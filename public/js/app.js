@@ -69,12 +69,20 @@ async function processAndSaveJSON () {
       }
     }
 
-    if (newAlbums.length === 0) throw new Error('Nenhum álbum foi encontrado.')
+        if (newAlbums.length === 0) {
+          // Não fechamos o modal — mostramos o erro para o usuário e mantemos o input disponível
+          const msg = `Nenhum álbum foi encontrado. Falhas:\n${errors.join('\n')}`
+          console.warn('processAndSaveJSON:', msg)
+          jsonError.classList.remove('text-yellow-400')
+          jsonError.classList.add('text-red-400')
+          jsonError.textContent = msg
+          return
+        }
 
-    await saveDataToFirestore(newAlbums, currentPlaylists)
-    closeDataModal()
+        await saveDataToFirestore(newAlbums, currentPlaylists)
+        closeDataModal()
 
-    if (errors.length > 0) alert(`Importação concluída com ${newAlbums.length} álbuns.\n\nFalhas:\n${errors.join('\n')}`)
+        if (errors.length > 0) alert(`Importação concluída com ${newAlbums.length} álbuns.\n\nFalhas:\n${errors.join('\n')}`)
   } catch (error) {
     console.error('Erro no processo:', error)
     jsonError.classList.remove('text-yellow-400')
