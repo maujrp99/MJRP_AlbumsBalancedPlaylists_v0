@@ -136,6 +136,26 @@ Design notes (high level):
 - A per-album `rankingSummary` object will be stored alongside playlists to explain which tracks from the album were used and why.
 - The full source list (external sources such as sites/magazines) will be recorded when available and surfaced in UI on demand; this will require a secure handling policy for any third-party attributions.
 
+Implementation notes (detailed):
+- **Ranking data contracts**
+  - Each track that participates in a playlist will carry a `rankingInfo` array with zero or more entries shaped like `{ reason: string, source: string, score?: number, timestamp?: string, metadata?: Record<string, unknown> }`. `reason` describes the placement action, `source` cites the origin (algorithm, critic, site name etc.), and `timestamp` anchors the decision for auditability.
+  - The playlists Firestore document will expand to contain `{ data: Playlist[], rankingSummary: Record<string, RankingSummary>, rankingSources: RankingSource[] }`. `RankingSummary` captures the album id/title/artist, the selected tracks (with rank, playlist id, and `rankingInfo` references), and an aggregated list of unique sources that affected that album. `RankingSource` records any third-party or internal provenance (e.g., `{ name: 'Rolling Stone', type: 'external', reference: 'https://...', secure: true }`).
+  - Each album object may optionally include `rankingSources` as part of the fetched metadata so curators can pass real-world attributions into the curation run. Those sources flow into the aggregated ranking source list and respect the policy that external attributions are treated as untrusted data (read-only, sanitized, and only surfaced in the UI after consent).
+
+- **Algorithm instrumentation**
+  - `runHybridCuration()` now emits ranking metadata alongside the playlists. Rank 1/2 picks are annotated with `P1 Hit`/`P2 Hit` reasons, fills use `fill:worse-ranked`, and `runFase4SwapBalancing()` appends swap-specific entries when conservative swaps move tracks between playlists.
+  - A helper smile collects track summaries into `rankingSummary` after playlist generation, deduplicating by album id and storing a `lastUpdated` timestamp. `rankingSources` is derived from the union of every `source` value seen in `rankingInfo` plus the optional album-level sources.
+  - Default scoring metadata is applied even when third-party data is absent (e.g., `score: 1.0` for hits, `score: 0.4` for fills) so the UI can show normalized metrics without requiring a backend change.
+
+- **Frontend persistence/UI**
+  - The Firestore `playlists` document now stores the ranking metadata so it can be rendered in the UI and also replayed during export/save operations. Playback of `rankingSummary` ensures future audit tooling can explain why a specific track was selected.
+  - A dedicated ranking panel surfaces the `rankingSources` (name, type, secure flag) and the `rankingSummary` per album. The panel is conditionally rendered when playlists exist and provides a secondary `details` disclosure for each album's track-level reasoning.
+  - All user-submitted ranking sources are sanitized and treated as read-only in the UI; third-party attribution is collapsed behind a consent prompt or masked label when the source is marked `secure: true`.
+
+- **Testing & validation**
+  - Unit tests will verify `curateAlbums()` continues to respect the `rank === 1/2` constraints, confirms fills follow the worst-ranked-first ordering, and asserts `rankingSummary` contains every playlist track with a `rankingInfo` entry.
+  - Integration tests will assert the Firestore persistence layer writes `rankingSummary` and `rankingSources` and that the front-end renders the ranking panel without regressing existing playlist visuals.
+
 Decision: P1/P2 Fill Strategy
 -----------------------------
 Following the latest design decision (Option 2), when P1 or P2 durations are below the 45-minute target the system will fill the playlist by selecting additional tracks using a "worst-ranked first" policy — i.e., prefer tracks with the highest numeric `rank` values (for example, rank 10 before rank 3). This choice prioritizes balance and diversity in the resulting playlist while preserving the positional guarantees for top-ranked tracks.
