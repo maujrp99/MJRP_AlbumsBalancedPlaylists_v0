@@ -4,8 +4,12 @@
 export async function fetchAlbumMetadata(albumQuery) {
   if (!albumQuery) throw new Error('Missing albumQuery');
 
-  // Use relative path so it works in different environments
-  const url = '/api/generate';
+  // Determine proxy URL. Use same host as page but default to port 3000 where the proxy runs.
+  const host = window.location.hostname || 'localhost';
+  const protocol = window.location.protocol || 'http:';
+  const url = (window.__api_base && typeof window.__api_base === 'string')
+    ? window.__api_base.replace(/\/$/, '') + '/api/generate'
+    : `${protocol}//${host}:3000/api/generate`;
 
   const resp = await fetch(url, {
     method: 'POST',
