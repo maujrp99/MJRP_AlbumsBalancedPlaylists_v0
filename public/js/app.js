@@ -1,5 +1,6 @@
 // public/js/app.js
 // App entrypoint module extracted from hybrid-curator.html
+/* global alert */
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js'
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js'
@@ -9,7 +10,7 @@ import { fetchAlbumMetadata } from './api.js'
 import { curateAlbums } from './curation.js'
 
 const firebaseConfig = window.__firebase_config
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'
+const appId = typeof window.__app_id !== 'undefined' ? window.__app_id : 'default-app-id'
 
 let app, auth, db
 let userId
@@ -26,7 +27,7 @@ let unsubscribePlaylists = null
 
 // UI elements
 let mainContent, loadingSpinner, albumsView, playlistsView, albumsGrid, playlistsGrid
-let toggleViewBtn, generateBtn, saveBtn, saveText, saveIcon
+let toggleViewBtn, generateBtn, saveBtn
 let albumsSummary, playlistsSummary
 let loadDataBtn, dataModal, closeModalBtn, cancelModalBtn, processJsonBtn, jsonInput, jsonError
 
@@ -42,7 +43,7 @@ function calculateTotalDuration (tracks) {
 }
 
 async function processAndSaveJSON () {
-  const originalBtnText = processJsonBtn.textContent
+  // originalBtnText not used; we avoid unused var
   processJsonBtn.disabled = true
   processJsonBtn.classList.add('opacity-50', 'cursor-not-allowed')
   jsonError.textContent = ''
@@ -89,7 +90,7 @@ async function processAndSaveJSON () {
 function renderAlbumsView (albums) {
   albumsGrid.innerHTML = ''
   if (!albums || albums.length === 0) {
-    albumsGrid.innerHTML = '<p class="text-spotify-lightgray col-span-full text-center">Nenhum álbum carregado. Clique em \"Carregar Dados\" para começar.</p>'
+    albumsGrid.innerHTML = '<p class="text-spotify-lightgray col-span-full text-center">Nenhum álbum carregado. Clique em \'Carregar Dados\' para começar.</p>'
     albumsSummary.innerHTML = '<p class="text-center text-spotify-lightgray">Nenhum dado de origem.</p>'
     return
   }
@@ -333,6 +334,15 @@ function moveTrackBetweenPlaylists (fromListId, toListId, oldIndex, newIndex, tr
   renderPlaylistsView(currentPlaylists)
 }
 
+/**
+ * Utility: reset save button state (called after user changes)
+ */
+function resetSaveButton () {
+  if (!saveBtn) return
+  saveBtn.disabled = false
+  saveBtn.classList.remove('opacity-50', 'cursor-not-allowed')
+}
+
 async function runHybridCuration () {
   if (!currentAlbums || currentAlbums.length === 0) {
     alert('Nenhum álbum carregado para processar.')
@@ -392,8 +402,6 @@ async function initializeAppContainer () {
   toggleViewBtn = document.getElementById('toggleViewBtn')
   generateBtn = document.getElementById('generateBtn')
   saveBtn = document.getElementById('saveBtn')
-  saveText = document.getElementById('save-text')
-  saveIcon = document.getElementById('save-icon')
   albumsSummary = document.getElementById('albums-summary')
   playlistsSummary = document.getElementById('playlists-summary')
 
@@ -414,7 +422,7 @@ async function initializeAppContainer () {
   processJsonBtn.addEventListener('click', processAndSaveJSON)
 
   try {
-    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token)
+    if (typeof window.__initial_auth_token !== 'undefined' && window.__initial_auth_token) await signInWithCustomToken(auth, window.__initial_auth_token)
     else await signInAnonymously(auth)
   } catch (error) {
     console.error('Erro na autenticação:', error)
