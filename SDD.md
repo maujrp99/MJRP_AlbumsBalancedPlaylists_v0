@@ -95,6 +95,7 @@ Roadmap / Next Steps (short-term)
 3. Add linting (ESLint) and a formatting step (Prettier), plus package.json scripts: `npm test`, `npm lint`, `npm start`.
 4. Integrate `fetchMultipleAlbumMetadata` into the UI import flow and add progress UI.
 5. Add `ajv-formats` for stricter url/date validation and consider requiring `cover` to be a valid URL.
+6. Implement P1/P2 playlist rules: ensure P1 contains all `rank === 1` tracks and P2 contains all `rank === 2` tracks; if either playlist's total duration is under 45 minutes, fill it by selecting additional tracks using the "worst-ranked first" strategy (highest numeric `rank` values). Never remove or swap existing `rank === 1` tracks out of P1 or `rank === 2` tracks out of P2 when filling.
 
 Testing & Style decisions
 -------------------------
@@ -134,6 +135,22 @@ Design notes (high level):
 - The system will annotate placed tracks with a `rankingInfo` array that includes labelled reasons (e.g., `P1 Hit`, `DeepCut - serpentine`, `Swap: duration-balance`) and optional numeric scores and timestamps.
 - A per-album `rankingSummary` object will be stored alongside playlists to explain which tracks from the album were used and why.
 - The full source list (external sources such as sites/magazines) will be recorded when available and surfaced in UI on demand; this will require a secure handling policy for any third-party attributions.
+
+Decision: P1/P2 Fill Strategy
+-----------------------------
+Following the latest design decision (Option 2), when P1 or P2 durations are below the 45-minute target the system will fill the playlist by selecting additional tracks using a "worst-ranked first" policy — i.e., prefer tracks with the highest numeric `rank` values (for example, rank 10 before rank 3). This choice prioritizes balance and diversity in the resulting playlist while preserving the positional guarantees for top-ranked tracks.
+
+Constraints and rules enforced by the algorithm:
+- P1 must always include every track that has `rank === 1` from the album; P2 must always include every track that has `rank === 2`.
+- When filling to reach the target duration, the algorithm may append additional tracks, but it must not remove or swap out any `rank === 1` tracks from P1 or any `rank === 2` tracks from P2.
+- The filling selection order is descending by `rank` (highest numeric rank first). Ties may be broken by secondary heuristics (longer duration first, then deterministic tie-breaker such as track id).
+
+Rationale:
+- Choosing the worst-ranked-first fill policy (Option 2) aims to increase variety and avoid over-emphasizing mid-ranked tracks when boosting playlist duration. It also simplifies provenance: filled tracks are explicitly annotated as "fill:worse-ranked" in `rankingInfo` so UI and audits can explain their selection.
+
+Implementation notes:
+- `runHybridCuration()` and `runFase4SwapBalancing()` will be updated to respect these constraints and to annotate filled tracks with `rankingInfo: [{ reason: 'fill:worse-ranked', source: 'algorithm' }]`.
+- Unit tests will be added to assert that P1/P2 always retain their `rank === 1/2` members and that fills obey the worst-ranked-first order and duration target behavior.
 
 This behavior is documented here and will be added to implementation tasks in the `feature/ranking-source` branch.
 

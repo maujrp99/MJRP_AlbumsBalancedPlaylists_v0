@@ -350,6 +350,8 @@
 
         // Import client API (centralized network calls)
         import { fetchAlbumMetadata } from './js/api.js';
+        // Import curated algorithm (DOM-free module)
+        import { curateAlbums } from './js/curation.js';
 
         let app, auth, db;
         let userId;
@@ -437,119 +439,25 @@
          * Calcula a duração total de uma lista de faixas
          */
         function calculateTotalDuration(tracks) {
-            if (!tracks || !Array.isArray(tracks)) return 0;
+            async function runHybridCuration() {
             return tracks.reduce((total, track) => total + (track.duration || 0), 0);
         }
 
         /**
-         * Exibe o estado de "Salvando..." no botão Salvar
-         */
-        function showSavingState() {
-            saveBtn.classList.add('loading', 'bg-yellow-500', 'hover:bg-yellow-500');
-            saveBtn.classList.remove('bg-spotify-green', 'hover:bg-green-400');
-            saveText.textContent = 'Salvando...';
-            saveIcon.innerHTML = `<svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>`;
-        }
+                try {
+                    // Call the DOM-free curator which implements the new P1/P2 fill strategy
+                    const newPlaylists = curateAlbums(currentAlbums, { targetSeconds: 45 * 60 });
 
-        /**
-         * Exibe o estado de "Salvo!" (Sucesso) no botão Salvar
-         */
-        function showSavedState() {
-            saveBtn.classList.remove('loading', 'bg-yellow-500', 'hover:bg-yellow-500');
-            saveBtn.classList.add('bg-green-600', 'hover:bg-green-600');
-            saveText.textContent = 'Salvo!';
-            saveIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-            </svg>`;
+                    // Update global state and persist
+                    currentPlaylists = newPlaylists;
+                    await saveDataToFirestore(currentAlbums, newPlaylists);
 
-            // Volta ao normal após 1.5s
-            setTimeout(resetSaveButton, 1500);
-        }
-
-        /**
-         * Reseta o botão Salvar para o estado padrão
-         */
-        function resetSaveButton() {
-            saveBtn.classList.remove('loading', 'bg-yellow-500', 'hover:bg-yellow-500', 'bg-green-600', 'hover:bg-green-600');
-            saveBtn.classList.add('bg-spotify-green', 'hover:bg-green-400');
-            saveText.textContent = 'Salvar';
-            saveIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-            </svg>`;
-        }
-
-        /**
-         * Exibe mensagem de erro no botão Salvar
-         */
-        function showSaveError(error) {
-            console.error("Erro ao salvar:", error);
-            saveBtn.classList.remove('loading', 'bg-yellow-500', 'bg-spotify-green');
-            saveBtn.classList.add('bg-red-600', 'hover:bg-red-600');
-            saveText.textContent = 'Erro!';
-            saveIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>`;
-
-            // Volta ao normal após 2s
-            setTimeout(resetSaveButton, 2000);
-        }
-
-        // --- Funções do Modal de Input (Passos 1-6) ---
-
-        /**
-         * (Passo 2) Abre o modal de carregamento de dados
-         */
-        function openDataModal() {
-            // Limpa o input para nova busca
-            jsonInput.value = '';
-            jsonError.textContent = '';
-            dataModal.classList.remove('hidden');
-        }
-
-        /**
-         * (Passo 2) Fecha o modal de carregamento de dados
-         */
-        function closeDataModal() {
-            dataModal.classList.add('hidden');
-        }
-
-        /**
-         * (Passo 3) Processa o JSON e salva no Firestore
-         */
-        /**
-         * (Passo 3) Processa o texto, busca metadados na IA e salva
-         */
-        async function processAndSaveJSON() {
-            const text = jsonInput.value.trim();
-            if (!text) {
-                jsonError.textContent = "Por favor, insira pelo menos um álbum.";
-                return;
-            }
-
-            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            if (lines.length === 0) {
-                jsonError.textContent = "Nenhuma linha válida encontrada.";
-                return;
-            }
-
-            // UI de Loading
-            const originalBtnText = processJsonBtn.textContent;
-            processJsonBtn.disabled = true;
-            processJsonBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            jsonError.textContent = ''; // Limpa erros anteriores
-            jsonError.classList.remove('text-red-400');
-            jsonError.classList.add('text-yellow-400'); // Cor de aviso/progresso
-
-            let newAlbums = [];
-            let errors = [];
-
-            try {
-                for (let i = 0; i < lines.length; i++) {
-                    const query = lines[i];
-                    // Atualiza progresso
+                    // Switch view or re-render
+                    if (isAlbumsView) toggleView(); else renderPlaylistsView(currentPlaylists);
+                } catch (err) {
+                    console.error('Erro ao rodar curadoria:', err);
+                    alert('Erro ao processar curadoria: ' + (err && err.message ? err.message : String(err)));
+                }
                     processJsonBtn.textContent = `Buscando ${i + 1}/${lines.length}...`;
                     jsonError.textContent = `Processando: "${query}"...`;
 
