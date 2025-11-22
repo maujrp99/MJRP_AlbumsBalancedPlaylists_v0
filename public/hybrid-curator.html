@@ -1,6 +1,11 @@
-        // The curation logic has been moved into `public/js/curation.js`.
-        // `runHybridCuration` now delegates to the module via import at the top of the file.
-
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Curadoria Híbrida</title>
+    <style>
+        /* Scrollbar */
         ::-webkit-scrollbar-thumb {
             background: #444;
             border-radius: 10px;
@@ -222,95 +227,35 @@
         console.log("Inline config loaded:", window.__firebase_config);
     </script>
     <script type="module">
-        // Importações do Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- Configuração Firebase ---
+        import { fetchAlbumMetadata } from './js/api.js';
+        import { curateAlbums } from './js/curation.js';
+
         const firebaseConfig = window.__firebase_config;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-        // Import client API (centralized network calls)
-        import { fetchAlbumMetadata } from './js/api.js';
-        // Import curated algorithm (DOM-free module)
-        import { curateAlbums } from './js/curation.js';
 
         let app, auth, db;
         let userId;
 
-        // Referências dos Documentos do Firestore
         let albumsDocRef;
         let playlistsDocRef;
 
-        // Estado Global da Aplicação
         let currentAlbums = [];
         let currentPlaylists = [];
         let isAlbumsView = true;
-        let sortableInstances = []; // Array para guardar instâncias do Sortable
-        let unsubscribeAlbums = null; // Listener do Firestore
-        let unsubscribePlaylists = null; // Listener do Firestore
+        let sortableInstances = [];
+        let unsubscribeAlbums = null;
+        let unsubscribePlaylists = null;
 
-        // --- Elementos da UI ---
-        // (Declarados aqui para acesso global no script)
+        // UI elements
         let mainContent, loadingSpinner, albumsView, playlistsView, albumsGrid, playlistsGrid;
         let toggleViewBtn, generateBtn, saveBtn, saveText, saveIcon;
         let albumsSummary, playlistsSummary;
-
-        // Elementos do Modal (Passos 1-3)
         let loadDataBtn, dataModal, closeModalBtn, cancelModalBtn, processJsonBtn, jsonInput, jsonError;
 
-        // (Passo 6) Template JSON para guiar novos usuários
-        const jsonTemplate = [
-            {
-                "id": "album_1",
-                "artist": "Nome do Artista",
-                "title": "Nome do Álbum",
-                "year": 2024,
-                "cover": "https://placehold.co/300x300/333/888?text=Capa",
-                "tracks": [
-                    {
-                        "id": "t1_1",
-                        "rank": 1,
-                        "title": "Nome da Faixa 1 (O maior hit)",
-                        "duration": 245
-                    },
-                    {
-                        "id": "t1_2",
-                        "rank": 2,
-                        "title": "Nome da Faixa 2 (O segundo hit)",
-                        "duration": 210
-                    },
-                    {
-                        "id": "t1_3",
-                        "rank": 3,
-                        "title": "Nome da Faixa 3 (Deep cut)",
-                        "duration": 305
-                    }
-                ]
-            },
-            {
-                "id": "album_2",
-                "artist": "Outro Artista",
-                "title": "Outro Álbum",
-                "year": 2022,
-                "cover": "https://placehold.co/300x300/333/888?text=Capa",
-                "tracks": [
-                    {
-                        "id": "t2_1",
-                        "rank": 1,
-                        "title": "Faixa Principal",
-                        "duration": 190
-                    }
-                ]
-            }
-        ];
-
-        // --- Funções Auxiliares ---
-
-        /**
-         * Formata segundos para o formato MM:SS
-         */
         function formatDuration(seconds) {
             if (isNaN(seconds) || seconds < 0) return '00:00';
             const minutes = Math.floor(seconds / 60);
@@ -318,88 +263,59 @@
             return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
         }
 
-        /**
-         * Calcula a duração total de uma lista de faixas
-         */
         function calculateTotalDuration(tracks) {
-            async function runHybridCuration() {
-            return tracks.reduce((total, track) => total + (track.duration || 0), 0);
+            return (tracks || []).reduce((s, x) => s + (x.duration || 0), 0);
         }
 
-        /**
-                try {
-                    // Call the DOM-free curator which implements the new P1/P2 fill strategy
-                    const newPlaylists = curateAlbums(currentAlbums, { targetSeconds: 45 * 60 });
+        async function processAndSaveJSON() {
+            const originalBtnText = processJsonBtn.textContent;
+            processJsonBtn.disabled = true;
+            processJsonBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            jsonError.textContent = '';
 
-                    // Update global state and persist
-                    currentPlaylists = newPlaylists;
-                    await saveDataToFirestore(currentAlbums, newPlaylists);
+            try {
+                const lines = (jsonInput.value || '').split(/\n+/).map(l => l.trim()).filter(Boolean);
+                if (lines.length === 0) throw new Error('Nenhuma linha válida fornecida.');
 
-                    // Switch view or re-render
-                    if (isAlbumsView) toggleView(); else renderPlaylistsView(currentPlaylists);
-                } catch (err) {
-                    console.error('Erro ao rodar curadoria:', err);
-                    alert('Erro ao processar curadoria: ' + (err && err.message ? err.message : String(err)));
-                }
+                const newAlbums = [];
+                const errors = [];
+
+                for (let i = 0; i < lines.length; i++) {
+                    const query = lines[i];
                     processJsonBtn.textContent = `Buscando ${i + 1}/${lines.length}...`;
                     jsonError.textContent = `Processando: "${query}"...`;
-
                     try {
                         const albumData = await fetchAlbumMetadata(query);
-                        if (albumData) {
-                            newAlbums.push(albumData);
-                        } else {
-                            errors.push(`Não encontrado: ${query}`);
-                        }
+                        if (albumData) newAlbums.push(albumData);
+                        else errors.push(`Não encontrado: ${query}`);
                     } catch (err) {
                         console.error(`Erro ao buscar "${query}":`, err);
                         errors.push(`Erro em "${query}": ${err.message}`);
                     }
                 }
 
-                if (newAlbums.length === 0) {
-                    throw new Error("Nenhum álbum foi encontrado. Verifique os nomes e tente novamente.");
-                }
+                if (newAlbums.length === 0) throw new Error('Nenhum álbum foi encontrado.');
 
-                // Salva os novos dados (sobrescrevendo os antigos)
                 await saveDataToFirestore(newAlbums, currentPlaylists);
-
                 closeDataModal();
 
-                // Feedback final (se houver erros parciais, poderia mostrar um toast, mas por enquanto loga)
-                if (errors.length > 0) {
-                    console.warn("Alguns álbuns falharam:", errors);
-                    alert(`Importação concluída com ${newAlbums.length} álbuns.\n\nFalhas:\n${errors.join('\n')}`);
-                }
-
+                if (errors.length > 0) alert(`Importação concluída com ${newAlbums.length} álbuns.\n\nFalhas:\n${errors.join('\n')}`);
             } catch (error) {
-                console.error("Erro no processo:", error);
+                console.error('Erro no processo:', error);
                 jsonError.classList.remove('text-yellow-400');
                 jsonError.classList.add('text-red-400');
                 jsonError.textContent = `Erro: ${error.message}`;
             } finally {
-                // Restaura botão
                 processJsonBtn.disabled = false;
                 processJsonBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                processJsonBtn.textContent = originalBtnText;
+                processJsonBtn.textContent = 'Buscar Metadados e Salvar';
             }
         }
 
-        // fetchAlbumMetadata is provided by './js/api.js' (imported above)
-
-
-        // --- Funções de Renderização (UI) ---
-
-        /**
-         * Renderiza a View de Álbuns
-         */
         function renderAlbumsView(albums) {
-            // Limpa o grid
             albumsGrid.innerHTML = '';
-
-            // Se não houver álbuns, mostre uma mensagem
             if (!albums || albums.length === 0) {
-                albumsGrid.innerHTML = `<p class="text-spotify-lightgray col-span-full text-center">Nenhum álbum carregado. Clique em "Carregar Dados" para começar.</p>`;
+                albumsGrid.innerHTML = `<p class="text-spotify-lightgray col-span-full text-center">Nenhum álbum carregado. Clique em \"Carregar Dados\" para começar.</p>`;
                 albumsSummary.innerHTML = `<p class="text-center text-spotify-lightgray">Nenhum dado de origem.</p>`;
                 return;
             }
@@ -408,8 +324,7 @@
             let totalDuration = 0;
 
             albums.forEach(album => {
-                if (!album) return; // Proteção contra dados inválidos
-
+                if (!album) return;
                 const albumTracks = album.tracks || [];
                 const albumDuration = calculateTotalDuration(albumTracks);
                 totalTracks += albumTracks.length;
@@ -432,9 +347,7 @@
                             <span class="font-semibold">Duração</span>
                         </div>
                         <ul class="space-y-1">
-                            ${albumTracks
-                        .sort((a, b) => (a.rank || 99) - (b.rank || 99)) // Ordena por rank
-                        .map(track => `
+                            ${albumTracks.sort((a,b)=> (a.rank||99)-(b.rank||99)).map(track => `
                                 <li class="flex justify-between items-center p-2 rounded-md hover:bg-spotify-gray">
                                     <span class="text-spotify-lightgray w-6 text-center">${track.rank || '-'}</span>
                                     <span class="flex-1 ml-2 text-white truncate" title="${track.title}">${track.title || 'Faixa Desconhecida'}</span>
@@ -450,7 +363,6 @@
                 albumsGrid.appendChild(albumCard);
             });
 
-            // Renderiza o Resumo dos Álbuns
             albumsSummary.innerHTML = `
                 <h3 class="text-lg font-semibold text-white mb-2">Resumo dos Álbuns (Origem)</h3>
                 <div class="grid grid-cols-3 gap-4 text-center">
@@ -470,19 +382,28 @@
             `;
         }
 
-        /**
-         * Renderiza a View de Playlists
-         */
-        function renderPlaylistsView(playlists) {
-            // Limpa o grid
-            playlistsGrid.innerHTML = '';
+        function renderTrackItem(track) {
+            const originAlbum = currentAlbums.find(a => a.tracks && a.tracks.some(t => t.id === track.id));
+            const albumTitle = originAlbum ? originAlbum.title : 'N/A';
+            return `
+                <li class="track-item flex justify-between items-center p-2 rounded-md hover:bg-spotify-gray" data-track-id="${track.id}">
+                    <div class="flex-1 truncate mr-2">
+                        <p class="text-white truncate" title="${track.title}">${track.title || 'Faixa Desconhecida'}</p>
+                        <p class="text-xs text-spotify-lightgray">Rank: ${track.rank || '-'}</p>
+                    </div>
+                    <span class="text-spotify-lightgray text-sm w-16 truncate text-center" title="${albumTitle}">${albumTitle}</span>
+                    <span class="text-spotify-lightgray text-sm w-12 text-right">${formatDuration(track.duration)}</span>
+                </li>
+            `;
+        }
 
-            // Destrói instâncias antigas do Sortable para evitar memory leaks
+        function renderPlaylistsView(playlists) {
+            playlistsGrid.innerHTML = '';
             sortableInstances.forEach(s => s.destroy());
             sortableInstances = [];
 
             if (!playlists || playlists.length === 0) {
-                playlistsGrid.innerHTML = `<p class="text-spotify-lightgray col-span-full text-center">Nenhuma playlist gerada. Volte e clique em "Gerar Playlists".</p>`;
+                playlistsGrid.innerHTML = `<p class="text-spotify-lightgray col-span-full text-center">Nenhuma playlist gerada. Volte e clique em \"Gerar Playlists\".</p>`;
                 playlistsSummary.innerHTML = `<p class="text-center text-spotify-lightgray">Nenhuma playlist para resumir.</p>`;
                 return;
             }
@@ -491,8 +412,7 @@
             let totalDuration = 0;
 
             playlists.forEach(playlist => {
-                if (!playlist) return; // Proteção
-
+                if (!playlist) return;
                 const playlistTracks = playlist.tracks || [];
                 const playlistDuration = calculateTotalDuration(playlistTracks);
                 totalTracks += playlistTracks.length;
@@ -511,7 +431,6 @@
                             <span class="font-semibold">Álbum</span>
                             <span class="font-semibold">Duração</span>
                         </div>
-                        <!-- Lista de faixas (container para SortableJS) -->
                         <ul id="playlist-${playlist.id}" data-playlist-id="${playlist.id}" class="space-y-1 h-full min-h-[150px]">
                             ${playlistTracks.map(track => renderTrackItem(track)).join('')}
                         </ul>
@@ -523,38 +442,11 @@
                 playlistsGrid.appendChild(playlistCard);
             });
 
-            // Renderiza o Resumo das Playlists
             renderPlaylistsSummary(playlists, totalTracks, totalDuration);
-
-            // Inicializa o Drag-and-Drop (SortableJS)
             initSortable();
         }
 
-        /**
-         * Helper para renderizar um item de faixa (usado no Sortable)
-         */
-        function renderTrackItem(track) {
-            // Encontra o álbum original da faixa
-            const originAlbum = currentAlbums.find(a => a.tracks.some(t => t.id === track.id));
-            const albumTitle = originAlbum ? originAlbum.title : 'N/A';
-
-            return `
-                <li class="track-item flex justify-between items-center p-2 rounded-md hover:bg-spotify-gray" data-track-id="${track.id}">
-                    <div class="flex-1 truncate mr-2">
-                        <p class="text-white truncate" title="${track.title}">${track.title || 'Faixa Desconhecida'}</p>
-                        <p class="text-xs text-spotify-lightgray">Rank: ${track.rank || '-'}</p>
-                    </div>
-                    <span class="text-spotify-lightgray text-sm w-16 truncate text-center" title="${albumTitle}">${albumTitle}</span>
-                    <span class="text-spotify-lightgray text-sm w-12 text-right">${formatDuration(track.duration)}</span>
-                </li>
-            `;
-        }
-
-        /**
-         * Renderiza o Resumo de Verificação das Playlists
-         */
         function renderPlaylistsSummary(playlists, totalTracks, totalDuration) {
-            // Calcula os totais de origem (dos álbuns)
             let originTotalTracks = 0;
             let originTotalDuration = 0;
             if (currentAlbums && currentAlbums.length > 0) {
@@ -566,23 +458,19 @@
                 });
             }
 
-            // Verifica se os totais batem
             const tracksMatch = originTotalTracks === totalTracks;
             const durationMatch = originTotalDuration === totalDuration;
             const isOk = tracksMatch && durationMatch;
 
             let verificationHtml = '';
-            if (isOk) {
-                verificationHtml = `<p class="text-2xl font-bold text-green-400">OK - Totais Batem!</p>`;
-            } else {
-                verificationHtml = `
-                    <p class="text-2xl font-bold text-red-400">ERRO - Totais Divergentes!</p>
-                    <div class="flex justify-around mt-2 text-sm">
-                        <p class="text-gray-300">Origem: <span class="font-bold">${originTotalTracks} faixas</span> / <span class="font-bold">${formatDuration(originTotalDuration)}</span></p>
-                        <p class="text-gray-300">Resultado: <span class="font-bold">${totalTracks} faixas</span> / <span class="font-bold">${formatDuration(totalDuration)}</span></p>
-                    </div>
-                `;
-            }
+            if (isOk) verificationHtml = `<p class="text-2xl font-bold text-green-400">OK - Totais Batem!</p>`;
+            else verificationHtml = `
+                <p class="text-2xl font-bold text-red-400">ERRO - Totais Divergentes!</p>
+                <div class="flex justify-around mt-2 text-sm">
+                    <p class="text-gray-300">Origem: <span class="font-bold">${originTotalTracks} faixas</span> / <span class="font-bold">${formatDuration(originTotalDuration)}</span></p>
+                    <p class="text-gray-300">Resultado: <span class="font-bold">${totalTracks} faixas</span> / <span class="font-bold">${formatDuration(totalDuration)}</span></p>
+                </div>
+            `;
 
             playlistsSummary.innerHTML = `
                 <h3 class="text-lg font-semibold text-white mb-2">Resumo das Playlists (Resultado)</h3>
@@ -607,9 +495,6 @@
             `;
         }
 
-        /**
-         * Atualiza a UI (Álbuns ou Playlists)
-         */
         function toggleView() {
             isAlbumsView = !isAlbumsView;
             if (isAlbumsView) {
@@ -620,450 +505,105 @@
                 albumsView.classList.add('hidden');
                 playlistsView.classList.remove('hidden');
                 toggleViewBtn.textContent = 'Ver Álbuns';
-                // Re-renderiza as playlists para garantir que o D&D funcione
                 renderPlaylistsView(currentPlaylists);
             }
         }
 
-        // --- Drag-and-Drop (SortableJS) ---
-
-        /**
-         * Inicializa o SortableJS em todas as listas de playlists
-         */
         function initSortable() {
             const lists = document.querySelectorAll('#playlists-grid ul');
             lists.forEach(list => {
-                // 'playlists' é o 'group name'. Isso permite arrastar entre listas.
                 const sortable = new window.Sortable(list, {
                     group: 'playlists',
                     animation: 150,
                     ghostClass: 'sortable-ghost',
                     dragClass: 'sortable-drag',
-                    onEnd: handleDragEnd // Função chamada ao soltar
+                    onEnd: handleDragEnd
                 });
                 sortableInstances.push(sortable);
             });
         }
 
-        /**
-         * Chamada quando o usuário solta uma faixa
-         */
         function handleDragEnd(evt) {
             const trackId = evt.item.dataset.trackId;
             const fromListId = evt.from.dataset.playlistId;
             const toListId = evt.to.dataset.playlistId;
-
-            // Se moveu para a mesma lista, apenas a ordem mudou
-            if (fromListId === toListId) {
-                updateTrackOrder(toListId, evt.newIndex, trackId);
-            } else {
-                // Moveu entre listas
-                moveTrackBetweenPlaylists(fromListId, toListId, evt.oldIndex, evt.newIndex, trackId);
-            }
-
-            // O estado mudou, habilita o botão Salvar
-            resetSaveButton();
+            if (fromListId === toListId) updateTrackOrder(toListId, evt.newIndex, trackId);
+            else moveTrackBetweenPlaylists(fromListId, toListId, evt.oldIndex, evt.newIndex, trackId);
+            resetSaveButton && resetSaveButton();
         }
 
-        /**
-         * Atualiza o estado (currentPlaylists) após mover faixa na *mesma* lista
-         */
         function updateTrackOrder(playlistId, newIndex, trackId) {
             const playlist = currentPlaylists.find(p => p.id === playlistId);
             if (!playlist) return;
-
-            // Encontra e remove a faixa
             const track = playlist.tracks.find(t => t.id === trackId);
             playlist.tracks = playlist.tracks.filter(t => t.id !== trackId);
-
-            // Re-insere na nova posição
-            if (track) {
-                playlist.tracks.splice(newIndex, 0, track);
-            }
-
-            // Re-renderiza APENAS as playlists para recalcular durações
+            if (track) playlist.tracks.splice(newIndex, 0, track);
             renderPlaylistsView(currentPlaylists);
         }
 
-        /**
-         * Atualiza o estado (currentPlaylists) após mover faixa *entre* listas
-         */
         function moveTrackBetweenPlaylists(fromListId, toListId, oldIndex, newIndex, trackId) {
             const fromPlaylist = currentPlaylists.find(p => p.id === fromListId);
             const toPlaylist = currentPlaylists.find(p => p.id === toListId);
             if (!fromPlaylist || !toPlaylist) return;
-
-            // Encontra e remove da lista antiga
-            let trackToMove = null;
-            // É mais seguro achar pelo ID do que pelo índice
             const trackIndex = fromPlaylist.tracks.findIndex(t => t.id === trackId);
             if (trackIndex > -1) {
-                trackToMove = fromPlaylist.tracks.splice(trackIndex, 1)[0];
-            }
-
-            // Adiciona na nova lista, na posição correta
-            if (trackToMove) {
+                const [trackToMove] = fromPlaylist.tracks.splice(trackIndex, 1);
                 toPlaylist.tracks.splice(newIndex, 0, trackToMove);
             }
-
-            // Re-renderiza TUDO para atualizar durações e totais
             renderPlaylistsView(currentPlaylists);
         }
 
-
-        // --- Lógica do Algoritmo de Curadoria ---
-
-        /**
-         * Ponto de entrada principal do algoritmo
-         */
-        function runHybridCuration() {
+        async function runHybridCuration() {
             if (!currentAlbums || currentAlbums.length === 0) {
-                alert("Nenhum álbum carregado para processar.");
+                alert('Nenhum álbum carregado para processar.');
                 return;
             }
-
-            // Deep clone dos álbuns para não modificar os dados originais
-            let workingAlbums = JSON.parse(JSON.stringify(currentAlbums));
-
-            // --- FASE 1: Preparação ---
-            const P_HITS = 2; // P1 (Hits 1) e P2 (Hits 2)
-
-            // Inicializa as playlists
-            let newPlaylists = [
-                { id: 'p1', title: 'Greatest Hits Vol. 1', subtitle: 'Rank #1 de cada álbum', tracks: [] },
-                { id: 'p2', title: 'Greatest Hits Vol. 2', subtitle: 'Rank #2 de cada álbum', tracks: [] }
-            ];
-
-            // --- FASE 2: Extração dos "Greatest Hits" ---
-            let remainingTracksPool = [];
-
-            workingAlbums.forEach(album => {
-                if (!album || !album.tracks) return; // Proteção
-
-                let tracks = [...album.tracks]; // Copia as faixas
-
-                // Move Faixa #1 para P1
-                let track1 = tracks.find(t => t.rank === 1);
-                if (track1) {
-                    newPlaylists[0].tracks.push(track1);
-                    tracks = tracks.filter(t => t.id !== track1.id);
-                }
-
-                // Move Faixa #2 para P2
-                let track2 = tracks.find(t => t.rank === 2);
-                if (track2) {
-                    newPlaylists[1].tracks.push(track2);
-                    tracks = tracks.filter(t => t.id !== track2.id);
-                }
-
-                // Adiciona o restante ao "pool" de Deep Cuts
-                // Guarda a referência do álbum para a "Rule of Thumb #2"
-                tracks.forEach(t => {
-                    t.originAlbumId = album.id;
-                    remainingTracksPool.push(t);
-                });
-            });
-
-            // Ordena o "pool" por aclamação (Rank)
-            remainingTracksPool.sort((a, b) => a.rank - b.rank);
-
-
-            // --- PRÉ-FASE 3: Cálculo do P-Ideal (Baseado na Duração) ---
-            const DURATION_TARGET_S = 45 * 60; // 45 min
-            const totalDeepCutsDuration = calculateTotalDuration(remainingTracksPool);
-
-            // (Correção do Passo 6: Usar Math.ceil)
-            // Se tivermos 2.1x de duração, precisamos de 3 playlists.
-            const P_DEEP_CUTS_IDEAL = Math.ceil(totalDeepCutsDuration / DURATION_TARGET_S);
-
-            // Se P_DEEP_CUTS_IDEAL for 0 (nenhuma faixa restante), defina como 1 para evitar divisão por zero
-            const numDeepCutPlaylists = Math.max(1, P_DEEP_CUTS_IDEAL);
-
-            // Cria as playlists de Deep Cuts
-            for (let i = 0; i < numDeepCutPlaylists; i++) {
-                newPlaylists.push({
-                    id: `p${P_HITS + i + 1}`,
-                    title: `Deep Cuts Vol. ${i + 1}`,
-                    subtitle: 'S-Draft Balanceado',
-                    tracks: []
-                });
-            }
-
-            // --- FASE 3: Distribuição S-Draft (Serpentine) Otimizada ---
-            // O S-Draft agora opera no "pool" de faixas, não por álbum
-
-            let direction = 1; // 1 = para frente, -1 = para trás
-            let p_index = 0; // Índice da playlist de deep cuts (0 a numDeepCutPlaylists-1)
-
-            remainingTracksPool.forEach(track => {
-                // O índice na lista 'newPlaylists' é (p_index + P_HITS)
-                newPlaylists[p_index + P_HITS].tracks.push(track);
-
-                // Lógica Serpentine
-                p_index += direction;
-
-                // "Quicar" (Bounce) nos extremos
-                if (p_index >= numDeepCutPlaylists) {
-                    direction = -1;
-                    p_index = numDeepCutPlaylists - 1; // Corrige o índice
-                } else if (p_index < 0) {
-                    direction = 1;
-                    p_index = 0; // Corrige o índice
-                }
-            });
-
-            // --- FASE 4: Rebalanceamento Automático (Ajuste Fino) ---
-            // Esta função tentará fazer "trocas" (swaps) para otimizar a duração,
-            // respeitando o Rule of Thumb #2 (representação de álbuns).
-            newPlaylists = runFase4SwapBalancing(newPlaylists, DURATION_TARGET_S);
-
-            // Atualiza o estado global e salva
-            currentPlaylists = newPlaylists;
-            saveDataToFirestore(currentAlbums, newPlaylists);
-
-            // Muda para a view de playlists
-            if (isAlbumsView) {
-                toggleView();
-            } else {
-                // Se já estiver na view, re-renderiza
-                renderPlaylistsView(currentPlaylists);
-            }
-        }
-
-        /**
-         * FASE 4: Algoritmo de Otimização de Duração (Swaps)
-         */
-        function runFase4SwapBalancing(playlists, targetDurationS) {
-            const FLEXIBILITY = 7 * 60; // 7 min
-            const MAX_SWAP_ITERATIONS = 100; // Limite de tentativas
-
-            for (let iter = 0; iter < MAX_SWAP_ITERATIONS; iter++) {
-                // 1. Calcula durações atuais
-                let p_durations = playlists.map(p => ({
-                    id: p.id,
-                    duration: calculateTotalDuration(p.tracks),
-                    playlist: p
-                }));
-
-                // 2. Encontra a mais longa (over) e a mais curta (under)
-                p_durations.sort((a, b) => a.duration - b.duration);
-                let p_under = p_durations[0];
-                let p_over = p_durations[p_durations.length - 1];
-
-                // 3. Verifica se estão dentro da flexibilidade
-                const isUnderOk = p_under.duration >= (targetDurationS - FLEXIBILITY);
-                const isOverOk = p_over.duration <= (targetDurationS + FLEXIBILITY);
-
-                if (isUnderOk && isOverOk) {
-                    // Todas as playlists estão balanceadas. Fim.
-                    console.log(`Balanceamento concluído na iteração ${iter}.`);
-                    return playlists;
-                }
-
-                // 4. Se não estiverem balanceadas, encontrar a "melhor troca" (1-por-1)
-
-                let bestSwap = {
-                    trackOver: null, // Faixa saindo da 'over'
-                    trackUnder: null, // Faixa saindo da 'under'
-                    newGap: Math.abs(p_over.duration - p_under.duration) // Gap atual
-                };
-
-                for (const trackOver of p_over.playlist.tracks) {
-                    for (const trackUnder of p_under.playlist.tracks) {
-
-                        // --- Validação do Rule of Thumb #2 (Representação de Álbuns) ---
-                        // A troca é válida?
-                        if (!isSwapValid(p_over.playlist, p_under.playlist, trackOver, trackUnder)) {
-                            continue; // Pula esta troca, ela quebra a regra.
-                        }
-                        // ----------------------------------------------------------------
-
-                        // Calcula o novo gap se fizermos esta troca
-                        const newOverDuration = p_over.duration - trackOver.duration + trackUnder.duration;
-                        const newUnderDuration = p_under.duration - trackUnder.duration + trackOver.duration;
-                        const newGap = Math.abs(newOverDuration - newUnderDuration);
-
-                        // Se esta troca for melhor (reduz o gap), salve-a
-                        if (newGap < bestSwap.newGap) {
-                            bestSwap = { trackOver, trackUnder, newGap };
-                        }
-                    }
-                }
-
-                // 5. Executar a melhor troca encontrada
-                if (bestSwap.trackOver) {
-                    // Executa a troca (swap)
-
-                    // Remove trackOver de p_over e adiciona trackUnder
-                    p_over.playlist.tracks = p_over.playlist.tracks.filter(t => t.id !== bestSwap.trackOver.id);
-                    p_over.playlist.tracks.push(bestSwap.trackUnder);
-
-                    // Remove trackUnder de p_under e adiciona trackOver
-                    p_under.playlist.tracks = p_under.playlist.tracks.filter(t => t.id !== bestSwap.trackUnder.id);
-                    p_under.playlist.tracks.push(bestSwap.trackOver);
-
-                } else {
-                    // Nenhuma troca válida foi encontrada que melhore o gap.
-                    console.log(`Balanceamento parado na iteração ${iter}: nenhuma troca válida encontrada.`);
-                    return playlists; // Para o loop
-                }
-            }
-
-            console.log(`Balanceamento parado: Atingiu ${MAX_SWAP_ITERATIONS} iterações.`);
-            return playlists; // Retorna o melhor que conseguiu
-        }
-
-        /**
-         * Verifica se uma troca (swap) viola o Rule of Thumb #2
-         */
-        function isSwapValid(p_over, p_under, trackOver, trackUnder) {
-            // (trackOver está saindo de p_over, trackUnder está saindo de p_under)
-
-            // Pergunta 1: trackOver é a última representante do seu álbum em p_over?
-            // E (AND) trackUnder (que está entrando) NÃO é desse mesmo álbum?
-            const isLast_Over = isLastTrackOfAlbumInPlaylist(p_over, trackOver);
-            if (isLast_Over && (trackOver.originAlbumId !== trackUnder.originAlbumId)) {
-                return false; // Inválido. Quebra a regra em p_over.
-            }
-
-            // Pergunta 2: trackUnder é a última representante do seu álbum em p_under?
-            // E (AND) trackOver (que está entrando) NÃO é desse mesmo álbum?
-            const isLast_Under = isLastTrackOfAlbumInPlaylist(p_under, trackUnder);
-            if (isLast_Under && (trackUnder.originAlbumId !== trackOver.originAlbumId)) {
-                return false; // Inválido. Quebra a regra em p_under.
-            }
-
-            // Se passou nas duas checagens, a troca é válida.
-            return true;
-        }
-
-        /**
-         * Helper que verifica se uma faixa é a última do seu álbum em uma playlist
-         */
-        function isLastTrackOfAlbumInPlaylist(playlist, track) {
-            if (!track.originAlbumId) return false; // Faixas de Hits (P1, P2) podem não ter isso
-
-            let count = 0;
-            for (const t of playlist.tracks) {
-                if (t.originAlbumId === track.originAlbumId) {
-                    count++;
-                }
-            }
-            return count === 1;
-        }
-
-
-        // --- Funções de Dados (Firestore) ---
-
-        /**
-         * Salva os dados (ambos álbuns e playlists) no Firestore
-         */
-        async function saveDataToFirestore(albums, playlists) {
-            if (!userId) {
-                console.error("Usuário não autenticado. Não é possível salvar.");
-                return;
-            }
-
-            showSavingState();
-
             try {
-                // Prepara os dados para salvar (converte para JSON puro)
+                const newPlaylists = curateAlbums(currentAlbums, { targetSeconds: 45 * 60 });
+                currentPlaylists = newPlaylists;
+                await saveDataToFirestore(currentAlbums, newPlaylists);
+                if (isAlbumsView) toggleView(); else renderPlaylistsView(currentPlaylists);
+            } catch (err) {
+                console.error('Erro ao rodar curadoria:', err);
+                alert('Erro ao processar curadoria: ' + (err && err.message ? err.message : String(err)));
+            }
+        }
+
+        async function saveDataToFirestore(albums, playlists) {
+            if (!userId) return console.error('Usuário não autenticado.');
+            try {
                 const albumsData = { data: JSON.parse(JSON.stringify(albums)) };
                 const playlistsData = { data: JSON.parse(JSON.stringify(playlists)) };
-
-                // Salva ambos
                 await setDoc(albumsDocRef, albumsData);
                 await setDoc(playlistsDocRef, playlistsData);
-
-                showSavedState();
-
-            } catch (error) {
-                showSaveError(error);
-            }
+            } catch (err) { console.error('Erro ao salvar:', err); }
         }
 
-        /**
-         * Carrega os dados (Álbuns e Playlists) do Firestore
-         */
         function loadData() {
-            if (!userId) {
-                console.error("Usuário não autenticado. Não é possível carregar.");
-                return;
-            }
-
-            // Define os caminhos dos documentos
             albumsDocRef = doc(db, `artifacts/${appId}/users/${userId}/curator/albums`);
             playlistsDocRef = doc(db, `artifacts/${appId}/users/${userId}/curator/playlists`);
 
-            // Listener para ÁLBUNS
-            if (unsubscribeAlbums) unsubscribeAlbums(); // Remove listener antigo
+            if (unsubscribeAlbums) unsubscribeAlbums();
             unsubscribeAlbums = onSnapshot(albumsDocRef, (docSnap) => {
-                loadingSpinner.classList.add('hidden'); // Esconde o spinner
-
-                if (docSnap.exists()) {
-                    currentAlbums = docSnap.data().data || [];
-                    console.log("Álbuns carregados:", currentAlbums.length);
-                    // (Passo 4) Não abrimos o modal se os dados existem
-
-                } else {
-                    // (Passo 4) Modificado: Não existem dados. Força o modal.
-                    console.log("Nenhum álbum encontrado. Abrindo modal de input.");
-                    currentAlbums = [];
-                    openDataModal(); // Força o usuário a carregar dados
-                }
-
-                // Re-renderiza a view de álbuns
+                loadingSpinner.classList.add('hidden');
+                if (docSnap.exists()) currentAlbums = docSnap.data().data || [];
+                else { currentAlbums = []; openDataModal(); }
                 renderAlbumsView(currentAlbums);
+            }, (error) => { console.error('Erro ao carregar álbuns:', error); alert('Erro ao carregar dados dos álbuns.'); });
 
-            }, (error) => {
-                console.error("Erro ao carregar álbuns:", error);
-                alert("Erro ao carregar dados dos álbuns.");
-            });
-
-            // Listener para PLAYLISTS
-            if (unsubscribePlaylists) unsubscribePlaylists(); // Remove listener antigo
+            if (unsubscribePlaylists) unsubscribePlaylists();
             unsubscribePlaylists = onSnapshot(playlistsDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    currentPlaylists = docSnap.data().data || [];
-                    console.log("Playlists carregadas:", currentPlaylists.length);
-                } else {
-                    console.log("Nenhum documento de playlists encontrado.");
-                    currentPlaylists = [];
-                }
-
-                // Re-renderiza a view de playlists (se ela estiver ativa)
-                if (!isAlbumsView) {
-                    renderPlaylistsView(currentPlaylists);
-                }
-
-            }, (error) => {
-                console.error("Erro ao carregar playlists:", error);
-                alert("Erro ao carregar dados das playlists.");
-            });
+                if (docSnap.exists()) currentPlaylists = docSnap.data().data || [];
+                else currentPlaylists = [];
+                if (!isAlbumsView) renderPlaylistsView(currentPlaylists);
+            }, (error) => { console.error('Erro ao carregar playlists:', error); alert('Erro ao carregar dados das playlists.'); });
         }
 
-        // --- Inicialização da Aplicação ---
-
-        /**
-         * Ponto de entrada principal
-         */
         async function initializeAppContainer() {
-            // Habilita logs do Firestore
             setLogLevel('Debug');
+            try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app); }
+            catch (error) { console.error('Erro ao inicializar Firebase:', error); mainContent.innerHTML = `<p class="text-red-400 text-center">Erro crítico ao conectar com o Firebase.</p>`; loadingSpinner.classList.add('hidden'); return; }
 
-            // Inicializa Firebase
-            try {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-            } catch (error) {
-                console.error("Erro ao inicializar Firebase:", error);
-                mainContent.innerHTML = `<p class="text-red-400 text-center">Erro crítico ao conectar com o Firebase. Verifique a configuração.</p>`;
-                loadingSpinner.classList.add('hidden');
-                return;
-            }
-
-            // Busca os elementos da UI (após o DOM estar pronto)
             mainContent = document.getElementById('main-content');
             loadingSpinner = document.getElementById('loading-spinner');
             albumsView = document.getElementById('albums-view');
@@ -1078,7 +618,6 @@
             albumsSummary = document.getElementById('albums-summary');
             playlistsSummary = document.getElementById('playlists-summary');
 
-            // Busca Elementos do Modal (Passos 1-3)
             loadDataBtn = document.getElementById('loadDataBtn');
             dataModal = document.getElementById('dataModal');
             closeModalBtn = document.getElementById('closeModalBtn');
@@ -1087,84 +626,43 @@
             jsonInput = document.getElementById('jsonInput');
             jsonError = document.getElementById('jsonError');
 
-            // Adiciona Listeners de Eventos
             toggleViewBtn.addEventListener('click', toggleView);
             generateBtn.addEventListener('click', runHybridCuration);
             saveBtn.addEventListener('click', () => saveDataToFirestore(currentAlbums, currentPlaylists));
-
-            // Listeners do Modal (Passos 2-3)
             loadDataBtn.addEventListener('click', openDataModal);
             closeModalBtn.addEventListener('click', closeDataModal);
             cancelModalBtn.addEventListener('click', closeDataModal);
             processJsonBtn.addEventListener('click', processAndSaveJSON);
 
-            // Autentica o usuário (Anônimo ou com Token)
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
+                else await signInAnonymously(auth);
             } catch (error) {
-                console.error("Erro na autenticação:", error);
+                console.error('Erro na autenticação:', error);
                 loadingSpinner.classList.add('hidden');
                 mainContent.innerHTML = `<p class="text-red-400 text-center">Erro de autenticação. O app não pode carregar.</p>`;
                 return;
             }
 
-            // Listener de mudança de autenticação
             onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    console.log("Usuário autenticado:", user.uid);
-                    userId = user.uid;
-
-                    // Mostra a view de álbuns (default)
-                    albumsView.classList.remove('hidden');
-
-                    // Carrega os dados do Firestore
-                    loadData();
-
-                } else {
-                    console.log("Usuário deslogado.");
-                    userId = null;
-                    if (unsubscribeAlbums) unsubscribeAlbums();
-                    if (unsubscribePlaylists) unsubscribePlaylists();
-                }
+                if (user) { userId = user.uid; albumsView.classList.remove('hidden'); loadData(); }
+                else { userId = null; if (unsubscribeAlbums) unsubscribeAlbums(); if (unsubscribePlaylists) unsubscribePlaylists(); }
             });
         }
 
-        /**
-         * Inicializador Robusto
-         * Espera ativamente pelo SortableJS e pelo DOM.
-         */
-        function robustInit() {
-            let attempts = 0;
-            const maxAttempts = 100; // 10 segundos
+        function openDataModal() { if (dataModal) dataModal.classList.remove('hidden'); }
+        function closeDataModal() { if (dataModal) dataModal.classList.add('hidden'); }
 
+        function robustInit() {
+            let attempts = 0; const maxAttempts = 100;
             const interval = setInterval(() => {
                 attempts++;
-
-                // Tenta inicializar
-                if (typeof window.Sortable !== 'undefined') {
-                    clearInterval(interval);
-                    console.log("Sortable.js carregado. Inicializando app.");
-                    initializeAppContainer();
-                }
-                // Falha
-                else if (attempts > maxAttempts) {
-                    clearInterval(interval);
-                    console.error("ERRO CRÍTICO: Sortable.js falhou ao carregar após 10 segundos.");
-                    loadingSpinner.classList.add('hidden');
-                    mainContent.innerHTML = `<p class="text-red-400 text-center">Erro crítico: A biblioteca de Drag-and-Drop (Sortable.js) falhou ao carregar. Tente recarregar a página.</p>`;
-                }
-            }, 100); // Verifica a cada 100ms
+                if (typeof window.Sortable !== 'undefined') { clearInterval(interval); initializeAppContainer(); }
+                else if (attempts > maxAttempts) { clearInterval(interval); loadingSpinner && loadingSpinner.classList.add('hidden'); mainContent && (mainContent.innerHTML = `<p class="text-red-400 text-center">Erro crítico: Sortable.js falhou ao carregar.</p>`); }
+            }, 100);
         }
 
-        // --- Ponto de Entrada ---
-        // Espera o DOM estar pronto E o SortableJS estar carregado
-        document.addEventListener('DOMContentLoaded', () => {
-            robustInit();
-        });
+        document.addEventListener('DOMContentLoaded', () => { robustInit(); });
 
     </script>
 
