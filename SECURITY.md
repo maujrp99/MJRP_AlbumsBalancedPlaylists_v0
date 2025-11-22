@@ -28,3 +28,22 @@ Client changes
 
 - The frontend `public/js/app.js` now calls `/api/generate` on the proxy rather than the AI provider directly.
 - Keep API keys only on the server.
+
+Additional notes:
+
+- The server now optionally validates album objects returned by the AI provider using `ajv` (if `ajv` is installed in `server/`). Validation failures are returned with HTTP `422` and a `validationErrors` array in the response. This helps detect malformed provider responses early.
+- If you see repeated `422` responses during testing, check the proxy logs (server console or `/tmp/proxy.log`) for `Album validation failed` messages and inspect the raw provider response.
+
+Running the proxy with AJV enabled:
+
+```bash
+cd server
+npm install ajv
+node index.js
+```
+
+Useful endpoints:
+
+- `GET /_health` — quick health check, returns `{ ok: true }` when the proxy is running.
+- `GET /api/list-models` — lists models (if using Google Generative Language endpoint and API key configured).
+- `POST /api/generate` — submit `{ albumQuery }` and receive normalized `{ data: <album> }` when successful.

@@ -14,8 +14,53 @@ if (!AI_API_KEY) {
 app.use(cors({ origin: 'http://localhost:8000' }));
 app.use(express.json());
 
+// attach a tiny middleware to timestamp requests for latency metrics
+app.use((req, res, next) => {
+  req._startTime = Date.now();
+  next();
+});
+
 // Health
 app.get('/_health', (req, res) => res.send({ ok: true }));
+
+// JSON Schema validation (AJV) will be used to validate album objects before returning
+let validateAlbum = null;
+try {
+  const Ajv = require('ajv');
+  const ajv = new Ajv({ allErrors: true, coerceTypes: true });
+
+  const albumSchema = {
+    type: 'object',
+    required: ['title', 'artist', 'tracks'],
+    properties: {
+      id: { type: 'string' },
+      title: { type: 'string' },
+      artist: { type: 'string' },
+      year: { anyOf: [{ type: 'integer' }, { type: 'string' }] },
+      cover: { type: 'string' },
+      tracks: {
+        type: 'array',
+        items: {
+          type: 'object',
+          required: ['id', 'rank', 'title'],
+          properties: {
+            id: { type: 'string' },
+            rank: { type: 'integer' },
+            title: { type: 'string' },
+            duration: { type: 'integer' }
+          },
+          additionalProperties: true
+        }
+      }
+    },
+    additionalProperties: true
+  };
+
+  validateAlbum = ajv.compile(albumSchema);
+  console.log('AJV album schema loaded');
+} catch (e) {
+  console.warn('AJV not available — skipping server-side schema validation. Install "ajv" to enable.');
+}
 
 // Optional helper: list available models from Google Generative Language
 app.get('/api/list-models', async (req, res) => {
@@ -81,7 +126,7 @@ app.post('/api/generate', async (req, res) => {
     const response = await axios.post(requestUrl, payload, axiosConfig);
 
     // Metrics: latency and token usage
-    const latencyMs = Date.now() - req._startTime;
+    const latencyMs = Date.now() - (req._startTime || Date.now());
     const usedModel = (process.env.AI_MODEL || 'models/gemini-2.5-flash');
     console.log(`AI proxy: model=${usedModel} status=${response.status} latencyMs=${latencyMs}`);
     if (response.data?.usageMetadata) {
@@ -107,6 +152,13 @@ app.post('/api/generate', async (req, res) => {
         try {
           const parsed = JSON.parse(cleaned);
           if (parsed && typeof parsed === 'object' && Array.isArray(parsed.tracks)) {
+            if (validateAlbum) {
+              const ok = validateAlbum(parsed);
+              if (!ok) {
+                console.warn('Album validation failed for parsed JSON:', validateAlbum.errors);
+                return res.status(422).json({ error: 'Validation failed', validationErrors: validateAlbum.errors });
+              }
+            }
             return res.status(200).json({ data: parsed });
           }
         } catch (e) {
@@ -116,6 +168,13 @@ app.post('/api/generate', async (req, res) => {
             try {
               const parsed2 = JSON.parse(jsonMatch[0]);
               if (parsed2 && typeof parsed2 === 'object' && Array.isArray(parsed2.tracks)) {
+                if (validateAlbum) {
+                  const ok2 = validateAlbum(parsed2);
+                  if (!ok2) {
+                    console.warn('Album validation failed for extracted JSON:', validateAlbum.errors);
+                    return res.status(422).json({ error: 'Validation failed', validationErrors: validateAlbum.errors });
+                  }
+                }
                 return res.status(200).json({ data: parsed2 });
               }
             } catch (e2) {
@@ -129,10 +188,24 @@ app.post('/api/generate', async (req, res) => {
 
       // Case B: provider returned parsed object directly in response.data or response.data.data
       if (response.data?.data && typeof response.data.data === 'object') {
+        if (validateAlbum) {
+          const ok3 = validateAlbum(response.data.data);
+          if (!ok3) {
+            console.warn('Album validation failed for response.data.data:', validateAlbum.errors);
+            return res.status(422).json({ error: 'Validation failed', validationErrors: validateAlbum.errors });
+          }
+        }
         return res.status(200).json({ data: response.data.data });
       }
 
       if (response.data && typeof response.data === 'object' && response.data.tracks) {
+        if (validateAlbum) {
+          const ok4 = validateAlbum(response.data);
+          if (!ok4) {
+            console.warn('Album validation failed for response.data:', validateAlbum.errors);
+            return res.status(422).json({ error: 'Validation failed', validationErrors: validateAlbum.errors });
+          }
+        }
         return res.status(200).json({ data: response.data });
       }
 
