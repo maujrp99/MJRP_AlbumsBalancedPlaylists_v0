@@ -54,7 +54,59 @@ function run () {
     process.exit(3)
   }
 
-  console.log('All tests passed')
+  // --- curation tests (async import of ES module) ---
+  try {
+    (async () => {
+      const mod = await import('../../public/js/curation.js');
+      const { curateAlbums } = mod;
+
+      // Sample albums: one album with ranks 1..5, durations small so fill is required
+      const albums = [
+        {
+          id: 'alb1',
+          title: 'Test Album',
+          artist: 'Tester',
+          tracks: [
+            { id: 't1', rank: 1, title: 'Hit1', duration: 60 },
+            { id: 't2', rank: 2, title: 'Hit2', duration: 60 },
+            { id: 't3', rank: 3, title: 'Mid', duration: 60 },
+            { id: 't4', rank: 10, title: 'Worst1', duration: 60 },
+            { id: 't5', rank: 9, title: 'Worst2', duration: 60 }
+          ]
+        }
+      ];
+
+      const playlists = curateAlbums(albums, { targetSeconds: 3 * 60 }); // small target to force fills
+
+      // P1 must include rank===1
+      const p1 = playlists.find(p => p.id === 'p1');
+      assert.ok(p1 && p1.tracks.some(t => t.rank === 1), 'P1 must include rank 1 track');
+
+      // P2 must include rank===2
+      const p2 = playlists.find(p => p.id === 'p2');
+      assert.ok(p2 && p2.tracks.some(t => t.rank === 2), 'P2 must include rank 2 track');
+
+      // Because target is 3min and each track is 1min, P1 and P2 should be filled.
+      // Fill strategy is worst-ranked-first, so the first appended to P1 or P2 should be rank 10 or 9.
+      const fillTracks = [...(p1.tracks || []).slice(1), ...(p2.tracks || []).slice(1)];
+      // At least one fill track should exist
+      assert.ok(fillTracks.length > 0, 'Expected fill tracks');
+      // The filled tracks should include the worst ranks (10,9)
+      const ranks = fillTracks.map(f => f.rank).filter(r => typeof r === 'number');
+      assert.ok(ranks.includes(10) || ranks.includes(9), 'Fill should prefer worst-ranked tracks');
+
+      console.log('curation tests passed');
+      console.log('All tests passed');
+    })().catch(err => {
+      console.error('curation tests failed');
+      console.error(err);
+      process.exit(4);
+    });
+  } catch (err) {
+    console.error('curation tests failed (sync)');
+    console.error(err);
+    process.exit(4);
+  }
 }
 
 run()
