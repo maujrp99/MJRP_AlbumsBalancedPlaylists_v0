@@ -27,9 +27,9 @@ let unsubscribePlaylists = null
 
 // UI elements
 let mainContent, loadingSpinner, albumsView, playlistsView, albumsGrid, playlistsGrid
-let toggleViewBtn, generateBtn, saveBtn
+let toggleViewBtn, generateBtn, generateQuickBtn, saveBtn
 let albumsSummary, playlistsSummary
-let loadDataBtn, dataModal, closeModalBtn, cancelModalBtn, processJsonBtn, jsonInput, jsonError
+let loadDataBtn, dataModal, closeModalBtn, cancelModalBtn, processJsonBtn, jsonInput, jsonError, emptyStateCta, emptyStateBtn
 
 function formatDuration (seconds) {
   if (isNaN(seconds) || seconds < 0) return '00:00'
@@ -69,20 +69,20 @@ async function processAndSaveJSON () {
       }
     }
 
-        if (newAlbums.length === 0) {
-          // Não fechamos o modal — mostramos o erro para o usuário e mantemos o input disponível
-          const msg = `Nenhum álbum foi encontrado. Falhas:\n${errors.join('\n')}`
-          console.warn('processAndSaveJSON:', msg)
-          jsonError.classList.remove('text-yellow-400')
-          jsonError.classList.add('text-red-400')
-          jsonError.textContent = msg
-          return
-        }
+    if (newAlbums.length === 0) {
+      // Não fechamos o modal — mostramos o erro para o usuário e mantemos o input disponível
+      const msg = `Nenhum álbum foi encontrado. Falhas:\n${errors.join('\n')}`
+      console.warn('processAndSaveJSON:', msg)
+      jsonError.classList.remove('text-yellow-400')
+      jsonError.classList.add('text-red-400')
+      jsonError.textContent = msg
+      return
+    }
 
-        await saveDataToFirestore(newAlbums, currentPlaylists)
-        closeDataModal()
+    await saveDataToFirestore(newAlbums, currentPlaylists)
+    closeDataModal()
 
-        if (errors.length > 0) alert(`Importação concluída com ${newAlbums.length} álbuns.\n\nFalhas:\n${errors.join('\n')}`)
+    if (errors.length > 0) alert(`Importação concluída com ${newAlbums.length} álbuns.\n\nFalhas:\n${errors.join('\n')}`)
   } catch (error) {
     console.error('Erro no processo:', error)
     jsonError.classList.remove('text-yellow-400')
@@ -96,9 +96,10 @@ async function processAndSaveJSON () {
 }
 
 function renderAlbumsView (albums) {
+  updateEmptyStateVisibility(albums)
   albumsGrid.innerHTML = ''
   if (!albums || albums.length === 0) {
-    albumsGrid.innerHTML = '<p class="text-spotify-lightgray col-span-full text-center">Nenhum álbum carregado. Clique em \'Carregar Dados\' para começar.</p>'
+    renderAlbumSkeletons(3)
     albumsSummary.innerHTML = '<p class="text-center text-spotify-lightgray">Nenhum dado de origem.</p>'
     return
   }
@@ -114,13 +115,13 @@ function renderAlbumsView (albums) {
     totalDuration += albumDuration
 
     const albumCard = document.createElement('div')
-    albumCard.className = 'bg-spotify-lightdark p-4 rounded-lg shadow-lg flex flex-col transition-shadow hover:shadow-xl'
+    albumCard.className = 'album-card card-base'
     albumCard.innerHTML = `
             <div class="flex items-center mb-4">
                 <img src="${album.cover || 'https://placehold.co/100x100/333/888?text=Capa'}" alt="Capa do ${album.title}" class="w-20 h-20 rounded-md mr-4 object-cover" onerror="this.src='https://placehold.co/100x100/333/888?text=Capa'">
                 <div>
-                    <h3 class="text-xl font-bold text-white">${album.title || 'Título Desconhecido'}</h3>
-                    <p class="text-sm text-spotify-lightgray">${album.artist || 'Artista Desconhecido'} (${album.year || '----'})</p>
+            <h3 class="text-xl font-bold text-white">${album.title || 'Título Desconhecido'}</h3>
+            <p class="text-sm text-muted">${album.artist || 'Artista Desconhecido'} • ${album.year || '----'}</p>
                 </div>
             </div>
             <div class="border-t border-spotify-gray pt-2">
@@ -147,22 +148,65 @@ function renderAlbumsView (albums) {
   })
 
   albumsSummary.innerHTML = `
-        <h3 class="text-lg font-semibold text-white mb-2">Resumo dos Álbuns (Origem)</h3>
-        <div class="grid grid-cols-3 gap-4 text-center">
-            <div>
-                <p class="text-sm text-spotify-lightgray">Total de Álbuns:</p>
-                <p class="text-2xl font-bold text-white">${albums.length}</p>
-            </div>
-            <div>
-                <p class="text-sm text-spotify-lightgray">Total de Faixas:</p>
-                <p class="text-2xl font-bold text-white">${totalTracks}</p>
-            </div>
-            <div>
-                <p class="text-sm text-spotify-lightgray">Duração Total:</p>
-                <p class="text-2xl font-bold text-white">${formatDuration(totalDuration)}</p>
-            </div>
+    <div class="card-content">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-white">Resumo</h3>
+        <span class="text-sm text-accent">${albums.length} álbuns</span>
+      </div>
+      <div class="grid grid-cols-3 gap-3 text-center">
+        <div>
+          <p class="text-xs uppercase tracking-wider text-muted">Faixas</p>
+          <p class="text-2xl font-bold text-white">${totalTracks}</p>
         </div>
-    `
+        <div>
+          <p class="text-xs uppercase tracking-wider text-muted">Minutos</p>
+          <p class="text-2xl font-bold text-white">${Math.floor(totalDuration / 60)}</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wider text-muted">Dur.</p>
+          <p class="text-2xl font-bold text-white">${formatDuration(totalDuration)}</p>
+        </div>
+      </div>
+    </div>
+  `
+}
+
+function setGenerateButtonsState (enabled) {
+  ;[generateBtn, generateQuickBtn].forEach(btn => {
+    if (!btn) return
+    btn.disabled = !enabled
+    btn.setAttribute('aria-disabled', String(!enabled))
+  })
+}
+
+function updateEmptyStateVisibility (albums) {
+  const hasAlbums = Array.isArray(albums) && albums.length > 0
+  if (emptyStateCta) emptyStateCta.classList.toggle('hidden', hasAlbums)
+  setGenerateButtonsState(hasAlbums)
+}
+
+function renderAlbumSkeletons (count = 3) {
+  albumsGrid.innerHTML = ''
+  const fragment = document.createDocumentFragment()
+  for (let i = 0; i < count; i++) {
+    const skeletonCard = document.createElement('div')
+    skeletonCard.className = 'skeleton-card'
+    fragment.appendChild(skeletonCard)
+  }
+  albumsGrid.appendChild(fragment)
+}
+
+function refreshToggleViewButtonState () {
+  if (!toggleViewBtn) return
+  if (isAlbumsView) {
+    toggleViewBtn.textContent = 'Ver Playlists'
+    toggleViewBtn.setAttribute('aria-label', 'Mostrar playlists geradas')
+    toggleViewBtn.setAttribute('aria-pressed', 'false')
+  } else {
+    toggleViewBtn.textContent = 'Ver Álbuns'
+    toggleViewBtn.setAttribute('aria-label', 'Voltar para os álbuns de origem')
+    toggleViewBtn.setAttribute('aria-pressed', 'true')
+  }
 }
 
 /**
@@ -206,7 +250,7 @@ function renderPlaylistsView (playlists) {
     totalDuration += playlistDuration
 
     const playlistCard = document.createElement('div')
-    playlistCard.className = 'bg-spotify-lightdark p-4 rounded-lg shadow-lg flex flex-col'
+    playlistCard.className = 'playlist-card card-base'
     playlistCard.innerHTML = `
             <div class="mb-4">
                 <h3 class="text-xl font-bold text-white">${playlist.title || 'Playlist Sem Título'}</h3>
@@ -289,13 +333,12 @@ function toggleView () {
   if (isAlbumsView) {
     albumsView.classList.remove('hidden')
     playlistsView.classList.add('hidden')
-    toggleViewBtn.textContent = 'Ver Playlists'
   } else {
     albumsView.classList.add('hidden')
     playlistsView.classList.remove('hidden')
-    toggleViewBtn.textContent = 'Ver Álbuns'
     renderPlaylistsView(currentPlaylists)
   }
+  refreshToggleViewButtonState()
 }
 
 function initSortable () {
@@ -421,18 +464,20 @@ async function initializeAppContainer () {
   playlistsGrid = document.getElementById('playlists-grid')
   toggleViewBtn = document.getElementById('toggleViewBtn')
   generateBtn = document.getElementById('generateBtn')
+  generateQuickBtn = document.getElementById('generateQuickBtn')
   saveBtn = document.getElementById('saveBtn')
   albumsSummary = document.getElementById('albums-summary')
   playlistsSummary = document.getElementById('playlists-summary')
 
   loadDataBtn = document.getElementById('loadDataBtn')
-  const generateQuickBtn = document.getElementById('generateQuickBtn')
   dataModal = document.getElementById('dataModal')
   closeModalBtn = document.getElementById('closeModalBtn')
   cancelModalBtn = document.getElementById('cancelModalBtn')
   processJsonBtn = document.getElementById('processJsonBtn')
   jsonInput = document.getElementById('jsonInput')
   jsonError = document.getElementById('jsonError')
+  emptyStateCta = document.getElementById('emptyStateCta')
+  emptyStateBtn = document.getElementById('emptyStateBtn')
 
   toggleViewBtn.addEventListener('click', toggleView)
   if (generateBtn) generateBtn.addEventListener('click', runHybridCuration)
@@ -442,6 +487,10 @@ async function initializeAppContainer () {
   closeModalBtn.addEventListener('click', closeDataModal)
   cancelModalBtn.addEventListener('click', closeDataModal)
   processJsonBtn.addEventListener('click', processAndSaveJSON)
+  if (emptyStateBtn) emptyStateBtn.addEventListener('click', openDataModal)
+
+  setGenerateButtonsState(false)
+  refreshToggleViewButtonState()
 
   try {
     if (typeof window.__initial_auth_token !== 'undefined' && window.__initial_auth_token) await signInWithCustomToken(auth, window.__initial_auth_token)
@@ -458,8 +507,17 @@ async function initializeAppContainer () {
   })
 }
 
-function openDataModal () { if (dataModal) dataModal.classList.remove('hidden') }
-function closeDataModal () { if (dataModal) dataModal.classList.add('hidden') }
+function openDataModal () {
+  if (!dataModal) return
+  dataModal.classList.remove('hidden')
+  dataModal.classList.add('visible')
+}
+
+function closeDataModal () {
+  if (!dataModal) return
+  dataModal.classList.add('hidden')
+  dataModal.classList.remove('visible')
+}
 
 function robustInit () {
   let attempts = 0; const maxAttempts = 100
