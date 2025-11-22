@@ -11,11 +11,18 @@ export async function fetchAlbumMetadata (albumQuery) {
     ? window.__api_base.replace(/\/$/, '') + '/api/generate'
     : `${protocol}//${host}:3000/api/generate`
 
-  const resp = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ albumQuery })
-  })
+  console.debug('fetchAlbumMetadata -> proxy url:', url, 'query:', albumQuery)
+  let resp
+  try {
+    resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ albumQuery })
+    })
+  } catch (err) {
+    // Network-level failure (DNS, refused connection, CORS preflight failure may surface here)
+    throw new Error(`Network error contacting proxy at ${url}: ${err && err.message ? err.message : String(err)}`)
+  }
 
   if (!resp.ok) {
     const text = await resp.text().catch(() => '')
