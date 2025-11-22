@@ -157,27 +157,27 @@ function renderAlbumsView(albums) {
 }
 
 function renderTrackItem(track) {
-    const originAlbum = currentAlbums.find(a => a.tracks && a.tracks.some(t => t.id === track.id));
-    const albumTitle = originAlbum ? originAlbum.title : 'N/A';
-    return `
-        <li class="track-item flex justify-between items-center p-2 rounded-md hover:bg-spotify-gray" data-track-id="${track.id}">
-            <div class="flex-1 truncate mr-2">
-                <p class="text-white truncate" title="${track.title}">${track.title || 'Faixa Desconhecida'}</p>
-                <p class="text-xs text-spotify-lightgray">Rank: ${track.rank || '-'}</p>
-            </div>
-            <span class="text-spotify-lightgray text-sm w-16 truncate text-center" title="${albumTitle}">${albumTitle}</span>
-            <span class="text-spotify-lightgray text-sm w-12 text-right">${formatDuration(track.duration)}</span>
-        </li>
-    `;
-}
-
-function renderPlaylistsView(playlists) {
-    playlistsGrid.innerHTML = '';
-    sortableInstances.forEach(s => s.destroy());
-    sortableInstances = [];
-
-    if (!playlists || playlists.length === 0) {
-        playlistsGrid.innerHTML = `<p class="text-spotify-lightgray col-span-full text-center">Nenhuma playlist gerada. Volte e clique em \"Gerar Playlists\".</p>`;
+            const playlistCard = document.createElement('div');
+            playlistCard.className = 'bg-spotify-lightdark p-4 rounded-lg shadow-lg flex flex-col';
+            playlistCard.innerHTML = `
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold text-white">${playlist.title || 'Playlist Sem Título'}</h3>
+                    <p class="text-sm text-spotify-lightgray">${playlist.subtitle || ''}</p>
+                </div>
+                <div class="border-t border-spotify-gray pt-2 flex-1">
+                    <div class="flex justify-between text-sm text-spotify-lightgray mb-2 px-2">
+                        <span class="flex-1 font-semibold">Faixa (Rank)</span>
+                        <span class="font-semibold">Álbum</span>
+                        <span class="font-semibold">Duração</span>
+                    </div>
+                    <ul id="playlist-${playlist.id}" data-playlist-id="${playlist.id}" class="space-y-1 h-full min-h-[150px]">
+                        ${playlistTracks.map(track => renderTrackItem(track)).join('')}
+                    </ul>
+                </div>
+                <div class="border-t border-spotify-gray mt-2 pt-2 text-right">
+                    <span class="text-sm font-semibold text-spotify-lightgray">Total: ${playlistTracks.length} faixas, ${formatDuration(playlistDuration)}</span>
+                </div>
+            `;
         playlistsSummary.innerHTML = `<p class="text-center text-spotify-lightgray">Nenhuma playlist para resumir.</p>`;
         return;
     }
