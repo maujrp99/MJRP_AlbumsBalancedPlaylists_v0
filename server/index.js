@@ -11,7 +11,11 @@ if (!AI_API_KEY) {
   console.warn('Warning: AI_API_KEY not set. Proxy will return 503 for generate requests.')
 }
 
-app.use(cors({ origin: 'http://localhost:8000' }))
+// Allow CORS for the dev origin or be permissive in non-production for local testing.
+const corsOptions = (process.env.NODE_ENV === 'production')
+  ? { origin: 'http://localhost:8000' }
+  : { origin: true } // allow any origin in development for convenience
+app.use(cors(corsOptions))
 app.use(express.json())
 
 // (timestamp middleware already attached above)
