@@ -96,14 +96,34 @@ app.post('/api/generate', async (req, res) => {
       // Case A: Google Gemini shape: candidates[0].content.parts[0].text (stringified JSON)
       const candidateText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (candidateText && typeof candidateText === 'string') {
+        // Sometimes providers wrap JSON in markdown fences (```json ... ```)
+        // or include extra commentary. Try several strategies to recover a JSON blob.
+        let cleaned = candidateText;
+        // Remove common triple-backtick fences and language hints
+        cleaned = cleaned.replace(/```\w*\n?/g, '');
+        cleaned = cleaned.replace(/```$/g, '');
+
+        // Try direct parse first
         try {
-          const parsed = JSON.parse(candidateText);
-          // Basic validation: must be object with tracks array
+          const parsed = JSON.parse(cleaned);
           if (parsed && typeof parsed === 'object' && Array.isArray(parsed.tracks)) {
             return res.status(200).json({ data: parsed });
           }
         } catch (e) {
-          console.warn('Could not parse candidate text as JSON, forwarding raw response');
+          // Not directly valid JSON — attempt to extract first JSON object substring
+          const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            try {
+              const parsed2 = JSON.parse(jsonMatch[0]);
+              if (parsed2 && typeof parsed2 === 'object' && Array.isArray(parsed2.tracks)) {
+                return res.status(200).json({ data: parsed2 });
+              }
+            } catch (e2) {
+              console.warn('Could not parse extracted JSON from candidate text:', e2.message);
+            }
+          } else {
+            console.warn('No JSON object found inside candidate text.');
+          }
         }
       }
 
