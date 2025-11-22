@@ -126,6 +126,17 @@ Open Questions
 - Will we accept stricter validation (e.g., require `duration` on tracks) or keep a permissive schema to accommodate provider variability?
 - Preferred CI provider (GitHub Actions assumed) and whether to run tests on every push.
 
+Ranking Source & Traceability (secondary priority)
+-------------------------------------------------
+We plan to add a ranking-source feature that records the provenance of ranking decisions used to place tracks and albums into playlists (examples: specific websites, magazines, critics, blogs, or internal heuristics). This is considered a secondary priority feature and will be implemented after algorithm correctness and testing are stable.
+
+Design notes (high level):
+- The system will annotate placed tracks with a `rankingInfo` array that includes labelled reasons (e.g., `P1 Hit`, `DeepCut - serpentine`, `Swap: duration-balance`) and optional numeric scores and timestamps.
+- A per-album `rankingSummary` object will be stored alongside playlists to explain which tracks from the album were used and why.
+- The full source list (external sources such as sites/magazines) will be recorded when available and surfaced in UI on demand; this will require a secure handling policy for any third-party attributions.
+
+This behavior is documented here and will be added to implementation tasks in the `feature/ranking-source` branch.
+
 Appendix: Mapping to Spec Kit SDD items
 --------------------------------------
 This document provides the core Spec Kit sections: purpose, scope, architecture, data contracts, security, testing and operational runbook. We can expand each section with diagrams, sequence diagrams and sample request/response fixtures as a next step.
