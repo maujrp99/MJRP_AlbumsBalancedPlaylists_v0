@@ -96,6 +96,25 @@ Roadmap / Next Steps (short-term)
 4. Integrate `fetchMultipleAlbumMetadata` into the UI import flow and add progress UI.
 5. Add `ajv-formats` for stricter url/date validation and consider requiring `cover` to be a valid URL.
 
+Testing & Style decisions
+-------------------------
+As part of the Priority 1 refactor we introduced the following developer tooling and choices:
+
+- Modularization: server logic was extracted into `server/lib/*` modules to simplify unit testing and maintenance.
+- Schema testing: `server/schema/album.schema.json` is the canonical schema; `server/lib/schema.js` loads that schema and compiles an AJV validator (optional: requires `ajv` installed).
+- Tests: a lightweight node-based test runner `server/test/run-tests.js` is included and wired to `npm test`. This avoids environment constraints encountered when running Jest in this workspace. The file `server/test/*.test.js` contains Jest-style tests (kept for future migration) while the node-runner validates core functionality now.
+- Style: the project uses JavaScript Standard Style (`standard`) for server source files and Prettier for formatting. `server/package.json` contains `lint`, `lint:fix` and `format` scripts. Tests were left using simple node assertions for reliability; they can be migrated to full Jest later.
+
+CI recommendation
+-----------------
+Add a GitHub Actions workflow that runs:
+
+- `npm ci` in `server/`
+- `npm run lint` (Standard) in `server/`
+- `npm test` (node-runner) in `server/`
+
+When Jest is enabled, replace the node-runner step with `npm test` (Jest) and include `jest --reporters=default` in CI logs.
+
 Longer-term
 -----------
 - Add retry logic and rate-limiting in the proxy (to protect API keys and avoid hitting provider rate limits).
