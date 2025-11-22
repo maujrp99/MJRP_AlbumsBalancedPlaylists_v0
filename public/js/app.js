@@ -426,6 +426,7 @@ async function initializeAppContainer () {
   playlistsSummary = document.getElementById('playlists-summary')
 
   loadDataBtn = document.getElementById('loadDataBtn')
+  const generateQuickBtn = document.getElementById('generateQuickBtn')
   dataModal = document.getElementById('dataModal')
   closeModalBtn = document.getElementById('closeModalBtn')
   cancelModalBtn = document.getElementById('cancelModalBtn')
@@ -434,7 +435,8 @@ async function initializeAppContainer () {
   jsonError = document.getElementById('jsonError')
 
   toggleViewBtn.addEventListener('click', toggleView)
-  generateBtn.addEventListener('click', runHybridCuration)
+  if (generateBtn) generateBtn.addEventListener('click', runHybridCuration)
+  if (generateQuickBtn) generateQuickBtn.addEventListener('click', runHybridCuration)
   saveBtn.addEventListener('click', () => saveDataToFirestore(currentAlbums, currentPlaylists))
   loadDataBtn.addEventListener('click', openDataModal)
   closeModalBtn.addEventListener('click', closeDataModal)

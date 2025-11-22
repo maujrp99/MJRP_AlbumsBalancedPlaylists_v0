@@ -58,7 +58,11 @@ export function curateAlbums (albums, opts = {}) {
   function fillPlaylistIfNeeded (playlist) {
     let dur = totalDuration(playlist.tracks)
     while (dur < DURATION_TARGET_S && remaining.length > 0) {
-      const candidate = remaining.shift() // already sorted worst-first
+      // Prefer a candidate from an album not yet present in this playlist
+      const existingAlbumIds = new Set((playlist.tracks || []).map(t => t.originAlbumId).filter(Boolean))
+      let idx = remaining.findIndex(t => !existingAlbumIds.has(t.originAlbumId))
+      if (idx === -1) idx = 0 // fallback to first available
+      const [candidate] = remaining.splice(idx, 1)
       if (!candidate) break
       // annotate as fill
       candidate.rankingInfo = candidate.rankingInfo || []
@@ -81,19 +85,26 @@ export function curateAlbums (albums, opts = {}) {
     playlists.push({ id: `p${P_HITS + i + 1}`, title: `Deep Cuts Vol. ${i + 1}`, subtitle: 'S-Draft Balanceado', tracks: [] })
   }
 
-  // Serpentine distribution on remaining pool (which may be already sorted worst-first, but order here is not critical)
-  let direction = 1
-  let pIndex = 0
-  for (const track of remaining) {
-    playlists[pIndex + P_HITS].tracks.push(track)
-    pIndex += direction
-    if (pIndex >= numDeepCutPlaylists) {
-      direction = -1
-      pIndex = numDeepCutPlaylists - 1
-    } else if (pIndex < 0) {
-      direction = 1
-      pIndex = 0
+  // Distribute remaining pool into deep cut playlists.
+  // To avoid clumping tracks from the same album, group by originAlbumId and round-robin across groups.
+  const albumBuckets = new Map()
+  for (const t of remaining) {
+    const key = t.originAlbumId || `__noalbum__:${t.id}`
+    if (!albumBuckets.has(key)) albumBuckets.set(key, [])
+    albumBuckets.get(key).push(t)
+  }
+
+  // Convert buckets to arrays and prepare iterators
+  const buckets = Array.from(albumBuckets.values())
+  let bucketIndex = 0
+  while (buckets.some(b => b.length > 0)) {
+    const bucket = buckets[bucketIndex]
+    if (bucket && bucket.length > 0) {
+      const track = bucket.shift()
+      // place into next playlist in serpentine order
+      playlists[P_HITS + (bucketIndex % numDeepCutPlaylists)].tracks.push(track)
     }
+    bucketIndex = (bucketIndex + 1) % buckets.length
   }
 
   // Phase: run swap balancing with conservative swap rules
