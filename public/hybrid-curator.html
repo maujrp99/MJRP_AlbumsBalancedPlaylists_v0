@@ -4,118 +4,83 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Curadoria Híbrida</title>
+
+    <!-- Tailwind + Inter for consistent styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
     <style>
-        /* Scrollbar */
-        ::-webkit-scrollbar-thumb {
-            background: #444;
-            border-radius: 10px;
-        }
+        /* Basic app-wide styles (kept minimal) */
+        html,body { height:100%; margin:0; background:#000; color:#E0E0E0; font-family: 'Inter', sans-serif; }
+        .spinner { border: 4px solid rgba(255,255,255,0.2); border-left-color:#1DB954; border-radius:50%; width:40px; height:40px; animation:spin 1s linear infinite }
+        @keyframes spin { to { transform:rotate(360deg) } }
+    </style>
+</head>
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
+<body class="antialiased">
+    <div id="app-container">
+        <header class="p-4 shadow">
+            <div class="container mx-auto max-w-7xl flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-spotify-green" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 19V6l12-3v13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <h1 class="text-xl font-bold">Curadoria Híbrida</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button id="loadDataBtn" class="bg-gray-700 text-white px-4 py-2 rounded-full">Carregar Dados</button>
+                    <button id="toggleViewBtn" class="bg-gray-700 text-white px-4 py-2 rounded-full">Ver Playlists</button>
+                    <button id="saveBtn" class="bg-spotify-green text-black px-4 py-2 rounded-full"><span id="save-text">Salvar</span></button>
+                </div>
+            </div>
+        </header>
 
-        /* Spinner de Loading */
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-left-color: #1DB954;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
+        <main id="main-content" class="container mx-auto max-w-7xl p-4">
+            <div id="loading-spinner" class="flex flex-col items-center justify-center p-16">
+                <div class="spinner"></div>
+                <p class="mt-4 text-spotify-lightgray">Carregando dados do Firestore...</p>
+            </div>
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    <script src="./config.js"></script>
+            <section id="albums-view" class="hidden">
+                <h2 class="text-3xl font-bold text-white mb-6">Álbuns (Origem)</h2>
+                <div id="albums-summary" class="bg-spotify-gray p-4 rounded-lg mb-6 shadow-md"></div>
+                <div class="text-center my-6">
+                    <button id="generateBtn" class="bg-spotify-green text-black px-8 py-3 rounded-full font-bold">Gerar Playlists (Algoritmo Híbrido)</button>
+                </div>
+                <div id="albums-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
+
+            <section id="playlists-view" class="hidden">
+                <h2 class="text-3xl font-bold text-white mb-6">Playlists Geradas</h2>
+                <div id="playlists-summary" class="bg-spotify-gray p-4 rounded-lg mb-6 shadow-md"></div>
+                <div id="playlists-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
+        </main>
+    </div>
+
+    <div id="dataModal" class="modal hidden">
+        <div class="modal-content rounded-lg shadow-xl">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-white">Buscar Álbuns (Texto)</h3>
+                <button id="closeModalBtn" class="text-gray-400 hover:text-white">✕</button>
+            </div>
+            <div class="modal-body p-4">
+                <textarea id="jsonInput" class="w-full h-64 bg-gray-900 border border-gray-700 rounded-md p-3 text-sm font-mono text-white" placeholder="Artista - Álbum\nArtista - Álbum..."></textarea>
+                <p id="jsonError" class="text-red-400 text-sm mt-2"></p>
+            </div>
+            <div class="p-4 border-t border-gray-700 bg-gray-800 rounded-b-lg flex justify-end space-x-3">
+                <button id="cancelModalBtn" class="bg-gray-600 text-white px-4 py-2 rounded-full">Cancelar</button>
+                <button id="processJsonBtn" class="bg-spotify-green text-black px-4 py-2 rounded-full">Buscar Metadados e Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load SortableJS first (defer) -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js" defer></script>
+
+    <!-- Load firebase-config (must define window.__firebase_config) -->
+    <script src="./js/firebase-config.js"></script>
+
+    <!-- App entry (ES module) -->
     <script type="module" src="./js/app.js"></script>
 
-            if (unsubscribeAlbums) unsubscribeAlbums();
-            unsubscribeAlbums = onSnapshot(albumsDocRef, (docSnap) => {
-                loadingSpinner.classList.add('hidden');
-                if (docSnap.exists()) currentAlbums = docSnap.data().data || [];
-                else { currentAlbums = []; openDataModal(); }
-                renderAlbumsView(currentAlbums);
-            }, (error) => { console.error('Erro ao carregar álbuns:', error); alert('Erro ao carregar dados dos álbuns.'); });
-
-            if (unsubscribePlaylists) unsubscribePlaylists();
-            unsubscribePlaylists = onSnapshot(playlistsDocRef, (docSnap) => {
-                if (docSnap.exists()) currentPlaylists = docSnap.data().data || [];
-                else currentPlaylists = [];
-                if (!isAlbumsView) renderPlaylistsView(currentPlaylists);
-            }, (error) => { console.error('Erro ao carregar playlists:', error); alert('Erro ao carregar dados das playlists.'); });
-        }
-
-        async function initializeAppContainer() {
-            setLogLevel('Debug');
-            try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app); }
-            catch (error) { console.error('Erro ao inicializar Firebase:', error); mainContent.innerHTML = `<p class="text-red-400 text-center">Erro crítico ao conectar com o Firebase.</p>`; loadingSpinner.classList.add('hidden'); return; }
-
-            mainContent = document.getElementById('main-content');
-            loadingSpinner = document.getElementById('loading-spinner');
-            albumsView = document.getElementById('albums-view');
-            playlistsView = document.getElementById('playlists-view');
-            albumsGrid = document.getElementById('albums-grid');
-            playlistsGrid = document.getElementById('playlists-grid');
-            toggleViewBtn = document.getElementById('toggleViewBtn');
-            generateBtn = document.getElementById('generateBtn');
-            saveBtn = document.getElementById('saveBtn');
-            saveText = document.getElementById('save-text');
-            saveIcon = document.getElementById('save-icon');
-            albumsSummary = document.getElementById('albums-summary');
-            playlistsSummary = document.getElementById('playlists-summary');
-
-            loadDataBtn = document.getElementById('loadDataBtn');
-            dataModal = document.getElementById('dataModal');
-            closeModalBtn = document.getElementById('closeModalBtn');
-            cancelModalBtn = document.getElementById('cancelModalBtn');
-            processJsonBtn = document.getElementById('processJsonBtn');
-            jsonInput = document.getElementById('jsonInput');
-            jsonError = document.getElementById('jsonError');
-
-            toggleViewBtn.addEventListener('click', toggleView);
-            generateBtn.addEventListener('click', runHybridCuration);
-            saveBtn.addEventListener('click', () => saveDataToFirestore(currentAlbums, currentPlaylists));
-            loadDataBtn.addEventListener('click', openDataModal);
-            closeModalBtn.addEventListener('click', closeDataModal);
-            cancelModalBtn.addEventListener('click', closeDataModal);
-            processJsonBtn.addEventListener('click', processAndSaveJSON);
-
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
-                else await signInAnonymously(auth);
-            } catch (error) {
-                console.error('Erro na autenticação:', error);
-                loadingSpinner.classList.add('hidden');
-                mainContent.innerHTML = `<p class="text-red-400 text-center">Erro de autenticação. O app não pode carregar.</p>`;
-                return;
-            }
-
-            onAuthStateChanged(auth, (user) => {
-                if (user) { userId = user.uid; albumsView.classList.remove('hidden'); loadData(); }
-                else { userId = null; if (unsubscribeAlbums) unsubscribeAlbums(); if (unsubscribePlaylists) unsubscribePlaylists(); }
-            });
-        }
-
-        function openDataModal() { if (dataModal) dataModal.classList.remove('hidden'); }
-        function closeDataModal() { if (dataModal) dataModal.classList.add('hidden'); }
-
-        function robustInit() {
-            let attempts = 0; const maxAttempts = 100;
-            const interval = setInterval(() => {
-                attempts++;
-                if (typeof window.Sortable !== 'undefined') { clearInterval(interval); initializeAppContainer(); }
-                else if (attempts > maxAttempts) { clearInterval(interval); loadingSpinner && loadingSpinner.classList.add('hidden'); mainContent && (mainContent.innerHTML = `<p class="text-red-400 text-center">Erro crítico: Sortable.js falhou ao carregar.</p>`); }
-            }, 100);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => { robustInit(); });
-
-    </script>
-
 </body>
-
 </html>
