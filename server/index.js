@@ -59,7 +59,7 @@ app.post('/api/generate', async (req, res) => {
       payload = {
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: {
-          maxOutputTokens: maxTokens || 800
+          maxOutputTokens: maxTokens || 8192
         }
       };
 

@@ -326,18 +326,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js" defer></script>
 
     <!-- Firebase (Módulo) -->
-    <!-- Firebase Config (Inline) -->
-    <script>
-        window.__firebase_config = {
-            apiKey: "AIzaSyA8x-II628CK3qQmmfr-WJE13LXdu7nAxs",
-            authDomain: "mjrp-playlist-generator.firebaseapp.com",
-            projectId: "mjrp-playlist-generator",
-            storageBucket: "mjrp-playlist-generator.firebasestorage.app",
-            messagingSenderId: "540062660076",
-            appId: "1:540062660076:web:f2cd9d6c24d9dd702ffcc9"
-        };
-        console.log("Inline config loaded:", window.__firebase_config);
-    </script>
+    <script src="config.js?v=${new Date().getTime()}"></script>
     <script type="module">
         // Importações do Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -345,7 +334,22 @@
         import { getFirestore, doc, getDoc, setDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Configuração Firebase ---
-        const firebaseConfig = window.__firebase_config;
+        console.log("Module script start. Waiting for config...");
+
+        // Função para esperar a config carregar
+        async function waitForConfig() {
+            let attempts = 0;
+            while (typeof window.__firebase_config === 'undefined' && attempts < 20) {
+                await new Promise(r => setTimeout(r, 100)); // Espera 100ms
+                attempts++;
+            }
+            return window.__firebase_config;
+        }
+
+        const rawConfig = await waitForConfig() || (typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        console.log("Config loaded:", rawConfig);
+
+        const firebaseConfig = typeof rawConfig === 'string' ? JSON.parse(rawConfig) : rawConfig;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
         let app, auth, db;
