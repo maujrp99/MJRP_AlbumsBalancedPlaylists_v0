@@ -376,8 +376,20 @@ function loadData () {
   if (unsubscribeAlbums) unsubscribeAlbums()
   unsubscribeAlbums = onSnapshot(albumsDocRef, (docSnap) => {
     loadingSpinner.classList.add('hidden')
-    if (docSnap.exists()) currentAlbums = docSnap.data().data || []
-    else { currentAlbums = []; openDataModal() }
+    // Handle both cases: doc missing OR doc exists but contains empty data array
+    if (docSnap.exists()) {
+      const payload = docSnap.data() || {}
+      const albumsFromDoc = Array.isArray(payload.data) ? payload.data : []
+      currentAlbums = albumsFromDoc
+      if (!albumsFromDoc || albumsFromDoc.length === 0) {
+        console.log('loadData: document exists but no albums; opening input modal')
+        openDataModal()
+      }
+    } else {
+      currentAlbums = []
+      console.log('loadData: no albums document found; opening input modal')
+      openDataModal()
+    }
     renderAlbumsView(currentAlbums)
   }, (error) => { console.error('Erro ao carregar álbuns:', error); alert('Erro ao carregar dados dos álbuns.') })
 
