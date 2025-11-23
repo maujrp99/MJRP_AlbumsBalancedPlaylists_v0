@@ -10,6 +10,28 @@ Purpose
 -------
 This document captures the design, architecture, interfaces, and operational considerations for the "VibeCoding / MJRP Albums Balanced Playlists" project. It is intended to follow the spirit of a Spec Kit SDD: clear goals, architecture diagrams (where applicable), component responsibilities, data contracts, security requirements and testing guidance.
 
+Recent changes (2025-11-23)
+--------------------------
+This SDD was updated to reflect a focused implementation improving ranking traceability and anti-hallucination measures.
+
+- BestEverAlbums-first evidence: server-side scraper `server/lib/scrapers/besteveralbums.js` is now the authoritative primary source for per-track acclaim when it can return evidence. The server will use scraper evidence to build `rankingAcclaim` and `rankingSources` before consulting the AI model.
+- Anti-hallucination URL validation: `server/lib/validateSource.js` performs lightweight URL verification (GET with small response cap) and a helper `isBestEverUrl()` to treat BestEver links as trusted provenance. Model-provided `referenceUrl` values are nullified if they cannot be verified.
+- Pipeline changes: `fetchRankingForAlbum()` in `server/index.js` was updated to prefer scraper evidence and fall back to the model prompt only when necessary. The debug endpoint `/api/debug/raw-ranking` continues to return both raw model output and `bestEverEvidence` to support audits and debugging.
+- Tests: new lightweight tests are added under `server/test/` to validate the scraper and the integrated fetch flow; normalization and curation tests were added as well.
+
+Remaining planned work (short term)
+----------------------------------
+The following planned items remain and are prioritized next:
+
+1. Frontend updates: render `BestEverAlbums` source first in the ranking panel and show a verified badge/link when `referenceUrl` is present. Remove the legacy header button while keeping guarded operator tooling for batch updates.
+2. Merge logic: when scraper evidence is partial, call the model as an enricher and merge results carefully (scraper overrides model for matching tracks; model fills uncovered tracks). Implement deterministic matching rules and unit tests for merging.
+3. Centralize URL verification: move or mirror verification into `server/lib/normalize.js` so all normalization paths can enforce anti-hallucination consistently.
+4. Fixture-based parser tests: add HTML fixtures for `besteveralbums` parsing edge cases and unit tests for the scraper parser functions.
+5. Documentation: update README and SDD (this section) to clearly explain the scraper-first policy, anti-hallucination rules, and how to run the debug endpoints and tests.
+6. Observability: add logs/metrics for nullified URLs, scraper failures/timeouts and model truncation events (finishReason = MAX_TOKENS).
+
+This SDD will be iteratively updated as the merging logic and frontend presentation are implemented and validated.
+
 Scope
 -----
 - Frontend: single-page static app served from `public/` (main entry: `public/hybrid-curator.html`).
