@@ -1,3 +1,16 @@
+// Ensure Web File/Blob globals exist for libraries (undici) that expect Web APIs
+try {
+  if (typeof File === 'undefined' || typeof Blob === 'undefined') {
+    const fb = require('fetch-blob')
+    if (fb) {
+      global.File = global.File || fb.File
+      global.Blob = global.Blob || fb.Blob
+    }
+  }
+} catch (e) {
+  // ignore — runtime will fail later if Fetch APIs are truly required
+}
+
 const express = require('express')
 const axios = require('axios')
 const cors = require('cors')
