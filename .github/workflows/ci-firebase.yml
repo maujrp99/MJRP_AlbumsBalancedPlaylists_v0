@@ -22,17 +22,25 @@ jobs:
           node-version: 18.x
           cache: 'npm'
 
-      - name: Install deps (if present)
+      - name: Install deps (root + server)
         run: |
           if [ -f package.json ]; then npm ci; fi
+          if [ -f server/package.json ]; then (cd server && npm ci); fi
 
-      - name: Run tests (if present)
+      - name: Lint (if present)
         run: |
-          if [ -f package.json ]; then npm test || true; fi
+          if [ -f package.json ]; then npm run lint --if-present || true; fi
+          if [ -f server/package.json ]; then (cd server && npm run lint) || true; fi
 
-      - name: Build (if present)
+      - name: Run tests (root + server)
+        run: |
+          if [ -f package.json ]; then npm test; fi
+          if [ -f server/package.json ]; then (cd server && npm test); fi
+
+      - name: Build (root + server)
         run: |
           if [ -f package.json ]; then npm run build --if-present; fi
+          if [ -f server/package.json ]; then (cd server && npm run build --if-present); fi
 
   preview-deploy:
     needs: build-test
@@ -46,9 +54,10 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: Install & Build (if present)
+      - name: Install & Build (root + server)
         run: |
           if [ -f package.json ]; then npm ci && npm run build --if-present; fi
+          if [ -f server/package.json ]; then (cd server && npm ci && npm run build --if-present); fi
 
       - name: Deploy to Firebase Preview Channel
         env:
@@ -62,7 +71,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const ch = `pr-${context.payload.pull_request.number}-${process.env.GITHUB_SHA?.slice(0,8)}`;
+            const ch = `pr-${context.payload.pull_request.number}-${context.sha?.slice(0,8)}`;
             const url = `https://${process.env.FIREBASE_PROJECT}.web.app`;
             github.rest.issues.createComment({
               owner: context.repo.owner,
@@ -88,9 +97,10 @@ jobs:
           node-version: 18.x
           cache: 'npm'
 
-      - name: Install & Build (if present)
+      - name: Install & Build (root + server)
         run: |
           if [ -f package.json ]; then npm ci && npm run build --if-present; fi
+          if [ -f server/package.json ]; then (cd server && npm ci && npm run build --if-present); fi
 
       - name: Deploy to Firebase (production)
         env:
