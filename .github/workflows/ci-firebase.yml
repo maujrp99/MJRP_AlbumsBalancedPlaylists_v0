@@ -55,7 +55,7 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT }}
         run: |
-          CHANNEL="pr-${{ github.event.number }}-${{ github.sha::8 }}"
+          CHANNEL="pr-${{ github.event.number }}-$(echo \"$GITHUB_SHA\" | cut -c1-8)"
           npx firebase-tools hosting:channel:deploy "$CHANNEL" --only hosting --token "$FIREBASE_TOKEN" --project "$FIREBASE_PROJECT"
 
       - name: Comment preview URL on PR
