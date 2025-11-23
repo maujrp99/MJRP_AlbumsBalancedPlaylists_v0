@@ -1,3 +1,19 @@
+# MJRP Albums Balanced Playlists
+
+This repository contains the MJRP Albums Balanced Playlists project — a hybrid curator that consolidates per-track acclaim (BestEverAlbums + AI-enriched) and generates balanced playlists.
+
+Key links
+- Origin monorepo: `maujrp99/VibeCoding` (subdirectory `MyProjects/MJRP_AlbumsBalancedPlaylists_v0`)
+- PR with latest provenance feature: https://github.com/maujrp99/VibeCoding/pull/2
+- Release / Tag: `BEA-RankingAcclaim-Implemented`
+- Live demo: https://mjrp-playlist-generator.web.app
+
+Quick start
+1. Install `firebase-tools`: `npm install -g firebase-tools` or use `npx`.
+2. From the project root (this folder), run `firebase deploy --only hosting --project mjrp-playlist-generator` (requires authentication).
+
+Notes
+- This repo was extracted from a monorepo. CI/workflows and secrets (FIREBASE_TOKEN, FIREBASE_PROJECT) are expected to be configured in GitHub Actions for automatic deploys.
 # VibeCoding — Local Dev Notes & Architecture
 
 Last updated: 2025-11-23
