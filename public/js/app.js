@@ -6,7 +6,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js'
 import { getFirestore, doc, setDoc, onSnapshot, setLogLevel } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
 
-import { fetchAlbumMetadata } from './api.js'
+import { fetchAlbumMetadata, fetchMultipleAlbumMetadata } from './api.js'
 import { curateAlbums } from './curation.js'
 
 const firebaseConfig = window.__firebase_config
@@ -33,6 +33,7 @@ let mainContent, loadingSpinner, albumsView, playlistsView, albumsGrid, playlist
 let toggleViewBtn, generateBtn, generateQuickBtn, saveBtn
 let albumsSummary, playlistsSummary
 let loadDataBtn, dataModal, closeModalBtn, cancelModalBtn, processJsonBtn, jsonInput, jsonError, emptyStateCta, emptyStateBtn
+let updateAcclaimBtn
 let rankingPanel, rankingSourcesList, rankingSummaryList, rankingAcclaimList
 
 function formatDuration (seconds) {
@@ -385,6 +386,18 @@ function renderRankingPanel () {
     return
   }
   rankingPanel.classList.remove('hidden')
+  // Debug banner to confirm front-end updates — visible change for testing
+  const debugBanner = document.createElement('div')
+  debugBanner.id = 'ranking-debug-banner'
+  debugBanner.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.8rem;border-radius:0.6rem;margin-bottom:0.8rem;background:linear-gradient(90deg,#331111, #221133);border:1px solid rgba(255,255,255,0.06);'
+  const now = new Date().toLocaleString()
+  const acclaimCount = (currentRankingAcclaim && currentRankingAcclaim.length) || 0
+  const summaryCount = (entries && entries.length) || 0
+  debugBanner.innerHTML = `<div style="display:flex;align-items:center;gap:0.6rem;"><strong style="color:#ffcc00;letter-spacing:0.06em">RANKING-UI-UPDATE</strong><span style="font-size:0.85rem;color:#ffd6a8">${now}</span></div><div style="font-size:0.85rem;color:#d1e8ff">acclaim:${acclaimCount} • summary:${summaryCount}</div>`
+  // insert or replace existing banner
+  const existingBanner = document.getElementById('ranking-debug-banner')
+  if (existingBanner) rankingPanel.replaceChild(debugBanner, existingBanner)
+  else rankingPanel.insertBefore(debugBanner, rankingPanel.firstChild)
   renderRankingSources()
   renderRankingAcclaimList(currentRankingAcclaim)
   renderRankingSummaryList(entries)
@@ -561,6 +574,71 @@ async function runHybridCuration () {
   }
 }
 
+async function updateAllAcclaim () {
+  if (!currentAlbums || currentAlbums.length === 0) {
+    alert('Nenhum álbum carregado para atualizar aclamação.')
+    return
+  }
+  if (!confirm(`Atualizar aclamação para todos os ${currentAlbums.length} álbuns? Isso fará chamadas ao serviço de IA.`)) return
+
+  // Disable button while running
+  if (updateAcclaimBtn) {
+    updateAcclaimBtn.disabled = true
+    updateAcclaimBtn.classList.add('opacity-50', 'cursor-not-allowed')
+    updateAcclaimBtn.textContent = 'Atualizando...'
+  }
+
+  try {
+    const queries = currentAlbums.map(a => `${a.artist || ''} - ${a.title || ''}`)
+    const results = await fetchMultipleAlbumMetadata(queries, {
+      concurrency: 2,
+      retries: 2,
+      backoffMs: 800,
+      onProgress: (index, success, payload) => {
+        // update debug banner with live progress
+        const banner = document.getElementById('ranking-debug-banner')
+        if (banner) banner.querySelector && (banner.lastElementChild.textContent = `acclaim:${(currentRankingAcclaim && currentRankingAcclaim.length)||0} • progress:${index + 1}/${queries.length}`)
+      }
+    })
+
+    // Merge results into currentAlbums
+    for (let i = 0; i < results.length; i++) {
+      const r = results[i]
+      if (r && r.success && r.data) {
+        // find album by title/artist and replace rankingAcclaim + rankingConsolidated
+        const returned = r.data
+        const idx = currentAlbums.findIndex(al => (al.id && al.id === returned.id) || ((al.title === returned.title) && (al.artist === returned.artist)))
+        if (idx > -1) {
+          currentAlbums[idx].rankingAcclaim = returned.rankingAcclaim || []
+          currentAlbums[idx].rankingSources = returned.rankingSources || []
+          // also copy consolidated if present
+          currentAlbums[idx].rankingConsolidated = returned.rankingConsolidated || []
+        } else {
+          // fallback: update by position
+          currentAlbums[i].rankingAcclaim = returned.rankingAcclaim || []
+          currentAlbums[i].rankingSources = returned.rankingSources || []
+          currentAlbums[i].rankingConsolidated = returned.rankingConsolidated || []
+        }
+      }
+    }
+
+    // Recompute client-side aggregates and save
+    currentRankingAcclaim = collectRankingAcclaim(currentAlbums)
+    await saveDataToFirestore(currentAlbums, currentPlaylists, currentRankingSummary, currentRankingSources)
+    renderPlaylistsView(currentPlaylists)
+    alert('Atualização de aclamação concluída. Firestore atualizado.')
+  } catch (err) {
+    console.error('Erro ao atualizar aclamação:', err)
+    alert('Erro ao atualizar aclamação: ' + (err && err.message ? err.message : String(err)))
+  } finally {
+    if (updateAcclaimBtn) {
+      updateAcclaimBtn.disabled = false
+      updateAcclaimBtn.classList.remove('opacity-50', 'cursor-not-allowed')
+      updateAcclaimBtn.textContent = 'Atualizar Aclamação'
+    }
+  }
+}
+
 async function saveDataToFirestore (albums, playlists, rankingSummary = {}, rankingSources = []) {
   if (!userId) return console.error('Usuário não autenticado.')
   try {
@@ -635,6 +713,7 @@ async function initializeAppContainer () {
   playlistsSummary = document.getElementById('playlists-summary')
 
   loadDataBtn = document.getElementById('loadDataBtn')
+  updateAcclaimBtn = document.getElementById('updateAcclaimBtn')
   dataModal = document.getElementById('dataModal')
   closeModalBtn = document.getElementById('closeModalBtn')
   cancelModalBtn = document.getElementById('cancelModalBtn')
@@ -653,6 +732,7 @@ async function initializeAppContainer () {
   if (generateQuickBtn) generateQuickBtn.addEventListener('click', runHybridCuration)
   saveBtn.addEventListener('click', () => saveDataToFirestore(currentAlbums, currentPlaylists, currentRankingSummary, currentRankingSources))
   loadDataBtn.addEventListener('click', openDataModal)
+  if (updateAcclaimBtn) updateAcclaimBtn.addEventListener('click', updateAllAcclaim)
   closeModalBtn.addEventListener('click', closeDataModal)
   cancelModalBtn.addEventListener('click', closeDataModal)
   processJsonBtn.addEventListener('click', processAndSaveJSON)

@@ -24,6 +24,64 @@ function tryParseJson (s) {
   }
 }
 
+function tryRecoverRankingFromText (s) {
+  if (!s || typeof s !== 'string') return null
+  const rankKeyMatch = s.match(/"ranking"\s*:\s*\[/i)
+  if (!rankKeyMatch) return null
+  const startIdx = s.indexOf('[', rankKeyMatch.index)
+  if (startIdx < 0) return null
+  const objs = []
+  let i = startIdx + 1
+  const len = s.length
+  while (i < len) {
+    // skip whitespace and commas
+    while (i < len && /[\s,]/.test(s[i])) i++
+    if (i >= len || s[i] !== '{') break
+    // find balanced object
+    let depth = 0
+    let j = i
+    while (j < len) {
+      if (s[j] === '{') depth++
+      else if (s[j] === '}') {
+        depth--
+        if (depth === 0) {
+          const candidate = s.slice(i, j + 1)
+          try {
+            const parsed = JSON.parse(candidate)
+            objs.push(parsed)
+          } catch (e) {
+            // ignore malformed object
+          }
+          i = j + 1
+          break
+        }
+      }
+      j++
+    }
+    if (j >= len) break
+  }
+  if (objs.length) return { ranking: objs }
+  return null
+}
+
+function parseNumberedList (s) {
+  if (!s || typeof s !== 'string') return null
+  const lines = s.split(/\r?\n/).map(l => l.trim()).filter(Boolean)
+  const results = []
+  // matches lines like "1. Title", "1) Title", "1 - Title", "#1 Title"
+  const re = /^\s*(?:#?\d+)(?:[\.)\-:]?)\s*(.*)$/
+  for (const line of lines) {
+    const m = line.match(re)
+    if (m && m[1]) {
+      let title = m[1].trim()
+      // strip surrounding quotes
+      title = title.replace(/^['"“”]+|['"“”]+$/g, '')
+      if (title) results.push(title)
+    }
+  }
+  return results.length ? results : null
+}
+
 function extractFromCandidate (response) {
   const candidateText = response?.data?.candidates?.[0]?.content?.parts?.[0]?.text
   if (candidateText && typeof candidateText === 'string') {
@@ -52,26 +110,65 @@ function extractAlbum (response) {
 
 function normalizeRankingEntry (entry, fallbackPosition) {
   if (!entry || typeof entry !== 'object') return null
-  const provider = entry.provider || entry.name || entry.source
-  if (!provider) return null
-  const positionVal = entry.position || entry.rank || fallbackPosition || 0
+  // Accept multiple possible key names (English/Portuguese/variants)
+  const providerField = entry.provider || entry.name || entry.source || entry.fontes || entry.providers
+  let provider = null
+  if (Array.isArray(providerField)) provider = providerField[0]
+  else if (providerField) provider = providerField
+
+  // allow entries even if provider is missing; use fallback string
+  if (!provider) provider = 'external'
+
+  const positionVal = entry.position || entry.posicao || entry.rank || fallbackPosition || 0
   const position = Number(positionVal) || fallbackPosition || null
+
+  const trackTitle = entry.trackTitle || entry.track || entry.faixa || entry.title || ''
+  const summary = entry.summary || entry.resumo || entry.description || ''
+  const referenceUrl = entry.referenceUrl || entry.reference_url || entry.url_referencia || entry.url || ''
+
   return {
     provider: String(provider),
-    summary: entry.summary || entry.description || '',
+    summary: summary,
     position,
-    referenceUrl: entry.referenceUrl || entry.url || entry.sourceUrl || '',
+    trackTitle: String(trackTitle),
+    referenceUrl: referenceUrl,
     type: entry.type || 'external'
   }
 }
 
 function extractRankingPayload (response) {
-  const candidateText = response?.data?.candidates?.[0]?.content?.parts?.[0]?.text
-  if (candidateText && typeof candidateText === 'string') {
-    const cleaned = cleanFencedMarkdown(candidateText)
+  // Try multiple locations where provider text may appear.
+  const tryText = (s) => (s && typeof s === 'string') ? s : null
+
+  const candidates = response?.data?.candidates || []
+  // common paths to textual content
+  const possibleTexts = []
+  if (candidates.length) {
+    const c = candidates[0].content || {}
+    possibleTexts.push(tryText(c?.parts?.[0]?.text))
+    possibleTexts.push(tryText(c?.output?.[0]?.content?.[0]?.text))
+    possibleTexts.push(tryText(c?.text))
+    possibleTexts.push(tryText(c?.outputText))
+  }
+  possibleTexts.push(tryText(response?.data?.outputText))
+  possibleTexts.push(tryText(response?.data?.text))
+  possibleTexts.push(tryText(response?.data && JSON.stringify(response.data)))
+
+  for (const t of possibleTexts) {
+    if (!t) continue
+    const cleaned = cleanFencedMarkdown(t)
     const parsed = tryParseJson(cleaned)
     if (parsed && typeof parsed === 'object') return parsed
+    const recovered = tryRecoverRankingFromText(cleaned)
+    if (recovered && typeof recovered === 'object') return recovered
+    // try a simple numbered list extraction (plain text lists)
+    const numbered = parseNumberedList(cleaned)
+    if (numbered && Array.isArray(numbered) && numbered.length) {
+      const ranking = numbered.map((title, idx) => ({ provider: 'model', trackTitle: title, position: idx + 1, referenceUrl: '' }))
+      return { ranking }
+    }
   }
+
   if (response?.data && typeof response.data === 'object') return response.data
   return null
 }

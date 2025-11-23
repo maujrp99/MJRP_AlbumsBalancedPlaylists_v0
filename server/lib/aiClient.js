@@ -6,7 +6,7 @@ async function callProvider ({ prompt, albumQuery, model, maxTokens, aiEndpoint,
   const aiUrl = aiEndpoint || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5:generateContent'
 
   let requestUrl = aiUrl
-  const axiosConfig = { timeout: 30_000 }
+  const axiosConfig = { timeout: 60_000 }
   let payload
 
   if (aiUrl.includes('generativelanguage.googleapis.com')) {
@@ -19,7 +19,7 @@ async function callProvider ({ prompt, albumQuery, model, maxTokens, aiEndpoint,
 
     payload = {
       contents: [{ parts: [{ text: promptText }] }],
-      generationConfig: { maxOutputTokens: maxTokens || 8192 }
+      generationConfig: { maxOutputTokens: maxTokens || 16384, temperature: 0.0 }
     }
 
     axiosConfig.headers = { 'Content-Type': 'application/json' }
@@ -28,7 +28,7 @@ async function callProvider ({ prompt, albumQuery, model, maxTokens, aiEndpoint,
     payload = {
       prompt: prompt || `Extract album data for: ${albumQuery}`,
       model: model || aiModelEnv || 'default-model',
-      max_tokens: maxTokens || 800
+      max_tokens: maxTokens || 2000
     }
     axiosConfig.headers = {
       Authorization: `Bearer ${aiApiKey}`,

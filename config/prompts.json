@@ -1,20 +1,17 @@
 {
   "albumSearchPrompt": "Sua tarefa é retornar metadados completos de um álbum dado o termo de busca a seguir. Input: {{albumQuery}}. Descreva o álbum em JSON válido com campos: id, artist, title, year, cover (URL), tracks (array com id, rank, title, duration em segundos).",
-  "rankingPrompt": "Para o álbum {{albumTitle}} por {{albumArtist}} ({{albumYear}}), compila um ranking de aclamação consolidado por faixa baseado nas análises críticas das revistas {{rankingProviders}} e nas comunidades de fãs, sendo o TheTopTens.com a principal expressão da opinião popular. Para cada faixa, indique a posição (posição 1 para a faixa mais aclamada), o nome da fonte, um resumo curto e a URL de referência. Retorne um JSON no formato { \"ranking\": [ { \"position\": 1, \"trackTitle\": \"nome da faixa\", \"provider\": \"Rolling Stone\", \"summary\": \"texto curto\", \"referenceUrl\": \"https://...\" } ] }.",
+  "rankingPrompt": "##RANKING PROMPT: What are the most acclaimed tracks and the ranking for all tracks of the albums {{albumTitle}} by {{albumArtist}} ({{albumYear}}) considering the https://www.besteveralbums.com/ ratings?\n\n##RULES\n- Primary evidence: use BestEverAlbums ratings when the album exists there. If BestEverAlbums provides per-track ratings or a track-ranking, use its ordering. If only album-level ratings are available, use them as supporting evidence.\n- Fallback: if the album is not found on BestEverAlbums, consolidate using other reliable sources (prefer those in `defaultRankingProviders`).\n- Sources: include BestEverAlbums as a `sources` entry with `provider` \"BestEverAlbums\", `providerType` \"community\" and `referenceUrl` set to the BestEverAlbums album URL when available; include up to 3 additional sources if used.\n- Anti-hallucination: do NOT invent URLs. If you cannot verify a URL, set `referenceUrl` to null.\n- Output constraints: temperature 0; keep output compact and machine-parsable.\n\n##RESPONSE FORMAT (REQUIRED)\nReturn ONLY these two parts in this exact order and with no extra commentary:\n1) A compact JSON object (single code block) matching the structure below:\n{\n  \"ranking\": [\n    {\"trackTitle\": \"...\", \"position\": 1, \"evidence\": [{\"provider\": \"BestEverAlbums\", \"referenceUrl\": \"https://...\"}]},\n    ...\n  ],\n  \"sources\": [\n    {\"provider\": \"BestEverAlbums\", \"providerType\": \"community\", \"referenceUrl\": \"https://...\"},\n    ...\n  ]\n}\n2) A compact numbered plain-text list (one track per line) matching the `ranking` order, for example:\n1. Track Title — [BestEverAlbums](https://... )\n2. Another Track — [BestEverAlbums](https://... )\n3. ...\n\nNo additional text, explanation or metadata outside the JSON block and the numbered list.\n",
   "defaultRankingProviders": [
-    "Pitchfork",
+    "Ultimate Classic Rock",
+    "Tenho Mais Discos Que Amigos (TMDQA!)",
+    "Reddit (subreddit de fãs)",
+    "TheTopTens.com",
+    "Wikipedia",
+    "Billboard",
     "Rolling Stone",
     "NME",
-    "Rate Your Music",
-    "Sonemic",
     "AllMusic",
-    "Sputnikmusic",
-    "TheTopTens.com",
-    "Loudwire",
-    "Kerrang!",
-    "Ultimate Classic Rock",
-    "Stereogum",
-    "Classic Rock Magazine",
-    "Metal Hammer"
+    "Rate Your Music",
+    "Pitchfork"
   ]
 }
