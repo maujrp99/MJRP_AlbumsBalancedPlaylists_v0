@@ -5,11 +5,10 @@ export async function fetchAlbumMetadata (albumQuery) {
   if (!albumQuery) throw new Error('Missing albumQuery')
 
   // Determine proxy URL. Use same host as page but default to port 3000 where the proxy runs.
-  const host = window.location.hostname || 'localhost'
-  const protocol = window.location.protocol || 'http:'
+  // Use an explicit override if provided, otherwise call the proxy via same-origin
   const url = (window.__api_base && typeof window.__api_base === 'string')
     ? window.__api_base.replace(/\/$/, '') + '/api/generate'
-    : `${protocol}//${host}:3000/api/generate`
+    : '/api/generate'
 
   console.debug('fetchAlbumMetadata -> proxy url:', url, 'query:', albumQuery)
   let resp
@@ -52,11 +51,9 @@ export async function fetchMultipleAlbumMetadata (queries, options = {}) {
   if (!Array.isArray(queries)) throw new Error('queries must be an array')
   const { concurrency = 3, retries = 3, backoffMs = 500, onProgress, signal } = options
 
-  const host = window.location.hostname || 'localhost'
-  const protocol = window.location.protocol || 'http:'
   const baseUrl = (window.__api_base && typeof window.__api_base === 'string')
     ? window.__api_base.replace(/\/$/, '') + '/api/generate'
-    : `${protocol}//${host}:3000/api/generate`
+    : '/api/generate'
 
   const results = new Array(queries.length)
   let idx = 0

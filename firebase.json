@@ -6,5 +6,15 @@
       "**/.*",
       "**/node_modules/**"
     ]
+    ,
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "run": {
+          "serviceId": "mjrp-proxy",
+          "region": "southamerica-east1"
+        }
+      }
+    ]
   }
 }

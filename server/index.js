@@ -52,10 +52,26 @@ if (!AI_API_KEY) {
   console.warn('Warning: AI_API_KEY not set. Proxy will return 503 for generate requests.')
 }
 
-// Allow CORS for the dev origin or be permissive in non-production for local testing.
-const corsOptions = (process.env.NODE_ENV === 'production')
-  ? { origin: 'http://localhost:8000' }
-  : { origin: true } // allow any origin in development for convenience
+// CORS configuration
+// Use `ALLOWED_ORIGIN` (comma-separated) in production to restrict allowed browser origins.
+// Default to the known hosted origin when not provided to avoid breaking the hosted site.
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'https://mjrp-playlist-generator.web.app'
+let corsOptions
+if (process.env.NODE_ENV === 'production') {
+  const allowed = Array.isArray(ALLOWED_ORIGIN) ? ALLOWED_ORIGIN : String(ALLOWED_ORIGIN).split(',').map(s => s.trim()).filter(Boolean)
+  if (!allowed.length) console.warn('Warning: ALLOWED_ORIGIN is empty in production; CORS will be restrictive')
+  corsOptions = {
+    origin: (origin, callback) => {
+      // Allow non-browser requests (curl, server-to-server) which have no origin header
+      if (!origin) return callback(null, true)
+      if (allowed.includes(origin)) return callback(null, true)
+      return callback(new Error('CORS origin not allowed'))
+    }
+  }
+} else {
+  // In development be permissive for convenience
+  corsOptions = { origin: true }
+}
 app.use(cors(corsOptions))
 app.use(express.json())
 

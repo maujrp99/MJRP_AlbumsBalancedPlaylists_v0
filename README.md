@@ -13,6 +13,7 @@ Documentation
 - `docs/PRODUCTION_DEPLOY.md`: Production deploy checklist
 - `docs/PROJECT_SUMMARY.md`: Project executive summary
 - `docs/CHAT_SUMMARY.md`: Conversation & work summary
+- `docs/DEPLOYMENT.md`: Deployment checklist (Cloud Run + Firebase Hosting)
 - `docs/SDD.md`: Software Design Document (detailed)
 - `docs/SECURITY.md`: Security notes and runbook
 
