@@ -222,6 +222,58 @@ async function parseChartRankingById(id) {
   return { albumUrl: chartUrl, evidence: normalized }
 }
 
+// Helper: parse chart HTML string (useful for fixture-based tests)
+function parseChartHtml (html, chartUrl = 'https://example/') {
+  const $ = cheerio.load(html)
+  const rows = []
+  $('table').each((i, table) => {
+    const $table = $(table)
+    const headerText = $table.find('th').text().toLowerCase()
+    if (headerText.includes('track') && headerText.includes('rating')) {
+      $table.find('tr').each((j, tr) => {
+        const $tr = $(tr)
+        const tds = $tr.find('td')
+        if (tds.length >= 2) {
+          const trackTd = $tr.find('td').filter((k, el) => {
+            const txt = $(el).text().toLowerCase()
+            return txt && /[a-z0-9]/i.test(txt) && !txt.match(/rating|comments|votes/i)
+          }).first()
+          let title = trackTd.text().trim()
+          const a = trackTd.find('a').first()
+          if (a && a.text()) title = a.text().trim()
+
+          let rating = null
+          const ratingCell = $tr.find('td').filter((k, el) => {
+            const txt = $(el).text().toLowerCase()
+            return txt && txt.includes('rating')
+          }).first()
+          if (ratingCell && ratingCell.text()) {
+            const rtxt = ratingCell.text()
+            const m = rtxt.match(/(\d{1,3})(?=\s*\()/)
+            if (m) rating = parseInt(m[1], 10)
+            else {
+              const m2 = rtxt.match(/(\d{1,3})/)
+              if (m2) rating = parseInt(m2[1], 10)
+            }
+          }
+
+          if (title) rows.push({ trackTitle: title, rating })
+        }
+      })
+    }
+  })
+
+  // fallback handling similar to parseChartRankingById
+  const normalized = rows.map(r => ({ trackTitle: r.trackTitle.replace(/^\s*\d+\.\s*/, '').trim(), rating: typeof r.rating === 'number' ? r.rating : null }))
+  normalized.sort((a, b) => {
+    if (a.rating === null && b.rating === null) return 0
+    if (a.rating === null) return 1
+    if (b.rating === null) return -1
+    return b.rating - a.rating
+  })
+  return { albumUrl: chartUrl, evidence: normalized }
+}
+
 async function parseAlbumRanking(albumUrl) {
   const res = await axios.get(albumUrl, { timeout: 15000 })
   const $ = cheerio.load(res.data)
@@ -339,4 +391,4 @@ async function getRankingFromUrl(albumUrl) {
   }
 }
 
-module.exports = { getRankingForAlbum, getRankingFromUrl, findArtistPage, parseArtistDiscography, findAlbumId, fetchAlbumPage }
+module.exports = { getRankingForAlbum, getRankingFromUrl, findArtistPage, parseArtistDiscography, findAlbumId, fetchAlbumPage, parseChartHtml }

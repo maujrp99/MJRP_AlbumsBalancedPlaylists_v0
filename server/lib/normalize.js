@@ -108,6 +108,45 @@ function extractAlbum (response) {
   return null
 }
 
+// URL verification uses the validateSource helper. Keep this logic centralized
+let validateSourceHelpers = null
+try {
+  validateSourceHelpers = require('./validateSource')
+} catch (e) {
+  // in some test contexts validateSource may be unavailable; gracefully degrade
+  validateSourceHelpers = null
+}
+
+const logger = (() => {
+  try { return require('./logger') } catch (e) { return console }
+})()
+
+async function validateAndSanitizeEntries (entries) {
+  if (!Array.isArray(entries)) return entries
+  const { verifyUrl, isBestEverUrl } = validateSourceHelpers || {}
+  await Promise.all(entries.map(async (ent) => {
+    if (ent && ent.referenceUrl && typeof ent.referenceUrl === 'string') {
+      try {
+        // allow BestEverAlbums urls without network verification
+        if (typeof isBestEverUrl === 'function' && isBestEverUrl(ent.referenceUrl)) return
+        if (typeof verifyUrl === 'function') {
+          const ok = await verifyUrl(ent.referenceUrl).catch(() => false)
+          if (!ok) ent.referenceUrl = null
+          else if (!ok) {
+            // record the nullification event for observability
+            try { logger.info('nullified_reference_url', { url: ent.referenceUrl, provider: ent.provider || null, trackTitle: ent.trackTitle || null }) } catch (e) { /* ignore */ }
+            ent.referenceUrl = null
+          }
+        }
+      } catch (e) {
+        try { logger.warn('reference_url_validation_error', { url: ent.referenceUrl, err: (e && e.message) || String(e) }) } catch (er) {}
+        ent.referenceUrl = null
+      }
+    }
+  }))
+  return entries
+}
+
 function normalizeRankingEntry (entry, fallbackPosition) {
   if (!entry || typeof entry !== 'object') return null
   // Accept multiple possible key names (English/Portuguese/variants)
@@ -187,6 +226,13 @@ function extractRankingEntries (response) {
     .sort((a, b) => (a.position || 0) - (b.position || 0))
 }
 
+// Async extractor that validates reference URLs using the centralized helper
+async function extractAndValidateRankingEntries (response) {
+  const entries = extractRankingEntries(response)
+  await validateAndSanitizeEntries(entries)
+  return entries
+}
+
 function rankingEntriesToSources (entries) {
   if (!Array.isArray(entries)) return []
   return entries.map(entry => ({
@@ -204,5 +250,6 @@ module.exports = {
   cleanFencedMarkdown,
   tryParseJson,
   extractRankingEntries,
+  extractAndValidateRankingEntries,
   rankingEntriesToSources
 }

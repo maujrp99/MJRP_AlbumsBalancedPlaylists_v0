@@ -27,10 +27,12 @@ app.get('/_health', (req, res) => res.send({ ok: true }))
 
 const { loadPrompts, renderPrompt } = require('./lib/prompts')
 const { callProvider } = require('./lib/aiClient')
-const { extractAlbum, extractRankingEntries, rankingEntriesToSources } = require('./lib/normalize')
+const { extractAlbum, extractRankingEntries, extractAndValidateRankingEntries, rankingEntriesToSources } = require('./lib/normalize')
 const { consolidateRanking } = require('./lib/ranking')
 const { validateAlbum, ajvAvailable } = require('./lib/schema')
 const { getRankingForAlbum: getBestEverRanking } = require('./lib/scrapers/besteveralbums')
+const { verifyUrl, isBestEverUrl } = require('./lib/validateSource')
+const logger = (() => { try { return require('./lib/logger') } catch (e) { return console } })()
 
 // Optional helper: list available models from Google Generative Language
 app.get('/api/list-models', async (req, res) => {
@@ -69,6 +71,134 @@ async function fetchRankingForAlbum (album, albumQuery, options = {}) {
     rankingProviders
   })
   if (!rankingPrompt) return { entries: [], sources: [] }
+  // If caller requested a raw provider response (debugging), still call the model
+  if (options && options.raw) {
+    const rankingResponse = await callProvider({
+      prompt: rankingPrompt,
+      maxTokens: 2048,
+      aiEndpoint: process.env.AI_ENDPOINT,
+      aiApiKey: AI_API_KEY,
+      aiModelEnv: process.env.AI_MODEL
+    })
+    return { raw: rankingResponse }
+  }
+
+  // PRIMARY: attempt deterministic BestEverAlbums scraper first for provenance
+  try {
+    const best = await getBestEverRanking(album?.title || albumQuery, album?.artist || '')
+    if (best && Array.isArray(best.evidence) && best.evidence.length > 0) {
+      // Convert scraper evidence to normalized ranking entries
+      const scraperEntries = best.evidence.map((e, idx) => ({
+        provider: 'BestEverAlbums',
+        trackTitle: e.trackTitle,
+        position: idx + 1,
+        referenceUrl: best.referenceUrl || best.albumUrl || null
+      }))
+
+      // If the scraper covers all tracks (or we don't know track count), return scraper evidence directly.
+      const albumTrackCount = Array.isArray(album && album.tracks) ? album.tracks.length : null
+      if (!albumTrackCount || scraperEntries.length >= albumTrackCount) {
+        const sources = [{ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: best.referenceUrl || best.albumUrl || null }]
+        return { entries: scraperEntries, sources }
+      }
+
+      // Scraper is partial: call the model as an enricher and merge results deterministically.
+      try {
+        const rankingResponse = await callProvider({
+          prompt: renderPrompt(loadPrompts().rankingPrompt, {
+            albumTitle: album.title || albumQuery,
+            albumArtist: album.artist || '',
+            albumYear: album.year || '',
+            albumQuery,
+            rankingProviders: ''
+          }),
+          maxTokens: 2048,
+          aiEndpoint: process.env.AI_ENDPOINT,
+          aiApiKey: AI_API_KEY,
+          aiModelEnv: process.env.AI_MODEL
+        })
+        let modelEntries = await extractAndValidateRankingEntries(rankingResponse)
+
+        // Merge: prefer scraperEntries (by trackTitle), otherwise use modelEntries; preserve BestEver provider tag
+        const mergedByTitle = new Map()
+        // index model entries by lowercased title for quick matching
+        const modelIndex = new Map()
+        modelEntries.forEach(me => {
+          if (me && me.trackTitle) modelIndex.set(String(me.trackTitle).toLowerCase(), me)
+        })
+
+        // Start with scraper positions
+        scraperEntries.forEach(se => {
+          if (se && se.trackTitle) mergedByTitle.set(String(se.trackTitle).toLowerCase(), se)
+        })
+
+        // Fill gaps from model
+        if (Array.isArray(album && album.tracks)) {
+          album.tracks.forEach((t, idx) => {
+            const key = String((t && (t.title || t.trackTitle || t.name)) || '').toLowerCase()
+            if (!key) return
+            if (!mergedByTitle.has(key)) {
+              const candidate = modelIndex.get(key)
+              if (candidate) mergedByTitle.set(key, candidate)
+            }
+          })
+        }
+
+        // As a fallback, include any remaining model entries up to albumTrackCount
+        if (mergedByTitle.size < (albumTrackCount || 0)) {
+          for (const me of modelEntries) {
+            const k = me && me.trackTitle ? String(me.trackTitle).toLowerCase() : null
+            if (!k) continue
+            if (!mergedByTitle.has(k)) mergedByTitle.set(k, me)
+            if (mergedByTitle.size >= (albumTrackCount || Infinity)) break
+          }
+        }
+
+        // Build ordered entries: try to preserve album track order when available
+        const finalEntries = []
+        if (Array.isArray(album && album.tracks)) {
+          album.tracks.forEach((t, idx) => {
+            const k = String((t && (t.title || t.trackTitle || t.name)) || '').toLowerCase()
+            const found = k ? mergedByTitle.get(k) : null
+            if (found) {
+              // if scraper provided position prefer it, otherwise assign next available position
+              const pos = found.position || (idx + 1)
+              finalEntries.push({ provider: found.provider || 'Model', trackTitle: found.trackTitle || t.title || t.trackTitle, position: pos, referenceUrl: found.referenceUrl || null })
+            }
+          })
+        }
+
+        // If still empty, fall back to mergedByTitle enumeration
+        if (finalEntries.length === 0) {
+          let i = 1
+          for (const v of mergedByTitle.values()) {
+            finalEntries.push({ provider: v.provider || 'Model', trackTitle: v.trackTitle, position: v.position || i, referenceUrl: v.referenceUrl || null })
+            i++
+          }
+        }
+
+        // Compose sources: BestEver first, then model sources (limit to 3)
+        const modelSources = rankingEntriesToSources(modelEntries || [])
+        const sources = [{ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: best.referenceUrl || best.albumUrl || null }]
+        for (const s of (modelSources || [])) {
+          if (sources.length >= 4) break
+          // avoid duplicate provider entries
+          if (!sources.some(existing => String(existing.provider).toLowerCase() === String(s.provider || '').toLowerCase())) sources.push(s)
+        }
+
+        return { entries: finalEntries, sources }
+      } catch (e) {
+        // If model enrichment failed, fall back to returning scraper-only evidence
+        logger.warn('model_enrichment_failed', { albumQuery, err: (e && e.message) || String(e) })
+        const sources = [{ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: best.referenceUrl || best.albumUrl || null }]
+        return { entries: scraperEntries, sources }
+      }
+    }
+  } catch (err) {
+    logger.warn('bestever_scraper_failed', { albumQuery, err: (err && err.message) || String(err) })
+  }
+
+  // FALLBACK: call the model prompt and normalize its results
   const rankingResponse = await callProvider({
     prompt: rankingPrompt,
     maxTokens: 2048,
@@ -76,10 +206,18 @@ async function fetchRankingForAlbum (album, albumQuery, options = {}) {
     aiApiKey: AI_API_KEY,
     aiModelEnv: process.env.AI_MODEL
   })
-  if (options && options.raw) {
-    return { raw: rankingResponse }
-  }
-  const entries = extractRankingEntries(rankingResponse)
+
+  // Detect common truncation/finish signals in provider response and log them
+  try {
+    const respData = rankingResponse && rankingResponse.data
+    const finishReason = (respData?.candidates && respData.candidates[0] && respData.candidates[0].metadata && respData.candidates[0].metadata.finishReason) || respData?.finish_reason || (respData?.choices && respData.choices[0] && respData.choices[0].finish_reason)
+    if (finishReason && String(finishReason).toUpperCase().includes('MAX_TOKENS')) {
+      logger.info('model_truncation_detected', { albumQuery, finishReason })
+    }
+  } catch (e) { /* ignore logging errors */ }
+
+  // Use centralized extractor that also validates reference URLs
+  let entries = await extractAndValidateRankingEntries(rankingResponse)
   const sources = rankingEntriesToSources(entries)
   return { entries, sources }
 }
@@ -207,6 +345,12 @@ app.use((req, res, next) => {
   next()
 })
 
-app.listen(PORT, () => {
-  console.log(`AI proxy server listening on http://localhost:${PORT}`)
-})
+// Export fetchRankingForAlbum for test harnesses and scripts
+module.exports = { fetchRankingForAlbum }
+
+// Only start the HTTP server when this file is run directly (not when required by tests)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`AI proxy server listening on http://localhost:${PORT}`)
+  })
+}

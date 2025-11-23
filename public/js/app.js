@@ -409,12 +409,23 @@ function renderRankingSources () {
     rankingSourcesList.innerHTML = '<p class="text-sm text-spotify-lightgray">Nenhuma fonte documentada ainda.</p>'
     return
   }
-  rankingSourcesList.innerHTML = currentRankingSources.map(source => {
-    const secureBadge = source.secure ? '<span class="ranking-source-secure" aria-label="Fonte segura">secure</span>' : ''
+  // Show BestEverAlbums (deterministic scraper) first when present
+  const isBestEverSource = s => (s && ((s.provider && String(s.provider).toLowerCase().includes('bestever')) || (s.name && String(s.name).toLowerCase().includes('bestever')) || (s.referenceUrl && String(s.referenceUrl).toLowerCase().includes('bestever'))))
+  const sorted = currentRankingSources.slice().sort((a, b) => {
+    const aBest = isBestEverSource(a) ? 0 : 1
+    const bBest = isBestEverSource(b) ? 0 : 1
+    return aBest - bBest
+  })
+
+  rankingSourcesList.innerHTML = sorted.map(source => {
+    const displayName = source.name || source.provider || 'Fonte'
+    const displayType = source.type || source.providerType || ''
+    const isBest = isBestEverSource(source)
+    const secureBadge = isBest ? '<span class="ranking-source-secure" aria-label="Fonte verificada">BestEver</span>' : (source.secure ? '<span class="ranking-source-secure" aria-label="Fonte segura">secure</span>' : '')
     return `
       <span class="ranking-source-chip">
-        <strong class="tracking-[0.3em] text-[10px] uppercase text-white">${escapeHtml(source.name)}</strong>
-        <span class="text-[11px] text-spotify-lightgray">${escapeHtml(source.type)}</span>
+        <strong class="tracking-[0.3em] text-[10px] uppercase text-white">${escapeHtml(displayName)}</strong>
+        <span class="text-[11px] text-spotify-lightgray">${escapeHtml(displayType)}</span>
         ${secureBadge}
       </span>
     `
@@ -437,6 +448,9 @@ function renderRankingAcclaimList (entries) {
     const albumLabel = albumParts.length ? albumParts.join(' • ') : 'Álbum desconhecido'
     const summaryText = entry.summary || 'Resumo não enviado'
     const sourceLink = entry.referenceUrl ? `<a href="${escapeHtml(entry.referenceUrl)}" target="_blank" rel="noreferrer">Ver fonte</a>` : ''
+    // Show a small verified badge when provider or URL indicates BestEverAlbums provenance
+    const isBestEver = (entry && ((entry.provider && String(entry.provider).toLowerCase().includes('bestever')) || (entry.referenceUrl && String(entry.referenceUrl).toLowerCase().includes('bestever'))))
+    const verifiedBadge = isBestEver ? ' <span class="text-xs text-green-400 font-semibold">(BestEver verificado)</span>' : ''
     return `
       <div class="ranking-acclaim-entry">
         <div class="flex items-baseline justify-between gap-3">
@@ -444,7 +458,7 @@ function renderRankingAcclaimList (entries) {
           <span class="text-xs uppercase text-spotify-lightgray">${positionLabel}</span>
         </div>
         <p class="text-[11px] text-spotify-lightgray mt-1 truncate">${escapeHtml(summaryText)}</p>
-        <div class="mt-2 text-[10px] tracking-wide text-right">${sourceLink}</div>
+        <div class="mt-2 text-[10px] tracking-wide text-right">${sourceLink}${verifiedBadge}</div>
       </div>
     `
   }).join('')

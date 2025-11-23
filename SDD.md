@@ -19,6 +19,18 @@ This SDD was updated to reflect a focused implementation improving ranking trace
 - Pipeline changes: `fetchRankingForAlbum()` in `server/index.js` was updated to prefer scraper evidence and fall back to the model prompt only when necessary. The debug endpoint `/api/debug/raw-ranking` continues to return both raw model output and `bestEverEvidence` to support audits and debugging.
 - Tests: new lightweight tests are added under `server/test/` to validate the scraper and the integrated fetch flow; normalization and curation tests were added as well.
 
+Implemented details (2025-11-23):
+
+- Merge logic implemented: when the BestEver scraper returns partial evidence (i.e., fewer items than the album's track count), the server invokes the model to enrich missing entries and merges results deterministically. The merging rules are conservative: the scraper's entries win for matching tracks (match by normalized track title), the model fills uncovered tracks, and model sources are appended but capped to avoid provenance spam. This logic is in `server/index.js` within `fetchRankingForAlbum`.
+- Centralized verification: URL verification/sanitization is now centralized in `server/lib/normalize.js` through the async helper `extractAndValidateRankingEntries(response)` so all normalization flows apply the same anti-hallucination policy. `server/lib/validateSource.js` remains the network check implementation but consumers call the normalizer to obtain validated entries.
+- Frontend traceability: the UI now surfaces BestEverAlbums provenance first and marks BestEver-sourced acclaim entries as verified. An operator-only `#updateAcclaimBtn` remains available but hidden by default for manual batch runs.
+- Observability: a small structured logger `server/lib/logger.js` was added and used to emit events for scraper failures (`bestever_scraper_failed`), enrichment errors (`model_enrichment_failed`), URL nullifications (`nullified_reference_url`) and model truncation detections (`model_truncation_detected`). These logs facilitate local debugging and future integration with centralized log systems.
+
+Testing updates:
+
+- Added fixture-driven parser test: `server/test/scraper-fixtures-test.js` exercises `server/lib/scrapers/besteveralbums.js::parseChartHtml` using `server/test/fixtures/sample-chart.html` to provide a deterministic test of parsing heuristics.
+- Existing unit tests (`server/test/unit-tests.js`) were re-run and pass with the new changes.
+
 Remaining planned work (short term)
 ----------------------------------
 The following planned items remain and are prioritized next:
