@@ -8,6 +8,14 @@ Key links
 - Release / Tag: `BEA-RankingAcclaim-Implemented`
 - Live demo: https://mjrp-playlist-generator.web.app
 
+Documentation
+- `docs/LOCAL_RUN.md`: Local development & smoke-tests
+- `docs/PRODUCTION_DEPLOY.md`: Production deploy checklist
+- `docs/PROJECT_SUMMARY.md`: Project executive summary
+- `docs/CHAT_SUMMARY.md`: Conversation & work summary
+- `docs/SDD.md`: Software Design Document (detailed)
+- `docs/SECURITY.md`: Security notes and runbook
+
 Quick start
 1. Install `firebase-tools`: `npm install -g firebase-tools` or use `npx`.
 2. From the project root (this folder), run `firebase deploy --only hosting --project mjrp-playlist-generator` (requires authentication).

@@ -59,13 +59,18 @@ jobs:
           if [ -f package.json ]; then npm ci && npm run build --if-present; fi
           if [ -f server/package.json ]; then (cd server && npm ci && npm run build --if-present); fi
 
+      - name: Authenticate to Google Cloud (service account)
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
       - name: Deploy to Firebase Preview Channel
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT }}
         run: |
           CHANNEL="pr-${{ github.event.number }}-$(echo \"$GITHUB_SHA\" | cut -c1-8)"
-          npx firebase-tools hosting:channel:deploy "$CHANNEL" --only hosting --token "$FIREBASE_TOKEN" --project "$FIREBASE_PROJECT"
+          npx firebase-tools hosting:channel:deploy "$CHANNEL" --only hosting --project "$FIREBASE_PROJECT"
 
       - name: Comment preview URL on PR
         uses: actions/github-script@v6
@@ -102,9 +107,14 @@ jobs:
           if [ -f package.json ]; then npm ci && npm run build --if-present; fi
           if [ -f server/package.json ]; then (cd server && npm ci && npm run build --if-present); fi
 
+      - name: Authenticate to Google Cloud (service account)
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
       - name: Deploy to Firebase (production)
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT }}
         run: |
-          npx firebase-tools deploy --only hosting --project "$FIREBASE_PROJECT" --token "$FIREBASE_TOKEN"
+          npx firebase-tools deploy --only hosting --project "$FIREBASE_PROJECT"
