@@ -1,14 +1,42 @@
-// Ensure Web File/Blob globals exist for libraries (undici) that expect Web APIs
+// Ensure Web File/Blob globals exist for libraries (undici) that reference Web APIs during import.
+// Prefer a proper polyfill if available, otherwise provide a tiny, safe stub so imports don't throw.
 try {
   if (typeof File === 'undefined' || typeof Blob === 'undefined') {
-    const fb = require('fetch-blob')
-    if (fb) {
-      global.File = global.File || fb.File
-      global.Blob = global.Blob || fb.Blob
+    try {
+      // try optional dependency if present
+      const fb = require('fetch-blob')
+      if (fb) {
+        global.File = global.File || fb.File
+        global.Blob = global.Blob || fb.Blob
+      }
+    } catch (e) {
+      // Minimal stub implementations: enough to satisfy typeof checks and construction during import.
+      // These stubs intentionally do not implement full behavior (they avoid increasing bundle size or adding deps).
+      if (typeof Blob === 'undefined') {
+        class _Blob {
+          constructor(parts = [], options = {}) {
+            this.size = Array.isArray(parts) ? parts.reduce((s, p) => s + (typeof p === 'string' ? Buffer.byteLength(p) : (p && p.length) || 0), 0) : 0
+            this.type = options.type || ''
+          }
+          text() { return Promise.resolve('') }
+          arrayBuffer() { return Promise.resolve(Buffer.alloc(0)) }
+        }
+        global.Blob = _Blob
+      }
+      if (typeof File === 'undefined') {
+        class _File extends global.Blob {
+          constructor(parts = [], filename = 'file', options = {}) {
+            super(parts, options)
+            this.name = filename
+            this.lastModified = options && options.lastModified ? options.lastModified : Date.now()
+          }
+        }
+        global.File = _File
+      }
     }
   }
-} catch (e) {
-  // ignore — runtime will fail later if Fetch APIs are truly required
+} catch (err) {
+  // If something unexpected happens, let application start and fail later with clearer errors.
 }
 
 const express = require('express')
