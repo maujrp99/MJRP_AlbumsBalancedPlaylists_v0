@@ -76,7 +76,7 @@ function run () {
         }
       ];
 
-      const playlists = curateAlbums(albums, { targetSeconds: 3 * 60 }); // small target to force fills
+      const { playlists, rankingSummary, rankingSources } = curateAlbums(albums, { targetSeconds: 3 * 60 }); // small target to force fills
 
       // P1 must include rank===1
       const p1 = playlists.find(p => p.id === 'p1');
@@ -94,6 +94,10 @@ function run () {
       // The filled tracks should include the worst ranks (10,9)
       const ranks = fillTracks.map(f => f.rank).filter(r => typeof r === 'number');
       assert.ok(ranks.includes(10) || ranks.includes(9), 'Fill should prefer worst-ranked tracks');
+
+      assert.ok(rankingSummary && rankingSummary.alb1, 'Album summary must exist');
+      assert.ok(rankingSummary.alb1.tracks.some(track => Array.isArray(track.rankingInfo)), 'Tracks must expose rankingInfo');
+      assert.ok(rankingSources && rankingSources.some(source => source.name === 'MJRP Hybrid Algorithm'), 'Default ranking source recorded');
 
       console.log('curation tests passed');
       console.log('All tests passed');

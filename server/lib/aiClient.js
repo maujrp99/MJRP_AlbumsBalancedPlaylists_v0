@@ -1,6 +1,8 @@
 const axios = require('axios')
 
-async function callProvider ({ albumQuery, model, maxTokens, aiEndpoint, aiApiKey, aiModelEnv }) {
+const DEFAULT_PROMPT = 'Sua tarefa é retornar os metadados de um álbum de música. Input: "{{albumQuery}}". Retorne apenas JSON válido com campos: id, artist, title, year, cover, tracks (cada track com id, rank, title, duration em segundos).'
+
+async function callProvider ({ prompt, albumQuery, model, maxTokens, aiEndpoint, aiApiKey, aiModelEnv }) {
   const aiUrl = aiEndpoint || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5:generateContent'
 
   let requestUrl = aiUrl
@@ -11,10 +13,12 @@ async function callProvider ({ albumQuery, model, maxTokens, aiEndpoint, aiApiKe
     const modelName = aiModelEnv || 'models/gemini-2.5-flash'
     requestUrl = `https://generativelanguage.googleapis.com/v1/${modelName}:generateContent?key=${encodeURIComponent(aiApiKey)}`
 
-    const prompt = `Sua tarefa é retornar os metadados de um álbum de música.\nInput: "${albumQuery}"\nRetorne apenas JSON válido com campos: id, artist, title, year, cover, tracks (cada track com id, rank, title, duration em segundos).`
+    const promptText = (prompt && typeof prompt === 'string')
+      ? prompt
+      : DEFAULT_PROMPT.replace('{{albumQuery}}', albumQuery || '')
 
     payload = {
-      contents: [{ parts: [{ text: prompt }] }],
+      contents: [{ parts: [{ text: promptText }] }],
       generationConfig: { maxOutputTokens: maxTokens || 8192 }
     }
 
@@ -22,7 +26,7 @@ async function callProvider ({ albumQuery, model, maxTokens, aiEndpoint, aiApiKe
   } else {
     requestUrl = aiUrl
     payload = {
-      prompt: `Extract album data for: ${albumQuery}`,
+      prompt: prompt || `Extract album data for: ${albumQuery}`,
       model: model || aiModelEnv || 'default-model',
       max_tokens: maxTokens || 800
     }

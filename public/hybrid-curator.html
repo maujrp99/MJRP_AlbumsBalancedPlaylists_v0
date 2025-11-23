@@ -229,6 +229,88 @@
             pointer-events: none;
         }
 
+        .ranking-panel {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(7, 10, 20, 0.9);
+            box-shadow: 0 25px 35px rgba(3, 3, 6, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ranking-panel::after {
+            content: '';
+            position: absolute;
+            inset: 1rem;
+            border-radius: 1.25rem;
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            pointer-events: none;
+        }
+
+        .ranking-source-chip {
+            border-radius: 999px;
+            padding: 0.35rem 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.03);
+            color: #f5f7ff;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+        }
+
+        .ranking-source-secure {
+            border-radius: 999px;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #6affc0;
+            border: 1px solid rgba(106, 255, 192, 0.4);
+        }
+
+        .ranking-album-summary {
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(12, 18, 32, 0.9);
+        }
+
+        .ranking-album-summary summary {
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .ranking-album-summary summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .ranking-track-row {
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 0.75rem;
+        }
+
+        .ranking-acclaim-section {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px dashed rgba(255, 255, 255, 0.08);
+        }
+
+        .ranking-acclaim-entry {
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 1rem;
+            background: rgba(12, 18, 32, 0.9);
+        }
+
+        .ranking-acclaim-entry a {
+            color: #70F6FF;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
         .card-content {
             position: relative;
             z-index: 1;
@@ -404,6 +486,20 @@
             <section id="playlists-view" class="hidden">
                 <h2 class="text-3xl font-bold text-white mb-6">Playlists Geradas</h2>
                 <div id="playlists-summary" class="glass-panel mb-6"></div>
+                <div id="rankingPanel" class="ranking-panel hidden mb-6" aria-live="polite">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <h3 class="text-lg font-semibold text-white">Ranking Traceability</h3>
+                            <p class="text-sm text-muted">Explicamos quais faixas foram selecionadas por álbum e por quê.</p>
+                        </div>
+                    </div>
+                    <div id="rankingSourcesList" class="flex flex-wrap gap-2"></div>
+                    <div class="ranking-acclaim-section">
+                        <h4 class="text-xs font-semibold tracking-[0.3em] uppercase text-spotify-lightgray">Ranking de Aclamação</h4>
+                        <div id="rankingAcclaimList" class="mt-2 space-y-2"></div>
+                    </div>
+                    <div id="rankingSummaryList" class="mt-4 space-y-3"></div>
+                </div>
                 <div id="playlists-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </section>
         </main>

@@ -1,0 +1,20 @@
+{
+  "albumSearchPrompt": "Sua tarefa é retornar metadados completos de um álbum dado o termo de busca a seguir. Input: {{albumQuery}}. Descreva o álbum em JSON válido com campos: id, artist, title, year, cover (URL), tracks (array com id, rank, title, duration em segundos).",
+  "rankingPrompt": "Para o álbum {{albumTitle}} por {{albumArtist}} ({{albumYear}}), compila um ranking de aclamação consolidado por faixa baseado nas análises críticas das revistas {{rankingProviders}} e nas comunidades de fãs, sendo o TheTopTens.com a principal expressão da opinião popular. Para cada faixa, indique a posição (posição 1 para a faixa mais aclamada), o nome da fonte, um resumo curto e a URL de referência. Retorne um JSON no formato { \"ranking\": [ { \"position\": 1, \"trackTitle\": \"nome da faixa\", \"provider\": \"Rolling Stone\", \"summary\": \"texto curto\", \"referenceUrl\": \"https://...\" } ] }.",
+  "defaultRankingProviders": [
+    "Pitchfork",
+    "Rolling Stone",
+    "NME",
+    "Rate Your Music",
+    "Sonemic",
+    "AllMusic",
+    "Sputnikmusic",
+    "TheTopTens.com",
+    "Loudwire",
+    "Kerrang!",
+    "Ultimate Classic Rock",
+    "Stereogum",
+    "Classic Rock Magazine",
+    "Metal Hammer"
+  ]
+}

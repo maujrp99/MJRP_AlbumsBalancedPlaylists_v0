@@ -20,6 +20,9 @@ let playlistsDocRef
 
 let currentAlbums = []
 let currentPlaylists = []
+let currentRankingSummary = {}
+let currentRankingSources = []
+let currentRankingAcclaim = []
 let isAlbumsView = true
 const sortableInstances = []
 let unsubscribeAlbums = null
@@ -30,6 +33,7 @@ let mainContent, loadingSpinner, albumsView, playlistsView, albumsGrid, playlist
 let toggleViewBtn, generateBtn, generateQuickBtn, saveBtn
 let albumsSummary, playlistsSummary
 let loadDataBtn, dataModal, closeModalBtn, cancelModalBtn, processJsonBtn, jsonInput, jsonError, emptyStateCta, emptyStateBtn
+let rankingPanel, rankingSourcesList, rankingSummaryList, rankingAcclaimList
 
 function formatDuration (seconds) {
   if (isNaN(seconds) || seconds < 0) return '00:00'
@@ -40,6 +44,47 @@ function formatDuration (seconds) {
 
 function calculateTotalDuration (tracks) {
   return (tracks || []).reduce((s, x) => s + (x.duration || 0), 0)
+}
+
+function collectRankingAcclaim (albums) {
+  if (!Array.isArray(albums)) return []
+  const seen = new Set()
+  const entries = []
+  albums.forEach(album => {
+    if (!album) return
+    const baseTitle = album.title || 'Álbum Desconhecido'
+    const baseArtist = album.artist || 'Artista Desconhecido'
+    const acclaimList = Array.isArray(album.rankingAcclaim) ? album.rankingAcclaim : []
+    acclaimList.forEach((entry, index) => {
+      if (!entry || !entry.provider) return
+      const position = Number(entry.position || entry.rank || index + 1) || null
+      const key = `${entry.provider}::${position || '0'}::${entry.referenceUrl || ''}`
+      if (seen.has(key)) return
+      seen.add(key)
+      entries.push({
+        provider: entry.provider,
+        position,
+        summary: entry.summary || entry.description || '',
+        referenceUrl: entry.referenceUrl || entry.url || entry.sourceUrl || '',
+        albumTitle: baseTitle,
+        albumArtist: baseArtist
+      })
+    })
+  })
+  return entries.sort((a, b) => (a.position || 999) - (b.position || 999))
+}
+
+const ESCAPE_MAP = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;'
+}
+
+function escapeHtml (value) {
+  if (value === undefined || value === null) return ''
+  return String(value).replace(/[&<>"']/g, char => ESCAPE_MAP[char] || char)
 }
 
 async function processAndSaveJSON () {
@@ -79,7 +124,7 @@ async function processAndSaveJSON () {
       return
     }
 
-    await saveDataToFirestore(newAlbums, currentPlaylists)
+    await saveDataToFirestore(newAlbums, currentPlaylists, currentRankingSummary, currentRankingSources)
     closeDataModal()
 
     if (errors.length > 0) alert(`Importação concluída com ${newAlbums.length} álbuns.\n\nFalhas:\n${errors.join('\n')}`)
@@ -274,6 +319,7 @@ function renderPlaylistsView (playlists) {
   })
 
   renderPlaylistsSummary(playlists, totalTracks, totalDuration)
+  renderRankingPanel()
   initSortable()
 }
 
@@ -325,6 +371,105 @@ function renderPlaylistsSummary (playlists, totalTracks, totalDuration) {
             <h4 class="text-md font-semibold text-white mb-1">Verificação de Integridade</h4>
             ${verificationHtml}
         </div>
+    `
+}
+
+function renderRankingPanel () {
+  if (!rankingPanel) return
+  const entries = currentRankingSummary && Object.values(currentRankingSummary)
+  const hasSummary = entries && entries.length > 0
+  const hasSources = currentRankingSources && currentRankingSources.length > 0
+  const hasAcclaim = currentRankingAcclaim && currentRankingAcclaim.length > 0
+  if (!hasSummary && !hasSources && !hasAcclaim) {
+    rankingPanel.classList.add('hidden')
+    return
+  }
+  rankingPanel.classList.remove('hidden')
+  renderRankingSources()
+  renderRankingAcclaimList(currentRankingAcclaim)
+  renderRankingSummaryList(entries)
+}
+
+function renderRankingSources () {
+  if (!rankingSourcesList) return
+  if (!currentRankingSources || currentRankingSources.length === 0) {
+    rankingSourcesList.innerHTML = '<p class="text-sm text-spotify-lightgray">Nenhuma fonte documentada ainda.</p>'
+    return
+  }
+  rankingSourcesList.innerHTML = currentRankingSources.map(source => {
+    const secureBadge = source.secure ? '<span class="ranking-source-secure" aria-label="Fonte segura">secure</span>' : ''
+    return `
+      <span class="ranking-source-chip">
+        <strong class="tracking-[0.3em] text-[10px] uppercase text-white">${escapeHtml(source.name)}</strong>
+        <span class="text-[11px] text-spotify-lightgray">${escapeHtml(source.type)}</span>
+        ${secureBadge}
+      </span>
+    `
+  }).join('')
+}
+
+function renderRankingAcclaimList (entries) {
+  if (!rankingAcclaimList) return
+  if (!entries || entries.length === 0) {
+    rankingAcclaimList.innerHTML = '<p class="text-sm text-spotify-lightgray">Nenhum ranking de aclamação registrado.</p>'
+    return
+  }
+  rankingAcclaimList.innerHTML = entries.map(entry => {
+    const positionLabel = (entry.position !== undefined && entry.position !== null)
+      ? `Posição ${escapeHtml(entry.position)}`
+      : 'Posição não especificada'
+    const albumParts = []
+    if (entry.albumTitle) albumParts.push(escapeHtml(entry.albumTitle))
+    if (entry.albumArtist) albumParts.push(escapeHtml(entry.albumArtist))
+    const albumLabel = albumParts.length ? albumParts.join(' • ') : 'Álbum desconhecido'
+    const summaryText = entry.summary || 'Resumo não enviado'
+    const sourceLink = entry.referenceUrl ? `<a href="${escapeHtml(entry.referenceUrl)}" target="_blank" rel="noreferrer">Ver fonte</a>` : ''
+    return `
+      <div class="ranking-acclaim-entry">
+        <div class="flex items-baseline justify-between gap-3">
+          <p class="text-sm font-semibold text-white truncate">${albumLabel}</p>
+          <span class="text-xs uppercase text-spotify-lightgray">${positionLabel}</span>
+        </div>
+        <p class="text-[11px] text-spotify-lightgray mt-1 truncate">${escapeHtml(summaryText)}</p>
+        <div class="mt-2 text-[10px] tracking-wide text-right">${sourceLink}</div>
+      </div>
+    `
+  }).join('')
+}
+
+function renderRankingSummaryList (entries) {
+  if (!rankingSummaryList) return
+  if (!entries.length) {
+    rankingSummaryList.innerHTML = '<p class="text-sm text-spotify-lightgray">Nenhuma trilha explicada.</p>'
+    return
+  }
+  rankingSummaryList.innerHTML = entries.map(entry => `
+      <details class="ranking-album-summary" open>
+        <summary class="flex items-center justify-between gap-4 text-sm font-semibold text-white">
+          <span class="truncate">${escapeHtml(entry.albumTitle)} • ${escapeHtml(entry.artist)}</span>
+          <span class="text-xs text-spotify-lightgray">${entry.sourceNames.length ? escapeHtml(entry.sourceNames.join(', ')) : 'sem fontes'}</span>
+        </summary>
+        <div class="mt-3 space-y-2">
+          ${entry.tracks.map(track => renderRankingTrackRow(track)).join('')}
+        </div>
+      </details>
+    `).join('')
+}
+
+function renderRankingTrackRow (track) {
+  const reasons = (track.rankingInfo || []).map(info => {
+    const positionLabel = info.metadata && info.metadata.position ? ` · Pos ${escapeHtml(info.metadata.position)}` : ''
+    return `${escapeHtml(info.reason)} · ${escapeHtml(info.source)}${positionLabel}`
+  }).join(' | ')
+  const rankLabel = track.rank !== undefined && track.rank !== null ? ` · Rank ${escapeHtml(track.rank)}` : ''
+  return `
+      <div class="ranking-track-row">
+        <div class="flex items-baseline justify-between gap-3">
+          <p class="text-sm font-semibold text-white truncate">${escapeHtml(track.title)}${rankLabel}</p>
+          <span class="text-[10px] text-spotify-lightgray">${escapeHtml(track.playlistTitle || track.playlistId || 'sem playlist')}</span>
+        </div>
+        <p class="text-[11px] text-spotify-lightgray">${reasons || 'Sem justificativa detalhada'}</p>
+      </div>
     `
 }
 
@@ -400,9 +545,15 @@ async function runHybridCuration () {
     return
   }
   try {
-    const newPlaylists = curateAlbums(currentAlbums, { targetSeconds: 45 * 60 })
+    const {
+      playlists: newPlaylists,
+      rankingSummary,
+      rankingSources
+    } = curateAlbums(currentAlbums, { targetSeconds: 45 * 60 })
     currentPlaylists = newPlaylists
-    await saveDataToFirestore(currentAlbums, newPlaylists)
+    currentRankingSummary = rankingSummary || {}
+    currentRankingSources = rankingSources || []
+    await saveDataToFirestore(currentAlbums, newPlaylists, currentRankingSummary, currentRankingSources)
     if (isAlbumsView) toggleView(); else renderPlaylistsView(currentPlaylists)
   } catch (err) {
     console.error('Erro ao rodar curadoria:', err)
@@ -410,11 +561,15 @@ async function runHybridCuration () {
   }
 }
 
-async function saveDataToFirestore (albums, playlists) {
+async function saveDataToFirestore (albums, playlists, rankingSummary = {}, rankingSources = []) {
   if (!userId) return console.error('Usuário não autenticado.')
   try {
     const albumsData = { data: JSON.parse(JSON.stringify(albums)) }
-    const playlistsData = { data: JSON.parse(JSON.stringify(playlists)) }
+    const playlistsData = {
+      data: JSON.parse(JSON.stringify(playlists)),
+      rankingSummary: JSON.parse(JSON.stringify(rankingSummary)),
+      rankingSources: JSON.parse(JSON.stringify(rankingSources))
+    }
     await setDoc(albumsDocRef, albumsData)
     await setDoc(playlistsDocRef, playlistsData)
   } catch (err) { console.error('Erro ao salvar:', err) }
@@ -432,12 +587,14 @@ function loadData () {
       const payload = docSnap.data() || {}
       const albumsFromDoc = Array.isArray(payload.data) ? payload.data : []
       currentAlbums = albumsFromDoc
+      currentRankingAcclaim = collectRankingAcclaim(currentAlbums)
       if (!albumsFromDoc || albumsFromDoc.length === 0) {
         console.log('loadData: document exists but no albums; opening input modal')
         openDataModal()
       }
     } else {
       currentAlbums = []
+      currentRankingAcclaim = []
       console.log('loadData: no albums document found; opening input modal')
       openDataModal()
     }
@@ -446,8 +603,16 @@ function loadData () {
 
   if (unsubscribePlaylists) unsubscribePlaylists()
   unsubscribePlaylists = onSnapshot(playlistsDocRef, (docSnap) => {
-    if (docSnap.exists()) currentPlaylists = docSnap.data().data || []
-    else currentPlaylists = []
+    if (docSnap.exists()) {
+      const payload = docSnap.data() || {}
+      currentPlaylists = payload.data || []
+      currentRankingSummary = payload.rankingSummary || {}
+      currentRankingSources = payload.rankingSources || []
+    } else {
+      currentPlaylists = []
+      currentRankingSummary = {}
+      currentRankingSources = []
+    }
     if (!isAlbumsView) renderPlaylistsView(currentPlaylists)
   }, (error) => { console.error('Erro ao carregar playlists:', error); alert('Erro ao carregar dados das playlists.') })
 }
@@ -478,11 +643,15 @@ async function initializeAppContainer () {
   jsonError = document.getElementById('jsonError')
   emptyStateCta = document.getElementById('emptyStateCta')
   emptyStateBtn = document.getElementById('emptyStateBtn')
+  rankingPanel = document.getElementById('rankingPanel')
+  rankingSourcesList = document.getElementById('rankingSourcesList')
+  rankingSummaryList = document.getElementById('rankingSummaryList')
+  rankingAcclaimList = document.getElementById('rankingAcclaimList')
 
   toggleViewBtn.addEventListener('click', toggleView)
   if (generateBtn) generateBtn.addEventListener('click', runHybridCuration)
   if (generateQuickBtn) generateQuickBtn.addEventListener('click', runHybridCuration)
-  saveBtn.addEventListener('click', () => saveDataToFirestore(currentAlbums, currentPlaylists))
+  saveBtn.addEventListener('click', () => saveDataToFirestore(currentAlbums, currentPlaylists, currentRankingSummary, currentRankingSources))
   loadDataBtn.addEventListener('click', openDataModal)
   closeModalBtn.addEventListener('click', closeDataModal)
   cancelModalBtn.addEventListener('click', closeDataModal)

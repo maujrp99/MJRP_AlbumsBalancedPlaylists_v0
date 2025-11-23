@@ -24,7 +24,7 @@ const albums = [
   }
 ]
 
-const playlists = curateAlbums(albums, { targetSeconds: 3 * 60 })
+const { playlists, rankingSummary, rankingSources } = curateAlbums(albums, { targetSeconds: 3 * 60 })
 
 const p1 = playlists.find(p => p.id === 'p1')
 const p2 = playlists.find(p => p.id === 'p2')
@@ -36,5 +36,9 @@ const fillTracks = [...(p1.tracks || []).slice(1), ...(p2.tracks || []).slice(1)
 assert.ok(fillTracks.length > 0, 'Expected fill tracks')
 const ranks = fillTracks.map(f => f.rank).filter(r => typeof r === 'number')
 assert.ok(ranks.includes(10) || ranks.includes(9), 'Fill should prefer worst-ranked tracks')
+
+assert.ok(rankingSummary && rankingSummary.alb1, 'Album summary must exist')
+assert.ok(rankingSummary.alb1.tracks.some(track => Array.isArray(track.rankingInfo)), 'Tracks must expose rankingInfo')
+assert.ok(rankingSources && rankingSources.some(source => source.name === 'MJRP Hybrid Algorithm'), 'Default ranking source recorded')
 
 console.log('curation.test.mjs passed')

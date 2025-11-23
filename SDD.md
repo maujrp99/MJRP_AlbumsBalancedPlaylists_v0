@@ -31,6 +31,23 @@ High-level Architecture
 -----------------------
 - Public static site (browser) — calls server proxy for AI-based album metadata; uses Firebase for user data and persistence.
 - Server proxy — receives `{ albumQuery }`, forwards to provider, normalizes results and validates against a JSON schema (AJV).
+- Gemini configuration loader — server-side helper that reads curated prompts from `config/prompts.json`, merges them with secrets (`GEMINI_API_KEY`), and issues requests to Google Gemini so both album lookups and ranking scans stay editable.
+
+Prompt Configuration
+--------------------
+Rather than embedding AI prompts in source files, the proxy reads them from `config/prompts.json` so curators can adjust queries, tone, and provider hints without redeploying. The file defines both the album metadata prompt and the ranking prompt, alongside a curated list of default sources (Pitchfork, Rolling Stone, NME, Rate Your Music, Sonemic, AllMusic, Sputnikmusic, TheTopTens.com, Loudwire, Kerrang!, Ultimate Classic Rock, Stereogum, Classic Rock Magazine, and Metal Hammer). The ranking prompt explicitly asks Gemini for a consolidated, *track-level* acclaim ranking per album that merges magazine critiques with fan sentiment (TheTopTens.com serves as the fan pulse).
+
+```json
+{
+  "albumSearchPrompt": "<text asking Gemini for normalized album metadata with track lists, durations, and release info>",
+  "rankingPrompt": "<text asking Gemini to compile a track-by-track acclaim ranking that returns provider, position, trackTitle, summary and reference URL>",
+  "defaultRankingProviders": ["Pitchfork", "Rolling Stone", "NME", "Rate Your Music", "Sonemic", "AllMusic", "Sputnikmusic", "TheTopTens.com", "Loudwire", "Kerrang!", "Ultimate Classic Rock", "Stereogum", "Classic Rock Magazine", "Metal Hammer"]
+}
+```
+
+The server renders these templates with the current album query plus metadata fields (`albumTitle`, `albumArtist`, `albumYear`) and then calls Gemini twice: once to fetch the normalized album object and again to fetch the ranking entries. Each ranking entry is expected to provide the acclaim `position`, `trackTitle`, `provider`, `summary`, and `referenceUrl` so the UI can surface clickable provenance. Secrets remain in `.env`, and only the proxy sees `GEMINI_API_KEY`.
+
+AI secrets live in `.env`, never shipped to the browser. Only the proxy holds `GEMINI_API_KEY` and it uses that key to authenticate calls from `config/prompts.json` to Gemini, hiding credentials from all clients.
 
 Component Responsibilities
 --------------------------
@@ -132,15 +149,17 @@ Ranking Source & Traceability (secondary priority)
 We plan to add a ranking-source feature that records the provenance of ranking decisions used to place tracks and albums into playlists (examples: specific websites, magazines, critics, blogs, or internal heuristics). This is considered a secondary priority feature and will be implemented after algorithm correctness and testing are stable.
 
 Design notes (high level):
-- The system will annotate placed tracks with a `rankingInfo` array that includes labelled reasons (e.g., `P1 Hit`, `DeepCut - serpentine`, `Swap: duration-balance`) and optional numeric scores and timestamps.
+- The system will annotate placed tracks with a `rankingInfo` array that includes labelled reasons (e.g., `P1 Hit`, `DeepCut - serpentine`, `Swap: duration-balance`) and ties each entry to the consolidated acclaim ranking position provided by external sources.
 - A per-album `rankingSummary` object will be stored alongside playlists to explain which tracks from the album were used and why.
 - The full source list (external sources such as sites/magazines) will be recorded when available and surfaced in UI on demand; this will require a secure handling policy for any third-party attributions.
 
 Implementation notes (detailed):
 - **Ranking data contracts**
-  - Each track that participates in a playlist will carry a `rankingInfo` array with zero or more entries shaped like `{ reason: string, source: string, score?: number, timestamp?: string, metadata?: Record<string, unknown> }`. `reason` describes the placement action, `source` cites the origin (algorithm, critic, site name etc.), and `timestamp` anchors the decision for auditability.
+  - Each track that participates in a playlist will carry a `rankingInfo` array with zero or more entries shaped like `{ reason: string, source: string, metadata?: Record<string, unknown> }`. `reason` describes the placement action and `source` cites the origin (algorithm, critic, site name etc.); the ranking position is provided separately by the consolidated acclaim data and there is no need for internal `score` or `timestamp` fields.
   - The playlists Firestore document will expand to contain `{ data: Playlist[], rankingSummary: Record<string, RankingSummary>, rankingSources: RankingSource[] }`. `RankingSummary` captures the album id/title/artist, the selected tracks (with rank, playlist id, and `rankingInfo` references), and an aggregated list of unique sources that affected that album. `RankingSource` records any third-party or internal provenance (e.g., `{ name: 'Rolling Stone', type: 'external', reference: 'https://...', secure: true }`).
   - Each album object may optionally include `rankingSources` as part of the fetched metadata so curators can pass real-world attributions into the curation run. Those sources flow into the aggregated ranking source list and respect the policy that external attributions are treated as untrusted data (read-only, sanitized, and only surfaced in the UI after consent).
+  - When the server calls Gemini with the ranking prompt, the response is expected to return an ordered list of acclaim entries (`provider`, `summary`, `position`, `referenceUrl`). Each entry is converted to a `rankingSource` (type `external`, `secure: true`) and is also referenced within the track-level `rankingInfo` so the UI can present both the textual reasoning and a deep link back to the originating critic/magazine. The `position` field supplies the ranking order instead of any `score` metadata.
+  - Each normalized album now carries an optional `rankingAcclaim` array that mirrors the Gemini ranking entries (`trackTitle`, `position`, `provider`, `summary`, `referenceUrl`). This array is persisted to Firestore alongside the album data and is used to surface the curated ranking panel plus any future audit tooling that needs to show track-level acclaim.
 
 - **Algorithm instrumentation**
   - `runHybridCuration()` now emits ranking metadata alongside the playlists. Rank 1/2 picks are annotated with `P1 Hit`/`P2 Hit` reasons, fills use `fill:worse-ranked`, and `runFase4SwapBalancing()` appends swap-specific entries when conservative swaps move tracks between playlists.

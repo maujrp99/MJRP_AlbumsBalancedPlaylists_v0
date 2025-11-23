@@ -25,8 +25,9 @@ app.get('/_health', (req, res) => res.send({ ok: true }))
 
 // Schema and validation are provided by `server/lib/schema.js` (AJV optional)
 
+const { loadPrompts, renderPrompt } = require('./lib/prompts')
 const { callProvider } = require('./lib/aiClient')
-const { extractAlbum } = require('./lib/normalize')
+const { extractAlbum, extractRankingEntries, rankingEntriesToSources } = require('./lib/normalize')
 const { validateAlbum, ajvAvailable } = require('./lib/schema')
 
 // Optional helper: list available models from Google Generative Language
@@ -45,6 +46,33 @@ app.get('/api/list-models', async (req, res) => {
 })
 
 // Proxy endpoint: accepts { albumQuery }
+async function fetchRankingForAlbum (album, albumQuery) {
+  const prompts = loadPrompts()
+  const template = prompts.rankingPrompt
+  if (!template) return { entries: [], sources: [] }
+  const rankingProviders = Array.isArray(prompts.defaultRankingProviders)
+    ? prompts.defaultRankingProviders.join(', ')
+    : ''
+  const rankingPrompt = renderPrompt(template, {
+    albumTitle: album.title || albumQuery,
+    albumArtist: album.artist || '',
+    albumYear: album.year || '',
+    albumQuery,
+    rankingProviders
+  })
+  if (!rankingPrompt) return { entries: [], sources: [] }
+  const rankingResponse = await callProvider({
+    prompt: rankingPrompt,
+    maxTokens: 2048,
+    aiEndpoint: process.env.AI_ENDPOINT,
+    aiApiKey: AI_API_KEY,
+    aiModelEnv: process.env.AI_MODEL
+  })
+  const entries = extractRankingEntries(rankingResponse)
+  const sources = rankingEntriesToSources(entries)
+  return { entries, sources }
+}
+
 app.post('/api/generate', async (req, res) => {
   if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured on server' })
 
@@ -52,7 +80,10 @@ app.post('/api/generate', async (req, res) => {
   if (!albumQuery) return res.status(400).json({ error: 'Missing albumQuery in request body' })
 
   try {
+    const prompts = loadPrompts()
+    const albumPrompt = renderPrompt(prompts.albumSearchPrompt, { albumQuery })
     const response = await callProvider({
+      prompt: albumPrompt || undefined,
       albumQuery,
       model,
       maxTokens,
@@ -83,7 +114,24 @@ app.post('/api/generate', async (req, res) => {
             return res.status(422).json({ error: 'Validation failed', validationErrors: validateAlbum.errors })
           }
         }
-        return res.status(200).json({ data: album })
+        let rankingEntries = []
+        let rankingSources = []
+        try {
+          const rankingResult = await fetchRankingForAlbum(album, albumQuery)
+          rankingEntries = rankingResult.entries
+          rankingSources = rankingResult.sources
+        } catch (err) {
+          console.warn('Ranking fetch skipped:', err?.message || err)
+        }
+        const combinedSources = Array.isArray(album.rankingSources)
+          ? [...album.rankingSources, ...rankingSources]
+          : [...rankingSources]
+        const albumPayload = {
+          ...album,
+          rankingSources: combinedSources
+        }
+        if (rankingEntries.length) albumPayload.rankingAcclaim = rankingEntries
+        return res.status(200).json({ data: albumPayload })
       }
     } catch (err) {
       console.warn('Normalization attempt failed, forwarding raw provider response', err?.message || err)
