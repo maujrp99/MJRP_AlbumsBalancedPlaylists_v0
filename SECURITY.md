@@ -34,6 +34,12 @@ Additional notes:
 - The server now optionally validates album objects returned by the AI provider using `ajv` (if `ajv` is installed in `server/`). Validation failures are returned with HTTP `422` and a `validationErrors` array in the response. This helps detect malformed provider responses early.
 - If you see repeated `422` responses during testing, check the proxy logs (server console or `/tmp/proxy.log`) for `Album validation failed` messages and inspect the raw provider response.
 
+Additional anti-hallucination note (2025-11-23):
+
+- The proxy includes lightweight URL verification for `referenceUrl` values returned by the AI model. Model-provided URLs that cannot be verified are nulled before being persisted or surfaced to the UI. BestEverAlbums URLs are treated as trusted provenance when they are returned by the server-side scraper.
+
+Operational note: during local development on 2025-11-23 the proxy was restarted and the health endpoint responded `{ "ok": true }` after fixes to the ranking flow.
+
 Running the proxy with AJV enabled:
 
 ```bash

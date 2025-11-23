@@ -2,7 +2,7 @@
 
 Status: Draft
 
-Last updated: 2025-11-22
+Last updated: 2025-11-23
 
 Authors: Project maintainers
 
@@ -25,6 +25,13 @@ Implemented details (2025-11-23):
 - Centralized verification: URL verification/sanitization is now centralized in `server/lib/normalize.js` through the async helper `extractAndValidateRankingEntries(response)` so all normalization flows apply the same anti-hallucination policy. `server/lib/validateSource.js` remains the network check implementation but consumers call the normalizer to obtain validated entries.
 - Frontend traceability: the UI now surfaces BestEverAlbums provenance first and marks BestEver-sourced acclaim entries as verified. An operator-only `#updateAcclaimBtn` remains available but hidden by default for manual batch runs.
 - Observability: a small structured logger `server/lib/logger.js` was added and used to emit events for scraper failures (`bestever_scraper_failed`), enrichment errors (`model_enrichment_failed`), URL nullifications (`nullified_reference_url`) and model truncation detections (`model_truncation_detected`). These logs facilitate local debugging and future integration with centralized log systems.
+
+UI presentation fix (2025-11-23):
+
+- The front-end ranking panel renderer was corrected to remove the initial global "Ranking de Aclamação" matrix (which previously interleaved albums by position). The panel now renders a single block per album and orders tracks by the consolidated `rank` (ascending: 1 = most acclaimed).
+- Ratings from BestEverAlbums are surfaced next to each track when available (the UI looks for `album.bestEverEvidence`, `album.rankingAcclaim` or consolidated entries). If you want ratings guaranteed in the UI, persist `bestEverEvidence` in the album payload on the server side (recommended).
+
+Operational note: the server was restarted during local development and the health endpoint returned `{ "ok": true }` on 2025-11-23.
 
 Testing updates:
 

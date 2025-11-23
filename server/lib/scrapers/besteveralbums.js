@@ -219,7 +219,7 @@ async function parseChartRankingById(id) {
     return b.rating - a.rating
   })
 
-  return { albumUrl: chartUrl, evidence: normalized }
+  return { albumUrl: chartUrl, albumId: String(id), evidence: normalized }
 }
 
 // Helper: parse chart HTML string (useful for fixture-based tests)
@@ -346,7 +346,7 @@ async function getRankingForAlbum(albumTitle, albumArtist) {
             const chartMatch = a.url.match(/thechart\.php\?a=(\d+)/i)
             if (chartMatch) {
               const parsed = await parseChartRankingById(chartMatch[1])
-              return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, evidence: parsed.evidence }
+              return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId, evidence: parsed.evidence }
             }
             const albumMatch = a.url.match(/album\.php\?id=(\d+)/i)
             if (albumMatch) {
@@ -362,14 +362,15 @@ async function getRankingForAlbum(albumTitle, albumArtist) {
     const id = await findAlbumId(albumTitle, albumArtist)
     if (id) {
       const parsed = await parseChartRankingById(id)
-      return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, evidence: parsed.evidence }
+      return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId, evidence: parsed.evidence }
     }
 
     // 3) fallback: try generic album page parsing using search heuristics
     const albumUrl = await fetchAlbumPage(albumTitle, albumArtist)
     if (!albumUrl) return null
     const parsed = await parseAlbumRanking(albumUrl)
-    return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, evidence: parsed.evidence }
+    // parseAlbumRanking may not know the chart id; return albumUrl and evidence
+    return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId || null, evidence: parsed.evidence }
   } catch (err) {
     return { error: err.message }
   }

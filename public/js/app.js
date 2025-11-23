@@ -399,8 +399,8 @@ function renderRankingPanel () {
   if (existingBanner) rankingPanel.replaceChild(debugBanner, existingBanner)
   else rankingPanel.insertBefore(debugBanner, rankingPanel.firstChild)
   renderRankingSources()
-  renderRankingAcclaimList(currentRankingAcclaim)
-  renderRankingSummaryList(entries)
+  // Render only the per-album consolidated ranking summary (no separate global positions block)
+  renderRankingSummaryList()
 }
 
 function renderRankingSources () {
@@ -438,49 +438,148 @@ function renderRankingAcclaimList (entries) {
     rankingAcclaimList.innerHTML = '<p class="text-sm text-spotify-lightgray">Nenhum ranking de aclamação registrado.</p>'
     return
   }
-  rankingAcclaimList.innerHTML = entries.map(entry => {
-    const positionLabel = (entry.position !== undefined && entry.position !== null)
-      ? `Posição ${escapeHtml(entry.position)}`
-      : 'Posição não especificada'
-    const albumParts = []
-    if (entry.albumTitle) albumParts.push(escapeHtml(entry.albumTitle))
-    if (entry.albumArtist) albumParts.push(escapeHtml(entry.albumArtist))
-    const albumLabel = albumParts.length ? albumParts.join(' • ') : 'Álbum desconhecido'
-    const summaryText = entry.summary || 'Resumo não enviado'
-    const sourceLink = entry.referenceUrl ? `<a href="${escapeHtml(entry.referenceUrl)}" target="_blank" rel="noreferrer">Ver fonte</a>` : ''
-    // Show a small verified badge when provider or URL indicates BestEverAlbums provenance
-    const isBestEver = (entry && ((entry.provider && String(entry.provider).toLowerCase().includes('bestever')) || (entry.referenceUrl && String(entry.referenceUrl).toLowerCase().includes('bestever'))))
-    const verifiedBadge = isBestEver ? ' <span class="text-xs text-green-400 font-semibold">(BestEver verificado)</span>' : ''
-    return `
-      <div class="ranking-acclaim-entry">
-        <div class="flex items-baseline justify-between gap-3">
-          <p class="text-sm font-semibold text-white truncate">${albumLabel}</p>
-          <span class="text-xs uppercase text-spotify-lightgray">${positionLabel}</span>
+  // Group entries by album (albumTitle • albumArtist) so the UI shows per-album acclaim lists
+  const grouped = {}
+  entries.forEach(entry => {
+    const title = entry && entry.albumTitle ? String(entry.albumTitle) : 'Álbum desconhecido'
+    const artist = entry && entry.albumArtist ? String(entry.albumArtist) : ''
+    const key = artist ? `${title} • ${artist}` : title
+    if (!grouped[key]) grouped[key] = []
+    grouped[key].push(entry)
+  })
+
+  // Render each album block: album header + tracks sorted by position asc (1 = most acclaimed)
+  rankingAcclaimList.innerHTML = Object.keys(grouped).map(albumKey => {
+    const list = grouped[albumKey].slice().sort((a, b) => (Number(a.position) || 999) - (Number(b.position) || 999))
+    const rows = list.map(entry => {
+      const pos = (entry.position !== undefined && entry.position !== null) ? `Posição ${escapeHtml(entry.position)}` : 'Posição não especificada'
+      const summaryText = entry.summary || 'Resumo não enviado'
+      const sourceLink = entry.referenceUrl ? `<a href="${escapeHtml(entry.referenceUrl)}" target="_blank" rel="noreferrer">Ver fonte</a>` : ''
+      const isBestEver = (entry && ((entry.provider && String(entry.provider).toLowerCase().includes('bestever')) || (entry.referenceUrl && String(entry.referenceUrl).toLowerCase().includes('bestever'))))
+      const verifiedBadge = isBestEver ? ' <span class="text-xs text-green-400 font-semibold">(BestEver verificado)</span>' : ''
+      return `
+        <div class="ranking-acclaim-entry">
+          <div class="flex items-baseline justify-between gap-3">
+            <p class="text-sm font-semibold text-white truncate">${escapeHtml(entry.trackTitle || 'Faixa desconhecida')}</p>
+            <span class="text-xs uppercase text-spotify-lightgray">${pos}</span>
+          </div>
+          <p class="text-[11px] text-spotify-lightgray mt-1 truncate">${escapeHtml(summaryText)}</p>
+          <div class="mt-2 text-[10px] tracking-wide text-right">${sourceLink}${verifiedBadge}</div>
         </div>
-        <p class="text-[11px] text-spotify-lightgray mt-1 truncate">${escapeHtml(summaryText)}</p>
-        <div class="mt-2 text-[10px] tracking-wide text-right">${sourceLink}${verifiedBadge}</div>
+      `
+    }).join('')
+    return `
+      <div class="ranking-album-block">
+        <h5 class="text-sm font-semibold text-white mb-2">${escapeHtml(albumKey)}</h5>
+        <div class="space-y-2">${rows}</div>
       </div>
     `
   }).join('')
 }
 
-function renderRankingSummaryList (entries) {
+function renderRankingSummaryList () {
   if (!rankingSummaryList) return
-  if (!entries.length) {
-    rankingSummaryList.innerHTML = '<p class="text-sm text-spotify-lightgray">Nenhuma trilha explicada.</p>'
+  if (!currentAlbums || currentAlbums.length === 0) {
+    rankingSummaryList.innerHTML = '<p class="text-sm text-spotify-lightgray">Nenhum álbum para exibir.</p>'
     return
   }
-  rankingSummaryList.innerHTML = entries.map(entry => `
-      <details class="ranking-album-summary" open>
-        <summary class="flex items-center justify-between gap-4 text-sm font-semibold text-white">
-          <span class="truncate">${escapeHtml(entry.albumTitle)} • ${escapeHtml(entry.artist)}</span>
-          <span class="text-xs text-spotify-lightgray">${entry.sourceNames.length ? escapeHtml(entry.sourceNames.join(', ')) : 'sem fontes'}</span>
-        </summary>
-        <div class="mt-3 space-y-2">
-          ${entry.tracks.map(track => renderRankingTrackRow(track)).join('')}
+
+  // For each album, prefer `rankingConsolidated` ordering (server-side consolidation, prefers BestEver evidence).
+  const html = currentAlbums.map(album => {
+    if (!album) return ''
+    const albumTitle = album.title || 'Álbum Desconhecido'
+    const albumArtist = album.artist || ''
+    // attempt to find BestEver album URL from album.rankingSources, album.bestEverUrl, or global currentRankingSources
+    const findBestEverUrl = (sources) => {
+      if (!Array.isArray(sources)) return null
+      for (const s of sources) {
+        if (!s) continue
+        const name = String(s.provider || s.name || '').toLowerCase()
+        const url = s.referenceUrl || s.albumUrl || s.url || null
+        if (name.includes('bestever') && url) return url
+        if (url && String(url).toLowerCase().includes('besteveralbums.com')) return url
+      }
+      return null
+    }
+
+    let bestEverUrl = album.bestEverUrl || findBestEverUrl(album.rankingSources) || findBestEverUrl(currentRankingSources)
+    // fallback: build canonical URL from album.bestEverAlbumId when present
+    if (!bestEverUrl && album.bestEverAlbumId) bestEverUrl = `https://www.besteveralbums.com/thechart.php?a=${encodeURIComponent(String(album.bestEverAlbumId))}#tracks`
+
+    // Determine track list: prefer rankingConsolidated (server-side Borda consolidation)
+    let tracks = []
+    if (Array.isArray(album.rankingConsolidated) && album.rankingConsolidated.length > 0) {
+      // rankingConsolidated entries include finalPosition
+      const normalizeKey = s => (s || '').toString().toLowerCase().replace(/[^a-z0-9]+/g, '')
+      tracks = album.rankingConsolidated.map(t => ({
+        title: t.trackTitle || t.title || t.name || 'Faixa desconhecida',
+        rank: t.finalPosition || t.position || null,
+        duration: (album.tracks || []).find(x => ((x.title || x.name || x.trackTitle) && String(x.title || x.name || x.trackTitle).toLowerCase() === String(t.trackTitle || '').toLowerCase()))?.duration || null,
+        rating: (function findRating () {
+          // prefer explicit rating on consolidated entry
+          if (t.rating) return t.rating
+          // try evidence attached to the consolidated entry
+          if (t.evidence && Array.isArray(t.evidence)) {
+            const be = t.evidence.find(e => e && String(e.provider || '').toLowerCase().includes('bestever') && (e.rating || e.score || e.value))
+            if (be) return be.rating || be.score || be.value
+          }
+          // check album.bestEverEvidence (server-provided array of {trackTitle, rating}) using normalized match
+          if (Array.isArray(album.bestEverEvidence)) {
+            const key = normalizeKey(t.trackTitle || t.title || '')
+            const m = album.bestEverEvidence.find(b => normalizeKey(b.trackTitle) === key)
+            if (m && (m.rating || m.score)) return m.rating || m.score
+          }
+          // check album.rankingAcclaim entries for rating
+          if (Array.isArray(album.rankingAcclaim)) {
+            const key = normalizeKey(t.trackTitle || t.title || '')
+            const m2 = album.rankingAcclaim.find(r => normalizeKey(r.trackTitle || r.title || '') === key)
+            if (m2 && (m2.rating || m2.score)) return m2.rating || m2.score
+          }
+          return null
+        })()
+      }))
+      // ensure ordered by rank asc
+      tracks.sort((a, b) => (Number(a.rank) || 999) - (Number(b.rank) || 999))
+    } else {
+      // fallback to album.tracks ordering (use available rank if present)
+      tracks = (album.tracks || []).map(t => ({ title: t.title || t.name || t.trackTitle || 'Faixa desconhecida', rank: t.rank || null, duration: t.duration || null, rating: t.rating || t.bestEverRating || null }))
+      tracks.sort((a, b) => (Number(a.rank) || 999) - (Number(b.rank) || 999))
+    }
+
+    const albumDuration = calculateTotalDuration(album.tracks || [])
+
+    const rowsHtml = tracks.map(track => {
+      const rankLabel = track.rank ? `${escapeHtml(String(track.rank))}` : '-'
+      const dur = track.duration ? formatDuration(track.duration) : '--:--'
+      const ratingLabel = track.rating ? `<span class="text-xs text-spotify-lightgray"> • Rating: ${escapeHtml(String(track.rating))}</span>` : ''
+      return `
+        <div class="flex items-center justify-between p-2 rounded-md hover:bg-spotify-gray">
+          <div class="flex items-center gap-3">
+            <span class="w-6 text-spotify-lightgray text-sm text-center">${rankLabel}</span>
+            <span class="text-white truncate">${escapeHtml(track.title)}</span>
+          </div>
+          <div class="text-right text-spotify-lightgray text-sm">${escapeHtml(dur)}${ratingLabel}</div>
         </div>
-      </details>
-    `).join('')
+      `
+    }).join('')
+
+    const sourceHtml = bestEverUrl ? `<a href="${escapeHtml(bestEverUrl)}" target="_blank" rel="noreferrer" class="text-xs text-spotify-lightgray">Fonte: BestEverAlbums</a>` : ''
+
+    return `
+      <div class="card-base mb-3">
+        <div class="p-3 border-b border-spotify-gray">
+          <div class="flex items-baseline justify-between">
+            <h4 class="text-sm font-semibold text-white">${escapeHtml(albumTitle)} • ${escapeHtml(albumArtist)}</h4>
+            <div class="text-xs text-spotify-lightgray">Total: ${formatDuration(albumDuration)}</div>
+          </div>
+          <div class="mt-2">${sourceHtml}</div>
+        </div>
+        <div class="p-3 space-y-1">${rowsHtml}</div>
+      </div>
+    `
+  }).join('')
+
+  rankingSummaryList.innerHTML = html
 }
 
 function renderRankingTrackRow (track) {

@@ -92,6 +92,7 @@ async function fetchRankingForAlbum (album, albumQuery, options = {}) {
         provider: 'BestEverAlbums',
         trackTitle: e.trackTitle,
         position: idx + 1,
+        rating: typeof e.rating === 'number' ? e.rating : (e.rating ? Number(e.rating) : null),
         referenceUrl: best.referenceUrl || best.albumUrl || null
       }))
 
@@ -99,7 +100,7 @@ async function fetchRankingForAlbum (album, albumQuery, options = {}) {
       const albumTrackCount = Array.isArray(album && album.tracks) ? album.tracks.length : null
       if (!albumTrackCount || scraperEntries.length >= albumTrackCount) {
         const sources = [{ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: best.referenceUrl || best.albumUrl || null }]
-        return { entries: scraperEntries, sources }
+        return { entries: scraperEntries, sources, bestEver: { albumUrl: best.referenceUrl || best.albumUrl || null, albumId: best.albumId || null, evidence: best.evidence } }
       }
 
       // Scraper is partial: call the model as an enricher and merge results deterministically.
@@ -186,12 +187,12 @@ async function fetchRankingForAlbum (album, albumQuery, options = {}) {
           if (!sources.some(existing => String(existing.provider).toLowerCase() === String(s.provider || '').toLowerCase())) sources.push(s)
         }
 
-        return { entries: finalEntries, sources }
+        return { entries: finalEntries, sources, bestEver: { albumUrl: best.referenceUrl || best.albumUrl || null, albumId: best.albumId || null, evidence: best.evidence } }
       } catch (e) {
         // If model enrichment failed, fall back to returning scraper-only evidence
         logger.warn('model_enrichment_failed', { albumQuery, err: (e && e.message) || String(e) })
         const sources = [{ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: best.referenceUrl || best.albumUrl || null }]
-        return { entries: scraperEntries, sources }
+        return { entries: scraperEntries, sources, bestEver: { albumUrl: best.referenceUrl || best.albumUrl || null, albumId: best.albumId || null, evidence: best.evidence } }
       }
     }
   } catch (err) {
@@ -274,6 +275,15 @@ app.post('/api/generate', async (req, res) => {
           const rankingResult = await fetchRankingForAlbum(album, albumQuery)
           rankingEntries = rankingResult.entries
           rankingSources = rankingResult.sources
+          // attach BestEver evidence/url to album payload when available
+          const bestEver = rankingResult.bestEver
+          if (bestEver) {
+            // ensure callers can access BestEver evidence and canonical url
+            album.bestEverEvidence = Array.isArray(bestEver.evidence) ? bestEver.evidence : []
+            album.bestEverUrl = bestEver.albumUrl || null
+            // prefer explicit albumId if available
+            if (bestEver.albumId) album.bestEverAlbumId = String(bestEver.albumId)
+          }
         } catch (err) {
           console.warn('Ranking fetch skipped:', err?.message || err)
         }

@@ -10,6 +10,12 @@
 - Fixture-driven parser tests for BestEver scraper and lightweight unit tests added under `server/test/`.
 - Observability: lightweight structured logging for scraper failures, URL nullification events, model enrichment failures and model truncation detection.
 
+### Fixed (2025-11-23)
+- UI: removed redundant global "positions" block in the ranking panel and corrected renderer to display a single per-album consolidated ranking ordered by track rank (1 = most acclaimed).
+
+### Operational
+- Server was restarted during development and the health endpoint responded OK on 2025-11-23.
+
 ### Changed
 - `fetchRankingForAlbum` now prefers scraper evidence and merges model evidence when needed.
 
