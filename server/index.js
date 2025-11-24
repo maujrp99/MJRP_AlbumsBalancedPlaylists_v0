@@ -393,6 +393,22 @@ app.post('/api/generate', async (req, res) => {
           console.warn('Ranking consolidation failed:', e && e.message)
           albumPayload.rankingConsolidated = []
         }
+        // Map consolidated final positions back onto album tracks as `rank` so clients
+        // (curation UI/algorithms) can rely on `track.rank` for playlist generation.
+        try {
+          if (Array.isArray(albumPayload.rankingConsolidated) && Array.isArray(albumPayload.tracks)) {
+            const rankMap = new Map()
+            albumPayload.rankingConsolidated.forEach(r => {
+              if (r && r.trackTitle && r.finalPosition) rankMap.set(String(r.trackTitle).toLowerCase(), Number(r.finalPosition))
+            })
+            albumPayload.tracks.forEach(t => {
+              const key = String((t && (t.title || t.trackTitle || t.name)) || '').toLowerCase()
+              if (key && rankMap.has(key)) t.rank = rankMap.get(key)
+            })
+          }
+        } catch (e) {
+          logger && logger.warn && logger.warn('rank_mapping_failed', { err: (e && e.message) || String(e) })
+        }
         return res.status(200).json({ data: albumPayload })
       }
     } catch (err) {
