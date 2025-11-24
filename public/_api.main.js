@@ -4,33 +4,11 @@
 export async function fetchAlbumMetadata (albumQuery) {
   if (!albumQuery) throw new Error('Missing albumQuery')
 
-  // Determine proxy URL. Prefer same-origin `/api/generate` for hosted site.
-  // Honor `window.__api_base` only for local development (localhost) or explicit different hostnames.
-  let url
-  if (window.__api_base && typeof window.__api_base === 'string') {
-    const candidate = window.__api_base.replace(/\/$/, '')
-    try {
-      const parsed = new URL(candidate)
-      // If candidate points to localhost (dev), allow it
-      if (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') {
-        url = candidate + '/api/generate'
-      } else {
-        // If candidate hostname matches current page hostname but includes a port (e.g. :3000),
-        // prefer same-origin path to avoid pointing to an incorrect port in production.
-        if (parsed.hostname === window.location.hostname && parsed.port) {
-          url = '/api/generate'
-        } else {
-          // Allow explicit different hosts (useful for custom staging)
-          url = candidate + '/api/generate'
-        }
-      }
-    } catch (e) {
-      // If parsing fails, fall back to same-origin to be safe
-      url = '/api/generate'
-    }
-  } else {
-    url = '/api/generate'
-  }
+  // Determine proxy URL. Use same host as page but default to port 3000 where the proxy runs.
+  // Use an explicit override if provided, otherwise call the proxy via same-origin
+  const url = (window.__api_base && typeof window.__api_base === 'string')
+    ? window.__api_base.replace(/\/$/, '') + '/api/generate'
+    : '/api/generate'
 
   console.debug('fetchAlbumMetadata -> proxy url:', url, 'query:', albumQuery)
   let resp
@@ -73,21 +51,9 @@ export async function fetchMultipleAlbumMetadata (queries, options = {}) {
   if (!Array.isArray(queries)) throw new Error('queries must be an array')
   const { concurrency = 3, retries = 3, backoffMs = 500, onProgress, signal } = options
 
-  // Reuse the same normalization logic as above for multiple fetches
-  let baseUrl
-  if (window.__api_base && typeof window.__api_base === 'string') {
-    const candidate = window.__api_base.replace(/\/$/, '')
-    try {
-      const parsed = new URL(candidate)
-      if (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') baseUrl = candidate + '/api/generate'
-      else if (parsed.hostname === window.location.hostname && parsed.port) baseUrl = '/api/generate'
-      else baseUrl = candidate + '/api/generate'
-    } catch (e) {
-      baseUrl = '/api/generate'
-    }
-  } else {
-    baseUrl = '/api/generate'
-  }
+  const baseUrl = (window.__api_base && typeof window.__api_base === 'string')
+    ? window.__api_base.replace(/\/$/, '') + '/api/generate'
+    : '/api/generate'
 
   const results = new Array(queries.length)
   let idx = 0
