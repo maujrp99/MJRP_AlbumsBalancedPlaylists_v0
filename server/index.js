@@ -333,7 +333,24 @@ app.post('/api/generate', async (req, res) => {
           rankingEntries = rankingResult.entries
           rankingSources = rankingResult.sources
           // attach BestEver evidence/url to album payload when available
-          const bestEver = rankingResult.bestEver
+          let bestEver = rankingResult.bestEver
+          // Fallback: if fetchRankingForAlbum didn't return BestEver, attempt a standalone scrape
+          if (!bestEver) {
+            try {
+              const be = await getBestEverRanking(album?.title || albumQuery, album?.artist || '')
+              if (be && Array.isArray(be.evidence) && be.evidence.length > 0) {
+                bestEver = be
+                // ensure rankingSources includes BestEver as primary provenance
+                rankingSources = Array.isArray(rankingSources) ? rankingSources : []
+                // avoid duplicate provider entries
+                if (!rankingSources.some(s => String(s.provider || '').toLowerCase() === 'besteveralbums')) {
+                  rankingSources.unshift({ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: be.referenceUrl || be.albumUrl || null })
+                }
+              }
+            } catch (e) {
+              logger && logger.warn && logger.warn('bestever_scraper_fallback_failed', { albumQuery, err: (e && e.message) || String(e) })
+            }
+          }
           if (bestEver) {
             // ensure callers can access BestEver evidence and canonical url
             album.bestEverEvidence = Array.isArray(bestEver.evidence) ? bestEver.evidence : []
