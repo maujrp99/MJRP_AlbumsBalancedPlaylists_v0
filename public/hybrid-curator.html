@@ -531,6 +531,17 @@
     <!-- Load firebase-config (must define window.__firebase_config) -->
     <script src="./js/firebase-config.js"></script>
 
+    <!-- Local dev: ensure API calls go to backend on :3000 when serving static files on :8000 -->
+    <script>
+        try {
+            if (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+                // prefer explicit backend port used by `./scripts/start-local.sh`
+                window.__api_base = window.__api_base || 'http://localhost:3000'
+                console.debug('Dev mode: setting window.__api_base to', window.__api_base)
+            }
+        } catch (e) { /* ignore */ }
+    </script>
+
     <!-- App entry (ES module) -->
     <script type="module" src="./js/app.js"></script>
 
