@@ -67,4 +67,32 @@ export FIREBASE_SERVICE_ACCOUNT='{"type": "service_account", ... }'
 Note: avoid leaving service-account keys on disk or in shell history; use CI secrets for production workflows.
 - Add a root lockfile (e.g., `package-lock.json`) if applicable to speed up caching during workflow runs.
 
+Automatic local key detection
+----------------------------
+
+To make local deploys as simple as running `./scripts/deploy-prod.sh` from the repository root, the deploy script will automatically look for a locally-stored key at `../keys/mjrp-service-account.json` (relative to the repo root). If that file exists and you have not set `FIREBASE_SERVICE_ACCOUNT` or `GOOGLE_APPLICATION_CREDENTIALS`, the script will load the JSON from that file and use it for the deploy.
+
+This allows you to simply run:
+
+```bash
+cd ~/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0
+./scripts/deploy-prod.sh 2>&1 | tee ~/deploy-prod.log
+```
+
+Notes and best practices:
+- The script still prefers `FIREBASE_SERVICE_ACCOUNT` (CI secret) and `GOOGLE_APPLICATION_CREDENTIALS` if they're already set.
+- Storing the key in `../keys/` is a convenience for local runs only; do NOT commit this file. Keep it readable only to your user (`chmod 600`).
+- For CI, add the service account JSON (raw or base64) to the repository's Actions secrets as `FIREBASE_SERVICE_ACCOUNT` and let the workflow run the deploy automatically.
+
+Cleanup
+-------
+
+After a successful deploy the script creates a temporary key file while running; it is automatically removed when the script exits. If you need to remove your local copy of the key after deploying, do:
+
+```bash
+rm -f ~/VibeCoding/MyProjects/keys/mjrp-service-account.json
+```
+
+If you want an explicit wrapper script (for example `scripts/deploy.sh`) that sets the common envs and runs `deploy-prod.sh`, ask and I will add it.
+
 ````

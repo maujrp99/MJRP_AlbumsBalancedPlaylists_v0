@@ -7,6 +7,15 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
+# Convenience: if the user keeps a local key at ../keys/mjrp-service-account.json (sibling folder),
+# automatically load it into FIREBASE_SERVICE_ACCOUNT so the script can be run with just
+# `./scripts/deploy-prod.sh` from the repo root. This makes local runs ergonomic while
+# still allowing CI to provide `FIREBASE_SERVICE_ACCOUNT` or `GOOGLE_APPLICATION_CREDENTIALS`.
+if [ -z "${FIREBASE_SERVICE_ACCOUNT:-}" ] && [ -f "$ROOT_DIR/../keys/mjrp-service-account.json" ]; then
+  echo "Found local service account at $ROOT_DIR/../keys/mjrp-service-account.json — using for deploy."
+  FIREBASE_SERVICE_ACCOUNT="$(cat "$ROOT_DIR/../keys/mjrp-service-account.json")"
+  export FIREBASE_SERVICE_ACCOUNT
+fi
 echo "Preparing production deploy..."
 
 # Determine FIREBASE_PROJECT
