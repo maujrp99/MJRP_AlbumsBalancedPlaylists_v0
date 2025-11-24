@@ -7,6 +7,15 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
+# Convenience: if the user keeps a local key at ../keys/mjrp-service-account.json (sibling folder),
+# automatically load it into FIREBASE_SERVICE_ACCOUNT so the script can be run with just
+# `./scripts/deploy-prod.sh` from the repo root. This makes local runs ergonomic while
+# still allowing CI to provide `FIREBASE_SERVICE_ACCOUNT` or `GOOGLE_APPLICATION_CREDENTIALS`.
+if [ -z "${FIREBASE_SERVICE_ACCOUNT:-}" ] && [ -f "$ROOT_DIR/../keys/mjrp-service-account.json" ]; then
+  echo "Found local service account at $ROOT_DIR/../keys/mjrp-service-account.json — using for deploy."
+  FIREBASE_SERVICE_ACCOUNT="$(cat "$ROOT_DIR/../keys/mjrp-service-account.json")"
+  export FIREBASE_SERVICE_ACCOUNT
+fi
 echo "Preparing production deploy..."
 
 # Determine FIREBASE_PROJECT
@@ -38,6 +47,27 @@ echo "Using Firebase project: $FIREBASE_PROJECT"
 
 # Prefer FIREBASE_TOKEN; if not present, check for GOOGLE_APPLICATION_CREDENTIALS
 if [ -z "${FIREBASE_TOKEN:-}" ]; then
+  # Support: FIREBASE_SERVICE_ACCOUNT (raw JSON or base64) for CI secrets
+  if [ -n "${FIREBASE_SERVICE_ACCOUNT:-}" ]; then
+    echo "Using service account from FIREBASE_SERVICE_ACCOUNT env"
+    SA_TMP_FILE="$(mktemp)"
+    # If the value looks like JSON, write it directly, otherwise try to decode base64
+    if command -v jq >/dev/null 2>&1 && echo "$FIREBASE_SERVICE_ACCOUNT" | jq . >/dev/null 2>&1; then
+      echo "$FIREBASE_SERVICE_ACCOUNT" > "$SA_TMP_FILE"
+    else
+      # try base64 decode
+      if echo "$FIREBASE_SERVICE_ACCOUNT" | base64 --decode > "$SA_TMP_FILE" 2>/dev/null; then
+        : # decoded successfully
+      else
+        echo "ERROR: FIREBASE_SERVICE_ACCOUNT is neither valid JSON nor base64-encoded JSON"
+        rm -f "$SA_TMP_FILE"
+        exit 1
+      fi
+    fi
+    export GOOGLE_APPLICATION_CREDENTIALS="$SA_TMP_FILE"
+    echo "Wrote temporary service account key to $GOOGLE_APPLICATION_CREDENTIALS"
+  fi
+
   if [ -n "${GOOGLE_APPLICATION_CREDENTIALS:-}" ] && [ -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
     echo "Using service account from GOOGLE_APPLICATION_CREDENTIALS"
     # Activate service account for gcloud (optional) - firebase-tools will pick up ADC

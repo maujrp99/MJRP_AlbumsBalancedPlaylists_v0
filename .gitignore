@@ -76,3 +76,7 @@ node_modules/
 # dataconnect generated files
 .dataconnect
 server/.env
+
+# Local diagnostics and temporary keys
+diagnostics/
+.local_pids
