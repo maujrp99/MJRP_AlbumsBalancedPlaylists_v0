@@ -153,6 +153,26 @@ If anything here looks ambiguous or you want a more formal release note for a Gi
 - Behavior: the scraper still falls back to verification and HTML-search heuristics when the suggest entries are ambiguous or contain bad keywords. This balances correctness and performance.
 - Note / future improvement: it is recommended to make the strict verification configurable via an environment flag such as `BESTEVER_STRICT_VERIFY=true|false` (default `true`). When `false`, the scraper would use the fast-accept path unconditionally for matched suggest entries (faster, fewer requests). Keep the default as strict in production to avoid regressions; add the flag if/when you require lower latency in batch runs.
 
+---
+
+## Hotfix: Strip parenthetical phrases from BestEver titles (2025-11-25)
+
+Summary
+- Problem: album or track titles that include parenthetical suffixes (e.g. "Let It Bleed (studio album)") were not matching canonical BestEver suggest/page titles, causing the scraper to miss the canonical page or to fallback to non-canonical pages.
+
+Root cause
+- Normalization used before-comparison did not remove parenthetical phrases, so tokenization and exact-containment checks could fail when the input included descriptors in parentheses.
+
+Fix applied
+- `server/lib/scrapers/besteveralbums.js`: strip content inside parentheses (e.g. `(...)`) before normalizing and comparing titles. This prevents mismatches caused by common suffixes like `(studio album)`, `(deluxe edition)`, etc.
+
+Verification
+- Local runs for *Let It Bleed* show the scraper now returns the canonical chart id `a=242` and extracts per-track ratings (e.g. `Gimme Shelter: 93`).
+
+Notes
+- This change complements the existing fast-accept and verification heuristics and reduces false negatives during suggest/title matching.
+
+
 ## Fixes: Fuzzy matching & divergence metadata (2025-11-25)
 
 ### Fixed

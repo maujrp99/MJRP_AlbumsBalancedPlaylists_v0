@@ -15,8 +15,8 @@ async function fetchAlbumPage(albumTitle, albumArtist) {
   // Attempt to find a reliable album/chart link in search results.
   // Prefer explicit album/chart paths like 'thechart.php?a=ID' or 'album.php?id=ID'.
   let albumPath = null
-  const qTitle = (albumTitle || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
-  const qArtist = (albumArtist || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+  const qTitle = (albumTitle || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
+  const qArtist = (albumArtist || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
   $search('a').each((i, el) => {
     const href = $search(el).attr('href')
     const text = ($search(el).text() || '').toLowerCase()
@@ -52,7 +52,7 @@ async function fetchAlbumPage(albumTitle, albumArtist) {
     const res = await axios.get(albumUrl, { timeout: 10000 })
     const $ = cheerio.load(res.data)
     const pageText = ($('title').text() + ' ' + $('h1').text() + ' ' + $('h2').text() + ' ' + $('body').text()).toLowerCase()
-    const normalize = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+    const normalize = s => (s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
     const targetTitle = normalize(albumTitle)
     const targetArtist = normalize(albumArtist)
     const hasTitle = targetTitle && pageText.includes(targetTitle)
@@ -74,7 +74,7 @@ async function pageContainsArtistOrTitle (url, albumTitle, albumArtist) {
     const titleText = ($('title').text() || '').toLowerCase()
     const headerText = (($('h1').text() || '') + ' ' + ($('h2').text() || '')).toLowerCase()
     const bodyText = ($('body').text() || '').toLowerCase()
-    const normalize = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+    const normalize = s => (s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
     const targetTitle = normalize(albumTitle)
     const targetArtist = normalize(albumArtist)
 
@@ -113,7 +113,7 @@ async function findAlbumId(albumTitle, albumArtist) {
     // Prefer exact suggest match: if suggest returns a title like "The Wall by Pink Floyd",
     // pick the corresponding URL (parsed[3]) without doing extra page fetches.
     try {
-      const normalize = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+      const normalize = s => (s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
       const targetTitle = normalize(albumTitle)
       const targetArtist = normalize(albumArtist)
       if (Array.isArray(titles) && titles.length && Array.isArray(urls) && urls.length) {
@@ -249,7 +249,7 @@ async function findArtistPage(artistName) {
       if (m) candidates.push({ id: m[1], url: u })
     }
     // verify candidate artist pages by checking header contains the artist name
-    const normalize = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+    const normalize = s => (s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
     const target = normalize(artistName)
     for (const c of candidates) {
       try {
@@ -492,7 +492,7 @@ async function getRankingForAlbum(albumTitle, albumArtist) {
       if (artistId) {
         const disc = await parseArtistDiscography(artistId)
         // normalize titles and try to match
-        const normalize = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '').trim()
+        const normalize = s => (s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, '').trim()
         const target = normalize(albumTitle)
         for (const a of disc.albums) {
           if (normalize(a.title) === target) {
