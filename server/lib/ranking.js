@@ -3,7 +3,16 @@
 
 function normalizeKey (s) {
   if (!s) return ''
-  return String(s).trim().toLowerCase()
+  try {
+    return String(s || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .replace(/[^a-z0-9]+/g, '')
+      .trim()
+  } catch (e) {
+    return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '').trim()
+  }
 }
 
 function consolidateRanking (tracks = [], acclaim = []) {
