@@ -118,16 +118,20 @@ export function curateAlbums (albums, opts = {}) {
     // based on acclaim ordering (ratings when present) so playlist generation
     // uses the acclaim ordering (1..N) as you requested.
     const tracks = [...album.tracks]
-    // Build a stable ordering: prefer rating (desc) when any rating exists,
-    // otherwise fall back to existing `rank` (ascending) or original order.
+    // Build a stable acclaim ordering per-album: prefer rating (desc) when available;
+    // otherwise fall back to `rank` (ascending) or original album order.
     const idToTrack = new Map(tracks.map((t, i) => [t && t.id ? t.id : `idx_${i}`, t]))
-    const annotated = tracks.map((t, i) => ({ id: t && t.id ? t.id : `idx_${i}`, rating: (t && (t.rating !== undefined && t.rating !== null)) ? Number(t.rating) : null, origIndex: i, existingRank: (t && t.rank) || null }))
+    const annotated = tracks.map((t, i) => ({
+      id: t && t.id ? t.id : `idx_${i}`,
+      rating: (t && (t.rating !== undefined && t.rating !== null)) ? Number(t.rating) : null,
+      origIndex: i,
+      existingRank: (t && t.rank) || null
+    }))
     const hasRatings = annotated.some(a => a.rating !== null)
     if (hasRatings) {
       annotated.sort((a, b) => {
         const ra = a.rating || 0; const rb = b.rating || 0
         if (rb !== ra) return rb - ra
-        // tiebreaker: preserve original album order
         return a.origIndex - b.origIndex
       })
     } else {
@@ -138,28 +142,33 @@ export function curateAlbums (albums, opts = {}) {
         return a.origIndex - b.origIndex
       })
     }
-    // Mutate the working album tracks' `rank` to the visual acclaim rank (1..N)
-    annotated.forEach((a, idx) => {
+    // Build acclaim-ordered track array and set visual ranks on the working copy
+    const acclaimOrderedTracks = annotated.map((a, idx) => {
       const t = idToTrack.get(a.id)
       if (t) t.rank = idx + 1
+      return t
     })
 
-    const t1 = tracks.find(t => t.rank === 1)
+    // Use acclaim-ordered tracks to select P1/P2 and remaining; this ensures
+    // playlist generation uses rating-based ordering as intended.
+    const t1 = acclaimOrderedTracks[0]
     if (t1) {
       markTrackOrigin(t1, album.id)
       annotateTrack(t1, 'P1 Hit', defaultRankingSource, 1)
       playlists[0].tracks.push(t1)
     }
 
-    const t2 = tracks.find(t => t.rank === 2)
+    const t2 = acclaimOrderedTracks[1]
     if (t2) {
       markTrackOrigin(t2, album.id)
       annotateTrack(t2, 'P2 Hit', defaultRankingSource, 0.95)
       playlists[1].tracks.push(t2)
     }
 
-    for (const track of tracks) {
-      if (track.rank === 1 || track.rank === 2) continue
+    for (let i = 0; i < acclaimOrderedTracks.length; i++) {
+      const track = acclaimOrderedTracks[i]
+      if (!track) continue
+      if (i === 0 || i === 1) continue
       markTrackOrigin(track, album.id)
       remaining.push(track)
     }
