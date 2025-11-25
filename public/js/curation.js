@@ -174,7 +174,10 @@ export function curateAlbums (albums, opts = {}) {
     }
   }
 
-  remaining.sort((a, b) => (b.rank || 999) - (a.rank || 999))
+  // Ensure `remaining` preserves acclaim ordering: rank=1 is best, so sort
+  // ascending by `rank` (1..N). Previously the sorter used descending order
+  // which effectively prioritized worse-ranked tracks.
+  remaining.sort((a, b) => (Number(a.rank || Number.POSITIVE_INFINITY) - Number(b.rank || Number.POSITIVE_INFINITY)))
 
   function totalDuration (tracks) {
     return (tracks || []).reduce((sum, track) => sum + (track.duration || 0), 0)
