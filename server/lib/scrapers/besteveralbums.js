@@ -47,7 +47,57 @@ async function fetchAlbumPage(albumTitle, albumArtist) {
 
   // Normalize URL
   const albumUrl = albumPath.startsWith('http') ? albumPath : `https://www.besteveralbums.com${albumPath}`
-  return albumUrl
+  // Verify page matches expected artist/title to avoid returning tribute pages
+  try {
+    const res = await axios.get(albumUrl, { timeout: 10000 })
+    const $ = cheerio.load(res.data)
+    const pageText = ($('title').text() + ' ' + $('h1').text() + ' ' + $('h2').text() + ' ' + $('body').text()).toLowerCase()
+    const normalize = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+    const targetTitle = normalize(albumTitle)
+    const targetArtist = normalize(albumArtist)
+    const hasTitle = targetTitle && pageText.includes(targetTitle)
+    const hasArtist = targetArtist && pageText.includes(targetArtist)
+    if (hasArtist || hasTitle) return albumUrl
+    // no strong match — don't return a likely-incorrect page
+    return null
+  } catch (e) {
+    return albumUrl
+  }
+}
+
+// Helper: check whether a BestEverAlbums chart/album page contains the album title and (preferably) the artist
+async function pageContainsArtistOrTitle (url, albumTitle, albumArtist) {
+  try {
+    const candidateUrl = url.startsWith('http') ? url : `https://www.besteveralbums.com${url}`
+    const res = await axios.get(candidateUrl, { timeout: 10000 })
+    const $ = cheerio.load(res.data)
+    const titleText = ($('title').text() || '').toLowerCase()
+    const headerText = (($('h1').text() || '') + ' ' + ($('h2').text() || '')).toLowerCase()
+    const bodyText = ($('body').text() || '').toLowerCase()
+    const normalize = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+    const targetTitle = normalize(albumTitle)
+    const targetArtist = normalize(albumArtist)
+
+    // Prefer strict pattern: <h1>... by <a>Artist</a> or <h1>Album (studio album) by Artist</h1>
+    const h1 = $('h1').first()
+    if (h1 && h1.length) {
+      const artistLink = h1.find('a').first()
+      if (artistLink && artistLink.length) {
+        const artistText = normalize(artistLink.text())
+        if (artistText && targetArtist && artistText === targetArtist) return true
+      }
+      // fallback: h1 text contains 'by <artist>' phrase
+      const h1Text = (h1.text() || '').toLowerCase()
+      if (targetArtist && h1Text.includes(`by ${targetArtist}`)) return true
+    }
+
+    // If albumArtist not provided, or above checks failed, require both title and artist in page body (conservative)
+    if (!targetArtist && targetTitle) return titleText.includes(targetTitle) || headerText.includes(targetTitle) || bodyText.includes(targetTitle)
+    // require explicit artist signal for safety
+    return false
+  } catch (err) {
+    return false
+  }
 }
 
 async function findAlbumId(albumTitle, albumArtist) {
@@ -58,36 +108,127 @@ async function findAlbumId(albumTitle, albumArtist) {
     const res = await axios.get(suggestUrl, { timeout: 10000 })
     const parsed = res.data
     const urls = Array.isArray(parsed) && parsed.length > 2 ? parsed[3] || parsed[2] || [] : []
+    const titles = Array.isArray(parsed) && parsed.length > 1 ? parsed[1] || [] : []
+
+    // Prefer exact suggest match: if suggest returns a title like "The Wall by Pink Floyd",
+    // pick the corresponding URL (parsed[3]) without doing extra page fetches.
+    try {
+      const normalize = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+      const targetTitle = normalize(albumTitle)
+      const targetArtist = normalize(albumArtist)
+      if (Array.isArray(titles) && titles.length && Array.isArray(urls) && urls.length) {
+        // filter out known suffixes that often indicate tribute/live/compilation pages
+        // expanded list to reduce false positives in suggest results
+        const badKeywords = ['tribute', 'live', 'soundtrack', 'various', 'tribute to', 'string quartet', 'cover', 'remix', 'reissue', 'deluxe', 'expanded', 'promo']
+        let fallbackIdx = -1
+        for (let i = 0; i < titles.length; i++) {
+          const t = String(titles[i] || '').toLowerCase()
+          const normalizedT = normalize(t)
+          if (targetArtist && normalizedT.includes(`by ${targetArtist}`) && normalizedT.includes(targetTitle)) {
+            const hasBad = badKeywords.some(k => normalizedT.includes(k))
+            const u = urls[i]
+            // FAST-ACCEPT: accept the suggest entry immediately when it contains the pattern
+            // "<Album> by <Artist>" and does not include known bad keywords. This avoids
+            // an extra page fetch in the common, correct case where suggest already points
+            // to the canonical page. We log the choice for auditability.
+            if (!hasBad) {
+              try {
+                const mChart = String(u).match(/thechart\.php\?a=(\d+)/i)
+                if (mChart) {
+                  console.info('bestever_fast_accept', { albumTitle: albumTitle, albumArtist: albumArtist, sourceIndex: i, url: u, id: mChart[1] })
+                  return mChart[1]
+                }
+                const mAlbum = String(u).match(/album\.php\?id=(\d+)/i)
+                if (mAlbum) {
+                  console.info('bestever_fast_accept', { albumTitle: albumTitle, albumArtist: albumArtist, sourceIndex: i, url: u, id: mAlbum[1] })
+                  return mAlbum[1]
+                }
+              } catch (e) {
+                // ignore and continue to fallback handling
+              }
+            }
+            // keep a fallback if no clean match found
+            if (fallbackIdx === -1) fallbackIdx = i
+          }
+        }
+        if (fallbackIdx !== -1) {
+          const u = urls[fallbackIdx]
+          const mChart = String(u).match(/thechart\.php\?a=(\d+)/i)
+          if (mChart) return mChart[1]
+          const mAlbum = String(u).match(/album\.php\?id=(\d+)/i)
+          if (mAlbum) return mAlbum[1]
+        }
+      }
+    } catch (e) {
+      // ignore and continue to verification flow
+    }
+    // collect candidate ids (chart or album) and prefer ones that verify against albumArtist/albumTitle
+    const candidates = []
     for (const u of urls) {
       if (!u) continue
       const mChart = u.match(/thechart\.php\?a=(\d+)/i)
-      if (mChart) return mChart[1]
+      if (mChart) candidates.push({ type: 'chart', id: mChart[1], url: u })
       const mAlbum = u.match(/album\.php\?id=(\d+)/i)
-      if (mAlbum) return mAlbum[1]
+      if (mAlbum) candidates.push({ type: 'album', id: mAlbum[1], url: u })
     }
-  } catch (err) {
-    // fallback to older HTML search
-    const q2 = encodeURIComponent(`${albumArtist} ${albumTitle}`)
-    const searchUrl = `https://www.besteveralbums.com/search.php?search=${q2}`
-    const searchRes = await axios.get(searchUrl, { timeout: 15000 })
-    const $ = cheerio.load(searchRes.data)
-    let found = null
-    $('a').each((i, el) => {
-      const href = $(el).attr('href')
-      if (!href) return
-      const mChart = href.match(/thechart\.php\?a=(\d+)/i)
-      if (mChart) {
-        found = mChart[1]
+
+    // helper: verify candidate page contains album title and/or artist using stricter heuristics
+    async function verifyCandidate(c) {
+      try {
+        return await pageContainsArtistOrTitle(c, albumTitle, albumArtist)
+      } catch (err) {
         return false
       }
-      const mAlbum = href.match(/album\.php\?id=(\d+)/i)
-      if (mAlbum) {
-        found = mAlbum[1]
-        return false
+    }
+
+    for (const c of candidates) {
+      // try to verify candidate; prefer first verified
+      const ok = await verifyCandidate(c.url)
+      if (ok) return c.id
+    }
+
+    // If none verified, attempt a more thorough HTML search (fetchAlbumPage)
+    try {
+      const alt = await fetchAlbumPage(albumTitle, albumArtist)
+      if (alt) {
+        const mChart = String(alt).match(/thechart\.php\?a=(\d+)/i)
+        if (mChart) return mChart[1]
+        const mAlbum = String(alt).match(/album\.php\?id=(\d+)/i)
+        if (mAlbum) return mAlbum[1]
       }
-    })
-    return found // may be null
-  }
+    } catch (e) {
+      // ignore and fall back
+    }
+
+    // fallback to first candidate id if none verified and HTML search didn't find better
+    if (candidates.length > 0) return candidates[0].id
+    } catch (err) {
+      // fallback to older HTML search
+      const q2 = encodeURIComponent(`${albumArtist} ${albumTitle}`)
+      const searchUrl = `https://www.besteveralbums.com/search.php?search=${q2}`
+      const searchRes = await axios.get(searchUrl, { timeout: 15000 })
+      const $ = cheerio.load(searchRes.data)
+      const foundCandidates = []
+      $('a').each((i, el) => {
+        const href = $(el).attr('href')
+        if (!href) return
+        const mChart = href.match(/thechart\.php\?a=(\d+)/i)
+        if (mChart) {
+          foundCandidates.push({ type: 'chart', id: mChart[1], url: href })
+          return
+        }
+        const mAlbum = href.match(/album\.php\?id=(\d+)/i)
+        if (mAlbum) {
+          foundCandidates.push({ type: 'album', id: mAlbum[1], url: href })
+          return
+        }
+      })
+      for (const c of foundCandidates) {
+        if (await pageContainsArtistOrTitle(c.url, albumTitle, albumArtist)) return c.id
+      }
+      // fallback: return first candidate id if no verification passed
+      return foundCandidates.length ? foundCandidates[0].id : null
+    }
   return null
 }
 
@@ -101,10 +242,25 @@ async function findArtistPage(artistName) {
     const parsed = res.data
     // parsed[2] is array of urls (based on observed structure)
     const urls = Array.isArray(parsed) && parsed.length > 2 ? parsed[3] || parsed[2] || [] : []
+    const candidates = []
     for (const u of urls) {
       if (!u) continue
       const m = u.match(/thechart\.php\?b=(\d+)/i)
-      if (m) return m[1]
+      if (m) candidates.push({ id: m[1], url: u })
+    }
+    // verify candidate artist pages by checking header contains the artist name
+    const normalize = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+    const target = normalize(artistName)
+    for (const c of candidates) {
+      try {
+        const artistUrl = c.url.startsWith('http') ? c.url : `https://www.besteveralbums.com${c.url}`
+        const r = await axios.get(artistUrl, { timeout: 10000 })
+        const $ = cheerio.load(r.data)
+        const header = (($('h1').text() || '') + ' ' + ($('title').text() || '')).toLowerCase()
+        if (header.includes(`by ${target}`) || header.includes(target)) return c.id
+      } catch (err) {
+        // ignore and try next
+      }
     }
   } catch (err) {
     // fall back to search.php heuristics already present earlier

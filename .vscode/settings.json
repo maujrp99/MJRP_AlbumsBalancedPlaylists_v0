@@ -1,0 +1,8 @@
+{
+  "chat.instructionsLocations": [
+    {
+      "path": ".github/instructions",
+      "enabled": true
+    }
+  ]
+}

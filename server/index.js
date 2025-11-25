@@ -85,7 +85,7 @@ app.get('/_health', (req, res) => res.send({ ok: true }))
 const { loadPrompts, renderPrompt } = require('./lib/prompts')
 const { callProvider } = require('./lib/aiClient')
 const { extractAlbum, extractRankingEntries, extractAndValidateRankingEntries, rankingEntriesToSources } = require('./lib/normalize')
-const { consolidateRanking } = require('./lib/ranking')
+const { consolidateRanking, normalizeKey: normalizeRankingKey } = require('./lib/ranking')
 const { validateAlbum, ajvAvailable } = require('./lib/schema')
 const { getRankingForAlbum: getBestEverRanking } = require('./lib/scrapers/besteveralbums')
 const { verifyUrl, isBestEverUrl } = require('./lib/validateSource')
@@ -183,23 +183,23 @@ async function fetchRankingForAlbum (album, albumQuery, options = {}) {
         })
         let modelEntries = await extractAndValidateRankingEntries(rankingResponse)
 
-        // Merge: prefer scraperEntries (by trackTitle), otherwise use modelEntries; preserve BestEver provider tag
+        // Merge: prefer scraperEntries (by normalized trackTitle), otherwise use modelEntries; preserve BestEver provider tag
         const mergedByTitle = new Map()
-        // index model entries by lowercased title for quick matching
+        // index model entries by normalized title for robust matching
         const modelIndex = new Map()
         modelEntries.forEach(me => {
-          if (me && me.trackTitle) modelIndex.set(String(me.trackTitle).toLowerCase(), me)
+          if (me && me.trackTitle) modelIndex.set(normalizeRankingKey(me.trackTitle), me)
         })
 
-        // Start with scraper positions
+        // Start with scraper positions (normalized)
         scraperEntries.forEach(se => {
-          if (se && se.trackTitle) mergedByTitle.set(String(se.trackTitle).toLowerCase(), se)
+          if (se && se.trackTitle) mergedByTitle.set(normalizeRankingKey(se.trackTitle), se)
         })
 
-        // Fill gaps from model
+        // Fill gaps from model by matching normalized album track titles
         if (Array.isArray(album && album.tracks)) {
           album.tracks.forEach((t, idx) => {
-            const key = String((t && (t.title || t.trackTitle || t.name)) || '').toLowerCase()
+            const key = normalizeRankingKey((t && (t.title || t.trackTitle || t.name)) || '')
             if (!key) return
             if (!mergedByTitle.has(key)) {
               const candidate = modelIndex.get(key)
@@ -208,10 +208,10 @@ async function fetchRankingForAlbum (album, albumQuery, options = {}) {
           })
         }
 
-        // As a fallback, include any remaining model entries up to albumTrackCount
+        // As a fallback, include any remaining model entries up to albumTrackCount (normalized)
         if (mergedByTitle.size < (albumTrackCount || 0)) {
           for (const me of modelEntries) {
-            const k = me && me.trackTitle ? String(me.trackTitle).toLowerCase() : null
+            const k = me && me.trackTitle ? normalizeRankingKey(me.trackTitle) : null
             if (!k) continue
             if (!mergedByTitle.has(k)) mergedByTitle.set(k, me)
             if (mergedByTitle.size >= (albumTrackCount || Infinity)) break
@@ -388,36 +388,33 @@ app.post('/api/generate', async (req, res) => {
         if (rankingEntries.length) albumPayload.rankingAcclaim = rankingEntries
         // Consolidate acclaim into a single ranking using Borda count
         try {
-          albumPayload.rankingConsolidated = consolidateRanking(albumPayload.tracks || [], albumPayload.rankingAcclaim || [])
+          const consolidated = consolidateRanking(albumPayload.tracks || [], albumPayload.rankingAcclaim || [])
+          if (consolidated && consolidated.results) {
+            albumPayload.rankingConsolidated = consolidated.results
+            albumPayload.rankingConsolidatedMeta = consolidated.divergence || {}
+          } else {
+            // backward-compatible: if consolidateRanking returned an array for any reason
+            albumPayload.rankingConsolidated = Array.isArray(consolidated) ? consolidated : []
+            albumPayload.rankingConsolidatedMeta = {}
+          }
         } catch (e) {
           console.warn('Ranking consolidation failed:', e && e.message)
           albumPayload.rankingConsolidated = []
+          albumPayload.rankingConsolidatedMeta = {}
         }
         // Map consolidated final positions back onto album tracks as `rank` so clients
         // (curation UI/algorithms) can rely on `track.rank` for playlist generation.
         try {
           if (Array.isArray(albumPayload.rankingConsolidated) && Array.isArray(albumPayload.tracks)) {
-            const normalizeKey = s => {
-              try {
-                return String(s || '')
-                  .toLowerCase()
-                  .normalize('NFD')
-                  .replace(/\p{Diacritic}/gu, '')
-                  .replace(/[^a-z0-9]+/g, '')
-              } catch (e) {
-                return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '')
-              }
-            }
-
             const rankMap = new Map()
             albumPayload.rankingConsolidated.forEach(r => {
               if (r && r.trackTitle && (r.finalPosition !== undefined && r.finalPosition !== null)) {
-                rankMap.set(normalizeKey(r.trackTitle), Number(r.finalPosition))
+                rankMap.set(normalizeRankingKey(r.trackTitle), Number(r.finalPosition))
               }
             })
 
             albumPayload.tracks.forEach(t => {
-              const key = normalizeKey((t && (t.title || t.trackTitle || t.name)) || '')
+              const key = normalizeRankingKey((t && (t.title || t.trackTitle || t.name)) || '')
               if (key && rankMap.has(key)) t.rank = rankMap.get(key)
             })
           }

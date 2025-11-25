@@ -45,6 +45,41 @@
 ### Notes
 - See feature branch `feature/ranking-provenance-implementation` for implementation details and tests.
 
+### 2025-11-25 — BestEverAlbums suggest fast-accept & audit
+
+- Problem: the BestEverAlbums `suggest.php` endpoint sometimes returns entries that point to non-canonical pages (tributes, live versions). Previously, our scraper occasionally selected those pages (e.g. `a=32729`) which did not include per-track ratings and produced incomplete/incorrect `rankingAcclaim`.
+- Fix applied: implement a "fast-accept" path in the BestEver scraper: when `suggest.php` returns a title that explicitly contains the pattern "<Album> by <Artist>" and the suggest title does NOT include known bad keywords (examples: `tribute`, `live`, `cover`, `deluxe`, `reissue`), we now accept the corresponding suggest URL immediately and extract its chart data. This reduces extra page fetches and matches the canonical id in normal cases (e.g. returned `a=204` for "The Wall"). The code logs `bestever_fast_accept` with the chosen id for auditability.
+- Behavior: the scraper still falls back to verification and HTML-search heuristics when the suggest entries are ambiguous or contain bad keywords. This balances correctness and performance.
+- Note / future improvement: it is recommended to make the strict verification configurable via an environment flag such as `BESTEVER_STRICT_VERIFY=true|false` (default `true`). When `false`, the scraper would use the fast-accept path unconditionally for matched suggest entries (faster, fewer requests). Keep the default as strict in production to avoid regressions; add the flag if/when you require lower latency in batch runs.
+
+## Fixes: Fuzzy matching & divergence metadata (2025-11-25)
+
+### Fixed
+- Addressed missing BestEver `rating` values for some albums (notably "The Wall") caused by strict title-matching heuristics that left BestEver evidence in unmatched buckets.
+
+### Changes
+- Relaxed matching heuristics in `server/lib/ranking.js`: added tokenization, token-overlap ratio, and substring containment checks to better match scraper evidence to album track titles.
+- Lowered token-overlap acceptance threshold and added containment short-circuit so variants like "Another Brick In The Wall (Pt. 2)" correctly map to album tracks.
+- Recorded unmatched mentions under `rankingConsolidatedMeta.unmatchedMentions` and tracks without evidence under `rankingConsolidatedMeta.tracksWithoutSupport` for audit and divergence analysis.
+- Exported `normalizeKey` from `server/lib/ranking.js` and reused it in `server/index.js` to ensure consistent normalization when mapping `finalPosition` back to `tracks[].rank`.
+
+### Tests
+- Added unit/integration verification and ran `npm test` in `server/` — all tests passed locally.
+
+### Notes & Next Steps
+- Confirm and run additional integration checks for production albums (e.g., "The Wall", "Electric Ladyland").
+- After your approval I will: commit remaining changes (branch `feature/server-acclaim-order`), create a git tag (proposed `v0.3.1-bea-fuzzy-match`), open a PR against `main`, and push the tag/branch to the remote for CI and deploy.
+
+### Root cause discovered (2025-11-25)
+- While investigating why `rating` values were missing for *The Wall*, we discovered the scraper was resolving the BestEver album link to the wrong chart page: it returned `https://www.besteveralbums.com/thechart.php?a=32729#tracks` ("More Bricks: The String Quartet Tribute To Pink Floyd's The Wall") instead of the canonical studio album page `https://www.besteveralbums.com/thechart.php?a=204#tracks` ("The Wall" by Pink Floyd). The mistake came from permissive search/suggest heuristics that favored token matches without verifying the artist on the matched page.
+
+### Fix to be implemented
+- Update `server/lib/scrapers/besteveralbums.js` to verify candidate chart/album pages by inspecting the page content (page title / headers) and confirming the artist/album match before accepting a candidate id/url. Prefer candidates where both album title and artist match with a reasonable token overlap. Fall back to previous behavior only if no verified candidate is found.
+
+### Impact
+- This prevents the scraper from picking tribute or unrelated albums with similar titles and restores correct `rating` extraction for canonical album pages (example: *The Wall*). This will also reduce false unmatched mappings in consolidation and improve `rankingConsolidated` accuracy.
+
+
 ## UI-Cleanup-Playlist-Layout (2025-11-24)
 
 ### Changed

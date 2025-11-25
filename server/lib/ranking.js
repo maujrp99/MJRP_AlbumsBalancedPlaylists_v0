@@ -4,15 +4,34 @@
 function normalizeKey (s) {
   if (!s) return ''
   try {
+    // Normalize: NFD -> remove diacritics, replace non-alphanumerics with space,
+    // collapse spaces and lowercase. This preserves token boundaries for fuzzy matching.
     return String(s || '')
       .toLowerCase()
       .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '')
-      .replace(/[^a-z0-9]+/g, '')
+      .replace(/\p{M}/gu, '')
+      .replace(/[^a-z0-9]+/g, ' ')
+      .replace(/\s+/g, ' ')
       .trim()
   } catch (e) {
-    return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '').trim()
+    return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim()
   }
+}
+
+function tokenize (s) {
+  const k = normalizeKey(s || '')
+  if (!k) return []
+  return k.split(' ').filter(Boolean)
+}
+
+function tokenOverlapRatio (tokensA, tokensB) {
+  if (!Array.isArray(tokensA) || !Array.isArray(tokensB) || tokensA.length === 0 || tokensB.length === 0) return 0
+  const setA = new Set(tokensA)
+  const setB = new Set(tokensB)
+  let inter = 0
+  for (const t of setA) if (setB.has(t)) inter++
+  const union = new Set([...setA, ...setB]).size
+  return union === 0 ? 0 : (inter / union)
 }
 
 function consolidateRanking (tracks = [], acclaim = []) {
@@ -26,30 +45,73 @@ function consolidateRanking (tracks = [], acclaim = []) {
 
   // build a map containing all album tracks as base (so consolidated ranking covers 1..N)
   const map = new Map()
+  const normIndex = new Map()
   if (Array.isArray(tracks)) {
     tracks.forEach((t, i) => {
       const title = (t && (t.title || t.name)) ? String(t.title || t.name) : `track_${i + 1}`
-      const key = normalizeKey(title)
-      map.set(key, { trackTitle: title, score: 0, supporting: [] })
+      const baseKey = normalizeKey(title)
+      const uniqKey = `${baseKey}::${i}`
+      map.set(uniqKey, { trackTitle: title, score: 0, supporting: [], tokens: tokenize(title), normKey: baseKey, index: i })
+      const arr = normIndex.get(baseKey) || []
+      arr.push(uniqKey)
+      normIndex.set(baseKey, arr)
     })
   }
 
   const addSupporting = (key, mention) => {
-    const existing = map.get(key) || { trackTitle: mention.trackTitle || key, score: 0, supporting: [] }
-    existing.supporting.push({ provider: mention.provider || '', position: mention.position || null, referenceUrl: mention.referenceUrl || '' })
+    const existing = map.get(key) || { trackTitle: mention.trackTitle || key, score: 0, supporting: [], tokens: tokenize(mention.trackTitle || key) }
+    existing.supporting.push({ provider: mention.provider || '', position: mention.position || null, referenceUrl: mention.referenceUrl || '', rating: (mention.rating !== undefined ? mention.rating : null) })
     map.set(key, existing)
   }
 
   acclaim.forEach(m => {
     if (!m) return
-    const key = normalizeKey(m.trackTitle)
-    if (!key) return
+    const mentionKey = normalizeKey(m.trackTitle)
+    if (!mentionKey) return
     // Only count points for tracks that are part of the album when tracks list is provided
-    if (N > 0 && !map.has(key)) {
-      // ignore mentions that don't match album tracks to keep consolidated ranking strictly per-album
-      return
+    let matchedKey = mentionKey
+    if (N > 0 && !map.has(matchedKey)) {
+      // Try normalized exact-match to one or more album tracks
+      const candidates = normIndex.get(mentionKey) || []
+      if (candidates.length === 1) {
+        matchedKey = candidates[0]
+      } else if (candidates.length > 1) {
+        // multiple album tracks with same normalized title: pick the one with least supporting entries
+        let bestCandidate = candidates[0]
+        let bestSupportCount = (map.get(bestCandidate) && map.get(bestCandidate).supporting) ? map.get(bestCandidate).supporting.length : 0
+        for (const c of candidates) {
+          const sCount = (map.get(c) && map.get(c).supporting) ? map.get(c).supporting.length : 0
+          if (sCount < bestSupportCount) {
+            bestCandidate = c
+            bestSupportCount = sCount
+          }
+        }
+        matchedKey = bestCandidate
+      } else {
+        // attempt fuzzy token-overlap matching to handle small title variants (pt. vs pt, commas, parentheses, etc.)
+        const mentionTokens = tokenize(m.trackTitle)
+        let best = { key: null, score: 0 }
+        for (const [k, v] of map.entries()) {
+          const norm = v && v.normKey ? v.normKey : normalizeKey(v && v.trackTitle)
+          // exact containment check on normalized base keys first
+          if (mentionKey.includes(norm) || norm.includes(mentionKey)) {
+            best = { key: k, score: 1 }
+            break
+          }
+          const ratio = tokenOverlapRatio(mentionTokens, v.tokens || tokenize(v && v.trackTitle))
+          if (ratio > best.score) best = { key: k, score: ratio }
+        }
+        // require moderate overlap (>= 0.4) to consider as a match; exact containment short-circuits
+        if (best.score >= 0.4 && best.key) matchedKey = best.key
+        else {
+          // unmatched mention: ignore for strict per-album consolidation but record under a special key
+          const muKey = `__unmatched__${mentionKey}`
+          addSupporting(muKey, m)
+          return
+        }
+      }
     }
-    addSupporting(key, m)
+    addSupporting(matchedKey, m)
     // Borda points: if N is known, points = N - position + 1; else use reciprocal fallback
     const p = Number(m.position) || 0
     let points = 0
@@ -59,19 +121,57 @@ function consolidateRanking (tracks = [], acclaim = []) {
     } else {
       points = p > 0 ? (1 / p) : 0
     }
-    const obj = map.get(key)
-    obj.score = (obj.score || 0) + points
+    const obj = map.get(matchedKey)
+    if (obj) {
+      obj.score = (obj.score || 0) + points
+      map.set(matchedKey, obj)
+    }
   })
 
   // Ensure we have results for all album tracks (map may have been empty if tracks unknown)
-  const results = Array.from(map.entries()).map(([k, v]) => ({
-    trackTitle: v.trackTitle || k,
-    rawScore: Number(v.score) || 0,
-    supporting: v.supporting || []
-  }))
+  // prepare results: ignore special unmatched buckets (they are recorded in divergence)
+  const allEntries = Array.from(map.entries())
+  const results = allEntries
+    .filter(([k]) => !String(k).startsWith('__unmatched__'))
+    .map(([k, v]) => ({
+      trackTitle: v.trackTitle || k,
+      rawScore: Number(v.score) || 0,
+      supporting: v.supporting || [],
+      // prefer explicit rating from BestEver evidence when present; otherwise take any available rating
+      rating: (function () {
+        try {
+          if (!v.supporting || v.supporting.length === 0) return null
+          // prefer BestEver provider rating
+          const be = v.supporting.find(s => s && s.provider && String(s.provider).toLowerCase().includes('bestever') && (s.rating !== undefined && s.rating !== null))
+          if (be) return be.rating
+          // otherwise first supporting rating
+          const any = v.supporting.find(s => s && (s.rating !== undefined && s.rating !== null))
+          if (any) return any.rating
+          return null
+        } catch (e) { return null }
+      })()
+    }))
 
-  // sort by rawScore desc (highest score first = final position 1)
-  results.sort((a, b) => (b.rawScore || 0) - (a.rawScore || 0))
+  // divergence information: unmatched mentions and tracks without supporting evidence
+  const unmatchedMentions = allEntries
+    .filter(([k]) => String(k).startsWith('__unmatched__'))
+    .flatMap(([k, v]) => (v.supporting || []).map(s => ({ provider: s.provider, trackTitle: v.trackTitle || k, position: s.position, referenceUrl: s.referenceUrl, rating: s.rating })))
+
+  const tracksWithoutSupport = results.filter(r => !r.supporting || r.supporting.length === 0).map(r => r.trackTitle)
+
+  // If ratings are present for any track, prefer ordering by rating desc (BestEver priority),
+  // otherwise fall back to rawScore (Borda) ordering. Keep rawScore as tiebreaker.
+  const hasRatings = results.some(r => r.rating !== undefined && r.rating !== null)
+  if (hasRatings) {
+    results.sort((a, b) => {
+      const ra = Number(a.rating || 0)
+      const rb = Number(b.rating || 0)
+      if (rb !== ra) return rb - ra
+      return (b.rawScore || 0) - (a.rawScore || 0)
+    })
+  } else {
+    results.sort((a, b) => (b.rawScore || 0) - (a.rawScore || 0))
+  }
 
   // assign finalPosition and normalizedScore and then return ordered by finalPosition (1..N)
   const maxPossible = (N > 0 && providersCount > 0) ? (N * providersCount) : (providersCount || 1)
@@ -81,7 +181,7 @@ function consolidateRanking (tracks = [], acclaim = []) {
   })
 
   // make sure array is ordered from finalPosition = 1 .. n (already is)
-  return results
+  return { results, divergence: { unmatchedMentions, tracksWithoutSupport } }
 }
 
-module.exports = { consolidateRanking }
+module.exports = { consolidateRanking, normalizeKey }
