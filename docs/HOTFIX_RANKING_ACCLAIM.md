@@ -112,6 +112,54 @@ git push origin feature/server-acclaim-order
 ```
 4. Monitorar pós-deploy: gerar o álbum em produção e comparar payload com o local.
 
+**Troubleshooting em produção (passos rápidos)**
+
+- Verifique a versão publicada do frontend: abra `https://mjrp-playlist-generator.web.app` e force full-refresh (⌘⇧R) para garantir que a nova `app.js` foi carregada.
+- Obtenha o payload de geração em produção (se o backend estiver publicamente acessível):
+
+```bash
+# Exemplo (substitua <BACKEND_URL> pelo proxy público do ambiente):
+curl -sS -X POST https://<BACKEND_URL>/api/generate \
+   -H "Content-Type: application/json" \
+   -d '{"albumQuery":"Pink Floyd - The Wall"}' | jq . > /tmp/prod_payload.json
+
+# Inspecione se `tracksByAcclaim` existe e contém `rank` + possivelmente `rating`:
+jq '.data.tracksByAcclaim | length, .data.tracksByAcclaim[0:5]' /tmp/prod_payload.json
+
+# Verifique `rankingConsolidated` e metadados de divergência:
+jq '.data.rankingConsolidated | length, .data.rankingConsolidated[0:5]' /tmp/prod_payload.json
+jq '.data.rankingConsolidatedMeta' /tmp/prod_payload.json
+```
+
+- Cheque logs do servidor (procure por chaves):
+   - `bestever_fast_accept` — indica que o scraper aceitou um resultado do `suggest.php` (útil para auditar a escolha do id). 
+   - `model_truncation_detected` — indica resposta cortada do modelo (pode faltar faixas no resultado do modelo).
+   - `rankingConsolidatedMeta` entries retornados no payload (unmatchedMentions / tracksWithoutSupport) — ajuda a identificar onde a consolidação não encontrou evidências.
+
+- Se a UI mostra numeração correta mas a ordenação por rating ainda não aparece:
+   1. Confirme que `tracksByAcclaim` no payload contém ratings. Se não contiver, o problema veio do scraper/enrichment (server-side).
+   2. Se `tracksByAcclaim` contiver ratings, confirme que `public/js/app.js` em produção é a versão que prioriza rating quando presente (veja o cabeçalho do arquivo em um browser devtools: `/* UI: prefer tracksByAcclaim for numbering; preserve rating ordering when available */`).
+
+**Rollback rápido (se necessário)**
+
+- Reverter o commit frontend e re-publicar:
+
+```bash
+# reverter commit localmente (substitua ce78f9b pelo commit que deseja reverter)
+git revert ce78f9b --no-edit
+git push origin main
+./scripts/deploy-prod.sh
+```
+
+- Alternativa: restaurar a versão anterior no Firebase Hosting usando a UI do Console (Console → Hosting → Releases → selecionar versão anterior e clicar em `Rollback`).
+
+**Checks pós-deploy**
+
+- Gere o álbum problemático na UI e confirme:
+   - A numeração (nº à esquerda) corresponde ao `rank` em `tracksByAcclaim`.
+   - A ordem visual dos itens segue `rating` desc quando ratings existem.
+- Se divergências persistirem, cole o JSON do payload retornado pelo backend (arquivo `/tmp/prod_payload.json` ou saída do curl acima) e eu faço a análise detalhada.
+
 O que eu preciso para conferir e reaplicar a solução agora
 --------------------------------------------------------
 - Permissão para rodar comandos locais (já tenho acesso ao workspace e aos scripts). Vou:

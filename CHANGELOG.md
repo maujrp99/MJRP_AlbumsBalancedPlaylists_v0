@@ -80,6 +80,14 @@
 - This prevents the scraper from picking tribute or unrelated albums with similar titles and restores correct `rating` extraction for canonical album pages (example: *The Wall*). This will also reduce false unmatched mappings in consolidation and improve `rankingConsolidated` accuracy.
 
 
+### 2025-11-25 — UI: rating ordering restored (frontend hotfix & deploy)
+
+- Symptom: after an initial UI hotfix, production showed correct acclaim numbering but lost the visual ordering by `rating` when ratings were available.
+- Fix: updated `public/js/app.js` to prefer server `tracksByAcclaim` for deterministic numbering, but preserve ordering by `rating` (descending) when a rating exists for one or more tracks. The code enriches `tracksByAcclaim` with ratings from `rankingConsolidated`, `bestEverEvidence` or `rankingAcclaim` before sorting for display.
+- Commit: `ce78f9b` — `UI: prefer tracksByAcclaim for numbering; preserve rating ordering when available`.
+- Deploy: frontend published to `https://mjrp-playlist-generator.web.app` via `./scripts/deploy-prod.sh` (2025-11-25).
+- Verification: ensure `/api/generate` payload contains `tracksByAcclaim` with `rank` and, when present, `rating` values; the UI now shows the deterministic rank while ordering by rating when available.
+
 ## UI-Cleanup-Playlist-Layout (2025-11-24)
 
 ### Changed
