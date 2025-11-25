@@ -117,18 +117,30 @@ export function curateAlbums (albums, opts = {}) {
     // Work on a local copy of the album tracks. We will assign a "visual" rank
     // based on acclaim ordering (ratings when present) so playlist generation
     // uses the acclaim ordering (1..N) as you requested.
-    const tracks = [...album.tracks]
-    // Build a stable acclaim ordering per-album: prefer rating (desc) when available;
-    // otherwise fall back to `rank` (ascending) or original album order.
+    const tracks = Array.isArray(album.tracks) ? album.tracks.map(t => ({ ...t })) : []
     const idToTrack = new Map(tracks.map((t, i) => [t && t.id ? t.id : `idx_${i}`, t]))
     const annotated = tracks.map((t, i) => ({
       id: t && t.id ? t.id : `idx_${i}`,
       rating: (t && (t.rating !== undefined && t.rating !== null)) ? Number(t.rating) : null,
       origIndex: i,
+      acclaimRank: (t && (t.acclaimRank !== undefined && t.acclaimRank !== null)) ? Number(t.acclaimRank) : null,
+      acclaimScore: (t && (t.acclaimScore !== undefined && t.acclaimScore !== null)) ? Number(t.acclaimScore) : null,
       existingRank: (t && t.rank) || null
     }))
+    const hasExplicitAcclaimRank = annotated.some(a => a.acclaimRank !== null)
     const hasRatings = annotated.some(a => a.rating !== null)
-    if (hasRatings) {
+    if (hasExplicitAcclaimRank) {
+      annotated.sort((a, b) => {
+        const ra = a.acclaimRank !== null ? a.acclaimRank : Number.POSITIVE_INFINITY
+        const rb = b.acclaimRank !== null ? b.acclaimRank : Number.POSITIVE_INFINITY
+        if (ra !== rb) return ra - rb
+        const sa = a.acclaimScore !== null ? a.acclaimScore : -Infinity
+        const sb = b.acclaimScore !== null ? b.acclaimScore : -Infinity
+        if (sa !== sb) return sb - sa
+        if (a.rating !== null && b.rating !== null && a.rating !== b.rating) return b.rating - a.rating
+        return a.origIndex - b.origIndex
+      })
+    } else if (hasRatings) {
       annotated.sort((a, b) => {
         const ra = a.rating || 0; const rb = b.rating || 0
         if (rb !== ra) return rb - ra
@@ -142,10 +154,15 @@ export function curateAlbums (albums, opts = {}) {
         return a.origIndex - b.origIndex
       })
     }
-    // Build acclaim-ordered track array and set visual ranks on the working copy
+    // Build acclaim-ordered track array and set explicit acclaim fields on the working copy
     const acclaimOrderedTracks = annotated.map((a, idx) => {
       const t = idToTrack.get(a.id)
-      if (t) t.rank = idx + 1
+      if (!t) return null
+      const appliedRank = a.acclaimRank !== null ? a.acclaimRank : ((a.existingRank !== null ? a.existingRank : (idx + 1)))
+      t.acclaimRank = appliedRank
+      t.acclaimScore = a.acclaimScore !== null ? a.acclaimScore : (a.rating !== null ? a.rating : t.acclaimScore)
+      t.rating = a.rating !== null ? a.rating : t.rating
+      if (t.rank === undefined || t.rank === null) t.rank = appliedRank
       return t
     })
 
@@ -177,7 +194,7 @@ export function curateAlbums (albums, opts = {}) {
   // Ensure `remaining` preserves acclaim ordering: rank=1 is best, so sort
   // ascending by `rank` (1..N). Previously the sorter used descending order
   // which effectively prioritized worse-ranked tracks.
-  remaining.sort((a, b) => (Number(a.rank || Number.POSITIVE_INFINITY) - Number(b.rank || Number.POSITIVE_INFINITY)))
+  remaining.sort((a, b) => (Number((a && (a.acclaimRank !== undefined ? a.acclaimRank : a.rank)) || Number.POSITIVE_INFINITY) - Number((b && (b.acclaimRank !== undefined ? b.acclaimRank : b.rank)) || Number.POSITIVE_INFINITY)))
 
   function totalDuration (tracks) {
     return (tracks || []).reduce((sum, track) => sum + (track.duration || 0), 0)
@@ -256,8 +273,10 @@ export function runFase4SwapBalancing (playlists, targetDurationS, opts = {}) {
   }
 
   function isSwapValid (pOver, pUnder, trackOver, trackUnder) {
-    if (trackOver && trackOver.rank === 1 && pOver.id === 'p1') return false
-    if (trackOver && trackOver.rank === 2 && pOver.id === 'p2') return false
+    const rankOver = trackOver ? (trackOver.acclaimRank !== undefined ? trackOver.acclaimRank : trackOver.rank) : null
+    const rankUnder = trackUnder ? (trackUnder.acclaimRank !== undefined ? trackUnder.acclaimRank : trackUnder.rank) : null
+    if (rankOver === 1 && pOver.id === 'p1') return false
+    if (rankOver === 2 && pOver.id === 'p2') return false
     const isLastOver = isLastTrackOfAlbumInPlaylist(pOver, trackOver)
     if (isLastOver && (trackOver.originAlbumId !== trackUnder.originAlbumId)) return false
     const isLastUnder = isLastTrackOfAlbumInPlaylist(pUnder, trackUnder)

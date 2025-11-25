@@ -172,6 +172,28 @@ Verification
 Notes
 - This change complements the existing fast-accept and verification heuristics and reduces false negatives during suggest/title matching.
 
+---
+
+## Analysis: Balanced playlist input alignment (2025-11-25)
+
+Summary
+- Symptom: even after `tracksByAcclaim` and the UI show the correct BestEver ordering, the balanced playlists still reflect canonical album order for some albums. This indicates the curation pipeline (which consumes `album.tracks`) is not using the acclaim ordering already available on the frontend.
+
+Root cause
+- `curateAlbums` receives `currentAlbums` directly, and most albums still have `album.tracks` sorted by canonical order. Although the UI renders the acclaim order via `tracksByAcclaim`, that array is not passed to the curation algorithm. As a result, `track.rank` often contains the canonical `finalPosition` and only gets overwritten in certain cases where `track.rating` is available.
+
+Proposed fix
+1. Before invoking `curateAlbums`, derive a per-album list of `tracksForCuration` that always reflects the acclaim ordering:
+  - Prefer `album.tracksByAcclaim` when present (already deterministic),
+  - Else fall back to `rankingConsolidated` (sorted by `finalPosition`),
+  - Else fall back to `album.tracks` (original order).
+  Each track copy carries `acclaimRank`, `rating` and optionally `acclaimScore` (using consolidated `normalizedScore` or normalized rating).
+2. Pass these derived track arrays to `curateAlbums` (without mutating the originals) so the algorithm consistently works off acclaim data.
+3. Update `curateAlbums` to prioritize `track.acclaimRank` / `track.rating` for ordering, remaining-pool sorting and swap guards, with canonical `track.rank` kept only as a fallback.
+
+Next steps
+- Implement the frontend changes described above, run `scripts/run_curation_on_payload.js` against a saved payload to confirm P1/P2 follow acclaim order, and update the README to document the data flow (payload -> tracksByAcclaim -> curation input).
+
 
 ## Fixes: Fuzzy matching & divergence metadata (2025-11-25)
 

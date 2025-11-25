@@ -745,6 +745,114 @@ function moveTrackBetweenPlaylists (fromListId, toListId, oldIndex, newIndex, tr
   renderPlaylistsView(currentPlaylists)
 }
 
+function normalizeTrackKeyForCuration (value) {
+  return (value || '')
+    .toString()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '')
+    .trim()
+}
+
+function buildTracksForCurationInput (album) {
+  if (!album) return []
+  const normalizeKey = normalizeTrackKeyForCuration
+  const consolidatedIndex = new Map()
+  if (Array.isArray(album.rankingConsolidated)) {
+    album.rankingConsolidated.forEach(entry => {
+      const key = normalizeKey(entry && (entry.trackTitle || entry.title || ''))
+      if (key) consolidatedIndex.set(key, entry)
+    })
+  }
+  const bestEverIndex = new Map()
+  if (Array.isArray(album.bestEverEvidence)) {
+    album.bestEverEvidence.forEach(entry => {
+      const key = normalizeKey(entry && (entry.trackTitle || entry.title || ''))
+      if (key) bestEverIndex.set(key, entry)
+    })
+  }
+  const acclaimIndex = new Map()
+  if (Array.isArray(album.rankingAcclaim)) {
+    album.rankingAcclaim.forEach(entry => {
+      const key = normalizeKey(entry && (entry.trackTitle || entry.title || ''))
+      if (key) acclaimIndex.set(key, entry)
+    })
+  }
+  const durationIndex = new Map()
+  if (Array.isArray(album.tracks)) {
+    album.tracks.forEach(track => {
+      const key = normalizeKey(track && (track.title || track.trackTitle || track.name || ''))
+      if (key && track) durationIndex.set(key, track.duration || null)
+    })
+  }
+
+  function enrichTrack (track, idx) {
+    const copy = { ...track }
+    const title = copy.title || copy.trackTitle || copy.name || `Faixa ${idx + 1}`
+    copy.title = title
+    const key = normalizeKey(title)
+    const consolidatedEntry = key ? consolidatedIndex.get(key) : null
+    const rating = (() => {
+      if (copy.rating !== undefined && copy.rating !== null) return Number(copy.rating)
+      if (consolidatedEntry && (consolidatedEntry.rating !== undefined && consolidatedEntry.rating !== null)) return Number(consolidatedEntry.rating)
+      const be = key ? bestEverIndex.get(key) : null
+      if (be && (be.rating !== undefined && be.rating !== null)) return Number(be.rating)
+      const ac = key ? acclaimIndex.get(key) : null
+      if (ac && (ac.rating !== undefined && ac.rating !== null)) return Number(ac.rating)
+      return null
+    })()
+    const normalizedScore = (() => {
+      if (copy.acclaimScore !== undefined && copy.acclaimScore !== null) return Number(copy.acclaimScore)
+      if (copy.normalizedScore !== undefined && copy.normalizedScore !== null) return Number(copy.normalizedScore)
+      if (consolidatedEntry && (consolidatedEntry.normalizedScore !== undefined && consolidatedEntry.normalizedScore !== null)) return Number(consolidatedEntry.normalizedScore)
+      if (rating !== null) return Number(rating)
+      return null
+    })()
+    const acclaimRank = (() => {
+      if (copy.acclaimRank !== undefined && copy.acclaimRank !== null) return Number(copy.acclaimRank)
+      if (copy.rank !== undefined && copy.rank !== null) return Number(copy.rank)
+      if (consolidatedEntry && (consolidatedEntry.finalPosition !== undefined && consolidatedEntry.finalPosition !== null)) return Number(consolidatedEntry.finalPosition)
+      return idx + 1
+    })()
+    const durationFromIndex = key && durationIndex.has(key) ? durationIndex.get(key) : null
+    copy.id = copy.id || `track_${album.id || 'album'}_${idx + 1}`
+    copy.originAlbumId = copy.originAlbumId || album.id || null
+    copy.duration = copy.duration !== undefined && copy.duration !== null ? copy.duration : durationFromIndex
+    copy.rating = rating
+    copy.acclaimScore = normalizedScore
+    copy.acclaimRank = acclaimRank
+    if (copy.rank === undefined || copy.rank === null) copy.rank = acclaimRank
+    return copy
+  }
+
+  const baseTracks = (() => {
+    if (Array.isArray(album.tracksByAcclaim) && album.tracksByAcclaim.length > 0) {
+      return album.tracksByAcclaim.map(track => ({ ...track }))
+    }
+    if (Array.isArray(album.rankingConsolidated) && album.rankingConsolidated.length > 0) {
+      return album.rankingConsolidated
+        .slice()
+        .sort((a, b) => (Number(a.finalPosition || a.position || 0) - Number(b.finalPosition || b.position || 0)))
+        .map((entry, idx) => {
+          const title = entry.trackTitle || entry.title || `Faixa ${idx + 1}`
+          const key = normalizeKey(title)
+          const duration = key && durationIndex.has(key) ? durationIndex.get(key) : null
+          return {
+            id: entry.id || `consolidated_${album.id || 'album'}_${idx + 1}`,
+            title,
+            rank: entry.finalPosition || entry.position || null,
+            rating: entry.rating !== undefined ? entry.rating : null,
+            normalizedScore: entry.normalizedScore !== undefined ? entry.normalizedScore : null,
+            duration,
+            originAlbumId: album.id || null
+          }
+        })
+    }
+    return Array.isArray(album.tracks) ? album.tracks.map(track => ({ ...track })) : []
+  })()
+
+  return baseTracks.map((track, idx) => enrichTrack(track, idx))
+}
+
 /**
  * Utility: reset save button state (called after user changes)
  */
@@ -760,11 +868,15 @@ async function runHybridCuration () {
     return
   }
   try {
+    const albumsForCuration = currentAlbums.map(album => ({
+      ...album,
+      tracks: buildTracksForCurationInput(album)
+    }))
     const {
       playlists: newPlaylists,
       rankingSummary,
       rankingSources
-    } = curateAlbums(currentAlbums, { targetSeconds: 45 * 60 })
+    } = curateAlbums(albumsForCuration, { targetSeconds: 45 * 60 })
     currentPlaylists = newPlaylists
     currentRankingSummary = rankingSummary || {}
     currentRankingSources = rankingSources || []
