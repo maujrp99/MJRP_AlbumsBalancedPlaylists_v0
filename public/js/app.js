@@ -27,6 +27,19 @@ let isAlbumsView = true
 const sortableInstances = []
 let unsubscribeAlbums = null
 let unsubscribePlaylists = null
+// Footer log elements
+let footerLastUpdateEl, footerLogToggleEl, footerLogEl
+
+function addFooterLog (message) {
+  try {
+    const when = new Date().toLocaleString()
+    const li = document.createElement('div')
+    li.className = 'footer-log-entry text-xs text-spotify-lightgray border-t border-spotify-gray py-1 px-2'
+    li.textContent = `${when} — ${message}`
+    if (footerLogEl) footerLogEl.prepend(li)
+    if (footerLastUpdateEl) footerLastUpdateEl.textContent = when
+  } catch (e) { console.debug('addFooterLog error', e) }
+}
 
 // UI elements
 let mainContent, loadingSpinner, albumsView, playlistsView, albumsGrid, playlistsGrid
@@ -59,16 +72,21 @@ function collectRankingAcclaim (albums) {
     acclaimList.forEach((entry, index) => {
       if (!entry || !entry.provider) return
       const position = Number(entry.position || entry.rank || index + 1) || null
-      const key = `${entry.provider}::${position || '0'}::${entry.referenceUrl || ''}`
+      const trackTitle = entry.trackTitle || entry.title || entry.track || entry.name || ''
+      // Build a dedupe key that includes provider, album identifier and track title
+      const albumId = album.id || album.bestEverAlbumId || String(baseTitle + '::' + baseArtist)
+      const key = `${entry.provider}::${albumId}::${(trackTitle || '').toString().trim().toLowerCase()}::${position || '0'}::${entry.referenceUrl || ''}`
       if (seen.has(key)) return
       seen.add(key)
       entries.push({
         provider: entry.provider,
         position,
+        trackTitle: trackTitle || null,
         summary: entry.summary || entry.description || '',
         referenceUrl: entry.referenceUrl || entry.url || entry.sourceUrl || '',
         albumTitle: baseTitle,
-        albumArtist: baseArtist
+        albumArtist: baseArtist,
+        albumId
       })
     })
   })
@@ -155,7 +173,35 @@ function renderAlbumsView (albums) {
 
   albums.forEach(album => {
     if (!album) return
-    const albumTracks = album.tracks || []
+    // Attempt to preserve the album's original track order even if the stored
+    // `album.tracks` array was previously reordered (for example, by `rank`).
+    // Heuristics: prefer explicit `trackNumber`/`position` fields, then try to
+    // parse a numeric suffix from the `id` (eg. `okc_track_1`). If none apply,
+    // fall back to the array order as stored.
+    const albumTracksRaw = album.tracks || []
+    const inferOriginalOrder = (tracks) => {
+      if (!Array.isArray(tracks) || tracks.length === 0) return tracks || []
+      // check for explicit numeric fields
+      const hasNumberField = tracks.every(t => t && (t.trackNumber !== undefined || t.number !== undefined || t.position !== undefined))
+      if (hasNumberField) {
+        return tracks.slice().sort((a, b) => (Number(a.trackNumber ?? a.number ?? a.position) || 0) - (Number(b.trackNumber ?? b.number ?? b.position) || 0))
+      }
+
+      // try to parse trailing number from id
+      const idNumber = (t) => {
+        if (!t || !t.id) return null
+        const m = String(t.id).match(/(\d+)\s*$/)
+        return m ? Number(m[1]) : null
+      }
+      const allHaveIdNumber = tracks.every(t => idNumber(t) !== null)
+      if (allHaveIdNumber) {
+        return tracks.slice().sort((a, b) => (idNumber(a) || 0) - (idNumber(b) || 0))
+      }
+
+      // fallback: preserve stored order
+      return tracks
+    }
+    const albumTracks = inferOriginalOrder(albumTracksRaw)
     const albumDuration = calculateTotalDuration(albumTracks)
     totalTracks += albumTracks.length
     totalDuration += albumDuration
@@ -177,13 +223,13 @@ function renderAlbumsView (albums) {
                     <span class="font-semibold">Duração</span>
                 </div>
                 <ul class="space-y-1">
-                    ${albumTracks.sort((a, b) => (a.rank || 99) - (b.rank || 99)).map(track => `
-                        <li class="flex justify-between items-center p-2 rounded-md hover:bg-spotify-gray">
-                            <span class="text-spotify-lightgray w-6 text-center">${track.rank || '-'}</span>
-                            <span class="flex-1 ml-2 text-white truncate" title="${track.title}">${track.title || 'Faixa Desconhecida'}</span>
-                            <span class="text-spotify-lightgray text-sm">${formatDuration(track.duration)}</span>
-                        </li>
-                    `).join('')}
+                  ${albumTracks.map((track, idx) => `
+                    <li class="flex justify-between items-center p-2 rounded-md hover:bg-spotify-gray">
+                      <span class="text-spotify-lightgray w-6 text-center">${idx + 1}</span>
+                      <span class="flex-1 ml-2 text-white truncate" title="${track.title}">${track.title || 'Faixa Desconhecida'}</span>
+                      <span class="text-spotify-lightgray text-sm">${formatDuration(track.duration)}</span>
+                    </li>
+                  `).join('')}
                 </ul>
             </div>
             <div class="border-t border-spotify-gray mt-2 pt-2 text-right">
@@ -260,7 +306,9 @@ function refreshToggleViewButtonState () {
  */
 function renderTrackItem (track) {
   // Encontra o álbum original da faixa
-  const originAlbum = currentAlbums.find(a => a.tracks && a.tracks.some(t => t.id === track.id))
+  const originAlbum = (track && track.originAlbumId)
+    ? currentAlbums.find(a => a.id === track.originAlbumId)
+    : currentAlbums.find(a => a.tracks && a.tracks.some(t => t.id === track.id))
   const albumTitle = originAlbum ? originAlbum.title : 'N/A'
 
   return `
@@ -285,6 +333,7 @@ function renderPlaylistsView (playlists) {
     playlistsSummary.innerHTML = '<p class="text-center text-spotify-lightgray">Nenhuma playlist para resumir.</p>'
     return
   }
+  // Section title is defined statically in the HTML; no dynamic injection needed.
   let totalTracks = 0
   let totalDuration = 0
 
@@ -340,39 +389,30 @@ function renderPlaylistsSummary (playlists, totalTracks, totalDuration) {
   const durationMatch = originTotalDuration === totalDuration
   const isOk = tracksMatch && durationMatch
 
-  let verificationHtml = ''
-  if (isOk) verificationHtml = '<p class="text-2xl font-bold text-green-400">OK - Totais Batem!</p>'
-  else {
-    verificationHtml = `
-        <p class="text-2xl font-bold text-red-400">ERRO - Totais Divergentes!</p>
-        <div class="flex justify-around mt-2 text-sm">
-            <p class="text-gray-300">Origem: <span class="font-bold">${originTotalTracks} faixas</span> / <span class="font-bold">${formatDuration(originTotalDuration)}</span></p>
-            <p class="text-gray-300">Resultado: <span class="font-bold">${totalTracks} faixas</span> / <span class="font-bold">${formatDuration(totalDuration)}</span></p>
+    // Instead of a prominent verification panel, move verification results to footer log
+    playlistsSummary.innerHTML = `
+      <h3 class="text-lg font-semibold text-white mb-2">Resumo das Playlists (Resultado)</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-4">
+        <div>
+          <p class="text-sm text-spotify-lightgray">Total de Playlists:</p>
+          <p class="text-2xl font-bold text-white">${playlists.length}</p>
         </div>
+        <div>
+          <p class="text-sm text-spotify-lightgray">Total de Faixas:</p>
+          <p class="text-2xl font-bold text-white">${totalTracks}</p>
+        </div>
+        <div>
+          <p class="text-sm text-spotify-lightgray">Duração Total:</p>
+          <p class="text-2xl font-bold text-white">${formatDuration(totalDuration)}</p>
+        </div>
+      </div>
     `
-  }
 
-  playlistsSummary.innerHTML = `
-        <h3 class="text-lg font-semibold text-white mb-2">Resumo das Playlists (Resultado)</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-4">
-            <div>
-                <p class="text-sm text-spotify-lightgray">Total de Playlists:</p>
-                <p class="text-2xl font-bold text-white">${playlists.length}</p>
-            </div>
-            <div>
-                <p class="text-sm text-spotify-lightgray">Total de Faixas:</p>
-                <p class="text-2xl font-bold text-white">${totalTracks}</p>
-            </div>
-            <div>
-                <p class="text-sm text-spotify-lightgray">Duração Total:</p>
-                <p class="text-2xl font-bold text-white">${formatDuration(totalDuration)}</p>
-            </div>
-        </div>
-        <div class="border-t border-spotify-gray pt-4 text-center">
-            <h4 class="text-md font-semibold text-white mb-1">Verificação de Integridade</h4>
-            ${verificationHtml}
-        </div>
-    `
+    // Log verification summary to footer (compact)
+    try {
+    if (isOk) addFooterLog('Verificação: OK - Totais batem (origem = resultado)')
+    else addFooterLog(`Verificação: ERRO - Totais divergentes. Origem: ${originTotalTracks} faixas / ${formatDuration(originTotalDuration)} · Resultado: ${totalTracks} faixas / ${formatDuration(totalDuration)}`)
+    } catch (e) { console.debug('footer log error', e) }
 }
 
 function renderRankingPanel () {
@@ -386,20 +426,15 @@ function renderRankingPanel () {
     return
   }
   rankingPanel.classList.remove('hidden')
-  // Debug banner to confirm front-end updates — visible change for testing
-  const debugBanner = document.createElement('div')
-  debugBanner.id = 'ranking-debug-banner'
-  debugBanner.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.8rem;border-radius:0.6rem;margin-bottom:0.8rem;background:linear-gradient(90deg,#331111, #221133);border:1px solid rgba(255,255,255,0.06);'
-  const now = new Date().toLocaleString()
-  const acclaimCount = (currentRankingAcclaim && currentRankingAcclaim.length) || 0
-  const summaryCount = (entries && entries.length) || 0
-  debugBanner.innerHTML = `<div style="display:flex;align-items:center;gap:0.6rem;"><strong style="color:#ffcc00;letter-spacing:0.06em">RANKING-UI-UPDATE</strong><span style="font-size:0.85rem;color:#ffd6a8">${now}</span></div><div style="font-size:0.85rem;color:#d1e8ff">acclaim:${acclaimCount} • summary:${summaryCount}</div>`
-  // insert or replace existing banner
-  const existingBanner = document.getElementById('ranking-debug-banner')
-  if (existingBanner) rankingPanel.replaceChild(debugBanner, existingBanner)
-  else rankingPanel.insertBefore(debugBanner, rankingPanel.firstChild)
+  // Log a compact summary to the footer log (UI traceability moved to log)
+  try {
+    const now = new Date().toLocaleString()
+    const acclaimCount = (currentRankingAcclaim && currentRankingAcclaim.length) || 0
+    const summaryCount = (entries && entries.length) || 0
+    addFooterLog(`Ranking updated — acclaim:${acclaimCount} • summary:${summaryCount}`)
+  } catch (e) { console.debug('ranking panel log error', e) }
   renderRankingSources()
-  // Render only the per-album consolidated ranking summary (no separate global positions block)
+  // Render only the per-album consolidated ranking summary
   renderRankingSummaryList()
 }
 
@@ -708,9 +743,8 @@ async function updateAllAcclaim () {
       retries: 2,
       backoffMs: 800,
       onProgress: (index, success, payload) => {
-        // update debug banner with live progress
-        const banner = document.getElementById('ranking-debug-banner')
-        if (banner) banner.querySelector && (banner.lastElementChild.textContent = `acclaim:${(currentRankingAcclaim && currentRankingAcclaim.length)||0} • progress:${index + 1}/${queries.length}`)
+        // update footer log with live progress
+        try { addFooterLog(`Atualizando aclamação — progresso: ${index + 1}/${queries.length}`) } catch (e) { console.debug('progress log error', e) }
       }
     })
 
@@ -839,6 +873,11 @@ async function initializeAppContainer () {
   rankingSourcesList = document.getElementById('rankingSourcesList')
   rankingSummaryList = document.getElementById('rankingSummaryList')
   rankingAcclaimList = document.getElementById('rankingAcclaimList')
+  // Footer log elements (optional, added in HTML)
+  footerLastUpdateEl = document.getElementById('footerLastUpdate')
+  footerLogToggleEl = document.getElementById('footerLogToggle')
+  footerLogEl = document.getElementById('footerLog')
+  if (footerLogToggleEl && footerLogEl) footerLogToggleEl.addEventListener('click', () => footerLogEl.classList.toggle('hidden'))
 
   toggleViewBtn.addEventListener('click', toggleView)
   if (generateBtn) generateBtn.addEventListener('click', runHybridCuration)

@@ -157,6 +157,12 @@ async function fetchRankingForAlbum (album, albumQuery, options = {}) {
       const albumTrackCount = Array.isArray(album && album.tracks) ? album.tracks.length : null
       if (!albumTrackCount || scraperEntries.length >= albumTrackCount) {
         const sources = [{ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: best.referenceUrl || best.albumUrl || null }]
+        // ensure deterministic ordering by position (or rating if present)
+        scraperEntries.sort((a, b) => {
+          if ((a.position || 0) && (b.position || 0)) return (a.position || 0) - (b.position || 0)
+          if ((a.rating || 0) && (b.rating || 0)) return (b.rating || 0) - (a.rating || 0)
+          return 0
+        })
         return { entries: scraperEntries, sources, bestEver: { albumUrl: best.referenceUrl || best.albumUrl || null, albumId: best.albumId || null, evidence: best.evidence } }
       }
 
@@ -212,28 +218,39 @@ async function fetchRankingForAlbum (album, albumQuery, options = {}) {
           }
         }
 
-        // Build ordered entries: try to preserve album track order when available
+        // Build ordered entries: collect merged entries and then order by position (or rating)
         const finalEntries = []
+        // Prefer preserving album track order for matching titles, but capture found.position/rating when available
         if (Array.isArray(album && album.tracks)) {
           album.tracks.forEach((t, idx) => {
             const k = String((t && (t.title || t.trackTitle || t.name)) || '').toLowerCase()
             const found = k ? mergedByTitle.get(k) : null
             if (found) {
-              // if scraper provided position prefer it, otherwise assign next available position
               const pos = found.position || (idx + 1)
-              finalEntries.push({ provider: found.provider || 'Model', trackTitle: found.trackTitle || t.title || t.trackTitle, position: pos, referenceUrl: found.referenceUrl || null })
+              finalEntries.push({ provider: found.provider || 'Model', trackTitle: found.trackTitle || t.title || t.trackTitle, position: pos, rating: found.rating || null, referenceUrl: found.referenceUrl || null })
             }
           })
         }
 
-        // If still empty, fall back to mergedByTitle enumeration
-        if (finalEntries.length === 0) {
-          let i = 1
+        // If still missing entries, include remaining mergedByTitle entries
+        if (finalEntries.length < (albumTrackCount || 0)) {
+          let i = finalEntries.length + 1
           for (const v of mergedByTitle.values()) {
-            finalEntries.push({ provider: v.provider || 'Model', trackTitle: v.trackTitle, position: v.position || i, referenceUrl: v.referenceUrl || null })
-            i++
+            const k = v && v.trackTitle ? String(v.trackTitle).toLowerCase() : null
+            if (k && !finalEntries.some(fe => String(fe.trackTitle).toLowerCase() === k)) {
+              finalEntries.push({ provider: v.provider || 'Model', trackTitle: v.trackTitle, position: v.position || i, rating: v.rating || null, referenceUrl: v.referenceUrl || null })
+              i++
+            }
+            if (finalEntries.length >= (albumTrackCount || Infinity)) break
           }
         }
+
+        // Ensure deterministic ordering: by position asc, then by rating desc
+        finalEntries.sort((a, b) => {
+          if ((a.position || 0) && (b.position || 0) && (a.position !== b.position)) return (a.position || 0) - (b.position || 0)
+          if ((a.rating || 0) && (b.rating || 0) && (a.rating !== b.rating)) return (b.rating || 0) - (a.rating || 0)
+          return 0
+        })
 
         // Compose sources: BestEver first, then model sources (limit to 3)
         const modelSources = rankingEntriesToSources(modelEntries || [])
@@ -375,6 +392,22 @@ app.post('/api/generate', async (req, res) => {
         } catch (e) {
           console.warn('Ranking consolidation failed:', e && e.message)
           albumPayload.rankingConsolidated = []
+        }
+        // Map consolidated final positions back onto album tracks as `rank` so clients
+        // (curation UI/algorithms) can rely on `track.rank` for playlist generation.
+        try {
+          if (Array.isArray(albumPayload.rankingConsolidated) && Array.isArray(albumPayload.tracks)) {
+            const rankMap = new Map()
+            albumPayload.rankingConsolidated.forEach(r => {
+              if (r && r.trackTitle && r.finalPosition) rankMap.set(String(r.trackTitle).toLowerCase(), Number(r.finalPosition))
+            })
+            albumPayload.tracks.forEach(t => {
+              const key = String((t && (t.title || t.trackTitle || t.name)) || '').toLowerCase()
+              if (key && rankMap.has(key)) t.rank = rankMap.get(key)
+            })
+          }
+        } catch (e) {
+          logger && logger.warn && logger.warn('rank_mapping_failed', { err: (e && e.message) || String(e) })
         }
         return res.status(200).json({ data: albumPayload })
       }
