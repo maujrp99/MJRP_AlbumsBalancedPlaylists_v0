@@ -311,12 +311,16 @@ function renderTrackItem (track) {
     ? currentAlbums.find(a => a.id === track.originAlbumId)
     : currentAlbums.find(a => a.tracks && a.tracks.some(t => t.id === track.id))
   const albumTitle = originAlbum ? originAlbum.title : 'N/A'
+  const rankValue = track && (track.rank !== undefined && track.rank !== null) ? track.rank : '-'
+  const canonicalBadge = (track && track.canonicalRank !== undefined && track.canonicalRank !== null && track.canonicalRank !== rankValue)
+    ? ` (Canon: ${track.canonicalRank})`
+    : ''
 
   return `
         <li class="track-item flex justify-between items-center p-2 rounded-md hover:bg-spotify-gray" data-track-id="${track.id}">
             <div class="flex-1 truncate mr-2">
                 <p class="text-white truncate" title="${track.title}">${track.title || 'Faixa Desconhecida'}</p>
-                <p class="text-xs text-spotify-lightgray">Rank: ${track.rank || '-'}</p>
+                <p class="text-xs text-spotify-lightgray">Rank: ${rankValue}${canonicalBadge}</p>
             </div>
             <span class="text-spotify-lightgray text-sm w-16 truncate text-center" title="${albumTitle}">${albumTitle}</span>
             <span class="text-spotify-lightgray text-sm w-12 text-right">${formatDuration(track.duration)}</span>
@@ -791,6 +795,12 @@ function buildTracksForCurationInput (album) {
     copy.title = title
     const key = normalizeKey(title)
     const consolidatedEntry = key ? consolidatedIndex.get(key) : null
+    const canonicalRank = (() => {
+      if (copy.canonicalRank !== undefined && copy.canonicalRank !== null) return Number(copy.canonicalRank)
+      if (copy.rank !== undefined && copy.rank !== null) return Number(copy.rank)
+      if (consolidatedEntry && (consolidatedEntry.finalPosition !== undefined && consolidatedEntry.finalPosition !== null)) return Number(consolidatedEntry.finalPosition)
+      return null
+    })()
     const rating = (() => {
       if (copy.rating !== undefined && copy.rating !== null) return Number(copy.rating)
       if (consolidatedEntry && (consolidatedEntry.rating !== undefined && consolidatedEntry.rating !== null)) return Number(consolidatedEntry.rating)
@@ -820,7 +830,7 @@ function buildTracksForCurationInput (album) {
     copy.rating = rating
     copy.acclaimScore = normalizedScore
     copy.acclaimRank = acclaimRank
-    if (copy.rank === undefined || copy.rank === null) copy.rank = acclaimRank
+    copy.canonicalRank = canonicalRank
     return copy
   }
 
@@ -871,7 +881,10 @@ function buildTracksForCurationInput (album) {
   sortedTracks.forEach((track, idx) => {
     if (!track) return
     track.acclaimRank = idx + 1
-    if (track.rank === undefined || track.rank === null) track.rank = track.acclaimRank
+    if (track.canonicalRank === undefined || track.canonicalRank === null) {
+      track.canonicalRank = (track.rank !== undefined && track.rank !== null) ? Number(track.rank) : null
+    }
+    track.rank = track.acclaimRank
   })
   return sortedTracks
 }
