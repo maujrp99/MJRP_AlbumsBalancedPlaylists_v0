@@ -114,7 +114,35 @@ export function curateAlbums (albums, opts = {}) {
     albumLookup.set(album.id, album)
     if (Array.isArray(album.rankingSources)) album.rankingSources.forEach(registerRankingSource)
     if (!Array.isArray(album.tracks)) continue
+    // Work on a local copy of the album tracks. We will assign a "visual" rank
+    // based on acclaim ordering (ratings when present) so playlist generation
+    // uses the acclaim ordering (1..N) as you requested.
     const tracks = [...album.tracks]
+    // Build a stable ordering: prefer rating (desc) when any rating exists,
+    // otherwise fall back to existing `rank` (ascending) or original order.
+    const idToTrack = new Map(tracks.map((t, i) => [t && t.id ? t.id : `idx_${i}`, t]))
+    const annotated = tracks.map((t, i) => ({ id: t && t.id ? t.id : `idx_${i}`, rating: (t && (t.rating !== undefined && t.rating !== null)) ? Number(t.rating) : null, origIndex: i, existingRank: (t && t.rank) || null }))
+    const hasRatings = annotated.some(a => a.rating !== null)
+    if (hasRatings) {
+      annotated.sort((a, b) => {
+        const ra = a.rating || 0; const rb = b.rating || 0
+        if (rb !== ra) return rb - ra
+        // tiebreaker: preserve original album order
+        return a.origIndex - b.origIndex
+      })
+    } else {
+      annotated.sort((a, b) => {
+        const ra = a.existingRank || Number.POSITIVE_INFINITY
+        const rb = b.existingRank || Number.POSITIVE_INFINITY
+        if (ra !== rb) return ra - rb
+        return a.origIndex - b.origIndex
+      })
+    }
+    // Mutate the working album tracks' `rank` to the visual acclaim rank (1..N)
+    annotated.forEach((a, idx) => {
+      const t = idToTrack.get(a.id)
+      if (t) t.rank = idx + 1
+    })
 
     const t1 = tracks.find(t => t.rank === 1)
     if (t1) {
