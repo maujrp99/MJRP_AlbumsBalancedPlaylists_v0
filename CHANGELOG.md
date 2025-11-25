@@ -44,6 +44,22 @@
 
 ### Notes
 - See feature branch `feature/ranking-provenance-implementation` for implementation details and tests.
+
+## UI-Cleanup-Playlist-Layout (2025-11-24)
+
+### Changed
+- Albums view: track listing now shows original track order numbering (1..N) instead of showing the consolidated `rank` value next to each track. This preserves the original album sequencing when browsing source albums.
+- Playlists UI: moved the playlist section title `Balanced Playlists` to sit immediately below the `Ranking de Aclamação` block (and above the generated playlists), styled to match the `Ranking de Aclamação` header.
+
+### Removed / Moved
+- Removed the prominent "Ranking Traceability" panel from the main UI. Traceability and verification messages are now recorded in a compact, collapsible footer log to reduce UI clutter.
+- The per-playlist integrity verification badge was removed from the main summary card and its results are now written to the footer log.
+
+### Added
+- Footer: a small, collapsible log panel and `Last Update` timestamp were added to the bottom of the page. The log collects runtime verification messages, ranking-refresh events and operator progress updates.
+
+### Notes
+- These changes focus on UI clarity: preserve album ordering, reduce visual noise, and keep traceability information available via a small, easily-accessible log.
 # Changelog
 
 ## Unreleased

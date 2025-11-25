@@ -426,6 +426,10 @@
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
+        /* Footer log styles */
+        .app-footer { border-top: 1px solid rgba(255,255,255,0.03); margin-top: 2rem; padding-top: 0.75rem; }
+        .footer-log-entry { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace; }
+        .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.8rem; border-radius: 999px; }
     </style>
 </head>
 
@@ -486,21 +490,20 @@
             </section>
 
             <section id="playlists-view" class="hidden">
-                <h2 class="text-3xl font-bold text-white mb-6">Playlists Geradas</h2>
+                <!-- Title for playlists moved below Ranking de Aclamação (see ranking panel) -->
                 <div id="playlists-summary" class="glass-panel mb-6"></div>
                 <div id="rankingPanel" class="ranking-panel hidden mb-6" aria-live="polite">
-                    <div class="flex items-center justify-between mb-3">
-                        <div>
-                            <h3 class="text-lg font-semibold text-white">Ranking Traceability</h3>
-                            <p class="text-sm text-muted">Explicamos quais faixas foram selecionadas por álbum e por quê.</p>
-                        </div>
-                    </div>
+                    <!-- Traceability panel header removed from main UI (moved to footer logs) -->
                     <div id="rankingSourcesList" class="flex flex-wrap gap-2"></div>
                     <div class="ranking-acclaim-section">
                         <h4 class="text-xs font-semibold tracking-[0.3em] uppercase text-spotify-lightgray">Ranking de Aclamação</h4>
                         <div id="rankingAcclaimList" class="mt-2 space-y-2"></div>
                     </div>
                     <div id="rankingSummaryList" class="mt-4 space-y-3"></div>
+                </div>
+                <!-- Balanced Playlists title (styled like 'Ranking de Aclamação') placed below the ranking section -->
+                <div class="mb-4">
+                    <h4 class="text-xs font-semibold tracking-[0.3em] uppercase text-spotify-lightgray">Balanced Playlists</h4>
                 </div>
                 <div id="playlists-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </section>
@@ -526,6 +529,15 @@
     </div>
 
     <!-- Load SortableJS first (defer) -->
+    <footer id="app-footer" class="app-footer">
+        <div class="container mx-auto max-w-7xl flex items-center justify-between">
+            <div>
+                <button id="footerLogToggle" class="btn btn-secondary btn-sm" type="button">Logs</button>
+            </div>
+            <div class="text-xs text-spotify-lightgray">Last Update: <span id="footerLastUpdate">—</span></div>
+        </div>
+        <div id="footerLog" class="container mx-auto max-w-7xl mt-2 hidden" style="max-height:160px;overflow:auto;border-top:1px solid rgba(255,255,255,0.03);padding-top:0.5rem"></div>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js" defer></script>
 
     <!-- Load firebase-config (must define window.__firebase_config) -->
