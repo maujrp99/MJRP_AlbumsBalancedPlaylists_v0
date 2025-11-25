@@ -421,6 +421,24 @@ app.post('/api/generate', async (req, res) => {
         } catch (e) {
           logger && logger.warn && logger.warn('rank_mapping_failed', { err: (e && e.message) || String(e) })
         }
+        // Additionally expose a track list ordered by acclaim rank for UI consumers that
+        // render the "Ranking de Aclamação" view directly from album payload.
+        try {
+          if (Array.isArray(albumPayload.tracks)) {
+            // ensure every track has a `rank` (fallback to original order if missing)
+            albumPayload.tracks.forEach((t, idx) => {
+              if (t && (t.rank === undefined || t.rank === null)) t.rank = idx + 1
+            })
+            // create a sorted copy by rank (1..N) to be used by the UI when showing acclaim order
+            albumPayload.tracksByAcclaim = Array.from(albumPayload.tracks).slice().sort((a, b) => {
+              const ra = (a && a.rank) || Number.POSITIVE_INFINITY
+              const rb = (b && b.rank) || Number.POSITIVE_INFINITY
+              return ra - rb
+            })
+          }
+        } catch (e) {
+          logger && logger.warn && logger.warn('tracks_by_acclaim_failed', { err: (e && e.message) || String(e) })
+        }
         return res.status(200).json({ data: albumPayload })
       }
     } catch (err) {
