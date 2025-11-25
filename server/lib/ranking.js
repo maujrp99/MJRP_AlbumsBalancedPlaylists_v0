@@ -45,16 +45,21 @@ function consolidateRanking (tracks = [], acclaim = []) {
 
   // build a map containing all album tracks as base (so consolidated ranking covers 1..N)
   const map = new Map()
+  const normIndex = new Map()
   if (Array.isArray(tracks)) {
     tracks.forEach((t, i) => {
       const title = (t && (t.title || t.name)) ? String(t.title || t.name) : `track_${i + 1}`
-      const key = normalizeKey(title)
-      map.set(key, { trackTitle: title, score: 0, supporting: [], tokens: tokenize(title) })
+      const baseKey = normalizeKey(title)
+      const uniqKey = `${baseKey}::${i}`
+      map.set(uniqKey, { trackTitle: title, score: 0, supporting: [], tokens: tokenize(title), normKey: baseKey, index: i })
+      const arr = normIndex.get(baseKey) || []
+      arr.push(uniqKey)
+      normIndex.set(baseKey, arr)
     })
   }
 
   const addSupporting = (key, mention) => {
-    const existing = map.get(key) || { trackTitle: mention.trackTitle || key, score: 0, supporting: [] }
+    const existing = map.get(key) || { trackTitle: mention.trackTitle || key, score: 0, supporting: [], tokens: tokenize(mention.trackTitle || key) }
     existing.supporting.push({ provider: mention.provider || '', position: mention.position || null, referenceUrl: mention.referenceUrl || '', rating: (mention.rating !== undefined ? mention.rating : null) })
     map.set(key, existing)
   }
@@ -66,25 +71,44 @@ function consolidateRanking (tracks = [], acclaim = []) {
     // Only count points for tracks that are part of the album when tracks list is provided
     let matchedKey = mentionKey
     if (N > 0 && !map.has(matchedKey)) {
-      // attempt fuzzy token-overlap matching to handle small title variants (pt. vs pt, commas, parentheses, etc.)
-      const mentionTokens = tokenize(m.trackTitle)
-      let best = { key: null, score: 0 }
-      for (const [k, v] of map.entries()) {
-        // exact containment check first: if one normalized string contains the other, accept immediately
-        if (mentionKey.includes(k) || k.includes(mentionKey)) {
-          best = { key: k, score: 1 }
-          break
+      // Try normalized exact-match to one or more album tracks
+      const candidates = normIndex.get(mentionKey) || []
+      if (candidates.length === 1) {
+        matchedKey = candidates[0]
+      } else if (candidates.length > 1) {
+        // multiple album tracks with same normalized title: pick the one with least supporting entries
+        let bestCandidate = candidates[0]
+        let bestSupportCount = (map.get(bestCandidate) && map.get(bestCandidate).supporting) ? map.get(bestCandidate).supporting.length : 0
+        for (const c of candidates) {
+          const sCount = (map.get(c) && map.get(c).supporting) ? map.get(c).supporting.length : 0
+          if (sCount < bestSupportCount) {
+            bestCandidate = c
+            bestSupportCount = sCount
+          }
         }
-        const ratio = tokenOverlapRatio(mentionTokens, v.tokens || tokenize(k))
-        if (ratio > best.score) best = { key: k, score: ratio }
-      }
-      // require moderate overlap (>= 0.4) to consider as a match; exact containment short-circuits
-      if (best.score >= 0.4 && best.key) matchedKey = best.key
-      else {
-        // unmatched mention: ignore for strict per-album consolidation but record under a special key
-        const muKey = `__unmatched__${mentionKey}`
-        addSupporting(muKey, m)
-        return
+        matchedKey = bestCandidate
+      } else {
+        // attempt fuzzy token-overlap matching to handle small title variants (pt. vs pt, commas, parentheses, etc.)
+        const mentionTokens = tokenize(m.trackTitle)
+        let best = { key: null, score: 0 }
+        for (const [k, v] of map.entries()) {
+          const norm = v && v.normKey ? v.normKey : normalizeKey(v && v.trackTitle)
+          // exact containment check on normalized base keys first
+          if (mentionKey.includes(norm) || norm.includes(mentionKey)) {
+            best = { key: k, score: 1 }
+            break
+          }
+          const ratio = tokenOverlapRatio(mentionTokens, v.tokens || tokenize(v && v.trackTitle))
+          if (ratio > best.score) best = { key: k, score: ratio }
+        }
+        // require moderate overlap (>= 0.4) to consider as a match; exact containment short-circuits
+        if (best.score >= 0.4 && best.key) matchedKey = best.key
+        else {
+          // unmatched mention: ignore for strict per-album consolidation but record under a special key
+          const muKey = `__unmatched__${mentionKey}`
+          addSupporting(muKey, m)
+          return
+        }
       }
     }
     addSupporting(matchedKey, m)
@@ -97,8 +121,11 @@ function consolidateRanking (tracks = [], acclaim = []) {
     } else {
       points = p > 0 ? (1 / p) : 0
     }
-    const obj = map.get(key)
-    obj.score = (obj.score || 0) + points
+    const obj = map.get(matchedKey)
+    if (obj) {
+      obj.score = (obj.score || 0) + points
+      map.set(matchedKey, obj)
+    }
   })
 
   // Ensure we have results for all album tracks (map may have been empty if tracks unknown)

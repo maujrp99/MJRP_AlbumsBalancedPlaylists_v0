@@ -183,23 +183,23 @@ async function fetchRankingForAlbum (album, albumQuery, options = {}) {
         })
         let modelEntries = await extractAndValidateRankingEntries(rankingResponse)
 
-        // Merge: prefer scraperEntries (by trackTitle), otherwise use modelEntries; preserve BestEver provider tag
+        // Merge: prefer scraperEntries (by normalized trackTitle), otherwise use modelEntries; preserve BestEver provider tag
         const mergedByTitle = new Map()
-        // index model entries by lowercased title for quick matching
+        // index model entries by normalized title for robust matching
         const modelIndex = new Map()
         modelEntries.forEach(me => {
-          if (me && me.trackTitle) modelIndex.set(String(me.trackTitle).toLowerCase(), me)
+          if (me && me.trackTitle) modelIndex.set(normalizeRankingKey(me.trackTitle), me)
         })
 
-        // Start with scraper positions
+        // Start with scraper positions (normalized)
         scraperEntries.forEach(se => {
-          if (se && se.trackTitle) mergedByTitle.set(String(se.trackTitle).toLowerCase(), se)
+          if (se && se.trackTitle) mergedByTitle.set(normalizeRankingKey(se.trackTitle), se)
         })
 
-        // Fill gaps from model
+        // Fill gaps from model by matching normalized album track titles
         if (Array.isArray(album && album.tracks)) {
           album.tracks.forEach((t, idx) => {
-            const key = String((t && (t.title || t.trackTitle || t.name)) || '').toLowerCase()
+            const key = normalizeRankingKey((t && (t.title || t.trackTitle || t.name)) || '')
             if (!key) return
             if (!mergedByTitle.has(key)) {
               const candidate = modelIndex.get(key)
@@ -208,10 +208,10 @@ async function fetchRankingForAlbum (album, albumQuery, options = {}) {
           })
         }
 
-        // As a fallback, include any remaining model entries up to albumTrackCount
+        // As a fallback, include any remaining model entries up to albumTrackCount (normalized)
         if (mergedByTitle.size < (albumTrackCount || 0)) {
           for (const me of modelEntries) {
-            const k = me && me.trackTitle ? String(me.trackTitle).toLowerCase() : null
+            const k = me && me.trackTitle ? normalizeRankingKey(me.trackTitle) : null
             if (!k) continue
             if (!mergedByTitle.has(k)) mergedByTitle.set(k, me)
             if (mergedByTitle.size >= (albumTrackCount || Infinity)) break
