@@ -1,5 +1,80 @@
 # Changelog
 
+All notable changes to this project are documented in this file. This changelog aims to be chronological and unambiguous: each release or hotfix has a concise summary, root cause (when relevant), the corrective action taken, and verification notes.
+
+Format:
+- Release / Hotfix header: date and short id
+- Sections: Summary, Root cause (if relevant), Fix applied, Verification, Notes / Next steps
+
+---
+
+## Release: BEA-RankingAcclaim-Implemented (2025-11-23)
+
+Summary
+- Added scraper-first ranking provenance using BestEverAlbums when available.
+- Server exposes per-track `bestEverEvidence`, `bestEverAlbumId` and per-track `rating` in the album payload returned by `/api/generate`.
+- Merge logic: when scraper evidence is partial, model outputs are used to enrich missing tracks; scraper entries take precedence for matched tracks.
+- Frontend: consolidated ranking UI updated to prefer server-side `rankingConsolidated` and surface BestEver sources first.
+
+Verification
+- Unit and integration tests added under `server/test/`. Local `npm test` passed during development.
+
+---
+
+## Hotfix: BestEver suggest fast-accept & fuzzy matching (2025-11-25)
+
+Summary
+- Problem: the BestEver `suggest.php` sometimes returned candidate results pointing to non-canonical pages (tributes, live versions). In some album queries (notably *Pink Floyd — The Wall*) the scraper selected such a page and thus returned incomplete evidence (missing per-track ratings), causing `rankingConsolidated` to be incorrect or sparse.
+
+Root cause
+- Scraper selection relied on suggest/title token matches without reliably verifying the artist or page content. Additionally, consolidation used strict normalization which failed to match many BestEver track title variants (punctuation, part labels), leaving valid mentions unmatched.
+
+Fixes applied
+- Scraper (`server/lib/scrapers/besteveralbums.js`):
+  - Added a safe "fast-accept" path when `suggest.php` returns a title matching the pattern "<Album> by <Artist>" and the suggest title lacks bad keywords (e.g., `tribute`, `live`, `cover`, `deluxe`, `reissue`). The choice is logged via `bestever_fast_accept` for auditability.
+  - Added page-content verification fallback: when suggest is ambiguous, the scraper fetches candidate pages and verifies album title/artist in the DOM before accepting the id.
+
+- Consolidation (`server/lib/ranking.js` and `server/index.js`):
+  - Hardened `normalizeKey` to strip diacritics (NFD + remove \p{M}), collapse non-alphanumerics, and preserve token boundaries.
+  - Introduced tokenization and token-overlap heuristics and containment checks to match BestEver evidence to album tracks (reduced misses for variants such as "Another Brick In The Wall Pt. 2").
+  - Fixed mapping bug and ensured `finalPosition` from consolidated results is mapped deterministically back into `tracks[].rank` (server exports `tracksByAcclaim` sorted by rank for UI convenience).
+
+- Frontend (`public/js/app.js`):
+  - Updated collection and rendering logic to prefer server `tracksByAcclaim` for deterministic numbering while preserving ordering by `rating` (descending) when ratings are available. If ratings are absent, fallback to `rank` ordering.
+  - Strengthened dedupe keys in `collectRankingAcclaim` to avoid discarding valid mentions.
+
+Verification
+- Local testing: reproduced problematic case for *The Wall* and confirmed scraper now selects canonical id (`a=204`) and returns per-track ratings; `rankingConsolidated` length matched track count and `tracks[].rank` was populated.
+- Tests: server unit tests passed locally (`cd server && npm test`).
+
+Notes / Next steps
+- Consider adding an environment flag `BESTEVER_STRICT_VERIFY=true|false` to control fast-accept vs strict verification in high-throughput runs.
+- Persist `rankingConsolidatedMeta` to Firestore for long-term auditability (currently returned inline in the payload).
+
+---
+
+## Patch: UI ordering / rating restoration (2025-11-25)
+
+Summary
+- Symptom: After the first UI hotfix that made the client use `tracksByAcclaim` for numbering, the visual ordering by `rating` was lost in some production views.
+- Action: Updated `public/js/app.js` to enrich `tracksByAcclaim` with ratings (from `rankingConsolidated`, `bestEverEvidence`, or `rankingAcclaim`) and order the displayed list by `rating` when ratings exist, while continuing to show the deterministic `rank` number beside each track.
+
+Verification
+- Commit `ce78f9b` recorded the change; frontend was deployed to Firebase Hosting (`https://mjrp-playlist-generator.web.app`) using `./scripts/deploy-prod.sh` and verified with sample album payloads.
+
+---
+
+## Unreleased / Pending
+
+- Persist `rankingConsolidatedMeta` to Firestore for long-term divergence auditing.
+- Add optional env flag `BESTEVER_STRICT_VERIFY` to toggle scraper fast-accept behavior for batch vs strict runs.
+- Add additional automated post-deploy smoke tests that call `/api/generate` for a set of known albums and assert `tracksByAcclaim` presence and congruence with BestEver evidence.
+
+---
+
+If anything here looks ambiguous or you want a more formal release note for a GitHub Release body, tell me which section to expand and I will prepare it.
+# Changelog
+
 ## BEA-RankingAcclaim-Implemented (2025-11-23)
 
 ### Added
