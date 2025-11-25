@@ -24,7 +24,7 @@ Quick start
 ## Ranking → Curation data flow (2025-11-25)
 
 1. The proxy (`/api/generate`) already returns `tracksByAcclaim`, `rankingConsolidated`, `bestEverEvidence` and `rankingAcclaim` for every album. These arrays carry deterministic `finalPosition`, `normalizedScore` and `rating` values.
-2. The frontend (`public/js/app.js`) now derives a per-album track list for the curation engine via `buildTracksForCurationInput`. It prefers `tracksByAcclaim`, falls back to `rankingConsolidated`, and only uses the raw `album.tracks` array as a last resort. Each derived track copy carries `acclaimRank`, `acclaimScore`, `rating` and `originAlbumId` without mutating the canonical track order used elsewhere in the UI.
+2. The frontend (`public/js/app.js`) now derives a per-album track list for the curation engine via `buildTracksForCurationInput`. It prefers `tracksByAcclaim`, falls back to `rankingConsolidated`, and only uses the raw `album.tracks` array as a last resort. After enrichment it re-sorts by BestEver rating (desc, then normalized score) and assigns `acclaimRank` sequentially so the playlist generator receives the exact same ordering shown in the Ranking panel.
 3. `curateAlbums` (`public/js/curation.js`) consumes those acclaim-enriched tracks. All ordering decisions (P1/P2 selection, remaining pool sort, swap safeguards) now prioritize `acclaimRank` and `acclaimScore` with graceful fallbacks to the canonical `rank` when acclaim data is absent. This guarantees playlists mirror the same BestEver ordering shown in the "Ranking de Aclamação" panel.
 
 Notes

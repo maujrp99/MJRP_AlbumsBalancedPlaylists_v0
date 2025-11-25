@@ -850,7 +850,30 @@ function buildTracksForCurationInput (album) {
     return Array.isArray(album.tracks) ? album.tracks.map(track => ({ ...track })) : []
   })()
 
-  return baseTracks.map((track, idx) => enrichTrack(track, idx))
+  const enrichedTracks = baseTracks.map((track, idx) => enrichTrack(track, idx))
+  const sortedTracks = enrichedTracks.slice()
+  const getScore = (track) => {
+    if (!track) return { rating: null, score: null }
+    const rating = (track.rating !== undefined && track.rating !== null) ? Number(track.rating) : null
+    const score = (track.acclaimScore !== undefined && track.acclaimScore !== null) ? Number(track.acclaimScore) : null
+    return { rating, score }
+  }
+  sortedTracks.sort((a, b) => {
+    const { rating: ra, score: sa } = getScore(a)
+    const { rating: rb, score: sb } = getScore(b)
+    if (rb !== null && ra !== null && rb !== ra) return rb - ra
+    if (sb !== null && sa !== null && sb !== sa) return sb - sa
+    const rankA = (a && a.rank !== undefined && a.rank !== null) ? Number(a.rank) : Number.POSITIVE_INFINITY
+    const rankB = (b && b.rank !== undefined && b.rank !== null) ? Number(b.rank) : Number.POSITIVE_INFINITY
+    if (rankA !== rankB) return rankA - rankB
+    return (a && a.title ? a.title.localeCompare(b && b.title ? b.title : '') : 0)
+  })
+  sortedTracks.forEach((track, idx) => {
+    if (!track) return
+    track.acclaimRank = idx + 1
+    if (track.rank === undefined || track.rank === null) track.rank = track.acclaimRank
+  })
+  return sortedTracks
 }
 
 /**

@@ -187,7 +187,7 @@ Proposed fix
   - Prefer `album.tracksByAcclaim` when present (already deterministic),
   - Else fall back to `rankingConsolidated` (sorted by `finalPosition`),
   - Else fall back to `album.tracks` (original order).
-  Each track copy carries `acclaimRank`, `rating` and optionally `acclaimScore` (using consolidated `normalizedScore` or normalized rating).
+  Each track copy carries `acclaimRank`, `rating` and optionally `acclaimScore` (using consolidated `normalizedScore` or normalized rating). After enrichment, explicitly sort by rating (descending) with normalized score/rank tiebreakers so `acclaimRank` always reflects the rating order displayed in the UI.
 2. Pass these derived track arrays to `curateAlbums` (without mutating the originals) so the algorithm consistently works off acclaim data.
 3. Update `curateAlbums` to prioritize `track.acclaimRank` / `track.rating` for ordering, remaining-pool sorting and swap guards, with canonical `track.rank` kept only as a fallback.
 
