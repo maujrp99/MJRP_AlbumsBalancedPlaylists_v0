@@ -45,6 +45,25 @@
 ### Notes
 - See feature branch `feature/ranking-provenance-implementation` for implementation details and tests.
 
+## Fixes: Fuzzy matching & divergence metadata (2025-11-25)
+
+### Fixed
+- Addressed missing BestEver `rating` values for some albums (notably "The Wall") caused by strict title-matching heuristics that left BestEver evidence in unmatched buckets.
+
+### Changes
+- Relaxed matching heuristics in `server/lib/ranking.js`: added tokenization, token-overlap ratio, and substring containment checks to better match scraper evidence to album track titles.
+- Lowered token-overlap acceptance threshold and added containment short-circuit so variants like "Another Brick In The Wall (Pt. 2)" correctly map to album tracks.
+- Recorded unmatched mentions under `rankingConsolidatedMeta.unmatchedMentions` and tracks without evidence under `rankingConsolidatedMeta.tracksWithoutSupport` for audit and divergence analysis.
+- Exported `normalizeKey` from `server/lib/ranking.js` and reused it in `server/index.js` to ensure consistent normalization when mapping `finalPosition` back to `tracks[].rank`.
+
+### Tests
+- Added unit/integration verification and ran `npm test` in `server/` — all tests passed locally.
+
+### Notes & Next Steps
+- Confirm and run additional integration checks for production albums (e.g., "The Wall", "Electric Ladyland").
+- After your approval I will: commit remaining changes (branch `feature/server-acclaim-order`), create a git tag (proposed `v0.3.1-bea-fuzzy-match`), open a PR against `main`, and push the tag/branch to the remote for CI and deploy.
+
+
 ## UI-Cleanup-Playlist-Layout (2025-11-24)
 
 ### Changed
