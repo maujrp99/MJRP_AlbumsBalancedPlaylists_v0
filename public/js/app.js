@@ -82,6 +82,7 @@ function collectRankingAcclaim (albums) {
         provider: entry.provider,
         position,
         trackTitle: trackTitle || null,
+        rating: entry.rating || entry.score || entry.value || null,
         summary: entry.summary || entry.description || '',
         referenceUrl: entry.referenceUrl || entry.url || entry.sourceUrl || '',
         albumTitle: baseTitle,
@@ -483,9 +484,14 @@ function renderRankingAcclaimList (entries) {
     grouped[key].push(entry)
   })
 
-  // Render each album block: album header + tracks sorted by position asc (1 = most acclaimed)
+      // Render each album block: album header + tracks sorted by rating desc (when available) otherwise position asc
   rankingAcclaimList.innerHTML = Object.keys(grouped).map(albumKey => {
-    const list = grouped[albumKey].slice().sort((a, b) => (Number(a.position) || 999) - (Number(b.position) || 999))
+    const list = grouped[albumKey].slice().sort((a, b) => {
+      const ra = Number(a.rating || 0) || 0
+      const rb = Number(b.rating || 0) || 0
+      if (ra !== rb) return rb - ra
+      return (Number(a.position) || 999) - (Number(b.position) || 999)
+    })
     const rows = list.map(entry => {
       const pos = (entry.position !== undefined && entry.position !== null) ? `Posição ${escapeHtml(entry.position)}` : 'Posição não especificada'
       const summaryText = entry.summary || 'Resumo não enviado'
@@ -573,8 +579,10 @@ function renderRankingSummaryList () {
           return null
         })()
       }))
-      // ensure ordered by rank asc
-      tracks.sort((a, b) => (Number(a.rank) || 999) - (Number(b.rank) || 999))
+      // if BestEver ratings are present, prefer ordering by rating desc; otherwise order by rank asc
+      const hasRatings = tracks.some(t => t.rating !== null && t.rating !== undefined)
+      if (hasRatings) tracks.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0))
+      else tracks.sort((a, b) => (Number(a.rank) || 999) - (Number(b.rank) || 999))
     } else {
       // fallback to album.tracks ordering (use available rank if present)
       tracks = (album.tracks || []).map(t => ({ title: t.title || t.name || t.trackTitle || 'Faixa desconhecida', rank: t.rank || null, duration: t.duration || null, rating: t.rating || t.bestEverRating || null }))
