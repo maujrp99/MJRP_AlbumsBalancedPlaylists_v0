@@ -632,15 +632,20 @@ function renderRankingSummaryList () {
 
     const albumDuration = calculateTotalDuration(album.tracks || [])
 
-    const rowsHtml = tracks.map(track => {
-      const rankLabel = track.rank ? `${escapeHtml(String(track.rank))}` : '-'
+    const rowsHtml = tracks.map((track, idx) => {
+      // displayIndex: visual numbering after sorting (1..N)
+      const displayIndex = idx + 1
       const dur = track.duration ? formatDuration(track.duration) : '--:--'
       const ratingLabel = track.rating ? `<span class="text-xs text-spotify-lightgray"> • Rating: ${escapeHtml(String(track.rating))}</span>` : ''
+      // If the canonical rank exists and differs from the visual index, show a small badge
+      const canonicalBadge = (track.rank !== undefined && track.rank !== null && Number(track.rank) !== displayIndex)
+        ? `<span class="text-[11px] text-spotify-lightgray ml-2">(Canon: ${escapeHtml(String(track.rank))})</span>`
+        : ''
       return `
         <div class="flex items-center justify-between p-2 rounded-md hover:bg-spotify-gray">
           <div class="flex items-center gap-3">
-            <span class="w-6 text-spotify-lightgray text-sm text-center">${rankLabel}</span>
-            <span class="text-white truncate">${escapeHtml(track.title)}</span>
+            <span class="w-6 text-spotify-lightgray text-sm text-center">${displayIndex}</span>
+            <span class="text-white truncate">${escapeHtml(track.title)} ${canonicalBadge}</span>
           </div>
           <div class="text-right text-spotify-lightgray text-sm">${escapeHtml(dur)}${ratingLabel}</div>
         </div>
