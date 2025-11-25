@@ -547,9 +547,50 @@ function renderRankingSummaryList () {
     // fallback: build canonical URL from album.bestEverAlbumId when present
     if (!bestEverUrl && album.bestEverAlbumId) bestEverUrl = `https://www.besteveralbums.com/thechart.php?a=${encodeURIComponent(String(album.bestEverAlbumId))}#tracks`
 
-    // Determine track list: prefer rankingConsolidated (server-side Borda consolidation)
+    // Determine track list: prefer server-provided `tracksByAcclaim` (deterministic acclaim order),
+    // otherwise fall back to `rankingConsolidated` (consolidated entries), then album.tracks.
     let tracks = []
-    if (Array.isArray(album.rankingConsolidated) && album.rankingConsolidated.length > 0) {
+    if (Array.isArray(album.tracksByAcclaim) && album.tracksByAcclaim.length > 0) {
+      // `tracksByAcclaim` is expected to be an array of track objects with `.title` and `.rank`.
+      // We will preserve the `rank` values for numbering, but if ratings are available
+      // prefer ordering by rating desc (so UI shows highest-rated tracks first while
+      // still displaying the deterministic rank number next to each track).
+      const normalizeKey = s => (s || '').toString().toLowerCase().replace(/[^a-z0-9]+/g, '')
+
+      // Build initial tracks array and enrich ratings from consolidated evidence if present
+      tracks = album.tracksByAcclaim.map(t => ({
+        title: t.title || t.trackTitle || t.name || 'Faixa desconhecida',
+        rank: t.rank || null,
+        duration: t.duration || null,
+        rating: (t.rating !== undefined && t.rating !== null) ? t.rating : null
+      }))
+
+      // Try to enrich missing ratings from album.rankingConsolidated, album.bestEverEvidence or album.rankingAcclaim
+      const consolidatedIndex = Array.isArray(album.rankingConsolidated)
+        ? new Map(album.rankingConsolidated.map(c => [normalizeKey(c.trackTitle || c.title || ''), c]))
+        : new Map()
+      const bestEverIndex = Array.isArray(album.bestEverEvidence)
+        ? new Map(album.bestEverEvidence.map(b => [normalizeKey(b.trackTitle || b.title || ''), b]))
+        : new Map()
+      const acclaimIndex = Array.isArray(album.rankingAcclaim)
+        ? new Map(album.rankingAcclaim.map(a => [normalizeKey(a.trackTitle || a.title || ''), a]))
+        : new Map()
+
+      tracks.forEach(tr => {
+        if (tr.rating !== null && tr.rating !== undefined) return
+        const key = normalizeKey(tr.title || '')
+        const c = consolidatedIndex.get(key)
+        if (c && (c.rating !== undefined && c.rating !== null)) { tr.rating = c.rating; return }
+        const b = bestEverIndex.get(key)
+        if (b && (b.rating !== undefined && b.rating !== null)) { tr.rating = b.rating; return }
+        const r = acclaimIndex.get(key)
+        if (r && (r.rating !== undefined && r.rating !== null)) { tr.rating = r.rating; return }
+      })
+
+      const hasRatings = tracks.some(t => t.rating !== null && t.rating !== undefined)
+      if (hasRatings) tracks.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0))
+      else tracks.sort((a, b) => (Number(a.rank) || 999) - (Number(b.rank) || 999))
+    } else if (Array.isArray(album.rankingConsolidated) && album.rankingConsolidated.length > 0) {
       // rankingConsolidated entries include finalPosition
       const normalizeKey = s => (s || '').toString().toLowerCase().replace(/[^a-z0-9]+/g, '')
       tracks = album.rankingConsolidated.map(t => ({
