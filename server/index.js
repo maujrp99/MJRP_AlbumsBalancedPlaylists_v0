@@ -397,12 +397,27 @@ app.post('/api/generate', async (req, res) => {
         // (curation UI/algorithms) can rely on `track.rank` for playlist generation.
         try {
           if (Array.isArray(albumPayload.rankingConsolidated) && Array.isArray(albumPayload.tracks)) {
+            const normalizeKey = s => {
+              try {
+                return String(s || '')
+                  .toLowerCase()
+                  .normalize('NFD')
+                  .replace(/\p{Diacritic}/gu, '')
+                  .replace(/[^a-z0-9]+/g, '')
+              } catch (e) {
+                return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '')
+              }
+            }
+
             const rankMap = new Map()
             albumPayload.rankingConsolidated.forEach(r => {
-              if (r && r.trackTitle && r.finalPosition) rankMap.set(String(r.trackTitle).toLowerCase(), Number(r.finalPosition))
+              if (r && r.trackTitle && (r.finalPosition !== undefined && r.finalPosition !== null)) {
+                rankMap.set(normalizeKey(r.trackTitle), Number(r.finalPosition))
+              }
             })
+
             albumPayload.tracks.forEach(t => {
-              const key = String((t && (t.title || t.trackTitle || t.name)) || '').toLowerCase()
+              const key = normalizeKey((t && (t.title || t.trackTitle || t.name)) || '')
               if (key && rankMap.has(key)) t.rank = rankMap.get(key)
             })
           }
