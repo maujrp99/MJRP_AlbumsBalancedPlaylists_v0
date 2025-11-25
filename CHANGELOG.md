@@ -72,6 +72,32 @@ Verification
 
 ---
 
+## Patch: Curation ordering fix (2025-11-25)
+
+Summary
+- Symptom: playlist generation was still effectively using the canonical `track.rank` (server-provided finalPosition) rather than the intended acclaim ordering (rating-desc) when selecting P1/P2 and filling playlists.
+
+Root cause
+- Although the UI and server provided `tracksByAcclaim` and visual ranks, the curation algorithm earlier relied on `track.rank` lookups which could reflect canonical positions. This produced playlists ordered by canonical rank rather than by acclaim rating.
+
+Fix applied
+- Updated `public/js/curation.js` to explicitly compute an acclaim-ordered per-album track list (prefer `rating` desc; fallback to existing rank/original order) and to:
+  - Select P1/P2 from the acclaim-ordered list (top 2 tracks by rating),
+  - Populate the `remaining` pool from the acclaim-ordered list (preserving the acclaim ordering),
+  - Assign visual `rank` (1..N) on the working copy so downstream steps use the acclaim ordering.
+
+Verification
+- Commit `c501535` contains the fix. The change was pushed to `main`. Recommend running the following smoke test after deploy:
+
+```bash
+curl -sS -X POST https://<BACKEND_URL>/api/generate -H "Content-Type: application/json" -d '{"albumQuery":"Exile on Main St."}' | jq '.data.tracksByAcclaim[0:3], .data.rankingConsolidated[0:3]'
+```
+
+Notes
+- This aligns generation behavior with the UI expectation: playlists are now built from acclaim ordering (rating), while the UI still surfaces canonical rank as an audit badge.
+
+---
+
 If anything here looks ambiguous or you want a more formal release note for a GitHub Release body, tell me which section to expand and I will prepare it.
 # Changelog
 
