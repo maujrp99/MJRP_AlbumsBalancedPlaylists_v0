@@ -5,11 +5,21 @@ const cheerio = require('cheerio')
 // Given an album title and artist, attempt to find album page by search,
 // then extract track ranking if present ordered by rating.
 
+// Helper to get axios config with headers
+const getAxiosConfig = (timeout = 30000) => ({
+  timeout,
+  headers: {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9'
+  }
+})
+
 async function fetchAlbumPage(albumTitle, albumArtist) {
   // BestEverAlbums has search endpoint like: https://www.besteveralbums.com/search.php?search=led+zeppelin+physical+graffiti
   const q = encodeURIComponent(`${albumArtist} ${albumTitle}`)
   const searchUrl = `https://www.besteveralbums.com/search.php?search=${q}`
-  const searchRes = await axios.get(searchUrl, { timeout: 15000 })
+  const searchRes = await axios.get(searchUrl, getAxiosConfig(30000))
   const $search = cheerio.load(searchRes.data)
 
   // Attempt to find a reliable album/chart link in search results.
@@ -49,7 +59,7 @@ async function fetchAlbumPage(albumTitle, albumArtist) {
   const albumUrl = albumPath.startsWith('http') ? albumPath : `https://www.besteveralbums.com${albumPath}`
   // Verify page matches expected artist/title to avoid returning tribute pages
   try {
-    const res = await axios.get(albumUrl, { timeout: 10000 })
+    const res = await axios.get(albumUrl, getAxiosConfig(30000))
     const $ = cheerio.load(res.data)
     const pageText = ($('title').text() + ' ' + $('h1').text() + ' ' + $('h2').text() + ' ' + $('body').text()).toLowerCase()
     const normalize = s => (s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
@@ -66,10 +76,10 @@ async function fetchAlbumPage(albumTitle, albumArtist) {
 }
 
 // Helper: check whether a BestEverAlbums chart/album page contains the album title and (preferably) the artist
-async function pageContainsArtistOrTitle (url, albumTitle, albumArtist) {
+async function pageContainsArtistOrTitle(url, albumTitle, albumArtist) {
   try {
     const candidateUrl = url.startsWith('http') ? url : `https://www.besteveralbums.com${url}`
-    const res = await axios.get(candidateUrl, { timeout: 10000 })
+    const res = await axios.get(candidateUrl, getAxiosConfig(30000))
     const $ = cheerio.load(res.data)
     const titleText = ($('title').text() || '').toLowerCase()
     const headerText = (($('h1').text() || '') + ' ' + ($('h2').text() || '')).toLowerCase()
@@ -105,7 +115,7 @@ async function findAlbumId(albumTitle, albumArtist) {
   const q = encodeURIComponent(`${albumArtist || ''} ${albumTitle || ''}`)
   const suggestUrl = `https://www.besteveralbums.com/suggest.php?q=${q}`
   try {
-    const res = await axios.get(suggestUrl, { timeout: 10000 })
+    const res = await axios.get(suggestUrl, getAxiosConfig(30000))
     const parsed = res.data
     const urls = Array.isArray(parsed) && parsed.length > 2 ? parsed[3] || parsed[2] || [] : []
     const titles = Array.isArray(parsed) && parsed.length > 1 ? parsed[1] || [] : []
@@ -202,33 +212,33 @@ async function findAlbumId(albumTitle, albumArtist) {
 
     // fallback to first candidate id if none verified and HTML search didn't find better
     if (candidates.length > 0) return candidates[0].id
-    } catch (err) {
-      // fallback to older HTML search
-      const q2 = encodeURIComponent(`${albumArtist} ${albumTitle}`)
-      const searchUrl = `https://www.besteveralbums.com/search.php?search=${q2}`
-      const searchRes = await axios.get(searchUrl, { timeout: 15000 })
-      const $ = cheerio.load(searchRes.data)
-      const foundCandidates = []
-      $('a').each((i, el) => {
-        const href = $(el).attr('href')
-        if (!href) return
-        const mChart = href.match(/thechart\.php\?a=(\d+)/i)
-        if (mChart) {
-          foundCandidates.push({ type: 'chart', id: mChart[1], url: href })
-          return
-        }
-        const mAlbum = href.match(/album\.php\?id=(\d+)/i)
-        if (mAlbum) {
-          foundCandidates.push({ type: 'album', id: mAlbum[1], url: href })
-          return
-        }
-      })
-      for (const c of foundCandidates) {
-        if (await pageContainsArtistOrTitle(c.url, albumTitle, albumArtist)) return c.id
+  } catch (err) {
+    // fallback to older HTML search
+    const q2 = encodeURIComponent(`${albumArtist} ${albumTitle}`)
+    const searchUrl = `https://www.besteveralbums.com/search.php?search=${q2}`
+    const searchRes = await axios.get(searchUrl, getAxiosConfig(30000))
+    const $ = cheerio.load(searchRes.data)
+    const foundCandidates = []
+    $('a').each((i, el) => {
+      const href = $(el).attr('href')
+      if (!href) return
+      const mChart = href.match(/thechart\.php\?a=(\d+)/i)
+      if (mChart) {
+        foundCandidates.push({ type: 'chart', id: mChart[1], url: href })
+        return
       }
-      // fallback: return first candidate id if no verification passed
-      return foundCandidates.length ? foundCandidates[0].id : null
+      const mAlbum = href.match(/album\.php\?id=(\d+)/i)
+      if (mAlbum) {
+        foundCandidates.push({ type: 'album', id: mAlbum[1], url: href })
+        return
+      }
+    })
+    for (const c of foundCandidates) {
+      if (await pageContainsArtistOrTitle(c.url, albumTitle, albumArtist)) return c.id
     }
+    // fallback: return first candidate id if no verification passed
+    return foundCandidates.length ? foundCandidates[0].id : null
+  }
   return null
 }
 
@@ -236,7 +246,7 @@ async function findArtistPage(artistName) {
   // Use the suggest endpoint which returns JSON suggestions including artist/chart urls
   const q = encodeURIComponent(artistName)
   const suggestUrl = `https://www.besteveralbums.com/suggest.php?q=${q}`
-  const res = await axios.get(suggestUrl, { timeout: 10000 })
+  const res = await axios.get(suggestUrl, getAxiosConfig(30000))
   // suggest.php returns a JSON array where one of the arrays is a list of URLs
   try {
     const parsed = res.data
@@ -254,7 +264,7 @@ async function findArtistPage(artistName) {
     for (const c of candidates) {
       try {
         const artistUrl = c.url.startsWith('http') ? c.url : `https://www.besteveralbums.com${c.url}`
-        const r = await axios.get(artistUrl, { timeout: 10000 })
+        const r = await axios.get(artistUrl, getAxiosConfig(30000))
         const $ = cheerio.load(r.data)
         const header = (($('h1').text() || '') + ' ' + ($('title').text() || '')).toLowerCase()
         if (header.includes(`by ${target}`) || header.includes(target)) return c.id
@@ -270,7 +280,7 @@ async function findArtistPage(artistName) {
 
 async function parseArtistDiscography(artistId) {
   const url = `https://www.besteveralbums.com/thechart.php?b=${artistId}`
-  const res = await axios.get(url, { timeout: 15000 })
+  const res = await axios.get(url, getAxiosConfig(30000))
   const $ = cheerio.load(res.data)
 
   const albums = []
@@ -299,7 +309,7 @@ async function parseArtistDiscography(artistId) {
 
 async function parseChartRankingById(id) {
   const chartUrl = `https://www.besteveralbums.com/thechart.php?a=${id}#tracks`
-  const res = await axios.get(chartUrl, { timeout: 15000 })
+  const res = await axios.get(chartUrl, getAxiosConfig(30000))
   const $ = cheerio.load(res.data)
 
   // find the table header that includes Track and Rating
@@ -379,7 +389,7 @@ async function parseChartRankingById(id) {
 }
 
 // Helper: parse chart HTML string (useful for fixture-based tests)
-function parseChartHtml (html, chartUrl = 'https://example/') {
+function parseChartHtml(html, chartUrl = 'https://example/') {
   const $ = cheerio.load(html)
   const rows = []
   $('table').each((i, table) => {
@@ -431,7 +441,7 @@ function parseChartHtml (html, chartUrl = 'https://example/') {
 }
 
 async function parseAlbumRanking(albumUrl) {
-  const res = await axios.get(albumUrl, { timeout: 15000 })
+  const res = await axios.get(albumUrl, getAxiosConfig(30000))
   const $ = cheerio.load(res.data)
 
   // BestEverAlbums album pages often have a track listing table; also they show user ratings per track in a table with class 'track' or similar.

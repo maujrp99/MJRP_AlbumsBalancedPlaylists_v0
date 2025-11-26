@@ -195,6 +195,17 @@ npm run format
 Notes:
 - The repository contains both ESLint/Prettier configuration (for editors and future CI) and `standard` for an opinionated JS style. The server source is formatted using Standard; tests use a small node runner to avoid Jest environment issues in the local environment. We can enable full Jest-based tests later if you prefer.
 
+Release & tagging workflow
+--------------------------
+The release cadence is lightweight but intentional so each deploy has an audit trail:
+- Keep day-to-day work on feature branches (e.g., `feat/acclaim-ordering`). Merge back into `main` or `prod-fixes` only after local `npm test` succeeds inside `server/` and the UI smoke test on `hybrid-curator.html` matches the acclaim ordering.
+- Before deploying, update `CHANGELOG.md` (and docs if relevant). Create an annotated tag using the convention `release-YYYY-MM-DD-<suffix>` (latest example: `release-25-11-2025-app-v1`):
+  ```bash
+  git tag -a release-YYYY-MM-DD-your-note -m "Release YYYY-MM-DD - short summary"
+  git push origin release-YYYY-MM-DD-your-note
+  ```
+- Deploy via `./scripts/deploy-prod.sh` (wraps Firebase Hosting) or run `firebase deploy --only hosting --project mjrp-playlist-generator` if you need a manual override. Keep release tags immutable; if a fix is needed, cut a new tag so rollbacks remain trivial.
+
 ## Repository Layout & Recent Restoration (2025-11-24)
 
 This project experienced a repository flatten/restore operation during maintenance on 2025-11-23/24. The text below summarizes what changed, what backups were created, and the current git state so you have a single source of truth inside this repository.

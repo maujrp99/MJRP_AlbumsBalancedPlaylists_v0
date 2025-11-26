@@ -1,30 +1,24 @@
 // Consolidation helpers for ranking acclaim
 // Implements Borda count consolidation: each source gives points = N - position + 1
 
-function normalizeKey (s) {
-  if (!s) return ''
-  try {
-    // Normalize: NFD -> remove diacritics, replace non-alphanumerics with space,
-    // collapse spaces and lowercase. This preserves token boundaries for fuzzy matching.
-    return String(s || '')
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/\p{M}/gu, '')
-      .replace(/[^a-z0-9]+/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-  } catch (e) {
-    return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim()
+// Lazy load shared module (ESM)
+let normalizeKeyFn = null
+async function getNormalizeKey() {
+  if (!normalizeKeyFn) {
+    const mod = await import('../../shared/normalize.js')
+    normalizeKeyFn = mod.normalizeKey
   }
+  return normalizeKeyFn
 }
 
-function tokenize (s) {
+async function tokenize(s) {
+  const normalizeKey = await getNormalizeKey()
   const k = normalizeKey(s || '')
   if (!k) return []
   return k.split(' ').filter(Boolean)
 }
 
-function tokenOverlapRatio (tokensA, tokensB) {
+function tokenOverlapRatio(tokensA, tokensB) {
   if (!Array.isArray(tokensA) || !Array.isArray(tokensB) || tokensA.length === 0 || tokensB.length === 0) return 0
   const setA = new Set(tokensA)
   const setB = new Set(tokensB)
@@ -34,7 +28,8 @@ function tokenOverlapRatio (tokensA, tokensB) {
   return union === 0 ? 0 : (inter / union)
 }
 
-function consolidateRanking (tracks = [], acclaim = []) {
+async function consolidateRanking(tracks = [], acclaim = []) {
+  const normalizeKey = await getNormalizeKey()
   // tracks: array of album tracks (used to infer N)
   // acclaim: array of mentions { provider, trackTitle, position, referenceUrl }
   const N = Array.isArray(tracks) && tracks.length ? tracks.length : 0
@@ -47,27 +42,28 @@ function consolidateRanking (tracks = [], acclaim = []) {
   const map = new Map()
   const normIndex = new Map()
   if (Array.isArray(tracks)) {
-    tracks.forEach((t, i) => {
+    for (let i = 0; i < tracks.length; i++) {
+      const t = tracks[i]
       const title = (t && (t.title || t.name)) ? String(t.title || t.name) : `track_${i + 1}`
       const baseKey = normalizeKey(title)
       const uniqKey = `${baseKey}::${i}`
-      map.set(uniqKey, { trackTitle: title, score: 0, supporting: [], tokens: tokenize(title), normKey: baseKey, index: i })
+      map.set(uniqKey, { trackTitle: title, score: 0, supporting: [], tokens: await tokenize(title), normKey: baseKey, index: i })
       const arr = normIndex.get(baseKey) || []
       arr.push(uniqKey)
       normIndex.set(baseKey, arr)
-    })
+    }
   }
 
-  const addSupporting = (key, mention) => {
-    const existing = map.get(key) || { trackTitle: mention.trackTitle || key, score: 0, supporting: [], tokens: tokenize(mention.trackTitle || key) }
+  const addSupporting = async (key, mention) => {
+    const existing = map.get(key) || { trackTitle: mention.trackTitle || key, score: 0, supporting: [], tokens: await tokenize(mention.trackTitle || key) }
     existing.supporting.push({ provider: mention.provider || '', position: mention.position || null, referenceUrl: mention.referenceUrl || '', rating: (mention.rating !== undefined ? mention.rating : null) })
     map.set(key, existing)
   }
 
-  acclaim.forEach(m => {
-    if (!m) return
+  for (const m of acclaim) {
+    if (!m) continue
     const mentionKey = normalizeKey(m.trackTitle)
-    if (!mentionKey) return
+    if (!mentionKey) continue
     // Only count points for tracks that are part of the album when tracks list is provided
     let matchedKey = mentionKey
     if (N > 0 && !map.has(matchedKey)) {
@@ -89,7 +85,7 @@ function consolidateRanking (tracks = [], acclaim = []) {
         matchedKey = bestCandidate
       } else {
         // attempt fuzzy token-overlap matching to handle small title variants (pt. vs pt, commas, parentheses, etc.)
-        const mentionTokens = tokenize(m.trackTitle)
+        const mentionTokens = await tokenize(m.trackTitle)
         let best = { key: null, score: 0 }
         for (const [k, v] of map.entries()) {
           const norm = v && v.normKey ? v.normKey : normalizeKey(v && v.trackTitle)
@@ -98,7 +94,7 @@ function consolidateRanking (tracks = [], acclaim = []) {
             best = { key: k, score: 1 }
             break
           }
-          const ratio = tokenOverlapRatio(mentionTokens, v.tokens || tokenize(v && v.trackTitle))
+          const ratio = tokenOverlapRatio(mentionTokens, v.tokens || await tokenize(v && v.trackTitle))
           if (ratio > best.score) best = { key: k, score: ratio }
         }
         // require moderate overlap (>= 0.4) to consider as a match; exact containment short-circuits
@@ -106,12 +102,12 @@ function consolidateRanking (tracks = [], acclaim = []) {
         else {
           // unmatched mention: ignore for strict per-album consolidation but record under a special key
           const muKey = `__unmatched__${mentionKey}`
-          addSupporting(muKey, m)
-          return
+          await addSupporting(muKey, m)
+          continue
         }
       }
     }
-    addSupporting(matchedKey, m)
+    await addSupporting(matchedKey, m)
     // Borda points: if N is known, points = N - position + 1; else use reciprocal fallback
     const p = Number(m.position) || 0
     let points = 0
@@ -126,7 +122,7 @@ function consolidateRanking (tracks = [], acclaim = []) {
       obj.score = (obj.score || 0) + points
       map.set(matchedKey, obj)
     }
-  })
+  }
 
   // Ensure we have results for all album tracks (map may have been empty if tracks unknown)
   // prepare results: ignore special unmatched buckets (they are recorded in divergence)
@@ -184,4 +180,4 @@ function consolidateRanking (tracks = [], acclaim = []) {
   return { results, divergence: { unmatchedMentions, tracksWithoutSupport } }
 }
 
-module.exports = { consolidateRanking, normalizeKey }
+module.exports = { consolidateRanking, normalizeKey: getNormalizeKey }

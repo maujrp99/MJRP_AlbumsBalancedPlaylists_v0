@@ -8,6 +8,23 @@ Format:
 
 ---
 
+## v1.5 Refactor (2025-11-25)
+
+### Architecture
+- **Shared Logic**: Created `shared/normalize.js` as an ES module used by both frontend and backend to ensure consistent key normalization.
+- **Frontend**: Refactored `curation.js` into a stateless `CurationEngine` class, decoupling it from the DOM. Updated `app.js` to use this engine.
+- **Backend**: Modularized `server/index.js` by extracting ranking logic into `server/lib/fetchRanking.js` and `server/lib/ranking.js`. Implemented dynamic imports for shared ESM modules.
+
+### Fixes
+- **Connectivity**: Addressed external scraper connectivity issues by increasing timeouts and adding browser-like User-Agent headers in `server/lib/scrapers/besteveralbums.js`. Note: Environment restrictions may still block specific sites.
+- **Curation**: Fixed a regression where `curateAlbums` was undefined in `app.js` by switching to `CurationEngine`.
+
+### Verification
+- Unit tests passed for backend modules.
+- Manual verification performed on localhost.
+
+---
+
 ## Release: BEA-RankingAcclaim-Implemented (2025-11-23)
 
 Summary
@@ -99,173 +116,3 @@ Notes
 ---
 
 If anything here looks ambiguous or you want a more formal release note for a GitHub Release body, tell me which section to expand and I will prepare it.
-# Changelog
-
-## BEA-RankingAcclaim-Implemented (2025-11-23)
-
-### Added
-- Scraper-first ranking provenance: deterministic per-track evidence from BestEverAlbums is preferred when available.
-- Server: `bestEverEvidence`, `bestEverAlbumId` and per-track `rating` are returned in album payloads and exposed via `/api/generate` and debug endpoints.
-- Merge logic: when scraper evidence is partial, the AI model enriches missing tracks; scraper entries override model entries for matched tracks.
-- Frontend: consolidated ranking UI updated to prefer server-side `rankingConsolidated`, remove redundant global positions table, and surface BestEver ratings and canonical BestEver URL when present.
-- Tests: fixture-driven parser tests for BestEver scraper and unit tests for normalization/consolidation added under `server/test/`.
-
-### Fixed
-- Removed confusing global "positions" block that interleaved albums; per-album consolidated rankings render correctly and tracks are ordered by final rank.
-
-### Operational
-- Server restarted and health endpoint returned OK during development. Debug endpoints validated BestEver evidence for sample albums.
-
-### Changed
-- `fetchRankingForAlbum` now prefers scraper evidence and merges model evidence where necessary; model-provided URLs are verified and nullified if unverifiable.
-
-### Notes
-- PR: https://github.com/maujrp99/VibeCoding/pull/2
-- Commit: af59825
-- Tag/Release: `BEA-RankingAcclaim-Implemented`
-
-## Unreleased
-
-### Added
-- Scraper-first ranking provenance: attempt deterministic per-track evidence from BestEverAlbums and prefer it when available.
-- Merge logic: when scraper evidence is partial, the AI model is called to enrich missing tracks; scraper entries override model entries for matched tracks.
-- Centralized URL verification: `server/lib/normalize.js` now validates and sanitizes `referenceUrl` values (BestEver URLs are trusted).
-- Frontend: UI surfaces BestEver sources first and marks BestEver-sourced acclaim entries as verified; operator batch button `#updateAcclaimBtn` is present but hidden by default.
-- Fixture-driven parser tests for BestEver scraper and lightweight unit tests added under `server/test/`.
-- Observability: lightweight structured logging for scraper failures, URL nullification events, model enrichment failures and model truncation detection.
-
-### Fixed
-- UI: removed redundant global "positions" block in the ranking panel and corrected renderer to display a single per-album consolidated ranking ordered by track rank (1 = most acclaimed).
-
-### Operational
-- Server was restarted during development and the health endpoint responded OK on 2025-11-23.
-
-### Changed
-- `fetchRankingForAlbum` now prefers scraper evidence and merges model evidence when needed.
-
-### Notes
-- See feature branch `feature/ranking-provenance-implementation` for implementation details and tests.
-
-### 2025-11-25 — BestEverAlbums suggest fast-accept & audit
-
-- Problem: the BestEverAlbums `suggest.php` endpoint sometimes returns entries that point to non-canonical pages (tributes, live versions). Previously, our scraper occasionally selected those pages (e.g. `a=32729`) which did not include per-track ratings and produced incomplete/incorrect `rankingAcclaim`.
-- Fix applied: implement a "fast-accept" path in the BestEver scraper: when `suggest.php` returns a title that explicitly contains the pattern "<Album> by <Artist>" and the suggest title does NOT include known bad keywords (examples: `tribute`, `live`, `cover`, `deluxe`, `reissue`), we now accept the corresponding suggest URL immediately and extract its chart data. This reduces extra page fetches and matches the canonical id in normal cases (e.g. returned `a=204` for "The Wall"). The code logs `bestever_fast_accept` with the chosen id for auditability.
-- Behavior: the scraper still falls back to verification and HTML-search heuristics when the suggest entries are ambiguous or contain bad keywords. This balances correctness and performance.
-- Note / future improvement: it is recommended to make the strict verification configurable via an environment flag such as `BESTEVER_STRICT_VERIFY=true|false` (default `true`). When `false`, the scraper would use the fast-accept path unconditionally for matched suggest entries (faster, fewer requests). Keep the default as strict in production to avoid regressions; add the flag if/when you require lower latency in batch runs.
-
----
-
-## Hotfix: Strip parenthetical phrases from BestEver titles (2025-11-25)
-
-Summary
-- Problem: album or track titles that include parenthetical suffixes (e.g. "Let It Bleed (studio album)") were not matching canonical BestEver suggest/page titles, causing the scraper to miss the canonical page or to fallback to non-canonical pages.
-
-Root cause
-- Normalization used before-comparison did not remove parenthetical phrases, so tokenization and exact-containment checks could fail when the input included descriptors in parentheses.
-
-Fix applied
-- `server/lib/scrapers/besteveralbums.js`: strip content inside parentheses (e.g. `(...)`) before normalizing and comparing titles. This prevents mismatches caused by common suffixes like `(studio album)`, `(deluxe edition)`, etc.
-
-Verification
-- Local runs for *Let It Bleed* show the scraper now returns the canonical chart id `a=242` and extracts per-track ratings (e.g. `Gimme Shelter: 93`).
-
-Notes
-- This change complements the existing fast-accept and verification heuristics and reduces false negatives during suggest/title matching.
-
----
-
-## Analysis: Balanced playlist input alignment (2025-11-25)
-
-Summary
-- Symptom: even after `tracksByAcclaim` and the UI show the correct BestEver ordering, the balanced playlists still reflect canonical album order for some albums. This indicates the curation pipeline (which consumes `album.tracks`) is not using the acclaim ordering already available on the frontend.
-
-Root cause
-- `curateAlbums` receives `currentAlbums` directly, and most albums still have `album.tracks` sorted by canonical order. Although the UI renders the acclaim order via `tracksByAcclaim`, that array is not passed to the curation algorithm. As a result, `track.rank` often contains the canonical `finalPosition` and only gets overwritten in certain cases where `track.rating` is available.
-
-Proposed fix
-1. Before invoking `curateAlbums`, derive a per-album list of `tracksForCuration` that always reflects the acclaim ordering:
-  - Prefer `album.tracksByAcclaim` when present (already deterministic),
-  - Else fall back to `rankingConsolidated` (sorted by `finalPosition`),
-  - Else fall back to `album.tracks` (original order).
-  Each track copy carries `acclaimRank`, `rating` and optionally `acclaimScore` (using consolidated `normalizedScore` or normalized rating). After enrichment, explicitly sort by rating (descending) with normalized score/rank tiebreakers so `acclaimRank` always reflects the rating order displayed in the UI.
-2. Pass these derived track arrays to `curateAlbums` (without mutating the originals) so the algorithm consistently works off acclaim data.
-3. Update `curateAlbums` to prioritize `track.acclaimRank` / `track.rating` for ordering, remaining-pool sorting and swap guards, with canonical `track.rank` kept only as a fallback.
-
-Next steps
-- Implement the frontend changes described above, run `scripts/run_curation_on_payload.js` against a saved payload to confirm P1/P2 follow acclaim order, and update the README to document the data flow (payload -> tracksByAcclaim -> curation input).
-
-
-## Fixes: Fuzzy matching & divergence metadata (2025-11-25)
-
-### Fixed
-- Addressed missing BestEver `rating` values for some albums (notably "The Wall") caused by strict title-matching heuristics that left BestEver evidence in unmatched buckets.
-
-### Changes
-- Relaxed matching heuristics in `server/lib/ranking.js`: added tokenization, token-overlap ratio, and substring containment checks to better match scraper evidence to album track titles.
-- Lowered token-overlap acceptance threshold and added containment short-circuit so variants like "Another Brick In The Wall (Pt. 2)" correctly map to album tracks.
-- Recorded unmatched mentions under `rankingConsolidatedMeta.unmatchedMentions` and tracks without evidence under `rankingConsolidatedMeta.tracksWithoutSupport` for audit and divergence analysis.
-- Exported `normalizeKey` from `server/lib/ranking.js` and reused it in `server/index.js` to ensure consistent normalization when mapping `finalPosition` back to `tracks[].rank`.
-
-### Tests
-- Added unit/integration verification and ran `npm test` in `server/` — all tests passed locally.
-
-### Notes & Next Steps
-- Confirm and run additional integration checks for production albums (e.g., "The Wall", "Electric Ladyland").
-- After your approval I will: commit remaining changes (branch `feature/server-acclaim-order`), create a git tag (proposed `v0.3.1-bea-fuzzy-match`), open a PR against `main`, and push the tag/branch to the remote for CI and deploy.
-
-### Root cause discovered (2025-11-25)
-- While investigating why `rating` values were missing for *The Wall*, we discovered the scraper was resolving the BestEver album link to the wrong chart page: it returned `https://www.besteveralbums.com/thechart.php?a=32729#tracks` ("More Bricks: The String Quartet Tribute To Pink Floyd's The Wall") instead of the canonical studio album page `https://www.besteveralbums.com/thechart.php?a=204#tracks` ("The Wall" by Pink Floyd). The mistake came from permissive search/suggest heuristics that favored token matches without verifying the artist on the matched page.
-
-### Fix to be implemented
-- Update `server/lib/scrapers/besteveralbums.js` to verify candidate chart/album pages by inspecting the page content (page title / headers) and confirming the artist/album match before accepting a candidate id/url. Prefer candidates where both album title and artist match with a reasonable token overlap. Fall back to previous behavior only if no verified candidate is found.
-
-### Impact
-- This prevents the scraper from picking tribute or unrelated albums with similar titles and restores correct `rating` extraction for canonical album pages (example: *The Wall*). This will also reduce false unmatched mappings in consolidation and improve `rankingConsolidated` accuracy.
-
-
-### 2025-11-25 — UI: rating ordering restored (frontend hotfix & deploy)
-
-- Symptom: after an initial UI hotfix, production showed correct acclaim numbering but lost the visual ordering by `rating` when ratings were available.
-- Fix: updated `public/js/app.js` to prefer server `tracksByAcclaim` for deterministic numbering, but preserve ordering by `rating` (descending) when a rating exists for one or more tracks. The code enriches `tracksByAcclaim` with ratings from `rankingConsolidated`, `bestEverEvidence` or `rankingAcclaim` before sorting for display.
-- Commit: `ce78f9b` — `UI: prefer tracksByAcclaim for numbering; preserve rating ordering when available`.
-- Deploy: frontend published to `https://mjrp-playlist-generator.web.app` via `./scripts/deploy-prod.sh` (2025-11-25).
-- Verification: ensure `/api/generate` payload contains `tracksByAcclaim` with `rank` and, when present, `rating` values; the UI now shows the deterministic rank while ordering by rating when available.
-
-## UI-Cleanup-Playlist-Layout (2025-11-24)
-
-### Changed
-- Albums view: track listing now shows original track order numbering (1..N) instead of showing the consolidated `rank` value next to each track. This preserves the original album sequencing when browsing source albums.
-- Playlists UI: moved the playlist section title `Balanced Playlists` to sit immediately below the `Ranking de Aclamação` block (and above the generated playlists), styled to match the `Ranking de Aclamação` header.
-
-### Removed / Moved
-- Removed the prominent "Ranking Traceability" panel from the main UI. Traceability and verification messages are now recorded in a compact, collapsible footer log to reduce UI clutter.
-- The per-playlist integrity verification badge was removed from the main summary card and its results are now written to the footer log.
-
-### Added
-- Footer: a small, collapsible log panel and `Last Update` timestamp were added to the bottom of the page. The log collects runtime verification messages, ranking-refresh events and operator progress updates.
-
-### Notes
-- These changes focus on UI clarity: preserve album ordering, reduce visual noise, and keep traceability information available via a small, easily-accessible log.
-# Changelog
-
-## Unreleased
-
-### Added
-- Scraper-first ranking provenance: attempt deterministic per-track evidence from BestEverAlbums and prefer it when available.
-- Merge logic: when scraper evidence is partial, the AI model is called to enrich missing tracks; scraper entries override model entries for matched tracks.
-- Centralized URL verification: `server/lib/normalize.js` now validates and sanitizes `referenceUrl` values (BestEver URLs are trusted).
-- Frontend: UI surfaces BestEver sources first and marks BestEver-sourced acclaim entries as verified; operator batch button `#updateAcclaimBtn` is present but hidden by default.
-- Fixture-driven parser tests for BestEver scraper and lightweight unit tests added under `server/test/`.
-- Observability: lightweight structured logging for scraper failures, URL nullification events, model enrichment failures and model truncation detection.
-
-### Fixed (2025-11-23)
-- UI: removed redundant global "positions" block in the ranking panel and corrected renderer to display a single per-album consolidated ranking ordered by track rank (1 = most acclaimed).
-
-### Operational
-- Server was restarted during development and the health endpoint responded OK on 2025-11-23.
-
-### Changed
-- `fetchRankingForAlbum` now prefers scraper evidence and merges model evidence when needed.
-
-### Notes
-- See feature branch `feature/ranking-provenance-implementation` for implementation details and tests.

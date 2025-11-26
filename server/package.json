@@ -9,7 +9,7 @@
     "lint": "standard",
     "lint:fix": "standard --fix",
     "format": "prettier --write .",
-    "test": "node --experimental-modules test/run-tests.js && node --experimental-modules test/curation.test.mjs"
+    "test": "node --experimental-modules test/unit-tests.js && node --experimental-modules test/run-tests.js && node --experimental-modules test/curation.test.mjs"
   },
   "dependencies": {
     "ajv": "^8.17.1",

@@ -7,7 +7,8 @@ import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged }
 import { getFirestore, doc, setDoc, onSnapshot, setLogLevel } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
 
 import { fetchAlbumMetadata, fetchMultipleAlbumMetadata } from './api.js'
-import { curateAlbums } from './curation.js'
+import { CurationEngine } from './curation.js'
+import { normalizeKey } from './shared/normalize.js'
 
 const firebaseConfig = window.__firebase_config
 const appId = typeof window.__app_id !== 'undefined' ? window.__app_id : 'default-app-id'
@@ -30,7 +31,7 @@ let unsubscribePlaylists = null
 // Footer log elements
 let footerLastUpdateEl, footerLogToggleEl, footerLogEl
 
-function addFooterLog (message) {
+function addFooterLog(message) {
   try {
     const when = new Date().toLocaleString()
     const li = document.createElement('div')
@@ -49,18 +50,18 @@ let loadDataBtn, dataModal, closeModalBtn, cancelModalBtn, processJsonBtn, jsonI
 let updateAcclaimBtn
 let rankingPanel, rankingSourcesList, rankingSummaryList, rankingAcclaimList
 
-function formatDuration (seconds) {
+function formatDuration(seconds) {
   if (isNaN(seconds) || seconds < 0) return '00:00'
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = Math.floor(seconds % 60)
   return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`
 }
 
-function calculateTotalDuration (tracks) {
+function calculateTotalDuration(tracks) {
   return (tracks || []).reduce((s, x) => s + (x.duration || 0), 0)
 }
 
-function collectRankingAcclaim (albums) {
+function collectRankingAcclaim(albums) {
   if (!Array.isArray(albums)) return []
   const seen = new Set()
   const entries = []
@@ -102,12 +103,12 @@ const ESCAPE_MAP = {
   "'": '&#39;'
 }
 
-function escapeHtml (value) {
+function escapeHtml(value) {
   if (value === undefined || value === null) return ''
   return String(value).replace(/[&<>"']/g, char => ESCAPE_MAP[char] || char)
 }
 
-async function processAndSaveJSON () {
+async function processAndSaveJSON() {
   // originalBtnText not used; we avoid unused var
   processJsonBtn.disabled = true
   processJsonBtn.classList.add('opacity-50', 'cursor-not-allowed')
@@ -160,7 +161,7 @@ async function processAndSaveJSON () {
   }
 }
 
-function renderAlbumsView (albums) {
+function renderAlbumsView(albums) {
   updateEmptyStateVisibility(albums)
   albumsGrid.innerHTML = ''
   if (!albums || albums.length === 0) {
@@ -264,7 +265,7 @@ function renderAlbumsView (albums) {
   `
 }
 
-function setGenerateButtonsState (enabled) {
+function setGenerateButtonsState(enabled) {
   ;[generateBtn, generateQuickBtn].forEach(btn => {
     if (!btn) return
     btn.disabled = !enabled
@@ -272,13 +273,13 @@ function setGenerateButtonsState (enabled) {
   })
 }
 
-function updateEmptyStateVisibility (albums) {
+function updateEmptyStateVisibility(albums) {
   const hasAlbums = Array.isArray(albums) && albums.length > 0
   if (emptyStateCta) emptyStateCta.classList.toggle('hidden', hasAlbums)
   setGenerateButtonsState(hasAlbums)
 }
 
-function renderAlbumSkeletons (count = 3) {
+function renderAlbumSkeletons(count = 3) {
   albumsGrid.innerHTML = ''
   const fragment = document.createDocumentFragment()
   for (let i = 0; i < count; i++) {
@@ -289,7 +290,7 @@ function renderAlbumSkeletons (count = 3) {
   albumsGrid.appendChild(fragment)
 }
 
-function refreshToggleViewButtonState () {
+function refreshToggleViewButtonState() {
   if (!toggleViewBtn) return
   if (isAlbumsView) {
     toggleViewBtn.textContent = 'Ver Playlists'
@@ -305,7 +306,7 @@ function refreshToggleViewButtonState () {
 /**
  * Helper para renderizar um item de faixa (usado no Sortable)
  */
-function renderTrackItem (track) {
+function renderTrackItem(track) {
   // Encontra o álbum original da faixa
   const originAlbum = (track && track.originAlbumId)
     ? currentAlbums.find(a => a.id === track.originAlbumId)
@@ -331,7 +332,7 @@ function renderTrackItem (track) {
 /**
  * Renderiza as playlists na UI (inclui inicialização do Sortable)
  */
-function renderPlaylistsView (playlists) {
+function renderPlaylistsView(playlists) {
   playlistsGrid.innerHTML = ''
   if (!playlists || playlists.length === 0) {
     playlistsGrid.innerHTML = '<p class="text-spotify-lightgray col-span-full text-center">Nenhuma playlist gerada.</p>'
@@ -378,7 +379,7 @@ function renderPlaylistsView (playlists) {
   initSortable()
 }
 
-function renderPlaylistsSummary (playlists, totalTracks, totalDuration) {
+function renderPlaylistsSummary(playlists, totalTracks, totalDuration) {
   let originTotalTracks = 0
   let originTotalDuration = 0
   if (currentAlbums && currentAlbums.length > 0) {
@@ -394,8 +395,8 @@ function renderPlaylistsSummary (playlists, totalTracks, totalDuration) {
   const durationMatch = originTotalDuration === totalDuration
   const isOk = tracksMatch && durationMatch
 
-    // Instead of a prominent verification panel, move verification results to footer log
-    playlistsSummary.innerHTML = `
+  // Instead of a prominent verification panel, move verification results to footer log
+  playlistsSummary.innerHTML = `
       <h3 class="text-lg font-semibold text-white mb-2">Resumo das Playlists (Resultado)</h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-4">
         <div>
@@ -413,14 +414,14 @@ function renderPlaylistsSummary (playlists, totalTracks, totalDuration) {
       </div>
     `
 
-    // Log verification summary to footer (compact)
-    try {
+  // Log verification summary to footer (compact)
+  try {
     if (isOk) addFooterLog('Verificação: OK - Totais batem (origem = resultado)')
     else addFooterLog(`Verificação: ERRO - Totais divergentes. Origem: ${originTotalTracks} faixas / ${formatDuration(originTotalDuration)} · Resultado: ${totalTracks} faixas / ${formatDuration(totalDuration)}`)
-    } catch (e) { console.debug('footer log error', e) }
+  } catch (e) { console.debug('footer log error', e) }
 }
 
-function renderRankingPanel () {
+function renderRankingPanel() {
   if (!rankingPanel) return
   const entries = currentRankingSummary && Object.values(currentRankingSummary)
   const hasSummary = entries && entries.length > 0
@@ -443,7 +444,7 @@ function renderRankingPanel () {
   renderRankingSummaryList()
 }
 
-function renderRankingSources () {
+function renderRankingSources() {
   if (!rankingSourcesList) return
   if (!currentRankingSources || currentRankingSources.length === 0) {
     rankingSourcesList.innerHTML = '<p class="text-sm text-spotify-lightgray">Nenhuma fonte documentada ainda.</p>'
@@ -472,7 +473,7 @@ function renderRankingSources () {
   }).join('')
 }
 
-function renderRankingAcclaimList (entries) {
+function renderRankingAcclaimList(entries) {
   if (!rankingAcclaimList) return
   if (!entries || entries.length === 0) {
     rankingAcclaimList.innerHTML = '<p class="text-sm text-spotify-lightgray">Nenhum ranking de aclamação registrado.</p>'
@@ -488,7 +489,7 @@ function renderRankingAcclaimList (entries) {
     grouped[key].push(entry)
   })
 
-      // Render each album block: album header + tracks sorted by rating desc (when available) otherwise position asc
+  // Render each album block: album header + tracks sorted by rating desc (when available) otherwise position asc
   rankingAcclaimList.innerHTML = Object.keys(grouped).map(albumKey => {
     const list = grouped[albumKey].slice().sort((a, b) => {
       const ra = Number(a.rating || 0) || 0
@@ -522,7 +523,7 @@ function renderRankingAcclaimList (entries) {
   }).join('')
 }
 
-function renderRankingSummaryList () {
+function renderRankingSummaryList() {
   if (!rankingSummaryList) return
   if (!currentAlbums || currentAlbums.length === 0) {
     rankingSummaryList.innerHTML = '<p class="text-sm text-spotify-lightgray">Nenhum álbum para exibir.</p>'
@@ -601,7 +602,7 @@ function renderRankingSummaryList () {
         title: t.trackTitle || t.title || t.name || 'Faixa desconhecida',
         rank: t.finalPosition || t.position || null,
         duration: (album.tracks || []).find(x => ((x.title || x.name || x.trackTitle) && String(x.title || x.name || x.trackTitle).toLowerCase() === String(t.trackTitle || '').toLowerCase()))?.duration || null,
-        rating: (function findRating () {
+        rating: (function findRating() {
           // prefer explicit rating on consolidated entry
           if (t.rating) return t.rating
           // try evidence attached to the consolidated entry
@@ -675,7 +676,7 @@ function renderRankingSummaryList () {
   rankingSummaryList.innerHTML = html
 }
 
-function renderRankingTrackRow (track) {
+function renderRankingTrackRow(track) {
   const reasons = (track.rankingInfo || []).map(info => {
     const positionLabel = info.metadata && info.metadata.position ? ` · Pos ${escapeHtml(info.metadata.position)}` : ''
     return `${escapeHtml(info.reason)} · ${escapeHtml(info.source)}${positionLabel}`
@@ -692,7 +693,7 @@ function renderRankingTrackRow (track) {
     `
 }
 
-function toggleView () {
+function toggleView() {
   isAlbumsView = !isAlbumsView
   if (isAlbumsView) {
     albumsView.classList.remove('hidden')
@@ -705,7 +706,7 @@ function toggleView () {
   refreshToggleViewButtonState()
 }
 
-function initSortable () {
+function initSortable() {
   const lists = document.querySelectorAll('#playlists-grid ul')
   lists.forEach(list => {
     const sortable = new window.Sortable(list, {
@@ -719,7 +720,7 @@ function initSortable () {
   })
 }
 
-function handleDragEnd (evt) {
+function handleDragEnd(evt) {
   const trackId = evt.item.dataset.trackId
   const fromListId = evt.from.dataset.playlistId
   const toListId = evt.to.dataset.playlistId
@@ -728,7 +729,7 @@ function handleDragEnd (evt) {
   resetSaveButton && resetSaveButton()
 }
 
-function updateTrackOrder (playlistId, newIndex, trackId) {
+function updateTrackOrder(playlistId, newIndex, trackId) {
   const playlist = currentPlaylists.find(p => p.id === playlistId)
   if (!playlist) return
   const track = playlist.tracks.find(t => t.id === trackId)
@@ -737,7 +738,7 @@ function updateTrackOrder (playlistId, newIndex, trackId) {
   renderPlaylistsView(currentPlaylists)
 }
 
-function moveTrackBetweenPlaylists (fromListId, toListId, oldIndex, newIndex, trackId) {
+function moveTrackBetweenPlaylists(fromListId, toListId, oldIndex, newIndex, trackId) {
   const fromPlaylist = currentPlaylists.find(p => p.id === fromListId)
   const toPlaylist = currentPlaylists.find(p => p.id === toListId)
   if (!fromPlaylist || !toPlaylist) return
@@ -749,15 +750,11 @@ function moveTrackBetweenPlaylists (fromListId, toListId, oldIndex, newIndex, tr
   renderPlaylistsView(currentPlaylists)
 }
 
-function normalizeTrackKeyForCuration (value) {
-  return (value || '')
-    .toString()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '')
-    .trim()
+function normalizeTrackKeyForCuration(value) {
+  return normalizeKey(value)
 }
 
-function buildTracksForCurationInput (album) {
+function buildTracksForCurationInput(album) {
   if (!album) return []
   const normalizeKey = normalizeTrackKeyForCuration
   const consolidatedIndex = new Map()
@@ -789,7 +786,7 @@ function buildTracksForCurationInput (album) {
     })
   }
 
-  function enrichTrack (track, idx) {
+  function enrichTrack(track, idx) {
     const copy = { ...track }
     const title = copy.title || copy.trackTitle || copy.name || `Faixa ${idx + 1}`
     copy.title = title
@@ -892,13 +889,13 @@ function buildTracksForCurationInput (album) {
 /**
  * Utility: reset save button state (called after user changes)
  */
-function resetSaveButton () {
+function resetSaveButton() {
   if (!saveBtn) return
   saveBtn.disabled = false
   saveBtn.classList.remove('opacity-50', 'cursor-not-allowed')
 }
 
-async function runHybridCuration () {
+async function runHybridCuration() {
   if (!currentAlbums || currentAlbums.length === 0) {
     alert('Nenhum álbum carregado para processar.')
     return
@@ -908,11 +905,12 @@ async function runHybridCuration () {
       ...album,
       tracks: buildTracksForCurationInput(album)
     }))
+    const engine = new CurationEngine({ targetSeconds: 45 * 60 })
     const {
       playlists: newPlaylists,
       rankingSummary,
       rankingSources
-    } = curateAlbums(albumsForCuration, { targetSeconds: 45 * 60 })
+    } = engine.curate(albumsForCuration)
     currentPlaylists = newPlaylists
     currentRankingSummary = rankingSummary || {}
     currentRankingSources = rankingSources || []
@@ -924,7 +922,7 @@ async function runHybridCuration () {
   }
 }
 
-async function updateAllAcclaim () {
+async function updateAllAcclaim() {
   if (!currentAlbums || currentAlbums.length === 0) {
     alert('Nenhum álbum carregado para atualizar aclamação.')
     return
@@ -973,8 +971,16 @@ async function updateAllAcclaim () {
 
     // Recompute client-side aggregates and save
     currentRankingAcclaim = collectRankingAcclaim(currentAlbums)
-    await saveDataToFirestore(currentAlbums, currentPlaylists, currentRankingSummary, currentRankingSources)
+    resetSaveButton && resetSaveButton()
+
+    const engine = new CurationEngine()
+    const result = engine.curate(currentAlbums)
+    currentPlaylists = result.playlists
+    currentRankingSummary = result.rankingSummary
+    currentRankingSources = result.rankingSources
+
     renderPlaylistsView(currentPlaylists)
+    toggleView()
     alert('Atualização de aclamação concluída. Firestore atualizado.')
   } catch (err) {
     console.error('Erro ao atualizar aclamação:', err)
@@ -988,7 +994,7 @@ async function updateAllAcclaim () {
   }
 }
 
-async function saveDataToFirestore (albums, playlists, rankingSummary = {}, rankingSources = []) {
+async function saveDataToFirestore(albums, playlists, rankingSummary = {}, rankingSources = []) {
   if (!userId) return console.error('Usuário não autenticado.')
   try {
     const albumsData = { data: JSON.parse(JSON.stringify(albums)) }
@@ -1002,7 +1008,7 @@ async function saveDataToFirestore (albums, playlists, rankingSummary = {}, rank
   } catch (err) { console.error('Erro ao salvar:', err) }
 }
 
-function loadData () {
+function loadData() {
   albumsDocRef = doc(db, `artifacts/${appId}/users/${userId}/curator/albums`)
   playlistsDocRef = doc(db, `artifacts/${appId}/users/${userId}/curator/playlists`)
 
@@ -1044,7 +1050,7 @@ function loadData () {
   }, (error) => { console.error('Erro ao carregar playlists:', error); alert('Erro ao carregar dados das playlists.') })
 }
 
-async function initializeAppContainer () {
+async function initializeAppContainer() {
   setLogLevel('Debug')
   try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app) } catch (error) { console.error('Erro ao inicializar Firebase:', error); mainContent.innerHTML = '<p class="text-red-400 text-center">Erro crítico ao conectar com o Firebase.</p>'; loadingSpinner.classList.add('hidden'); return }
 
@@ -1110,19 +1116,19 @@ async function initializeAppContainer () {
   })
 }
 
-function openDataModal () {
+function openDataModal() {
   if (!dataModal) return
   dataModal.classList.remove('hidden')
   dataModal.classList.add('visible')
 }
 
-function closeDataModal () {
+function closeDataModal() {
   if (!dataModal) return
   dataModal.classList.add('hidden')
   dataModal.classList.remove('visible')
 }
 
-function robustInit () {
+function robustInit() {
   let attempts = 0; const maxAttempts = 100
   const interval = setInterval(() => {
     attempts++

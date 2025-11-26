@@ -1,9 +1,9 @@
 ````markdown
 # Software Design Document (SDD)
 
-Status: Draft
+Status: Draft (v1.5 Refactor)
 
-Last updated: 2025-11-23
+Last updated: 2025-11-25
 
 Authors: Project maintainers
 
@@ -31,6 +31,23 @@ UI presentation fix (2025-11-23):
 
 - The front-end ranking panel renderer was corrected to remove the initial global "Ranking de Aclamação" matrix (which previously interleaved albums by position). The panel now renders a single block per album and orders tracks by the consolidated `rank` (ascending: 1 = most acclaimed).
 - Ratings from BestEverAlbums are surfaced next to each track when available (the UI looks for `album.bestEverEvidence`, `album.rankingAcclaim` or consolidated entries). If you want ratings guaranteed in the UI, persist `bestEverEvidence` in the album payload on the server side (recommended).
+
+v1.5 Architecture Refactor (Planned 2025-11-25)
+-----------------------------------------------
+To address coupling and maintainability risks, the following architectural changes are planned for version 1.5:
+
+1.  **Shared Normalization Module**:
+    -   **Goal**: Eliminate logic duplication between client and server.
+    -   **Implementation**: Create `shared/normalize.js` as a pure ES Module.
+    -   **Usage**: Imported natively by `public/js/app.js` and via `import` (or require wrapper) in `server/lib/`.
+
+2.  **Frontend Modularization**:
+    -   **Goal**: Decouple curation logic from UI state.
+    -   **Implementation**: Refactor `public/js/curation.js` to expose a stateless `CurationEngine` class or functional API that accepts raw albums and returns playlist structures, with no DOM dependencies.
+
+3.  **Backend Service Layer Extraction**:
+    -   **Goal**: Slim down `server/index.js`.
+    -   **Implementation**: Move `fetchRankingForAlbum` and orchestration logic into `server/lib/fetchRanking.js`. `index.js` becomes a thin HTTP controller.
 
 Operational note: the server was restarted during local development and the health endpoint returned `{ "ok": true }` on 2025-11-23.
 

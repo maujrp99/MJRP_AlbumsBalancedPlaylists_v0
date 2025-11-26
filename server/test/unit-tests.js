@@ -2,7 +2,7 @@ const assert = require('assert')
 const { cleanFencedMarkdown, tryParseJson, extractAlbum } = require('../lib/normalize')
 const { validateAlbum, ajvAvailable } = require('../lib/schema')
 
-function run () {
+function run() {
   console.log('Running simple node tests...')
   // normalize tests
   try {
@@ -54,63 +54,109 @@ function run () {
     process.exit(3)
   }
 
-  // --- curation tests (async import of ES module) ---
+  // ranking tests (async)
   try {
     (async () => {
-      const mod = await import('../../public/js/curation.js');
-      const { curateAlbums } = mod;
+      const { consolidateRanking, normalizeKey } = require('../lib/ranking')
 
-      // Sample albums: one album with ranks 1..5, durations small so fill is required
-      const albums = [
-        {
-          id: 'alb1',
-          title: 'Test Album',
-          artist: 'Tester',
-          tracks: [
-            { id: 't1', rank: 1, title: 'Hit1', duration: 60 },
-            { id: 't2', rank: 2, title: 'Hit2', duration: 60 },
-            { id: 't3', rank: 3, title: 'Mid', duration: 60 },
-            { id: 't4', rank: 10, title: 'Worst1', duration: 60 },
-            { id: 't5', rank: 9, title: 'Worst2', duration: 60 }
-          ]
-        }
-      ];
+      // Test normalizeKey (async getter or function? It's an async getter in the new implementation)
+      const norm = await normalizeKey()
+      assert.strictEqual(norm('  Foo  Bar! '), 'foo bar')
 
-      const { playlists, rankingSummary, rankingSources } = curateAlbums(albums, { targetSeconds: 3 * 60 }); // small target to force fills
+      // Test consolidateRanking
+      const tracks = [{ title: 'Track A' }, { title: 'Track B' }]
+      const acclaim = [
+        { provider: 'P1', trackTitle: 'Track A', position: 1 },
+        { provider: 'P2', trackTitle: 'Track B', position: 1 },
+        { provider: 'P3', trackTitle: 'Track A', position: 2 }
+      ]
 
-      // P1 must include rank===1
-      const p1 = playlists.find(p => p.id === 'p1');
-      assert.ok(p1 && p1.tracks.some(t => t.rank === 1), 'P1 must include rank 1 track');
+      const result = await consolidateRanking(tracks, acclaim)
+      assert.ok(result.results)
+      assert.strictEqual(result.results.length, 2)
+      // Track A: 1st (pts=2) + 2nd (pts=1) = 3 pts
+      // Track B: 1st (pts=2) = 2 pts
+      // So Track A should be #1
+      assert.strictEqual(result.results[0].trackTitle, 'Track A')
+      assert.strictEqual(result.results[0].finalPosition, 1)
+      assert.strictEqual(result.results[1].trackTitle, 'Track B')
+      assert.strictEqual(result.results[1].finalPosition, 2)
 
-      // P2 must include rank===2
-      const p2 = playlists.find(p => p.id === 'p2');
-      assert.ok(p2 && p2.tracks.some(t => t.rank === 2), 'P2 must include rank 2 track');
+      console.log('ranking tests passed')
 
-      // Because target is 3min and each track is 1min, P1 and P2 should be filled.
-      // Fill strategy is worst-ranked-first, so the first appended to P1 or P2 should be rank 10 or 9.
-      const fillTracks = [...(p1.tracks || []).slice(1), ...(p2.tracks || []).slice(1)];
-      // At least one fill track should exist
-      assert.ok(fillTracks.length > 0, 'Expected fill tracks');
-      // The filled tracks should include the worst ranks (10,9)
-      const ranks = fillTracks.map(f => f.rank).filter(r => typeof r === 'number');
-      assert.ok(ranks.includes(10) || ranks.includes(9), 'Fill should prefer worst-ranked tracks');
-
-      assert.ok(rankingSummary && rankingSummary.alb1, 'Album summary must exist');
-      assert.ok(rankingSummary.alb1.tracks.some(track => Array.isArray(track.rankingInfo)), 'Tracks must expose rankingInfo');
-      assert.ok(rankingSources && rankingSources.some(source => source.name === 'MJRP Hybrid Algorithm'), 'Default ranking source recorded');
-
-      console.log('curation tests passed');
-      console.log('All tests passed');
+      // Continue to curation tests...
+      runCurationTests()
     })().catch(err => {
-      console.error('curation tests failed');
+      console.error('ranking tests failed')
+      console.error(err)
+      process.exit(5)
+    })
+  } catch (err) {
+    console.error('ranking tests failed (sync setup)')
+    console.error(err)
+  }
+
+  function runCurationTests() {
+    // --- curation tests (async import of ES module) ---
+    try {
+      (async () => {
+        const mod = await import('../../public/js/curation.js');
+        const { curateAlbums } = mod;
+
+        // Sample albums: one album with ranks 1..5, durations small so fill is required
+        const albums = [
+          {
+            id: 'alb1',
+            title: 'Test Album',
+            artist: 'Tester',
+            tracks: [
+              { id: 't1', rank: 1, title: 'Hit1', duration: 60 },
+              { id: 't2', rank: 2, title: 'Hit2', duration: 60 },
+              { id: 't3', rank: 3, title: 'Mid', duration: 60 },
+              { id: 't4', rank: 10, title: 'Worst1', duration: 60 },
+              { id: 't5', rank: 9, title: 'Worst2', duration: 60 }
+            ]
+          }
+        ];
+
+        const { playlists, rankingSummary, rankingSources } = curateAlbums(albums, { targetSeconds: 3 * 60 }); // small target to force fills
+
+        // P1 must include rank===1
+        const p1 = playlists.find(p => p.id === 'p1');
+        assert.ok(p1 && p1.tracks.some(t => t.rank === 1), 'P1 must include rank 1 track');
+
+        // P2 must include rank===2
+        const p2 = playlists.find(p => p.id === 'p2');
+        assert.ok(p2 && p2.tracks.some(t => t.rank === 2), 'P2 must include rank 2 track');
+
+        // Because target is 3min and each track is 1min, P1 and P2 should be filled.
+        // Fill strategy is worst-ranked-first, so the first appended to P1 or P2 should be rank 10 or 9.
+        const fillTracks = [...(p1.tracks || []).slice(1), ...(p2.tracks || []).slice(1)];
+        // At least one fill track should exist
+        assert.ok(fillTracks.length > 0, 'Expected fill tracks');
+        // The filled tracks should include the worst ranks (10,9)
+        const ranks = fillTracks.map(f => f.rank).filter(r => typeof r === 'number');
+        assert.ok(ranks.includes(10) || ranks.includes(9), 'Fill should prefer worst-ranked tracks');
+
+        assert.ok(rankingSummary && rankingSummary.alb1, 'Album summary must exist');
+        assert.ok(rankingSummary.alb1.tracks.some(track => Array.isArray(track.rankingInfo)), 'Tracks must expose rankingInfo');
+        assert.ok(rankingSources && rankingSources.some(source => source.name === 'MJRP Hybrid Algorithm'), 'Default ranking source recorded');
+
+        console.log('curation tests passed');
+        console.log('All tests passed');
+      })().catch(err => {
+        console.error('curation tests failed');
+        console.error(err);
+        process.exit(4);
+      });
+    } catch (err) {
+      console.error('curation tests failed (sync)');
       console.error(err);
       process.exit(4);
-    });
-  } catch (err) {
-    console.error('curation tests failed (sync)');
-    console.error(err);
-    process.exit(4);
+    }
   }
+
+  // run() removed
 }
 
 run()

@@ -67,6 +67,33 @@ Este documento sumariza o propósito, arquitetura, fluxo principal e pendências
   - `gh secret set FIREBASE_PROJECT --body "your-firebase-project-id" --repo maujrp99/MJRP_AlbumsBalancedPlaylists_v0`
   - `gh secret set FIREBASE_TOKEN --body "<token>" --repo maujrp99/MJRP_AlbumsBalancedPlaylists_v0`
 
+## Architecture Review & v1.5 Refactor Plan (2025-11-25)
+
+An architecture review identified key areas for improvement to ensure scalability and maintainability (v1.5).
+
+**Prioritized Refactor Items:**
+
+1.  **Frontend Modularization (High Risk):**
+    *   **Problem:** `app.js` and `curation.js` are monolithic and tightly coupled to the DOM/Globals.
+    *   **Solution:** Refactor `curation.js` into a pure ES Module with a clear API, decoupling state and heuristics from the UI.
+
+2.  **Backend Service Layer (High Risk):**
+    *   **Problem:** `index.js` handles HTTP, orchestration, and business logic.
+    *   **Solution:** Extract `fetchRankingForAlbum` into a dedicated service module (`server/lib/fetchRanking.js`) to improve composability and testing.
+
+3.  **Shared Normalization (Medium Risk):**
+    *   **Problem:** Logic duplication between client and server for key normalization.
+    *   **Solution:** Create a shared ES Module (`shared/normalize.js`) usable by both Frontend (native import) and Backend (import/require).
+
+4.  **Testing & Observability:**
+    *   **Plan:** Add headless browser tests (Vitest/JSDOM) for curation logic and improve client-side telemetry for fallback scenarios.
+
+**Design Patterns to Emphasize:**
+*   **Proxy:** Server hiding API keys.
+*   **Strategy:** Dynamic ranking source selection (Scraper vs AI).
+*   **Facade:** Simplified client API.
+*   **Adapter:** Standardizing external API responses.
+
 --
 Arquivo gerado automaticamente a partir da análise do repositório em 2025-11-23.
 

@@ -1,8 +1,8 @@
 const assert = require('assert')
 const { getRankingFromUrl, getRankingForAlbum } = require('../lib/scrapers/besteveralbums')
-const { getRankingForAlbum: fetchRankingForAlbum } = require('../index')
+const { fetchRankingForAlbum } = require('../lib/fetchRanking')
 
-async function testScraperDirectChart () {
+async function testScraperDirectChart() {
   console.log('Test: scraper direct chart URL')
   const url = 'https://www.besteveralbums.com/thechart.php?a=145#tracks'
   const res = await getRankingFromUrl(url)
@@ -21,15 +21,10 @@ async function testScraperByAlbum() {
 
 async function testFetchRankingForAlbumIntegration() {
   console.log('Test: server fetchRankingForAlbum integration (uses scraper path)')
-  // require the server index module and call the exported function
-  // Note: fetchRankingForAlbum expects (album, albumQuery, options)
-  const server = require('../index')
-  if (!server || !server.fetchRankingForAlbum) {
-    console.log('  ! server.fetchRankingForAlbum not exported; skipping integration test')
-    return
-  }
+  // fetchRankingForAlbum is now imported directly
+
   const album = { title: 'Physical Graffiti', artist: 'Led Zeppelin', year: '1975' }
-  const result = await server.fetchRankingForAlbum(album, 'Led Zeppelin - Physical Graffiti')
+  const result = await fetchRankingForAlbum(album, 'Led Zeppelin - Physical Graffiti')
   assert(result && Array.isArray(result.entries), 'result.entries should be an array')
   assert(result.entries.length > 0, 'entries should be populated from scraper')
   console.log('  ✔ fetchRankingForAlbum returned', result.entries.length, 'entries (scraper primary)')
