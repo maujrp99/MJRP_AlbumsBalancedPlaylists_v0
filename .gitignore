@@ -82,3 +82,12 @@ diagnostics/
 .local_pids
 server/shared/
 server/_shared_temp/
+
+# Vite build output
+dist/
+
+# Vitest coverage
+coverage/
+
+# Vite cache
+.vite/
