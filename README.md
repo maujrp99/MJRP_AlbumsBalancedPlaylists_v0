@@ -166,17 +166,23 @@ package.json         # Frontend dependencies
 
 ### v2.0 Roadmap
 
-**Sprint 1** (✅ Complete - 85%):
+**Sprint 1** (✅ Complete):
 - Vite + Vitest setup
 - Store architecture (Albums, Playlists, Series)
 - Comprehensive test suite (55 tests, 82.57% coverage)
 
-**Sprint 2** (Next):
-- HashRouter for SPA navigation
-- Base view components
-- Home/Landing view
+**Sprint 2** (✅ Complete):
+- History API router (clean URLs)
+- BaseView architecture
+- HomeView with series creation
+- 67 tests passing (12 router + 55 stores)
 
-**Sprint 3-6**: See `docs/V2.0_ANALYSIS.md` for full roadmap.
+**Sprint 3** (Next):
+- Albums Library view
+- Ranking view with acclaim data  
+- Album detail view
+
+**Sprint 4-6**: See `docs/V2.0_ANALYSIS.md` for full roadmap.
 
 ### Documentation
 

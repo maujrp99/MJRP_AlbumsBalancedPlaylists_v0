@@ -42,6 +42,11 @@ export class AlbumsStore {
      * @param {Object} album - Album data from API
      */
     addAlbum(album) {
+        // Normalize tracks to include extensible metadata field
+        if (album.tracks && Array.isArray(album.tracks)) {
+            album.tracks = album.tracks.map(track => this.normalizeTrack(track))
+        }
+
         const existing = this.albums.find(a =>
             a.title === album.title && a.artist === album.artist
         )
@@ -53,6 +58,24 @@ export class AlbumsStore {
             // Update existing album
             Object.assign(existing, album)
             this.notify()
+        }
+    }
+
+    /**
+     * Normalize track to include extensible metadata
+     * @param {Object} track - Track data
+     * @returns {Object} Normalized track
+     * @private
+     */
+    normalizeTrack(track) {
+        return {
+            ...track,
+            metadata: track.metadata || {
+                isrc: null,           // International Standard Recording Code
+                appleMusicId: null,   // Apple Music track ID (cached after match)
+                spotifyId: null,      // Spotify track ID (future integration)
+                ...track.metadata     // Preserve any existing metadata
+            }
         }
     }
 

@@ -8,6 +8,112 @@ Format:
 
 ---
 
+## v2.0.0-alpha.2 Sprint 2: Router & Views (2025-11-26)
+
+**Status**: In development (feature/v2.0-foundation branch)
+
+### Summary
+Implemented SPA routing with History API, base view architecture, and HomeView for series creation. Clean URL navigation without hash symbols, preparing for OAuth integrations (Apple Music, Spotify).
+
+### Features
+
+**History API Router**:
+- Clean URLs (`/home` instead of `/#/home`)
+- Route registration with param extraction (`/albums/:id`)
+- Navigation hooks (before/after navigate)
+- View lifecycle management (render → mount → destroy)
+- Query string parsing
+- Link interception for SPA navigation
+- Browser back/forward support
+
+**View Architecture**:
+- **BaseView** abstract class:
+  - Lifecycle methods (render, mount, destroy)
+  - DOM helpers ($, $$)
+  - Subscription management
+  - Event cleanup
+  - Timestamp formatting utility
+- **HomeView** implementation:
+  - Series creation form
+  - Recent series grid with cards
+  - SeriesStore integration (subscribe/notify)
+  - Form validation and cleanup
+  - Keyboard shortcuts (Enter navigation)
+  - Responsive dark mode UI
+
+**Future-Proofing**:
+- Extended track metadata structure:
+  ```javascript
+  metadata: {
+    isrc: null,          // International Standard Recording Code
+    appleMusicId: null,  // Apple Music track ID (cached)
+    spotifyId: null      // Spotify track ID (future)
+  }
+  ```
+- Ready for OAuth flows (Apple Music, Spotify, Google)
+
+### Testing Infrastructure
+- **Router tests**: 12 comprehensive tests
+  - Route registration and matching
+  - Navigation and param extraction
+  - Lifecycle hooks
+  - Link interception
+- **All tests passing**: 67/67 (router + stores)
+- **Coverage**: Router core 100%
+
+### Documentation Added
+- `docs/ROUTING_DECISION.md` - Hash vs History API analysis
+- `docs/APPLE_MUSIC_ARCHITECTURE.md` - Future integration architecture
+- Updated `README.md` with Sprint 2 status
+
+### Files Added
+```
+public/js/router.js              # 167 lines - History API router
+public/js/views/BaseView.js      # 110 lines - Base view class
+public/js/views/HomeView.js      # 190 lines - Home view implementation
+public/index-v2.html             # 290 lines - v2.0 entry point
+test/router.test.js              # 157 lines - Router test suite
+docs/ROUTING_DECISION.md         # 485 lines - Routing analysis
+docs/APPLE_MUSIC_ARCHITECTURE.md # 650 lines - Integration architecture
+```
+
+### Files Modified
+```
+public/js/stores/albums.js       # +22 lines - Track metadata extension
+firebase.json                    # +5 lines - SPA rewrite rule cleanup
+README.md                        # Updated Sprint 2 roadmap status
+```
+
+### Sprint Status
+- ✅ Phase 1: Router Core (100%)
+- ✅ Phase 2: Base View Architecture (100%)
+- ✅ Phase 3: HomeView Implementation (100%)
+- ✅ Phase 4: App Bootstrap (100%)
+- ✅ Phase 5: Testing (100%)
+- ✅ Phase 6: Manual Verification (100%)
+- ✅ Phase 7: Documentation (100%)
+
+### Demo
+- ✅ Successful browser demo recorded
+- ✅ Series creation workflow validated
+- ✅ History API navigation verified
+- ✅ Store updates working correctly
+
+### Next Steps (Sprint 3)
+- Albums Library view
+- Ranking view with acclaim visualization
+- Album detail view
+- API integration for album fetching
+
+### Notes
+- Backend unchanged - v2.0 is frontend-only refactor
+- Production deployment still uses v1.6.1
+- All changes on feature branch, safe to revert
+- History API chosen for OAuth compatibility
+- v1.6.1 entry point (`hybrid-curator.html`) preserved
+
+---
+
 ## v2.0.0-alpha.1 Sprint 1: Foundation Setup (2025-11-26)
 
 **Status**: In development (feature/v2.0-foundation branch)
