@@ -88,6 +88,109 @@ python3 -m http.server 8000 -d public
 
  - Open `http://localhost:8000/hybrid-curator.html` and use the app; client calls `http://localhost:3000/api/generate` to request album metadata (unless overridden by `window.__api_base`).
 
+## v2.0 Development (Modern Stack)
+
+**Status**: In development on branch `feature/v2.0-foundation`
+
+v2.0 is a major architectural upgrade transforming the app into a modern SPA with series management. 
+
+### Tech Stack
+- **Bundler**: Vite 5.x (HMR, modern ES modules)
+- **Testing**: Vitest 1.x (Jest-compatible, fast)
+- **State Management**: Custom stores (Observer pattern)
+- **Frontend**: Vanilla JS + ES modules (no framework yet)
+- **Backend**: Same Node.js/Express (no changes needed)
+
+### Development Workflow
+
+1. **Install frontend dependencies**:
+
+```bash
+npm install
+```
+
+2. **Run dev server** (frontend with HMR):
+
+```bash
+npm run dev
+# Opens Vite dev server at http://localhost:5000
+# Automatically proxies /api/* to backend on :3000
+```
+
+3. **Run backend** (in separate terminal):
+
+```bash
+cd server
+npm start
+# Runs on http://localhost:3000
+```
+
+4. **Run tests**:
+
+```bash
+npm test              # Run all tests
+npm run test:ui       # Open test UI dashboard
+npm run test:coverage # Generate coverage report
+```
+
+5. **Build for production**:
+
+```bash
+npm run build   # Output: dist/
+npm run preview # Preview production build locally
+```
+
+### Project Structure (v2.0)
+
+```
+public/
+  js/
+    stores/          # State management  
+      albums.js      # Albums CRUD + Firestore
+      playlists.js   # Playlist generation + drag-and-drop
+      series.js      # Series metadata (v2.0 feature)
+    components/      # (Coming in Sprint 2)
+    views/           # (Coming in Sprint 2)
+  hybrid-curator.html # Entry point
+
+test/
+  stores/            # Store unit tests
+    albums.test.js   # 16 tests, 78.23% coverage
+    playlists.test.js # 22 tests, 100% coverage
+    series.test.js   # 17 tests, 70.52% coverage
+
+vite.config.js       # Vite configuration
+vitest.config.js     # Vitest configuration
+package.json         # Frontend dependencies
+```
+
+### v2.0 Roadmap
+
+**Sprint 1** (✅ Complete - 85%):
+- Vite + Vitest setup
+- Store architecture (Albums, Playlists, Series)
+- Comprehensive test suite (55 tests, 82.57% coverage)
+
+**Sprint 2** (Next):
+- HashRouter for SPA navigation
+- Base view components
+- Home/Landing view
+
+**Sprint 3-6**: See `docs/V2.0_ANALYSIS.md` for full roadmap.
+
+### Documentation
+
+- `docs/V2.0_ANALYSIS.md` - Complete technical analysis
+- `docs/V2.0_DESIGN_MOCKUPS.md` - UI/UX mockups
+- `docs/V2.0_DEPLOYMENT_IMPACT.md` - Deployment changes
+- `docs/TOOLING_COMPARISON.md` - Vite vs alternatives
+
+---
+
+## v1.x Development (Legacy - Current Production)
+
+### Running v1.x locally (Python static server)
+
 ## Security & git hygiene
 
 

@@ -1,10 +1,94 @@
 # Changelog
 
-All notable changes to this project are documented in this file. This changelog aims to be chronological and unambiguous: each release or hotfix has a concise summary, root cause (when relevant), the corrective action taken, and verification notes.
-
 Format:
-- Release / Hotfix header: date and short id
-- Sections: Summary, Root cause (if relevant), Fix applied, Verification, Notes / Next steps
+- Version anchor
+- Summary
+- Changes / Fixes
+- Files modified
+
+---
+
+## v2.0.0-alpha.1 Sprint 1: Foundation Setup (2025-11-26)
+
+**Status**: In development (feature/v2.0-foundation branch)
+
+### Summary
+Major architectural upgrade: Modern build tooling (Vite), comprehensive testing (Vitest), and centralized state management (stores). This alpha establishes the foundational infrastructure for v2.0's SPA transformation.
+
+### Features
+
+**Development Tools**:
+- Vite 5.x for modern bundling, HMR, and dev server with API proxy
+- Vitest 1.x for fast unit testing with jsdom environment
+- Path aliases for clean imports (`@stores`, `@components`, `@views`, `@shared`)
+- Coverage reporting with v8 provider
+
+**State Management Architecture**:
+- **AlbumsStore**: CRUD operations, Firestore sync, current album tracking
+- **PlaylistsStore**: Playlist generation, drag-and-drop state, duration calculation
+- **SeriesStore**: Series metadata management (new v2.0 feature)
+- All stores implement Observer pattern (subscribe/notify)
+
+**Testing Infrastructure**:
+- 55 comprehensive unit tests across 3 stores
+- AlbumsStore: 16 tests, 78.23% coverage
+- PlaylistsStore: 22 tests, 100% coverage
+- SeriesStore: 17 tests, 70.52% coverage
+- Overall store coverage: 82.57%
+- Firebase mocks for isolated testing
+
+### Documentation Added
+- `docs/V2.0_ANALYSIS.md` - Complete technical analysis and roadmap
+- `docs/V2.0_DESIGN_MOCKUPS.md` - UI/UX mockups with component specs
+- `docs/V2.0_DEPLOYMENT_IMPACT.md` - Deployment workflow changes
+- `docs/TOOLING_COMPARISON.md` - Vite vs webpack/parcel/esbuild comparison
+- Updated `README.md` with v2.0 development workflow
+
+### Files Added
+```
+package.json                 # Frontend dependencies (vite, vitest, etc)
+package-lock.json           # Lockfile (199 packages)
+vite.config.js              # Vite bundler configuration
+vitest.config.js            # Vitest test runner configuration
+test/setup.js               # Global test setup with Firebase mocks
+
+public/js/stores/
+  albums.js                 # 178 lines - Albums state management
+  playlists.js              # 174 lines - Playlists state management
+  series.js                 # 174 lines - Series state management
+
+test/stores/
+  albums.test.js            # 16 tests - AlbumsStore comprehensive suite
+  playlists.test.js         # 22 tests - PlaylistsStore with drag-and-drop
+  series.test.js            # 17 tests - SeriesStore validation
+
+docs/
+  V2.0_ANALYSIS.md          # Technical analysis and sprint breakdown
+  V2.0_DESIGN_MOCKUPS.md    # UI mockups for 4 main views
+  V2.0_DEPLOYMENT_IMPACT.md # Deployment impact analysis
+  TOOLING_COMPARISON.md     # Build tooling comparison
+```
+
+### Changes
+- `.gitignore`: Added `dist/`, `coverage/`, `.vite/`
+- `README.md`: Added v2.0 development section with workflow
+
+### Sprint Status
+- ✅ Phase 1: Development Tools Setup (100%)
+- ✅ Phase 2: Store Architecture (100%)
+- ✅ Phase 3: Testing Infrastructure (100%)
+- ⏳ Phase 4: Integration & Verification (75%)
+
+### Next Steps (Sprint 2)
+- HashRouter for SPA navigation
+- Base view components (Home, Albums, Ranking, Playlists)
+- Component library implementation
+
+### Notes
+- Backend unchanged - v2.0 is frontend-only refactor
+- Production deployment still uses v1.6.1
+- All changes on feature branch, safe to revert
+- Build tested and working (`npm run build` successful)
 
 ---
 
