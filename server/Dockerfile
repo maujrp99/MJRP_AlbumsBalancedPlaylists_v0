@@ -15,9 +15,8 @@ COPY package*.json ./
 RUN npm ci --only=production || npm install --only=production
 
 # copy application source
+COPY _shared_temp ../shared
 COPY . .
-
-# expose the port the app listens on
 EXPOSE 3000
 
 # start the app

@@ -8,6 +8,70 @@ Format:
 
 ---
 
+## v1.6.1 Hotfix: Production Deployment (2025-11-26)
+
+### Summary
+Fixed critical production deployment issue where track ratings were not appearing in production environment despite working correctly in local development.
+
+### Root Cause
+Multiple configuration and module loading issues in the Cloud Run container deployment:
+1. **Missing Config Files**: `config/prompts.json` was not being copied to the container, causing `loadPrompts()` to fail silently and `fetchRankingForAlbum` to return empty results immediately.
+2. **Shared Module Path**: `shared/normalize.js` was not accessible at the expected import path within the container.
+3. **ESM Configuration**: The shared module lacked proper ESM configuration (`package.json` with `"type": "module"`), causing import failures.
+
+### Fixes Applied
+
+**Deployment Script (`scripts/deploy-backend.sh`)**:
+- Added copying of `config/` directory to `server/config/` before Cloud Run build
+- Added copying of `shared/` directory to `server/_shared_temp/` with ESM package.json injection
+- Added cleanup of temporary directories after deployment
+
+**Module Loading (`server/lib/prompts.js`)**:
+- Updated to check multiple paths for `prompts.json`: container path (`../config/`) and local path (`../../config/`)
+- Added graceful fallback between paths using `fs.existsSync()`
+
+**Shared Module (`shared/normalize.js`)**:
+- Deployment script now creates `{"type": "module"}` package.json in the shared directory
+- Ensures proper ESM handling by Node.js in the container
+
+**Frontend Cache Busting (`public/hybrid-curator.html`)**:
+- Added `?v=1.6.0` cache buster to app.js script tag to force browser reload of updated logic
+
+### Debug Instrumentation Added
+- Created `/api/debug/files` endpoint to inspect container filesystem
+- Created `/api/debug/import` endpoint to test dynamic module imports  
+- Enhanced `/api/debug/raw-ranking` to return full error details
+- Added `debugTrace` to `fetchRankingForAlbum` to track execution flow
+- Exposed debug metadata in API responses via `rankingConsolidatedMeta`
+
+### Verification
+Tested with production API:
+```bash
+curl -X POST https://mjrp-proxy-540062660076.southamerica-east1.run.app/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"albumQuery": "Rolling Stones - Let it Bleed"}'
+```
+
+**Results**:
+- ✅ `Has Ratings: true` (previously `false`)
+- ✅ 9 tracks with ratings from BestEverAlbums
+- ✅ Sample: "Gimme Shelter" with rating 93
+- ✅ Debug trace confirms full pipeline execution: scraper → ratings → consolidation
+
+### Files Modified
+- `scripts/deploy-backend.sh`: Added config/shared copying and cleanup
+- `server/lib/prompts.js`: Multi-path config loading
+- `server/lib/fetchRanking.js`: Debug tracing
+- `server/index.js`: Debug endpoint enhancements, debug metadata exposure
+- `public/hybrid-curator.html`: Cache busting
+
+### Notes
+- Debug endpoints (`/api/debug/*`) should be disabled or protected in production deployment
+- Consider adding health check endpoint that validates config/module loading
+- Future: Add automated smoke tests that verify `/api/generate` returns ratings
+
+---
+
 ## v1.5 Refactor (2025-11-25)
 
 ### Architecture

@@ -177,7 +177,20 @@ async function consolidateRanking(tracks = [], acclaim = []) {
   })
 
   // make sure array is ordered from finalPosition = 1 .. n (already is)
-  return { results, divergence: { unmatchedMentions, tracksWithoutSupport } }
+  return {
+    results,
+    divergence: { unmatchedMentions, tracksWithoutSupport },
+    debugInfo: {
+      tracksCount: N,
+      acclaimCount: acclaim.length,
+      providersCount,
+      sampleMatch: acclaim.length > 0 ? {
+        mention: acclaim[0].trackTitle,
+        mentionKey: await getNormalizeKey().then(f => f(acclaim[0].trackTitle)),
+        matched: map.has(await getNormalizeKey().then(f => f(acclaim[0].trackTitle)))
+      } : null
+    }
+  }
 }
 
 module.exports = { consolidateRanking, normalizeKey: getNormalizeKey }

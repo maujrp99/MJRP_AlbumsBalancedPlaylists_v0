@@ -153,6 +153,8 @@ app.post('/api/generate', async (req, res) => {
         }
         let rankingEntries = []
         let rankingSources = []
+        let fetchDebug = null
+
         try {
           // If client requested raw ranking response, return raw provider response here.
           if (req.body && req.body.rawStage === 'ranking') {
@@ -160,6 +162,7 @@ app.post('/api/generate', async (req, res) => {
             return res.status(200).json({ rawRankingResponse: rankingResult.raw })
           }
           const rankingResult = await fetchRankingForAlbum(album, albumQuery)
+          fetchDebug = rankingResult.debugTrace
           rankingEntries = rankingResult.entries
           rankingSources = rankingResult.sources
           // attach BestEver evidence/url to album payload when available
@@ -204,7 +207,15 @@ app.post('/api/generate', async (req, res) => {
           const consolidated = await consolidateRanking(albumPayload.tracks || [], albumPayload.rankingAcclaim || [])
           if (consolidated && consolidated.results) {
             albumPayload.rankingConsolidated = consolidated.results
-            albumPayload.rankingConsolidatedMeta = consolidated.divergence || {}
+            albumPayload.rankingConsolidatedMeta = {
+              ...consolidated.divergence,
+              debugInfo: consolidated.debugInfo,
+              rankingEntriesCount: rankingEntries ? rankingEntries.length : -1,
+              // rankingResult is block-scoped, so we can't access it here directly without refactoring.
+              // But we have rankingEntries which is what matters.
+              rankingEntriesSample: rankingEntries && rankingEntries.length ? rankingEntries[0] : null,
+              fetchRankingDebug: fetchDebug
+            }
           } else {
             // backward-compatible: if consolidateRanking returned an array for any reason
             albumPayload.rankingConsolidated = Array.isArray(consolidated) ? consolidated : []
@@ -213,7 +224,7 @@ app.post('/api/generate', async (req, res) => {
         } catch (e) {
           console.warn('Ranking consolidation failed:', e && e.message)
           albumPayload.rankingConsolidated = []
-          albumPayload.rankingConsolidatedMeta = {}
+          albumPayload.rankingConsolidatedMeta = { error: e.message, stack: e.stack }
         }
         // Map consolidated final positions back onto album tracks as `rank` so clients
         // (curation UI/algorithms) can rely on `track.rank` for playlist generation.
@@ -300,11 +311,53 @@ app.post('/api/debug/raw-ranking', async (req, res) => {
     const safeAlbumResp = albumResp && albumResp.data ? albumResp.data : null
     const safeRankingResp = rankingResult && rankingResult.raw && rankingResult.raw.data ? rankingResult.raw.data : null
     return res.status(200).json({ albumResponse: safeAlbumResp, rawRankingResponse: safeRankingResp, bestEverEvidence: bestEver })
+    return res.status(200).json({ albumResponse: safeAlbumResp, rawRankingResponse: safeRankingResp, bestEverEvidence: bestEver })
   } catch (err) {
     console.error('Error fetching raw ranking:', err?.message || err)
     const status = err.response?.status || 500
-    const data = err.response?.data || { error: 'Could not fetch raw ranking' }
+    const data = err.response?.data || { error: 'Could not fetch raw ranking', details: err.message, stack: err.stack }
     return res.status(status).json(data)
+  }
+})
+
+// Debug endpoint: list files to verify container structure
+app.get('/api/debug/files', (req, res) => {
+  if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured' })
+  const fs = require('fs')
+  const path = require('path')
+  try {
+    const targetPath = req.query.path ? path.resolve(req.query.path) : path.resolve(__dirname)
+
+    const listDir = (dir) => {
+      try {
+        return fs.readdirSync(dir).map(f => {
+          const stat = fs.statSync(path.join(dir, f))
+          return { name: f, isDir: stat.isDirectory(), size: stat.size }
+        })
+      } catch (e) { return e.message }
+    }
+
+    res.json({
+      cwd: process.cwd(),
+      dirname: __dirname,
+      targetPath,
+      contents: listDir(targetPath)
+    })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// Debug endpoint: test import and normalization
+app.get('/api/debug/import', async (req, res) => {
+  if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured' })
+  try {
+    const mod = await import('../shared/normalize.js')
+    const input = req.query.input
+    const normalized = input ? mod.normalizeKey(input) : null
+    res.json({ ok: true, exports: Object.keys(mod), input, normalized })
+  } catch (e) {
+    res.status(500).json({ error: e.message, stack: e.stack })
   }
 })
 

@@ -16,10 +16,11 @@ async function getNormalizeKey() {
 const logger = (() => { try { return require('./logger') } catch (e) { return console } })()
 
 async function fetchRankingForAlbum(album, albumQuery, options = {}) {
+    const debugTrace = []
     const normalizeKey = await getNormalizeKey()
     const prompts = loadPrompts()
     const template = prompts.rankingPrompt
-    if (!template) return { entries: [], sources: [] }
+    if (!template) return { entries: [], sources: [], debugTrace }
 
     const rankingProviders = Array.isArray(prompts.defaultRankingProviders)
         ? prompts.defaultRankingProviders
@@ -36,7 +37,7 @@ async function fetchRankingForAlbum(album, albumQuery, options = {}) {
         rankingProviders
     })
 
-    if (!rankingPrompt) return { entries: [], sources: [] }
+    if (!rankingPrompt) return { entries: [], sources: [], debugTrace }
 
     if (options && options.raw) {
         const rankingResponse = await callProvider({
@@ -46,11 +47,14 @@ async function fetchRankingForAlbum(album, albumQuery, options = {}) {
             aiApiKey: process.env.AI_API_KEY,
             aiModelEnv: process.env.AI_MODEL
         })
-        return { raw: rankingResponse }
+        return { raw: rankingResponse, debugTrace }
     }
 
     try {
+        debugTrace.push({ step: 'getBestEverRanking', args: { title: album?.title || albumQuery, artist: album?.artist || '' } })
         const best = await getBestEverRanking(album?.title || albumQuery, album?.artist || '')
+        debugTrace.push({ step: 'getBestEverRanking_result', found: !!best, evidenceCount: best?.evidence?.length, error: best?.error })
+
         if (best && Array.isArray(best.evidence) && best.evidence.length > 0) {
             const scraperEntries = best.evidence.map((e, idx) => ({
                 provider: 'BestEverAlbums',
@@ -61,6 +65,8 @@ async function fetchRankingForAlbum(album, albumQuery, options = {}) {
             }))
 
             const albumTrackCount = Array.isArray(album && album.tracks) ? album.tracks.length : null
+            debugTrace.push({ step: 'check_completeness', albumTrackCount, scraperEntriesCount: scraperEntries.length })
+
             if (!albumTrackCount || scraperEntries.length >= albumTrackCount) {
                 const sources = [{ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: best.referenceUrl || best.albumUrl || null }]
                 scraperEntries.sort((a, b) => {
@@ -68,10 +74,11 @@ async function fetchRankingForAlbum(album, albumQuery, options = {}) {
                     if ((a.rating || 0) && (b.rating || 0)) return (b.rating || 0) - (a.rating || 0)
                     return 0
                 })
-                return { entries: scraperEntries, sources, bestEver: { albumUrl: best.referenceUrl || best.albumUrl || null, albumId: best.albumId || null, evidence: best.evidence } }
+                return { entries: scraperEntries, sources, bestEver: { albumUrl: best.referenceUrl || best.albumUrl || null, albumId: best.albumId || null, evidence: best.evidence }, debugTrace }
             }
 
             try {
+                debugTrace.push({ step: 'ai_enrichment_start' })
                 const rankingResponse = await callProvider({
                     prompt: renderPrompt(loadPrompts().rankingPrompt, {
                         albumTitle: album.title || albumQuery,
@@ -86,6 +93,7 @@ async function fetchRankingForAlbum(album, albumQuery, options = {}) {
                     aiModelEnv: process.env.AI_MODEL
                 })
                 let modelEntries = await extractAndValidateRankingEntries(rankingResponse)
+                debugTrace.push({ step: 'ai_enrichment_result', modelEntriesCount: modelEntries.length })
 
                 const mergedByTitle = new Map()
                 const modelIndex = new Map()
@@ -154,15 +162,17 @@ async function fetchRankingForAlbum(album, albumQuery, options = {}) {
                     if (!sources.some(existing => String(existing.provider).toLowerCase() === String(s.provider || '').toLowerCase())) sources.push(s)
                 }
 
-                return { entries: finalEntries, sources, bestEver: { albumUrl: best.referenceUrl || best.albumUrl || null, albumId: best.albumId || null, evidence: best.evidence } }
+                return { entries: finalEntries, sources, bestEver: { albumUrl: best.referenceUrl || best.albumUrl || null, albumId: best.albumId || null, evidence: best.evidence }, debugTrace }
             } catch (e) {
                 logger.warn('model_enrichment_failed', { albumQuery, err: (e && e.message) || String(e) })
+                debugTrace.push({ step: 'model_enrichment_failed', error: e.message })
                 const sources = [{ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: best.referenceUrl || best.albumUrl || null }]
-                return { entries: scraperEntries, sources, bestEver: { albumUrl: best.referenceUrl || best.albumUrl || null, albumId: best.albumId || null, evidence: best.evidence } }
+                return { entries: scraperEntries, sources, bestEver: { albumUrl: best.referenceUrl || best.albumUrl || null, albumId: best.albumId || null, evidence: best.evidence }, debugTrace }
             }
         }
     } catch (err) {
         logger.warn('bestever_scraper_failed', { albumQuery, err: (err && err.message) || String(err) })
+        debugTrace.push({ step: 'bestever_scraper_failed', error: err.message })
     }
 
     const rankingResponse = await callProvider({
@@ -183,7 +193,7 @@ async function fetchRankingForAlbum(album, albumQuery, options = {}) {
 
     let entries = await extractAndValidateRankingEntries(rankingResponse)
     const sources = rankingEntriesToSources(entries)
-    return { entries, sources }
+    return { entries, sources, debugTrace }
 }
 
 module.exports = { fetchRankingForAlbum }

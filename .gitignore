@@ -80,3 +80,5 @@ server/.env
 # Local diagnostics and temporary keys
 diagnostics/
 .local_pids
+server/shared/
+server/_shared_temp/

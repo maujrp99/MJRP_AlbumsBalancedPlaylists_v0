@@ -1,100 +1,459 @@
-```markdown
-+### MJRP Albums Balanced Playlists — Resumo Executivo
+# MJRP Albums Balanced Playlists — Project Summary
 
-Este documento sumariza o propósito, arquitetura, fluxo principal e pendências operacionais do projeto **MJRP Albums Balanced Playlists**.
+**Version**: v1.6.1 (Production) | **Next**: v2.0 (Planning)  
+**Last Updated**: 2025-11-26
 
-**Objetivo**
-- Gerar playlists balanceadas a partir de dados de "aclamação" por faixa, combinando evidência determinística (BestEverAlbums) com enriquecimento por modelo de IA (Gemini / Google Generative Language).
-- Servir uma UI estática (Firebase Hosting) que persiste curadorias no Firestore e protege chaves de IA por meio de um proxy server.
+---
 
-**Visão Geral do Fluxo**
-- Frontend (`public/`) chama o proxy em `POST /api/generate` para obter metadados normalizados do álbum + ranking de faixas.
-- Proxy (`server/index.js`) tenta primeiro obter evidência do scraper `BestEverAlbums` (`server/lib/scrapers/besteveralbums.js`).
-- Se o scraper for parcial, o proxy solicita ao modelo para enriquecer e mescla resultados (scraper vence conflitos).
-- Normalização, validação e sanitização são feitas por `server/lib/normalize.js`, `server/lib/schema.js` (AJV opcional) e `server/lib/validateSource.js`.
-- Consolidação de rankings usa Borda (ver `server/lib/ranking.js`).
-- O algoritmo de curadoria (cliente) (`public/js/curation.js`) gera playlists P1/P2/DeepCuts, respeita regras de P1/P2 e preenche até a duração alvo.
+## Executive Summary
 
-**Componentes Principais**
-- Frontend: `public/hybrid-curator.html`, `public/js/app.js`, `public/js/api.js`, `public/js/curation.js`.
-- Proxy / Backend: `server/index.js` e módulos em `server/lib/` (`aiClient.js`, `normalize.js`, `ranking.js`, `schema.js`, `validateSource.js`, `scrapers/besteveralbums.js`).
-- Tests: `server/test/*` e `test/*` com runners simples (node-based).
-- CI/CD: workflow em `.github/workflows/ci-firebase.yml` (build/test + deploy). Hosting configurado em `firebase.json` (public → `public/`).
+**MJRP Playlist Generator** is a web application that generates balanced playlists from track-level acclaim data, combining deterministic evidence (BestEverAlbums scraper) with AI enrichment (Google Gemini).
 
-**Como rodar localmente (resumo rápido)**
-- Backend proxy:
-  - `cd server && npm ci`
-  - criar `.env` com `AI_API_KEY`, `AI_ENDPOINT` (opcional), `AI_MODEL` (opcional), `PORT` (opcional)
-  - `npm start` (escuta por padrão em `:3000`)
-- Frontend static:
-  - servir `public/` (ex.: `python3 -m http.server 8000 -d public`)
-  - abrir `http://localhost:8000/hybrid-curator.html` (cliente usa `http://<host>:3000/api/generate` por padrão)
-- Testes do server:
-  - `cd server && npm test`
+### Current Status ✅
+- **v1.6.1** deployed to production
+- Frontend: `https://mjrp-playlist-generator.web.app`
+- Backend API: Cloud Run (`mjrp-proxy`)
+- All core features operational with full BestEverAlbums integration
 
-**Estado atual de CI/CD e deploy**
-- Workflow de GitHub Actions configurado para instalar dependências (root + `server/`), rodar lint/test e fazer deploy usando `firebase-tools` com `FIREBASE_TOKEN` e `FIREBASE_PROJECT`.
-- Segredos necessários: `FIREBASE_PROJECT`, `FIREBASE_TOKEN` (ou, alternativamente, `FIREBASE_SERVICE_ACCOUNT` se migrarmos para Service Account).
-- Preview PR criado (branch `ci-firebase-test`) e run em andamento / monitorado.
+---
 
-**Observações técnicas e riscos**
-- Scraper-first é poderoso para proveniência mas frágil a mudanças no HTML do BestEverAlbums.
-- Validação AJV é opcional hoje — se `ajv` não estiver instalado, a validação fica desativada (recomenda-se instalar em CI para garantir contratos).
-- CORS no `server/index.js` tem comportamento permissivo em dev; rever para produção.
-- `aiClient.js` usa query param `?key=` para chamadas Google GL — chave deve permanecer no servidor.
+## Core Features
 
-**Pendências e próximos passos (prioritários)**
-1. Validar o run do PR de preview (capturar logs e URL de preview). Se OK, promover merge para `main` para deploy de produção.
-2. Executar e corrigir quaisquer falhas de teste (`cd server && npm ci && npm test`) — rodar em CI também.
-3. Reforçar validação instalando `ajv` no `server` e garantir que CI execute a validação.
-4. Rever `corsOptions` para ajustar origem em produção.
-5. Habilitar branch protection (exigir checks do workflow) para `main`.
-6. (Opcional) Migrar deploy para Service Account JSON (`FIREBASE_SERVICE_ACCOUNT`) para melhor gestão de credenciais.
+### 1. Track Ranking Consolidation
+- **Scraper-first approach**: BestEverAlbums track ratings when available
+- **AI enrichment**: Google Gemini fills gaps for partial/missing data
+- **Borda count consolidation**: Normalizes rankings from multiple sources
+- **Fuzzy matching**: Token-overlap heuristics handle title variants
 
-**Checklist rápido para retomar deploy agora**
-- [x] `FIREBASE_PROJECT` e `FIREBASE_TOKEN` adicionados aos secrets do repositório.
-- [ ] Aguardar finalização do workflow do PR e verificar preview URL e logs.
-- [ ] Mergiar para `main` quando o preview estiver validado.
-- [ ] Habilitar proteção de branch para `main`.
+### 2. Balanced Playlist Generation
+- **P1/P2 selection**: Top 2 acclaimed tracks per album
+- **DeepCuts playlists**: Remaining tracks distributed evenly
+- **Duration targeting**: Configurable max duration per playlist
+- **Manual override**: Drag-and-drop reordering with Sortable.js
 
-**Comandos úteis**
-- Listar runs e ver logs:
-  - `gh run list --repo maujrp99/MJRP_AlbumsBalancedPlaylists_v0`
-  - `gh run view <run-id> --repo maujrp99/MJRP_AlbumsBalancedPlaylists_v0 --log`
-- Rodar testes server local:
-  - `cd server && npm ci && npm test`
-- Definir secrets (local):
-  - `gh secret set FIREBASE_PROJECT --body "your-firebase-project-id" --repo maujrp99/MJRP_AlbumsBalancedPlaylists_v0`
-  - `gh secret set FIREBASE_TOKEN --body "<token>" --repo maujrp99/MJRP_AlbumsBalancedPlaylists_v0`
+### 3. Data Persistence
+- **Firestore integration**: Albums and playlists saved to Firestore
+- **BestEver evidence caching**: Reduces scraper calls
+- **Debug metadata**: `rankingConsolidatedMeta` for observability
 
-## Architecture Review & v1.5 Refactor Plan (2025-11-25)
+---
 
-An architecture review identified key areas for improvement to ensure scalability and maintainability (v1.5).
+## Architecture
 
-**Prioritized Refactor Items:**
+### Frontend (`public/`)
+```
+public/
+├── hybrid-curator.html    # Main SPA
+├── js/
+│   ├── app.js            # App orchestrator (~800 lines)
+│   ├── api.js            # Backend API client
+│   ├── curation.js       # CurationEngine (stateless)
+│   └── shared/
+│       └── normalize.js  # Shared normalization (symlink)
+├── css/
+│   └── styles.css
+└── config.js             # Firebase config
+```
 
-1.  **Frontend Modularization (High Risk):**
-    *   **Problem:** `app.js` and `curation.js` are monolithic and tightly coupled to the DOM/Globals.
-    *   **Solution:** Refactor `curation.js` into a pure ES Module with a clear API, decoupling state and heuristics from the UI.
+**Key Components**:
+- `CurationEngine`: Stateless class for playlist generation
+- `api.js`: Wraps `/api/generate` calls with error handling
+- `app.js`: DOM manipulation, state management, Firestore integration
 
-2.  **Backend Service Layer (High Risk):**
-    *   **Problem:** `index.js` handles HTTP, orchestration, and business logic.
-    *   **Solution:** Extract `fetchRankingForAlbum` into a dedicated service module (`server/lib/fetchRanking.js`) to improve composability and testing.
+### Backend (`server/`)
+```
+server/
+├── index.js                      # Express server
+├── lib/
+│   ├── fetchRanking.js          # Ranking orchestration
+│   ├── ranking.js               # Borda consolidation
+│   ├── aiClient.js              # Google Gemini integration
+│   ├── prompts.js               # Prompt templates
+│   ├── normalize.js             # Schema validation
+│   └── scrapers/
+│       └── besteveralbums.js    # BestEver scraper
+├── test/                        # Unit tests
+├── Dockerfile                   # Cloud Run container
+└── package.json
+```
 
-3.  **Shared Normalization (Medium Risk):**
-    *   **Problem:** Logic duplication between client and server for key normalization.
-    *   **Solution:** Create a shared ES Module (`shared/normalize.js`) usable by both Frontend (native import) and Backend (import/require).
+**Key Modules**:
+- `fetchRankingForAlbum`: Scraper → AI fallback pipeline
+- `consolidateRanking`: Borda count + fuzzy matching
+- `getBestEverRanking`: Album search → track ratings scraper
 
-4.  **Testing & Observability:**
-    *   **Plan:** Add headless browser tests (Vitest/JSDOM) for curation logic and improve client-side telemetry for fallback scenarios.
+### Shared Module (`shared/`)
+```
+shared/
+└── normalize.js    # ES Module used by both frontend/backend
+```
 
-**Design Patterns to Emphasize:**
-*   **Proxy:** Server hiding API keys.
-*   **Strategy:** Dynamic ranking source selection (Scraper vs AI).
-*   **Facade:** Simplified client API.
-*   **Adapter:** Standardizing external API responses.
+**Purpose**: Unified key normalization
+- NFD diacritic removal
+- Non-alphanumeric replacement
+- Token boundary preservation
 
---
-Arquivo gerado automaticamente a partir da análise do repositório em 2025-11-23.
+---
 
-``` 
+## Deployment
+
+### Production Environment
+
+| Component | Platform | URL |
+|-----------|----------|-----|
+| Frontend | Firebase Hosting | `https://mjrp-playlist-generator.web.app` |
+| Backend | Cloud Run (southamerica-east1) | `https://mjrp-proxy-540062660076.southamerica-east1.run.app` |
+| Database | Firestore | `mjrp-playlist-generator` project |
+
+### Deployment Scripts
+
+```bash
+# Frontend
+./scripts/deploy-prod.sh    # Deploys to Firebase Hosting
+
+# Backend
+./scripts/deploy-backend.sh # Builds + deploys to Cloud Run
+```
+
+**Backend Deployment Flow**:
+1. Copy `shared/` → `server/_shared_temp/` (with ESM config)
+2. Copy `config/` → `server/config/`
+3. Build Docker image from `server/Dockerfile`
+4. Deploy to Cloud Run with `gcloud run deploy`
+5. Cleanup temporary directories
+
+---
+
+## Local Development
+
+### Prerequisites
+- Node.js 18+
+- Firebase CLI (`npm install -g firebase-tools`)
+- Google Cloud SDK (`gcloud`)
+
+### Backend Setup
+```bash
+cd server
+npm ci
+
+# Create .env
+cat > .env << EOL
+AI_API_KEY=your-gemini-api-key
+PORT=3000
+ALLOWED_ORIGIN=http://localhost:8000
+NODE_ENV=development
+EOL
+
+npm start  # Starts on :3000
+```
+
+### Frontend Setup
+```bash
+# Serve static files
+python3 -m http.server 8000 -d public
+
+# Or use Firebase emulators
+firebase serve --only hosting
+```
+
+Open `http://localhost:8000/hybrid-curator.html`
+
+### Running Tests
+```bash
+# Backend unit tests
+cd server && npm test
+
+# Run specific test
+npm test -- server/test/normalize.test.js
+```
+
+---
+
+## v1.6.1 Recent Fixes (2025-11-26)
+
+### Production Deployment Hotfix
+**Problem**: Track ratings missing in production despite working locally
+
+**Root Cause**:
+1. `config/prompts.json` not copied to Cloud Run container
+2. `shared/normalize.js` import path incorrect in container
+3. Missing ESM configuration for shared module
+
+**Solution**:
+- Updated `scripts/deploy-backend.sh` to stage config/shared
+- Modified `server/lib/prompts.js` to support multiple config paths
+- Injected `{"type": "module"}` into shared module during deploy
+- Added cache busting to frontend (`?v=1.6.0`)
+
+**Verification**:
+```bash
+curl https://mjrp-proxy-540062660076.southamerica-east1.run.app/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"albumQuery": "Rolling Stones - Let it Bleed"}'
+
+# Result: ✅ Has Ratings: true (was false)
+```
+
+**Debug Instrumentation Added**:
+- `/api/debug/files` - Inspect container filesystem
+- `/api/debug/import` - Test module imports
+- `/api/debug/raw-ranking` - Scraper evidence inspection
+- `debugTrace` in `fetchRankingForAlbum` - Execution flow tracking
+
+**Files Modified**:
+- `scripts/deploy-backend.sh`
+- `server/lib/prompts.js`
+- `server/lib/fetchRanking.js`
+- `server/index.js`
+- `public/hybrid-curator.html`
+
+See [CHANGELOG.md](../CHANGELOG.md#v161-hotfix-production-deployment-2025-11-26) for details.
+
+---
+
+## v2.0 Roadmap (Planning Phase)
+
+### Vision
+Transform from single-page tool into **multi-section SPA** with series management.
+
+### Key Features (Planned)
+
+#### 1. Navigation & Routing
+- **HashRouter**: States for `#home`, `#albums`, `#ranking`, `#playlists`
+- **Lazy loading**: Dynamic imports per view
+- **Shared layout**: TopNav component across all views
+
+#### 2. Series Management
+- **Home screen**: Create/manage playlist series
+- **Firestore schema**: `series` collection with `albumQueries`, `createdAt`, `notes`
+- **Historical series**: Resume previous curation sessions
+
+#### 3. Album Library
+- **View saved albums**: List with filters (artist, year, BestEver status)
+- **Quick actions**: Remove, reprocess ranking, open BestEver reference
+- **Sync badges**: Visual indicators for Firestore sync status
+
+#### 4. Enhanced Ranking View
+- **Tabs**: Summary, Sources, Logs (telemetry)
+- **Per-album controls**: Update ranking, view debug trace
+- **Source attribution**: Deduplicated list of ranking providers
+
+#### 5. Playlist Versioning
+- **Snapshots**: Save playlist state to `series/{id}/history/{timestamp}`
+- **Revert capability**: Rollback to previous versions
+- **Status badges**: "Drag applied", "Synchronized"
+
+### Technical Improvements
+
+#### Architecture Changes
+```
+public/js/
+├── stores/          # NEW: State management
+│   ├── albums.js
+│   ├── playlists.js
+│   └── series.js
+├── views/           # NEW: Route views
+│   ├── home.js
+│   ├── albums.js
+│   ├── ranking.js
+│   └── playlists.js
+├── components/      # NEW: Reusable components
+│   └── topNav.js
+└── app.js          # Refactored: Router + orchestrator
+```
+
+#### Tooling Upgrades
+- **Bundler**: Vite (development server + optimized builds)
+- **Testing**: Vitest + jsdom for headless UI tests
+- **Build**: ES modules with tree-shaking
+
+### Migration Plan
+
+**Sprint Overview** (est. 2.5 months):
+1. **Sprint 1** (2 weeks): Foundation (Vite, stores, tests)
+2. **Sprint 2** (1 week): Navigation (HashRouter, views)
+3. **Sprint 3** (2 weeks): Series management (Home, Firestore)
+4. **Sprint 4** (1.5 weeks): Albums & Ranking views
+5. **Sprint 5** (1.5 weeks): Playlists versioning
+6. **Sprint 6** (1 week): Migration script, E2E tests, deploy
+
+**Firestore Migration**:
+- Script: `migrate-to-v2.js` (Node CLI)
+- Strategy: Create default series, move existing playlists
+- Risk mitigation: Backup, staging testing, rollback plan
+
+See [docs/V2.0_ANALYSIS.md](V2.0_ANALYSIS.md) for detailed analysis and risk assessment.
+
+---
+
+## API Reference
+
+### Main Endpoint: `/api/generate`
+
+**Request**:
+```json
+POST /api/generate
+Content-Type: application/json
+
+{
+  "albumQuery": "Pink Floyd - The Wall"
+}
+```
+
+**Response**:
+```json
+{
+  "album": {
+    "title": "The Wall",
+    "artist": "Pink Floyd",
+    "year": 1979,
+    "tracks": [...]
+  },
+  "rankingConsolidated": [
+    {
+      "trackTitle": "Comfortably Numb",
+      "rating": 97,
+      "rawScore": 18,
+      "supporting": [...],
+      "finalPosition": 1,
+      "normalizedScore": 1
+    }
+  ],
+  "rankingSources": [...],
+  "bestEverEvidence": {...},
+  "tracksByAcclaim": [...],  // Sorted by rating desc
+  "rankingConsolidatedMeta": {
+    "divergence": {...},
+    "debugInfo": {...}
+  }
+}
+```
+
+### Debug Endpoints (Production)
+
+**⚠️ Note**: Should be protected/disabled in production
+
+- `GET /api/debug/files?path=/usr/src/app` - List container files
+- `GET /api/debug/import?input=text` - Test normalize import
+- `POST /api/debug/raw-ranking` - Raw BestEver scraper output
+
+---
+
+## Testing
+
+### Unit Tests (`server/test/`)
+```bash
+cd server && npm test
+```
+
+**Coverage**:
+- `normalize.test.js`: Schema validation
+- `ranking.test.js`: Borda consolidation, fuzzy matching
+- `besteveralbums.test.js`: Scraper parsing
+
+### Manual Testing Checklist
+- [ ] Load album (via query)
+- [ ] Verify ratings appear
+- [ ] Generate playlists (P1, P2, DeepCuts)
+- [ ] Drag-and-drop reordering
+- [ ] Save to Firestore
+- [ ] Load saved curation
+
+---
+
+## Known Issues & Limitations
+
+### Current Limitations
+1. **Single-session only**: No series management (v2.0 feature)
+2. **Client-side state**: No persistence beyond Firestore snapshot
+3. **No batch processing**: One album at a time
+4. **Rate limiting**: BestEverAlbums scraper can fail under load
+
+### Future Improvements
+- [ ] Implement playlist series (v2.0)
+- [ ] Add batch album processing
+- [ ] Implement queue for scraper requests
+- [ ] Add health check endpoint
+- [ ] Disable/protect debug endpoints in prod
+- [ ] Add E2E tests (Playwright/Cypress)
+
+---
+
+## Design Patterns
+
+### Proxy Pattern
+**Server hides API keys**: Client never sees `AI_API_KEY`
+
+### Strategy Pattern
+**Dynamic ranking sources**: Scraper → AI fallback
+
+### Facade Pattern
+**Simplified client API**: `/api/generate` abstracts complexity
+
+### Adapter Pattern
+**Standardized responses**: BestEver HTML → normalized JSON
+
+---
+
+## CI/CD
+
+### GitHub Actions
+**Workflow**: `.github/workflows/ci-firebase.yml`
+
+**Triggers**:
+- Push to `main` → Deploy production
+- Pull requests → Deploy preview
+
+**Steps**:
+1. Install dependencies (root + server)
+2. Run linter + tests
+3. Build frontend
+4. Deploy via `firebase-tools`
+
+**Secrets Required**:
+- `FIREBASE_PROJECT`
+- `FIREBASE_TOKEN` (or `FIREBASE_SERVICE_ACCOUNT`)
+- `AI_API_KEY` (for E2E tests)
+
+---
+
+## Environment Variables
+
+### Backend (`server/.env`)
+```bash
+AI_API_KEY=your-gemini-api-key    # Required
+AI_ENDPOINT=...                    # Optional (defaults to Gemini)
+AI_MODEL=...                       # Optional (defaults to gemini-1.5-flash)
+PORT=3000                          # Optional
+ALLOWED_ORIGIN=http://localhost:8000  # CORS
+NODE_ENV=development|production
+```
+
+### Frontend (`public/config.js`)
+```javascript
+const firebaseConfig = {
+  apiKey: "...",
+  authDomain: "mjrp-playlist-generator.firebaseapp.com",
+  projectId: "mjrp-playlist-generator",
+  // ...
+};
+```
+
+---
+
+## References
+
+- [CHANGELOG.md](../CHANGELOG.md) - Version history
+- [SDD.md](SDD.md) - Software Design Document
+- [mjrp-playlist-generator-2.0.md](mjrp-playlist-generator-2.0.md) - v2.0 original plan
+- [V2.0_ANALYSIS.md](V2.0_ANALYSIS.md) - v2.0 technical analysis
+- [Walkthrough (v1.6.1)](../../../.gemini/antigravity/brain/3db5a56b-d2c3-4ca0-b7b8-7cb6e0243381/walkthrough.md) - Deployment fix walkthrough
+
+---
+
+**Maintainer**: @maujrp99  
+**License**: MIT (assumed)  
+**Repository**: [MJRP_AlbumsBalancedPlaylists_v0](https://github.com/maujrp99/MJRP_AlbumsBalancedPlaylists_v0)
+
+*Last updated: 2025-11-26 - Post v1.6.1 deployment fix*
+ 
