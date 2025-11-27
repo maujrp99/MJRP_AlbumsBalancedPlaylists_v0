@@ -14,6 +14,11 @@ export class PlaylistsStore {
         this.isDirty = false // Unsaved changes
         this.isSynchronized = true
         this.listeners = new Set()
+
+        // Version history for undo/redo
+        this.versions = []
+        this.currentVersionIndex = -1
+        this.maxVersions = 20
     }
 
     /**
@@ -32,6 +37,7 @@ export class PlaylistsStore {
         this.playlists = playlists
         this.isDirty = false
         this.isSynchronized = false
+        this.createSnapshot('Initial generation')
         this.notify()
     }
 
@@ -68,6 +74,7 @@ export class PlaylistsStore {
 
         this.isDirty = true
         this.isSynchronized = false
+        this.createSnapshot(`Moved track from ${fromPlaylist.name} to ${toPlaylist.name}`)
         this.notify()
     }
 
@@ -84,6 +91,7 @@ export class PlaylistsStore {
 
         this.isDirty = true
         this.isSynchronized = false
+        this.createSnapshot(`Reordered track in ${playlist.name}`)
         this.notify()
     }
 
@@ -138,8 +146,81 @@ export class PlaylistsStore {
             playlists: this.playlists,
             config: this.config,
             isDirty: this.isDirty,
-            isSynchronized: this.isSynchronized
+            isSynchronized: this.isSynchronized,
+            canUndo: this.currentVersionIndex > 0,
+            canRedo: this.currentVersionIndex < this.versions.length - 1
         }
+    }
+
+    /**
+     * Create version snapshot for undo/redo
+     * @param {string} description - Change description
+     * @private
+     */
+    createSnapshot(description) {
+        // Remove any versions after current (if we undid then made changes)
+        if (this.currentVersionIndex < this.versions.length - 1) {
+            this.versions = this.versions.slice(0, this.currentVersionIndex + 1)
+        }
+
+        // Add new snapshot
+        this.versions.push({
+            playlists: JSON.parse(JSON.stringify(this.playlists)),
+            timestamp: new Date().toISOString(),
+            description
+        })
+
+        // Limit history size
+        if (this.versions.length > this.maxVersions) {
+            this.versions.shift()
+        } else {
+            this.currentVersionIndex++
+        }
+    }
+
+    /**
+     * Undo to previous version
+     * @returns {boolean} True if undo was successful
+     */
+    undo() {
+        if (this.currentVersionIndex > 0) {
+            this.currentVersionIndex--
+            this.playlists = JSON.parse(JSON.stringify(
+                this.versions[this.currentVersionIndex].playlists
+            ))
+            this.isDirty = true
+            this.notify()
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Redo to next version
+     * @returns {boolean} True if redo was successful
+     */
+    redo() {
+        if (this.currentVersionIndex < this.versions.length - 1) {
+            this.currentVersionIndex++
+            this.playlists = JSON.parse(JSON.stringify(
+                this.versions[this.currentVersionIndex].playlists
+            ))
+            this.isDirty = true
+            this.notify()
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Get version history
+     * @returns {Array} Version history with current indicator
+     */
+    getVersionHistory() {
+        return this.versions.map((v, index) => ({
+            ...v,
+            isCurrent: index === this.currentVersionIndex
+        }))
     }
 
     /**
@@ -154,6 +235,8 @@ export class PlaylistsStore {
         }
         this.isDirty = false
         this.isSynchronized = true
+        this.versions = []
+        this.currentVersionIndex = -1
         this.notify()
     }
 }

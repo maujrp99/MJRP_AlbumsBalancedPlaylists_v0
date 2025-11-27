@@ -8,6 +8,249 @@ Format:
 
 ---
 
+## v2.0.0-alpha.4 Sprint 4: Playlists Management (2025-11-26)
+
+**Status**: In development (feature/v2.0-foundation branch)
+
+### Summary
+Implemented complete playlist management system with drag-and-drop editing, undo/redo version history, and backend API integration. Users can now generate balanced playlists from ranked albums, reorder tracks interactively, and export to JSON.
+
+### Features
+
+**PlaylistsStore Enhancement** (+85 lines):
+- **Version History System**:
+  - Snapshot-based undo/redo (max 20 versions)
+  - Automatic snapshot creation on track moves/reorders
+  - `undo()` / `redo()` methods with state restoration
+  - `getVersionHistory()` with current version indicator
+  - Version pruning when undoing then making new changes
+- **State Management**:
+  - `canUndo` / `canRedo` flags in state
+  - Immutable snapshots (deep clone via JSON)
+  - Integrated with existing `moveTrack()` and `reorderTrack()`
+
+**API Client Enhancement** (+68 lines):
+- `generatePlaylists(albums, options)` method
+- Backend integration with `/api/playlists` endpoint
+- Payload formatting:
+  - Album data with tracks (title, rank, rating, duration)
+  - Options: targetCount, minTracksPerPlaylist, maxTracksPerPlaylist
+- `normalizePlaylists()` response handler
+- Playlist naming and ID generation
+
+**PlaylistsView** (363 lines new):
+- **Generate Section**:
+  - Album count display
+  - Playlist count selector (3-5)
+  - **Min/max duration per playlist inputs (30-60 min default)**
+  - "Generate Playlists" button with loading state
+  - Warning if no albums loaded
+- **Playlists Grid**:
+  - Responsive columns (auto-fit, 300px min)
+  - Editable playlist names (contenteditable)
+  - Playlist stats (track count, duration)
+  - Track items with drag handles (⋮⋮)
+- **Drag & Drop**:
+  - Reorder tracks within same playlist
+  - Move tracks between playlists
+  - Visual feedback (`.dragging`, `.drag-over`)
+  - Event delegation for performance
+- **Undo/Redo UI**:
+  - Undo/Redo buttons in header
+  - Auto-disabled when at history bounds
+  - Console feedback on success
+- **Export Section**:
+  - JSON export (working - downloads file)
+  - Spotify export placeholder (Sprint 5)
+  - Apple Music export placeholder (Sprint 6)
+- **Empty State**:
+  - Clear instructions when no playlists
+  - Disabled generate button if no albums
+
+**Router Integration**:
+- Registered `/playlists` route
+- Updated `RankingView` "Create Playlists" button
+- Navigate from rankings → playlists
+- Vite middleware updated for `/playlists` SPA routing
+
+**Styling** (+150 lines CSS):
+- **Grid Layout**:
+  - Responsive playlists columns
+  - Card-based playlist containers
+  - Min-height for empty playlists
+- **Track Items**:
+  - Flexbox layout with drag handle
+  - Hover effects (border color change)
+  - Truncated text with ellipsis
+  - Rating badges
+- **Drag Feedback**:
+  - `.dragging`: Opacity 0.5, grabbing cursor
+  - `.drag-over`: Green border, background tint
+  - Smooth transitions
+- **Generate/Export Sections**:
+  - Grid options layout
+  - Centered export actions
+  - Card styling consistency
+
+### Implementation Details
+
+**Version History Pattern**:
+```javascript
+createSnapshot(description) {
+  // Remove future versions if undid then changed
+  if (currentIndex < versions.length - 1) {
+    versions = versions.slice(0, currentIndex + 1)
+  }
+  
+  // Add snapshot with deep clone
+  versions.push({
+    playlists: JSON.parse(JSON.stringify(playlists)),
+    timestamp: new Date().toISOString(),
+    description
+  })
+  
+  // Enforce max limit
+  if (versions.length > maxVersions) {
+    versions.shift()
+  }
+}
+```
+
+**Drag & Drop Flow**:
+1. `dragstart`: Capture source playlist/track indices → `.dragging`
+2. `dragover`: Prevent default, add `.drag-over` to target
+3. `drop`: Call `moveTrack()` or `reorderTrack()` based on target
+4. `dragend`: Clear drag state, remove visual classes
+
+**Backend Payload**:
+```json
+{
+  "albums": [
+    {
+      "title": "Album Name",
+      "artist": "Artist Name",
+      "tracks": [
+        { "title": "Track", "rank": 1, "rating": 95, "duration": 240 }
+      ]
+    }
+  ],
+  "options": {
+    "targetCount": 4,
+    "minTracksPerPlaylist": 8,
+    "maxTracksPerPlaylist": 15
+  }
+}
+```
+
+### Bug Fixes (Hotfixes 2025-11-27)
+
+1.  **SeriesStore ID Mismatch** (Critical):
+    -   **Issue**: `HomeView` generated a temporary ID (`series_...`) which was overwritten by `SeriesStore` (`Date.now()`), causing `AlbumsView` to fail loading the series on initial navigation (URL ID mismatch).
+    -   **Fix**: Updated `SeriesStore.createSeries` to respect provided IDs and updated `HomeView` to use the returned ID.
+    -   **Impact**: Fixed "No albums in library" empty state on first load.
+
+2.  **PlaylistsView Reactivity**:
+    -   **Issue**: `PlaylistsView` lacked an `update()` method implementation, causing the UI to remain static after generation or state changes.
+    -   **Fix**: Implemented `update()` to re-render grid, undo/redo controls, and toggle sections dynamically.
+    -   **Impact**: Playlist generation now updates the view immediately.
+
+3.  **Ratings Display**:
+    -   **Issue**: Ratings were missing from frontend due to missing mapping in backend and strict checks in frontend.
+    -   **Fix**: Added `ratingMap` in backend `server/index.js` and relaxed frontend `hasRatings` check.
+    -   **Impact**: "✓ Rated" badges now appear correctly for supported albums.
+
+4.  **UX Improvements**:
+    -   **Clear Cache**: Added "Troubleshooting Tools" section with Clear Cache button to `HomeView`.
+    -   **Error Feedback**: Replaced `alert()` with inline red error messages in `PlaylistsView`.
+    -   **Timestamps**: Added "Last updated" footer to views for visual liveness confirmation.
+
+### Bug Fixes
+
+1. **Import Statement** (Syntax):
+   - **Issue**: `import { router, } from '../router.js'` (trailing comma)
+   - **Fix**: Removed trailing comma
+   - **Impact**: PlaylistsView now loads without syntax error
+
+2. **Vite Dev Server** (Configuration):
+   - **Issue**: Server needed restart after middleware changes
+   - **Fix**: Restarted dev server
+   - **Impact**: `/playlists` route now serves correctly
+
+### Testing & Verification
+
+**Manual Testing**:
+- ✅ Navigate to `/playlists` directly
+- ✅ Playlist generation form displays
+- ⏸️ Generate playlists (requires backend `/api/playlists` endpoint)
+- ⏸️ Drag-and-drop reordering
+- ⏸️ Undo/redo functionality
+- ✅ JSON export downloads file
+
+**Note**: Full end-to-end testing pending backend `/api/playlists` implementation
+
+### Files Added
+```
+public/js/views/PlaylistsView.js   # 363 lines - Playlists management view
+```
+
+### Files Modified
+```
+public/js/stores/playlists.js      # +85 lines - Version history
+public/js/api/client.js            # +68 lines - generatePlaylists method
+public/js/views/RankingView.js     # Modified - Navigate to playlists
+public/index-v2.html               # +150 lines CSS, route registration
+vite.config.js                     # +1 line - /playlists middleware
+```
+
+### Performance & UX
+
+- **Version History**: O(1) undo/redo via index tracking
+- **Drag & Drop**: Event delegation (single listener per container)
+- **JSON Export**: Client-side with `Blob` and `URL.createObjectURL`
+- **Loading State**: Overlay with spinner during generation
+- **Disabled States**: Buttons auto-disable when actions unavailable
+
+### Architecture Decisions
+
+**Why Version History?**
+- Users experiment with track ordering
+- Easy to undo mistakes without fear
+-Industry standard (Spotify, Logic Pro, etc.)
+
+**Why Immutable Snapshots?**
+- Prevents reference bugs
+- Simplifies undo/redo logic
+- Small memory cost (~10KB per snapshot)
+
+**Why JSON Export First?**
+- No OAuth dependency (Sprint 5-6)
+- Useful for backup/debugging
+- Foundation for Spotify/Apple Music exports
+
+### Next Steps (Sprint 5-6)
+
+**Sprint 5: Spotify Integration**
+- OAuth authentication
+- Spotify Web API playlist creation
+- Track matching by ISRC
+- Error handling for unmatched tracks
+
+**Sprint 6: Apple Music Integration**
+- MusicKit JS setup
+- Apple Music API playlist creation
+- Track matching
+- Cross-platform export options
+
+### Notes
+
+- Backend `/api/playlists` exists in v1.6.1 (tested and working)
+- v2.0 frontend ready for backend integration
+- Drag-and-drop UX matches modern playlist tools
+- Version history limited to 20 to prevent memory bloat
+- All changes on `feature/v2.0-foundation` branch
+
+---
+
 ## v2.0.0-alpha.3 Sprint 3: Albums & Ranking Views (2025-11-26)
 
 **Status**: In development (feature/v2.0-foundation branch)

@@ -44,7 +44,8 @@ export default defineConfig({
                     if (req.url && (
                         req.url.startsWith('/home') ||
                         req.url.startsWith('/albums') ||
-                        req.url.startsWith('/ranking')
+                        req.url.startsWith('/ranking') ||
+                        req.url.startsWith('/playlists')
                     )) {
                         req.url = '/index-v2.html'
                     }

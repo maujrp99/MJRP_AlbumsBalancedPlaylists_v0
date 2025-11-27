@@ -3,6 +3,7 @@ import { albumsStore } from '../stores/albums.js'
 import { seriesStore } from '../stores/series.js'
 import { apiClient } from '../api/client.js'
 import { router } from '../router.js'
+import { Breadcrumb } from '../components/Breadcrumb.js'
 
 /**
  * AlbumsView
@@ -10,20 +11,22 @@ import { router } from '../router.js'
  */
 
 export class AlbumsView extends BaseView {
-    constructor() {
-        super()
-        this.isLoading = false
-        this.searchQuery = ''
-        this.loadProgress = { current: 0, total: 0 }
-    }
+  constructor() {
+    super()
+    this.isLoading = false
+    this.searchQuery = ''
+    this.loadProgress = { current: 0, total: 0 }
+  }
 
-    async render(params) {
-        const albums = albumsStore.getAlbums()
-        const activeSeries = seriesStore.getActiveSeries()
+  async render(params) {
+    const albums = albumsStore.getAlbums()
+    const activeSeries = seriesStore.getActiveSeries()
 
-        return `
+    return `
       <div class="albums-view">
         <header class="view-header">
+          ${Breadcrumb.render('/albums')}
+          
           <div class="header-content">
             <h1>📚 Albums Library</h1>
             ${activeSeries ? `
@@ -42,9 +45,6 @@ export class AlbumsView extends BaseView {
               class="search-input"
               value="${this.searchQuery}"
             />
-            <button class="btn btn-secondary" id="backToHomeBtn">
-              ← Back to Home
-            </button>
           </div>
         </header>
 
@@ -55,18 +55,22 @@ export class AlbumsView extends BaseView {
         </div>
 
         ${albums.length === 0 && !this.isLoading ? this.renderEmptyState() : ''}
+        
+        <footer class="view-footer">
+          <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
+        </footer>
       </div>
     `
+  }
+
+  renderAlbumsGrid(albums) {
+    const filtered = this.filterAlbums(albums)
+
+    if (filtered.length === 0 && this.searchQuery) {
+      return '<p class="no-results">No albums match your search.</p>'
     }
 
-    renderAlbumsGrid(albums) {
-        const filtered = this.filterAlbums(albums)
-
-        if (filtered.length === 0 && this.searchQuery) {
-            return '<p class="no-results">No albums match your search.</p>'
-        }
-
-        return filtered.map(album => `
+    return filtered.map(album => `
       <div class="album-card" data-album-id="${album.id || ''}">
         <div class="album-cover">
           <div class="cover-placeholder">🎵</div>
@@ -81,12 +85,18 @@ export class AlbumsView extends BaseView {
             <span class="badge">
               ${album.tracks?.length || 0} tracks
             </span>
-            ${album.acclaim?.hasRatings ?
-                '<span class="badge badge-success">✓ Rated</span>' :
-                '<span class="badge badge-warning">⚠ No ratings</span>'
-            }
+            ${(() => {
+        console.log(`[AlbumsView] Rendering album: ${album.title}`, {
+          hasRatings: album.acclaim?.hasRatings,
+          tracksWithRating: album.tracks?.filter(t => t.rating).length
+        })
+        const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
+        return hasRatings ?
+          '<span class="badge badge-success">✓ Rated</span>' :
+          '<span class="badge badge-warning">⚠ No ratings</span>'
+      })()}
             ${album._cached ?
-                '<span class="badge badge-info">💾 Cached</span>' : ''}
+        '<span class="badge badge-info">💾 Cached</span>' : ''}
           </div>
         </div>
         
@@ -100,23 +110,23 @@ export class AlbumsView extends BaseView {
         </div>
       </div>
     `).join('')
-    }
+  }
 
-    filterAlbums(albums) {
-        if (!this.searchQuery) return albums
+  filterAlbums(albums) {
+    if (!this.searchQuery) return albums
 
-        const query = this.searchQuery.toLowerCase()
-        return albums.filter(album =>
-            album.title?.toLowerCase().includes(query) ||
-            album.artist?.toLowerCase().includes(query)
-        )
-    }
+    const query = this.searchQuery.toLowerCase()
+    return albums.filter(album =>
+      album.title?.toLowerCase().includes(query) ||
+      album.artist?.toLowerCase().includes(query)
+    )
+  }
 
-    renderLoadingProgress() {
-        const { current, total } = this.loadProgress
-        const percentage = total > 0 ? Math.round((current / total) * 100) : 0
+  renderLoadingProgress() {
+    const { current, total } = this.loadProgress
+    const percentage = total > 0 ? Math.round((current / total) * 100) : 0
 
-        return `
+    return `
       <div class="loading-overlay">
         <div class="loading-content">
           <div class="loading-spinner"></div>
@@ -128,10 +138,10 @@ export class AlbumsView extends BaseView {
         </div>
       </div>
     `
-    }
+  }
 
-    renderEmptyState() {
-        return `
+  renderEmptyState() {
+    return `
       <div class="empty-state">
         <p class="empty-icon">📝</p>
         <p class="empty-text">No albums in library</p>
@@ -141,125 +151,137 @@ export class AlbumsView extends BaseView {
         </button>
       </div>
     `
+  }
+
+  async mount(params) {
+    this.container = document.getElementById('app')
+
+    // Attach breadcrumb listeners
+    Breadcrumb.attachListeners(this.container)
+
+    // Subscribe to albums store
+    const unsubscribe = albumsStore.subscribe((state) => {
+      if (!this.isLoading) {
+        this.updateAlbumsGrid(state.albums)
+      }
+    })
+    this.subscriptions.push(unsubscribe)
+
+    // Setup search
+    const searchInput = this.$('#albumSearch')
+    if (searchInput) {
+      this.on(searchInput, 'input', (e) => {
+        this.searchQuery = e.target.value
+        this.updateAlbumsGrid(albumsStore.getAlbums())
+      })
     }
 
-    async mount(params) {
-        this.container = document.getElementById('app')
-
-        // Subscribe to albums store
-        const unsubscribe = albumsStore.subscribe((state) => {
-            if (!this.isLoading) {
-                this.updateAlbumsGrid(state.albums)
-            }
-        })
-        this.subscriptions.push(unsubscribe)
-
-        // Setup search
-        const searchInput = this.$('#albumSearch')
-        if (searchInput) {
-            this.on(searchInput, 'input', (e) => {
-                this.searchQuery = e.target.value
-                this.updateAlbumsGrid(albumsStore.getAlbums())
-            })
-        }
-
-        // Back to home button
-        const backBtn = this.$('#backToHomeBtn')
-        if (backBtn) {
-            this.on(backBtn, 'click', () => router.navigate('/home'))
-        }
-
-        const goHomeBtn = this.$('#goHomeBtn')
-        if (goHomeBtn) {
-            this.on(goHomeBtn, 'click', () => router.navigate('/home'))
-        }
-
-        // View ranking buttons (event delegation)
-        this.on(this.container, 'click', (e) => {
-            if (e.target.dataset.action === 'view-ranking') {
-                const albumId = e.target.dataset.albumId
-                router.navigate(`/ranking/${albumId}`)
-            }
-        })
-
-        // Load albums if we have an active series
-        const activeSeries = seriesStore.getActiveSeries()
-        if (activeSeries && activeSeries.albumQueries && activeSeries.albumQueries.length > 0) {
-            await this.loadAlbumsFromQueries(activeSeries.albumQueries)
-        }
+    const goHomeBtn = this.$('#goHomeBtn')
+    if (goHomeBtn) {
+      this.on(goHomeBtn, 'click', () => router.navigate('/home'))
     }
 
-    async loadAlbumsFromQueries(queries) {
-        this.isLoading = true
-        this.loadProgress = { current: 0, total: queries.length }
+    // View ranking buttons (event delegation)
+    this.on(this.container, 'click', (e) => {
+      if (e.target.dataset.action === 'view-ranking') {
+        const albumId = e.target.dataset.albumId
+        router.navigate(`/ranking/${albumId}`)
+      }
+    })
 
-        // Initial render with progress
-        const grid = this.$('#albumsGrid')
-        if (grid) {
-            grid.parentElement.insertBefore(
-                this.createElementFromHTML(this.renderLoadingProgress()),
-                grid
-            )
+    // Priority: URL param > Store state
+    const urlParams = new URLSearchParams(window.location.search)
+    const urlSeriesId = urlParams.get('seriesId') || (params && params.seriesId)
+
+    if (urlSeriesId) {
+      console.log('[AlbumsView] Restoring series from URL:', urlSeriesId)
+      seriesStore.setActiveSeries(urlSeriesId)
+    }
+
+    const activeSeries = seriesStore.getActiveSeries()
+
+    if (activeSeries && activeSeries.albumQueries && activeSeries.albumQueries.length > 0) {
+      console.log('[AlbumsView] Loading albums for series:', activeSeries.name)
+      await this.loadAlbumsFromQueries(activeSeries.albumQueries)
+    } else {
+      console.warn('[AlbumsView] No active series or albums found to load')
+    }
+  }
+
+  async loadAlbumsFromQueries(queries) {
+    // Reset store to clear previous series' albums
+    albumsStore.reset()
+
+    this.isLoading = true
+    this.loadProgress = { current: 0, total: queries.length }
+
+    // Initial render with progress
+    const grid = this.$('#albumsGrid')
+    if (grid) {
+      grid.parentElement.insertBefore(
+        this.createElementFromHTML(this.renderLoadingProgress()),
+        grid
+      )
+    }
+
+    try {
+      const { results, errors } = await apiClient.fetchMultipleAlbums(
+        queries,
+        (current, total, result) => {
+          this.loadProgress = { current, total }
+          this.updateLoadingProgress()
+
+          // Add successful albums incrementally
+          if (result.status === 'success' && result.album) {
+            albumsStore.addAlbum(result.album)
+          }
         }
+      )
 
-        try {
-            const { results, errors } = await apiClient.fetchMultipleAlbums(
-                queries,
-                (current, total, result) => {
-                    this.loadProgress = { current, total }
-                    this.updateLoadingProgress()
+      if (errors.length > 0) {
+        console.warn(`${errors.length} albums failed to load:`, errors)
+      }
+    } catch (error) {
+      console.error('Failed to load albums:', error)
+      alert('⚠️ Error loading albums. Please try again.')
+    } finally {
+      this.isLoading = false
 
-                    // Add successful albums incrementally
-                    if (result.status === 'success' && result.album) {
-                        albumsStore.addAlbum(result.album)
-                    }
-                }
-            )
+      // Remove loading overlay
+      const overlay = this.$('.loading-overlay')
+      if (overlay) {
+        overlay.remove()
+      }
 
-            if (errors.length > 0) {
-                console.warn(`${errors.length} albums failed to load:`, errors)
-            }
-        } catch (error) {
-            console.error('Failed to load albums:', error)
-            alert('⚠️ Error loading albums. Please try again.')
-        } finally {
-            this.isLoading = false
-
-            // Remove loading overlay
-            const overlay = this.$('.loading-overlay')
-            if (overlay) {
-                overlay.remove()
-            }
-
-            // Final update
-            this.updateAlbumsGrid(albumsStore.getAlbums())
-        }
+      // Final update
+      this.updateAlbumsGrid(albumsStore.getAlbums())
     }
+  }
 
-    updateLoadingProgress() {
-        const overlay = this.$('.loading-overlay')
-        if (overlay) {
-            overlay.outerHTML = this.renderLoadingProgress()
-        }
+  updateLoadingProgress() {
+    const overlay = this.$('.loading-overlay')
+    if (overlay) {
+      overlay.outerHTML = this.renderLoadingProgress()
     }
+  }
 
-    updateAlbumsGrid(albums) {
-        const grid = this.$('#albumsGrid')
-        if (grid) {
-            grid.innerHTML = this.renderAlbumsGrid(albums)
-        }
+  updateAlbumsGrid(albums) {
+    const grid = this.$('#albumsGrid')
+    if (grid) {
+      grid.innerHTML = this.renderAlbumsGrid(albums)
     }
+  }
 
-    createElementFromHTML(html) {
-        const template = document.createElement('template')
-        template.innerHTML = html.trim()
-        return template.content.firstChild
-    }
+  createElementFromHTML(html) {
+    const template = document.createElement('template')
+    template.innerHTML = html.trim()
+    return template.content.firstChild
+  }
 
-    escapeHtml(text) {
-        if (!text) return ''
-        const div = document.createElement('div')
-        div.textContent = text
-        return div.innerHTML
-    }
+  escapeHtml(text) {
+    if (!text) return ''
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
+  }
 }

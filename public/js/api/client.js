@@ -111,6 +111,76 @@ export class APIClient {
     }
 
     /**
+     * Generate balanced playlists from albums
+     * @param {Array<Object>} albums - Albums with ranked tracks
+     * @param {Object} options - Generation options
+     * @returns {Promise<Array>} Generated playlists
+     */
+    async generatePlaylists(albums, options = {}) {
+        try {
+            const response = await fetch(`${this.baseUrl}/playlists`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    albums: albums.map(album => ({
+                        id: album.id,
+                        title: album.title,
+                        artist: album.artist,
+                        tracks: album.tracks.map(t => ({
+                            id: t.id,
+                            title: t.title,
+                            rank: t.rank,
+                            rating: t.rating,
+                            duration: t.duration
+                        }))
+                    })),
+                    options: {
+                        targetCount: options.targetCount || 4,
+                        minDuration: options.minDuration || 30,
+                        maxDuration: options.maxDuration || 60
+                    }
+                })
+            })
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+            }
+
+            const data = await response.json()
+
+            // Normalize playlist response
+            return this.normalizePlaylists(data.playlists || data)
+        } catch (error) {
+            console.error('Playlist generation failed:', error)
+            throw error
+        }
+    }
+
+    /**
+     * Normalize playlists data from API
+     * @param {Array} playlists - Raw playlist data
+     * @returns {Array} Normalized playlists
+     * @private
+     */
+    normalizePlaylists(playlists) {
+        return playlists.map((playlist, index) => ({
+            id: `playlist-${index + 1}`,
+            name: playlist.name || `Playlist ${index + 1}`,
+            tracks: (playlist.tracks || []).map(track => ({
+                title: track.title || track.name || '',
+                artist: track.artist || '',
+                album: track.album || '',
+                rating: track.rating || null,
+                rank: track.rank || track.acclaimRank || track.finalPosition || '-',
+                duration: track.duration || track.durationSeconds || 0,
+                metadata: track.metadata || {}
+            }))
+        }))
+    }
+
+    /**
      * Extract artist from query string
      * @param {string} query - Album query
      * @returns {string} Artist name
@@ -164,11 +234,32 @@ export class APIClient {
                     spotifyId: null
                 }
             })),
-            acclaim: {
-                hasRatings: data.rankingConsolidatedMeta?.hasRatings || false,
-                source: data.rankingConsolidatedMeta?.source || 'unknown',
-                trackCount: data.rankingConsolidatedMeta?.tracksCount || 0
-            },
+            acclaim: (() => {
+                const tracks = data.tracksByAcclaim || data.rankingConsolidated || data.tracks || []
+                console.log('[APIClient] normalizeAlbum - data sources:', {
+                    hasTracksByAcclaim: !!data.tracksByAcclaim,
+                    hasRankingConsolidated: !!data.rankingConsolidated,
+                    hasTracks: !!data.tracks,
+                    tracksCount: tracks.length,
+                    sampleTrack: tracks[0]
+                })
+
+                // Check if we have ANY rating or rank data
+                const hasRatings = tracks.some(t =>
+                    (t.rating !== null && t.rating !== undefined) ||
+                    (t.rank !== null && t.rank !== undefined) ||
+                    (t.acclaimRank !== null && t.acclaimRank !== undefined) ||
+                    (t.finalPosition !== null && t.finalPosition !== undefined)
+                )
+
+                console.log('[APIClient] hasRatings calculated:', hasRatings)
+
+                return {
+                    hasRatings,
+                    source: data.rankingConsolidatedMeta?.source || 'hybrid-curation',
+                    trackCount: tracks.length
+                }
+            })(),
             metadata: {
                 fetchedAt: new Date().toISOString(),
                 ...data.metadata

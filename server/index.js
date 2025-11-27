@@ -240,15 +240,23 @@ app.post('/api/generate', async (req, res) => {
 
           if (Array.isArray(albumPayload.rankingConsolidated) && Array.isArray(albumPayload.tracks)) {
             const rankMap = new Map()
+            const ratingMap = new Map()
             albumPayload.rankingConsolidated.forEach(r => {
-              if (r && r.trackTitle && (r.finalPosition !== undefined && r.finalPosition !== null)) {
-                rankMap.set(normalizeKey(r.trackTitle), Number(r.finalPosition))
+              if (r && r.trackTitle) {
+                const key = normalizeKey(r.trackTitle)
+                if (r.finalPosition !== undefined && r.finalPosition !== null) {
+                  rankMap.set(key, Number(r.finalPosition))
+                }
+                if (r.rating !== undefined && r.rating !== null) {
+                  ratingMap.set(key, Number(r.rating))
+                }
               }
             })
 
             albumPayload.tracks.forEach(t => {
               const key = normalizeKey((t && (t.title || t.trackTitle || t.name)) || '')
-              if (key && rankMap.has(key)) t.rank = rankMap.get(key)
+              if (rankMap.has(key)) t.rank = rankMap.get(key)
+              if (ratingMap.has(key)) t.rating = ratingMap.get(key)
             })
           }
         } catch (e) {
@@ -284,6 +292,66 @@ app.post('/api/generate', async (req, res) => {
     const status = err.response?.status || 500
     const data = err.response?.data || { error: 'AI provider error' }
     return res.status(status).json(data)
+  }
+})
+
+// Playlist generation endpoint
+app.post('/api/playlists', async (req, res) => {
+  try {
+    const { albums, options = {} } = req.body
+
+    if (!Array.isArray(albums) || albums.length === 0) {
+      return res.status(400).json({ error: 'albums array required' })
+    }
+
+    // Import curation logic (ES module)
+    const { curateAlbums } = await import('../public/js/curation.js')
+
+    // Convert duration from minutes to seconds
+    const targetSeconds = (() => {
+      if (options.minDuration && options.maxDuration) {
+        // Use average of min/max
+        const avgMinutes = (Number(options.minDuration) + Number(options.maxDuration)) / 2
+        return avgMinutes * 60
+      }
+      if (options.targetDuration) {
+        return Number(options.targetDuration) * 60
+      }
+      // Default: 45 minutes
+      return 45 * 60
+    })()
+
+    // Run curation
+    const result = curateAlbums(albums, { targetSeconds })
+
+    // Format response
+    const response = {
+      playlists: (result.playlists || []).map(p => ({
+        id: p.id,
+        name: p.title || p.id,
+        subtitle: p.subtitle,
+        tracks: (p.tracks || []).map(t => ({
+          id: t.id,
+          title: t.title,
+          artist: t.artist,
+          album: t.album,
+          rating: t.rating,
+          rank: t.rank,
+          duration: t.duration,
+          originAlbumId: t.originAlbumId
+        }))
+      })),
+      summary: result.rankingSummary,
+      sources: result.rankingSources
+    }
+
+    return res.json(response)
+  } catch (err) {
+    console.error('Playlist generation error:', err)
+    return res.status(500).json({
+      error: 'Playlist generation failed',
+      message: err.message
+    })
   }
 })
 

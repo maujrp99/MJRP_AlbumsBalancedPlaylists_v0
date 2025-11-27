@@ -1,6 +1,7 @@
 import { BaseView } from './BaseView.js'
 import { albumsStore } from '../stores/albums.js'
 import { router } from '../router.js'
+import { Breadcrumb } from '../components/Breadcrumb.js'
 
 /**
  * RankingView
@@ -8,25 +9,23 @@ import { router } from '../router.js'
  */
 
 export class RankingView extends BaseView {
-    constructor() {
-        super()
-        this.activeTab = 'summary'
+  constructor() {
+    super()
+    this.activeTab = 'summary'
+  }
+
+  async render(params) {
+    const { albumId } = params
+    const album = this.findAlbum(albumId)
+
+    if (!album) {
+      return this.renderNotFound()
     }
 
-    async render(params) {
-        const { albumId } = params
-        const album = this.findAlbum(albumId)
-
-        if (!album) {
-            return this.renderNotFound()
-        }
-
-        return `
+    return `
       <div class="ranking-view">
         <header class="album-header">
-          <button class="btn btn-secondary btn-sm" id="backBtn">
-            ← Back to Albums
-          </button>
+          ${Breadcrumb.render(`/ranking/${albumId}`, params)}
           
           <div class="album-header-info">
             <h1>${this.escapeHtml(album.title)}</h1>
@@ -66,15 +65,15 @@ export class RankingView extends BaseView {
         </div>
       </div>
     `
-    }
+  }
 
-    renderSummary(album) {
-        const hasRatings = album.acclaim?.hasRatings
-        const trackCount = album.tracks?.length || 0
-        const ratedTracks = album.tracks?.filter(t => t.rating && t.rating > 0).length || 0
-        const avgRating = this.calculateAverageRating(album.tracks)
+  renderSummary(album) {
+    const hasRatings = album.acclaim?.hasRatings
+    const trackCount = album.tracks?.length || 0
+    const ratedTracks = album.tracks?.filter(t => t.rating && t.rating > 0).length || 0
+    const avgRating = this.calculateAverageRating(album.tracks)
 
-        return `
+    return `
       <div class="summary-grid">
         <div class="summary-card">
           <h3>Track Count</h3>
@@ -113,16 +112,16 @@ export class RankingView extends BaseView {
         </div>
       `}
     `
+  }
+
+  renderTrackRankings(album) {
+    const tracks = album.tracks || []
+
+    if (tracks.length === 0) {
+      return '<p class="empty-text">No tracks available</p>'
     }
 
-    renderTrackRankings(album) {
-        const tracks = album.tracks || []
-
-        if (tracks.length === 0) {
-            return '<p class="empty-text">No tracks available</p>'
-        }
-
-        return `
+    return `
       <div class="ranking-table-container">
         <table class="ranking-table">
           <thead>
@@ -145,9 +144,9 @@ export class RankingView extends BaseView {
                 </td>
                 <td class="rating-cell">
                   ${track.rating ?
-                `<span class="rating-badge rating-${this.getRatingClass(track.rating)}">${track.rating}</span>` :
-                '<span class="rating-badge rating-none">-</span>'
-            }
+        `<span class="rating-badge rating-${this.getRatingClass(track.rating)}">${track.rating}</span>` :
+        '<span class="rating-badge rating-none">-</span>'
+      }
                 </td>
                 <td class="score-cell">
                   ${track.normalizedScore ? track.normalizedScore.toFixed(2) : '-'}
@@ -161,12 +160,12 @@ export class RankingView extends BaseView {
         </table>
       </div>
     `
-    }
+  }
 
-    renderSources(album) {
-        const source = album.acclaim?.source || 'Unknown'
+  renderSources(album) {
+    const source = album.acclaim?.source || 'Unknown'
 
-        return `
+    return `
       <div class="sources-info">
         <h3>Acclaim Data Source</h3>
         <p class="source-description">Primary source: <strong>${source}</strong></p>
@@ -208,10 +207,10 @@ export class RankingView extends BaseView {
         ` : ''}
       </div>
     `
-    }
+  }
 
-    renderNotFound() {
-        return `
+  renderNotFound() {
+    return `
       <div class="not-found">
         <h2>❌ Album Not Found</h2>
         <p>The requested album doesn't exist in your library.</p>
@@ -220,95 +219,89 @@ export class RankingView extends BaseView {
         </button>
       </div>
     `
+  }
+
+  async mount(params) {
+    this.container = document.getElementById('app')
+
+    // Attach breadcrumb listeners
+    Breadcrumb.attachListeners(this.container)
+
+    // Create playlists button
+    const createBtn = this.$('#createPlaylistsBtn')
+    if (createBtn) {
+      this.on(createBtn, 'click', () => router.navigate('/playlists'))
     }
 
-    async mount(params) {
-        this.container = document.getElementById('app')
+    // Tab switching
+    const tabBtns = this.$$('.tab-btn')
+    tabBtns.forEach(btn => {
+      this.on(btn, 'click', (e) => {
+        this.switchTab(e.target.dataset.tab)
+      })
+    })
 
-        // Back button
-        const backBtn = this.$('#backBtn')
-        if (backBtn) {
-            this.on(backBtn, 'click', () => router.navigate('/albums'))
-        }
-
-        // Create playlists button
-        const createBtn = this.$('#createPlaylistsBtn')
-        if (createBtn) {
-            this.on(createBtn, 'click', () => {
-                // TODO: Implement in Sprint 4
-                alert('🎵 Playlists view coming in Sprint 4!')
-            })
-        }
-
-        // Tab switching
-        const tabBtns = this.$$('.tab-btn')
-        tabBtns.forEach(btn => {
-            this.on(btn, 'click', (e) => {
-                this.switchTab(e.target.dataset.tab)
-            })
-        })
-
-        // Go home if not found
-        const goHomeBtn = this.$('#goHomeBtn')
-        if (goHomeBtn) {
-            this.on(goHomeBtn, 'click', () => router.navigate('/home'))
-        }
+    // Go home if not found
+    const goHomeBtn = this.$('#goHomeBtn')
+    if (goHomeBtn) {
+      this.on(goHomeBtn, 'click', () => router.navigate('/home'))
     }
+  }
 
-    switchTab(tabName) {
-        this.activeTab = tabName
+  switchTab(tabName) {
+    this.activeTab = tabName
 
-        // Remove active from all tabs
-        this.$$('.tab-btn').forEach(btn => btn.classList.remove('active'))
-        this.$$('.tab-pane').forEach(pane => pane.classList.remove('active'))
+    // Remove active from all tabs
+    this.$$('.tab-btn').forEach(btn => btn.classList.remove('active'))
+    this.$$('.tab-pane').forEach(pane => pane.classList.remove('active'))
 
-        // Add active to selected tab
-        const tabBtn = this.$(`[data-tab="${tabName}"]`)
-        const tabPane = this.$(`#${tabName}-tab`)
+    // Add active to selected tab
+    const tabBtn = this.$(`[data-tab="${tabName}"]`)
+    const tabPane = this.$(`#${tabName}-tab`)
 
-        if (tabBtn) tabBtn.classList.add('active')
-        if (tabPane) tabPane.classList.add('active')
-    }
+    if (tabBtn) tabBtn.classList.add('active')
+    if (tabPane) tabPane.classList.add('active')
+  }
 
-    findAlbum(albumId) {
-        const albums = albumsStore.getAlbums()
+  findAlbum(albumId) {
+    const albums = albumsStore.getAlbums()
 
-        // Try exact ID match first
-        const byId = albums.find(a => a.id === albumId)
-        if (byId) return byId
+    // Try exact ID match first
+    const byId = albums.find(a => a.id === albumId)
+    if (byId) return byId
 
-        // Fallback to first album if no match (for debugging)
-        return albums[0] || null
-    }
+    // Fallback to first album if no match (for debugging)
+    return albums[0] || null
+  }
 
-    getRatingClass(rating) {
-        if (rating >= 90) return 'excellent'
-        if (rating >= 80) return 'great'
-        if (rating >= 70) return 'good'
-        return 'fair'
-    }
+  getRatingClass(rating) {
+    if (rating >= 90) return 'excellent'
+    if (rating >= 80) return 'great'
+    if (rating >= 70) return 'good'
+    return 'fair'
+  }
 
-    formatDuration(seconds) {
-        if (!seconds) return '-'
-        const mins = Math.floor(seconds / 60)
-        const secs = seconds % 60
-        return `${mins}:${secs.toString().padStart(2, '0')}`
-    }
+  formatDuration(seconds) {
+    if (!seconds) return '-'
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
 
-    calculateAverageRating(tracks) {
-        if (!tracks || tracks.length === 0) return null
+  calculateAverageRating(tracks) {
+    if (!tracks || tracks.length === 0) return null
 
-        const ratedTracks = tracks.filter(t => t.rating && t.rating > 0)
-        if (ratedTracks.length === 0) return null
+    const ratedTracks = tracks.filter(t => t.rating && t.rating > 0)
+    if (ratedTracks.length === 0) return null
 
-        const sum = ratedTracks.reduce((acc, t) => acc + t.rating, 0)
-        return Math.round(sum / ratedTracks.length)
-    }
+    const sum = ratedTracks.reduce((acc, t) => acc + t.rating, 0)
+    return Math.round(sum / ratedTracks.length)
+  }
 
-    escapeHtml(text) {
-        if (!text) return ''
-        const div = document.createElement('div')
-        div.textContent = text
-        return div.innerHTML
-    }
+  escapeHtml(text) {
+    if (!text) return ''
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
+  }
 }

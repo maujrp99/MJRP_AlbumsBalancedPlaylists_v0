@@ -14,49 +14,64 @@ export class HomeView extends BaseView {
     return `
       <div class="home-view">
         <header class="hero">
-          <h1>🎵 MJRP Playlist Generator</h1>
-          <p class="tagline">Curate multi-album playlists with AI-powered acclaim rankings</p>
+          <h1>🎵 MJRP Playlist Generator v2.0</h1>
+          <p class="hero-subtitle">Create balanced playlists from critically acclaimed albums</p>
         </header>
 
-        <section class="series-form card">
+        <section class="create-series">
           <h2>Create New Series</h2>
           
-          <div class="form-group">
-            <label for="seriesName">Series Name</label>
-            <input 
-              type="text" 
-              id="seriesName" 
-              placeholder="e.g., Classic Rock Collection"
-              class="form-control"
-              autocomplete="off"
-            />
-          </div>
+          <form id="seriesForm" class="series-form">
+            <div id="formError" class="alert alert-warning" style="display: none;"></div>
 
-          <div class="form-group">
-            <label for="albumList">Albums (one per line)</label>
-            <textarea 
-              id="albumList" 
-              rows="8" 
-              placeholder="Pink Floyd - The Wall&#10;Led Zeppelin - IV&#10;The Beatles - Abbey Road&#10;Queen - A Night at the Opera"
-              class="form-control mono"
-            ></textarea>
-            <small class="form-hint">Format: Artist - Album Title (or just Album Title)</small>
-          </div>
+            <div class="form-group">
+              <label for="seriesName">Series Name</label>
+              <input 
+                type="text" 
+                id="seriesName" 
+                class="form-control"
+                placeholder="e.g., Classic Rock Collection"
+                autocomplete="off"
+              />
+            </div>
 
-          <div class="form-group">
-            <label for="seriesNotes">Notes (optional)</label>
-            <input 
-              type="text" 
-              id="seriesNotes" 
-              placeholder="e.g., For road trip playlist"
-              class="form-control"
-            />
-          </div>
+            <div class="form-group">
+              <label for="albumList">
+                Albums (one per line)
+                <span class="form-hint">Minimum 2 albums required. Format: Artist - Album</span>
+              </label>
+              <textarea 
+                id="albumList" 
+                class="form-control mono"
+                rows="6" 
+                placeholder="The Rolling Stones - Let It Bleed&#10;Pink Floyd - The Wall&#10;Jimi Hendrix - Electric Ladyland"
+              ></textarea>
+            </div>
 
-          <button id="createSeriesBtn" class="btn btn-primary btn-large">
-            <span class="btn-icon">🚀</span>
-            Generate Rankings
-          </button>
+            <div class="form-group">
+              <label for="seriesNotes">Notes (Optional)</label>
+              <textarea 
+                id="seriesNotes" 
+                class="form-control"
+                placeholder="Add some context about this series..."
+                rows="2"
+              ></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" id="createSeriesBtn" class="btn btn-primary btn-large" style="width: 100%;">
+                <span class="btn-icon">🚀</span>
+                Generate Rankings
+              </button>
+            </div>
+          </form>
+
+          <div style="margin-top: 2rem; text-align: center; border-top: 1px solid #333; padding-top: 1rem;">
+            <p style="color: #808080; font-size: 0.9rem; margin-bottom: 0.5rem;">Troubleshooting Tools</p>
+            <button type="button" class="btn btn-secondary btn-sm" id="clearCacheBtn">
+              🗑️ Clear Cache & Reset
+            </button>
+          </div>
         </section>
 
         <section class="recent-series">
@@ -124,10 +139,25 @@ export class HomeView extends BaseView {
     })
     this.subscriptions.push(unsubscribe)
 
-    // Setup create series button
-    const createBtn = this.$('#createSeriesBtn')
-    if (createBtn) {
-      this.on(createBtn, 'click', () => this.handleCreateSeries())
+    // Clear Cache button
+    const clearCacheBtn = this.$('#clearCacheBtn')
+    if (clearCacheBtn) {
+      this.on(clearCacheBtn, 'click', () => {
+        if (confirm('Clear all cached album data? This will force fresh data from the backend.')) {
+          localStorage.clear()
+          alert('✅ Cache cleared! Page will reload.')
+          location.reload()
+        }
+      })
+    }
+
+    // Setup create series form
+    const form = this.$('#seriesForm')
+    if (form) {
+      this.on(form, 'submit', (e) => {
+        e.preventDefault()
+        this.handleCreateSeries()
+      })
     }
 
     // Setup Enter key on inputs
@@ -158,13 +188,13 @@ export class HomeView extends BaseView {
     const notes = this.$('#seriesNotes')?.value.trim()
 
     if (!name) {
-      alert('⚠️ Please enter a series name')
+      this.showErrorMessage('⚠️ Please enter a series name')
       this.$('#seriesName')?.focus()
       return
     }
 
     if (!albumListText) {
-      alert('⚠️ Please enter at least one album')
+      this.showErrorMessage('⚠️ Please enter at least 2 albums (one per line)')
       this.$('#albumList')?.focus()
       return
     }
@@ -174,23 +204,31 @@ export class HomeView extends BaseView {
       .map(line => line.trim())
       .filter(line => line.length > 0)
 
-    if (albumQueries.length === 0) {
-      alert('⚠️ Please enter at least one album')
+    if (albumQueries.length < 2) {
+      this.showErrorMessage('⚠️ Minimum 2 albums required for balanced playlists.<br>Please add at least one more album.')
+      this.$('#albumList')?.focus()
       return
     }
 
-    // Create series in store
-    const series = seriesStore.createSeries({
+    // Clear any previous errors
+    this.hideErrorMessage()
+
+    // Create series
+    const series = {
+      id: `series_${Date.now()}`,
       name,
+      notes,
       albumQueries,
-      notes: notes || ''
-    })
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
 
-    // Set as active series
-    seriesStore.setActiveSeries(series.id)
+    const createdSeries = seriesStore.createSeries(series)
+    seriesStore.setActiveSeries(createdSeries.id)
 
-    // Navigate to albums view to start loading
-    router.navigate('/albums')
+    // Navigate to albums view with seriesId
+    router.navigate(`/albums?seriesId=${createdSeries.id}`)
   }
 
   handleResumeSeries(seriesId) {
@@ -203,5 +241,26 @@ export class HomeView extends BaseView {
     if (grid) {
       grid.innerHTML = this.renderRecentSeries(series)
     }
+  }
+
+  showErrorMessage(message) {
+    const errorEl = this.$('#formError')
+    if (errorEl) {
+      errorEl.innerHTML = message
+      errorEl.style.display = 'block'
+      // Scroll to error if needed
+      errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }
+
+  hideErrorMessage() {
+    const errorEl = this.$('#formError')
+    if (errorEl) {
+      errorEl.style.display = 'none'
+    }
+  }
+
+  update() {
+    // Update timestamp if we add one to HomeView
   }
 }

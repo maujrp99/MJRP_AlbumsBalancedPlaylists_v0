@@ -9,7 +9,7 @@ export class AlbumCache {
     constructor() {
         this.memoryCache = new Map() // L1 cache (RAM)
         this.ttl = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
-        this.version = '2.0' // For future migrations
+        this.version = '2.1' // Bumped to force refresh of ratings
 
         // Cleanup expired entries on init
         this.clearExpired()

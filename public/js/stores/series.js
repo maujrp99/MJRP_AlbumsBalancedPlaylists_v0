@@ -10,6 +10,7 @@ export class SeriesStore {
         this.loading = false
         this.error = null
         this.listeners = new Set()
+        this.loadFromLocalStorage()
     }
 
     /**
@@ -44,20 +45,46 @@ export class SeriesStore {
      */
     createSeries(seriesData) {
         const series = {
-            id: Date.now().toString(), // Temporary ID
+            id: seriesData.id || Date.now().toString(),
             name: seriesData.name,
             albumQueries: seriesData.albumQueries || [],
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            status: 'pending',
+            createdAt: seriesData.createdAt || new Date(),
+            updatedAt: seriesData.updatedAt || new Date(),
+            status: seriesData.status || 'pending',
             notes: seriesData.notes || ''
         }
 
         this.series.unshift(series)
         this.activeSeries = series
+        this.saveToLocalStorage()
         this.notify()
 
         return series
+    }
+
+    saveToLocalStorage() {
+        try {
+            localStorage.setItem('mjrp_series', JSON.stringify(this.series))
+        } catch (e) {
+            console.error('Failed to save series to localStorage', e)
+        }
+    }
+
+    loadFromLocalStorage() {
+        try {
+            const data = localStorage.getItem('mjrp_series')
+            if (data) {
+                this.series = JSON.parse(data)
+                // Restore dates
+                this.series.forEach(s => {
+                    s.createdAt = new Date(s.createdAt)
+                    s.updatedAt = new Date(s.updatedAt)
+                })
+                this.notify()
+            }
+        } catch (e) {
+            console.error('Failed to load series from localStorage', e)
+        }
     }
 
     /**

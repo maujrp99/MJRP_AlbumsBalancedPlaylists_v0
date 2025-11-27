@@ -584,6 +584,12 @@
       color: #fef3c7;
     }
 
+    .alert-danger {
+      background: #5f1a1a;
+      border-left: 4px solid #f87171;
+      color: #fecaca;
+    }
+
     .alert strong {
       display: block;
       margin-bottom: 0.5rem;
@@ -742,6 +748,195 @@
       color: #fff;
       margin-bottom: 1rem;
     }
+
+    /* PlaylistsView Styles */
+    .playlists-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .playlist-column {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      min-height: 400px;
+    }
+
+    .playlist-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #333;
+    }
+
+    .playlist-name {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.3rem;
+      color: #fff;
+      outline: none;
+    }
+
+    .playlist-name:focus {
+      color: #667eea;
+    }
+
+    .playlist-stats {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .playlist-tracks {
+      min-height: 200px;
+    }
+
+    .track-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      cursor: grab;
+      transition: all 0.2s;
+    }
+
+    .track-item:hover {
+      border-color: #667eea;
+      background: #1a1a2a;
+    }
+
+    .track-item.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    .track-item.drag-over {
+      border-color: #4ade80;
+      background: #1a2a1a;
+    }
+
+    .track-drag-handle {
+      color: #808080;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .track-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .track-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-rank {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-bottom: 2px;
+    }
+
+    .track-meta {
+      font-size: 0.8rem;
+      color: #888;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .track-rating {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      background: #667eea;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .generate-section {
+      margin-bottom: 3rem;
+    }
+
+    .generate-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .option-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #b0b0b0;
+    }
+
+    .export-section {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .export-section h3 {
+      margin: 0 0 1.5rem 0;
+      color: #fff;
+    }
+
+    .export-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Breadcrumb Navigation */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 0;
+      font-size: 0.9rem;
+      color: #b0b0b0;
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb-link {
+      color: #667eea;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb-link:hover {
+      color: #8b9eff;
+      text-decoration: underline;
+    }
+
+    .breadcrumb-separator {
+      color: #808080;
+      user-select: none;
+      margin: 0 0.25rem;
+    }
+
+    .breadcrumb-current {
+      color: #fff;
+      font-weight: 500;
+    }
   </style>
 </head>
 
@@ -755,11 +950,13 @@
     import { HomeView } from './js/views/HomeView.js'
     import { AlbumsView } from './js/views/AlbumsView.js'
     import { RankingView } from './js/views/RankingView.js'
+    import { PlaylistsView } from './js/views/PlaylistsView.js'
 
     // Register routes
     router.register('/home', () => new HomeView())
     router.register('/albums', () => new AlbumsView())
     router.register('/ranking/:albumId', () => new RankingView())
+    router.register('/playlists', () => new PlaylistsView())
 
     // Default route
     if (!window.location.pathname || window.location.pathname === '/' || window.location.pathname === '/index-v2.html') {
