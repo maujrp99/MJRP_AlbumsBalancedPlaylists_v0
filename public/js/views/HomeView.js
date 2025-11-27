@@ -8,10 +8,10 @@ import { router } from '../router.js'
  */
 
 export class HomeView extends BaseView {
-    async render(params) {
-        const recentSeries = seriesStore.getSeries()
+  async render(params) {
+    const recentSeries = seriesStore.getSeries()
 
-        return `
+    return `
       <div class="home-view">
         <header class="hero">
           <h1>🎵 MJRP Playlist Generator</h1>
@@ -67,20 +67,20 @@ export class HomeView extends BaseView {
         </section>
       </div>
     `
-    }
+  }
 
-    renderRecentSeries(series) {
-        if (series.length === 0) {
-            return `
+  renderRecentSeries(series) {
+    if (series.length === 0) {
+      return `
         <div class="empty-state">
           <p class="empty-icon">📝</p>
           <p class="empty-text">No series created yet</p>
           <p class="empty-hint">Create your first series above to get started!</p>
         </div>
       `
-        }
+    }
 
-        return series.slice(0, 6).map(s => `
+    return series.slice(0, 6).map(s => `
       <div class="series-card" data-series-id="${s.id}">
         <div class="series-card-header">
           <h3>${this.escapeHtml(s.name)}</h3>
@@ -107,110 +107,101 @@ export class HomeView extends BaseView {
         </div>
       </div>
     `).join('')
+  }
+
+  escapeHtml(text) {
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
+  }
+
+  async mount(params) {
+    this.container = document.getElementById('app')
+
+    // Subscribe to series store for updates
+    const unsubscribe = seriesStore.subscribe((state) => {
+      this.updateRecentSeries(state.series)
+    })
+    this.subscriptions.push(unsubscribe)
+
+    // Setup create series button
+    const createBtn = this.$('#createSeriesBtn')
+    if (createBtn) {
+      this.on(createBtn, 'click', () => this.handleCreateSeries())
     }
 
-    escapeHtml(text) {
-        const div = document.createElement('div')
-        div.textContent = text
-        return div.innerHTML
+    // Setup Enter key on inputs
+    const nameInput = this.$('#seriesName')
+    const albumList = this.$('#albumList')
+
+    if (nameInput) {
+      this.on(nameInput, 'keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault()
+          albumList?.focus()
+        }
+      })
     }
 
-    async mount(params) {
-        this.container = document.getElementById('app')
+    // Event delegation for resume buttons
+    this.on(this.container, 'click', (e) => {
+      if (e.target.dataset.action === 'resume') {
+        const seriesId = e.target.dataset.id
+        this.handleResumeSeries(seriesId)
+      }
+    })
+  }
 
-        // Subscribe to series store for updates
-        const unsubscribe = seriesStore.subscribe((state) => {
-            this.updateRecentSeries(state.series)
-        })
-        this.subscriptions.push(unsubscribe)
+  async handleCreateSeries() {
+    const name = this.$('#seriesName')?.value.trim()
+    const albumListText = this.$('#albumList')?.value.trim()
+    const notes = this.$('#seriesNotes')?.value.trim()
 
-        // Setup create series button
-        const createBtn = this.$('#createSeriesBtn')
-        if (createBtn) {
-            this.on(createBtn, 'click', () => this.handleCreateSeries())
-        }
-
-        // Setup Enter key on inputs
-        const nameInput = this.$('#seriesName')
-        const albumList = this.$('#albumList')
-
-        if (nameInput) {
-            this.on(nameInput, 'keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault()
-                    albumList?.focus()
-                }
-            })
-        }
-
-        // Event delegation for resume buttons
-        this.on(this.container, 'click', (e) => {
-            if (e.target.dataset.action === 'resume') {
-                const seriesId = e.target.dataset.id
-                this.handleResumeSeries(seriesId)
-            }
-        })
+    if (!name) {
+      alert('⚠️ Please enter a series name')
+      this.$('#seriesName')?.focus()
+      return
     }
 
-    async handleCreateSeries() {
-        const name = this.$('#seriesName')?.value.trim()
-        const albumListText = this.$('#albumList')?.value.trim()
-        const notes = this.$('#seriesNotes')?.value.trim()
-
-        if (!name) {
-            alert('⚠️ Please enter a series name')
-            this.$('#seriesName')?.focus()
-            return
-        }
-
-        if (!albumListText) {
-            alert('⚠️ Please enter at least one album')
-            this.$('#albumList')?.focus()
-            return
-        }
-
-        const albumQueries = albumListText
-            .split('\n')
-            .map(line => line.trim())
-            .filter(line => line.length > 0)
-
-        if (albumQueries.length === 0) {
-            alert('⚠️ Please enter at least one album')
-            return
-        }
-
-        // Create series in store
-        const series = seriesStore.createSeries({
-            name,
-            albumQueries,
-            notes: notes || ''
-        })
-
-        // Navigate to ranking view to start processing
-        // (Ranking view will be implemented in Sprint 3)
-        // For now, just show success message
-        console.log('Series created:', series)
-        alert(`✅ Series "${name}" created with ${albumQueries.length} albums!\n\n(Ranking view coming in Sprint 3)`)
-
-        // Clear form
-        this.$('#seriesName').value = ''
-        this.$('#albumList').value = ''
-        this.$('#seriesNotes').value = ''
+    if (!albumListText) {
+      alert('⚠️ Please enter at least one album')
+      this.$('#albumList')?.focus()
+      return
     }
 
-    handleResumeSeries(seriesId) {
-        seriesStore.setActiveSeries(seriesId)
+    const albumQueries = albumListText
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
 
-        // Navigate to playlists view
-        // (Will be implemented in Sprint 4)
-        console.log('Resume series:', seriesId)
-        alert('📋 Playlists view coming in Sprint 4!')
+    if (albumQueries.length === 0) {
+      alert('⚠️ Please enter at least one album')
+      return
     }
 
-    updateRecentSeries(series) {
-        const grid = this.$('.series-grid')
-        if (grid) {
-            grid.innerHTML = this.renderRecentSeries(series)
-        }
+    // Create series in store
+    const series = seriesStore.createSeries({
+      name,
+      albumQueries,
+      notes: notes || ''
+    })
+
+    // Set as active series
+    seriesStore.setActiveSeries(series.id)
+
+    // Navigate to albums view to start loading
+    router.navigate('/albums')
+  }
+
+  handleResumeSeries(seriesId) {
+    seriesStore.setActiveSeries(seriesId)
+    router.navigate('/albums')
+  }
+
+  updateRecentSeries(series) {
+    const grid = this.$('.series-grid')
+    if (grid) {
+      grid.innerHTML = this.renderRecentSeries(series)
     }
+  }
 }

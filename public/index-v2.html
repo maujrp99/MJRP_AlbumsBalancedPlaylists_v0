@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -244,8 +245,506 @@
       color: #fff;
       margin-bottom: 1rem;
     }
+
+    /* AlbumsView Styles */
+    .view-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #333;
+    }
+
+    .header-content h1 {
+      margin: 0 0 0.5rem 0;
+      color: #fff;
+    }
+
+    .active-series-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #2a2a2a;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .badge-label {
+      color: #808080;
+    }
+
+    .badge-value {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .search-input {
+      padding: 0.5rem 1rem;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-size: 0.9rem;
+      width: 250px;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .albums-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .album-card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .album-card:hover {
+      border-color: #667eea;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+    }
+
+    .album-cover {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+
+    .cover-placeholder {
+      opacity: 0.3;
+    }
+
+    .album-info {
+      padding: 1rem;
+    }
+
+    .album-title {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+      color: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .album-artist {
+      margin: 0 0 0.25rem 0;
+      color: #b0b0b0;
+      font-size: 0.9rem;
+    }
+
+    .album-year {
+      margin: 0 0 1rem 0;
+      color: #808080;
+      font-size: 0.85rem;
+    }
+
+    .album-meta {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .badge-success {
+      background: #1a5f1a;
+      color: #4ade80;
+    }
+
+    .badge-warning {
+      background: #5f4e1a;
+      color: #fbbf24;
+    }
+
+    .badge-info {
+      background: #1a3a5f;
+      color: #60a5fa;
+    }
+
+    .album-actions {
+      padding: 0 1rem 1rem 1rem;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      color: #808080;
+      font-size: 1.1rem;
+    }
+
+    /* Loading Progress */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(10, 10, 10, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .loading-content {
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid #333;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading-text {
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: #2a2a2a;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
+    }
+
+    .loading-status {
+      color: #b0b0b0;
+      font-size: 0.9rem;
+    }
+
+    /* RankingView Styles */
+    .album-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #333;
+    }
+
+    .album-header-info h1 {
+      margin: 0 0 0.5rem 0;
+      color: #fff;
+      font-size: 2rem;
+    }
+
+    .artist-name {
+      margin: 0;
+      color: #b0b0b0;
+      font-size: 1.1rem;
+    }
+
+    .album-year {
+      margin: 0.25rem 0 0 0;
+      color: #808080;
+      font-size: 0.9rem;
+    }
+
+    /* Tabs */
+    .ranking-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #333;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      color: #808080;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #b0b0b0;
+    }
+
+    .tab-btn.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+    }
+
+    .tab-content {
+      min-height: 400px;
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    /* Summary Grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .summary-card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .summary-card h3 {
+      margin: 0 0 1rem 0;
+      color: #808080;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .summary-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .summary-value.success {
+      color: #4ade80;
+    }
+
+    .summary-value.warning {
+      color: #fbbf24;
+    }
+
+    .summary-value.neutral {
+      color: #b0b0b0;
+    }
+
+    /* Alerts */
+    .alert {
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .alert-success {
+      background: #1a5f1a;
+      border-left: 4px solid #4ade80;
+      color: #d1fae5;
+    }
+
+    .alert-warning {
+      background: #5f4e1a;
+      border-left: 4px solid #fbbf24;
+      color: #fef3c7;
+    }
+
+    .alert strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    /* Ranking Table */
+    .ranking-table-container {
+      overflow-x: auto;
+    }
+
+    .ranking-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1a1a1a;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .ranking-table th {
+      background: #2a2a2a;
+      color: #b0b0b0;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+
+    .ranking-table td {
+      padding: 1rem;
+      border-top: 1px solid #2a2a2a;
+    }
+
+    .track-row.rated {
+      background: rgba(102, 126, 234, 0.05);
+    }
+
+    .rank-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #2a2a2a;
+      border-radius: 12px;
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .track-cell strong {
+      color: #fff;
+    }
+
+    .rating-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .rating-excellent {
+      background: #1a5f1a;
+      color: #4ade80;
+    }
+
+    .rating-great {
+      background: #1a4d5f;
+      color: #22d3ee;
+    }
+
+    .rating-good {
+      background: #5f4e1a;
+      color: #fbbf24;
+    }
+
+    .rating-fair {
+      background: #5f1a1a;
+      color: #f87171;
+    }
+
+    .rating-none {
+      background: #2a2a2a;
+      color: #808080;
+    }
+
+    /* Sources Info */
+    .sources-info {
+      max-width: 800px;
+    }
+
+    .source-description {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      color: #b0b0b0;
+    }
+
+    .source-badge {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid #333;
+      margin-bottom: 1.5rem;
+    }
+
+    .source-verified {
+      background: linear-gradient(135deg, rgba(26, 95, 26, 0.2) 0%, rgba(26, 95, 26, 0.05) 100%);
+      border-left: 4px solid #4ade80;
+    }
+
+    .source-ai {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(102, 126, 234, 0.05) 100%);
+      border-left: 4px solid #667eea;
+    }
+
+    .source-unknown {
+      background: linear-gradient(135deg, rgba(95, 78, 26, 0.2) 0%, rgba(95, 78, 26, 0.05) 100%);
+      border-left: 4px solid #fbbf24;
+    }
+
+    .badge-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .badge-content h4 {
+      margin: 0 0 0.5rem 0;
+      color: #fff;
+    }
+
+    .badge-content p {
+      margin: 0.25rem 0;
+      color: #b0b0b0;
+      font-size: 0.95rem;
+    }
+
+    .cache-info {
+      padding: 1rem;
+      background: #2a2a2a;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #b0b0b0;
+    }
+
+    .cache-hint {
+      color: #808080;
+      font-size: 0.85rem;
+    }
+
+    /* Not Found */
+    .not-found {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .not-found h2 {
+      color: #fff;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
+
 <body>
   <!-- Main app container -->
   <div id="app">Loading...</div>
@@ -254,10 +753,14 @@
   <script type="module">
     import { router } from './js/router.js'
     import { HomeView } from './js/views/HomeView.js'
+    import { AlbumsView } from './js/views/AlbumsView.js'
+    import { RankingView } from './js/views/RankingView.js'
 
     // Register routes
     router.register('/home', () => new HomeView())
-    
+    router.register('/albums', () => new AlbumsView())
+    router.register('/ranking/:albumId', () => new RankingView())
+
     // Default route
     if (!window.location.pathname || window.location.pathname === '/' || window.location.pathname === '/index-v2.html') {
       router.navigate('/home')
@@ -272,4 +775,5 @@
     })
   </script>
 </body>
+
 </html>
