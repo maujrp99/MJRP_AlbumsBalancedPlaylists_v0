@@ -17,62 +17,203 @@ export class AlbumsView extends BaseView {
     this.isLoading = false
     this.searchQuery = ''
     this.loadProgress = { current: 0, total: 0 }
+
+    // View mode state - default to 'expanded' as requested
+    this.viewMode = localStorage.getItem('albumsViewMode') || 'expanded'
+
+    // Filter state
+    this.filters = {
+      artist: 'all',
+      year: 'all',
+      status: 'all',
+      bestEverOnly: false
+    }
   }
 
   async render(params) {
     const albums = albumsStore.getAlbums()
     const activeSeries = seriesStore.getActiveSeries()
+    // Filter albums early to use throughout render
+    const filteredAlbums = this.filterAlbums(albums)
+
+    // DEBUG: Enhanced logging for troubleshooting
+    console.log('🔍 [DEBUG] Raw albums:', albums.length)
+    console.log('🔍 [DEBUG] Filtered albums:', filteredAlbums.length)
+    console.log('🔍 [DEBUG] Filters:', JSON.stringify(this.filters, null, 2))
+    console.log('🔍 [DEBUG] View mode:', this.viewMode)
+    console.log('🔍 [DEBUG] Search query:', this.searchQuery)
 
     return `
       <div class="albums-view container">
         <header class="view-header mb-8 fade-in">
           ${Breadcrumb.render('/albums')}
           
-          <div class="header-content flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <div class="header-title-row">
-              <h1 class="flex items-center gap-3">
-                ${activeSeries ? this.escapeHtml(activeSeries.name) : `${getIcon('Music', 'w-8 h-8')} Albums Library`}
-              </h1>
-              ${activeSeries ? `
-                <div class="active-series-badge mt-2">
-                  <span class="badge badge-neutral flex items-center gap-1">
-                    ${getIcon('Info', 'w-3 h-3')} Series: ${this.escapeHtml(activeSeries.name)}
-                  </span>
-                </div>
-              ` : ''}
-            </div>
-
-            <div class="header-actions flex gap-3">
-              ${activeSeries ? `
-                <a href="/series/${activeSeries.id}/ranking" class="btn btn-primary" data-link>
-                  ${getIcon('BarChart', 'w-5 h-5')}
-                  View Consolidated Ranking
-                </a>
-              ` : ''}
-            </div>
+          <!-- Title Row -->
+          <div class="header-title-row mb-6">
+            <h1 class="text-4xl font-bold mb-3 flex items-center gap-3">
+              ${activeSeries ? this.escapeHtml(activeSeries.name) : `${getIcon('Music', 'w-8 h-8')} Albums Library`}
+            </h1>
+            ${activeSeries ? `
+              <div class="flex items-center gap-4 text-lg">
+                <span class="text-accent-primary font-semibold">
+                  ${filteredAlbums.length} album${filteredAlbums.length !== 1 ? 's' : ''}
+                </span>
+                ${this.viewMode === 'expanded' ? `
+                  <span class="badge badge-primary">Consolidated View</span>
+                ` : ''}
+              </div>
+            ` : ''}
           </div>
           
-          <div class="search-bar relative max-w-md w-full">
-            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-              ${getIcon('Search', 'w-5 h-5')}
-            </span>
-            <input 
-              type="search" 
-              id="albumSearch" 
-              placeholder="Search albums..."
-              class="form-control pl-10"
-              value="${this.searchQuery}"
-            />
+          <!-- Filters Section -->
+          <div class="filters-section glass-panel p-4 mb-6 fade-in" style="animation-delay: 0.1s">
+            <div class="filters-row flex flex-wrap gap-3 items-center">
+              <!-- Search -->
+              <div class="search-bar relative flex-1 min-w-[200px]">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  ${getIcon('Search', 'w-5 h-5')}
+                </span>
+                <input 
+                  type="search" 
+                  id="albumSearch" 
+                  placeholder="Search albums..."
+                  class="form-control pl-10 w-full"
+                  value="${this.searchQuery}"
+                />
+              </div>
+              
+              <!-- Artist Filter -->
+              <div class="filter-dropdown relative">
+                <select id="artistFilter" class="form-control appearance-none cursor-pointer pr-8">
+                  <option value="all">All Artists</option>
+                  ${this.getUniqueArtists(albums).map(artist => `
+                    <option value="${this.escapeHtml(artist)}" ${this.filters.artist === artist ? 'selected' : ''}>
+                      ${this.escapeHtml(artist)}
+                    </option>
+                  `).join('')}
+                </select>
+                <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                  ${getIcon('ChevronDown', 'w-4 h-4')}
+                </span>
+              </div>
+              
+              <!-- Year Filter -->
+              <div class="filter-dropdown relative">
+                <select id="yearFilter" class="form-control appearance-none cursor-pointer pr-8">
+                  <option value="all">All Years</option>
+                  <option value="1960s" ${this.filters.year === '1960s' ? 'selected' : ''}>1960s</option>
+                  <option value="1970s" ${this.filters.year === '1970s' ? 'selected' : ''}>1970s</option>
+                  <option value="1980s" ${this.filters.year === '1980s' ? 'selected' : ''}>1980s</option>
+                  <option value="1990s" ${this.filters.year === '1990s' ? 'selected' : ''}>1990s</option>
+                  <option value="2000s" ${this.filters.year === '2000s' ? 'selected' : ''}>2000s+</option>
+                </select>
+                <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                  ${getIcon('ChevronDown', 'w-4 h-4')}
+                </span>
+              </div>
+              
+              <!-- Status Filter -->
+              <div class="filter-dropdown relative">
+                <select id="statusFilter" class="form-control appearance-none cursor-pointer pr-8">
+                  <option value="all">All Status</option>
+                  <option value="rated" ${this.filters.status === 'rated' ? 'selected' : ''}>Rated</option>
+                  <option value="pending" ${this.filters.status === 'pending' ? 'selected' : ''}>Pending</option>
+                </select>
+                <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                  ${getIcon('ChevronDown', 'w-4 h-4')}
+                </span>
+              </div>
+              
+              <!-- BestEver Toggle -->
+              <label class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  id="bestEverOnly" 
+                  class="form-checkbox"
+                  ${this.filters.bestEverOnly ? 'checked' : ''}
+                />
+                <span class="text-sm font-medium whitespace-nowrap">BestEver only</span>
+              </label>
+              
+              <!-- Refresh Button (Skip Cache) -->
+              <button 
+                id="refreshAlbums" 
+                class="btn btn-warning whitespace-nowrap flex items-center gap-2"
+                title="Reload albums from API (skip cache)">
+                ${getIcon('RefreshCw', 'w-4 h-4')}
+                Refresh
+              </button>
+              
+              <!-- View Mode Toggle -->
+              <button 
+                id="toggleViewMode" 
+                class="btn ${this.viewMode === 'compact' ? 'btn-primary' : 'btn-secondary'} whitespace-nowrap">
+                ${getIcon(this.viewMode === 'compact' ? 'List' : 'Grid', 'w-5 h-5')}
+                ${this.viewMode === 'compact' ? 'View Expanded' : 'View Compact'}
+              </button>
+            </div>
           </div>
         </header>
 
+        <!-- DEBUG: Visual Debug Panel START -->
+        <div class="debug-panel" style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.9); border: 2px solid #00ff88; padding: 16px; border-radius: 12px; z-index: 9999; max-width: 350px; font-family: monospace; font-size: 12px; box-shadow: 0 4px 20px rgba(0,255,136,0.3);">
+          <div style="color: #00ff88; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid #00ff88; padding-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+            🔍 DEBUG PANEL
+            <span style="font-size: 10px; opacity: 0.7; font-weight: normal;">(remover depois)</span>
+          </div>
+          
+          <div style="color: #fff; line-height: 1.6;">
+            <div style="margin-bottom: 8px;">
+              <span style="color: #00ff88;">📊 Albums:</span>
+              <div style="padding-left: 12px;">
+                <div>Total: <strong>${albums.length}</strong></div>
+                <div>Filtered: <strong style="color: ${filteredAlbums.length === 0 ? '#ff4444' : '#00ff88'};">${filteredAlbums.length}</strong></div>
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 8px;">
+              <span style="color: #00ff88;">🔎 Search:</span>
+              <div style="padding-left: 12px;">
+                ${this.searchQuery ? `<strong>"${this.escapeHtml(this.searchQuery)}"</strong>` : '<em style="opacity: 0.5;">none</em>'}
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 8px;">
+              <span style="color: #00ff88;">🎵 Filters:</span>
+              <div style="padding-left: 12px; font-size: 11px;">
+                <div>Artist: <strong>${this.filters.artist === 'all' ? 'All' : this.escapeHtml(this.filters.artist)}</strong></div>
+                <div>Year: <strong>${this.filters.year === 'all' ? 'All' : this.filters.year}</strong></div>
+                <div>Status: <strong>${this.filters.status === 'all' ? 'All' : this.filters.status}</strong></div>
+                <div>BestEver: <strong style="color: ${this.filters.bestEverOnly ? '#ffaa00' : '#666'};">${this.filters.bestEverOnly ? 'YES' : 'NO'}</strong></div>
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 0;">
+              <span style="color: #00ff88;">👁️ View Mode:</span>
+              <div style="padding-left: 12px;">
+                <strong style="color: #ffaa00;">${this.viewMode.toUpperCase()}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- DEBUG: Visual Debug Panel END -->
+
         ${this.isLoading ? this.renderLoadingProgress() : ''}
 
-        <div class="albums-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="albumsGrid">
-          ${this.renderAlbumsGrid(albums)}
-        </div>
+        <!-- Conditional rendering based on viewMode -->
+        ${this.viewMode === 'expanded' ?
+        `<div class="albums-list space-y-6" id="albumsList">
+            ${this.renderExpandedList(filteredAlbums)}
+          </div>` :
+        `<div class="albums-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="albumsGrid">
+            ${this.renderAlbumsGrid(filteredAlbums)}
+          </div>`
+      }
 
-        ${albums.length === 0 && !this.isLoading ? this.renderEmptyState() : ''}
+        <!-- Empty state container - updated dynamically -->
+        <div id="emptyStateContainer">
+          ${filteredAlbums.length === 0 && !this.isLoading ? this.renderEmptyState() : ''}
+        </div>
         
         <footer class="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
           <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
@@ -81,19 +222,153 @@ export class AlbumsView extends BaseView {
     `
   }
 
-  renderAlbumsGrid(albums) {
-    const filtered = this.filterAlbums(albums)
-
-    if (filtered.length === 0 && this.searchQuery) {
+  // MODE 3: Expanded List View
+  renderExpandedList(albums) {
+    if (albums.length === 0 && (this.searchQuery || Object.values(this.filters).some(v => v !== 'all' && v !== false))) {
       return `
-        <div class="col-span-full text-center py-12 text-muted">
-          <p class="text-xl mb-2">No albums match your search</p>
-          <p class="text-sm">Try adjusting your filters</p>
+        <div class="text-center py-12 text-muted">
+          <p class="text-xl mb-2">No albums match your filters</p>
+          <p class="text-sm">Try adjusting your search or filters</p>
         </div>
       `
     }
 
-    return filtered.map(album => `
+    // DEBUG: Log first album structure
+    if (albums.length > 0) {
+      console.log('🔍 [DEBUG] renderExpandedList - First album:', {
+        title: albums[0].title,
+        artist: albums[0].artist,
+        bestEverAlbumId: albums[0].bestEverAlbumId,
+        bestEverUrl: albums[0].bestEverUrl,
+        tracksCount: albums[0].tracks?.length,
+        tracksOriginalOrderCount: albums[0].tracksOriginalOrder?.length,
+        firstTrack: albums[0].tracks?.[0],
+        firstOriginalTrack: albums[0].tracksOriginalOrder?.[0]
+      })
+    }
+
+    return albums.map((album, idx) => `
+      <div class="expanded-album-card glass-panel p-6 fade-in" style="animation-delay: ${idx * 0.05}s" data-album-id="${album.id || ''}">
+        <!-- Album Header -->
+        <div class="album-header-compact flex items-start gap-4 mb-6 pb-4 border-b border-white/10">
+          <!-- Album Cover -->
+          <div class="album-cover w-24 h-24 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl flex items-center justify-center flex-shrink-0">
+            ${album.coverUrl ?
+        `<img src="${album.coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
+        `<div class="text-2xl opacity-20">${getIcon('Music', 'w-12 h-12')}</div>`
+      }
+          </div>
+
+          <!-- Album Info -->
+          <div class="flex-1">
+            <h3 class="text-2xl font-bold mb-1">${getIcon('Music', 'w-6 h-6 inline mr-2')}${this.escapeHtml(album.title)}</h3>
+            <p class="text-accent-primary text-lg mb-2">${this.escapeHtml(album.artist)}</p>
+            <div class="flex flex-wrap gap-2 text-sm">
+              ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
+              <span class="badge badge-neutral">${album.tracks?.length || 0} tracks</span>
+              ${(() => {
+        const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
+        return hasRatings ?
+          `<span class="badge badge-success flex items-center gap-1">${getIcon('Check', 'w-3 h-3')} Rated</span>` :
+          `<span class="badge badge-warning flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
+      })()}
+              ${album.bestEverAlbumId ? `
+                <a href="https://www.besteveralbums.com/thechart.php?a=${album.bestEverAlbumId}" target="_blank" rel="noopener noreferrer" class="badge badge-primary hover:badge-accent transition-colors flex items-center gap-1">
+                  ${getIcon('ExternalLink', 'w-3 h-3')} BestEver
+                </a>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+
+        <!-- Dual Tracklists -->
+        <div class="dual-tracklists-compact grid md:grid-cols-2 gap-6">
+          ${this.renderRankedTracklist(album)}
+          ${this.renderOriginalTracklist(album)}
+        </div>
+      </div>
+    `).join('')
+  }
+
+  // Ranked Tracklist (for MODE 3)
+  renderRankedTracklist(album) {
+    const tracks = album.tracks || []
+    if (tracks.length === 0) {
+      return '<p class="text-muted text-sm">No tracks available</p>'
+    }
+
+    // Sort by rating (descending)
+    const rankedTracks = [...tracks].sort((a, b) => (b.rating || 0) - (a.rating || 0))
+
+    return `
+      <div class="tracklist-section">
+        <h4 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-primary">
+          ${getIcon('TrendingUp', 'w-4 h-4')}
+          Ranked by Acclaim
+        </h4>
+        <div class="tracks-list-compact space-y-1 text-sm">
+          ${rankedTracks.map((track, idx) => {
+      const rating = track.rating || 0
+      const medal = idx < 3 ? (idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉') : ''
+      return `
+              <div class="track-row-compact flex items-center gap-2 py-1 px-2 rounded hover:bg-white/5">
+                <span class="track-pos w-6 text-xs text-muted text-center">${medal || (idx + 1)}</span>
+                <span class="track-name flex-1 truncate">${this.escapeHtml(track.title || track.name)}</span>
+                ${rating > 0 ? `<span class="track-rating badge badge-sm ${rating >= 90 ? 'badge-success' : rating >= 80 ? 'badge-primary' : 'badge-neutral'}">⭐ ${rating}</span>` : ''}
+              </div>
+            `
+    }).join('')}
+        </div>
+      </div>
+    `
+  }
+
+  // Original Tracklist (for MODE 3)
+  renderOriginalTracklist(album) {
+    // Use tracksOriginalOrder if available, otherwise fall back to tracks
+    const tracks = album.tracksOriginalOrder || album.tracks || []
+    if (tracks.length === 0) {
+      return '<p class="text-muted text-sm">No tracks available</p>'
+    }
+
+    return `
+      <div class="tracklist-section">
+        <h4 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
+          ${getIcon('List', 'w-4 h-4')}
+          Original Album Order
+        </h4>
+        <div class="tracks-list-compact space-y-1 text-sm">
+          ${tracks.map((track, idx) => {
+      const rating = track.rating || 0
+      // Use track position for correct numbering
+      const position = track.position || (idx + 1)
+      return `
+              <div class="track-row-compact flex items-center gap-2 py-1 px-2 rounded hover:bg-white/5">
+                <span class="track-pos w-6 text-xs text-muted text-center">${position}</span>
+                <span class="track-name flex-1 truncate">${this.escapeHtml(track.title || track.name)}</span>
+                ${rating > 0 ? `<span class="track-rating badge badge-sm badge-neutral opacity-70">⭐ ${rating}</span>` : ''}
+              </div>
+            `
+    }).join('')}
+        </div>
+      </div>
+    `
+  }
+
+  // MODE 1: Compact Grid View
+  renderAlbumsGrid(albums) {
+    // albums is already filtered from render(), don't filter again
+
+    if (albums.length === 0 && (this.searchQuery || Object.values(this.filters).some(v => v !== 'all' && v !== false))) {
+      return `
+        <div class="col-span-full text-center py-12 text-muted">
+          <p class="text-xl mb-2">No albums match your filters</p>
+          <p class="text-sm">Try adjusting your search or filters</p>
+        </div>
+      `
+    }
+
+    return albums.map(album => `
       <div class="album-card group relative overflow-hidden" data-album-id="${album.id || ''}">
         <div class="album-cover aspect-square bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center mb-4 rounded-xl relative">
           ${album.coverUrl ?
@@ -137,7 +412,7 @@ export class AlbumsView extends BaseView {
             class="btn btn-secondary btn-sm w-full justify-center group-hover:btn-primary transition-all"
             data-action="view-ranking"
             data-album-id="${album.id || ''}">
-            View Ranking ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1')}
+            View Ranked Tracks ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1')}
           </button>
         </div>
       </div>
@@ -145,13 +420,81 @@ export class AlbumsView extends BaseView {
   }
 
   filterAlbums(albums) {
-    if (!this.searchQuery) return albums
+    let filtered = albums
 
-    const query = this.searchQuery.toLowerCase()
-    return albums.filter(album =>
-      album.title?.toLowerCase().includes(query) ||
-      album.artist?.toLowerCase().includes(query)
-    )
+    // Search filter
+    if (this.searchQuery) {
+      const query = this.searchQuery.toLowerCase()
+      filtered = filtered.filter(album =>
+        album.title?.toLowerCase().includes(query) ||
+        album.artist?.toLowerCase().includes(query)
+      )
+    }
+
+    // Artist filter
+    if (this.filters.artist !== 'all') {
+      filtered = filtered.filter(album => album.artist === this.filters.artist)
+    }
+
+    // Year filter
+    if (this.filters.year !== 'all') {
+      filtered = filtered.filter(album => {
+        const year = album.year
+        if (!year) return false
+
+        switch (this.filters.year) {
+          case '1960s': return year >= 1960 && year < 1970
+          case '1970s': return year >= 1970 && year < 1980
+          case '1980s': return year >= 1980 && year < 1990
+          case '1990s': return year >= 1990 && year < 2000
+          case '2000s': return year >= 2000
+          default: return true
+        }
+      })
+    }
+
+    // Status filter - defensive check for tracks existence
+    if (this.filters.status !== 'all') {
+      filtered = filtered.filter(album => {
+        // Check multiple sources for ratings
+        const hasRatings = album.acclaim?.hasRatings ||
+          (Array.isArray(album.tracks) && album.tracks.length > 0 &&
+            album.tracks.some(t => t.rating > 0))
+        return this.filters.status === 'rated' ? hasRatings : !hasRatings
+      })
+    }
+
+    // BestEver filter
+    if (this.filters.bestEverOnly) {
+      filtered = filtered.filter(album => album.bestEverAlbumId)
+    }
+
+    // DEBUG: Log filtering steps
+    console.log('🔍 [DEBUG] Filter Results:', {
+      initial: albums.length,
+      afterSearch: this.searchQuery ? filtered.length : 'n/a',
+      afterArtist: this.filters.artist !== 'all' ? filtered.length : 'n/a',
+      afterYear: this.filters.year !== 'all' ? filtered.length : 'n/a',
+      afterStatus: this.filters.status !== 'all' ? filtered.length : 'n/a',
+      afterBestEver: this.filters.bestEverOnly ? filtered.length : 'n/a',
+      final: filtered.length
+    })
+
+    return filtered
+  }
+
+  getUniqueArtists(albums) {
+    const artists = albums
+      .map(album => album.artist)
+      .filter(Boolean)
+    return [...new Set(artists)].sort()
+  }
+
+  escapeHtml(text) {
+    if (!text) return ''
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
   }
 
   renderLoadingProgress() {
@@ -204,7 +547,79 @@ export class AlbumsView extends BaseView {
     if (searchInput) {
       this.on(searchInput, 'input', (e) => {
         this.searchQuery = e.target.value
+        console.log('🔍 [DEBUG] Search changed:', this.searchQuery) // DEBUG:
         this.updateAlbumsGrid(albumsStore.getAlbums())
+      })
+    }
+
+    // Setup filter dropdowns
+    const artistFilter = this.$('#artistFilter')
+    if (artistFilter) {
+      this.on(artistFilter, 'change', (e) => {
+        this.filters.artist = e.target.value
+        console.log('🔍 [DEBUG] Artist filter changed:', this.filters.artist) // DEBUG:
+        this.updateAlbumsGrid(albumsStore.getAlbums())
+      })
+    }
+
+    const yearFilter = this.$('#yearFilter')
+    if (yearFilter) {
+      this.on(yearFilter, 'change', (e) => {
+        this.filters.year = e.target.value
+        console.log('🔍 [DEBUG] Year filter changed:', this.filters.year) // DEBUG:
+        this.updateAlbumsGrid(albumsStore.getAlbums())
+      })
+    }
+
+    const statusFilter = this.$('#statusFilter')
+    if (statusFilter) {
+      this.on(statusFilter, 'change', (e) => {
+        this.filters.status = e.target.value
+        console.log('🔍 [DEBUG] Status filter changed:', this.filters.status) // DEBUG:
+        this.updateAlbumsGrid(albumsStore.getAlbums())
+      })
+    }
+
+    // BestEver checkbox
+    const bestEverCheckbox = this.$('#bestEverOnly')
+    if (bestEverCheckbox) {
+      this.on(bestEverCheckbox, 'change', (e) => {
+        this.filters.bestEverOnly = e.target.checked
+        console.log('🔍 [DEBUG] BestEver filter changed:', this.filters.bestEverOnly) // DEBUG:
+        this.updateAlbumsGrid(albumsStore.getAlbums())
+      })
+    }
+
+    // Refresh Albums Button (Skip Cache)
+    const refreshBtn = this.$('#refreshAlbums')
+    if (refreshBtn) {
+      this.on(refreshBtn, 'click', async () => {
+        console.log('🔄 [DEBUG] Refresh Albums - Clearing cache and reloading...')
+
+        // Get series albums queries
+        const activeSeries = seriesStore.getActiveSeries()
+        if (activeSeries?.albums) {
+          // Reload with skip-cache flag
+          await this.loadAlbumsFromQueries(activeSeries.albums, true) // skipCache = true
+        }
+      })
+    }
+
+    // View Mode Toggle
+    const toggleViewBtn = this.$('#toggleViewMode')
+    if (toggleViewBtn) {
+      this.on(toggleViewBtn, 'click', async () => {
+        this.viewMode = this.viewMode === 'compact' ? 'expanded' : 'compact'
+        localStorage.setItem('albumsViewMode', this.viewMode)
+        console.log('\ud83d\udd0d [DEBUG] View mode toggled:', this.viewMode) // DEBUG:
+
+        // Full re-render of the entire view
+        const params = { /* any params needed */ }
+        const html = await this.render(params)
+        this.container.innerHTML = html
+
+        // Re-mount to re-attach event listeners
+        await this.mount(params)
       })
     }
 
@@ -213,12 +628,17 @@ export class AlbumsView extends BaseView {
       this.on(goHomeBtn, 'click', () => router.navigate('/home'))
     }
 
-    // View ranking buttons (event delegation)
+    // View ranking buttons - improved event delegation
     this.on(this.container, 'click', async (e) => {
       // View Ranking
-      if (e.target.dataset.action === 'view-ranking' || e.target.closest('[data-action="view-ranking"]')) {
-        const btn = e.target.dataset.action === 'view-ranking' ? e.target : e.target.closest('[data-action="view-ranking"]')
-        const albumId = btn.dataset.albumId
+      const rankingBtn = e.target.closest('[data-action="view-ranking"]')
+      if (rankingBtn) {
+        const albumId = rankingBtn.dataset.albumId
+        if (!albumId) {
+          console.error('[AlbumsView] No albumId found on button:', rankingBtn)
+          return
+        }
+        console.log('[AlbumsView] Navigating to ranking:', albumId)
         router.navigate(`/ranking/${albumId}`)
         return
       }
@@ -276,7 +696,7 @@ export class AlbumsView extends BaseView {
     }
   }
 
-  async loadAlbumsFromQueries(queries) {
+  async loadAlbumsFromQueries(queries, skipCache = false) {
     // Reset store to clear previous series' albums
     albumsStore.reset()
 
@@ -303,7 +723,8 @@ export class AlbumsView extends BaseView {
           if (result.status === 'success' && result.album) {
             albumsStore.addAlbum(result.album)
           }
-        }
+        },
+        skipCache  // Pass skipCache flag to API client
       )
 
       if (errors.length > 0) {
@@ -334,9 +755,76 @@ export class AlbumsView extends BaseView {
   }
 
   updateAlbumsGrid(albums) {
-    const grid = this.$('#albumsGrid')
-    if (grid) {
-      grid.innerHTML = this.renderAlbumsGrid(albums)
+    const filtered = this.filterAlbums(albums) // DEBUG: Apply filters
+    console.log('🔍 [DEBUG] Updating grid with', filtered.length, 'albums') // DEBUG:
+
+    // Update the correct container based on viewMode
+    if (this.viewMode === 'expanded') {
+      const list = this.$('#albumsList')
+      if (list) {
+        list.innerHTML = this.renderExpandedList(filtered)
+      }
+    } else {
+      const grid = this.$('#albumsGrid')
+      if (grid) {
+        grid.innerHTML = this.renderAlbumsGrid(filtered)
+      }
+    }
+
+    // Update empty state container
+    const emptyStateContainer = this.$('#emptyStateContainer')
+    if (emptyStateContainer) {
+      emptyStateContainer.innerHTML = filtered.length === 0 && !this.isLoading ? this.renderEmptyState() : ''
+    }
+
+    // DEBUG: Update debug panel dynamically
+    this.updateDebugPanel(albums, filtered)
+  }
+
+  // DEBUG: Helper to update debug panel
+  updateDebugPanel(albums, filteredAlbums) {
+    const debugPanel = this.$('.debug-panel')
+    if (debugPanel) {
+      debugPanel.innerHTML = `
+        <div style="color: #00ff88; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid #00ff88; padding-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+          🔍 DEBUG PANEL
+          <span style="font-size: 10px; opacity: 0.7; font-weight: normal;">(remover depois)</span>
+        </div>
+        
+        <div style="color: #fff; line-height: 1.6;">
+          <div style="margin-bottom: 8px;">
+            <span style="color: #00ff88;">📊 Albums:</span>
+            <div style="padding-left: 12px;">
+              <div>Total: <strong>${albums.length}</strong></div>
+              <div>Filtered: <strong style="color: ${filteredAlbums.length === 0 ? '#ff4444' : '#00ff88'};">${filteredAlbums.length}</strong></div>
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 8px;">
+            <span style="color: #00ff88;">🔎 Search:</span>
+            <div style="padding-left: 12px;">
+              ${this.searchQuery ? `<strong>"${this.escapeHtml(this.searchQuery)}"</strong>` : '<em style="opacity: 0.5;">none</em>'}
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 8px;">
+            <span style="color: #00ff88;">🎵 Filters:</span>
+            <div style="padding-left: 12px; font-size: 11px;">
+              <div>Artist: <strong>${this.filters.artist === 'all' ? 'All' : this.escapeHtml(this.filters.artist)}</strong></div>
+              <div>Year: <strong>${this.filters.year === 'all' ? 'All' : this.filters.year}</strong></div>
+              <div>Status: <strong>${this.filters.status === 'all' ? 'All' : this.filters.status}</strong></div>
+              <div>BestEver: <strong style="color: ${this.filters.bestEverOnly ? '#ffaa00' : '#666'};">${this.filters.bestEverOnly ? 'YES' : 'NO'}</strong></div>
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 0;">
+            <span style="color: #00ff88;">👁️ View Mode:</span>
+            <div style="padding-left: 12px;">
+              <strong style="color: #ffaa00;">${this.viewMode.toUpperCase()}</strong>
+            </div>
+          </div>
+        </div>
+      `
     }
   }
 

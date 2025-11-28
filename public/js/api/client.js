@@ -216,33 +216,64 @@ export class APIClient {
         // Generate stable ID
         const id = this.generateAlbumId(data)
 
-        return {
+        // DEBUG: Log raw API data
+        console.log('[APIClient] normalizeAlbumData - Raw data:', {
+            hasTracks: !!data.tracks,
+            hasTracksByAcclaim: !!data.tracksByAcclaim,
+            hasBestEverAlbumId: !!data.bestEverAlbumId,
+            hasBestEverUrl: !!data.bestEverUrl,
+            tracksCount: data.tracks?.length,
+            tracksByAcclaimCount: data.tracksByAcclaim?.length,
+            bestEverAlbumId: data.bestEverAlbumId,
+            bestEverUrl: data.bestEverUrl,
+            firstTrack: data.tracks?.[0],
+            firstAcclaimTrack: data.tracksByAcclaim?.[0]
+        })
+
+        // data.tracks = ORIGINAL ORDER from API (AS IS)
+        // data.tracksByAcclaim = SORTED BY ACCLAIM (ranked)
+        const originalTracks = data.tracks || []
+        const rankedTracks = data.tracksByAcclaim || data.rankingConsolidated || []
+
+        const normalized = {
             id,
             title: data.title || data.album || '',
             artist: data.artist || '',
             year: data.year || null,
-            tracks: (data.tracksByAcclaim || data.rankingConsolidated || data.tracks || []).map(track => ({
+
+            // BestEver fields from backend  
+            bestEverAlbumId: data.bestEverAlbumId || null,
+            bestEverUrl: data.bestEverUrl || null,
+            bestEverEvidence: data.bestEverEvidence || [],
+
+            // Use rankedTracks as primary tracks array (sorted by acclaim)
+            tracks: (rankedTracks.length > 0 ? rankedTracks : originalTracks).map((track, idx) => ({
                 ...track,
                 title: track.title || track.name || '',
-                rank: track.rank || track.acclaimRank || track.finalPosition || 0,
+                rank: track.rank || track.acclaimRank || track.finalPosition || (idx + 1),
                 rating: track.rating || null,
                 normalizedScore: track.normalizedScore || track.acclaimScore || 0,
                 duration: track.duration || null,
+                // Preserve original position from data.tracks
+                position: track.position || track.trackNumber || null,
                 metadata: track.metadata || {
                     isrc: null,
                     appleMusicId: null,
                     spotifyId: null
                 }
             })),
+
+            // Store original tracks AS IS for "Original Album Order"
+            tracksOriginalOrder: originalTracks.map((track, idx) => ({
+                ...track,
+                title: track.title || track.name || '',
+                position: track.position || track.trackNumber || (idx + 1),
+                rating: track.rating || null,
+                duration: track.duration || null
+            })),
+
             acclaim: (() => {
-                const tracks = data.tracksByAcclaim || data.rankingConsolidated || data.tracks || []
-                console.log('[APIClient] normalizeAlbum - data sources:', {
-                    hasTracksByAcclaim: !!data.tracksByAcclaim,
-                    hasRankingConsolidated: !!data.rankingConsolidated,
-                    hasTracks: !!data.tracks,
-                    tracksCount: tracks.length,
-                    sampleTrack: tracks[0]
-                })
+                const tracks = rankedTracks.length > 0 ? rankedTracks : originalTracks
 
                 // Check if we have ANY rating or rank data
                 const hasRatings = tracks.some(t =>
@@ -251,8 +282,6 @@ export class APIClient {
                     (t.acclaimRank !== null && t.acclaimRank !== undefined) ||
                     (t.finalPosition !== null && t.finalPosition !== undefined)
                 )
-
-                console.log('[APIClient] hasRatings calculated:', hasRatings)
 
                 return {
                     hasRatings,
@@ -265,6 +294,20 @@ export class APIClient {
                 ...data.metadata
             }
         }
+
+        // DEBUG: Log normalized output
+        console.log('[APIClient] normalizeAlbumData - Normalized:', {
+            id: normalized.id,
+            title: normalized.title,
+            bestEverAlbumId: normalized.bestEverAlbumId,
+            bestEverUrl: normalized.bestEverUrl,
+            tracksCount: normalized.tracks?.length,
+            tracksOriginalOrderCount: normalized.tracksOriginalOrder?.length,
+            firstTrack: normalized.tracks?.[0],
+            firstOriginalTrack: normalized.tracksOriginalOrder?.[0]
+        })
+
+        return normalized
     }
 
     /**

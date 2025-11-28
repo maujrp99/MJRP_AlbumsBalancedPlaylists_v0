@@ -2,16 +2,18 @@ import { BaseView } from './BaseView.js'
 import { albumsStore } from '../stores/albums.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
+import { getIcon } from '../components/Icons.js'
 
 /**
- * RankingView
- * Display album track rankings with acclaim visualization
+ * RankingView (MODE 2)
+ * Single Album Detail with dual tracklists:
+ * - Ranked by Acclaim (sorted by rating)
+ * - Original Album Order (AS IS)
  */
 
 export class RankingView extends BaseView {
   constructor() {
     super()
-    this.activeTab = 'summary'
   }
 
   async render(params) {
@@ -22,201 +24,154 @@ export class RankingView extends BaseView {
       return this.renderNotFound()
     }
 
+    const avgRating = this.calculateAverageRating(album.tracks)
+    const trackCount = album.tracks?.length || 0
+
     return `
-      <div class="ranking-view">
-        <header class="album-header">
+      <div class="ranking-view container">
+        <header class="view-header mb-8 fade-in">
           ${Breadcrumb.render(`/ranking/${albumId}`, params)}
           
-          <div class="album-header-info">
-            <h1>${this.escapeHtml(album.title)}</h1>
-            <p class="artist-name">${this.escapeHtml(album.artist)}</p>
-            ${album.year ? `<p class="album-year">${album.year}</p>` : ''}
-          </div>
-
-          <button class="btn btn-primary" id="createPlaylistsBtn">
-            Create Playlists →
+          <!-- Back Button -->
+          <button id="backToAlbums" class="btn btn-secondary mb-4 inline-flex items-center gap-2">
+            ${getIcon('ArrowLeft', 'w-4 h-4')}
+            Back to Albums
           </button>
+
+          <!-- Album Header Card -->
+          <div class="glass-panel p-6 mb-6">
+            <div class="flex items-start gap-6">
+              <!-- Album Cover Placeholder -->
+              <div class="album-cover-large w-32 h-32 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl flex items-center justify-center flex-shrink-0">
+                ${album.coverUrl ?
+        `<img src="${album.coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
+        `<div class="text-4xl opacity-20">${getIcon('Music', 'w-16 h-16')}</div>`
+      }
+              </div>
+
+              <!-- Album Info -->
+              <div class="flex-1">
+                <h1 class="text-3xl font-bold mb-2">${getIcon('Music', 'w-8 h-8 inline mr-2')}${this.escapeHtml(album.title)}</h1>
+                <p class="text-accent-primary text-xl mb-3">${this.escapeHtml(album.artist)}</p>
+                <div class="flex flex-wrap gap-3 text-sm">
+                  ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
+                  <span class="badge badge-neutral">${trackCount} tracks</span>
+                  ${avgRating ? `<span class="badge badge-success">Avg Rating: ${avgRating}</span>` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
         </header>
 
-        <div class="ranking-tabs">
-          <button class="tab-btn ${this.activeTab === 'summary' ? 'active' : ''}" data-tab="summary">
-            Summary
-          </button>
-          <button class="tab-btn ${this.activeTab === 'tracks' ? 'active' : ''}" data-tab="tracks">
-            Track Rankings
-          </button>
-          <button class="tab-btn ${this.activeTab === 'sources' ? 'active' : ''}" data-tab="sources">
-            Sources
-          </button>
+        <!-- Dual Tracklists -->
+        <div class="dual-tracklists grid gap-8">
+          ${this.renderRankedTracklist(album)}
+          ${this.renderOriginalTracklist(album)}
         </div>
 
-        <div class="tab-content">
-          <div class="tab-pane ${this.activeTab === 'summary' ? 'active' : ''}" id="summary-tab">
-            ${this.renderSummary(album)}
-          </div>
-          
-          <div class="tab-pane ${this.activeTab === 'tracks' ? 'active' : ''}" id="tracks-tab">
-            ${this.renderTrackRankings(album)}
-          </div>
-          
-          <div class="tab-pane ${this.activeTab === 'sources' ? 'active' : ''}" id="sources-tab">
-            ${this.renderSources(album)}
-          </div>
-        </div>
+        <footer class="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
+          <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
+        </footer>
       </div>
     `
   }
 
-  renderSummary(album) {
-    const hasRatings = album.acclaim?.hasRatings
-    const trackCount = album.tracks?.length || 0
-    const ratedTracks = album.tracks?.filter(t => t.rating && t.rating > 0).length || 0
-    const avgRating = this.calculateAverageRating(album.tracks)
+  renderRankedTracklist(album) {
+    const tracks = album.tracks || []
+    if (tracks.length === 0) {
+      return '<p class="text-muted">No tracks available</p>'
+    }
+
+    // Sort by rating (descending)
+    const rankedTracks = [...tracks].sort((a, b) => (b.rating || 0) - (a.rating || 0))
 
     return `
-      <div class="summary-grid">
-        <div class="summary-card">
-          <h3>Track Count</h3>
-          <p class="summary-value">${trackCount}</p>
-        </div>
-        
-        <div class="summary-card">
-          <h3>Rated Tracks</h3>
-          <p class="summary-value ${hasRatings ? 'success' : 'warning'}">
-            ${ratedTracks} / ${trackCount}
-          </p>
-        </div>
-        
-        <div class="summary-card">
-          <h3>Average Rating</h3>
-          <p class="summary-value ${avgRating ? 'success' : 'neutral'}">
-            ${avgRating || 'N/A'}
-          </p>
-        </div>
-        
-        <div class="summary-card">
-          <h3>Acclaim Source</h3>
-          <p class="summary-value">${album.acclaim?.source || 'Unknown'}</p>
+      <div class="tracklist-section glass-panel p-6 fade-in">
+        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+          ${getIcon('TrendingUp', 'w-6 h-6 text-accent-primary')}
+          Ranked by Acclaim
+        </h3>
+        <div class="tracks-list space-y-2">
+          ${rankedTracks.map((track, idx) => this.renderTrackRow(track, idx + 1, true)).join('')}
         </div>
       </div>
-
-      ${!hasRatings ? `
-        <div class="alert alert-warning">
-       <strong>⚠️ No acclaim ratings found</strong>
-          <p>This album doesn't have BestEverAlbums ratings. Playlists will be generated using basic track ordering.</p>
-        </div>
-      ` : `
-        <div class="alert alert-success">
-          <strong>✓ Acclaim data available</strong>
-          <p>This album has ${ratedTracks} rated tracks from ${album.acclaim.source}. Playlist curation will use these rankings.</p>
-        </div>
-      `}
     `
   }
 
-  renderTrackRankings(album) {
+  renderOriginalTracklist(album) {
     const tracks = album.tracks || []
-
     if (tracks.length === 0) {
-      return '<p class="empty-text">No tracks available</p>'
+      return '<p class="text-muted">No tracks available</p>'
     }
 
     return `
-      <div class="ranking-table-container">
-        <table class="ranking-table">
-          <thead>
-            <tr>
-              <th class="rank-col">Rank</th>
-              <th class="track-col">Track</th>
-              <th class="rating-col">Rating</th>
-              <th class="score-col">Score</th>
-              <th class="duration-col">Duration</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${tracks.map((track, index) => `
-              <tr class="track-row ${track.rating ? 'rated' : 'unrated'}">
-                <td class="rank-cell">
-                  <span class="rank-badge">${track.rank || index + 1}</span>
-                </td>
-                <td class="track-cell">
-                  <strong>${this.escapeHtml(track.title || track.name)}</strong>
-                </td>
-                <td class="rating-cell">
-                  ${track.rating ?
-        `<span class="rating-badge rating-${this.getRatingClass(track.rating)}">${track.rating}</span>` :
-        '<span class="rating-badge rating-none">-</span>'
-      }
-                </td>
-                <td class="score-cell">
-                  ${track.normalizedScore ? track.normalizedScore.toFixed(2) : '-'}
-                </td>
-                <td class="duration-cell">
-                  ${track.duration ? this.formatDuration(track.duration) : '-'}
-                </td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
+      <div class="tracklist-section glass-panel p-6 fade-in" style="animation-delay: 0.1s">
+        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+          ${getIcon('List', 'w-6 h-6 text-accent-secondary')}
+          Original Album Order
+        </h3>
+        <div class="tracks-list space-y-2">
+          ${tracks.map((track, idx) => this.renderTrackRow(track, idx + 1, false)).join('')}
+        </div>
       </div>
     `
   }
 
-  renderSources(album) {
-    const source = album.acclaim?.source || 'Unknown'
+  renderTrackRow(track, position, showRating) {
+    const rating = track.rating || 0
+    const ratingClass = this.getRatingClass(rating)
+    const duration = track.duration ? this.formatDuration(track.duration) : '-'
+
+    // Medal icons for top 3 in ranked list
+    const medal = showRating && position <= 3 ?
+      (position === 1 ? '🥇' : position === 2 ? '🥈' : '🥉') : ''
 
     return `
-      <div class="sources-info">
-        <h3>Acclaim Data Source</h3>
-        <p class="source-description">Primary source: <strong>${source}</strong></p>
-        
-        ${source === 'BestEverAlbums' ? `
-          <div class="source-badge source-verified">
-            <div class="badge-icon">✓</div>
-            <div class="badge-content">
-              <h4>Verified Source</h4>
-              <p>Data scraped from BestEverAlbums.com with deterministic rankings.</p>
-              <p>This is the most reliable source for track acclaim data.</p>
-            </div>
-          </div>
-        ` : source === 'AI' ? `
-          <div class="source-badge source-ai">
-            <div class="badge-icon">🤖</div>
-            <div class="badge-content">
-              <h4>AI-Generated Rankings</h4>
-              <p>Rankings generated by Gemini AI based on critical consensus.</p>
-              <p><strong>Note:</strong> May vary slightly on regeneration.</p>
-            </div>
-          </div>
-        ` : `
-          <div class="source-badge source-unknown">
-            <div class="badge-icon">⚠️</div>
-            <div class="badge-content">
-              <h4>Unknown Source</h4>
-              <p>No acclaim data available for this album.</p>
-              <p>Playlists will use default track ordering.</p>
-            </div>
-          </div>
-        `}
+      <div class="track-row flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors">
+        <!-- Position -->
+        <div class="track-position w-8 text-center font-bold text-muted">
+          ${medal || position}
+        </div>
 
-        ${album._cached ? `
-          <div class="cache-info">
-            <p>💾 This data was loaded from cache.</p>
-            <p class="cache-hint">Fetched: ${this.formatTimestamp(album.metadata?.fetchedAt)}</p>
+        <!-- Track Title -->
+        <div class="track-title flex-1 font-medium">
+          ${this.escapeHtml(track.title || track.name)}
+        </div>
+
+        <!-- Rating (only in ranked list) -->
+        ${showRating && rating > 0 ? `
+          <div class="track-rating">
+            <span class="badge ${ratingClass === 'excellent' ? 'badge-success' :
+          ratingClass === 'great' ? 'badge-primary' :
+            ratingClass === 'good' ? 'badge-warning' : 'badge-neutral'}">
+              ⭐ ${rating}
+            </span>
+          </div>
+        ` : showRating ? `
+          <div class="track-rating">
+            <span class="badge badge-neutral opacity-50">-</span>
           </div>
         ` : ''}
+
+        <!-- Duration -->
+        <div class="track-duration text-muted text-sm w-16 text-right">
+          ${duration}
+        </div>
       </div>
     `
   }
 
   renderNotFound() {
     return `
-      <div class="not-found">
-        <h2>❌ Album Not Found</h2>
-        <p>The requested album doesn't exist in your library.</p>
-        <button class="btn btn-primary" id="goHomeBtn">
-          Go to Home
-        </button>
+      <div class="not-found container text-center py-16">
+        <div class="glass-panel p-12 max-w-md mx-auto">
+          <div class="text-6xl mb-6 opacity-30">${getIcon('AlertTriangle', 'w-24 h-24 mx-auto')}</div>
+          <h2 class="text-2xl font-bold mb-2">Album Not Found</h2>
+          <p class="text-muted mb-8">The requested album doesn't exist in your library.</p>
+          <button class="btn btn-primary" id="goHomeBtn">
+            ${getIcon('ArrowLeft', 'w-4 h-4 mr-2')} Go to Home
+          </button>
+        </div>
       </div>
     `
   }
@@ -227,40 +182,20 @@ export class RankingView extends BaseView {
     // Attach breadcrumb listeners
     Breadcrumb.attachListeners(this.container)
 
-    // Create playlists button
-    const createBtn = this.$('#createPlaylistsBtn')
-    if (createBtn) {
-      this.on(createBtn, 'click', () => router.navigate('/playlists'))
-    }
-
-    // Tab switching
-    const tabBtns = this.$$('.tab-btn')
-    tabBtns.forEach(btn => {
-      this.on(btn, 'click', (e) => {
-        this.switchTab(e.target.dataset.tab)
+    // Back button
+    const backBtn = this.$('#backToAlbums')
+    if (backBtn) {
+      this.on(backBtn, 'click', () => {
+        // Remember to go back to the view mode the user was in
+        router.navigate('/albums')
       })
-    })
+    }
 
     // Go home if not found
     const goHomeBtn = this.$('#goHomeBtn')
     if (goHomeBtn) {
       this.on(goHomeBtn, 'click', () => router.navigate('/home'))
     }
-  }
-
-  switchTab(tabName) {
-    this.activeTab = tabName
-
-    // Remove active from all tabs
-    this.$$('.tab-btn').forEach(btn => btn.classList.remove('active'))
-    this.$$('.tab-pane').forEach(pane => pane.classList.remove('active'))
-
-    // Add active to selected tab
-    const tabBtn = this.$(`[data-tab="${tabName}"]`)
-    const tabPane = this.$(`#${tabName}-tab`)
-
-    if (tabBtn) tabBtn.classList.add('active')
-    if (tabPane) tabPane.classList.add('active')
   }
 
   findAlbum(albumId) {

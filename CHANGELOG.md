@@ -8,6 +8,128 @@ Format:
 
 ---
 
+## v2.0.0-alpha.6 Sprint 4.5 Phase 2: Albums View Modes (2025-11-28)
+
+**Status**: ⚠️ **Partially Completed** - Tagged as `sprint4.5-partially-completed`
+
+### Summary
+Implemented MODE 3 (Expanded List View) for Albums with dual tracklists (Ranked by Acclaim + Original Album Order). Encountered localStorage cache invalidation issue with new normalized fields. **Decision**: Defer complete fix to Sprint 5 (Firestore) for proper data persistence and schema versioning.
+
+### Features Implemented
+
+**MODE 3: Expanded List View** ✅
+- Vertical list layout showing all albums simultaneously
+- Each album displays dual tracklists side-by-side:
+  - **Ranked by Acclaim**: Sorted by rating (descending) with medals 🥇🥈🥉 for top 3
+  - **Original Album Order**: AS IS from API (`data.tracks`)
+- All tracks visible (no pagination/truncation)
+- Premium glassmorphism design matching MODE 2
+
+**View Mode Toggle** ✅
+- Button in filter bar to switch between Compact Grid (MODE 1) and Expanded List (MODE 3)
+- Full view re-render on toggle with event listener re-attachment
+- ViewMode state persists in localStorage
+
+**Series Title UI Enhancement** ✅
+- Larger 4xl font size with bold styling
+- "Series Name:" label prefix for clarity
+- Album count in accent color (prominent display)
+- Removed "Consolidated View" badge (cleaner UX)
+
+### Known Issues (Deferred to Sprint 5)
+
+**localStorage Cache Invalidation** ⚠️
+
+**Problem**:
+Albums cached before code changes lack new normalized fields (`bestEverAlbumId`, `bestEverUrl`, `tracksOriginalOrder`), resulting in `undefined` values when loaded from cache.
+
+**Root Cause**:
+```javascript
+// Cache hit bypasses normalizeAlbumData()
+✅ L2 cache hit (localStorage): Album X
+   ↓ (No re-normalization)
+   ↓  
+{
+  bestEverAlbumId: undefined,      // ❌ Missing
+  bestEverUrl: undefined,          // ❌ Missing
+  tracksOriginalOrder: undefined   // ❌ Missing
+}
+```
+
+**Current Workaround**:
+- ✅ "Refresh" button in AlbumsView header forces skip-cache reload
+- ✅ "Clear Cache" in footer + page reload
+- ⚠️ Requires manual user action
+
+**Why Deferred to Sprint 5**:
+
+1. **Firestore >> localStorage**
+   - Schema versioning built-in
+   - No size limits (~5MB localStorage vs unlimited Firestore)
+   - Automatic field migration via Firestore rules
+   - Timestamp-based cache invalidation
+
+2. **Architectural Alignment**
+   - Sprint 5 replaces localStorage with Firestore entirely
+   - Proper persistence layer with offline support
+   - Single source of truth for all album data
+
+3. **Limited Impact**
+   - Only affects existing cached albums
+   - New albums normalize correctly
+   - Users can manually refresh when needed
+
+### Files Modified
+```
+public/js/api/client.js                # +50 lines - Debug logging, BestEver fields extraction
+public/js/views/AlbumsView.js          # +120 lines - MODE 3 rendering, Refresh button, dual tracklists
+docs/troubleshooting_log.md           # +88 lines - Sprint 4.5 Phase 2 issues documented
+```
+
+### Implementation Details
+
+**Data Flow** (MODE 3):
+```javascript
+// API Response has TWO track arrays:
+data.tracks              // Original album order (AS IS)
+data.tracksByAcclaim     // Sorted by rating (ranked)
+
+// Normalization preserves both:
+normalized.tracks = tracksByAcclaim        // Primary for UI
+normalized.tracksOriginalOrder = data.tracks  // For "Original Album Order" list
+
+// Rendering:
+renderRankedTracklist(album.tracks)                    // Shows acclaim ranking
+renderOriginalTracklist(album.tracksOriginalOrder)     // Shows AS IS order
+```
+
+**Refresh Button Flow**:
+```javascript
+// User clicks Refresh
+→ loadAlbumsFromQueries(queries, skipCache=true)
+  → apiClient.fetchMultipleAlbums(queries, onProgress, skipCache=true)
+    → fetchAlbum(query, skipCache=true)  // Bypasses cache
+      → _fetchAlbumFromAPI()  // Fresh fetch
+        → normalizeAlbumData(data)  // All fields populated ✅
+```
+
+### Next Steps (Sprint 5)
+
+**Firestore Persistence Architecture**:
+- [ ] Replace localStorage with Firestore for album storage
+- [ ] Implement schema versioning (e.g., `_schemaVersion: 2`)
+- [ ] Migrate existing localStorage → Firestore on first load
+- [ ] Add `lastFetched` timestamp for cache invalidation strategy
+- [ ] Implement offline-first sync (Firestore + local cache)
+
+**Benefits**:
+- ✅ Proper data persistence across devices
+- ✅ No cache invalidation issues
+- ✅ Edit/delete album functionality  
+- ✅ Collaborative series sharing (future Sprint 6)
+
+---
+
 ## v2.0.0-alpha.5 Sprint 4.5 Phase 1: Landing View UI/UX (2025-11-28)
 
 **Status**: In development (feature/v2.0-foundation branch)

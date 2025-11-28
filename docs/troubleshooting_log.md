@@ -1,4 +1,91 @@
-# Sprint 4: Troubleshooting Log - Ratings Not Loading
+# Troubleshooting Log
+
+## Sprint 4.5 Phase 2: Albums View Implementation (2025-11-28)
+
+**Date**: 2025-11-28  
+**Session Duration**: 16:00 - 18:50 (2h50m)  
+**Status**: ⚠️ **Partially Completed** - Deferred to Sprint 5
+
+---
+
+### Issue: localStorage Cache Missing New Fields
+
+**Problem**: After implementing new album fields (`bestEverAlbumId`, `bestEverUrl`, `tracksOriginalOrder`), albums loaded from cache showed `undefined` for these fields.
+
+**Root Cause**:
+- Albums cached in localStorage before code changes lack new normalized fields
+- `normalizeAlbumData()` changes not reflected in existing cache entries
+- Cache hit bypasses normalization, loading old structure
+
+**Symptoms**:
+```javascript
+// Console logs showed:
+bestEverAlbumId: undefined      // ❌ Missing
+bestEverUrl: undefined          // ❌ Missing  
+tracksOriginalOrderCount: undefined  // ❌ Missing
+```
+
+**Investigation** (via debug logs):
+```
+✅ L2 cache hit (localStorage): The Rolling Stones - Let It Bleed
+   ↓ (No normalization happens on cache hit)
+   ↓
+[DEBUG] renderExpandedList - First album: {
+  bestEverAlbumId: undefined,    // ❌ 
+  tracksOriginalOrder: undefined // ❌
+}
+```
+
+**Attempted Fixes**:
+1. ✅ Added "Refresh" button to force skip-cache reload
+2. ✅ Modified `loadAlbumsFromQueries(queries, skipCache)` to accept flag
+3. ⚠️ Partial success - requires manual user action
+
+**Workaround** (Current):
+- User clicks "Refresh" button in AlbumsView header
+- Or uses "Clear Cache" in Footer + page reload
+- Forces API fetch with fresh normalization
+
+**Decision**: ⏸️ **Defer Complete Fix to Sprint 5**
+
+**Rationale**:
+1. **Firestore = Better Solution**
+   - Persistent storage with schema versioning
+   - No localStorage limit constraints
+   - Automatic field migration via Firestore rules
+   - Single source of truth
+
+2. **Temporary Workaround Sufficient**
+   - Affects only existing cached data
+   - New data normalizes correctly
+   - Users can manually refresh when needed
+
+3. **Sprint 5 Architecture**:
+   ```javascript
+   // Future: Firestore replaces localStorage entirely
+   const albumDoc = await db
+     .collection('series/{id}/albums')
+     .doc(albumId)
+     .get()
+   
+   // All fields guaranteed present (schema enforced)
+   // Cache invalidation handled by Firestore timestamps
+   ```
+
+**Files Modified**:
+- `public/js/api/client.js` - Added comprehensive debug logging
+- `public/js/views/AlbumsView.js` - Added Refresh button + handler
+- `public/js/views/AlbumsView.js` - Fixed series title UI
+
+**Documented Issues for Sprint 5**:
+- [ ] Implement Firestore album storage
+- [ ] Migrate localStorage → Firestore on first load
+- [ ] Add schema version checking
+- [ ] Implement cache invalidation strategy
+
+---
+
+## Sprint 4: Ratings Not Loading (2025-11-27)
 
 **Date**: 2025-11-27  
 **Session Duration**: 09:30 - 14:32 (5h)  
@@ -274,3 +361,32 @@ if (albumQueries.length < 2) {
 ## Lessons Learned
 1. **Verify Dependencies**: Never assume a library is available just because the code uses it. Always check `package.json` or HTML includes.
 2. **Visual Verification**: "It works on my machine" (or in code) doesn't mean it renders correctly. Visual checks are crucial.
+
+---
+
+# Sprint 4.5 Phase 2: Troubleshooting Log - Albums View Bugs
+
+**Date**: 2025-11-28
+**Session Duration**: 16:15 - Present
+**Issue**: Critical bugs found in AlbumsView after initial implementation of Filter Header.
+
+## Timeline & Root Causes
+
+### 16:15 - Bugs Reported
+**Scenario**: User loaded "recent series test2" and clicked Continue.
+**Observed Issues**:
+1.  **View Mode Default**: Did not load "expanded" view by default as expected for the series.
+2.  **Albums Not Rendering**: "No albums" empty state shown despite albums being loaded in the store.
+3.  **View Ranking Layout**: Clicking "View Ranking" resulted in a broken/messy layout.
+
+### Investigation (Pending)
+**Hypotheses**:
+1.  **View Mode**: `AlbumsView` constructor might be ignoring `activeSeries` preferences or localStorage state is overriding incorrectly.
+2.  **Rendering**: `filterAlbums` might be aggressively filtering out albums (e.g., due to default filter state mismatch) or `render()` logic has a flaw when checking `filteredAlbums.length`.
+3.  **Layout**: CSS classes for the ranking view might be missing or conflicting with the new Tailwind setup.
+
+## Next Steps
+1.  Reproduce bugs via browser demo.
+2.  Debug `AlbumsView.js` logic.
+3.  Apply fixes and verify.
+
