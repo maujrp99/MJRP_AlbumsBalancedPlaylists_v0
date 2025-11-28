@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Equalizador SVG Gerado Matematicamente</title>
+    <style>
+        body {
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            color: white;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+
+        h3 {
+            margin-bottom: 10px;
+            font-weight: normal;
+            color: #ddd;
+        }
+
+        svg {
+            background-color: black;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h3>Visualização do SVG Gerado (Equalizer)</h3>
+    <svg id="svgEqualizer" width="700" height="300" viewBox="0 0 700 300"></svg>
+
+    <script type="module">
+        import { SvgGenerator } from './js/utils/SvgGenerator.js';
+
+        window.generateAll = function () {
+            // Equalizer
+            const svgEq = document.getElementById('svgEqualizer');
+            SvgGenerator.generateEqualizer(svgEq, {
+                numCols: 40,
+                maxBlocks: 28,
+                gap: 2,
+                heightRatio: 0.33,
+                headroomRatio: 0.10,
+                showGuide: true
+            });
+        }
+
+        // Initialize on load
+        window.onload = generateAll;
+    </script>
+</body>
+
+</html>

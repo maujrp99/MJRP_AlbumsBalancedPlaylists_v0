@@ -227,7 +227,11 @@ describe('PlaylistsStore', () => {
                     p1p2Rule: true
                 },
                 isDirty: false,
-                isSynchronized: false
+                isSynchronized: false,
+                history: [],
+                currentVersionIndex: -1,
+                canUndo: false,
+                canRedo: false
             })
         })
     })

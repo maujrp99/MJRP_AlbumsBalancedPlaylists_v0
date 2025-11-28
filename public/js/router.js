@@ -16,9 +16,10 @@ export class Router {
 
         // Intercept link clicks for SPA navigation
         document.addEventListener('click', (e) => {
-            if (e.target.matches('a[href^="/"]')) {
+            const link = e.target.closest('a[href^="/"]')
+            if (link) {
                 e.preventDefault()
-                this.navigate(e.target.getAttribute('href'))
+                this.navigate(link.getAttribute('href'))
             }
         })
     }

@@ -8,6 +8,65 @@ Format:
 
 ---
 
+## v2.0.0-alpha.5 Sprint 4.5 Phase 1: Landing View UI/UX (2025-11-28)
+
+**Status**: In development (feature/v2.0-foundation branch)
+
+### Summary
+Finalized the Landing View (HomeView) UI/UX with a premium "Nebula" theme. Implemented a dynamic SVG background generator for the Hero Banner, a new SVG logo, and fixed critical styling issues by integrating Tailwind CSS.
+
+### Features
+
+**Hero Banner Overhaul**:
+- **Dynamic SVG Background**:
+  - Created `SvgGenerator.js` utility to generate mathematical equalizer patterns.
+  - Implemented "Vibrant Spectrum" gradient (Green -> Yellow -> Red).
+  - Configured for 33% height occupancy to leave room for copy.
+  - Generated unique `hero_bg.svg` using server-side script.
+- **New Logo**:
+  - Created `MJRPLogo` SVG (Vinyl Record with Flame) in `Icons.js`.
+  - Replaced placeholder icon in TopNav and Hero.
+
+**Styling Infrastructure**:
+- **Tailwind CSS Integration**:
+  - Added Tailwind CDN to `index-v2.html` (was previously missing).
+  - Configured basic theme extension.
+  - Removed conflicting legacy styles.
+
+**Developer Tools**:
+- **SVG Debugger**:
+  - Created `public/debug-svg-generator.html` for real-time visualization of SVG generation logic.
+  - Allows tweaking parameters (columns, gap, height ratio) visually.
+
+### Fixes
+
+1. **Missing Styles** (Critical):
+   - **Issue**: Header, Footer, and Hero were unstyled on localhost.
+   - **Fix**: Added `<script src="https://cdn.tailwindcss.com"></script>` to `index-v2.html`.
+   - **Impact**: UI now renders correctly with all Tailwind classes applied.
+
+2. **SVG Generation**:
+   - **Issue**: Initial SVG generation script failed due to ESM/CommonJS mismatch.
+   - **Fix**: Updated `scripts/generate_hero_svg.js` to use ESM imports.
+
+### Files Added
+```
+public/js/utils/SvgGenerator.js        # Generic SVG generation logic
+public/debug-svg-generator.html        # Visual debugger for SVGs
+scripts/generate_hero_svg.js           # Server-side generation script
+public/assets/images/hero_bg.svg       # Generated background asset
+```
+
+### Files Modified
+```
+public/index-v2.html                   # Added Tailwind CDN
+public/js/views/HomeView.js            # Updated Hero structure and classes
+public/js/components/Icons.js          # Added MJRPLogo
+public/js/components/TopNav.js         # Updated logo usage
+```
+
+---
+
 ## v2.0.0-alpha.4 Sprint 4: Playlists Management (2025-11-26)
 
 **Status**: In development (feature/v2.0-foundation branch)
@@ -164,6 +223,16 @@ createSnapshot(description) {
     -   **Error Feedback**: Replaced `alert()` with inline red error messages in `PlaylistsView`.
     -   **Timestamps**: Added "Last updated" footer to views for visual liveness confirmation.
 
+5.  **Series Mixing (Ghost Albums)**:
+    -   **Issue**: Albums from previous series persisted when switching series (e.g., Test 14 albums showing in Test 11).
+    -   **Fix**: Added `albumsStore.reset()` before loading new series albums in `AlbumsView`.
+    -   **Impact**: Clean state when switching contexts.
+
+6.  **Playlist Rank Display**:
+    -   **Issue**: Track rank showed as "-" in playlists.
+    -   **Fix**: Updated `client.js` normalization to fallback to `acclaimRank` or `finalPosition` if `rank` is missing.
+    -   **Impact**: "Rank: X" correctly displayed in playlist cards.
+
 ### Bug Fixes
 
 1. **Import Statement** (Syntax):
@@ -215,7 +284,7 @@ vite.config.js                     # +1 line - /playlists middleware
 **Why Version History?**
 - Users experiment with track ordering
 - Easy to undo mistakes without fear
--Industry standard (Spotify, Logic Pro, etc.)
+- Industry standard (Spotify, Logic Pro, etc.)
 
 **Why Immutable Snapshots?**
 - Prevents reference bugs

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="flameGrad" x1="20" y1="80" x2="80" y2="20" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF4D00"/>
+      <stop offset="50%" stop-color="#FF8800"/>
+      <stop offset="100%" stop-color="#FFCC00"/>
+    </linearGradient>
+    <radialGradient id="vinylGrad" cx="50" cy="50" r="45" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#222"/>
+      <stop offset="100%" stop-color="#000"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Flame Background -->
+  <path d="M50 5 C30 20, 10 40, 15 65 C20 90, 45 95, 50 95 C55 95, 80 90, 85 65 C90 40, 70 20, 50 5 Z" fill="url(#flameGrad)" opacity="0.8"/>
+  <path d="M50 15 C40 30, 30 45, 35 60 C40 75, 50 80, 50 80 C50 80, 60 75, 65 60 C70 45, 60 30, 50 15 Z" fill="#FFF" opacity="0.2"/>
+
+  <!-- Vinyl Record -->
+  <circle cx="50" cy="55" r="30" fill="url(#vinylGrad)" stroke="#333" stroke-width="1"/>
+  <!-- Grooves -->
+  <circle cx="50" cy="55" r="24" stroke="#444" stroke-width="0.5" fill="none"/>
+  <circle cx="50" cy="55" r="18" stroke="#444" stroke-width="0.5" fill="none"/>
+  <circle cx="50" cy="55" r="12" stroke="#444" stroke-width="0.5" fill="none"/>
+  <!-- Label -->
+  <circle cx="50" cy="55" r="8" fill="#FF4D00"/>
+  <circle cx="50" cy="55" r="2" fill="#000"/>
+</svg>

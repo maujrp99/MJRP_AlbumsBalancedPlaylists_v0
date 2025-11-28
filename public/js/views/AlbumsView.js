@@ -4,6 +4,7 @@ import { seriesStore } from '../stores/series.js'
 import { apiClient } from '../api/client.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
+import { getIcon } from '../components/Icons.js'
 
 /**
  * AlbumsView
@@ -23,26 +24,43 @@ export class AlbumsView extends BaseView {
     const activeSeries = seriesStore.getActiveSeries()
 
     return `
-      <div class="albums-view">
-        <header class="view-header">
+      <div class="albums-view container">
+        <header class="view-header mb-8 fade-in">
           ${Breadcrumb.render('/albums')}
           
-          <div class="header-content">
-            <h1>📚 Albums Library</h1>
-            ${activeSeries ? `
-              <div class="active-series-badge">
-                <span class="badge-label">Series:</span>
-                <span class="badge-value">${this.escapeHtml(activeSeries.name)}</span>
-              </div>
-            ` : ''}
+          <div class="header-content flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <div class="header-title-row">
+              <h1 class="flex items-center gap-3">
+                ${activeSeries ? this.escapeHtml(activeSeries.name) : `${getIcon('Music', 'w-8 h-8')} Albums Library`}
+              </h1>
+              ${activeSeries ? `
+                <div class="active-series-badge mt-2">
+                  <span class="badge badge-neutral flex items-center gap-1">
+                    ${getIcon('Info', 'w-3 h-3')} Series: ${this.escapeHtml(activeSeries.name)}
+                  </span>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="header-actions flex gap-3">
+              ${activeSeries ? `
+                <a href="/series/${activeSeries.id}/ranking" class="btn btn-primary" data-link>
+                  ${getIcon('BarChart', 'w-5 h-5')}
+                  View Consolidated Ranking
+                </a>
+              ` : ''}
+            </div>
           </div>
           
-          <div class="header-actions">
+          <div class="search-bar relative max-w-md w-full">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+              ${getIcon('Search', 'w-5 h-5')}
+            </span>
             <input 
               type="search" 
               id="albumSearch" 
               placeholder="Search albums..."
-              class="search-input"
+              class="form-control pl-10"
               value="${this.searchQuery}"
             />
           </div>
@@ -50,13 +68,13 @@ export class AlbumsView extends BaseView {
 
         ${this.isLoading ? this.renderLoadingProgress() : ''}
 
-        <div class="albums-grid" id="albumsGrid">
+        <div class="albums-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="albumsGrid">
           ${this.renderAlbumsGrid(albums)}
         </div>
 
         ${albums.length === 0 && !this.isLoading ? this.renderEmptyState() : ''}
         
-        <footer class="view-footer">
+        <footer class="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
           <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
         </footer>
       </div>
@@ -67,45 +85,59 @@ export class AlbumsView extends BaseView {
     const filtered = this.filterAlbums(albums)
 
     if (filtered.length === 0 && this.searchQuery) {
-      return '<p class="no-results">No albums match your search.</p>'
+      return `
+        <div class="col-span-full text-center py-12 text-muted">
+          <p class="text-xl mb-2">No albums match your search</p>
+          <p class="text-sm">Try adjusting your filters</p>
+        </div>
+      `
     }
 
     return filtered.map(album => `
-      <div class="album-card" data-album-id="${album.id || ''}">
-        <div class="album-cover">
-          <div class="cover-placeholder">🎵</div>
-        </div>
-        
-        <div class="album-info">
-          <h3 class="album-title">${this.escapeHtml(album.title)}</h3>
-          <p class="album-artist">${this.escapeHtml(album.artist)}</p>
-          ${album.year ? `<p class="album-year">${album.year}</p>` : ''}
+      <div class="album-card group relative overflow-hidden" data-album-id="${album.id || ''}">
+        <div class="album-cover aspect-square bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center mb-4 rounded-xl relative">
+          ${album.coverUrl ?
+        `<img src="${album.coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
+        `<div class="text-6xl opacity-20">${getIcon('Music', 'w-24 h-24')}</div>`
+      }
           
-          <div class="album-meta">
-            <span class="badge">
-              ${album.tracks?.length || 0} tracks
-            </span>
-            ${(() => {
-        console.log(`[AlbumsView] Rendering album: ${album.title}`, {
-          hasRatings: album.acclaim?.hasRatings,
-          tracksWithRating: album.tracks?.filter(t => t.rating).length
-        })
-        const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
-        return hasRatings ?
-          '<span class="badge badge-success">✓ Rated</span>' :
-          '<span class="badge badge-warning">⚠ No ratings</span>'
-      })()}
-            ${album._cached ?
-        '<span class="badge badge-info">💾 Cached</span>' : ''}
+          <!-- Hover Overlay -->
+          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-sm">
+             <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Refresh Data">
+               ${getIcon('Refresh', 'w-5 h-5')}
+             </button>
+             <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Remove Album">
+               ${getIcon('Trash', 'w-5 h-5')}
+             </button>
           </div>
         </div>
         
-        <div class="album-actions">
+        <div class="album-info">
+          <h3 class="album-title font-bold text-lg truncate mb-1" title="${this.escapeHtml(album.title)}">${this.escapeHtml(album.title)}</h3>
+          <p class="album-artist text-accent-primary text-sm mb-2">${this.escapeHtml(album.artist)}</p>
+          
+          <div class="album-meta flex flex-wrap gap-2 mb-4">
+            <span class="badge badge-neutral text-xs">
+              ${album.year || 'Unknown'}
+            </span>
+            <span class="badge badge-neutral text-xs">
+              ${album.tracks?.length || 0} tracks
+            </span>
+            ${(() => {
+        const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
+        return hasRatings ?
+          `<span class="badge badge-success text-xs flex items-center gap-1">${getIcon('Check', 'w-3 h-3')} Rated</span>` :
+          `<span class="badge badge-warning text-xs flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
+      })()}
+          </div>
+        </div>
+        
+        <div class="album-actions mt-auto">
           <button 
-            class="btn btn-primary btn-sm"
+            class="btn btn-secondary btn-sm w-full justify-center group-hover:btn-primary transition-all"
             data-action="view-ranking"
             data-album-id="${album.id || ''}">
-            View Ranking →
+            View Ranking ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1')}
           </button>
         </div>
       </div>
@@ -127,14 +159,14 @@ export class AlbumsView extends BaseView {
     const percentage = total > 0 ? Math.round((current / total) * 100) : 0
 
     return `
-      <div class="loading-overlay">
-        <div class="loading-content">
-          <div class="loading-spinner"></div>
-          <p class="loading-text">Loading albums...</p>
-          <div class="progress-bar-container">
-            <div class="progress-bar" style="width: ${percentage}%"></div>
+      <div class="loading-overlay fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="loading-content glass-panel p-8 max-w-md w-full text-center">
+          <div class="loading-spinner w-12 h-12 border-4 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p class="loading-text text-xl font-bold mb-2">Loading albums...</p>
+          <div class="progress-bar-container bg-white/10 h-2 rounded-full overflow-hidden mb-2">
+            <div class="progress-bar bg-accent-primary h-full transition-all duration-300" style="width: ${percentage}%"></div>
           </div>
-          <p class="loading-status">${current} / ${total} (${percentage}%)</p>
+          <p class="loading-status text-muted">${current} / ${total} (${percentage}%)</p>
         </div>
       </div>
     `
@@ -142,12 +174,12 @@ export class AlbumsView extends BaseView {
 
   renderEmptyState() {
     return `
-      <div class="empty-state">
-        <p class="empty-icon">📝</p>
-        <p class="empty-text">No albums in library</p>
-        <p class="empty-hint">Create a series from the home page to get started</p>
+      <div class="empty-state text-center py-16 glass-panel">
+        <div class="text-6xl mb-6 opacity-30">${getIcon('Music', 'w-24 h-24 mx-auto')}</div>
+        <h2 class="text-2xl font-bold mb-2">No albums in library</h2>
+        <p class="text-muted mb-8">Create a series from the home page to get started</p>
         <button class="btn btn-primary" id="goHomeBtn">
-          Go to Home
+          ${getIcon('ArrowLeft', 'w-4 h-4 mr-2')} Go to Home
         </button>
       </div>
     `
@@ -182,10 +214,46 @@ export class AlbumsView extends BaseView {
     }
 
     // View ranking buttons (event delegation)
-    this.on(this.container, 'click', (e) => {
-      if (e.target.dataset.action === 'view-ranking') {
-        const albumId = e.target.dataset.albumId
+    this.on(this.container, 'click', async (e) => {
+      // View Ranking
+      if (e.target.dataset.action === 'view-ranking' || e.target.closest('[data-action="view-ranking"]')) {
+        const btn = e.target.dataset.action === 'view-ranking' ? e.target : e.target.closest('[data-action="view-ranking"]')
+        const albumId = btn.dataset.albumId
         router.navigate(`/ranking/${albumId}`)
+        return
+      }
+
+      // Refresh Album
+      const refreshBtn = e.target.closest('[title="Refresh Data"]')
+      if (refreshBtn) {
+        const card = refreshBtn.closest('.album-card')
+        const albumId = card?.dataset.albumId
+        if (albumId) {
+          if (confirm('Refresh album data? This will re-fetch from the API.')) {
+            // For now, we'll just reload the series to force a refresh, or we could implement a specific refresh method
+            // A simple way is to remove and re-add, but that's risky.
+            // Better: just alert for now as "Coming Soon" or implement a real refresh if API supports it.
+            // Given the current API client, we don't have a single album refresh.
+            // Let's just reload the page for now to be safe, or show a toast.
+            alert('🔄 Refreshing data is not fully implemented in the backend yet. Please reload the series.')
+          }
+        }
+        return
+      }
+
+      // Remove Album
+      const trashBtn = e.target.closest('[title="Remove Album"]')
+      if (trashBtn) {
+        const card = trashBtn.closest('.album-card')
+        const albumId = card?.dataset.albumId
+        if (albumId) {
+          if (confirm('Are you sure you want to remove this album from the library?')) {
+            albumsStore.removeAlbum(albumId)
+            // Also update the series query list if possible? 
+            // For now, just removing from the view is good enough for the UI.
+          }
+        }
+        return
       }
     })
 
