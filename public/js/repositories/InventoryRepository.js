@@ -20,12 +20,12 @@ export class InventoryRepository extends BaseRepository {
     }
 
     /**
-     * Add album to inventory
-     * @param {Object} album - Album data (with full albumData)
-     * @param {string} format - Physical format: "cd" | "vinyl" | "dvd" | "bluray" | "digital"
-     * @param {Object} options - Optional metadata (purchasePrice, notes, etc.)
-     * @returns {Promise<string>} Inventory album ID
-     */
+   * Add album to inventory
+   * @param {Object} album - Album data (with full albumData)
+   * @param {string} format - Physical format: "cd" | "vinyl" | "dvd" | "bluray" | "digital"
+   * @param {Object} options - Optional metadata (purchasePrice, currency, notes, etc.)
+   * @returns {Promise<string>} Inventory album ID
+   */
     async addAlbum(album, format = 'cd', options = {}) {
         if (!album || !album.title || !album.artist) {
             throw new Error('Album must have title and artist')
@@ -34,6 +34,12 @@ export class InventoryRepository extends BaseRepository {
         const validFormats = ['cd', 'vinyl', 'dvd', 'bluray', 'digital']
         if (!validFormats.includes(format)) {
             throw new Error(`Format must be one of: ${validFormats.join(', ')}`)
+        }
+
+        const validCurrencies = ['USD', 'BRL']
+        const currency = options.currency || 'USD'
+        if (!validCurrencies.includes(currency)) {
+            throw new Error(`Currency must be one of: ${validCurrencies.join(', ')}`)
         }
 
         // Check if album already in inventory
@@ -48,6 +54,7 @@ export class InventoryRepository extends BaseRepository {
             year: album.year,
             format,
             purchasePrice: options.purchasePrice || null,
+            currency,
             purchaseDate: options.purchaseDate || null,
             condition: options.condition || null,
             notes: options.notes || '',
@@ -59,13 +66,13 @@ export class InventoryRepository extends BaseRepository {
     }
 
     /**
-     * Update inventory album
-     * @param {string} albumId - Inventory album ID
-     * @param {Object} updates - Fields to update (format, purchasePrice, notes, etc.)
-     * @returns {Promise<string>} Album ID
-     */
+   * Update inventory album
+   * @param {string} albumId - Inventory album ID
+   * @param {Object} updates - Fields to update (format, purchasePrice, notes, etc.)
+   * @returns {Promise<string>} Album ID
+   */
     async updateAlbum(albumId, updates) {
-        const allowed = ['format', 'purchasePrice', 'purchaseDate', 'condition', 'notes']
+        const allowed = ['format', 'purchasePrice', 'currency', 'purchaseDate', 'condition', 'notes']
         const filtered = {}
 
         allowed.forEach(field => {
@@ -79,6 +86,29 @@ export class InventoryRepository extends BaseRepository {
         }
 
         return this.update(albumId, filtered)
+    }
+
+    /**
+     * Update price inline (for quick edits)
+     * @param {string} albumId - Inventory album ID
+     * @param {number} newPrice - New price
+     * @param {string} currency - Currency (USD or BRL)
+     * @returns {Promise<string>} Album ID
+     */
+    async updatePrice(albumId, newPrice, currency = 'USD') {
+        if (newPrice < 0) {
+            throw new Error('Price cannot be negative')
+        }
+
+        const validCurrencies = ['USD', 'BRL']
+        if (!validCurrencies.includes(currency)) {
+            throw new Error('Currency must be USD or BRL')
+        }
+
+        return this.update(albumId, {
+            purchasePrice: newPrice,
+            currency
+        })
     }
 
     /**
@@ -110,9 +140,9 @@ export class InventoryRepository extends BaseRepository {
     }
 
     /**
-     * Get inventory statistics
-     * @returns {Promise<Object>} Stats (count by format, total value, etc.)
-     */
+   * Get inventory statistics
+   * @returns {Promise<Object>} Stats (count by format, total value by currency, etc.)
+   */
     async getStatistics() {
         const albums = await this.findAll()
 
@@ -125,12 +155,16 @@ export class InventoryRepository extends BaseRepository {
                 bluray: 0,
                 digital: 0
             },
-            totalValue: 0,
-            averagePrice: 0
+            totalValueUSD: 0,
+            totalValueBRL: 0,
+            averagePriceUSD: 0,
+            averagePriceBRL: 0
         }
 
-        let totalPrice = 0
-        let priceCount = 0
+        let totalPriceUSD = 0
+        let totalPriceBRL = 0
+        let countUSD = 0
+        let countBRL = 0
 
         albums.forEach(album => {
             // Count by format
@@ -138,15 +172,25 @@ export class InventoryRepository extends BaseRepository {
                 stats.byFormat[album.format] = (stats.byFormat[album.format] || 0) + 1
             }
 
-            // Total value
+            // Total value by currency
             if (album.purchasePrice && !isNaN(album.purchasePrice)) {
-                totalPrice += Number(album.purchasePrice)
-                priceCount++
+                const price = Number(album.purchasePrice)
+                const currency = album.currency || 'USD'
+
+                if (currency === 'USD') {
+                    totalPriceUSD += price
+                    countUSD++
+                } else if (currency === 'BRL') {
+                    totalPriceBRL += price
+                    countBRL++
+                }
             }
         })
 
-        stats.totalValue = totalPrice
-        stats.averagePrice = priceCount > 0 ? totalPrice / priceCount : 0
+        stats.totalValueUSD = totalPriceUSD
+        stats.totalValueBRL = totalPriceBRL
+        stats.averagePriceUSD = countUSD > 0 ? totalPriceUSD / countUSD : 0
+        stats.averagePriceBRL = countBRL > 0 ? totalPriceBRL / countBRL : 0
 
         return stats
     }

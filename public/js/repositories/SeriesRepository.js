@@ -59,49 +59,6 @@ export class SeriesRepository extends BaseRepository {
     }
 
     /**
-     * Delete series with cascade (deletes all albums + playlists)
-     * @param {string} seriesId - Series ID
-     * @returns {Promise<void>}
-     */
-    async deleteWithCascade(seriesId) {
-        const batch = this.db.batch()
-
-        // Get all albums in this series
-        const albumsSnapshot = await this.collection
-            .doc(seriesId)
-            .collection('albums')
-            .get()
-
-        // Delete all albums
-        albumsSnapshot.docs.forEach(doc => {
-            batch.delete(doc.ref)
-        })
-
-        // Get all playlists in this series
-        const playlistsSnapshot = await this.collection
-            .doc(seriesId)
-            .collection('playlists')
-            .get()
-
-        // Delete all playlists
-        playlistsSnapshot.docs.forEach(doc => {
-            batch.delete(doc.ref)
-        })
-
-        // Delete the series itself
-        batch.delete(this.collection.doc(seriesId))
-
-        // Execute batch (all-or-nothing)
-        await batch.commit()
-
-        // Invalidate cache
-        if (this.cache) {
-            await this.cache.invalidate(this.getCacheKey(seriesId))
-            await this.cache.invalidate(this.getCacheKey('all'))
-        }
-    }
-
-    /**
      * Create series from inventory albums
      * @param {string[]} albumIds - Inventory album IDs
      * @param {string} seriesName - Name for new series
