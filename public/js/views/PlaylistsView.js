@@ -60,7 +60,7 @@ export class PlaylistsView extends BaseView {
         <div id="mainContent" class="fade-in" style="animation-delay: 0.1s">
           ${playlists.length === 0 ? this.renderGenerateSection() : ''}
 
-          <div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="playlistsGrid">
+          <div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="playlistsGrid">
             ${this.renderPlaylists(playlists)}
           </div>
         </div>
@@ -99,12 +99,11 @@ export class PlaylistsView extends BaseView {
 
     if (mainContent) {
       if (playlists.length === 0) {
-        const generateSection = this.$('.generate-section')
-        if (!generateSection) {
-          mainContent.innerHTML = this.renderGenerateSection() + '<div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="playlistsGrid"></div>'
-          const generateBtn = this.$('#generateBtn')
-          if (generateBtn) this.on(generateBtn, 'click', () => this.handleGenerate())
-        }
+        // Always re-render generate section to reflect potential changes in album count (e.g. after recovery)
+        mainContent.innerHTML = this.renderGenerateSection() + '<div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="playlistsGrid"></div>'
+
+        const generateBtn = this.$('#generateBtn')
+        if (generateBtn) this.on(generateBtn, 'click', () => this.handleGenerate())
       } else {
         const generateSection = this.$('.generate-section')
         if (generateSection) generateSection.remove()
@@ -112,15 +111,15 @@ export class PlaylistsView extends BaseView {
         const grid = this.$('#playlistsGrid')
         if (grid) grid.innerHTML = this.renderPlaylists(playlists)
       }
-    }
 
-    if (exportSection) {
-      exportSection.innerHTML = playlists.length > 0 ? this.renderExportSection() : ''
-      // Re-attach export listeners would go here
-    }
+      if (exportSection) {
+        exportSection.innerHTML = playlists.length > 0 ? this.renderExportSection() : ''
+        // Re-attach export listeners would go here
+      }
 
-    const footerTime = this.$('.last-update')
-    if (footerTime) footerTime.textContent = `Last updated: ${new Date().toLocaleTimeString()}`
+      const footerTime = this.$('.last-update')
+      if (footerTime) footerTime.textContent = `Last updated: ${new Date().toLocaleTimeString()}`
+    }
   }
 
   renderUndoRedoControls(state) {
@@ -220,12 +219,18 @@ export class PlaylistsView extends BaseView {
         <div class="track-info pl-6">
           <div class="flex justify-between items-start gap-2">
             <div class="track-title font-medium text-sm line-clamp-1" title="${this.escapeHtml(track.title)}">${this.escapeHtml(track.title)}</div>
-            ${track.rating ? `<span class="badge ${ratingClass} text-[10px] px-1.5 py-0.5 h-fit">${track.rating}</span>` : ''}
+            <div class="flex items-center gap-1">
+              ${track.rank ? `<span class="badge badge-neutral text-[10px] px-1.5 py-0.5 h-fit">#${track.rank}</span>` : ''}
+              ${track.rating ? `<span class="badge ${ratingClass} text-[10px] px-1.5 py-0.5 h-fit">${track.rating}</span>` : ''}
+            </div>
           </div>
           
-          <div class="track-meta text-xs text-muted mt-1 flex justify-between items-center">
-             <span class="truncate max-w-[70%]">${track.artist ? this.escapeHtml(track.artist) : ''}</span>
-             <span class="font-mono opacity-70">${this.formatDuration(track.duration)}</span>
+          <div class="track-meta text-xs text-muted mt-1 space-y-0.5">
+            ${track.artist ? `<div class="truncate">${this.escapeHtml(track.artist)}</div>` : ''}
+            <div class="flex justify-between items-center">
+              ${track.album ? `<span class="truncate opacity-70">${this.escapeHtml(track.album)}</span>` : '<span></span>'}
+              <span class="font-mono opacity-70">${this.formatDuration(track.duration)}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -347,6 +352,15 @@ export class PlaylistsView extends BaseView {
 
     // Check for auto-generate flag
     const urlParams = new URLSearchParams(window.location.search)
+    const seriesId = urlParams.get('seriesId')
+
+    // Data Recovery: If albums are missing but we have a series, load them
+    const albums = albumsStore.getAlbums()
+    if (albums.length === 0 && seriesId) {
+      console.log('[PlaylistsView] Albums missing, attempting to recover from series:', seriesId)
+      await this.recoverSeriesData(seriesId)
+    }
+
     if (urlParams.get('generate') === 'true') {
       console.log('[PlaylistsView] Auto-generating playlists requested')
       // Remove param to prevent re-generation on refresh
@@ -355,6 +369,63 @@ export class PlaylistsView extends BaseView {
 
       // Trigger generation after a short delay to ensure stores are ready
       setTimeout(() => this.handleGenerate(), 500)
+    }
+  }
+
+  async recoverSeriesData(seriesId) {
+    try {
+      // Ensure series is active
+      let activeSeries = seriesStore.getActiveSeries()
+      if (!activeSeries || activeSeries.id !== seriesId) {
+        seriesStore.setActiveSeries(seriesId)
+        activeSeries = seriesStore.getActiveSeries()
+      }
+
+      // If still no series (e.g. hard refresh), try to load from Firestore
+      if (!activeSeries) {
+        const { db } = await import('../app.js')
+        await seriesStore.loadFromFirestore(db)
+        seriesStore.setActiveSeries(seriesId)
+        activeSeries = seriesStore.getActiveSeries()
+      }
+
+      if (activeSeries && activeSeries.albumQueries) {
+        console.log('[PlaylistsView] Recovering albums for:', activeSeries.name)
+
+        // Show loading state
+        this.isGenerating = true
+        this.update()
+
+        // Reuse the logic from AlbumsView (we should refactor this to a shared service later)
+        // For now, we manually fetch and populate the store
+        const queries = activeSeries.albumQueries
+
+        // Reset store first
+        albumsStore.reset()
+
+        let loadedCount = 0
+        for (const query of queries) {
+          try {
+            // Use fetchAlbum instead of searchAlbum
+            const data = await apiClient.fetchAlbum(query)
+            if (data) {
+              albumsStore.addAlbum(data)
+              loadedCount++
+            }
+          } catch (e) {
+            console.warn('Failed to recover album:', query, e)
+          }
+        }
+
+        console.log('[PlaylistsView] Recovery complete. Albums loaded:', loadedCount)
+
+        this.isGenerating = false
+        this.update()
+      }
+    } catch (err) {
+      console.error('[PlaylistsView] Recovery failed:', err)
+      this.isGenerating = false
+      this.update()
     }
   }
 

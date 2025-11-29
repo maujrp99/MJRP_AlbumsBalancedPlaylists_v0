@@ -32,6 +32,11 @@ export class HomeView extends BaseView {
               <h1 class="text-2xl md:text-4xl font-syne font-extrabold text-white leading-tight tracking-wide md:whitespace-nowrap">
                 The Album Playlist Synthesizer
               </h1>
+              <img 
+                src="/assets/images/newMJRPlogorealistic.png?v=${Date.now()}" 
+                alt="MJRP Logo" 
+                class="w-24 h-24 md:w-28 md:h-28 object-contain shrink-0"
+              />
             </div>
             
             <p class="text-lg md:text-xl text-gray-300 font-light leading-relaxed max-w-2xl border-l-4 border-orange-500/50 pl-4">
@@ -245,7 +250,7 @@ export class HomeView extends BaseView {
 
   handleResumeSeries(seriesId) {
     seriesStore.setActiveSeries(seriesId)
-    router.navigate('/albums')
+    router.navigate(`/albums?seriesId=${seriesId}`)
   }
 
   updateRecentSeries(series) {

@@ -4,7 +4,7 @@
  */
 
 import { InventoryRepository } from '../repositories/InventoryRepository.js'
-import { firestore } from '../firebase-config.js'
+import { db as firestore } from '../app.js'
 import { cacheManager } from '../cache/CacheManager.js'
 
 export class InventoryStore {

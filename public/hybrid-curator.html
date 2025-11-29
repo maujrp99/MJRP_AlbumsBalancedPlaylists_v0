@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -132,8 +133,8 @@
             min-height: calc(100vh - 72px);
             padding: 2rem 1rem 3rem;
             background: radial-gradient(circle at 20% 10%, rgba(137, 243, 255, 0.15), transparent 40%),
-                        radial-gradient(circle at 80% 0%, rgba(109, 130, 255, 0.13), transparent 45%),
-                        var(--bg-base);
+                radial-gradient(circle at 80% 0%, rgba(109, 130, 255, 0.13), transparent 45%),
+                var(--bg-base);
         }
 
         .glass-panel {
@@ -376,8 +377,13 @@
         }
 
         @keyframes shimmer {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(100%); }
+            from {
+                transform: translateX(-100%);
+            }
+
+            to {
+                transform: translateX(100%);
+            }
         }
 
         #loading-spinner .spinner {
@@ -425,11 +431,28 @@
             }
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         /* Footer log styles */
-        .app-footer { border-top: 1px solid rgba(255,255,255,0.03); margin-top: 2rem; padding-top: 0.75rem; }
-        .footer-log-entry { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace; }
-        .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.8rem; border-radius: 999px; }
+        .app-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            margin-top: 2rem;
+            padding-top: 0.75rem;
+        }
+
+        .footer-log-entry {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            border-radius: 999px;
+        }
     </style>
 </head>
 
@@ -446,8 +469,10 @@
                                     <stop offset="100%" stop-color="#7F6DFF" />
                                 </linearGradient>
                             </defs>
-                            <circle cx="24" cy="24" r="18" stroke="url(#logoGradient)" stroke-width="2" fill="none" opacity="0.85" />
-                            <path d="M20 14 L28 24 L20 34" stroke="url(#logoGradient)" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                            <circle cx="24" cy="24" r="18" stroke="url(#logoGradient)" stroke-width="2" fill="none"
+                                opacity="0.85" />
+                            <path d="M20 14 L28 24 L20 34" stroke="url(#logoGradient)" stroke-width="2.5"
+                                stroke-linecap="round" fill="none" />
                         </svg>
                     </div>
                     <div>
@@ -457,12 +482,17 @@
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button id="loadDataBtn" class="btn btn-secondary" type="button" aria-label="Abrir modal para carregar álbuns">Carregar Dados</button>
-                    <button id="generateQuickBtn" class="btn btn-primary" type="button" title="Gerar playlists" aria-label="Gerar playlists">Gerar Playlists</button>
-                    <button id="toggleViewBtn" class="btn btn-secondary" type="button" aria-pressed="false">Ver Playlists</button>
-                    <button id="saveBtn" class="btn btn-secondary" type="button"><span id="save-text">Salvar</span></button>
+                    <button id="loadDataBtn" class="btn btn-secondary" type="button"
+                        aria-label="Abrir modal para carregar álbuns">Carregar Dados</button>
+                    <button id="generateQuickBtn" class="btn btn-primary" type="button" title="Gerar playlists"
+                        aria-label="Gerar playlists">Gerar Playlists</button>
+                    <button id="toggleViewBtn" class="btn btn-secondary" type="button" aria-pressed="false">Ver
+                        Playlists</button>
+                    <button id="saveBtn" class="btn btn-secondary" type="button"><span
+                            id="save-text">Salvar</span></button>
                     <!-- Operator tooling: batch update of acclaim. Hidden by default; remove 'hidden' class to expose. -->
-                    <button id="updateAcclaimBtn" class="btn btn-secondary hidden" type="button">Atualizar Aclamação (Operador)</button>
+                    <button id="updateAcclaimBtn" class="btn btn-secondary hidden" type="button">Atualizar Aclamação
+                        (Operador)</button>
                 </div>
             </div>
         </header>
@@ -476,7 +506,8 @@
             <div id="emptyStateCta" class="empty-state hidden" role="status" aria-live="polite">
                 <p class="text-muted">Comece com MJRP Balanced Play</p>
                 <h3>Não há dados para processar ainda.</h3>
-                <p class="text-sm text-muted">Clique em Carregar Dados para abrir o modal de importação e trazer álbuns via texto.</p>
+                <p class="text-sm text-muted">Clique em Carregar Dados para abrir o modal de importação e trazer álbuns
+                    via texto.</p>
                 <button id="emptyStateBtn" class="btn btn-primary mt-4" type="button">Abrir modal de importação</button>
             </div>
 
@@ -484,7 +515,8 @@
                 <h2 class="text-3xl font-bold text-white mb-6">Álbuns (Origem)</h2>
                 <div id="albums-summary" class="glass-panel mb-6"></div>
                 <div class="text-center my-6">
-                    <button id="generateBtn" class="btn btn-primary px-8 py-3 font-bold" type="button">Gerar Playlists (Algoritmo Híbrido)</button>
+                    <button id="generateBtn" class="btn btn-primary px-8 py-3 font-bold" type="button">Gerar Playlists
+                        (Algoritmo Híbrido)</button>
                 </div>
                 <div id="albums-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </section>
@@ -496,14 +528,16 @@
                     <!-- Traceability panel header removed from main UI (moved to footer logs) -->
                     <div id="rankingSourcesList" class="flex flex-wrap gap-2"></div>
                     <div class="ranking-acclaim-section">
-                        <h4 class="text-xs font-semibold tracking-[0.3em] uppercase text-spotify-lightgray">Ranking de Aclamação</h4>
+                        <h4 class="text-xs font-semibold tracking-[0.3em] uppercase text-spotify-lightgray">Ranking de
+                            Aclamação</h4>
                         <div id="rankingAcclaimList" class="mt-2 space-y-2"></div>
                     </div>
                     <div id="rankingSummaryList" class="mt-4 space-y-3"></div>
                 </div>
                 <!-- Balanced Playlists title (styled like 'Ranking de Aclamação') placed below the ranking section -->
                 <div class="mb-4">
-                    <h4 class="text-xs font-semibold tracking-[0.3em] uppercase text-spotify-lightgray">Balanced Playlists</h4>
+                    <h4 class="text-xs font-semibold tracking-[0.3em] uppercase text-spotify-lightgray">Balanced
+                        Playlists</h4>
                 </div>
                 <div id="playlists-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </section>
@@ -518,7 +552,9 @@
                 <button id="closeModalBtn" class="text-gray-400 hover:text-white" aria-label="Fechar modal">✕</button>
             </div>
             <div class="modal-body p-4">
-                <textarea id="jsonInput" class="w-full h-64 bg-gray-900 border border-gray-700 rounded-md p-3 text-sm font-mono text-white" placeholder="Artista - Álbum | Artista - Álbum..."></textarea>
+                <textarea id="jsonInput"
+                    class="w-full h-64 bg-gray-900 border border-gray-700 rounded-md p-3 text-sm font-mono text-white"
+                    placeholder="Artista - Álbum | Artista - Álbum..."></textarea>
                 <p id="jsonError" class="modal-error text-red-400 text-sm mt-2" role="status" aria-live="polite"></p>
             </div>
             <div class="p-4 border-t border-gray-700 bg-gray-800 rounded-b-lg flex justify-end space-x-3">
@@ -536,7 +572,8 @@
             </div>
             <div class="text-xs text-spotify-lightgray">Last Update: <span id="footerLastUpdate">—</span></div>
         </div>
-        <div id="footerLog" class="container mx-auto max-w-7xl mt-2 hidden" style="max-height:160px;overflow:auto;border-top:1px solid rgba(255,255,255,0.03);padding-top:0.5rem"></div>
+        <div id="footerLog" class="container mx-auto max-w-7xl mt-2 hidden"
+            style="max-height:160px;overflow:auto;border-top:1px solid rgba(255,255,255,0.03);padding-top:0.5rem"></div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js" defer></script>
 
@@ -558,4 +595,5 @@
     <script type="module" src="./js/app.js?v=1.6.0"></script>
 
 </body>
+
 </html>

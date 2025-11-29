@@ -147,48 +147,41 @@ node tests/cache/cache.test.js                 # 14/14 ✅
 
 ---
 
-### ⏳ Phase 3 - Implementation - Sprint 5.3 ✅ COMPLETE
+### ⏳ Phase 3 - Remaining Work
 
-**UI Components & Features**:
-- **Inventory System**:
-  - `InventoryView` (grid/list, filters, search, inline edit)
-  - `InventoryStore` (observable pattern, optimistic updates)
-  - Modals: Add to Inventory, Edit Item, Create Series from Inventory
-- **CRUD Modals**:
-  - Delete Series (no cascade), Edit Series Name
-  - Delete Album, Delete Playlist
-  - Flame/Amber theme with glassmorphism
-- **Integration**:
-  - Router integration (refactored `app.js`)
-  - "Add to Inventory" action in AlbumsView
-  - "Generate Playlists" button in AlbumsView
-  - Auto-generation via URL param (`?generate=true`)
+**UI Components** (not yet implemented):
+- Migration banner (HomeView)
+- Migration progress modal
+- CRUD delete/edit modals
+- **InventoryView** (new route `/inventory`)
+- Add to Inventory action (AlbumsView)
+- Generate Playlists button (AlbumsView → PlaylistsView)
+- Create Series from Inventory workflow
 
-**Security Hardening**:
-- Secured `firebase-config.js` (gitignored)
-- Removed hardcoded API keys from `app.js`
-- Added `firebase-config.example.js` template
+**Manual Testing** (pending):
+- Migration flow (localStorage → Firestore)
+- CRUD operations with UI
+- Inventory management
+- Cross-tab cache sync
+- Browser compatibility (Chrome, Firefox, Safari)
 
-**Tests**:
-- Added `InventoryStore` unit tests
-- Fixed `AlbumCache` tests (localStorage environment check)
+**Estimated Completion**: 3-4 hours
 
 ---
 
 ### 🎯 Production Readiness
 
 **Ready**:
-- ✅ Repository architecture (user-scoped)
+- ✅ Repository architecture (user-scoped from day 1)
 - ✅ Cache layer (graceful fallback)
-- ✅ Migration tool (code ready)
-- ✅ Inventory System (full CRUD + UI)
-- ✅ Security (config injection)
+- ✅ Migration tool (rollback safety)
 - ✅ Automated tests (100% passing)
 
-**Pending**:
-- ⏳ User Acceptance Testing (UAT)
-- ⏳ Migration UI (banner/modal) integration
+**Pending** (after Phase 3 UI):
+- ⏳ Manual testing checklist (17 items)
 - ⏳ Cross-browser validation
+- ⏳ Firestore security rules
+- ⏳ Production Firebase config
 
 ---
 
