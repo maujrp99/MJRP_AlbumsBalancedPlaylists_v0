@@ -250,6 +250,8 @@ export class APIClient {
             tracks: (rankedTracks.length > 0 ? rankedTracks : originalTracks).map((track, idx) => ({
                 ...track,
                 title: track.title || track.name || '',
+                artist: data.artist || '',  // ✅ ADD: Artist from album data
+                album: data.title || '',    // ✅ ADD: Album title
                 rank: track.rank || track.acclaimRank || track.finalPosition || (idx + 1),
                 rating: track.rating || null,
                 normalizedScore: track.normalizedScore || track.acclaimScore || 0,
