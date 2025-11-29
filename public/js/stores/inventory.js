@@ -7,7 +7,7 @@ import { InventoryRepository } from '../repositories/InventoryRepository.js'
 import { firestore } from '../firebase-config.js'
 import { cacheManager } from '../cache/CacheManager.js'
 
-class InventoryStore {
+export class InventoryStore {
     constructor() {
         this.albums = []
         this.loading = false

@@ -228,8 +228,6 @@ describe('PlaylistsStore', () => {
                 },
                 isDirty: false,
                 isSynchronized: false,
-                history: [],
-                currentVersionIndex: -1,
                 canUndo: false,
                 canRedo: false
             })

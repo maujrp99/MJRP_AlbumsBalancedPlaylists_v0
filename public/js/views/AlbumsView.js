@@ -49,20 +49,20 @@ export class AlbumsView extends BaseView {
           ${Breadcrumb.render('/albums')}
           
           <!-- Title Row -->
-          <div class="header-title-row mb-6">
-            <h1 class="text-4xl font-bold mb-3 flex items-center gap-3">
-              ${activeSeries ? this.escapeHtml(activeSeries.name) : `${getIcon('Music', 'w-8 h-8')} Albums Library`}
+          <div class="header-title-row mb-6 flex justify-between items-center">
+            <h1 class="text-4xl font-bold flex items-center gap-3">
+              ${getIcon('Disc', 'w-8 h-8 text-accent-primary')}
+              ${activeSeries ? this.escapeHtml(activeSeries.name) : 'All Albums'}
             </h1>
-            ${activeSeries ? `
-              <div class="flex items-center gap-4 text-lg">
-                <span class="text-accent-primary font-semibold">
-                  ${filteredAlbums.length} album${filteredAlbums.length !== 1 ? 's' : ''}
-                </span>
-                ${this.viewMode === 'expanded' ? `
-                  <span class="badge badge-primary">Consolidated View</span>
-                ` : ''}
-              </div>
-            ` : ''}
+            
+            <button 
+              id="generatePlaylistsBtn" 
+              class="btn btn-primary flex items-center gap-2"
+              ${filteredAlbums.length === 0 ? 'disabled' : ''}
+            >
+              ${getIcon('Play', 'w-5 h-5')}
+              Generate Playlists
+            </button>
           </div>
           
           <!-- Filters Section -->
@@ -279,6 +279,19 @@ export class AlbumsView extends BaseView {
               ` : ''}
             </div>
           </div>
+            </div>
+          </div>
+          
+          <!-- Actions -->
+          <div class="flex flex-col gap-2 ml-4">
+            <button 
+              class="btn btn-secondary btn-sm whitespace-nowrap"
+              data-action="add-to-inventory"
+              data-album-id="${album.id || ''}"
+            >
+              ${getIcon('Archive', 'w-4 h-4')} Add to Inventory
+            </button>
+          </div>
         </div>
 
         <!-- Dual Tracklists -->
@@ -383,6 +396,9 @@ export class AlbumsView extends BaseView {
              </button>
              <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Remove Album">
                ${getIcon('Trash', 'w-5 h-5')}
+             </button>
+             <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Add to Inventory" data-action="add-to-inventory" data-album-id="${album.id || ''}">
+               ${getIcon('Archive', 'w-5 h-5')}
              </button>
           </div>
         </div>
@@ -676,6 +692,42 @@ export class AlbumsView extends BaseView {
         return
       }
     })
+
+    // Add to Inventory
+    this.on(this.container, 'click', async (e) => {
+      const addBtn = e.target.closest('[data-action="add-to-inventory"]')
+      if (addBtn) {
+        const albumId = addBtn.dataset.albumId
+        const album = albumsStore.getAlbums().find(a => a.id === albumId)
+        if (album) {
+          const { showAddToInventoryModal } = await import('../components/InventoryModals.js')
+          showAddToInventoryModal(album, () => {
+            // Optional: show success toast
+            console.log('Added to inventory')
+          })
+        }
+      }
+    })
+
+    // Generate Playlists
+    const generateBtn = this.$('#generatePlaylistsBtn')
+    if (generateBtn) {
+      this.on(generateBtn, 'click', async () => {
+        const activeSeries = seriesStore.getActiveSeries()
+        if (!activeSeries) {
+          alert('Please select a series first.')
+          return
+        }
+
+        // Navigate to Playlists view with generation flag or trigger generation
+        // For now, let's assume we navigate to playlists view and it handles generation if empty
+        // Or we can trigger it here.
+        // Let's try to trigger the curation engine.
+        // But CurationEngine is in curation.js which might not be easily accessible here without refactor.
+        // Simpler approach: Navigate to /playlists?generate=true
+        router.navigate(`/playlists?seriesId=${activeSeries.id}&generate=true`)
+      })
+    }
 
     // Priority: URL param > Store state
     const urlParams = new URLSearchParams(window.location.search)

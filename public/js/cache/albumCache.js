@@ -12,7 +12,11 @@ export class AlbumCache {
         this.version = '2.1' // Bumped to force refresh of ratings
 
         // Cleanup expired entries on init
-        this.clearExpired()
+        try {
+            this.clearExpired()
+        } catch (e) {
+            console.warn('Failed to clear expired cache:', e)
+        }
     }
 
     /**

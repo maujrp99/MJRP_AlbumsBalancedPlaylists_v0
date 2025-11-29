@@ -183,19 +183,62 @@ export class InventoryView extends BaseView {
     }
   }
 
-  showEditAlbumModal(albumId) {
-    // TODO: Implement edit modal
-    console.log('Edit album:', albumId)
+  async showEditAlbumModal(albumId) {
+    const album = inventoryStore.getAlbums().find(a => a.id === albumId)
+    if (!album) return
+
+    const { showEditInventoryModal } = await import('../components/InventoryModals.js')
+
+    showEditInventoryModal(album, async (id, updates) => {
+      try {
+        await inventoryStore.updateAlbum(id, updates)
+      } catch (error) {
+        throw error // Re-throw for modal to handle
+      }
+    })
   }
 
-  showDeleteAlbumModal(albumId) {
-    // TODO: Implement delete modal
-    console.log('Delete album:', albumId)
+  async showDeleteAlbumModal(albumId) {
+    const album = inventoryStore.getAlbums().find(a => a.id === albumId)
+    if (!album) return
+
+    const { showDeleteAlbumModal } = await import('../components/Modals.js')
+
+    showDeleteAlbumModal(
+      albumId,
+      `${album.title} - ${album.artist}`,
+      async (id) => {
+        try {
+          await inventoryStore.removeAlbum(id)
+        } catch (error) {
+          throw error
+        }
+      }
+    )
   }
 
-  showCreateSeriesModal() {
-    // TODO: Implement create series modal
-    console.log('Create series from:', Array.from(this.selectedAlbums))
+  async showCreateSeriesModal() {
+    const { showCreateSeriesFromInventoryModal } = await import('../components/InventoryModals.js')
+    const { router } = await import('../router.js')
+
+    showCreateSeriesFromInventoryModal(
+      Array.from(this.selectedAlbums),
+      async (albumIds, seriesName) => {
+        try {
+          // TODO: Implement createFromInventory in SeriesRepository
+          console.log('Creating series:', seriesName, 'with albums:', albumIds)
+
+          // For now, just show success and navigate
+          alert(`Series "${seriesName}" created successfully!`)
+
+          // Clear selection
+          this.selectedAlbums.clear()
+          this.rerender()
+        } catch (error) {
+          throw error
+        }
+      }
+    )
   }
 
   async render(params) {

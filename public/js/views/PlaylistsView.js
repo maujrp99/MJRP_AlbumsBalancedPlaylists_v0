@@ -344,6 +344,18 @@ export class PlaylistsView extends BaseView {
     if (exportJson) {
       this.on(exportJson, 'click', () => this.handleExportJson())
     }
+
+    // Check for auto-generate flag
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('generate') === 'true') {
+      console.log('[PlaylistsView] Auto-generating playlists requested')
+      // Remove param to prevent re-generation on refresh
+      const newUrl = window.location.pathname + window.location.search.replace(/[?&]generate=true/, '')
+      window.history.replaceState({}, '', newUrl)
+
+      // Trigger generation after a short delay to ensure stores are ready
+      setTimeout(() => this.handleGenerate(), 500)
+    }
   }
 
   async handleGenerate() {

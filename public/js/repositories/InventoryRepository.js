@@ -130,13 +130,28 @@ export class InventoryRepository extends BaseRepository {
     }
 
     /**
-     * Find album by original album ID
+     * Find album by original album ID  
      * @param {string} albumId - Original album ID
      * @returns {Promise<Object|null>} Inventory album or null
      */
     async findByAlbumId(albumId) {
+        // Try cache first with albumId key
+        const cacheKey = this.getCacheKey(`album_${albumId}`)
+        if (this.cache) {
+            const cached = await this.cache.get(cacheKey)
+            if (cached) return cached
+        }
+
+        // Query Firestore (no index needed, linear scan acceptable for inventory)
         const albums = await this.findAll()
-        return albums.find(a => a.albumData?.id === albumId) || null
+        const found = albums.find(a => a.albumData?.id === albumId) || null
+
+        // Cache result
+        if (found && this.cache) {
+            await this.cache.set(cacheKey, found, this.cacheTTL)
+        }
+
+        return found
     }
 
     /**
