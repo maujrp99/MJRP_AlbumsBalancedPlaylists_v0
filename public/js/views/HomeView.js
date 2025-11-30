@@ -2,6 +2,9 @@ import { BaseView } from './BaseView.js'
 import { seriesStore } from '../stores/series.js'
 import { router } from '../router.js'
 import { getIcon } from '../components/Icons.js'
+import { db } from '../app.js'
+import { CacheManager } from '../cache/CacheManager.js'
+import { MigrationUtility } from '../migration/MigrationUtility.js'
 
 /**
  * HomeView
@@ -9,11 +12,23 @@ import { getIcon } from '../components/Icons.js'
  */
 
 export class HomeView extends BaseView {
+  constructor() {
+    super()
+    this.migrationUtility = new MigrationUtility(db, new CacheManager())
+    this.showMigrationBanner = false
+  }
+
   async render(params) {
     const recentSeries = seriesStore.getSeries()
 
+    // Check if migration is needed
+    this.showMigrationBanner = !this.migrationUtility.isMigrationComplete() &&
+      this.migrationUtility.hasLocalStorageData()
+
     return `
       <div class="home-view container">
+        ${this.showMigrationBanner ? this.renderMigrationBanner() : ''}
+
         <!-- Hero Banner -->
         <section class="hero-banner relative rounded-3xl overflow-hidden mb-8 fade-in min-h-[320px] md:min-h-[400px] flex items-center shadow-2xl border border-white/10 group w-full">
           <!-- Background Image -->
@@ -39,9 +54,14 @@ export class HomeView extends BaseView {
               />
             </div>
             
-            <p class="text-lg md:text-xl text-gray-300 font-light leading-relaxed max-w-2xl border-l-4 border-orange-500/50 pl-4">
+            <p class="text-lg md:text-xl text-gray-300 font-light leading-relaxed max-w-2xl border-l-4 border-orange-500/50 pl-4 mb-6">
               Create balanced playlists from critically acclaimed albums, mixing their ranked tracks
             </p>
+
+            <button id="goToInventoryBtn" class="btn btn-secondary flex items-center gap-2">
+              ${getIcon('Archive', 'w-5 h-5')}
+              Manage Inventory
+            </button>
           </div>
         </section>
 
@@ -102,6 +122,27 @@ export class HomeView extends BaseView {
             ${this.renderRecentSeries(recentSeries)}
           </div>
         </section>
+      </div>
+    `
+  }
+
+  renderMigrationBanner() {
+    return `
+      <div class="migration-banner bg-gradient-to-r from-blue-900 to-indigo-900 border border-blue-500/30 rounded-xl p-6 mb-8 flex items-center justify-between shadow-lg relative overflow-hidden">
+        <div class="absolute inset-0 bg-blue-500/5 pattern-grid"></div>
+        <div class="relative z-10 flex items-center gap-4">
+          <div class="p-3 bg-blue-500/20 rounded-full text-blue-300">
+            ${getIcon('Database', 'w-8 h-8')}
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-white mb-1">Data Migration Available</h3>
+            <p class="text-blue-200 text-sm">We found data from a previous version. Migrate it to the new database to keep your history.</p>
+          </div>
+        </div>
+        <button id="startMigrationBtn" class="btn btn-primary relative z-10 whitespace-nowrap shadow-xl">
+          Start Migration
+          ${getIcon('ArrowRight', 'w-4 h-4 ml-2')}
+        </button>
       </div>
     `
   }
@@ -197,6 +238,50 @@ export class HomeView extends BaseView {
         this.handleResumeSeries(seriesId)
       }
     })
+
+    // Migration Button
+    const migrationBtn = this.$('#startMigrationBtn')
+    if (migrationBtn) {
+      this.on(migrationBtn, 'click', () => this.handleMigration())
+    }
+
+    // Inventory Button
+    const inventoryBtn = this.$('#goToInventoryBtn')
+    if (inventoryBtn) {
+      this.on(inventoryBtn, 'click', () => router.navigate('/inventory'))
+    }
+  }
+
+  async handleMigration() {
+    if (!confirm('Start migration? This will move your local data to the new database structure.')) return
+
+    const btn = this.$('#startMigrationBtn')
+    const originalText = btn.innerHTML
+    btn.disabled = true
+    btn.innerHTML = `${getIcon('Loader', 'w-4 h-4 animate-spin mr-2')} Migrating...`
+
+    try {
+      const result = await this.migrationUtility.migrate('user-id', (current, total, message) => {
+        // Optional: Update a progress bar or status text
+        console.log(`[Migration] ${Math.round(current)}%: ${message}`)
+        btn.innerHTML = `${getIcon('Loader', 'w-4 h-4 animate-spin mr-2')} ${Math.round(current)}%`
+      })
+
+      if (result.success) {
+        alert(`Migration Complete!\nMigrated: ${result.seriesMigrated} series, ${result.albumsMigrated} albums.`)
+        // Reload to refresh stores
+        window.location.reload()
+      } else {
+        alert('Migration finished with errors. Check console for details.')
+        console.error('Migration errors:', result.errors)
+      }
+    } catch (error) {
+      console.error('Migration failed:', error)
+      alert('Migration failed: ' + error.message)
+    } finally {
+      btn.disabled = false
+      btn.innerHTML = originalText
+    }
   }
 
   async handleCreateSeries() {

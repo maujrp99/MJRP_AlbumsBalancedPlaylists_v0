@@ -354,12 +354,8 @@ export class PlaylistsView extends BaseView {
     const urlParams = new URLSearchParams(window.location.search)
     const seriesId = urlParams.get('seriesId')
 
-    // Data Recovery: If albums are missing but we have a series, load them
-    const albums = albumsStore.getAlbums()
-    if (albums.length === 0 && seriesId) {
-      console.log('[PlaylistsView] Albums missing, attempting to recover from series:', seriesId)
-      await this.recoverSeriesData(seriesId)
-    }
+    // Store persistence: Albums should already be loaded from AlbumsView
+    // No recovery logic needed - store persists across navigation
 
     if (urlParams.get('generate') === 'true') {
       console.log('[PlaylistsView] Auto-generating playlists requested')
@@ -372,62 +368,9 @@ export class PlaylistsView extends BaseView {
     }
   }
 
-  async recoverSeriesData(seriesId) {
-    try {
-      // Ensure series is active
-      let activeSeries = seriesStore.getActiveSeries()
-      if (!activeSeries || activeSeries.id !== seriesId) {
-        seriesStore.setActiveSeries(seriesId)
-        activeSeries = seriesStore.getActiveSeries()
-      }
-
-      // If still no series (e.g. hard refresh), try to load from Firestore
-      if (!activeSeries) {
-        const { db } = await import('../app.js')
-        await seriesStore.loadFromFirestore(db)
-        seriesStore.setActiveSeries(seriesId)
-        activeSeries = seriesStore.getActiveSeries()
-      }
-
-      if (activeSeries && activeSeries.albumQueries) {
-        console.log('[PlaylistsView] Recovering albums for:', activeSeries.name)
-
-        // Show loading state
-        this.isGenerating = true
-        this.update()
-
-        // Reuse the logic from AlbumsView (we should refactor this to a shared service later)
-        // For now, we manually fetch and populate the store
-        const queries = activeSeries.albumQueries
-
-        // Reset store first
-        albumsStore.reset()
-
-        let loadedCount = 0
-        for (const query of queries) {
-          try {
-            // Use fetchAlbum instead of searchAlbum
-            const data = await apiClient.fetchAlbum(query)
-            if (data) {
-              albumsStore.addAlbum(data)
-              loadedCount++
-            }
-          } catch (e) {
-            console.warn('Failed to recover album:', query, e)
-          }
-        }
-
-        console.log('[PlaylistsView] Recovery complete. Albums loaded:', loadedCount)
-
-        this.isGenerating = false
-        this.update()
-      }
-    } catch (err) {
-      console.error('[PlaylistsView] Recovery failed:', err)
-      this.isGenerating = false
-      this.update()
-    }
-  }
+  // REMOVED: recoverSeriesData() method
+  // Architectural change: Store now persists data across navigation.
+  // Recovery logic no longer needed - data is loaded once in AlbumsView and persists.
 
   async handleGenerate() {
     const albums = albumsStore.getAlbums()

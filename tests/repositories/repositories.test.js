@@ -338,7 +338,7 @@ async function runTests() {
     // Get statistics
     const stats = await inventoryRepo.getStatistics()
     assert(stats.totalAlbums === 1, 'InventoryRepository.getStatistics counts total albums')
-    assert(stats.totalValue === 50, 'InventoryRepository.getStatistics calculates total value')
+    assert(stats.totalValueUSD === 50, 'InventoryRepository.getStatistics calculates total value')
 
     // Duplicate check
     let duplicateError = null

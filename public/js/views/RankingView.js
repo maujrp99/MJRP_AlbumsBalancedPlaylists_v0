@@ -99,7 +99,9 @@ export class RankingView extends BaseView {
   }
 
   renderOriginalTracklist(album) {
-    const tracks = album.tracks || []
+    // FIX: Use tracksOriginalOrder if available
+    const tracks = album.tracksOriginalOrder || album.tracks || []
+
     if (tracks.length === 0) {
       return '<p class="text-muted">No tracks available</p>'
     }
@@ -111,7 +113,11 @@ export class RankingView extends BaseView {
           Original Album Order
         </h3>
         <div class="tracks-list space-y-2">
-          ${tracks.map((track, idx) => this.renderTrackRow(track, idx + 1, false)).join('')}
+          ${tracks.map((track, idx) => {
+      // Use track position if available, otherwise index
+      const position = track.position || (idx + 1)
+      return this.renderTrackRow(track, position, false)
+    }).join('')}
         </div>
       </div>
     `

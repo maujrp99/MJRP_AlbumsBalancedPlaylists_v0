@@ -3,6 +3,8 @@
  * Manages album data, loading, and Firestore sync
  */
 
+import { Album } from '../models/Album.js'
+
 export class AlbumsStore {
     constructor() {
         this.albums = []
@@ -39,13 +41,21 @@ export class AlbumsStore {
 
     /**
      * Add album to store
-     * @param {Object} album - Album data from API
+     * @param {Object|Album} album - Album data or instance
      */
     addAlbum(album) {
-        // Normalize tracks to include extensible metadata field
+        // Domain Model: Tracks are already normalized by the Album/Track constructor.
+        // We don't need to re-normalize them here, especially if they are Track instances.
+
+        // If we wanted to ensure metadata extensibility, we could do it on the Track instance,
+        // but Track model already handles metadata preservation.
+
+        /* 
+        // LEGACY: Removed to prevent converting Track instances back to plain objects
         if (album.tracks && Array.isArray(album.tracks)) {
             album.tracks = album.tracks.map(track => this.normalizeTrack(track))
         }
+        */
 
         const existing = this.albums.find(a =>
             a.title === album.title && a.artist === album.artist
@@ -56,7 +66,16 @@ export class AlbumsStore {
             this.notify()
         } else {
             // Update existing album
-            Object.assign(existing, album)
+            // If album is an instance, we might lose methods if we just Object.assign
+            // But since we are replacing the data, we should probably replace the reference 
+            // or carefully copy properties.
+
+            // For now, Object.assign works for properties, but methods are on prototype.
+            // If 'existing' was a plain object and 'album' is an instance, 'existing' becomes hybrid.
+            // Ideally, we should replace 'existing' in the array.
+
+            const index = this.albums.indexOf(existing)
+            this.albums[index] = album
             this.notify()
         }
     }
@@ -66,6 +85,7 @@ export class AlbumsStore {
      * @param {Object} track - Track data
      * @returns {Object} Normalized track
      * @private
+     * @deprecated Track model handles this
      */
     normalizeTrack(track) {
         return {
@@ -106,7 +126,7 @@ export class AlbumsStore {
 
         try {
             const snapshot = await db.collection('albums').get()
-            this.albums = snapshot.docs.map(doc => ({
+            this.albums = snapshot.docs.map(doc => new Album({
                 id: doc.id,
                 ...doc.data()
             }))

@@ -55,12 +55,30 @@ export class CurationEngine {
     return this.rankingSources.get(key)
   }
 
-  annotateTrack(track, reason, sourceEntry, score) {
-    if (!track) return
-    track.rankingInfo = track.rankingInfo || []
-    const sourceName = (sourceEntry && sourceEntry.name) || this.defaultRankingSource?.name || 'MJRP Hybrid Algorithm'
-    track.rankingInfo.push(createRankingInfoEntry(reason, sourceName, score))
-    if (sourceEntry) this.registerRankingSource(sourceEntry)
+  /**
+   * Annotate track with enrichment source
+   * @param {Object} track - Track to annotate
+   * @param {string} source - Source description
+   * @param {Object} metadata - Additional metadata
+   * @param {number} score - Score value
+   */
+  annotateTrack(track, source, metadata = null, score = null) {
+    if (!track.rankingInfo) track.rankingInfo = []
+    track.rankingInfo.push({
+      source,
+      metadata,
+      score,
+      timestamp: new Date().toISOString()
+    })
+  }
+
+  /**
+   * Normalize key for matching
+   * @param {string} str - String to normalize
+   * @returns {string} Normalized string
+   */
+  normalizeKey(str) {
+    return str ? str.toLowerCase().trim().replace(/[^\w\s]/g, '') : ''
   }
 
   markTrackOrigin(track, albumId) {
@@ -68,7 +86,22 @@ export class CurationEngine {
   }
 
   enrichTracks(album) {
+    // DOMAIN MODEL ADAPTER
+    if (typeof Album !== 'undefined' && album instanceof Album) {
+      // Album model already encapsulates the logic for ranked tracks
+      // We return new Track instances to ensure isolation from Store state
+      // (Curation engine might mutate tracks with playlist-specific data)
+      return album.tracks.map(t => new Track(t, { artist: album.artist, title: album.title }))
+    }
+
+    // LEGACY LOGIC (Fallback for raw JSON if any)
     if (!album) return []
+
+    // Helper function for legacy logic
+    const normalizeKey = (str) => {
+      return str ? str.toLowerCase().trim().replace(/[^\w\s]/g, '') : ''
+    }
+
     const consolidatedIndex = new Map()
     if (Array.isArray(album.rankingConsolidated)) {
       album.rankingConsolidated.forEach(entry => {
@@ -170,6 +203,8 @@ export class CurationEngine {
             return {
               id: entry.id || `consolidated_${album.id || 'album'}_${idx + 1}`,
               title,
+              artist: album.artist || '', // ✅ ADD: Preserve artist
+              album: album.title || '',   // ✅ ADD: Preserve album title
               rank: entry.finalPosition || entry.position || null,
               rating: entry.rating !== undefined ? entry.rating : null,
               normalizedScore: entry.normalizedScore !== undefined ? entry.normalizedScore : null,

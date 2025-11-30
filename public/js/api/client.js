@@ -1,3 +1,5 @@
+import axios from 'axios'
+import { Album } from '../models/Album.js'
 import { albumCache } from '../cache/albumCache.js'
 
 /**
@@ -12,30 +14,48 @@ export class APIClient {
         this.baseUrl = API_BASE
         this.defaultRetries = 2
         this.retryDelay = 1000
+        this.cache = albumCache // Initialize this.cache with albumCache
     }
 
     /**
-     * Fetch album data from backend (with caching)
-     * @param {string} query - Album query (Artist - Album or just Album)
-     * @param {boolean} skipCache - Skip cache and force fetch
-     * @returns {Promise<Object>} Album data with tracks and acclaim
+     * Fetch album data (with caching)
+     * @param {string} query - Album query (Artist - Album)
+     * @param {boolean} skipCache - Force fresh fetch
+     * @returns {Promise<Album>} Album data
      */
     async fetchAlbum(query, skipCache = false) {
-        // Check cache first (unless skipCache)
+        // 1. Check cache (if not skipped)
         if (!skipCache) {
-            const cached = albumCache.get(query)
+            const cached = this.cache.get(query)
             if (cached) {
-                return { ...cached, _cached: true }
+                console.log('[APIClient] Returning cached album:', query)
+                // HYDRATION: Convert cached JSON back to Album instance
+                return cached instanceof Album ? cached : new Album(cached)
             }
         }
 
-        // Fetch from API
-        const album = await this._fetchAlbumFromAPI(query, this.defaultRetries)
+        // 2. Fetch from API
+        try {
+            console.log('[APIClient] Fetching from API:', query)
+            const response = await axios.post(`${this.baseUrl}/generate`, {
+                albumQuery: query
+            })
 
-        // Cache result
-        albumCache.set(query, album)
+            if (!response.data || !response.data.data) {
+                throw new Error('Invalid API response format')
+            }
 
-        return { ...album, _cached: false }
+            // 3. Normalize & Cache
+            const album = this.normalizeAlbumData(response.data.data)
+
+            // Cache the raw data structure (Album instance will be serialized to JSON)
+            this.cache.set(query, album)
+
+            return album
+        } catch (error) {
+            console.error('[APIClient] Fetch error:', error)
+            throw error
+        }
     }
 
     /**
@@ -75,17 +95,31 @@ export class APIClient {
      * @param {Array<string>} queries - Album queries
      * @param {Function} onProgress - Progress callback (current, total, result)
      * @param {boolean} skipCache - Skip cache for all albums
+     * @param {AbortSignal} signal - Abort signal to cancel operation
      * @returns {Promise<Object>} { results, errors }
      */
-    async fetchMultipleAlbums(queries, onProgress = null, skipCache = false) {
+    async fetchMultipleAlbums(queries, onProgress = null, skipCache = false, signal = null) {
         const results = []
         const errors = []
 
         for (let i = 0; i < queries.length; i++) {
+            // Check cancellation
+            if (signal && signal.aborted) {
+                console.log('[APIClient] fetchMultipleAlbums aborted')
+                break
+            }
+
             const query = queries[i]
 
             try {
                 const album = await this.fetchAlbum(query, skipCache)
+
+                // Check cancellation again after await
+                if (signal && signal.aborted) {
+                    console.log('[APIClient] fetchMultipleAlbums aborted after fetch')
+                    break
+                }
+
                 const result = { query, album, status: 'success' }
                 results.push(result)
 
@@ -93,6 +127,9 @@ export class APIClient {
                     onProgress(i + 1, queries.length, result)
                 }
             } catch (error) {
+                // Check cancellation
+                if (signal && signal.aborted) break
+
                 const errorResult = {
                     query,
                     error: error.message,
@@ -212,6 +249,12 @@ export class APIClient {
      * @returns {Object} Normalized album
      * @private
      */
+    /**
+     * Normalize album data from API
+     * @param {Object} data - Raw API response
+     * @returns {Album} Normalized album instance
+     * @private
+     */
     normalizeAlbumData(data) {
         // Generate stable ID
         const id = this.generateAlbumId(data)
@@ -220,96 +263,87 @@ export class APIClient {
         console.log('[APIClient] normalizeAlbumData - Raw data:', {
             hasTracks: !!data.tracks,
             hasTracksByAcclaim: !!data.tracksByAcclaim,
-            hasBestEverAlbumId: !!data.bestEverAlbumId,
-            hasBestEverUrl: !!data.bestEverUrl,
             tracksCount: data.tracks?.length,
-            tracksByAcclaimCount: data.tracksByAcclaim?.length,
-            bestEverAlbumId: data.bestEverAlbumId,
-            bestEverUrl: data.bestEverUrl,
-            firstTrack: data.tracks?.[0],
-            firstAcclaimTrack: data.tracksByAcclaim?.[0]
+            tracksByAcclaimCount: data.tracksByAcclaim?.length
         })
 
-        // data.tracks = ORIGINAL ORDER from API (AS IS)
-        // data.tracksByAcclaim = SORTED BY ACCLAIM (ranked)
         const originalTracks = data.tracks || []
         const rankedTracks = data.tracksByAcclaim || data.rankingConsolidated || []
 
-        const normalized = {
+        // DEBUG: Inspect track lists before processing
+        console.log('[APIClient] normalizeAlbumData - Track Lists:', {
+            originalFirst: originalTracks[0]?.title,
+            originalLength: originalTracks.length,
+            rankedFirst: rankedTracks[0]?.title,
+            rankedLength: rankedTracks.length
+        })
+
+        // Helper to prepare track data for Model
+        // Handles backend-specific field mapping
+        const prepareTrackData = (track, idx, isRanked) => ({
+            ...track,
+            // Map backend fields to Model expected fields
+            rank: track.rank || track.acclaimRank || track.finalPosition || (isRanked ? idx + 1 : null),
+            position: track.position || track.trackNumber || (!isRanked ? idx + 1 : null),
+            normalizedScore: track.normalizedScore || track.acclaimScore || 0,
+            // Artist/Album will be filled by Album Model context
+        })
+
+        // Construct Album Data
+        const albumData = {
             id,
-            title: data.title || data.album || '',
-            artist: data.artist || '',
-            year: data.year || null,
+            title: data.title || data.album,
+            artist: data.artist,
+            year: data.year,
+            coverUrl: data.coverUrl,
 
-            // BestEver fields from backend  
-            bestEverAlbumId: data.bestEverAlbumId || null,
-            bestEverUrl: data.bestEverUrl || null,
-            bestEverEvidence: data.bestEverEvidence || [],
+            // BestEver fields
+            bestEverAlbumId: data.bestEverAlbumId,
+            bestEverUrl: data.bestEverUrl,
+            bestEverEvidence: data.bestEverEvidence,
 
-            // Use rankedTracks as primary tracks array (sorted by acclaim)
-            tracks: (rankedTracks.length > 0 ? rankedTracks : originalTracks).map((track, idx) => ({
-                ...track,
-                title: track.title || track.name || '',
-                artist: data.artist || '',  // ✅ ADD: Artist from album data
-                album: data.title || '',    // ✅ ADD: Album title
-                rank: track.rank || track.acclaimRank || track.finalPosition || (idx + 1),
-                rating: track.rating || null,
-                normalizedScore: track.normalizedScore || track.acclaimScore || 0,
-                duration: track.duration || null,
-                // Preserve original position from data.tracks
-                position: track.position || track.trackNumber || null,
-                metadata: track.metadata || {
-                    isrc: null,
-                    appleMusicId: null,
-                    spotifyId: null
-                }
-            })),
+            // Tracks Lists (Pre-processed)
+            // If rankedTracks exists, use it for 'tracks' (Acclaim order)
+            // Otherwise fallback to originalTracks
+            tracks: (rankedTracks.length > 0 ? rankedTracks : originalTracks).map((t, i) => prepareTrackData(t, i, true)),
 
-            // Store original tracks AS IS for "Original Album Order"
-            tracksOriginalOrder: originalTracks.map((track, idx) => ({
-                ...track,
-                title: track.title || track.name || '',
-                position: track.position || track.trackNumber || (idx + 1),
-                rating: track.rating || null,
-                duration: track.duration || null
-            })),
+            // Original Order Tracks
+            tracksOriginalOrder: originalTracks.map((t, i) => prepareTrackData(t, i, false)),
 
-            acclaim: (() => {
+            metadata: {
+                fetchedAt: new Date().toISOString(),
+                ...data.metadata
+            },
+
+            // Calculate acclaim metadata if missing
+            acclaim: data.acclaim || (() => {
                 const tracks = rankedTracks.length > 0 ? rankedTracks : originalTracks
-
-                // Check if we have ANY rating or rank data
                 const hasRatings = tracks.some(t =>
                     (t.rating !== null && t.rating !== undefined) ||
-                    (t.rank !== null && t.rank !== undefined) ||
-                    (t.acclaimRank !== null && t.acclaimRank !== undefined) ||
-                    (t.finalPosition !== null && t.finalPosition !== undefined)
+                    (t.rank !== null && t.rank !== undefined)
                 )
-
                 return {
                     hasRatings,
                     source: data.rankingConsolidatedMeta?.source || 'hybrid-curation',
                     trackCount: tracks.length
                 }
-            })(),
-            metadata: {
-                fetchedAt: new Date().toISOString(),
-                ...data.metadata
-            }
+            })()
         }
 
+        // Return Domain Model Instance
+        const album = new Album(albumData)
+
         // DEBUG: Log normalized output
-        console.log('[APIClient] normalizeAlbumData - Normalized:', {
-            id: normalized.id,
-            title: normalized.title,
-            bestEverAlbumId: normalized.bestEverAlbumId,
-            bestEverUrl: normalized.bestEverUrl,
-            tracksCount: normalized.tracks?.length,
-            tracksOriginalOrderCount: normalized.tracksOriginalOrder?.length,
-            firstTrack: normalized.tracks?.[0],
-            firstOriginalTrack: normalized.tracksOriginalOrder?.[0]
+        console.log('[APIClient] normalizeAlbumData - Normalized Album:', {
+            id: album.id,
+            title: album.title,
+            tracksCount: album.tracks.length,
+            tracksOriginalOrderCount: album.tracksOriginalOrder.length,
+            firstTrack: album.tracks[0],
+            firstOriginalTrack: album.tracksOriginalOrder[0]
         })
 
-        return normalized
+        return album
     }
 
     /**

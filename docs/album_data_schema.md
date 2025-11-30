@@ -297,49 +297,81 @@ tracks: rankedTracks.map((track, idx) => ({
 ### File: `public/js/api/client.js`
 ### Method: `normalizeAlbumData()` (LINE 209-311)
 
-**Change 1: Add artist/album to ranked tracks**
+## 🗺️ Detailed Data Mapping (The "Source of Truth")
+
+This section maps exactly where each critical piece of data comes from and how it travels.
+
+### 1. Track Lists Origin & Flow
+
+| Data Concept | Backend Source (JSON) | Client Normalization (`client.js`) | Store State (`albums.js`) | Curation Usage (`curation.js`) | View Render (`AlbumsView.js`) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Original Order** | `data.tracks` (Array) | `tracksOriginalOrder` | `album.tracksOriginalOrder` | Used as fallback if ranking fails | `renderOriginalTracklist` |
+| **Acclaim Order** | `data.tracksByAcclaim` | `tracks` (if available) | `album.tracks` | Used for `generatePlaylists` | `renderRankedTracklist` |
+| **Consolidated** | `data.rankingConsolidated` | `tracks` (fallback) | `album.tracks` | Used for `generatePlaylists` | `renderRankedTracklist` |
+
+### 2. Field-Level Mapping (The "Lost Data" Investigation)
+
+#### A. Original Track Object (`tracksOriginalOrder`)
+
+| Field | Source in `data.tracks` | Transformation in `normalizeAlbumData` | Status in Store | Status in View |
+| :--- | :--- | :--- | :--- | :--- |
+| `title` | `track.title` | `track.title || track.name` | ✅ Preserved | ✅ Rendered |
+| `position` | `track.position` | `track.position || idx + 1` | ✅ Preserved | ✅ Used for numbering |
+| `artist` | **MISSING** | `data.artist` (Added in Fix) | ✅ Preserved | ✅ Rendered (after fix) |
+| `album` | **MISSING** | `data.title` (Added in Fix) | ✅ Preserved | ✅ Rendered (after fix) |
+
+#### B. Ranked Track Object (`tracks`)
+
+| Field | Source in `data.tracksByAcclaim` | Transformation in `normalizeAlbumData` | Status in Store | Status in View |
+| :--- | :--- | :--- | :--- | :--- |
+| `title` | `track.title` | `track.title` | ✅ Preserved | ✅ Rendered |
+| `rank` | `track.rank` | `track.rank || track.acclaimRank` | ✅ Preserved | ✅ Used for numbering |
+| `rating` | `track.rating` | `track.rating` | ✅ Preserved | ✅ Used for stars |
+| `artist` | **MISSING** | `data.artist` (Added in Fix) | ✅ Preserved | ✅ Rendered (after fix) |
+
+### 3. Critical Transformation Points (Where things go wrong)
+
+#### Point A: `client.js` Normalization
 ```javascript
-tracks: (rankedTracks.length > 0 ? rankedTracks : originalTracks).map((track, idx) => ({
+// Input: data.tracks (Array of objects)
+// Logic:
+tracksOriginalOrder: data.tracks.map((track, idx) => ({
   ...track,
-  title: track.title || track.name || '',
-  artist: data.artist || '',  // ✅ ADD THIS LINE
-  album: data.title || '',    // ✅ ADD THIS LINE
-  rank: track.rank || track.acclaimRank || track.finalPosition || (idx + 1),
-  rating: track.rating || null,
-  // ... rest of fields
+  position: track.position || idx + 1 // ⚠️ Critical: Relies on array order if position missing
 }))
 ```
 
-**Change 2: Add artist/album to original tracks**
+#### Point B: `curation.js` Enrichment
 ```javascript
-tracksOriginalOrder: originalTracks.map((track, idx) => ({
-  ...track,
-  title: track.title || track.name || '',
-  artist: data.artist || '',  // ✅ ADD THIS LINE
-  album: data.title || '',    // ✅ ADD THIS LINE
-  position: track.position || track.trackNumber || (idx + 1),
-  // ... rest of fields
-}))
+// Input: album.tracks (Ranked) OR album.rankingConsolidated
+// Logic:
+enrichTracks(album) {
+   // ⚠️ Critical: Re-creates track objects.
+   // MUST copy artist/album from parent album.
+   // MUST preserve original ID to map back to original order.
+}
 ```
 
----
+#### Point C: `AlbumsView.js` Rendering
+```javascript
+// Input: album.tracksOriginalOrder
+// Logic:
+renderOriginalTracklist(album) {
+  const tracks = album.tracksOriginalOrder || album.tracks // ⚠️ Fallback risk
+  // If tracksOriginalOrder is missing/empty, it shows Ranked order!
+}
+```
 
-## Impact on Views
+### 4. Hypothesis for "Original Order" Regression
 
-| View | Fields Used | Before Fix | After Fix |
-|------|-------------|------------|-----------|
-| AlbumsView | `album.title`, `album.artist` | ✅ Works | ✅ Works |
-| RankingView | `track.title`, `track.rating` | ✅ Works | ✅ Works |
-| PlaylistsView | `track.title`, `track.artist`, `track.album` | 🔴 Empty | ✅ Displays |
+If `tracksOriginalOrder` is **undefined** or **empty** in the Store, `AlbumsView` falls back to `album.tracks` (which is Ranked Order).
 
----
+**Why would it be undefined?**
+1. `client.js` failed to populate it (unlikely, code looks safe).
+2. `AlbumsStore` failed to save it (checked, looks safe).
+3. **CACHE POISONING**: Old data in `localStorage` or `IndexedDB` has `tracks` but NO `tracksOriginalOrder`.
+   - When loading from cache, `tracksOriginalOrder` is undefined.
+   - View falls back to `tracks` (Ranked).
+   - User sees "Ranked Order" in the "Original Order" column.
 
-## Data Persistence Guarantee
-
-With store persistence (proposed architectural fix):
-1. ✅ Album loaded ONCE with correct data
-2. ✅ Tracks include artist/album fields
-3. ✅ Data available in PlaylistsView
-4. ✅ Data available in RankingView
-5. ✅ No re-fetching needed
-6. ✅ No data loss on navigation
+**Solution**: Hard Refresh / Clear Cache is mandatory to fix this state.

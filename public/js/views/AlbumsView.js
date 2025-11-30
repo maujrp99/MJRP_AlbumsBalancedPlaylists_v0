@@ -19,7 +19,7 @@ export class AlbumsView extends BaseView {
     this.loadProgress = { current: 0, total: 0 }
 
     // Default view mode
-    this.viewMode = 'grid' // 'grid', 'ranked', or 'expanded'
+    this.viewMode = localStorage.getItem('albumsViewMode') || 'compact' // 'compact' (grid) or 'expanded'
 
     // Filter state
     this.filters = {
@@ -31,12 +31,19 @@ export class AlbumsView extends BaseView {
 
     // Store cleanup function
     this.cleanup = null
+    this.abortController = null
   }
 
   destroy() {
     // Call parent destroy
     super.destroy()
     console.log('[AlbumsView] Destroying view')
+
+    // Cancel any pending requests
+    if (this.abortController) {
+      this.abortController.abort()
+      this.abortController = null
+    }
 
     // Custom cleanup
     if (this.cleanup) {
@@ -249,18 +256,7 @@ export class AlbumsView extends BaseView {
     }
 
     // DEBUG: Log first album structure
-    if (albums.length > 0) {
-      console.log('🔍 [DEBUG] renderExpandedList - First album:', {
-        title: albums[0].title,
-        artist: albums[0].artist,
-        bestEverAlbumId: albums[0].bestEverAlbumId,
-        bestEverUrl: albums[0].bestEverUrl,
-        tracksCount: albums[0].tracks?.length,
-        tracksOriginalOrderCount: albums[0].tracksOriginalOrder?.length,
-        firstTrack: albums[0].tracks?.[0],
-        firstOriginalTrack: albums[0].tracksOriginalOrder?.[0]
-      })
-    }
+    // if (albums.length > 0) { ... }
 
     return albums.map((album, idx) => {
       // DEBUG: Trace rendering of each album
@@ -360,6 +356,15 @@ export class AlbumsView extends BaseView {
   renderOriginalTracklist(album) {
     // Use tracksOriginalOrder if available, otherwise fall back to tracks
     const tracks = album.tracksOriginalOrder || album.tracks || []
+
+    // DEBUG: Inspect Original Order Data
+    console.log(`🔍 [DEBUG] renderOriginalTracklist for ${album.title}:`, {
+      hasOriginalOrder: !!album.tracksOriginalOrder,
+      originalOrderLength: album.tracksOriginalOrder?.length,
+      fallbackToTracks: !album.tracksOriginalOrder,
+      firstTrack: tracks[0]?.title,
+      firstTrackId: tracks[0]?.id
+    })
     if (tracks.length === 0) {
       return '<p class="text-muted text-sm">No tracks available</p>'
     }
@@ -416,6 +421,9 @@ export class AlbumsView extends BaseView {
              </button>
              <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Remove Album">
                ${getIcon('Trash', 'w-5 h-5')}
+             </button>
+             <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Edit Album" data-action="edit-album" data-album-id="${album.id || ''}">
+               ${getIcon('Edit', 'w-5 h-5')}
              </button>
              <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Add to Inventory" data-action="add-to-inventory" data-album-id="${album.id || ''}">
                ${getIcon('Archive', 'w-5 h-5')}
@@ -634,9 +642,11 @@ export class AlbumsView extends BaseView {
 
         // Get series albums queries
         const activeSeries = seriesStore.getActiveSeries()
-        if (activeSeries?.albums) {
+        if (activeSeries?.albumQueries) {
           // Reload with skip-cache flag
-          await this.loadAlbumsFromQueries(activeSeries.albums, true) // skipCache = true
+          await this.loadAlbumsFromQueries(activeSeries.albumQueries, true) // skipCache = true
+        } else {
+          console.warn('⚠️ [DEBUG] No albumQueries found in active series:', activeSeries)
         }
       })
     }
@@ -724,6 +734,30 @@ export class AlbumsView extends BaseView {
           showAddToInventoryModal(album, () => {
             // Optional: show success toast
             console.log('Added to inventory')
+          })
+        }
+        return
+      }
+
+      // Edit Album
+      const editBtn = e.target.closest('[data-action="edit-album"]')
+      if (editBtn) {
+        const albumId = editBtn.dataset.albumId
+        const album = albumsStore.getAlbums().find(a => a.id === albumId)
+        if (album) {
+          const { showEditAlbumModal } = await import('../components/EditAlbumModal.js')
+          showEditAlbumModal(album, async (id, updates) => {
+            console.log('Saving album updates:', id, updates)
+
+            // Merge updates into album object
+            const updatedAlbum = { ...album, ...updates }
+
+            // Save to Firestore via Store
+            // We need db instance. 
+            const { db } = await import('../app.js')
+            await albumsStore.saveToFirestore(db, updatedAlbum)
+
+            // Store will notify and view will re-render
           })
         }
       }
@@ -825,10 +859,19 @@ export class AlbumsView extends BaseView {
       )
     }
 
+    // Cancel previous request if any
+    if (this.abortController) {
+      this.abortController.abort()
+    }
+    this.abortController = new AbortController()
+
     try {
       const { results, errors } = await apiClient.fetchMultipleAlbums(
         queries,
         (current, total, result) => {
+          // Ignore updates if aborted
+          if (this.abortController.signal.aborted) return
+
           this.loadProgress = { current, total }
           this.updateLoadingProgress()
 
@@ -837,7 +880,8 @@ export class AlbumsView extends BaseView {
             albumsStore.addAlbum(result.album)
           }
         },
-        skipCache  // Pass skipCache flag to API client
+        skipCache,  // Pass skipCache flag to API client
+        this.abortController.signal // Pass signal
       )
 
       if (errors.length > 0) {

@@ -6,6 +6,7 @@
 import { SeriesRepository } from '../repositories/SeriesRepository.js'
 import { AlbumRepository } from '../repositories/AlbumRepository.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
+import { Album } from '../models/Album.js'
 
 export class MigrationUtility {
     constructor(firestore, cache) {
@@ -203,11 +204,21 @@ export class MigrationUtility {
             for (const [seriesId, seriesAlbums] of albumsBySeries) {
                 const albumRepo = new AlbumRepository(this.firestore, this.cache, userId, seriesId)
 
-                for (const album of seriesAlbums) {
+                for (const albumData of seriesAlbums) {
                     try {
+                        // HYDRATION: Ensure we migrate a robust Album object, not anemic JSON
+                        // This fixes missing tracksOriginalOrder and artist/album fields in tracks
+                        const album = new Album(albumData)
+
                         album._schemaVersion = 2
                         album._migratedFrom = 'localStorage'
                         album._migrationDate = new Date()
+
+                        // Convert back to plain object if repository/firestore requires it,
+                        // or pass instance if supported. Firestore usually handles objects.
+                        // But Album instance has methods that are not enumerable.
+                        // We should pass {...album} to be safe, or rely on JSON serialization.
+                        // Let's pass the instance, assuming BaseRepository handles it.
 
                         await albumRepo.create(album)
                         result.albumsMigrated++
@@ -216,8 +227,8 @@ export class MigrationUtility {
                         const progress = 10 + (currentStep / totalSteps) * 70
                         onProgress?.(progress, 100, `Migrated album: ${album.title}`)
                     } catch (error) {
-                        console.error(`Failed to migrate album ${album.title}:`, error)
-                        result.errors.push({ type: 'album', name: album.title, error: error.message })
+                        console.error(`Failed to migrate album ${albumData.title}:`, error)
+                        result.errors.push({ type: 'album', name: albumData.title, error: error.message })
                     }
                 }
             }

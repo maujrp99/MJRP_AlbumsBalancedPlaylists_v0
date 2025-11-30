@@ -401,7 +401,7 @@ Header actions, next to view mode toggle
 - Blu-ray: Cyan (`#06b6d4`)
 - Digital: Gray (`#6b7280`)
 
-### Icons
+### Icons (don't use emoji, use svg)
 - ℹ️ Info
 - ⚠️ Warning
 - ✅ Success

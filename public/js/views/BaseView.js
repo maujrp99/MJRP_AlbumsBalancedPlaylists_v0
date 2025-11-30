@@ -113,4 +113,16 @@ export class BaseView {
         if (hours < 48) return 'Yesterday'
         return dateObj.toLocaleDateString()
     }
+
+    /**
+     * Escape HTML special characters to prevent XSS
+     * @param {string} str - String to escape
+     * @returns {string} Escaped string
+     */
+    escapeHtml(str) {
+        if (!str) return ''
+        const div = document.createElement('div')
+        div.textContent = str
+        return div.innerHTML
+    }
 }

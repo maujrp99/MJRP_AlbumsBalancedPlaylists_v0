@@ -2,6 +2,172 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
+### ⏳ Phase 3 - Remaining Work (To be confirmed)
+
+**UI Components** (not yet implemented):
+- Migration banner (HomeView)
+- Migration progress modal
+- CRUD delete/edit modals
+- **InventoryView** (new route `/inventory`)
+- Add to Inventory action (AlbumsView)
+- Generate Playlists button (AlbumsView → PlaylistsView)
+- Create Series from Inventory workflow
+
+**Manual Testing** (pending):
+- Migration flow (localStorage → Firestore)
+- CRUD operations with UI
+- Inventory management
+- Cross-tab cache sync
+- Browser compatibility (Chrome, Firefox, Safari
+
+---
+
+## [Sprint 5 - Phase 3: UI & Refactor] - 2025-11-30
+
+### 📋 Session Timeline (2025-11-30 08:00)
+
+**Complete Implementation Session**: Documentation consolidation, Domain Model refactor, critical bug fixes, and UI restoration  
+**Total Steps**: 58 discrete actions (see detailed breakdown below)  
+**Status**: ✅ UAT Phase - Ready for final verification
+
+#### Phase 1: Documentation Reorganization (Steps 1-6)
+- Created `/docs/` folder structure (devops, product-management, archive)
+- Moved documentation files to organized locations:
+  - DevOps: LOCAL_RUN.md, DEPLOYMENT.md, PRODUCTION_DEPLOY.md, SECRET_ROTATION_RUNBOOK.md, SECURITY.md
+  - Product: PROJECT_SUMMARY.md, SPRINT_5_UI_SPECS.md, V2.0_ANALYSIS.md
+  - Archive: HOTFIX_RANKING_ACCLAIM.md, IMPACT_ANALYSIS.md, troubleshooting_log.md
+- Created `docs/README.md` as documentation index
+- Consolidated `troubleshooting_log.md` into `DEBUG_LOG.md`
+- Moved `DEBUG_LOG.md` to `/docs/` root
+- Updated ARCHITECTURE.md with cross-references
+
+#### Phase 2: UI Enhancement (Steps 7-10)
+- Added MJRP realistic logo to hero section (`HomeView.js`)
+- Fixed logo background transparency (external tool → `sips` verification)
+- Added cache-busting (`?v=${Date.now()}`) to force logo reload
+- Positioned logo on right side, matching left icon size
+
+#### Phase 3: Git Commit (Steps 11-13)
+- Staged all changes (`git add -A`)
+- Committed: "docs: consolidate architecture documentation + add MJRP logo to hero"
+- Created tag `v2.0.1-docs-consolidation`
+
+#### Phase 4: Domain Model Analysis (Steps 14-17)
+- Identified root cause: "Anemic Domain Model" (raw JSON passing)
+- Issues: Artist/Album missing in playlists, Original Order broken
+- Created Implementation Plan for Domain Model refactor
+- User approved architectural refactor (Option B)
+
+#### Phase 5: Domain Model Implementation (Steps 18-22)
+- Updated ARCHITECTURE.md (moved current to "Previous", documented new model)
+- Created ES6 classes:
+  - `public/js/models/Track.js` - Guarantees artist/album context
+  - `public/js/models/Album.js` - Manages tracks and tracksOriginalOrder
+  - `public/js/models/Playlist.js` - Playlist domain logic
+  - `public/js/models/Series.js` - Series aggregation
+- Refactored `client.js`: Returns `new Album(data)`, added hydration
+- Refactored `curation.js`: Uses Album/Track models, added guard
+- Updated `AlbumsStore.js`: Prevents instance → plain object conversion
+
+#### Phase 6: Critical Bug Fixes (Steps 23-25)
+- **Issue #9: Axios Reference Error**
+  - Fix: `npm install axios` + added import to `client.js`
+- **Issue #10: API 400 Bad Request**
+  - Fix: Changed payload property `album` → `albumQuery`
+- **Issue #11: AI_API_KEY Not Loaded**
+  - Fix: Updated `server/index.js` dotenv to `path.resolve(__dirname, '.env')`
+
+#### Phase 7: Code Review & Verification (Steps 26-29)
+- Performed comprehensive code review of Domain Model refactor
+- Fixed hydration in `MigrationUtility.js` and `AlbumsStore.js`
+- Created Data Flow Analysis (verified tracks vs tracksOriginalOrder)
+- Ran `curl` to API to verify data structure
+- Consolidated analysis into ARCHITECTURE.md (per documentation rules)
+
+#### Phase 8: Debug Log Reorganization (Steps 30-31)
+- Reorganized `DEBUG_LOG.md` chronologically (newest first)
+- Consolidated HOTFIX_RANKING_ACCLAIM.md into `DEBUG_LOG.md`
+
+#### Phase 9: Original Album Order Investigation (Steps 32-41)
+- **Issue #13: Original Order Incorrect After Refresh**
+- Added debug logs to `client.js` (normalization inspection)
+- Added visual [DEBUG] badges to track numbers
+- Added console logs to `loadAlbumsFromQueries()`
+- Restarted servers to force code update
+- Added file load verification log
+- **Breakthrough**: Realized user was on `RankingView.js`, not `AlbumsView.js`
+- Fixed `RankingView.js` - had same bug (ignoring tracksOriginalOrder)
+- Documented full investigation in DEBUG_LOG.md
+- Cleaned up debug artifacts
+
+#### Phase 10: Sprint 5.3 Regression Fixes (Steps 42-45)
+- **Issue #14: Generate Playlists 500 Error**
+  - Fix: Added guard in `curation.js` for Album class check
+- **Issue #15: Ghost Albums**
+  - Fix: Implemented `AbortController` in `AlbumsView.js`
+  - Added `AbortSignal` support to `APIClient.fetchMultipleAlbums()`
+- **Issue #16: View Mode State Mismatch**
+  - Fix: Read `localStorage.getItem('albumsViewMode')` in constructor
+- **Issue #12: Refresh Button**
+  - Fix: Corrected property `activeSeries.albums` → `activeSeries.albumQueries`
+
+#### Phase 11: UI Reimplementation (Steps 46-49)
+- Re-implemented Migration Banner in `HomeView.js`
+- Created `EditAlbumModal.js` component
+- Added Edit Album button to `AlbumsView.js`
+- Added Inventory navigation to `HomeView.js`
+
+#### Phase 12: Testing & Additional Fixes (Steps 50-52)
+- Ran automated tests: 34/34 passing
+  - `tests/repositories/repositories.test.js` - 20/20
+  - `tests/cache/cache.test.js` - 14/14
+- **Issue #17: InventoryView Runtime Error**
+  - Fix: Added `escapeHtml()` method to `BaseView.js`
+- **Issue #18: Firebase API Key Error**
+  - Fix: Added `<script src="/js/firebase-config.js"></script>` to `index-v2.html`
+
+#### Phase 13: Final Documentation (Steps 53-58)
+- Updated `CHANGELOG.md` with Sprint 5 Phase 3 completion
+- Created UI Persistence Specs section in `ARCHITECTURE.md`
+- Corrected Issue IDs in `DEBUG_LOG.md` (swapped #17 and #18)
+- Documented UI/UX Standards (No Emojis rule) in `ARCHITECTURE.md`
+- Deprecated `implementation_plan.md` in favor of `task.md`
+- Updated `task.md` to mark all Sprint 5.3 tasks as DONE
+
+---
+
+### 🚀 Major: Domain Model Refactor & UI Restoration
+
+**Status**: ✅ UAT Phase - Ready for Verification  
+**Tests**: 34/34 Passing (100%)  
+**Focus**: Data Integrity, UI Components, Bug Fixes
+
+#### Changed - Domain Model Architecture
+- **Rich Domain Model**: Replaced anemic JSON objects with `Album`, `Track`, `Playlist`, `Series` classes.
+- **Data Integrity**: Guaranteed `artist`/`album` context in tracks (fixes "Unknown Artist" bug).
+- **Hydration**: Centralized logic for restoring objects from storage/API.
+
+#### Fixed - Critical Bugs
+- **Generate Playlists 500 Error (Issue #14)**: Fixed server-side crash due to missing `Album` class definition in `curation.js`.
+- **Ghost Albums Regression (Issue #15)**: Fixed race condition in `AlbumsView` using `AbortController`.
+- **View Mode State Mismatch (Issue #16)**: Fixed toggle logic and localStorage persistence.
+- **Firebase API Key Error (Issue #18)**: Fixed client-side auth error by injecting config.
+- **InventoryView Runtime Error (Issue #17)**: Fixed missing `escapeHtml` method.
+- **Original Album Order (Issue #13)**: Fixed regression where ranked order was shown instead of original disc order.
+- **Refresh Button (Issue #12)**: Fixed property mismatch in refresh logic.
+- **Axios Reference Error (Issue #9)**: Installed axios and added import.
+- **API 400 Bad Request (Issue #10)**: Fixed payload property mismatch.
+- **AI_API_KEY Loading (Issue #11)**: Fixed dotenv path resolution.
+- **Migration UI**: Restored missing Migration Banner in `HomeView.js`.
+
+#### Added - UI Components
+- **Edit Album Modal**: Implemented `EditAlbumModal.js` for inline editing
+- **Inventory Navigation**: Added "Manage Inventory" button to HomeView
+- **Migration Banner**: Re-implemented in HomeView with legacy data detection
+
+#### Known Issues
+- None at this time.
+
 ---
 
 ## [Sprint 5 - Phases 1-2] - 2025-11-28
@@ -165,7 +331,7 @@ node tests/cache/cache.test.js                 # 14/14 ✅
 - Cross-tab cache sync
 - Browser compatibility (Chrome, Firefox, Safari)
 
-**Estimated Completion**: 3-4 hours
+
 
 ---
 
