@@ -9,8 +9,31 @@
 
 **Context**: Developer onboarding revealed Issues #15 and #16 were NOT actually resolved despite being marked "Resolved" in previous session. User reported problems persist.
 
-### Issue #15: Ghost Albums - REOPENED
-**Status**: ✅ **RESOLVED (After 3 iterations)**  
+### Issue #21: Sticky Playlists (Series Selector) - NEW
+**Status**: 🔴 Open
+**Date**: 2025-11-30 21:15
+**Type**: Regression / Logic Flaw
+
+#### User Report
+When navigating through the series dropdown or using arrows, the view keeps showing the playlists from the *first* generated series, regardless of the selection.
+
+#### Initial Analysis
+- **Symptom**: Playlists from Series A persist when switching to Series B.
+- **Hypothesis**:
+  1. `PlaylistsStore.setPlaylists([])` might not be clearing state effectively or view not re-rendering.
+  2. `PlaylistsStore` undo/redo history might not track `seriesId`, causing restoration of wrong playlists if Undo is triggered or history state is mixed.
+  3. Validation logic in `PlaylistsView` might be bypassed if `seriesId` becomes null during switch but playlists remain.
+
+#### Next Steps
+1. Investigate `PlaylistsStore` history mechanism (does it snapshot `seriesId`?).
+2. Verify `PlaylistsView` series selector handler.
+3. Fix store to ensure `seriesId` is tightly coupled with playlist data in history.
+
+---
+
+### Issue #15: Ghost Albums - REOPENED (Again)
+**Status**: ✅ **RESOLVED (Definitively)**
+**Date**: 2025-11-30 21:00  
 **Date**: 2025-11-30 19:17 - 20:11  
 **Session Duration**: ~54 minutes
 

@@ -10,7 +10,8 @@ export default defineConfig({
         sourcemap: true,
         rollupOptions: {
             input: {
-                main: path.resolve(__dirname, 'public/hybrid-curator.html')
+                main: path.resolve(__dirname, 'public/hybrid-curator.html'),
+                v2: path.resolve(__dirname, 'public/index-v2.html')
             }
         }
     },

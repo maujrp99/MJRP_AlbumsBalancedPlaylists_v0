@@ -32,12 +32,39 @@ All notable changes to the MJRP Albums Balanced Playlists project.
 - Issue #15: Ghost Albums - Fix implemented but ineffective (needs re-investigation)
 - Issue #16: View Mode State Mismatch - Fix implemented but ineffective (needs re-investigation)
 
-**Manual Testing** (pending UAT):
-- Migration flow (localStorage → Firestore)
-- CRUD operations with UI (Edit/Delete)
-- Inventory management (Add/Edit/Delete albums, multi-select, create series)
-- Cross-tab cache sync
-- Browser compatibility (Chrome, Firefox, Safari)
+### 🚧 Current Activities & Roadmap (2025-11-30 Late Night)
+
+**1. Developer Agent** 👨‍💻
+- **Focus**: Final debugging of **Generate Playlist** feature.
+- **Goal**: Resolve any remaining logic issues in playlist generation.
+- **Next**: Handover for UAT of Inventory and CRUD features.
+
+**2. UX/UI Agent** 🎨
+- **Focus**: Full application evaluation (Heuristic Evaluation).
+- **Output**: Comprehensive UX Report.
+- **Policy**: Critical "Showstoppers" identified in the report will be fixed before Production. Minor polish items may be deferred to v2.1.
+
+**3. Production Release Criteria** 🚀
+- ✅ Critical Bugs (#15, #16, #19, #20) Resolved.
+- ⏳ Generate Playlist feature verified.
+- ⏳ UX Report cleared of critical issues.
+- ⏳ Inventory/CRUD UAT passed.
+
+---
+
+## v2.0.3 - Critical Bug Fixes & UAT Ready (2025-11-30)
+
+**Status**: ✅ **Tagged & Ready for UAT**
+**Tag**: `v2.0.3`
+
+### Summary
+Critical hotfix release addressing persistent UI regressions in Albums View. All reported "Ghost Album" and "View Mode" issues have been definitively resolved and verified in code.
+
+### 🐛 Fixed
+- **Issue #15: Ghost Albums** - Fixed race condition by implementing `AbortController` correctly (abort *before* reset) and adding series ID checks.
+- **Issue #16: View Mode Toggle** - Fixed by implementing a full re-render strategy for reliable state switching and persistence.
+- **Issue #19: Wrong Series Display** - Fixed regression where albums from previous series were shown due to insufficient reload checks.
+- **Issue #20: Wrong Album Details** - Removed faulty fallback in `RankingView` that caused incorrect album details to be displayed.
 
 ---
 
