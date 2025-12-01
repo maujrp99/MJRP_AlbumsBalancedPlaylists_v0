@@ -21,9 +21,20 @@ export class PlaylistsView extends BaseView {
 
   async render(params) {
     const state = playlistsStore.getState()
-    const playlists = state.playlists
     const activeSeries = seriesStore.getActiveSeries()
     const allSeries = seriesStore.getSeries()
+
+    // FIX: Check for "Ghost Playlists" (Issue #19 equivalent)
+    // If store has playlists but they belong to a different series, ignore them
+    let playlists = state.playlists
+
+    if (state.seriesId && activeSeries && state.seriesId !== activeSeries.id) {
+      console.warn('[PlaylistsView] Detected playlists from different series. Ignoring.', {
+        storeSeriesId: state.seriesId,
+        activeSeriesId: activeSeries.id
+      })
+      playlists = [] // Treat as empty for this view
+    }
 
     return `
       <div class="playlists-view container">
@@ -80,7 +91,13 @@ export class PlaylistsView extends BaseView {
 
   update() {
     const state = playlistsStore.getState()
-    const playlists = state.playlists
+    const activeSeries = seriesStore.getActiveSeries()
+
+    // FIX: Apply same series validation to update()
+    let playlists = state.playlists
+    if (state.seriesId && activeSeries && state.seriesId !== activeSeries.id) {
+      playlists = []
+    }
 
     // Update Undo/Redo
     const undoRedo = this.$('#undoRedoControls')
@@ -406,8 +423,12 @@ export class PlaylistsView extends BaseView {
       })
 
       console.log('[PlaylistsView] Received playlists:', playlists)
-      playlistsStore.setPlaylists(playlists)
-      console.log('[PlaylistsView] Playlists set in store')
+
+      // FIX: Pass seriesId to store to link playlists to this specific series
+      const activeSeries = seriesStore.getActiveSeries()
+      playlistsStore.setPlaylists(playlists, activeSeries ? activeSeries.id : null)
+
+      console.log('[PlaylistsView] Playlists set in store for series:', activeSeries ? activeSeries.id : 'unknown')
 
       // Force immediate update
       this.isGenerating = false

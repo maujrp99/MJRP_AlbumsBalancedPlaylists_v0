@@ -32,9 +32,6 @@ export class AlbumsView extends BaseView {
     // Store cleanup function
     this.cleanup = null
     this.abortController = null
-
-    // FIX #19: Track which series was last loaded to prevent showing wrong albums
-    this._lastLoadedSeriesId = null
   }
 
   destroy() {
@@ -894,16 +891,19 @@ export class AlbumsView extends BaseView {
       const currentCount = currentAlbums.length
 
       // Check if we need to reload
+      // FIX: Use persistent store state instead of view instance state
+      const lastLoadedId = albumsStore.getLastLoadedSeriesId()
+
       const needsReload = currentCount === 0 ||
         currentCount !== expectedCount ||
-        !this._lastLoadedSeriesId ||
-        this._lastLoadedSeriesId !== activeSeries.id
+        !lastLoadedId ||
+        lastLoadedId !== activeSeries.id
 
       if (needsReload) {
         console.log('[AlbumsView] Loading albums for series:', activeSeries.name, `(${currentCount}/${expectedCount})`)
         await this.loadAlbumsFromQueries(activeSeries.albumQueries)
-        // Remember which series we just loaded
-        this._lastLoadedSeriesId = activeSeries.id
+        // Remember which series we just loaded (IN STORE)
+        albumsStore.setLastLoadedSeriesId(activeSeries.id)
         // Note: loadAlbumsFromQueries already updates the view, no need to call updateAlbumsGrid
       } else {
         console.log('[AlbumsView] Albums already loaded for series:', activeSeries.name, `(${currentCount} albums)`)

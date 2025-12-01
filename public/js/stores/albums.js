@@ -11,6 +11,7 @@ export class AlbumsStore {
         this.currentAlbum = null
         this.loading = false
         this.error = null
+        this.lastLoadedSeriesId = null // FIX: Persist series context
         this.listeners = new Set()
     }
 
@@ -37,6 +38,23 @@ export class AlbumsStore {
     setCurrentAlbum(album) {
         this.currentAlbum = album
         this.notify()
+    }
+
+    /**
+     * Set ID of the last loaded series
+     * @param {string} seriesId - Series ID
+     */
+    setLastLoadedSeriesId(seriesId) {
+        this.lastLoadedSeriesId = seriesId
+        // No notify needed for metadata
+    }
+
+    /**
+     * Get ID of the last loaded series
+     * @returns {string|null} Series ID
+     */
+    getLastLoadedSeriesId() {
+        return this.lastLoadedSeriesId
     }
 
     /**
@@ -205,6 +223,7 @@ export class AlbumsStore {
         this.currentAlbum = null
         this.loading = false
         this.error = null
+        this.lastLoadedSeriesId = null
         this.notify()
     }
 }

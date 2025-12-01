@@ -11,6 +11,7 @@ export class PlaylistsStore {
             maxDuration: 75, // minutes
             p1p2Rule: true
         }
+        this.seriesId = null // FIX: Track active series ID
         this.isDirty = false // Unsaved changes
         this.isSynchronized = true
         this.listeners = new Set()
@@ -32,9 +33,11 @@ export class PlaylistsStore {
     /**
      * Set playlists (e.g., after generation)
      * @param {Array} playlists - Generated playlists
+     * @param {string} seriesId - ID of the series these playlists belong to
      */
-    setPlaylists(playlists) {
+    setPlaylists(playlists, seriesId = null) {
         this.playlists = playlists
+        this.seriesId = seriesId // Track which series these belong to
         this.isDirty = false
         this.isSynchronized = false
         this.createSnapshot('Initial generation')
@@ -144,6 +147,7 @@ export class PlaylistsStore {
     getState() {
         return {
             playlists: this.playlists,
+            seriesId: this.seriesId,
             config: this.config,
             isDirty: this.isDirty,
             isSynchronized: this.isSynchronized,
@@ -233,6 +237,7 @@ export class PlaylistsStore {
             maxDuration: 75,
             p1p2Rule: true
         }
+        this.seriesId = null
         this.isDirty = false
         this.isSynchronized = true
         this.versions = []

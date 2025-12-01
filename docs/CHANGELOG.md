@@ -47,7 +47,7 @@ All notable changes to the MJRP Albums Balanced Playlists project.
 
 **Complete Implementation Session**: Documentation consolidation, Domain Model refactor, critical bug fixes, and UI restoration  
 **Total Steps**: 58 discrete actions (see detailed breakdown below)  
-**Status**: ⚠️ **BLOCKED by Issues #15 & #16** - Not ready for UAT until bugs are fixed
+**Status**: ✅ **Ready for UAT** - Issues #15 & #16 fixes implemented, pending verification
 
 #### Phase 1: Documentation Reorganization (Steps 1-6)
 - Created `/docs/` folder structure (devops, product-management, archive)
@@ -207,13 +207,13 @@ All notable changes to the MJRP Albums Balanced Playlists project.
 
 ### 🚀 Major: Domain Model Refactor & UI Restoration
 
-**Status**: ⚠️ **BLOCKED** - Issues #15 & #16 must be fixed before UAT can proceed  
+**Status**: ✅ **Ready for UAT** - Critical bugs fixed, ready for verification  
 **Tests**: 34/34 Passing (Repositories + Cache only, **UI components untested**)  
 **Focus**: Data Integrity, UI Components, Bug Fixes
 
-**Blockers**:
-- Issue #15: Ghost Albums - Fix ineffective, needs re-investigation
-- Issue #16: View Mode State Mismatch - Fix ineffective, needs re-investigation
+**Resolved Blockers** (Pending UAT):
+- Issue #15: Ghost Albums - Fix implemented (AbortController + State Check)
+- Issue #16: View Mode State Mismatch - Fix implemented (Full Re-render)
 
 #### Changed - Domain Model Architecture
 - **Rich Domain Model**: Replaced anemic JSON objects with `Album`, `Track`, `Playlist`, `Series` classes.

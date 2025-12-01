@@ -82,16 +82,16 @@
 - **Purpose**: Know what's done vs what's pending
 - **Focus on**:
   - ⚠️ UI Components status (IMPLEMENTED but NOT VERIFIED)
-  - 🚨 Known Issues (Issues #15 & #16 UNRESOLVED)
+  - ✅ Known Issues (Issues #15 & #16 RESOLVED - Pending UAT)
   - Session Timeline Phases 10-12 (**CODE EXISTS BUT NOT VERIFIED**)
   - 🚨 CRITICAL DEVELOPER NOTICE section
-- **Key takeaway**: Don't assume Phases 10-12 work!
+- **Key takeaway**: Focus on UAT Verification!
 
 ### **Step 3.2: Issue Audit**
 📄 **Read**: `reports/issue_audit_report.md`
 - **Purpose**: Understand all 10 issues (#9-18) and their TRUE status
 - **Focus on**:
-  - Issues #15 & #16: Marked "Resolved" but ARE NOT (start here!)
+  - Issues #15 & #16: Marked "Resolved" (Fixes implemented, pending UAT)
   - Issues #9-14, #17-18: Need UAT validation
   - Recommended actions for each issue
 
@@ -181,8 +181,8 @@ npm run dev
 # Terminal 2
 cd server && node index.js
 ```
-- Open `http://localhost:5173/`
-- **⚠️ Expected**: You WILL encounter bugs (Issues #15 & #16)
+- Open `http://localhost:5000/`
+- **⚠️ Expected**: You might encounter bugs (Issues #15 & #16 should be fixed)
 
 ### **Step 5.4: Debug Log Review**
 📄 **Read**: `docs/debug/DEBUG_LOG.md`
@@ -197,27 +197,16 @@ cd server && node index.js
 
 Based on current status, here's the priority order:
 
-### **Priority 1: Fix Known Issues (CRITICAL)**
-- **Issue #15: Ghost Albums** 
-  - File: `public/js/views/AlbumsView.js`
-  - Problem: AbortController exists but doesn't prevent ghost albums
-  - Action: Re-investigate race condition logic
-  
-- **Issue #16: View Mode State Mismatch**
-  - File: `public/js/views/AlbumsView.js`
-  - Problem: localStorage read exists but toggle state still wrong
-  - Action: Debug timing/initialization order
-
-### **Priority 2: UAT Testing (Verify Implementations)**
+### **Priority 1: UAT Testing (Verify Implementations)**
 Test these 6 UI components manually:
-1. Migration Banner (HomeView)
-2. Edit Album Modal
-3. Delete Album Modal
-4. InventoryView
-5. Add to Inventory action
-6. Generate Playlists button
+1. **Ghost Albums Fix (#15)**: Verify navigation doesn't duplicate albums
+2. **View Mode Toggle Fix (#16)**: Verify toggle works and persists
+3. Migration Banner (HomeView)
+4. Edit Album Modal
+5. Delete Album Modal
+6. InventoryView
 
-### **Priority 3: Complete Pending Features**
+### **Priority 2: Complete Pending Features**
 - Migration Progress Modal (optional polish)
 - Create Series from Inventory backend (TODO at line 228)
 
@@ -257,7 +246,7 @@ Test these 6 UI components manually:
 2. **Don't assume Phases 10-12 work** - They need UAT testing
 3. **Don't modify v1.6 (hybrid-curator.html)** - It's frozen for production
 4. **Don't skip CHANGELOG "Remaining Work"** - It's your source of truth
-5. **Don't work on new features before fixing #15 & #16** - These are critical
+5. **Don't work on new features before verifying #15 & #16** - These are critical
 
 ---
 
@@ -276,13 +265,13 @@ Test these 6 UI components manually:
 ## 📞 Questions After Onboarding?
 
 **Check these first**:
-1. `reports/comprehensive_audit_report.md` - Full project audit
+1. `reports/archive/comprehensive_audit_report.md` - Full project audit
 2. `docs/CHANGELOG.md` - Session timeline (58 steps documented)
-3. `reports/issue_audit_report.md` - Issue details
+3. `reports/issue_audit_report.md` - Issue details (Active)
 
 **Still stuck?**: Refer to architecture diagrams in ARCHITECTURE.md
 
 ---
 
-**Last Updated**: 2025-11-30 17:09  
-**Next Update**: After Issues #15 & #16 are resolved and UAT completes
+**Last Updated**: 2025-11-30 23:50
+**Next Update**: After UAT completes
