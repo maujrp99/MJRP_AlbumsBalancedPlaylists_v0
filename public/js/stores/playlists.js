@@ -36,11 +36,20 @@ export class PlaylistsStore {
      * @param {string} seriesId - ID of the series these playlists belong to
      */
     setPlaylists(playlists, seriesId = null) {
+        console.log('📦 [PlaylistsStore] setPlaylists called:', {
+            playlistsCount: playlists.length,
+            newSeriesId: seriesId,
+            oldSeriesId: this.seriesId
+        })
         this.playlists = playlists
         this.seriesId = seriesId // Track which series these belong to
         this.isDirty = false
         this.isSynchronized = false
         this.createSnapshot('Initial generation')
+        console.log('📦 [PlaylistsStore] After set:', {
+            playlistsCount: this.playlists.length,
+            seriesId: this.seriesId
+        })
         this.notify()
     }
 
@@ -145,7 +154,7 @@ export class PlaylistsStore {
      * @returns {Object} Current state
      */
     getState() {
-        return {
+        const state = {
             playlists: this.playlists,
             seriesId: this.seriesId,
             config: this.config,
@@ -154,6 +163,11 @@ export class PlaylistsStore {
             canUndo: this.currentVersionIndex > 0,
             canRedo: this.currentVersionIndex < this.versions.length - 1
         }
+        console.log('📦 [PlaylistsStore] getState:', {
+            playlistsCount: state.playlists.length,
+            seriesId: state.seriesId
+        })
+        return state
     }
 
     /**
@@ -162,14 +176,14 @@ export class PlaylistsStore {
      * @private
      */
     createSnapshot(description) {
-        // Remove any versions after current (if we undid then made changes)
+        // Remove future history if we branch off
         if (this.currentVersionIndex < this.versions.length - 1) {
             this.versions = this.versions.slice(0, this.currentVersionIndex + 1)
         }
 
-        // Add new snapshot
         this.versions.push({
             playlists: JSON.parse(JSON.stringify(this.playlists)),
+            seriesId: this.seriesId, // FIX: Snapshot seriesId
             timestamp: new Date().toISOString(),
             description
         })
@@ -177,9 +191,8 @@ export class PlaylistsStore {
         // Limit history size
         if (this.versions.length > this.maxVersions) {
             this.versions.shift()
-        } else {
-            this.currentVersionIndex++
         }
+        this.currentVersionIndex = this.versions.length - 1
     }
 
     /**
@@ -189,9 +202,9 @@ export class PlaylistsStore {
     undo() {
         if (this.currentVersionIndex > 0) {
             this.currentVersionIndex--
-            this.playlists = JSON.parse(JSON.stringify(
-                this.versions[this.currentVersionIndex].playlists
-            ))
+            const version = this.versions[this.currentVersionIndex]
+            this.playlists = JSON.parse(JSON.stringify(version.playlists))
+            this.seriesId = version.seriesId // FIX: Restore seriesId
             this.isDirty = true
             this.notify()
             return true
@@ -206,9 +219,9 @@ export class PlaylistsStore {
     redo() {
         if (this.currentVersionIndex < this.versions.length - 1) {
             this.currentVersionIndex++
-            this.playlists = JSON.parse(JSON.stringify(
-                this.versions[this.currentVersionIndex].playlists
-            ))
+            const version = this.versions[this.currentVersionIndex]
+            this.playlists = JSON.parse(JSON.stringify(version.playlists))
+            this.seriesId = version.seriesId // FIX: Restore seriesId
             this.isDirty = true
             this.notify()
             return true

@@ -26,7 +26,7 @@
 ## 🚀 DevOps
 
 - **[devops/LOCAL_RUN.md](devops/LOCAL_RUN.md)** - How to run locally
-- **[devops/DEPLOYMENT.md](devops/DEPLOYMENT.md)** - Deployment guide
+- **[devops/PRODUCTION_DEPLOY.md](devops/PRODUCTION_DEPLOY.md)** - Production deployment guide
 - **[devops/PRODUCTION_DEPLOY.md](devops/PRODUCTION_DEPLOY.md)** - Production deployment procedures
 - **[devops/SECRET_ROTATION_RUNBOOK.md](devops/SECRET_ROTATION_RUNBOOK.md)** - Secret rotation procedures
 - **[devops/SECURITY.md](devops/SECURITY.md)** - Security guidelines
@@ -64,7 +64,7 @@
 ### For Developers
 - Start here: [DevOps → Local Run](devops/LOCAL_RUN.md)
 - Architecture decisions: [ARCHITECTURE.md](ARCHITECTURE.md)
-- Deployment: [DevOps → Deployment](devops/DEPLOYMENT.md)
+- Deployment: [DevOps → Production Deploy](devops/PRODUCTION_DEPLOY.md)
 
 ### For Product Managers
 - Project overview: [Product Management → Project Summary](product-management/PROJECT_SUMMARY.md)
@@ -87,7 +87,7 @@ docs/
 │
 ├── devops/
 │   ├── LOCAL_RUN.md
-│   ├── DEPLOYMENT.md
+│   ├── PRODUCTION_DEPLOY.md
 │   ├── PRODUCTION_DEPLOY.md
 │   ├── SECRET_ROTATION_RUNBOOK.md
 │   └── SECURITY.md

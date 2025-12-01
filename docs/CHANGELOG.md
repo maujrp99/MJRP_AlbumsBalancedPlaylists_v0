@@ -79,7 +79,7 @@ Critical hotfix release addressing persistent UI regressions in Albums View. All
 #### Phase 1: Documentation Reorganization (Steps 1-6)
 - Created `/docs/` folder structure (devops, product-management, archive)
 - Moved documentation files to organized locations:
-  - DevOps: LOCAL_RUN.md, DEPLOYMENT.md, PRODUCTION_DEPLOY.md, SECRET_ROTATION_RUNBOOK.md, SECURITY.md
+  - DevOps: LOCAL_RUN.md, PRODUCTION_DEPLOY.md, SECRET_ROTATION_RUNBOOK.md, SECURITY.md
   - Product: PROJECT_SUMMARY.md, SPRINT_5_UI_SPECS.md, V2.0_ANALYSIS.md
   - Archive: HOTFIX_RANKING_ACCLAIM.md, IMPACT_ANALYSIS.md, troubleshooting_log.md
 - Created `docs/README.md` as documentation index

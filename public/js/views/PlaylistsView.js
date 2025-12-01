@@ -334,21 +334,32 @@ export class PlaylistsView extends BaseView {
     // Series Selector
     const seriesSelector = this.$('#seriesSelector')
     if (seriesSelector) {
-      this.on(seriesSelector, 'change', (e) => {
+      this.on(seriesSelector, 'change', async (e) => {
         const newSeriesId = e.target.value
-        console.log('[PlaylistsView] Switching series to:', newSeriesId)
+        const oldSeriesId = seriesStore.getActiveSeries()?.id
+
+        console.log('🔄 [PlaylistsView] ===== SERIES CHANGE START =====')
+        console.log('🔄 [PlaylistsView] Old Series:', oldSeriesId)
+        console.log('🔄 [PlaylistsView] New Series:', newSeriesId)
+        console.log('🔄 [PlaylistsView] Current Playlists:', playlistsStore.getPlaylists().length)
+
+        // 1. Update Active Series
+        console.log('🔄 [PlaylistsView] Step 1: Setting active series...')
         seriesStore.setActiveSeries(newSeriesId)
-        // Reload the view to reflect the new series context
-        // Since we are already in /playlists, we might just need to trigger a re-render or let the store subscription handle it.
-        // However, PlaylistsView might need to re-fetch playlists for the new series if they are stored separately.
-        // For now, let's assume playlists are global in the store or filtered by series. 
-        // Actually, the current store structure seems to hold one set of playlists.
-        // We should probably clear the current playlists when switching series.
-        playlistsStore.setPlaylists([]) // Clear current
-        this.render(params).then(html => {
-          this.container.innerHTML = html
-          this.mount(params) // Re-mount to attach listeners again
-        })
+        console.log('🔄 [PlaylistsView] Step 1: Active series set to:', seriesStore.getActiveSeries()?.id)
+
+        // 2. Clear current playlists to prevent ghosting
+        console.log('🔄 [PlaylistsView] Step 2: Clearing playlists...')
+        console.log('🔄 [PlaylistsView] Before clear:', playlistsStore.getPlaylists().length)
+        playlistsStore.setPlaylists([], newSeriesId)
+        console.log('🔄 [PlaylistsView] After clear:', playlistsStore.getPlaylists().length)
+        console.log('🔄 [PlaylistsView] Store seriesId:', playlistsStore.getState().seriesId)
+
+        // 3. Force full view reload via Router
+        console.log('🔄 [PlaylistsView] Step 3: Forcing router reload...')
+        console.log('🔄 [PlaylistsView] Current path:', window.location.pathname)
+        await router.loadRoute(window.location.pathname)
+        console.log('🔄 [PlaylistsView] ===== SERIES CHANGE END =====')
       })
     }
 

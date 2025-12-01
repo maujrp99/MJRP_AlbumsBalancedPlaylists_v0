@@ -7,7 +7,7 @@
 ## 📚 Active Documentation
 
 ### Primary Deployment Guide
-**Location:** `/DEPLOYMENT.md` (root of project)
+**Location:** `docs/devops/PRODUCTION_DEPLOY.md`
 
 This is the **single source of truth** for production deployments. It consolidates:
 - Pre-deployment checklists
@@ -35,7 +35,7 @@ This is the **single source of truth** for production deployments. It consolidat
 
 **Location:** `/docs/archive/`
 
-The following files were consolidated into `/DEPLOYMENT.md` on 2025-11-29:
+The following files were consolidated into `PRODUCTION_DEPLOY.md` on 2025-11-29:
 - `DEPLOYMENT_ARCHIVED_20251129.md` (Original Cloud Run + Firebase guide)
 - `PRODUCTION_DEPLOY_ARCHIVED_20251129.md` (Original CI/CD checklist)
 - `DEPLOYMENT_CHECKLIST_V2_ARCHIVED_20251129.md` (Sprint 5 checklist)
@@ -46,7 +46,7 @@ The following files were consolidated into `/DEPLOYMENT.md` on 2025-11-29:
 
 ## 🎯 Quick Links
 
-- **Deploy to Production:** See `/DEPLOYMENT.md`
+- **Deploy to Production:** See `PRODUCTION_DEPLOY.md` (this directory)
 - **Rotate Secrets:** See `SECRET_ROTATION_RUNBOOK.md`
 - **Run Locally:** See `LOCAL_RUN.md`
 - **Security Policies:** See `SECURITY.md`

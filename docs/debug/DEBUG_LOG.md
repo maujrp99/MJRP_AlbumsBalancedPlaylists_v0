@@ -9,25 +9,121 @@
 
 **Context**: Developer onboarding revealed Issues #15 and #16 were NOT actually resolved despite being marked "Resolved" in previous session. User reported problems persist.
 
-### Issue #21: Sticky Playlists (Series Selector) - NEW
-**Status**: 🔴 Open
-**Date**: 2025-11-30 21:15
+**Status**: 🔴 **OPEN (After 4 failed attempts)**
+**Date Started**: 2025-11-30 21:15
+**Date Last Updated**: 2025-12-01 13:10
 **Type**: Regression / Logic Flaw
+**Session Duration**: ~16 hours (across 2 days)
 
 #### User Report
-When navigating through the series dropdown or using arrows, the view keeps showing the playlists from the *first* generated series, regardless of the selection.
+When navigating through the series dropdown or using arrows in the PlaylistsView, the view keeps showing the playlists from the *first* generated series, regardless of which series is selected in the dropdown.
 
-#### Initial Analysis
-- **Symptom**: Playlists from Series A persist when switching to Series B.
-- **Hypothesis**:
-  1. `PlaylistsStore.setPlaylists([])` might not be clearing state effectively or view not re-rendering.
-  2. `PlaylistsStore` undo/redo history might not track `seriesId`, causing restoration of wrong playlists if Undo is triggered or history state is mixed.
-  3. Validation logic in `PlaylistsView` might be bypassed if `seriesId` becomes null during switch but playlists remain.
+**Reproduction Steps**:
+1. Generate playlists for Series tc1 (e.g., Greatest Hits Vol. 1 & 2)
+2. Switch to Series tc2 using dropdown
+3. **Expected**: Playlists should clear or show tc2 playlists
+4. **Actual**: tc1 playlists remain visible
 
-#### Next Steps
-1. Investigate `PlaylistsStore` history mechanism (does it snapshot `seriesId`?).
-2. Verify `PlaylistsView` series selector handler.
-3. Fix store to ensure `seriesId` is tightly coupled with playlist data in history.
+#### Investigation Timeline
+
+**ATTEMPT #1: Store Series Tracking + View Validation** (2025-11-30 21:15 - FAILED)
+- **Hypothesis**: `PlaylistsStore` doesn't track which series the playlists belong to, causing cross-contamination.
+- **Fix Applied**:
+  1. Added `seriesId` property to `PlaylistsStore` (line 14)
+  2. Modified `setPlaylists(playlists, seriesId)` to accept and store `seriesId` (lines 38-40)
+  3. Updated `getState()` to expose `seriesId` (line 150)
+  4. Modified `reset()` to clear `seriesId` (line 239)
+  5. Added validation in `PlaylistsView.render()` and `update()` to check if `state.seriesId !== activeSeries.id` (lines 30-36, 97-99)
+  6. Updated `handleGenerate()` to pass `activeSeries.id` to `setPlaylists()` (line 428)
+- **Files Modified**:
+  - `public/js/stores/playlists.js` (Steps 412-414)
+  - `public/js/views/PlaylistsView.js` (Step 422)
+- **Result**: ❌ **FAILED** - User reported playlists still persist when switching series
+- **Root Cause Missed**: Validation logic works, but store history (undo/redo) doesn't track `seriesId`
+
+**ATTEMPT #2: History Snapshot SeriesId** (2025-12-01 00:26 - FAILED)
+- **Hypothesis**: Undo/redo history snapshots don't include `seriesId`, so restoring history brings back playlists without series context.
+- **Fix Applied**:
+  1. Modified `createSnapshot()` to include `seriesId` in snapshots (line 172)
+  2. Updated `undo()` to restore `seriesId` from snapshot (line 193)
+  3. Updated `redo()` to restore `seriesId` from snapshot (line 210)
+- **Files Modified**:
+  - `public/js/stores/playlists.js` (Steps 438-439)
+- **Result**: ❌ **FAILED** - User confirmed playlists still show from wrong series
+- **Root Cause Missed**: Series selector event handler has logic issues
+
+**ATTEMPT #3: Refactor Series Selector Handler** (2025-12-01 00:35 - FAILED)
+- **Hypothesis**: The series selector's manual re-render logic (`this.render().then(html => this.mount())`) causes memory leaks and doesn't properly clean up state.
+- **Fix Applied**:
+  1. Replaced manual re-render with `router.loadRoute(window.location.pathname)`
+  2. Added comments explaining the fix
+- **Code Change** (`PlaylistsView.js` lines 336-351):
+  ```javascript
+  this.on(seriesSelector, 'change', async (e) => {
+      const newSeriesId = e.target.value
+      console.log('[PlaylistsView] Switching series to:', newSeriesId)
+      
+      // 1. Update Active Series
+      seriesStore.setActiveSeries(newSeriesId)
+      
+      // 2. Clear current playlists to prevent ghosting
+      playlistsStore.setPlaylists([]) 
+      
+      // 3. Force full view reload via Router
+      await router.loadRoute(window.location.pathname)
+  })
+  ```
+- **Files Modified**:
+  - `public/js/views/PlaylistsView.js` (Step 464)
+- **Result**: ❌ **FAILED** - User reported playlists still persist
+- **Root Cause Missed**: `router.loadRoute()` method doesn't exist!
+
+**ATTEMPT #4: Implement Missing router.loadRoute()** (2025-12-01 13:05 - FAILED)
+- **Hypothesis**: The call to `router.loadRoute()` in Attempt #3 failed silently because the method didn't exist in `router.js`.
+- **Discovery**: Reviewed `router.js` and confirmed `loadRoute()` method was never implemented.
+- **Fix Applied**:
+  1. Added `loadRoute(path)` method to `Router` class to force route reload
+  2. Method updates history and manually triggers `handleRouteChange()`
+- **Code Change** (`router.js` lines 84-91):
+  ```javascript
+  async loadRoute(path) {
+      // Update history without triggering popstate
+      history.replaceState({}, '', path)
+      // Manually trigger route handling
+      await this.handleRouteChange()
+  }
+  ```
+- **Files Modified**:
+  - `public/js/router.js` (Step 474)
+- **Verification Attempted**: Browser agent failed to connect (404 errors on localhost:5005 and 127.0.0.1:5005)
+- **Result**: ❌ **FAILED** - User confirmed playlists still persist after reload
+- **Root Cause**: **STILL UNKNOWN** - All logical fixes applied, but issue persists
+
+#### Current State Analysis (2025-12-01 13:10)
+**What We Know**:
+1. ✅ `PlaylistsStore` correctly tracks `seriesId`
+2. ✅ `PlaylistsView` validates `seriesId` before rendering
+3. ✅ History snapshots include `seriesId`
+4. ✅ Series selector calls `setPlaylists([])` to clear
+5. ✅ Series selector calls `router.loadRoute()` to force reload
+6. ✅ `router.loadRoute()` now exists and should work
+7. ❌ **Playlists still persist when switching series**
+
+**Possible Remaining Causes**:
+1. **Race Condition**: `setPlaylists([])` → `router.loadRoute()` sequence might have timing issues
+   - Store subscription fires render before loadRoute completes?
+   - View renders with old data before new view is created?
+2. **Store Subscription Not Cleared**: Even after `destroy()`, old subscriptions might fire
+3. **Cache/Build Issue**: Changes not being loaded by browser (unlikely, but possible)
+4. **Deep Reactivity Issue**: Playlists array is cleared but DOM retains old HTML
+5. **Router Bug**: `loadRoute()` implementation doesn't actually destroy/recreate view properly
+
+**Next Investigation Steps**:
+1. Add extensive console logging to track exact execution order
+2. Verify `BaseView.destroy()` is actually being called
+3. Check if store subscriptions are truly being removed
+4. Investigate if `router.handleRouteChange()` → `renderView()` actually creates new view instance
+5. Consider adding explicit `playlistsStore.reset()` instead of just `setPlaylists([])`
 
 ---
 

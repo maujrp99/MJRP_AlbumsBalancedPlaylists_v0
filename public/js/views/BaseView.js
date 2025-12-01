@@ -34,9 +34,14 @@ export class BaseView {
      * Called before navigating to new view
      */
     destroy() {
+        console.log('🧹 [BaseView] destroy called for:', this.constructor.name)
+        console.log('🧹 [BaseView] Subscriptions to clear:', this.subscriptions.length)
+
         // Unsubscribe from all stores
         this.subscriptions.forEach(unsubscribe => unsubscribe())
         this.subscriptions = []
+
+        console.log('🧹 [BaseView] All subscriptions cleared')
     }
 
     /**
