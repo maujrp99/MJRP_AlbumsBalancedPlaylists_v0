@@ -32,6 +32,9 @@ export class AlbumsView extends BaseView {
     // Store cleanup function
     this.cleanup = null
     this.abortController = null
+
+    // FIX #19: Track which series was last loaded to prevent showing wrong albums
+    this._lastLoadedSeriesId = null
   }
 
   destroy() {
@@ -655,17 +658,100 @@ export class AlbumsView extends BaseView {
     const toggleViewBtn = this.$('#toggleViewMode')
     if (toggleViewBtn) {
       this.on(toggleViewBtn, 'click', async () => {
+        // FIX #16: Toggle mode and re-render entire view
         this.viewMode = this.viewMode === 'compact' ? 'expanded' : 'compact'
         localStorage.setItem('albumsViewMode', this.viewMode)
-        console.log('\ud83d\udd0d [DEBUG] View mode toggled:', this.viewMode) // DEBUG:
+        console.log('[DEBUG] View mode toggled:', this.viewMode)
 
-        // Full re-render of the entire view
-        const params = { /* any params needed */ }
-        const html = await this.render(params)
+        // Re-render entire view with new mode (keeps same instance)
+        const html = await this.render({})
         this.container.innerHTML = html
 
-        // Re-mount to re-attach event listeners
-        await this.mount(params)
+        // Re-initialize event listeners (preserves this instance)
+        // Get current series info
+        const activeSeries = seriesStore.getActiveSeries()
+        const currentAlbums = albumsStore.getAlbums()
+
+        // Re-setup all event listeners
+        Breadcrumb.attachListeners(this.container)
+
+        // Re-bind search
+        const searchInput = this.$('#albumSearch')
+        if (searchInput) {
+          this.on(searchInput, 'input', (e) => {
+            this.searchQuery = e.target.value
+            this.updateAlbumsGrid(albumsStore.getAlbums())
+          })
+        }
+
+        // Re-bind filters
+        const artistFilter = this.$('#artistFilter')
+        if (artistFilter) {
+          this.on(artistFilter, 'change', (e) => {
+            this.filters.artist = e.target.value
+            this.updateAlbumsGrid(albumsStore.getAlbums())
+          })
+        }
+
+        const yearFilter = this.$('#yearFilter')
+        if (yearFilter) {
+          this.on(yearFilter, 'change', (e) => {
+            this.filters.year = e.target.value
+            this.updateAlbumsGrid(albumsStore.getAlbums())
+          })
+        }
+
+        const statusFilter = this.$('#statusFilter')
+        if (statusFilter) {
+          this.on(statusFilter, 'change', (e) => {
+            this.filters.status = e.target.value
+            this.updateAlbumsGrid(albumsStore.getAlbums())
+          })
+        }
+
+        const bestEverCheckbox = this.$('#bestEverOnly')
+        if (bestEverCheckbox) {
+          this.on(bestEverCheckbox, 'change', (e) => {
+            this.filters.bestEverOnly = e.target.checked
+            this.updateAlbumsGrid(albumsStore.getAlbums())
+          })
+        }
+
+        // Re-bind toggle button (recursive call setup)
+        const newToggleBtn = this.$('#toggleViewMode')
+        if (newToggleBtn) {
+          newToggleBtn.addEventListener('click', () => toggleViewBtn.click())
+        }
+
+        // Re-bind other buttons
+        const refreshBtn = this.$('#refreshAlbums')
+        if (refreshBtn) {
+          this.on(refreshBtn, 'click', async () => {
+            if (activeSeries?.albumQueries) {
+              await this.loadAlbumsFromQueries(activeSeries.albumQueries, true)
+            }
+          })
+        }
+
+        const generateBtn = this.$('#generatePlaylistsBtn')
+        if (generateBtn) {
+          this.on(generateBtn, 'click', async () => {
+            const activeSeries = seriesStore.getActiveSeries()
+            const albums = albumsStore.getAlbums()
+
+            if (!activeSeries) {
+              alert('⚠️ No active series. Please create or load a series first.')
+              return
+            }
+
+            if (albums.length === 0) {
+              alert('⚠️ No albums loaded. Please load albums before generating playlists.')
+              return
+            }
+
+            router.navigate(`/playlists?seriesId=${activeSeries.id}`)
+          })
+        }
       })
     }
 
@@ -768,17 +854,20 @@ export class AlbumsView extends BaseView {
     if (generateBtn) {
       this.on(generateBtn, 'click', async () => {
         const activeSeries = seriesStore.getActiveSeries()
+        const albums = albumsStore.getAlbums()
+
+        // FIX: Add validation for edge cases
         if (!activeSeries) {
-          alert('Please select a series first.')
+          alert('⚠️ No active series. Please create or load a series first.')
           return
         }
 
-        // Navigate to Playlists view with generation flag or trigger generation
-        // For now, let's assume we navigate to playlists view and it handles generation if empty
-        // Or we can trigger it here.
-        // Let's try to trigger the curation engine.
-        // But CurationEngine is in curation.js which might not be easily accessible here without refactor.
-        // Simpler approach: Navigate to /playlists?generate=true
+        if (albums.length === 0) {
+          alert('⚠️ No albums loaded. Please load albums before generating playlists.')
+          return
+        }
+
+        console.log('[AlbumsView] Navigating to playlists with', albums.length, 'albums')
         router.navigate(`/playlists?seriesId=${activeSeries.id}`)
       })
     }
@@ -793,10 +882,35 @@ export class AlbumsView extends BaseView {
     }
 
     const activeSeries = seriesStore.getActiveSeries()
+    const currentAlbums = albumsStore.getAlbums()
 
     if (activeSeries && activeSeries.albumQueries && activeSeries.albumQueries.length > 0) {
-      console.log('[AlbumsView] Loading albums for series:', activeSeries.name)
-      await this.loadAlbumsFromQueries(activeSeries.albumQueries)
+      // FIX #15 ENHANCED + FIX #19: Check if albums are already loaded for THIS SPECIFIC series
+      // Only reload if:
+      // 1. Store is empty (currentCount === 0)
+      // 2. Wrong number of albums (currentCount !== expectedCount)
+      // 3. Albums are from a DIFFERENT series (check first album's metadata or series change)
+      const expectedCount = activeSeries.albumQueries.length
+      const currentCount = currentAlbums.length
+
+      // Check if we need to reload
+      const needsReload = currentCount === 0 ||
+        currentCount !== expectedCount ||
+        !this._lastLoadedSeriesId ||
+        this._lastLoadedSeriesId !== activeSeries.id
+
+      if (needsReload) {
+        console.log('[AlbumsView] Loading albums for series:', activeSeries.name, `(${currentCount}/${expectedCount})`)
+        await this.loadAlbumsFromQueries(activeSeries.albumQueries)
+        // Remember which series we just loaded
+        this._lastLoadedSeriesId = activeSeries.id
+        // Note: loadAlbumsFromQueries already updates the view, no need to call updateAlbumsGrid
+      } else {
+        console.log('[AlbumsView] Albums already loaded for series:', activeSeries.name, `(${currentCount} albums)`)
+        // CRITICAL FIX: Do NOT call updateAlbumsGrid here!
+        // The render() method already rendered these albums, calling updateAlbumsGrid
+        // would duplicate them. The view is already up-to-date from render().
+      }
     } else if (urlSeriesId && !activeSeries) {
       // Fallback: Series ID in URL but not in store (Hard Refresh scenario)
       console.log('[AlbumsView] Series not in store, attempting to fetch from Firestore...')
@@ -831,7 +945,18 @@ export class AlbumsView extends BaseView {
   }
 
   async loadAlbumsFromQueries(queries, skipCache = false) {
-    // Reset store to clear previous series' albums
+    // FIX #15: Cancel previous requests FIRST, before clearing store
+    // This prevents race condition where old requests complete after reset
+    if (this.abortController) {
+      console.log('[AlbumsView] Aborting previous fetch operation')
+      this.abortController.abort()
+      this.abortController = null
+    }
+
+    // Create new abort controller for this operation
+    this.abortController = new AbortController()
+
+    // NOW reset store (no pending requests can add albums after this)
     albumsStore.reset()
 
     // Force immediate UI clear
@@ -858,12 +983,6 @@ export class AlbumsView extends BaseView {
         container
       )
     }
-
-    // Cancel previous request if any
-    if (this.abortController) {
-      this.abortController.abort()
-    }
-    this.abortController = new AbortController()
 
     try {
       const { results, errors } = await apiClient.fetchMultipleAlbums(

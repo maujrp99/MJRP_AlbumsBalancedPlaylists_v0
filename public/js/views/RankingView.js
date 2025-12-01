@@ -207,12 +207,18 @@ export class RankingView extends BaseView {
   findAlbum(albumId) {
     const albums = albumsStore.getAlbums()
 
-    // Try exact ID match first
-    const byId = albums.find(a => a.id === albumId)
-    if (byId) return byId
+    console.log('[RankingView] Looking for album:', albumId)
+    console.log('[RankingView] Available albums:', albums.map(a => a.id))
 
-    // Fallback to first album if no match (for debugging)
-    return albums[0] || null
+    // FIX #20: Only return album if ID matches exactly
+    // DO NOT fallback to first album - that causes wrong album to display
+    const album = albums.find(a => a.id === albumId)
+
+    if (!album) {
+      console.warn('[RankingView] Album not found:', albumId)
+    }
+
+    return album || null
   }
 
   getRatingClass(rating) {
