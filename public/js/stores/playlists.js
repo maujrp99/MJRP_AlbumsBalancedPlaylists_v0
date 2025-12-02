@@ -36,20 +36,11 @@ export class PlaylistsStore {
      * @param {string} seriesId - ID of the series these playlists belong to
      */
     setPlaylists(playlists, seriesId = null) {
-        console.log('📦 [PlaylistsStore] setPlaylists called:', {
-            playlistsCount: playlists.length,
-            newSeriesId: seriesId,
-            oldSeriesId: this.seriesId
-        })
         this.playlists = playlists
         this.seriesId = seriesId // Track which series these belong to
         this.isDirty = false
         this.isSynchronized = false
         this.createSnapshot('Initial generation')
-        console.log('📦 [PlaylistsStore] After set:', {
-            playlistsCount: this.playlists.length,
-            seriesId: this.seriesId
-        })
         this.notify()
     }
 
@@ -154,7 +145,7 @@ export class PlaylistsStore {
      * @returns {Object} Current state
      */
     getState() {
-        const state = {
+        return {
             playlists: this.playlists,
             seriesId: this.seriesId,
             config: this.config,
@@ -163,11 +154,6 @@ export class PlaylistsStore {
             canUndo: this.currentVersionIndex > 0,
             canRedo: this.currentVersionIndex < this.versions.length - 1
         }
-        console.log('📦 [PlaylistsStore] getState:', {
-            playlistsCount: state.playlists.length,
-            seriesId: state.seriesId
-        })
-        return state
     }
 
     /**

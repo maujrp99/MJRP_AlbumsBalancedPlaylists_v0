@@ -85,16 +85,11 @@ export class Router {
      * @param {string} path - Path to load
      */
     async loadRoute(path) {
-        console.log('🚦 [Router] loadRoute called:', path)
-        console.log('🚦 [Router] Current view:', this.currentView?.constructor?.name)
-
         // Update history without triggering popstate
         history.replaceState({}, '', path)
 
         // Manually trigger route handling
-        console.log('🚦 [Router] Triggering handleRouteChange...')
         await this.handleRouteChange()
-        console.log('🚦 [Router] loadRoute completed')
     }
 
     /**
@@ -102,20 +97,13 @@ export class Router {
      * @private
      */
     async renderView(viewFactory, params) {
-        console.log('🚦 [Router] renderView called')
-
         // Cleanup current view
         if (this.currentView && this.currentView.destroy) {
-            console.log('🚦 [Router] Destroying old view:', this.currentView.constructor.name)
             this.currentView.destroy()
-            console.log('🚦 [Router] Old view destroyed')
         }
 
         // Create new view instance
-        console.log('🚦 [Router] Creating new view instance...')
         this.currentView = viewFactory()
-        console.log('🚦 [Router] New view created:', this.currentView.constructor.name)
-
         const container = document.getElementById('app')
 
         if (!container) {
@@ -125,17 +113,13 @@ export class Router {
 
         // Render view HTML
         if (this.currentView.render) {
-            console.log('🚦 [Router] Rendering view HTML...')
             const html = await this.currentView.render(params)
             container.innerHTML = html
-            console.log('🚦 [Router] View HTML rendered')
         }
 
         // Call view's mount lifecycle
         if (this.currentView.mount) {
-            console.log('🚦 [Router] Mounting view...')
             await this.currentView.mount(params)
-            console.log('🚦 [Router] View mounted')
         }
     }
 

@@ -47,23 +47,7 @@ export class PlaylistsView extends BaseView {
             </h1>
             
             <div class="header-actions flex items-center gap-4">
-               <!-- Series Selector -->
-               <div class="series-selector relative">
-                 <select id="seriesSelector" class="form-control appearance-none cursor-pointer pr-10 py-2 pl-4 bg-white/5 border-white/10 hover:bg-white/10 transition-colors rounded-full text-sm">
-                   ${allSeries.map(s => `
-                     <option value="${s.id}" ${activeSeries && s.id === activeSeries.id ? 'selected' : ''}>
-                       ${s.name}
-                     </option>
-                   `).join('')}
-                 </select>
-                 <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted">
-                   ${getIcon('ChevronDown', 'w-3 h-3')}
-                 </div>
-               </div>
-
-               <div id="undoRedoControls" class="flex gap-2">
-                 ${this.renderUndoRedoControls(state)}
-               </div>
+               <!-- Series Selector & Navigation REMOVED: Simplified UX -->
             </div>
           </div>
         </header>
@@ -331,37 +315,8 @@ export class PlaylistsView extends BaseView {
     // Drag and drop
     this.setupDragAndDrop()
 
-    // Series Selector
-    const seriesSelector = this.$('#seriesSelector')
-    if (seriesSelector) {
-      this.on(seriesSelector, 'change', async (e) => {
-        const newSeriesId = e.target.value
-        const oldSeriesId = seriesStore.getActiveSeries()?.id
-
-        console.log('🔄 [PlaylistsView] ===== SERIES CHANGE START =====')
-        console.log('🔄 [PlaylistsView] Old Series:', oldSeriesId)
-        console.log('🔄 [PlaylistsView] New Series:', newSeriesId)
-        console.log('🔄 [PlaylistsView] Current Playlists:', playlistsStore.getPlaylists().length)
-
-        // 1. Update Active Series
-        console.log('🔄 [PlaylistsView] Step 1: Setting active series...')
-        seriesStore.setActiveSeries(newSeriesId)
-        console.log('🔄 [PlaylistsView] Step 1: Active series set to:', seriesStore.getActiveSeries()?.id)
-
-        // 2. Clear current playlists to prevent ghosting
-        console.log('🔄 [PlaylistsView] Step 2: Clearing playlists...')
-        console.log('🔄 [PlaylistsView] Before clear:', playlistsStore.getPlaylists().length)
-        playlistsStore.setPlaylists([], newSeriesId)
-        console.log('🔄 [PlaylistsView] After clear:', playlistsStore.getPlaylists().length)
-        console.log('🔄 [PlaylistsView] Store seriesId:', playlistsStore.getState().seriesId)
-
-        // 3. Force full view reload via Router
-        console.log('🔄 [PlaylistsView] Step 3: Forcing router reload...')
-        console.log('🔄 [PlaylistsView] Current path:', window.location.pathname)
-        await router.loadRoute(window.location.pathname)
-        console.log('🔄 [PlaylistsView] ===== SERIES CHANGE END =====')
-      })
-    }
+    // Series Selector - REMOVED (Product Decision: Simplify UX, close Issue #21)
+    // Users must navigate back to Albums view to switch series
 
     // Export buttons (Sprint 5-6 placeholders)
     const exportSpotify = this.$('#exportSpotifyBtn')

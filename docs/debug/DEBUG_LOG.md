@@ -2,18 +2,26 @@
 
 **Last Updated**: 2025-11-30 20:30
 **Workflow**: See `.agent/workflows/debug_protocol.md`
+## Maintenance Notes
 
+**How to Update This Document**:
+1. Active issues → Current Debugging Session
+2. Resolved/reverted issues → Move to Previous with timestamp
+3. Keep Previous sections for history (don't delete)
+4. Link to ARCHITECTURE.md for architectural decisions
+
+**See**: `.agent/workflows/debug_issue.md` for systematic debugging protocol
 ---
 
 ## Current Debugging Session (2025-11-30)
 
 **Context**: Developer onboarding revealed Issues #15 and #16 were NOT actually resolved despite being marked "Resolved" in previous session. User reported problems persist.
 
-**Status**: 🔴 **OPEN (After 4 failed attempts)**
-**Date Started**: 2025-11-30 21:15
-**Date Last Updated**: 2025-12-01 13:10
-**Type**: Regression / Logic Flaw
-**Session Duration**: ~16 hours (across 2 days)
+**Status**: ❌ **CLOSED - WONTFIX** (Product Decision)
+**Date Started**: 2025-11-30 21:15  
+**Date Closed**: 2025-12-02 06:11  
+**Type**: Regression / Logic Flaw  
+**Resolution**: **Feature Removed**
 
 #### User Report
 When navigating through the series dropdown or using arrows in the PlaylistsView, the view keeps showing the playlists from the *first* generated series, regardless of which series is selected in the dropdown.
@@ -24,7 +32,33 @@ When navigating through the series dropdown or using arrows in the PlaylistsView
 3. **Expected**: Playlists should clear or show tc2 playlists
 4. **Actual**: tc1 playlists remain visible
 
-#### Investigation Timeline
+#### Resolution (2025-12-02 06:11)
+
+**Product Decision**: After 4 failed attempts and ~16 hours of debugging, the decision was made to **remove the series selector dropdown** from `PlaylistsView` entirely to simplify UX and eliminate this issue permanently.
+
+**Changes Applied**:
+1. ✅ **Removed series selector HTML** from `PlaylistsView.render()` (lines 50-62)
+2. ✅ **Removed series selector event handler** from `PlaylistsView.mount()` (lines 335-364)
+3. ✅ **Removed Undo/Redo navigation buttons** from header (lines 49-55) - User request 2025-12-02 06:45
+4. ✅ **Cleaned up all debug logs** added during investigation:
+   - Removed emoji logs (🔄) from `PlaylistsView.js`
+   - Removed emoji logs (📦) from `PlaylistsStore.js`
+   - Removed emoji logs (🚦) from `Router.js`
+   - Removed emoji logs (🧹) from `BaseView.js`
+4. ✅ **Kept `seriesId` tracking** in `PlaylistsStore` for data integrity
+5. ✅ **Verified `handleGenerate()`** correctly passes `activeSeries.id` to `setPlaylists()` (line 440)
+
+**User Impact**:
+- Users can no longer switch series using the dropdown in PlaylistsView
+- Series navigation now requires using breadcrumbs or back button to return to Albums view
+- This simplifies the UX and prevents the cross-contamination issue
+
+**Technical Notes**:
+- `router.loadRoute()` method implemented during debugging remains available for future use
+- `seriesId` tracking in `PlaylistsStore` provides foundation for multi-series features later
+- All 4 debugging attempts documented in this issue serve as reference for similar problems
+
+**Next Investigation Steps**:
 
 **ATTEMPT #1: Store Series Tracking + View Validation** (2025-11-30 21:15 - FAILED)
 - **Hypothesis**: `PlaylistsStore` doesn't track which series the playlists belong to, causing cross-contamination.
@@ -962,13 +996,6 @@ grep -n "🔍 \\[DEBUG\\]" public/js/views/AlbumsView.js
 3. **Browser automation limits**: Manual testing sometimes more reliable
 
 ---
-
-## Maintenance Notes
-
-**How to Update This Document**:
-1. Active issues → Current Debugging Session
-2. Resolved/reverted issues → Move to Previous with timestamp
-3. Keep Previous sections for history (don't delete)
-4. Link to ARCHITECTURE.md for architectural decisions
-
 **See**: `.agent/workflows/debug_issue.md` for systematic debugging protocol
+
+
