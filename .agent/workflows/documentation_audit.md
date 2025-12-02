@@ -284,9 +284,14 @@ du -sh docs/archive/
 
 ## 🔄 When to Re-run
 
-**Triggers**:
-- Every 3-6 months (routine maintenance)
-- After major project milestones (releases, sprints)
+**Primary Triggers**:
+- **On-demand** - User explicitly requests audit
+- **End of development cycle** - After sprint/release completion
+- **Key milestones** - Project-defined checkpoints (e.g., v1.0, v2.0, beta release)
+
+**Routine Maintenance**:
+- Every 3-6 months (if no milestones)
+- After major project phases (releases, architecture refactors)
 - When archive/ has 20+ files
 - When documentation feels "hard to navigate"
 
