@@ -28,10 +28,10 @@ const firebaseConfig = window.__firebase_config || {
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
-const db = getFirestore(app)
+export const db = getFirestore(app)
 
-// Export for other modules if needed (though they should import from config)
-export { app, auth, db }
+// Export app and auth too
+export { app, auth }
 
 // Auth State Listener
 onAuthStateChanged(auth, (user) => {

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import path from 'path'
+import fs from 'fs'
 
 export default defineConfig({
     root: 'public',
@@ -43,8 +44,6 @@ export default defineConfig({
         {
             name: 'copy-static-files',
             closeBundle() {
-                const fs = require('fs')
-
                 // Copy firebase-config.js to dist/js/
                 const jsDestDir = path.resolve(__dirname, 'dist/js')
                 if (!fs.existsSync(jsDestDir)) {
