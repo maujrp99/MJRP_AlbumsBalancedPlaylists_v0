@@ -2,53 +2,133 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
-### ⏳ Phase 3 - Remaining Work
+## v2.0.4 - First Production Deployment v1.6 → v2.0 (2025-12-02)
 
-**Status**: Updated 2025-11-30 17:04 (Based on [CodeVerificationReport.md](CodeVerificationReport.md))
+**Status**: 🚀 **PRODUCTION DEPLOYMENT** (Major Version Upgrade)  
+**Tag**: `v2.0.4`  
+**Previous Production**: `v1.6working-in-prod`
 
-**UI Components** (incomplete):
-- **Migration Progress Modal** - Visual UI component for migration progress
-  - Current: Uses `console.log` + browser `alert()` 
-  - Needed: Custom modal with progress bar (optional - for production polish)
-- **Create Series from Inventory** - Backend workflow implementation
-  - Current: UI modal exists, has TODO comment in code (line 228 `InventoryView.js`)
-  - Needed: Complete `SeriesRepository.createFromInventory()` method
+### ⚠️ CRITICAL: Untested Features in Production
 
-**UI Components** (⚠️ IMPLEMENTED - Pending UAT, may contain bugs):
-- ⚠️ Migration Banner (HomeView) - 369 lines, implemented
-  - Status: Code exists, needs UAT testing
-- ⚠️ Edit Album Modal - 150 lines in `EditAlbumModal.js`
-  - Status: Code exists, needs UAT testing
-- ⚠️ Delete Album Modal - Implemented in `InventoryView.js` via `Modals.js`
-  - Status: Code exists, needs UAT testing
-- ⚠️ InventoryView - 593 lines, 21 methods, route `/inventory` working
-  - Status: Code exists, needs UAT testing, may have bugs
-- ⚠️ Add to Inventory action - Integrated in `AlbumsView.js`
-  - Status: Code exists, needs UAT testing
-- ⚠️ Generate Playlists button - Functional in `AlbumsView.js`
-  - Status: Code exists, needs UAT testing
+> [!CAUTION]
+> **This release deploys v2.0 architecture to production WITHOUT complete testing of the following critical features:**
+> - **Persistence Layer** - IndexedDB caching and data persistence NOT fully tested
+> - **Inventory Management** - Full CRUD operations and UI flows NOT validated in production
+> - **Migration System** - Firestore migration banner and data migration NOT tested end-to-end
+> - **Series Management** - Multi-series context switching has known bugs (Issue #21)
+>
+> **RISK LEVEL**: HIGH  
+> **MITIGATION**: Close monitoring required post-deployment. Rollback plan prepared.
 
-**Known Issues** (affecting implemented components):
-- Issue #15: Ghost Albums - Fix implemented but ineffective (needs re-investigation)
-- Issue #16: View Mode State Mismatch - Fix implemented but ineffective (needs re-investigation)
+---
 
-### 🚧 Current Activities & Roadmap (2025-11-30 Late Night)
+### Summary
 
-**1. Developer Agent** 👨‍💻
-- **Focus**: Final debugging of **Generate Playlist** feature.
-- **Goal**: Resolve any remaining logic issues in playlist generation.
-- **Next**: Handover for UAT of Inventory and CRUD features.
+First production deployment of v2.0 architecture, bringing Series Management, SPA routing, and Vite build system to production. Includes bug fix for Issue #21 (Sticky Playlists) by removing series selector from PlaylistsView.
 
-**2. UX/UI Agent** 🎨
-- **Focus**: Full application evaluation (Heuristic Evaluation).
-- **Output**: Comprehensive UX Report.
-- **Policy**: Critical "Showstoppers" identified in the report will be fixed before Production. Minor polish items may be deferred to v2.1.
+**Architecture Changes**:
+- v1.6: Static files, no bundler, direct HTML serving
+- v2.0: Vite bundler + SPA router + Firebase Firestore
 
-**3. Production Release Criteria** 🚀
-- ✅ Critical Bugs (#15, #16, #19, #20) Resolved.
-- ⏳ Generate Playlist feature verified.
-- ⏳ UX Report cleared of critical issues.
-- ⏳ Inventory/CRUD UAT passed.
+---
+
+### 🔧 Fixed
+
+- **Issue #21: Sticky Playlists** - CLOSED AS WONTFIX
+  - **Root Cause**: Series selector dropdown caused playlist cross-contamination after 4 failed fix attempts
+  - **Solution**: Removed series selector and Undo/Redo navigation buttons from PlaylistsView
+  - **Impact**: Users navigate via breadcrumbs instead of dropdown
+  - **Files Modified**: 5 files, -98 lines (cleaner codebase)
+  - **Details**: See `docs/debug/DEBUG_LOG.md` for complete investigation timeline
+
+---
+
+### ✨ Added (v2.0 Architecture)
+
+**Backend (Cloud Run)**:
+- ✅ Series Management API endpoints
+- ✅ Multi-series CRUD operations
+- ✅ Firebase Firestore integration
+- ✅ Maintained backward compatibility with v1.6 env vars
+
+**Frontend (Firebase Hosting)**:
+- ✅ Vite build system (dev + production)
+- ✅ Custom SPA router with view lifecycle
+- ✅ BaseView architecture for all views
+- ✅ Series Management UI
+- ✅ Migration Banner (⚠️ UNTESTED)
+- ✅ Inventory Management UI (⚠️ UNTESTED)
+
+**Database**:
+- ✅ Firebase Firestore migration system (⚠️ UNTESTED)
+- ✅ Automatic data migration on first load
+
+---
+
+### 🗑️ Removed
+
+- ❌ Series selector dropdown from PlaylistsView
+- ❌ Undo/Redo navigation buttons (← →)
+- ❌ Debug logs from investigation (🔄 📦 🚦 🧹)
+
+---
+
+### ⚠️ Known Issues
+
+**Untested Features** (listed above in CRITICAL section):
+- Persistence layer functionality unknown
+- Inventory CRUD operations not validated
+- Migration banner flow not tested
+
+**Documentation Gaps**:
+- User-facing migration guide not created
+- Production monitoring plan incomplete
+
+---
+
+### 🚀 Deployment Info
+
+**Deployed To**:
+- Backend: Google Cloud Run (`mjrp-proxy`, southamerica-east1)
+- Frontend: Firebase Hosting (`https://mjrp-playlist-generator.web.app`)
+
+**Scripts Used**:
+```bash
+./scripts/deploy-backend.sh   # Backend
+npm run build && ./scripts/deploy-prod.sh  # Frontend
+```
+
+**Rollback Plan**: Firebase Hosting rollback to `v1.6working-in-prod` available in ~30 seconds
+
+---
+
+### 📊 Metrics
+
+- **Code Changes**: 5 files modified (Issue #21 fix)
+- **Code Reduction**: -98 lines
+- **Build Time**: ~30 seconds (Vite)
+- **Bundle Size**: ~210 KB (minified + gzipped)
+
+---
+
+### 📝 Migration Notes
+
+**First-Time Users**:
+- Will see Migration Banner (if feature works correctly)
+- Data automatically migrated from localStorage to Firestore
+- No action required by user
+
+**Existing v1.6 Users**:
+- No series selector in PlaylistsView (use breadcrumbs)
+- May encounter bugs in untested features
+
+---
+
+### 🔗 Related Documentation
+
+- Implementation Plan: `/.gemini/antigravity/brain/.../implementation_plan.md`
+- Debug Log: `docs/debug/DEBUG_LOG.md` (Issue #21 timeline)
+- Deployment Guide: `docs/product-management/V2.0_DEPLOYMENT_IMPACT.md`
 
 ---
 
