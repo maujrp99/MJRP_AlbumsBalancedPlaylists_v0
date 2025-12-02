@@ -1,9 +1,37 @@
 # Documentation
 
 **Project**: MJRP Album-Balanced Playlists Generator  
-**Last Updated**: 2025-11-29
+**Last Updated**: 2025-12-02
 
-> **Note**: This is the documentation index. For project overview, see [main README](../README.md) in the root.
+> **Note**: This is the documentation index. For quick start, see below.
+
+---
+
+## 🚀 Quick Start
+
+### Development
+```bash
+# Terminal 1: Backend
+cd server && node index.js
+
+# Terminal 2: Frontend
+npm run dev
+```
+
+- **Frontend**: http://localhost:5000 (Vite dev server)
+- **Backend**: http://localhost:3000 (Express proxy)
+
+### Testing
+```bash
+npm test              # Unit tests (Vitest)
+npm run test:e2e      # E2E tests (Puppeteer)
+npm run test:coverage # Coverage report
+```
+
+### Current Version
+**v2.0.3** - Sprint 5 Phase 3 (Ready for UAT)
+
+See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
 ---
 
@@ -27,7 +55,6 @@
 
 - **[devops/LOCAL_RUN.md](devops/LOCAL_RUN.md)** - How to run locally
 - **[devops/PRODUCTION_DEPLOY.md](devops/PRODUCTION_DEPLOY.md)** - Production deployment guide
-- **[devops/PRODUCTION_DEPLOY.md](devops/PRODUCTION_DEPLOY.md)** - Production deployment procedures
 - **[devops/SECRET_ROTATION_RUNBOOK.md](devops/SECRET_ROTATION_RUNBOOK.md)** - Secret rotation procedures
 - **[devops/SECURITY.md](devops/SECURITY.md)** - Security guidelines
 
@@ -84,13 +111,16 @@ docs/
 ├── README.md (this file)
 ├── ARCHITECTURE.md (consolidated architecture)
 ├── CHANGELOG.md (version history)
+├── CONTRIBUTING.md (contribution guidelines)
 │
 ├── devops/
 │   ├── LOCAL_RUN.md
 │   ├── PRODUCTION_DEPLOY.md
-│   ├── PRODUCTION_DEPLOY.md
 │   ├── SECRET_ROTATION_RUNBOOK.md
 │   └── SECURITY.md
+│
+├── tester/
+│   └── QA_ENGINEER_ONBOARDING.md
 │
 ├── product-management/
 │   ├── PROJECT_SUMMARY.md

@@ -116,3 +116,11 @@ export async function closeBrowser(browser) {
         await browser.close();
     }
 }
+
+/**
+ * Sleep/delay utility (replacement for deprecated page.waitForTimeout)
+ * @param {number} ms - Milliseconds to wait
+ */
+export async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

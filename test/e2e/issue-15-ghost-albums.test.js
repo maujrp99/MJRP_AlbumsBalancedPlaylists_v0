@@ -2,7 +2,7 @@
  * Issue #15 Test: Ghost Albums
  */
 
-import { launchBrowser, createPage, takeScreenshot, closeBrowser } from './setup.js';
+import { launchBrowser, createPage, takeScreenshot, closeBrowser, sleep } from './setup.js';
 import { navigateTo, createSeries, getAlbumCount, getAlbumTitles } from './helpers.js';
 
 export async function testGhostAlbums() {
@@ -28,7 +28,7 @@ export async function testGhostAlbums() {
 
         console.log('Step 1: Create Series A');
         await createSeries(page, seriesA.name, seriesA.albums);
-        await page.waitForTimeout(3000);
+        await sleep(3000);
 
         const countA = await getAlbumCount(page);
         const titlesA = await getAlbumTitles(page);
@@ -42,7 +42,7 @@ export async function testGhostAlbums() {
 
         console.log('\nStep 3: Create Series B');
         await createSeries(page, seriesB.name, seriesB.albums);
-        await page.waitForTimeout(3000);
+        await sleep(3000);
 
         const countB = await getAlbumCount(page);
         const titlesB = await getAlbumTitles(page);

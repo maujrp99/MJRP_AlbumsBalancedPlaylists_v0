@@ -2,7 +2,7 @@
  * Issue #16 Test: View Mode Toggle
  */
 
-import { launchBrowser, createPage, takeScreenshot, closeBrowser } from './setup.js';
+import { launchBrowser, createPage, takeScreenshot, closeBrowser, sleep } from './setup.js';
 import { navigateTo, SELECTORS, getAlbumCount } from './helpers.js';
 
 export async function testViewToggle() {
@@ -18,7 +18,7 @@ export async function testViewToggle() {
 
         console.log('Step 1: Navigate to Albums page');
         await navigateTo(page, '/albums');
-        await page.waitForTimeout(2000);
+        await sleep(2000);
 
         const initialGrid = await page.$('#albumsGrid');
         const initialMode = initialGrid ? 'grid' : 'list';

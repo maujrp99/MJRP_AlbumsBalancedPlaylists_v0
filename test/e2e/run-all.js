@@ -6,10 +6,13 @@
 import { runSmokeTest } from './smoke.test.js';
 import { testGhostAlbums } from './issue-15-ghost-albums.test.js';
 import { testViewToggle } from './issue-16-view-toggle.test.js';
+import { testSeriesSwitching } from './issue-19-series-switching.test.js';
+import { testStickyPlaylists } from './issue-21-sticky-playlists.test.js';
+import { testUIComponents } from './ui-components.test.js';
 
 async function runAllTests() {
     console.log('\n' + '='.repeat(60));
-    console.log('🚀 MJRP E2E Test Suite');
+    console.log('🚀 MJRP E2E Test Suite - Complete');
     console.log('='.repeat(60));
 
     const results = [];
@@ -34,9 +37,27 @@ async function runAllTests() {
     totalPassed += issue16Result.passed;
     totalFailed += issue16Result.failed;
 
+    // Run Issue #19 Test
+    const issue19Result = await testSeriesSwitching();
+    results.push({ name: 'Issue #19: Series Switching', ...issue19Result });
+    totalPassed += issue19Result.passed;
+    totalFailed += issue19Result.failed;
+
+    // Run Issue #21 Test
+    const issue21Result = await testStickyPlaylists();
+    results.push({ name: 'Issue #21: Sticky Playlists', ...issue21Result });
+    totalPassed += issue21Result.passed;
+    totalFailed += issue21Result.failed;
+
+    // Run UI Components Test
+    const uiResult = await testUIComponents();
+    results.push({ name: 'UI Components', ...uiResult });
+    totalPassed += uiResult.passed;
+    totalFailed += uiResult.failed;
+
     // Summary
     console.log('\n' + '='.repeat(60));
-    console.log('📊 TEST SUITE SUMMARY');
+    console.log('📊 COMPLETE TEST SUITE SUMMARY');
     console.log('='.repeat(60));
 
     results.forEach(result => {
@@ -49,6 +70,7 @@ async function runAllTests() {
 
     console.log('='.repeat(60));
     console.log(`TOTAL: ${totalPassed} passed, ${totalFailed} failed`);
+    console.log(`Test Suites: ${results.filter(r => r.success).length}/${results.length} passed`);
     console.log('='.repeat(60) + '\n');
 
     const allPassed = totalFailed === 0;
