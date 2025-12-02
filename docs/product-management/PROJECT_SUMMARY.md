@@ -1,7 +1,7 @@
 # MJRP Albums Balanced Playlists — Project Summary
 
-**Version**: v1.6.1 (Production) | **Next**: v2.0 (Planning)  
-**Last Updated**: 2025-11-26
+**Version**: v2.0.3 (Production)  
+**Last Updated**: 2025-12-02
 
 ---
 
@@ -267,22 +267,47 @@ public/js/
 - **Testing**: Vitest + jsdom for headless UI tests
 - **Build**: ES modules with tree-shaking
 
-### Migration Plan
+### Technical Decisions (v2.0)
 
-**Sprint Overview** (est. 2.5 months):
-1. **Sprint 1** (2 weeks): Foundation (Vite, stores, tests)
-2. **Sprint 2** (1 week): Navigation (HashRouter, views)
-3. **Sprint 3** (2 weeks): Series management (Home, Firestore)
-4. **Sprint 4** (1.5 weeks): Albums & Ranking views
-5. **Sprint 5** (1.5 weeks): Playlists versioning
-6. **Sprint 6** (1 week): Migration script, E2E tests, deploy
+#### Why Vite over Rollup?
+**Decision**: Use Vite as bundler for v2.0
 
-**Firestore Migration**:
-- Script: `migrate-to-v2.js` (Node CLI)
-- Strategy: Create default series, move existing playlists
-- Risk mitigation: Backup, staging testing, rollback plan
+**Reasoning**:
+- ✅ **Hot Module Replacement (HMR)**: Native dev server with instant updates
+- ✅ **Build Speed**: Uses esbuild (10-100x faster than traditional bundlers)
+- ✅ **Minimal Configuration**: Works out-of-the-box for most use cases
+- ✅ **Firebase Hosting Compatible**: Serves static builds seamlessly
+- ✅ **Tree Shaking**: Excellent bundle optimization
 
-See [docs/V2.0_ANALYSIS.md](V2.0_ANALYSIS.md) for detailed analysis and risk assessment.
+**Alternative Considered**: Rollup
+- ❌ Requires manual dev server configuration
+- 🟡 Slower build times
+- 🟡 Higher learning curve
+
+**Result**: Vite adopted in Sprint 1
+
+#### Risk Analysis
+
+**Critical Risks Identified**:
+
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| **Firestore Migration Data Loss** | 🟡 Medium | 🔴 High | Backup + staging + rollback plan |
+| **Performance with Many Albums** | 🟡 Medium | 🟡 Medium | Client-side filtering → server queries |
+| **BestEverAlbums Rate Limiting** | 🟢 Low | 🟡 Medium | Queue + retry logic + caching |
+| **Breaking Changes v1.6 → v2.0** | 🟡 Medium | 🔴 High | Migration guide + v1.6 support period |
+
+**All risks documented in Sprint planning with specific mitigations.**
+
+### Firestore Migration Strategy
+
+**Approach**: Lazy migration (on-demand)
+- Users on first v2.0 login: localStorage → Firestore migration
+- Backup created before migration
+- Rollback capability if migration fails
+- Migration script: `migrate-to-v2.js` (Node CLI)
+
+See [ROADMAP.md](ROADMAP.md) for complete sprint breakdown (Sprints 1-9).
 
 ---
 
@@ -443,11 +468,19 @@ const firebaseConfig = {
 
 ## References
 
-- [CHANGELOG.md](../CHANGELOG.md) - Version history
-- [SDD.md](SDD.md) - Software Design Document
-- [mjrp-playlist-generator-2.0.md](mjrp-playlist-generator-2.0.md) - v2.0 original plan
-- [V2.0_ANALYSIS.md](V2.0_ANALYSIS.md) - v2.0 technical analysis
-- [Walkthrough (v1.6.1)](../../../.gemini/antigravity/brain/3db5a56b-d2c3-4ca0-b7b8-7cb6e0243381/walkthrough.md) - Deployment fix walkthrough
+### Current Documentation
+- **[ROADMAP.md](ROADMAP.md)** - Product roadmap (Sprints 1-9)
+- **[CHANGELOG.md](../CHANGELOG.md)** - Version history and release notes
+- **[ARCHITECTURE.md](../ARCHITECTURE.md)** - Architecture decisions
+- **[CONTRIBUTING.md](../CONTRIBUTING.md)** - Development workflow
+
+### Archived Planning Documents
+*Historical v2.0 planning docs (archived 2025-12-02)*:
+- `docs/archive/archive-backup.tar.gz` contains:
+  - `mjrp-playlist-generator-2.0.md` - Original v2.0 vision (7-phase plan)
+  - `V2.0_ANALYSIS.md` - Technical analysis (712 lines, risk assessment)
+
+**Note**: Archived docs consolidated into ROADMAP.md and this summary.
 
 ---
 
