@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-11-30 20:30
+**Last Updated**: 2025-12-02 07:15
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -11,9 +11,20 @@
 4. Link to ARCHITECTURE.md for architectural decisions
 
 **See**: `.agent/workflows/debug_issue.md` for systematic debugging protocol
+
 ---
 
-## Current Debugging Session (2025-11-30)
+## Current Debugging Session
+
+🟢 **No active session** (as of 2025-12-02 07:15)
+
+All recent issues have been resolved or closed. See "Previous Sessions" below for details.
+
+---
+
+## Previous Session (2025-12-02)
+
+### Issue #21: Sticky Playlists
 
 **Context**: Developer onboarding revealed Issues #15 and #16 were NOT actually resolved despite being marked "Resolved" in previous session. User reported problems persist.
 
@@ -160,6 +171,8 @@ When navigating through the series dropdown or using arrows in the PlaylistsView
 5. Consider adding explicit `playlistsStore.reset()` instead of just `setPlaylists([])`
 
 ---
+
+## Previous Session (2025-11-30)
 
 ### Issue #15: Ghost Albums - REOPENED (Again)
 **Status**: ✅ **RESOLVED (Definitively)**
