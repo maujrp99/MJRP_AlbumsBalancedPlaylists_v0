@@ -11,6 +11,7 @@
 This is a web application for creating balanced playlists from ranked albums. It uses:
 - **Frontend**: Vite + Vanilla JavaScript (SPA with custom router)
 - **Backend**: Node.js/Express + AI API proxy
+- **Database**: Firebase Firestore
 - **Ports**: 
   - Dev Server: `http://localhost:5000` (Vite dev - configured in vite.config.js)
   - Preview Server: `http://localhost:5005` (Vite preview)
