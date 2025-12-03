@@ -32,6 +32,10 @@ echo '{"type": "module"}' > server/_shared_temp/package.json
 echo "Staging config..."
 cp -r config server/config
 
+# Copy public/ folder for curation.js (backend needs it for playlist generation)
+echo "Staging public/ folder..."
+cp -r public server/public
+
 gcloud run deploy "$SERVICE_NAME" \
   --source server \
   --region "$REGION" \
@@ -41,5 +45,6 @@ gcloud run deploy "$SERVICE_NAME" \
 # Cleanup
 rm -rf server/_shared_temp
 rm -rf server/config
+rm -rf server/public
 
 echo "Backend deploy complete!"

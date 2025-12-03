@@ -1,12 +1,12 @@
 # Debug Log
 
-**Last Updated**: 2025-12-02 07:15
+**Last Updated**: 2025-12-02 17:00
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
 **How to Update This Document**:
-1. Active issues → Current Debugging Session
-2. Resolved/reverted issues → Move to Previous with timestamp
+1. Active issues → 🔥 ACTIVE DEBUGGING SESSION
+2. Resolved/reverted issues → Move to 📜 PREVIOUS DEBUGGING SESSIONS with timestamp
 3. Keep Previous sections for history (don't delete)
 4. Link to ARCHITECTURE.md for architectural decisions
 
@@ -14,9 +14,31 @@
 
 ---
 
+## 🔥 Production Deployment Issues - v2.0.4 (2025-12-02 17:00)
+
+**Status**: ✅ RESOLVED  
+**Timeline**: 16:20 → 17:00 (40 min)  
+**Severity**: 🔴 CRITICAL
+
+### Issue #1: firebase-config.js Missing
+**Error**: `Uncaught SyntaxError: Unexpected token '<'`  
+**Cause**: Vite didn't copy non-module script  
+**Fix**: Added auto-copy plugin to `vite.config.js`  
+**Result**: ✅ Firebase auth works
+
+### Issue #2: Backend Missing curation.js
+**Error**: `Cannot find module '/usr/src/public/js/curation.js'`  
+**Cause**: `public/` not copied to Docker container  
+**Fix**: Updated `deploy-backend.sh` to copy `public/`  
+**Result**: ✅ Playlist generation works
+
+**See**: [Troubleshooting](../devops/PRODUCTION_DEPLOY.md#troubleshooting) for details
+
+---
+
 ## Current Debugging Session
 
-🟢 **No active session** (as of 2025-12-02 07:15)
+🟢 **No active session** (as of 2025-12-02 17:00)
 
 All recent issues have been resolved or closed. See "Previous Sessions" below for details.
 
