@@ -43,6 +43,23 @@ First production deployment of v2.0 architecture, bringing Series Management, SP
 
 ---
 
+### 🔥 Hotfixes (Post-Deployment)
+
+**Commit `18d3891` - Production Deployment Fixes**:
+- ✅ Fixed `firebase-config.js` not copied to dist/ (Vite plugin added)
+- ✅ Fixed backend missing `curation.js` (Dockerfile + deploy script updated)
+- ✅ Fixed missing assets (images/logos) in dist/ (auto-copy plugin)
+- ✅ Created comprehensive deployment documentation
+
+**Commit `799e923` - Firestore Initialization Fix**:
+- ✅ Fixed `app.js` to export `db` as const (Firestore db.collection error)
+- ✅ Fixed `vite.config.js` to use ES6 import for fs module (build error)
+- ✅ Added `public/package.json` for ES module marker
+
+**Impact**: Inventory features now functional, build process stable
+
+---
+
 ### ✨ Added (v2.0 Architecture)
 
 **Backend (Cloud Run)**:

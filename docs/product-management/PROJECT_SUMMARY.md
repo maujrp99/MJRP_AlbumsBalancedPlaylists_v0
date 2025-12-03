@@ -1,6 +1,6 @@
 # MJRP Albums Balanced Playlists — Project Summary
 
-**Version**: v2.0.3 (Production)  
+**Version**: v2.0.4 (Production)  
 **Last Updated**: 2025-12-02
 
 ---
