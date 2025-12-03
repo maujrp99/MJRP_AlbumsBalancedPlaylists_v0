@@ -62,6 +62,74 @@ export class SeriesStore {
         return series
     }
 
+    /**
+     * Update existing series
+     * @param {string} id - Series ID
+     * @param {Object} updates - Fields to update
+     */
+    async updateSeries(id, updates) {
+        const series = this.series.find(s => s.id === id)
+        if (!series) {
+            throw new Error('Series not found')
+        }
+
+        const updatedSeries = {
+            ...series,
+            ...updates,
+            updatedAt: new Date()
+        }
+
+        // Update local state
+        const index = this.series.indexOf(series)
+        this.series[index] = updatedSeries
+
+        if (this.activeSeries && this.activeSeries.id === id) {
+            this.activeSeries = updatedSeries
+        }
+
+        this.saveToLocalStorage()
+        this.notify()
+
+        // Update Firestore
+        // We pass the db instance if available, or rely on the view to call saveToFirestore
+        // Ideally, the store should handle this if it had the db instance.
+        // For now, we'll return the updated series so the view can save it if needed,
+        // OR we can rely on the fact that saveToFirestore handles updates.
+        return updatedSeries
+    }
+
+    /**
+     * Delete series
+     * @param {string} id - Series ID
+     * @param {Object} db - Firestore instance (optional)
+     */
+    async deleteSeries(id, db) {
+        const index = this.series.findIndex(s => s.id === id)
+        if (index === -1) return
+
+        // Remove from local state
+        this.series.splice(index, 1)
+
+        if (this.activeSeries && this.activeSeries.id === id) {
+            this.activeSeries = null
+        }
+
+        this.saveToLocalStorage()
+        this.notify()
+
+        // Remove from Firestore
+        if (db) {
+            try {
+                await db.collection('series').doc(id).delete()
+                // Note: We do NOT delete the albums collection. 
+                // Albums are preserved as requested.
+            } catch (e) {
+                console.error('Failed to delete series from Firestore:', e)
+                throw e
+            }
+        }
+    }
+
     saveToLocalStorage() {
         try {
             localStorage.setItem('mjrp_series', JSON.stringify(this.series))

@@ -131,6 +131,35 @@ export class BaseRepository {
         return docRef.id
     }
 
+    /**
+     * Create multiple documents (batch operation)
+     * @param {Array<Object>} items - Array of document data
+     * @returns {Promise<void>}
+     */
+    async createMany(items) {
+        if (!items || items.length === 0) return
+
+        const batch = this.db.batch()
+        const timestamp = this.getServerTimestamp()
+
+        items.forEach(item => {
+            const docRef = this.collection.doc() // Auto-ID
+            const docData = {
+                ...item,
+                createdAt: timestamp,
+                _schemaVersion: this.schemaVersion
+            }
+            batch.set(docRef, docData)
+        })
+
+        await batch.commit()
+
+        // Invalidate 'all' cache
+        if (this.cache) {
+            await this.cache.invalidate(this.getCacheKey('all'))
+        }
+    }
+
     // ========== UPDATE OPERATION ==========
 
     /**

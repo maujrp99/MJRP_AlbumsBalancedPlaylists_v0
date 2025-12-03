@@ -12,8 +12,9 @@ import { MigrationUtility } from '../migration/MigrationUtility.js'
  */
 
 export class HomeView extends BaseView {
-  constructor() {
+  constructor(db) {
     super()
+    this.db = db
     this.migrationUtility = new MigrationUtility(db, new CacheManager())
     this.showMigrationBanner = false
   }
@@ -128,20 +129,24 @@ export class HomeView extends BaseView {
 
   renderMigrationBanner() {
     return `
-      <div class="migration-banner bg-gradient-to-r from-blue-900 to-indigo-900 border border-blue-500/30 rounded-xl p-6 mb-8 flex items-center justify-between shadow-lg relative overflow-hidden">
-        <div class="absolute inset-0 bg-blue-500/5 pattern-grid"></div>
-        <div class="relative z-10 flex items-center gap-4">
-          <div class="p-3 bg-blue-500/20 rounded-full text-blue-300">
-            ${getIcon('Database', 'w-8 h-8')}
+      <div class="migration-banner glass-panel px-8 py-3 mb-8 mx-auto max-w-fit flex flex-col md:flex-row items-center justify-center gap-6 border border-accent-primary/30 rounded-full relative overflow-hidden group shadow-[0_0_20px_rgba(255,136,0,0.15)] hover:border-accent-primary/60 transition-colors">
+        <!-- Subtle Glow -->
+        <div class="absolute inset-0 bg-gradient-to-r from-orange-500/10 via-transparent to-orange-500/5 opacity-30"></div>
+        
+        <div class="relative z-10 flex items-center gap-3">
+          <div class="text-accent-primary shrink-0 animate-pulse">
+            ${getIcon('Database', 'w-5 h-5')}
           </div>
-          <div>
-            <h3 class="text-xl font-bold text-white mb-1">Data Migration Available</h3>
-            <p class="text-blue-200 text-sm">We found data from a previous version. Migrate it to the new database to keep your history.</p>
+          <div class="flex flex-col md:flex-row md:items-center gap-1 md:gap-3 text-center md:text-left">
+            <h3 class="text-sm font-bold text-white whitespace-nowrap">Data Migration Available</h3>
+            <span class="hidden md:inline text-white/20">|</span>
+            <p class="text-gray-400 text-xs md:text-sm">Old data detected. Update database to keep history.</p>
           </div>
         </div>
-        <button id="startMigrationBtn" class="btn btn-primary relative z-10 whitespace-nowrap shadow-xl">
-          Start Migration
-          ${getIcon('ArrowRight', 'w-4 h-4 ml-2')}
+
+        <button id="startMigrationBtn" class="btn btn-primary btn-sm relative z-10 whitespace-nowrap rounded-full px-6 text-xs shadow-lg hover:scale-105 transition-transform">
+          Migrate Now
+          ${getIcon('ArrowRight', 'w-3 h-3 ml-1')}
         </button>
       </div>
     `
@@ -160,7 +165,7 @@ export class HomeView extends BaseView {
       `
     }
 
-    return series.slice(0, 6).map(s => `
+    return series.map(s => `
       <div class="series-card glass-panel group hover:scale-[1.02] transition-all duration-300" data-series-id="${s.id}">
         <div class="series-card-header flex justify-between items-start mb-4">
           <h3 class="text-lg font-bold truncate pr-2"><span class="text-muted font-normal text-sm uppercase tracking-wide mr-1">Series:</span> ${this.escapeHtml(s.name)}</h3>
@@ -208,6 +213,13 @@ export class HomeView extends BaseView {
       this.updateRecentSeries(state.series)
     })
     this.subscriptions.push(unsubscribe)
+
+    // Load from Firestore if available
+    if (this.db) {
+      seriesStore.loadFromFirestore(this.db).catch(err => {
+        console.warn('Failed to load series from Firestore:', err)
+      })
+    }
 
     // Setup create series form
     const form = this.$('#seriesForm')
@@ -328,6 +340,13 @@ export class HomeView extends BaseView {
 
     const createdSeries = seriesStore.createSeries(series)
     seriesStore.setActiveSeries(createdSeries.id)
+
+    // Save to Firestore (non-blocking)
+    if (this.db) {
+      seriesStore.saveToFirestore(this.db, createdSeries)
+        .then(() => console.log('✅ Series saved to Firestore:', createdSeries.id))
+        .catch(err => console.warn('⚠️ Failed to save series to Firestore:', err))
+    }
 
     // Navigate to albums view with seriesId
     router.navigate(`/albums?seriesId=${createdSeries.id}`)

@@ -13,13 +13,13 @@ export class TopNav {
       <nav class="top-nav glass-panel mx-auto max-w-[1200px] mt-4 mb-8 px-3 py-1 flex justify-between items-center sticky top-4 z-50">
         <!-- Logo -->
         <a href="/home" class="nav-logo flex items-center gap-3 group" data-link>
-          <div class="logo-icon w-12 h-12 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+          <div class="logo-icon w-20 h-20 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
             <img src="/assets/images/logo.png" alt="MJRP" class="w-full h-full object-contain">
           </div>
           <img 
             src="/assets/images/TheAlbumPlaylistSynth.png" 
             alt="The Album Playlist Synthesizer"
-            class="h-6 md:h-8 w-auto object-contain hover:opacity-80 transition-opacity"
+            class="h-12 md:h-16 w-auto object-contain hover:opacity-80 transition-opacity"
             loading="lazy"
           >
         </a>
@@ -28,7 +28,7 @@ export class TopNav {
         <div class="hidden md:flex items-center gap-8">
           ${this.renderNavLink('/home', 'Home', currentPath)}
           ${this.renderNavLink('/albums', 'Albums', currentPath)}
-          ${this.renderNavLink('/playlists', 'Playlist Series', currentPath)}
+          ${this.renderNavLink('/series', 'Playlist Series', currentPath)}
           <span class="text-muted cursor-not-allowed" title="Coming Soon">Inventory</span>
         </div>
 
@@ -45,7 +45,7 @@ export class TopNav {
           
           ${this.renderNavLink('/home', 'Home', currentPath, true)}
           ${this.renderNavLink('/albums', 'Albums', currentPath, true)}
-          ${this.renderNavLink('/playlists', 'Playlist Series', currentPath, true)}
+          ${this.renderNavLink('/series', 'Playlist Series', currentPath, true)}
           <span class="text-muted text-2xl font-bold opacity-50">Inventory</span>
         </div>
       </nav>

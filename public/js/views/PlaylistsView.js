@@ -5,7 +5,10 @@ import { seriesStore } from '../stores/series.js'
 import { apiClient } from '../api/client.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
+import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
+import { CacheManager } from '../cache/CacheManager.js'
 
 /**
  * PlaylistsView
@@ -13,8 +16,9 @@ import { getIcon } from '../components/Icons.js'
  */
 
 export class PlaylistsView extends BaseView {
-  constructor() {
+  constructor(db) {
     super()
+    this.db = db
     this.isGenerating = false
     this.draggedTrack = null
   }
@@ -43,7 +47,7 @@ export class PlaylistsView extends BaseView {
           
           <div class="header-content mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
             <h1 class="text-4xl font-bold flex items-center gap-3">
-              <img src="/assets/images/newMJRPlogorealistic.png" alt="MJRP" class="w-16 h-16 object-contain"> Playlist Management
+              ${getIcon('Music', 'w-8 h-8')} Playlist Management
             </h1>
             
             <div class="header-actions flex items-center gap-4">
@@ -261,10 +265,10 @@ export class PlaylistsView extends BaseView {
             ${getIcon('Music', 'w-5 h-5')} Export to Spotify
           </button>
           <button class="btn btn-primary" id="exportAppleMusicBtn">
-            ${getIcon('Apple', 'w-5 h-5')} Export to Apple Music
+            ${getIcon('Star', 'w-5 h-5')} Export to Apple Music
           </button>
           <button class="btn btn-secondary" id="exportJsonBtn">
-            ${getIcon('Download', 'w-5 h-5')} Download JSON
+            ${getIcon('FileText', 'w-5 h-5')} Download JSON
           </button>
         </div>
       </div>
@@ -395,6 +399,28 @@ export class PlaylistsView extends BaseView {
       playlistsStore.setPlaylists(playlists, activeSeries ? activeSeries.id : null)
 
       console.log('[PlaylistsView] Playlists set in store for series:', activeSeries ? activeSeries.id : 'unknown')
+
+      // Save to Firestore (if series exists and db is available)
+      if (activeSeries && activeSeries.id && this.db) {
+        try {
+          const playlistRepository = new PlaylistRepository(this.db, new CacheManager(), 'user-id', activeSeries.id)
+
+          // Prepare data for batch write
+          const playlistDocs = playlists.map(p => ({
+            name: p.name,
+            tracks: p.tracks,
+            totalDuration: p.totalDuration || 0,
+            createdAt: new Date().toISOString()
+          }))
+
+          await playlistRepository.createMany(playlistDocs)
+          playlistsStore.markSynchronized()
+          console.log('✅ Playlists saved to Firestore (Batch Write)')
+        } catch (dbError) {
+          console.warn('⚠️ Failed to save to Firestore (Offline Mode?):', dbError)
+          // Don't block UI - localStorage is already updated by store
+        }
+      }
 
       // Force immediate update
       this.isGenerating = false

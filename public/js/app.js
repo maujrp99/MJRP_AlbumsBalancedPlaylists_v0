@@ -13,7 +13,9 @@ import { AlbumsView } from './views/AlbumsView.js'
 import { PlaylistsView } from './views/PlaylistsView.js'
 import { InventoryView } from './views/InventoryView.js'
 import { RankingView } from './views/RankingView.js'
+import { RankingView } from './views/RankingView.js'
 import { ConsolidatedRankingView } from './views/ConsolidatedRankingView.js'
+import { SeriesListView } from './views/SeriesListView.js'
 
 // Initialize Firebase
 const firebaseConfig = window.__firebase_config || {
@@ -51,12 +53,14 @@ onAuthStateChanged(auth, (user) => {
 })
 
 // Register Routes
-router.register('/home', () => new HomeView())
-router.register('/albums', () => new AlbumsView())
-router.register('/playlists', () => new PlaylistsView())
-router.register('/inventory', () => new InventoryView())
-router.register('/ranking/:albumId', () => new RankingView())
-router.register('/consolidated-ranking', () => new ConsolidatedRankingView())
+// Register Routes
+router.register('/home', () => new HomeView(db))
+router.register('/albums', () => new AlbumsView(db))
+router.register('/playlists', () => new PlaylistsView(db))
+router.register('/inventory', () => new InventoryView(db))
+router.register('/ranking/:albumId', () => new RankingView(db))
+router.register('/consolidated-ranking', () => new ConsolidatedRankingView(db))
+router.register('/series', () => new SeriesListView(db))
 
 // Default route handling is done by Router class (popstate/load)
 

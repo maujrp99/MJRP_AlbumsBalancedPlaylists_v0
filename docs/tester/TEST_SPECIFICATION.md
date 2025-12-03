@@ -8,23 +8,21 @@
 
 ---
 
-## 🚨 KNOWN IMPLEMENTATION GAPS
+## 🚨 IMPLEMENTATION STATUS (Sprint 5 Hardening)
 
-**Investigation**: 2025-12-02 22:40  
-**Details**: [persistence_gap_analysis.md](./persistence_gap_analysis.md)
+**Status**: ✅ **Implemented (Hybrid Persistence)**
+**Date**: 2025-12-03
 
-### Critical Gaps:
-1.  **Playlists NOT saved to Firestore** → TC-014 will FAIL
-2.  **Series persist to localStorage only** (NOT Firestore)
-3.  **Inventory persistence status unknown**
+### Persistence Strategy:
+1.  **Playlists**: Firestore (Batch Writes) + localStorage (Offline support)
+2.  **Series**: Firestore + localStorage
+3.  **Albums**: localStorage cache
 
-### Test Impact:
--   ✅ **Navigation, UI, Ranking**: All testable
--   ❌ **Playlist Persistence (TC-014)**: BLOCKED - Not implemented
--   ⚠️ **Inventory CRUD**: Verify if persistence works
--   ✅ **Migration**: Fully implemented and testable
+### New Features:
+-   **Series Management UI**: `/series` route for CRUD operations
+-   **Safe Delete**: Deleting a series does NOT delete its albums from inventory
 
-**See**: [test_spec_inventory_crud_migration.md](./test_spec_inventory_crud_migration.md) for details
+**See**: [TEST_PLAN_SPRINT5_HARDENING.md](./TEST_PLAN_SPRINT5_HARDENING.md) for specific test scenarios.
 
 ---
 
@@ -45,6 +43,8 @@
 ### Primary Routes
 ```
 / (Home)
+├── /series (Series List)
+│   └── /albums (for selected series)
 ├── /albums
 │   ├── /ranking?album={id}
 │   └── /playlists
@@ -60,8 +60,15 @@
 
 #### From HOME (`/`)
 - **→ Albums**: Click "Load Albums" button
+- **→ Series List**: Click "Playlist Series" in TopNav
 - **→ Albums**: Click "Continue" on recent series card
 - **Direct URL**: Type `/albums` in URL bar
+
+#### From SERIES LIST (`/series`)
+- **→ Home**: Click "Home" in TopNav
+- **→ Albums**: Click "Open" on a series
+- **→ Edit Series**: Click "Edit" icon
+- **→ Delete Series**: Click "Delete" icon
 
 #### From ALBUMS (`/albums`)
 - **→ Home**: Click "Home" in TopNav
@@ -242,6 +249,22 @@ Albums → Ranking → [F5] → Ranking (same album)
 - **Update**: Series timestamp on resume
 
 ---
+
+### SERIES LIST VIEW (`/series`)
+
+#### Display Elements
+- **List**: All created series
+- **Columns**: Name, Album Count, Created Date, Actions
+
+#### Actions
+- **Click Row/Open**: Navigate to `/albums` for that series
+- **Click Edit**: Rename series
+- **Click Delete**: Delete series (Safe Delete)
+
+#### Data Operations
+- **Read**: Fetch all series from Firestore/localStorage
+- **Update**: Rename series
+- **Delete**: Remove series document (but KEEP inventory albums)
 
 ### ALBUMS VIEW
 
@@ -635,6 +658,38 @@ Albums → Ranking → [F5] → Ranking (same album)
 
 ---
 
+## Epic 9: Series Management (Sprint 5)
+
+### US-033: View Series List
+**As a** curator
+**I want** to see a list of all my playlist series
+**So that** I can manage my collections
+
+**Priority**: 🟡 High
+**Estimate**: 3 points
+
+---
+
+### US-034: Rename Series
+**As a** curator
+**I want** to rename an existing series
+**So that** I can correct typos or update names
+
+**Priority**: 🟢 Medium
+**Estimate**: 2 points
+
+---
+
+### US-035: Delete Series (Safe Delete)
+**As a** curator
+**I want** to delete a series WITHOUT deleting its albums
+**So that** I can remove the container but keep the inventory data
+
+**Priority**: 🔴 Critical
+**Estimate**: 5 points
+
+---
+
 ---
 
 # Part 4: Acceptance Criteria
@@ -792,6 +847,78 @@ Albums → Ranking → [F5] → Ranking (same album)
 - ✅ P1: First track selection based on `acclaimRank === 1`
 - ✅ P2: Tracks with `acclaimRank <= 2`
 - ✅ DeepCuts: Tracks with `acclaimRank > 2`, distributed evenly
+
+---
+
+---
+
+## AC-026: View Series List (US-033)
+
+**Given** I have created multiple series
+**When** I navigate to `/series`
+**Then**:
+- ✅ List of all series displayed
+- ✅ Columns: Name, Album Count, Created Date, Actions
+- ✅ Sorted by most recent
+
+---
+
+## AC-027: Rename Series (US-034)
+
+**Given** I am on Series List view
+**When** I click "Edit" on a series
+**And** I enter a new name and save
+**Then**:
+- ✅ Name updates in the list
+- ✅ Firestore document updated
+- ✅ Toast notification shown
+
+---
+
+## AC-028: Delete Series - Safe Delete (US-035)
+
+**Given** I have a series with 5 albums
+**When** I delete the series
+**Then**:
+- ✅ Series removed from list
+- ✅ Series document deleted from Firestore
+- ✅ **CRITICAL**: The 5 albums remain in `/inventory` (not deleted)
+
+---
+
+---
+
+## AC-026: View Series List (US-033)
+
+**Given** I have created multiple series
+**When** I navigate to `/series`
+**Then**:
+- ✅ List of all series displayed
+- ✅ Columns: Name, Album Count, Created Date, Actions
+- ✅ Sorted by most recent
+
+---
+
+## AC-027: Rename Series (US-034)
+
+**Given** I am on Series List view
+**When** I click "Edit" on a series
+**And** I enter a new name and save
+**Then**:
+- ✅ Name updates in the list
+- ✅ Firestore document updated
+- ✅ Toast notification shown
+
+---
+
+## AC-028: Delete Series - Safe Delete (US-035)
+
+**Given** I have a series with 5 albums
+**When** I delete the series
+**Then**:
+- ✅ Series removed from list
+- ✅ Series document deleted from Firestore
+- ✅ **CRITICAL**: The 5 albums remain in `/inventory` (not deleted)
 
 ---
 

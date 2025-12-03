@@ -37,7 +37,7 @@ export class AlbumsView extends BaseView {
   destroy() {
     // Call parent destroy
     super.destroy()
-    console.log('[AlbumsView] Destroying view')
+
 
     // Cancel any pending requests
     if (this.abortController) {
@@ -58,12 +58,7 @@ export class AlbumsView extends BaseView {
     // Filter albums early to use throughout render
     const filteredAlbums = this.filterAlbums(albums)
 
-    // DEBUG: Enhanced logging for troubleshooting
-    console.log('🔍 [DEBUG] Raw albums:', albums.length)
-    console.log('🔍 [DEBUG] Filtered albums:', filteredAlbums.length)
-    console.log('🔍 [DEBUG] Filters:', JSON.stringify(this.filters, null, 2))
-    console.log('🔍 [DEBUG] View mode:', this.viewMode)
-    console.log('🔍 [DEBUG] Search query:', this.searchQuery)
+
 
     return `
       <div class="albums-view container">
@@ -71,7 +66,7 @@ export class AlbumsView extends BaseView {
           ${Breadcrumb.render('/albums')}
           
           <!-- Title Row -->
-          <div class="header-title-row mb-6 flex justify-between items-center">
+          <div class="header-title-row mt-6 mb-6 flex justify-between items-center">
             <h1 class="text-4xl font-bold flex items-center gap-3">
               ${getIcon('Disc', 'w-8 h-8 text-accent-primary')}
               ${activeSeries ? this.escapeHtml(activeSeries.name) : 'All Albums'}
@@ -177,48 +172,7 @@ export class AlbumsView extends BaseView {
           </div>
         </header>
 
-        <!-- DEBUG: Visual Debug Panel START -->
-        <div class="debug-panel" style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.9); border: 2px solid #00ff88; padding: 16px; border-radius: 12px; z-index: 9999; max-width: 350px; font-family: monospace; font-size: 12px; box-shadow: 0 4px 20px rgba(0,255,136,0.3);">
-          <div style="color: #00ff88; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid #00ff88; padding-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-            🔍 DEBUG PANEL
-            <span style="font-size: 10px; opacity: 0.7; font-weight: normal;">(remover depois)</span>
-          </div>
-          
-          <div style="color: #fff; line-height: 1.6;">
-            <div style="margin-bottom: 8px;">
-              <span style="color: #00ff88;">📊 Albums:</span>
-              <div style="padding-left: 12px;">
-                <div>Total: <strong>${albums.length}</strong></div>
-                <div>Filtered: <strong style="color: ${filteredAlbums.length === 0 ? '#ff4444' : '#00ff88'};">${filteredAlbums.length}</strong></div>
-              </div>
-            </div>
-            
-            <div style="margin-bottom: 8px;">
-              <span style="color: #00ff88;">🔎 Search:</span>
-              <div style="padding-left: 12px;">
-                ${this.searchQuery ? `<strong>"${this.escapeHtml(this.searchQuery)}"</strong>` : '<em style="opacity: 0.5;">none</em>'}
-              </div>
-            </div>
-            
-            <div style="margin-bottom: 8px;">
-              <span style="color: #00ff88;">🎵 Filters:</span>
-              <div style="padding-left: 12px; font-size: 11px;">
-                <div>Artist: <strong>${this.filters.artist === 'all' ? 'All' : this.escapeHtml(this.filters.artist)}</strong></div>
-                <div>Year: <strong>${this.filters.year === 'all' ? 'All' : this.filters.year}</strong></div>
-                <div>Status: <strong>${this.filters.status === 'all' ? 'All' : this.filters.status}</strong></div>
-                <div>BestEver: <strong style="color: ${this.filters.bestEverOnly ? '#ffaa00' : '#666'};">${this.filters.bestEverOnly ? 'YES' : 'NO'}</strong></div>
-              </div>
-            </div>
-            
-            <div style="margin-bottom: 0;">
-              <span style="color: #00ff88;">👁️ View Mode:</span>
-              <div style="padding-left: 12px;">
-                <strong style="color: #ffaa00;">${this.viewMode.toUpperCase()}</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- DEBUG: Visual Debug Panel END -->
+
 
         ${this.isLoading ? this.renderLoadingProgress() : ''}
 
@@ -259,8 +213,7 @@ export class AlbumsView extends BaseView {
     // if (albums.length > 0) { ... }
 
     return albums.map((album, idx) => {
-      // DEBUG: Trace rendering of each album
-      console.log(`🔍 [DEBUG] Rendering album ${idx}:`, { id: album.id, title: album.title, artist: album.artist })
+
 
       return `
       <div class="expanded-album-card glass-panel p-6 fade-in" style="animation-delay: ${idx * 0.05}s" data-album-id="${album.id || ''}">
@@ -357,14 +310,7 @@ export class AlbumsView extends BaseView {
     // Use tracksOriginalOrder if available, otherwise fall back to tracks
     const tracks = album.tracksOriginalOrder || album.tracks || []
 
-    // DEBUG: Inspect Original Order Data
-    console.log(`🔍 [DEBUG] renderOriginalTracklist for ${album.title}:`, {
-      hasOriginalOrder: !!album.tracksOriginalOrder,
-      originalOrderLength: album.tracksOriginalOrder?.length,
-      fallbackToTracks: !album.tracksOriginalOrder,
-      firstTrack: tracks[0]?.title,
-      firstTrackId: tracks[0]?.id
-    })
+
     if (tracks.length === 0) {
       return '<p class="text-muted text-sm">No tracks available</p>'
     }
@@ -513,16 +459,7 @@ export class AlbumsView extends BaseView {
       filtered = filtered.filter(album => album.bestEverAlbumId)
     }
 
-    // DEBUG: Log filtering steps
-    console.log('🔍 [DEBUG] Filter Results:', {
-      initial: albums.length,
-      afterSearch: this.searchQuery ? filtered.length : 'n/a',
-      afterArtist: this.filters.artist !== 'all' ? filtered.length : 'n/a',
-      afterYear: this.filters.year !== 'all' ? filtered.length : 'n/a',
-      afterStatus: this.filters.status !== 'all' ? filtered.length : 'n/a',
-      afterBestEver: this.filters.bestEverOnly ? filtered.length : 'n/a',
-      final: filtered.length
-    })
+
 
     return filtered
   }
@@ -591,7 +528,7 @@ export class AlbumsView extends BaseView {
     if (searchInput) {
       this.on(searchInput, 'input', (e) => {
         this.searchQuery = e.target.value
-        console.log('🔍 [DEBUG] Search changed:', this.searchQuery) // DEBUG:
+
         this.updateAlbumsGrid(albumsStore.getAlbums())
       })
     }
@@ -601,7 +538,7 @@ export class AlbumsView extends BaseView {
     if (artistFilter) {
       this.on(artistFilter, 'change', (e) => {
         this.filters.artist = e.target.value
-        console.log('🔍 [DEBUG] Artist filter changed:', this.filters.artist) // DEBUG:
+
         this.updateAlbumsGrid(albumsStore.getAlbums())
       })
     }
@@ -610,7 +547,7 @@ export class AlbumsView extends BaseView {
     if (yearFilter) {
       this.on(yearFilter, 'change', (e) => {
         this.filters.year = e.target.value
-        console.log('🔍 [DEBUG] Year filter changed:', this.filters.year) // DEBUG:
+
         this.updateAlbumsGrid(albumsStore.getAlbums())
       })
     }
@@ -619,7 +556,7 @@ export class AlbumsView extends BaseView {
     if (statusFilter) {
       this.on(statusFilter, 'change', (e) => {
         this.filters.status = e.target.value
-        console.log('🔍 [DEBUG] Status filter changed:', this.filters.status) // DEBUG:
+
         this.updateAlbumsGrid(albumsStore.getAlbums())
       })
     }
@@ -629,7 +566,7 @@ export class AlbumsView extends BaseView {
     if (bestEverCheckbox) {
       this.on(bestEverCheckbox, 'change', (e) => {
         this.filters.bestEverOnly = e.target.checked
-        console.log('🔍 [DEBUG] BestEver filter changed:', this.filters.bestEverOnly) // DEBUG:
+
         this.updateAlbumsGrid(albumsStore.getAlbums())
       })
     }
@@ -638,7 +575,7 @@ export class AlbumsView extends BaseView {
     const refreshBtn = this.$('#refreshAlbums')
     if (refreshBtn) {
       this.on(refreshBtn, 'click', async () => {
-        console.log('🔄 [DEBUG] Refresh Albums - Clearing cache and reloading...')
+
 
         // Get series albums queries
         const activeSeries = seriesStore.getActiveSeries()
@@ -646,7 +583,7 @@ export class AlbumsView extends BaseView {
           // Reload with skip-cache flag
           await this.loadAlbumsFromQueries(activeSeries.albumQueries, true) // skipCache = true
         } else {
-          console.warn('⚠️ [DEBUG] No albumQueries found in active series:', activeSeries)
+
         }
       })
     }
@@ -658,7 +595,7 @@ export class AlbumsView extends BaseView {
         // FIX #16: Toggle mode and re-render entire view
         this.viewMode = this.viewMode === 'compact' ? 'expanded' : 'compact'
         localStorage.setItem('albumsViewMode', this.viewMode)
-        console.log('[DEBUG] View mode toggled:', this.viewMode)
+
 
         // Re-render entire view with new mode (keeps same instance)
         const html = await this.render({})
@@ -767,7 +704,7 @@ export class AlbumsView extends BaseView {
           console.error('[AlbumsView] No albumId found on button:', rankingBtn)
           return
         }
-        console.log('[AlbumsView] Navigating to ranking:', albumId)
+
         router.navigate(`/ranking/${albumId}`)
         return
       }
@@ -816,7 +753,7 @@ export class AlbumsView extends BaseView {
           const { showAddToInventoryModal } = await import('../components/InventoryModals.js')
           showAddToInventoryModal(album, () => {
             // Optional: show success toast
-            console.log('Added to inventory')
+
           })
         }
         return
@@ -830,7 +767,7 @@ export class AlbumsView extends BaseView {
         if (album) {
           const { showEditAlbumModal } = await import('../components/EditAlbumModal.js')
           showEditAlbumModal(album, async (id, updates) => {
-            console.log('Saving album updates:', id, updates)
+
 
             // Merge updates into album object
             const updatedAlbum = { ...album, ...updates }
@@ -864,7 +801,7 @@ export class AlbumsView extends BaseView {
           return
         }
 
-        console.log('[AlbumsView] Navigating to playlists with', albums.length, 'albums')
+
         router.navigate(`/playlists?seriesId=${activeSeries.id}`)
       })
     }
@@ -874,7 +811,7 @@ export class AlbumsView extends BaseView {
     const urlSeriesId = urlParams.get('seriesId') || (params && params.seriesId)
 
     if (urlSeriesId) {
-      console.log('[AlbumsView] Restoring series from URL:', urlSeriesId)
+
       seriesStore.setActiveSeries(urlSeriesId)
     }
 
@@ -900,20 +837,20 @@ export class AlbumsView extends BaseView {
         lastLoadedId !== activeSeries.id
 
       if (needsReload) {
-        console.log('[AlbumsView] Loading albums for series:', activeSeries.name, `(${currentCount}/${expectedCount})`)
+
         await this.loadAlbumsFromQueries(activeSeries.albumQueries)
         // Remember which series we just loaded (IN STORE)
         albumsStore.setLastLoadedSeriesId(activeSeries.id)
         // Note: loadAlbumsFromQueries already updates the view, no need to call updateAlbumsGrid
       } else {
-        console.log('[AlbumsView] Albums already loaded for series:', activeSeries.name, `(${currentCount} albums)`)
+
         // CRITICAL FIX: Do NOT call updateAlbumsGrid here!
         // The render() method already rendered these albums, calling updateAlbumsGrid
         // would duplicate them. The view is already up-to-date from render().
       }
     } else if (urlSeriesId && !activeSeries) {
       // Fallback: Series ID in URL but not in store (Hard Refresh scenario)
-      console.log('[AlbumsView] Series not in store, attempting to fetch from Firestore...')
+
       try {
         // We need to access the db instance. It's exported from app.js
         const { db } = await import('../app.js')
@@ -927,7 +864,7 @@ export class AlbumsView extends BaseView {
         const reloadedSeries = seriesStore.getActiveSeries()
 
         if (reloadedSeries && reloadedSeries.albumQueries) {
-          console.log('[AlbumsView] Series recovered from Firestore:', reloadedSeries.name)
+
           await this.loadAlbumsFromQueries(reloadedSeries.albumQueries)
         } else {
           console.warn('[AlbumsView] Series not found even after Firestore fetch')
@@ -948,7 +885,7 @@ export class AlbumsView extends BaseView {
     // FIX #15: Cancel previous requests FIRST, before clearing store
     // This prevents race condition where old requests complete after reset
     if (this.abortController) {
-      console.log('[AlbumsView] Aborting previous fetch operation')
+
       this.abortController.abort()
       this.abortController = null
     }
@@ -965,8 +902,7 @@ export class AlbumsView extends BaseView {
     const list = this.$('#albumsList')
     if (list) list.innerHTML = ''
 
-    // Update debug panel immediately to show 0 albums
-    this.updateDebugPanel([], [])
+
 
     this.isLoading = true
     this.updateAlbumsGrid([]) // Clear grid immediately to show loading state
@@ -1032,7 +968,7 @@ export class AlbumsView extends BaseView {
 
   updateAlbumsGrid(albums) {
     const filtered = this.filterAlbums(albums) // DEBUG: Apply filters
-    console.log('🔍 [DEBUG] Updating grid with', filtered.length, 'albums') // DEBUG:
+
 
     // Update Generate Playlists button state
     const generateBtn = this.$('#generatePlaylistsBtn')
@@ -1063,56 +999,10 @@ export class AlbumsView extends BaseView {
       emptyStateContainer.innerHTML = filtered.length === 0 && !this.isLoading ? this.renderEmptyState() : ''
     }
 
-    // DEBUG: Update debug panel dynamically
-    this.updateDebugPanel(albums, filtered)
+
   }
 
-  // DEBUG: Helper to update debug panel
-  updateDebugPanel(albums, filteredAlbums) {
-    const debugPanel = this.$('.debug-panel')
-    if (debugPanel) {
-      debugPanel.innerHTML = `
-      < div style = "color: #00ff88; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid #00ff88; padding-bottom: 8px; display: flex; align-items: center; gap: 8px;" >
-          🔍 DEBUG PANEL
-      < span style = "font-size: 10px; opacity: 0.7; font-weight: normal;" > (remover depois)</span >
-        </div >
 
-      <div style="color: #fff; line-height: 1.6;">
-        <div style="margin-bottom: 8px;">
-          <span style="color: #00ff88;">📊 Albums:</span>
-          <div style="padding-left: 12px;">
-            <div>Total: <strong>${albums.length}</strong></div>
-            <div>Filtered: <strong style="color: ${filteredAlbums.length === 0 ? '#ff4444' : '#00ff88'};">${filteredAlbums.length}</strong></div>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 8px;">
-          <span style="color: #00ff88;">🔎 Search:</span>
-          <div style="padding-left: 12px;">
-            ${this.searchQuery ? `<strong>"${this.escapeHtml(this.searchQuery)}"</strong>` : '<em style="opacity: 0.5;">none</em>'}
-          </div>
-        </div>
-
-        <div style="margin-bottom: 8px;">
-          <span style="color: #00ff88;">🎵 Filters:</span>
-          <div style="padding-left: 12px; font-size: 11px;">
-            <div>Artist: <strong>${this.filters.artist === 'all' ? 'All' : this.escapeHtml(this.filters.artist)}</strong></div>
-            <div>Year: <strong>${this.filters.year === 'all' ? 'All' : this.filters.year}</strong></div>
-            <div>Status: <strong>${this.filters.status === 'all' ? 'All' : this.filters.status}</strong></div>
-            <div>BestEver: <strong style="color: ${this.filters.bestEverOnly ? '#ffaa00' : '#666'};">${this.filters.bestEverOnly ? 'YES' : 'NO'}</strong></div>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 0;">
-          <span style="color: #00ff88;">👁️ View Mode:</span>
-          <div style="padding-left: 12px;">
-            <strong style="color: #ffaa00;">${this.viewMode.toUpperCase()}</strong>
-          </div>
-        </div>
-      </div>
-    `
-    }
-  }
 
   createElementFromHTML(html) {
     const template = document.createElement('template')

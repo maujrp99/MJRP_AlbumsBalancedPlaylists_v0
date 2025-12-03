@@ -20,6 +20,9 @@ export class PlaylistsStore {
         this.versions = []
         this.currentVersionIndex = -1
         this.maxVersions = 20
+
+        // Load from localStorage on initialization
+        this.loadFromLocalStorage()
     }
 
     /**
@@ -41,6 +44,7 @@ export class PlaylistsStore {
         this.isDirty = false
         this.isSynchronized = false
         this.createSnapshot('Initial generation')
+        this.saveToLocalStorage()
         this.notify()
     }
 
@@ -78,6 +82,7 @@ export class PlaylistsStore {
         this.isDirty = true
         this.isSynchronized = false
         this.createSnapshot(`Moved track from ${fromPlaylist.name} to ${toPlaylist.name}`)
+        this.saveToLocalStorage()
         this.notify()
     }
 
@@ -95,6 +100,7 @@ export class PlaylistsStore {
         this.isDirty = true
         this.isSynchronized = false
         this.createSnapshot(`Reordered track in ${playlist.name}`)
+        this.saveToLocalStorage()
         this.notify()
     }
 
@@ -192,6 +198,7 @@ export class PlaylistsStore {
             this.playlists = JSON.parse(JSON.stringify(version.playlists))
             this.seriesId = version.seriesId // FIX: Restore seriesId
             this.isDirty = true
+            this.saveToLocalStorage()
             this.notify()
             return true
         }
@@ -209,6 +216,7 @@ export class PlaylistsStore {
             this.playlists = JSON.parse(JSON.stringify(version.playlists))
             this.seriesId = version.seriesId // FIX: Restore seriesId
             this.isDirty = true
+            this.saveToLocalStorage()
             this.notify()
             return true
         }
@@ -240,8 +248,44 @@ export class PlaylistsStore {
         this.isDirty = false
         this.isSynchronized = true
         this.versions = []
-        this.currentVersionIndex = -1
         this.notify()
+    }
+
+    /**
+     * Save playlists to localStorage
+     */
+    saveToLocalStorage() {
+        try {
+            const data = {
+                playlists: this.playlists,
+                seriesId: this.seriesId,
+                config: this.config,
+                updatedAt: new Date().toISOString()
+            }
+            localStorage.setItem('mjrp_playlists', JSON.stringify(data))
+            // console.log('Playlists saved to localStorage:', this.playlists.length)
+        } catch (e) {
+            console.error('Failed to save playlists to localStorage', e)
+        }
+    }
+
+    /**
+     * Load playlists from localStorage
+     */
+    loadFromLocalStorage() {
+        try {
+            const data = localStorage.getItem('mjrp_playlists')
+            if (data) {
+                const parsed = JSON.parse(data)
+                this.playlists = parsed.playlists || []
+                this.seriesId = parsed.seriesId || null
+                this.config = { ...this.config, ...(parsed.config || {}) }
+                // console.log('Playlists loaded from localStorage:', this.playlists.length)
+            }
+        } catch (error) {
+            console.error('Failed to load playlists from localStorage:', error)
+            this.playlists = []
+        }
     }
 }
 
