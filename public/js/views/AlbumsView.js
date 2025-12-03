@@ -55,8 +55,23 @@ export class AlbumsView extends BaseView {
   async render(params) {
     const albums = albumsStore.getAlbums()
     const activeSeries = seriesStore.getActiveSeries()
+    // Priority: URL param > Active Series
+    const urlParams = new URLSearchParams(window.location.search)
+    const targetSeriesId = params?.seriesId || urlParams.get('seriesId') || activeSeries?.id
+
+    // Ghost Album Prevention:
+    // If the store has albums from a different series than what we are about to show,
+    // ignore them in the render. The mount() method will trigger a reload.
+    const lastLoadedId = albumsStore.getLastLoadedSeriesId()
+    let displayAlbums = albums
+
+    if (targetSeriesId && lastLoadedId && targetSeriesId !== lastLoadedId) {
+      // console.log('[AlbumsView] Ghost Albums prevented: Stored series', lastLoadedId, '!= Target', targetSeriesId)
+      displayAlbums = []
+    }
+
     // Filter albums early to use throughout render
-    const filteredAlbums = this.filterAlbums(albums)
+    const filteredAlbums = this.filterAlbums(displayAlbums)
 
 
 
@@ -967,7 +982,18 @@ export class AlbumsView extends BaseView {
   }
 
   updateAlbumsGrid(albums) {
-    const filtered = this.filterAlbums(albums) // DEBUG: Apply filters
+    // FIX: Ghost Albums - Validate series context before rendering
+    // Store subscriptions can trigger this method with stale data from previous series
+    const activeSeries = seriesStore.getActiveSeries()
+    const lastLoadedId = albumsStore.getLastLoadedSeriesId()
+
+    // Early exit if we're trying to render albums from wrong series
+    if (activeSeries && lastLoadedId && activeSeries.id !== lastLoadedId) {
+      console.warn('[AlbumsView] updateAlbumsGrid: Series mismatch, skipping render')
+      return
+    }
+
+    const filtered = this.filterAlbums(albums)
 
 
     // Update Generate Playlists button state

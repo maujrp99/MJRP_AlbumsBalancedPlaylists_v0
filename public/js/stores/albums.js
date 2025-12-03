@@ -249,6 +249,7 @@ export class AlbumsStore {
                     purchasePrice: a.purchasePrice,
                     currency: a.currency
                 })),
+                lastLoadedSeriesId: this.lastLoadedSeriesId,
                 updatedAt: new Date().toISOString()
             }
             localStorage.setItem('mjrp_albums', JSON.stringify(data))
@@ -268,6 +269,7 @@ export class AlbumsStore {
                 // Re-hydrate Album instances if needed, or use plain objects
                 // For now, plain objects are sufficient for display
                 this.albums = parsed.albums || []
+                this.lastLoadedSeriesId = parsed.lastLoadedSeriesId || null
                 // console.log('Albums loaded from localStorage:', this.albums.length)
             }
         } catch (error) {
