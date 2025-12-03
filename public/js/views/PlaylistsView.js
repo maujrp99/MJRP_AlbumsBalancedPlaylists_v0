@@ -43,7 +43,7 @@ export class PlaylistsView extends BaseView {
           
           <div class="header-content mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
             <h1 class="text-4xl font-bold flex items-center gap-3">
-              ${getIcon('Music', 'w-8 h-8')} Playlist Management
+              <img src="/assets/images/logo.png" alt="MJRP" class="w-8 h-8 object-contain"> Playlist Management
             </h1>
             
             <div class="header-actions flex items-center gap-4">
