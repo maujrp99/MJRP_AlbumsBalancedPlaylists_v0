@@ -41,9 +41,9 @@ export class PlaylistsView extends BaseView {
         <header class="view-header mb-8 fade-in">
           ${Breadcrumb.render('/playlists')}
           
-          <div class="header-content flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <h1 class="flex items-center gap-3">
-              ${getIcon('Music', 'w-8 h-8')} Playlist Management
+          <div class="header-content mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <h1 class="text-4xl font-bold flex items-center gap-3">
+              <img src="/assets/images/newMJRPlogorealistic.png" alt="MJRP" class="w-16 h-16 object-contain"> Playlist Management
             </h1>
             
             <div class="header-actions flex items-center gap-4">
@@ -254,17 +254,17 @@ export class PlaylistsView extends BaseView {
 
   renderExportSection() {
     return `
-      <div class="export-section">
-        <h3>Export Playlists</h3>
-        <div class="export-actions">
+      <div class="export-section glass-panel p-8 text-center">
+        <h3 class="text-2xl font-bold mb-6">Export Playlists</h3>
+        <div class="export-actions flex flex-wrap justify-center gap-4 mt-6">
           <button class="btn btn-primary" id="exportSpotifyBtn">
-            🎵 Export to Spotify
+            ${getIcon('Music', 'w-5 h-5')} Export to Spotify
           </button>
           <button class="btn btn-primary" id="exportAppleMusicBtn">
-            🍎 Export to Apple Music
+            ${getIcon('Apple', 'w-5 h-5')} Export to Apple Music
           </button>
           <button class="btn btn-secondary" id="exportJsonBtn">
-            💾 Download JSON
+            ${getIcon('Download', 'w-5 h-5')} Download JSON
           </button>
         </div>
       </div>

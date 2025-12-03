@@ -2,21 +2,26 @@ import { getIcon } from './Icons.js'
 import { router } from '../router.js'
 
 export class TopNav {
-    constructor() {
-        this.isMenuOpen = false
-    }
+  constructor() {
+    this.isMenuOpen = false
+  }
 
-    render() {
-        const currentPath = window.location.pathname
+  render() {
+    const currentPath = window.location.pathname
 
-        return `
+    return `
       <nav class="top-nav glass-panel mx-auto max-w-[1200px] mt-4 mb-8 px-3 py-1 flex justify-between items-center sticky top-4 z-50">
         <!-- Logo -->
         <a href="/home" class="nav-logo flex items-center gap-3 group" data-link>
-          <div class="logo-icon w-24 h-24 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-            <img src="/assets/images/logo.png" alt="MJRP Logo" class="w-full h-full object-contain">
+          <div class="logo-icon w-12 h-12 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+            <img src="/assets/images/logo.png" alt="MJRP" class="w-full h-full object-contain">
           </div>
-          <span class="font-syne font-bold text-xl tracking-tight">The Album Playlist Synthesizer</span>
+          <img 
+            src="/assets/images/TheAlbumPlaylistSynth.png" 
+            alt="The Album Playlist Synthesizer"
+            class="h-6 md:h-8 w-auto object-contain hover:opacity-80 transition-opacity"
+            loading="lazy"
+          >
         </a>
 
         <!-- Desktop Menu -->
@@ -45,45 +50,45 @@ export class TopNav {
         </div>
       </nav>
     `
-    }
+  }
 
-    renderNavLink(path, label, currentPath, isMobile = false) {
-        const isActive = currentPath === path || (path !== '/home' && currentPath.startsWith(path))
-        const baseClass = isMobile ? 'text-2xl font-bold' : 'text-sm font-medium uppercase tracking-wider hover:text-accent-primary transition-colors'
-        const activeClass = isActive ? 'text-accent-primary' : 'text-muted'
+  renderNavLink(path, label, currentPath, isMobile = false) {
+    const isActive = currentPath === path || (path !== '/home' && currentPath.startsWith(path))
+    const baseClass = isMobile ? 'text-2xl font-bold' : 'text-sm font-medium uppercase tracking-wider hover:text-accent-primary transition-colors'
+    const activeClass = isActive ? 'text-accent-primary' : 'text-muted'
 
-        return `
+    return `
       <a href="${path}" class="${baseClass} ${activeClass}" data-link>
         ${label}
       </a>
     `
-    }
+  }
 
-    attachListeners() {
-        const mobileBtn = document.getElementById('mobileMenuBtn')
-        const closeBtn = document.getElementById('closeMenuBtn')
-        const mobileMenu = document.getElementById('mobileMenu')
-        const links = mobileMenu?.querySelectorAll('a')
+  attachListeners() {
+    const mobileBtn = document.getElementById('mobileMenuBtn')
+    const closeBtn = document.getElementById('closeMenuBtn')
+    const mobileMenu = document.getElementById('mobileMenu')
+    const links = mobileMenu?.querySelectorAll('a')
 
-        const toggleMenu = (show) => {
-            this.isMenuOpen = show
-            if (mobileMenu) {
-                if (show) {
-                    mobileMenu.classList.remove('opacity-0', 'pointer-events-none')
-                    document.body.style.overflow = 'hidden'
-                } else {
-                    mobileMenu.classList.add('opacity-0', 'pointer-events-none')
-                    document.body.style.overflow = ''
-                }
-            }
+    const toggleMenu = (show) => {
+      this.isMenuOpen = show
+      if (mobileMenu) {
+        if (show) {
+          mobileMenu.classList.remove('opacity-0', 'pointer-events-none')
+          document.body.style.overflow = 'hidden'
+        } else {
+          mobileMenu.classList.add('opacity-0', 'pointer-events-none')
+          document.body.style.overflow = ''
         }
-
-        mobileBtn?.addEventListener('click', () => toggleMenu(true))
-        closeBtn?.addEventListener('click', () => toggleMenu(false))
-
-        // Close menu when clicking a link
-        links?.forEach(link => {
-            link.addEventListener('click', () => toggleMenu(false))
-        })
+      }
     }
+
+    mobileBtn?.addEventListener('click', () => toggleMenu(true))
+    closeBtn?.addEventListener('click', () => toggleMenu(false))
+
+    // Close menu when clicking a link
+    links?.forEach(link => {
+      link.addEventListener('click', () => toggleMenu(false))
+    })
+  }
 }
