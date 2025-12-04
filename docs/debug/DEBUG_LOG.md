@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-02 17:00
+**Last Updated**: 2025-12-03 22:44
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -38,9 +38,142 @@
 
 ## Current Debugging Session
 
-🟢 **No active session** (as of 2025-12-02 17:00)
+🟢 **No active session** (as of 2025-12-03 22:44)
 
 All recent issues have been resolved or closed. See "Previous Sessions" below for details.
+
+---
+
+## Previous Session (2025-12-03)
+
+### Issue #22: Ghost Albums Regression (Expanded View)
+
+**Status**: ✅ **RESOLVED**  
+**Date**: 2025-12-03 16:07 - 22:44  
+**Type**: Regression / Incomplete Fix  
+**Severity**: 🟡 MEDIUM  
+**Session Duration**: ~6 hours (investigation + 2 fix attempts)
+
+#### User Report
+After implementing localStorage persistence (Sprint 5), Ghost Albums returned when switching between series in Expanded View mode. User noted that albums from Series A appeared when navigating to Series B.
+
+#### Investigation Timeline
+
+**ATTEMPT #1: Add localStorage Persistence** (16:07 - PARTIAL SUCCESS)
+- **Hypothesis**: `lastLoadedSeriesId` was being lost on page reload because it wasn't persisted
+- **Fix Applied**: 
+  1. Modified `AlbumsStore.saveToLocalStorage()` to include `lastLoadedSeriesId` (line 252)
+  2. Modified `AlbumsStore.loadFromLocalStorage()` to restore `lastLoadedSeriesId` (line 270)
+  3. Added validation in `AlbumsView.render()` to check series context (lines 58-73)
+- **Code Changes**:
+  ```javascript
+  // AlbumsStore.js
+  saveToLocalStorage() {
+    const data = {
+      albums: this.albums.map(a => ({...})),
+      lastLoadedSeriesId: this.lastLoadedSeriesId, // NEW
+      updatedAt: new Date().toISOString()
+    }
+  }
+  
+  loadFromLocalStorage() {
+    this.albums = parsed.albums || []
+    this.lastLoadedSeriesId = parsed.lastLoadedSeriesId || null // NEW
+  }
+  
+  // AlbumsView.js render()
+  const lastLoadedId = albumsStore.getLastLoadedSeriesId()
+  let displayAlbums = albums
+  
+  if (targetSeriesId && lastLoadedId && targetSeriesId !== lastLoadedId) {
+    displayAlbums = [] // Hide stale albums
+  }
+  ```
+- **Files Modified**:
+  - `public/js/stores/albums.js` (Steps 2098)
+  - `public/js/views/AlbumsView.js` (Step 2103)
+- **Result**: ❌ **INCOMPLETE** - Fixed initial render but ghost albums still appeared via store subscriptions
+- **Root Cause Missed**: Store subscriptions call `updateAlbumsGrid()` which bypasses the `render()` validation
+
+**Discovery Phase** (19:30 - 20:10)
+- **AI Tester Report**: Reproduced Ghost Albums in production (Expanded View)
+- **Key Finding**: "render() has the check, but updateAlbumsGrid() lacks it"
+- **User Request**: "Please investigate the debug log and compare with current implementation"
+- **Investigation Result**: Created detailed analysis documento showing:
+  1. Original fix (Issue #19, Nov 30) tracked `_lastLoadedSeriesId` in view instance
+  2. My persistence improvement was good BUT I only added validation to `render()`
+  3. Store subscriptions trigger `updateAlbumsGrid()` → no validation → ghost albums
+- **Evidence**: `docs/technical/ghost_albums_investigation_2025_12_03.md`
+
+**ATTEMPT #2: Add Validation to updateAlbumsGrid** (20:10 - SUCCESS)
+- **Hypothesis**: Store subscriptions bypass `render()` validation, need to guard `updateAlbumsGrid()` too
+- **Fix Applied**: Added series context validation at start of `updateAlbumsGrid()`
+- **Code Change** (`AlbumsView.js` lines 984-995):
+  ```javascript
+  updateAlbumsGrid(albums) {
+    // FIX: Ghost Albums - Validate series context before rendering
+    const activeSeries = seriesStore.getActiveSeries()
+    const lastLoadedId = albumsStore.getLastLoadedSeriesId()
+    
+    // Early exit if we're trying to render albums from wrong series
+    if (activeSeries && lastLoadedId && activeSeries.id !== lastLoadedId) {
+      console.warn('[AlbumsView] updateAlbumsGrid: Series mismatch, skipping render')
+      return
+    }
+    
+    const filtered = this.filterAlbums(albums)
+    // ... proceed with rendering
+  }
+  ```
+- **Result**: ✅ **SUCCESS** - User confirmed "ghost issue resolved in prod"
+- **Why This Works**: 
+  - Validates context on BOTH render paths: initial render AND store updates
+  - Prevents subscriptions from displaying stale data
+  - Preserves localStorage persistence improvement
+
+#### Final Root Cause
+**Two separate render paths, but only one was guarded:**
+1. **Initial Render**: `render()` method → ✅ Had validation (Attempt #1)
+2. **Store Updates**: `updateAlbumsGrid()` via subscriptions → ❌ No validation until Attempt #2
+
+**Flow that caused bug:**
+```
+1. Load Series A → render() validates → correct albums shown ✅
+2. Navigate to Series B
+3. Series B starts loading
+4. AlbumsStore updates with new data
+5. Store.notify() triggers subscription
+6. Subscription calls updateAlbumsGrid(albums)
+7. ❌ updateAlbumsGrid() renders WITHOUT checking lastLoadedSeriesId
+8. Result: Mix of Series A and Series B albums visible
+```
+
+#### Files Modified
+- `public/js/stores/albums.js` (lines 252, 270) - Persistence
+- `public/js/views/AlbumsView.js` (lines 58-73, 984-995) - Validation on both paths
+
+#### Deployment
+- **Commit**: `314d4b1` - "fix: prevent ghost albums in updateAlbumsGrid via series context validation"
+- **Frontend Deploy**: Firebase Hosting ✅
+- **Verified**: Production testing by user at 22:44
+
+#### Verification
+- ✅ Tested in production by AI Tester
+- ✅ User confirmed resolution: "ghost issue resolved in prod"
+- ✅ Works in both Grid and Expanded view modes
+- ✅ Works on page reload (localStorage persistence)
+- ✅ Works on series switching
+
+#### Lessons Learned
+1. **Check ALL render paths**: When fixing UI bugs, verify ALL methods that update DOM, not just primary `render()`
+2. **Store subscriptions are independent**: They trigger separate code paths that may bypass main validation logic
+3. **Test reports are invaluable**: AI Tester correctly identified the exact gap before code review
+4. **Partial fixes are dangerous**: Attempt #1 looked complete but only covered one of two render paths
+
+**See Also**: 
+- [Investigation Report](../technical/ghost_albums_investigation_2025_12_03.md)
+- [Initial Analysis](../technical/regression_ghost_albums_analysis.md)
+- [Tester Report](../tester/GHOST_ALBUMS_REPORT.md)
 
 ---
 
