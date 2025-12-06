@@ -29,7 +29,7 @@ npm run test:coverage # Coverage report
 ```
 
 ### Current Version
-**v2.0.4** - Sprint 5 Phase 3 (Production Deployed)
+**v2.0.3** - Sprint 5 Phase 3 (Ready for UAT)
 
 See [CHANGELOG.md](CHANGELOG.md) for full version history.
 

@@ -16,8 +16,6 @@ RUN npm ci --only=production || npm install --only=production
 
 # copy application source
 COPY _shared_temp ../shared
-COPY config ./config
-COPY public ../public
 COPY . .
 EXPOSE 3000
 

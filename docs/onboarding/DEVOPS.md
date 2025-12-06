@@ -92,4 +92,4 @@ gcloud run deploy mjrp-v2 --source .
 
 ---
 
-**System Status**: 🟢 Operational (v2.0.4)
+**System Status**: 🟢 Operational (v2.0.3)

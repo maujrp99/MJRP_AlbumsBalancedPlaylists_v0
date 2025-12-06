@@ -5,10 +5,7 @@ import { seriesStore } from '../stores/series.js'
 import { apiClient } from '../api/client.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
-import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
-import { CacheManager } from '../cache/CacheManager.js'
 
 /**
  * PlaylistsView
@@ -16,9 +13,8 @@ import { CacheManager } from '../cache/CacheManager.js'
  */
 
 export class PlaylistsView extends BaseView {
-  constructor(db) {
+  constructor() {
     super()
-    this.db = db
     this.isGenerating = false
     this.draggedTrack = null
   }
@@ -45,8 +41,8 @@ export class PlaylistsView extends BaseView {
         <header class="view-header mb-8 fade-in">
           ${Breadcrumb.render('/playlists')}
           
-          <div class="header-content mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <h1 class="text-4xl font-bold flex items-center gap-3">
+          <div class="header-content flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <h1 class="flex items-center gap-3">
               ${getIcon('Music', 'w-8 h-8')} Playlist Management
             </h1>
             
@@ -258,17 +254,17 @@ export class PlaylistsView extends BaseView {
 
   renderExportSection() {
     return `
-      <div class="export-section glass-panel p-8 text-center">
-        <h3 class="text-2xl font-bold mb-6">Export Playlists</h3>
-        <div class="export-actions flex flex-wrap justify-center gap-4 mt-6">
+      <div class="export-section">
+        <h3>Export Playlists</h3>
+        <div class="export-actions">
           <button class="btn btn-primary" id="exportSpotifyBtn">
-            ${getIcon('Music', 'w-5 h-5')} Export to Spotify
+            🎵 Export to Spotify
           </button>
           <button class="btn btn-primary" id="exportAppleMusicBtn">
-            ${getIcon('Star', 'w-5 h-5')} Export to Apple Music
+            🍎 Export to Apple Music
           </button>
           <button class="btn btn-secondary" id="exportJsonBtn">
-            ${getIcon('FileText', 'w-5 h-5')} Download JSON
+            💾 Download JSON
           </button>
         </div>
       </div>
@@ -399,28 +395,6 @@ export class PlaylistsView extends BaseView {
       playlistsStore.setPlaylists(playlists, activeSeries ? activeSeries.id : null)
 
       console.log('[PlaylistsView] Playlists set in store for series:', activeSeries ? activeSeries.id : 'unknown')
-
-      // Save to Firestore (if series exists and db is available)
-      if (activeSeries && activeSeries.id && this.db) {
-        try {
-          const playlistRepository = new PlaylistRepository(this.db, new CacheManager(), 'user-id', activeSeries.id)
-
-          // Prepare data for batch write
-          const playlistDocs = playlists.map(p => ({
-            name: p.name,
-            tracks: p.tracks,
-            totalDuration: p.totalDuration || 0,
-            createdAt: new Date().toISOString()
-          }))
-
-          await playlistRepository.createMany(playlistDocs)
-          playlistsStore.markSynchronized()
-          console.log('✅ Playlists saved to Firestore (Batch Write)')
-        } catch (dbError) {
-          console.warn('⚠️ Failed to save to Firestore (Offline Mode?):', dbError)
-          // Don't block UI - localStorage is already updated by store
-        }
-      }
 
       // Force immediate update
       this.isGenerating = false

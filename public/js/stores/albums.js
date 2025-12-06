@@ -13,7 +13,6 @@ export class AlbumsStore {
         this.error = null
         this.lastLoadedSeriesId = null // FIX: Persist series context
         this.listeners = new Set()
-        this.loadFromLocalStorage()
     }
 
     /**
@@ -82,7 +81,6 @@ export class AlbumsStore {
 
         if (!existing) {
             this.albums.push(album)
-            this.saveToLocalStorage()
             this.notify()
         } else {
             // Update existing album
@@ -96,7 +94,6 @@ export class AlbumsStore {
 
             const index = this.albums.indexOf(existing)
             this.albums[index] = album
-            this.saveToLocalStorage()
             this.notify()
         }
     }
@@ -131,7 +128,6 @@ export class AlbumsStore {
             if (this.currentAlbum?.id === albumId) {
                 this.currentAlbum = null
             }
-            this.saveToLocalStorage()
             this.notify()
         }
     }
@@ -229,53 +225,6 @@ export class AlbumsStore {
         this.error = null
         this.lastLoadedSeriesId = null
         this.notify()
-    }
-
-    /**
-     * Save albums to localStorage
-     */
-    saveToLocalStorage() {
-        try {
-            // Only save essential data to avoid quota limits
-            const data = {
-                albums: this.albums.map(a => ({
-                    id: a.id,
-                    title: a.title,
-                    artist: a.artist,
-                    year: a.year,
-                    tracks: a.tracks,
-                    albumData: a.albumData,
-                    format: a.format,
-                    purchasePrice: a.purchasePrice,
-                    currency: a.currency
-                })),
-                lastLoadedSeriesId: this.lastLoadedSeriesId,
-                updatedAt: new Date().toISOString()
-            }
-            localStorage.setItem('mjrp_albums', JSON.stringify(data))
-        } catch (e) {
-            console.warn('Failed to save albums to localStorage (quota exceeded?):', e)
-        }
-    }
-
-    /**
-     * Load albums from localStorage
-     */
-    loadFromLocalStorage() {
-        try {
-            const data = localStorage.getItem('mjrp_albums')
-            if (data) {
-                const parsed = JSON.parse(data)
-                // Re-hydrate Album instances if needed, or use plain objects
-                // For now, plain objects are sufficient for display
-                this.albums = parsed.albums || []
-                this.lastLoadedSeriesId = parsed.lastLoadedSeriesId || null
-                // console.log('Albums loaded from localStorage:', this.albums.length)
-            }
-        } catch (error) {
-            console.error('Failed to load albums from localStorage:', error)
-            this.albums = []
-        }
     }
 }
 

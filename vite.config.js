@@ -1,10 +1,8 @@
 import { defineConfig } from 'vite'
 import path from 'path'
-import fs from 'fs'
 
 export default defineConfig({
     root: 'public',
-    publicDir: false, // Disable default public dir behavior (we'll copy manually)
 
     build: {
         outDir: '../dist',
@@ -15,9 +13,7 @@ export default defineConfig({
                 main: path.resolve(__dirname, 'public/hybrid-curator.html'),
                 v2: path.resolve(__dirname, 'public/index-v2.html')
             }
-        },
-        // Copy firebase-config.js to dist
-        copyPublicDir: false
+        }
     },
 
     resolve: {
@@ -41,29 +37,6 @@ export default defineConfig({
     },
 
     plugins: [
-        {
-            name: 'copy-static-files',
-            closeBundle() {
-                // Copy firebase-config.js to dist/js/
-                const jsDestDir = path.resolve(__dirname, 'dist/js')
-                if (!fs.existsSync(jsDestDir)) {
-                    fs.mkdirSync(jsDestDir, { recursive: true })
-                }
-                fs.copyFileSync(
-                    path.resolve(__dirname, 'public/js/firebase-config.js'),
-                    path.resolve(jsDestDir, 'firebase-config.js')
-                )
-                console.log('✓ Copied firebase-config.js to dist/js/')
-
-                // Copy assets folder (images/logos) to dist/
-                const assetsSource = path.resolve(__dirname, 'public/assets')
-                const assetsDest = path.resolve(__dirname, 'dist/assets')
-                if (fs.existsSync(assetsSource)) {
-                    fs.cpSync(assetsSource, assetsDest, { recursive: true })
-                    console.log('✓ Copied assets/ folder to dist/')
-                }
-            }
-        },
         {
             name: 'v2-spa-fallback',
             configureServer(server) {

@@ -1,9 +1,8 @@
-/**
- * BaseRepository
- * Abstract base class for all Firestore repositories
- * Provides common CRUD operations with cache integration
- */
+import { serverTimestamp } from 'firebase/firestore'
 
+/**
+ * Base repository class for Firestore interactions
+ */
 export class BaseRepository {
     /**
      * @param {firebase.firestore.Firestore} firestore - Firestore instance
@@ -131,35 +130,6 @@ export class BaseRepository {
         return docRef.id
     }
 
-    /**
-     * Create multiple documents (batch operation)
-     * @param {Array<Object>} items - Array of document data
-     * @returns {Promise<void>}
-     */
-    async createMany(items) {
-        if (!items || items.length === 0) return
-
-        const batch = this.db.batch()
-        const timestamp = this.getServerTimestamp()
-
-        items.forEach(item => {
-            const docRef = this.collection.doc() // Auto-ID
-            const docData = {
-                ...item,
-                createdAt: timestamp,
-                _schemaVersion: this.schemaVersion
-            }
-            batch.set(docRef, docData)
-        })
-
-        await batch.commit()
-
-        // Invalidate 'all' cache
-        if (this.cache) {
-            await this.cache.invalidate(this.getCacheKey('all'))
-        }
-    }
-
     // ========== UPDATE OPERATION ==========
 
     /**
@@ -233,7 +203,7 @@ export class BaseRepository {
      * @protected
      */
     getServerTimestamp() {
-        return firebase.firestore.FieldValue.serverTimestamp()
+        return serverTimestamp()
     }
 
     /**

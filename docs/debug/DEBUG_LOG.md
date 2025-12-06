@@ -1,12 +1,12 @@
 # Debug Log
 
-**Last Updated**: 2025-12-03 22:44
+**Last Updated**: 2025-12-02 07:15
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
 **How to Update This Document**:
-1. Active issues → 🔥 ACTIVE DEBUGGING SESSION
-2. Resolved/reverted issues → Move to 📜 PREVIOUS DEBUGGING SESSIONS with timestamp
+1. Active issues → Current Debugging Session
+2. Resolved/reverted issues → Move to Previous with timestamp
 3. Keep Previous sections for history (don't delete)
 4. Link to ARCHITECTURE.md for architectural decisions
 
@@ -14,168 +14,105 @@
 
 ---
 
-## 🔥 Production Deployment Issues - v2.0.4 (2025-12-02 17:00)
-
-**Status**: ✅ RESOLVED  
-**Timeline**: 16:20 → 17:00 (40 min)  
-**Severity**: 🔴 CRITICAL
-
-### Issue #1: firebase-config.js Missing
-**Error**: `Uncaught SyntaxError: Unexpected token '<'`  
-**Cause**: Vite didn't copy non-module script  
-**Fix**: Added auto-copy plugin to `vite.config.js`  
-**Result**: ✅ Firebase auth works
-
-### Issue #2: Backend Missing curation.js
-**Error**: `Cannot find module '/usr/src/public/js/curation.js'`  
-**Cause**: `public/` not copied to Docker container  
-**Fix**: Updated `deploy-backend.sh` to copy `public/`  
-**Result**: ✅ Playlist generation works
-
-**See**: [Troubleshooting](../devops/PRODUCTION_DEPLOY.md#troubleshooting) for details
-
----
-
 ## Current Debugging Session
 
-🟢 **No active session** (as of 2025-12-03 22:44)
+🔴 **ACTIVE SESSION** (as of 2025-12-06 20:01)
 
-All recent issues have been resolved or closed. See "Previous Sessions" below for details.
-
----
-
-## Previous Session (2025-12-03)
-
-### Issue #22: Ghost Albums Regression (Expanded View)
-
-**Status**: ✅ **RESOLVED**  
-**Date**: 2025-12-03 16:07 - 22:44  
-**Type**: Regression / Incomplete Fix  
-**Severity**: 🟡 MEDIUM  
-**Session Duration**: ~6 hours (investigation + 2 fix attempts)
+### Issue #22: Ghost Albums Regression - REOPENED
+**Status**: 🔴 **IN PROGRESS - ALL ATTEMPTS FAILED**
+**Date Started**: 2025-12-06 19:42
+**Type**: Regression
+**Component**: `AlbumsView.js` / `AlbumsStore.js`
 
 #### User Report
-After implementing localStorage persistence (Sprint 5), Ghost Albums returned when switching between series in Expanded View mode. User noted that albums from Series A appeared when navigating to Series B.
+Ghost Albums returned after previous session marked as resolved. Albums from previously viewed series appear when switching to a new series.
 
-#### Investigation Timeline
+#### Failed Attempts (2025-12-06)
 
-**ATTEMPT #1: Add localStorage Persistence** (16:07 - PARTIAL SUCCESS)
-- **Hypothesis**: `lastLoadedSeriesId` was being lost on page reload because it wasn't persisted
+**ATTEMPT #1: Closure Capture** (19:42 - FAILED)
+- **Hypothesis**: `this.abortController` in callback refers to wrong controller due to closure scope
 - **Fix Applied**: 
-  1. Modified `AlbumsStore.saveToLocalStorage()` to include `lastLoadedSeriesId` (line 252)
-  2. Modified `AlbumsStore.loadFromLocalStorage()` to restore `lastLoadedSeriesId` (line 270)
-  3. Added validation in `AlbumsView.render()` to check series context (lines 58-73)
-- **Code Changes**:
+  - Captured `currentController` and `targetSeriesId` at start of `loadAlbumsFromQueries()`
+  - Changed callback to check `currentController.signal.aborted` instead of `this.abortController`
+  - Added series ID validation: `if (seriesStore.getActiveSeries()?.id !== targetSeriesId) return`
+- **Files Modified**: `AlbumsView.js` (lines 928-929, 962-972, 982)
+- **Result**: ❌ FAILED - User reported Ghost Albums still appearing
+- **Root Cause Missed**: This was a variation of ATTEMPT #1 from previous session that was already documented as failed
+
+**ATTEMPT #2: Revert to Original Solution** (19:53 - FAILED)
+- **Hypothesis**: My closure capture broke something that was working
+- **Action**: Reverted closure capture changes, restored original code
+- **Code Change**:
   ```javascript
-  // AlbumsStore.js
-  saveToLocalStorage() {
-    const data = {
-      albums: this.albums.map(a => ({...})),
-      lastLoadedSeriesId: this.lastLoadedSeriesId, // NEW
-      updatedAt: new Date().toISOString()
-    }
-  }
-  
-  loadFromLocalStorage() {
-    this.albums = parsed.albums || []
-    this.lastLoadedSeriesId = parsed.lastLoadedSeriesId || null // NEW
-  }
-  
-  // AlbumsView.js render()
-  const lastLoadedId = albumsStore.getLastLoadedSeriesId()
-  let displayAlbums = albums
-  
-  if (targetSeriesId && lastLoadedId && targetSeriesId !== lastLoadedId) {
-    displayAlbums = [] // Hide stale albums
-  }
+  // Reverted back to:
+  if (this.abortController.signal.aborted) return
+  this.abortController.signal // Pass signal
   ```
-- **Files Modified**:
-  - `public/js/stores/albums.js` (Steps 2098)
-  - `public/js/views/AlbumsView.js` (Step 2103)
-- **Result**: ❌ **INCOMPLETE** - Fixed initial render but ghost albums still appeared via store subscriptions
-- **Root Cause Missed**: Store subscriptions call `updateAlbumsGrid()` which bypasses the `render()` validation
+- **Files Modified**: `AlbumsView.js`
+- **Result**: ❌ FAILED - User confirmed issue persists
+- **Root Cause Missed**: Original code was also broken
 
-**Discovery Phase** (19:30 - 20:10)
-- **AI Tester Report**: Reproduced Ghost Albums in production (Expanded View)
-- **Key Finding**: "render() has the check, but updateAlbumsGrid() lacks it"
-- **User Request**: "Please investigate the debug log and compare with current implementation"
-- **Investigation Result**: Created detailed analysis documento showing:
-  1. Original fix (Issue #19, Nov 30) tracked `_lastLoadedSeriesId` in view instance
-  2. My persistence improvement was good BUT I only added validation to `render()`
-  3. Store subscriptions trigger `updateAlbumsGrid()` → no validation → ghost albums
-- **Evidence**: `docs/technical/ghost_albums_investigation_2025_12_03.md`
-
-**ATTEMPT #2: Add Validation to updateAlbumsGrid** (20:10 - SUCCESS)
-- **Hypothesis**: Store subscriptions bypass `render()` validation, need to guard `updateAlbumsGrid()` too
-- **Fix Applied**: Added series context validation at start of `updateAlbumsGrid()`
-- **Code Change** (`AlbumsView.js` lines 984-995):
+**ATTEMPT #3: Guard in Subscription Callback** (19:55 - FAILED)
+- **Hypothesis**: Store subscription callback renders albums without checking series ownership
+- **Fix Applied**: Added guard to subscription callback in `mount()`:
   ```javascript
-  updateAlbumsGrid(albums) {
-    // FIX: Ghost Albums - Validate series context before rendering
-    const activeSeries = seriesStore.getActiveSeries()
-    const lastLoadedId = albumsStore.getLastLoadedSeriesId()
-    
-    // Early exit if we're trying to render albums from wrong series
-    if (activeSeries && lastLoadedId && activeSeries.id !== lastLoadedId) {
-      console.warn('[AlbumsView] updateAlbumsGrid: Series mismatch, skipping render')
-      return
+  const unsubscribe = albumsStore.subscribe((state) => {
+    if (!this.isLoading) {
+      const activeSeries = seriesStore.getActiveSeries()
+      const lastLoadedId = albumsStore.getLastLoadedSeriesId()
+      
+      if (activeSeries && lastLoadedId && lastLoadedId !== activeSeries.id) {
+        console.warn('[AlbumsView] Ignoring stale albums from series:', lastLoadedId)
+        return
+      }
+      
+      this.updateAlbumsGrid(state.albums)
     }
-    
-    const filtered = this.filterAlbums(albums)
-    // ... proceed with rendering
-  }
+  })
   ```
-- **Result**: ✅ **SUCCESS** - User confirmed "ghost issue resolved in prod"
-- **Why This Works**: 
-  - Validates context on BOTH render paths: initial render AND store updates
-  - Prevents subscriptions from displaying stale data
-  - Preserves localStorage persistence improvement
+- **Files Modified**: `AlbumsView.js` (lines 558-574)
+- **Result**: ❌ FAILED - User reported issue persists
+- **Root Cause Missed**: `lastLoadedSeriesId` gets cleared by `reset()`
 
-#### Final Root Cause
-**Two separate render paths, but only one was guarded:**
-1. **Initial Render**: `render()` method → ✅ Had validation (Attempt #1)
-2. **Store Updates**: `updateAlbumsGrid()` via subscriptions → ❌ No validation until Attempt #2
+**ATTEMPT #4: Timing Fix - Set SeriesId Before Reset** (19:58 - FAILED)
+- **Hypothesis**: `albumsStore.reset()` clears `lastLoadedSeriesId` to null, making guard pass incorrectly
+- **Fix Applied**: 
+  - Moved `albumsStore.setLastLoadedSeriesId(targetSeries.id)` to BEFORE `reset()` call
+  - Removed redundant call after load completes
+  ```javascript
+  // FIX: Set lastLoadedSeriesId BEFORE reset
+  const targetSeries = seriesStore.getActiveSeries()
+  if (targetSeries) {
+    albumsStore.setLastLoadedSeriesId(targetSeries.id)
+  }
+  albumsStore.reset()
+  ```
+- **Files Modified**: `AlbumsView.js` (lines 936-942, 886-887)
+- **Result**: ❌ FAILED - User confirmed issue still persists
+- **Root Cause**: STILL UNKNOWN
 
-**Flow that caused bug:**
-```
-1. Load Series A → render() validates → correct albums shown ✅
-2. Navigate to Series B
-3. Series B starts loading
-4. AlbumsStore updates with new data
-5. Store.notify() triggers subscription
-6. Subscription calls updateAlbumsGrid(albums)
-7. ❌ updateAlbumsGrid() renders WITHOUT checking lastLoadedSeriesId
-8. Result: Mix of Series A and Series B albums visible
-```
+#### Current State Analysis (2025-12-06 20:01)
+**What We Know**:
+1. ✅ `lastLoadedSeriesId` tracking exists in store
+2. ✅ Subscription guard now exists (ATTEMPT #3)
+3. ✅ Timing fix applied (ATTEMPT #4)
+4. ❌ **Ghost Albums STILL appearing**
 
-#### Files Modified
-- `public/js/stores/albums.js` (lines 252, 270) - Persistence
-- `public/js/views/AlbumsView.js` (lines 58-73, 984-995) - Validation on both paths
+**Possible Remaining Causes**:
+1. `reset()` is called which fires `notify()` - subscription sees empty albums array but proceeds
+2. The guard condition logic may be inverted or incorrect
+3. There may be multiple subscription callbacks racing
+4. `render()` method may be the actual source of ghost rendering, not `updateAlbumsGrid()`
+5. View instance may be caching old data somewhere not tracked
 
-#### Deployment
-- **Commit**: `314d4b1` - "fix: prevent ghost albums in updateAlbumsGrid via series context validation"
-- **Frontend Deploy**: Firebase Hosting ✅
-- **Verified**: Production testing by user at 22:44
-
-#### Verification
-- ✅ Tested in production by AI Tester
-- ✅ User confirmed resolution: "ghost issue resolved in prod"
-- ✅ Works in both Grid and Expanded view modes
-- ✅ Works on page reload (localStorage persistence)
-- ✅ Works on series switching
-
-#### Lessons Learned
-1. **Check ALL render paths**: When fixing UI bugs, verify ALL methods that update DOM, not just primary `render()`
-2. **Store subscriptions are independent**: They trigger separate code paths that may bypass main validation logic
-3. **Test reports are invaluable**: AI Tester correctly identified the exact gap before code review
-4. **Partial fixes are dangerous**: Attempt #1 looked complete but only covered one of two render paths
-
-**See Also**: 
-- [Investigation Report](../technical/ghost_albums_investigation_2025_12_03.md)
-- [Initial Analysis](../technical/regression_ghost_albums_analysis.md)
-- [Tester Report](../tester/GHOST_ALBUMS_REPORT.md)
+**Next Investigation Steps**:
+1. Add extensive console logging to track EXACT execution order
+2. Check if `render()` is called with stale data before `mount()`
+3. Review if there are other places where albums are rendered
+4. Consider completely different approach (clear DOM first, render after all loads complete)
 
 ---
+
 
 ## Previous Session (2025-12-02)
 

@@ -5,6 +5,8 @@ import { getIcon } from '../components/Icons.js'
 import { db } from '../app.js'
 import { CacheManager } from '../cache/CacheManager.js'
 import { MigrationUtility } from '../migration/MigrationUtility.js'
+import { Autocomplete } from '../components/Autocomplete.js'
+import { albumLoader } from '../services/AlbumLoader.js'
 
 /**
  * HomeView
@@ -12,9 +14,8 @@ import { MigrationUtility } from '../migration/MigrationUtility.js'
  */
 
 export class HomeView extends BaseView {
-  constructor(db) {
+  constructor() {
     super()
-    this.db = db
     this.migrationUtility = new MigrationUtility(db, new CacheManager())
     this.showMigrationBanner = false
   }
@@ -88,6 +89,10 @@ export class HomeView extends BaseView {
                 Albums 
                 <span class="text-muted text-xs ml-2 font-normal normal-case opacity-60"> (Minimum 2 albums required, one per line. Format: Artist - Album)</span>
               </label>
+              
+              <!-- Autocomplete Container -->
+              <div id="autocompleteWrapper" class="mb-4"></div>
+
               <textarea 
                 id="albumList" 
                 class="form-control mono"
@@ -165,7 +170,7 @@ export class HomeView extends BaseView {
       `
     }
 
-    return series.map(s => `
+    return series.slice(0, 6).map(s => `
       <div class="series-card glass-panel group hover:scale-[1.02] transition-all duration-300" data-series-id="${s.id}">
         <div class="series-card-header flex justify-between items-start mb-4">
           <h3 class="text-lg font-bold truncate pr-2"><span class="text-muted font-normal text-sm uppercase tracking-wide mr-1">Series:</span> ${this.escapeHtml(s.name)}</h3>
@@ -214,13 +219,6 @@ export class HomeView extends BaseView {
     })
     this.subscriptions.push(unsubscribe)
 
-    // Load from Firestore if available
-    if (this.db) {
-      seriesStore.loadFromFirestore(this.db).catch(err => {
-        console.warn('Failed to load series from Firestore:', err)
-      })
-    }
-
     // Setup create series form
     const form = this.$('#seriesForm')
     if (form) {
@@ -261,6 +259,41 @@ export class HomeView extends BaseView {
     const inventoryBtn = this.$('#goToInventoryBtn')
     if (inventoryBtn) {
       this.on(inventoryBtn, 'click', () => router.navigate('/inventory'))
+    }
+
+    // Initialize Autocomplete
+    this.initAutocomplete()
+  }
+
+  async initAutocomplete() {
+    const wrapper = this.$('#autocompleteWrapper')
+    const textarea = this.$('#albumList')
+
+    if (wrapper && textarea) {
+      // Start loading data
+      albumLoader.load().catch(console.error)
+
+      const autocomplete = new Autocomplete({
+        placeholder: 'Search for an album to add...',
+        loader: albumLoader,
+        onSelect: (item) => {
+          const entry = `${item.artist} - ${item.album}`
+          const currentVal = textarea.value
+
+          // Add newline if needed
+          const separator = currentVal.length > 0 && !currentVal.endsWith('\n') ? '\n' : ''
+          textarea.value = currentVal + separator + entry + '\n'
+
+          // Flash effect to show added
+          textarea.classList.add('border-accent-primary')
+          setTimeout(() => textarea.classList.remove('border-accent-primary'), 300)
+
+          // Scroll to bottom
+          textarea.scrollTop = textarea.scrollHeight
+        }
+      })
+
+      wrapper.appendChild(autocomplete.render())
     }
   }
 
@@ -340,13 +373,6 @@ export class HomeView extends BaseView {
 
     const createdSeries = seriesStore.createSeries(series)
     seriesStore.setActiveSeries(createdSeries.id)
-
-    // Save to Firestore (non-blocking)
-    if (this.db) {
-      seriesStore.saveToFirestore(this.db, createdSeries)
-        .then(() => console.log('✅ Series saved to Firestore:', createdSeries.id))
-        .catch(err => console.warn('⚠️ Failed to save series to Firestore:', err))
-    }
 
     // Navigate to albums view with seriesId
     router.navigate(`/albums?seriesId=${createdSeries.id}`)

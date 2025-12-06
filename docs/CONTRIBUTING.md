@@ -63,7 +63,7 @@ npm run dev
 ```
 
 The application will be available at:
-- **Frontend:** http://localhost:5000
+- **Frontend:** http://localhost:3000
 - **Backend:** http://localhost:3001
 
 ---
@@ -458,7 +458,7 @@ firebase deploy
 
 ### 7. Document Release
 
-Update release notes documentation (archived in `docs/archive/RELEASE_archived_20251201.md`).
+Update `RELEASE.md` with release notes.
 
 ---
 

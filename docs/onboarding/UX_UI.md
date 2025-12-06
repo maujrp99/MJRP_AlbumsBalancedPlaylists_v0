@@ -21,7 +21,7 @@ We are building a **premium, immersive music curation experience**.
 
 ---
 
-## 🔭 Current UI Status (v2.0.4)
+## 🔭 Current UI Status (v2.0.3)
 
 ### 1. Core Views
 - **HomeView**: Hero banner with dynamic "Equalizer" SVG. Migration banner (needs polish).

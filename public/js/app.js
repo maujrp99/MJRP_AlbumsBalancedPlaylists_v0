@@ -13,9 +13,7 @@ import { AlbumsView } from './views/AlbumsView.js'
 import { PlaylistsView } from './views/PlaylistsView.js'
 import { InventoryView } from './views/InventoryView.js'
 import { RankingView } from './views/RankingView.js'
-import { RankingView } from './views/RankingView.js'
 import { ConsolidatedRankingView } from './views/ConsolidatedRankingView.js'
-import { SeriesListView } from './views/SeriesListView.js'
 
 // Initialize Firebase
 const firebaseConfig = window.__firebase_config || {
@@ -30,10 +28,10 @@ const firebaseConfig = window.__firebase_config || {
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
-export const db = getFirestore(app)
+const db = getFirestore(app)
 
-// Export app and auth too
-export { app, auth }
+// Export for other modules if needed (though they should import from config)
+export { app, auth, db }
 
 // Auth State Listener
 onAuthStateChanged(auth, (user) => {
@@ -53,14 +51,16 @@ onAuthStateChanged(auth, (user) => {
 })
 
 // Register Routes
-// Register Routes
-router.register('/home', () => new HomeView(db))
-router.register('/albums', () => new AlbumsView(db))
-router.register('/playlists', () => new PlaylistsView(db))
-router.register('/inventory', () => new InventoryView(db))
-router.register('/ranking/:albumId', () => new RankingView(db))
-router.register('/consolidated-ranking', () => new ConsolidatedRankingView(db))
-router.register('/series', () => new SeriesListView(db))
+router.register('/home', () => new HomeView())
+router.register('/albums', () => new AlbumsView())
+router.register('/playlists', () => new PlaylistsView())
+router.register('/saved-playlists', async () => {
+    const { SavedPlaylistsView } = await import('./views/SavedPlaylistsView.js')
+    return new SavedPlaylistsView()
+})
+router.register('/inventory', () => new InventoryView())
+router.register('/ranking/:albumId', () => new RankingView())
+router.register('/consolidated-ranking', () => new ConsolidatedRankingView())
 
 // Default route handling is done by Router class (popstate/load)
 
