@@ -7,7 +7,7 @@ import { BaseRepository } from './BaseRepository.js'
 
 export class AlbumRepository extends BaseRepository {
     /**
-     * @param {firebase.firestore.Firestore} firestore - Firestore instance
+     * @param {Firestore} firestore - Firestore instance (modular)
      * @param {Object} cache - Cache manager
      * @param {string} userId - User ID for scoping
      * @param {string} seriesId - Series ID for scoping
@@ -22,9 +22,7 @@ export class AlbumRepository extends BaseRepository {
             throw new Error('AlbumRepository requires seriesId')
         }
 
-        this.collection = firestore.collection(
-            `users/${this.userId}/series/${this.seriesId}/albums`
-        )
+        this.collectionPath = `users/${this.userId}/series/${this.seriesId}/albums`
         this.schemaVersion = 2 // Incremented for new fields (tracksOriginalOrder, bestEverUrl)
     }
 

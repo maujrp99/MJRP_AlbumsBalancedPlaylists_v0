@@ -7,7 +7,7 @@ import { BaseRepository } from './BaseRepository.js'
 
 export class InventoryRepository extends BaseRepository {
     /**
-     * @param {firebase.firestore.Firestore} firestore - Firestore instance
+     * @param {Firestore} firestore - Firestore instance (modular)
      * @param {Object} cache - Cache manager
      * @param {string} userId - User ID for scoping
      */
@@ -15,7 +15,7 @@ export class InventoryRepository extends BaseRepository {
         super(firestore, cache)
 
         this.userId = userId || 'anonymous-user'
-        this.collection = firestore.collection(`users/${this.userId}/inventory/albums`)
+        this.collectionPath = `users/${this.userId}/inventory/albums`
         this.schemaVersion = 1
     }
 

@@ -4,10 +4,11 @@
  */
 
 import { BaseRepository } from './BaseRepository.js'
+import { collection, getDocs } from 'firebase/firestore'
 
 export class SeriesRepository extends BaseRepository {
     /**
-     * @param {firebase.firestore.Firestore} firestore - Firestore instance
+     * @param {Firestore} firestore - Firestore instance (modular)
      * @param {Object} cache - Cache manager
      * @param {string} userId - User ID for scoping
      */
@@ -15,7 +16,7 @@ export class SeriesRepository extends BaseRepository {
         super(firestore, cache)
 
         this.userId = userId || 'anonymous-user' // Fallback until Sprint 7 auth
-        this.collection = firestore.collection(`users/${this.userId}/series`)
+        this.collectionPath = `users/${this.userId}/series`
         this.schemaVersion = 1
     }
 
@@ -30,15 +31,13 @@ export class SeriesRepository extends BaseRepository {
             return null
         }
 
-        // Load albums subcollection
-        const albumsSnapshot = await this.collection
-            .doc(seriesId)
-            .collection('albums')
-            .get()
+        // Load albums subcollection (modular SDK)
+        const albumsRef = collection(this.db, `${this.collectionPath}/${seriesId}/albums`)
+        const albumsSnapshot = await getDocs(albumsRef)
 
-        series.albums = albumsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
+        series.albums = albumsSnapshot.docs.map(docSnap => ({
+            id: docSnap.id,
+            ...docSnap.data()
         }))
 
         return series

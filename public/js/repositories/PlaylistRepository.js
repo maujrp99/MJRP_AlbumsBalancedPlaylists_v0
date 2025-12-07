@@ -7,7 +7,7 @@ import { BaseRepository } from './BaseRepository.js'
 
 export class PlaylistRepository extends BaseRepository {
     /**
-     * @param {firebase.firestore.Firestore} firestore - Firestore instance
+     * @param {Firestore} firestore - Firestore instance (modular)
      * @param {Object} cache - Cache manager
      * @param {string} userId - User ID for scoping
      * @param {string} seriesId - Series ID for scoping
@@ -22,9 +22,7 @@ export class PlaylistRepository extends BaseRepository {
             throw new Error('PlaylistRepository requires seriesId')
         }
 
-        this.collection = firestore.collection(
-            `users/${this.userId}/series/${this.seriesId}/playlists`
-        )
+        this.collectionPath = `users/${this.userId}/series/${this.seriesId}/playlists`
         this.schemaVersion = 1
     }
 

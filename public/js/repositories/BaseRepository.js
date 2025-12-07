@@ -1,11 +1,25 @@
-import { serverTimestamp } from 'firebase/firestore'
+import {
+    serverTimestamp,
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    query,
+    where,
+    orderBy,
+    limit,
+    writeBatch
+} from 'firebase/firestore'
 
 /**
- * Base repository class for Firestore interactions
+ * Base repository class for Firestore interactions (Modular SDK)
  */
 export class BaseRepository {
     /**
-     * @param {firebase.firestore.Firestore} firestore - Firestore instance
+     * @param {Firestore} firestore - Firestore instance (modular)
      * @param {Object} cache - Cache manager instance
      */
     constructor(firestore, cache) {
@@ -15,8 +29,30 @@ export class BaseRepository {
 
         this.db = firestore
         this.cache = cache
-        this.collection = null // Must be set by subclass
+        this.collectionPath = null // Must be set by subclass as string path
         this.schemaVersion = 1 // Override in subclass if needed
+    }
+
+    /**
+     * Get collection reference (modular)
+     * @returns {CollectionReference}
+     * @protected
+     */
+    getCollection() {
+        if (!this.collectionPath) {
+            throw new Error('Collection path not set in repository')
+        }
+        return collection(this.db, this.collectionPath)
+    }
+
+    /**
+     * Get document reference (modular)
+     * @param {string} id - Document ID
+     * @returns {DocumentReference}
+     * @protected
+     */
+    getDocRef(id) {
+        return doc(this.db, this.collectionPath, id)
     }
 
     /**
@@ -26,10 +62,10 @@ export class BaseRepository {
      * @protected
      */
     getCacheKey(id) {
-        if (!this.collection) {
+        if (!this.collectionPath) {
             throw new Error('Collection path not set in repository')
         }
-        return `${this.collection.path}:${id}`
+        return `${this.collectionPath}:${id}`
     }
 
     // ========== READ OPERATIONS ==========
@@ -48,12 +84,12 @@ export class BaseRepository {
         }
 
         // Fetch from Firestore
-        const doc = await this.collection.doc(id).get()
-        if (!doc.exists) {
+        const docSnap = await getDoc(this.getDocRef(id))
+        if (!docSnap.exists()) {
             return null
         }
 
-        const data = { id: doc.id, ...doc.data() }
+        const data = { id: docSnap.id, ...docSnap.data() }
 
         // Cache result
         if (this.cache) {
@@ -69,28 +105,32 @@ export class BaseRepository {
      * @returns {Promise<Array>} Array of documents
      */
     async findAll(filters = {}) {
-        let query = this.collection
+        const constraints = []
 
-        // Apply filters
+        // Apply where filters
         if (filters.where) {
             filters.where.forEach(([field, op, value]) => {
-                query = query.where(field, op, value)
+                constraints.push(where(field, op, value))
             })
         }
 
+        // Apply orderBy
         if (filters.orderBy) {
             const [field, direction = 'asc'] = filters.orderBy
-            query = query.orderBy(field, direction)
+            constraints.push(orderBy(field, direction))
         }
 
+        // Apply limit
         if (filters.limit) {
-            query = query.limit(filters.limit)
+            constraints.push(limit(filters.limit))
         }
 
-        const snapshot = await query.get()
-        return snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
+        const q = query(this.getCollection(), ...constraints)
+        const snapshot = await getDocs(q)
+
+        return snapshot.docs.map(docSnap => ({
+            id: docSnap.id,
+            ...docSnap.data()
         }))
     }
 
@@ -120,7 +160,7 @@ export class BaseRepository {
             _schemaVersion: this.schemaVersion
         }
 
-        const docRef = await this.collection.add(docData)
+        const docRef = await addDoc(this.getCollection(), docData)
 
         // Invalidate 'all' cache
         if (this.cache) {
@@ -144,7 +184,7 @@ export class BaseRepository {
             updatedAt: this.getServerTimestamp()
         }
 
-        await this.collection.doc(id).update(updateData)
+        await updateDoc(this.getDocRef(id), updateData)
 
         // Invalidate cache
         if (this.cache) {
@@ -163,7 +203,7 @@ export class BaseRepository {
      * @returns {Promise<void>}
      */
     async delete(id) {
-        await this.collection.doc(id).delete()
+        await deleteDoc(this.getDocRef(id))
 
         // Invalidate cache
         if (this.cache) {
@@ -178,10 +218,10 @@ export class BaseRepository {
      * @returns {Promise<void>}
      */
     async deleteMany(ids) {
-        const batch = this.db.batch()
+        const batch = writeBatch(this.db)
 
         ids.forEach(id => {
-            batch.delete(this.collection.doc(id))
+            batch.delete(this.getDocRef(id))
         })
 
         await batch.commit()
@@ -199,7 +239,7 @@ export class BaseRepository {
 
     /**
      * Get Firestore server timestamp
-     * @returns {firebase.firestore.FieldValue}
+     * @returns {FieldValue}
      * @protected
      */
     getServerTimestamp() {
@@ -212,8 +252,8 @@ export class BaseRepository {
      * @returns {Promise<boolean>}
      */
     async exists(id) {
-        const doc = await this.collection.doc(id).get()
-        return doc.exists
+        const docSnap = await getDoc(this.getDocRef(id))
+        return docSnap.exists()
     }
 
     /**
