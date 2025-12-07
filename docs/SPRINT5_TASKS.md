@@ -37,11 +37,20 @@
 
 ---
 
-## Phase 3: Ghost Albums Fix (P0) X NOT DONE
+## Phase 3: Ghost Albums Fix (P0) ✅ DONE
 
 - [x] **3.1** Modify `reset(preserveSeriesContext)` in albums.js
 - [x] **3.2** Update AlbumsView.js to call `reset(true)`
 - [x] **3.3** Build verified ✅
+
+---
+
+## Phase 3b: Inventory Modal Fix (High) ✅ DONE
+
+- [x] **3b.1** Fix `modals.css` relative path for sub-routes
+- [x] **3b.2** Add missing `modals.css` link to `index-v2.html` (SPA entry)
+- [x] **3b.3** Fortify `modals.css` with bulletproof centering rules
+- [x] **3b.4** Fix `favicon.ico` 404
 
 ---
 

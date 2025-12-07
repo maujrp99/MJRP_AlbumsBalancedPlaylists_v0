@@ -6,18 +6,24 @@
 import { inventoryStore } from '../stores/inventory.js'
 
 export function showAddToInventoryModal(album, onSuccess) {
-    const modal = document.createElement('div')
-    modal.className = 'modal-overlay'
-    modal.innerHTML = `
+  const modal = document.createElement('div')
+  modal.className = 'modal-overlay'
+
+  modal.innerHTML = `
     <div class="modal-container glass-panel max-w-md">
       <!-- Header -->
       <div class="modal-header p-6 border-b border-surface-light">
         <h2 class="text-2xl font-bold flex items-center gap-3">
           <svg class="w-6 h-6 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
           Add to Inventory
         </h2>
+        <button class="absolute top-4 right-4 text-gray-400 hover:text-white" data-action="cancel">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
       </div>
 
       <!-- Content -->
@@ -52,131 +58,127 @@ export function showAddToInventoryModal(album, onSuccess) {
         <!-- Currency -->
         <div>
           <label class="block mb-2 text-sm font-medium text-gray-300">Currency:</label>
-          <div class="flex gap-3">
+          <div class="flex gap-4">
             <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="currency" value="USD" checked class="form-radio text-accent-primary" />
-              <span>USD ($)</span>
+              <input type="radio" name="currency" value="BRL" checked class="text-accent-primary focus:ring-accent-primary">
+              BRL
             </label>
             <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="currency" value="BRL" class="form-radio text-accent-primary" />
-              <span>BRL (R$)</span>
+              <input type="radio" name="currency" value="USD" class="text-accent-primary focus:ring-accent-primary">
+              USD
             </label>
           </div>
         </div>
 
-        <!-- Purchase Price (Optional) -->
+        <!-- Price -->
         <div>
-          <label class="block mb-2 text-sm font-medium text-gray-300">Purchase Price (optional):</label>
+          <label class="block mb-2 text-sm font-medium text-gray-300">Purchase Price:</label>
           <div class="relative">
-            <span id="currencyPrefix" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-            <input 
-              type="number" 
-              id="priceInput"
-              class="form-control w-full pl-8"
-              placeholder="0.00"
-              step="0.01"
-              min="0"
-            />
+            <span id="currencyPrefix" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">R$</span>
+            <input type="number" id="priceInput" step="0.01" min="0" placeholder="0.00" class="form-control w-full pl-8">
           </div>
         </div>
 
-        <!-- Notes (Optional) -->
+        <!-- Notes -->
         <div>
-          <label class="block mb-2 text-sm font-medium text-gray-300">Notes (optional):</label>
-          <textarea 
-            id="notesInput"
-            class="form-control w-full resize-none"
-            placeholder="Limited edition, signed copy, etc..."
-            rows="3"
-          ></textarea>
+          <label class="block mb-2 text-sm font-medium text-gray-300">Condition / Notes:</label>
+          <textarea id="notesInput" rows="3" class="form-control w-full resize-none" placeholder="e.g. Mint condition, Japanese import..."></textarea>
         </div>
-      </div>
 
-      <!-- Actions -->
-      <div class="modal-footer p-6 border-t border-surface-light flex gap-3 justify-end">
-        <button class="btn btn-secondary" data-action="cancel">Cancel</button>
-        <button class="btn btn-primary" data-action="add">Add to Inventory</button>
+        <!-- Actions -->
+        <div class="modal-footer p-6 border-t border-surface-light flex gap-3 justify-end">
+          <button class="btn btn-secondary" data-action="cancel">Cancel</button>
+          <button class="btn btn-primary" data-action="add">Add to Inventory</button>
+        </div>
       </div>
     </div>
   `
 
-    const formatSelect = modal.querySelector('#formatSelect')
-    const currencyRadios = modal.querySelectorAll('input[name="currency"]')
-    const currencyPrefix = modal.querySelector('#currencyPrefix')
-    const priceInput = modal.querySelector('#priceInput')
-    const notesInput = modal.querySelector('#notesInput')
-    const cancelBtn = modal.querySelector('[data-action="cancel"]')
-    const addBtn = modal.querySelector('[data-action="add"]')
+  // Use scoped queries to ensure we get elements from THIS modal instance
+  const formatSelect = modal.querySelector('#formatSelect')
+  const currencyRadios = modal.querySelectorAll('input[name="currency"]')
+  const currencyPrefix = modal.querySelector('#currencyPrefix')
+  const priceInput = modal.querySelector('#priceInput')
+  const notesInput = modal.querySelector('#notesInput')
+  const cancelBtn = modal.querySelector('[data-action="cancel"]')
+  const addBtn = modal.querySelector('[data-action="add"]')
 
-    // Update currency prefix
-    currencyRadios.forEach(radio => {
-        radio.addEventListener('change', () => {
-            currencyPrefix.textContent = radio.value === 'USD' ? '$' : 'R$'
-        })
+  // Update currency prefix
+  currencyRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      currencyPrefix.textContent = radio.value === 'USD' ? '$' : 'R$'
     })
+  })
 
-    const close = () => modal.remove()
+  const close = () => modal.remove()
 
-    cancelBtn.addEventListener('click', close)
+  cancelBtn.addEventListener('click', close)
 
-    addBtn.addEventListener('click', async () => {
-        addBtn.disabled = true
-        addBtn.textContent = 'Adding...'
+  addBtn.addEventListener('click', async () => {
+    console.log('[Modal] Add button clicked')
+    addBtn.disabled = true
+    addBtn.textContent = 'Adding...'
 
-        try {
-            const format = formatSelect.value
-            const currency = document.querySelector('input[name="currency"]:checked').value
-            const price = priceInput.value ? parseFloat(priceInput.value) : null
-            const notes = notesInput.value.trim()
+    try {
+      const format = formatSelect.value
+      // Scoped query for checked radio
+      const checkedCurrency = modal.querySelector('input[name="currency"]:checked')
+      const currency = checkedCurrency ? checkedCurrency.value : 'BRL'
 
-            const options = {
-                currency,
-                purchasePrice: price,
-                notes: notes || ''
-            }
+      const price = priceInput.value ? parseFloat(priceInput.value) : null
+      const notes = notesInput.value.trim()
 
-            await inventoryStore.addAlbum(album, format, options)
+      console.log('[Modal] Payload:', { format, currency, price, notes })
 
-            if (onSuccess) {
-                onSuccess()
-            }
+      const options = {
+        currency,
+        purchasePrice: price,
+        notes: notes || ''
+      }
 
-            close()
-        } catch (error) {
-            console.error('Failed to add to inventory:', error)
-            addBtn.disabled = false
-            addBtn.textContent = 'Add to Inventory'
+      await inventoryStore.addAlbum(album, format, options)
 
-            if (error.message.includes('already in inventory')) {
-                alert('This album is already in your inventory!')
-            } else {
-                alert(`Failed to add to inventory: ${error.message}`)
-            }
-        }
-    })
+      console.log('[Modal] Success')
+      if (onSuccess) onSuccess()
+      close()
+    } catch (error) {
+      console.error('[Modal] Error:', error)
+      addBtn.disabled = false
+      addBtn.textContent = 'Add to Inventory'
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) close()
-    })
+      if (error && error.message && error.message.includes('already in inventory')) {
+        alert('This album is already in your inventory!')
+      } else {
+        alert(`Failed: ${error ? error.message : 'Unknown'}`)
+      }
+    }
+  })
 
-    document.addEventListener('keydown', function handleEscape(e) {
-        if (e.key === 'Escape') {
-            close()
-            document.removeEventListener('keydown', handleEscape)
-        }
-    })
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close()
+  })
 
-    document.body.appendChild(modal)
-    return modal
+  document.addEventListener('keydown', function handleEscape(e) {
+    if (e.key === 'Escape') {
+      close()
+      document.removeEventListener('keydown', handleEscape)
+    }
+  })
+
+  document.body.appendChild(modal)
+  return modal
 }
 
 /**
- * Edit Inventory Album Modal
+ * Show a modal to edit an existing inventory item
+ * @param {Object} item - The inventory item to edit
+ * @param {Function} onSave - Callback when item is saved
  */
-export function showEditInventoryModal(album, onSave) {
-    const modal = document.createElement('div')
-    modal.className = 'modal-overlay'
-    modal.innerHTML = `
+export function showEditInventoryModal(item, onSave) {
+  const modal = document.createElement('div')
+  modal.className = 'modal-overlay'
+
+  modal.innerHTML = `
     <div class="modal-container glass-panel max-w-md">
       <div class="modal-header p-6 border-b border-surface-light">
         <h2 class="text-2xl font-bold flex items-center gap-3">
@@ -188,23 +190,13 @@ export function showEditInventoryModal(album, onSave) {
       </div>
 
       <div class="modal-content p-6 space-y-4">
-        <div class="bg-surface-dark p-3 rounded-lg">
-          <p class="font-semibold">${escapeHtml(album.title)}</p>
-          <p class="text-sm text-gray-400">${escapeHtml(album.artist)}</p>
+        <div class="bg-surface-dark p-3 rounded-lg border border-surface-light">
+          <p class="font-semibold">${escapeHtml(item.album.title)}</p>
+          <p class="text-sm text-gray-400">${escapeHtml(item.album.artist)}</p>
         </div>
 
-        <!-- Format -->
         <div>
           <label class="block mb-2 text-sm font-medium text-gray-300">Format:</label>
-          <select id="formatSelect" class="form-control w-full">
-            <option value="cd" ${album.format === 'cd' ? 'selected' : ''}>CD</option>
-            <option value="vinyl" ${album.format === 'vinyl' ? 'selected' : ''}>Vinyl</option>
-            <option value="dvd" ${album.format === 'dvd' ? 'selected' : ''}>DVD</option>
-            <option value="bluray" ${album.format === 'bluray' ? 'selected' : ''}>Blu-ray</option>
-            <option value="digital" ${album.format === 'digital' ? 'selected' : ''}>Digital</option>
-          </select>
-        </div>
-
         <!-- Currency -->
         <div>
           <label class="block mb-2 text-sm font-medium text-gray-300">Currency:</label>
@@ -251,59 +243,59 @@ export function showEditInventoryModal(album, onSave) {
     </div>
   `
 
-    const formatSelect = modal.querySelector('#formatSelect')
-    const priceInput = modal.querySelector('#priceInput')
-    const notesInput = modal.querySelector('#notesInput')
-    const cancelBtn = modal.querySelector('[data-action="cancel"]')
-    const saveBtn = modal.querySelector('[data-action="save"]')
+  const formatSelect = modal.querySelector('#formatSelect')
+  const priceInput = modal.querySelector('#priceInput')
+  const notesInput = modal.querySelector('#notesInput')
+  const cancelBtn = modal.querySelector('[data-action="cancel"]')
+  const saveBtn = modal.querySelector('[data-action="save"]')
 
-    const close = () => modal.remove()
+  const close = () => modal.remove()
 
-    cancelBtn.addEventListener('click', close)
+  cancelBtn.addEventListener('click', close)
 
-    saveBtn.addEventListener('click', async () => {
-        saveBtn.disabled = true
-        saveBtn.textContent = 'Saving...'
+  saveBtn.addEventListener('click', async () => {
+    saveBtn.disabled = true
+    saveBtn.textContent = 'Saving...'
 
-        try {
-            const updates = {
-                format: formatSelect.value,
-                currency: document.querySelector('input[name="currency"]:checked').value,
-                purchasePrice: priceInput.value ? parseFloat(priceInput.value) : null,
-                notes: notesInput.value.trim()
-            }
+    try {
+      const updates = {
+        format: formatSelect.value,
+        currency: document.querySelector('input[name="currency"]:checked').value,
+        purchasePrice: priceInput.value ? parseFloat(priceInput.value) : null,
+        notes: notesInput.value.trim()
+      }
 
-            await onSave(album.id, updates)
-            close()
-        } catch (error) {
-            saveBtn.disabled = false
-            saveBtn.textContent = 'Save Changes'
-            alert(`Failed to save: ${error.message}`)
-        }
-    })
+      await onSave(album.id, updates)
+      close()
+    } catch (error) {
+      saveBtn.disabled = false
+      saveBtn.textContent = 'Save Changes'
+      alert(`Failed to save: ${error.message}`)
+    }
+  })
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) close()
-    })
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close()
+  })
 
-    document.addEventListener('keydown', function handleEscape(e) {
-        if (e.key === 'Escape') {
-            close()
-            document.removeEventListener('keydown', handleEscape)
-        }
-    })
+  document.addEventListener('keydown', function handleEscape(e) {
+    if (e.key === 'Escape') {
+      close()
+      document.removeEventListener('keydown', handleEscape)
+    }
+  })
 
-    document.body.appendChild(modal)
-    return modal
+  document.body.appendChild(modal)
+  return modal
 }
 
 /**
  * Create Series from Inventory Modal
  */
 export function showCreateSeriesFromInventoryModal(selectedAlbumIds, onConfirm) {
-    const modal = document.createElement('div')
-    modal.className = 'modal-overlay'
-    modal.innerHTML = `
+  const modal = document.createElement('div')
+  modal.className = 'modal-overlay'
+  modal.innerHTML = `
     <div class="modal-container glass-panel max-w-md">
       <div class="modal-header p-6 border-b border-surface-light">
         <h2 class="text-2xl font-bold flex items-center gap-3">
@@ -347,64 +339,64 @@ export function showCreateSeriesFromInventoryModal(selectedAlbumIds, onConfirm) 
     </div>
   `
 
-    const input = modal.querySelector('#seriesNameInput')
-    const cancelBtn = modal.querySelector('[data-action="cancel"]')
-    const createBtn = modal.querySelector('[data-action="create"]')
+  const input = modal.querySelector('#seriesNameInput')
+  const cancelBtn = modal.querySelector('[data-action="cancel"]')
+  const createBtn = modal.querySelector('[data-action="create"]')
 
-    const validate = () => {
-        createBtn.disabled = input.value.trim().length < 3
+  const validate = () => {
+    createBtn.disabled = input.value.trim().length < 3
+  }
+
+  input.addEventListener('input', validate)
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !createBtn.disabled) {
+      createBtn.click()
     }
+  })
 
-    input.addEventListener('input', validate)
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !createBtn.disabled) {
-            createBtn.click()
-        }
-    })
+  const close = () => modal.remove()
 
-    const close = () => modal.remove()
+  cancelBtn.addEventListener('click', close)
 
-    cancelBtn.addEventListener('click', close)
+  createBtn.addEventListener('click', async () => {
+    const seriesName = input.value.trim()
+    if (seriesName.length < 3) return
 
-    createBtn.addEventListener('click', async () => {
-        const seriesName = input.value.trim()
-        if (seriesName.length < 3) return
+    createBtn.disabled = true
+    createBtn.textContent = 'Creating...'
 
-        createBtn.disabled = true
-        createBtn.textContent = 'Creating...'
+    try {
+      await onConfirm(selectedAlbumIds, seriesName)
+      close()
+    } catch (error) {
+      createBtn.disabled = false
+      createBtn.textContent = 'Create Series'
+      alert(`Failed to create series: ${error.message}`)
+    }
+  })
 
-        try {
-            await onConfirm(selectedAlbumIds, seriesName)
-            close()
-        } catch (error) {
-            createBtn.disabled = false
-            createBtn.textContent = 'Create Series'
-            alert(`Failed to create series: ${error.message}`)
-        }
-    })
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close()
+  })
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) close()
-    })
+  document.addEventListener('keydown', function handleEscape(e) {
+    if (e.key === 'Escape') {
+      close()
+      document.removeEventListener('keydown', handleEscape)
+    }
+  })
 
-    document.addEventListener('keydown', function handleEscape(e) {
-        if (e.key === 'Escape') {
-            close()
-            document.removeEventListener('keydown', handleEscape)
-        }
-    })
+  document.body.appendChild(modal)
 
-    document.body.appendChild(modal)
+  setTimeout(() => {
+    input.focus()
+  }, 100)
 
-    setTimeout(() => {
-        input.focus()
-    }, 100)
-
-    return modal
+  return modal
 }
 
 function escapeHtml(str) {
-    const div = document.createElement('div')
-    div.textContent = str
-    return div.innerHTML
+  const div = document.createElement('div')
+  div.textContent = str
+  return div.innerHTML
 }

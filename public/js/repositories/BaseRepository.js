@@ -12,7 +12,7 @@ import {
     orderBy,
     limit,
     writeBatch
-} from 'firebase/firestore'
+} from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
 
 /**
  * Base repository class for Firestore interactions (Modular SDK)

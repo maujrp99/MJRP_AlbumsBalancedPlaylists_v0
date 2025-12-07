@@ -15,7 +15,10 @@ export class InventoryRepository extends BaseRepository {
         super(firestore, cache)
 
         this.userId = userId || 'anonymous-user'
-        this.collectionPath = `users/${this.userId}/inventory/albums`
+        // Path must match Firebase rules: artifacts/{appId}/users/{userId}/inventory
+        // appId is "mjrp-albums" (from firebaseConfig.projectId)
+        const appId = 'mjrp-albums'
+        this.collectionPath = `artifacts/${appId}/users/${this.userId}/inventory`
         this.schemaVersion = 1
     }
 
@@ -58,7 +61,8 @@ export class InventoryRepository extends BaseRepository {
             purchaseDate: options.purchaseDate || null,
             condition: options.condition || null,
             notes: options.notes || '',
-            albumData: album, // Full album data for creating series
+            notes: options.notes || '',
+            albumData: { ...album }, // Convert class instance to plain object
             addedToInventory: this.getServerTimestamp()
         }
 

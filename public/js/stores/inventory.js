@@ -4,7 +4,7 @@
  */
 
 import { InventoryRepository } from '../repositories/InventoryRepository.js'
-import { db as firestore } from '../app.js'
+import { db as firestore, auth } from '../app.js'
 import { cacheManager } from '../cache/CacheManager.js'
 
 export class InventoryStore {
@@ -14,13 +14,29 @@ export class InventoryStore {
         this.error = null
         this.listeners = []
         this.repository = null
-        this.userId = 'anonymous-user' // Will be updated when auth is implemented
+        this.userId = null // Will be set from Firebase Auth
     }
 
     /**
-     * Initialize repository
+     * Initialize repository with current user
      */
     init() {
+        // Get userId from Firebase Auth
+        if (!this.userId && auth?.currentUser) {
+            this.userId = auth.currentUser.uid
+        }
+
+        // Fallback to anonymous if no auth yet
+        if (!this.userId) {
+            this.userId = 'anonymous-user'
+            console.warn('[InventoryStore] No auth user, using anonymous fallback')
+        }
+
+        // Check if firestore is available
+        if (!firestore) {
+            throw new Error('Firestore not initialized. Make sure app.js has loaded.')
+        }
+
         if (!this.repository) {
             this.repository = new InventoryRepository(firestore, cacheManager, this.userId)
         }

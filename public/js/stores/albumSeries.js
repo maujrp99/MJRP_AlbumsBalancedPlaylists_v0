@@ -1,4 +1,4 @@
-import { serverTimestamp, collection, doc, addDoc, updateDoc, getDocs, query, orderBy, limit } from 'firebase/firestore'
+import { serverTimestamp, collection, doc, addDoc, updateDoc, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
 
 /**
  * AlbumSeriesStore

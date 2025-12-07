@@ -16,6 +16,56 @@
 
 ## Current Debugging Session
 
+### Issue #25: Inventory Modal Misalignment & Missing Styles - RESOLVED
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-07 01:35
+**Type**: Configuration / Environment Issue
+**Component**: `index-v2.html`, `vite.config.js`, `modals.css`
+
+#### Problem
+The "Add to Inventory" modal was not displaying correctly. 
+- Initially reported as appearing "below the footer" (unstyled).
+- Later appeared misaligned, clipped, or stuck at the bottom-left of the screen despite seemingly correct styles.
+- "Add" button functionality was also initially reported as broken (likely due to modal state).
+
+#### Root Cause
+**SPA Entry Point Mismatch**: 
+- The project has multiple HTML files (`index.html`, `index-v2.html`, `hybrid-curator.html`).
+- The development environment (Vite) is configured in `vite.config.js` to serve `index-v2.html` for all SPA routes (`/home`, `/albums`, etc.).
+- `index-v2.html` **was missing the stylesheet link** for `modals.css`.
+- `hybrid-curator.html` had the link, but editing it had no effect on the running app.
+- The modal appeared "styled" in later screenshots because it inherited atomic classes from Tailwind (e.g., `bg-black`, `rounded`), but missed the crucial **layout rules** (`position: fixed`, `z-index`, `centering`) which were defined only in `modals.css`.
+
+#### Failed Attempts
+1. **Inline JS Styles**: Attempted to inject `z-index` and `position` directly via `InventoryModals.js`. Failed because it fought with CSS reset/defaults and introduced maintenance complexity.
+2. **Reverting Code**: Reverted `InventoryModals.js` simply to restore "old behavior", assuming a code regression. This brought back the unstyled `<div>` at the bottom of the body.
+3. **Fixing Wrong HTML**: Changed `./css/modals.css` to `/css/modals.css` in `hybrid-curator.html`. Failed to affect the app because the user was viewing `index-v2.html`.
+4. **Tailwind Class Checks**: Suspected Tailwind conflicts, but the real issue was simply that the custom CSS file wasn't loaded at all.
+
+#### Final Solution
+1. **Identified Entry Point**: Confirmed via `vite.config.js` that `index-v2.html` is the authoritative entry point for the SPA.
+2. **Linked CSS**: Added `<link rel="stylesheet" href="/css/modals.css">` to `public/index-v2.html`.
+3. **Fortified CSS**: Updated `modals.css` with "bulletproof" centering rules to prevent any future layout ambiguity:
+   ```css
+   .modal-overlay {
+     position: fixed !important;
+     inset: 0 !important;
+     width: 100vw !important;
+     height: 100vh !important;
+     z-index: 2147483647 !important;
+     display: flex !important;
+     justify-content: center !important;
+     align-items: center !important;
+   }
+   ```
+
+#### Files Modified
+- `public/index-v2.html`: Added CSS link.
+- `public/css/modals.css`: Enhanced layout rules.
+- `public/hybrid-curator.html`: Fixed relative path (harmless side benefit).
+
+---
+
 ### Issue #24: Missing SVG Icons - RESOLVED
 **Status**: ✅ **RESOLVED**
 **Date**: 2025-12-06 20:50
@@ -94,10 +144,8 @@ if (mobileMenu) {
 
 ---
 
-🔴 **ACTIVE SESSION** (as of 2025-12-06 20:01)
-
-### Issue #22: Ghost Albums Regression - REOPENED
-**Status**: 🔴 **IN PROGRESS - ALL ATTEMPTS FAILED**
+### Issue #22: Ghost Albums Regression - RESOLVED
+**Status**: ✅ **RESOLVED**
 **Date Started**: 2025-12-06 19:42
 **Type**: Regression
 **Component**: `AlbumsView.js` / `AlbumsStore.js`

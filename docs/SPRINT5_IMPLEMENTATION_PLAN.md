@@ -46,9 +46,15 @@
 
 ---
 
-## Phase 3: Ghost Albums Fix (P0) - PENDING
+## Phase 3: Ghost Albums Fix (P0) - ✅ DONE
 
-Modify `reset(preserveSeriesContext = false)` in albums.js.
+Implemented 3-Layer Defense: Render Guard, Mount Guard, and Timing Fix.
+
+---
+
+## Phase 3b: Inventory Modal Fix (High) - ✅ DONE
+
+Fixed SPA entry point CSS link issue and CSS positioning rules.
 
 ---
 

@@ -6,7 +6,7 @@
  */
 
 import { Album } from '../models/Album.js'
-import { collection, doc, addDoc, updateDoc, getDocs } from 'firebase/firestore'
+import { collection, doc, addDoc, updateDoc, getDocs } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
 
 export class AlbumsStore {
     constructor() {
