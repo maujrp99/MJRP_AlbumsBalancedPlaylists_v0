@@ -12,7 +12,7 @@ export class AlbumsStore {
         this.currentAlbum = null
         this.loading = false
         this.error = null
-        this.lastLoadedSeriesId = null // FIX: Persist series context
+        this.lastLoadedAlbumSeriesId = null // FIX: Persist series context
         this.listeners = new Set()
     }
 
@@ -45,8 +45,8 @@ export class AlbumsStore {
      * Set ID of the last loaded series
      * @param {string} seriesId - Series ID
      */
-    setLastLoadedSeriesId(seriesId) {
-        this.lastLoadedSeriesId = seriesId
+    setLastLoadedAlbumSeriesId(seriesId) {
+        this.lastLoadedAlbumSeriesId = seriesId
         // No notify needed for metadata
     }
 
@@ -54,8 +54,8 @@ export class AlbumsStore {
      * Get ID of the last loaded series
      * @returns {string|null} Series ID
      */
-    getLastLoadedSeriesId() {
-        return this.lastLoadedSeriesId
+    getLastLoadedAlbumSeriesId() {
+        return this.lastLoadedAlbumSeriesId
     }
 
     /**
@@ -218,15 +218,15 @@ export class AlbumsStore {
 
     /**
      * Reset store to initial state
-     * @param {boolean} preserveSeriesContext - If true, keeps lastLoadedSeriesId (for series switch)
+     * @param {boolean} preserveAlbumSeriesContext - If true, keeps lastLoadedAlbumSeriesId (for series switch)
      */
-    reset(preserveSeriesContext = false) {
-        const seriesId = preserveSeriesContext ? this.lastLoadedSeriesId : null
+    reset(preserveAlbumSeriesContext = false) {
+        const seriesId = preserveAlbumSeriesContext ? this.lastLoadedAlbumSeriesId : null
         this.albums = []
         this.currentAlbum = null
         this.loading = false
         this.error = null
-        this.lastLoadedSeriesId = seriesId
+        this.lastLoadedAlbumSeriesId = seriesId
         this.notify()
     }
 }

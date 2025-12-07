@@ -561,7 +561,7 @@ export class AlbumsView extends BaseView {
         // FIX: Ghost Albums Prevention (GHOST_ALBUMS_REPORT.md)
         // Only update grid if albums belong to the currently active series
         const activeSeries = albumSeriesStore.getActiveSeries()
-        const lastLoadedId = albumsStore.getLastLoadedSeriesId()
+        const lastLoadedId = albumsStore.getLastLoadedAlbumSeriesId()
 
         // Guard: Don't render stale albums from a different series
         if (activeSeries && lastLoadedId && lastLoadedId !== activeSeries.id) {
@@ -873,7 +873,7 @@ export class AlbumsView extends BaseView {
 
       // Check if we need to reload
       // FIX: Use persistent store state instead of view instance state
-      const lastLoadedId = albumsStore.getLastLoadedSeriesId()
+      const lastLoadedId = albumsStore.getLastLoadedAlbumSeriesId()
 
       const needsReload = currentCount === 0 ||
         currentCount !== expectedCount ||
@@ -939,7 +939,7 @@ export class AlbumsView extends BaseView {
     // FIX: Set lastLoadedSeriesId BEFORE reset so subscription guard works during load
     const targetSeries = albumSeriesStore.getActiveSeries()
     if (targetSeries) {
-      albumsStore.setLastLoadedSeriesId(targetSeries.id)
+      albumsStore.setLastLoadedAlbumSeriesId(targetSeries.id)
     }
 
     // NOW reset store but PRESERVE seriesId (no pending requests can add albums after this)

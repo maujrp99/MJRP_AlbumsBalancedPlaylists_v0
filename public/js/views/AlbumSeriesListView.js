@@ -12,7 +12,7 @@ export class AlbumSeriesListView extends BaseView {
   constructor(db) {
     super()
     this.db = db
-    this.editingSeriesId = null
+    this.editingAlbumSeriesId = null
   }
 
   async render(params) {
@@ -181,12 +181,12 @@ export class AlbumSeriesListView extends BaseView {
       this.on(editForm, 'submit', async (e) => {
         e.preventDefault()
         const name = this.$('#editNameInput').value
-        if (this.editingSeriesId && name) {
+        if (this.editingAlbumSeriesId && name) {
           try {
-            await albumSeriesStore.updateSeries(this.editingSeriesId, { name })
+            await albumSeriesStore.updateSeries(this.editingAlbumSeriesId, { name })
             if (this.db) {
               // Ensure Firestore update happens
-              const series = albumSeriesStore.getSeries().find(s => s.id === this.editingSeriesId)
+              const series = albumSeriesStore.getSeries().find(s => s.id === this.editingAlbumSeriesId)
               if (series) await albumSeriesStore.saveToFirestore(this.db, series)
             }
             this.closeModal(editModal)
@@ -206,9 +206,9 @@ export class AlbumSeriesListView extends BaseView {
 
     if (confirmDelete) {
       this.on(confirmDelete, 'click', async () => {
-        if (this.deletingSeriesId) {
+        if (this.deletingAlbumSeriesId) {
           try {
-            await albumSeriesStore.deleteSeries(this.deletingSeriesId, this.db)
+            await albumSeriesStore.deleteSeries(this.deletingAlbumSeriesId, this.db)
             this.closeModal(deleteModal)
           } catch (err) {
             alert('Failed to delete series: ' + err.message)
@@ -224,7 +224,7 @@ export class AlbumSeriesListView extends BaseView {
     const series = albumSeriesStore.getSeries().find(s => s.id === id)
     if (!series) return
 
-    this.editingSeriesId = id
+    this.editingAlbumSeriesId = id
     const input = this.$('#editNameInput')
     if (input) input.value = series.name
 
@@ -236,7 +236,7 @@ export class AlbumSeriesListView extends BaseView {
     const series = albumSeriesStore.getSeries().find(s => s.id === id)
     if (!series) return
 
-    this.deletingSeriesId = id
+    this.deletingAlbumSeriesId = id
     const nameSpan = this.$('#deleteSeriesName')
     if (nameSpan) nameSpan.textContent = series.name
 
@@ -246,8 +246,8 @@ export class AlbumSeriesListView extends BaseView {
 
   closeModal(modal) {
     if (modal) modal.classList.add('hidden')
-    this.editingSeriesId = null
-    this.deletingSeriesId = null
+    this.editingAlbumSeriesId = null
+    this.deletingAlbumSeriesId = null
   }
 
   escapeHtml(text) {

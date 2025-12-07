@@ -225,9 +225,10 @@ See `docs/tester/SPRINT5_UAT_20251206.md` for details:
 | What the project does | README.md | docs/ |
 | System architecture | ARCHITECTURE.md | docs/ |
 | Data models | album_data_schema.md | docs/technical/ |
-| Current status | CHANGELOG.md (line 5) | docs/ |
-| Known bugs | issue_audit_report.md | reports/ |
-| Sprint history | sprint_history_analysis.md | reports/ |
+| Current status | CHANGELOG.md | docs/ |
+| **Current blockers** | SPRINT5_UAT_20251206.md | docs/tester/ |
+| Known bugs | DEBUG_LOG.md | docs/debug/ |
+| Sprint history | ROADMAP.md | docs/product-management/ |
 | How to run locally | LOCAL_RUN.md | docs/devops/ |
 | Security & secrets | SECURITY.md | docs/devops/ |
 
@@ -235,8 +236,9 @@ See `docs/tester/SPRINT5_UAT_20251206.md` for details:
 
 | Task | Primary Files | Secondary Files |
 |------|---------------|-----------------|
-| Fix Issue #15 | AlbumsView.js | APIClient.js, AbortController usage |
-| Fix Issue #16 | AlbumsView.js | localStorage logic |
+| Fix Firebase SDK | series.js, albums.js | BaseRepository.js |
+| Fix Series Buttons | SeriesListView.js | Event delegation |
+| Fix Ghost Albums (#22) | AlbumsView.js, albums.js | DEBUG_LOG.md |
 | Add new UI component | BaseView.js (extend) | app.js (routing) |
 | Add new repository | BaseRepository.js (extend) | - |
 | Debug data flow | client.js → Repository → Cache | - |
@@ -246,11 +248,11 @@ See `docs/tester/SPRINT5_UAT_20251206.md` for details:
 
 ## ⚠️ Common Pitfalls (Learn from our mistakes)
 
-1. **Don't trust "Resolved" in DEBUG_LOG** - Always verify issues yourself
-2. **Don't assume Phases 10-12 work** - They need UAT testing
+1. **Don't trust documentation blindly** - Verify features actually work
+2. **Don't assume Repositories are integrated** - They exist but aren't connected to Views
 3. **Don't modify v1.6 (hybrid-curator.html)** - It's frozen for production
-4. **Don't skip CHANGELOG "Remaining Work"** - It's your source of truth
-5. **Don't work on new features before verifying #15 & #16** - These are critical
+4. **Check SPRINT5_UAT_20251206.md first** - It has the current blockers
+5. **Don't work on new features** - Fix Firebase SDK and Series buttons first
 
 ---
 
@@ -269,13 +271,13 @@ See `docs/tester/SPRINT5_UAT_20251206.md` for details:
 ## 📞 Questions After Onboarding?
 
 **Check these first**:
-1. `reports/archive/comprehensive_audit_report.md` - Full project audit
-2. `docs/CHANGELOG.md` - Session timeline (58 steps documented)
-3. `reports/issue_audit_report.md` - Issue details (Active)
+1. `docs/tester/SPRINT5_UAT_20251206.md` - Current blockers
+2. `docs/debug/DEBUG_LOG.md` - Issue history (see Issue #22)
+3. `docs/tester/GAP_ANALYSIS.md` - Implementation gaps
 
 **Still stuck?**: Refer to architecture diagrams in ARCHITECTURE.md
 
 ---
 
-**Last Updated**: 2025-11-30 23:50
-**Next Update**: After UAT completes
+**Last Updated**: 2025-12-06
+**Next Update**: After Sprint 5 blockers resolved

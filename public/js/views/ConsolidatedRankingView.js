@@ -6,21 +6,21 @@ import { getIcon } from '../components/Icons.js'
 export class ConsolidatedRankingView extends BaseView {
   constructor() {
     super()
-    this.activeSeriesId = null
+    this.activeAlbumSeriesId = null
     this.filterAlbumId = 'all'
     this.sortField = 'rank' // rank, rating, score, duration
     this.sortDirection = 'asc'
   }
 
   async mount(params) {
-    this.activeSeriesId = params.id
+    this.activeAlbumSeriesId = params.id
 
     // Subscribe to stores
     this.subscribe(albumsStore, () => this.render())
     this.subscribe(albumSeriesStore, () => this.render())
 
     // Ensure series is loaded
-    if (!albumSeriesStore.getById(this.activeSeriesId)) {
+    if (!albumSeriesStore.getById(this.activeAlbumSeriesId)) {
       // If series not found in store (e.g. direct link), try to load or redirect
       // For now, redirect to home if not found
       // window.location.href = '/home'
@@ -74,7 +74,7 @@ export class ConsolidatedRankingView extends BaseView {
   }
 
   render() {
-    const series = albumSeriesStore.getById(this.activeSeriesId)
+    const series = albumSeriesStore.getById(this.activeAlbumSeriesId)
     const albums = albumsStore.getAlbums()
     const tracks = this.getFilteredTracks()
 
@@ -86,7 +86,7 @@ export class ConsolidatedRankingView extends BaseView {
             <div class="breadcrumb flex items-center gap-2 text-sm text-muted mb-4">
               <a href="/home" data-link class="hover:text-white transition-colors">Home</a>
               <span class="separator opacity-50">›</span>
-              <a href="/albums?seriesId=${this.activeSeriesId}" data-link class="hover:text-white transition-colors">Albums</a>
+              <a href="/albums?seriesId=${this.activeAlbumSeriesId}" data-link class="hover:text-white transition-colors">Albums</a>
               <span class="separator opacity-50">›</span>
               <span class="current text-accent-primary">Consolidated Ranking</span>
             </div>

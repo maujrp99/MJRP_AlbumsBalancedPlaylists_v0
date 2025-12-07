@@ -64,10 +64,10 @@ export class TopNav {
         <div 
           id="mobileMenu" 
           class="mobile-drawer fixed inset-y-0 left-0 z-50 flex flex-col w-[280px] max-w-[80vw] transition-transform duration-300 transform -translate-x-full border-r border-orange-500/20"
-          style="background-color: #0a0a0f !important; box-shadow: 4px 0 40px rgba(0,0,0,0.9);"
+          style="background-color: #0a0a0f; box-shadow: 4px 0 40px rgba(0,0,0,0.9);"
         >
           <!-- Header -->
-          <div class="flex items-center justify-between p-5 border-b border-white/10">
+          <div class="flex items-center justify-between p-5 border-b border-white/10 bg-[#0a0a0f]">
             <div class="flex items-center gap-3">
               <img src="/assets/images/logo.png" alt="MJRP" class="w-10 h-10">
               <span class="text-sm font-bold text-white/80">Menu</span>
@@ -78,7 +78,7 @@ export class TopNav {
           </div>
           
           <!-- Navigation Links -->
-          <nav class="flex flex-col p-4 gap-1 flex-1">
+          <nav class="flex flex-col p-4 gap-1 flex-1 bg-[#0a0a0f]">
             ${this.renderMobileNavLink('/home', 'Home', 'Rocket', currentPath)}
             ${this.renderMobileNavLink(albumsSeriesLink, 'Albums', 'Music', currentPath)}
             ${this.renderMobileNavLink('/album-series', 'Album Series', 'Layers', currentPath)}
@@ -87,7 +87,7 @@ export class TopNav {
           </nav>
           
           <!-- Footer -->
-          <div class="p-4 border-t border-white/10 text-center">
+          <div class="p-4 border-t border-white/10 text-center bg-[#0a0a0f]">
             <p class="text-xs text-gray-500">MJRP Playlist Synthesizer</p>
           </div>
         </div>
