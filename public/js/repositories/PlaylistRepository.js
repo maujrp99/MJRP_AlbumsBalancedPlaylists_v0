@@ -22,7 +22,9 @@ export class PlaylistRepository extends BaseRepository {
             throw new Error('PlaylistRepository requires seriesId')
         }
 
-        this.collectionPath = `users/${this.userId}/series/${this.seriesId}/playlists`
+        // Path must match Firebase rules: artifacts/{appId}/users/{userId}/curator/data/series/{seriesId}/playlists
+        const appId = 'mjrp-albums'
+        this.collectionPath = `artifacts/${appId}/users/${this.userId}/curator/data/series/${this.seriesId}/playlists`
         this.schemaVersion = 1
     }
 

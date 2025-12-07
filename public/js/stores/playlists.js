@@ -292,7 +292,7 @@ export class PlaylistsStore {
         const sanitizedPlaylists = JSON.parse(JSON.stringify(this.playlists))
 
         // 2. Save each playlist
-        // We use a batch-like approach or parallel promises
+        // We use repo.save() (upsert) because playlists might have local IDs but not exist in DB yet
         const promises = sanitizedPlaylists.map(playlist => {
             // Include timestamp and metadata
             const playlistData = {
@@ -300,8 +300,12 @@ export class PlaylistsStore {
                 updatedAt: new Date().toISOString()
             }
 
+            // Always use save (upsert)
+            // If it has an ID, use it. If not (rare), create one or let repo handle it?
+            // Generator assigns IDs like 'playlist-1', so we use those as doc IDs or let Firestore generate?
+            // Ideally we want stable IDs.
             if (playlist.id) {
-                return repo.update(playlist.id, playlistData)
+                return repo.save(playlist.id, playlistData)
             } else {
                 return repo.create(playlistData)
             }

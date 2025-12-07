@@ -115,11 +115,31 @@ export class PlaylistsView extends BaseView {
 
       if (exportSection) {
         exportSection.innerHTML = playlists.length > 0 ? this.renderExportSection() : ''
-        // Re-attach export listeners would go here
+        this.attachExportListeners()
       }
 
       const footerTime = this.$('.last-update')
       if (footerTime) footerTime.textContent = `Last updated: ${new Date().toLocaleTimeString()}`
+    }
+  }
+
+  attachExportListeners() {
+    const exportSpotify = this.$('#exportSpotifyBtn')
+    const exportAppleMusic = this.$('#exportAppleMusicBtn')
+    const exportJson = this.$('#exportJsonBtn')
+    const saveHistory = this.$('#saveToHistoryBtn')
+
+    if (exportSpotify) {
+      this.on(exportSpotify, 'click', () => alert('🎵 Spotify export coming in Sprint 5!'))
+    }
+    if (exportAppleMusic) {
+      this.on(exportAppleMusic, 'click', () => alert('🍎 Apple Music export coming in Sprint 6!'))
+    }
+    if (exportJson) {
+      this.on(exportJson, 'click', () => this.handleExportJson())
+    }
+    if (saveHistory) {
+      this.on(saveHistory, 'click', () => this.handleSaveToHistory())
     }
   }
 
@@ -287,7 +307,37 @@ export class PlaylistsView extends BaseView {
     try {
       const { db, cacheManager, auth } = await import('../app.js')
       const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous-user'
+
+      // 1. Ensure Parent Series Exists (Upsert)
+      const activeSeries = albumSeriesStore.getActiveSeries()
+      if (activeSeries) {
+        const { SeriesRepository } = await import('../repositories/SeriesRepository.js')
+        const seriesRepo = new SeriesRepository(db, cacheManager, userId)
+
+        // Sanitize series object (minimal payload to avoid rule violations)
+        const seriesData = {
+          id: activeSeries.id,
+          name: activeSeries.name || 'Untitled Series',
+          sourceType: activeSeries.sourceType || 'unknown',
+          // Only include albumQueries if they exist and are array
+          albumQueries: Array.isArray(activeSeries.albumQueries) ? activeSeries.albumQueries : [],
+          updatedAt: new Date().toISOString()
+        }
+
+        console.log('[PlaylistsView] 1. Saving Series Parent:', activeSeries.id, seriesData)
+        try {
+          await seriesRepo.save(activeSeries.id, seriesData)
+          console.log('[PlaylistsView] ✅ Series Parent Saved')
+        } catch (err) {
+          console.error('[PlaylistsView] ❌ Failed to save Series Parent:', err)
+          throw err // Propagate to outer catch
+        }
+      }
+
+      // 2. Save Playlists (Subcollection)
+      console.log('[PlaylistsView] 2. Saving Playlists Subcollection...')
       await playlistsStore.saveToFirestore(db, cacheManager, userId)
+      console.log('[PlaylistsView] ✅ Playlists Saved')
 
       if (btn) {
         btn.className = 'btn btn-success flex items-center gap-2'
@@ -299,12 +349,24 @@ export class PlaylistsView extends BaseView {
       }
       alert('Success: Playlists saved to series history!')
     } catch (error) {
-      console.error('Save failed:', error)
-      alert(`Failed to save: ${error.message}`)
+      console.error('[PlaylistsView] ❌ Cloud Save Failed:', error)
+
+      // FALLBACK: Save to LocalStorage so user doesn't lose data
+      console.log('[PlaylistsView] Attempting Local Save (Fallback)...')
+      playlistsStore.saveToLocalStorage()
+
       if (btn) {
-        btn.disabled = false
-        btn.textContent = 'Save to Series History'
+        btn.className = 'btn btn-warning flex items-center gap-2'
+        btn.innerHTML = `${getIcon('AlertTriangle', 'w-5 h-5')} Saved Locally Only`
+        // Reset button after 3 seconds
+        setTimeout(() => {
+          btn.disabled = false
+          btn.className = 'btn btn-success flex items-center gap-2' // Keep green/success look or revert to primary? 
+          // Let's revert to primary Call To Action but maybe keep it enabled
+          btn.innerHTML = `${getIcon('Cloud', 'w-5 h-5')} Save to Series History`
+        }, 4000)
       }
+      alert('⚠️ Cloud save failed (permissions). Playlists have been saved to your BROWSER STORAGE.')
     }
   }
 
@@ -359,27 +421,8 @@ export class PlaylistsView extends BaseView {
     // Drag and drop
     this.setupDragAndDrop()
 
-    // Series Selector - REMOVED (Product Decision: Simplify UX, close Issue #21)
-    // Users must navigate back to Albums view to switch series
-
-    // Export buttons (Sprint 5-6 placeholders)
-    const exportSpotify = this.$('#exportSpotifyBtn')
-    const exportAppleMusic = this.$('#exportAppleMusicBtn')
-    const exportJson = this.$('#exportJsonBtn')
-    const saveHistory = this.$('#saveToHistoryBtn')
-
-    if (exportSpotify) {
-      this.on(exportSpotify, 'click', () => alert('🎵 Spotify export coming in Sprint 5!'))
-    }
-    if (exportAppleMusic) {
-      this.on(exportAppleMusic, 'click', () => alert('🍎 Apple Music export coming in Sprint 6!'))
-    }
-    if (exportJson) {
-      this.on(exportJson, 'click', () => this.handleExportJson())
-    }
-    if (saveHistory) {
-      this.on(saveHistory, 'click', () => this.handleSaveToHistory())
-    }
+    // Export buttons & Save History
+    this.attachExportListeners()
 
     // Check for auto-generate flag
     const urlParams = new URLSearchParams(window.location.search)

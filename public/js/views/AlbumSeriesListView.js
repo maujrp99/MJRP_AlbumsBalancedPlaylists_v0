@@ -25,7 +25,7 @@ export class AlbumSeriesListView extends BaseView {
           
           <div class="header-content mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
             <h1 class="text-4xl font-bold flex items-center gap-3">
-              ${getIcon('Layers', 'w-8 h-8')} Series Management
+              ${getIcon('Layers', 'w-8 h-8')} Albums Series Management
             </h1>
             
             <button class="btn btn-primary" id="createSeriesBtn">
@@ -139,6 +139,8 @@ export class AlbumSeriesListView extends BaseView {
   }
 
   async mount() {
+    this.container = document.getElementById('app')
+
     // Subscribe to store
     const unsubscribe = albumSeriesStore.subscribe(() => this.update())
     this.subscriptions.push(unsubscribe)

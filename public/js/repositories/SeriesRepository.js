@@ -16,7 +16,11 @@ export class SeriesRepository extends BaseRepository {
         super(firestore, cache)
 
         this.userId = userId || 'anonymous-user' // Fallback until Sprint 7 auth
-        this.collectionPath = `users/${this.userId}/series`
+
+        // Path must match Firebase rules: artifacts/{appId}/users/{userId}/curator/data/series
+        // We add '/data/' segment because 'curator' is a collection, so we need a doc ('data') before the next collection ('series')
+        const appId = 'mjrp-albums'
+        this.collectionPath = `artifacts/${appId}/users/${this.userId}/curator/data/series`
         this.schemaVersion = 1
     }
 

@@ -5,6 +5,7 @@ import {
     getDoc,
     getDocs,
     addDoc,
+    setDoc,
     updateDoc,
     deleteDoc,
     query,
@@ -168,6 +169,32 @@ export class BaseRepository {
         }
 
         return docRef.id
+    }
+
+    // ========== UPSERT OPERATION ==========
+
+    /**
+     * Create or update document with specific ID (Upsert)
+     * @param {string} id - Document ID
+     * @param {Object} data - Document data
+     * @returns {Promise<string>} Document ID
+     */
+    async save(id, data) {
+        const docData = {
+            ...data,
+            updatedAt: this.getServerTimestamp(),
+            _schemaVersion: this.schemaVersion
+        }
+
+        await setDoc(this.getDocRef(id), docData, { merge: true })
+
+        // Invalidate cache
+        if (this.cache) {
+            await this.cache.invalidate(this.getCacheKey(id))
+            await this.cache.invalidate(this.getCacheKey('all'))
+        }
+
+        return id
     }
 
     // ========== UPDATE OPERATION ==========

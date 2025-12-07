@@ -403,8 +403,13 @@ cd server && npm test
 3. **No batch processing**: One album at a time
 4. **Rate limiting**: BestEverAlbums scraper can fail under load
 
+### Recent Achievements
+- **Persistence Layer Complete**: Implemented robust Firestore integration for Series and Playlists using `artifacts/mjrp-albums/users/{uid}/curator` namespace to comply with security rules.
+- **UI Enhancements**: 
+    - Redesigned `SavedPlaylistsView` (Your Playlists Series) with modern cards, badges, and "Edit" flow.
+    - Updated `SeriesView` and `PlaylistsView` for better UX.
+- **Critical Bug Fixes**: Resolved "Ghost Albums" (Sprint 5.1) and Permission Denied errors (Sprint 5.4).(v2.0)
 ### Future Improvements
-- [ ] Implement playlist series (v2.0)
 - [ ] Add batch album processing
 - [ ] Implement queue for scraper requests
 - [ ] Add health check endpoint
