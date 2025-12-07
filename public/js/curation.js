@@ -169,6 +169,11 @@ export class CurationEngine {
       copy.id = copy.id || `track_${album.id || 'album'}_${idx + 1}`
       copy.originAlbumId = copy.originAlbumId || album.id || null
       copy.duration = copy.duration !== undefined && copy.duration !== null ? copy.duration : durationFromIndex
+
+      // Ensure artist/album metadata is preserved from parent Album
+      copy.artist = copy.artist || album.artist || ''
+      copy.album = copy.album || album.title || ''
+
       copy.rating = rating
       copy.acclaimScore = normalizedScore
       copy.acclaimRank = acclaimRank
