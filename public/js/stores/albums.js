@@ -1,6 +1,8 @@
 /**
  * Albums Store
- * Manages album data, loading, and Firestore sync
+ * Manages album data per series, loading, and Firestore sync
+ * 
+ * ARCHITECTURE: Albums are keyed by AlbumSeriesId to prevent ghost albums
  */
 
 import { Album } from '../models/Album.js'
@@ -8,20 +10,107 @@ import { collection, doc, addDoc, updateDoc, getDocs } from 'firebase/firestore'
 
 export class AlbumsStore {
     constructor() {
-        this.albums = []
+        // NEW: Albums stored per series - prevents ghost albums
+        this.albumsByAlbumSeriesId = new Map()  // Map<string, Album[]>
+        this.activeAlbumSeriesId = null
+
         this.currentAlbum = null
         this.loading = false
         this.error = null
-        this.lastLoadedAlbumSeriesId = null // FIX: Persist series context
         this.listeners = new Set()
     }
 
+    // ========== SERIES CONTEXT ==========
+
     /**
-     * Get all albums
+     * Set active album series ID
+     * @param {string} seriesId - Series ID
+     */
+    setActiveAlbumSeriesId(seriesId) {
+        this.activeAlbumSeriesId = seriesId
+        this.notify()
+    }
+
+    /**
+     * Get active album series ID
+     * @returns {string|null} Active series ID
+     */
+    getActiveAlbumSeriesId() {
+        return this.activeAlbumSeriesId
+    }
+
+    // LEGACY: Keep for backward compatibility during migration
+    setLastLoadedAlbumSeriesId(seriesId) {
+        this.setActiveAlbumSeriesId(seriesId)
+    }
+
+    getLastLoadedAlbumSeriesId() {
+        return this.getActiveAlbumSeriesId()
+    }
+
+    // ========== ALBUM OPERATIONS ==========
+
+    /**
+     * Get albums for active series
      * @returns {Array} Current albums list
      */
     getAlbums() {
-        return this.albums
+        if (!this.activeAlbumSeriesId) return []
+        return this.albumsByAlbumSeriesId.get(this.activeAlbumSeriesId) || []
+    }
+
+    /**
+     * Get albums for specific series (for internal use)
+     * @param {string} seriesId - Series ID
+     * @returns {Array} Albums for that series
+     */
+    getAlbumsForSeries(seriesId) {
+        return this.albumsByAlbumSeriesId.get(seriesId) || []
+    }
+
+    /**
+     * Add album to store - MUST specify seriesId
+     * Rejects albums for inactive series (prevents ghost albums)
+     * @param {string} albumSeriesId - Series ID this album belongs to
+     * @param {Object|Album} album - Album data or instance
+     * @returns {boolean} True if added, false if rejected
+     */
+    addAlbumToSeries(albumSeriesId, album) {
+        // GHOST ALBUM PREVENTION: Reject if not for active series
+        if (albumSeriesId !== this.activeAlbumSeriesId) {
+            console.warn(`[AlbumsStore] Rejecting album for inactive series: ${albumSeriesId} (active: ${this.activeAlbumSeriesId})`)
+            return false
+        }
+
+        // Ensure array exists for this series
+        if (!this.albumsByAlbumSeriesId.has(albumSeriesId)) {
+            this.albumsByAlbumSeriesId.set(albumSeriesId, [])
+        }
+
+        const albums = this.albumsByAlbumSeriesId.get(albumSeriesId)
+        const existing = albums.find(a => a.title === album.title && a.artist === album.artist)
+
+        if (!existing) {
+            albums.push(album)
+        } else {
+            const index = albums.indexOf(existing)
+            albums[index] = album
+        }
+
+        this.notify()
+        return true
+    }
+
+    /**
+     * LEGACY: Add album without seriesId - uses active series
+     * @deprecated Use addAlbumToSeries(seriesId, album) instead
+     */
+    addAlbum(album) {
+        if (!this.activeAlbumSeriesId) {
+            console.warn('[AlbumsStore] addAlbum called without active series - rejecting')
+            return false
+        }
+        return this.addAlbumToSeries(this.activeAlbumSeriesId, album)
     }
 
     /**
@@ -42,96 +131,45 @@ export class AlbumsStore {
     }
 
     /**
-     * Set ID of the last loaded series
-     * @param {string} seriesId - Series ID
-     */
-    setLastLoadedAlbumSeriesId(seriesId) {
-        this.lastLoadedAlbumSeriesId = seriesId
-        // No notify needed for metadata
-    }
-
-    /**
-     * Get ID of the last loaded series
-     * @returns {string|null} Series ID
-     */
-    getLastLoadedAlbumSeriesId() {
-        return this.lastLoadedAlbumSeriesId
-    }
-
-    /**
-     * Add album to store
-     * @param {Object|Album} album - Album data or instance
-     */
-    addAlbum(album) {
-        // Domain Model: Tracks are already normalized by the Album/Track constructor.
-        // We don't need to re-normalize them here, especially if they are Track instances.
-
-        // If we wanted to ensure metadata extensibility, we could do it on the Track instance,
-        // but Track model already handles metadata preservation.
-
-        /* 
-        // LEGACY: Removed to prevent converting Track instances back to plain objects
-        if (album.tracks && Array.isArray(album.tracks)) {
-            album.tracks = album.tracks.map(track => this.normalizeTrack(track))
-        }
-        */
-
-        const existing = this.albums.find(a =>
-            a.title === album.title && a.artist === album.artist
-        )
-
-        if (!existing) {
-            this.albums.push(album)
-            this.notify()
-        } else {
-            // Update existing album
-            // If album is an instance, we might lose methods if we just Object.assign
-            // But since we are replacing the data, we should probably replace the reference 
-            // or carefully copy properties.
-
-            // For now, Object.assign works for properties, but methods are on prototype.
-            // If 'existing' was a plain object and 'album' is an instance, 'existing' becomes hybrid.
-            // Ideally, we should replace 'existing' in the array.
-
-            const index = this.albums.indexOf(existing)
-            this.albums[index] = album
-            this.notify()
-        }
-    }
-
-    /**
-     * Normalize track to include extensible metadata
-     * @param {Object} track - Track data
-     * @returns {Object} Normalized track
-     * @private
-     * @deprecated Track model handles this
-     */
-    normalizeTrack(track) {
-        return {
-            ...track,
-            metadata: track.metadata || {
-                isrc: null,           // International Standard Recording Code
-                appleMusicId: null,   // Apple Music track ID (cached after match)
-                spotifyId: null,      // Spotify track ID (future integration)
-                ...track.metadata     // Preserve any existing metadata
-            }
-        }
-    }
-
-    /**
      * Remove album from store
      * @param {string} albumId - Album ID to remove
      */
     removeAlbum(albumId) {
-        const index = this.albums.findIndex(a => a.id === albumId)
+        const albums = this.getAlbums()
+        const index = albums.findIndex(a => a.id === albumId)
         if (index !== -1) {
-            this.albums.splice(index, 1)
+            albums.splice(index, 1)
             if (this.currentAlbum?.id === albumId) {
                 this.currentAlbum = null
             }
             this.notify()
         }
     }
+
+    // ========== SERIES MANAGEMENT ==========
+
+    /**
+     * Clear albums for a specific series
+     * @param {string} seriesId - Series ID to clear
+     */
+    clearAlbumSeries(seriesId) {
+        this.albumsByAlbumSeriesId.delete(seriesId)
+        if (this.activeAlbumSeriesId === seriesId) {
+            this.notify()
+        }
+    }
+
+    /**
+     * Check if series has cached albums
+     * @param {string} seriesId - Series ID
+     * @returns {boolean} True if cached
+     */
+    hasAlbumsForSeries(seriesId) {
+        return this.albumsByAlbumSeriesId.has(seriesId) &&
+            this.albumsByAlbumSeriesId.get(seriesId).length > 0
+    }
+
+    // ========== FIRESTORE OPERATIONS ==========
 
     /**
      * Load albums from Firestore
@@ -145,12 +183,18 @@ export class AlbumsStore {
 
         try {
             const snapshot = await getDocs(collection(db, 'albums'))
-            this.albums = snapshot.docs.map(docSnap => new Album({
+            const albums = snapshot.docs.map(docSnap => new Album({
                 id: docSnap.id,
                 ...docSnap.data()
             }))
+
+            // Store in active series if set
+            if (this.activeAlbumSeriesId) {
+                this.albumsByAlbumSeriesId.set(this.activeAlbumSeriesId, albums)
+            }
+
             this.notify()
-            return this.albums
+            return albums
         } catch (error) {
             this.error = error.message
             this.notify()
@@ -185,6 +229,8 @@ export class AlbumsStore {
         }
     }
 
+    // ========== SUBSCRIPTIONS ==========
+
     /**
      * Subscribe to store changes
      * @param {Function} listener - Callback fired on state change
@@ -209,24 +255,34 @@ export class AlbumsStore {
      */
     getState() {
         return {
-            albums: this.albums,
+            albums: this.getAlbums(),
             currentAlbum: this.currentAlbum,
             loading: this.loading,
-            error: this.error
+            error: this.error,
+            activeAlbumSeriesId: this.activeAlbumSeriesId
         }
     }
 
+    // ========== RESET ==========
+
     /**
      * Reset store to initial state
-     * @param {boolean} preserveAlbumSeriesContext - If true, keeps lastLoadedAlbumSeriesId (for series switch)
+     * @param {boolean} preserveAlbumSeriesContext - If true, keeps activeAlbumSeriesId
      */
     reset(preserveAlbumSeriesContext = false) {
-        const seriesId = preserveAlbumSeriesContext ? this.lastLoadedAlbumSeriesId : null
-        this.albums = []
+        const seriesId = preserveAlbumSeriesContext ? this.activeAlbumSeriesId : null
+
+        // Clear only active series, or all if not preserving
+        if (preserveAlbumSeriesContext && this.activeAlbumSeriesId) {
+            this.albumsByAlbumSeriesId.delete(this.activeAlbumSeriesId)
+        } else {
+            this.albumsByAlbumSeriesId.clear()
+        }
+
         this.currentAlbum = null
         this.loading = false
         this.error = null
-        this.lastLoadedAlbumSeriesId = seriesId
+        this.activeAlbumSeriesId = seriesId
         this.notify()
     }
 }

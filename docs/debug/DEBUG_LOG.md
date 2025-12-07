@@ -16,6 +16,84 @@
 
 ## Current Debugging Session
 
+### Issue #24: Missing SVG Icons - RESOLVED
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-06 20:50
+**Type**: UI Bug
+**Component**: `Icons.js`
+
+#### Problem
+Multiple icons not rendering in `SeriesListView`, `AlbumsView`, `InventoryView`, and `TopNav` (hamburger menu invisible).
+
+#### Root Cause
+Icons were being called via `getIcon()` but were not defined in the `Icons` object in `Icons.js`.
+
+#### Solution
+Added 10 missing icons to `Icons.js`:
+- `Menu` - Hamburger menu (critical for mobile nav)
+- `Edit` - Edit buttons
+- `Play` - Album playback
+- `RefreshCw` - Refresh filter button
+- `ExternalLink` - BestEver links
+- `ArrowRight` - Migration banner CTA
+- `Loader` - Loading states
+- `Layers` - Series management
+- `Trash2` - Delete in Inventory
+
+#### Files Modified
+- `public/js/components/Icons.js` (lines 99-119)
+
+---
+
+### Issue #23: Mobile Menu Transparent Background - RESOLVED  
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-06 22:33
+**Type**: UI/UX Bug
+**Component**: `TopNav.js`, `modals.css`
+
+#### Problem
+Mobile hamburger menu drawer opened but had transparent/see-through background, making text unreadable as page content was visible behind it.
+
+#### Failed Attempts
+1. **Inline `background: #0d0d12`** - CSS classes overrode it
+2. **Tailwind `bg-black/95`** - Not processed correctly
+3. **`bg-[#0a0a0f]`** - Still transparent
+4. **CSS class `.mobile-drawer` with `!important`** - Still overridden
+5. **JavaScript `style.setProperty('background-color', '#0a0a0f', 'important')`** - Still transparent
+
+#### Root Cause
+Unknown CSS cascade issue causing all background declarations to be ignored or overridden by parent/global styles.
+
+#### Final Solution (Triple-Layer Approach)
+Applied solid background `bg-[#0a0a0f]` to **ALL internal child elements**:
+1. Parent `#mobileMenu`: inline style + CSS class
+2. Header div: `bg-[#0a0a0f]`
+3. Nav element: `bg-[#0a0a0f]`
+4. Footer div: `bg-[#0a0a0f]`
+
+Also added JavaScript reinforcement in `attachListeners()`:
+```javascript
+if (mobileMenu) {
+  mobileMenu.style.setProperty('background-color', '#0a0a0f', 'important')
+  mobileMenu.style.setProperty('backdrop-filter', 'none', 'important')
+}
+```
+
+#### UX Improvements Made
+- Hamburger button moved to **LEFT** side (standard for left-slide drawer)
+- Title uses flame image (`TheAlbumPlaylistSynth.png`) instead of text
+- Drawer width: 280px / max 80vw
+- Orange border accent: `border-orange-500/20`
+- Deep shadow: `box-shadow: 4px 0 40px rgba(0,0,0,0.9)`
+- Click overlay to close (`#mobileMenuOverlay`)
+- Icon-enhanced navigation links
+
+#### Files Modified
+- `public/js/components/TopNav.js` (complete menu restructure)
+- `public/css/modals.css` (added `.mobile-drawer` class)
+
+---
+
 🔴 **ACTIVE SESSION** (as of 2025-12-06 20:01)
 
 ### Issue #22: Ghost Albums Regression - REOPENED
