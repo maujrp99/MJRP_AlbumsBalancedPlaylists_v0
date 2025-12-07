@@ -186,49 +186,6 @@ export class AlbumsView extends BaseView {
           </div>
         </header>
 
-        <!-- DEBUG: Visual Debug Panel START -->
-        <div class="debug-panel" style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.9); border: 2px solid #00ff88; padding: 16px; border-radius: 12px; z-index: 9999; max-width: 350px; font-family: monospace; font-size: 12px; box-shadow: 0 4px 20px rgba(0,255,136,0.3);">
-          <div style="color: #00ff88; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid #00ff88; padding-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-            🔍 DEBUG PANEL
-            <span style="font-size: 10px; opacity: 0.7; font-weight: normal;">(remover depois)</span>
-          </div>
-          
-          <div style="color: #fff; line-height: 1.6;">
-            <div style="margin-bottom: 8px;">
-              <span style="color: #00ff88;">📊 Albums:</span>
-              <div style="padding-left: 12px;">
-                <div>Total: <strong>${albums.length}</strong></div>
-                <div>Filtered: <strong style="color: ${filteredAlbums.length === 0 ? '#ff4444' : '#00ff88'};">${filteredAlbums.length}</strong></div>
-              </div>
-            </div>
-            
-            <div style="margin-bottom: 8px;">
-              <span style="color: #00ff88;">🔎 Search:</span>
-              <div style="padding-left: 12px;">
-                ${this.searchQuery ? `<strong>"${this.escapeHtml(this.searchQuery)}"</strong>` : '<em style="opacity: 0.5;">none</em>'}
-              </div>
-            </div>
-            
-            <div style="margin-bottom: 8px;">
-              <span style="color: #00ff88;">🎵 Filters:</span>
-              <div style="padding-left: 12px; font-size: 11px;">
-                <div>Artist: <strong>${this.filters.artist === 'all' ? 'All' : this.escapeHtml(this.filters.artist)}</strong></div>
-                <div>Year: <strong>${this.filters.year === 'all' ? 'All' : this.filters.year}</strong></div>
-                <div>Status: <strong>${this.filters.status === 'all' ? 'All' : this.filters.status}</strong></div>
-                <div>BestEver: <strong style="color: ${this.filters.bestEverOnly ? '#ffaa00' : '#666'};">${this.filters.bestEverOnly ? 'YES' : 'NO'}</strong></div>
-              </div>
-            </div>
-            
-            <div style="margin-bottom: 0;">
-              <span style="color: #00ff88;">👁️ View Mode:</span>
-              <div style="padding-left: 12px;">
-                <strong style="color: #ffaa00;">${this.viewMode.toUpperCase()}</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- DEBUG: Visual Debug Panel END -->
-
         ${this.isLoading ? this.renderLoadingProgress() : ''}
 
         <!-- Conditional rendering based on viewMode -->
@@ -1085,16 +1042,16 @@ export class AlbumsView extends BaseView {
 
 
 
-createElementFromHTML(html) {
-  const template = document.createElement('template')
-  template.innerHTML = html.trim()
-  return template.content.firstChild
-}
+  createElementFromHTML(html) {
+    const template = document.createElement('template')
+    template.innerHTML = html.trim()
+    return template.content.firstChild
+  }
 
-escapeHtml(text) {
-  if (!text) return ''
-  const div = document.createElement('div')
-  div.textContent = text
-  return div.innerHTML
-}
+  escapeHtml(text) {
+    if (!text) return ''
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
+  }
 }
