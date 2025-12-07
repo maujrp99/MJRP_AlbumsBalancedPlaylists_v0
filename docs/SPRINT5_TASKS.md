@@ -54,30 +54,31 @@
 
 ---
 
-## Phase 4: Code Cleanup (P1)
-
-- [ ] **4.1** Remove duplicate `escapeHtml()` from AlbumsView.js
-- [ ] **4.2** Remove duplicate `escapeHtml()` from PlaylistsView.js
-- [ ] **4.3** Remove duplicate `escapeHtml()` from SeriesListView.js
-- [ ] **4.4** Remove duplicate `escapeHtml()` from SavedPlaylistsView.js
-
+## Phase 4: Playlists Persistence (P0)
+ 
+- [ ] **4.1** Add `saveToLocalStorage()` to PlaylistsStore
+- [ ] **4.2** Add `loadFromLocalStorage()` to PlaylistsStore
+- [ ] **4.3** Call on constructor and setPlaylists
+- [ ] **4.4** Integrate PlaylistRepository in PlaylistsView
+ 
 ---
-
-## Phase 5: Playlists Persistence (P0)
-
-- [ ] **5.1** Add `saveToLocalStorage()` to PlaylistsStore
-- [ ] **5.2** Add `loadFromLocalStorage()` to PlaylistsStore
-- [ ] **5.3** Call on constructor and setPlaylists
-- [ ] **5.4** Integrate PlaylistRepository in PlaylistsView
-
+ 
+## Phase 5: Inventory & Series UI (P1)
+ 
+- [ ] **5.1** Verified: Edit/Delete buttons in InventoryView (CRUD)
+- [ ] **5.2** Add InventoryRepository to InventoryView.js (Edit/Delete)
+- [ ] **5.3** Firestore save in edit callback
+- [ ] **5.4** Firestore delete in delete callback
+- [ ] **5.5** Debug AlbumSeriesListView buttons
+ 
 ---
-
-## Phase 6: Inventory & Series UI (P1)
-
-- [ ] **6.1** Add InventoryRepository to InventoryView.js
-- [ ] **6.2** Firestore save in edit callback
-- [ ] **6.3** Firestore delete in delete callback
-- [ ] **6.4** Debug AlbumSeriesListView buttons
+ 
+## Phase 6: Code Cleanup (P2)
+ 
+- [ ] **6.1** Remove duplicate `escapeHtml()` from AlbumsView.js
+- [ ] **6.2** Remove duplicate `escapeHtml()` from PlaylistsView.js
+- [ ] **6.3** Remove duplicate `escapeHtml()` from SeriesListView.js
+- [ ] **6.4** Remove duplicate `escapeHtml()` from SavedPlaylistsView.js
 
 ---
 

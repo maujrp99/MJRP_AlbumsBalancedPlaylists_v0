@@ -58,18 +58,19 @@ Fixed SPA entry point CSS link issue and CSS positioning rules.
 
 ---
 
-## Phase 4: Code Cleanup (P1) - PENDING
-
-Remove duplicate `escapeHtml()` from 4 views.
-
----
-
-## Phase 5: Playlists Persistence (P0) - PENDING
-
+## Phase 4: Playlists Persistence (P0) - NEXT
+ 
 Add localStorage/Firestore persistence to PlaylistsStore.
-
+ 
 ---
-
-## Phase 6: Inventory & Series UI (P1) - PENDING
-
+ 
+## Phase 5: Inventory & Series UI (P1) - PENDING
+ 
 Integrate InventoryRepository in InventoryView.
+**Note**: Verify Edit/Delete buttons (CRUD) in Inventory, as likely only ADD works currently.
+ 
+---
+ 
+## Phase 6: Code Cleanup (P2) - PENDING
+ 
+Remove duplicate `escapeHtml()` from 4 views.

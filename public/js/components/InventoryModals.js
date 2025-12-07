@@ -139,8 +139,23 @@ export function showAddToInventoryModal(album, onSuccess) {
       await inventoryStore.addAlbum(album, format, options)
 
       console.log('[Modal] Success')
+
+      // Visual Feedback
+      addBtn.textContent = 'Saved!'
+      addBtn.className = 'btn bg-green-600 text-white cursor-default'
+
+      const footer = modal.querySelector('.modal-footer')
+      const msg = document.createElement('div')
+      msg.className = 'text-green-400 text-sm font-bold text-right px-6 pb-2'
+      msg.textContent = 'Success: Album saved to your inventory!'
+      footer.before(msg)
+
       if (onSuccess) onSuccess()
-      close()
+
+      // Delay closing so user sees the success message
+      setTimeout(() => {
+        close()
+      }, 1500)
     } catch (error) {
       console.error('[Modal] Error:', error)
       addBtn.disabled = false
