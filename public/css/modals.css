@@ -221,3 +221,8 @@
   background: #0a0a0f !important;
   backdrop-filter: none !important;
 }
+
+/* FIX: Ensure hidden modals are actually hidden, overriding the !important above */
+.modal-overlay.hidden {
+  display: none !important;
+}

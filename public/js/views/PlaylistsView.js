@@ -254,21 +254,58 @@ export class PlaylistsView extends BaseView {
 
   renderExportSection() {
     return `
-      <div class="export-section">
-        <h3>Export Playlists</h3>
-        <div class="export-actions">
-          <button class="btn btn-primary" id="exportSpotifyBtn">
-            🎵 Export to Spotify
+      <div class="export-section glass-panel p-6">
+        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+          ${getIcon('Save', 'w-5 h-5')} Actions & Export
+        </h3>
+        <div class="export-actions flex flex-wrap gap-4">
+          <button class="btn btn-success flex items-center gap-2" id="saveToHistoryBtn">
+            ${getIcon('Cloud', 'w-5 h-5')} Save to Series History
           </button>
-          <button class="btn btn-primary" id="exportAppleMusicBtn">
-            🍎 Export to Apple Music
+          <div class="h-auto w-px bg-white/10 mx-2"></div>
+          <button class="btn btn-primary flex items-center gap-2" id="exportSpotifyBtn">
+            Export to Spotify
           </button>
-          <button class="btn btn-secondary" id="exportJsonBtn">
-            💾 Download JSON
+          <button class="btn btn-primary flex items-center gap-2" id="exportAppleMusicBtn">
+            Export to Apple Music
+          </button>
+          <button class="btn btn-secondary flex items-center gap-2" id="exportJsonBtn">
+            Download JSON
           </button>
         </div>
       </div>
     `
+  }
+
+  async handleSaveToHistory() {
+    const btn = this.$('#saveToHistoryBtn')
+    if (btn) {
+      btn.disabled = true
+      btn.textContent = 'Saving...'
+    }
+
+    try {
+      const { db, cacheManager, auth } = await import('../app.js')
+      const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous-user'
+      await playlistsStore.saveToFirestore(db, cacheManager, userId)
+
+      if (btn) {
+        btn.className = 'btn btn-success flex items-center gap-2'
+        btn.innerHTML = `${getIcon('Check', 'w-5 h-5')} Saved!`
+        setTimeout(() => {
+          btn.disabled = false
+          btn.innerHTML = `${getIcon('Cloud', 'w-5 h-5')} Save to Series History`
+        }, 2000)
+      }
+      alert('Success: Playlists saved to series history!')
+    } catch (error) {
+      console.error('Save failed:', error)
+      alert(`Failed to save: ${error.message}`)
+      if (btn) {
+        btn.disabled = false
+        btn.textContent = 'Save to Series History'
+      }
+    }
   }
 
   renderGeneratingOverlay() {
@@ -293,6 +330,13 @@ export class PlaylistsView extends BaseView {
       this.update()
     })
     this.subscriptions.push(unsubscribe)
+
+    // Attempt recovery from LocalStorage if store is empty
+    if (playlistsStore.getPlaylists().length === 0) {
+      if (playlistsStore.loadFromLocalStorage()) {
+        console.log('[PlaylistsView] Recovered playlists from LocalStorage')
+      }
+    }
 
     // Generate button
     const generateBtn = this.$('#generateBtn')
@@ -322,6 +366,7 @@ export class PlaylistsView extends BaseView {
     const exportSpotify = this.$('#exportSpotifyBtn')
     const exportAppleMusic = this.$('#exportAppleMusicBtn')
     const exportJson = this.$('#exportJsonBtn')
+    const saveHistory = this.$('#saveToHistoryBtn')
 
     if (exportSpotify) {
       this.on(exportSpotify, 'click', () => alert('🎵 Spotify export coming in Sprint 5!'))
@@ -331,6 +376,9 @@ export class PlaylistsView extends BaseView {
     }
     if (exportJson) {
       this.on(exportJson, 'click', () => this.handleExportJson())
+    }
+    if (saveHistory) {
+      this.on(saveHistory, 'click', () => this.handleSaveToHistory())
     }
 
     // Check for auto-generate flag

@@ -103,7 +103,7 @@ export class Router {
         }
 
         // Create new view instance
-        this.currentView = viewFactory()
+        this.currentView = await viewFactory()
         const container = document.getElementById('app')
 
         if (!container) {

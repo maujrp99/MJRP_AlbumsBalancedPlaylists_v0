@@ -227,6 +227,134 @@ export class PlaylistsStore {
     }
 
     /**
+     * Save current state to LocalStorage
+     */
+    saveToLocalStorage() {
+        if (!this.seriesId) return
+
+        try {
+            const data = {
+                playlists: JSON.parse(JSON.stringify(this.playlists)), // Deep copy & sanitize
+                seriesId: this.seriesId,
+                config: this.config,
+                timestamp: Date.now()
+            }
+            localStorage.setItem('mjrp_current_playlists', JSON.stringify(data))
+        } catch (e) {
+            console.warn('Failed to save playlists to LocalStorage:', e)
+        }
+    }
+
+    /**
+     * Load state from LocalStorage
+     * @returns {boolean} True if loaded successfully
+     */
+    loadFromLocalStorage() {
+        try {
+            const saved = localStorage.getItem('mjrp_current_playlists')
+            if (!saved) return false
+
+            const data = JSON.parse(saved)
+
+            // Validate data freshness (optional: e.g. expires after 24h)
+            // const isFresh = Date.now() - data.timestamp < 24 * 60 * 60 * 1000
+
+            this.playlists = data.playlists || []
+            this.seriesId = data.seriesId
+            this.config = data.config || this.config
+            // Reset dirty state since we just loaded
+            this.isDirty = false
+            this.notify()
+            return true
+        } catch (e) {
+            console.warn('Failed to load playlists from LocalStorage:', e)
+            return false
+        }
+    }
+
+    /**
+     * Save playlists to Firestore
+     * @param {Object} db - Firestore instance
+     * @param {Object} cacheManager - Cache manager instance
+     * @param {string} userId - Current User ID
+     * @returns {Promise<void>}
+     */
+    async saveToFirestore(db, cacheManager, userId) {
+        if (!this.seriesId || !db) {
+            throw new Error('Cannot save: Missing database connection or Series ID')
+        }
+
+        const { PlaylistRepository } = await import('../repositories/PlaylistRepository.js')
+        const repo = new PlaylistRepository(db, cacheManager, userId || 'anonymous-user', this.seriesId)
+
+        // 1. Sanitize Data (Deep Clean)
+        // Convert custom Track objects to plain objects using JSON serialization
+        const sanitizedPlaylists = JSON.parse(JSON.stringify(this.playlists))
+
+        // 2. Save each playlist
+        // We use a batch-like approach or parallel promises
+        const promises = sanitizedPlaylists.map(playlist => {
+            // Include timestamp and metadata
+            const playlistData = {
+                ...playlist,
+                updatedAt: new Date().toISOString()
+            }
+
+            if (playlist.id) {
+                return repo.update(playlist.id, playlistData)
+            } else {
+                return repo.create(playlistData)
+            }
+        })
+
+        await Promise.all(promises)
+
+        this.isDirty = false
+        this.isSynchronized = true
+        this.saveToLocalStorage() // Sycn local too
+        this.notify()
+    }
+
+    /**
+     * Load playlists from Firestore for the active series
+     * @param {Object} db - Firestore instance
+     * @param {Object} cacheManager - Cache manager
+     * @param {string} userId - Current User ID
+     * @param {string} seriesId - Series ID to load
+     */
+    async loadFromFirestore(db, cacheManager, userId, seriesId) {
+        if (!seriesId || !db) return
+
+        this.seriesId = seriesId
+
+        try {
+            const { PlaylistRepository } = await import('../repositories/PlaylistRepository.js')
+            const repo = new PlaylistRepository(db, cacheManager, userId || 'anonymous-user', seriesId)
+
+            const playlists = await repo.findAll()
+
+            if (playlists && playlists.length > 0) {
+                this.playlists = playlists
+                this.isSynchronized = true
+                this.isDirty = false
+                this.saveToLocalStorage()
+                this.notify()
+                return true
+            }
+        } catch (e) {
+            console.error('Failed to load playlists from Firestore:', e)
+        }
+        return false
+    }
+
+    /**
+     * Clean LocalStorage
+     */
+    clearLocalStorage() {
+        localStorage.removeItem('mjrp_current_playlists')
+    }
+
+    /**
      * Reset store to initial state
      */
     reset() {
@@ -241,6 +369,7 @@ export class PlaylistsStore {
         this.isSynchronized = true
         this.versions = []
         this.currentVersionIndex = -1
+        this.clearLocalStorage() // Clear storage on reset
         this.notify()
     }
 }
