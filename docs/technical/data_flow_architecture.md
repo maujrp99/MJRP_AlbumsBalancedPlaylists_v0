@@ -1,5 +1,7 @@
 # Album Data Flow Architecture
 
+**Updated**: 2025-12-06T21:44
+
 ## Overview
 This document maps the **Data Flow Diagram (DFD)** and **Sequence Diagrams** for album data through the application's views and store.
 
@@ -15,7 +17,7 @@ graph LR
     PlaylistsView[PlaylistsView]
     RankingView[RankingView]
     
-    SeriesStore[(SeriesStore)]
+    AlbumSeriesStore[(AlbumSeriesStore)]
     AlbumsStore[(AlbumsStore)]
     PlaylistsStore[(PlaylistsStore)]
     
@@ -27,8 +29,8 @@ graph LR
     User --> PlaylistsView
     User --> RankingView
     
-    HomeView --> SeriesStore
-    AlbumsView --> SeriesStore
+    HomeView --> AlbumSeriesStore
+    AlbumsView --> AlbumSeriesStore
     AlbumsView --> AlbumsStore
     AlbumsView --> API
     
@@ -37,7 +39,7 @@ graph LR
     RankingView --> AlbumsStore
     
     API --> AlbumsStore
-    SeriesStore --> Firestore
+    AlbumSeriesStore --> Firestore
 ```
 
 ---
@@ -48,17 +50,17 @@ graph LR
 sequenceDiagram
     participant User
     participant HomeView
-    participant SeriesStore
+    participant AlbumSeriesStore
     participant AlbumsView
     participant API
     participant AlbumsStore
     
     User->>HomeView: Create/Resume Series
-    HomeView->>SeriesStore: setActiveSeries(id)
+    HomeView->>AlbumSeriesStore: setActiveSeries(id)
     HomeView->>AlbumsView: navigate('/albums?seriesId=X')
     
-    AlbumsView->>SeriesStore: getActiveSeries()
-    SeriesStore-->>AlbumsView: {id, name, albumQueries}
+    AlbumsView->>AlbumSeriesStore: getActiveSeries()
+    AlbumSeriesStore-->>AlbumsView: {id, name, albumQueries}
     
     AlbumsView->>AlbumsView: loadAlbumsFromQueries()
     AlbumsView->>AlbumsStore: reset() ⚠️ CLEARS OLD DATA
@@ -80,7 +82,7 @@ sequenceDiagram
 
 ---
 
-## Scenario 2: Navigate to Playlists (Proposed Fix)
+## Scenario 2: Navigate to Playlists
 
 ```mermaid
 sequenceDiagram
@@ -109,15 +111,9 @@ sequenceDiagram
     PlaylistsView->>PlaylistsView: render playlists
 ```
 
-**Key Points:**
-- ✅ AlbumsView.destroy() does NOT call reset()
-- ✅ Store data persists across navigation
-- ✅ PlaylistsView directly accesses store data
-- ❌ NO recovery logic needed
-
 ---
 
-## Scenario 3: Navigate to Album Ranking (Proposed Fix)
+## Scenario 3: Navigate to Album Ranking
 
 ```mermaid
 sequenceDiagram
@@ -144,12 +140,6 @@ sequenceDiagram
     RankingView->>RankingView: render ranking view
 ```
 
-**Key Points:**
-- ✅ AlbumsView.destroy() does NOT call reset()
-- ✅ Store data persists across navigation
-- ✅ RankingView finds album in store
-- ❌ NO recovery logic needed
-
 ---
 
 ## Scenario 4: Hard Refresh (Edge Case)
@@ -158,7 +148,7 @@ sequenceDiagram
 sequenceDiagram
     participant Browser
     participant AlbumsView
-    participant SeriesStore
+    participant AlbumSeriesStore
     participant Firestore
     participant API
     participant AlbumsStore
@@ -167,15 +157,15 @@ sequenceDiagram
     Note over AlbumsStore: ⚠️ Store is EMPTY (in-memory)
     
     AlbumsView->>AlbumsView: mount(params)
-    AlbumsView->>SeriesStore: getActiveSeries()
-    SeriesStore-->>AlbumsView: null ⚠️ (also empty)
+    AlbumsView->>AlbumSeriesStore: getActiveSeries()
+    AlbumSeriesStore-->>AlbumsView: null ⚠️ (also empty)
     
     AlbumsView->>AlbumsView: Check for seriesId in URL
     AlbumsView->>Firestore: loadFromFirestore()
-    Firestore-->>SeriesStore: [series data]
+    Firestore-->>AlbumSeriesStore: [series data]
     
-    AlbumsView->>SeriesStore: setActiveSeries(urlSeriesId)
-    SeriesStore-->>AlbumsView: {id, name, albumQueries}
+    AlbumsView->>AlbumSeriesStore: setActiveSeries(urlSeriesId)
+    AlbumSeriesStore-->>AlbumsView: {id, name, albumQueries}
     
     AlbumsView->>AlbumsView: loadAlbumsFromQueries()
     AlbumsView->>AlbumsStore: reset() ⚠️ (already empty)
@@ -188,12 +178,6 @@ sequenceDiagram
     
     AlbumsView->>AlbumsView: render albums
 ```
-
-**Key Points:**
-- ⚠️ Hard refresh = new browser session = empty store
-- ✅ AlbumsView has fallback: load from Firestore
-- ✅ This is ONLY for hard refresh, not navigation
-- ❌ PlaylistsView/RankingView do NOT need this (user navigates from Albums)
 
 ---
 
@@ -233,35 +217,23 @@ stateDiagram-v2
 ### ✅ Store Persists (Keep Data)
 1. **View Navigation**: AlbumsView → PlaylistsView → RankingView
 2. **Back/Forward**: Browser history navigation
-3. **View Lifecycle**: constructor/destroy do NOT reset
+3. **View Lifecycle**: destroy() does NOT reset
 
-### Current vs Proposed
+### Current Implementation
 
-| Event | Current Behavior | Proposed Behavior |
-|-------|------------------|-------------------|
-| AlbumsView.constructor() | ❌ reset() | ✅ No reset() |
-| AlbumsView.destroy() | ❌ reset() | ✅ No reset() |
-| loadAlbumsFromQueries() | ✅ reset() | ✅ reset() (keep!) |
-| Navigate to Playlists | ❌ Empty store → recovery | ✅ Store has data |
-| Navigate to Ranking | ❌ Empty store → recovery | ✅ Store has data |
-| Hard Refresh | ✅ Fallback to Firestore | ✅ Same (keep!) |
+| Event | Behavior |
+|-------|----------|
+| AlbumsView.constructor() | ✅ No reset() |
+| AlbumsView.destroy() | ✅ No reset() |
+| loadAlbumsFromQueries() | ✅ reset() before fetch |
+| Navigate to Playlists | ✅ Store has data |
+| Navigate to Ranking | ✅ Store has data |
+| Hard Refresh | ✅ Fallback to Firestore |
 
 ---
 
 ## Architecture Benefits
 
-### Before (Band-Aid Approach)
-```
-AlbumsView loads data
-  → destroy() resets store
-    → PlaylistsView needs recovery
-    → RankingView needs recovery
-      → Code duplication
-      → Race conditions
-      → Ghost albums
-```
-
-### After (Proposed)
 ```
 AlbumsView loads data ONCE
   → Store persists while series active
