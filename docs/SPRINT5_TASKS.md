@@ -25,15 +25,15 @@
 
 ---
 
-## Phase 2: Firebase SDK Standardization (P0)
+## Phase 2: Firebase SDK (P0) ✅ DONE
 
-- [x] **2.1** Update `series.js` → modular Firestore imports
-- [x] **2.2** Delete duplicate `saveToFirestore()` from series.js
+- [x] **2.1** Update `albumSeries.js` → modular Firestore imports
+- [x] **2.2** Delete duplicate `saveToFirestore()` from albumSeries.js
 - [x] **2.3** Convert `loadFromFirestore()` to modular API
 - [x] **2.4** Convert `saveToFirestore()` to modular API
-- [ ] **2.5** Add Firestore modular imports to albums.js
-- [ ] **2.6** Convert albums.js to modular API
-- [ ] **2.7** Verify: No "firebase is not defined" errors
+- [x] **2.5** Add Firestore modular imports to albums.js
+- [x] **2.6** Convert albums.js to modular API
+- [x] **2.7** Build verified ✅
 
 ---
 

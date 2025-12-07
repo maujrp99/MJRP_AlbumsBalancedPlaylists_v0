@@ -1,7 +1,7 @@
 # MJRP Albums Balanced Playlists — Project Summary
 
-**Version**: v2.0.3 (Production)  
-**Last Updated**: 2025-12-02
+**Version**: v2.0.4 (Production)  
+**Last Updated**: 2025-12-06
 
 ---
 
@@ -9,11 +9,20 @@
 
 **MJRP Playlist Generator** is a web application that generates balanced playlists from track-level acclaim data, combining deterministic evidence (BestEverAlbums scraper) with AI enrichment (Google Gemini).
 
-### Current Status ✅
-- **v1.6.1** deployed to production
+### Current Status ⚠️ 4 P0 Blockers
+- **v2.0.4** deployed to production
 - Frontend: `https://mjrp-playlist-generator.web.app`
 - Backend API: Cloud Run (`mjrp-proxy`)
-- All core features operational with full BestEverAlbums integration
+- Core features operational BUT **Firestore persistence broken**
+
+> [!CAUTION]
+> **Sprint 5 UAT Blockers (2025-12-06)**:
+> 1. 🔴 Firebase SDK Mismatch (nothing saves to Firestore)
+> 2. 🔴 Series UI Buttons non-functional
+> 3. 🔴 Ghost Albums (Issue #22) - 4 fix attempts failed
+> 4. 🔴 Playlists lost on refresh
+>
+> See [SPRINT5_UAT_20251206.md](../tester/SPRINT5_UAT_20251206.md)
 
 ---
 

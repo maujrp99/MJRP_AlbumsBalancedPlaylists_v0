@@ -36,10 +36,15 @@ export class TopNav {
 
         <!-- Logo -->
         <a href="/home" class="nav-logo flex items-center gap-3 group flex-1 md:flex-none" data-link>
-          <div class="logo-icon w-12 h-12 md:w-16 md:h-16 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+          <div class="logo-icon w-12 h-12 md:w-16 md:h-16 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform shrink-0">
             <img src="/assets/images/logo.png" alt="MJRP Logo" class="w-full h-full object-contain">
           </div>
-          <span class="hidden sm:inline font-syne font-bold text-lg md:text-xl tracking-tight">The Album Playlist Synthesizer</span>
+          <img 
+            src="/assets/images/TheAlbumPlaylistSynth.png" 
+            alt="The Album Playlist Synthesizer"
+            class="h-8 sm:h-10 md:h-12 w-auto object-contain hover:opacity-80 transition-opacity"
+            loading="lazy"
+          >
         </a>
 
         <!-- Desktop Menu -->
@@ -58,8 +63,8 @@ export class TopNav {
         <!-- Mobile Menu Drawer (Left Side) -->
         <div 
           id="mobileMenu" 
-          class="fixed inset-y-0 left-0 z-50 flex flex-col w-[280px] max-w-[80vw] transition-transform duration-300 transform -translate-x-full"
-          style="background: #0d0d12; border-right: 1px solid rgba(255, 136, 0, 0.2); box-shadow: 4px 0 40px rgba(0,0,0,0.8);"
+          class="fixed inset-y-0 left-0 z-50 flex flex-col w-[280px] max-w-[80vw] transition-transform duration-300 transform -translate-x-full bg-[#0a0a0f] border-r border-orange-500/20"
+          style="box-shadow: 4px 0 40px rgba(0,0,0,0.9);"
         >
           <!-- Header -->
           <div class="flex items-center justify-between p-5 border-b border-white/10">

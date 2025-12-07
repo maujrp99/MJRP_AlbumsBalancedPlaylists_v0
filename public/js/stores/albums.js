@@ -4,6 +4,7 @@
  */
 
 import { Album } from '../models/Album.js'
+import { collection, doc, addDoc, updateDoc, getDocs } from 'firebase/firestore'
 
 export class AlbumsStore {
     constructor() {
@@ -143,10 +144,10 @@ export class AlbumsStore {
         this.notify()
 
         try {
-            const snapshot = await db.collection('albums').get()
-            this.albums = snapshot.docs.map(doc => new Album({
-                id: doc.id,
-                ...doc.data()
+            const snapshot = await getDocs(collection(db, 'albums'))
+            this.albums = snapshot.docs.map(docSnap => new Album({
+                id: docSnap.id,
+                ...docSnap.data()
             }))
             this.notify()
             return this.albums
@@ -169,10 +170,10 @@ export class AlbumsStore {
     async saveToFirestore(db, album) {
         try {
             if (album.id) {
-                await db.collection('albums').doc(album.id).update(album)
+                await updateDoc(doc(db, 'albums', album.id), album)
                 return album.id
             } else {
-                const docRef = await db.collection('albums').add(album)
+                const docRef = await addDoc(collection(db, 'albums'), album)
                 album.id = docRef.id
                 this.addAlbum(album)
                 return docRef.id

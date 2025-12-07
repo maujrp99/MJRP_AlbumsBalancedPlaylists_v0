@@ -1,8 +1,8 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-02  
-**Current Version**: v2.0.3  
-**Current Sprint**: Sprint 5 Phase 3 (Ready for UAT)
+**Last Updated**: 2025-12-06  
+**Current Version**: v2.0.4  
+**Current Sprint**: Sprint 5 Phase 3 (🔴 UAT BLOCKED - 4 P0 Issues)
 
 ---
 
@@ -86,36 +86,45 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 
 ### Sprint 5 Phase 3: Inventory System & Persistence (In Progress)
 
-**Status**: Phase 3 - Ready for UAT  
+**Status**: Phase 3 - 🔴 **UAT BLOCKED**  
 **Duration**: 3 phases (Nov 2025 - Dec 2025)
+
+> [!CAUTION]
+> Sprint 5 UAT found **4 critical blockers** (2025-12-06):
+> 1. **Firebase SDK Mismatch** - Nothing saves to Firestore (modular vs compat API)
+> 2. **Series UI Buttons** - Non-functional (Edit/Delete/Open)
+> 3. **Ghost Albums (Issue #22)** - 4 fix attempts failed
+> 4. **Playlists Not Persisted** - Lost on refresh
+>
+> See [SPRINT5_UAT_20251206.md](../tester/SPRINT5_UAT_20251206.md) for details.
 
 #### Scope
 
 **📦 Persistence Architecture**
-- ✅ **Firestore Persistence**
+- ✅ **Firestore Persistence** (Code exists)
   - Replace localStorage with Firestore Cloud Database
   - Persistence cross-device (sync between devices)
-  - User-scoped data (`/users/{userId}/`)
+  - ⚠️ **BLOCKER**: Firebase SDK mismatch prevents writes
   
 - ✅ **IndexedDB Cache** (L2 cache)
   - Replace localStorage (5MB limit)
   - IndexedDB = ~500MB+ capacity
   - Cross-tab sync
 
-- ✅ **Repository Pattern**
+- ✅ **Repository Pattern** (Code exists)
   - `AlbumRepository`, `SeriesRepository`, `PlaylistRepository`
   - `InventoryRepository` ← inventory persistence!
-  - CRUD completo (Create, Read, Update, Delete)
+  - ⚠️ **BLOCKER**: Not integrated into Views
 
 - ✅ **Migration Tool**
   - Migrate data from localStorage → Firestore
   - No data loss
 
-- ✅ **Inventory Persistence**
+- ✅ **Inventory Persistence** (UI exists)
   - Save owned albums in Firestore
-  - Format, price, notes → all persisted
+  - ⚠️ **BLOCKER**: InventoryRepository not connected
 
-**UAT Status**: Pending user confirmation
+**UAT Status**: ❌ **BLOCKED** - Requires AI Dev fixes
 
 ---
 
@@ -270,5 +279,5 @@ For detailed history of Sprints 1-4, see [CHANGELOG.md](../CHANGELOG.md).
 
 **See Also**:
 - [CHANGELOG.md](../CHANGELOG.md) - Detailed development history
-- [V2.0_ANALYSIS.md](V2.0_ANALYSIS.md) - Technical analysis
 - [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) - Executive summary
+- [SPRINT5_UAT_20251206.md](../tester/SPRINT5_UAT_20251206.md) - Current blockers

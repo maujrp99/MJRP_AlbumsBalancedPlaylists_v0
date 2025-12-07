@@ -35,13 +35,13 @@
 - **Focus on**: Problem being solved, target users, key differentiators
 
 ### **Step 1.3: How did we get here?**
-📄 **Read**: `reports/sprint_history_analysis.md`
-- **Purpose**: Understand development chronology (8 sprints)
+📄 **Read**: `docs/CHANGELOG.md` and `docs/product-management/ROADMAP.md`
+- **Purpose**: Understand development chronology (Sprints 1-9)
 - **Focus on**: 
-  - Sprint timeline (pages 1-3)
+  - Sprint history in ROADMAP.md (completed sprints section)
+  - Current sprint status and blockers
   - Architecture evolution (4 phases)
-  - Legacy v1.6 vs v2.0 comparison table
-- **⏭️ Skip**: Detailed sprint deliverables (come back later if needed)
+- **Note**: Historical sprint analysis was archived to `docs/archive/archive-backup.tar.gz`
 
 **✅ Checkpoint**: You should now understand WHAT the project does and WHY it exists.
 
@@ -87,19 +87,20 @@
   - 🚨 CRITICAL DEVELOPER NOTICE section
 - **Key takeaway**: Focus on UAT Verification!
 
-### **Step 3.2: Issue Audit**
-📄 **Read**: `reports/issue_audit_report.md`
-- **Purpose**: Understand all 10 issues (#9-18) and their TRUE status
+### **Step 3.2: Current Issues & Blockers**
+📄 **Read**: `docs/debug/DEBUG_LOG.md` and `docs/tester/SPRINT5_UAT_20251206.md`
+- **Purpose**: Understand current blockers and active issues
 - **Focus on**:
-  - Issues #15 & #16: Marked "Resolved" (Fixes implemented, pending UAT)
-  - Issues #9-14, #17-18: Need UAT validation
-  - Recommended actions for each issue
+  - Issue #22: Ghost Albums (4 fix attempts failed)
+  - Firebase SDK Mismatch (nothing saves to Firestore)
+  - Series UI Buttons (non-functional)
+- **Note**: Historical issue audit archived. Current issues tracked in DEBUG_LOG.md
 
-### **Step 3.3: Code vs Documentation Contradictions**
-📄 **Skim**: `reports/CodeVerificationReport.md`
-- **Purpose**: See what was claimed vs what exists in code
-- **Focus on**: Summary table (page 1)
-- **Key insight**: 62.5% of "Remaining Work" claims were incorrect
+### **Step 3.3: Implementation Gaps**
+📄 **Read**: `docs/tester/GAP_ANALYSIS.md`
+- **Purpose**: See what's documented vs what actually works
+- **Focus on**: Persistence gaps (Firestore vs localStorage)
+- **Key insight**: Repositories exist but aren't integrated into Views
 
 **✅ Checkpoint**: You should now know what's ACTUALLY done, what NEEDS FIXING, and what NOT to trust.
 
@@ -140,9 +141,13 @@
    - `AlbumsView.js` (1,011 lines) - **⚠️ Contains Issue #15 & #16 bugs**
    - `InventoryView.js` (593 lines) - CRUD operations
 
-**⚠️ CRITICAL**: When reading `AlbumsView.js`:
-- Look for `AbortController` implementation (Issue #15 fix - doesn't work)
-- Look for `localStorage.getItem('albumsViewMode')` (Issue #16 fix - doesn't work)
+**Note**: Issues #15 (Ghost Albums) and #16 (View Mode) were closed.
+Current active issue: **Issue #22 (Ghost Albums in Expanded View)** - See `docs/debug/DEBUG_LOG.md`
+
+**⚠️ CRITICAL Sprint 5 Blockers** (as of 2025-12-06):
+1. 🔴 **Firebase SDK Mismatch** - Nothing saves to Firestore
+2. 🔴 **Series UI Buttons** - Non-functional (Edit/Delete/Open)
+3. 🔴 **Ghost Albums (Issue #22)** - 4 fix attempts failed
 
 ### **Step 4.4: API Client**
 📄 **Read**: `public/js/api/client.js`
@@ -197,18 +202,17 @@ cd server && node index.js
 
 Based on current status, here's the priority order:
 
-### **Priority 1: UAT Testing (Verify Implementations)**
-Test these 6 UI components manually:
-1. **Ghost Albums Fix (#15)**: Verify navigation doesn't duplicate albums
-2. **View Mode Toggle Fix (#16)**: Verify toggle works and persists
-3. Migration Banner (HomeView)
-4. Edit Album Modal
-5. Delete Album Modal
-6. InventoryView
+### **Priority 1: Fix Critical Blockers (Sprint 5)**
+See `docs/tester/SPRINT5_UAT_20251206.md` for details:
+1. 🔴 **P0**: Firebase SDK Mismatch (modular vs compat API)
+2. 🔴 **P0**: Series Management Buttons (event delegation issue)
+3. 🔴 **P0**: Ghost Albums Issue #22 (4 fix attempts failed)
+4. 🔴 **P0**: Playlists/Series not persisted to Firestore
 
-### **Priority 2: Complete Pending Features**
-- Migration Progress Modal (optional polish)
-- Create Series from Inventory backend (TODO at line 228)
+### **Priority 2: Integrate Repositories**
+- Connect `PlaylistRepository` to `PlaylistsView`
+- Connect `SeriesRepository` to `HomeView`
+- Connect `InventoryRepository` to `InventoryView`
 
 ---
 

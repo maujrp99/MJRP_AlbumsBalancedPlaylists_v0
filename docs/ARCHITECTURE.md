@@ -35,6 +35,41 @@
 
 ---
 
+# ⚠️ Known Limitations (as of 2025-12-06)
+
+> [!WARNING]
+> **Sprint 5 UAT found critical gaps** - documentation may describe features that don't work as expected.
+> See [SPRINT5_UAT_20251206.md](tester/SPRINT5_UAT_20251206.md) for details.
+
+### Firestore Persistence Gap
+
+| Component | Code Exists | Integrated | Works |
+|-----------|-------------|------------|-------|
+| SeriesRepository | ✅ | ❌ | ❌ |
+| PlaylistRepository | ✅ | ❌ | ❌ |
+| InventoryRepository | ✅ | ❌ | ❌ |
+
+**Root Cause**: Firebase SDK mismatch (modular vs compat API)
+- `app.js` uses: `import { getFirestore } from 'firebase/firestore'`
+- `series.js` uses: `firebase.firestore.FieldValue.serverTimestamp()` ← **Crashes**
+
+### Series UI Gaps
+
+| Button | Code Exists | Event Listener | Works |
+|--------|-------------|----------------|-------|
+| Edit Series | ✅ | ❌ | ❌ |
+| Delete Series | ✅ | ❌ | ❌ |
+| Open Series | ✅ | ❌ | ❌ |
+
+**Root Cause**: Event delegation in `SeriesListView.mount()` not matching buttons.
+
+### Ghost Albums (Issue #22)
+
+Albums from previous series appear when switching series. **4 fix attempts failed**.  
+See [DEBUG_LOG.md](debug/DEBUG_LOG.md) Issue #22 for investigation history.
+
+---
+
 # Current Architecture and Analysis
 
 ## Domain Model Architecture (Current)
