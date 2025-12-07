@@ -58,9 +58,14 @@ Fixed SPA entry point CSS link issue and CSS positioning rules.
 
 ---
 
-## Phase 4: Playlists Persistence (P0) - NEXT
+## Phase 4: Playlists Persistence & Series Views (P0) - NEXT
  
-Add localStorage/Firestore persistence to PlaylistsStore.
+Add localStorage/Firestore persistence to PlaylistsStore AND implement the Series Views.
+
+- [ ] Persistence for PlaylistsStore
+- [ ] **Implement View**: `AlbumSeriesListView` (manage album series)
+- [ ] **Implement View**: `SavedPlaylistsView` (manage playlist series)
+- [ ] Ensure persistence works for both views
  
 ---
  

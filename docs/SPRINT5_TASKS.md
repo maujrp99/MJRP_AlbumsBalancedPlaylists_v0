@@ -60,6 +60,10 @@
 - [ ] **4.2** Add `loadFromLocalStorage()` to PlaylistsStore
 - [ ] **4.3** Call on constructor and setPlaylists
 - [ ] **4.4** Integrate PlaylistRepository in PlaylistsView
+- [ ] **4.5** Implement `AlbumSeriesListView` (CRUD UI + Logic)
+- [ ] **4.6** Implement `SavedPlaylistsView` (UI for saved playlists)
+- [ ] **4.7** Ensure correct routing for `/album-series` and `/playlist-series`
+- [ ] **4.8** Verify persistence linkage logic across views
  
 ---
  
