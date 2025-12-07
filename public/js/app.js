@@ -54,10 +54,27 @@ onAuthStateChanged(auth, (user) => {
 router.register('/home', () => new HomeView())
 router.register('/albums', () => new AlbumsView())
 router.register('/playlists', () => new PlaylistsView())
+
+// New routes for Phase 1 TopNav fix
+router.register('/album-series', async () => {
+    const { AlbumSeriesListView } = await import('./views/AlbumSeriesListView.js')
+    return new AlbumSeriesListView(db)
+})
+router.register('/playlist-series', async () => {
+    const { SavedPlaylistsView } = await import('./views/SavedPlaylistsView.js')
+    return new SavedPlaylistsView()
+})
+
+// Legacy routes (kept for backward compatibility)
 router.register('/saved-playlists', async () => {
     const { SavedPlaylistsView } = await import('./views/SavedPlaylistsView.js')
     return new SavedPlaylistsView()
 })
+router.register('/series', async () => {
+    const { AlbumSeriesListView } = await import('./views/AlbumSeriesListView.js')
+    return new AlbumSeriesListView(db)
+})
+
 router.register('/inventory', () => new InventoryView())
 router.register('/ranking/:albumId', () => new RankingView())
 router.register('/consolidated-ranking', () => new ConsolidatedRankingView())

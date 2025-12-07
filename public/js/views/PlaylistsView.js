@@ -1,7 +1,7 @@
 import { BaseView } from './BaseView.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { albumsStore } from '../stores/albums.js'
-import { seriesStore } from '../stores/series.js'
+import { albumSeriesStore } from '../stores/albumSeries.js'
 import { apiClient } from '../api/client.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
@@ -21,8 +21,8 @@ export class PlaylistsView extends BaseView {
 
   async render(params) {
     const state = playlistsStore.getState()
-    const activeSeries = seriesStore.getActiveSeries()
-    const allSeries = seriesStore.getSeries()
+    const activeSeries = albumSeriesStore.getActiveSeries()
+    const allSeries = albumSeriesStore.getSeries()
 
     // FIX: Check for "Ghost Playlists" (Issue #19 equivalent)
     // If store has playlists but they belong to a different series, ignore them
@@ -75,7 +75,7 @@ export class PlaylistsView extends BaseView {
 
   update() {
     const state = playlistsStore.getState()
-    const activeSeries = seriesStore.getActiveSeries()
+    const activeSeries = albumSeriesStore.getActiveSeries()
 
     // FIX: Apply same series validation to update()
     let playlists = state.playlists
@@ -391,7 +391,7 @@ export class PlaylistsView extends BaseView {
       console.log('[PlaylistsView] Received playlists:', playlists)
 
       // FIX: Pass seriesId to store to link playlists to this specific series
-      const activeSeries = seriesStore.getActiveSeries()
+      const activeSeries = albumSeriesStore.getActiveSeries()
       playlistsStore.setPlaylists(playlists, activeSeries ? activeSeries.id : null)
 
       console.log('[PlaylistsView] Playlists set in store for series:', activeSeries ? activeSeries.id : 'unknown')

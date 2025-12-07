@@ -1,5 +1,5 @@
 import { BaseView } from './BaseView.js'
-import { seriesStore } from '../stores/series.js'
+import { albumSeriesStore } from '../stores/albumSeries.js'
 import { router } from '../router.js'
 import { getIcon } from '../components/Icons.js'
 import { db } from '../app.js'
@@ -21,7 +21,7 @@ export class HomeView extends BaseView {
   }
 
   async render(params) {
-    const recentSeries = seriesStore.getSeries()
+    const recentSeries = albumSeriesStore.getSeries()
 
     // Check if migration is needed
     this.showMigrationBanner = !this.migrationUtility.isMigrationComplete() &&
@@ -123,7 +123,7 @@ export class HomeView extends BaseView {
         </section>
 
         <section class="recent-series mt-12 fade-in" style="animation-delay: 0.2s">
-          <h2 class="text-center text-2xl md:text-3xl font-bold mb-12 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Recent Series</h2>
+          <h2 class="text-center text-2xl md:text-3xl font-bold mb-12 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Recent Albums Series</h2>
           <div class="series-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             ${this.renderRecentSeries(recentSeries)}
           </div>
@@ -214,7 +214,7 @@ export class HomeView extends BaseView {
     this.container = document.getElementById('app')
 
     // Subscribe to series store for updates
-    const unsubscribe = seriesStore.subscribe((state) => {
+    const unsubscribe = albumSeriesStore.subscribe((state) => {
       this.updateRecentSeries(state.series)
     })
     this.subscriptions.push(unsubscribe)
@@ -371,15 +371,15 @@ export class HomeView extends BaseView {
       updatedAt: new Date().toISOString()
     }
 
-    const createdSeries = seriesStore.createSeries(series)
-    seriesStore.setActiveSeries(createdSeries.id)
+    const createdSeries = albumSeriesStore.createSeries(series)
+    albumSeriesStore.setActiveSeries(createdSeries.id)
 
     // Navigate to albums view with seriesId
     router.navigate(`/albums?seriesId=${createdSeries.id}`)
   }
 
   handleResumeSeries(seriesId) {
-    seriesStore.setActiveSeries(seriesId)
+    albumSeriesStore.setActiveSeries(seriesId)
     router.navigate(`/albums?seriesId=${seriesId}`)
   }
 

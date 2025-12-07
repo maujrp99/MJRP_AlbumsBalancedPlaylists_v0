@@ -1,6 +1,6 @@
 import { BaseView } from './BaseView.js'
 import { albumsStore } from '../stores/albums.js'
-import { seriesStore } from '../stores/series.js'
+import { albumSeriesStore } from '../stores/albumSeries.js'
 import { getIcon } from '../components/Icons.js'
 
 export class ConsolidatedRankingView extends BaseView {
@@ -17,10 +17,10 @@ export class ConsolidatedRankingView extends BaseView {
 
     // Subscribe to stores
     this.subscribe(albumsStore, () => this.render())
-    this.subscribe(seriesStore, () => this.render())
+    this.subscribe(albumSeriesStore, () => this.render())
 
     // Ensure series is loaded
-    if (!seriesStore.getById(this.activeSeriesId)) {
+    if (!albumSeriesStore.getById(this.activeSeriesId)) {
       // If series not found in store (e.g. direct link), try to load or redirect
       // For now, redirect to home if not found
       // window.location.href = '/home'
@@ -74,7 +74,7 @@ export class ConsolidatedRankingView extends BaseView {
   }
 
   render() {
-    const series = seriesStore.getById(this.activeSeriesId)
+    const series = albumSeriesStore.getById(this.activeSeriesId)
     const albums = albumsStore.getAlbums()
     const tracks = this.getFilteredTracks()
 

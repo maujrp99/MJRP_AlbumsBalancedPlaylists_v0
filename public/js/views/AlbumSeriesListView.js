@@ -1,24 +1,24 @@
 import { BaseView } from './BaseView.js'
-import { seriesStore } from '../stores/series.js'
+import { albumSeriesStore } from '../stores/albumSeries.js'
 import { router } from '../router.js'
 import { getIcon } from '../components/Icons.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 
 /**
- * SeriesListView
- * Manage all playlist series (CRUD)
+ * AlbumSeriesListView
+ * Manage all album series (CRUD)
  */
-export class SeriesListView extends BaseView {
-    constructor(db) {
-        super()
-        this.db = db
-        this.editingSeriesId = null
-    }
+export class AlbumSeriesListView extends BaseView {
+  constructor(db) {
+    super()
+    this.db = db
+    this.editingSeriesId = null
+  }
 
-    async render(params) {
-        const series = seriesStore.getSeries()
+  async render(params) {
+    const series = albumSeriesStore.getSeries()
 
-        return `
+    return `
       <div class="series-list-view container">
         <header class="view-header mb-8 fade-in">
           ${Breadcrumb.render('/series')}
@@ -74,20 +74,20 @@ export class SeriesListView extends BaseView {
         </div>
       </div>
     `
-    }
+  }
 
-    renderEmptyState() {
-        return `
+  renderEmptyState() {
+    return `
       <div class="text-center py-12 opacity-50">
         ${getIcon('Layers', 'w-16 h-16 mx-auto mb-4 opacity-50')}
         <h3 class="text-xl font-bold mb-2">No Series Found</h3>
         <p>Create your first series to get started.</p>
       </div>
     `
-    }
+  }
 
-    renderSeriesList(series) {
-        return `
+  renderSeriesList(series) {
+    return `
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         ${series.map(s => `
           <div class="series-card glass-panel group hover:border-accent-primary/30 transition-all duration-300 flex flex-col h-full">
@@ -128,132 +128,132 @@ export class SeriesListView extends BaseView {
         `).join('')}
       </div>
     `
+  }
+
+  update() {
+    const series = albumSeriesStore.getSeries()
+    const mainContent = this.$('#mainContent')
+    if (mainContent) {
+      mainContent.innerHTML = series.length === 0 ? this.renderEmptyState() : this.renderSeriesList(series)
+    }
+  }
+
+  async mount() {
+    // Subscribe to store
+    const unsubscribe = albumSeriesStore.subscribe(() => this.update())
+    this.subscriptions.push(unsubscribe)
+
+    // Load from Firestore if needed (and not already loaded)
+    if (this.db && albumSeriesStore.getSeries().length === 0) {
+      albumSeriesStore.loadFromFirestore(this.db).catch(console.warn)
     }
 
-    update() {
-        const series = seriesStore.getSeries()
-        const mainContent = this.$('#mainContent')
-        if (mainContent) {
-            mainContent.innerHTML = series.length === 0 ? this.renderEmptyState() : this.renderSeriesList(series)
+    // Event Delegation
+    this.on(this.container, 'click', (e) => {
+      const btn = e.target.closest('button[data-action]')
+      if (!btn) return
+
+      const action = btn.dataset.action
+      const id = btn.dataset.id
+
+      if (action === 'continue') router.navigate(`/albums?seriesId=${id}`)
+      if (action === 'edit') this.openEditModal(id)
+      if (action === 'delete') this.openDeleteModal(id)
+    })
+
+    // Create Button
+    const createBtn = this.$('#createSeriesBtn')
+    if (createBtn) {
+      this.on(createBtn, 'click', () => router.navigate('/home'))
+    }
+
+    // Modal Controls
+    this.setupModals()
+  }
+
+  setupModals() {
+    // Edit Modal
+    const editModal = this.$('#editModal')
+    const editForm = this.$('#editForm')
+    const cancelEdit = this.$('#cancelEditBtn')
+
+    if (editForm) {
+      this.on(editForm, 'submit', async (e) => {
+        e.preventDefault()
+        const name = this.$('#editNameInput').value
+        if (this.editingSeriesId && name) {
+          try {
+            await albumSeriesStore.updateSeries(this.editingSeriesId, { name })
+            if (this.db) {
+              // Ensure Firestore update happens
+              const series = albumSeriesStore.getSeries().find(s => s.id === this.editingSeriesId)
+              if (series) await albumSeriesStore.saveToFirestore(this.db, series)
+            }
+            this.closeModal(editModal)
+          } catch (err) {
+            alert('Failed to update series: ' + err.message)
+          }
         }
+      })
     }
 
-    async mount() {
-        // Subscribe to store
-        const unsubscribe = seriesStore.subscribe(() => this.update())
-        this.subscriptions.push(unsubscribe)
+    if (cancelEdit) this.on(cancelEdit, 'click', () => this.closeModal(editModal))
 
-        // Load from Firestore if needed (and not already loaded)
-        if (this.db && seriesStore.getSeries().length === 0) {
-            seriesStore.loadFromFirestore(this.db).catch(console.warn)
+    // Delete Modal
+    const deleteModal = this.$('#deleteModal')
+    const confirmDelete = this.$('#confirmDeleteBtn')
+    const cancelDelete = this.$('#cancelDeleteBtn')
+
+    if (confirmDelete) {
+      this.on(confirmDelete, 'click', async () => {
+        if (this.deletingSeriesId) {
+          try {
+            await albumSeriesStore.deleteSeries(this.deletingSeriesId, this.db)
+            this.closeModal(deleteModal)
+          } catch (err) {
+            alert('Failed to delete series: ' + err.message)
+          }
         }
-
-        // Event Delegation
-        this.on(this.container, 'click', (e) => {
-            const btn = e.target.closest('button[data-action]')
-            if (!btn) return
-
-            const action = btn.dataset.action
-            const id = btn.dataset.id
-
-            if (action === 'continue') router.navigate(`/albums?seriesId=${id}`)
-            if (action === 'edit') this.openEditModal(id)
-            if (action === 'delete') this.openDeleteModal(id)
-        })
-
-        // Create Button
-        const createBtn = this.$('#createSeriesBtn')
-        if (createBtn) {
-            this.on(createBtn, 'click', () => router.navigate('/home'))
-        }
-
-        // Modal Controls
-        this.setupModals()
+      })
     }
 
-    setupModals() {
-        // Edit Modal
-        const editModal = this.$('#editModal')
-        const editForm = this.$('#editForm')
-        const cancelEdit = this.$('#cancelEditBtn')
+    if (cancelDelete) this.on(cancelDelete, 'click', () => this.closeModal(deleteModal))
+  }
 
-        if (editForm) {
-            this.on(editForm, 'submit', async (e) => {
-                e.preventDefault()
-                const name = this.$('#editNameInput').value
-                if (this.editingSeriesId && name) {
-                    try {
-                        await seriesStore.updateSeries(this.editingSeriesId, { name })
-                        if (this.db) {
-                            // Ensure Firestore update happens
-                            const series = seriesStore.getSeries().find(s => s.id === this.editingSeriesId)
-                            if (series) await seriesStore.saveToFirestore(this.db, series)
-                        }
-                        this.closeModal(editModal)
-                    } catch (err) {
-                        alert('Failed to update series: ' + err.message)
-                    }
-                }
-            })
-        }
+  openEditModal(id) {
+    const series = albumSeriesStore.getSeries().find(s => s.id === id)
+    if (!series) return
 
-        if (cancelEdit) this.on(cancelEdit, 'click', () => this.closeModal(editModal))
+    this.editingSeriesId = id
+    const input = this.$('#editNameInput')
+    if (input) input.value = series.name
 
-        // Delete Modal
-        const deleteModal = this.$('#deleteModal')
-        const confirmDelete = this.$('#confirmDeleteBtn')
-        const cancelDelete = this.$('#cancelDeleteBtn')
+    const modal = this.$('#editModal')
+    if (modal) modal.classList.remove('hidden')
+  }
 
-        if (confirmDelete) {
-            this.on(confirmDelete, 'click', async () => {
-                if (this.deletingSeriesId) {
-                    try {
-                        await seriesStore.deleteSeries(this.deletingSeriesId, this.db)
-                        this.closeModal(deleteModal)
-                    } catch (err) {
-                        alert('Failed to delete series: ' + err.message)
-                    }
-                }
-            })
-        }
+  openDeleteModal(id) {
+    const series = albumSeriesStore.getSeries().find(s => s.id === id)
+    if (!series) return
 
-        if (cancelDelete) this.on(cancelDelete, 'click', () => this.closeModal(deleteModal))
-    }
+    this.deletingSeriesId = id
+    const nameSpan = this.$('#deleteSeriesName')
+    if (nameSpan) nameSpan.textContent = series.name
 
-    openEditModal(id) {
-        const series = seriesStore.getSeries().find(s => s.id === id)
-        if (!series) return
+    const modal = this.$('#deleteModal')
+    if (modal) modal.classList.remove('hidden')
+  }
 
-        this.editingSeriesId = id
-        const input = this.$('#editNameInput')
-        if (input) input.value = series.name
+  closeModal(modal) {
+    if (modal) modal.classList.add('hidden')
+    this.editingSeriesId = null
+    this.deletingSeriesId = null
+  }
 
-        const modal = this.$('#editModal')
-        if (modal) modal.classList.remove('hidden')
-    }
-
-    openDeleteModal(id) {
-        const series = seriesStore.getSeries().find(s => s.id === id)
-        if (!series) return
-
-        this.deletingSeriesId = id
-        const nameSpan = this.$('#deleteSeriesName')
-        if (nameSpan) nameSpan.textContent = series.name
-
-        const modal = this.$('#deleteModal')
-        if (modal) modal.classList.remove('hidden')
-    }
-
-    closeModal(modal) {
-        if (modal) modal.classList.add('hidden')
-        this.editingSeriesId = null
-        this.deletingSeriesId = null
-    }
-
-    escapeHtml(text) {
-        if (!text) return ''
-        const div = document.createElement('div')
-        div.textContent = text
-        return div.innerHTML
-    }
+  escapeHtml(text) {
+    if (!text) return ''
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
+  }
 }

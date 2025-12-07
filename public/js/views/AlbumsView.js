@@ -1,6 +1,6 @@
 import { BaseView } from './BaseView.js'
 import { albumsStore } from '../stores/albums.js'
-import { seriesStore } from '../stores/series.js'
+import { albumSeriesStore } from '../stores/albumSeries.js'
 import { apiClient } from '../api/client.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
@@ -54,7 +54,7 @@ export class AlbumsView extends BaseView {
 
   async render(params) {
     const albums = albumsStore.getAlbums()
-    const activeSeries = seriesStore.getActiveSeries()
+    const activeSeries = albumSeriesStore.getActiveSeries()
     // Filter albums early to use throughout render
     const filteredAlbums = this.filterAlbums(albums)
 
@@ -560,7 +560,7 @@ export class AlbumsView extends BaseView {
       if (!this.isLoading) {
         // FIX: Ghost Albums Prevention (GHOST_ALBUMS_REPORT.md)
         // Only update grid if albums belong to the currently active series
-        const activeSeries = seriesStore.getActiveSeries()
+        const activeSeries = albumSeriesStore.getActiveSeries()
         const lastLoadedId = albumsStore.getLastLoadedSeriesId()
 
         // Guard: Don't render stale albums from a different series
@@ -623,7 +623,7 @@ export class AlbumsView extends BaseView {
       this.on(refreshBtn, 'click', async () => {
 
         // Get series albums queries
-        const activeSeries = seriesStore.getActiveSeries()
+        const activeSeries = albumSeriesStore.getActiveSeries()
         if (activeSeries?.albumQueries) {
           // Reload with skip-cache flag
           await this.loadAlbumsFromQueries(activeSeries.albumQueries, true) // skipCache = true
@@ -647,7 +647,7 @@ export class AlbumsView extends BaseView {
 
         // Re-initialize event listeners (preserves this instance)
         // Get current series info
-        const activeSeries = seriesStore.getActiveSeries()
+        const activeSeries = albumSeriesStore.getActiveSeries()
         const currentAlbums = albumsStore.getAlbums()
 
         // Re-setup all event listeners
@@ -714,7 +714,7 @@ export class AlbumsView extends BaseView {
         const generateBtn = this.$('#generatePlaylistsBtn')
         if (generateBtn) {
           this.on(generateBtn, 'click', async () => {
-            const activeSeries = seriesStore.getActiveSeries()
+            const activeSeries = albumSeriesStore.getActiveSeries()
             const albums = albumsStore.getAlbums()
 
             if (!activeSeries) {
@@ -831,7 +831,7 @@ export class AlbumsView extends BaseView {
     const generateBtn = this.$('#generatePlaylistsBtn')
     if (generateBtn) {
       this.on(generateBtn, 'click', async () => {
-        const activeSeries = seriesStore.getActiveSeries()
+        const activeSeries = albumSeriesStore.getActiveSeries()
         const albums = albumsStore.getAlbums()
 
         // FIX: Add validation for edge cases
@@ -856,10 +856,10 @@ export class AlbumsView extends BaseView {
 
     if (urlSeriesId) {
       console.log('[AlbumsView] Restoring series from URL:', urlSeriesId)
-      seriesStore.setActiveSeries(urlSeriesId)
+      albumSeriesStore.setActiveSeries(urlSeriesId)
     }
 
-    const activeSeries = seriesStore.getActiveSeries()
+    const activeSeries = albumSeriesStore.getActiveSeries()
     const currentAlbums = albumsStore.getAlbums()
 
     if (activeSeries && activeSeries.albumQueries && activeSeries.albumQueries.length > 0) {
@@ -897,14 +897,14 @@ export class AlbumsView extends BaseView {
       try {
         // We need to access the db instance. It's exported from app.js
         const { db } = await import('../app.js')
-        const { seriesStore } = await import('../stores/series.js')
+        const { albumSeriesStore } = await import('../stores/albumSeries.js')
 
         // Force load from Firestore
-        await seriesStore.loadFromFirestore(db)
+        await albumSeriesStore.loadFromFirestore(db)
 
         // Try setting active series again
-        seriesStore.setActiveSeries(urlSeriesId)
-        const reloadedSeries = seriesStore.getActiveSeries()
+        albumSeriesStore.setActiveSeries(urlSeriesId)
+        const reloadedSeries = albumSeriesStore.getActiveSeries()
 
         if (reloadedSeries && reloadedSeries.albumQueries) {
           console.log('[AlbumsView] Series recovered from Firestore:', reloadedSeries.name)
@@ -937,7 +937,7 @@ export class AlbumsView extends BaseView {
     this.abortController = new AbortController()
 
     // FIX: Set lastLoadedSeriesId BEFORE reset so subscription guard works during load
-    const targetSeries = seriesStore.getActiveSeries()
+    const targetSeries = albumSeriesStore.getActiveSeries()
     if (targetSeries) {
       albumsStore.setLastLoadedSeriesId(targetSeries.id)
     }

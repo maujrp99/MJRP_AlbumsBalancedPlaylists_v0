@@ -1,37 +1,11 @@
-import { serverTimestamp } from 'firebase/firestore'
+import { serverTimestamp, collection, doc, addDoc, updateDoc, getDocs, query, orderBy, limit } from 'firebase/firestore'
 
 /**
- * Series Store
- * Manages playlist series metadata and history
+ * AlbumSeriesStore
+ * Manages album series metadata and history
  */
 
-export class SeriesStore {
-    // ... existing constructor ...
-
-    async saveToFirestore(db, series) {
-        try {
-            const data = {
-                ...series,
-                updatedAt: serverTimestamp()
-            }
-
-            if (series.id) {
-                await db.collection('series').doc(series.id).update(data)
-                return series.id
-            } else {
-                const docRef = await db.collection('series').add({
-                    ...data,
-                    createdAt: serverTimestamp()
-                })
-                series.id = docRef.id
-                return docRef.id
-            }
-        } catch (error) {
-            this.error = error.message
-            this.notify()
-            throw error
-        }
-    }
+export class AlbumSeriesStore {
     constructor() {
         this.series = []
         this.activeSeries = null
@@ -126,16 +100,14 @@ export class SeriesStore {
         this.notify()
 
         try {
-            const snapshot = await db.collection('series')
-                .orderBy('updatedAt', 'desc')
-                .limit(20)
-                .get()
+            const q = query(collection(db, 'series'), orderBy('updatedAt', 'desc'), limit(20))
+            const snapshot = await getDocs(q)
 
-            this.series = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-                createdAt: doc.data().createdAt?.toDate(),
-                updatedAt: doc.data().updatedAt?.toDate()
+            this.series = snapshot.docs.map(docSnap => ({
+                id: docSnap.id,
+                ...docSnap.data(),
+                createdAt: docSnap.data().createdAt?.toDate(),
+                updatedAt: docSnap.data().updatedAt?.toDate()
             }))
 
             this.notify()
@@ -160,16 +132,16 @@ export class SeriesStore {
         try {
             const data = {
                 ...series,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                updatedAt: serverTimestamp()
             }
 
             if (series.id) {
-                await db.collection('series').doc(series.id).update(data)
+                await updateDoc(doc(db, 'series', series.id), data)
                 return series.id
             } else {
-                const docRef = await db.collection('series').add({
+                const docRef = await addDoc(collection(db, 'series'), {
                     ...data,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: serverTimestamp()
                 })
                 series.id = docRef.id
                 return docRef.id
@@ -225,4 +197,4 @@ export class SeriesStore {
 }
 
 // Singleton instance
-export const seriesStore = new SeriesStore()
+export const albumSeriesStore = new AlbumSeriesStore()
