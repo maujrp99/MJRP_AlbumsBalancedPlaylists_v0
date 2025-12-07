@@ -14,17 +14,15 @@
 
 ## 🚀 Quick Start
 
-### Development
-```bash
-# Terminal 1: Backend
-cd server && node index.js
+### Quick Start
 
-# Terminal 2: Frontend
-npm run dev
+```bash
+npm run dev          # Dev server → http://localhost:5000 (NOT 5173!)
+cd server && node index.js  # API server
 ```
 
-- **Frontend**: http://localhost:5000
-- **Backend**: http://localhost:3000
+> **Port Info**: Dev = 5000, Preview = 5005, API = 3000  
+> See `PORT_INFO.txt` or `docs/devops/PORT_CONFIGURATION.md`
 
 ### Testing
 ```bash

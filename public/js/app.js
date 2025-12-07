@@ -87,4 +87,14 @@ window.addEventListener('error', (e) => {
     // Optional: Show toast
 })
 
+
 console.log('🚀 App Initialized')
+
+// Expose stores/router globally for Puppeteer testing
+if (typeof window !== 'undefined') {
+    import('./stores/albumSeries.js').then(m => { window.albumSeriesStore = m.albumSeriesStore })
+    import('./stores/albums.js').then(m => { window.albumsStore = m.albumsStore })
+    import('./stores/playlists.js').then(m => { window.playlistsStore = m.playlistsStore })
+    window.router = router
+}
+

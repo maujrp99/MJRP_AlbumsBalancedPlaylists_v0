@@ -37,7 +37,7 @@
 
 ---
 
-## Phase 3: Ghost Albums Fix (P0) ✅ DONE
+## Phase 3: Ghost Albums Fix (P0) X NOT DONE
 
 - [x] **3.1** Modify `reset(preserveSeriesContext)` in albums.js
 - [x] **3.2** Update AlbumsView.js to call `reset(true)`

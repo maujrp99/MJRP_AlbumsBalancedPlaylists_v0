@@ -179,6 +179,11 @@ npm test  # Should see 34/34 passing
 - **Note**: Tests cover Repositories + Cache, NOT UI components
 
 ### **Step 5.3: Start Dev Servers**
+
+> [!IMPORTANT]
+> **Use port 5000 (NOT 5173!)**  
+> This project explicitly sets port 5000 in vite.config.js
+
 ```bash
 # Terminal 1
 npm run dev
@@ -186,8 +191,8 @@ npm run dev
 # Terminal 2
 cd server && node index.js
 ```
-- Open `http://localhost:5000/`
-- **⚠️ Expected**: You might encounter bugs (Issues #15 & #16 should be fixed)
+- Open `http://localhost:5000/` ← **Correct port**
+- **⚠️ Expected**: You might encounter bugs (see SPRINT5_UAT_20251206.md for current blockers)
 
 ### **Step 5.4: Debug Log Review**
 📄 **Read**: `docs/debug/DEBUG_LOG.md`
