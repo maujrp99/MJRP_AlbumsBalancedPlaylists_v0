@@ -61,8 +61,8 @@ export class InventoryRepository extends BaseRepository {
             purchaseDate: options.purchaseDate || null,
             condition: options.condition || null,
             notes: options.notes || '',
-            notes: options.notes || '',
-            albumData: { ...album }, // Convert class instance to plain object
+            // Deep sanitize album data (removes undefined, converts custom classes like Track to plain objects)
+            albumData: JSON.parse(JSON.stringify(album)),
             addedToInventory: this.getServerTimestamp()
         }
 

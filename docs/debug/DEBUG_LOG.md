@@ -66,7 +66,36 @@ The "Add to Inventory" modal was not displaying correctly.
 
 ---
 
-### Issue #24: Missing SVG Icons - RESOLVED
+### Issue #26: Firebase Serialization Errors (Custom Objects) - RESOLVED
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-07 01:45
+**Type**: Data Persistence Error
+**Component**: `InventoryRepository.js`
+
+#### Problem
+Adding an album to inventory failed with two distinct Firebase errors:
+1. `Unsupported field value: undefined` (found in `coverUrl`)
+2. `Unsupported field value: a custom Track object` (found in `tracks` array)
+
+#### Root Cause
+The application architecture recently evolved to use rich ES6 Classes (`Album`, `Track`) instead of plain objects.
+- **Firestore Limitation**: The Firestore SDK does NOT support saving custom Class instances directly. It requires Plain Old JavaScript Objects (POJOs).
+- **Undefined Handling**: Spreading a class instance `{...album}` copies properties with `undefined` values, which Firestore explicitly rejects.
+
+#### Failed Attempts
+1. **Shallow Sanitization**: Iterating over keys and setting `undefined` to `null`. This failed because it didn't recurse into nested arrays (like `tracks`), leaving the custom `Track` objects inside.
+
+#### Final Solution (Deep Sanitization)
+Implemented robust serialization in `InventoryRepository.addAlbum` using `JSON.parse(JSON.stringify(album))`.
+- **Why**: This technique automatically:
+  1. Converts ALL custom class instances (nested or not) into plain objects.
+  2. Removes all keys with `undefined` values (which is valid for Firestore).
+  3. Handles deep nesting without complex recursive code.
+
+#### Files Modified
+- `public/js/repositories/InventoryRepository.js`
+
+---
 **Status**: ✅ **RESOLVED**
 **Date**: 2025-12-06 20:50
 **Type**: UI Bug
