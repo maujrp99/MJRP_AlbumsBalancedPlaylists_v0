@@ -58,6 +58,24 @@ export class SavedPlaylistsView extends BaseView {
             </div>
         </div>
       </div>
+      
+      <!-- Delete Confirmation Modal -->
+      <div id="deleteModal" class="modal-overlay hidden z-50 fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300">
+          <div class="modal-content glass-panel p-6 max-w-md w-full mx-4 transform scale-95 transition-transform duration-300">
+              <div class="text-center">
+                  <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
+                      ${getIcon('AlertTriangle', 'w-8 h-8 text-red-500')}
+                  </div>
+                  <h3 class="text-xl font-bold mb-2">Delete Series?</h3>
+                  <p id="deleteSeriesName" class="text-muted mb-4">This will permanently delete this series and all its playlists.</p>
+                  <div class="flex gap-3 justify-center">
+                      <button class="btn btn-secondary" data-action="cancel-delete">Cancel</button>
+                      <button class="btn btn-danger bg-red-600 hover:bg-red-700" data-action="confirm-delete">Delete</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
     `
     }
 
@@ -107,6 +125,9 @@ export class SavedPlaylistsView extends BaseView {
                     </button>
                     <button class="btn btn-secondary btn-sm group-hover:bg-white/10 transition-colors" data-action="open-series" data-id="${group.series.id}">
                         Open Series Manager ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1')}
+                    </button>
+                    <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-colors" data-action="delete-series" data-id="${group.series.id}" data-name="${this.escapeHtml(group.series.name)}">
+                        ${getIcon('Trash', 'w-4 h-4')}
                     </button>
                 </div>
             </div>
@@ -265,15 +286,115 @@ export class SavedPlaylistsView extends BaseView {
             if (btn.id === 'goHomeBtn') {
                 router.navigate('/album-series')
             }
+
+            // Delete Series Flow
+            if (action === 'delete-series') {
+                const seriesId = btn.dataset.id
+                const seriesName = btn.dataset.name
+                this.pendingDeleteId = seriesId
+                this.openDeleteModal(seriesName)
+            }
+
+            if (action === 'cancel-delete') {
+                this.closeDeleteModal()
+            }
+
+            if (action === 'confirm-delete') {
+                if (this.pendingDeleteId) {
+                    this.handleDeleteSeries(this.pendingDeleteId)
+                }
+            }
         })
     }
 
     handleEditSeries(seriesId, albumSeriesStore, playlistsStore) {
+        const group = this.data.find(r => r.series.id === seriesId)
+        if (!group) return
+
         const existing = albumSeriesStore.getSeries().find(s => s.id === seriesId)
         if (!existing) albumSeriesStore.series.push(group.series)
         albumSeriesStore.setActiveSeries(seriesId)
         playlistsStore.setPlaylists(group.playlists, seriesId)
         router.navigate('/playlists')
+    }
+
+    openDeleteModal(seriesName) {
+        const modal = document.getElementById('deleteModal')
+        const modalContent = modal?.querySelector('.modal-content')
+        const nameEl = document.getElementById('deleteSeriesName')
+
+        if (nameEl) {
+            nameEl.textContent = `Delete "${seriesName}"? This will permanently remove this series and all its playlists.`
+        }
+
+        if (modal) {
+            modal.classList.remove('hidden')
+            setTimeout(() => {
+                modal.classList.remove('opacity-0')
+                if (modalContent) {
+                    modalContent.classList.remove('scale-95')
+                    modalContent.classList.add('scale-100')
+                }
+            }, 10)
+        }
+    }
+
+    closeDeleteModal() {
+        const modal = document.getElementById('deleteModal')
+        const modalContent = modal?.querySelector('.modal-content')
+
+        if (modal) {
+            modal.classList.add('opacity-0')
+            if (modalContent) {
+                modalContent.classList.remove('scale-100')
+                modalContent.classList.add('scale-95')
+            }
+            setTimeout(() => {
+                modal.classList.add('hidden')
+                this.pendingDeleteId = null
+            }, 300)
+        }
+    }
+
+    async handleDeleteSeries(seriesId) {
+        const confirmBtn = document.querySelector('[data-action="confirm-delete"]')
+        if (confirmBtn) {
+            confirmBtn.disabled = true
+            confirmBtn.textContent = 'Deleting...'
+        }
+
+        try {
+            const { db, cacheManager, auth } = await import('../app.js')
+            const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous-user'
+
+            // 1. Delete all playlists in the series
+            const playlistRepo = new PlaylistRepository(db, cacheManager, userId, seriesId)
+            const playlists = await playlistRepo.findAll()
+
+            for (const playlist of playlists) {
+                await playlistRepo.delete(playlist.id)
+            }
+
+            // 2. Delete the series itself
+            const seriesRepo = new SeriesRepository(db, cacheManager, userId)
+            await seriesRepo.delete(seriesId)
+
+            // 3. Update local data and re-render
+            this.data = this.data.filter(r => r.series.id !== seriesId)
+            this.update()
+
+            this.closeDeleteModal()
+
+            console.log('[SavedPlaylistsView] Series deleted:', seriesId)
+        } catch (err) {
+            console.error('[SavedPlaylistsView] Delete failed:', err)
+            alert('Failed to delete series: ' + err.message)
+
+            if (confirmBtn) {
+                confirmBtn.disabled = false
+                confirmBtn.textContent = 'Delete'
+            }
+        }
     }
 
     openPlaylistModal(seriesId, playlistId) {
