@@ -63,8 +63,8 @@ export class TopNav {
         <!-- Mobile Menu Drawer (Left Side) -->
         <div 
           id="mobileMenu" 
-          class="fixed inset-y-0 left-0 z-50 flex flex-col w-[280px] max-w-[80vw] transition-transform duration-300 transform -translate-x-full bg-[#0a0a0f] border-r border-orange-500/20"
-          style="box-shadow: 4px 0 40px rgba(0,0,0,0.9);"
+          class="mobile-drawer fixed inset-y-0 left-0 z-50 flex flex-col w-[280px] max-w-[80vw] transition-transform duration-300 transform -translate-x-full border-r border-orange-500/20"
+          style="background-color: #0a0a0f !important; box-shadow: 4px 0 40px rgba(0,0,0,0.9);"
         >
           <!-- Header -->
           <div class="flex items-center justify-between p-5 border-b border-white/10">
@@ -127,6 +127,12 @@ export class TopNav {
     const mobileMenu = document.getElementById('mobileMenu')
     const mobileOverlay = document.getElementById('mobileMenuOverlay')
     const links = mobileMenu?.querySelectorAll('a')
+
+    // Force solid background on mobile menu (CSS workaround)
+    if (mobileMenu) {
+      mobileMenu.style.setProperty('background-color', '#0a0a0f', 'important')
+      mobileMenu.style.setProperty('backdrop-filter', 'none', 'important')
+    }
 
     const toggleMenu = (show) => {
       this.isMenuOpen = show

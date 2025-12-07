@@ -218,13 +218,15 @@ export class AlbumsStore {
 
     /**
      * Reset store to initial state
+     * @param {boolean} preserveSeriesContext - If true, keeps lastLoadedSeriesId (for series switch)
      */
-    reset() {
+    reset(preserveSeriesContext = false) {
+        const seriesId = preserveSeriesContext ? this.lastLoadedSeriesId : null
         this.albums = []
         this.currentAlbum = null
         this.loading = false
         this.error = null
-        this.lastLoadedSeriesId = null
+        this.lastLoadedSeriesId = seriesId
         this.notify()
     }
 }

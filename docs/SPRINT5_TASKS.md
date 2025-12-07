@@ -37,11 +37,11 @@
 
 ---
 
-## Phase 3: Ghost Albums Fix (P0)
+## Phase 3: Ghost Albums Fix (P0) ✅ DONE
 
-- [ ] **3.1** Modify `reset()` in albums.js: add `preserveSeriesContext` flag
-- [ ] **3.2** Update AlbumsView.js to call `reset(true)`
-- [ ] **3.3** Test: switch series, no ghost albums
+- [x] **3.1** Modify `reset(preserveSeriesContext)` in albums.js
+- [x] **3.2** Update AlbumsView.js to call `reset(true)`
+- [x] **3.3** Build verified ✅
 
 ---
 

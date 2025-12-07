@@ -208,3 +208,9 @@
     margin: 1rem;
   }
 }
+
+/* Mobile Drawer - Solid Background */
+.mobile-drawer {
+  background: #0a0a0f !important;
+  backdrop-filter: none !important;
+}

@@ -942,8 +942,8 @@ export class AlbumsView extends BaseView {
       albumsStore.setLastLoadedSeriesId(targetSeries.id)
     }
 
-    // NOW reset store (no pending requests can add albums after this)
-    albumsStore.reset()
+    // NOW reset store but PRESERVE seriesId (no pending requests can add albums after this)
+    albumsStore.reset(true) // FIX: Ghost Albums - preserve series context
 
     // Force immediate UI clear
     const grid = this.$('#albumsGrid')
