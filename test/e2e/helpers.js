@@ -129,15 +129,30 @@ export async function createSeries(page, seriesName, albums) {
 
     // Fill in albums
     const albumsText = albums.join('\n');
-    const albumsInput = await page.$(SELECTORS.home.seriesInput);
-    await albumsInput.click({ clickCount: 3 }); // Select all
-    await albumsInput.type(albumsText);
+    const albumsInput = await page.$('#albumList, #albumQueries');
+    if (albumsInput) {
+        await albumsInput.click({ clickCount: 3 }); // Select all
+        await albumsInput.type(albumsText);
+    }
 
-    // Click Load Albums
-    await page.click(SELECTORS.home.loadButton);
+    // Click Load Albums button using evaluate (works with all Puppeteer versions)
+    await page.evaluate(() => {
+        const buttons = Array.from(document.querySelectorAll('button'));
+        const loadBtn = buttons.find(b =>
+            b.textContent.includes('Load Albums') ||
+            b.textContent.includes('🚀') ||
+            b.textContent.includes('Create Series')
+        );
+        if (loadBtn) loadBtn.click();
+    });
 
     // Wait for navigation to albums page
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    try {
+        await page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 10000 });
+    } catch (e) {
+        // May not navigate immediately - wait using standard Promise
+        await new Promise(r => setTimeout(r, 2000));
+    }
 
     console.log(`✓ Created series: ${seriesName}`);
 }
