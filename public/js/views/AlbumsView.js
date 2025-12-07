@@ -55,8 +55,22 @@ export class AlbumsView extends BaseView {
   async render(params) {
     const albums = albumsStore.getAlbums()
     const activeSeries = albumSeriesStore.getActiveSeries()
+
+    // Ghost Albums Prevention (from prod):
+    // If albums in store are from a different series than what we're rendering,
+    // show empty instead. The mount() will trigger reload for correct series.
+    const urlParams = new URLSearchParams(window.location.search)
+    const targetSeriesId = params?.seriesId || urlParams.get('seriesId') || activeSeries?.id
+    const lastLoadedId = albumsStore.getLastLoadedAlbumSeriesId()
+
+    let displayAlbums = albums
+    if (targetSeriesId && lastLoadedId && targetSeriesId !== lastLoadedId) {
+      console.warn(`[AlbumsView] Ghost prevention: series mismatch (${lastLoadedId} != ${targetSeriesId})`)
+      displayAlbums = []  // Block ghost albums at render level
+    }
+
     // Filter albums early to use throughout render
-    const filteredAlbums = this.filterAlbums(albums)
+    const filteredAlbums = this.filterAlbums(displayAlbums)
 
     // DEBUG: Enhanced logging for troubleshooting
 
@@ -951,8 +965,7 @@ export class AlbumsView extends BaseView {
     const list = this.$('#albumsList')
     if (list) list.innerHTML = ''
 
-    // Update debug panel immediately to show 0 albums
-    this.updateDebugPanel([], [])
+
 
     this.isLoading = true
     this.updateAlbumsGrid([]) // Clear grid immediately to show loading state
@@ -1026,7 +1039,18 @@ export class AlbumsView extends BaseView {
   }
 
   updateAlbumsGrid(albums) {
-    const filtered = this.filterAlbums(albums) // DEBUG: Apply filters
+    // Ghost Albums Prevention (from prod):
+    // Store subscriptions can trigger this method with stale data from previous series.
+    // Early exit if trying to render albums from wrong series.
+    const activeSeries = albumSeriesStore.getActiveSeries()
+    const lastLoadedId = albumsStore.getLastLoadedAlbumSeriesId()
+
+    if (activeSeries && lastLoadedId && activeSeries.id !== lastLoadedId) {
+      console.warn('[AlbumsView] updateAlbumsGrid: series mismatch, skipping render')
+      return  // Block ghost albums from subscription updates
+    }
+
+    const filtered = this.filterAlbums(albums)
 
     // Update Generate Playlists button state
     const generateBtn = this.$('#generatePlaylistsBtn')
@@ -1057,67 +1081,20 @@ export class AlbumsView extends BaseView {
       emptyStateContainer.innerHTML = filtered.length === 0 && !this.isLoading ? this.renderEmptyState() : ''
     }
 
-    // DEBUG: Update debug panel dynamically
-    this.updateDebugPanel(albums, filtered)
   }
 
-  // DEBUG: Helper to update debug panel
-  updateDebugPanel(albums, filteredAlbums) {
-    const debugPanel = this.$('.debug-panel')
-    if (debugPanel) {
-      debugPanel.innerHTML = `
-      < div style = "color: #00ff88; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid #00ff88; padding-bottom: 8px; display: flex; align-items: center; gap: 8px;" >
-          🔍 DEBUG PANEL
-      < span style = "font-size: 10px; opacity: 0.7; font-weight: normal;" > (remover depois)</span >
-        </div >
 
-      <div style="color: #fff; line-height: 1.6;">
-        <div style="margin-bottom: 8px;">
-          <span style="color: #00ff88;">📊 Albums:</span>
-          <div style="padding-left: 12px;">
-            <div>Total: <strong>${albums.length}</strong></div>
-            <div>Filtered: <strong style="color: ${filteredAlbums.length === 0 ? '#ff4444' : '#00ff88'};">${filteredAlbums.length}</strong></div>
-          </div>
-        </div>
 
-        <div style="margin-bottom: 8px;">
-          <span style="color: #00ff88;">🔎 Search:</span>
-          <div style="padding-left: 12px;">
-            ${this.searchQuery ? `<strong>"${this.escapeHtml(this.searchQuery)}"</strong>` : '<em style="opacity: 0.5;">none</em>'}
-          </div>
-        </div>
+createElementFromHTML(html) {
+  const template = document.createElement('template')
+  template.innerHTML = html.trim()
+  return template.content.firstChild
+}
 
-        <div style="margin-bottom: 8px;">
-          <span style="color: #00ff88;">🎵 Filters:</span>
-          <div style="padding-left: 12px; font-size: 11px;">
-            <div>Artist: <strong>${this.filters.artist === 'all' ? 'All' : this.escapeHtml(this.filters.artist)}</strong></div>
-            <div>Year: <strong>${this.filters.year === 'all' ? 'All' : this.filters.year}</strong></div>
-            <div>Status: <strong>${this.filters.status === 'all' ? 'All' : this.filters.status}</strong></div>
-            <div>BestEver: <strong style="color: ${this.filters.bestEverOnly ? '#ffaa00' : '#666'};">${this.filters.bestEverOnly ? 'YES' : 'NO'}</strong></div>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 0;">
-          <span style="color: #00ff88;">👁️ View Mode:</span>
-          <div style="padding-left: 12px;">
-            <strong style="color: #ffaa00;">${this.viewMode.toUpperCase()}</strong>
-          </div>
-        </div>
-      </div>
-    `
-    }
-  }
-
-  createElementFromHTML(html) {
-    const template = document.createElement('template')
-    template.innerHTML = html.trim()
-    return template.content.firstChild
-  }
-
-  escapeHtml(text) {
-    if (!text) return ''
-    const div = document.createElement('div')
-    div.textContent = text
-    return div.innerHTML
-  }
+escapeHtml(text) {
+  if (!text) return ''
+  const div = document.createElement('div')
+  div.textContent = text
+  return div.innerHTML
+}
 }
