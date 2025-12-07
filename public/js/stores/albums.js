@@ -267,17 +267,14 @@ export class AlbumsStore {
 
     /**
      * Reset store to initial state
-     * @param {boolean} preserveAlbumSeriesContext - If true, keeps activeAlbumSeriesId
+     * @param {boolean} preserveAlbumSeriesContext - If true, keeps activeAlbumSeriesId but CLEARS ALL albums
      */
     reset(preserveAlbumSeriesContext = false) {
         const seriesId = preserveAlbumSeriesContext ? this.activeAlbumSeriesId : null
 
-        // Clear only active series, or all if not preserving
-        if (preserveAlbumSeriesContext && this.activeAlbumSeriesId) {
-            this.albumsByAlbumSeriesId.delete(this.activeAlbumSeriesId)
-        } else {
-            this.albumsByAlbumSeriesId.clear()
-        }
+        // ALWAYS clear all albums to prevent ghost albums
+        // The Map will be repopulated with new series' albums
+        this.albumsByAlbumSeriesId.clear()
 
         this.currentAlbum = null
         this.loading = false

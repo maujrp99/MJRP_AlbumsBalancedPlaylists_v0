@@ -1,0 +1,9 @@
+# Port Configuration Quick Reference
+
+**Dev Server**: http://localhost:5000 ← USE THIS  
+**Preview/E2E**: http://localhost:5005  
+**Backend API**: http://localhost:3000  
+
+⚠️ **NOT 5173** - That's Vite default, we use 5000!
+
+See docs/devops/PORT_CONFIGURATION.md for full details.

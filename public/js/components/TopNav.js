@@ -153,9 +153,14 @@ export class TopNav {
     closeBtn?.addEventListener('click', () => toggleMenu(false))
     mobileOverlay?.addEventListener('click', () => toggleMenu(false))
 
-    // Close menu when clicking a link
+    // Close menu when clicking a link (use capture to run before router)
     links?.forEach(link => {
-      link.addEventListener('click', () => toggleMenu(false))
+      link.addEventListener('click', (e) => {
+        toggleMenu(false)
+      }, true) // Use capture phase
     })
+
+    // Fallback: Close menu on any navigation (router event)
+    window.addEventListener('popstate', () => toggleMenu(false))
   }
 }

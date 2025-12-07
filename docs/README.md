@@ -9,6 +9,11 @@
 
 ## 🚀 Quick Start
 
+> [!IMPORTANT]
+> **Ports**: Dev = **5000**, Preview = **5005**, API = **3000**  
+> **NOT 5173** (that's Vite default, we explicitly use 5000)  
+> See [PORT_CONFIGURATION.md](devops/PORT_CONFIGURATION.md)
+
 ### Development
 ```bash
 # Terminal 1: Backend
@@ -18,7 +23,7 @@ cd server && node index.js
 npm run dev
 ```
 
-- **Frontend**: http://localhost:5000 (Vite dev server)
+- **Frontend**: http://localhost:5000 ← **USE THIS PORT**
 - **Backend**: http://localhost:3000 (Express proxy)
 
 ### Testing
