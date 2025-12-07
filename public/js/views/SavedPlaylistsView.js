@@ -40,7 +40,7 @@ export class SavedPlaylistsView extends BaseView {
                             <span id="modalDuration">0m</span>
                         </div>
                     </div>
-                    <button id="closeModalBtn" class="btn btn-ghost btn-circle hover:bg-white/10 text-white">
+                    <button id="closeModalBtn" class="btn btn-ghost btn-circle hover:bg-white/10 text-white" data-action="close-modal">
                         ${getIcon('X', 'w-6 h-6')}
                     </button>
                 </div>
@@ -50,8 +50,8 @@ export class SavedPlaylistsView extends BaseView {
                 </div>
 
                 <div class="modal-actions mt-6 pt-4 border-t border-white/10 flex justify-end gap-3">
-                     <button class="btn btn-secondary" id="modalCloseAction">Close</button>
-                     <button class="btn btn-primary" id="modalEditBtn">
+                     <button class="btn btn-secondary" id="modalCloseAction" data-action="close-modal">Close</button>
+                     <button class="btn btn-primary" id="modalEditBtn" data-action="edit-playlist-modal">
                         ${getIcon('Edit', 'w-4 h-4 mr-2')} Edit This Playlist
                      </button>
                 </div>
