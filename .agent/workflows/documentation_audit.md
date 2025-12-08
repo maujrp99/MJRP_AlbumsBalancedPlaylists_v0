@@ -92,6 +92,7 @@ find docs/ reports/ -name "*.md" -exec basename {} \; | sort | uniq -d
 docs/
 ├── README.md (index)
 ├── ARCHITECTURE.md
+ ├── Architecture-history.md (for historical info)
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 │

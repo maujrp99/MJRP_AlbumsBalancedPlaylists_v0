@@ -65,11 +65,11 @@ graph TB
 4. [Album Data Schema & Transformations (2025-11-29)](#album-data-schema-current)
 5. [UI/UX Standards (2025-11-29)](#uiux-standards-current)
 6. [Router Architecture](#router-architecture)
+7. [Firebase Integration Guide](#firebase-integration-guide)
 
-### Previous Architecture and Analysis  
-4. [Sprint 5: Repository Pattern (2025-11-28)](#sprint-5-repository-pattern-previous)
-5. [Caching Strategy (2025-11-29 01:32)](#caching-strategy-previous)
-6. [Routing Decision (2025-11-29 01:32)](#routing-decision-previous)
+### Architecture Decisions (ADRs)
+- [Caching Strategy](#caching-strategy-previous)
+- [Routing Decision](#routing-decision-previous)
 
 ### Cross-References
 - **[Sprint 5: Persistence Architecture](archive/architecture-artifacts-2025-11-29/SPRINT_5_PERSISTENCE_ARCHITECTURE.md)** (1829 lines)
@@ -84,41 +84,6 @@ graph TB
   - Active debugging sessions
   - Historical issues & resolutions
   - Debug tools documentation
-
----
-
-# ⚠️ Known Limitations (as of 2025-12-06)
-
-> [!WARNING]
-> **Sprint 5 UAT found critical gaps** - documentation may describe features that don't work as expected.
-> See [SPRINT5_UAT_20251206.md](tester/SPRINT5_UAT_20251206.md) for details.
-
-### Firestore Persistence Gap
-
-| Component | Code Exists | Integrated | Works |
-|-----------|-------------|------------|-------|
-| SeriesRepository | ✅ | ❌ | ❌ |
-| PlaylistRepository | ✅ | ❌ | ❌ |
-| InventoryRepository | ✅ | ❌ | ❌ |
-
-**Root Cause**: Firebase SDK mismatch (modular vs compat API)
-- `app.js` uses: `import { getFirestore } from 'firebase/firestore'`
-- `series.js` uses: `firebase.firestore.FieldValue.serverTimestamp()` ← **Crashes**
-
-### Series UI Gaps
-
-| Button | Code Exists | Event Listener | Works |
-|--------|-------------|----------------|-------|
-| Edit Series | ✅ | ❌ | ❌ |
-| Delete Series | ✅ | ❌ | ❌ |
-| Open Series | ✅ | ❌ | ❌ |
-
-**Root Cause**: Event delegation in `SeriesListView.mount()` not matching buttons.
-
-### Ghost Albums (Issue #22)
-
-Albums from previous series appear when switching series. **4 fix attempts failed**.  
-See [DEBUG_LOG.md](debug/DEBUG_LOG.md) Issue #22 for investigation history.
 
 ---
 
@@ -508,27 +473,6 @@ ${getIcon('Rocket', 'w-4 h-4')}
 - **Spacing**: Use standard Tailwind spacing (e.g., `p-4`, `m-2`, `gap-4`).
 - **Typography**: Use `font-syne` for headers and `font-sans` for body text.
 
----
-
-# Previous Architecture and Analysis
-
-## Sprint 5: Repository Pattern (Previous)
-**Status**: 🟡 Superseded (Partially Implemented)  
-**Date**: 2025-11-28  
-**Superseded**: 2025-11-29 (Store management approach changed)  
-**See**: [Current Store State Management](#store-state-management-current)
-
-### Summary
-
-Implemented Repository Pattern for Firestore persistence:
-- `BaseRepository` with full CRUD operations
-- `SeriesRepository`, `AlbumRepository`, `PlaylistRepository`, `InventoryRepository`
-- Cache invalidation on mutations
-- User-scoped collections (Sprint 7 auth-ready)
-
-**Superseded Aspect**: Recovery logic approach. Repositories remain valid, but view-level recovery was replaced with store persistence.
-
-**Full Details**: See [SPRINT_5_PERSISTENCE_ARCHITECTURE.md](SPRINT_5_PERSISTENCE_ARCHITECTURE.md)
 
 ---
 
