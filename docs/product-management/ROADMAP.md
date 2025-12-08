@@ -111,20 +111,20 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
   - IndexedDB = ~500MB+ capacity
   - Cross-tab sync
 
-- ✅ **Repository Pattern** (Code exists)
+- ⏳ **Repository Pattern** (Code exists, NOT fully integrated)
   - `AlbumRepository`, `SeriesRepository`, `PlaylistRepository`
   - `InventoryRepository` ← inventory persistence!
   - ⚠️ **BLOCKER**: Not integrated into Views
 
-- ✅ **Migration Tool**
+- ⏳ **Migration Tool** (Code exists, NOT fully functional)
   - Migrate data from localStorage → Firestore
   - No data loss
 
-- ✅ **Inventory Persistence** (UI exists)
+- ⏳ **Inventory Persistence** (UI exists, NOT fully connected)
   - Save owned albums in Firestore
   - ⚠️ **BLOCKER**: InventoryRepository not connected
 
-**UAT Status**: ❌ **BLOCKED** - Requires AI Dev fixes
+**UAT Status**: ⏳ **IN VALIDATION** - CRUDs still have issues (see CRUD_REVIEW_REPORT.md)
 
 ---
 
