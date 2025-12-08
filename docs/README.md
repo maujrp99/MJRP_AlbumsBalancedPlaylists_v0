@@ -91,6 +91,7 @@ Use `tar -xzvf [filename]` to access contents.
 
 | Archive File | Contents | Reason for Archiving |
 |--------------|----------|----------------------|
+| **sprint5-analysis-20251202.tar.gz** | `GAP_ANALYSIS.md`, `PERSISTENCE_IMPLEMENTATION_REPORT.md`, `TESTABLE_FEATURES.md`, `TEST_PLAN_SPRINT5_HARDENING.md`, `TEST_SPEC_SPRINT5.md` | Pre-UAT analysis and planning docs (Dec 2-3) |
 | **tester-reports-20251208.tar.gz** | `CRUD_REVIEW_REPORT.md`, `GHOST_ALBUMS_REPORT.md`, `UX_ANALYSIS_REPORT_20251130.md`, and 5 others | Snapshots of completed testing phases (Nov/Dec 2025) |
 | **v2.0-planning-docs.tar.gz** | `V2.0_ANALYSIS.md`, `mjrp-playlist-generator-2.0.md` | Initial V2.0 planning docs (superseded by ROADMAP.md) |
 | **archive-backup.tar.gz** | `mission_reports/`, `audit_reports/` (Nov 2025) | Phase 1 & 2 mission reports |
