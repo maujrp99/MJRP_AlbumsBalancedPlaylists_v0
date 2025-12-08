@@ -217,6 +217,8 @@ export class InventoryStore {
     getStatistics() {
         const stats = {
             totalAlbums: this.albums.length,
+            ownedCount: 0,
+            wishlistCount: 0,
             byFormat: {
                 cd: 0,
                 vinyl: 0,
@@ -226,16 +228,28 @@ export class InventoryStore {
             },
             totalValueUSD: 0,
             totalValueBRL: 0,
+            ownedValueUSD: 0,
+            ownedValueBRL: 0,
             averagePriceUSD: 0,
             averagePriceBRL: 0
         }
 
         let totalPriceUSD = 0
         let totalPriceBRL = 0
+        let ownedPriceUSD = 0
+        let ownedPriceBRL = 0
         let countUSD = 0
         let countBRL = 0
 
         this.albums.forEach(album => {
+            // Count by ownership
+            const isOwned = album.owned !== false
+            if (isOwned) {
+                stats.ownedCount++
+            } else {
+                stats.wishlistCount++
+            }
+
             // Count by format
             if (album.format) {
                 stats.byFormat[album.format] = (stats.byFormat[album.format] || 0) + 1
@@ -248,9 +262,11 @@ export class InventoryStore {
 
                 if (currency === 'USD') {
                     totalPriceUSD += price
+                    if (isOwned) ownedPriceUSD += price
                     countUSD++
                 } else if (currency === 'BRL') {
                     totalPriceBRL += price
+                    if (isOwned) ownedPriceBRL += price
                     countBRL++
                 }
             }
@@ -258,6 +274,8 @@ export class InventoryStore {
 
         stats.totalValueUSD = totalPriceUSD
         stats.totalValueBRL = totalPriceBRL
+        stats.ownedValueUSD = ownedPriceUSD
+        stats.ownedValueBRL = ownedPriceBRL
         stats.averagePriceUSD = countUSD > 0 ? totalPriceUSD / countUSD : 0
         stats.averagePriceBRL = countBRL > 0 ? totalPriceBRL / countBRL : 0
 

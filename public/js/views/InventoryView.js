@@ -226,6 +226,14 @@ export class InventoryView extends BaseView {
     const album = inventoryStore.getAlbums().find(a => a.id === albumId)
     if (!album) return
 
+    // Prevent double-click by disabling button during save
+    const btn = document.querySelector(`.owned-toggle-btn[data-album-id="${albumId}"]`)
+    if (btn) {
+      if (btn.disabled) return // Already processing
+      btn.disabled = true
+      btn.classList.add('opacity-50', 'cursor-wait')
+    }
+
     const newOwnedStatus = album.owned === false ? true : false
 
     try {
@@ -234,6 +242,11 @@ export class InventoryView extends BaseView {
       this.rerender()
     } catch (error) {
       toast.error('Failed to update status: ' + error.message)
+      // Re-enable button on error
+      if (btn) {
+        btn.disabled = false
+        btn.classList.remove('opacity-50', 'cursor-wait')
+      }
     }
   }
 
@@ -313,22 +326,28 @@ export class InventoryView extends BaseView {
             </h1>
             
             <!-- Stats Row -->
-            <div class="stats-row flex items-center gap-6 text-lg">
+            <div class="stats-row flex flex-wrap items-center gap-4 text-sm md:text-lg">
               <span class="text-accent-primary font-semibold">
                 ${stats.totalAlbums} album${stats.totalAlbums !== 1 ? 's' : ''}
               </span>
               
-              <!-- Currency Selector -->
-              <div class="currency-selector relative">
+              <!-- Owned/Wishlist badges -->
+              <div class="flex gap-2">
+                <span class="badge badge-success text-xs">✓ ${stats.ownedCount} Owned</span>
+                <span class="badge badge-neutral text-xs">${stats.wishlistCount} Wishlist</span>
+              </div>
+              
+              <!-- Currency Selector with Owned Total -->
+              <div class="currency-selector relative ml-auto">
                 <select 
                   id="currencySelector" 
-                  class="form-control appearance-none cursor-pointer pr-8 bg-surface-light"
+                  class="form-control appearance-none cursor-pointer pr-8 bg-surface-light text-sm"
                 >
                   <option value="USD" ${this.currency === 'USD' ? 'selected' : ''}>
-                    Total: ${this.formatCurrency(stats.totalValueUSD, 'USD')}
+                    Owned: ${this.formatCurrency(stats.ownedValueUSD, 'USD')}
                   </option>
                   <option value="BRL" ${this.currency === 'BRL' ? 'selected' : ''}>
-                    Total: ${this.formatCurrency(stats.totalValueBRL, 'BRL')}
+                    Owned: ${this.formatCurrency(stats.ownedValueBRL, 'BRL')}
                   </option>
                 </select>
                 <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">

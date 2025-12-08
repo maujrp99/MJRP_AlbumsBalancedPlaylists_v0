@@ -6,9 +6,9 @@
 import { getIcon } from './Icons.js'
 
 export function showViewAlbumModal(album) {
-    const modal = document.createElement('div')
-    modal.className = 'modal-overlay'
-    modal.innerHTML = `
+  const modal = document.createElement('div')
+  modal.className = 'modal-overlay'
+  modal.innerHTML = `
     <div class="modal-container glass-panel max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden flex flex-col">
       <!-- Header -->
       <div class="modal-header p-6 border-b border-surface-light flex items-start gap-4">
@@ -85,14 +85,19 @@ export function showViewAlbumModal(album) {
               ${getIcon('Music', 'w-4 h-4')} Track Listing
             </h3>
             <div class="tracks-list bg-surface-dark rounded-lg overflow-hidden">
-              ${album.albumData.tracks.map((track, idx) => `
+              ${album.albumData.tracks.map((track, idx) => {
+    // Guard against null/undefined track properties
+    const trackTitle = track?.title || track?.name || 'Unknown Track'
+    const hasRating = track?.rating != null && track?.rating !== undefined
+    const hasDuration = track?.duration != null && track?.duration > 0
+    return `
                 <div class="track-row flex items-center gap-3 px-4 py-2 border-b border-white/5 last:border-0 hover:bg-white/5">
                   <span class="text-xs text-gray-500 w-6 text-right">${idx + 1}</span>
-                  <span class="flex-1 truncate">${escapeHtml(track.title || track.name || 'Unknown Track')}</span>
-                  ${track.rating ? `<span class="text-xs text-accent-primary">★ ${track.rating}</span>` : ''}
-                  ${track.duration ? `<span class="text-xs text-gray-500">${formatDuration(track.duration)}</span>` : ''}
+                  <span class="flex-1 truncate">${escapeHtml(trackTitle)}</span>
+                  ${hasRating ? `<span class="text-xs text-accent-primary">★ ${track.rating}</span>` : ''}
+                  ${hasDuration ? `<span class="text-xs text-gray-500">${formatDuration(track.duration)}</span>` : ''}
                 </div>
-              `).join('')}
+              `}).join('')}
             </div>
           </div>
         ` : `
@@ -110,46 +115,46 @@ export function showViewAlbumModal(album) {
     </div>
   `
 
-    // Event handlers
-    const closeModal = () => modal.remove()
+  // Event handlers
+  const closeModal = () => modal.remove()
 
-    modal.querySelectorAll('[data-action="close"]').forEach(btn => {
-        btn.addEventListener('click', closeModal)
-    })
+  modal.querySelectorAll('[data-action="close"]').forEach(btn => {
+    btn.addEventListener('click', closeModal)
+  })
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal()
-    })
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal()
+  })
 
-    document.addEventListener('keydown', function handleEscape(e) {
-        if (e.key === 'Escape') {
-            closeModal()
-            document.removeEventListener('keydown', handleEscape)
-        }
-    })
+  document.addEventListener('keydown', function handleEscape(e) {
+    if (e.key === 'Escape') {
+      closeModal()
+      document.removeEventListener('keydown', handleEscape)
+    }
+  })
 
-    document.body.appendChild(modal)
-    return modal
+  document.body.appendChild(modal)
+  return modal
 }
 
 function escapeHtml(str) {
-    if (!str) return ''
-    const div = document.createElement('div')
-    div.textContent = str
-    return div.innerHTML
+  if (!str) return ''
+  const div = document.createElement('div')
+  div.textContent = str
+  return div.innerHTML
 }
 
 function formatCurrency(value, currency = 'USD') {
-    if (!value) return currency === 'USD' ? '$0.00' : 'R$ 0,00'
-    if (currency === 'BRL') {
-        return `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-    }
-    return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  if (!value) return currency === 'USD' ? '$0.00' : 'R$ 0,00'
+  if (currency === 'BRL') {
+    return `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  }
+  return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 function formatDuration(seconds) {
-    if (!seconds) return ''
-    const mins = Math.floor(seconds / 60)
-    const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs.toString().padStart(2, '0')}`
+  if (!seconds) return ''
+  const mins = Math.floor(seconds / 60)
+  const secs = Math.floor(seconds % 60)
+  return `${mins}:${secs.toString().padStart(2, '0')}`
 }

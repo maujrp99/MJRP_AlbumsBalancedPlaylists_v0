@@ -4,6 +4,7 @@ import { router } from '../router.js'
 import { getIcon } from '../components/Icons.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import toast from '../components/Toast.js'
+import { confirm } from '../components/ConfirmationModal.js'
 
 /**
  * AlbumSeriesListView
@@ -14,6 +15,8 @@ export class AlbumSeriesListView extends BaseView {
     super()
     this.db = db
     this.editingAlbumSeriesId = null
+    this.editingAlbumQueries = []
+    this.deletingAlbumSeriesId = null
   }
 
   async render(params) {
@@ -378,9 +381,14 @@ export class AlbumSeriesListView extends BaseView {
 
   removeAlbumFromList(index) {
     if (index >= 0 && index < this.editingAlbumQueries.length) {
-      const removed = this.editingAlbumQueries.splice(index, 1)
-      this.renderAlbumsList()
-      toast.info(`Removed: ${removed[0]}`)
+      const albumName = this.editingAlbumQueries[index]
+
+      // Show confirmation before removing
+      confirm.delete('Album', () => {
+        this.editingAlbumQueries.splice(index, 1)
+        this.renderAlbumsList()
+        toast.info(`Removed: ${albumName}`)
+      }, 'This only removes the album from this series, not from your inventory.')
     }
   }
 
