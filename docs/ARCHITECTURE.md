@@ -1,7 +1,58 @@
 # Architecture Documentation
 
-**Last Updated**: 2025-11-29 19:05
+**Last Updated**: 2025-12-08  
 **Workflow**: See `.agent/workflows/architecture_documentation.md`
+
+> **For project overview, features, and deployment info, see:**
+> - [PROJECT_SUMMARY.md](product-management/PROJECT_SUMMARY.md)
+> - [ROADMAP.md](product-management/ROADMAP.md)
+
+---
+
+## High-Level Architecture
+
+```mermaid
+graph TB
+    subgraph Browser
+        User[User]
+        TopNav[TopNav]
+        Router[Router]
+        Views[Views: Home, Albums, Playlists, Inventory, Ranking]
+        Stores[(Stores: albums, albumSeries, playlists, inventory)]
+    end
+    
+    subgraph Cache
+        LocalStorage[(localStorage)]
+        IndexedDB[(IndexedDB)]
+        MemoryCache[(Memory Cache)]
+    end
+    
+    subgraph Firebase
+        Firestore[(Firestore)]
+        Auth[Firebase Auth]
+    end
+    
+    subgraph Backend["Backend (Cloud Run)"]
+        API[API Server :3000]
+        Scrapers[BestEver Scraper]
+        AI[Google Gemini]
+    end
+    
+    User --> TopNav
+    TopNav --> Router
+    Router --> Views
+    Views --> Stores
+    Stores --> LocalStorage
+    Stores --> Firestore
+    Stores --> MemoryCache
+    MemoryCache --> IndexedDB
+    
+    Views --> API
+    API --> Scrapers
+    API --> AI
+    
+    Auth --> Stores
+```
 
 ---
 
@@ -562,10 +613,12 @@ service cloud.firestore {
 #### Reading Data
 
 ```javascript
-import { doc, getDoc } from 'firebase/firestore'
+import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
 
-async loadFromFirestore(db, id) {
-    const docRef = doc(db, `users/${userId}/series/${id}`)
+async loadFromFirestore(db, userId, seriesId) {
+    // Path must match security rules: artifacts/{appId}/users/{userId}/curator/*
+    const collectionPath = `artifacts/mjrp-albums/users/${userId}/curator/albumSeries`
+    const docRef = doc(db, collectionPath, seriesId)
     const docSnap = await getDoc(docRef)
     
     if (docSnap.exists()) {
@@ -578,13 +631,18 @@ async loadFromFirestore(db, id) {
 #### Writing Data
 
 ```javascript
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
 
-async saveToFirestore(db, data) {
-    const docRef = doc(db, `users/${userId}/series/${data.id}`)
+async saveToFirestore(db, userId, data) {
+    // Path must match security rules
+    const collectionPath = `artifacts/mjrp-albums/users/${userId}/curator/albumSeries`
+    const docRef = doc(db, collectionPath, data.id)
+    
+    // Deep serialize: removes undefined and converts ES6 classes to POJOs
+    const serialized = JSON.parse(JSON.stringify(data))
     
     await setDoc(docRef, {
-        ...data,
+        ...serialized,
         updatedAt: serverTimestamp()
     })
 }
