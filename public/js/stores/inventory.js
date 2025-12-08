@@ -130,10 +130,13 @@ export class InventoryStore {
      * Update album in inventory
      */
     async updateAlbum(albumId, updates) {
+        console.log('[InventoryStore.updateAlbum] Starting update for:', albumId, updates)
         this.init()
 
         try {
+            console.log('[InventoryStore.updateAlbum] Calling repository.updateAlbum')
             await this.repository.updateAlbum(albumId, updates)
+            console.log('[InventoryStore.updateAlbum] Repository update successful')
 
             // Update local state
             this.albums = this.albums.map(album =>
@@ -141,9 +144,10 @@ export class InventoryStore {
             )
 
             this.notify()
+            console.log('[InventoryStore.updateAlbum] Local state updated')
             return albumId
         } catch (error) {
-            console.error('Failed to update inventory album:', error)
+            console.error('[InventoryStore.updateAlbum] Failed to update inventory album:', error)
             throw error
         }
     }
@@ -187,18 +191,22 @@ export class InventoryStore {
      * Remove album from inventory
      */
     async removeAlbum(albumId) {
+        console.log('[InventoryStore.removeAlbum] Starting delete for:', albumId)
         this.init()
 
         try {
+            console.log('[InventoryStore.removeAlbum] Calling repository.removeAlbum')
             await this.repository.removeAlbum(albumId)
+            console.log('[InventoryStore.removeAlbum] Repository delete successful')
 
             // Remove from local state
             this.albums = this.albums.filter(album => album.id !== albumId)
             this.notify()
 
+            console.log('[InventoryStore.removeAlbum] Removed from local state, albums remaining:', this.albums.length)
             return albumId
         } catch (error) {
-            console.error('Failed to remove from inventory:', error)
+            console.error('[InventoryStore.removeAlbum] Failed to remove from inventory:', error)
             throw error
         }
     }

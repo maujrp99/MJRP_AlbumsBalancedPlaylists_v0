@@ -191,6 +191,10 @@ export function showAddToInventoryModal(album, onSuccess) {
  * @param {Function} onSave - Callback when item is saved
  */
 export function showEditInventoryModal(item, onSave) {
+  // Normalize: item could be the album directly or have item.album structure
+  const album = item.album || item
+  const inventoryId = item.id || album.id
+
   const modal = document.createElement('div')
   modal.className = 'modal-overlay'
 
@@ -207,22 +211,30 @@ export function showEditInventoryModal(item, onSave) {
 
       <div class="modal-content p-6 space-y-4">
         <div class="bg-surface-dark p-3 rounded-lg border border-surface-light">
-          <p class="font-semibold">${escapeHtml(item.album.title)}</p>
-          <p class="text-sm text-gray-400">${escapeHtml(item.album.artist)}</p>
+          <p class="font-semibold">${escapeHtml(album.title || 'Unknown Title')}</p>
+          <p class="text-sm text-gray-400">${escapeHtml(album.artist || 'Unknown Artist')}</p>
         </div>
 
         <div>
           <label class="block mb-2 text-sm font-medium text-gray-300">Format:</label>
+          <select id="formatSelect" class="form-control w-full">
+            <option value="CD" ${(item.format || album.format) === 'CD' ? 'selected' : ''}>CD</option>
+            <option value="Vinyl" ${(item.format || album.format) === 'Vinyl' ? 'selected' : ''}>Vinyl</option>
+            <option value="Digital" ${(item.format || album.format) === 'Digital' ? 'selected' : ''}>Digital</option>
+            <option value="Cassette" ${(item.format || album.format) === 'Cassette' ? 'selected' : ''}>Cassette</option>
+          </select>
+        </div>
+
         <!-- Currency -->
         <div>
           <label class="block mb-2 text-sm font-medium text-gray-300">Currency:</label>
           <div class="flex gap-3">
             <label class="flex items-center gap-2">
-              <input type="radio" name="currency" value="USD" ${album.currency === 'USD' ? 'checked' : ''} class="form-radio" />
+              <input type="radio" name="currency" value="USD" ${(item.currency || album.currency) === 'USD' ? 'checked' : ''} class="form-radio" />
               <span>USD</span>
             </label>
             <label class="flex items-center gap-2">
-              <input type="radio" name="currency" value="BRL" ${album.currency === 'BRL' ? 'checked' : ''} class="form-radio" />
+              <input type="radio" name="currency" value="BRL" ${(item.currency || album.currency) === 'BRL' ? 'checked' : ''} class="form-radio" />
               <span>BRL</span>
             </label>
           </div>
@@ -235,7 +247,7 @@ export function showEditInventoryModal(item, onSave) {
             type="number" 
             id="priceInput"
             class="form-control w-full"
-            value="${album.purchasePrice || ''}"
+            value="${item.purchasePrice || album.purchasePrice || ''}"
             step="0.01"
             min="0"
           />
@@ -248,7 +260,7 @@ export function showEditInventoryModal(item, onSave) {
             id="notesInput"
             class="form-control w-full resize-none"
             rows="3"
-          >${escapeHtml(album.notes || '')}</textarea>
+          >${escapeHtml(item.notes || album.notes || '')}</textarea>
         </div>
       </div>
 
@@ -281,7 +293,7 @@ export function showEditInventoryModal(item, onSave) {
         notes: notesInput.value.trim()
       }
 
-      await onSave(album.id, updates)
+      await onSave(inventoryId, updates)
       close()
     } catch (error) {
       saveBtn.disabled = false

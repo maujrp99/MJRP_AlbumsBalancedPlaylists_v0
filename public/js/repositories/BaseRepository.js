@@ -230,7 +230,20 @@ export class BaseRepository {
      * @returns {Promise<void>}
      */
     async delete(id) {
-        await deleteDoc(this.getDocRef(id))
+        const docRef = this.getDocRef(id)
+        console.log('[BaseRepository.delete] Deleting document:', {
+            id,
+            path: docRef.path,
+            collectionPath: this.collectionPath
+        })
+
+        try {
+            await deleteDoc(docRef)
+            console.log('[BaseRepository.delete] deleteDoc successful for:', docRef.path)
+        } catch (error) {
+            console.error('[BaseRepository.delete] deleteDoc FAILED:', error)
+            throw error
+        }
 
         // Invalidate cache
         if (this.cache) {
