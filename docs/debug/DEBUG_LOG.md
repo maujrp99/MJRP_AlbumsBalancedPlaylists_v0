@@ -16,6 +16,68 @@
 
 ## Current Debugging Session
 
+### Issue #28: Inventory Albums Not Loading on First Visit - RESOLVED
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-08 19:05 → 19:27
+**Type**: Inventory/Loading Bug
+**Component**: `inventory.js`, `InventoryView.js`
+
+#### Problem
+Inventory albums don't appear when visiting InventoryView the first time.
+
+#### Failed Attempts
+
+**Attempt #1: Added debug logs** (19:10)
+- Added console.log to `InventoryStore.init()` and `InventoryView.onMount()`
+- **Failed**: Logs didn't appear - because method was named `onMount` not `mount`
+
+**Attempt #2: Renamed onMount → mount** (19:18)
+- Router calls `this.currentView.mount()` but InventoryView had `onMount()`
+- Renamed to `mount()` so Router could call it
+- **Partial Success**: Logs appeared, showed `loadAlbums returned: 5 albums`
+- **Still Failed**: UI showed "empty" despite 5 albums loaded
+
+**Attempt #3: Reordered subscription** (19:21)
+- The subscription to store was AFTER `await loadAlbums()`
+- `loadAlbums()` calls `notify()` which fires subscription callback
+- But subscription didn't exist yet when notify fired!
+- **Fix**: Moved subscription BEFORE `loadAlbums()` call
+- **Still Failed**: `TypeError: this.rerender is not a function`
+
+**Attempt #4: Added missing rerender() method** (19:25)
+- `this.rerender()` was called 14+ times but **never defined**
+- Likely lost in a previous AI session crash
+- **Fix**: Added `rerender()` method implementation
+- **SUCCESS!** ✅
+
+#### Root Causes (3 issues)
+1. **Method naming**: `onMount()` vs `mount()` - Router expects `mount()`
+2. **Subscription timing**: Must subscribe BEFORE async load so notify triggers rerender
+3. **Missing method**: `rerender()` was never implemented
+
+#### Final Solution
+```javascript
+// InventoryView.js
+async mount() {
+  // 1. Subscribe FIRST
+  this.unsubscribe = inventoryStore.subscribe(() => this.rerender())
+  
+  // 2. THEN load (notify will trigger rerender)
+  await inventoryStore.loadAlbums()
+}
+
+// Added missing method
+async rerender() {
+  const container = document.getElementById('app')
+  const html = await this.render()
+  container.innerHTML = html
+  this.afterRender()
+}
+```
+
+---
+
+
 ### Issue #27: Album Series CRUD Persistence Failures - AWAITING VERIFICATION
 **Status**: 🟡 **AWAITING USER VERIFICATION**
 **Date**: 2025-12-08 17:00

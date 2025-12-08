@@ -21,9 +21,13 @@ export class InventoryStore {
      * Initialize repository with current user
      */
     init() {
+        console.log('[InventoryStore.init] Starting init, current userId:', this.userId)
+        console.log('[InventoryStore.init] auth?.currentUser:', auth?.currentUser?.uid)
+
         // Get userId from Firebase Auth
         if (!this.userId && auth?.currentUser) {
             this.userId = auth.currentUser.uid
+            console.log('[InventoryStore.init] Set userId from auth:', this.userId)
         }
 
         // Fallback to anonymous if no auth yet
@@ -38,7 +42,10 @@ export class InventoryStore {
         }
 
         if (!this.repository) {
+            console.log('[InventoryStore.init] Creating repository with userId:', this.userId)
             this.repository = new InventoryRepository(firestore, cacheManager, this.userId)
+        } else {
+            console.log('[InventoryStore.init] Repository already exists, userId:', this.repository.userId)
         }
     }
 

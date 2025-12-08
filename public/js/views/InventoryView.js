@@ -25,18 +25,23 @@ export class InventoryView extends BaseView {
     this.editingPriceId = null
   }
 
-  async onMount() {
-    // Load albums on mount
-    try {
-      await inventoryStore.loadAlbums()
-    } catch (error) {
-      console.error('Failed to load inventory:', error)
-    }
+  async mount() {
+    console.log('[InventoryView.mount] Starting mount')
 
-    // Subscribe to store updates
+    // Subscribe to store updates FIRST (before loading)
     this.unsubscribe = inventoryStore.subscribe(() => {
+      console.log('[InventoryView.mount] Store updated, calling rerender')
       this.rerender()
     })
+
+    // Load albums on mount
+    try {
+      console.log('[InventoryView.mount] Calling inventoryStore.loadAlbums()')
+      const albums = await inventoryStore.loadAlbums()
+      console.log('[InventoryView.mount] loadAlbums returned:', albums?.length, 'albums')
+    } catch (error) {
+      console.error('[InventoryView.mount] Failed to load inventory:', error)
+    }
   }
 
   onUnmount() {
@@ -44,6 +49,20 @@ export class InventoryView extends BaseView {
     if (this.unsubscribe) {
       this.unsubscribe()
     }
+  }
+
+  /**
+   * Re-render the view with current data
+   * Called when store updates or filters change
+   */
+  async rerender() {
+    console.log('[InventoryView.rerender] Re-rendering view')
+    const container = document.getElementById('app')
+    if (!container) return
+
+    const html = await this.render()
+    container.innerHTML = html
+    this.afterRender()
   }
 
   afterRender() {
