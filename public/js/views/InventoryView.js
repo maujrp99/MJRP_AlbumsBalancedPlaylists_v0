@@ -4,6 +4,7 @@ import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
+import { showViewAlbumModal } from '../components/ViewAlbumModal.js'
 
 /**
  * InventoryView
@@ -17,7 +18,8 @@ export class InventoryView extends BaseView {
     this.selectedAlbums = new Set()
     this.filters = {
       format: 'all',
-      search: ''
+      search: '',
+      ownership: 'all' // 'all' | 'owned' | 'wishlist'
     }
     this.currency = localStorage.getItem('inventoryCurrency') || 'USD'
     this.editingPriceId = null
@@ -73,6 +75,15 @@ export class InventoryView extends BaseView {
     if (formatFilter) {
       formatFilter.addEventListener('change', (e) => {
         this.filters.format = e.target.value
+        this.rerender()
+      })
+    }
+
+    // Ownership filter
+    const ownershipFilter = document.getElementById('ownershipFilter')
+    if (ownershipFilter) {
+      ownershipFilter.addEventListener('change', (e) => {
+        this.filters.ownership = e.target.value
         this.rerender()
       })
     }
@@ -167,6 +178,26 @@ export class InventoryView extends BaseView {
       })
     })
 
+    // View album buttons (including cover click)
+    const viewButtons = document.querySelectorAll('.view-album-btn')
+    viewButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation()
+        const albumId = e.currentTarget.dataset.albumId
+        this.handleViewAlbum(albumId)
+      })
+    })
+
+    // Owned toggle buttons
+    const ownedToggleBtns = document.querySelectorAll('.owned-toggle-btn')
+    ownedToggleBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation()
+        const albumId = e.currentTarget.dataset.albumId
+        this.handleToggleOwned(albumId)
+      })
+    })
+
     // Create series from selected
     const createSeriesBtn = document.getElementById('createSeriesFromSelected')
     if (createSeriesBtn) {
@@ -181,6 +212,28 @@ export class InventoryView extends BaseView {
       goToAlbumsBtn.addEventListener('click', () => {
         router.navigate('/albums')
       })
+    }
+  }
+
+  handleViewAlbum(albumId) {
+    const album = inventoryStore.getAlbums().find(a => a.id === albumId)
+    if (album) {
+      showViewAlbumModal(album)
+    }
+  }
+
+  async handleToggleOwned(albumId) {
+    const album = inventoryStore.getAlbums().find(a => a.id === albumId)
+    if (!album) return
+
+    const newOwnedStatus = album.owned === false ? true : false
+
+    try {
+      await inventoryStore.updateAlbum(albumId, { owned: newOwnedStatus })
+      toast.success(newOwnedStatus ? 'Marked as Owned' : 'Marked as Wishlist')
+      this.rerender()
+    } catch (error) {
+      toast.error('Failed to update status: ' + error.message)
     }
   }
 
@@ -317,6 +370,18 @@ export class InventoryView extends BaseView {
                 </span>
               </div>
               
+              <!-- Ownership Filter -->
+              <div class="filter-dropdown relative">
+                <select id="ownershipFilter" class="form-control appearance-none cursor-pointer pr-8">
+                  <option value="all" ${this.filters.ownership === 'all' ? 'selected' : ''}>All Status</option>
+                  <option value="owned" ${this.filters.ownership === 'owned' ? 'selected' : ''}>✓ Owned Only</option>
+                  <option value="wishlist" ${this.filters.ownership === 'wishlist' ? 'selected' : ''}>Wishlist Only</option>
+                </select>
+                <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                  ${getIcon('ChevronDown', 'w-4 h-4')}
+                </span>
+              </div>
+              
               <!-- View Mode Toggle -->
               <button 
                 id="toggleViewMode" 
@@ -369,6 +434,7 @@ export class InventoryView extends BaseView {
   renderAlbumCard(album) {
     const isSelected = this.selectedAlbums.has(album.id)
     const isEditingPrice = this.editingPriceId === album.id
+    const isOwned = album.owned !== false // Default to true if not set
 
     return `
       <div class="album-card glass-panel p-4 relative ${isSelected ? 'ring-2 ring-accent-primary' : ''}" data-album-id="${album.id}">
@@ -382,8 +448,21 @@ export class InventoryView extends BaseView {
           />
         </div>
         
+        <!-- Owned Badge (top right) -->
+        <div class="absolute top-2 right-2 z-10">
+          <button 
+            class="owned-toggle-btn ${isOwned ? 'bg-green-500/20 text-green-400 border-green-500/50' : 'bg-gray-500/20 text-gray-400 border-gray-500/50'} 
+                   text-xs px-2 py-1 rounded-full border hover:scale-105 transition-transform cursor-pointer"
+            data-album-id="${album.id}"
+            data-owned="${isOwned}"
+            title="${isOwned ? 'Click to mark as Wishlist' : 'Click to mark as Owned'}"
+          >
+            ${isOwned ? '✓ OWNED' : 'WISHLIST'}
+          </button>
+        </div>
+        
         <!-- Album Cover -->
-        <div class="album-cover mb-3 aspect-square bg-surface-light rounded-lg flex items-center justify-center">
+        <div class="album-cover mb-3 aspect-square bg-surface-light rounded-lg flex items-center justify-center cursor-pointer view-album-btn" data-album-id="${album.id}">
           ${album.albumData?.coverUrl ? `
             <img src="${album.albumData.coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-lg" />
           ` : `
@@ -436,11 +515,17 @@ export class InventoryView extends BaseView {
         <!-- Actions -->
         <div class="flex gap-2">
           <button 
-            class="btn btn-sm btn-secondary flex-1 edit-album-btn flex items-center justify-center gap-1"
+            class="btn btn-sm btn-ghost flex-1 view-album-btn flex items-center justify-center gap-1"
+            data-album-id="${album.id}"
+          >
+            ${getIcon('Eye', 'w-4 h-4')}
+            View
+          </button>
+          <button 
+            class="btn btn-sm btn-secondary edit-album-btn flex items-center justify-center gap-1"
             data-album-id="${album.id}"
           >
             ${getIcon('Edit', 'w-4 h-4')}
-            Edit
           </button>
           <button 
             class="btn btn-sm btn-danger delete-album-btn flex items-center justify-center gap-1"
@@ -575,6 +660,13 @@ export class InventoryView extends BaseView {
         if (!title.includes(query) && !artist.includes(query)) {
           return false
         }
+      }
+
+      // Ownership filter
+      if (this.filters.ownership !== 'all') {
+        const isOwned = album.owned !== false
+        if (this.filters.ownership === 'owned' && !isOwned) return false
+        if (this.filters.ownership === 'wishlist' && isOwned) return false
       }
 
       return true
