@@ -39,18 +39,49 @@ export class AlbumSeriesListView extends BaseView {
           ${series.length === 0 ? this.renderEmptyState() : this.renderSeriesList(series)}
         </div>
 
-        <!-- Edit Modal -->
+        <!-- Enhanced Edit Modal -->
         <div id="editModal" class="modal-overlay hidden">
-          <div class="modal-content glass-panel p-6 max-w-md w-full mx-4">
-            <h3 class="text-xl font-bold mb-4">Edit Series</h3>
+          <div class="modal-content glass-panel p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
+              <h3 class="text-xl font-bold flex items-center gap-2">
+                ${getIcon('Edit', 'w-5 h-5 text-accent-primary')} Edit Series
+              </h3>
+              <button type="button" class="btn btn-ghost btn-circle" id="closeEditBtn">
+                ${getIcon('X', 'w-5 h-5')}
+              </button>
+            </div>
+            
             <form id="editForm">
-              <div class="form-group mb-4">
+              <!-- Series Name -->
+              <div class="form-group mb-6">
                 <label class="block text-sm font-medium mb-2">Series Name</label>
-                <input type="text" id="editNameInput" class="form-control w-full" required minlength="3">
+                <input type="text" id="editNameInput" class="form-control w-full" required minlength="3" placeholder="Enter series name...">
               </div>
-              <div class="flex justify-end gap-3">
+              
+              <!-- Albums List -->
+              <div class="form-group mb-6">
+                <div class="flex items-center justify-between mb-3">
+                  <label class="text-sm font-medium">Albums in Series</label>
+                  <span id="albumCount" class="badge badge-neutral text-xs">0 albums</span>
+                </div>
+                
+                <div id="albumsList" class="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar mb-4 bg-black/20 rounded-lg p-3">
+                  <!-- Albums rendered dynamically -->
+                </div>
+                
+                <!-- Add Album Input -->
+                <div class="flex gap-2">
+                  <input type="text" id="addAlbumInput" class="form-control flex-1" placeholder="Artist - Album Title">
+                  <button type="button" class="btn btn-secondary" id="addAlbumBtn">
+                    ${getIcon('Plus', 'w-4 h-4')} Add
+                  </button>
+                </div>
+                <p class="text-xs text-muted mt-1">Format: Artist - Album Title (e.g., Pink Floyd - The Wall)</p>
+              </div>
+              
+              <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
                 <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="submit" class="btn btn-primary">${getIcon('Check', 'w-4 h-4')} Save Changes</button>
               </div>
             </form>
           </div>
@@ -179,19 +210,37 @@ export class AlbumSeriesListView extends BaseView {
     const editModal = this.$('#editModal')
     const editForm = this.$('#editForm')
     const cancelEdit = this.$('#cancelEditBtn')
+    const closeEdit = this.$('#closeEditBtn')
+    const addAlbumBtn = this.$('#addAlbumBtn')
+    const addAlbumInput = this.$('#addAlbumInput')
 
     if (editForm) {
       this.on(editForm, 'submit', async (e) => {
         e.preventDefault()
-        const name = this.$('#editNameInput').value
-        if (this.editingAlbumSeriesId && name) {
+        const name = this.$('#editNameInput').value.trim()
+
+        if (!name || name.length < 3) {
+          toast.warning('Series name must be at least 3 characters')
+          return
+        }
+
+        if (this.editingAlbumQueries.length < 2) {
+          toast.warning('Series must have at least 2 albums')
+          return
+        }
+
+        if (this.editingAlbumSeriesId) {
           try {
-            await albumSeriesStore.updateSeries(this.editingAlbumSeriesId, { name })
+            // Update both name and albumQueries
+            await albumSeriesStore.updateSeries(this.editingAlbumSeriesId, {
+              name,
+              albumQueries: this.editingAlbumQueries
+            })
             if (this.db) {
-              // Ensure Firestore update happens
               const series = albumSeriesStore.getSeries().find(s => s.id === this.editingAlbumSeriesId)
               if (series) await albumSeriesStore.saveToFirestore(this.db, series)
             }
+            toast.success('Series updated successfully!')
             this.closeModal(editModal)
           } catch (err) {
             toast.error('Failed to update series: ' + err.message)
@@ -200,7 +249,35 @@ export class AlbumSeriesListView extends BaseView {
       })
     }
 
+    // Add album button
+    if (addAlbumBtn) {
+      this.on(addAlbumBtn, 'click', () => this.addAlbumToList())
+    }
+
+    // Add album on Enter key
+    if (addAlbumInput) {
+      this.on(addAlbumInput, 'keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault()
+          this.addAlbumToList()
+        }
+      })
+    }
+
+    // Remove album event delegation on albums list
+    const albumsList = this.$('#albumsList')
+    if (albumsList) {
+      this.on(albumsList, 'click', (e) => {
+        const btn = e.target.closest('[data-action="remove-album"]')
+        if (btn) {
+          const index = parseInt(btn.dataset.index)
+          this.removeAlbumFromList(index)
+        }
+      })
+    }
+
     if (cancelEdit) this.on(cancelEdit, 'click', () => this.closeModal(editModal))
+    if (closeEdit) this.on(closeEdit, 'click', () => this.closeModal(editModal))
 
     // Delete Modal
     const deleteModal = this.$('#deleteModal')
@@ -212,6 +289,7 @@ export class AlbumSeriesListView extends BaseView {
         if (this.deletingAlbumSeriesId) {
           try {
             await albumSeriesStore.deleteSeries(this.deletingAlbumSeriesId, this.db)
+            toast.success('Series deleted')
             this.closeModal(deleteModal)
           } catch (err) {
             toast.error('Failed to delete series: ' + err.message)
@@ -228,11 +306,82 @@ export class AlbumSeriesListView extends BaseView {
     if (!series) return
 
     this.editingAlbumSeriesId = id
+    this.editingAlbumQueries = [...(series.albumQueries || [])]
+
     const input = this.$('#editNameInput')
     if (input) input.value = series.name
 
+    this.renderAlbumsList()
+
     const modal = this.$('#editModal')
     if (modal) modal.classList.remove('hidden')
+  }
+
+  renderAlbumsList() {
+    const container = this.$('#albumsList')
+    const countBadge = this.$('#albumCount')
+
+    if (!container) return
+
+    if (this.editingAlbumQueries.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-4 text-muted">
+          ${getIcon('Music', 'w-8 h-8 mx-auto mb-2 opacity-50')}
+          <p class="text-sm">No albums in this series</p>
+        </div>
+      `
+    } else {
+      container.innerHTML = this.editingAlbumQueries.map((query, idx) => `
+        <div class="album-item flex items-center justify-between bg-white/5 rounded-lg px-3 py-2 group hover:bg-white/10 transition-colors">
+          <div class="flex items-center gap-3 flex-1 min-w-0">
+            <span class="text-accent-primary font-mono text-xs w-6">${idx + 1}</span>
+            <span class="truncate">${this.escapeHtml(query)}</span>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm text-red-400 opacity-0 group-hover:opacity-100 transition-opacity" data-action="remove-album" data-index="${idx}">
+            ${getIcon('Trash', 'w-4 h-4')}
+          </button>
+        </div>
+      `).join('')
+    }
+
+    if (countBadge) {
+      countBadge.textContent = `${this.editingAlbumQueries.length} album${this.editingAlbumQueries.length !== 1 ? 's' : ''}`
+    }
+  }
+
+  addAlbumToList() {
+    const input = this.$('#addAlbumInput')
+    if (!input) return
+
+    const value = input.value.trim()
+    if (!value) {
+      toast.warning('Please enter an album in format: Artist - Album')
+      return
+    }
+
+    if (!value.includes('-')) {
+      toast.warning('Please use format: Artist - Album Title')
+      return
+    }
+
+    if (this.editingAlbumQueries.includes(value)) {
+      toast.warning('This album is already in the list')
+      return
+    }
+
+    this.editingAlbumQueries.push(value)
+    this.renderAlbumsList()
+    input.value = ''
+    input.focus()
+    toast.success('Album added')
+  }
+
+  removeAlbumFromList(index) {
+    if (index >= 0 && index < this.editingAlbumQueries.length) {
+      const removed = this.editingAlbumQueries.splice(index, 1)
+      this.renderAlbumsList()
+      toast.info(`Removed: ${removed[0]}`)
+    }
   }
 
   openDeleteModal(id) {
@@ -250,6 +399,7 @@ export class AlbumSeriesListView extends BaseView {
   closeModal(modal) {
     if (modal) modal.classList.add('hidden')
     this.editingAlbumSeriesId = null
+    this.editingAlbumQueries = []
     this.deletingAlbumSeriesId = null
   }
 
