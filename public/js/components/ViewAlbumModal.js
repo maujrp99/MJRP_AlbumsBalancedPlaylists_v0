@@ -78,27 +78,54 @@ export function showViewAlbumModal(album) {
           </div>
         ` : ''}
 
-        <!-- Tracks List -->
-        ${album.albumData?.tracks?.length ? `
-          <div class="tracks-section">
-            <h3 class="text-sm font-bold text-gray-400 mb-3 flex items-center gap-2">
-              ${getIcon('Music', 'w-4 h-4')} Track Listing
-            </h3>
-            <div class="tracks-list bg-surface-dark rounded-lg overflow-hidden">
-              ${album.albumData.tracks.map((track, idx) => {
-    // Guard against null/undefined track properties
+        <!-- Tracks Lists -->
+        ${(album.albumData?.tracksOriginalOrder?.length || album.albumData?.tracks?.length) ? `
+          <div class="tracks-section space-y-6">
+            <!-- Original Track Order (use tracksOriginalOrder if available) -->
+            <div>
+              <h3 class="text-sm font-bold text-gray-400 mb-3 flex items-center gap-2">
+                ${getIcon('Music', 'w-4 h-4')} Original Track Order
+              </h3>
+              <div class="tracks-list bg-surface-dark rounded-lg overflow-hidden">
+                ${(album.albumData.tracksOriginalOrder || album.albumData.tracks).map((track, idx) => {
     const trackTitle = track?.title || track?.name || 'Unknown Track'
     const hasRating = track?.rating != null && track?.rating !== undefined
     const hasDuration = track?.duration != null && track?.duration > 0
     return `
-                <div class="track-row flex items-center gap-3 px-4 py-2 border-b border-white/5 last:border-0 hover:bg-white/5">
-                  <span class="text-xs text-gray-500 w-6 text-right">${idx + 1}</span>
-                  <span class="flex-1 truncate">${escapeHtml(trackTitle)}</span>
-                  ${hasRating ? `<span class="text-xs text-accent-primary">★ ${track.rating}</span>` : ''}
-                  ${hasDuration ? `<span class="text-xs text-gray-500">${formatDuration(track.duration)}</span>` : ''}
-                </div>
-              `}).join('')}
+                  <div class="track-row flex items-center gap-3 px-4 py-2 border-b border-white/5 last:border-0 hover:bg-white/5">
+                    <span class="text-xs text-gray-500 w-6 text-right">${idx + 1}</span>
+                    <span class="flex-1 truncate">${escapeHtml(trackTitle)}</span>
+                    ${hasRating ? `<span class="text-xs text-accent-primary">★ ${track.rating}</span>` : ''}
+                    ${hasDuration ? `<span class="text-xs text-gray-500">${formatDuration(track.duration)}</span>` : ''}
+                  </div>
+                `}).join('')}
+              </div>
             </div>
+
+            <!-- Ranked Tracks (sorted by rating) - use tracks which is already sorted -->
+            ${(album.albumData.tracks || []).some(t => t?.rating != null) ? `
+              <div>
+                <h3 class="text-sm font-bold text-accent-primary mb-3 flex items-center gap-2">
+                  ${getIcon('Star', 'w-4 h-4')} Ranked by Rating
+                </h3>
+                <div class="tracks-list bg-surface-dark rounded-lg overflow-hidden">
+                  ${[...(album.albumData.tracks || [])]
+          .filter(t => t?.rating != null)
+          .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+          .map((track, idx) => {
+            const trackTitle = track?.title || track?.name || 'Unknown Track'
+            const hasDuration = track?.duration != null && track?.duration > 0
+            return `
+                    <div class="track-row flex items-center gap-3 px-4 py-2 border-b border-white/5 last:border-0 hover:bg-white/5">
+                      <span class="text-xs font-bold w-6 text-right ${idx < 3 ? 'text-accent-primary' : 'text-gray-400'}">#${idx + 1}</span>
+                      <span class="flex-1 truncate">${escapeHtml(trackTitle)}</span>
+                      <span class="text-sm font-bold text-accent-primary">★ ${track.rating}</span>
+                      ${hasDuration ? `<span class="text-xs text-gray-500">${formatDuration(track.duration)}</span>` : ''}
+                    </div>
+                  `}).join('')}
+                </div>
+              </div>
+            ` : ''}
           </div>
         ` : `
           <div class="text-center py-8 text-gray-500">
