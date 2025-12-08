@@ -213,11 +213,15 @@ export class AlbumsStore {
      */
     async saveToFirestore(db, album) {
         try {
+            // Deep serialize: removes undefined and converts ES6 classes like Track to POJOs
+            // Required per Issue #26 in DEBUG_LOG.md
+            const serialized = JSON.parse(JSON.stringify(album))
+
             if (album.id) {
-                await updateDoc(doc(db, 'albums', album.id), album)
+                await updateDoc(doc(db, 'albums', album.id), serialized)
                 return album.id
             } else {
-                const docRef = await addDoc(collection(db, 'albums'), album)
+                const docRef = await addDoc(collection(db, 'albums'), serialized)
                 album.id = docRef.id
                 this.addAlbum(album)
                 return docRef.id

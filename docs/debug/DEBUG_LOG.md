@@ -16,6 +16,45 @@
 
 ## Current Debugging Session
 
+### Issue #27: Album Series CRUD Persistence Failures - AWAITING VERIFICATION
+**Status**: 🟡 **AWAITING USER VERIFICATION**
+**Date**: 2025-12-08 17:00
+**Type**: Firebase/Persistence Bug
+**Component**: `albumSeries.js`, `AlbumSeriesListView.js`
+
+#### Problem
+Edit Series "Save Changes" and Delete Series operations failing due to multiple Firebase issues:
+1. **Firestore permission errors** - Wrong collection path being used
+2. **Serialization errors** - Not using JSON.parse/stringify for ES6 classes
+3. **Cache recovery** - Items reappearing after delete on page refresh
+
+#### Root Causes
+1. `saveToFirestore()` not serializing data (`{...series}` instead of `JSON.parse(JSON.stringify(series))`)
+2. `deleteSeries()` using wrong path `doc(db, 'series', id)` instead of `getSeriesCollectionPath()`
+3. Delete updating localStorage BEFORE confirming Firestore success (source of truth)
+
+#### Failed Attempts (2025-12-08)
+1. **Made Firestore "optional"** - Incorrectly assumed localStorage was source of truth. User correction: ARCHITECTURE.md line 515 states Firestore IS source of truth.
+2. **Fire-and-forget delete** - Tried to delete from localStorage first, then Firestore async. Wrong per architecture.
+3. **Created incorrect documentation** - Made `FIRESTORE_PERMISSIONS_FIX.md` stating Firestore is optional. Had to delete.
+4. **Only fixed albumSeries.js** - User tested and found albums.js also missing serialization. Album edit save failed with "custom Track object" error.
+
+#### Additional Issue Found (2025-12-08 17:18)
+**Error:** `FirebaseError: Function updateDoc() called with invalid data. Unsupported field value: a custom Track object`
+**Location:** `albums.js` → `saveToFirestore()` line 217
+**Root Cause:** Album object contains `tracks` array with `Track` class instances, not POJOs.
+**Fix Applied:** ⏳ Added `JSON.parse(JSON.stringify(album))` before Firestore write.
+
+#### Solutions Applied (2025-12-08) - ⚠️ NOT VERIFIED BY USER
+1. ⏳ Added JSON serialization to `albumSeries.js` → `saveToFirestore()`
+2. ⏳ Fixed `deleteSeries()` to use correct collection path via `getSeriesCollectionPath()`
+3. ⏳ Changed order: Firestore delete FIRST, then localStorage (source of truth pattern)
+4. ⏳ Made db REQUIRED parameter (not optional) per ARCHITECTURE.md
+5. ⏳ Added JSON serialization to `albums.js` → `saveToFirestore()` (new fix)
+
+---
+
+
 ### Issue #25: Inventory Modal Misalignment & Missing Styles - RESOLVED
 **Status**: ✅ **RESOLVED**
 **Date**: 2025-12-07 01:35

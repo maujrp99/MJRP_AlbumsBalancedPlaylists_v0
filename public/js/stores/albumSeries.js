@@ -12,7 +12,28 @@ export class AlbumSeriesStore {
         this.loading = false
         this.error = null
         this.listeners = new Set()
+        this.userId = null // Will be set when user authenticates
         this.loadFromLocalStorage()
+    }
+
+    /**
+     * Set user ID for Firestore operations
+     * @param {string} userId - Firebase auth user ID
+     */
+    setUserId(userId) {
+        this.userId = userId || 'anonymous-user'
+    }
+
+    /**
+     * Build Firestore collection path matching security rules
+     * Path: artifacts/mjrp-albums/users/{userId}/curator/series
+     * @param {Object} db - Firestore instance
+     * @returns {string} Collection path
+     */
+    getSeriesCollectionPath(db) {
+        const appId = 'mjrp-albums'
+        const userId = this.userId || 'anonymous-user'
+        return `artifacts/${appId}/users/${userId}/curator/series`
     }
 
     /**
@@ -100,7 +121,8 @@ export class AlbumSeriesStore {
         this.notify()
 
         try {
-            const q = query(collection(db, 'series'), orderBy('updatedAt', 'desc'), limit(20))
+            const collectionPath = this.getSeriesCollectionPath(db)
+            const q = query(collection(db, collectionPath), orderBy('updatedAt', 'desc'), limit(20))
             const snapshot = await getDocs(q)
 
             this.series = snapshot.docs.map(docSnap => ({
@@ -123,6 +145,85 @@ export class AlbumSeriesStore {
     }
 
     /**
+     * Update existing series
+     * @param {string} id - Series ID to update
+     * @param {Object} updates - Fields to update
+     * @param {Object} db - Firestore instance (REQUIRED for persistence)
+     * @returns {Promise<Object>} Updated series
+     */
+    async updateSeries(id, updates, db) {
+        if (!db) {
+            throw new Error('[AlbumSeriesStore] Firestore db is required - it is the source of truth')
+        }
+
+        const index = this.series.findIndex(s => s.id === id)
+        if (index === -1) throw new Error('Series not found')
+
+        const updatedSeries = {
+            ...this.series[index],
+            ...updates,
+            updatedAt: new Date()
+        }
+
+        // 1. Update in-memory state (optimistic)
+        this.series[index] = updatedSeries
+
+        if (this.activeSeries && this.activeSeries.id === id) {
+            this.activeSeries = updatedSeries
+        }
+
+        // 2. Update localStorage (optimistic cache)
+        this.saveToLocalStorage()
+        this.notify()
+
+        // 3. Save to Firestore (SOURCE OF TRUTH)
+        // If this fails, we throw - operation is not complete
+        try {
+            await this.saveToFirestore(db, updatedSeries)
+        } catch (error) {
+            // Firestore failed - revert optimistic updates
+            console.error('[AlbumSeriesStore] Firestore save failed, reverting:', error)
+
+            // Reload from localStorage to revert
+            this.loadFromLocalStorage()
+            this.notify()
+
+            throw error  // Re-throw so View knows it failed
+        }
+
+        return updatedSeries
+    }
+
+    /**
+     * Delete series
+     * @param {string} id - Series ID to delete
+     * @param {Object} db - Firestore database instance (REQUIRED - source of truth)
+     */
+    async deleteSeries(id, db) {
+        if (!db) {
+            throw new Error('[AlbumSeriesStore] Firestore db is required for delete - it is the source of truth')
+        }
+
+        const index = this.series.findIndex(s => s.id === id)
+        if (index === -1) throw new Error('Series not found')
+
+        // 1. Delete from Firestore FIRST (source of truth)
+        // If this fails, we don't modify local state
+        const collectionPath = this.getSeriesCollectionPath(db)
+        await deleteDoc(doc(db, collectionPath, id))
+
+        // 2. THEN update local state (only after Firestore succeeds)
+        this.series.splice(index, 1)
+
+        if (this.activeSeries && this.activeSeries.id === id) {
+            this.activeSeries = null
+        }
+
+        this.saveToLocalStorage()
+        this.notify()
+    }
+
+    /**
      * Save series to Firestore
      * @param {Object} db - Firestore database instance
      * @param {Object} series - Series to save
@@ -130,17 +231,21 @@ export class AlbumSeriesStore {
      */
     async saveToFirestore(db, series) {
         try {
+            const collectionPath = this.getSeriesCollectionPath(db)
+            // Deep serialize: removes undefined values and converts ES6 classes to POJOs
+            // Required per Issue #26 in DEBUG_LOG.md
+            const serialized = JSON.parse(JSON.stringify(series))
             const data = {
-                ...series,
+                ...serialized,
                 updatedAt: serverTimestamp()
             }
 
             if (series.id) {
-                await updateDoc(doc(db, 'series', series.id), data)
+                await updateDoc(doc(db, collectionPath, series.id), data)
                 return series.id
             } else {
-                const docRef = await addDoc(collection(db, 'series'), {
-                    ...data,
+                const docRef = await addDoc(collection(db, collectionPath), {
+                    ...serialized,
                     createdAt: serverTimestamp()
                 })
                 series.id = docRef.id

@@ -15,6 +15,7 @@ import { InventoryView } from './views/InventoryView.js'
 import { RankingView } from './views/RankingView.js'
 import { ConsolidatedRankingView } from './views/ConsolidatedRankingView.js'
 import toast from './components/Toast.js'
+import { albumSeriesStore } from './stores/albumSeries.js'
 
 // Initialize Firebase
 const firebaseConfig = window.__firebase_config || {
@@ -39,6 +40,9 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         console.log('✅ Authenticated as:', user.uid)
         document.body.classList.add('authenticated')
+
+        // Set userId in stores for Firestore operations
+        albumSeriesStore.setUserId(user.uid)
 
         // Initialize Router if not already started
         // (Router handles its own initialization on load, but we might want to gate it)

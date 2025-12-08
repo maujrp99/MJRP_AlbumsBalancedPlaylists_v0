@@ -5,6 +5,8 @@ import { getIcon } from '../components/Icons.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import toast from '../components/Toast.js'
 import { confirm } from '../components/ConfirmationModal.js'
+import { Autocomplete } from '../components/Autocomplete.js'
+import { albumLoader } from '../services/AlbumLoader.js'
 
 /**
  * AlbumSeriesListView
@@ -73,12 +75,8 @@ export class AlbumSeriesListView extends BaseView {
                 </div>
                 
                 <!-- Add Album Input -->
-                <div class="flex gap-2">
-                  <input type="text" id="addAlbumInput" class="form-control flex-1" placeholder="Artist - Album Title">
-                  <button type="button" class="btn btn-secondary" id="addAlbumBtn">
-                    ${getIcon('Plus', 'w-4 h-4')} Add
-                  </button>
-                </div>
+                <!-- Autocomplete Container -->
+                <div id="seriesAutocompleteWrapper" class="mb-4 relative z-50"></div>
                 <p class="text-xs text-muted mt-1">Format: Artist - Album Title (e.g., Pink Floyd - The Wall)</p>
               </div>
               
@@ -214,13 +212,12 @@ export class AlbumSeriesListView extends BaseView {
     const editForm = this.$('#editForm')
     const cancelEdit = this.$('#cancelEditBtn')
     const closeEdit = this.$('#closeEditBtn')
-    const addAlbumBtn = this.$('#addAlbumBtn')
-    const addAlbumInput = this.$('#addAlbumInput')
 
     if (editForm) {
       this.on(editForm, 'submit', async (e) => {
         e.preventDefault()
         const name = this.$('#editNameInput').value.trim()
+        const saveBtn = editForm.querySelector('button[type="submit"]')
 
         if (!name || name.length < 3) {
           toast.warning('Series name must be at least 3 characters')
@@ -233,36 +230,35 @@ export class AlbumSeriesListView extends BaseView {
         }
 
         if (this.editingAlbumSeriesId) {
+          const saveBtn = editForm.querySelector('button[type="submit"]')
+          const originalBtnContent = saveBtn.innerHTML
+
           try {
-            // Update both name and albumQueries
-            await albumSeriesStore.updateSeries(this.editingAlbumSeriesId, {
-              name,
-              albumQueries: this.editingAlbumQueries
-            })
-            if (this.db) {
-              const series = albumSeriesStore.getSeries().find(s => s.id === this.editingAlbumSeriesId)
-              if (series) await albumSeriesStore.saveToFirestore(this.db, series)
-            }
+            // Show loading state
+            saveBtn.disabled = true
+            saveBtn.innerHTML = `${getIcon('Loader', 'w-4 h-4 animate-spin')} Saving...`
+
+            // Store handles BOTH localStorage + Firestore persistence
+            await albumSeriesStore.updateSeries(
+              this.editingAlbumSeriesId,
+              {
+                name,
+                albumQueries: this.editingAlbumQueries
+              },
+              this.db  // Optional: Firestore backup (non-blocking)
+            )
+
             toast.success('Series updated successfully!')
             this.closeModal(editModal)
           } catch (err) {
+            console.error('Failed to update series:', err)
             toast.error('Failed to update series: ' + err.message)
+          } finally {
+            if (saveBtn) {
+              saveBtn.disabled = false
+              saveBtn.innerHTML = originalBtnContent
+            }
           }
-        }
-      })
-    }
-
-    // Add album button
-    if (addAlbumBtn) {
-      this.on(addAlbumBtn, 'click', () => this.addAlbumToList())
-    }
-
-    // Add album on Enter key
-    if (addAlbumInput) {
-      this.on(addAlbumInput, 'keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault()
-          this.addAlbumToList()
         }
       })
     }
@@ -304,6 +300,44 @@ export class AlbumSeriesListView extends BaseView {
     if (cancelDelete) this.on(cancelDelete, 'click', () => this.closeModal(deleteModal))
   }
 
+  // Helper to init autocomplete inside the modal when it opens (or once)
+  initSeriesAutocomplete() {
+    const wrapper = this.$('#seriesAutocompleteWrapper')
+    if (!wrapper || wrapper.hasChildNodes()) return // Already initialized
+
+    albumLoader.load().catch(console.error)
+
+    const autocomplete = new Autocomplete({
+      placeholder: 'Search to add album...',
+      loader: albumLoader,
+      onSelect: (item) => {
+        const entry = `${item.artist} - ${item.album}`
+
+        if (this.editingAlbumQueries.includes(entry)) {
+          toast.warning('This album is already in the list')
+          return
+        }
+
+        this.editingAlbumQueries.push(entry)
+        this.renderAlbumsList()
+        toast.success(`Added: ${item.album}`)
+
+        // Clear input by re-rendering component or calling internal clear if available
+        // For now, simpler to just clear the input value manually if exposed, 
+        // but Autocomplete component handles its own state. 
+        // We can force value clear by finding the input.
+        const input = wrapper.querySelector('input')
+        if (input) {
+          input.value = ''
+          input.focus()
+        }
+      }
+    })
+
+    wrapper.innerHTML = ''
+    wrapper.appendChild(autocomplete.render())
+  }
+
   openEditModal(id) {
     const series = albumSeriesStore.getSeries().find(s => s.id === id)
     if (!series) return
@@ -315,6 +349,11 @@ export class AlbumSeriesListView extends BaseView {
     if (input) input.value = series.name
 
     this.renderAlbumsList()
+
+    // Initialize Autocomplete if not already done
+    requestAnimationFrame(() => {
+      this.initSeriesAutocomplete()
+    })
 
     const modal = this.$('#editModal')
     if (modal) modal.classList.remove('hidden')
@@ -338,9 +377,9 @@ export class AlbumSeriesListView extends BaseView {
         <div class="album-item flex items-center justify-between bg-white/5 rounded-lg px-3 py-2 group hover:bg-white/10 transition-colors">
           <div class="flex items-center gap-3 flex-1 min-w-0">
             <span class="text-accent-primary font-mono text-xs w-6">${idx + 1}</span>
-            <span class="truncate">${this.escapeHtml(query)}</span>
+            <span class="truncate" title="${this.escapeHtml(query)}">${this.escapeHtml(query)}</span>
           </div>
-          <button type="button" class="btn btn-ghost btn-sm text-red-400 opacity-0 group-hover:opacity-100 transition-opacity" data-action="remove-album" data-index="${idx}">
+          <button type="button" class="btn btn-ghost btn-sm text-red-400 opacity-60 hover:opacity-100 transition-opacity" data-action="remove-album" data-index="${idx}" title="Remove album">
             ${getIcon('Trash', 'w-4 h-4')}
           </button>
         </div>
@@ -352,43 +391,17 @@ export class AlbumSeriesListView extends BaseView {
     }
   }
 
-  addAlbumToList() {
-    const input = this.$('#addAlbumInput')
-    if (!input) return
-
-    const value = input.value.trim()
-    if (!value) {
-      toast.warning('Please enter an album in format: Artist - Album')
-      return
-    }
-
-    if (!value.includes('-')) {
-      toast.warning('Please use format: Artist - Album Title')
-      return
-    }
-
-    if (this.editingAlbumQueries.includes(value)) {
-      toast.warning('This album is already in the list')
-      return
-    }
-
-    this.editingAlbumQueries.push(value)
-    this.renderAlbumsList()
-    input.value = ''
-    input.focus()
-    toast.success('Album added')
-  }
+  // addAlbumToList removed - logic moved to Autocomplete onSelect
 
   removeAlbumFromList(index) {
     if (index >= 0 && index < this.editingAlbumQueries.length) {
       const albumName = this.editingAlbumQueries[index]
 
-      // Show confirmation before removing
-      confirm.delete('Album', () => {
-        this.editingAlbumQueries.splice(index, 1)
-        this.renderAlbumsList()
-        toast.info(`Removed: ${albumName}`)
-      }, 'This only removes the album from this series, not from your inventory.')
+      // Direct removal - no nested modal to avoid overlay conflicts
+      // User can undo by clicking Cancel on the edit form
+      this.editingAlbumQueries.splice(index, 1)
+      this.renderAlbumsList()
+      toast.info(`Removed: ${albumName}`)
     }
   }
 
