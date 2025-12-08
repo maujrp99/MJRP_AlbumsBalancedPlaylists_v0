@@ -1,9 +1,13 @@
-import { serverTimestamp, collection, doc, addDoc, updateDoc, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
-
 /**
  * AlbumSeriesStore
  * Manages album series metadata and history
+ * 
+ * Refactored to use SeriesRepository for Firestore persistence
+ * localStorage remains as fast-read cache
  */
+
+import { SeriesRepository } from '../repositories/SeriesRepository.js'
+import { cacheManager } from '../cache/CacheManager.js'
 
 export class AlbumSeriesStore {
     constructor() {
@@ -12,28 +16,37 @@ export class AlbumSeriesStore {
         this.loading = false
         this.error = null
         this.listeners = new Set()
-        this.userId = null // Will be set when user authenticates
+        this.userId = null
+        this.repository = null
+        this.db = null  // Will be set on init
+
+        // Load from localStorage for instant access
         this.loadFromLocalStorage()
     }
 
     /**
-     * Set user ID for Firestore operations
+     * Initialize repository with Firestore and user ID
+     * Called after Firebase auth is ready
+     * @param {Firestore} db - Firestore instance
+     * @param {string} userId - Firebase auth user ID
+     */
+    init(db, userId) {
+        this.db = db
+        this.userId = userId || 'anonymous-user'
+        this.repository = new SeriesRepository(db, cacheManager, this.userId)
+        console.log('[AlbumSeriesStore] Initialized with userId:', this.userId)
+    }
+
+    /**
+     * Set user ID (legacy compatibility - use init() instead)
      * @param {string} userId - Firebase auth user ID
      */
     setUserId(userId) {
         this.userId = userId || 'anonymous-user'
-    }
-
-    /**
-     * Build Firestore collection path matching security rules
-     * Path: artifacts/mjrp-albums/users/{userId}/curator/series
-     * @param {Object} db - Firestore instance
-     * @returns {string} Collection path
-     */
-    getSeriesCollectionPath(db) {
-        const appId = 'mjrp-albums'
-        const userId = this.userId || 'anonymous-user'
-        return `artifacts/${appId}/users/${userId}/curator/series`
+        // Re-initialize repository if db is available
+        if (this.db) {
+            this.repository = new SeriesRepository(this.db, cacheManager, this.userId)
+        }
     }
 
     /**
@@ -53,43 +66,61 @@ export class AlbumSeriesStore {
     }
 
     /**
-     * Set active series
+     * Set active series by ID
      * @param {string} seriesId - Series ID to activate
+     * @returns {Object|null} Activated series or null if not found
      */
     setActiveSeries(seriesId) {
-        this.activeSeries = this.series.find(s => s.id === seriesId) || null
-        this.notify()
+        const series = this.series.find(s => s.id === seriesId)
+        if (series) {
+            this.activeSeries = series
+            this.notify()
+        }
+        return series || null
     }
 
     /**
      * Create new series
-     * @param {Object} seriesData - Series metadata
-     * @returns {Object} Created series
+     * @param {Object} seriesData - Series data (name, albumQueries, etc.)
+     * @returns {Promise<Object>} Created series
      */
-    createSeries(seriesData) {
+    async createSeries(seriesData) {
+        if (!this.repository) {
+            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
+        }
+
         const series = {
-            id: seriesData.id || Date.now().toString(),
-            name: seriesData.name,
+            name: seriesData.name || 'Untitled Series',
             albumQueries: seriesData.albumQueries || [],
-            createdAt: seriesData.createdAt || new Date(),
-            updatedAt: seriesData.updatedAt || new Date(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
             status: seriesData.status || 'pending',
             notes: seriesData.notes || ''
         }
 
+        // 1. Save to Firestore (source of truth)
+        const id = await this.repository.create(series)
+        series.id = id
+
+        // 2. Update memory
         this.series.unshift(series)
         this.activeSeries = series
+
+        // 3. Update localStorage cache
         this.saveToLocalStorage()
         this.notify()
 
         return series
     }
 
+    // ========== PERSISTENCE ==========
+
     saveToLocalStorage() {
         try {
-            localStorage.setItem('mjrp_series', JSON.stringify(this.series))
+            const serialized = JSON.parse(JSON.stringify(this.series))
+            localStorage.setItem('mjrp_series', JSON.stringify(serialized))
         } catch (e) {
-            console.error('Failed to save series to localStorage', e)
+            console.error('[AlbumSeriesStore] Failed to save to localStorage', e)
         }
     }
 
@@ -106,32 +137,38 @@ export class AlbumSeriesStore {
                 this.notify()
             }
         } catch (e) {
-            console.error('Failed to load series from localStorage', e)
+            console.error('[AlbumSeriesStore] Failed to load from localStorage', e)
         }
     }
 
     /**
-     * Load series from Firestore
-     * @param {Object} db - Firestore database instance
+     * Load series from Firestore (source of truth)
      * @returns {Promise<Array>} Loaded series
      */
-    async loadFromFirestore(db) {
+    async loadFromFirestore() {
+        if (!this.repository) {
+            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
+        }
+
         this.loading = true
         this.error = null
         this.notify()
 
         try {
-            const collectionPath = this.getSeriesCollectionPath(db)
-            const q = query(collection(db, collectionPath), orderBy('updatedAt', 'desc'), limit(20))
-            const snapshot = await getDocs(q)
+            // Use repository to fetch all series
+            const firestoreSeries = await this.repository.findAll({
+                orderBy: ['updatedAt', 'desc'],
+                limit: 20
+            })
 
-            this.series = snapshot.docs.map(docSnap => ({
-                id: docSnap.id,
-                ...docSnap.data(),
-                createdAt: docSnap.data().createdAt?.toDate(),
-                updatedAt: docSnap.data().updatedAt?.toDate()
+            this.series = firestoreSeries.map(s => ({
+                ...s,
+                createdAt: s.createdAt?.toDate ? s.createdAt.toDate() : new Date(s.createdAt),
+                updatedAt: s.updatedAt?.toDate ? s.updatedAt.toDate() : new Date(s.updatedAt)
             }))
 
+            // Update localStorage cache
+            this.saveToLocalStorage()
             this.notify()
             return this.series
         } catch (error) {
@@ -148,48 +185,34 @@ export class AlbumSeriesStore {
      * Update existing series
      * @param {string} id - Series ID to update
      * @param {Object} updates - Fields to update
-     * @param {Object} db - Firestore instance (REQUIRED for persistence)
      * @returns {Promise<Object>} Updated series
      */
-    async updateSeries(id, updates, db) {
-        if (!db) {
-            throw new Error('[AlbumSeriesStore] Firestore db is required - it is the source of truth')
+    async updateSeries(id, updates) {
+        if (!this.repository) {
+            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
         }
 
         const index = this.series.findIndex(s => s.id === id)
         if (index === -1) throw new Error('Series not found')
 
+        // 1. Update in Firestore FIRST (source of truth)
+        await this.repository.update(id, updates)
+
+        // 2. Update memory
         const updatedSeries = {
             ...this.series[index],
             ...updates,
             updatedAt: new Date()
         }
-
-        // 1. Update in-memory state (optimistic)
         this.series[index] = updatedSeries
 
         if (this.activeSeries && this.activeSeries.id === id) {
             this.activeSeries = updatedSeries
         }
 
-        // 2. Update localStorage (optimistic cache)
+        // 3. Update localStorage cache
         this.saveToLocalStorage()
         this.notify()
-
-        // 3. Save to Firestore (SOURCE OF TRUTH)
-        // If this fails, we throw - operation is not complete
-        try {
-            await this.saveToFirestore(db, updatedSeries)
-        } catch (error) {
-            // Firestore failed - revert optimistic updates
-            console.error('[AlbumSeriesStore] Firestore save failed, reverting:', error)
-
-            // Reload from localStorage to revert
-            this.loadFromLocalStorage()
-            this.notify()
-
-            throw error  // Re-throw so View knows it failed
-        }
 
         return updatedSeries
     }
@@ -197,65 +220,29 @@ export class AlbumSeriesStore {
     /**
      * Delete series
      * @param {string} id - Series ID to delete
-     * @param {Object} db - Firestore database instance (REQUIRED - source of truth)
+     * @returns {Promise<void>}
      */
-    async deleteSeries(id, db) {
-        if (!db) {
-            throw new Error('[AlbumSeriesStore] Firestore db is required for delete - it is the source of truth')
+    async deleteSeries(id) {
+        if (!this.repository) {
+            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
         }
 
         const index = this.series.findIndex(s => s.id === id)
         if (index === -1) throw new Error('Series not found')
 
         // 1. Delete from Firestore FIRST (source of truth)
-        // If this fails, we don't modify local state
-        const collectionPath = this.getSeriesCollectionPath(db)
-        await deleteDoc(doc(db, collectionPath, id))
+        await this.repository.delete(id)
 
-        // 2. THEN update local state (only after Firestore succeeds)
+        // 2. Update memory
         this.series.splice(index, 1)
 
         if (this.activeSeries && this.activeSeries.id === id) {
             this.activeSeries = null
         }
 
+        // 3. Update localStorage cache
         this.saveToLocalStorage()
         this.notify()
-    }
-
-    /**
-     * Save series to Firestore
-     * @param {Object} db - Firestore database instance
-     * @param {Object} series - Series to save
-     * @returns {Promise<string>} Document ID
-     */
-    async saveToFirestore(db, series) {
-        try {
-            const collectionPath = this.getSeriesCollectionPath(db)
-            // Deep serialize: removes undefined values and converts ES6 classes to POJOs
-            // Required per Issue #26 in DEBUG_LOG.md
-            const serialized = JSON.parse(JSON.stringify(series))
-            const data = {
-                ...serialized,
-                updatedAt: serverTimestamp()
-            }
-
-            if (series.id) {
-                await updateDoc(doc(db, collectionPath, series.id), data)
-                return series.id
-            } else {
-                const docRef = await addDoc(collection(db, collectionPath), {
-                    ...serialized,
-                    createdAt: serverTimestamp()
-                })
-                series.id = docRef.id
-                return docRef.id
-            }
-        } catch (error) {
-            this.error = error.message
-            this.notify()
-            throw error
-        }
     }
 
     /**

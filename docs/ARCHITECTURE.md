@@ -426,6 +426,39 @@ import { collection, doc, setDoc, getDoc, serverTimestamp }
 firebase.firestore.FieldValue.serverTimestamp()  // ReferenceError!
 ```
 
+### Firestore Security Rules (Production)
+
+> [!IMPORTANT]
+> **Source of Truth:** Firebase Console (not local files)  
+> **Last Updated:** 2025-12-08
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+    // Curated data (AlbumSeries, PlaylistSeries, Albums, Playlists)
+    match /artifacts/{appId}/users/{userId}/curator/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Inventory collection
+    match /artifacts/{appId}/users/{userId}/inventory/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+  }
+}
+```
+
+**Allowed Paths (for Repositories):**
+
+| Data Type | Collection Path |
+|-----------|-----------------|
+| AlbumSeries | `artifacts/mjrp-albums/users/{userId}/curator/albumSeries` |
+| PlaylistSeries | `artifacts/mjrp-albums/users/{userId}/curator/playlistSeries` |
+| Inventory | `artifacts/mjrp-albums/users/{userId}/inventory` |
+
 ---
 
 ### Common Patterns

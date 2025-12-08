@@ -238,14 +238,13 @@ export class AlbumSeriesListView extends BaseView {
             saveBtn.disabled = true
             saveBtn.innerHTML = `${getIcon('Loader', 'w-4 h-4 animate-spin')} Saving...`
 
-            // Store handles BOTH localStorage + Firestore persistence
+            // Store handles BOTH localStorage + Firestore persistence via Repository
             await albumSeriesStore.updateSeries(
               this.editingAlbumSeriesId,
               {
                 name,
                 albumQueries: this.editingAlbumQueries
-              },
-              this.db  // Optional: Firestore backup (non-blocking)
+              }
             )
 
             toast.success('Series updated successfully!')
@@ -287,7 +286,7 @@ export class AlbumSeriesListView extends BaseView {
       this.on(confirmDelete, 'click', async () => {
         if (this.deletingAlbumSeriesId) {
           try {
-            await albumSeriesStore.deleteSeries(this.deletingAlbumSeriesId, this.db)
+            await albumSeriesStore.deleteSeries(this.deletingAlbumSeriesId)
             toast.success('Series deleted')
             this.closeModal(deleteModal)
           } catch (err) {
