@@ -4,6 +4,7 @@
  */
 
 import { inventoryStore } from '../stores/inventory.js'
+import toast from './Toast.js'
 
 export function showAddToInventoryModal(album, onSuccess) {
   const modal = document.createElement('div')
@@ -162,9 +163,9 @@ export function showAddToInventoryModal(album, onSuccess) {
       addBtn.textContent = 'Add to Inventory'
 
       if (error && error.message && error.message.includes('already in inventory')) {
-        alert('This album is already in your inventory!')
+        toast.warning('This album is already in your inventory!')
       } else {
-        alert(`Failed: ${error ? error.message : 'Unknown'}`)
+        toast.error(`Failed: ${error ? error.message : 'Unknown'}`)
       }
     }
   })
@@ -285,7 +286,7 @@ export function showEditInventoryModal(item, onSave) {
     } catch (error) {
       saveBtn.disabled = false
       saveBtn.textContent = 'Save Changes'
-      alert(`Failed to save: ${error.message}`)
+      toast.error(`Failed to save: ${error.message}`)
     }
   })
 
@@ -386,7 +387,7 @@ export function showCreateSeriesFromInventoryModal(selectedAlbumIds, onConfirm) 
     } catch (error) {
       createBtn.disabled = false
       createBtn.textContent = 'Create Series'
-      alert(`Failed to create series: ${error.message}`)
+      toast.error(`Failed to create series: ${error.message}`)
     }
   })
 

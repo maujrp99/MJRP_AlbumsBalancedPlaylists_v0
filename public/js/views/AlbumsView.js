@@ -5,6 +5,7 @@ import { apiClient } from '../api/client.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
+import toast from '../components/Toast.js'
 
 /**
  * AlbumsView
@@ -689,12 +690,12 @@ export class AlbumsView extends BaseView {
             const albums = albumsStore.getAlbums()
 
             if (!activeSeries) {
-              alert('⚠️ No active series. Please create or load a series first.')
+              toast.warning('No active series. Please create or load a series first.')
               return
             }
 
             if (albums.length === 0) {
-              alert('⚠️ No albums loaded. Please load albums before generating playlists.')
+              toast.warning('No albums loaded. Please load albums before generating playlists.')
               return
             }
 
@@ -736,7 +737,7 @@ export class AlbumsView extends BaseView {
             // Better: just alert for now as "Coming Soon" or implement a real refresh if API supports it.
             // Given the current API client, we don't have a single album refresh.
             // Let's just reload the page for now to be safe, or show a toast.
-            alert('🔄 Refreshing data is not fully implemented in the backend yet. Please reload the series.')
+            toast.info('Refreshing data is not fully implemented yet. Please reload the series.')
           }
         }
         return
@@ -807,12 +808,12 @@ export class AlbumsView extends BaseView {
 
         // FIX: Add validation for edge cases
         if (!activeSeries) {
-          alert('⚠️ No active series. Please create or load a series first.')
+          toast.warning('No active series. Please create or load a series first.')
           return
         }
 
         if (albums.length === 0) {
-          alert('⚠️ No albums loaded. Please load albums before generating playlists.')
+          toast.warning('No albums loaded. Please load albums before generating playlists.')
           return
         }
 
@@ -973,7 +974,7 @@ export class AlbumsView extends BaseView {
       }
     } catch (error) {
       console.error('Failed to load albums:', error)
-      alert('⚠️ Error loading albums. Please try again.')
+      toast.error('Error loading albums. Please try again.')
     } finally {
       this.isLoading = false
 

@@ -6,6 +6,7 @@ import { apiClient } from '../api/client.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
+import toast from '../components/Toast.js'
 
 /**
  * PlaylistsView
@@ -130,10 +131,10 @@ export class PlaylistsView extends BaseView {
     const saveHistory = this.$('#saveToHistoryBtn')
 
     if (exportSpotify) {
-      this.on(exportSpotify, 'click', () => alert('🎵 Spotify export coming in Sprint 5!'))
+      this.on(exportSpotify, 'click', () => toast.info('Spotify export coming in Sprint 5!'))
     }
     if (exportAppleMusic) {
-      this.on(exportAppleMusic, 'click', () => alert('🍎 Apple Music export coming in Sprint 6!'))
+      this.on(exportAppleMusic, 'click', () => toast.info('Apple Music export coming in Sprint 6!'))
     }
     if (exportJson) {
       this.on(exportJson, 'click', () => this.handleExportJson())
@@ -347,7 +348,7 @@ export class PlaylistsView extends BaseView {
           btn.innerHTML = `${getIcon('Cloud', 'w-5 h-5')} Save to Series History`
         }, 2000)
       }
-      alert('Success: Playlists saved to series history!')
+      toast.success('Playlists saved to series history!')
     } catch (error) {
       console.error('[PlaylistsView] ❌ Cloud Save Failed:', error)
 
@@ -366,7 +367,7 @@ export class PlaylistsView extends BaseView {
           btn.innerHTML = `${getIcon('Cloud', 'w-5 h-5')} Save to Series History`
         }, 4000)
       }
-      alert('⚠️ Cloud save failed (permissions). Playlists have been saved to your BROWSER STORAGE.')
+      toast.warning('Cloud save failed (permissions). Playlists saved to browser storage.')
     }
   }
 
@@ -451,7 +452,7 @@ export class PlaylistsView extends BaseView {
     console.log('[PlaylistsView] handleGenerate - albums:', albums.length)
 
     if (albums.length === 0) {
-      alert('⚠️ No albums loaded. Please go back and load albums first.')
+      toast.warning('No albums loaded. Please go back and load albums first.')
       return
     }
 
@@ -493,7 +494,7 @@ export class PlaylistsView extends BaseView {
       console.log('[PlaylistsView] View updated')
     } catch (error) {
       console.error('[PlaylistsView] Generation failed:', error)
-      alert('⚠️ Failed to generate playlists. Please try again.')
+      toast.error('Failed to generate playlists. Please try again.')
       this.isGenerating = false
       this.update()
     }

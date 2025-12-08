@@ -3,6 +3,7 @@ import { albumSeriesStore } from '../stores/albumSeries.js'
 import { router } from '../router.js'
 import { getIcon } from '../components/Icons.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
+import toast from '../components/Toast.js'
 
 /**
  * AlbumSeriesListView
@@ -193,7 +194,7 @@ export class AlbumSeriesListView extends BaseView {
             }
             this.closeModal(editModal)
           } catch (err) {
-            alert('Failed to update series: ' + err.message)
+            toast.error('Failed to update series: ' + err.message)
           }
         }
       })
@@ -213,7 +214,7 @@ export class AlbumSeriesListView extends BaseView {
             await albumSeriesStore.deleteSeries(this.deletingAlbumSeriesId, this.db)
             this.closeModal(deleteModal)
           } catch (err) {
-            alert('Failed to delete series: ' + err.message)
+            toast.error('Failed to delete series: ' + err.message)
           }
         }
       })

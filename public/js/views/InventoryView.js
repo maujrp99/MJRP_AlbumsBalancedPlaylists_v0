@@ -3,6 +3,7 @@ import { inventoryStore } from '../stores/inventory.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
+import toast from '../components/Toast.js'
 
 /**
  * InventoryView
@@ -133,7 +134,7 @@ export class InventoryView extends BaseView {
           this.rerender()
         } catch (error) {
           console.error('Failed to update price:', error)
-          alert('Failed to update price. Please try again.')
+          toast.error('Failed to update price. Please try again.')
         }
       }
 
@@ -229,7 +230,7 @@ export class InventoryView extends BaseView {
           console.log('Creating series:', seriesName, 'with albums:', albumIds)
 
           // For now, just show success and navigate
-          alert(`Series "${seriesName}" created successfully!`)
+          toast.success(`Series "${seriesName}" created successfully!`)
 
           // Clear selection
           this.selectedAlbums.clear()

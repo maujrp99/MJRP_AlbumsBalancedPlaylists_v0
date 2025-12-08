@@ -7,6 +7,7 @@ import { CacheManager } from '../cache/CacheManager.js'
 import { MigrationUtility } from '../migration/MigrationUtility.js'
 import { Autocomplete } from '../components/Autocomplete.js'
 import { albumLoader } from '../services/AlbumLoader.js'
+import toast from '../components/Toast.js'
 
 /**
  * HomeView
@@ -313,16 +314,16 @@ export class HomeView extends BaseView {
       })
 
       if (result.success) {
-        alert(`Migration Complete!\nMigrated: ${result.seriesMigrated} series, ${result.albumsMigrated} albums.`)
+        toast.success(`Migration Complete! Migrated: ${result.seriesMigrated} series, ${result.albumsMigrated} albums.`)
         // Reload to refresh stores
         window.location.reload()
       } else {
-        alert('Migration finished with errors. Check console for details.')
+        toast.warning('Migration finished with errors. Check console for details.')
         console.error('Migration errors:', result.errors)
       }
     } catch (error) {
       console.error('Migration failed:', error)
-      alert('Migration failed: ' + error.message)
+      toast.error('Migration failed: ' + error.message)
     } finally {
       btn.disabled = false
       btn.innerHTML = originalText

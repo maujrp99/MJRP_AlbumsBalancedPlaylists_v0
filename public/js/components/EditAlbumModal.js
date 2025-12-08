@@ -3,10 +3,12 @@
  * Allows editing album metadata (Title, Artist, Year, Cover)
  */
 
+import toast from './Toast.js'
+
 export function showEditAlbumModal(album, onSave) {
-    const modal = document.createElement('div')
-    modal.className = 'modal-overlay'
-    modal.innerHTML = `
+  const modal = document.createElement('div')
+  modal.className = 'modal-overlay'
+  modal.innerHTML = `
     <div class="modal-container glass-panel max-w-md">
       <!-- Header -->
       <div class="modal-header p-6 border-b border-surface-light">
@@ -81,69 +83,69 @@ export function showEditAlbumModal(album, onSave) {
     </div>
   `
 
-    const titleInput = modal.querySelector('#titleInput')
-    const artistInput = modal.querySelector('#artistInput')
-    const yearInput = modal.querySelector('#yearInput')
-    const coverUrlInput = modal.querySelector('#coverUrlInput')
-    const cancelBtn = modal.querySelector('[data-action="cancel"]')
-    const saveBtn = modal.querySelector('[data-action="save"]')
+  const titleInput = modal.querySelector('#titleInput')
+  const artistInput = modal.querySelector('#artistInput')
+  const yearInput = modal.querySelector('#yearInput')
+  const coverUrlInput = modal.querySelector('#coverUrlInput')
+  const cancelBtn = modal.querySelector('[data-action="cancel"]')
+  const saveBtn = modal.querySelector('[data-action="save"]')
 
-    const close = () => modal.remove()
+  const close = () => modal.remove()
 
-    cancelBtn.addEventListener('click', close)
+  cancelBtn.addEventListener('click', close)
 
-    saveBtn.addEventListener('click', async () => {
-        const title = titleInput.value.trim()
-        const artist = artistInput.value.trim()
+  saveBtn.addEventListener('click', async () => {
+    const title = titleInput.value.trim()
+    const artist = artistInput.value.trim()
 
-        if (!title || !artist) {
-            alert('Title and Artist are required.')
-            return
-        }
+    if (!title || !artist) {
+      toast.warning('Title and Artist are required.')
+      return
+    }
 
-        saveBtn.disabled = true
-        saveBtn.textContent = 'Saving...'
+    saveBtn.disabled = true
+    saveBtn.textContent = 'Saving...'
 
-        try {
-            const updates = {
-                title,
-                artist,
-                year: yearInput.value ? parseInt(yearInput.value) : null,
-                coverUrl: coverUrlInput.value.trim() || null
-            }
+    try {
+      const updates = {
+        title,
+        artist,
+        year: yearInput.value ? parseInt(yearInput.value) : null,
+        coverUrl: coverUrlInput.value.trim() || null
+      }
 
-            await onSave(album.id, updates)
-            close()
-        } catch (error) {
-            console.error('Failed to save album:', error)
-            saveBtn.disabled = false
-            saveBtn.textContent = 'Save Changes'
-            alert(`Failed to save: ${error.message}`)
-        }
-    })
+      await onSave(album.id, updates)
+      close()
+    } catch (error) {
+      console.error('Failed to save album:', error)
+      saveBtn.disabled = false
+      saveBtn.textContent = 'Save Changes'
+      toast.error(`Failed to save: ${error.message}`)
+    }
+  })
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) close()
-    })
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close()
+  })
 
-    document.addEventListener('keydown', function handleEscape(e) {
-        if (e.key === 'Escape') {
-            close()
-            document.removeEventListener('keydown', handleEscape)
-        }
-    })
+  document.addEventListener('keydown', function handleEscape(e) {
+    if (e.key === 'Escape') {
+      close()
+      document.removeEventListener('keydown', handleEscape)
+    }
+  })
 
-    document.body.appendChild(modal)
+  document.body.appendChild(modal)
 
-    // Focus title input
-    setTimeout(() => titleInput.focus(), 100)
+  // Focus title input
+  setTimeout(() => titleInput.focus(), 100)
 
-    return modal
+  return modal
 }
 
 function escapeHtml(str) {
-    if (!str) return ''
-    const div = document.createElement('div')
-    div.textContent = str
-    return div.innerHTML
+  if (!str) return ''
+  const div = document.createElement('div')
+  div.textContent = str
+  return div.innerHTML
 }

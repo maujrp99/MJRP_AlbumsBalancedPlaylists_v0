@@ -3,14 +3,16 @@
  * Reusable modal components for CRUD operations
  */
 
+import toast from './Toast.js'
+
 /**
  * Delete Series Modal
  * Shows confirmation with NO cascade warning (albums stay)
  */
 export function showDeleteSeriesModal(seriesId, seriesName, onConfirm) {
-    const modal = document.createElement('div')
-    modal.className = 'modal-overlay'
-    modal.innerHTML = `
+  const modal = document.createElement('div')
+  modal.className = 'modal-overlay'
+  modal.innerHTML = `
     <div class="modal-container glass-panel max-w-md">
       <!-- Header -->
       <div class="modal-header p-6 border-b border-surface-light">
@@ -52,54 +54,54 @@ export function showDeleteSeriesModal(seriesId, seriesName, onConfirm) {
     </div>
   `
 
-    // Event handlers
-    const cancelBtn = modal.querySelector('[data-action="cancel"]')
-    const confirmBtn = modal.querySelector('[data-action="confirm"]')
+  // Event handlers
+  const cancelBtn = modal.querySelector('[data-action="cancel"]')
+  const confirmBtn = modal.querySelector('[data-action="confirm"]')
 
-    const close = () => {
-        modal.remove()
+  const close = () => {
+    modal.remove()
+  }
+
+  cancelBtn.addEventListener('click', close)
+  confirmBtn.addEventListener('click', async () => {
+    confirmBtn.disabled = true
+    confirmBtn.textContent = 'Deleting...'
+
+    try {
+      await onConfirm(seriesId)
+      close()
+    } catch (error) {
+      confirmBtn.disabled = false
+      confirmBtn.textContent = 'Delete Series'
+      toast.error(`Failed to delete series: ${error.message}`)
     }
+  })
 
-    cancelBtn.addEventListener('click', close)
-    confirmBtn.addEventListener('click', async () => {
-        confirmBtn.disabled = true
-        confirmBtn.textContent = 'Deleting...'
+  // Close on overlay click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close()
+  })
 
-        try {
-            await onConfirm(seriesId)
-            close()
-        } catch (error) {
-            confirmBtn.disabled = false
-            confirmBtn.textContent = 'Delete Series'
-            alert(`Failed to delete series: ${error.message}`)
-        }
-    })
-
-    // Close on overlay click
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) close()
-    })
-
-    // Close on Escape
-    const handleEscape = (e) => {
-        if (e.key === 'Escape') {
-            close()
-            document.removeEventListener('keydown', handleEscape)
-        }
+  // Close on Escape
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+      close()
+      document.removeEventListener('keydown', handleEscape)
     }
-    document.addEventListener('keydown', handleEscape)
+  }
+  document.addEventListener('keydown', handleEscape)
 
-    document.body.appendChild(modal)
-    return modal
+  document.body.appendChild(modal)
+  return modal
 }
 
 /**
  * Edit Series Name Modal
  */
 export function showEditSeriesModal(seriesId, currentName, onSave) {
-    const modal = document.createElement('div')
-    modal.className = 'modal-overlay'
-    modal.innerHTML = `
+  const modal = document.createElement('div')
+  modal.className = 'modal-overlay'
+  modal.innerHTML = `
     <div class="modal-container glass-panel max-w-md">
       <!-- Header -->
       <div class="modal-header p-6 border-b border-surface-light">
@@ -133,75 +135,75 @@ export function showEditSeriesModal(seriesId, currentName, onSave) {
     </div>
   `
 
-    const input = modal.querySelector('#seriesNameInput')
-    const cancelBtn = modal.querySelector('[data-action="cancel"]')
-    const saveBtn = modal.querySelector('[data-action="save"]')
+  const input = modal.querySelector('#seriesNameInput')
+  const cancelBtn = modal.querySelector('[data-action="cancel"]')
+  const saveBtn = modal.querySelector('[data-action="save"]')
 
-    // Validate input
-    const validate = () => {
-        const value = input.value.trim()
-        saveBtn.disabled = value.length < 3 || value === currentName
+  // Validate input
+  const validate = () => {
+    const value = input.value.trim()
+    saveBtn.disabled = value.length < 3 || value === currentName
+  }
+
+  input.addEventListener('input', validate)
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !saveBtn.disabled) {
+      saveBtn.click()
     }
+  })
 
-    input.addEventListener('input', validate)
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !saveBtn.disabled) {
-            saveBtn.click()
-        }
-    })
+  const close = () => {
+    modal.remove()
+  }
 
-    const close = () => {
-        modal.remove()
+  cancelBtn.addEventListener('click', close)
+  saveBtn.addEventListener('click', async () => {
+    const newName = input.value.trim()
+    if (newName.length < 3) return
+
+    saveBtn.disabled = true
+    saveBtn.textContent = 'Saving...'
+
+    try {
+      await onSave(seriesId, newName)
+      close()
+    } catch (error) {
+      saveBtn.disabled = false
+      saveBtn.textContent = 'Save Changes'
+      toast.error(`Failed to save: ${error.message}`)
     }
+  })
 
-    cancelBtn.addEventListener('click', close)
-    saveBtn.addEventListener('click', async () => {
-        const newName = input.value.trim()
-        if (newName.length < 3) return
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close()
+  })
 
-        saveBtn.disabled = true
-        saveBtn.textContent = 'Saving...'
-
-        try {
-            await onSave(seriesId, newName)
-            close()
-        } catch (error) {
-            saveBtn.disabled = false
-            saveBtn.textContent = 'Save Changes'
-            alert(`Failed to save: ${error.message}`)
-        }
-    })
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) close()
-    })
-
-    const handleEscape = (e) => {
-        if (e.key === 'Escape') {
-            close()
-            document.removeEventListener('keydown', handleEscape)
-        }
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+      close()
+      document.removeEventListener('keydown', handleEscape)
     }
-    document.addEventListener('keydown', handleEscape)
+  }
+  document.addEventListener('keydown', handleEscape)
 
-    document.body.appendChild(modal)
+  document.body.appendChild(modal)
 
-    // Focus and select input
-    setTimeout(() => {
-        input.focus()
-        input.select()
-    }, 100)
+  // Focus and select input
+  setTimeout(() => {
+    input.focus()
+    input.select()
+  }, 100)
 
-    return modal
+  return modal
 }
 
 /**
  * Delete Album Modal
  */
 export function showDeleteAlbumModal(albumId, albumTitle, onConfirm) {
-    const modal = document.createElement('div')
-    modal.className = 'modal-overlay'
-    modal.innerHTML = `
+  const modal = document.createElement('div')
+  modal.className = 'modal-overlay'
+  modal.innerHTML = `
     <div class="modal-container glass-panel max-w-md">
       <div class="modal-header p-6 border-b border-surface-light">
         <div class="flex items-center gap-3">
@@ -227,48 +229,48 @@ export function showDeleteAlbumModal(albumId, albumTitle, onConfirm) {
     </div>
   `
 
-    const cancelBtn = modal.querySelector('[data-action="cancel"]')
-    const confirmBtn = modal.querySelector('[data-action="confirm"]')
+  const cancelBtn = modal.querySelector('[data-action="cancel"]')
+  const confirmBtn = modal.querySelector('[data-action="confirm"]')
 
-    const close = () => modal.remove()
+  const close = () => modal.remove()
 
-    cancelBtn.addEventListener('click', close)
-    confirmBtn.addEventListener('click', async () => {
-        confirmBtn.disabled = true
-        confirmBtn.textContent = 'Deleting...'
+  cancelBtn.addEventListener('click', close)
+  confirmBtn.addEventListener('click', async () => {
+    confirmBtn.disabled = true
+    confirmBtn.textContent = 'Deleting...'
 
-        try {
-            await onConfirm(albumId)
-            close()
-        } catch (error) {
-            confirmBtn.disabled = false
-            confirmBtn.textContent = 'Delete'
-            alert(`Failed to delete: ${error.message}`)
-        }
-    })
+    try {
+      await onConfirm(albumId)
+      close()
+    } catch (error) {
+      confirmBtn.disabled = false
+      confirmBtn.textContent = 'Delete'
+      toast.error(`Failed to delete: ${error.message}`)
+    }
+  })
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) close()
-    })
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close()
+  })
 
-    document.addEventListener('keydown', function handleEscape(e) {
-        if (e.key === 'Escape') {
-            close()
-            document.removeEventListener('keydown', handleEscape)
-        }
-    })
+  document.addEventListener('keydown', function handleEscape(e) {
+    if (e.key === 'Escape') {
+      close()
+      document.removeEventListener('keydown', handleEscape)
+    }
+  })
 
-    document.body.appendChild(modal)
-    return modal
+  document.body.appendChild(modal)
+  return modal
 }
 
 /**
  * Delete Playlist Modal
  */
 export function showDeletePlaylistModal(playlistId, playlistTitle, trackCount, onConfirm) {
-    const modal = document.createElement('div')
-    modal.className = 'modal-overlay'
-    modal.innerHTML = `
+  const modal = document.createElement('div')
+  modal.className = 'modal-overlay'
+  modal.innerHTML = `
     <div class="modal-container glass-panel max-w-md">
       <div class="modal-header p-6 border-b border-surface-light">
         <div class="flex items-center gap-3">
@@ -294,46 +296,46 @@ export function showDeletePlaylistModal(playlistId, playlistTitle, trackCount, o
     </div>
   `
 
-    const cancelBtn = modal.querySelector('[data-action="cancel"]')
-    const confirmBtn = modal.querySelector('[data-action="confirm"]')
+  const cancelBtn = modal.querySelector('[data-action="cancel"]')
+  const confirmBtn = modal.querySelector('[data-action="confirm"]')
 
-    const close = () => modal.remove()
+  const close = () => modal.remove()
 
-    cancelBtn.addEventListener('click', close)
-    confirmBtn.addEventListener('click', async () => {
-        confirmBtn.disabled = true
-        confirmBtn.textContent = 'Deleting...'
+  cancelBtn.addEventListener('click', close)
+  confirmBtn.addEventListener('click', async () => {
+    confirmBtn.disabled = true
+    confirmBtn.textContent = 'Deleting...'
 
-        try {
-            await onConfirm(playlistId)
-            close()
-        } catch (error) {
-            confirmBtn.disabled = false
-            confirmBtn.textContent = 'Delete'
-            alert(`Failed to delete: ${error.message}`)
-        }
-    })
+    try {
+      await onConfirm(playlistId)
+      close()
+    } catch (error) {
+      confirmBtn.disabled = false
+      confirmBtn.textContent = 'Delete'
+      toast.error(`Failed to delete: ${error.message}`)
+    }
+  })
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) close()
-    })
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close()
+  })
 
-    document.addEventListener('keydown', function handleEscape(e) {
-        if (e.key === 'Escape') {
-            close()
-            document.removeEventListener('keydown', handleEscape)
-        }
-    })
+  document.addEventListener('keydown', function handleEscape(e) {
+    if (e.key === 'Escape') {
+      close()
+      document.removeEventListener('keydown', handleEscape)
+    }
+  })
 
-    document.body.appendChild(modal)
-    return modal
+  document.body.appendChild(modal)
+  return modal
 }
 
 /**
  * Helper to escape HTML
  */
 function escapeHtml(str) {
-    const div = document.createElement('div')
-    div.textContent = str
-    return div.innerHTML
+  const div = document.createElement('div')
+  div.textContent = str
+  return div.innerHTML
 }

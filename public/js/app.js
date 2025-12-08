@@ -14,6 +14,7 @@ import { PlaylistsView } from './views/PlaylistsView.js'
 import { InventoryView } from './views/InventoryView.js'
 import { RankingView } from './views/RankingView.js'
 import { ConsolidatedRankingView } from './views/ConsolidatedRankingView.js'
+import toast from './components/Toast.js'
 
 // Initialize Firebase
 const firebaseConfig = window.__firebase_config || {
@@ -45,7 +46,7 @@ onAuthStateChanged(auth, (user) => {
         console.log('⚠️ Not authenticated, signing in anonymously...')
         signInAnonymously(auth).catch((error) => {
             console.error('Auth failed:', error)
-            alert('Authentication failed. App may not work correctly.')
+            toast.error('Authentication failed. App may not work correctly.')
         })
     }
 })

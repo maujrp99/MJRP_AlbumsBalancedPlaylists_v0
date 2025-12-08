@@ -4,6 +4,7 @@ import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { getIcon } from '../components/Icons.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { router } from '../router.js'
+import toast from '../components/Toast.js'
 
 export class SavedPlaylistsView extends BaseView {
     constructor() {
@@ -388,7 +389,7 @@ export class SavedPlaylistsView extends BaseView {
             console.log('[SavedPlaylistsView] Series deleted:', seriesId)
         } catch (err) {
             console.error('[SavedPlaylistsView] Delete failed:', err)
-            alert('Failed to delete series: ' + err.message)
+            toast.error('Failed to delete series: ' + err.message)
 
             if (confirmBtn) {
                 confirmBtn.disabled = false
