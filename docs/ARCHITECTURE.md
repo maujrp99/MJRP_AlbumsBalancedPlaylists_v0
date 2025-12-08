@@ -13,6 +13,7 @@
 3. [Data Flow Analysis (2025-11-29)](#data-flow-analysis-2025-11-29)
 4. [Album Data Schema & Transformations (2025-11-29)](#album-data-schema-current)
 5. [UI/UX Standards (2025-11-29)](#uiux-standards-current)
+6. [Router Architecture](#router-architecture)
 
 ### Previous Architecture and Analysis  
 4. [Sprint 5: Repository Pattern (2025-11-28)](#sprint-5-repository-pattern-previous)
@@ -67,6 +68,101 @@
 
 Albums from previous series appear when switching series. **4 fix attempts failed**.  
 See [DEBUG_LOG.md](debug/DEBUG_LOG.md) Issue #22 for investigation history.
+
+---
+
+## Router Architecture
+**Status**: 🟢 Active  
+**File**: `public/js/router.js`  
+**Type**: Custom SPA Router (History API)
+
+### Overview
+
+The application uses a custom client-side router built on the History API (`pushState`). No external dependencies (React Router, Vue Router, etc.).
+
+### View Lifecycle
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Router
+    participant CurrentView
+    participant NewView
+    participant DOM
+    
+    User->>Router: navigate('/albums')
+    Router->>Router: beforeNavigateHooks()
+    Router->>CurrentView: destroy()
+    CurrentView->>CurrentView: cleanup subscriptions
+    
+    Router->>NewView: viewFactory()
+    Router->>NewView: render(params)
+    NewView-->>Router: HTML string
+    Router->>DOM: container.innerHTML = html
+    
+    Router->>NewView: mount(params)
+    NewView->>NewView: setup event listeners
+    NewView->>NewView: subscribe to stores
+    
+    Router->>Router: afterNavigateHooks()
+```
+
+### Lifecycle Methods (BaseView)
+
+| Method | When Called | Purpose |
+|--------|-------------|---------|
+| `render(params)` | After factory, before DOM | Returns HTML string |
+| `mount(params)` | After HTML injected | Setup listeners, subscriptions |
+| `destroy()` | Before navigation away | Cleanup listeners, subscriptions |
+| `update()` | On store notification | Re-render parts of UI |
+
+### Registered Routes
+
+| Path | View | Query Params |
+|------|------|--------------|
+| `/home` | HomeView | - |
+| `/albums` | AlbumsView | `?seriesId=X` |
+| `/playlists` | PlaylistsView | - |
+| `/album-series` | AlbumSeriesListView | - |
+| `/playlist-series` | SavedPlaylistsView | - |
+| `/ranking/:albumId` | RankingView | - |
+| `/ranking/consolidated` | ConsolidatedRankingView | - |
+| `/inventory` | InventoryView | - |
+
+### Navigation API
+
+```javascript
+import { router } from './router.js'
+
+// Navigate with history push
+router.navigate('/albums?seriesId=123')
+
+// Force reload current route (same view)
+await router.loadRoute(window.location.pathname)
+
+// Add before/after hooks
+router.beforeNavigate((path, state) => {
+    // Return false to prevent navigation
+    return !hasUnsavedChanges
+})
+
+router.afterNavigate((path, params) => {
+    // Analytics, etc.
+})
+```
+
+### Link Handling
+
+The router intercepts all `<a href="/...">` clicks on the page and uses `pushState` instead of full page reload. No special component needed.
+
+```html
+<!-- These are automatically intercepted -->
+<a href="/albums">View Albums</a>
+<a href="/inventory">Inventory</a>
+
+<!-- External links work normally -->
+<a href="https://example.com">External</a>
+```
 
 ---
 
