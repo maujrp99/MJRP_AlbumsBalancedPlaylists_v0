@@ -21,7 +21,7 @@ We are building a **premium, immersive music curation experience**.
 
 ---
 
-## 🔭 Current UI Status (v2.0.3)
+## 🔭 Current UI Status (v2.0.6)
 
 ### 1. Core Views
 - **HomeView**: Hero banner with dynamic "Equalizer" SVG. Migration banner (needs polish).
@@ -82,3 +82,33 @@ These components are implemented but need **Visual QA**:
 ---
 
 **Ready? Make it shine!** ✨
+
+---
+
+## 📐 UI/UX Standards (v2.0.6)
+
+### Feedback Components ✅
+- **Toast** (`components/Toast.js`) - Success (green), Error (red), Info (blue)
+- **ConfirmationModal** (`components/ConfirmationModal.js`) - Standardized delete warnings
+
+### Button Hierarchy
+- **Primary**: Save, Create (purple gradient)
+- **Secondary**: Cancel, Back (gray)  
+- **Danger**: Delete, Remove (red)
+
+### Delete Confirmation Pattern
+**Rule**: Always clarify scope
+
+Example:
+```
+Delete Series "My Rock Collection"?
+✓ Series will be removed
+✗ Albums remain in Inventory
+```
+
+### Icons
+- Use SVG components from `Icons.js`
+- NO emojis in production UI
+- Heroicons style consistency
+
+**Last Updated**: 2025-12-08

@@ -1,7 +1,7 @@
 # MJRP Playlist Generator - Product Roadmap
 
 **Last Updated**: 2025-12-06  
-**Current Version**: v2.0.4  
+**Current Version**: v2.0.6  
 **Current Sprint**: Sprint 5 Phase 3 (🔴 UAT BLOCKED - 4 P0 Issues)
 
 ---
