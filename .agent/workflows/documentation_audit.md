@@ -4,7 +4,7 @@ description: Documentation Audit & Reorganization Protocol
 
 # Documentation Audit & Reorganization Protocol
 
-**Purpose**: Systematically audit, consolidate, and reorganize project documentation to eliminate redundancy, improve discoverability, and reduce maintenance burden.
+**Purpose**: Systematically audit, consolidate to keep the information up-to-date with a history available, reorganizing project documentation to solve contradictions, eliminate redundancy, improve discoverability, and reduce maintenance burden.
 
 **When to Use**: 
 - Documentation feels scattered or duplicated
@@ -48,11 +48,12 @@ Create `documentation_audit_analysis.md` artifact with:
 
 ## 📊 Phase 1: Problem Identification
 
-### 1.1 Find Duplicates
+### 1.1 Find Duplicates and contradictions
 **Check for**:
 - Multiple README files (root vs docs/)
 - Duplicate CHANGELOGs
 - Multiple onboarding guides in different locations
+- Compare code vs. documentations, ask the user input to solve contradictions.
 - Archived versions of active docs
 
 **Command**:

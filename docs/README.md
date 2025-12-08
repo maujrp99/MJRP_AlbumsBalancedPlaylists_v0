@@ -1,7 +1,7 @@
 # Documentation
 
 **Project**: MJRP Album-Balanced Playlists Generator  
-**Last Updated**: 2025-12-02
+**Last Updated**: 2025-12-08
 
 > **Note**: This is the documentation index. For quick start, see below.
 
@@ -30,7 +30,6 @@ npm run dev
 ```bash
 npm test              # Unit tests (Vitest)
 npm run test:e2e      # E2E tests (Puppeteer)
-npm run test:coverage # Coverage report
 ```
 
 ### Current Version
@@ -40,116 +39,78 @@ See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
 ---
 
-## 📐 Architecture
+## 📂 Active Documentation Structure
 
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Consolidated architecture decisions
-  - Current: Store State Management, Album Data Schema
-  - Previous: Caching Strategy, Routing Decision, Repository Pattern
-  - Cross-references: Sprint 5 Persistence, Apple Music Integration, SDD
-  - **This is the single source of truth for architectural decisions**
-
-- **[DEBUG_LOG.md](DEBUG_LOG.md)** - Debugging sessions & troubleshooting
-  - Current debugging session (Issue #8: Store State Management)
-  - Previous debugging sessions (Sprint 4, 4.5, hotfixes)
-  - Debug tools documentation
-  - Lessons learned
+```
+docs/
+├── README.md                 # This index
+├── ARCHITECTURE.md           # System design & decisions
+├── CHANGELOG.md              # Version history
+├── SPRINT5_TASKS.md          # Current sprint tasks
+│
+├── onboarding/               # Guides for new team members
+│   ├── DEVELOPER.md          # Dev setup & context
+│   ├── DEVOPS.md             # Infrastructure & deploy
+│   ├── QA_ENGINEER.md        # Testing protocols
+│   ├── UX_UI.md              # Design system
+│   └── README.md             # Onboarding index
+│
+├── tester/                   # QA & Testing
+│   ├── GAP_ANALYSIS.md       # Implementation gaps
+│   ├── TEST_SPECIFICATION.md # Full test specs
+│   └── SPRINT5_UAT_*.md      # Current UAT reports
+│
+├── product-management/       # Product Planning
+│   ├── ROADMAP.md            # Future plans
+│   ├── PROJECT_SUMMARY.md    # Executive summary
+│   └── [Requirements Docs]
+│
+├── devops/                   # Operations
+│   ├── PORT_CONFIGURATION.md # Port reference
+│   ├── LOCAL_RUN.md          # Run guides
+│   └── PRODUCTION_DEPLOY.md  # Deploy runbooks
+│
+├── technical/                # Low-level specs
+│   ├── album_data_schema.md
+│   └── data_flow_architecture.md
+│
+├── ux/                       # Design & UX
+│   ├── LOGO_IMPLEMENTATION_GUIDE.md
+│   └── UI_CONSISTENCY_AUDIT.md
+│
+└── debug/                    # Troubleshooting
+    └── DEBUG_LOG.md          # Active debug history
+```
 
 ---
 
-## 🚀 DevOps
+## 🗄️ Historical Archives
 
-- **[devops/LOCAL_RUN.md](devops/LOCAL_RUN.md)** - How to run locally
-- **[devops/PRODUCTION_DEPLOY.md](devops/PRODUCTION_DEPLOY.md)** - Production deployment guide
-- **[devops/SECRET_ROTATION_RUNBOOK.md](devops/SECRET_ROTATION_RUNBOOK.md)** - Secret rotation procedures
-- **[devops/SECURITY.md](devops/SECURITY.md)** - Security guidelines
+Old documentation is preserved in `docs/archive/`. 
+Use `tar -xzvf [filename]` to access contents.
 
----
+| Archive File | Contents | Reason for Archiving |
+|--------------|----------|----------------------|
+| **tester-reports-20251208.tar.gz** | `CRUD_REVIEW_REPORT.md`, `GHOST_ALBUMS_REPORT.md`, `UX_ANALYSIS_REPORT_20251130.md`, and 5 others | Snapshots of completed testing phases (Nov/Dec 2025) |
+| **v2.0-planning-docs.tar.gz** | `V2.0_ANALYSIS.md`, `mjrp-playlist-generator-2.0.md` | Initial V2.0 planning docs (superseded by ROADMAP.md) |
+| **archive-backup.tar.gz** | `mission_reports/`, `audit_reports/` (Nov 2025) | Phase 1 & 2 mission reports |
 
-## 📦 Product Management
-
-- **[product-management/PROJECT_SUMMARY.md](product-management/PROJECT_SUMMARY.md)** - Project overview
-- **[product-management/SPRINT_5_UI_SPECS.md](product-management/SPRINT_5_UI_SPECS.md)** - Sprint 5 specifications
-- **[product-management/V2.0_ANALYSIS.md](product-management/V2.0_ANALYSIS.md)** - V2.0 analysis
-- **[product-management/V2.0_DEPLOYMENT_IMPACT.md](product-management/V2.0_DEPLOYMENT_IMPACT.md)** - V2.0 deployment impact
-- **[product-management/V2.0_DESIGN_MOCKUPS.md](product-management/V2.0_DESIGN_MOCKUPS.md)** - V2.0 design mockups
-- **[product-management/mjrp-playlist-generator-2.0.md](product-management/mjrp-playlist-generator-2.0.md)** - V2.0 specification
-
----
-
-## 📝 Project History
-
-- **[CHANGELOG.md](CHANGELOG.md)** - Version history and release notes
-
----
-
-## 📚 Archive
-
-- **[archive/architecture-artifacts-2025-11-29/](archive/architecture-artifacts-2025-11-29/)** - Consolidated architecture artifacts (Nov 29, 2025)
-  - Includes: Sprint 5 Persistence Architecture, Apple Music Architecture, SDD, and others
-- **[archive/hotfixes/](archive/hotfixes/)** - Historical hotfix documentation
-- **[archive/](archive/)** - Other archived documents
+> **Note**: All file history is preserved in git. You can also view previous versions of any file using `git log`.
 
 ---
 
 ## 🔍 Quick Links
 
 ### For Developers
-- Start here: [DevOps → Local Run](devops/LOCAL_RUN.md)
-- Architecture decisions: [ARCHITECTURE.md](ARCHITECTURE.md)
-- Deployment: [DevOps → Production Deploy](devops/PRODUCTION_DEPLOY.md)
+- **Start here**: [Onboarding → Developer](onboarding/DEVELOPER.md)
+- **Architecture**: [ARCHITECTURE.md](ARCHITECTURE.md)
+- **Debug Log**: [debug/DEBUG_LOG.md](debug/DEBUG_LOG.md)
 
-### For Product Managers
-- Project overview: [Product Management → Project Summary](product-management/PROJECT_SUMMARY.md)
-- Latest changes: [CHANGELOG.md](CHANGELOG.md)
-- Sprint specs: [Product Management → Sprint 5 UI Specs](product-management/SPRINT_5_UI_SPECS.md)
+### For Testers
+- **Start here**: [Onboarding → QA Engineer](onboarding/QA_ENGINEER.md)
+- **Test Specs**: [tester/TEST_SPECIFICATION.md](tester/TEST_SPECIFICATION.md)
+- **Current Blocks**: [tester/SPRINT5_UAT_20251206.md](tester/SPRINT5_UAT_20251206.md)
 
-### For Architects
-- Current architecture: [ARCHITECTURE.md](ARCHITECTURE.md)
-- Historical decisions: [archive/architecture-artifacts-2025-11-29/](archive/architecture-artifacts-2025-11-29/)
-
----
-
-## 📂 Documentation Structure
-
-```
-docs/
-├── README.md (this file)
-├── ARCHITECTURE.md (consolidated architecture)
-├── CHANGELOG.md (version history)
-├── CONTRIBUTING.md (contribution guidelines)
-│
-├── devops/
-│   ├── LOCAL_RUN.md
-│   ├── PRODUCTION_DEPLOY.md
-│   ├── SECRET_ROTATION_RUNBOOK.md
-│   └── SECURITY.md
-│
-├── tester/
-│   └── QA_ENGINEER_ONBOARDING.md
-│
-├── product-management/
-│   ├── PROJECT_SUMMARY.md
-│   ├── SPRINT_5_UI_SPECS.md
-│   ├── V2.0_ANALYSIS.md
-│   ├── V2.0_DEPLOYMENT_IMPACT.md
-│   ├── V2.0_DESIGN_MOCKUPS.md
-│   └── mjrp-playlist-generator-2.0.md
-│
-└── archive/
-    ├── architecture-artifacts-2025-11-29/ (13 files)
-    ├── hotfixes/ (historical hotfixes)
-    └── [other archived documents]
-```
-
----
-
-## 🔄 Maintenance
-
-**When to update this index:**
-- New top-level document added to /docs
-- Folder structure changes
-- Major documentation reorganization
-
-**Workflow documentation:**
-- Architecture updates: See `.agent/workflows/architecture_documentation.md`
-- Debug workflow: See `.agent/workflows/debug_issue.md`
+### For DevOps
+- **Start here**: [Onboarding → DevOps](onboarding/DEVOPS.md)
+- **Ports**: [devops/PORT_CONFIGURATION.md](devops/PORT_CONFIGURATION.md)

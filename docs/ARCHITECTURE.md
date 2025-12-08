@@ -385,6 +385,171 @@ Implemented Repository Pattern for Firestore persistence:
 
 ---
 
+## Firebase Integration Guide
+**Status**: 🟢 Active  
+**SDK Version**: v11.6.1 (Modular)  
+**Last Updated**: 2025-12-08
+
+### Setup
+
+#### Initialization (app.js)
+
+```javascript
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js'
+import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js'
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
+
+const firebaseConfig = {
+    apiKey: "...",
+    authDomain: "mjrp-albums.firebaseapp.com",
+    projectId: "mjrp-albums"
+}
+
+const app = initializeApp(firebaseConfig)
+const auth = getAuth(app)
+const db = getFirestore(app)
+
+// Anonymous authentication
+signInAnonymously(auth)
+```
+
+#### Modular SDK Imports
+
+**✅ CORRECT** (Modular v9+):
+```javascript
+import { collection, doc, setDoc, getDoc, serverTimestamp } 
+  from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
+```
+
+**❌ WRONG** (Compat v8):
+```javascript
+firebase.firestore.FieldValue.serverTimestamp()  // ReferenceError!
+```
+
+---
+
+### Common Patterns
+
+#### Reading Data
+
+```javascript
+import { doc, getDoc } from 'firebase/firestore'
+
+async loadFromFirestore(db, id) {
+    const docRef = doc(db, `users/${userId}/series/${id}`)
+    const docSnap = await getDoc(docRef)
+    
+    if (docSnap.exists()) {
+        return docSnap.data()
+    }
+    return null
+}
+```
+
+#### Writing Data
+
+```javascript
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
+
+async saveToFirestore(db, data) {
+    const docRef = doc(db, `users/${userId}/series/${data.id}`)
+    
+    await setDoc(docRef, {
+        ...data,
+        updatedAt: serverTimestamp()
+    })
+}
+```
+
+#### Handling Custom Classes
+
+**Problem**: Firestore rejects ES6 class instances
+
+**Solution**: Deep serialize
+```javascript
+// ❌ WRONG
+await setDoc(docRef, album)  // Crashes if album is Album instance
+
+// ✅ CORRECT
+const serialized = JSON.parse(JSON.stringify(album))
+await setDoc(docRef, serialized)
+```
+
+**Why**: `JSON.parse(JSON.stringify())` converts classes to plain objects AND removes `undefined` values automatically.
+
+**See**: [DEBUG_LOG.md](debug/DEBUG_LOG.md) Issue #26 for full context.
+
+---
+
+### Error Handling
+
+#### Common Errors
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `firebase is not defined` | Mixing modular + compat | Use modular imports only |
+| `Unsupported field value: undefined` | Undefined properties | Use JSON serialization |
+| `Unsupported field value: custom object` | Class instances | Use JSON serialization |
+| `Missing permissions` | Firestore rules | Check anonymous auth enabled |
+
+#### Troubleshooting Steps
+
+1. **Check imports**: All Firebase imports use modular CDN syntax
+2. **Check serialization**: No class instances sent to Firestore  
+3. **Check auth**: User authenticated (`auth.currentUser` exists)
+4. **Check console**: Firebase errors include stack traces
+
+---
+
+### Architecture: Firestore vs localStorage
+
+| Aspect | Firestore | localStorage |
+|--------|-----------|--------------|
+| **Persistence** | Cloud (cross-device) | Browser only |
+| **Offline** | SDK caches locally | Always available |
+| **Size limit** | 1MB per document | 5-10MB total |
+| **Speed** | Network latency | Instant |
+| **Use for** | Series, Playlists, Inventory | UI state, cache |
+
+**Pattern**: Write to both
+- **Firestore**: Source of truth (cloud persistence)
+- **localStorage**: Fast reads (instant access)
+- **IndexedDB**: Offline cache (via Firebase SDK)
+
+---
+
+### Authentication (Current State)
+
+**Sprint 5-6**: Firebase Anonymous Authentication  
+**Sprint 7**: Apple & Google OAuth (planned)
+
+**Current Flow**:
+```javascript
+// app.js automatically signs in
+signInAnonymously(auth)
+
+// Sets userId in stores
+onAuthStateChanged(auth, (user) => {
+    albumSeriesStore.setUserId(user.uid)
+})
+```
+
+**⚠️ Tech Debt**: 
+Some code uses fallback `|| 'anonymous-user'` string. This creates shared data bug.
+
+**Correct**: Always use `auth.currentUser.uid` (unique per visitor).
+
+**See**: ROADMAP Sprint 7 for OAuth implementation plan.
+
+---
+
+### See Also
+- [Repository Pattern](#sprint-5-repository-pattern-previous)
+- [DEBUG_LOG.md](debug/DEBUG_LOG.md) - Issues #25, #26
+- [Firebase Docs](https://firebase.google.com/docs/firestore)
+
+---
+
 ## Caching Strategy (Previous)
 **Status**: 🟢 Implemented  
 **Date**: 2025-11-29 01:32  

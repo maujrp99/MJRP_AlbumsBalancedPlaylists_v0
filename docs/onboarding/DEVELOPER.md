@@ -70,6 +70,24 @@
 - **Purpose**: Understand how data moves through the system
 - **Focus on**: API → Client → Repository → Cache → View flow
 
+### **Step 2.4: Firebase/Firestore Integration**
+📄 **Read**: `docs/ARCHITECTURE.md` → "Firebase Integration Guide"
+- **Purpose**: Understand how to work with Firebase/Firestore
+- **Key Points**:
+  - SDK: Modular v11.6.1 (NOT compat v8)
+  - Auth: Anonymous (auto sign-in via app.js)
+  - Always serialize classes before saving: `JSON.parse(JSON.stringify(obj))`
+  
+**⚠️ Common Mistake**:
+```javascript
+// ❌ Crashes
+firebase.firestore.FieldValue.serverTimestamp()
+
+// ✅ Works  
+import { serverTimestamp } from 'firebase/firestore'
+serverTimestamp()
+```
+
 **✅ Checkpoint**: You should now understand HOW the system is built.
 
 ---
