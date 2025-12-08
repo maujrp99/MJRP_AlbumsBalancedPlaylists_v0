@@ -53,12 +53,13 @@
 📄 **Read**: `docs/ARCHITECTURE.md`
 - **Purpose**: Understand system design, patterns, data flow
 - **Focus on**:
+  - High-Level Architecture Diagram (new)
   - Tech stack (Vite, Vitest, Firestore, IndexedDB)
   - Repository Pattern (BaseRepository → 4 specific repos)
   - Domain Model (Album, Track, Playlist, Series classes)
-  - Cache strategy (L1 Memory + L2 IndexedDB)
-  - File structure overview
-- **⏭️ Skip**: Deprecated sections (marked as such)
+  - Router Architecture (lifecycle: render → mount → destroy)
+  - Firebase Integration Guide
+  - Architecture Decisions (ADRs)
 
 ### **Step 2.2: Data Schemas**
 📄 **Read**: `docs/technical/album_data_schema.md`
@@ -106,21 +107,17 @@ serverTimestamp()
 - **Key takeaway**: Focus on UAT Verification!
 
 ### **Step 3.2: Current Issues & Blockers**
-📄 **Read**: `docs/debug/DEBUG_LOG.md` and `docs/tester/SPRINT5_UAT_20251206.md`
-- **Purpose**: Understand current blockers and active issues
-- **Focus on**:
-  - Issue #22: Ghost Albums (4 fix attempts failed)
-  - Firebase SDK Mismatch (nothing saves to Firestore)
-  - Series UI Buttons (non-functional)
-- **Note**: Historical issue audit archived. Current issues tracked in DEBUG_LOG.md
+📄 **Read**: `docs/debug/DEBUG_LOG.md`
+- **Purpose**: Understand current debugging context and historical issues
+- **Focus on**: Active issues and their status
+- **Note**: Some Sprint 5 blockers are actively being resolved
 
 ### **Step 3.3: Implementation Gaps**
-📄 **Read**: `docs/tester/GAP_ANALYSIS.md`
-- **Purpose**: See what's documented vs what actually works
-- **Focus on**: Persistence gaps (Firestore vs localStorage)
-- **Key insight**: Repositories exist but aren't integrated into Views
+📄 **Read**: `docs/technical/CACHE_PERSISTENCE_ARCHITECTURE.md`
+- **Purpose**: See cache and persistence layer analysis
+- **Focus on**: Which stores use which persistence mechanism
 
-**✅ Checkpoint**: You should now know what's ACTUALLY done, what NEEDS FIXING, and what NOT to trust.
+**✅ Checkpoint**: You should now know what's ACTUALLY done and what NEEDS WORK.
 
 ---
 
@@ -159,13 +156,11 @@ serverTimestamp()
    - `AlbumsView.js` (1,011 lines) - **⚠️ Contains Issue #15 & #16 bugs**
    - `InventoryView.js` (593 lines) - CRUD operations
 
-**Note**: Issues #15 (Ghost Albums) and #16 (View Mode) were closed.
-Current active issue: **Issue #22 (Ghost Albums in Expanded View)** - See `docs/debug/DEBUG_LOG.md`
+**Note**: See `docs/debug/DEBUG_LOG.md` for current issue status.
 
-**⚠️ CRITICAL Sprint 5 Blockers** (as of 2025-12-06):
-1. 🔴 **Firebase SDK Mismatch** - Nothing saves to Firestore
-2. 🔴 **Series UI Buttons** - Non-functional (Edit/Delete/Open)
-3. 🔴 **Ghost Albums (Issue #22)** - 4 fix attempts failed
+> [!NOTE]
+> Sprint 5 blockers are being actively addressed.
+> Check `DEBUG_LOG.md` for the latest status.
 
 ### **Step 4.4: API Client**
 📄 **Read**: `public/js/api/client.js`
@@ -225,17 +220,12 @@ cd server && node index.js
 
 Based on current status, here's the priority order:
 
-### **Priority 1: Fix Critical Blockers (Sprint 5)**
-See `docs/tester/SPRINT5_UAT_20251206.md` for details:
-1. 🔴 **P0**: Firebase SDK Mismatch (modular vs compat API)
-2. 🔴 **P0**: Series Management Buttons (event delegation issue)
-3. 🔴 **P0**: Ghost Albums Issue #22 (4 fix attempts failed)
-4. 🔴 **P0**: Playlists/Series not persisted to Firestore
+### **Priority 1: Review Current Status**
+See `docs/debug/DEBUG_LOG.md` for current active issues.
 
 ### **Priority 2: Integrate Repositories**
-- Connect `PlaylistRepository` to `PlaylistsView`
-- Connect `SeriesRepository` to `HomeView`
-- Connect `InventoryRepository` to `InventoryView`
+- Connect stores to use Repository Pattern consistently
+- See `docs/technical/CACHE_PERSISTENCE_ARCHITECTURE.md` for guidance
 
 ---
 
@@ -259,9 +249,8 @@ See `docs/tester/SPRINT5_UAT_20251206.md` for details:
 
 | Task | Primary Files | Secondary Files |
 |------|---------------|-----------------|
-| Fix Firebase SDK | series.js, albums.js | BaseRepository.js |
-| Fix Series Buttons | SeriesListView.js | Event delegation |
-| Fix Ghost Albums (#22) | AlbumsView.js, albums.js | DEBUG_LOG.md |
+| Fix Firestore persistence | albumSeries.js, albums.js | SeriesRepository.js |
+| Fix Series UI | AlbumSeriesListView.js | Event delegation |
 | Add new UI component | BaseView.js (extend) | app.js (routing) |
 | Add new repository | BaseRepository.js (extend) | - |
 | Debug data flow | client.js → Repository → Cache | - |
@@ -302,5 +291,5 @@ See `docs/tester/SPRINT5_UAT_20251206.md` for details:
 
 ---
 
-**Last Updated**: 2025-12-06
-**Next Update**: After Sprint 5 blockers resolved
+**Last Updated**: 2025-12-08  
+**Status**: Being updated as Sprint 5 blockers are resolved
