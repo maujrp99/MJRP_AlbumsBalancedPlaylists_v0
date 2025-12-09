@@ -78,32 +78,32 @@ async rerender() {
 ---
 
 
-### Issue #29: Inventory Card Display & Modal Issues - IN PROGRESS
-**Status**: 🔄 **IN PROGRESS**
-**Date**: 2025-12-08 21:28
+### Issue #29: Inventory Card Display & Modal Issues - RESOLVED ✅
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-08 21:28 → 21:58
 **Type**: UI/UX Bug
 **Component**: `InventoryView.js`, `InventoryModals.js`, `InventoryRepository.js`
 
 #### Problem
 Multiple issues with Inventory view display and modal functionality:
-1. **Format Select in Modal** - Dropdown doesn't show all options visually
-2. **Card Format Badge** - Always shows "CD" regardless of selected format
-3. **Owned Toggle Not Working** - Toggle button doesn't update status in Firestore
-4. **Checkbox UX Confusion** - Purpose unclear (originally meant for owned status)
+1. **Format Select in Modal** - Incorrect case (CD vs cd) and missing options
+2. **Card Format Badge** - Always showed "CD" due to case mismatch
+3. **Owned Toggle Not Working** - "No valid fields to update" error
 
-#### Root Cause Analysis
-- `owned` property was NOT being saved in `InventoryRepository.addAlbum` (FIXED)
-- Format may not be persisting correctly to Firestore
-- Toggle handler may have event binding issues after rerender
+#### Root Causes
+1. `owned` was NOT in `updateAlbum` allowed fields list
+2. Edit modal used uppercase values ("CD") but system expects lowercase ("cd")
+3. Edit modal missing DVD/Blu-ray options
 
 #### Fixes Applied
-- [x] Added `owned` property to repository save (default true)
+- [x] Added `owned` to allowed fields in `updateAlbum`
+- [x] Fixed Edit modal format values to lowercase
+- [x] Added all 6 format options to Edit modal
+- [x] Added Cassette format across all components
 
-#### TODO
-- [ ] Fix format select display (CSS/HTML issue)
-- [ ] Debug format not persisting in card badge
-- [ ] Verify owned toggle updates Firestore
-- [ ] Clarify checkbox vs toggle UX (consider removing checkbox)
+#### Remaining UX TODO
+- [ ] Improve owned marking UX (remove confusing checkbox)
+- [ ] Fix total calculation to consider owned status
 
 ---
 
