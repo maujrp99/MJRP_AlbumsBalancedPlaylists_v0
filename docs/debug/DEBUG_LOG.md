@@ -98,24 +98,33 @@ When `playlists.length > 0`, the generate section is removed (line 112) and no r
 
 ### Issue #30: Album Delete/Edit Not Working - AWAITING VERIFICATION
 **Status**: 🟡 **AWAITING USER VERIFICATION**
-**Date**: 2025-12-09 12:45
+**Date**: 2025-12-09 12:45 → 15:30
 **Type**: CRUD Bug
-**Component**: `AlbumsView.js`, `albums.js`
+**Component**: `AlbumsView.js`, `albumSeries.js`
 
 #### Problem
 1. **Delete button** - Had no `data-action` attribute, no handler
-2. **Edit button** - Saved to Firestore but didn't update local store or notify
+2. **Delete was memory-only** - Album returned on page refresh
 
-#### Root Causes
-1. Delete button at line 379 was missing `data-action="remove-album"` and `data-album-id`
-2. Edit handler called `saveToFirestore()` but never updated local state or called `notify()`
+#### Initial Wrong Approach
+Tried to create AlbumRepository and delete albums from Firestore.
+**THIS WAS WRONG** - Albums are NOT stored in Firestore!
 
-#### Fixes Applied
-- [x] Added `data-action="remove-album"` and `data-album-id` to delete button
-- [x] Added handler using `showDeleteAlbumModal` with confirmation
-- [x] After delete, calls `albumsStore.removeAlbum(id)` which already notifies
-- [x] Fixed edit handler to update local store array and call `albumsStore.notify()`
-- [x] Added toast notifications for success/error
+#### Correct Architecture Understanding
+- Series stores `albumQueries[]` (search strings like "Pink Floyd The Wall")
+- Albums are fetched from API on demand using those queries
+- Delete from series = Remove query from `albumQueries[]`, NOT delete album data
+- Does NOT affect Inventory (different data)
+
+#### Corrected Fixes Applied
+- [x] Added `data-action="remove-album"` to delete button
+- [x] Added `removeAlbumFromSeries(album)` to `albumSeries.js`
+  - Finds query matching album title/artist
+  - Removes from `albumQueries[]`
+  - Calls `updateSeries()` → persists to Firestore
+- [x] Updated AlbumsView delete handler:
+  1. Call `albumSeriesStore.removeAlbumFromSeries(album)` FIRST (Firestore)
+  2. Then `albumsStore.removeAlbum(id)` (memory)
 
 ---
 

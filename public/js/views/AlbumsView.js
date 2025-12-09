@@ -827,7 +827,10 @@ export class AlbumsView extends BaseView {
             `${album.title} - ${album.artist}`,
             async (id) => {
               try {
-                // Remove from local store (also removes from series context)
+                // 1. Remove from series in Firestore (updates albumQueries[])
+                await albumSeriesStore.removeAlbumFromSeries(album)
+
+                // 2. Remove from local memory store
                 albumsStore.removeAlbum(id)
 
                 const { toast } = await import('../components/Toast.js')

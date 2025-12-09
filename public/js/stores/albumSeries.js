@@ -218,6 +218,46 @@ export class AlbumSeriesStore {
     }
 
     /**
+     * Remove an album from the active series
+     * Finds the matching query in albumQueries and removes it
+     * @param {Object} album - Album object with title and artist
+     * @returns {Promise<Object>} Updated series
+     */
+    async removeAlbumFromSeries(album) {
+        if (!this.activeSeries) {
+            throw new Error('No active series')
+        }
+
+        const albumQueries = this.activeSeries.albumQueries || []
+
+        // Find the query that matches this album
+        // Query format is typically "Artist Album Title" or just "Album Title"
+        const queryToRemove = albumQueries.find(query => {
+            const queryLower = query.toLowerCase()
+            const titleLower = album.title?.toLowerCase() || ''
+            const artistLower = album.artist?.toLowerCase() || ''
+
+            // Match if query contains both artist and title, or just title
+            return queryLower.includes(titleLower) ||
+                (queryLower.includes(artistLower) && queryLower.includes(titleLower))
+        })
+
+        if (!queryToRemove) {
+            // Fallback: remove by index if we have album's original query stored
+            console.warn('[AlbumSeriesStore] Could not find matching query for album:', album.title)
+            throw new Error('Could not find album query in series')
+        }
+
+        // Remove the query from the array
+        const updatedQueries = albumQueries.filter(q => q !== queryToRemove)
+
+        // Update the series with new albumQueries
+        return this.updateSeries(this.activeSeries.id, {
+            albumQueries: updatedQueries
+        })
+    }
+
+    /**
      * Delete series
      * @param {string} id - Series ID to delete
      * @returns {Promise<void>}
