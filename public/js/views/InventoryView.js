@@ -62,6 +62,7 @@ export class InventoryView extends BaseView {
 
     const html = await this.render()
     container.innerHTML = html
+    this.container = container // Fix: Assign container for event listeners
     this.afterRender()
   }
 
@@ -70,11 +71,12 @@ export class InventoryView extends BaseView {
   }
 
   attachEventListeners() {
-    // Currency selector
+    // Currency toggle button
     const currencySelector = document.getElementById('currencySelector')
     if (currencySelector) {
-      currencySelector.addEventListener('change', (e) => {
-        this.currency = e.target.value
+      currencySelector.addEventListener('click', () => {
+        // Toggle between USD and BRL
+        this.currency = this.currency === 'USD' ? 'BRL' : 'USD'
         localStorage.setItem('inventoryCurrency', this.currency)
         this.rerender()
       })
@@ -273,14 +275,13 @@ export class InventoryView extends BaseView {
       else msg = 'Removed from specific lists'
 
       toast.success(msg)
-      this.rerender()
+      // NOTE: rerender is handled by store subscription, no need to call it here
     } catch (error) {
       toast.error('Failed to update status: ' + error.message)
       // Re-enable on error
       if (select) {
         select.disabled = false
         select.classList.remove('opacity-50', 'cursor-wait')
-        this.rerender() // Revert UI
       }
     }
   }
@@ -372,22 +373,25 @@ export class InventoryView extends BaseView {
                 <span class="badge badge-neutral text-xs">${stats.wishlistCount} Wishlist</span>
               </div>
               
-              <!-- Currency Selector with Owned Total -->
-              <div class="currency-selector relative ml-auto">
-                <select 
-                  id="currencySelector" 
-                  class="form-control appearance-none cursor-pointer pr-8 bg-surface-light text-sm"
-                >
-                  <option value="USD" ${this.currency === 'USD' ? 'selected' : ''}>
-                    Owned: ${this.formatCurrency(stats.ownedValueUSD, 'USD')}
-                  </option>
-                  <option value="BRL" ${this.currency === 'BRL' ? 'selected' : ''}>
-                    Owned: ${this.formatCurrency(stats.ownedValueBRL, 'BRL')}
-                  </option>
-                </select>
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                  ${getIcon('ChevronDown', 'w-4 h-4')}
+              
+              <!-- Total Value (Plain Text) + Currency Toggle -->
+              <div class="flex items-center gap-3 ml-auto">
+                <span class="text-sm text-gray-400">Total Owned:</span>
+                <span class="text-lg font-bold text-accent-primary">
+                  ${this.currency === 'USD'
+        ? this.formatCurrency(stats.ownedValueUSD, 'USD')
+        : this.formatCurrency(stats.ownedValueBRL, 'BRL')}
                 </span>
+                
+                <!-- Currency Toggle Button -->
+                <button 
+                  id="currencySelector"
+                  class="text-xs px-2 py-1 rounded bg-surface-light hover:bg-surface-lighter border border-surface-light text-gray-300 hover:text-white transition-colors"
+                  data-currency="${this.currency}"
+                  title="Toggle Currency"
+                >
+                  ${this.currency}
+                </button>
               </div>
             </div>
           </div>
@@ -496,16 +500,17 @@ export class InventoryView extends BaseView {
         <div class="absolute top-2 right-2 z-10 w-32">
           <div class="relative group">
             <select 
-              class="status-select w-full appearance-none pl-3 pr-8 py-1 rounded-full text-xs font-medium border cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors bg-surface-dark/90 backdrop-blur-sm
-                     ${isOwned ? 'text-green-400 border-green-500/50' :
-        album.owned === false ? 'text-pink-400 border-pink-500/50' :
-          'text-gray-400 border-gray-500/50'}"
+              class="status-select w-full appearance-none pl-3 pr-8 py-1 rounded-full text-xs font-medium border cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors bg-gray-900 text-white
+                     ${isOwned ? 'border-green-500/50 text-green-400' :
+        album.owned === false ? 'border-pink-500/50 text-pink-400' :
+          'border-gray-600 text-gray-400'}"
               data-album-id="${album.id}"
               onchange="this.dispatchEvent(new CustomEvent('status-change', { bubbles: true, detail: { albumId: '${album.id}', status: this.value } }))"
+              style="background-color: #1f2937;"
             >
-              <option value="not-owned" ${album.owned === null || album.owned === undefined ? 'selected' : ''}>Not Owned</option>
-              <option value="owned" ${isOwned ? 'selected' : ''}>Owned</option>
-              <option value="wishlist" ${album.owned === false ? 'selected' : ''}>Wishlist</option>
+              <option value="not-owned" ${album.owned === null || album.owned === undefined ? 'selected' : ''} class="bg-gray-900 text-white">Not Owned</option>
+              <option value="owned" ${isOwned ? 'selected' : ''} class="bg-gray-900 text-green-400">✓ Owned</option>
+              <option value="wishlist" ${album.owned === false ? 'selected' : ''} class="bg-gray-900 text-pink-400">♡ Wishlist</option>
             </select>
             <!-- Custom Arrow -->
             <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-current opacity-70">

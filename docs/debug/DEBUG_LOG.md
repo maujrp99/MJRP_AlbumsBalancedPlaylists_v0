@@ -102,8 +102,8 @@ Multiple issues with Inventory view display and modal functionality:
 - [x] Added Cassette format across all components
 
 #### Remaining UX TODO
-- [ ] Improve owned marking UX (remove confusing checkbox)
-- [ ] Fix total calculation to consider owned status
+- [x] Improve owned marking UX (remove confusing checkbox)
+- [x] Fix total calculation to consider owned status
 
 ---
 
