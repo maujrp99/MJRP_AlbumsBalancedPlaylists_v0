@@ -266,11 +266,18 @@ export class AlbumsView extends BaseView {
           <!-- Actions -->
           <div class="flex flex-col gap-2 ml-4">
             <button 
-              class="btn btn-secondary btn-sm whitespace-nowrap"
+              class="btn btn-success btn-sm whitespace-nowrap flex items-center gap-2"
               data-action="add-to-inventory"
               data-album-id="${album.id || ''}"
             >
-              ${getIcon('Archive', 'w-4 h-4')} Add to Inventory
+              ${getIcon('Plus', 'w-4 h-4')} Add to Inventory
+            </button>
+            <button 
+              class="btn btn-danger btn-sm whitespace-nowrap flex items-center gap-2"
+              data-action="remove-album"
+              data-album-id="${album.id || ''}"
+            >
+              ${getIcon('Trash', 'w-4 h-4')} Remove
             </button>
           </div>
         </div>
@@ -373,16 +380,10 @@ export class AlbumsView extends BaseView {
           
           <!-- Hover Overlay -->
           <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-sm">
-             <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Refresh Data">
-               ${getIcon('Refresh', 'w-5 h-5')}
-             </button>
-             <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Remove Album" data-action="remove-album" data-album-id="${album.id || ''}">
+             <button class="btn-icon bg-red-500/20 hover:bg-red-500/40 text-red-400 p-3 rounded-full" title="Remove from Series" data-action="remove-album" data-album-id="${album.id || ''}">
                ${getIcon('Trash', 'w-5 h-5')}
              </button>
-             <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Edit Album" data-action="edit-album" data-album-id="${album.id || ''}">
-               ${getIcon('Edit', 'w-5 h-5')}
-             </button>
-             <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Add to Inventory" data-action="add-to-inventory" data-album-id="${album.id || ''}">
+             <button class="btn-icon bg-green-500/20 hover:bg-green-500/40 text-green-400 p-3 rounded-full" title="Add to Inventory" data-action="add-to-inventory" data-album-id="${album.id || ''}">
                ${getIcon('Plus', 'w-5 h-5')}
              </button>
           </div>
@@ -725,23 +726,7 @@ export class AlbumsView extends BaseView {
         return
       }
 
-      // Refresh Album
-      const refreshBtn = e.target.closest('[title="Refresh Data"]')
-      if (refreshBtn) {
-        const card = refreshBtn.closest('.album-card')
-        const albumId = card?.dataset.albumId
-        if (albumId) {
-          if (confirm('Refresh album data? This will re-fetch from the API.')) {
-            // For now, we'll just reload the series to force a refresh, or we could implement a specific refresh method
-            // A simple way is to remove and re-add, but that's risky.
-            // Better: just alert for now as "Coming Soon" or implement a real refresh if API supports it.
-            // Given the current API client, we don't have a single album refresh.
-            // Let's just reload the page for now to be safe, or show a toast.
-            toast.info('Refreshing data is not fully implemented yet. Please reload the series.')
-          }
-        }
-        return
-      }
+      // NOTE: Refresh button was removed from UI for simplicity
 
       // NOTE: Remove Album handler is now in a separate event listener below
       // using showDeleteAlbumModal with proper styled confirmation
