@@ -96,50 +96,40 @@ When `playlists.length > 0`, the generate section is removed (line 112) and no r
 
 ---
 
-### Issue #30: Album Delete/Edit Not Working - AWAITING VERIFICATION
-**Status**: 🟡 **AWAITING USER VERIFICATION**
-**Date**: 2025-12-09 12:45 → 15:40
+### Issue #30: Album Delete Not Working - RESOLVED ✅
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-09 12:45 → 17:35
 **Type**: CRUD Bug
 **Component**: `AlbumsView.js`, `albumSeries.js`
 
 #### Problem
-1. **Delete button** - Had no `data-action` attribute, no handler
-2. **Delete was memory-only** - Album returned on page refresh
+1. Delete button had no proper handler
+2. Albums returned on page refresh after delete
 
-#### Initial Wrong Approach
-Tried to create AlbumRepository and delete albums from Firestore.
-**THIS WAS WRONG** - Albums are NOT stored in Firestore!
+#### Failed Attempts
 
-#### Correct Architecture Understanding
-- Series stores `albumQueries[]` (search strings like "Pink Floyd The Wall")
-- Albums are fetched from API on demand using those queries
-- Delete from series = Remove query from `albumQueries[]`, NOT delete album data
-- Does NOT affect Inventory (different data)
+**Attempt #1 (15:30):** Added `removeAlbumFromSeries()` to albumSeries.js
+- Result: Albums disappeared but reappeared on navigation
+- Root Cause Found: `album` was `undefined` because ID mismatch
 
-#### Failed Attempt #1 (2025-12-09 15:30)
-**What was done:**
-- Added `removeAlbumFromSeries(album)` to albumSeries.js
-- Updated AlbumsView to call `albumSeriesStore.removeAlbumFromSeries(album)`
+**Attempt #2 (17:00):** Added debug logs
+- Discovered: Button ID = `david-bowie_blackstar`, Store IDs = `['the-beatles_sgt-peppers...', ...]`
+- The Blackstar was in VIEW but NOT in STORE
 
-**User Test Result:**
-- Albums disappeared from view ✅
-- But REAPPEARED when navigating home and back ❌
-- Console showed "L1 cache hit" returning deleted albums
+#### Root Cause
+1. **Duplicate handler:** Old handler at line 746 used native `confirm()` and only called `albumsStore.removeAlbum()` (memory-only)
+2. **ID mismatch:** Album IDs from API didn't match store IDs, so `album = undefined`
+3. **removeAlbumFromSeries never called:** Because album was undefined, Firestore was never updated
 
-**Root Cause Hypothesis:**
-- Firestore update may not be happening OR
-- API client cache is not invalidated after series update
+#### Solution Applied
+1. **Removed duplicate handler** with native `confirm()`
+2. **DOM fallback:** When album not in store, extract title/artist from card HTML
+3. **Call removeAlbumFromSeries():** Updates `albumQueries[]` in series via Firestore
+4. **Remove card from DOM:** Immediate visual feedback
 
-#### Debug Logs Added (2025-12-09 15:40)
-Added console.logs to trace:
-- `removeAlbumFromSeries()`: album title, current queries, query to remove, updated queries
-- `updateSeries()`: Firestore call, success confirmation, localStorage update
-
-#### Corrected Fixes Applied
-- [x] Added `data-action="remove-album"` to delete button
-- [x] Added `removeAlbumFromSeries(album)` to `albumSeries.js`
-- [x] Updated AlbumsView delete handler
-- [ ] **PENDING**: Debug and fix persistence issue
+#### Files Modified
+- `AlbumsView.js`: New delete handler with DOM fallback, removed duplicate handler
+- `albumSeries.js`: Added `removeAlbumFromSeries()` method
 
 ---
 

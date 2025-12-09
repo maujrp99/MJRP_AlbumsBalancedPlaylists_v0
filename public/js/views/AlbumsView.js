@@ -743,20 +743,8 @@ export class AlbumsView extends BaseView {
         return
       }
 
-      // Remove Album
-      const trashBtn = e.target.closest('[title="Remove Album"]')
-      if (trashBtn) {
-        const card = trashBtn.closest('.album-card')
-        const albumId = card?.dataset.albumId
-        if (albumId) {
-          if (confirm('Are you sure you want to remove this album from the library?')) {
-            albumsStore.removeAlbum(albumId)
-            // Also update the series query list if possible? 
-            // For now, just removing from the view is good enough for the UI.
-          }
-        }
-        return
-      }
+      // NOTE: Remove Album handler is now in a separate event listener below
+      // using showDeleteAlbumModal with proper styled confirmation
     })
 
     // Add to Inventory
@@ -817,7 +805,24 @@ export class AlbumsView extends BaseView {
       const removeBtn = e.target.closest('[data-action="remove-album"]')
       if (removeBtn) {
         const albumId = removeBtn.dataset.albumId
-        const album = albumsStore.getAlbums().find(a => a.id === albumId)
+
+        // Find the album card to get title and artist from DOM
+        const albumCard = removeBtn.closest('.album-card')
+        let album = albumsStore.getAlbums().find(a => a.id === albumId)
+
+        // Fallback: if album not in store, create minimal object from DOM
+        if (!album && albumCard) {
+          const titleEl = albumCard.querySelector('.album-title')
+          const artistEl = albumCard.querySelector('.album-artist')
+          if (titleEl && artistEl) {
+            album = {
+              id: albumId,
+              title: titleEl.textContent.trim(),
+              artist: artistEl.textContent.trim()
+            }
+          }
+        }
+
         if (album) {
           // Import confirmation modal
           const { showDeleteAlbumModal } = await import('../components/Modals.js')
@@ -830,17 +835,26 @@ export class AlbumsView extends BaseView {
                 // 1. Remove from series in Firestore (updates albumQueries[])
                 await albumSeriesStore.removeAlbumFromSeries(album)
 
-                // 2. Remove from local memory store
+                // 2. Remove from local memory store (if present)
                 albumsStore.removeAlbum(id)
+
+                // 3. Remove the card from DOM
+                if (albumCard) {
+                  albumCard.remove()
+                }
 
                 const { toast } = await import('../components/Toast.js')
                 toast.success('Album removed from series')
               } catch (error) {
-                console.error('Failed to remove album:', error)
+                console.error('[AlbumsView] Failed to remove album:', error)
                 throw error // Re-throw for modal to handle
               }
             }
           )
+        } else {
+          console.error('[AlbumsView] Could not find album info for ID:', albumId)
+          const { toast } = await import('../components/Toast.js')
+          toast.error('Could not find album information')
         }
       }
     })
