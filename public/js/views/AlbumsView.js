@@ -284,8 +284,8 @@ export class AlbumsView extends BaseView {
 
         <!-- Dual Tracklists -->
         <div class="dual-tracklists-compact grid md:grid-cols-2 gap-6">
-          ${this.renderRankedTracklist(album)}
           ${this.renderOriginalTracklist(album)}
+          ${this.renderRankedTracklist(album)}
         </div>
       </div>
     `
@@ -748,43 +748,7 @@ export class AlbumsView extends BaseView {
         return
       }
 
-      // Edit Album
-      const editBtn = e.target.closest('[data-action="edit-album"]')
-      if (editBtn) {
-        const albumId = editBtn.dataset.albumId
-        const album = albumsStore.getAlbums().find(a => a.id === albumId)
-        if (album) {
-          const { showEditAlbumModal } = await import('../components/EditAlbumModal.js')
-          showEditAlbumModal(album, async (id, updates) => {
-            console.log('Saving album updates:', id, updates)
 
-            try {
-              // Merge updates into album object
-              const updatedAlbum = { ...album, ...updates }
-
-              // Save to Firestore via Store
-              const { db } = await import('../app.js')
-              await albumsStore.saveToFirestore(db, updatedAlbum)
-
-              // Update local store and notify to re-render
-              // Find and replace the album in the store
-              const albums = albumsStore.getAlbums()
-              const index = albums.findIndex(a => a.id === id)
-              if (index !== -1) {
-                albums[index] = updatedAlbum
-                albumsStore.notify()
-              }
-
-              const { toast } = await import('../components/Toast.js')
-              toast.success('Album updated successfully')
-            } catch (error) {
-              console.error('Failed to save album:', error)
-              const { toast } = await import('../components/Toast.js')
-              toast.error('Failed to save album: ' + error.message)
-            }
-          })
-        }
-      }
 
       // Remove Album
       const removeBtn = e.target.closest('[data-action="remove-album"]')
