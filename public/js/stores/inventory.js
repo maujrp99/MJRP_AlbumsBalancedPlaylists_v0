@@ -258,12 +258,14 @@ export class InventoryStore {
 
         this.albums.forEach(album => {
             // Count by ownership
-            const isOwned = album.owned !== false
+            // Strict check: only true counts as owned. null/undefined (Not Owned) and false (Wishlist) do not.
+            const isOwned = album.owned === true
             if (isOwned) {
                 stats.ownedCount++
-            } else {
+            } else if (album.owned === false) {
                 stats.wishlistCount++
             }
+            // null/undefined counts as stored but neither owned nor wishlist (Not Owned)
 
             // Count by format
             if (album.format) {

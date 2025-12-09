@@ -207,13 +207,20 @@ export class InventoryView extends BaseView {
       })
     })
 
-    // Owned toggle buttons
-    const ownedToggleBtns = document.querySelectorAll('.owned-toggle-btn')
-    ownedToggleBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    // Status dropdowns
+    this.container.addEventListener('status-change', (e) => {
+      e.stopPropagation()
+      this.handleStatusChange(e.detail.albumId, e.detail.status)
+    })
+
+    // Fallback for direct change if custom event bubbles (via delegation)
+    const statusSelects = document.querySelectorAll('.status-select')
+    statusSelects.forEach(select => {
+      select.addEventListener('change', (e) => {
         e.stopPropagation()
-        const albumId = e.currentTarget.dataset.albumId
-        this.handleToggleOwned(albumId)
+        const albumId = e.target.dataset.albumId
+        const status = e.target.value
+        this.handleStatusChange(albumId, status)
       })
     })
 
@@ -241,30 +248,39 @@ export class InventoryView extends BaseView {
     }
   }
 
-  async handleToggleOwned(albumId) {
+  async handleStatusChange(albumId, status) {
     const album = inventoryStore.getAlbums().find(a => a.id === albumId)
     if (!album) return
 
-    // Prevent double-click by disabling button during save
-    const btn = document.querySelector(`.owned-toggle-btn[data-album-id="${albumId}"]`)
-    if (btn) {
-      if (btn.disabled) return // Already processing
-      btn.disabled = true
-      btn.classList.add('opacity-50', 'cursor-wait')
+    // Visual feedback handled by select state, but we can disable during save
+    const select = document.querySelector(`.status-select[data-album-id="${albumId}"]`)
+    if (select) {
+      select.disabled = true
+      select.classList.add('opacity-50', 'cursor-wait')
     }
 
-    const newOwnedStatus = album.owned === false ? true : false
+    let isOwned = null
+    if (status === 'owned') isOwned = true
+    else if (status === 'wishlist') isOwned = false
+    // 'not-owned' remains null
 
     try {
-      await inventoryStore.updateAlbum(albumId, { owned: newOwnedStatus })
-      toast.success(newOwnedStatus ? 'Marked as Owned' : 'Marked as Wishlist')
+      await inventoryStore.updateAlbum(albumId, { owned: isOwned })
+
+      let msg = 'Updated status'
+      if (isOwned === true) msg = 'Moved to Collection'
+      else if (isOwned === false) msg = 'Moved to Wishlist'
+      else msg = 'Removed from specific lists'
+
+      toast.success(msg)
       this.rerender()
     } catch (error) {
       toast.error('Failed to update status: ' + error.message)
-      // Re-enable button on error
-      if (btn) {
-        btn.disabled = false
-        btn.classList.remove('opacity-50', 'cursor-wait')
+      // Re-enable on error
+      if (select) {
+        select.disabled = false
+        select.classList.remove('opacity-50', 'cursor-wait')
+        this.rerender() // Revert UI
       }
     }
   }
@@ -476,27 +492,28 @@ export class InventoryView extends BaseView {
 
     return `
       <div class="album-card glass-panel p-4 relative ${isSelected ? 'ring-2 ring-accent-primary' : ''}" data-album-id="${album.id}">
-        <!-- Selection Checkbox -->
-        <div class="absolute top-2 left-2 z-10">
-          <input 
-            type="checkbox" 
-            class="album-checkbox form-checkbox cursor-pointer"
-            data-album-id="${album.id}"
-            ${isSelected ? 'checked' : ''}
-          />
-        </div>
-        
-        <!-- Owned Badge (top right) -->
-        <div class="absolute top-2 right-2 z-10">
-          <button 
-            class="owned-toggle-btn ${isOwned ? 'bg-green-500/20 text-green-400 border-green-500/50' : 'bg-gray-500/20 text-gray-400 border-gray-500/50'} 
-                   text-xs px-2 py-1 rounded-full border hover:scale-105 transition-transform cursor-pointer"
-            data-album-id="${album.id}"
-            data-owned="${isOwned}"
-            title="${isOwned ? 'Click to mark as Wishlist' : 'Click to mark as Owned'}"
-          >
-            ${isOwned ? '✓ OWNED' : 'WISHLIST'}
-          </button>
+        <!-- Status Dropdown (top right) -->
+        <div class="absolute top-2 right-2 z-10 w-32">
+          <div class="relative group">
+            <select 
+              class="status-select w-full appearance-none pl-3 pr-8 py-1 rounded-full text-xs font-medium border cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors bg-surface-dark/90 backdrop-blur-sm
+                     ${isOwned ? 'text-green-400 border-green-500/50' :
+        album.owned === false ? 'text-pink-400 border-pink-500/50' :
+          'text-gray-400 border-gray-500/50'}"
+              data-album-id="${album.id}"
+              onchange="this.dispatchEvent(new CustomEvent('status-change', { bubbles: true, detail: { albumId: '${album.id}', status: this.value } }))"
+            >
+              <option value="not-owned" ${album.owned === null || album.owned === undefined ? 'selected' : ''}>Not Owned</option>
+              <option value="owned" ${isOwned ? 'selected' : ''}>Owned</option>
+              <option value="wishlist" ${album.owned === false ? 'selected' : ''}>Wishlist</option>
+            </select>
+            <!-- Custom Arrow -->
+            <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-current opacity-70">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+          </div>
         </div>
         
         <!-- Album Cover -->
