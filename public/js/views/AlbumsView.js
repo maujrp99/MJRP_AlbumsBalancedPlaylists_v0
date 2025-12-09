@@ -376,7 +376,7 @@ export class AlbumsView extends BaseView {
              <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Refresh Data">
                ${getIcon('Refresh', 'w-5 h-5')}
              </button>
-             <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Remove Album">
+             <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Remove Album" data-action="remove-album" data-album-id="${album.id || ''}">
                ${getIcon('Trash', 'w-5 h-5')}
              </button>
              <button class="btn-icon bg-white/10 hover:bg-white/20 text-white p-3 rounded-full" title="Edit Album" data-action="edit-album" data-album-id="${album.id || ''}">
@@ -785,16 +785,59 @@ export class AlbumsView extends BaseView {
           showEditAlbumModal(album, async (id, updates) => {
             console.log('Saving album updates:', id, updates)
 
-            // Merge updates into album object
-            const updatedAlbum = { ...album, ...updates }
+            try {
+              // Merge updates into album object
+              const updatedAlbum = { ...album, ...updates }
 
-            // Save to Firestore via Store
-            // We need db instance. 
-            const { db } = await import('../app.js')
-            await albumsStore.saveToFirestore(db, updatedAlbum)
+              // Save to Firestore via Store
+              const { db } = await import('../app.js')
+              await albumsStore.saveToFirestore(db, updatedAlbum)
 
-            // Store will notify and view will re-render
+              // Update local store and notify to re-render
+              // Find and replace the album in the store
+              const albums = albumsStore.getAlbums()
+              const index = albums.findIndex(a => a.id === id)
+              if (index !== -1) {
+                albums[index] = updatedAlbum
+                albumsStore.notify()
+              }
+
+              const { toast } = await import('../components/Toast.js')
+              toast.success('Album updated successfully')
+            } catch (error) {
+              console.error('Failed to save album:', error)
+              const { toast } = await import('../components/Toast.js')
+              toast.error('Failed to save album: ' + error.message)
+            }
           })
+        }
+      }
+
+      // Remove Album
+      const removeBtn = e.target.closest('[data-action="remove-album"]')
+      if (removeBtn) {
+        const albumId = removeBtn.dataset.albumId
+        const album = albumsStore.getAlbums().find(a => a.id === albumId)
+        if (album) {
+          // Import confirmation modal
+          const { showDeleteAlbumModal } = await import('../components/Modals.js')
+
+          showDeleteAlbumModal(
+            albumId,
+            `${album.title} - ${album.artist}`,
+            async (id) => {
+              try {
+                // Remove from local store (also removes from series context)
+                albumsStore.removeAlbum(id)
+
+                const { toast } = await import('../components/Toast.js')
+                toast.success('Album removed from series')
+              } catch (error) {
+                console.error('Failed to remove album:', error)
+                throw error // Re-throw for modal to handle
+              }
+            }
+          )
         }
       }
     })
