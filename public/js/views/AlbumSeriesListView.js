@@ -148,7 +148,7 @@ export class AlbumSeriesListView extends BaseView {
 
             <div class="card-actions flex gap-2 mt-auto pt-4 border-t border-white/5">
               <button class="btn btn-primary btn-sm flex-1" data-action="continue" data-id="${s.id}">
-                Open
+                View
               </button>
               <button class="btn btn-secondary btn-sm btn-icon" data-action="edit" data-id="${s.id}" title="Edit">
                 ${getIcon('Edit', 'w-4 h-4')}

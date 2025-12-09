@@ -53,16 +53,17 @@ export class PlaylistsView extends BaseView {
           </div>
         </header>
 
+        <!-- Export Section (Top) -->
+        <div id="exportSection" class="mb-6 fade-in" style="animation-delay: 0.05s">
+          ${playlists.length > 0 ? this.renderExportSection() : ''}
+        </div>
+
         <div id="mainContent" class="fade-in" style="animation-delay: 0.1s">
           ${playlists.length === 0 ? this.renderGenerateSection() : ''}
 
           <div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="playlistsGrid">
             ${this.renderPlaylists(playlists)}
           </div>
-        </div>
-
-        <div id="exportSection" class="mt-8 fade-in" style="animation-delay: 0.2s">
-          ${playlists.length > 0 ? this.renderExportSection() : ''}
         </div>
 
         ${this.isGenerating ? this.renderGeneratingOverlay() : ''}
