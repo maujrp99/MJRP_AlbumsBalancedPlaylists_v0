@@ -56,6 +56,7 @@ export class InventoryRepository extends BaseRepository {
             artist: album.artist,
             year: album.year,
             format,
+            owned: options.owned !== undefined ? options.owned : true, // Default to owned, can be set to false for wishlist
             purchasePrice: options.purchasePrice || null,
             currency,
             purchaseDate: options.purchaseDate || null,

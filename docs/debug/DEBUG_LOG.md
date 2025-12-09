@@ -78,6 +78,35 @@ async rerender() {
 ---
 
 
+### Issue #29: Inventory Card Display & Modal Issues - IN PROGRESS
+**Status**: 🔄 **IN PROGRESS**
+**Date**: 2025-12-08 21:28
+**Type**: UI/UX Bug
+**Component**: `InventoryView.js`, `InventoryModals.js`, `InventoryRepository.js`
+
+#### Problem
+Multiple issues with Inventory view display and modal functionality:
+1. **Format Select in Modal** - Dropdown doesn't show all options visually
+2. **Card Format Badge** - Always shows "CD" regardless of selected format
+3. **Owned Toggle Not Working** - Toggle button doesn't update status in Firestore
+4. **Checkbox UX Confusion** - Purpose unclear (originally meant for owned status)
+
+#### Root Cause Analysis
+- `owned` property was NOT being saved in `InventoryRepository.addAlbum` (FIXED)
+- Format may not be persisting correctly to Firestore
+- Toggle handler may have event binding issues after rerender
+
+#### Fixes Applied
+- [x] Added `owned` property to repository save (default true)
+
+#### TODO
+- [ ] Fix format select display (CSS/HTML issue)
+- [ ] Debug format not persisting in card badge
+- [ ] Verify owned toggle updates Firestore
+- [ ] Clarify checkbox vs toggle UX (consider removing checkbox)
+
+---
+
 ### Issue #27: Album Series CRUD Persistence Failures - AWAITING VERIFICATION
 **Status**: 🟡 **AWAITING USER VERIFICATION**
 **Date**: 2025-12-08 17:00
