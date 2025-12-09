@@ -77,6 +77,48 @@ async rerender() {
 
 ---
 
+### Issue #31: Playlist Generate Not Using New Albums - AWAITING VERIFICATION
+**Status**: 🟡 **AWAITING USER VERIFICATION**
+**Date**: 2025-12-09 13:00
+**Type**: UI/UX Bug
+**Component**: `PlaylistsView.js`
+
+#### Problem
+After generating playlists, if user adds new albums to the series and returns to Playlist view, there's no way to regenerate with the new albums - the Generate section is removed when playlists exist.
+
+#### Root Cause
+When `playlists.length > 0`, the generate section is removed (line 112) and no regenerate button exists.
+
+#### Fix Applied
+- [x] Added "Regenerate" button (btn-warning) to export section
+- [x] Button calls `handleGenerate()` which uses current `albumsStore.getAlbums()`
+- [x] New albums are automatically included since store is always fresh
+
+---
+
+### Issue #30: Album Delete/Edit Not Working - AWAITING VERIFICATION
+**Status**: 🟡 **AWAITING USER VERIFICATION**
+**Date**: 2025-12-09 12:45
+**Type**: CRUD Bug
+**Component**: `AlbumsView.js`, `albums.js`
+
+#### Problem
+1. **Delete button** - Had no `data-action` attribute, no handler
+2. **Edit button** - Saved to Firestore but didn't update local store or notify
+
+#### Root Causes
+1. Delete button at line 379 was missing `data-action="remove-album"` and `data-album-id`
+2. Edit handler called `saveToFirestore()` but never updated local state or called `notify()`
+
+#### Fixes Applied
+- [x] Added `data-action="remove-album"` and `data-album-id` to delete button
+- [x] Added handler using `showDeleteAlbumModal` with confirmation
+- [x] After delete, calls `albumsStore.removeAlbum(id)` which already notifies
+- [x] Fixed edit handler to update local store array and call `albumsStore.notify()`
+- [x] Added toast notifications for success/error
+
+---
+
 
 ### Issue #29: Inventory Card Display & Modal Issues - RESOLVED ✅
 **Status**: ✅ **RESOLVED**
