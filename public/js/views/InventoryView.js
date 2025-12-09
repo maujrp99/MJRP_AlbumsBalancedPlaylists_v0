@@ -648,6 +648,7 @@ export class InventoryView extends BaseView {
     const formatConfig = {
       cd: { icon: 'Disc', label: 'CD', color: 'text-blue-400' },
       vinyl: { icon: 'Disc', label: 'Vinyl', color: 'text-green-400' },
+      cassette: { icon: 'Play', label: 'Cassette', color: 'text-yellow-400' },
       dvd: { icon: 'Film', label: 'DVD', color: 'text-purple-400' },
       bluray: { icon: 'Film', label: 'Blu-ray', color: 'text-cyan-400' },
       digital: { icon: 'Download', label: 'Digital', color: 'text-gray-400' }

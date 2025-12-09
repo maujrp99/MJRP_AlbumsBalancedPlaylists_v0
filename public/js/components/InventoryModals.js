@@ -42,10 +42,9 @@ export function showAddToInventoryModal(album, onSuccess) {
           </label>
           <div class="relative">
             <select id="formatSelect" class="form-control w-full appearance-none pr-10">
-              <option value="cd">
-                <svg class="inline w-4 h-4" />CD
-              </option>
+              <option value="cd">CD</option>
               <option value="vinyl">Vinyl</option>
+              <option value="cassette">Cassette</option>
               <option value="dvd">DVD</option>
               <option value="bluray">Blu-ray</option>
               <option value="digital">Digital</option>
@@ -218,10 +217,12 @@ export function showEditInventoryModal(item, onSave) {
         <div>
           <label class="block mb-2 text-sm font-medium text-gray-300">Format:</label>
           <select id="formatSelect" class="form-control w-full">
-            <option value="CD" ${(item.format || album.format) === 'CD' ? 'selected' : ''}>CD</option>
-            <option value="Vinyl" ${(item.format || album.format) === 'Vinyl' ? 'selected' : ''}>Vinyl</option>
-            <option value="Digital" ${(item.format || album.format) === 'Digital' ? 'selected' : ''}>Digital</option>
-            <option value="Cassette" ${(item.format || album.format) === 'Cassette' ? 'selected' : ''}>Cassette</option>
+            <option value="cd" ${(item.format || album.format) === 'cd' ? 'selected' : ''}>CD</option>
+            <option value="vinyl" ${(item.format || album.format) === 'vinyl' ? 'selected' : ''}>Vinyl</option>
+            <option value="cassette" ${(item.format || album.format) === 'cassette' ? 'selected' : ''}>Cassette</option>
+            <option value="dvd" ${(item.format || album.format) === 'dvd' ? 'selected' : ''}>DVD</option>
+            <option value="bluray" ${(item.format || album.format) === 'bluray' ? 'selected' : ''}>Blu-ray</option>
+            <option value="digital" ${(item.format || album.format) === 'digital' ? 'selected' : ''}>Digital</option>
           </select>
         </div>
 

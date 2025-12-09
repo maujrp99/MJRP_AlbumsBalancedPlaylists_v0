@@ -34,7 +34,7 @@ export class InventoryRepository extends BaseRepository {
             throw new Error('Album must have title and artist')
         }
 
-        const validFormats = ['cd', 'vinyl', 'dvd', 'bluray', 'digital']
+        const validFormats = ['cd', 'vinyl', 'cassette', 'dvd', 'bluray', 'digital']
         if (!validFormats.includes(format)) {
             throw new Error(`Format must be one of: ${validFormats.join(', ')}`)
         }
@@ -77,7 +77,7 @@ export class InventoryRepository extends BaseRepository {
    * @returns {Promise<string>} Album ID
    */
     async updateAlbum(albumId, updates) {
-        const allowed = ['format', 'purchasePrice', 'currency', 'purchaseDate', 'condition', 'notes']
+        const allowed = ['format', 'purchasePrice', 'currency', 'purchaseDate', 'condition', 'notes', 'owned']
         const filtered = {}
 
         allowed.forEach(field => {
