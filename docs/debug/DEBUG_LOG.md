@@ -98,7 +98,7 @@ When `playlists.length > 0`, the generate section is removed (line 112) and no r
 
 ### Issue #30: Album Delete/Edit Not Working - AWAITING VERIFICATION
 **Status**: 🟡 **AWAITING USER VERIFICATION**
-**Date**: 2025-12-09 12:45 → 15:30
+**Date**: 2025-12-09 12:45 → 15:40
 **Type**: CRUD Bug
 **Component**: `AlbumsView.js`, `albumSeries.js`
 
@@ -116,15 +116,30 @@ Tried to create AlbumRepository and delete albums from Firestore.
 - Delete from series = Remove query from `albumQueries[]`, NOT delete album data
 - Does NOT affect Inventory (different data)
 
+#### Failed Attempt #1 (2025-12-09 15:30)
+**What was done:**
+- Added `removeAlbumFromSeries(album)` to albumSeries.js
+- Updated AlbumsView to call `albumSeriesStore.removeAlbumFromSeries(album)`
+
+**User Test Result:**
+- Albums disappeared from view ✅
+- But REAPPEARED when navigating home and back ❌
+- Console showed "L1 cache hit" returning deleted albums
+
+**Root Cause Hypothesis:**
+- Firestore update may not be happening OR
+- API client cache is not invalidated after series update
+
+#### Debug Logs Added (2025-12-09 15:40)
+Added console.logs to trace:
+- `removeAlbumFromSeries()`: album title, current queries, query to remove, updated queries
+- `updateSeries()`: Firestore call, success confirmation, localStorage update
+
 #### Corrected Fixes Applied
 - [x] Added `data-action="remove-album"` to delete button
 - [x] Added `removeAlbumFromSeries(album)` to `albumSeries.js`
-  - Finds query matching album title/artist
-  - Removes from `albumQueries[]`
-  - Calls `updateSeries()` → persists to Firestore
-- [x] Updated AlbumsView delete handler:
-  1. Call `albumSeriesStore.removeAlbumFromSeries(album)` FIRST (Firestore)
-  2. Then `albumsStore.removeAlbum(id)` (memory)
+- [x] Updated AlbumsView delete handler
+- [ ] **PENDING**: Debug and fix persistence issue
 
 ---
 

@@ -188,7 +188,10 @@ export class AlbumSeriesStore {
      * @returns {Promise<Object>} Updated series
      */
     async updateSeries(id, updates) {
+        console.log('[AlbumSeriesStore] updateSeries called with id:', id, 'updates:', updates)
+
         if (!this.repository) {
+            console.error('[AlbumSeriesStore] Repository not initialized!')
             throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
         }
 
@@ -196,7 +199,9 @@ export class AlbumSeriesStore {
         if (index === -1) throw new Error('Series not found')
 
         // 1. Update in Firestore FIRST (source of truth)
+        console.log('[AlbumSeriesStore] Calling repository.update()...')
         await this.repository.update(id, updates)
+        console.log('[AlbumSeriesStore] Firestore update SUCCESS')
 
         // 2. Update memory
         const updatedSeries = {
@@ -208,10 +213,12 @@ export class AlbumSeriesStore {
 
         if (this.activeSeries && this.activeSeries.id === id) {
             this.activeSeries = updatedSeries
+            console.log('[AlbumSeriesStore] Active series updated in memory')
         }
 
         // 3. Update localStorage cache
         this.saveToLocalStorage()
+        console.log('[AlbumSeriesStore] localStorage updated')
         this.notify()
 
         return updatedSeries
@@ -224,11 +231,16 @@ export class AlbumSeriesStore {
      * @returns {Promise<Object>} Updated series
      */
     async removeAlbumFromSeries(album) {
+        console.log('[AlbumSeriesStore] removeAlbumFromSeries called for:', album.title, '-', album.artist)
+
         if (!this.activeSeries) {
+            console.error('[AlbumSeriesStore] No active series!')
             throw new Error('No active series')
         }
 
+        console.log('[AlbumSeriesStore] Active series:', this.activeSeries.id, this.activeSeries.name)
         const albumQueries = this.activeSeries.albumQueries || []
+        console.log('[AlbumSeriesStore] Current albumQueries:', albumQueries)
 
         // Find the query that matches this album
         // Query format is typically "Artist Album Title" or just "Album Title"
@@ -242,19 +254,25 @@ export class AlbumSeriesStore {
                 (queryLower.includes(artistLower) && queryLower.includes(titleLower))
         })
 
+        console.log('[AlbumSeriesStore] Query to remove:', queryToRemove)
+
         if (!queryToRemove) {
-            // Fallback: remove by index if we have album's original query stored
-            console.warn('[AlbumSeriesStore] Could not find matching query for album:', album.title)
+            console.error('[AlbumSeriesStore] Could not find matching query for album:', album.title)
+            console.error('[AlbumSeriesStore] Available queries:', albumQueries)
             throw new Error('Could not find album query in series')
         }
 
         // Remove the query from the array
         const updatedQueries = albumQueries.filter(q => q !== queryToRemove)
+        console.log('[AlbumSeriesStore] Updated queries (after removal):', updatedQueries)
 
         // Update the series with new albumQueries
-        return this.updateSeries(this.activeSeries.id, {
+        console.log('[AlbumSeriesStore] Calling updateSeries with new albumQueries...')
+        const result = await this.updateSeries(this.activeSeries.id, {
             albumQueries: updatedQueries
         })
+        console.log('[AlbumSeriesStore] updateSeries completed. Result:', result)
+        return result
     }
 
     /**
