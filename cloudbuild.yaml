@@ -4,6 +4,9 @@ steps:
     script: |
       mkdir -p server/_shared_temp
       cp -r shared/* server/_shared_temp/
+      echo "=== DEBUG: Listing server directory ==="
+      ls -R server
+
 
   # 2. Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
