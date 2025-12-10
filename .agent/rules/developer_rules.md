@@ -2,9 +2,15 @@
 trigger: always_on
 ---
 
-###GOLDEN RULES
-Always ask if you have full project context and what is the full context of the demand.
-Read carefully all the documentation and point out contradictions to be addressed.
-After implement a feature, or a fix, always document or update the documentation.
-Always log the failed attempts to fix an issue/problem in the debug log .md, as well as the solution only if the user confirmed it is really done.
-Nunca marca nada como fixed ou done, enquanto o usuário não confirmar que está OK.
+### PROJECT CONSTITUTION
+> [!IMPORTANT]
+> **ALWAYS** follow the Project Constitution defined in `docs/specs/constitution.md`.
+> It defines the Core Principles for User-Centric Quality, Clean Code, Documentation, and Testing.
+
+### GOLDEN RULES
+1. **Context First**: Always ask if you have full project context and what is the full context of the demand.
+2. **Docs Verification**: Read carefully all documentation and point out contradictions.
+3. **Spec-Driven**: For complex features, verify against `docs/specs/` before implementation.
+4. **Documentation Sync**: After implementing a feature or fix, always update the documentation.
+5. **Debug Traceability**: Always log failed attempts and solutions in the debug log.
+6. **User Validation**: Nunca marca nada como fixed ou done, enquanto o usuário não confirmar que está OK.

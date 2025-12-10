@@ -6,7 +6,7 @@ description: Architecture and Technical Analysis Protocol
 Architecture and Technical Analysis Protocol
 
 ## Purpose
-Maintain living architecture documentation with clear history of decisions and changes.
+Maintain living architecture documentation aligned with **Project Constitution** principles, with clear history of decisions.
 
 ## File Structure
 - `/docs/ARCHITECTURE.md` - Single source of truth for architectural decisions
@@ -43,6 +43,7 @@ flowchart TD
 
 ### Rationale
 [Why this decision was made]
+**Principle Alignment**: [Which Constitution Principle this supports, e.g. User-Centric Quality]
 
 ### Diagrams
 [Mermaid diagrams, data flow, etc.]
@@ -95,7 +96,7 @@ When debugging reveals architectural issues:
 1. Check `ARCHITECTURE.md` → Current state
 2. Propose changes in `implementation_plan.md`
 3. After approval → Update ARCHITECTURE.md
-4. Delete `implementation_plan.md` artifact (consolidated)
+4. Archive `implementation_plan.md` or mark as completed (historically preserved in task context)
 
 ### With Task Management
 Mark in `task.md`:
