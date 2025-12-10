@@ -1,67 +1,56 @@
 # DevOps Documentation
 
-**Last Updated:** 2025-11-29
+**Last Updated:** 2025-12-10
 
 ---
 
-## 📚 Active Documentation
+## 📚 Primary Documentation
 
-### Primary Deployment Guide
-**Location:** `docs/devops/PRODUCTION_DEPLOY.md`
+### [DEVOPS_GUIDE.md](./DEVOPS_GUIDE.md)
 
-This is the **single source of truth** for production deployments. It consolidates:
-- Pre-deployment checklists
-- Cloud Run deployment procedures
-- Firebase Hosting deployment
-- Post-deployment validation
-- Rollback procedures
-- CI/CD configuration
-- Troubleshooting guide
+Este é o **documento consolidado único** para todas as operações de DevOps. Inclui:
 
-**Use this document for all deployment activities.**
+- Quick Start para deploy (frontend e backend)
+- Desenvolvimento local
+- Configuração de portas
+- Production Readiness Checklist
+- Segurança e Secrets
+- Rotação de Secrets
+- Rollback Procedures
+- Troubleshooting
+- Known Issues Reference
 
----
-
-## 📂 Supporting Documentation (This Directory)
-
-### Security & Operations
-- [`SECRET_ROTATION_RUNBOOK.md`](./SECRET_ROTATION_RUNBOOK.md) - Secret rotation procedures
-- [`SECURITY.md`](./SECURITY.md) - Security policies and best practices
-- [`LOCAL_RUN.md`](./LOCAL_RUN.md) - Local development setup
+**Use este documento para todas as atividades de DevOps.**
 
 ---
 
-## 📦 Archived Documentation
+## 📦 Documentação Arquivada
 
-**Location:** `/docs/archive/`
+**Localização:** `/docs/archive/devops/`
 
-The following files were consolidated into `PRODUCTION_DEPLOY.md` on 2025-11-29:
-- `DEPLOYMENT_ARCHIVED_20251129.md` (Original Cloud Run + Firebase guide)
-- `PRODUCTION_DEPLOY_ARCHIVED_20251129.md` (Original CI/CD checklist)
-- `DEPLOYMENT_CHECKLIST_V2_ARCHIVED_20251129.md` (Sprint 5 checklist)
+Os seguintes arquivos foram consolidados em `DEVOPS_GUIDE.md` em 2025-12-10:
 
-**These files are preserved for historical reference but should not be used for new deployments.**
+| Arquivo Original | Arquivo Arquivado |
+|------------------|-------------------|
+| `V2.0_DEPLOYMENT_IMPACT.md` | `V2.0_DEPLOYMENT_IMPACT_ARCHIVED_20251210.md` |
+| `LOCAL_RUN.md` | `LOCAL_RUN_ARCHIVED_20251210.md` |
+| `PORT_CONFIGURATION.md` | `PORT_CONFIGURATION_ARCHIVED_20251210.md` |
+| `SECURITY.md` | `SECURITY_ARCHIVED_20251210.md` |
+| `SECRET_ROTATION_RUNBOOK.md` | `SECRET_ROTATION_RUNBOOK_ARCHIVED_20251210.md` |
 
----
-
-## 🎯 Quick Links
-
-- **Deploy to Production:** See `PRODUCTION_DEPLOY.md` (this directory)
-- **Rotate Secrets:** See `SECRET_ROTATION_RUNBOOK.md`
-- **Run Locally:** See `LOCAL_RUN.md`
-- **Security Policies:** See `SECURITY.md`
+**Estes arquivos são preservados para referência histórica mas NÃO devem ser usados para novos deploys.**
 
 ---
 
-## 📝 Documentation Rules
+## 📝 Regras de Documentação
 
-Per project documentation protocol:
-1. **Do not create new documents** - Use existing ones
-2. **Always use timestamps** when updating
-3. **Never delete information** - Move to archive with `_ARCHIVED_YYYYMMDD` suffix
-4. **Mark deprecated content** as "deprecated" or "old" if needed
+Conforme protocolo do projeto:
+1. **Não criar novos documentos** - Usar os existentes
+2. **Sempre usar timestamps** ao atualizar
+3. **Nunca deletar informação** - Mover para archive com sufixo `_ARCHIVED_YYYYMMDD`
+4. **Marcar conteúdo deprecated** como "deprecated" ou "old" se necessário
 
 ---
 
 **Owner:** DevOps Team  
-**Next Review:** Before Sprint 6 deployment
+**Próxima Revisão:** Antes do deploy do Sprint 6
