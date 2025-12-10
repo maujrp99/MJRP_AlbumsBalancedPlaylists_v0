@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-02 07:15
+**Last Updated**: 2025-12-09 23:28
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -15,6 +15,130 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #33: Frontend Module Resolution Error (axios) - AWAITING VERIFICATION 🟡
+**Status**: 🟡 **FIX APPLIED - AWAITING USER PRODUCTION VERIFICATION**
+**Date**: 2025-12-09 22:46 → ongoing
+**Type**: Build/Production Bug
+**Component**: `firebase.json`, `vite.config.js`, `public/index.html`
+
+#### Problem
+After deploying Frontend to Firebase Hosting, browser shows:
+```
+Uncaught TypeError: Failed to resolve module specifier "axios". Relative references must start with either "/", "./", or "../".
+```
+App stuck at "Loading..." - completely broken in production.
+
+#### Root Cause Analysis (UPDATED 23:38)
+**The REAL issue was `firebase.json`:**
+- `"public": "public"` → Serves **source files** directly
+- Should be `"public": "dist"` → Serves **Vite build output**
+
+Firebase Hosting was bypassing Vite entirely, serving unbundled source files.
+Browsers cannot resolve `import axios from 'axios'` (bare module specifier) without a bundler.
+
+**Per `V2.0_DEPLOYMENT_IMPACT.md` (line 54)**, this should have been changed but was never applied.
+
+#### Failed Attempts
+
+**Attempt #1: Add Axios CDN + Remove Import** (22:48)
+- Added CDN script, commented out import
+- **Result**: ❌ FAILED - Still serving source files
+
+**Attempt #2: Add Vite Externalization Config** (23:00)
+- Added `external: ['axios']` + `output.globals`
+- **Result**: ❌ FAILED - Firebase still serving source, not dist
+
+**Attempt #3: Remove Externalization** (23:28)
+- Removed `external: ['axios']` from vite.config.js
+- Removed CDN script from index.html
+- **Result**: ⚠️ PARTIAL - Build correct, but deploy still wrong
+
+#### Attempt #4: Fix firebase.json (23:39) - DEFINITIVE FIX
+
+**Root cause addressed:**
+
+1. **Changed `firebase.json`:**
+   ```diff
+   - "public": "public"
+   + "public": "dist"
+   ```
+
+2. **Removed from `vite.config.js`** (already done):
+   ```javascript
+   // REMOVED: external: ['axios'], output.globals
+   ```
+
+3. **Removed from `index.html`** (already done):
+   ```html
+   <!-- REMOVED: CDN script -->
+   ```
+
+**Build Result:**
+- `main-CSHnc8VX.js` (209KB) with axios bundled inline ✅
+
+#### Files Modified
+- `firebase.json`: Changed `"public": "public"` → `"public": "dist"`
+- `vite.config.js`: Removed `external` and `output.globals` for axios
+- `public/index.html`: Removed CDN script tag
+
+#### Verification
+- [x] Build succeeds (`npm run build`)
+- [x] Bundle includes axios inline
+- [x] firebase.json updated
+
+#### Production Verification (PENDING)
+- [ ] Deploy: `npm run build && firebase deploy --only hosting`
+- [ ] Browser test - app loads without axios error
+- [ ] **USER CONFIRMATION REQUIRED** to mark as RESOLVED
+
+---
+
+### Issue #32: Cloud Build Docker Context Failure - RESOLVED ✅
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-09 22:10 → 22:42
+**Type**: CI/CD Configuration Bug
+**Component**: `cloudbuild.yaml`, Cloud Build Trigger
+
+#### Problem
+Cloud Build failed with:
+```
+COPY failed: file not found in build context or excluded by .dockerignore: stat _shared_temp: file does not exist
+```
+
+#### Root Cause
+The `Dockerfile` expects `server/_shared_temp/` directory to exist (containing shared libs copied from `shared/`). This copy step was supposed to happen BEFORE Docker build, but:
+1. `cloudbuild.yaml` didn't exist in the repository
+2. Cloud Build Trigger was configured as "Dockerfile" mode, not "Cloud Build config" mode
+
+#### Failed Attempts
+
+**Attempt #1: Create cloudbuild.yaml** (22:14)
+- Created `cloudbuild.yaml` with bash step to copy shared libs before Docker build
+- **Result**: ❌ FAILED - Cloud Build Trigger ignored the file
+- **Reason**: Trigger was set to "Autodetected" which found Dockerfile first
+
+**Attempt #2: User Changed Trigger Config** (22:26)
+- User changed Trigger Configuration from "Autodetected" to "Cloud Build configuration file"
+- Set Location to "Repository" and path to `cloudbuild.yaml`
+- **Result**: ❌ FAILED - New error about `build.logs_bucket` invalid argument
+- **Reason**: Trigger had service account that required explicit logging config
+
+**Attempt #3: Add Logging Option** (22:34)
+- Added to `cloudbuild.yaml`:
+  ```yaml
+  options:
+    logging: CLOUD_LOGGING_ONLY
+  ```
+- **Result**: ✅ SUCCESS - Build completed, Docker image pushed, Cloud Run deployed
+
+#### Final Solution
+1. Created `cloudbuild.yaml` with proper steps (copy shared → build → push → deploy)
+2. Added `options: logging: CLOUD_LOGGING_ONLY`
+3. User configured Trigger to use "Cloud Build configuration file" from Repository
+
+---
+
 
 ### Issue #28: Inventory CRUD Not Working - RESOLVED ✅
 **Status**: ✅ **RESOLVED - FULL CRUD WORKING**
