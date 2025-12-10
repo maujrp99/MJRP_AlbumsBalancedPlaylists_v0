@@ -16,6 +16,25 @@ if [ -z "${FIREBASE_SERVICE_ACCOUNT:-}" ] && [ -f "$ROOT_DIR/../keys/mjrp-servic
   FIREBASE_SERVICE_ACCOUNT="$(cat "$ROOT_DIR/../keys/mjrp-service-account.json")"
   export FIREBASE_SERVICE_ACCOUNT
 fi
+
+# Build frontend (Vite)
+echo "Building frontend..."
+npm run build
+if [ $? -ne 0 ]; then
+  echo "ERROR: npm run build failed. Aborting deploy."
+  exit 1
+fi
+echo "Build complete. Output in dist/"
+
+# Copy static files that Vite doesn't bundle
+echo "Copying static files to dist/..."
+mkdir -p dist/js dist/css dist/assets
+cp public/js/firebase-config.js dist/js/ 2>/dev/null || echo "Warning: firebase-config.js not found"
+cp -r public/css/* dist/css/ 2>/dev/null || true
+cp -r public/assets/* dist/assets/ 2>/dev/null || true
+cp public/favicon.ico dist/ 2>/dev/null || true
+echo "Static files copied."
+
 echo "Preparing production deploy..."
 
 # Determine FIREBASE_PROJECT

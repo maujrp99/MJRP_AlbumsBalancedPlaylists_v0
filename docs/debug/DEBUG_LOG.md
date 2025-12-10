@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-09 23:28
+**Last Updated**: 2025-12-09 23:54
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -16,11 +16,11 @@
 
 ## Current Debugging Session
 
-### Issue #33: Frontend Module Resolution Error (axios) - AWAITING VERIFICATION 🟡
-**Status**: 🟡 **FIX APPLIED - AWAITING USER PRODUCTION VERIFICATION**
-**Date**: 2025-12-09 22:46 → ongoing
+### Issue #33: Frontend Module Resolution Error (axios) - RESOLVED ✅
+**Status**: ✅ **RESOLVED - USER CONFIRMED**
+**Date**: 2025-12-09 22:46 → 23:54
 **Type**: Build/Production Bug
-**Component**: `firebase.json`, `vite.config.js`, `public/index.html`
+**Component**: `firebase.json`, `vite.config.js`, `public/index.html`, `scripts/deploy-prod.sh`
 
 #### Problem
 After deploying Frontend to Firebase Hosting, browser shows:
@@ -29,7 +29,7 @@ Uncaught TypeError: Failed to resolve module specifier "axios". Relative referen
 ```
 App stuck at "Loading..." - completely broken in production.
 
-#### Root Cause Analysis (UPDATED 23:38)
+#### Root Cause Analysis
 **The REAL issue was `firebase.json`:**
 - `"public": "public"` → Serves **source files** directly
 - Should be `"public": "dist"` → Serves **Vite build output**
@@ -52,45 +52,36 @@ Browsers cannot resolve `import axios from 'axios'` (bare module specifier) with
 **Attempt #3: Remove Externalization** (23:28)
 - Removed `external: ['axios']` from vite.config.js
 - Removed CDN script from index.html
-- **Result**: ⚠️ PARTIAL - Build correct, but deploy still wrong
+- **Result**: ⚠️ PARTIAL - Build correct, but firebase.json still wrong
 
-#### Attempt #4: Fix firebase.json (23:39) - DEFINITIVE FIX
+**Attempt #4: Fix firebase.json** (23:39)
+- Changed `"public": "public"` → `"public": "dist"`
+- **Result**: ⚠️ PARTIAL - App loads but firebase-config.js 404
 
-**Root cause addressed:**
+**Attempt #5: Add static files copy step** (23:50) ✅
+- Updated `deploy-prod.sh` to copy static files to dist/
+- **Result**: ✅ SUCCESS - User confirmed app works
 
-1. **Changed `firebase.json`:**
-   ```diff
-   - "public": "public"
-   + "public": "dist"
-   ```
+#### Final Solution
 
-2. **Removed from `vite.config.js`** (already done):
-   ```javascript
-   // REMOVED: external: ['axios'], output.globals
-   ```
-
-3. **Removed from `index.html`** (already done):
-   ```html
-   <!-- REMOVED: CDN script -->
-   ```
-
-**Build Result:**
-- `main-CSHnc8VX.js` (209KB) with axios bundled inline ✅
+1. **`firebase.json`**: Changed `"public": "dist"`
+2. **`vite.config.js`**: Removed `external: ['axios']`
+3. **`public/index.html`**: Removed CDN script
+4. **`deploy-prod.sh`**: Added `npm run build` + static files copy step
 
 #### Files Modified
-- `firebase.json`: Changed `"public": "public"` → `"public": "dist"`
-- `vite.config.js`: Removed `external` and `output.globals` for axios
-- `public/index.html`: Removed CDN script tag
+- `firebase.json`: Changed public directory to `dist`
+- `vite.config.js`: Cleaned up axios workarounds
+- `public/index.html`: Removed CDN script
+- `scripts/deploy-prod.sh`: Added build + static files copy
+- `docs/devops/V2.0_DEPLOYMENT_IMPACT.md`: Added status note
 
 #### Verification
 - [x] Build succeeds (`npm run build`)
 - [x] Bundle includes axios inline
-- [x] firebase.json updated
-
-#### Production Verification (PENDING)
-- [ ] Deploy: `npm run build && firebase deploy --only hosting`
-- [ ] Browser test - app loads without axios error
-- [ ] **USER CONFIRMATION REQUIRED** to mark as RESOLVED
+- [x] Static files copied to dist/
+- [x] Deploy: 30 files uploaded
+- [x] **USER CONFIRMED**: Production working at 23:54
 
 ---
 
