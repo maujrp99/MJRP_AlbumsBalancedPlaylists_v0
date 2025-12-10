@@ -1,8 +1,8 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-06  
-**Current Version**: v2.0.6  
-**Current Sprint**: Sprint 5 Phase 3 (🔴 UAT BLOCKED - 4 P0 Issues)
+**Last Updated**: 2025-12-09  
+**Current Version**: v2.1.0  
+**Current Sprint**: Preparation for Sprint 6 (Apple Music Integration)
 
 ---
 
@@ -12,7 +12,8 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 
 ---
 
-## ✅ Completed Sprints (1-4)
+## ✅ Completed Sprints (1-5)
+
 
 ### Sprint 1: Foundation (Nov 2025)
 **Goal**: Modern build tooling + state management foundation  
@@ -81,72 +82,54 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 - Fixed ranking URL parameter parsing
 
 ---
+### Sprint 5: Inventory System & Persistence (Nov - Dec 2025)
+**Goal**: Implement persistence, repository pattern, and inventory management.  
+**Delivered**: 2025-12-09 (v2.1.0)
+
+**Deliverables**:
+- ✅ **Firestore Persistence**: Cloud sync for Albums, Series, and Playlists.
+- ✅ **Inventory CRUD**: Complete management of owned albums.
+- ✅ **Repository Pattern**: Abstraction layer for data access (SeriesRepository, etc.).
+- ✅ **UI/UX Improvements**: Standardized buttons, Mobile Menu fixes, Toast notifications.
+- ✅ **Consolidation**: Single entry point (`index.html`), SPA routing configured.
+- ✅ **Ghost Albums Fix**: Resolved persistence query issues.
+
+---
 
 ## 🚧 Current Sprint
 
-### Sprint 5 Phase 3: Inventory System & Persistence (In Progress)
 
-**Status**: Phase 3 - 🔴 **UAT BLOCKED**  
-**Duration**: 3 phases (Nov 2025 - Dec 2025)
+### Sprint 6: Authentication (Apple & Google)
 
-> [!CAUTION]
-> Sprint 5 UAT found **4 critical blockers** (2025-12-06):
-> 1. **Firebase SDK Mismatch** - Nothing saves to Firestore (modular vs compat API)
-> 2. **Series UI Buttons** - Non-functional (Edit/Delete/Open)
-> 3. **Ghost Albums (Issue #22)** - 4 fix attempts failed
-> 4. **Playlists Not Persisted** - Lost on refresh
->
-> See [SPRINT5_UAT_20251206.md](../tester/SPRINT5_UAT_20251206.md) for details.
+**Duration**: 1 week  
+**Priority**: High
 
 #### Scope
 
-**📦 Persistence Architecture**
-- ✅ **Firestore Persistence** (Code exists)
-  - Replace localStorage with Firestore Cloud Database
-  - Persistence cross-device (sync between devices)
-  - ⚠️ **BLOCKER**: Firebase SDK mismatch prevents writes
-  
-- ✅ **IndexedDB Cache** (L2 cache)
-  - Replace localStorage (5MB limit)
-  - IndexedDB = ~500MB+ capacity
-  - Cross-tab sync
+- [ ] **Login with Apple ID**
+  - Enable Apple Sign-In
+  - Integrate with Apple authentication SDK
 
-- ⏳ **Repository Pattern** (Code exists, NOT fully integrated)
-  - `AlbumRepository`, `SeriesRepository`, `PlaylistRepository`
-  - `InventoryRepository` ← inventory persistence!
-  - ⚠️ **BLOCKER**: Not integrated into Views
+- [ ] **Login with Google Account**
+  - Enable Google Sign-In
+  - Integrate with Google authentication SDK
 
-- ⏳ **Migration Tool** (Code exists, NOT fully functional)
-  - Migrate data from localStorage → Firestore
-  - No data loss
+- [ ] **User Data Persistence**
+  - Capture and persist **only name and email** from user
+  - Secure user data in Firestore (`/users/{userId}/profile`)
 
-- ⏳ **Inventory Persistence** (UI exists, NOT fully connected)
-  - Save owned albums in Firestore
-  - ⚠️ **BLOCKER**: InventoryRepository not connected
-
-**UAT Status**: ⏳ **IN VALIDATION** - CRUDs still have issues (see CRUD_REVIEW_REPORT.md)
+**Deliverables**:
+- Multi-provider authentication
+- User profile management
+- Secure session handling
 
 ---
 
-## 📜 Completed Sprints
 
-For detailed history of Sprints 1-4, see [CHANGELOG.md](../CHANGELOG.md).
-
-**Summary**:
-- **Sprint 1**: Vite + Vitest setup, Store architecture (Albums, Playlists, Series)
-- **Sprint 2**: History API router, BaseView architecture, HomeView with series creation
-- **Sprint 3**: AlbumsView (library), RankingView (acclaim data), Album detail view
-- **Sprint 4**: PlaylistsView with drag-and-drop, "Generate Playlist" feature
-- **Sprint 4.5**: Hotfixes (caching issues, localStorage migration)
-
----
-
-## 🚀 Upcoming Sprints
-
-### Sprint 6: Apple Music Integration (Export)
-
-**Duration**: 1-2 weeks  
-**Priority**: High
+### Sprint 7: Apple Music Integration (Export)
+### Preparation for Sprint 6
+- Reviewing Apple Music API requirements
+- Setting up Developer Account credentials
 
 #### Scope
 
@@ -173,31 +156,6 @@ For detailed history of Sprints 1-4, see [CHANGELOG.md](../CHANGELOG.md).
 
 ---
 
-### Sprint 7: Authentication (Apple & Google)
-
-**Duration**: 1 week  
-**Priority**: High
-
-#### Scope
-
-- [ ] **Login with Apple ID**
-  - Enable Apple Sign-In
-  - Integrate with Apple authentication SDK
-
-- [ ] **Login with Google Account**
-  - Enable Google Sign-In
-  - Integrate with Google authentication SDK
-
-- [ ] **User Data Persistence**
-  - Capture and persist **only name and email** from user
-  - Secure user data in Firestore (`/users/{userId}/profile`)
-
-**Deliverables**:
-- Multi-provider authentication
-- User profile management
-- Secure session handling
-
----
 
 ### Sprint 8: Batch Album Operations
 
