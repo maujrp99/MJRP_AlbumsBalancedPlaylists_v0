@@ -16,11 +16,11 @@
 
 ## Current Debugging Session
 
-### Issue #34: Generate Playlists API Returns 500 - TO INVESTIGATE 🟡
-**Status**: 🟡 **TO INVESTIGATE**
-**Date**: 2025-12-10 00:00
+### Issue #34: Generate Playlists API Returns 500 - RESOLVED ✅
+**Status**: ✅ **RESOLVED - USER CONFIRMED**
+**Date**: 2025-12-10 00:00 → 10:23
 **Type**: Backend API Error
-**Component**: `server/index.js` - `/api/playlists` endpoint
+**Component**: `server/index.js`, `shared/curation.js`
 
 #### Problem
 When clicking "Generate Playlists" in production, the API returns HTTP 500:
@@ -29,17 +29,48 @@ When clicking "Generate Playlists" in production, the API returns HTTP 500:
 client.js:193 Playlist generation failed: Error: HTTP 500:
 ```
 
-#### Initial Investigation
-- Backend redeploy via `./scripts/deploy-backend.sh` completed successfully
-- New revision `mjrp-proxy-00062-n9g` deployed
-- Error persists after redeploy
-- Likely a runtime error in the playlist generation logic
+#### Root Cause (Found via Cloud Run Logs)
+```
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/usr/src/public/js/curation.js' 
+imported from /usr/src/app/index.js
+```
 
-#### Next Steps
-- [ ] Check Cloud Run logs for stack trace
-- [ ] Test `/api/generate` endpoint (album fetch)
-- [ ] Review `/api/playlists` handler code
-- [ ] Check environment variables in Cloud Run
+The Docker container only has:
+- `/usr/src/app/` → server code
+- `/usr/src/shared/` → shared modules
+
+It does NOT have `/usr/src/public/` - that folder is only for frontend.
+
+The `server/index.js` was importing:
+```javascript
+await import('../public/js/curation.js')  // ❌ Path doesn't exist in container
+```
+
+#### Fix Applied (10:20)
+1. **Copied `curation.js` to `shared/` folder**:
+   ```bash
+   cp public/js/curation.js shared/curation.js
+   ```
+
+2. **Fixed import in `shared/curation.js`**:
+   ```diff
+   - import { normalizeKey } from './shared/normalize.js'
+   + import { normalizeKey } from './normalize.js'
+   ```
+
+3. **Updated `server/index.js`**:
+   ```diff
+   - await import('../public/js/curation.js')
+   + await import('../shared/curation.js')
+   ```
+
+4. **Deployed backend**:
+   - New revision: `mjrp-proxy-00064-5rz`
+
+#### Verification
+- [x] Local import test passed
+- [x] Backend deployed successfully
+- [x] **USER CONFIRMED**: Generate playlists working at 10:23
 
 ---
 

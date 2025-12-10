@@ -305,8 +305,8 @@ app.post('/api/playlists', async (req, res) => {
       return res.status(400).json({ error: 'albums array required' })
     }
 
-    // Import curation logic (ES module)
-    const { curateAlbums } = await import('../public/js/curation.js')
+    // Import curation logic (ES module from shared folder)
+    const { curateAlbums } = await import('../shared/curation.js')
 
     // Convert duration from minutes to seconds
     const targetSeconds = (() => {
