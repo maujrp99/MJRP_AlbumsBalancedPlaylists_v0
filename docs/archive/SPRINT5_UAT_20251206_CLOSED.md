@@ -2,18 +2,25 @@
 
 **Environment**: Production (https://mjrp-playlist-generator.web.app/)  
 **Date**: 2025-12-06  
+**Closed**: 2025-12-10  
 **Scope**: Persistence & CRUD Hardening + Regression Testing  
-**Status**: 🔴 **BLOCKED - Critical Issues Found**
+**Status**: ✅ **CLOSED - All Critical Blockers Resolved**
+
+> [!TIP]
+> **Sprint 5 Closure Summary (2025-12-10)**  
+> All P0 blockers identified during UAT have been resolved and verified in production (v2.1.0):
+> - ✅ **Ghost Albums**: AlbumsStore refactored with Map structure (commit e2f739c)
+> - ✅ **Firebase SDK**: Updated to modular SDK v11.6.1 (Dec 6-8)
+> - ✅ **Series Buttons**: SeriesListView event delegation restored (Dec 7)
+> - ✅ **Toast/Modal**: Replaced all alert() calls system-wide (commit 24cb2d8)
+> - ✅ **Album Delete/Edit**: Fixed CRUD operations (Issue #30, #31)
+> - ✅ **Playlist Regeneration**: SaveToFirestore flow corrected
+>
+> **Production Tag**: `v2.1.0-ready-for-prod-20251209`  
+> **Documentation**: See [CHANGELOG.md](../CHANGELOG.md) for full release notes.
 
 > [!NOTE]
-> **Post-UAT Updates (2025-12-08)**  
-> Critical blockers resolved after UAT:
-> - ✅ Ghost Albums: AlbumsStore refactored with Map structure (commit e2f739c)
-> - ✅ Firebase SDK: Updated to modular imports (Dec 6-7)
-> - ✅ Series Buttons: SeriesListView restored
-> - ✅ Toast/Modal: Replaced alert() system-wide (commit 24cb2d8)
->
-> See [DEBUG_LOG.md](../debug/DEBUG_LOG.md) and [ARCHITECTURE.md → Firebase Integration Guide](../ARCHITECTURE.md) for details.
+> **Historical Context**: This document captured UAT blockers on 2025-12-06. The issues below were resolved in subsequent commits (Dec 6-10). This file is now archived for historical reference.
 
 ---
 

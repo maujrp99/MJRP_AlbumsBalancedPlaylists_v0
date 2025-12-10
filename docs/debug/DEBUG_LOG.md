@@ -14,6 +14,28 @@
 
 ---
 
+## 📑 Issue Index
+
+| Issue | Component | Status | Line |
+|-------|-----------|--------|------|
+| #34 | Generate Playlists API 500 | ✅ RESOLVED | [L19](#issue-34-generate-playlists-api-returns-500---resolved-) |
+| #33 | Axios Module Resolution | ✅ RESOLVED | [L77](#issue-33-frontend-module-resolution-error-axios---resolved-) |
+| #32 | Cloud Build Docker Context | ✅ RESOLVED | [L146](#issue-32-cloud-build-docker-context-failure---resolved-) |
+| #31 | Playlist Generate New Albums | ⏳ AWAITING | [L253](#issue-31-playlist-generate-not-using-new-albums---awaiting-verification) |
+| #30 | Album Delete | ✅ RESOLVED | [L272](#issue-30-album-delete-not-working---resolved-) |
+| #29 | Inventory Card Display | ✅ RESOLVED | [L310](#issue-29-inventory-card-display--modal-issues---resolved-) |
+| #28 | Inventory CRUD | ✅ RESOLVED | [L192](#issue-28-inventory-crud-not-working---resolved-) |
+| #27 | Album Series CRUD | ⏳ AWAITING | [L339](#issue-27-album-series-crud-persistence-failures---awaiting-verification) |
+| #26 | Firebase Serialization | ✅ RESOLVED | [L428](#issue-26-firebase-serialization-errors-custom-objects---resolved) |
+| #25 | Inventory Modal Styles | ✅ RESOLVED | [L378](#issue-25-inventory-modal-misalignment--missing-styles---resolved) |
+| #23 | Mobile Menu Transparent | ✅ RESOLVED | [L486](#issue-23-mobile-menu-transparent-background---resolved) |
+| #22 | Ghost Albums | ✅ RESOLVED | [L535](#issue-22-ghost-albums-regression---resolved) |
+| #21 | Sticky Playlists | ✅ WONTFIX | [L633](#issue-21-sticky-playlists) |
+
+> **Note**: Issues #1-#20 are in the "Previous Sessions" section (historical).
+
+---
+
 ## Current Debugging Session
 
 ### Issue #34: Generate Playlists API Returns 500 - RESOLVED ✅

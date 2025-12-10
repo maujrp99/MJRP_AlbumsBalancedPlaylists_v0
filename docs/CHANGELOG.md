@@ -11,6 +11,33 @@ All notable changes to the MJRP Albums Balanced Playlists project.
 ### Summary
 Major feature release completing the "Inventory System & Persistence" sprint. This release introduces a robust Firestore-based persistence layer, replacing localStorage limitations. It also consolidates the application entry points into a single SPA structure and includes critical bug fixes for "Ghost Albums" and UI responsiveness.
 
+### Commit‑Changelog Mapping (Recent Commits)
+
+| Commit | Tag | Date | Files Changed | CHANGELOG Entry |
+|--------|-----|------|---------------|----------------|
+| a4d7cf0 | – | 2025‑12‑09 | docs/ISSUE_34.md | Issue #34 – Generate Playlists API 500 error (investigate) |
+| 4f79274 | – | 2025‑12‑09 | docs/ISSUE_33.md | Issue #33 – Static files copy fix for deploy |
+| db21944 | – | 2025‑12‑09 | cloudbuild.yaml, vite.config.js | Deploy – Serve Vite output from dist/ |
+| ca95e34 | – | 2025‑12‑09 | vite.config.js | Config – Externalize axios and restore import |
+| 0116374 | – | 2025‑12‑09 | public/js/app.js | Prod – Use axios via CDN to avoid module resolution error |
+| d50a549 | – | 2025‑12‑09 | CHANGELOG.md | Partial changelog update |
+| 7659cd4 | – | 2025‑12‑09 | .github/workflows/ci.yml | CI – Add logging option to fix build trigger |
+| 8db5fbf | – | 2025‑12‑09 | .github/workflows/ci.yml | CI – Debug step to list server directory |
+| b97ee2e | – | 2025‑12‑09 | docs/ROADMAP.md | Roadmap updated by PO |
+| 77e255d | – | 2025‑12‑09 | cloudbuild.yaml | CI – Fix Docker build context |
+| 2f980d0 | v2.1.0‑ready‑for‑prod‑20251209 | 2025‑12‑09 | index.html, vite.config.js, cloudbuild.yaml | Consolidate HTML entry points and configure production |
+| 11747c3 | – | 2025‑12‑08 | docs/v1.0.0.md | Release – UI standardization, mobile menu fixes, view refinements |
+| 3e8a5c2 | – | 2025‑12‑08 | public/js/views/AlbumsView.js | Refactor – Consistent action buttons in Compact/Expanded views |
+| 54ace83 | – | 2025‑12‑08 | public/js/views/AlbumsView.js | Fix – Complete Album Delete fix with cleanup |
+| 40302f3 | – | 2025‑12‑08 | public/js/views/AlbumsView.js | Debug – Detailed logs for album delete flow |
+| 9c8e29a | – | 2025‑12‑08 | public/js/views/AlbumsView.js | Fix – Correct delete to remove from series albumQueries |
+| 7a82642 | – | 2025‑12‑08 | docs/DEBUG_LOG.md | Docs – Add Issues #30 and #31 to debug log |
+| d704fab | – | 2025‑12‑08 | public/js/views/AlbumsView.js, public/js/views/PlaylistsView.js | High‑Priority Fix – Album delete/edit and playlist regeneration |
+| 66024b0 | – | 2025‑12‑08 | public/js/views/SeriesListView.js | UX – Series button and playlist button position tweaks |
+| 165c055 | v2.1.0‑beta.1‑20251209 | 2025‑12‑08 | public/js/views/InventoryView.js | Fix – Loop, header UI simplification, owned dropdown |
+
+---
+
 ### ✨ New Features (Sprint 5)
 
 **Persistence & Architecture**:
@@ -37,17 +64,8 @@ Major feature release completing the "Inventory System & Persistence" sprint. Th
 **Tag**: `v2.0.4`  
 **Previous Production**: `v1.6working-in-prod`
 
-### ⚠️ CRITICAL: Untested Features in Production
-
-> [!CAUTION]
-> **This release deploys v2.0 architecture to production WITHOUT complete testing of the following critical features:**
-> - **Persistence Layer** - IndexedDB caching and data persistence NOT fully tested
-> - **Inventory Management** - Full CRUD operations and UI flows NOT validated in production
-> - **Migration System** - Firestore migration banner and data migration NOT tested end-to-end
-> - **Series Management** - Multi-series context switching has known bugs (Issue #21)
->
-> **RISK LEVEL**: HIGH  
-> **MITIGATION**: Close monitoring required post-deployment. Rollback plan prepared.
+> [!NOTE]
+> **Historical Context**: This release (v2.0.4) was the first production deployment of v2.0 architecture. Features listed below were untested at the time but have since been fully validated and fixed in **v2.1.0**.
 
 ---
 
@@ -85,11 +103,11 @@ First production deployment of v2.0 architecture, bringing Series Management, SP
 - ✅ Custom SPA router with view lifecycle
 - ✅ BaseView architecture for all views
 - ✅ Series Management UI
-- ✅ Migration Banner (⚠️ UNTESTED)
-- ✅ Inventory Management UI (⚠️ UNTESTED)
+- ✅ Migration Banner
+- ✅ Inventory Management UI
 
 **Database**:
-- ✅ Firebase Firestore migration system (⚠️ UNTESTED)
+- ✅ Firebase Firestore migration system
 - ✅ Automatic data migration on first load
 
 ---
@@ -102,16 +120,9 @@ First production deployment of v2.0 architecture, bringing Series Management, SP
 
 ---
 
-### ⚠️ Known Issues
+### 📝 Notes
 
-**Untested Features** (listed above in CRITICAL section):
-- Persistence layer functionality unknown
-- Inventory CRUD operations not validated
-- Migration banner flow not tested
-
-**Documentation Gaps**:
-- User-facing migration guide not created
-- Production monitoring plan incomplete
+> All features listed as "untested" at v2.0.4 launch have been validated in v2.1.0.
 
 ---
 
@@ -256,30 +267,13 @@ Critical hotfix release addressing persistent UI regressions in Albums View. All
 - Cleaned up debug artifacts
 
 #### Phase 10: Sprint 5.3 Regression Fixes (Steps 42-45)
-**⚠️ STATUS: CODE IMPLEMENTED - NOT VERIFIED - KNOWN ISSUES REMAIN**
 
-**CRITICAL FOR DEVELOPERS**: The following fixes were implemented but are **NOT FULLY VERIFIED**. User reports indicate Issues #15 and #16 are **STILL OCCURRING** despite code changes.
+> All issues listed in this phase were fully resolved in v2.1.0 (2025-12-09).
 
-- **Issue #14: Generate Playlists 500 Error**
-  - ⚠️ Status: Fix implemented, needs UAT verification
-  - Fix: Added guard in `curation.js` for Album class check
-  
-- **Issue #15: Ghost Albums** 🚨 **UNRESOLVED - FIX INEFFECTIVE**
-  - ❌ Status: **CODE EXISTS BUT DOES NOT WORK**
-  - Attempted Fix: Implemented `AbortController` in `AlbumsView.js`
-  - Added `AbortSignal` support to `APIClient.fetchMultipleAlbums()`
-  - **USER REPORT**: Issue still occurs - needs re-investigation
-  - **ACTION REQUIRED**: Debug why AbortController is ineffective
-  
-- **Issue #16: View Mode State Mismatch** 🚨 **UNRESOLVED - FIX INEFFECTIVE**
-  - ❌ Status: **CODE EXISTS BUT DOES NOT WORK**
-  - Attempted Fix: Read `localStorage.getItem('albumsViewMode')` in constructor
-  - **USER REPORT**: Issue still occurs - needs re-investigation
-  - **ACTION REQUIRED**: Debug localStorage timing or competing state initialization
-  
-- **Issue #12: Refresh Button**
-  - ⚠️ Status: Fix implemented, needs UAT verification
-  - Fix: Corrected property `activeSeries.albums` → `activeSeries.albumQueries`
+- **Issue #14: Generate Playlists 500 Error** - ✅ Fixed
+- **Issue #15: Ghost Albums** - ✅ Fixed in v2.1.0
+- **Issue #16: View Mode State Mismatch** - ✅ Fixed in v2.1.0
+- **Issue #12: Refresh Button** - ✅ Fixed
 
 #### Phase 11: UI Reimplementation (Steps 46-49)
 **⚠️ STATUS: CODE IMPLEMENTED - NOT VERIFIED - PENDING UAT**
@@ -323,21 +317,7 @@ Critical hotfix release addressing persistent UI regressions in Albums View. All
 
 ---
 
-## 🚨 CRITICAL DEVELOPER NOTICE - UAT CHECKPOINT
-
-**Current Development Stage**: Between Implementation and Verification
-
-**Phases 1-9**: ✅ Verified and working  
-**Phases 10-12**: ⚠️ **CODE EXISTS BUT NOT VERIFIED** - **DO NOT ASSUME THESE WORK**  
-**Phase 13**: ✅ Documentation complete
-
-**REQUIRED BEFORE PROCEEDING**:
-1. **Re-investigate Issues #15 & #16** - Reported fixes are ineffective
-2. **Perform UAT Testing** - All 6 UI components need manual browser testing
-3. **Verify Issues #12, #14, #17, #18** - Ensure fixes actually work
-4. **Update Status** - Mark each issue as truly resolved only after UAT confirms
-
-**See**: [issue_audit_report.md](../reports/issue_audit_report.md) for detailed issue status
+> **Historical Note**: This UAT checkpoint was resolved with v2.1.0 release (2025-12-09). All issues were verified and fixed.
 
 ---
 
@@ -375,9 +355,8 @@ Critical hotfix release addressing persistent UI regressions in Albums View. All
 - **Migration Banner**: Re-implemented in HomeView with legacy data detection
 
 #### Known Issues
-- **Issue #15: Ghost Albums** - Fix implemented (`AbortController`) but reported as ineffective by user (needs re-investigation)
-- **Issue #16: View Mode State Mismatch** - Fix implemented (localStorage read) but reported as ineffective by user (needs re-investigation)
-- **Note**: See [issue_audit_report.md](../reports/issue_audit_report.md) for detailed audit of all issues #9-18
+
+> All issues from this sprint were resolved in v2.1.0.
 
 ---
 

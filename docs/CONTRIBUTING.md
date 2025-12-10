@@ -233,7 +233,7 @@ git tag -a v2.0.0 -m "Release v2.0.0: Production ready"
 git push origin --tags
 ```
 
-### Tag Naming Conventions
+### Tag Naming Conventions (always add timestamp to the tag names)
 
 | Pattern | Example | Usage |
 |---------|---------|-------|

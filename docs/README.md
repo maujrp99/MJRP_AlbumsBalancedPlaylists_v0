@@ -33,7 +33,7 @@ npm run test:e2e      # E2E tests (Puppeteer)
 ```
 
 ### Current Version
-**v2.0.4** - Sprint 5 Phase 3 (🔴 UAT BLOCKED - see [SPRINT5_UAT Report](tester/SPRINT5_UAT_20251206.md))
+**v2.1.0** - Sprint 5 Complete: Persistence & Production Ready (✅ DEPLOYED)
 
 See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
@@ -56,9 +56,8 @@ docs/
 │   └── README.md             # Onboarding index
 │
 ├── tester/                   # QA & Testing
-│   ├── GAP_ANALYSIS.md       # Implementation gaps
 │   ├── TEST_SPECIFICATION.md # Full test specs
-│   └── SPRINT5_UAT_*.md      # Current UAT reports
+│   └── SECURITY_RULES_DISCREPANCY.md # Security issues
 │
 ├── product-management/       # Product Planning
 │   ├── ROADMAP.md            # Future plans
@@ -66,9 +65,8 @@ docs/
 │   └── [Requirements Docs]
 │
 ├── devops/                   # Operations
-│   ├── PORT_CONFIGURATION.md # Port reference
-│   ├── LOCAL_RUN.md          # Run guides
-│   └── PRODUCTION_DEPLOY.md  # Deploy runbooks
+│   ├── DEVOPS_GUIDE.md       # Consolidated DevOps guide
+│   └── README.md             # DevOps index
 │
 ├── technical/                # Low-level specs
 │   ├── album_data_schema.md
@@ -91,6 +89,7 @@ Use `tar -xzvf [filename]` to access contents.
 
 | Archive File | Contents | Reason for Archiving |
 |--------------|----------|----------------------|
+| **SPRINT5_UAT_20251206_CLOSED.md** | Sprint 5 UAT Final Report | Sprint 5 closed 2025-12-10; all blockers resolved |
 | **sprint5-analysis-20251202.tar.gz** | `GAP_ANALYSIS.md`, `PERSISTENCE_IMPLEMENTATION_REPORT.md`, `TESTABLE_FEATURES.md`, `TEST_PLAN_SPRINT5_HARDENING.md`, `TEST_SPEC_SPRINT5.md` | Pre-UAT analysis and planning docs (Dec 2-3) |
 | **tester-reports-20251208.tar.gz** | `CRUD_REVIEW_REPORT.md`, `GHOST_ALBUMS_REPORT.md`, `UX_ANALYSIS_REPORT_20251130.md`, and 5 others | Snapshots of completed testing phases (Nov/Dec 2025) |
 | **v2.0-planning-docs.tar.gz** | `V2.0_ANALYSIS.md`, `mjrp-playlist-generator-2.0.md` | Initial V2.0 planning docs (superseded by ROADMAP.md) |
@@ -110,7 +109,7 @@ Use `tar -xzvf [filename]` to access contents.
 ### For Testers
 - **Start here**: [Onboarding → QA Engineer](onboarding/QA_ENGINEER.md)
 - **Test Specs**: [tester/TEST_SPECIFICATION.md](tester/TEST_SPECIFICATION.md)
-- **Current Blocks**: [tester/SPRINT5_UAT_20251206.md](tester/SPRINT5_UAT_20251206.md)
+- **Sprint 5 UAT (Archived)**: [archive/SPRINT5_UAT_20251206_CLOSED.md](archive/SPRINT5_UAT_20251206_CLOSED.md)
 
 ### For DevOps
 - **Start here**: [Onboarding → DevOps](onboarding/DEVOPS.md)
