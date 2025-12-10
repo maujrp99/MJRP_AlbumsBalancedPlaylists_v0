@@ -32,3 +32,6 @@ steps:
       - '--allow-unauthenticated'
 images:
   - 'gcr.io/$PROJECT_ID/mjrp-proxy'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
