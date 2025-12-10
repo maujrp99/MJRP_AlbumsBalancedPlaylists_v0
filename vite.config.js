@@ -11,6 +11,12 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: path.resolve(__dirname, 'public/index.html')
+            },
+            external: ['axios'],
+            output: {
+                globals: {
+                    axios: 'axios'
+                }
             }
         }
     },
