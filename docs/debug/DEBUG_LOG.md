@@ -16,6 +16,33 @@
 
 ## Current Debugging Session
 
+### Issue #34: Generate Playlists API Returns 500 - TO INVESTIGATE 🟡
+**Status**: 🟡 **TO INVESTIGATE**
+**Date**: 2025-12-10 00:00
+**Type**: Backend API Error
+**Component**: `server/index.js` - `/api/playlists` endpoint
+
+#### Problem
+When clicking "Generate Playlists" in production, the API returns HTTP 500:
+```
+/api/playlists:1 Failed to load resource: the server responded with a status of 500 ()
+client.js:193 Playlist generation failed: Error: HTTP 500:
+```
+
+#### Initial Investigation
+- Backend redeploy via `./scripts/deploy-backend.sh` completed successfully
+- New revision `mjrp-proxy-00062-n9g` deployed
+- Error persists after redeploy
+- Likely a runtime error in the playlist generation logic
+
+#### Next Steps
+- [ ] Check Cloud Run logs for stack trace
+- [ ] Test `/api/generate` endpoint (album fetch)
+- [ ] Review `/api/playlists` handler code
+- [ ] Check environment variables in Cloud Run
+
+---
+
 ### Issue #33: Frontend Module Resolution Error (axios) - RESOLVED ✅
 **Status**: ✅ **RESOLVED - USER CONFIRMED**
 **Date**: 2025-12-09 22:46 → 23:54
