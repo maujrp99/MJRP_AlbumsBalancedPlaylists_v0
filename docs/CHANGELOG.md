@@ -2,6 +2,35 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
+## v2.1.0 - Sprint 5 Complete: Persistence & Production Ready (2025-12-09)
+
+**Status**: 🚀 **PRODUCTION RELEASE**  
+**Tag**: `v2.1.0`  
+**Previous Production**: `v2.0.4`
+
+### Summary
+Major feature release completing the "Inventory System & Persistence" sprint. This release introduces a robust Firestore-based persistence layer, replacing localStorage limitations. It also consolidates the application entry points into a single SPA structure and includes critical bug fixes for "Ghost Albums" and UI responsiveness.
+
+### ✨ New Features (Sprint 5)
+
+**Persistence & Architecture**:
+- ✅ **Firestore Integration**: User-scoped data now syncs across devices for Series and Playlists.
+- ✅ **Repository Pattern**: Implemented `SeriesRepository`, `AlbumRepository`, and `PlaylistRepository` for clean data access.
+- ✅ **IndexedDB Caching**: Added L2 caching layer for offline support and performance.
+- ✅ **Entry Point Consolidation**: Promoted `index-v2.html` to `index.html`, archiving legacy files.
+
+**UI/UX**:
+- ✅ **Mobile Menu**: Fixed visibility issues and responsiveness (auto-close on resize).
+- ✅ **Button Standardization**: Applied consistent styling (`btn-success`, `btn-danger`) across the app.
+- ✅ **Album View**: Reordered expanded view columns (Original Order left, Ranked right).
+
+### 🐛 Fixed
+- **Ghost Albums**: Resolved persistence query issues causing data leak between series.
+- **SPA Routing**: Added rewrite rules in `firebase.json` to support deep linking and refresh on subpages.
+- **Build Config**: Fixed `vite.config.js` and `cloudbuild.yaml` for correct production builds.
+
+---
+
 ## v2.0.4 - First Production Deployment v1.6 → v2.0 (2025-12-02)
 
 **Status**: 🚀 **PRODUCTION DEPLOYMENT** (Major Version Upgrade)  
