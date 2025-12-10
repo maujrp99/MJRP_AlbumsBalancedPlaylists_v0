@@ -1,16 +1,150 @@
-<!doctype html>
-<html lang="pt-BR">
-<!-- Redirecting to hybrid-curator entrypoint -->
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="refresh" content="0; url=/home" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MJRP Balanced Play</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MJRP Playlist Generator v2.0</title>
+  <!-- Tailwind CSS for v2.0 Premium UI -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Syne (Artistic/Curator Vibe) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Modal Styles (Required for Inventory) -->
+  <link rel="stylesheet" href="/css/modals.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'syne': ['Syne', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              orange: '#f97316', // orange-500
+              red: '#dc2626',    // red-600
+              yellow: '#fbbf24', // amber-400
+              dark: '#0a0a0a'    // neutral-950
+            }
+          },
+          backgroundImage: {
+            'flame-gradient': 'linear-gradient(135deg, #f97316 0%, #dc2626 100%)',
+            'flame-gradient-hover': 'linear-gradient(135deg, #fb923c 0%, #ef4444 100%)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer components {
+      .btn {
+        @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-syne font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+      }
+      
+      .btn-primary {
+        @apply bg-flame-gradient text-white shadow-lg shadow-brand-orange/20 hover:shadow-brand-orange/40 border border-white/10;
+      }
+
+      .btn-secondary {
+        @apply bg-white/5 text-white border border-white/10 hover:bg-white/10 hover:border-white/20 backdrop-blur-sm;
+      }
+
+      .btn-success {
+        @apply bg-gradient-to-br from-green-600 to-green-500 text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/40 border border-white/10;
+      }
+
+      .btn-danger {
+        @apply bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg shadow-red-500/20 hover:shadow-red-500/40 border border-white/10;
+      }
+
+      .btn-sm {
+        @apply px-4 py-2 text-sm rounded-lg;
+      }
+
+      .btn-icon {
+        @apply inline-flex items-center justify-center p-3 rounded-full transition-all duration-300 transform hover:scale-110 active:scale-95;
+      }
+
+      .glass-panel {
+        @apply bg-black/40 backdrop-blur-md border border-white/10 rounded-3xl p-6;
+      }
+      
+      .form-control {
+        @apply w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-brand-orange/50 focus:ring-1 focus:ring-brand-orange/50 transition-all font-syne;
+      }
+
+      .container {
+        @apply max-w-[1200px] mx-auto px-6;
+      }
+
+      .badge {
+        @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
+      }
+
+      .badge-success {
+        @apply bg-green-500/20 text-green-400 border border-green-500/30;
+      }
+
+      .badge-warning {
+        @apply bg-amber-500/20 text-amber-400 border border-amber-500/30;
+      }
+    }
+  </style>
 </head>
 
-<body>
-  <p>Redirecionando para a aplicação v2.0... <a href="/home">Clique aqui se não redirecionar</a></p>
+<body class="bg-black text-white font-syne">
+  <!-- Main app container -->
+  <!-- Main app container -->
+  <div id="header-container"></div>
+  <div id="app" class="min-h-screen">Loading...</div>
+  <div id="footer-container"></div>
+
+  <!-- App initialization -->
+  <script src="/js/firebase-config.js"></script>
+  <script type="module">
+    import { router } from './js/router.js'
+    import { HomeView } from './js/views/HomeView.js'
+    import { AlbumsView } from './js/views/AlbumsView.js'
+    import { RankingView } from './js/views/RankingView.js'
+    import { PlaylistsView } from './js/views/PlaylistsView.js'
+    import { ConsolidatedRankingView } from './js/views/ConsolidatedRankingView.js'
+    import { TopNav } from './js/components/TopNav.js'
+    import { Footer } from './js/components/Footer.js'
+
+    // Initialize Global Components
+    const topNav = new TopNav()
+    document.getElementById('header-container').innerHTML = topNav.render()
+    topNav.attachListeners()
+
+    const footer = new Footer()
+    document.getElementById('footer-container').innerHTML = footer.render()
+    footer.attachListeners()
+
+    // Register routes
+    router.register('/home', () => new HomeView())
+    router.register('/albums', () => new AlbumsView())
+    router.register('/ranking/:albumId', () => new RankingView())
+    router.register('/playlists', () => new PlaylistsView())
+    router.register('/series/:id/ranking', () => new ConsolidatedRankingView())
+
+    // Default route
+    if (!window.location.pathname || window.location.pathname === '/' || window.location.pathname === '/index-v2.html') {
+      router.navigate('/home')
+    } else {
+      // Trigger initial route
+      router.handleRouteChange()
+    }
+
+    // Debug: log navigation
+    router.afterNavigate((path) => {
+      console.log('✅ Navigated to:', path)
+    })
+  </script>
 </body>
 
 </html>
