@@ -1,0 +1,31 @@
+steps:
+  # 1. Prepare shared directory for Docker build
+  - name: 'bash'
+    script: |
+      mkdir -p server/_shared_temp
+      cp -r shared/* server/_shared_temp/
+
+  # 2. Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/mjrp-proxy', 'server']
+
+  # 3. Push the image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/mjrp-proxy']
+
+  # 4. Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'mjrp-proxy'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/mjrp-proxy'
+      - '--region'
+      - 'southamerica-east1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+images:
+  - 'gcr.io/$PROJECT_ID/mjrp-proxy'
