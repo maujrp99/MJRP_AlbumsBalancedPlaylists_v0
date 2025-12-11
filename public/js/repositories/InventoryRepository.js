@@ -34,6 +34,10 @@ export class InventoryRepository extends BaseRepository {
             throw new Error('Album must have title and artist')
         }
 
+        if (!album.id) {
+            throw new Error('Album must have an ID')
+        }
+
         const validFormats = ['cd', 'vinyl', 'cassette', 'dvd', 'bluray', 'digital']
         if (!validFormats.includes(format)) {
             throw new Error(`Format must be one of: ${validFormats.join(', ')}`)
@@ -46,8 +50,10 @@ export class InventoryRepository extends BaseRepository {
         }
 
         // Check if album already in inventory
+        // FORCE REFRESH: Ensure we are checking against fresh data if possible, though findByAlbumId handles checks
         const existing = await this.findByAlbumId(album.id)
         if (existing) {
+            console.warn(`[InventoryRepository] Prevented duplicate add for album: ${album.id}`)
             throw new Error('Album already in inventory')
         }
 
@@ -56,13 +62,13 @@ export class InventoryRepository extends BaseRepository {
             artist: album.artist,
             year: album.year,
             format,
-            owned: options.owned !== undefined ? options.owned : null, // Default to null (Not Owned), can be true (Owned) or false (Wishlist)
+            owned: options.owned !== undefined ? options.owned : null, // Default to null (Not Owned)
             purchasePrice: options.purchasePrice || null,
             currency,
             purchaseDate: options.purchaseDate || null,
             condition: options.condition || null,
             notes: options.notes || '',
-            // Deep sanitize album data (removes undefined, converts custom classes like Track to plain objects)
+            // Deep sanitize album data
             albumData: JSON.parse(JSON.stringify(album)),
             addedToInventory: this.getServerTimestamp()
         }
@@ -140,6 +146,8 @@ export class InventoryRepository extends BaseRepository {
      * @returns {Promise<Object|null>} Inventory album or null
      */
     async findByAlbumId(albumId) {
+        if (!albumId) return null
+
         // Try cache first with albumId key
         const cacheKey = this.getCacheKey(`album_${albumId}`)
         if (this.cache) {
@@ -147,9 +155,10 @@ export class InventoryRepository extends BaseRepository {
             if (cached) return cached
         }
 
-        // Query Firestore (no index needed, linear scan acceptable for inventory)
+        // Query Firestore
+        // Use loose comparison for IDs (String vs Number safety)
         const albums = await this.findAll()
-        const found = albums.find(a => a.albumData?.id === albumId) || null
+        const found = albums.find(a => String(a.albumData?.id) === String(albumId)) || null
 
         // Cache result
         if (found && this.cache) {

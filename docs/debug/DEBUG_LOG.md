@@ -38,6 +38,65 @@
 
 ## Current Debugging Session
 
+### Issue #36: Auth Integration Regressions - RESOLVED ✅
+**Status**: ✅ **RESOLVED - USER CONFIRMED**
+**Date**: 2025-12-11 19:15 → 19:40
+**Type**: Regression
+**Component**: `HomeView.js`, `AlbumsView.js`, `TopNav.js`
+
+#### Problem
+After abstracting the Auth/UserStore logic, several regressions appeared:
+1. **HomeView**: `ReferenceError: series is not defined` when creating a series.
+2. **TopNav**: "Albums" link broke (`seriesId=undefined`), and "Sign In" button was missing for guests.
+3. **AlbumsView**: Deleting an album crashed the app if the parent series was also deleted (Ghost Series context).
+
+#### Root Cause
+1. **HomeView**: Code wrapper for `try/catch` accidentally removed the `const series = ...` definition.
+2. **TopNav**: Logic assumed verified user; didn't handle `isAnonymous` correctly. Link generation didn't have a fallback for `undefined` series.
+3. **AlbumsView**: Delete handler assumed `activeSeries` always existed.
+
+#### Fix Applied
+1. **HomeView**: Restored `series` object definition.
+2. **TopNav**:
+    - Added explicit `if (currentUser.isAnonymous)` check to show "Sign In".
+    - Fixed `getAlbumsSeriesLink` to return base `/albums` if no series active.
+3. **AlbumsView**: Added defensive `if (!activeSeries)` check to prevent crash during deletion.
+
+#### Files Modified
+- `public/js/views/HomeView.js`
+- `public/js/views/AlbumsView.js`
+- `public/js/components/TopNav.js`
+
+---
+
+### Issue #35: Firebase Initialization & SDK Mismatch - RESOLVED ✅
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-11 18:00 → 19:10
+**Type**: Architecture/Infrastructure
+**Component**: `app.js`, `firebase-init.js`, `AuthService.js`, `Repositories`
+
+#### Problem
+The application failed to load with multiple errors:
+1. `No Firebase App '[DEFAULT]' has been created` - calling `getAuth/getFirestore` before `initializeApp`.
+2. `Expected first argument to collection() to be a CollectionReference` - Mixing CDN imports with NPM imports.
+
+#### Root Cause
+1. **Module Evaluation Order**: `AuthService.js` and Repositories were instantiating `getAuth()` at the top level.
+2. **Hybrid Import Strategy**: Firebase SDK treats objects from CDN and NPM as different instances.
+
+#### Fix Applied
+1. **Centralized Initialization**: Created `public/js/firebase-init.js` with lazy initialization.
+2. **Lazy Loading**: Refactored `AuthService` to access `this.auth` via a getter.
+3. **Standardization**: Converted **ALL** repositories to use NPM imports exclusively.
+
+#### Files Modified
+- `public/js/firebase-init.js` (Created)
+- `shared/services/AuthService.js`
+- `public/js/app.js`
+- `public/js/repositories/*.js`
+
+---
+
 ### Issue #34: Generate Playlists API Returns 500 - RESOLVED ✅
 **Status**: ✅ **RESOLVED - USER CONFIRMED**
 **Date**: 2025-12-10 00:00 → 10:23
