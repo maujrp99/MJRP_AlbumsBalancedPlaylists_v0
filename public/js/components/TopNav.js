@@ -1,10 +1,28 @@
 import { getIcon } from './Icons.js'
 import { router } from '../router.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
+import { userStore } from '../stores/UserStore.js'
+import { authService } from '@shared/services/AuthService.js'
+import { showLoginModal } from './LoginModal.js'
+import toast from './Toast.js'
 
 export class TopNav {
   constructor() {
     this.isMenuOpen = false
+    this.userState = userStore.getState()
+
+    // Subscribe to auth changes
+    userStore.subscribe(this.handleAuthChange.bind(this))
+  }
+
+  handleAuthChange(state) {
+    this.userState = state
+    // Re-render only if mounted
+    const container = document.getElementById('header-container')
+    if (container) {
+      container.innerHTML = this.render()
+      this.attachListeners()
+    }
   }
 
   /**
@@ -12,15 +30,15 @@ export class TopNav {
    */
   getAlbumsSeriesLink() {
     const activeSeries = albumSeriesStore.getActiveSeries()
-    if (activeSeries?.id) {
+    if (activeSeries && activeSeries.id) {
       return `/albums?seriesId=${activeSeries.id}`
     }
     // Fallback: use last series if available
     const series = albumSeriesStore.getSeries()
-    if (series.length > 0) {
+    if (series.length > 0 && series[0].id) {
       return `/albums?seriesId=${series[0].id}`
     }
-    return '/album-series' // Fallback to series list if no series exists
+    return '/albums'
   }
 
   render() {
@@ -42,13 +60,13 @@ export class TopNav {
           <img 
             src="/assets/images/TheAlbumPlaylistSynth.png" 
             alt="The Album Playlist Synthesizer"
-            class="h-8 sm:h-10 md:h-12 w-auto object-contain hover:opacity-80 transition-opacity"
+            class="hidden md:block h-8 sm:h-10 md:h-12 w-auto object-contain hover:opacity-80 transition-opacity"
             loading="lazy"
           >
         </a>
 
         <!-- Desktop Menu -->
-        <div class="hidden md:flex items-center gap-8">
+        <div class="hidden md:flex items-center gap-6">
           ${this.renderNavLink('/home', 'Home', currentPath)}
           ${this.renderNavLink(albumsSeriesLink, 'Albums', currentPath)}
           ${this.renderNavLink('/album-series', 'Album Series', currentPath)}
@@ -56,6 +74,10 @@ export class TopNav {
           ${this.renderNavLink('/inventory', 'Inventory', currentPath)}
         </div>
 
+        <!-- User Section (Right) -->
+        <div class="flex items-center gap-2 ml-4">
+             ${this.renderUserSection()}
+        </div>
 
         <!-- Mobile Menu Overlay (Background) -->
         <div id="mobileMenuOverlay" class="fixed inset-0 z-40 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"></div>
@@ -86,13 +108,68 @@ export class TopNav {
             ${this.renderMobileNavLink('/inventory', 'Inventory', 'Archive', currentPath)}
           </nav>
           
-          <!-- Footer -->
+          <!-- Mobile Footer / Auth -->
           <div class="p-4 border-t border-white/10 text-center bg-brand-dark">
-            <p class="text-xs text-gray-500">MJRP Playlist Synthesizer</p>
+             ${this.renderMobileAuth()}
           </div>
         </div>
       </nav>
     `
+  }
+
+  renderUserSection() {
+    const { currentUser, loading } = this.userState
+
+    if (loading) {
+      return `<div class="w-8 h-8 rounded-full bg-white/10 animate-pulse"></div>`
+    }
+
+    if (currentUser && !currentUser.isAnonymous) {
+      // Authenticated (Real User)
+      const photoURL = currentUser.photoURL || '/assets/images/logo.png' // Fallback
+      return `
+            <div class="relative group" id="userMenuDropdownTrigger">
+                <button class="flex items-center gap-2 p-1 rounded-full hover:bg-white/5 transition-colors">
+                    <img src="${photoURL}" class="w-8 h-8 rounded-full border border-white/20" alt="User">
+                     <span class="hidden lg:block text-sm font-medium text-white/80 max-w-[100px] truncate">${currentUser.displayName || 'User'}</span>
+                </button>
+                
+                <!-- Dropdown -->
+                <div class="absolute right-0 mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div class="p-3 border-b border-white/10">
+                        <p class="text-xs text-white/50">Signed in as</p>
+                        <p class="text-sm font-bold truncate">${currentUser.displayName || currentUser.email}</p>
+                    </div>
+                    <button id="logoutBtn" class="w-full text-left px-4 py-3 text-sm hover:bg-white/5 text-red-400 flex items-center gap-2">
+                         ${getIcon('Logout', 'w-4 h-4')} Sign Out
+                    </button>
+                </div>
+            </div>
+        `
+    } else {
+      // Guest or Anonymous
+      return `
+            <button id="loginBtn" class="btn btn-sm btn-primary">
+                Sign In
+            </button>
+        `
+    }
+  }
+
+  renderMobileAuth() {
+    const { currentUser } = this.userState
+    if (currentUser && !currentUser.isAnonymous) {
+      return `
+            <div class="flex flex-col gap-3">
+                <div class="flex items-center gap-3 justify-center mb-2">
+                    <img src="${currentUser.photoURL || '/assets/images/logo.png'}" class="w-8 h-8 rounded-full">
+                    <span class="text-sm font-bold">${currentUser.displayName || 'User'}</span>
+                </div>
+                 <button id="mobileLogoutBtn" class="btn btn-sm btn-secondary w-full">Sign Out</button>
+            </div>
+        `
+    }
+    return `<button id="mobileLoginBtn" class="btn btn-sm btn-primary w-full">Sign In to Sync</button>`
   }
 
   renderMobileNavLink(path, label, iconName, currentPath) {
@@ -128,12 +205,27 @@ export class TopNav {
     const mobileOverlay = document.getElementById('mobileMenuOverlay')
     const links = mobileMenu?.querySelectorAll('a')
 
-    // Force solid background on mobile menu (CSS workaround)
-    // REMOVED: Managed via Tailwind class bg-brand-dark in render()
-    // if (mobileMenu) {
-    //   mobileMenu.style.setProperty('background-color', '#0a0a0f', 'important')
-    //   mobileMenu.style.setProperty('backdrop-filter', 'none', 'important')
-    // }
+    // Auth Listeners
+    const loginBtn = document.getElementById('loginBtn')
+    const logoutBtn = document.getElementById('logoutBtn')
+    const mobileLoginBtn = document.getElementById('mobileLoginBtn')
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn')
+
+    const openLogin = () => showLoginModal()
+    const doLogout = async () => {
+      try {
+        await authService.logout()
+        toast.success('Signed out successfully')
+      } catch (err) {
+        toast.error('Sign out failed')
+      }
+    }
+
+    loginBtn?.addEventListener('click', openLogin)
+    mobileLoginBtn?.addEventListener('click', openLogin)
+
+    logoutBtn?.addEventListener('click', doLogout)
+    mobileLogoutBtn?.addEventListener('click', doLogout)
 
     const toggleMenu = (show) => {
       this.isMenuOpen = show
@@ -154,14 +246,14 @@ export class TopNav {
     closeBtn?.addEventListener('click', () => toggleMenu(false))
     mobileOverlay?.addEventListener('click', () => toggleMenu(false))
 
-    // Close menu when clicking a link (use capture to run before router)
+    // Close menu when clicking a link
     links?.forEach(link => {
       link.addEventListener('click', (e) => {
         toggleMenu(false)
-      }, true) // Use capture phase
+      }, true)
     })
 
-    // Fallback: Close menu on any navigation (router event)
+    // Fallback: Close menu on any navigation
     window.addEventListener('popstate', () => toggleMenu(false))
 
     // Fix: Auto-close menu on resize to desktop
@@ -172,3 +264,4 @@ export class TopNav {
     })
   }
 }
+

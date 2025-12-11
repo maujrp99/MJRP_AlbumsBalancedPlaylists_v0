@@ -61,7 +61,12 @@ export class AlbumsView extends BaseView {
     // If albums in store are from a different series than what we're rendering,
     // show empty instead. The mount() will trigger reload for correct series.
     const urlParams = new URLSearchParams(window.location.search)
-    const targetSeriesId = params?.seriesId || urlParams.get('seriesId') || activeSeries?.id
+    let targetSeriesId = params?.seriesId || urlParams.get('seriesId') || activeSeries?.id
+
+    // FIX: Sanitize undefined string
+    if (targetSeriesId === 'undefined' || targetSeriesId === 'null') {
+      targetSeriesId = null
+    }
     const lastLoadedId = albumsStore.getLastLoadedAlbumSeriesId()
 
     let displayAlbums = albums
@@ -781,6 +786,15 @@ export class AlbumsView extends BaseView {
             `${album.title} - ${album.artist}`,
             async (id) => {
               try {
+                // Check if series still exists
+                const activeSeries = albumSeriesStore.getActiveSeries()
+                if (!activeSeries) {
+                  const { toast } = await import('../components/Toast.js')
+                  toast.error('Series no longer exists. Redirecting...')
+                  setTimeout(() => router.navigate('/album-series'), 1500)
+                  return
+                }
+
                 // 1. Remove from series in Firestore (updates albumQueries[])
                 await albumSeriesStore.removeAlbumFromSeries(album)
 
@@ -833,7 +847,13 @@ export class AlbumsView extends BaseView {
 
     // Priority: URL param > Store state
     const urlParams = new URLSearchParams(window.location.search)
-    const urlSeriesId = urlParams.get('seriesId') || (params && params.seriesId)
+    let urlSeriesId = urlParams.get('seriesId') || (params && params.seriesId)
+
+    // FIX: Handle "undefined" string literal from bad URLs
+    if (urlSeriesId === 'undefined' || urlSeriesId === 'null') {
+      console.warn('[AlbumsView] Found invalid seriesId "undefined" in URL. Ignoring.')
+      urlSeriesId = null
+    }
 
     if (urlSeriesId) {
       console.log('[AlbumsView] Restoring series from URL:', urlSeriesId)
@@ -1011,6 +1031,15 @@ export class AlbumsView extends BaseView {
     // Early exit if trying to render albums from wrong series.
     const activeSeries = albumSeriesStore.getActiveSeries()
     const lastLoadedId = albumsStore.getLastLoadedAlbumSeriesId()
+
+    // FIX: If no active series (e.g. it was deleted), do not render stale albums
+    if (!activeSeries) {
+      console.warn('[AlbumsView] No active series found. Clearing view.')
+      this.renderEmptyState()
+      const grid = this.$('#albumsGrid')
+      if (grid) grid.innerHTML = '' // Ensure visual clear
+      return
+    }
 
     if (activeSeries && lastLoadedId && activeSeries.id !== lastLoadedId) {
       console.warn('[AlbumsView] updateAlbumsGrid: series mismatch, skipping render')

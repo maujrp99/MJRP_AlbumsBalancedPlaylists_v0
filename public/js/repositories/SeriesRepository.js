@@ -4,7 +4,7 @@
  */
 
 import { BaseRepository } from './BaseRepository.js'
-import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
+import { collection, getDocs } from 'firebase/firestore'
 
 export class SeriesRepository extends BaseRepository {
     /**

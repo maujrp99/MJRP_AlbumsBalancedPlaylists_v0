@@ -106,45 +106,7 @@
 
   <!-- App initialization -->
   <script src="/js/firebase-config.js"></script>
-  <script type="module">
-    import { router } from './js/router.js'
-    import { HomeView } from './js/views/HomeView.js'
-    import { AlbumsView } from './js/views/AlbumsView.js'
-    import { RankingView } from './js/views/RankingView.js'
-    import { PlaylistsView } from './js/views/PlaylistsView.js'
-    import { ConsolidatedRankingView } from './js/views/ConsolidatedRankingView.js'
-    import { TopNav } from './js/components/TopNav.js'
-    import { Footer } from './js/components/Footer.js'
-
-    // Initialize Global Components
-    const topNav = new TopNav()
-    document.getElementById('header-container').innerHTML = topNav.render()
-    topNav.attachListeners()
-
-    const footer = new Footer()
-    document.getElementById('footer-container').innerHTML = footer.render()
-    footer.attachListeners()
-
-    // Register routes
-    router.register('/home', () => new HomeView())
-    router.register('/albums', () => new AlbumsView())
-    router.register('/ranking/:albumId', () => new RankingView())
-    router.register('/playlists', () => new PlaylistsView())
-    router.register('/series/:id/ranking', () => new ConsolidatedRankingView())
-
-    // Default route
-    if (!window.location.pathname || window.location.pathname === '/' || window.location.pathname === '/index-v2.html') {
-      router.navigate('/home')
-    } else {
-      // Trigger initial route
-      router.handleRouteChange()
-    }
-
-    // Debug: log navigation
-    router.afterNavigate((path) => {
-      console.log('✅ Navigated to:', path)
-    })
-  </script>
+  <script type="module" src="/js/app.js"></script>
 </body>
 
 </html>

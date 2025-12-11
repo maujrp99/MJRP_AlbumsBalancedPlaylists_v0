@@ -4,11 +4,16 @@ import { InventoryStore } from '../../public/js/stores/inventory.js'
 // Mock dependencies
 vi.mock('../../public/js/repositories/InventoryRepository.js', () => {
     return {
-        InventoryRepository: vi.fn().mockImplementation(() => ({
-            findAll: vi.fn().mockResolvedValue([]),
+        InventoryRepository: vi.fn().mockImplementation((db, cache, userId) => ({
+            userId,
+            // Mock method return based on user context if needed, or default
+            findAll: vi.fn().mockResolvedValue(userId === 'user-123' ? [
+                { id: '1', title: 'User Album', artist: 'User Artist' }
+            ] : []),
             addAlbum: vi.fn().mockResolvedValue('new-id'),
             updateAlbum: vi.fn().mockResolvedValue(),
             updatePrice: vi.fn().mockResolvedValue(),
+            getStatistics: vi.fn().mockReturnValue({ total: 0, value: 0 }),
             removeAlbum: vi.fn().mockResolvedValue(),
             findByAlbumId: vi.fn().mockResolvedValue(null)
         }))
@@ -23,6 +28,29 @@ vi.mock('../../public/js/cache/CacheManager.js', () => ({
     cacheManager: {}
 }))
 
+vi.mock('../../public/js/app.js', () => ({
+    db: {},
+    auth: { currentUser: null }
+}))
+
+// Mock DataSyncService
+vi.mock('../../public/js/services/DataSyncService.js', () => ({
+    dataSyncService: {
+        migrateInventory: vi.fn().mockResolvedValue(0)
+    }
+}))
+import { dataSyncService } from '../../public/js/services/DataSyncService.js'
+
+// Mock UserStore
+vi.mock('../../public/js/stores/UserStore.js', () => ({
+    userStore: {
+        subscribe: vi.fn(),
+        getState: vi.fn().mockReturnValue({ currentUser: null })
+    }
+}))
+
+import { userStore } from '../../public/js/stores/UserStore.js'
+
 describe('InventoryStore', () => {
     let store
 
@@ -32,10 +60,41 @@ describe('InventoryStore', () => {
     })
 
     describe('constructor', () => {
-        it('should initialize with empty state', () => {
+        it('should initialize and subscribe to userStore', () => {
+            expect(userStore.subscribe).toHaveBeenCalled()
             expect(store.getAlbums()).toEqual([])
-            expect(store.getState().loading).toBe(false)
-            expect(store.getState().error).toBeNull()
+        })
+    })
+
+    describe('onUserChange', () => {
+        it('should update userId and reload repository when user logs in', async () => {
+            const mockUser = { uid: 'user-123' }
+            const expectedAlbumsAfterLogin = [{ id: '1', title: 'User Album', artist: 'User Artist' }]
+
+            store.init()
+
+            // Add a guest album so migration triggers
+            store.albums = [{ id: 'guest-1', title: 'Guest Album', artist: 'Guest Artist' }]
+
+            // Trigger auth change
+            await store.handleUserChange({ currentUser: mockUser })
+
+            expect(store.userId).toBe('user-123')
+            expect(store.repository.userId).toBe('user-123')
+            expect(dataSyncService.migrateInventory).toHaveBeenCalled()
+            expect(store.getAlbums()).toEqual(expectedAlbumsAfterLogin)
+        })
+
+        it('should revert to anonymous when user logs out', async () => {
+            // Start logged in
+            store.userId = 'user-123'
+            store.init()
+
+            // Trigger logout
+            await store.handleUserChange({ currentUser: null })
+
+            expect(store.userId).toBe('anonymous-user')
+            expect(store.repository.userId).toBe('anonymous-user')
         })
     })
 
@@ -127,3 +186,4 @@ describe('InventoryStore', () => {
         })
     })
 })
+

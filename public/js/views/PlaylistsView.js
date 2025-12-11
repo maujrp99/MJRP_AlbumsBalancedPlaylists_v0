@@ -435,7 +435,11 @@ export class PlaylistsView extends BaseView {
 
     // Check for auto-generate flag
     const urlParams = new URLSearchParams(window.location.search)
-    const seriesId = urlParams.get('seriesId')
+    let seriesId = urlParams.get('seriesId')
+
+    if (seriesId === 'undefined' || seriesId === 'null') {
+      seriesId = null
+    }
 
     // Store persistence: Albums should already be loaded from AlbumsView
     // No recovery logic needed - store persists across navigation

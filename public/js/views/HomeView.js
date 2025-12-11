@@ -372,11 +372,16 @@ export class HomeView extends BaseView {
       updatedAt: new Date().toISOString()
     }
 
-    const createdSeries = albumSeriesStore.createSeries(series)
-    albumSeriesStore.setActiveSeries(createdSeries.id)
+    try {
+      // FIX: Await the async creation (Firestore + LocalStorage)
+      const createdSeries = await albumSeriesStore.createSeries(series)
 
-    // Navigate to albums view with seriesId
-    router.navigate(`/albums?seriesId=${createdSeries.id}`)
+      // Navigate to albums view with seriesId
+      router.navigate(`/albums?seriesId=${createdSeries.id}`)
+    } catch (error) {
+      console.error('Failed to create series:', error)
+      this.showErrorMessage('Failed to create series. Please try again.')
+    }
   }
 
   handleResumeSeries(seriesId) {

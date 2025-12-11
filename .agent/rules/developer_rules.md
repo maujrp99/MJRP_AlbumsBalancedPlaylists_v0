@@ -14,3 +14,4 @@ trigger: always_on
 4. **Documentation Sync**: After implementing a feature or fix, always update the documentation.
 5. **Debug Traceability**: Always log failed attempts and solutions in the debug log.
 6. **User Validation**: Nunca marca nada como fixed ou done, enquanto o usuário não confirmar que está OK.
+7. **Never break a working feature*: Garanta que novas implementações e fixes, não quebrem funcionalidades prontas e funcionais dos sprints anteriores.

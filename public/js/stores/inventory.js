@@ -4,8 +4,10 @@
  */
 
 import { InventoryRepository } from '../repositories/InventoryRepository.js'
-import { db as firestore, auth } from '../app.js'
+import { db as firestore } from '../app.js'
 import { cacheManager } from '../cache/CacheManager.js'
+import { userStore } from './UserStore.js'
+import { dataSyncService } from '../services/DataSyncService.js'
 
 export class InventoryStore {
     constructor() {
@@ -14,38 +16,65 @@ export class InventoryStore {
         this.error = null
         this.listeners = []
         this.repository = null
-        this.userId = null // Will be set from Firebase Auth
+        this.userId = 'anonymous-user'
+
+        // Subscribe to user changes
+        userStore.subscribe(this.handleUserChange.bind(this))
     }
 
     /**
-     * Initialize repository with current user
+     * Handle user state change
+     * @param {Object} state - UserStore state
+     */
+    async handleUserChange(state) {
+        const newUser = state.currentUser
+        const newUserId = newUser ? newUser.uid : 'anonymous-user'
+
+        // Only update if changed
+        if (this.userId !== newUserId) {
+            console.log(`[InventoryStore] Switching user context: ${this.userId} -> ${newUserId}`)
+
+            // Capture data relative to previous user context (if it was anonymous)
+            // This is the "Guest Data" we want to migrate
+            let albumsToMigrate = []
+            if (this.userId === 'anonymous-user' && this.albums.length > 0 && newUserId !== 'anonymous-user') {
+                albumsToMigrate = [...this.albums]
+                console.log(`[InventoryStore] Found ${albumsToMigrate.length} guest albums to migrate.`)
+            }
+
+            this.userId = newUserId
+
+            // Re-init repository with new user
+            if (firestore) {
+                this.repository = new InventoryRepository(firestore, cacheManager, this.userId)
+
+                // Perform migration if needed
+                if (albumsToMigrate.length > 0) {
+                    try {
+                        const count = await dataSyncService.migrateInventory(this.repository, albumsToMigrate)
+                        if (count > 0) console.log(`[InventoryStore] Migrated ${count} albums.`)
+                        await this.loadAlbums()
+                    } catch (err) {
+                        console.error('[InventoryStore] Migration failed', err)
+                    }
+                } else {
+                    // No migration needed, just load
+                    await this.loadAlbums().catch(err => console.error('Failed to reload inventory on user switch:', err))
+                }
+            }
+        }
+    }
+
+    /**
+     * Initialize repository
      */
     init() {
-        console.log('[InventoryStore.init] Starting init, current userId:', this.userId)
-        console.log('[InventoryStore.init] auth?.currentUser:', auth?.currentUser?.uid)
-
-        // Get userId from Firebase Auth
-        if (!this.userId && auth?.currentUser) {
-            this.userId = auth.currentUser.uid
-            console.log('[InventoryStore.init] Set userId from auth:', this.userId)
-        }
-
-        // Fallback to anonymous if no auth yet
-        if (!this.userId) {
-            this.userId = 'anonymous-user'
-            console.warn('[InventoryStore] No auth user, using anonymous fallback')
-        }
-
-        // Check if firestore is available
         if (!firestore) {
-            throw new Error('Firestore not initialized. Make sure app.js has loaded.')
+            throw new Error('Firestore not initialized')
         }
 
         if (!this.repository) {
-            console.log('[InventoryStore.init] Creating repository with userId:', this.userId)
             this.repository = new InventoryRepository(firestore, cacheManager, this.userId)
-        } else {
-            console.log('[InventoryStore.init] Repository already exists, userId:', this.repository.userId)
         }
     }
 

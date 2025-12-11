@@ -3,9 +3,8 @@
  * Initializes Router, Auth, and Views
  */
 
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js'
-import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js'
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
+import { app, auth, db } from './firebase-init.js'
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
 
 import { router } from './router.js'
 import { HomeView } from './views/HomeView.js'
@@ -17,21 +16,6 @@ import { ConsolidatedRankingView } from './views/ConsolidatedRankingView.js'
 import toast from './components/Toast.js'
 import { albumSeriesStore } from './stores/albumSeries.js'
 
-// Initialize Firebase
-const firebaseConfig = window.__firebase_config || {
-    // Fallback if window config is missing (should be injected by server/build)
-    apiKey: "API_KEY_PLACEHOLDER",
-    authDomain: "mjrp-albums.firebaseapp.com",
-    projectId: "mjrp-albums",
-    storageBucket: "mjrp-albums.appspot.com",
-    messagingSenderId: "SENDER_ID_PLACEHOLDER",
-    appId: "APP_ID_PLACEHOLDER"
-}
-
-const app = initializeApp(firebaseConfig)
-const auth = getAuth(app)
-const db = getFirestore(app)
-
 // Export for other modules if needed (though they should import from config)
 export { app, auth, db }
 
@@ -41,7 +25,8 @@ onAuthStateChanged(auth, (user) => {
         console.log('✅ Authenticated as:', user.uid)
         document.body.classList.add('authenticated')
 
-        // Initialize stores with Firestore and userId for Repository Pattern
+        // Initialize stores with Firestore and userId (Repository Pattern)
+        // Store initialization logic handles checking if already initialized
         albumSeriesStore.init(db, user.uid)
 
         // Initialize Router if not already started
@@ -52,6 +37,38 @@ onAuthStateChanged(auth, (user) => {
             console.error('Auth failed:', error)
             toast.error('Authentication failed. App may not work correctly.')
         })
+    }
+})
+
+// Initialize UI Components
+import { TopNav } from './components/TopNav.js'
+import { Footer } from './components/Footer.js'
+
+const initUI = () => {
+    const topNav = new TopNav()
+    const headerEl = document.getElementById('header-container')
+    if (headerEl) {
+        headerEl.innerHTML = topNav.render()
+        topNav.attachListeners()
+    }
+
+    const footer = new Footer()
+    const footerEl = document.getElementById('footer-container')
+    if (footerEl) {
+        footerEl.innerHTML = footer.render()
+        footer.attachListeners()
+    }
+}
+
+// Initialize Router and UI when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    initUI()
+
+    // Default route handling
+    if (!window.location.pathname || window.location.pathname === '/' || window.location.pathname === '/index-v2.html') {
+        router.navigate('/home')
+    } else {
+        router.handleRouteChange()
     }
 })
 

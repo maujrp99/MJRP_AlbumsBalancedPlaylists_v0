@@ -5,7 +5,11 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, signOut, o
  */
 export class AuthService {
     constructor() {
-        this.auth = getAuth()
+        // Auth initialized lazily to ensure Firebase app is ready
+    }
+
+    get auth() {
+        return getAuth()
     }
 
     /**
