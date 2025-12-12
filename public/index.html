@@ -4,6 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSP: Allow Apple Auth and Data URIs for Fonts -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://*.gstatic.com https://*.apple.com https://*.cdn-apple.com; script-src 'self' 'unsafe-inline' https://*.apple.com https://*.cdn-apple.com; font-src 'self' https://*.googleapis.com https://*.gstatic.com https://*.apple.com data:; img-src 'self' https: data:; style-src 'self' 'unsafe-inline' https://*.googleapis.com;">
   <title>MJRP Playlist Generator v2.0</title>
   <!-- Tailwind CSS for v2.0 Premium UI -->
   <script src="https://cdn.tailwindcss.com"></script>

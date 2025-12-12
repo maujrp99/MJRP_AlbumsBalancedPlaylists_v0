@@ -429,6 +429,19 @@ export class AlbumsView extends BaseView {
   filterAlbums(albums) {
     let filtered = albums
 
+    // FIX: Expansion Dataset Safety
+    // Do not show expanded discography items in the main browsing view (too many items)
+    // Only show them when searching or filtering by specific criteria
+    const isBrowsingAll = !this.searchQuery &&
+      this.filters.artist === 'all' &&
+      this.filters.year === 'all' &&
+      this.filters.status === 'all' &&
+      !this.filters.bestEverOnly
+
+    if (isBrowsingAll) {
+      filtered = filtered.filter(album => album.addedBy !== 'expansion')
+    }
+
     // Search filter
     if (this.searchQuery) {
       const query = this.searchQuery.toLowerCase()

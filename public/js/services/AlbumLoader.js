@@ -18,22 +18,36 @@ export class AlbumLoader {
         if (this.isLoaded) return Promise.resolve(this.albums)
         if (this.loadPromise) return this.loadPromise
 
-        this.loadPromise = fetch('/assets/data/albums.csv')
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to load albums data')
-                return response.text()
-            })
-            .then(csvText => {
+        this.loadPromise = new Promise(async (resolve, reject) => {
+            try {
+                // Try to load expanded JSON first (Enriched Data)
+                const jsonResponse = await fetch('/assets/data/albums-expanded.json')
+                if (jsonResponse.ok) {
+                    const data = await jsonResponse.json()
+                    this.albums = data
+                    this.isLoaded = true
+                    console.log(`[AlbumLoader] Loaded ${this.albums.length} albums from Expanded JSON (Enriched)`)
+                    resolve(this.albums)
+                    return
+                }
+
+                // Fallback to CSV (Legacy)
+                console.warn('[AlbumLoader] Expanded dataset not found, falling back to CSV')
+                const csvResponse = await fetch('/assets/data/albums.csv')
+                if (!csvResponse.ok) throw new Error('Failed to load albums data')
+
+                const csvText = await csvResponse.text()
                 this.albums = this.parseCSV(csvText)
                 this.isLoaded = true
-                console.log(`[AlbumLoader] Loaded ${this.albums.length} albums`)
-                return this.albums
-            })
-            .catch(err => {
+                console.log(`[AlbumLoader] Loaded ${this.albums.length} albums from CSV`)
+                resolve(this.albums)
+
+            } catch (err) {
                 console.error('[AlbumLoader] Error loading albums:', err)
-                this.loadPromise = null // Reset on error to allow retry
-                return []
-            })
+                this.loadPromise = null
+                resolve([]) // Fail gracefully
+            }
+        })
 
         return this.loadPromise
     }
