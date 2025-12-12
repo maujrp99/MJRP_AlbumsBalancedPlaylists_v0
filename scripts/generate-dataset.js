@@ -288,6 +288,33 @@ async function main() {
         // === ELECTRONIC / DANCE - Mainstream ===
         "Daft Punk", "Faithless", "Orbital", "The KLF", "Underworld",
 
+        // === JAZZ LEGENDS ===
+        "Miles Davis", "John Coltrane", "Duke Ellington", "Charles Mingus",
+        "Bill Evans", "Ornette Coleman", "Sun Ra", "Cecil Taylor",
+        "Art Ensemble of Chicago", "Jaco Pastorius", "Ella Fitzgerald",
+
+        // === SINGER-SONGWRITERS / ALTERNATIVE ICONS ===
+        "Joni Mitchell", "Tom Waits", "Van Morrison", "Frank Zappa",
+        "Bruce Springsteen", "Patti Smith", "Kate Bush", "Björk",
+        "Nick Cave & The Bad Seeds", "PJ Harvey", "Scott Walker",
+        "Leonard Cohen", "Randy Newman", "Laura Nyro",
+
+        // === ALTERNATIVE / EXPERIMENTAL ===
+        "Sonic Youth", "The Fall", "Nine Inch Nails", "Primal Scream",
+        "The Flaming Lips", "Beck", "Dinosaur Jr.", "Mercury Rev",
+        "Guided by Voices", "Weezer", "OutKast", "Moby",
+
+        // === POST-ROCK / AMBIENT ===
+        "Mogwai", "Sigur Rós", "Tangerine Dream", "Klaus Schulze",
+        "Steve Roach", "Autechre", "Boards of Canada",
+
+        // === GOTH / INDUSTRIAL ===
+        "Bauhaus", "Killing Joke", "Ministry", "Godflesh",
+
+        // === CLASSIC ROCK ADDITIONS ===
+        "ZZ Top", "The Soft Machine", "Hawkwind", "Captain Beefheart",
+        "Cheap Trick", "Alice Cooper", "Fairport Convention",
+
         // === MÚSICA BRASILEIRA - Pioneiros e Bossa Nova ===
         "Pixinguinha", "Carmem Miranda", "Ary Barroso", "Dorival Caymmi",
         "Orlando Silva", "Francisco Alves", "Noel Rosa", "Custódio Mesquita",
