@@ -38,7 +38,7 @@ export class Autocomplete {
         </div>
       </div>
       
-      <div class="results-dropdown hidden absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar z-50">
+      <div class="results-dropdown hidden absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl max-h-80 overflow-y-auto custom-scrollbar z-50">
         <!-- Results injected here -->
       </div>
     `
@@ -80,7 +80,7 @@ export class Autocomplete {
 
     async performSearch(query) {
         try {
-            const results = this.loader.search(query, 10) // Limit to 10
+            const results = this.loader.search(query, 50) // Increased from 10 to show more options
             this.renderResults(results)
         } finally {
             this.spinner.classList.add('hidden')
@@ -96,12 +96,18 @@ export class Autocomplete {
       `
         } else {
             this.resultsList.innerHTML = results.map((item, index) => `
-        <div class="result-item p-3 hover:bg-white/10 cursor-pointer flex items-center justify-between border-b border-white/5 last:border-0 transition-colors" data-index="${index}">
-          <div class="flex flex-col">
-            <span class="text-white font-medium">${item.album}</span>
-            <span class="text-xs text-accent-primary">${item.artist} <span class="text-gray-500">• ${item.year}</span></span>
+        <div class="result-item p-3 hover:bg-white/10 cursor-pointer flex items-center gap-3 border-b border-white/5 last:border-0 transition-colors" data-index="${index}">
+          <div class="w-10 h-10 flex-shrink-0 bg-gray-800 rounded overflow-hidden">
+            ${item.coverUrl
+                    ? `<img src="${item.coverUrl}" alt="" class="w-full h-full object-cover" loading="lazy" />`
+                    : `<div class="w-full h-full flex items-center justify-center text-gray-600">${getIcon('Music', 'w-5 h-5')}</div>`
+                }
           </div>
-          <div class="text-white/20">
+          <div class="flex flex-col flex-1 min-w-0">
+            <span class="text-white font-medium truncate">${item.album}</span>
+            <span class="text-xs text-accent-primary truncate">${item.artist} <span class="text-gray-500">• ${item.year}</span></span>
+          </div>
+          <div class="text-white/20 flex-shrink-0">
             ${getIcon('Plus', 'w-4 h-4')}
           </div>
         </div>
