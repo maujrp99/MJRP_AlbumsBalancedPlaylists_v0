@@ -1,8 +1,8 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-09  
-**Current Version**: v2.1.0  
-**Current Sprint**: Preparation for Sprint 6 (Apple Music Integration)
+**Last Updated**: 2025-12-12  
+**Current Version**: v2.1.1  
+**Current Sprint**: Sprint 7 (Apple Music Integration)
 
 ---
 
@@ -96,85 +96,108 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 
 ---
 
-## 🚧 Current Sprint
+## ✅ Completed (Continued)
 
-
-### Sprint 6: Authentication (Apple & Google)
-
-**Duration**: 1 week  
-**Priority**: High
-
-#### Scope
-
-- [ ] **Login with Apple ID**
-  - Enable Apple Sign-In
-  - Integrate with Apple authentication SDK
-
-- [ ] **Login with Google Account**
-  - Enable Google Sign-In
-  - Integrate with Google authentication SDK
-
-- [ ] **User Data Persistence**
-  - Capture and persist **only name and email** from user
-  - Secure user data in Firestore (`/users/{userId}/profile`)
+### Sprint 6: Authentication & Data Enrichment
+**Goal**: Social login + Album data enrichment  
+**Delivered**: 2025-12-12 (v2.1.1)
 
 **Deliverables**:
-- Multi-provider authentication
-- User profile management
-- Secure session handling
+- ✅ **Apple Sign-In**: Configured via Firebase Auth + Apple Developer Portal.
+- ✅ **Google Sign-In**: Already configured from previous sprint.
+- ✅ **Data Enrichment Script**: `scripts/generate-dataset.js` - Discogs API integration for covers + discography expansion.
+- ✅ **CSP Updates**: Content Security Policy fixes for Apple auth and Tailwind CDN.
+- ✅ **Mobile Haptics**: Added haptic feedback for drag-and-drop (Android only).
+
+**Technical Notes**:
+- Apple auth requires exact `authDomain` match in Return URLs.
+- Data enrichment script generates `albums-expanded.json` (~40k+ albums).
+
+---
+
+## 🚧 Current Sprint
 
 ---
 
 
 ### Sprint 7: Apple Music Integration (Export)
-### Preparation for Sprint 6
-- Reviewing Apple Music API requirements
-- Setting up Developer Account credentials
+
+**Duration**: 1-2 weeks  
+**Priority**: High  
+**Status**: Ready to start
+
+#### Pre-Requisites (Done in Sprint 6)
+- ✅ Apple Developer Account configured
+- ✅ .p8 Key generated (can be reused for MusicKit)
+- ✅ Data enrichment script complete
 
 #### Scope
 
-- [ ] **Apple Music Auth**
-  - Register App in Apple Music Developer Dashboard
-  - Implement OAuth2 Flow (Backend proxy or PKCE)
-  - Store/Refresh Tokens securely
+- [ ] **MusicKit Setup**
+  - Enable MusicKit capability on App ID
+  - Generate Developer Token (JWT with .p8 key)
+
+- [ ] **Backend Proxy**
+  - Endpoint for Developer Token generation
+  - Endpoint for Apple Music API calls (search, create playlist)
 
 - [ ] **Apple Music API Client**
-  - `searchTracks(query)`
-  - `createPlaylist(userId, name, description)`
-  - `addTracksToPlaylist(playlistId, uris)`
+  - `searchTracks(query)` - Find tracks in Apple Music catalog
+  - `createPlaylist(name, description)` - Create user playlist
+  - `addTracksToPlaylist(playlistId, trackIds)` - Add tracks
 
-- [ ] **Export Workflow**
-  - "Connect to Apple Music" UI in PlaylistsView
+- [ ] **Export Workflow UI**
+  - "Connect to Apple Music" button in PlaylistsView
   - Export Progress Modal (Matching tracks...)
-  - Handling unmatched tracks (Manual search fallback?)
+  - Handling unmatched tracks (Skip or Manual search)
   - Success confirmation with link to Apple Music
 
+**Estimated Effort**: ~6-8 hours
+
 **Deliverables**:
-- Apple Music OAuth integration
+- MusicKit OAuth integration
 - Export playlists to Apple Music
 - Production deployment with export feature
 
 ---
 
 
-### Sprint 8: Batch Album Operations
+### Sprint 8: Native App (Capacitor) + Batch Operations
 
-**Duration**: TBD  
+**Duration**: 1-2 weeks  
 **Priority**: Medium  
-**Status**: To be defined after Sprint 6 production release
+**Status**: Planned
 
-#### Scope (Draft)
+#### Part A: Capacitor PWA Wrapper
+
+- [ ] **Setup Capacitor**
+  - Install `@capacitor/core`, `@capacitor/cli`
+  - Initialize iOS platform (`npx cap add ios`)
+
+- [ ] **Native Features**
+  - Install `@capacitor/haptics` - Haptic feedback on iOS
+  - Configure App ID and signing in Xcode
+
+- [ ] **Distribution**
+  - TestFlight for personal use
+  - (Optional) App Store submission
+
+**Estimated Effort**: ~2 hours
+
+---
+
+#### Part B: Batch Album Operations
 
 - [ ] **Load Batch of Albums**
   - Import multiple albums at once
-  - CSV/JSON import support?
-  - Bulk album search
+  - CSV/JSON import support
+  - Bulk album search via Discogs
 
 - [ ] **Export Batch of Albums**
   - Export album data
-  - Format options (JSON, CSV, etc.)
+  - Format options (JSON, CSV)
 
-**Note**: Scope to be refined based on user feedback after Sprint 6.
+**Note**: Scope to be refined based on user feedback after Sprint 7.
 
 ---
 
