@@ -140,7 +140,7 @@ export class PlaylistsView extends BaseView {
       this.on(exportSpotify, 'click', () => toast.info('Spotify export coming in Sprint 5!'))
     }
     if (exportAppleMusic) {
-      this.on(exportAppleMusic, 'click', () => toast.info('Apple Music export coming in Sprint 6!'))
+      this.on(exportAppleMusic, 'click', () => this.handleExportToAppleMusic())
     }
     if (exportJson) {
       this.on(exportJson, 'click', () => this.handleExportJson())
@@ -601,6 +601,97 @@ export class PlaylistsView extends BaseView {
     a.click()
 
     URL.revokeObjectURL(url)
+  }
+
+  async handleExportToAppleMusic() {
+    const btn = this.$('#exportAppleMusicBtn')
+    const originalText = btn?.innerHTML
+
+    try {
+      // 1. Import MusicKitService
+      const { musicKitService } = await import('../services/MusicKitService.js')
+
+      // 2. Initialize MusicKit
+      if (btn) {
+        btn.disabled = true
+        btn.innerHTML = `${getIcon('Music', 'w-5 h-5 animate-spin')} Connecting...`
+      }
+
+      await musicKitService.init()
+
+      // 3. Authorize user (get library access)
+      if (btn) btn.innerHTML = `${getIcon('Music', 'w-5 h-5')} Authorizing...`
+      await musicKitService.authorize()
+
+      const playlists = playlistsStore.getPlaylists()
+      if (playlists.length === 0) {
+        toast.warning('No playlists to export')
+        return
+      }
+
+      let successCount = 0
+      let warningCount = 0
+
+      // 4. Export each playlist
+      for (const playlist of playlists) {
+        if (btn) btn.innerHTML = `${getIcon('Music', 'w-5 h-5')} Exporting ${playlist.name}...`
+
+        // Find tracks in Apple Music catalog
+        const trackIds = []
+        const notFound = []
+
+        for (const track of playlist.tracks) {
+          const found = await musicKitService.findTrack(track.title, track.artist)
+          if (found) {
+            trackIds.push(found.id)
+          } else {
+            notFound.push(`${track.artist} - ${track.title}`)
+          }
+        }
+
+        if (trackIds.length > 0) {
+          await musicKitService.createPlaylist(playlist.name, trackIds)
+          successCount++
+
+          if (notFound.length > 0) {
+            console.warn(`[AppleMusic] Tracks not found in ${playlist.name}:`, notFound)
+            warningCount += notFound.length
+          }
+        } else {
+          toast.warning(`Could not find any tracks for "${playlist.name}"`)
+        }
+
+        // Small delay between playlist creations
+        await new Promise(r => setTimeout(r, 500))
+      }
+
+      // 5. Show result
+      if (successCount > 0) {
+        if (warningCount > 0) {
+          toast.success(`${successCount} playlist(s) exported! (${warningCount} tracks not found)`)
+        } else {
+          toast.success(`${successCount} playlist(s) exported to Apple Music! 🎉`)
+        }
+      } else {
+        toast.error('Failed to export playlists')
+      }
+
+    } catch (error) {
+      console.error('[AppleMusic] Export failed:', error)
+
+      if (error.message?.includes('not configured')) {
+        toast.error('Apple Music not configured. Please set up MusicKit credentials.')
+      } else if (error.message?.includes('Authorization')) {
+        toast.warning('Apple Music authorization was cancelled')
+      } else {
+        toast.error(`Export failed: ${error.message}`)
+      }
+    } finally {
+      if (btn) {
+        btn.disabled = false
+        btn.innerHTML = originalText || 'Export to Apple Music'
+      }
+    }
   }
 
   calculateDuration(tracks) {
