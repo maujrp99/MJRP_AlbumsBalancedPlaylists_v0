@@ -537,7 +537,19 @@ export class PlaylistsView extends BaseView {
         dragClass: 'opacity-100',
         handle: '.track-item', // Make the whole item draggable (or use .track-drag-handle if preferred)
 
+        // Haptic feedback on drag start
+        onStart: () => {
+          if ('vibrate' in navigator) {
+            navigator.vibrate(50) // Short pulse when picking up
+          }
+        },
+
         onEnd: (evt) => {
+          // Haptic feedback on drop
+          if ('vibrate' in navigator) {
+            navigator.vibrate([20, 30, 20]) // Double pulse pattern when dropping
+          }
+
           const { from, to, oldIndex, newIndex } = evt
 
           // If dropped outside or no change
