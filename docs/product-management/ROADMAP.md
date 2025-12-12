@@ -98,20 +98,19 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 
 ## ✅ Completed (Continued)
 
-### Sprint 6: Authentication & Data Enrichment
-**Goal**: Social login + Album data enrichment  
+### Sprint 6: Authentication
+**Goal**: Social login with Apple and Google  
 **Delivered**: 2025-12-12 (v2.1.1)
 
 **Deliverables**:
 - ✅ **Apple Sign-In**: Configured via Firebase Auth + Apple Developer Portal.
 - ✅ **Google Sign-In**: Already configured from previous sprint.
-- ✅ **Data Enrichment Script**: `scripts/generate-dataset.js` - Discogs API integration for covers + discography expansion.
 - ✅ **CSP Updates**: Content Security Policy fixes for Apple auth and Tailwind CDN.
 - ✅ **Mobile Haptics**: Added haptic feedback for drag-and-drop (Android only).
 
 **Technical Notes**:
 - Apple auth requires exact `authDomain` match in Return URLs.
-- Data enrichment script generates `albums-expanded.json` (~40k+ albums).
+- Documented in DEBUG_LOG.md Issue #37.
 
 ---
 
@@ -120,7 +119,7 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 ---
 
 
-### Sprint 7: Apple Music Integration (Export)
+### Sprint 7: Data Enrichment Validation + Apple Music Integration
 
 **Duration**: 1-2 weeks  
 **Priority**: High  
@@ -129,9 +128,25 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 #### Pre-Requisites (Done in Sprint 6)
 - ✅ Apple Developer Account configured
 - ✅ .p8 Key generated (can be reused for MusicKit)
-- ✅ Data enrichment script complete
 
-#### Scope
+#### Part A: Data Enrichment Validation (Pending)
+
+- [ ] **Verify Script Completion**
+  - Confirm `albums-expanded.json` generation finished
+  - Check final file size and album count
+
+- [ ] **Frontend Validation**
+  - Test album covers loading in AlbumsView
+  - Test autocomplete with expanded dataset
+  - Verify performance with ~40k+ albums
+
+- [ ] **Deploy Enriched Data**
+  - Include `albums-expanded.json` in production build
+  - Verify fallback to CSV if JSON missing
+
+---
+
+#### Part B: Apple Music Integration
 
 - [ ] **MusicKit Setup**
   - Enable MusicKit capability on App ID
@@ -152,12 +167,10 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
   - Handling unmatched tracks (Skip or Manual search)
   - Success confirmation with link to Apple Music
 
-**Estimated Effort**: ~6-8 hours
-
 **Deliverables**:
+- Data enrichment validated and deployed
 - MusicKit OAuth integration
 - Export playlists to Apple Music
-- Production deployment with export feature
 
 ---
 
