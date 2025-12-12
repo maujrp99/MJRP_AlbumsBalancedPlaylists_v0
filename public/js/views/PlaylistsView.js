@@ -296,14 +296,11 @@ export class PlaylistsView extends BaseView {
             ${getIcon('Cloud', 'w-5 h-5')} Save to Series History
           </button>
           <div class="h-auto w-px bg-white/10 mx-2"></div>
-          <button class="btn btn-primary flex items-center gap-2" id="exportSpotifyBtn">
-            Export to Spotify
-          </button>
-          <button class="btn btn-primary flex items-center gap-2" id="exportAppleMusicBtn">
-            Export to Apple Music
+          <button class="btn flex items-center gap-2 bg-gradient-to-r from-[#fa2d48] to-[#fc5c7d] hover:from-[#fc5c7d] hover:to-[#fa2d48] text-white font-semibold shadow-lg hover:shadow-[#fa2d48]/30 transition-all duration-300" id="exportAppleMusicBtn">
+            ${getIcon('Apple', 'w-5 h-5')} Export to Apple Music
           </button>
           <button class="btn btn-secondary flex items-center gap-2" id="exportJsonBtn">
-            Download JSON
+            ${getIcon('Download', 'w-5 h-5')} Download JSON
           </button>
         </div>
       </div>
