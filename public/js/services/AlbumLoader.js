@@ -120,13 +120,18 @@ export class AlbumLoader {
 
         const lowerQuery = query.toLowerCase()
 
-        // exact matches first, then starts with, then includes
-        // Simple filter for V1
+        // Filter matching albums, then sort by year (newest first)
         return this.albums
             .filter(item =>
                 item.album.toLowerCase().includes(lowerQuery) ||
                 item.artist.toLowerCase().includes(lowerQuery)
             )
+            .sort((a, b) => {
+                // Sort by year descending (newest first)
+                const yearA = parseInt(a.year) || 0
+                const yearB = parseInt(b.year) || 0
+                return yearB - yearA
+            })
             .slice(0, limit)
     }
 }
