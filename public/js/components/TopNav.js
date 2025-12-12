@@ -60,7 +60,7 @@ export class TopNav {
           <img 
             src="/assets/images/TheAlbumPlaylistSynth.png" 
             alt="The Album Playlist Synthesizer"
-            class="hidden md:block h-8 sm:h-10 md:h-12 w-auto object-contain hover:opacity-80 transition-opacity"
+            class="block h-6 sm:h-10 md:h-12 w-auto object-contain hover:opacity-80 transition-opacity"
             loading="lazy"
           >
         </a>

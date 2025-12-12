@@ -7,6 +7,7 @@ import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
+import Sortable from 'sortablejs'
 
 /**
  * PlaylistsView
@@ -147,6 +148,9 @@ export class PlaylistsView extends BaseView {
     if (saveHistory) {
       this.on(saveHistory, 'click', () => this.handleSaveToHistory())
     }
+
+    // Re-initialize Drag and Drop after DOM updates
+    this.setupDragAndDrop()
   }
 
   renderUndoRedoControls(state) {
@@ -513,69 +517,53 @@ export class PlaylistsView extends BaseView {
   }
 
   setupDragAndDrop() {
-    // Delegate drag events
-    this.on(this.container, 'dragstart', (e) => {
-      if (e.target.classList.contains('track-item')) {
-        this.handleDragStart(e)
-      }
-    })
-
-    this.on(this.container, 'dragover', (e) => {
-      e.preventDefault()
-      this.handleDragOver(e)
-    })
-
-    this.on(this.container, 'drop', (e) => {
-      e.preventDefault()
-      this.handleDrop(e)
-    })
-
-    this.on(this.container, 'dragend', () => {
-      this.handleDragEnd()
-    })
-  }
-
-  handleDragStart(e) {
-    const trackEl = e.target
-    this.draggedTrack = {
-      playlist: parseInt(trackEl.dataset.playlistIndex),
-      track: parseInt(trackEl.dataset.trackIndex)
+    // Clean up old instances
+    if (this.sortables) {
+      this.sortables.forEach(s => s.destroy())
     }
-    trackEl.classList.add('dragging')
+    this.sortables = []
+
+    // Initialize Sortable on all playlist containers
+    const containers = this.container.querySelectorAll('.playlist-tracks')
+
+    containers.forEach(container => {
+      const sortable = new Sortable(container, {
+        group: 'shared-playlists', // Allow dragging between lists
+        animation: 150,
+        delay: 100, // Slight delay to prevent accidental drags on touch
+        delayOnTouchOnly: true,
+        touchStartThreshold: 3, // Tolerance for touch
+        ghostClass: 'bg-white/5',
+        dragClass: 'opacity-100',
+        handle: '.track-item', // Make the whole item draggable (or use .track-drag-handle if preferred)
+
+        onEnd: (evt) => {
+          const { from, to, oldIndex, newIndex } = evt
+
+          // If dropped outside or no change
+          if (!to || (from === to && oldIndex === newIndex)) {
+            return
+          }
+
+          const fromPlaylistIndex = parseInt(from.dataset.playlistIndex)
+          const toPlaylistIndex = parseInt(to.dataset.playlistIndex)
+
+          if (from === to) {
+            // Reorder within same playlist
+            console.log(`[Sortable] Reorder in playlist ${fromPlaylistIndex}: ${oldIndex} -> ${newIndex}`)
+            playlistsStore.reorderTrack(fromPlaylistIndex, oldIndex, newIndex)
+          } else {
+            // Move to different playlist
+            console.log(`[Sortable] Move ${fromPlaylistIndex}->${toPlaylistIndex}: ${oldIndex} -> ${newIndex}`)
+            playlistsStore.moveTrack(fromPlaylistIndex, toPlaylistIndex, oldIndex, newIndex)
+          }
+        }
+      })
+      this.sortables.push(sortable)
+    })
   }
 
-  handleDragOver(e) {
-    const trackEl = e.target.closest('.track-item')
-    if (trackEl && !trackEl.classList.contains('dragging')) {
-      trackEl.classList.add('drag-over')
-    }
-  }
-
-  handleDrop(e) {
-    const targetEl = e.target.closest('.track-item') || e.target.closest('.playlist-tracks')
-
-    if (!targetEl || !this.draggedTrack) return
-
-    const toPlaylist = parseInt(targetEl.dataset.playlistIndex)
-    const toTrack = targetEl.dataset.trackIndex ? parseInt(targetEl.dataset.trackIndex) : null
-
-    const { playlist: fromPlaylist, track: fromTrack } = this.draggedTrack
-
-    if (fromPlaylist === toPlaylist && toTrack !== null) {
-      // Reorder within same playlist
-      playlistsStore.reorderTrack(fromPlaylist, fromTrack, toTrack)
-    } else if (toPlaylist !== null && toPlaylist !== fromPlaylist) {
-      // Move to different playlist
-      playlistsStore.moveTrack(fromPlaylist, toPlaylist, fromTrack, toTrack || 0)
-    }
-  }
-
-  handleDragEnd() {
-    this.draggedTrack = null
-    // Remove drag classes
-    this.$$('.dragging').forEach(el => el.classList.remove('dragging'))
-    this.$$('.drag-over').forEach(el => el.classList.remove('drag-over'))
-  }
+  // Removed manual handleDragStart/Over/Drop/End as Sortable handles them
 
   handleUndo() {
     if (playlistsStore.undo()) {

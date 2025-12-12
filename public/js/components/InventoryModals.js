@@ -157,13 +157,41 @@ export function showAddToInventoryModal(album, onSuccess) {
         close()
       }, 1500)
     } catch (error) {
-      console.error('[Modal] Error:', error)
-      addBtn.disabled = false
-      addBtn.textContent = 'Add to Inventory'
+      const isDuplicate = error && error.message && error.message.includes('already in inventory')
 
-      if (error && error.message && error.message.includes('already in inventory')) {
-        toast.warning('This album is already in your inventory!')
+      if (isDuplicate) {
+        console.warn('[Modal] Handled duplicate album attempt') // Clean console
+
+        // Visual Feedback - Error
+        addBtn.disabled = false
+        addBtn.textContent = 'Already in Inventory'
+        addBtn.className = 'btn bg-amber-600 text-white hover:bg-amber-700'
+
+        const footer = modal.querySelector('.modal-footer')
+
+        // Remove any existing messages
+        const existingMsg = modal.querySelector('.modal-message-feedback')
+        if (existingMsg) existingMsg.remove()
+
+        const msg = document.createElement('div')
+        msg.className = 'modal-message-feedback text-amber-500 text-sm font-bold text-right px-6 pb-2 whitespace-nowrap'
+        msg.textContent = '⚠️ This album is already in your inventory'
+
+        // Insert BEFORE footer (right above buttons)
+        footer.before(msg)
+
+        // Reset button/msg after delay
+        setTimeout(() => {
+          if (document.body.contains(modal)) {
+            addBtn.textContent = 'Add to Inventory'
+            addBtn.className = 'btn btn-primary'
+            msg.remove()
+          }
+        }, 3000)
       } else {
+        console.error('[Modal] Error:', error)
+        addBtn.disabled = false
+        addBtn.textContent = 'Add to Inventory'
         toast.error(`Failed: ${error ? error.message : 'Unknown'}`)
       }
     }
