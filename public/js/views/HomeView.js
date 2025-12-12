@@ -175,9 +175,7 @@ export class HomeView extends BaseView {
       <div class="series-card glass-panel group hover:scale-[1.02] transition-all duration-300" data-series-id="${s.id}">
         <div class="series-card-header flex justify-between items-start mb-4">
           <h3 class="text-lg font-bold truncate pr-2"><span class="text-muted font-normal text-sm uppercase tracking-wide mr-1">Series:</span> ${this.escapeHtml(s.name)}</h3>
-          <span class="badge ${s.status === 'complete' ? 'badge-success' : 'badge-warning'}">
-            ${s.status.charAt(0).toUpperCase() + s.status.slice(1)}
-          </span>
+          ${s.status === 'complete' ? '<span class="badge badge-success">Complete</span>' : ''}
         </div>
         
         <div class="series-meta flex gap-4 mb-4 text-sm text-muted">

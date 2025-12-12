@@ -129,11 +129,8 @@ export class AlbumSeriesListView extends BaseView {
                 <h3 class="text-lg font-bold truncate" title="${this.escapeHtml(s.name)}">${this.escapeHtml(s.name)}</h3>
                 <div class="text-xs text-muted mt-1">
                   Created: ${new Date(s.createdAt).toLocaleDateString()}
-                </div>
               </div>
-              <span class="badge ${s.status === 'completed' ? 'badge-success' : 'badge-neutral'} text-xs uppercase">
-                ${s.status || 'pending'}
-              </span>
+              ${s.status === 'completed' ? `<span class="badge badge-success text-xs uppercase">Completed</span>` : ''}
             </div>
 
             <div class="card-body flex-1">

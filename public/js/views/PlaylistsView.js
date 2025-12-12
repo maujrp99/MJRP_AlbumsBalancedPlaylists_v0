@@ -296,7 +296,7 @@ export class PlaylistsView extends BaseView {
             ${getIcon('Cloud', 'w-5 h-5')} Save to Series History
           </button>
           <div class="h-auto w-px bg-white/10 mx-2"></div>
-          <button class="btn flex items-center gap-2 bg-gradient-to-r from-[#fa2d48] to-[#fc5c7d] hover:from-[#fc5c7d] hover:to-[#fa2d48] text-white font-semibold shadow-lg hover:shadow-[#fa2d48]/30 transition-all duration-300" id="exportAppleMusicBtn">
+          <button class="btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300" id="exportAppleMusicBtn">
             ${getIcon('Apple', 'w-5 h-5')} Export to Apple Music
           </button>
           <button class="btn btn-secondary flex items-center gap-2" id="exportJsonBtn">
@@ -611,13 +611,13 @@ export class PlaylistsView extends BaseView {
       // 2. Initialize MusicKit
       if (btn) {
         btn.disabled = true
-        btn.innerHTML = `${getIcon('Music', 'w-5 h-5 animate-spin')} Connecting...`
+        btn.innerHTML = `${getIcon('Apple', 'w-5 h-5 animate-spin')} Connecting...`
       }
 
       await musicKitService.init()
 
       // 3. Authorize user (get library access)
-      if (btn) btn.innerHTML = `${getIcon('Music', 'w-5 h-5')} Authorizing...`
+      if (btn) btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} Authorizing...`
       await musicKitService.authorize()
 
       const playlists = playlistsStore.getPlaylists()
@@ -626,19 +626,35 @@ export class PlaylistsView extends BaseView {
         return
       }
 
+      // 4. Get active series name for folder
+      const activeSeries = albumSeriesStore.getActiveSeries()
+      const seriesName = activeSeries?.name || 'MJRP Playlists'
+
+      // 5. Create or find folder with series name
+      if (btn) btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} Creating folder...`
+      const folderId = await musicKitService.createOrGetFolder(seriesName)
+
       let successCount = 0
       let warningCount = 0
 
-      // 4. Export each playlist
+      // 6. Export each playlist
       for (const playlist of playlists) {
-        if (btn) btn.innerHTML = `${getIcon('Music', 'w-5 h-5')} Exporting ${playlist.name}...`
+        const playlistName = `${seriesName} - ${playlist.name}`
+        if (btn) btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} Exporting ${playlist.name}...`
 
-        // Find tracks in Apple Music catalog
+        // Find tracks in Apple Music catalog with improved matching
         const trackIds = []
         const notFound = []
 
         for (const track of playlist.tracks) {
-          const found = await musicKitService.findTrack(track.title, track.artist)
+          // Use improved matching with album name and live album detection
+          const isLiveAlbum = track.album?.toLowerCase().includes('live') || false
+          const found = await musicKitService.findTrackFromAlbum(
+            track.title,
+            track.artist,
+            track.album || '',
+            isLiveAlbum
+          )
           if (found) {
             trackIds.push(found.id)
           } else {
@@ -647,7 +663,8 @@ export class PlaylistsView extends BaseView {
         }
 
         if (trackIds.length > 0) {
-          await musicKitService.createPlaylist(playlist.name, trackIds)
+          // Create playlist inside series folder
+          await musicKitService.createPlaylistInFolder(playlistName, trackIds, folderId)
           successCount++
 
           if (notFound.length > 0) {
@@ -662,12 +679,12 @@ export class PlaylistsView extends BaseView {
         await new Promise(r => setTimeout(r, 500))
       }
 
-      // 5. Show result
+      // 7. Show result
       if (successCount > 0) {
         if (warningCount > 0) {
-          toast.success(`${successCount} playlist(s) exported! (${warningCount} tracks not found)`)
+          toast.success(`${successCount} playlist(s) exported to "${seriesName}" folder! (${warningCount} tracks not found)`)
         } else {
-          toast.success(`${successCount} playlist(s) exported to Apple Music! 🎉`)
+          toast.success(`${successCount} playlist(s) exported to "${seriesName}" folder! 🎉`)
         }
       } else {
         toast.error('Failed to export playlists')

@@ -5,6 +5,7 @@ import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
 import { showViewAlbumModal } from '../components/ViewAlbumModal.js'
+import { albumLoader } from '../services/AlbumLoader.js'
 
 /**
  * InventoryView
@@ -522,15 +523,15 @@ export class InventoryView extends BaseView {
         </div>
         
         <!-- Album Cover -->
-        <div class="album-cover mb-3 aspect-square bg-surface-light rounded-lg flex items-center justify-center cursor-pointer view-album-btn" data-album-id="${album.id}">
-          ${album.albumData?.coverUrl ? `
-            <img src="${album.albumData.coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-lg" />
-          ` : `
-            <div class="text-gray-600">
-              ${getIcon('Disc', 'w-16 h-16')}
-            </div>
-          `}
-        </div>
+      <div class="album-cover mb-3 aspect-square bg-surface-light rounded-lg flex items-center justify-center cursor-pointer view-album-btn" data-album-id="${album.id}">
+        ${this.getAlbumCoverUrl(album) ? `
+          <img src="${this.getAlbumCoverUrl(album)}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-lg" />
+        ` : `
+          <div class="text-gray-600">
+            ${getIcon('Disc', 'w-16 h-16')}
+          </div>
+        `}
+      </div>
         
         <!-- Album Info -->
         <h3 class="font-semibold text-lg mb-1 truncate" title="${this.escapeHtml(album.title)}">
@@ -742,5 +743,20 @@ export class InventoryView extends BaseView {
     } else {
       return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
     }
+  }
+
+  /**
+   * Get album cover URL with HD fallback
+   * Uses artworkTemplate from Apple Music if available, otherwise Discogs coverUrl
+   */
+  getAlbumCoverUrl(album) {
+    const data = album.albumData || album
+
+    // Use albumLoader helper if available
+    if (data.artworkTemplate || data.coverUrl) {
+      return albumLoader.getArtworkUrl(data, 300)
+    }
+
+    return null
   }
 }

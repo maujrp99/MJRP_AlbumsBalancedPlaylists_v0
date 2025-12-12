@@ -260,7 +260,7 @@ class MusicKitService {
                     body: JSON.stringify({
                         attributes: {
                             name: name,
-                            description: 'Created by Album Playlist Synthesizer'
+                            description: "Created by MJRP's The Album Playlist Synthesizer"
                         },
                         relationships: {
                             tracks: {
@@ -278,6 +278,98 @@ class MusicKitService {
             return playlist.data?.data?.[0];
         } catch (error) {
             console.error('[MusicKit] Create playlist failed:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Create or find a playlist folder by name
+     * @param {string} folderName - Folder name (Series name)
+     * @returns {Promise<string|null>} Folder ID or null
+     */
+    async createOrGetFolder(folderName) {
+        await this.authorize();
+
+        try {
+            // First, try to find existing folder
+            const foldersResult = await this.music.api.music('/v1/me/library/playlist-folders');
+            const folders = foldersResult.data?.data || [];
+
+            const existingFolder = folders.find(f =>
+                f.attributes?.name?.toLowerCase() === folderName.toLowerCase()
+            );
+
+            if (existingFolder) {
+                console.log('[MusicKit] Found existing folder:', folderName);
+                return existingFolder.id;
+            }
+
+            // Create new folder
+            const newFolder = await this.music.api.music('/v1/me/library/playlist-folders', null, {
+                fetchOptions: {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        attributes: {
+                            name: folderName
+                        }
+                    })
+                }
+            });
+
+            console.log('[MusicKit] Created folder:', folderName);
+            return newFolder.data?.data?.[0]?.id || null;
+        } catch (error) {
+            console.error('[MusicKit] Folder operation failed:', error);
+            return null; // Continue without folder
+        }
+    }
+
+    /**
+     * Create playlist inside a folder
+     * @param {string} name - Playlist name
+     * @param {Array<string>} trackIds - Track IDs
+     * @param {string|null} folderId - Parent folder ID
+     */
+    async createPlaylistInFolder(name, trackIds, folderId = null) {
+        await this.authorize();
+
+        const playlistData = {
+            attributes: {
+                name: name,
+                description: "Created by MJRP's The Album Playlist Synthesizer"
+            },
+            relationships: {
+                tracks: {
+                    data: trackIds.map(id => ({
+                        id: id,
+                        type: 'songs'
+                    }))
+                }
+            }
+        };
+
+        // Add parent folder relationship if provided
+        if (folderId) {
+            playlistData.relationships.parent = {
+                data: [{
+                    id: folderId,
+                    type: 'library-playlist-folders'
+                }]
+            };
+        }
+
+        try {
+            const playlist = await this.music.api.music('/v1/me/library/playlists', null, {
+                fetchOptions: {
+                    method: 'POST',
+                    body: JSON.stringify(playlistData)
+                }
+            });
+
+            console.log('[MusicKit] Playlist created in folder:', name);
+            return playlist.data?.data?.[0];
+        } catch (error) {
+            console.error('[MusicKit] Create playlist in folder failed:', error);
             throw error;
         }
     }
@@ -306,6 +398,96 @@ class MusicKitService {
             console.error('[MusicKit] Track search failed:', error);
             return null;
         }
+    }
+
+    /**
+     * Search for a track from a specific album (improved matching)
+     * Prefers Hi-Res Lossless, allows remasters, excludes live versions
+     * @param {string} title - Track title
+     * @param {string} artist - Artist name
+     * @param {string} albumName - Album name for filtering
+     * @param {boolean} isLiveAlbum - Whether the source album is a live album
+     * @returns {Promise<Object|null>} Best matching track
+     */
+    async findTrackFromAlbum(title, artist, albumName, isLiveAlbum = false) {
+        await this.init();
+
+        try {
+            // Search with album name for better precision
+            const result = await this.music.api.music(`/v1/catalog/us/search`, {
+                term: `${title} ${artist} ${albumName}`,
+                types: 'songs',
+                limit: 20
+            });
+
+            const tracks = result.data?.results?.songs?.data || [];
+
+            if (tracks.length === 0) {
+                // Fallback to simpler search
+                return this.findTrack(title, artist);
+            }
+
+            // Filter and rank tracks
+            const ranked = tracks
+                .filter(track => {
+                    const trackName = (track.attributes?.name || '').toLowerCase();
+                    const trackAlbum = (track.attributes?.albumName || '').toLowerCase();
+                    const searchTitle = title.toLowerCase();
+
+                    // Must match title approximately
+                    if (!trackName.includes(searchTitle) && !searchTitle.includes(trackName)) {
+                        return false;
+                    }
+
+                    // If NOT a live album source, exclude live versions
+                    if (!isLiveAlbum) {
+                        const isLiveTrack = trackAlbum.includes('live') ||
+                            trackName.includes('(live)') ||
+                            trackName.includes('[live]');
+                        if (isLiveTrack) return false;
+                    }
+
+                    return true;
+                })
+                .map(track => ({
+                    track,
+                    score: this._scoreTrack(track, albumName)
+                }))
+                .sort((a, b) => b.score - a.score);
+
+            return ranked[0]?.track || tracks[0] || null;
+        } catch (error) {
+            console.error('[MusicKit] Track search failed:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Score a track for quality preference
+     * Higher score = better match
+     * @private
+     */
+    _scoreTrack(track, targetAlbum) {
+        let score = 0;
+        const attrs = track.attributes || {};
+        const albumName = (attrs.albumName || '').toLowerCase();
+        const targetLower = targetAlbum.toLowerCase();
+
+        // Exact album match (+50)
+        if (albumName === targetLower) score += 50;
+        else if (albumName.includes(targetLower) || targetLower.includes(albumName)) score += 30;
+
+        // Hi-Res Lossless preference (+20)
+        if (attrs.audioTraits?.includes('hi-res-lossless')) score += 20;
+        else if (attrs.audioTraits?.includes('lossless')) score += 10;
+
+        // Remaster bonus (+5) - user prefers remastered
+        if (albumName.includes('remaster')) score += 5;
+
+        // Spatial audio bonus (+3)
+        if (attrs.audioTraits?.includes('spatial')) score += 3;
+
+        return score;
     }
 
     /**
