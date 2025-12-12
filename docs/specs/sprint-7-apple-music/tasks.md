@@ -1,6 +1,6 @@
 # Sprint 7 Tasks: Apple Music Integration
 
-**Created**: 2025-12-12 | **Status**: ✅ Complete
+**Created**: 2025-12-12 | **Status**: ✅ Complete | **Tag**: v2.2.1
 
 ---
 
