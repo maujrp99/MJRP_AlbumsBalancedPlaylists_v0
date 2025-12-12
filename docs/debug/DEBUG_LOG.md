@@ -18,8 +18,10 @@
 
 | Issue | Component | Status | Line |
 |-------|-----------|--------|------|
-| #34 | Generate Playlists API 500 | ✅ RESOLVED | [L19](#issue-34-generate-playlists-api-returns-500---resolved-) |
-| #33 | Axios Module Resolution | ✅ RESOLVED | [L77](#issue-33-frontend-module-resolution-error-axios---resolved-) |
+| #37 | Apple Sign-In Config | ✅ RESOLVED | [L41](#issue-37-apple-sign-in-invalid-redirect-url---resolved-) |
+| #36 | Auth Integration Regressions | ✅ RESOLVED | [L85](#issue-36-auth-integration-regressions---resolved-) |
+| #35 | Firebase Initialization | ✅ RESOLVED | [L119](#issue-35-firebase-initialization--sdk-mismatch---resolved-) |
+| #34 | Generate Playlists API 500 | ✅ RESOLVED | [L145](#issue-34-generate-playlists-api-returns-500---resolved-) |
 | #32 | Cloud Build Docker Context | ✅ RESOLVED | [L146](#issue-32-cloud-build-docker-context-failure---resolved-) |
 | #31 | Playlist Generate New Albums | ⏳ AWAITING | [L253](#issue-31-playlist-generate-not-using-new-albums---awaiting-verification) |
 | #30 | Album Delete | ✅ RESOLVED | [L272](#issue-30-album-delete-not-working---resolved-) |
@@ -37,6 +39,48 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #37: Apple Sign-In Invalid Redirect URL - RESOLVED ✅
+**Status**: ✅ **RESOLVED - USER CONFIRMED**
+**Date**: 2025-12-11 22:15 → 23:35
+**Type**: Configuration
+**Component**: Apple Developer Portal, Firebase Console
+
+#### Problem
+Apple Sign-In popup showed `invalid_request: Invalid web redirect url` error.
+The CSP (Content Security Policy) was also blocking fonts and scripts from Apple CDNs.
+
+#### Failed Attempts
+1. **Attempt 1**: Added `mjrp-albums.firebaseapp.com` to Apple Portal Return URLs.
+   - **Result**: Still failed. Assumed wrong domain.
+2. **Attempt 2**: Added `mjrp-playlist-generator.web.app` to Apple Portal.
+   - **Result**: Still failed. Firebase uses `.firebaseapp.com` for auth, not `.web.app`.
+3. **Attempt 3**: Updated CSP in `index.html` to allow Apple fonts (`data:` URIs).
+   - **Result**: Partial fix. CSP errors resolved but redirect URL error persisted.
+4. **Attempt 4**: CSP too strict, broke production (blocked Tailwind/Firebase CDNs).
+   - **Result**: Had to widen CSP to include `cdn.tailwindcss.com`, `www.gstatic.com`.
+
+#### Root Cause
+Firebase `authDomain` was configured as `mjrp-playlist-generator.firebaseapp.com`, but Apple Portal only had:
+- `mjrp-albums.firebaseapp.com` (wrong project)
+- `mjrp-playlist-generator.web.app` (wrong domain type)
+
+The correct domain/Return URL was **never configured**.
+
+#### Fix Applied
+1. **Apple Developer Portal** (Identifiers > Service IDs > MJRP Web Auth > Configure):
+   - Added to **Domains**: `mjrp-playlist-generator.firebaseapp.com`
+   - Added to **Return URLs**: `https://mjrp-playlist-generator.firebaseapp.com/__/auth/handler`
+2. **CSP Fix**: Updated `public/index.html` to allow Tailwind, Firebase, and Apple CDNs.
+
+#### Files Modified
+- `public/index.html` (CSP meta tag)
+
+#### Lesson Learned
+Always verify `authDomain` in `firebase-config.js` before configuring Apple Portal Return URLs.
+The redirect URL format is: `https://{authDomain}/__/auth/handler`.
+
+---
 
 ### Issue #36: Auth Integration Regressions - RESOLVED ✅
 **Status**: ✅ **RESOLVED - USER CONFIRMED**
