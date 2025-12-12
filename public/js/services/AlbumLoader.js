@@ -134,6 +134,31 @@ export class AlbumLoader {
             })
             .slice(0, limit)
     }
+
+    /**
+     * Get artwork URL for an album at specified size
+     * Uses Apple Music artworkTemplate if available, falls back to coverUrl
+     * @param {Object} album - Album object with artworkTemplate or coverUrl
+     * @param {number} size - Desired size in pixels (default 500)
+     * @returns {string|null} Artwork URL or null
+     */
+    getArtworkUrl(album, size = 500) {
+        if (!album) return null
+
+        // Prefer Apple Music artwork template (supports dynamic sizing)
+        if (album.artworkTemplate) {
+            return album.artworkTemplate
+                .replace('{w}', size)
+                .replace('{h}', size)
+        }
+
+        // Fallback to Discogs cover URL
+        if (album.coverUrl) {
+            return album.coverUrl
+        }
+
+        return null
+    }
 }
 
 export const albumLoader = new AlbumLoader()

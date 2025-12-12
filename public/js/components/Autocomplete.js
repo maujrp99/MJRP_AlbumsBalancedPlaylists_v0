@@ -95,13 +95,19 @@ export class Autocomplete {
         </div>
       `
         } else {
-            this.resultsList.innerHTML = results.map((item, index) => `
+            this.resultsList.innerHTML = results.map((item, index) => {
+                // Use loader's getArtworkUrl for dynamic sizing (100px for thumbnails)
+                const coverUrl = this.loader?.getArtworkUrl
+                    ? this.loader.getArtworkUrl(item, 100)
+                    : (item.artworkTemplate?.replace('{w}', 100).replace('{h}', 100) || item.coverUrl)
+
+                return `
         <div class="result-item p-3 hover:bg-white/10 cursor-pointer flex items-center gap-3 border-b border-white/5 last:border-0 transition-colors" data-index="${index}">
           <div class="w-10 h-10 flex-shrink-0 bg-gray-800 rounded overflow-hidden">
-            ${item.coverUrl
-                    ? `<img src="${item.coverUrl}" alt="" class="w-full h-full object-cover" loading="lazy" />`
-                    : `<div class="w-full h-full flex items-center justify-center text-gray-600">${getIcon('Music', 'w-5 h-5')}</div>`
-                }
+            ${coverUrl
+                        ? `<img src="${coverUrl}" alt="" class="w-full h-full object-cover" loading="lazy" />`
+                        : `<div class="w-full h-full flex items-center justify-center text-gray-600">${getIcon('Music', 'w-5 h-5')}</div>`
+                    }
           </div>
           <div class="flex flex-col flex-1 min-w-0">
             <span class="text-white font-medium truncate">${item.album}</span>
@@ -111,7 +117,7 @@ export class Autocomplete {
             ${getIcon('Plus', 'w-4 h-4')}
           </div>
         </div>
-      `).join('')
+      `}).join('')
 
             // Attach click events to items
             this.resultsList.querySelectorAll('.result-item').forEach((el, index) => {
