@@ -202,7 +202,7 @@ const ESSENTIAL_ARTISTS = [
     "Racionais MC's", "Criolo", "MV Bill", "Emicida"
 ];
 
-const normalize = name => name?.toLowerCase().trim().replace(/[^\\w\\s]/g, '').replace(/\\s+/g, ' ') || '';
+const normalize = name => name?.toLowerCase().trim().replace(/[^\w\s]/g, '').replace(/\s+/g, ' ') || '';
 const essentialSet = new Set(ESSENTIAL_ARTISTS.map(normalize));
 
 // Generate Apple Music token
