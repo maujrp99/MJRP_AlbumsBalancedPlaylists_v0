@@ -30,6 +30,8 @@ steps:
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
+      - '--set-secrets'
+      - 'APPLE_TEAM_ID=musickit-team-id:latest,APPLE_KEY_ID=musickit-key-id:latest,APPLE_MUSIC_PRIVATE_KEY=musickit-private-key:latest'
 images:
   - 'gcr.io/$PROJECT_ID/mjrp-proxy'
 
