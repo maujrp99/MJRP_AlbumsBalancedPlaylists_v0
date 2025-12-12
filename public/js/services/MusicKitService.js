@@ -412,6 +412,8 @@ class MusicKitService {
     async findTrackFromAlbum(title, artist, albumName, isLiveAlbum = false) {
         await this.init();
 
+        console.log(`[MusicKit] Searching: "${title}" by ${artist} from "${albumName}"`);
+
         try {
             // Search with album name for better precision
             const result = await this.music.api.music(`/v1/catalog/us/search`, {
@@ -421,21 +423,30 @@ class MusicKitService {
             });
 
             const tracks = result.data?.results?.songs?.data || [];
+            console.log(`[MusicKit] Found ${tracks.length} candidates for "${title}"`);
 
             if (tracks.length === 0) {
                 // Fallback to simpler search
+                console.log(`[MusicKit] No results, trying simple search...`);
                 return this.findTrack(title, artist);
             }
 
-            // Filter and rank tracks
+            // Filter and rank tracks (relaxed matching)
             const ranked = tracks
                 .filter(track => {
                     const trackName = (track.attributes?.name || '').toLowerCase();
                     const trackAlbum = (track.attributes?.albumName || '').toLowerCase();
                     const searchTitle = title.toLowerCase();
 
-                    // Must match title approximately
-                    if (!trackName.includes(searchTitle) && !searchTitle.includes(trackName)) {
+                    // Relaxed title matching - just check first few words
+                    const searchWords = searchTitle.split(' ').slice(0, 3).join(' ');
+                    const trackWords = trackName.split(' ').slice(0, 3).join(' ');
+                    const titleMatch = trackName.includes(searchWords) ||
+                        searchWords.includes(trackWords) ||
+                        trackName.includes(searchTitle) ||
+                        searchTitle.includes(trackName);
+
+                    if (!titleMatch) {
                         return false;
                     }
 
@@ -455,7 +466,18 @@ class MusicKitService {
                 }))
                 .sort((a, b) => b.score - a.score);
 
-            return ranked[0]?.track || tracks[0] || null;
+            // If no ranked tracks, fallback to first result
+            if (ranked.length === 0 && tracks.length > 0) {
+                console.log(`[MusicKit] No ranked matches, using first result: "${tracks[0].attributes?.name}"`);
+                return tracks[0];
+            }
+
+            const selected = ranked[0]?.track;
+            if (selected) {
+                console.log(`[MusicKit] Selected: "${selected.attributes?.name}" from "${selected.attributes?.albumName}" (score: ${ranked[0].score})`);
+            }
+
+            return selected || null;
         } catch (error) {
             console.error('[MusicKit] Track search failed:', error);
             return null;
