@@ -1,0 +1,251 @@
+/**
+ * Enrichment script focused on ESSENTIAL ARTISTS only
+ * Much faster than full enrichment - only processes albums from priority artists
+ * 
+ * Usage: node scripts/enrich-essential-artists.js
+ */
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
+import dotenv from 'dotenv';
+
+const require = createRequire(import.meta.url);
+const jwt = require('jsonwebtoken');
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const projectRoot = path.join(__dirname, '..');
+
+// Load environment variables from server/.env
+dotenv.config({ path: path.join(projectRoot, 'server/.env') });
+
+const TEAM_ID = process.env.APPLE_TEAM_ID;
+const KEY_ID = process.env.APPLE_KEY_ID;
+const PRIVATE_KEY = process.env.APPLE_MUSIC_PRIVATE_KEY;
+
+if (!TEAM_ID || !KEY_ID || !PRIVATE_KEY) {
+    console.error('❌ Missing Apple Music credentials in server/.env');
+    process.exit(1);
+}
+
+// Essential artists list (from generate-dataset.js)
+const ESSENTIAL_ARTISTS = [
+    // === ROCK CLÁSSICO / HARD ROCK ===
+    "The Beatles", "The Rolling Stones", "The Who", "The Kinks", "Jimi Hendrix",
+    "Cream", "The Doors", "Led Zeppelin", "Creedence Clearwater Revival",
+    "Jefferson Airplane", "Grateful Dead", "Janis Joplin", "The Animals",
+    "Chuck Berry", "Elvis Presley", "Queen", "AC/DC", "Deep Purple",
+    "Black Sabbath", "Aerosmith", "Kiss", "Van Halen", "Lynyrd Skynyrd",
+    "Bad Company", "Free", "Thin Lizzy", "Grand Funk Railroad",
+    "Blue Öyster Cult", "Status Quo", "Uriah Heep", "Ted Nugent", "UFO",
+
+    // === PROGRESSIVE ROCK / ART ROCK ===
+    "Pink Floyd", "The Moody Blues", "Procol Harum", "King Crimson", "Yes",
+    "Genesis", "Rush", "Jethro Tull", "Emerson Lake & Palmer", "Supertramp",
+
+    // === HEAVY METAL / THRASH ===
+    "Iron Maiden", "Judas Priest", "Motörhead", "Metallica", "Slayer",
+    "Megadeth", "Anthrax", "Venom", "Dio", "Pantera", "Sepultura",
+    "Testament", "Slipknot", "Avenged Sevenfold", "Mastodon",
+    "Ozzy Osbourne",
+
+    // === GLAM ROCK / HAIR METAL ===
+    "David Bowie", "T. Rex", "Roxy Music", "Mott the Hoople", "Slade",
+    "Guns N' Roses", "Bon Jovi", "Mötley Crüe", "Def Leppard", "Poison",
+    "Warrant", "Whitesnake",
+
+    // === PUNK ROCK ===
+    "Ramones", "Sex Pistols", "The Clash", "The Damned", "Iggy Pop",
+
+    // === FOLK / FOLK ROCK ===
+    "Bob Dylan", "Joan Baez", "Pete Seeger", "Simon & Garfunkel", "The Byrds",
+    "Buffalo Springfield", "Crosby, Stills & Nash", "Neil Young",
+    "Tracy Chapman", "Suzanne Vega", "Ani DiFranco", "Fleet Foxes",
+    "Mumford & Sons", "The Lumineers",
+
+    // === SOFT ROCK / YACHT ROCK / POP ROCK ===
+    "Eagles", "Fleetwood Mac", "Carole King", "James Taylor", "Elton John",
+    "Billy Joel", "Steely Dan", "Doobie Brothers", "Toto", "Kenny Loggins",
+    "Michael McDonald", "Christopher Cross", "Phil Collins", "Dire Straits",
+    "Journey", "Foreigner", "Bryan Adams", "Maroon 5",
+
+    // === FUNK / SOUL / R&B ===
+    "James Brown", "Sly & The Family Stone", "Parliament-Funkadelic",
+    "Earth, Wind & Fire", "Kool & the Gang", "The Commodores", "Ohio Players",
+    "Aretha Franklin", "Otis Redding", "Sam Cooke", "Marvin Gaye",
+    "Stevie Wonder", "The Supremes", "The Temptations",
+    "Smokey Robinson & The Miracles", "Martha and the Vandellas",
+    "Al Green", "Barry White", "Bill Withers", "Erykah Badu",
+    "Lauryn Hill", "Mark Ronson",
+
+    // === ALTERNATIVE / GRUNGE / INDIE ===
+    "Nirvana", "Pearl Jam", "Soundgarden", "Alice in Chains",
+    "Stone Temple Pilots", "Smashing Pumpkins", "R.E.M.", "Pavement",
+    "Blur", "Oasis", "Suede", "Radiohead", "Foo Fighters", "Audioslave",
+    "Creed", "Live", "The Strokes", "Arctic Monkeys", "Franz Ferdinand",
+    "The Killers", "Yeah Yeah Yeahs", "Kings of Leon", "Vampire Weekend",
+    "Tame Impala", "Muse", "Coldplay", "Linkin Park", "System of a Down",
+    "Queens of the Stone Age",
+
+    // === NEW WAVE / POST-PUNK ===
+    "Depeche Mode", "Duran Duran", "Eurythmics", "The Police", "Blondie",
+    "Talking Heads", "B-52s", "Soft Cell", "A-ha", "U2", "The Smiths",
+    "The Cure", "Joy Division", "New Order", "Siouxsie and the Banshees",
+
+    // === FUNK METAL / NU METAL ===
+    "Red Hot Chili Peppers", "Faith No More", "Rage Against the Machine",
+    "Primus", "Living Colour", "Fishbone",
+
+    // === BLUES ROCK REVIVAL ===
+    "The White Stripes", "The Black Keys", "Rival Sons", "Greta Van Fleet",
+
+    // === COUNTRY ROCK ===
+    "The Allman Brothers Band", "Poco", "Traveling Wilburys",
+    "Dwight Yoakam", "Zac Brown Band",
+
+    // === ELECTRONIC / DANCE ===
+    "Daft Punk", "Deadmau5", "Eric Prydz", "Tiësto", "Armin van Buuren",
+    "The Chemical Brothers", "The Prodigy", "Fatboy Slim", "Massive Attack",
+    "Portishead", "Air", "Aphex Twin", "Boards of Canada",
+
+    // === JAZZ LEGENDS ===
+    "Miles Davis", "John Coltrane", "Duke Ellington", "Charles Mingus",
+    "Bill Evans", "Ella Fitzgerald",
+
+    // === SINGER-SONGWRITERS ===
+    "Joni Mitchell", "Tom Waits", "Van Morrison", "Frank Zappa",
+    "Bruce Springsteen", "Patti Smith", "Kate Bush", "Björk",
+    "Nick Cave & The Bad Seeds", "PJ Harvey", "Leonard Cohen",
+
+    // === MÚSICA BRASILEIRA ===
+    "Tim Maia", "Elis Regina", "Chico Buarque", "Milton Nascimento",
+    "Caetano Veloso", "Gilberto Gil", "Djavan", "Jorge Ben Jor",
+    "Legião Urbana", "Titãs", "Os Paralamas do Sucesso", "Raul Seixas",
+    "Os Mutantes", "Rita Lee", "Roberto Carlos"
+];
+
+const normalize = name => name?.toLowerCase().trim().replace(/[^\\w\\s]/g, '').replace(/\\s+/g, ' ') || '';
+const essentialSet = new Set(ESSENTIAL_ARTISTS.map(normalize));
+
+// Generate Apple Music token
+function generateToken() {
+    const token = jwt.sign({}, PRIVATE_KEY, {
+        algorithm: 'ES256',
+        expiresIn: '1h',
+        issuer: TEAM_ID,
+        header: { alg: 'ES256', kid: KEY_ID }
+    });
+    return token;
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function searchAppleMusic(artist, album, token) {
+    const query = encodeURIComponent(`${album} ${artist}`);
+    const url = `https://api.music.apple.com/v1/catalog/us/search?term=${query}&types=albums&limit=5`;
+
+    const res = await fetch(url, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+        if (res.status === 429) {
+            console.log('   ⏳ Rate limited, waiting 60s...');
+            await sleep(60000);
+            return searchAppleMusic(artist, album, token);
+        }
+        return null;
+    }
+
+    const data = await res.json();
+    const results = data.results?.albums?.data || [];
+
+    // Find best match
+    for (const result of results) {
+        const attrs = result.attributes;
+        if (normalize(attrs.artistName).includes(normalize(artist).split(' ')[0])) {
+            return {
+                appleMusicId: result.id,
+                artworkTemplate: attrs.artwork?.url?.replace('{w}x{h}', '{w}x{h}') || null
+            };
+        }
+    }
+
+    return results[0] ? {
+        appleMusicId: results[0].id,
+        artworkTemplate: results[0].attributes?.artwork?.url?.replace('{w}x{h}', '{w}x{h}') || null
+    } : null;
+}
+
+async function main() {
+    console.log('🎵 Essential Artists Enrichment');
+    console.log('================================\n');
+
+    const dataPath = path.join(projectRoot, 'public/assets/data/albums-expanded.json');
+    const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+
+    // Filter to essential artists only
+    const essentialAlbums = data.filter(a => essentialSet.has(normalize(a.artist)));
+    console.log(`📊 Total albums: ${data.length}`);
+    console.log(`🎯 Essential albums: ${essentialAlbums.length}`);
+
+    // Filter to albums without artworkTemplate
+    const toEnrich = essentialAlbums.filter(a => !a.artworkTemplate);
+    console.log(`🔄 Need enrichment: ${toEnrich.length}\n`);
+
+    if (toEnrich.length === 0) {
+        console.log('✅ All essential albums already enriched!');
+        return;
+    }
+
+    const token = generateToken();
+    let enriched = 0;
+    let failed = 0;
+
+    for (let i = 0; i < toEnrich.length; i++) {
+        const album = toEnrich[i];
+        process.stdout.write(`[${i + 1}/${toEnrich.length}] ${album.artist} - ${album.album}... `);
+
+        try {
+            const result = await searchAppleMusic(album.artist, album.album, token);
+
+            if (result?.artworkTemplate) {
+                // Update in original data array
+                const idx = data.findIndex(a => a.id === album.id);
+                if (idx >= 0) {
+                    data[idx].appleMusicId = result.appleMusicId;
+                    data[idx].artworkTemplate = result.artworkTemplate;
+                    data[idx].enrichedAt = new Date().toISOString();
+                }
+                console.log('✅');
+                enriched++;
+            } else {
+                console.log('❌ Not found');
+                failed++;
+            }
+
+            // Save every 20 albums
+            if ((i + 1) % 20 === 0) {
+                fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+                console.log(`   💾 Progress saved (${enriched} enriched)`);
+            }
+
+            await sleep(200); // Rate limiting
+
+        } catch (err) {
+            console.log(`⚠️ Error: ${err.message}`);
+            failed++;
+        }
+    }
+
+    // Final save
+    fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+
+    console.log('\n================================');
+    console.log(`✅ Enriched: ${enriched}`);
+    console.log(`❌ Failed: ${failed}`);
+    console.log('💾 Data saved!');
+}
+
+main().catch(console.error);
