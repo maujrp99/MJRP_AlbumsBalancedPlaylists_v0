@@ -125,12 +125,18 @@ export class TopNav {
     }
 
     if (currentUser && !currentUser.isAnonymous) {
-      // Authenticated (Real User)
-      const photoURL = currentUser.photoURL || '/assets/images/logo.png' // Fallback
+      // Check if user logged in via Apple
+      const isAppleProvider = currentUser.providerData?.some(p => p.providerId === 'apple.com')
+
+      // Use Apple icon for Apple login, otherwise photo or MJRP logo
+      const avatarContent = isAppleProvider
+        ? `<div class="w-8 h-8 rounded-full bg-gray-800 border border-white/20 flex items-center justify-center">${getIcon('Apple', 'w-5 h-5 text-white')}</div>`
+        : `<img src="${currentUser.photoURL || '/assets/images/logo.png'}" class="w-8 h-8 rounded-full border border-white/20" alt="User">`
+
       return `
             <div class="relative group" id="userMenuDropdownTrigger">
                 <button class="flex items-center gap-2 p-1 rounded-full hover:bg-white/5 transition-colors">
-                    <img src="${photoURL}" class="w-8 h-8 rounded-full border border-white/20" alt="User">
+                    ${avatarContent}
                      <span class="hidden lg:block text-sm font-medium text-white/80 max-w-[100px] truncate">${currentUser.displayName || 'User'}</span>
                 </button>
                 
@@ -188,8 +194,10 @@ export class TopNav {
 
   renderNavLink(path, label, currentPath, isMobile = false) {
     const isActive = currentPath === path || (path !== '/home' && currentPath.startsWith(path))
-    const baseClass = isMobile ? 'text-2xl font-bold' : 'text-sm font-medium uppercase tracking-wider hover:text-accent-primary transition-colors'
-    const activeClass = isActive ? 'text-accent-primary' : 'text-muted'
+    const baseClass = isMobile
+      ? 'text-2xl font-bold'
+      : 'text-sm font-medium uppercase tracking-wider px-3 py-1.5 rounded-lg hover:backdrop-blur-md hover:bg-white/10 hover:text-accent-primary transition-all duration-200'
+    const activeClass = isActive ? 'text-accent-primary bg-white/5' : 'text-muted'
 
     return `
       <a href="${path}" class="${baseClass} ${activeClass}" data-link>

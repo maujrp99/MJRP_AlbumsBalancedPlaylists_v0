@@ -161,7 +161,7 @@ export class SavedPlaylistsView extends BaseView {
                             </div>
                         </div>
 
-                        <button class="btn btn-sm btn-ghost w-full border border-white/10 hover:bg-white/10 z-20 flex items-center justify-center gap-2" data-action="view-playlist" data-series="${group.series.id}" data-id="${pl.id}">
+                        <button class="btn btn-sm w-full border-2 border-white/30 bg-white/10 hover:bg-white/20 hover:border-white/50 z-20 flex items-center justify-center gap-2 font-medium transition-all" data-action="view-playlist" data-series="${group.series.id}" data-id="${pl.id}">
                              ${getIcon('Eye', 'w-4 h-4')} View Tracks
                         </button>
                     </div>
