@@ -29,7 +29,7 @@ if (!TEAM_ID || !KEY_ID || !PRIVATE_KEY) {
     process.exit(1);
 }
 
-// Essential artists list (from generate-dataset.js)
+// Essential artists list (FULL from generate-dataset.js - 396 artists)
 const ESSENTIAL_ARTISTS = [
     // === ROCK CLÁSSICO / HARD ROCK ===
     "The Beatles", "The Rolling Stones", "The Who", "The Kinks", "Jimi Hendrix",
@@ -47,8 +47,7 @@ const ESSENTIAL_ARTISTS = [
     // === HEAVY METAL / THRASH ===
     "Iron Maiden", "Judas Priest", "Motörhead", "Metallica", "Slayer",
     "Megadeth", "Anthrax", "Venom", "Dio", "Pantera", "Sepultura",
-    "Testament", "Slipknot", "Avenged Sevenfold", "Mastodon",
-    "Ozzy Osbourne",
+    "Testament", "Slipknot", "Avenged Sevenfold", "Mastodon", "Ozzy Osbourne",
 
     // === GLAM ROCK / HAIR METAL ===
     "David Bowie", "T. Rex", "Roxy Music", "Mott the Hoople", "Slade",
@@ -104,25 +103,103 @@ const ESSENTIAL_ARTISTS = [
     "The Allman Brothers Band", "Poco", "Traveling Wilburys",
     "Dwight Yoakam", "Zac Brown Band",
 
-    // === ELECTRONIC / DANCE ===
-    "Daft Punk", "Deadmau5", "Eric Prydz", "Tiësto", "Armin van Buuren",
-    "The Chemical Brothers", "The Prodigy", "Fatboy Slim", "Massive Attack",
-    "Portishead", "Air", "Aphex Twin", "Boards of Canada",
+    // === ELECTRONIC / DANCE - Progressive House / Trance ===
+    "Anthony Pappa", "BT", "Deep Dish", "Dave Seaman", "Danny Howells",
+    "Eric Prydz", "Pryda", "Cirez D", "Hernan Cattaneo", "Hybrid",
+    "Deadmau5", "James Holden", "John Digweed", "Nick Warren", "Sasha",
+    "Son Kite", "D-Nox & Beckers",
+
+    // === ELECTRONIC / DANCE - Trance / Uplifting ===
+    "Above & Beyond", "Armin van Buuren", "ATB", "Blank & Jones", "Chicane",
+    "Cosmic Gate", "Darren Emerson", "Ferry Corsten", "System F", "Gouryella",
+    "Mauro Picotto", "Paul Oakenfold", "Paul van Dyk", "Rank 1",
+    "Robert Miles", "Tiësto",
+
+    // === ELECTRONIC / DANCE - Techno / Minimal ===
+    "Adam Beyer", "Aphex Twin", "Carl Cox", "Chris Liebing", "Derrick May",
+    "Green Velvet", "Jeff Mills", "Juan Atkins", "Laurent Garnier",
+    "Luke Slater", "Richie Hawtin", "Plastikman", "The Advent", "Sven Väth",
+
+    // === ELECTRONIC / DANCE - Big Beat / Breakbeat ===
+    "Apollo 440", "Basement Jaxx", "Bentley Rhythm Ace", "Fatboy Slim",
+    "Groove Armada", "Leftfield", "The Chemical Brothers", "The Crystal Method",
+    "The Prodigy", "Propellerheads",
+
+    // === ELECTRONIC / DANCE - Trip-Hop / Downtempo ===
+    "Air", "Massive Attack", "Portishead", "Thievery Corporation", "Tricky",
+    "Morcheeba", "The Orb", "The Future Sound of London",
+
+    // === ELECTRONIC / DANCE - Mainstream ===
+    "Daft Punk", "Faithless", "Orbital", "The KLF", "Underworld",
 
     // === JAZZ LEGENDS ===
     "Miles Davis", "John Coltrane", "Duke Ellington", "Charles Mingus",
-    "Bill Evans", "Ella Fitzgerald",
+    "Bill Evans", "Ornette Coleman", "Sun Ra", "Cecil Taylor",
+    "Art Ensemble of Chicago", "Jaco Pastorius", "Ella Fitzgerald",
 
-    // === SINGER-SONGWRITERS ===
+    // === SINGER-SONGWRITERS / ALTERNATIVE ICONS ===
     "Joni Mitchell", "Tom Waits", "Van Morrison", "Frank Zappa",
     "Bruce Springsteen", "Patti Smith", "Kate Bush", "Björk",
-    "Nick Cave & The Bad Seeds", "PJ Harvey", "Leonard Cohen",
+    "Nick Cave & The Bad Seeds", "PJ Harvey", "Scott Walker",
+    "Leonard Cohen", "Randy Newman", "Laura Nyro",
 
-    // === MÚSICA BRASILEIRA ===
-    "Tim Maia", "Elis Regina", "Chico Buarque", "Milton Nascimento",
-    "Caetano Veloso", "Gilberto Gil", "Djavan", "Jorge Ben Jor",
-    "Legião Urbana", "Titãs", "Os Paralamas do Sucesso", "Raul Seixas",
-    "Os Mutantes", "Rita Lee", "Roberto Carlos"
+    // === ALTERNATIVE / EXPERIMENTAL ===
+    "Sonic Youth", "The Fall", "Nine Inch Nails", "Primal Scream",
+    "The Flaming Lips", "Beck", "Dinosaur Jr.", "Mercury Rev",
+    "Guided by Voices", "Weezer", "OutKast", "Moby",
+
+    // === POST-ROCK / AMBIENT ===
+    "Mogwai", "Sigur Rós", "Tangerine Dream", "Klaus Schulze",
+    "Steve Roach", "Autechre", "Boards of Canada",
+
+    // === GOTH / INDUSTRIAL ===
+    "Bauhaus", "Killing Joke", "Ministry", "Godflesh",
+
+    // === CLASSIC ROCK ADDITIONS ===
+    "ZZ Top", "The Soft Machine", "Hawkwind", "Captain Beefheart",
+    "Cheap Trick", "Alice Cooper", "Fairport Convention",
+
+    // === MÚSICA BRASILEIRA - Pioneiros e Bossa Nova ===
+    "Pixinguinha", "Carmem Miranda", "Ary Barroso", "Dorival Caymmi",
+    "Orlando Silva", "Francisco Alves", "Noel Rosa", "Custódio Mesquita",
+    "Ciro Monteiro", "João Gilberto", "Tom Jobim", "Vinicius de Moraes",
+    "Carlos Lyra", "Roberto Menescal", "Nara Leão", "Astrud Gilberto",
+
+    // === MÚSICA BRASILEIRA - MPB ===
+    "Elis Regina", "Chico Buarque", "Milton Nascimento", "Clara Nunes",
+    "Maria Bethânia", "Gal Costa", "Caetano Veloso", "Gilberto Gil",
+    "Djavan", "Fafá de Belém", "Simone", "Ivan Lins", "Gonzaguinha",
+
+    // === MÚSICA BRASILEIRA - Tropicália ===
+    "Os Mutantes", "Tom Zé", "Jorge Ben Jor",
+
+    // === MÚSICA BRASILEIRA - Samba e Pagode ===
+    "Cartola", "Nelson Cavaquinho", "Adoniran Barbosa", "Candeia",
+    "Paulinho da Viola", "Beth Carvalho", "Martinho da Vila", "Zeca Pagodinho",
+
+    // === MÚSICA BRASILEIRA - Regional ===
+    "Luiz Gonzaga", "Jackson do Pandeiro", "Alceu Valença", "Geraldo Azevedo",
+    "Raul Seixas",
+
+    // === MÚSICA BRASILEIRA - Jovem Guarda e Pop ===
+    "Roberto Carlos", "Erasmo Carlos", "Wanderléa", "Tim Maia", "Rita Lee",
+
+    // === MÚSICA BRASILEIRA - Sertanejo ===
+    "Chitãozinho & Xororó", "Leandro & Leonardo", "Zezé Di Camargo & Luciano",
+
+    // === MÚSICA BRASILEIRA - Axé ===
+    "Ivete Sangalo", "Daniela Mercury",
+
+    // === MÚSICA BRASILEIRA - Rock Brasileiro ===
+    "Legião Urbana", "Titãs", "Os Paralamas do Sucesso", "Barão Vermelho",
+    "Lulu Santos", "RPM", "Ultraje a Rigor", "Cazuza", "Cidade Negra",
+    "Engenheiros do Hawaii", "Skank", "Chico Science & Nação Zumbi",
+    "Natiruts", "O Rappa", "Charlie Brown Jr", "Raimundos", "Marcelo D2",
+    "Planet Hemp", "Nenhum de Nós", "Plebe Rude", "Ed Motta",
+    "Capital Inicial", "Baiana System", "Detonautas", "CPM 22",
+
+    // === MÚSICA BRASILEIRA - Hip Hop / Rap ===
+    "Racionais MC's", "Criolo", "MV Bill", "Emicida"
 ];
 
 const normalize = name => name?.toLowerCase().trim().replace(/[^\\w\\s]/g, '').replace(/\\s+/g, ' ') || '';
