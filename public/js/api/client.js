@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Album } from '../models/Album.js'
 import { albumCache } from '../cache/albumCache.js'
+import { albumLoader } from '../services/AlbumLoader.js'
 
 /**
  * API Client
@@ -295,7 +296,9 @@ export class APIClient {
             title: data.title || data.album,
             artist: data.artist,
             year: data.year,
-            coverUrl: data.coverUrl,
+
+            // Enrich coverUrl from albums-expanded.json if not present
+            coverUrl: data.coverUrl || this.lookupCoverUrl(data.artist, data.title || data.album),
 
             // BestEver fields
             bestEverAlbumId: data.bestEverAlbumId,
@@ -366,6 +369,41 @@ export class APIClient {
      */
     delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))
+    }
+
+    /**
+     * Lookup coverUrl from albums-expanded.json via AlbumLoader
+     * @param {string} artist - Artist name
+     * @param {string} album - Album title
+     * @returns {string|null} Cover URL or null if not found
+     * @private
+     */
+    lookupCoverUrl(artist, album) {
+        if (!artist || !album) return null
+
+        // AlbumLoader must be already loaded (it's loaded on app init)
+        if (!albumLoader.isLoaded || !albumLoader.albums) {
+            console.log('[APIClient] AlbumLoader not ready, skipping cover lookup')
+            return null
+        }
+
+        const normalizedArtist = artist.toLowerCase().trim()
+        const normalizedAlbum = album.toLowerCase().trim()
+
+        // Find matching album in enriched dataset
+        const match = albumLoader.albums.find(a => {
+            const matchArtist = (a.artist || '').toLowerCase().trim()
+            const matchAlbum = (a.album || '').toLowerCase().trim()
+            return matchArtist === normalizedArtist && matchAlbum === normalizedAlbum
+        })
+
+        if (match?.coverUrl) {
+            console.log(`[APIClient] Cover found for "${artist} - ${album}"`)
+            return match.coverUrl
+        }
+
+        console.log(`[APIClient] No cover found for "${artist} - ${album}"`)
+        return null
     }
 }
 
