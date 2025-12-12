@@ -262,13 +262,20 @@ async function main() {
     const dataPath = path.join(projectRoot, 'public/assets/data/albums-expanded.json');
     const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
 
-    // Filter to essential artists only
-    const essentialAlbums = data.filter(a => essentialSet.has(normalize(a.artist)));
+    // Filter: Acclaimed albums (has place from CSV) OR Essential artists
+    const priorityAlbums = data.filter(a => {
+        const isAcclaimed = a.place !== null && a.place !== undefined;
+        const isEssentialArtist = essentialSet.has(normalize(a.artist));
+        return isAcclaimed || isEssentialArtist;
+    });
+
     console.log(`📊 Total albums: ${data.length}`);
-    console.log(`🎯 Essential albums: ${essentialAlbums.length}`);
+    console.log(`⭐ Acclaimed albums (with place): ${data.filter(a => a.place !== null && a.place !== undefined).length}`);
+    console.log(`� Essential artists albums: ${data.filter(a => essentialSet.has(normalize(a.artist))).length}`);
+    console.log(`🎯 Priority albums (union): ${priorityAlbums.length}`);
 
     // Filter to albums without artworkTemplate
-    const toEnrich = essentialAlbums.filter(a => !a.artworkTemplate);
+    const toEnrich = priorityAlbums.filter(a => !a.artworkTemplate);
     console.log(`🔄 Need enrichment: ${toEnrich.length}\n`);
 
     if (toEnrich.length === 0) {
