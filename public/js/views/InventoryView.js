@@ -35,6 +35,9 @@ export class InventoryView extends BaseView {
       this.rerender()
     })
 
+    // Load album dataset for cover lookups
+    albumLoader.load().catch(console.warn)
+
     // Load albums on mount
     try {
       console.log('[InventoryView.mount] Calling inventoryStore.loadAlbums()')
@@ -748,13 +751,25 @@ export class InventoryView extends BaseView {
   /**
    * Get album cover URL with HD fallback
    * Uses artworkTemplate from Apple Music if available, otherwise Discogs coverUrl
+   * Falls back to looking up in albums-expanded.json if not in local data
    */
   getAlbumCoverUrl(album) {
     const data = album.albumData || album
 
-    // Use albumLoader helper if available
+    // Check if we have cover data directly
     if (data.artworkTemplate || data.coverUrl) {
       return albumLoader.getArtworkUrl(data, 300)
+    }
+
+    // Try to find in albumLoader by artist + title match
+    if (albumLoader.isLoaded && album.artist && album.title) {
+      const match = albumLoader.albums.find(a =>
+        a.artist?.toLowerCase() === album.artist?.toLowerCase() &&
+        a.album?.toLowerCase() === album.title?.toLowerCase()
+      )
+      if (match && (match.artworkTemplate || match.coverUrl)) {
+        return albumLoader.getArtworkUrl(match, 300)
+      }
     }
 
     return null
