@@ -81,6 +81,10 @@ app.use(express.json())
 // Health
 app.get('/_health', (req, res) => res.send({ ok: true }))
 
+// MusicKit routes (Apple Music integration)
+const musickitRoutes = require('./routes/musickit')
+app.use('/api', musickitRoutes)
+
 // Schema and validation are provided by `server/lib/schema.js` (AJV optional)
 
 const { loadPrompts, renderPrompt } = require('./lib/prompts')
