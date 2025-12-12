@@ -256,30 +256,38 @@ async function searchAppleMusic(artist, album, token) {
 }
 
 async function main() {
-    console.log('🎵 Essential Artists Enrichment');
+    console.log('🎵 Priority Albums Enrichment');
     console.log('================================\n');
 
     const dataPath = path.join(projectRoot, 'public/assets/data/albums-expanded.json');
     const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
 
-    // Filter: Acclaimed albums (has place from CSV) OR Essential artists
-    const priorityAlbums = data.filter(a => {
-        const isAcclaimed = a.place !== null && a.place !== undefined;
-        const isEssentialArtist = essentialSet.has(normalize(a.artist));
-        return isAcclaimed || isEssentialArtist;
-    });
+    // Separate into categories
+    const essentialArtistAlbums = data.filter(a => essentialSet.has(normalize(a.artist)));
+    const acclaimedAlbums = data.filter(a =>
+        a.place !== null && a.place !== undefined &&
+        !essentialSet.has(normalize(a.artist)) // Exclude essential artists (already covered)
+    );
 
-    console.log(`📊 Total albums: ${data.length}`);
-    console.log(`⭐ Acclaimed albums (with place): ${data.filter(a => a.place !== null && a.place !== undefined).length}`);
-    console.log(`� Essential artists albums: ${data.filter(a => essentialSet.has(normalize(a.artist))).length}`);
-    console.log(`🎯 Priority albums (union): ${priorityAlbums.length}`);
+    console.log(`📊 Total albums in dataset: ${data.length}`);
+    console.log(`🎸 Essential artists albums: ${essentialArtistAlbums.length}`);
+    console.log(`⭐ Acclaimed albums (non-essential): ${acclaimedAlbums.length}`);
+
+    // Combine: Essential first, then acclaimed
+    const priorityAlbums = [...essentialArtistAlbums, ...acclaimedAlbums];
+    console.log(`🎯 Total priority albums: ${priorityAlbums.length}`);
 
     // Filter to albums without artworkTemplate
     const toEnrich = priorityAlbums.filter(a => !a.artworkTemplate);
     console.log(`🔄 Need enrichment: ${toEnrich.length}\n`);
 
+    // Show sample of first 5 albums to verify
+    console.log('📋 First 5 albums to process:');
+    toEnrich.slice(0, 5).forEach((a, i) => console.log(`   ${i + 1}. ${a.artist} - ${a.album}`));
+    console.log('');
+
     if (toEnrich.length === 0) {
-        console.log('✅ All essential albums already enriched!');
+        console.log('✅ All priority albums already enriched!');
         return;
     }
 
