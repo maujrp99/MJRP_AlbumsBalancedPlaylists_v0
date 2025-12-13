@@ -80,7 +80,7 @@ export class Autocomplete {
 
     async performSearch(query) {
         try {
-            const results = this.loader.search(query, 50) // Increased from 10 to show more options
+            const results = await this.loader.search(query, 50) // Increased from 10 to show more options
             this.renderResults(results)
         } finally {
             this.spinner.classList.add('hidden')

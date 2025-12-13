@@ -87,6 +87,14 @@ self.onmessage = function (e) {
             });
         }
 
+
+        // Sort by Year Ascending (Oldest first)
+        gathered.sort((a, b) => {
+            const yearA = parseInt(a.year) || 9999;
+            const yearB = parseInt(b.year) || 9999;
+            return yearA - yearB;
+        });
+
         postMessage({ type: 'RESULTS', results: gathered, query, requestId });
     }
 };

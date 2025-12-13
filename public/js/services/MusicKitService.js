@@ -431,38 +431,39 @@ class MusicKitService {
                 return this.findTrack(title, artist);
             }
 
-            // Filter and rank tracks (relaxed matching)
+            // Filter and rank tracks (improved fuzzy matching)
             const ranked = tracks
                 .filter(track => {
                     const trackName = (track.attributes?.name || '').toLowerCase();
                     const trackAlbum = (track.attributes?.albumName || '').toLowerCase();
                     const searchTitle = title.toLowerCase();
 
-                    // Relaxed title matching - just check first few words
-                    const searchWords = searchTitle.split(' ').slice(0, 3).join(' ');
-                    const trackWords = trackName.split(' ').slice(0, 3).join(' ');
-                    const titleMatch = trackName.includes(searchWords) ||
-                        searchWords.includes(trackWords) ||
-                        trackName.includes(searchTitle) ||
-                        searchTitle.includes(trackName);
-
-                    if (!titleMatch) {
-                        return false;
-                    }
-
-                    // If NOT a live album source, exclude live versions
+                    // 1. Live Filter (Strict)
                     if (!isLiveAlbum) {
                         const isLiveTrack = trackAlbum.includes('live') ||
                             trackName.includes('(live)') ||
-                            trackName.includes('[live]');
+                            trackName.includes('[live]') ||
+                            trackName.includes(' - live');
                         if (isLiveTrack) return false;
                     }
 
-                    return true;
+                    // 2. Fuzzy Match Title
+                    // Calculate similarity score (0-1)
+                    const similarity = this._calculateSimilarity(searchTitle, trackName);
+
+                    // Allow match if similarity > 0.6 OR partial inclusion for long titles
+                    const includes = trackName.includes(searchTitle) || searchTitle.includes(trackName);
+
+                    if (similarity > 0.6 || includes) {
+                        track.similarity = similarity; // Store for scoring
+                        return true;
+                    }
+
+                    return false;
                 })
                 .map(track => ({
                     track,
-                    score: this._scoreTrack(track, albumName)
+                    score: this._scoreTrack(track, albumName) + ((track.similarity || 0) * 10) // Boost by similarity
                 }))
                 .sort((a, b) => b.score - a.score);
 
@@ -517,6 +518,36 @@ class MusicKitService {
      */
     isReady() {
         return this.isInitialized && this.music !== null;
+        /**
+     * Calculate string similarity (0-1) using Levenshtein distance
+     * @private
+     */
+        _calculateSimilarity(s1, s2) {
+            const longer = s1.length > s2.length ? s1 : s2;
+            const shorter = s1.length > s2.length ? s2 : s1;
+            const longerLength = longer.length;
+            if (longerLength === 0) return 1.0;
+
+            const costs = new Array();
+            for (let i = 0; i <= longer.length; i++) {
+                let lastValue = i;
+                for (let j = 0; j <= shorter.length; j++) {
+                    if (i == 0) costs[j] = j;
+                    else {
+                        if (j > 0) {
+                            let newValue = costs[j - 1];
+                            if (longer.charAt(i - 1) != shorter.charAt(j - 1))
+                                newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+                            costs[j - 1] = lastValue;
+                            lastValue = newValue;
+                        }
+                    }
+                }
+                if (i > 0) costs[shorter.length] = lastValue;
+            }
+
+            return (longerLength - costs[shorter.length]) / parseFloat(longerLength);
+        }
     }
 }
 

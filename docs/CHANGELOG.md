@@ -2,6 +2,39 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
+## Unreleased (Sprint 7 UAT)
+
+### 🚧 In Progress
+- **Track Export**: Investigation of missing tracks (e.g. 72 Seasons).
+- **Autocomplete UX**: Improvements to Load Albums form (Artist filter).
+- **Cover Art**: Fixes for loading states in cards.
+
+---
+
+## v2.2.1 - Sprint 6 Complete & Mobile Polish (2025-12-13)
+
+**Status**: 🚀 **PRODUCTION RELEASE**
+**Tag**: `v2.2.1`
+
+### Summary
+Completes Sprint 6 with robust authentication (Apple/Google), CSP fixes, and mobile UX improvements (haptic feedback).
+
+### ✨ New Features
+- **Mobile Haptics**: Added haptic feedback for drag-and-drop on supported devices.
+- **Apple Auth**: Final CSP fixes for Apple Sign-In.
+
+---
+
+## v2.2.0 - Sprint 6 Feature Freeze (2025-12-12)
+
+**Status**: 🏷️ **TAGGED RELEASE**
+**Tag**: `v2.2.0`
+
+### Summary
+Feature freeze for authentication sprint.
+
+---
+
 ## v2.1.0 - Sprint 5 Complete: Persistence & Production Ready (2025-12-09)
 
 **Status**: 🚀 **PRODUCTION RELEASE**  

@@ -298,7 +298,7 @@ export class APIClient {
             year: data.year,
 
             // Enrich coverUrl from albums-expanded.json if not present
-            coverUrl: data.coverUrl || this.lookupCoverUrl(data.artist, data.title || data.album),
+            coverUrl: data.coverUrl || null, // TODO: Implement async hydration for covers
 
             // BestEver fields
             bestEverAlbumId: data.bestEverAlbumId,

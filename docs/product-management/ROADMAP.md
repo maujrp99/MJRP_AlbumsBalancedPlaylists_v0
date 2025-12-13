@@ -1,8 +1,8 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-12  
-**Current Version**: v2.1.1  
-**Current Sprint**: Sprint 7 (Apple Music Integration)
+**Last Updated**: 2025-12-13
+**Current Version**: v2.2.1
+**Current Sprint**: Sprint 7 (Data Enrichment & UAT)
 
 ---
 
@@ -123,26 +123,48 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 
 **Duration**: 1-2 weeks  
 **Priority**: High  
-**Status**: Ready to start
+**Status**: 🚧 **In Progress** (UAT)
 
 #### Pre-Requisites (Done in Sprint 6)
 - ✅ Apple Developer Account configured
 - ✅ .p8 Key generated (can be reused for MusicKit)
 
-#### Part A: Data Enrichment Validation (Pending)
+#### Part A: Data Enrichment & UI Polish (UAT In Progress)
 
-- [ ] **Verify Script Completion**
-  - Confirm `albums-expanded.json` generation finished
-  - Check final file size and album count
+- [x] **Optimized Autocomplete**
+    - [x] Data Optimization (JSON index)
+    - [x] Web Worker Setup
+    - [x] UI Integration
+    - [ ] **UI/UX Refinement** (Load Albums Form) - *WIP: Autocomplete field by artist + manual album entry*
 
-- [ ] **Frontend Validation**
-  - Test album covers loading in AlbumsView
-  - Test autocomplete with expanded dataset
-  - Verify performance with ~40k+ albums
+- [ ] **Data Validation & Assets**
+    - [ ] **Cover Art Loading** - *WIP: Fix Sync/Async hydration & loading state*
+    - [ ] Verify Script Completion (`albums-expanded.json`)
 
-- [ ] **Deploy Enriched Data**
-  - Include `albums-expanded.json` in production build
-  - Verify fallback to CSV if JSON missing
+#### Part B: Integrations & Fixes (UAT In Progress)
+
+- [ ] **Export Workflow UI**
+    - [ ] "Connect to Apple Music" button in PlaylistsView
+    - [ ] **Fix Export Bug**: Missing tracks (e.g. 72 Seasons) - *WIP: Add debug logging*
+
+- [ ] **Backend Proxy & API Client**
+    - [ ] Endpoint for Developer Token generation
+    - [ ] Apple Music API calls (search, create playlist) for Apple Music API calls (via proxy or client)
+
+- [x] **Apple Music API Client**
+  - [x] `searchTracks(query)`
+  - [x] `createPlaylist(name, description)`
+  - [x] `addTracksToPlaylist(playlistId, trackIds)`
+
+- [x] **Export Workflow UI**
+  - [x] "Connect to Apple Music" button in PlaylistsView
+  - [x] Export Progress Modal
+  - [x] Success confirmation with link
+
+**Deliverables Status**:
+- ✅ Autocomplete & Cover Loading (Part A) - *Pending User Final Sign-off*
+- ✅ Export Implementation (Part B) - **DONE**
+- 🚧 Export Verification (Part B) - **IN PROGRESS** (Fixing track matching issues, e.g. 72 Seasons)
 
 ---
 

@@ -4,9 +4,10 @@ description: Documentation Audit & Reorganization Protocol
 
 # Documentation Audit & Reorganization Protocol
 
-**Purpose**: Systematically audit, consolidate to keep the information up-to-date with a history available, reorganizing project documentation to solve contradictions, eliminate redundancy, improve discoverability, and reduce maintenance burden.
+**Purpose**: Systematically audit, verify and read all markdown files of the project, check latest tags and commits since last production deploy, compare with current code, then, start consolidating to keep the information up-to-date with a history available, reorganizing project documentation to solve contradictions, eliminate redundancy, improve discoverability, and reduce maintenance burden.
 
 **When to Use**: 
+- On demand as per user request
 - Documentation feels scattered or duplicated
 - Archive folders are bloated
 - Multiple folders serve unclear purposes (e.g., `reports/`, `docs/`, scattered guides)
@@ -39,7 +40,7 @@ Common patterns:
 Create `documentation_audit_analysis.md` artifact with:
 - Total file count
 - Folder structure
-- Identified problems (duplicates, obsolete, scattered)
+- Identified problems (contradictions, conflicts, duplicates, obsolete, scattered)
 - Proposed consolidation plan
 
 **Output**: Analysis artifact for user review
@@ -91,8 +92,9 @@ find docs/ reports/ -name "*.md" -exec basename {} \; | sort | uniq -d
 ```
 docs/
 ├── README.md (index)
+├── PROJECT_SUMMARY.md (Executive Summary)
+├── ROADMAP.md (Product Roadmap)
 ├── ARCHITECTURE.md
- ├── Architecture-history.md (for historical info)
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 │
@@ -100,13 +102,10 @@ docs/
 │   ├── README.md
 │   ├── DEVELOPER.md
 │   ├── DEVOPS.md
+│   ├── QA_ENGINEER.md
 │   └── [ROLE].md
 │
-├── [domain]/             # Domain-specific docs
-│   ├── devops/
-│   ├── technical/
-│   ├── product-management/
-│   └── ux/
+├── technical/            # Deep technical specs & data flows
 │
 ├── debug/
 │   └── DEBUG_LOG.md      # Living issue tracker
@@ -281,6 +280,7 @@ du -sh docs/archive/
 3. **Compress, don't delete** - Old archives go to .tar.gz
 4. **Commit per phase** - Easier to revert if needed
 5. **Update cross-references** - Fix broken links after moves
+## 🚨 Critical Rules (ALWAYS ENFORCE)
 
 ---
 

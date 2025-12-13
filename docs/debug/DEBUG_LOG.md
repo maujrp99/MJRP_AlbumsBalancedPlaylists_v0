@@ -18,7 +18,11 @@
 
 | Issue | Component | Status | Line |
 |-------|-----------|--------|------|
-| #37 | Apple Sign-In Config | ✅ RESOLVED | [L41](#issue-37-apple-sign-in-invalid-redirect-url---resolved-) |
+| #41 | Cover Art Loading | 🚧 IN PROGRESS | [L41](#issue-41-cover-art-loading-issues---in-progress) |
+| #40 | Autocomplete UX | 🚧 IN PROGRESS | [L41](#issue-40-autocomplete-ux-improvements---in-progress) |
+| #39 | Track Export Failed | 🚧 IN PROGRESS | [L41](#issue-39-track-export-failed-missing-tracks---in-progress) |
+| #38 | Autocomplete TypeError | ✅ RESOLVED | [L41](#issue-38-autocomplete-typeerror-syncasync-mismatch---resolved-) |
+| #37 | Apple Sign-In Config | ✅ RESOLVED | [L85](#issue-37-apple-sign-in-invalid-redirect-url---resolved-) |
 | #36 | Auth Integration Regressions | ✅ RESOLVED | [L85](#issue-36-auth-integration-regressions---resolved-) |
 | #35 | Firebase Initialization | ✅ RESOLVED | [L119](#issue-35-firebase-initialization--sdk-mismatch---resolved-) |
 | #34 | Generate Playlists API 500 | ✅ RESOLVED | [L145](#issue-34-generate-playlists-api-returns-500---resolved-) |
@@ -39,6 +43,81 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #41: Cover Art Loading Issues - IN PROGRESS
+**Status**: 🚧 **IN PROGRESS**
+**Date**: 2025-12-13
+**Type**: UI Bug
+**Component**: `AlbumCard.js`, `OptimizedAlbumLoader.js`
+
+#### Problem
+Cover art sometimes fails to load or flickers in album cards.
+Sync/Async hydration mismatch suspected.
+
+---
+
+### Issue #40: Autocomplete UX Improvements - IN PROGRESS
+**Status**: 🚧 **IN PROGRESS**
+**Date**: 2025-12-13
+**Type**: UX Improvement
+**Component**: `HomeView.js`
+
+#### Request
+Refine "Load Albums" form.
+- **Goal**: Split autocomplete into Artist Filter + Album Selection.
+- **Goal**: Allow direct album entry if not found.
+
+---
+
+### Issue #39: Track Export Failed (Missing Tracks) - IN PROGRESS
+**Status**: 🚧 **IN PROGRESS**
+**Date**: 2025-12-13
+**Type**: Data Bug
+**Component**: `PlaylistExport.js`
+
+#### Problem
+Some albums (e.g. *72 Seasons* by Metallica) fail to export tracks or show missing tracks in generated playlists.
+Need to investigate if this is a matching issue or data validation failure.
+
+---
+
+### Issue #38: Autocomplete TypeError (Sync/Async Mismatch) - RESOLVED ✅
+**Status**: ✅ **RESOLVED - USER CONFIRMED**
+**Date**: 2025-12-13 00:20
+**Type**: Implementation Bug
+**Component**: `Autocomplete.js`, `OptimizedAlbumLoader.js`
+
+#### Problem
+User reported `TypeError: results.map is not a function` in the browser console when typing in the search box. Autocomplete dropdown did not appear.
+
+#### Root Cause
+Contract mismatch between the legacy `AlbumLoader` (synchronous) and the new `OptimizedAlbumLoader` (asynchronous, Promise-based).
+- `Autocomplete.js` assumed `this.loader.search()` returned an array immediately.
+- `OptimizedAlbumLoader.search()` returns a `Promise` (because it talks to a Web Worker).
+- `results` was a Promise object, which does not have a `.map()` method.
+
+#### Failed Attempts
+- **Implicit Assumption**: The initial refactor didn't update the call site in `Autocomplete.js` to handle the asynchronous nature of the new loader, assuming interface compatibility was 1:1.
+
+#### Fix Applied
+Updated `Autocomplete.js` to `await` the result of `performSearch`:
+```javascript
+// Autocomplete.js
+async performSearch(query) {
+    try {
+        const results = await this.loader.search(query, 50) 
+        this.renderResults(results)
+// ...
+```
+
+#### Files Modified
+- `public/js/components/Autocomplete.js`
+
+#### Verification
+- [x] Code reviewed: `await` keyword added.
+- [x] Data verification: `generate-autocomplete-index.cjs` confirmed to include `artworkTemplate` for thumbnails.
+
+---
 
 ### Issue #37: Apple Sign-In Invalid Redirect URL - RESOLVED ✅
 **Status**: ✅ **RESOLVED - USER CONFIRMED**

@@ -68,16 +68,43 @@ class OptimizedAlbumLoader {
     }
 
     /**
-     * Helper to generate artwork URL
+     * Parse artwork URL from optimized item
      * @param {object} item 
      * @param {number} size 
      * @returns {string|null}
      */
     getArtworkUrl(item, size = 100) {
-        if (!item.artworkTemplate) return null;
-        return item.artworkTemplate
+        if (!item) return null;
+        // Handle both optimized (d/e) and full (artworkTemplate) formats
+        const template = item.e || item.artworkTemplate;
+        if (!template) return item.coverUrl || null;
+        
+        return template
             .replace('{w}', size)
             .replace('{h}', size);
+    }
+
+    /**
+     * Find a specific album (Optimized for cover lookup)
+     * Wraps search but filters for exact-ish match
+     * @param {string} artist 
+     * @param {string} album 
+     * @returns {Promise<object|null>}
+     */
+    async findAlbum(artist, album) {
+        if (!artist || !album) return null;
+        const query = `${artist} ${album}`;
+        const results = await this.search(query, 5);
+        
+        // Simple normalization
+        const norm = str => str?.toLowerCase().trim();
+        const targetArtist = norm(artist);
+        const targetAlbum = norm(album);
+        
+        return results.find(item => {
+            return norm(item.artist) === targetArtist && 
+                   norm(item.album).includes(targetAlbum); // Looser match for album
+        }) || results[0] || null; // Fallback to first result if high confidence?
     }
 }
 

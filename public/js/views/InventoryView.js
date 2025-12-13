@@ -72,6 +72,39 @@ export class InventoryView extends BaseView {
 
   afterRender() {
     this.attachEventListeners()
+    this.hydrateCovers()
+  }
+
+  async hydrateCovers() {
+    const hydrateElements = this.container.querySelectorAll('[data-hydrate-artist]')
+
+    // Process in chunks or intersection observer would be even better, 
+    // but for now simple batched checking
+    hydrateElements.forEach(async (el) => {
+      const artist = el.dataset.hydrateArtist
+      const album = el.dataset.hydrateAlbum
+
+      try {
+        const match = await albumLoader.findAlbum(artist, album)
+        if (match) {
+          const url = albumLoader.getArtworkUrl(match, 300)
+          if (url) {
+            // Create image element to replace placeholder
+            const img = document.createElement('img')
+            img.src = url
+            img.alt = `${artist} - ${album}`
+            img.className = 'w-full h-full object-cover rounded-lg fade-in'
+
+            // Clear placeholder and append image
+            el.innerHTML = ''
+            el.appendChild(img)
+          }
+        }
+      } catch (err) {
+        // Silent fail for hydration
+        // console.debug('Hydration failed', err)
+      }
+    })
   }
 
   attachEventListeners() {
@@ -526,7 +559,9 @@ export class InventoryView extends BaseView {
         </div>
         
         <!-- Album Cover -->
-      <div class="album-cover mb-3 aspect-square bg-surface-light rounded-lg flex items-center justify-center cursor-pointer view-album-btn" data-album-id="${album.id}">
+      <div class="album-cover mb-3 aspect-square bg-surface-light rounded-lg flex items-center justify-center cursor-pointer view-album-btn" 
+           data-album-id="${album.id}"
+           ${!this.getAlbumCoverUrl(album) ? `data-hydrate-artist="${this.escapeHtml(album.artist)}" data-hydrate-album="${this.escapeHtml(album.title)}"` : ''}>
         ${this.getAlbumCoverUrl(album) ? `
           <img src="${this.getAlbumCoverUrl(album)}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-lg" />
         ` : `
@@ -762,14 +797,20 @@ export class InventoryView extends BaseView {
     }
 
     // Try to find in albumLoader by artist + title match
-    if (albumLoader.isLoaded && album.artist && album.title) {
-      const match = albumLoader.albums.find(a =>
-        a.artist?.toLowerCase() === album.artist?.toLowerCase() &&
-        a.album?.toLowerCase() === album.title?.toLowerCase()
-      )
-      if (match && (match.artworkTemplate || match.coverUrl)) {
-        return albumLoader.getArtworkUrl(match, 300)
-      }
+    if (album.artist && album.title) {
+      // OptimizedAlbumLoader.findAlbum is async.
+      // Since getArtworkUrl is often called in render loop (sync),
+      // we might return null here and let a separate hydration pass update it?
+      // OR: For now, since we are removing legacy loader, we accept that covers 
+      // will only show if 'artworkTemplate' is already on the object.
+      // The object 'data' passed here comes from inventoryStore.
+
+      // Note: InventoryView rendering is sync. We can't await here.
+      // We relies on 'artworkTemplate' being populated during 'add'.
+      // If it's missing, we could trigger a background fetch.
+
+      // For tech debt removal: returning null is safe if we trust data is enriched on add.
+      return null;
     }
 
     return null
