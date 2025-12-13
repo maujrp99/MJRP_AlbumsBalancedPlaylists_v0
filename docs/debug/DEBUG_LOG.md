@@ -1864,3 +1864,29 @@ grep -n "🔍 \\[DEBUG\\]" public/js/views/AlbumsView.js
 **See**: `.agent/workflows/debug_issue.md` for systematic debugging protocol
 
 
+
+### Issue #44: New "Tech" UI CSS Not Applying - RESOLVED ✅
+**Severity**: High (UI Broken)
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-13 17:33
+**Type**: Configuration/CSS
+**Component**: `index.css`, `index.html`, `app.js`
+
+#### Problem
+User reported that despite multiple attempts and a "hard refresh", the new "Neon/Green Tech" styles (e.g., dark inputs, neon borders) are not appearing. The inputs remain white (default Tailwind forms style).
+
+#### Root Cause Discovery
+**`public/css/index.css` is VERIFIED TO NOT BE LOADING.**
+- It is **NOT** linked in `public/index.html`.
+- It is **NOT** imported in `public/js/app.js` (Vite dependency graph requires CSS import in JS or HTML).
+- Only Tailwind CDN is running, which defaults inputs to white.
+- `index.css` was created containing the imports for `tech-theme.css`, but the entry point never loads it.
+
+#### Fix Applied
+Added `import '../css/index.css'` to `public/js/app.js`.
+This ensures Vite bundles the CSS (including `tech-theme.css` and `neon.css`) into the application.
+
+#### Verification
+- [x] **USER CONFIRMED**: "ficou sensational!!" (It looks sensational). 
+- [x] Neon Green accents and dark theme are now visible.
+

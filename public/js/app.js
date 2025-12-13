@@ -3,6 +3,7 @@
  * Initializes Router, Auth, and Views
  */
 
+import '../css/index.css'
 import { app, auth, db } from './firebase-init.js'
 import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
 
