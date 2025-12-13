@@ -2,7 +2,7 @@ const axios = require('axios')
 
 const DEFAULT_PROMPT = 'Sua tarefa é retornar os metadados de um álbum de música. Input: "{{albumQuery}}". Retorne apenas JSON válido com campos: id, artist, title, year, cover, tracks (cada track com id, rank, title, duration em segundos).'
 
-async function callProvider ({ prompt, albumQuery, model, maxTokens, aiEndpoint, aiApiKey, aiModelEnv }) {
+async function callProvider({ prompt, albumQuery, model, maxTokens, aiEndpoint, aiApiKey, aiModelEnv }) {
   const aiUrl = aiEndpoint || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5:generateContent'
 
   let requestUrl = aiUrl

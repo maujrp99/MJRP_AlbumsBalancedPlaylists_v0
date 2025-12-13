@@ -6,6 +6,7 @@ import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
+import { optimizedAlbumLoader as albumLoader } from '../services/OptimizedAlbumLoader.js'
 
 /**
  * AlbumsView
@@ -153,7 +154,6 @@ export class AlbumsView extends BaseView {
               <div class="filter-dropdown relative">
                 <select id="statusFilter" class="form-control appearance-none cursor-pointer pr-8">
                   <option value="all">All Status</option>
-                  <option value="rated" ${this.filters.status === 'rated' ? 'selected' : ''}>Rated</option>
                   <option value="pending" ${this.filters.status === 'pending' ? 'selected' : ''}>Pending</option>
                 </select>
                 <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
@@ -232,6 +232,7 @@ export class AlbumsView extends BaseView {
 
     return albums.map((album, idx) => {
       // DEBUG: Trace rendering of each album
+      const coverUrl = albumLoader.getArtworkUrl(album, 150)
 
       return `
       <div class="expanded-album-card glass-panel p-6 fade-in" style="animation-delay: ${idx * 0.05}s" data-album-id="${album.id || ''}">
@@ -239,8 +240,8 @@ export class AlbumsView extends BaseView {
         <div class="album-header-compact flex items-start gap-4 mb-6 pb-4 border-b border-white/10">
           <!-- Album Cover -->
           <div class="album-cover w-24 h-24 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl flex items-center justify-center flex-shrink-0">
-            ${album.coverUrl ?
-          `<img src="${album.coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
+            ${coverUrl ?
+          `<img src="${coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
           `<div class="text-2xl opacity-20">${getIcon('Music', 'w-12 h-12')}</div>`
         }
           </div>
@@ -255,7 +256,7 @@ export class AlbumsView extends BaseView {
               ${(() => {
           const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
           return hasRatings ?
-            `<span class="badge badge-success flex items-center gap-1">${getIcon('Check', 'w-3 h-3')} Rated</span>` :
+            '' :
             `<span class="badge badge-warning flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
         })()}
               ${album.bestEverAlbumId ? `
@@ -375,13 +376,16 @@ export class AlbumsView extends BaseView {
       `
     }
 
-    return albums.map(album => `
+    return albums.map(album => {
+      const coverUrl = albumLoader.getArtworkUrl(album, 300)
+
+      return `
       <div class="album-card group relative overflow-hidden" data-album-id="${album.id || ''}">
         <div class="album-cover aspect-square bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center mb-4 rounded-xl relative">
-          ${album.coverUrl ?
-        `<img src="${album.coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
-        `<div class="text-6xl opacity-20">${getIcon('Music', 'w-24 h-24')}</div>`
-      }
+          ${coverUrl ?
+          `<img src="${coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
+          `<div class="text-6xl opacity-20">${getIcon('Music', 'w-24 h-24')}</div>`
+        }
           
           <!-- Hover Overlay -->
           <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-sm">
@@ -406,11 +410,11 @@ export class AlbumsView extends BaseView {
               ${album.tracks?.length || 0} tracks
             </span>
             ${(() => {
-        const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
-        return hasRatings ?
-          `<span class="badge badge-success text-xs flex items-center gap-1">${getIcon('Check', 'w-3 h-3')} Rated</span>` :
-          `<span class="badge badge-warning text-xs flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
-      })()}
+          const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
+          return hasRatings ?
+            '' :
+            `<span class="badge badge-warning text-xs flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
+        })()}
           </div>
         </div>
         
@@ -423,7 +427,9 @@ export class AlbumsView extends BaseView {
           </button>
         </div>
       </div>
-    `).join('')
+      </div>
+    `
+    }).join('')
   }
 
   filterAlbums(albums) {
@@ -480,7 +486,7 @@ export class AlbumsView extends BaseView {
         const hasRatings = album.acclaim?.hasRatings ||
           (Array.isArray(album.tracks) && album.tracks.length > 0 &&
             album.tracks.some(t => t.rating > 0))
-        return this.filters.status === 'rated' ? hasRatings : !hasRatings
+        return !hasRatings // Only support filtering for Pending, as Rated is removed from UI
       })
     }
 

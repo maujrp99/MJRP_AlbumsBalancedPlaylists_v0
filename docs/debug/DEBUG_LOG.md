@@ -1890,3 +1890,23 @@ This ensures Vite bundles the CSS (including `tech-theme.css` and `neon.css`) in
 - [x] **USER CONFIRMED**: "ficou sensational!!" (It looks sensational). 
 - [x] Neon Green accents and dark theme are now visible.
 
+
+### Issue #45: Album Load 500 Error (Deluxe Edition) - DEFERRED ⏸️
+**Severity**: Medium (Specific Album Fails)
+**Status**: ⏸️ **DEFERRED**
+**Date**: 2025-12-13 17:55
+**Type**: API Error
+**Component**: `server/index.js`, `aiClient.js`
+
+#### Problem
+Loading "Judas Priest - Invincible Shield (Deluxe Edition)" fails with `AxiosError: Request failed with status code 500` from `/api/generate`.
+Other albums (e.g. Metallica) work.
+
+#### Suspected Cause
+- **Complex Query**: "Deluxe Edition" might generate a very large response that times out the AI provider or fails normalization.
+- **Model Config**: Originally suspected invalid model name, but user confirmed configuration is correct/intended.
+
+#### Status
+User requested to skip this issue for now to focus on higher priorities.
+**Workaround**: None currently (avoid Deluxe Edition queries if possible).
+

@@ -100,7 +100,7 @@ export class HomeView extends BaseView {
                 <!-- Left: Artist Filter -->
                 <div id="artistPanel" class="col-span-12 md:col-span-4 tech-panel tech-green-accent h-fit">
                     <div class="tech-header-bar">
-                        <span class="tech-title">02A // Artist Filter</span>
+                        <span class="tech-title">02a // Artist Filter</span>
                         ${getIcon('User', 'w-4 h-4 text-tech-green opacity-50')}
                     </div>
                     <div class="p-4 tech-grid-bg min-h-[150px] flex flex-col gap-4">
@@ -130,7 +130,7 @@ export class HomeView extends BaseView {
                 <!-- Right: Album Selector (Swappable) -->
                 <div id="selectionPanel" class="col-span-12 md:col-span-8 tech-panel tech-orange-accent">
                     <div class="tech-header-bar">
-                        <span class="tech-title" id="selectionTitle">02B // Select Album</span>
+                        <span class="tech-title" id="selectionTitle">02b // Select Album</span>
                     </div>
                     
                     <div class="p-4 bg-black/20 min-h-[300px] relative">

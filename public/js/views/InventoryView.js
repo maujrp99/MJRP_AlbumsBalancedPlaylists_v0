@@ -5,7 +5,7 @@ import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
 import { showViewAlbumModal } from '../components/ViewAlbumModal.js'
-import { albumLoader } from '../services/AlbumLoader.js'
+import { optimizedAlbumLoader as albumLoader } from '../services/OptimizedAlbumLoader.js'
 
 /**
  * InventoryView
