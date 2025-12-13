@@ -63,6 +63,26 @@ class OptimizedAlbumLoader {
         });
     }
 
+    /**
+     * Find all albums by specific artist (Exact match)
+     * @param {string} artistName 
+     * @returns {Promise<Array>}
+     */
+    findByArtist(artistName) {
+        if (!this.worker) return Promise.resolve([]);
+
+        return new Promise((resolve) => {
+            const requestId = ++this.requestIdCounter;
+            this.pendingRequests.set(requestId, resolve);
+
+            this.worker.postMessage({
+                type: 'FIND_BY_ARTIST',
+                query: artistName,
+                requestId
+            });
+        });
+    }
+
     // Load method kept for compatibility with old interface (HomeView calls it)
     async load() {
         // No-op, worker initializes itself in constructor

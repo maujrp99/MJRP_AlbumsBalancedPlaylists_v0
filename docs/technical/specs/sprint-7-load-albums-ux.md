@@ -17,12 +17,15 @@ We will transform the experience from a "Text Editor" to a "Playlist Builder".
 
 ## 3. User Journey (New Flow)
 
-### Step 1: The "Smart" Input Flow (Addressing Artist Formatting)
-To handle the user's need for *Artist Filtering* vs *Direct Album* entry:
+### Step 1: Artist Drill-Down (The "Select" Flow)
+- **Action**: User types in "Filter by Artist" (e.g., "Metallica").
+- **Interaction**: Selecting an artist automatically **REPLACES** the "Search for Album" input with a **Results Grid/Carousel**.
+- **Results View**: Shows all albums by that artist (e.g. 5-10 covers).
+- **Selection**: User clicks albums in this grid to toggle them into the **Staging Area** below.
+- **Persistence**: The Artist Results stay open until the user clears the filter or selects a new artist.
 
-**Option A: Global Search (Direct)**
-- User types *"Abbey Road"* into the main bar.
-- Result: "The Beatles - Abbey Road" appears.
+### Step 2: Global Search (Fallback)
+- If no artist is filtered, the right side remains a standard "Search for Album" autocomplete.
 
 **Option B: Artist Drill-Down (Structured)**
 - User focuses on an **"Artist Filter"** field (or types `@Metallica`).

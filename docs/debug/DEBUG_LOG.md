@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-09 23:54
+**Last Updated**: 2025-12-13 13:14
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -43,6 +43,48 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #43: Production Worker Dependency Failure (uFuzzy) - RESOLVED ✅
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-13 13:00
+**Type**: Build/Bundling Bug
+**Component**: `search.worker.js`, `uFuzzy.js`
+
+#### Problem
+In production, `search.worker.js` failed with `Uncaught NetworkError: Failed to execute 'importScripts'...`.
+The external dependency `../vendor/uFuzzy.js` could not be loaded because the worker was bundled into `assets/` while `vendor/` remained in the root (or path resolution failed).
+
+#### Fix Applied
+1.  Converted `search.worker.js` to an ES Module (`import uFuzzy from ...`).
+2.  Modified `uFuzzy.js` to `export default uFuzzy`.
+3.  Vite now bundles the dependency *inline* into the worker chunk.
+
+#### Verification
+- Worker file size increased (~9kb), confirming bundling.
+- Production deploy confirmed working.
+
+---
+
+### Issue #42: Worker 404 / SyntaxError in Production - RESOLVED ✅
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-13 12:50
+**Type**: Build/Path Bug
+**Component**: `OptimizedAlbumLoader.js`
+
+#### Problem
+Web Worker failed to initialize with `SyntaxError: Unexpected token '<'`.
+This meant the browser was receiving `index.html` (404 fallback) instead of the JS file.
+Caused by `new Worker('/js/workers/search.worker.js')` pointing to a source path that doesn't exist in the hashed production build.
+
+#### Fix Applied
+Refactored `OptimizedAlbumLoader.js` to use Vite's worker import syntax:
+```javascript
+import SearchWorker from '../workers/search.worker.js?worker';
+this.worker = new SearchWorker();
+```
+This ensures Vite correctly bundles and hashes the worker file.
+
+---
 
 ### Issue #41: Cover Art Loading Issues - IN PROGRESS
 **Status**: 🚧 **IN PROGRESS**

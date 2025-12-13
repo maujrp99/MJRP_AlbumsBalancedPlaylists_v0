@@ -96,5 +96,30 @@ self.onmessage = function (e) {
         });
 
         postMessage({ type: 'RESULTS', results: gathered, query, requestId });
+    } else if (type === 'FIND_BY_ARTIST') {
+        // Strict filter by artist name (case-insensitive)
+        if (!isReady || !query) {
+            postMessage({ type: 'RESULTS', results: [], requestId });
+            return;
+        }
+
+        const normalize = s => s.toLowerCase().trim();
+        const target = normalize(query);
+
+        // Filter directly from source array
+        const matches = albums.filter(item => normalize(item.a) === target);
+
+        const results = matches.map(item => ({
+            artist: item.a,
+            album: item.b,
+            year: item.c,
+            id: item.d,
+            artworkTemplate: item.e
+        }));
+
+        // Sort by Year
+        results.sort((a, b) => (parseInt(a.year) || 0) - (parseInt(b.year) || 0));
+
+        postMessage({ type: 'RESULTS', results, requestId });
     }
 };

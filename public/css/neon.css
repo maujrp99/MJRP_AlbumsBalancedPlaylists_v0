@@ -1,0 +1,62 @@
+/* Neon / Gamer UI Utilities */
+
+:root {
+    --neon-blue: #00f3ff;
+    --neon-orange: #ff8800;
+    --neon-green: #00ff9d;
+}
+
+.neon-border-blue {
+    border: 1px solid rgba(0, 243, 255, 0.5);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2), inset 0 0 5px rgba(0, 243, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.neon-border-blue:focus {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.4), inset 0 0 10px rgba(0, 243, 255, 0.2);
+}
+
+.neon-border-orange {
+    border: 1px solid rgba(255, 136, 0, 0.5);
+    box-shadow: 0 0 10px rgba(255, 136, 0, 0.2);
+}
+
+.neon-border-green {
+    border: 1px solid rgba(0, 255, 157, 0.5);
+    box-shadow: 0 0 10px rgba(0, 255, 157, 0.2), inset 0 0 5px rgba(0, 255, 157, 0.1);
+    transition: all 0.3s ease;
+}
+
+.neon-border-green:focus {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 15px rgba(0, 255, 157, 0.4), inset 0 0 10px rgba(0, 255, 157, 0.2);
+}
+
+.text-neon-blue {
+    color: var(--neon-blue);
+    text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+}
+
+.text-neon-green {
+    color: var(--neon-green);
+    text-shadow: 0 0 5px rgba(0, 255, 157, 0.5);
+}
+
+/* Custom Scrollbar for results */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}

@@ -1,0 +1,134 @@
+/* Tech / Sci-Fi Theme Utilities */
+
+:root {
+    --tech-green: #00FF9D;
+    --tech-green-dim: rgba(0, 255, 157, 0.1);
+    --tech-orange: #FF8800;
+    --tech-orange-dim: rgba(255, 136, 0, 0.1);
+    --tech-bg: rgba(10, 10, 12, 0.95);
+    --tech-border: rgba(255, 255, 255, 0.15);
+}
+
+/* 1. Tech Panels (Chamfered "Folder" Look) */
+.tech-panel {
+    background: var(--tech-bg);
+    border: 1px solid var(--tech-border);
+    position: relative;
+    border-radius: 8px;
+    /* Fallback */
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+/* The glowing header bar with "cut" corner */
+.tech-header-bar {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+    border-bottom: 1px solid var(--tech-border);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.tech-header-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+}
+
+.tech-green-accent .tech-header-bar::before {
+    background: var(--tech-blue);
+}
+
+.tech-orange-accent .tech-header-bar::before {
+    background: var(--tech-orange);
+}
+
+.tech-title {
+    font-family: 'Syne', sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* 2. Specific Panel Shapes (Clip Path) - Optional advanced look */
+/* We'll stick to borders for now to ensure compatibility, but add "tech accents" */
+
+/* 3. Inputs */
+.tech-input {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid var(--tech-border);
+    color: white !important;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.tech-green-accent .tech-input:focus {
+    border-color: var(--tech-green);
+    box-shadow: 0 0 15px var(--tech-green-dim);
+}
+
+.tech-orange-accent .tech-input:focus {
+    border-color: var(--tech-orange);
+    box-shadow: 0 0 15px var(--tech-orange-dim);
+}
+
+/* 4. The Grid Item (Card) */
+.tech-card {
+    position: relative;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.tech-card:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.tech-card.selected {
+    border-color: var(--tech-orange);
+    box-shadow: 0 0 20px var(--tech-orange-dim), inset 0 0 10px var(--tech-orange-dim);
+}
+
+/* 5. The Big Button */
+.tech-btn-primary {
+    background: linear-gradient(90deg, rgba(255, 136, 0, 0.2) 0%, rgba(255, 136, 0, 0.4) 50%, rgba(255, 136, 0, 0.2) 100%);
+    border: 1px solid var(--tech-orange);
+    color: white;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.tech-btn-primary:hover {
+    box-shadow: 0 0 30px var(--tech-orange-dim);
+    text-shadow: 0 0 8px rgba(255, 136, 0, 0.8);
+    transform: translateY(-1px);
+}
+
+.tech-btn-primary::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    width: 80%;
+    height: 2px;
+    background: var(--tech-orange);
+    box-shadow: 0 0 10px var(--tech-orange);
+}
+
+/* 6. Grid Background */
+.tech-grid-bg {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+}

@@ -19,21 +19,20 @@ export class HomeView extends BaseView {
     super()
     this.migrationUtility = new MigrationUtility(db, new CacheManager())
     this.showMigrationBanner = false
+    this.selectedAlbums = [] // Visual Staging Area
+    this.isBulkMode = false  // Toggle between visual/text
   }
 
   async render(params) {
     const recentSeries = albumSeriesStore.getSeries()
-
-    // Check if migration is needed
-    this.showMigrationBanner = !this.migrationUtility.isMigrationComplete() &&
-      this.migrationUtility.hasLocalStorageData()
+    this.showMigrationBanner = !this.migrationUtility.isMigrationComplete() && this.migrationUtility.hasLocalStorageData()
 
     return `
-      <div class="home-view container">
+      <div class="home-view container max-w-7xl mx-auto px-4">
         ${this.showMigrationBanner ? this.renderMigrationBanner() : ''}
 
         <!-- Hero Banner -->
-        <section class="hero-banner relative rounded-3xl overflow-hidden mb-8 fade-in min-h-[320px] md:min-h-[400px] flex items-center shadow-2xl border border-white/10 group w-full">
+        <section class="hero-banner relative rounded-3xl overflow-hidden mb-12 fade-in min-h-[320px] md:min-h-[400px] flex items-center shadow-2xl border border-white/10 group w-full">
           <!-- Background Image -->
           <div class="absolute inset-0 z-0 bg-black">
             <img src="/assets/images/hero_bg.svg" alt="Hero Background" class="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105">
@@ -68,67 +67,137 @@ export class HomeView extends BaseView {
           </div>
         </section>
 
-        <section class="create-series glass-panel fade-in p-8 md:p-12" style="animation-delay: 0.1s">
-          <h2 class="text-center text-2xl md:text-3xl font-bold mb-12 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Start Creating your New Series of Playlists</h2>
-          
-          <form id="seriesForm" class="series-form">
+        <!-- 2. Main Interface -->
+        <form id="seriesForm" class="tech-interface space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div id="formError" class="alert alert-warning" style="display: none;"></div>
 
-            <div class="form-group mb-8">
-              <label for="seriesName" class="block mb-3 text-sm font-bold tracking-wide text-gray-300 uppercase">Playlists Series Name</label>
-              <input 
-                type="text" 
-                id="seriesName" 
-                class="form-control"
-                placeholder="e.g., Classic Rock Collection"
-                autocomplete="off"
-              />
+            <!-- Row 1: Series Name -->
+            <div class="tech-panel tech-green-accent">
+                <div class="tech-header-bar">
+                    <span class="tech-title">01 // Series Configuration</span>
+                </div>
+                <div class="p-6 bg-black/40">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Target Series Name</label>
+                    <input 
+                        type="text" 
+                        id="seriesName" 
+                        class="tech-input w-full p-4 rounded text-xl"
+                        placeholder="e.g., 'Summer Vibes 2024'"
+                        autocomplete="off"
+                    />
+                </div>
             </div>
 
-            <div class="form-group mb-8">
-              <label for="albumList" class="block mb-3 text-sm font-bold tracking-wide text-gray-300 uppercase">
-                Albums 
-                <span class="text-muted text-xs ml-2 font-normal normal-case opacity-60"> (Minimum 2 albums required, one per line. Format: Artist - Album)</span>
-              </label>
-              
-              <!-- Autocomplete Container -->
-              <div id="autocompleteWrapper" class="mb-4"></div>
+            <!-- Row 2: Operation Deck (Artist | Search) -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 relative">
+                
+                <!-- Toggle Mode -->
+                <button type="button" id="toggleBulkModeBtn" class="absolute -top-8 right-0 text-xs text-gray-500 hover:text-white flex items-center gap-1 transition-colors uppercase tracking-widest">
+                  ${getIcon('FileText', 'w-3 h-3')}
+                  Switch to Bulk Mode
+                </button>
 
-              <textarea 
-                id="albumList" 
-                class="form-control mono"
-                rows="6" 
-                placeholder="The Rolling Stones - Let It Bleed&#10;Pink Floyd - The Wall&#10;Jimi Hendrix - Electric Ladyland"
-              ></textarea>
+                <!-- Left: Artist Filter -->
+                <div id="artistPanel" class="col-span-12 md:col-span-4 tech-panel tech-green-accent h-fit">
+                    <div class="tech-header-bar">
+                        <span class="tech-title">02A // Artist Filter</span>
+                        ${getIcon('User', 'w-4 h-4 text-tech-green opacity-50')}
+                    </div>
+                    <div class="p-4 tech-grid-bg min-h-[150px] flex flex-col gap-4">
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                id="artistFilterInput"
+                                class="tech-input w-full p-3 rounded pl-10 neon-border-green focus:border-green-400"
+                                placeholder="Type Artist Name..."
+                                autocomplete="off"
+                            >
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-tech-green">
+                                ${getIcon('Search', 'w-4 h-4')}
+                            </div>
+                            <div class="absolute inset-y-0 right-0 pr-2 flex items-center">
+                                <button type="button" id="clearArtistBtn" class="text-gray-500 hover:text-white hidden p-1">
+                                    ${getIcon('X', 'w-3 h-3')}
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Filtering by artist unlocks the verified discography grid.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right: Album Selector (Swappable) -->
+                <div id="selectionPanel" class="col-span-12 md:col-span-8 tech-panel tech-orange-accent">
+                    <div class="tech-header-bar">
+                        <span class="tech-title" id="selectionTitle">02B // Select Album</span>
+                    </div>
+                    
+                    <div class="p-4 bg-black/20 min-h-[300px] relative">
+                         <!-- A. Global Search (Default) -->
+                         <div id="autocompleteWrapper" class="transition-opacity duration-300">
+                             <!-- Autocomplete injects here -->
+                         </div>
+
+                         <!-- B. Artist Results Grid (Overlay/Replacement) -->
+                         <div id="artistResultsContainer" class="hidden absolute inset-0 z-10 bg-black/90 p-4 overflow-y-auto custom-scrollbar">
+                             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
+                                <span class="text-tech-green font-bold tracking-wide">DISCOGRAPHY SCAN</span>
+                                <button type="button" id="closeArtistResultsBtn" class="text-xs text-gray-400 hover:text-white uppercase tracking-wider flex items-center gap-1">
+                                    Close View ${getIcon('X', 'w-3 h-3')}
+                                </button>
+                             </div>
+                             <div id="artistResultsGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                 <!-- Dynamic Items -->
+                             </div>
+                         </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group mb-8">
-              <label for="seriesNotes" class="block mb-3 text-sm font-bold tracking-wide text-gray-300 uppercase">Notes (Optional)</label>
-              <textarea 
-                id="seriesNotes" 
-                class="form-control"
-                placeholder="Add some context about this series..."
-                rows="2"
-              ></textarea>
+            <!-- Row 3: Staging Area -->
+            <div class="tech-panel tech-orange-accent">
+                <div class="tech-header-bar">
+                    <span class="tech-title">03 // Staging Area</span>
+                    <span class="text-accent-primary font-mono text-sm count-badge hidden">(0)</span>
+                </div>
+                <div id="stagingGrid" class="p-6 grid grid-cols-2 md:grid-cols-6 lg:grid-cols-8 gap-4 min-h-[140px] tech-grid-bg">
+                    <!-- Dynamic Staging Area -->
+                    <div class="col-span-full flex flex-col items-center justify-center text-gray-600 opacity-50">
+                        ${getIcon('Layers', 'w-12 h-12 mb-2')}
+                        <p class="font-mono text-xs uppercase tracking-widest">Awaiting Selection</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-actions flex flex-col items-center">
-              <p class="form-helper-text text-center mb-6 text-sm text-gray-400 max-w-lg">Create your series of playlists by loading the albums, viewing their tracks' ranking, then generating the playlists.</p>
-              <button type="submit" id="createSeriesBtn" class="btn btn-primary btn-large px-12 py-4 text-lg">
-                ${getIcon('Rocket', 'w-6 h-6')}
-                Load Albums
-              </button>
+            <!-- Notes (Hidden in collapsed toggle or simpler) -->
+            <div class="tech-panel">
+                <div class="p-4 bg-black/40">
+                     <input type="text" id="seriesNotes" class="bg-transparent border-none w-full text-sm text-gray-400 focus:text-white focus:outline-none" placeholder="> Add optional mission notes...">
+                </div>
             </div>
-          </form>
 
+            <!-- Action -->
+            <div class="flex justify-center pt-4">
+                <button type="submit" id="createSeriesBtn" class="tech-btn-primary px-16 py-6 text-xl rounded w-full md:w-auto">
+                    Initialize Load Sequence ${getIcon('ArrowRight', 'ml-2 w-5 h-5 inline-block')}
+                </button>
+            </div>
+
+            <!-- Bulk Mode Fallback (Hidden) -->
+            <div id="bulkModeContainer" class="hidden tech-panel p-6">
+                <textarea id="albumList" class="form-control mono text-sm h-64" placeholder="Artist - Album"></textarea>
+            </div>
+        </form>
+
+        <!-- Footer / Recent -->
+        <section class="mt-20 border-t border-white/5 pt-12 opacity-50 hover:opacity-100 transition-opacity">
+           <h3 class="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6 text-center">Recent Operations</h3>
+           <div class="series-grid grid grid-cols-1 md:grid-cols-3 gap-6">
+                ${this.renderRecentSeries(recentSeries)}
+           </div>
         </section>
 
-        <section class="recent-series mt-12 fade-in" style="animation-delay: 0.2s">
-          <h2 class="text-center text-2xl md:text-3xl font-bold mb-12 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Recent Albums Series</h2>
-          <div class="series-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            ${this.renderRecentSeries(recentSeries)}
-          </div>
-        </section>
       </div>
     `
   }
@@ -262,38 +331,273 @@ export class HomeView extends BaseView {
 
     // Initialize Autocomplete
     this.initAutocomplete()
+
+    // Mode Toggle
+    const toggleBtn = this.$('#toggleBulkModeBtn')
+    if (toggleBtn) {
+      this.on(toggleBtn, 'click', () => this.toggleBulkMode())
+    }
+
+    // Artist Filter Logic
+    const artistInput = this.$('#artistFilterInput')
+
+    if (artistInput) {
+      let debounceTimer;
+      this.on(artistInput, 'input', (e) => {
+        const query = e.target.value.trim()
+        clearTimeout(debounceTimer)
+
+        if (query.length > 2) {
+          debounceTimer = setTimeout(() => this.searchArtists(query), 500)
+        } else {
+          this.closeArtistResults()
+        }
+      })
+    }
+
+    // Close Artist Results
+    const closeArtistBtn = this.$('#closeArtistResultsBtn')
+    if (closeArtistBtn) {
+      this.on(closeArtistBtn, 'click', () => this.closeArtistResults())
+    }
+
+    // Artist Grid Delegation
+    const artistResultsGrid = this.$('#artistResultsGrid')
+    if (artistResultsGrid) {
+      this.on(artistResultsGrid, 'click', (e) => {
+        const card = e.target.closest('.artist-album-card')
+        if (card) {
+          // Parse data from card
+          const albumData = JSON.parse(decodeURIComponent(card.dataset.json))
+          this.toggleAlbumSelection(albumData, card)
+        }
+      })
+    }
+
+    // Staging Grid Delegation (Remove buttons)
+    const stagingGrid = this.$('#stagingGrid')
+    if (stagingGrid) {
+      this.on(stagingGrid, 'click', (e) => {
+        const removeBtn = e.target.closest('.remove-album-btn')
+        if (removeBtn) {
+          const index = parseInt(removeBtn.dataset.index)
+          this.removeAlbum(index)
+        }
+      })
+    }
+  }
+
+  toggleBulkMode() {
+    this.isBulkMode = !this.isBulkMode
+    const visualContainer = this.$('#visualModeContainer')
+    const bulkContainer = this.$('#bulkModeContainer')
+    const toggleBtnText = this.$('#toggleBulkModeBtn .mode-text')
+
+    if (this.isBulkMode) {
+      visualContainer.classList.add('hidden')
+      bulkContainer.classList.remove('hidden')
+      if (toggleBtnText) toggleBtnText.textContent = 'Switch to Visual Search'
+
+      // SYNC: Visual -> Text
+      const textarea = this.$('#albumList')
+      if (textarea && this.selectedAlbums.length > 0) {
+        const textContent = this.selectedAlbums.map(a => `${a.artist} - ${a.album}`).join('\n')
+        // Append or Replace? Let's append to be safe if user typed something
+        if (textarea.value.trim().length > 0 && !textarea.value.endsWith('\n')) {
+          textarea.value += '\n'
+        }
+        textarea.value += textContent
+      }
+
+    } else {
+      bulkContainer.classList.add('hidden')
+      visualContainer.classList.remove('hidden')
+      if (toggleBtnText) toggleBtnText.textContent = 'Switch to Bulk Paste'
+      // We do NOT sync Text -> Visual automatically as parsing covers is hard without fetching
+    }
+  }
+
+  async searchArtists(artistName) {
+    // 1. Show Container
+    const container = this.$('#artistResultsContainer')
+    const wrapper = this.$('#autocompleteWrapper')
+    const grid = this.$('#artistResultsGrid')
+
+    if (!container || !grid) return
+
+    container.classList.remove('hidden')
+    wrapper.classList.add('opacity-50', 'pointer-events-none') // Dim background
+
+    // 2. Fetch
+    grid.innerHTML = `<div class="col-span-full text-center py-8 text-accent-secondary animate-pulse">Searching discography for "${artistName}"...</div>`
+
+    try {
+      const results = await albumLoader.findByArtist(artistName)
+
+      if (results.length === 0) {
+        grid.innerHTML = `
+                  <div class="col-span-full text-center py-8 text-gray-500">
+                      <p>No albums found for "${artistName}"</p>
+                      <button class="btn btn-sm btn-ghost mt-2" id="useManualSearch">Try Manual Search</button>
+                  </div>
+              `
+        return
+      }
+
+      // 3. Render
+      grid.innerHTML = results.map(album => {
+        const isSelected = this.selectedAlbums.some(a => a.id === album.id)
+        const coverUrl = albumLoader.getArtworkUrl(album, 200)
+        const json = encodeURIComponent(JSON.stringify(album))
+
+        return `
+                <div class="artist-album-card cursor-pointer group relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${isSelected ? 'border-orange-500 shadow-[0_0_15px_rgba(255,85,0,0.5)]' : 'border-transparent hover:border-white/20'}" data-json="${json}" data-id="${album.id}">
+                    <img src="${coverUrl}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all ${isSelected ? 'opacity-100 scale-105' : ''}">
+                    
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-2 flex flex-col justify-end">
+                        <p class="text-white text-xs font-bold truncate">${album.album}</p>
+                        <p class="text-gray-400 text-[10px]">${album.year}</p>
+                    </div>
+
+                    ${isSelected ? `
+                        <div class="absolute top-2 right-2 bg-orange-500 text-white rounded-full p-1 shadow-lg animate-in zoom-in">
+                            ${getIcon('Check', 'w-3 h-3')}
+                        </div>
+                    ` : ''}
+                </div>
+              `
+      }).join('')
+
+    } catch (err) {
+      console.error(err)
+      grid.innerHTML = `<div class="col-span-full text-center text-red-400">Error loading albums</div>`
+    }
+  }
+
+  closeArtistResults() {
+    const container = this.$('#artistResultsContainer')
+    const wrapper = this.$('#autocompleteWrapper')
+    if (container) container.classList.add('hidden')
+    if (wrapper) wrapper.classList.remove('opacity-50', 'pointer-events-none')
+  }
+
+  toggleAlbumSelection(album, cardEl) {
+    const index = this.selectedAlbums.findIndex(a => a.id === album.id)
+
+    if (index >= 0) {
+      // Remove
+      this.removeAlbum(index)
+      // Update Card UI locally without re-render entire grid
+      if (cardEl) {
+        cardEl.classList.remove('border-orange-500', 'shadow-[0_0_15px_rgba(255,85,0,0.5)]')
+        cardEl.classList.add('border-transparent')
+        const check = cardEl.querySelector('.bg-orange-500')
+        if (check) check.remove()
+      }
+    } else {
+      // Add
+      this.handleAlbumSelect(album)
+      // Update Card UI
+      if (cardEl) {
+        cardEl.classList.add('border-orange-500', 'shadow-[0_0_15px_rgba(255,85,0,0.5)]')
+        cardEl.classList.remove('border-transparent')
+        // Add checkmark if not exists
+        if (!cardEl.querySelector('.bg-orange-500')) {
+          cardEl.innerHTML += `
+                    <div class="absolute top-2 right-2 bg-orange-500 text-white rounded-full p-1 shadow-lg animate-in zoom-in">
+                        ${getIcon('Check', 'w-3 h-3')}
+                    </div>
+                 `
+        }
+      }
+    }
   }
 
   async initAutocomplete() {
     const wrapper = this.$('#autocompleteWrapper')
-    const textarea = this.$('#albumList')
 
-    if (wrapper && textarea) {
+    if (wrapper) {
       // Start loading data
       albumLoader.load().catch(console.error)
 
       const autocomplete = new Autocomplete({
-        placeholder: 'Search for an album to add...',
-        loader: albumLoader,
-        onSelect: (item) => {
-          const entry = `${item.artist} - ${item.album}`
-          const currentVal = textarea.value
-
-          // Add newline if needed
-          const separator = currentVal.length > 0 && !currentVal.endsWith('\n') ? '\n' : ''
-          textarea.value = currentVal + separator + entry + '\n'
-
-          // Flash effect to show added
-          textarea.classList.add('border-accent-primary')
-          setTimeout(() => textarea.classList.remove('border-accent-primary'), 300)
-
-          // Scroll to bottom
-          textarea.scrollTop = textarea.scrollHeight
-        }
+        placeholder: 'Or search for any album directly...',
+        loader: {
+          search: async (q, limit) => {
+            // Standard global search
+            return albumLoader.search(q, limit)
+          },
+          getArtworkUrl: (item, size) => albumLoader.getArtworkUrl(item, size)
+        },
+        onSelect: (item) => this.handleAlbumSelect(item)
       })
 
       wrapper.appendChild(autocomplete.render())
     }
+  }
+
+  handleAlbumSelect(item) {
+    // 1. Add to state
+    this.selectedAlbums.push(item)
+
+    // 2. Render Grid
+    this.renderStagingGrid()
+
+    // 3. Update counter
+    this.updateCountBadge()
+
+    // 4. Feedback
+    // Optional: scroll to grid if needed
+  }
+
+  removeAlbum(index) {
+    this.selectedAlbums.splice(index, 1)
+    this.renderStagingGrid()
+    this.updateCountBadge()
+  }
+
+  updateCountBadge() {
+    const badge = this.$('.count-badge')
+    if (badge) {
+      badge.textContent = `(${this.selectedAlbums.length})`
+      badge.classList.toggle('hidden', this.selectedAlbums.length === 0)
+    }
+  }
+
+  renderStagingGrid() {
+    const grid = this.$('#stagingGrid')
+    if (!grid) return
+
+    if (this.selectedAlbums.length === 0) {
+      grid.innerHTML = `
+             <div class="col-span-full flex flex-col items-center justify-center text-gray-500 py-8 opacity-60">
+                ${getIcon('Search', 'w-10 h-10 mb-2')}
+                <p>Search and select albums above</p>
+             </div>
+          `
+      return
+    }
+
+    grid.innerHTML = this.selectedAlbums.map((album, index) => {
+      const coverUrl = albumLoader.getArtworkUrl(album, 300)
+
+      return `
+            <div class="group relative aspect-square rounded-lg overflow-hidden bg-gray-800 border border-white/10 shadow-lg animate-in zoom-in duration-300">
+                <img src="${coverUrl}" alt="${album.album}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-3 flex flex-col justify-end">
+                    <p class="text-white font-bold text-sm truncate shadow-black drop-shadow-md">${album.album}</p>
+                    <p class="text-gray-300 text-xs truncate shadow-black drop-shadow-md">${album.artist}</p>
+                </div>
+
+                <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button class="remove-album-btn bg-red-500/80 hover:bg-red-500 text-white p-1 rounded-full shadow-lg backdrop-blur-sm transition-transform hover:scale-110" data-index="${index}" title="Remove">
+                        ${getIcon('X', 'w-4 h-4')}
+                    </button>
+                </div>
+            </div>
+          `
+    }).join('')
   }
 
   async handleMigration() {
@@ -330,25 +634,31 @@ export class HomeView extends BaseView {
 
   async handleCreateSeries() {
     const name = this.$('#seriesName')?.value.trim()
-    const albumListText = this.$('#albumList')?.value.trim()
     const notes = this.$('#seriesNotes')?.value.trim()
+    const albumListText = this.$('#albumList')?.value.trim()
 
-    if (!name) {
-      this.showErrorMessage('⚠️ Please enter a series name')
-      this.$('#seriesName')?.focus()
-      return
+    let albumQueries = []
+
+    if (this.isBulkMode) {
+      // Bulk Mode: Parse Textarea
+      if (!albumListText) {
+        this.showErrorMessage('⚠️ Please enter at least 2 albums (one per line)')
+        this.$('#albumList')?.focus()
+        return
+      }
+      albumQueries = albumListText
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+
+    } else {
+      // Visual Mode: Use State
+      if (this.selectedAlbums.length < 2) {
+        this.showErrorMessage('⚠️ Please select at least 2 albums')
+        return
+      }
+      albumQueries = this.selectedAlbums.map(a => `${a.artist} - ${a.album}`)
     }
-
-    if (!albumListText) {
-      this.showErrorMessage('⚠️ Please enter at least 2 albums (one per line)')
-      this.$('#albumList')?.focus()
-      return
-    }
-
-    const albumQueries = albumListText
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line.length > 0)
 
     if (albumQueries.length < 2) {
       this.showErrorMessage('⚠️ Minimum 2 albums required for balanced playlists.<br>Please add at least one more album.')
