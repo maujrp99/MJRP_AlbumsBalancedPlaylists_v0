@@ -734,7 +734,7 @@ export class AlbumsView extends BaseView {
               return
             }
 
-            router.navigate(`/ playlists ? seriesId = ${activeSeries.id} `)
+            router.navigate(`/playlists?seriesId=${activeSeries.id}`)
           })
         }
       })
@@ -756,7 +756,7 @@ export class AlbumsView extends BaseView {
           return
         }
         console.log('[AlbumsView] Navigating to ranking:', albumId)
-        router.navigate(`/ ranking / ${albumId} `)
+        router.navigate(`/ranking/${albumId}`)
         return
       }
 
@@ -870,7 +870,7 @@ export class AlbumsView extends BaseView {
         }
 
         console.log('[AlbumsView] Navigating to playlists with', albums.length, 'albums')
-        router.navigate(`/ playlists ? seriesId = ${activeSeries.id} `)
+        router.navigate(`/playlists?seriesId=${activeSeries.id}`)
       })
     }
 
@@ -898,7 +898,12 @@ export class AlbumsView extends BaseView {
       // 1. Store is empty (currentCount === 0)
       // 2. Wrong number of albums (currentCount !== expectedCount)
       // 3. Albums are from a DIFFERENT series (check first album's metadata or series change)
+
+      // CRITICAL FIX: Ensure albumsStore knows which series we are in BEFORE checking cache
+      albumsStore.setActiveAlbumSeriesId(activeSeries.id)
+
       const expectedCount = activeSeries.albumQueries.length
+      const currentAlbums = albumsStore.getAlbums() // Get updated cache for this series
       const currentCount = currentAlbums.length
 
       // Check if we need to reload
