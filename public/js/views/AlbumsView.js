@@ -4,9 +4,10 @@ import { albumSeriesStore } from '../stores/albumSeries.js'
 import { apiClient } from '../api/client.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
+import { albumLoader } from '../services/AlbumLoader.js'
+import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
-import { optimizedAlbumLoader as albumLoader } from '../services/OptimizedAlbumLoader.js'
 
 /**
  * AlbumsView
@@ -72,7 +73,7 @@ export class AlbumsView extends BaseView {
 
     let displayAlbums = albums
     if (targetSeriesId && lastLoadedId && targetSeriesId !== lastLoadedId) {
-      console.warn(`[AlbumsView] Ghost prevention: series mismatch (${lastLoadedId} != ${targetSeriesId})`)
+      console.warn(`[AlbumsView] Ghost prevention: series mismatch(${lastLoadedId} != ${targetSeriesId})`)
       displayAlbums = []  // Block ghost albums at render level
     }
 
@@ -82,120 +83,120 @@ export class AlbumsView extends BaseView {
     // DEBUG: Enhanced logging for troubleshooting
 
     return `
-      <div class="albums-view container">
-        <header class="view-header mb-8 fade-in">
-          ${Breadcrumb.render('/albums')}
-          
-          <!-- Title Row -->
-          <div class="header-title-row mb-6 flex justify-between items-center">
-            <h1 class="text-4xl font-bold flex items-center gap-3">
-              ${getIcon('Disc', 'w-8 h-8 text-accent-primary')}
-              ${activeSeries ? this.escapeHtml(activeSeries.name) : 'All Albums'}
-            </h1>
-            
-            <button 
-              id="generatePlaylistsBtn" 
-              class="btn btn-primary flex items-center gap-2"
-              ${filteredAlbums.length === 0 ? 'disabled' : ''}
-            >
-              ${getIcon('Play', 'w-5 h-5')}
-              Generate Playlists
-            </button>
+  <div class="albums-view container" >
+    <header class="view-header mb-8 fade-in">
+      ${Breadcrumb.render('/albums')}
+
+      <!-- Title Row -->
+      <div class="header-title-row mb-6 flex justify-between items-center">
+        <h1 class="text-4xl font-bold flex items-center gap-3">
+          ${getIcon('Disc', 'w-8 h-8 text-accent-primary')}
+          ${activeSeries ? this.escapeHtml(activeSeries.name) : 'All Albums'}
+        </h1>
+
+        <button
+          id="generatePlaylistsBtn"
+          class="btn btn-primary flex items-center gap-2"
+          ${filteredAlbums.length === 0 ? 'disabled' : ''}
+        >
+          ${getIcon('Play', 'w-5 h-5')}
+          Generate Playlists
+        </button>
+      </div>
+
+      <!-- Filters Section -->
+      <div class="filters-section glass-panel p-4 mb-6 fade-in" style="animation-delay: 0.1s">
+        <div class="filters-row flex flex-wrap gap-3 items-center">
+          <!-- Search -->
+          <div class="search-bar relative flex-1 min-w-[200px]">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+              ${getIcon('Search', 'w-5 h-5')}
+            </span>
+            <input
+              type="search"
+              id="albumSearch"
+              placeholder="Search albums..."
+              class="form-control pl-10 w-full"
+              value="${this.searchQuery}"
+            />
           </div>
-          
-          <!-- Filters Section -->
-          <div class="filters-section glass-panel p-4 mb-6 fade-in" style="animation-delay: 0.1s">
-            <div class="filters-row flex flex-wrap gap-3 items-center">
-              <!-- Search -->
-              <div class="search-bar relative flex-1 min-w-[200px]">
-                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  ${getIcon('Search', 'w-5 h-5')}
-                </span>
-                <input 
-                  type="search" 
-                  id="albumSearch" 
-                  placeholder="Search albums..."
-                  class="form-control pl-10 w-full"
-                  value="${this.searchQuery}"
-                />
-              </div>
-              
-              <!-- Artist Filter -->
-              <div class="filter-dropdown relative">
-                <select id="artistFilter" class="form-control appearance-none cursor-pointer pr-8">
-                  <option value="all">All Artists</option>
-                  ${this.getUniqueArtists(albums).map(artist => `
+
+          <!-- Artist Filter -->
+          <div class="filter-dropdown relative">
+            <select id="artistFilter" class="form-control appearance-none cursor-pointer pr-8">
+              <option value="all">All Artists</option>
+              ${this.getUniqueArtists(albums).map(artist => `
                     <option value="${this.escapeHtml(artist)}" ${this.filters.artist === artist ? 'selected' : ''}>
                       ${this.escapeHtml(artist)}
                     </option>
                   `).join('')}
-                </select>
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                  ${getIcon('ChevronDown', 'w-4 h-4')}
-                </span>
-              </div>
-              
-              <!-- Year Filter -->
-              <div class="filter-dropdown relative">
-                <select id="yearFilter" class="form-control appearance-none cursor-pointer pr-8">
-                  <option value="all">All Years</option>
-                  <option value="1960s" ${this.filters.year === '1960s' ? 'selected' : ''}>1960s</option>
-                  <option value="1970s" ${this.filters.year === '1970s' ? 'selected' : ''}>1970s</option>
-                  <option value="1980s" ${this.filters.year === '1980s' ? 'selected' : ''}>1980s</option>
-                  <option value="1990s" ${this.filters.year === '1990s' ? 'selected' : ''}>1990s</option>
-                  <option value="2000s" ${this.filters.year === '2000s' ? 'selected' : ''}>2000s+</option>
-                </select>
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                  ${getIcon('ChevronDown', 'w-4 h-4')}
-                </span>
-              </div>
-              
-              <!-- Status Filter -->
-              <div class="filter-dropdown relative">
-                <select id="statusFilter" class="form-control appearance-none cursor-pointer pr-8">
-                  <option value="all">All Status</option>
-                  <option value="pending" ${this.filters.status === 'pending' ? 'selected' : ''}>Pending</option>
-                </select>
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                  ${getIcon('ChevronDown', 'w-4 h-4')}
-                </span>
-              </div>
-              
-              <!-- BestEver Toggle -->
-              <label class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  id="bestEverOnly" 
-                  class="form-checkbox"
-                  ${this.filters.bestEverOnly ? 'checked' : ''}
-                />
-                <span class="text-sm font-medium whitespace-nowrap">BestEver only</span>
-              </label>
-              
-              <!-- Refresh Button (Skip Cache) -->
-              <button 
-                id="refreshAlbums" 
-                class="btn btn-warning whitespace-nowrap flex items-center gap-2"
-                title="Reload albums from API (skip cache)">
-                ${getIcon('RefreshCw', 'w-4 h-4')}
-                Refresh
-              </button>
-              
-              <!-- View Mode Toggle -->
-              <button 
-                id="toggleViewMode" 
-                class="btn ${this.viewMode === 'compact' ? 'btn-primary' : 'btn-secondary'} whitespace-nowrap">
-                ${getIcon(this.viewMode === 'compact' ? 'List' : 'Grid', 'w-5 h-5')}
-                ${this.viewMode === 'compact' ? 'View Expanded' : 'View Compact'}
-              </button>
-            </div>
+            </select>
+            <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+              ${getIcon('ChevronDown', 'w-4 h-4')}
+            </span>
           </div>
-        </header>
+
+          <!-- Year Filter -->
+          <div class="filter-dropdown relative">
+            <select id="yearFilter" class="form-control appearance-none cursor-pointer pr-8">
+              <option value="all">All Years</option>
+              <option value="1960s" ${this.filters.year === '1960s' ? 'selected' : ''}>1960s</option>
+              <option value="1970s" ${this.filters.year === '1970s' ? 'selected' : ''}>1970s</option>
+              <option value="1980s" ${this.filters.year === '1980s' ? 'selected' : ''}>1980s</option>
+              <option value="1990s" ${this.filters.year === '1990s' ? 'selected' : ''}>1990s</option>
+              <option value="2000s" ${this.filters.year === '2000s' ? 'selected' : ''}>2000s+</option>
+            </select>
+            <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+              ${getIcon('ChevronDown', 'w-4 h-4')}
+            </span>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="filter-dropdown relative">
+            <select id="statusFilter" class="form-control appearance-none cursor-pointer pr-8">
+              <option value="all">All Status</option>
+              <option value="pending" ${this.filters.status === 'pending' ? 'selected' : ''}>Pending</option>
+            </select>
+            <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+              ${getIcon('ChevronDown', 'w-4 h-4')}
+            </span>
+          </div>
+
+          <!-- BestEver Toggle -->
+          <label class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+            <input
+              type="checkbox"
+              id="bestEverOnly"
+              class="form-checkbox"
+              ${this.filters.bestEverOnly ? 'checked' : ''}
+            />
+            <span class="text-sm font-medium whitespace-nowrap">BestEver only</span>
+          </label>
+
+          <!-- Refresh Button (Skip Cache) -->
+          <button
+            id="refreshAlbums"
+            class="btn btn-warning whitespace-nowrap flex items-center gap-2"
+            title="Reload albums from API (skip cache)">
+            ${getIcon('RefreshCw', 'w-4 h-4')}
+            Refresh
+          </button>
+
+          <!-- View Mode Toggle -->
+          <button
+            id="toggleViewMode"
+            class="btn ${this.viewMode === 'compact' ? 'btn-primary' : 'btn-secondary'} whitespace-nowrap">
+            ${getIcon(this.viewMode === 'compact' ? 'List' : 'Grid', 'w-5 h-5')}
+            ${this.viewMode === 'compact' ? 'View Expanded' : 'View Compact'}
+          </button>
+        </div>
+      </div>
+    </header>
 
         ${this.isLoading ? this.renderLoadingProgress() : ''}
 
-        <!-- Conditional rendering based on viewMode -->
-        ${this.viewMode === 'expanded' ?
+        <!--Conditional rendering based on viewMode-->
+  ${this.viewMode === 'expanded' ?
         `<div class="albums-list space-y-6" id="albumsList">
             ${this.renderExpandedList(filteredAlbums)}
           </div>` :
@@ -204,7 +205,7 @@ export class AlbumsView extends BaseView {
           </div>`
       }
 
-        <!-- Empty state container - updated dynamically -->
+        <!--Empty state container - updated dynamically-->
         <div id="emptyStateContainer">
           ${filteredAlbums.length === 0 && !this.isLoading ? this.renderEmptyState() : ''}
         </div>
@@ -213,79 +214,79 @@ export class AlbumsView extends BaseView {
           <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
         </footer>
       </div>
-    `
+  `
   }
 
   // MODE 3: Expanded List View
   renderExpandedList(albums) {
     if (albums.length === 0 && (this.searchQuery || Object.values(this.filters).some(v => v !== 'all' && v !== false))) {
       return `
-        <div class="text-center py-12 text-muted">
+  <div class="text-center py-12 text-muted" >
           <p class="text-xl mb-2">No albums match your filters</p>
           <p class="text-sm">Try adjusting your search or filters</p>
         </div>
-      `
+  `
     }
 
-    // DEBUG: Log first album structure
-    // if (albums.length > 0) { ... }
-
     return albums.map((album, idx) => {
-      // DEBUG: Trace rendering of each album
       const coverUrl = albumLoader.getArtworkUrl(album, 150)
 
       return `
-      <div class="expanded-album-card glass-panel p-6 fade-in" style="animation-delay: ${idx * 0.05}s" data-album-id="${album.id || ''}">
-        <!-- Album Header -->
-        <div class="album-header-compact flex items-start gap-4 mb-6 pb-4 border-b border-white/10">
-          <!-- Album Cover -->
-          <div class="album-cover w-24 h-24 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl flex items-center justify-center flex-shrink-0">
-            ${coverUrl ?
-          `<img src="${coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
-          `<div class="text-2xl opacity-20">${getIcon('Music', 'w-12 h-12')}</div>`
-        }
-          </div>
+  <div class="expanded-album-card glass-panel p-6 mb-6 rounded-2xl animate-in fade-in slide-in-from-bottom-4 duration-500" style="animation-delay: ${idx * 50}ms" data-album-id="${album.id || ''}" >
+    <div class="flex flex-col md:flex-row gap-6 items-start">
 
-          <!-- Album Info -->
-          <div class="flex-1">
-            <h3 class="text-2xl font-bold mb-1">${getIcon('Music', 'w-6 h-6 inline mr-2')}${this.escapeHtml(album.title)}</h3>
-            <p class="text-accent-primary text-lg mb-2">${this.escapeHtml(album.artist)}</p>
-            <div class="flex flex-wrap gap-2 text-sm">
-              ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
-              <span class="badge badge-neutral">${album.tracks?.length || 0} tracks</span>
-              ${(() => {
+      <!-- Album Cover & Actions Column -->
+      <div class="flex flex-col gap-4 shrink-0">
+        <div class="relative group">
+          <div class="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg bg-gray-800 border border-white/10">
+            <img
+              src="${coverUrl}"
+              alt="${this.escapeHtml(album.title)}"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <!-- Action Buttons (Refined) -->
+        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+          <button class="tech-btn tech-btn-secondary text-xs px-4 py-2 flex items-center gap-2 hover:bg-white/20"
+            data-action="add-to-inventory"
+            data-album-id="${album.id || ''}">
+            ${getIcon('Plus', 'w-3 h-3')} Inventory
+          </button>
+
+          <button class="tech-btn tech-btn-danger text-xs px-4 py-2 flex items-center gap-2"
+            data-action="remove-album"
+            data-album-id="${album.id || ''}">
+            ${getIcon('Trash', 'w-3 h-3')} Remove
+          </button>
+        </div>
+      </div>
+
+      <!-- Content Column -->
+      <div class="flex-1 w-full min-w-0">
+        <h3 class="text-2xl font-bold mb-1 flex items-center gap-2">
+          ${getIcon('Music', 'w-6 h-6 text-accent-primary')}
+          ${this.escapeHtml(album.title)}
+        </h3>
+        <p class="text-accent-primary text-lg mb-3">${this.escapeHtml(album.artist)}</p>
+
+        <!-- Badges -->
+        <div class="flex flex-wrap gap-2 text-sm mb-4">
+          ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
+          <span class="badge badge-neutral">${album.tracks?.length || 0} tracks</span>
+          ${(() => {
           const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
           return hasRatings ?
             '' :
             `<span class="badge badge-warning flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
         })()}
-              ${album.bestEverAlbumId ? `
+          ${album.bestEverAlbumId ? `
                 <a href="https://www.besteveralbums.com/thechart.php?a=${album.bestEverAlbumId}" target="_blank" rel="noopener noreferrer" class="badge badge-primary hover:badge-accent transition-colors flex items-center gap-1">
                   ${getIcon('ExternalLink', 'w-3 h-3')} BestEver
                 </a>
               ` : ''}
-            </div>
-          </div>
-            </div>
-          </div>
-          
-          <!-- Actions -->
-          <div class="flex flex-col gap-2 ml-4">
-            <button 
-              class="btn btn-success btn-sm whitespace-nowrap flex items-center gap-2"
-              data-action="add-to-inventory"
-              data-album-id="${album.id || ''}"
-            >
-              ${getIcon('Plus', 'w-4 h-4')} Add to Inventory
-            </button>
-            <button 
-              class="btn btn-danger btn-sm whitespace-nowrap flex items-center gap-2"
-              data-action="remove-album"
-              data-album-id="${album.id || ''}"
-            >
-              ${getIcon('Trash', 'w-4 h-4')} Remove
-            </button>
-          </div>
         </div>
 
         <!-- Dual Tracklists -->
@@ -294,7 +295,9 @@ export class AlbumsView extends BaseView {
           ${this.renderRankedTracklist(album)}
         </div>
       </div>
-    `
+    </div>
+      </div>
+  `
     }).join('')
   }
 
@@ -309,7 +312,7 @@ export class AlbumsView extends BaseView {
     const rankedTracks = [...tracks].sort((a, b) => (b.rating || 0) - (a.rating || 0))
 
     return `
-      <div class="tracklist-section">
+  <div class="tracklist-section" >
         <h4 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-primary">
           ${getIcon('TrendingUp', 'w-4 h-4')}
           Ranked by Acclaim
@@ -328,7 +331,7 @@ export class AlbumsView extends BaseView {
     }).join('')}
         </div>
       </div>
-    `
+  `
   }
 
   // Original Tracklist (for MODE 3)
@@ -340,7 +343,7 @@ export class AlbumsView extends BaseView {
     }
 
     return `
-      <div class="tracklist-section">
+  <div class="tracklist-section" >
         <h4 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
           ${getIcon('List', 'w-4 h-4')}
           Original Album Order
@@ -360,7 +363,7 @@ export class AlbumsView extends BaseView {
     }).join('')}
         </div>
       </div>
-    `
+  `
   }
 
   // MODE 1: Compact Grid View
@@ -369,66 +372,73 @@ export class AlbumsView extends BaseView {
 
     if (albums.length === 0 && (this.searchQuery || Object.values(this.filters).some(v => v !== 'all' && v !== false))) {
       return `
-        <div class="col-span-full text-center py-12 text-muted">
+  <div class="col-span-full text-center py-12 text-muted" >
           <p class="text-xl mb-2">No albums match your filters</p>
           <p class="text-sm">Try adjusting your search or filters</p>
         </div>
-      `
+  `
     }
 
     return albums.map(album => {
+      // Use 300px for grid view to ensure high quality on retina/large screens
       const coverUrl = albumLoader.getArtworkUrl(album, 300)
 
       return `
-      <div class="album-card group relative overflow-hidden" data-album-id="${album.id || ''}">
-        <div class="album-cover aspect-square bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center mb-4 rounded-xl relative">
-          ${coverUrl ?
-          `<img src="${coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
-          `<div class="text-6xl opacity-20">${getIcon('Music', 'w-24 h-24')}</div>`
+  <div class="album-card-stack group flex flex-col gap-3" data-album-id="${album.id || ''}" >
+        <!--Image Container(Square top)-->
+        <div class="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-800 border border-white/5 shadow-lg group-hover:shadow-xl transition-all duration-300">
+           ${coverUrl ?
+          `<img src="${coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />` :
+          `<div class="flex items-center justify-center w-full h-full text-white/20">${getIcon('Music', 'w-24 h-24')}</div>`
         }
-          
-          <!-- Hover Overlay -->
-          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-sm">
-             <button class="btn-icon bg-red-500/20 hover:bg-red-500/40 text-red-400 p-3 rounded-full" title="Remove from Series" data-action="remove-album" data-album-id="${album.id || ''}">
-               ${getIcon('Trash', 'w-5 h-5')}
-             </button>
-             <button class="btn-icon bg-green-500/20 hover:bg-green-500/40 text-green-400 p-3 rounded-full" title="Add to Inventory" data-action="add-to-inventory" data-album-id="${album.id || ''}">
-               ${getIcon('Plus', 'w-5 h-5')}
-             </button>
-          </div>
+           
+           <!-- Hover Floating Actions (Pill) -->
+           <div class="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-10">
+              <div class="flex items-center gap-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-full p-1 shadow-2xl">
+                 <button class="p-2 text-red-400 hover:text-red-300 hover:bg-white/10 rounded-full transition-colors" title="Remove" data-action="remove-album" data-album-id="${album.id || ''}">
+                   ${getIcon('Trash', 'w-4 h-4')}
+                 </button>
+                 <div class="w-px h-4 bg-white/20"></div>
+                 <button class="p-2 text-green-400 hover:text-green-300 hover:bg-white/10 rounded-full transition-colors" title="Add to Inventory" data-action="add-to-inventory" data-album-id="${album.id || ''}">
+                   ${getIcon('Plus', 'w-4 h-4')}
+                 </button>
+              </div>
+           </div>
         </div>
         
-        <div class="album-info">
-          <h3 class="album-title font-bold text-lg truncate mb-1" title="${this.escapeHtml(album.title)}">${this.escapeHtml(album.title)}</h3>
-          <p class="album-artist text-accent-primary text-sm mb-2">${this.escapeHtml(album.artist)}</p>
-          
-          <div class="album-meta flex flex-wrap gap-2 mb-4">
-            <span class="badge badge-neutral text-xs">
-              ${album.year || 'Unknown'}
-            </span>
-            <span class="badge badge-neutral text-xs">
-              ${album.tracks?.length || 0} tracks
-            </span>
-            ${(() => {
+        <!--Metadata Container(Below Image)-->
+  <div class="flex flex-col gap-1 px-1">
+    <h3 class="font-bold text-white text-base truncate leading-tight" title="${this.escapeHtml(album.title)}">
+      ${this.escapeHtml(album.title)}
+    </h3>
+    <p class="text-gray-400 text-sm truncate hover:text-white transition-colors">
+      ${this.escapeHtml(album.artist)}
+    </p>
+
+    <!-- Badges (Preserved) -->
+    <div class="flex flex-wrap gap-2 mt-1">
+      <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
+        ${album.year || 'N/A'}
+      </span>
+      <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
+        ${album.tracks?.length || 0}
+      </span>
+      ${(() => {
           const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
-          return hasRatings ?
-            '' :
-            `<span class="badge badge-warning text-xs flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
+          return hasRatings ? '' : `<span class="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')}</span>`
         })()}
-          </div>
-        </div>
-        
-        <div class="album-actions mt-auto">
-          <button 
-            class="btn btn-secondary btn-sm w-full justify-center group-hover:btn-primary transition-all"
-            data-action="view-ranking"
-            data-album-id="${album.id || ''}">
-            View Ranked Tracks ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1')}
-          </button>
-        </div>
+    </div>
+
+    <!-- View Ranking Button (Preserved, Subtle) -->
+    <button
+      class="mt-2 w-full text-xs py-1.5 rounded-lg border border-white/10 bg-white/5 text-gray-300 hover:bg-white/10 hover:border-accent-primary/50 hover:text-accent-primary transition-all flex items-center justify-center gap-1"
+      data-action="view-ranking"
+      data-album-id="${album.id || ''}">
+      View Ranked ${getIcon('ArrowLeft', 'w-3 h-3 rotate-180')}
+    </button>
+  </div>
       </div>
-      </div>
-    `
+  `
     }).join('')
   }
 
@@ -520,22 +530,22 @@ export class AlbumsView extends BaseView {
     const percentage = total > 0 ? Math.round((current / total) * 100) : 0
 
     return `
-      <div class="loading-overlay fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
-        <div class="loading-content glass-panel p-8 max-w-md w-full text-center">
-          <div class="loading-spinner w-12 h-12 border-4 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p class="loading-text text-xl font-bold mb-2">Loading albums...</p>
-          <div class="progress-bar-container bg-white/10 h-2 rounded-full overflow-hidden mb-2">
-            <div class="progress-bar bg-accent-primary h-full transition-all duration-300" style="width: ${percentage}%"></div>
-          </div>
-          <p class="loading-status text-muted">${current} / ${total} (${percentage}%)</p>
-        </div>
+  <div class="loading-overlay fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50" >
+    <div class="loading-content glass-panel p-8 max-w-md w-full text-center">
+      <div class="loading-spinner w-12 h-12 border-4 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p class="loading-text text-xl font-bold mb-2">Loading albums...</p>
+      <div class="progress-bar-container bg-white/10 h-2 rounded-full overflow-hidden mb-2">
+        <div class="progress-bar bg-accent-primary h-full transition-all duration-300" style="width: ${percentage}%"></div>
       </div>
-    `
+      <p class="loading-status text-muted">${current} / ${total} (${percentage}%)</p>
+    </div>
+      </div>
+  `
   }
 
   renderEmptyState() {
     return `
-      <div class="empty-state text-center py-16 glass-panel">
+  <div class="empty-state text-center py-16 glass-panel" >
         <div class="text-6xl mb-6 opacity-30">${getIcon('Music', 'w-24 h-24 mx-auto')}</div>
         <h2 class="text-2xl font-bold mb-2">No albums in library</h2>
         <p class="text-muted mb-8">Create a series from the home page to get started</p>
@@ -543,7 +553,7 @@ export class AlbumsView extends BaseView {
           ${getIcon('ArrowLeft', 'w-4 h-4 mr-2')} Go to Home
         </button>
       </div>
-      `
+  `
   }
 
   async mount(params) {
@@ -724,7 +734,7 @@ export class AlbumsView extends BaseView {
               return
             }
 
-            router.navigate(`/playlists?seriesId=${activeSeries.id}`)
+            router.navigate(`/ playlists ? seriesId = ${activeSeries.id} `)
           })
         }
       })
@@ -746,7 +756,7 @@ export class AlbumsView extends BaseView {
           return
         }
         console.log('[AlbumsView] Navigating to ranking:', albumId)
-        router.navigate(`/ranking/${albumId}`)
+        router.navigate(`/ ranking / ${albumId} `)
         return
       }
 
@@ -802,7 +812,7 @@ export class AlbumsView extends BaseView {
 
           showDeleteAlbumModal(
             albumId,
-            `${album.title} - ${album.artist}`,
+            `${album.title} - ${album.artist} `,
             async (id) => {
               try {
                 // Check if series still exists
@@ -860,7 +870,7 @@ export class AlbumsView extends BaseView {
         }
 
         console.log('[AlbumsView] Navigating to playlists with', albums.length, 'albums')
-        router.navigate(`/playlists?seriesId=${activeSeries.id}`)
+        router.navigate(`/ playlists ? seriesId = ${activeSeries.id} `)
       })
     }
 
@@ -901,7 +911,7 @@ export class AlbumsView extends BaseView {
         lastLoadedId !== activeSeries.id
 
       if (needsReload) {
-        console.log('[AlbumsView] Loading albums for series:', activeSeries.name, `(${currentCount}/${expectedCount})`)
+        console.log('[AlbumsView] Loading albums for series:', activeSeries.name, `(${currentCount} / ${expectedCount})`)
         await this.loadAlbumsFromQueries(activeSeries.albumQueries)
         // Note: lastLoadedSeriesId is now set BEFORE reset in loadAlbumsFromQueries
         // Note: loadAlbumsFromQueries already updates the view, no need to call updateAlbumsGrid
@@ -1001,15 +1011,34 @@ export class AlbumsView extends BaseView {
 
           // Add successful albums incrementally
           if (result.status === 'success' && result.album) {
-            albumsStore.addAlbum(result.album)
 
-            // Save to Firestore (non-blocking, fail-safe)
-            if (this.db) {
-              albumsStore.saveToFirestore(this.db, result.album)
-                .catch(err => {
-                  console.warn('⚠️ Failed to save album to Firestore:', err)
-                  // Continue execution - localStorage still works
-                })
+            // FIX: Hydrate with local cover if missing
+            if (!result.album.coverUrl && !result.album.artworkTemplate) {
+              // We can't await here easily inside the callback if it's not async-safe in ApiClient
+              // But ApiClient awaits the callback, so we should be good if we make the callback async?
+              // Actually, let's just do it "fire and forget" or assume fast lookup?
+              // Better: ApiClient structure check. 
+              // Assuming checking the OptimizedLoader is fast (WebWorker). 
+              // We'll wrap in a self-executing async or promise handling if needed, 
+              // but ApiClient usually awaits the callback.
+
+              // For now, let's try to find it.
+              optimizedAlbumLoader.findAlbum(result.album.artist, result.album.title).then(localMatch => {
+                if (localMatch) {
+                  result.album.coverUrl = optimizedAlbumLoader.getArtworkUrl(localMatch, 500)
+                }
+                albumsStore.addAlbum(result.album)
+
+                // Save to Firestore (non-blocking)
+                if (this.db) {
+                  albumsStore.saveToFirestore(this.db, result.album).catch(console.warn)
+                }
+              })
+            } else {
+              albumsStore.addAlbum(result.album)
+              if (this.db) {
+                albumsStore.saveToFirestore(this.db, result.album).catch(console.warn)
+              }
             }
           }
         },

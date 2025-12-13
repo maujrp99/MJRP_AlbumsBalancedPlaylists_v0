@@ -11,7 +11,8 @@
         "test:ui": "vitest --ui",
         "test:coverage": "vitest --coverage",
         "test:e2e": "node test/e2e/run-all.js",
-        "test:e2e:headful": "HEADLESS=false node test/e2e/run-all.js"
+        "test:e2e:headful": "HEADLESS=false node test/e2e/run-all.js",
+        "lint": "eslint ."
     },
     "keywords": [
         "playlist",
@@ -22,9 +23,12 @@
     "author": "maujrp99",
     "license": "MIT",
     "devDependencies": {
+        "@eslint/js": "^9.39.2",
         "@vitest/coverage-v8": "^1.1.0",
         "@vitest/ui": "^1.1.0",
         "dotenv": "^17.2.3",
+        "eslint": "^9.39.2",
+        "globals": "^16.5.0",
         "jsdom": "^23.0.1",
         "jsonwebtoken": "^9.0.3",
         "puppeteer": "^24.31.0",

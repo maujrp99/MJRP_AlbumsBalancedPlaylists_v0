@@ -55,6 +55,13 @@ We follow a strict **Spec-First** approach. We do not write complex code without
 📄 **Read**: `docs/CONSTITUTION.md` (Section IV)
 - **Key Concept**: "Design before you build"
 
+### **Step 1.6: Developer Standards** (New)
+> [!IMPORTANT]
+> **Linting Policy**:
+> *   **ALWAYS** run `npm run lint` before committing.
+> *   All code must pass the standard `eslint` configuration.
+> *   Fix errors immediately. Do not commit broken code.
+
 **Templates Location**: `/.specify/templates/`
 - **Feature Specs**: Use `spec-template.md` to define requirements.
 - ** Implementation Plans**: Use `plan-template.md` to break down work.

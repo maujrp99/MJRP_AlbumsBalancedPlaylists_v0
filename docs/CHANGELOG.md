@@ -11,6 +11,31 @@ All notable changes to the MJRP Albums Balanced Playlists project.
 
 ---
 
+## v2.4.0 - UX Revamp & Autocomplete (2025-12-13)
+
+**Status**: 🏷️ **TAGGED RELEASE**
+**Tag**: `v2.4.0`
+
+### Summary
+Major UX improvement for the "Load Albums" flow, introducing a split-pane interface and optimized autocomplete powered by a Web Worker. Also includes significant Apple Music integration (Export) foundation.
+
+### ✨ New Features
+- **Load Albums UX**:
+  - Split view: "Series Configuration" vs "Album Selection".
+  - **Autocomplete**: High-performance fuzzy search (uFuzzy + Web Worker).
+  - **Apple Music Export**: Connect and export playlists directly to Apple Music library.
+
+### 🐛 Fixed & Polished
+- **UI Polish**: Rounded orange buttons (12px), lowercase labels (02a/02b).
+- **Cleanup**: Removed "Rated" status filters and labels.
+
+### ⚠️ Known Issues
+- **Cover Art Loading**: Fails in `AlbumsView`/`InventoryView` (Deferred to `feature/cover-loading-views-revamp`).
+- **Deep Link**: `Judas Priest - Invincible Shield (Deluxe)` causes 500 Error (Deferred).
+- **Inventory**: Ownership status toggle inconsistent.
+
+---
+
 ## v2.2.1 - Sprint 6 Complete & Mobile Polish (2025-12-13)
 
 **Status**: 🚀 **PRODUCTION RELEASE**

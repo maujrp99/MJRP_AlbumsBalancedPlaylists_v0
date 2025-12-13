@@ -1910,3 +1910,19 @@ Other albums (e.g. Metallica) work.
 User requested to skip this issue for now to focus on higher priorities.
 **Workaround**: None currently (avoid Deluxe Edition queries if possible).
 
+
+### Issue #46: Cover Art Hydration Failed (Non-Home Views) - DEFERRED ⏸️
+**Severity**: Medium (Visual Inconsistency)
+**Status**: ⏸️ **DEFERRED (Awaiting View Revamp)**
+**Date**: 2025-12-13 18:05
+**Type**: UI/Data Hydration
+**Component**: `InventoryView.js`, `AlbumsView.js`
+
+#### Problem
+Cover art for Apple Music albums loads correctly in `HomeView` (via `OptimizedAlbumLoader`) but often fails or shows placeholders in `AlbumsView` and `InventoryView`, even after applying the same loader logic.
+The user suspects the current "patch" approach is insufficient and requires a "general views revamp".
+
+#### Status
+- Attempted fix in `v2.4.0` (using `getArtworkUrl`) was deemed a failure by the user.
+- **Decision**: Deferred to a dedicated branch `feature/cover-loading-views-revamp`.
+- **Planned Fix**: Holistic review of how views handle async data and template resolution.

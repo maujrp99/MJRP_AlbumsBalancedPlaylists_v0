@@ -128,3 +128,41 @@
         linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 20px 20px;
 }
+
+/* 7. Glass Panel (Missing) */
+.glass-panel {
+    background: rgba(10, 10, 12, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* 8. Tech Buttons (Missing variants) */
+.tech-btn {
+    @apply inline-flex items-center justify-center rounded-lg transition-all duration-300 font-medium uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed;
+    border: 1px solid transparent;
+}
+
+.tech-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tech-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.tech-btn-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.tech-btn-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    transform: translateY(-1px);
+}

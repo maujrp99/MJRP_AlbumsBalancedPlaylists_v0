@@ -129,19 +129,38 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 - ✅ Apple Developer Account configured
 - ✅ .p8 Key generated (can be reused for MusicKit)
 
-#### Part A: Data Enrichment & UI Polish (UAT In Progress)
+#### Part A: Data Enrichment & UI Polish (✅ Completed)
 
 - [x] **Optimized Autocomplete**
     - [x] Data Optimization (JSON index)
     - [x] Web Worker Setup
     - [x] UI Integration
-    - [ ] **UI/UX Refinement** (Load Albums Form) - *WIP: Autocomplete field by artist + manual album entry*
+    - [x] **UI/UX Refinement** (Load Albums Form)
 
-- [ ] **Data Validation & Assets**
-    - [ ] **Cover Art Loading** - *WIP: Fix Sync/Async hydration & loading state*
-    - [ ] Verify Script Completion (`albums-expanded.json`)
+- [x] **Data Validation & Assets**
+    - [x] Verify Script Completion (`albums-expanded.json`)
 
-#### Part B: Integrations & Fixes (UAT In Progress)
+#### Part B: Integrations (✅ Completed)
+
+- [x] **Backend Proxy & API Client**
+    - [x] Endpoint for Developer Token generation
+    - [x] Apple Music API Client method
+
+- [x] **Export Workflow UI**
+    - [x] "Connect to Apple Music" button in PlaylistsView
+    - [x] Export Progress Modal
+    - [x] Success confirmation with link
+
+#### Part C: View Revamp & Stability (🚧 In Progress)
+
+- [ ] **Holistic View Revamp (Cover Loading)**
+    - [ ] Branch: `feature/cover-loading-views-revamp`
+    - [ ] Standardize async hydration across `AlbumsView`, `InventoryView`
+    - [ ] Fix Inventory Ownership bug
+
+- [ ] **Final UAT Fixes**
+    - [ ] Verify "Metallica" missing tracks fix in Prod
+    - [ ] Fix 500 Error (Judas Priest)
 
 - [ ] **Export Workflow UI**
     - [ ] "Connect to Apple Music" button in PlaylistsView
