@@ -6,7 +6,7 @@ import { Breadcrumb } from '../components/Breadcrumb.js'
 import toast from '../components/Toast.js'
 import { confirm } from '../components/ConfirmationModal.js'
 import { Autocomplete } from '../components/Autocomplete.js'
-import { albumLoader } from '../services/AlbumLoader.js'
+import { optimizedAlbumLoader as albumLoader } from '../services/OptimizedAlbumLoader.js'
 
 /**
  * AlbumSeriesListView

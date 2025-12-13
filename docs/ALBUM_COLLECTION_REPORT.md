@@ -12,15 +12,7 @@ Generated: 2025-12-12T23:41:06.052Z
 
 ## ⭐ Acclaimed Albums (6992)
 
-- !!! - Louden Up Now
-- !!! - Myth Takes
-- ??? - ???
-- ...And You Will Know Us by the Trail of Dead - Madonna
-- ...And You Will Know Us by the Trail of Dead - So Divided
-- ...And You Will Know Us by the Trail of Dead - Source Tags & Codes
-- ...And You Will Know Us by the Trail of Dead - Worlds Apart
-- (Sandy) Alex G - House of Sugar
-- (Sandy) Alex G - Rocket
+
 - 10,000 Maniacs - In My Tribe
 - 100 Gecs - 1000 gecs
 - 10cc - 10cc

@@ -6,7 +6,7 @@ import { db } from '../app.js'
 import { CacheManager } from '../cache/CacheManager.js'
 import { MigrationUtility } from '../migration/MigrationUtility.js'
 import { Autocomplete } from '../components/Autocomplete.js'
-import { albumLoader } from '../services/AlbumLoader.js'
+import { optimizedAlbumLoader as albumLoader } from '../services/OptimizedAlbumLoader.js'
 import toast from '../components/Toast.js'
 
 /**
