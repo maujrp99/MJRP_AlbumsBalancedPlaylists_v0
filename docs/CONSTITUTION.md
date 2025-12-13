@@ -19,13 +19,13 @@ We favor simplicity and standard web technologies over complex framework lock-in
 
 ### III. Documentation First
 Documentation is a living part of the codebase, not an afterthought.
-- **Single Source of Truth**: `ARCHITECTURE.md`, `ROADMAP.md`, and `DEVOPS_GUIDE.md` must reflect reality.
+- **Single Source of Truth**: `ARCHITECTURE.md`, `ROADMAP.md`, and `technical/devops/DEVOPS_GUIDE.md` must reflect reality.
 - **Traceability**: Every bug fix requires an entry in `DEBUG_LOG.md`.
 - **Planning**: No code is written without an `implementation_plan.md` or `Implementation Guide` approved by the user.
 
 ### IV. Spec-Driven & Test-Supported
 We design before we build, and we verify what we built.
-- **Spec-First**: For complex features (like Auth), a detailed technical specification is required before implementation.
+- **Spec-First**: For complex features (like Auth), a detailed technical specification is required before implementation (See `.specify/templates/`).
 - **Testing**:
     - **Unit Tests** (Vitest) for core logic (Stores, Repositories).
     - **Manual Verification** plans must be explicit and executed.

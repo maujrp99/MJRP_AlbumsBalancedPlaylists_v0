@@ -12,7 +12,7 @@
 > [!IMPORTANT]
 > **Ports**: Dev = **5000**, Preview = **5005**, API = **3000**  
 > **NOT 5173** (that's Vite default, we explicitly use 5000)  
-> See [PORT_CONFIGURATION.md](devops/PORT_CONFIGURATION.md)
+> See [PORT_CONFIGURATION.md](technical/devops/PORT_CONFIGURATION.md)
 
 ### Development
 ```bash
@@ -44,37 +44,25 @@ See [CHANGELOG.md](CHANGELOG.md) for full version history.
 ```
 docs/
 ├── README.md                 # This index
+├── PROJECT_SUMMARY.md        # Executive summary
+├── ROADMAP.md                # Future plans
 ├── ARCHITECTURE.md           # System design & decisions
+├── CONSTITUTION.md           # Core Methodology (Spec-Kit)
 ├── CHANGELOG.md              # Version history
-├── SPRINT5_TASKS.md          # Current sprint tasks
+├── CONTRIBUTING.md           # Guidelines
 │
 ├── onboarding/               # Guides for new team members
 │   ├── DEVELOPER.md          # Dev setup & context
 │   ├── DEVOPS.md             # Infrastructure & deploy
 │   ├── QA_ENGINEER.md        # Testing protocols
-│   ├── UX_UI.md              # Design system
 │   └── README.md             # Onboarding index
 │
-├── tester/                   # QA & Testing
-│   ├── TEST_SPECIFICATION.md # Full test specs
-│   └── SECURITY_RULES_DISCREPANCY.md # Security issues
-│
-├── product-management/       # Product Planning
-│   ├── ROADMAP.md            # Future plans
-│   ├── PROJECT_SUMMARY.md    # Executive summary
-│   └── [Requirements Docs]
-│
-├── devops/                   # Operations
-│   ├── DEVOPS_GUIDE.md       # Consolidated DevOps guide
-│   └── README.md             # DevOps index
-│
-├── technical/                # Low-level specs
-│   ├── album_data_schema.md
-│   └── data_flow_architecture.md
-│
-├── ux/                       # Design & UX
-│   ├── LOGO_IMPLEMENTATION_GUIDE.md
-│   └── UI_CONSISTENCY_AUDIT.md
+├── technical/                # Single Source for Engineering Docs
+│   ├── devops/               # Infrastructure & deploy guides
+│   ├── tester/               # QA & Testing specs
+│   ├── ux/                   # Design & UX specs
+│   ├── specs/                # Feature Specifications
+│   └── analysis/             # Technical deep dives
 │
 └── debug/                    # Troubleshooting
     └── DEBUG_LOG.md          # Active debug history
@@ -108,9 +96,8 @@ Use `tar -xzvf [filename]` to access contents.
 
 ### For Testers
 - **Start here**: [Onboarding → QA Engineer](onboarding/QA_ENGINEER.md)
-- **Test Specs**: [tester/TEST_SPECIFICATION.md](tester/TEST_SPECIFICATION.md)
-- **Sprint 5 UAT (Archived)**: [archive/SPRINT5_UAT_20251206_CLOSED.md](archive/SPRINT5_UAT_20251206_CLOSED.md)
+- **Test Specs**: [technical/tester/TEST_SPECIFICATION.md](technical/tester/TEST_SPECIFICATION.md)
 
 ### For DevOps
 - **Start here**: [Onboarding → DevOps](onboarding/DEVOPS.md)
-- **Ports**: [devops/PORT_CONFIGURATION.md](devops/PORT_CONFIGURATION.md)
+- **Ports**: [technical/devops/PORT_CONFIGURATION.md](technical/devops/PORT_CONFIGURATION.md)

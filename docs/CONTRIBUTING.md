@@ -12,9 +12,30 @@ Thank you for your interest in contributing! This document provides guidelines a
 - [Branching Strategy](#branching-strategy)
 - [Tagging Guidelines](#tagging-guidelines)
 - [Code Style](#code-style)
+- [Methodology & Rules](#methodology--rules)
 - [Project Structure](#project-structure)
 - [Testing](#testing)
 - [Release Process](#release-process)
+- [Documentation Standards](#documentation-standards)
+
+---
+
+## 📏 Methodology & Rules
+
+### Spec-Driven Development (SDD)
+We follow the **Spec-Driven Development** methodology mandated by our [Constitution](docs/CONSTITUTION.md).
+
+1.  **Spec First**: Before writing complex code (features, integrations), you MUST write a spec.
+    *   Use templates located in: **`.specify/templates/`**
+    *   `spec-template.md`: For feature logic and requirements.
+    *   `plan-template.md`: For implementation steps.
+2.  **Ratification**: The spec must be approved by the User (Product Owner) before implementation begins.
+3.  **Living Docs**: Update the spec if requirements change during implementation.
+
+### Documentation Rules
+1.  **Single Source of Truth**: Do not duplicate info. `docs/technical/` is the home for engineering specs.
+2.  **No Root Clutter**: Do not create new folders in `docs/` root. Use `docs/technical/[domain]`.
+3.  **Traceability**: Update `docs/debug/DEBUG_LOG.md` for every significant bug fix.
 
 ---
 
@@ -319,21 +340,18 @@ return '<div>' + series.map(function(s) { return s.name }).join(', ') + '</div>'
 MJRP_AlbumsBalancedPlaylists_v0/
 ├── public/                    # Frontend files
 │   ├── index-v2.html         # Main HTML entry
-│   ├── assets/               # Images, SVGs, static files
-│   └── js/
-│       ├── views/            # View components (HomeView, AlbumsView, etc.)
-│       ├── components/       # Reusable components (TopNav, Footer, Icons)
-│       ├── stores/           # State management (series.js)
-│       ├── utils/            # Utilities (SvgGenerator, etc.)
-│       └── router.js         # Client-side routing
+│   ├── js/                   # Vanilla JS source
+│   ├── css/                  # Styles
+│   └── assets/               # Static assets
 ├── server/                   # Backend API
-│   ├── server.js            # Express server
-│   ├── controllers/         # Route handlers
-│   ├── services/            # Business logic
-│   └── utils/               # Server utilities
-├── test/                    # Test files
-├── scripts/                 # Build/utility scripts
-└── docs/                    # Documentation
+├── test/                     # Test files
+├── scripts/                  # Build/utility scripts
+├── .specify/                 # SDD Templates (Hidden Methodology Folder)
+└── docs/                     # Documentation
+    ├── technical/            # Engineering Docs (DevOps, QA, Specs)
+    ├── onboarding/           # Team Guides
+    ├── archive/              # Historical Snapshots
+    └── [Root Files]          # Project Summary, Roadmap, Constitution
 ```
 
 ### View Pattern (BaseView)

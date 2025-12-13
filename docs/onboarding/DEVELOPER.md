@@ -30,12 +30,12 @@
 - **Focus on**: Project description, key features, documentation references
 
 ### **Step 1.2: Executive Summary**
-📄 **Read**: `docs/product-management/PROJECT_SUMMARY.md`
+📄 **Read**: `docs/PROJECT_SUMMARY.md`
 - **Purpose**: High-level product vision, business context
 - **Focus on**: Problem being solved, target users, key differentiators
 
 ### **Step 1.3: How did we get here?**
-📄 **Read**: `docs/CHANGELOG.md` and `docs/product-management/ROADMAP.md`
+📄 **Read**: `docs/CHANGELOG.md` and `docs/ROADMAP.md`
 - **Purpose**: Understand development chronology (Sprints 1-9)
 - **Focus on**: 
   - Sprint history in ROADMAP.md (completed sprints section)
@@ -44,6 +44,28 @@
 - **Note**: Historical sprint analysis was archived to `docs/archive/archive-backup.tar.gz`
 
 **✅ Checkpoint**: You should now understand WHAT the project does and WHY it exists.
+
+---
+
+## 🚀 PHASE 1.5: Methodology (How We Work)
+
+### **Step 1.5: Spec-Driven Development (SDD)**
+We follow a strict **Spec-First** approach. We do not write complex code without a plan.
+
+📄 **Read**: `docs/CONSTITUTION.md` (Section IV)
+- **Key Concept**: "Design before you build"
+
+**Templates Location**: `/.specify/templates/`
+- **Feature Specs**: Use `spec-template.md` to define requirements.
+- ** Implementation Plans**: Use `plan-template.md` to break down work.
+- **Task Lists**: Use `tasks-template.md` for granular checklists.
+
+**Your Workflow**:
+1. Received a feature request? Check if a Spec exists in `docs/technical/specs/`.
+2. If not, create one using the template.
+3. Get User approval.
+4. Implement (`docs/technical/specs/sprint-X-plan.md`).
+5. Verify.
 
 ---
 
@@ -62,12 +84,12 @@
   - Architecture Decisions (ADRs)
 
 ### **Step 2.2: Data Schemas**
-📄 **Read**: `docs/technical/album_data_schema.md`
+📄 **Read**: `docs/technical/analysis/album_data_schema.md`
 - **Purpose**: Understand data structures
 - **Focus on**: Album, Track, Playlist, Series object shapes
 
 ### **Step 2.3: Data Flow**
-📄 **Read**: `docs/technical/data_flow_architecture.md`
+📄 **Read**: `docs/technical/analysis/data_flow_architecture.md`
 - **Purpose**: Understand how data moves through the system
 - **Focus on**: API → Client → Repository → Cache → View flow
 

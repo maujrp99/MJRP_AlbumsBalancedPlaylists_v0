@@ -22,7 +22,7 @@
 > 3. 🔴 Ghost Albums (Issue #22) - 4 fix attempts failed
 > 4. 🔴 Playlists lost on refresh
 >
-> See [SPRINT5_UAT_20251206.md](../tester/SPRINT5_UAT_20251206.md)
+> See [SPRINT5_UAT_20251206.md](technical/tester/SPRINT5_UAT_20251206.md)
 
 ---
 
@@ -216,7 +216,7 @@ curl https://mjrp-proxy-540062660076.southamerica-east1.run.app/api/generate \
 - `server/index.js`
 - `public/hybrid-curator.html`
 
-See [CHANGELOG.md](../CHANGELOG.md#v161-hotfix-production-deployment-2025-11-26) for details.
+See [CHANGELOG.md](CHANGELOG.md#v161-hotfix-production-deployment-2025-11-26) for details.
 
 ---
 
@@ -484,9 +484,9 @@ const firebaseConfig = {
 
 ### Current Documentation
 - **[ROADMAP.md](ROADMAP.md)** - Product roadmap (Sprints 1-9)
-- **[CHANGELOG.md](../CHANGELOG.md)** - Version history and release notes
-- **[ARCHITECTURE.md](../ARCHITECTURE.md)** - Architecture decisions
-- **[CONTRIBUTING.md](../CONTRIBUTING.md)** - Development workflow
+- **[CHANGELOG.md](CHANGELOG.md)** - Version history and release notes
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Architecture decisions
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Development workflow
 
 ### Archived Planning Documents
 *Historical v2.0 planning docs (archived 2025-12-02)*:

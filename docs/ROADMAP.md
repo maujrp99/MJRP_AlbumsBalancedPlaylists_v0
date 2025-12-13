@@ -294,6 +294,6 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 ---
 
 **See Also**:
-- [CHANGELOG.md](../CHANGELOG.md) - Detailed development history
+- [CHANGELOG.md](CHANGELOG.md) - Detailed development history
 - [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) - Executive summary
-- [SPRINT5_UAT_20251206.md](../tester/SPRINT5_UAT_20251206.md) - Current blockers
+- [SPRINT5_UAT_20251206.md](technical/tester/SPRINT5_UAT_20251206.md) - Current blockers
