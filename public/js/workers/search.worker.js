@@ -3,7 +3,7 @@
  * Handles background fetching and fuzzy searching of albums
  */
 
-importScripts('../vendor/uFuzzy.js');
+import uFuzzy from '../vendor/uFuzzy.js';
 
 let albums = [];
 let haystack = []; // Array of strings for uFuzzy: "Artist - Album"
