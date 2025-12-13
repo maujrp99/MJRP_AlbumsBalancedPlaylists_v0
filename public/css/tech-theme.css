@@ -106,8 +106,8 @@
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
-    border-radius: 9999px;
-    /* Fully rounded */
+    border-radius: 12px;
+    /* Gently rounded */
 }
 
 .tech-btn-primary:hover {
