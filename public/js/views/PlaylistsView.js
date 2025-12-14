@@ -555,8 +555,6 @@ export class PlaylistsView extends BaseView {
         },
 
         onEnd: (evt) => {
-          this.isDragging = false // Re-enable re-render
-
           // Haptic feedback on drop
           if ('vibrate' in navigator) {
             navigator.vibrate([20, 30, 20]) // Double pulse pattern when dropping
@@ -566,6 +564,7 @@ export class PlaylistsView extends BaseView {
 
           // If dropped outside or no change
           if (!to || (from === to && oldIndex === newIndex)) {
+            this.isDragging = false
             return
           }
 
@@ -581,6 +580,12 @@ export class PlaylistsView extends BaseView {
             console.log(`[Sortable] Move ${fromPlaylistIndex}->${toPlaylistIndex}: ${oldIndex} -> ${newIndex}`)
             playlistsStore.moveTrack(fromPlaylistIndex, toPlaylistIndex, oldIndex, newIndex)
           }
+
+          // Re-enable re-render AFTER store update is processed
+          // Use requestAnimationFrame to ensure update() runs with isDragging=true
+          requestAnimationFrame(() => {
+            this.isDragging = false
+          })
         }
       })
       this.sortables.push(sortable)
