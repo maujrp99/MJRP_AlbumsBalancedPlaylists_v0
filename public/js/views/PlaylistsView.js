@@ -122,6 +122,8 @@ export class PlaylistsView extends BaseView {
       }
 
       if (exportSection) {
+        // Reset flag since we're re-creating the DOM elements
+        this.exportListenersAttached = false
         exportSection.innerHTML = playlists.length > 0 ? this.renderExportSection() : ''
         this.attachExportListeners()
       }
