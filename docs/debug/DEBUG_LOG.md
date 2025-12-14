@@ -49,11 +49,15 @@
 
 ## Current Debugging Session
 
-### Issue #47: Sortable Drag & Drop Freeze - RESOLVED ✅
-**Status**: ✅ **RESOLVED**
-**Date**: 2025-12-14 00:40
+### Issue #47: Sortable Drag & Drop Freeze - RESOLVED ✅ (TECH DEBT)
+**Status**: ✅ **RESOLVED** - *Marked as Tech Debt for refactor*
+**Date**: 2025-12-14 01:05
 **Type**: Frontend/UI Bug
 **Component**: `PlaylistsView.js`, SortableJS
+
+> [!WARNING]
+> **TECH DEBT**: Current fix uses multiple flags and timing hacks. Needs architectural refactor.
+> See "Tech Debt Notes" section below.
 
 #### Problem
 After performing one drag & drop operation in the Playlist Management view, the UI would freeze:
@@ -61,35 +65,52 @@ After performing one drag & drop operation in the Playlist Management view, the 
 - Buttons (Export, Save, etc.) stopped responding
 - No errors appeared in console
 
-#### Investigation
-1. Traced events: Sortable `onEnd` triggered `playlistsStore.moveTrack()`
-2. Store called `notify()` which triggered `PlaylistsView.update()`
-3. `update()` line 117: `grid.innerHTML = this.renderPlaylists(playlists)` **re-created entire DOM**
-4. This destroyed elements that Sortable was tracking, invalidating event listeners
+#### Root Cause
+Architectural conflict: SortableJS manipulates DOM directly, but `update()` recreates DOM via `innerHTML`. These patterns are incompatible.
 
 #### Failed Attempts
-| Attempt | Action | Result |
-|---------|--------|--------|
-| 1 | Added `isDragging` flag, set false at start of `onEnd` | ❌ Flag was reset BEFORE store update, so `update()` ran with `isDragging=false` |
+| # | Action | Result |
+|---|--------|--------|
+| 1 | Added `isDragging` flag, set false at start of `onEnd` | ❌ Flag reset BEFORE store update, so `update()` ran with `isDragging=false` |
+| 2 | Moved flag reset to `requestAnimationFrame()` after store call | ✅ Drags work, ❌ Buttons freeze (listeners lost) |
+| 3 | Reset `exportListenersAttached=false` before section re-render | ✅ Buttons work, ❌ Track counts/durations don't update |
+| 4 | Added `this.update()` inside `requestAnimationFrame` | ✅ Works but creates complex timing dependencies |
 
-#### Fix Applied
+#### Fix Applied (Current - Needs Refactor)
 ```javascript
+// Constructor
+this.isDragging = false
+this.exportListenersAttached = false
+
 // onStart
 this.isDragging = true
 
-// onEnd - after store.moveTrack()
+// onEnd
 requestAnimationFrame(() => {
-  this.isDragging = false  // Delay reset to next frame
+  this.isDragging = false
+  this.update()  // Deferred update
 })
 
-// update() - skip re-render when dragging
+// update()
 if (!this.isDragging) {
   grid.innerHTML = this.renderPlaylists(playlists)
 }
+this.exportListenersAttached = false  // Reset before re-render
 ```
 
+#### Tech Debt Notes
+Current solution works but has code smells:
+- Multiple state flags (`isDragging`, `exportListenersAttached`)
+- Timing dependency via `requestAnimationFrame`
+- Logic scattered across multiple methods
+
+**Proper solution (TODO)**: 
+1. Use partial DOM updates for metadata only (track counts, durations)
+2. Or: Re-initialize Sortable after each `update()`
+3. Or: Adopt reactive framework (Preact/lit-html)
+
 #### Files Modified
-- `public/js/views/PlaylistsView.js`: Added `isDragging` flag with proper timing
+- `public/js/views/PlaylistsView.js`: Added flags and timing logic
 
 ---
 
