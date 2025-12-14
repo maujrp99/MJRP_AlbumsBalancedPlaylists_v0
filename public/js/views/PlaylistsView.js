@@ -584,9 +584,11 @@ export class PlaylistsView extends BaseView {
           }
 
           // Re-enable re-render AFTER store update is processed
-          // Use requestAnimationFrame to ensure update() runs with isDragging=true
+          // Use requestAnimationFrame to ensure update() runs with isDragging=true first
           requestAnimationFrame(() => {
             this.isDragging = false
+            // Trigger deferred update to refresh track counts/durations
+            this.update()
           })
         }
       })
