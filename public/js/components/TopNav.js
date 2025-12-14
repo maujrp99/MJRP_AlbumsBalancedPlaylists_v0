@@ -83,7 +83,7 @@ export class TopNav {
           ${this.renderNavLink('/album-series', 'Series', currentPath)}
           ${this.renderNavLink('/playlist-series', 'Playlists', currentPath)}
           ${this.renderNavLink('/inventory', 'Inventory', currentPath)}
-          ${this.needsMigration() ? this.renderDataSyncLink() : ''}
+          ${/* TODO: Data Sync hidden until functionality validated */ ''}
         </div>
 
         <!-- User Section (Right) -->
@@ -118,15 +118,7 @@ export class TopNav {
             ${this.renderMobileNavLink('/album-series', 'Series', 'Layers', currentPath)}
             ${this.renderMobileNavLink('/playlist-series', 'Playlists', 'List', currentPath)}
             ${this.renderMobileNavLink('/inventory', 'Inventory', 'Archive', currentPath)}
-            ${this.needsMigration() ? `
-              <div class="border-t border-white/10 mt-2 pt-2">
-                <button id="mobileDataSyncBtn" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-orange-400 hover:bg-orange-500/10 w-full">
-                  ${getIcon('Database', 'w-5 h-5')}
-                  <span class="font-medium">Data Sync</span>
-                  <span class="ml-auto text-xs bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full">NEW</span>
-                </button>
-              </div>
-            ` : ''}
+            ${/* TODO: Data Sync hidden until functionality validated */ ''}
           </nav>
           
           <!-- Mobile Footer / Auth -->

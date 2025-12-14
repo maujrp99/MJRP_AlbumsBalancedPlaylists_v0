@@ -50,7 +50,7 @@
 
 .tech-title {
     font-family: 'Syne', sans-serif;
-    text-transform: uppercase;
+    /* text-transform: uppercase; - REMOVED to allow 02a/02b lowercase */
     font-weight: 700;
     letter-spacing: 0.05em;
     font-size: 0.85rem;
