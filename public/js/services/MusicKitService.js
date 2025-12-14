@@ -358,6 +358,11 @@ class MusicKitService {
             };
         }
 
+        // DEBUG: Log the payload being sent
+        console.log('[MusicKit] Creating playlist:', name, 'with', trackIds.length, 'tracks');
+        console.log('[MusicKit] Track IDs:', trackIds);
+        console.log('[MusicKit] Payload:', JSON.stringify(playlistData, null, 2));
+
         try {
             const playlist = await this.music.api.music('/v1/me/library/playlists', null, {
                 fetchOptions: {
@@ -366,6 +371,8 @@ class MusicKitService {
                 }
             });
 
+            // DEBUG: Log the response
+            console.log('[MusicKit] Playlist creation response:', playlist);
             console.log('[MusicKit] Playlist created in folder:', name);
             return playlist.data?.data?.[0];
         } catch (error) {

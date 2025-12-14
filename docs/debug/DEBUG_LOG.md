@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-13 13:14
+**Last Updated**: 2025-12-13 20:52
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -18,10 +18,12 @@
 
 | Issue | Component | Status | Line |
 |-------|-----------|--------|------|
-| #41 | Cover Art Loading | 🚧 IN PROGRESS | [L41](#issue-41-cover-art-loading-issues---in-progress) |
-| #40 | Autocomplete UX | 🚧 IN PROGRESS | [L41](#issue-40-autocomplete-ux-improvements---in-progress) |
-| #39 | Track Export Failed | 🚧 IN PROGRESS | [L41](#issue-39-track-export-failed-missing-tracks---in-progress) |
-| #38 | Autocomplete TypeError | ✅ RESOLVED | [L41](#issue-38-autocomplete-typeerror-syncasync-mismatch---resolved-) |
+| #44 | MusicKit 503 Error | ✅ RESOLVED | [L47](#issue-44-musickit-503-error---export-to-apple-music-failed---resolved-) |
+| #43 | Worker uFuzzy | ✅ RESOLVED | [L82](#issue-43-production-worker-dependency-failure-ufuzzy---resolved-) |
+| #41 | Cover Art Loading | 🚧 IN PROGRESS | [L100](#issue-41-cover-art-loading-issues---in-progress) |
+| #40 | Autocomplete UX | 🚧 IN PROGRESS | [L100](#issue-40-autocomplete-ux-improvements---in-progress) |
+| #39 | Track Export Failed | 🚧 IN PROGRESS | [L100](#issue-39-track-export-failed-missing-tracks---in-progress) |
+| #38 | Autocomplete TypeError | ✅ RESOLVED | [L100](#issue-38-autocomplete-typeerror-syncasync-mismatch---resolved-) |
 | #37 | Apple Sign-In Config | ✅ RESOLVED | [L85](#issue-37-apple-sign-in-invalid-redirect-url---resolved-) |
 | #36 | Auth Integration Regressions | ✅ RESOLVED | [L85](#issue-36-auth-integration-regressions---resolved-) |
 | #35 | Firebase Initialization | ✅ RESOLVED | [L119](#issue-35-firebase-initialization--sdk-mismatch---resolved-) |
@@ -43,6 +45,46 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #44: MusicKit 503 Error - Export to Apple Music Failed - RESOLVED ✅
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-13 20:52
+**Type**: Cloud/IAM Configuration Bug
+**Component**: Cloud Run, Secret Manager
+
+#### Problem
+"Export to Apple Music" button returned 503 error: `"MusicKit not configured"`.
+The `/api/musickit-token` endpoint failed despite secrets being configured in Cloud Run.
+
+#### Key Observation
+- `AI_API_KEY` secret worked fine (tested via `/api/list-models`).
+- Only MusicKit secrets (`APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_MUSIC_PRIVATE_KEY`) were failing.
+
+#### Root Cause
+The Cloud Run Service Account (`540062660076-compute@developer.gserviceaccount.com`) **lacked IAM permissions** to access the MusicKit secrets in Secret Manager.
+
+| Secret | IAM Binding Before |
+|--------|-------------------|
+| `AI_API_KEY` | ✅ Had `secretAccessor` |
+| `musickit-team-id` | ❌ No bindings |
+| `musickit-key-id` | ❌ No bindings |
+| `musickit-private-key` | ❌ No bindings |
+
+#### Fix Applied
+1. Added `Secret Manager Secret Accessor` role to the 3 MusicKit secrets via GCP Console.
+2. Forced new Cloud Run revision:
+   ```bash
+   gcloud run services update mjrp-proxy --region=southamerica-east1 --project=mjrp-playlist-generator --update-env-vars="FORCE_RESTART=$(date +%s)"
+   gcloud run services update-traffic mjrp-proxy --to-latest --region=southamerica-east1 --project=mjrp-playlist-generator
+   ```
+
+#### Verification
+```bash
+curl https://mjrp-playlist-generator.web.app/api/musickit-status
+# {"configured":true,"missing":[]}
+```
+
+---
 
 ### Issue #43: Production Worker Dependency Failure (uFuzzy) - RESOLVED ✅
 **Status**: ✅ **RESOLVED**
