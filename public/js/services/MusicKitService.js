@@ -13,6 +13,26 @@ class MusicKitService {
         this.isInitialized = false;
         this.isAuthorized = false;
         this.initPromise = null;
+        this._storefront = null; // Cache user's storefront
+    }
+
+    /**
+     * Get user's storefront (region) for catalog searches
+     * Falls back to 'us' if not available
+     * @returns {string} Storefront code (e.g., 'us', 'br', 'gb')
+     */
+    _getStorefront() {
+        if (this._storefront) {
+            return this._storefront;
+        }
+        // Try to get from MusicKit instance
+        if (this.music?.storefrontId) {
+            this._storefront = this.music.storefrontId;
+            console.log(`[MusicKit] Using storefront: ${this._storefront}`);
+            return this._storefront;
+        }
+        // Fallback to US
+        return 'us';
     }
 
     /**
@@ -117,7 +137,7 @@ class MusicKitService {
         const query = album ? `${artist} ${album}` : artist;
 
         try {
-            const result = await this.music.api.music(`/v1/catalog/us/search`, {
+            const result = await this.music.api.music(`/v1/catalog/${this._getStorefront()}/search`, {
                 term: query,
                 types: 'albums',
                 limit: limit
@@ -140,7 +160,7 @@ class MusicKitService {
 
         try {
             // First, find the artist
-            const artistSearch = await this.music.api.music(`/v1/catalog/us/search`, {
+            const artistSearch = await this.music.api.music(`/v1/catalog/${this._getStorefront()}/search`, {
                 term: artistName,
                 types: 'artists',
                 limit: 1
@@ -156,7 +176,7 @@ class MusicKitService {
 
             // Then get their albums
             const albumsResult = await this.music.api.music(
-                `/v1/catalog/us/artists/${artistId}/albums`,
+                `/v1/catalog/${this._getStorefront()}/artists/${artistId}/albums`,
                 { limit: 100 }
             );
 
@@ -391,7 +411,7 @@ class MusicKitService {
         await this.init();
 
         try {
-            const result = await this.music.api.music(`/v1/catalog/us/search`, {
+            const result = await this.music.api.music(`/v1/catalog/${this._getStorefront()}/search`, {
                 term: `${title} ${artist}`,
                 types: 'songs',
                 limit: 5
@@ -423,7 +443,7 @@ class MusicKitService {
 
         try {
             // Search with album name for better precision
-            const result = await this.music.api.music(`/v1/catalog/us/search`, {
+            const result = await this.music.api.music(`/v1/catalog/${this._getStorefront()}/search`, {
                 term: `${title} ${artist} ${albumName}`,
                 types: 'songs',
                 limit: 20
