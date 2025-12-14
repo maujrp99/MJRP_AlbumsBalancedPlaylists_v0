@@ -29,7 +29,6 @@ export class HomeView extends BaseView {
 
     return `
       <div class="home-view container max-w-7xl mx-auto px-4">
-        ${this.showMigrationBanner ? this.renderMigrationBanner() : ''}
 
         <!-- Hero Banner -->
         <section class="hero-banner relative rounded-3xl overflow-hidden mb-12 fade-in min-h-[320px] md:min-h-[400px] flex items-center shadow-2xl border border-white/10 group w-full">
@@ -43,8 +42,8 @@ export class HomeView extends BaseView {
           <div class="relative z-10 pt-2 px-8 pb-8 md:pt-4 md:px-12 md:pb-12 flex flex-col items-start gap-4 max-w-3xl">
             <!-- Logo & Title Row -->
             <div class="flex items-center gap-4 mb-2">
-              <div class="logo-icon w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-orange-500/20 backdrop-blur-sm border border-white/10 shrink-0">
-                 ${getIcon('MJRPLogo', 'w-8 h-8 md:w-10 md:h-10')}
+              <div class="logo-icon w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
+                 <img src="/assets/images/newMJRPlogo.png" alt="MJRP Logo" class="w-full h-full object-contain">
               </div>
               <h1 class="text-2xl md:text-4xl font-syne font-extrabold text-white leading-tight tracking-wide md:whitespace-nowrap">
                 The Album Playlist Synthesizer
@@ -67,7 +66,7 @@ export class HomeView extends BaseView {
           </div>
         </section>
 
-        <!-- 2. Main Interface -->
+        <!--2. Main Interface-- >
         <form id="seriesForm" class="tech-interface space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div id="formError" class="alert alert-warning" style="display: none;"></div>
 
@@ -179,8 +178,8 @@ export class HomeView extends BaseView {
 
             <!-- Action -->
             <div class="flex justify-center pt-4">
-                <button type="submit" id="createSeriesBtn" class="tech-btn-primary px-16 py-6 text-xl rounded w-full md:w-auto">
-                    Initialize Load Sequence ${getIcon('ArrowRight', 'ml-2 w-5 h-5 inline-block')}
+                <button type="submit" id="createSeriesBtn" class="tech-btn-primary px-8 py-4 text-base rounded-2xl w-full md:w-auto md:max-w-sm">
+                    Initialize Load Sequence ${getIcon('ArrowRight', 'ml-2 w-4 h-4 inline-block')}
                 </button>
             </div>
 
@@ -190,22 +189,22 @@ export class HomeView extends BaseView {
             </div>
         </form>
 
-        <!-- Footer / Recent -->
-        <section class="mt-20 border-t border-white/5 pt-12 opacity-50 hover:opacity-100 transition-opacity">
-           <h3 class="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6 text-center">Recent Operations</h3>
-           <div class="series-grid grid grid-cols-1 md:grid-cols-3 gap-6">
-                ${this.renderRecentSeries(recentSeries)}
-           </div>
-        </section>
+        <!--Footer / Recent-- >
+      <section class="mt-20 border-t border-white/5 pt-12 opacity-50 hover:opacity-100 transition-opacity">
+        <h3 class="font-mono text-xs text-gray-500 uppercase tracking-widest mb-6 text-center">Recent Operations</h3>
+        <div class="series-grid grid grid-cols-1 md:grid-cols-3 gap-6">
+          ${this.renderRecentSeries(recentSeries)}
+        </div>
+      </section>
 
-      </div>
-    `
+      </div >
+      `
   }
 
   renderMigrationBanner() {
     return `
-      <div class="migration-banner glass-panel px-8 py-3 mb-8 mx-auto max-w-fit flex flex-col md:flex-row items-center justify-center gap-6 border border-accent-primary/30 rounded-full relative overflow-hidden group shadow-[0_0_20px_rgba(255,136,0,0.15)] hover:border-accent-primary/60 transition-colors">
-        <!-- Subtle Glow -->
+      < div class="migration-banner glass-panel px-8 py-3 mb-8 mx-auto max-w-fit flex flex-col md:flex-row items-center justify-center gap-6 border border-accent-primary/30 rounded-full relative overflow-hidden group shadow-[0_0_20px_rgba(255,136,0,0.15)] hover:border-accent-primary/60 transition-colors" >
+        < !--Subtle Glow-- >
         <div class="absolute inset-0 bg-gradient-to-r from-orange-500/10 via-transparent to-orange-500/5 opacity-30"></div>
         
         <div class="relative z-10 flex items-center gap-3">
@@ -223,25 +222,25 @@ export class HomeView extends BaseView {
           Migrate Now
           ${getIcon('ArrowRight', 'w-3 h-3 ml-1')}
         </button>
-      </div>
-    `
+      </div >
+      `
   }
 
   renderRecentSeries(series) {
     if (series.length === 0) {
       return `
-        <div class="empty-state text-center p-8 glass-panel">
+      < div class="empty-state text-center p-8 glass-panel" >
           <div class="text-brand-orange mb-4 flex justify-center opacity-50">
             ${getIcon('FileText', 'w-16 h-16')}
           </div>
           <p class="text-lg font-semibold">No series created yet</p>
           <p class="text-muted text-sm">Create your first series above to get started!</p>
-        </div>
+        </div >
       `
     }
 
     return series.slice(0, 6).map(s => `
-      <div class="series-card glass-panel group hover:scale-[1.02] transition-all duration-300" data-series-id="${s.id}">
+      < div class="series-card glass-panel group hover:scale-[1.02] transition-all duration-300" data - series - id="${s.id}" >
         <div class="series-card-header flex justify-between items-start mb-4">
           <h3 class="text-lg font-bold truncate pr-2"><span class="text-muted font-normal text-sm uppercase tracking-wide mr-1">Series:</span> ${this.escapeHtml(s.name)}</h3>
           ${s.status === 'complete' ? '<span class="badge badge-success">Complete</span>' : ''}
@@ -259,17 +258,17 @@ export class HomeView extends BaseView {
         </div>
         
         ${s.notes ? `<p class="series-notes text-sm text-muted mb-4 line-clamp-2">${this.escapeHtml(s.notes)}</p>` : ''}
-        
-        <div class="series-actions pt-4 border-t border-white/5">
-          <button 
-            class="btn btn-secondary btn-sm w-full justify-center group-hover:bg-white/10 transition-colors" 
-            data-action="resume" 
-            data-id="${s.id}">
-            Continue ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180')}
-          </button>
-        </div>
-      </div>
-    `).join('')
+
+    <div class="series-actions pt-4 border-t border-white/5">
+      <button
+        class="btn btn-secondary btn-sm w-full justify-center group-hover:bg-white/10 transition-colors"
+        data-action="resume"
+        data-id="${s.id}">
+        Continue ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180')}
+      </button>
+    </div>
+      </div >
+      `).join('')
   }
 
   escapeHtml(text) {
@@ -401,7 +400,7 @@ export class HomeView extends BaseView {
       // SYNC: Visual -> Text
       const textarea = this.$('#albumList')
       if (textarea && this.selectedAlbums.length > 0) {
-        const textContent = this.selectedAlbums.map(a => `${a.artist} - ${a.album}`).join('\n')
+        const textContent = this.selectedAlbums.map(a => `${a.artist} - ${a.album} `).join('\n')
         // Append or Replace? Let's append to be safe if user typed something
         if (textarea.value.trim().length > 0 && !textarea.value.endsWith('\n')) {
           textarea.value += '\n'
@@ -429,18 +428,18 @@ export class HomeView extends BaseView {
     wrapper.classList.add('opacity-50', 'pointer-events-none') // Dim background
 
     // 2. Fetch
-    grid.innerHTML = `<div class="col-span-full text-center py-8 text-accent-secondary animate-pulse">Searching discography for "${artistName}"...</div>`
+    grid.innerHTML = `< div class="col-span-full text-center py-8 text-accent-secondary animate-pulse" > Searching discography for "${artistName}"...</div > `
 
     try {
       const results = await albumLoader.findByArtist(artistName)
 
       if (results.length === 0) {
         grid.innerHTML = `
-                  <div class="col-span-full text-center py-8 text-gray-500">
+      < div class="col-span-full text-center py-8 text-gray-500" >
                       <p>No albums found for "${artistName}"</p>
                       <button class="btn btn-sm btn-ghost mt-2" id="useManualSearch">Try Manual Search</button>
-                  </div>
-              `
+                  </div >
+      `
         return
       }
 
@@ -451,26 +450,26 @@ export class HomeView extends BaseView {
         const json = encodeURIComponent(JSON.stringify(album))
 
         return `
-                <div class="artist-album-card cursor-pointer group relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${isSelected ? 'border-orange-500 shadow-[0_0_15px_rgba(255,85,0,0.5)]' : 'border-transparent hover:border-white/20'}" data-json="${json}" data-id="${album.id}">
-                    <img src="${coverUrl}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all ${isSelected ? 'opacity-100 scale-105' : ''}">
-                    
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-2 flex flex-col justify-end">
-                        <p class="text-white text-xs font-bold truncate">${album.album}</p>
-                        <p class="text-gray-400 text-[10px]">${album.year}</p>
-                    </div>
+      < div class="artist-album-card cursor-pointer group relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${isSelected ? 'border-orange-500 shadow-[0_0_15px_rgba(255,85,0,0.5)]' : 'border-transparent hover:border-white/20'}" data - json="${json}" data - id="${album.id}" >
+        <img src="${coverUrl}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all ${isSelected ? 'opacity-100 scale-105' : ''}">
 
-                    ${isSelected ? `
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-2 flex flex-col justify-end">
+            <p class="text-white text-xs font-bold truncate">${album.album}</p>
+            <p class="text-gray-400 text-[10px]">${album.year}</p>
+          </div>
+
+          ${isSelected ? `
                         <div class="absolute top-2 right-2 bg-orange-500 text-white rounded-full p-1 shadow-lg animate-in zoom-in">
                             ${getIcon('Check', 'w-3 h-3')}
                         </div>
                     ` : ''}
-                </div>
-              `
+        </div>
+    `
       }).join('')
 
     } catch (err) {
       console.error(err)
-      grid.innerHTML = `<div class="col-span-full text-center text-red-400">Error loading albums</div>`
+      grid.innerHTML = `< div class="col-span-full text-center text-red-400" > Error loading albums</div > `
     }
   }
 
@@ -504,10 +503,10 @@ export class HomeView extends BaseView {
         // Add checkmark if not exists
         if (!cardEl.querySelector('.bg-orange-500')) {
           cardEl.innerHTML += `
-                    <div class="absolute top-2 right-2 bg-orange-500 text-white rounded-full p-1 shadow-lg animate-in zoom-in">
-                        ${getIcon('Check', 'w-3 h-3')}
-                    </div>
-                 `
+      < div class="absolute top-2 right-2 bg-orange-500 text-white rounded-full p-1 shadow-lg animate-in zoom-in" >
+        ${getIcon('Check', 'w-3 h-3')}
+                    </div >
+      `
         }
       }
     }
@@ -570,11 +569,11 @@ export class HomeView extends BaseView {
 
     if (this.selectedAlbums.length === 0) {
       grid.innerHTML = `
-             <div class="col-span-full flex flex-col items-center justify-center text-gray-500 py-8 opacity-60">
-                ${getIcon('Search', 'w-10 h-10 mb-2')}
-                <p>Search and select albums above</p>
-             </div>
-          `
+      < div class="col-span-full flex flex-col items-center justify-center text-gray-500 py-8 opacity-60" >
+        ${getIcon('Search', 'w-10 h-10 mb-2')}
+    <p>Search and select albums above</p>
+             </div >
+      `
       return
     }
 
@@ -582,21 +581,21 @@ export class HomeView extends BaseView {
       const coverUrl = albumLoader.getArtworkUrl(album, 300)
 
       return `
-            <div class="group relative aspect-square rounded-lg overflow-hidden bg-gray-800 border border-white/10 shadow-lg animate-in zoom-in duration-300">
-                <img src="${coverUrl}" alt="${album.album}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
-                
-                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-3 flex flex-col justify-end">
-                    <p class="text-white font-bold text-sm truncate shadow-black drop-shadow-md">${album.album}</p>
-                    <p class="text-gray-300 text-xs truncate shadow-black drop-shadow-md">${album.artist}</p>
-                </div>
+      < div class="group relative aspect-square rounded-lg overflow-hidden bg-gray-800 border border-white/10 shadow-lg animate-in zoom-in duration-300" >
+        <img src="${coverUrl}" alt="${album.album}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
 
-                <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button class="remove-album-btn bg-red-500/80 hover:bg-red-500 text-white p-1 rounded-full shadow-lg backdrop-blur-sm transition-transform hover:scale-110" data-index="${index}" title="Remove">
-                        ${getIcon('X', 'w-4 h-4')}
-                    </button>
-                </div>
-            </div>
-          `
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-3 flex flex-col justify-end">
+            <p class="text-white font-bold text-sm truncate shadow-black drop-shadow-md">${album.album}</p>
+            <p class="text-gray-300 text-xs truncate shadow-black drop-shadow-md">${album.artist}</p>
+          </div>
+
+          <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button class="remove-album-btn bg-red-500/80 hover:bg-red-500 text-white p-1 rounded-full shadow-lg backdrop-blur-sm transition-transform hover:scale-110" data-index="${index}" title="Remove">
+              ${getIcon('X', 'w-4 h-4')}
+            </button>
+          </div>
+        </div>
+    `
     }).join('')
   }
 
@@ -611,8 +610,8 @@ export class HomeView extends BaseView {
     try {
       const result = await this.migrationUtility.migrate('user-id', (current, total, message) => {
         // Optional: Update a progress bar or status text
-        console.log(`[Migration] ${Math.round(current)}%: ${message}`)
-        btn.innerHTML = `${getIcon('Loader', 'w-4 h-4 animate-spin mr-2')} ${Math.round(current)}%`
+        console.log(`[Migration] ${Math.round(current)}%: ${message} `)
+        btn.innerHTML = `${getIcon('Loader', 'w-4 h-4 animate-spin mr-2')} ${Math.round(current)}% `
       })
 
       if (result.success) {
@@ -657,7 +656,7 @@ export class HomeView extends BaseView {
         this.showErrorMessage('⚠️ Please select at least 2 albums')
         return
       }
-      albumQueries = this.selectedAlbums.map(a => `${a.artist} - ${a.album}`)
+      albumQueries = this.selectedAlbums.map(a => `${a.artist} - ${a.album} `)
     }
 
     if (albumQueries.length < 2) {
@@ -671,7 +670,7 @@ export class HomeView extends BaseView {
 
     // Create series
     const series = {
-      id: `series_${Date.now()}`,
+      id: `series_${Date.now()} `,
       name,
       notes,
       albumQueries,
@@ -685,7 +684,7 @@ export class HomeView extends BaseView {
       const createdSeries = await albumSeriesStore.createSeries(series)
 
       // Navigate to albums view with seriesId
-      router.navigate(`/albums?seriesId=${createdSeries.id}`)
+      router.navigate(`/ albums ? seriesId = ${createdSeries.id} `)
     } catch (error) {
       console.error('Failed to create series:', error)
       this.showErrorMessage('Failed to create series. Please try again.')
@@ -694,7 +693,7 @@ export class HomeView extends BaseView {
 
   handleResumeSeries(seriesId) {
     albumSeriesStore.setActiveSeries(seriesId)
-    router.navigate(`/albums?seriesId=${seriesId}`)
+    router.navigate(`/ albums ? seriesId = ${seriesId} `)
   }
 
   updateRecentSeries(series) {

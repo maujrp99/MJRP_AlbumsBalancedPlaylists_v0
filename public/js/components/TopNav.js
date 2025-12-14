@@ -5,14 +5,25 @@ import { userStore } from '../stores/UserStore.js'
 import { authService } from '@shared/services/AuthService.js'
 import { showLoginModal } from './LoginModal.js'
 import toast from './Toast.js'
+import { db } from '../app.js'
+import { CacheManager } from '../cache/CacheManager.js'
+import { MigrationUtility } from '../migration/MigrationUtility.js'
 
 export class TopNav {
   constructor() {
     this.isMenuOpen = false
     this.userState = userStore.getState()
+    this.migrationUtility = new MigrationUtility(db, new CacheManager())
 
     // Subscribe to auth changes
     userStore.subscribe(this.handleAuthChange.bind(this))
+  }
+
+  /**
+   * Check if migration is needed
+   */
+  needsMigration() {
+    return !this.migrationUtility.isMigrationComplete() && this.migrationUtility.hasLocalStorageData()
   }
 
   handleAuthChange(state) {
@@ -69,9 +80,10 @@ export class TopNav {
         <div class="hidden md:flex items-center gap-6">
           ${this.renderNavLink('/home', 'Home', currentPath)}
           ${this.renderNavLink(albumsSeriesLink, 'Albums', currentPath)}
-          ${this.renderNavLink('/album-series', 'Album Series', currentPath)}
-          ${this.renderNavLink('/playlist-series', 'Playlist Series', currentPath)}
+          ${this.renderNavLink('/album-series', 'Series', currentPath)}
+          ${this.renderNavLink('/playlist-series', 'Playlists', currentPath)}
           ${this.renderNavLink('/inventory', 'Inventory', currentPath)}
+          ${this.needsMigration() ? this.renderDataSyncLink() : ''}
         </div>
 
         <!-- User Section (Right) -->
@@ -103,9 +115,18 @@ export class TopNav {
           <nav class="flex flex-col p-4 gap-1 flex-1 bg-brand-dark">
             ${this.renderMobileNavLink('/home', 'Home', 'Rocket', currentPath)}
             ${this.renderMobileNavLink(albumsSeriesLink, 'Albums', 'Music', currentPath)}
-            ${this.renderMobileNavLink('/album-series', 'Album Series', 'Layers', currentPath)}
-            ${this.renderMobileNavLink('/playlist-series', 'Playlist Series', 'List', currentPath)}
+            ${this.renderMobileNavLink('/album-series', 'Series', 'Layers', currentPath)}
+            ${this.renderMobileNavLink('/playlist-series', 'Playlists', 'List', currentPath)}
             ${this.renderMobileNavLink('/inventory', 'Inventory', 'Archive', currentPath)}
+            ${this.needsMigration() ? `
+              <div class="border-t border-white/10 mt-2 pt-2">
+                <button id="mobileDataSyncBtn" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-orange-400 hover:bg-orange-500/10 w-full">
+                  ${getIcon('Database', 'w-5 h-5')}
+                  <span class="font-medium">Data Sync</span>
+                  <span class="ml-auto text-xs bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full">NEW</span>
+                </button>
+              </div>
+            ` : ''}
           </nav>
           
           <!-- Mobile Footer / Auth -->
@@ -206,6 +227,35 @@ export class TopNav {
     `
   }
 
+  /**
+   * Render Data Sync link for desktop nav
+   */
+  renderDataSyncLink() {
+    return `
+      <button id="dataSyncBtn" class="flex items-center gap-2 text-sm font-medium uppercase tracking-wider px-3 py-1.5 rounded-lg hover:backdrop-blur-md hover:bg-orange-500/10 text-orange-400 transition-all duration-200 border border-orange-500/30">
+        ${getIcon('Database', 'w-4 h-4')}
+        Data Sync
+      </button>
+    `
+  }
+
+  async handleDataSync() {
+    try {
+      toast.info('Starting data migration...')
+      await this.migrationUtility.migrate()
+      toast.success('Data migration complete!')
+      // Re-render to hide Data Sync button
+      const container = document.getElementById('header-container')
+      if (container) {
+        container.innerHTML = this.render()
+        this.attachListeners()
+      }
+    } catch (err) {
+      console.error('Migration failed:', err)
+      toast.error('Migration failed: ' + err.message)
+    }
+  }
+
   attachListeners() {
     const mobileBtn = document.getElementById('mobileMenuBtn')
     const closeBtn = document.getElementById('closeMenuBtn')
@@ -234,6 +284,16 @@ export class TopNav {
 
     logoutBtn?.addEventListener('click', doLogout)
     mobileLogoutBtn?.addEventListener('click', doLogout)
+
+    // Data Sync handlers
+    const dataSyncBtn = document.getElementById('dataSyncBtn')
+    const mobileDataSyncBtn = document.getElementById('mobileDataSyncBtn')
+
+    dataSyncBtn?.addEventListener('click', () => this.handleDataSync())
+    mobileDataSyncBtn?.addEventListener('click', () => {
+      toggleMenu(false)
+      this.handleDataSync()
+    })
 
     const toggleMenu = (show) => {
       this.isMenuOpen = show
