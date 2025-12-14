@@ -42,7 +42,7 @@ export class HomeView extends BaseView {
           <div class="relative z-10 pt-2 px-8 pb-8 md:pt-4 md:px-12 md:pb-12 flex flex-col items-start gap-4 max-w-3xl">
             <!-- Logo & Title Row -->
             <div class="flex items-center gap-4 mb-2">
-              <div class="logo-icon w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
+              <div class="logo-icon w-24 h-24 md:w-28 md:h-28 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
                  <img src="/assets/images/newMJRPlogo.png" alt="MJRP Logo" class="w-full h-full object-contain">
               </div>
               <h1 class="text-2xl md:text-4xl font-syne font-extrabold text-white leading-tight tracking-wide md:whitespace-nowrap">

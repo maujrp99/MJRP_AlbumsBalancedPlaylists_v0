@@ -1,7 +1,49 @@
 # UI Style Guide
 
 **Last Updated**: 2025-12-14
-**Status**: Living Document (auto-generated from codebase scan)
+**Status**: Living Document
+
+---
+
+## Element Registry
+
+Use these IDs to reference specific UI elements:
+
+### HomeView Elements
+
+| Element ID | Description | Current Size |
+|------------|-------------|--------------|
+| `home.hero-logo-left` | Left logo (vinyl) | 96px / 112px (md) |
+| `home.hero-logo-right` | Right logo (fire vinyl) | 96px / 112px (md) |
+| `home.hero-title` | "The Album Playlist Synthesizer" | text-2xl / text-4xl |
+| `home.hero-subtitle` | Description paragraph | text-lg / text-xl |
+| `home.create-button` | "Initialize Load Sequence" | text-base, rounded-2xl |
+| `home.step-01` | "01 // Series Configuration" | text-xs uppercase |
+| `home.step-02a` | "02a // Artist Filter" | text-xs uppercase |
+| `home.step-02b` | "02b // Select Album" | text-xs uppercase |
+
+### TopNav Elements
+
+| Element ID | Description | Current Size |
+|------------|-------------|--------------|
+| `nav.logo-icon` | MJRP logo in nav | 48px / 64px (md) |
+| `nav.title-image` | "The Album Playlist Synthesizer" text image | h-6 / h-10 / h-12 |
+| `nav.menu-item` | Navigation link | text-sm uppercase |
+
+### AlbumsView Elements
+
+| Element ID | Description | Current |
+|------------|-------------|---------|
+| `albums.page-header` | View title | text-4xl font-bold |
+| `albums.card-cover` | Album cover (compact) | aspect-square |
+| `albums.card-cover-expanded` | Album cover (expanded) | 128px / 160px |
+
+### PlaylistsView Elements
+
+| Element ID | Description | Current |
+|------------|-------------|---------|
+| `playlists.header` | "Playlist Management" | text-4xl font-bold |
+| `playlists.track-item` | Draggable track | p-3 rounded-lg |
 
 ---
 
