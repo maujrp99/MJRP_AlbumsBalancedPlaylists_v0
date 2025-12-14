@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-13 20:52
+**Last Updated**: 2025-12-14 00:45
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -18,17 +18,20 @@
 
 | Issue | Component | Status | Line |
 |-------|-----------|--------|------|
-| #44 | MusicKit 503 Error | ✅ RESOLVED | [L47](#issue-44-musickit-503-error---export-to-apple-music-failed---resolved-) |
-| #43 | Worker uFuzzy | ✅ RESOLVED | [L82](#issue-43-production-worker-dependency-failure-ufuzzy---resolved-) |
-| #41 | Cover Art Loading | 🚧 IN PROGRESS | [L100](#issue-41-cover-art-loading-issues---in-progress) |
-| #40 | Autocomplete UX | 🚧 IN PROGRESS | [L100](#issue-40-autocomplete-ux-improvements---in-progress) |
-| #39 | Track Export Failed | 🚧 IN PROGRESS | [L100](#issue-39-track-export-failed-missing-tracks---in-progress) |
-| #38 | Autocomplete TypeError | ✅ RESOLVED | [L100](#issue-38-autocomplete-typeerror-syncasync-mismatch---resolved-) |
-| #37 | Apple Sign-In Config | ✅ RESOLVED | [L85](#issue-37-apple-sign-in-invalid-redirect-url---resolved-) |
-| #36 | Auth Integration Regressions | ✅ RESOLVED | [L85](#issue-36-auth-integration-regressions---resolved-) |
-| #35 | Firebase Initialization | ✅ RESOLVED | [L119](#issue-35-firebase-initialization--sdk-mismatch---resolved-) |
-| #34 | Generate Playlists API 500 | ✅ RESOLVED | [L145](#issue-34-generate-playlists-api-returns-500---resolved-) |
-| #32 | Cloud Build Docker Context | ✅ RESOLVED | [L146](#issue-32-cloud-build-docker-context-failure---resolved-) |
+| #47 | Sortable Freeze | ✅ RESOLVED | [L48](#issue-47-sortable-drag--drop-freeze---resolved-) |
+| #46 | Duplicate Export Listener | ✅ RESOLVED | [L100](#issue-46-duplicate-export-to-apple-music-calls---resolved-) |
+| #45 | Apple Music Region Export | ✅ RESOLVED | [L130](#issue-45-apple-music-export-region-issue-72-seasons---resolved-) |
+| #44 | MusicKit 503 Error | ✅ RESOLVED | [L170](#issue-44-musickit-503-error---export-to-apple-music-failed---resolved-) |
+| #43 | Worker uFuzzy | ✅ RESOLVED | [L210](#issue-43-production-worker-dependency-failure-ufuzzy---resolved-) |
+| #41 | Cover Art Loading | 🚧 IN PROGRESS | [L230](#issue-41-cover-art-loading-issues---in-progress) |
+| #40 | Autocomplete UX | 🚧 IN PROGRESS | [L230](#issue-40-autocomplete-ux-improvements---in-progress) |
+| #39 | Track Export Failed | ✅ RESOLVED (by #45) | [L130](#issue-45-apple-music-export-region-issue-72-seasons---resolved-) |
+| #38 | Autocomplete TypeError | ✅ RESOLVED | [L230](#issue-38-autocomplete-typeerror-syncasync-mismatch---resolved-) |
+| #37 | Apple Sign-In Config | ✅ RESOLVED | [L230](#issue-37-apple-sign-in-invalid-redirect-url---resolved-) |
+| #36 | Auth Integration Regressions | ✅ RESOLVED | [L230](#issue-36-auth-integration-regressions---resolved-) |
+| #35 | Firebase Initialization | ✅ RESOLVED | [L230](#issue-35-firebase-initialization--sdk-mismatch---resolved-) |
+| #34 | Generate Playlists API 500 | ✅ RESOLVED | [L230](#issue-34-generate-playlists-api-returns-500---resolved-) |
+| #32 | Cloud Build Docker Context | ✅ RESOLVED | [L230](#issue-32-cloud-build-docker-context-failure---resolved-) |
 | #31 | Playlist Generate New Albums | ⏳ AWAITING | [L253](#issue-31-playlist-generate-not-using-new-albums---awaiting-verification) |
 | #30 | Album Delete | ✅ RESOLVED | [L272](#issue-30-album-delete-not-working---resolved-) |
 | #29 | Inventory Card Display | ✅ RESOLVED | [L310](#issue-29-inventory-card-display--modal-issues---resolved-) |
@@ -45,6 +48,136 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #47: Sortable Drag & Drop Freeze - RESOLVED ✅
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-14 00:40
+**Type**: Frontend/UI Bug
+**Component**: `PlaylistsView.js`, SortableJS
+
+#### Problem
+After performing one drag & drop operation in the Playlist Management view, the UI would freeze:
+- Subsequent drags didn't work
+- Buttons (Export, Save, etc.) stopped responding
+- No errors appeared in console
+
+#### Investigation
+1. Traced events: Sortable `onEnd` triggered `playlistsStore.moveTrack()`
+2. Store called `notify()` which triggered `PlaylistsView.update()`
+3. `update()` line 117: `grid.innerHTML = this.renderPlaylists(playlists)` **re-created entire DOM**
+4. This destroyed elements that Sortable was tracking, invalidating event listeners
+
+#### Failed Attempts
+| Attempt | Action | Result |
+|---------|--------|--------|
+| 1 | Added `isDragging` flag, set false at start of `onEnd` | ❌ Flag was reset BEFORE store update, so `update()` ran with `isDragging=false` |
+
+#### Fix Applied
+```javascript
+// onStart
+this.isDragging = true
+
+// onEnd - after store.moveTrack()
+requestAnimationFrame(() => {
+  this.isDragging = false  // Delay reset to next frame
+})
+
+// update() - skip re-render when dragging
+if (!this.isDragging) {
+  grid.innerHTML = this.renderPlaylists(playlists)
+}
+```
+
+#### Files Modified
+- `public/js/views/PlaylistsView.js`: Added `isDragging` flag with proper timing
+
+---
+
+### Issue #46: Duplicate Export to Apple Music Calls - RESOLVED ✅
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-14 00:25
+**Type**: Frontend/Event Handling Bug
+**Component**: `PlaylistsView.js`
+
+#### Problem
+When clicking "Export to Apple Music", the export ran **twice**:
+- Console showed duplicate logs for every search and playlist creation
+- Could cause race conditions or duplicate playlists
+
+#### Root Cause
+`attachExportListeners()` was called twice:
+1. In `mount()` during view initialization
+2. In `update()` every time the view re-rendered
+
+Each call added **new** event listeners without removing old ones.
+
+#### Fix Applied
+Added `exportListenersAttached` flag to prevent duplicate attachment:
+```javascript
+constructor() {
+  this.exportListenersAttached = false
+}
+
+attachExportListeners() {
+  if (this.exportListenersAttached) return
+  // ... attach listeners ...
+  this.exportListenersAttached = true
+}
+```
+
+#### Files Modified
+- `public/js/views/PlaylistsView.js`: Added listener attachment guard
+
+---
+
+### Issue #45: Apple Music Export Region Issue (72 Seasons) - RESOLVED ✅
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-14 00:15
+**Type**: API/Integration Bug
+**Component**: `MusicKitService.js`
+**Related**: Issue #39 (Track Export Failed)
+
+#### Problem
+When exporting playlists to Apple Music:
+- Tracks from Metallica "72 Seasons" album were NOT appearing in created playlists
+- Tracks from other albums (AC/DC, Ozzy, Judas Priest) appeared correctly
+- Console showed tracks were "found" with valid track IDs
+- API returned 201 (success) for playlist creation
+
+#### Investigation
+1. Confirmed track IDs were being sent in API payload (e.g., `1655432388`)
+2. Playlist creation succeeded (status 201)
+3. But tracks didn't appear in Apple Music library
+
+#### Root Cause
+`MusicKitService.js` had **hardcoded US region** for catalog searches:
+```javascript
+// Line 426
+await this.music.api.music(`/v1/catalog/us/search`, {...})
+```
+User was in **Brazil** - track IDs from US catalog may have different IDs or availability in BR catalog.
+
+#### Fix Applied
+Added dynamic storefront detection:
+```javascript
+_getStorefront() {
+  if (this.music?.storefrontId) {
+    return this.music.storefrontId  // e.g., 'br' for Brazil
+  }
+  return 'us'  // fallback
+}
+
+// Changed 5 occurrences:
+await this.music.api.music(`/v1/catalog/${this._getStorefront()}/search`, {...})
+```
+
+#### Files Modified
+- `public/js/services/MusicKitService.js`: Added `_getStorefront()` helper, replaced 5 hardcoded `/catalog/us/` references
+
+#### Verification
+After fix, tracks from all albums including 72 Seasons appeared correctly in Apple Music playlists.
+
+---
 
 ### Issue #44: MusicKit 503 Error - Export to Apple Music Failed - RESOLVED ✅
 **Status**: ✅ **RESOLVED**
