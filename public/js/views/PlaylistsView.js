@@ -20,6 +20,7 @@ export class PlaylistsView extends BaseView {
     this.isGenerating = false
     this.draggedTrack = null
     this.exportListenersAttached = false // Prevent duplicate listener attachment
+    this.isDragging = false // Prevent re-render during drag operations
   }
 
   async render(params) {
@@ -110,11 +111,14 @@ export class PlaylistsView extends BaseView {
         const generateBtn = this.$('#generateBtn')
         if (generateBtn) this.on(generateBtn, 'click', () => this.handleGenerate())
       } else {
-        const generateSection = this.$('.generate-section')
-        if (generateSection) generateSection.remove()
+        // Skip grid re-render during drag operations to prevent Sortable invalidation
+        if (!this.isDragging) {
+          const generateSection = this.$('.generate-section')
+          if (generateSection) generateSection.remove()
 
-        const grid = this.$('#playlistsGrid')
-        if (grid) grid.innerHTML = this.renderPlaylists(playlists)
+          const grid = this.$('#playlistsGrid')
+          if (grid) grid.innerHTML = this.renderPlaylists(playlists)
+        }
       }
 
       if (exportSection) {
@@ -544,12 +548,15 @@ export class PlaylistsView extends BaseView {
 
         // Haptic feedback on drag start
         onStart: () => {
+          this.isDragging = true // Prevent re-render during drag
           if ('vibrate' in navigator) {
             navigator.vibrate(50) // Short pulse when picking up
           }
         },
 
         onEnd: (evt) => {
+          this.isDragging = false // Re-enable re-render
+
           // Haptic feedback on drop
           if ('vibrate' in navigator) {
             navigator.vibrate([20, 30, 20]) // Double pulse pattern when dropping
