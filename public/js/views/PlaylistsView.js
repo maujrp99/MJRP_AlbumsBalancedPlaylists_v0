@@ -19,6 +19,7 @@ export class PlaylistsView extends BaseView {
     super()
     this.isGenerating = false
     this.draggedTrack = null
+    this.exportListenersAttached = false // Prevent duplicate listener attachment
   }
 
   async render(params) {
@@ -127,6 +128,12 @@ export class PlaylistsView extends BaseView {
   }
 
   attachExportListeners() {
+    // Prevent duplicate listener attachment
+    if (this.exportListenersAttached) {
+      console.log('[PlaylistsView] Export listeners already attached, skipping')
+      return
+    }
+
     const exportSpotify = this.$('#exportSpotifyBtn')
     const exportAppleMusic = this.$('#exportAppleMusicBtn')
     const exportJson = this.$('#exportJsonBtn')
@@ -141,6 +148,7 @@ export class PlaylistsView extends BaseView {
     }
     if (exportAppleMusic) {
       this.on(exportAppleMusic, 'click', () => this.handleExportToAppleMusic())
+      this.exportListenersAttached = true // Mark as attached
     }
     if (exportJson) {
       this.on(exportJson, 'click', () => this.handleExportJson())
