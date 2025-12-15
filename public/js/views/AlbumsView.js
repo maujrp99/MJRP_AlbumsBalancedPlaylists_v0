@@ -9,6 +9,7 @@ import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
 import { showViewAlbumModal } from '../components/ViewAlbumModal.js'
+import { createViewModeStrategy } from './strategies/ViewModeStrategy.js'
 
 /**
  * AlbumsView
@@ -22,8 +23,10 @@ export class AlbumsView extends BaseView {
     this.searchQuery = ''
     this.loadProgress = { current: 0, total: 0 }
 
-    // Default view mode
-    this.viewMode = localStorage.getItem('albumsViewMode') || 'compact' // 'compact' (grid) or 'expanded'
+    // Default view mode - now using Strategy Pattern
+    this.viewModeKey = localStorage.getItem('albumsViewMode') || 'compact'
+    this.viewMode = this.viewModeKey // Keep for backwards compatibility
+    this.viewStrategy = createViewModeStrategy(this.viewModeKey, this)
 
     // Filter state
     this.filters = {
@@ -91,12 +94,8 @@ export class AlbumsView extends BaseView {
     // Actually, line 63: const albums = albumsStore.getAlbums()
     const filteredAlbums = this.filterAlbums(albums)
 
-    // DEBUG: Enhanced logging for troubleshooting
-
-    // Updated render method logic
-    const contentHtml = this.viewMode === 'expanded'
-      ? this.renderScopedList(filteredAlbums, allSeries)
-      : this.renderScopedGrid(filteredAlbums, allSeries)
+    // Updated render method logic - Using Strategy Pattern
+    const contentHtml = this.viewStrategy.render(filteredAlbums, allSeries)
 
     return `
   <div class="albums-view container" >
@@ -213,12 +212,12 @@ export class AlbumsView extends BaseView {
             Refresh
           </button>
 
-          <!-- View Mode Toggle -->
+          <!-- View Mode Toggle - Using Strategy Pattern -->
           <button
             id="toggleViewMode"
-            class="btn ${this.viewMode === 'compact' ? 'btn-primary' : 'btn-secondary'} whitespace-nowrap">
-            ${getIcon(this.viewMode === 'compact' ? 'List' : 'Grid', 'w-5 h-5')}
-            ${this.viewMode === 'compact' ? 'View Expanded' : 'View Compact'}
+            class="${this.viewStrategy.getButtonClass()} whitespace-nowrap">
+            ${getIcon(this.viewStrategy.getButtonIcon(), 'w-5 h-5')}
+            ${this.viewStrategy.getButtonLabel()}
           </button>
         </div>
       </div>
@@ -916,13 +915,15 @@ export class AlbumsView extends BaseView {
       })
     }
 
-    // View Mode Toggle
+    // View Mode Toggle - Using Strategy Pattern
     const toggleViewBtn = this.$('#toggleViewMode')
     if (toggleViewBtn) {
       this.on(toggleViewBtn, 'click', async () => {
-        // FIX #16: Toggle mode and re-render entire view
-        this.viewMode = this.viewMode === 'compact' ? 'expanded' : 'compact'
-        localStorage.setItem('albumsViewMode', this.viewMode)
+        // Toggle mode using Strategy Pattern
+        this.viewModeKey = this.viewModeKey === 'compact' ? 'expanded' : 'compact'
+        this.viewMode = this.viewModeKey // Keep for backwards compatibility
+        this.viewStrategy = createViewModeStrategy(this.viewModeKey, this)
+        localStorage.setItem('albumsViewMode', this.viewModeKey)
 
         // Re-render entire view with new mode (keeps same instance)
         const html = await this.render({})
@@ -1437,17 +1438,11 @@ export class AlbumsView extends BaseView {
       return
     }
 
-    // Render based on viewMode
+    // Render using Strategy Pattern
     const allSeries = albumSeriesStore.getSeries()
-    if (this.viewMode === 'expanded') {
-      const html = this.renderScopedList(filtered, allSeries)
-      console.log('[AlbumsView] renderScopedList returned HTML length:', html?.length)
-      container.innerHTML = html
-    } else {
-      const html = this.renderScopedGrid(filtered, allSeries)
-      console.log('[AlbumsView] renderScopedGrid returned HTML length:', html?.length)
-      container.innerHTML = html
-    }
+    const html = this.viewStrategy.render(filtered, allSeries)
+    console.log('[AlbumsView] Strategy rendered HTML length:', html?.length, 'mode:', this.viewModeKey)
+    container.innerHTML = html
 
     // Update empty state container
     const emptyStateContainer = this.$('#emptyStateContainer')
