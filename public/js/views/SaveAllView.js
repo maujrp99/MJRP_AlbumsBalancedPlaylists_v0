@@ -1,5 +1,5 @@
 import { BaseView } from './BaseView.js'
-import { MigrationUtility } from '../utils/MigrationUtility.js'
+import { MigrationUtility } from '../migration/MigrationUtility.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
 
@@ -8,17 +8,17 @@ import toast from '../components/Toast.js'
  * Data Migration utility page - moved from HomeView
  */
 export class SaveAllView extends BaseView {
-    constructor() {
-        super()
-        this.migrationUtil = new MigrationUtility()
-        this.migrationState = 'idle' // idle, running, complete, error
-        this.migrationProgress = { current: 0, total: 0, currentItem: '' }
-    }
+  constructor() {
+    super()
+    this.migrationUtil = new MigrationUtility()
+    this.migrationState = 'idle' // idle, running, complete, error
+    this.migrationProgress = { current: 0, total: 0, currentItem: '' }
+  }
 
-    async render() {
-        const hasPendingMigration = await this.migrationUtil.hasPendingMigration()
+  async render() {
+    const hasPendingMigration = await this.migrationUtil.hasPendingMigration()
 
-        return `
+    return `
       <div class="save-all-view container py-8 max-w-4xl mx-auto">
         <header class="mb-8">
           <h1 class="text-3xl font-syne font-bold text-white mb-2">
@@ -92,72 +92,72 @@ export class SaveAllView extends BaseView {
         </section>
       </div>
     `
+  }
+
+  async mount() {
+    // Start Migration Button
+    const startBtn = this.$('#startMigrationBtn')
+    if (startBtn) {
+      this.on(startBtn, 'click', () => this.startMigration())
     }
 
-    async mount() {
-        // Start Migration Button
-        const startBtn = this.$('#startMigrationBtn')
-        if (startBtn) {
-            this.on(startBtn, 'click', () => this.startMigration())
-        }
+    // Re-check Button
+    const checkBtn = this.$('#checkMigrationBtn')
+    if (checkBtn) {
+      this.on(checkBtn, 'click', () => this.checkMigrationStatus())
+    }
+  }
 
-        // Re-check Button
-        const checkBtn = this.$('#checkMigrationBtn')
-        if (checkBtn) {
-            this.on(checkBtn, 'click', () => this.checkMigrationStatus())
-        }
+  async startMigration() {
+    const progressSection = this.$('#migrationProgressSection')
+    const startBtn = this.$('#startMigrationBtn')
+    const statusText = this.$('#migrationStatusText')
+
+    if (progressSection) progressSection.classList.remove('hidden')
+    if (startBtn) startBtn.disabled = true
+    if (statusText) statusText.textContent = 'Migration in progress...'
+
+    try {
+      await this.migrationUtil.runMigration((progress) => {
+        this.updateProgress(progress)
+      })
+
+      if (statusText) statusText.textContent = 'Migration complete!'
+      toast.success('Data migration completed successfully!')
+    } catch (error) {
+      console.error('Migration failed:', error)
+      if (statusText) statusText.textContent = 'Migration failed. Please try again.'
+      toast.error('Migration failed: ' + error.message)
+    }
+  }
+
+  updateProgress(progress) {
+    const progressBar = this.$('#migrationProgressBar')
+    const progressText = this.$('#migrationProgressText')
+    const progressPercent = this.$('#migrationProgressPercent')
+
+    const percent = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0
+
+    if (progressBar) progressBar.style.width = `${percent}%`
+    if (progressText) progressText.textContent = progress.currentItem || 'Processing...'
+    if (progressPercent) progressPercent.textContent = `${percent}%`
+  }
+
+  async checkMigrationStatus() {
+    const hasPending = await this.migrationUtil.hasPendingMigration()
+    const statusText = this.$('#migrationStatusText')
+    const startBtn = this.$('#startMigrationBtn')
+
+    if (statusText) {
+      statusText.textContent = hasPending
+        ? 'Old data detected. Ready to migrate.'
+        : 'No pending migrations.'
     }
 
-    async startMigration() {
-        const progressSection = this.$('#migrationProgressSection')
-        const startBtn = this.$('#startMigrationBtn')
-        const statusText = this.$('#migrationStatusText')
-
-        if (progressSection) progressSection.classList.remove('hidden')
-        if (startBtn) startBtn.disabled = true
-        if (statusText) statusText.textContent = 'Migration in progress...'
-
-        try {
-            await this.migrationUtil.runMigration((progress) => {
-                this.updateProgress(progress)
-            })
-
-            if (statusText) statusText.textContent = 'Migration complete!'
-            toast.success('Data migration completed successfully!')
-        } catch (error) {
-            console.error('Migration failed:', error)
-            if (statusText) statusText.textContent = 'Migration failed. Please try again.'
-            toast.error('Migration failed: ' + error.message)
-        }
+    if (startBtn) {
+      startBtn.disabled = !hasPending
     }
 
-    updateProgress(progress) {
-        const progressBar = this.$('#migrationProgressBar')
-        const progressText = this.$('#migrationProgressText')
-        const progressPercent = this.$('#migrationProgressPercent')
-
-        const percent = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0
-
-        if (progressBar) progressBar.style.width = `${percent}%`
-        if (progressText) progressText.textContent = progress.currentItem || 'Processing...'
-        if (progressPercent) progressPercent.textContent = `${percent}%`
-    }
-
-    async checkMigrationStatus() {
-        const hasPending = await this.migrationUtil.hasPendingMigration()
-        const statusText = this.$('#migrationStatusText')
-        const startBtn = this.$('#startMigrationBtn')
-
-        if (statusText) {
-            statusText.textContent = hasPending
-                ? 'Old data detected. Ready to migrate.'
-                : 'No pending migrations.'
-        }
-
-        if (startBtn) {
-            startBtn.disabled = !hasPending
-        }
-
-        toast.info(hasPending ? 'Pending migration found' : 'No migrations needed')
-    }
+    toast.info(hasPending ? 'Pending migration found' : 'No migrations needed')
+  }
 }
