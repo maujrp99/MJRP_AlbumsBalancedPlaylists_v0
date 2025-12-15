@@ -1415,6 +1415,7 @@ export class AlbumsView extends BaseView {
     }
 
     const filtered = this.filterAlbums(albums)
+    console.log('[AlbumsView] After filterAlbums: filtered=', filtered?.length, 'from albums=', albums?.length)
 
     // Update Generate Playlists button state
     const generateBtn = this.$('#generatePlaylistsBtn')
@@ -1427,21 +1428,25 @@ export class AlbumsView extends BaseView {
     }
 
     // Update the correct container based on viewMode
+    // FIX: The container ID is 'albumsContainer', not 'albumsGrid' or 'albumsList'!
+    const container = this.$('#albumsContainer')
+    console.log('[AlbumsView] Container element found:', !!container, 'viewMode:', this.viewMode)
+
+    if (!container) {
+      console.error('[AlbumsView] CRITICAL: #albumsContainer not found in DOM!')
+      return
+    }
+
+    // Render based on viewMode
+    const allSeries = albumSeriesStore.getSeries()
     if (this.viewMode === 'expanded') {
-      const list = this.$('#albumsList')
-      if (list) {
-        // FIX: Use renderScopedList logic for expanded view (supports grouping)
-        const allSeries = albumSeriesStore.getSeries()
-        list.innerHTML = this.renderScopedList(filtered, allSeries)
-      }
+      const html = this.renderScopedList(filtered, allSeries)
+      console.log('[AlbumsView] renderScopedList returned HTML length:', html?.length)
+      container.innerHTML = html
     } else {
-      const grid = this.$('#albumsGrid')
-      if (grid) {
-        // FIX: Use renderScopedGrid logic for compact view (supports grouping)
-        // Need to pass seriesList if we want accurate grouping
-        const allSeries = albumSeriesStore.getSeries()
-        grid.innerHTML = this.renderScopedGrid(filtered, allSeries)
-      }
+      const html = this.renderScopedGrid(filtered, allSeries)
+      console.log('[AlbumsView] renderScopedGrid returned HTML length:', html?.length)
+      container.innerHTML = html
     }
 
     // Update empty state container
