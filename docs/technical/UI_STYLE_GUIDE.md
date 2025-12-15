@@ -1,6 +1,6 @@
 # UI Style Guide
 
-**Last Updated**: 2025-12-14
+**Last Updated**: 2025-12-15
 **Status**: Living Document
 
 ---
@@ -15,7 +15,7 @@ Use these IDs to reference specific UI elements:
 |------------|-------------|--------------|
 | `home.hero-logo-left` | Left logo (vinyl) | 96px / 112px (md) |
 | `home.hero-logo-right` | Right logo (fire vinyl) | 96px / 112px (md) |
-| `home.hero-title` | "The Album Playlist Synthesizer" | text-2xl / text-4xl |
+| `home.hero-title` | "The Album Blender" | text-2xl / text-4xl |
 | `home.hero-subtitle` | Description paragraph | text-lg / text-xl |
 | `home.create-button` | "Initialize Load Sequence" | text-base, rounded-2xl |
 | `home.step-01` | "01 // Series Configuration" | text-xs uppercase |
@@ -27,8 +27,8 @@ Use these IDs to reference specific UI elements:
 | Element ID | Description | Current Size |
 |------------|-------------|--------------|
 | `nav.logo-icon` | MJRP logo in nav | 48px / 64px (md) |
-| `nav.title-image` | "The Album Playlist Synthesizer" text image | h-6 / h-10 / h-12 |
-| `nav.menu-item` | Navigation link | text-sm uppercase |
+| `nav.title-image` | "The Album Blender" text image | h-6 / h-10 / h-12 |
+| `nav.menu-item` | Navigation link | text-sm uppercase, font-semibold, `.nav-link-glow` |
 
 ### AlbumsView Elements
 | Element ID | Description | Class / Style |

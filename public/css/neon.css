@@ -43,6 +43,28 @@
     text-shadow: 0 0 5px rgba(0, 255, 157, 0.5);
 }
 
+/* Navigation Link Glow Effect */
+.nav-link-glow {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-link-glow:hover {
+    color: var(--neon-orange);
+    text-shadow: 
+        0 0 5px rgba(255, 136, 0, 0.6),
+        0 0 10px rgba(255, 136, 0, 0.4),
+        0 0 20px rgba(255, 136, 0, 0.2);
+    background: rgba(255, 136, 0, 0.1);
+    backdrop-filter: blur(4px);
+}
+
+.nav-link-glow.text-accent-primary {
+    text-shadow: 
+        0 0 5px rgba(255, 136, 0, 0.4),
+        0 0 10px rgba(255, 136, 0, 0.2);
+}
+
 /* Custom Scrollbar for results */
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;

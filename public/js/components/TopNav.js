@@ -202,7 +202,7 @@ export class TopNav {
     const isActive = currentPath === path || (path !== '/home' && currentPath.startsWith(path))
     const baseClass = isMobile
       ? 'text-2xl font-bold'
-      : 'text-sm font-medium uppercase tracking-wider px-3 py-1.5 rounded-lg hover:backdrop-blur-md hover:bg-white/10 hover:text-accent-primary transition-all duration-200'
+      : 'nav-link-glow text-sm font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg transition-all duration-300'
     const activeClass = isActive ? 'text-accent-primary bg-white/5' : 'text-muted'
 
     return `
