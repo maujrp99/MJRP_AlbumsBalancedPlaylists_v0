@@ -1,6 +1,6 @@
 # Architecture Documentation
 
-**Last Updated**: 2025-12-08  
+**Last Updated**: 2025-12-15  
 **Workflow**: See `.agent/workflows/architecture_documentation.md`
 
 > **For project overview, features, and deployment info, see:**
@@ -66,6 +66,7 @@ graph TB
 5. [UI/UX Standards (2025-11-29)](#uiux-standards-current)
 6. [Router Architecture](#router-architecture)
 7. [Firebase Integration Guide](#firebase-integration-guide)
+8. [ViewMode Strategy Pattern (2025-12-15)](#viewmode-strategy-pattern)
 
 ### Architecture Decisions (ADRs)
 - [Caching Strategy](#caching-strategy-previous)
@@ -84,6 +85,107 @@ graph TB
   - Active debugging sessions
   - Historical issues & resolutions
   - Debug tools documentation
+
+---
+
+## ViewMode Strategy Pattern
+**Status**: 🟢 Active  
+**Date**: 2025-12-15  
+**File**: `public/js/views/strategies/ViewModeStrategy.js`  
+**Type**: Behavioral Design Pattern
+
+### Overview
+
+The `AlbumsView` supports two view modes: **Compact** (grid) and **Expanded** (list with dual tracklists). Previously, view mode logic was scattered throughout the code with conditionals like:
+
+```javascript
+if (this.viewMode === 'expanded') {
+  // render list
+} else {
+  // render grid
+}
+```
+
+This was refactored using the **Strategy Pattern** to improve modularity, testability, and extensibility.
+
+### Class Diagram
+
+```mermaid
+classDiagram
+    class ViewModeStrategy {
+        <<abstract>>
+        +view: AlbumsView
+        +getContainerId(): string
+        +render(albums, series): string
+        +getButtonLabel(): string
+        +getButtonIcon(): string
+        +getModeKey(): string
+        +getButtonClass(): string
+    }
+    
+    class CompactViewStrategy {
+        +getModeKey() "compact"
+        +render() calls renderScopedGrid()
+        +getButtonLabel() "View Compact"
+        +getButtonIcon() "Grid"
+    }
+    
+    class ExpandedViewStrategy {
+        +getModeKey() "expanded"
+        +render() calls renderScopedList()
+        +getButtonLabel() "View Expanded"
+        +getButtonIcon() "List"
+    }
+    
+    ViewModeStrategy <|-- CompactViewStrategy
+    ViewModeStrategy <|-- ExpandedViewStrategy
+```
+
+### Usage
+
+```javascript
+import { createViewModeStrategy } from './strategies/ViewModeStrategy.js'
+
+// In AlbumsView constructor
+this.viewModeKey = localStorage.getItem('albumsViewMode') || 'compact'
+this.viewStrategy = createViewModeStrategy(this.viewModeKey, this)
+
+// Rendering (simplified from conditional to delegation)
+const html = this.viewStrategy.render(albums, series)
+
+// Toggle button
+${this.viewStrategy.getButtonLabel()}
+${getIcon(this.viewStrategy.getButtonIcon(), 'w-5 h-5')}
+```
+
+### Benefits
+
+| Aspect | Before | After |
+|--------|--------|-------|
+| **Logic Location** | Scattered conditionals | Centralized in Strategy classes |
+| **Adding New Mode** | Edit multiple places | Create new Strategy class |
+| **Testing** | Integration tests only | Unit test each Strategy |
+| **Readability** | `if/else` chains | Clear delegation |
+
+### Factory Function
+
+```javascript
+export function createViewModeStrategy(modeKey, view) {
+  switch (modeKey) {
+    case 'expanded': return new ExpandedViewStrategy(view)
+    case 'compact':
+    default: return new CompactViewStrategy(view)
+  }
+}
+```
+
+### Extension Points
+
+To add a new view mode (e.g., "table"):
+1. Create `TableViewStrategy extends ViewModeStrategy`
+2. Implement `render()`, `getButtonLabel()`, etc.
+3. Add case to factory function
+4. No changes needed in `AlbumsView.js`
 
 ---
 

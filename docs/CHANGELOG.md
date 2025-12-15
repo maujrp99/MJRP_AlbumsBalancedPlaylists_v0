@@ -4,27 +4,31 @@ All notable changes to the MJRP Albums Balanced Playlists project.
 
 ## v2.7.0 - Sprint 7.5: AlbumsView Polish & Refactor (2025-12-15)
 
-**Status**: 🚧 **IN PROGRESS**
-**Current Release**: `v2.7.0-dev`
+**Status**: 🏷️ **TAGGED RELEASE**
+**Tag**: `v2.7.0`
 
 ### Summary
-Sprint 7.5 focuses on refining the `AlbumsView` with a new "All Series" scope, visual grouping, and performance refactors using Apple Music.
+Sprint 7.5 focuses on refining the `AlbumsView` with a new "All Series" scope, visual grouping, ViewMode Strategy Pattern refactor, and critical bug fixes for Ranked by Acclaim.
 
 ### ✨ New Features
 - **AlbumsView Scope Architecture**:
   - Implemented "All Series" vs "Single Series" logic.
   - Added Series Dropdown Filter (defaults to All).
   - Added Visual Grouping (Borders/Titles) for albums by series.
+- **ViewMode Strategy Pattern**:
+  - Refactored viewMode logic (compact/expanded) into Strategy classes
+  - Created `CompactViewStrategy` and `ExpandedViewStrategy`
+  - Improved maintainability and extensibility
 - **UI Architecture**:
   - **Shared Action Delegation**: Centralized event listeners for Grid/List views.
   - **Tech Theme Polish**: Standardized buttons (`tech-btn-primary`).
 
 ### 🐛 Fixed
-- **Navigation**: "Albums" link in TopNav now correctly resets to "All Series".
-- **View Logic**: Fixed "All Albums Series" title mismatch.
-- **Grouping**: Fixed missing borders/titles in Expanded View.
-- **Empty State**: Fixed modal "No tracks" error.
-- **Filters**: Fixed `seriesFilter` event listener loss on view toggle.
+- **Issue #52**: Series 5.1 empty render - wrong container ID (`#albumsGrid` → `#albumsContainer`)
+- **Issue #53**: Ranked by Acclaim not loading - endpoint used `e.title` instead of `e.trackTitle`
+- **Album Loading**: Increased search limit from 1 to 5 for better standard edition selection
+- **Navigation**: "Albums" link in TopNav now correctly resets to "All Series"
+- **Phantom Clicks**: Added `e.isTrusted` protection in router interceptor
 
 ---
 

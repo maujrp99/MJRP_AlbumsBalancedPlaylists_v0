@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-14 00:45
+**Last Updated**: 2025-12-15 18:35
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -18,7 +18,8 @@
 
 | Issue | Component | Status | Line |
 |-------|-----------|--------|------|
-| #52 | Series Empty Render | 🚧 IN PROGRESS | [L52](#issue-52-series-51-empty-render-albums-loaded-but-not-displayed---in-progress) |
+| #53 | Ranked by Acclaim | ✅ RESOLVED | [L100](#issue-53-ranked-by-acclaim-not-loading-ratings---resolved) |
+| #52 | Series Empty Render | ✅ RESOLVED | [L52](#issue-52-series-51-empty-render-albums-loaded-but-not-displayed---resolved) |
 | #47 | Sortable Freeze | ✅ RESOLVED | [L107](#issue-47-sortable-drag--drop-freeze---resolved-) |
 | #46 | Duplicate Export Listener | ✅ RESOLVED | [L100](#issue-46-duplicate-export-to-apple-music-calls---resolved-) |
 | #45 | Apple Music Region Export | ✅ RESOLVED | [L130](#issue-45-apple-music-export-region-issue-72-seasons---resolved-) |
@@ -92,9 +93,49 @@ When navigating to a specific series (e.g., Series 5.1 via URL `/albums?seriesId
 - `public/js/views/AlbumsView.js` - Container ID fix + guard logic
 
 #### Tech Debt
-> [!WARNING]
-> **REFACTOR NEEDED**: The ViewMode logic (`expanded` vs `compact`) has conditional code scattered throughout `AlbumsView.js`. 
-> User requested refactoring using **Strategy Pattern** to modularize view modes.
+> [!NOTE]
+> **RESOLVED**: The ViewMode logic refactoring was completed using **Strategy Pattern**.
+> See `public/js/views/strategies/ViewModeStrategy.js`
+
+---
+
+### Issue #53: Ranked by Acclaim Not Loading Ratings - ✅ RESOLVED
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-15 16:38
+**Severity**: CRITICAL (Core Feature Broken)
+**Type**: Backend Bug
+**Component**: `server/index.js`, `besteveralbums.js`
+
+#### Problem
+"Ranked by Acclaim" tracklist showing all ratings as `null`, even though BestEverAlbums data was being scraped successfully (11 tracks with ratings found).
+
+#### Root Cause
+**Property Name Mismatch**: The `/api/enrich-album` endpoint in `server/index.js` was checking `e.title`, but the BestEverAlbums scraper returns `e.trackTitle`.
+
+```javascript
+// BUG (line 154)
+if (e.title && e.rating !== undefined ...) // e.title is UNDEFINED!
+
+// FIX
+const trackTitle = e.trackTitle || e.title
+if (trackTitle && e.rating !== undefined ...)
+```
+
+#### Evidence
+```bash
+# Scraper returns correct data:
+{ trackTitle: "Light My Fire", rating: 92 }
+{ trackTitle: "Break On Through (To The Other Side)", rating: 91 }
+
+# But endpoint couldn't match because it was looking for `e.title`
+```
+
+#### Fix Applied
+- `server/index.js:154` - Changed `e.title` to `e.trackTitle || e.title`
+- Added debug logging for evidence matching
+
+#### Related: Album Loading Improvement
+Also increased Apple Music search limit from 1 to 5 in `client.js` to allow better scoring/selection of Standard editions over Deluxe/Remastered.
 
 ---
 

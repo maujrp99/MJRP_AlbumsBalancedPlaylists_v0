@@ -1,8 +1,8 @@
 # MJRP Playlist Generator - Product Roadmap
 
 **Last Updated**: 2025-12-15
-**Current Version**: v2.2.2
-**Current Sprint**: Sprint 7.5 (ViewModeStrategy Refactor)
+**Current Version**: v2.7.0
+**Current Sprint**: Sprint 8 (Planned: SeriesView Consolidation)
 
 ---
 
