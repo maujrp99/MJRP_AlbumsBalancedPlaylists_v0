@@ -151,15 +151,21 @@ app.post('/api/enrich-album', async (req, res) => {
       // Index the evidence by normalized key
       const evidenceIndex = new Map()
       bestEver.evidence.forEach(e => {
-        if (e.title && (e.rating !== undefined || e.rating !== null)) {
-          const key = normalizeKey(e.title)
+        // FIX: Scraper returns `trackTitle`, not `title`. Support both for safety.
+        const trackTitle = e.trackTitle || e.title
+        if (trackTitle && e.rating !== undefined && e.rating !== null) {
+          const key = normalizeKey(trackTitle)
+          console.log(`[Enrichment DEBUG] BestEver track: "${trackTitle}" -> key: "${key}" -> rating: ${e.rating}`)
           if (key) evidenceIndex.set(key, e.rating)
         }
       })
 
+      console.log(`[Enrichment DEBUG] Evidence index has ${evidenceIndex.size} entries:`, [...evidenceIndex.keys()])
+
       // Map to request tracks
       tracks.forEach(t => {
         const key = normalizeKey(t.title || t.name || '')
+        console.log(`[Enrichment DEBUG] Apple track: "${t.title}" -> key: "${key}" -> hasMatch: ${evidenceIndex.has(key)}`)
         let rating = null
         if (key && evidenceIndex.has(key)) {
           rating = Number(evidenceIndex.get(key))
@@ -167,7 +173,7 @@ app.post('/api/enrich-album', async (req, res) => {
         ratingsMap.push({ title: t.title, rating })
       })
 
-      console.log(`[Enrichment] Success for ${title}: Found ${evidenceIndex.size} ratings.`)
+      console.log(`[Enrichment] Success for ${title}: Found ${evidenceIndex.size} ratings, matched ${ratingsMap.filter(r => r.rating !== null).length} tracks.`)
 
     } catch (e) {
       console.error('[Enrichment] Mapping failed:', e)

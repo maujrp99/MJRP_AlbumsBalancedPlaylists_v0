@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-**MJRP Playlist Generator** is a web application that generates balanced playlists from track-level acclaim data, combining deterministic evidence (BestEverAlbums scraper) with AI enrichment (Google Gemini).
+The MJRP Playlist Generator, "The Album Blender," is a visionary platform aiming to be the definitive tool for music curation, empowering enthusiasts to transcend algorithmic bubbles by focusing on objectively balanced album-based playlists. It achieves this by integrating global acclaim ratings (from sources like BestEverAlbums and Musicboard) with AI enrichment (Google Gemini) to ensure musical inspiration meets data precision. Its future state is a multi-device, cloud-synced ecosystem providing a seamless experience and native integration with major streaming services, Apple Music and Spotify in the future.
 
 ### Current Status ⚠️ 4 P0 Blockers
 - **v2.0.4** deployed to production

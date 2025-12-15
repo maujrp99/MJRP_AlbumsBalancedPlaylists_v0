@@ -1,21 +1,20 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-13
-**Current Version**: v2.2.1
-**Current Sprint**: Sprint 7 (Data Enrichment & UAT)
+**Last Updated**: 2025-12-15
+**Current Version**: v2.2.2
+**Current Sprint**: Sprint 7.5 (ViewModeStrategy Refactor)
 
 ---
 
 ## 🎯 Product Vision
 
-Transform MJRP Playlist Generator from a single-device tool into a **multi-device, cloud-synced music curation platform** with integrations to major streaming services (Apple Music, Spotify).
-
+To empower music lovers and casual curators to transcend algorithmic bubbles by providing the definitive music curation platform. The MJRP Playlist Generator, "The Album Blender" will transform the art of playlist creation by using the intelligence of global acclaim ratings (BestEverAlbums, Musicboard) and AI enrichment (Google Gemini) to generate balanced playlists that are objectively balanced from acclaimed albums or albums from your favorite band7artist. Our vision is to be the multi-device, cloud-synced ecosystem where a passion for artist's albums meets data precision, delivering the perfect balanced album playlist experience with native integration into the largest streaming platforms (Spotify, Apple Music).
 ---
 
 ## ✅ Completed Sprints (1-5)
 
 
-### Sprint 1: Foundation (Nov 2025)
+### Sprint 1: Foundation (Nov 2025) - DONE
 **Goal**: Modern build tooling + state management foundation  
 **Duration**: 2 weeks
 
@@ -48,7 +47,7 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 
 ---
 
-### Sprint 3: Core Views (Nov 2025)
+### Sprint 3: Core Views (Nov 2025) - DONE
 **Goal**: Albums Library, Ranking, Playlists views  
 **Duration**: 2 weeks
 
@@ -82,7 +81,7 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 - Fixed ranking URL parameter parsing
 
 ---
-### Sprint 5: Inventory System & Persistence (Nov - Dec 2025)
+### Sprint 5: Inventory System & Persistence (Nov - Dec 2025) - DONE
 **Goal**: Implement persistence, repository pattern, and inventory management.  
 **Delivered**: 2025-12-09 (v2.1.0)
 
@@ -119,7 +118,7 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 ---
 
 
-### Sprint 7: Data Enrichment Validation + Apple Music Integration
+### Sprint 7: Data Enrichment Validation (NOt done yet - 15/12) + Apple Music Integration  - DONE
 
 **Duration**: 1-2 weeks  
 **Priority**: High  
@@ -150,25 +149,48 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
     - [x] "Connect to Apple Music" button in PlaylistsView
     - [x] Export Progress Modal
     - [x] Success confirmation with link
+   
+- [x ] **MusicKit Setup**
+  - Enable MusicKit capability on App ID
+  - Generate Developer Token (JWT with .p8 key)
 
-#### Part C: View Revamp & Stability (🚧 In Progress)
+- [ x] **Backend Proxy**
+  - Endpoint for Developer Token generation
+  - Endpoint for Apple Music API calls (search, create playlist)
 
-- [ ] **Holistic View Revamp (Cover Loading)**
-    - [ ] Branch: `feature/cover-loading-views-revamp`
-    - [ ] Standardize async hydration across `AlbumsView`, `InventoryView`
-    - [ ] Fix Inventory Ownership bug
-
-- [ ] **Final UAT Fixes**
-    - [ ] Verify "Metallica" missing tracks fix in Prod
-    - [ ] Fix 500 Error (Judas Priest)
+- [ x] **Apple Music API Client**
+  - `searchTracks(query)` - Find tracks in Apple Music catalog
+  - `createPlaylist(name, description)` - Create user playlist
+  - `addTracksToPlaylist(playlistId, trackIds)` - Add tracks
 
 - [ ] **Export Workflow UI**
-    - [ ] "Connect to Apple Music" button in PlaylistsView
-    - [ ] **Fix Export Bug**: Missing tracks (e.g. 72 Seasons) - *WIP: Add debug logging*
+  - "Connect to Apple Music" button in PlaylistsView
+  - Export Progress Modal (Matching tracks...)
+  - Handling unmatched tracks (Skip or Manual search)
+  - Success confirmation with link to Apple Music
+
+**Deliverables**:
+- MusicKit OAuth integration
+- Export playlists to Apple Music
+
+#### Part C: View Revamp & Stability  - DONE
+
+- [ ] **Holistic View Revamp (Cover Loading)**
+    - [x ] Branch: `feature/cover-loading-views-revamp`
+    - [x ] Standardize async hydration across `AlbumsView`, `InventoryView`
+    - [ NOT DONE] Fix Inventory Ownership bug
+
+- [ ] **Final UAT Fixes**
+    - [ x] Verify "Metallica" missing tracks fix in Prod
+    - [ x] Fix 500 Error (Judas Priest)
+
+- [ ] **Export Workflow UI**
+    - [ x] "Connect to Apple Music" button in PlaylistsView
+    - [ x] **Fix Export Bug**: Missing tracks (e.g. 72 Seasons) - *WIP: Add debug logging*
 
 - [ ] **Backend Proxy & API Client**
-    - [ ] Endpoint for Developer Token generation
-    - [ ] Apple Music API calls (search, create playlist) for Apple Music API calls (via proxy or client)
+    - [ x] Endpoint for Developer Token generation
+    - [ x] Apple Music API calls (search, create playlist) for Apple Music API calls (via proxy or client)
 
 - [x] **Apple Music API Client**
   - [x] `searchTracks(query)`
@@ -183,22 +205,22 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 **Deliverables Status**:
 - ✅ Autocomplete & Cover Loading (Part A) - *Pending User Final Sign-off*
 - ✅ Export Implementation (Part B) - **DONE**
-- 🚧 Export Verification (Part B) - **IN PROGRESS** (Fixing track matching issues, e.g. 72 Seasons)
+- ✅ Export Verification (Part B) - **DONE** (Fixing track matching issues, e.g. 72 Seasons)
 
-#### Part C: View Revamp & Stability (🚧 In Progress)
+#### Part C: View Revamp & Stability (DONE)
 
 - [ ] **Holistic View Revamp (Cover Loading)**
-    - [ ] Branch: `feature/cover-loading-views-revamp`
-    - [ ] Standardize async hydration across `AlbumsView`, `InventoryView`
-    - [ ] Fix Inventory Ownership bug
+    - [ x] Branch: `feature/cover-loading-views-revamp`
+    - [ x] Standardize async hydration across `AlbumsView`, `InventoryView`
+    - [ x] Fix Inventory Ownership bug
 
 - [ ] **Final UAT Fixes**
-    - [ ] Verify "Metallica" missing tracks fix in Prod
-    - [ ] Fix 500 Error (Judas Priest)
+    - [ x] Verify "Metallica" missing tracks fix in Prod
+    - [ x] Fix 500 Error (Judas Priest)
 
 ---
 
-### Sprint 7.5: AlbumsView Polish & Refactor (Current)
+### Sprint 7.5: AlbumsView Polish & Refactor (Current)ß
 
 **Goal**: Refine AlbumsView UI/UX and fix "Ghost Albums" via architectural scope changes + Apple Music Metadata Refactor.
 **Status**: 🚧 **In Progress**
@@ -210,47 +232,20 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
     - [x] "All Series" visual grouping with borders (Compact + Expanded).
     - [x] Action buttons justified right, below cover.
     - [x] "View Tracks" label update.
-- [x] **Interaction**:
+- [x] **Interaction**: (STRATEGY pattern implemented to fix issues - se debug log)
     - [x] Compact View: Click cover → Modal.
     - [x] Expanded View: Default behavior.
 - [ ] **Architecture Refactor**:
-    - [ ] `loadAlbum` uses Apple Music Metadata (Fast).
-    - [ ] Backend acts as "Enrichment" only (Rankings).
+    - [x ] `loadAlbum` uses Apple Music Metadata (Fast).
+    - [WIP 15/12 ] Backend acts as "Enrichment" only (Rankings).
 
 ---
 
----
+### Sprint 8: Rank by User Feature + Revamp Playlist Generation and S-Draft algorithm
 
-#### Part B: Apple Music Integration
+###PARKING LOT BACKLOG
 
-- [ ] **MusicKit Setup**
-  - Enable MusicKit capability on App ID
-  - Generate Developer Token (JWT with .p8 key)
-
-- [ ] **Backend Proxy**
-  - Endpoint for Developer Token generation
-  - Endpoint for Apple Music API calls (search, create playlist)
-
-- [ ] **Apple Music API Client**
-  - `searchTracks(query)` - Find tracks in Apple Music catalog
-  - `createPlaylist(name, description)` - Create user playlist
-  - `addTracksToPlaylist(playlistId, trackIds)` - Add tracks
-
-- [ ] **Export Workflow UI**
-  - "Connect to Apple Music" button in PlaylistsView
-  - Export Progress Modal (Matching tracks...)
-  - Handling unmatched tracks (Skip or Manual search)
-  - Success confirmation with link to Apple Music
-
-**Deliverables**:
-- Data enrichment validated and deployed
-- MusicKit OAuth integration
-- Export playlists to Apple Music
-
----
-
-
-### Sprint 8: Native App (Capacitor) + Batch Operations
+### Sprint X: Native App (Capacitor) + Batch Operations
 
 **Duration**: 1-2 weeks  
 **Priority**: Medium  
@@ -289,7 +284,7 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 
 ---
 
-### Sprint 9: Spotify Integration (Export)
+### Sprint Y: Spotify Integration (Export)
 
 **Duration**: 1-2 weeks  
 **Priority**: Medium
@@ -319,7 +314,7 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 
 ---
 
-## 📊 Long-Term Vision (Post-Sprint 9)
+## 📊 Long-Term Vision - 
 
 **Ideas for future consideration**:
 - Collaborative series sharing

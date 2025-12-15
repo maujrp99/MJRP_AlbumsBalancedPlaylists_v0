@@ -43,12 +43,17 @@ export class APIClient {
             const artist = this.extractArtist(query)
             const albumName = this.extractAlbum(query)
 
-            // Search (limit 1)
-            const appleAlbums = await musicKitService.searchAlbums(artist, albumName, 1)
+            // Search (limit 5 to allow scoring/filtering for best edition)
+            const appleAlbums = await musicKitService.searchAlbums(artist, albumName, 5)
 
             if (appleAlbums && appleAlbums.length > 0) {
-                const appleId = appleAlbums[0].id
-                console.log(`[APIClient] Found in Apple Music: ${appleAlbums[0].attributes?.name} (${appleId})`)
+                // First result is already scored/sorted by searchAlbums (standard editions prioritized)
+                const selected = appleAlbums[0]
+                const appleId = selected.id
+                console.log(`[APIClient] Selected from ${appleAlbums.length} results: "${selected.attributes?.name}" (${appleId})`)
+                if (appleAlbums.length > 1) {
+                    console.log(`[APIClient] Other options: ${appleAlbums.slice(1, 3).map(a => a.attributes?.name).join(', ')}`)
+                }
 
                 // Get Full Details (Tracks)
                 const fullAlbum = await musicKitService.getAlbumDetails(appleId)
