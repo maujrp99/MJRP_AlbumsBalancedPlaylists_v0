@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Album } from '../models/Album.js'
 import { albumCache } from '../cache/albumCache.js'
 import { albumLoader } from '../services/AlbumLoader.js'
+import { musicKitService } from '../services/MusicKitService.js'
 
 /**
  * API Client
@@ -35,28 +36,104 @@ export class APIClient {
             }
         }
 
-        // 2. Fetch from API
+        // 2. Sprint 7.5: Try Apple Music + Enrichment First
         try {
-            console.log('[APIClient] Fetching from API:', query)
-            const response = await axios.post(`${this.baseUrl}/generate`, {
-                albumQuery: query
-            })
+            console.log('[APIClient] Searching Apple Music:', query)
+            // Extract Artist/Album from query for better search
+            const artist = this.extractArtist(query)
+            const albumName = this.extractAlbum(query)
 
-            if (!response.data || !response.data.data) {
-                throw new Error('Invalid API response format')
+            // Search (limit 1)
+            const appleAlbums = await musicKitService.searchAlbums(artist, albumName, 1)
+
+            if (appleAlbums && appleAlbums.length > 0) {
+                const appleId = appleAlbums[0].id
+                console.log(`[APIClient] Found in Apple Music: ${appleAlbums[0].attributes?.name} (${appleId})`)
+
+                // Get Full Details (Tracks)
+                const fullAlbum = await musicKitService.getAlbumDetails(appleId)
+
+                if (fullAlbum) {
+                    // 3. Enrich with Rankings (Backend)
+                    console.log('[APIClient] Enriching album with BestEver data...')
+                    const enrichResp = await axios.post(`${this.baseUrl}/enrich-album`, {
+                        albumData: {
+                            title: fullAlbum.title,
+                            artist: fullAlbum.artist,
+                            tracks: fullAlbum.tracks
+                        }
+                    })
+
+                    const enrichment = enrichResp.data?.data || {}
+                    const ratingsMap = new Map()
+                    if (enrichment.trackRatings) {
+                        enrichment.trackRatings.forEach(r => {
+                            // Normalize key on client too just to be safe, or direct match
+                            if (r.rating !== null) ratingsMap.set(r.title, r.rating)
+                        })
+                    }
+
+                    // 4. Construct Album Model Data
+                    const stableId = this.generateAlbumId({ title: fullAlbum.title, artist: fullAlbum.artist })
+
+                    // Helper to map Apple Track to internal format
+                    const mapTrack = (t) => ({
+                        id: t.id || `track_${stableId}_${t.trackNumber}`,
+                        title: t.title,
+                        artist: t.artist || fullAlbum.artist,
+                        album: fullAlbum.title,
+                        duration: t.duration,
+                        trackNumber: t.trackNumber,
+                        isrc: t.isrc,
+                        previewUrl: t.previewUrl,
+                        rating: ratingsMap.get(t.title) || null,
+                        rank: null // Calculated below
+                    })
+
+                    // Create objects once to ensure reference identity between lists
+                    const allTracks = fullAlbum.tracks.map(mapTrack)
+
+                    const tracksOriginalOrder = [...allTracks].sort((a, b) => a.trackNumber - b.trackNumber)
+
+                    // Calculate Acclaim Order (Sorted by Rating Desc)
+                    let tracksByAcclaim = [...allTracks]
+
+                    const hasRatings = tracksByAcclaim.some(t => t.rating !== null)
+                    if (hasRatings) {
+                        tracksByAcclaim.sort((a, b) => {
+                            const rA = a.rating !== null ? a.rating : -1
+                            const rB = b.rating !== null ? b.rating : -1
+                            if (rA !== rB) return rB - rA
+                            return a.trackNumber - b.trackNumber
+                        })
+                    }
+                    // Assign Rank (1..N)
+                    tracksByAcclaim.forEach((t, idx) => t.rank = idx + 1)
+
+                    const albumData = {
+                        id: stableId,
+                        title: fullAlbum.title,
+                        artist: fullAlbum.artist,
+                        year: fullAlbum.year,
+                        coverUrl: musicKitService.getArtworkUrl(fullAlbum.artworkTemplate, 600),
+                        tracks: tracksByAcclaim, // Ranked List
+                        tracksOriginalOrder: tracksOriginalOrder, // Disk List
+                        bestEverUrl: enrichment.bestEverInfo?.url,
+                        bestEverAlbumId: enrichment.bestEverInfo?.albumId,
+                        metadata: { source: 'Apple Music', sourceId: fullAlbum.id }
+                    }
+
+                    const album = new Album(albumData)
+                    this.cache.set(query, album)
+                    return album
+                }
             }
-
-            // 3. Normalize & Cache
-            const album = this.normalizeAlbumData(response.data.data)
-
-            // Cache the raw data structure (Album instance will be serialized to JSON)
-            this.cache.set(query, album)
-
-            return album
-        } catch (error) {
-            console.error('[APIClient] Fetch error:', error)
-            throw error
+        } catch (e) {
+            console.warn('[APIClient] Apple Music fetch failed/skipped, falling back to Legacy:', e)
         }
+
+        // 5. Fallback: Legacy Generate API
+        return this._fetchAlbumFromAPI(query)
     }
 
     /**

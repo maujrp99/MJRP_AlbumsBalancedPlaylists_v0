@@ -18,7 +18,8 @@
 
 | Issue | Component | Status | Line |
 |-------|-----------|--------|------|
-| #47 | Sortable Freeze | ✅ RESOLVED | [L48](#issue-47-sortable-drag--drop-freeze---resolved-) |
+| #52 | Series Empty Render | 🚧 IN PROGRESS | [L52](#issue-52-series-51-empty-render-albums-loaded-but-not-displayed---in-progress) |
+| #47 | Sortable Freeze | ✅ RESOLVED | [L107](#issue-47-sortable-drag--drop-freeze---resolved-) |
 | #46 | Duplicate Export Listener | ✅ RESOLVED | [L100](#issue-46-duplicate-export-to-apple-music-calls---resolved-) |
 | #45 | Apple Music Region Export | ✅ RESOLVED | [L130](#issue-45-apple-music-export-region-issue-72-seasons---resolved-) |
 | #44 | MusicKit 503 Error | ✅ RESOLVED | [L170](#issue-44-musickit-503-error---export-to-apple-music-failed---resolved-) |
@@ -48,6 +49,61 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #52: Series 5.1 Empty Render (Albums Loaded But Not Displayed) - 🚧 IN PROGRESS
+**Status**: 🚧 **IN PROGRESS**
+**Date**: 2025-12-15 13:20
+**Severity**: CRITICAL (Blocks Series Navigation)
+**Type**: State Management / Render Bug
+**Component**: `AlbumsView.js`, `router.js`, `albumSeriesStore.js`, `albumsStore.js`
+
+#### Problem
+When navigating to a specific series (e.g., Series 5.1 via URL `/albums?seriesId=...`), the album data is **successfully fetched from cache**, but the UI shows an **empty grid**. The "All Albums Series" view works correctly.
+
+**Console Evidence:**
+- Cache hits occur: `✅ L2 cache hit (localStorage): The Doors - The Doors`
+- Albums are added to store: `Subscription fired: albums= 5`
+- Final update logs correctly: `Final update: albums= 5 activeSeriesId= t6NoC...`
+- But the UI remains empty
+
+#### Root Cause Analysis
+Multiple interacting issues discovered:
+
+1. **Phantom Click Navigation** - TopNav re-render after auth was triggering a click event on the "Albums" link, navigating from `/albums?seriesId=...` to `/albums` (ALL view)
+2. **Ghost Albums Guard Too Restrictive** - The `updateAlbumsGrid` guard was blocking valid renders when `activeSeries` was temporarily null due to auth/migration timing
+3. **Still Investigating** - Even after fixing above, render may still fail
+
+#### Failed Attempts
+
+| # | Date | Attempt | Code Changed | Result |
+|---|------|---------|--------------|--------|
+| 1 | 2025-12-15 11:30 | Bump cache version to 3.0 | `albumCache.js` | ❌ Not the issue - data WAS loading |
+| 2 | 2025-12-15 11:45 | Update `normalizeKey` for better enrichment matching | `shared/normalize.js` | ❌ Syntax error introduced, then fixed. Not the core issue |
+| 3 | 2025-12-15 12:00 | Update `MusicKitService.searchAlbums` to filter Deluxe versions | `MusicKitService.js` | ❌ Improvement but not the empty render issue |
+| 4 | 2025-12-15 12:15 | `await loadScope` in mount + clear activeSeries | `AlbumsView.js` | ❌ Timing improvement but still empty |
+| 5 | 2025-12-15 12:45 | Add debug logs to subscription | `AlbumsView.js` | ℹ️ Revealed data WAS loading, problem was elsewhere |
+| 6 | 2025-12-15 12:55 | Add router navigate trace logs | `router.js` | ✅ **Discovered** phantom click from TopNav re-render |
+| 7 | 2025-12-15 13:05 | Block phantom clicks in router interceptor | `router.js` | ✅ **Fixed** navigation hijack. View no longer destroyed |
+| 8 | 2025-12-15 13:15 | Adjust `updateAlbumsGrid` guard logic for SINGLE scope | `AlbumsView.js` | ⏳ **TESTING** - Logs now show "rendering 5 albums" but UI still empty |
+
+#### Current State
+- **Phantom click**: ✅ FIXED (router.js interceptor now blocks `e.isTrusted=false` or `e.detail=0`)
+- **Guard logic**: ⚠️ MODIFIED - Now allows render when `lastLoadedId === targetSeriesId`
+- **UI render**: ❌ STILL FAILING - Need to investigate `renderCard` or DOM insertion
+
+#### Files Modified
+- `public/js/router.js` - Phantom click protection
+- `public/js/views/AlbumsView.js` - Guard logic + debug logs
+- `public/js/cache/albumCache.js` - Version bump (3.0)
+- `public/js/services/MusicKitService.js` - Deluxe filtering
+- `shared/normalize.js` - Key normalization
+
+#### Next Steps
+1. Add debug log inside `renderCard` to verify it's being called
+2. Check if DOM element `#albumsGrid` exists when render is attempted
+3. Verify `filtered` array in `updateAlbumsGrid` is not empty after `filterAlbums`
+
+---
 
 ### Issue #47: Sortable Drag & Drop Freeze - RESOLVED ✅ (TECH DEBT)
 **Status**: ✅ **RESOLVED** - *Marked as Tech Debt for refactor*

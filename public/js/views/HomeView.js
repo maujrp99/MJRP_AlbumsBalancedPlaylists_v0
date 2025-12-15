@@ -309,11 +309,22 @@ export class HomeView extends BaseView {
       })
     }
 
-    // Event delegation for resume buttons
+    // Event delegation for resume buttons AND cards
     this.on(this.container, 'click', (e) => {
+      // 1. Check for specific action button
       if (e.target.dataset.action === 'resume') {
         const seriesId = e.target.dataset.id
         this.handleResumeSeries(seriesId)
+        return
+      }
+
+      // 2. Check for Card click (if not clicking another interactive element)
+      const card = e.target.closest('.series-card')
+      if (card && !e.target.closest('button') && !e.target.closest('a')) {
+        const seriesId = card.dataset.seriesId
+        if (seriesId) {
+          this.handleResumeSeries(seriesId)
+        }
       }
     })
 

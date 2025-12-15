@@ -143,9 +143,98 @@ class MusicKitService {
                 limit: limit
             });
 
-            return result.data?.results?.albums?.data || [];
+            let albums = result.data?.results?.albums?.data || [];
+
+            // Filter and Sort: Prioritize Standard Editions
+            // 1. Exact Name Match (High Priority)
+            // 2. Penalize "Deluxe", "Expanded", "Remastered", "Live", "Edition" (unless query asks for it)
+            // 3. Prefer "Album" type over "Compilation" or "Single"
+
+            const targetName = (album || query).toLowerCase().trim();
+            const wantsDeluxe = targetName.includes('deluxe') || targetName.includes('edition') || targetName.includes('expanded');
+            const wantsLive = targetName.includes('live') || targetName.includes('concert');
+
+            // Score each album
+            albums = albums.map(a => {
+                const name = a.attributes?.name?.toLowerCase() || '';
+                let score = 0;
+
+                // Exact match (ignoring case)
+                if (name === targetName) score += 100;
+
+                // Penalties for unwanted editions
+                if (!wantsDeluxe) {
+                    if (name.includes('deluxe')) score -= 50;
+                    if (name.includes('expanded')) score -= 30;
+                    if (name.includes('edition') && !name.includes('standard')) score -= 20;
+                    if (name.includes('remaster')) score -= 10; // Remasters are okay, but original is cleaner for matching
+                }
+
+                if (!wantsLive && (name.includes('live') || name.includes(' in concert'))) {
+                    score -= 100; // Heavily penalize live if not asked
+                }
+
+                return { album: a, score };
+            });
+
+            // Sort by score descending
+            albums.sort((a, b) => b.score - a.score);
+
+            // Return sorted raw album objects
+            return albums.map(wrapper => wrapper.album);
         } catch (error) {
             console.error('[MusicKit] Search failed:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Get full album details including tracks
+     * @param {string} appleAlbumId - Apple Music Album ID
+     * @returns {Promise<Object>} Full album object with tracks
+     */
+    async getAlbumDetails(appleAlbumId) {
+        await this.init();
+        try {
+            const result = await this.music.api.music(
+                `/v1/catalog/${this._getStorefront()}/albums/${appleAlbumId}`,
+                {
+                    include: 'tracks'
+                }
+            );
+
+            const album = result.data?.data?.[0];
+            if (!album) return null;
+
+            // Map tracks to a clean format
+            const rawTracks = album.relationships?.tracks?.data || [];
+            const tracks = rawTracks.map((t, idx) => ({
+                title: t.attributes?.name,
+                duration: Math.round((t.attributes?.durationInMillis || 0) / 1000),
+                isrc: t.attributes?.isrc,
+                trackNumber: t.attributes?.trackNumber || (idx + 1),
+                discNumber: t.attributes?.discNumber || 1,
+                previewUrl: t.attributes?.previews?.[0]?.url,
+                artist: t.attributes?.artistName, // Sometimes tracks have different artists
+                id: t.id
+            }));
+
+            return {
+                id: album.id,
+                title: album.attributes?.name,
+                artist: album.attributes?.artistName,
+                artworkTemplate: this._extractArtworkTemplate(album.attributes?.artwork),
+                releaseDate: album.attributes?.releaseDate,
+                year: album.attributes?.releaseDate?.split('-')[0],
+                tracks: tracks,
+                url: album.attributes?.url,
+                isLive: album.attributes?.name?.toLowerCase().includes('live') ||
+                    album.attributes?.name?.toLowerCase().includes(' in concert'),
+                recordLabel: album.attributes?.recordLabel
+            };
+
+        } catch (error) {
+            console.error(`[MusicKit] Get Album Details failed for ${appleAlbumId}:`, error);
             throw error;
         }
     }
@@ -488,10 +577,28 @@ class MusicKitService {
 
                     return false;
                 })
-                .map(track => ({
-                    track,
-                    score: this._scoreTrack(track, albumName) + ((track.similarity || 0) * 10) // Boost by similarity
-                }))
+                .map(track => {
+                    const trackName = (track.attributes?.name || '').toLowerCase();
+                    const albumTitle = (track.attributes?.albumName || '').toLowerCase();
+
+                    let score = this._scoreTrack(track, albumName) + ((track.similarity || 0) * 10);
+
+                    // Penalize Deluxe/Super Deluxe/Expanded/Remastered versions if checking against a short album name
+                    // UNLESS the user query specifically asked for them (which we assume albumName is)
+                    // Heuristic: If target is "The Who Who's Next" (short) and result is "Who's Next (Super Deluxe)" (long)
+                    // we penalize the long one.
+                    const isDeluxe = albumTitle.includes('deluxe') || albumTitle.includes('expanded') || albumTitle.includes('edition');
+                    const targetHasDeluxe = albumName.toLowerCase().includes('deluxe');
+
+                    if (isDeluxe && !targetHasDeluxe) {
+                        score -= 15; // Downrank deluxe if not requested
+                    }
+
+                    return {
+                        track,
+                        score: score
+                    };
+                })
                 .sort((a, b) => b.score - a.score);
 
             // If no ranked tracks, fallback to first result

@@ -115,6 +115,83 @@ app.get('/api/list-models', async (req, res) => {
 // Proxy endpoint: accepts { albumQuery }
 // fetchRankingForAlbum is now imported from server/lib/fetchRanking.js
 
+// NEW Endpoint (Sprint 7.5): Enrich Album Context with Rankings (BestEverAlgorithms only)
+app.post('/api/enrich-album', async (req, res) => {
+  if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured on server' })
+
+  const { albumData } = req.body
+  if (!albumData || !albumData.title || !Array.isArray(albumData.tracks)) {
+    return res.status(400).json({ error: 'Invalid albumData. Requires title and tracks array.' })
+  }
+
+  const artist = albumData.artist || ''
+  const title = albumData.title
+  const tracks = albumData.tracks
+
+  // 1. Scrape BestEverAlbums for rankings
+  let bestEver = null
+  try {
+    // getBestEverRanking takes (title, artist)
+    // It returns { albumId, albumUrl, evidence: [{ title, rating, position, ... }] }
+    bestEver = await getBestEverRanking(title, artist)
+  } catch (err) {
+    console.warn(`[Enrichment] BestEver scraper failed for ${artist} - ${title}:`, err.message)
+    // Fallback continues with null bestEver
+  }
+
+  // 2. Map Scraped Ratings to Official Tracklist
+  // We want to return a sparse array or map of ratings for the tracks provided in request
+  const ratingsMap = []
+
+  if (bestEver && Array.isArray(bestEver.evidence) && bestEver.evidence.length > 0) {
+    try {
+      // normalizeKey is an async getter imported from ranking lib
+      const normalizeKey = await normalizeRankingKey()
+
+      // Index the evidence by normalized key
+      const evidenceIndex = new Map()
+      bestEver.evidence.forEach(e => {
+        if (e.title && (e.rating !== undefined || e.rating !== null)) {
+          const key = normalizeKey(e.title)
+          if (key) evidenceIndex.set(key, e.rating)
+        }
+      })
+
+      // Map to request tracks
+      tracks.forEach(t => {
+        const key = normalizeKey(t.title || t.name || '')
+        let rating = null
+        if (key && evidenceIndex.has(key)) {
+          rating = Number(evidenceIndex.get(key))
+        }
+        ratingsMap.push({ title: t.title, rating })
+      })
+
+      console.log(`[Enrichment] Success for ${title}: Found ${evidenceIndex.size} ratings.`)
+
+    } catch (e) {
+      console.error('[Enrichment] Mapping failed:', e)
+    }
+  } else {
+    // FR-002: Fallback behavior
+    console.warn(`[Enrichment] No ratings found for [${title}] by [${artist}]. Using original order.`)
+    // We return empty ratings map (all nulls)
+    tracks.forEach(t => ratingsMap.push({ title: t.title, rating: null }))
+  }
+
+  return res.json({
+    data: {
+      bestEverInfo: bestEver ? {
+        albumId: bestEver.albumId,
+        url: bestEver.albumUrl || bestEver.referenceUrl,
+        evidenceCount: bestEver.evidence?.length || 0
+      } : null,
+      trackRatings: ratingsMap
+    }
+  })
+})
+
+
 app.post('/api/generate', async (req, res) => {
   if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured on server' })
 
@@ -384,7 +461,7 @@ app.post('/api/debug/raw-ranking', async (req, res) => {
     const safeAlbumResp = albumResp && albumResp.data ? albumResp.data : null
     const safeRankingResp = rankingResult && rankingResult.raw && rankingResult.raw.data ? rankingResult.raw.data : null
     return res.status(200).json({ albumResponse: safeAlbumResp, rawRankingResponse: safeRankingResp, bestEverEvidence: bestEver })
-    return res.status(200).json({ albumResponse: safeAlbumResp, rawRankingResponse: safeRankingResp, bestEverEvidence: bestEver })
+
   } catch (err) {
     console.error('Error fetching raw ranking:', err?.message || err)
     const status = err.response?.status || 500

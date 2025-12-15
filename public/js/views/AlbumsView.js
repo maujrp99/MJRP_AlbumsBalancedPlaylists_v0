@@ -828,6 +828,7 @@ export class AlbumsView extends BaseView {
 
     // Subscribe to albums store
     const unsubscribe = albumsStore.subscribe((state) => {
+      console.log('[AlbumsView] Subscription fired: isLoading=', this.isLoading, 'albums=', state.albums?.length)
       if (!this.isLoading) {
         // FIX: Ghost Albums Prevention (GHOST_ALBUMS_REPORT.md)
         // Only update grid if albums belong to the currently active series
@@ -1172,16 +1173,16 @@ export class AlbumsView extends BaseView {
     // Exception: If we have an activeSeries in store, we might default to that?
     // Spec says: "Dropdown MUST default to "All Series" when no ID is present in URL."
 
+    // Determine initial scope
     if (urlSeriesId) {
-      this.loadScope('SINGLE', urlSeriesId)
+      await this.loadScope('SINGLE', urlSeriesId)
     } else {
-      // Check if we already have a focused series in store? 
-      // Spec says "Coming from Recent Series ... loads that specific series" (which sets URL)
-      // User navigating to "/albums" should see ALL.
-      this.loadScope('ALL')
+      // Clear any stale active series immediately
+      albumSeriesStore.setActiveSeries(null)
+      await this.loadScope('ALL')
     }
 
-    // Initial Header Sync
+    // Initial Header Sync (after scope is set)
     this.updateHeaderState()
   }
 
@@ -1363,7 +1364,9 @@ export class AlbumsView extends BaseView {
       }
 
       // Final update
-      this.updateAlbumsGrid(albumsStore.getAlbums())
+      const finalAlbums = albumsStore.getAlbums()
+      console.log('[AlbumsView] Final update in loadAlbumsFromQueries: albums=', finalAlbums?.length, 'activeSeriesId=', albumsStore.getActiveAlbumSeriesId())
+      this.updateAlbumsGrid(finalAlbums)
     }
   }
 
@@ -1375,6 +1378,8 @@ export class AlbumsView extends BaseView {
   }
 
   updateAlbumsGrid(albums) {
+    console.log('[AlbumsView] updateAlbumsGrid called: albums=', albums?.length, 'isLoading=', this.isLoading, 'currentScope=', this.currentScope)
+
     // If loading, show empty but don't warn
     if (this.isLoading && albums.length === 0) {
       const grid = this.$('#albumsGrid')
@@ -1388,18 +1393,25 @@ export class AlbumsView extends BaseView {
     const activeSeries = albumSeriesStore.getActiveSeries()
     const lastLoadedId = albumsStore.getLastLoadedAlbumSeriesId()
 
-    // FIX: If no active series (e.g. it was deleted), do not render stale albums
-    if (!activeSeries && this.currentScope !== 'ALL') { // Added check for currentScope
-      console.warn('[AlbumsView] No active series found. Clearing view.')
-      this.renderEmptyState()
-      const grid = this.$('#albumsGrid')
-      if (grid) grid.innerHTML = '' // Ensure visual clear
-      return
-    }
+    console.log('[AlbumsView] Guard check: activeSeries=', activeSeries?.id, 'lastLoadedId=', lastLoadedId)
 
-    if (activeSeries && lastLoadedId && activeSeries.id !== lastLoadedId && this.currentScope !== 'ALL') { // Added check for currentScope
-      console.warn('[AlbumsView] updateAlbumsGrid: series mismatch, skipping render')
-      return  // Block ghost albums from subscription updates
+    // FIX: For SINGLE scope, if we have albums and matching lastLoadedId, render them
+    // even if activeSeries is temporarily null due to timing
+    if (this.currentScope === 'SINGLE') {
+      // If lastLoadedId matches our targetSeriesId and we have albums, render them
+      if (lastLoadedId === this.targetSeriesId && albums.length > 0) {
+        console.log('[AlbumsView] SINGLE scope: rendering', albums.length, 'albums for', this.targetSeriesId)
+        // Continue to render
+      } else if (!activeSeries && albums.length === 0) {
+        console.warn('[AlbumsView] SINGLE scope: No active series and no albums. Clearing view.')
+        this.renderEmptyState()
+        const grid = this.$('#albumsGrid')
+        if (grid) grid.innerHTML = ''
+        return
+      }
+    } else if (this.currentScope === 'ALL') {
+      // For ALL scope, just render what we have
+      console.log('[AlbumsView] ALL scope: rendering', albums.length, 'albums')
     }
 
     const filtered = this.filterAlbums(albums)

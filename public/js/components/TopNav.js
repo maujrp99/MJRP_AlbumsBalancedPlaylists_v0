@@ -40,12 +40,8 @@ export class TopNav {
    * Get the albums link with active series ID if available
    */
   getAlbumsSeriesLink() {
-    const activeSeries = albumSeriesStore.getActiveSeries()
-    if (activeSeries && activeSeries.id) {
-      return `/albums?seriesId=${activeSeries.id}`
-    }
-    // Fallback:  getAlbumsSeriesLink() {
     // FIX: Default to "All Series" view when clicking Albums nav
+    // This ensures consistent navigation behavior (User Defect Fix)
     return '/albums'
   }
 

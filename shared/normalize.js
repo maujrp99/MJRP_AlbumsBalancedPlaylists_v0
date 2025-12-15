@@ -5,20 +5,16 @@
  * @param {string} s - The string to normalize.
  * @returns {string} The normalized string.
  */
-export function normalizeKey (s) {
-  if (!s) return ''
-  try {
-    // Normalize: NFD -> remove diacritics, replace non-alphanumerics with space,
-    // collapse spaces and lowercase. This preserves token boundaries for fuzzy matching.
-    return String(s || '')
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/\p{M}/gu, '')
-      .replace(/[^a-z0-9]+/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-  } catch (e) {
-    // Fallback for environments without full unicode support (unlikely in modern browsers/node)
-    return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim()
-  }
+export function normalizeKey(str) {
+  if (!str) return '';
+  return str.toString()
+    .toLowerCase()
+    .replace(/\s*\(.*?\)/g, '') // Remove (anything)
+    .replace(/\s*\[.*?\]/g, '') // Remove [anything]
+    .replace(/\s*\{.*?\}/g, '') // Remove {anything} - just in case
+    .replace(/\s*-\s*.*?remaster.*/g, '') // Remove "- 2011 Remaster" etc trailing dashes
+    .replace(/\s*-\s*.*?mix.*/g, '') // Remove "- 2023 Mix"
+    .replace(/[^\w\s]/g, '') // Remove all non-word chars (punctuation)
+    .replace(/\s+/g, ' ') // Collapse whitespace
+    .trim();
 }

@@ -18,8 +18,32 @@ export class Router {
         document.addEventListener('click', (e) => {
             const link = e.target.closest('a[href^="/"]')
             if (link) {
+                const targetHref = link.getAttribute('href')
+                const currentPath = window.location.pathname + window.location.search
+
+                // FIX: Avoid duplicate navigation to the same path
+                // Also prevents phantom clicks during TopNav re-render
+                if (targetHref === currentPath) {
+                    console.log('[Router] Ignoring duplicate navigation to:', targetHref)
+                    e.preventDefault()
+                    return
+                }
+
+                // FIX: Don't navigate to /albums if we're already on /albums with a seriesId
+                // and the click is coming from a navigation link (not user intent)
+                const currentHasSeriesId = window.location.search.includes('seriesId=')
+                const targetIsPlainAlbums = targetHref === '/albums'
+                if (currentHasSeriesId && targetIsPlainAlbums && window.location.pathname === '/albums') {
+                    // Check if this is likely a phantom click (no user interaction flag)
+                    if (!e.isTrusted || e.detail === 0) {
+                        console.log('[Router] Blocking phantom click to /albums while on series view')
+                        e.preventDefault()
+                        return
+                    }
+                }
+
                 e.preventDefault()
-                this.navigate(link.getAttribute('href'))
+                this.navigate(targetHref)
             }
         })
     }
@@ -43,6 +67,7 @@ export class Router {
      * @param {Object} state - Optional state to pass
      */
     navigate(path, state = {}) {
+        console.log('[Router] navigate called:', path, 'from:', new Error().stack?.split('\n')[2])
         // Call before hooks
         for (const hook of this.beforeNavigateHooks) {
             const canNavigate = hook(path, state)
