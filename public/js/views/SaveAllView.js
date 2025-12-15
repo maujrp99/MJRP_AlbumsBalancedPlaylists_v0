@@ -2,6 +2,8 @@ import { BaseView } from './BaseView.js'
 import { MigrationUtility } from '../migration/MigrationUtility.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
+import { getAuth } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js'
 
 /**
  * SaveAllView
@@ -10,13 +12,18 @@ import toast from '../components/Toast.js'
 export class SaveAllView extends BaseView {
   constructor() {
     super()
-    this.migrationUtil = new MigrationUtility()
+    const db = getFirestore()
+    this.migrationUtil = new MigrationUtility(db, null)
     this.migrationState = 'idle' // idle, running, complete, error
-    this.migrationProgress = { current: 0, total: 0, currentItem: '' }
+  }
+
+  hasPendingMigration() {
+    // Check if there's data to migrate AND migration hasn't been completed
+    return !this.migrationUtil.isMigrationComplete() && this.migrationUtil.hasLocalStorageData()
   }
 
   async render() {
-    const hasPendingMigration = await this.migrationUtil.hasPendingMigration()
+    const hasPending = this.hasPendingMigration()
 
     return `
       <div class="save-all-view container py-8 max-w-4xl mx-auto">
@@ -38,7 +45,7 @@ export class SaveAllView extends BaseView {
             <div>
               <h2 class="text-xl font-bold text-white">Migration Status</h2>
               <p class="text-gray-400" id="migrationStatusText">
-                ${hasPendingMigration ? 'Old data detected. Ready to migrate.' : 'No pending migrations.'}
+                ${hasPending ? 'Old data detected. Ready to migrate.' : 'No pending migrations.'}
               </p>
             </div>
           </div>
@@ -57,7 +64,7 @@ export class SaveAllView extends BaseView {
             <button 
               id="startMigrationBtn" 
               class="btn btn-primary"
-              ${!hasPendingMigration ? 'disabled' : ''}
+              ${!hasPending ? 'disabled' : ''}
             >
               ${getIcon('Play', 'w-5 h-5 mr-2')}
               Start Migration
@@ -118,8 +125,11 @@ export class SaveAllView extends BaseView {
     if (statusText) statusText.textContent = 'Migration in progress...'
 
     try {
-      await this.migrationUtil.runMigration((progress) => {
-        this.updateProgress(progress)
+      const auth = getAuth()
+      const userId = auth.currentUser?.uid || 'anonymous-user'
+
+      await this.migrationUtil.migrate(userId, (current, total, message) => {
+        this.updateProgress({ current, total, currentItem: message })
       })
 
       if (statusText) statusText.textContent = 'Migration complete!'
@@ -143,8 +153,8 @@ export class SaveAllView extends BaseView {
     if (progressPercent) progressPercent.textContent = `${percent}%`
   }
 
-  async checkMigrationStatus() {
-    const hasPending = await this.migrationUtil.hasPendingMigration()
+  checkMigrationStatus() {
+    const hasPending = this.hasPendingMigration()
     const statusText = this.$('#migrationStatusText')
     const startBtn = this.$('#startMigrationBtn')
 
