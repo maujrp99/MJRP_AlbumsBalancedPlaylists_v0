@@ -63,7 +63,7 @@ export class TopNav {
           </div>
           <img 
             src="/assets/images/TheAlbumPlaylistSynth.png" 
-            alt="The Album Playlist Synthesizer"
+            alt="The Album Blender"
             class="block h-6 sm:h-10 md:h-12 w-auto object-contain hover:opacity-80 transition-opacity"
             loading="lazy"
           >
@@ -76,7 +76,7 @@ export class TopNav {
           ${this.renderNavLink('/album-series', 'Series', currentPath)}
           ${this.renderNavLink('/playlist-series', 'Playlists', currentPath)}
           ${this.renderNavLink('/inventory', 'Inventory', currentPath)}
-          ${/* TODO: Data Sync hidden until functionality validated */ ''}
+          ${this.renderNavLink('/save-all', 'Save All', currentPath)}
         </div>
 
         <!-- User Section (Right) -->
@@ -111,7 +111,7 @@ export class TopNav {
             ${this.renderMobileNavLink('/album-series', 'Series', 'Layers', currentPath)}
             ${this.renderMobileNavLink('/playlist-series', 'Playlists', 'List', currentPath)}
             ${this.renderMobileNavLink('/inventory', 'Inventory', 'Archive', currentPath)}
-            ${/* TODO: Data Sync hidden until functionality validated */ ''}
+            ${this.renderMobileNavLink('/save-all', 'Save All', 'Database', currentPath)}
           </nav>
           
           <!-- Mobile Footer / Auth -->

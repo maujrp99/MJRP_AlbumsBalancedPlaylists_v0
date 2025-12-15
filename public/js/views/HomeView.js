@@ -25,11 +25,9 @@ export class HomeView extends BaseView {
 
   async render(params) {
     const recentSeries = albumSeriesStore.getSeries()
-    this.showMigrationBanner = !this.migrationUtility.isMigrationComplete() && this.migrationUtility.hasLocalStorageData()
 
     return `
       <div class="home-view container max-w-7xl mx-auto px-4">
-        ${this.showMigrationBanner ? this.renderMigrationBanner() : ''}
 
         <!-- Hero Banner -->
         <section class="hero-banner relative rounded-3xl overflow-hidden mb-12 fade-in min-h-[320px] md:min-h-[400px] flex items-center shadow-2xl border border-white/10 group w-full">
@@ -47,7 +45,7 @@ export class HomeView extends BaseView {
                 <img src="/assets/images/newMJRPlogo.png" alt="MJRP Logo" class="w-full h-full object-contain">
               </div>
               <h1 class="text-2xl md:text-4xl font-syne font-extrabold text-white leading-tight tracking-wide md:whitespace-nowrap">
-                The Album Playlist Synthesizer
+                The Album Blender
               </h1>
               <img 
                 src="/assets/images/newMJRPlogorealistic.png?v=${Date.now()}" 

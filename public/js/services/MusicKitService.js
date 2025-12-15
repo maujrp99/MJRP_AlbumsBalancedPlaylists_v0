@@ -76,7 +76,7 @@ class MusicKitService {
             await window.MusicKit.configure({
                 developerToken: token,
                 app: {
-                    name: 'Album Playlist Synthesizer',
+                    name: 'The Album Blender',
                     build: '2.0.0'
                 }
             });
@@ -369,7 +369,7 @@ class MusicKitService {
                     body: JSON.stringify({
                         attributes: {
                             name: name,
-                            description: "Created by MJRP's The Album Playlist Synthesizer"
+                            description: "Created by MJRP's The Album Blender"
                         },
                         relationships: {
                             tracks: {
@@ -445,7 +445,7 @@ class MusicKitService {
         const playlistData = {
             attributes: {
                 name: name,
-                description: "Created by MJRP's The Album Playlist Synthesizer"
+                description: "Created by MJRP's The Album Blender"
             },
             relationships: {
                 tracks: {

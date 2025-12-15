@@ -98,6 +98,12 @@ router.register('/series', async () => {
     return new AlbumSeriesListView(db)
 })
 
+// Save All (Data Migration) route
+router.register('/save-all', async () => {
+    const { SaveAllView } = await import('./views/SaveAllView.js')
+    return new SaveAllView()
+})
+
 router.register('/inventory', () => new InventoryView())
 router.register('/ranking/:albumId', () => new RankingView())
 router.register('/consolidated-ranking', () => new ConsolidatedRankingView())
