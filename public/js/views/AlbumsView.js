@@ -93,6 +93,11 @@ export class AlbumsView extends BaseView {
 
     // DEBUG: Enhanced logging for troubleshooting
 
+    // Updated render method logic
+    const contentHtml = this.viewMode === 'expanded'
+      ? this.renderScopedList(filteredAlbums, allSeries)
+      : this.renderScopedGrid(filteredAlbums, allSeries)
+
     return `
   <div class="albums-view container" >
     <header class="view-header mb-8 fade-in">
@@ -219,27 +224,22 @@ export class AlbumsView extends BaseView {
       </div>
     </header>
 
-        ${this.isLoading ? this.renderLoadingProgress() : ''}
+    ${this.isLoading ? this.renderLoadingProgress() : ''}
 
-        <!--Conditional rendering based on viewMode-->
-  ${this.viewMode === 'expanded' ?
-        `<div class="albums-list space-y-6" id="albumsList">
-            ${this.renderExpandedList(filteredAlbums)}
-          </div>` :
-        `<div class="albums-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="albumsGrid">
-            ${this.renderAlbumsGrid(filteredAlbums)}
-          </div>`
-      }
+    <!-- Content Container (Grid or List handled by renderScoped methods) -->
+    <div id="albumsContainer">
+        ${contentHtml}
+    </div>
 
-        <!--Empty state container - updated dynamically-->
-        <div id="emptyStateContainer">
-          ${filteredAlbums.length === 0 && !this.isLoading ? this.renderEmptyState() : ''}
-        </div>
+    <!--Empty state container - updated dynamically-->
+    <div id="emptyStateContainer">
+      ${filteredAlbums.length === 0 && !this.isLoading ? this.renderEmptyState() : ''}
+    </div>
         
-        <footer class="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
-          <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
-        </footer>
-      </div>
+    <footer class="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
+      <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
+    </footer>
+  </div>
   `
   }
 
@@ -411,10 +411,10 @@ export class AlbumsView extends BaseView {
       const coverUrl = albumLoader.getArtworkUrl(album, 300)
 
       return `
-  <div class="album-card-stack group flex flex-col gap-3" data-album-id="${album.id || ''}" >
+  <div class="album-card-compact flex flex-col gap-3 h-full relative" data-album-id="${album.id || ''}" >
         <!--Image Container(Square top) - Click triggers View Modal-->
         <div 
-            class="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-800 border border-white/5 shadow-lg group-hover:shadow-xl transition-all duration-300 cursor-pointer"
+            class="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-800 border border-white/5 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
             data-action="view-modal"
             data-album-id="${album.id || ''}"
         >
@@ -592,8 +592,14 @@ export class AlbumsView extends BaseView {
 
   // Sprint 7.5: Render Grouped Grid for "All Series"
   renderScopedGrid(albums, seriesList) {
+    // Helper to wrap grid items
+    const wrapGrid = (content) => `
+       <div class="albums-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+         ${content}
+       </div>`
+
     if (this.currentScope === 'SINGLE') {
-      return this.renderAlbumsGrid(albums)
+      return wrapGrid(this.renderAlbumsGrid(albums))
     }
 
     // "All Series" Grouping
@@ -623,9 +629,14 @@ export class AlbumsView extends BaseView {
         // Note: Exact match logic might vary, but for now we trust the "reverse matching" or just metadata
         // Better approach: When loading ALL, we could tag them. For now, let's try fuzzy match context
         // Actually, simplest is: Check if any query contains the album title
-        const match = queries.some(q =>
-          q.toLowerCase().includes(album.title.toLowerCase())
-        )
+        // Bidirectional check for better matching (Query contains Album OR Album contains Query)
+        // This handles cases where Query is "Artist - Album" (Long) vs "Album" (Short)
+        // AND cases where Album is "Album (Deluxe)" (Long) vs "Album" (Short)
+        const match = queries.some(q => {
+          const qNorm = q.toLowerCase()
+          const aNorm = album.title.toLowerCase()
+          return qNorm.includes(aNorm) || aNorm.includes(qNorm)
+        })
 
         if (match) {
           const group = seriesGroups.get(series.id)
@@ -649,7 +660,7 @@ export class AlbumsView extends BaseView {
                         ${group.albums.length} albums
                     </span>
                 </div>
-                ${this.renderAlbumsGrid(group.albums)}
+                ${wrapGrid(this.renderAlbumsGrid(group.albums))}
             </div>
         `
     })
@@ -664,7 +675,7 @@ export class AlbumsView extends BaseView {
                         ${otherAlbums.length} albums
                     </span>
                 </div>
-                ${this.renderAlbumsGrid(otherAlbums)}
+                ${wrapGrid(this.renderAlbumsGrid(otherAlbums))}
             </div>
         `
     }
@@ -687,7 +698,11 @@ export class AlbumsView extends BaseView {
     albums.forEach(album => {
       let found = false
       for (const series of seriesList) {
-        if ((series.albumQueries || []).some(q => q.toLowerCase().includes(album.title.toLowerCase()))) {
+        if ((series.albumQueries || []).some(q => {
+          const qNorm = q.toLowerCase()
+          const aNorm = album.title.toLowerCase()
+          return qNorm.includes(aNorm) || aNorm.includes(qNorm)
+        })) {
           const group = seriesGroups.get(series.id)
           if (group) group.albums.push(album)
           found = true
@@ -832,7 +847,7 @@ export class AlbumsView extends BaseView {
 
     // Sprint 7.5: Subscribe to AlbumSeriesStore to update Header (Title/Dropdown)
     const seriesUnsubscribe = albumSeriesStore.subscribe((state) => {
-      this.updateViewHeader()
+      this.updateHeaderState()
     })
     this.subscriptions.push(seriesUnsubscribe)
 
@@ -1165,6 +1180,9 @@ export class AlbumsView extends BaseView {
       // User navigating to "/albums" should see ALL.
       this.loadScope('ALL')
     }
+
+    // Initial Header Sync
+    this.updateHeaderState()
   }
 
   // Sprint 7.5: Load Scope (Architecture)
@@ -1222,6 +1240,7 @@ export class AlbumsView extends BaseView {
       }
 
       // 3. Load Data
+      this.updateHeaderState() // Sync Dropdown
       if (queriesToLoad.length > 0) {
         await this.loadAlbumsFromQueries(queriesToLoad, skipCache)
       } else {
@@ -1430,7 +1449,7 @@ export class AlbumsView extends BaseView {
   }
 
   // Sprint 7.5: Update Header UI (Title & Dropdown) dynamically
-  updateViewHeader() {
+  updateHeaderState() {
     const activeSeries = albumSeriesStore.getActiveSeries()
     const isAllScope = this.currentScope === 'ALL'
 
@@ -1466,9 +1485,11 @@ export class AlbumsView extends BaseView {
         seriesSelect.innerHTML = optionsHtml
       }
 
-      // Set value
-      const val = isAllScope ? 'all' : (activeSeries ? activeSeries.id : 'all')
-      seriesSelect.value = val
+      if (isAllScope || !activeSeries) {
+        seriesSelect.value = 'all'
+      } else {
+        seriesSelect.value = activeSeries.id
+      }
     }
   }
 }

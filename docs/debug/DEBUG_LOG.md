@@ -1393,16 +1393,19 @@ Albums from previous series still appearing when:
 
 ---
 
-### Issue #48: Documentation vs Code Discrepancy (v2.4 -> v2.7)
-    - **Status**: ✅ Resolved
-    - **Symptoms**: Changelog stopped at v2.4, but git tags existed up to v2.6.
-    - **Fix**: Reconstructed Changelog from git history (v2.5 dragged, v2.6 UI). Defined current work as v2.7.
-    - **Outcome**: Documentation reflects reality. New Roadmap/Spec created for Sprint 7.5.
+- **ID**: #48
+  - **Status**: [RESOLVED]
+  - **Date**: 2025-12-15
+  - **Component**: Documentation / Versioning
+  - **Description**: Changelog discrepancy (v2.4 vs v2.7) and roadmap alignment.
+  - **Fix**: Retroactively updated Changelog to reflect v2.5 (Stability) and v2.6 (UI Polish). Aligned current work to v2.7. Roadmap updated.
 
-### Issue #49: Expanded View Grouping Missing (Sprint 7.5)
-    - **Status**: ✅ Resolved
-    - **Symptoms**: Selecting "All Series" and switching to Expanded View showed a flat list without headers/borders.
-    - **Fix**: Implemented `renderScopedList` in `AlbumsView.js` mirroring the grid logic.
+- **ID**: #49
+  - **Status**: [RESOLVED]
+  - **Date**: 2025-12-15
+  - **Component**: AlbumsView (UI)
+  - **Description**: Visual regressions in AlbumsView: Series grouping missing in expanded view, and compact grid layout broken (single column).
+  - **Correction**: Refactored `AlbumsView.js` `render()` method to correctly delegate to `renderScopedGrid` and `renderScopedList` for both Single and All-Series scopes. Added missing `grid-cols-` classes to `renderScopedGrid` output and ensured list wrappers were present in `renderScopedList`.
     - **Outcome**: Expanded view now shows Series Headers and Borders consistently.
 
 ### Issue #19: Wrong Series Albums Displayed
