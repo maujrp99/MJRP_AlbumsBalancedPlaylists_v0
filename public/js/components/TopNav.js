@@ -64,7 +64,7 @@ export class TopNav {
           <img 
             src="/assets/images/TheAlbumPlaylistSynth.png" 
             alt="The Album Blender"
-            class="block h-6 sm:h-10 md:h-12 w-auto object-contain hover:opacity-80 transition-opacity"
+            class="block h-10 sm:h-12 md:h-16 w-auto object-contain hover:opacity-80 transition-opacity"
             loading="lazy"
           >
         </a>
