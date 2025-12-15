@@ -31,12 +31,19 @@ Use these IDs to reference specific UI elements:
 | `nav.menu-item` | Navigation link | text-sm uppercase |
 
 ### AlbumsView Elements
-
-| Element ID | Description | Current |
-|------------|-------------|---------|
-| `albums.page-header` | View title | text-4xl font-bold |
-| `albums.card-cover` | Album cover (compact) | aspect-square |
-| `albums.card-cover-expanded` | Album cover (expanded) | 128px / 160px |
+| Element ID | Description | Class / Style |
+|------------|-------------|---------------|
+| `albums.page-header` | View title | text-4xl font-bold flex gap-3 |
+| `albums.series-filter` | Series Dropdown Picker | `form-control` bg-brand-dark/50 |
+| `albums.filters-section` | Filter Bar Container | `glass-panel p-4` |
+| `albums.toggle-view-mode` | Toggle Compact/Expanded | `tech-btn` (Primary/Secondary) |
+| `albums.generate-btn` | Generate Playlists CTA | `tech-btn-primary px-8 py-3 rounded-2xl` |
+| `albums.card-compact` | Album Card (Grid) | `group flex flex-col gap-3` |
+| `albums.card-cover` | Album Cover (Compact) | `aspect-square rounded-xl` |
+| `albums.series-group` | Series Group Container | `rounded-xl border border-white/5 p-6 bg-white/5` |
+| `albums.series-header` | Series Group Title | `text-2xl font-bold text-accent-primary` |
+| `albums.modal-overlay` | Modal Background | `modal-overlay` |
+| `albums.modal-container` | Modal Content Box | `glass-panel max-w-2xl rounded-xl` |
 
 ### PlaylistsView Elements
 

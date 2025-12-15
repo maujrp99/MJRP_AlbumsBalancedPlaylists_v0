@@ -44,11 +44,8 @@ export class TopNav {
     if (activeSeries && activeSeries.id) {
       return `/albums?seriesId=${activeSeries.id}`
     }
-    // Fallback: use last series if available
-    const series = albumSeriesStore.getSeries()
-    if (series.length > 0 && series[0].id) {
-      return `/albums?seriesId=${series[0].id}`
-    }
+    // Fallback:  getAlbumsSeriesLink() {
+    // FIX: Default to "All Series" view when clicking Albums nav
     return '/albums'
   }
 

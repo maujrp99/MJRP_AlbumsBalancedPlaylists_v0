@@ -185,6 +185,40 @@ Transform MJRP Playlist Generator from a single-device tool into a **multi-devic
 - ✅ Export Implementation (Part B) - **DONE**
 - 🚧 Export Verification (Part B) - **IN PROGRESS** (Fixing track matching issues, e.g. 72 Seasons)
 
+#### Part C: View Revamp & Stability (🚧 In Progress)
+
+- [ ] **Holistic View Revamp (Cover Loading)**
+    - [ ] Branch: `feature/cover-loading-views-revamp`
+    - [ ] Standardize async hydration across `AlbumsView`, `InventoryView`
+    - [ ] Fix Inventory Ownership bug
+
+- [ ] **Final UAT Fixes**
+    - [ ] Verify "Metallica" missing tracks fix in Prod
+    - [ ] Fix 500 Error (Judas Priest)
+
+---
+
+### Sprint 7.5: AlbumsView Polish & Refactor (Current)
+
+**Goal**: Refine AlbumsView UI/UX and fix "Ghost Albums" via architectural scope changes + Apple Music Metadata Refactor.
+**Status**: 🚧 **In Progress**
+
+**Deliverables**:
+- [x] **Data Flow Architecture**: Scope-based loading (All vs Single Series).
+- [x] **UI Refinement**:
+    - [x] Series Dropdown Filter (Tech Theme).
+    - [x] "All Series" visual grouping with borders (Compact + Expanded).
+    - [x] Action buttons justified right, below cover.
+    - [x] "View Tracks" label update.
+- [x] **Interaction**:
+    - [x] Compact View: Click cover → Modal.
+    - [x] Expanded View: Default behavior.
+- [ ] **Architecture Refactor**:
+    - [ ] `loadAlbum` uses Apple Music Metadata (Fast).
+    - [ ] Backend acts as "Enrichment" only (Rankings).
+
+---
+
 ---
 
 #### Part B: Apple Music Integration

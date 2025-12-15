@@ -179,8 +179,8 @@ export class HomeView extends BaseView {
 
             <!-- Action -->
             <div class="flex justify-center pt-4">
-                <button type="submit" id="createSeriesBtn" class="tech-btn-primary px-16 py-6 text-xl rounded w-full md:w-auto">
-                    Initialize Load Sequence ${getIcon('ArrowRight', 'ml-2 w-5 h-5 inline-block')}
+                <button type="submit" id="createSeriesBtn" class="tech-btn-primary px-8 py-4 text-base rounded-2xl w-full md:w-auto md:max-w-sm">
+                    Initialize Load Sequence ${getIcon('ArrowRight', 'ml-2 w-4 h-4 inline-block')}
                 </button>
             </div>
 

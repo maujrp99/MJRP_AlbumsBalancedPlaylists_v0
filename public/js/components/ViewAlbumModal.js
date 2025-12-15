@@ -8,14 +8,15 @@ import { getIcon } from './Icons.js'
 export function showViewAlbumModal(album) {
   const modal = document.createElement('div')
   modal.className = 'modal-overlay'
+  const activeData = album.albumData || album // FIX: Handle both inventory wrappers and raw album objects
   modal.innerHTML = `
     <div class="modal-container glass-panel max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden flex flex-col">
       <!-- Header -->
       <div class="modal-header p-6 border-b border-surface-light flex items-start gap-4">
         <!-- Album Cover -->
         <div class="w-24 h-24 bg-surface-dark rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
-          ${album.albumData?.coverUrl ? `
-            <img src="${album.albumData.coverUrl}" alt="${escapeHtml(album.title)}" class="w-full h-full object-cover" />
+          ${activeData?.coverUrl ? `
+            <img src="${activeData.coverUrl}" alt="${escapeHtml(album.title)}" class="w-full h-full object-cover" />
           ` : `
             <div class="text-gray-600">
               ${getIcon('Disc', 'w-12 h-12')}
@@ -60,10 +61,10 @@ export function showViewAlbumModal(album) {
               <p class="font-semibold">${new Date(album.purchaseDate).toLocaleDateString()}</p>
             </div>
           ` : ''}
-          ${album.albumData?.tracks?.length ? `
+          ${activeData?.tracks?.length ? `
             <div class="stat-card bg-surface-dark p-3 rounded-lg">
               <p class="text-xs text-gray-500 mb-1">Tracks</p>
-              <p class="font-semibold">${album.albumData.tracks.length}</p>
+              <p class="font-semibold">${activeData.tracks.length}</p>
             </div>
           ` : ''}
         </div>
@@ -79,7 +80,7 @@ export function showViewAlbumModal(album) {
         ` : ''}
 
         <!-- Tracks Lists -->
-        ${(album.albumData?.tracksOriginalOrder?.length || album.albumData?.tracks?.length) ? `
+        ${(activeData?.tracksOriginalOrder?.length || activeData?.tracks?.length) ? `
           <div class="tracks-section space-y-6">
             <!-- Original Track Order (use tracksOriginalOrder if available) -->
             <div>
@@ -87,7 +88,7 @@ export function showViewAlbumModal(album) {
                 ${getIcon('Music', 'w-4 h-4')} Original Track Order
               </h3>
               <div class="tracks-list bg-surface-dark rounded-lg overflow-hidden">
-                ${(album.albumData.tracksOriginalOrder || album.albumData.tracks).map((track, idx) => {
+                ${(activeData.tracksOriginalOrder || activeData.tracks).map((track, idx) => {
     const trackTitle = track?.title || track?.name || 'Unknown Track'
     const hasRating = track?.rating != null && track?.rating !== undefined
     const hasDuration = track?.duration != null && track?.duration > 0
@@ -103,13 +104,13 @@ export function showViewAlbumModal(album) {
             </div>
 
             <!-- Ranked Tracks (sorted by rating) - use tracks which is already sorted -->
-            ${(album.albumData.tracks || []).some(t => t?.rating != null) ? `
+            ${(activeData.tracks || []).some(t => t?.rating != null) ? `
               <div>
                 <h3 class="text-sm font-bold text-accent-primary mb-3 flex items-center gap-2">
                   ${getIcon('Star', 'w-4 h-4')} Ranked by Rating
                 </h3>
                 <div class="tracks-list bg-surface-dark rounded-lg overflow-hidden">
-                  ${[...(album.albumData.tracks || [])]
+                  ${[...(activeData.tracks || [])]
           .filter(t => t?.rating != null)
           .sort((a, b) => (b.rating || 0) - (a.rating || 0))
           .map((track, idx) => {

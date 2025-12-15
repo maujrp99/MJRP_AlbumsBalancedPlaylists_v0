@@ -2,12 +2,75 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
-## Unreleased (Sprint 7 UAT)
+## v2.7.0 - Sprint 7.5: AlbumsView Polish & Refactor (2025-12-15)
 
-### 🚧 In Progress
-- **Track Export**: Investigation of missing tracks (e.g. 72 Seasons).
-- **Autocomplete UX**: Improvements to Load Albums form (Artist filter).
-- **Cover Art**: Fixes for loading states in cards.
+**Status**: 🚧 **IN PROGRESS**
+**Current Release**: `v2.7.0-dev`
+
+### Summary
+Sprint 7.5 focuses on refining the `AlbumsView` with a new "All Series" scope, visual grouping, and performance refactors using Apple Music.
+
+### ✨ New Features
+- **AlbumsView Scope Architecture**:
+  - Implemented "All Series" vs "Single Series" logic.
+  - Added Series Dropdown Filter (defaults to All).
+  - Added Visual Grouping (Borders/Titles) for albums by series.
+- **UI Architecture**:
+  - **Shared Action Delegation**: Centralized event listeners for Grid/List views.
+  - **Tech Theme Polish**: Standardized buttons (`tech-btn-primary`).
+
+### 🐛 Fixed
+- **Navigation**: "Albums" link in TopNav now correctly resets to "All Series".
+- **View Logic**: Fixed "All Albums Series" title mismatch.
+- **Grouping**: Fixed missing borders/titles in Expanded View.
+- **Empty State**: Fixed modal "No tracks" error.
+- **Filters**: Fixed `seriesFilter` event listener loss on view toggle.
+
+---
+
+## v2.6.0 - Sprint 7 Phase D: UI Polish & Style Guide (2025-12-14)
+
+**Status**: 🏷️ **TAGGED RELEASE**
+**Tag**: `v2.6.0`
+
+### Summary
+Focused on UI standardization, creating a formal Style Guide, and refining the Home and Navigation elements.
+
+### ✨ New Features
+- **UI Style Guide**: Comprehensive documentation for typography, buttons, and components (`docs/technical/UI_STYLE_GUIDE.md`).
+- **Hero Logo**: Adjusted logo sizing for visual balance.
+- **TopNav**: Renamed "Albums Series" to "Series" and "Playlist Series" to "Playlists".
+
+### 🐛 Fixed
+- **HTML Clean**: Restored clean HTML structure from v2.5.0.
+- **Tech Theme**: Removed uppercase transform from tech-titles.
+
+---
+
+## v2.5.0 - Sprint 7 Phase C: Apple Music & Drag-n-Drop Stability (2025-12-14)
+
+**Status**: 🏷️ **TAGGED RELEASE**
+**Tag**: `v2.5.0`
+
+### Summary
+Critical stability release for the Drag-and-Drop system (Sortable.js) and Apple Music Export localization.
+
+### 🐛 Fixed
+- **Sortable Freeze**: Fixed critical bug where dragging caused UI freeze due to excessive re-renders (Issue #47).
+- **Apple Music Region**: Implemented dynamic Storefront detection (fixes 404s for non-US users).
+- **Export Listeners**: Fixed duplicate event listener attachments.
+- **Track Counts**: Fixed track count updates after drag operations.
+
+---
+
+## v2.4.1 - Navigation Fixes (2025-12-13)
+
+**Status**: 🏷️ **TAGGED RELEASE**
+**Tag**: `v2.4.1`
+
+### 🐛 Fixed
+- **AlbumsView**: Fixed navigation URLs and cache synchronization.
+- **Cover Hydration**: Fixed fallback logic for missing covers.
 
 ---
 

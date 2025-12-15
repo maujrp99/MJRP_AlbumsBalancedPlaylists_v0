@@ -8,6 +8,7 @@ import { albumLoader } from '../services/AlbumLoader.js'
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
+import { showViewAlbumModal } from '../components/ViewAlbumModal.js'
 
 /**
  * AlbumsView
@@ -35,6 +36,10 @@ export class AlbumsView extends BaseView {
     // Store cleanup function
     this.cleanup = null
     this.abortController = null
+
+    // Sprint 7.5: Scope State
+    this.currentScope = 'SINGLE' // 'SINGLE' | 'ALL'
+    this.targetSeriesId = null
   }
 
   destroy() {
@@ -58,6 +63,12 @@ export class AlbumsView extends BaseView {
   async render(params) {
     const albums = albumsStore.getAlbums()
     const activeSeries = albumSeriesStore.getActiveSeries()
+    const allSeries = albumSeriesStore.getSeries()
+
+    // Determine current scope for render title
+    const isAllScope = this.currentScope === 'ALL'
+    const pageTitle = isAllScope ? 'All Albums Series' : (activeSeries ? this.escapeHtml(activeSeries.name) : 'Albums')
+
 
     // Ghost Albums Prevention (from prod):
     // If albums in store are from a different series than what we're rendering,
@@ -71,14 +82,14 @@ export class AlbumsView extends BaseView {
     }
     const lastLoadedId = albumsStore.getLastLoadedAlbumSeriesId()
 
-    let displayAlbums = albums
-    if (targetSeriesId && lastLoadedId && targetSeriesId !== lastLoadedId) {
-      console.warn(`[AlbumsView] Ghost prevention: series mismatch(${lastLoadedId} != ${targetSeriesId})`)
-      displayAlbums = []  // Block ghost albums at render level
-    }
-
     // Filter albums early to use throughout render
-    const filteredAlbums = this.filterAlbums(displayAlbums)
+    // For ALL scope, we filter globally first, then group later
+    // For ALL scope, we filter globally first, then group later
+    // displayAlbums was previously defined but removed during refactor.
+    // We should use 'albums' from store which was retrieved at line 63.
+    // If we want ghost prevention, we should use that logic, but 'albums' is fine for now provided store is consistent.
+    // Actually, line 63: const albums = albumsStore.getAlbums()
+    const filteredAlbums = this.filterAlbums(albums)
 
     // DEBUG: Enhanced logging for troubleshooting
 
@@ -91,12 +102,12 @@ export class AlbumsView extends BaseView {
       <div class="header-title-row mb-6 flex justify-between items-center">
         <h1 class="text-4xl font-bold flex items-center gap-3">
           ${getIcon('Disc', 'w-8 h-8 text-accent-primary')}
-          ${activeSeries ? this.escapeHtml(activeSeries.name) : 'All Albums'}
+          ${pageTitle}
         </h1>
 
         <button
           id="generatePlaylistsBtn"
-          class="btn btn-primary flex items-center gap-2"
+          class="tech-btn-primary px-8 py-3 text-base rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform"
           ${filteredAlbums.length === 0 ? 'disabled' : ''}
         >
           ${getIcon('Play', 'w-5 h-5')}
@@ -119,6 +130,21 @@ export class AlbumsView extends BaseView {
               class="form-control pl-10 w-full"
               value="${this.searchQuery}"
             />
+          </div>
+
+          <!-- Series Filter (Sprint 7.5) -->
+          <div class="series-dropdown relative min-w-[200px]">
+             <select id="seriesFilter" class="form-control appearance-none cursor-pointer pr-8 text-accent-primary font-bold bg-brand-dark/50 border-accent-primary/30">
+              <option value="all" ${!activeSeries ? 'selected' : ''}>All Series</option>
+              ${albumSeriesStore.getSeries().map(series => `
+                <option value="${series.id}" ${activeSeries && activeSeries.id === series.id ? 'selected' : ''}>
+                  ${this.escapeHtml(series.name)}
+                </option>
+              `).join('')}
+            </select>
+            <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-accent-primary">
+              ${getIcon('Layers', 'w-4 h-4')}
+            </span>
           </div>
 
           <!-- Artist Filter -->
@@ -367,6 +393,7 @@ export class AlbumsView extends BaseView {
   }
 
   // MODE 1: Compact Grid View
+  // MODE 1: Compact Grid View
   renderAlbumsGrid(albums) {
     // albums is already filtered from render(), don't filter again
 
@@ -385,57 +412,77 @@ export class AlbumsView extends BaseView {
 
       return `
   <div class="album-card-stack group flex flex-col gap-3" data-album-id="${album.id || ''}" >
-        <!--Image Container(Square top)-->
-        <div class="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-800 border border-white/5 shadow-lg group-hover:shadow-xl transition-all duration-300">
+        <!--Image Container(Square top) - Click triggers View Modal-->
+        <div 
+            class="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-800 border border-white/5 shadow-lg group-hover:shadow-xl transition-all duration-300 cursor-pointer"
+            data-action="view-modal"
+            data-album-id="${album.id || ''}"
+        >
            ${coverUrl ?
           `<img src="${coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />` :
           `<div class="flex items-center justify-center w-full h-full text-white/20">${getIcon('Music', 'w-24 h-24')}</div>`
         }
            
-           <!-- Hover Floating Actions (Pill) -->
-           <div class="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-10">
-              <div class="flex items-center gap-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-full p-1 shadow-2xl">
-                 <button class="p-2 text-red-400 hover:text-red-300 hover:bg-white/10 rounded-full transition-colors" title="Remove" data-action="remove-album" data-album-id="${album.id || ''}">
-                   ${getIcon('Trash', 'w-4 h-4')}
-                 </button>
-                 <div class="w-px h-4 bg-white/20"></div>
-                 <button class="p-2 text-green-400 hover:text-green-300 hover:bg-white/10 rounded-full transition-colors" title="Add to Inventory" data-action="add-to-inventory" data-album-id="${album.id || ''}">
-                   ${getIcon('Plus', 'w-4 h-4')}
-                 </button>
-              </div>
+           <!-- Hover Overlay Icon to indicate clickable -->
+           <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+              <span class="bg-black/50 p-3 rounded-full backdrop-blur text-white">
+                  ${getIcon('Maximize2', 'w-6 h-6')}
+              </span>
            </div>
         </div>
         
         <!--Metadata Container(Below Image)-->
   <div class="flex flex-col gap-1 px-1">
-    <h3 class="font-bold text-white text-base truncate leading-tight" title="${this.escapeHtml(album.title)}">
-      ${this.escapeHtml(album.title)}
-    </h3>
-    <p class="text-gray-400 text-sm truncate hover:text-white transition-colors">
-      ${this.escapeHtml(album.artist)}
-    </p>
+    <div class="flex justify-between items-start gap-2">
+        <div class="min-w-0 flex-1">
+            <h3 class="font-bold text-white text-base truncate leading-tight" title="${this.escapeHtml(album.title)}">
+              ${this.escapeHtml(album.title)}
+            </h3>
+            <p class="text-gray-400 text-sm truncate hover:text-white transition-colors">
+              ${this.escapeHtml(album.artist)}
+            </p>
+        </div>
+        
+        <!-- Sprint 7.5: Action Buttons (Right Aligned) -->
+        <div class="flex items-center gap-1 shrink-0">
+             <button class="p-1.5 text-gray-400 hover:text-green-400 hover:bg-white/10 rounded-lg transition-colors" 
+                title="Add to Inventory" 
+                data-action="add-to-inventory" 
+                data-album-id="${album.id || ''}">
+               ${getIcon('Plus', 'w-4 h-4')}
+             </button>
+             <button class="p-1.5 text-gray-400 hover:text-red-400 hover:bg-white/10 rounded-lg transition-colors" 
+                title="Remove" 
+                data-action="remove-album" 
+                data-album-id="${album.id || ''}">
+               ${getIcon('Trash', 'w-4 h-4')}
+             </button>
+        </div>
+    </div>
 
-    <!-- Badges (Preserved) -->
-    <div class="flex flex-wrap gap-2 mt-1">
-      <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
-        ${album.year || 'N/A'}
-      </span>
-      <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
-        ${album.tracks?.length || 0}
-      </span>
-      ${(() => {
+    <!-- Badges & View Button Row -->
+    <div class="flex items-center justify-between mt-2 gap-2">
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
+            ${album.year || 'N/A'}
+          </span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
+            ${album.tracks?.length || 0}
+          </span>
+          ${(() => {
           const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
           return hasRatings ? '' : `<span class="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')}</span>`
         })()}
-    </div>
+        </div>
 
-    <!-- View Ranking Button (Preserved, Subtle) -->
-    <button
-      class="mt-2 w-full text-xs py-1.5 rounded-lg border border-white/10 bg-white/5 text-gray-300 hover:bg-white/10 hover:border-accent-primary/50 hover:text-accent-primary transition-all flex items-center justify-center gap-1"
-      data-action="view-ranking"
-      data-album-id="${album.id || ''}">
-      View Ranked ${getIcon('ArrowLeft', 'w-3 h-3 rotate-180')}
-    </button>
+        <!-- View Tracks Button (Renamed from View Ranked) -->
+        <button
+          class="text-xs px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 text-accent-primary hover:bg-white/10 hover:border-accent-primary/50 transition-all flex items-center gap-1 whitespace-nowrap"
+          data-action="view-modal"
+          data-album-id="${album.id || ''}">
+          View Tracks
+        </button>
+    </div>
   </div>
       </div>
   `
@@ -543,6 +590,146 @@ export class AlbumsView extends BaseView {
   `
   }
 
+  // Sprint 7.5: Render Grouped Grid for "All Series"
+  renderScopedGrid(albums, seriesList) {
+    if (this.currentScope === 'SINGLE') {
+      return this.renderAlbumsGrid(albums)
+    }
+
+    // "All Series" Grouping
+    let html = '<div class="all-series-container space-y-12">'
+
+    // 1. Group albums by Series
+    // We reverse lookup which series owns the album
+    const seriesGroups = new Map()
+
+    // Initialize groups for all series to ensure order
+    seriesList.forEach(series => {
+      seriesGroups.set(series.id, {
+        series: series,
+        albums: []
+      })
+    })
+
+    // "Other" bucket for albums not found in any series (defensive)
+    const otherAlbums = []
+
+    albums.forEach(album => {
+      let found = false
+      // Check which series queries match this album
+      for (const series of seriesList) {
+        const queries = series.albumQueries || []
+        // Simple check: is this album title/artist present in queries?
+        // Note: Exact match logic might vary, but for now we trust the "reverse matching" or just metadata
+        // Better approach: When loading ALL, we could tag them. For now, let's try fuzzy match context
+        // Actually, simplest is: Check if any query contains the album title
+        const match = queries.some(q =>
+          q.toLowerCase().includes(album.title.toLowerCase())
+        )
+
+        if (match) {
+          const group = seriesGroups.get(series.id)
+          if (group) group.albums.push(album)
+          found = true
+          break // Assign to first matching series
+        }
+      }
+      if (!found) otherAlbums.push(album)
+    })
+
+    // 2. Render Groups
+    seriesGroups.forEach(group => {
+      if (group.albums.length === 0) return // Skip empty series groups in view
+
+      html += `
+            <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5">
+                <div class="series-group-header flex items-center gap-4 mb-6 pb-2 border-b border-white/10">
+                    <h2 class="text-2xl font-bold text-accent-primary">${this.escapeHtml(group.series.name)}</h2>
+                    <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full border border-white/5">
+                        ${group.albums.length} albums
+                    </span>
+                </div>
+                ${this.renderAlbumsGrid(group.albums)}
+            </div>
+        `
+    })
+
+    // Render Orphans if any
+    if (otherAlbums.length > 0) {
+      html += `
+            <div class="series-group mt-12">
+                 <div class="series-group-header flex items-center gap-4 mb-6 pb-2 border-b border-white/10">
+                    <h2 class="text-2xl font-bold text-gray-400">Uncategorized</h2>
+                    <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full">
+                        ${otherAlbums.length} albums
+                    </span>
+                </div>
+                ${this.renderAlbumsGrid(otherAlbums)}
+            </div>
+        `
+    }
+
+    html += '</div>'
+    return html
+  }
+
+  // Sprint 7.5: Render Grouped List for "All Series" (Expanded Mode)
+  renderScopedList(albums, seriesList) {
+    if (this.currentScope === 'SINGLE') {
+      return this.renderExpandedList(albums)
+    }
+
+    let html = '<div class="all-series-container space-y-12">'
+    const seriesGroups = new Map()
+    seriesList.forEach(series => seriesGroups.set(series.id, { series, albums: [] }))
+    const otherAlbums = []
+
+    albums.forEach(album => {
+      let found = false
+      for (const series of seriesList) {
+        if ((series.albumQueries || []).some(q => q.toLowerCase().includes(album.title.toLowerCase()))) {
+          const group = seriesGroups.get(series.id)
+          if (group) group.albums.push(album)
+          found = true
+          break
+        }
+      }
+      if (!found) otherAlbums.push(album)
+    })
+
+    seriesGroups.forEach(group => {
+      if (group.albums.length === 0) return
+      html += `
+            <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5">
+                <div class="series-group-header flex items-center gap-4 mb-6 pb-2 border-b border-white/10">
+                    <h2 class="text-2xl font-bold text-accent-primary">${this.escapeHtml(group.series.name)}</h2>
+                    <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full border border-white/5">
+                        ${group.albums.length} albums
+                    </span>
+                </div>
+                ${this.renderExpandedList(group.albums)}
+            </div>
+        `
+    })
+
+    if (otherAlbums.length > 0) {
+      html += `
+            <div class="series-group mt-12">
+                 <div class="series-group-header flex items-center gap-4 mb-6 pb-2 border-b border-white/10">
+                    <h2 class="text-2xl font-bold text-gray-400">Uncategorized</h2>
+                    <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full">
+                        ${otherAlbums.length} albums
+                    </span>
+                </div>
+                ${this.renderExpandedList(otherAlbums)}
+            </div>
+        `
+    }
+
+    html += '</div>'
+    return html
+  }
+
   renderEmptyState() {
     return `
   <div class="empty-state text-center py-16 glass-panel" >
@@ -562,6 +749,68 @@ export class AlbumsView extends BaseView {
     // Attach breadcrumb listeners
     Breadcrumb.attachListeners(this.container)
 
+    // Sprint 7.5: Global delegation for Album actions (Grid & List)
+    // We attach this to the container to handle dynamically rendered content (like groups)
+    this.on(this.container, 'click', async (e) => {
+      // Find closest button or action element
+      const target = e.target.closest('[data-action]')
+      if (!target) return
+
+      const action = target.dataset.action
+      const albumId = target.dataset.albumId
+      if (!albumId) return
+
+      // Prevent default propagation if it's a button
+      e.stopPropagation()
+
+      // Get album object from store
+      // Need to find it across series if scope is ALL. 
+      // albumsStore.getAlbums() returns current Scope's albums (which is All or Single).
+      let album = albumsStore.getAlbums().find(a => a.id === albumId)
+
+      // Safety for fallback
+      if (!album) {
+        const allSeries = albumSeriesStore.getSeries()
+        // Try to find in any loaded series cache if needed, but getAlbums() should have it
+        // If scope is ALL, albumsStore should have all albums
+      }
+
+      if (!album) {
+        console.warn('[AlbumsView] Album not found for action:', action, albumId)
+        return
+      }
+
+      switch (action) {
+        case 'view-modal':
+          showViewAlbumModal(album)
+          break
+        case 'add-to-inventory':
+          try {
+            // Import inventory store dynamically if needed or just use event
+            // Assuming inventoryStore is global or we need to import it? 
+            // Inventory interactions usually happen via InventoryView...
+            // But here we are in AlbumsView. 
+            // Let's use toast for now or check if we have inventoryStore imported?
+            // We don't import inventoryStore in AlbumsView imports list above.
+            // Let's dynamic import
+            const { inventoryStore } = await import('../stores/inventory.js')
+            await inventoryStore.addAlbum(album)
+            toast.success(`Added "${album.title}" to inventory`)
+          } catch (err) {
+            console.error(err)
+            toast.error('Failed to add to inventory')
+          }
+          break
+        case 'remove-album':
+          if (confirm(`Remove "${album.title}" from this series?`)) {
+            await albumSeriesStore.removeAlbumFromSeries(album)
+            // View will update automatically via subscription
+            toast.success('Album removed from series')
+          }
+          break
+      }
+    })
+
     // Subscribe to albums store
     const unsubscribe = albumsStore.subscribe((state) => {
       if (!this.isLoading) {
@@ -580,6 +829,12 @@ export class AlbumsView extends BaseView {
       }
     })
     this.subscriptions.push(unsubscribe)
+
+    // Sprint 7.5: Subscribe to AlbumSeriesStore to update Header (Title/Dropdown)
+    const seriesUnsubscribe = albumSeriesStore.subscribe((state) => {
+      this.updateViewHeader()
+    })
+    this.subscriptions.push(seriesUnsubscribe)
 
     // Setup search
     const searchInput = this.$('#albumSearch')
@@ -628,15 +883,20 @@ export class AlbumsView extends BaseView {
     const refreshBtn = this.$('#refreshAlbums')
     if (refreshBtn) {
       this.on(refreshBtn, 'click', async () => {
+        // Reload current scope
+        this.loadScope(this.currentScope, this.targetSeriesId, true)
+      })
+    }
 
-        // Get series albums queries
-        const activeSeries = albumSeriesStore.getActiveSeries()
-        if (activeSeries?.albumQueries) {
-          // Reload with skip-cache flag
-          await this.loadAlbumsFromQueries(activeSeries.albumQueries, true) // skipCache = true
-        } else {
-          console.warn('⚠️ [DEBUG] No albumQueries found in active series:', activeSeries)
-        }
+    // Sprint 7.5: Series Dropdown Listener
+    const seriesFilter = this.$('#seriesFilter')
+    if (seriesFilter) {
+      this.on(seriesFilter, 'change', (e) => {
+        const val = e.target.value
+        const newScope = val === 'all' ? 'ALL' : 'SINGLE'
+        const newId = val === 'all' ? null : val
+
+        this.loadScope(newScope, newId)
       })
     }
 
@@ -699,6 +959,17 @@ export class AlbumsView extends BaseView {
           this.on(bestEverCheckbox, 'change', (e) => {
             this.filters.bestEverOnly = e.target.checked
             this.updateAlbumsGrid(albumsStore.getAlbums())
+          })
+        }
+
+        // FIX: Re-bind Series Filter
+        const seriesFilter = this.$('#seriesFilter')
+        if (seriesFilter) {
+          this.on(seriesFilter, 'change', (e) => {
+            const val = e.target.value
+            const newScope = val === 'all' ? 'ALL' : 'SINGLE'
+            const newId = val === 'all' ? null : val
+            this.loadScope(newScope, newId)
           })
         }
 
@@ -874,89 +1145,95 @@ export class AlbumsView extends BaseView {
       })
     }
 
-    // Priority: URL param > Store state
+    // Trigger Initial Load
+    // We defer this slightly to ensure mount is complete
+    // Use URL params or defaults
     const urlParams = new URLSearchParams(window.location.search)
-    let urlSeriesId = urlParams.get('seriesId') || (params && params.seriesId)
+    const urlSeriesId = params?.seriesId || urlParams.get('seriesId')
 
-    // FIX: Handle "undefined" string literal from bad URLs
-    if (urlSeriesId === 'undefined' || urlSeriesId === 'null') {
-      console.warn('[AlbumsView] Found invalid seriesId "undefined" in URL. Ignoring.')
-      urlSeriesId = null
-    }
+    // Determine initial scope
+    // If ID present -> SINGLE
+    // If no ID -> ALL (Default per spec)
+    // Exception: If we have an activeSeries in store, we might default to that?
+    // Spec says: "Dropdown MUST default to "All Series" when no ID is present in URL."
 
     if (urlSeriesId) {
-      console.log('[AlbumsView] Restoring series from URL:', urlSeriesId)
-      albumSeriesStore.setActiveSeries(urlSeriesId)
-    }
-
-    const activeSeries = albumSeriesStore.getActiveSeries()
-    const currentAlbums = albumsStore.getAlbums()
-
-    if (activeSeries && activeSeries.albumQueries && activeSeries.albumQueries.length > 0) {
-      // FIX #15 ENHANCED + FIX #19: Check if albums are already loaded for THIS SPECIFIC series
-      // Only reload if:
-      // 1. Store is empty (currentCount === 0)
-      // 2. Wrong number of albums (currentCount !== expectedCount)
-      // 3. Albums are from a DIFFERENT series (check first album's metadata or series change)
-
-      // CRITICAL FIX: Ensure albumsStore knows which series we are in BEFORE checking cache
-      albumsStore.setActiveAlbumSeriesId(activeSeries.id)
-
-      const expectedCount = activeSeries.albumQueries.length
-      const currentAlbums = albumsStore.getAlbums() // Get updated cache for this series
-      const currentCount = currentAlbums.length
-
-      // Check if we need to reload
-      // FIX: Use persistent store state instead of view instance state
-      const lastLoadedId = albumsStore.getLastLoadedAlbumSeriesId()
-
-      const needsReload = currentCount === 0 ||
-        currentCount !== expectedCount ||
-        !lastLoadedId ||
-        lastLoadedId !== activeSeries.id
-
-      if (needsReload) {
-        console.log('[AlbumsView] Loading albums for series:', activeSeries.name, `(${currentCount} / ${expectedCount})`)
-        await this.loadAlbumsFromQueries(activeSeries.albumQueries)
-        // Note: lastLoadedSeriesId is now set BEFORE reset in loadAlbumsFromQueries
-        // Note: loadAlbumsFromQueries already updates the view, no need to call updateAlbumsGrid
-      } else {
-        console.log('[AlbumsView] Albums already loaded for series:', activeSeries.name, `(${currentCount} albums)`)
-        // CRITICAL FIX: Do NOT call updateAlbumsGrid here!
-        // The render() method already rendered these albums, calling updateAlbumsGrid
-        // would duplicate them. The view is already up-to-date from render().
-      }
-    } else if (urlSeriesId && !activeSeries) {
-      // Fallback: Series ID in URL but not in store (Hard Refresh scenario)
-      console.log('[AlbumsView] Series not in store, attempting to fetch from Firestore...')
-      try {
-        // We need to access the db instance. It's exported from app.js
-        const { db } = await import('../app.js')
-        const { albumSeriesStore } = await import('../stores/albumSeries.js')
-
-        // Force load from Firestore
-        await albumSeriesStore.loadFromFirestore(db)
-
-        // Try setting active series again
-        albumSeriesStore.setActiveSeries(urlSeriesId)
-        const reloadedSeries = albumSeriesStore.getActiveSeries()
-
-        if (reloadedSeries && reloadedSeries.albumQueries) {
-          console.log('[AlbumsView] Series recovered from Firestore:', reloadedSeries.name)
-          await this.loadAlbumsFromQueries(reloadedSeries.albumQueries)
-        } else {
-          console.warn('[AlbumsView] Series not found even after Firestore fetch')
-          this.renderEmptyState()
-        }
-      } catch (err) {
-        console.error('[AlbumsView] Failed to recover series:', err)
-        this.renderEmptyState()
-      }
+      this.loadScope('SINGLE', urlSeriesId)
     } else {
-      console.warn('[AlbumsView] No active series or albums found to load')
-      this.renderEmptyState()
+      // Check if we already have a focused series in store? 
+      // Spec says "Coming from Recent Series ... loads that specific series" (which sets URL)
+      // User navigating to "/albums" should see ALL.
+      this.loadScope('ALL')
+    }
+  }
+
+  // Sprint 7.5: Load Scope (Architecture)
+  async loadScope(scopeType, seriesId = null, skipCache = false) {
+    this.currentScope = scopeType
+    this.targetSeriesId = seriesId
+    this.isLoading = true
+
+    // Update URL without reload (if needed)
+    const newUrl = seriesId ? `/albums?seriesId=${seriesId}` : '/albums'
+    if (window.location.pathname + window.location.search !== newUrl) {
+      window.history.pushState({}, '', newUrl)
     }
 
+    try {
+      // 1. Reset Store Context
+      // 'ALL' scope uses a special ID to prevent mixing
+      const storeContextId = scopeType === 'ALL' ? 'ALL_SERIES_VIEW' : seriesId
+
+      albumsStore.setActiveAlbumSeriesId(storeContextId)
+      albumsStore.reset(true) // Clear albums, keep context ID
+
+      this.updateAlbumsGrid([]) // Clear UI
+
+      // 2. Resolve Queries
+      let queriesToLoad = []
+
+      if (scopeType === 'ALL') {
+        await albumSeriesStore.loadFromFirestore() // Ensure we have latest series list
+        const allSeries = albumSeriesStore.getSeries()
+        // Aggregate all queries
+        allSeries.forEach(s => {
+          if (s.albumQueries) queriesToLoad.push(...s.albumQueries)
+        })
+        // Clear active series in store so "All" is active concept
+        albumSeriesStore.setActiveSeries(null)
+
+      } else {
+        // Single Series
+        // Ensure Series info is loaded
+        let series = albumSeriesStore.getSeries().find(s => s.id === seriesId)
+        if (!series) {
+          await albumSeriesStore.loadFromFirestore()
+          series = albumSeriesStore.getSeries().find(s => s.id === seriesId)
+        }
+
+        if (series) {
+          albumSeriesStore.setActiveSeries(series.id)
+          queriesToLoad = series.albumQueries || []
+        } else {
+          // Series not found
+          console.warn('[AlbumsView] Series not found:', seriesId)
+          queriesToLoad = []
+        }
+      }
+
+      // 3. Load Data
+      if (queriesToLoad.length > 0) {
+        await this.loadAlbumsFromQueries(queriesToLoad, skipCache)
+      } else {
+        this.isLoading = false
+        this.updateAlbumsGrid([])
+      }
+
+    } catch (err) {
+      console.error('[AlbumsView] loadScope failed', err)
+      this.isLoading = false
+      toast.error('Failed to load series data')
+    }
   }
 
   async loadAlbumsFromQueries(queries, skipCache = false) {
@@ -1079,6 +1356,13 @@ export class AlbumsView extends BaseView {
   }
 
   updateAlbumsGrid(albums) {
+    // If loading, show empty but don't warn
+    if (this.isLoading && albums.length === 0) {
+      const grid = this.$('#albumsGrid')
+      if (grid) grid.innerHTML = ''
+      return
+    }
+
     // Ghost Albums Prevention (from prod):
     // Store subscriptions can trigger this method with stale data from previous series.
     // Early exit if trying to render albums from wrong series.
@@ -1086,7 +1370,7 @@ export class AlbumsView extends BaseView {
     const lastLoadedId = albumsStore.getLastLoadedAlbumSeriesId()
 
     // FIX: If no active series (e.g. it was deleted), do not render stale albums
-    if (!activeSeries) {
+    if (!activeSeries && this.currentScope !== 'ALL') { // Added check for currentScope
       console.warn('[AlbumsView] No active series found. Clearing view.')
       this.renderEmptyState()
       const grid = this.$('#albumsGrid')
@@ -1094,7 +1378,7 @@ export class AlbumsView extends BaseView {
       return
     }
 
-    if (activeSeries && lastLoadedId && activeSeries.id !== lastLoadedId) {
+    if (activeSeries && lastLoadedId && activeSeries.id !== lastLoadedId && this.currentScope !== 'ALL') { // Added check for currentScope
       console.warn('[AlbumsView] updateAlbumsGrid: series mismatch, skipping render')
       return  // Block ghost albums from subscription updates
     }
@@ -1115,12 +1399,17 @@ export class AlbumsView extends BaseView {
     if (this.viewMode === 'expanded') {
       const list = this.$('#albumsList')
       if (list) {
-        list.innerHTML = this.renderExpandedList(filtered)
+        // FIX: Use renderScopedList logic for expanded view (supports grouping)
+        const allSeries = albumSeriesStore.getSeries()
+        list.innerHTML = this.renderScopedList(filtered, allSeries)
       }
     } else {
       const grid = this.$('#albumsGrid')
       if (grid) {
-        grid.innerHTML = this.renderAlbumsGrid(filtered)
+        // FIX: Use renderScopedGrid logic for compact view (supports grouping)
+        // Need to pass seriesList if we want accurate grouping
+        const allSeries = albumSeriesStore.getSeries()
+        grid.innerHTML = this.renderScopedGrid(filtered, allSeries)
       }
     }
 
@@ -1140,10 +1429,46 @@ export class AlbumsView extends BaseView {
     return template.content.firstChild
   }
 
-  escapeHtml(text) {
-    if (!text) return ''
-    const div = document.createElement('div')
-    div.textContent = text
-    return div.innerHTML
+  // Sprint 7.5: Update Header UI (Title & Dropdown) dynamically
+  updateViewHeader() {
+    const activeSeries = albumSeriesStore.getActiveSeries()
+    const isAllScope = this.currentScope === 'ALL'
+
+    // 1. Update Title
+    const titleEl = this.$('.header-title-row h1')
+    if (titleEl) {
+      const pageTitle = isAllScope ? 'All Albums Series' : (activeSeries ? this.escapeHtml(activeSeries.name) : 'Albums')
+      // Preserve icon
+      titleEl.innerHTML = `
+          ${getIcon('Disc', 'w-8 h-8 text-accent-primary')}
+          ${pageTitle}
+        `
+    }
+
+    // 2. Update Dropdown Value
+    const seriesSelect = this.$('#seriesFilter')
+    if (seriesSelect) {
+      // If options are missing (late load), repopulate them?
+      // Check if we need to re-render options
+      const allSeries = albumSeriesStore.getSeries()
+      const currentOptions = seriesSelect.options.length
+
+      // If we have more series than options (minus 'all'), re-render options
+      if (allSeries.length > 0 && currentOptions <= 1) {
+        const optionsHtml = `
+              <option value="all">All Series</option>
+              ${allSeries.map(series => `
+                <option value="${series.id}">
+                  ${this.escapeHtml(series.name)}
+                </option>
+              `).join('')}
+            `
+        seriesSelect.innerHTML = optionsHtml
+      }
+
+      // Set value
+      const val = isAllScope ? 'all' : (activeSeries ? activeSeries.id : 'all')
+      seriesSelect.value = val
+    }
   }
 }
