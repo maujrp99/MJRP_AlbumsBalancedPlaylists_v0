@@ -22,7 +22,7 @@ export class LegacyRoundRobinAlgorithm extends BaseAlgorithm {
         id: 'legacy-roundrobin',
         name: 'Legacy Round-Robin',
         badge: 'LEGACY',
-        description: 'Current implementation: P1/P2 Greatest Hits + round-robin Deep Cuts. Tested and stable.',
+        description: 'Modo simples: distribui faixas em rodízio. Estável e testado, bom para comparação.',
         isRecommended: false
     }
 

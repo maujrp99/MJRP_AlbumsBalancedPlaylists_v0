@@ -9,6 +9,7 @@
 import { LegacyRoundRobinAlgorithm } from './LegacyRoundRobinAlgorithm.js'
 import { SDraftOriginalAlgorithm } from './SDraftOriginalAlgorithm.js'
 import { MJRPBalancedCascadeAlgorithm } from './MJRPBalancedCascadeAlgorithm.js'
+import { MJRPBalancedCascadeV0Algorithm } from './MJRPBalancedCascadeV0Algorithm.js'
 
 /**
  * Registry of all available algorithms
@@ -16,10 +17,11 @@ import { MJRPBalancedCascadeAlgorithm } from './MJRPBalancedCascadeAlgorithm.js'
  */
 const algorithms = new Map()
 
-// Register all algorithms
-algorithms.set('legacy-roundrobin', LegacyRoundRobinAlgorithm)
+// Register all algorithms (order matters for UI display)
+algorithms.set('mjrp-balanced-cascade', MJRPBalancedCascadeAlgorithm) // RECOMMENDED first
+algorithms.set('mjrp-cascade-v0', MJRPBalancedCascadeV0Algorithm)
 algorithms.set('s-draft-original', SDraftOriginalAlgorithm)
-algorithms.set('mjrp-balanced-cascade', MJRPBalancedCascadeAlgorithm)
+algorithms.set('legacy-roundrobin', LegacyRoundRobinAlgorithm)
 
 /**
  * Get algorithm class by ID
@@ -81,4 +83,6 @@ export function createAlgorithm(id, opts = {}) {
 export { LegacyRoundRobinAlgorithm } from './LegacyRoundRobinAlgorithm.js'
 export { SDraftOriginalAlgorithm } from './SDraftOriginalAlgorithm.js'
 export { MJRPBalancedCascadeAlgorithm } from './MJRPBalancedCascadeAlgorithm.js'
+export { MJRPBalancedCascadeV0Algorithm } from './MJRPBalancedCascadeV0Algorithm.js'
+
 

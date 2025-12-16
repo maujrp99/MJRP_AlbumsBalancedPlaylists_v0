@@ -352,9 +352,6 @@ export class PlaylistsView extends BaseView {
           ${getIcon('Save', 'w-5 h-5')} Actions & Export
         </h3>
         <div class="export-actions flex flex-wrap gap-4">
-          <button class="btn btn-warning flex items-center gap-2" id="regenerateBtn" title="Regenerate playlists using current albums (including newly added ones)">
-            ${getIcon('Refresh', 'w-5 h-5')} Regenerate
-          </button>
           <button class="btn btn-success flex items-center gap-2" id="saveToHistoryBtn">
             ${getIcon('Cloud', 'w-5 h-5')} Save to Series History
           </button>

@@ -1,7 +1,8 @@
 /**
- * MJRPBalancedCascadeAlgorithm - Algorithm #2 (Recommended)
+ * MJRPBalancedCascadeV0Algorithm - Original Cascade (No Merge)
  * 
  * Hybrid algorithm combining Serpentine distribution with Cascade rebalancing.
+ * This is the original v0 version WITHOUT playlist merge optimization.
  * 
  * Phases:
  * 1. Greatest Hits: #1 and #2 only (split if >60 min)
@@ -9,7 +10,7 @@
  * 3. Cascade Global: Excess tracks in ping-pong by ranking
  * 4. Duration Trim: Move excess from DC>48min to Orphan Tracks
  * 
- * @module algorithms/MJRPBalancedCascadeAlgorithm
+ * @module algorithms/MJRPBalancedCascadeV0Algorithm
  */
 
 import { BaseAlgorithm } from './BaseAlgorithm.js'
@@ -19,13 +20,13 @@ const GREATEST_HITS_MAX = 60 * 60 // 60 minutes
 const DEEP_CUTS_MAX = 48 * 60 // 48 minutes (strict)
 const MINIMUM_DURATION = 30 * 60 // 30 minutes
 
-export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
+export class MJRPBalancedCascadeV0Algorithm extends BaseAlgorithm {
     static metadata = {
-        id: 'mjrp-balanced-cascade',
-        name: 'MJRP Balanced Cascade',
-        badge: 'RECOMMENDED',
-        description: 'Cria playlists balanceadas mesclando as melhores faixas de cada álbum. Playlists curtas são combinadas automaticamente.',
-        isRecommended: true
+        id: 'mjrp-cascade-v0',
+        name: 'MJRP Cascade v0',
+        badge: 'ORIGINAL',
+        description: 'Versão original sem merge: cada Deep Cut fica separada, mesmo as curtas.',
+        isRecommended: false
     }
 
     constructor(opts = {}) {
@@ -38,9 +39,9 @@ export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
         this._legacyHelper = new LegacyRoundRobinAlgorithm(opts)
 
         this.defaultRankingSource = this.registerRankingSource(opts.defaultRankingSource || {
-            name: 'MJRP Balanced Cascade',
+            name: 'MJRP Cascade v0',
             type: 'internal',
-            description: 'Curadoria MJRP Balanced Cascade',
+            description: 'Curadoria MJRP Cascade v0 (sem merge)',
             secure: true
         })
     }
@@ -256,9 +257,6 @@ export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
             }
         }
 
-        // Phase 3.5: Merge small adjacent playlists (front to back)
-        this.mergeSmallPlaylists(playlists, firstDeepCutIndex)
-
         // Phase 4: Duration Trim (move excess to Orphan Tracks)
         this.trimOverDurationPlaylists(playlists, firstDeepCutIndex)
 
@@ -274,73 +272,6 @@ export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
             playlists,
             rankingSummary,
             rankingSources: this.getRankingSources()
-        }
-    }
-
-    /**
-     * Merge adjacent small Deep Cuts playlists if combined duration < 48 min
-     * Loop from front (DC1) to back - earlier DCs tend to be smaller
-     * Maintains ranking grouping within merged playlist
-     */
-    mergeSmallPlaylists(playlists, firstDeepCutIndex) {
-        let i = firstDeepCutIndex
-
-        while (i < playlists.length - 1) {
-            const current = playlists[i]
-            const next = playlists[i + 1]
-
-            // Skip GH playlists and Orphan Tracks
-            if (current.title.includes('Greatest Hits') ||
-                next.title.includes('Greatest Hits') ||
-                current.title === 'Orphan Tracks' ||
-                next.title === 'Orphan Tracks') {
-                i++
-                continue
-            }
-
-            const currentDuration = this.calculateTotalDuration(current.tracks)
-            const nextDuration = this.calculateTotalDuration(next.tracks)
-            const combinedDuration = currentDuration + nextDuration
-
-            if (combinedDuration < this.deepCutsMax) {
-                console.log(`[Cascade] Merging playlists: "${current.title}" (${Math.round(currentDuration / 60)}min) + "${next.title}" (${Math.round(nextDuration / 60)}min) = ${Math.round(combinedDuration / 60)}min`)
-
-                // Merge: move all tracks from next into current
-                for (const track of next.tracks) {
-                    current.tracks.push(track)
-                    this.annotateTrack(track, `Merged from ${next.title}`, this.defaultRankingSource, 0.5)
-                }
-
-                // Sort by rank to maintain grouping
-                current.tracks.sort((a, b) => (a._rank || 0) - (b._rank || 0))
-
-                // Update title to reflect merged content
-                const currentVolMatch = current.title.match(/Vol\. (\d+)/)
-                const nextVolMatch = next.title.match(/Vol\. (\d+)/)
-                if (currentVolMatch && nextVolMatch) {
-                    current.title = `Deep Cuts Vol. ${currentVolMatch[1]}-${nextVolMatch[1]}`
-                }
-
-                // Remove the merged playlist
-                playlists.splice(i + 1, 1)
-
-                // Don't increment i - check if we can merge again with new next
-            } else {
-                i++
-            }
-        }
-
-        // Renumber Deep Cuts after merge
-        let dcNum = 1
-        for (let j = firstDeepCutIndex; j < playlists.length; j++) {
-            if (playlists[j].title.includes('Deep Cuts') && !playlists[j].title.includes('-')) {
-                playlists[j].title = `Deep Cuts Vol. ${dcNum}`
-                dcNum++
-            } else if (playlists[j].title.includes('-')) {
-                // Already a merged title, just update the first number
-                playlists[j].title = playlists[j].title.replace(/Vol\. \d+-/, `Vol. ${dcNum}-`)
-                dcNum++
-            }
         }
     }
 
@@ -382,5 +313,4 @@ export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
     }
 }
 
-export default MJRPBalancedCascadeAlgorithm
-
+export default MJRPBalancedCascadeV0Algorithm

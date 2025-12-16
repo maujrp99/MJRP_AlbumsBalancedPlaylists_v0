@@ -24,9 +24,9 @@ const P_HITS = 2 // Number of Greatest Hits playlists
 export class SDraftOriginalAlgorithm extends BaseAlgorithm {
     static metadata = {
         id: 's-draft-original',
-        name: 'S-Draft Hybrid Curator Original',
-        badge: 'ORIGINAL',
-        description: 'Full Serpentine: P1/P2 Greatest Hits + true S-Draft Deep Cuts distribution (odd/even album logic).',
+        name: 'S-Draft Serpentine',
+        badge: 'CLASSIC',
+        description: 'Algoritmo clássico: distribui faixas em zigue-zague entre as playlists para máxima variedade.',
         isRecommended: false
     }
 

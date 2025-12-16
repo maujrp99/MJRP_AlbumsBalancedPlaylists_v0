@@ -62,9 +62,9 @@ export class TopNav {
             <img src="/assets/images/logo.png" alt="MJRP Logo" class="w-full h-full object-contain">
           </div>
           <img 
-            src="/assets/images/TheAlbumPlaylistSynth.png" 
+            src="/assets/images/TheAlbumBlender.png" 
             alt="The Album Blender"
-            class="block h-10 sm:h-12 md:h-16 w-auto object-contain hover:opacity-80 transition-opacity"
+            class="block h-8 sm:h-12 md:h-14 w-auto object-contain hover:opacity-80 transition-opacity"
             loading="lazy"
           >
         </a>
