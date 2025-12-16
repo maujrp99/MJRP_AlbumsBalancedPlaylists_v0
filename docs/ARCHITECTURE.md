@@ -241,8 +241,10 @@ sequenceDiagram
 | `/home` | HomeView | - |
 | `/albums` | AlbumsView | `?seriesId=X` |
 | `/playlists` | PlaylistsView | - |
-| `/album-series` | AlbumSeriesListView | - |
+| `/album-series` | ⇒ Redirects to `/albums` | - |
+| `/series` | ⇒ Redirects to `/albums` | - |
 | `/playlist-series` | SavedPlaylistsView | - |
+| `/save-all` | SaveAllView | - |
 | `/ranking/:albumId` | RankingView | - |
 | `/ranking/consolidated` | ConsolidatedRankingView | - |
 | `/inventory` | InventoryView | - |

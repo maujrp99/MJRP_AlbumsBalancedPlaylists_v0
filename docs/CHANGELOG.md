@@ -37,6 +37,33 @@ Sprint 7.5 focuses on refining the `AlbumsView` with a new "All Series" scope, v
 
 ---
 
+## v2.7.1 - Sprint 7.5.1: SeriesView Consolidation (2025-12-15)
+
+**Status**: 🚧 **IN PROGRESS** (pending merge)
+**Branch**: `feature/consolidate-seriesview`
+
+### Summary
+Consolidated `AlbumSeriesListView` into `AlbumsView`, eliminating a redundant view and simplifying navigation.
+
+### ✨ New Features
+- **Edit/Delete Series in AlbumsView**: Added buttons to series headers in "All Series" view (compact + expanded modes)
+- **Edit Series Modal**: Full edit functionality with:
+  - Name editing
+  - Album list management (add/remove)
+  - Autocomplete for adding albums
+- **Delete Series Modal**: Safe delete with confirmation (albums preserved)
+
+### 🗑️ Removed
+- **AlbumSeriesListView.js**: Deprecated and deleted (430 lines removed)
+- **TopNav "Series" link**: Removed redundant navigation item
+- **/album-series and /series routes**: Now redirect to `/albums`
+
+### 🔄 Changed
+- **TopNav**: "Albums" renamed to "Album Series"
+- **Router**: Legacy routes redirect to consolidated `/albums` view
+
+---
+
 ## v2.6.0 - Sprint 7 Phase D: UI Polish & Style Guide (2025-12-14)
 
 **Status**: 🏷️ **TAGGED RELEASE**

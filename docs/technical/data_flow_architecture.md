@@ -1,9 +1,11 @@
 # Album Data Flow Architecture
 
-**Updated**: 2025-12-06T21:44
+**Updated**: 2025-12-15
 
 ## Overview
 This document maps the **Data Flow Diagram (DFD)** and **Sequence Diagrams** for album data through the application's views and store.
+
+> **Note (v2.7.1)**: `AlbumSeriesListView` has been deprecated. Series management (Edit/Delete) is now consolidated into `AlbumsView`.
 
 ---
 
@@ -13,9 +15,10 @@ This document maps the **Data Flow Diagram (DFD)** and **Sequence Diagrams** for
 graph LR
     User[User Actions]
     HomeView[HomeView]
-    AlbumsView[AlbumsView]
+    AlbumsView[AlbumsView - Series CRUD]
     PlaylistsView[PlaylistsView]
     RankingView[RankingView]
+    SaveAllView[SaveAllView - Data Migration]
     
     AlbumSeriesStore[(AlbumSeriesStore)]
     AlbumsStore[(AlbumsStore)]
@@ -28,6 +31,7 @@ graph LR
     User --> AlbumsView
     User --> PlaylistsView
     User --> RankingView
+    User --> SaveAllView
     
     HomeView --> AlbumSeriesStore
     AlbumsView --> AlbumSeriesStore
@@ -37,6 +41,7 @@ graph LR
     PlaylistsView --> AlbumsStore
     PlaylistsView --> PlaylistsStore
     RankingView --> AlbumsStore
+    SaveAllView --> Firestore
     
     API --> AlbumsStore
     AlbumSeriesStore --> Firestore

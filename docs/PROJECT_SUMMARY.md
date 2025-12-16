@@ -1,7 +1,7 @@
 # MJRP Albums Balanced Playlists — Project Summary
 
-**Version**: v2.0.6 (Production)  
-**Last Updated**: 2025-12-06
+**Version**: v2.7.1 (Production)  
+**Last Updated**: 2025-12-15
 
 ---
 
@@ -9,20 +9,18 @@
 
 The MJRP Playlist Generator, "The Album Blender," is a visionary platform aiming to be the definitive tool for music curation, empowering enthusiasts to transcend algorithmic bubbles by focusing on objectively balanced album-based playlists. It achieves this by integrating global acclaim ratings (from sources like BestEverAlbums and Musicboard) with AI enrichment (Google Gemini) to ensure musical inspiration meets data precision. Its future state is a multi-device, cloud-synced ecosystem providing a seamless experience and native integration with major streaming services, Apple Music and Spotify in the future.
 
-### Current Status ⚠️ 4 P0 Blockers
-- **v2.0.4** deployed to production
+### Current Status ✅ Production Stable
+- **v2.7.1** pending merge (SeriesView consolidation)
 - Frontend: `https://mjrp-playlist-generator.web.app`
 - Backend API: Cloud Run (`mjrp-proxy`)
-- Core features operational BUT **Firestore persistence broken**
+- Core features operational
 
-> [!CAUTION]
-> **Sprint 5 UAT Blockers (2025-12-06)**:
-> 1. 🔴 Firebase SDK Mismatch (nothing saves to Firestore)
-> 2. 🔴 Series UI Buttons non-functional
-> 3. 🔴 Ghost Albums (Issue #22) - 4 fix attempts failed
-> 4. 🔴 Playlists lost on refresh
->
-> See [SPRINT5_UAT_20251206.md](technical/tester/SPRINT5_UAT_20251206.md)
+> [!NOTE]
+> **Recent Updates (Sprint 7.5.1)**:
+> - 🟢 **Rebrand**: "The Album Playlist Synthesizer" → "The Album Blender"
+> - 🟢 **SeriesView Consolidation**: AlbumSeriesListView deprecated
+> - 🟢 **SaveAllView**: New dedicated Data Migration page
+> - 🟢 **TopNav Enhancements**: Neon glow hover effect, simplified navigation
 
 ---
 
