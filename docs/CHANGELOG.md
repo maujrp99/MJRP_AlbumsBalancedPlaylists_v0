@@ -8,9 +8,17 @@ All notable changes to the MJRP Albums Balanced Playlists project.
 **Tag**: `v2.7.0`
 
 ### Summary
-Sprint 7.5 focuses on refining the `AlbumsView` with a new "All Series" scope, visual grouping, ViewMode Strategy Pattern refactor, and critical bug fixes for Ranked by Acclaim.
+Sprint 7.5 focuses on refining the `AlbumsView` with a new "All Series" scope, visual grouping, ViewMode Strategy Pattern refactor, critical bug fixes, app rebrand, and Data Migration page.
 
 ### ✨ New Features
+- **Rebrand**: "The Album Playlist Synthesizer" → "The Album Blender"
+  - Updated TopNav logo, HomeView hero, and MusicKitService references
+- **SaveAllView**: New dedicated page for Data Migration (`/save-all`)
+  - Removed migration banner from HomeView
+  - Added "Save All" link to TopNav desktop/mobile menus
+- **TopNav Hover Effect**: Enhanced with neon glow effect (`.nav-link-glow`)
+  - Added text-shadow with orange glow on hover
+  - Changed font-weight to `font-semibold`
 - **AlbumsView Scope Architecture**:
   - Implemented "All Series" vs "Single Series" logic.
   - Added Series Dropdown Filter (defaults to All).
@@ -19,9 +27,6 @@ Sprint 7.5 focuses on refining the `AlbumsView` with a new "All Series" scope, v
   - Refactored viewMode logic (compact/expanded) into Strategy classes
   - Created `CompactViewStrategy` and `ExpandedViewStrategy`
   - Improved maintainability and extensibility
-- **UI Architecture**:
-  - **Shared Action Delegation**: Centralized event listeners for Grid/List views.
-  - **Tech Theme Polish**: Standardized buttons (`tech-btn-primary`).
 
 ### 🐛 Fixed
 - **Issue #52**: Series 5.1 empty render - wrong container ID (`#albumsGrid` → `#albumsContainer`)
