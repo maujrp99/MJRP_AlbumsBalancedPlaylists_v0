@@ -8,6 +8,7 @@ import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
 import Sortable from 'sortablejs'
+import { getAllAlgorithms, getRecommendedAlgorithm, createAlgorithm } from '../algorithms/index.js'
 
 /**
  * PlaylistsView
@@ -21,6 +22,10 @@ export class PlaylistsView extends BaseView {
     this.draggedTrack = null
     this.exportListenersAttached = false // Prevent duplicate listener attachment
     this.isDragging = false // Prevent re-render during drag operations
+
+    // Algorithm selection
+    const recommended = getRecommendedAlgorithm()
+    this.selectedAlgorithmId = recommended ? recommended.id : 's-draft-balanced'
   }
 
   async render(params) {
@@ -56,13 +61,18 @@ export class PlaylistsView extends BaseView {
           </div>
         </header>
 
-        <!-- Export Section (Top) -->
-        <div id="exportSection" class="mb-6 fade-in" style="animation-delay: 0.05s">
+        <!-- Algorithm Selector (Always visible) -->
+        <div id="algorithmSection" class="mb-6 fade-in" style="animation-delay: 0.05s">
+          ${this.renderAlgorithmSelector(playlists.length > 0)}
+        </div>
+
+        <!-- Export Section (Only when playlists exist) -->
+        <div id="exportSection" class="mb-6 fade-in" style="animation-delay: 0.08s">
           ${playlists.length > 0 ? this.renderExportSection() : ''}
         </div>
 
         <div id="mainContent" class="fade-in" style="animation-delay: 0.1s">
-          ${playlists.length === 0 ? this.renderGenerateSection() : ''}
+          ${this.renderNoAlbumsWarning()}
 
           <div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="playlistsGrid">
             ${this.renderPlaylists(playlists)}
@@ -99,26 +109,33 @@ export class PlaylistsView extends BaseView {
       if (redoBtn) this.on(redoBtn, 'click', () => this.handleRedo())
     }
 
+    // Update Algorithm Section (always visible)
+    const algorithmSection = this.$('#algorithmSection')
+    if (algorithmSection) {
+      algorithmSection.innerHTML = this.renderAlgorithmSelector(playlists.length > 0)
+      // Attach generate button listener
+      const generateBtn = this.$('#generateBtn')
+      if (generateBtn) this.on(generateBtn, 'click', () => this.handleGenerate())
+    }
+
     // Update Main Content logic
     const mainContent = this.$('#mainContent')
     const exportSection = this.$('#exportSection')
 
     if (mainContent) {
-      if (playlists.length === 0) {
-        // Always re-render generate section to reflect potential changes in album count (e.g. after recovery)
-        mainContent.innerHTML = this.renderGenerateSection() + '<div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="playlistsGrid"></div>'
-
-        const generateBtn = this.$('#generateBtn')
-        if (generateBtn) this.on(generateBtn, 'click', () => this.handleGenerate())
-      } else {
-        // Skip grid re-render during drag operations to prevent Sortable invalidation
-        if (!this.isDragging) {
-          const generateSection = this.$('.generate-section')
-          if (generateSection) generateSection.remove()
-
-          const grid = this.$('#playlistsGrid')
-          if (grid) grid.innerHTML = this.renderPlaylists(playlists)
+      // Skip grid re-render during drag operations to prevent Sortable invalidation
+      if (!this.isDragging) {
+        // Update no albums warning
+        const warningSection = mainContent.querySelector('.no-albums-warning')
+        const albums = albumsStore.getAlbums()
+        if (albums.length === 0 && !warningSection) {
+          mainContent.insertAdjacentHTML('afterbegin', this.renderNoAlbumsWarning())
+        } else if (albums.length > 0 && warningSection) {
+          warningSection.remove()
         }
+
+        const grid = this.$('#playlistsGrid')
+        if (grid) grid.innerHTML = this.renderPlaylists(playlists)
       }
 
       if (exportSection) {
@@ -179,50 +196,82 @@ export class PlaylistsView extends BaseView {
     `
   }
 
-  renderGenerateSection() {
+  /**
+   * Render algorithm selector - always visible
+   * @param {boolean} hasPlaylists - Whether playlists already exist
+   */
+  renderAlgorithmSelector(hasPlaylists = false) {
     const albums = albumsStore.getAlbums()
     const albumCount = albums.length
+    const algorithms = getAllAlgorithms()
+
+    if (albumCount === 0) {
+      return '' // No albums, show warning in main content instead
+    }
+
+    const buttonText = hasPlaylists ? 'Regenerate with Selected Algorithm' : 'Generate Playlists'
+    const buttonIcon = hasPlaylists ? 'Refresh' : 'Rocket'
 
     return `
-      <div class="generate-section glass-panel max-w-2xl mx-auto text-center p-8">
-        <h2 class="text-2xl font-bold mb-4">Generate Balanced Playlists</h2>
-        <p class="text-muted mb-8">Create playlists from your ${albumCount} ranked album${albumCount !== 1 ? 's' : ''} using our balanced algorithm.</p>
+      <div class="algorithm-section glass-panel p-6">
+        <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+          ${getIcon('Settings', 'w-5 h-5')} Algorithm Selection
+        </h3>
+        <p class="text-muted text-sm mb-4">
+          ${hasPlaylists
+        ? `Choose a different algorithm to regenerate playlists from your ${albumCount} albums.`
+        : `Select an algorithm to generate playlists from your ${albumCount} ranked albums.`}
+        </p>
         
-        <div id="playlistError" class="alert alert-danger mb-6" style="display: none;"></div>
+        <div class="algorithm-options grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+          ${algorithms.map(algo => `
+            <label class="algorithm-option flex items-start gap-3 p-4 rounded-xl border transition-all cursor-pointer
+              ${this.selectedAlgorithmId === algo.id
+            ? 'border-accent-primary bg-accent-primary/10'
+            : 'border-white/10 bg-white/5 hover:border-white/20'}">
+              <input type="radio" name="algorithm" value="${algo.id}" 
+                ${this.selectedAlgorithmId === algo.id ? 'checked' : ''}
+                class="mt-1 accent-accent-primary" />
+              <div class="flex-1 text-left">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-semibold text-sm">${algo.name}</span>
+                  <span class="badge ${algo.isRecommended ? 'badge-success' : algo.badge === 'LEGACY' ? 'badge-warning' : 'badge-neutral'} text-xs">
+                    ${algo.badge}
+                  </span>
+                </div>
+                <p class="text-xs text-muted">${algo.description}</p>
+              </div>
+            </label>
+          `).join('')}
+        </div>
 
-        ${albumCount === 0 ? `
-          <div class="alert alert-warning bg-yellow-500/10 border border-yellow-500/20 text-yellow-200 p-4 rounded-xl">
-            <strong class="flex items-center justify-center gap-2 mb-2">${getIcon('AlertTriangle', 'w-5 h-5')} No albums loaded</strong>
-            <p>Please go back and load albums first.</p>
-          </div>
-        ` : `
-          <div class="generate-options grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-left">
-            <div class="option-group">
-              <label for="playlistCount" class="block text-sm font-semibold mb-2">Number of playlists</label>
-              <select id="playlistCount" class="form-control">
-                <option value="3">3 playlists</option>
-                <option value="4" selected>4 playlists</option>
-                <option value="5">5 playlists</option>
-              </select>
-            </div>
-
-            <div class="option-group">
-              <label for="minDuration" class="block text-sm font-semibold mb-2">Min duration (min)</label>
-              <input type="number" id="minDuration" class="form-control" value="30" min="20" max="90" />
-            </div>
-
-            <div class="option-group">
-              <label for="maxDuration" class="block text-sm font-semibold mb-2">Max duration (min)</label>
-              <input type="number" id="maxDuration" class="form-control" value="60" min="30" max="120" />
-            </div>
-          </div>
-
-          <button class="btn btn-primary btn-large w-full justify-center" id="generateBtn">
-            ${getIcon('Rocket', 'w-5 h-5')} Generate Playlists
-          </button>
-        `}
+        <button class="btn ${hasPlaylists ? 'btn-warning' : 'btn-primary'} btn-large w-full justify-center" id="generateBtn">
+          ${getIcon(buttonIcon, 'w-5 h-5')} ${buttonText}
+        </button>
       </div>
     `
+  }
+
+  /**
+   * Render no albums warning if needed
+   */
+  renderNoAlbumsWarning() {
+    const albums = albumsStore.getAlbums()
+    if (albums.length > 0) return ''
+
+    return `
+      <div class="no-albums-warning glass-panel max-w-2xl mx-auto text-center p-8 mb-6">
+        <div class="alert alert-warning bg-yellow-500/10 border border-yellow-500/20 text-yellow-200 p-4 rounded-xl">
+          <strong class="flex items-center justify-center gap-2 mb-2">${getIcon('AlertTriangle', 'w-5 h-5')} No albums loaded</strong>
+          <p>Please go back and load albums first before generating playlists.</p>
+        </div>
+      </div>
+    `
+  }
+
+  // DEPRECATED: Use renderAlgorithmSelector() instead
+  renderGenerateSection() {
+    return this.renderAlgorithmSelector(false)
   }
 
   renderPlaylists(playlists) {
@@ -491,23 +540,44 @@ export class PlaylistsView extends BaseView {
       }
     }
 
-    const targetCount = parseInt(this.$('#playlistCount')?.value || '4')
-    const minDuration = parseInt(this.$('#minDuration')?.value || '30')
-    const maxDuration = parseInt(this.$('#maxDuration')?.value || '60')
+    // Get selected algorithm from radio buttons
+    const selectedRadio = this.container.querySelector('input[name="algorithm"]:checked')
+    if (selectedRadio) {
+      this.selectedAlgorithmId = selectedRadio.value
+    }
 
-    console.log('[PlaylistsView] Generating playlists with options:', { targetCount, minDuration, maxDuration })
+    console.log('[PlaylistsView] Generating playlists with algorithm:', this.selectedAlgorithmId)
 
     this.isGenerating = true
     this.update()
 
     try {
-      const playlists = await apiClient.generatePlaylists(albums, {
-        targetCount,
-        minDuration,
-        maxDuration
-      })
+      // Create algorithm instance
+      const algorithm = createAlgorithm(this.selectedAlgorithmId)
 
-      console.log('[PlaylistsView] Received playlists:', playlists)
+      if (!algorithm) {
+        throw new Error(`Unknown algorithm: ${this.selectedAlgorithmId}`)
+      }
+
+      // Generate playlists using selected algorithm
+      console.log('[PlaylistsView] Using algorithm:', algorithm.constructor.getMetadata().name)
+      const result = algorithm.generate(albums)
+
+      // Transform result to playlist format expected by store
+      const playlists = result.playlists.map(p => ({
+        name: p.title,
+        tracks: p.tracks.map(t => ({
+          id: t.id,
+          title: t.title,
+          artist: t.artist,
+          album: t.album,
+          duration: t.duration,
+          rating: t.rating,
+          rank: t.rank || t.acclaimRank
+        }))
+      }))
+
+      console.log('[PlaylistsView] Generated playlists:', playlists.length)
 
       // FIX: Pass seriesId to store to link playlists to this specific series
       const activeSeries = albumSeriesStore.getActiveSeries()
@@ -521,7 +591,7 @@ export class PlaylistsView extends BaseView {
       console.log('[PlaylistsView] View updated')
     } catch (error) {
       console.error('[PlaylistsView] Generation failed:', error)
-      toast.error('Failed to generate playlists. Please try again.')
+      toast.error(`Failed to generate playlists: ${error.message}`)
       this.isGenerating = false
       this.update()
     }
