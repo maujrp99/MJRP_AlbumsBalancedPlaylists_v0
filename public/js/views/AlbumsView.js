@@ -653,11 +653,21 @@ export class AlbumsView extends BaseView {
 
       html += `
             <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5">
-                <div class="series-group-header flex items-center gap-4 mb-6 pb-2 border-b border-white/10">
-                    <h2 class="text-2xl font-bold text-accent-primary">${this.escapeHtml(group.series.name)}</h2>
-                    <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full border border-white/5">
-                        ${group.albums.length} albums
-                    </span>
+                <div class="series-group-header flex items-center justify-between mb-6 pb-2 border-b border-white/10">
+                    <div class="flex items-center gap-4">
+                        <h2 class="text-2xl font-bold text-accent-primary">${this.escapeHtml(group.series.name)}</h2>
+                        <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full border border-white/5">
+                            ${group.albums.length} albums
+                        </span>
+                    </div>
+                    <div class="series-actions flex gap-2">
+                        <button class="btn btn-secondary btn-sm btn-icon" data-action="edit-series" data-series-id="${group.series.id}" title="Edit Series">
+                            ${getIcon('Edit', 'w-4 h-4')}
+                        </button>
+                        <button class="btn btn-danger btn-sm btn-icon" data-action="delete-series" data-series-id="${group.series.id}" title="Delete Series">
+                            ${getIcon('Trash', 'w-4 h-4')}
+                        </button>
+                    </div>
                 </div>
                 ${wrapGrid(this.renderAlbumsGrid(group.albums))}
             </div>
@@ -715,11 +725,21 @@ export class AlbumsView extends BaseView {
       if (group.albums.length === 0) return
       html += `
             <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5">
-                <div class="series-group-header flex items-center gap-4 mb-6 pb-2 border-b border-white/10">
-                    <h2 class="text-2xl font-bold text-accent-primary">${this.escapeHtml(group.series.name)}</h2>
-                    <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full border border-white/5">
-                        ${group.albums.length} albums
-                    </span>
+                <div class="series-group-header flex items-center justify-between mb-6 pb-2 border-b border-white/10">
+                    <div class="flex items-center gap-4">
+                        <h2 class="text-2xl font-bold text-accent-primary">${this.escapeHtml(group.series.name)}</h2>
+                        <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full border border-white/5">
+                            ${group.albums.length} albums
+                        </span>
+                    </div>
+                    <div class="series-actions flex gap-2">
+                        <button class="btn btn-secondary btn-sm btn-icon" data-action="edit-series" data-series-id="${group.series.id}" title="Edit Series">
+                            ${getIcon('Edit', 'w-4 h-4')}
+                        </button>
+                        <button class="btn btn-danger btn-sm btn-icon" data-action="delete-series" data-series-id="${group.series.id}" title="Delete Series">
+                            ${getIcon('Trash', 'w-4 h-4')}
+                        </button>
+                    </div>
                 </div>
                 ${this.renderExpandedList(group.albums)}
             </div>
