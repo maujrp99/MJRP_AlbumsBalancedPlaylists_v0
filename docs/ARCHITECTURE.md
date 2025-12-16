@@ -1,6 +1,6 @@
 # Architecture Documentation
 
-**Last Updated**: 2025-12-15  
+**Last Updated**: 2025-12-16  
 **Workflow**: See `.agent/workflows/architecture_documentation.md`
 
 > **For project overview, features, and deployment info, see:**
@@ -19,6 +19,7 @@ graph TB
         Router[Router]
         Views[Views: Home, Albums, Playlists, Inventory, Ranking]
         Stores[(Stores: albums, albumSeries, playlists, inventory)]
+        Algorithms[Algorithm Registry]
     end
     
     subgraph Cache
@@ -42,6 +43,7 @@ graph TB
     TopNav --> Router
     Router --> Views
     Views --> Stores
+    Views --> Algorithms
     Stores --> LocalStorage
     Stores --> Firestore
     Stores --> MemoryCache
@@ -67,6 +69,7 @@ graph TB
 6. [Router Architecture](#router-architecture)
 7. [Firebase Integration Guide](#firebase-integration-guide)
 8. [ViewMode Strategy Pattern (2025-12-15)](#viewmode-strategy-pattern)
+9. [Algorithm Strategy Pattern (2025-12-16)](#algorithm-strategy-pattern)
 
 ### Architecture Decisions (ADRs)
 - [Caching Strategy](#caching-strategy-previous)
@@ -186,6 +189,83 @@ To add a new view mode (e.g., "table"):
 2. Implement `render()`, `getButtonLabel()`, etc.
 3. Add case to factory function
 4. No changes needed in `AlbumsView.js`
+
+---
+
+## Algorithm Strategy Pattern
+**Status**: 🟢 Active  
+**Date**: 2025-12-16  
+**Directory**: `public/js/algorithms/`  
+**Type**: Behavioral Design Pattern
+
+### Overview
+
+The playlist generation system uses the Strategy Pattern to support multiple algorithms. Users can select which algorithm to use in `PlaylistsView`.
+
+### Class Diagram
+
+```mermaid
+classDiagram
+    class BaseAlgorithm {
+        <<abstract>>
+        +generate(albums, opts)*
+        +registerRankingSource(source)
+        +annotateTrack(track, source)
+        +calculateTotalDuration(tracks)
+        +buildRankingSummary(playlists)
+    }
+    
+    class LegacyRoundRobinAlgorithm {
+        +generate() Round-robin distribution
+    }
+    
+    class SDraftOriginalAlgorithm {
+        +generate() Full Serpentine
+    }
+    
+    class MJRPBalancedCascadeAlgorithm {
+        +generate() Serpentine + Cascade
+        +trimOverDurationPlaylists()
+    }
+    
+    BaseAlgorithm <|-- LegacyRoundRobinAlgorithm
+    BaseAlgorithm <|-- SDraftOriginalAlgorithm
+    BaseAlgorithm <|-- MJRPBalancedCascadeAlgorithm
+```
+
+### Algorithms
+
+| ID | Name | Description |
+|----|------|-------------|
+| `legacy-roundrobin` | Legacy Round-Robin | Original simplified implementation |
+| `s-draft-original` | S-Draft Original | Full Serpentine distribution |
+| `mjrp-balanced-cascade` | MJRP Balanced Cascade | Serpentine + Cascade (RECOMMENDED) |
+
+### MJRP Balanced Cascade Features
+- **Greatest Hits**: #1 and #2 only (split if >60min)
+- **Serpentine First Pass**: Odd albums DC_last→DC1, even DC1→DC_last
+- **Cascade Global**: Excess tracks in ping-pong by ranking
+- **Duration Trim**: >48min → Orphan Tracks
+- **numDC Formula**: `minTracksInAnyAlbum - 2`
+
+### Usage
+
+```javascript
+import { createAlgorithm, getAllAlgorithms } from './algorithms/index.js'
+
+// Get all available algorithms
+const algorithms = getAllAlgorithms()
+
+// Create algorithm instance
+const algorithm = createAlgorithm('mjrp-balanced-cascade')
+
+// Generate playlists
+const { playlists, rankingSummary } = algorithm.generate(albums)
+```
+
+### Cross-Reference
+- Full specification: [ALGORITHM_MENU.md](technical/specs/ALGORITHM_MENU.md)
+- SDD artifacts: [algorithm-strategy/](technical/specs/algorithm-strategy/)
 
 ---
 

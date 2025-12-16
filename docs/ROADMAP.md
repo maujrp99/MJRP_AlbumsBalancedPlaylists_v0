@@ -1,8 +1,8 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-15
-**Current Version**: v2.7.1
-**Current Sprint**: Sprint 7.5.1: SeriesView Consolidation (DONE) - Pending merge
+**Last Updated**: 2025-12-16
+**Current Version**: v2.8.0
+**Current Sprint**: Sprint 8.5: Algorithm Improvements (In Progress)
 
 ---
 
@@ -107,18 +107,40 @@ To empower music lovers and casual curators to transcend algorithmic bubbles by 
 - ✅ **CSP Updates**: Content Security Policy fixes for Apple auth and Tailwind CDN.
 - ✅ **Mobile Haptics**: Added haptic feedback for drag-and-drop (Android only).
 
-**Technical Notes**:
-- Apple auth requires exact `authDomain` match in Return URLs.
-- Documented in DEBUG_LOG.md Issue #37.
+---
+
+### Sprint 7-7.5: Data Enrichment + View Revamp (Dec 2025) - DONE
+**Delivered**: 2025-12-15 (v2.7.0, v2.7.1)
+
+**Deliverables**:
+- ✅ **Rebrand**: "The Album Playlist Synthesizer" → "The Album Blender"
+- ✅ **Apple Music Integration**: MusicKit OAuth, export playlists
+- ✅ **ViewMode Strategy Pattern**: Compact/Expanded strategies
+- ✅ **AlbumsView Consolidation**: Series management integrated
+- ✅ **SaveAllView**: Data migration page
+
+---
+
+### Sprint 8: Algorithm Strategy Pattern (Dec 2025) - DONE ✅
+**Delivered**: 2025-12-16 (v2.8.0)
+
+**Deliverables**:
+- ✅ **Algorithm Selector UI**: Radio button selector in PlaylistsView
+- ✅ **3 Playlist Generation Algorithms**:
+  - Legacy Round-Robin (original)
+  - S-Draft Original (full Serpentine)
+  - **MJRP Balanced Cascade** (Serpentine + Cascade - RECOMMENDED)
+- ✅ **SDD Documentation**: ALGORITHM_MENU.md, spec.md, plan.md, tasks.md
+
+**MJRP Balanced Cascade Features**:
+- Greatest Hits: #1 and #2 only (split if >60min)
+- Serpentine first pass (odd/even albums)
+- Cascade global for excess tracks (ping-pong by ranking)
+- Duration trim: >48min → Orphan Tracks
 
 ---
 
 ## 🚧 Current Sprint
-
----
-
-
-### Sprint 7: Data Enrichment Validation (NOt done yet - 15/12) + Apple Music Integration  - DONE
 
 **Duration**: 1-2 weeks  
 **Priority**: High  

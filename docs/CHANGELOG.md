@@ -2,6 +2,47 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
+## v2.8.0 - Sprint 8: Algorithm Strategy Pattern (2025-12-16)
+
+**Status**: 🏷️ **TAGGED RELEASE**
+**Tag**: `v2.8.0`
+
+### Summary
+Sprint 8 introduces the Algorithm Strategy Pattern, allowing users to choose between different playlist generation algorithms. The new **MJRP Balanced Cascade** algorithm combines Serpentine distribution with Cascade rebalancing.
+
+### ✨ New Features
+- **Algorithm Selector UI**: Radio button selector in PlaylistsView to choose algorithm
+- **3 Playlist Generation Algorithms**:
+  - **Legacy Round-Robin**: Original simplified implementation
+  - **S-Draft Original**: Full Serpentine distribution
+  - **MJRP Balanced Cascade** (RECOMMENDED): Serpentine + Cascade hybrid
+
+### 🎯 MJRP Balanced Cascade Algorithm
+- **Greatest Hits**: #1 and #2 tracks only (split if >60min)
+- **Serpentine First Pass**: Odd albums DC_last→DC1, even DC1→DC_last
+- **Cascade Global**: Excess tracks distributed in ping-pong by ranking
+- **Duration Trim**: Playlists >48min moved to "Orphan Tracks"
+- **numDC Formula**: `minTracksInAnyAlbum - 2`
+
+### 📁 New Files
+```
+public/js/algorithms/
+├── BaseAlgorithm.js (~180 lines)
+├── LegacyRoundRobinAlgorithm.js (~400 lines)
+├── SDraftOriginalAlgorithm.js (~270 lines)
+├── MJRPBalancedCascadeAlgorithm.js (~300 lines)
+└── index.js (registry)
+
+docs/technical/specs/
+├── ALGORITHM_MENU.md (full specification)
+└── algorithm-strategy/ (SDD artifacts)
+```
+
+### 🔧 Changed
+- **PlaylistsView.js**: Algorithm selector always visible, button changes to "Regenerate"
+
+---
+
 ## v2.7.0 - Sprint 7.5: AlbumsView Polish & Refactor (2025-12-15)
 
 **Status**: 🏷️ **TAGGED RELEASE**

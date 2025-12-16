@@ -1,11 +1,13 @@
 # Album Data Flow Architecture
 
-**Updated**: 2025-12-15
+**Updated**: 2025-12-16
 
 ## Overview
 This document maps the **Data Flow Diagram (DFD)** and **Sequence Diagrams** for album data through the application's views and store.
 
 > **Note (v2.7.1)**: `AlbumSeriesListView` has been deprecated. Series management (Edit/Delete) is now consolidated into `AlbumsView`.
+
+> **Note (v2.8.0)**: Playlist generation now uses the **Algorithm Strategy Pattern**. See [ALGORITHM_MENU.md](specs/ALGORITHM_MENU.md).
 
 ---
 
@@ -23,6 +25,7 @@ graph LR
     AlbumSeriesStore[(AlbumSeriesStore)]
     AlbumsStore[(AlbumsStore)]
     PlaylistsStore[(PlaylistsStore)]
+    AlgorithmRegistry[Algorithm Registry]
     
     API[API Client]
     Firestore[(Firestore DB)]
@@ -40,6 +43,7 @@ graph LR
     
     PlaylistsView --> AlbumsStore
     PlaylistsView --> PlaylistsStore
+    PlaylistsView --> AlgorithmRegistry
     RankingView --> AlbumsStore
     SaveAllView --> Firestore
     
@@ -87,7 +91,7 @@ sequenceDiagram
 
 ---
 
-## Scenario 2: Navigate to Playlists
+## Scenario 2: Navigate to Playlists & Generate
 
 ```mermaid
 sequenceDiagram
@@ -96,6 +100,7 @@ sequenceDiagram
     participant Router
     participant PlaylistsView
     participant AlbumsStore
+    participant AlgorithmRegistry
     participant PlaylistsStore
     
     User->>AlbumsView: Click "Generate Playlists"
@@ -108,10 +113,13 @@ sequenceDiagram
     PlaylistsView->>AlbumsStore: getAlbums()
     AlbumsStore-->>PlaylistsView: [albums] ✅ Data available
     
-    PlaylistsView->>PlaylistsView: render generate section
+    PlaylistsView->>PlaylistsView: render algorithm selector
     
-    User->>PlaylistsView: Click "Generate"
-    PlaylistsView->>PlaylistsStore: generatePlaylists(albums)
+    User->>PlaylistsView: Select algorithm & Click "Generate"
+    PlaylistsView->>AlgorithmRegistry: createAlgorithm(selectedId)
+    AlgorithmRegistry-->>PlaylistsView: algorithm instance
+    PlaylistsView->>PlaylistsView: algorithm.generate(albums)
+    PlaylistsView->>PlaylistsStore: setPlaylists(playlists)
     PlaylistsStore-->>PlaylistsView: [playlists]
     PlaylistsView->>PlaylistsView: render playlists
 ```

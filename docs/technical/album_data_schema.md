@@ -1,8 +1,8 @@
 # Album Data Schema & Transformations
 
-## 🔴 CRITICAL FINDING
-**track.artist and track.album fields are NOT being populated in normalizeAlbumData!**
-This is why they don't appear in PlaylistsView.
+## 🟢 STATUS (v2.8.0)
+**track.artist and track.album fields** are now properly populated by the Algorithm Strategy Pattern.  
+The `MJRPBalancedCascadeAlgorithm` uses `markTrackOrigin()` from `BaseAlgorithm` to attach origin album info to each track.
 
 ---
 
