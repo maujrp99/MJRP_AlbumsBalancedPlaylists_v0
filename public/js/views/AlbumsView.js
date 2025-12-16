@@ -43,6 +43,11 @@ export class AlbumsView extends BaseView {
     // Sprint 7.5: Scope State
     this.currentScope = 'SINGLE' // 'SINGLE' | 'ALL'
     this.targetSeriesId = null
+
+    // Sprint 7.5: Series Edit/Delete State (consolidated from AlbumSeriesListView)
+    this.editingSeriesId = null
+    this.editingAlbumQueries = []
+    this.deletingSeriesId = null
   }
 
   destroy() {
@@ -238,6 +243,64 @@ export class AlbumsView extends BaseView {
     <footer class="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
       <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
     </footer>
+
+    <!-- Edit Series Modal (consolidated from AlbumSeriesListView) -->
+    <div id="editSeriesModal" class="modal-overlay hidden">
+      <div class="modal-content glass-panel p-6 max-w-2xl w-full mx-4 rounded-xl">
+        <div class="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
+          <h3 class="text-xl font-bold flex items-center gap-2">
+            ${getIcon('Edit', 'w-5 h-5 text-accent-primary')} Edit Series
+          </h3>
+          <button type="button" class="btn btn-ghost btn-circle" id="closeEditSeriesBtn">
+            ${getIcon('X', 'w-5 h-5')}
+          </button>
+        </div>
+        
+        <form id="editSeriesForm">
+          <div class="form-group mb-6">
+            <label class="block text-sm font-medium mb-2">Series Name</label>
+            <input type="text" id="editSeriesNameInput" class="form-control w-full" required minlength="3" placeholder="Enter series name...">
+          </div>
+          
+          <div class="form-group mb-6">
+            <div class="flex items-center justify-between mb-3">
+              <label class="text-sm font-medium">Albums in Series</label>
+              <span id="editSeriesAlbumCount" class="badge badge-neutral text-xs">0 albums</span>
+            </div>
+            
+            <div id="editSeriesAlbumsList" class="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar mb-4 bg-black/20 rounded-lg p-3">
+              <!-- Albums rendered dynamically -->
+            </div>
+            
+            <div id="editSeriesAutocompleteWrapper" class="mb-4 relative z-50"></div>
+            <p class="text-xs text-muted mt-1">Format: Artist - Album Title (e.g., Pink Floyd - The Wall)</p>
+          </div>
+          
+          <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
+            <button type="button" class="btn btn-secondary" id="cancelEditSeriesBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary">${getIcon('Check', 'w-4 h-4')} Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Delete Series Modal -->
+    <div id="deleteSeriesModal" class="modal-overlay hidden">
+      <div class="modal-content glass-panel p-6 max-w-md w-full mx-4 border-l-4 border-red-500 rounded-xl">
+        <h3 class="text-xl font-bold mb-2 text-red-400">Delete Series?</h3>
+        <p class="mb-4 text-muted">
+          Are you sure you want to delete <strong id="deleteSeriesName" class="text-white"></strong>?
+        </p>
+        <div class="alert alert-info mb-6 text-sm">
+          ${getIcon('Info', 'w-4 h-4 inline mr-1')}
+          <strong>Safe Delete:</strong> Albums associated with this series will NOT be deleted. They will remain in your inventory.
+        </div>
+        <div class="flex justify-end gap-3">
+          <button type="button" class="btn btn-secondary" id="cancelDeleteSeriesBtn">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteSeriesBtn">Delete Series</button>
+        </div>
+      </div>
+    </div>
   </div>
   `
   }
@@ -792,6 +855,22 @@ export class AlbumsView extends BaseView {
 
       const action = target.dataset.action
       const albumId = target.dataset.albumId
+      const seriesId = target.dataset.seriesId
+
+      // Handle series actions first
+      if (seriesId) {
+        e.stopPropagation()
+        switch (action) {
+          case 'edit-series':
+            this.openEditSeriesModal(seriesId)
+            return
+          case 'delete-series':
+            this.openDeleteSeriesModal(seriesId)
+            return
+        }
+      }
+
+      // Album actions require albumId
       if (!albumId) return
 
       // Prevent default propagation if it's a button
@@ -1182,6 +1261,9 @@ export class AlbumsView extends BaseView {
       })
     }
 
+    // Sprint 7.5: Edit/Delete Series Modal Listeners (consolidated from AlbumSeriesListView)
+    this.setupSeriesModals()
+
     // Trigger Initial Load
     // We defer this slightly to ensure mount is complete
     // Use URL params or defaults
@@ -1205,6 +1287,177 @@ export class AlbumsView extends BaseView {
 
     // Initial Header Sync (after scope is set)
     this.updateHeaderState()
+  }
+
+  // Sprint 7.5: Setup Series Modal Event Listeners (consolidated from AlbumSeriesListView)
+  setupSeriesModals() {
+    const editModal = this.$('#editSeriesModal')
+    const deleteModal = this.$('#deleteSeriesModal')
+
+    // Edit Modal Form Submit
+    const editForm = this.$('#editSeriesForm')
+    if (editForm) {
+      this.on(editForm, 'submit', async (e) => {
+        e.preventDefault()
+        const name = this.$('#editSeriesNameInput').value.trim()
+        const saveBtn = editForm.querySelector('button[type="submit"]')
+
+        if (!name || name.length < 3) {
+          toast.warning('Series name must be at least 3 characters')
+          return
+        }
+
+        if (this.editingAlbumQueries.length < 2) {
+          toast.warning('Series must have at least 2 albums')
+          return
+        }
+
+        if (this.editingSeriesId) {
+          const originalBtnContent = saveBtn.innerHTML
+
+          try {
+            saveBtn.disabled = true
+            saveBtn.innerHTML = `${getIcon('Loader', 'w-4 h-4 animate-spin')} Saving...`
+
+            await albumSeriesStore.updateSeries(
+              this.editingSeriesId,
+              { name, albumQueries: this.editingAlbumQueries }
+            )
+
+            toast.success('Series updated successfully!')
+            this.closeSeriesModal(editModal)
+
+            // Reload current scope to reflect changes
+            this.loadScope(this.currentScope, this.targetSeriesId)
+          } catch (err) {
+            console.error('Failed to update series:', err)
+            toast.error('Failed to update series: ' + err.message)
+          } finally {
+            if (saveBtn) {
+              saveBtn.disabled = false
+              saveBtn.innerHTML = originalBtnContent
+            }
+          }
+        }
+      })
+    }
+
+    // Edit Modal Close Buttons
+    const closeEditBtn = this.$('#closeEditSeriesBtn')
+    const cancelEditBtn = this.$('#cancelEditSeriesBtn')
+    if (closeEditBtn) this.on(closeEditBtn, 'click', () => this.closeSeriesModal(editModal))
+    if (cancelEditBtn) this.on(cancelEditBtn, 'click', () => this.closeSeriesModal(editModal))
+
+    // Edit Modal - Remove album from list delegation
+    const albumsList = this.$('#editSeriesAlbumsList')
+    if (albumsList) {
+      this.on(albumsList, 'click', (e) => {
+        const btn = e.target.closest('[data-action="remove-album-from-edit"]')
+        if (btn) {
+          const index = parseInt(btn.dataset.index)
+          this.editingAlbumQueries.splice(index, 1)
+          this.renderSeriesAlbumsList()
+        }
+      })
+    }
+
+    // Delete Modal Confirm
+    const confirmDeleteBtn = this.$('#confirmDeleteSeriesBtn')
+    if (confirmDeleteBtn) {
+      this.on(confirmDeleteBtn, 'click', async () => {
+        if (this.deletingSeriesId) {
+          try {
+            await albumSeriesStore.deleteSeries(this.deletingSeriesId)
+            toast.success('Series deleted')
+            this.closeSeriesModal(deleteModal)
+
+            // If we were viewing this series, switch to All
+            if (this.targetSeriesId === this.deletingSeriesId) {
+              this.loadScope('ALL')
+            } else {
+              this.loadScope(this.currentScope, this.targetSeriesId)
+            }
+          } catch (err) {
+            toast.error('Failed to delete series: ' + err.message)
+          }
+        }
+      })
+    }
+
+    // Delete Modal Close Buttons
+    const cancelDeleteBtn = this.$('#cancelDeleteSeriesBtn')
+    if (cancelDeleteBtn) this.on(cancelDeleteBtn, 'click', () => this.closeSeriesModal(deleteModal))
+  }
+
+  // Open Edit Series Modal
+  openEditSeriesModal(seriesId) {
+    const series = albumSeriesStore.getSeries().find(s => s.id === seriesId)
+    if (!series) {
+      toast.error('Series not found')
+      return
+    }
+
+    this.editingSeriesId = seriesId
+    this.editingAlbumQueries = [...(series.albumQueries || [])]
+
+    const modal = this.$('#editSeriesModal')
+    const nameInput = this.$('#editSeriesNameInput')
+
+    if (nameInput) nameInput.value = series.name
+    this.renderSeriesAlbumsList()
+
+    if (modal) modal.classList.remove('hidden')
+  }
+
+  // Open Delete Series Modal
+  openDeleteSeriesModal(seriesId) {
+    const series = albumSeriesStore.getSeries().find(s => s.id === seriesId)
+    if (!series) {
+      toast.error('Series not found')
+      return
+    }
+
+    this.deletingSeriesId = seriesId
+
+    const modal = this.$('#deleteSeriesModal')
+    const nameEl = this.$('#deleteSeriesName')
+
+    if (nameEl) nameEl.textContent = series.name
+    if (modal) modal.classList.remove('hidden')
+  }
+
+  // Render Albums List inside Edit Modal
+  renderSeriesAlbumsList() {
+    const albumsList = this.$('#editSeriesAlbumsList')
+    const countEl = this.$('#editSeriesAlbumCount')
+
+    if (countEl) countEl.textContent = `${this.editingAlbumQueries.length} albums`
+
+    if (albumsList) {
+      if (this.editingAlbumQueries.length === 0) {
+        albumsList.innerHTML = `<p class="text-gray-500 text-sm italic">No albums yet. Use search below to add.</p>`
+        return
+      }
+
+      albumsList.innerHTML = this.editingAlbumQueries.map((query, i) => `
+        <div class="album-item flex items-center justify-between p-2 bg-white/5 rounded-lg">
+          <span class="text-sm truncate flex-1 mr-2">${this.escapeHtml(query)}</span>
+          <button type="button" class="btn btn-ghost btn-sm text-red-400 hover:text-red-300" data-action="remove-album-from-edit" data-index="${i}">
+            ${getIcon('X', 'w-4 h-4')}
+          </button>
+        </div>
+      `).join('')
+    }
+  }
+
+  // Close any series modal
+  closeSeriesModal(modal) {
+    if (modal) {
+      modal.classList.add('hidden')
+    }
+    this.editingSeriesId = null
+    this.editingAlbumQueries = []
+    this.deletingSeriesId = null
   }
 
   // Sprint 7.5: Load Scope (Architecture)
