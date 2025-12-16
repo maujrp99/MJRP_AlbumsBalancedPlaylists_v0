@@ -79,23 +79,24 @@ router.register('/albums', () => new AlbumsView())
 router.register('/playlists', () => new PlaylistsView())
 
 // New routes for Phase 1 TopNav fix
-router.register('/album-series', async () => {
-    const { AlbumSeriesListView } = await import('./views/AlbumSeriesListView.js')
-    return new AlbumSeriesListView(db)
+// Sprint 7.5: /album-series now redirects to /albums (consolidated view)
+router.register('/album-series', () => {
+    router.navigate('/albums')
+    return null
 })
 router.register('/playlist-series', async () => {
     const { SavedPlaylistsView } = await import('./views/SavedPlaylistsView.js')
     return new SavedPlaylistsView()
 })
 
-// Legacy routes (kept for backward compatibility)
+// Legacy routes (redirect to consolidated /albums)
 router.register('/saved-playlists', async () => {
     const { SavedPlaylistsView } = await import('./views/SavedPlaylistsView.js')
     return new SavedPlaylistsView()
 })
-router.register('/series', async () => {
-    const { AlbumSeriesListView } = await import('./views/AlbumSeriesListView.js')
-    return new AlbumSeriesListView(db)
+router.register('/series', () => {
+    router.navigate('/albums')
+    return null
 })
 
 // Save All (Data Migration) route

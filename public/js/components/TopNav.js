@@ -72,8 +72,7 @@ export class TopNav {
         <!-- Desktop Menu -->
         <div class="hidden md:flex items-center gap-6">
           ${this.renderNavLink('/home', 'Home', currentPath)}
-          ${this.renderNavLink(albumsSeriesLink, 'Albums', currentPath)}
-          ${this.renderNavLink('/album-series', 'Series', currentPath)}
+          ${this.renderNavLink(albumsSeriesLink, 'Album Series', currentPath)}
           ${this.renderNavLink('/playlist-series', 'Playlists', currentPath)}
           ${this.renderNavLink('/inventory', 'Inventory', currentPath)}
           ${this.renderNavLink('/save-all', 'Save All', currentPath)}
@@ -107,8 +106,7 @@ export class TopNav {
           <!-- Navigation Links -->
           <nav class="flex flex-col p-4 gap-1 flex-1 bg-brand-dark">
             ${this.renderMobileNavLink('/home', 'Home', 'Rocket', currentPath)}
-            ${this.renderMobileNavLink(albumsSeriesLink, 'Albums', 'Music', currentPath)}
-            ${this.renderMobileNavLink('/album-series', 'Series', 'Layers', currentPath)}
+            ${this.renderMobileNavLink(albumsSeriesLink, 'Album Series', 'Music', currentPath)}
             ${this.renderMobileNavLink('/playlist-series', 'Playlists', 'List', currentPath)}
             ${this.renderMobileNavLink('/inventory', 'Inventory', 'Archive', currentPath)}
             ${this.renderMobileNavLink('/save-all', 'Save All', 'Database', currentPath)}
