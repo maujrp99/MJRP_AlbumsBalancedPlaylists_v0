@@ -10,6 +10,7 @@ import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
 import { showViewAlbumModal } from '../components/ViewAlbumModal.js'
 import { createViewModeStrategy } from './strategies/ViewModeStrategy.js'
+import { Autocomplete } from '../components/Autocomplete.js'
 
 /**
  * AlbumsView
@@ -1405,6 +1406,7 @@ export class AlbumsView extends BaseView {
 
     if (nameInput) nameInput.value = series.name
     this.renderSeriesAlbumsList()
+    this.initSeriesAutocomplete()
 
     if (modal) modal.classList.remove('hidden')
   }
@@ -1458,6 +1460,44 @@ export class AlbumsView extends BaseView {
     this.editingSeriesId = null
     this.editingAlbumQueries = []
     this.deletingSeriesId = null
+  }
+
+  // Initialize Autocomplete for adding albums in Edit Series Modal
+  initSeriesAutocomplete() {
+    const wrapper = this.$('#editSeriesAutocompleteWrapper')
+    if (!wrapper) return
+
+    // Clear existing autocomplete if re-opening modal
+    wrapper.innerHTML = ''
+
+    // Load album data for autocomplete
+    optimizedAlbumLoader.load().catch(console.error)
+
+    const autocomplete = new Autocomplete({
+      placeholder: 'Search to add album...',
+      loader: optimizedAlbumLoader,
+      onSelect: (item) => {
+        const entry = `${item.artist} - ${item.album}`
+
+        if (this.editingAlbumQueries.includes(entry)) {
+          toast.warning('This album is already in the list')
+          return
+        }
+
+        this.editingAlbumQueries.push(entry)
+        this.renderSeriesAlbumsList()
+        toast.success(`Added: ${item.album}`)
+
+        // Clear input
+        const input = wrapper.querySelector('input')
+        if (input) {
+          input.value = ''
+          input.focus()
+        }
+      }
+    })
+
+    wrapper.appendChild(autocomplete.render())
   }
 
   // Sprint 7.5: Load Scope (Architecture)
