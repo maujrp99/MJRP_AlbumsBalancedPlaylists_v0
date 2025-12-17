@@ -60,18 +60,18 @@ export class SavedPlaylistsView extends BaseView {
         </div>
       </div>
       
-      <!-- Delete Confirmation Modal -->
+      <!-- Delete All Playlists Confirmation Modal -->
       <div id="deleteModal" class="modal-overlay hidden z-50 fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300">
           <div class="modal-content glass-panel p-6 max-w-md w-full mx-4 transform scale-95 transition-transform duration-300">
               <div class="text-center">
                   <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
                       ${getIcon('AlertTriangle', 'w-8 h-8 text-red-500')}
                   </div>
-                  <h3 class="text-xl font-bold mb-2">Delete Series?</h3>
-                  <p id="deleteSeriesName" class="text-muted mb-4">This will permanently delete this series and all its playlists.</p>
+                  <h3 class="text-xl font-bold mb-2">Delete All Playlists?</h3>
+                  <p id="deleteSeriesName" class="text-muted mb-4">This will permanently delete all playlists in this series. The series and its albums will remain.</p>
                   <div class="flex gap-3 justify-center">
                       <button class="btn btn-secondary" data-action="cancel-delete">Cancel</button>
-                      <button class="btn btn-danger bg-red-600 hover:bg-red-700" data-action="confirm-delete">Delete</button>
+                      <button class="btn btn-danger bg-red-600 hover:bg-red-700" data-action="confirm-delete">Delete All Playlists</button>
                   </div>
               </div>
           </div>
@@ -127,7 +127,7 @@ export class SavedPlaylistsView extends BaseView {
                     <button class="btn btn-secondary btn-sm group-hover:bg-white/10 transition-colors" data-action="open-series" data-id="${group.series.id}">
                         Open Series Manager ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1')}
                     </button>
-                    <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-colors" data-action="delete-series" data-id="${group.series.id}" data-name="${this.escapeHtml(group.series.name)}">
+                    <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-colors" data-action="delete-all-playlists" data-id="${group.series.id}" data-name="${this.escapeHtml(group.series.name)}" title="Delete all playlists in this series">
                         ${getIcon('Trash', 'w-4 h-4')}
                     </button>
                 </div>
@@ -291,8 +291,8 @@ export class SavedPlaylistsView extends BaseView {
                 router.navigate('/album-series')
             }
 
-            // Delete Series Flow
-            if (action === 'delete-series') {
+            // Delete All Playlists Flow (keeps series, deletes only playlists)
+            if (action === 'delete-all-playlists') {
                 const seriesId = btn.dataset.id
                 const seriesName = btn.dataset.name
                 this.pendingDeleteId = seriesId
@@ -305,7 +305,7 @@ export class SavedPlaylistsView extends BaseView {
 
             if (action === 'confirm-delete') {
                 if (this.pendingDeleteId) {
-                    this.handleDeleteSeries(this.pendingDeleteId)
+                    this.handleDeleteAllPlaylists(this.pendingDeleteId)
                 }
             }
 
@@ -369,7 +369,7 @@ export class SavedPlaylistsView extends BaseView {
         }
     }
 
-    async handleDeleteSeries(seriesId) {
+    async handleDeleteAllPlaylists(seriesId) {
         const confirmBtn = document.querySelector('[data-action="confirm-delete"]')
         if (confirmBtn) {
             confirmBtn.disabled = true
@@ -380,7 +380,7 @@ export class SavedPlaylistsView extends BaseView {
             const { db, cacheManager, auth } = await import('../app.js')
             const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous-user'
 
-            // 1. Delete all playlists in the series
+            // Delete all playlists in the series (but NOT the series itself)
             const playlistRepo = new PlaylistRepository(db, cacheManager, userId, seriesId)
             const playlists = await playlistRepo.findAll()
 
@@ -388,24 +388,26 @@ export class SavedPlaylistsView extends BaseView {
                 await playlistRepo.delete(playlist.id)
             }
 
-            // 2. Delete the series itself
-            const seriesRepo = new SeriesRepository(db, cacheManager, userId)
-            await seriesRepo.delete(seriesId)
-
-            // 3. Update local data and re-render
-            this.data = this.data.filter(r => r.series.id !== seriesId)
+            // Update local data - clear playlists from the group but keep series
+            const group = this.data.find(r => r.series.id === seriesId)
+            if (group) {
+                group.playlists = []
+                // Remove group from view since it has no playlists
+                this.data = this.data.filter(r => r.playlists.length > 0)
+            }
             this.update()
 
             this.closeDeleteModal()
+            toast.success('All playlists deleted. Series and albums remain.')
 
-            console.log('[SavedPlaylistsView] Series deleted:', seriesId)
+            console.log('[SavedPlaylistsView] All playlists deleted for series:', seriesId)
         } catch (err) {
-            console.error('[SavedPlaylistsView] Delete failed:', err)
-            toast.error('Failed to delete series: ' + err.message)
+            console.error('[SavedPlaylistsView] Delete playlists failed:', err)
+            toast.error('Failed to delete playlists: ' + err.message)
 
             if (confirmBtn) {
                 confirmBtn.disabled = false
-                confirmBtn.textContent = 'Delete'
+                confirmBtn.textContent = 'Delete All Playlists'
             }
         }
     }
