@@ -164,6 +164,9 @@ export class SavedPlaylistsView extends BaseView {
                         <button class="btn btn-sm w-full border-2 border-white/30 bg-white/10 hover:bg-white/20 hover:border-white/50 z-20 flex items-center justify-center gap-2 font-medium transition-all" data-action="view-playlist" data-series="${group.series.id}" data-id="${pl.id}">
                              ${getIcon('Eye', 'w-4 h-4')} View Tracks
                         </button>
+                        <button class="btn btn-sm btn-ghost w-full text-red-400 hover:bg-red-500/20 hover:text-red-300 z-20 flex items-center justify-center gap-2 font-medium transition-all mt-2" data-action="delete-playlist" data-series="${group.series.id}" data-id="${pl.id}" data-name="${this.escapeHtml(pl.name)}" data-count="${pl.tracks?.length || 0}">
+                             ${getIcon('Trash', 'w-4 h-4')} Delete Playlist
+                        </button>
                     </div>
                 `).join('')}
             </div>
@@ -305,6 +308,15 @@ export class SavedPlaylistsView extends BaseView {
                     this.handleDeleteSeries(this.pendingDeleteId)
                 }
             }
+
+            // Delete Individual Playlist Flow
+            if (action === 'delete-playlist') {
+                const seriesId = btn.dataset.series
+                const playlistId = btn.dataset.id
+                const playlistName = btn.dataset.name
+                const trackCount = btn.dataset.count
+                this.handleDeletePlaylist(seriesId, playlistId, playlistName, trackCount)
+            }
         })
     }
 
@@ -396,6 +408,35 @@ export class SavedPlaylistsView extends BaseView {
                 confirmBtn.textContent = 'Delete'
             }
         }
+    }
+
+    async handleDeletePlaylist(seriesId, playlistId, playlistName, trackCount) {
+        // Use showDeletePlaylistModal from Modals.js
+        const { showDeletePlaylistModal } = await import('../components/Modals.js')
+
+        showDeletePlaylistModal(playlistId, playlistName, trackCount, async (id) => {
+            const { db, cacheManager, auth } = await import('../app.js')
+            const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous-user'
+
+            // Delete only this playlist
+            const playlistRepo = new PlaylistRepository(db, cacheManager, userId, seriesId)
+            await playlistRepo.delete(id)
+
+            // Update local data
+            const group = this.data.find(r => r.series.id === seriesId)
+            if (group) {
+                group.playlists = group.playlists.filter(p => p.id !== id)
+
+                // If no playlists left in series, remove the group
+                if (group.playlists.length === 0) {
+                    this.data = this.data.filter(r => r.series.id !== seriesId)
+                }
+            }
+
+            this.update()
+            toast.success(`Playlist "${playlistName}" deleted`)
+            console.log('[SavedPlaylistsView] Playlist deleted:', id)
+        })
     }
 
     openPlaylistModal(seriesId, playlistId) {

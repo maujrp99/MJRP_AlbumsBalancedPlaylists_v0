@@ -108,6 +108,20 @@ export class PlaylistsStore {
     }
 
     /**
+     * Set batch name on all playlists (used when saving to history)
+     * @param {string} batchName - Name for this playlist batch
+     */
+    setBatchName(batchName) {
+        const timestamp = new Date().toISOString()
+        this.playlists.forEach(playlist => {
+            playlist.batchName = batchName
+            playlist.savedAt = timestamp
+        })
+        this.batchName = batchName
+        this.notify()
+    }
+
+    /**
      * Calculate total duration of playlist
      * @param {number} playlistIndex - Playlist index
      * @returns {number} Total duration in minutes

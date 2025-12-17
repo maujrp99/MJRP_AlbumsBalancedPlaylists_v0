@@ -332,6 +332,98 @@ export function showDeletePlaylistModal(playlistId, playlistTitle, trackCount, o
 }
 
 /**
+ * Save Playlists Modal - Allows naming the playlist batch before saving
+ * @param {string} defaultName - Default name suggestion (series name)
+ * @param {number} playlistCount - Number of playlists being saved
+ * @param {Function} onSave - Callback with the chosen name
+ */
+export function showSavePlaylistsModal(defaultName, playlistCount, onSave) {
+  const modal = document.createElement('div')
+  modal.className = 'modal-overlay'
+  modal.innerHTML = `
+    <div class="modal-container glass-panel max-w-md">
+      <div class="modal-header p-6 border-b border-surface-light">
+        <h2 class="text-2xl font-bold flex items-center gap-3">
+          <svg class="w-6 h-6 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+          </svg>
+          Save to History
+        </h2>
+      </div>
+
+      <div class="modal-content p-6 space-y-4">
+        <p class="text-gray-300">Name this playlist batch (${playlistCount} playlists):</p>
+        
+        <input 
+          type="text" 
+          id="playlistBatchName"
+          class="form-control w-full"
+          value="${escapeHtml(defaultName)}"
+          placeholder="e.g., Trip Hop - Session 1"
+        />
+        
+        <p class="text-xs text-gray-400">This name will help you identify this set when viewing history.</p>
+      </div>
+
+      <div class="modal-footer p-6 border-t border-surface-light flex gap-3 justify-end">
+        <button class="btn btn-secondary" data-action="cancel">Cancel</button>
+        <button class="btn btn-success" data-action="save">Save Playlists</button>
+      </div>
+    </div>
+  `
+
+  const input = modal.querySelector('#playlistBatchName')
+  const cancelBtn = modal.querySelector('[data-action="cancel"]')
+  const saveBtn = modal.querySelector('[data-action="save"]')
+
+  const close = () => modal.remove()
+
+  cancelBtn.addEventListener('click', close)
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      saveBtn.click()
+    }
+  })
+
+  saveBtn.addEventListener('click', async () => {
+    const batchName = input.value.trim() || defaultName
+    saveBtn.disabled = true
+    saveBtn.textContent = 'Saving...'
+
+    try {
+      await onSave(batchName)
+      close()
+    } catch (error) {
+      saveBtn.disabled = false
+      saveBtn.textContent = 'Save Playlists'
+      toast.error(`Failed to save: ${error.message}`)
+    }
+  })
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close()
+  })
+
+  document.addEventListener('keydown', function handleEscape(e) {
+    if (e.key === 'Escape') {
+      close()
+      document.removeEventListener('keydown', handleEscape)
+    }
+  })
+
+  document.body.appendChild(modal)
+
+  // Focus and select input
+  setTimeout(() => {
+    input.focus()
+    input.select()
+  }, 100)
+
+  return modal
+}
+
+/**
  * Helper to escape HTML
  */
 function escapeHtml(str) {
@@ -339,3 +431,4 @@ function escapeHtml(str) {
   div.textContent = str
   return div.innerHTML
 }
+
