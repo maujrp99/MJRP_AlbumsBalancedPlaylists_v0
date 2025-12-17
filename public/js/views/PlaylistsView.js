@@ -368,84 +368,103 @@ export class PlaylistsView extends BaseView {
   }
 
   async handleSaveToHistory() {
-    const { showSavePlaylistsModal } = await import('../components/Modals.js')
-
     const activeSeries = albumSeriesStore.getActiveSeries()
     const playlists = playlistsStore.getPlaylists()
-    const defaultName = activeSeries?.name || 'My Playlists'
-    const playlistCount = playlists.length
 
-    // Show naming modal first
-    showSavePlaylistsModal(defaultName, playlistCount, async (batchName) => {
-      const btn = this.$('#saveToHistoryBtn')
-      if (btn) {
-        btn.disabled = true
-        btn.textContent = 'Saving...'
-      }
+    // Check if we're editing an existing batch (playlists already have batchName and savedAt)
+    const existingBatchName = playlists[0]?.batchName
+    const isEditingExistingBatch = existingBatchName && playlists[0]?.savedAt
 
-      try {
-        const { db, cacheManager, auth } = await import('../app.js')
-        const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous-user'
+    if (isEditingExistingBatch) {
+      // Direct save without naming modal - overwrite existing
+      await this._savePlaylistsToFirestore(existingBatchName, true)
+    } else {
+      // New batch - show naming modal
+      const { showSavePlaylistsModal } = await import('../components/Modals.js')
+      const defaultName = activeSeries?.name || 'My Playlists'
+      const playlistCount = playlists.length
 
-        // 1. Ensure Parent Series Exists (Upsert)
-        if (activeSeries) {
-          const { SeriesRepository } = await import('../repositories/SeriesRepository.js')
-          const seriesRepo = new SeriesRepository(db, cacheManager, userId)
+      showSavePlaylistsModal(defaultName, playlistCount, async (batchName) => {
+        await this._savePlaylistsToFirestore(batchName, false)
+      })
+    }
+  }
 
-          // Sanitize series object (minimal payload to avoid rule violations)
-          const seriesData = {
-            id: activeSeries.id,
-            name: activeSeries.name || 'Untitled Series',
-            sourceType: activeSeries.sourceType || 'unknown',
-            albumQueries: Array.isArray(activeSeries.albumQueries) ? activeSeries.albumQueries : [],
-            updatedAt: new Date().toISOString()
-          }
+  async _savePlaylistsToFirestore(batchName, isOverwrite) {
+    const btn = this.$('#saveToHistoryBtn')
+    if (btn) {
+      btn.disabled = true
+      btn.textContent = isOverwrite ? 'Saving changes...' : 'Saving...'
+    }
 
-          console.log('[PlaylistsView] 1. Saving Series Parent:', activeSeries.id, seriesData)
-          try {
-            await seriesRepo.save(activeSeries.id, seriesData)
-            console.log('[PlaylistsView] ✅ Series Parent Saved')
-          } catch (err) {
-            console.error('[PlaylistsView] ❌ Failed to save Series Parent:', err)
-            throw err
-          }
+    try {
+      const { db, cacheManager, auth } = await import('../app.js')
+      const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous-user'
+      const activeSeries = albumSeriesStore.getActiveSeries()
+
+      // 1. Ensure Parent Series Exists (Upsert)
+      if (activeSeries) {
+        const { SeriesRepository } = await import('../repositories/SeriesRepository.js')
+        const seriesRepo = new SeriesRepository(db, cacheManager, userId)
+
+        const seriesData = {
+          id: activeSeries.id,
+          name: activeSeries.name || 'Untitled Series',
+          sourceType: activeSeries.sourceType || 'unknown',
+          albumQueries: Array.isArray(activeSeries.albumQueries) ? activeSeries.albumQueries : [],
+          updatedAt: new Date().toISOString()
         }
 
-        // 2. Set batch name on playlists before saving
+        console.log('[PlaylistsView] 1. Saving Series Parent:', activeSeries.id, seriesData)
+        try {
+          await seriesRepo.save(activeSeries.id, seriesData)
+          console.log('[PlaylistsView] ✅ Series Parent Saved')
+        } catch (err) {
+          console.error('[PlaylistsView] ❌ Failed to save Series Parent:', err)
+          throw err
+        }
+      }
+
+      // 2. Set batch name on playlists (or update timestamp if editing)
+      if (!isOverwrite) {
         playlistsStore.setBatchName(batchName)
-
-        // 3. Save Playlists (Subcollection)
-        console.log('[PlaylistsView] 2. Saving Playlists with batch name:', batchName)
-        await playlistsStore.saveToFirestore(db, cacheManager, userId)
-        console.log('[PlaylistsView] ✅ Playlists Saved')
-
-        if (btn) {
-          btn.className = 'btn btn-success flex items-center gap-2'
-          btn.innerHTML = `${getIcon('Check', 'w-5 h-5')} Saved!`
-          setTimeout(() => {
-            btn.disabled = false
-            btn.innerHTML = `${getIcon('Cloud', 'w-5 h-5')} Save to Series History`
-          }, 2000)
-        }
-        toast.success(`"${batchName}" saved to series history!`)
-      } catch (error) {
-        console.error('[PlaylistsView] ❌ Cloud Save Failed:', error)
-
-        // FALLBACK: Save to LocalStorage so user doesn't lose data
-        console.log('[PlaylistsView] Attempting Local Save (Fallback)...')
-        playlistsStore.saveToLocalStorage()
-
-        if (btn) {
-          btn.className = 'btn btn-warning flex items-center gap-2'
-          btn.innerHTML = `${getIcon('AlertTriangle', 'w-5 h-5')} Saved Locally Only`
-          setTimeout(() => {
-            btn.disabled = false
-            btn.innerHTML = `${getIcon('Cloud', 'w-5 h-5')} Save to Series History`
-          }, 4000)
-        }
-        toast.warning('Cloud save failed (permissions). Playlists saved to browser storage.')
+      } else {
+        // Just update savedAt timestamp for existing batch
+        const playlists = playlistsStore.getPlaylists()
+        const timestamp = new Date().toISOString()
+        playlists.forEach(p => p.savedAt = timestamp)
       }
-    })
+
+      // 3. Save Playlists (Subcollection) - uses repo.save() which is upsert
+      console.log(`[PlaylistsView] 2. ${isOverwrite ? 'Overwriting' : 'Saving'} Playlists with batch name:`, batchName)
+      await playlistsStore.saveToFirestore(db, cacheManager, userId)
+      console.log('[PlaylistsView] ✅ Playlists Saved')
+
+      if (btn) {
+        btn.className = 'btn btn-success flex items-center gap-2'
+        btn.innerHTML = `${getIcon('Check', 'w-5 h-5')} ${isOverwrite ? 'Updated!' : 'Saved!'}`
+        setTimeout(() => {
+          btn.disabled = false
+          btn.innerHTML = `${getIcon('Cloud', 'w-5 h-5')} Save to Series History`
+        }, 2000)
+      }
+      toast.success(isOverwrite ? `"${batchName}" updated!` : `"${batchName}" saved to series history!`)
+    } catch (error) {
+      console.error('[PlaylistsView] ❌ Cloud Save Failed:', error)
+
+      console.log('[PlaylistsView] Attempting Local Save (Fallback)...')
+      playlistsStore.saveToLocalStorage()
+
+      if (btn) {
+        btn.className = 'btn btn-warning flex items-center gap-2'
+        btn.innerHTML = `${getIcon('AlertTriangle', 'w-5 h-5')} Saved Locally Only`
+        setTimeout(() => {
+          btn.disabled = false
+          btn.innerHTML = `${getIcon('Cloud', 'w-5 h-5')} Save to Series History`
+        }, 4000)
+      }
+      toast.warning('Cloud save failed (permissions). Playlists saved to browser storage.')
+    }
   }
 
   renderGeneratingOverlay() {
