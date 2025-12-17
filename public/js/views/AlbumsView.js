@@ -1122,6 +1122,10 @@ export class AlbumsView extends BaseView {
               return
             }
 
+            // FIX: Clear any existing batch context so we create NEW playlists
+            const { playlistsStore } = await import('../stores/playlists.js')
+            playlistsStore.clearBatchContext()
+
             router.navigate(`/playlists?seriesId=${activeSeries.id}`)
           })
         }
@@ -1258,6 +1262,11 @@ export class AlbumsView extends BaseView {
         }
 
         console.log('[AlbumsView] Navigating to playlists with', albums.length, 'albums')
+
+        // FIX: Clear any existing batch context so we create NEW playlists, not edit old ones
+        const { playlistsStore } = await import('../stores/playlists.js')
+        playlistsStore.clearBatchContext()
+
         router.navigate(`/playlists?seriesId=${activeSeries.id}`)
       })
     }

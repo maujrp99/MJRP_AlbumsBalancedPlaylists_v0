@@ -396,6 +396,11 @@ export class SavedPlaylistsView extends BaseView {
         if (!existing) albumSeriesStore.series.push(group.series)
         albumSeriesStore.setActiveSeries(seriesId)
         playlistsStore.setPlaylists(group.playlists, seriesId)
+
+        // FIX: Clear batch context when going to ADD new playlists (not edit)
+        // This prevents old batchName/savedAt from contaminating new batch creation
+        playlistsStore.clearBatchContext()
+
         router.navigate('/playlists')
     }
 

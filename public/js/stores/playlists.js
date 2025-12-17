@@ -122,6 +122,19 @@ export class PlaylistsStore {
     }
 
     /**
+     * Clear batch context from all playlists (when creating new batch, not editing)
+     * This prevents the "ghost batch" problem where old savedAt/batchName contaminate new playlists
+     */
+    clearBatchContext() {
+        this.playlists.forEach(playlist => {
+            delete playlist.batchName
+            delete playlist.savedAt
+        })
+        this.batchName = null
+        console.log('[PlaylistsStore] Batch context cleared')
+    }
+
+    /**
      * Calculate total duration of playlist
      * @param {number} playlistIndex - Playlist index
      * @returns {number} Total duration in minutes
