@@ -1,8 +1,8 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-16
-**Current Version**: v2.8.0
-**Current Sprint**: Sprint 8.5: Algorithm Improvements (In Progress)
+**Last Updated**: 2025-12-17
+**Current Version**: v2.8.5
+**Current Sprint**: Sprint 9: Ranking Refactor & Data Enrichment (Starting)
 
 ---
 
@@ -13,6 +13,32 @@ To empower music lovers and casual curators to transcend algorithmic bubbles by 
 
 ## ✅ Completed Sprints (1-5)
 
+Sprint 8.5 - Enhancements 
+(Implementation and release per phase)
+
+Phase 1 - MJRP Balanced Cascade algorithm enhancement:
+    - No momento de revisão se as playlists tem menos de 48 min, se a soma da duração da playlist DC N e da DC N+1 for menor que 48 min, faz o merge da playlists mantendo o agrupamento de ranking.
+
+
+
+Phase- 2 UI improvements on Playlist view:
+- Move MJRP Balanced Cascade to be the first displayed on the left
+- Precisamos melhorar as descrições do algoritmo para ser mais didática, mais user friendly, para leigos.
+- We have to “Regenerate” now (see print). Does the one in the Actions & Export section still make sense? 
+
+
+Phase 3 Feature improvement on Playlist view:- o delete está deletando a Album Series inteira, deveria deletar somente a playlist
+- Precisamos implementar a nomeação da playlist pelo usuario e reorganizar a UI da playlist view. O que quero dizer:
+    - Uma Album Series X, pode ter a playlist serie X.1, X.2, Y, Z, todas pertencentes a albums series X. Então, cada vez que for salvar um playlist to Series History, precisamos ter o nome da playlist pra agrupar na UI da playlist view. Entende? 
+
+Phase 4 - New suggested algorithms
+- Implementar os algoritmos que vc sugeriu:
+Balanced Mix	VARIETY	Distribuição igual de ratings
+Timeline Journey	JOURNEY	Ordem cronológica por ano
+BestEver Elite	ELITE	Só tracks com rating ≥ 80
+
+
+Sprint 9 - Ranking Options Refactor + Artists/Albums Data Enrichment
 
 ### Sprint 1: Foundation (Nov 2025) - DONE
 **Goal**: Modern build tooling + state management foundation  
@@ -140,130 +166,99 @@ To empower music lovers and casual curators to transcend algorithmic bubbles by 
 
 ---
 
+### Sprint 8.5: Algorithm Improvements & Playlist Fixes (Dec 2025) - DONE ✅
+**Delivered**: 2025-12-17 (v2.8.5)
+
+**Deliverables**:
+- ✅ **MJRP Cascade V0 Algorithm**: Preserved original algorithm for comparison
+- ✅ **State Machine Pattern**: Explicit CREATE/EDIT modes for playlist workflow
+- ✅ **Playlist Ordering**: `order` field ensures GH→DC1→DC2 sequence
+- ✅ **Overwrite Logic**: Delete old batch before saving new
+- ✅ **Bug Fixes**: Ghost playlists (#54, #55), localStorage recovery, albumsStore context
+
+**Technical Debt Identified**:
+- PlaylistsView has 891 lines (needs split in Sprint 10)
+- 5 sources of truth for "active series" (needs cleanup)
+
+---
+
 ## 🚧 Current Sprint
 
-**Duration**: 1-2 weeks  
+### Sprint 9: Ranking Refactor & Data Enrichment
+
+**Duration**: 2 weeks  
 **Priority**: High  
-**Status**: 🚧 **In Progress** (UAT)
+**Status**: 🚧 **Starting**
 
-#### Pre-Requisites (Done in Sprint 6)
-- ✅ Apple Developer Account configured
-- ✅ .p8 Key generated (can be reused for MusicKit)
+#### Part A: Ranking System Refactor
 
-#### Part A: Data Enrichment & UI Polish (✅ Completed)
+- [ ] **User Rankings**
+  - Allow users to create custom track rankings
+  - Store in Firestore under user context
+  - UI: Star rating or 1-100 scale input
 
-- [x] **Optimized Autocomplete**
-    - [x] Data Optimization (JSON index)
-    - [x] Web Worker Setup
-    - [x] UI Integration
-    - [x] **UI/UX Refinement** (Load Albums Form)
+- [ ] **Ranking Sources**
+  - Source selector: BestEver / Musicboard / User / Hybrid
+  - Visual indicator of source in AlbumsView
 
-- [x] **Data Validation & Assets**
-    - [x] Verify Script Completion (`albums-expanded.json`)
+- [ ] **Ranking Display**
+  - RankingView revamp with source tabs
+  - Track-level ranking comparison
 
-#### Part B: Integrations (✅ Completed)
+#### Part B: Artist/Album Data Enrichment
 
-- [x] **Backend Proxy & API Client**
-    - [x] Endpoint for Developer Token generation
-    - [x] Apple Music API Client method
+- [ ] **Artist Metadata**
+  - Fetch from Discogs/MusicBrainz
+  - Artist bio, image, genre tags
 
-- [x] **Export Workflow UI**
-    - [x] "Connect to Apple Music" button in PlaylistsView
-    - [x] Export Progress Modal
-    - [x] Success confirmation with link
-   
-- [x ] **MusicKit Setup**
-  - Enable MusicKit capability on App ID
-  - Generate Developer Token (JWT with .p8 key)
+- [ ] **Album Metadata**
+  - Enhanced credits
+  - Recording date vs release date
+  - Studio/location info
 
-- [ x] **Backend Proxy**
-  - Endpoint for Developer Token generation
-  - Endpoint for Apple Music API calls (search, create playlist)
-
-- [ x] **Apple Music API Client**
-  - `searchTracks(query)` - Find tracks in Apple Music catalog
-  - `createPlaylist(name, description)` - Create user playlist
-  - `addTracksToPlaylist(playlistId, trackIds)` - Add tracks
-
-- [ ] **Export Workflow UI**
-  - "Connect to Apple Music" button in PlaylistsView
-  - Export Progress Modal (Matching tracks...)
-  - Handling unmatched tracks (Skip or Manual search)
-  - Success confirmation with link to Apple Music
-
-**Deliverables**:
-- MusicKit OAuth integration
-- Export playlists to Apple Music
-
-#### Part C: View Revamp & Stability  - DONE
-
-- [ ] **Holistic View Revamp (Cover Loading)**
-    - [x ] Branch: `feature/cover-loading-views-revamp`
-    - [x ] Standardize async hydration across `AlbumsView`, `InventoryView`
-    - [ NOT DONE] Fix Inventory Ownership bug
-
-- [ ] **Final UAT Fixes**
-    - [ x] Verify "Metallica" missing tracks fix in Prod
-    - [ x] Fix 500 Error (Judas Priest)
-
-- [ ] **Export Workflow UI**
-    - [ x] "Connect to Apple Music" button in PlaylistsView
-    - [ x] **Fix Export Bug**: Missing tracks (e.g. 72 Seasons) - *WIP: Add debug logging*
-
-- [ ] **Backend Proxy & API Client**
-    - [ x] Endpoint for Developer Token generation
-    - [ x] Apple Music API calls (search, create playlist) for Apple Music API calls (via proxy or client)
-
-- [x] **Apple Music API Client**
-  - [x] `searchTracks(query)`
-  - [x] `createPlaylist(name, description)`
-  - [x] `addTracksToPlaylist(playlistId, trackIds)`
-
-- [x] **Export Workflow UI**
-  - [x] "Connect to Apple Music" button in PlaylistsView
-  - [x] Export Progress Modal
-  - [x] Success confirmation with link
-
-**Deliverables Status**:
-- ✅ Autocomplete & Cover Loading (Part A) - *Pending User Final Sign-off*
-- ✅ Export Implementation (Part B) - **DONE**
-- ✅ Export Verification (Part B) - **DONE** (Fixing track matching issues, e.g. 72 Seasons)
-
-#### Part C: View Revamp & Stability (DONE)
-
-- [ ] **Holistic View Revamp (Cover Loading)**
-    - [ x] Branch: `feature/cover-loading-views-revamp`
-    - [ x] Standardize async hydration across `AlbumsView`, `InventoryView`
-    - [ x] Fix Inventory Ownership bug
-
-- [ ] **Final UAT Fixes**
-    - [ x] Verify "Metallica" missing tracks fix in Prod
-    - [ x] Fix 500 Error (Judas Priest)
+- [ ] **Gemini AI Enrichment** (Optional)
+  - AI-generated album descriptions
+  - Similar albums suggestions
 
 ---
 
-### Sprint 7.5: AlbumsView Polish & Refactor (Current)ß
+## 📋 Upcoming Sprints
 
-**Goal**: Refine AlbumsView UI/UX and fix "Ghost Albums" via architectural scope changes + Apple Music Metadata Refactor.
-**Status**: 🚧 **In Progress**
+### Sprint 10: Playlist Subsystem Refactor
 
-**Deliverables**:
-- [x] **Data Flow Architecture**: Scope-based loading (All vs Single Series).
-- [x] **UI Refinement**:
-    - [x] Series Dropdown Filter (Tech Theme).
-    - [x] "All Series" visual grouping with borders (Compact + Expanded).
-    - [x] Action buttons justified right, below cover.
-    - [x] "View Tracks" label update.
-- [x] **Interaction**: (STRATEGY pattern implemented to fix issues - se debug log)
-    - [x] Compact View: Click cover → Modal.
-    - [x] Expanded View: Default behavior.
-- [ ] **Architecture Refactor**:
-    - [x ] `loadAlbum` uses Apple Music Metadata (Fast).
-    - [WIP 15/12 ] Backend acts as "Enrichment" only (Rankings).
+**Duration**: 2 weeks  
+**Priority**: High  
+**Status**: Planned
+
+**Goal**: Clean architecture for playlist generation and management
+
+#### Refactoring Scope
+
+- [ ] **Single Source of Truth**: URL params drive state
+- [ ] **Split PlaylistsStore** (440 lines):
+  - `PlaylistsStore` (state only)
+  - `PlaylistsPersistence` (Firestore/localStorage)
+  - `PlaylistsVersioning` (undo/redo)
+
+- [ ] **Split PlaylistsView** (891 lines):
+  - `PlaylistsView` (coordinator)
+  - `PlaylistGenerator` (algorithm execution)
+  - `PlaylistRenderer` (UI)
+  - `PlaylistExporter` (JSON/Apple Music)
+
+- [ ] **Context Pattern**
+  - `PlaylistsContext.init(params)` sets all stores from URL
+  - Remove redundant setter calls from navigation points
 
 ---
 
-### Sprint 8: Rank by User Feature + Revamp Playlist Generation and S-Draft algorithm
+### Sprint 11: Native App (Capacitor) + Batch Operations
+
+**Duration**: 1-2 weeks  
+**Priority**: Medium  
+**Status**: Planned
+
+---
 
 ###PARKING LOT BACKLOG
 

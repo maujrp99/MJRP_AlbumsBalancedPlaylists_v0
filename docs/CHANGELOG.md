@@ -2,6 +2,35 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
+## v2.8.5 - Sprint 8.5: Algorithm Improvements & Playlist Fixes (2025-12-17)
+
+**Status**: 🏷️ **TAGGED RELEASE**
+**Tag**: `v2.8.5`
+
+### Summary
+Sprint 8.5 delivers critical bug fixes for playlist editing workflow and preserves the original MJRP Cascade algorithm.
+
+### ✨ New Features
+- **MJRP Cascade V0 Algorithm**: Preserved original algorithm for A/B testing
+- **State Machine Pattern**: Explicit CREATE/EDIT modes for playlist workflow
+- **Playlist Ordering**: `order` field ensures GH→DC1→DC2→... sequence
+
+### 🐛 Bug Fixes
+- **Issue #54**: Edit Batch Not Overwriting
+  - Root cause: Regenerate creates new IDs, upsert created duplicates
+  - Fix: Delete old batch before saving new
+- **Issue #55**: Ghost Playlist Context
+  - Root cause: localStorage recovery contaminated create mode
+  - Fix: Recovery only in EDIT mode
+- **albumsStore Context**: handleEditSeries now sets activeAlbumSeriesId
+- **getAll() typo**: Changed to findAll() in _savePlaylistsToFirestore
+
+### 🏗️ Technical Debt Identified
+- PlaylistsView has 891 lines (Sprint 10 refactor planned)
+- 5 sources of truth for "active series"
+
+---
+
 ## v2.8.0 - Sprint 8: Algorithm Strategy Pattern (2025-12-16)
 
 **Status**: 🏷️ **TAGGED RELEASE**
