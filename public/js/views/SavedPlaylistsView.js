@@ -397,11 +397,10 @@ export class SavedPlaylistsView extends BaseView {
         albumSeriesStore.setActiveSeries(seriesId)
         playlistsStore.setPlaylists(group.playlists, seriesId)
 
-        // FIX: Clear batch context when going to ADD new playlists (not edit)
-        // This prevents old batchName/savedAt from contaminating new batch creation
-        playlistsStore.clearBatchContext()
+        // Sprint 8.5: Set CREATING mode explicitly (State Machine Pattern)
+        playlistsStore.setCreateMode()
 
-        router.navigate('/playlists')
+        router.navigate(`/playlists?seriesId=${seriesId}`)
     }
 
     openDeleteModal(seriesName) {
@@ -543,11 +542,17 @@ export class SavedPlaylistsView extends BaseView {
         if (!existing) albumSeriesStore.series.push(group.series)
         albumSeriesStore.setActiveSeries(seriesId)
 
-        // Load only this batch's playlists
+        // Load this batch's playlists
         playlistsStore.setPlaylists(batchPlaylists, seriesId)
 
+        // Sprint 8.5: Set EDITING mode explicitly (State Machine Pattern)
+        const savedAt = batchPlaylists[0]?.savedAt
+        playlistsStore.setEditMode(batchName, seriesId, savedAt)
+
         toast.info(`Editing "${batchName}" (${batchPlaylists.length} playlists)`)
-        router.navigate('/playlists')
+
+        // Navigate with edit param so mode survives refresh
+        router.navigate(`/playlists?seriesId=${seriesId}&edit=${encodeURIComponent(batchName)}`)
     }
 
     async handleDeleteBatch(seriesId, batchName, count) {

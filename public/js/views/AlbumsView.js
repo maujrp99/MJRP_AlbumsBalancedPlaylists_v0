@@ -1122,9 +1122,9 @@ export class AlbumsView extends BaseView {
               return
             }
 
-            // FIX: Clear any existing batch context so we create NEW playlists
+            // Sprint 8.5: Set CREATING mode explicitly
             const { playlistsStore } = await import('../stores/playlists.js')
-            playlistsStore.clearBatchContext()
+            playlistsStore.setCreateMode()
 
             router.navigate(`/playlists?seriesId=${activeSeries.id}`)
           })
@@ -1263,9 +1263,9 @@ export class AlbumsView extends BaseView {
 
         console.log('[AlbumsView] Navigating to playlists with', albums.length, 'albums')
 
-        // FIX: Clear any existing batch context so we create NEW playlists, not edit old ones
+        // Sprint 8.5: Set CREATING mode explicitly
         const { playlistsStore } = await import('../stores/playlists.js')
-        playlistsStore.clearBatchContext()
+        playlistsStore.setCreateMode()
 
         router.navigate(`/playlists?seriesId=${activeSeries.id}`)
       })

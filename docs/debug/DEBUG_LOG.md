@@ -54,6 +54,7 @@
 ### Issue #55: Ghost Playlists / Batch Context Contamination
 **Status**: 🧪 **TESTING** (Awaiting User Verification)
 **Date**: 2025-12-17 00:18
+**Updated**: 2025-12-17 01:40
 **Severity**: HIGH
 **Type**: State Management / Cache Contamination
 **Component**: `PlaylistsStore`, `PlaylistsView`, `SavedPlaylistsView`
@@ -70,32 +71,35 @@ Similar to Issue #22 (Ghost Albums) - same pattern of stale cache contaminating 
 |---|------|---------|--------|
 | 1 | 00:18 | Detect edit mode via `playlists[0]?.savedAt` | ❌ FAILED - localStorage recovery loaded old playlists with savedAt |
 | 2 | 00:32 | Preserve batch context when regenerating | ❌ FAILED - Made problem worse, now ALL saves were "updates" |
-| 3 | 00:52 | Added `clearBatchContext()` method | 🧪 TESTING |
+| 3 | 00:52 | Added `clearBatchContext()` method | ❌ FAILED - Order issue: clear before navigate, but localStorage recovery AFTER mount |
+| 4 | 01:22 | State Machine Pattern (user approved) | 🧪 TESTING |
 
 #### Root Cause Analysis
 1. **LocalStorage Recovery**: `loadFromLocalStorage()` restores playlists with old `batchName`/`savedAt`
-2. **No Context Reset**: Unlike AlbumsView's `loadScope()`, PlaylistsView doesn't reset context on navigation
-3. **State Bleed**: `handleGenerate()` preserved old context even for new batch creation
+2. **Execution Order**: `clearBatchContext()` called before navigation, but `loadFromLocalStorage()` in mount() restored context
+3. **No Explicit Mode**: System inferred edit/create from playlist metadata instead of explicit state
 
-#### Current Fix (Attempt #3)
-- Added `PlaylistsStore.clearBatchContext()` method
-- Called in:
-  - `AlbumsView` → when navigating to playlists (2 locations)
-  - `SavedPlaylistsView.handleEditSeries()` → "Add Playlists" button
-- NOT called in `handleEditBatchPlaylists()` → "Edit Batch" button (preserves context)
+#### Final Fix (Attempt #4): State Machine + URL Pattern
+**Implementation:**
+- `PlaylistsStore.mode`: 'CREATING' | 'EDITING' - explicit mode
+- `PlaylistsStore.editContext`: { batchName, seriesId, savedAt } when editing
+- `setEditMode()` / `setCreateMode()` methods for explicit transitions
+- `isEditingExistingBatch()` method for checking mode
+- URL param `?edit=batchName` for persistence across refresh
+- `PlaylistsView.mount()` reads URL and sets mode accordingly
 
-#### Tech Debt
-> [!WARNING]
-> **Current solution is patches, not architecture.** The proper fix would be implementing a `loadScope()` pattern similar to AlbumsView with:
-> - `setEditMode(batchName, savedAt)` 
-> - `setCreateMode()`
-> - Guards in subscriptions
+**Files Modified:**
+- `playlists.js` - State machine implementation
+- `PlaylistsView.js` - mount() reads URL, handleSaveToHistory uses store.mode
+- `SavedPlaylistsView.js` - handleEditBatch navigates with ?edit= param
+- `AlbumsView.js` - uses setCreateMode()
 
 ---
 
 ### Issue #54: Edit Batch Not Overwriting
 **Status**: 🧪 **TESTING** (Awaiting User Verification)
 **Date**: 2025-12-17 00:00
+**Updated**: 2025-12-17 01:40
 **Severity**: HIGH
 **Type**: Logic Bug
 **Component**: `PlaylistsView.handleSaveToHistory()`
@@ -115,16 +119,17 @@ When editing an existing batch:
 | 1 | 23:20 | Add debug logs to detect `savedAt` | ℹ️ INFO - Revealed `savedAt` was being lost |
 | 2 | 23:36 | Skip modal if `isEditingExistingBatch` true | ❌ FAILED - `handleGenerate()` cleared `savedAt` |
 | 3 | 23:58 | Preserve batch context in `handleGenerate()` | ❌ PARTIAL - Worked for regenerate, but broke "Add Playlists" |
-| 4 | 00:52 | Add `clearBatchContext()` for create-mode separation | 🧪 TESTING |
+| 4 | 00:52 | Add `clearBatchContext()` for create-mode separation | ❌ FAILED - localStorage recovery restored context |
+| 5 | 01:22 | State Machine Pattern | 🧪 TESTING |
 
 #### Root Cause
 **Two interacting issues:**
 1. `handleGenerate()` called `setPlaylists()` with NEW playlists without `savedAt`
 2. LocalStorage recovery contaminated create-mode with old batch context
+3. **Order problem**: Clear happened before navigate, but restore happened after mount
 
-#### Current Fix
-1. `handleGenerate()` now preserves `batchName`/`savedAt` if editing existing batch
-2. `clearBatchContext()` separates "Create" from "Edit" mode
+#### Final Fix (Same as #55)
+The State Machine pattern solves both issues by making mode explicit instead of inferring from metadata.
 
 ---
 **Status**: ✅ **RESOLVED**

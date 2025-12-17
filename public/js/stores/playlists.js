@@ -16,6 +16,11 @@ export class PlaylistsStore {
         this.isSynchronized = true
         this.listeners = new Set()
 
+        // Sprint 8.5: Explicit mode for edit vs create
+        // Solves Ghost Playlist issue by making intent explicit
+        this.mode = 'CREATING' // 'CREATING' | 'EDITING'
+        this.editContext = null // { batchName, seriesId, savedAt } when editing
+
         // Version history for undo/redo
         this.versions = []
         this.currentVersionIndex = -1
@@ -122,16 +127,40 @@ export class PlaylistsStore {
     }
 
     /**
-     * Clear batch context from all playlists (when creating new batch, not editing)
-     * This prevents the "ghost batch" problem where old savedAt/batchName contaminate new playlists
+     * Sprint 8.5: Set EDITING mode (called when user clicks "Edit Batch")
+     * @param {string} batchName - Name of batch being edited
+     * @param {string} seriesId - Series ID
+     * @param {string} savedAt - Original savedAt timestamp (for overwrite)
      */
-    clearBatchContext() {
-        this.playlists.forEach(playlist => {
-            delete playlist.batchName
-            delete playlist.savedAt
-        })
-        this.batchName = null
-        console.log('[PlaylistsStore] Batch context cleared')
+    setEditMode(batchName, seriesId, savedAt) {
+        this.mode = 'EDITING'
+        this.editContext = { batchName, seriesId, savedAt }
+        console.log('[PlaylistsStore] Mode: EDITING', this.editContext)
+    }
+
+    /**
+     * Sprint 8.5: Set CREATING mode (called when user starts new batch)
+     */
+    setCreateMode() {
+        this.mode = 'CREATING'
+        this.editContext = null
+        console.log('[PlaylistsStore] Mode: CREATING')
+    }
+
+    /**
+     * Sprint 8.5: Check if currently in edit mode
+     * @returns {boolean}
+     */
+    isEditingExistingBatch() {
+        return this.mode === 'EDITING' && this.editContext !== null
+    }
+
+    /**
+     * Sprint 8.5: Get current edit context
+     * @returns {Object|null}
+     */
+    getEditContext() {
+        return this.editContext
     }
 
     /**
