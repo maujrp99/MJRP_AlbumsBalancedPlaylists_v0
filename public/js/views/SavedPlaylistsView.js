@@ -111,6 +111,23 @@ export class SavedPlaylistsView extends BaseView {
     renderSeriesGroup(group) {
         if (group.playlists.length === 0) return '' // Skip empty series
 
+        // Group playlists by batchName for organized display
+        const playlistsByBatch = new Map()
+        group.playlists.forEach(pl => {
+            const batchKey = pl.batchName || 'Saved Playlists'
+            if (!playlistsByBatch.has(batchKey)) {
+                playlistsByBatch.set(batchKey, { name: batchKey, savedAt: pl.savedAt, playlists: [] })
+            }
+            playlistsByBatch.get(batchKey).playlists.push(pl)
+        })
+
+        // Sort batches by savedAt (newest first)
+        const batches = Array.from(playlistsByBatch.values()).sort((a, b) => {
+            const dateA = a.savedAt ? new Date(a.savedAt) : new Date(0)
+            const dateB = b.savedAt ? new Date(b.savedAt) : new Date(0)
+            return dateB - dateA
+        })
+
         return `
         <div class="series-group glass-panel p-6 rounded-xl animate-scale-in">
             <div class="group-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-white/10 pb-4">
@@ -133,44 +150,64 @@ export class SavedPlaylistsView extends BaseView {
                 </div>
             </div>
 
-            <div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                ${group.playlists.map((pl, index) => `
-                    <div class="playlist-mini-card bg-gradient-to-br from-white/5 to-transparent p-5 rounded-lg border border-white/5 hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10 transition-all duration-300 group/card relative overflow-hidden flex flex-col">
-                        <div class="absolute top-0 right-0 p-2 opacity-50 group-hover/card:opacity-100 transition-opacity">
-                            ${getIcon('Music', 'w-12 h-12 text-white/5')}
-                        </div>
-                        
-                        <div class="relative z-10 flex-1">
-                            <h3 class="font-bold text-lg mb-1 truncate text-white group-hover/card:text-accent-primary transition-colors cursor-pointer" title="${this.escapeHtml(pl.name)}" data-action="view-playlist" data-series="${group.series.id}" data-id="${pl.id}">
-                                ${this.escapeHtml(pl.name)}
-                            </h3>
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="badge badge-primary text-xs font-bold shadow-sm">${pl.tracks?.length || 0} tracks</span>
-                                <span class="text-xs text-muted flex items-center gap-1">
-                                    ${getIcon('Clock', 'w-3 h-3')} ${this.formatDuration(pl.tracks)}
-                                </span>
-                            </div>
-
-                            <!-- Album Summary -->
-                            <div class="album-summary mb-4 space-y-1">
-                                ${this.renderAlbumSummary(pl.tracks)}
-                            </div>
-                            
-                            <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden mb-4">
-                                <div class="h-full bg-accent-primary/50" style="width: ${Math.min(100, (pl.tracks?.length || 0) * 5)}%"></div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-sm w-full border-2 border-white/30 bg-white/10 hover:bg-white/20 hover:border-white/50 z-20 flex items-center justify-center gap-2 font-medium transition-all" data-action="view-playlist" data-series="${group.series.id}" data-id="${pl.id}">
-                             ${getIcon('Eye', 'w-4 h-4')} View Tracks
-                        </button>
-                        <button class="btn btn-sm btn-ghost w-full text-red-400 hover:bg-red-500/20 hover:text-red-300 z-20 flex items-center justify-center gap-2 font-medium transition-all mt-2" data-action="delete-playlist" data-series="${group.series.id}" data-id="${pl.id}" data-name="${this.escapeHtml(pl.name)}" data-count="${pl.tracks?.length || 0}">
-                             ${getIcon('Trash', 'w-4 h-4')} Delete Playlist
-                        </button>
-                    </div>
-                `).join('')}
-            </div>
+            ${batches.map(batch => this.renderPlaylistBatch(batch, group.series.id)).join('')}
         </div>
+        `
+    }
+
+    renderPlaylistBatch(batch, seriesId) {
+        const formattedDate = batch.savedAt ? new Date(batch.savedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''
+
+        return `
+            <div class="playlist-batch mb-6 last:mb-0">
+                <div class="batch-header flex items-center gap-3 mb-4 border-l-4 border-accent-primary/50 pl-3">
+                    <h3 class="text-lg font-semibold text-white/90">${this.escapeHtml(batch.name)}</h3>
+                    <span class="text-xs text-muted">${batch.playlists.length} playlists</span>
+                    ${formattedDate ? `<span class="text-xs text-muted/60">${formattedDate}</span>` : ''}
+                </div>
+                
+                <div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    ${batch.playlists.map(pl => this.renderPlaylistCard(pl, seriesId)).join('')}
+                </div>
+            </div>
+        `
+    }
+
+    renderPlaylistCard(pl, seriesId) {
+        return `
+            <div class="playlist-mini-card bg-gradient-to-br from-white/5 to-transparent p-5 rounded-lg border border-white/5 hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10 transition-all duration-300 group/card relative overflow-hidden flex flex-col">
+                <div class="absolute top-0 right-0 p-2 opacity-50 group-hover/card:opacity-100 transition-opacity">
+                    ${getIcon('Music', 'w-12 h-12 text-white/5')}
+                </div>
+                
+                <div class="relative z-10 flex-1">
+                    <h3 class="font-bold text-lg mb-1 truncate text-white group-hover/card:text-accent-primary transition-colors cursor-pointer" title="${this.escapeHtml(pl.name)}" data-action="view-playlist" data-series="${seriesId}" data-id="${pl.id}">
+                        ${this.escapeHtml(pl.name)}
+                    </h3>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="badge badge-primary text-xs font-bold shadow-sm">${pl.tracks?.length || 0} tracks</span>
+                        <span class="text-xs text-muted flex items-center gap-1">
+                            ${getIcon('Clock', 'w-3 h-3')} ${this.formatDuration(pl.tracks)}
+                        </span>
+                    </div>
+
+                    <!-- Album Summary -->
+                    <div class="album-summary mb-4 space-y-1">
+                        ${this.renderAlbumSummary(pl.tracks)}
+                    </div>
+                    
+                    <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden mb-4">
+                        <div class="h-full bg-accent-primary/50" style="width: ${Math.min(100, (pl.tracks?.length || 0) * 5)}%"></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-sm w-full border-2 border-white/30 bg-white/10 hover:bg-white/20 hover:border-white/50 z-20 flex items-center justify-center gap-2 font-medium transition-all" data-action="view-playlist" data-series="${seriesId}" data-id="${pl.id}">
+                     ${getIcon('Eye', 'w-4 h-4')} View Tracks
+                </button>
+                <button class="btn btn-sm btn-ghost w-full text-red-400 hover:bg-red-500/20 hover:text-red-300 z-20 flex items-center justify-center gap-2 font-medium transition-all mt-2" data-action="delete-playlist" data-series="${seriesId}" data-id="${pl.id}" data-name="${this.escapeHtml(pl.name)}" data-count="${pl.tracks?.length || 0}">
+                     ${getIcon('Trash', 'w-4 h-4')} Delete Playlist
+                </button>
+            </div>
         `
     }
 
@@ -337,7 +374,7 @@ export class SavedPlaylistsView extends BaseView {
         const nameEl = document.getElementById('deleteSeriesName')
 
         if (nameEl) {
-            nameEl.textContent = `Delete "${seriesName}"? This will permanently remove this series and all its playlists.`
+            nameEl.textContent = `Delete all playlists in "${seriesName}"? The series and albums will remain.`
         }
 
         if (modal) {
