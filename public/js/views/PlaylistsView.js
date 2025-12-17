@@ -527,19 +527,19 @@ export class PlaylistsView extends BaseView {
         // If refreshed, we need to reload the batch playlists from store/localStorage
         playlistsStore.setEditMode(decodeURIComponent(editBatchName), seriesId, null)
       }
+
+      // Only recover from localStorage in EDIT mode (for refresh)
+      if (playlistsStore.getPlaylists().length === 0) {
+        if (playlistsStore.loadFromLocalStorage()) {
+          console.log('[PlaylistsView] Recovered playlists from LocalStorage (edit mode)')
+        }
+      }
     } else {
       // Create mode: User came from Albums view or Add Playlists
-      if (playlistsStore.mode !== 'CREATING') {
-        console.log('[PlaylistsView] URL indicates create mode')
-        playlistsStore.setCreateMode()
-      }
-    }
-
-    // Attempt recovery from LocalStorage if store is empty
-    if (playlistsStore.getPlaylists().length === 0) {
-      if (playlistsStore.loadFromLocalStorage()) {
-        console.log('[PlaylistsView] Recovered playlists from LocalStorage')
-      }
+      // DO NOT recover from localStorage - we want a clean slate
+      console.log('[PlaylistsView] Create mode - clearing any stale playlists')
+      playlistsStore.setCreateMode()
+      playlistsStore.playlists = [] // Clear any stale data
     }
 
     // Generate button
