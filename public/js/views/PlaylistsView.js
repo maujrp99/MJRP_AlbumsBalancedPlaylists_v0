@@ -436,14 +436,31 @@ export class PlaylistsView extends BaseView {
       if (!isOverwrite) {
         playlistsStore.setBatchName(batchName)
       } else {
-        // Just update savedAt timestamp for existing batch
-        const playlists = playlistsStore.getPlaylists()
-        const timestamp = new Date().toISOString()
-        playlists.forEach(p => p.savedAt = timestamp)
+        // Sprint 8.5: For overwrite, we need to:
+        // 1. Delete OLD playlists with this batchName (they have different IDs after regenerate)
+        // 2. Set batchName on the NEW playlists
+        // 3. Save the NEW playlists
+
+        const { PlaylistRepository } = await import('../repositories/PlaylistRepository.js')
+        const repo = new PlaylistRepository(db, cacheManager, userId, activeSeries.id)
+
+        // Delete old batch playlists first
+        console.log('[PlaylistsView] 2a. Deleting old playlists for batch:', batchName)
+        const allPlaylists = await repo.getAll()
+        const oldBatchPlaylists = allPlaylists.filter(p => p.batchName === batchName)
+        console.log('[PlaylistsView] Found', oldBatchPlaylists.length, 'old playlists to delete')
+
+        for (const oldPlaylist of oldBatchPlaylists) {
+          await repo.delete(oldPlaylist.id)
+        }
+        console.log('[PlaylistsView] ✅ Old batch deleted')
+
+        // Now set batch info on new playlists
+        playlistsStore.setBatchName(batchName)
       }
 
       // 3. Save Playlists (Subcollection) - uses repo.save() which is upsert
-      console.log(`[PlaylistsView] 2. ${isOverwrite ? 'Overwriting' : 'Saving'} Playlists with batch name:`, batchName)
+      console.log(`[PlaylistsView] 2b. ${isOverwrite ? 'Saving overwritten' : 'Saving'} Playlists with batch name:`, batchName)
       await playlistsStore.saveToFirestore(db, cacheManager, userId)
       console.log('[PlaylistsView] ✅ Playlists Saved')
 

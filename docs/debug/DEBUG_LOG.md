@@ -99,10 +99,10 @@ Similar to Issue #22 (Ghost Albums) - same pattern of stale cache contaminating 
 ### Issue #54: Edit Batch Not Overwriting
 **Status**: 🧪 **TESTING** (Awaiting User Verification)
 **Date**: 2025-12-17 00:00
-**Updated**: 2025-12-17 01:40
+**Updated**: 2025-12-17 09:40
 **Severity**: HIGH
 **Type**: Logic Bug
-**Component**: `PlaylistsView.handleSaveToHistory()`
+**Component**: `PlaylistsView._savePlaylistsToFirestore()`
 
 #### Problem
 When editing an existing batch:
@@ -110,7 +110,7 @@ When editing an existing batch:
 2. Make changes (move tracks, regenerate)
 3. Click "Save to Series History"
 4. **Expected**: Overwrites existing batch
-5. **Actual**: Creates duplicate OR asks for new name
+5. **Actual**: Creates new playlists with default name
 
 #### Failed Attempts
 
@@ -120,16 +120,22 @@ When editing an existing batch:
 | 2 | 23:36 | Skip modal if `isEditingExistingBatch` true | ❌ FAILED - `handleGenerate()` cleared `savedAt` |
 | 3 | 23:58 | Preserve batch context in `handleGenerate()` | ❌ PARTIAL - Worked for regenerate, but broke "Add Playlists" |
 | 4 | 00:52 | Add `clearBatchContext()` for create-mode separation | ❌ FAILED - localStorage recovery restored context |
-| 5 | 01:22 | State Machine Pattern | 🧪 TESTING |
+| 5 | 01:22 | State Machine Pattern | ❌ PARTIAL - Mode works, but IDs change on regenerate |
+| 6 | 09:40 | Delete old batch before saving new | 🧪 TESTING |
 
-#### Root Cause
-**Two interacting issues:**
-1. `handleGenerate()` called `setPlaylists()` with NEW playlists without `savedAt`
-2. LocalStorage recovery contaminated create-mode with old batch context
-3. **Order problem**: Clear happened before navigate, but restore happened after mount
+#### Root Cause (Final)
+**Regenerate creates NEW playlist IDs.** When saveToFirestore runs, it uses `playlist.id` for upsert, so if IDs changed (from regeneration), it creates NEW documents instead of updating existing ones.
 
-#### Final Fix (Same as #55)
-The State Machine pattern solves both issues by making mode explicit instead of inferring from metadata.
+#### Final Fix (Attempt #6)
+1. In `_savePlaylistsToFirestore()` for OVERWRITE mode:
+   - Delete ALL playlists with matching `batchName` first
+   - Then call `setBatchName()` on new playlists
+   - Then save new playlists
+
+**Additional fix: Playlist Order**
+- Added `order` field (0, 1, 2...) when saving playlists
+- Sort by `order` when loading in `handleEditBatchPlaylists()`
+- Preserves Greatest Hits → DC1 → DC2 → ... sequence
 
 ---
 **Status**: ✅ **RESOLVED**

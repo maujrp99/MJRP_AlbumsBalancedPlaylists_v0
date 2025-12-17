@@ -347,12 +347,13 @@ export class PlaylistsStore {
         // Convert custom Track objects to plain objects using JSON serialization
         const sanitizedPlaylists = JSON.parse(JSON.stringify(this.playlists))
 
-        // 2. Save each playlist
+        // 2. Save each playlist with order field
         // We use repo.save() (upsert) because playlists might have local IDs but not exist in DB yet
-        const promises = sanitizedPlaylists.map(playlist => {
-            // Include timestamp and metadata
+        const promises = sanitizedPlaylists.map((playlist, index) => {
+            // Include timestamp, metadata, and order for proper sorting when loading
             const playlistData = {
                 ...playlist,
+                order: index, // Sprint 8.5: Preserve playlist order
                 updatedAt: new Date().toISOString()
             }
 

@@ -537,12 +537,15 @@ export class SavedPlaylistsView extends BaseView {
             return
         }
 
+        // Sprint 8.5: Sort by order field (Greatest Hits, DC1, DC2... sequence)
+        batchPlaylists.sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+
         // Set up the series in store
         const existing = albumSeriesStore.getSeries().find(s => s.id === seriesId)
         if (!existing) albumSeriesStore.series.push(group.series)
         albumSeriesStore.setActiveSeries(seriesId)
 
-        // Load this batch's playlists
+        // Load this batch's playlists (now sorted)
         playlistsStore.setPlaylists(batchPlaylists, seriesId)
 
         // Sprint 8.5: Set EDITING mode explicitly (State Machine Pattern)
