@@ -371,9 +371,22 @@ export class PlaylistsView extends BaseView {
     const activeSeries = albumSeriesStore.getActiveSeries()
     const playlists = playlistsStore.getPlaylists()
 
+    // Debug: Log playlist metadata
+    console.log('[PlaylistsView] Save to History - Checking playlists:', {
+      count: playlists.length,
+      firstPlaylist: playlists[0] ? {
+        id: playlists[0].id,
+        batchName: playlists[0].batchName,
+        savedAt: playlists[0].savedAt
+      } : null
+    })
+
     // Check if we're editing an existing batch (playlists already have batchName and savedAt)
     const existingBatchName = playlists[0]?.batchName
-    const isEditingExistingBatch = existingBatchName && playlists[0]?.savedAt
+    const existingSavedAt = playlists[0]?.savedAt
+    const isEditingExistingBatch = Boolean(existingBatchName && existingSavedAt)
+
+    console.log('[PlaylistsView] Is editing existing batch?', isEditingExistingBatch, { existingBatchName, existingSavedAt })
 
     if (isEditingExistingBatch) {
       // Direct save without naming modal - overwrite existing

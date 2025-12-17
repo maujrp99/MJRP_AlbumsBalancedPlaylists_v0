@@ -517,6 +517,17 @@ export class SavedPlaylistsView extends BaseView {
         // Filter playlists to only this batch
         const batchPlaylists = group.playlists.filter(p => p.batchName === batchName)
 
+        // Debug: Log what we're loading
+        console.log('[SavedPlaylistsView] Loading batch for edit:', {
+            batchName,
+            playlistCount: batchPlaylists.length,
+            firstPlaylist: batchPlaylists[0] ? {
+                id: batchPlaylists[0].id,
+                batchName: batchPlaylists[0].batchName,
+                savedAt: batchPlaylists[0].savedAt
+            } : null
+        })
+
         if (batchPlaylists.length === 0) {
             toast.warning('No playlists found in this batch')
             return
