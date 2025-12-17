@@ -3,6 +3,11 @@ const { callProvider } = require('./aiClient')
 const { extractAndValidateRankingEntries, rankingEntriesToSources } = require('./normalize')
 const { getRankingForAlbum: getBestEverRanking } = require('./scrapers/besteveralbums')
 
+// Musicboard scraper integration (Sprint 9)
+// Uncomment when scraper is ready:
+// const { getRankingForAlbum: getMusicboardRanking } = require('./scrapers/musicboard')
+const getMusicboardRanking = null // Placeholder until scraper is debugged
+
 // Lazy load shared module (ESM)
 let normalizeKeyFn = null
 async function getNormalizeKey() {
@@ -14,6 +19,67 @@ async function getNormalizeKey() {
 }
 
 const logger = (() => { try { return require('./logger') } catch (e) { return console } })()
+
+/**
+ * Normalize ratings from different sources to 0-100 scale
+ * BestEverAlbums: 0-100 (no change)
+ * Musicboard: 0-10 → multiply by 10
+ * @param {number} rating - Raw rating from source
+ * @param {string} source - Source provider name
+ * @returns {number} Normalized rating (0-100)
+ */
+function normalizeRating(rating, source) {
+    if (rating === null || rating === undefined) return null
+    const numRating = Number(rating)
+    if (isNaN(numRating)) return null
+
+    const sourceLower = String(source || '').toLowerCase()
+
+    if (sourceLower.includes('musicboard')) {
+        // Musicboard uses 0-10 scale
+        return Math.min(100, Math.max(0, numRating * 10))
+    }
+
+    // BestEverAlbums and others use 0-100
+    return Math.min(100, Math.max(0, numRating))
+}
+
+/**
+ * Merge evidence from multiple sources with source priority
+ * Priority: 1. BestEver, 2. Musicboard, 3. Others
+ * @param {Array} bestEverEvidence - Evidence from BestEverAlbums
+ * @param {Array} musicboardEvidence - Evidence from Musicboard
+ * @returns {Array} Merged evidence with best rating per track
+ */
+function mergeRankingEvidence(bestEverEvidence = [], musicboardEvidence = []) {
+    const merged = new Map()
+
+    // First, add all BestEver evidence (highest priority)
+    for (const e of bestEverEvidence) {
+        if (!e || !e.trackTitle) continue
+        const key = String(e.trackTitle).toLowerCase().trim()
+        merged.set(key, {
+            ...e,
+            rating: normalizeRating(e.rating, 'BestEverAlbums'),
+            source: 'BestEverAlbums'
+        })
+    }
+
+    // Then, fill gaps with Musicboard evidence
+    for (const e of musicboardEvidence) {
+        if (!e || !e.trackTitle) continue
+        const key = String(e.trackTitle).toLowerCase().trim()
+        if (!merged.has(key)) {
+            merged.set(key, {
+                ...e,
+                rating: normalizeRating(e.rating, 'Musicboard'),
+                source: 'Musicboard'
+            })
+        }
+    }
+
+    return Array.from(merged.values())
+}
 
 async function fetchRankingForAlbum(album, albumQuery, options = {}) {
     const debugTrace = []
@@ -66,6 +132,32 @@ async function fetchRankingForAlbum(album, albumQuery, options = {}) {
 
             const albumTrackCount = Array.isArray(album && album.tracks) ? album.tracks.length : null
             debugTrace.push({ step: 'check_completeness', albumTrackCount, scraperEntriesCount: scraperEntries.length })
+
+            // ==================================================================
+            // MUSICBOARD FALLBACK (Sprint 9)
+            // Try Musicboard when BestEver data is incomplete
+            // ==================================================================
+            let musicboardEvidence = []
+            if (getMusicboardRanking && scraperEntries.length < (albumTrackCount || Infinity)) {
+                try {
+                    debugTrace.push({ step: 'getMusicboardRanking', reason: 'BestEver incomplete' })
+                    const mbResult = await getMusicboardRanking(album?.title || albumQuery, album?.artist || '')
+                    debugTrace.push({ step: 'getMusicboardRanking_result', found: !!mbResult, evidenceCount: mbResult?.evidence?.length, error: mbResult?.error })
+
+                    if (mbResult && Array.isArray(mbResult.evidence) && mbResult.evidence.length > 0) {
+                        musicboardEvidence = mbResult.evidence.map(e => ({
+                            ...e,
+                            rating: normalizeRating(e.rating, 'Musicboard'),
+                            provider: 'Musicboard'
+                        }))
+                        logger.info('musicboard_fallback_used', { albumQuery, tracksFound: musicboardEvidence.length })
+                    }
+                } catch (mbErr) {
+                    logger.warn('musicboard_fallback_failed', { albumQuery, err: mbErr?.message || String(mbErr) })
+                    debugTrace.push({ step: 'musicboard_fallback_failed', error: mbErr?.message })
+                }
+            }
+            // ==================================================================
 
             if (!albumTrackCount || scraperEntries.length >= albumTrackCount) {
                 const sources = [{ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: best.referenceUrl || best.albumUrl || null }]
