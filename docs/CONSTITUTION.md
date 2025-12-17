@@ -11,7 +11,7 @@ The user experience must be premium, dynamic, and polished.
 ### II. Clean Code & Modular Architecture
 We favor simplicity and standard web technologies over complex framework lock-in where possible.
 - **Tech Stack**: Vanilla Javascript (ES Modules), Vite, CSS Variables (Tailwind only if requested).
-- **Patterns**:
+- **Patterns (not limited to)**:
     - **Store Pattern** for client-side state management (Observer-based).
     - **Repository Pattern** for data access (Firestore, LocalStorage).
     - **Service Layer** for external integrations (AI, Auth).
