@@ -16,8 +16,8 @@
 
 ## 📑 Issue Index
 
-| Issue | Component | Status | Line |
-|-------|-----------|--------|------|
+| #55 | Ghost Playlists | 🧪 TESTING | [L54](#issue-55-ghost-playlists--batch-context-contamination) |
+| #54 | Edit Batch Not Overwriting | 🧪 TESTING | [L54](#issue-54-edit-batch-not-overwriting) |
 | #53 | Ranked by Acclaim | ✅ RESOLVED | [L100](#issue-53-ranked-by-acclaim-not-loading-ratings---resolved) |
 | #52 | Series Empty Render | ✅ RESOLVED | [L52](#issue-52-series-51-empty-render-albums-loaded-but-not-displayed---resolved) |
 | #47 | Sortable Freeze | ✅ RESOLVED | [L107](#issue-47-sortable-drag--drop-freeze---resolved-) |
@@ -51,7 +51,82 @@
 
 ## Current Debugging Session
 
-### Issue #52: Series 5.1 Empty Render (Albums Loaded But Not Displayed) - ✅ RESOLVED
+### Issue #55: Ghost Playlists / Batch Context Contamination
+**Status**: 🧪 **TESTING** (Awaiting User Verification)
+**Date**: 2025-12-17 00:18
+**Severity**: HIGH
+**Type**: State Management / Cache Contamination
+**Component**: `PlaylistsStore`, `PlaylistsView`, `SavedPlaylistsView`
+
+#### Problem
+When creating new playlists, system always detected as "editing existing batch" because old `batchName` and `savedAt` values from localStorage contaminated new sessions.
+
+#### Related Issue
+Similar to Issue #22 (Ghost Albums) - same pattern of stale cache contaminating new data.
+
+#### Failed Attempts
+
+| # | Time | Attempt | Result |
+|---|------|---------|--------|
+| 1 | 00:18 | Detect edit mode via `playlists[0]?.savedAt` | ❌ FAILED - localStorage recovery loaded old playlists with savedAt |
+| 2 | 00:32 | Preserve batch context when regenerating | ❌ FAILED - Made problem worse, now ALL saves were "updates" |
+| 3 | 00:52 | Added `clearBatchContext()` method | 🧪 TESTING |
+
+#### Root Cause Analysis
+1. **LocalStorage Recovery**: `loadFromLocalStorage()` restores playlists with old `batchName`/`savedAt`
+2. **No Context Reset**: Unlike AlbumsView's `loadScope()`, PlaylistsView doesn't reset context on navigation
+3. **State Bleed**: `handleGenerate()` preserved old context even for new batch creation
+
+#### Current Fix (Attempt #3)
+- Added `PlaylistsStore.clearBatchContext()` method
+- Called in:
+  - `AlbumsView` → when navigating to playlists (2 locations)
+  - `SavedPlaylistsView.handleEditSeries()` → "Add Playlists" button
+- NOT called in `handleEditBatchPlaylists()` → "Edit Batch" button (preserves context)
+
+#### Tech Debt
+> [!WARNING]
+> **Current solution is patches, not architecture.** The proper fix would be implementing a `loadScope()` pattern similar to AlbumsView with:
+> - `setEditMode(batchName, savedAt)` 
+> - `setCreateMode()`
+> - Guards in subscriptions
+
+---
+
+### Issue #54: Edit Batch Not Overwriting
+**Status**: 🧪 **TESTING** (Awaiting User Verification)
+**Date**: 2025-12-17 00:00
+**Severity**: HIGH
+**Type**: Logic Bug
+**Component**: `PlaylistsView.handleSaveToHistory()`
+
+#### Problem
+When editing an existing batch:
+1. Click "Edit" (pencil icon) on batch
+2. Make changes (move tracks, regenerate)
+3. Click "Save to Series History"
+4. **Expected**: Overwrites existing batch
+5. **Actual**: Creates duplicate OR asks for new name
+
+#### Failed Attempts
+
+| # | Time | Attempt | Result |
+|---|------|---------|--------|
+| 1 | 23:20 | Add debug logs to detect `savedAt` | ℹ️ INFO - Revealed `savedAt` was being lost |
+| 2 | 23:36 | Skip modal if `isEditingExistingBatch` true | ❌ FAILED - `handleGenerate()` cleared `savedAt` |
+| 3 | 23:58 | Preserve batch context in `handleGenerate()` | ❌ PARTIAL - Worked for regenerate, but broke "Add Playlists" |
+| 4 | 00:52 | Add `clearBatchContext()` for create-mode separation | 🧪 TESTING |
+
+#### Root Cause
+**Two interacting issues:**
+1. `handleGenerate()` called `setPlaylists()` with NEW playlists without `savedAt`
+2. LocalStorage recovery contaminated create-mode with old batch context
+
+#### Current Fix
+1. `handleGenerate()` now preserves `batchName`/`savedAt` if editing existing batch
+2. `clearBatchContext()` separates "Create" from "Edit" mode
+
+---
 **Status**: ✅ **RESOLVED**
 **Date**: 2025-12-15 14:07
 **Severity**: CRITICAL (Blocks Series Navigation)
