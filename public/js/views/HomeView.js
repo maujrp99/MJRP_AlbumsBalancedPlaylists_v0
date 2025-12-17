@@ -7,6 +7,7 @@ import { CacheManager } from '../cache/CacheManager.js'
 import { MigrationUtility } from '../migration/MigrationUtility.js'
 import { Autocomplete } from '../components/Autocomplete.js'
 import { optimizedAlbumLoader as albumLoader } from '../services/OptimizedAlbumLoader.js'
+import { musicKitService } from '../services/MusicKitService.js'
 import toast from '../components/Toast.js'
 
 /**
@@ -437,13 +438,14 @@ export class HomeView extends BaseView {
     container.classList.remove('hidden')
     wrapper.classList.add('opacity-50', 'pointer-events-none') // Dim background
 
-    // 2. Fetch
-    grid.innerHTML = `<div class="col-span-full text-center py-8 text-accent-secondary animate-pulse">Searching discography for "${artistName}"...</div>`
+    // 2. Fetch from Apple Music API (Sprint 9: Global search)
+    grid.innerHTML = `<div class="col-span-full text-center py-8 text-accent-secondary animate-pulse">Searching Apple Music for "${artistName}"...</div>`
 
     try {
-      const results = await albumLoader.findByArtist(artistName)
+      // Sprint 9: Use MusicKit API instead of local cache
+      const apiResults = await musicKitService.getArtistAlbums(artistName)
 
-      if (results.length === 0) {
+      if (apiResults.length === 0) {
         grid.innerHTML = `
                   <div class="col-span-full text-center py-8 text-gray-500">
                       <p>No albums found for "${artistName}"</p>
@@ -453,19 +455,33 @@ export class HomeView extends BaseView {
         return
       }
 
-      // 3. Render
-      grid.innerHTML = results.map(album => {
-        const isSelected = this.selectedAlbums.some(a => a.id === album.id)
-        const coverUrl = albumLoader.getArtworkUrl(album, 200)
-        const json = encodeURIComponent(JSON.stringify(album))
+      // 3. Render - Map API response fields to view model
+      grid.innerHTML = apiResults.map(album => {
+        // Map MusicKit fields to expected format
+        const viewModel = {
+          id: album.appleMusicId,
+          album: album.title,
+          artist: album.artist,
+          year: album.year,
+          artworkTemplate: album.artworkTemplate
+        }
+
+        const isSelected = this.selectedAlbums.some(a => a.id === viewModel.id)
+        const coverUrl = musicKitService.getArtworkUrl(album.artworkTemplate, 200)
+        const json = encodeURIComponent(JSON.stringify(viewModel))
+
+        // Fallback for missing artwork
+        const imgHtml = coverUrl
+          ? `<img src="${coverUrl}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all ${isSelected ? 'opacity-100 scale-105' : ''}" loading="lazy" onerror="this.src='/assets/images/default_album.png'; this.onerror=null;">`
+          : `<div class="w-full h-full flex items-center justify-center bg-gray-800 text-gray-600">${getIcon('Disc', 'w-12 h-12')}</div>`
 
         return `
-                <div class="artist-album-card cursor-pointer group relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${isSelected ? 'border-orange-500 shadow-[0_0_15px_rgba(255,85,0,0.5)]' : 'border-transparent hover:border-white/20'}" data-json="${json}" data-id="${album.id}">
-                    <img src="${coverUrl}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all ${isSelected ? 'opacity-100 scale-105' : ''}">
+                <div class="artist-album-card cursor-pointer group relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${isSelected ? 'border-orange-500 shadow-[0_0_15px_rgba(255,85,0,0.5)]' : 'border-transparent hover:border-white/20'}" data-json="${json}" data-id="${viewModel.id}">
+                    ${imgHtml}
                     
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-2 flex flex-col justify-end">
-                        <p class="text-white text-xs font-bold truncate">${album.album}</p>
-                        <p class="text-gray-400 text-[10px]">${album.year}</p>
+                        <p class="text-white text-xs font-bold truncate">${viewModel.album}</p>
+                        <p class="text-gray-400 text-[10px]">${viewModel.year || 'N/A'}</p>
                     </div>
 
                     ${isSelected ? `

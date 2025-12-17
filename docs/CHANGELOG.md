@@ -2,6 +2,34 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
+## v2.9.0 - Sprint 9: Ranking Enrichment & UI Enhancements (2025-12-17)
+
+**Status**: 🚧 **IN PROGRESS**
+**Branch**: `feature/sprint9-ranking-enrichment`
+
+### Summary
+Sprint 9 introduces ranking enrichment features and improves artist search with Apple MusicKit API integration.
+
+### ✨ New Features
+- **MusicKit API Artist Search**: Artist Filter in HomeView now searches Apple Music globally instead of local cache
+  - Finds any artist in Apple Music catalog
+  - Artwork fallback for missing covers
+  - Field mapping for API response
+
+### 🚧 In Progress (Agent A)
+- Ranking enrichment with multiple sources
+- Ranking consolidation display
+
+### ⏸️ Deferred to Backlog
+- **Album Type Filter** (Singles, Live, Compilations)
+  - See Issue #56 in DEBUG_LOG.md
+  - Requires HomeView architectural refactoring before implementation
+
+### 📁 Files Modified
+- `public/js/views/HomeView.js` - MusicKit API integration
+
+---
+
 ## v2.8.5 - Sprint 8.5: Algorithm Improvements & Playlist Fixes (2025-12-17)
 
 **Status**: 🏷️ **TAGGED RELEASE**

@@ -136,18 +136,18 @@ sequenceDiagram
 - This is the goal: open to all artists!
 
 ### 3. Album Filter by Type
-**Decision**: **Filter by type if feasible**
+**Decision**: **[REVISED] Filter logic belongs in Search/Loading phase**
 
-- Desired filters: Studio, Live, Compilations
-- Need to investigate Apple Music API capabilities for album type
-- Implement if complexity is reasonable
+- *Correction (2025-12-17)*: Users clarified that filtering should happen when searching/loading albums in `HomeView`, not as a post-load filter in `AlbumsView`.
+- **Action**: Removed Task 1 from Agent B scope (AlbumsView modification).
+- **Future**: Consider adding "Type" toggle in HomeView search results.
 
 ---
 
 ## 📝 Next Steps
 
-1. Investigate Apple Music API for album type metadata
+1. ~~Investigate Apple Music API for album type metadata~~ [DONE - API has type info]
 2. Design Musicboard scraper architecture (for future sprint)
-3. Implement artist search with full Apple Music catalog
-4. Add album type filter dropdown (if API supports)
+3. ~~Implement artist search with full Apple Music catalog~~ [DONE]
+4. **[BACKLOG]** Refactor HomeView to extract ArtistDiscographyPanel component before adding Type Filter (Issue #56)
 

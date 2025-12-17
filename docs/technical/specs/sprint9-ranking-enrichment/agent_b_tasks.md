@@ -69,35 +69,21 @@ Follow this for any bug fixes.
 
 ## 📋 Your Tasks
 
-### Task 1: Album Type Filter (Priority 1)
+## 📋 Your Tasks
 
-**Goal**: Add dropdown to filter albums by type (Studio, Live, Compilation, EP)
+### Task 1: [DEPRECATED] Album Type Filter
+*Removed from scope per User Feedback (2025-12-17)* - Filtering will be handled during search/loading in HomeView, not post-load in AlbumsView.
 
-**Location**: `AlbumsView.js` filter bar section
-
-**Steps**:
-1. Find the filter bar rendering (search for `renderFilterBar` or similar)
-2. Add a new dropdown: `<select id="typeFilter">`
-3. Options: All, Album (Studio), Live, Compilation, EP, Single
-4. On change, filter the displayed albums
-5. Persist selection in localStorage
-
-**Reference**: `MusicKitService._classifyAlbumType()` at line 297 already classifies albums:
-```javascript
-_classifyAlbumType(attributes) {
-    if (attributes.isSingle) return 'Single';
-    if (attributes.isCompilation) return 'Compilation';
-    if (name.includes('live')) return 'Live';
-    if (name.includes(' ep')) return 'EP';
-    return 'Album'; // Default: studio
-}
-```
-
-### Task 2: Artist Search Enhancement (Priority 2)
+### Task 2: Artist Search Enhancement (Priority 1)
 
 **Goal**: Ensure artist search works with ANY Apple Music artist
 
 **Current State**: Artist autocomplete in HomeView uses Apple Music API
+
+**Verify**:
+1. Search for obscure artists (not just mainstream)
+2. Check `MusicKitService.getArtistAlbums()` has no BestEver filtering
+3. Add artist avatar/image to search results if not present
 
 **Verify**:
 1. Search for obscure artists (not just mainstream)
