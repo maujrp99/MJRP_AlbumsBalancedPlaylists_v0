@@ -138,8 +138,8 @@ export class SavedPlaylistsView extends BaseView {
                     <span class="text-xs text-muted font-mono bg-black/30 px-2 py-1 rounded ml-8">ID: ${group.series.id.slice(0, 8)}...</span>
                 </div>
                 <div class="flex gap-2">
-                    <button class="btn btn-primary btn-sm flex items-center gap-1 group-hover:bg-accent-primary group-hover:text-white transition-colors" data-action="edit-series" data-id="${group.series.id}">
-                        ${getIcon('Edit', 'w-4 h-4')} Edit Playlists
+                    <button class="btn btn-primary btn-sm flex items-center gap-1 group-hover:bg-accent-primary group-hover:text-white transition-colors" data-action="add-playlists" data-id="${group.series.id}">
+                        ${getIcon('Plus', 'w-4 h-4')} Add Playlists
                     </button>
                     <button class="btn btn-secondary btn-sm group-hover:bg-white/10 transition-colors" data-action="open-series" data-id="${group.series.id}">
                         Open Series Manager ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1')}
@@ -160,10 +160,20 @@ export class SavedPlaylistsView extends BaseView {
 
         return `
             <div class="playlist-batch mb-6 last:mb-0">
-                <div class="batch-header flex items-center gap-3 mb-4 border-l-4 border-accent-primary/50 pl-3">
-                    <h3 class="text-lg font-semibold text-white/90">${this.escapeHtml(batch.name)}</h3>
-                    <span class="text-xs text-muted">${batch.playlists.length} playlists</span>
-                    ${formattedDate ? `<span class="text-xs text-muted/60">${formattedDate}</span>` : ''}
+                <div class="batch-header flex items-center justify-between mb-4 border-l-4 border-accent-primary/50 pl-3">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-lg font-semibold text-white/90">${this.escapeHtml(batch.name)}</h3>
+                        <span class="text-xs text-muted">${batch.playlists.length} playlists</span>
+                        ${formattedDate ? `<span class="text-xs text-muted/60">${formattedDate}</span>` : ''}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="btn btn-ghost btn-xs text-white/60 hover:text-accent-primary hover:bg-white/10 transition-colors" data-action="edit-batch" data-series="${seriesId}" data-batch="${this.escapeHtml(batch.name)}" title="Edit batch name">
+                            ${getIcon('Edit', 'w-4 h-4')}
+                        </button>
+                        <button class="btn btn-ghost btn-xs text-red-400/60 hover:text-red-400 hover:bg-red-500/10 transition-colors" data-action="delete-batch" data-series="${seriesId}" data-batch="${this.escapeHtml(batch.name)}" data-count="${batch.playlists.length}" title="Delete this batch">
+                            ${getIcon('Trash', 'w-4 h-4')}
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -354,6 +364,27 @@ export class SavedPlaylistsView extends BaseView {
                 const trackCount = btn.dataset.count
                 this.handleDeletePlaylist(seriesId, playlistId, playlistName, trackCount)
             }
+
+            // Add Playlists (same as edit-series - goes to playlists view)
+            if (action === 'add-playlists') {
+                const id = btn.dataset.id
+                this.handleEditSeries(id, albumSeriesStore, playlistsStore)
+            }
+
+            // Edit Batch Name
+            if (action === 'edit-batch') {
+                const seriesId = btn.dataset.series
+                const batchName = btn.dataset.batch
+                this.handleEditBatchName(seriesId, batchName)
+            }
+
+            // Delete Batch (all playlists in this batch)
+            if (action === 'delete-batch') {
+                const seriesId = btn.dataset.series
+                const batchName = btn.dataset.batch
+                const count = btn.dataset.count
+                this.handleDeleteBatch(seriesId, batchName, count)
+            }
         })
     }
 
@@ -475,6 +506,67 @@ export class SavedPlaylistsView extends BaseView {
             this.update()
             toast.success(`Playlist "${playlistName}" deleted`)
             console.log('[SavedPlaylistsView] Playlist deleted:', id)
+        })
+    }
+
+    async handleEditBatchName(seriesId, currentBatchName) {
+        // Prompt for new batch name
+        const { showEditSeriesModal } = await import('../components/Modals.js')
+
+        // Reuse the edit series modal but for batch name
+        showEditSeriesModal(`batch-${seriesId}`, currentBatchName, async (_, newBatchName) => {
+            const { db, cacheManager, auth } = await import('../app.js')
+            const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous-user'
+
+            // Update all playlists in this batch with the new name
+            const playlistRepo = new PlaylistRepository(db, cacheManager, userId, seriesId)
+            const group = this.data.find(r => r.series.id === seriesId)
+
+            if (group) {
+                const playlistsInBatch = group.playlists.filter(p => p.batchName === currentBatchName)
+
+                for (const playlist of playlistsInBatch) {
+                    playlist.batchName = newBatchName
+                    await playlistRepo.save(playlist.id, playlist)
+                }
+
+                this.update()
+                toast.success(`Batch renamed to "${newBatchName}"`)
+            }
+        })
+    }
+
+    async handleDeleteBatch(seriesId, batchName, count) {
+        // Show confirmation modal
+        const { showDeletePlaylistModal } = await import('../components/Modals.js')
+
+        // Reuse delete modal with batch info
+        showDeletePlaylistModal(`batch-${batchName}`, batchName, count, async () => {
+            const { db, cacheManager, auth } = await import('../app.js')
+            const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous-user'
+
+            const playlistRepo = new PlaylistRepository(db, cacheManager, userId, seriesId)
+            const group = this.data.find(r => r.series.id === seriesId)
+
+            if (group) {
+                const playlistsInBatch = group.playlists.filter(p => p.batchName === batchName)
+
+                // Delete each playlist in this batch
+                for (const playlist of playlistsInBatch) {
+                    await playlistRepo.delete(playlist.id)
+                }
+
+                // Update local data
+                group.playlists = group.playlists.filter(p => p.batchName !== batchName)
+
+                if (group.playlists.length === 0) {
+                    this.data = this.data.filter(r => r.series.id !== seriesId)
+                }
+
+                this.update()
+                toast.success(`Batch "${batchName}" deleted (${count} playlists)`)
+                console.log('[SavedPlaylistsView] Batch deleted:', batchName)
+            }
         })
     }
 
