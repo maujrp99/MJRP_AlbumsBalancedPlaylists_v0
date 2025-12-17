@@ -616,11 +616,27 @@ export class PlaylistsView extends BaseView {
 
       console.log('[PlaylistsView] Generated playlists:', playlists.length)
 
+      // FIX: Preserve batch context when regenerating during edit mode
+      const existingPlaylists = playlistsStore.getPlaylists()
+      const existingBatchName = existingPlaylists[0]?.batchName
+      const existingSavedAt = existingPlaylists[0]?.savedAt
+      const isEditingExistingBatch = Boolean(existingBatchName && existingSavedAt)
+
+      // Carry over batch metadata if editing
+      if (isEditingExistingBatch) {
+        console.log('[PlaylistsView] Preserving batch context on regenerate:', { existingBatchName, existingSavedAt })
+        playlists.forEach(p => {
+          p.batchName = existingBatchName
+          p.savedAt = existingSavedAt
+        })
+      }
+
       // FIX: Pass seriesId to store to link playlists to this specific series
       const activeSeries = albumSeriesStore.getActiveSeries()
       playlistsStore.setPlaylists(playlists, activeSeries ? activeSeries.id : null)
 
-      console.log('[PlaylistsView] Playlists set in store for series:', activeSeries ? activeSeries.id : 'unknown')
+      console.log('[PlaylistsView] Playlists set in store for series:', activeSeries ? activeSeries.id : 'unknown',
+        isEditingExistingBatch ? `(editing batch: ${existingBatchName})` : '(new batch)')
 
       // Force immediate update
       this.isGenerating = false
