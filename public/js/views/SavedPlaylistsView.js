@@ -371,11 +371,11 @@ export class SavedPlaylistsView extends BaseView {
                 this.handleEditSeries(id, albumSeriesStore, playlistsStore)
             }
 
-            // Edit Batch Name
+            // Edit Batch Playlists (navigate to editor)
             if (action === 'edit-batch') {
                 const seriesId = btn.dataset.series
                 const batchName = btn.dataset.batch
-                this.handleEditBatchName(seriesId, batchName)
+                this.handleEditBatchPlaylists(seriesId, batchName, albumSeriesStore, playlistsStore)
             }
 
             // Delete Batch (all playlists in this batch)
@@ -509,31 +509,29 @@ export class SavedPlaylistsView extends BaseView {
         })
     }
 
-    async handleEditBatchName(seriesId, currentBatchName) {
-        // Prompt for new batch name
-        const { showEditSeriesModal } = await import('../components/Modals.js')
+    async handleEditBatchPlaylists(seriesId, batchName, albumSeriesStore, playlistsStore) {
+        // Load only the playlists from this specific batch and navigate to editor
+        const group = this.data.find(r => r.series.id === seriesId)
+        if (!group) return
 
-        // Reuse the edit series modal but for batch name
-        showEditSeriesModal(`batch-${seriesId}`, currentBatchName, async (_, newBatchName) => {
-            const { db, cacheManager, auth } = await import('../app.js')
-            const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous-user'
+        // Filter playlists to only this batch
+        const batchPlaylists = group.playlists.filter(p => p.batchName === batchName)
 
-            // Update all playlists in this batch with the new name
-            const playlistRepo = new PlaylistRepository(db, cacheManager, userId, seriesId)
-            const group = this.data.find(r => r.series.id === seriesId)
+        if (batchPlaylists.length === 0) {
+            toast.warning('No playlists found in this batch')
+            return
+        }
 
-            if (group) {
-                const playlistsInBatch = group.playlists.filter(p => p.batchName === currentBatchName)
+        // Set up the series in store
+        const existing = albumSeriesStore.getSeries().find(s => s.id === seriesId)
+        if (!existing) albumSeriesStore.series.push(group.series)
+        albumSeriesStore.setActiveSeries(seriesId)
 
-                for (const playlist of playlistsInBatch) {
-                    playlist.batchName = newBatchName
-                    await playlistRepo.save(playlist.id, playlist)
-                }
+        // Load only this batch's playlists
+        playlistsStore.setPlaylists(batchPlaylists, seriesId)
 
-                this.update()
-                toast.success(`Batch renamed to "${newBatchName}"`)
-            }
-        })
+        toast.info(`Editing "${batchName}" (${batchPlaylists.length} playlists)`)
+        router.navigate('/playlists')
     }
 
     async handleDeleteBatch(seriesId, batchName, count) {
