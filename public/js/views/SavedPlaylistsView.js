@@ -388,7 +388,7 @@ export class SavedPlaylistsView extends BaseView {
         })
     }
 
-    handleEditSeries(seriesId, albumSeriesStore, playlistsStore) {
+    async handleEditSeries(seriesId, albumSeriesStore, playlistsStore) {
         const group = this.data.find(r => r.series.id === seriesId)
         if (!group) return
 
@@ -396,7 +396,11 @@ export class SavedPlaylistsView extends BaseView {
         if (!existing) albumSeriesStore.series.push(group.series)
         albumSeriesStore.setActiveSeries(seriesId)
 
-        // Sprint 8.5: FIX: Do NOT load existing playlists - we want to ADD new ones
+        // Sprint 8.5 FIX: ALSO set albumsStore context so getAlbums() returns correct series
+        const { albumsStore } = await import('../stores/albums.js')
+        albumsStore.setActiveAlbumSeriesId(seriesId)
+        console.log('[SavedPlaylistsView] Set albumsStore context for series:', seriesId)
+
         // Clear store and set CREATING mode for a clean slate
         playlistsStore.setCreateMode()
         playlistsStore.playlists = [] // Clear any existing data
