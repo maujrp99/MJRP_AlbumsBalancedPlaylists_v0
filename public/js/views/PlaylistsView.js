@@ -446,7 +446,7 @@ export class PlaylistsView extends BaseView {
 
         // Delete old batch playlists first
         console.log('[PlaylistsView] 2a. Deleting old playlists for batch:', batchName)
-        const allPlaylists = await repo.getAll()
+        const allPlaylists = await repo.findAll()
         const oldBatchPlaylists = allPlaylists.filter(p => p.batchName === batchName)
         console.log('[PlaylistsView] Found', oldBatchPlaylists.length, 'old playlists to delete')
 

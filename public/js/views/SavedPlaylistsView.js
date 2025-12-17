@@ -395,10 +395,12 @@ export class SavedPlaylistsView extends BaseView {
         const existing = albumSeriesStore.getSeries().find(s => s.id === seriesId)
         if (!existing) albumSeriesStore.series.push(group.series)
         albumSeriesStore.setActiveSeries(seriesId)
-        playlistsStore.setPlaylists(group.playlists, seriesId)
 
-        // Sprint 8.5: Set CREATING mode explicitly (State Machine Pattern)
+        // Sprint 8.5: FIX: Do NOT load existing playlists - we want to ADD new ones
+        // Clear store and set CREATING mode for a clean slate
         playlistsStore.setCreateMode()
+        playlistsStore.playlists = [] // Clear any existing data
+        playlistsStore.seriesId = seriesId // Set series context
 
         router.navigate(`/playlists?seriesId=${seriesId}`)
     }
