@@ -48,13 +48,21 @@ function normalize(str) {
 }
 
 /**
- * Create URL slug from artist and album name
- * Musicboard uses format: /album/{artist-slug}-{album-slug}/
+ * Create album URL from artist and album name
+ * 
+ * Musicboard URL pattern (discovered 2025-12-17):
+ * https://musicboard.app/album/{album-slug}/{artist-slug}/
+ * 
+ * Examples:
+ * - Metallica (self-titled): /album/metallica/metallica/
+ * - Ride The Lightning: /album/ride-the-lightning/metallica/
+ * - Nevermind: /album/nevermind/nirvana/
  */
-function createAlbumSlug(artist, album) {
+function createAlbumUrl(artist, album) {
     const artistSlug = normalize(artist).replace(/\s+/g, '-')
     const albumSlug = normalize(album).replace(/\s+/g, '-')
-    return `${artistSlug}-${albumSlug}`
+    // Pattern: /album/{album-slug}/{artist-slug}/
+    return `https://musicboard.app/album/${albumSlug}/${artistSlug}/`
 }
 
 /**
@@ -103,9 +111,8 @@ async function getRankingForAlbum(albumTitle, albumArtist) {
     let browser = null
 
     try {
-        // Try constructing URL directly first
-        const slug = createAlbumSlug(albumArtist, albumTitle)
-        const albumUrl = `https://musicboard.app/album/${slug}/`
+        // Construct URL using correct pattern
+        const albumUrl = createAlbumUrl(albumArtist, albumTitle)
 
         browser = await launchBrowser()
         const page = await browser.newPage()
@@ -226,84 +233,99 @@ async function searchAndScrape(browser, page, albumTitle, albumArtist) {
 
 /**
  * Extract track ratings from the current page
+ * 
+ * CSS Selectors discovered via browser inspection (2025-12-17):
+ * - Track row: div[class*="trackitem_container"]
+ * - Track title: .link-overlay-title (or .link-overlay span.link-overlay-title)
+ * - Track number: div[class*="trackitem_itemContainer"] p
+ * - Rating: p tag containing decimal like "4.4"
+ * 
+ * NOTE: Musicboard uses 0-5 scale, we convert to 0-100 for consistency
  */
 async function extractTrackRatings(page, albumUrl) {
     try {
         const data = await page.evaluate(() => {
             const evidence = []
 
-            // Strategy 1: Look for track list containers
-            const trackContainers = document.querySelectorAll(
-                '[class*="track-list"], [class*="tracklist"], [class*="songlist"], ' +
-                '[data-testid*="track"], [class*="TrackRow"], [class*="SongRow"]'
-            )
+            // Primary Strategy: Use actual Musicboard selectors (discovered 2025-12-17)
+            // Musicboard uses CSS modules with hashed class names, so we use partial matching
+            const trackRows = document.querySelectorAll('div[class*="trackitem_container"]')
 
-            // Strategy 2: Look for individual track items
-            const trackItems = document.querySelectorAll(
-                '[class*="track-item"], [class*="song-item"], [class*="TrackItem"], ' +
-                'tr[class*="track"], li[class*="track"], div[class*="track"]'
-            )
+            console.log(`[Musicboard] Found ${trackRows.length} track rows`)
 
-            // Strategy 3: Look for tables with track data
-            const tables = document.querySelectorAll('table')
+            for (const row of trackRows) {
+                // Extract track number
+                const numberEl = row.querySelector('div[class*="trackitem_itemContainer"] p, div[class*="itemContainer"] p')
+                const position = numberEl ? parseInt(numberEl.innerText.trim(), 10) : null
 
-            // Try extracting from track items
-            const allItems = [...trackContainers, ...trackItems]
+                // Extract track title (using link-overlay pattern)
+                const titleEl = row.querySelector('.link-overlay-title') ||
+                    row.querySelector('span.link-overlay-title') ||
+                    row.querySelector('a.link-overlay')
+                const title = titleEl ? titleEl.innerText.trim() : ''
 
-            for (const item of allItems) {
-                // Look for track title
-                const titleEl = item.querySelector(
-                    '[class*="track-name"], [class*="song-name"], [class*="title"], ' +
-                    '[class*="TrackName"], [class*="SongName"]'
-                ) || item.querySelector('a') || item
+                if (!title || title.length < 2) continue
 
-                const title = (titleEl?.textContent || '').trim()
-                if (!title || title.length < 2 || title.length > 200) continue
-
-                // Look for rating
+                // Extract rating: format is "X.X / 5" (e.g., "4.4 / 5")
+                // Class is "black" but that's not specific enough
+                // Use regex to match "4.4 / 5" or just "4.4" patterns
                 let rating = null
-                const ratingEl = item.querySelector(
-                    '[class*="rating"], [class*="score"], [class*="average"], ' +
-                    '[class*="Rating"], [class*="Score"]'
-                )
+                const allParagraphs = row.querySelectorAll('p')
+                for (const p of allParagraphs) {
+                    const text = p.innerText.trim()
 
-                if (ratingEl) {
-                    const ratingText = ratingEl.textContent.trim()
-                    // Musicboard uses 0-10 scale typically, or percentage
-                    const numMatch = ratingText.match(/(\d+\.?\d*)/)
-                    if (numMatch) {
-                        rating = parseFloat(numMatch[1])
+                    // Primary pattern: "4.4 / 5" format (discovered 2025-12-17)
+                    const slashMatch = text.match(/^(\d+\.?\d*)\s*\/\s*\d+$/)
+                    if (slashMatch) {
+                        const ratingValue = parseFloat(slashMatch[1])
+                        // Musicboard uses 0-5 scale, convert to 0-100
+                        rating = Math.round(ratingValue * 20) // 4.4 -> 88
+                        break
+                    }
+
+                    // Fallback: just decimal number like "4.4"
+                    if (/^\d+\.\d+$/.test(text)) {
+                        const ratingValue = parseFloat(text)
+                        if (ratingValue >= 0 && ratingValue <= 5) {
+                            rating = Math.round(ratingValue * 20)
+                        } else if (ratingValue >= 0 && ratingValue <= 10) {
+                            rating = Math.round(ratingValue * 10)
+                        }
+                        break
                     }
                 }
 
                 // Avoid duplicates
                 if (!evidence.find(e => e.trackTitle === title)) {
-                    evidence.push({ trackTitle: title, rating })
+                    evidence.push({
+                        trackTitle: title,
+                        rating,
+                        position: position || evidence.length + 1
+                    })
                 }
             }
 
-            // Try tables as fallback
+            // Fallback Strategy: Try original generic selectors if primary found nothing
             if (evidence.length === 0) {
-                for (const table of tables) {
-                    const rows = table.querySelectorAll('tr')
-                    for (const row of rows) {
-                        const cells = row.querySelectorAll('td')
-                        if (cells.length >= 2) {
-                            const title = (cells[0]?.textContent || cells[1]?.textContent || '').trim()
-                            if (!title || title.length < 2) continue
+                console.log('[Musicboard] Primary selectors failed, trying fallback...')
 
-                            let rating = null
-                            for (const cell of cells) {
-                                const text = cell.textContent.trim()
-                                const numMatch = text.match(/^(\d+\.?\d*)$/)
-                                if (numMatch) {
-                                    rating = parseFloat(numMatch[1])
-                                    break
-                                }
-                            }
+                // Look for any elements that might contain track data
+                const fallbackItems = document.querySelectorAll(
+                    '[class*="track"], [class*="song"], [class*="Track"], [class*="Song"]'
+                )
+
+                for (const item of fallbackItems) {
+                    const text = item.innerText.trim()
+                    if (text.length > 2 && text.length < 100) {
+                        // Try to parse as track
+                        const titleMatch = text.match(/^(?:\d+\.)?\s*(.+?)(?:\s+\d+\.\d+)?$/)
+                        if (titleMatch && titleMatch[1]) {
+                            const title = titleMatch[1].trim()
+                            const ratingMatch = text.match(/(\d+\.\d+)/)
+                            const rating = ratingMatch ? Math.round(parseFloat(ratingMatch[1]) * 20) : null
 
                             if (!evidence.find(e => e.trackTitle === title)) {
-                                evidence.push({ trackTitle: title, rating })
+                                evidence.push({ trackTitle: title, rating, position: evidence.length + 1 })
                             }
                         }
                     }
@@ -323,23 +345,22 @@ async function extractTrackRatings(page, albumUrl) {
         const cleanedEvidence = data.evidence
             .map(e => ({
                 trackTitle: e.trackTitle
-                    .replace(/^\d+\.?\s*/, '') // Remove leading track numbers
+                    .replace(/^\d+\.\s*/, '') // Remove leading track numbers like "1. "
                     .replace(/\s*\(.*?\)\s*$/, '') // Remove parentheticals at end
                     .trim(),
                 rating: e.rating,
-                position: data.evidence.indexOf(e) + 1
+                position: e.position
             }))
             .filter(e => e.trackTitle.length > 1)
 
-        // Sort by rating if available
-        cleanedEvidence.sort((a, b) => {
-            if (a.rating === null && b.rating === null) return 0
-            if (a.rating === null) return 1
-            if (b.rating === null) return -1
-            return b.rating - a.rating
-        })
+        // Sort by position (original tracklist order)
+        cleanedEvidence.sort((a, b) => (a.position || 999) - (b.position || 999))
 
         console.log(`[Musicboard] Extracted ${cleanedEvidence.length} tracks`)
+
+        if (cleanedEvidence.length > 0) {
+            console.log('[Musicboard] Sample:', cleanedEvidence.slice(0, 3))
+        }
 
         return {
             provider: 'Musicboard',

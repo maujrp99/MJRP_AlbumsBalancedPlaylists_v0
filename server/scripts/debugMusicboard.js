@@ -18,8 +18,9 @@ async function debugMusicboard() {
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36')
     await page.setViewport({ width: 1920, height: 1080 })
 
-    // Navigate to a known album page
-    const url = 'https://musicboard.app/album/metallica-metallica/'
+    // Navigate to a known album page (using correct URL pattern)
+    // Pattern: /album/{album-slug}/{artist-slug}/
+    const url = 'https://musicboard.app/album/metallica/metallica/'
     console.log('Navigating to:', url)
 
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 })
