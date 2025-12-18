@@ -16,6 +16,7 @@
 
 ## 📑 Issue Index
 
+| #56 | HomeView Type Filter | ⏸️ DEFERRED | [L52](#issue-56-homeview-type-filter-layout-regression) |
 | #55 | Ghost Playlists | 🧪 TESTING | [L54](#issue-55-ghost-playlists--batch-context-contamination) |
 | #54 | Edit Batch Not Overwriting | 🧪 TESTING | [L54](#issue-54-edit-batch-not-overwriting) |
 | #53 | Ranked by Acclaim | ✅ RESOLVED | [L100](#issue-53-ranked-by-acclaim-not-loading-ratings---resolved) |
@@ -50,6 +51,45 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #56: HomeView Type Filter Layout Regression
+**Status**: ⏸️ **DEFERRED** (Moved to Backlog)
+**Date**: 2025-12-17 18:00
+**Updated**: 2025-12-17 19:15
+**Severity**: MEDIUM
+**Type**: UI Layout / Template Injection
+**Component**: `HomeView.js`
+
+#### Problem
+Attempted to add Album Type Filter checkboxes (Singles, Live, Compilations) to the Artist Search results in HomeView. Multiple implementation approaches caused severe layout regressions where the results grid overlapped with other UI elements (Staging Area).
+
+#### Failed Attempts
+
+| # | Time | Attempt | Result |
+|---|------|---------|--------|
+| 1 | 18:05 | Inject filter UI via `container.innerHTML` | ❌ FAILED - Destroyed existing DOM structure |
+| 2 | 18:20 | Switch container from `absolute` to `relative` | ❌ FAILED - Broke intended overlay UX |
+| 3 | 18:35 | Add filters to `render()` template (Option A) | ❌ FAILED - Still had layout issues |
+
+#### Root Cause Analysis
+1. **Architectural Issue**: Original implementation defines `artistResultsContainer` in the HTML template with specific CSS (`absolute inset-0`)
+2. **My Approach**: Overwrote `container.innerHTML` dynamically, destroying the template structure
+3. **Correct Approach**: Should only update `grid.innerHTML` without touching the container
+
+#### Resolution
+- **Rolled back** all filter-related changes using `git checkout HEAD -- HomeView.js`
+- **Kept** the MusicKit API enhancement (Task 2) which was implemented separately and works correctly
+- **Deferred** the Type Filter feature to backlog for proper architectural refactoring
+
+#### Lessons Learned
+1. Don't make multiple incremental patches without validating each
+2. Understand the existing template structure before modifying
+3. For UI changes, consider extracting to a separate component
+
+#### Files Modified
+- `public/js/views/HomeView.js` - Rolled back, then added only MusicKit API change
+
+---
 
 ### Issue #55: Ghost Playlists / Batch Context Contamination
 **Status**: 🧪 **TESTING** (Awaiting User Verification)
