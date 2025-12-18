@@ -4,9 +4,7 @@ const { extractAndValidateRankingEntries, rankingEntriesToSources } = require('.
 const { getRankingForAlbum: getBestEverRanking } = require('./scrapers/besteveralbums')
 
 // Musicboard scraper integration (Sprint 9)
-// Uncomment when scraper is ready:
-// const { getRankingForAlbum: getMusicboardRanking } = require('./scrapers/musicboard')
-const getMusicboardRanking = null // Placeholder until scraper is debugged
+const { getRankingForAlbum: getMusicboardRanking } = require('./scrapers/musicboard')
 
 // Lazy load shared module (ESM)
 let normalizeKeyFn = null
@@ -27,20 +25,15 @@ const logger = (() => { try { return require('./logger') } catch (e) { return co
  * @param {number} rating - Raw rating from source
  * @param {string} source - Source provider name
  * @returns {number} Normalized rating (0-100)
- */
 function normalizeRating(rating, source) {
     if (rating === null || rating === undefined) return null
     const numRating = Number(rating)
     if (isNaN(numRating)) return null
 
-    const sourceLower = String(source || '').toLowerCase()
+    // NOTE: Musicboard scraper already converts 0-5 → 0-100 internally
+    // So we don't need to re-normalize it here
+    // All sources should return 0-100 scale
 
-    if (sourceLower.includes('musicboard')) {
-        // Musicboard uses 0-10 scale
-        return Math.min(100, Math.max(0, numRating * 10))
-    }
-
-    // BestEverAlbums and others use 0-100
     return Math.min(100, Math.max(0, numRating))
 }
 
