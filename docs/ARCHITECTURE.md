@@ -91,6 +91,58 @@ graph TB
 
 ---
 
+## Sprint 10: Modularization & Design Patterns
+**Status**: 🟢 Complete  
+**Date**: 2025-12-18  
+**Objective**: Improve code maintainability through modularization
+
+### Design Patterns in Use
+
+| Pattern | Location | Purpose |
+|---------|----------|---------|
+| **Context Object** | `views/albums/AlbumsScopedRenderer.js` | Pass dependencies as object to avoid `this` binding |
+| **Dependency Injection** | `server/index.js` → Routes | Inject `loadPrompts`, `callProvider` into route handlers |
+| **Barrel Export** | `views/*/index.js` | Single entry point for module imports |
+| **Strategy** | `ViewModeStrategy.js`, Algorithms | Interchangeable behaviors (Compact/Expanded, different algorithms) |
+| **State Machine** | `PlaylistsStore.mode` | Explicit CREATE/EDIT modes |
+| **Observer** | All Stores | Reactive UI updates via `subscribe()` |
+| **Repository** | `*Repository.js` | Abstract Firestore data access |
+| **Facade** | `MusicKitService.js` | Simplified Apple Music API interface |
+
+### Module Structure
+
+```
+public/js/views/
+├── albums/
+│   ├── index.js              # Barrel export
+│   ├── AlbumsGridRenderer.js # Render functions
+│   ├── AlbumsScopedRenderer.js # All Series grouping
+│   └── AlbumsFilters.js       # Filter utilities
+├── playlists/
+│   ├── index.js              # Barrel export
+│   ├── PlaylistsExport.js    # JSON/Apple Music export
+│   └── PlaylistsDragDrop.js  # SortableJS integration
+└── strategies/
+    └── ViewModeStrategy.js   # Compact/Expanded modes
+
+server/routes/
+├── albums.js     # /generate, /enrich-album
+├── playlists.js  # /playlists  
+└── debug.js      # /debug/*, /list-models
+```
+
+### Metrics
+
+| File | Before | After | Reduction |
+|------|--------|-------|-----------|
+| `server/index.js` | 535 | 150 | -72% |
+| `AlbumsView.js` | 1,757 | 1,374 | -22% |
+| `PlaylistsView.js` | 886 | 783 | -12% |
+
+**Total**: -871 lines removed, 10 modules created
+
+---
+
 ## ViewMode Strategy Pattern
 **Status**: 🟢 Active  
 **Date**: 2025-12-15  
