@@ -388,15 +388,25 @@ export class EditPlaylistView extends BaseView {
 
       console.log('[EditPlaylistView] Regenerating with algorithm:', algorithm.name)
 
-      const newPlaylists = algorithm.generate(albums)
+      const result = algorithm.generate(albums)
 
-      // Keep the current batch name
-      newPlaylists.forEach((p, i) => {
-        p.batchName = this.currentBatchName
-        p.order = i
-      })
+      // Transform and add numbering prefix to playlist names
+      const newPlaylists = result.playlists.map((p, i) => ({
+        name: `${i + 1}. ${p.title}`,
+        batchName: this.currentBatchName,
+        order: i,
+        tracks: p.tracks.map(t => ({
+          id: t.id,
+          title: t.title,
+          artist: t.artist,
+          album: t.album,
+          duration: t.duration,
+          rating: t.rating,
+          rank: t.rank || t.acclaimRank
+        }))
+      }))
 
-      playlistsStore.setPlaylists(newPlaylists)
+      playlistsStore.setPlaylists(newPlaylists, this.seriesId)
       toast.success(`Regenerated ${newPlaylists.length} playlists!`)
 
     } catch (error) {

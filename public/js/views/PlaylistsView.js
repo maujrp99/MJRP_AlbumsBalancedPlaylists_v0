@@ -284,7 +284,8 @@ export class PlaylistsView extends BaseView {
     return playlists.map((playlist, pIndex) => `
       <div class="playlist-column glass-panel flex flex-col h-full" data-playlist-index="${pIndex}">
         <div class="playlist-header mb-4 pb-4 border-b border-white/10">
-          <h3 class="playlist-name text-lg font-bold mb-2 outline-none focus:text-accent-primary transition-colors" contenteditable="true" data-playlist-index="${pIndex}">
+          <h3 class="playlist-name text-lg font-bold mb-2 outline-none focus:text-accent-primary transition-colors flex items-center gap-2" contenteditable="true" data-playlist-index="${pIndex}">
+            <span class="text-accent-primary font-mono">${pIndex + 1}.</span>
             ${this.escapeHtml(playlist.name)}
           </h3>
           <div class="playlist-stats flex gap-2">
@@ -638,8 +639,9 @@ export class PlaylistsView extends BaseView {
       const result = algorithm.generate(albums)
 
       // Transform result to playlist format expected by store
-      const playlists = result.playlists.map(p => ({
-        name: p.title,
+      // Add numbering prefix to playlist names (user requested)
+      const playlists = result.playlists.map((p, index) => ({
+        name: `${index + 1}. ${p.title}`,
         tracks: p.tracks.map(t => ({
           id: t.id,
           title: t.title,
