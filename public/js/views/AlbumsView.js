@@ -12,19 +12,19 @@ import { showViewAlbumModal } from '../components/ViewAlbumModal.js'
 import { createViewModeStrategy } from './strategies/ViewModeStrategy.js'
 import { Autocomplete } from '../components/Autocomplete.js'
 
-// Sprint 10: Modular components
+// Sprint 10: Modular components - Consolidated imports
 import {
   renderLoadingProgress as renderLoadingProgressFn,
-  renderRankedTracklist,
-  renderOriginalTracklist,
+  renderRankedTracklist as renderRankedTracklistFn,
+  renderOriginalTracklist as renderOriginalTracklistFn,
   renderRankingBadge,
   renderExpandedAlbumCard,
+  renderExpandedList as renderExpandedListFn,
   renderCompactAlbumCard,
+  renderAlbumsGrid as renderAlbumsGridFn,
   renderNoMatchState,
   escapeHtml as escapeHtmlFn,
-  wrapInGrid
-} from './albums/index.js'
-import {
+  wrapInGrid,
   filterAlbums as filterAlbumsFn,
   getUniqueArtists as getUniqueArtistsFn
 } from './albums/index.js'
@@ -314,259 +314,30 @@ export class AlbumsView extends BaseView {
   `
   }
 
-  // MODE 3: Expanded List View
+  // MODE 3: Expanded List View - DELEGATED to module
   renderExpandedList(albums) {
-    if (albums.length === 0 && (this.searchQuery || Object.values(this.filters).some(v => v !== 'all' && v !== false))) {
-      return `
-  <div class="text-center py-12 text-muted" >
-          <p class="text-xl mb-2">No albums match your filters</p>
-          <p class="text-sm">Try adjusting your search or filters</p>
-        </div>
-  `
-    }
-
-    return albums.map((album, idx) => {
-      const coverUrl = albumLoader.getArtworkUrl(album, 150)
-
-      return `
-  <div class="expanded-album-card glass-panel p-6 mb-6 rounded-2xl animate-in fade-in slide-in-from-bottom-4 duration-500" style="animation-delay: ${idx * 50}ms" data-album-id="${album.id || ''}" >
-    <div class="flex flex-col md:flex-row gap-6 items-start">
-
-      <!-- Album Cover & Actions Column -->
-      <div class="flex flex-col gap-4 shrink-0">
-        <div class="relative group">
-          <div class="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg bg-gray-800 border border-white/10">
-            <img
-              src="${coverUrl}"
-              alt="${this.escapeHtml(album.title)}"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              loading="lazy"
-            />
-          </div>
-        </div>
-
-        <!-- Action Buttons (Refined) -->
-        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
-          <button class="tech-btn tech-btn-secondary text-xs px-4 py-2 flex items-center gap-2 hover:bg-white/20"
-            data-action="add-to-inventory"
-            data-album-id="${album.id || ''}">
-            ${getIcon('Plus', 'w-3 h-3')} Inventory
-          </button>
-
-          <button class="tech-btn tech-btn-danger text-xs px-4 py-2 flex items-center gap-2"
-            data-action="remove-album"
-            data-album-id="${album.id || ''}">
-            ${getIcon('Trash', 'w-3 h-3')} Remove
-          </button>
-        </div>
-      </div>
-
-      <!-- Content Column -->
-      <div class="flex-1 w-full min-w-0">
-        <h3 class="text-2xl font-bold mb-1 flex items-center gap-2">
-          ${getIcon('Music', 'w-6 h-6 text-accent-primary')}
-          ${this.escapeHtml(album.title)}
-        </h3>
-        <p class="text-accent-primary text-lg mb-3">${this.escapeHtml(album.artist)}</p>
-
-        <!-- Badges -->
-        <div class="flex flex-wrap gap-2 text-sm mb-4">
-          ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
-          <span class="badge badge-neutral">${album.tracks?.length || 0} tracks</span>
-          ${(() => {
-          const hasBestEver = !!album.bestEverAlbumId
-          const providerType = album.acclaim?.providerType
-          const hasRatings = album.tracks?.some(t => t.rating > 0)
-
-          if (hasBestEver) {
-            return `
-                <a href="https://www.besteveralbums.com/thechart.php?a=${album.bestEverAlbumId}" target="_blank" rel="noopener noreferrer" class="badge badge-primary hover:badge-accent transition-colors flex items-center gap-1" title="Ranking by Community Acclaim">
-                  ${getIcon('ExternalLink', 'w-3 h-3')} Acclaim
-                </a>`
-          }
-          if (providerType === 'popularity') {
-            return `<span class="badge badge-success flex items-center gap-1" title="Ranking by Spotify Popularity">${getIcon('TrendingUp', 'w-3 h-3')} Popularity</span>`
-          }
-          if (hasRatings) {
-            return `<span class="badge badge-info flex items-center gap-1" title="Ranking by AI Enrichment">${getIcon('Cpu', 'w-3 h-3')} AI</span>`
-          }
-          // Pending
-          return `<span class="badge badge-warning flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
-        })()}
-        </div>
-
-        <!-- Dual Tracklists -->
-        <div class="dual-tracklists-compact grid md:grid-cols-2 gap-6">
-          ${this.renderOriginalTracklist(album)}
-          ${this.renderRankedTracklist(album)}
-        </div>
-      </div>
-    </div>
-      </div>
-  `
-    }).join('')
+    return renderExpandedListFn(albums, {
+      searchQuery: this.searchQuery,
+      filters: this.filters
+    })
   }
 
-  // Ranked Tracklist (for MODE 3)
+  // Ranked Tracklist (for MODE 3) - DELEGATED to module
   renderRankedTracklist(album) {
-    const tracks = album.tracks || []
-    if (tracks.length === 0) {
-      return '<p class="text-muted text-sm">No tracks available</p>'
-    }
-
-    // Sort by rating (descending)
-    const rankedTracks = [...tracks].sort((a, b) => (b.rating || 0) - (a.rating || 0))
-
-    return `
-  <div class="tracklist-section" >
-        <h4 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-primary">
-          ${getIcon('TrendingUp', 'w-4 h-4')}
-          Ranked by Acclaim
-        </h4>
-        <div class="tracks-list-compact space-y-1 text-sm">
-          ${rankedTracks.map((track, idx) => {
-      const rating = track.rating || 0
-      const medal = idx < 3 ? (idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉') : ''
-      return `
-              <div class="track-row-compact flex items-center gap-2 py-1 px-2 rounded hover:bg-white/5">
-                <span class="track-pos w-6 text-xs text-muted text-center">${medal || (idx + 1)}</span>
-                <span class="track-name flex-1 truncate">${this.escapeHtml(track.title || track.name)}</span>
-                ${rating > 0 ? `<span class="track-rating badge badge-sm ${rating >= 90 ? 'badge-success' : rating >= 80 ? 'badge-primary' : 'badge-neutral'}">⭐ ${rating}</span>` : ''}
-              </div>
-            `
-    }).join('')}
-        </div>
-      </div>
-  `
+    return renderRankedTracklistFn(album)
   }
 
-  // Original Tracklist (for MODE 3)
+  // Original Tracklist (for MODE 3) - DELEGATED to module
   renderOriginalTracklist(album) {
-    // Use tracksOriginalOrder if available, otherwise fall back to tracks
-    const tracks = album.tracksOriginalOrder || album.tracks || []
-    if (tracks.length === 0) {
-      return '<p class="text-muted text-sm">No tracks available</p>'
-    }
-
-    return `
-  <div class="tracklist-section" >
-        <h4 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
-          ${getIcon('List', 'w-4 h-4')}
-          Original Album Order
-        </h4>
-        <div class="tracks-list-compact space-y-1 text-sm">
-          ${tracks.map((track, idx) => {
-      const rating = track.rating || 0
-      // Use track position for correct numbering
-      const position = track.position || (idx + 1)
-      return `
-              <div class="track-row-compact flex items-center gap-2 py-1 px-2 rounded hover:bg-white/5">
-                <span class="track-pos w-6 text-xs text-muted text-center">${position}</span>
-                <span class="track-name flex-1 truncate">${this.escapeHtml(track.title || track.name)}</span>
-                ${rating > 0 ? `<span class="track-rating badge badge-sm badge-neutral opacity-70">⭐ ${rating}</span>` : ''}
-              </div>
-            `
-    }).join('')}
-        </div>
-      </div>
-  `
+    return renderOriginalTracklistFn(album)
   }
 
-  // MODE 1: Compact Grid View
-  // MODE 1: Compact Grid View
+  // MODE 1: Compact Grid View - DELEGATED to module
   renderAlbumsGrid(albums) {
-    // albums is already filtered from render(), don't filter again
-
-    if (albums.length === 0 && (this.searchQuery || Object.values(this.filters).some(v => v !== 'all' && v !== false))) {
-      return `
-  <div class="col-span-full text-center py-12 text-muted" >
-          <p class="text-xl mb-2">No albums match your filters</p>
-          <p class="text-sm">Try adjusting your search or filters</p>
-        </div>
-  `
-    }
-
-    return albums.map(album => {
-      // Use 300px for grid view to ensure high quality on retina/large screens
-      const coverUrl = albumLoader.getArtworkUrl(album, 300)
-
-      return `
-  <div class="album-card-compact flex flex-col gap-3 h-full relative" data-album-id="${album.id || ''}" >
-        <!--Image Container(Square top) - Click triggers View Modal-->
-        <div 
-            class="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-800 border border-white/5 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
-            data-action="view-modal"
-            data-album-id="${album.id || ''}"
-        >
-           ${coverUrl ?
-          `<img src="${coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />` :
-          `<div class="flex items-center justify-center w-full h-full text-white/20">${getIcon('Music', 'w-24 h-24')}</div>`
-        }
-           
-           <!-- Hover Overlay Icon to indicate clickable -->
-           <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-              <span class="bg-black/50 p-3 rounded-full backdrop-blur text-white">
-                  ${getIcon('Maximize2', 'w-6 h-6')}
-              </span>
-           </div>
-        </div>
-        
-        <!--Metadata Container(Below Image)-->
-  <div class="flex flex-col gap-1 px-1">
-    <div class="flex justify-between items-start gap-2">
-        <div class="min-w-0 flex-1">
-            <h3 class="font-bold text-white text-base truncate leading-tight" title="${this.escapeHtml(album.title)}">
-              ${this.escapeHtml(album.title)}
-            </h3>
-            <p class="text-gray-400 text-sm truncate hover:text-white transition-colors">
-              ${this.escapeHtml(album.artist)}
-            </p>
-        </div>
-        
-        <!-- Sprint 7.5: Action Buttons (Right Aligned) -->
-        <div class="flex items-center gap-1 shrink-0">
-             <button class="p-1.5 text-gray-400 hover:text-green-400 hover:bg-white/10 rounded-lg transition-colors" 
-                title="Add to Inventory" 
-                data-action="add-to-inventory" 
-                data-album-id="${album.id || ''}">
-               ${getIcon('Plus', 'w-4 h-4')}
-             </button>
-             <button class="p-1.5 text-gray-400 hover:text-red-400 hover:bg-white/10 rounded-lg transition-colors" 
-                title="Remove" 
-                data-action="remove-album" 
-                data-album-id="${album.id || ''}">
-               ${getIcon('Trash', 'w-4 h-4')}
-             </button>
-        </div>
-    </div>
-
-    <!-- Badges & View Button Row -->
-    <div class="flex items-center justify-between mt-2 gap-2">
-        <div class="flex flex-wrap gap-2">
-          <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
-            ${album.year || 'N/A'}
-          </span>
-          <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
-            ${album.tracks?.length || 0}
-          </span>
-          ${(() => {
-          const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
-          return hasRatings ? '' : `<span class="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')}</span>`
-        })()}
-        </div>
-
-        <!-- View Tracks Button (Renamed from View Ranked) -->
-        <button
-          class="text-xs px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 text-accent-primary hover:bg-white/10 hover:border-accent-primary/50 transition-all flex items-center gap-1 whitespace-nowrap"
-          data-action="view-modal"
-          data-album-id="${album.id || ''}">
-          View Tracks
-        </button>
-    </div>
-  </div>
-      </div>
-  `
-    }).join('')
+    return renderAlbumsGridFn(albums, {
+      searchQuery: this.searchQuery,
+      filters: this.filters
+    })
   }
 
   // Sprint 10: Delegate to modular filter
