@@ -12,6 +12,23 @@ import { showViewAlbumModal } from '../components/ViewAlbumModal.js'
 import { createViewModeStrategy } from './strategies/ViewModeStrategy.js'
 import { Autocomplete } from '../components/Autocomplete.js'
 
+// Sprint 10: Modular components
+import {
+  renderLoadingProgress as renderLoadingProgressFn,
+  renderRankedTracklist,
+  renderOriginalTracklist,
+  renderRankingBadge,
+  renderExpandedAlbumCard,
+  renderCompactAlbumCard,
+  renderNoMatchState,
+  escapeHtml as escapeHtmlFn,
+  wrapInGrid
+} from './albums/index.js'
+import {
+  filterAlbums as filterAlbumsFn,
+  getUniqueArtists as getUniqueArtistsFn
+} from './albums/index.js'
+
 /**
  * AlbumsView
  * Grid of albums with search and filter
@@ -29,12 +46,11 @@ export class AlbumsView extends BaseView {
     this.viewMode = this.viewModeKey // Keep for backwards compatibility
     this.viewStrategy = createViewModeStrategy(this.viewModeKey, this)
 
-    // Filter state
+    // Filter state - Sprint 9: Updated to use 'source' instead of 'status'/'bestEverOnly'
     this.filters = {
       artist: 'all',
       year: 'all',
-      status: 'all',
-      bestEverOnly: false
+      source: 'all'  // Options: all, pending, acclaim, popularity, ai
     }
 
     // Store cleanup function
@@ -187,27 +203,19 @@ export class AlbumsView extends BaseView {
             </span>
           </div>
 
-          <!-- Status Filter -->
+          <!-- Source Filter (Unified) -->
           <div class="filter-dropdown relative">
-            <select id="statusFilter" class="form-control appearance-none cursor-pointer pr-8">
-              <option value="all">All Status</option>
-              <option value="pending" ${this.filters.status === 'pending' ? 'selected' : ''}>Pending</option>
+            <select id="sourceFilter" class="form-control appearance-none cursor-pointer pr-8">
+              <option value="all">All Sources</option>
+              <option value="pending" ${this.filters.source === 'pending' ? 'selected' : ''}>Pending</option>
+              <option value="acclaim" ${this.filters.source === 'acclaim' ? 'selected' : ''}>Acclaim (BestEver)</option>
+              <option value="popularity" ${this.filters.source === 'popularity' ? 'selected' : ''}>Popularity (Spotify)</option>
+              <option value="ai" ${this.filters.source === 'ai' ? 'selected' : ''}>AI Enriched</option>
             </select>
             <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
               ${getIcon('ChevronDown', 'w-4 h-4')}
             </span>
           </div>
-
-          <!-- BestEver Toggle -->
-          <label class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
-            <input
-              type="checkbox"
-              id="bestEverOnly"
-              class="form-checkbox"
-              ${this.filters.bestEverOnly ? 'checked' : ''}
-            />
-            <span class="text-sm font-medium whitespace-nowrap">BestEver only</span>
-          </label>
 
           <!-- Refresh Button (Skip Cache) -->
           <button
@@ -366,16 +374,25 @@ export class AlbumsView extends BaseView {
           ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
           <span class="badge badge-neutral">${album.tracks?.length || 0} tracks</span>
           ${(() => {
-          const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
-          return hasRatings ?
-            '' :
-            `<span class="badge badge-warning flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
+          const hasBestEver = !!album.bestEverAlbumId
+          const providerType = album.acclaim?.providerType
+          const hasRatings = album.tracks?.some(t => t.rating > 0)
+
+          if (hasBestEver) {
+            return `
+                <a href="https://www.besteveralbums.com/thechart.php?a=${album.bestEverAlbumId}" target="_blank" rel="noopener noreferrer" class="badge badge-primary hover:badge-accent transition-colors flex items-center gap-1" title="Ranking by Community Acclaim">
+                  ${getIcon('ExternalLink', 'w-3 h-3')} Acclaim
+                </a>`
+          }
+          if (providerType === 'popularity') {
+            return `<span class="badge badge-success flex items-center gap-1" title="Ranking by Spotify Popularity">${getIcon('TrendingUp', 'w-3 h-3')} Popularity</span>`
+          }
+          if (hasRatings) {
+            return `<span class="badge badge-info flex items-center gap-1" title="Ranking by AI Enrichment">${getIcon('Cpu', 'w-3 h-3')} AI</span>`
+          }
+          // Pending
+          return `<span class="badge badge-warning flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
         })()}
-          ${album.bestEverAlbumId ? `
-                <a href="https://www.besteveralbums.com/thechart.php?a=${album.bestEverAlbumId}" target="_blank" rel="noopener noreferrer" class="badge badge-primary hover:badge-accent transition-colors flex items-center gap-1">
-                  ${getIcon('ExternalLink', 'w-3 h-3')} BestEver
-                </a>
-              ` : ''}
         </div>
 
         <!-- Dual Tracklists -->
@@ -552,106 +569,29 @@ export class AlbumsView extends BaseView {
     }).join('')
   }
 
+  // Sprint 10: Delegate to modular filter
   filterAlbums(albums) {
-    let filtered = albums
-
-    // FIX: Expansion Dataset Safety
-    // Do not show expanded discography items in the main browsing view (too many items)
-    // Only show them when searching or filtering by specific criteria
-    const isBrowsingAll = !this.searchQuery &&
-      this.filters.artist === 'all' &&
-      this.filters.year === 'all' &&
-      this.filters.status === 'all' &&
-      !this.filters.bestEverOnly
-
-    if (isBrowsingAll) {
-      filtered = filtered.filter(album => album.addedBy !== 'expansion')
-    }
-
-    // Search filter
-    if (this.searchQuery) {
-      const query = this.searchQuery.toLowerCase()
-      filtered = filtered.filter(album =>
-        album.title?.toLowerCase().includes(query) ||
-        album.artist?.toLowerCase().includes(query)
-      )
-    }
-
-    // Artist filter
-    if (this.filters.artist !== 'all') {
-      filtered = filtered.filter(album => album.artist === this.filters.artist)
-    }
-
-    // Year filter
-    if (this.filters.year !== 'all') {
-      filtered = filtered.filter(album => {
-        const year = album.year
-        if (!year) return false
-
-        switch (this.filters.year) {
-          case '1960s': return year >= 1960 && year < 1970
-          case '1970s': return year >= 1970 && year < 1980
-          case '1980s': return year >= 1980 && year < 1990
-          case '1990s': return year >= 1990 && year < 2000
-          case '2000s': return year >= 2000
-          default: return true
-        }
-      })
-    }
-
-    // Status filter - defensive check for tracks existence
-    if (this.filters.status !== 'all') {
-      filtered = filtered.filter(album => {
-        // Check multiple sources for ratings
-        const hasRatings = album.acclaim?.hasRatings ||
-          (Array.isArray(album.tracks) && album.tracks.length > 0 &&
-            album.tracks.some(t => t.rating > 0))
-        return !hasRatings // Only support filtering for Pending, as Rated is removed from UI
-      })
-    }
-
-    // BestEver filter
-    if (this.filters.bestEverOnly) {
-      filtered = filtered.filter(album => album.bestEverAlbumId)
-    }
-
-    // DEBUG: Log filtering steps
-    // Filter logic end
-
-    return filtered
+    return filterAlbumsFn(albums, {
+      searchQuery: this.searchQuery,
+      filters: this.filters
+    })
   }
 
+  // Sprint 10: Delegate to modular utility
   getUniqueArtists(albums) {
-    const artists = albums
-      .map(album => album.artist)
-      .filter(Boolean)
-    return [...new Set(artists)].sort()
+    return getUniqueArtistsFn(albums)
   }
 
+  // Sprint 10: Delegate to modular utility
   escapeHtml(text) {
-    if (!text) return ''
-    const div = document.createElement('div')
-    div.textContent = text
-    return div.innerHTML
+    return escapeHtmlFn(text)
   }
 
+  // Sprint 10: Delegate to modular renderer
   renderLoadingProgress() {
-    const { current, total } = this.loadProgress
-    const percentage = total > 0 ? Math.round((current / total) * 100) : 0
-
-    return `
-  <div class="loading-overlay fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50" >
-    <div class="loading-content glass-panel p-8 max-w-md w-full text-center">
-      <div class="loading-spinner w-12 h-12 border-4 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p class="loading-text text-xl font-bold mb-2">Loading albums...</p>
-      <div class="progress-bar-container bg-white/10 h-2 rounded-full overflow-hidden mb-2">
-        <div class="progress-bar bg-accent-primary h-full transition-all duration-300" style="width: ${percentage}%"></div>
-      </div>
-      <p class="loading-status text-muted">${current} / ${total} (${percentage}%)</p>
-    </div>
-      </div>
-  `
+    return renderLoadingProgressFn(this.loadProgress)
   }
+
 
   // Sprint 7.5: Render Grouped Grid for "All Series"
   renderScopedGrid(albums, seriesList) {
@@ -977,19 +917,12 @@ export class AlbumsView extends BaseView {
       })
     }
 
-    const statusFilter = this.$('#statusFilter')
-    if (statusFilter) {
-      this.on(statusFilter, 'change', (e) => {
-        this.filters.status = e.target.value
-        this.updateAlbumsGrid(albumsStore.getAlbums())
-      })
-    }
-
-    // BestEver checkbox
-    const bestEverCheckbox = this.$('#bestEverOnly')
-    if (bestEverCheckbox) {
-      this.on(bestEverCheckbox, 'change', (e) => {
-        this.filters.bestEverOnly = e.target.checked
+    // Source Filter (replaces Status + BestEver)
+    const sourceFilter = this.$('#sourceFilter')
+    if (sourceFilter) {
+      this.on(sourceFilter, 'change', (e) => {
+        this.filters.source = e.target.value
+        console.log('[AlbumsView] Source filter changed:', this.filters.source)
         this.updateAlbumsGrid(albumsStore.getAlbums())
       })
     }
@@ -1063,18 +996,12 @@ export class AlbumsView extends BaseView {
           })
         }
 
-        const statusFilter = this.$('#statusFilter')
-        if (statusFilter) {
-          this.on(statusFilter, 'change', (e) => {
-            this.filters.status = e.target.value
-            this.updateAlbumsGrid(albumsStore.getAlbums())
-          })
-        }
-
-        const bestEverCheckbox = this.$('#bestEverOnly')
-        if (bestEverCheckbox) {
-          this.on(bestEverCheckbox, 'change', (e) => {
-            this.filters.bestEverOnly = e.target.checked
+        // Re-bind Source Filter (replaces Status + BestEver)
+        const sourceFilter = this.$('#sourceFilter')
+        if (sourceFilter) {
+          this.on(sourceFilter, 'change', (e) => {
+            this.filters.source = e.target.value
+            console.log('[AlbumsView] Source filter changed (after toggle):', this.filters.source)
             this.updateAlbumsGrid(albumsStore.getAlbums())
           })
         }

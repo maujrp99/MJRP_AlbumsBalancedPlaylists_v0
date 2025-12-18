@@ -62,11 +62,20 @@ async function fetchAlbumPage(albumTitle, albumArtist) {
     const res = await axios.get(albumUrl, getAxiosConfig(30000))
     const $ = cheerio.load(res.data)
     const pageText = ($('title').text() + ' ' + $('h1').text() + ' ' + $('h2').text() + ' ' + $('body').text()).toLowerCase()
+
     const normalize = s => (s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
-    const targetTitle = normalize(albumTitle)
+    const normalizeLoose = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+
+    // Check both strict (stripped parens) and loose (quoted parens)
+    const targetTitleRaw = normalize(albumTitle)
+    const targetTitleLoose = normalizeLoose(albumTitle)
     const targetArtist = normalize(albumArtist)
-    const hasTitle = targetTitle && pageText.includes(targetTitle)
+
+    const hasTitle = (targetTitleRaw && pageText.includes(targetTitleRaw)) ||
+      (targetTitleLoose && pageText.includes(targetTitleLoose))
+
     const hasArtist = targetArtist && pageText.includes(targetArtist)
+
     if (hasArtist || hasTitle) return albumUrl
     // no strong match — don't return a likely-incorrect page
     return null
@@ -84,8 +93,13 @@ async function pageContainsArtistOrTitle(url, albumTitle, albumArtist) {
     const titleText = ($('title').text() || '').toLowerCase()
     const headerText = (($('h1').text() || '') + ' ' + ($('h2').text() || '')).toLowerCase()
     const bodyText = ($('body').text() || '').toLowerCase()
+    // normalize: standardizes strings for comparison.
+    // normalizeLoose: keeps text inside parentheses but removes special chars, critical for titles like "Untitled (Led Zeppelin IV)"
     const normalize = s => (s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
-    const targetTitle = normalize(albumTitle)
+    const normalizeLoose = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+
+    const targetTitleRaw = normalize(albumTitle)
+    const targetTitleLoose = normalizeLoose(albumTitle)
     const targetArtist = normalize(albumArtist)
 
     // Prefer strict pattern: <h1>... by <a>Artist</a> or <h1>Album (studio album) by Artist</h1>
@@ -102,7 +116,12 @@ async function pageContainsArtistOrTitle(url, albumTitle, albumArtist) {
     }
 
     // If albumArtist not provided, or above checks failed, require both title and artist in page body (conservative)
-    if (!targetArtist && targetTitle) return titleText.includes(targetTitle) || headerText.includes(targetTitle) || bodyText.includes(targetTitle)
+    // Updated logic: Check both strict (no parens) and loose (with parens) versions of the title
+    if (!targetArtist && targetTitleRaw) {
+      return titleText.includes(targetTitleRaw) || headerText.includes(targetTitleRaw) ||
+        titleText.includes(targetTitleLoose) || headerText.includes(targetTitleLoose)
+    }
+
     // require explicit artist signal for safety
     return false
   } catch (err) {

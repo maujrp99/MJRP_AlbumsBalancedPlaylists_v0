@@ -16,11 +16,29 @@ async function debugMusicboard() {
 
     const page = await browser.newPage()
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36')
+
+    // Capture console logs
+    page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
+    page.on('pageerror', err => console.log('BROWSER ERROR:', err.toString()));
+
     await page.setViewport({ width: 1920, height: 1080 })
 
-    // Navigate to a known album page (using correct URL pattern)
+    // Navigate to album page
+    const albumCli = process.argv[2] || 'metallica'
+    const artistCli = process.argv[3] || 'metallica'
+
+    // Normalize logic similar to actual scraper
+    const formatSlug = (str) => str.toLowerCase()
+        .replace(/ \((remastered|remaster|deluxe|edition|expanded).*\)/g, '')
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+
+    const albumSlug = formatSlug(albumCli)
+    const artistSlug = formatSlug(artistCli)
+
     // Pattern: /album/{album-slug}/{artist-slug}/
-    const url = 'https://musicboard.app/album/metallica/metallica/'
+    const url = `https://musicboard.app/album/${albumSlug}/${artistSlug}/`
     console.log('Navigating to:', url)
 
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 })

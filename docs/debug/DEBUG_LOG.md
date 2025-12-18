@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-15 18:35
+**Last Updated**: 2025-12-18 01:20
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -16,7 +16,9 @@
 
 ## 📑 Issue Index
 
-| #56 | HomeView Type Filter | ⏸️ DEFERRED | [L52](#issue-56-homeview-type-filter-layout-regression) |
+| #58 | Sprint 9 Badge Display | 🚧 IN PROGRESS | [L114](#issue-58-sprint-9---badge-shows-pending-despite-bestever-data) |
+| #57 | Sprint 9 Filter Regression | 🧪 TESTING | [L54](#issue-57-sprint-9---frontend-filter-regression-albums-not-displaying) |
+| #56 | HomeView Type Filter | ⏸️ DEFERRED | [L165](#issue-56-homeview-type-filter-layout-regression) |
 | #55 | Ghost Playlists | 🧪 TESTING | [L54](#issue-55-ghost-playlists--batch-context-contamination) |
 | #54 | Edit Batch Not Overwriting | 🧪 TESTING | [L54](#issue-54-edit-batch-not-overwriting) |
 | #53 | Ranked by Acclaim | ✅ RESOLVED | [L100](#issue-53-ranked-by-acclaim-not-loading-ratings---resolved) |
@@ -51,6 +53,106 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #57: Sprint 9 - Frontend Filter Regression (Albums Not Displaying)
+**Status**: 🧪 **TESTING** (Frontend Fix Applied - Awaiting User Verification)
+**Date**: 2025-12-18 00:45
+**Updated**: 2025-12-18 01:20
+**Severity**: CRITICAL (Blocked All Album Display)
+**Type**: State Management / Filter Logic
+**Component**: `AlbumsView.js`
+
+#### Problem
+After implementing Sprint 9 features (Source filter dropdown, dynamic badges), all 39 albums in the user's library stopped displaying. Console showed:
+```
+[AlbumsView] After filterAlbums: filtered= 0 from albums= 39
+```
+
+#### Failed Attempts
+
+| # | Time | Attempt | Result |
+|---|------|---------|--------|
+| 1 | 00:51 | Fixed `isBrowsingAll` to use `this.filters.source` instead of `this.filters.status` | ❌ FAILED - `isBrowsingAll` still false |
+| 2 | 01:03 | Disabled expansion filter (`album.addedBy !== 'expansion'`) | ❌ FAILED - Still 0 albums, `addedBy` was all `undefined` anyway |
+| 3 | 01:08 | Updated event listeners from `#statusFilter`/`#bestEverOnly` to `#sourceFilter` | ❌ FAILED - Filter state still not updating correctly |
+| 4 | 01:13 | **Inspected constructor** - found `this.filters` initialized with OLD keys | ✅ ROOT CAUSE FOUND |
+
+#### Root Cause
+**Constructor Initialization Mismatch**: The `AlbumsView` constructor (lines 33-38) was still initializing `this.filters` with the OLD schema:
+```javascript
+// BUG (old schema)
+this.filters = {
+  artist: 'all',
+  year: 'all',
+  status: 'all',        // ← removed from HTML
+  bestEverOnly: false   // ← removed from HTML
+}
+```
+
+This caused `this.filters.source` to be `undefined`, so the condition `this.filters.source === 'all'` evaluated to `false`, making `isBrowsingAll = false`, which then triggered incorrect filtering logic.
+
+#### Fix Applied
+Updated constructor to use new schema:
+```javascript
+this.filters = {
+  artist: 'all',
+  year: 'all',
+  source: 'all'  // NEW: Options: all, pending, acclaim, popularity, ai
+}
+```
+
+#### Files Modified
+- `public/js/views/AlbumsView.js`:
+  - Constructor filter initialization (line 33-38)
+  - `filterAlbums()` isBrowsingAll condition (line 560-565)
+  - Event listeners for source filter (line 990-1005, 1076-1090)
+
+#### Lessons Learned
+1. When changing filter schema, update ALL 3 places: HTML, event listeners, AND constructor
+2. Check constructor initialization when state appears undefined
+3. Browser cache can hide JS changes - use hard refresh (Ctrl+Shift+R)
+
+---
+
+### Issue #58: Sprint 9 - Badge Shows "PENDING" Despite BestEver Data
+**Status**: 🚧 **IN PROGRESS** (Awaiting Investigation)
+**Date**: 2025-12-18 01:30
+**Updated**: 2025-12-18 01:45
+**Severity**: HIGH (UI Bug - Incorrect Status Display)
+**Type**: Data Flow / API Response
+**Component**: `/api/enrich-album`, `client.js`, `AlbumsView.js`
+
+#### Problem
+Albums display "PENDING" badge in UI even though:
+1. BestEver enrichment IS being called (`[APIClient] Enriching album with BestEver data...`)
+2. Scraper DOES return `albumId` (confirmed via CLI test: `albumId: "144"` for Led Zeppelin IV)
+3. "Ranked by Acclaim" section shows tracks with ratings (proving data is being fetched)
+
+#### Evidence (Frontend Console)
+```
+client.js:63 [APIClient] Enriching album with BestEver data...
+albumCache.js:87 💾 Cached: Led Zeppelin - Led Zeppelin IV (Remastered)
+AlbumsView.js:1731 [AlbumsView] After filterAlbums: filtered= 39 from albums= 39
+```
+Albums ARE being enriched and cached, but badge shows PENDING.
+
+#### Code Analysis (Correct Path)
+1. `besteveralbums.js:550` → Returns `{ albumId: parsed.albumId, ... }` ✅
+2. `index.js:191` → Returns `bestEverInfo: { albumId: bestEver.albumId, ... }` ✅
+3. `client.js:127` → Saves `bestEverAlbumId: enrichment.bestEverInfo?.albumId` ✅
+4. `AlbumsView.js:360` → Badge logic: `hasBestEver = !!album.bestEverAlbumId` ✅
+
+#### Suspected Root Cause
+The `/enrich-album` endpoint may NOT be returning `bestEver.albumId` in some cases. Need to:
+1. Add debug log to `/api/enrich-album` to confirm `bestEver.albumId` value
+2. Verify frontend is receiving the response correctly
+
+#### Next Steps (Tomorrow)
+1. Check **server logs** for `/enrich-album` response
+2. Add `console.log` to `client.js:72` to log full `enrichment` response
+3. Verify `bestEver.albumId` is populated in scraper response
+
+---
 
 ### Issue #56: HomeView Type Filter Layout Regression
 **Status**: ⏸️ **DEFERRED** (Moved to Backlog)

@@ -1,7 +1,7 @@
 # MJRP Albums Balanced Playlists — Project Summary
 
-**Version**: v2.7.1 (Production)  
-**Last Updated**: 2025-12-15
+**Version**: v2.7.2 (Production)  
+**Last Updated**: 2025-12-18
 
 ---
 
@@ -10,17 +10,18 @@
 The MJRP Playlist Generator, "The Album Blender," is a visionary platform aiming to be the definitive tool for music curation, empowering enthusiasts to transcend algorithmic bubbles by focusing on objectively balanced album-based playlists. It achieves this by integrating global acclaim ratings (from sources like BestEverAlbums and Musicboard) with AI enrichment (Google Gemini) to ensure musical inspiration meets data precision. Its future state is a multi-device, cloud-synced ecosystem providing a seamless experience and native integration with major streaming services, Apple Music and Spotify in the future.
 
 ### Current Status ✅ Production Stable
-- **v2.7.1** pending merge (SeriesView consolidation)
+- **v2.7.2** (Sprint 10 Refactoring in progress)
 - Frontend: `https://mjrp-playlist-generator.web.app`
 - Backend API: Cloud Run (`mjrp-proxy`)
 - Core features operational
 
 > [!NOTE]
-> **Recent Updates (Sprint 7.5.1)**:
-> - 🟢 **Rebrand**: "The Album Playlist Synthesizer" → "The Album Blender"
-> - 🟢 **SeriesView Consolidation**: AlbumSeriesListView deprecated
-> - 🟢 **SaveAllView**: New dedicated Data Migration page
-> - 🟢 **TopNav Enhancements**: Neon glow hover effect, simplified navigation
+> **Recent Updates (Sprint 10)**:
+> - 🟢 **Codebase Refactoring**: 9 modular files created (~1,125 lines)
+> - 🟢 **AlbumsView.js**: 1,837 → 1,524 lines (-17%)
+> - 🟢 **PlaylistsView.js**: 891 → 756 lines (-15%)
+> - 🟢 **Deleted**: `app.legacy.js` (47KB savings)
+> - 🟢 **New Modules**: `views/albums/`, `views/playlists/`, `server/routes/`
 
 ---
 
@@ -52,20 +53,32 @@ The MJRP Playlist Generator, "The Album Blender," is a visionary platform aiming
 public/
 ├── hybrid-curator.html    # Main SPA
 ├── js/
-│   ├── app.js            # App orchestrator (~800 lines)
-│   ├── api.js            # Backend API client
-│   ├── curation.js       # CurationEngine (stateless)
+│   ├── app.js             # App orchestrator
+│   ├── api/client.js      # Backend API client
+│   ├── views/             # View components
+│   │   ├── AlbumsView.js  # (1,524 lines, modularized)
+│   │   ├── PlaylistsView.js # (756 lines, modularized)
+│   │   ├── albums/        # Sprint 10: Extracted modules
+│   │   │   ├── AlbumsGridRenderer.js
+│   │   │   ├── AlbumsFilters.js
+│   │   │   └── index.js
+│   │   └── playlists/     # Sprint 10: Extracted modules
+│   │       ├── PlaylistsExport.js
+│   │       ├── PlaylistsDragDrop.js
+│   │       └── index.js
 │   └── shared/
-│       └── normalize.js  # Shared normalization (symlink)
+│       └── normalize.js   # Shared normalization
 ├── css/
 │   └── styles.css
-└── config.js             # Firebase config
+└── config.js              # Firebase config
 ```
 
 **Key Components**:
 - `CurationEngine`: Stateless class for playlist generation
-- `api.js`: Wraps `/api/generate` calls with error handling
-- `app.js`: DOM manipulation, state management, Firestore integration
+- `AlbumsGridRenderer`: Modular rendering for album grids
+- `AlbumsFilters`: Modular filtering logic
+- `PlaylistsExport`: Export to JSON/Apple Music
+- `PlaylistsDragDrop`: SortableJS drag-and-drop configuration
 
 ### Backend (`server/`)
 ```

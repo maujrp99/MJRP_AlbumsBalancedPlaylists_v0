@@ -3,8 +3,8 @@ const { callProvider } = require('./aiClient')
 const { extractAndValidateRankingEntries, rankingEntriesToSources } = require('./normalize')
 const { getRankingForAlbum: getBestEverRanking } = require('./scrapers/besteveralbums')
 
-// Musicboard scraper integration (Sprint 9)
-const { getRankingForAlbum: getMusicboardRanking } = require('./scrapers/musicboard')
+// Spotify Popularity integration (Sprint 9 pivot)
+const { getSpotifyPopularityRanking } = require('./services/spotifyPopularity')
 
 // Lazy load shared module (ESM)
 let normalizeKeyFn = null
@@ -112,6 +112,12 @@ async function fetchRankingForAlbum(album, albumQuery, options = {}) {
     try {
         debugTrace.push({ step: 'getBestEverRanking', args: { title: album?.title || albumQuery, artist: album?.artist || '' } })
         const best = await getBestEverRanking(album?.title || albumQuery, album?.artist || '')
+        console.log(`[Ranking] BestEver result for "${album?.title || albumQuery}":`, {
+            found: !!best,
+            evidenceCount: best?.evidence?.length || 0,
+            error: best?.error,
+            referenceUrl: best?.referenceUrl
+        })
         debugTrace.push({ step: 'getBestEverRanking_result', found: !!best, evidenceCount: best?.evidence?.length, error: best?.error })
 
         if (best && Array.isArray(best.evidence) && best.evidence.length > 0) {
@@ -127,27 +133,53 @@ async function fetchRankingForAlbum(album, albumQuery, options = {}) {
             debugTrace.push({ step: 'check_completeness', albumTrackCount, scraperEntriesCount: scraperEntries.length })
 
             // ==================================================================
-            // MUSICBOARD FALLBACK (Sprint 9)
-            // Try Musicboard when BestEver data is incomplete
+            // SPOTIFY POPULARITY FALLBACK (Sprint 9)
+            // Try Spotify when BestEver has few actual ratings
             // ==================================================================
-            let musicboardEvidence = []
-            if (getMusicboardRanking && scraperEntries.length < (albumTrackCount || Infinity)) {
-                try {
-                    debugTrace.push({ step: 'getMusicboardRanking', reason: 'BestEver incomplete' })
-                    const mbResult = await getMusicboardRanking(album?.title || albumQuery, album?.artist || '')
-                    debugTrace.push({ step: 'getMusicboardRanking_result', found: !!mbResult, evidenceCount: mbResult?.evidence?.length, error: mbResult?.error })
+            let popularityEvidence = []
+            // Count tracks that actually have ratings (not just evidence count)
+            const tracksWithRatings = scraperEntries.filter(e => e.rating !== null && e.rating !== undefined).length
+            // Relaxed threshold: if we have at least 3 rated tracks or 40% of known tracks, it's better than nothing
+            // (Previously 50%, relaxed to allow partial data to win over pure popularity/AI)
+            const minRequiredRatings = Math.ceil((albumTrackCount || 1) * 0.4)
+            console.log(`[Ranking] BestEver for "${album?.title || albumQuery}": ${tracksWithRatings}/${albumTrackCount || '?'} tracks with ratings (need >= ${minRequiredRatings})`)
 
-                    if (mbResult && Array.isArray(mbResult.evidence) && mbResult.evidence.length > 0) {
-                        musicboardEvidence = mbResult.evidence.map(e => ({
-                            ...e,
-                            rating: normalizeRating(e.rating, 'Musicboard'),
-                            provider: 'Musicboard'
+            if (tracksWithRatings < minRequiredRatings && tracksWithRatings < 3) {
+                try {
+                    console.log(`[Ranking] 🔍 BestEver data insufficient (${tracksWithRatings}/${minRequiredRatings}), calling Spotify Popularity fallback...`)
+                    debugTrace.push({ step: 'getSpotifyPopularityRanking', reason: `BestEver has only ${tracksWithRatings} ratings` })
+                    const popResult = await getSpotifyPopularityRanking(album?.title || albumQuery, album?.artist || '')
+                    debugTrace.push({ step: 'getSpotifyPopularityRanking_result', found: !!popResult, evidenceCount: popResult?.evidence?.length, error: popResult?.error })
+
+                    if (popResult && Array.isArray(popResult.evidence) && popResult.evidence.length > 0) {
+                        popularityEvidence = popResult.evidence.map(e => ({
+                            provider: 'Spotify',
+                            trackTitle: e.trackTitle,
+                            position: e.position,
+                            rating: e.rating, // 0-100
+                            referenceUrl: popResult.referenceUrl
                         }))
-                        logger.info('musicboard_fallback_used', { albumQuery, tracksFound: musicboardEvidence.length })
+                        console.log(`[Ranking] 🎵 Spotify Popularity fallback: found ${popularityEvidence.length} tracks`)
+                        logger.info('spotify_fallback_used', { albumQuery, tracksFound: popularityEvidence.length })
+
+                        // Use Spotify data instead of incomplete BestEver data
+                        // But we might want to augment/merge? For now, if fallback triggers, IT wins.
+                        // We will return this immediately to avoid merging bad data.
+                        if (popularityEvidence.length >= (albumTrackCount || 0) * 0.5) {
+                            // Sufficient fallback data
+                            const finalEntries = popularityEvidence // Use Spotify exclusively if it's better
+                            const sources = [{ provider: 'Spotify', providerType: 'popularity', referenceUrl: popResult.referenceUrl }]
+                            return {
+                                entries: finalEntries.sort((a, b) => b.rating - a.rating),
+                                sources,
+                                spotify: { referenceUrl: popResult.referenceUrl },
+                                debugTrace
+                            }
+                        }
                     }
-                } catch (mbErr) {
-                    logger.warn('musicboard_fallback_failed', { albumQuery, err: mbErr?.message || String(mbErr) })
-                    debugTrace.push({ step: 'musicboard_fallback_failed', error: mbErr?.message })
+                } catch (spErr) {
+                    logger.warn('spotify_fallback_failed', { albumQuery, err: spErr?.message || String(spErr) })
+                    debugTrace.push({ step: 'spotify_fallback_failed', error: spErr?.message })
                 }
             }
             // ==================================================================
@@ -260,6 +292,38 @@ async function fetchRankingForAlbum(album, albumQuery, options = {}) {
         debugTrace.push({ step: 'bestever_scraper_failed', error: err.message })
     }
 
+    // ==================================================================
+    // MUSICBOARD PRIMARY FALLBACK (Sprint 9)
+    // Try Musicboard when BestEver completely fails (0 results or error)
+    // ==================================================================
+    // ==================================================================
+    // SPOTIFY PRIMARY FALLBACK (Sprint 9)
+    // Try Spotify when BestEver completely fails (0 results)
+    // ==================================================================
+    try {
+        console.log(`[Ranking] 🔍 BestEver failed for "${album?.title || albumQuery}", trying Spotify Popularity...`)
+        const popResult = await getSpotifyPopularityRanking(album?.title || albumQuery, album?.artist || '')
+
+        if (popResult && !popResult.error && Array.isArray(popResult.evidence) && popResult.evidence.length > 0) {
+            const finalEntries = popResult.evidence.map(e => ({
+                provider: 'Spotify',
+                trackTitle: e.trackTitle,
+                position: e.position,
+                rating: e.rating,
+                referenceUrl: popResult.referenceUrl
+            })).sort((a, b) => b.rating - a.rating)
+
+            const sources = [{ provider: 'Spotify', providerType: 'popularity', referenceUrl: popResult.referenceUrl }]
+            return { entries: finalEntries, sources, spotify: { referenceUrl: popResult.referenceUrl }, debugTrace }
+        }
+    } catch (spErr) {
+        // ignore
+    }
+    // ==================================================================
+    // ==================================================================
+
+    // AI Enrichment (last resort fallback)
+    console.log(`[Ranking] 🤖 Falling back to AI enrichment for "${album?.title || albumQuery}"`)
     const rankingResponse = await callProvider({
         prompt: rankingPrompt,
         maxTokens: 2048,

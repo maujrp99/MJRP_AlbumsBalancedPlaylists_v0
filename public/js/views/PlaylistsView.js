@@ -10,6 +10,10 @@ import toast from '../components/Toast.js'
 import Sortable from 'sortablejs'
 import { getAllAlgorithms, getRecommendedAlgorithm, createAlgorithm } from '../algorithms/index.js'
 
+// Sprint 10: Modular components
+import { handleExportJson as handleExportJsonFn, handleExportToAppleMusic as handleExportToAppleMusicFn } from './playlists/index.js'
+import { setupDragAndDrop as setupDragAndDropFn } from './playlists/index.js'
+
 /**
  * PlaylistsView
  * Playlist generation, editing, and management
@@ -752,18 +756,9 @@ export class PlaylistsView extends BaseView {
     }
   }
 
+  // Sprint 10: Delegate to modular export
   handleExportJson() {
-    const playlists = playlistsStore.getPlaylists()
-    const json = JSON.stringify(playlists, null, 2)
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `playlists_${new Date().toISOString().split('T')[0]}.json`
-    a.click()
-
-    URL.revokeObjectURL(url)
+    handleExportJsonFn()
   }
 
   async handleExportToAppleMusic() {
