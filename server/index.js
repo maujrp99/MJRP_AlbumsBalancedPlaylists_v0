@@ -40,7 +40,6 @@ try {
 }
 
 const express = require('express')
-const axios = require('axios')
 const cors = require('cors')
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
@@ -53,9 +52,9 @@ if (!AI_API_KEY) {
   console.warn('Warning: AI_API_KEY not set. Proxy will return 503 for generate requests.')
 }
 
-// CORS configuration
-// Use `ALLOWED_ORIGIN` (comma-separated) in production to restrict allowed browser origins.
-// Default to the known hosted origin when not provided to avoid breaking the hosted site.
+// ============================================================================
+// CORS Configuration
+// ============================================================================
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'https://mjrp-playlist-generator.web.app'
 let corsOptions
 if (process.env.NODE_ENV === 'production') {
@@ -76,457 +75,74 @@ if (process.env.NODE_ENV === 'production') {
 app.use(cors(corsOptions))
 app.use(express.json())
 
-// (timestamp middleware already attached above)
-
-// Health
-app.get('/_health', (req, res) => res.send({ ok: true }))
-
-// MusicKit routes (Apple Music integration)
-const musickitRoutes = require('./routes/musickit')
-app.use('/api', musickitRoutes)
-
-// Schema and validation are provided by `server/lib/schema.js` (AJV optional)
-
-const { loadPrompts, renderPrompt } = require('./lib/prompts')
-const { callProvider } = require('./lib/aiClient')
-const { extractAlbum, extractRankingEntries, extractAndValidateRankingEntries, rankingEntriesToSources } = require('./lib/normalize')
-const { consolidateRanking, normalizeKey: normalizeRankingKey } = require('./lib/ranking')
-const { validateAlbum, ajvAvailable } = require('./lib/schema')
-const { getRankingForAlbum: getBestEverRanking } = require('./lib/scrapers/besteveralbums')
-const { verifyUrl, isBestEverUrl } = require('./lib/validateSource')
-const { fetchRankingForAlbum } = require('./lib/fetchRanking')
-const logger = (() => { try { return require('./lib/logger') } catch (e) { return console } })()
-
-// Optional helper: list available models from Google Generative Language
-app.get('/api/list-models', async (req, res) => {
-  if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured on server' })
-  try {
-    const listUrl = 'https://generativelanguage.googleapis.com/v1/models?key=' + encodeURIComponent(AI_API_KEY)
-    const resp = await axios.get(listUrl, { timeout: 10_000 })
-    return res.status(resp.status).json(resp.data)
-  } catch (err) {
-    console.error('Error listing models:', err?.response?.status, err?.response?.data || err.message || err)
-    const status = err.response?.status || 500
-    const data = err.response?.data || { error: 'Could not list models' }
-    return res.status(status).json(data)
-  }
-})
-
-// Proxy endpoint: accepts { albumQuery }
-// fetchRankingForAlbum is now imported from server/lib/fetchRanking.js
-
-// NEW Endpoint (Sprint 7.5): Enrich Album Context with Rankings (BestEverAlgorithms only)
-app.post('/api/enrich-album', async (req, res) => {
-  if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured on server' })
-
-  const { albumData } = req.body
-  if (!albumData || !albumData.title || !Array.isArray(albumData.tracks)) {
-    return res.status(400).json({ error: 'Invalid albumData. Requires title and tracks array.' })
-  }
-
-  const artist = albumData.artist || ''
-  const title = albumData.title
-  const tracks = albumData.tracks
-
-  // 1. Scrape BestEverAlbums for rankings
-  let bestEver = null
-  try {
-    // getBestEverRanking takes (title, artist)
-    // It returns { albumId, albumUrl, evidence: [{ title, rating, position, ... }] }
-    bestEver = await getBestEverRanking(title, artist)
-  } catch (err) {
-    console.warn(`[Enrichment] BestEver scraper failed for ${artist} - ${title}:`, err.message)
-    // Fallback continues with null bestEver
-  }
-
-  // 2. Map Scraped Ratings to Official Tracklist
-  // We want to return a sparse array or map of ratings for the tracks provided in request
-  const ratingsMap = []
-
-  if (bestEver && Array.isArray(bestEver.evidence) && bestEver.evidence.length > 0) {
-    try {
-      // normalizeKey is an async getter imported from ranking lib
-      const normalizeKey = await normalizeRankingKey()
-
-      // Index the evidence by normalized key
-      const evidenceIndex = new Map()
-      bestEver.evidence.forEach(e => {
-        // FIX: Scraper returns `trackTitle`, not `title`. Support both for safety.
-        const trackTitle = e.trackTitle || e.title
-        if (trackTitle && e.rating !== undefined && e.rating !== null) {
-          const key = normalizeKey(trackTitle)
-          console.log(`[Enrichment DEBUG] BestEver track: "${trackTitle}" -> key: "${key}" -> rating: ${e.rating}`)
-          if (key) evidenceIndex.set(key, e.rating)
-        }
-      })
-
-      console.log(`[Enrichment DEBUG] Evidence index has ${evidenceIndex.size} entries:`, [...evidenceIndex.keys()])
-
-      // Map to request tracks
-      tracks.forEach(t => {
-        const key = normalizeKey(t.title || t.name || '')
-        console.log(`[Enrichment DEBUG] Apple track: "${t.title}" -> key: "${key}" -> hasMatch: ${evidenceIndex.has(key)}`)
-        let rating = null
-        if (key && evidenceIndex.has(key)) {
-          rating = Number(evidenceIndex.get(key))
-        }
-        ratingsMap.push({ title: t.title, rating })
-      })
-
-      console.log(`[Enrichment] Success for ${title}: Found ${evidenceIndex.size} ratings, matched ${ratingsMap.filter(r => r.rating !== null).length} tracks.`)
-
-    } catch (e) {
-      console.error('[Enrichment] Mapping failed:', e)
-    }
-  } else {
-    // FR-002: Fallback behavior
-    console.warn(`[Enrichment] No ratings found for [${title}] by [${artist}]. Using original order.`)
-    // We return empty ratings map (all nulls)
-    tracks.forEach(t => ratingsMap.push({ title: t.title, rating: null }))
-  }
-
-  return res.json({
-    data: {
-      bestEverInfo: bestEver ? {
-        albumId: bestEver.albumId,
-        url: bestEver.albumUrl || bestEver.referenceUrl,
-        evidenceCount: bestEver.evidence?.length || 0
-      } : null,
-      trackRatings: ratingsMap
-    }
-  })
-})
-
-
-app.post('/api/generate', async (req, res) => {
-  if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured on server' })
-
-  const { albumQuery, model, maxTokens } = req.body
-  if (!albumQuery) return res.status(400).json({ error: 'Missing albumQuery in request body' })
-
-  try {
-    const prompts = loadPrompts()
-    const albumPrompt = renderPrompt(prompts.albumSearchPrompt, { albumQuery })
-    const response = await callProvider({
-      prompt: albumPrompt || undefined,
-      albumQuery,
-      model,
-      maxTokens,
-      aiEndpoint: process.env.AI_ENDPOINT,
-      aiApiKey: AI_API_KEY,
-      aiModelEnv: process.env.AI_MODEL
-    })
-
-    const latencyMs = Date.now() - (req._startTime || Date.now())
-    const usedModel = (process.env.AI_MODEL || 'models/gemini-2.5-flash')
-    console.log(`AI proxy: model=${usedModel} status=${response.status} latencyMs=${latencyMs}`)
-
-    if (response.data?.usageMetadata) {
-      try {
-        const u = response.data.usageMetadata
-        console.log(`AI usage: promptTokens=${u.promptTokenCount || '-'} totalTokens=${u.totalTokenCount || '-'} thoughtsTokens=${u.thoughtsTokenCount || '-'} `)
-      } catch (e) { /* ignore */ }
-    }
-
-    // Normalize
-    try {
-      const album = extractAlbum(response)
-      if (album) {
-        if (ajvAvailable && validateAlbum) {
-          const ok = validateAlbum(album)
-          if (!ok) {
-            console.warn('Album validation failed:', validateAlbum.errors)
-            return res.status(422).json({ error: 'Validation failed', validationErrors: validateAlbum.errors })
-          }
-        }
-        let rankingEntries = []
-        let rankingSources = []
-        let fetchDebug = null
-
-        try {
-          // If client requested raw ranking response, return raw provider response here.
-          if (req.body && req.body.rawStage === 'ranking') {
-            const rankingResult = await fetchRankingForAlbum(album, albumQuery, { raw: true })
-            return res.status(200).json({ rawRankingResponse: rankingResult.raw })
-          }
-          const rankingResult = await fetchRankingForAlbum(album, albumQuery)
-          fetchDebug = rankingResult.debugTrace
-          rankingEntries = rankingResult.entries
-          rankingSources = rankingResult.sources
-          // attach BestEver evidence/url to album payload when available
-          let bestEver = rankingResult.bestEver
-          // Fallback: if fetchRankingForAlbum didn't return BestEver, attempt a standalone scrape
-          if (!bestEver) {
-            try {
-              const be = await getBestEverRanking(album?.title || albumQuery, album?.artist || '')
-              if (be && Array.isArray(be.evidence) && be.evidence.length > 0) {
-                bestEver = be
-                // ensure rankingSources includes BestEver as primary provenance
-                rankingSources = Array.isArray(rankingSources) ? rankingSources : []
-                // avoid duplicate provider entries
-                if (!rankingSources.some(s => String(s.provider || '').toLowerCase() === 'besteveralbums')) {
-                  rankingSources.unshift({ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: be.referenceUrl || be.albumUrl || null })
-                }
-              }
-            } catch (e) {
-              logger && logger.warn && logger.warn('bestever_scraper_fallback_failed', { albumQuery, err: (e && e.message) || String(e) })
-            }
-          }
-          if (bestEver) {
-            // ensure callers can access BestEver evidence and canonical url
-            album.bestEverEvidence = Array.isArray(bestEver.evidence) ? bestEver.evidence : []
-            album.bestEverUrl = bestEver.albumUrl || null
-            // prefer explicit albumId if available
-            if (bestEver.albumId) album.bestEverAlbumId = String(bestEver.albumId)
-          }
-        } catch (err) {
-          console.warn('Ranking fetch skipped:', err?.message || err)
-        }
-        const combinedSources = Array.isArray(album.rankingSources)
-          ? [...album.rankingSources, ...rankingSources]
-          : [...rankingSources]
-        const albumPayload = {
-          ...album,
-          rankingSources: combinedSources
-        }
-        if (rankingEntries.length) albumPayload.rankingAcclaim = rankingEntries
-        // Consolidate acclaim into a single ranking using Borda count
-        try {
-          const consolidated = await consolidateRanking(albumPayload.tracks || [], albumPayload.rankingAcclaim || [])
-          if (consolidated && consolidated.results) {
-            albumPayload.rankingConsolidated = consolidated.results
-            albumPayload.rankingConsolidatedMeta = {
-              ...consolidated.divergence,
-              debugInfo: consolidated.debugInfo,
-              rankingEntriesCount: rankingEntries ? rankingEntries.length : -1,
-              // rankingResult is block-scoped, so we can't access it here directly without refactoring.
-              // But we have rankingEntries which is what matters.
-              rankingEntriesSample: rankingEntries && rankingEntries.length ? rankingEntries[0] : null,
-              fetchRankingDebug: fetchDebug
-            }
-          } else {
-            // backward-compatible: if consolidateRanking returned an array for any reason
-            albumPayload.rankingConsolidated = Array.isArray(consolidated) ? consolidated : []
-            albumPayload.rankingConsolidatedMeta = {}
-          }
-        } catch (e) {
-          console.warn('Ranking consolidation failed:', e && e.message)
-          albumPayload.rankingConsolidated = []
-          albumPayload.rankingConsolidatedMeta = { error: e.message, stack: e.stack }
-        }
-        // Map consolidated final positions back onto album tracks as `rank` so clients
-        // (curation UI/algorithms) can rely on `track.rank` for playlist generation.
-        try {
-          // Lazy load normalizeKey if needed, or use the one from ranking lib if exported?
-          // Actually consolidateRanking uses it internally.
-          // But here we need it for mapping.
-          // We can use normalizeRankingKey which is imported from ranking lib (which is now async getter? No, I need to check ranking.js export)
-
-          // Wait, ranking.js exports { consolidateRanking, normalizeKey: getNormalizeKey }
-          // So normalizeRankingKey is an async function now!
-          const normalizeKey = await normalizeRankingKey()
-
-          if (Array.isArray(albumPayload.rankingConsolidated) && Array.isArray(albumPayload.tracks)) {
-            const rankMap = new Map()
-            const ratingMap = new Map()
-            albumPayload.rankingConsolidated.forEach(r => {
-              if (r && r.trackTitle) {
-                const key = normalizeKey(r.trackTitle)
-                if (r.finalPosition !== undefined && r.finalPosition !== null) {
-                  rankMap.set(key, Number(r.finalPosition))
-                }
-                if (r.rating !== undefined && r.rating !== null) {
-                  ratingMap.set(key, Number(r.rating))
-                }
-              }
-            })
-
-            albumPayload.tracks.forEach(t => {
-              const key = normalizeKey((t && (t.title || t.trackTitle || t.name)) || '')
-              if (rankMap.has(key)) t.rank = rankMap.get(key)
-              if (ratingMap.has(key)) t.rating = ratingMap.get(key)
-            })
-          }
-        } catch (e) {
-          logger && logger.warn && logger.warn('rank_mapping_failed', { err: (e && e.message) || String(e) })
-        }
-        // Additionally expose a track list ordered by acclaim rank for UI consumers that
-        // render the "Ranking de Aclamação" view directly from album payload.
-        try {
-          if (Array.isArray(albumPayload.tracks)) {
-            // ensure every track has a `rank` (fallback to original order if missing)
-            albumPayload.tracks.forEach((t, idx) => {
-              if (t && (t.rank === undefined || t.rank === null)) t.rank = idx + 1
-            })
-            // create a sorted copy by rank (1..N) to be used by the UI when showing acclaim order
-            albumPayload.tracksByAcclaim = Array.from(albumPayload.tracks).slice().sort((a, b) => {
-              const ra = (a && a.rank) || Number.POSITIVE_INFINITY
-              const rb = (b && b.rank) || Number.POSITIVE_INFINITY
-              return ra - rb
-            })
-          }
-        } catch (e) {
-          logger && logger.warn && logger.warn('tracks_by_acclaim_failed', { err: (e && e.message) || String(e) })
-        }
-        return res.status(200).json({ data: albumPayload })
-      }
-    } catch (err) {
-      console.warn('Normalization attempt failed, forwarding raw provider response', err?.message || err)
-    }
-
-    return res.status(response.status).json(response.data)
-  } catch (err) {
-    console.error('Error proxying to AI provider:', err?.response?.status, err?.response?.data || err.message || err)
-    const status = err.response?.status || 500
-    const data = err.response?.data || { error: 'AI provider error' }
-    return res.status(status).json(data)
-  }
-})
-
-// Playlist generation endpoint
-app.post('/api/playlists', async (req, res) => {
-  try {
-    const { albums, options = {} } = req.body
-
-    if (!Array.isArray(albums) || albums.length === 0) {
-      return res.status(400).json({ error: 'albums array required' })
-    }
-
-    // Import curation logic (ES module from shared folder)
-    const { curateAlbums } = await import('../shared/curation.js')
-
-    // Convert duration from minutes to seconds
-    const targetSeconds = (() => {
-      if (options.minDuration && options.maxDuration) {
-        // Use average of min/max
-        const avgMinutes = (Number(options.minDuration) + Number(options.maxDuration)) / 2
-        return avgMinutes * 60
-      }
-      if (options.targetDuration) {
-        return Number(options.targetDuration) * 60
-      }
-      // Default: 45 minutes
-      return 45 * 60
-    })()
-
-    // Run curation
-    const result = curateAlbums(albums, { targetSeconds })
-
-    // Format response
-    const response = {
-      playlists: (result.playlists || []).map(p => ({
-        id: p.id,
-        name: p.title || p.id,
-        subtitle: p.subtitle,
-        tracks: (p.tracks || []).map(t => ({
-          id: t.id,
-          title: t.title,
-          artist: t.artist,
-          album: t.album,
-          rating: t.rating,
-          rank: t.rank,
-          duration: t.duration,
-          originAlbumId: t.originAlbumId
-        }))
-      })),
-      summary: result.rankingSummary,
-      sources: result.rankingSources
-    }
-
-    return res.json(response)
-  } catch (err) {
-    console.error('Playlist generation error:', err)
-    return res.status(500).json({
-      error: 'Playlist generation failed',
-      message: err.message
-    })
-  }
-})
-
-// Debug endpoint: return raw provider response for ranking prompt (no normalization)
-app.post('/api/debug/raw-ranking', async (req, res) => {
-  if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured on server' })
-  const { albumQuery, model, maxTokens } = req.body
-  if (!albumQuery) return res.status(400).json({ error: 'Missing albumQuery in request body' })
-  try {
-    const prompts = loadPrompts()
-    const albumPrompt = renderPrompt(prompts.albumSearchPrompt, { albumQuery })
-    const albumResp = await callProvider({ prompt: albumPrompt || undefined, albumQuery, model, maxTokens, aiEndpoint: process.env.AI_ENDPOINT, aiApiKey: AI_API_KEY, aiModelEnv: process.env.AI_MODEL })
-    // attempt to extract album to get title/artist/year for ranking prompt; fall back to albumQuery
-    let album = null
-    try { album = extractAlbum(albumResp) } catch (e) { /* ignore */ }
-    const rankingResult = await fetchRankingForAlbum(album || { title: albumQuery, artist: '', year: '' }, albumQuery, { raw: true })
-    // also attempt to fetch evidence from BestEverAlbums
-    let bestEver = null
-    try {
-      bestEver = await getBestEverRanking(album?.title || albumQuery, album?.artist || '')
-    } catch (e) {
-      console.warn('BestEverAlbums scraper failed:', e && e.message)
-    }
-    // provider response objects may contain circular references; return only the `.data` payload
-    const safeAlbumResp = albumResp && albumResp.data ? albumResp.data : null
-    const safeRankingResp = rankingResult && rankingResult.raw && rankingResult.raw.data ? rankingResult.raw.data : null
-    return res.status(200).json({ albumResponse: safeAlbumResp, rawRankingResponse: safeRankingResp, bestEverEvidence: bestEver })
-
-  } catch (err) {
-    console.error('Error fetching raw ranking:', err?.message || err)
-    const status = err.response?.status || 500
-    const data = err.response?.data || { error: 'Could not fetch raw ranking', details: err.message, stack: err.stack }
-    return res.status(status).json(data)
-  }
-})
-
-// Debug endpoint: list files to verify container structure
-app.get('/api/debug/files', (req, res) => {
-  if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured' })
-  const fs = require('fs')
-  const path = require('path')
-  try {
-    const targetPath = req.query.path ? path.resolve(req.query.path) : path.resolve(__dirname)
-
-    const listDir = (dir) => {
-      try {
-        return fs.readdirSync(dir).map(f => {
-          const stat = fs.statSync(path.join(dir, f))
-          return { name: f, isDir: stat.isDirectory(), size: stat.size }
-        })
-      } catch (e) { return e.message }
-    }
-
-    res.json({
-      cwd: process.cwd(),
-      dirname: __dirname,
-      targetPath,
-      contents: listDir(targetPath)
-    })
-  } catch (e) {
-    res.status(500).json({ error: e.message })
-  }
-})
-
-// Debug endpoint: test import and normalization
-app.get('/api/debug/import', async (req, res) => {
-  if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured' })
-  try {
-    const mod = await import('../shared/normalize.js')
-    const input = req.query.input
-    const normalized = input ? mod.normalizeKey(input) : null
-    res.json({ ok: true, exports: Object.keys(mod), input, normalized })
-  } catch (e) {
-    res.status(500).json({ error: e.message, stack: e.stack })
-  }
-})
-
-// attach a tiny middleware to timestamp requests for latency metrics
+// Timestamp middleware for latency metrics
 app.use((req, res, next) => {
   req._startTime = Date.now()
   next()
 })
 
-// Export fetchRankingForAlbum for test harnesses and scripts
+// ============================================================================
+// Health Check
+// ============================================================================
+app.get('/_health', (req, res) => res.send({ ok: true }))
+
+// ============================================================================
+// Load Dependencies for Routes
+// ============================================================================
+const { loadPrompts, renderPrompt } = require('./lib/prompts')
+const { callProvider } = require('./lib/aiClient')
+const { extractAlbum } = require('./lib/normalize')
+const { validateAlbum, ajvAvailable } = require('./lib/schema')
+const { getRankingForAlbum: getBestEverRanking } = require('./lib/scrapers/besteveralbums')
+const { fetchRankingForAlbum } = require('./lib/fetchRanking')
+const { consolidateRanking, normalizeKey: normalizeRankingKey } = require('./lib/ranking')
+const logger = (() => { try { return require('./lib/logger') } catch (e) { return console } })()
+
+// Dependencies object for route initialization
+const routeDeps = {
+  loadPrompts,
+  renderPrompt,
+  callProvider,
+  extractAlbum,
+  validateAlbum,
+  ajvAvailable,
+  getBestEverRanking,
+  fetchRankingForAlbum,
+  consolidateRanking,
+  normalizeRankingKey,
+  logger
+}
+
+// ============================================================================
+// Mount Routes
+// ============================================================================
+
+// MusicKit routes (Apple Music integration)
+const musickitRoutes = require('./routes/musickit')
+app.use('/api', musickitRoutes)
+
+// Album routes (generate, enrich-album)
+const { router: albumRoutes, initAlbumRoutes } = require('./routes/albums')
+initAlbumRoutes(routeDeps)
+app.use('/api', albumRoutes)
+
+// Playlist routes
+const playlistRoutes = require('./routes/playlists')
+app.use('/api', playlistRoutes)
+
+// Debug routes (list-models, raw-ranking, files, import)
+const { router: debugRoutes, initDebugRoutes } = require('./routes/debug')
+initDebugRoutes(routeDeps)
+app.use('/api', debugRoutes)
+
+// ============================================================================
+// Export for tests
+// ============================================================================
 module.exports = { fetchRankingForAlbum }
 
-// Only start the HTTP server when this file is run directly (not when required by tests)
+// ============================================================================
+// Start Server (only when run directly)
+// ============================================================================
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`AI proxy server listening on http://localhost:${PORT}`)
