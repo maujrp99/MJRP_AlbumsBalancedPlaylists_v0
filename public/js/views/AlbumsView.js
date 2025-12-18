@@ -26,7 +26,9 @@ import {
   escapeHtml as escapeHtmlFn,
   wrapInGrid,
   filterAlbums as filterAlbumsFn,
-  getUniqueArtists as getUniqueArtistsFn
+  getUniqueArtists as getUniqueArtistsFn,
+  renderScopedGrid as renderScopedGridFn,
+  renderScopedList as renderScopedListFn
 } from './albums/index.js'
 
 /**
@@ -364,179 +366,24 @@ export class AlbumsView extends BaseView {
   }
 
 
-  // Sprint 7.5: Render Grouped Grid for "All Series"
+  // Sprint 7.5: Render Grouped Grid for "All Series" - DELEGATED to module
   renderScopedGrid(albums, seriesList) {
-    // Helper to wrap grid items
-    const wrapGrid = (content) => `
-       <div class="albums-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-         ${content}
-       </div>`
-
-    if (this.currentScope === 'SINGLE') {
-      return wrapGrid(this.renderAlbumsGrid(albums))
-    }
-
-    // "All Series" Grouping
-    let html = '<div class="all-series-container space-y-12">'
-
-    // 1. Group albums by Series
-    // We reverse lookup which series owns the album
-    const seriesGroups = new Map()
-
-    // Initialize groups for all series to ensure order
-    seriesList.forEach(series => {
-      seriesGroups.set(series.id, {
-        series: series,
-        albums: []
-      })
+    return renderScopedGridFn({
+      albums,
+      seriesList,
+      currentScope: this.currentScope,
+      renderAlbumsGrid: (a) => this.renderAlbumsGrid(a)
     })
-
-    // "Other" bucket for albums not found in any series (defensive)
-    const otherAlbums = []
-
-    albums.forEach(album => {
-      let found = false
-      // Check which series queries match this album
-      for (const series of seriesList) {
-        const queries = series.albumQueries || []
-        // Simple check: is this album title/artist present in queries?
-        // Note: Exact match logic might vary, but for now we trust the "reverse matching" or just metadata
-        // Better approach: When loading ALL, we could tag them. For now, let's try fuzzy match context
-        // Actually, simplest is: Check if any query contains the album title
-        // Bidirectional check for better matching (Query contains Album OR Album contains Query)
-        // This handles cases where Query is "Artist - Album" (Long) vs "Album" (Short)
-        // AND cases where Album is "Album (Deluxe)" (Long) vs "Album" (Short)
-        const match = queries.some(q => {
-          const qNorm = q.toLowerCase()
-          const aNorm = album.title.toLowerCase()
-          return qNorm.includes(aNorm) || aNorm.includes(qNorm)
-        })
-
-        if (match) {
-          const group = seriesGroups.get(series.id)
-          if (group) group.albums.push(album)
-          found = true
-          break // Assign to first matching series
-        }
-      }
-      if (!found) otherAlbums.push(album)
-    })
-
-    // 2. Render Groups
-    seriesGroups.forEach(group => {
-      if (group.albums.length === 0) return // Skip empty series groups in view
-
-      html += `
-            <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5">
-                <div class="series-group-header flex items-center justify-between mb-6 pb-2 border-b border-white/10">
-                    <div class="flex items-center gap-4">
-                        <h2 class="text-2xl font-bold text-accent-primary">${this.escapeHtml(group.series.name)}</h2>
-                        <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full border border-white/5">
-                            ${group.albums.length} albums
-                        </span>
-                    </div>
-                    <div class="series-actions flex gap-2">
-                        <button class="btn btn-secondary btn-sm btn-icon" data-action="edit-series" data-series-id="${group.series.id}" title="Edit Series">
-                            ${getIcon('Edit', 'w-4 h-4')}
-                        </button>
-                        <button class="btn btn-danger btn-sm btn-icon" data-action="delete-series" data-series-id="${group.series.id}" title="Delete Series">
-                            ${getIcon('Trash', 'w-4 h-4')}
-                        </button>
-                    </div>
-                </div>
-                ${wrapGrid(this.renderAlbumsGrid(group.albums))}
-            </div>
-        `
-    })
-
-    // Render Orphans if any
-    if (otherAlbums.length > 0) {
-      html += `
-            <div class="series-group mt-12">
-                 <div class="series-group-header flex items-center gap-4 mb-6 pb-2 border-b border-white/10">
-                    <h2 class="text-2xl font-bold text-gray-400">Uncategorized</h2>
-                    <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full">
-                        ${otherAlbums.length} albums
-                    </span>
-                </div>
-                ${wrapGrid(this.renderAlbumsGrid(otherAlbums))}
-            </div>
-        `
-    }
-
-    html += '</div>'
-    return html
   }
 
-  // Sprint 7.5: Render Grouped List for "All Series" (Expanded Mode)
+  // Sprint 7.5: Render Grouped List for "All Series" - DELEGATED to module
   renderScopedList(albums, seriesList) {
-    if (this.currentScope === 'SINGLE') {
-      return this.renderExpandedList(albums)
-    }
-
-    let html = '<div class="all-series-container space-y-12">'
-    const seriesGroups = new Map()
-    seriesList.forEach(series => seriesGroups.set(series.id, { series, albums: [] }))
-    const otherAlbums = []
-
-    albums.forEach(album => {
-      let found = false
-      for (const series of seriesList) {
-        if ((series.albumQueries || []).some(q => {
-          const qNorm = q.toLowerCase()
-          const aNorm = album.title.toLowerCase()
-          return qNorm.includes(aNorm) || aNorm.includes(qNorm)
-        })) {
-          const group = seriesGroups.get(series.id)
-          if (group) group.albums.push(album)
-          found = true
-          break
-        }
-      }
-      if (!found) otherAlbums.push(album)
+    return renderScopedListFn({
+      albums,
+      seriesList,
+      currentScope: this.currentScope,
+      renderExpandedList: (a) => this.renderExpandedList(a)
     })
-
-    seriesGroups.forEach(group => {
-      if (group.albums.length === 0) return
-      html += `
-            <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5">
-                <div class="series-group-header flex items-center justify-between mb-6 pb-2 border-b border-white/10">
-                    <div class="flex items-center gap-4">
-                        <h2 class="text-2xl font-bold text-accent-primary">${this.escapeHtml(group.series.name)}</h2>
-                        <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full border border-white/5">
-                            ${group.albums.length} albums
-                        </span>
-                    </div>
-                    <div class="series-actions flex gap-2">
-                        <button class="btn btn-secondary btn-sm btn-icon" data-action="edit-series" data-series-id="${group.series.id}" title="Edit Series">
-                            ${getIcon('Edit', 'w-4 h-4')}
-                        </button>
-                        <button class="btn btn-danger btn-sm btn-icon" data-action="delete-series" data-series-id="${group.series.id}" title="Delete Series">
-                            ${getIcon('Trash', 'w-4 h-4')}
-                        </button>
-                    </div>
-                </div>
-                ${this.renderExpandedList(group.albums)}
-            </div>
-        `
-    })
-
-    if (otherAlbums.length > 0) {
-      html += `
-            <div class="series-group mt-12">
-                 <div class="series-group-header flex items-center gap-4 mb-6 pb-2 border-b border-white/10">
-                    <h2 class="text-2xl font-bold text-gray-400">Uncategorized</h2>
-                    <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full">
-                        ${otherAlbums.length} albums
-                    </span>
-                </div>
-                ${this.renderExpandedList(otherAlbums)}
-            </div>
-        `
-    }
-
-    html += '</div>'
-    return html
   }
 
   renderEmptyState() {

@@ -20,6 +20,12 @@ export {
     wrapInGrid
 } from './AlbumsGridRenderer.js'
 
+// Scoped renderers (All Series view)
+export {
+    renderScopedGrid,
+    renderScopedList
+} from './AlbumsScopedRenderer.js'
+
 // Filter utilities
 export {
     filterAlbums,
@@ -28,3 +34,4 @@ export {
     getDecadeOptions,
     getSourceOptions
 } from './AlbumsFilters.js'
+
