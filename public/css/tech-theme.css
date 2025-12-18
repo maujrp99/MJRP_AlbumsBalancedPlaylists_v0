@@ -166,3 +166,26 @@
     color: #fca5a5;
     transform: translateY(-1px);
 }
+
+/* 9. Select/Dropdown Styles - Fix white text on white background */
+select,
+.select,
+select.select-bordered {
+    background-color: rgba(10, 10, 12, 0.9) !important;
+    color: white !important;
+}
+
+select option,
+.select option {
+    background-color: #1a1a1d !important;
+    color: white !important;
+    padding: 8px 12px;
+}
+
+select option:hover,
+select option:checked,
+.select option:hover,
+.select option:checked {
+    background-color: #3b82f6 !important;
+    color: white !important;
+}
