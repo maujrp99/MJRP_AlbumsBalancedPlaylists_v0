@@ -256,3 +256,111 @@ AlbumsView loads data ONCE
       → ✅ No race conditions
       → ✅ No ghost albums
 ```
+
+---
+
+## Playlist Data Model
+
+### Firestore Schema
+
+```
+Firestore Path:
+users/{userId}/albumSeries/{seriesId}/playlists/{playlistId}
+```
+
+### Playlist Document Structure
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Firestore document ID (auto-generated) |
+| `batchName` | string | Grupo de playlists (ex: "Greatest Hits") |
+| `name` | string | Nome individual da playlist (ex: "DC1", "DC2") |
+| `tracks` | array | Lista de tracks com title, artist, duration, rating |
+| `order` | number | Ordem da playlist no batch (0, 1, 2...) |
+| `createdAt` | timestamp | Data de criação |
+| `savedAt` | timestamp | Data da última atualização |
+
+### Conceito: Batch vs Playlist
+
+```
+Batch "Greatest Hits" (batchName)
+├── Playlist id="abc", name="DC1", order=0
+├── Playlist id="def", name="DC2", order=1
+└── Playlist id="ghi", name="DC3", order=2
+```
+
+Um **batch** é um grupo de playlists com o mesmo `batchName`. 
+Cada **playlist** tem seu próprio `id` no Firestore.
+
+### Problema: Regenerate Muda IDs
+
+Quando o usuário regenera playlists, o algoritmo cria **novos objetos** com **novos IDs**:
+
+```
+Antes:                        Após Regenerate:
+id="abc" batchName="V1"  →   id="xyz" batchName="V1" (ID NOVO!)
+```
+
+### Solução: Save por batchName (Delete + Save)
+
+Na EditPlaylistView, o Save deve:
+1. **Deletar** todos documentos onde `batchName === currentBatchName`
+2. **Salvar** as novas playlists com o mesmo `batchName`
+
+```javascript
+// Pseudo-código
+async function saveEditedBatch(batchName, newPlaylists) {
+  // 1. Deletar batch antigo
+  const oldPlaylists = await repo.findByBatchName(batchName)
+  for (const p of oldPlaylists) {
+    await repo.delete(p.id)
+  }
+  
+  // 2. Salvar novas playlists
+  for (const p of newPlaylists) {
+    p.batchName = batchName // garantir mesmo batchName
+    await repo.save(p)
+  }
+}
+```
+
+### Diferença: CREATE vs EDIT Mode
+
+| Aspecto | CREATE Mode | EDIT Mode |
+|---------|-------------|-----------|
+| **Entrada** | `/playlists` | `/playlists?edit=batchName` |
+| **Carregar** | Store vazio | Firestore (fresh) |
+| **Regenerate** | IDs novos | IDs novos, mas batchName mantido |
+| **Save** | Cria batch NOVO | Deleta antigo + Salva novo |
+
+### Suporte a Renomear Batch
+
+Para permitir que o usuário renomeie o batch (ex: "Greatest Hits" → "Best of 2024"):
+
+```javascript
+// EditPlaylistView
+class EditPlaylistView {
+  mount(params) {
+    this.originalBatchName = params.edit  // Guardar nome original da URL
+    this.currentBatchName = params.edit   // Nome atual (pode mudar)
+  }
+  
+  async save() {
+    // 1. Deletar pelo nome ORIGINAL (não o atual)
+    await deleteByBatchName(this.originalBatchName)
+    
+    // 2. Salvar com o novo nome
+    for (const p of playlists) {
+      p.batchName = this.currentBatchName  // Novo nome se mudou
+      await repo.save(p)
+    }
+  }
+}
+```
+
+Isso permite:
+- ✅ Editar sem mudar nome
+- ✅ Editar E renomear batch
+- ✅ Regenerar e salvar
+
+

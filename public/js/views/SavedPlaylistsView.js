@@ -520,48 +520,14 @@ export class SavedPlaylistsView extends BaseView {
     }
 
     async handleEditBatchPlaylists(seriesId, batchName, albumSeriesStore, playlistsStore) {
-        // Load only the playlists from this specific batch and navigate to editor
-        const group = this.data.find(r => r.series.id === seriesId)
-        if (!group) return
+        // Sprint 11: Use new EditPlaylistView for editing batches
+        // EditPlaylistView loads directly from Firestore to avoid ghost playlists (#55)
+        // and saves by batchName to fix overwriting issue (#54)
 
-        // Filter playlists to only this batch
-        const batchPlaylists = group.playlists.filter(p => p.batchName === batchName)
+        console.log('[SavedPlaylistsView] Navigating to EditPlaylistView:', { seriesId, batchName })
 
-        // Debug: Log what we're loading
-        console.log('[SavedPlaylistsView] Loading batch for edit:', {
-            batchName,
-            playlistCount: batchPlaylists.length,
-            firstPlaylist: batchPlaylists[0] ? {
-                id: batchPlaylists[0].id,
-                batchName: batchPlaylists[0].batchName,
-                savedAt: batchPlaylists[0].savedAt
-            } : null
-        })
-
-        if (batchPlaylists.length === 0) {
-            toast.warning('No playlists found in this batch')
-            return
-        }
-
-        // Sprint 8.5: Sort by order field (Greatest Hits, DC1, DC2... sequence)
-        batchPlaylists.sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
-
-        // Set up the series in store
-        const existing = albumSeriesStore.getSeries().find(s => s.id === seriesId)
-        if (!existing) albumSeriesStore.series.push(group.series)
-        albumSeriesStore.setActiveSeries(seriesId)
-
-        // Load this batch's playlists (now sorted)
-        playlistsStore.setPlaylists(batchPlaylists, seriesId)
-
-        // Sprint 8.5: Set EDITING mode explicitly (State Machine Pattern)
-        const savedAt = batchPlaylists[0]?.savedAt
-        playlistsStore.setEditMode(batchName, seriesId, savedAt)
-
-        toast.info(`Editing "${batchName}" (${batchPlaylists.length} playlists)`)
-
-        // Navigate with edit param so mode survives refresh
-        router.navigate(`/playlists?seriesId=${seriesId}&edit=${encodeURIComponent(batchName)}`)
+        // Navigate to new edit route - EditPlaylistView handles loading
+        router.navigate(`/playlists/edit?seriesId=${seriesId}&edit=${encodeURIComponent(batchName)}`)
     }
 
     async handleDeleteBatch(seriesId, batchName, count) {

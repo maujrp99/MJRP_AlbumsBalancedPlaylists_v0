@@ -78,6 +78,12 @@ router.register('/home', () => new HomeView())
 router.register('/albums', () => new AlbumsView())
 router.register('/playlists', () => new PlaylistsView())
 
+// Sprint 11: EditPlaylistView for editing existing batches (fixes #54, #55)
+router.register('/playlists/edit', async () => {
+    const { EditPlaylistView } = await import('./views/EditPlaylistView.js')
+    return new EditPlaylistView()
+})
+
 // New routes for Phase 1 TopNav fix
 // Sprint 7.5: /album-series now redirects to /albums (consolidated view)
 router.register('/album-series', () => {
