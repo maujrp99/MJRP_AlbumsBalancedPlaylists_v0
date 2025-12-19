@@ -171,7 +171,10 @@ export class PlaylistsView extends BaseView {
       this.on(regenerate, 'click', () => this.handleGenerate())
     }
     if (exportSpotify) {
-      this.on(exportSpotify, 'click', () => toast.info('Spotify export coming in Sprint 5!'))
+      this.on(exportSpotify, 'click', async () => {
+        const { showSpotifyExportModal } = await import('../components/SpotifyExportModal.js')
+        showSpotifyExportModal()
+      })
     }
     if (exportAppleMusic) {
       this.on(exportAppleMusic, 'click', () => this.handleExportToAppleMusic())
@@ -361,6 +364,9 @@ export class PlaylistsView extends BaseView {
             ${getIcon('Cloud', 'w-5 h-5')} Save to Series History
           </button>
           <div class="h-auto w-px bg-white/10 mx-2"></div>
+          <button class="btn flex items-center gap-2 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all duration-300" style="background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);" id="exportSpotifyBtn">
+            ${getIcon('Spotify', 'w-5 h-5')} Export to Spotify
+          </button>
           <button class="btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300" id="exportAppleMusicBtn">
             ${getIcon('Apple', 'w-5 h-5')} Export to Apple Music
           </button>

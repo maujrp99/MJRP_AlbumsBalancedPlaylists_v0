@@ -28,7 +28,7 @@ export default defineConfig({
     },
 
     server: {
-        host: 'mjrp.local', // Custom domain for unified OAuth (Spotify + Apple Music)
+        host: true, // Accept localhost and 127.0.0.1 (needed for Spotify OAuth)
         port: 5000,
         proxy: {
             '/api': {

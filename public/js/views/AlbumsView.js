@@ -676,6 +676,9 @@ export class AlbumsView extends BaseView {
             router.navigate(`/playlists?seriesId=${activeSeries.id}`)
           })
         }
+
+        // FIX: Re-render albums grid after view mode toggle to mount ranking components
+        this.updateAlbumsGrid(currentAlbums)
       })
     }
 

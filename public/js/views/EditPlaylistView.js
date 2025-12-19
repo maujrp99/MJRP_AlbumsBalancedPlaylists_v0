@@ -12,6 +12,9 @@ import { getAllAlgorithms, getRecommendedAlgorithm, createAlgorithm } from '../a
 // Sprint 10: Modular components
 import { handleExportJson as handleExportJsonFn, handleExportToAppleMusic as handleExportToAppleMusicFn } from './playlists/index.js'
 
+// Sprint 11: Spotify export modal
+import { showSpotifyExportModal } from '../components/SpotifyExportModal.js'
+
 /**
  * EditPlaylistView - Sprint 11
  * 
@@ -444,11 +447,14 @@ export class EditPlaylistView extends BaseView {
   renderExportSection() {
     return `
       <div class="flex flex-wrap gap-3 glass-panel p-4 rounded-xl">
+        <button id="exportSpotifyBtn" class="btn btn-sm flex items-center gap-2 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all duration-300" style="background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);">
+          ${getIcon('Spotify', 'w-4 h-4')} Export to Spotify
+        </button>
+        <button id="exportAppleMusicBtn" class="btn btn-sm flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg transition-all duration-300">
+          ${getIcon('Apple', 'w-4 h-4')} Export to Apple Music
+        </button>
         <button id="exportJsonBtn" class="btn btn-outline btn-sm flex items-center gap-2">
           ${getIcon('Download', 'w-4 h-4')} Export JSON
-        </button>
-        <button id="exportAppleMusicBtn" class="btn btn-outline btn-sm flex items-center gap-2">
-          ${getIcon('Apple', 'w-4 h-4')} Export to Apple Music
         </button>
       </div>
     `
@@ -546,14 +552,23 @@ export class EditPlaylistView extends BaseView {
   }
 
   attachExportListeners() {
-    const jsonBtn = this.$('#exportJsonBtn')
-    if (jsonBtn) {
-      jsonBtn.addEventListener('click', () => handleExportJsonFn())
+    // Sprint 11: Spotify export
+    const spotifyBtn = this.$('#exportSpotifyBtn')
+    if (spotifyBtn) {
+      spotifyBtn.addEventListener('click', () => {
+        const playlists = playlistsStore.getPlaylists()
+        showSpotifyExportModal(playlists)
+      })
     }
 
     const appleBtn = this.$('#exportAppleMusicBtn')
     if (appleBtn) {
       appleBtn.addEventListener('click', () => handleExportToAppleMusicFn({ btn: appleBtn }))
+    }
+
+    const jsonBtn = this.$('#exportJsonBtn')
+    if (jsonBtn) {
+      jsonBtn.addEventListener('click', () => handleExportJsonFn())
     }
   }
 

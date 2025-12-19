@@ -363,4 +363,248 @@ Isso permite:
 - ✅ Editar E renomear batch
 - ✅ Regenerar e salvar
 
+---
+
+## Sprint 11: Spotify Integration Flow
+
+**Added**: 2025-12-19
+
+### Spotify OAuth Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant App
+    participant SpotifyAuthService
+    participant Spotify
+
+    User->>App: Click "Connect Spotify"
+    App->>SpotifyAuthService: initiateAuth()
+    SpotifyAuthService->>SpotifyAuthService: Generate PKCE codes
+    SpotifyAuthService->>Spotify: Redirect to /authorize
+    Spotify->>User: Login prompt
+    User->>Spotify: Authenticate
+    Spotify->>App: Redirect with ?code=XXX
+    App->>SpotifyAuthService: handleCallback(code)
+    SpotifyAuthService->>Spotify: Exchange code for tokens
+    Spotify-->>SpotifyAuthService: access_token, refresh_token
+    SpotifyAuthService->>localStorage: Store tokens
+```
+
+### Spotify Auto-Enrichment Flow (New in Sprint 11)
+
+```mermaid
+sequenceDiagram
+    participant AlbumsView
+    participant APIClient
+    participant MusicKitService
+    participant BestEverAPI
+    participant SpotifyService
+    participant AlbumsStore
+    participant Cache
+
+    AlbumsView->>APIClient: fetchAlbum("Artist - Album")
+    APIClient->>Cache: Check localStorage
+    
+    alt Cache Miss
+        APIClient->>MusicKitService: searchAlbums()
+        MusicKitService-->>APIClient: Apple Music album data
+        
+        APIClient->>BestEverAPI: POST /enrich-album
+        BestEverAPI-->>APIClient: track ratings
+        
+        APIClient->>APIClient: Create Album instance
+        
+        alt Spotify Connected
+            APIClient->>SpotifyService: enrichAlbumData(artist, title)
+            SpotifyService->>SpotifyService: searchAlbum() + getTracksWithPopularity()
+            SpotifyService-->>APIClient: {spotifyId, trackPopularityMap}
+            APIClient->>APIClient: Apply popularity to tracks (fuzzy match)
+        end
+        
+        APIClient->>Cache: store in localStorage
+    end
+    
+    APIClient-->>AlbumsView: Album with tracks
+    AlbumsView->>AlbumsStore: addAlbum(album)
+```
+
+### Spotify Export Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant PlaylistsView
+    participant SpotifyExportModal
+    participant SpotifyService
+    participant Spotify
+
+    User->>PlaylistsView: Click "Export to Spotify"
+    PlaylistsView->>SpotifyExportModal: show(playlists)
+    SpotifyExportModal->>SpotifyExportModal: State: IDLE
+    
+    User->>SpotifyExportModal: Enter name + Click Export
+    SpotifyExportModal->>SpotifyExportModal: State: MATCHING
+    
+    loop For each track
+        SpotifyExportModal->>SpotifyService: searchTrack(name, artist)
+        SpotifyService-->>SpotifyExportModal: {uri} or null
+    end
+    
+    SpotifyExportModal->>SpotifyExportModal: State: CREATING
+    SpotifyExportModal->>SpotifyService: createPlaylist(name)
+    SpotifyService-->>SpotifyExportModal: {playlistId, url}
+    
+    SpotifyExportModal->>SpotifyExportModal: State: ADDING
+    SpotifyExportModal->>SpotifyService: addTracksToPlaylist(id, uris)
+    
+    SpotifyExportModal->>SpotifyExportModal: State: SUCCESS
+    SpotifyExportModal-->>User: Show success + Spotify link
+```
+
+---
+
+## View Mode Toggle Flow (BUG INVESTIGATION)
+
+**Issue**: Tracks from wrong album showing after toggle
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant AlbumsView
+    participant AlbumsStore
+    participant GridRenderer
+    participant TracksRankingComparison
+
+    User->>AlbumsView: Click "View Expanded" toggle
+    AlbumsView->>AlbumsView: viewModeKey = 'expanded'
+    AlbumsView->>AlbumsView: viewStrategy = new ExpandedStrategy()
+    
+    Note over AlbumsView: CRITICAL: Full re-render!
+    AlbumsView->>AlbumsView: this.render({})
+    AlbumsView->>AlbumsView: this.container.innerHTML = html
+    
+    Note over AlbumsView: Re-bind events...
+    AlbumsView->>AlbumsView: setupEventListeners()
+    
+    AlbumsView->>AlbumsView: updateAlbumsGrid(currentAlbums)
+    AlbumsView->>AlbumsStore: getAlbums()
+    AlbumsStore-->>AlbumsView: [albums]
+    
+    AlbumsView->>GridRenderer: render(albums)
+    GridRenderer-->>AlbumsView: HTML with .ranking-comparison-container
+    
+    AlbumsView->>AlbumsView: container.innerHTML = html
+    
+    loop For each .ranking-comparison-container
+        AlbumsView->>AlbumsView: el.dataset.albumId
+        AlbumsView->>AlbumsView: albums.find(a => a.id === albumId)
+        
+        Note over AlbumsView: ⚠️ BUG: Is album reference correct?
+        
+        AlbumsView->>TracksRankingComparison: new({album}).mount(el)
+        TracksRankingComparison->>TracksRankingComparison: album.getTracks('original')
+        
+        Note over TracksRankingComparison: ⚠️ BUG: Tracks might be from wrong album!
+    end
+```
+
+### Potential Bug Causes
+
+| Cause | Likelihood | Evidence |
+|-------|------------|----------|
+| Album ID mismatch | Medium | Tracks from different album shown |
+| Shared reference mutation | High | Same tracks array shared between albums |
+| Cache returning wrong album | High | Problem reappears after cache clear |
+| Store state pollution | Medium | Multiple series data mixing |
+
+---
+
+## Cache Strategy (3-Level)
+
+```mermaid
+graph TD
+    Request[fetchAlbum Request]
+    
+    L1[L1: Memory Cache<br/>Map in APIClient]
+    L2[L2: localStorage<br/>album_cache_XXX]
+    L3[L3: External APIs<br/>Apple Music + BestEver + Spotify]
+    
+    Request --> L1
+    L1 -->|HIT| Return[Return Album]
+    L1 -->|MISS| L2
+    L2 -->|HIT| PromoteL1[Promote to L1]
+    PromoteL1 --> Return
+    L2 -->|MISS| L3
+    L3 --> SaveL2[Save to L2]
+    SaveL2 --> SaveL1[Save to L1]
+    SaveL1 --> Return
+    
+    style L1 fill:#4ade80,stroke:#166534
+    style L2 fill:#60a5fa,stroke:#1d4ed8
+    style L3 fill:#f97316,stroke:#c2410c
+```
+
+### Cache Key Generation
+
+```javascript
+// albumCache.js
+getStorageKey(query) {
+    return `album_cache_${this.normalizeQuery(query)}`
+}
+
+normalizeQuery(query) {
+    return query.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_-]/g, '')
+}
+```
+
+**⚠️ Potential Issue**: Similar queries might generate same key!
+- "The Beatles - Rubber Soul" → `the_beatles_-_rubber_soul`
+- "Beatles - Rubber Soul" → `beatles_-_rubber_soul` (different)
+
+---
+
+## TracksRankingComparison Component Data Flow
+
+```mermaid
+graph TD
+    Album[Album Instance]
+    TRC[TracksRankingComparison]
+    Normalize[normalizeTracks]
+    State[Component State]
+    Table[TracksTable]
+    
+    Album -->|passed as prop| TRC
+    TRC -->|constructor| Normalize
+    Normalize -->|album.getTracks 'original'| TracksOriginal[tracksOriginalOrder]
+    TracksOriginal -->|map with defaults| State
+    
+    State -->|getSortedTracks| SortedTracks[Sorted Tracks]
+    SortedTracks --> Table
+    Table -->|render| DOM[DOM]
+    
+    subgraph "Data Source Problem"
+        TracksOriginal
+        Note["⚠️ If album.tracksOriginalOrder<br/>points to wrong data,<br/>wrong tracks are shown"]
+    end
+```
+
+### Debug Checklist
+
+- [ ] Album.id matches container data-album-id?
+- [ ] album.tracksOriginalOrder has correct tracks?
+- [ ] Track.album field matches Album.title?
+- [ ] Cache is storing correct album → tracks mapping?
+
+---
+
+## Known Issues (Sprint 11)
+
+| ID | Issue | Root Cause | Status |
+|----|-------|------------|--------|
+| BUG-1 | Wrong tracks in ranking table | TBD - investigating | 🔍 INVESTIGATING |
+| BUG-2 | Table disappears on view toggle | Missing updateAlbumsGrid call | ✅ FIXED |
+| BUG-3 | Spotify not enriching (0 tracks matched) | Title mismatch | ✅ FIXED |
+| BUG-4 | Led Zeppelin not found on Spotify | Fuzzy search needed | ✅ FIXED |
+
 
