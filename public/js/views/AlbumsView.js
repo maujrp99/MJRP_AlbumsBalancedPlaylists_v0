@@ -25,11 +25,13 @@ import {
   renderNoMatchState,
   escapeHtml as escapeHtmlFn,
   wrapInGrid,
-  filterAlbums as filterAlbumsFn,
   getUniqueArtists as getUniqueArtistsFn,
   renderScopedGrid as renderScopedGridFn,
-  renderScopedList as renderScopedListFn
+  renderScopedList as renderScopedListFn,
+  filterAlbums as filterAlbumsFn
 } from './albums/index.js'
+
+import { TracksRankingComparison } from '../components/ranking/TracksRankingComparison.js'
 
 /**
  * AlbumsView
@@ -1316,6 +1318,16 @@ export class AlbumsView extends BaseView {
     const html = this.viewStrategy.render(filtered, allSeries)
     console.log('[AlbumsView] Strategy rendered HTML length:', html?.length, 'mode:', this.viewModeKey)
     container.innerHTML = html
+
+    // Sprint 11: Hydrate Ranking Comparison Components (Mode 3)
+    const rankingContainers = container.querySelectorAll('.ranking-comparison-container')
+    rankingContainers.forEach(el => {
+      const albumId = el.dataset.albumId
+      const album = filtered.find(a => a.id === albumId)
+      if (album) {
+        new TracksRankingComparison({ album }).mount(el)
+      }
+    })
 
     // Update empty state container
     const emptyStateContainer = this.$('#emptyStateContainer')

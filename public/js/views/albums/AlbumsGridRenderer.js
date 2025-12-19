@@ -13,9 +13,9 @@ import { getIcon } from '../../components/Icons.js'
  * @returns {string} Escaped text
  */
 export function escapeHtml(text) {
-    const div = document.createElement('div')
-    div.textContent = text || ''
-    return div.innerHTML
+  const div = document.createElement('div')
+  div.textContent = text || ''
+  return div.innerHTML
 }
 
 /**
@@ -24,10 +24,10 @@ export function escapeHtml(text) {
  * @returns {string} HTML string
  */
 export function renderLoadingProgress(progress) {
-    const { current, total } = progress
-    const percentage = total > 0 ? Math.round((current / total) * 100) : 0
+  const { current, total } = progress
+  const percentage = total > 0 ? Math.round((current / total) * 100) : 0
 
-    return `
+  return `
     <div class="loading-overlay fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
       <div class="loading-content glass-panel p-8 max-w-md w-full text-center">
         <div class="loading-spinner w-12 h-12 border-4 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -46,7 +46,7 @@ export function renderLoadingProgress(progress) {
  * @returns {string} HTML string
  */
 export function renderEmptyState() {
-    return `
+  return `
     <div class="text-center py-12 text-muted">
       <p class="text-xl mb-2">No albums yet</p>
       <p class="text-sm">Add albums from the Home page to get started</p>
@@ -59,7 +59,7 @@ export function renderEmptyState() {
  * @returns {string} HTML string
  */
 export function renderNoMatchState() {
-    return `
+  return `
     <div class="text-center py-12 text-muted">
       <p class="text-xl mb-2">No albums match your filters</p>
       <p class="text-sm">Try adjusting your search or filters</p>
@@ -73,15 +73,15 @@ export function renderNoMatchState() {
  * @returns {string} HTML string
  */
 export function renderRankedTracklist(album) {
-    const tracks = album.tracks || []
-    if (tracks.length === 0) {
-        return '<p class="text-muted text-sm">No tracks available</p>'
-    }
+  const tracks = album.tracks || []
+  if (tracks.length === 0) {
+    return '<p class="text-muted text-sm">No tracks available</p>'
+  }
 
-    // Sort by rating (descending)
-    const rankedTracks = [...tracks].sort((a, b) => (b.rating || 0) - (a.rating || 0))
+  // Sort by rating (descending)
+  const rankedTracks = [...tracks].sort((a, b) => (b.rating || 0) - (a.rating || 0))
 
-    return `
+  return `
     <div class="tracklist-section">
       <h4 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-primary">
         ${getIcon('TrendingUp', 'w-4 h-4')}
@@ -89,16 +89,16 @@ export function renderRankedTracklist(album) {
       </h4>
       <div class="tracks-list-compact space-y-1 text-sm">
         ${rankedTracks.map((track, idx) => {
-        const rating = track.rating || 0
-        const medal = idx < 3 ? (idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉') : ''
-        return `
+    const rating = track.rating || 0
+    const medal = idx < 3 ? (idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉') : ''
+    return `
             <div class="track-row-compact flex items-center gap-2 py-1 px-2 rounded hover:bg-white/5">
               <span class="track-pos w-6 text-xs text-muted text-center">${medal || (idx + 1)}</span>
               <span class="track-name flex-1 truncate">${escapeHtml(track.title || track.name)}</span>
               ${rating > 0 ? `<span class="track-rating badge badge-sm ${rating >= 90 ? 'badge-success' : rating >= 80 ? 'badge-primary' : 'badge-neutral'}">⭐ ${rating}</span>` : ''}
             </div>
           `
-    }).join('')}
+  }).join('')}
       </div>
     </div>
   `
@@ -110,12 +110,12 @@ export function renderRankedTracklist(album) {
  * @returns {string} HTML string
  */
 export function renderOriginalTracklist(album) {
-    const tracks = album.tracksOriginalOrder || album.tracks || []
-    if (tracks.length === 0) {
-        return '<p class="text-muted text-sm">No tracks available</p>'
-    }
+  const tracks = album.tracksOriginalOrder || album.tracks || []
+  if (tracks.length === 0) {
+    return '<p class="text-muted text-sm">No tracks available</p>'
+  }
 
-    return `
+  return `
     <div class="tracklist-section">
       <h4 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
         ${getIcon('List', 'w-4 h-4')}
@@ -123,16 +123,16 @@ export function renderOriginalTracklist(album) {
       </h4>
       <div class="tracks-list-compact space-y-1 text-sm">
         ${tracks.map((track, idx) => {
-        const rating = track.rating || 0
-        const position = track.position || (idx + 1)
-        return `
+    const rating = track.rating || 0
+    const position = track.position || (idx + 1)
+    return `
             <div class="track-row-compact flex items-center gap-2 py-1 px-2 rounded hover:bg-white/5">
               <span class="track-pos w-6 text-xs text-muted text-center">${position}</span>
               <span class="track-name flex-1 truncate">${escapeHtml(track.title || track.name)}</span>
               ${rating > 0 ? `<span class="track-rating badge badge-sm badge-neutral opacity-70">⭐ ${rating}</span>` : ''}
             </div>
           `
-    }).join('')}
+  }).join('')}
       </div>
     </div>
   `
@@ -144,24 +144,24 @@ export function renderOriginalTracklist(album) {
  * @returns {string} HTML string for badge
  */
 export function renderRankingBadge(album) {
-    const hasBestEver = !!album.bestEverAlbumId
-    const providerType = album.acclaim?.providerType
-    const hasRatings = album.tracks?.some(t => t.rating > 0)
+  const hasBestEver = !!album.bestEverAlbumId
+  const providerType = album.acclaim?.providerType
+  const hasRatings = album.tracks?.some(t => t.rating > 0)
 
-    if (hasBestEver) {
-        return `
+  if (hasBestEver) {
+    return `
       <a href="https://www.besteveralbums.com/thechart.php?a=${album.bestEverAlbumId}" target="_blank" rel="noopener noreferrer" class="badge badge-primary hover:badge-accent transition-colors flex items-center gap-1" title="Ranking by Community Acclaim">
         ${getIcon('ExternalLink', 'w-3 h-3')} Acclaim
       </a>`
-    }
-    if (providerType === 'popularity') {
-        return `<span class="badge badge-success flex items-center gap-1" title="Ranking by Spotify Popularity">${getIcon('TrendingUp', 'w-3 h-3')} Popularity</span>`
-    }
-    if (hasRatings) {
-        return `<span class="badge badge-info flex items-center gap-1" title="Ranking by AI Enrichment">${getIcon('Cpu', 'w-3 h-3')} AI</span>`
-    }
-    // Pending
-    return `<span class="badge badge-warning flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
+  }
+  if (providerType === 'popularity') {
+    return `<span class="badge badge-success flex items-center gap-1" title="Ranking by Spotify Popularity">${getIcon('TrendingUp', 'w-3 h-3')} Popularity</span>`
+  }
+  if (hasRatings) {
+    return `<span class="badge badge-info flex items-center gap-1" title="Ranking by AI Enrichment">${getIcon('Cpu', 'w-3 h-3')} AI</span>`
+  }
+  // Pending
+  return `<span class="badge badge-warning flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
 }
 
 /**
@@ -171,9 +171,9 @@ export function renderRankingBadge(album) {
  * @returns {string} HTML string
  */
 export function renderExpandedAlbumCard(album, idx) {
-    const coverUrl = albumLoader.getArtworkUrl(album, 150)
+  const coverUrl = albumLoader.getArtworkUrl(album, 150)
 
-    return `
+  return `
     <div class="expanded-album-card glass-panel p-6 mb-6 rounded-2xl animate-in fade-in slide-in-from-bottom-4 duration-500" style="animation-delay: ${idx * 50}ms" data-album-id="${album.id || ''}">
       <div class="flex flex-col md:flex-row gap-6 items-start">
         <!-- Album Cover & Actions Column -->
@@ -215,11 +215,8 @@ export function renderExpandedAlbumCard(album, idx) {
             <span class="badge badge-neutral">${album.tracks?.length || 0} tracks</span>
             ${renderRankingBadge(album)}
           </div>
-          <!-- Dual Tracklists -->
-          <div class="dual-tracklists-compact grid md:grid-cols-2 gap-6">
-            ${renderOriginalTracklist(album)}
-            ${renderRankedTracklist(album)}
-          </div>
+          <!-- Ranking UI Container (Mounts TracksRankingComparison) -->
+          <div class="ranking-comparison-container mt-6" data-album-id="${album.id}"></div>
         </div>
       </div>
     </div>
@@ -233,14 +230,14 @@ export function renderExpandedAlbumCard(album, idx) {
  * @returns {string} HTML string
  */
 export function renderExpandedList(albums, context = {}) {
-    const { searchQuery, filters } = context
-    const hasActiveFilters = searchQuery || (filters && Object.values(filters).some(v => v !== 'all' && v !== false))
+  const { searchQuery, filters } = context
+  const hasActiveFilters = searchQuery || (filters && Object.values(filters).some(v => v !== 'all' && v !== false))
 
-    if (albums.length === 0 && hasActiveFilters) {
-        return renderNoMatchState()
-    }
+  if (albums.length === 0 && hasActiveFilters) {
+    return renderNoMatchState()
+  }
 
-    return albums.map((album, idx) => renderExpandedAlbumCard(album, idx)).join('')
+  return albums.map((album, idx) => renderExpandedAlbumCard(album, idx)).join('')
 }
 
 /**
@@ -249,10 +246,10 @@ export function renderExpandedList(albums, context = {}) {
  * @returns {string} HTML string
  */
 export function renderCompactAlbumCard(album) {
-    const coverUrl = albumLoader.getArtworkUrl(album, 300)
-    const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
+  const coverUrl = albumLoader.getArtworkUrl(album, 300)
+  const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
 
-    return `
+  return `
     <div class="album-card-compact flex flex-col gap-3 h-full relative" data-album-id="${album.id || ''}">
       <!-- Image Container -->
       <div 
@@ -261,9 +258,9 @@ export function renderCompactAlbumCard(album) {
         data-album-id="${album.id || ''}"
       >
         ${coverUrl ?
-            `<img src="${coverUrl}" alt="${escapeHtml(album.title)}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />` :
-            `<div class="flex items-center justify-center w-full h-full text-white/20">${getIcon('Music', 'w-24 h-24')}</div>`
-        }
+      `<img src="${coverUrl}" alt="${escapeHtml(album.title)}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />` :
+      `<div class="flex items-center justify-center w-full h-full text-white/20">${getIcon('Music', 'w-24 h-24')}</div>`
+    }
         <!-- Hover Overlay -->
         <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
           <span class="bg-black/50 p-3 rounded-full backdrop-blur text-white">
@@ -329,14 +326,14 @@ export function renderCompactAlbumCard(album) {
  * @returns {string} HTML string
  */
 export function renderAlbumsGrid(albums, context = {}) {
-    const { searchQuery, filters } = context
-    const hasActiveFilters = searchQuery || (filters && Object.values(filters).some(v => v !== 'all' && v !== false))
+  const { searchQuery, filters } = context
+  const hasActiveFilters = searchQuery || (filters && Object.values(filters).some(v => v !== 'all' && v !== false))
 
-    if (albums.length === 0 && hasActiveFilters) {
-        return `<div class="col-span-full">${renderNoMatchState()}</div>`
-    }
+  if (albums.length === 0 && hasActiveFilters) {
+    return `<div class="col-span-full">${renderNoMatchState()}</div>`
+  }
 
-    return albums.map(album => renderCompactAlbumCard(album)).join('')
+  return albums.map(album => renderCompactAlbumCard(album)).join('')
 }
 
 /**
@@ -345,7 +342,7 @@ export function renderAlbumsGrid(albums, context = {}) {
  * @returns {string} HTML string wrapped in grid
  */
 export function wrapInGrid(content) {
-    return `
+  return `
     <div class="albums-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
       ${content}
     </div>
