@@ -90,9 +90,9 @@ export class EditPlaylistView extends BaseView {
         </div>
 
         <div id="mainContent" class="fade-in" style="animation-delay: 0.1s">
-          ${playlists.length === 0 ? this.renderLoadingState() : ''}
+          <div id="loadingContainer">${this.isLoading ? this.renderLoadingState() : ''}</div>
 
-          <div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="playlistsGrid">
+          <div class="playlists-grid grid grid-cols-1 md:grid-cols-2 gap-6" id="playlistsGrid">
             ${this.renderPlaylists(playlists)}
           </div>
         </div>
@@ -469,14 +469,15 @@ export class EditPlaylistView extends BaseView {
                     data-playlist-index="${index}"
                     title="Delete this playlist">
               ${getIcon('Trash', 'w-4 h-4')}
-            </button>
           </div>
         </div>
-        <div class="tracks-list space-y-1 max-h-[400px] overflow-y-auto" data-playlist-index="${index}">
+        <div class="tracks-list space-y-1 flex-1 min-h-[200px] overflow-y-auto custom-scrollbar pr-1" data-playlist-index="${index}">
           ${(playlist.tracks || []).map((track, trackIndex) => this.renderTrack(track, index, trackIndex)).join('')}
+          <div class="drop-zone-padding h-16 opacity-0"></div>
         </div>
-        <div class="mt-3 text-sm text-muted">
-          Duration: ${this.calculateDuration(playlist.tracks || [])}
+        <div class="mt-3 pt-3 border-t border-white/10 text-sm text-muted flex justify-between">
+          <span>Duration: ${this.calculateDuration(playlist.tracks || [])}</span>
+          <span class="opacity-60">${playlist.tracks?.length || 0} tracks</span>
         </div>
       </div>
     `).join('')
@@ -557,6 +558,19 @@ export class EditPlaylistView extends BaseView {
   update() {
     const state = playlistsStore.getState()
     const playlists = state.playlists
+
+    // Remove loading state if playlists are loaded
+    const loadingContainer = this.$('#loadingContainer')
+    if (loadingContainer && playlists.length > 0) {
+      loadingContainer.innerHTML = ''
+    }
+
+    // Update status badge
+    const statusBadge = this.$('#editStatusBadge')
+    if (statusBadge && !this.isLoading) {
+      statusBadge.className = 'badge badge-success px-3 py-1 rounded-full text-sm'
+      statusBadge.textContent = `Editing: ${this.currentBatchName || 'Batch'}`
+    }
 
     // Update playlists grid
     const grid = this.$('#playlistsGrid')
