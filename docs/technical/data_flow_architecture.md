@@ -506,103 +506,59 @@ sequenceDiagram
 
 ---
 
-## View Mode Toggle Flow (BUG INVESTIGATION)
-
-**Issue**: Tracks from wrong album showing after toggle
 
 ```mermaid
 sequenceDiagram
     participant User
     participant AlbumsView
+    participant Router
+    participant RankingView
     participant AlbumsStore
-    participant GridRenderer
-    participant TracksRankingComparison
-
-    User->>AlbumsView: Click "View Expanded" toggle
-    AlbumsView->>AlbumsView: viewModeKey = 'expanded'
-    AlbumsView->>AlbumsView: viewStrategy = new ExpandedStrategy()
     
-    Note over AlbumsView: CRITICAL: Full re-render!
-    AlbumsView->>AlbumsView: this.render({})
-    AlbumsView->>AlbumsView: this.container.innerHTML = html
+    User->>AlbumsView: Click album card
+    AlbumsView->>Router: navigate('/ranking/album-id')
+    Router->>RankingView: mount(albumId)
     
-    Note over AlbumsView: Re-bind events...
-    AlbumsView->>AlbumsView: setupEventListeners()
+    RankingView->>AlbumsStore: getAlbum(albumId)
+    AlbumsStore-->>RankingView: album
     
-    AlbumsView->>AlbumsView: updateAlbumsGrid(currentAlbums)
-    AlbumsView->>AlbumsStore: getAlbums()
-    AlbumsStore-->>AlbumsView: [albums]
-    
-    AlbumsView->>GridRenderer: render(albums)
-    GridRenderer-->>AlbumsView: HTML with .ranking-comparison-container
-    
-    AlbumsView->>AlbumsView: container.innerHTML = html
-    
-    loop For each .ranking-comparison-container
-        AlbumsView->>AlbumsView: el.dataset.albumId
-        AlbumsView->>AlbumsView: albums.find(a => a.id === albumId)
-        
-        Note over AlbumsView: ⚠️ BUG: Is album reference correct?
-        
-        AlbumsView->>TracksRankingComparison: new({album}).mount(el)
-        TracksRankingComparison->>TracksRankingComparison: album.getTracks('original')
-        
-        Note over TracksRankingComparison: ⚠️ BUG: Tracks might be from wrong album!
-    end
+    RankingView->>RankingView: render()
 ```
-
-### Potential Bug Causes
-
-| Cause | Likelihood | Evidence |
-|-------|------------|----------|
-| Album ID mismatch | Medium | Tracks from different album shown |
-| Shared reference mutation | High | Same tracks array shared between albums |
-| Cache returning wrong album | High | Problem reappears after cache clear |
-| Store state pollution | Medium | Multiple series data mixing |
 
 ---
 
-## Cache Strategy (3-Level)
+## Technical Strategies
+
+### Playlist Persistence Strategy (Batch Management)
+
+When editing or regenerating playlists, the system treats the batch as a unit. Since regeneration creates new playlist objects with new IDs, the save process handles versioning and renaming:
+
+1. **Delete** all existing playlists where `batchName === originalBatchName`
+2. **Save** all current playlists with `batchName = newBatchName`
+
+This strategy prevents "ghost playlists" (orphaned tracks from previous generations) and supports batch renaming in a single atomic-like operation.
+
+### Cache Strategy (2-Level + Source of Truth)
+
+The system uses a unified `CacheManager` with a 2-level architecture, falling back to Firestore/API only when necessary.
 
 ```mermaid
 graph TD
-    Request[fetchAlbum Request]
-    
-    L1[L1: Memory Cache<br/>Map in APIClient]
-    L2[L2: localStorage<br/>album_cache_XXX]
-    L3[L3: External APIs<br/>Apple Music + BestEver + Spotify]
-    
-    Request --> L1
-    L1 -->|HIT| Return[Return Album]
-    L1 -->|MISS| L2
-    L2 -->|HIT| PromoteL1[Promote to L1]
-    PromoteL1 --> Return
-    L2 -->|MISS| L3
-    L3 --> SaveL2[Save to L2]
-    SaveL2 --> SaveL1[Save to L1]
-    SaveL1 --> Return
-    
-    style L1 fill:#4ade80,stroke:#166534
-    style L2 fill:#60a5fa,stroke:#1d4ed8
-    style L3 fill:#f97316,stroke:#c2410c
+    Request[Data Request] --> L1{L1: Memory?}
+    L1 -- Yes --> ReturnL1[Return Data (Fastest)]
+    L1 -- No --> L2{L2: IndexedDB?}
+    L2 -- Yes --> ReturnL2[Return Data (Fast)]
+    L2 -- No --> Source{Source: Firestore/API}
+    Source --> Cache[Update Cache L1+L2]
+    Cache --> ReturnSource[Return Data]
 ```
 
-### Cache Key Generation
+1. **L1: Memory Cache** (Session-only, Map-based)
+2. **L2: IndexedDB** (Persistent, 7-day TTL default)
+3. **Source of Truth**: Firestore (User Data) or Apple/Spotify APIs (Metadata)
 
-```javascript
-// albumCache.js
-getStorageKey(query) {
-    return `album_cache_${this.normalizeQuery(query)}`
-}
 
-normalizeQuery(query) {
-    return query.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_-]/g, '')
-}
-```
 
-**⚠️ Potential Issue**: Similar queries might generate same key!
-- "The Beatles - Rubber Soul" → `the_beatles_-_rubber_soul`
-- "Beatles - Rubber Soul" → `beatles_-_rubber_soul` (different)
 
 ---
 
