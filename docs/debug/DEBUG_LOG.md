@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-18 01:20
+**Last Updated**: 2025-12-18 23:20
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -16,11 +16,15 @@
 
 ## 📑 Issue Index
 
+| #62 | Sprint 9 Race Condition | ✅ RESOLVED | [L55](#issue-62-race-condition-albumsview-unmount) |
+| #61 | Regenerate Browser Freeze | ✅ RESOLVED | [L55](#issue-61-regenerate-browser-freeze) |
+| #60 | Scroll/DragDrop UX | ✅ RESOLVED | [L55](#issue-60-scroll-dragdrop-ux) |
+| #59 | Loading Spinner Persistent | ✅ RESOLVED | [L55](#issue-59-loading-spinner-persistent) |
 | #58 | Sprint 9 Badge Display | 🚧 IN PROGRESS | [L114](#issue-58-sprint-9---badge-shows-pending-despite-bestever-data) |
-| #57 | Sprint 9 Filter Regression | 🧪 TESTING | [L54](#issue-57-sprint-9---frontend-filter-regression-albums-not-displaying) |
+| #57 | Sprint 9 Filter Regression | ✅ RESOLVED | [L54](#issue-57-sprint-9---frontend-filter-regression-albums-not-displaying) |
 | #56 | HomeView Type Filter | ⏸️ DEFERRED | [L165](#issue-56-homeview-type-filter-layout-regression) |
-| #55 | Ghost Playlists | 🧪 TESTING | [L54](#issue-55-ghost-playlists--batch-context-contamination) |
-| #54 | Edit Batch Not Overwriting | 🧪 TESTING | [L54](#issue-54-edit-batch-not-overwriting) |
+| #55 | Ghost Playlists | ✅ RESOLVED | [L54](#issue-55-ghost-playlists--batch-context-contamination) |
+| #54 | Edit Batch Not Overwriting | ✅ RESOLVED | [L54](#issue-54-edit-batch-not-overwriting) |
 | #53 | Ranked by Acclaim | ✅ RESOLVED | [L100](#issue-53-ranked-by-acclaim-not-loading-ratings---resolved) |
 | #52 | Series Empty Render | ✅ RESOLVED | [L52](#issue-52-series-51-empty-render-albums-loaded-but-not-displayed---resolved) |
 | #47 | Sortable Freeze | ✅ RESOLVED | [L107](#issue-47-sortable-drag--drop-freeze---resolved-) |
@@ -53,6 +57,21 @@
 ---
 
 ## Current Debugging Session
+
+### Issues #59-62: Sprint 9+10 Bugs - ALL RESOLVED (2025-12-18)
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-18 22:00
+**Severity**: HIGH → CRITICAL
+**Commits**: `da77600`, `7ccf410`, `08054a6`
+
+| Issue | Problem | Fix |
+|-------|---------|-----|
+| #59 | Loading spinner persistent | Added `loadingContainer` div, use `this.isLoading` state |
+| #60 | Scroll/DragDrop UX poor | Added `min-h`, `custom-scrollbar`, `drop-zone-padding` |
+| #61 | Regenerate browser freeze | Fixed invalid algorithm ID, reset `isGenerating` flag |
+| #62 | Race condition AlbumsView | Added unmount guard check in `updateAlbumsGrid()` |
+
+---
 
 ### Issue #57: Sprint 9 - Frontend Filter Regression (Albums Not Displaying)
 **Status**: 🧪 **TESTING** (Frontend Fix Applied - Awaiting User Verification)

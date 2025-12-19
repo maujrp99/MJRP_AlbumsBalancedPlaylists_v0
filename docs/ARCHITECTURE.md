@@ -1,6 +1,6 @@
 # Architecture Documentation
 
-**Last Updated**: 2025-12-16  
+**Last Updated**: 2025-12-18  
 **Workflow**: See `.agent/workflows/architecture_documentation.md`
 
 > **For project overview, features, and deployment info, see:**

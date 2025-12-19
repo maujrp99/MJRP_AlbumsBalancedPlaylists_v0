@@ -1,8 +1,8 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-17
-**Current Version**: v2.8.5
-**Current Sprint**: Sprint 9: Ranking Refactor & Data Enrichment (Starting)
+**Last Updated**: 2025-12-18
+**Current Version**: v2.9.0
+**Current Sprint**: Sprint 9+10 ✅ DEPLOYED | Sprint 11: Spotify Integration (Planning)
 
 ---
 
@@ -11,7 +11,25 @@
 To empower music lovers and casual curators to transcend algorithmic bubbles by providing the definitive music curation platform. The MJRP Playlist Generator, "The Album Blender" will transform the art of playlist creation by using the intelligence of global acclaim ratings (BestEverAlbums, Musicboard) and AI enrichment (Google Gemini) to generate balanced playlists that are objectively balanced from acclaimed albums or albums from your favorite band7artist. Our vision is to be the multi-device, cloud-synced ecosystem where a passion for artist's albums meets data precision, delivering the perfect balanced album playlist experience with native integration into the largest streaming platforms (Spotify, Apple Music).
 ---
 
-## ✅ Completed Sprints (1-5)
+## ✅ Completed Sprints (1-10)
+
+### Sprint 9+10: Ranking Enrichment & Codebase Refactoring (Dec 2025) - DONE ✅
+**Delivered**: 2025-12-18 (v2.9.0)
+
+**Deliverables**:
+- ✅ **EditPlaylistView**: Full editing support for saved playlist batches
+- ✅ **GlobalProgress Component**: Top loading bar (YouTube-style)
+- ✅ **Skeleton Loaders CSS**: Modern shimmer effect for loading states
+- ✅ **Playlist Numbering**: Visual and generation numbering
+- ✅ **Server Routes Modularization**: index.js reduced from 535 to 151 lines
+- ✅ **Bug Fixes**: Issues #54-62 resolved (ghost playlists, regenerate freeze, etc.)
+- ✅ **Cleanup**: Deleted musicboard.js (-421 lines)
+
+**Technical Debt Addressed**:
+- PlaylistsView reduced from 891 to 783 lines
+- AlbumsView reduced from 1,757 to 1,374 lines
+
+---
 
 Sprint 8.5 - Enhancements 
 (Implementation and release per phase)
@@ -24,7 +42,7 @@ Phase 1 - MJRP Balanced Cascade algorithm enhancement:
 Phase- 2 UI improvements on Playlist view:
 - Move MJRP Balanced Cascade to be the first displayed on the left
 - Precisamos melhorar as descrições do algoritmo para ser mais didática, mais user friendly, para leigos.
-- We have to “Regenerate” now (see print). Does the one in the Actions & Export section still make sense? 
+- We have to "Regenerate" now (see print). Does the one in the Actions & Export section still make sense? 
 
 
 Phase 3 Feature improvement on Playlist view:- o delete está deletando a Album Series inteira, deveria deletar somente a playlist
@@ -37,8 +55,7 @@ Balanced Mix	VARIETY	Distribuição igual de ratings
 Timeline Journey	JOURNEY	Ordem cronológica por ano
 BestEver Elite	ELITE	Só tracks com rating ≥ 80
 
-
-Sprint 9 - Ranking Options Refactor + Artists/Albums Data Enrichment
+---
 
 ### Sprint 1: Foundation (Nov 2025) - DONE
 **Goal**: Modern build tooling + state management foundation  
@@ -184,75 +201,52 @@ Sprint 9 - Ranking Options Refactor + Artists/Albums Data Enrichment
 
 ## 🚧 Current Sprint
 
-### Sprint 9: Ranking Refactor & Data Enrichment
+### Sprint 11: Spotify Integration & Multi-Source Ranking
 
 **Duration**: 2 weeks  
 **Priority**: High  
-**Status**: 🚧 **Starting**
+**Status**: 🚧 **PLANNING**
+**Branch**: `feature/sprint11-spotify-integration` (to be created)
 
-#### Part A: Ranking System Refactor
+#### Part A: Spotify API Integration
 
-- [ ] **User Rankings**
-  - Allow users to create custom track rankings
-  - Store in Firestore under user context
-  - UI: Star rating or 1-100 scale input
+- [ ] **Spotify OAuth**
+  - Register App in Spotify Developer Dashboard
+  - Implement OAuth2 Flow (PKCE for frontend)
+  - Store/Refresh Tokens securely
 
-- [ ] **Ranking Sources**
-  - Source selector: BestEver / Musicboard / User / Hybrid
-  - Visual indicator of source in AlbumsView
+- [ ] **Spotify Track Popularity Ranking**
+  - Use track `popularity` field (0-100) as fallback ranking
+  - When BestEver fails → use Spotify popularity as ranking source
+  - Badge: 🟢 POPULARITY (Spotify) instead of PENDING
 
-- [ ] **Ranking Display**
-  - RankingView revamp with source tabs
-  - Track-level ranking comparison
+- [ ] **Spotify Album Links**
+  - Add `spotifyUrl` to album data model
+  - Display Spotify icon/link in AlbumsView
 
-#### Part B: Artist/Album Data Enrichment
+- [ ] **Export to Spotify**
+  - "Connect to Spotify" UI in PlaylistsView
+  - Search matching tracks via Spotify API
+  - Create playlist and add tracks
+  - Success confirmation with Spotify link
 
-- [ ] **Artist Metadata**
-  - Fetch from Discogs/MusicBrainz
-  - Artist bio, image, genre tags
+#### Part B: Multi-Source Ranking UX
 
-- [ ] **Album Metadata**
-  - Enhanced credits
-  - Recording date vs release date
-  - Studio/location info
+- [ ] **Visual Badges by Source**
+  - 🏆 ACCLAIM (BestEver) - Green
+  - 🟢 POPULARITY (Spotify) - Green
+  - ⚪ ORIGINAL (No ranking) - Gray
 
-- [ ] **Gemini AI Enrichment** (Optional)
-  - AI-generated album descriptions
-  - Similar albums suggestions
-
----
-
-## 📋 Upcoming Sprints
-
-### Sprint 10: Playlist Subsystem Refactor
-
-**Duration**: 2 weeks  
-**Priority**: High  
-**Status**: Planned
-
-**Goal**: Clean architecture for playlist generation and management
-
-#### Refactoring Scope
-
-- [ ] **Single Source of Truth**: URL params drive state
-- [ ] **Split PlaylistsStore** (440 lines):
-  - `PlaylistsStore` (state only)
-  - `PlaylistsPersistence` (Firestore/localStorage)
-  - `PlaylistsVersioning` (undo/redo)
-
-- [ ] **Split PlaylistsView** (891 lines):
-  - `PlaylistsView` (coordinator)
-  - `PlaylistGenerator` (algorithm execution)
-  - `PlaylistRenderer` (UI)
-  - `PlaylistExporter` (JSON/Apple Music)
-
-- [ ] **Context Pattern**
-  - `PlaylistsContext.init(params)` sets all stores from URL
-  - Remove redundant setter calls from navigation points
+- [ ] **Smart Ranking Selection**
+  - Priority: BestEver → Spotify → Original order
+  - If BestEver has <50% coverage → fallback to Spotify
+  - `rankingSource` field on album: `"acclaim"`, `"popularity"`, `"original"`
 
 ---
 
-### Sprint 11: Native App (Capacitor) + Batch Operations
+## 📋 Upcoming Sprints / Backlog
+
+### Sprint 12: Native App (Capacitor) + Batch Operations
 
 **Duration**: 1-2 weeks  
 **Priority**: Medium  
