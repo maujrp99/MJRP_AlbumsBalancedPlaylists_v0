@@ -1,6 +1,7 @@
 # Album Data Flow Architecture
 
-**Updated**: 2025-12-16
+**Updated**: 2025-12-19
+**Version**: 2.0 (Full System Inventory)
 
 ## Overview
 This document maps the **Data Flow Diagram (DFD)** and **Sequence Diagrams** for album data through the application's views and store.
@@ -9,9 +10,110 @@ This document maps the **Data Flow Diagram (DFD)** and **Sequence Diagrams** for
 
 > **Note (v2.8.0)**: Playlist generation now uses the **Algorithm Strategy Pattern**. See [ALGORITHM_MENU.md](specs/ALGORITHM_MENU.md).
 
+> **Note (Sprint 11)**: Spotify integration added. Auto-enrichment with popularity data.
+
 ---
 
-## System Components
+## System Components Inventory
+
+### Frontend Components
+
+#### Views (10 files)
+| View | Purpose | Size | Documented? |
+|------|---------|------|-------------|
+| `AlbumsView.js` | Series CRUD, Album grid | 52KB | ✅ |
+| `HomeView.js` | Dashboard, Series list | 31KB | ✅ |
+| `PlaylistsView.js` | Generate playlists | 31KB | ✅ |
+| `SavedPlaylistsView.js` | View saved batches | 31KB | ❌ NEW |
+| `InventoryView.js` | Personal collection | 30KB | ❌ NEW |
+| `EditPlaylistView.js` | Edit existing batch | 22KB | ❌ NEW |
+| `ConsolidatedRankingView.js` | Cross-album ranking | 11KB | ❌ NEW |
+| `RankingView.js` | Single album ranking | 8KB | ✅ |
+| `SaveAllView.js` | Data migration | 6KB | ✅ |
+| `BaseView.js` | View base class | 3KB | ✅ |
+
+#### Stores (5 files)
+| Store | Purpose | Documented? |
+|-------|---------|-------------|
+| `playlists.js` | Playlist state | ✅ |
+| `albumSeries.js` | Series CRUD | ✅ |
+| `inventory.js` | Personal collection | ❌ NEW |
+| `albums.js` | Album data by series | ✅ |
+| `UserStore.js` | Auth state | ❌ NEW |
+
+#### Services (6 files)
+| Service | Purpose | Documented? |
+|---------|---------|-------------|
+| `MusicKitService.js` | Apple Music API | ⚠️ Partial |
+| `SpotifyService.js` | Spotify API (S11) | ✅ NEW |
+| `SpotifyAuthService.js` | OAuth PKCE (S11) | ✅ NEW |
+| `AlbumLoader.js` | Load album data | ❌ |
+| `OptimizedAlbumLoader.js` | Worker-based search | ❌ |
+| `DataSyncService.js` | Firestore sync | ❌ |
+
+#### Algorithms (7 files)
+| Algorithm | Purpose | Documented? |
+|-----------|---------|-------------|
+| `index.js` | Algorithm Registry | ⚠️ Partial |
+| `BaseAlgorithm.js` | Base class | ⚠️ Partial |
+| `MJRPBalancedCascadeAlgorithm.js` | Main algorithm | ⚠️ Partial |
+| `MJRPBalancedCascadeV0Algorithm.js` | Legacy version | ❌ |
+| `SDraftBalancedAlgorithm.js` | S-Draft variant | ❌ |
+| `SDraftOriginalAlgorithm.js` | S-Draft original | ❌ |
+| `LegacyRoundRobinAlgorithm.js` | Round-robin | ⚠️ Partial |
+
+#### Models (4 files)
+| Model | Purpose | Documented? |
+|-------|---------|-------------|
+| `Album.js` | Album entity | ❌ |
+| `Track.js` | Track entity | ❌ |
+| `Playlist.js` | Playlist entity | ❌ |
+| `Series.js` | Series entity | ❌ |
+
+#### Repositories (5 files)
+| Repository | Purpose | Documented? |
+|------------|---------|-------------|
+| `BaseRepository.js` | CRUD base | ❌ |
+| `InventoryRepository.js` | Inventory CRUD | ❌ |
+| `SeriesRepository.js` | Series CRUD | ❌ |
+| `PlaylistRepository.js` | Playlist CRUD | ❌ |
+| `AlbumRepository.js` | Album CRUD | ❌ |
+
+#### Components - Ranking (3 files)
+| Component | Purpose | Documented? |
+|-----------|---------|-------------|
+| `TracksRankingComparison.js` | Multi-source comparison | ✅ NEW |
+| `TracksTable.js` | Desktop table UI | ✅ NEW |
+| `TracksTabs.js` | Mobile tabs UI | ✅ NEW |
+
+---
+
+### Backend Components
+
+#### Routes (4 files)
+| Route | Endpoints | Documented? |
+|-------|-----------|-------------|
+| `albums.js` | `/generate`, `/enrich-album` | ⚠️ Partial |
+| `playlists.js` | `/playlists/*` | ❌ |
+| `musickit.js` | `/token` | ⚠️ Partial |
+| `debug.js` | `/list-models`, `/raw-ranking` | ❌ |
+
+#### Libraries (10 files)
+| Library | Purpose | Documented? |
+|---------|---------|-------------|
+| `fetchRanking.js` | BestEverAlbums scraping | ⚠️ Partial |
+| `ranking.js` | Consolidate rankings | ❌ |
+| `normalize.js` | Data normalization | ❌ |
+| `scrapers/besteveralbums.js` | BEA scraper | ⚠️ Partial |
+| `aiClient.js` | AI provider | ❌ |
+| `prompts.js` | Prompt templates | ❌ |
+| `schema.js` | AJV validation | ❌ |
+| `logger.js` | Logging | ❌ |
+| `validateSource.js` | Source validation | ❌ |
+
+---
+
+## System High-Level Architecture
 
 ```mermaid
 graph LR
@@ -19,21 +121,30 @@ graph LR
     HomeView[HomeView]
     AlbumsView[AlbumsView - Series CRUD]
     PlaylistsView[PlaylistsView]
+    EditPlaylistView[EditPlaylistView]
+    SavedPlaylistsView[SavedPlaylistsView]
     RankingView[RankingView]
+    InventoryView[InventoryView]
     SaveAllView[SaveAllView - Data Migration]
     
     AlbumSeriesStore[(AlbumSeriesStore)]
     AlbumsStore[(AlbumsStore)]
     PlaylistsStore[(PlaylistsStore)]
+    InventoryStore[(InventoryStore)]
     AlgorithmRegistry[Algorithm Registry]
     
     API[API Client]
+    SpotifyService[Spotify Service]
+    MusicKitService[MusicKit Service]
     Firestore[(Firestore DB)]
     
     User --> HomeView
     User --> AlbumsView
     User --> PlaylistsView
+    User --> EditPlaylistView
+    User --> SavedPlaylistsView
     User --> RankingView
+    User --> InventoryView
     User --> SaveAllView
     
     HomeView --> AlbumSeriesStore
@@ -44,12 +155,18 @@ graph LR
     PlaylistsView --> AlbumsStore
     PlaylistsView --> PlaylistsStore
     PlaylistsView --> AlgorithmRegistry
+    EditPlaylistView --> PlaylistsStore
+    SavedPlaylistsView --> PlaylistsStore
+    
     RankingView --> AlbumsStore
+    InventoryView --> InventoryStore
     SaveAllView --> Firestore
     
     API --> AlbumsStore
+    API --> SpotifyService
+    API --> MusicKitService
     AlbumSeriesStore --> Firestore
-```
+    InventoryStore --> Firestore
 
 ---
 
@@ -606,5 +723,319 @@ graph TD
 | BUG-2 | Table disappears on view toggle | Missing updateAlbumsGrid call | ✅ FIXED |
 | BUG-3 | Spotify not enriching (0 tracks matched) | Title mismatch | ✅ FIXED |
 | BUG-4 | Led Zeppelin not found on Spotify | Fuzzy search needed | ✅ FIXED |
+
+---
+
+## CRUD Flows by Entity
+
+### Album Series CRUD
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant HomeView
+    participant AlbumSeriesStore
+    participant SeriesRepository
+    participant Firestore
+
+    Note over User,Firestore: CREATE Series
+    User->>HomeView: Enter name + albums, Click Create
+    HomeView->>AlbumSeriesStore: createSeries({name, albumQueries})
+    AlbumSeriesStore->>SeriesRepository: save(series)
+    SeriesRepository->>Firestore: addDoc(users/{uid}/albumSeries)
+    Firestore-->>AlbumSeriesStore: {id}
+    AlbumSeriesStore-->>HomeView: Refresh list
+
+    Note over User,Firestore: READ Series
+    User->>HomeView: Page load
+    HomeView->>AlbumSeriesStore: loadFromFirestore()
+    AlbumSeriesStore->>Firestore: getDocs(users/{uid}/albumSeries)
+    Firestore-->>AlbumSeriesStore: [series]
+
+    Note over User,Firestore: UPDATE Series
+    User->>AlbumsView: Click Edit, Modify, Save
+    AlbumsView->>AlbumSeriesStore: updateSeries(id, {name, albumQueries})
+    AlbumSeriesStore->>SeriesRepository: update(id, data)
+    SeriesRepository->>Firestore: updateDoc(users/{uid}/albumSeries/{id})
+
+    Note over User,Firestore: DELETE Series
+    User->>AlbumsView: Click Delete, Confirm
+    AlbumsView->>AlbumSeriesStore: deleteSeries(id)
+    AlbumSeriesStore->>SeriesRepository: delete(id)
+    SeriesRepository->>Firestore: deleteDoc(users/{uid}/albumSeries/{id})
+```
+
+### Playlist CRUD
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant PlaylistsView
+    participant EditPlaylistView
+    participant SavedPlaylistsView
+    participant PlaylistsStore
+    participant PlaylistRepository
+    participant Firestore
+
+    Note over User,Firestore: CREATE (Generate)
+    User->>PlaylistsView: Click Generate
+    PlaylistsView->>AlgorithmRegistry: getAlgorithm(id)
+    AlgorithmRegistry-->>PlaylistsView: algorithm
+    PlaylistsView->>PlaylistsView: algorithm.generate(albums)
+    PlaylistsView->>PlaylistsStore: setPlaylists(playlists)
+    
+    Note over User,Firestore: READ (Saved)
+    User->>SavedPlaylistsView: Navigate
+    SavedPlaylistsView->>PlaylistsStore: loadFromFirestore(seriesId)
+    PlaylistsStore->>Firestore: getDocs(users/{uid}/albumSeries/{id}/playlists)
+    Firestore-->>PlaylistsStore: [playlists]
+
+    Note over User,Firestore: UPDATE (Edit Batch)
+    User->>EditPlaylistView: Modify tracks, Click Save
+    EditPlaylistView->>PlaylistRepository: deleteByBatchName(original)
+    PlaylistRepository->>Firestore: delete old docs
+    EditPlaylistView->>PlaylistRepository: saveBatch(playlists)
+    PlaylistRepository->>Firestore: addDoc each playlist
+
+    Note over User,Firestore: DELETE (Batch)
+    User->>SavedPlaylistsView: Click Delete Batch
+    SavedPlaylistsView->>PlaylistRepository: deleteByBatchName(name)
+    PlaylistRepository->>Firestore: delete all docs with batchName
+```
+
+### Inventory CRUD
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant AlbumsView
+    participant InventoryView
+    participant InventoryStore
+    participant InventoryRepository
+    participant Firestore
+
+    Note over User,Firestore: ADD to Inventory
+    User->>AlbumsView: Click "+ Inventory" on album card
+    AlbumsView->>AlbumsView: showAddToInventoryModal(album)
+    User->>AlbumsView: Select category, Confirm
+    AlbumsView->>InventoryStore: addItem({album, category, notes})
+    InventoryStore->>InventoryRepository: save(item)
+    InventoryRepository->>Firestore: addDoc(users/{uid}/inventory)
+
+    Note over User,Firestore: VIEW Inventory
+    User->>InventoryView: Navigate
+    InventoryView->>InventoryStore: loadFromFirestore()
+    InventoryStore->>Firestore: getDocs(users/{uid}/inventory)
+    Firestore-->>InventoryStore: [items]
+
+    Note over User,Firestore: EDIT Item
+    User->>InventoryView: Click Edit, Modify, Save
+    InventoryView->>InventoryStore: updateItem(id, data)
+    InventoryStore->>InventoryRepository: update(id, data)
+    InventoryRepository->>Firestore: updateDoc(users/{uid}/inventory/{id})
+
+    Note over User,Firestore: DELETE Item
+    User->>InventoryView: Click Delete, Confirm
+    InventoryView->>InventoryStore: deleteItem(id)
+    InventoryStore->>InventoryRepository: delete(id)
+    InventoryRepository->>Firestore: deleteDoc(users/{uid}/inventory/{id})
+```
+
+---
+
+## Ranking Generation Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant AlbumsView
+    participant APIClient
+    participant Backend
+    participant BestEverAlbums
+    participant SpotifyService
+    participant TracksRankingComparison
+
+    User->>AlbumsView: Load album series
+    AlbumsView->>APIClient: fetchAlbum("Artist - Album")
+    
+    Note over APIClient,BestEverAlbums: Step 1: Get BEA Ranking
+    APIClient->>Backend: POST /enrich-album
+    Backend->>BestEverAlbums: Scrape album page
+    BestEverAlbums-->>Backend: {tracks with ratings}
+    Backend-->>APIClient: {tracksByAcclaim, tracksOriginalOrder}
+    
+    Note over APIClient,SpotifyService: Step 2: Get Spotify Popularity (if connected)
+    APIClient->>SpotifyService: enrichAlbumData(artist, title)
+    SpotifyService->>SpotifyService: searchAlbum() / fuzzy match
+    SpotifyService->>SpotifyService: getAlbumTracksWithPopularity()
+    SpotifyService-->>APIClient: {spotifyId, trackPopularityMap}
+    
+    Note over APIClient,TracksRankingComparison: Step 3: Merge Rankings
+    APIClient->>APIClient: Apply spotifyPopularity to tracks
+    APIClient->>APIClient: Calculate spotifyRank (sort by popularity)
+    APIClient->>AlbumsStore: addAlbum(enrichedAlbum)
+    
+    Note over AlbumsView,TracksRankingComparison: Step 4: Render
+    AlbumsView->>TracksRankingComparison: mount(album)
+    TracksRankingComparison->>TracksRankingComparison: normalizeTracks()
+    TracksRankingComparison->>TracksTable: render(tracks)
+    TracksTable-->>User: Display table with Acclaim + Popularity columns
+```
+
+### Ranking Data Model
+
+```javascript
+// Track object with ranking data
+{
+    title: "Norwegian Wood",
+    artist: "The Beatles",
+    position: 2,           // Original album order (1-indexed)
+    
+    // BestEverAlbums.com ranking
+    rank: 1,               // 1 = best rated track (from BEA)
+    rating: 85,            // BEA rating (0-100)
+    
+    // Spotify ranking
+    spotifyPopularity: 71, // 0-100 from Spotify API
+    spotifyRank: 3,        // Derived: sorted by popularity desc
+    spotifyId: "xxx",
+    spotifyUri: "spotify:track:xxx"
+}
+```
+
+---
+
+## Algorithm Generation Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant PlaylistsView
+    participant AlgorithmRegistry
+    participant BaseAlgorithm
+    participant SelectedAlgorithm
+    participant PlaylistsStore
+
+    User->>PlaylistsView: Select algorithm from dropdown
+    User->>PlaylistsView: Click "Generate Playlists"
+    
+    PlaylistsView->>AlgorithmRegistry: getAlgorithm(selectedId)
+    AlgorithmRegistry-->>PlaylistsView: algorithm instance
+    
+    PlaylistsView->>SelectedAlgorithm: configure(options)
+    Note over SelectedAlgorithm: options: {playlistDuration, albumLimit, etc.}
+    
+    PlaylistsView->>AlbumsStore: getAlbums()
+    AlbumsStore-->>PlaylistsView: [albums with tracks]
+    
+    PlaylistsView->>SelectedAlgorithm: generate(albums, options)
+    
+    Note over SelectedAlgorithm: Algorithm Logic
+    SelectedAlgorithm->>SelectedAlgorithm: Sort tracks by rank
+    SelectedAlgorithm->>SelectedAlgorithm: Distribute across playlists
+    SelectedAlgorithm->>SelectedAlgorithm: Balance album representation
+    SelectedAlgorithm-->>PlaylistsView: [Playlist[]]
+    
+    PlaylistsView->>PlaylistsStore: setPlaylists(playlists)
+    PlaylistsStore-->>PlaylistsView: notify
+    PlaylistsView->>PlaylistsView: render playlists
+```
+
+### Algorithm Registry
+
+```javascript
+// algorithms/index.js
+const algorithms = {
+    'mjrp-balanced-cascade': MJRPBalancedCascadeAlgorithm,
+    'mjrp-balanced-v0': MJRPBalancedCascadeV0Algorithm,
+    'sdraft-balanced': SDraftBalancedAlgorithm,
+    'sdraft-original': SDraftOriginalAlgorithm,
+    'legacy-round-robin': LegacyRoundRobinAlgorithm
+}
+
+export function getAlgorithmById(id) {
+    return new algorithms[id]()
+}
+
+export function listAlgorithms() {
+    return Object.keys(algorithms).map(id => ({
+        id,
+        name: algorithms[id].displayName,
+        description: algorithms[id].description
+    }))
+}
+```
+
+---
+
+## Navigation Map
+
+```mermaid
+graph TD
+    Home[HomeView<br/>/home]
+    Albums[AlbumsView<br/>/albums?seriesId=X]
+    Playlists[PlaylistsView<br/>/playlists]
+    EditPlaylist[EditPlaylistView<br/>/playlists/edit?batch=X]
+    SavedPlaylists[SavedPlaylistsView<br/>/playlists/saved]
+    Ranking[RankingView<br/>/ranking/:albumId]
+    Inventory[InventoryView<br/>/inventory]
+    SaveAll[SaveAllView<br/>/save-all]
+    
+    Home -->|"Create/Resume Series"| Albums
+    Albums -->|"Generate Playlists"| Playlists
+    Albums -->|"View Ranking"| Ranking
+    Albums -->|"+ Inventory"| Inventory
+    
+    Playlists -->|"Save"| SavedPlaylists
+    Playlists -->|"Back"| Albums
+    
+    SavedPlaylists -->|"Edit Batch"| EditPlaylist
+    EditPlaylist -->|"Save"| SavedPlaylists
+    
+    Ranking -->|"Back"| Albums
+    Inventory -->|"Back"| Home
+    
+    style Home fill:#4ade80
+    style Albums fill:#60a5fa
+    style Playlists fill:#f97316
+    style Inventory fill:#a855f7
+```
+
+---
+
+## App Initialization Flow
+
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant index.html
+    participant app.js
+    participant Firebase
+    participant Router
+    participant View
+
+    Browser->>index.html: Load page
+    index.html->>app.js: import app.js
+    
+    app.js->>Firebase: initializeApp(config)
+    Firebase-->>app.js: firebase instance
+    
+    app.js->>Firebase: onAuthStateChanged()
+    
+    alt User Logged In
+        Firebase-->>app.js: user object
+        app.js->>app.js: Set userId in stores
+    else No User
+        Firebase-->>app.js: null
+        app.js->>app.js: Set anonymous mode
+    end
+    
+    app.js->>Router: initialize()
+    Router->>Router: Parse current URL
+    Router->>Router: Find matching route
+    Router->>View: mount(container, params)
+    View->>View: render()
+    View-->>Browser: Display page
+```
 
 

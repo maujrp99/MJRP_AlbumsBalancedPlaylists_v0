@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-19 16:20
+**Last Updated**: 2025-12-19 18:17
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -18,6 +18,11 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
+| #75 | Data Flow Architecture Incomplete | 🚧 IN PROGRESS | [Details](#issue-75-data-flow-architecture-incomplete) |
+| #74 | Ranking Table Disappears on View Toggle | ✅ RESOLVED | [Details](#issue-74-ranking-table-disappears-on-view-toggle) |
+| #73 | Led Zeppelin Not Found on Spotify | ✅ RESOLVED | [Details](#issue-73-led-zeppelin-not-found-on-spotify) |
+| #72 | Spotify Popularity Not Displaying | ✅ RESOLVED | [Details](#issue-72-spotify-popularity-not-displaying) |
+| #71 | Wrong Tracks in Ranking Table | 🔍 INVESTIGATING | [Details](#issue-71-wrong-tracks-in-ranking-table) |
 | #70 | Loading UX During Album Render | 🚧 IN PROGRESS | [Details](#issue-70-loading-ux-during-album-render) |
 | #69 | AlbumsView Duplicate Imports | ✅ RESOLVED | [Details](#issue-69-albumsview-duplicate-imports-syntaxerror) |
 | #68 | Router TypeError on Callback | ✅ RESOLVED | [Details](#issue-68-router-typeerror-on-callback-route) |
@@ -68,7 +73,116 @@
 
 ## Current Debugging Session
 
-### Issues #63-70: Sprint 11 - Spotify Integration (2025-12-19)
+### Issues #71-75: Sprint 11 UAT - Spotify Integration (2025-12-19)
+**Status**: 🔍 **UAT IN PROGRESS** (1 critical bug under investigation)
+**Date**: 2025-12-19 16:00-18:17
+**Sprint**: Sprint 11 - Spotify Integration Phase 3-5
+
+---
+
+#### Issue #75: Data Flow Architecture Incomplete
+**Status**: 🚧 **IN PROGRESS**
+**Severity**: HIGH (Technical Debt)
+**Type**: Documentation
+
+**Problem**: `data_flow_architecture.md` is ~50% incomplete. Missing:
+- 4 Views (EditPlaylistView, InventoryView, SavedPlaylistsView, ConsolidatedRankingView)
+- 2 Stores (inventory, UserStore)
+- 3 Services (AlbumLoader, OptimizedAlbumLoader, DataSyncService)
+- CRUD flows for all entities
+- Ranking generation flow
+- Algorithm generation flow
+
+**Action**: Full code scan and document all flows.
+
+**Files**: `docs/technical/data_flow_architecture.md`
+
+---
+
+#### Issue #74: Ranking Table Disappears on View Toggle
+**Status**: ✅ **RESOLVED**
+**Severity**: MEDIUM (UX Bug)
+**Type**: Rendering
+
+**Problem**: When toggling between Compact and Expanded view, the ranking table (TracksRankingComparison) disappears.
+
+**Root Cause**: After view toggle, `updateAlbumsGrid()` was not being called, so ranking components were not re-mounted.
+
+**Solution**: Added `this.updateAlbumsGrid(currentAlbums)` after event listener re-binding in view toggle handler.
+
+**Files Fixed**: `AlbumsView.js` (line 679)
+
+---
+
+#### Issue #73: Led Zeppelin Not Found on Spotify
+**Status**: ✅ **RESOLVED**
+**Severity**: MEDIUM (Data)
+**Type**: API Integration
+
+**Problem**: Spotify search for "Led Zeppelin - Led Zeppelin (Remastered)" returned no results.
+
+**Root Cause**: Spotify API doesn't match "(Remastered)" suffix, and structured query `artist:X album:Y` was too strict.
+
+**Solution**: 
+1. Strip common suffixes (Remastered, Deluxe Edition, etc.) before search
+2. Added fuzzy matching fallback using Levenshtein distance
+3. Search by artist only → then score results by album name similarity
+
+**Files Fixed**: `SpotifyService.js` - `searchAlbum()`, `_searchByArtistFuzzy()`, `_similarityScore()`
+
+---
+
+#### Issue #72: Spotify Popularity Not Displaying
+**Status**: ✅ **RESOLVED**
+**Severity**: HIGH (Feature Broken)
+**Type**: Data Mapping
+
+**Problem**: Even when Spotify found an album with 14 tracks, the log showed "matched 0/14 tracks". Popularity column showed "Not linked".
+
+**Root Cause**: Track title matching was exact-match only. Apple Music track titles differ from Spotify (e.g., parenthetical info, punctuation).
+
+**Solution**: Implemented fuzzy matching for track titles:
+1. Normalize: lowercase, remove punctuation, collapse whitespace
+2. Try exact match first
+3. Fallback to substring matching
+
+**Files Fixed**: `client.js` - `findSpotifyMatch()` helper function
+
+---
+
+#### Issue #71: Wrong Tracks in Ranking Table
+**Status**: 🔍 **INVESTIGATING**
+**Severity**: CRITICAL (Data Corruption)
+**Type**: Rendering/Data
+
+**Problem**: Album card shows "Rubber Soul" by The Beatles, but the tracks displayed are Led Zeppelin songs (Black Dog, Stairway to Heaven, etc.).
+
+**Symptoms**:
+- Happens after view mode toggle
+- Persists even after cache clear
+- Problem recurs (not just stale cache)
+
+**Suspected Causes**:
+1. Album ID mismatch in container → album lookup
+2. Shared reference mutation between album objects
+3. Cache storing corrupted data
+4. Store state pollution between series
+
+**Investigation Plan**:
+1. Add debug logging to track album → tracks mapping
+2. Verify album.id matches container data-album-id
+3. Check if albums share same tracks array reference
+4. Trace data flow from API → cache → store → component
+
+**Files to Investigate**: 
+- `AlbumsView.js` (updateAlbumsGrid)
+- `TracksRankingComparison.js` (normalizeTracks)
+- `albumCache.js` (cache key collision?)
+- `Album.js` model (shared references?)
+
+---
+
+### Issues #63-70: Sprint 11 - Spotify Integration (Earlier Session)
 **Status**: 🔄 **MOSTLY RESOLVED** (1 pending)
 **Date**: 2025-12-19 12:00-16:00
 **Sprint**: Sprint 11 - Spotify Integration Phase 1-3
