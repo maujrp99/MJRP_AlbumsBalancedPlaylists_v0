@@ -1,115 +1,40 @@
 # Album Data Flow Architecture
 
 **Updated**: 2025-12-19
-**Version**: 2.0 (Full System Inventory)
+**Version**: 2.1 (Reorganized)
 
 ## Overview
-This document maps the **Data Flow Diagram (DFD)** and **Sequence Diagrams** for album data through the application's views and store.
 
-> **Note (v2.7.1)**: `AlbumSeriesListView` has been deprecated. Series management (Edit/Delete) is now consolidated into `AlbumsView`.
+This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** for data flows through the application.
 
-> **Note (v2.8.0)**: Playlist generation now uses the **Algorithm Strategy Pattern**. See [ALGORITHM_MENU.md](specs/ALGORITHM_MENU.md).
+> For component inventory and API reference, see [component_reference.md](component_reference.md)
+> For bug tracking, see [DEBUG_LOG.md](../debug/DEBUG_LOG.md)
 
-> **Note (Sprint 11)**: Spotify integration added. Auto-enrichment with popularity data.
-
----
-
-## System Components Inventory
-
-### Frontend Components
-
-#### Views (10 files)
-| View | Purpose | Size | Documented? |
-|------|---------|------|-------------|
-| `AlbumsView.js` | Series CRUD, Album grid | 52KB | ✅ |
-| `HomeView.js` | Dashboard, Series list | 31KB | ✅ |
-| `PlaylistsView.js` | Generate playlists | 31KB | ✅ |
-| `SavedPlaylistsView.js` | View saved batches | 31KB | ❌ NEW |
-| `InventoryView.js` | Personal collection | 30KB | ❌ NEW |
-| `EditPlaylistView.js` | Edit existing batch | 22KB | ❌ NEW |
-| `ConsolidatedRankingView.js` | Cross-album ranking | 11KB | ❌ NEW |
-| `RankingView.js` | Single album ranking | 8KB | ✅ |
-| `SaveAllView.js` | Data migration | 6KB | ✅ |
-| `BaseView.js` | View base class | 3KB | ✅ |
-
-#### Stores (5 files)
-| Store | Purpose | Documented? |
-|-------|---------|-------------|
-| `playlists.js` | Playlist state | ✅ |
-| `albumSeries.js` | Series CRUD | ✅ |
-| `inventory.js` | Personal collection | ❌ NEW |
-| `albums.js` | Album data by series | ✅ |
-| `UserStore.js` | Auth state | ❌ NEW |
-
-#### Services (6 files)
-| Service | Purpose | Documented? |
-|---------|---------|-------------|
-| `MusicKitService.js` | Apple Music API | ⚠️ Partial |
-| `SpotifyService.js` | Spotify API (S11) | ✅ NEW |
-| `SpotifyAuthService.js` | OAuth PKCE (S11) | ✅ NEW |
-| `AlbumLoader.js` | Load album data | ❌ |
-| `OptimizedAlbumLoader.js` | Worker-based search | ❌ |
-| `DataSyncService.js` | Firestore sync | ❌ |
-
-#### Algorithms (7 files)
-| Algorithm | Purpose | Documented? |
-|-----------|---------|-------------|
-| `index.js` | Algorithm Registry | ⚠️ Partial |
-| `BaseAlgorithm.js` | Base class | ⚠️ Partial |
-| `MJRPBalancedCascadeAlgorithm.js` | Main algorithm | ⚠️ Partial |
-| `MJRPBalancedCascadeV0Algorithm.js` | Legacy version | ❌ |
-| `SDraftBalancedAlgorithm.js` | S-Draft variant | ❌ |
-| `SDraftOriginalAlgorithm.js` | S-Draft original | ❌ |
-| `LegacyRoundRobinAlgorithm.js` | Round-robin | ⚠️ Partial |
-
-#### Models (4 files)
-| Model | Purpose | Documented? |
-|-------|---------|-------------|
-| `Album.js` | Album entity | ❌ |
-| `Track.js` | Track entity | ❌ |
-| `Playlist.js` | Playlist entity | ❌ |
-| `Series.js` | Series entity | ❌ |
-
-#### Repositories (5 files)
-| Repository | Purpose | Documented? |
-|------------|---------|-------------|
-| `BaseRepository.js` | CRUD base | ❌ |
-| `InventoryRepository.js` | Inventory CRUD | ❌ |
-| `SeriesRepository.js` | Series CRUD | ❌ |
-| `PlaylistRepository.js` | Playlist CRUD | ❌ |
-| `AlbumRepository.js` | Album CRUD | ❌ |
-
-#### Components - Ranking (3 files)
-| Component | Purpose | Documented? |
-|-----------|---------|-------------|
-| `TracksRankingComparison.js` | Multi-source comparison | ✅ NEW |
-| `TracksTable.js` | Desktop table UI | ✅ NEW |
-| `TracksTabs.js` | Mobile tabs UI | ✅ NEW |
+### Version Notes
+- **v2.7.1**: `AlbumSeriesListView` deprecated → Series management consolidated into `AlbumsView`
+- **v2.8.0**: Playlist generation uses **Algorithm Strategy Pattern** (see [ALGORITHM_MENU.md](specs/ALGORITHM_MENU.md))
+- **Sprint 11**: Spotify integration with auto-enrichment
 
 ---
 
-### Backend Components
+## Table of Contents
 
-#### Routes (4 files)
-| Route | Endpoints | Documented? |
-|-------|-----------|-------------|
-| `albums.js` | `/generate`, `/enrich-album` | ⚠️ Partial |
-| `playlists.js` | `/playlists/*` | ❌ |
-| `musickit.js` | `/token` | ⚠️ Partial |
-| `debug.js` | `/list-models`, `/raw-ranking` | ❌ |
-
-#### Libraries (10 files)
-| Library | Purpose | Documented? |
-|---------|---------|-------------|
-| `fetchRanking.js` | BestEverAlbums scraping | ⚠️ Partial |
-| `ranking.js` | Consolidate rankings | ❌ |
-| `normalize.js` | Data normalization | ❌ |
-| `scrapers/besteveralbums.js` | BEA scraper | ⚠️ Partial |
-| `aiClient.js` | AI provider | ❌ |
-| `prompts.js` | Prompt templates | ❌ |
-| `schema.js` | AJV validation | ❌ |
-| `logger.js` | Logging | ❌ |
-| `validateSource.js` | Source validation | ❌ |
+1. [System Architecture](#system-high-level-architecture)
+2. [App Initialization](#app-initialization-flow)
+3. [Navigation Map](#navigation-map)
+4. [Core Data Flows](#core-data-flows)
+   - Load Series
+   - Navigate to Playlists
+   - Navigate to Ranking
+   - Hard Refresh
+5. [CRUD Flows](#crud-flows-by-entity)
+   - Album Series
+   - Playlists
+   - Inventory
+6. [Special Flows](#special-flows)
+   - Ranking Generation
+   - Algorithm Generation
+   - Spotify Integration
 
 ---
 
