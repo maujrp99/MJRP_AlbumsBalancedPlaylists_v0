@@ -147,6 +147,83 @@ Sprint 11 introduces Spotify integration as both a **ranking fallback** and **ex
 }
 ```
 
+### 5.1 Data Flow Architecture
+
+> **Note**: This documents how Spotify data flows into the playlist generation algorithms.
+
+#### Current Flow (BestEver Only)
+
+```mermaid
+flowchart TD
+    subgraph "Data Sources"
+        BEA[BestEverAlbums Scraper]
+    end
+    
+    subgraph "Album Model"
+        AM[Album.js]
+        RC[rankingConsolidated]
+        BR[beaRatings]
+    end
+    
+    subgraph "Algorithm Layer"
+        LR[LegacyRoundRobinAlgorithm.enrichTracks]
+        ALG[SDraft / MJRPCascade.generate]
+    end
+    
+    BEA --> RC & BR
+    RC & BR --> AM
+    AM --> LR
+    LR -->|"track.rank, track.rating"| ALG
+```
+
+**Key Files**:
+| File | Role |
+|------|------|
+| `Album.js` | Stores `rankingConsolidated`, `beaRatings` |
+| `LegacyRoundRobinAlgorithm.enrichTracks()` | Reads BEA data → sets `.rank` |
+| `SDraftOriginalAlgorithm.generate()` | Uses `.rank` for playlist distribution |
+
+#### Proposed Flow (With Spotify Integration)
+
+```mermaid
+flowchart TD
+    subgraph "Data Sources"
+        BEA[BestEverAlbums]
+        SPF[Spotify API]
+    end
+    
+    subgraph "Services"
+        SS[SpotifyService.js]
+        TRC[TracksRankingComparison.js]
+    end
+    
+    subgraph "Album Model"
+        AM[Album.js]
+        SID[spotifyId]
+        SPOP[spotifyPopularity]
+        TPOP[tracks[].spotifyPopularity]
+    end
+    
+    subgraph "Algorithm Layer"
+        LR[enrichTracks - MODIFIED]
+        ALG[Algorithms]
+    end
+    
+    SPF --> SS
+    SS -->|"On 'Enrich Data' click"| TRC
+    TRC -->|"Updates album"| AM
+    SID & SPOP & TPOP --> AM
+    AM --> LR
+    LR -->|"IF rankingSource=='popularity': use spotifyPopularity as rank"| ALG
+```
+
+**Integration Points**:
+| File | Line | Change Required |
+|------|------|-----------------|
+| `TracksRankingComparison.js` | 205 | Connect "Enrich" button to `SpotifyService` |
+| `LegacyRoundRobinAlgorithm.js` | `enrichTracks()` | Add conditional: if `rankingSource === 'popularity'`, use `spotifyPopularity` as `rank` |
+| `AlbumsStore.js` | - | Add method to update album with Spotify data |
+
 ---
 
 ## 6. API Endpoints
