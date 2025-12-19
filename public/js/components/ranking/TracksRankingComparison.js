@@ -198,16 +198,124 @@ export class TracksRankingComparison {
         const enrichBtn = container.querySelector('#enrichBtn')
         if (enrichBtn) {
             enrichBtn.addEventListener('click', async () => {
-                toast.info('Fetching Spotify data...')
+                enrichBtn.disabled = true
+                enrichBtn.textContent = 'Loading...'
+
                 try {
-                    // Call SpotifyService logic here (Phase 2 integration)
-                    // For now just toast
-                    toast.warning('Enrichment logic pending implementation')
+                    await this.enrichWithSpotifyData()
+                    toast.success('Spotify data loaded!')
+                    // Re-render with new data
+                    this.state.tracks = this.normalizeTracks(this.album)
+                    container.innerHTML = this.render()
+                    this.mount(container) // Re-bind events
                 } catch (err) {
-                    console.error(err)
-                    toast.error('Enrichment failed')
+                    console.error('[TracksRankingComparison] Enrichment failed:', err)
+                    toast.error(err.message || 'Spotify enrichment failed')
+                    enrichBtn.disabled = false
+                    enrichBtn.textContent = 'Enrich Data'
                 }
             })
         }
     }
+
+    /**
+     * Fetch Spotify data for this album and update the Album model
+     */
+    async enrichWithSpotifyData() {
+        const { SpotifyAuthService } = await import('../../services/SpotifyAuthService.js')
+
+        // Check if connected to Spotify
+        if (!SpotifyAuthService.isAuthenticated()) {
+            throw new Error('Connect to Spotify first (click the Spotify button in the header)')
+        }
+
+        const spotifyAlbum = await SpotifyService.searchAlbum(this.album.artist, this.album.title)
+
+        if (!spotifyAlbum) {
+            throw new Error(`Album not found on Spotify: "${this.album.artist} - ${this.album.title}"`)
+        }
+
+        // Validate artist match
+        if (!SpotifyService._validateMatch(spotifyAlbum, this.album.artist)) {
+            console.warn('[TracksRankingComparison] Artist mismatch, but proceeding with found album')
+        }
+
+        // Fetch tracks with popularity
+        const spotifyTracks = await SpotifyService.getAlbumTracksWithPopularity(spotifyAlbum.id)
+
+        if (!spotifyTracks || spotifyTracks.length === 0) {
+            throw new Error('No tracks found for this album on Spotify')
+        }
+
+        // Update Album model with Spotify data
+        this.album.spotifyId = spotifyAlbum.id
+        this.album.spotifyUrl = spotifyAlbum.external_urls?.spotify || null
+        this.album.spotifyPopularity = SpotifyService.calculateAveragePopularity(spotifyTracks)
+
+        // Match tracks by name and update spotifyPopularity
+        const normalizeTitle = (str) => str?.toLowerCase().replace(/[^a-z0-9]/g, '') || ''
+
+        // Create lookup map from Spotify tracks
+        const spotifyTrackMap = new Map()
+        spotifyTracks.forEach((st, idx) => {
+            const key = normalizeTitle(st.name)
+            spotifyTrackMap.set(key, {
+                popularity: st.popularity,
+                spotifyRank: idx + 1, // Rank by original Spotify order (approximation)
+                spotifyId: st.id,
+                spotifyUri: st.uri
+            })
+        })
+
+        // Also create a ranked list by popularity (for spotifyPopularityRank)
+        const sortedByPop = [...spotifyTracks].sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
+        const popRankMap = new Map()
+        sortedByPop.forEach((st, idx) => {
+            popRankMap.set(st.id, idx + 1)
+        })
+
+        // Update each track in album
+        const tracks = this.album.tracks || []
+        let matchCount = 0
+
+        tracks.forEach(track => {
+            const key = normalizeTitle(track.title || track.name)
+            const spotifyData = spotifyTrackMap.get(key)
+
+            if (spotifyData) {
+                track.spotifyPopularity = spotifyData.popularity
+                track.spotifyPopularityRank = popRankMap.get(spotifyData.spotifyId) || null
+                track.spotifyId = spotifyData.spotifyId
+                track.spotifyUri = spotifyData.spotifyUri
+                matchCount++
+            } else {
+                // Try fuzzy match (first 10 chars)
+                const fuzzyKey = key.substring(0, 10)
+                for (const [spotifyKey, data] of spotifyTrackMap.entries()) {
+                    if (spotifyKey.startsWith(fuzzyKey) || fuzzyKey.startsWith(spotifyKey.substring(0, 10))) {
+                        track.spotifyPopularity = data.popularity
+                        track.spotifyPopularityRank = popRankMap.get(data.spotifyId) || null
+                        track.spotifyId = data.spotifyId
+                        track.spotifyUri = data.spotifyUri
+                        matchCount++
+                        break
+                    }
+                }
+            }
+        })
+
+        console.log(`[TracksRankingComparison] Matched ${matchCount}/${tracks.length} tracks with Spotify data`)
+
+        // Optionally set rankingSource if this is the primary source
+        if (matchCount > tracks.length * 0.5) {
+            // More than 50% matched - can use as fallback
+            if (!this.album.bestEverAlbumId) {
+                this.album.rankingSource = 'popularity'
+            }
+        }
+
+        // Note: The album is updated in-place. If using a store, 
+        // the store should notify subscribers on next interaction.
+    }
 }
+

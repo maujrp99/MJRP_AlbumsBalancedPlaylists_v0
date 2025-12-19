@@ -124,6 +124,15 @@ export const Icons = {
 
   // Cloud icon
   Cloud: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`,
+
+  // Spotify icon (same as SpotifyConfig for consistent naming)
+  Spotify: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.717.476-1.076.236-2.948-1.8-6.661-2.209-11.037-1.211-.421.084-.827-.185-.911-.597-.084-.421.185-.827.597-.911 4.856-1.108 8.948-.65 12.191 1.341.332.25.476.696.236 1.142zm1.474-3.267c-.314.492-.93.65-1.422.336-3.415-2.091-8.618-2.697-12.656-1.472-.53.167-1.111-.122-1.278-.652-.167-.53.122-1.111.652-1.278 4.639-1.416 10.37-0.748 14.368 1.64.492.29.65.929.336 1.426zm.135-3.376c-4.079-2.42-10.8-2.643-14.7-1.458-.616.187-1.276-.174-1.463-.79-.187-.616.174-1.276.79-1.463 4.475-1.353 11.833-1.096 16.48 1.666.571.337.755 1.087.418 1.658-.337.571-1.087.755-1.658.418z"/></svg>`,
+
+  // CPU/AI icon for AI-based ranking
+  Cpu: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3"/><path d="M15 1v3"/><path d="M9 20v3"/><path d="M15 20v3"/><path d="M20 9h3"/><path d="M20 14h3"/><path d="M1 9h3"/><path d="M1 14h3"/></svg>`,
+
+  // Maximize icon for expand actions  
+  Maximize2: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>`,
 }
 
 /**

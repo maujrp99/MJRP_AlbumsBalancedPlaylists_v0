@@ -145,23 +145,39 @@ export function renderOriginalTracklist(album) {
  */
 export function renderRankingBadge(album) {
   const hasBestEver = !!album.bestEverAlbumId
-  const providerType = album.acclaim?.providerType
+  const hasSpotify = !!album.spotifyId
+  const providerType = album.acclaim?.providerType || album.rankingSource
   const hasRatings = album.tracks?.some(t => t.rating > 0)
+  const hasSpotifyPopularity = album.tracks?.some(t => t.spotifyPopularity > 0)
+
+  // Multiple badges can be shown
+  let badges = []
 
   if (hasBestEver) {
-    return `
+    badges.push(`
       <a href="https://www.besteveralbums.com/thechart.php?a=${album.bestEverAlbumId}" target="_blank" rel="noopener noreferrer" class="badge badge-primary hover:badge-accent transition-colors flex items-center gap-1" title="Ranking by Community Acclaim">
         ${getIcon('ExternalLink', 'w-3 h-3')} Acclaim
-      </a>`
+      </a>`)
   }
-  if (providerType === 'popularity') {
-    return `<span class="badge badge-success flex items-center gap-1" title="Ranking by Spotify Popularity">${getIcon('TrendingUp', 'w-3 h-3')} Popularity</span>`
+
+  if (hasSpotify) {
+    badges.push(`
+      <a href="${album.spotifyUrl || `https://open.spotify.com/album/${album.spotifyId}`}" target="_blank" rel="noopener noreferrer" class="badge flex items-center gap-1 transition-colors hover:opacity-80" style="background: #1DB954; color: white; border: none;" title="Open in Spotify">
+        ${getIcon('Spotify', 'w-3 h-3')} Spotify
+      </a>`)
+  } else if (providerType === 'popularity' || hasSpotifyPopularity) {
+    badges.push(`<span class="badge flex items-center gap-1" style="background: #1DB954; color: white;" title="Ranking by Spotify Popularity">${getIcon('TrendingUp', 'w-3 h-3')} Popularity</span>`)
   }
-  if (hasRatings) {
-    return `<span class="badge badge-info flex items-center gap-1" title="Ranking by AI Enrichment">${getIcon('Cpu', 'w-3 h-3')} AI</span>`
+
+  if (badges.length === 0) {
+    if (hasRatings) {
+      return `<span class="badge badge-info flex items-center gap-1" title="Ranking by AI Enrichment">${getIcon('Cpu', 'w-3 h-3')} AI</span>`
+    }
+    // Pending
+    return `<span class="badge badge-warning flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
   }
-  // Pending
-  return `<span class="badge badge-warning flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')} Pending</span>`
+
+  return badges.join('')
 }
 
 /**
