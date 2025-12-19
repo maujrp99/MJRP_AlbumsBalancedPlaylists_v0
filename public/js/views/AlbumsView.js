@@ -1246,6 +1246,12 @@ export class AlbumsView extends BaseView {
   }
 
   updateAlbumsGrid(albums) {
+    // Guard: View may have been unmounted while async operations were in flight
+    if (!this.container || !document.contains(this.container)) {
+      console.log('[AlbumsView] View unmounted, skipping updateAlbumsGrid')
+      return
+    }
+
     console.log('[AlbumsView] updateAlbumsGrid called: albums=', albums?.length, 'isLoading=', this.isLoading, 'currentScope=', this.currentScope)
 
     // If loading, show empty but don't warn

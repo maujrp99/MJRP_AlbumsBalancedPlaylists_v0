@@ -1,10 +1,10 @@
-
 /* UX Improvement Animations */
 @keyframes zoomIn {
   from {
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -16,30 +16,174 @@
 }
 
 .count-badge {
-    animation: fadeAndSlide 0.3s ease-out;
+  animation: fadeAndSlide 0.3s ease-out;
 }
 
 @keyframes fadeAndSlide {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Custom Scrollbar for results */
 .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+  width: 6px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Input Group Focus State */
 .group:focus-within .text-accent-primary {
-    color: #ff8800; /* brand-orange */
+  color: #ff8800;
+  /* brand-orange */
+}
+
+/* ================================
+   SKELETON LOADER - Shimmer Effect
+   ================================ */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.05) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  border-radius: 8px;
+}
+
+.skeleton-card {
+  min-height: 250px;
+}
+
+.skeleton-line {
+  height: 16px;
+  margin-bottom: 8px;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+.skeleton-line.medium {
+  width: 80%;
+}
+
+.skeleton-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+}
+
+/* ================================
+   GLOBAL PROGRESS BAR (Top)
+   ================================ */
+@keyframes progress-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+.progress-bar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 30%;
+  background: linear-gradient(90deg, #ff8800, #ff5500, #ff8800);
+  animation: progress-indeterminate 1.2s infinite ease-in-out;
+}
+
+/* ================================
+   REFRESH INDICATOR BADGE
+   ================================ */
+@keyframes pulse-soft {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.badge-refreshing {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 136, 0, 0.2);
+  border: 1px solid rgba(255, 136, 0, 0.4);
+  border-radius: 20px;
+  font-size: 12px;
+  color: #ff8800;
+  animation: pulse-soft 1.5s infinite;
+}
+
+.badge-refreshing .dot {
+  width: 6px;
+  height: 6px;
+  background: #ff8800;
+  border-radius: 50%;
+  animation: pulse-soft 1s infinite;
+}
+
+/* Stale data overlay when refreshing */
+.stale-overlay {
+  position: relative;
+}
+
+.stale-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.stale-overlay.is-refreshing::after {
+  opacity: 1;
 }
