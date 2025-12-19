@@ -1,8 +1,9 @@
 # Sprint 9+10 Consolidated Pending Tasks
 
 **Created**: 2025-12-18 11:54  
+**Updated**: 2025-12-18 22:48  
 **Branch**: `feature/sprint9-ranking-enrichment`  
-**Status**: Consolidando pendências de Sprint 9 (Ranking) + Sprint 10 (Refactoring)
+**Status**: ✅ **Deployed to Production** - UAT in progress
 
 ---
 
@@ -10,9 +11,17 @@
 
 | Sprint | Total Tasks | Completed | Pending | Progress |
 |--------|-------------|-----------|---------|----------|
-| Sprint 9 | ~12 | 6 | **6** | 50% |
+| Sprint 9 | ~12 | 9 | **3** | 75% |
 | Sprint 10 | 57 | 23 | **34** | 40% |
-| **Total** | ~69 | 29 | **40** | ~42% |
+| **Total** | ~69 | 32 | **37** | ~46% |
+
+### 🎉 Today's Fixes (2025-12-18)
+- ✅ EditPlaylistView loading spinner bug
+- ✅ EditPlaylistView regenerate critical freeze bug
+- ✅ Playlist numbering (visual + generation)
+- ✅ Race condition fix (container not found)
+- ✅ GlobalProgress component + skeleton loaders CSS
+- ✅ Playlist ordering in SavedPlaylistsView
 
 ---
 
@@ -23,9 +32,13 @@
 | Issue | Título | Status | Ação Requerida |
 |-------|--------|--------|----------------|
 | **#58** | Badge "PENDING" apesar de BestEver data | 🚧 IN PROGRESS | Investigar desconexão entre API response e frontend |
-| **#57** | Filter Regression | 🧪 TESTING | User verification needed |
-| **#55** | Ghost Playlists / Batch Contamination | 🧪 TESTING | User verification needed |
-| **#54** | Edit Batch Not Overwriting | 🧪 TESTING | User verification needed |
+| **#57** | Filter Regression | ✅ FIXED | Constructor filter schema updated |
+| **#55** | Ghost Playlists / Batch Contamination | ✅ FIXED | State machine + URL param pattern |
+| **#54** | Edit Batch Not Overwriting | ✅ FIXED | Delete old batch before save |
+| **#59** | EditPlaylistView loading spinner | ✅ FIXED | loadingContainer + isLoading state |
+| **#60** | Scroll/DragDrop UX | ✅ FIXED | min-h, custom-scrollbar, drop-zone-padding |
+| **#61** | Regenerate browser freeze | ✅ FIXED | Algorithm ID + isGenerating reset |
+| **#62** | Race condition AlbumsView | ✅ FIXED | Unmount guard check |
 
 ### Implementation Tasks
 
@@ -35,8 +48,9 @@
 | `spotifyPopularity.js` | Serviço de fallback Spotify | ✅ **DONE** | 110 linhas implementadas |
 | Fallback pipeline | BestEver → Spotify → AI | ✅ **DONE** | Implementado em `fetchRanking.js` |
 | Dynamic Badges | Badges Acclaim/Popularity/AI | ⚠️ **PARTIAL** | Implementado mas Issue #58 mostra PENDING |
-| Source Filter | Dropdown para filtrar por source | ⚠️ **PARTIAL** | Implementado, Issue #57 regression fixed |
+| Source Filter | Dropdown para filtrar por source | ✅ **DONE** | Issue #57 fixed |
 | **DELETE musicboard.js** | Cleanup de scraper deprecated | ❌ **PENDING** | Arquivo com 352 linhas ainda existe |
+| **GlobalProgress.js** | Loading bar component | ✅ **NEW** | Created with skeleton CSS |
 
 ### Issue #58 Deep Dive
 
@@ -44,12 +58,6 @@
 - Scraper retornar `albumId: "144"` ✅
 - "Ranked by Acclaim" mostrar tracks com ratings ✅
 - API enrich sendo chamado ✅
-
-**Código existente (VERIFIED):**
-```
-besteveralbums.js:67  - normalizeLoose definido
-besteveralbums.js:97  - comentário "critical for titles like Untitled (Led Zeppelin IV)"
-```
 
 **Próximos passos:**
 1. Verificar response de `/api/enrich-album` no console
