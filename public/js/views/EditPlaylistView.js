@@ -38,7 +38,7 @@ export class EditPlaylistView extends BaseView {
 
     // Algorithm selection
     const recommended = getRecommendedAlgorithm()
-    this.selectedAlgorithmId = recommended ? recommended.id : 's-draft-balanced'
+    this.selectedAlgorithmId = recommended ? recommended.id : 'mjrp-balanced-cascade'
 
     // Loading state
     this.isLoading = true
@@ -376,6 +376,8 @@ export class EditPlaylistView extends BaseView {
 
       if (!algorithm) {
         toast.error('Selected algorithm not found')
+        this.isGenerating = false
+        this.update()
         return
       }
 
