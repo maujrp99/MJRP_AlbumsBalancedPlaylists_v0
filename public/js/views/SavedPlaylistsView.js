@@ -121,6 +121,18 @@ export class SavedPlaylistsView extends BaseView {
             playlistsByBatch.get(batchKey).playlists.push(pl)
         })
 
+        // Sort playlists within each batch by order field or name
+        playlistsByBatch.forEach(batch => {
+            batch.playlists.sort((a, b) => {
+                // Primary: sort by order field if present
+                if (a.order !== undefined && b.order !== undefined) {
+                    return a.order - b.order
+                }
+                // Fallback: sort by name (handles "1. Greatest Hits", "2. Deep Cuts", etc.)
+                return (a.name || '').localeCompare(b.name || '', undefined, { numeric: true })
+            })
+        })
+
         // Sort batches by savedAt (newest first)
         const batches = Array.from(playlistsByBatch.values()).sort((a, b) => {
             const dateA = a.savedAt ? new Date(a.savedAt) : new Date(0)
