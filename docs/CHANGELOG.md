@@ -2,33 +2,49 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
-## v2.9.0 - Sprint 9: Ranking Enrichment & UI Enhancements (2025-12-17)
+## v2.9.0 - Sprint 9+10: Ranking Enrichment, EditPlaylistView & Loading UX (2025-12-18)
 
-**Status**: 🚧 **IN PROGRESS**
+**Status**: 🚀 **DEPLOYED TO PRODUCTION**
+**Tag**: `v2.9.0`
 **Branch**: `feature/sprint9-ranking-enrichment`
 
 ### Summary
-Sprint 9 introduces ranking enrichment features and improves artist search with Apple MusicKit API integration.
+Sprint 9+10 delivers ranking enrichment features, new EditPlaylistView for editing saved playlists, improved loading UX, and extensive bug fixes for playlist editing workflow.
 
 ### ✨ New Features
-- **MusicKit API Artist Search**: Artist Filter in HomeView now searches Apple Music globally instead of local cache
-  - Finds any artist in Apple Music catalog
-  - Artwork fallback for missing covers
-  - Field mapping for API response
+- **EditPlaylistView**: Full editing support for saved playlist batches
+  - Load from Firestore, edit tracks, regenerate with different algorithms
+  - Delete old batch before save (overwrite pattern)
+- **GlobalProgress Component**: Top loading bar (YouTube-style)
+- **Skeleton Loaders**: CSS shimmer effect for loading states
+- **Playlist Numbering**: Visual and generation numbering (1. 2. 3.)
 
-### 🚧 In Progress (Agent A)
-- Ranking enrichment with multiple sources
-- Ranking consolidation display
+### 🐛 Bug Fixes (Issues #54-62)
+| Issue | Description | Fix |
+|-------|-------------|-----|
+| #54 | Edit Batch Not Overwriting | Delete old batch before save |
+| #55 | Ghost Playlists | State machine + URL param pattern |
+| #57 | Filter Regression | Constructor filter schema |
+| #59 | Loading spinner persistent | loadingContainer + isLoading state |
+| #60 | Scroll/DragDrop UX | min-h, custom-scrollbar, drop-zone-padding |
+| #61 | Regenerate browser freeze | Algorithm ID + isGenerating reset |
+| #62 | Race condition AlbumsView | Unmount guard check |
 
-### ⏸️ Deferred to Backlog
-- **Album Type Filter** (Singles, Live, Compilations)
-  - See Issue #56 in DEBUG_LOG.md
-  - Requires HomeView architectural refactoring before implementation
+### 🧹 Cleanup
+- Deleted `musicboard.js` scraper (-421 lines)
+- Server routes integrated (index.js = 151 lines)
 
-### 📁 Files Modified
-- `public/js/views/HomeView.js` - MusicKit API integration
+### 📁 New Files
+```
+public/js/views/EditPlaylistView.js (612 lines)
+public/js/components/GlobalProgress.js (76 lines)
+public/js/views/albums/ (modular components)
+public/js/views/playlists/ (modular components)
+server/routes/ (albums.js, playlists.js, debug.js)
+```
 
 ---
+
 
 ## v2.8.5 - Sprint 8.5: Algorithm Improvements & Playlist Fixes (2025-12-17)
 
