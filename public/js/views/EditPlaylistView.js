@@ -215,29 +215,22 @@ export class EditPlaylistView extends BaseView {
   }
 
   async loadAlbumsForSeries(seriesId) {
-    // Load albums from series if not already in store
+    // Check if albums are already cached in the store
     const albums = albumsStore.getAlbums()
-    if (albums.length === 0) {
-      const activeSeries = albumSeriesStore.getActiveSeries()
-      if (activeSeries?.albumQueries && activeSeries.albumQueries.length > 0) {
-        // Try to load albums from AlbumsView logic
-        console.log('[EditPlaylistView] Attempting to load albums for regeneration')
-        try {
-          // Import album loading function
-          const { OptimizedAlbumLoader } = await import('../services/OptimizedAlbumLoader.js')
-          const loader = new OptimizedAlbumLoader()
-          const loadedAlbums = await loader.loadAlbums(activeSeries.albumQueries)
-          albumsStore.setAlbums(loadedAlbums, seriesId)
-          console.log('[EditPlaylistView] Loaded', loadedAlbums.length, 'albums for regeneration')
-        } catch (err) {
-          console.warn('[EditPlaylistView] Could not load albums:', err.message)
-          toast.warning('No albums loaded. Go back to Albums view and load albums first.')
-        }
-      } else {
-        console.log('[EditPlaylistView] No album queries in series, regeneration disabled')
-      }
+
+    if (albums.length > 0) {
+      console.log('[EditPlaylistView] Using', albums.length, 'cached albums for regeneration')
+      return
+    }
+
+    // Albums not in store - user needs to load them from Albums view first
+    // The OptimizedAlbumLoader is for DB search only, not API loading
+    const activeSeries = albumSeriesStore.getActiveSeries()
+    if (activeSeries?.albumQueries && activeSeries.albumQueries.length > 0) {
+      console.log('[EditPlaylistView] Albums not cached, regeneration will fail. User must visit Albums view first.')
+      toast.warning('Albums not loaded. Visit Albums view first to enable Regenerate.')
     } else {
-      console.log('[EditPlaylistView] Using', albums.length, 'cached albums')
+      console.log('[EditPlaylistView] No album queries in series, regeneration disabled')
     }
   }
 
