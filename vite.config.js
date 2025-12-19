@@ -3,6 +3,8 @@ import path from 'path'
 
 export default defineConfig({
     root: 'public',
+    envDir: '../', // Fix: Vite looks in 'root' by default, but our .env is one level up
+
 
     build: {
         outDir: '../dist',
@@ -26,6 +28,7 @@ export default defineConfig({
     },
 
     server: {
+        host: 'mjrp.local', // Custom domain for unified OAuth (Spotify + Apple Music)
         port: 5000,
         proxy: {
             '/api': {

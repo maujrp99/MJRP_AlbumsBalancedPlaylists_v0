@@ -75,7 +75,8 @@ export class TopNav {
           ${this.renderNavLink(albumsSeriesLink, 'Album Series', currentPath)}
           ${this.renderNavLink('/playlist-series', 'Playlists', currentPath)}
           ${this.renderNavLink('/inventory', 'Inventory', currentPath)}
-          ${this.renderNavLink('/save-all', 'Save All', currentPath)}
+          <!-- Spotify Connect (Phase 1) -->
+          <div id="spotify-connect-desktop"></div>
         </div>
 
         <!-- User Section (Right) -->
@@ -109,7 +110,9 @@ export class TopNav {
             ${this.renderMobileNavLink(albumsSeriesLink, 'Album Series', 'Music', currentPath)}
             ${this.renderMobileNavLink('/playlist-series', 'Playlists', 'List', currentPath)}
             ${this.renderMobileNavLink('/inventory', 'Inventory', 'Archive', currentPath)}
-            ${this.renderMobileNavLink('/save-all', 'Save All', 'Database', currentPath)}
+            <div class="px-4 py-2">
+               <div id="spotify-connect-mobile"></div>
+            </div>
           </nav>
           
           <!-- Mobile Footer / Auth -->
@@ -239,7 +242,7 @@ export class TopNav {
     }
   }
 
-  attachListeners() {
+  async attachListeners() {
     const mobileBtn = document.getElementById('mobileMenuBtn')
     const closeBtn = document.getElementById('closeMenuBtn')
     const mobileMenu = document.getElementById('mobileMenu')
@@ -313,6 +316,21 @@ export class TopNav {
         toggleMenu(false)
       }
     })
+
+    // Initialize Spotify Connect Button
+    try {
+      const { SpotifyConnectButton } = await import('./SpotifyConnectButton.js')
+
+      if (document.getElementById('spotify-connect-desktop')) {
+        new SpotifyConnectButton('spotify-connect-desktop')
+      }
+
+      if (document.getElementById('spotify-connect-mobile')) {
+        new SpotifyConnectButton('spotify-connect-mobile')
+      }
+    } catch (err) {
+      console.error('[TopNav] Error initializing Spotify Button:', err)
+    }
   }
 }
 

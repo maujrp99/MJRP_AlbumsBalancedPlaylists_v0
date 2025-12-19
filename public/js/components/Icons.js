@@ -13,6 +13,8 @@ export const Icons = {
 
   Music: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
 
+  SpotifyConfig: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.717.476-1.076.236-2.948-1.8-6.661-2.209-11.037-1.211-.421.084-.827-.185-.911-.597-.084-.421.185-.827.597-.911 4.856-1.108 8.948-.65 12.191 1.341.332.25.476.696.236 1.142zm1.474-3.267c-.314.492-.93.65-1.422.336-3.415-2.091-8.618-2.697-12.656-1.472-.53.167-1.111-.122-1.278-.652-.167-.53.122-1.111.652-1.278 4.639-1.416 10.37-0.748 14.368 1.64.492.29.65.929.336 1.426zm.135-3.376c-4.079-2.42-10.8-2.643-14.7-1.458-.616.187-1.276-.174-1.463-.79-.187-.616.174-1.276.79-1.463 4.475-1.353 11.833-1.096 16.48 1.666.571.337.755 1.087.418 1.658-.337.571-1.087.755-1.658.418z"/></svg>`,
+
   Trash: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>`,
 
   User: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,

@@ -78,6 +78,25 @@ router.register('/home', () => new HomeView())
 router.register('/albums', () => new AlbumsView())
 router.register('/playlists', () => new PlaylistsView())
 
+// Sprint 11 Phase 1: Spotify Auth Callback
+router.register('/callback', async () => {
+    const { SpotifyAuthService } = await import('./services/SpotifyAuthService.js')
+    const toast = (await import('./components/Toast.js')).default
+
+    // Show loading state if needed, but handled by toast for now
+    await SpotifyAuthService.handleCallback().then(success => {
+        if (success) {
+            toast.success('Connected to Spotify!')
+        } else {
+            toast.error('Failed to connect to Spotify')
+        }
+    })
+
+    // Clear URL query is handled inside Service, just navigate to home
+    router.navigate('/home')
+    return null
+})
+
 // Sprint 11: EditPlaylistView for editing existing batches (fixes #54, #55)
 router.register('/playlists/edit', async () => {
     const { EditPlaylistView } = await import('./views/EditPlaylistView.js')
@@ -131,6 +150,8 @@ if (typeof window !== 'undefined') {
     import('./stores/albumSeries.js').then(m => { window.albumSeriesStore = m.albumSeriesStore })
     import('./stores/albums.js').then(m => { window.albumsStore = m.albumsStore })
     import('./stores/playlists.js').then(m => { window.playlistsStore = m.playlistsStore })
+    import('./services/SpotifyAuthService.js').then(m => { window.SpotifyAuthService = m.SpotifyAuthService })
+    import('./services/SpotifyService.js').then(m => { window.SpotifyService = m.SpotifyService })
     window.router = router
 }
 

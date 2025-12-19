@@ -137,13 +137,13 @@ export class Router {
         }
 
         // Render view HTML
-        if (this.currentView.render) {
+        if (this.currentView && this.currentView.render) {
             const html = await this.currentView.render(params)
             container.innerHTML = html
         }
 
         // Call view's mount lifecycle
-        if (this.currentView.mount) {
+        if (this.currentView && this.currentView.mount) {
             await this.currentView.mount(params)
         }
     }
