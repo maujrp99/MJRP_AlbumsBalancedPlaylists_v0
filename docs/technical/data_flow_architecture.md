@@ -715,14 +715,7 @@ graph TD
 
 ---
 
-## Known Issues (Sprint 11)
-
-| ID | Issue | Root Cause | Status |
-|----|-------|------------|--------|
-| BUG-1 | Wrong tracks in ranking table | TBD - investigating | 🔍 INVESTIGATING |
-| BUG-2 | Table disappears on view toggle | Missing updateAlbumsGrid call | ✅ FIXED |
-| BUG-3 | Spotify not enriching (0 tracks matched) | Title mismatch | ✅ FIXED |
-| BUG-4 | Led Zeppelin not found on Spotify | Fuzzy search needed | ✅ FIXED |
+> **Note**: For bug tracking and known issues, see [DEBUG_LOG.md](../debug/DEBUG_LOG.md)
 
 ---
 

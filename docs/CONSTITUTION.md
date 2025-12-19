@@ -22,6 +22,8 @@ Documentation is a living part of the codebase, not an afterthought.
 - **Single Source of Truth**: `ARCHITECTURE.md`, `ROADMAP.md`, and `technical/devops/DEVOPS_GUIDE.md` must reflect reality.
 - **Traceability**: Every bug fix requires an entry in `DEBUG_LOG.md`.
 - **Planning**: No code is written without an `implementation_plan.md` or `Implementation Guide` approved by the user.
+- **Issues ONLY in DEBUG_LOG**: Bug tracking, known issues, and investigation notes MUST be in `docs/debug/DEBUG_LOG.md`. Never add "Known Issues" sections to architecture or technical docs.
+- **Architecture = Structure**: Architecture docs describe HOW the system works, not what's broken.
 
 ### IV. Spec-Driven & Test-Supported
 We design before we build, and we verify what we built.
