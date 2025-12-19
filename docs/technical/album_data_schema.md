@@ -1,15 +1,18 @@
 # Album Data Schema & Transformations
 
-## 🟢 STATUS (v2.8.0)
+## 🟢 STATUS (v2.9.0 - Sprint 11 Planning)
 **track.artist and track.album fields** are now properly populated by the Algorithm Strategy Pattern.  
 The `MJRPBalancedCascadeAlgorithm` uses `markTrackOrigin()` from `BaseAlgorithm` to attach origin album info to each track.
+
+> **Update Sprint 11**: Added `spotifyUrl`, `spotifyId`, and `rankingSource` to Album model.
 
 ---
 
 ## Data Flow Journey
 
 ```
-Raw API Response → normalizeAlbumData() → AlbumsStore → Views
+// Sprint 11 Flow:
+Raw API Response → normalizeAlbumData() → AlbumsStore → Views (AlbumsView/Inventory/Playlists)
 ```
 
 ---

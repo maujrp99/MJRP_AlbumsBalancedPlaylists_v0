@@ -32,4 +32,4 @@ Welcome! This directory contains onboarding documentation for different roles wo
 
 ---
 
-**Last Updated**: 2025-12-02
+**Last Updated**: 2025-12-19

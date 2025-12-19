@@ -11,48 +11,53 @@
 ## Phase 1: Spotify OAuth Setup (2 days)
 
 ### Setup
-- [ ] Register app in Spotify Developer Dashboard
-- [ ] Get Client ID (don't need Client Secret for PKCE)
-- [ ] Configure redirect URIs (localhost + production)
-- [ ] Set required scopes: `playlist-modify-public`, `playlist-modify-private`, `user-read-private`
+- [x] Register app in Spotify Developer Dashboard
+- [x] Get Client ID (don't need Client Secret for PKCE)
+- [x] Configure redirect URIs (localhost + production)
+- [x] Set required scopes: `playlist-modify-public`, `playlist-modify-private`, `user-read-private`
 
 ### Implementation
-- [ ] Create `SpotifyAuthService.js`
-  - [ ] `generateCodeVerifier()` - Random 128 chars
-  - [ ] `generateCodeChallenge()` - SHA256 + Base64URL
-  - [ ] `initiateAuth()` - Opens Spotify login popup
-  - [ ] `handleCallback()` - Exchange code for tokens
-  - [ ] `refreshToken()` - Auto-refresh expired tokens
-  - [ ] `isAuthenticated()` - Check token validity
-  - [ ] `logout()` - Clear tokens
-- [ ] Create `SpotifyConnectButton.js` component
-- [ ] Add callback route handler in `app.js`
-- [ ] Store tokens in localStorage
+- [x] Create `SpotifyAuthService.js`
+  - [x] `generateCodeVerifier()` - Random 128 chars
+  - [x] `generateCodeChallenge()` - SHA256 + Base64URL
+  - [x] `initiateAuth()` - Opens Spotify login popup
+  - [x] `handleCallback()` - Exchange code for tokens
+  - [x] `refreshToken()` - Auto-refresh expired tokens
+  - [x] `isAuthenticated()` - Check token validity
+  - [x] `logout()` - Clear tokens
+- [x] Create `SpotifyConnectButton.js` component
+- [x] Add callback route handler in `app.js`
+- [x] Store tokens in localStorage
 
 ### Verification
-- [ ] Test OAuth flow in localhost
-- [ ] Test OAuth flow in production
-- [ ] Verify token refresh works
+- [x] Test OAuth flow in localhost
+- [x] Test OAuth flow in production
+- [x] Verify token refresh works
 
 ---
 
 ## Phase 2: Spotify Popularity Ranking (2 days)
 
-### Backend
-- [ ] Review existing `spotifyPopularity.js`
-- [ ] Ensure it returns:
-  - [ ] `spotifyId` - Album ID
-  - [ ] `spotifyUrl` - Album URL
-  - [ ] `tracks[].popularity` - 0-100 value
-  - [ ] `tracks[].spotifyPopularityRank` - Calculated rank
-- [ ] Create `server/routes/spotify.js`
-  - [ ] `POST /api/spotify/album-ranking` endpoint
+### Core Service Logic
+- [x] Create `public/js/services/SpotifyService.js`
+  - [x] `searchAlbum(artist, albumName)` -> returns Spotify ID
+  - [x] `getAlbumDetails(spotifyId)` -> returns tracks with popularity
+  - [x] `getAlbumTracksWithPopularity(spotifyId)` -> returns tracks with popularity
+  - [x] `calculateAveragePopularity(tracks)` -> returns 0-100 avg
+  - [x] Error handling (401 -> refresh token -> retry)
+  - [x] **Verification**: Tested via Console.
 
 ### Integration
-- [ ] Modify `fetchRanking.js`
-  - [ ] Add Spotify as fallback after BestEver fails
-  - [ ] Logic: BestEver → Spotify → Original order
-  - [ ] Set `rankingSource` field on album
+- [x] Update `Album` model (in memory/store) to hold:
+  - `spotifyId`
+  - `spotifyPopularity` (0-100)
+  - `spotifyUrl`
+  - `spotifyImages`
+- [ ] Update `AlbumsScopedRenderer` (or new logic) to fetch this data on demand (Lazy Loading) to avoid rate limits?
+  *Decision*: Fetch only when "Expanded View" is opened OR when "Enrich" is clicked?
+  *Refinement*: Plan says "Lazy load when user expands album".
+
+---
 
 ### Data Model
 - [ ] Add fields to Album object:
@@ -64,24 +69,38 @@
 
 ---
 
+---
+
 ## Phase 3: Multi-Source Ranking UX (2 days)
 
-### AlbumsView - Expanded Card
-- [ ] Implement Tab UI for ranking selection
-  - [ ] Tab 1: "Ranked by Acclaim" (BestEver)
-  - [ ] Tab 2: "Ranked by Popularity" (Spotify)
-- [ ] Keep "Original Order" column fixed on left
-- [ ] Show active tab based on `rankingSource`
-- [ ] Disable unavailable tab (if source not available)
+### Architecture Components
+- [ ] Create `public/js/components/ranking/TracksRankingComparison.js` (Smart Container)
+  - [ ] Logic: `calculateAverages(tracks)`
+  - [ ] State: `activeTab`, `sortField`, `sortDirection`
+  - [ ] Data normalization & Resize listener
+- [ ] Create `public/js/components/ranking/TracksTable.js` (Desktop Presenter)
+  - [ ] Headers: "Track Name (Original)", "Acclaim BEA Rank", "Spotify Popularity Rank"
+  - [ ] Render Footer with calculated Averages
+  - [ ] Render Header Links (Spotify + BEA)
+- [ ] Create `public/js/components/ranking/TracksTabs.js` (Mobile Presenter)
+  - [ ] Render Tab Switcher & Simple List
+  - [ ] Render Mini-Footer with scores
 
-### Responsive Design
-- [ ] Desktop (≥1024px): Consider 3-column layout
-- [ ] Mobile (<1024px): Tabs only
-- [ ] Test on various screen sizes
+### Integration
+- [ ] **AlbumsView (Expanded)**
+  - [ ] Import `TracksRankingComparison`
+  - [ ] Replace existing layout
+  - [ ] Remove old manual rendering logic
 
-### Visual Indicators
-- [ ] Popularity bar visualization (0-100)
-- [ ] Different styling for each ranking source
+- [ ] **Inventory View (Modal)**
+  - [ ] Update `ViewAlbumModal.js` to use `TracksRankingComparison`
+  - [ ] Verify styling consistency within modal
+  - [ ] **CRITICAL FIX**: Debug and fix "Add/Remove from Inventory" buttons logic (reported buggy)
+
+### Stylization
+- [ ] Implement sorting animations (optional nice-to-have)
+- [ ] Ensure "Sticky Headers" for long track lists
+- [ ] Tooltip implementation for "Pending" or "Low Data" states
 
 ---
 
@@ -171,13 +190,13 @@
 
 | Phase | Tasks | Status |
 |-------|-------|--------|
-| Phase 1: OAuth | 15 | ⬜ Not Started |
-| Phase 2: Ranking | 12 | ⬜ Not Started |
-| Phase 3: Ranking UX | 8 | ⬜ Not Started |
+| Phase 1: OAuth | 15 | ✅ Complete |
+| Phase 2: Ranking | 12 | ✅ Complete |
+| Phase 3: Ranking UX | 8 | 🔄 In Progress |
 | Phase 4: Cards UI | 8 | ⬜ Not Started |
 | Phase 5: Export | 12 | ⬜ Not Started |
 | Phase 6: Testing | 16 | ⬜ Not Started |
-| **Total** | **71** | **0% Complete** |
+| **Total** | **71** | **38% Complete** |
 
 ---
 

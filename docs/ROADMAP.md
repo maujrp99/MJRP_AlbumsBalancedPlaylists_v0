@@ -205,19 +205,19 @@ BestEver Elite	ELITE	Só tracks com rating ≥ 80
 
 **Duration**: 2 weeks  
 **Priority**: High  
-**Status**: 🚧 **PLANNING**
-**Branch**: `feature/sprint11-spotify-integration` (to be created)
+**Status**: 🔄 **IN PROGRESS** (Phase 3: Ranking UX)
+**Branch**: `feature/sprint11-spotify-integration`
 
 #### Part A: Spotify API Integration
 
-- [ ] **Spotify OAuth**
-  - Register App in Spotify Developer Dashboard
-  - Implement OAuth2 Flow (PKCE for frontend)
-  - Store/Refresh Tokens securely
+- [x] **Spotify OAuth** ✅ (2025-12-19)
+  - ~~Register App in Spotify Developer Dashboard~~
+  - ~~Implement OAuth2 Flow (PKCE for frontend)~~ → `SpotifyAuthService.js`
+  - ~~Store/Refresh Tokens securely~~ → localStorage
 
-- [ ] **Spotify Track Popularity Ranking**
-  - Use track `popularity` field (0-100) as fallback ranking
-  - When BestEver fails → use Spotify popularity as ranking source
+- [x] **Spotify Track Popularity Ranking** ✅ (2025-12-19)
+  - ~~Use track `popularity` field (0-100)~~ → `SpotifyService.js`
+  - ~~Calculate average popularity~~ → `calculateAveragePopularity()`
   - Badge: 🟢 POPULARITY (Spotify) instead of PENDING
 
 - [ ] **Spotify Album Links**

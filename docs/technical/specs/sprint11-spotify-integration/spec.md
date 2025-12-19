@@ -64,15 +64,17 @@ Sprint 11 introduces Spotify integration as both a **ranking fallback** and **ex
 | FR-3.2 | If BestEver has <50% track coverage → fallback to Spotify |
 | FR-3.3 | Add `rankingSource` field: `"acclaim"`, `"popularity"`, `"original"` |
 | FR-3.4 | Algorithms use final `rank` field (source-agnostic) |
+| FR-3.5 | **Consolidated Averages**: Calculate & Display average Rating/Popularity per column |
+| FR-3.6 | **Total Score**: Display a weighted or simple average of both sources |
 
-### FR-4: Visual Badges
+### FR-4: Visual Headers & Badges
 
 | Requirement | Description |
 |-------------|-------------|
-| FR-4.1 | 🏆 ACCLAIM badge (green) - BestEver data |
-| FR-4.2 | 🟢 POPULARITY badge (green) - Spotify data |
-| FR-4.3 | ⚪ ORIGINAL badge (gray) - No ranking |
-| FR-4.4 | Show badge per album (not per track) |
+| FR-4.1 | "Track Name" header sorts by Original Album Order |
+| FR-4.2 | "Acclaim BEA Rank" header sorts by Acclaim (Orange) |
+| FR-4.3 | "Spotify Pop. Rank" header sorts by Popularity (Green) |
+| FR-4.4 | Display BEA Link + Spotify Link in Album Header |
 
 ### FR-5: Spotify Album Links
 
@@ -95,6 +97,16 @@ Sprint 11 introduces Spotify integration as both a **ranking fallback** and **ex
 
 ---
 
+## 4. Non-Functional Requirements (UI Scope)
+
+| NFR | Description |
+|-----|-------------|
+| NFR-1 | **Reuse**: ranking component used in Expanded, Inventory Modal, & Compact Modal |
+| NFR-2 | **Consistency**: Same visual table structure across all views |
+| NFR-3 | **Responsiveness**: Table on Desktop, Tabs on Mobile |
+
+---
+
 ## 4. Non-Functional Requirements
 
 | NFR | Description |
@@ -108,6 +120,8 @@ Sprint 11 introduces Spotify integration as both a **ranking fallback** and **ex
 ---
 
 ## 5. Data Model Changes
+
+> **Note**: These changes will be reflected in `docs/technical/album_data_schema.md`
 
 ### Album Object (Extended)
 
@@ -191,7 +205,7 @@ Sprint 11 introduces Spotify integration as both a **ranking fallback** and **ex
 
 | Metric | Target |
 |--------|--------|
-| PENDING badges reduced | <10% of albums |
+| PENDING badges reduced | 0% (Eliminate Pending state) |
 | Spotify export success rate | >90% tracks matched |
 | OAuth flow completion | <30 seconds |
 | User satisfaction | Qualitative feedback positive |
@@ -213,7 +227,7 @@ Sprint 11 introduces Spotify integration as both a **ranking fallback** and **ex
 |------------|--------|
 | Spotify Developer Account | ✅ Already exists (see SPOTIFY_SETUP.md) |
 | `spotifyPopularity.js` service | ✅ Already exists (136 lines) |
-| Spotify Web API credentials | ⚠️ Need Client ID/Secret |
+| Spotify Web API credentials | ✅ In `.env` / Cloud Secret Manager |
 
 ---
 

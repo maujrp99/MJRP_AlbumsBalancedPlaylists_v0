@@ -34,6 +34,12 @@ export class Album {
         this.bestEverUrl = data.bestEverUrl
         this.acclaim = data.acclaim || {}
 
+        // Spotify Data
+        this.spotifyId = data.spotifyId || null
+        this.spotifyUrl = data.spotifyUrl || null
+        this.spotifyImages = data.spotifyImages || []
+        this.spotifyPopularity = data.spotifyPopularity !== undefined ? Number(data.spotifyPopularity) : null
+
         // Preserve other properties
         this.metadata = data.metadata || {}
     }

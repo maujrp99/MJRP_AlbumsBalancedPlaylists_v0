@@ -125,15 +125,14 @@ serverTimestamp()
 ## ⚠️ PHASE 3: Current Status & Known Issues (30 minutes)
 
 ### **Step 3.1: Where are we now?**
-📄 **Read**: `docs/CHANGELOG.md` - **CRITICAL SECTION**
-- **Start at**: Line 5 - "Phase 3 - Remaining Work"
-- **Purpose**: Know what's done vs what's pending
-- **Focus on**:
-  - ⚠️ UI Components status (IMPLEMENTED but NOT VERIFIED)
-  - ✅ Known Issues (Issues #15 & #16 RESOLVED - Pending UAT)
-  - Session Timeline Phases 10-12 (**CODE EXISTS BUT NOT VERIFIED**)
-  - 🚨 CRITICAL DEVELOPER NOTICE section
-- **Key takeaway**: Focus on UAT Verification!
+📄 **Read**: `docs/ROADMAP.md` - Current Sprint section
+- **Focus on**: Sprint 11 - Spotify Integration & Multi-Source Ranking
+- **Status**: Phase 1 & 2 Complete, Phase 3 (Ranking UX) In Progress
+- **Key Files Created**:
+  - `SpotifyAuthService.js` - OAuth PKCE flow
+  - `SpotifyService.js` - Album search & popularity ranking
+  - `SpotifyConnectButton.js` - TopNav integration
+- **Key takeaway**: Multi-Source Ranking UX is next!
 
 ### **Step 3.2: Current Issues & Blockers**
 📄 **Read**: `docs/debug/DEBUG_LOG.md`

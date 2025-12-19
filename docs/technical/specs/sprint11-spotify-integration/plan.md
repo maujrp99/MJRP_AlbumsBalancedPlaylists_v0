@@ -80,202 +80,136 @@ VITE_SPOTIFY_REDIRECT_URI=https://mjrp-playlist-generator.web.app/callback
 
 ## Phase 3: Multi-Source Ranking UX
 
-### UI Mockups - AlbumsView Expanded Card
+### Architecture: Container / Presenter Pattern
 
-**Current Layout (2 columns):**
+To solve the "Table on Desktop vs Tabs on Mobile" challenge, we will use a **Smart Container** that orchestrates two **Dumb Presenters**.
+
+#### 1. Smart Container: `TracksRankingComparison.js`
+- **State**:
+  - `activeTab` (for mobile)
+  - `sortField` (for desktop: 'original', 'acclaim', 'popularity')
+  - `sortDirection` ('asc', 'desc')
+- **Logic**:
+  - **Averages Calculation**: Computes avg(Acclaim) and avg(Popularity) on mounting.
+  - **Total Score**: Computes (avgAcclaim + avgPop) / 2.
+  - **Normalization**: Ensures every track has a rank.
+  - **Responsiveness**: Toggles between Table/Tabs presenters.
+
+#### 2. Desktop Presenter: `TracksTable.js`
+- **Props**: `sortedTracks`, `averages`, `albumLinks` (Spotify/BEA)
+- **Render**:
+  - Full width table
+  - **Headers**:
+    - "Track Name (Original Album Order)"
+    - "Acclaim BEA Rank" (with Orange Badge)
+    - "Spotify Popularity Rank" (with Green Badge)
+  - **Footer**: Sticky footer showing consolidated averages.
+
+#### 3. Mobile Presenter: `TracksTabs.js`
+- **Props**: `tracks`, `activeTab`, `averages`
+- **Render**:
+  - Tab switcher.
+  - Simplified list.
+  - Mini-footer with scores.
+
+---
+
+### UI Mockups (Final Decision: Option 5 - Refined Table)
+
+**Desktop (Table)**
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│  [Album Cover]  LED ZEPPELIN IV                                      │
-│                 Led Zeppelin (1971)                                  │
-│                 🏆 ACCLAIM                                           │
-├───────────────────────────────┬─────────────────────────────────────┤
-│  ORIGINAL ORDER               │  RANKED BY ACCLAIM                  │
-├───────────────────────────────┼─────────────────────────────────────┤
-│  1. Black Dog                 │  1. Stairway to Heaven    ⭐ 98     │
-│  2. Rock and Roll             │  2. Black Dog             ⭐ 92     │
-│  3. The Battle of Evermore    │  3. When the Levee Breaks ⭐ 90     │
-│  4. Stairway to Heaven        │  4. Rock and Roll         ⭐ 88     │
-│  5. Misty Mountain Hop        │  5. Going to California   ⭐ 85     │
-│  6. Four Sticks               │  6. The Battle of Evermore⭐ 82     │
-│  7. Going to California       │  7. Misty Mountain Hop    ⭐ 78     │
-│  8. When the Levee Breaks     │  8. Four Sticks           ⭐ 65     │
-└───────────────────────────────┴─────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────┐
+│ Track Name (Original Album Order) | Acclaim BEA Rank | Pop |
+├───────────────────────────────────┼──────────────────┼─────┤
+│ 1. Stairway to Heaven             | #1 ⭐98          │ ... |
+│ ...                               | ...              │ ... |
+├───────────────────────────────────┼──────────────────┼─────┤
+│ AVERAGES                          | ⭐ 92.0          │ ... |
+└───────────────────────────────────┴──────────────────┴─────┘
+```
+
+
+**Mobile (Tabs)**
+```
+┌──────────────────────────────────────────────────┐
+│ [ ORIGINAL ]   [ 🏆 ACCLAIM ]   [ 🟢 POPUL. ]    │
+├──────────────────────────────────────────────────┤
+│ 1. Stairway to Heaven           #4 Org   ⭐ 98   │
+│ 2. Black Dog                    #1 Org   ⭐ 92   │
+└──────────────────────────────────────────────────┘
 ```
 
 ---
 
-### NEW Layout Option A: Tabs (Recommended)
+### Integration Points
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│  [Album Cover]  LED ZEPPELIN IV                                      │
-│                 Led Zeppelin (1971)                                  │
-│                 🏆 ACCLAIM  🔗[Spotify]                              │
-├─────────────────────────────────────────────────────────────────────┤
-│  ORIGINAL ORDER  │  [ ACCLAIM ] ← selected │  [ POPULARITY ]        │
-├───────────────────────────────┬─────────────────────────────────────┤
-│  1. Black Dog                 │  1. Stairway to Heaven    ⭐ 98     │
-│  2. Rock and Roll             │  2. Black Dog             ⭐ 92     │
-│  3. The Battle of Evermore    │  3. When the Levee Breaks ⭐ 90     │
-│  4. Stairway to Heaven        │  4. Rock and Roll         ⭐ 88     │
-│  ...                          │  ...                                │
-└───────────────────────────────┴─────────────────────────────────────┘
-```
+1. **AlbumsView (Expanded Card)**
+   - Import `TracksRankingComparison`
+   - Pass `album` object
+   - Component handles its own layout
 
-**Pros:**
-- Clean, no horizontal scroll
-- Easy to compare Original vs Selected Ranking
-- Mobile-friendly
-
-**Cons:**
-- Can't see both rankings simultaneously
+2. **ViewAlbumModal (Inventory)**
+   - Same integration
+   - Ensures consistent sorting/viewing experience across app
 
 ---
 
-### NEW Layout Option B: Three Columns
-
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│  [Album Cover]  LED ZEPPELIN IV                                                         │
-│                 Led Zeppelin (1971)                 🏆 ACCLAIM  🟢 POPULARITY           │
-├────────────────────────────┬───────────────────────────┬───────────────────────────────┤
-│  ORIGINAL ORDER            │  RANKED BY ACCLAIM        │  RANKED BY POPULARITY         │
-├────────────────────────────┼───────────────────────────┼───────────────────────────────┤
-│  1. Black Dog              │  1. Stairway ⭐98         │  1. Stairway    ▓▓▓▓▓▓▓ 95    │
-│  2. Rock and Roll          │  2. Black Dog ⭐92        │  2. Black Dog   ▓▓▓▓▓▓  88    │
-│  3. The Battle of...       │  3. When the Levee ⭐90   │  3. Rock n Roll ▓▓▓▓▓   82    │
-│  4. Stairway to Heaven     │  4. Rock and Roll ⭐88    │  4. When Levee  ▓▓▓▓    75    │
-│  ...                       │  ...                      │  ...                          │
-└────────────────────────────┴───────────────────────────┴───────────────────────────────┘
-```
-
-**Pros:**
-- Compare all 3 rankings at once
-- Clear visual differentiation
-
-**Cons:**
-- May need horizontal scroll on mobile
-- Crowded on small screens
-
----
-
-### NEW Layout Option C: Hybrid (Best of Both)
-
-**On Desktop (≥1024px):** 3 columns
-**On Mobile (<1024px):** Tabs
-
-```javascript
-// Responsive rendering
-if (window.innerWidth >= 1024) {
-  return renderThreeColumnLayout()
-} else {
-  return renderTabsLayout()
-}
-```
-
----
-
-### Recommendation: **Option C (Hybrid)**
-
-1. Desktop users get full comparison view
-2. Mobile users get tab-based clean interface
-3. Implement Option A (Tabs) first, then add Option B for desktop
-
----
-
-## Phase 4: Album Cards UI Update
-
-### Compact View Changes
-
-**Current:**
-```
-┌──────────────┐
-│ [Cover]      │
-│ Album Title  │
-│ Artist       │
-│ 🏆 ACCLAIM   │
-└──────────────┘
-```
-
-**New:**
-```
-┌──────────────┐
-│ [Cover]      │
-│ Album Title  │
-│ Artist       │
-│ 🏆 ACCLAIM   │
-│ 🔗 Spotify   │ ← NEW: Clickable link
-└──────────────┘
-```
-
-### Badge Variants
+### Badge Variants (for headers)
 
 | Source | Badge | Color |
 |--------|-------|-------|
-| BestEver | 🏆 ACCLAIM | `#22c55e` (green-500) |
+| BestEver | 🏆 ACCLAIM | `#f97316` (orange-500) |
 | Spotify | 🟢 POPULARITY | `#1DB954` (Spotify green) |
 | None | ⚪ ORIGINAL | `#6b7280` (gray-500) |
 
 ---
 
-## Phase 5: Export to Spotify
+### Environment Variables
+- `VITE_SPOTIFY_CLIENT_ID` (exposed to client - Auth Code with PKCE)
+- `SPOTIFY_CLIENT_SECRET` (NOT used on client - PKCE flow)
 
-### Export Flow Mockup
+---
 
-```
-┌─────────────────────────────────────────────────────┐
-│                   EXPORT PLAYLIST                    │
-├─────────────────────────────────────────────────────┤
-│                                                      │
-│  Select Destination:                                 │
-│                                                      │
-│  ┌──────────────────┐  ┌──────────────────┐         │
-│  │  🍎 Apple Music  │  │  🎵 Spotify     │          │
-│  │    Connected!    │  │   [Connect]     │          │
-│  └──────────────────┘  └──────────────────┘         │
-│                                                      │
-│  Playlist Name: ________________________             │
-│                                                      │
-│  [ Export to Spotify ]                               │
-│                                                      │
-└─────────────────────────────────────────────────────┘
-```
+## Phase 5: Export to Spotify (Generated Playlists Only)
 
-### Export Progress Modal
+### Export Progress Modal (Standardized)
+This new component `ExportProgressModal.js` will eventually replace the Apple Music export UI to strictly maintain the same "Standard Pattern" across providers.
 
-```
-┌─────────────────────────────────────────────────────┐
-│              EXPORTING TO SPOTIFY                    │
-├─────────────────────────────────────────────────────┤
-│                                                      │
-│  ████████████████████░░░░░░░░░░  65%                │
-│                                                      │
-│  Matching tracks...                                  │
-│  ✅ Stairway to Heaven - Led Zeppelin               │
-│  ✅ Black Dog - Led Zeppelin                        │
-│  ⏳ Rock and Roll - Led Zeppelin...                 │
-│                                                      │
-│  Found: 42/45 tracks                                 │
-│                                                      │
-└─────────────────────────────────────────────────────┘
-```
+**UI State Machine:**
+1. `IDLE`: [Export Button] active
+2. `MATCHING`: "Searching Spotify for track 1/12..."
+3. `CREATING`: "Creating playlist 'My Album'..."
+4. `ADDING`: "Adding tracks..."
+5. `SUCCESS`: "Done! [Open in Spotify]"
+6. `ERROR`: Warning list of unmatched tracks.
 
-### Export Success Modal
+---
 
-```
-┌─────────────────────────────────────────────────────┐
-│                 🎉 SUCCESS!                          │
-├─────────────────────────────────────────────────────┤
-│                                                      │
-│  Playlist "Greatest Hits" created in Spotify!       │
-│                                                      │
-│  ✅ 42 tracks added                                  │
-│  ⚠️ 3 tracks not found (see details)                │
-│                                                      │
-│  [ View Not Found ]  [ Open in Spotify ]            │
-│                                                      │
-└─────────────────────────────────────────────────────┘
-```
+## 🏗️ Holistic Architectural Analysis (AlbumsView & PlaylistsView)
+
+### 1. The "God Object" Problem (AlbumsView.js)
+Current State: `AlbumsView.js` is ~1300 lines, handling too many responsibilities (Filtering, Search, Grid Rendering, Modal Logic, etc.).
+**Refactoring Strategy (Sprint 11)**:
+- By creating `TracksRankingComparison.js` (Container), we are **extracting** the complex ranking logic OUT of `VIEW` scope.
+- `AlbumsView.js` will no longer manually render track lists; it will simply mount the new Container.
+- **Impact**: Reduces `AlbumsView.js` complexity and prevents "spaghetti code" when adding a 3rd data source.
+
+### 2. Service Layer Pattern (PlaylistsView.js)
+Current State: `PlaylistsView.js` directly calls `albumsStore`, `playlistsStore`, and contains significant business logic in `handleGenerate`.
+**Refactoring Strategy (Sprint 11)**:
+- We introducing `SpotifyService.js` and `MusicKitService.js` to handle all external IO.
+- The View becomes a "dumb" consumer of services, moving towards a proper MVC/MVVM separation.
+- **Benefit**: Debugging "Export" issues will be isolated to the Service files, not the UI view file.
+
+### 3. Modularity & Reusability
+- **Container/Presenter**: The new `TracksRankingComparison` is context-agnostic. It works in the expanded Album Card, Inventory Modal, and future views without code availability duplication.
+- **Standardized Modals**: The `ExportProgressModal` standardizes the "Async Task UI" pattern, replacing ad-hoc loading states in `PlaylistsView`.
+
+**Clean Code Verdict**: This sprint is not just adding features; it is actively **reducing technical debt** by enforcing a strict separation between Data (Service), Logic (Container), and UI (Presenter) across the two main Views.
+
+---
+
+## Phase 6: Testing & Polish
 
 ---
 

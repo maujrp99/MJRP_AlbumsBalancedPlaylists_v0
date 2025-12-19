@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-18 23:20
+**Last Updated**: 2025-12-19 16:20
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -16,6 +16,16 @@
 
 ## 📑 Issue Index
 
+| # | Description | Status | Link |
+|---|-------------|--------|------|
+| #70 | Loading UX During Album Render | 🚧 IN PROGRESS | [Details](#issue-70-loading-ux-during-album-render) |
+| #69 | AlbumsView Duplicate Imports | ✅ RESOLVED | [Details](#issue-69-albumsview-duplicate-imports-syntaxerror) |
+| #68 | Router TypeError on Callback | ✅ RESOLVED | [Details](#issue-68-router-typeerror-on-callback-route) |
+| #67 | CSP Blocking Apple Music API | ✅ RESOLVED | [Details](#issue-67-csp-blocking-apple-music-api) |
+| #66 | CSP Blocking Firebase Source Maps | ✅ RESOLVED | [Details](#issue-66-csp-blocking-firebase-source-maps) |
+| #65 | CSP Blocking Spotify API | ✅ RESOLVED | [Details](#issue-65-csp-blocking-spotify-api) |
+| #64 | Spotify Redirect URI (localhost blocked) | ✅ RESOLVED | [Details](#issue-64-spotify-redirect-uri-localhost-blocked) |
+| #63 | Missing VITE_SPOTIFY_CLIENT_ID | ✅ RESOLVED | [Details](#issue-63-missing-vite_spotify_client_id) |
 | #62 | Sprint 9 Race Condition | ✅ RESOLVED | [L55](#issue-62-race-condition-albumsview-unmount) |
 | #61 | Regenerate Browser Freeze | ✅ RESOLVED | [L55](#issue-61-regenerate-browser-freeze) |
 | #60 | Scroll/DragDrop UX | ✅ RESOLVED | [L55](#issue-60-scroll-dragdrop-ux) |
@@ -57,6 +67,137 @@
 ---
 
 ## Current Debugging Session
+
+### Issues #63-70: Sprint 11 - Spotify Integration (2025-12-19)
+**Status**: 🔄 **MOSTLY RESOLVED** (1 pending)
+**Date**: 2025-12-19 12:00-16:00
+**Sprint**: Sprint 11 - Spotify Integration Phase 1-3
+
+---
+
+#### Issue #70: Loading UX During Album Render
+**Status**: 🚧 **IN PROGRESS**
+**Severity**: MEDIUM (UX)
+**Type**: User Experience
+
+**Problem**: Albums page shows inconsistent data during load - cards appear incrementally causing visual confusion.
+
+**Requested Solution**: Non-blocking loading indicator showing which album is being processed.
+
+**Files to Modify**: `AlbumsView.js`, `GlobalProgress.js`
+
+---
+
+#### Issue #69: AlbumsView Duplicate Imports (SyntaxError)
+**Status**: ✅ **RESOLVED**
+**Severity**: CRITICAL (App Blocked)
+
+**Problem**: 
+```
+SyntaxError: Identifier 'filterAlbumsFn' has already been declared
+```
+App stuck on "Loading..." screen.
+
+**Root Cause**: Previous edit accidentally duplicated import statements in `AlbumsView.js`.
+
+**Fix**: Removed duplicate import lines (filterAlbumsFn, getUniqueArtistsFn, renderScopedGridFn).
+
+**Files Modified**: `public/js/views/AlbumsView.js` (lines 28-36)
+
+---
+
+#### Issue #68: Router TypeError on Callback Route
+**Status**: ✅ **RESOLVED**
+**Severity**: MEDIUM
+
+**Problem**:
+```
+TypeError: Cannot read properties of null (reading 'render') at Router.renderView
+```
+
+**Root Cause**: `/callback` route returns `null` after processing OAuth redirect, but Router expected a view object with `render()` method.
+
+**Fix**: Added null check in `router.js` before calling `view.render()`.
+
+**Files Modified**: `public/js/router.js`
+
+---
+
+#### Issue #67: CSP Blocking Apple Music API
+**Status**: ✅ **RESOLVED**
+**Severity**: HIGH
+
+**Problem**: `Connecting to 'https://api.music.apple.com' violates Content Security Policy`
+
+**Fix**: Added `https://api.music.apple.com` to `connect-src` in CSP meta tag.
+
+**Files Modified**: `public/index.html`
+
+---
+
+#### Issue #66: CSP Blocking Firebase Source Maps
+**Status**: ✅ **RESOLVED**
+**Severity**: LOW (Dev only)
+
+**Problem**: Console spam with CSP violations for `firebase-firestore.js.map` from gstatic.com
+
+**Fix**: Added `https://*.gstatic.com` to `connect-src`.
+
+**Files Modified**: `public/index.html`
+
+---
+
+#### Issue #65: CSP Blocking Spotify API
+**Status**: ✅ **RESOLVED**
+**Severity**: HIGH
+
+**Problem**: Spotify OAuth token exchange blocked by CSP.
+
+**Fix**: Added `https://accounts.spotify.com` and `https://api.spotify.com` to `connect-src`.
+
+**Files Modified**: `public/index.html`
+
+---
+
+#### Issue #64: Spotify Redirect URI (localhost blocked)
+**Status**: ✅ **RESOLVED** (Updated 2025-12-19 16:26)
+**Severity**: HIGH
+
+**Problem**: Spotify Dashboard rejects `http://localhost:5000/callback` - error message: "localhost is not allowed as redirect URI"
+
+**Root Cause**: Spotify changed policy in 2024 to block "localhost" string.
+
+**Final Solution**: Custom local domain `mjrp.local`
+1. Add `127.0.0.1 mjrp.local` to hosts file (Windows/Mac)
+2. Updated `vite.config.js` with `host: 'mjrp.local'`
+3. Register `http://mjrp.local:5000/callback` in BOTH dashboards
+
+**Benefits**:
+- Single URL for both Spotify and Apple Music
+- Unified localStorage/cookies (no session splits)
+- Same experience as production
+
+**Setup Guide**: [LOCAL_DOMAIN_SETUP.md](../onboarding/LOCAL_DOMAIN_SETUP.md)
+
+**Files Modified**: `vite.config.js`, new doc created
+
+---
+
+#### Issue #63: Missing VITE_SPOTIFY_CLIENT_ID
+**Status**: ✅ **RESOLVED**
+**Severity**: HIGH
+
+**Problem**: Alert "Missing VITE_SPOTIFY_CLIENT_ID" despite `.env` file existing with correct variable.
+
+**Root Cause**: `vite.config.js` had `root: 'public'` which changed envDir to look inside `public/` instead of project root.
+
+**Fix**: Added `envDir: '../'` to `vite.config.js` to explicitly point to project root.
+
+**Files Modified**: `vite.config.js`
+
+**Lesson Learned**: When using non-root `root` config in Vite, must explicitly set `envDir`.
+
+---
 
 ### Issues #59-62: Sprint 9+10 Bugs - ALL RESOLVED (2025-12-18)
 **Status**: ✅ **RESOLVED**

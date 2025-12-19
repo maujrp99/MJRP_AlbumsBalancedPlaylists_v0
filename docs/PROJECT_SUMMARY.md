@@ -1,7 +1,7 @@
 # MJRP Albums Balanced Playlists — Project Summary
 
-**Version**: v2.7.2 (Production)  
-**Last Updated**: 2025-12-18
+**Version**: v2.9.0 (Production)  
+**Last Updated**: 2025-12-19
 
 ---
 
@@ -10,7 +10,7 @@
 The MJRP Playlist Generator, "The Album Blender," is a visionary platform aiming to be the definitive tool for music curation, empowering enthusiasts to transcend algorithmic bubbles by focusing on objectively balanced album-based playlists. It achieves this by integrating global acclaim ratings (from sources like BestEverAlbums and Musicboard) with AI enrichment (Google Gemini) to ensure musical inspiration meets data precision. Its future state is a multi-device, cloud-synced ecosystem providing a seamless experience and native integration with major streaming services, Apple Music and Spotify in the future.
 
 ### Current Status ✅ Production Stable
-- **v2.7.2** (Sprint 10 Refactoring in progress)
+- **v2.9.0** (Sprint 11: Spotify Integration - Phase 3 in progress)
 - Frontend: `https://mjrp-playlist-generator.web.app`
 - Backend API: Cloud Run (`mjrp-proxy`)
 - Core features operational
