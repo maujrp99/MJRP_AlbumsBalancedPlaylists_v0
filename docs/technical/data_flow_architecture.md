@@ -15,6 +15,7 @@ This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** fo
 - **v2.8.0**: Playlist generation uses **Algorithm Strategy Pattern** (see [ALGORITHM_MENU.md](specs/ALGORITHM_MENU.md))
 - **Sprint 11**: Spotify integration with auto-enrichment
 - **Sprint 11.5**: **Event-Driven Persistence** for enrichment (Fix #58) & `AlbumsStateController` introduction.
+- **Sprint 11.5**: **Ranking Strategy Pattern** fully implemented (Balanced, Spotify, BEA).
 
 ---
 
@@ -200,38 +201,42 @@ sequenceDiagram
 
 ---
 
-## Scenario 2: Navigate to Playlists & Generate
+
+## Scenario 2: Navigate to Playlists & Generate (with Ranking Strategy)
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant AlbumsView
-    participant Router
-    participant PlaylistsView
-    participant AlbumsStore
-    participant AlgorithmRegistry
-    participant PlaylistsStore
+    participant View as PlaylistsView
+    participant Store as AlbumsStore
+    participant RankingFactory as Ranking/Index
+    participant Strategy as RankingStrategy
+    participant Algorithm as MJRPBalancedCascade
+    participant PStore as PlaylistsStore
     
-    User->>AlbumsView: Click "Generate Playlists"
-    AlbumsView->>Router: navigate('/playlists')
-    Router->>AlbumsView: destroy()
+    User->>View: Select "Spotify Ranking"
+    User->>View: Click "Generate"
     
-    Note over AlbumsView,AlbumsStore: ✅ NO reset() - Store persists!
+    View->>RankingFactory: createRankingStrategy('spotify')
+    RankingFactory-->>View: strategyInstance
     
-    Router->>PlaylistsView: mount()
-    PlaylistsView->>AlbumsStore: getAlbums()
-    AlbumsStore-->>PlaylistsView: [albums] ✅ Data available
+    View->>Store: getAlbums()
+    Store-->>View: [albums]
     
-    PlaylistsView->>PlaylistsView: render algorithm selector
+    View->>Algorithm: generate(albums, { strategy })
     
-    User->>PlaylistsView: Select algorithm & Click "Generate"
-    PlaylistsView->>AlgorithmRegistry: createAlgorithm(selectedId)
-    AlgorithmRegistry-->>PlaylistsView: algorithm instance
-    PlaylistsView->>PlaylistsView: algorithm.generate(albums)
-    PlaylistsView->>PlaylistsStore: setPlaylists(playlists)
-    PlaylistsStore-->>PlaylistsView: [playlists]
-    PlaylistsView->>PlaylistsView: render playlists
+    loop For each album
+        Algorithm->>Strategy: rank(album)
+        Strategy->>Strategy: Sort tracks by popular/rating
+        Strategy-->>Algorithm: [rankedTracks]
+    end
+    
+    Algorithm->>Algorithm: Distribute playlists
+    Algorithm-->>View: { playlists }
+    
+    View->>PStore: setPlaylists(playlists)
 ```
+
 
 ---
 

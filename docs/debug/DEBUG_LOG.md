@@ -36,6 +36,24 @@
 
 ## Current Debugging Session
 
+### Issue #88: Ranking Strategy Selection Ignored
+**Status**: ✅ **RESOLVED**
+**Severity**: HIGH
+**Problem**: Selecting "Spotify Popularity" strategy in the UI did not affect the output; the algorithm continued using the default "Balanced" strategy.
+**Root Cause**: `PlaylistsView.js` was creating the `RankingStrategy` instance but failing to pass it into the `algorithm.generate()` method options.
+**Fix**: Updated `PlaylistsView.js` to correctly pass `{ rankingStrategy }` in the options object.
+
+### Issue #87: Spotify Enrichment Persistence Failure
+**Status**: ✅ **RESOLVED**
+**Severity**: CRITICAL
+**Problem**: After clicking "Enrich with Spotify", the data appeared on screen but was lost upon navigating to "Playlists" view, causing Ranking Strategies to fail (fallback to Acclaim).
+**Root Cause**: The `AlbumsView` logic to persist data was missing listeners for the new `album-enriched` event defined in Sprint 11.5. Additionally, `AlbumsStateController` had an invalid dynamic import for Firestore.
+**Fix**: 
+1. Added `album-enriched` listener in `AlbumsView.js`.
+2. Fixed DB import path in `AlbumsStateController.js`.
+3. Validated event flow from Component -> View -> Controller -> Store -> DB.
+
+
 ### Issue #82: TopNav Highlight Bug
 **Status**: 🔍 **INVESTIGATING**
 **Severity**: LOW
