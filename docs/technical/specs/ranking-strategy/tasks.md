@@ -29,8 +29,10 @@
 - [x] Verify functionality with visual check.
 
 ## 5. Verification
-- [ ] Browser Test: Select "Spotify", Generate, Check Track Order.
-- [ ] Browser Test: Select "BEA", Generate, Check Track Order.
+- [x] Browser Test: Select "Spotify", Generate, Check Track Order.
+- [x] Browser Test: Select "BEA", Generate, Check Track Order.
+- [x] **Verified Persistence**: Enriched data saves to DB.
+- [x] **Verified UI**: Time/Duration column visible.
 
 ## 6. Documentation (Post-Implementation)
 - [ ] Update `docs/technical/data_flow_architecture.md` (Architecture Docs)
