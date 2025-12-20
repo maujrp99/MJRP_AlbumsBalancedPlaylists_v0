@@ -1,7 +1,7 @@
 # MJRP Albums Balanced Playlists — Project Summary
 
-**Version**: v2.9.0 (Production)  
-**Last Updated**: 2025-12-19
+**Version**: v2.12.0 (Production Stable)  
+**Last Updated**: 2025-12-20
 
 ---
 
@@ -16,22 +16,21 @@ The MJRP Playlist Generator, "The Album Blender," is a visionary platform aiming
 - Core features operational
 
 > [!NOTE]
-> **Recent Updates (Sprint 10)**:
-> - 🟢 **Codebase Refactoring**: 9 modular files created (~1,125 lines)
-> - 🟢 **AlbumsView.js**: 1,837 → 1,524 lines (-17%)
-> - 🟢 **PlaylistsView.js**: 891 → 756 lines (-15%)
-> - 🟢 **Deleted**: `app.legacy.js` (47KB savings)
-> - 🟢 **New Modules**: `views/albums/`, `views/playlists/`, `server/routes/`
-
+> **Recent Updates (Sprint 12.0)**:
+> - 🟢 **Ranking Strategy Selection**: Decoupled ranking from algorithms (Spotify, BEA, Balanced).
+> - 🟢 **Persistence Fix**: Real-time Firestore sync for Spotify enrichment data.
+> - 🟢 **UI Refinement**: Restored Duration/Time column in Comparison Table.
+> - 🟢 **Modularization**: `AlbumsView.js` refactor in progress (Event-driven controller introduced).
 ---
 
 ## Core Features
 
-### 1. Track Ranking Consolidation
-- **Scraper-first approach**: BestEverAlbums track ratings when available
-- **AI enrichment**: Google Gemini fills gaps for partial/missing data
-- **Borda count consolidation**: Normalizes rankings from multiple sources
-- **Fuzzy matching**: Token-overlap heuristics handle title variants
+### 1. Track Ranking & Strategy Selection
+- **Ranking Strategy Pattern**: Toggle between "Balanced", "Spotify Popularity", or "BEA Rating".
+- **Scraper-first approach**: BestEverAlbums track ratings when available.
+- **Spotify Enrichment**: Fetches real-time popularity and track durations.
+- **Borda count consolidation**: Normalizes rankings from multiple sources.
+- **Fuzzy matching**: Token-overlap heuristics handle title variants.
 
 ### 2. Balanced Playlist Generation
 - **P1/P2 selection**: Top 2 acclaimed tracks per album

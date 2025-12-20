@@ -1,8 +1,8 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-19
-**Current Version**: v2.11.0
-**Current Sprint**: Sprint 12: Critical Fixes & Architecture Refactor
+**Last Updated**: 2025-12-20
+**Current Version**: v2.12.0
+**Current Sprint**: Sprint 12: Critical Fixes & Refactor (Phase 1 Done)
 
 ---
 
@@ -15,15 +15,18 @@
 **Status**: 🔄 **IN PROGRESS**
 **Branch**: `feature/albumsview-refactor`
 
-#### Part A: Bug Fixes (UAT Blockers)
-- [ ] **Critical: Wrong Tracks in Ranking Table (#71)**
-  - Investigation using new documentation flows
-  - Fix Album ID passing in `ExpandedStrategy`
-  - Verify track reference isolation
+#### Part A: Bug Fixes & Ranking Strategy (COMPLETED ✅)
+- [x] **Critical: Wrong Tracks in Ranking Table (#71)**
+  - Fixed Album ID passing and data flow in `TracksRankingComparison`
+  - Restored **Duration/Time** column for verification
+- [x] **Ranking Strategy Pattern Implementation**
+  - Decoupled ranking logic (Balanced, Spotify, BEA) from algorithms
+  - Integrated UI selectors in `PlaylistsView`
+- [x] **Event-Driven Persistence Fix (#58/87)**
+  - Fixed "Enrich Data" not saving to Firestore (Data loss on navigation bug)
+  - Standardized Firebase DB injection in `AlbumsStateController`
 - [ ] **Loading UX Improvements (#70)**
-  - Smoother transition between skeleton and multi-source ranking
-- [ ] **Badge Display Verification (#58)**
-  - Ensure "PENDING" is correctly replaced by "ACCLAIM" or "POPULARITY"
+  - Smoother transition between skeleton and multi-source ranking (In Progress)
 
 #### Part B: AlbumsView Modularization
 - [ ] **Break down God-File**
