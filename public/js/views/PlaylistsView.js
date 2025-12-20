@@ -9,6 +9,7 @@ import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
 import Sortable from 'sortablejs'
 import { getAllAlgorithms, getRecommendedAlgorithm, createAlgorithm } from '../algorithms/index.js'
+import { createRankingStrategy, BalancedRankingStrategy, SpotifyRankingStrategy, BEARankingStrategy } from '../ranking/index.js'
 
 // Sprint 10: Modular components
 import { handleExportJson as handleExportJsonFn, handleExportToAppleMusic as handleExportToAppleMusicFn } from './playlists/index.js'
@@ -30,6 +31,9 @@ export class PlaylistsView extends BaseView {
     // Algorithm selection
     const recommended = getRecommendedAlgorithm()
     this.selectedAlgorithmId = recommended ? recommended.id : 's-draft-balanced'
+
+    // Ranking Strategy selection
+    this.selectedRankingId = 'balanced'
   }
 
   async render(params) {
@@ -65,9 +69,9 @@ export class PlaylistsView extends BaseView {
           </div>
         </header>
 
-        <!-- Algorithm Selector (Always visible) -->
+        <!-- Generation Settings (Algorithm + Ranking) -->
         <div id="algorithmSection" class="mb-6 fade-in" style="animation-delay: 0.05s">
-          ${this.renderAlgorithmSelector(playlists.length > 0)}
+          ${this.renderSettingsSection(playlists.length > 0)}
         </div>
 
         <!-- Export Section (Only when playlists exist) -->
@@ -113,13 +117,33 @@ export class PlaylistsView extends BaseView {
       if (redoBtn) this.on(redoBtn, 'click', () => this.handleRedo())
     }
 
-    // Update Algorithm Section (always visible)
+    // Update Settings Section
     const algorithmSection = this.$('#algorithmSection')
     if (algorithmSection) {
-      algorithmSection.innerHTML = this.renderAlgorithmSelector(playlists.length > 0)
-      // Attach generate button listener
+      algorithmSection.innerHTML = this.renderSettingsSection(playlists.length > 0)
+
       const generateBtn = this.$('#generateBtn')
       if (generateBtn) this.on(generateBtn, 'click', () => this.handleGenerate())
+
+      // Attach listener for ranking strategy dropdown if needed (though it's standard input)
+      const rankingSelect = this.$('#rankingStrategySelect')
+      if (rankingSelect) {
+        this.on(rankingSelect, 'change', (e) => {
+          this.selectedRankingId = e.target.value
+          // Update description dynamically
+          const rankingStrategies = [
+            BalancedRankingStrategy.metadata,
+            SpotifyRankingStrategy.metadata,
+            BEARankingStrategy.metadata
+          ]
+          const selectedStrat = rankingStrategies.find(s => s.id === this.selectedRankingId)
+          const descriptionEl = this.$('#rankingDescription')
+          if (descriptionEl && selectedStrat) {
+            descriptionEl.textContent = selectedStrat.description
+          }
+          console.log('[PlaylistsView] Selected ranking strategy:', this.selectedRankingId)
+        })
+      }
     }
 
     // Update Main Content logic
@@ -204,52 +228,83 @@ export class PlaylistsView extends BaseView {
   }
 
   /**
-   * Render algorithm selector - always visible
-   * @param {boolean} hasPlaylists - Whether playlists already exist
+   * Render consolidated Settings Section (Algorithm + Ranking)
    */
-  renderAlgorithmSelector(hasPlaylists = false) {
+  renderSettingsSection(hasPlaylists = false) {
     const albums = albumsStore.getAlbums()
     const albumCount = albums.length
     const algorithms = getAllAlgorithms()
 
-    if (albumCount === 0) {
-      return '' // No albums, show warning in main content instead
-    }
+    if (albumCount === 0) return ''
 
-    const buttonText = hasPlaylists ? 'Regenerate with Selected Algorithm' : 'Generate Playlists'
+    const buttonText = hasPlaylists ? 'Regenerate Playlists' : 'Generate Playlists'
     const buttonIcon = hasPlaylists ? 'Refresh' : 'Rocket'
 
+    // Ranking Strategies Metadata
+    const rankingStrategies = [
+      BalancedRankingStrategy.metadata,
+      SpotifyRankingStrategy.metadata,
+      BEARankingStrategy.metadata
+    ]
+
     return `
-      <div class="algorithm-section glass-panel p-6">
+      <div class="settings-section glass-panel p-6">
         <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
-          ${getIcon('Settings', 'w-5 h-5')} Algorithm Selection
+          ${getIcon('Settings', 'w-5 h-5')} Generation Settings
         </h3>
-        <p class="text-muted text-sm mb-4">
-          ${hasPlaylists
-        ? `Choose a different algorithm to regenerate playlists from your ${albumCount} albums.`
-        : `Select an algorithm to generate playlists from your ${albumCount} ranked albums.`}
-        </p>
         
-        <div class="algorithm-options grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-          ${algorithms.map(algo => `
-            <label class="algorithm-option flex items-start gap-3 p-4 rounded-xl border transition-all cursor-pointer
-              ${this.selectedAlgorithmId === algo.id
-            ? 'border-accent-primary bg-accent-primary/10'
-            : 'border-white/10 bg-white/5 hover:border-white/20'}">
-              <input type="radio" name="algorithm" value="${algo.id}" 
-                ${this.selectedAlgorithmId === algo.id ? 'checked' : ''}
-                class="mt-1 accent-accent-primary" />
-              <div class="flex-1 text-left">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="font-semibold text-sm">${algo.name}</span>
-                  <span class="badge ${algo.isRecommended ? 'badge-success' : algo.badge === 'LEGACY' ? 'badge-warning' : 'badge-neutral'} text-xs">
-                    ${algo.badge}
-                  </span>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+            <!-- Left: Algorithm Selection (Output) -->
+            <div class="lg:col-span-8">
+                <label class="block text-sm font-medium text-muted mb-3">1. Distribution Algorithm (Output)</label>
+                <div class="algorithm-options grid grid-cols-1 md:grid-cols-2 gap-3">
+                  ${algorithms.map(algo => `
+                    <label class="algorithm-option flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer h-full
+                      ${this.selectedAlgorithmId === algo.id
+        ? 'border-accent-primary bg-accent-primary/10'
+        : 'border-white/10 bg-white/5 hover:border-white/20'}">
+                      <input type="radio" name="algorithm" value="${algo.id}" 
+                        ${this.selectedAlgorithmId === algo.id ? 'checked' : ''}
+                        class="mt-1 accent-accent-primary" />
+                      <div class="flex-1 text-left">
+                        <div class="flex items-center gap-2 mb-1">
+                          <span class="font-semibold text-sm">${algo.name}</span>
+                          <span class="badge ${algo.isRecommended ? 'badge-success' : algo.badge === 'LEGACY' ? 'badge-warning' : 'badge-neutral'} text-[10px] px-1.5 py-0.5">
+                            ${algo.badge}
+                          </span>
+                        </div>
+                        <p class="text-xs text-muted line-clamp-2">${algo.description}</p>
+                      </div>
+                    </label>
+                  `).join('')}
                 </div>
-                <p class="text-xs text-muted">${algo.description}</p>
-              </div>
-            </label>
-          `).join('')}
+            </div>
+
+            <!-- Right: Ranking Strategy (Input) -->
+            <div class="lg:col-span-4">
+                 <label class="block text-sm font-medium text-muted mb-3">2. Ranking Source (Input)</label>
+                 <div class="bg-white/5 rounded-xl border border-white/10 p-4 h-full">
+                    <p class="text-xs text-muted mb-3">
+                        Choose the "Source of Truth" for how tracks are ranked (S-Tier vs Deep Cuts).
+                    </p>
+                    <select id="rankingStrategySelect" class="w-full bg-black/40 border border-white/10 rounded-lg p-2.5 text-sm focus:border-accent-primary focus:outline-none transition-colors">
+                        ${rankingStrategies.map(strat => `
+                            <option value="${strat.id}" ${this.selectedRankingId === strat.id ? 'selected' : ''}>
+                                ${strat.name}
+                            </option>
+                        `).join('')}
+                    </select>
+                    
+                    <div class="mt-4 p-3 bg-white/5 rounded-lg border border-white/5">
+                        <div class="flex items-start gap-2">
+                             ${getIcon('Info', 'w-4 h-4 text-accent-primary mt-0.5')}
+                             <p class="text-xs text-muted" id="rankingDescription">
+                                ${rankingStrategies.find(s => s.id === this.selectedRankingId)?.description || ''}
+                             </p>
+                        </div>
+                    </div>
+                 </div>
+            </div>
         </div>
 
         <button class="btn ${hasPlaylists ? 'btn-warning' : 'btn-primary'} btn-large w-full justify-center" id="generateBtn">
@@ -257,6 +312,11 @@ export class PlaylistsView extends BaseView {
         </button>
       </div>
     `
+  }
+
+  // Backwards compatibility shim
+  renderAlgorithmSelector(hasPlaylists) {
+    return this.renderSettingsSection(hasPlaylists)
   }
 
   /**
@@ -629,7 +689,26 @@ export class PlaylistsView extends BaseView {
       this.selectedAlgorithmId = selectedRadio.value
     }
 
-    console.log('[PlaylistsView] Generating playlists with algorithm:', this.selectedAlgorithmId)
+    // Get selected ranking strategy
+    const rankingSelect = this.container.querySelector('#rankingStrategySelect')
+    if (rankingSelect) {
+      this.selectedRankingId = rankingSelect.value
+    }
+
+    console.log('[PlaylistsView] Generating with:', {
+      algorithm: this.selectedAlgorithmId,
+      ranking: this.selectedRankingId
+    })
+
+    // VALIDATION: Check if data exists for selected strategy
+    if (this.selectedRankingId === 'spotify') {
+      const hasSpotifyData = albums.some(a => a.tracks?.some(t => t.spotifyPopularity !== undefined && t.spotifyPopularity > -1))
+      if (!hasSpotifyData) {
+        if (!confirm('⚠️ No Spotify Popularity data detected! The "Spotify Popularity" strategy will fallback to Acclaim ratings.\n\nTip: Go to Albums view and run "Enrich with Spotify" first.\n\nContinue anyway?')) {
+          return
+        }
+      }
+    }
 
     this.isGenerating = true
     this.update()
@@ -644,7 +723,11 @@ export class PlaylistsView extends BaseView {
 
       // Generate playlists using selected algorithm
       console.log('[PlaylistsView] Using algorithm:', algorithm.constructor.getMetadata().name)
-      const result = algorithm.generate(albums)
+
+      const { createRankingStrategy } = await import('../ranking/index.js')
+      const rankingStrategy = createRankingStrategy(this.selectedRankingId)
+
+      const result = algorithm.generate(albums, { rankingStrategy })
 
       // Transform result to playlist format expected by store
       // Add numbering prefix to playlist names (user requested)

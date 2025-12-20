@@ -176,7 +176,7 @@ export class AlbumsView extends BaseView {
       </div>
 
       <!-- Filters Section -->
-      <div class="filters-section glass-panel p-4 mb-6 fade-in" style="animation-delay: 0.1s">
+      <div class="filters-section glass-panel p-4 mb-6 fade-in relative" style="animation-delay: 0.1s">
         <div class="filters-row flex flex-wrap gap-3 items-center">
           <!-- Search -->
           <div class="search-bar relative flex-1 min-w-[200px]">
@@ -268,10 +268,11 @@ export class AlbumsView extends BaseView {
             ${this.viewStrategy.getButtonLabel()}
           </button>
         </div>
+        
+        <!-- Loading Progress Anchor (Managed by InlineProgress) -->
+        <div id="loading-progress-container" class="w-full mt-4 empty:hidden"></div>
       </div>
     </header>
-
-    ${this.isLoading ? this.renderLoadingProgress() : ''}
 
     <!-- Content Container (Grid or List handled by renderScoped methods) -->
     <div id="albumsContainer">
@@ -443,6 +444,14 @@ export class AlbumsView extends BaseView {
       console.warn('[AlbumsView] Progress container not found, falling back to app container')
       this.inlineProgress = new InlineProgress(this.container)
     }
+
+    // Sprint 11: Listen for persistence events from child components (e.g. TracksRankingComparison)
+    this.on(this.container, 'album-enriched', (e) => {
+      const album = e.detail.album
+      console.log('[AlbumsView] Received album-enriched event:', album.title)
+      this.controller.persistAlbum(album)
+      // Toast is handled by component usually, but we can confirm save
+    })
 
     // Attach breadcrumb listeners
     Breadcrumb.attachListeners(this.container)

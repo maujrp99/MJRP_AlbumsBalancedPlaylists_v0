@@ -374,6 +374,38 @@ export const SpotifyService = {
     },
 
     /**
+     * Create multiple playlists for a series (e.g. "Series - S Tier", "Series - A Tier")
+     * @param {Array<{name: string, tracks: Array<{spotifyUri: string}>}>} playlistsData 
+     * @param {string} seriesNamePrefix 
+     * @param {Function} onProgress (current, total, message) => void
+     */
+    async createSeriesPlaylists(playlistsData, seriesNamePrefix, onProgress) {
+        const totalPlaylists = playlistsData.length
+        let createdCount = 0
+
+        for (const playlistData of playlistsData) {
+            const playlistName = `${seriesNamePrefix} - ${playlistData.name}`
+            createdCount++
+
+            if (onProgress) {
+                onProgress(createdCount, totalPlaylists, `Creating "${playlistName}"...`)
+            }
+
+            // 1. Create Playlist
+            const playlist = await this.createPlaylist(playlistName, `Part of ${seriesNamePrefix} series`)
+
+            // 2. Add Tracks
+            const uris = playlistData.tracks.map(t => t.spotifyUri).filter(Boolean)
+            if (uris.length > 0) {
+                if (onProgress) {
+                    onProgress(createdCount, totalPlaylists, `Adding ${uris.length} tracks to "${playlistName}"...`)
+                }
+                await this.addTracksToPlaylist(playlist.id, uris)
+            }
+        }
+    },
+
+    /**
      * Add tracks to a playlist
      * @param {string} playlistId 
      * @param {Array<string>} trackUris - Array of Spotify track URIs

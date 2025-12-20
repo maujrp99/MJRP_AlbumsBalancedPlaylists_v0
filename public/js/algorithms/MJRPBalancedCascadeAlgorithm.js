@@ -13,7 +13,7 @@
  */
 
 import { BaseAlgorithm } from './BaseAlgorithm.js'
-import { LegacyRoundRobinAlgorithm } from './LegacyRoundRobinAlgorithm.js'
+import { BalancedRankingStrategy } from '../ranking/BalancedRankingStrategy.js'
 
 const GREATEST_HITS_MAX = 60 * 60 // 60 minutes
 const DEEP_CUTS_MAX = 48 * 60 // 48 minutes (strict)
@@ -34,9 +34,6 @@ export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
         this.deepCutsMax = opts.deepCutsMax || DEEP_CUTS_MAX
         this.minimumDuration = opts.minimumDuration || MINIMUM_DURATION
 
-        // Use Legacy for enrichTracks
-        this._legacyHelper = new LegacyRoundRobinAlgorithm(opts)
-
         this.defaultRankingSource = this.registerRankingSource(opts.defaultRankingSource || {
             name: 'MJRP Balanced Cascade',
             type: 'internal',
@@ -49,12 +46,22 @@ export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
      * Generate playlists using MJRP Balanced Cascade algorithm
      */
     generate(albums, opts = {}) {
-        // Phase 1: Preparation
-        const workingAlbums = (albums || []).map((album, albumIndex) => ({
-            ...album,
-            tracks: this._legacyHelper.enrichTracks(album),
-            _albumIndex: albumIndex
-        }))
+        // Phase 1: Preparation (Input Adaptation Phase)
+        // Use injected strategy or default to Balanced
+        const strategy = opts.rankingStrategy || new BalancedRankingStrategy()
+
+        console.log(`[MJRPBalancedCascadeAlgorithm] Using properties:`, strategy.constructor.name)
+
+        const workingAlbums = (albums || []).map((album, albumIndex) => {
+            // DECOUPLED: Use the strategy to rank tracks
+            const rankedTracks = strategy.rank(album)
+
+            return {
+                ...album,
+                tracks: rankedTracks,
+                _albumIndex: albumIndex
+            }
+        })
 
         const playlists = []
         const allAlbumIds = new Set()
@@ -77,17 +84,13 @@ export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
 
             if (!Array.isArray(album.tracks) || album.tracks.length === 0) continue
 
-            // Sort tracks by rank
-            const sortedTracks = [...album.tracks].sort((a, b) => {
-                const rankA = a.acclaimRank ?? a.rank ?? Number.POSITIVE_INFINITY
-                const rankB = b.acclaimRank ?? b.rank ?? Number.POSITIVE_INFINITY
-                return rankA - rankB
-            })
+            // Strategy has already sorted tracks and assigned _rank (1-based)
+            const sortedTracks = album.tracks // Trust the input strategy
 
             albumTrackCounts.set(album.id, sortedTracks.length)
 
             // Collect rank #1
-            if (sortedTracks[0]) {
+            if (sortedTracks.length > 0 && sortedTracks[0]._rank === 1) {
                 const t1 = { ...sortedTracks[0] }
                 this.markTrackOrigin(t1, album.id)
                 this.annotateTrack(t1, 'Greatest Hit #1', this.defaultRankingSource, 1)
@@ -95,7 +98,7 @@ export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
             }
 
             // Collect rank #2
-            if (sortedTracks[1]) {
+            if (sortedTracks.length > 1 && sortedTracks[1]._rank === 2) {
                 const t2 = { ...sortedTracks[1] }
                 this.markTrackOrigin(t2, album.id)
                 this.annotateTrack(t2, 'Greatest Hit #2', this.defaultRankingSource, 0.95)
@@ -103,9 +106,8 @@ export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
             }
 
             // Remaining tracks #3+ with rank info
-            const remaining = sortedTracks.slice(2).map((t, idx) => {
+            const remaining = sortedTracks.slice(2).map((t) => {
                 const copy = { ...t }
-                copy._rank = idx + 3 // rank #3, #4, #5...
                 this.markTrackOrigin(copy, album.id)
                 return copy
             })
@@ -152,7 +154,8 @@ export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
         const firstDeepCutIndex = playlists.length
 
         // Calculate numDC based on minTracks - 2
-        const minTracksPerAlbum = Math.min(...Array.from(albumTrackCounts.values()))
+        const counts = Array.from(albumTrackCounts.values())
+        const minTracksPerAlbum = counts.length > 0 ? Math.min(...counts) : 0
         const numDC = Math.max(1, minTracksPerAlbum - 2)
         const maxRankInFirstPass = numDC + 2 // e.g., if numDC=7, first pass covers #3-#9
 

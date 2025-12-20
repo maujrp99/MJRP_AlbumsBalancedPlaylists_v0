@@ -132,11 +132,9 @@ export class AlbumsStateController {
     async persistAlbum(album) {
         try {
             // Lazy import store to avoid circular deps if needed, 
-            // or assume it's available globally/in scope. 
             // Better: Pass store in constructor or use global store singleton pattern used in app.
             const { albumsStore } = await import('../../stores/albums.js')
-            const { getFirestore } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js')
-            const db = getFirestore()
+            const { db } = await import('../../firebase-init.js')
 
             await albumsStore.updateAlbum(db, album)
             console.log(`[AlbumsStateController] Persisted album: ${album.title}`)

@@ -17,7 +17,8 @@ export class TracksTable {
             { id: 'position', label: '#', icon: 'Hash', width: 'w-16' },
             { id: 'title', label: 'Track Name', width: 'flex-1' },
             { id: 'rank', label: 'Acclaim', icon: 'Award', width: 'w-32', align: 'center' },
-            { id: 'spotifyPopularity', label: 'Popularity', icon: 'SpotifyConfig', width: 'w-48', align: 'left' } // Changed align to left for bars
+            { id: 'spotifyPopularity', label: 'Popularity', icon: 'SpotifyConfig', width: 'w-48', align: 'left' },
+            { id: 'duration', label: 'Time', icon: 'Clock', width: 'w-20', align: 'right' }
         ]
 
         return headers.map(h => {
@@ -101,8 +102,10 @@ export class TracksTable {
             }
                 </div>
 
-                <!-- Duration Hidden -->
-
+                <!-- Duration -->
+                <div class="w-20 px-4 py-3 text-right text-white/50 font-mono text-xs group-hover:text-white">
+                    ${time}
+                </div>
             </div>
         `
     }
