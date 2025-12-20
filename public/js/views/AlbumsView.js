@@ -3,6 +3,7 @@ import { albumsStore } from '../stores/albums.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { apiClient } from '../api/client.js'
 import { router } from '../router.js'
+import { globalProgress } from '../components/GlobalProgress.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { albumLoader } from '../services/AlbumLoader.js'
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
@@ -1054,6 +1055,9 @@ export class AlbumsView extends BaseView {
       // 2. Resolve Queries
       let queriesToLoad = []
 
+      // Start global progress for the batch load
+      globalProgress.start()
+
       if (scopeType === 'ALL') {
         await albumSeriesStore.loadFromFirestore() // Ensure we have latest series list
         const allSeries = albumSeriesStore.getSeries()
@@ -1216,6 +1220,7 @@ export class AlbumsView extends BaseView {
       toast.error('Error loading albums. Please try again.')
     } finally {
       this.isLoading = false
+      globalProgress.finish()
 
       // Remove loading overlay
       const overlay = this.$('.loading-overlay')
