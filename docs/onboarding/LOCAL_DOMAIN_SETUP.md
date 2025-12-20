@@ -1,24 +1,24 @@
-# Local Development Setup: Custom Domain (mjrp.local)
+# Local Development Setup: Custom Domain (mjrp.local) (INVALID, NOT DONE!!!!!!)
 
 **Created**: 2025-12-19
 **Purpose**: Unified OAuth development for Spotify + Apple Music
 
 ---
 
-## Why This Is Needed
+## Why This Is Needed (NOT DONE!!!!!!)
 
 Both Spotify and Apple Music require redirect URIs for OAuth:
 - **Spotify** (2024+): Blocks `localhost`, only accepts IP or custom domains
 - **Apple Music**: Works with `localhost` but also accepts custom domains
 
-Using a **custom local domain** (`mjrp.local`) solves both:
+Using a **custom local domain** (`mjrp.local`) solves both: 
 - ✅ Single URL for all services
 - ✅ Unified localStorage/cookies (no session splits)
 - ✅ Same experience as production
 
 ---
 
-## Setup Instructions
+## Setup Instructions (NOT DONE!!!!!!)
 
 ### Windows (Required once per machine)
 
@@ -40,7 +40,7 @@ Using a **custom local domain** (`mjrp.local`) solves both:
 
 ---
 
-### macOS (Required once per machine)
+### macOS (Required once per machine) (NOT DONE!!!!!!)
 
 1. **Open Terminal**
 
@@ -85,7 +85,7 @@ Using a **custom local domain** (`mjrp.local`) solves both:
 
 ---
 
-## Running the App
+## Running the App 
 
 After hosts file setup:
 

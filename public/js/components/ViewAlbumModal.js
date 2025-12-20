@@ -1,22 +1,31 @@
 /**
  * ViewAlbumModal Component
  * Shows album details including tracks, format, condition, notes
+ * MODERNIZED: Uses TracksRankingComparison to match Expanded View UX
  */
 
 import { getIcon } from './Icons.js'
+import { TracksRankingComparison } from './ranking/TracksRankingComparison.js'
+import { Album } from '../models/Album.js'
 
-export function showViewAlbumModal(album) {
+export async function showViewAlbumModal(albumInput) {
   const modal = document.createElement('div')
   modal.className = 'modal-overlay'
-  const activeData = album.albumData || album // FIX: Handle both inventory wrappers and raw album objects
+
+  // Hydrate Album Model if needed (handle wrappers or POJOs)
+  const rawData = albumInput.albumData || albumInput
+  const album = rawData instanceof Album ? rawData : new Album(rawData)
+
+  // Render Skeleton Shell
   modal.innerHTML = `
-    <div class="modal-container glass-panel max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden flex flex-col">
+    <div class="modal-container glass-panel max-w-5xl w-full mx-4 max-h-[95vh] min-h-[75vh] overflow-hidden flex flex-col shadow-2xl animate-fade-in-up">
       <!-- Header -->
-      <div class="modal-header p-6 border-b border-surface-light flex items-start gap-4">
+      <div class="modal-header p-6 border-b border-surface-light flex items-start gap-6 bg-surface-darker/50 backdrop-blur-md">
         <!-- Album Cover -->
-        <div class="w-24 h-24 bg-surface-dark rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
-          ${activeData?.coverUrl ? `
-            <img src="${activeData.coverUrl}" alt="${escapeHtml(album.title)}" class="w-full h-full object-cover" />
+        <div class="w-24 h-24 md:w-32 md:h-32 bg-surface-dark rounded-xl shadow-lg flex items-center justify-center flex-shrink-0 overflow-hidden relative group">
+          ${album.coverUrl ? `
+            <img src="${album.coverUrl}" alt="${escapeHtml(album.title)}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
           ` : `
             <div class="text-gray-600">
               ${getIcon('Disc', 'w-12 h-12')}
@@ -24,127 +33,82 @@ export function showViewAlbumModal(album) {
           `}
         </div>
         
-        <div class="flex-1 min-w-0">
-          <h2 class="text-2xl font-bold truncate">${escapeHtml(album.title)}</h2>
-          <p class="text-lg text-gray-400">${escapeHtml(album.artist)}</p>
-          <div class="flex items-center gap-3 mt-2 text-sm text-gray-500">
-            ${album.year ? `<span>${album.year}</span>` : ''}
-            ${album.format ? `<span class="badge badge-neutral">${album.format.toUpperCase()}</span>` : ''}
+        <div class="flex-1 min-w-0 pt-1">
+          <h2 class="text-2xl md:text-3xl font-bold truncate text-white leading-tight">${escapeHtml(album.title)}</h2>
+          <p class="text-xl text-accent-primary font-medium mb-2">${escapeHtml(album.artist)}</p>
+          
+          <div class="flex flex-wrap items-center gap-3 mt-3 text-sm text-gray-400">
+            ${album.year ? `<span class="px-2 py-0.5 bg-surface-light rounded-md border border-white/5">${album.year}</span>` : ''}
+            ${album.format ? `<span class="badge badge-neutral uppercase text-xs tracking-wider">${album.format}</span>` : ''}
             ${album.owned !== false ? `<span class="badge badge-success">OWNED</span>` : `<span class="badge badge-neutral">WISHLIST</span>`}
           </div>
-        </div>
-        
-        <button class="btn btn-ghost btn-circle ml-auto" data-action="close">
-          ${getIcon('X', 'w-6 h-6')}
-        </button>
-      </div>
 
-      <!-- Content -->
-      <div class="modal-content p-6 overflow-y-auto custom-scrollbar flex-1">
-        <!-- Album Info Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          ${album.purchasePrice ? `
-            <div class="stat-card bg-surface-dark p-3 rounded-lg">
-              <p class="text-xs text-gray-500 mb-1">Purchase Price</p>
-              <p class="font-bold text-accent-primary">${formatCurrency(album.purchasePrice, album.currency)}</p>
-            </div>
-          ` : ''}
-          ${album.condition ? `
-            <div class="stat-card bg-surface-dark p-3 rounded-lg">
-              <p class="text-xs text-gray-500 mb-1">Condition</p>
-              <p class="font-semibold">${escapeHtml(album.condition)}</p>
-            </div>
-          ` : ''}
-          ${album.purchaseDate ? `
-            <div class="stat-card bg-surface-dark p-3 rounded-lg">
-              <p class="text-xs text-gray-500 mb-1">Purchased</p>
-              <p class="font-semibold">${new Date(album.purchaseDate).toLocaleDateString()}</p>
-            </div>
-          ` : ''}
-          ${activeData?.tracks?.length ? `
-            <div class="stat-card bg-surface-dark p-3 rounded-lg">
-              <p class="text-xs text-gray-500 mb-1">Tracks</p>
-              <p class="font-semibold">${activeData.tracks.length}</p>
-            </div>
-          ` : ''}
-        </div>
-
-        <!-- Notes -->
-        ${album.notes ? `
-          <div class="notes-section mb-6">
-            <h3 class="text-sm font-bold text-gray-400 mb-2 flex items-center gap-2">
-              ${getIcon('FileText', 'w-4 h-4')} Notes
-            </h3>
-            <p class="text-gray-300 bg-surface-dark p-3 rounded-lg">${escapeHtml(album.notes)}</p>
-          </div>
-        ` : ''}
-
-        <!-- Tracks Lists -->
-        ${(activeData?.tracksOriginalOrder?.length || activeData?.tracks?.length) ? `
-          <div class="tracks-section space-y-6">
-            <!-- Original Track Order (use tracksOriginalOrder if available) -->
-            <div>
-              <h3 class="text-sm font-bold text-gray-400 mb-3 flex items-center gap-2">
-                ${getIcon('Music', 'w-4 h-4')} Original Track Order
-              </h3>
-              <div class="tracks-list bg-surface-dark rounded-lg overflow-hidden">
-                ${(activeData.tracksOriginalOrder || activeData.tracks).map((track, idx) => {
-    const trackTitle = track?.title || track?.name || 'Unknown Track'
-    const hasRating = track?.rating != null && track?.rating !== undefined
-    const hasDuration = track?.duration != null && track?.duration > 0
-    return `
-                  <div class="track-row flex items-center gap-3 px-4 py-2 border-b border-white/5 last:border-0 hover:bg-white/5">
-                    <span class="text-xs text-gray-500 w-6 text-right">${idx + 1}</span>
-                    <span class="flex-1 truncate">${escapeHtml(trackTitle)}</span>
-                    ${hasRating ? `<span class="text-xs text-accent-primary">★ ${track.rating}</span>` : ''}
-                    ${hasDuration ? `<span class="text-xs text-gray-500">${formatDuration(track.duration)}</span>` : ''}
-                  </div>
-                `}).join('')}
+          <!-- Metadata Grid (Compact) -->
+           <div class="flex flex-wrap gap-4 mt-4 text-xs text-gray-500 font-mono opacity-80">
+            ${album.purchasePrice ? `
+              <div class="flex items-center gap-1">
+                <span class="text-gray-600">Price:</span>
+                <span class="text-gray-300">${formatCurrency(album.purchasePrice, album.currency)}</span>
               </div>
-            </div>
-
-            <!-- Ranked Tracks (sorted by rating) - use tracks which is already sorted -->
-            ${(activeData.tracks || []).some(t => t?.rating != null) ? `
-              <div>
-                <h3 class="text-sm font-bold text-accent-primary mb-3 flex items-center gap-2">
-                  ${getIcon('Star', 'w-4 h-4')} Ranked by Rating
-                </h3>
-                <div class="tracks-list bg-surface-dark rounded-lg overflow-hidden">
-                  ${[...(activeData.tracks || [])]
-          .filter(t => t?.rating != null)
-          .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-          .map((track, idx) => {
-            const trackTitle = track?.title || track?.name || 'Unknown Track'
-            const hasDuration = track?.duration != null && track?.duration > 0
-            return `
-                    <div class="track-row flex items-center gap-3 px-4 py-2 border-b border-white/5 last:border-0 hover:bg-white/5">
-                      <span class="text-xs font-bold w-6 text-right ${idx < 3 ? 'text-accent-primary' : 'text-gray-400'}">#${idx + 1}</span>
-                      <span class="flex-1 truncate">${escapeHtml(trackTitle)}</span>
-                      <span class="text-sm font-bold text-accent-primary">★ ${track.rating}</span>
-                      ${hasDuration ? `<span class="text-xs text-gray-500">${formatDuration(track.duration)}</span>` : ''}
-                    </div>
-                  `}).join('')}
-                </div>
+            ` : ''}
+            ${album.condition ? `
+              <div class="flex items-center gap-1">
+                <span class="text-gray-600">Cond:</span>
+                <span class="text-gray-300">${escapeHtml(album.condition)}</span>
               </div>
             ` : ''}
           </div>
-        ` : `
-          <div class="text-center py-8 text-gray-500">
-            ${getIcon('Music', 'w-12 h-12 mx-auto mb-2 opacity-50')}
-            <p>No track listing available</p>
-          </div>
-        `}
+        </div>
+        
+        <button class="btn btn-ghost btn-circle hover:bg-white/10 text-gray-400 hover:text-white transition-all" data-action="close">
+          ${getIcon('X', 'w-8 h-8')}
+        </button>
+      </div>
+
+      <!-- Notes Section (if notes exist) -->
+      ${album.notes ? `
+        <div class="px-6 py-4 bg-yellow-500/5 border-b border-white/5">
+             <h3 class="text-xs font-bold text-yellow-500/80 uppercase tracking-widest mb-1 flex items-center gap-2">
+              ${getIcon('FileText', 'w-3 h-3')} Notes
+            </h3>
+            <p class="text-sm text-yellow-100/80 italic leading-relaxed">"${escapeHtml(album.notes)}"</p>
+        </div>
+      ` : ''}
+
+      <!-- Ranking/Tracks Content -->
+      <div class="modal-content flex-1 overflow-hidden bg-surface-dark/30 relative">
+        <div class="absolute inset-0 overflow-y-auto custom-scrollbar p-6">
+           <div id="modal-ranking-container"></div>
+        </div>
       </div>
 
       <!-- Footer -->
-      <div class="modal-footer p-4 border-t border-surface-light flex justify-end">
-        <button class="btn btn-secondary" data-action="close">Close</button>
+      <div class="modal-footer p-4 border-t border-surface-light bg-surface-darker flex justify-end gap-3">
+         <button class="btn btn-secondary px-6" data-action="close">Close</button>
       </div>
     </div>
   `
 
+  // Mount logic
+  document.body.appendChild(modal)
+
+  // Initialize Comparison Component
+  const container = modal.querySelector('#modal-ranking-container')
+  if (container) {
+    const comparison = new TracksRankingComparison({ album })
+
+    // Defer mount slightly to ensure DOM checks work
+    setTimeout(() => {
+      comparison.mount(container)
+      comparison.updateUI() // Force initial render
+    }, 0)
+  }
+
   // Event handlers
-  const closeModal = () => modal.remove()
+  const closeModal = () => {
+    modal.classList.add('animate-fade-out-down')
+    setTimeout(() => modal.remove(), 200) // Match animation duration
+  }
 
   modal.querySelectorAll('[data-action="close"]').forEach(btn => {
     btn.addEventListener('click', closeModal)
@@ -154,14 +118,14 @@ export function showViewAlbumModal(album) {
     if (e.target === modal) closeModal()
   })
 
-  document.addEventListener('keydown', function handleEscape(e) {
+  const handleEscape = (e) => {
     if (e.key === 'Escape') {
       closeModal()
       document.removeEventListener('keydown', handleEscape)
     }
-  })
+  }
+  document.addEventListener('keydown', handleEscape)
 
-  document.body.appendChild(modal)
   return modal
 }
 
@@ -178,11 +142,4 @@ function formatCurrency(value, currency = 'USD') {
     return `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
   }
   return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-}
-
-function formatDuration(seconds) {
-  if (!seconds) return ''
-  const mins = Math.floor(seconds / 60)
-  const secs = Math.floor(seconds % 60)
-  return `${mins}:${secs.toString().padStart(2, '0')}`
 }

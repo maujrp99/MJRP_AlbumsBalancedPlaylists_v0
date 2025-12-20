@@ -42,6 +42,15 @@ export class Album {
 
         // Preserve other properties
         this.metadata = data.metadata || {}
+
+        // DEBUG: Trace Spotify Data Load
+        if (data.spotifyId || data.spotifyPopularity) {
+            console.log(`[Album Model] Loaded Spotify Data for ${this.title}:`, {
+                id: this.spotifyId,
+                pop: this.spotifyPopularity,
+                source: data.rankingSource
+            })
+        }
     }
 
     /**
@@ -52,5 +61,44 @@ export class Album {
     getTracks(order = 'original') {
         if (order === 'acclaim') return this.tracks
         return this.tracksOriginalOrder
+    }
+
+    /**
+     * Ensures all tracks have valid ranking data.
+     * Fallback Strategy:
+     * 1. If no external rank, use 'position' (Original Order) as 'rank'.
+     * 2. If 'rank' is present, respect it.
+     * @returns {boolean} True if data was modified (needs save), False otherwise.
+     */
+    ensureRankingIntegrity() {
+        let modified = false
+
+        // Check availability of ranking Source
+        const hasExternalRanking = !!this.bestEverAlbumId || !!this.spotifyId || this.rankingSource === 'popularity'
+
+        // If 'tracks' (ranked list) is empty or same as original and no external source,
+        // force metadata alignment
+        if (!hasExternalRanking) {
+            this.rankingSource = 'original'
+            modified = true
+        }
+
+        // Ensure every track in the "Ranked" list has a numeric rank
+        this.tracks.forEach((track, index) => {
+            // If rank is missing or invalid, fallback to 1-based index (assuming array is somewhat ordered)
+            // OR fallback to original position if available
+            if (!track.rank || track.rank >= 999) {
+                // Heuristic: If we are in 'acclaim' order but have no rank, 
+                // we default to current array index + 1 OR original position
+                const fallbackRank = track.position || (index + 1)
+
+                if (track.rank !== fallbackRank) {
+                    track.rank = fallbackRank
+                    modified = true
+                }
+            }
+        })
+
+        return modified
     }
 }

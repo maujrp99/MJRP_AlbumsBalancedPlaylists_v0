@@ -1,10 +1,10 @@
 # Album Data Schema & Transformations
 
-## 🟢 STATUS (v2.9.0 - Sprint 11 Planning)
+## 🟢 STATUS (v2.9.1 - Sprint 11.5 Stabilization)
 **track.artist and track.album fields** are now properly populated by the Algorithm Strategy Pattern.  
 The `MJRPBalancedCascadeAlgorithm` uses `markTrackOrigin()` from `BaseAlgorithm` to attach origin album info to each track.
 
-> **Update Sprint 11**: Added `spotifyUrl`, `spotifyId`, and `rankingSource` to Album model.
+> **Update Sprint 11.5**: Added `spotifyUrl`, `spotifyId`, `spotifyPopularity`, `rankingSource`, and `EnsureRankingIntegrity` flow to Album model.
 
 ---
 
@@ -86,6 +86,11 @@ normalizeAlbumData(data) {
     title: "Shake Your Money Maker",
     artist: "The Black Crowes",  // ✅ Album-level
     year: 1990,
+
+    // New Fields (Sprint 11)
+    rankingSource: 'acclaim', // 'acclaim' | 'popularity' | 'original' | 'ai'
+    spotifyId: null, // "6YabPKtZA..."
+    spotifyPopularity: null, // 0-100
     
     tracks: rankedTracks.map((track, idx) => ({
       ...track,
@@ -94,6 +99,12 @@ normalizeAlbumData(data) {
       rating: track.rating,
       duration: track.duration,
       position: track.position,
+      
+      // New Track Fields (Sprint 11)
+      spotifyId: null,
+      spotifyPopularity: null, 
+      spotifyPopularityRank: null,
+
       // 🔴 MISSING: artist field
       // 🔴 MISSING: album field
       metadata: {...}

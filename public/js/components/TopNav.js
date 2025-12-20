@@ -186,7 +186,7 @@ export class TopNav {
   }
 
   renderMobileNavLink(path, label, iconName, currentPath) {
-    const isActive = currentPath === path || (path !== '/home' && currentPath.startsWith(path))
+    const isActive = currentPath === path || (path !== '/' && currentPath.startsWith(path + '/'))
     return `
       <a 
         href="${path}" 
@@ -200,7 +200,17 @@ export class TopNav {
   }
 
   renderNavLink(path, label, currentPath, isMobile = false) {
-    const isActive = currentPath === path || (path !== '/home' && currentPath.startsWith(path))
+    // FIX: Strict prefix matching to avoid "Album Series" (/albums) matching "/" incorrectly?
+    // Actually, logic was: path !== '/home' && currentPath.startsWith(path)
+    // If path is '/albums', it matches '/albums/series/5'. 
+    // If currentPath is '/home', it shouldn't match. 
+    // Let's make it stricter: exact match OR path + '/' prefix match
+    const isActive = currentPath === path || (path !== '/' && currentPath.startsWith(path + '/'))
+
+    // Fallback for "Home" if it's implicitly active due to root? 
+    // If path is '/home' and currentPath is '/', let's assume Redirect handled it?
+    // But strictly speaking, highlights should match URL.
+
     const baseClass = isMobile
       ? 'text-2xl font-bold'
       : 'nav-link-glow text-sm font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg transition-all duration-300'

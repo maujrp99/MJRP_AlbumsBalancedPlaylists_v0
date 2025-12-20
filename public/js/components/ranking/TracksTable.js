@@ -42,14 +42,15 @@ export class TracksTable {
 
     renderRow(track) {
         // Format Duration (ms -> mm:ss)
-        const ms = track.duration
+        const ms = Number(track.duration) || 0
         const min = Math.floor(ms / 60000)
         const sec = ((ms % 60000) / 1000).toFixed(0).padStart(2, '0')
-        const time = ms > 0 ? `${min}:${sec}` : '--:--'
+        const time = ms > 1000 ? `${min}:${sec}` : '--:--'
 
         // Data Checks
         const hasRank = track.rank && track.rank < 999
         const hasPop = track.spotifyPopularity > -1
+        const positionDisplay = track.position >= 999 ? '-' : track.position
 
         // Popularity Bar Color Logic
         // < 30: red, < 60: yellow, >= 60: green
@@ -61,7 +62,7 @@ export class TracksTable {
                 
                 <!-- Position -->
                 <div class="w-16 px-4 py-3 text-white/50 font-mono text-sm group-hover:text-white">
-                    ${track.position}
+                    ${positionDisplay}
                 </div>
 
                 <!-- Title -->
@@ -75,7 +76,10 @@ export class TracksTable {
                 <!-- Acclaim Rank -->
                 <div class="w-32 px-4 py-3 flex justify-center">
                     ${hasRank
-                ? `<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-brand-orange/10 text-brand-orange text-sm font-bold border border-brand-orange/20 shadow-lg shadow-brand-orange/5">#${track.rank}</span>`
+                ? `<div class="flex items-center gap-2">
+                     <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-brand-orange/10 text-brand-orange text-sm font-bold border border-brand-orange/20 shadow-lg shadow-brand-orange/5">#${track.rank}</span>
+                     ${track.rating ? `<span class="flex items-center gap-1 text-sm font-bold text-white/90"><span class="text-brand-orange">★</span>${Number(track.rating).toFixed(0)}</span>` : ''}
+                   </div>`
                 : `<span class="text-white/10 text-xs">-</span>`
             }
                 </div>

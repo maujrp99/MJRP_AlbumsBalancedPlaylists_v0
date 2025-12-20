@@ -30,6 +30,7 @@ import {
   renderScopedList as renderScopedListFn,
   filterAlbums as filterAlbumsFn
 } from './albums/index.js'
+import { AlbumsStateController } from './controllers/AlbumsStateController.js'
 
 import { TracksRankingComparison } from '../components/ranking/TracksRankingComparison.js'
 
@@ -41,9 +42,24 @@ import { TracksRankingComparison } from '../components/ranking/TracksRankingComp
 export class AlbumsView extends BaseView {
   constructor() {
     super()
+
+    // Sprint 11.5: State Isolation via Controller
+    this.controller = new AlbumsStateController()
+
+    // Legacy state (to be deprecated as we migrate)
     this.isLoading = false
-    this.searchQuery = ''
     this.loadProgress = { current: 0, total: 0 }
+
+    // Bind State Changes to Render
+    this.controller.subscribe((state, event) => {
+      console.log(`[AlbumsView] State Update: ${event}`, state)
+      if (event === 'filters_changed' || event === 'albums_updated') {
+        const grid = this.$('#albumsContainer')
+        // Only re-render if we are already mounted? 
+        // For now, we rely on the manual updateAlbumsGrid calls from the store,
+        // but eventually this listener will drive the UI.
+      }
+    })
 
     // Default view mode - now using Strategy Pattern
     this.viewModeKey = localStorage.getItem('albumsViewMode') || 'compact'
@@ -82,11 +98,23 @@ export class AlbumsView extends BaseView {
       this.abortController = null
     }
 
-    // Custom cleanup
     if (this.cleanup) {
       this.cleanup()
       this.cleanup = null
     }
+  }
+
+  async mount(params) {
+    await super.mount(params)
+
+    // Sprint 11.5: Listen for enrichment persistence events from child components
+    this.container.addEventListener('album-enriched', (e) => {
+      const { album } = e.detail
+      if (album) {
+        console.log('[AlbumsView] Received album-enriched event, saving...', album.title)
+        this.controller.persistAlbum(album)
+      }
+    })
   }
 
   async render(params) {
@@ -158,7 +186,7 @@ export class AlbumsView extends BaseView {
               id="albumSearch"
               placeholder="Search albums..."
               class="form-control pl-10 w-full"
-              value="${this.searchQuery}"
+              value="${this.searchQuery || ''}"
             />
           </div>
 
@@ -459,28 +487,39 @@ export class AlbumsView extends BaseView {
           showViewAlbumModal(album)
           break
         case 'add-to-inventory':
-          try {
-            // Import inventory store dynamically if needed or just use event
-            // Assuming inventoryStore is global or we need to import it? 
-            // Inventory interactions usually happen via InventoryView...
-            // But here we are in AlbumsView. 
-            // Let's use toast for now or check if we have inventoryStore imported?
-            // We don't import inventoryStore in AlbumsView imports list above.
-            // Let's dynamic import
-            const { inventoryStore } = await import('../stores/inventory.js')
-            await inventoryStore.addAlbum(album)
-            toast.success(`Added "${album.title}" to inventory`)
-          } catch (err) {
-            console.error(err)
-            toast.error('Failed to add to inventory')
-          }
+          // FIX: Open modal instead of direct add, to allow selecting format/price
+          const { showAddToInventoryModal } = await import('../components/InventoryModals.js')
+          showAddToInventoryModal(album, () => {
+            // Optional success callback (modal handles toast itself)
+            // We could refresh UI here if needed
+          })
           break
         case 'remove-album':
-          if (confirm(`Remove "${album.title}" from this series?`)) {
-            await albumSeriesStore.removeAlbumFromSeries(album)
-            // View will update automatically via subscription
-            toast.success('Album removed from series')
-          }
+          // Import custom modal for better UX
+          const { showDeleteAlbumModal } = await import('../components/Modals.js')
+
+          showDeleteAlbumModal(
+            album.id,
+            `${album.title} - ${album.artist}`,
+            async () => {
+              try {
+                const urlParams = new URLSearchParams(window.location.search)
+                const seriesId = urlParams.get('seriesId')
+
+                // 1. Remove from series (Persistence)
+                await albumSeriesStore.removeAlbumFromSeries(album, seriesId)
+
+                // 2. Remove from local view store (Immediate UI Feedback)
+                albumsStore.removeAlbum(album.id)
+
+                // 3. Success Toast
+                toast.success('Album removed from series')
+              } catch (err) {
+                console.error('Failed to remove album:', err)
+                toast.error('Failed to remove album: ' + err.message)
+              }
+            }
+          )
           break
       }
     })
@@ -720,75 +759,6 @@ export class AlbumsView extends BaseView {
             // Optional: show success toast
             console.log('Added to inventory')
           })
-        }
-        return
-      }
-
-
-
-      // Remove Album
-      const removeBtn = e.target.closest('[data-action="remove-album"]')
-      if (removeBtn) {
-        const albumId = removeBtn.dataset.albumId
-
-        // Find the album card to get title and artist from DOM
-        const albumCard = removeBtn.closest('.album-card')
-        let album = albumsStore.getAlbums().find(a => a.id === albumId)
-
-        // Fallback: if album not in store, create minimal object from DOM
-        if (!album && albumCard) {
-          const titleEl = albumCard.querySelector('.album-title')
-          const artistEl = albumCard.querySelector('.album-artist')
-          if (titleEl && artistEl) {
-            album = {
-              id: albumId,
-              title: titleEl.textContent.trim(),
-              artist: artistEl.textContent.trim()
-            }
-          }
-        }
-
-        if (album) {
-          // Import confirmation modal
-          const { showDeleteAlbumModal } = await import('../components/Modals.js')
-
-          showDeleteAlbumModal(
-            albumId,
-            `${album.title} - ${album.artist} `,
-            async (id) => {
-              try {
-                // Check if series still exists
-                const activeSeries = albumSeriesStore.getActiveSeries()
-                if (!activeSeries) {
-                  const { toast } = await import('../components/Toast.js')
-                  toast.error('Series no longer exists. Redirecting...')
-                  setTimeout(() => router.navigate('/album-series'), 1500)
-                  return
-                }
-
-                // 1. Remove from series in Firestore (updates albumQueries[])
-                await albumSeriesStore.removeAlbumFromSeries(album)
-
-                // 2. Remove from local memory store (if present)
-                albumsStore.removeAlbum(id)
-
-                // 3. Remove the card from DOM
-                if (albumCard) {
-                  albumCard.remove()
-                }
-
-                const { toast } = await import('../components/Toast.js')
-                toast.success('Album removed from series')
-              } catch (error) {
-                console.error('[AlbumsView] Failed to remove album:', error)
-                throw error // Re-throw for modal to handle
-              }
-            }
-          )
-        } else {
-          console.error('[AlbumsView] Could not find album info for ID:', albumId)
-          const { toast } = await import('../components/Toast.js')
-          toast.error('Could not find album information')
         }
       }
     })
@@ -1099,7 +1069,24 @@ export class AlbumsView extends BaseView {
         // Ensure Series info is loaded
         let series = albumSeriesStore.getSeries().find(s => s.id === seriesId)
         if (!series) {
-          await albumSeriesStore.loadFromFirestore()
+          // Retry logic for initialization race condition
+          let retries = 0
+          while (retries < 5) {
+            try {
+              await albumSeriesStore.loadFromFirestore()
+              break
+            } catch (err) {
+              if (err.message.includes('Repository not initialized')) {
+                console.warn(`[AlbumsView] Store not ready, retrying (${retries + 1}/5)...`)
+                await new Promise(r => setTimeout(r, 300))
+                retries++
+              } else {
+                throw err
+              }
+            }
+          }
+          if (retries >= 5) throw new Error('AlbumStore failed to initialize')
+
           series = albumSeriesStore.getSeries().find(s => s.id === seriesId)
         }
 
@@ -1296,13 +1283,26 @@ export class AlbumsView extends BaseView {
     const filtered = this.filterAlbums(albums)
     console.log('[AlbumsView] After filterAlbums: filtered=', filtered?.length, 'from albums=', albums?.length)
 
+    // State Isolation: Feed data to controller
+    this.controller.setAlbums(albums)
+    this.controller.setFilters({ searchQuery: this.searchQuery || '' }) // Sync legacy search
+
     // Update Generate Playlists button state
     const generateBtn = this.$('#generatePlaylistsBtn')
+    const readiness = this.controller.checkSeriesReadiness()
+
     if (generateBtn) {
       if (filtered.length === 0) {
         generateBtn.setAttribute('disabled', 'true')
+        generateBtn.title = 'No albums to generate from'
+      } else if (!readiness.isReady) {
+        // Enforce Total Ranking Integrity
+        generateBtn.setAttribute('disabled', 'true')
+        generateBtn.title = `Readiness Alert: ${readiness.unrankedCount} albums are missing ranking data. Enrich them first.`
+        console.warn('[AlbumsView] Series not ready for generation:', readiness.unrankedAlbums.map(a => a.title))
       } else {
         generateBtn.removeAttribute('disabled')
+        generateBtn.title = 'Generate Balanced Playlists'
       }
     }
 
@@ -1324,11 +1324,15 @@ export class AlbumsView extends BaseView {
 
     // Sprint 11: Hydrate Ranking Comparison Components (Mode 3)
     const rankingContainers = container.querySelectorAll('.ranking-comparison-container')
+    console.log(`[AlbumsView] Hydrating ${rankingContainers.length} ranking containers`)
     rankingContainers.forEach(el => {
       const albumId = el.dataset.albumId
       const album = filtered.find(a => a.id === albumId)
       if (album) {
+        console.log(`[AlbumsView] Mounting TracksRankingComparison for album: ${album.title} (${album.id})`)
         new TracksRankingComparison({ album }).mount(el)
+      } else {
+        console.warn(`[AlbumsView] Album not found for ranking hydration: ${albumId}`)
       }
     })
 

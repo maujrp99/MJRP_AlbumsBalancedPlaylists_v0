@@ -14,6 +14,7 @@ This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** fo
 - **v2.7.1**: `AlbumSeriesListView` deprecated → Series management consolidated into `AlbumsView`
 - **v2.8.0**: Playlist generation uses **Algorithm Strategy Pattern** (see [ALGORITHM_MENU.md](specs/ALGORITHM_MENU.md))
 - **Sprint 11**: Spotify integration with auto-enrichment
+- **Sprint 11.5**: **Event-Driven Persistence** for enrichment (Fix #58) & `AlbumsStateController` introduction.
 
 ---
 
@@ -499,42 +500,31 @@ sequenceDiagram
     SpotifyAuthService->>localStorage: Store tokens
 ```
 
-### Spotify Auto-Enrichment Flow (New in Sprint 11)
+### Spotify Auto-Enrichment Flow (Refactored Sprint 11.5)
 
 ```mermaid
 sequenceDiagram
-    participant AlbumsView
-    participant APIClient
-    participant MusicKitService
-    participant BestEverAPI
-    participant SpotifyService
-    participant AlbumsStore
-    participant Cache
+    participant Components as TracksRankingComparison
+    participant View as AlbumsView
+    participant Controller as AlbumsStateController
+    participant Spotify as SpotifyService
+    participant Store as AlbumsStore
+    participant DB as Firestore
 
-    AlbumsView->>APIClient: fetchAlbum("Artist - Album")
-    APIClient->>Cache: Check localStorage
+    Note over Components: User clicks "Enrich Data"
+
+    Components->>Spotify: enrichAlbumData(artist, title)
+    Spotify-->>Components: { spotifyId, popularity... }
+    Components->>Components: Update local album state
     
-    alt Cache Miss
-        APIClient->>MusicKitService: searchAlbums()
-        MusicKitService-->>APIClient: Apple Music album data
-        
-        APIClient->>BestEverAPI: POST /enrich-album
-        BestEverAPI-->>APIClient: track ratings
-        
-        APIClient->>APIClient: Create Album instance
-        
-        alt Spotify Connected
-            APIClient->>SpotifyService: enrichAlbumData(artist, title)
-            SpotifyService->>SpotifyService: searchAlbum() + getTracksWithPopularity()
-            SpotifyService-->>APIClient: {spotifyId, trackPopularityMap}
-            APIClient->>APIClient: Apply popularity to tracks (fuzzy match)
-        end
-        
-        APIClient->>Cache: store in localStorage
-    end
+    Components->>View: dispatchEvent('album-enriched')
+    Note right of Components: Event-Driven Persistence Fix (#58)
     
-    APIClient-->>AlbumsView: Album with tracks
-    AlbumsView->>AlbumsStore: addAlbum(album)
+    View->>Controller: persistAlbum(album)
+    Controller->>Store: updateAlbum(db, album)
+    Store->>DB: updateDoc('albums', album.id)
+    Store-->>Controller: Success
+    Controller->>View: notify('albums_updated')
 ```
 
 ### Spotify Export Flow

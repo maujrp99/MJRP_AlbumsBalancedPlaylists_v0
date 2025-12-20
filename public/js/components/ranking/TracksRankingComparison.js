@@ -32,15 +32,36 @@ export class TracksRankingComparison {
      * (Track model should already provide this, but this is a safety layer)
      */
     normalizeTracks(album) {
-        // We use tracksOriginalOrder as base to ensure we have all tracks
-        // (sometimes acclaim list might filter out stuff? unlikely but safe)
-        return album.getTracks('original').map(track => ({
-            ...track,
-            // Ensure numeric values for sorting
-            position: Number(track.position) || 999,
-            rank: Number(track.rank) || 999, // 999 = unranked
-            spotifyPopularity: track.spotifyPopularity !== null ? Number(track.spotifyPopularity) : -1
-        }))
+        // Enriched/Ranked source (contains ratings, popularity)
+        const enrichedTracks = album.getTracks('acclaim')
+
+        // Create lookup map by title (normalized) for merging
+        const enrichedMap = new Map()
+        const norm = (str) => str?.toLowerCase().trim().replace(/[^a-z0-9]/g, '') || ''
+
+        enrichedTracks.forEach(t => {
+            enrichedMap.set(norm(t.title), t)
+        })
+
+        // We use tracksOriginalOrder as base to ensure we have all tracks 1..N
+        return album.getTracks('original').map((track, idx) => {
+            const enriched = enrichedMap.get(norm(track.title))
+
+            return {
+                ...track,
+                // Merge enriched fields if available
+                rank: enriched?.rank || track.rank || 999,
+                rating: enriched?.rating || track.rating || null,
+                spotifyPopularity: (enriched?.spotifyPopularity !== undefined && enriched?.spotifyPopularity !== null)
+                    ? Number(enriched.spotifyPopularity)
+                    : (track.spotifyPopularity !== undefined && track.spotifyPopularity !== null ? Number(track.spotifyPopularity) : -1),
+                spotifyId: enriched?.spotifyId || track.spotifyId,
+                // FIX: Ensure position fallback to index+1 if data missing
+                position: Number(track.position) || (idx + 1),
+                // FIX: Ensure duration from enriched source if available, else track, else 0
+                duration: enriched?.duration || track.duration || 0
+            }
+        })
     }
 
     getSortedTracks() {
@@ -51,14 +72,10 @@ export class TracksRankingComparison {
             let valB = b[sortField]
 
             // Special handling for missing data
-            if (valA === -1) valA = -999999 // Always push missing spotify to bottom (if desc) or top (if asc)? 
-            // Actually: -1 means "no data".
-            // For Popularity (Desc is good): missing should be last. (0 is better than -1).
-            // For Rank (Asc is good): missing (999) should be last.
+            if (valA === -1) valA = -999999
 
             if (sortField === 'spotifyPopularity') {
                 // Higher is better. Default direction for popularity should be DESC.
-                // If val is -1 (missing), treat as -Infinity
                 if (a.spotifyPopularity === -1) valA = -Infinity
                 if (b.spotifyPopularity === -1) valB = -Infinity
             }
@@ -72,15 +89,13 @@ export class TracksRankingComparison {
     getAverages() {
         const { tracks } = this.state
 
-        // Acclaim Average (Rank) - Lower is better? Or usually Rating?
-        // Let's use Rating if available, otherwise Rank?
-        // Plan said "Acclaim Index". Let's use Average Rank for now.
+        // Acclaim Average (Rank)
         const rankedTracks = tracks.filter(t => t.rank && t.rank < 999)
         const avgRank = rankedTracks.length
             ? (rankedTracks.reduce((sum, t) => sum + t.rank, 0) / rankedTracks.length).toFixed(1)
             : '-'
 
-        // Spotify Average (Popularity) - Higher is better
+        // Spotify Average (Popularity)
         const popTracks = tracks.filter(t => t.spotifyPopularity >= 0)
         const avgPop = popTracks.length
             ? (popTracks.reduce((sum, t) => sum + t.spotifyPopularity, 0) / popTracks.length).toFixed(1)
@@ -120,15 +135,19 @@ export class TracksRankingComparison {
     }
 
     updateUI() {
+        if (!this.container) return
+
         // Re-render components
-        const tableContainer = document.querySelector('#tracks-table-container')
-        const tabsContainer = document.querySelector('#tracks-tabs-container')
-        const averagesContainer = document.querySelector('#ranking-averages')
+        // FIX: Use scoped queries within this.container instead of global document.querySelector
+        // AND use classes, as IDs must be unique
+        const tableContainer = this.container.querySelector('.tracks-table-container')
+        const tabsContainer = this.container.querySelector('.tracks-tabs-container')
 
         const sortedTracks = this.getSortedTracks()
-        const averages = this.getAverages()
 
         if (tableContainer) {
+            // Clear previous content to avoid appending duplicates if not handled by sub-component
+            tableContainer.innerHTML = ''
             new TracksTable({
                 tracks: sortedTracks,
                 sortField: this.state.sortField,
@@ -138,50 +157,40 @@ export class TracksRankingComparison {
         }
 
         if (tabsContainer) {
+            tabsContainer.innerHTML = ''
             new TracksTabs({
                 tracks: sortedTracks,
                 activeTab: this.state.activeTab,
                 onTabChange: this.handleTabChange
             }).mount(tabsContainer)
         }
-
-        // Update Averages/Footer if separate
-        // For now, presenters might render their own footers, 
-        // but plan mentions a shared "Total Score" footer.
-        // Let's pass averages to presenters.
     }
 
     render() {
-        const sortedTracks = this.getSortedTracks()
-        const averages = this.getAverages()
-
-        // Responsive Strategy: Render BOTH containers, hide/show via CSS
-        // This avoids complex JS resize listeners
-
-        // We defer mounting to after render
+        // Responsive Strategy
         setTimeout(() => this.updateUI(), 0)
 
         return `
             <div class="tracks-ranking-comparison w-full space-y-6">
                 
-                <!-- Debug / Enrichment Controls (Temporary Placement) -->
+                <!-- Enrichment Controls -->
                 ${this.album.spotifyId ? '' : `
                     <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl flex justify-between items-center mb-4">
                         <span class="text-blue-400 text-sm">Spotify data not linked.</span>
-                        <button id="enrichBtn" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition-colors">
+                        <button class="enrich-btn px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition-colors">
                             Enrich Data
                         </button>
                     </div>
                 `}
 
                 <!-- Desktop View -->
-                <div id="tracks-table-container" class="hidden md:block">
+                <div class="tracks-table-container hidden md:block">
                     <!-- TracksTable mounts here -->
                     <div class="animate-pulse bg-white/5 h-64 rounded-xl"></div>
                 </div>
 
                 <!-- Mobile View -->
-                <div id="tracks-tabs-container" class="md:hidden">
+                <div class="tracks-tabs-container md:hidden">
                     <!-- TracksTabs mounts here -->
                     <div class="animate-pulse bg-white/5 h-64 rounded-xl"></div>
                 </div>
@@ -192,10 +201,11 @@ export class TracksRankingComparison {
 
     async mount(container) {
         if (!container) return
+        this.container = container // Store ref for scoped updates
         container.innerHTML = this.render()
 
         // Bind Enrichment Button
-        const enrichBtn = container.querySelector('#enrichBtn')
+        const enrichBtn = container.querySelector('.enrich-btn')
         if (enrichBtn) {
             enrichBtn.addEventListener('click', async () => {
                 enrichBtn.disabled = true
@@ -204,10 +214,20 @@ export class TracksRankingComparison {
                 try {
                     await this.enrichWithSpotifyData()
                     toast.success('Spotify data loaded!')
+
                     // Re-render with new data
                     this.state.tracks = this.normalizeTracks(this.album)
                     container.innerHTML = this.render()
                     this.mount(container) // Re-bind events
+
+                    // FIX: Dispatch event for persistence
+                    const event = new CustomEvent('album-enriched', {
+                        detail: { album: this.album },
+                        bubbles: true
+                    })
+                    container.dispatchEvent(event)
+                    console.log('[TracksRankingComparison] Dispatched album-enriched event')
+
                 } catch (err) {
                     console.error('[TracksRankingComparison] Enrichment failed:', err)
                     toast.error(err.message || 'Spotify enrichment failed')
@@ -258,16 +278,18 @@ export class TracksRankingComparison {
         // Create lookup map from Spotify tracks
         const spotifyTrackMap = new Map()
         spotifyTracks.forEach((st, idx) => {
+            // FIX: Normalization was too strict?
             const key = normalizeTitle(st.name)
             spotifyTrackMap.set(key, {
                 popularity: st.popularity,
-                spotifyRank: idx + 1, // Rank by original Spotify order (approximation)
+                spotifyRank: idx + 1, // Rank by original Spotify order
                 spotifyId: st.id,
-                spotifyUri: st.uri
+                spotifyUri: st.uri,
+                duration: st.duration_ms // Capture Duration!
             })
         })
 
-        // Also create a ranked list by popularity (for spotifyPopularityRank)
+        // Also create a ranked list by popularity
         const sortedByPop = [...spotifyTracks].sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
         const popRankMap = new Map()
         sortedByPop.forEach((st, idx) => {
@@ -287,6 +309,8 @@ export class TracksRankingComparison {
                 track.spotifyPopularityRank = popRankMap.get(spotifyData.spotifyId) || null
                 track.spotifyId = spotifyData.spotifyId
                 track.spotifyUri = spotifyData.spotifyUri
+                // Update duration if missing
+                if (!track.duration) track.duration = spotifyData.duration
                 matchCount++
             } else {
                 // Try fuzzy match (first 10 chars)
@@ -297,6 +321,7 @@ export class TracksRankingComparison {
                         track.spotifyPopularityRank = popRankMap.get(data.spotifyId) || null
                         track.spotifyId = data.spotifyId
                         track.spotifyUri = data.spotifyUri
+                        if (!track.duration) track.duration = data.duration
                         matchCount++
                         break
                     }
@@ -305,17 +330,5 @@ export class TracksRankingComparison {
         })
 
         console.log(`[TracksRankingComparison] Matched ${matchCount}/${tracks.length} tracks with Spotify data`)
-
-        // Optionally set rankingSource if this is the primary source
-        if (matchCount > tracks.length * 0.5) {
-            // More than 50% matched - can use as fallback
-            if (!this.album.bestEverAlbumId) {
-                this.album.rankingSource = 'popularity'
-            }
-        }
-
-        // Note: The album is updated in-place. If using a store, 
-        // the store should notify subscribers on next interaction.
     }
 }
-

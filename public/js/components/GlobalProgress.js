@@ -17,9 +17,13 @@ class GlobalProgressManager {
         if (!document.getElementById('globalProgress')) {
             const container = document.createElement('div')
             container.id = 'globalProgress'
-            container.className = 'progress-bar-container'
+            // Fixed top bar, super high z-index (9999) to cover everything
+            container.className = 'fixed top-0 left-0 w-full h-1.5 z-[9999] pointer-events-none'
             container.style.display = 'none'
-            container.innerHTML = '<div class="progress-bar"></div>'
+            // Inner bar with animation and strong glow
+            container.innerHTML = `
+                <div class="h-full bg-brand-orange shadow-[0_0_15px_rgba(255,100,0,0.8)] animate-progress-indeterminate w-full origin-left"></div>
+            `
             document.body.prepend(container)
         }
         this.element = document.getElementById('globalProgress')

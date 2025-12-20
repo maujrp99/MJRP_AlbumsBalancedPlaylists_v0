@@ -14,6 +14,7 @@ export class AlbumRepository extends BaseRepository {
      */
     constructor(firestore, cache, userId, seriesId) {
         super(firestore, cache)
+        console.log(`[AlbumRepository] Initialized for series: ${seriesId}`)
 
         this.userId = userId || 'anonymous-user'
         this.seriesId = seriesId

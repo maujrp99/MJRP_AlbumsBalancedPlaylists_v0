@@ -1,17 +1,164 @@
-/**
- * AlbumSeriesStore
- * Manages album series metadata and history
- * 
- * Refactored to use SeriesRepository for Firestore persistence
- * localStorage remains as fast-read cache
- */
-
 import { SeriesRepository } from '../repositories/SeriesRepository.js'
 import { cacheManager } from '../cache/CacheManager.js'
 import { userStore } from './UserStore.js'
 import { dataSyncService } from '../services/DataSyncService.js'
+import { globalProgress } from '../components/GlobalProgress.js'
 
 export class AlbumSeriesStore {
+    // ... constructor ...
+
+    // ... (lines 14-138)
+
+    /**
+     * Create new series
+     */
+    async createSeries(seriesData) {
+        if (!this.repository) {
+            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
+        }
+
+        globalProgress.start()
+        try {
+            const series = {
+                name: seriesData.name || 'Untitled Series',
+                albumQueries: seriesData.albumQueries || [],
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                status: seriesData.status || 'pending',
+                notes: seriesData.notes || ''
+            }
+
+            // 1. Save to Firestore (source of truth)
+            const id = await this.repository.create(series)
+            series.id = id
+
+            // 2. Update memory
+            this.series.unshift(series)
+            this.activeSeries = series
+
+            // 3. Update localStorage cache
+            this.saveToLocalStorage()
+            this.notify()
+
+            return series
+        } finally {
+            globalProgress.finish()
+        }
+    }
+
+    // ...
+
+    /**
+     * Load series from Firestore (source of truth)
+     */
+    async loadFromFirestore() {
+        if (!this.repository) {
+            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
+        }
+
+        this.loading = true
+        this.error = null
+        this.notify()
+        globalProgress.start()
+
+        try {
+            // Use repository to fetch all series
+            const firestoreSeries = await this.repository.findAll({
+                orderBy: ['updatedAt', 'desc'],
+                limit: 20
+            })
+
+            this.series = firestoreSeries.map(s => ({
+                ...s,
+                createdAt: s.createdAt?.toDate ? s.createdAt.toDate() : new Date(s.createdAt),
+                updatedAt: s.updatedAt?.toDate ? s.updatedAt.toDate() : new Date(s.updatedAt)
+            }))
+
+            // Update localStorage cache
+            this.saveToLocalStorage()
+            this.notify()
+            return this.series
+        } catch (error) {
+            this.error = error.message
+            this.notify()
+            throw error
+        } finally {
+            this.loading = false
+            globalProgress.finish()
+            this.notify()
+        }
+    }
+
+    /**
+     * Update existing series
+     */
+    async updateSeries(id, updates) {
+        if (!this.repository) {
+            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
+        }
+
+        const index = this.series.findIndex(s => s.id === id)
+        if (index === -1) throw new Error('Series not found')
+
+        globalProgress.start()
+        try {
+            // 1. Update in Firestore FIRST (source of truth)
+            await this.repository.update(id, updates)
+
+            // 2. Update memory
+            const updatedSeries = {
+                ...this.series[index],
+                ...updates,
+                updatedAt: new Date()
+            }
+            this.series[index] = updatedSeries
+
+            if (this.activeSeries && this.activeSeries.id === id) {
+                this.activeSeries = updatedSeries
+            }
+
+            // 3. Update localStorage cache
+            this.saveToLocalStorage()
+            this.notify()
+
+            return updatedSeries
+        } finally {
+            globalProgress.finish()
+        }
+    }
+
+    // ... (lines 272-342)
+
+    /**
+     * Delete series
+     */
+    async deleteSeries(id) {
+        if (!this.repository) {
+            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
+        }
+
+        const index = this.series.findIndex(s => s.id === id)
+        if (index === -1) throw new Error('Series not found')
+
+        globalProgress.start()
+        try {
+            // 1. Delete from Firestore FIRST (source of truth)
+            await this.repository.delete(id)
+
+            // 2. Update memory
+            this.series.splice(index, 1)
+
+            if (this.activeSeries && this.activeSeries.id === id) {
+                this.activeSeries = null
+            }
+
+            // 3. Update localStorage cache
+            this.saveToLocalStorage()
+            this.notify()
+        } finally {
+            globalProgress.finish()
+        }
+    }
     constructor() {
         this.series = []
         this.activeSeries = null
@@ -275,12 +422,38 @@ export class AlbumSeriesStore {
      * @param {Object} album - Album object with title and artist
      * @returns {Promise<Object>} Updated series
      */
-    async removeAlbumFromSeries(album) {
-        if (!this.activeSeries) {
-            throw new Error('No active series')
+    async removeAlbumFromSeries(album, seriesId = null) {
+        let targetSeries = this.activeSeries
+
+        // Fallback 1: Use provided seriesId if activeSeries is missing
+        if (!targetSeries && seriesId) {
+            targetSeries = this.series.find(s => s.id === seriesId)
         }
 
-        const albumQueries = this.activeSeries.albumQueries || []
+        // Fallback 2 (Global Search): If still no target, search ALL series for this album query
+        if (!targetSeries) {
+            console.log('[AlbumSeriesStore] No context series. Searching all series for album:', album.title)
+            // We need to find which series has a query matching this album
+            const norm = str => str?.toLowerCase().trim() || ''
+
+            targetSeries = this.series.find(s => {
+                return (s.albumQueries || []).some(query => {
+                    const q = norm(query)
+                    const t = norm(album.title)
+                    const a = norm(album.artist)
+                    return q.includes(t) || (q.includes(a) && q.includes(t))
+                })
+            })
+        }
+
+        if (!targetSeries) {
+            // If still no series found, it means the album probably isn't linked to a query 
+            // (or query format mismatch). This effectively means "Series no longer exists" or "Not in any series".
+            console.error('[AlbumSeriesStore] Could not find any series containing album:', album.title)
+            throw new Error('Could not find which series this album belongs to.')
+        }
+
+        const albumQueries = targetSeries.albumQueries || []
 
         // Find the query that matches this album
         // Query format is typically "Artist Album Title" or just "Album Title"
@@ -303,7 +476,8 @@ export class AlbumSeriesStore {
         const updatedQueries = albumQueries.filter(q => q !== queryToRemove)
 
         // Update the series with new albumQueries
-        return this.updateSeries(this.activeSeries.id, {
+        console.log(`[AlbumSeriesStore] Removing "${album.title}" from series "${targetSeries.name}"`)
+        return this.updateSeries(targetSeries.id, {
             albumQueries: updatedQueries
         })
     }

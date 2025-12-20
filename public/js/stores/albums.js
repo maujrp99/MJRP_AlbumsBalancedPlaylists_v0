@@ -134,6 +134,10 @@ export class AlbumsStore {
      * Remove album from store
      * @param {string} albumId - Album ID to remove
      */
+    /**
+     * Remove album from store
+     * @param {string} albumId - Album ID to remove
+     */
     removeAlbum(albumId) {
         const albums = this.getAlbums()
         const index = albums.findIndex(a => a.id === albumId)
@@ -144,6 +148,21 @@ export class AlbumsStore {
             }
             this.notify()
         }
+    }
+
+    /**
+     * Update album in store and persist to Firestore
+     * @param {Object} db - Firestore instance
+     * @param {Object} album - Updated album instance
+     */
+    async updateAlbum(db, album) {
+        if (!album.id) throw new Error('Cannot update album without ID')
+
+        // Optimistic Update
+        this.addAlbumToSeries(this.activeAlbumSeriesId, album)
+
+        // Persist
+        await this.saveToFirestore(db, album)
     }
 
     // ========== SERIES MANAGEMENT ==========
