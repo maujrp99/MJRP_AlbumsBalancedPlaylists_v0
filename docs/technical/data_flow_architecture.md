@@ -21,8 +21,9 @@ This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** fo
 
 1. [System Architecture](#system-high-level-architecture)
 2. [App Initialization](#app-initialization-flow)
-3. [Navigation Map](#navigation-map)
-4. [Core Data Flows](#core-data-flows)
+3. [View Lifecycle & Navigation](#view-lifecycle--navigation)
+4. [Navigation Map](#navigation-map)
+5. [Core Data Flows](#core-data-flows)
    - Load Series
    - Navigate to Playlists
    - Navigate to Ranking
@@ -92,6 +93,71 @@ graph LR
     API --> MusicKitService
     AlbumSeriesStore --> Firestore
     InventoryStore --> Firestore
+
+---
+
+## View Lifecycle & Navigation
+
+The application uses a custom client-side router built on the History API (`pushState`). Views follow a standard lifecycle managed by the router.
+
+### Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Router
+    participant CurrentView
+    participant NewView
+    participant DOM
+    
+    User->>Router: navigate('/albums')
+    Router->>Router: beforeNavigateHooks()
+    Router->>CurrentView: destroy()
+    CurrentView->>CurrentView: cleanup subscriptions
+    
+    Router->>NewView: viewFactory()
+    Router->>NewView: render(params)
+    NewView-->>Router: HTML string
+    Router->>DOM: container.innerHTML = html
+    
+    Router->>NewView: mount(params)
+    NewView->>NewView: setup event listeners
+    NewView->>NewView: subscribe to stores
+    
+    Router->>Router: afterNavigateHooks()
+```
+
+### Lifecycle Methods (BaseView)
+
+| Method | When Called | Purpose |
+|--------|-------------|---------|
+| `render(params)` | After factory, before DOM | Returns HTML string |
+| `mount(params)` | After HTML injected | Setup listeners, subscriptions |
+| `destroy()` | Before navigation away | Cleanup listeners, subscriptions |
+| `update()` | On store notification | Re-render parts of UI |
+
+### Navigation API
+
+```javascript
+import { router } from './router.js'
+
+// Navigate with history push
+router.navigate('/albums?seriesId=123')
+
+// Force reload current route (same view)
+await router.loadRoute(window.location.pathname)
+```
+
+### Link Handling
+
+The router intercepts all `<a href="/...">` clicks on the page and uses `pushState` instead of full page reload.
+
+```html
+<!-- These are automatically intercepted -->
+<a href="/albums">View Albums</a>
+<a href="/inventory">Inventory</a>
+```
+
 
 ---
 
