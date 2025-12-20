@@ -4,6 +4,7 @@ import { albumSeriesStore } from '../stores/albumSeries.js'
 import { apiClient } from '../api/client.js'
 import { router } from '../router.js'
 import { globalProgress } from '../components/GlobalProgress.js'
+import { InlineProgress } from '../components/InlineProgress.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { albumLoader } from '../services/AlbumLoader.js'
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
@@ -432,6 +433,16 @@ export class AlbumsView extends BaseView {
 
   async mount(params) {
     this.container = document.getElementById('app')
+
+    // Sprint 11.5: Initialize InlineProgress for loading bar
+    // FIX: Target specific container below filters (User Feedback)
+    const progressContainer = this.$('#loading-progress-container')
+    if (progressContainer) {
+      this.inlineProgress = new InlineProgress(progressContainer)
+    } else {
+      console.warn('[AlbumsView] Progress container not found, falling back to app container')
+      this.inlineProgress = new InlineProgress(this.container)
+    }
 
     // Attach breadcrumb listeners
     Breadcrumb.attachListeners(this.container)
@@ -1055,8 +1066,8 @@ export class AlbumsView extends BaseView {
       // 2. Resolve Queries
       let queriesToLoad = []
 
-      // Start global progress for the batch load
-      globalProgress.start()
+      // Start inline progress
+      if (this.inlineProgress) this.inlineProgress.start()
 
       if (scopeType === 'ALL') {
         await albumSeriesStore.loadFromFirestore() // Ensure we have latest series list
@@ -1097,12 +1108,9 @@ export class AlbumsView extends BaseView {
         if (series) {
           albumSeriesStore.setActiveSeries(series.id)
           queriesToLoad = series.albumQueries || []
-        } else {
-          // Series not found
-          console.warn('[AlbumsView] Series not found:', seriesId)
-          queriesToLoad = []
         }
       }
+
 
       // 3. Load Data
       this.updateHeaderState() // Sync Dropdown
@@ -1156,14 +1164,10 @@ export class AlbumsView extends BaseView {
 
     this.loadProgress = { current: 0, total: queries.length }
 
-    // Initial render with progress
-    const container = this.$('#albumsGrid') || this.$('#albumsList')
-    if (container) {
-      container.parentElement.insertBefore(
-        this.createElementFromHTML(this.renderLoadingProgress()),
-        container
-      )
-    }
+    // Initial render with progress - REMOVED legacy insertion
+    // InlineProgress handles this now via start()
+    // const container = this.$('#albumsGrid') || this.$('#albumsList')
+    // if (container) ...
 
     try {
       const { results, errors } = await apiClient.fetchMultipleAlbums(
@@ -1173,7 +1177,15 @@ export class AlbumsView extends BaseView {
           if (this.abortController.signal.aborted) return
 
           this.loadProgress = { current, total }
-          this.updateLoadingProgress()
+
+          // Sprint 11.5: Inline Progress Update
+          if (this.inlineProgress) {
+            const percent = Math.round((current / total) * 100)
+            const label = result.album ? `Loading: ${result.album.artist} - ${result.album.title}` : `Processing... (${percent}%)`
+            this.inlineProgress.update(current, total, label)
+          } else {
+            this.updateLoadingProgress() // Legacy fallback
+          }
 
           // Add successful albums incrementally
           if (result.status === 'success' && result.album) {
@@ -1305,6 +1317,9 @@ export class AlbumsView extends BaseView {
         generateBtn.setAttribute('disabled', 'true')
         generateBtn.title = `Readiness Alert: ${readiness.unrankedCount} albums are missing ranking data. Enrich them first.`
         console.warn('[AlbumsView] Series not ready for generation:', readiness.unrankedAlbums.map(a => a.title))
+      } else if (this.currentScope === 'ALL') {
+        generateBtn.setAttribute('disabled', 'true')
+        generateBtn.title = 'Select a specific series to generate playlists'
       } else {
         generateBtn.removeAttribute('disabled')
         generateBtn.title = 'Generate Balanced Playlists'

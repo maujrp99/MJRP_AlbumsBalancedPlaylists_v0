@@ -614,7 +614,9 @@ export class PlaylistsView extends BaseView {
     }
 
     // Check for ratings
-    const ratedAlbums = albums.filter(a => a.acclaim?.hasRatings || a.tracks?.some(t => t.rating))
+    // Check for ratings
+    const ratedAlbums = albums.filter(a => a.acclaim?.hasRatings || a.tracks?.some(t => t.rating || (t.spotifyPopularity !== undefined && t.spotifyPopularity > -1)))
+
     if (ratedAlbums.length === 0) {
       if (!confirm('⚠️ No ratings detected on any albums. Playlists may be unbalanced. Continue anyway?')) {
         return

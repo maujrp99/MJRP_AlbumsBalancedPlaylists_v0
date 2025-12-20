@@ -308,6 +308,12 @@ export class LegacyRoundRobinAlgorithm extends BaseAlgorithm {
                 if (be?.rating !== undefined && be?.rating !== null) return Number(be.rating)
                 const ac = key ? acclaimIndex.get(key) : null
                 if (ac?.rating !== undefined && ac?.rating !== null) return Number(ac.rating)
+
+                // Fallback: Spotify Popularity
+                if (copy.spotifyPopularity !== undefined && copy.spotifyPopularity !== null && copy.spotifyPopularity > -1) {
+                    return Number(copy.spotifyPopularity)
+                }
+
                 return null
             })()
 
@@ -329,7 +335,9 @@ export class LegacyRoundRobinAlgorithm extends BaseAlgorithm {
                 if (consolidatedEntry?.finalPosition !== undefined && consolidatedEntry?.finalPosition !== null) {
                     return Number(consolidatedEntry.finalPosition)
                 }
-                return idx + 1
+                // If we have a rating (including from Spotify), do NOT default to index yet.
+                // We will sort and assign rank later.
+                return null
             })()
 
             const durationFromIndex = key && durationIndex.has(key) ? durationIndex.get(key) : null
@@ -343,6 +351,8 @@ export class LegacyRoundRobinAlgorithm extends BaseAlgorithm {
             copy.acclaimScore = normalizedScore
             copy.acclaimRank = acclaimRank
             copy.canonicalRank = canonicalRank
+            copy.spotifyPopularity = copy.spotifyPopularity // Ensure this is preserved if it exists
+            copy.origIndex = idx // Preserve original index for stable sort
 
             return copy
         })
@@ -355,19 +365,27 @@ export class LegacyRoundRobinAlgorithm extends BaseAlgorithm {
             const scoreA = a.acclaimScore !== undefined && a.acclaimScore !== null ? Number(a.acclaimScore) : null
             const scoreB = b.acclaimScore !== undefined && b.acclaimScore !== null ? Number(b.acclaimScore) : null
 
-            if (ratingB !== null && ratingA !== null && ratingB !== ratingA) return ratingB - ratingA
-            if (scoreB !== null && scoreA !== null && scoreB !== scoreA) return scoreB - scoreA
-
-            const rankA = a.rank !== undefined && a.rank !== null ? Number(a.rank) : Number.POSITIVE_INFINITY
-            const rankB = b.rank !== undefined && b.rank !== null ? Number(b.rank) : Number.POSITIVE_INFINITY
+            // Primary: Acclaim Rank (if explicit)
+            const rankA = a.acclaimRank !== null ? a.acclaimRank : Number.POSITIVE_INFINITY
+            const rankB = b.acclaimRank !== null ? b.acclaimRank : Number.POSITIVE_INFINITY
             if (rankA !== rankB) return rankA - rankB
 
-            return (a.title || '').localeCompare(b.title || '')
+            // Secondary: Rating (includes Spotify Popularity now)
+            if (ratingB !== null && ratingA !== null && ratingB !== ratingA) return ratingB - ratingA
+
+            // Tertiary: Score
+            if (scoreB !== null && scoreA !== null && scoreB !== scoreA) return scoreB - scoreA
+
+            // Quaternary: Original Order
+            return (a.origIndex || 0) - (b.origIndex || 0)
         })
 
         sortedTracks.forEach((track, idx) => {
             if (!track) return
-            track.acclaimRank = idx + 1
+            // Assign rank based on sort order if it was missing
+            if (track.acclaimRank === null) {
+                track.acclaimRank = idx + 1
+            }
             if (track.canonicalRank === undefined || track.canonicalRank === null) {
                 track.canonicalRank = track.rank !== undefined && track.rank !== null ? Number(track.rank) : null
             }
