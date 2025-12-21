@@ -17,52 +17,46 @@
 
 #### Part A: Bug Fixes & Ranking Strategy (COMPLETED ✅)
 - [x] **Critical: Wrong Tracks in Ranking Table (#71)**
-  - Fixed Album ID passing and data flow in `TracksRankingComparison`
-  - Restored **Duration/Time** column for verification
 - [x] **Ranking Strategy Pattern Implementation**
-  - Decoupled ranking logic (Balanced, Spotify, BEA) from algorithms
-  - Integrated UI selectors in `PlaylistsView`
 - [x] **Event-Driven Persistence Fix (#58/87)**
-  - Fixed "Enrich Data" not saving to Firestore (Data loss on navigation bug)
-  - Standardized Firebase DB injection in `AlbumsStateController`
-- [ ] **Loading UX Improvements (#70)**
-  - Smoother transition between skeleton and multi-source ranking (In Progress)
 
-#### Part B: AlbumsView Modularization
-- [ ] **Break down God-File**
-  - Extract `renderAlbumCard` logic to a dedicated module
-  - Modularize event delegation setup
-  - Decouple stores from view lifecycle (Dependency Injection foundation)
+#### Part B: AlbumsView Modularization (Starting Now)
+- [ ] **Analysis**: Create `FEATURE_COMPONENT_MAP.md`.
+- [ ] **Extraction**: Move `renderAlbumCard` logic to `AlbumsGrid.js`.
+- [ ] **Decoupling**: Events and Store isolation.
 
 ---
 
 ## 📋 Upcoming Sprints / Backlog
 
-### Sprint 13: Native App (Capacitor) + Batch Operations
+### Sprint 13: V3 Architecture Refactor & "The Blending Menu"
 **Status**: Planned
-**Priority**: Medium
+**Priority**: Critical
+**Focus**: Modularization, Componentization, and Algorithm Parametrization.
 
-#### Part A: Capacitor PWA Wrapper
-- [ ] **Setup Capacitor**
-- [ ] **Native Features (iOS Haptics)**
-- [ ] **Distribution (TestFlight)**
+#### Part A: Core Componentization
+- [ ] **Feature Mapping**: Create `FEATURE_COMPONENT_MAP.md` to catalog all `AlbumsView` logic.
+- [ ] **Surgical Extraction**: Break `AlbumsView` into `AlbumsGrid`, `AlbumsFilterBar`, `SeriesHeader`.
+- [ ] **View Cleanup**: Ensure Views only handle routing and layout, not logic.
 
-#### Part B: Batch Album Operations
-- [ ] **Load Batch of Albums (bulk import)**
-- [ ] **Export Batch of Albums (CSV/JSON)**
+#### Part B: Logic Modularization
+- [ ] **Service Layer Enforcement**: Move all business logic from Views to Controllers/Services.
+- [ ] **Parametrization Schema**: Define the JSON schema for "Blending Menu" inputs.
 
 ---
 
 ## 🎯 Product Vision
 
-To empower music lovers and casual curators to transcend algorithmic bubbles by providing the definitive music curation platform. The MJRP Playlist Generator, "The Album Blender" will transform the art of playlist creation by using the intelligence of global acclaim ratings (BestEverAlbums, Musicboard) and AI enrichment (Google Gemini) to generate balanced playlists that are objectively balanced from acclaimed albums or albums from your favorite artist. Our vision is to be a multi-device, cloud-synced ecosystem where a passion for artist's albums meets data precision, delivering the perfect balanced album playlist experience with native integration into the largest streaming platforms (Spotify, Apple Music).
+- **The Album Blender**: A mixer that takes raw data (albums, AOTY ratings, Spotify popularity) and blends them into a coherent, balanced listening experience.
+- **Blending Menu**: A standardized, highly parametrized interface for choosing "Mix Styles" (e.g., Balanced Flow, Hits & Gems).
+- **Entity Agnosticism**: While Album-Centric, the system supports Artists and Genres as first-class entry points.
+- **Responsive Componentization**: "Write Once, Adapt Everywhere". A UI component library that adapts to Mobile and Desktop contexts.
 
 ### 📊 Long-Term Vision
-- Collaborative series sharing
-- Advanced playlist algorithms
-- Cross-platform sync (mobile apps)
-- Integration with other music services (YouTube Music, Tidal, etc.)
-- AI-powered playlist recommendations
+- **Entity Expansion**: Artists (Sprint 14), Genres (Sprint 15).
+- **AOTY Integration**: Adding AlbumOfTheYear.org as a ranking source.
+- **Native Mobile Experience**: Capacitor wrapper around the responsive web app.
+- **Collaborative Series**: Sharing and co-curating series.
 
 ---
 

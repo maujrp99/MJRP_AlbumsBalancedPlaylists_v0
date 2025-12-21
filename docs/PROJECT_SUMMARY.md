@@ -7,7 +7,12 @@
 
 ## Executive Summary
 
-The MJRP Playlist Generator, "The Album Blender," is a visionary platform aiming to be the definitive tool for music curation, empowering enthusiasts to transcend algorithmic bubbles by focusing on objectively balanced album-based playlists. It achieves this by integrating global acclaim ratings (from sources like BestEverAlbums and Musicboard) with AI enrichment (Google Gemini) to ensure musical inspiration meets data precision. Its future state is a multi-device, cloud-synced ecosystem providing a seamless experience and native integration with major streaming services, Apple Music and Spotify in the future.
+The MJRP Playlist Generator, **"The Album Blender"**, is a strategic curation platform designed to restore the depth of music appreciation. It operates as an intelligence layer above streaming services, blending raw data (Albums, Critical Acclaim, Popularity) into coherent, balanced, and personalized listening experiences.
+
+**Key Pillars (v3.0 Vision)**:
+1.  **Album-Centric Core**: The Album is the fundamental unit, but users can access it via Artists or Genres.
+2.  **The Blending Menu**: Users select "Mix Styles" (e.g., "Deep Cuts", "Balanced Flow") instead of complex algorithms.
+3.  **Responsive Intelligence**: A componentized architecture that adapts the experience to Desktop (Power User) and Mobile (Consumption).
 
 ### Current Status ✅ Production Stable
 - **v2.9.0** (Sprint 11: Spotify Integration - Phase 3 in progress)
@@ -16,11 +21,10 @@ The MJRP Playlist Generator, "The Album Blender," is a visionary platform aiming
 - Core features operational
 
 > [!NOTE]
-> **Recent Updates (Sprint 12.0)**:
-> - 🟢 **Ranking Strategy Selection**: Decoupled ranking from algorithms (Spotify, BEA, Balanced).
-> - 🟢 **Persistence Fix**: Real-time Firestore sync for Spotify enrichment data.
-> - 🟢 **UI Refinement**: Restored Duration/Time column in Comparison Table.
-> - 🟢 **Modularization**: `AlbumsView.js` refactor in progress (Event-driven controller introduced).
+> **Recent Updates (Sprint 12 - In Progress)**:
+> - 🟢 **Ranking Strategy**: Implemented Multi-Source Ranking (Spotify/BEA).
+> - 🚧 **V3 Refactor**: Starting surgical modularization of `AlbumsView` to support "The Blending Menu".
+> - 🚧 **Componentization**: Moving towards a responsive, component-based UI architecture.
 ---
 
 ## Core Features
