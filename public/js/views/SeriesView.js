@@ -6,12 +6,15 @@
  */
 
 import Component from '../components/base/Component.js';
+import SeriesHeader from '../components/series/SeriesHeader.js';
+import SeriesFilterBar from '../components/series/SeriesFilterBar.js';
+import SeriesGridRenderer from '../components/series/SeriesGridRenderer.js';
 
 export default class SeriesView {
     constructor(controller) {
         this.controller = controller;
         this.components = {};
-        this.container = document.getElementById('app'); // Main mounting point
+        this.container = document.body; // Default fallback, but mount() will look for #app
     }
 
     /**
@@ -19,10 +22,34 @@ export default class SeriesView {
      */
     async mount() {
         console.log("SeriesView Mounting... 🚀");
+        this.container = document.getElementById('app');
+        if (!this.container) {
+            console.error("App container not found!");
+            return;
+        }
+
         this.renderShell();
 
         // Initialize Sub-Components
         await this.initComponents();
+
+        // Initial Data Load (Mock for S12 Phase 3 Verification)
+        this.components.header.update({
+            metadata: {
+                title: "V3 Series Demo",
+                description: "Architecture Refactor in Progress - Phase 3",
+                stats: { count: 3, duration: "2h 15m" }
+            }
+        });
+
+        this.components.grid.update({
+            items: [
+                { id: 1, title: "Dark Side of the Moon", artist: "Pink Floyd", coverUrl: "https://upload.wikimedia.org/wikipedia/en/3/3b/Dark_Side_of_the_Moon.png", releaseDate: "1973-03-01" },
+                { id: 2, title: "OK Computer", artist: "Radiohead", coverUrl: "https://upload.wikimedia.org/wikipedia/en/b/ba/Radioheadokcomputer.png", releaseDate: "1997-05-21" },
+                { id: 3, title: "Abbey Road", artist: "The Beatles", coverUrl: "https://upload.wikimedia.org/wikipedia/en/4/42/Beatles_-_Abbey_Road.jpg", releaseDate: "1969-09-26" }
+            ],
+            layout: 'grid'
+        });
     }
 
     /**
@@ -31,18 +58,24 @@ export default class SeriesView {
     renderShell() {
         this.container.innerHTML = `
             <div id="series-view-layout" class="flex flex-col h-screen bg-gray-900 text-white">
-                <header id="series-header-mount" class="p-4 border-b border-gray-800"></header>
+                <!-- Header Mount -->
+                <header id="series-header-mount" class="p-4 border-b border-gray-800 bg-gray-900/95 backdrop-blur z-20 sticky top-0 shadow-md"></header>
                 
-                <main class="flex-1 overflow-hidden flex">
+                <main class="flex-1 overflow-hidden flex relative">
                     <!-- Sidebar (Filters/Nav) -->
-                    <aside id="series-sidebar-mount" class="w-64 bg-gray-950 hidden md:block p-4 overflow-y-auto"></aside>
+                    <aside class="w-72 bg-gray-950 hidden md:flex flex-col border-r border-gray-800 z-10">
+                        <div id="series-sidebar-mount" class="flex-1 p-5 overflow-y-auto"></div>
+                    </aside>
                     
                     <!-- Main Grid -->
-                    <section id="series-grid-mount" class="flex-1 p-4 overflow-y-auto relative"></section>
+                    <section id="series-grid-mount" class="flex-1 p-4 md:p-6 overflow-y-auto relative scroll-smooth bg-gradient-to-b from-gray-900 to-black"></section>
                 </main>
                 
                 <!-- Blending Overlay Mount Point -->
                 <div id="blending-menu-mount"></div>
+                
+                <!-- Toast/Modal Mount Points -->
+                <div id="modal-container"></div>
             </div>
         `;
     }
@@ -51,16 +84,40 @@ export default class SeriesView {
      * mounts the child components into the shell
      */
     async initComponents() {
-        // Placeholder for Component Mounting
-        // this.components.header = new SeriesHeader({ container: document.getElementById('series-header-mount') });
-        // this.components.header.mount();
+        // 1. Header
+        this.components.header = new SeriesHeader({
+            container: document.getElementById('series-header-mount'),
+            props: { metadata: null }
+        });
+        this.components.header.mount();
 
-        console.log("Components Initialized (Placeholders)");
+        // 2. Sidebar (Filter Bar)
+        this.components.filters = new SeriesFilterBar({
+            container: document.getElementById('series-sidebar-mount'),
+            props: {
+                onSearch: (q) => this.controller?.handleSearch(q),
+                onSort: (s) => this.controller?.handleFilter(s)
+            }
+        });
+        this.components.filters.mount();
+
+        // 3. Grid Renderer
+        this.components.grid = new SeriesGridRenderer({
+            container: document.getElementById('series-grid-mount'),
+            props: { items: [], layout: 'grid' }
+        });
+        this.components.grid.mount();
+
+        console.log("Components Initialized & Mounted ✅");
     }
 
     update(state) {
         console.log("SeriesView Updating with State:", state);
-        // Propagate updates to components
-        // Object.values(this.components).forEach(comp => comp.update(state));
+        if (state.series && this.components.header) {
+            this.components.header.update({ metadata: state.series });
+        }
+        if (state.items && this.components.grid) {
+            this.components.grid.update({ items: state.items });
+        }
     }
 }

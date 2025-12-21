@@ -25,15 +25,15 @@ It addresses the following User Stories:
 *Extracting UI/Logic from the Monolith into reusable blocks.*
 
 ### Core Series Components (US1, US3)
-- [ ] **Grid Renderer**: Create `components/series/SeriesGridRenderer.js` (Pure DOM generation).
-- [ ] **Entity Card**: Create `components/series/EntityCard.js` (HTML Generator + Ghost Logic).
-- [ ] **Filter Bar**: Create `components/series/SeriesFilterBar.js` (Search & Sort logic).
-- [ ] **Header**: Create `components/series/SeriesHeader.js` (Title, description, stats).
+- [x] **Grid Renderer**: Create `components/series/SeriesGridRenderer.js` (Pure DOM generation).
+- [x] **Entity Card**: Create `components/series/EntityCard.js` (HTML Generator + Ghost Logic).
+- [x] **Filter Bar**: Create `components/series/SeriesFilterBar.js` (Search & Sort logic).
+- [x] **Header**: Create `components/series/SeriesHeader.js` (Title, description, stats).
 - [ ] **Drag & Drop**: Create `components/series/SeriesDragDrop.js` (SortableJS Wrapper).
 
 ### Shared Utilities (US1)
-- [ ] **Loader**: Create `components/shared/SkeletonLoader.js`.
-- [ ] **Context Menu**: Create `components/shared/ContextMenu.js` (The "Three-dot" logic).
+- [x] **Loader**: Create `components/shared/SkeletonLoader.js`.
+- [x] **Context Menu**: Create `components/shared/ContextMenu.js` (The "Three-dot" logic).
 
 ### Inventory & Playlists (US4)
 - [ ] **Inventory Grid**: Create `components/inventory/InventoryGrid.js` (Extends/Uses SeriesRenderer).
