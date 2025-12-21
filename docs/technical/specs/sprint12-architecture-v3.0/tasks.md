@@ -16,10 +16,10 @@ It addresses the following User Stories:
 ---
 
 ## 1. 🏗️ Infrastructure & Base (US1)
-- [ ] **Setup**: Verify Git Branch `sprint12-architecture-v3.0`.
-- [ ] **Base Component**: Create `public/js/components/base/Component.js` (The abstract class with `mount`, `update`, `unmount`).
-- [ ] **Store Integration**: Create `public/js/controllers/SeriesController.js` (Empty shell for logic migration).
-- [ ] **Entry Point**: Create `public/js/views/SeriesView.js` (Initially a copy of `AlbumsView.js` to start strangling).
+- [x] **Setup**: Verify Git Branch `sprint12-architecture-v3.0`.
+- [x] **Base Component**: Create `public/js/components/base/Component.js` (The abstract class with `mount`, `update`, `unmount`).
+- [x] **Store Integration**: Create `public/js/controllers/SeriesController.js` (Empty shell for logic migration).
+- [x] **Entry Point**: Create `public/js/views/SeriesView.js` (Initially a copy of `AlbumsView.js` to start strangling).
 
 ## 2. 🧩 Component Extraction: "The Shopping List" (US1, US3, US4)
 *Extracting UI/Logic from the Monolith into reusable blocks.*
