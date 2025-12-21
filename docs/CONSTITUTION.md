@@ -15,7 +15,11 @@ We favor simplicity and standard web technologies over complex framework lock-in
     - **Store Pattern** for client-side state management (Observer-based).
     - **Repository Pattern** for data access (Firestore, LocalStorage).
     - **Service Layer** for external integrations (AI, Auth).
+    - **Service Layer** for external integrations (AI, Auth).
 - **Structure**: Separation of concerns (View vs Logic vs Data).
+- **Naming Conventions**:
+    - **Universal Series Model**: All curation contexts must be suffixed with `Series` (e.g., `AlbumSeries`, `ArtistSeries`, `GenreSeries`) and flow through the `Blending Menu`.
+    - **Pipeline**: `create[Entity]Series` -> `blendSeries` -> `generatePlaylist`.
 
 ### III. Documentation First
 Documentation is a living part of the codebase, not an afterthought.
