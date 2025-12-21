@@ -29,16 +29,16 @@ It addresses the following User Stories:
 - [x] **Entity Card**: Create `components/series/EntityCard.js` (HTML Generator + Ghost Logic).
 - [x] **Filter Bar**: Create `components/series/SeriesFilterBar.js` (Search & Sort logic).
 - [x] **Header**: Create `components/series/SeriesHeader.js` (Title, description, stats).
-- [ ] **Drag & Drop**: Create `components/series/SeriesDragDrop.js` (SortableJS Wrapper).
+- [x] **Drag & Drop**: Create `components/series/SeriesDragDrop.js` (SortableJS Wrapper).
 
 ### Shared Utilities (US1)
 - [x] **Loader**: Create `components/shared/SkeletonLoader.js`.
 - [x] **Context Menu**: Create `components/shared/ContextMenu.js` (The "Three-dot" logic).
 
 ### Inventory & Playlists (US4)
-- [ ] **Inventory Grid**: Create `components/inventory/InventoryGrid.js` (Extends/Uses SeriesRenderer).
-- [ ] **Playlist Board**: Create `components/playlists/PlaylistsDragBoard.js` (Kanban logic).
-- [ ] **Export Toolbar**: Create `components/playlists/PlaylistExportToolbar.js`.
+- [x] **Inventory Grid**: Create `components/inventory/InventoryGrid.js` (Extends/Uses SeriesRenderer).
+- [x] **Playlist Board**: Create `components/playlists/PlaylistsDragBoard.js` (Kanban logic).
+- [x] **Export Toolbar**: Create `components/playlists/PlaylistExportToolbar.js`.
 
 ### Navigation & Home (US5)
 - [ ] **Home Carousel**: Create `components/home/HomeCarousel.js` (The 3-Slide Hero).
