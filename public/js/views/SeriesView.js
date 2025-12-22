@@ -1,31 +1,37 @@
 /**
  * SeriesView.js
  * 
- * V3 "Thin Orchestrator" - Extends BaseView
+ * V3 Architecture: THIN ORCHESTRATOR
  * 
- * Responsibilities:
- * - Shell HTML generation (render)
- * - Component mounting (mount)
- * - DOM event delegation to Controller
- * - Lazy loading / infinite scroll for albums grid
+ * This view is a thin shell that:
+ * 1. Renders the basic page structure (header, toolbar mount, grid mount)
+ * 2. Mounts V3 components (SeriesHeader, SeriesToolbar, SeriesGridRenderer)
+ * 3. Delegates all rendering to components (which use existing production functions)
  * 
- * DOES NOT: Contains business logic. That lives in SeriesController.
+ * The components internally reuse AlbumsGridRenderer/AlbumsScopedRenderer functions,
+ * ensuring 100% feature parity with AlbumsView.
  */
 
 import { BaseView } from './BaseView.js';
-import { db } from '../app.js';
+import { db } from '../firebase-init.js';
+import { albumsStore } from '../stores/albums.js';
+import { albumSeriesStore } from '../stores/albumSeries.js';
+import { router } from '../router.js';
+import { InlineProgress } from '../components/InlineProgress.js';
+import { Breadcrumb } from '../components/Breadcrumb.js';
+import { getIcon } from '../components/Icons.js';
 
-// Components
+// V3 Components
 import SeriesHeader from '../components/series/SeriesHeader.js';
-import SeriesFilterBar from '../components/series/SeriesFilterBar.js';
+import SeriesToolbar from '../components/series/SeriesToolbar.js';
 import SeriesGridRenderer from '../components/series/SeriesGridRenderer.js';
 
-// Lazy Loading Config
-const LAZY_LOAD_CONFIG = {
-    initialBatchSize: 10,       // Load first 10 items (show quickly)
-    batchSize: 10,              // Load 10 more on scroll
-    rootMargin: '200px',        // Trigger 200px before reaching bottom
-};
+// Utilities (for filtering)
+import {
+    filterAlbums as filterAlbumsFn,
+    getUniqueArtists as getUniqueArtistsFn,
+    escapeHtml
+} from './albums/index.js';
 
 export default class SeriesView extends BaseView {
     constructor(controller) {
@@ -33,301 +39,325 @@ export default class SeriesView extends BaseView {
         this.controller = controller;
         this.components = {};
 
-        // Lazy loading state
-        this.displayedCount = 0;
-        this.allItems = [];
-        this.loadMoreObserver = null;
+        // State
+        this.currentScope = 'ALL';
+        this.targetSeriesId = null;
+        this.searchQuery = '';
+        this.filters = { artist: 'all', year: 'all', source: 'all' };
+        this.viewMode = localStorage.getItem('albumsViewMode') || 'compact';
+        this.isLoading = false;
+
+        // Progress
+        this.inlineProgress = null;
     }
 
     /**
-     * Render - Returns shell HTML
+     * Render - Returns a thin shell with mount points for components
      */
     async render(params) {
-        console.log('[SeriesView] Rendering shell...', params);
-
         return `
-            <div id="series-view-layout" class="flex flex-col min-h-screen bg-gray-900 text-white">
-                <!-- Header Mount Point -->
-                <header id="series-header-mount" class="sticky top-0 z-30 bg-gray-900/95 backdrop-blur border-b border-gray-800 shadow-lg">
-                    <div class="animate-pulse h-20 bg-gray-800/50"></div>
+            <div class="albums-view container">
+                <!-- Header Component Mount -->
+                <header class="view-header mb-8 fade-in">
+                    <div id="series-header-mount"></div>
+                    <div id="series-toolbar-mount"></div>
                 </header>
 
-                <div class="flex flex-1 overflow-hidden">
-                    <!-- Sidebar (Filters) - Desktop -->
-                    <aside id="series-sidebar" class="w-64 bg-gray-950 hidden lg:flex flex-col border-r border-gray-800">
-                        <div id="series-filter-mount" class="flex-1 p-4 overflow-y-auto"></div>
-                    </aside>
+                <!-- Grid Component Mount -->
+                <div id="series-grid-mount"></div>
 
-                    <!-- Main Content Area -->
-                    <main class="flex-1 overflow-y-auto scroll-smooth" id="series-main-scroll">
-                        <!-- Mobile Filter Toggle -->
-                        <div class="lg:hidden p-4 border-b border-gray-800">
-                            <button id="mobile-filter-toggle" class="btn btn-ghost w-full flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 010 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h10a1 1 0 010 2H4a1 1 0 01-1-1zM3 16a1 1 0 011-1h7a1 1 0 010 2H4a1 1 0 01-1-1z"/>
-                                </svg>
-                                Filters & Sort
-                            </button>
-                        </div>
+                <!-- Empty State (shown when no albums) -->
+                <div id="emptyStateContainer"></div>
+                
+                <!-- Footer -->
+                <footer class="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
+                    <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
+                </footer>
 
-                        <!-- Albums Grid -->
-                        <section id="series-grid-mount" class="p-4 md:p-6">
-                            <!-- GridRenderer will populate this -->
-                            <div class="grid-skeleton grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                                ${this.renderSkeletonCards(12)}
-                            </div>
-                        </section>
-
-                        <!-- Load More Sentinel (for IntersectionObserver) -->
-                        <div id="load-more-sentinel" class="h-20 flex items-center justify-center">
-                            <div id="load-more-spinner" class="hidden">
-                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
-                            </div>
-                        </div>
-                    </main>
-                </div>
-
-                <!-- Mobile Filter Drawer -->
-                <div id="mobile-filter-drawer" class="fixed inset-0 z-50 hidden">
-                    <div class="absolute inset-0 bg-black/60" id="mobile-filter-backdrop"></div>
-                    <div class="absolute right-0 top-0 h-full w-80 bg-gray-900 p-4 shadow-xl">
-                        <div id="mobile-filter-content"></div>
-                    </div>
-                </div>
-
-                <!-- Toast Container -->
-                <div id="toast-container" class="fixed bottom-4 right-4 z-50"></div>
+                <!-- Modals (can be componentized later) -->
+                <div id="series-modals-mount"></div>
             </div>
         `;
     }
 
     /**
-     * Generate skeleton card placeholders
-     */
-    renderSkeletonCards(count) {
-        return Array(count).fill(0).map(() => `
-            <div class="animate-pulse">
-                <div class="aspect-square bg-gray-800 rounded-lg mb-2"></div>
-                <div class="h-4 bg-gray-800 rounded w-3/4 mb-1"></div>
-                <div class="h-3 bg-gray-800 rounded w-1/2"></div>
-            </div>
-        `).join('');
-    }
-
-    /**
-     * Mount - Initialize components and controller
+     * Mount - Initialize and mount all V3 components
      */
     async mount(params) {
-        console.log('[SeriesView] Mounting components...', params);
+        console.log('[SeriesView] Mounting...', params);
 
-        // Link controller to view
-        this.controller.setView(this);
-        this.controller.init(db, this);
+        // Initialize container reference
+        this.container = document.getElementById('app');
 
-        // Mount sub-components
-        await this.initComponents();
+        // Determine scope from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const seriesId = params?.seriesId || urlParams.get('seriesId');
 
-        // Setup lazy loading
-        this.setupLazyLoading();
+        if (seriesId && seriesId !== 'undefined' && seriesId !== 'null') {
+            this.currentScope = 'SINGLE';
+            this.targetSeriesId = seriesId;
+        } else {
+            this.currentScope = 'ALL';
+            this.targetSeriesId = null;
+        }
 
-        // Setup mobile filter toggle
-        this.setupMobileFilters();
+        // Link controller
+        if (this.controller) {
+            this.controller.setView(this);
+            this.controller.init(db, this);
+        }
 
-        // Determine scope from URL params
-        const seriesId = params?.query?.seriesId || params?.seriesId;
-        const scopeType = seriesId ? 'SINGLE' : 'ALL';
+        // Mount V3 components
+        await this.mountHeader();
+        await this.mountToolbar();
+        await this.mountGrid();
+
+        // Attach breadcrumb listeners
+        Breadcrumb.attachListeners(this.container);
 
         // Load data via controller
-        await this.controller.loadScope(scopeType, seriesId);
+        if (this.controller) {
+            await this.controller.loadScope(this.currentScope, this.targetSeriesId);
+        }
+
+        console.log('[SeriesView] All components mounted ✅');
     }
 
-    /**
-     * Initialize child components
-     */
-    async initComponents() {
-        // Header
-        const headerMount = document.getElementById('series-header-mount');
-        if (headerMount) {
-            this.components.header = new SeriesHeader({
-                container: headerMount,
-                props: { metadata: null }
-            });
-            this.components.header.mount();
-        }
+    // =========================================
+    // COMPONENT MOUNTING
+    // =========================================
 
-        // Filter Bar (Sidebar)
-        const filterMount = document.getElementById('series-filter-mount');
-        if (filterMount) {
-            this.components.filters = new SeriesFilterBar({
-                container: filterMount,
-                props: {
-                    onSearch: (q) => this.controller.handleSearch(q),
-                    onSort: (s) => this.controller.handleSort(s)
-                }
-            });
-            this.components.filters.mount();
-        }
+    async mountHeader() {
+        const mount = document.getElementById('series-header-mount');
+        if (!mount) return;
 
-        // Grid Renderer
-        const gridMount = document.getElementById('series-grid-mount');
-        if (gridMount) {
-            this.components.grid = new SeriesGridRenderer({
-                container: gridMount,
-                props: { items: [], layout: 'grid' }
-            });
-            this.components.grid.mount();
-        }
+        const activeSeries = albumSeriesStore.getActiveSeries();
+        const albums = albumsStore.getAlbums();
+        const pageTitle = this.currentScope === 'ALL'
+            ? 'All Albums Series'
+            : (activeSeries ? escapeHtml(activeSeries.name) : 'Albums');
 
-        console.log('[SeriesView] Components mounted ✅');
+        this.components.header = new SeriesHeader({
+            container: mount,
+            props: {
+                pageTitle,
+                albumCount: albums.length,
+                onGeneratePlaylists: () => this.handleGeneratePlaylists()
+            }
+        });
+        this.components.header.mount();
     }
 
-    /**
-     * Setup IntersectionObserver for lazy loading
-     */
-    setupLazyLoading() {
-        const sentinel = document.getElementById('load-more-sentinel');
-        if (!sentinel) return;
+    async mountToolbar() {
+        const mount = document.getElementById('series-toolbar-mount');
+        if (!mount) return;
 
-        this.loadMoreObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && this.displayedCount < this.allItems.length) {
-                    this.loadMoreItems();
-                }
-            });
-        }, {
-            root: document.getElementById('series-main-scroll'),
-            rootMargin: LAZY_LOAD_CONFIG.rootMargin
+        const albums = albumsStore.getAlbums();
+        const activeSeries = albumSeriesStore.getActiveSeries();
+        const allSeries = albumSeriesStore.getSeries();
+
+        // Setup inline progress container
+        const progressContainer = document.getElementById('loading-progress-container');
+        if (progressContainer) {
+            this.inlineProgress = new InlineProgress(progressContainer);
+        }
+
+        this.components.toolbar = new SeriesToolbar({
+            container: mount,
+            props: {
+                searchQuery: this.searchQuery,
+                filters: this.filters,
+                viewMode: this.viewMode,
+                artists: getUniqueArtistsFn(albums),
+                seriesList: allSeries,
+                activeSeries,
+                onSearch: (q) => this.handleSearch(q),
+                onSeriesChange: (v) => this.handleSeriesChange(v),
+                onArtistFilter: (v) => this.handleFilter('artist', v),
+                onYearFilter: (v) => this.handleFilter('year', v),
+                onSourceFilter: (v) => this.handleFilter('source', v),
+                onRefresh: () => this.handleRefresh(),
+                onToggleView: () => this.handleToggleView()
+            }
+        });
+        this.components.toolbar.mount();
+    }
+
+    async mountGrid() {
+        const mount = document.getElementById('series-grid-mount');
+        if (!mount) return;
+
+        const albums = albumsStore.getAlbums();
+        const filteredAlbums = this.filterAlbums(albums);
+        const allSeries = albumSeriesStore.getSeries();
+
+        this.components.grid = new SeriesGridRenderer({
+            container: mount,
+            props: {
+                items: filteredAlbums,
+                layout: this.viewMode === 'compact' ? 'grid' : 'list',
+                scope: this.currentScope,
+                seriesList: allSeries,
+                context: { searchQuery: this.searchQuery, filters: this.filters }
+            }
+        });
+        this.components.grid.mount();
+
+        // Show empty state if needed
+        this.updateEmptyState(filteredAlbums.length);
+    }
+
+    // =========================================
+    // EVENT HANDLERS (delegate to controller or update components)
+    // =========================================
+
+    handleSearch(query) {
+        this.searchQuery = query;
+        this.refreshGrid();
+    }
+
+    handleSeriesChange(value) {
+        if (value === 'all') {
+            router.navigate('/albums');
+        } else {
+            router.navigate(`/albums?seriesId=${value}`);
+        }
+    }
+
+    handleFilter(type, value) {
+        this.filters[type] = value;
+        this.refreshGrid();
+    }
+
+    handleRefresh() {
+        if (this.controller) {
+            this.controller.loadScope(this.currentScope, this.targetSeriesId, true);
+        }
+    }
+
+    handleToggleView() {
+        this.viewMode = this.viewMode === 'compact' ? 'expanded' : 'compact';
+        localStorage.setItem('albumsViewMode', this.viewMode);
+
+        // Re-mount toolbar with new mode state
+        this.mountToolbar();
+
+        // Refresh grid with new layout
+        this.refreshGrid();
+    }
+
+    handleGeneratePlaylists() {
+        const activeSeries = albumSeriesStore.getActiveSeries();
+        if (activeSeries) {
+            router.navigate(`/playlists?seriesId=${activeSeries.id}`);
+        } else {
+            router.navigate('/playlists');
+        }
+    }
+
+    // =========================================
+    // HELPER METHODS
+    // =========================================
+
+    filterAlbums(albums) {
+        return filterAlbumsFn(albums, {
+            searchQuery: this.searchQuery,
+            filters: this.filters
+        });
+    }
+
+    refreshGrid() {
+        if (!this.components.grid) return;
+
+        const albums = albumsStore.getAlbums();
+        const filteredAlbums = this.filterAlbums(albums);
+        const allSeries = albumSeriesStore.getSeries();
+
+        this.components.grid.update({
+            items: filteredAlbums,
+            layout: this.viewMode === 'compact' ? 'grid' : 'list',
+            scope: this.currentScope,
+            seriesList: allSeries,
+            context: { searchQuery: this.searchQuery, filters: this.filters }
         });
 
-        this.loadMoreObserver.observe(sentinel);
+        this.updateEmptyState(filteredAlbums.length);
     }
 
-    /**
-     * Load more items (called by IntersectionObserver)
-     */
-    loadMoreItems() {
-        if (this.displayedCount >= this.allItems.length) return;
+    updateEmptyState(albumCount) {
+        const container = document.getElementById('emptyStateContainer');
+        if (!container) return;
 
-        const spinner = document.getElementById('load-more-spinner');
-        if (spinner) spinner.classList.remove('hidden');
-
-        // Simulate small delay for UX
-        setTimeout(() => {
-            const nextBatch = this.allItems.slice(
-                this.displayedCount,
-                this.displayedCount + LAZY_LOAD_CONFIG.batchSize
-            );
-
-            this.displayedCount += nextBatch.length;
-
-            // Append to grid
-            if (this.components.grid) {
-                this.components.grid.appendItems(nextBatch);
-            }
-
-            if (spinner) spinner.classList.add('hidden');
-            console.log(`[SeriesView] Lazy loaded: ${this.displayedCount}/${this.allItems.length}`);
-        }, 100);
-    }
-
-    /**
-     * Setup mobile filter drawer toggle
-     */
-    setupMobileFilters() {
-        const toggle = document.getElementById('mobile-filter-toggle');
-        const drawer = document.getElementById('mobile-filter-drawer');
-        const backdrop = document.getElementById('mobile-filter-backdrop');
-
-        if (toggle && drawer) {
-            toggle.addEventListener('click', () => drawer.classList.remove('hidden'));
-            backdrop?.addEventListener('click', () => drawer.classList.add('hidden'));
-        }
-    }
-
-    // =========================================
-    // VIEW UPDATE METHODS (called by Controller)
-    // =========================================
-
-    /**
-     * Update loading state
-     */
-    setLoading(isLoading) {
-        const gridMount = document.getElementById('series-grid-mount');
-        if (!gridMount) return;
-
-        if (isLoading) {
-            gridMount.innerHTML = `
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    ${this.renderSkeletonCards(LAZY_LOAD_CONFIG.initialBatchSize)}
+        if (albumCount === 0 && !this.isLoading) {
+            container.innerHTML = `
+                <div class="empty-state text-center py-16 glass-panel">
+                    <div class="text-6xl mb-6 opacity-30">${getIcon('Music', 'w-24 h-24 mx-auto')}</div>
+                    <h2 class="text-2xl font-bold mb-2">No albums in library</h2>
+                    <p class="text-muted mb-8">Create a series from the home page to get started</p>
+                    <button class="btn btn-primary" onclick="window.location.href='/home'">
+                        ${getIcon('ArrowLeft', 'w-4 h-4 mr-2')} Go to Home
+                    </button>
                 </div>
             `;
+        } else {
+            container.innerHTML = '';
         }
     }
 
-    /**
-     * Update albums (with lazy loading support)
-     */
+    // =========================================
+    // UPDATE METHODS (called by Controller)
+    // =========================================
+
+    setLoading(isLoading) {
+        this.isLoading = isLoading;
+        if (this.inlineProgress) {
+            isLoading ? this.inlineProgress.start() : this.inlineProgress.finish();
+        }
+    }
+
+    updateProgress(progress) {
+        if (this.inlineProgress) {
+            this.inlineProgress.update(progress.current, progress.total, progress.label);
+        }
+    }
+
     updateAlbums(albums) {
         console.log('[SeriesView] updateAlbums:', albums?.length);
-
-        this.allItems = albums || [];
-        this.displayedCount = 0;
-
-        // Load initial batch
-        const initialBatch = this.allItems.slice(0, LAZY_LOAD_CONFIG.initialBatchSize);
-        this.displayedCount = initialBatch.length;
-
-        if (this.components.grid) {
-            this.components.grid.update({ items: initialBatch, layout: 'grid' });
-        }
-
-        // Update sentinel visibility
-        const sentinel = document.getElementById('load-more-sentinel');
-        if (sentinel) {
-            sentinel.style.display = this.allItems.length > this.displayedCount ? 'flex' : 'none';
-        }
+        this.refreshGrid();
+        this.updateHeader();
     }
 
-    /**
-     * Update loading progress
-     */
-    updateProgress(progress) {
-        // TODO: Use InlineProgress component
-        console.log(`[SeriesView] Progress: ${progress.current}/${progress.total} - ${progress.label || ''}`);
+    updateHeader() {
+        if (!this.components.header) return;
+
+        const activeSeries = albumSeriesStore.getActiveSeries();
+        const albums = albumsStore.getAlbums();
+        const pageTitle = this.currentScope === 'ALL'
+            ? 'All Albums Series'
+            : (activeSeries ? escapeHtml(activeSeries.name) : 'Albums');
+
+        this.components.header.update({
+            pageTitle,
+            albumCount: albums.length
+        });
     }
 
-    /**
-     * Update header info
-     */
-    updateHeader(data) {
-        if (this.components.header) {
-            this.components.header.update({
-                metadata: {
-                    title: data.title,
-                    description: data.description,
-                    stats: { count: this.allItems.length }
-                }
-            });
-        }
-    }
+    // =========================================
+    // LIFECYCLE
+    // =========================================
 
-    /**
-     * Destroy - Cleanup
-     */
     destroy() {
         console.log('[SeriesView] Destroying...');
 
-        // Disconnect observer
-        if (this.loadMoreObserver) {
-            this.loadMoreObserver.disconnect();
-            this.loadMoreObserver = null;
-        }
-
-        // Unmount components
+        // Unmount all components
         Object.values(this.components).forEach(c => {
             if (c && typeof c.unmount === 'function') c.unmount();
         });
         this.components = {};
+
+        if (this.inlineProgress) {
+            this.inlineProgress.finish();
+        }
 
         super.destroy();
     }

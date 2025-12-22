@@ -1,47 +1,84 @@
 /**
  * SeriesGridRenderer.js
  * 
- * Responsible for rendering the main grid of entities (Albums, etc).
- * It uses EntityCard.js for individual items.
- * Supports lazy loading via appendItems().
+ * V3 Component Pattern: DELEGATES to existing production render functions
+ * 
+ * This component wraps existing AlbumsGridRenderer and AlbumsScopedRenderer
+ * to provide a component interface while maintaining 100% feature parity.
+ * 
+ * Supports:
+ * - Compact grid view (via wrapInGrid + renderAlbumsGrid)
+ * - Expanded list view (via renderExpandedList)
+ * - Scoped rendering for ALL/SINGLE series (via renderScopedGrid/List)
+ * - Lazy loading via appendItems()
  */
 import Component from '../base/Component.js';
 import EntityCard from './EntityCard.js';
+import {
+    renderAlbumsGrid,
+    renderExpandedList,
+    wrapInGrid
+} from '../../views/albums/AlbumsGridRenderer.js';
+import { renderScopedGrid, renderScopedList } from '../../views/albums/AlbumsScopedRenderer.js';
 
 export default class SeriesGridRenderer extends Component {
     /**
      * @param {Object} props
-     * @param {Array} props.items - List of entities to render
+     * @param {Array} props.items - List of albums to render
      * @param {string} props.layout - 'grid' | 'list'
+     * @param {string} props.scope - 'SINGLE' | 'ALL'
+     * @param {Array} props.seriesList - All series for scoped rendering
+     * @param {Object} props.context - Filter context { searchQuery, filters }
      */
-    constructor(props) {
-        super(props);
+    constructor(config) {
+        super(config);
         this.gridElement = null;
     }
 
     render() {
-        const { items = [], layout = 'grid' } = this.props;
+        const {
+            items = [],
+            layout = 'grid',
+            scope = 'SINGLE',
+            seriesList = [],
+            context = {}
+        } = this.props;
 
-        // Define Layout Classes
-        const gridClasses = "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6";
-        const listClasses = "flex flex-col gap-2";
+        let contentHtml;
 
-        const layoutClass = layout === 'list' ? listClasses : gridClasses;
-
-        // Generate Items HTML
-        const itemsHTML = items.map(item => {
-            const card = new EntityCard({ entity: item, type: 'album' });
-            return card.getHTML();
-        }).join('');
-
-        // Ghost Card (Add New) - Always appended at the end
-        const ghostCard = new EntityCard({ type: 'ghost' });
-        const ghostHTML = ghostCard.getHTML();
+        if (scope === 'ALL' && seriesList.length > 0) {
+            // Use scoped renderer for ALL series view
+            if (layout === 'grid') {
+                contentHtml = renderScopedGrid({
+                    albums: items,
+                    seriesList,
+                    currentScope: scope,
+                    renderAlbumsGrid: (albums) => renderAlbumsGrid(albums, context)
+                });
+            } else {
+                contentHtml = renderScopedList({
+                    albums: items,
+                    seriesList,
+                    currentScope: scope,
+                    renderExpandedList: (albums) => renderExpandedList(albums, context)
+                });
+            }
+        } else {
+            // SINGLE series or no grouping
+            if (layout === 'grid') {
+                // Use production wrapInGrid + renderAlbumsGrid
+                const cardsHtml = renderAlbumsGrid(items, context);
+                const ghostHtml = EntityCard.renderGhostCard();
+                contentHtml = wrapInGrid(cardsHtml + ghostHtml);
+            } else {
+                // Expanded list view
+                contentHtml = renderExpandedList(items, context);
+            }
+        }
 
         this.container.innerHTML = `
-            <div id="series-grid-inner" class="${layoutClass} pb-20">
-                ${itemsHTML}
-                ${ghostHTML}
+            <div id="series-grid-inner" class="pb-8">
+                ${contentHtml}
             </div>
         `;
 
@@ -55,21 +92,39 @@ export default class SeriesGridRenderer extends Component {
     appendItems(newItems) {
         if (!this.gridElement || !newItems?.length) return;
 
+        const { context = {} } = this.props;
+
+        // Find the grid container within (could be nested in scoped view)
+        const gridContainer = this.gridElement.querySelector('.albums-grid') || this.gridElement;
+
         // Find ghost card to insert before it
-        const ghostCard = this.gridElement.querySelector('[data-ghost="true"]');
+        const ghostCard = gridContainer.querySelector('[data-ghost="true"]');
+
+        // Create new cards HTML
+        const newCardsHtml = newItems.map(album => EntityCard.renderCard(album, 'compact')).join('');
+
+        // Create fragment and insert
+        const temp = document.createElement('div');
+        temp.innerHTML = newCardsHtml;
 
         const fragment = document.createDocumentFragment();
-        newItems.forEach(item => {
-            const card = new EntityCard({ entity: item, type: 'album' });
-            const temp = document.createElement('div');
-            temp.innerHTML = card.getHTML();
-            fragment.appendChild(temp.firstElementChild);
-        });
+        while (temp.firstChild) {
+            fragment.appendChild(temp.firstChild);
+        }
 
         if (ghostCard) {
-            this.gridElement.insertBefore(fragment, ghostCard);
+            ghostCard.parentNode.insertBefore(fragment, ghostCard);
         } else {
-            this.gridElement.appendChild(fragment);
+            gridContainer.appendChild(fragment);
         }
+    }
+
+    /**
+     * Get current item count (for lazy loading state)
+     */
+    getItemCount() {
+        const gridContainer = this.gridElement?.querySelector('.albums-grid') || this.gridElement;
+        if (!gridContainer) return 0;
+        return gridContainer.querySelectorAll('[data-album-id]').length;
     }
 }
