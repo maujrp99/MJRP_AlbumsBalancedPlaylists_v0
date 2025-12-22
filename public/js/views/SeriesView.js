@@ -82,62 +82,8 @@ export default class SeriesView extends BaseView {
                     <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
                 </footer>
 
-                <!-- Edit Series Modal -->
-                <div id="editSeriesModal" class="modal-overlay hidden">
-                    <div class="modal-content glass-panel p-6 max-w-2xl w-full mx-4 rounded-xl">
-                        <div class="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
-                            <h3 class="text-xl font-bold flex items-center gap-2">
-                                ${getIcon('Edit', 'w-5 h-5 text-accent-primary')} Edit Series
-                            </h3>
-                            <button type="button" class="btn btn-ghost btn-circle" id="closeEditSeriesBtn">
-                                ${getIcon('X', 'w-5 h-5')}
-                            </button>
-                        </div>
-                        <form id="editSeriesForm">
-                            <div class="form-group mb-6">
-                                <label class="block text-sm font-medium mb-2">Series Name</label>
-                                <input type="text" id="editSeriesNameInput" class="form-control w-full" required minlength="3" placeholder="Enter series name...">
-                            </div>
-                            
-                            <div class="form-group mb-6">
-                                <div class="flex items-center justify-between mb-3">
-                                    <label class="text-sm font-medium">Albums in Series</label>
-                                    <span id="editSeriesAlbumCount" class="badge badge-neutral text-xs">0 albums</span>
-                                </div>
-                                
-                                <div id="editSeriesAlbumsList" class="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar mb-4 bg-black/20 rounded-lg p-3">
-                                    <!-- Albums rendered dynamically -->
-                                </div>
-                                
-                                <div id="editSeriesAutocompleteWrapper" class="mb-4 relative z-50"></div>
-                                <p class="text-xs text-muted mt-1">Format: Artist - Album Title (e.g., Pink Floyd - The Wall)</p>
-                            </div>
-                            
-                            <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
-                                <button type="button" class="btn btn-secondary" id="cancelEditSeriesBtn">Cancel</button>
-                                <button type="submit" class="btn btn-primary">${getIcon('Check', 'w-4 h-4')} Save Changes</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Delete Series Modal -->
-                <div id="deleteSeriesModal" class="modal-overlay hidden">
-                    <div class="modal-content glass-panel p-6 max-w-md w-full mx-4 border-l-4 border-red-500 rounded-xl">
-                        <h3 class="text-xl font-bold mb-2 text-red-400">Delete Series?</h3>
-                        <p class="mb-4 text-muted">
-                            Are you sure you want to delete <strong id="deleteSeriesName" class="text-white"></strong>?
-                        </p>
-                        <div class="alert alert-info mb-6 text-sm">
-                            ${getIcon('Info', 'w-4 h-4 inline mr-1')}
-                            <strong>Safe Delete:</strong> Albums will NOT be deleted. They will remain in your inventory.
-                        </div>
-                        <div class="flex justify-end gap-3">
-                            <button type="button" class="btn btn-secondary" id="cancelDeleteSeriesBtn">Cancel</button>
-                            <button type="button" class="btn btn-danger" id="confirmDeleteSeriesBtn">Delete Series</button>
-                        </div>
-                    </div>
-                </div>
+                <!-- Series Modals Mount Point -->
+                <div id="series-modals-mount"></div>
             </div>
         `;
     }
@@ -177,8 +123,8 @@ export default class SeriesView extends BaseView {
         // Setup event handler for card actions (CRUD)
         this.setupEventHandler();
 
-        // Setup modal event listeners
-        this.setupSeriesModals();
+        // Mount SeriesModals component (Edit/Delete)
+        this.mountSeriesModals();
 
         // Attach breadcrumb listeners
         Breadcrumb.attachListeners(this.container);
@@ -296,213 +242,48 @@ export default class SeriesView extends BaseView {
     }
 
     /**
-     * Setup series modal event listeners (Edit/Delete)
+     * Mount SeriesModals component (Edit/Delete series modals)
      */
-    setupSeriesModals() {
-        // Edit modal buttons
-        const closeEditBtn = this.$('#closeEditSeriesBtn');
-        const cancelEditBtn = this.$('#cancelEditSeriesBtn');
-        const editForm = this.$('#editSeriesForm');
+    mountSeriesModals() {
+        const mount = this.$('#series-modals-mount');
+        if (!mount) return;
 
-        if (closeEditBtn) this.on(closeEditBtn, 'click', () => this.closeModal('editSeriesModal'));
-        if (cancelEditBtn) this.on(cancelEditBtn, 'click', () => this.closeModal('editSeriesModal'));
-        if (editForm) {
-            this.on(editForm, 'submit', async (e) => {
-                e.preventDefault();
-                await this.handleEditSeriesSubmit();
-            });
-        }
-
-        // Delete modal buttons
-        const cancelDeleteBtn = this.$('#cancelDeleteSeriesBtn');
-        const confirmDeleteBtn = this.$('#confirmDeleteSeriesBtn');
-
-        if (cancelDeleteBtn) this.on(cancelDeleteBtn, 'click', () => this.closeModal('deleteSeriesModal'));
-        if (confirmDeleteBtn) this.on(confirmDeleteBtn, 'click', () => this.handleDeleteSeriesConfirm());
-    }
-
-    /**
-     * Open Edit Series Modal
-     */
-    openEditSeriesModal(seriesId) {
-        const series = albumSeriesStore.getSeries().find(s => s.id === seriesId);
-        if (!series) {
-            toast.error('Series not found');
-            return;
-        }
-
-        this.editingSeriesId = seriesId;
-        this.editingAlbumQueries = [...(series.albumQueries || [])];
-
-        const nameInput = this.$('#editSeriesNameInput');
-        const modal = this.$('#editSeriesModal');
-
-        if (nameInput) nameInput.value = series.name || '';
-        this.renderSeriesAlbumsList();
-        this.initSeriesAutocomplete();
-
-        if (modal) modal.classList.remove('hidden');
-    }
-
-    /**
-     * Open Delete Series Modal
-     */
-    openDeleteSeriesModal(seriesId) {
-        const series = albumSeriesStore.getSeries().find(s => s.id === seriesId);
-        if (!series) return;
-
-        this.deletingSeriesId = seriesId;
-
-        const nameEl = this.$('#deleteSeriesName');
-        const modal = this.$('#deleteSeriesModal');
-
-        if (nameEl) nameEl.textContent = series.name || 'this series';
-        if (modal) modal.classList.remove('hidden');
-    }
-
-    /**
-     * Close any modal by ID
-     */
-    closeModal(modalId) {
-        const modal = this.$(`#${modalId}`);
-        if (modal) modal.classList.add('hidden');
-
-        // Reset editing state when closing edit modal
-        if (modalId === 'editSeriesModal') {
-            this.editingSeriesId = null;
-            this.editingAlbumQueries = [];
-        }
-        if (modalId === 'deleteSeriesModal') {
-            this.deletingSeriesId = null;
-        }
-    }
-
-    /**
-     * Render Albums List inside Edit Modal
-     */
-    renderSeriesAlbumsList() {
-        const albumsList = this.$('#editSeriesAlbumsList');
-        const countEl = this.$('#editSeriesAlbumCount');
-
-        if (countEl) countEl.textContent = `${this.editingAlbumQueries?.length || 0} albums`;
-
-        if (albumsList) {
-            if (!this.editingAlbumQueries || this.editingAlbumQueries.length === 0) {
-                albumsList.innerHTML = `<p class="text-gray-500 text-sm italic">No albums yet. Use search below to add.</p>`;
-                return;
-            }
-
-            albumsList.innerHTML = this.editingAlbumQueries.map((query, i) => `
-                <div class="album-item flex items-center justify-between p-2 bg-white/5 rounded-lg">
-                    <span class="text-sm truncate flex-1 mr-2">${escapeHtml(query)}</span>
-                    <button type="button" class="btn btn-ghost btn-sm text-red-400 hover:text-red-300" data-action="remove-album-from-edit" data-index="${i}">
-                        ${getIcon('X', 'w-4 h-4')}
-                    </button>
-                </div>
-            `).join('');
-
-            // Add remove handlers
-            albumsList.querySelectorAll('[data-action="remove-album-from-edit"]').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const index = parseInt(e.currentTarget.dataset.index, 10);
-                    this.editingAlbumQueries.splice(index, 1);
-                    this.renderSeriesAlbumsList();
-                });
-            });
-        }
-    }
-
-    /**
-     * Initialize Autocomplete for adding albums in Edit Series Modal
-     */
-    initSeriesAutocomplete() {
-        const wrapper = this.$('#editSeriesAutocompleteWrapper');
-        if (!wrapper) return;
-
-        // Clear existing autocomplete if re-opening modal
-        wrapper.innerHTML = '';
-
-        // Load album data for autocomplete
-        optimizedAlbumLoader.load().catch(console.error);
-
-        const autocomplete = new Autocomplete({
-            placeholder: 'Search to add album...',
-            loader: optimizedAlbumLoader,
-            onSelect: (item) => {
-                const entry = `${item.artist} - ${item.album}`;
-
-                if (this.editingAlbumQueries.includes(entry)) {
-                    toast.warning('This album is already in the list');
-                    return;
+        this.components.modals = new SeriesModals({
+            onSeriesUpdated: (seriesId) => {
+                this.updateHeader();
+                if (this.controller) {
+                    this.controller.loadScope(this.currentScope, this.targetSeriesId, true);
                 }
-
-                this.editingAlbumQueries.push(entry);
-                this.renderSeriesAlbumsList();
-                toast.success(`Added: ${item.album}`);
-
-                // Clear input
-                const input = wrapper.querySelector('input');
-                if (input) {
-                    input.value = '';
-                    input.focus();
+            },
+            onSeriesDeleted: (seriesId) => {
+                if (this.targetSeriesId === seriesId) {
+                    router.navigate('/albums');
+                } else {
+                    this.refreshGrid();
                 }
-            }
+            },
+            escapeHtml: escapeHtml
         });
 
-        wrapper.appendChild(autocomplete.render());
+        mount.innerHTML = this.components.modals.render();
+        this.components.modals.mount(mount);
     }
 
     /**
-     * Handle Edit Series form submit
+     * Open Edit Series Modal (delegates to SeriesModals)
      */
-    async handleEditSeriesSubmit() {
-        const nameInput = this.$('#editSeriesNameInput');
-        const newName = nameInput?.value?.trim();
-
-        if (!newName || !this.editingSeriesId) return;
-
-        try {
-            await albumSeriesStore.updateSeries(this.editingSeriesId, {
-                name: newName,
-                albumQueries: this.editingAlbumQueries || []
-            });
-            this.closeModal('editSeriesModal');
-            this.updateHeader();
-            toast.success('Series updated successfully');
-
-            // Reload to reflect changes
-            if (this.controller) {
-                this.controller.loadScope(this.currentScope, this.targetSeriesId, true);
-            }
-        } catch (err) {
-            console.error('[SeriesView] Failed to update series:', err);
-            toast.error('Failed to update series');
+    openEditSeriesModal(seriesId) {
+        if (this.components.modals) {
+            this.components.modals.openEdit(seriesId);
         }
     }
 
     /**
-     * Handle Delete Series confirmation
+     * Open Delete Series Modal (delegates to SeriesModals)
      */
-    async handleDeleteSeriesConfirm() {
-        if (!this.deletingSeriesId) return;
-
-        try {
-            await albumSeriesStore.deleteSeries(this.deletingSeriesId);
-            this.closeModal('deleteSeriesModal');
-
-            // Navigate away if we just deleted the current series
-            if (this.targetSeriesId === this.deletingSeriesId) {
-                router.navigate('/albums');
-            } else {
-                this.refreshGrid();
-            }
-
-            const { toast } = await import('../components/Toast.js');
-            toast.success('Series deleted successfully');
-        } catch (err) {
-            console.error('[SeriesView] Failed to delete series:', err);
-            const { toast } = await import('../components/Toast.js');
-            toast.error('Failed to delete series');
+    openDeleteSeriesModal(seriesId) {
+        if (this.components.modals) {
+            this.components.modals.openDelete(seriesId);
         }
     }
 
