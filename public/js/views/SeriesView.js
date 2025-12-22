@@ -29,6 +29,7 @@ import SeriesHeader from '../components/series/SeriesHeader.js';
 import SeriesToolbar from '../components/series/SeriesToolbar.js';
 import SeriesGridRenderer from '../components/series/SeriesGridRenderer.js';
 import SeriesEventHandler from '../components/series/SeriesEventHandler.js';
+import SeriesModals from '../components/series/SeriesModals.js';
 
 // Utilities (for filtering)
 import {

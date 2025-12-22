@@ -48,9 +48,18 @@ It addresses the following User Stories:
 ## 3. 🧠 Logic Migration (US1)
 *Moving the brain out of the View.*
 
-- [ ] **Controller Logic**: Move `loadSeries`, `filter`, `sort` logic from `AlbumsView` to `SeriesController`.
+- [/] **Controller Logic**: Move `loadSeries`, `filter`, `sort` logic from `SeriesView` to `SeriesController`.
 - [ ] **Event Routing**: Move DOM event listeners to `SeriesController.bindEvents()`.
-- [ ] **Orchestrator**: Update `SeriesView.js` to ONLY mount components and delegate events.
+- [ ] **Modals Extraction**: Extract Edit/Delete Series modals to `components/series/SeriesModals.js`.
+- [ ] **Orchestrator**: Update `SeriesView.js` to ONLY mount components and delegate events (Target: <400 LOC).
+
+## 3.5 🧭 Navigation Revision (US3)
+*Prepare TopNav for responsive dashboard and series context.*
+
+- [ ] **TopNav Refactor**: Update `TopNav.js` to use `hidden md:flex` for responsive behavior.
+- [ ] **Mobile Menu**: Add hamburger menu state for mobile view.
+- [ ] **Series Context**: Display active series name in TopNav when in series scope.
+- [ ] **Create Mix CTA**: Add prominent "Create Mix" button in header (Desktop) / FAB (Mobile).
 
 ## 4. 🥤 New Features: The Blending Menu (US2)
 - [ ] **Schema**: Implement `RankingContext` structure in `CurationEngine`.
