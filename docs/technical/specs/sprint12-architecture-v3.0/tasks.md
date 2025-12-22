@@ -45,13 +45,13 @@ It addresses the following User Stories:
 - [ ] **Series Grid**: Create `components/home/SeriesGrid.js` (Visual Cards).
 - [ ] **Breadcrumbs**: Create `components/navigation/Breadcrumbs.js` (Replacing simple back buttons).
 
-## 3. 🧠 Logic Migration (US1)
+## 3. 🧠 Logic Migration (US1) ✅
 *Moving the brain out of the View.*
 
-- [/] **Controller Logic**: Move `loadSeries`, `filter`, `sort` logic from `SeriesView` to `SeriesController`.
-- [ ] **Event Routing**: Move DOM event listeners to `SeriesController.bindEvents()`.
-- [ ] **Modals Extraction**: Extract Edit/Delete Series modals to `components/series/SeriesModals.js`.
-- [ ] **Orchestrator**: Update `SeriesView.js` to ONLY mount components and delegate events (Target: <400 LOC).
+- [x] **Controller Logic**: Move `loadSeries`, `filter`, `sort` logic from `SeriesView` to `SeriesController`.
+- [x] **Event Routing**: Move DOM event listeners to `SeriesController.bindEvents()`.
+- [x] **Modals Extraction**: Extract Edit/Delete Series modals to `components/series/SeriesModals.js`.
+- [x] **Orchestrator**: Update `SeriesView.js` to ONLY mount components and delegate events (**389 LOC achieved**, target <400).
 
 ## 3.5 🧭 Navigation Revision (US3)
 *Prepare TopNav for responsive dashboard and series context.*
