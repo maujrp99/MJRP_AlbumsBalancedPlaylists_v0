@@ -1,88 +1,151 @@
 /**
- * SeriesView.js (Formerly AlbumsView)
+ * SeriesView.js
  * 
- * V3 "Thin Orchestrator".
- * Responsibility: Mounts Components and delegates events to Controller.
+ * V3 "Thin Orchestrator" - Extends BaseView
  * 
- * NOW extends BaseView for proper Router integration.
+ * Responsibilities:
+ * - Shell HTML generation (render)
+ * - Component mounting (mount)
+ * - DOM event delegation to Controller
+ * - Lazy loading / infinite scroll for albums grid
+ * 
+ * DOES NOT: Contains business logic. That lives in SeriesController.
  */
 
 import { BaseView } from './BaseView.js';
+import { db } from '../app.js';
+
+// Components
 import SeriesHeader from '../components/series/SeriesHeader.js';
 import SeriesFilterBar from '../components/series/SeriesFilterBar.js';
 import SeriesGridRenderer from '../components/series/SeriesGridRenderer.js';
+
+// Lazy Loading Config
+const LAZY_LOAD_CONFIG = {
+    initialBatchSize: 10,       // Load first 10 items (show quickly)
+    batchSize: 10,              // Load 10 more on scroll
+    rootMargin: '200px',        // Trigger 200px before reaching bottom
+};
 
 export default class SeriesView extends BaseView {
     constructor(controller) {
         super();
         this.controller = controller;
         this.components = {};
+
+        // Lazy loading state
+        this.displayedCount = 0;
+        this.allItems = [];
+        this.loadMoreObserver = null;
     }
 
     /**
-     * Render Method - Must return HTML string for the router
+     * Render - Returns shell HTML
      */
     async render(params) {
-        console.log("SeriesView Rendering... 🚀", params);
+        console.log('[SeriesView] Rendering shell...', params);
 
-        // Return the shell HTML that will be populated by mount()
         return `
-            <div id="series-view-layout" class="flex flex-col h-screen bg-gray-900 text-white">
-                <!-- Header Mount -->
-                <header id="series-header-mount" class="p-4 border-b border-gray-800 bg-gray-900/95 backdrop-blur z-20 sticky top-0 shadow-md"></header>
-                
-                <main class="flex-1 overflow-hidden flex relative">
-                    <!-- Sidebar (Filters/Nav) -->
-                    <aside class="w-72 bg-gray-950 hidden md:flex flex-col border-r border-gray-800 z-10">
-                        <div id="series-sidebar-mount" class="flex-1 p-5 overflow-y-auto"></div>
+            <div id="series-view-layout" class="flex flex-col min-h-screen bg-gray-900 text-white">
+                <!-- Header Mount Point -->
+                <header id="series-header-mount" class="sticky top-0 z-30 bg-gray-900/95 backdrop-blur border-b border-gray-800 shadow-lg">
+                    <div class="animate-pulse h-20 bg-gray-800/50"></div>
+                </header>
+
+                <div class="flex flex-1 overflow-hidden">
+                    <!-- Sidebar (Filters) - Desktop -->
+                    <aside id="series-sidebar" class="w-64 bg-gray-950 hidden lg:flex flex-col border-r border-gray-800">
+                        <div id="series-filter-mount" class="flex-1 p-4 overflow-y-auto"></div>
                     </aside>
-                    
-                    <!-- Main Grid -->
-                    <section id="series-grid-mount" class="flex-1 p-4 md:p-6 overflow-y-auto relative scroll-smooth bg-gradient-to-b from-gray-900 to-black"></section>
-                </main>
-                
-                <!-- Blending Overlay Mount Point -->
-                <div id="blending-menu-mount"></div>
-                
-                <!-- Toast/Modal Mount Points -->
-                <div id="modal-container"></div>
+
+                    <!-- Main Content Area -->
+                    <main class="flex-1 overflow-y-auto scroll-smooth" id="series-main-scroll">
+                        <!-- Mobile Filter Toggle -->
+                        <div class="lg:hidden p-4 border-b border-gray-800">
+                            <button id="mobile-filter-toggle" class="btn btn-ghost w-full flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 010 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h10a1 1 0 010 2H4a1 1 0 01-1-1zM3 16a1 1 0 011-1h7a1 1 0 010 2H4a1 1 0 01-1-1z"/>
+                                </svg>
+                                Filters & Sort
+                            </button>
+                        </div>
+
+                        <!-- Albums Grid -->
+                        <section id="series-grid-mount" class="p-4 md:p-6">
+                            <!-- GridRenderer will populate this -->
+                            <div class="grid-skeleton grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                                ${this.renderSkeletonCards(12)}
+                            </div>
+                        </section>
+
+                        <!-- Load More Sentinel (for IntersectionObserver) -->
+                        <div id="load-more-sentinel" class="h-20 flex items-center justify-center">
+                            <div id="load-more-spinner" class="hidden">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+
+                <!-- Mobile Filter Drawer -->
+                <div id="mobile-filter-drawer" class="fixed inset-0 z-50 hidden">
+                    <div class="absolute inset-0 bg-black/60" id="mobile-filter-backdrop"></div>
+                    <div class="absolute right-0 top-0 h-full w-80 bg-gray-900 p-4 shadow-xl">
+                        <div id="mobile-filter-content"></div>
+                    </div>
+                </div>
+
+                <!-- Toast Container -->
+                <div id="toast-container" class="fixed bottom-4 right-4 z-50"></div>
             </div>
         `;
     }
 
     /**
-     * Mount Method - Called after render, sets up components and events
+     * Generate skeleton card placeholders
      */
-    async mount(params) {
-        console.log("SeriesView Mounting Components... 🔧", params);
-
-        // Initialize Sub-Components
-        await this.initComponents();
-
-        // Initial Data Load (Mock for S12 Phase 3 Verification)
-        this.components.header.update({
-            metadata: {
-                title: "V3 Series Demo",
-                description: "Architecture Refactor in Progress - Phase 3",
-                stats: { count: 3, duration: "2h 15m" }
-            }
-        });
-
-        this.components.grid.update({
-            items: [
-                { id: 1, title: "Dark Side of the Moon", artist: "Pink Floyd", coverUrl: "https://upload.wikimedia.org/wikipedia/en/3/3b/Dark_Side_of_the_Moon.png", releaseDate: "1973-03-01" },
-                { id: 2, title: "OK Computer", artist: "Radiohead", coverUrl: "https://upload.wikimedia.org/wikipedia/en/b/ba/Radioheadokcomputer.png", releaseDate: "1997-05-21" },
-                { id: 3, title: "Abbey Road", artist: "The Beatles", coverUrl: "https://upload.wikimedia.org/wikipedia/en/4/42/Beatles_-_Abbey_Road.jpg", releaseDate: "1969-09-26" }
-            ],
-            layout: 'grid'
-        });
+    renderSkeletonCards(count) {
+        return Array(count).fill(0).map(() => `
+            <div class="animate-pulse">
+                <div class="aspect-square bg-gray-800 rounded-lg mb-2"></div>
+                <div class="h-4 bg-gray-800 rounded w-3/4 mb-1"></div>
+                <div class="h-3 bg-gray-800 rounded w-1/2"></div>
+            </div>
+        `).join('');
     }
 
     /**
-     * Mounts the child components into the shell
+     * Mount - Initialize components and controller
+     */
+    async mount(params) {
+        console.log('[SeriesView] Mounting components...', params);
+
+        // Link controller to view
+        this.controller.setView(this);
+        this.controller.init(db, this);
+
+        // Mount sub-components
+        await this.initComponents();
+
+        // Setup lazy loading
+        this.setupLazyLoading();
+
+        // Setup mobile filter toggle
+        this.setupMobileFilters();
+
+        // Determine scope from URL params
+        const seriesId = params?.query?.seriesId || params?.seriesId;
+        const scopeType = seriesId ? 'SINGLE' : 'ALL';
+
+        // Load data via controller
+        await this.controller.loadScope(scopeType, seriesId);
+    }
+
+    /**
+     * Initialize child components
      */
     async initComponents() {
-        // 1. Header
+        // Header
         const headerMount = document.getElementById('series-header-mount');
         if (headerMount) {
             this.components.header = new SeriesHeader({
@@ -92,20 +155,20 @@ export default class SeriesView extends BaseView {
             this.components.header.mount();
         }
 
-        // 2. Sidebar (Filter Bar)
-        const sidebarMount = document.getElementById('series-sidebar-mount');
-        if (sidebarMount) {
+        // Filter Bar (Sidebar)
+        const filterMount = document.getElementById('series-filter-mount');
+        if (filterMount) {
             this.components.filters = new SeriesFilterBar({
-                container: sidebarMount,
+                container: filterMount,
                 props: {
-                    onSearch: (q) => this.controller?.handleSearch(q),
-                    onSort: (s) => this.controller?.handleFilter(s)
+                    onSearch: (q) => this.controller.handleSearch(q),
+                    onSort: (s) => this.controller.handleSort(s)
                 }
             });
             this.components.filters.mount();
         }
 
-        // 3. Grid Renderer
+        // Grid Renderer
         const gridMount = document.getElementById('series-grid-mount');
         if (gridMount) {
             this.components.grid = new SeriesGridRenderer({
@@ -115,37 +178,157 @@ export default class SeriesView extends BaseView {
             this.components.grid.mount();
         }
 
-        console.log("Components Initialized & Mounted ✅");
+        console.log('[SeriesView] Components mounted ✅');
     }
 
     /**
-     * Destroy Method - Cleanup when navigating away
+     * Setup IntersectionObserver for lazy loading
+     */
+    setupLazyLoading() {
+        const sentinel = document.getElementById('load-more-sentinel');
+        if (!sentinel) return;
+
+        this.loadMoreObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && this.displayedCount < this.allItems.length) {
+                    this.loadMoreItems();
+                }
+            });
+        }, {
+            root: document.getElementById('series-main-scroll'),
+            rootMargin: LAZY_LOAD_CONFIG.rootMargin
+        });
+
+        this.loadMoreObserver.observe(sentinel);
+    }
+
+    /**
+     * Load more items (called by IntersectionObserver)
+     */
+    loadMoreItems() {
+        if (this.displayedCount >= this.allItems.length) return;
+
+        const spinner = document.getElementById('load-more-spinner');
+        if (spinner) spinner.classList.remove('hidden');
+
+        // Simulate small delay for UX
+        setTimeout(() => {
+            const nextBatch = this.allItems.slice(
+                this.displayedCount,
+                this.displayedCount + LAZY_LOAD_CONFIG.batchSize
+            );
+
+            this.displayedCount += nextBatch.length;
+
+            // Append to grid
+            if (this.components.grid) {
+                this.components.grid.appendItems(nextBatch);
+            }
+
+            if (spinner) spinner.classList.add('hidden');
+            console.log(`[SeriesView] Lazy loaded: ${this.displayedCount}/${this.allItems.length}`);
+        }, 100);
+    }
+
+    /**
+     * Setup mobile filter drawer toggle
+     */
+    setupMobileFilters() {
+        const toggle = document.getElementById('mobile-filter-toggle');
+        const drawer = document.getElementById('mobile-filter-drawer');
+        const backdrop = document.getElementById('mobile-filter-backdrop');
+
+        if (toggle && drawer) {
+            toggle.addEventListener('click', () => drawer.classList.remove('hidden'));
+            backdrop?.addEventListener('click', () => drawer.classList.add('hidden'));
+        }
+    }
+
+    // =========================================
+    // VIEW UPDATE METHODS (called by Controller)
+    // =========================================
+
+    /**
+     * Update loading state
+     */
+    setLoading(isLoading) {
+        const gridMount = document.getElementById('series-grid-mount');
+        if (!gridMount) return;
+
+        if (isLoading) {
+            gridMount.innerHTML = `
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                    ${this.renderSkeletonCards(LAZY_LOAD_CONFIG.initialBatchSize)}
+                </div>
+            `;
+        }
+    }
+
+    /**
+     * Update albums (with lazy loading support)
+     */
+    updateAlbums(albums) {
+        console.log('[SeriesView] updateAlbums:', albums?.length);
+
+        this.allItems = albums || [];
+        this.displayedCount = 0;
+
+        // Load initial batch
+        const initialBatch = this.allItems.slice(0, LAZY_LOAD_CONFIG.initialBatchSize);
+        this.displayedCount = initialBatch.length;
+
+        if (this.components.grid) {
+            this.components.grid.update({ items: initialBatch, layout: 'grid' });
+        }
+
+        // Update sentinel visibility
+        const sentinel = document.getElementById('load-more-sentinel');
+        if (sentinel) {
+            sentinel.style.display = this.allItems.length > this.displayedCount ? 'flex' : 'none';
+        }
+    }
+
+    /**
+     * Update loading progress
+     */
+    updateProgress(progress) {
+        // TODO: Use InlineProgress component
+        console.log(`[SeriesView] Progress: ${progress.current}/${progress.total} - ${progress.label || ''}`);
+    }
+
+    /**
+     * Update header info
+     */
+    updateHeader(data) {
+        if (this.components.header) {
+            this.components.header.update({
+                metadata: {
+                    title: data.title,
+                    description: data.description,
+                    stats: { count: this.allItems.length }
+                }
+            });
+        }
+    }
+
+    /**
+     * Destroy - Cleanup
      */
     destroy() {
-        console.log("SeriesView Destroying... 💤");
+        console.log('[SeriesView] Destroying...');
 
-        // Unmount all components
-        Object.values(this.components).forEach(component => {
-            if (component && typeof component.unmount === 'function') {
-                component.unmount();
-            }
+        // Disconnect observer
+        if (this.loadMoreObserver) {
+            this.loadMoreObserver.disconnect();
+            this.loadMoreObserver = null;
+        }
+
+        // Unmount components
+        Object.values(this.components).forEach(c => {
+            if (c && typeof c.unmount === 'function') c.unmount();
         });
         this.components = {};
 
-        // Call parent cleanup
         super.destroy();
-    }
-
-    /**
-     * Update Method - Called when stores notify
-     */
-    update(state) {
-        console.log("SeriesView Updating with State:", state);
-        if (state?.series && this.components.header) {
-            this.components.header.update({ metadata: state.series });
-        }
-        if (state?.items && this.components.grid) {
-            this.components.grid.update({ items: state.items });
-        }
     }
 }

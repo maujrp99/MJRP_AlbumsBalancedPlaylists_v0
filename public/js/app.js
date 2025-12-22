@@ -11,10 +11,9 @@ import { AuthService } from './services/AuthService.js'
 
 import { router } from './router.js'
 import { HomeView } from './views/HomeView.js'
-import { AlbumsView } from './views/AlbumsView.js'
-// V3 Architecture - Not yet integrated into /albums route
-// import SeriesView from './views/SeriesView.js'
-// import SeriesController from './controllers/SeriesController.js'
+// V3 Architecture: SeriesView replaces AlbumsView
+import SeriesView from './views/SeriesView.js'
+import SeriesController from './controllers/SeriesController.js'
 import { PlaylistsView } from './views/PlaylistsView.js'
 import { InventoryView } from './views/InventoryView.js'
 import { RankingView } from './views/RankingView.js'
@@ -79,9 +78,12 @@ async function bootstrap() {
 document.addEventListener('DOMContentLoaded', bootstrap)
 
 // Register Routes
+// V3: SeriesController is instantiated once and passed to view
+const seriesController = new SeriesController();
+
 router.register('/home', () => new HomeView())
-router.register('/albums', () => new AlbumsView())
-router.register('/albums/:seriesId', () => new AlbumsView())
+router.register('/albums', () => new SeriesView(seriesController))
+router.register('/albums/:seriesId', () => new SeriesView(seriesController))
 router.register('/playlists', () => new PlaylistsView())
 router.register('/inventory', () => new InventoryView())
 

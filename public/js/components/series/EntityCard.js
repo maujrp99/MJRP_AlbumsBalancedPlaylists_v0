@@ -89,7 +89,7 @@ export default class EntityCard {
 
     getGhostCardHTML() {
         return `
-            <div class="group relative bg-gray-800/50 border-2 border-dashed border-gray-700 rounded-lg flex flex-col items-center justify-center aspect-square cursor-pointer hover:border-green-500 hover:bg-gray-800 transition-colors" data-action="add-new">
+            <div class="group relative bg-gray-800/50 border-2 border-dashed border-gray-700 rounded-lg flex flex-col items-center justify-center aspect-square cursor-pointer hover:border-green-500 hover:bg-gray-800 transition-colors" data-action="add-new" data-ghost="true">
                 <div class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                     <i class="fas fa-plus text-2xl text-gray-400 group-hover:text-green-500"></i>
                 </div>
