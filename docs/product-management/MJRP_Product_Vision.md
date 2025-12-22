@@ -70,6 +70,8 @@ To enable a true "Menu" experience, the algorithms must be highly parametrized. 
 *   **Single Playlist**: The consolidated "Best Of".
 *   **Multiple Playlists (Series)**: Breaking down large collections (e.g., "The Experimental Years", "The Pop Years").
 
+##The blendin menu overall description is:  seguir a metafora do restaurate: Choose your blend" para selecionar as series, (um drop down/filter que tenha as entidades e que depois de selecionado a entidade carrega as series para a entidade selecionada),. Aí a seção de "chose your flavor" para os algoritmos, "pick your ingredientes" para a parametrizacao que será passada ao algoritmo (duration, single/multiple e # playlists, discover mode, etc.) , e por fim, o botão de blend it and generate your playlist(s) 
+
 ---
 
 ## 5. 📱 Architectural Imperative: Responsive Componentization

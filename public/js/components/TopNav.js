@@ -8,12 +8,14 @@ import toast from './Toast.js'
 import { db } from '../app.js'
 import { CacheManager } from '../cache/CacheManager.js'
 import { MigrationUtility } from '../migration/MigrationUtility.js'
+import { SeriesDropdown } from './navigation/SeriesDropdown.js'
 
 export class TopNav {
   constructor() {
     this.isMenuOpen = false
     this.userState = userStore.getState()
     this.migrationUtility = new MigrationUtility(db, new CacheManager())
+    this.seriesDropdown = null // Initialized in attachListeners
 
     // Subscribe to auth changes
     userStore.subscribe(this.handleAuthChange.bind(this))
@@ -47,7 +49,6 @@ export class TopNav {
 
   render() {
     const currentPath = window.location.pathname
-    const albumsSeriesLink = this.getAlbumsSeriesLink()
 
     return `
       <nav class="top-nav glass-panel mx-auto max-w-[1200px] mt-4 mb-8 px-3 py-1 flex justify-between items-center sticky top-4 z-50">
@@ -72,8 +73,8 @@ export class TopNav {
         <!-- Desktop Menu -->
         <div class="hidden md:flex items-center gap-6">
           ${this.renderNavLink('/home', 'Home', currentPath)}
-          ${this.renderNavLink(albumsSeriesLink, 'Album Series', currentPath)}
-          ${this.renderNavLink('/playlist-series', 'Playlists', currentPath)}
+          ${this.renderSeriesDropdown(currentPath)}
+          ${this.renderNavLink('/blend', 'The Blending Menu', currentPath)}
           ${this.renderNavLink('/inventory', 'Inventory', currentPath)}
           <!-- Spotify Connect (Phase 1) -->
           <div id="spotify-connect-desktop"></div>
@@ -107,8 +108,27 @@ export class TopNav {
           <!-- Navigation Links -->
           <nav class="flex flex-col p-4 gap-1 flex-1 bg-brand-dark">
             ${this.renderMobileNavLink('/home', 'Home', 'Rocket', currentPath)}
-            ${this.renderMobileNavLink(albumsSeriesLink, 'Album Series', 'Music', currentPath)}
-            ${this.renderMobileNavLink('/playlist-series', 'Playlists', 'List', currentPath)}
+            
+            <!-- Series Expandable Section -->
+            <div class="mobile-series-section">
+              <button id="mobileSeriesToggle" class="flex items-center justify-between w-full px-4 py-3 rounded-xl text-white/70 hover:bg-white/5 transition-all">
+                <div class="flex items-center gap-3">
+                  ${getIcon('Music', 'w-5 h-5')}
+                  <span class="font-medium">Series</span>
+                </div>
+                ${getIcon('ChevronDown', 'w-4 h-4 transition-transform duration-200')}
+              </button>
+              <div id="mobileSeriesItems" class="hidden pl-8 space-y-1 mt-1">
+                ${this.renderMobileNavLink('/albums', 'Albums', 'Disc', currentPath)}
+                ${this.renderMobileNavLink('/artists', 'Artists', 'User', currentPath)}
+                ${this.renderMobileNavLink('/genres', 'Genres', 'Tag', currentPath)}
+                ${this.renderMobileNavLink('/tracks', 'Tracks', 'Music', currentPath)}
+                <div class="border-t border-white/10 my-1"></div>
+                ${this.renderMobileNavLink('/playlist-series', 'Playlists', 'List', currentPath)}
+              </div>
+            </div>
+            
+            ${this.renderMobileNavLink('/blend', 'The Blending Menu', 'Sliders', currentPath)}
             ${this.renderMobileNavLink('/inventory', 'Inventory', 'Archive', currentPath)}
             <div class="px-4 py-2">
                <div id="spotify-connect-mobile"></div>
@@ -224,6 +244,15 @@ export class TopNav {
   }
 
   /**
+   * Render Series Dropdown (TopNav v2)
+   */
+  renderSeriesDropdown(currentPath) {
+    // Create dropdown instance for rendering
+    const dropdown = new SeriesDropdown({ currentPath })
+    return dropdown.render()
+  }
+
+  /**
    * Render Data Sync link for desktop nav
    */
   renderDataSyncLink() {
@@ -253,6 +282,10 @@ export class TopNav {
   }
 
   async attachListeners() {
+    // TopNav v2: Initialize SeriesDropdown
+    this.seriesDropdown = new SeriesDropdown({ currentPath: window.location.pathname })
+    this.seriesDropdown.attachListeners()
+
     const mobileBtn = document.getElementById('mobileMenuBtn')
     const closeBtn = document.getElementById('closeMenuBtn')
     const mobileMenu = document.getElementById('mobileMenu')
@@ -289,6 +322,22 @@ export class TopNav {
     mobileDataSyncBtn?.addEventListener('click', () => {
       toggleMenu(false)
       this.handleDataSync()
+    })
+
+    // Mobile Series Section Toggle
+    const mobileSeriesToggle = document.getElementById('mobileSeriesToggle')
+    const mobileSeriesItems = document.getElementById('mobileSeriesItems')
+
+    mobileSeriesToggle?.addEventListener('click', () => {
+      const isExpanded = !mobileSeriesItems?.classList.contains('hidden')
+      if (mobileSeriesItems) {
+        mobileSeriesItems.classList.toggle('hidden', isExpanded)
+      }
+      // Rotate chevron
+      const chevron = mobileSeriesToggle.querySelector('svg:last-of-type')
+      if (chevron) {
+        chevron.classList.toggle('rotate-180', !isExpanded)
+      }
     })
 
     const toggleMenu = (show) => {
