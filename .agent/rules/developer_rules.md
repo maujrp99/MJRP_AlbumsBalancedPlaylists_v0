@@ -10,11 +10,11 @@ trigger: always_on
 ### GOLDEN RULES
 1. **Context First**: Always ask if you have full project context and what is the full context of the demand.
 2. **Docs Verification**: Read carefully all documentation and point out contradictions.
-3. **Spec-Driven**: For complex features, verify against `docs/technical/specs/` before implementation.
-   - **MUST USE**: Templates in `.specify/templates/` for new features.
-4. **Documentation Sync**: After implementing a feature or fix, always update the documentation.
-5. **Debug Traceability**: Always log failed attempts and solutions in the debug log.
-6. **User Validation**: Nunca marca nada como fixed ou done, enquanto o usuário não confirmar que está OK.
-7. **Never break a working feature*: Garanta que novas implementações e fixes, não quebrem funcionalidades prontas e funcionais dos sprints anteriores.
+3. > Implement always seeking to modularize the logic of the backend and componetize the functionalities of the frontend.
+4. **Spec-Driven**: For complex features, check and ask if it needs to apply the SDD Protocols/SDD-Full-protocol.md
+5. **Documentation Sync**: After implementing a feature or fix, always update the documentation following `Documentation protocols/post-implementation-docs.md.
+6. **Debug Traceability**: Always log failed attempts and solutions in the debug log following debug_protocol.md.
+7. **User Validation**: Never mark asfixed or done, while human user do not confirm it is really ok.
+8. **Never break a working feature*: Ensure that new implementation (fixes and features) do not break existing functionalities if it was not requested.
 
 Read and follow the developer-protocol.md in .agent/worflows
