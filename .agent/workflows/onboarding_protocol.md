@@ -20,33 +20,42 @@ This ensures the agent has full understanding of project architecture, standards
 
 ### Workflows (`.agent/workflows/`)
 // turbo
-5. Read `architecture_protocol.md`
-6. Read `debug_protocol.md`
-7. Read `documentation_audit.md`
-8. Read `sdd_protocol.md`
+5. Read `architecture_protocol.md` - Architecture and Technical Analysis Protocol
+6. Read `code_quality_assessment_protocol.md` - Code quality assessment process
+7. Read `debug_protocol.md` - Systematic process for debugging and fixing issues
+8. Read `developer_protocol.md` - Golden rules for development
+9. Read `Documentation protocols/documentation-protocol.md` - Living Rules for documenting accordingly
+10. Read `Documentation protocols/documentation_audit.md` - Documentation Audit & Reorganization Protocol
+11. Read `Documentation protocols/post-implementation-docs.md` - Post-implementation documentation checklist
+12. Read `SDD Protocols/SDD-Full-protocol.md` - Specification Defined Development (SDD) Full Protocol
+13. Read `SDD Protocols/plan-SDD-protocol.md` - SDD Planning Phase Protocol
+14. Read `SDD Protocols/specify-SDD-protocol.md` - SDD Specification Phase Protocol
+15. Read `SDD Protocols/task-SDD-protocol.md` - SDD Tasking Phase Protocol
+16. Read `onboarding_protocol.md` - This Onboarding Protocol
+
 
 ---
 
 ## Step 2: Read Core Documentation (`docs/` folder)
 
 // turbo
-9. Read `ARCHITECTURE.md` - Overall system architecture
-10. Read `CHANGELOG.md` - Recent changes and version history
-11. Read `CONSTITUTION.md` - Core principles and guidelines
-12. Read `CONTRIBUTING.md` - Contribution guidelines
-13. Read `PROJECT_SUMMARY.md` - Project overview
-14. Read `README.md` - Main project README
-15. Read `ROADMAP.md` - Future plans and milestones
+17. Read `ARCHITECTURE.md` - Overall system architecture
+18. Read `CHANGELOG.md` - Recent changes and version history
+19. Read `CONSTITUTION.md` - Core principles and guidelines
+20. Read `CONTRIBUTING.md` - Contribution guidelines
+21. Read `PROJECT_SUMMARY.md` - Project overview
+22. Read `README.md` - Main project README
+23. Read `ROADMAP.md` - Future plans and milestones
 
 ---
 
 ## Step 3: Read Technical Documentation (`docs/technical/` folder)
 
 // turbo
-16. Read `album_data_schema.md` - Data models for albums
-17. Read `ARCHITECTURE_AUDIT.md` - Architecture review findings
-18. Read `data_flow_architecture.md` - Data flow patterns
-19. Read `UI_STYLE_GUIDE.md` - UI/UX guidelines
+24. Read `album_data_schema.md` - Data models for albums
+25. Read `ARCHITECTURE_AUDIT.md` - Architecture review findings
+26. Read `data_flow_architecture.md` - Data flow patterns
+27. Read `UI_STYLE_GUIDE.md` - UI/UX guidelines
 
 ---
 
@@ -54,35 +63,35 @@ This ensures the agent has full understanding of project architecture, standards
 
 ### Debug (`docs/debug/`)
 // turbo
-20. Read `DEBUG_LOG.md` - Current and historical debugging issues
+28. Read `DEBUG_LOG.md` - Current and historical debugging issues
 
 ### Onboarding (`docs/onboarding/`)
 // turbo
-21. Read `DEVELOPER.md` - Developer onboarding guide
-22. Read `DEVOPS.md` - DevOps and deployment guide
-23. Read `QA_ENGINEER.md` - QA testing guide
-24. Read `README.md` - Onboarding overview
-25. Read `UX_UI.md` - UX/UI design guide
+29. Read `DEVELOPER.md` - Developer onboarding guide
+30. Read `DEVOPS.md` - DevOps and deployment guide
+31. Read `QA_ENGINEER.md` - QA testing guide
+32. Read `README.md` - Onboarding overview
+33. Read `UX_UI.md` - UX/UI design guide
 
 ---
 
 ## Step 5: Read SDD Templates (`.specify/templates/` folder)
 
 // turbo
-26. Read `agent-file-template.md` - File change template
-27. Read `checklist-template.md` - Task checklist template
-28. Read `plan-template.md` - Planning document template
-29. Read `spec-template.md` - Feature specification template
-30. Read `tasks-template.md` - Task breakdown template
+34. Read `agent-file-template.md` - File change template
+35. Read `checklist-template.md` - Task checklist template
+36. Read `plan-template.md` - Planning document template
+37. Read `spec-template.md` - Feature specification template
+38. Read `tasks-template.md` - Task breakdown template
 
 ---
 
-## Step 6: Architecture Review (`docs/refactor/`)
+## Step 6: Code Quality Ritual (`docs/technical/refactor/`)
 
 // turbo
-31. Read `CODE_QUALITY_ASSESSMENT.md` - Code quality metrics and analysis
-32. Analyze current codebase state based on assessment findings
-33. Identify any critical issues or tech debt to be aware of
+39. Read `PROTOCOL.md` - Code Quality Assessment Protocol reference
+40. Execute `code-quality-assessment-protocol.md`
+41. Identify any critical issues or tech debt to be aware of
 
 ---
 

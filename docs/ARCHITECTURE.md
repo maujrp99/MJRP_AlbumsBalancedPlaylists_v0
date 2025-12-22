@@ -1,7 +1,7 @@
 # Architecture Documentation
 
-**Last Updated**: 2025-12-19
-**Workflow**: See `.agent/workflows/architecture_documentation.md`
+**Last Updated**: 2025-12-21 18:30
+**Workflow**: See `.agent/workflows/architecture_protocol.md`
 
 > **For project overview, features, and deployment info, see:**
 > - [PROJECT_SUMMARY.md](product-management/PROJECT_SUMMARY.md)
@@ -21,24 +21,24 @@ graph TB
         Stores[(Stores: albums, albumSeries, playlists, inventory)]
         Algorithms[Algorithm Registry]
     end
-    
+
     subgraph Cache
         LocalStorage[(localStorage)]
         IndexedDB[(IndexedDB)]
         MemoryCache[(Memory Cache)]
     end
-    
+
     subgraph Firebase
         Firestore[(Firestore)]
         Auth[Firebase Auth]
     end
-    
+
     subgraph Backend["Backend (Cloud Run)"]
         API[API Server :3000]
         Scrapers[BestEver Scraper]
         AI[Google Gemini]
     end
-    
+
     User --> TopNav
     TopNav --> Router
     Router --> Views
@@ -48,11 +48,11 @@ graph TB
     Stores --> Firestore
     Stores --> MemoryCache
     MemoryCache --> IndexedDB
-    
+
     Views --> API
     API --> Scrapers
     API --> AI
-    
+
     Auth --> Stores
 ```
 
@@ -60,18 +60,123 @@ graph TB
 
 ## Table of Contents
 
-1. [Design Patterns & Core Strategies](#design-patterns--core-strategies)
-2. [Router & View Lifecycle](#router--view-lifecycle)
-3. [Domain Model Architecture](#domain-model-architecture)
-4. [Store State Management](#store-state-management)
-5. [UI/UX Standards](#uiux-standards)
-6. [Firebase Integration Guide](#firebase-integration-guide)
-7. [Caching & Performance](#caching--performance)
+1. [Core Domain Models (V3)](#core-domain-models)
+2. [V3 Component Architecture](#v3-component-architecture-series-centric)
+3. [Design Patterns & Core Strategies](#design-patterns--core-strategies)
+4. [Router & View Lifecycle](#router--view-lifecycle)
+5. [Domain Model Architecture](#domain-model-architecture)
+6. [Store State Management](#store-state-management)
+7. [UI/UX Standards](#uiux-standards)
+8. [Firebase Integration Guide](#firebase-integration-guide)
+9. [Caching & Performance](#caching--performance)
+10. [Previous Architecture (V1/V2)](#v1v2-monolithic-view-pattern)
 
 ### Cross-References
-- **[Debug Log](DEBUG_LOG.md)**: Active debugging sessions and historical resolutions.
+- **[Debug Log](debug/DEBUG_LOG.md)**: Active debugging sessions and historical resolutions.
 - **[Component Reference](technical/component_reference.md)**: Detailed API and file-level documentation.
 - **[Data Flow Architecture](technical/data_flow_architecture.md)**: Sequence diagrams and technical lifecycle flows.
+
+---
+
+## Core Domain Models
+**Principles**: Universal Series Model, Golden Pipeline
+**Defined in**: `docs/CONSTITUTION.md`
+
+### 1. Universal Series Model
+All curation contexts are treated as a **Series**. This abstracts the difference between an Album, an Artist, or a Genre.
+- **Entity**: The base unit (Album, Track, Artist).
+- **Series**: A collection of entities treated as a unit for ranking/shuffling.
+- **Naming**: `AlbumSeries`, `ArtistSeries`, `TrackSeries`.
+
+### 2. The Golden Pipeline
+The standard data flow for all curation actions:
+`Input (Entity/Series)` -> `RankingContext (Config)` -> `Blending Menu (Algorithm)` -> `Standardized Output (Playlist)`
+
+---
+
+## [V3 Component Architecture (Series-Centric)]
+**Status**: 🟢 Current
+**Date**: 2025-12-21 17:15
+**Author**: Antigravity (AI Assistant)
+**Related Issues**: Sprint 12, #Refactor
+
+### Problem Statement
+The application relying on monolithic Views (`AlbumsView.js`) created a "God Class" problem: coupled logic, DOM manipulation, and state management in single files of 600+ lines. This violated the "Separation of Concerns" principle and made adding features like the "Blending Menu" risky.
+
+### Decisions & Patterns (V3)
+We adopted a **Responsive Component-Based Architecture** using Vanilla JS.
+
+| Pattern | Role in V3 | Why we chose it |
+| :--- | :--- | :--- |
+| **Component-Based** | Visuals (`EntityCard`, `SeriesHeader`) | Encapsulates HTML/CSS generation and local event binding. Reusable across Views. |
+| **MVC (Controller)** | Logic (`SeriesController`) | Decouples business logic (Filtering, Fetching) from the View. |
+| **Observer** | State (`Stores`) | Allows components to react to data changes without prop-drilling. |
+| **Repository** | Data (`AlbumRepository`) | Abstracts the data source (Firestore vs Local) from the Controller. |
+
+### Rationale
+**Principle Alignment**: **Clean Code & Modular Architecture** (Constitution II)
+- **Modularity**: Components are "Lego blocks" (e.g., `SeriesDragDrop` can be attached to any grid).
+- **Maintainability**: Logic changes in `SeriesController` don't break the UI in `SeriesView`.
+- **Performance**: Virtual DOM is overkill; direct DOM manipulation within small Components is efficient.
+
+### Component Hierarchy
+```mermaid
+graph TD
+    App[App Entry] --> Router
+    Router --> SeriesView["SeriesView (Orchestrator)"]
+
+    subgraph "View Layer (Components)"
+        SeriesView --> SeriesHeader[Series Header (Meta & Actions)]
+        SeriesView --> SeriesFilterBar[Filter & Search Bar]
+        SeriesView --> SeriesGrid[Series Grid (Responsive)]
+        SeriesGrid --> EntityCard[Entity Card (Album/Artist)]
+        SeriesView --> BlendingMenuView[Blending Menu (Overlay)]
+    end
+
+    subgraph "Logic Layer"
+        SeriesView -.Events.-> SeriesController[Series Controller]
+        SeriesController --> DataStores[Data Stores/Repositories]
+    end
+```
+
+### Key Data Structures
+
+#### RankingContext
+The contract between the UI and the Curation Engine for the **Blending Menu**.
+
+```json
+{
+  "style": "balanced_cascade",
+  "targetDuration": 2700,
+  "parameters": {
+    "strictness": 0.8,
+    "p1_count": 1,
+    "deep_cut_ratio": 0.5
+  },
+  "scope": { "type": "series", "id": "series_123" },
+  "sources": [
+    { "id": "bea", "weight": 1.0 },
+    { "id": "spotify", "weight": 0.8 }
+  ]
+}
+```
+
+### Consequences
+- ✅ **Benefits**:
+    - **Testability**: Logic can be unit-tested without a browser.
+    - **Scalability**: New Views (Inventory, Playlists) are just assemblies of existing Components.
+    - **Responsiveness**: CSS-driven layouts (Tailwind) handled in Components, not JS.
+- ⚠️ **Trade-offs**:
+    - **Complexity**: Requires strictly defined interfaces between layers (`props`, `callbacks`).
+- 🔴 **Risks**:
+    - **Migration Overhead**: Porting 100% of `AlbumsView` features (Drag&Drop, Context Menu) takes significant effort.
+
+### Implementation Status
+- [x] Design approved (Plan V3)
+- [x] Infrastructure (Base Component, Controller)
+- [x] Core Components (Grid, Card, Header, Filter)
+- [ ] Logic Migration (Controller Implementation)
+- [ ] Blending Menu Implementation
 
 ---
 
@@ -103,7 +208,7 @@ The core of state management. Stores notify registered views of changes, allowin
 
 ## Router & View Lifecycle
 
-The application uses a custom client-side router based on the History API (`pushState`). 
+The application uses a custom client-side router based on the History API (`pushState`).
 
 > [!IMPORTANT]
 > Detailed sequence diagrams and lifecycle method definitions are documented in [data_flow_architecture.md](technical/data_flow_architecture.md#view-lifecycle--navigation).
@@ -113,7 +218,7 @@ The application uses a custom client-side router based on the History API (`push
 | Path | View | Query Params |
 |------|------|--------------|
 | `/home` | HomeView | - |
-| `/albums` | AlbumsView | `?seriesId=X` |
+| `/albums` | SeriesView (V3) | `?seriesId=X` |
 | `/playlists` | PlaylistsView | - |
 | `/playlist-series` | SavedPlaylistsView | - |
 | `/save-all` | SaveAllView | - |
@@ -173,6 +278,21 @@ Stores manage the application's runtime state and synchronization with Firestore
 - **Level 1 (Memory)**: Instant access during the active session.
 - **Level 2 (In-Browser)**: Persistent cache for album metadata.
 - **Strategy**: Stale-While-Revalidate pattern used for external metadata to ensure snappy transitions.
+
+---
+
+## [V1/V2 Monolithic View Pattern]
+**Status**: 🟡 Superseded
+**Date**: 2024-01-01 (Legacy)
+
+### Description
+Previous architecture relied on `View.js` classes that directly manipulated the DOM and handled all logic internally.
+**Deficiencies**:
+- Hard to test.
+- Duplicate logic (Copy/Paste between Albums and Inventory).
+- "God Class" antipattern.
+
+**See**: [V3 Component Architecture](#v3-component-architecture-series-centric)
 
 ---
 

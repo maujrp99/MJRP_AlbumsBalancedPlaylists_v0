@@ -9,17 +9,18 @@ import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
 
 import { router } from './router.js'
 import { HomeView } from './views/HomeView.js'
-// import { AlbumsView } from './views/AlbumsView.js' // Deprecated V3
-import SeriesView from './views/SeriesView.js'
-import SeriesController from './controllers/SeriesController.js'
+import { AlbumsView } from './views/AlbumsView.js'
+// V3 Architecture - Not yet integrated into /albums route
+// import SeriesView from './views/SeriesView.js'
+// import SeriesController from './controllers/SeriesController.js'
 import { PlaylistsView } from './views/PlaylistsView.js'
 import { InventoryView } from './views/InventoryView.js'
 import { RankingView } from './views/RankingView.js'
 import { ConsolidatedRankingView } from './views/ConsolidatedRankingView.js' // Consolidates View
 
-// V3 Initialization
-const seriesController = new SeriesController();
-seriesController.init();
+// V3 Architecture - Controllers are ready but not yet wired
+// const seriesController = new SeriesController();
+// seriesController.init();
 
 import toast from './components/Toast.js'
 import { albumSeriesStore } from './stores/albumSeries.js'
@@ -82,8 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Register Routes
 router.register('/home', () => new HomeView())
-router.register('/albums', () => new SeriesView(seriesController)) // V3 Switch
-router.register('/albums/:seriesId', () => new SeriesView(seriesController)) // V3 Switch
+router.register('/albums', () => new AlbumsView())
+router.register('/albums/:seriesId', () => new AlbumsView())
 router.register('/playlists', () => new PlaylistsView())
 router.register('/inventory', () => new InventoryView())
 // Sprint 11 Phase 1: Spotify Auth Callback

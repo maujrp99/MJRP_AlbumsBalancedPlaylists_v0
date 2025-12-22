@@ -4,9 +4,16 @@
  * Renders a single card for an Album, Artist, or Genre.
  * Supports different variants based on context (Grid, List, Compact).
  */
-import Component from '../base/Component.js';
+/**
+ * EntityCard.js
+ * 
+ * Renders a single card for an Album, Artist, or Genre.
+ * Supports different variants based on context (Grid, List, Compact).
+ * Note: Does NOT extend Component because it returns HTML string, doesn't mount itself.
+ */
+// import Component from '../base/Component.js'; // Not needed
 
-export default class EntityCard extends Component {
+export default class EntityCard {
     /**
      * @param {Object} props
      * @param {Object} props.entity - The data object (Album/Artist)
@@ -16,7 +23,7 @@ export default class EntityCard extends Component {
      * @param {Function} props.onAction - Context menu handler
      */
     constructor(props) {
-        super({ container: null, props }); // Container handled by Parent (Grid) often, or created here if strictly modular
+        this.props = props;
     }
 
     /**

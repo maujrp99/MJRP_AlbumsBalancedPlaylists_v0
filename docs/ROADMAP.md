@@ -17,13 +17,22 @@
 
 #### Part A: Bug Fixes & Ranking Strategy (COMPLETED ✅)
 - [x] **Critical: Wrong Tracks in Ranking Table (#71)**
+  - Fixed Album ID passing and data flow in `TracksRankingComparison`
+  - Restored **Duration/Time** column for verification
 - [x] **Ranking Strategy Pattern Implementation**
+  - Decoupled ranking logic (Balanced, Spotify, BEA) from algorithms
+  - Integrated UI selectors in `PlaylistsView`
 - [x] **Event-Driven Persistence Fix (#58/87)**
+  - Fixed "Enrich Data" not saving to Firestore (Data loss on navigation bug)
+  - Standardized Firebase DB injection in `AlbumsStateController`
+- [ ] **Loading UX Improvements (#70)**
+  - Smoother transition between skeleton and multi-source ranking (In Progress)
 
-#### Part B: AlbumsView Modularization (Starting Now)
-- [ ] **Analysis**: Create `FEATURE_COMPONENT_MAP.md`.
-- [ ] **Extraction**: Move `renderAlbumCard` logic to `AlbumsGrid.js`.
-- [ ] **Decoupling**: Events and Store isolation.
+#### Part B: AlbumsView Modularization
+- [ ] **Break down God-File**
+  - Extract `renderAlbumCard` logic to a dedicated module
+  - Modularize event delegation setup
+  - Decouple stores from view lifecycle (Dependency Injection foundation)
 
 ---
 
@@ -53,10 +62,11 @@
 - **Responsive Componentization**: "Write Once, Adapt Everywhere". A UI component library that adapts to Mobile and Desktop contexts.
 
 ### 📊 Long-Term Vision
-- **Entity Expansion**: Artists (Sprint 14), Genres (Sprint 15).
-- **AOTY Integration**: Adding AlbumOfTheYear.org as a ranking source.
-- **Native Mobile Experience**: Capacitor wrapper around the responsive web app.
-- **Collaborative Series**: Sharing and co-curating series.
+- Collaborative series sharing
+- Advanced playlist algorithms
+- Cross-platform sync (mobile apps)
+- Integration with other music services (YouTube Music, Tidal, etc.)
+- AI-powered playlist recommendations
 
 ---
 

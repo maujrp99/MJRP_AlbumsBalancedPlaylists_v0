@@ -10,7 +10,7 @@
  * It DOES NOT manipulate the DOM directly. It calls View methods.
  */
 
-import { albumStore } from '../stores/AlbumStore.js'; // Assuming this exists or will exist
+import { albumStore } from '../stores/albums.js';
 
 export default class SeriesController {
     constructor() {

@@ -52,8 +52,12 @@ export default class SeriesFilterBar extends Component {
         const sortSelect = this.container.querySelector('#series-sort-select');
 
         if (searchInput && this.props.onSearch) {
+            let timeout;
             searchInput.addEventListener('input', (e) => {
-                this.props.onSearch(e.target.value);
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    this.props.onSearch(e.target.value);
+                }, 300); // 300ms debounce
             });
         }
 
