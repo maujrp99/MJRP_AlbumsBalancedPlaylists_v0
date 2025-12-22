@@ -1,11 +1,13 @@
 /**
  * App Entry Point
  * Initializes Router, Auth, and Views
+ * 
+ * V3 Architecture: Uses AuthService to gate routing behind auth readiness.
  */
 
 import '../css/index.css'
 import { app, auth, db } from './firebase-init.js'
-import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
+import { AuthService } from './services/AuthService.js'
 
 import { router } from './router.js'
 import { HomeView } from './views/HomeView.js'
@@ -16,38 +18,12 @@ import { AlbumsView } from './views/AlbumsView.js'
 import { PlaylistsView } from './views/PlaylistsView.js'
 import { InventoryView } from './views/InventoryView.js'
 import { RankingView } from './views/RankingView.js'
-import { ConsolidatedRankingView } from './views/ConsolidatedRankingView.js' // Consolidates View
-
-// V3 Architecture - Controllers are ready but not yet wired
-// const seriesController = new SeriesController();
-// seriesController.init();
+import { ConsolidatedRankingView } from './views/ConsolidatedRankingView.js'
 
 import toast from './components/Toast.js'
-import { albumSeriesStore } from './stores/albumSeries.js'
 
-// Export for other modules if needed (though they should import from config)
+// Export for other modules if needed
 export { app, auth, db }
-
-// Auth State Listener
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        console.log('✅ Authenticated as:', user.uid)
-        document.body.classList.add('authenticated')
-
-        // Initialize stores with Firestore and userId (Repository Pattern)
-        // Store initialization logic handles checking if already initialized
-        albumSeriesStore.init(db, user.uid)
-
-        // Initialize Router if not already started
-        // (Router handles its own initialization on load, but we might want to gate it)
-    } else {
-        console.log('⚠️ Not authenticated, signing in anonymously...')
-        signInAnonymously(auth).catch((error) => {
-            console.error('Auth failed:', error)
-            toast.error('Authentication failed. App may not work correctly.')
-        })
-    }
-})
 
 // Initialize UI Components
 import { TopNav } from './components/TopNav.js'
@@ -69,17 +45,38 @@ const initUI = () => {
     }
 }
 
-// Initialize Router and UI when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+/**
+ * Bootstrap the application.
+ * Waits for auth to be ready before routing.
+ */
+async function bootstrap() {
+    console.log('🚀 App Bootstrap Starting...')
+
+    // 1. Initialize UI (TopNav, Footer) - doesn't depend on auth
     initUI()
 
-    // Default route handling
+    // 2. Wait for authentication to be ready
+    const user = await AuthService.waitForAuth()
+
+    if (!user) {
+        console.warn('⚠️ App started without authenticated user. Some features may not work.')
+        toast.warning('Authentication issue. Some features may be limited.')
+    }
+
+    // 3. Now safe to handle routes (auth and stores are ready)
+    console.log('✅ Auth ready, handling route...')
+
     if (!window.location.pathname || window.location.pathname === '/' || window.location.pathname === '/index-v2.html') {
         router.navigate('/home')
     } else {
         router.handleRouteChange()
     }
-})
+
+    console.log('🚀 App Bootstrap Complete')
+}
+
+// Start app when DOM is ready
+document.addEventListener('DOMContentLoaded', bootstrap)
 
 // Register Routes
 router.register('/home', () => new HomeView())
@@ -87,12 +84,12 @@ router.register('/albums', () => new AlbumsView())
 router.register('/albums/:seriesId', () => new AlbumsView())
 router.register('/playlists', () => new PlaylistsView())
 router.register('/inventory', () => new InventoryView())
+
 // Sprint 11 Phase 1: Spotify Auth Callback
 router.register('/callback', async () => {
     const { SpotifyAuthService } = await import('./services/SpotifyAuthService.js')
     const toast = (await import('./components/Toast.js')).default
 
-    // Show loading state if needed, but handled by toast for now
     await SpotifyAuthService.handleCallback().then(success => {
         if (success) {
             toast.success('Connected to Spotify!')
@@ -101,19 +98,17 @@ router.register('/callback', async () => {
         }
     })
 
-    // Clear URL query is handled inside Service, just navigate to home
     router.navigate('/home')
     return null
 })
 
-// Sprint 11: EditPlaylistView for editing existing batches (fixes #54, #55)
+// Sprint 11: EditPlaylistView for editing existing batches
 router.register('/playlists/edit', async () => {
     const { EditPlaylistView } = await import('./views/EditPlaylistView.js')
     return new EditPlaylistView()
 })
 
-// New routes for Phase 1 TopNav fix
-// Sprint 7.5: /album-series now redirects to /albums (consolidated view)
+// Redirect routes
 router.register('/album-series', () => {
     router.navigate('/albums')
     return null
@@ -122,8 +117,6 @@ router.register('/playlist-series', async () => {
     const { SavedPlaylistsView } = await import('./views/SavedPlaylistsView.js')
     return new SavedPlaylistsView()
 })
-
-// Legacy routes (redirect to consolidated /albums)
 router.register('/saved-playlists', async () => {
     const { SavedPlaylistsView } = await import('./views/SavedPlaylistsView.js')
     return new SavedPlaylistsView()
@@ -133,26 +126,19 @@ router.register('/series', () => {
     return null
 })
 
-// Save All (Data Migration) route
+// Data Migration route
 router.register('/save-all', async () => {
     const { SaveAllView } = await import('./views/SaveAllView.js')
     return new SaveAllView()
 })
 
-router.register('/inventory', () => new InventoryView())
 router.register('/ranking/:albumId', () => new RankingView())
 router.register('/consolidated-ranking', () => new ConsolidatedRankingView())
-
-// Default route handling is done by Router class (popstate/load)
 
 // Global Error Handler
 window.addEventListener('error', (e) => {
     console.error('Global Error:', e.error)
-    // Optional: Show toast
 })
-
-
-console.log('🚀 App Initialized')
 
 // Expose stores/router globally for Puppeteer testing
 if (typeof window !== 'undefined') {
@@ -163,4 +149,3 @@ if (typeof window !== 'undefined') {
     import('./services/SpotifyService.js').then(m => { window.SpotifyService = m.SpotifyService })
     window.router = router
 }
-
