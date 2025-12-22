@@ -73,3 +73,34 @@ It addresses the following User Stories:
 - [ ] **Import Cleanup**: Ensure all imports point to `SeriesView` or new components.
 - [ ] **Verification**: Run Manual Test Plan (Ghost Album, Drag & Drop, Mobile Menu).
 - [ ] **Decision Point**: After verification passes, decide whether to delete `AlbumsView_legacy.js`.
+
+---
+
+## 6. 🗂️ Modal Architecture Analysis (BACKLOG)
+
+> [!NOTE]
+> **Added:** 2025-12-22  
+> **Priority:** Medium  
+> **Status:** Pending Analysis
+
+### Problem Statement
+Multiple JS modals exist across the codebase with inconsistent patterns:
+- `EditAlbumModal.js`
+- `ViewAlbumModal.js`
+- `SeriesModals.js`
+- `LoginModal.js`
+- Various inline modals in views
+
+### Required Analysis
+- [ ] **Inventory**: Identify all modal implementations across the codebase
+- [ ] **Pattern Assessment**: Evaluate current patterns (class-based, inline HTML, etc.)
+- [ ] **Design Pattern**: Propose a unified modal system (e.g., ModalManager, BaseModal class)
+- [ ] **Spec Creation**: Create SDD spec for modal refactoring
+- [ ] **Implementation Plan**: Define migration path for existing modals
+
+### Potential Benefits
+- Consistent open/close behavior
+- Unified styling and accessibility
+- Reduced code duplication
+- Easier to create new modals
+
