@@ -59,6 +59,8 @@ It addresses the following User Stories:
 - [ ] **Integration**: Connect "Create Mix" button -> `BlendingMenuView` -> `CurationEngine`.
 
 ## 5. 🧹 Cleanup & Cutover
-- [ ] **Deletion**: Delete old `AlbumsView.js` code (now replaced by `SeriesView.js`).
-- [ ] **Renaming**: Ensure all references point to `SeriesView`.
+- [ ] **Legacy Rename**: Rename `AlbumsView.js` to `AlbumsView_legacy.js` (keep for reference, deletion decision deferred).
+- [ ] **Router Update**: Update router to use `SeriesView` for `/albums` route.
+- [ ] **Import Cleanup**: Ensure all imports point to `SeriesView` or new components.
 - [ ] **Verification**: Run Manual Test Plan (Ghost Album, Drag & Drop, Mobile Menu).
+- [ ] **Decision Point**: After verification passes, decide whether to delete `AlbumsView_legacy.js`.
