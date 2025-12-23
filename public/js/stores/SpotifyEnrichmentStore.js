@@ -46,7 +46,12 @@ class SpotifyEnrichmentStore {
 
     /**
      * Get the user-scoped collection path.
-     * Returns: users/{userId}/spotify_enrichment
+     * 
+     * WORKAROUND (Option B): Uses same path structure as SeriesRepository:
+     *   artifacts/{appId}/users/{userId}/curator/data/spotify_enrichment/{albumKey}
+     * 
+     * TARGET (Option A - Prod): Global collection:
+     *   spotify_enrichment/{albumKey}
      * 
      * @returns {string|null} Collection path or null if not authenticated
      */
@@ -56,7 +61,11 @@ class SpotifyEnrichmentStore {
             console.warn('[EnrichmentStore] No authenticated user')
             return null
         }
-        return `users/${user.uid}/${COLLECTION_NAME}`
+
+        // Path must match Firebase rules: artifacts/{appId}/users/{userId}/curator/data/...
+        // Same structure as SeriesRepository
+        const appId = 'mjrp-albums'
+        return `artifacts/${appId}/users/${user.uid}/curator/data/${COLLECTION_NAME}`
     }
 
     /**
