@@ -142,7 +142,7 @@ export class BlendSeriesSelector {
             
             <div>
                 <label class="block text-sm font-medium mb-3 text-muted">Select Series</label>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                     ${seriesCards}
                 </div>
             </div>
