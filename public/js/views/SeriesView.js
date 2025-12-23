@@ -41,6 +41,9 @@ import {
 // Ranking component for expanded view
 import { TracksRankingComparison } from '../components/ranking/TracksRankingComparison.js';
 
+// Sprint 12: Enrichment integration - auto-apply cached Spotify data
+import { applyEnrichmentToAlbums } from '../helpers/SpotifyEnrichmentHelper.js';
+
 export default class SeriesView extends BaseView {
     constructor(controller) {
         super();
@@ -346,12 +349,23 @@ export default class SeriesView extends BaseView {
         });
     }
 
-    refreshGrid() {
+    async refreshGrid() {
         if (!this.components.grid) return;
 
         const albums = albumsStore.getAlbums();
-        const filteredAlbums = this.filterAlbums(albums);
+        let filteredAlbums = this.filterAlbums(albums);
         const allSeries = albumSeriesStore.getSeries();
+
+        // Sprint 12: Apply cached Spotify enrichment to albums before rendering
+        // This uses data from background enrichment service
+        try {
+            await applyEnrichmentToAlbums(filteredAlbums, {
+                fetchIfMissing: false, // Don't fetch live - only use cache
+                silent: true
+            });
+        } catch (e) {
+            console.warn('[SeriesView] Enrichment application failed:', e.message);
+        }
 
         this.components.grid.update({
             items: filteredAlbums,

@@ -137,6 +137,16 @@ public/js/algorithms/
 - [x] Update `ARCHITECTURE.md` with Phase 3 status
 - [x] Update `data_flow_architecture.md` with enrichment notes
 
+### 3.5 Enrichment Integration Layer 🚧 IN PROGRESS
+> **Problem**: Background enrichment saves to `spotify_enrichment` collection, but AlbumsView only reads embedded album data.
+> **Solution**: Connect `optimizedAlbumLoader` with `SpotifyEnrichmentStore` to auto-apply enrichment.
+
+- [ ] Create `applyEnrichmentToAlbum(album)` helper function
+- [ ] Integrate with `optimizedAlbumLoader.loadAlbumsForView()`
+- [ ] Auto-merge Spotify data into album objects on load
+- [ ] Remove need for manual "Enrich Data" click
+- [ ] Test: Background enrichment → navigate to Series → Spotify data visible
+
 ---
 
 ## ⚠️ Production Deployment Pending
