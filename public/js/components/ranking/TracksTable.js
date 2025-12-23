@@ -52,10 +52,8 @@ export class TracksTable {
         const hasPop = track.spotifyPopularity > -1
         const positionDisplay = track.position >= 999 ? '-' : track.position
 
-        // Popularity Bar Color Logic
-        // < 30: red, < 60: yellow, >= 60: green
-        const popColor = track.spotifyPopularity < 30 ? 'bg-red-500' :
-            track.spotifyPopularity < 60 ? 'bg-yellow-500' : 'bg-[#1DB954]'
+        // Color scheme: Acclaim = Orange, Popularity = Spotify Green
+        const spotifyGreen = 'bg-[#1DB954]'
 
         return `
             <div class="group flex items-center border-b border-white/5 hover:bg-white/5 transition-colors">
@@ -96,7 +94,7 @@ export class TracksTable {
                                         <span class="${track.spotifyPopularity > 80 ? 'text-[#1DB954]' : 'text-white/60'}">${track.spotifyPopularity}%</span>
                                     </div>
                                     <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                                        <div class="h-full ${popColor} rounded-full" style="width: ${track.spotifyPopularity}%"></div>
+                                        <div class="h-full ${spotifyGreen} rounded-full" style="width: ${track.spotifyPopularity}%"></div>
                                     </div>
                                 </div>
                             </div>
