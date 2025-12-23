@@ -384,14 +384,25 @@ export class BlendingMenuView extends BaseView {
                 throw new Error(`Unknown algorithm: ${this.selectedFlavor.id}`)
             }
 
-            // Determine ranking strategy based on algorithm
-            const rankingId = this.selectedFlavor.id.includes('popular') ? 'spotify' : 'bea'
+            // Determine ranking strategy based on:
+            // 1. TopN algorithms have fixed ranking (popular=spotify, acclaimed=bea)
+            // 2. Other algorithms use config.rankingType from UI
+            let rankingId = this.config.rankingType || 'combined'
+            if (this.selectedFlavor.id.includes('popular')) {
+                rankingId = 'spotify' // Locked for TopN Popular
+            } else if (this.selectedFlavor.id.includes('acclaimed')) {
+                rankingId = 'bea' // Locked for TopN Acclaimed
+            }
             const rankingStrategy = createRankingStrategy(rankingId)
 
-            // Generate playlists
+            console.log(`[BlendingMenuView] Using ranking: ${rankingId}, duration: ${this.config.duration}min, outputMode: ${this.config.outputMode}, discovery: ${this.config.discoveryMode}`)
+
+            // Generate playlists with full config
             const result = algorithm.generate(albums, {
                 rankingStrategy,
-                targetDuration: this.config.duration * 60 // Convert minutes to seconds
+                targetDuration: this.config.duration * 60, // Convert minutes to seconds
+                outputMode: this.config.outputMode,
+                discoveryMode: this.config.discoveryMode
             })
 
             // Transform result to playlist format

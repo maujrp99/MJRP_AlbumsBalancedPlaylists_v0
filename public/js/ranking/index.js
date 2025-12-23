@@ -24,6 +24,7 @@ export function createRankingStrategy(id) {
         case 'bea':
             return new BEARankingStrategy()
         case 'balanced':
+        case 'combined':  // Alias for balanced (used by Blending Menu UI)
         default:
             return new BalancedRankingStrategy()
     }
