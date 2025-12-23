@@ -1,7 +1,8 @@
 # Blending Menu - Phase 1: Tasks
 
 **Created**: 2025-12-22  
-**Status**: APPROVED  
+**Updated**: 2025-12-23  
+**Status**: 🟡 PARTIALLY IMPLEMENTED  
 **Plan**: [plan.md](./plan.md)  
 **Analysis**: [algorithm-analysis.md](./algorithm-analysis.md)
 
@@ -13,23 +14,23 @@
 > **Decisão**: Refatorar algoritmos existentes ANTES de criar novos.
 > **Pattern**: Mixin/Trait Pattern para manter BaseAlgorithm enxuta.
 
-### 1A.1 Criar Mixins
+### 1A.1 Criar Mixins ✅ COMPLETED
 
 #### [NEW] PlaylistBalancingMixin.js (~70 LOC)
-- [ ] Criar arquivo em `algorithms/mixins/`
-- [ ] Extrair `runSwapBalancing()` de Legacy/SDraft
-- [ ] Extrair `isSwapValid()` de Legacy/SDraft
-- [ ] Exportar como mixin aplicável
+- [x] Criar arquivo em `algorithms/mixins/`
+- [x] Extrair `runSwapBalancing()` de Legacy/SDraft
+- [x] Extrair `isSwapValid()` de Legacy/SDraft
+- [x] Exportar como mixin aplicável
 
 #### [NEW] DurationTrimmingMixin.js (~40 LOC)
-- [ ] Criar arquivo em `algorithms/mixins/`
-- [ ] Extrair `trimOverDurationPlaylists()` de MJRP/MJRPv0
-- [ ] Exportar como mixin aplicável
+- [x] Criar arquivo em `algorithms/mixins/`
+- [x] Extrair `trimOverDurationPlaylists()` de MJRP/MJRPv0
+- [x] Exportar como mixin aplicável
 
 #### [NEW] TrackEnrichmentMixin.js (~185 LOC)
-- [ ] Criar arquivo em `algorithms/mixins/`
-- [ ] Extrair `enrichTracks()` de Legacy
-- [ ] Exportar como mixin aplicável
+- [x] Criar arquivo em `algorithms/mixins/`
+- [x] Extrair `enrichTracks()` de Legacy
+- [x] Exportar como mixin aplicável
 
 ---
 

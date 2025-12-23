@@ -1,6 +1,6 @@
 # Architecture Documentation
 
-**Last Updated**: 2025-12-21 18:30
+**Last Updated**: 2025-12-23
 **Workflow**: See `.agent/workflows/architecture_protocol.md`
 
 > **For project overview, features, and deployment info, see:**
@@ -175,8 +175,11 @@ The contract between the UI and the Curation Engine for the **Blending Menu**.
 - [x] Design approved (Plan V3)
 - [x] Infrastructure (Base Component, Controller)
 - [x] Core Components (Grid, Card, Header, Filter)
-- [ ] Logic Migration (Controller Implementation)
-- [ ] Blending Menu Implementation
+- [x] **SeriesView V3** (575 LOC thin orchestrator, 8 components, Controller with 0 DOM refs) ✅
+- [x] **Blending Menu Phase 1** (Algorithm Mixins + TopN Algorithms) ✅
+- [x] **Blending Menu Phase 2** (UI Components: BlendingMenuView, BlendFlavorCard, etc.) ✅
+- [ ] Blending Menu Phase 3 (Integration & Testing - in progress)
+- [ ] AlbumsView Refactor (Applying V3 pattern - deferred)
 
 ---
 
@@ -187,9 +190,18 @@ The application is built on a modular architecture using standard design pattern
 ### 1. Strategy Pattern
 Used for interchangeable behaviors:
 - **ViewMode Strategy**: Decouples rendering (Compact vs Expanded) from view logic.
-- **Algorithm Strategy**: Pluggable playlist generation algorithms (Cascade, S-Draft, etc.).
+- **Algorithm Strategy**: Pluggable playlist generation algorithms (Cascade, S-Draft, TopN).
+- **Ranking Strategy**: Pluggable ranking sources (Spotify, BEA, Balanced).
 
-### 2. Repository Pattern
+### 2. Mixin Pattern (Sprint 12)
+Reusable algorithm behaviors extracted from legacy algorithms:
+- `PlaylistBalancingMixin`: Swap balancing logic for track distribution
+- `DurationTrimmingMixin`: Playlist duration enforcement
+- `TrackEnrichmentMixin`: Track metadata enrichment
+
+**Location**: `public/js/algorithms/mixins/`
+
+### 3. Repository Pattern
 Abstracts Firestore interactions. All data access is centralized in `*Repository` classes, ensuring consistent schema handling and CRUD operations.
 
 ### 3. Observer Pattern
@@ -219,6 +231,7 @@ The application uses a custom client-side router based on the History API (`push
 |------|------|--------------|
 | `/home` | HomeView | - |
 | `/albums` | SeriesView (V3) | `?seriesId=X` |
+| `/blend` | BlendingMenuView | - |
 | `/playlists` | PlaylistsView | - |
 | `/playlist-series` | SavedPlaylistsView | - |
 | `/save-all` | SaveAllView | - |

@@ -5,6 +5,7 @@ description: Post-implementation documentation checklist - run after completing 
 # Post-Implementation Documentation Checklist
 
 > Invoke this workflow after implementing any feature or fix to ensure docs stay updated.
+> Follow the documentation guidelines of documentation-protocol.md
 
 ## When to Use
 - After completing a feature implementation

@@ -1,7 +1,7 @@
 # Album Data Flow Architecture
 
-**Updated**: 2025-12-19
-**Version**: 2.1 (Reorganized)
+**Updated**: 2025-12-23
+**Version**: 2.3 (Blending Menu)
 
 ## Overview
 
@@ -16,28 +16,155 @@ This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** fo
 - **Sprint 11**: Spotify integration with auto-enrichment
 - **Sprint 11.5**: **Event-Driven Persistence** for enrichment (Fix #58) & `AlbumsStateController` introduction.
 - **Sprint 11.5**: **Ranking Strategy Pattern** fully implemented (Balanced, Spotify, BEA).
+- **Sprint 12**: **SeriesView V3 Architecture** - Componentized thin orchestrator pattern.
+- **Sprint 12**: **Blending Menu** - 4-step wizard UI + TopN algorithms + Mixin pattern (see below).
 
 ---
 
 ## Table of Contents
 
 1. [System Architecture](#system-high-level-architecture)
-2. [App Initialization](#app-initialization-flow)
-3. [View Lifecycle & Navigation](#view-lifecycle--navigation)
-4. [Navigation Map](#navigation-map)
-5. [Core Data Flows](#core-data-flows)
+2. [SeriesView V3 Architecture](#seriesview-v3-architecture) ← **Sprint 12**
+3. [Blending Menu Architecture](#blending-menu-architecture) ← **NEW (Sprint 12)**
+4. [App Initialization](#app-initialization-flow)
+5. [View Lifecycle & Navigation](#view-lifecycle--navigation)
+6. [Navigation Map](#navigation-map)
+7. [Core Data Flows](#core-data-flows)
    - Load Series
    - Navigate to Playlists
    - Navigate to Ranking
    - Hard Refresh
-5. [CRUD Flows](#crud-flows-by-entity)
+8. [CRUD Flows](#crud-flows-by-entity)
    - Album Series
    - Playlists
    - Inventory
-6. [Special Flows](#special-flows)
+9. [Special Flows](#special-flows)
    - Ranking Generation
    - Algorithm Generation
    - Spotify Integration
+
+---
+
+## SeriesView V3 Architecture
+
+> **Added**: Sprint 12 (2025-12-23)
+> **Pattern**: Thin Orchestrator + Focused Components
+
+### Component Hierarchy
+
+```
+SeriesView (575 LOC - Thin Orchestrator)
+    │
+    ├── SeriesController (313 LOC - 0 DOM refs, pure logic)
+    │
+    ├── Components (public/js/components/series/)
+    │   ├── SeriesHeader.js (56 LOC) - Title, count, generate button
+    │   ├── SeriesToolbar.js (162 LOC) - Filters, search, view toggle
+    │   ├── SeriesGridRenderer.js (131 LOC) - Delegates to production renders
+    │   ├── SeriesEventHandler.js (183 LOC) - CRUD event delegation
+    │   ├── EntityCard.js (68 LOC) - Card wrapper (delegates to AlbumCard)
+    │   ├── SeriesFilterBar.js (77 LOC) - Filter dropdowns
+    │   ├── SeriesDragDrop.js (66 LOC) - Drag functionality
+    │   └── SeriesModals.js - Modal management
+    │
+    └── Stores
+        ├── AlbumSeriesStore
+        └── AlbumsStore
+```
+
+### Data Flow Pattern
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant SeriesView
+    participant SeriesController
+    participant SeriesEventHandler
+    participant Store as AlbumsStore
+    
+    User->>SeriesView: User Action (click, filter)
+    SeriesView->>SeriesEventHandler: Delegate event
+    SeriesEventHandler->>SeriesController: Business logic
+    SeriesController->>Store: State mutation
+    Store-->>SeriesView: notify()
+    SeriesView->>SeriesView: Re-render affected components
+```
+
+### Key Patterns
+
+| Pattern | Implementation |
+|---------|----------------|
+| **Thin Orchestrator** | SeriesView reduced from ~1200 to 575 lines |
+| **Controller Decoupling** | SeriesController has 0 DOM references |
+| **Prop-Based Components** | Components receive data via props |
+| **Lifecycle Methods** | All components implement `mount/unmount/update` |
+
+---
+
+## Blending Menu Architecture
+
+> **Added**: Sprint 12 (2025-12-23)
+> **Route**: `/blend`
+> **Pattern**: 4-Step Wizard + Algorithm Strategy + Mixin Pattern
+
+### Component Hierarchy
+
+```
+BlendingMenuView.js (Main Wizard)
+    │
+    ├── Step 1: BlendSeriesSelector.js
+    │       └── Entity type dropdown → Series loader
+    │
+    ├── Step 2: BlendFlavorCard.js
+    │       └── Algorithm selection cards (TopN + Legacy)
+    │
+    ├── Step 3: BlendIngredientsPanel.js
+    │       └── Duration, Output mode, Playlist count
+    │
+    └── Step 4: "Blend It!" CTA
+            └── → CurationEngine → PlaylistSeries
+```
+
+### Algorithm Layer (with Mixins)
+
+```
+algorithms/
+├── mixins/
+│   ├── PlaylistBalancingMixin.js   (Swap balancing)
+│   ├── DurationTrimmingMixin.js    (Duration enforcement)
+│   └── TrackEnrichmentMixin.js     (Metadata enrichment)
+│
+├── TopNAlgorithm.js                (Base for Top 3/5)
+│   ├── Top3PopularAlgorithm.js     ("Crowd Favorites" - Spotify)
+│   ├── Top3AcclaimedAlgorithm.js   ("Critics' Choice" - BEA)
+│   ├── Top5PopularAlgorithm.js     ("Greatest Hits" - Spotify)
+│   └── Top5AcclaimedAlgorithm.js   ("Deep Cuts" - BEA)
+│
+└── (Legacy: MJRP, SDraft, LegacyRoundRobin)
+```
+
+### Data Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant BlendingMenuView
+    participant BlendFlavorCard
+    participant CurationEngine
+    participant Algorithm
+    participant SpotifyService
+    
+    User->>BlendingMenuView: Select Series (Step 1)
+    User->>BlendFlavorCard: Select Algorithm (Step 2)
+    User->>BlendingMenuView: Configure Parameters (Step 3)
+    User->>BlendingMenuView: Click "Blend It!" (Step 4)
+    BlendingMenuView->>CurationEngine: generate(config)
+    CurationEngine->>Algorithm: execute(albums, opts)
+    Algorithm-->>CurationEngine: Playlist data
+    CurationEngine-->>BlendingMenuView: Show Preview
+    User->>BlendingMenuView: Save to Spotify
+    BlendingMenuView->>SpotifyService: createPlaylist()
+```
 
 ---
 

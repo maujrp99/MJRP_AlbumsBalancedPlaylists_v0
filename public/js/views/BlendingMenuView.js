@@ -39,14 +39,19 @@ export class BlendingMenuView extends BaseView {
         return `
             <div class="container mx-auto px-4 py-8 max-w-5xl">
                 <!-- Header -->
-                <div class="text-center mb-10">
-                    <div class="inline-flex items-center gap-3 mb-4">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center gap-3 mb-3">
                         <span class="text-4xl">🍹</span>
                         <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">
                             The Blending Menu
                         </h1>
                     </div>
-                    <p class="text-muted text-lg">"Your Music, Your Recipe"</p>
+                    <p class="text-muted text-lg mb-6">"Your Music, Your Recipe"</p>
+                    
+                    <!-- Progressive Disclosure Stepper -->
+                    <div class="inline-flex items-center gap-2 md:gap-4 px-4 py-3 rounded-2xl bg-white/5 border border-white/10">
+                        ${this.renderStepper()}
+                    </div>
                 </div>
 
                 <!-- Step 1: Choose Your Blend -->
@@ -96,6 +101,58 @@ export class BlendingMenuView extends BaseView {
                 </section>
             </div>
         `
+    }
+
+    /**
+     * Render progressive disclosure stepper
+     */
+    renderStepper() {
+        const steps = [
+            { num: 1, label: 'Blend', icon: '🍹', done: !!this.selectedSeries },
+            { num: 2, label: 'Flavor', icon: '🍬', done: !!this.selectedFlavor },
+            { num: 3, label: 'Ingredients', icon: '🥗', done: this.config.duration !== null },
+            { num: 4, label: 'Ready!', icon: '🎛️', done: false }
+        ]
+
+        // Determine current step
+        let currentStep = 1
+        if (this.selectedSeries) currentStep = 2
+        if (this.selectedFlavor) currentStep = 3
+        if (this.selectedSeries && this.selectedFlavor) currentStep = 4
+
+        return steps.map((step, idx) => {
+            const isActive = step.num === currentStep
+            const isDone = step.num < currentStep
+            const isFuture = step.num > currentStep
+
+            const stepClass = isDone
+                ? 'bg-green-500 text-white border-green-500'
+                : isActive
+                    ? 'bg-orange-400 text-black border-orange-400 shadow-lg shadow-orange-400/30'
+                    : 'bg-white/5 text-muted border-white/20'
+
+            const labelClass = isDone
+                ? 'text-green-400'
+                : isActive
+                    ? 'text-orange-400 font-bold'
+                    : 'text-muted'
+
+            const connector = idx < steps.length - 1
+                ? `<div class="w-4 md:w-8 h-0.5 ${isDone ? 'bg-green-500' : 'bg-white/20'}"></div>`
+                : ''
+
+            return `
+                <div class="flex items-center gap-1 md:gap-2">
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center text-sm transition-all ${stepClass}">
+                            ${isDone ? '✓' : step.icon}
+                        </div>
+                        <span class="text-[10px] md:text-xs mt-1 ${labelClass}">${step.label}</span>
+                    </div>
+                    ${connector}
+                </div>
+            `
+        }).join('')
     }
 
     /**
@@ -176,13 +233,27 @@ export class BlendingMenuView extends BaseView {
     }
 
     /**
-     * Update generate button state
+     * Update generate button state and stepper
      */
     updateGenerateButton() {
+        // Update stepper
+        this.updateStepper()
+
+        // Update generate button
         const section = document.getElementById('blend-generate-section')
         if (section) {
             section.innerHTML = this.renderGenerateButton()
             this.attachGenerateListener()
+        }
+    }
+
+    /**
+     * Update stepper UI
+     */
+    updateStepper() {
+        const stepperContainer = document.querySelector('.inline-flex.items-center.gap-2')
+        if (stepperContainer) {
+            stepperContainer.innerHTML = this.renderStepper()
         }
     }
 

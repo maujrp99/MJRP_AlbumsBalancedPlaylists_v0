@@ -1,7 +1,9 @@
 # MJRP Albums Balanced Playlists — Project Summary
 
 **Version**: v2.12.0 (Production Stable)  
-**Last Updated**: 2025-12-20
+**Last Updated**: 2025-12-23
+
+> **See Also**: [Product Vision](product-management/MJRP_Product_Vision.md) | [Roadmap](ROADMAP.md)
 
 ---
 
@@ -15,16 +17,21 @@ The MJRP Playlist Generator, **"The Album Blender"**, is a strategic curation pl
 3.  **Responsive Intelligence**: A componentized architecture that adapts the experience to Desktop (Power User) and Mobile (Consumption).
 
 ### Current Status ✅ Production Stable
-- **v2.9.0** (Sprint 11: Spotify Integration - Phase 3 in progress)
+- **v2.12.0** (Sprint 12: Critical Fixes & AlbumsView Modularization)
 - Frontend: `https://mjrp-playlist-generator.web.app`
 - Backend API: Cloud Run (`mjrp-proxy`)
 - Core features operational
 
 > [!NOTE]
-> **Recent Updates (Sprint 12 - In Progress)**:
+> **Current Sprint (Sprint 12 - In Progress)**:
 > - 🟢 **Ranking Strategy**: Implemented Multi-Source Ranking (Spotify/BEA).
-> - 🚧 **V3 Refactor**: Starting surgical modularization of `AlbumsView` to support "The Blending Menu".
-> - 🚧 **Componentization**: Moving towards a responsive, component-based UI architecture.
+> - 🟢 **SeriesView V3**: Completed componentization (575 LOC thin orchestrator).
+> - 🚧 **AlbumsView Refactor**: Applying same V3 pattern to reduce ~1220 LOC God Class.
+> - 🚧 **Blending Menu**: Preparing parametrized algorithm inputs.
+
+> [!TIP]
+> **Previous**: v2.9.0 (Sprint 9-11) delivered Spotify OAuth, EditPlaylistView, and GlobalProgress components.
+
 ---
 
 ## Core Features

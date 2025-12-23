@@ -77,7 +77,7 @@ export class BlendSeriesSelector {
 
         container.innerHTML = `
             <div class="mb-6">
-                <label class="block text-sm font-medium mb-2 text-muted">Entity Type</label>
+                <label class="block text-sm font-medium mb-2 text-muted">Blend your Music by</label>
                 <select id="blend-entity-select" class="w-full bg-surface/60 border border-white/10 rounded-lg px-4 py-3 focus:border-orange-400 focus:ring-1 focus:ring-orange-400 transition-all">
                     ${entityOptions}
                 </select>

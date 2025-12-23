@@ -6,6 +6,7 @@ For documenting follow the **Recommended structure**:
 ```
 docs/
 ├── README.md (index)
+├── MJRP_Product_Vision.md (The Product Vision)
 ├── PROJECT_SUMMARY.md (Executive Summary)
 ├── ROADMAP.md (Product Roadmap)
 ├── ARCHITECTURE.md

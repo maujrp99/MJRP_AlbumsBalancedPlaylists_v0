@@ -38,24 +38,30 @@ This ensures the agent has full understanding of project architecture, standards
 
 ## Step 2: Read Core Documentation (`docs/` folder)
 
+### Product Vision (`docs/product-management/`) - READ FIRST
 // turbo
-17. Read `ARCHITECTURE.md` - Overall system architecture
-18. Read `CHANGELOG.md` - Recent changes and version history
-19. Read `CONSTITUTION.md` - Core principles and guidelines
-20. Read `CONTRIBUTING.md` - Contribution guidelines
-21. Read `PROJECT_SUMMARY.md` - Project overview
-22. Read `README.md` - Main project README
-23. Read `ROADMAP.md` - Future plans and milestones
+17. Read `product-management/MJRP_Product_Vision.md` - **START HERE** - Core product philosophy, Universal Series Model, Blending Menu concept
+18. Read `product-management/VISION_FEEDBACK_ANALYSIS.md` - User feedback and strategic adjustments
+19. Read `PROJECT_SUMMARY.md` - Executive project overview
+
+### Architecture & Standards
+// turbo
+20. Read `ARCHITECTURE.md` - Overall system architecture
+21. Read `CHANGELOG.md` - Recent changes and version history
+22. Read `CONSTITUTION.md` - Core principles and guidelines
+23. Read `CONTRIBUTING.md` - Contribution guidelines
+24. Read `README.md` - Main project README
+25. Read `ROADMAP.md` - Future plans and milestones
 
 ---
 
 ## Step 3: Read Technical Documentation (`docs/technical/` folder)
 
 // turbo
-24. Read `album_data_schema.md` - Data models for albums
-25. Read `ARCHITECTURE_AUDIT.md` - Architecture review findings
-26. Read `data_flow_architecture.md` - Data flow patterns
-27. Read `UI_STYLE_GUIDE.md` - UI/UX guidelines
+26. Read `album_data_schema.md` - Data models for albums
+27. Read `ARCHITECTURE_AUDIT.md` - Architecture review findings
+28. Read `data_flow_architecture.md` - Data flow patterns
+29. Read `UI_STYLE_GUIDE.md` - UI/UX guidelines
 
 ---
 
@@ -63,35 +69,35 @@ This ensures the agent has full understanding of project architecture, standards
 
 ### Debug (`docs/debug/`)
 // turbo
-28. Read `DEBUG_LOG.md` - Current and historical debugging issues
+30. Read `DEBUG_LOG.md` - Current and historical debugging issues
 
 ### Onboarding (`docs/onboarding/`)
 // turbo
-29. Read `DEVELOPER.md` - Developer onboarding guide
-30. Read `DEVOPS.md` - DevOps and deployment guide
-31. Read `QA_ENGINEER.md` - QA testing guide
-32. Read `README.md` - Onboarding overview
-33. Read `UX_UI.md` - UX/UI design guide
+31. Read `DEVELOPER.md` - Developer onboarding guide
+32. Read `DEVOPS.md` - DevOps and deployment guide
+33. Read `QA_ENGINEER.md` - QA testing guide
+34. Read `README.md` - Onboarding overview
+35. Read `UX_UI.md` - UX/UI design guide
 
 ---
 
 ## Step 5: Read SDD Templates (`.specify/templates/` folder)
 
 // turbo
-34. Read `agent-file-template.md` - File change template
-35. Read `checklist-template.md` - Task checklist template
-36. Read `plan-template.md` - Planning document template
-37. Read `spec-template.md` - Feature specification template
-38. Read `tasks-template.md` - Task breakdown template
+36. Read `agent-file-template.md` - File change template
+37. Read `checklist-template.md` - Task checklist template
+38. Read `plan-template.md` - Planning document template
+39. Read `spec-template.md` - Feature specification template
+40. Read `tasks-template.md` - Task breakdown template
 
 ---
 
 ## Step 6: Code Quality Ritual (`docs/technical/refactor/`)
 
 // turbo
-39. Read `PROTOCOL.md` - Code Quality Assessment Protocol reference
-40. Execute `code-quality-assessment-protocol.md`
-41. Identify any critical issues or tech debt to be aware of
+41. Read `PROTOCOL.md` - Code Quality Assessment Protocol reference
+42. Execute `code-quality-assessment-protocol.md`
+43. Identify any critical issues or tech debt to be aware of
 
 ---
 
@@ -99,6 +105,7 @@ This ensures the agent has full understanding of project architecture, standards
 
 After executing all steps, confirm understanding of:
 
+- [ ] **Product Vision** (Universal Series Model, Blending Menu, Album-Centric Philosophy)
 - [ ] Project architecture and patterns (Clean Architecture, SPA)
 - [ ] Data models (Album, Track, Playlist, Series)
 - [ ] Current sprint/feature work (check `docs/technical/specs/`)
@@ -112,6 +119,7 @@ After executing all steps, confirm understanding of:
 
 | Topic | Document |
 |-------|----------|
+| **Product Vision** | `docs/product-management/MJRP_Product_Vision.md` |
 | Bug tracking | `docs/debug/DEBUG_LOG.md` |
 | Architecture | `docs/ARCHITECTURE.md` |
 | Data models | `docs/technical/album_data_schema.md` |
