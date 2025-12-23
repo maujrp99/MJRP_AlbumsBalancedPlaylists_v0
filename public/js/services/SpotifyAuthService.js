@@ -155,6 +155,10 @@ export const SpotifyAuthService = {
             localStorage.removeItem('spotify_code_verifier')
             localStorage.removeItem('spotify_auth_state')
 
+            // Dispatch auth success event (for background enrichment trigger)
+            console.log('[SpotifyAuth] Auth successful, dispatching event')
+            window.dispatchEvent(new CustomEvent('spotify-auth-success'))
+
             return true
 
         } catch (err) {

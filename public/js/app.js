@@ -64,7 +64,34 @@ async function bootstrap() {
         toast.warning('Authentication issue. Some features may be limited.')
     }
 
-    // 3. Now safe to handle routes (auth and stores are ready)
+    // 3. Setup background enrichment trigger
+    // When Spotify auth succeeds, auto-start background enrichment
+    window.addEventListener('spotify-auth-success', async () => {
+        console.log('🎵 Spotify auth success, triggering background enrichment...')
+        try {
+            const { spotifyEnrichmentService } = await import('./services/SpotifyEnrichmentService.js')
+
+            // Subscribe to progress for toast notifications
+            spotifyEnrichmentService.subscribe((event) => {
+                if (event.type === 'started') {
+                    toast.info(`🎵 Enriching ${event.total} albums with Spotify data...`)
+                } else if (event.type === 'completed') {
+                    toast.success(`✅ Enriched ${event.completed} albums (${event.failed} failed)`)
+                } else if (event.type === 'already_complete') {
+                    console.log('[Enrichment] All albums already enriched')
+                }
+            })
+
+            // Start the enrichment after a short delay to let auth stabilize
+            setTimeout(() => {
+                spotifyEnrichmentService.startEnrichment()
+            }, 2000)
+        } catch (error) {
+            console.error('[Bootstrap] Failed to start enrichment:', error)
+        }
+    })
+
+    // 4. Now safe to handle routes (auth and stores are ready)
     console.log('✅ Auth ready, handling route...')
 
     if (!window.location.pathname || window.location.pathname === '/' || window.location.pathname === '/index-v2.html') {
