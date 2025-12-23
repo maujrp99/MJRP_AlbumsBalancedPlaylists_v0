@@ -140,13 +140,13 @@ export class BlendFlavorCard {
                         ${getIcon(flavor.icon, 'w-6 h-6 text-white')}
                     </div>
                     
-                    <h4 class="font-bold text-sm mb-1 ${isSelected ? 'text-orange-400' : isRecommended ? 'text-amber-400' : ''}">${flavor.name}</h4>
+                    <h4 class="font-bold text-base mb-1 ${isSelected ? 'text-orange-400' : isRecommended ? 'text-amber-400' : ''}">${flavor.name}</h4>
                     
-                    <span class="inline-block px-2 py-0.5 text-[10px] rounded-full mb-1.5 ${badgeClass}">
+                    <span class="inline-block px-2 py-0.5 text-[10px] rounded-full mb-2 ${badgeClass}">
                         ${flavor.badge}
                     </span>
                     
-                    <p class="text-[11px] text-muted line-clamp-2 leading-tight">${flavor.description}</p>
+                    <p class="text-[13px] text-muted leading-snug">${flavor.description}</p>
                 </div>
                 
                 ${isSelected ? `

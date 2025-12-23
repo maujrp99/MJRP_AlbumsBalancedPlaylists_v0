@@ -20,12 +20,19 @@ export class BlendIngredientsPanel {
     }
 
     /**
-     * Duration options
+     * Duration options (in minutes)
      */
     static DURATIONS = [
-        { value: 30, label: '30 min', icon: 'Clock' },
-        { value: 45, label: '45 min', icon: 'Clock' },
-        { value: 60, label: '1 hour', icon: 'Clock' }
+        { value: 30, label: '30' },
+        { value: 45, label: '45' },
+        { value: 50, label: '50' },
+        { value: 60, label: '60' },
+        { value: 70, label: '70' },
+        { value: 75, label: '75' },
+        { value: 80, label: '80' },
+        { value: 90, label: '90' },
+        { value: 100, label: '100' },
+        { value: 120, label: '120' }
     ]
 
     /**
@@ -49,17 +56,17 @@ export class BlendIngredientsPanel {
                 <!-- Duration -->
                 <div>
                     <label class="block text-sm font-medium mb-3 text-muted">
-                        ${getIcon('Clock', 'w-4 h-4 inline mr-2')}Target Duration
+                        ${getIcon('Clock', 'w-4 h-4 inline mr-2')}Target Duration (minutes)
                     </label>
-                    <div class="flex gap-3">
+                    <div class="grid grid-cols-5 gap-2">
                         ${BlendIngredientsPanel.DURATIONS.map(d => `
                             <button type="button" 
-                                class="blend-duration-btn flex-1 px-4 py-3 rounded-lg border transition-all duration-200
+                                class="blend-duration-btn px-3 py-2 rounded-lg border transition-all duration-200 text-center
                                     ${this.config.duration === d.value
                 ? 'border-orange-400 bg-orange-400/20 text-orange-400 ring-1 ring-orange-400'
                 : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'}"
                                 data-duration="${d.value}">
-                                <span class="font-semibold">${d.label}</span>
+                                <span class="font-semibold text-sm">${d.label}</span>
                             </button>
                         `).join('')}
                     </div>

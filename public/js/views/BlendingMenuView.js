@@ -39,10 +39,10 @@ export class BlendingMenuView extends BaseView {
         // Progressive disclosure state
         const step1Complete = !!this.selectedSeries
         const step2Complete = !!this.selectedFlavor
-        // TopN algorithms and MJRP don't need Step 3 params
-        const algorithmHasParams = this.selectedFlavor?.id?.includes('s-draft') || this.selectedFlavor?.id?.includes('legacy')
-        const step3Skipped = step2Complete && !algorithmHasParams
-        const step3Complete = step3Skipped || (step2Complete && this.config.duration !== null)
+        // ALL algorithms now show Step 3 for duration selection
+        const algorithmHasParams = true
+        const step3Skipped = false // Never skip Step 3
+        const step3Complete = step2Complete && this.config.duration !== null
 
         return `
             <div class="container mx-auto px-4 py-8 max-w-5xl">
@@ -278,11 +278,8 @@ export class BlendingMenuView extends BaseView {
         this.seriesSelector.render()
         this.flavorCard.render()
 
-        // Only render ingredients if algorithm has params
-        const algorithmHasParams = this.selectedFlavor?.id?.includes('s-draft') || this.selectedFlavor?.id?.includes('legacy')
-        if (algorithmHasParams) {
-            this.ingredientsPanel.render()
-        }
+        // Always render ingredients - all algorithms show Step 3
+        this.ingredientsPanel.render()
 
         // Attach listeners
         this.attachGenerateListener()

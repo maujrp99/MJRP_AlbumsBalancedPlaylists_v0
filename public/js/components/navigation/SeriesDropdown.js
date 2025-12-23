@@ -21,8 +21,8 @@ export class SeriesDropdown {
         this.entityTypes = [
             { label: 'By Album', route: '/albums', icon: 'Disc', available: true },
             { label: 'By Artist', route: '/artists', icon: 'User', available: false },
-            { label: 'By Genre', route: '/genres', icon: 'Tag', available: false },
-            { label: 'By Track', route: '/tracks', icon: 'Music', available: false },
+            { label: 'By Genre', route: '/genres', icon: 'Music', available: false },
+            { label: 'By Track', route: '/tracks', icon: 'ListMusic', available: false },
             { type: 'separator' },
             { label: 'Playlists', route: '/playlist-series', icon: 'List', available: true }
         ];
@@ -65,7 +65,7 @@ export class SeriesDropdown {
                 
                 <div 
                     id="seriesDropdownMenu"
-                    class="absolute top-full left-0 mt-2 w-48 glass-panel rounded-xl shadow-xl py-2 transition-all duration-200 ${this.isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}"
+                    class="absolute top-full left-0 mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl py-2 transition-all duration-200 ${this.isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}"
                 >
                     ${this.renderItems()}
                 </div>

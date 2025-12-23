@@ -35,7 +35,8 @@ export class MJRPBalancedCascadeAlgorithm extends BaseWithTrimming {
     constructor(opts = {}) {
         super(opts)
         this.greatestHitsMax = opts.greatestHitsMax || GREATEST_HITS_MAX
-        this.deepCutsMax = opts.deepCutsMax || DEEP_CUTS_MAX
+        // targetDuration option overrides DEEP_CUTS_MAX when passed from Blending Menu
+        this.deepCutsMax = opts.targetDuration || opts.deepCutsMax || DEEP_CUTS_MAX
         this.minimumDuration = opts.minimumDuration || MINIMUM_DURATION
 
         this.defaultRankingSource = this.registerRankingSource(opts.defaultRankingSource || {
@@ -48,13 +49,23 @@ export class MJRPBalancedCascadeAlgorithm extends BaseWithTrimming {
 
     /**
      * Generate playlists using MJRP Balanced Cascade algorithm
+     * @param {Array} albums - Albums to process
+     * @param {Object} opts - Options including:
+     *   - rankingStrategy: Strategy for ranking tracks
+     *   - targetDuration: Override Deep Cuts duration cap (in seconds)
      */
     generate(albums, opts = {}) {
+        // Apply targetDuration from opts if provided (Blending Menu integration)
+        if (opts.targetDuration && opts.targetDuration !== this.deepCutsMax) {
+            this.deepCutsMax = opts.targetDuration
+            console.log(`[MJRPBalancedCascadeAlgorithm] Using targetDuration: ${Math.round(opts.targetDuration / 60)} min`)
+        }
+
         // Phase 1: Preparation (Input Adaptation Phase)
         // Use injected strategy or default to Balanced
         const strategy = opts.rankingStrategy || new BalancedRankingStrategy()
 
-        console.log(`[MJRPBalancedCascadeAlgorithm] Using properties:`, strategy.constructor.name)
+        console.log(`[MJRPBalancedCascadeAlgorithm] Using ranking strategy:`, strategy.constructor.name)
 
         const workingAlbums = (albums || []).map((album, albumIndex) => {
             // DECOUPLED: Use the strategy to rank tracks

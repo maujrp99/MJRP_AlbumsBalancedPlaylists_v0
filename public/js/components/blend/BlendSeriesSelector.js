@@ -9,6 +9,7 @@
 
 import { getIcon } from '../Icons.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
+import { optimizedAlbumLoader } from '../../services/OptimizedAlbumLoader.js'
 
 export class BlendSeriesSelector {
     constructor(opts = {}) {
@@ -18,6 +19,8 @@ export class BlendSeriesSelector {
         this.selectedSeries = opts.selectedSeries || null
         this.series = []
         this.isLoading = false
+        // Cache for album cover thumbnails (keyed by series ID)
+        this.thumbnailCache = new Map()
     }
 
     /**
@@ -52,6 +55,60 @@ export class BlendSeriesSelector {
 
         this.isLoading = false
         this.render()
+
+        // Preload thumbnails (async, non-blocking)
+        this.preloadAllThumbnails()
+    }
+
+    /**
+     * Preload thumbnails for all series
+     * Non-blocking - updates UI as thumbnails become available
+     */
+    async preloadAllThumbnails() {
+        for (const series of this.series) {
+            if (!this.thumbnailCache.has(series.id)) {
+                this.preloadSeriesThumbnails(series).then(() => {
+                    this.render() // Re-render to show loaded thumbnails
+                })
+            }
+        }
+    }
+
+    /**
+     * Preload thumbnails for a single series
+     * Parses "Artist - Album" strings and fetches real covers
+     */
+    async preloadSeriesThumbnails(series, max = 3) {
+        const queries = series.albumQueries || []
+        const thumbs = []
+        const count = Math.min(queries.length, max)
+
+        for (let i = 0; i < count; i++) {
+            const query = queries[i]
+            let coverUrl = null
+
+            if (typeof query === 'object' && query.imageUrl) {
+                coverUrl = query.imageUrl
+            } else if (typeof query === 'string' && query.includes(' - ')) {
+                // Parse "Artist - Album" format
+                const [artist, ...albumParts] = query.split(' - ')
+                const album = albumParts.join(' - ')
+
+                try {
+                    const found = await optimizedAlbumLoader.findAlbum(artist, album)
+                    if (found) {
+                        coverUrl = optimizedAlbumLoader.getArtworkUrl(found, 100)
+                    }
+                } catch (e) {
+                    console.debug(`[BlendSeriesSelector] Could not find cover for: ${query}`)
+                }
+            }
+
+            thumbs.push(coverUrl)
+        }
+
+        this.thumbnailCache.set(series.id, thumbs)
+        return thumbs
     }
 
     /**
@@ -100,7 +157,11 @@ export class BlendSeriesSelector {
     renderSeriesCard(series) {
         const isSelected = this.selectedSeries?.id === series.id
         // Use albumQueries which is the actual array of album references
-        const albumCount = series.albumQueries?.length || series.albums?.length || 0
+        const albumQueries = series.albumQueries || series.albums || []
+        const albumCount = albumQueries.length
+
+        // Get album thumbnails for cascade display (max 3)
+        const thumbnails = this.getSeriesThumbnails(series, 3)
 
         return `
             <div class="blend-series-card group cursor-pointer p-4 rounded-lg border transition-all duration-200
@@ -109,15 +170,84 @@ export class BlendSeriesSelector {
                 : 'border-white/10 bg-white/5 hover:border-orange-400/50 hover:bg-white/10'}"
                 data-series-id="${series.id}">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500/20 to-amber-500/10 flex items-center justify-center">
-                        ${getIcon('FolderOpen', 'w-5 h-5 text-orange-400')}
-                    </div>
+                    ${this.renderThumbnailsCascade(thumbnails)}
                     <div class="flex-1 min-w-0">
                         <h4 class="font-medium truncate ${isSelected ? 'text-orange-400' : ''}">${series.name}</h4>
                         <p class="text-xs text-muted">${albumCount} album${albumCount !== 1 ? 's' : ''}</p>
                     </div>
                     ${isSelected ? `<div class="text-orange-400">${getIcon('Check', 'w-5 h-5')}</div>` : ''}
                 </div>
+            </div>
+        `
+    }
+
+    /**
+     * Get thumbnails from series albumQueries
+     * Uses cached thumbnails if available (preloaded with real covers)
+     * Returns array of imageUrls or nulls (for placeholders)
+     */
+    getSeriesThumbnails(series, max = 3) {
+        // Check cache first (populated by preloadSeriesThumbnails)
+        if (this.thumbnailCache.has(series.id)) {
+            return this.thumbnailCache.get(series.id).slice(0, max)
+        }
+
+        // Fallback: return nulls for placeholders (will be replaced when cache loads)
+        const queries = series.albumQueries || []
+        const count = Math.min(queries.length, max)
+        return new Array(count).fill(null)
+    }
+
+    /**
+     * Render cascade thumbnails component
+     * Diagonal layout: each cover offset both horizontally and vertically
+     */
+    renderThumbnailsCascade(thumbnails) {
+        if (thumbnails.length === 0) {
+            // Fallback to folder icon
+            return `
+                <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500/20 to-amber-500/10 flex items-center justify-center">
+                    ${getIcon('FolderOpen', 'w-6 h-6 text-orange-400')}
+                </div>
+            `
+        }
+
+        // Diagonal cascade layout: each thumbnail offset diagonally
+        const stackedThumbs = thumbnails.map((url, i) => {
+            const zIndex = thumbnails.length - i
+            const leftOffset = i * 10  // Horizontal offset per item
+            const topOffset = i * 6    // Vertical offset per item (diagonal effect)
+
+            if (url) {
+                return `
+                    <img 
+                        src="${url}" 
+                        alt="Album cover" 
+                        class="w-10 h-10 rounded-md object-cover shadow-lg border border-white/20 absolute"
+                        style="left: ${leftOffset}px; top: ${topOffset}px; z-index: ${zIndex};"
+                        onerror="this.style.display='none'"
+                    >
+                `
+            } else {
+                // Gradient placeholder
+                return `
+                    <div 
+                        class="w-10 h-10 rounded-md bg-gradient-to-br from-purple-500/40 to-orange-500/40 shadow-lg border border-white/20 absolute flex items-center justify-center"
+                        style="left: ${leftOffset}px; top: ${topOffset}px; z-index: ${zIndex};"
+                    >
+                        ${getIcon('Disc', 'w-5 h-5 text-white/50')}
+                    </div>
+                `
+            }
+        }).join('')
+
+        // Container dimensions to accommodate diagonal stacking
+        const containerWidth = 40 + ((thumbnails.length - 1) * 10)  // base + horizontal offsets
+        const containerHeight = 40 + ((thumbnails.length - 1) * 6) // base + vertical offsets
+
+        return `
+            <div class="relative shrink-0" style="width: ${containerWidth}px; height: ${containerHeight}px;">
+                ${stackedThumbs}
             </div>
         `
     }
