@@ -114,15 +114,15 @@ export class TopNav {
               <button id="mobileSeriesToggle" class="flex items-center justify-between w-full px-4 py-3 rounded-xl text-white/70 hover:bg-white/5 transition-all">
                 <div class="flex items-center gap-3">
                   ${getIcon('Music', 'w-5 h-5')}
-                  <span class="font-medium">Series</span>
+                  <span class="font-medium">Music Series</span>
                 </div>
                 ${getIcon('ChevronDown', 'w-4 h-4 transition-transform duration-200')}
               </button>
               <div id="mobileSeriesItems" class="hidden pl-8 space-y-1 mt-1">
-                ${this.renderMobileNavLink('/albums', 'Albums', 'Disc', currentPath)}
-                ${this.renderMobileNavLink('/artists', 'Artists', 'User', currentPath)}
-                ${this.renderMobileNavLink('/genres', 'Genres', 'Tag', currentPath)}
-                ${this.renderMobileNavLink('/tracks', 'Tracks', 'Music', currentPath)}
+                ${this.renderMobileNavLink('/albums', 'By Album', 'Disc', currentPath)}
+                ${this.renderMobileNavLink('/artists', 'By Artist', 'User', currentPath)}
+                ${this.renderMobileNavLink('/genres', 'By Genre', 'Tag', currentPath)}
+                ${this.renderMobileNavLink('/tracks', 'By Track', 'Music', currentPath)}
                 <div class="border-t border-white/10 my-1"></div>
                 ${this.renderMobileNavLink('/playlist-series', 'Playlists', 'List', currentPath)}
               </div>

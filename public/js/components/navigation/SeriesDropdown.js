@@ -19,10 +19,10 @@ export class SeriesDropdown {
 
         // Series entity types with routes and availability
         this.entityTypes = [
-            { label: 'Albums', route: '/albums', icon: 'Disc', available: true },
-            { label: 'Artists', route: '/artists', icon: 'User', available: false },
-            { label: 'Genres', route: '/genres', icon: 'Tag', available: false },
-            { label: 'Tracks', route: '/tracks', icon: 'Music', available: false },
+            { label: 'By Album', route: '/albums', icon: 'Disc', available: true },
+            { label: 'By Artist', route: '/artists', icon: 'User', available: false },
+            { label: 'By Genre', route: '/genres', icon: 'Tag', available: false },
+            { label: 'By Track', route: '/tracks', icon: 'Music', available: false },
             { type: 'separator' },
             { label: 'Playlists', route: '/playlist-series', icon: 'List', available: true }
         ];
@@ -41,7 +41,7 @@ export class SeriesDropdown {
                 return entity.label;
             }
         }
-        return 'Series';
+        return 'Music Series';
     }
 
     /**
