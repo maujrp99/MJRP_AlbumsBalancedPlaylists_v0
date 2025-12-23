@@ -130,86 +130,11 @@ export class APIClient {
 
                     const album = new Album(albumData)
 
-                    // Sprint 11: Auto-enrich with Spotify if connected
+                    // Sprint 12: Use modular SpotifyEnrichmentHelper
+                    // This checks cache first, then fetches fresh if needed
                     try {
-                        const { SpotifyService } = await import('../services/SpotifyService.js')
-
-                        if (SpotifyService.isAvailable()) {
-                            console.log('[APIClient] Spotify connected - enriching with popularity data...')
-                            const spotifyData = await SpotifyService.enrichAlbumData(fullAlbum.artist, fullAlbum.title)
-
-                            if (spotifyData) {
-                                // Apply Spotify data to album
-                                album.spotifyId = spotifyData.spotifyId
-                                album.spotifyUrl = spotifyData.spotifyUrl
-                                album.spotifyPopularity = spotifyData.spotifyPopularity
-
-                                // Helper: Normalize title for fuzzy matching
-                                const normalizeTitle = (str) =>
-                                    str?.toLowerCase()
-                                        .replace(/[^a-z0-9\s]/g, '') // Remove punctuation
-                                        .replace(/\s+/g, ' ')
-                                        .trim() || ''
-
-                                // Helper: Find best match from Spotify tracks
-                                const findSpotifyMatch = (trackTitle) => {
-                                    const normalized = normalizeTitle(trackTitle)
-
-                                    // Try exact match first
-                                    const exactKey = trackTitle.toLowerCase().trim()
-                                    if (spotifyData.trackPopularityMap.has(exactKey)) {
-                                        return spotifyData.trackPopularityMap.get(exactKey)
-                                    }
-
-                                    // Try fuzzy match
-                                    for (const [spotifyTitle, data] of spotifyData.trackPopularityMap) {
-                                        const spotifyNorm = normalizeTitle(spotifyTitle)
-
-                                        // Check if titles are similar enough
-                                        if (spotifyNorm === normalized ||
-                                            spotifyNorm.includes(normalized) ||
-                                            normalized.includes(spotifyNorm)) {
-                                            return data
-                                        }
-                                    }
-                                    return null
-                                }
-
-                                // Apply popularity to tracks
-                                let matchCount = 0
-                                album.tracks.forEach(track => {
-                                    const spotifyMatch = findSpotifyMatch(track.title)
-                                    if (spotifyMatch) {
-                                        track.spotifyPopularity = spotifyMatch.popularity
-                                        track.spotifyId = spotifyMatch.spotifyId
-                                        track.spotifyUri = spotifyMatch.spotifyUri
-                                        matchCount++
-                                    }
-                                })
-
-                                // Also apply to original order tracks
-                                album.tracksOriginalOrder.forEach(track => {
-                                    const spotifyMatch = findSpotifyMatch(track.title)
-                                    if (spotifyMatch) {
-                                        track.spotifyPopularity = spotifyMatch.popularity
-                                        track.spotifyId = spotifyMatch.spotifyId
-                                        track.spotifyUri = spotifyMatch.spotifyUri
-                                    }
-                                })
-
-                                // Calculate Spotify-based rank (by popularity desc)
-                                const tracksWithPopularity = album.tracks.filter(t => t.spotifyPopularity != null)
-                                if (tracksWithPopularity.length > 0) {
-                                    // Sort copy to avoid mutating the original order
-                                    const sorted = [...tracksWithPopularity].sort((a, b) => b.spotifyPopularity - a.spotifyPopularity)
-                                    sorted.forEach((t, idx) => {
-                                        t.spotifyRank = idx + 1
-                                    })
-                                }
-
-                                console.log(`[APIClient] Spotify enrichment complete: matched ${matchCount}/${album.tracks.length} tracks`)
-                            }
-                        }
+                        const { applyEnrichmentToAlbum } = await import('../helpers/SpotifyEnrichmentHelper.js')
+                        await applyEnrichmentToAlbum(album, { fetchIfMissing: true })
                     } catch (spotifyError) {
                         console.warn('[APIClient] Spotify enrichment skipped:', spotifyError.message)
                     }
