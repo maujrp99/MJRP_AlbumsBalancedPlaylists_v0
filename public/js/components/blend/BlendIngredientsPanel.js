@@ -2,19 +2,77 @@
  * BlendIngredientsPanel.js
  * 
  * Step 3: 🥗 Pick Your Ingredients
- * Parameter configuration (duration, output mode)
+ * Parameter configuration (duration, output mode, ranking type, discovery mode)
+ * Shows/hides options conditionally based on selected algorithm flavor
  * 
  * @module components/blend/BlendIngredientsPanel
  */
 
 import { getIcon } from '../Icons.js'
 
+/**
+ * Configuration for which ingredients each algorithm supports
+ */
+const ALGORITHM_INGREDIENTS = {
+    'mjrp-balanced-cascade': {
+        duration: true,
+        outputMode: false,      // Auto-split internally
+        rankingType: true,      // Spotify / BEA / Combined
+        discoveryMode: true     // Include unranked
+    },
+    'mjrp-cascade-v0': {
+        duration: true,
+        outputMode: false,
+        rankingType: true,
+        discoveryMode: true
+    },
+    's-draft-original': {
+        duration: true,
+        outputMode: true,       // Single / Multiple
+        rankingType: true,
+        discoveryMode: true
+    },
+    'legacy-roundrobin': {
+        duration: true,
+        outputMode: false,
+        rankingType: false,
+        discoveryMode: true
+    },
+    'top-3-popular': {
+        duration: true,
+        outputMode: true,
+        rankingType: false,     // Locked: Spotify
+        discoveryMode: false    // Requires ranking data
+    },
+    'top-3-acclaimed': {
+        duration: true,
+        outputMode: true,
+        rankingType: false,     // Locked: BEA
+        discoveryMode: false
+    },
+    'top-5-popular': {
+        duration: true,
+        outputMode: true,
+        rankingType: false,
+        discoveryMode: false
+    },
+    'top-5-acclaimed': {
+        duration: true,
+        outputMode: true,
+        rankingType: false,
+        discoveryMode: false
+    }
+}
+
 export class BlendIngredientsPanel {
     constructor(opts = {}) {
         this.onConfigChange = opts.onConfigChange || (() => { })
+        this.selectedFlavor = opts.selectedFlavor || null
         this.config = {
-            duration: opts.duration || 45,  // 30, 45, 60 minutes
-            outputMode: opts.outputMode || 'auto',  // 'single', 'multiple', 'auto'
+            duration: opts.duration || 60,
+            outputMode: opts.outputMode || 'auto',
+            rankingType: opts.rankingType || 'combined',
+            discoveryMode: opts.discoveryMode || false,
             ...opts.config
         }
     }
@@ -45,64 +103,183 @@ export class BlendIngredientsPanel {
     ]
 
     /**
+     * Ranking type options
+     */
+    static RANKING_TYPES = [
+        { value: 'spotify', label: 'Spotify Popularity', description: 'Based on play counts', icon: 'TrendingUp' },
+        { value: 'bea', label: 'Critics Choice', description: 'Based on BEA rankings', icon: 'Award' },
+        { value: 'combined', label: 'Combined', description: 'Balanced mix of both', icon: 'Scale' }
+    ]
+
+    /**
+     * Update selected flavor (called from parent view)
+     */
+    setFlavor(flavor) {
+        this.selectedFlavor = flavor
+    }
+
+    /**
+     * Get ingredient visibility for current flavor
+     */
+    getIngredientConfig() {
+        const flavorId = this.selectedFlavor?.id
+        return ALGORITHM_INGREDIENTS[flavorId] || {
+            duration: true,
+            outputMode: true,
+            rankingType: true,
+            discoveryMode: true
+        }
+    }
+
+    /**
      * Render the component
      */
     render() {
         const container = document.getElementById('blend-ingredients-panel')
         if (!container) return
 
+        const ingredients = this.getIngredientConfig()
+
         container.innerHTML = `
             <div class="space-y-6">
-                <!-- Duration -->
-                <div>
-                    <label class="block text-sm font-medium mb-3 text-muted">
-                        ${getIcon('Clock', 'w-4 h-4 inline mr-2')}Target Duration (minutes)
-                    </label>
-                    <div class="grid grid-cols-5 gap-2">
-                        ${BlendIngredientsPanel.DURATIONS.map(d => `
-                            <button type="button" 
-                                class="blend-duration-btn px-3 py-2 rounded-lg border transition-all duration-200 text-center
-                                    ${this.config.duration === d.value
-                ? 'border-orange-400 bg-orange-400/20 text-orange-400 ring-1 ring-orange-400'
-                : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'}"
-                                data-duration="${d.value}">
-                                <span class="font-semibold text-sm">${d.label}</span>
-                            </button>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <!-- Output Mode -->
-                <div>
-                    <label class="block text-sm font-medium mb-3 text-muted">
-                        ${getIcon('LayoutGrid', 'w-4 h-4 inline mr-2')}Output Mode
-                    </label>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        ${BlendIngredientsPanel.OUTPUT_MODES.map(m => `
-                            <button type="button"
-                                class="blend-output-btn p-4 rounded-lg border text-left transition-all duration-200
-                                    ${this.config.outputMode === m.value
-                        ? 'border-orange-400 bg-orange-400/20 ring-1 ring-orange-400'
-                        : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'}"
-                                data-output="${m.value}">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-lg bg-surface/60 flex items-center justify-center
-                                        ${this.config.outputMode === m.value ? 'text-orange-400' : 'text-muted'}">
-                                        ${getIcon(m.icon, 'w-5 h-5')}
-                                    </div>
-                                    <div>
-                                        <span class="font-medium block ${this.config.outputMode === m.value ? 'text-orange-400' : ''}">${m.label}</span>
-                                        <span class="text-xs text-muted">${m.description}</span>
-                                    </div>
-                                </div>
-                            </button>
-                        `).join('')}
-                    </div>
-                </div>
+                <!-- Duration (always shown) -->
+                ${this.renderDurationSection()}
+                
+                <!-- Output Mode (conditional) -->
+                ${ingredients.outputMode ? this.renderOutputModeSection() : ''}
+                
+                <!-- Ranking Type (conditional) -->
+                ${ingredients.rankingType ? this.renderRankingTypeSection() : ''}
+                
+                <!-- Discovery Mode (conditional) -->
+                ${ingredients.discoveryMode ? this.renderDiscoveryModeSection() : ''}
             </div>
         `
 
         this.attachListeners()
+    }
+
+    /**
+     * Render Duration section
+     */
+    renderDurationSection() {
+        return `
+            <div>
+                <label class="block text-sm font-medium mb-3 text-muted">
+                    ${getIcon('Clock', 'w-4 h-4 inline mr-2')}Target Duration (minutes)
+                </label>
+                <div class="grid grid-cols-5 gap-2">
+                    ${BlendIngredientsPanel.DURATIONS.map(d => `
+                        <button type="button" 
+                            class="blend-duration-btn px-3 py-2 rounded-lg border transition-all duration-200 text-center
+                                ${this.config.duration === d.value
+                ? 'border-orange-400 bg-orange-400/20 text-orange-400 ring-1 ring-orange-400'
+                : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'}"
+                            data-duration="${d.value}">
+                            <span class="font-semibold text-sm">${d.label}</span>
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `
+    }
+
+    /**
+     * Render Output Mode section
+     */
+    renderOutputModeSection() {
+        return `
+            <div>
+                <label class="block text-sm font-medium mb-3 text-muted">
+                    ${getIcon('LayoutGrid', 'w-4 h-4 inline mr-2')}Output Mode
+                </label>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    ${BlendIngredientsPanel.OUTPUT_MODES.map(m => `
+                        <button type="button"
+                            class="blend-output-btn p-4 rounded-lg border text-left transition-all duration-200
+                                ${this.config.outputMode === m.value
+                ? 'border-orange-400 bg-orange-400/20 ring-1 ring-orange-400'
+                : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'}"
+                            data-output="${m.value}">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-surface/60 flex items-center justify-center
+                                    ${this.config.outputMode === m.value ? 'text-orange-400' : 'text-muted'}">
+                                    ${getIcon(m.icon, 'w-5 h-5')}
+                                </div>
+                                <div>
+                                    <span class="font-medium block ${this.config.outputMode === m.value ? 'text-orange-400' : ''}">${m.label}</span>
+                                    <span class="text-xs text-muted">${m.description}</span>
+                                </div>
+                            </div>
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `
+    }
+
+    /**
+     * Render Ranking Type section
+     */
+    renderRankingTypeSection() {
+        return `
+            <div>
+                <label class="block text-sm font-medium mb-3 text-muted">
+                    ${getIcon('BarChart2', 'w-4 h-4 inline mr-2')}Ranking Source
+                </label>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    ${BlendIngredientsPanel.RANKING_TYPES.map(r => `
+                        <button type="button"
+                            class="blend-ranking-btn p-4 rounded-lg border text-left transition-all duration-200
+                                ${this.config.rankingType === r.value
+                ? 'border-orange-400 bg-orange-400/20 ring-1 ring-orange-400'
+                : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'}"
+                            data-ranking="${r.value}">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-surface/60 flex items-center justify-center
+                                    ${this.config.rankingType === r.value ? 'text-orange-400' : 'text-muted'}">
+                                    ${getIcon(r.icon, 'w-5 h-5')}
+                                </div>
+                                <div>
+                                    <span class="font-medium block ${this.config.rankingType === r.value ? 'text-orange-400' : ''}">${r.label}</span>
+                                    <span class="text-xs text-muted">${r.description}</span>
+                                </div>
+                            </div>
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `
+    }
+
+    /**
+     * Render Discovery Mode section
+     */
+    renderDiscoveryModeSection() {
+        return `
+            <div class="flex items-center justify-between p-4 rounded-lg border ${this.config.discoveryMode
+                ? 'border-orange-400/50 bg-orange-400/10'
+                : 'border-white/10 bg-white/5'} transition-all duration-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-surface/60 flex items-center justify-center ${this.config.discoveryMode ? 'text-orange-400' : 'text-muted'}">
+                        ${getIcon('Compass', 'w-5 h-5')}
+                    </div>
+                    <div>
+                        <span class="font-medium block ${this.config.discoveryMode ? 'text-orange-400' : ''}">Discovery Mode</span>
+                        <span class="text-xs text-muted">Include tracks without ranking data</span>
+                    </div>
+                </div>
+                <button type="button" 
+                    id="blend-discovery-toggle"
+                    class="w-12 h-7 rounded-full transition-all duration-200 relative ${this.config.discoveryMode
+                ? 'bg-orange-400'
+                : 'bg-gray-600'}">
+                    <span class="absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-all duration-200 ${this.config.discoveryMode
+                ? 'left-6'
+                : 'left-1'}"></span>
+                </button>
+            </div>
+        `
     }
 
     /**
@@ -126,6 +303,25 @@ export class BlendIngredientsPanel {
                 this.render()
             })
         })
+
+        // Ranking type buttons
+        document.querySelectorAll('.blend-ranking-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.config.rankingType = btn.dataset.ranking
+                this.onConfigChange(this.config)
+                this.render()
+            })
+        })
+
+        // Discovery mode toggle
+        const discoveryToggle = document.getElementById('blend-discovery-toggle')
+        if (discoveryToggle) {
+            discoveryToggle.addEventListener('click', () => {
+                this.config.discoveryMode = !this.config.discoveryMode
+                this.onConfigChange(this.config)
+                this.render()
+            })
+        }
     }
 
     /**

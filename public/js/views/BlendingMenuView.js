@@ -31,7 +31,12 @@ export class BlendingMenuView extends BaseView {
         // State
         this.selectedSeries = null
         this.selectedFlavor = null
-        this.config = { duration: 45, outputMode: 'auto' }
+        this.config = {
+            duration: 60,
+            outputMode: 'auto',
+            rankingType: 'combined',
+            discoveryMode: false
+        }
         this.isGenerating = false
     }
 
@@ -278,7 +283,8 @@ export class BlendingMenuView extends BaseView {
         this.seriesSelector.render()
         this.flavorCard.render()
 
-        // Always render ingredients - all algorithms show Step 3
+        // Pass selected flavor to ingredients panel for conditional rendering
+        this.ingredientsPanel.setFlavor(this.selectedFlavor)
         this.ingredientsPanel.render()
 
         // Attach listeners
