@@ -1,7 +1,7 @@
 # Album Data Flow Architecture
 
-**Updated**: 2025-12-23
-**Version**: 2.3 (Blending Menu)
+**Updated**: 2025-12-23 17:40
+**Version**: 2.4 (Conditional Ingredients + Enrichment)
 
 ## Overview
 
@@ -18,6 +18,8 @@ This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** fo
 - **Sprint 11.5**: **Ranking Strategy Pattern** fully implemented (Balanced, Spotify, BEA).
 - **Sprint 12**: **SeriesView V3 Architecture** - Componentized thin orchestrator pattern.
 - **Sprint 12**: **Blending Menu** - 4-step wizard UI + TopN algorithms + Mixin pattern (see below).
+- **Sprint 12**: **Conditional Ingredients Panel** - Parameters show/hide based on selected algorithm.
+- **Sprint 12**: **Background Enrichment** (spec) - Firestore-only with lazy cleanup, auto-enrich on Spotify auth.
 
 ---
 
@@ -118,11 +120,15 @@ BlendingMenuView.js (Main Wizard)
     ├── Step 2: BlendFlavorCard.js
     │       └── Algorithm selection cards (TopN + Legacy)
     │
-    ├── Step 3: BlendIngredientsPanel.js
-    │       └── Duration, Output mode, Playlist count
+    ├── Step 3: BlendIngredientsPanel.js (Conditional per algorithm)
+    │       └── Duration, Output mode, Ranking Type, Discovery Mode
+    │       └── Shows/hides params based on ALGORITHM_INGREDIENTS config
     │
     └── Step 4: "Blend It!" CTA
             └── → CurationEngine → PlaylistSeries
+│
+└── (Planned) SpotifyEnrichmentStore.js
+        └── Firestore persistence with lazy cleanup
 ```
 
 ### Algorithm Layer (with Mixins)

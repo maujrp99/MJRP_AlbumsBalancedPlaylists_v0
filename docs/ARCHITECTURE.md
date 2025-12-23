@@ -1,6 +1,6 @@
 # Architecture Documentation
 
-**Last Updated**: 2025-12-23
+**Last Updated**: 2025-12-23 17:40
 **Workflow**: See `.agent/workflows/architecture_protocol.md`
 
 > **For project overview, features, and deployment info, see:**
@@ -178,8 +178,15 @@ The contract between the UI and the Curation Engine for the **Blending Menu**.
 - [x] **SeriesView V3** (575 LOC thin orchestrator, 8 components, Controller with 0 DOM refs) ✅
 - [x] **Blending Menu Phase 1** (Algorithm Mixins + TopN Algorithms) ✅
 - [x] **Blending Menu Phase 2** (UI Components: BlendingMenuView, BlendFlavorCard, etc.) ✅
-- [ ] Blending Menu Phase 3 (Integration & Testing - in progress)
+- [/] **Blending Menu Phase 3** (In Progress)
+  - [x] Conditional Ingredients Panel (rankingType, discoveryMode per algorithm)
+  - [x] Connect UI config to algorithm.generate() 
+  - [ ] Background Enrichment Service (Firestore, spec complete)
 - [ ] AlbumsView Refactor (Applying V3 pattern - deferred)
+
+### Related Documentation
+- [AlgorithmsMenu.md](technical/specs/sprint12-architecture-v3.0/blending-menu/AlgorithmsMenu.md) - Flavor definitions and ingredient matrix
+- [background-enrichment-spec.md](technical/specs/sprint12-architecture-v3.0/blending-menu/background-enrichment-spec.md) - Spotify enrichment with Firestore + lazy cleanup
 
 ---
 

@@ -8,11 +8,14 @@
 **Route**: `/blend`
 
 > [!NOTE]
-> **Implementation Status (2025-12-23)**:
+> **Implementation Status (2025-12-23 17:40)**:
 > - ✅ **Phase 1A**: Algorithm Mixins created (3 files, 14 tests ✅)
 > - ✅ **Phase 1B**: TopN algorithms created (5 files, 16 tests ✅)
 > - ✅ **Phase 2**: UI components created (BlendingMenuView, BlendFlavorCard, BlendSeriesSelector, BlendIngredientsPanel)
 > - 🚧 **Phase 3**: Integration & Testing (in progress)
+>   - ✅ Conditional Ingredients Panel (show/hide per algorithm)
+>   - ✅ Connect UI config to algorithms (rankingType, outputMode, discoveryMode)
+>   - 🔲 Background Enrichment Service (spec complete, implementation pending)
 
 ---
 

@@ -108,7 +108,39 @@ public/js/algorithms/
 
 ---
 
+## Phase 3: Integration & UX (Sprint 12 - In Progress)
+
+### 3.1 Conditional Ingredients Panel ✅ COMPLETED
+- [x] Create `ALGORITHM_INGREDIENTS` config in `BlendIngredientsPanel.js`
+- [x] Add Ranking Type selector (Spotify/BEA/Combined)
+- [x] Add Discovery Mode toggle
+- [x] Show/hide ingredients based on selected flavor
+- [x] Pass `selectedFlavor` from `BlendingMenuView` to panel
+
+### 3.2 Connect Ingredients to Algorithms ✅ COMPLETED
+- [x] Pass `rankingType` from UI config to `createRankingStrategy()`
+- [x] Pass `outputMode` and `discoveryMode` to `algorithm.generate()`
+- [x] Add 'combined' alias to ranking strategy factory
+- [x] Lock ranking for TopN algorithms (popular=spotify, acclaimed=bea)
+
+### 3.3 Background Enrichment Service 🔲 PLANNED
+> **Spec**: [background-enrichment-spec.md](./background-enrichment-spec.md)
+
+- [ ] Create `SpotifyEnrichmentStore.js` (Firestore CRUD with lazy cleanup)
+- [ ] Create `SpotifyEnrichmentService.js` (queue + background worker)
+- [ ] Trigger enrichment on Spotify auth success
+- [ ] Add progress UI (toast + TopNav indicator)
+- [ ] Integrate with `SpotifyRankingStrategy`
+
+### 3.4 Documentation ✅ COMPLETED
+- [x] Create `AlgorithmsMenu.md` (flavor definitions + ingredient matrix)
+- [x] Update `ARCHITECTURE.md` with Phase 3 status
+- [x] Update `data_flow_architecture.md` with enrichment notes
+
+---
+
 ## User Review Required
 
 > [!IMPORTANT]
 > **Tasks aprovadas. Iniciar execução da Phase 1A (Mixin refactoring)?**
+
