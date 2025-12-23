@@ -151,11 +151,23 @@ function applySpotifyData(album, enrichmentData, trackPopularityMap = null) {
     album.tracks?.forEach(applyToTrack)
     album.tracksOriginalOrder?.forEach(applyToTrack)
 
-    // Calculate Spotify-based rank
-    const tracksWithPop = (album.tracks || []).filter(t => t.spotifyPopularity != null)
+    // Calculate Spotify-based rank for ALL tracks with popularity
+    const allTracks = [...(album.tracks || []), ...(album.tracksOriginalOrder || [])]
+    const uniqueTracks = allTracks.filter((t, i, arr) => arr.findIndex(x => x.title === t.title) === i)
+    const tracksWithPop = uniqueTracks.filter(t => t.spotifyPopularity != null)
+
     if (tracksWithPop.length > 0) {
         const sorted = [...tracksWithPop].sort((a, b) => b.spotifyPopularity - a.spotifyPopularity)
-        sorted.forEach((t, idx) => t.spotifyRank = idx + 1)
+        sorted.forEach((t, idx) => {
+            const rank = idx + 1
+            // Apply to all tracks with same title in both arrays
+            album.tracks?.forEach(track => {
+                if (track.title === t.title) track.spotifyRank = rank
+            })
+            album.tracksOriginalOrder?.forEach(track => {
+                if (track.title === t.title) track.spotifyRank = rank
+            })
+        })
     }
 }
 
