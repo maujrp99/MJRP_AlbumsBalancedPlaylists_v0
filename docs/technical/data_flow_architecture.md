@@ -1,7 +1,7 @@
 # Album Data Flow Architecture
 
-**Updated**: 2025-12-23 17:40
-**Version**: 2.4 (Conditional Ingredients + Enrichment)
+**Updated**: 2025-12-23 20:40
+**Version**: 2.5 (Spotify Enrichment Modularization)
 
 ## Overview
 
@@ -19,7 +19,7 @@ This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** fo
 - **Sprint 12**: **SeriesView V3 Architecture** - Componentized thin orchestrator pattern.
 - **Sprint 12**: **Blending Menu** - 4-step wizard UI + TopN algorithms + Mixin pattern (see below).
 - **Sprint 12**: **Conditional Ingredients Panel** - Parameters show/hide based on selected algorithm.
-- **Sprint 12**: **Background Enrichment** (spec) - Firestore-only with lazy cleanup, auto-enrich on Spotify auth.
+- **Sprint 12**: **Spotify Enrichment Modularization** - SpotifyEnrichmentStore, SpotifyEnrichmentService, SpotifyEnrichmentHelper with cache-first pattern.
 
 ---
 
@@ -126,10 +126,95 @@ BlendingMenuView.js (Main Wizard)
     │
     └── Step 4: "Blend It!" CTA
             └── → CurationEngine → PlaylistSeries
-│
-└── (Planned) SpotifyEnrichmentStore.js
-        └── Firestore persistence with lazy cleanup
 ```
+
+---
+
+## Spotify Enrichment Architecture
+
+> **Added**: Sprint 12 (2025-12-23)
+> **Status**: ✅ IMPLEMENTED
+> **Pattern**: Background Service + Cache-First Helper
+
+### Component Hierarchy
+
+```
+SpotifyEnrichmentHelper (Single Source of Truth)
+    │
+    ├── applyEnrichmentToAlbum()     → Enrich single album
+    └── applyEnrichmentToAlbums()    → Batch enrichment
+           │
+           ├── SpotifyEnrichmentStore (Firestore CRUD)
+           │   ├── normalizeKey()     → Deterministic keys
+           │   ├── get()              → With lazy cleanup + TTL
+           │   ├── save()             → With schema versioning
+           │   └── Path: artifacts/mjrp-albums/users/{uid}/curator/data/spotify_enrichment
+           │
+           └── SpotifyService.enrichAlbumData()
+               └── Spotify API → Search → Tracks → Popularity
+```
+
+### Data Flow Diagram
+
+```mermaid
+graph TB
+    subgraph Trigger["🔐 Trigger Layer"]
+        Auth[Spotify Auth Success]
+        AppJS[app.js bootstrap]
+    end
+
+    subgraph Background["🔄 Background Enrichment"]
+        Service[SpotifyEnrichmentService]
+        Queue[Album Queue]
+    end
+
+    subgraph Cache["💾 Cache Layer"]
+        Store[SpotifyEnrichmentStore]
+        Firestore[(Firestore)]
+    end
+
+    subgraph Integration["🔌 Integration Layer"]
+        Helper[SpotifyEnrichmentHelper]
+        ClientJS[client.js fetchAlbum]
+        SeriesView[SeriesView refreshGrid]
+    end
+
+    subgraph Display["📱 Display Layer"]
+        Albums[Album Cards]
+        Tracks[Track Popularity]
+    end
+
+    Auth --> AppJS
+    AppJS --> Service
+    Service --> Queue
+    Queue --> |Rate Limited| Store
+    Store --> Firestore
+
+    ClientJS --> Helper
+    SeriesView --> Helper
+    Helper --> |Cache First| Store
+    Helper --> |Miss? Fetch| Service
+
+    Helper --> Albums
+    Albums --> Tracks
+```
+
+### Consumers
+
+| Consumer | When | Cache First? | Fallback |
+|----------|------|--------------|----------|
+| `client.js.fetchAlbum()` | New album loaded | ✅ Yes | Fetch live |
+| `SeriesView.refreshGrid()` | Grid renders | ✅ Yes | None (cache only) |
+| `BlendingMenuView` | Before blend | ✅ Yes | Use unenriched |
+
+### Anti-Ghost Strategies
+
+| Strategy | Implementation |
+|----------|----------------|
+| **Deterministic Keys** | `normalizeKey()` → `artist-album` without special chars |
+| **Lazy Cleanup** | `get()` checks `albumExistsCheck()` → deletes orphans |
+| **TTL Validation** | Data expires after 30 days (`MAX_AGE_MS`) |
+| **Schema Versioning** | `CURRENT_SCHEMA_VERSION = 1` → auto-invalidate on schema change |
 
 ### Algorithm Layer (with Mixins)
 
