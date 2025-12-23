@@ -3,6 +3,7 @@
 **Spec**: [spec.md](./spec.md)
 **Plan**: [plan.md](./plan.md)
 **Branch**: `sprint12-architecture-v3.0`
+**Updated**: 2025-12-23
 
 ## Scope & Coverage
 This task list covers **Phase 3 (Execution)** of the V3 Reboot.
@@ -61,18 +62,22 @@ It addresses the following User Stories:
 - [ ] **Series Context**: Display active series name in TopNav when in series scope.
 - [ ] **Create Mix CTA**: Add prominent "Create Mix" button in header (Desktop) / FAB (Mobile).
 
-## 4. 🥤 New Features: The Blending Menu (US2)
-- [ ] **Schema**: Implement `RankingContext` structure in `CurationEngine`.
-- [ ] **UI**: Create `components/blending/BlendingMenuView.js` (The Overlay).
-- [ ] **Inputs**: Implement "Strictness" and "Duration" sliders.
-- [ ] **Integration**: Connect "Create Mix" button -> `BlendingMenuView` -> `CurationEngine`.
+## 4. 🥤 New Features: The Blending Menu (US2) ✅
+> **Detailed Tasks**: [blending-menu/tasks.md](./blending-menu/tasks.md)
 
-## 5. 🧹 Cleanup & Cutover
-- [ ] **Legacy Rename**: Rename `AlbumsView.js` to `AlbumsView_legacy.js` (keep for reference, deletion decision deferred).
-- [ ] **Router Update**: Update router to use `SeriesView` for `/albums` route.
-- [ ] **Import Cleanup**: Ensure all imports point to `SeriesView` or new components.
-- [ ] **Verification**: Run Manual Test Plan (Ghost Album, Drag & Drop, Mobile Menu).
-- [ ] **Decision Point**: After verification passes, decide whether to delete `AlbumsView_legacy.js`.
+- [x] **Schema**: Implement algorithm flavors and ingredient matrix.
+- [x] **UI**: Create `BlendingMenuView.js`, `BlendFlavorCard.js`, `BlendSeriesSelector.js`, `BlendIngredientsPanel.js`.
+- [x] **Inputs**: Implement Duration, Ranking Type, Discovery Mode selectors.
+- [x] **Conditional Ingredients**: Show/hide parameters based on selected algorithm.
+- [x] **Integration**: Connect "Blend It!" CTA → algorithm.generate() → Playlists.
+- [x] **Background Enrichment**: SpotifyEnrichmentStore + SpotifyEnrichmentService.
+
+## 5. 🧹 Cleanup & Cutover (Partial)
+- [x] **Router Update**: `/albums` uses `SeriesView`, `/blend` uses `BlendingMenuView`.
+- [x] **Import Cleanup**: All imports point to new components.
+- [ ] **Legacy Rename**: Rename `AlbumsView.js` to `AlbumsView_legacy.js` (deferred).
+- [ ] **Verification**: Run full Manual Test Plan.
+- [ ] **Decision Point**: Delete `AlbumsView_legacy.js` after verification.
 
 ---
 
