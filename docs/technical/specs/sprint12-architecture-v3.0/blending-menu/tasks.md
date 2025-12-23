@@ -123,14 +123,14 @@ public/js/algorithms/
 - [x] Add 'combined' alias to ranking strategy factory
 - [x] Lock ranking for TopN algorithms (popular=spotify, acclaimed=bea)
 
-### 3.3 Background Enrichment Service 🔲 PLANNED
+### 3.3 Background Enrichment Service ✅ COMPLETED
 > **Spec**: [background-enrichment-spec.md](./background-enrichment-spec.md)
 
-- [ ] Create `SpotifyEnrichmentStore.js` (Firestore CRUD with lazy cleanup)
-- [ ] Create `SpotifyEnrichmentService.js` (queue + background worker)
-- [ ] Trigger enrichment on Spotify auth success
-- [ ] Add progress UI (toast + TopNav indicator)
-- [ ] Integrate with `SpotifyRankingStrategy`
+- [x] Create `SpotifyEnrichmentStore.js` (Firestore CRUD with lazy cleanup)
+- [x] Create `SpotifyEnrichmentService.js` (queue + background worker)
+- [x] Trigger enrichment on Spotify auth success
+- [x] Add progress notifications (toast)
+- [ ] Add visual progress UI in TopNav (deferred)
 
 ### 3.4 Documentation ✅ COMPLETED
 - [x] Create `AlgorithmsMenu.md` (flavor definitions + ingredient matrix)
