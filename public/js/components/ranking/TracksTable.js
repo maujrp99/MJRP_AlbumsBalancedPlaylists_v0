@@ -88,13 +88,16 @@ export class TracksTable {
                 <div class="w-48 px-4 py-3">
                     ${hasPop
                 ? `
-                            <div class="flex flex-col gap-1 w-full max-w-[140px]">
-                                <div class="flex justify-between items-end text-[10px] text-white/40 uppercase font-bold tracking-wider">
-                                    <span>Score</span>
-                                    <span class="${track.spotifyPopularity > 80 ? 'text-[#1DB954]' : 'text-white/60'}">${track.spotifyPopularity}%</span>
-                                </div>
-                                <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                                    <div class="h-full ${popColor} rounded-full" style="width: ${track.spotifyPopularity}%"></div>
+                            <div class="flex items-center gap-2">
+                                ${track.spotifyRank ? `<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1DB954]/10 text-[#1DB954] text-sm font-bold border border-[#1DB954]/20 shadow-lg shadow-[#1DB954]/5">#${track.spotifyRank}</span>` : ''}
+                                <div class="flex flex-col gap-1 flex-1 max-w-[100px]">
+                                    <div class="flex justify-between items-end text-[10px] text-white/40 uppercase font-bold tracking-wider">
+                                        <span>Score</span>
+                                        <span class="${track.spotifyPopularity > 80 ? 'text-[#1DB954]' : 'text-white/60'}">${track.spotifyPopularity}%</span>
+                                    </div>
+                                    <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                                        <div class="h-full ${popColor} rounded-full" style="width: ${track.spotifyPopularity}%"></div>
+                                    </div>
                                 </div>
                             </div>
                           `
