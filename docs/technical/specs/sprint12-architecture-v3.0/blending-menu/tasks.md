@@ -139,6 +139,60 @@ public/js/algorithms/
 
 ---
 
+## ⚠️ Production Deployment Pending
+
+> [!IMPORTANT]
+> **Added**: 2025-12-23  
+> **Priority**: Required before production deploy  
+> **Status**: 🟡 PENDING
+
+### Background Enrichment - Global Collection Migration
+
+The `SpotifyEnrichmentStore` currently uses **user-scoped paths** to work with existing Firestore rules:
+
+```
+users/{userId}/spotify_enrichment/{albumKey}   ← CURRENT (dev)
+```
+
+For **production deployment**, migrate to **global collection** for shared enrichment:
+
+```
+spotify_enrichment/{albumKey}   ← TARGET (prod)
+```
+
+#### Why?
+- **Shared data**: Enrichment for "Abbey Road" benefits ALL users
+- **Cost savings**: One enrichment per album, not per user
+- **Performance**: New users get pre-enriched data
+
+#### Steps Required
+
+1. **Add Firestore Security Rules** in Firebase Console:
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ... existing rules ...
+    
+    // Global Spotify Enrichment (any authenticated user can read/write)
+    match /spotify_enrichment/{albumKey} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+```
+
+2. **Update SpotifyEnrichmentStore.js**:
+   - Remove `getCollectionPath()` method
+   - Use `const COLLECTION = 'spotify_enrichment'` directly
+   - Remove `userStore` import
+
+3. **Data Migration** (optional):
+   - Run one-time migration to copy user-scoped data to global collection
+   - Or let natural re-enrichment populate global collection
+
+
+
 ## User Review Required
 
 > [!IMPORTANT]

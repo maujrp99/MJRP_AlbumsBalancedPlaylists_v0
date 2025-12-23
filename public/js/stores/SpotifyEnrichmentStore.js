@@ -7,17 +7,57 @@
  * - TTL validation (30-day expiration)
  * - Schema versioning
  * 
+ * ============================================================================
+ * ⚠️ WORKAROUND: USER-SCOPED STORAGE (Option B)
+ * ============================================================================
+ * Current implementation uses user-scoped path to work with existing Firestore rules:
+ *   users/{userId}/spotify_enrichment/{albumKey}
+ * 
+ * PRODUCTION TARGET (Option A - Global Collection):
+ *   spotify_enrichment/{albumKey}
+ * 
+ * WHY THIS WORKAROUND?
+ * - Global collection requires new Firestore security rules
+ * - User-scoped path reuses existing rules (works immediately)
+ * 
+ * MIGRATION STEPS FOR PROD:
+ * 1. Add Firestore rule: match /spotify_enrichment/{albumKey} { allow read, write: if request.auth != null; }
+ * 2. Remove getCollectionPath() method
+ * 3. Use COLLECTION = 'spotify_enrichment' directly
+ * 4. Remove userStore import
+ * 
+ * See: docs/technical/specs/sprint12-architecture-v3.0/blending-menu/tasks.md
+ * ============================================================================
+ * 
  * @see docs/technical/specs/sprint12-architecture-v3.0/blending-menu/background-enrichment-spec.md
  */
 
 import { db } from '../firebase-init.js'
 import { doc, getDoc, setDoc, deleteDoc, collection, getDocs } from 'firebase/firestore'
+import { userStore } from './UserStore.js'
 
-const COLLECTION = 'spotify_enrichment'
+// WORKAROUND: Collection name (used under user path for now)
+// TARGET: Use as root collection 'spotify_enrichment' when Firestore rules are updated
+const COLLECTION_NAME = 'spotify_enrichment'
 const CURRENT_SCHEMA_VERSION = 1
 const MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000 // 30 days
 
 class SpotifyEnrichmentStore {
+
+    /**
+     * Get the user-scoped collection path.
+     * Returns: users/{userId}/spotify_enrichment
+     * 
+     * @returns {string|null} Collection path or null if not authenticated
+     */
+    getCollectionPath() {
+        const user = userStore.currentUser
+        if (!user) {
+            console.warn('[EnrichmentStore] No authenticated user')
+            return null
+        }
+        return `users/${user.uid}/${COLLECTION_NAME}`
+    }
 
     /**
      * Generate a deterministic key from artist and album names.
@@ -49,10 +89,13 @@ class SpotifyEnrichmentStore {
      * @returns {Promise<Object|null>} Enrichment data or null
      */
     async get(artist, album, albumExistsCheck = null) {
+        const collectionPath = this.getCollectionPath()
+        if (!collectionPath) return null
+
         const key = this.normalizeKey(artist, album)
 
         try {
-            const docRef = doc(db, COLLECTION, key)
+            const docRef = doc(db, collectionPath, key)
             const snapshot = await getDoc(docRef)
 
             if (!snapshot.exists()) {
@@ -120,10 +163,15 @@ class SpotifyEnrichmentStore {
      * @returns {Promise<void>}
      */
     async save(artist, album, enrichmentData) {
+        const collectionPath = this.getCollectionPath()
+        if (!collectionPath) {
+            throw new Error('No authenticated user - cannot save enrichment')
+        }
+
         const key = this.normalizeKey(artist, album)
 
         try {
-            const docRef = doc(db, COLLECTION, key)
+            const docRef = doc(db, collectionPath, key)
             await setDoc(docRef, {
                 ...enrichmentData,
                 artist,
@@ -159,10 +207,13 @@ class SpotifyEnrichmentStore {
      * @returns {Promise<void>}
      */
     async delete(artist, album) {
+        const collectionPath = this.getCollectionPath()
+        if (!collectionPath) return
+
         const key = this.normalizeKey(artist, album)
 
         try {
-            const docRef = doc(db, COLLECTION, key)
+            const docRef = doc(db, collectionPath, key)
             await deleteDoc(docRef)
             console.log(`[EnrichmentStore] Deleted enrichment: ${key}`)
         } catch (error) {
@@ -171,13 +222,16 @@ class SpotifyEnrichmentStore {
     }
 
     /**
-     * Get count of all enrichments (for stats/debugging).
+     * Get count of all enrichments for current user (for stats/debugging).
      * 
      * @returns {Promise<number>} Total count
      */
     async getCount() {
+        const collectionPath = this.getCollectionPath()
+        if (!collectionPath) return 0
+
         try {
-            const collectionRef = collection(db, COLLECTION)
+            const collectionRef = collection(db, collectionPath)
             const snapshot = await getDocs(collectionRef)
             return snapshot.size
         } catch (error) {
