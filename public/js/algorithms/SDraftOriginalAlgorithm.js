@@ -15,13 +15,16 @@
  */
 
 import { BaseAlgorithm } from './BaseAlgorithm.js'
-import { LegacyRoundRobinAlgorithm } from './LegacyRoundRobinAlgorithm.js'
+import { PlaylistBalancingMixin, TrackEnrichmentMixin, applyMixins } from './mixins/index.js'
 
 const DEFAULT_TARGET_SECONDS = 45 * 60 // 45 minutes
 const FLEXIBILITY_SECONDS = 7 * 60 // ±7 minutes
 const P_HITS = 2 // Number of Greatest Hits playlists
 
-export class SDraftOriginalAlgorithm extends BaseAlgorithm {
+// Apply mixins to base class
+const BaseWithMixins = applyMixins(BaseAlgorithm, PlaylistBalancingMixin, TrackEnrichmentMixin)
+
+export class SDraftOriginalAlgorithm extends BaseWithMixins {
     static metadata = {
         id: 's-draft-original',
         name: 'S-Draft Serpentine',
@@ -35,8 +38,8 @@ export class SDraftOriginalAlgorithm extends BaseAlgorithm {
         this.targetSeconds = opts.targetSeconds || DEFAULT_TARGET_SECONDS
         this.flexibilitySeconds = opts.flexibilitySeconds || FLEXIBILITY_SECONDS
 
-        // Use Legacy for enrichTracks (shared logic)
-        this._legacyHelper = new LegacyRoundRobinAlgorithm(opts)
+        // NOTE: enrichTracks is now inherited from TrackEnrichmentMixin
+        // NOTE: runSwapBalancing and isSwapValid are inherited from PlaylistBalancingMixin
 
         // Register default source
         this.defaultRankingSource = this.registerRankingSource(opts.defaultRankingSource || {
@@ -54,10 +57,10 @@ export class SDraftOriginalAlgorithm extends BaseAlgorithm {
      * @returns {Object} { playlists, rankingSummary, rankingSources }
      */
     generate(albums, opts = {}) {
-        // Phase 1: Preparation & Ranking
+        // Phase 1: Preparation & Ranking - use enrichTracks from mixin
         const workingAlbums = (albums || []).map((album, albumIndex) => ({
             ...album,
-            tracks: this._legacyHelper.enrichTracks(album),
+            tracks: this.enrichTracks(album),
             _albumIndex: albumIndex // Track original order for odd/even logic
         }))
 
@@ -204,73 +207,7 @@ export class SDraftOriginalAlgorithm extends BaseAlgorithm {
         }
     }
 
-    /**
-     * Balance playlist durations via track swapping (same as Legacy)
-     * @param {Array} playlists 
-     */
-    runSwapBalancing(playlists) {
-        const MAX_ITERATIONS = 100
-
-        for (let iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
-            const playlistDurations = playlists.map(playlist => ({
-                id: playlist.id,
-                duration: this.calculateTotalDuration(playlist.tracks),
-                playlist
-            }))
-
-            playlistDurations.sort((a, b) => a.duration - b.duration)
-            const pUnder = playlistDurations[0]
-            const pOver = playlistDurations[playlistDurations.length - 1]
-
-            const underOk = pUnder.duration >= (this.targetSeconds - this.flexibilitySeconds)
-            const overOk = pOver.duration <= (this.targetSeconds + this.flexibilitySeconds)
-            if (underOk && overOk) return
-
-            let bestSwap = {
-                trackOver: null,
-                trackUnder: null,
-                newGap: Math.abs(pOver.duration - pUnder.duration)
-            }
-
-            for (const trackOver of pOver.playlist.tracks) {
-                for (const trackUnder of pUnder.playlist.tracks) {
-                    if (!this.isSwapValid(pOver.playlist, pUnder.playlist, trackOver, trackUnder)) continue
-
-                    const newOverDuration = pOver.duration - (trackOver.duration || 0) + (trackUnder.duration || 0)
-                    const newUnderDuration = pUnder.duration - (trackUnder.duration || 0) + (trackOver.duration || 0)
-                    const gap = Math.abs(newOverDuration - newUnderDuration)
-
-                    if (gap < bestSwap.newGap) {
-                        bestSwap = { trackOver, trackUnder, newGap: gap }
-                    }
-                }
-            }
-
-            if (bestSwap.trackOver) {
-                this.annotateTrack(bestSwap.trackOver, `Swap: moved to ${pUnder.playlist.id}`, this.defaultRankingSource, 0.45)
-                this.annotateTrack(bestSwap.trackUnder, `Swap: moved to ${pOver.playlist.id}`, this.defaultRankingSource, 0.45)
-
-                pOver.playlist.tracks = pOver.playlist.tracks.filter(t => t.id !== bestSwap.trackOver.id)
-                pOver.playlist.tracks.push(bestSwap.trackUnder)
-                pUnder.playlist.tracks = pUnder.playlist.tracks.filter(t => t.id !== bestSwap.trackUnder.id)
-                pUnder.playlist.tracks.push(bestSwap.trackOver)
-            } else {
-                return // No valid swap found
-            }
-        }
-    }
-
-    /**
-     * Check if swap is valid (protect Greatest Hits top tracks)
-     */
-    isSwapValid(pOver, pUnder, trackOver, trackUnder) {
-        const rankOver = trackOver?.acclaimRank ?? trackOver?.rank ?? null
-
-        if (rankOver === 1 && pOver.id === 'p1') return false
-        if (rankOver === 2 && pOver.id === 'p2') return false
-
-        return true
-    }
+    // NOTE: runSwapBalancing and isSwapValid are now inherited from PlaylistBalancingMixin
 }
 
 export default SDraftOriginalAlgorithm

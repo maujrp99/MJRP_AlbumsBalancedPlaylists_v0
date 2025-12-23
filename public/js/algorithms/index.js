@@ -10,6 +10,11 @@ import { LegacyRoundRobinAlgorithm } from './LegacyRoundRobinAlgorithm.js'
 import { SDraftOriginalAlgorithm } from './SDraftOriginalAlgorithm.js'
 import { MJRPBalancedCascadeAlgorithm } from './MJRPBalancedCascadeAlgorithm.js'
 import { MJRPBalancedCascadeV0Algorithm } from './MJRPBalancedCascadeV0Algorithm.js'
+// Top N algorithms for Blending Menu
+import { Top3PopularAlgorithm } from './Top3PopularAlgorithm.js'
+import { Top3AcclaimedAlgorithm } from './Top3AcclaimedAlgorithm.js'
+import { Top5PopularAlgorithm } from './Top5PopularAlgorithm.js'
+import { Top5AcclaimedAlgorithm } from './Top5AcclaimedAlgorithm.js'
 
 /**
  * Registry of all available algorithms
@@ -22,6 +27,11 @@ algorithms.set('mjrp-balanced-cascade', MJRPBalancedCascadeAlgorithm) // RECOMME
 algorithms.set('mjrp-cascade-v0', MJRPBalancedCascadeV0Algorithm)
 algorithms.set('s-draft-original', SDraftOriginalAlgorithm)
 algorithms.set('legacy-roundrobin', LegacyRoundRobinAlgorithm)
+// Top N algorithms (Blending Menu flavors)
+algorithms.set('top-3-popular', Top3PopularAlgorithm)
+algorithms.set('top-3-acclaimed', Top3AcclaimedAlgorithm)
+algorithms.set('top-5-popular', Top5PopularAlgorithm)
+algorithms.set('top-5-acclaimed', Top5AcclaimedAlgorithm)
 
 /**
  * Get algorithm class by ID
@@ -84,5 +94,11 @@ export { LegacyRoundRobinAlgorithm } from './LegacyRoundRobinAlgorithm.js'
 export { SDraftOriginalAlgorithm } from './SDraftOriginalAlgorithm.js'
 export { MJRPBalancedCascadeAlgorithm } from './MJRPBalancedCascadeAlgorithm.js'
 export { MJRPBalancedCascadeV0Algorithm } from './MJRPBalancedCascadeV0Algorithm.js'
+// Top N algorithms
+export { TopNAlgorithm } from './TopNAlgorithm.js'
+export { Top3PopularAlgorithm } from './Top3PopularAlgorithm.js'
+export { Top3AcclaimedAlgorithm } from './Top3AcclaimedAlgorithm.js'
+export { Top5PopularAlgorithm } from './Top5PopularAlgorithm.js'
+export { Top5AcclaimedAlgorithm } from './Top5AcclaimedAlgorithm.js'
 
 

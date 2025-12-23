@@ -14,12 +14,16 @@
 
 import { BaseAlgorithm } from './BaseAlgorithm.js'
 import { BalancedRankingStrategy } from '../ranking/BalancedRankingStrategy.js'
+import { DurationTrimmingMixin } from './mixins/index.js'
 
 const GREATEST_HITS_MAX = 60 * 60 // 60 minutes
 const DEEP_CUTS_MAX = 48 * 60 // 48 minutes (strict)
 const MINIMUM_DURATION = 30 * 60 // 30 minutes
 
-export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
+// Apply mixin to base class
+const BaseWithTrimming = DurationTrimmingMixin(BaseAlgorithm)
+
+export class MJRPBalancedCascadeAlgorithm extends BaseWithTrimming {
     static metadata = {
         id: 'mjrp-balanced-cascade',
         name: 'MJRP Balanced Cascade',
@@ -347,42 +351,7 @@ export class MJRPBalancedCascadeAlgorithm extends BaseAlgorithm {
         }
     }
 
-    /**
-     * Trim playlists over 48 min by moving lowest-rank tracks to Orphan Tracks
-     */
-    trimOverDurationPlaylists(playlists, firstDeepCutIndex) {
-        let orphanPlaylist = null
-
-        for (let i = firstDeepCutIndex; i < playlists.length; i++) {
-            const playlist = playlists[i]
-            let duration = this.calculateTotalDuration(playlist.tracks)
-
-            while (duration > this.deepCutsMax && playlist.tracks.length > 0) {
-                // Sort by rank descending (lowest rank = highest number = remove first)
-                playlist.tracks.sort((a, b) => (b._rank || 999) - (a._rank || 999))
-
-                const removed = playlist.tracks.shift()
-                if (removed) {
-                    if (!orphanPlaylist) {
-                        orphanPlaylist = {
-                            id: 'orphan',
-                            title: 'Orphan Tracks',
-                            subtitle: 'Trimmed due to duration limits',
-                            tracks: []
-                        }
-                        playlists.push(orphanPlaylist)
-                    }
-                    orphanPlaylist.tracks.push(removed)
-                    this.annotateTrack(removed, 'Trimmed to Orphan Tracks', this.defaultRankingSource, 0.2)
-                }
-
-                duration = this.calculateTotalDuration(playlist.tracks)
-            }
-
-            // Re-sort by rank ascending for display
-            playlist.tracks.sort((a, b) => (a._rank || 0) - (b._rank || 0))
-        }
-    }
+    // NOTE: trimOverDurationPlaylists is now inherited from DurationTrimmingMixin
 }
 
 export default MJRPBalancedCascadeAlgorithm

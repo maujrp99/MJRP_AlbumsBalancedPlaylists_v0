@@ -14,13 +14,16 @@
  */
 
 import { BaseAlgorithm } from './BaseAlgorithm.js'
-import { LegacyRoundRobinAlgorithm } from './LegacyRoundRobinAlgorithm.js'
+import { DurationTrimmingMixin, TrackEnrichmentMixin, applyMixins } from './mixins/index.js'
 
 const GREATEST_HITS_MAX = 60 * 60 // 60 minutes
 const DEEP_CUTS_MAX = 48 * 60 // 48 minutes (strict)
 const MINIMUM_DURATION = 30 * 60 // 30 minutes
 
-export class MJRPBalancedCascadeV0Algorithm extends BaseAlgorithm {
+// Apply mixins to base class
+const BaseWithMixins = applyMixins(BaseAlgorithm, DurationTrimmingMixin, TrackEnrichmentMixin)
+
+export class MJRPBalancedCascadeV0Algorithm extends BaseWithMixins {
     static metadata = {
         id: 'mjrp-cascade-v0',
         name: 'MJRP Cascade v0',
@@ -35,8 +38,7 @@ export class MJRPBalancedCascadeV0Algorithm extends BaseAlgorithm {
         this.deepCutsMax = opts.deepCutsMax || DEEP_CUTS_MAX
         this.minimumDuration = opts.minimumDuration || MINIMUM_DURATION
 
-        // Use Legacy for enrichTracks
-        this._legacyHelper = new LegacyRoundRobinAlgorithm(opts)
+        // NOTE: enrichTracks is now inherited from TrackEnrichmentMixin
 
         this.defaultRankingSource = this.registerRankingSource(opts.defaultRankingSource || {
             name: 'MJRP Cascade v0',
@@ -50,10 +52,10 @@ export class MJRPBalancedCascadeV0Algorithm extends BaseAlgorithm {
      * Generate playlists using MJRP Balanced Cascade algorithm
      */
     generate(albums, opts = {}) {
-        // Phase 1: Preparation
+        // Phase 1: Preparation - use enrichTracks from mixin
         const workingAlbums = (albums || []).map((album, albumIndex) => ({
             ...album,
-            tracks: this._legacyHelper.enrichTracks(album),
+            tracks: this.enrichTracks(album),
             _albumIndex: albumIndex
         }))
 
@@ -275,42 +277,7 @@ export class MJRPBalancedCascadeV0Algorithm extends BaseAlgorithm {
         }
     }
 
-    /**
-     * Trim playlists over 48 min by moving lowest-rank tracks to Orphan Tracks
-     */
-    trimOverDurationPlaylists(playlists, firstDeepCutIndex) {
-        let orphanPlaylist = null
-
-        for (let i = firstDeepCutIndex; i < playlists.length; i++) {
-            const playlist = playlists[i]
-            let duration = this.calculateTotalDuration(playlist.tracks)
-
-            while (duration > this.deepCutsMax && playlist.tracks.length > 0) {
-                // Sort by rank descending (lowest rank = highest number = remove first)
-                playlist.tracks.sort((a, b) => (b._rank || 999) - (a._rank || 999))
-
-                const removed = playlist.tracks.shift()
-                if (removed) {
-                    if (!orphanPlaylist) {
-                        orphanPlaylist = {
-                            id: 'orphan',
-                            title: 'Orphan Tracks',
-                            subtitle: 'Trimmed due to duration limits',
-                            tracks: []
-                        }
-                        playlists.push(orphanPlaylist)
-                    }
-                    orphanPlaylist.tracks.push(removed)
-                    this.annotateTrack(removed, 'Trimmed to Orphan Tracks', this.defaultRankingSource, 0.2)
-                }
-
-                duration = this.calculateTotalDuration(playlist.tracks)
-            }
-
-            // Re-sort by rank ascending for display
-            playlist.tracks.sort((a, b) => (a._rank || 0) - (b._rank || 0))
-        }
-    }
+    // NOTE: trimOverDurationPlaylists is now inherited from DurationTrimmingMixin
 }
 
 export default MJRPBalancedCascadeV0Algorithm

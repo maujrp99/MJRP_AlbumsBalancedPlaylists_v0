@@ -13,11 +13,15 @@
  */
 
 import { BaseAlgorithm } from './BaseAlgorithm.js'
+import { PlaylistBalancingMixin, applyMixins } from './mixins/index.js'
 
 const DEFAULT_TARGET_SECONDS = 45 * 60 // 45 minutes
 const P_HITS = 2 // Number of Greatest Hits playlists
 
-export class LegacyRoundRobinAlgorithm extends BaseAlgorithm {
+// Apply mixin to base class
+const BaseWithBalancing = PlaylistBalancingMixin(BaseAlgorithm)
+
+export class LegacyRoundRobinAlgorithm extends BaseWithBalancing {
     static metadata = {
         id: 'legacy-roundrobin',
         name: 'Legacy Round-Robin',
@@ -433,86 +437,8 @@ export class LegacyRoundRobinAlgorithm extends BaseAlgorithm {
         return count === 1
     }
 
-    /**
-     * Check if swap is valid
-     * @param {Object} pOver - Playlist over target
-     * @param {Object} pUnder - Playlist under target
-     * @param {Object} trackOver - Track from over playlist
-     * @param {Object} trackUnder - Track from under playlist
-     * @returns {boolean}
-     */
-    isSwapValid(pOver, pUnder, trackOver, trackUnder) {
-        const rankOver = trackOver?.acclaimRank ?? trackOver?.rank ?? null
-        const rankUnder = trackUnder?.acclaimRank ?? trackUnder?.rank ?? null
-
-        if (rankOver === 1 && pOver.id === 'p1') return false
-        if (rankOver === 2 && pOver.id === 'p2') return false
-
-        const isLastOver = this.isLastTrackOfAlbumInPlaylist(pOver, trackOver)
-        if (isLastOver && trackOver.originAlbumId !== trackUnder.originAlbumId) return false
-
-        const isLastUnder = this.isLastTrackOfAlbumInPlaylist(pUnder, trackUnder)
-        if (isLastUnder && trackUnder.originAlbumId !== trackOver.originAlbumId) return false
-
-        return true
-    }
-
-    /**
-     * Balance playlist durations via track swapping
-     * @param {Array} playlists 
-     */
-    runSwapBalancing(playlists) {
-        const FLEXIBILITY = 7 * 60 // 7 minutes
-        const MAX_ITERATIONS = 100
-
-        for (let iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
-            const playlistDurations = playlists.map(playlist => ({
-                id: playlist.id,
-                duration: this.calculateTotalDuration(playlist.tracks),
-                playlist
-            }))
-
-            playlistDurations.sort((a, b) => a.duration - b.duration)
-            const pUnder = playlistDurations[0]
-            const pOver = playlistDurations[playlistDurations.length - 1]
-
-            const underOk = pUnder.duration >= (this.targetSeconds - FLEXIBILITY)
-            const overOk = pOver.duration <= (this.targetSeconds + FLEXIBILITY)
-            if (underOk && overOk) return
-
-            let bestSwap = {
-                trackOver: null,
-                trackUnder: null,
-                newGap: Math.abs(pOver.duration - pUnder.duration)
-            }
-
-            for (const trackOver of pOver.playlist.tracks) {
-                for (const trackUnder of pUnder.playlist.tracks) {
-                    if (!this.isSwapValid(pOver.playlist, pUnder.playlist, trackOver, trackUnder)) continue
-
-                    const newOverDuration = pOver.duration - (trackOver.duration || 0) + (trackUnder.duration || 0)
-                    const newUnderDuration = pUnder.duration - (trackUnder.duration || 0) + (trackOver.duration || 0)
-                    const gap = Math.abs(newOverDuration - newUnderDuration)
-
-                    if (gap < bestSwap.newGap) {
-                        bestSwap = { trackOver, trackUnder, newGap: gap }
-                    }
-                }
-            }
-
-            if (bestSwap.trackOver) {
-                this.annotateTrack(bestSwap.trackOver, `Swap: moved to ${pUnder.playlist.id}`, this.defaultRankingSource, 0.45)
-                this.annotateTrack(bestSwap.trackUnder, `Swap: moved to ${pOver.playlist.id}`, this.defaultRankingSource, 0.45)
-
-                pOver.playlist.tracks = pOver.playlist.tracks.filter(t => t.id !== bestSwap.trackOver.id)
-                pOver.playlist.tracks.push(bestSwap.trackUnder)
-                pUnder.playlist.tracks = pUnder.playlist.tracks.filter(t => t.id !== bestSwap.trackUnder.id)
-                pUnder.playlist.tracks.push(bestSwap.trackOver)
-            } else {
-                return // No valid swap found
-            }
-        }
-    }
+    // NOTE: isSwapValid, isLastTrackOfAlbumInPlaylist, and runSwapBalancing
+    // are now inherited from PlaylistBalancingMixin
 }
 
 export default LegacyRoundRobinAlgorithm

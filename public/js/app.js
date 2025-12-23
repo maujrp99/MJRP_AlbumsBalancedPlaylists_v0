@@ -19,6 +19,7 @@ import { InventoryView } from './views/InventoryView.js'
 import { RankingView } from './views/RankingView.js'
 import { ConsolidatedRankingView } from './views/ConsolidatedRankingView.js'
 import { ComingSoonView } from './views/ComingSoonView.js'
+import { BlendingMenuView } from './views/BlendingMenuView.js'
 
 import toast from './components/Toast.js'
 
@@ -92,7 +93,7 @@ router.register('/inventory', () => new InventoryView())
 router.register('/artists', () => new ComingSoonView())
 router.register('/genres', () => new ComingSoonView())
 router.register('/tracks', () => new ComingSoonView())
-router.register('/blend', () => new ComingSoonView())
+router.register('/blend', () => new BlendingMenuView())
 
 // Sprint 11 Phase 1: Spotify Auth Callback
 router.register('/callback', async () => {
