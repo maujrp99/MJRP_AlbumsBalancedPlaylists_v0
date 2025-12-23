@@ -99,7 +99,8 @@ export class BlendSeriesSelector {
      */
     renderSeriesCard(series) {
         const isSelected = this.selectedSeries?.id === series.id
-        const albumCount = series.albums?.length || 0
+        // Use albumQueries which is the actual array of album references
+        const albumCount = series.albumQueries?.length || series.albums?.length || 0
 
         return `
             <div class="blend-series-card group cursor-pointer p-4 rounded-lg border transition-all duration-200

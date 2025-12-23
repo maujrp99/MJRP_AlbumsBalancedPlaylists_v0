@@ -36,6 +36,14 @@ export class BlendingMenuView extends BaseView {
     }
 
     async render(params) {
+        // Progressive disclosure state
+        const step1Complete = !!this.selectedSeries
+        const step2Complete = !!this.selectedFlavor
+        // TopN algorithms and MJRP don't need Step 3 params
+        const algorithmHasParams = this.selectedFlavor?.id?.includes('s-draft') || this.selectedFlavor?.id?.includes('legacy')
+        const step3Skipped = step2Complete && !algorithmHasParams
+        const step3Complete = step3Skipped || (step2Complete && this.config.duration !== null)
+
         return `
             <div class="container mx-auto px-4 py-8 max-w-5xl">
                 <!-- Header -->
@@ -54,7 +62,7 @@ export class BlendingMenuView extends BaseView {
                     </div>
                 </div>
 
-                <!-- Step 1: Choose Your Blend -->
+                <!-- Step 1: Choose Your Blend - Always visible -->
                 <section class="glass-panel rounded-2xl p-6 mb-6">
                     <div class="flex items-center gap-3 mb-4">
                         <span class="text-2xl">🍹</span>
@@ -64,8 +72,9 @@ export class BlendingMenuView extends BaseView {
                     <div id="blend-series-selector"></div>
                 </section>
 
-                <!-- Step 2: Choose Your Flavor -->
-                <section class="glass-panel rounded-2xl p-6 mb-6">
+                <!-- Step 2: Choose Your Flavor - Visible only when Step 1 complete -->
+                ${step1Complete ? `
+                <section class="glass-panel rounded-2xl p-6 mb-6 animate-fadeIn">
                     <div class="flex items-center gap-3 mb-4">
                         <span class="text-2xl">🍬</span>
                         <h2 class="text-xl font-bold">Choose Your Flavor</h2>
@@ -73,9 +82,20 @@ export class BlendingMenuView extends BaseView {
                     </div>
                     <div id="blend-flavor-cards"></div>
                 </section>
+                ` : `
+                <section class="glass-panel rounded-2xl p-6 mb-6 opacity-40">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🔒</span>
+                        <h2 class="text-xl font-medium text-muted">Choose Your Flavor</h2>
+                        <span class="text-xs text-muted px-2 py-1 bg-white/5 rounded-full">Step 2</span>
+                    </div>
+                    <p class="text-sm text-muted mt-2">Complete Step 1 to unlock</p>
+                </section>
+                `}
 
-                <!-- Step 3: Pick Your Ingredients -->
-                <section class="glass-panel rounded-2xl p-6 mb-6">
+                <!-- Step 3: Pick Your Ingredients - Only show if algorithm has params -->
+                ${step2Complete && algorithmHasParams ? `
+                <section class="glass-panel rounded-2xl p-6 mb-6 animate-fadeIn">
                     <div class="flex items-center gap-3 mb-4">
                         <span class="text-2xl">🥗</span>
                         <h2 class="text-xl font-bold">Pick Your Ingredients</h2>
@@ -83,18 +103,30 @@ export class BlendingMenuView extends BaseView {
                     </div>
                     <div id="blend-ingredients-panel"></div>
                 </section>
+                ` : ''}
 
-                <!-- Step 4: Blend It! -->
-                <section class="glass-panel rounded-2xl p-6 border-2 border-orange-400/30">
+                <!-- Step 4: Blend It! - Visible when Step 2 complete (and Step 3 if applicable) -->
+                ${(step2Complete && step3Skipped) || step3Complete ? `
+                <section class="glass-panel rounded-2xl p-6 border-2 border-orange-400/30 animate-fadeIn">
                     <div class="flex items-center gap-3 mb-4">
                         <span class="text-2xl">🎛️</span>
                         <h2 class="text-xl font-bold">Blend It!</h2>
-                        <span class="text-xs text-muted px-2 py-1 bg-white/5 rounded-full">Step 4</span>
+                        <span class="text-xs text-muted px-2 py-1 bg-white/5 rounded-full">${algorithmHasParams ? 'Step 4' : 'Step 3'}</span>
                     </div>
                     <div id="blend-generate-section" class="text-center py-4">
                         ${this.renderGenerateButton()}
                     </div>
                 </section>
+                ` : step1Complete && !step2Complete ? `
+                <section class="glass-panel rounded-2xl p-6 opacity-40">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🔒</span>
+                        <h2 class="text-xl font-medium text-muted">Blend It!</h2>
+                        <span class="text-xs text-muted px-2 py-1 bg-white/5 rounded-full">${algorithmHasParams ? 'Step 4' : 'Step 3'}</span>
+                    </div>
+                    <p class="text-sm text-muted mt-2">Complete previous steps to unlock</p>
+                </section>
+                ` : ''}
 
                 <!-- Results Area -->
                 <section id="blend-results" class="mt-8 hidden">
@@ -201,17 +233,17 @@ export class BlendingMenuView extends BaseView {
     async mount() {
         // Initialize components
         this.seriesSelector = new BlendSeriesSelector({
-            onEntityChange: (entity) => this.updateGenerateButton(),
+            onEntityChange: (entity) => this.fullUpdate(),
             onSeriesSelect: (series) => {
                 this.selectedSeries = series
-                this.updateGenerateButton()
+                this.fullUpdate() // Trigger full re-render for progressive disclosure
             }
         })
 
         this.flavorCard = new BlendFlavorCard({
             onFlavorSelect: (flavor) => {
                 this.selectedFlavor = flavor
-                this.updateGenerateButton()
+                this.fullUpdate() // Trigger full re-render for progressive disclosure
             }
         })
 
@@ -229,6 +261,30 @@ export class BlendingMenuView extends BaseView {
         this.ingredientsPanel.render()
 
         // Attach generate button listener
+        this.attachGenerateListener()
+    }
+
+    /**
+     * Full update - re-render entire view for progressive disclosure
+     */
+    async fullUpdate() {
+        const container = this.container || document.getElementById('app')
+        if (!container) return
+
+        // Re-render entire view
+        container.innerHTML = await this.render()
+
+        // Re-mount components
+        this.seriesSelector.render()
+        this.flavorCard.render()
+
+        // Only render ingredients if algorithm has params
+        const algorithmHasParams = this.selectedFlavor?.id?.includes('s-draft') || this.selectedFlavor?.id?.includes('legacy')
+        if (algorithmHasParams) {
+            this.ingredientsPanel.render()
+        }
+
+        // Attach listeners
         this.attachGenerateListener()
     }
 
@@ -269,6 +325,7 @@ export class BlendingMenuView extends BaseView {
 
     /**
      * Handle playlist generation
+     * Loads albums from series, sets in stores, navigates to PlaylistsView
      */
     async handleGenerate() {
         if (!this.selectedSeries || !this.selectedFlavor) return
@@ -277,7 +334,14 @@ export class BlendingMenuView extends BaseView {
         this.updateGenerateButton()
 
         try {
-            // The selected series has albumQueries, need to load full album data
+            const { apiClient } = await import('../api/client.js')
+            const { albumsStore } = await import('../stores/albums.js')
+            const { router } = await import('../router.js')
+            const { playlistsStore } = await import('../stores/playlists.js')
+            const { createRankingStrategy } = await import('../ranking/index.js')
+            const toast = (await import('../components/Toast.js')).default
+
+            // Get album queries from selected series
             const albumQueries = this.selectedSeries.albumQueries || []
 
             if (albumQueries.length === 0) {
@@ -285,16 +349,73 @@ export class BlendingMenuView extends BaseView {
                 return
             }
 
-            // For now, we'll show a placeholder message since albums need to be loaded
-            // In a production implementation, we'd use apiClient to fetch album data
-            this.showError(`Ready to blend ${albumQueries.length} albums! (Full album loading coming soon)`)
-            return
+            // Show loading progress
+            this.showProgress(`Loading ${albumQueries.length} albums...`)
 
-            // TODO: Load albums via apiClient and generate playlists
-            // const albums = await Promise.all(albumQueries.map(q => apiClient.fetchAlbum(q)))
-            // const algorithm = createAlgorithm(this.selectedFlavor.id, {...})
-            // const result = algorithm.generate(albums)
-            // this.showResults(result)
+            // Load albums via apiClient
+            const albums = []
+            for (let i = 0; i < albumQueries.length; i++) {
+                const query = albumQueries[i]
+                this.showProgress(`Loading album ${i + 1}/${albumQueries.length}...`)
+
+                try {
+                    const album = await apiClient.fetchAlbum(query)
+                    if (album) {
+                        albums.push(album)
+                    }
+                } catch (err) {
+                    console.warn(`[BlendingMenuView] Failed to load album: ${query.artist} - ${query.album}`, err)
+                }
+            }
+
+            if (albums.length === 0) {
+                this.showError('Failed to load any albums')
+                return
+            }
+
+            this.showProgress(`Generating playlists with ${this.selectedFlavor.name}...`)
+
+            // Create algorithm and generate playlists
+            const algorithm = createAlgorithm(this.selectedFlavor.id)
+            if (!algorithm) {
+                throw new Error(`Unknown algorithm: ${this.selectedFlavor.id}`)
+            }
+
+            // Determine ranking strategy based on algorithm
+            const rankingId = this.selectedFlavor.id.includes('popular') ? 'spotify' : 'bea'
+            const rankingStrategy = createRankingStrategy(rankingId)
+
+            // Generate playlists
+            const result = algorithm.generate(albums, {
+                rankingStrategy,
+                targetDuration: this.config.duration * 60 // Convert minutes to seconds
+            })
+
+            // Transform result to playlist format
+            const playlists = result.playlists.map((p, index) => ({
+                name: `${index + 1}. ${p.title}`,
+                tracks: p.tracks.map(t => ({
+                    id: t.id,
+                    title: t.title,
+                    artist: t.artist,
+                    album: t.album,
+                    duration: t.duration,
+                    rating: t.rating,
+                    rank: t.rank || t.acclaimRank
+                }))
+            }))
+
+            console.log('[BlendingMenuView] Generated playlists:', playlists.length)
+
+            // Set active series
+            albumSeriesStore.setActiveSeries(this.selectedSeries.id)
+
+            // Set playlists in store
+            playlistsStore.setPlaylists(playlists, this.selectedSeries.id)
+
+            // Navigate to playlists view
+            toast.success(`Generated ${playlists.length} playlist(s)!`)
+            router.navigate(`/playlists?seriesId=${this.selectedSeries.id}`)
 
         } catch (err) {
             console.error('[BlendingMenuView] Generation error:', err)
@@ -303,6 +424,22 @@ export class BlendingMenuView extends BaseView {
             this.isGenerating = false
             this.updateGenerateButton()
         }
+    }
+
+    /**
+     * Show progress message
+     */
+    showProgress(message) {
+        const container = document.getElementById('blend-results')
+        if (!container) return
+
+        container.classList.remove('hidden')
+        container.innerHTML = `
+            <div class="glass-panel rounded-2xl p-6 text-center">
+                <div class="animate-spin rounded-full h-10 w-10 border-3 border-orange-400 border-t-transparent mx-auto mb-4"></div>
+                <p class="text-muted">${message}</p>
+            </div>
+        `
     }
 
     /**
