@@ -3,6 +3,7 @@ import { Album } from '../models/Album.js'
 import { albumCache } from '../cache/albumCache.js'
 import { albumLoader } from '../services/AlbumLoader.js'
 import { musicKitService } from '../services/MusicKitService.js'
+import { TrackTransformer } from '../transformers/TrackTransformer.js'
 
 /**
  * API Client
@@ -81,22 +82,26 @@ export class APIClient {
                     // 4. Construct Album Model Data
                     const stableId = this.generateAlbumId({ title: fullAlbum.title, artist: fullAlbum.artist })
 
-                    // Helper to map Apple Track to internal format
-                    const mapTrack = (t) => ({
+                    // Sprint 12.5: Use TrackTransformer for canonical track creation
+                    const albumContext = {
+                        artist: fullAlbum.artist,
+                        album: fullAlbum.title,
+                        albumId: stableId
+                    }
+
+                    // Map Apple Music tracks to canonical format
+                    const allTracks = fullAlbum.tracks.map(t => TrackTransformer.toCanonical({
                         id: t.id || `track_${stableId}_${t.trackNumber}`,
                         title: t.title,
                         artist: t.artist || fullAlbum.artist,
-                        album: fullAlbum.title,
                         duration: t.duration,
+                        position: t.trackNumber,
                         trackNumber: t.trackNumber,
                         isrc: t.isrc,
                         previewUrl: t.previewUrl,
-                        rating: ratingsMap.get(t.title) || null,
-                        rank: null // Calculated below
-                    })
-
-                    // Create objects once to ensure reference identity between lists
-                    const allTracks = fullAlbum.tracks.map(mapTrack)
+                        appleMusicId: t.id,
+                        rating: ratingsMap.get(t.title) || null
+                    }, albumContext))
 
                     const tracksOriginalOrder = [...allTracks].sort((a, b) => a.trackNumber - b.trackNumber)
 

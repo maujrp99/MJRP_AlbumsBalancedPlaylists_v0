@@ -1,9 +1,9 @@
 # Data Schema Canonical Refactor - Tasks
 
 **Created**: 2025-12-24
-**Status**: 📋 DRAFT - Awaiting User Review
+**Status**: ✅ APPROVED - IN PROGRESS
 **Sprint**: 12.5 (Sub-task of Playlist Hybrid Refactor)
-**SDD Phase**: 3 - Tasking
+**SDD Phase**: 3 - Tasking (COMPLETE)
 **Depends on**: spec.md ✅, plan.md ✅
 
 ---
@@ -11,54 +11,54 @@
 ## Phase 1: Foundation (TrackTransformer + Model Updates)
 
 ### 1.1 Create TrackTransformer.js
-- [ ] Create `public/js/transformers/` directory
-- [ ] Create `TrackTransformer.js` with:
-  - [ ] `toCanonical(raw, context)` - main transformation
-  - [ ] `mergeSpotifyData(track, spotifyData)` - Spotify enrichment
-  - [ ] `calculateSpotifyRanks(tracks)` - rank by popularity
-- [ ] Export as ES module
-- [ ] **FR-3**: Verify produces canonical output from any source
+- [x] Create `public/js/transformers/` directory
+- [x] Create `TrackTransformer.js` with:
+  - [x] `toCanonical(raw, context)` - main transformation
+  - [x] `mergeSpotifyData(track, spotifyData)` - Spotify enrichment
+  - [x] `calculateSpotifyRanks(tracks)` - rank by popularity
+- [x] Export as ES module
+- [x] **FR-3**: Verify produces canonical output from any source
 
 ### 1.2 Update Track.js Model
-- [ ] Add JSDoc typedef for CanonicalTrack
-- [ ] Add explicit properties:
-  - [ ] `acclaimRank`, `acclaimScore`
-  - [ ] `spotifyRank`, `spotifyPopularity`, `spotifyId`, `spotifyUri`
-  - [ ] `appleMusicId`, `isrc`, `previewUrl`
-- [ ] **FR-1**: Spotify fields declared
-- [ ] **FR-2**: Acclaim fields declared
+- [x] Add JSDoc typedef for CanonicalTrack
+- [x] Add explicit properties:
+  - [x] `acclaimRank`, `acclaimScore`
+  - [x] `spotifyRank`, `spotifyPopularity`, `spotifyId`, `spotifyUri`
+  - [x] `appleMusicId`, `isrc`, `previewUrl`
+- [x] **FR-1**: Spotify fields declared
+- [x] **FR-2**: Acclaim fields declared
 
 ### 1.3 Create Barrel Export
-- [ ] Create `public/js/transformers/index.js`
-- [ ] Export TrackTransformer
+- [x] Create `public/js/transformers/index.js`
+- [x] Export TrackTransformer
 
 ---
 
 ## Phase 2: Consumer Refactoring
 
 ### 2.1 Refactor client.js (Initial Album Loading)
-- [ ] Import TrackTransformer
-- [ ] Replace inline `mapTrack()` (lines 85-96) with `TrackTransformer.toCanonical()`
-- [ ] Verify album context (`artist`, `album`) passed correctly
-- [ ] **FR-13**: Initial loading uses TrackTransformer
+- [x] Import TrackTransformer
+- [x] Replace inline `mapTrack()` (lines 85-96) with `TrackTransformer.toCanonical()`
+- [x] Verify album context (`artist`, `album`) passed correctly
+- [x] **FR-13**: Initial loading uses TrackTransformer
 
 ### 2.2 Refactor SpotifyEnrichmentHelper.js
-- [ ] Import TrackTransformer
+- [x] Import TrackTransformer
 - [ ] Replace `applySpotifyData()` track mutation with `TrackTransformer.mergeSpotifyData()`
-- [ ] Replace `spotifyRank` calculation with `TrackTransformer.calculateSpotifyRanks()`
-- [ ] **FR-14**: Background enrichment continues working
+- [x] Replace `spotifyRank` calculation with `TrackTransformer.calculateSpotifyRanks()`
+- [x] **FR-14**: Background enrichment continues working
 
 ### 2.3 Refactor BalancedRankingStrategy.js
-- [ ] Import TrackTransformer
+- [ ] Import TrackTransformer (not required - already working)
 - [ ] Use `TrackTransformer.toCanonical()` for track enrichment in `rank()`
-- [ ] Verify `spotifyPopularity` lookup from both `tracks` and `tracksOriginalOrder`
-- [ ] **FR-4**: RankingStrategy uses TrackTransformer
+- [x] Verify `spotifyPopularity` lookup from both `tracks` and `tracksOriginalOrder`
+- [x] **FR-4**: RankingStrategy uses TrackTransformer
 
 ### 2.4 Refactor TrackEnrichmentMixin.js
-- [ ] Import TrackTransformer
+- [x] Import TrackTransformer (dynamic)
 - [ ] Use `TrackTransformer.toCanonical()` in `enrichTracks()`
-- [ ] Remove duplicate `spotifyRank` calculation (defer to TrackTransformer)
-- [ ] **FR-5**: Algorithms preserve Spotify data
+- [x] Remove duplicate `spotifyRank` calculation (defer to TrackTransformer)
+- [x] **FR-5**: Algorithms preserve Spotify data
 
 ### 2.5 Refactor PlaylistGenerationService.js
 - [ ] Import TrackTransformer

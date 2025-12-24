@@ -205,20 +205,9 @@ export function TrackEnrichmentMixin(Base) {
                 track.rank = track.acclaimRank
             })
 
-            // Sprint 12.5: Calculate spotifyRank based on spotifyPopularity
-            // Sort by popularity desc and assign ranks
-            const byPopularity = [...sortedTracks].sort((a, b) => {
-                const popA = a.spotifyPopularity ?? -1
-                const popB = b.spotifyPopularity ?? -1
-                return popB - popA // Higher popularity = lower rank (better)
-            })
-            byPopularity.forEach((track, idx) => {
-                if (!track) return
-                // Only assign rank if track has valid popularity
-                if (track.spotifyPopularity !== undefined && track.spotifyPopularity !== null && track.spotifyPopularity > -1) {
-                    track.spotifyRank = idx + 1
-                }
-            })
+            // Sprint 12.5: Use TrackTransformer for consistent spotifyRank calculation
+            const { TrackTransformer } = await import('../../transformers/TrackTransformer.js')
+            TrackTransformer.calculateSpotifyRanks(sortedTracks)
 
             return sortedTracks
         }
