@@ -624,10 +624,20 @@ export class PlaylistsView extends BaseView {
       }
     } else {
       // Create mode: User came from Albums view or Add Playlists
-      // DO NOT recover from localStorage - we want a clean slate
-      console.log('[PlaylistsView] Create mode - clearing any stale playlists')
-      playlistsStore.setCreateMode()
-      playlistsStore.playlists = [] // Clear any stale data
+      // Sprint 12.5 FIX: Only clear if there are NO playlists for this series
+      // BlendingMenuView sets playlists BEFORE navigation, so we need to preserve them
+      const existingPlaylists = playlistsStore.getPlaylists()
+      const existingSeriesId = playlistsStore.seriesId
+
+      if (existingPlaylists.length > 0 && existingSeriesId === seriesId) {
+        // Fresh playlists from BlendingMenuView - preserve them!
+        console.log('[PlaylistsView] Create mode - preserving fresh playlists from generation:', existingPlaylists.length)
+      } else {
+        // Stale playlists from different series or truly empty - clear and set create mode
+        console.log('[PlaylistsView] Create mode - clearing stale playlists (different series or empty)')
+        playlistsStore.setCreateMode()
+        playlistsStore.playlists = []
+      }
     }
 
     // Generate button
