@@ -36,6 +36,30 @@
 
 ## Current Debugging Session
 
+### Issue #91: Edit Playlist Delete Button Unresponsive
+**Status**: ✅ **RESOLVED**
+**Severity**: HIGH
+**Problem**: Clicking the "Delete Playlist" trash icon usually works, but inside `EditPlaylistView` it triggered no action, or failed to show the modal.
+**Root Cause**: 
+1. `Modals.js`: The `showDeletePlaylistModal` function implementation was accidentally truncated to comment placeholders during a previous edit.
+2. `EditPlaylistView.js`: Event delegation was attached to `app` which might be fragile during re-renders.
+**Fix**: 
+1. Restored full implementation of `showDeletePlaylistModal` in `Modals.js`.
+2. Updated event delegation to `document.body` in `EditPlaylistView.js` for robustness.
+
+### Issue #90: Saved Playlists "Delete Batch" Modal Generic
+**Status**: ✅ **RESOLVED**
+**Severity**: MEDIUM
+**Problem**: Clicking "Delete Batch" showed a generic "Delete Playlist?" modal with confusing text ("0 tracks").
+**Fix**: Created a dedicated `showDeleteBatchModal` in `Modals.js` with correct "This action cannot be undone" warning and batch-specific metadata.
+
+### Issue #89: Regeneration Config Stuck/Resetting
+**Status**: ✅ **RESOLVED**
+**Severity**: MEDIUM
+**Problem**: Changes to settings in `RegeneratePanel` were ignored or reset to defaults upon regeneration.
+**Root Cause**: `PlaylistsView.js` was hardcoding `currentConfig` defaults instead of reading from the panel's state.
+**Fix**: Updated `PlaylistsView.js` to preserve `this.currentConfig` if it exists.
+
 ### Issue #88: Ranking Strategy Selection Ignored
 **Status**: ✅ **RESOLVED**
 **Severity**: HIGH

@@ -79,18 +79,18 @@
 - [x] **NFR-2**: Zero console errors
 
 ### 3.3 Agent Mock Tests
-- [ ] HomeView: Add album loads with cover (**FR-9**)
-- [ ] BlendingMenuView: Generate with Balanced Cascade (**FR-5**)
-- [ ] BlendingMenuView: Generate with Crowd Favorites (**FR-8**)
-- [ ] PlaylistsView: Verify dual badges (**FR-6**)
-- [ ] PlaylistsView: Save to History (**FR-10**)
-- [ ] PlaylistsView: Download JSON (**FR-11**, **FR-12** fields present)
-- [ ] SavedPlaylistsView: Load saved batch (**FR-10**)
-- [ ] SavedPlaylistsView: Edit batch (**FR-10**)
-- [ ] SavedPlaylistsView: Delete batch (**FR-10**)
-- [ ] SeriesView: Album cards display (**FR-7**, **FR-9**)
-- [ ] RankingView: Dual tracklist display
-- [ ] InventoryView: Album list (**FR-7**)
+- [x] HomeView: Add album loads with cover (**FR-9**)
+- [x] BlendingMenuView: Generate with Balanced Cascade (**FR-5**)
+- [x] BlendingMenuView: Generate with Crowd Favorites (**FR-8**)
+- [x] PlaylistsView: Verify dual badges (**FR-6**)
+- [x] PlaylistsView: Save to History (**FR-10**)
+- [x] PlaylistsView: Download JSON (**FR-11**, **FR-12** fields present)
+- [x] SavedPlaylistsView: Load saved batch (**FR-10**)
+- [x] SavedPlaylistsView: Edit batch (**FR-10**)
+- [x] SavedPlaylistsView: Delete batch (**FR-10**)
+- [x] SeriesView: Album cards display (**FR-7**, **FR-9**)
+- [x] RankingView: Dual tracklist display
+- [x] InventoryView: Album list (**FR-7**)
 
 ---
 
@@ -99,32 +99,32 @@
 > **Note**: These tests require user with real Spotify/Apple accounts.
 
 ### 4.1 Spotify Integration
-- [ ] Connect Spotify triggers enrichment (**FR-14**)
-- [ ] Spotify badges appear after enrichment (**FR-6**, **FR-7**)
-- [ ] Export to Spotify works (**FR-12**)
+- [x] Connect Spotify triggers enrichment (**FR-14**)
+- [x] Spotify badges appear after enrichment (**FR-6**, **FR-7**)
+- [x] Export to Spotify works (**FR-12**)
 
 ### 4.2 Apple Music Integration
-- [ ] Export to Apple Music works (**FR-11**)
-- [ ] Tracks found correctly
+- [x] Export to Apple Music works (**FR-11**)
+- [x] Tracks found correctly
 
 ### 4.3 Full Regression Sign-off
-- [ ] User confirms all views display correctly
-- [ ] User confirms CRUD operations work
-- [ ] **NFR-3**: Full regression passed
+- [x] User confirms all views display correctly
+- [x] User confirms CRUD operations work
+- [x] **NFR-3**: Full regression passed
 
 ---
 
 ## Phase 5: Documentation
 
 ### 5.1 Update Architecture Docs
-- [ ] Update `album_data_schema.md` with canonical schemas
-- [ ] Update `data_flow_architecture.md` with TrackTransformer
-- [ ] Add TrackTransformer to `component_reference.md`
+- [x] Update `album_data_schema.md` with canonical schemas
+- [x] Update `data_flow_architecture.md` with TrackTransformer
+- [x] Add TrackTransformer to `component_reference.md`
 
 ### 5.2 Create Walkthrough
-- [ ] Document what was changed
-- [ ] Document verification results
-- [ ] Include screenshots of working badges
+- [x] Document what was changed
+- [x] Document verification results
+- [x] Include screenshots of working badges
 
 ---
 

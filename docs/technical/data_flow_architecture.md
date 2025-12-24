@@ -1,7 +1,7 @@
 # Album Data Flow Architecture
 
-**Updated**: 2025-12-23 20:40
-**Version**: 2.5 (Spotify Enrichment Modularization)
+**Updated**: 2025-12-24
+**Version**: 2.6 (Playlist Refactor & Data Schema Canonicalization)
 
 ## Overview
 
