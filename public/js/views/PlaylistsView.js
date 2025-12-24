@@ -70,10 +70,13 @@ export class PlaylistsView extends BaseView {
           </div>
         </header>
 
-        <!-- Generation Settings (Algorithm + Ranking) -->
+        <!-- Generation Settings (Algorithm + Ranking) - HIDDEN when playlists exist (from BlendingMenu) -->
+        <!-- Sprint 12.5: This is legacy code. Use RegeneratePanel for regeneration in future -->
+        ${playlists.length === 0 ? `
         <div id="algorithmSection" class="mb-6 fade-in" style="animation-delay: 0.05s">
-          ${this.renderSettingsSection(playlists.length > 0)}
+          ${this.renderSettingsSection(false)}
         </div>
+        ` : ''}
 
         <!-- Export Section (Only when playlists exist) -->
         <div id="exportSection" class="mb-6 fade-in" style="animation-delay: 0.08s">
