@@ -197,18 +197,24 @@ export class PlaylistPersistenceService {
 ### 3.1 TrackItem.js
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│ ≡ │ Track Title                    │ #1 ★92 │ #3 78% │
-│   │ Artist Name                    │ orange │ green  │
-│   │ Album Name              3:42   │        │        │
-└──────────────────────────────────────────────────────────┘
-  ↑     ↑                              ↑        ↑
- drag  info                        acclaim  spotify
-handle                              badge    badge
+┌──────────────────────────────────────────────────────────────────┐
+│ ≡ │ Track Title                    3:42 │ #1 ★92 │ #3 78% │     │
+│   │ Artist Name • Album Name            │ CHOSEN │ ALT.   │     │
+└──────────────────────────────────────────────────────────────────┘
+  ↑     ↑                             ↑       ↑         ↑
+ drag  info                        duration  LEFT     RIGHT
+handle                                     (primary) (secondary)
 ```
+
+> [!NOTE]
+> **Badge Order Rule**: The **LEFT badge** is always the **CHOSEN ranking** (used for generation).
+> The **RIGHT badge** is the **ALTERNATIVE ranking** (for reference).
+> - If Spotify Popularity chosen → LEFT: Spotify (green), RIGHT: Acclaim (orange)
+> - If Acclaim chosen → LEFT: Acclaim (orange), RIGHT: Spotify (green)
 
 **Props:**
 - `track`: Track object
+- `primaryRanking`: 'spotify' | 'acclaim' (determines badge order)
 - `draggable`: boolean (default: true)
 - `onRemove`: optional callback
 
