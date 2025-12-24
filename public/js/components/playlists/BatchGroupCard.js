@@ -41,53 +41,53 @@ export class BatchGroupCard {
     ).join('')
 
     return `
-      <div class="batch-group-card bg-surface rounded-xl border border-white/10 overflow-hidden" 
+      <div class="batch-group-card bg-surface rounded-xl border border-white/10 overflow-hidden mb-6 transition-all duration-300 hover:border-brand-orange/30" 
            data-series-id="${seriesId}" 
            data-batch-name="${this.escapeHtml(batchName)}">
         
-        <!-- Batch Header -->
-        <div class="batch-header p-4 bg-white/5 border-b border-white/10">
+        <!-- Rich Batch Header -->
+        <div class="batch-header p-5 bg-gradient-to-r from-white/5 to-transparent border-b border-white/10">
           <div class="flex items-center justify-between">
-            <div>
-              <h3 class="font-bold text-lg">${this.escapeHtml(batchName)}</h3>
-              <p class="text-sm text-muted mt-1">
-                ${playlistCount} playlist${playlistCount !== 1 ? 's' : ''} • ${totalTracks} tracks • ${dateStr}
-              </p>
+            <div class="flex items-center gap-4">
+               <div class="p-3 rounded-lg bg-gradient-to-br from-brand-orange to-red-500 shadow-lg">
+                  ${getIcon('Music', 'w-6 h-6 text-white')}
+               </div>
+               <div>
+                  <h3 class="font-bold text-xl text-white tracking-tight">${this.escapeHtml(batchName)}</h3>
+                  <div class="flex items-center gap-3 text-sm text-muted mt-1">
+                    <span class="flex items-center gap-1">${getIcon('List', 'w-3 h-3')} ${playlistCount} playlists</span>
+                    <span class="flex items-center gap-1">${getIcon('Music', 'w-3 h-3')} ${totalTracks} tracks</span>
+                    <span class="flex items-center gap-1">${getIcon('Calendar', 'w-3 h-3')} ${dateStr}</span>
+                  </div>
+               </div>
             </div>
+
             <div class="flex items-center gap-2">
-              <button class="btn btn-ghost btn-sm" 
+              <button class="btn btn-secondary btn-sm flex items-center gap-2 hover:bg-white/20 transition-all shadow-md" 
                       data-action="edit-batch" 
                       data-series-id="${seriesId}" 
                       data-batch-name="${this.escapeHtml(batchName)}"
-                      title="Edit Batch">
-                ${getIcon('Edit', 'w-4 h-4')}
+                      title="Edit this batch">
+                ${getIcon('Edit', 'w-4 h-4')} Edit Batch
               </button>
-              <button class="btn btn-ghost btn-sm text-red-400 hover:text-red-300" 
+              <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors" 
                       data-action="delete-batch" 
                       data-series-id="${seriesId}" 
                       data-batch-name="${this.escapeHtml(batchName)}"
                       data-count="${playlistCount}"
-                      title="Delete Batch">
+                      title="Delete entire batch">
                 ${getIcon('Trash', 'w-4 h-4')}
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Playlist List -->
-        <div class="batch-playlists divide-y divide-white/5">
-          ${playlistsHtml || '<div class="p-4 text-center text-muted">No playlists</div>'}
+        <!-- Playlist List (Compact & Rich) -->
+        <div class="batch-playlists divide-y divide-white/5 bg-black/20">
+          ${playlistsHtml || '<div class="p-6 text-center text-muted italic">No playlists in this batch</div>'}
         </div>
-
-        <!-- Batch Actions -->
-        <div class="batch-actions p-3 bg-white/5 border-t border-white/10 flex justify-end gap-2">
-          <button class="btn btn-secondary btn-sm" 
-                  data-action="view-batch"
-                  data-series-id="${seriesId}"
-                  data-batch-name="${this.escapeHtml(batchName)}">
-            View All
-          </button>
-        </div>
+        
+        <!-- No Footer Button (View All removed as requested) -->
       </div>
     `
   }
@@ -101,30 +101,25 @@ export class BatchGroupCard {
     const duration = this.formatDuration(playlist.tracks)
 
     return `
-      <div class="playlist-row p-3 flex items-center justify-between hover:bg-white/5 transition-colors">
-        <div class="flex items-center gap-3">
-          ${getIcon('Music', 'w-5 h-5 text-muted')}
+      <div class="playlist-row p-4 flex items-center justify-between hover:bg-white/5 transition-colors group">
+        <div class="flex items-center gap-4">
+          <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-muted group-hover:text-brand-orange group-hover:bg-brand-orange/10 transition-colors">
+            ${getIcon('Disc', 'w-4 h-4')}
+          </div>
           <div>
-            <div class="font-medium">${this.escapeHtml(playlist.name)}</div>
-            <div class="text-xs text-muted">${trackCount} tracks • ${duration}</div>
+            <div class="font-medium text-white group-hover:text-brand-orange transition-colors">${this.escapeHtml(playlist.name)}</div>
+            <div class="text-xs text-muted font-mono mt-0.5">${trackCount} tracks • ${duration}</div>
           </div>
         </div>
-        <div class="flex items-center gap-1">
-          <button class="btn btn-ghost btn-xs" 
-                  data-action="edit-playlist" 
-                  data-series-id="${seriesId}" 
-                  data-playlist-id="${playlist.id}"
-                  title="Edit Playlist">
-            ${getIcon('Edit', 'w-3 h-3')}
-          </button>
-          <button class="btn btn-ghost btn-xs text-red-400 hover:text-red-300" 
-                  data-action="delete-playlist" 
-                  data-series-id="${seriesId}" 
-                  data-playlist-id="${playlist.id}"
-                  data-playlist-name="${this.escapeHtml(playlist.name)}"
-                  data-track-count="${trackCount}"
-                  title="Delete Playlist">
-            ${getIcon('Trash', 'w-3 h-3')}
+        
+        <div class="flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+           <!-- Individual Edit Removed as requested -->
+           <button class="btn btn-ghost btn-sm text-muted hover:text-white" 
+                  data-action="view-playlist" 
+                  data-series="${seriesId}" 
+                  data-id="${playlist.id}"
+                  title="View Details">
+            ${getIcon('Eye', 'w-4 h-4')}
           </button>
         </div>
       </div>

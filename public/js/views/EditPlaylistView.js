@@ -269,10 +269,12 @@ export class EditPlaylistView extends BaseView {
     // Export listeners
     this.attachExportListeners()
 
-    // Delete playlist buttons (use event delegation on container)
-    this.container?.addEventListener('click', (e) => {
+    // Delete playlist buttons (use event delegation)
+    // Delete playlist buttons (use event delegation on document body to ensure capture)
+    this.on(document.body, 'click', (e) => {
       const deleteBtn = e.target.closest('[data-action="delete-playlist"]')
       if (deleteBtn) {
+        console.log('[EditPlaylistView] Delete button clicked', deleteBtn.dataset)
         const playlistIndex = parseInt(deleteBtn.dataset.playlistIndex)
         this.handleDeletePlaylist(playlistIndex)
       }
@@ -341,26 +343,25 @@ export class EditPlaylistView extends BaseView {
     }
   }
 
-  handleDeletePlaylist(playlistIndex) {
+  async handleDeletePlaylist(playlistIndex) {
     const playlists = playlistsStore.getPlaylists()
     const playlist = playlists[playlistIndex]
 
     if (!playlist) return
 
-    // Confirm deletion
-    if (!confirm(`Delete "${playlist.name}" (${playlist.tracks?.length || 0} tracks)?`)) {
-      return
-    }
+    const { showDeletePlaylistModal } = await import('../components/Modals.js')
 
-    // Remove playlist from store
-    const newPlaylists = playlists.filter((_, i) => i !== playlistIndex)
-    playlistsStore.setPlaylists(newPlaylists, this.seriesId)
+    showDeletePlaylistModal(playlist.id, playlist.name, playlist.tracks?.length || 0, () => {
+      // Remove playlist from store
+      const newPlaylists = playlists.filter((_, i) => i !== playlistIndex)
+      playlistsStore.setPlaylists(newPlaylists, this.seriesId)
 
-    toast.success(`Playlist "${playlist.name}" removed`)
-    console.log('[EditPlaylistView] Deleted playlist:', playlist.name)
+      toast.success(`Playlist "${playlist.name}" removed`)
+      console.log('[EditPlaylistView] Deleted playlist:', playlist.name)
 
-    // Update UI
-    this.update()
+      // Update UI
+      this.update()
+    })
   }
 
   async handleGenerate() {
@@ -477,6 +478,7 @@ export class EditPlaylistView extends BaseView {
                     data-playlist-index="${index}"
                     title="Delete this playlist">
               ${getIcon('Trash', 'w-4 h-4')}
+            </button>
           </div>
         </div>
         <div class="tracks-list space-y-1 flex-1 min-h-[200px] overflow-y-auto custom-scrollbar pr-1" data-playlist-index="${index}">

@@ -267,6 +267,9 @@ export function showDeleteAlbumModal(albumId, albumTitle, onConfirm) {
 /**
  * Delete Playlist Modal
  */
+/**
+ * Delete Playlist Modal
+ */
 export function showDeletePlaylistModal(playlistId, playlistTitle, trackCount, onConfirm) {
   const modal = document.createElement('div')
   modal.className = 'modal-overlay'
@@ -312,6 +315,74 @@ export function showDeletePlaylistModal(playlistId, playlistTitle, trackCount, o
     } catch (error) {
       confirmBtn.disabled = false
       confirmBtn.textContent = 'Delete'
+      toast.error(`Failed to delete: ${error.message}`)
+    }
+  })
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close()
+  })
+
+  document.addEventListener('keydown', function handleEscape(e) {
+    if (e.key === 'Escape') {
+      close()
+      document.removeEventListener('keydown', handleEscape)
+    }
+  })
+
+  document.body.appendChild(modal)
+  return modal
+}
+
+/**
+ * Delete Batch Modal
+ */
+export function showDeleteBatchModal(batchName, playlistCount, onConfirm) {
+  const modal = document.createElement('div')
+  modal.className = 'modal-overlay'
+  modal.innerHTML = `
+      <div class="modal-container glass-panel max-w-md">
+        <div class="modal-header p-6 border-b border-surface-light">
+          <div class="flex items-center gap-3">
+            <svg class="w-6 h-6 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <h2 class="text-2xl font-bold">Delete Batch?</h2>
+          </div>
+        </div>
+  
+        <div class="modal-content p-6 space-y-4">
+          <p class="text-gray-300">Are you sure you want to delete this ENTIRE batch of playlists?</p>
+          <div class="bg-surface-dark p-3 rounded-lg">
+            <p class="font-semibold">${escapeHtml(batchName)}</p>
+            <p class="text-sm text-gray-400">${playlistCount} playlist${playlistCount !== 1 ? 's' : ''}</p>
+          </div>
+          <p class="text-sm text-red-400">This action cannot be undone.</p>
+        </div>
+  
+        <div class="modal-footer p-6 border-t border-surface-light flex gap-3 justify-end">
+          <button class="btn btn-secondary" data-action="cancel">Cancel</button>
+          <button class="btn btn-danger" data-action="confirm">Delete Batch</button>
+        </div>
+      </div>
+    `
+
+  const cancelBtn = modal.querySelector('[data-action="cancel"]')
+  const confirmBtn = modal.querySelector('[data-action="confirm"]')
+
+  const close = () => modal.remove()
+
+  cancelBtn.addEventListener('click', close)
+  confirmBtn.addEventListener('click', async () => {
+    confirmBtn.disabled = true
+    confirmBtn.textContent = 'Deleting...'
+
+    try {
+      await onConfirm()
+      close()
+    } catch (error) {
+      confirmBtn.disabled = false
+      confirmBtn.textContent = 'Delete Batch'
       toast.error(`Failed to delete: ${error.message}`)
     }
   })

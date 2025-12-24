@@ -40,7 +40,7 @@ This ensures the agent has full understanding of project architecture, standards
 
 ### Product Vision (`docs/product-management/`) - READ FIRST
 // turbo
-17. Read `product-management/MJRP_Product_Vision.md` - **START HERE** - Core product philosophy, Universal Series Model, Blending Menu concept
+17. Read `product-management/MJRP_Product_Vision.md` - Core product philosophy, Universal Series Model, Blending Menu concept
 18. Read `product-management/VISION_FEEDBACK_ANALYSIS.md` - User feedback and strategic adjustments
 19. Read `PROJECT_SUMMARY.md` - Executive project overview
 

@@ -19,6 +19,7 @@ import { setupDragAndDrop as setupDragAndDropFn } from './playlists/index.js'
 // Sprint 12.5: Playlist components
 import { TrackItem } from '../components/playlists/TrackItem.js'
 import { PlaylistGrid } from '../components/playlists/PlaylistGrid.js'
+import { RegeneratePanel } from '../components/playlists/RegeneratePanel.js'
 
 /**
  * PlaylistsView
@@ -26,7 +27,376 @@ import { PlaylistGrid } from '../components/playlists/PlaylistGrid.js'
  */
 
 export class PlaylistsView extends BaseView {
-  // ... existing constructor ...
+  constructor() {
+    super()
+    this.isGenerating = false
+    this.draggedTrack = null
+    this.exportListenersAttached = false // Prevent duplicate listener attachment
+    this.isDragging = false // Prevent re-render during drag operations
+
+    // Algorithm selection
+    const recommended = getRecommendedAlgorithm()
+    this.selectedAlgorithmId = recommended ? recommended.id : 's-draft-balanced'
+
+    // Ranking Strategy selection
+    this.selectedRankingId = 'balanced'
+
+    // UI State
+    this.isRegeneratePanelExpanded = false
+
+    // Ranking Strategy selection
+    this.selectedRankingId = 'balanced'
+  }
+
+  /**
+   * Helper to render either RegeneratePanel or Legacy Settings
+   * Wraps logic to switch between initial generation settings and regeneration panel
+   */
+  renderGenerationControls(playlists, activeSeries) {
+    if (playlists.length > 0) {
+      return `
+        <div id="regeneratePanelMount" class="mb-6 fade-in" style="animation-delay: 0.05s">
+          ${RegeneratePanel.render({
+        seriesId: activeSeries?.id,
+        batchName: playlistsStore.getEditContext()?.batchName || 'New Batch',
+        existingPlaylistIds: playlists.map(p => p.id).filter(Boolean),
+        currentConfig: RegeneratePanel.currentConfig?.algorithmId
+          ? RegeneratePanel.currentConfig
+          : { algorithmId: 'mjrp-balanced-cascade', rankingId: 'balanced' },
+        expanded: this.isRegeneratePanelExpanded
+      })}
+        </div>
+      `
+    } else {
+      return `
+        <div id="algorithmSection" class="mb-6 fade-in" style="animation-delay: 0.05s">
+          ${this.renderSettingsSection(false)}
+        </div>
+      `
+    }
+  }
+
+  attachGenerationListeners(hasPlaylists) {
+    if (hasPlaylists) {
+      // Mount Regenerate Panel listeners if present
+      this.mountRegeneratePanel()
+
+      // Mount the Blending Menu components inside the panel
+      RegeneratePanel.mount()
+    } else {
+      // Attach Legacy Settings listeners
+      const generateBtn = this.$('#generateBtn')
+      if (generateBtn) this.on(generateBtn, 'click', () => this.handleGenerate())
+
+      const rankingSelect = this.$('#rankingStrategySelect')
+      if (rankingSelect) {
+        this.on(rankingSelect, 'change', (e) => {
+          this.selectedRankingId = e.target.value
+          const rankingStrategies = [
+            BalancedRankingStrategy.metadata,
+            SpotifyRankingStrategy.metadata,
+            BEARankingStrategy.metadata
+          ]
+          const selectedStrat = rankingStrategies.find(s => s.id === this.selectedRankingId)
+          const descriptionEl = this.$('#rankingDescription')
+          if (descriptionEl && selectedStrat) {
+            descriptionEl.textContent = selectedStrat.description
+          }
+        })
+      }
+    }
+  }
+
+  async render(params) {
+    const state = playlistsStore.getState()
+    const activeSeries = albumSeriesStore.getActiveSeries()
+    const allSeries = albumSeriesStore.getSeries()
+
+    // FIX: Check for "Ghost Playlists" (Issue #19 equivalent)
+    // If store has playlists but they belong to a different series, ignore them
+    let playlists = state.playlists
+
+    if (state.seriesId && activeSeries && state.seriesId !== activeSeries.id) {
+      console.warn('[PlaylistsView] Detected playlists from different series. Ignoring.', {
+        storeSeriesId: state.seriesId,
+        activeSeriesId: activeSeries.id
+      })
+      playlists = [] // Treat as empty for this view
+    }
+
+    return `
+      <div class="playlists-view container">
+        <header class="view-header mb-8 fade-in">
+          ${Breadcrumb.render('/playlists')}
+          
+          <div class="header-content mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <h1 class="text-4xl font-bold flex items-center gap-3">
+              ${getIcon('Music', 'w-8 h-8')} Playlist Management
+            </h1>
+            
+            <div class="header-actions flex items-center gap-4">
+               <!-- Series Selector & Navigation REMOVED: Simplified UX -->
+            </div>
+          </div>
+        </header>
+
+        <!-- Generation Control Container -->
+        <div id="generationControlContainer">
+            ${this.renderGenerationControls(playlists, activeSeries)}
+        </div>
+
+        <!-- Export Section (Only when playlists exist) -->
+        <div id="exportSection" class="mb-6 fade-in" style="animation-delay: 0.08s">
+          ${playlists.length > 0 ? this.renderExportSection() : ''}
+        </div>
+
+        <div id="mainContent" class="fade-in" style="animation-delay: 0.1s">
+          ${this.renderNoAlbumsWarning()}
+
+          <!-- Playlist Grid Container -->
+          <!-- We render the grid here. Note: id="playlistsGrid" is target for updates -->
+          <div id="playlistsGrid">
+            ${this.renderPlaylists(playlists)}
+          </div>
+        </div>
+
+        ${this.isGenerating ? this.renderGeneratingOverlay() : ''}
+        
+        <footer class="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
+          <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
+        </footer>
+      </div>
+    `
+  }
+
+  update() {
+    const state = playlistsStore.getState()
+    const activeSeries = albumSeriesStore.getActiveSeries()
+
+    // FIX: Apply same series validation to update()
+    let playlists = state.playlists
+    if (state.seriesId && activeSeries && state.seriesId !== activeSeries.id) {
+      playlists = []
+    }
+
+    // Update Undo/Redo
+    const undoRedo = this.$('#undoRedoControls')
+    if (undoRedo) {
+      undoRedo.innerHTML = this.renderUndoRedoControls(state)
+      // Re-attach listeners for these buttons
+      const undoBtn = this.$('#undoBtn')
+      const redoBtn = this.$('#redoBtn')
+      if (undoBtn) this.on(undoBtn, 'click', () => this.handleUndo())
+      if (redoBtn) this.on(redoBtn, 'click', () => this.handleRedo())
+    }
+
+    // Update Generation Controls (Swap between Settings and Regenerate Panel)
+    const controlContainer = this.$('#generationControlContainer')
+    if (controlContainer) {
+      controlContainer.innerHTML = this.renderGenerationControls(playlists, activeSeries)
+      this.attachGenerationListeners(playlists.length > 0)
+    }
+
+    // Update Main Content logic
+    const mainContent = this.$('#mainContent')
+    const exportSection = this.$('#exportSection')
+
+    if (mainContent) {
+      // Skip grid re-render during drag operations to prevent Sortable invalidation
+      if (!this.isDragging) {
+        // Update no albums warning
+        const warningSection = mainContent.querySelector('.no-albums-warning')
+        const albums = albumsStore.getAlbums()
+        if (albums.length === 0 && !warningSection) {
+          mainContent.insertAdjacentHTML('afterbegin', this.renderNoAlbumsWarning())
+        } else if (albums.length > 0 && warningSection) {
+          warningSection.remove()
+        }
+
+        const grid = this.$('#playlistsGrid')
+        if (grid) grid.innerHTML = this.renderPlaylists(playlists)
+      }
+
+      if (exportSection) {
+        // Reset flag since we're re-creating the DOM elements
+        this.exportListenersAttached = false
+        exportSection.innerHTML = playlists.length > 0 ? this.renderExportSection() : ''
+        this.attachExportListeners()
+      }
+
+      const footerTime = this.$('.last-update')
+      if (footerTime) footerTime.textContent = `Last updated: ${new Date().toLocaleTimeString()}`
+    }
+  }
+
+  attachExportListeners() {
+    // Prevent duplicate listener attachment
+    if (this.exportListenersAttached) {
+      console.log('[PlaylistsView] Export listeners already attached, skipping')
+      return
+    }
+
+    const exportSpotify = this.$('#exportSpotifyBtn')
+    const exportAppleMusic = this.$('#exportAppleMusicBtn')
+    const exportJson = this.$('#exportJsonBtn')
+    const saveHistory = this.$('#saveToHistoryBtn')
+    const regenerate = this.$('#regenerateBtn')
+
+    if (regenerate) {
+      this.on(regenerate, 'click', () => this.handleGenerate())
+    }
+    if (exportSpotify) {
+      this.on(exportSpotify, 'click', async () => {
+        const { showSpotifyExportModal } = await import('../components/SpotifyExportModal.js')
+        showSpotifyExportModal()
+      })
+    }
+    if (exportAppleMusic) {
+      this.on(exportAppleMusic, 'click', () => this.handleExportToAppleMusic())
+      this.exportListenersAttached = true // Mark as attached
+    }
+    if (exportJson) {
+      this.on(exportJson, 'click', () => this.handleExportJson())
+    }
+    if (saveHistory) {
+      this.on(saveHistory, 'click', () => this.handleSaveToHistory())
+    }
+
+    // Re-initialize Drag and Drop after DOM updates
+    this.setupDragAndDrop()
+  }
+
+  renderUndoRedoControls(state) {
+    if (state.playlists.length === 0) return ''
+    return `
+      <button class="btn btn-secondary btn-sm" id="undoBtn" ${!state.canUndo ? 'disabled' : ''} title="Undo">
+        ${getIcon('ArrowLeft', 'w-4 h-4')}
+      </button>
+      <button class="btn btn-secondary btn-sm" id="redoBtn" ${!state.canRedo ? 'disabled' : ''} title="Redo">
+        ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180')}
+      </button>
+    `
+  }
+
+  /**
+   * Render consolidated Settings Section (Algorithm + Ranking)
+   */
+  renderSettingsSection(hasPlaylists = false) {
+    const albums = albumsStore.getAlbums()
+    const albumCount = albums.length
+    const algorithms = getAllAlgorithms()
+
+    if (albumCount === 0) return ''
+
+    const buttonText = hasPlaylists ? 'Regenerate Playlists' : 'Generate Playlists'
+    const buttonIcon = hasPlaylists ? 'Refresh' : 'Rocket'
+
+    // Ranking Strategies Metadata
+    const rankingStrategies = [
+      BalancedRankingStrategy.metadata,
+      SpotifyRankingStrategy.metadata,
+      BEARankingStrategy.metadata
+    ]
+
+    return `
+      <div class="settings-section glass-panel p-6">
+        <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+          ${getIcon('Settings', 'w-5 h-5')} Generation Settings
+        </h3>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+            <!-- Left: Algorithm Selection (Output) -->
+            <div class="lg:col-span-8">
+                <label class="block text-sm font-medium text-muted mb-3">1. Distribution Algorithm (Output)</label>
+                <div class="algorithm-options grid grid-cols-1 md:grid-cols-2 gap-3">
+                  ${algorithms.map(algo => `
+                    <label class="algorithm-option flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer h-full
+                      ${this.selectedAlgorithmId === algo.id
+        ? 'border-accent-primary bg-accent-primary/10'
+        : 'border-white/10 bg-white/5 hover:border-white/20'}">
+                      <input type="radio" name="algorithm" value="${algo.id}" 
+                        ${this.selectedAlgorithmId === algo.id ? 'checked' : ''}
+                        class="mt-1 accent-accent-primary" />
+                      <div class="flex-1 text-left">
+                        <div class="flex items-center gap-2 mb-1">
+                          <span class="font-semibold text-sm">${algo.name}</span>
+                          <span class="badge ${algo.isRecommended ? 'badge-success' : algo.badge === 'LEGACY' ? 'badge-warning' : 'badge-neutral'} text-[10px] px-1.5 py-0.5">
+                            ${algo.badge}
+                          </span>
+                        </div>
+                        <p class="text-xs text-muted line-clamp-2">${algo.description}</p>
+                      </div>
+                    </label>
+                  `).join('')}
+                </div>
+            </div>
+
+            <!-- Right: Ranking Strategy (Input) -->
+            <div class="lg:col-span-4">
+                 <label class="block text-sm font-medium text-muted mb-3">2. Ranking Source (Input)</label>
+                 <div class="bg-white/5 rounded-xl border border-white/10 p-4 h-full">
+                    <p class="text-xs text-muted mb-3">
+                        Choose the "Source of Truth" for how tracks are ranked (S-Tier vs Deep Cuts).
+                    </p>
+                    <select id="rankingStrategySelect" class="w-full bg-black/40 border border-white/10 rounded-lg p-2.5 text-sm focus:border-accent-primary focus:outline-none transition-colors">
+                        ${rankingStrategies.map(strat => `
+                            <option value="${strat.id}" ${this.selectedRankingId === strat.id ? 'selected' : ''}>
+                                ${strat.name}
+                            </option>
+                        `).join('')}
+                    </select>
+                    
+                    <div class="mt-4 p-3 bg-white/5 rounded-lg border border-white/5">
+                        <div class="flex items-start gap-2">
+                             ${getIcon('Info', 'w-4 h-4 text-accent-primary mt-0.5')}
+                             <p class="text-xs text-muted" id="rankingDescription">
+                                ${rankingStrategies.find(s => s.id === this.selectedRankingId)?.description || ''}
+                             </p>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+        </div>
+
+        <button class="btn ${hasPlaylists ? 'btn-warning' : 'btn-primary'} btn-large w-full justify-center" id="generateBtn">
+          ${getIcon(buttonIcon, 'w-5 h-5')} ${buttonText}
+        </button>
+      </div>
+    `
+  }
+
+  // Backwards compatibility shim
+  renderAlgorithmSelector(hasPlaylists) {
+    return this.renderSettingsSection(hasPlaylists)
+  }
+
+  /**
+   * Render no albums warning if needed
+   * Sprint 12.5 FIX: Don't show warning if playlists already exist
+   * (albums were loaded during generation, just not stored in albumsStore)
+   */
+  renderNoAlbumsWarning() {
+    // If we have playlists, albums must have been loaded at some point
+    const playlists = playlistsStore.getPlaylists()
+    if (playlists.length > 0) return ''
+
+    const albums = albumsStore.getAlbums()
+    if (albums.length > 0) return ''
+
+    return `
+      <div class="no-albums-warning glass-panel max-w-2xl mx-auto text-center p-8 mb-6">
+        <div class="alert alert-warning bg-yellow-500/10 border border-yellow-500/20 text-yellow-200 p-4 rounded-xl">
+          <strong class="flex items-center justify-center gap-2 mb-2">${getIcon('AlertTriangle', 'w-5 h-5')} No albums loaded</strong>
+          <p>Please go back and load albums first before generating playlists.</p>
+        </div>
+      </div>
+    `
+  }
+
+  // DEPRECATED: Use renderAlgorithmSelector() instead
+  renderGenerateSection() {
+    return this.renderAlgorithmSelector(false)
+  }
 
   renderPlaylists(playlists) {
     if (playlists.length === 0) return ''
@@ -39,9 +409,6 @@ export class PlaylistsView extends BaseView {
       primaryRanking: 'acclaim' // Default fallback
     })
   }
-
-  // Obsolete methods removed: renderTrack, getRatingClass, formatDuration
-  // TrackItem and PlaylistCard components now handle this logic.
 
   renderExportSection() {
     return `
@@ -93,7 +460,34 @@ export class PlaylistsView extends BaseView {
       const playlistCount = playlists.length
 
       showSavePlaylistsModal(defaultName, playlistCount, async (batchName) => {
-        await this._savePlaylistsToFirestore(batchName, false)
+        if (!batchName) return
+
+        // Sprint 12.5 FIX: Check if batch name exists to prevent duplication
+        try {
+          const { db, cacheManager, auth } = await import('../app.js')
+          const { PlaylistPersistenceService } = await import('../services/PlaylistPersistenceService.js')
+          // Service isn't a class instance but we need repo access? 
+          // Actually we can use the repo directly or just assume overwrite logic.
+          // BUT overwrite logic only works if we pass isOverwrite=true.
+          // We need to KNOW if it exists first.
+
+          const { PlaylistRepository } = await import('../repositories/PlaylistRepository.js')
+          const repo = new PlaylistRepository(db, cacheManager, auth?.currentUser?.uid || 'anonymous-user', activeSeries.id)
+          const allPlaylists = await repo.findAll()
+          const exists = allPlaylists.some(p => p.batchName === batchName)
+
+          if (exists) {
+            if (confirm(`A playlist batch named "${batchName}" already exists. Overwrite it?`)) {
+              await this._savePlaylistsToFirestore(batchName, true)
+            }
+          } else {
+            await this._savePlaylistsToFirestore(batchName, false)
+          }
+        } catch (err) {
+          console.error('Error checking duplicate batch:', err)
+          // Fallback to safe save (no overwrite)
+          await this._savePlaylistsToFirestore(batchName, false)
+        }
       })
     }
   }
@@ -469,6 +863,79 @@ export class PlaylistsView extends BaseView {
   // Sprint 10: Delegate to modular export
   handleExportJson() {
     handleExportJsonFn()
+  }
+
+  // Sprint 12.5: Regenerate Panel Integration
+  mountRegeneratePanel() {
+    const panels = this.container.querySelectorAll('[data-action="toggle-regenerate-panel"]')
+    panels.forEach(btn => {
+      this.on(btn, 'click', () => {
+        this.isRegeneratePanelExpanded = !this.isRegeneratePanelExpanded
+        this.update()
+      })
+    })
+
+    const regenBtns = this.container.querySelectorAll('[data-action="regenerate-playlists"]')
+    regenBtns.forEach(btn => {
+      this.on(btn, 'click', () => this.handleRegenerate())
+    })
+  }
+
+  async handleRegenerate() {
+    console.log('[PlaylistsView] Regenerating with ID preservation...')
+
+    // 1. Capture existing IDs
+    const existingPlaylists = playlistsStore.getPlaylists()
+    const existingIds = existingPlaylists.map(p => p.id)
+
+    // 2. Generate new playlists (reuse handleGenerate logic but with preservation)
+    const albums = albumsStore.getAlbums()
+
+    this.isGenerating = true
+    this.update()
+
+    try {
+      // Get config from panel components
+      const panelConfig = RegeneratePanel.getConfig()
+
+      const result = playlistGenerationService.generate(albums, {
+        algorithmId: panelConfig.algorithmId,
+        rankingId: panelConfig.rankingType || 'combined',
+        // Fix: Map duration (minutes) to targetDuration (seconds)
+        targetDuration: (panelConfig.duration || 60) * 60,
+        outputMode: panelConfig.outputMode,
+        discoveryMode: panelConfig.discoveryMode
+      })
+
+      // 3. Map new playlists to existing IDs
+      const newPlaylists = result.playlists.map((p, index) => {
+        // If we have an existing ID for this index, reuse it
+        if (index < existingIds.length && existingIds[index]) {
+          return { ...p, id: existingIds[index] }
+        }
+        return p
+      })
+
+      console.log('[PlaylistsView] Preserved IDs:',
+        newPlaylists.filter(p => existingIds.includes(p.id)).length,
+        'of', existingIds.length
+      )
+
+      // 4. Update store
+      const activeSeries = albumSeriesStore.getActiveSeries()
+      playlistsStore.setPlaylists(newPlaylists, activeSeries ? activeSeries.id : null)
+
+      this.isGenerating = false
+      await this.update()
+
+      toast.success('Playlists regenerated! (IDs preserved)')
+
+    } catch (error) {
+      console.error('[PlaylistsView] Regenerate failed:', error)
+      toast.error(error.message)
+      this.isGenerating = false
+      this.update()
+    }
   }
 
   // Sprint 10: Delegate to modular export

@@ -279,30 +279,31 @@ export class SavedPlaylistsView extends BaseView {
 
             // Delete Individual Playlist Flow
             if (action === 'delete-playlist') {
-                const seriesId = btn.dataset.series
-                const playlistId = btn.dataset.id
-                const playlistName = btn.dataset.name
-                const trackCount = btn.dataset.count
+                const seriesId = btn.dataset.seriesId
+                const playlistId = btn.dataset.playlistId
+                const playlistName = btn.dataset.playlistName
+                const trackCount = btn.dataset.trackCount
                 this.handleDeletePlaylist(seriesId, playlistId, playlistName, trackCount)
             }
 
-            // Add Playlists (same as edit-series - goes to playlists view)
+            // Add Playlists (Redirect to Blend Menu)
             if (action === 'add-playlists') {
                 const id = btn.dataset.id
-                this.handleEditSeries(id, albumSeriesStore, playlistsStore)
+                // Use standard router navigation to Blend Menu
+                router.navigate(`/blend?seriesId=${id}`)
             }
 
             // Edit Batch Playlists (navigate to editor)
             if (action === 'edit-batch') {
-                const seriesId = btn.dataset.series
-                const batchName = btn.dataset.batch
+                const seriesId = btn.dataset.seriesId
+                const batchName = btn.dataset.batchName
                 this.handleEditBatchPlaylists(seriesId, batchName, albumSeriesStore, playlistsStore)
             }
 
             // Delete Batch (all playlists in this batch)
             if (action === 'delete-batch') {
-                const seriesId = btn.dataset.series
-                const batchName = btn.dataset.batch
+                const seriesId = btn.dataset.seriesId
+                const batchName = btn.dataset.batchName
                 const count = btn.dataset.count
                 this.handleDeleteBatch(seriesId, batchName, count)
             }
@@ -453,10 +454,10 @@ export class SavedPlaylistsView extends BaseView {
 
     async handleDeleteBatch(seriesId, batchName, count) {
         // Show confirmation modal
-        const { showDeletePlaylistModal } = await import('../components/Modals.js')
+        const { showDeleteBatchModal } = await import('../components/Modals.js')
 
         // Reuse delete modal with batch info
-        showDeletePlaylistModal(`batch-${batchName}`, batchName, count, async () => {
+        showDeleteBatchModal(batchName, count, async () => {
             const { db, cacheManager, auth } = await import('../app.js')
             const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous-user'
 

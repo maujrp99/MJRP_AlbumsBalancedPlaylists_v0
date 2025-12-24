@@ -122,29 +122,40 @@ export class Router {
      * @private
      */
     async renderView(viewFactory, params) {
-        // Cleanup current view
-        if (this.currentView && this.currentView.destroy) {
-            this.currentView.destroy()
-        }
-
-        // Create new view instance
-        this.currentView = await viewFactory()
         const container = document.getElementById('app')
-
         if (!container) {
             console.error('App container #app not found')
             return
         }
 
-        // Render view HTML
-        if (this.currentView && this.currentView.render) {
-            const html = await this.currentView.render(params)
-            container.innerHTML = html
-        }
+        try {
+            // Cleanup current view
+            if (this.currentView && this.currentView.destroy) {
+                this.currentView.destroy()
+            }
 
-        // Call view's mount lifecycle
-        if (this.currentView && this.currentView.mount) {
-            await this.currentView.mount(params)
+            // Create new view instance
+            this.currentView = await viewFactory()
+
+            // Render view HTML
+            if (this.currentView && this.currentView.render) {
+                const html = await this.currentView.render(params)
+                container.innerHTML = html
+            }
+
+            // Call view's mount lifecycle
+            if (this.currentView && this.currentView.mount) {
+                await this.currentView.mount(params)
+            }
+        } catch (error) {
+            console.error('[Router] Render failed:', error)
+            container.innerHTML = `
+                <div class="p-8 text-center">
+                    <div class="text-red-500 text-xl font-bold mb-2">View Error</div>
+                    <pre class="bg-black/30 p-4 rounded text-left text-sm overflow-auto text-red-300 max-w-2xl mx-auto">${error.message}\n${error.stack}</pre>
+                    <button class="btn btn-secondary mt-4" onclick="window.history.back()">Go Back</button>
+                </div>
+            `
         }
     }
 

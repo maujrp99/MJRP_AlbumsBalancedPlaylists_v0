@@ -5,7 +5,7 @@ description: Systematic process for assessing codebase quality and architectural
 # Code Quality Assessment Protocol
 
 Execute this protocol at the end of every sprint or major architectural milestone or whenever the human user request.
-The goal is to provide a quantitative and qualitative measure of technical debt and clean code compliance.
+The goal is to provide a quantitative and qualitative measure of clean architecture, modularity of backend logic, componetization of UI and frontend elementtechnical debt and clean code compliance.
 
 ---
 

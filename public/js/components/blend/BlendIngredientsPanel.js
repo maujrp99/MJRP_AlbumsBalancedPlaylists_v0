@@ -66,6 +66,7 @@ const ALGORITHM_INGREDIENTS = {
 
 export class BlendIngredientsPanel {
     constructor(opts = {}) {
+        this.containerId = opts.containerId || 'blend-ingredients-panel'
         this.onConfigChange = opts.onConfigChange || (() => { })
         this.selectedFlavor = opts.selectedFlavor || null
         this.config = {
@@ -135,7 +136,7 @@ export class BlendIngredientsPanel {
      * Render the component
      */
     render() {
-        const container = document.getElementById('blend-ingredients-panel')
+        const container = document.getElementById(this.containerId)
         if (!container) return
 
         const ingredients = this.getIngredientConfig()
@@ -156,7 +157,7 @@ export class BlendIngredientsPanel {
             </div>
         `
 
-        this.attachListeners()
+        this.attachListeners(container)
     }
 
     /**

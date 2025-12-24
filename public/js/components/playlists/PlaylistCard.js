@@ -21,34 +21,34 @@ import { TrackItem } from './TrackItem.js'
  */
 
 export class PlaylistCard {
-    /**
-     * Render playlist card HTML
-     * @param {PlaylistCardOptions} options
-     * @returns {string} - HTML string
-     */
-    static render(options) {
-        const {
-            playlist,
-            index,
-            editable = true,
-            primaryRanking = 'spotify'
-        } = options
+  /**
+   * Render playlist card HTML
+   * @param {PlaylistCardOptions} options
+   * @returns {string} - HTML string
+   */
+  static render(options) {
+    const {
+      playlist,
+      index,
+      editable = true,
+      primaryRanking = 'spotify'
+    } = options
 
-        const tracks = playlist.tracks || []
-        const totalDuration = this.calculateDuration(tracks)
-        const trackCount = tracks.length
+    const tracks = playlist.tracks || []
+    const totalDuration = this.calculateDuration(tracks)
+    const trackCount = tracks.length
 
-        const tracksHtml = tracks.map((track, trackIndex) =>
-            TrackItem.render({
-                track,
-                playlistIndex: index,
-                trackIndex,
-                primaryRanking,
-                draggable: true
-            })
-        ).join('')
+    const tracksHtml = tracks.map((track, trackIndex) =>
+      TrackItem.render({
+        track,
+        playlistIndex: index,
+        trackIndex,
+        primaryRanking,
+        draggable: true
+      })
+    ).join('')
 
-        return `
+    return `
       <div class="playlist-card bg-surface rounded-xl border border-white/10 overflow-hidden" data-playlist-index="${index}">
         <div class="playlist-header p-4 bg-white/5 border-b border-white/10 flex items-center justify-between">
           <div class="flex-1">
@@ -70,32 +70,50 @@ export class PlaylistCard {
           </div>
         </div>
         
-        <div class="playlist-tracks p-3 space-y-2 max-h-[500px] overflow-y-auto" data-playlist-index="${index}">
+        <style>
+          .custom-scrollbar-${index}::-webkit-scrollbar {
+            width: 6px;
+          }
+          .custom-scrollbar-${index}::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+          }
+          .custom-scrollbar-${index}::-webkit-scrollbar-thumb {
+            background: rgba(249, 115, 22, 0.3); /* brand-orange with opacity */
+            border-radius: 4px;
+          }
+          .custom-scrollbar-${index}::-webkit-scrollbar-thumb:hover {
+            background: rgba(249, 115, 22, 0.6);
+          }
+        </style>
+        
+        <div class="playlist-tracks custom-scrollbar-${index} p-3 space-y-2 max-h-[260px] overflow-y-auto md:max-h-none md:overflow-visible" 
+             data-playlist-index="${index}">
           ${tracksHtml || '<div class="text-center text-muted py-8">No tracks</div>'}
         </div>
       </div>
     `
-    }
+  }
 
-    /**
-     * Calculate total duration in MM:SS format
-     * @private
-     */
-    static calculateDuration(tracks) {
-        const totalSeconds = tracks.reduce((sum, t) => sum + (t.duration || 0), 0)
-        const mins = Math.floor(totalSeconds / 60)
-        const secs = Math.floor(totalSeconds % 60)
-        return `${mins}:${secs.toString().padStart(2, '0')}`
-    }
+  /**
+   * Calculate total duration in MM:SS format
+   * @private
+   */
+  static calculateDuration(tracks) {
+    const totalSeconds = tracks.reduce((sum, t) => sum + (t.duration || 0), 0)
+    const mins = Math.floor(totalSeconds / 60)
+    const secs = Math.floor(totalSeconds % 60)
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
 
-    /**
-     * Escape HTML special characters
-     * @private
-     */
-    static escapeHtml(text) {
-        if (!text) return ''
-        const div = document.createElement('div')
-        div.textContent = text
-        return div.innerHTML
-    }
+  /**
+   * Escape HTML special characters
+   * @private
+   */
+  static escapeHtml(text) {
+    if (!text) return ''
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
+  }
 }

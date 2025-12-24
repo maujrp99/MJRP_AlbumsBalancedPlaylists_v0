@@ -394,6 +394,12 @@ export class BlendingMenuView extends BaseView {
             // Set active series
             albumSeriesStore.setActiveSeries(this.selectedSeries.id)
 
+            // Fix: Store albums in albumsStore using correct API
+            // This ensures PlaylistsView has access to source data for regeneration
+            albumsStore.setActiveAlbumSeriesId(this.selectedSeries.id)
+            albumsStore.clearAlbumSeries(this.selectedSeries.id)
+            albums.forEach(album => albumsStore.addAlbumToSeries(this.selectedSeries.id, album))
+
             // Set playlists in store
             playlistsStore.setPlaylists(playlists, this.selectedSeries.id)
 

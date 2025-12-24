@@ -9,6 +9,8 @@
  */
 
 import { getIcon } from '../Icons.js'
+import { BlendFlavorCard } from '../blend/BlendFlavorCard.js'
+import { BlendIngredientsPanel } from '../blend/BlendIngredientsPanel.js'
 
 /**
  * @typedef {Object} RegeneratePanelOptions
@@ -20,23 +22,31 @@ import { getIcon } from '../Icons.js'
  */
 
 export class RegeneratePanel {
-    /**
-     * Render regenerate panel HTML
-     * @param {RegeneratePanelOptions} options
-     * @returns {string} - HTML string
-     */
-    static render(options) {
-        const {
-            seriesId,
-            batchName,
-            existingPlaylistIds = [],
-            currentConfig = {},
-            expanded = false
-        } = options
+  // Store instances to access state later
+  static flavorCard = null
+  static ingredientsPanel = null
+  static currentConfig = {}
 
-        const playlistCount = existingPlaylistIds.length
+  /**
+   * Render regenerate panel HTML
+   * @param {RegeneratePanelOptions} options
+   * @returns {string} - HTML string
+   */
+  static render(options) {
+    const {
+      seriesId,
+      batchName,
+      existingPlaylistIds = [],
+      currentConfig = {},
+      expanded = false
+    } = options
 
-        return `
+    // Store initial config
+    this.currentConfig = { ...currentConfig }
+
+    const playlistCount = existingPlaylistIds.length
+
+    return `
       <div class="regenerate-panel bg-surface rounded-xl border border-white/10 mb-6" 
            data-series-id="${seriesId}" 
            data-batch-name="${this.escapeHtml(batchName)}">
@@ -46,7 +56,7 @@ export class RegeneratePanel {
                 data-action="toggle-regenerate-panel">
           <div class="flex items-center gap-3">
             ${getIcon('RefreshCw', 'w-5 h-5 text-brand-orange')}
-            <span class="font-semibold">Regenerate Settings</span>
+                <h3 class="regenerate-header text-lg font-bold flex-1">Reconfigure your Music Playlist Blend</h3>
             <span class="text-sm text-muted">(${playlistCount} playlist${playlistCount !== 1 ? 's' : ''})</span>
           </div>
           <div class="regenerate-chevron transition-transform ${expanded ? 'rotate-180' : ''}">
@@ -57,25 +67,14 @@ export class RegeneratePanel {
         <!-- Collapsible Content -->
         <div class="regenerate-content ${expanded ? '' : 'hidden'} border-t border-white/10 p-4 space-y-4">
           
-          <!-- Algorithm Selector Placeholder -->
-          <div id="regenerate-flavor-container">
-            <!-- BlendFlavorCard will be mounted here -->
-            <div class="text-center text-muted py-4">Loading algorithm options...</div>
-          </div>
+          <!-- Step 1: Flavor (Algorithm) -->
+          <div id="regenerate-flavor-container"></div>
 
-          <!-- Ingredients Panel Placeholder -->
-          <div id="regenerate-ingredients-container">
-            <!-- BlendIngredientsPanel will be mounted here -->
-          </div>
+          <!-- Step 2: Ingredients (Params) -->
+          <div id="regenerate-ingredients-container"></div>
 
           <!-- Warning -->
-          <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 flex items-start gap-3">
-            ${getIcon('AlertTriangle', 'w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5')}
-            <div class="text-sm">
-              <p class="font-medium text-yellow-500">ID Preservation</p>
-              <p class="text-muted mt-1">Regenerating will replace all tracks but keep playlist IDs intact for proper overwrite.</p>
-            </div>
-          </div>
+          <!-- Warning Block Removed (too technical) -->
 
           <!-- Regenerate Button -->
           <button class="btn btn-primary w-full flex items-center justify-center gap-2" 
@@ -86,16 +85,87 @@ export class RegeneratePanel {
         </div>
       </div>
     `
+  }
+
+  /**
+   * Mount components and attach listeners
+   * Must be called after render()
+   */
+  static mount() {
+    // Initialize Flavor Card
+    this.flavorCard = new BlendFlavorCard({
+      containerId: 'regenerate-flavor-container',
+      selectedFlavor: { id: this.currentConfig.algorithmId }, // Partial flavor supported by selector logic? 
+      // Note: BlendFlavorCard expects full flavor object or logic to find it. 
+      // We'll let it execute its internal logic if possible or update it shortly.
+      onFlavorSelect: (flavor) => {
+        this.currentConfig.algorithmId = flavor.id
+        // Update ingredients visibility based on flavor
+        if (this.ingredientsPanel) {
+          this.ingredientsPanel.setFlavor(flavor)
+          this.ingredientsPanel.render()
+        }
+      }
+    })
+
+    // Trick: We need to set the initial flavor selection correctly. 
+    // BlendFlavorCard constructor usually takes `selectedFlavor` object. 
+    // If we only have ID, we might need to find it first or force update after init.
+    // For now, let's rely on BlendFlavorCard handling init or select first one if null.
+    // Explicitly finding the flavor would be better if possible, but getAllAlgorithms is inside component logic.
+    // Let's rely on internal init for now, then clean up if needed.
+
+    // Correction: BlendFlavorCard gets algorithms internally. 
+    // We can access this.flavorCard.flavors after construction to set correct initial selection.
+    const algorithms = this.flavorCard.flavors || []
+    const initialFlavor = algorithms.find(a => a.id === this.currentConfig.algorithmId) || algorithms[0]
+
+    if (initialFlavor) {
+      this.flavorCard.selectedFlavor = initialFlavor
+      this.currentConfig.algorithmId = initialFlavor.id
     }
 
-    /**
-     * Escape HTML special characters
-     * @private
-     */
-    static escapeHtml(text) {
-        if (!text) return ''
-        const div = document.createElement('div')
-        div.textContent = text
-        return div.innerHTML
+    this.flavorCard.render()
+
+
+    // Initialize Ingredients Panel
+    this.ingredientsPanel = new BlendIngredientsPanel({
+      containerId: 'regenerate-ingredients-container',
+      selectedFlavor: initialFlavor,
+      config: {
+        // Map currentConfig props to panel props
+        // This assumes PlaylistsView passed a config object roughly matching expected keys or we use defaults
+      },
+      onConfigChange: (newConfig) => {
+        // Merge updates into our tracked config
+        Object.assign(this.currentConfig, newConfig)
+      }
+    })
+    this.ingredientsPanel.render()
+  }
+
+  /**
+   * Get the current configuration for generation
+   */
+  static getConfig() {
+    if (this.ingredientsPanel) {
+      const ingredients = this.ingredientsPanel.getConfig()
+      return {
+        algorithmId: this.currentConfig.algorithmId,
+        ...ingredients
+      }
     }
+    return this.currentConfig
+  }
+
+  /**
+   * Escape HTML special characters
+   * @private
+   */
+  static escapeHtml(text) {
+    if (!text) return ''
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
+  }
 }
