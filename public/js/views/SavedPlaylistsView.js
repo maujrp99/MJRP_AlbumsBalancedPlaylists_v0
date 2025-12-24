@@ -5,6 +5,7 @@ import { getIcon } from '../components/Icons.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { router } from '../router.js'
 import toast from '../components/Toast.js'
+import { BatchGroupCard } from '../components/playlists/BatchGroupCard.js'
 
 export class SavedPlaylistsView extends BaseView {
     constructor() {
@@ -560,8 +561,21 @@ export class SavedPlaylistsView extends BaseView {
 
     update() {
         const container = document.getElementById('mainContent')
-        if (container) {
+        if (!container) return
+
+        try {
+            // Safety: Ensure data is defined
+            if (!this.data) this.data = []
+
             container.innerHTML = this.isLoading ? this.renderLoading() : this.renderContent()
+        } catch (err) {
+            console.error('[SavedPlaylistsView] Render failed:', err)
+            container.innerHTML = `
+                <div class="p-8 text-center">
+                    <div class="text-red-500 text-xl font-bold mb-2">Error Loading View</div>
+                    <pre class="bg-black/30 p-4 rounded text-left text-sm overflow-auto text-red-300">${err.message}\n${err.stack}</pre>
+                </div>
+            `
         }
     }
 
