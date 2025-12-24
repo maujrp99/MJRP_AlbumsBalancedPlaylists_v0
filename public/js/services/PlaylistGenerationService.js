@@ -10,6 +10,7 @@
 
 import { createAlgorithm } from '../algorithms/index.js'
 import { createRankingStrategy } from '../ranking/index.js'
+import { TrackTransformer } from '../transformers/TrackTransformer.js'
 
 /**
  * @typedef {Object} GenerationConfig
@@ -100,18 +101,18 @@ export class PlaylistGenerationService {
      * @param {Object[]} rawTracks - Raw tracks from algorithm
      * @returns {Object[]} - Normalized tracks with all required fields
      */
+    /**
+     * Transform raw tracks to normalized format
+     * Single source of truth for track mapping
+     * 
+     * @param {Object[]} rawTracks - Raw tracks from algorithm
+     * @returns {Object[]} - Normalized tracks with all required fields
+     */
     transformTracks(rawTracks) {
-        return rawTracks.map(t => ({
-            id: t.id,
-            title: t.title,
-            artist: t.artist,
-            album: t.album,
-            duration: t.duration,
-            rating: t.rating,
-            rank: t.rank || t.acclaimRank,
-            spotifyRank: t.spotifyRank,
-            spotifyPopularity: t.spotifyPopularity
-        }))
+        // Sprint 12.5: Use TrackTransformer for canonical output
+        // We pass empty context as we don't have album context here, 
+        // but rawTracks usually have artist/album populated by this stage.
+        return rawTracks.map(t => TrackTransformer.toCanonical(t))
     }
 
     /**

@@ -9,6 +9,7 @@
  * 
  * @module algorithms/mixins/TrackEnrichmentMixin
  */
+import { TrackTransformer } from '../../transformers/TrackTransformer.js'
 
 /**
  * Mixin that adds track enrichment capabilities
@@ -98,77 +99,70 @@ export function TrackEnrichmentMixin(Base) {
 
             // Enrich each track
             const enrichedTracks = baseTracks.map((track, idx) => {
-                const copy = { ...track }
-                const title = copy.title || copy.trackTitle || copy.name || `Track ${idx + 1}`
-                copy.title = title
+                const title = track.title || track.trackTitle || track.name || `Track ${idx + 1}`
                 const key = this.normalizeKey(title)
+
                 const consolidatedEntry = key ? consolidatedIndex.get(key) : null
+                const bestEverEntry = key ? bestEverIndex.get(key) : null
+                const acclaimEntry = key ? acclaimIndex.get(key) : null
 
-                // Determine canonical rank
-                const canonicalRank = (() => {
-                    if (copy.canonicalRank !== undefined && copy.canonicalRank !== null) return Number(copy.canonicalRank)
-                    if (copy.rank !== undefined && copy.rank !== null) return Number(copy.rank)
-                    if (consolidatedEntry?.finalPosition !== undefined && consolidatedEntry?.finalPosition !== null) {
-                        return Number(consolidatedEntry.finalPosition)
-                    }
-                    return null
-                })()
-
-                // Determine rating
-                const rating = (() => {
-                    if (copy.rating !== undefined && copy.rating !== null) return Number(copy.rating)
-                    if (consolidatedEntry?.rating !== undefined && consolidatedEntry?.rating !== null) {
-                        return Number(consolidatedEntry.rating)
-                    }
-                    const be = key ? bestEverIndex.get(key) : null
-                    if (be?.rating !== undefined && be?.rating !== null) return Number(be.rating)
-                    const ac = key ? acclaimIndex.get(key) : null
-                    if (ac?.rating !== undefined && ac?.rating !== null) return Number(ac.rating)
-
-                    // Fallback: Spotify Popularity
-                    if (copy.spotifyPopularity !== undefined && copy.spotifyPopularity !== null && copy.spotifyPopularity > -1) {
-                        return Number(copy.spotifyPopularity)
-                    }
-
-                    return null
-                })()
-
-                // Determine normalized score
-                const normalizedScore = (() => {
-                    if (copy.acclaimScore !== undefined && copy.acclaimScore !== null) return Number(copy.acclaimScore)
-                    if (copy.normalizedScore !== undefined && copy.normalizedScore !== null) return Number(copy.normalizedScore)
-                    if (consolidatedEntry?.normalizedScore !== undefined && consolidatedEntry?.normalizedScore !== null) {
-                        return Number(consolidatedEntry.normalizedScore)
-                    }
-                    if (rating !== null) return Number(rating)
-                    return null
-                })()
-
-                // Determine acclaim rank
-                const acclaimRank = (() => {
-                    if (copy.acclaimRank !== undefined && copy.acclaimRank !== null) return Number(copy.acclaimRank)
-                    if (copy.rank !== undefined && copy.rank !== null) return Number(copy.rank)
-                    if (consolidatedEntry?.finalPosition !== undefined && consolidatedEntry?.finalPosition !== null) {
-                        return Number(consolidatedEntry.finalPosition)
-                    }
-                    return null
-                })()
-
+                // Determine duration
                 const durationFromIndex = key && durationIndex.has(key) ? durationIndex.get(key) : null
+                const finalDuration = track.duration !== undefined && track.duration !== null ? track.duration : durationFromIndex
 
-                copy.id = copy.id || `track_${album.id || 'album'}_${idx + 1}`
-                copy.originAlbumId = copy.originAlbumId || album.id || null
-                copy.duration = copy.duration !== undefined && copy.duration !== null ? copy.duration : durationFromIndex
-                copy.artist = copy.artist || album.artist || ''
-                copy.album = copy.album || album.title || ''
-                copy.rating = rating
-                copy.acclaimScore = normalizedScore
-                copy.acclaimRank = acclaimRank
-                copy.canonicalRank = canonicalRank
-                copy.spotifyPopularity = copy.spotifyPopularity
-                copy.origIndex = idx
+                // Prepare Raw for Transformer
+                const raw = {
+                    ...track,
+                    title,
+                    duration: finalDuration,
 
-                return copy
+                    // Maps to Canonical 'acclaimRank'
+                    acclaimRank: track.acclaimRank
+                        ?? acclaimEntry?.rank
+                        ?? null,
+
+                    // Maps to Canonical 'rating' (Priority: Track -> Consolidated -> BEA -> Acclaim -> Spotify)
+                    rating: track.rating
+                        ?? consolidatedEntry?.rating
+                        ?? bestEverEntry?.rating
+                        ?? acclaimEntry?.rating
+                        ?? (track.spotifyPopularity > -1 ? track.spotifyPopularity : null),
+
+                    // Maps to Canonical 'acclaimScore'
+                    acclaimScore: track.acclaimScore
+                        ?? track.normalizedScore
+                        ?? consolidatedEntry?.normalizedScore
+                        ?? (track.rating !== undefined ? track.rating : null), // Fallback to rating if score missing
+
+                    // Maps to Canonical 'position'
+                    position: track.position || track.trackNumber || (idx + 1)
+                }
+
+                // 3. Transform to Canonical
+                // Note: Algorithms often run client-side where we might not have full album context
+                // so we pass available context
+                const canonical = TrackTransformer.toCanonical(raw, {
+                    artist: album.artist,
+                    album: album.title,
+                    albumId: album.id
+                })
+
+                // Restore algo-specific props
+                canonical.origIndex = idx
+                // Ensure ID is unique if missing
+                if (!canonical.id || canonical.id.startsWith('track_')) {
+                    canonical.id = `track_${album.id || 'album'}_${idx + 1}`
+                }
+
+                // Calculate Canonical Rank (Logic specific to this Mixin's history)
+                canonical.canonicalRank = (() => {
+                    if (track.canonicalRank !== undefined && track.canonicalRank !== null) return Number(track.canonicalRank)
+                    if (track.rank !== undefined && track.rank !== null) return Number(track.rank)
+                    if (consolidatedEntry?.finalPosition) return Number(consolidatedEntry.finalPosition)
+                    return null
+                })()
+
+                return canonical
             })
 
             // Sort by score/rating and assign final ranks
@@ -206,7 +200,6 @@ export function TrackEnrichmentMixin(Base) {
             })
 
             // Sprint 12.5: Use TrackTransformer for consistent spotifyRank calculation
-            const { TrackTransformer } = await import('../../transformers/TrackTransformer.js')
             TrackTransformer.calculateSpotifyRanks(sortedTracks)
 
             return sortedTracks

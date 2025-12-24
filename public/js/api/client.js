@@ -376,16 +376,32 @@ export class APIClient {
             rankedLength: rankedTracks.length
         })
 
-        // Helper to prepare track data for Model
-        // Handles backend-specific field mapping
-        const prepareTrackData = (track, idx, isRanked) => ({
-            ...track,
-            // Map backend fields to Model expected fields
-            rank: track.rank || track.acclaimRank || track.finalPosition || (isRanked ? idx + 1 : null),
-            position: track.position || track.trackNumber || (!isRanked ? idx + 1 : null),
-            normalizedScore: track.normalizedScore || track.acclaimScore || 0,
-            // Artist/Album will be filled by Album Model context
-        })
+        // Sprint 12.5: Use TrackTransformer for canonical track creation
+        const albumContext = {
+            artist: data.artist,
+            album: data.title || data.album,
+            albumId: id
+        }
+
+        // Helper to prepare track data using TrackTransformer
+        const prepareTrackData = (track, idx, isRanked) => {
+            // Ensure strictly required fields for transformer if backend data is messy
+            const raw = {
+                ...track,
+                // Pass rank/position hints if they exist, otherwise mapped by index below
+                acclaimRank: track.rank || track.acclaimRank || track.finalPosition,
+                position: track.position || track.trackNumber,
+                acclaimScore: track.normalizedScore || track.acclaimScore
+            }
+
+            const canonical = TrackTransformer.toCanonical(raw, albumContext)
+
+            // Apply index-based fallbacks if strictly needed (though transformer handles most)
+            if (isRanked && !canonical.acclaimRank) canonical.acclaimRank = idx + 1
+            if (!isRanked && !canonical.position) canonical.position = idx + 1
+
+            return canonical
+        }
 
         // Construct Album Data
         const albumData = {

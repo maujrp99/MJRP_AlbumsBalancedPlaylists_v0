@@ -12,6 +12,7 @@
  * @module ranking/BalancedRankingStrategy
  */
 import { RankingStrategy } from './RankingStrategy.js'
+import { TrackTransformer } from '../transformers/TrackTransformer.js'
 
 export class BalancedRankingStrategy extends RankingStrategy {
     static metadata = {
@@ -87,87 +88,70 @@ export class BalancedRankingStrategy extends RankingStrategy {
             return Array.isArray(album.tracks) ? album.tracks.map(track => ({ ...track })) : []
         })()
 
-        // Enrich each track
+        // Enrich each track using TrackTransformer
         const enrichedTracks = baseTracks.map((track, idx) => {
-            const copy = { ...track }
-            const title = copy.title || copy.trackTitle || copy.name || `Track ${idx + 1}`
-            copy.title = title
+            const title = track.title || track.trackTitle || track.name || `Track ${idx + 1}`
             const key = localNormalizeKey(title)
-            const consolidatedEntry = key ? consolidatedIndex.get(key) : null
 
-            // Spotify Data (if available on original track object)
-            // Sprint 12.5 FIX: Check BOTH tracks AND tracksOriginalOrder
-            // Spotify enrichment may be in either list depending on data source
-            if (!copy.spotifyPopularity && !copy.spotifyRank) {
-                // Try to find in album.tracks first
+            // Lookup metadata from various indices
+            const consolidatedEntry = key ? consolidatedIndex.get(key) : null
+            const bestEverEntry = key ? bestEverIndex.get(key) : null
+            const acclaimEntry = key ? acclaimIndex.get(key) : null
+
+            // Prepare Raw Data for Transformer
+            // Priority: Explicit Consolidated -> BestEver -> Acclaim -> Track Itself
+            const raw = {
+                ...track,
+                title: title,
+                // Maps to Canonical 'acclaimRank'
+                acclaimRank: track.acclaimRank
+                    ?? acclaimEntry?.rank
+                    ?? null,
+
+                // Maps to Canonical 'rating'
+                rating: track.rating
+                    ?? consolidatedEntry?.rating
+                    ?? bestEverEntry?.rating
+                    ?? acclaimEntry?.rating
+                    ?? null,
+
+                // Maps to Canonical 'acclaimScore'
+                acclaimScore: track.normalizedScore
+                    ?? track.acclaimScore
+                    ?? consolidatedEntry?.normalizedScore
+                    ?? 0
+            }
+
+            // Create Canonical Track
+            const canonical = TrackTransformer.toCanonical(raw, {
+                artist: album.artist,
+                album: album.title,
+                albumId: album.id
+            })
+
+            // Spotify Enrichment (Sprint 12.5)
+            // If explicit Spotify data missing, try to find it in original album context
+            if (!canonical.spotifyPopularity && !canonical.spotifyRank) {
                 let originalTrack = album.tracks?.find(t => localNormalizeKey(t.title || t.name) === key)
 
-                // Fallback to tracksOriginalOrder (where Spotify enrichment is often stored)
                 if (!originalTrack?.spotifyPopularity && album.tracksOriginalOrder) {
                     originalTrack = album.tracksOriginalOrder.find(t => localNormalizeKey(t.title || t.name) === key)
                 }
 
                 if (originalTrack) {
-                    copy.spotifyId = copy.spotifyId || originalTrack.spotifyId || originalTrack.id
-                    copy.spotifyUri = copy.spotifyUri || originalTrack.spotifyUri || originalTrack.uri
-                    copy.spotifyPopularity = originalTrack.spotifyPopularity ?? originalTrack.popularity
-                    copy.spotifyRank = originalTrack.spotifyRank
+                    Object.assign(canonical, TrackTransformer.mergeSpotifyData(canonical, originalTrack))
                 }
             }
 
-            // Determine canonical rank
-            const canonicalRank = (() => {
-                if (copy.canonicalRank !== undefined && copy.canonicalRank !== null) return Number(copy.canonicalRank)
-                if (copy.rank !== undefined && copy.rank !== null) return Number(copy.rank)
-                if (consolidatedEntry?.finalPosition !== undefined && consolidatedEntry?.finalPosition !== null) {
-                    return Number(consolidatedEntry.finalPosition)
-                }
-                return null
-            })()
+            // Fallback Rating: If still null, use Spotify Popularity
+            if (canonical.rating === null && canonical.spotifyPopularity !== null) {
+                canonical.rating = canonical.spotifyPopularity
+            }
 
-            // Determine rating
-            const rating = (() => {
-                if (copy.rating !== undefined && copy.rating !== null) return Number(copy.rating)
-                if (consolidatedEntry?.rating !== undefined && consolidatedEntry?.rating !== null) {
-                    return Number(consolidatedEntry.rating)
-                }
-                const be = key ? bestEverIndex.get(key) : null
-                if (be?.rating !== undefined && be?.rating !== null) return Number(be.rating)
-                const ac = key ? acclaimIndex.get(key) : null
-                if (ac?.rating !== undefined && ac?.rating !== null) return Number(ac.rating)
+            // Restore original index for stable sort fallback
+            canonical.origIndex = idx
 
-                // Fallback: Spotify Popularity
-                if (copy.spotifyPopularity !== undefined && copy.spotifyPopularity !== null && copy.spotifyPopularity > -1) {
-                    return Number(copy.spotifyPopularity)
-                }
-
-                return null
-            })()
-
-            // Determine normalized score
-            const normalizedScore = (() => {
-                if (copy.normalizedScore !== undefined && copy.normalizedScore !== null) return Number(copy.normalizedScore)
-                if (consolidatedEntry?.normalizedScore !== undefined && consolidatedEntry?.normalizedScore !== null) {
-                    return Number(consolidatedEntry.normalizedScore)
-                }
-                return 0
-            })()
-
-            // Explicit Acclaim Rank (Top 1-2 often fixed)
-            const acclaimRank = (() => {
-                if (copy.acclaimRank !== undefined && copy.acclaimRank !== null) return Number(copy.acclaimRank)
-                const ac = key ? acclaimIndex.get(key) : null
-                if (ac?.rank !== undefined && ac?.rank !== null) return Number(ac.rank)
-                return null
-            })()
-
-            copy.acclaimRank = acclaimRank
-            copy.rating = rating
-            copy.normalizedScore = normalizedScore
-            copy.canonicalRank = canonicalRank
-            copy.origIndex = idx
-
-            return copy
+            return canonical
         })
 
         // SORT logic (The "Strategy")

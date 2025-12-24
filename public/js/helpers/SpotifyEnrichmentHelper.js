@@ -143,9 +143,15 @@ function applySpotifyData(album, enrichmentData, trackPopularityMap = null) {
     const applyToTrack = (track) => {
         const match = findMatch(track.title)
         if (match) {
-            track.spotifyPopularity = match.popularity
-            track.spotifyId = match.spotifyId
-            track.spotifyUri = match.spotifyUri
+            // Sprint 12.5: Use TrackTransformer to merge data
+            const enriched = TrackTransformer.mergeSpotifyData(track, match)
+
+            // Mutate in place as we are iterating album references
+            Object.assign(track, {
+                spotifyPopularity: enriched.spotifyPopularity,
+                spotifyId: enriched.spotifyId,
+                spotifyUri: enriched.spotifyUri
+            })
         }
     }
 

@@ -44,39 +44,39 @@
 
 ### 2.2 Refactor SpotifyEnrichmentHelper.js
 - [x] Import TrackTransformer
-- [ ] Replace `applySpotifyData()` track mutation with `TrackTransformer.mergeSpotifyData()`
+- [x] Replace `applySpotifyData()` track mutation with `TrackTransformer.mergeSpotifyData()`
 - [x] Replace `spotifyRank` calculation with `TrackTransformer.calculateSpotifyRanks()`
 - [x] **FR-14**: Background enrichment continues working
 
 ### 2.3 Refactor BalancedRankingStrategy.js
-- [ ] Import TrackTransformer (not required - already working)
-- [ ] Use `TrackTransformer.toCanonical()` for track enrichment in `rank()`
+- [x] Import TrackTransformer (not required - already working)
+- [x] Use `TrackTransformer.toCanonical()` for track enrichment in `rank()`
 - [x] Verify `spotifyPopularity` lookup from both `tracks` and `tracksOriginalOrder`
 - [x] **FR-4**: RankingStrategy uses TrackTransformer
 
 ### 2.4 Refactor TrackEnrichmentMixin.js
 - [x] Import TrackTransformer (dynamic)
-- [ ] Use `TrackTransformer.toCanonical()` in `enrichTracks()`
+- [x] Use `TrackTransformer.toCanonical()` in `enrichTracks()`
 - [x] Remove duplicate `spotifyRank` calculation (defer to TrackTransformer)
 - [x] **FR-5**: Algorithms preserve Spotify data
 
 ### 2.5 Refactor PlaylistGenerationService.js
-- [ ] Import TrackTransformer
-- [ ] Use `TrackTransformer.toCanonical()` in `transformTracks()`
-- [ ] Verify all canonical fields preserved in output
+- [x] Import TrackTransformer
+- [x] Use `TrackTransformer.toCanonical()` in `transformTracks()`
+- [x] Verify all canonical fields preserved in output
 
 ---
 
 ## Phase 3: Verification (Agent Tests)
 
 ### 3.1 Build Verification
-- [ ] Run `npm run dev`
-- [ ] Verify no build errors
-- [ ] Verify no missing imports
+- [x] Run `npm run dev`
+- [x] Verify no build errors
+- [x] Verify no missing imports
 
 ### 3.2 Console Verification
-- [ ] Navigate to all views
-- [ ] **NFR-2**: Zero console errors
+- [x] Navigate to all views
+- [x] **NFR-2**: Zero console errors
 
 ### 3.3 Agent Mock Tests
 - [ ] HomeView: Add album loads with cover (**FR-9**)
