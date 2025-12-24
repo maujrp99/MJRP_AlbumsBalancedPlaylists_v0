@@ -322,8 +322,14 @@ export class PlaylistsView extends BaseView {
 
   /**
    * Render no albums warning if needed
+   * Sprint 12.5 FIX: Don't show warning if playlists already exist
+   * (albums were loaded during generation, just not stored in albumsStore)
    */
   renderNoAlbumsWarning() {
+    // If we have playlists, albums must have been loaded at some point
+    const playlists = playlistsStore.getPlaylists()
+    if (playlists.length > 0) return ''
+
     const albums = albumsStore.getAlbums()
     if (albums.length > 0) return ''
 
