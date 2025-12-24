@@ -367,6 +367,12 @@ export class PlaylistsView extends BaseView {
   renderTrack(track, playlistIndex, trackIndex) {
     const ratingClass = this.getRatingClass(track.rating)
 
+    // Sprint 12: Color-coded rank badges
+    // Acclaim = Orange, Popularity = Spotify Green
+    const hasAcclaimRank = track.rank && track.rank < 999
+    const hasSpotifyRank = track.spotifyRank && track.spotifyRank < 999
+    const hasSpotifyPop = track.spotifyPopularity != null && track.spotifyPopularity > -1
+
     return `
       <div 
         class="track-item bg-white/5 hover:bg-white/10 border border-white/5 rounded-lg p-3 cursor-move transition-all group relative" 
@@ -381,9 +387,19 @@ export class PlaylistsView extends BaseView {
         <div class="track-info pl-6">
           <div class="flex justify-between items-start gap-2">
             <div class="track-title font-medium text-sm line-clamp-1" title="${this.escapeHtml(track.title)}">${this.escapeHtml(track.title)}</div>
-            <div class="flex items-center gap-1">
-              ${track.rank ? `<span class="badge badge-neutral text-[10px] px-1.5 py-0.5 h-fit">#${track.rank}</span>` : ''}
-              ${track.rating ? `<span class="badge ${ratingClass} text-[10px] px-1.5 py-0.5 h-fit">${track.rating}</span>` : ''}
+            <div class="flex items-center gap-1.5">
+              ${hasAcclaimRank
+        ? `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-orange/10 text-brand-orange text-[10px] font-bold border border-brand-orange/20">#${track.rank}</span>`
+        : ''}
+              ${track.rating
+        ? `<span class="flex items-center gap-0.5 text-[10px] font-bold"><span class="text-brand-orange">★</span>${track.rating}</span>`
+        : ''}
+              ${hasSpotifyRank
+        ? `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#1DB954]/10 text-[#1DB954] text-[10px] font-bold border border-[#1DB954]/20">#${track.spotifyRank}</span>`
+        : ''}
+              ${hasSpotifyPop
+        ? `<span class="text-[10px] font-bold text-[#1DB954]">${track.spotifyPopularity}%</span>`
+        : ''}
             </div>
           </div>
           
