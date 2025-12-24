@@ -747,6 +747,7 @@ export class PlaylistsView extends BaseView {
 
       // Transform result to playlist format expected by store
       // Add numbering prefix to playlist names (user requested)
+      // Sprint 12: Include spotifyRank and spotifyPopularity for color-coded badges
       const playlists = result.playlists.map((p, index) => ({
         name: `${index + 1}. ${p.title}`,
         tracks: p.tracks.map(t => ({
@@ -756,7 +757,9 @@ export class PlaylistsView extends BaseView {
           album: t.album,
           duration: t.duration,
           rating: t.rating,
-          rank: t.rank || t.acclaimRank
+          rank: t.rank || t.acclaimRank,
+          spotifyRank: t.spotifyRank,
+          spotifyPopularity: t.spotifyPopularity
         }))
       }))
 
