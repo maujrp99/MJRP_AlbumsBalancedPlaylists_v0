@@ -156,6 +156,79 @@ These are the CORE fields and will always be present in CanonicalTrack.
 
 ---
 
+## 2.6 INITIAL ALBUM LOADING FLOW (HomeView)
+
+### Flow Sequence
+
+```
+HomeView.handleAddAlbum()
+    │
+    ├── User enters "Artist - Album"
+    │
+    ▼
+apiClient.fetchAlbum({ artist, album })
+    │
+    ├── MusicKitService.searchAlbums() → Find Apple Music match
+    ├── MusicKitService.getAlbumDetails() → Get full album with tracks
+    │
+    ├── client.js mapTrack() (lines 85-96) ← TrackTransformer.toCanonical() HERE
+    │   └── Creates track objects with: id, title, artist, album, isrc, previewUrl, rating
+    │
+    ├── new Album(albumData) → Model created
+    │
+    └── applyEnrichmentToAlbum() → Add Spotify data if available
+            └── SpotifyEnrichmentHelper.applySpotifyData() ← TrackTransformer.mergeSpotifyData() HERE
+```
+
+### Refactor Impact
+
+| Step | Current | After Refactor |
+|------|---------|----------------|
+| mapTrack (line 85) | Inline mapping | `TrackTransformer.toCanonical()` |
+| Album model | Creates Track[] | Creates CanonicalTrack[] |
+| Spotify enrichment | applySpotifyData | `TrackTransformer.mergeSpotifyData()` |
+
+---
+
+## 2.7 SPOTIFY BACKGROUND ENRICHMENT ANALYSIS
+
+### Background Job: `SpotifyEnrichmentService` (`app.js:72-87`)
+
+**Trigger**: After Spotify OAuth success
+**Purpose**: Pre-enrich ALL albums in user's series with Spotify popularity data
+
+```javascript
+// app.js (lines 72-87)
+const { spotifyEnrichmentService } = await import('./services/SpotifyEnrichmentService.js')
+spotifyEnrichmentService.startEnrichment()
+```
+
+### `SpotifyEnrichmentService.enrichAlbum()` (lines 181-223)
+
+**Data Saved to Firestore**:
+```javascript
+await spotifyEnrichmentStore.save(item.artist, item.album, {
+    spotifyId: data.spotifyId,
+    spotifyUrl: data.spotifyUrl,
+    spotifyPopularity: data.spotifyPopularity,    // Album-level
+    spotifyArtwork: data.spotifyArtwork,
+    trackPopularity: data.spotifyTracks || []     // Track-level array
+})
+```
+
+### Refactor Impact
+
+| Component | Current | After Refactor |
+|-----------|---------|----------------|
+| `SpotifyEnrichmentService` | Stores raw data | NO CHANGE (stores to Firestore) |
+| `SpotifyEnrichmentStore` | CRUD for enrichment | NO CHANGE |
+| `SpotifyEnrichmentHelper` | Applies stored data to tracks | Use `TrackTransformer.mergeSpotifyData()` |
+
+✅ **Background job is SAFE**: It only stores data to Firestore, doesn't create Track objects.
+The refactor only affects the **consumer** (`SpotifyEnrichmentHelper`) that reads and applies this data.
+
+---
+
 ## 3. PROPOSED CHANGES
 
 ### 2.1 New File: TrackTransformer.js
@@ -333,20 +406,45 @@ sequenceDiagram
 
 After implementation, test ALL views:
 
-| # | View | Test | Expected |
-|---|------|------|----------|
-| 1 | BlendingMenuView | Generate with Balanced Cascade | Playlists created |
-| 2 | BlendingMenuView | Generate with Crowd Favorites | Playlists ordered by Spotify |
-| 3 | PlaylistsView | Verify dual badges | Orange Acclaim + Green Spotify |
-| 4 | PlaylistsView | Save to History | Saves without error |
-| 5 | PlaylistsView | Export to Spotify | Tracks found and exported |
-| 6 | PlaylistsView | Download JSON | Valid JSON with all fields |
-| 7 | SavedPlaylistsView | Load saved batch | Displays correctly |
-| 8 | SavedPlaylistsView | Edit batch | Opens in edit mode |
-| 9 | SavedPlaylistsView | Delete batch | Removes correctly |
-| 10 | SeriesView | Album cards display | Correct artwork, tracks count |
-| 11 | RankingView | Dual tracklist display | Original vs Ranked order |
-| 12 | InventoryView | Album list | All albums with covers |
+| # | View | Test | Expected | Owner |
+|---|------|------|----------|-------|
+| 1 | HomeView | Add album "Artist - Album" | Album loads with cover | Agent (mock) |
+| 2 | HomeView | Connect Spotify → Enrichment starts | Background job runs | User |
+| 3 | BlendingMenuView | Generate with Balanced Cascade | Playlists created | Agent |
+| 4 | BlendingMenuView | Generate with Crowd Favorites | Playlists ordered by Spotify | Agent |
+| 5 | PlaylistsView | Verify dual badges | Orange Acclaim + Green Spotify | Agent |
+| 6 | PlaylistsView | Save to History | Saves without error | Agent |
+| 7 | PlaylistsView | Export to Spotify | Tracks found and exported | **User** |
+| 8 | PlaylistsView | Export to Apple Music | Tracks found and exported | **User** |
+| 9 | PlaylistsView | Download JSON | Valid JSON with all fields | Agent |
+| 10 | SavedPlaylistsView | Load saved batch | Displays correctly | Agent |
+| 11 | SavedPlaylistsView | Edit batch | Opens in edit mode | Agent |
+| 12 | SavedPlaylistsView | Delete batch | Removes correctly | Agent |
+| 13 | SeriesView | Album cards display | Correct artwork, tracks count | Agent |
+| 14 | RankingView | Dual tracklist display | Original vs Ranked order | Agent |
+| 15 | InventoryView | Album list | All albums with covers | Agent |
+
+### 4.2 Agent Mock Tests
+
+I can validate the following **without Spotify/Apple credentials**:
+
+| Test | Method |
+|------|--------|
+| TrackTransformer produces canonical output | Console log validation |
+| Dual badges render (with mock data) | DOM inspection |
+| JSON export contains all fields | Download and parse |
+| No console errors on navigation | Browser console check |
+
+### 4.3 User-Required Tests (Real Credentials)
+
+These tests require **you** to run them with real Spotify/Apple accounts:
+
+| Test | Steps |
+|------|-------|
+| Export to Spotify | Click export → Check Spotify app |
+| Export to Apple Music | Click export → Check Apple Music |
+| Connect Spotify triggers enrichment | Connect → Check console for `[EnrichmentService]` logs |
+| Spotify badges appear after enrichment | After enrichment completes, reload → Check green badges |
 
 ### 4.2 Console Verification
 

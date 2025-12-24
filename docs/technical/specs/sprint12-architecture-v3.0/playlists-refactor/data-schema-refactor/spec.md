@@ -89,6 +89,8 @@ The application has **multiple inconsistent data schemas** for Albums and Tracks
 | FR-10 | All CRUD operations (Series, Playlists, Inventory) persist data without loss | UAT |
 | FR-11 | Export to Apple Music uses track.title, track.artist, track.album correctly | UAT |
 | FR-12 | Export to Spotify uses track.title, track.artist, track.album correctly | UAT |
+| FR-13 | Initial album loading (HomeView → client.js) uses TrackTransformer | Code review |
+| FR-14 | Background Spotify enrichment (SpotifyEnrichmentService) continues working after refactor | UAT |
 
 ### Non-Functional Requirements
 
