@@ -168,109 +168,17 @@ export class SavedPlaylistsView extends BaseView {
     }
 
     renderPlaylistBatch(batch, seriesId) {
-        const formattedDate = batch.savedAt ? new Date(batch.savedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''
-
-        return `
-            <div class="playlist-batch mb-6 last:mb-0">
-                <div class="batch-header flex items-center justify-between mb-4 border-l-4 border-accent-primary/50 pl-3">
-                    <div class="flex items-center gap-3">
-                        <h3 class="text-lg font-semibold text-white/90">${this.escapeHtml(batch.name)}</h3>
-                        <span class="text-xs text-muted">${batch.playlists.length} playlists</span>
-                        ${formattedDate ? `<span class="text-xs text-muted/60">${formattedDate}</span>` : ''}
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button class="btn btn-ghost btn-xs text-white/60 hover:text-accent-primary hover:bg-white/10 transition-colors" data-action="edit-batch" data-series="${seriesId}" data-batch="${this.escapeHtml(batch.name)}" title="Edit batch name">
-                            ${getIcon('Edit', 'w-4 h-4')}
-                        </button>
-                        <button class="btn btn-ghost btn-xs text-red-400/60 hover:text-red-400 hover:bg-red-500/10 transition-colors" data-action="delete-batch" data-series="${seriesId}" data-batch="${this.escapeHtml(batch.name)}" data-count="${batch.playlists.length}" title="Delete this batch">
-                            ${getIcon('Trash', 'w-4 h-4')}
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="playlists-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    ${batch.playlists.map(pl => this.renderPlaylistCard(pl, seriesId)).join('')}
-                </div>
-            </div>
-        `
-    }
-
-    renderPlaylistCard(pl, seriesId) {
-        return `
-            <div class="playlist-mini-card bg-gradient-to-br from-white/5 to-transparent p-5 rounded-lg border border-white/5 hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10 transition-all duration-300 group/card relative overflow-hidden flex flex-col">
-                <div class="absolute top-0 right-0 p-2 opacity-50 group-hover/card:opacity-100 transition-opacity">
-                    ${getIcon('Music', 'w-12 h-12 text-white/5')}
-                </div>
-                
-                <div class="relative z-10 flex-1">
-                    <h3 class="font-bold text-lg mb-1 truncate text-white group-hover/card:text-accent-primary transition-colors cursor-pointer" title="${this.escapeHtml(pl.name)}" data-action="view-playlist" data-series="${seriesId}" data-id="${pl.id}">
-                        ${this.escapeHtml(pl.name)}
-                    </h3>
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="badge badge-primary text-xs font-bold shadow-sm">${pl.tracks?.length || 0} tracks</span>
-                        <span class="text-xs text-muted flex items-center gap-1">
-                            ${getIcon('Clock', 'w-3 h-3')} ${this.formatDuration(pl.tracks)}
-                        </span>
-                    </div>
-
-                    <!-- Album Summary -->
-                    <div class="album-summary mb-4 space-y-1">
-                        ${this.renderAlbumSummary(pl.tracks)}
-                    </div>
-                    
-                    <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden mb-4">
-                        <div class="h-full bg-accent-primary/50" style="width: ${Math.min(100, (pl.tracks?.length || 0) * 5)}%"></div>
-                    </div>
-                </div>
-
-                <button class="btn btn-sm w-full border-2 border-white/30 bg-white/10 hover:bg-white/20 hover:border-white/50 z-20 flex items-center justify-center gap-2 font-medium transition-all" data-action="view-playlist" data-series="${seriesId}" data-id="${pl.id}">
-                     ${getIcon('Eye', 'w-4 h-4')} View Tracks
-                </button>
-                <button class="btn btn-sm btn-ghost w-full text-red-400 hover:bg-red-500/20 hover:text-red-300 z-20 flex items-center justify-center gap-2 font-medium transition-all mt-2" data-action="delete-playlist" data-series="${seriesId}" data-id="${pl.id}" data-name="${this.escapeHtml(pl.name)}" data-count="${pl.tracks?.length || 0}">
-                     ${getIcon('Trash', 'w-4 h-4')} Delete Playlist
-                </button>
-            </div>
-        `
-    }
-
-    renderAlbumSummary(tracks) {
-        if (!tracks || tracks.length === 0) return ''
-
-        // DEBUG: Check what track data looks like
-        if (this.debugOnce !== true) {
-            console.log('[SavedPlaylistsView] Track Sample JSON:', JSON.stringify(tracks[0], null, 2))
-            this.debugOnce = true
-        }
-
-        // Extract unique albums (Artist - Album)
-        const albums = new Set()
-        tracks.forEach(t => {
-            // Check for various property names
-            const albumName = t.album || t.albumTitle || (t.albumData ? t.albumData.title : 'Unknown')
-            const artistName = t.artist || t.artistName || (t.albumData ? t.albumData.artist : 'Unknown')
-
-            if (albumName && artistName) {
-                albums.add(`${artistName} - ${albumName}`)
-            }
+        return BatchGroupCard.render({
+            seriesId,
+            batchName: batch.name,
+            playlists: batch.playlists,
+            createdAt: batch.savedAt
         })
-
-        const uniqueAlbums = Array.from(albums)
-        const displayLimit = 3
-        const displayAlbums = uniqueAlbums.slice(0, displayLimit)
-        const remaining = uniqueAlbums.length - displayLimit
-
-        return `
-            <div class="text-xs text-white/70 space-y-1">
-                ${displayAlbums.map(album => `
-                    <div class="flex items-center gap-1 truncate">
-                        <span class="w-1 h-1 rounded-full bg-accent-primary/50 shrink-0"></span>
-                        <span class="truncate block" title="${this.escapeHtml(album)}">${this.escapeHtml(album)}</span>
-                    </div>
-                `).join('')}
-                ${remaining > 0 ? `<div class="text-white/40 pl-2 text-[10px]">+ ${remaining} more albums</div>` : ''}
-            </div>
-        `
     }
+
+
+
+
 
     formatDuration(tracks) {
         if (!tracks) return '0m'

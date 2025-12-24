@@ -85,7 +85,7 @@
 ### 2.6 Migrate Views to Components (PENDING - Phase 3)
 - [ ] PlaylistsView: Replace renderTrack with TrackItem
 - [ ] PlaylistsView: Replace renderPlaylists with PlaylistGrid
-- [ ] SavedPlaylistsView: Replace inline rendering with BatchGroupCard
+- [x] SavedPlaylistsView: Replace inline rendering with BatchGroupCard
 - [ ] Verify: No visual regression
 
 ---
