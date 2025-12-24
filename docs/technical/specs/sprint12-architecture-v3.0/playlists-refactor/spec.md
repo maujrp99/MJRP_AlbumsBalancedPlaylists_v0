@@ -76,6 +76,7 @@ Refactor Playlist-related functionality using a **Hybrid Architecture** that com
 | FR-10 | **CRUD in SavedPlaylistsView**: Delete playlist, batch, all playlists | Manual UAT |
 | FR-11 | **Edit Batch Playlists** navigation and editing works | Manual UAT |
 | FR-12 | **Download JSON** export continues working | Manual UAT |
+| FR-13 | **Regenerate in PlaylistsView Detail** with BlendingMenu components, preserving playlist IDs | Manual UAT |
 
 ### 3.2 Non-Functional Requirements
 
@@ -179,8 +180,12 @@ TopNav "Playlists" → SavedPlaylistsView (Landing Page)
 
 PlaylistsView (Detail):
                      ├── Edit playlist names, tracks (drag & drop)
-                     ├── "Regenerate" → uses existing series config
-                     ├── Export, Save to History
+                     ├── **Regenerate Panel** (REUSES BlendingMenu components):
+                     │   ├── Algorithm selector (BlendFlavorCard)
+                     │   ├── Ingredients (BlendIngredientsPanel)
+                     │   └── "Regenerate" CTA → preserves playlist IDs for overwrite
+                     ├── Export (Spotify, Apple Music, JSON)
+                     ├── Save to Series History
                      └── "← Back" to landing
 
 BlendingMenuView:
@@ -190,6 +195,12 @@ BlendingMenuView:
                      ├── Step 4: Batch Name + "Blend It!" CTA
                      └── Navigate to PlaylistsView (Detail)
 ```
+
+> [!IMPORTANT]
+> **ID Preservation on Regenerate**: When regenerating in PlaylistsView Detail, the system MUST:
+> 1. Preserve existing `playlist.id` values
+> 2. Keep the same `batchName`
+> 3. Only replace tracks, not the playlist documents
 
 ---
 
