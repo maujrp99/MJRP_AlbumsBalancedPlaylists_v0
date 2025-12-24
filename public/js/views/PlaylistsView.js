@@ -16,6 +16,9 @@ import { playlistGenerationService } from '../services/PlaylistGenerationService
 import { handleExportJson as handleExportJsonFn, handleExportToAppleMusic as handleExportToAppleMusicFn } from './playlists/index.js'
 import { setupDragAndDrop as setupDragAndDropFn } from './playlists/index.js'
 
+// Sprint 12.5: Playlist components
+import { TrackItem } from '../components/playlists/TrackItem.js'
+
 /**
  * PlaylistsView
  * Playlist generation, editing, and management
@@ -354,75 +357,45 @@ export class PlaylistsView extends BaseView {
   renderPlaylists(playlists) {
     if (playlists.length === 0) return ''
 
-    return playlists.map((playlist, pIndex) => `
-      <div class="playlist-column glass-panel flex flex-col h-full" data-playlist-index="${pIndex}">
-        <div class="playlist-header mb-4 pb-4 border-b border-white/10">
-          <h3 class="playlist-name text-lg font-bold mb-2 outline-none focus:text-accent-primary transition-colors flex items-center gap-2" contenteditable="true" data-playlist-index="${pIndex}">
-            <span class="text-accent-primary font-mono">${pIndex + 1}.</span>
-            ${this.escapeHtml(playlist.name)}
-          </h3>
-          <div class="playlist-stats flex gap-2">
-            <span class="badge badge-neutral text-xs">${playlist.tracks.length} tracks</span>
-            <span class="badge badge-neutral text-xs">${this.calculateDuration(playlist.tracks)}</span>
+    return playlists.map((playlist, pIndex) => {
+      // Sprint 12.5: Get primaryRanking from playlist metadata for badge order
+      // 'spotify' → LEFT green, RIGHT orange | 'bea'/'acclaim' → LEFT orange, RIGHT green
+      const rankingId = playlist._meta?.rankingId || 'balanced'
+      const primaryRanking = (rankingId === 'spotify') ? 'spotify' : 'acclaim'
+
+      return `
+        <div class="playlist-column glass-panel flex flex-col h-full" data-playlist-index="${pIndex}">
+          <div class="playlist-header mb-4 pb-4 border-b border-white/10">
+            <h3 class="playlist-name text-lg font-bold mb-2 outline-none focus:text-accent-primary transition-colors flex items-center gap-2" contenteditable="true" data-playlist-index="${pIndex}">
+              <span class="text-accent-primary font-mono">${pIndex + 1}.</span>
+              ${this.escapeHtml(playlist.name)}
+            </h3>
+            <div class="playlist-stats flex gap-2">
+              <span class="badge badge-neutral text-xs">${playlist.tracks.length} tracks</span>
+              <span class="badge badge-neutral text-xs">${this.calculateDuration(playlist.tracks)}</span>
+            </div>
+          </div>
+
+          <div class="playlist-tracks flex-1 overflow-y-auto min-h-[200px] space-y-2" data-playlist-index="${pIndex}">
+            ${playlist.tracks.map((track, tIndex) => this.renderTrack(track, pIndex, tIndex, primaryRanking)).join('')}
           </div>
         </div>
-
-        <div class="playlist-tracks flex-1 overflow-y-auto min-h-[200px] space-y-2" data-playlist-index="${pIndex}">
-          ${playlist.tracks.map((track, tIndex) => this.renderTrack(track, pIndex, tIndex)).join('')}
-        </div>
-      </div>
-    `).join('')
+      `
+    }).join('')
   }
 
-  renderTrack(track, playlistIndex, trackIndex) {
-    const ratingClass = this.getRatingClass(track.rating)
-
-    // Sprint 12: Color-coded rank badges
-    // Acclaim = Orange, Popularity = Spotify Green
-    const hasAcclaimRank = track.rank && track.rank < 999
-    const hasSpotifyRank = track.spotifyRank && track.spotifyRank < 999
-    const hasSpotifyPop = track.spotifyPopularity != null && track.spotifyPopularity > -1
-
-    return `
-      <div 
-        class="track-item bg-white/5 hover:bg-white/10 border border-white/5 rounded-lg p-3 cursor-move transition-all group relative" 
-        draggable="true"
-        data-playlist-index="${playlistIndex}"
-        data-track-index="${trackIndex}">
-        
-        <div class="track-drag-handle absolute left-2 top-1/2 -translate-y-1/2 text-muted opacity-0 group-hover:opacity-50 hover:!opacity-100 cursor-grab">
-            ${getIcon('GripVertical', 'w-4 h-4')}
-        </div>
-
-        <div class="track-info pl-6">
-          <div class="flex justify-between items-start gap-2">
-            <div class="track-title font-medium text-sm line-clamp-1" title="${this.escapeHtml(track.title)}">${this.escapeHtml(track.title)}</div>
-            <div class="flex items-center gap-1.5">
-              ${hasAcclaimRank
-        ? `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-orange/10 text-brand-orange text-[10px] font-bold border border-brand-orange/20">#${track.rank}</span>`
-        : ''}
-              ${track.rating
-        ? `<span class="flex items-center gap-0.5 text-[10px] font-bold"><span class="text-brand-orange">★</span>${track.rating}</span>`
-        : ''}
-              ${hasSpotifyRank
-        ? `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#1DB954]/10 text-[#1DB954] text-[10px] font-bold border border-[#1DB954]/20">#${track.spotifyRank}</span>`
-        : ''}
-              ${hasSpotifyPop
-        ? `<span class="text-[10px] font-bold text-[#1DB954]">${track.spotifyPopularity}%</span>`
-        : ''}
-            </div>
-          </div>
-          
-          <div class="track-meta text-xs text-muted mt-1 space-y-0.5">
-            ${track.artist ? `<div class="truncate">${this.escapeHtml(track.artist)}</div>` : ''}
-            <div class="flex justify-between items-center">
-              ${track.album ? `<span class="truncate opacity-70">${this.escapeHtml(track.album)}</span>` : '<span></span>'}
-              <span class="font-mono opacity-70">${this.formatDuration(track.duration)}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    `
+  /**
+   * Render track using TrackItem component
+   * Sprint 12.5: Badge order based on primaryRanking (LEFT=chosen, RIGHT=alt)
+   */
+  renderTrack(track, playlistIndex, trackIndex, primaryRanking = 'acclaim') {
+    return TrackItem.render({
+      track,
+      playlistIndex,
+      trackIndex,
+      primaryRanking,
+      draggable: true
+    })
   }
 
   getRatingClass(rating) {

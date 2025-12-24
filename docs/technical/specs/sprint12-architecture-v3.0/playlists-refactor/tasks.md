@@ -42,51 +42,59 @@
 
 ---
 
-## Phase 2: Components (UI Extraction) ⏳ IN PROGRESS
+## Phase 2: Components (UI Extraction) ✅ COMPLETE
 
-### 2.1 TrackItem.js
-- [ ] Create `public/js/components/playlists/TrackItem.js`
-- [ ] Implement badge order logic (primaryRanking prop)
-- [ ] Include drag handle, duration, title, artist
-- [ ] Support Acclaim badge (orange)
-- [ ] Support Spotify badge (green)
-- [ ] Verify: Visual matches mockup
+### 2.1 TrackItem.js ✅
+- [x] Create `public/js/components/playlists/TrackItem.js`
+- [x] Implement badge order logic (primaryRanking prop)
+- [x] Include drag handle, duration, title, artist
+- [x] Support Acclaim badge (orange)
+- [x] Support Spotify badge (green)
+- [ ] Verify: Visual matches mockup (awaiting integration)
 
-### 2.2 PlaylistCard.js
-- [ ] Create `public/js/components/playlists/PlaylistCard.js`
-- [ ] Header with name (editable), track count, duration
-- [ ] Contains TrackItem list
-- [ ] Support Sortable.js integration for drag & drop
-- [ ] Verify: Matches current playlist column layout
+### 2.2 PlaylistCard.js ✅
+- [x] Create `public/js/components/playlists/PlaylistCard.js`
+- [x] Header with name (editable), track count, duration
+- [x] Contains TrackItem list
+- [ ] Support Sortable.js integration for drag & drop (awaiting integration)
+- [ ] Verify: Matches current playlist column layout (awaiting integration)
 
-### 2.3 PlaylistGrid.js
-- [ ] Create `public/js/components/playlists/PlaylistGrid.js`
-- [ ] Grid layout of PlaylistCards
-- [ ] Responsive columns (1/2/3)
-- [ ] Verify: Renders correctly on different screen sizes
+### 2.3 PlaylistGrid.js ✅
+- [x] Create `public/js/components/playlists/PlaylistGrid.js`
+- [x] Grid layout of PlaylistCards
+- [x] Responsive columns (1/2/3)
+- [ ] Verify: Renders correctly on different screen sizes (awaiting integration)
 
-### 2.4 RegeneratePanel.js
-- [ ] Create `public/js/components/playlists/RegeneratePanel.js`
-- [ ] Reuse BlendFlavorCard component
-- [ ] Reuse BlendIngredientsPanel component
-- [ ] Collapsible panel header
-- [ ] "Regenerate" CTA button
-- [ ] Warning about ID preservation
-- [ ] Verify: Panel expands/collapses
+### 2.4 RegeneratePanel.js ✅
+- [x] Create `public/js/components/playlists/RegeneratePanel.js`
+- [ ] Reuse BlendFlavorCard component (placeholder only)
+- [ ] Reuse BlendIngredientsPanel component (placeholder only)
+- [x] Collapsible panel header
+- [x] "Regenerate" CTA button
+- [x] Warning about ID preservation
+- [ ] Verify: Panel expands/collapses (awaiting integration)
 
-### 2.5 BatchGroupCard.js
-- [ ] Create `public/js/components/playlists/BatchGroupCard.js`
-- [ ] Header with batch name, date
-- [ ] List of playlists in batch
-- [ ] Edit/Delete buttons per playlist
-- [ ] Edit Batch / Delete Batch actions
-- [ ] Verify: Matches current SavedPlaylistsView layout
+### 2.5 BatchGroupCard.js ✅
+- [x] Create `public/js/components/playlists/BatchGroupCard.js`
+- [x] Header with batch name, date
+- [x] List of playlists in batch
+- [x] Edit/Delete buttons per playlist
+- [x] Edit Batch / Delete Batch actions
+- [ ] Verify: Matches current SavedPlaylistsView layout (awaiting integration)
 
-### 2.6 Migrate Views to Components
+### 2.6 Migrate Views to Components (PENDING - Phase 3)
 - [ ] PlaylistsView: Replace renderTrack with TrackItem
 - [ ] PlaylistsView: Replace renderPlaylists with PlaylistGrid
 - [ ] SavedPlaylistsView: Replace inline rendering with BatchGroupCard
 - [ ] Verify: No visual regression
+
+---
+
+## Bug Fixes (Sprint 12.5) ✅
+
+- [x] **Fix**: PlaylistsView clearing fresh playlists from BlendingMenuView navigation
+- [x] **Fix**: "No albums loaded" warning showing when playlists exist
+- [x] **Fix**: Hide legacy "Generation Settings" panel when playlists exist
 
 ---
 
