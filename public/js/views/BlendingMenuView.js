@@ -18,7 +18,7 @@ import { getIcon } from '../components/Icons.js'
 import { BlendSeriesSelector } from '../components/blend/BlendSeriesSelector.js'
 import { BlendFlavorCard } from '../components/blend/BlendFlavorCard.js'
 import { BlendIngredientsPanel } from '../components/blend/BlendIngredientsPanel.js'
-import { createAlgorithm } from '../algorithms/index.js'
+import { playlistGenerationService } from '../services/PlaylistGenerationService.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 
 export class BlendingMenuView extends BaseView {
@@ -378,49 +378,16 @@ export class BlendingMenuView extends BaseView {
 
             this.showProgress(`Generating playlists with ${this.selectedFlavor.name}...`)
 
-            // Create algorithm and generate playlists
-            const algorithm = createAlgorithm(this.selectedFlavor.id)
-            if (!algorithm) {
-                throw new Error(`Unknown algorithm: ${this.selectedFlavor.id}`)
-            }
-
-            // Determine ranking strategy based on:
-            // 1. TopN algorithms have fixed ranking (popular=spotify, acclaimed=bea)
-            // 2. Other algorithms use config.rankingType from UI
-            let rankingId = this.config.rankingType || 'combined'
-            if (this.selectedFlavor.id.includes('popular')) {
-                rankingId = 'spotify' // Locked for TopN Popular
-            } else if (this.selectedFlavor.id.includes('acclaimed')) {
-                rankingId = 'bea' // Locked for TopN Acclaimed
-            }
-            const rankingStrategy = createRankingStrategy(rankingId)
-
-            console.log(`[BlendingMenuView] Using ranking: ${rankingId}, duration: ${this.config.duration}min, outputMode: ${this.config.outputMode}, discovery: ${this.config.discoveryMode}`)
-
-            // Generate playlists with full config
-            const result = algorithm.generate(albums, {
-                rankingStrategy,
-                targetDuration: this.config.duration * 60, // Convert minutes to seconds
+            // Sprint 12.5: Use centralized PlaylistGenerationService
+            const result = playlistGenerationService.generate(albums, {
+                algorithmId: this.selectedFlavor.id,
+                rankingId: this.config.rankingType || 'balanced',
+                targetDuration: this.config.duration * 60,
                 outputMode: this.config.outputMode,
                 discoveryMode: this.config.discoveryMode
             })
 
-            // Transform result to playlist format
-            // Sprint 12: Include spotifyRank and spotifyPopularity for color-coded badges
-            const playlists = result.playlists.map((p, index) => ({
-                name: `${index + 1}. ${p.title}`,
-                tracks: p.tracks.map(t => ({
-                    id: t.id,
-                    title: t.title,
-                    artist: t.artist,
-                    album: t.album,
-                    duration: t.duration,
-                    rating: t.rating,
-                    rank: t.rank || t.acclaimRank,
-                    spotifyRank: t.spotifyRank,
-                    spotifyPopularity: t.spotifyPopularity
-                }))
-            }))
+            const playlists = result.playlists
 
             console.log('[BlendingMenuView] Generated playlists:', playlists.length)
 
