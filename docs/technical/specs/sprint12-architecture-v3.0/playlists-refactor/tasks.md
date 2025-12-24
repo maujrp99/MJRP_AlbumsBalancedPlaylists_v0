@@ -83,8 +83,8 @@
 - [ ] Verify: Matches current SavedPlaylistsView layout (awaiting integration)
 
 ### 2.6 Migrate Views to Components (PENDING - Phase 3)
-- [ ] PlaylistsView: Replace renderTrack with TrackItem
-- [ ] PlaylistsView: Replace renderPlaylists with PlaylistGrid
+- [x] PlaylistsView: Replace renderTrack with TrackItem
+- [x] PlaylistsView: Replace renderPlaylists with PlaylistGrid
 - [x] SavedPlaylistsView: Replace inline rendering with BatchGroupCard
 - [ ] Verify: No visual regression
 
