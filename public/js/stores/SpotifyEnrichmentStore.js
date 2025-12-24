@@ -32,12 +32,10 @@
  * @see docs/technical/specs/sprint12-architecture-v3.0/blending-menu/background-enrichment-spec.md
  */
 
-import { db } from '../firebase-init.js'
+import { db, auth } from '../firebase-init.js'
 import { doc, getDoc, setDoc, deleteDoc, collection, getDocs } from 'firebase/firestore'
-import { userStore } from './UserStore.js'
 
-// WORKAROUND: Collection name (used under user path for now)
-// TARGET: Use as root collection 'spotify_enrichment' when Firestore rules are updated
+// TARGET: Global collection 'spotify_enrichment'
 const COLLECTION_NAME = 'spotify_enrichment'
 const CURRENT_SCHEMA_VERSION = 1
 const MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000 // 30 days
@@ -45,27 +43,15 @@ const MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000 // 30 days
 class SpotifyEnrichmentStore {
 
     /**
-     * Get the user-scoped collection path.
-     * 
-     * WORKAROUND (Option B): Uses same path structure as SeriesRepository:
-     *   artifacts/{appId}/users/{userId}/curator/data/spotify_enrichment/{albumKey}
+     * Get the global collection path.
      * 
      * TARGET (Option A - Prod): Global collection:
      *   spotify_enrichment/{albumKey}
      * 
-     * @returns {string|null} Collection path or null if not authenticated
+     * @returns {string} Collection path
      */
     getCollectionPath() {
-        const user = userStore.currentUser
-        if (!user) {
-            console.warn('[EnrichmentStore] No authenticated user')
-            return null
-        }
-
-        // Path must match Firebase rules: artifacts/{appId}/users/{userId}/curator/data/...
-        // Same structure as SeriesRepository
-        const appId = 'mjrp-albums'
-        return `artifacts/${appId}/users/${user.uid}/curator/data/${COLLECTION_NAME}`
+        return COLLECTION_NAME
     }
 
     /**
