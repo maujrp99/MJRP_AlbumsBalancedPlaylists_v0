@@ -1,6 +1,6 @@
 # UI Style Guide
 
-**Last Updated**: 2025-12-15
+**Last Updated**: 2025-12-23
 **Status**: Living Document
 
 ---
@@ -177,6 +177,27 @@ Use these IDs to reference specific UI elements:
 | Danger | `bg-red-500` | None |
 | Success | `bg-green-500` | None |
 | Warning | Yellow variant | None |
+
+### Data Source Color Coding
+
+> **Added**: Sprint 12 (2025-12-23)
+
+Use consistent colors to visually distinguish data sources:
+
+| Source | Color Name | Hex | Tailwind Class | Usage |
+|--------|------------|-----|----------------|-------|
+| **Acclaim** (BEA) | Brand Orange | `#FF6B00` | `text-brand-orange`, `bg-brand-orange` | Rankings, ratings, acclaim badges, ★ stars |
+| **Popularity** (Spotify) | Spotify Green | `#1DB954` | `text-[#1DB954]`, `bg-[#1DB954]` | Popularity scores, rank badges, progress bars |
+
+**UI Elements by Source:**
+
+| Element | Acclaim (Orange) | Popularity (Green) |
+|---------|-----------------|-------------------|
+| Rank badge | `#1` orange circle | `#1` green circle |
+| Score indicator | `★ 93` with orange star | `78%` with green text |
+| Progress bar | N/A | Green bar (`#1DB954`) |
+| Header icon | Award (orange) | SpotifyConfig (green) |
+| Footer average | "Avg Rank" with orange | "Avg Pop" with green |
 
 ---
 
