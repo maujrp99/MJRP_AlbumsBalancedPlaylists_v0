@@ -87,6 +87,8 @@ The application has **multiple inconsistent data schemas** for Albums and Tracks
 | FR-8 | Spotify-based algorithms sort tracks by spotifyPopularity correctly | UAT |
 | FR-9 | Apple Music Kit album cover data preserved through transformations | UAT |
 | FR-10 | All CRUD operations (Series, Playlists, Inventory) persist data without loss | UAT |
+| FR-11 | Export to Apple Music uses track.title, track.artist, track.album correctly | UAT |
+| FR-12 | Export to Spotify uses track.title, track.artist, track.album correctly | UAT |
 
 ### Non-Functional Requirements
 

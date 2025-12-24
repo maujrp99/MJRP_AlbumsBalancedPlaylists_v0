@@ -75,7 +75,88 @@
 
 ---
 
-## 2. PROPOSED CHANGES
+## 2. APPLE MUSIC KIT INTEGRATION ANALYSIS
+
+### Current Integration Points
+
+| File | Usage | Critical Fields |
+|------|-------|-----------------|
+| `client.js:47-143` | Primary album fetch | artworkTemplate → coverUrl |
+| `client.js:85-96` | mapTrack() | id, isrc, previewUrl, trackNumber |
+| `HomeView.js:446-470` | Discography search | artworkTemplate → coverUrl |
+| `PlaylistsExport.js:88` | findTrackFromAlbum | title, artist, album |
+
+### Data Flow from Apple Music Kit
+
+```
+MusicKitService.getAlbumDetails(appleId)
+    │
+    ├── fullAlbum.title, fullAlbum.artist, fullAlbum.year
+    ├── fullAlbum.artworkTemplate  → musicKitService.getArtworkUrl(template, 600) → coverUrl
+    └── fullAlbum.tracks[]
+            ├── t.id (Apple Music track ID)
+            ├── t.title
+            ├── t.trackNumber
+            ├── t.duration
+            ├── t.isrc (International Standard Recording Code)
+            └── t.previewUrl (30s audio preview)
+```
+
+### Fields TrackTransformer MUST Preserve
+
+| Field | Source | Purpose |
+|-------|--------|---------|
+| `appleMusicId` | t.id from Apple | Cross-platform matching |
+| `isrc` | t.isrc from Apple | Universal track identifier |
+| `previewUrl` | t.previewUrl from Apple | Audio preview |
+| `trackNumber` | t.trackNumber | Original disc order |
+
+### Fields Album Model MUST Preserve
+
+| Field | Source | Purpose |
+|-------|--------|---------|
+| `coverUrl` | musicKitService.getArtworkUrl() | Album artwork display |
+| `artworkTemplate` | fullAlbum.artworkTemplate | Resize artwork dynamically |
+| `appleMusicId` | fullAlbum.id in metadata.sourceId | Export to Apple Music |
+
+---
+
+## 2.5 EXPORT FLOW ANALYSIS
+
+### Export to Apple Music (`PlaylistsExport.js:39-145`)
+
+**Fields Used Per Track** (lines 85-93):
+| Field | Usage |
+|-------|-------|
+| `track.title` | Search query |
+| `track.artist` | Search query |
+| `track.album` | Album filter + live detection |
+
+**No Changes Needed**: All fields are in CanonicalTrack schema.
+
+### Export to Spotify (`PlaylistsExport.js:152-253`)
+
+**Fields Used Per Track** (lines 195-200):
+| Field | Usage |
+|-------|-------|
+| `track.title` ǀ `track.name` | Search query |
+| `track.artist` | Search query |
+| `track.album` | Search filter |
+
+**No Changes Needed**: All fields are in CanonicalTrack schema. Code already handles fallback `track.title || track.name`.
+
+### Export Safety Summary
+
+✅ **Both exports use only basic identity fields**:
+- `title` (with `name` fallback in Spotify)
+- `artist`
+- `album`
+
+These are the CORE fields and will always be present in CanonicalTrack.
+
+---
+
+## 3. PROPOSED CHANGES
 
 ### 2.1 New File: TrackTransformer.js
 
