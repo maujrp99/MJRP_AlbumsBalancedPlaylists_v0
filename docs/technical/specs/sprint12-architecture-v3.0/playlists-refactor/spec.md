@@ -70,7 +70,12 @@ Refactor Playlist-related functionality using a **Hybrid Architecture** that com
 | FR-4 | BlendingMenu Step 4 prompts for batch name (when output:multiple) | Manual UAT |
 | FR-5 | TrackItem displays Acclaim (orange) and Spotify (green) badges | Visual check |
 | FR-6 | Drag & Drop works in PlaylistsView Detail | Manual UAT |
-| FR-7 | All existing CRUD operations continue working | Regression test |
+| FR-7 | **Export to Spotify** continues working | Manual UAT |
+| FR-8 | **Export to Apple Music** continues working | Manual UAT |
+| FR-9 | **Save to Series History** continues working (both CREATE and EDIT modes) | Manual UAT |
+| FR-10 | **CRUD in SavedPlaylistsView**: Delete playlist, batch, all playlists | Manual UAT |
+| FR-11 | **Edit Batch Playlists** navigation and editing works | Manual UAT |
+| FR-12 | **Download JSON** export continues working | Manual UAT |
 
 ### 3.2 Non-Functional Requirements
 
