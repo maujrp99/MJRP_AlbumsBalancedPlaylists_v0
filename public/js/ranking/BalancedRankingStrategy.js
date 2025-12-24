@@ -96,13 +96,22 @@ export class BalancedRankingStrategy extends RankingStrategy {
             const consolidatedEntry = key ? consolidatedIndex.get(key) : null
 
             // Spotify Data (if available on original track object)
-            // Look for it in the original album.tracks list if baseTracks came from ranking
-            if (!copy.spotifyPopularity) {
-                const originalTrack = album.tracks?.find(t => localNormalizeKey(t.title || t.name) === key)
+            // Sprint 12.5 FIX: Check BOTH tracks AND tracksOriginalOrder
+            // Spotify enrichment may be in either list depending on data source
+            if (!copy.spotifyPopularity && !copy.spotifyRank) {
+                // Try to find in album.tracks first
+                let originalTrack = album.tracks?.find(t => localNormalizeKey(t.title || t.name) === key)
+
+                // Fallback to tracksOriginalOrder (where Spotify enrichment is often stored)
+                if (!originalTrack?.spotifyPopularity && album.tracksOriginalOrder) {
+                    originalTrack = album.tracksOriginalOrder.find(t => localNormalizeKey(t.title || t.name) === key)
+                }
+
                 if (originalTrack) {
-                    copy.spotifyId = originalTrack.spotifyId || originalTrack.id
-                    copy.spotifyUri = originalTrack.spotifyUri || originalTrack.uri
-                    copy.spotifyPopularity = originalTrack.popularity ?? originalTrack.spotifyPopularity
+                    copy.spotifyId = copy.spotifyId || originalTrack.spotifyId || originalTrack.id
+                    copy.spotifyUri = copy.spotifyUri || originalTrack.spotifyUri || originalTrack.uri
+                    copy.spotifyPopularity = originalTrack.spotifyPopularity ?? originalTrack.popularity
+                    copy.spotifyRank = originalTrack.spotifyRank
                 }
             }
 
