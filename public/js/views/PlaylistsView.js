@@ -8,8 +8,9 @@ import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
 import Sortable from 'sortablejs'
-import { getAllAlgorithms, getRecommendedAlgorithm, createAlgorithm } from '../algorithms/index.js'
-import { createRankingStrategy, BalancedRankingStrategy, SpotifyRankingStrategy, BEARankingStrategy } from '../ranking/index.js'
+import { getAllAlgorithms, getRecommendedAlgorithm } from '../algorithms/index.js'
+import { BalancedRankingStrategy, SpotifyRankingStrategy, BEARankingStrategy } from '../ranking/index.js'
+import { playlistGenerationService } from '../services/PlaylistGenerationService.js'
 
 // Sprint 10: Modular components
 import { handleExportJson as handleExportJsonFn, handleExportToAppleMusic as handleExportToAppleMusicFn } from './playlists/index.js'
@@ -730,42 +731,16 @@ export class PlaylistsView extends BaseView {
     this.update()
 
     try {
-      // Create algorithm instance
-      const algorithm = createAlgorithm(this.selectedAlgorithmId)
+      // Sprint 12.5: Use centralized PlaylistGenerationService
+      const result = playlistGenerationService.generate(albums, {
+        algorithmId: this.selectedAlgorithmId,
+        rankingId: this.selectedRankingId
+      })
 
-      if (!algorithm) {
-        throw new Error(`Unknown algorithm: ${this.selectedAlgorithmId}`)
-      }
-
-      // Generate playlists using selected algorithm
-      console.log('[PlaylistsView] Using algorithm:', algorithm.constructor.getMetadata().name)
-
-      const { createRankingStrategy } = await import('../ranking/index.js')
-      const rankingStrategy = createRankingStrategy(this.selectedRankingId)
-
-      const result = algorithm.generate(albums, { rankingStrategy })
-
-      // Transform result to playlist format expected by store
-      // Add numbering prefix to playlist names (user requested)
-      // Sprint 12: Include spotifyRank and spotifyPopularity for color-coded badges
-      const playlists = result.playlists.map((p, index) => ({
-        name: `${index + 1}. ${p.title}`,
-        tracks: p.tracks.map(t => ({
-          id: t.id,
-          title: t.title,
-          artist: t.artist,
-          album: t.album,
-          duration: t.duration,
-          rating: t.rating,
-          rank: t.rank || t.acclaimRank,
-          spotifyRank: t.spotifyRank,
-          spotifyPopularity: t.spotifyPopularity
-        }))
-      }))
+      const playlists = result.playlists
 
       console.log('[PlaylistsView] Generated playlists:', playlists.length)
 
-      // Sprint 8.5: No need to preserve batch context anymore - mode is explicit in store
       // FIX: Pass seriesId to store to link playlists to this specific series
       const activeSeries = albumSeriesStore.getActiveSeries()
       playlistsStore.setPlaylists(playlists, activeSeries ? activeSeries.id : null)
