@@ -34,7 +34,8 @@ BlendingMenuView.js (513 LOC)
 │   ├── Create ranking strategy
 │   ├── Generate playlists
 │   └── Transform tracks (DUPLICATED)
-└── Navigate to PlaylistsView
+├── ⚠️ MISSING: Playlist Series naming (for output mode: multiple)
+└── Navigate to PlaylistsView (Detail)
 ```
 
 ### 2.2 PlaylistsView (LEGACY)
@@ -88,11 +89,13 @@ PlaylistsView.js (893 LOC)
 
 ```
 components/playlists/
-├── PlaylistCard.js          ← Renders single playlist column
-├── TrackItem.js             ← Renders track with badges (shared)
+├── PlaylistCard.js          ← Renders single playlist column (with editable name)
+├── TrackItem.js             ← Renders track with badges + drag handle (REQUIRED)
 ├── PlaylistGrid.js          ← Grid layout of playlists
 ├── PlaylistExportPanel.js   ← Export buttons
 ├── PlaylistSavePanel.js     ← Save to history
+├── PlaylistSeriesNaming.js  ← Name input for playlist series (batch name)
+├── PlaylistCRUDActions.js   ← Edit/Delete playlist modals
 └── GenerationProgress.js    ← Loading overlay
 ```
 
@@ -122,21 +125,35 @@ components/playlists/
 - [ ] Create `TrackItem.js` component
 - [ ] Supports Acclaim badge (orange)
 - [ ] Supports Spotify badge (green)
-- [ ] Supports drag handle (optional)
-- [ ] PlaylistsView uses component
+- [ ] Supports drag handle (REQUIRED for PlaylistsView Detail)
+- [ ] PlaylistsView Detail uses component
 - [ ] BlendingMenuView can use same component (future)
 
 ---
 
-### US-3: Deprecate PlaylistsView Generation UI
-> As a **user**, I want the Blending Menu to be the primary generation entry point
-> So that I have a consistent, guided experience.
+### US-3: Clarify View Roles & Navigation
+> As a **user**, I want clear separation between views
+> So that I know where to create, edit, and manage playlists.
+
+**View Hierarchy:**
+```
+TopNav "Playlists" → SavedPlaylistsView (Landing Page)
+                     ├── Shows grouped Playlist Series
+                     ├── "+ Add" button → navigates to Blending Menu
+                     └── Click series → PlaylistsView (Detail)
+
+PlaylistsView (Detail):
+                     ├── Edit playlist names, tracks (drag & drop)
+                     ├── "Regenerate" → uses existing series config
+                     ├── Export, Save to History
+                     └── "← Back" to landing
+```
 
 **Acceptance Criteria:**
-- [ ] PlaylistsView focuses on editing/export only
-- [ ] Remove/simplify "Generation Settings" section
-- [ ] Add "← Generate More" link to Blending Menu
-- [ ] Update navigation flow
+- [ ] PlaylistsView Detail focuses on editing/export/regenerate
+- [ ] SavedPlaylistsView "+ Add" navigates to Blending Menu
+- [ ] Maintain regenerate capability in PlaylistsView Detail
+- [ ] Clear back navigation
 
 ---
 
@@ -156,9 +173,16 @@ components/playlists/
 - [ ] Migrate PlaylistsView to use components
 - [ ] Update UI tests
 
-### Phase 3: UX Simplification (Optional)
-- [ ] Evaluate removing generation from PlaylistsView
-- [ ] Update navigation to favor Blending Menu
+### Phase 3: UX & Navigation Clarity
+- [ ] SavedPlaylistsView "+Add" → BlendingMenu (for new generation)
+- [ ] PlaylistsView Detail keeps "Regenerate" (for existing series)
+- [ ] Add Playlist Series naming to Blending Menu Step 4 (when output mode = multiple)
+- [ ] Evaluate removing full "Generation Settings" panel from PlaylistsView Detail
+
+### Phase 4: CRUD Components
+- [ ] Create `PlaylistCRUDActions.js` (edit/delete modals)
+- [ ] Create `PlaylistSeriesNaming.js` (batch name input)
+- [ ] Integrate with BlendingMenu and PlaylistsView Detail
 
 ---
 
