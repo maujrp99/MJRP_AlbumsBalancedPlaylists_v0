@@ -40,8 +40,8 @@ export default class SeriesHeader extends Component {
                         class="tech-btn-primary px-8 py-3 text-base rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform"
                         ${!canGenerate ? 'disabled' : ''}
                     >
-                        ${getIcon('Play', 'w-5 h-5')}
-                        Generate Playlists
+                        ${getIcon('Sliders', 'w-5 h-5')}
+                        Blend your Albums
                     </button>
                 </div>
             </div>

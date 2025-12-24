@@ -159,7 +159,14 @@ export default class SeriesView extends BaseView {
             props: {
                 pageTitle,
                 albumCount: albums.length,
-                onGeneratePlaylists: () => this.handleGeneratePlaylists()
+                onGeneratePlaylists: () => {
+                    const activeSeries = albumSeriesStore.getActiveSeries();
+                    if (activeSeries) {
+                        router.navigate(`/blend?seriesId=${activeSeries.id}`);
+                    } else {
+                        router.navigate('/blend');
+                    }
+                }
             }
         });
         this.components.header.mount();

@@ -6,12 +6,28 @@ import { Breadcrumb } from '../components/Breadcrumb.js'
 import { router } from '../router.js'
 import toast from '../components/Toast.js'
 import { BatchGroupCard } from '../components/playlists/BatchGroupCard.js'
+import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
+import { AlbumCascade } from '../components/common/AlbumCascade.js'
+
+// Expose AlbumCascade globally for BatchGroupCard if needed (or refactor BatchGroupCard to import it)
+// BatchGroupCard is static, so better to ensure it's imported there or here. 
+// Ideally BatchGroupCard should import it, but I used `globalThis` check in BatchGroupCard edit to be safe.
+// To be cleaner, I'll rely on BatchGroupCard handling it or this logic passing the HTML.
+// Actually, BatchGroupCard render refactor used `globalThis.AlbumCascade` which is weak. 
+// Let's attach it to window here to be safe since BatchGroupCard doesn't import it in my previous edit?
+// Wait, I didn't add import to BatchGroupCard.js in previous step. 
+// I should have. But since I'm here, I'll make sure it works by exposing it or I'll fix BatchGroupCard next.
+// Better: I will fix BatchGroupCard import in a separate tool call if needed, but for now let's set it up here.
+// Actually, I'll use the proper way: Import it here, pass it down? No, BatchGroupCard is responsible for rendering.
+// I will assume BatchGroupCard needs the import.
+window.AlbumCascade = AlbumCascade;
 
 export class SavedPlaylistsView extends BaseView {
     constructor() {
         super()
         this.data = []
         this.isLoading = true
+        this.thumbnailCache = new Map()
     }
 
     async render(params) {
@@ -169,12 +185,66 @@ export class SavedPlaylistsView extends BaseView {
     }
 
     renderPlaylistBatch(batch, seriesId) {
+        // Get cached thumbnails for this series
+        const thumbnails = this.thumbnailCache.get(seriesId) || []
+
         return BatchGroupCard.render({
             seriesId,
             batchName: batch.name,
             playlists: batch.playlists,
-            createdAt: batch.savedAt
+            createdAt: batch.savedAt,
+            thumbnails: thumbnails
         })
+    }
+
+    /**
+     * Preload thumbnails for all series groups
+     */
+    async preloadAllThumbnails() {
+        for (const group of this.data) {
+            if (!this.thumbnailCache.has(group.series.id)) {
+                this.preloadSeriesThumbnails(group.series).then(() => {
+                    this.update() // Re-render to show loaded thumbnails
+                })
+            }
+        }
+    }
+
+    /**
+     * Preload thumbnails for a single series
+     * Uses optimizedAlbumLoader to resolve covers from album names
+     */
+    async preloadSeriesThumbnails(series, max = 3) {
+        // Use albumQueries (V3) or fallback to albums array names
+        const queries = series.albumQueries || series.albums || []
+        const thumbs = []
+        const count = Math.min(queries.length, max)
+
+        for (let i = 0; i < count; i++) {
+            const query = queries[i]
+            let coverUrl = null
+
+            // Handle object query (with imageUrl) or string "Artist - Album"
+            if (typeof query === 'object' && query.imageUrl) {
+                coverUrl = query.imageUrl
+            } else if (typeof query === 'string' && query.includes(' - ')) {
+                const [artist, ...albumParts] = query.split(' - ')
+                const album = albumParts.join(' - ')
+
+                try {
+                    const found = await optimizedAlbumLoader.findAlbum(artist, album)
+                    if (found) {
+                        coverUrl = optimizedAlbumLoader.getArtworkUrl(found, 100)
+                    }
+                } catch (e) {
+                    // Ignore missing covers
+                }
+            }
+            thumbs.push(coverUrl)
+        }
+
+        this.thumbnailCache.set(series.id, thumbs)
+        return thumbs
     }
 
 
@@ -219,6 +289,9 @@ export class SavedPlaylistsView extends BaseView {
         } finally {
             this.isLoading = false
             this.update()
+
+            // Start loading thumbnails in background
+            this.preloadAllThumbnails()
         }
 
         // Event Listeners

@@ -75,6 +75,7 @@ export class TopNav {
           ${this.renderNavLink('/home', 'Home', currentPath)}
           ${this.renderSeriesDropdown(currentPath)}
           ${this.renderNavLink('/blend', 'The Blending Menu', currentPath)}
+          ${this.renderNavLink('/saved-playlists', 'Playlists', currentPath)}
           ${this.renderNavLink('/inventory', 'Inventory', currentPath)}
           <!-- Spotify Connect (Phase 1) -->
           <div id="spotify-connect-desktop"></div>
@@ -129,6 +130,7 @@ export class TopNav {
             </div>
             
             ${this.renderMobileNavLink('/blend', 'The Blending Menu', 'Sliders', currentPath)}
+            ${this.renderMobileNavLink('/saved-playlists', 'Playlists', 'List', currentPath)}
             ${this.renderMobileNavLink('/inventory', 'Inventory', 'Archive', currentPath)}
             <div class="px-4 py-2">
                <div id="spotify-connect-mobile"></div>

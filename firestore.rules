@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // =========================================================================
+    // ARTIFACTS (User Data - Scoped)
+    // =========================================================================
+    match /artifacts/{appId}/users/{userId}/curator/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    match /artifacts/{appId}/users/{userId}/inventory/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // =========================================================================
+    // LEGACY ALBUMS (Root Collection)
+    // =========================================================================
+    // Necessário porque o AlbumsStore ainda grava na raiz '/albums'
+    match /albums/{albumId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // =========================================================================
+    // SPOTIFY ENRICHMENT (Global Public Cache)
+    // =========================================================================
+    match /spotify_enrichment/{albumKey} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null; 
+    }
+    
+  }
+}

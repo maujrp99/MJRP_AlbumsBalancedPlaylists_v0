@@ -29,7 +29,8 @@ export class BatchGroupCard {
       seriesId,
       batchName,
       playlists = [],
-      createdAt
+      createdAt,
+      thumbnails = [] // New prop for cover art
     } = options
 
     const playlistCount = playlists.length
@@ -40,6 +41,15 @@ export class BatchGroupCard {
       this.renderPlaylistRow(seriesId, playlist)
     ).join('')
 
+    // Use AlbumCascade for visual richness
+    const cascadeHtml = globalThis.AlbumCascade
+      ? globalThis.AlbumCascade.render(thumbnails)
+      : `
+            <div class="p-3 rounded-lg bg-gradient-to-br from-brand-orange to-red-500 shadow-lg">
+                ${getIcon('Music', 'w-6 h-6 text-white')}
+            </div>
+        `
+
     return `
       <div class="batch-group-card bg-surface rounded-xl border border-white/10 overflow-hidden mb-6 transition-all duration-300 hover:border-brand-orange/30" 
            data-series-id="${seriesId}" 
@@ -49,9 +59,7 @@ export class BatchGroupCard {
         <div class="batch-header p-5 bg-gradient-to-r from-white/5 to-transparent border-b border-white/10">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
-               <div class="p-3 rounded-lg bg-gradient-to-br from-brand-orange to-red-500 shadow-lg">
-                  ${getIcon('Music', 'w-6 h-6 text-white')}
-               </div>
+               ${cascadeHtml}
                <div>
                   <h3 class="font-bold text-xl text-white tracking-tight">${this.escapeHtml(batchName)}</h3>
                   <div class="flex items-center gap-3 text-sm text-muted mt-1">

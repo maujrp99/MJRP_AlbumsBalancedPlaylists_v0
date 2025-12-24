@@ -9,6 +9,7 @@
 
 import { getIcon } from '../Icons.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
+import { AlbumCascade } from '../common/AlbumCascade.js'
 import { optimizedAlbumLoader } from '../../services/OptimizedAlbumLoader.js'
 
 export class BlendSeriesSelector {
@@ -202,54 +203,9 @@ export class BlendSeriesSelector {
      * Render cascade thumbnails component
      * Diagonal layout: each cover offset both horizontally and vertically
      */
+    // DIAGONAL LAYOUT EXTRACTED TO COMPONENT
     renderThumbnailsCascade(thumbnails) {
-        if (thumbnails.length === 0) {
-            // Fallback to folder icon
-            return `
-                <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500/20 to-amber-500/10 flex items-center justify-center">
-                    ${getIcon('FolderOpen', 'w-6 h-6 text-orange-400')}
-                </div>
-            `
-        }
-
-        // Diagonal cascade layout: each thumbnail offset diagonally
-        const stackedThumbs = thumbnails.map((url, i) => {
-            const zIndex = thumbnails.length - i
-            const leftOffset = i * 10  // Horizontal offset per item
-            const topOffset = i * 6    // Vertical offset per item (diagonal effect)
-
-            if (url) {
-                return `
-                    <img 
-                        src="${url}" 
-                        alt="Album cover" 
-                        class="w-10 h-10 rounded-md object-cover shadow-lg border border-white/20 absolute"
-                        style="left: ${leftOffset}px; top: ${topOffset}px; z-index: ${zIndex};"
-                        onerror="this.style.display='none'"
-                    >
-                `
-            } else {
-                // Gradient placeholder
-                return `
-                    <div 
-                        class="w-10 h-10 rounded-md bg-gradient-to-br from-purple-500/40 to-orange-500/40 shadow-lg border border-white/20 absolute flex items-center justify-center"
-                        style="left: ${leftOffset}px; top: ${topOffset}px; z-index: ${zIndex};"
-                    >
-                        ${getIcon('Disc', 'w-5 h-5 text-white/50')}
-                    </div>
-                `
-            }
-        }).join('')
-
-        // Container dimensions to accommodate diagonal stacking
-        const containerWidth = 40 + ((thumbnails.length - 1) * 10)  // base + horizontal offsets
-        const containerHeight = 40 + ((thumbnails.length - 1) * 6) // base + vertical offsets
-
-        return `
-            <div class="relative shrink-0" style="width: ${containerWidth}px; height: ${containerHeight}px;">
-                ${stackedThumbs}
-            </div>
-        `
+        return AlbumCascade.render(thumbnails)
     }
 
     /**
