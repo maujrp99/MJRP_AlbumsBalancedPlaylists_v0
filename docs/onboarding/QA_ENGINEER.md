@@ -9,6 +9,8 @@
 ## Part 1: Business Context
 
 ### What is This App?
+> **Context**: Read the [Product Vision](../MJRP_PRODUCT_VISION.md) first.
+
 MJRP Albums Balanced Playlists is a **hybrid music curator** that generates balanced playlists from ranked albums. It combines:
 - **BestEver Albums** acclaim data
 - **AI-powered** track ranking enrichment
