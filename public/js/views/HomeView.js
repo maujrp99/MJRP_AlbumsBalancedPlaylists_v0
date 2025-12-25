@@ -456,7 +456,11 @@ export class HomeView extends BaseView {
       }
 
       // 3. Render - Map API response fields to view model
-      grid.innerHTML = apiResults.map(album => {
+      // 3. Render - Create DOM elements
+      grid.innerHTML = '' // Clear loading state
+      const fragment = document.createDocumentFragment()
+
+      apiResults.forEach(album => {
         // Map MusicKit fields to expected format
         const viewModel = {
           id: album.appleMusicId,
@@ -468,30 +472,62 @@ export class HomeView extends BaseView {
 
         const isSelected = this.selectedAlbums.some(a => a.id === viewModel.id)
         const coverUrl = musicKitService.getArtworkUrl(album.artworkTemplate, 200)
-        const json = encodeURIComponent(JSON.stringify(viewModel))
 
-        // Fallback for missing artwork
-        const imgHtml = coverUrl
-          ? `<img src="${coverUrl}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all ${isSelected ? 'opacity-100 scale-105' : ''}" loading="lazy" onerror="this.src='/assets/images/default_album.png'; this.onerror=null;">`
-          : `<div class="w-full h-full flex items-center justify-center bg-gray-800 text-gray-600">${getIcon('Disc', 'w-12 h-12')}</div>`
+        // Wrapper
+        const cardDiv = document.createElement('div')
+        cardDiv.className = `artist-album-card cursor-pointer group relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${isSelected ? 'border-orange-500 shadow-[0_0_15px_rgba(255,85,0,0.5)]' : 'border-transparent hover:border-white/20'}`
+        // Set data attributes
+        cardDiv.dataset.id = viewModel.id
+        // We use encodeURIComponent to ensure it's safe in the dataset string if accessed via dataset
+        cardDiv.dataset.json = encodeURIComponent(JSON.stringify(viewModel))
 
-        return `
-                <div class="artist-album-card cursor-pointer group relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${isSelected ? 'border-orange-500 shadow-[0_0_15px_rgba(255,85,0,0.5)]' : 'border-transparent hover:border-white/20'}" data-json="${json}" data-id="${viewModel.id}">
-                    ${imgHtml}
-                    
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-2 flex flex-col justify-end">
-                        <p class="text-white text-xs font-bold truncate">${viewModel.album}</p>
-                        <p class="text-gray-400 text-[10px]">${viewModel.year || 'N/A'}</p>
-                    </div>
+        // Image / Fallback
+        if (coverUrl) {
+          const img = document.createElement('img')
+          img.src = coverUrl
+          img.className = `w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all ${isSelected ? 'opacity-100 scale-105' : ''}`
+          img.loading = 'lazy'
+          img.alt = viewModel.album
+          img.onerror = function () {
+            this.src = '/assets/images/default_album.png'
+            this.onerror = null
+          }
+          cardDiv.appendChild(img)
+        } else {
+          const placeholder = document.createElement('div')
+          placeholder.className = 'w-full h-full flex items-center justify-center bg-gray-800 text-gray-600'
+          placeholder.innerHTML = getIcon('Disc', 'w-12 h-12') // Icon is trusted SVG
+          cardDiv.appendChild(placeholder)
+        }
 
-                    ${isSelected ? `
-                        <div class="absolute top-2 right-2 bg-orange-500 text-white rounded-full p-1 shadow-lg animate-in zoom-in">
-                            ${getIcon('Check', 'w-3 h-3')}
-                        </div>
-                    ` : ''}
-                </div>
-              `
-      }).join('')
+        // Overlay
+        const overlay = document.createElement('div')
+        overlay.className = 'absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-2 flex flex-col justify-end'
+
+        const titleP = document.createElement('p')
+        titleP.className = 'text-white text-xs font-bold truncate'
+        titleP.textContent = viewModel.album
+        overlay.appendChild(titleP)
+
+        const yearP = document.createElement('p')
+        yearP.className = 'text-gray-400 text-[10px]'
+        yearP.textContent = viewModel.year || 'N/A'
+        overlay.appendChild(yearP)
+
+        cardDiv.appendChild(overlay)
+
+        // Selection Checkmark
+        if (isSelected) {
+          const checkDiv = document.createElement('div')
+          checkDiv.className = 'absolute top-2 right-2 bg-orange-500 text-white rounded-full p-1 shadow-lg animate-in zoom-in'
+          checkDiv.innerHTML = getIcon('Check', 'w-3 h-3') // Trusted SVG
+          cardDiv.appendChild(checkDiv)
+        }
+
+        fragment.appendChild(cardDiv)
+      })
+
+      grid.appendChild(fragment)
 
     } catch (err) {
       console.error(err)

@@ -3,7 +3,7 @@
 **Version**: v2.12.0 (Production Stable)  
 **Last Updated**: 2025-12-23
 
-> **See Also**: [Product Vision](product-management/MJRP_Product_Vision.md) | [Roadmap](ROADMAP.md)
+> **See Also**: [Product Vision](MJRP_PRODUCT_VISION.md) | [Roadmap](ROADMAP.md)
 
 ---
 

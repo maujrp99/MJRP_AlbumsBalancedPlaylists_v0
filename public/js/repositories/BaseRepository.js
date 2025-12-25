@@ -152,16 +152,24 @@ export class BaseRepository {
     /**
      * Create new document
      * @param {Object} data - Document data
+     * @param {WriteBatch} [batch] - Optional Firestore write batch
      * @returns {Promise<string>} Created document ID
      */
-    async create(data) {
+    async create(data, batch = null) {
         const docData = {
             ...data,
             createdAt: this.getServerTimestamp(),
             _schemaVersion: this.schemaVersion
         }
 
-        const docRef = await addDoc(this.getCollection(), docData)
+        // Generate a new reference (auto-ID)
+        const docRef = doc(this.getCollection())
+
+        if (batch) {
+            batch.set(docRef, docData)
+        } else {
+            await setDoc(docRef, docData)
+        }
 
         // Invalidate 'all' cache
         if (this.cache) {
@@ -177,21 +185,41 @@ export class BaseRepository {
      * Create or update document with specific ID (Upsert)
      * @param {string} id - Document ID
      * @param {Object} data - Document data
+     * @param {WriteBatch} [batch] - Optional Firestore write batch
      * @returns {Promise<string>} Document ID
      */
-    async save(id, data) {
+    async save(id, data, batch = null) {
         const docData = {
             ...data,
             updatedAt: this.getServerTimestamp(),
             _schemaVersion: this.schemaVersion
         }
 
-        await setDoc(this.getDocRef(id), docData, { merge: true })
+        const docRef = this.getDocRef(id)
+
+        if (batch) {
+            batch.set(docRef, docData, { merge: true })
+        } else {
+            await setDoc(docRef, docData, { merge: true })
+        }
 
         // Invalidate cache
         if (this.cache) {
-            await this.cache.invalidate(this.getCacheKey(id))
-            await this.cache.invalidate(this.getCacheKey('all'))
+            if (!batch) {
+                // Only invalidate immediately if not batched (or invalidate optimistic? 
+                // For batch, we might want to defer invalidation, but for now we'll do it here assuming the caller commits)
+                // Actually, best practice for batch is to NOT await side effects that rely on commit.
+                // But cache invalidation is safe to do "optimistically" or "eagerly" usually, 
+                // though strictly it should be after commit. 
+                // Given the constraints, we will leave cache invalidation here as it's just clearing keys.
+                await this.cache.invalidate(this.getCacheKey(id))
+                await this.cache.invalidate(this.getCacheKey('all'))
+            } else {
+                // Queue cache invalidation? Or just do it? 
+                // Doing it here is fine, it just means next read might miss cache. Refetching is safer.
+                await this.cache.invalidate(this.getCacheKey(id))
+                await this.cache.invalidate(this.getCacheKey('all'))
+            }
         }
 
         return id
