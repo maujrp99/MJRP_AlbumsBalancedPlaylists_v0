@@ -6,7 +6,7 @@
  */
 
 import { Album } from '../models/Album.js'
-import { collection, doc, addDoc, updateDoc, getDocs } from 'firebase/firestore'
+import { collection, doc, addDoc, updateDoc, setDoc, getDocs } from 'firebase/firestore'
 
 export class AlbumsStore {
     constructor() {
@@ -237,7 +237,10 @@ export class AlbumsStore {
             const serialized = JSON.parse(JSON.stringify(album))
 
             if (album.id) {
-                await updateDoc(doc(db, 'albums', album.id), serialized)
+                // Fix: Use setDoc with merge instead of updateDoc to handle cases where 
+                // the document might not exist yet (e.g. hydrated from API with ID but not saved)
+                // This resolves "FirebaseError: No document to update"
+                await setDoc(doc(db, 'albums', album.id), serialized, { merge: true })
                 return album.id
             } else {
                 const docRef = await addDoc(collection(db, 'albums'), serialized)
