@@ -112,11 +112,23 @@ export class PlaylistsController {
     async loadAlbumsForSeries(seriesId) {
         if (albumsStore.getAlbums().length > 0) return
 
-        const activeSeries = albumSeriesStore.getActiveSeries()
-        // If we have query info, we warn user they might need to go back to Albums view
-        // In V3, we rely on albums being loaded. If not, they are just generic items.
-        if (activeSeries?.albumQueries?.length > 0) {
-            toast.warning('Albums not loaded. Regeneration capabilities limited.')
+        console.log('[PlaylistsController] Albums not in memory. Fetching for series:', seriesId)
+
+        try {
+            // Trigger background load
+            // We authorize the view to update when albums arrive by subscribing in View, 
+            // or we force an update here if needed.
+            // Using dynamic import to avoid circular dep if any, or standard import.
+            // Using the service directly:
+            const { optimizedAlbumLoader } = await import('../services/OptimizedAlbumLoader.js')
+
+            // This usually updates albumsStore internally
+            await optimizedAlbumLoader.loadSeries(seriesId)
+
+            console.log('[PlaylistsController] Albums loaded for edit context.')
+        } catch (err) {
+            console.error('[PlaylistsController] Failed to load albums:', err)
+            toast.error('Could not load albums for reconfiguration')
         }
     }
 

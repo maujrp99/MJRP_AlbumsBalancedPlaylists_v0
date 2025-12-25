@@ -50,13 +50,20 @@ export class PlaylistsView extends BaseView {
   }
 
   subscribeStores() {
-    const unsubscribe = playlistsStore.subscribe(() => {
+    const unsubscribePlaylists = playlistsStore.subscribe(() => {
       if (!this.isDragging) this.update()
     })
-    this.subscriptions.push(unsubscribe)
+    this.subscriptions.push(unsubscribePlaylists)
 
-    // We might want to subscribe to AlbumsStore if we handle dynamic album loading, 
-    // but typically albums are loaded before entering or via Controller.
+    // Subscribe to AlbumsStore to support dynamic loading in Edit Mode
+    const unsubscribeAlbums = albumsStore.subscribe(() => {
+      // We only need to re-render if we are showing album-dependent UI or want to refresh state
+      // In Edit Mode, loading albums enables the "Regenerate" functionality.
+      // It might be good to refresh to ensure stores are synced.
+      console.log('[PlaylistsView] Albums updated, refreshing...')
+      if (!this.isDragging) this.update()
+    })
+    this.subscriptions.push(unsubscribeAlbums)
   }
 
   update() {
@@ -217,12 +224,16 @@ export class PlaylistsView extends BaseView {
 
     const jsonBtn = this.container.querySelector('#exportJsonBtn')
     if (jsonBtn) {
-      import('./playlists/index.js').then(({ handleExportJson }) => handleExportJson())
+      jsonBtn.addEventListener('click', () => {
+        import('./playlists/index.js').then(({ handleExportJson }) => handleExportJson())
+      })
     }
 
     const appleBtn = this.container.querySelector('#exportAppleMusicBtn')
     if (appleBtn) {
-      import('./playlists/index.js').then(({ handleExportToAppleMusic }) => handleExportToAppleMusic())
+      appleBtn.addEventListener('click', () => {
+        import('./playlists/index.js').then(({ handleExportToAppleMusic }) => handleExportToAppleMusic())
+      })
     }
 
     // Delete Playlist (Delegation)
