@@ -140,10 +140,8 @@ router.register('/callback', async () => {
 })
 
 // Sprint 11: EditPlaylistView for editing existing batches
-router.register('/playlists/edit', async () => {
-    const { EditPlaylistView } = await import('./views/EditPlaylistView.js')
-    return new EditPlaylistView()
-})
+// ARCH-1 Refactor: Consolidated into PlaylistsView
+router.register('/playlists/edit', () => new PlaylistsView())
 
 // Redirect routes
 router.register('/album-series', () => {

@@ -24,6 +24,7 @@ export class PlaylistsGridRenderer {
                 // UX Fix: Allow reconfigure in Create Mode (no batch name yet)
                 batchName: playlists[0].batchName || 'New Batch',
                 existingPlaylistIds: playlists.map(p => p.id).filter(Boolean),
+                count: playlists.length, // Explicit count for UI
                 currentConfig: RegeneratePanel.currentConfig || { algorithmId: 'mjrp-balanced-cascade', rankingId: 'balanced' },
                 expanded: isExpanded
             })}
@@ -31,10 +32,7 @@ export class PlaylistsGridRenderer {
             `
         }
 
-        // Initial Empty State (No Playlists) -> Show "Settings Section" (Legacy/Initial)
-        // Actually, if we are in CREATE mode but haven't generated yet, we show the initial settings.
-        // But PlaylistsView usually mounts with empty playlists, so this branch hits.
-        // We'll leave the initial render logic to the View's main render if needed, or handle here.
+        // Initial Empty State
         return ''
     }
 
@@ -80,10 +78,7 @@ export class PlaylistsGridRenderer {
     }
 
     static renderBatchNameInput(currentName, isEditMode) {
-        // Only render if explicitly requested (e.g. Edit Mode)
-        // Or if we want to expose it in Create Mode (optional, but requested in consolidation plan)
-        if (!isEditMode) return ''
-
+        // ALWAYS render the input, even in Create Mode, so users can name their batch before saving.
         return `
             <div id="batchNameSection" class="mb-6 fade-in glass-panel p-4 rounded-xl" style="animation-delay: 0.03s">
                 <label class="block text-sm font-medium mb-2">Batch Name</label>
@@ -92,7 +87,7 @@ export class PlaylistsGridRenderer {
                     id="batchNameInput" 
                     value="${currentName || ''}"
                     class="input input-bordered w-full max-w-md bg-white/5 border-white/10 rounded-lg px-4 py-2"
-                    placeholder="Enter batch name"
+                    placeholder="Enter batch name (e.g., 'My Beatles Mix')"
                 />
             </div>
         `

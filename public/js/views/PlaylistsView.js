@@ -26,18 +26,27 @@ export class PlaylistsView extends BaseView {
     this.dragHandler = new PlaylistsDragHandler(this)
   }
 
+  async render(params) {
+    // 1. Initialize Data via Controller
+    await this.controller.initialize(params)
+
+    // 2. Return HTML string
+    return this.generateHtml()
+  }
+
   async mount(params) {
     this.container = document.getElementById('app')
     Breadcrumb.attachListeners(this.container)
 
-    // 1. Initialize Data via Controller
-    await this.controller.initialize(params)
-
-    // 2. Subscribe to Stores
+    // 3. Subscribe to Stores
     this.subscribeStores()
 
-    // 3. Render Initial State
-    this.update()
+    // 4. Attach Listeners & Setup Drag
+    this.attachListeners()
+    const state = playlistsStore.getState()
+    if (state.playlists.length > 0) {
+      this.dragHandler.setup(this.container)
+    }
   }
 
   subscribeStores() {
@@ -53,16 +62,26 @@ export class PlaylistsView extends BaseView {
   update() {
     if (!this.container) return
 
+    // Render entire view
+    this.container.innerHTML = this.generateHtml()
+
+    // Attach Listeners
+    this.attachListeners()
+
+    // Setup Drag & Drop
+    const state = playlistsStore.getState()
+    if (state.playlists.length > 0) {
+      this.dragHandler.setup(this.container)
+    }
+  }
+
+  generateHtml() {
     const state = playlistsStore.getState()
     const playlists = state.playlists
     const activeSeries = albumSeriesStore.getActiveSeries()
     const isEditMode = playlistsStore.isEditingExistingBatch()
 
-    // Render entire view (Simplest approach for thin orchestrator)
-    // Ideally we diff, but for now full re-render is safer and fast enough with component caching.
-    // Actually, we should preserve the grid container if dragging, but we block updates during dragging anyway.
-
-    this.container.innerHTML = `
+    return `
             <div class="playlists-view container">
                 ${this.renderHeader(isEditMode, playlists)}
                 
@@ -93,14 +112,6 @@ export class PlaylistsView extends BaseView {
                 </footer>
             </div>
         `
-
-    // Attach Listeners
-    this.attachListeners()
-
-    // Setup Drag & Drop (only if playlists exist)
-    if (playlists.length > 0) {
-      this.dragHandler.setup(this.container)
-    }
   }
 
   renderHeader(isEditMode, playlists) {
