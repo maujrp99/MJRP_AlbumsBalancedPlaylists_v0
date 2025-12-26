@@ -18,8 +18,7 @@ import { getIcon } from '../components/Icons.js'
 import { BlendSeriesSelector } from '../components/blend/BlendSeriesSelector.js'
 import { BlendFlavorCard } from '../components/blend/BlendFlavorCard.js'
 import { BlendIngredientsPanel } from '../components/blend/BlendIngredientsPanel.js'
-import { playlistGenerationService } from '../services/PlaylistGenerationService.js'
-import { albumSeriesStore } from '../stores/albumSeries.js'
+import { blendingController } from '../controllers/BlendingController.js'
 
 export class BlendingMenuView extends BaseView {
     constructor() {
@@ -337,74 +336,28 @@ export class BlendingMenuView extends BaseView {
         this.updateGenerateButton()
 
         try {
-            const { apiClient } = await import('../api/client.js')
-            const { albumsStore } = await import('../stores/albums.js')
             const { router } = await import('../router.js')
-            const { playlistsStore } = await import('../stores/playlists.js')
-            const { createRankingStrategy } = await import('../ranking/index.js')
             const toast = (await import('../components/Toast.js')).default
 
-            // Get album queries from selected series
-            const albumQueries = this.selectedSeries.albumQueries || []
-
-            if (albumQueries.length === 0) {
-                this.showError('No albums in selected series')
-                return
-            }
-
-            // Show loading progress
-            this.showProgress(`Loading ${albumQueries.length} albums...`)
-
-            // Load albums via apiClient
-            const albums = []
-            for (let i = 0; i < albumQueries.length; i++) {
-                const query = albumQueries[i]
-                this.showProgress(`Loading album ${i + 1}/${albumQueries.length}...`)
-
-                try {
-                    const album = await apiClient.fetchAlbum(query)
-                    if (album) {
-                        albums.push(album)
-                    }
-                } catch (err) {
-                    console.warn(`[BlendingMenuView] Failed to load album: ${query.artist} - ${query.album}`, err)
-                }
-            }
-
-            if (albums.length === 0) {
-                this.showError('Failed to load any albums')
-                return
-            }
-
-            this.showProgress(`Generating playlists with ${this.selectedFlavor.name}...`)
-
-            // Sprint 12.5: Use centralized PlaylistGenerationService
-            const result = playlistGenerationService.generate(albums, {
+            // Build config from flavor + ingredients
+            const ingredientsConfig = this.ingredientsPanel.getConfig()
+            const config = {
                 algorithmId: this.selectedFlavor.id,
-                rankingId: this.config.rankingType || 'balanced',
-                targetDuration: this.config.duration * 60,
-                outputMode: this.config.outputMode,
-                discoveryMode: this.config.discoveryMode
-            })
+                ...ingredientsConfig
+            }
 
-            const playlists = result.playlists
-
-            console.log('[BlendingMenuView] Generated playlists:', playlists.length)
-
-            // Set active series
-            albumSeriesStore.setActiveSeries(this.selectedSeries.id)
-
-            // Fix: Store albums in albumsStore using correct API
-            // This ensures PlaylistsView has access to source data for regeneration
-            albumsStore.setActiveAlbumSeriesId(this.selectedSeries.id)
-            albumsStore.clearAlbumSeries(this.selectedSeries.id)
-            albums.forEach(album => albumsStore.addAlbumToSeries(this.selectedSeries.id, album))
-
-            // Set playlists in store
-            playlistsStore.setPlaylists(playlists, this.selectedSeries.id)
+            // Use BlendingController for centralized generation logic
+            const result = await blendingController.generateFromSeries(
+                this.selectedSeries.id,
+                config,
+                {
+                    onProgress: (msg) => this.showProgress(msg),
+                    useExistingAlbums: false
+                }
+            )
 
             // Navigate to playlists view
-            toast.success(`Generated ${playlists.length} playlist(s)!`)
+            toast.success(`Generated ${result.playlists.length} playlist(s)!`)
             router.navigate(`/playlists?seriesId=${this.selectedSeries.id}`)
 
         } catch (err) {

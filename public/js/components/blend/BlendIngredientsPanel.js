@@ -326,10 +326,30 @@ export class BlendIngredientsPanel {
     }
 
     /**
-     * Get current configuration
+     * Get current configuration in NORMALIZED format for PlaylistGenerationService
+     * 
+     * Returns:
+     * - targetDuration: in SECONDS (not minutes)
+     * - rankingId: 'balanced' | 'spotify' | 'bea' (not rankingType)
+     * - outputMode: as-is
+     * - discoveryMode: as-is
+     * 
+     * @returns {Object} Normalized config ready for PlaylistGenerationService
      */
     getConfig() {
-        return { ...this.config }
+        // Map rankingType → rankingId
+        const rankingMapping = {
+            'combined': 'balanced',
+            'spotify': 'spotify',
+            'bea': 'bea'
+        }
+
+        return {
+            targetDuration: this.config.duration * 60, // minutes → seconds
+            rankingId: rankingMapping[this.config.rankingType] || 'balanced',
+            outputMode: this.config.outputMode,
+            discoveryMode: this.config.discoveryMode
+        }
     }
 }
 
