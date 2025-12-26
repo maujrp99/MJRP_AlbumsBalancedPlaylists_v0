@@ -40,6 +40,23 @@
 
 ## Current Debugging Session
 
+### Issue #96: "Owned" Logic Default Incorrect
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-26 15:45
+**Severity**: MEDIUM (Logic Bug)
+**Type**: Business Logic
+**Component**: `InventoryController` (V3), `InventoryGridRenderer` (V3)
+
+#### Problem
+New items added to Inventory defaulted to "Owned" (Green) incorrectly, when they should default to "Not Owned" (Backlog). Stats logic also counted everything as owned.
+
+#### Solution
+1. **Controller**: Updated `calculateStats` to count only `album.owned === true`.
+2. **Logic**: `null` or `undefined` now explicitly treated as "Not Owned".
+3. **UI**: Restored Status Dropdown to allow explicit tri-state selection (Owned/Wishlist/Not Owned).
+
+---
+
 ### Issue #95: Series Filter Dropdown Empty on First Load
 **Status**: 🚧 **IN PROGRESS**
 **Date**: 2025-12-26 12:20

@@ -495,13 +495,4 @@ export function showSavePlaylistsModal(defaultName, playlistCount, onSave) {
   return modal
 }
 
-/**
- * Helper to escape HTML - DEPRECATED: Use utils/stringUtils.js
- * Kept here temporarily if needed but should use import
- */
-// function escapeHtml(str) {
-//   const div = document.createElement('div')
-//   div.textContent = str
-//   return div.innerHTML
-// }
 

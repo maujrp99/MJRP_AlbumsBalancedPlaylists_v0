@@ -453,11 +453,3 @@ export function showCreateSeriesFromInventoryModal(selectedAlbumIds, onConfirm) 
   return modal
 }
 
-/**
- * Helper to escape HTML - DEPRECATED: Use utils/stringUtils.js
- */
-// function escapeHtml(str) {
-//   const div = document.createElement('div')
-//   div.textContent = str
-//   return div.innerHTML
-// }

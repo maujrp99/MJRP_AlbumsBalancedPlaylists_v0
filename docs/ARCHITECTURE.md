@@ -25,6 +25,8 @@
 | **ARCH-4** | Album Search Modularization | 📋 Sprint 14 | Extract search logic from SeriesView |
 | **ARCH-5** | Cache Consolidation | ✅ Complete | AlbumCache → CacheManager (IndexedDB) |
 | **ARCH-6** | SeriesView Loading Optimization | ✅ Complete | Incremental render, store-level caching |
+| **ARCH-8** | InventoryView V3 Refactor | ✅ Complete | Modularized InventoryView (Controller + Renderer) |
+| **ARCH-8** | InventoryView V3 Refactor | ✅ Complete | Modularized InventoryView (Controller + Renderer) |
 
 ### ARCH-1: PlaylistsView Modularization
 
@@ -98,6 +100,22 @@ Store (runtime state) → Repository (Firestore CRUD)
 **Spec**: [arch-6-series-loading-optimization_spec.md](technical/specs/arch-6-series-loading-optimization_spec.md)
 
 **Known Issue**: #95 - Series filter dropdown empty on first load (Sprint 14)
+
+---
+
+### ARCH-8: InventoryView V3 Refactor
+
+**Problem**: `InventoryView.js` was a "God Class" (~800 LOC) containing logic, rendering, and event handling.
+
+**Solution**:
+- **Controller**: `InventoryController.js` handles data loading, filtering, stats, and CRUD.
+- **Renderer**: `InventoryGridRenderer.js` generates pure HTML for Grid/List views.
+- **View**: `InventoryView.js` acts as a thin shell for DOM patching and event delegation.
+
+**Key Changes**:
+- **Strict Ownership**: Explicit tri-state logic (Owned, Wishlist, Not Owned).
+- **Currency Support**: Split stats for USD/BRL.
+- **Performance**: Use `OptimizedAlbumLoader` for covers.
 
 ---
 

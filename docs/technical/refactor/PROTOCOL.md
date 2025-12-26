@@ -20,6 +20,7 @@ The official, step-by-step protocol is located at:
 - [v5.0 (V3 & Data Schema Refactor)](CODE_QUALITY_ASSESSMENT_v5.0.md)
 - [v6.0 (Post-Sprint 13 Onboarding Audit)](CODE_QUALITY_ASSESSMENT_v6.0.md)
 - [v7.0 (Pre-Sprint 14 Baseline)](CODE_QUALITY_ASSESSMENT_v7.0.md)
+- [v8.0 (Post-Inventory Refactor)](CODE_QUALITY_ASSESSMENT_v8.0.md)
 
 ---
 **Last Updated**: 2025-12-26

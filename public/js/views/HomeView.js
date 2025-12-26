@@ -8,8 +8,11 @@ import { MigrationUtility } from '../migration/MigrationUtility.js'
 import { Autocomplete } from '../components/Autocomplete.js'
 import { optimizedAlbumLoader as albumLoader } from '../services/OptimizedAlbumLoader.js'
 import { musicKitService } from '../services/MusicKitService.js'
-import toast from '../components/Toast.js'
+import { toast } from '../components/Toast.js'
 import { escapeHtml } from '../utils/stringUtils.js'
+import { albumSearchService } from '../services/album-search/AlbumSearchService.js'
+import { DiscographyToolbar } from '../components/search/DiscographyToolbar.js'
+import { showVariantPickerModal } from '../components/search/VariantPickerModal.js'
 
 /**
  * HomeView
@@ -94,63 +97,66 @@ export class HomeView extends BaseView {
                 <!-- Toggle Mode -->
                 <button type="button" id="toggleBulkModeBtn" class="absolute -top-8 right-0 text-xs text-gray-500 hover:text-white flex items-center gap-1 transition-colors uppercase tracking-widest">
                   ${getIcon('FileText', 'w-3 h-3')}
-                  Switch to Bulk Mode
+                  <span class="mode-text">Switch to Bulk Mode</span>
                 </button>
 
-                <!-- Left: Artist Filter -->
-                <div id="artistPanel" class="col-span-12 md:col-span-4 tech-panel tech-green-accent h-fit">
-                    <div class="tech-header-bar">
-                        <span class="tech-title">02a // Artist Filter</span>
-                        ${getIcon('User', 'w-4 h-4 text-tech-green opacity-50')}
-                    </div>
-                    <div class="p-4 tech-grid-bg min-h-[150px] flex flex-col gap-4">
-                        <div class="relative">
-                            <input 
-                                type="text" 
-                                id="artistFilterInput"
-                                class="tech-input w-full p-3 rounded pl-10 neon-border-green focus:border-green-400"
-                                placeholder="Type Artist Name..."
-                                autocomplete="off"
-                            >
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-tech-green">
-                                ${getIcon('Search', 'w-4 h-4')}
+                <!-- Visual Mode Container -->
+                <div id="visualModeContainer" class="col-span-12 grid grid-cols-1 md:grid-cols-12 gap-6 relative">
+                    <!-- Left: Artist Filter -->
+                    <div id="artistPanel" class="col-span-12 md:col-span-4 tech-panel tech-green-accent h-fit">
+                        <div class="tech-header-bar">
+                            <span class="tech-title">02a // Artist Filter</span>
+                            ${getIcon('User', 'w-4 h-4 text-tech-green opacity-50')}
+                        </div>
+                        <div class="p-4 tech-grid-bg min-h-[150px] flex flex-col gap-4">
+                            <div class="relative">
+                                <input 
+                                    type="text" 
+                                    id="artistFilterInput"
+                                    class="tech-input w-full p-3 rounded pl-10 neon-border-green focus:border-green-400"
+                                    placeholder="Type Artist Name..."
+                                    autocomplete="off"
+                                >
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-tech-green">
+                                    ${getIcon('Search', 'w-4 h-4')}
+                                </div>
+                                <div class="absolute inset-y-0 right-0 pr-2 flex items-center">
+                                    <button type="button" id="clearArtistBtn" class="text-gray-500 hover:text-white hidden p-1">
+                                        ${getIcon('X', 'w-3 h-3')}
+                                    </button>
+                                </div>
                             </div>
-                            <div class="absolute inset-y-0 right-0 pr-2 flex items-center">
-                                <button type="button" id="clearArtistBtn" class="text-gray-500 hover:text-white hidden p-1">
-                                    ${getIcon('X', 'w-3 h-3')}
-                                </button>
+                            <p class="text-xs text-gray-500 leading-relaxed">
+                                Filtering by artist unlocks the verified discography grid.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Album Selector (Swappable) -->
+                    <div id="selectionPanel" class="col-span-12 md:col-span-8 tech-panel tech-orange-accent">
+                        <div class="tech-header-bar">
+                            <span class="tech-title" id="selectionTitle">02b // Select Album</span>
+                        </div>
+                        
+                        <div class="p-4 bg-black/20 min-h-[300px] relative">
+                            <!-- A. Global Search (Default) -->
+                            <div id="autocompleteWrapper" class="transition-opacity duration-300">
+                                <!-- Autocomplete injects here -->
+                            </div>
+
+                            <!-- B. Artist Results Grid (Overlay/Replacement) -->
+                            <div id="artistResultsContainer" class="hidden absolute inset-0 z-10 bg-black/90 p-4 overflow-y-auto custom-scrollbar">
+                                <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
+                                    <span class="text-tech-green font-bold tracking-wide">DISCOGRAPHY SCAN</span>
+                                    <button type="button" id="closeArtistResultsBtn" class="text-xs text-gray-400 hover:text-white uppercase tracking-wider flex items-center gap-1">
+                                        Close View ${getIcon('X', 'w-3 h-3')}
+                                    </button>
+                                </div>
+                                <div id="artistResultsGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <!-- Dynamic Items -->
+                                </div>
                             </div>
                         </div>
-                        <p class="text-xs text-gray-500 leading-relaxed">
-                            Filtering by artist unlocks the verified discography grid.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Right: Album Selector (Swappable) -->
-                <div id="selectionPanel" class="col-span-12 md:col-span-8 tech-panel tech-orange-accent">
-                    <div class="tech-header-bar">
-                        <span class="tech-title" id="selectionTitle">02b // Select Album</span>
-                    </div>
-                    
-                    <div class="p-4 bg-black/20 min-h-[300px] relative">
-                         <!-- A. Global Search (Default) -->
-                         <div id="autocompleteWrapper" class="transition-opacity duration-300">
-                             <!-- Autocomplete injects here -->
-                         </div>
-
-                         <!-- B. Artist Results Grid (Overlay/Replacement) -->
-                         <div id="artistResultsContainer" class="hidden absolute inset-0 z-10 bg-black/90 p-4 overflow-y-auto custom-scrollbar">
-                             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
-                                <span class="text-tech-green font-bold tracking-wide">DISCOGRAPHY SCAN</span>
-                                <button type="button" id="closeArtistResultsBtn" class="text-xs text-gray-400 hover:text-white uppercase tracking-wider flex items-center gap-1">
-                                    Close View ${getIcon('X', 'w-3 h-3')}
-                                </button>
-                             </div>
-                             <div id="artistResultsGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                                 <!-- Dynamic Items -->
-                             </div>
-                         </div>
                     </div>
                 </div>
             </div>
@@ -371,14 +377,19 @@ export class HomeView extends BaseView {
     const artistResultsGrid = this.$('#artistResultsGrid')
     if (artistResultsGrid) {
       this.on(artistResultsGrid, 'click', (e) => {
+        // Handle "Select All" or "View Variants" clicks if we add buttons
+        // But mainly card clicks
         const card = e.target.closest('.artist-album-card')
         if (card) {
-          // Parse data from card
+          // Check if clicking a specific action or the card itself
           const albumData = JSON.parse(decodeURIComponent(card.dataset.json))
-          this.toggleAlbumSelection(albumData, card)
+          this.handleCardClick(albumData, card)
         }
       })
     }
+
+    // Initialize Discography Toolbar
+    this.initToolbar()
 
     // Staging Grid Delegation (Remove buttons)
     const stagingGrid = this.$('#stagingGrid')
@@ -391,6 +402,22 @@ export class HomeView extends BaseView {
         }
       })
     }
+  }
+
+  initToolbar() {
+    // Find where to mount it - we'll put it inside the artistResultsContainer above the grid
+    // But we need to do it precisely when the results open.
+    // Or we can pre-mount it.
+    // Let's instantiate it here.
+    this.discographyToolbar = new DiscographyToolbar({
+      onFilterChange: (filters) => this.handleFilterChange(filters)
+    });
+  }
+
+  handleFilterChange(filters) {
+    if (!this.currentDiscography) return;
+
+    this.renderDiscographyGrid(this.currentDiscography, filters);
   }
 
   toggleBulkMode() {
@@ -408,7 +435,6 @@ export class HomeView extends BaseView {
       const textarea = this.$('#albumList')
       if (textarea && this.selectedAlbums.length > 0) {
         const textContent = this.selectedAlbums.map(a => `${a.artist} - ${a.album}`).join('\n')
-        // Append or Replace? Let's append to be safe if user typed something
         if (textarea.value.trim().length > 0 && !textarea.value.endsWith('\n')) {
           textarea.value += '\n'
         }
@@ -418,8 +444,7 @@ export class HomeView extends BaseView {
     } else {
       bulkContainer.classList.add('hidden')
       visualContainer.classList.remove('hidden')
-      if (toggleBtnText) toggleBtnText.textContent = 'Switch to Bulk Paste'
-      // We do NOT sync Text -> Visual automatically as parsing covers is hard without fetching
+      if (toggleBtnText) toggleBtnText.textContent = 'Switch to Bulk Mode'
     }
   }
 
@@ -434,101 +459,144 @@ export class HomeView extends BaseView {
     container.classList.remove('hidden')
     wrapper.classList.add('opacity-50', 'pointer-events-none') // Dim background
 
-    // 2. Fetch from Apple Music API (Sprint 9: Global search)
-    grid.innerHTML = `<div class="col-span-full text-center py-8 text-accent-secondary animate-pulse">Searching Apple Music for "${artistName}"...</div>`
+    // Inject Toolbar if not present
+    if (!container.querySelector('.discography-toolbar')) {
+      const toolbarContainer = document.createElement('div');
+      // Insert after header
+      container.insertBefore(toolbarContainer, grid);
+      this.discographyToolbar.mount(toolbarContainer);
+    }
+
+    // 2. Fetch using NEW Service
+    grid.innerHTML = `<div class="col-span-full text-center py-8 text-accent-secondary animate-pulse">Scanning discography for "${artistName}"...</div>`
 
     try {
-      // Sprint 9: Use MusicKit API instead of local cache
-      const apiResults = await musicKitService.getArtistAlbums(artistName)
+      // Use ARCH-4 Service
+      const albums = await albumSearchService.getArtistDiscography(artistName)
 
-      if (apiResults.length === 0) {
+      if (albums.length === 0) {
         grid.innerHTML = `
                   <div class="col-span-full text-center py-8 text-gray-500">
                       <p>No albums found for "${artistName}"</p>
                       <button class="btn btn-sm btn-ghost mt-2" id="useManualSearch">Try Manual Search</button>
                   </div>
               `
+        this.currentDiscography = [];
         return
       }
 
-      // 3. Render - Map API response fields to view model
-      // 3. Render - Create DOM elements
-      grid.innerHTML = '' // Clear loading state
-      const fragment = document.createDocumentFragment()
-
-      apiResults.forEach(album => {
-        // Map MusicKit fields to expected format
-        const viewModel = {
-          id: album.appleMusicId,
-          album: album.title,
-          artist: album.artist,
-          year: album.year,
-          artworkTemplate: album.artworkTemplate
-        }
-
-        const isSelected = this.selectedAlbums.some(a => a.id === viewModel.id)
-        const coverUrl = musicKitService.getArtworkUrl(album.artworkTemplate, 200)
-
-        // Wrapper
-        const cardDiv = document.createElement('div')
-        cardDiv.className = `artist-album-card cursor-pointer group relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${isSelected ? 'border-orange-500 shadow-[0_0_15px_rgba(255,85,0,0.5)]' : 'border-transparent hover:border-white/20'}`
-        // Set data attributes
-        cardDiv.dataset.id = viewModel.id
-        // We use encodeURIComponent to ensure it's safe in the dataset string if accessed via dataset
-        cardDiv.dataset.json = encodeURIComponent(JSON.stringify(viewModel))
-
-        // Image / Fallback
-        if (coverUrl) {
-          const img = document.createElement('img')
-          img.src = coverUrl
-          img.className = `w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all ${isSelected ? 'opacity-100 scale-105' : ''}`
-          img.loading = 'lazy'
-          img.alt = viewModel.album
-          img.onerror = function () {
-            this.src = '/assets/images/default_album.png'
-            this.onerror = null
-          }
-          cardDiv.appendChild(img)
-        } else {
-          const placeholder = document.createElement('div')
-          placeholder.className = 'w-full h-full flex items-center justify-center bg-gray-800 text-gray-600'
-          placeholder.innerHTML = getIcon('Disc', 'w-12 h-12') // Icon is trusted SVG
-          cardDiv.appendChild(placeholder)
-        }
-
-        // Overlay
-        const overlay = document.createElement('div')
-        overlay.className = 'absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-2 flex flex-col justify-end'
-
-        const titleP = document.createElement('p')
-        titleP.className = 'text-white text-xs font-bold truncate'
-        titleP.textContent = viewModel.album
-        overlay.appendChild(titleP)
-
-        const yearP = document.createElement('p')
-        yearP.className = 'text-gray-400 text-[10px]'
-        yearP.textContent = viewModel.year || 'N/A'
-        overlay.appendChild(yearP)
-
-        cardDiv.appendChild(overlay)
-
-        // Selection Checkmark
-        if (isSelected) {
-          const checkDiv = document.createElement('div')
-          checkDiv.className = 'absolute top-2 right-2 bg-orange-500 text-white rounded-full p-1 shadow-lg animate-in zoom-in'
-          checkDiv.innerHTML = getIcon('Check', 'w-3 h-3') // Trusted SVG
-          cardDiv.appendChild(checkDiv)
-        }
-
-        fragment.appendChild(cardDiv)
-      })
-
-      grid.appendChild(fragment)
+      this.currentDiscography = albums;
+      // Initial render with default filters
+      this.renderDiscographyGrid(albums, this.discographyToolbar.activeFilters);
 
     } catch (err) {
       console.error(err)
-      grid.innerHTML = `<div class="col-span-full text-center text-red-400">Error loading albums</div>`
+      grid.innerHTML = `<div class="col-span-full text-center text-red-400">Error loading albums: ${err.message}</div>`
     }
+  }
+
+  renderDiscographyGrid(albums, filters) {
+    const grid = this.$('#artistResultsGrid')
+    if (!grid) return;
+
+    // Apply Filters
+    // Note: EditionFilter logic for 'grouped' albums might need tweaking in service,
+    // strictly speaking filters should apply to variants inside groups too.
+    // For now, let's assume simple filtering.
+
+    // We filter the RAW view models (or groups)
+    // Since 'EditionFilter' expects flat list usually, but we have groups.
+    // Let's filter the groups based on their contents? 
+    // Actually, standard EditionFilter in ARCH-4 expects 'raw albums'.
+    // But we have mapped objects. 
+    // Reuse logic locally or in service.
+
+    // Local Filter Logic for Groups
+    const visible = albums.filter(group => {
+      // 1. Type Filter (Album, Single, etc)
+      if (filters.types.length > 0 && !filters.types.includes(group.type)) return false;
+
+      // 2. Edition Filter (Standard, Deluxe, Remaster)
+      // If ANY variant in the group matches the enabled editions, show the group.
+      // (The group might be "Led Zeppelin IV", containing "Remaster" and "Deluxe")
+      if (filters.editions && filters.editions.length > 0) {
+        const variants = group.variants || [group];
+        const hasMatchingVariant = variants.some(v => {
+          const title = v.title.toLowerCase();
+          const isDeluxe = title.includes('deluxe') || title.includes('expanded') || title.includes('edition') || title.includes('bonus');
+          const isLive = title.includes('live') || title.includes('concert');
+          const isRemaster = title.includes('remaster');
+          const isStandard = !isDeluxe && !isLive; // Simple standard definition
+
+          if (filters.editions.includes('standard') && isStandard) return true;
+          if (filters.editions.includes('deluxe') && isDeluxe) return true;
+          if (filters.editions.includes('remaster') && isRemaster) return true;
+
+          return false;
+        });
+
+        if (!hasMatchingVariant) return false;
+      }
+
+      return true;
+    });
+
+    grid.innerHTML = '' // Clear
+    const fragment = document.createDocumentFragment()
+
+    visible.forEach(group => {
+      const isSelected = this.selectedAlbums.some(a => a.id === group.id)
+
+      // Wrapper
+      const cardDiv = document.createElement('div')
+      cardDiv.className = `artist-album-card cursor-pointer group relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${isSelected ? 'border-orange-500 shadow-[0_0_15px_rgba(255,85,0,0.5)]' : 'border-transparent hover:border-white/20'}`
+      // Set data attributes
+      cardDiv.dataset.id = group.id
+      cardDiv.dataset.json = encodeURIComponent(JSON.stringify(group))
+
+      // Image
+      if (group.coverUrl) {
+        const img = document.createElement('img')
+        img.src = group.coverUrl
+        img.className = `w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all ${isSelected ? 'opacity-100 scale-105' : ''}`
+        img.loading = 'lazy'
+        cardDiv.appendChild(img)
+      } else {
+        // Fallback
+        cardDiv.innerHTML += `<div class="absolute inset-0 bg-gray-800 flex items-center justify-center">${getIcon('Disc', 'w-12 h-12 text-gray-600')}</div>`
+      }
+
+      // Overlay
+      const overlay = document.createElement('div')
+      overlay.className = 'absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-2 flex flex-col justify-end'
+
+      // Badge for Variants
+      let badgeHtml = '';
+      if (group.variants && group.variants.length > 1) {
+        badgeHtml = `<span class="inline-flex items-center gap-1 bg-surface-light/80 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm mb-1 w-fit">
+                ${getIcon('Layers', 'w-3 h-3')} ${group.variants.length} versions
+             </span>`;
+      }
+
+      overlay.innerHTML = `
+            ${badgeHtml}
+            <p class="text-white text-xs font-bold truncate">${escapeHtml(group.title)}</p>
+            <p class="text-gray-400 text-[10px]">${group.year || 'N/A'}</p>
+        `;
+      cardDiv.appendChild(overlay)
+
+      // Selection Checkmark
+      if (isSelected) {
+        const checkDiv = document.createElement('div')
+        checkDiv.className = 'absolute top-2 right-2 bg-orange-500 text-white rounded-full p-1 shadow-lg animate-in zoom-in'
+        checkDiv.innerHTML = getIcon('Check', 'w-3 h-3')
+        cardDiv.appendChild(checkDiv)
+      }
+
+      fragment.appendChild(cardDiv)
+    })
+
+    grid.appendChild(fragment)
   }
 
   closeArtistResults() {
@@ -538,13 +606,52 @@ export class HomeView extends BaseView {
     if (wrapper) wrapper.classList.remove('opacity-50', 'pointer-events-none')
   }
 
+  handleCardClick(albumGroup, cardEl) {
+    // If it has variants, open Modal.
+    // UNLESS it's already selected? If selected, maybe just deselect the primary?
+    // Let's allow modal to handle "adding" logic always for complex groups.
+
+    if (albumGroup.variants && albumGroup.variants.length > 1) {
+      showVariantPickerModal(albumGroup, (selectedAlbums) => {
+        // Add all selected
+        selectedAlbums.forEach(a => {
+          // Ensure formatting matches 'viewModel' expected by handleAlbumSelect
+          // The service internal format is close enough but let's be sure
+          const item = {
+            id: a.id || a.appleMusicId,
+            album: a.title,
+            artist: a.artist,
+            year: a.year,
+            artworkTemplate: a.raw?.attributes?.artwork?.url // Pass template for loader
+          }
+          this.handleAlbumSelect(item);
+        });
+        // Force refresh of grid checkmarks (lazy way: just re-render grid)
+        this.renderDiscographyGrid(this.currentDiscography, this.discographyToolbar.activeFilters);
+      });
+      return;
+    }
+
+    // Single item logic
+    this.toggleAlbumSelection(albumGroup, cardEl)
+  }
+
   toggleAlbumSelection(album, cardEl) {
-    const index = this.selectedAlbums.findIndex(a => a.id === album.id)
+    // Map service object to internal selectedAlbum object
+    const item = {
+      id: album.id,
+      album: album.title,
+      artist: album.artist,
+      year: album.year,
+      artworkTemplate: album.raw?.attributes?.artwork?.url
+    }
+
+    const index = this.selectedAlbums.findIndex(a => a.id === item.id)
 
     if (index >= 0) {
       // Remove
       this.removeAlbum(index)
-      // Update Card UI locally without re-render entire grid
+      // Visual update
       if (cardEl) {
         cardEl.classList.remove('border-orange-500', 'shadow-[0_0_15px_rgba(255,85,0,0.5)]')
         cardEl.classList.add('border-transparent')
@@ -553,12 +660,11 @@ export class HomeView extends BaseView {
       }
     } else {
       // Add
-      this.handleAlbumSelect(album)
-      // Update Card UI
+      this.handleAlbumSelect(item)
+      // Visual update
       if (cardEl) {
         cardEl.classList.add('border-orange-500', 'shadow-[0_0_15px_rgba(255,85,0,0.5)]')
         cardEl.classList.remove('border-transparent')
-        // Add checkmark if not exists
         if (!cardEl.querySelector('.bg-orange-500')) {
           cardEl.innerHTML += `
                     <div class="absolute top-2 right-2 bg-orange-500 text-white rounded-full p-1 shadow-lg animate-in zoom-in">

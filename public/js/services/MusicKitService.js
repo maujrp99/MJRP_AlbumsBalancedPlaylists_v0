@@ -263,13 +263,37 @@ class MusicKitService {
 
             const artistId = artists[0].id;
 
-            // Then get their albums
-            const albumsResult = await this.music.api.music(
-                `/v1/catalog/${this._getStorefront()}/artists/${artistId}/albums`,
-                { limit: 100 }
-            );
+            // Then get their albums (paginate to get ALL)
+            let allAlbums = [];
+            let offset = 0;
+            const limit = 100;
+            let hasMore = true;
 
-            const albums = albumsResult.data?.data || [];
+            console.log(`[MusicKit] Fetching full discography for ${artistName}...`);
+
+            while (hasMore) {
+                const albumsResult = await this.music.api.music(
+                    `/v1/catalog/${this._getStorefront()}/artists/${artistId}/albums`,
+                    { limit, offset }
+                );
+
+                const page = albumsResult.data?.data || [];
+                allAlbums = allAlbums.concat(page);
+
+                if (page.length < limit) {
+                    hasMore = false;
+                } else {
+                    offset += limit;
+                    // Safety break to prevent infinite loops in massive catalogs (e.g. > 500)
+                    if (offset > 500) {
+                        console.warn('[MusicKit] Reached 500 album safety limit for', artistName);
+                        hasMore = false;
+                    }
+                }
+            }
+
+            console.log(`[MusicKit] Fetched ${allAlbums.length} total albums.`);
+            const albums = allAlbums;
 
             // Map to our format with album type classification
             return albums.map(album => ({
