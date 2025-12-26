@@ -1,11 +1,82 @@
 # Architecture Documentation
 
-**Last Updated**: 2025-12-24
+**Last Updated**: 2025-12-26
 **Workflow**: See `.agent/workflows/architecture_protocol.md`
 
 > **For project overview, features, and deployment info, see:**
 > - [PROJECT_SUMMARY.md](product-management/PROJECT_SUMMARY.md)
 > - [ROADMAP.md](product-management/ROADMAP.md)
+
+---
+
+## Architectural Evolution (Sprint 13-14)
+
+> [!NOTE]
+> This section documents architectural changes made during Sprint 13-14 refactoring.
+> For detailed specs, see `docs/technical/specs/arch-*` files.
+
+### Summary Table
+
+| ID | Name | Status | Description |
+|:---|:-----|:-------|:------------|
+| **ARCH-1** | PlaylistsView Modularization | ✅ Complete | Exploded God Class into Controller + Renderer + DragHandler |
+| **ARCH-2** | Store Pattern Standardization | ✅ Complete | SpotifyEnrichmentStore → Repository pattern |
+| **ARCH-3** | Component Reuse Foundation | ✅ Complete | BaseCard + BatchGroupCard enhancements |
+| **ARCH-4** | Album Search Modularization | 📋 Planned | Extract search logic from SeriesView |
+| **ARCH-5** | Cache Consolidation | ✅ Complete | AlbumCache → CacheManager (IndexedDB) |
+| **ARCH-6** | SeriesView Loading Optimization | 📋 Planned | Store-level caching, unified loading flow |
+
+### ARCH-1: PlaylistsView Modularization
+
+**Problem**: `PlaylistsView.js` was 960+ LOC "God Class" with coupled concerns.
+
+**Solution**: Exploded into:
+- `PlaylistsController.js` - Business logic, state management
+- `PlaylistsGridRenderer.js` - Rendering logic
+- `PlaylistsDragHandler.js` - Drag-and-drop behavior
+
+**Result**: View reduced to ~300 LOC thin orchestrator.
+
+---
+
+### ARCH-2: Store Pattern Standardization
+
+**Problem**: `SpotifyEnrichmentStore` didn't follow Repository pattern.
+
+**Solution**: Created `SpotifyEnrichmentRepository` extending `BaseRepository`.
+
+**Pattern**: All stores now follow:
+```
+Store (runtime state) → Repository (Firestore CRUD)
+```
+
+---
+
+### ARCH-3: Component Reuse Foundation
+
+**Problem**: Low component reuse (5%), duplicate card implementations.
+
+**Solution**:
+- Created `BaseCard` abstract component
+- Enhanced `BatchGroupCard` with collapsible/expandable states
+
+---
+
+### ARCH-5: Cache Consolidation
+
+**Problem**: Two parallel cache systems (AlbumCache + CacheManager), localStorage 5MB limit.
+
+**Solution**:
+- Migrated `AlbumCache` to use `CacheManager` as backend
+- L1: Memory (MemoryCache), L2: IndexedDB (~500MB)
+- Normalized cache keys (lowercase, trimmed)
+- 7-day migration period from localStorage
+
+**Files Changed**:
+- `public/js/cache/albumCache.js` - Refactored to async API
+- `public/js/api/client.js` - Updated to await cache methods
+
+**Spec**: [arch-5-cache-consolidation_spec.md](technical/specs/arch-5-cache-consolidation_spec.md)
 
 ---
 
@@ -296,9 +367,28 @@ Stores manage the application's runtime state and synchronization with Firestore
 
 ## Caching & Performance
 
-- **Level 1 (Memory)**: Instant access during the active session.
-- **Level 2 (In-Browser)**: Persistent cache for album metadata.
-- **Strategy**: Stale-While-Revalidate pattern used for external metadata to ensure snappy transitions.
+> [!NOTE]
+> **ARCH-5 Update (2025-12-26)**: Cache architecture consolidated to use IndexedDB.
+
+### Cache Architecture (Post ARCH-5)
+
+```mermaid
+graph LR
+    API[apiClient] --> AC[AlbumCache<br/>facade]
+    AC --> CM[CacheManager]
+    CM --> L1[(Memory L1)]
+    CM --> L2[(IndexedDB L2)]
+```
+
+| Layer | Storage | Capacity | Persistence |
+|-------|---------|----------|-------------|
+| **L1** | MemoryCache (Map) | ~50MB | Session only |
+| **L2** | IndexedDB | ~500MB | Permanent (7-day TTL) |
+
+### Key Features
+- **Normalized Keys**: `album:artist - title` (lowercase, trimmed)
+- **Migration**: 7-day dual-read from legacy localStorage
+- **Async API**: `await albumCache.get()` / `await albumCache.set()`
 
 ---
 
