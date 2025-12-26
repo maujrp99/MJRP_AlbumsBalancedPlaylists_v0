@@ -1,7 +1,7 @@
 # Plan: ARCH-2 Standardize Stores
 
 **Created**: 2025-12-26  
-**Status**: Draft - Awaiting User Review  
+**Status**: ✅ DONE  
 **Spec**: [arch-2-standardize-stores_spec.md](./arch-2-standardize-stores_spec.md)
 
 ---

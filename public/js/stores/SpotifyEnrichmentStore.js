@@ -1,76 +1,26 @@
 /**
  * SpotifyEnrichmentStore
  * 
- * Firestore-backed store for Spotify enrichment data with:
+ * Firestore-backed store for Spotify enrichment data.
+ * Refactored to use SpotifyEnrichmentRepository (ARCH-2).
+ * 
+ * Features:
  * - Deterministic keys (normalized artist-album)
  * - Lazy cleanup (orphan detection on read)
  * - TTL validation (30-day expiration)
  * - Schema versioning
  * 
- * ============================================================================
- * ⚠️ WORKAROUND: USER-SCOPED STORAGE (Option B)
- * ============================================================================
- * Current implementation uses user-scoped path to work with existing Firestore rules:
- *   users/{userId}/spotify_enrichment/{albumKey}
- * 
- * PRODUCTION TARGET (Option A - Global Collection):
- *   spotify_enrichment/{albumKey}
- * 
- * WHY THIS WORKAROUND?
- * - Global collection requires new Firestore security rules
- * - User-scoped path reuses existing rules (works immediately)
- * 
- * MIGRATION STEPS FOR PROD:
- * 1. Add Firestore rule: match /spotify_enrichment/{albumKey} { allow read, write: if request.auth != null; }
- * 2. Remove getCollectionPath() method
- * 3. Use COLLECTION = 'spotify_enrichment' directly
- * 4. Remove userStore import
- * 
- * See: docs/technical/specs/sprint12-architecture-v3.0/blending-menu/tasks.md
- * ============================================================================
- * 
- * @see docs/technical/specs/sprint12-architecture-v3.0/blending-menu/background-enrichment-spec.md
+ * @see docs/technical/specs/sprint13-tech-debt/arch-2-standardize-stores_plan.md
  */
 
-import { db, auth } from '../firebase-init.js'
-import { doc, getDoc, setDoc, deleteDoc, collection, getDocs } from 'firebase/firestore'
-
-// TARGET: Global collection 'spotify_enrichment'
-const COLLECTION_NAME = 'spotify_enrichment'
-const CURRENT_SCHEMA_VERSION = 1
-const MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000 // 30 days
+import { db } from '../firebase-init.js'
+import { SpotifyEnrichmentRepository } from '../repositories/SpotifyEnrichmentRepository.js'
+import { CacheManager } from '../cache/CacheManager.js'
 
 class SpotifyEnrichmentStore {
-
-    /**
-     * Get the global collection path.
-     * 
-     * TARGET (Option A - Prod): Global collection:
-     *   spotify_enrichment/{albumKey}
-     * 
-     * @returns {string} Collection path
-     */
-    getCollectionPath() {
-        return COLLECTION_NAME
-    }
-
-    /**
-     * Generate a deterministic key from artist and album names.
-     * This ensures the same album always maps to the same document.
-     * 
-     * @param {string} artist - Artist name
-     * @param {string} album - Album title
-     * @returns {string} Normalized key
-     */
-    normalizeKey(artist, album) {
-        return `${artist}-${album}`
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-            .replace(/[^a-z0-9-]/g, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '')
-            .substring(0, 100) // Firestore ID limit safety
+    constructor() {
+        const cache = new CacheManager()
+        this.repository = new SpotifyEnrichmentRepository(db, cache)
     }
 
     /**
@@ -84,69 +34,35 @@ class SpotifyEnrichmentStore {
      * @returns {Promise<Object|null>} Enrichment data or null
      */
     async get(artist, album, albumExistsCheck = null) {
-        const collectionPath = this.getCollectionPath()
-        if (!collectionPath) return null
-
-        const key = this.normalizeKey(artist, album)
-
         try {
-            const docRef = doc(db, collectionPath, key)
-            const snapshot = await getDoc(docRef)
+            const data = await this.repository.getByArtistAlbum(artist, album)
 
-            if (!snapshot.exists()) {
+            // Validation: Check TTL and schema
+            if (!data || !this.repository.isValid(data)) {
+                if (data) {
+                    const key = this.repository.normalizeKey(artist, album)
+                    console.log(`[EnrichmentStore] Stale data, needs refresh: ${key}`)
+                }
                 return null
             }
 
-            const data = snapshot.data()
-
-            // Validation 1: Check TTL and schema
-            if (!this.isValid(data)) {
-                console.log(`[EnrichmentStore] Stale data, needs refresh: ${key}`)
-                return null
-            }
-
-            // Validation 2: Check if source album still exists (lazy cleanup)
+            // Validation: Check if source album still exists (lazy cleanup)
             if (albumExistsCheck && typeof albumExistsCheck === 'function') {
                 const exists = await albumExistsCheck(artist, album)
                 if (!exists) {
+                    const key = this.repository.normalizeKey(artist, album)
                     console.log(`[EnrichmentStore] Orphan cleanup: ${key}`)
-                    await deleteDoc(docRef)
+                    await this.repository.delete(key)
                     return null
                 }
             }
 
             return data
         } catch (error) {
+            const key = this.repository.normalizeKey(artist, album)
             console.error(`[EnrichmentStore] Error getting enrichment for ${key}:`, error)
             return null
         }
-    }
-
-    /**
-     * Validate enrichment data.
-     * 
-     * @param {Object} data - Enrichment data from Firestore
-     * @returns {boolean} True if valid, false if expired or wrong schema
-     */
-    isValid(data) {
-        if (!data) return false
-
-        // Check TTL
-        if (data.enrichedAt && Date.now() - data.enrichedAt > MAX_AGE_MS) {
-            return false
-        }
-
-        // Check schema version
-        if (data.schemaVersion !== CURRENT_SCHEMA_VERSION) {
-            return false
-        }
-
-        // Check required fields
-        if (!data.spotifyId) {
-            return false
-        }
-
-        return true
     }
 
     /**
@@ -158,25 +74,12 @@ class SpotifyEnrichmentStore {
      * @returns {Promise<void>}
      */
     async save(artist, album, enrichmentData) {
-        const collectionPath = this.getCollectionPath()
-        if (!collectionPath) {
-            throw new Error('No authenticated user - cannot save enrichment')
-        }
-
-        const key = this.normalizeKey(artist, album)
-
         try {
-            const docRef = doc(db, collectionPath, key)
-            await setDoc(docRef, {
-                ...enrichmentData,
-                artist,
-                album,
-                enrichedAt: Date.now(),
-                schemaVersion: CURRENT_SCHEMA_VERSION
-            })
-
+            await this.repository.saveEnrichment(artist, album, enrichmentData)
+            const key = this.repository.normalizeKey(artist, album)
             console.log(`[EnrichmentStore] Saved enrichment: ${key}`)
         } catch (error) {
+            const key = this.repository.normalizeKey(artist, album)
             console.error(`[EnrichmentStore] Error saving enrichment for ${key}:`, error)
             throw error
         }
@@ -202,37 +105,36 @@ class SpotifyEnrichmentStore {
      * @returns {Promise<void>}
      */
     async delete(artist, album) {
-        const collectionPath = this.getCollectionPath()
-        if (!collectionPath) return
-
-        const key = this.normalizeKey(artist, album)
-
         try {
-            const docRef = doc(db, collectionPath, key)
-            await deleteDoc(docRef)
+            const key = this.repository.normalizeKey(artist, album)
+            await this.repository.delete(key)
             console.log(`[EnrichmentStore] Deleted enrichment: ${key}`)
         } catch (error) {
+            const key = this.repository.normalizeKey(artist, album)
             console.error(`[EnrichmentStore] Error deleting enrichment for ${key}:`, error)
         }
     }
 
     /**
-     * Get count of all enrichments for current user (for stats/debugging).
+     * Get count of all enrichments (for stats/debugging).
      * 
      * @returns {Promise<number>} Total count
      */
     async getCount() {
-        const collectionPath = this.getCollectionPath()
-        if (!collectionPath) return 0
-
         try {
-            const collectionRef = collection(db, collectionPath)
-            const snapshot = await getDocs(collectionRef)
-            return snapshot.size
+            return await this.repository.count()
         } catch (error) {
             console.error('[EnrichmentStore] Error getting count:', error)
             return 0
         }
+    }
+
+    /**
+     * Legacy method - kept for backward compatibility.
+     * @deprecated Use repository.normalizeKey() instead
+     */
+    normalizeKey(artist, album) {
+        return this.repository.normalizeKey(artist, album)
     }
 }
 

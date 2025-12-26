@@ -296,7 +296,8 @@ export class SavedPlaylistsView extends BaseView {
 
         // Event Listeners
         this.on(document.getElementById('app'), 'click', (e) => {
-            const btn = e.target.closest('button[data-action]') || e.target.closest('[data-action="view-playlist"]')
+            // Match buttons and divs with data-action (for toggles)
+            const btn = e.target.closest('[data-action]')
             if (!btn) return
 
             const action = btn.dataset.action
@@ -379,6 +380,51 @@ export class SavedPlaylistsView extends BaseView {
                 const batchName = btn.dataset.batchName
                 const count = btn.dataset.count
                 this.handleDeleteBatch(seriesId, batchName, count)
+            }
+
+            // Toggle collapse/expand for batch group card header
+            // Skip if clicked on a button (which has its own action)
+            if (action === 'toggle-collapse') {
+                if (e.target.closest('button')) return // Don't toggle if clicking a button
+
+                const card = btn.closest('.batch-group-card')
+                if (card) {
+                    const isCollapsed = card.dataset.collapsed === 'true'
+                    card.dataset.collapsed = !isCollapsed
+
+                    // Toggle playlist list visibility
+                    const playlistsList = card.querySelector('.batch-playlists')
+                    if (playlistsList) {
+                        playlistsList.classList.toggle('hidden')
+                    }
+
+                    // Rotate chevron icon
+                    const icon = card.querySelector('.collapse-icon')
+                    if (icon) {
+                        icon.style.transform = isCollapsed ? 'rotate(90deg)' : 'rotate(0deg)'
+                    }
+                }
+            }
+
+            // Toggle expand/collapse for individual playlist tracks
+            // Skip if clicked on a button (which has its own action)
+            if (action === 'toggle-playlist-tracks') {
+                if (e.target.closest('button')) return // Don't toggle if clicking a button
+
+                const wrapper = btn.closest('.playlist-row-wrapper')
+                if (wrapper) {
+                    const tracksList = wrapper.querySelector('.playlist-tracks-list')
+                    const icon = wrapper.querySelector('.expand-icon')
+
+                    if (tracksList) {
+                        const isHidden = tracksList.classList.contains('hidden')
+                        tracksList.classList.toggle('hidden')
+
+                        if (icon) {
+                            icon.style.transform = isHidden ? 'rotate(90deg)' : 'rotate(0deg)'
+                        }
+                    }
+                }
             }
         })
     }
