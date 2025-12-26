@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-19 23:00
+**Last Updated**: 2025-12-25 22:30
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -18,6 +18,8 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
+| #93 | **Reconfigure Panel Ignores Ingredients (Edit Mode)** | 🟠 HIGH | [Details](#issue-93) |
+| #92 | **Album Cache/Display Architectural Flaw** | 🔴 CRITICAL | [Details](#issue-92) |
 | #86 | Modal Display Issues (999/0:00/Missing Ratings) | ✅ RESOLVED | [Details](#issue-86) |
 | #82 | TopNav Highlight Bug | ✅ RESOLVED | [Details](#issue-82-topnav-highlight-bug) |
 | #81 | Inventory Double-Add Bug | ✅ RESOLVED | [Details](#issue-81-inventory-double-add-bug) |
@@ -35,6 +37,159 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #93: Reconfigure Panel Ignores Ingredients (Edit Mode)
+**Status**: 🟠 **HIGH - NEEDS INVESTIGATION**
+**Date**: 2025-12-25 22:43
+**Severity**: HIGH (Feature Broken)
+**Type**: Logic / State
+**Component**: `RegeneratePanel`, `PlaylistsView`, `PlaylistsController`
+
+#### Problem Summary
+When clicking "Edit" on a saved playlist and using the **Reconfigure panel** to change blend ingredients/settings, the changes are NOT applied when clicking "Regenerate Playlists".
+
+#### Symptoms
+1. Toggle Reconfigure panel → ✅ Works (expands/collapses)
+2. Change ingredients (min tracks, ranking strategy, etc.) → Visual change appears
+3. Click "Regenerate Playlists" → ❌ Old settings used, new ingredients ignored
+
+#### Suspected Root Cause
+The `PlaylistsView` or `PlaylistsController` may not be reading the current state from `RegeneratePanel` when calling `handleGenerate()`. Possible issues:
+1. `RegeneratePanel.getConfig()` not called before generation
+2. `PlaylistsController.regenerate()` uses cached config instead of fresh values
+3. State not propagated from `RegeneratePanel` → `PlaylistsView` → `PlaylistsController`
+
+#### Related Issues
+- **Issue #89** (RESOLVED): Similar issue where config was reset to defaults - fixed by preserving `this.currentConfig`
+- **Issue #92**: May be compounded by wrong albums being loaded (albums not in series included in generation)
+
+#### Investigation Plan
+1. Add console.log in `RegeneratePanel.getConfig()` to verify values
+2. Log `PlaylistsView.currentConfig` before calling `handleGenerate()`
+3. Verify `PlaylistsController.regenerate()` receives correct config
+4. Check if `playlistsStore.mode === 'EDITING'` affects config handling
+
+#### Files to Check
+- `public/js/components/playlists/RegeneratePanel.js` - `getConfig()` method
+- `public/js/views/PlaylistsView.js` - `handleRegenerate()` event handler
+- `public/js/controllers/PlaylistsController.js` - `regenerate()` method
+
+---
+
+### Issue #92: Album Cache/Display Architectural Flaw
+**Status**: 🔴 **CRITICAL - REQUIRES ARCHITECTURAL FIX**
+**Date**: 2025-12-25 22:30
+**Severity**: CRITICAL (Data Corruption + UI Flaw)
+**Type**: Architecture / State Management
+**Component**: `apiClient`, `albumCache`, `albumsStore`, `SeriesView`, `SeriesController`
+
+#### Problem Summary
+When viewing albums in Single Series mode, **wrong albums appear** (e.g., "Physical Graffiti" and "Mothership" appear in "Robert Plant 00-10s" series, which should only have 7 albums).
+
+Additionally, **Series Filter dropdown** doesn't properly update when navigating via URL with `?seriesId=X`.
+
+#### Symptoms
+
+| Filter Mode | Expected | Actual |
+|-------------|----------|--------|
+| All Series → Group "Robert Plant 00-10s" | 7 albums | ✅ 7 albums |
+| URL `?seriesId=4pYonlM3ruTNV8H9auMM` | 7 albums, filter shows series name | ❌ 9 albums, filter shows "All Series" |
+| Click series dropdown again | 7 albums | ❌ Still 9 albums (with Mothership, Physical Graffiti) |
+
+#### Root Cause Analysis (ARCHITECTURAL)
+
+**3 interlinked architectural violations:**
+
+1. **Cache Key vs Album Title Mismatch**
+   ```
+   Query: "Jimmy Page & Robert Plant - No Quarter"
+   Apple Music Returns: "Physical Graffiti (Remastered)"
+   Cache Key Used: "Jimmy Page & Robert Plant - No Quarter"
+   Album Title Stored: "Physical Graffiti (Remastered)"
+   ```
+   The cache stores the WRONG album under the ORIGINAL query as key. When the series loads albums by query, it gets the wrong album data.
+
+2. **Apple Music Search Artist Format Mismatch**
+   - Query: `"Robert Plant & Jimmy Page - Walking Into Clarksdale"`
+   - Apple Music knows it as: `"Page and Plant - Walking Into Clarksdale"`
+   - Search returns Led Zeppelin albums (Mothership, Physical Graffiti) because artist doesn't match
+
+3. **AlbumsStore Cross-Series Pollution**
+   - `albumsStore` is a GLOBAL singleton that accumulates albums from ALL series
+   - When loading a single series, albums from ALL previous loads remain in store
+   - View/Filter logic doesn't properly isolate by series
+
+#### Evidence (Console Logs)
+
+```
+[APIClient] Searching Apple Music: Robert Plant & Jimmy Page - Walking Into Clarksdale
+[APIClient] Selected from 5 results: "Mothership (Remastered)" (1052497413)
+💾 Cached: Robert Plant & Jimmy Page - Walking Into Clarksdale
+
+[AlbumSeriesStore] Could not find matching query for: Physical Graffiti (Remastered)
+[SeriesEventHandler] Failed to remove album: Error: Could not find album query in series
+```
+
+#### Why Patches Won't Work
+
+Multiple patch attempts were made and reverted:
+1. **Similarity Threshold**: Added <35% similarity rejection → Would break search for legitimate artist name variations
+2. **Album-Only Fallback Search**: Tried searching by album name only → Other albums with same name could conflict
+3. **Force Clear Cache**: Would cause excessive API calls and rate limiting
+
+#### Required Architectural Changes
+
+> [!IMPORTANT]
+> **This requires Sprint-level architectural work, not a quick fix.**
+
+**1. Cache Key Normalization**
+- Cache MUST validate that the returned album title matches the query
+- If mismatch > threshold, DON'T cache, return error to caller
+- OR: Use a composite key: `{artist}_{albumTitle}` from the RESULT, not the query
+
+**2. Album Identity Model**
+- Albums need a **stable identity** that isn't just the cache key
+- Consider: `{ originalQuery, actualTitle, actualArtist, appleId, spotifyId }`
+- Track which query produced which album for debugging
+
+**3. Series-Scoped Album Filtering**
+- `albumsStore.getAlbumsForSeries(seriesId)` must ONLY return albums whose queries match the series
+- Current pattern adds ALL fetched albums to a global pool
+
+**4. SeriesView/Controller State Reset**
+- When navigating to single series, explicitly clear albums not in that series
+- Filter dropdown must sync with URL on mount
+
+#### Related Architectural Debt
+
+| Item | Description |
+|------|-------------|
+| ARCH-2 | Standardize Stores (albumsStore pattern inconsistent) |
+| DEBT-1 | Split API Client (MusicKitService + EnrichmentService) |
+| #75 | Data Flow Architecture incomplete documentation |
+
+#### Files Involved
+
+| File | Role | Issue |
+|------|------|-------|
+| `public/js/api/client.js` | Fetches albums, caches with query key | Uses query as cache key when returned album differs |
+| `public/js/cache/albumCache.js` | L1/L2 cache for albums | No validation of key vs stored content |
+| `public/js/stores/albums.js` | Global album store | Accumulates albums from all series without isolation |
+| `public/js/services/MusicKitService.js` | Apple Music search | Doesn't handle artist name variations (e.g., "Page and Plant") |
+| `public/js/views/SeriesView.js` | Series filter dropdown | Doesn't sync filter state with URL `seriesId` on mount |
+| `public/js/controllers/SeriesController.js` | Loads albums for series | Uses global store, doesn't isolate by series |
+
+#### Recommended Sprint Scope
+
+**Sprint 14 or 15** - Album Data Pipeline Refactor:
+- [ ] Define Album Identity Model with stable IDs
+- [ ] Refactor albumCache to use result-based keys
+- [ ] Add cache validation (query vs result matching)
+- [ ] Refactor albumsStore to be series-scoped
+- [ ] Fix SeriesView filter sync with URL params
+- [ ] Add Apple Music artist name normalization/alternatives
+
+---
 
 ### Issue #91: Edit Playlist Delete Button Unresponsive
 **Status**: ✅ **RESOLVED**

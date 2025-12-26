@@ -1,6 +1,6 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-24
+**Last Updated**: 2025-12-25
 **Current Version**: v3.0.0
 **Current Sprint**: Sprint 13: Tech Debt & V3 Architecture
 
@@ -12,22 +12,25 @@
 **Goal**: Resolve critical persistence risks (Atomic Saves) and Execute V3 Architecture Plan (Modularization).
 **Duration**: 2 weeks
 **Priority**: Critical
-**Status**: 🔄 **IN PROGRESS**
+**Status**: 🔄 **IN PROGRESS** (Partial Complete)
 **Branch**: `sprint-13`
 
-#### Part A: Critical Technical Debt (Security & Persistence)
-- [ ] **CRIT-1: Atomic Playlist Saves**
-  - Implement `WriteBatch` to prevent partial data loss during playlist creation.
+#### Part A: Critical Technical Debt (Security & Persistence) ✅ COMPLETE
+- [x] **CRIT-1: Atomic Playlist Saves**
+  - Implemented `WriteBatch` in `PlaylistsStore.runBatchSave()`.
   - Spec: `crit-1-atomic-saves_spec.md`
-- [ ] **CRIT-2: Security Hardening (innerHTML)**
-  -  Remove `innerHTML` usage across the codebase to prevent XSS.
+- [x] **CRIT-2: Security Hardening (innerHTML)**
+  - Replaced `innerHTML` with `createElement`/`textContent` in `HomeView`, `SavedPlaylistsView`, `SeriesModals`.
   - Spec: `crit-2-innerhtml_spec.md`
+- [x] **CRIT-4: Firestore Rules**
+  - Added rules for `users/{userId}/series/{seriesId}/albums` path.
 - [x] **Production Hotfix: Album Persistence**
   - Fixed `AlbumsStore` hydration bug (`updateDoc` -> `setDoc`).
 
-#### Part B: Architecture V3 (Modularization)
-- [ ] **ARCH-1: PlaylistsView Refactor**
-  - Break down the God-Class into `DragHandler`, `GridRenderer`, `Controller`.
+#### Part B: Architecture V3 (Modularization) - PARTIAL
+- [x] **ARCH-1: PlaylistsView Refactor**
+  - Created `PlaylistsController.js`, `PlaylistsGridRenderer.js`, `PlaylistsDragHandler.js`.
+  - `PlaylistsView` reduced to thin orchestrator.
   - Spec: `arch-1-playlistsview_spec.md`
 - [ ] **ARCH-2: Standardize Stores**
   - Refactor `SpotifyEnrichmentStore` to use `BaseRepository` pattern.
@@ -36,9 +39,13 @@
   - Implement `BaseCard` to reduce code duplication.
   - Spec: `arch-3-basecard_spec.md`
 
-#### Part C: Documentation & Audit
-- [ ] **Documentation Audit**: Consolidate reports, archive old specs, update Roadmap.
+#### Part C: Documentation & Audit - PARTIAL
+- [x] **Documentation Audit**: Consolidated reports, archived old specs, updated codebase_analysis.md.
 - [ ] **Onboarding Protocol**: Verify `onboarding_protocol.md` reflects V3 architecture.
+
+#### Blockers Discovered During Verification
+- 🟠 **[#93] Reconfigure Panel Ignores Ingredients**: Panel toggle works but config not applied on regenerate. See [DEBUG_LOG #93](debug/DEBUG_LOG.md#issue-93).
+- 🔴 **[CRIT-5/#92] Album Cache/Display Architectural Flaw**: Wrong albums appearing in series due to cache key mismatch. See [DEBUG_LOG #92](debug/DEBUG_LOG.md#issue-92).
 
 ---
 

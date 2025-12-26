@@ -174,23 +174,39 @@ export class PlaylistsView extends BaseView {
       })
     }
 
-    // Re-generate Panel Listeners (Delegated or specific?)
-    // The RegeneratePanel typically attaches its own listeners or we delegate.
-    // Wait, RegeneratePanel uses `Generate` button too inside it.
-    // We need to ensure we capture that. 
-    // If RegeneratePanel renders a button with id="regenerateActionBtn" (check component),
-    // we should listen to it. 
-    // Actually, RegeneratePanel.js usually attaches listeners if we call `RegeneratePanel.mount()`.
-    if (this.container.querySelector('#regeneratePanelMount')) {
-      // We might need to call a static mount, or simple delegation event
-      // Let's assume standard event bubbling for "click" on button inside panel
-      // NOTE: Existing RegeneratePanel might need `mount` call. 
-      // Checking previous PlaylistsView, it called `RegeneratePanel.mount()`.
-      // Ideally we move that logic to Renderer or Controller, but View handles DOM.
-      // Let's call it here.
+    // Toggle Regenerate Panel (Collapse/Expand)
+    const toggleBtn = this.container.querySelector('[data-action="toggle-regenerate-panel"]')
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        const panel = this.container.querySelector('.regenerate-panel')
+        const content = panel?.querySelector('.regenerate-content')
+        const chevron = panel?.querySelector('.regenerate-chevron')
+
+        if (content) {
+          content.classList.toggle('hidden')
+          chevron?.classList.toggle('rotate-180')
+          console.log('[PlaylistsView] Regenerate panel toggled')
+        }
+      })
+    }
+
+    // Mount RegeneratePanel components (Flavor, Ingredients)
+    const regeneratePanel = this.container.querySelector('.regenerate-panel')
+    if (regeneratePanel) {
       import('../components/playlists/RegeneratePanel.js').then(({ RegeneratePanel }) => {
         RegeneratePanel.mount()
       })
+
+      // Regenerate Button inside panel
+      const regenerateBtn = this.container.querySelector('[data-action="regenerate-playlists"]')
+      if (regenerateBtn) {
+        regenerateBtn.addEventListener('click', () => {
+          import('../components/playlists/RegeneratePanel.js').then(({ RegeneratePanel }) => {
+            const config = RegeneratePanel.getConfig()
+            this.controller.handleGenerate(config)
+          })
+        })
+      }
     }
 
     // Export/Save Listeners

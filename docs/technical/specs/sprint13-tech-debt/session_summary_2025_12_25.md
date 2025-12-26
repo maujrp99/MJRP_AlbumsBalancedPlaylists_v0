@@ -32,9 +32,9 @@
 - **Hidden Batch Name:** The Batch Name input was previously restricted to Edit Mode only. **Fixed.**
 - **Incorrect Playlist Count:** The Regenerate Panel was showing "0 playlists". **Fixed.**
 - **Apple Music Auth Loop:** Fixed a bug where export functions were called immediately on render, triggering auth flow in Edit Mode.
-- **Disabled Reconfiguration in Edit Mode:** Fixed logic to ensure albums are loaded via `OptimizedAlbumLoader` when entering Edit Mode directly, enabling the "Regenerate" panel.
-- **Apple Music Auth Loop:** Fixed a bug where export functions were called immediately on render, triggering auth flow in Edit Mode.
-- **Disabled Reconfiguration in Edit Mode:** Fixed logic to ensure albums are loaded via `OptimizedAlbumLoader` when entering Edit Mode directly, enabling the "Regenerate" panel.
+- **Disabled Reconfiguration in Edit Mode:** Fixed logic to ensure albums are loaded via `apiClient.fetchMultipleAlbums()` (the V3 API pipeline pattern) when entering Edit Mode directly. This uses the `albumQueries` from the series to fetch full album data with tracks from the backend API.
+
+> **Note**: `OptimizedAlbumLoader` is for search/autocomplete only (no track data). Full album loading uses `apiClient.fetchMultipleAlbums()` which calls Backend `/api/generate`.
 
 ## 3. Pending Actions (Next Session)
 - **Final Verification:** Resume the browser verification test.

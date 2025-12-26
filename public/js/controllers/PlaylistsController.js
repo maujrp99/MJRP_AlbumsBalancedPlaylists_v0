@@ -110,22 +110,60 @@ export class PlaylistsController {
     }
 
     async loadAlbumsForSeries(seriesId) {
-        if (albumsStore.getAlbums().length > 0) return
+        // Check if albums are already cached
+        if (albumsStore.getAlbums().length > 0) {
+            console.log('[PlaylistsController] Albums already in memory, skipping load')
+            return
+        }
 
-        console.log('[PlaylistsController] Albums not in memory. Fetching for series:', seriesId)
+        console.log('[PlaylistsController] Albums not in memory. Loading via API pipeline for series:', seriesId)
 
         try {
-            // Trigger background load
-            // We authorize the view to update when albums arrive by subscribing in View, 
-            // or we force an update here if needed.
-            // Using dynamic import to avoid circular dep if any, or standard import.
-            // Using the service directly:
-            const { optimizedAlbumLoader } = await import('../services/OptimizedAlbumLoader.js')
+            // V3 Architecture: Load albums via API pipeline (same as SeriesController)
+            // 1. Get album queries from the active series
+            let activeSeries = albumSeriesStore.getActiveSeries()
 
-            // This usually updates albumsStore internally
-            await optimizedAlbumLoader.loadSeries(seriesId)
+            if (!activeSeries || activeSeries.id !== seriesId) {
+                // Ensure series is set
+                await albumSeriesStore.loadFromFirestore()
+                albumSeriesStore.setActiveSeries(seriesId)
+                activeSeries = albumSeriesStore.getActiveSeries()
+            }
 
-            console.log('[PlaylistsController] Albums loaded for edit context.')
+            if (!activeSeries || !activeSeries.albumQueries || activeSeries.albumQueries.length === 0) {
+                console.warn('[PlaylistsController] No album queries found for series. Regeneration will be disabled.')
+                toast.warning('No album data available. Visit Music Series to load albums first.')
+                return
+            }
+
+            // 2. Set context for ghost prevention
+            albumsStore.setActiveAlbumSeriesId(seriesId)
+            albumsStore.reset(true)
+
+            // 3. Load via API (fetchMultipleAlbums)
+            const { apiClient } = await import('../api/client.js')
+
+            const { results, errors } = await apiClient.fetchMultipleAlbums(
+                activeSeries.albumQueries,
+                (current, total, result) => {
+                    if (result.status === 'success' && result.album) {
+                        // Add album to store (same pattern as SeriesController.hydrateAndAddAlbum)
+                        albumsStore.addAlbumToSeries(seriesId, result.album)
+                    }
+                },
+                false // skipCache
+            )
+
+            if (errors.length > 0) {
+                console.warn(`[PlaylistsController] ${errors.length} albums failed to load`)
+            }
+
+            const loadedCount = albumsStore.getAlbums().length
+            console.log(`[PlaylistsController] Albums loaded via API for edit context: ${loadedCount} albums`)
+
+            if (loadedCount === 0) {
+                toast.warning('Could not load albums. Visit Music Series first to ensure data is available.')
+            }
         } catch (err) {
             console.error('[PlaylistsController] Failed to load albums:', err)
             toast.error('Could not load albums for reconfiguration')
@@ -215,6 +253,26 @@ export class PlaylistsController {
             // Logic mostly copied from _savePlaylistsToFirestore but cleaner
             const { db, cacheManager, auth } = await import('../app.js')
             const userId = auth.currentUser?.uid || 'anonymous-user'
+
+            // Fix: Ensure we have a Series ID. 
+            // activeSeries might be null if we reloaded the page in Edit Mode without visiting Albums view first.
+            // But we should have it in playlistsStore.seriesId from initialize()
+            let seriesId = albumSeriesStore.getActiveSeries()?.id
+
+            if (!seriesId) {
+                // Fallback to store context
+                seriesId = playlistsStore.seriesId
+                if (seriesId) {
+                    // Try to restore active series in store if missing (optional but good for consistency)
+                    const { SeriesRepository } = await import('../repositories/SeriesRepository.js')
+                    const seriesRepo = new SeriesRepository(db, cacheManager, userId)
+                    const series = await seriesRepo.findById(seriesId)
+                    if (series) albumSeriesStore.setActiveSeries(series.id)
+                }
+            }
+
+            if (!seriesId) throw new Error('No Series Context found for saving.')
+
             const activeSeries = albumSeriesStore.getActiveSeries()
 
             // 1. Save Series Parent (Upsert)
@@ -229,7 +287,7 @@ export class PlaylistsController {
 
             // 2. Handle Overwrite (Delete Old)
             const { PlaylistRepository } = await import('../repositories/PlaylistRepository.js')
-            const repo = new PlaylistRepository(db, cacheManager, userId, activeSeries?.id)
+            const repo = new PlaylistRepository(db, cacheManager, userId, seriesId)
 
             // If overwriting (Edit Mode OR explicit overwrite confirmed in Create Mode)
             // Note: Create Mode overwrite check happens in View before calling this with isOverwrite=true usually.

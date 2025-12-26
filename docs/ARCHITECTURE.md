@@ -75,6 +75,7 @@ graph TB
 - **[Debug Log](debug/DEBUG_LOG.md)**: Active debugging sessions and historical resolutions.
 - **[Component Reference](technical/component_reference.md)**: Detailed API and file-level documentation.
 - **[Data Flow Architecture](technical/data_flow_architecture.md)**: Sequence diagrams and technical lifecycle flows.
+- **[Codebase Analysis](technical/codebase_analysis.md)**: Complete architecture map with data flow diagrams (2025-12-25).
 
 ---
 
