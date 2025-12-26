@@ -260,20 +260,12 @@ export default class SeriesView extends BaseView {
 
         this.components.modals = new SeriesModals({
             onSeriesUpdated: (seriesId) => {
-                // ARCH-6: Invalidate store cache to prevent stale data
-                albumsStore.clearAlbumSeries(seriesId);
-                albumsStore.clearAlbumSeries('ALL_SERIES_VIEW'); // Also invalidate "all" view
-
                 this.updateHeader();
                 if (this.controller) {
                     this.controller.loadScope(this.currentScope, this.targetSeriesId, true);
                 }
             },
             onSeriesDeleted: (seriesId) => {
-                // ARCH-6: Invalidate store cache
-                albumsStore.clearAlbumSeries(seriesId);
-                albumsStore.clearAlbumSeries('ALL_SERIES_VIEW');
-
                 if (this.targetSeriesId === seriesId) {
                     router.navigate('/albums');
                 } else {
@@ -314,22 +306,12 @@ export default class SeriesView extends BaseView {
         this.refreshGrid();
     }
 
-    /**
-     * ARCH-6: Handle series filter change WITHOUT router navigation
-     * Calls loadScope directly for instant update, then updates URL
-     */
     handleSeriesChange(value) {
-        const seriesId = value === 'all' ? null : value;
-        const scopeType = seriesId ? 'SINGLE' : 'ALL';
-
-        // Load directly without router navigation (prevents remount)
-        if (this.controller) {
-            this.controller.loadScope(scopeType, seriesId);
+        if (value === 'all') {
+            router.navigate('/albums');
+        } else {
+            router.navigate(`/albums?seriesId=${value}`);
         }
-
-        // Update URL without triggering navigation
-        const url = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
-        window.history.replaceState({}, '', url);
     }
 
     handleFilter(type, value) {
@@ -475,26 +457,6 @@ export default class SeriesView extends BaseView {
             pageTitle,
             albumCount: albums.length
         });
-    }
-
-    /**
-     * ARCH-6: Update toolbar filter dropdown to match active series
-     * Called when using store cache to keep UI in sync
-     */
-    updateToolbar(data) {
-        const seriesFilter = document.getElementById('seriesFilter');
-        if (!seriesFilter) return;
-
-        // Update dropdown value without triggering change event
-        const newValue = data.activeSeriesId || 'all';
-        if (seriesFilter.value !== newValue) {
-            console.log('[SeriesView] Syncing toolbar filter:', newValue);
-            seriesFilter.value = newValue;
-        }
-
-        // Also update internal scope state
-        this.currentScope = data.activeSeriesId ? 'SINGLE' : 'ALL';
-        this.targetSeriesId = data.activeSeriesId;
     }
 
     // =========================================

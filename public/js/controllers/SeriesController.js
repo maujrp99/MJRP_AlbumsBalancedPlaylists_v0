@@ -84,6 +84,8 @@ export default class SeriesController {
 
         this.state.currentScope = scopeType;
         this.state.targetSeriesId = seriesId;
+        this.state.isLoading = true;
+        this.notifyView('loading', true);
 
         // Update URL without reload
         const newUrl = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
@@ -92,36 +94,12 @@ export default class SeriesController {
         }
 
         try {
-            // Determine store context ID
+            // Reset store context
             const storeContextId = scopeType === 'ALL' ? 'ALL_SERIES_VIEW' : seriesId;
-
-            // ARCH-6: Check store cache BEFORE reset/fetch
-            if (!skipCache && albumsStore.hasAlbumsForSeries(storeContextId)) {
-                console.log('[SeriesController] ✅ Using cached albums from store');
-
-                // Sync albumSeriesStore active series (for toolbar)
-                if (scopeType === 'ALL') {
-                    albumSeriesStore.setActiveSeries(null);
-                } else {
-                    albumSeriesStore.setActiveSeries(seriesId);
-                }
-
-                albumsStore.setActiveAlbumSeriesId(storeContextId);
-                this.notifyView('header', this.getHeaderData());
-                this.notifyView('toolbar', { activeSeriesId: seriesId }); // Sync toolbar
-                this.notifyView('albums', albumsStore.getAlbumsForSeries(storeContextId));
-                this.notifyView('loading', false);
-                this.state.isLoading = false;
-                return;
-            }
-
-            // No cache hit - proceed with loading
-            this.state.isLoading = true;
-            this.notifyView('loading', true);
-
-            // Reset store context (only clears this series, not all)
             albumsStore.setActiveAlbumSeriesId(storeContextId);
-            albumsStore.clearAlbumSeries(storeContextId);
+            albumsStore.reset(true);
+
+            this.notifyView('albums', []);
 
             // Resolve queries to load
             let queriesToLoad = [];
@@ -166,7 +144,6 @@ export default class SeriesController {
 
             // Notify view about header/series change
             this.notifyView('header', this.getHeaderData());
-            this.notifyView('toolbar', { activeSeriesId: seriesId }); // Sync toolbar
 
             // Load albums
             if (queriesToLoad.length > 0) {
@@ -205,7 +182,8 @@ export default class SeriesController {
             albumsStore.setLastLoadedAlbumSeriesId(targetSeries.id);
         }
 
-        // ARCH-6: Don't reset here - already handled in loadScope via clearAlbumSeries
+        albumsStore.reset(true);
+        this.notifyView('albums', []);
 
         this.state.isLoading = true;
         this.state.loadProgress = { current: 0, total: queries.length };
@@ -350,9 +328,6 @@ export default class SeriesController {
                 break;
             case 'header':
                 if (this.view.updateHeader) this.view.updateHeader(data);
-                break;
-            case 'toolbar':
-                if (this.view.updateToolbar) this.view.updateToolbar(data);
                 break;
         }
     }

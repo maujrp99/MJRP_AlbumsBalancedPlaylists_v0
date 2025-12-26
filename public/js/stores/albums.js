@@ -292,18 +292,15 @@ export class AlbumsStore {
     // ========== RESET ==========
 
     /**
- * Reset store to initial state
- * @param {boolean} preserveAlbumSeriesContext - If true, keeps activeAlbumSeriesId AND album cache
- * ARCH-6: Now preserves album cache for navigation-back scenarios
- */
+     * Reset store to initial state
+     * @param {boolean} preserveAlbumSeriesContext - If true, keeps activeAlbumSeriesId but CLEARS ALL albums
+     */
     reset(preserveAlbumSeriesContext = false) {
         const seriesId = preserveAlbumSeriesContext ? this.activeAlbumSeriesId : null
 
-        // ARCH-6: Preserve album cache for navigation back
-        // Only clear if explicitly requested (full reset)
-        if (!preserveAlbumSeriesContext) {
-            this.albumsByAlbumSeriesId.clear()
-        }
+        // ALWAYS clear all albums to prevent ghost albums
+        // The Map will be repopulated with new series' albums
+        this.albumsByAlbumSeriesId.clear()
 
         this.currentAlbum = null
         this.loading = false
