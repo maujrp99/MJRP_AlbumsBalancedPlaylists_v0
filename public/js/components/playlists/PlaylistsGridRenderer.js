@@ -1,6 +1,7 @@
 import { PlaylistGrid } from './PlaylistGrid.js'
 import { RegeneratePanel } from './RegeneratePanel.js'
 import { getIcon } from '../Icons.js'
+import { escapeHtml } from '../../utils/stringUtils.js'
 
 /**
  * PlaylistsGridRenderer
@@ -85,7 +86,7 @@ export class PlaylistsGridRenderer {
                 <input 
                     type="text" 
                     id="batchNameInput" 
-                    value="${currentName || ''}"
+                    value="${escapeHtml(currentName || '')}"
                     class="input input-bordered w-full max-w-md bg-white/5 border-white/10 rounded-lg px-4 py-2"
                     placeholder="Enter batch name (e.g., 'My Beatles Mix')"
                 />

@@ -6,17 +6,7 @@
 
 import { albumLoader } from '../../services/AlbumLoader.js'
 import { getIcon } from '../../components/Icons.js'
-
-/**
- * Escape HTML special characters
- * @param {string} text - Text to escape
- * @returns {string} Escaped text
- */
-export function escapeHtml(text) {
-  const div = document.createElement('div')
-  div.textContent = text || ''
-  return div.innerHTML
-}
+import { escapeHtml } from '../../utils/stringUtils.js'
 
 /**
  * Render loading progress overlay

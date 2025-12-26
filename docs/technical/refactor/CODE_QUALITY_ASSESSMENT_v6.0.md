@@ -7,28 +7,40 @@
 
 ---
 
+## ⚠️ Important: Deprecated Files Excluded
+
+The following files have been deprecated and moved to `public/legacy/`:
+- `AlbumsView_DEPRECATED.js` (1,227 LOC) - Replaced by `SeriesView.js`
+- `EditPlaylistView_DEPRECATED.js` (531 LOC) - Merged into `PlaylistsView.js`
+
+**This assessment only evaluates ACTIVE code.**
+
+---
+
 ## 📊 Executive Scorecard
 
 | Metric Group | Specific Metric | Formula/Definition | Target | **v5.0** | **v6.0 Current** | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Componentization (UI)** | **Density** | Total Components / Total Views | >3.0 | 3.08 | **3.69** | 🟢 Excellent |
+| **Componentization (UI)** | **Density** | Total Components / Total Views | >3.0 | 3.08 | **4.80** | 🟢 Excellent |
 | | **Reusability** | Shared Components / Total Components | >40% | 5.0% | **4.2%** | 🔴 Critical |
 | **Modularization (Logic)** | **Decoupling** | Controllers with 0 DOM refs / Total | 100% | 98% | **100%** | 🟢 Excellent |
-| | **Logic-to-View** | LOC (Controllers+Services) / LOC (Views) | >1.0 | ~0.35 | **0.47** | 🟠 Improving |
-| **Tech Health** | **Safe Sink Ratio** | Files with `innerHTML` violations | 1:0 | 49 files | **50+ files** | 🔴 Critical |
+| | **Logic-to-View** | LOC (Controllers+Services) / LOC (Views) | >1.0 | ~0.35 | **0.73** | � Improving |
+| **Tech Health** | **Safe Sink Ratio** | Files with `innerHTML` violations | 1:0 | 49 files | **~45 files** | 🔴 Critical |
 | | **Async Safety** | API calls with Error Handling | 100% | 95% | **96%** | 🟢 Good |
 
 ### Key Metrics Breakdown
 
 | Category | Count | Total LOC |
 |----------|-------|-----------|
-| Views (primary) | 13 | ~5,266 |
-| Views (modules) | 6 | ~1,013 |
+| Views (primary) | 10 | ~3,884 |
+| Views (modules) | 10 | ~1,219 |
 | Components | 48 | ~4,800+ |
 | Shared Components | 2 | ~200 |
 | Stores | 6 | ~1,662 |
 | Controllers | 4 | ~888 |
 | Services | 9 | ~2,215 |
+
+**Component Density**: 48 components / 10 views = **4.80** ✅
 
 ---
 
@@ -63,11 +75,11 @@
 
 | File Path | Lines | Score | Main Violation | Actionable Fix |
 | :--- | :--- | :--- | :--- | :--- |
-| `public/js/views/AlbumsView.js` | 1,227 | 🔴 1 | **God Class** - Still handles 8+ responsibilities (grid, modals, CRUD, enrichment, filters, search, series, scope). | **Extract AlbumsController**, apply V3 pattern from SeriesView. |
-| `public/js/views/InventoryView.js` | 742 | 🔴 2 | **Monolith** - CRUD + UI + Modals in single file. | Extract `InventoryController` and `InventoryGridRenderer`. |
-| `public/js/views/HomeView.js` | 688 | 🟠 3 | **Mixed Concerns** - Series creation wizard mixed with UI. | Extract `SeriesWizardController`. |
-| `public/js/views/SavedPlaylistsView.js` | 625 | 🟠 4 | **Feature Creep** - Expanded for batch management. | Extract `BatchManager` component. |
-| `public/js/**/*.js` | 50+ files | 🔴 1 | **Security** - innerHTML used for dynamic content. | Global "Operation Safe Text" - textContent or DOMPurify. |
+| `public/js/views/InventoryView.js` | 742 | 🔴 1 | **God Class** - CRUD + UI + Modals in single file. | Extract `InventoryController` and `InventoryGridRenderer`. |
+| `public/js/views/HomeView.js` | 688 | 🟠 2 | **Mixed Concerns** - Series creation wizard mixed with UI. | Extract `SeriesWizardController`. |
+| `public/js/views/SavedPlaylistsView.js` | 625 | 🟠 3 | **Feature Creep** - Expanded for batch management. | Extract `BatchManager` component. |
+| `public/js/components/Modals.js` | 506 | 🔴 4 | **God File** - 6 modals in single file. | Split into individual modal files, create `BaseModal`. |
+| `public/js/**/*.js` | ~45 files | 🔴 1 | **Security** - innerHTML used for dynamic content. | Global "Operation Safe Text" - textContent or DOMPurify. |
 
 ---
 
@@ -102,15 +114,15 @@ components/
 | **Dependency Injection** | 🟡 Medium | Some services hardcode dependencies |
 | **Testability** | 🟡 Medium | Controllers testable, services need mocking |
 
-**Controller Pattern (V3) Adoption**:
+**Controller Pattern (V3) Adoption** (Active Views Only):
 | View | Controller | Status |
 |------|------------|--------|
 | SeriesView | SeriesController | ✅ 100% decoupled |
 | PlaylistsView | PlaylistsController | ✅ 100% decoupled |
-| AlbumsView | AlbumsStateController | 🟠 Partial (only 144 LOC) |
 | BlendingMenuView | BlendingController | ✅ 100% decoupled |
-| InventoryView | ❌ None | 🔴 Missing |
-| HomeView | ❌ None | 🔴 Missing |
+| InventoryView | ❌ None | 🔴 Needs refactor |
+| HomeView | ❌ None | 🔴 Needs refactor |
+| SavedPlaylistsView | ❌ None | 🔴 Needs refactor |
 
 ### C. Performance Assessment
 
@@ -153,42 +165,79 @@ components/
 
 ---
 
+## 🔴 Modal Architecture Analysis
+
+> **Status**: Needs Refactor | **Impact**: Maintainability, Security
+
+| File | LOC | Pattern | # Modals | Status |
+|------|-----|---------|----------|--------|
+| `Modals.js` | 506 | Functions | 6 | 🔴 God File |
+| `InventoryModals.js` | 460 | Functions | 3 | 🔴 God File |
+| `SpotifyExportModal.js` | 511 | Class V3 | 1 | 🟡 Large but structured |
+| `SeriesModals.js` | 314 | Class V3 | 2 | 🟢 **Good pattern** |
+
+**Recommendation**: Create `BaseModal.js`, split God Files into individual modals.
+
+---
+
+## 🔴 escapeHtml Duplication Analysis
+
+> **Status**: Critical Code Smell | **Impact**: Maintenance nightmare
+
+**8 duplicate definitions found:**
+
+| File | Line |
+|------|------|
+| `Modals.js` | 500 |
+| `InventoryModals.js` | 455 |
+| `ConfirmationModal.js` | 187 |
+| `EditAlbumModal.js` | 146 |
+| `ViewAlbumModal.js` | 132 |
+| `Toast.js` | 116 |
+| `AlbumsGridRenderer.js` | 15 |
+| `AlbumsScopedRenderer.js` | 10 |
+
+**Recommendation**: Create `utils/escapeHtml.js` and consolidate.
+
+---
+
 ## 🎯 Strategic Recommendations
 
 ### Immediate (Sprint 14)
 
-1. **AlbumsView V3 Refactor** (CRITICAL)
-   - Extract `AlbumsController.js` (~300 LOC of logic)
-   - Create `AlbumsGridRenderer.js` for grid HTML
-   - Target: Reduce from 1,227 → ~400 LOC
+1. **InventoryView V3 Refactor** (CRITICAL - 742 LOC)
+   - Extract `InventoryController.js` (~250 LOC of logic)
+   - Create `InventoryGridRenderer.js`
+   - Target: Reduce to ~300 LOC
 
 2. **Operation "Safe Text" Phase 1** (SECURITY)
    - Priority files: `Modals.js`, `InventoryModals.js`, `SeriesModals.js`
    - Replace `innerHTML` with `textContent` for dynamic values
-   - Add DOMPurify for trusted HTML (if needed)
 
-3. **Resolve #92 Album Cache Issue** (DATA INTEGRITY)
+3. **escapeHtml Consolidation** (CODE QUALITY)
+   - Create `utils/escapeHtml.js`
+   - Update 8 files to import from utility
+
+4. **Resolve #92 Album Cache Issue** (DATA INTEGRITY)
    - Fix cache key ≠ album identity problem
-   - Add Apple Music artist name normalization
 
 ### Architectural (Sprint 15+)
 
-1. **Shared Component Library**
-   - Create `BaseCard.js` with common card styling
-   - Extend for `PlaylistCard`, `BatchCard`, `BlendCard`
-   - Target: Increase Reusability from 4.2% → 25%
+1. **Modal Refactor**
+   - Create `BaseModal.js` component
+   - Split `Modals.js` (506 LOC) into individual modals
+   - Split `InventoryModals.js` (460 LOC)
 
-2. **Complete V3 Pattern Migration**
+2. **Complete V3 Migration**
    | View | Priority | Estimated LOC Reduction |
    |------|----------|-------------------------|
-   | AlbumsView | P0 | -800 LOC (65%) |
-   | InventoryView | P1 | -400 LOC (55%) |
-   | HomeView | P2 | -300 LOC (45%) |
+   | InventoryView | P0 | -400 LOC (55%) |
+   | HomeView | P1 | -350 LOC (50%) |
    | SavedPlaylistsView | P2 | -300 LOC (48%) |
 
-3. **Sanitization Pipeline**
-   - Enforce DOMPurify for all user-generated content
-   - ESLint rule: no-innerHTML-with-variables
+3. **Shared Component Library**
+   - Create `BaseCard.js` with common card styling
+   - Target: Increase Reusability from 4.2% → 25%
 
 ---
 
@@ -207,23 +256,26 @@ components/
 ## 📊 Trend Analysis
 
 ```
-LOC Trend (Selected Views):
-                    v5.0    v6.0    Change
-PlaylistsView       960     245     -75% ✨
-AlbumsView          ~1,100  1,227   +12% ⚠️
-SeriesView          575     408     -29% ✅
-SavedPlaylistsView  589     625     +6%
+Active Views LOC (Excluding Deprecated):
+                        v5.0    v6.0    Status
+PlaylistsView           960     245     ✅ -75%
+SeriesView              575     408     ✅ -29%
+InventoryView           742     742     ⚠️ Unchanged
+HomeView                688     688     ⚠️ Unchanged
+SavedPlaylistsView      589     625     ⚠️ +6%
 ```
 
 ### Positive Trends
-- V3 pattern successfully applied to PlaylistsView and SeriesView
-- Controller layer maturing (4 controllers, 0 DOM refs)
-- Service layer well-structured (9 services, avg 246 LOC)
+- **AlbumsView successfully deprecated** → SeriesView (67% smaller)
+- **EditPlaylistView deprecated** → Merged into PlaylistsView
+- V3 pattern covers **30%** of active views (up from 11%)
+- Component Density improved to **4.80** (target: >3.0)
 
-### Concerning Trends
-- AlbumsView grew instead of shrinking
-- innerHTML violations unchanged
-- Shared components still minimal
+### Areas Needing Work
+- 3 God Classes remain (InventoryView, HomeView, SavedPlaylistsView)
+- 2 Modal God Files need splitting
+- 8 duplicate `escapeHtml` definitions
+- innerHTML violations persist (~45 files)
 
 ---
 

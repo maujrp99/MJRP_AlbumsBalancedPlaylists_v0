@@ -1,18 +1,18 @@
-import { BaseView } from './BaseView.js'
-import { albumsStore } from '../stores/albums.js'
-import { albumSeriesStore } from '../stores/albumSeries.js'
-import { apiClient } from '../api/client.js'
-import { router } from '../router.js'
-import { globalProgress } from '../components/GlobalProgress.js'
-import { InlineProgress } from '../components/InlineProgress.js'
-import { Breadcrumb } from '../components/Breadcrumb.js'
-import { albumLoader } from '../services/AlbumLoader.js'
-import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
-import { getIcon } from '../components/Icons.js'
-import toast from '../components/Toast.js'
-import { showViewAlbumModal } from '../components/ViewAlbumModal.js'
-import { createViewModeStrategy } from './strategies/ViewModeStrategy.js'
-import { Autocomplete } from '../components/Autocomplete.js'
+import { BaseView } from '../js/views/BaseView.js'
+import { albumsStore } from '../js/stores/albums.js'
+import { albumSeriesStore } from '../js/stores/albumSeries.js'
+import { apiClient } from '../js/api/client.js'
+import { router } from '../js/router.js'
+import { globalProgress } from '../js/components/GlobalProgress.js'
+import { InlineProgress } from '../js/components/InlineProgress.js'
+import { Breadcrumb } from '../js/components/Breadcrumb.js'
+import { albumLoader } from '../js/services/AlbumLoader.js'
+import { optimizedAlbumLoader } from '../js/services/OptimizedAlbumLoader.js'
+import { getIcon } from '../js/components/Icons.js'
+import toast from '../js/components/Toast.js'
+import { showViewAlbumModal } from '../js/components/ViewAlbumModal.js'
+import { createViewModeStrategy } from '../js/views/strategies/ViewModeStrategy.js'
+import { Autocomplete } from '../js/components/Autocomplete.js'
 
 // Sprint 10: Modular components - Consolidated imports
 import {
@@ -31,10 +31,10 @@ import {
   renderScopedGrid as renderScopedGridFn,
   renderScopedList as renderScopedListFn,
   filterAlbums as filterAlbumsFn
-} from './albums/index.js'
-import { AlbumsStateController } from './controllers/AlbumsStateController.js'
+} from '../js/views/albums/index.js'
+import { AlbumsStateController } from '../js/views/controllers/AlbumsStateController.js'
 
-import { TracksRankingComparison } from '../components/ranking/TracksRankingComparison.js'
+import { TracksRankingComparison } from '../js/components/ranking/TracksRankingComparison.js'
 
 /**
  * AlbumsView
@@ -514,7 +514,7 @@ export class AlbumsView extends BaseView {
           break
         case 'add-to-inventory':
           // FIX: Open modal instead of direct add, to allow selecting format/price
-          const { showAddToInventoryModal } = await import('../components/InventoryModals.js')
+          const { showAddToInventoryModal } = await import('../js/components/InventoryModals.js')
           showAddToInventoryModal(album, () => {
             // Optional success callback (modal handles toast itself)
             // We could refresh UI here if needed
@@ -522,7 +522,7 @@ export class AlbumsView extends BaseView {
           break
         case 'remove-album':
           // Import custom modal for better UX
-          const { showDeleteAlbumModal } = await import('../components/Modals.js')
+          const { showDeleteAlbumModal } = await import('../js/components/Modals.js')
 
           showDeleteAlbumModal(
             album.id,
@@ -735,7 +735,7 @@ export class AlbumsView extends BaseView {
             }
 
             // Sprint 8.5: Set CREATING mode explicitly
-            const { playlistsStore } = await import('../stores/playlists.js')
+            const { playlistsStore } = await import('../js/stores/playlists.js')
             playlistsStore.setCreateMode()
 
             router.navigate(`/playlists?seriesId=${activeSeries.id}`)
@@ -780,7 +780,7 @@ export class AlbumsView extends BaseView {
         const albumId = addBtn.dataset.albumId
         const album = albumsStore.getAlbums().find(a => a.id === albumId)
         if (album) {
-          const { showAddToInventoryModal } = await import('../components/InventoryModals.js')
+          const { showAddToInventoryModal } = await import('../js/components/InventoryModals.js')
           showAddToInventoryModal(album, () => {
             // Optional: show success toast
             console.log('Added to inventory')
@@ -810,7 +810,7 @@ export class AlbumsView extends BaseView {
         console.log('[AlbumsView] Navigating to playlists with', albums.length, 'albums')
 
         // Sprint 8.5: Set CREATING mode explicitly
-        const { playlistsStore } = await import('../stores/playlists.js')
+        const { playlistsStore } = await import('../js/stores/playlists.js')
         playlistsStore.setCreateMode()
 
         router.navigate(`/playlists?seriesId=${activeSeries.id}`)

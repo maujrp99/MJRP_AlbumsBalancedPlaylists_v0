@@ -4,6 +4,7 @@
  */
 
 import toast from './Toast.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 
 /**
  * Delete Series Modal
@@ -495,11 +496,12 @@ export function showSavePlaylistsModal(defaultName, playlistCount, onSave) {
 }
 
 /**
- * Helper to escape HTML
+ * Helper to escape HTML - DEPRECATED: Use utils/stringUtils.js
+ * Kept here temporarily if needed but should use import
  */
-function escapeHtml(str) {
-  const div = document.createElement('div')
-  div.textContent = str
-  return div.innerHTML
-}
+// function escapeHtml(str) {
+//   const div = document.createElement('div')
+//   div.textContent = str
+//   return div.innerHTML
+// }
 

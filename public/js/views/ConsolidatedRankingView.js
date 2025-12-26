@@ -2,6 +2,7 @@ import { BaseView } from './BaseView.js'
 import { albumsStore } from '../stores/albums.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { getIcon } from '../components/Icons.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 
 export class ConsolidatedRankingView extends BaseView {
   constructor() {
@@ -93,7 +94,7 @@ export class ConsolidatedRankingView extends BaseView {
             <div class="header-title-row flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <h1 class="flex items-center gap-3">
                 ${getIcon('BarChart', 'w-8 h-8')}
-                ${series ? series.name : 'Series Ranking'}
+                ${series ? escapeHtml(series.name) : 'Series Ranking'}
               </h1>
               <div class="header-actions">
                 <a href="/playlists" class="btn btn-primary" data-link>
@@ -114,7 +115,7 @@ export class ConsolidatedRankingView extends BaseView {
                   <option value="all" ${this.filterAlbumId === 'all' ? 'selected' : ''}>All Albums</option>
                   ${albums.map(album => `
                     <option value="${album.id}" ${this.filterAlbumId === album.id ? 'selected' : ''}>
-                      ${album.title}
+                      ${escapeHtml(album.title)}
                     </option>
                   `).join('')}
                 </select>
@@ -175,7 +176,7 @@ export class ConsolidatedRankingView extends BaseView {
           ${this.renderRankBadge(track.rank)}
         </td>
         <td class="title-cell p-4">
-          <div class="track-title font-medium text-white group-hover:text-accent-primary transition-colors">${track.title}</div>
+          <div class="track-title font-medium text-white group-hover:text-accent-primary transition-colors">${escapeHtml(track.title)}</div>
         </td>
         <td class="rating-cell p-4">
           ${track.rating ? `
@@ -185,7 +186,7 @@ export class ConsolidatedRankingView extends BaseView {
         </td>
         <td class="score-cell p-4 text-muted font-mono">${track.score || '-'}</td>
         <td class="duration-cell p-4 text-muted font-mono text-sm">${duration}</td>
-        <td class="album-cell p-4 text-sm text-muted">${track.albumTitle}</td>
+        <td class="album-cell p-4 text-sm text-muted">${escapeHtml(track.albumTitle)}</td>
         <td class="source-cell p-4">${sourceLink}</td>
       </tr>
     `

@@ -5,6 +5,7 @@
  */
 
 import { getIcon } from './Icons.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 
 let modalContainer = null
 
@@ -184,11 +185,6 @@ function getTypeConfig(type) {
     }
 }
 
-function escapeHtml(text) {
-    const div = document.createElement('div')
-    div.textContent = text
-    return div.innerHTML
-}
 
 // Convenience methods for common actions
 export const confirm = {

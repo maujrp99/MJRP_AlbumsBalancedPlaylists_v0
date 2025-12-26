@@ -3,6 +3,7 @@ import { albumsStore } from '../stores/albums.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 
 /**
  * RankingView (MODE 2)
@@ -44,15 +45,15 @@ export class RankingView extends BaseView {
               <!-- Album Cover Placeholder -->
               <div class="album-cover-large w-32 h-32 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl flex items-center justify-center flex-shrink-0">
                 ${album.coverUrl ?
-        `<img src="${album.coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
+        `<img src="${album.coverUrl}" alt="${escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
         `<div class="text-4xl opacity-20">${getIcon('Music', 'w-16 h-16')}</div>`
       }
               </div>
 
               <!-- Album Info -->
               <div class="flex-1">
-                <h1 class="text-3xl font-bold mb-2">${getIcon('Music', 'w-8 h-8 inline mr-2')}${this.escapeHtml(album.title)}</h1>
-                <p class="text-accent-primary text-xl mb-3">${this.escapeHtml(album.artist)}</p>
+                <h1 class="text-3xl font-bold mb-2">${getIcon('Music', 'w-8 h-8 inline mr-2')}${escapeHtml(album.title)}</h1>
+                <p class="text-accent-primary text-xl mb-3">${escapeHtml(album.artist)}</p>
                 <div class="flex flex-wrap gap-3 text-sm">
                   ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
                   <span class="badge badge-neutral">${trackCount} tracks</span>
@@ -141,7 +142,7 @@ export class RankingView extends BaseView {
 
         <!-- Track Title -->
         <div class="track-title flex-1 font-medium">
-          ${this.escapeHtml(track.title || track.name)}
+          ${escapeHtml(track.title || track.name)}
         </div>
 
         <!-- Rating (only in ranked list) -->
@@ -245,10 +246,4 @@ export class RankingView extends BaseView {
     return Math.round(sum / ratedTracks.length)
   }
 
-  escapeHtml(text) {
-    if (!text) return ''
-    const div = document.createElement('div')
-    div.textContent = text
-    return div.innerHTML
-  }
 }

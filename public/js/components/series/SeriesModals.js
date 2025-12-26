@@ -15,13 +15,13 @@ import { Autocomplete } from '../Autocomplete.js';
 import { optimizedAlbumLoader } from '../../services/OptimizedAlbumLoader.js';
 import { toast } from '../Toast.js';
 import { albumSeriesStore } from '../../stores/albumSeries.js';
+import { escapeHtml } from '../../utils/stringUtils.js';
 
 export default class SeriesModals {
     constructor(options = {}) {
         this.container = null;
         this.onSeriesUpdated = options.onSeriesUpdated || (() => { });
         this.onSeriesDeleted = options.onSeriesDeleted || (() => { });
-        this.escapeHtml = options.escapeHtml || ((str) => str);
 
         // Modal state
         this.editingSeriesId = null;

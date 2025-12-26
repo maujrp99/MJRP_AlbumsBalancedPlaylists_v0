@@ -1,4 +1,5 @@
 import { BaseView } from './BaseView.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 import { SeriesRepository } from '../repositories/SeriesRepository.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { getIcon } from '../components/Icons.js'
@@ -162,7 +163,7 @@ export class SavedPlaylistsView extends BaseView {
             <div class="group-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-white/10 pb-4">
                 <div class="mb-4 md:mb-0">
                     <h2 class="text-2xl font-bold text-accent-primary flex items-center gap-2">
-                        ${getIcon('Layers', 'w-6 h-6')} ${this.escapeHtml(group.series.name)}
+                        ${getIcon('Layers', 'w-6 h-6')} ${escapeHtml(group.series.name)}
                     </h2>
                     <span class="text-xs text-muted font-mono bg-black/30 px-2 py-1 rounded ml-8">ID: ${group.series.id.slice(0, 8)}...</span>
                 </div>
@@ -173,7 +174,7 @@ export class SavedPlaylistsView extends BaseView {
                     <button class="btn btn-secondary btn-sm group-hover:bg-white/10 transition-colors" data-action="open-series" data-id="${group.series.id}">
                         Open Series Manager ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1')}
                     </button>
-                    <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-colors" data-action="delete-all-playlists" data-id="${group.series.id}" data-name="${this.escapeHtml(group.series.name)}" title="Delete all playlists in this series">
+                    <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-colors" data-action="delete-all-playlists" data-id="${group.series.id}" data-name="${escapeHtml(group.series.name)}" title="Delete all playlists in this series">
                         ${getIcon('Trash', 'w-4 h-4')}
                     </button>
                 </div>

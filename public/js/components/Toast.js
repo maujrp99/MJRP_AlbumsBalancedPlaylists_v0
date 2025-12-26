@@ -4,6 +4,8 @@
  * Replaces all alert() calls throughout the app
  */
 
+import { escapeHtml } from '../utils/stringUtils.js'
+
 const TOAST_DURATION = 4000
 const TOAST_ANIMATION_DURATION = 300
 
@@ -113,11 +115,6 @@ function getToastIcon(type) {
     }
 }
 
-function escapeHtml(text) {
-    const div = document.createElement('div')
-    div.textContent = text
-    return div.innerHTML
-}
 
 // Convenience methods
 export const toast = {

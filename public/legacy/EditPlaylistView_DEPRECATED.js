@@ -1,19 +1,19 @@
-import { BaseView } from './BaseView.js'
-import { playlistsStore } from '../stores/playlists.js'
-import { albumsStore } from '../stores/albums.js'
-import { albumSeriesStore } from '../stores/albumSeries.js'
-import { router } from '../router.js'
-import { Breadcrumb } from '../components/Breadcrumb.js'
-import { getIcon } from '../components/Icons.js'
-import toast from '../components/Toast.js'
+import { BaseView } from '../js/views/BaseView.js'
+import { playlistsStore } from '../js/stores/playlists.js'
+import { albumsStore } from '../js/stores/albums.js'
+import { albumSeriesStore } from '../js/stores/albumSeries.js'
+import { router } from '../js/router.js'
+import { Breadcrumb } from '../js/components/Breadcrumb.js'
+import { getIcon } from '../js/components/Icons.js'
+import toast from '../js/components/Toast.js'
 import Sortable from 'sortablejs'
-import { getAllAlgorithms, getRecommendedAlgorithm, createAlgorithm } from '../algorithms/index.js'
+import { getAllAlgorithms, getRecommendedAlgorithm, createAlgorithm } from '../js/algorithms/index.js'
 
 // Sprint 10: Modular components
-import { handleExportJson as handleExportJsonFn, handleExportToAppleMusic as handleExportToAppleMusicFn } from './playlists/index.js'
+import { handleExportJson as handleExportJsonFn, handleExportToAppleMusic as handleExportToAppleMusicFn } from '../js/views/playlists/index.js'
 
 // Sprint 11: Spotify export modal
-import { showSpotifyExportModal } from '../components/SpotifyExportModal.js'
+import { showSpotifyExportModal } from '../js/components/SpotifyExportModal.js'
 
 /**
  * EditPlaylistView - Sprint 11
@@ -159,8 +159,8 @@ export class EditPlaylistView extends BaseView {
 
   async loadPlaylistsFromFirestore() {
     try {
-      const { db, auth } = await import('../app.js')
-      const { cacheManager } = await import('../cache/CacheManager.js')
+      const { db, auth } = await import('../js/app.js')
+      const { cacheManager } = await import('../js/cache/CacheManager.js')
       const userId = auth.currentUser?.uid || 'anonymous-user'
 
       // Get series ID from URL or active series
@@ -182,7 +182,7 @@ export class EditPlaylistView extends BaseView {
         albumSeriesStore.setActiveSeries(seriesId)
       }
 
-      const { PlaylistRepository } = await import('../repositories/PlaylistRepository.js')
+      const { PlaylistRepository } = await import('../js/repositories/PlaylistRepository.js')
       const repo = new PlaylistRepository(db, cacheManager, userId, seriesId)
 
       console.log('[EditPlaylistView] Loading playlists from Firestore for batch:', this.originalBatchName)
@@ -289,8 +289,8 @@ export class EditPlaylistView extends BaseView {
     }
 
     try {
-      const { db, auth } = await import('../app.js')
-      const { cacheManager } = await import('../cache/CacheManager.js')
+      const { db, auth } = await import('../js/app.js')
+      const { cacheManager } = await import('../js/cache/CacheManager.js')
       const userId = auth.currentUser?.uid || 'anonymous-user'
       const activeSeries = albumSeriesStore.getActiveSeries()
 
@@ -299,7 +299,7 @@ export class EditPlaylistView extends BaseView {
         return
       }
 
-      const { PlaylistRepository } = await import('../repositories/PlaylistRepository.js')
+      const { PlaylistRepository } = await import('../js/repositories/PlaylistRepository.js')
       const repo = new PlaylistRepository(db, cacheManager, userId, activeSeries.id)
 
       // 1. DELETE old batch by ORIGINAL name (supports renaming)
@@ -349,7 +349,7 @@ export class EditPlaylistView extends BaseView {
 
     if (!playlist) return
 
-    const { showDeletePlaylistModal } = await import('../components/Modals.js')
+    const { showDeletePlaylistModal } = await import('../js/components/Modals.js')
 
     showDeletePlaylistModal(playlist.id, playlist.name, playlist.tracks?.length || 0, () => {
       // Remove playlist from store

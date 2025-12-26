@@ -1,4 +1,5 @@
 import { BaseView } from './BaseView.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { albumsStore } from '../stores/albums.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
@@ -125,7 +126,7 @@ export class PlaylistsView extends BaseView {
     const title = isEditMode ? 'Edit Playlist Batch' : 'Playlist Management'
     const icon = isEditMode ? 'Edit' : 'Music'
     const badge = isEditMode
-      ? `<span class="badge badge-success px-3 py-1 rounded-full text-sm">Editing: ${playlistsStore.editContext?.batchName || '...'}</span>`
+      ? `<span class="badge badge-success px-3 py-1 rounded-full text-sm">Editing: ${escapeHtml(playlistsStore.editContext?.batchName || '...')}</span>`
       : ''
 
     return `

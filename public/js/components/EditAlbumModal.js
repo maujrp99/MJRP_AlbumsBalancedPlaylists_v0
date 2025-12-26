@@ -4,6 +4,7 @@
  */
 
 import toast from './Toast.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 
 export function showEditAlbumModal(album, onSave) {
   const modal = document.createElement('div')
@@ -143,9 +144,3 @@ export function showEditAlbumModal(album, onSave) {
   return modal
 }
 
-function escapeHtml(str) {
-  if (!str) return ''
-  const div = document.createElement('div')
-  div.textContent = str
-  return div.innerHTML
-}

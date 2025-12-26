@@ -1,440 +1,115 @@
 import { BaseView } from './BaseView.js'
+import { InventoryController } from '../controllers/InventoryController.js'
+import { InventoryGridRenderer } from './renderers/InventoryGridRenderer.js'
 import { inventoryStore } from '../stores/inventory.js'
-import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
-import toast from '../components/Toast.js'
-import { showViewAlbumModal } from '../components/ViewAlbumModal.js'
-import { optimizedAlbumLoader as albumLoader } from '../services/OptimizedAlbumLoader.js'
-
-/**
- * InventoryView
- * Manage physical album collection (CD, Vinyl, DVD, Blu-ray, Digital)
- */
 
 export class InventoryView extends BaseView {
   constructor() {
     super()
-    this.viewMode = localStorage.getItem('inventoryViewMode') || 'grid'
-    this.selectedAlbums = new Set()
-    this.filters = {
-      format: 'all',
-      search: '',
-      ownership: 'all' // 'all' | 'owned' | 'wishlist'
-    }
-    this.currency = localStorage.getItem('inventoryCurrency') || 'USD'
-    this.editingPriceId = null
+    this.controller = new InventoryController(this)
   }
 
   async mount() {
-    console.log('[InventoryView.mount] Starting mount')
-
-    // Subscribe to store updates FIRST (before loading)
+    // Subscribe to store updates
     this.unsubscribe = inventoryStore.subscribe(() => {
-      console.log('[InventoryView.mount] Store updated, calling rerender')
-      this.rerender()
+      this.controller.updateStateFromStore()
+      this.controller.refresh()
     })
 
-    // Load album dataset for cover lookups
-    albumLoader.load().catch(console.warn)
-
-    // Load albums on mount
-    try {
-      console.log('[InventoryView.mount] Calling inventoryStore.loadAlbums()')
-      const albums = await inventoryStore.loadAlbums()
-      console.log('[InventoryView.mount] loadAlbums returned:', albums?.length, 'albums')
-    } catch (error) {
-      console.error('[InventoryView.mount] Failed to load inventory:', error)
-    }
+    await this.controller.initialize()
   }
 
   onUnmount() {
-    // Unsubscribe when leaving view
-    if (this.unsubscribe) {
-      this.unsubscribe()
-    }
+    if (this.unsubscribe) this.unsubscribe()
   }
 
   /**
-   * Re-render the view with current data
-   * Called when store updates or filters change
+   * Render the view state
+   * @param {Object} state - The state from Controller
    */
-  async rerender() {
-    console.log('[InventoryView.rerender] Re-rendering view')
-    const container = document.getElementById('app')
-    if (!container) return
+  /**
+   * Render the view state
+   * @param {Object} input - Route params (from Router) or State object (from Controller)
+   */
+  async render(input) {
+    // Determine if input is state or route params
+    // Controller state has 'filteredAlbums' array. Route params usually don't.
+    const isUpdate = input && Array.isArray(input.filteredAlbums)
+    const state = isUpdate ? input : this.controller.state
 
-    const html = await this.render()
-    container.innerHTML = html
-    this.container = container // Fix: Assign container for event listeners
-    this.afterRender()
-  }
-
-  afterRender() {
-    this.attachEventListeners()
-    this.hydrateCovers()
-  }
-
-  async hydrateCovers() {
-    const hydrateElements = this.container.querySelectorAll('[data-hydrate-artist]')
-
-    // Process in chunks or intersection observer would be even better, 
-    // but for now simple batched checking
-    hydrateElements.forEach(async (el) => {
-      const artist = el.dataset.hydrateArtist
-      const album = el.dataset.hydrateAlbum
-
-      try {
-        const match = await albumLoader.findAlbum(artist, album)
-        if (match) {
-          const url = albumLoader.getArtworkUrl(match, 300)
-          if (url) {
-            // Create image element to replace placeholder
-            const img = document.createElement('img')
-            img.src = url
-            img.alt = `${artist} - ${album}`
-            img.className = 'w-full h-full object-cover rounded-lg fade-in'
-
-            // Clear placeholder and append image
-            el.innerHTML = ''
-            el.appendChild(img)
-          }
-        }
-      } catch (err) {
-        // Silent fail for hydration
-        // console.debug('Hydration failed', err)
-      }
-    })
-  }
-
-  attachEventListeners() {
-    // Currency toggle button
-    const currencySelector = document.getElementById('currencySelector')
-    if (currencySelector) {
-      currencySelector.addEventListener('click', () => {
-        // Toggle between USD and BRL
-        this.currency = this.currency === 'USD' ? 'BRL' : 'USD'
-        localStorage.setItem('inventoryCurrency', this.currency)
-        this.rerender()
-      })
+    // Guard: State might not be ready on initial load if Store is empty
+    if (!state.filteredAlbums) {
+      // Try to use Controller defaults
     }
 
-    // Search
-    const searchInput = document.getElementById('inventorySearch')
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        this.filters.search = e.target.value
-        this.rerender()
-      })
-    }
+    const content = InventoryGridRenderer.render(state)
+    const stats = state.stats || {}
 
-    // Format filter
-    const formatFilter = document.getElementById('formatFilter')
-    if (formatFilter) {
-      formatFilter.addEventListener('change', (e) => {
-        this.filters.format = e.target.value
-        this.rerender()
-      })
-    }
+    const html = `
+            <div class="inventory-view container pb-20">
+                <header class="view-header mb-8 fade-in">
+                    ${Breadcrumb.render('/inventory')}
+                    
+                     <div class="header-title-row mb-6">
+                        <h1 class="text-4xl font-bold mb-3 flex items-center gap-3">
+                        ${getIcon('Archive', 'w-8 h-8 text-accent-primary')}
+                        My Collection
+                        </h1>
+                        
+                        <div class="stats-row flex flex-wrap items-center gap-4 text-sm md:text-lg">
+                            <span class="text-accent-primary font-semibold">
+                                ${stats.totalCount || 0} albums
+                            </span>
+                            <div class="flex gap-2">
+                                <span class="badge badge-success text-xs">✓ ${stats.ownedCount || 0} Owned</span>
+                                <span class="badge badge-neutral text-xs">${stats.wishlistCount || 0} Wishlist</span>
+                            </div>
+                            <div class="flex items-center gap-3 ml-auto">
+                                <span class="text-sm text-gray-400">Total Owned:</span>
+                                <span class="text-lg font-bold text-accent-primary">
+                                    ${state.viewCurrency === 'USD'
+        ? InventoryGridRenderer.formatPrice(stats.ownedValueUSD, 'USD')
+        : InventoryGridRenderer.formatPrice(stats.ownedValueBRL, 'BRL')}
+                                </span>
+                                <button 
+                                  id="currencySelector"
+                                  class="text-xs px-2 py-1 rounded bg-surface-light hover:bg-surface-lighter border border-surface-light text-gray-300 hover:text-white transition-colors uppercase"
+                                  title="Toggle Currency"
+                                >
+                                  ${state.viewCurrency}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-    // Ownership filter
-    const ownershipFilter = document.getElementById('ownershipFilter')
-    if (ownershipFilter) {
-      ownershipFilter.addEventListener('change', (e) => {
-        this.filters.ownership = e.target.value
-        this.rerender()
-      })
-    }
+                    ${this.renderFilters(state)}
+                </header>
 
-    // View mode toggle
-    const toggleBtn = document.getElementById('toggleViewMode')
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', () => {
-        this.viewMode = this.viewMode === 'grid' ? 'list' : 'grid'
-        localStorage.setItem('inventoryViewMode', this.viewMode)
-        this.rerender()
-      })
-    }
-
-    // Album checkboxes (multi-select)
-    const checkboxes = document.querySelectorAll('.album-checkbox')
-    checkboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', (e) => {
-        const albumId = e.target.dataset.albumId
-        if (e.target.checked) {
-          this.selectedAlbums.add(albumId)
-        } else {
-          this.selectedAlbums.delete(albumId)
-        }
-        this.rerender()
-      })
-    })
-
-    // Price edit buttons (inline editing)
-    const priceButtons = document.querySelectorAll('.price-edit-btn')
-    priceButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const albumId = e.currentTarget.dataset.albumId
-        this.editingPriceId = albumId
-        this.rerender()
-
-        // Focus input after rerender
-        setTimeout(() => {
-          const input = document.getElementById(`priceInput-${albumId}`)
-          if (input) {
-            input.focus()
-            input.select()
-          }
-        }, 50)
-      })
-    })
-
-    // Price inputs (save on blur/enter)
-    const priceInputs = document.querySelectorAll('[id^="priceInput-"]')
-    priceInputs.forEach(input => {
-      const savePrice = async () => {
-        const albumId = input.dataset.albumId
-        const currency = input.dataset.currency
-        const newPrice = parseFloat(input.value) || 0
-
-        try {
-          await inventoryStore.updatePrice(albumId, newPrice, currency)
-          this.editingPriceId = null
-          this.rerender()
-        } catch (error) {
-          console.error('Failed to update price:', error)
-          toast.error('Failed to update price. Please try again.')
-        }
-      }
-
-      input.addEventListener('blur', savePrice)
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          savePrice()
-        } else if (e.key === 'Escape') {
-          this.editingPriceId = null
-          this.rerender()
-        }
-      })
-    })
-
-    // Edit album buttons
-    const editButtons = document.querySelectorAll('.edit-album-btn')
-    editButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const albumId = e.currentTarget.dataset.albumId
-        this.showEditAlbumModal(albumId)
-      })
-    })
-
-    // Delete album buttons
-    const deleteButtons = document.querySelectorAll('.delete-album-btn')
-    deleteButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const albumId = e.currentTarget.dataset.albumId
-        this.showDeleteAlbumModal(albumId)
-      })
-    })
-
-    // View album buttons (including cover click)
-    const viewButtons = document.querySelectorAll('.view-album-btn')
-    viewButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation()
-        const albumId = e.currentTarget.dataset.albumId
-        this.handleViewAlbum(albumId)
-      })
-    })
-
-    // Status dropdowns
-    this.container.addEventListener('status-change', (e) => {
-      e.stopPropagation()
-      this.handleStatusChange(e.detail.albumId, e.detail.status)
-    })
-
-    // Fallback for direct change if custom event bubbles (via delegation)
-    const statusSelects = document.querySelectorAll('.status-select')
-    statusSelects.forEach(select => {
-      select.addEventListener('change', (e) => {
-        e.stopPropagation()
-        const albumId = e.target.dataset.albumId
-        const status = e.target.value
-        this.handleStatusChange(albumId, status)
-      })
-    })
-
-    // Create series from selected
-    const createSeriesBtn = document.getElementById('createSeriesFromSelected')
-    if (createSeriesBtn) {
-      createSeriesBtn.addEventListener('click', () => {
-        this.showCreateSeriesModal()
-      })
-    }
-
-    // Go to Albums button (empty state)
-    const goToAlbumsBtn = document.getElementById('goToAlbums')
-    if (goToAlbumsBtn) {
-      goToAlbumsBtn.addEventListener('click', () => {
-        router.navigate('/albums')
-      })
-    }
-  }
-
-  handleViewAlbum(albumId) {
-    const album = inventoryStore.getAlbums().find(a => a.id === albumId)
-    if (album) {
-      showViewAlbumModal(album)
-    }
-  }
-
-  async handleStatusChange(albumId, status) {
-    const album = inventoryStore.getAlbums().find(a => a.id === albumId)
-    if (!album) return
-
-    // Visual feedback handled by select state, but we can disable during save
-    const select = document.querySelector(`.status-select[data-album-id="${albumId}"]`)
-    if (select) {
-      select.disabled = true
-      select.classList.add('opacity-50', 'cursor-wait')
-    }
-
-    let isOwned = null
-    if (status === 'owned') isOwned = true
-    else if (status === 'wishlist') isOwned = false
-    // 'not-owned' remains null
-
-    try {
-      await inventoryStore.updateAlbum(albumId, { owned: isOwned })
-
-      let msg = 'Updated status'
-      if (isOwned === true) msg = 'Moved to Collection'
-      else if (isOwned === false) msg = 'Moved to Wishlist'
-      else msg = 'Removed from specific lists'
-
-      toast.success(msg)
-      // NOTE: rerender is handled by store subscription, no need to call it here
-    } catch (error) {
-      toast.error('Failed to update status: ' + error.message)
-      // Re-enable on error
-      if (select) {
-        select.disabled = false
-        select.classList.remove('opacity-50', 'cursor-wait')
-      }
-    }
-  }
-
-  async showEditAlbumModal(albumId) {
-    const album = inventoryStore.getAlbums().find(a => a.id === albumId)
-    if (!album) return
-
-    const { showEditInventoryModal } = await import('../components/InventoryModals.js')
-
-    showEditInventoryModal(album, async (id, updates) => {
-      try {
-        await inventoryStore.updateAlbum(id, updates)
-      } catch (error) {
-        throw error // Re-throw for modal to handle
-      }
-    })
-  }
-
-  async showDeleteAlbumModal(albumId) {
-    const album = inventoryStore.getAlbums().find(a => a.id === albumId)
-    if (!album) return
-
-    const { showDeleteAlbumModal } = await import('../components/Modals.js')
-
-    showDeleteAlbumModal(
-      albumId,
-      `${album.title} - ${album.artist}`,
-      async (id) => {
-        try {
-          await inventoryStore.removeAlbum(id)
-        } catch (error) {
-          throw error
-        }
-      }
-    )
-  }
-
-  async showCreateSeriesModal() {
-    const { showCreateSeriesFromInventoryModal } = await import('../components/InventoryModals.js')
-    const { router } = await import('../router.js')
-
-    showCreateSeriesFromInventoryModal(
-      Array.from(this.selectedAlbums),
-      async (albumIds, seriesName) => {
-        try {
-          // TODO: Implement createFromInventory in SeriesRepository
-          console.log('Creating series:', seriesName, 'with albums:', albumIds)
-
-          // For now, just show success and navigate
-          toast.success(`Series "${seriesName}" created successfully!`)
-
-          // Clear selection
-          this.selectedAlbums.clear()
-          this.rerender()
-        } catch (error) {
-          throw error
-        }
-      }
-    )
-  }
-
-  async render(params) {
-    const albums = inventoryStore.getAlbums()
-    const stats = inventoryStore.getStatistics()
-    const filteredAlbums = this.filterAlbums(albums)
-
-    return `
-      <div class="inventory-view container">
-        <header class="view-header mb-8 fade-in">
-          ${Breadcrumb.render('/inventory')}
-          
-          <!-- Title Row -->
-          <div class="header-title-row mb-6">
-            <h1 class="text-4xl font-bold mb-3 flex items-center gap-3">
-              ${getIcon('Archive', 'w-8 h-8 text-accent-primary')}
-              My Collection
-            </h1>
-            
-            <!-- Stats Row -->
-            <div class="stats-row flex flex-wrap items-center gap-4 text-sm md:text-lg">
-              <span class="text-accent-primary font-semibold">
-                ${stats.totalAlbums} album${stats.totalAlbums !== 1 ? 's' : ''}
-              </span>
-              
-              <!-- Owned/Wishlist badges -->
-              <div class="flex gap-2">
-                <span class="badge badge-success text-xs">✓ ${stats.ownedCount} Owned</span>
-                <span class="badge badge-neutral text-xs">${stats.wishlistCount} Wishlist</span>
-              </div>
-              
-              
-              <!-- Total Value (Plain Text) + Currency Toggle -->
-              <div class="flex items-center gap-3 ml-auto">
-                <span class="text-sm text-gray-400">Total Owned:</span>
-                <span class="text-lg font-bold text-accent-primary">
-                  ${this.currency === 'USD'
-        ? this.formatCurrency(stats.ownedValueUSD, 'USD')
-        : this.formatCurrency(stats.ownedValueBRL, 'BRL')}
-                </span>
-                
-                <!-- Currency Toggle Button -->
-                <button 
-                  id="currencySelector"
-                  class="text-xs px-2 py-1 rounded bg-surface-light hover:bg-surface-lighter border border-surface-light text-gray-300 hover:text-white transition-colors"
-                  data-currency="${this.currency}"
-                  title="Toggle Currency"
-                >
-                  ${this.currency}
-                </button>
-              </div>
+                <div id="inventory-grid-container">
+                    ${content}
+                </div>
             </div>
-          </div>
-          
-          <!-- Filters Section -->
-          <div class="filters-section glass-panel p-4 fade-in" style="animation-delay: 0.1s">
+        `
+
+    // If called by Controller (Update), manually update DOM
+    if (isUpdate) {
+      const app = document.getElementById('app')
+      if (app) {
+        app.innerHTML = html
+        this.attachEventListeners()
+      }
+    }
+
+    // Always return HTML for Router
+    return html
+  }
+
+  renderFilters(state) {
+    const { filters, viewMode } = state
+    return `
+          <div class="filters-section glass-panel p-4 mb-6">
             <div class="filters-row flex flex-wrap gap-3 items-center">
               <!-- Search -->
               <div class="search-bar relative flex-1 min-w-[200px]">
@@ -446,7 +121,7 @@ export class InventoryView extends BaseView {
                   id="inventorySearch" 
                   placeholder="Search collection..."
                   class="form-control pl-10 w-full"
-                  value="${this.escapeHtml(this.filters.search)}"
+                  value="${filters.search || ''}"
                 />
               </div>
               
@@ -454,11 +129,9 @@ export class InventoryView extends BaseView {
               <div class="filter-dropdown relative">
                 <select id="formatFilter" class="form-control appearance-none cursor-pointer pr-8">
                   <option value="all">All Formats</option>
-                  <option value="cd" ${this.filters.format === 'cd' ? 'selected' : ''}>CD</option>
-                  <option value="vinyl" ${this.filters.format === 'vinyl' ? 'selected' : ''}>Vinyl</option>
-                  <option value="dvd" ${this.filters.format === 'dvd' ? 'selected' : ''}>DVD</option>
-                  <option value="bluray" ${this.filters.format === 'bluray' ? 'selected' : ''}>Blu-ray</option>
-                  <option value="digital" ${this.filters.format === 'digital' ? 'selected' : ''}>Digital</option>
+                  <option value="cd" ${filters.format === 'cd' ? 'selected' : ''}>CD</option>
+                  <option value="vinyl" ${filters.format === 'vinyl' ? 'selected' : ''}>Vinyl</option>
+                  <option value="digital" ${filters.format === 'digital' ? 'selected' : ''}>Digital</option>
                 </select>
                 <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
                   ${getIcon('ChevronDown', 'w-4 h-4')}
@@ -468,9 +141,9 @@ export class InventoryView extends BaseView {
               <!-- Ownership Filter -->
               <div class="filter-dropdown relative">
                 <select id="ownershipFilter" class="form-control appearance-none cursor-pointer pr-8">
-                  <option value="all" ${this.filters.ownership === 'all' ? 'selected' : ''}>All Status</option>
-                  <option value="owned" ${this.filters.ownership === 'owned' ? 'selected' : ''}>✓ Owned Only</option>
-                  <option value="wishlist" ${this.filters.ownership === 'wishlist' ? 'selected' : ''}>Wishlist Only</option>
+                  <option value="all" ${filters.ownership === 'all' ? 'selected' : ''}>All Status</option>
+                  <option value="owned" ${filters.ownership === 'owned' ? 'selected' : ''}>✓ Owned Only</option>
+                  <option value="wishlist" ${filters.ownership === 'wishlist' ? 'selected' : ''}>Wishlist Only</option>
                 </select>
                 <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
                   ${getIcon('ChevronDown', 'w-4 h-4')}
@@ -480,339 +153,106 @@ export class InventoryView extends BaseView {
               <!-- View Mode Toggle -->
               <button 
                 id="toggleViewMode" 
-                class="btn ${this.viewMode === 'grid' ? 'btn-primary' : 'btn-secondary'}"
+                class="btn ${viewMode === 'grid' ? 'btn-primary' : 'btn-secondary'}"
                 title="Toggle grid/list view"
               >
-                ${getIcon(this.viewMode === 'grid' ? 'Grid' : 'List', 'w-5 h-5')}
+                ${getIcon(viewMode === 'grid' ? 'Grid' : 'List', 'w-5 h-5')}
               </button>
-              
-              <!-- Create Series from Selected -->
-              ${this.selectedAlbums.size > 0 ? `
-                <button 
-                  id="createSeriesFromSelected" 
-                  class="btn btn-primary flex items-center gap-2"
-                >
-                  ${getIcon('FolderPlus', 'w-5 h-5')}
-                  Create Series (${this.selectedAlbums.size})
-                </button>
-              ` : ''}
             </div>
           </div>
-        </header>
-
-        <!-- Albums Grid/List -->
-        ${this.renderAlbums(filteredAlbums)}
-      </div>
-    `
+        `
   }
 
-  renderAlbums(albums) {
-    if (albums.length === 0) {
-      return this.renderEmptyState()
+  attachEventListeners() {
+    // Search
+    const searchInput = document.getElementById('inventorySearch')
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        this.controller.handleFilterChange('search', e.target.value)
+      })
+      // Maintain focus
+      // A bit tricky with full re-render. Ideally use debounce or diff.
+      // For now, simple re-render.
+      searchInput.focus()
+      // Set cursor to end
+      const val = searchInput.value
+      searchInput.value = ''
+      searchInput.value = val
     }
 
-    if (this.viewMode === 'grid') {
-      return this.renderGrid(albums)
-    } else {
-      return this.renderList(albums)
-    }
-  }
+    // Filters
+    document.getElementById('formatFilter')?.addEventListener('change', (e) => {
+      this.controller.handleFilterChange('format', e.target.value)
+    })
 
-  renderGrid(albums) {
-    return `
-      <div class="albums-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 fade-in" style="animation-delay: 0.2s">
-        ${albums.map(album => this.renderAlbumCard(album)).join('')}
-      </div>
-    `
-  }
+    document.getElementById('ownershipFilter')?.addEventListener('change', (e) => {
+      this.controller.handleFilterChange('ownership', e.target.value)
+    })
 
-  renderAlbumCard(album) {
-    const isSelected = this.selectedAlbums.has(album.id)
-    const isEditingPrice = this.editingPriceId === album.id
-    const isOwned = album.owned !== false // Default to true if not set
+    document.getElementById('toggleViewMode')?.addEventListener('click', () => {
+      const current = this.controller.state.viewMode
+      this.controller.handleViewModeChange(current === 'grid' ? 'list' : 'grid')
+    })
 
-    return `
-      <div class="album-card glass-panel p-4 relative ${isSelected ? 'ring-2 ring-accent-primary' : ''}" data-album-id="${album.id}">
-        <!-- Status Dropdown (top right) -->
-        <div class="absolute top-2 right-2 z-10 w-32">
-          <div class="relative group">
-            <select 
-              class="status-select w-full appearance-none pl-3 pr-8 py-1 rounded-full text-xs font-medium border cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors bg-gray-900 text-white
-                     ${isOwned ? 'border-green-500/50 text-green-400' :
-        album.owned === false ? 'border-pink-500/50 text-pink-400' :
-          'border-gray-600 text-gray-400'}"
-              data-album-id="${album.id}"
-              onchange="this.dispatchEvent(new CustomEvent('status-change', { bubbles: true, detail: { albumId: '${album.id}', status: this.value } }))"
-              style="background-color: #1f2937;"
-            >
-              <option value="not-owned" ${album.owned === null || album.owned === undefined ? 'selected' : ''} class="bg-gray-900 text-white">Not Owned</option>
-              <option value="owned" ${isOwned ? 'selected' : ''} class="bg-gray-900 text-green-400">✓ Owned</option>
-              <option value="wishlist" ${album.owned === false ? 'selected' : ''} class="bg-gray-900 text-pink-400">♡ Wishlist</option>
-            </select>
-            <!-- Custom Arrow -->
-            <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-current opacity-70">
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Album Cover -->
-      <div class="album-cover mb-3 aspect-square bg-surface-light rounded-lg flex items-center justify-center cursor-pointer view-album-btn" 
-           data-album-id="${album.id}"
-           ${!this.getAlbumCoverUrl(album) ? `data-hydrate-artist="${this.escapeHtml(album.artist)}" data-hydrate-album="${this.escapeHtml(album.title)}"` : ''}>
-        ${this.getAlbumCoverUrl(album) ? `
-          <img src="${this.getAlbumCoverUrl(album)}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded-lg" />
-        ` : `
-          <div class="text-gray-600">
-            ${getIcon('Disc', 'w-16 h-16')}
-          </div>
-        `}
-      </div>
-        
-        <!-- Album Info -->
-        <h3 class="font-semibold text-lg mb-1 truncate" title="${this.escapeHtml(album.title)}">
-          ${this.escapeHtml(album.title)}
-        </h3>
-        <p class="text-sm text-gray-400 mb-1 truncate">${this.escapeHtml(album.artist)}</p>
-        <p class="text-xs text-gray-500 mb-2">${album.year || '—'}</p>
-        
-        <!-- Format Badge -->
-        <div class="mb-3">
-          ${this.renderFormatBadge(album.format)}
-        </div>
-        
-        <!-- Price (Inline Editable) -->
-        <div class="price-section mb-3">
-          ${isEditingPrice ? `
-            <input 
-              type="number" 
-              id="priceInput-${album.id}"
-              class="form-control w-full text-accent-primary font-semibold" 
-              value="${album.purchasePrice || 0}"
-              step="0.01"
-              min="0"
-              placeholder="Price"
-              data-album-id="${album.id}"
-              data-currency="${album.currency || this.currency}"
-            />
-          ` : `
-            <button 
-              class="price-edit-btn text-accent-primary font-semibold hover:text-accent-secondary transition-colors cursor-pointer text-left w-full"
-              data-album-id="${album.id}"
-              title="Click to edit price"
-            >
-              ${album.purchasePrice
-        ? this.formatCurrency(album.purchasePrice, album.currency || this.currency)
-        : `${this.currency === 'USD' ? '$' : 'R$'} —`
-      }
-            </button>
-          `}
-        </div>
-        
-        <!-- Actions -->
-        <div class="flex gap-2">
-          <button 
-            class="btn btn-sm btn-ghost flex-1 view-album-btn flex items-center justify-center gap-1"
-            data-album-id="${album.id}"
-          >
-            ${getIcon('Eye', 'w-4 h-4')}
-            View
-          </button>
-          <button 
-            class="btn btn-sm btn-secondary edit-album-btn flex items-center justify-center gap-1"
-            data-album-id="${album.id}"
-          >
-            ${getIcon('Edit', 'w-4 h-4')}
-          </button>
-          <button 
-            class="btn btn-sm btn-danger delete-album-btn flex items-center justify-center gap-1"
-            data-album-id="${album.id}"
-          >
-            ${getIcon('Trash2', 'w-4 h-4')}
-          </button>
-        </div>
-      </div>
-    `
-  }
+    document.getElementById('currencySelector')?.addEventListener('click', () => {
+      this.controller.handleCurrencyChange()
+    })
 
-  renderList(albums) {
-    return `
-      <div class="albums-list space-y-3 fade-in" style="animation-delay: 0.2s">
-        ${albums.map(album => this.renderAlbumRow(album)).join('')}
-      </div>
-    `
-  }
+    // Grid Delegation for Buttons
+    const grid = document.getElementById('inventory-grid-container')
+    if (grid) {
+      grid.addEventListener('click', (e) => {
+        // Handle Button/Div clicks (Edit, Delete, View)
+        const target = e.target.closest('.view-album-btn, .edit-album-btn, .delete-album-btn')
+        if (!target) return
 
-  renderAlbumRow(album) {
-    const isSelected = this.selectedAlbums.has(album.id)
+        const albumId = target.dataset.albumId
+        if (!albumId) return
 
-    return `
-      <div class="album-row glass-panel p-4 flex items-center gap-4 ${isSelected ? 'ring-2 ring-accent-primary' : ''}" data-album-id="${album.id}">
-        <!-- Checkbox -->
-        <input 
-          type="checkbox" 
-          class="album-checkbox form-checkbox cursor-pointer"
-          data-album-id="${album.id}"
-          ${isSelected ? 'checked' : ''}
-        />
-        
-        <!-- Cover (small) -->
-        <div class="album-cover-small w-16 h-16 bg-surface-light rounded flex items-center justify-center flex-shrink-0">
-          ${album.albumData?.coverUrl ? `
-            <img src="${album.albumData.coverUrl}" alt="${this.escapeHtml(album.title)}" class="w-full h-full object-cover rounded" />
-          ` : `
-            ${getIcon('Disc', 'w-8 h-8 text-gray-600')}
-          `}
-        </div>
-        
-        <!-- Info -->
-        <div class="flex-1 min-w-0">
-          <h3 class="font-semibold truncate">${this.escapeHtml(album.title)}</h3>
-          <p class="text-sm text-gray-400 truncate">${this.escapeHtml(album.artist)} • ${album.year || '—'}</p>
-        </div>
-        
-        <!-- Format -->
-        <div class="flex-shrink-0">
-          ${this.renderFormatBadge(album.format)}
-        </div>
-        
-        <!-- Price -->
-        <div class="price-section flex-shrink-0 w-32">
-          <button 
-            class="price-edit-btn text-accent-primary font-semibold hover:text-accent-secondary transition-colors cursor-pointer"
-            data-album-id="${album.id}"
-            title="Click to edit price"
-          >
-            ${album.purchasePrice
-        ? this.formatCurrency(album.purchasePrice, album.currency || this.currency)
-        : `${this.currency === 'USD' ? '$' : 'R$'} —`
-      }
-          </button>
-        </div>
-        
-        <!-- Actions -->
-        <div class="flex gap-2 flex-shrink-0">
-          <button class="btn btn-sm btn-secondary edit-album-btn" data-album-id="${album.id}">
-            ${getIcon('Edit', 'w-4 h-4')}
-          </button>
-          <button class="btn btn-sm btn-danger delete-album-btn" data-album-id="${album.id}">
-            ${getIcon('Trash2', 'w-4 h-4')}
-          </button>
-        </div>
-      </div>
-    `
-  }
-
-  renderFormatBadge(format) {
-    const formatConfig = {
-      cd: { icon: 'Disc', label: 'CD', color: 'text-blue-400' },
-      vinyl: { icon: 'Disc', label: 'Vinyl', color: 'text-green-400' },
-      cassette: { icon: 'Play', label: 'Cassette', color: 'text-yellow-400' },
-      dvd: { icon: 'Film', label: 'DVD', color: 'text-purple-400' },
-      bluray: { icon: 'Film', label: 'Blu-ray', color: 'text-cyan-400' },
-      digital: { icon: 'Download', label: 'Digital', color: 'text-gray-400' }
-    }
-
-    const config = formatConfig[format] || formatConfig.cd
-
-    return `
-      <span class="badge inline-flex items-center gap-1 ${config.color}">
-        ${getIcon(config.icon, 'w-3 h-3')}
-        ${config.label}
-      </span>
-    `
-  }
-
-  renderEmptyState() {
-    return `
-      <div class="empty-state glass-panel p-12 text-center fade-in" style="animation-delay: 0.2s">
-        <div class="mb-6">
-          ${getIcon('Archive', 'w-24 h-24 mx-auto text-gray-600')}
-        </div>
-        <h2 class="text-2xl font-bold mb-3">Your inventory is empty</h2>
-        <p class="text-gray-400 mb-6 max-w-md mx-auto">
-          Add albums from the Albums view to start tracking your physical collection.
-        </p>
-        <button 
-          id="goToAlbums"
-          class="btn btn-primary"
-        >
-          Go to Albums
-        </button>
-      </div>
-    `
-  }
-
-  filterAlbums(albums) {
-    return albums.filter(album => {
-      // Format filter
-      if (this.filters.format !== 'all' && album.format !== this.filters.format) {
-        return false
-      }
-
-      // Search filter
-      if (this.filters.search) {
-        const query = this.filters.search.toLowerCase()
-        const title = (album.title || '').toLowerCase()
-        const artist = (album.artist || '').toLowerCase()
-        if (!title.includes(query) && !artist.includes(query)) {
-          return false
+        if (target.classList.contains('delete-album-btn')) {
+          this.handleDeleteWithModal(albumId)
+        } else if (target.classList.contains('edit-album-btn')) {
+          this.handleEditWithModal(albumId)
+        } else if (target.classList.contains('view-album-btn')) {
+          this.handleViewWithModal(albumId)
         }
-      }
+      })
 
-      // Ownership filter
-      if (this.filters.ownership !== 'all') {
-        const isOwned = album.owned !== false
-        if (this.filters.ownership === 'owned' && !isOwned) return false
-        if (this.filters.ownership === 'wishlist' && isOwned) return false
-      }
+      // Status Select Change
+      grid.addEventListener('change', (e) => {
+        if (e.target.classList.contains('status-select')) {
+          const albumId = e.target.dataset.albumId
+          const status = e.target.value // 'owned', 'wishlist', 'not-owned'
+          this.controller.handleStatusChange(albumId, status)
+        }
+      })
+    }
+  }
 
-      return true
+  async handleDeleteWithModal(albumId) {
+    const { showDeleteAlbumModal } = await import('../components/Modals.js')
+    const album = this.controller.state.albums.find(a => a.id === albumId)
+    if (!album) return
+
+    showDeleteAlbumModal(albumId, `${album.title}`, async (id) => {
+      await this.controller.handleDelete(id)
     })
   }
 
-  formatCurrency(value, currency) {
-    if (!value) return currency === 'USD' ? '$0.00' : 'R$ 0,00'
+  async handleEditWithModal(albumId) {
+    const { showEditInventoryModal } = await import('../components/InventoryModals.js')
+    const album = this.controller.state.albums.find(a => a.id === albumId)
+    if (!album) return
 
-    if (currency === 'BRL') {
-      return `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-    } else {
-      return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-    }
+    showEditInventoryModal(album, async (id, updates) => {
+      await this.controller.handleUpdateAlbum(id, updates)
+    })
   }
 
-  /**
-   * Get album cover URL with HD fallback
-   * Uses artworkTemplate from Apple Music if available, otherwise Discogs coverUrl
-   * Falls back to looking up in albums-expanded.json if not in local data
-   */
-  getAlbumCoverUrl(album) {
-    const data = album.albumData || album
-
-    // Check if we have cover data directly
-    if (data.artworkTemplate || data.coverUrl) {
-      return albumLoader.getArtworkUrl(data, 300)
-    }
-
-    // Try to find in albumLoader by artist + title match
-    if (album.artist && album.title) {
-      // OptimizedAlbumLoader.findAlbum is async.
-      // Since getArtworkUrl is often called in render loop (sync),
-      // we might return null here and let a separate hydration pass update it?
-      // OR: For now, since we are removing legacy loader, we accept that covers 
-      // will only show if 'artworkTemplate' is already on the object.
-      // The object 'data' passed here comes from inventoryStore.
-
-      // Note: InventoryView rendering is sync. We can't await here.
-      // We relies on 'artworkTemplate' being populated during 'add'.
-      // If it's missing, we could trigger a background fetch.
-
-      // For tech debt removal: returning null is safe if we trust data is enriched on add.
-      return null;
-    }
-
-    return null
+  async handleViewWithModal(albumId) {
+    const { showViewAlbumModal } = await import('../components/ViewAlbumModal.js')
+    const album = this.controller.state.albums.find(a => a.id === albumId)
+    if (!album) return
+    showViewAlbumModal(album)
   }
 }

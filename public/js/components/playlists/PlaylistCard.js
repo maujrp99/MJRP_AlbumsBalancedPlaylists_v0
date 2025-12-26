@@ -10,6 +10,7 @@
 
 import { getIcon } from '../Icons.js'
 import { TrackItem } from './TrackItem.js'
+import { escapeHtml } from '../../utils/stringUtils.js'
 
 /**
  * @typedef {Object} PlaylistCardOptions
@@ -56,9 +57,9 @@ export class PlaylistCard {
               <h3 class="playlist-name text-lg font-bold cursor-text hover:bg-white/5 rounded px-2 py-1 -ml-2"
                   contenteditable="true" 
                   data-playlist-index="${index}" 
-                  spellcheck="false">${this.escapeHtml(playlist.name)}</h3>
+                  spellcheck="false">${escapeHtml(playlist.name)}</h3>
             ` : `
-              <h3 class="text-lg font-bold">${this.escapeHtml(playlist.name)}</h3>
+              <h3 class="text-lg font-bold">${escapeHtml(playlist.name)}</h3>
             `}
           </div>
           <div class="flex items-center gap-3 text-sm text-muted">
@@ -106,14 +107,4 @@ export class PlaylistCard {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  /**
-   * Escape HTML special characters
-   * @private
-   */
-  static escapeHtml(text) {
-    if (!text) return ''
-    const div = document.createElement('div')
-    div.textContent = text
-    return div.innerHTML
-  }
 }

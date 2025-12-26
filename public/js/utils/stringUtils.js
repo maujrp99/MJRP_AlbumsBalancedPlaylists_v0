@@ -88,3 +88,31 @@ export function generateAlbumKey(artist, album) {
  * Similarity threshold for album matching
  */
 export const SIMILARITY_THRESHOLD = 0.35
+
+/**
+ * Escapes HTML special characters to prevent XSS
+ * @param {string} str - The string to escape
+ * @returns {string} The escaped string
+ */
+export function escapeHtml(str) {
+    if (typeof str !== 'string') {
+        return str
+    }
+    const div = document.createElement('div')
+    div.textContent = str
+    return div.innerHTML
+}
+
+/**
+ * Safe Text injection
+ * Usage: safeText(element, content)
+ * Instead of: element.innerHTML = content (dangerous)
+ * Or: element.textContent = content (safe but verbose if null checking needed)
+ * @param {HTMLElement} element - The target element
+ * @param {string} text - The text content
+ */
+export function safeText(element, text) {
+    if (element) {
+        element.textContent = text || ''
+    }
+}

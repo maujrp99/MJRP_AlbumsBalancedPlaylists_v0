@@ -5,16 +5,7 @@
  */
 
 import { getIcon } from '../../components/Icons.js'
-
-// Internal helper: escape HTML
-function escapeHtml(text) {
-    if (!text) return ''
-    return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-}
+import { escapeHtml } from '../../utils/stringUtils.js'
 
 // Internal helper: wrap content in grid
 function wrapInGrid(content) {

@@ -34,9 +34,9 @@ import SeriesModals from '../components/series/SeriesModals.js';
 // Utilities (for filtering)
 import {
     filterAlbums as filterAlbumsFn,
-    getUniqueArtists as getUniqueArtistsFn,
-    escapeHtml
+    getUniqueArtists as getUniqueArtistsFn
 } from './albums/index.js';
+import { escapeHtml } from '../utils/stringUtils.js';
 
 // Ranking component for expanded view
 import { TracksRankingComparison } from '../components/ranking/TracksRankingComparison.js';

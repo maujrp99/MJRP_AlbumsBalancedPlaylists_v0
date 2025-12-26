@@ -7,6 +7,7 @@
 import { getIcon } from './Icons.js'
 import { TracksRankingComparison } from './ranking/TracksRankingComparison.js'
 import { Album } from '../models/Album.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 
 export async function showViewAlbumModal(albumInput) {
   const modal = document.createElement('div')
@@ -129,12 +130,6 @@ export async function showViewAlbumModal(albumInput) {
   return modal
 }
 
-function escapeHtml(str) {
-  if (!str) return ''
-  const div = document.createElement('div')
-  div.textContent = str
-  return div.innerHTML
-}
 
 function formatCurrency(value, currency = 'USD') {
   if (!value) return currency === 'USD' ? '$0.00' : 'R$ 0,00'

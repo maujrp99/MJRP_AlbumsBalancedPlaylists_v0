@@ -6,7 +6,6 @@
 
 // Rendering components
 export {
-    escapeHtml,
     renderLoadingProgress,
     renderEmptyState,
     renderNoMatchState,

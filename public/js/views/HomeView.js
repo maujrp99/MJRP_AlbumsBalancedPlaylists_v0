@@ -9,6 +9,7 @@ import { Autocomplete } from '../components/Autocomplete.js'
 import { optimizedAlbumLoader as albumLoader } from '../services/OptimizedAlbumLoader.js'
 import { musicKitService } from '../services/MusicKitService.js'
 import toast from '../components/Toast.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 
 /**
  * HomeView
@@ -242,7 +243,7 @@ export class HomeView extends BaseView {
     return series.slice(0, 6).map(s => `
       <div class="series-card glass-panel group hover:scale-[1.02] transition-all duration-300" data-series-id="${s.id}">
         <div class="series-card-header flex justify-between items-start mb-4">
-          <h3 class="text-lg font-bold truncate pr-2"><span class="text-muted font-normal text-sm uppercase tracking-wide mr-1">Series:</span> ${this.escapeHtml(s.name)}</h3>
+          <h3 class="text-lg font-bold truncate pr-2"><span class="text-muted font-normal text-sm uppercase tracking-wide mr-1">Series:</span> ${escapeHtml(s.name)}</h3>
           ${s.status === 'complete' ? '<span class="badge badge-success">Complete</span>' : ''}
         </div>
         
@@ -257,7 +258,7 @@ export class HomeView extends BaseView {
           </span>
         </div>
         
-        ${s.notes ? `<p class="series-notes text-sm text-muted mb-4 line-clamp-2">${this.escapeHtml(s.notes)}</p>` : ''}
+        ${s.notes ? `<p class="series-notes text-sm text-muted mb-4 line-clamp-2">${escapeHtml(s.notes)}</p>` : ''}
         
         <div class="series-actions pt-4 border-t border-white/5">
           <button 
@@ -271,11 +272,6 @@ export class HomeView extends BaseView {
     `).join('')
   }
 
-  escapeHtml(text) {
-    const div = document.createElement('div')
-    div.textContent = text
-    return div.innerHTML
-  }
 
   async mount(params) {
     this.container = document.getElementById('app')

@@ -15,6 +15,7 @@
 
 import { BaseView } from './BaseView.js'
 import { getIcon } from '../components/Icons.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 import { BlendSeriesSelector } from '../components/blend/BlendSeriesSelector.js'
 import { BlendFlavorCard } from '../components/blend/BlendFlavorCard.js'
 import { BlendIngredientsPanel } from '../components/blend/BlendIngredientsPanel.js'
@@ -225,8 +226,8 @@ export class BlendingMenuView extends BaseView {
 
                 ${isReady ? `
                     <p class="text-sm text-muted">
-                        Using <strong>${this.selectedFlavor.name}</strong> on 
-                        <strong>${this.selectedSeries.name}</strong>
+                        Using <strong>${escapeHtml(this.selectedFlavor.name)}</strong> on 
+                        <strong>${escapeHtml(this.selectedSeries.name)}</strong>
                         (${this.config.duration} min, ${this.config.outputMode} mode)
                     </p>
                 ` : ''}
@@ -402,7 +403,7 @@ export class BlendingMenuView extends BaseView {
                 <div class="space-y-4">
                     ${result.playlists.map(p => `
                         <div class="p-4 rounded-lg bg-white/5 border border-white/10">
-                            <h4 class="font-semibold">${p.title}</h4>
+                            <h4 class="font-semibold">${escapeHtml(p.title)}</h4>
                             <p class="text-sm text-muted">${p.tracks.length} tracks</p>
                         </div>
                     `).join('')}

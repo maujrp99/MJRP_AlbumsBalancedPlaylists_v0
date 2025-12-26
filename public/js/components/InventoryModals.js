@@ -5,6 +5,7 @@
 
 import { inventoryStore } from '../stores/inventory.js'
 import toast from './Toast.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 
 export function showAddToInventoryModal(album, onSuccess) {
   const modal = document.createElement('div')
@@ -452,8 +453,11 @@ export function showCreateSeriesFromInventoryModal(selectedAlbumIds, onConfirm) 
   return modal
 }
 
-function escapeHtml(str) {
-  const div = document.createElement('div')
-  div.textContent = str
-  return div.innerHTML
-}
+/**
+ * Helper to escape HTML - DEPRECATED: Use utils/stringUtils.js
+ */
+// function escapeHtml(str) {
+//   const div = document.createElement('div')
+//   div.textContent = str
+//   return div.innerHTML
+// }
