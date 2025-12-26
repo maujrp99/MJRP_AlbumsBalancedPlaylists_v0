@@ -1,208 +1,283 @@
 # ARCH-6: SeriesView Loading Optimization - Implementation Plan
-**Status**: 📋 DRAFT - Awaiting Review  
+
+**Status**: 📋 REVISED - Ready for Implementation  
 **Date**: 2025-12-26  
-**Spec**: [arch-6-series-loading-optimization_spec.md](./arch-6-series-loading-optimization_spec.md)
+**Spec**: [arch-6-series-loading-optimization_spec.md](./arch-6-series-loading-optimization_spec.md)  
+**Previous Attempt**: Reverted in `29875ef`
 
 ---
 
 ## 1. Architecture Overview
 
-### Current Flow (Problematic)
+### Current Flow (Problems)
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant Filter as Series Filter
+    participant U as User
+    participant Filter
     participant Router
     participant SV as SeriesView
     participant SC as SeriesController
-    participant Store as albumsStore
+    participant AS as albumsStore
 
-    User->>Filter: Select series
-    Filter->>Router: navigate('/albums?seriesId=X')
+    U->>Filter: Select series
+    Filter->>Router: navigate()
     Router->>SV: unmount()
     Router->>SV: mount()
-    SV->>SC: loadScope('SINGLE', X)
-    SC->>Store: reset(true)
-    Note over Store: ALL albums cleared!
+    SV->>SC: loadScope()
+    SC->>AS: reset(true)
+    Note over AS: ALL albums cleared!
     SC->>SV: notifyView('albums', [])
-    Note over SV: Empty flash!
-    SC->>SC: loadAlbumsFromQueries()
-    Note over SC: Re-fetch from IndexedDB
-    SC->>SV: notifyView('albums', data)
+    Note over SV: Grid shows "No albums" ❌
+    
+    loop Each album
+        SC->>AS: addAlbum()
+        Note over SC: onAlbumsChange SKIPPED ❌
+    end
+    
+    SC->>SV: notifyView('albums', all)
+    Note over SV: Boom! All at once ❌
 ```
 
-### Target Flow (Optimized)
+### Target Flow (Fixed)
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant Filter as Series Filter
+    participant U as User
+    participant Filter
     participant SV as SeriesView
     participant SC as SeriesController
-    participant Store as albumsStore
+    participant AS as albumsStore
 
-    User->>Filter: Select series
-    Filter->>SC: loadScope('SINGLE', X)
-    SC->>Store: hasAlbumsForSeries(X)?
+    U->>Filter: Select series
+    Filter->>SC: loadScope() [direct call]
+    SC->>AS: hasAlbumsForSeries()?
     
-    alt Store Cache Hit
-        Store-->>SC: true
-        SC->>SV: notifyView('albums', cachedData)
-        Note over SV: Instant render!
-    else Store Cache Miss
-        Store-->>SC: false
-        SC->>SC: loadAlbumsFromQueries()
-        SC->>SV: notifyView('albums', data)
+    alt Cache HIT
+        AS-->>SC: true
+        SC->>SV: notifyView('albums', cached)
+        Note over SV: INSTANT! ✅
+    else Cache MISS
+        SC->>SV: notifyView('loading', true)
+        loop Each album
+            SC->>AS: addAlbum()
+            SC->>SV: notifyView('albums', current)
+            Note over SV: Renders 1 by 1 ✅
+        end
     end
     
-    SC->>SV: Update URL via replaceState
+    SC->>SV: replaceState(url)
 ```
 
 ---
 
-## 2. Component Changes
+## 2. Changes by File
 
-### File 1: SeriesView.js
+### File 1: SeriesController.js
 
-#### Change: `handleSeriesChange()`
+#### Change A: Incremental Render in Callback
 
 ```diff
- handleSeriesChange(value) {
--    if (value === 'all') {
--        router.navigate('/albums');
--    } else {
--        router.navigate(`/albums?seriesId=${value}`);
--    }
-+    const seriesId = value === 'all' ? null : value;
-+    const scopeType = seriesId ? 'SINGLE' : 'ALL';
-+    
-+    // Load directly without router navigation
-+    this.controller.loadScope(scopeType, seriesId);
-+    
-+    // Update URL without triggering navigation
-+    const url = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
-+    window.history.replaceState({}, '', url);
- }
+// In loadAlbumsFromQueries callback
+(current, total, result) => {
+    if (this.abortController.signal.aborted) return;
+
+    this.state.loadProgress = { current, total };
+    const progressLabel = result.album
+        ? `Loading: ${result.album.artist} - ${result.album.title}`
+        : `Processing... (${Math.round((current / total) * 100)}%)`;
+
+    this.notifyView('progress', { current, total, label: progressLabel });
+
+    if (result.status === 'success' && result.album) {
+        this.hydrateAndAddAlbum(result.album);
++       // ARCH-6: Incremental render - sync with progress bar
++       this.notifyView('albums', albumsStore.getAlbums());
+    }
+}
+```
+
+#### Change B: Store Cache Check in loadScope
+
+```diff
+async loadScope(scopeType, seriesId = null, skipCache = false) {
+    this.state.currentScope = scopeType;
+    this.state.targetSeriesId = seriesId;
+
+    const storeContextId = scopeType === 'ALL' ? 'ALL_SERIES_VIEW' : seriesId;
+
++   // ARCH-6: Check store cache BEFORE loading
++   if (!skipCache && albumsStore.hasAlbumsForSeries(storeContextId)) {
++       console.log('[SeriesController] ✅ Cache HIT - instant render');
++       albumsStore.setActiveAlbumSeriesId(storeContextId);
++       albumSeriesStore.setActiveSeries(scopeType === 'ALL' ? null : seriesId);
++       this.notifyView('header', this.getHeaderData());
++       this.notifyView('albums', albumsStore.getAlbumsForSeries(storeContextId));
++       this.notifyView('loading', false);
++       return;
++   }
+
+    // Cache MISS - proceed with loading
+    this.state.isLoading = true;
+    this.notifyView('loading', true);
+    // ... rest
+```
+
+#### Change C: Remove reset(true) in loadAlbumsFromQueries
+
+```diff
+async loadAlbumsFromQueries(queries, skipCache = false) {
+    // Cancel previous
+    if (this.abortController) {
+        this.abortController.abort();
+    }
+    this.abortController = new AbortController();
+
+-   albumsStore.reset(true);
+-   this.notifyView('albums', []);
++   // ARCH-6: Don't reset - just clear current series
++   albumsStore.clearAlbumSeries(albumsStore.getActiveAlbumSeriesId());
+
+    this.state.isLoading = true;
+    // ... rest
 ```
 
 ---
 
-### File 2: SeriesController.js
+### File 2: SeriesView.js
 
-#### Change: `loadScope()` - Add store cache check
+#### Change A: handleSeriesChange - Direct loadScope
 
 ```diff
- async loadScope(scopeType, seriesId = null, skipCache = false) {
-     console.log(`[SeriesController] loadScope: ${scopeType}, seriesId=${seriesId}`);
-
-     this.state.currentScope = scopeType;
-     this.state.targetSeriesId = seriesId;
--    this.state.isLoading = true;
--    this.notifyView('loading', true);
-
-     // Update URL without reload
-     const newUrl = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
-     if (window.location.pathname + window.location.search !== newUrl) {
-         window.history.pushState({}, '', newUrl);
-     }
-
-     try {
-         const storeContextId = scopeType === 'ALL' ? 'ALL_SERIES_VIEW' : seriesId;
-+        
-+        // ARCH-6: Check store cache BEFORE reset
-+        if (!skipCache && albumsStore.hasAlbumsForSeries(storeContextId)) {
-+            console.log('[SeriesController] ✅ Using cached albums from store');
-+            albumsStore.setActiveAlbumSeriesId(storeContextId);
-+            this.notifyView('header', this.getHeaderData());
-+            this.notifyView('albums', albumsStore.getAlbumsForSeries(storeContextId));
-+            this.notifyView('loading', false);
-+            return;
-+        }
-
-+        this.state.isLoading = true;
-+        this.notifyView('loading', true);
-+
-         albumsStore.setActiveAlbumSeriesId(storeContextId);
--        albumsStore.reset(true);
--
--        this.notifyView('albums', []);
-+        // Don't reset - just clear current series if needed
-+        albumsStore.clearAlbumSeries(storeContextId);
-
-         // ... rest of the method
+handleSeriesChange(value) {
+-   if (value === 'all') {
+-       router.navigate('/albums');
+-   } else {
+-       router.navigate(`/albums?seriesId=${value}`);
+-   }
++   const seriesId = value === 'all' ? null : value;
++   const scopeType = seriesId ? 'SINGLE' : 'ALL';
++   
++   // ARCH-6: Direct call, no router remount
++   if (this.controller) {
++       this.controller.loadScope(scopeType, seriesId);
++   }
++   
++   // Update URL without navigation
++   const url = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
++   window.history.replaceState({}, '', url);
++   
++   // Update internal state
++   this.currentScope = scopeType;
++   this.targetSeriesId = seriesId;
+}
 ```
 
 ---
 
 ### File 3: albums.js (store)
 
-#### Change: `reset()` - Don't clear albumsByAlbumSeriesId
+#### Change: reset() Preserves Map
 
 ```diff
- reset(preserveAlbumSeriesContext = false) {
-     const seriesId = preserveAlbumSeriesContext ? this.activeAlbumSeriesId : null
+reset(preserveAlbumSeriesContext = false) {
+    const seriesId = preserveAlbumSeriesContext ? this.activeAlbumSeriesId : null;
 
--    // ALWAYS clear all albums to prevent ghost albums
--    this.albumsByAlbumSeriesId.clear()
-+    // ARCH-6: Preserve album cache for navigation back
-+    // Only clear if explicitly requested
-+    if (!preserveAlbumSeriesContext) {
-+        this.albumsByAlbumSeriesId.clear()
-+    }
+-   // ALWAYS clear all albums
+-   this.albumsByAlbumSeriesId.clear();
++   // ARCH-6: Only clear if full reset
++   if (!preserveAlbumSeriesContext) {
++       this.albumsByAlbumSeriesId.clear();
++   }
 
-     this.currentAlbum = null
-     this.loading = false
-     this.error = null
-     this.activeAlbumSeriesId = seriesId
-     this.notify()
- }
+    this.currentAlbum = null;
+    this.loading = false;
+    this.error = null;
+    this.activeAlbumSeriesId = seriesId;
+    this.notify();
+}
 ```
 
 ---
 
-## 3. Implementation Steps
+### File 4: SeriesView.js (CRUD handlers)
 
-| Step | File | Estimated Time |
-|------|------|----------------|
-| 1 | `SeriesView.js` - handleSeriesChange | 10 min |
-| 2 | `SeriesController.js` - loadScope cache check | 15 min |
-| 3 | `albums.js` - reset behavior | 10 min |
-| 4 | CRUD handlers - add cache invalidation | 5 min |
-| 5 | Test & verify all scenarios | 15 min |
+#### Change: Cache Invalidation
 
-**Total**: ~55 min
+```diff
+// In mountSeriesModals()
+this.components.modals = new SeriesModals({
+    onSeriesUpdated: (seriesId) => {
++       // ARCH-6: Invalidate cache
++       albumsStore.clearAlbumSeries(seriesId);
++       albumsStore.clearAlbumSeries('ALL_SERIES_VIEW');
+        this.updateHeader();
+        if (this.controller) {
+            this.controller.loadScope(this.currentScope, this.targetSeriesId, true);
+        }
+    },
+    onSeriesDeleted: (seriesId) => {
++       // ARCH-6: Invalidate cache
++       albumsStore.clearAlbumSeries(seriesId);
++       albumsStore.clearAlbumSeries('ALL_SERIES_VIEW');
+        if (this.targetSeriesId === seriesId) {
+            router.navigate('/albums');
+        } else {
+            this.refreshGrid();
+        }
+    },
+```
+
+---
+
+## 3. Implementation Order
+
+| Step | Change | Time |
+|------|--------|------|
+| 1 | Incremental render (callback) | 5 min |
+| 2 | Store cache check (loadScope) | 10 min |
+| 3 | Remove reset() in loadAlbumsFromQueries | 5 min |
+| 4 | handleSeriesChange (no router) | 5 min |
+| 5 | reset() preserves Map | 5 min |
+| 6 | CRUD cache invalidation | 5 min |
+| 7 | Test all 3 scenarios | 15 min |
+
+**Total**: ~50 min
 
 ---
 
 ## 4. Testing Plan
 
-### Scenario 1: Filter Change
-1. Navigate to `/albums`
-2. Wait for albums to load
-3. Change filter to specific series
-4. **Expected**: No flash, instant update, console shows "Using cached albums"
+### Test 1: Incremental Render
+1. Clear IndexedDB cache
+2. Navigate to `/albums`
+3. **Expected**: Albums appear 1 by 1 as progress bar advances
 
-### Scenario 2: Navigation Back
-1. Navigate to `/albums?seriesId=X`
-2. Wait for albums to load
-3. Navigate to `/playlists`
-4. Navigate back to `/albums`
-5. **Expected**: Albums appear instantly, no loading indicator
+### Test 2: Filter Change Cache Hit
+1. Load "All Series"
+2. Change filter to "LED SERIES"
+3. Change back to "All Series"
+4. **Expected**: Instant switch, console shows "Cache HIT"
 
-### Scenario 3: Force Refresh Still Works
+### Test 3: Navigate Away/Back
+1. Load `/albums`
+2. Go to `/playlists`
+3. Return to `/albums`
+4. **Expected**: Albums appear instantly
+
+### Test 4: Refresh Button
 1. Load a series
-2. Press F5
-3. **Expected**: Full reload from URL params (skipCache behavior preserved)
+2. Click Refresh
+3. **Expected**: Full reload (skipCache=true)
 
 ---
 
 ## 5. Rollback Plan
 
-If issues found:
-1. Revert `handleSeriesChange` to use router.navigate
-2. Revert `reset()` to clear Map
-3. Store cache doesn't affect IndexedDB cache (ARCH-5)
+If critical issues:
+```bash
+git revert HEAD  # Reverts ARCH-6 changes
+```
 
 ---
 

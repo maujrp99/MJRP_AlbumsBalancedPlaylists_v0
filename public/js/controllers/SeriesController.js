@@ -84,8 +84,6 @@ export default class SeriesController {
 
         this.state.currentScope = scopeType;
         this.state.targetSeriesId = seriesId;
-        this.state.isLoading = true;
-        this.notifyView('loading', true);
 
         // Update URL without reload
         const newUrl = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
@@ -94,10 +92,26 @@ export default class SeriesController {
         }
 
         try {
-            // Reset store context
             const storeContextId = scopeType === 'ALL' ? 'ALL_SERIES_VIEW' : seriesId;
+
+            // ARCH-6: Check store cache BEFORE loading
+            if (!skipCache && albumsStore.hasAlbumsForSeries(storeContextId)) {
+                console.log('[SeriesController] ✅ Cache HIT - instant render');
+                albumsStore.setActiveAlbumSeriesId(storeContextId);
+                albumSeriesStore.setActiveSeries(scopeType === 'ALL' ? null : seriesId);
+                this.notifyView('header', this.getHeaderData());
+                this.notifyView('albums', albumsStore.getAlbumsForSeries(storeContextId));
+                this.notifyView('loading', false);
+                this.state.isLoading = false;
+                return;
+            }
+
+            // Cache MISS - proceed with loading
+            this.state.isLoading = true;
+            this.notifyView('loading', true);
+
             albumsStore.setActiveAlbumSeriesId(storeContextId);
-            albumsStore.reset(true);
+            albumsStore.clearAlbumSeries(storeContextId); // Clear only this series
 
             this.notifyView('albums', []);
 
@@ -205,6 +219,8 @@ export default class SeriesController {
 
                     if (result.status === 'success' && result.album) {
                         this.hydrateAndAddAlbum(result.album);
+                        // ARCH-6: Incremental render - sync with progress bar
+                        this.notifyView('albums', albumsStore.getAlbums());
                     }
                 },
                 skipCache,
