@@ -180,12 +180,6 @@ export default class SeriesView extends BaseView {
         const activeSeries = albumSeriesStore.getActiveSeries();
         const allSeries = albumSeriesStore.getSeries();
 
-        // Setup inline progress container
-        const progressContainer = document.getElementById('loading-progress-container');
-        if (progressContainer) {
-            this.inlineProgress = new InlineProgress(progressContainer);
-        }
-
         this.components.toolbar = new SeriesToolbar({
             container: mount,
             props: {
@@ -205,6 +199,12 @@ export default class SeriesView extends BaseView {
             }
         });
         this.components.toolbar.mount();
+
+        // FIX: Setup inline progress container AFTER toolbar is mounted (so DOM exists)
+        const progressContainer = document.getElementById('loading-progress-container');
+        if (progressContainer) {
+            this.inlineProgress = new InlineProgress(progressContainer);
+        }
     }
 
     async mountGrid() {

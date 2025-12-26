@@ -39,6 +39,11 @@ import { TracksRankingComparison } from '../components/ranking/TracksRankingComp
 /**
  * AlbumsView
  * Grid of albums with search and filter
+ * 
+ * @deprecated This view is superseded by SeriesView (V3 Architecture).
+ * SeriesView is now the active view for /albums route.
+ * This file is kept for reference during migration but should NOT be used.
+ * See: docs/ARCHITECTURE.md -> V3 Component Architecture
  */
 
 export class AlbumsView extends BaseView {

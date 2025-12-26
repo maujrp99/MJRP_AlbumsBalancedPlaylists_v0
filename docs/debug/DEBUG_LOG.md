@@ -18,8 +18,9 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
-| #93 | **Reconfigure Panel Ignores Ingredients (Edit Mode)** | 🟠 HIGH | [Details](#issue-93) |
-| #92 | **Album Cache/Display Architectural Flaw** | 🔴 CRITICAL | [Details](#issue-92) |
+| #94 | **SeriesView Progress Bar Not Showing** | ✅ RESOLVED | [Details](#issue-94) |
+| #93 | **Reconfigure Panel Ignores Ingredients (Edit Mode)** | ✅ RESOLVED | [Details](#issue-93) |
+| #92 | **Album Cache/Display Architectural Flaw** | ✅ RESOLVED | [Details](#issue-92) |
 | #86 | Modal Display Issues (999/0:00/Missing Ratings) | ✅ RESOLVED | [Details](#issue-86) |
 | #82 | TopNav Highlight Bug | ✅ RESOLVED | [Details](#issue-82-topnav-highlight-bug) |
 | #81 | Inventory Double-Add Bug | ✅ RESOLVED | [Details](#issue-81-inventory-double-add-bug) |
@@ -38,41 +39,76 @@
 
 ## Current Debugging Session
 
+### Issue #94: SeriesView Progress Bar Not Showing
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-26 02:45
+**Resolved**: 2025-12-26 02:50
+**Severity**: MEDIUM (UX Degradation)
+**Type**: DOM / Lifecycle
+**Component**: `SeriesView`, `SeriesToolbar`, `InlineProgress`
+
+#### Problem Summary
+Loading progress bar missing in Albums Series view after cache refactors. Shows "Starting..." text but no progress bar animation. User also reported slow/repeated album loading when navigating.
+
+#### Root Cause
+In `SeriesView.mountToolbar()`, the code tried to initialize `InlineProgress` with a container that doesn't exist yet:
+```javascript
+// BEFORE toolbar.mount() - container doesn't exist!
+const progressContainer = document.getElementById('loading-progress-container');
+if (progressContainer) {
+    this.inlineProgress = new InlineProgress(progressContainer);
+}
+// toolbar.mount() creates the container
+this.components.toolbar.mount();
+```
+
+#### Solution
+Move `InlineProgress` initialization to AFTER `toolbar.mount()`:
+```javascript
+this.components.toolbar.mount();
+// NOW container exists
+const progressContainer = document.getElementById('loading-progress-container');
+if (progressContainer) {
+    this.inlineProgress = new InlineProgress(progressContainer);
+}
+```
+
+#### File Changed
+- `public/js/views/SeriesView.js` - `mountToolbar()` method
+
+---
+
 ### Issue #93: Reconfigure Panel Ignores Ingredients (Edit Mode)
-**Status**: 🟠 **HIGH - NEEDS INVESTIGATION**
+**Status**: ✅ **RESOLVED**
 **Date**: 2025-12-25 22:43
+**Resolved**: 2025-12-26 02:40
 **Severity**: HIGH (Feature Broken)
 **Type**: Logic / State
-**Component**: `RegeneratePanel`, `PlaylistsView`, `PlaylistsController`
+**Component**: `RegeneratePanel`, `BlendIngredientsPanel`, `BlendingController`
 
 #### Problem Summary
 When clicking "Edit" on a saved playlist and using the **Reconfigure panel** to change blend ingredients/settings, the changes are NOT applied when clicking "Regenerate Playlists".
 
-#### Symptoms
-1. Toggle Reconfigure panel → ✅ Works (expands/collapses)
-2. Change ingredients (min tracks, ranking strategy, etc.) → Visual change appears
-3. Click "Regenerate Playlists" → ❌ Old settings used, new ingredients ignored
+#### Root Cause
+1. **Field name mismatch**: `BlendIngredientsPanel.getConfig()` returned `duration` (minutes) and `rankingType`, but `PlaylistGenerationService` expected `targetDuration` (seconds) and `rankingId`.
+2. **Wrong albums**: `PlaylistsController.loadAlbumsForSeries()` skipped loading if ANY albums were in memory, even if from a different series.
 
-#### Suspected Root Cause
-The `PlaylistsView` or `PlaylistsController` may not be reading the current state from `RegeneratePanel` when calling `handleGenerate()`. Possible issues:
-1. `RegeneratePanel.getConfig()` not called before generation
-2. `PlaylistsController.regenerate()` uses cached config instead of fresh values
-3. State not propagated from `RegeneratePanel` → `PlaylistsView` → `PlaylistsController`
+#### Solution
+1. **Centralized config normalization** in `BlendIngredientsPanel.getConfig()`:
+   - Converts `duration * 60` → `targetDuration` (seconds)
+   - Maps `rankingType` → `rankingId` (e.g. 'combined' → 'balanced')
+2. **Created `BlendingController.js`** with centralized:
+   - `generateFromSeries(seriesId, config)` - loads albums + generates
+   - `regenerate(config)` - generates using albums in store
+3. **Fixed series mismatch** in `PlaylistsController.loadAlbumsForSeries()`:
+   - Now checks if albums belong to the correct series before skipping
 
-#### Related Issues
-- **Issue #89** (RESOLVED): Similar issue where config was reset to defaults - fixed by preserving `this.currentConfig`
-- **Issue #92**: May be compounded by wrong albums being loaded (albums not in series included in generation)
-
-#### Investigation Plan
-1. Add console.log in `RegeneratePanel.getConfig()` to verify values
-2. Log `PlaylistsView.currentConfig` before calling `handleGenerate()`
-3. Verify `PlaylistsController.regenerate()` receives correct config
-4. Check if `playlistsStore.mode === 'EDITING'` affects config handling
-
-#### Files to Check
-- `public/js/components/playlists/RegeneratePanel.js` - `getConfig()` method
-- `public/js/views/PlaylistsView.js` - `handleRegenerate()` event handler
-- `public/js/controllers/PlaylistsController.js` - `regenerate()` method
+#### Files Changed
+- NEW: `public/js/controllers/BlendingController.js`
+- `public/js/components/blend/BlendIngredientsPanel.js`
+- `public/js/components/playlists/RegeneratePanel.js`
+- `public/js/views/BlendingMenuView.js`
+- `public/js/controllers/PlaylistsController.js`
 
 ---
 
