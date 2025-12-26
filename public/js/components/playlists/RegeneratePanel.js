@@ -147,13 +147,17 @@ export class RegeneratePanel {
 
   /**
    * Get the current configuration for generation
+   * BlendIngredientsPanel.getConfig() already returns normalized format
+   * 
+   * @returns {Object} Config ready for PlaylistGenerationService
    */
   static getConfig() {
     if (this.ingredientsPanel) {
-      const ingredients = this.ingredientsPanel.getConfig()
+      // BlendIngredientsPanel.getConfig() returns normalized config
+      // (targetDuration in seconds, rankingId instead of rankingType)
       return {
         algorithmId: this.currentConfig.algorithmId,
-        ...ingredients
+        ...this.ingredientsPanel.getConfig()
       }
     }
     return this.currentConfig

@@ -1,13 +1,17 @@
 import axios from 'axios'
 import { Album } from '../models/Album.js'
+import { AlbumIdentity } from '../models/AlbumIdentity.js'
 import { albumCache } from '../cache/albumCache.js'
 import { albumLoader } from '../services/AlbumLoader.js'
 import { musicKitService } from '../services/MusicKitService.js'
 import { TrackTransformer } from '../transformers/TrackTransformer.js'
+import { SIMILARITY_THRESHOLD } from '../utils/stringUtils.js'
 
 /**
  * API Client
  * Wrapper for backend API calls with retry logic and caching
+ * 
+ * CRIT-5: Added AlbumIdentity validation to prevent wrong albums from being cached
  */
 
 const API_BASE = window.__api_base || '/api'
@@ -27,9 +31,9 @@ export class APIClient {
      * @returns {Promise<Album>} Album data
      */
     async fetchAlbum(query, skipCache = false) {
-        // 1. Check cache (if not skipped)
+        // 1. Check cache (if not skipped) - ARCH-5: Now async for IndexedDB
         if (!skipCache) {
-            const cached = this.cache.get(query)
+            const cached = await this.cache.get(query)
             if (cached) {
                 console.log('[APIClient] Returning cached album:', query)
                 // HYDRATION: Convert cached JSON back to Album instance
@@ -55,6 +59,28 @@ export class APIClient {
                 if (appleAlbums.length > 1) {
                     console.log(`[APIClient] Other options: ${appleAlbums.slice(1, 3).map(a => a.attributes?.name).join(', ')}`)
                 }
+
+                // CRIT-5a: Validate album match before processing
+                const identity = new AlbumIdentity(query, {
+                    title: selected.attributes?.name,
+                    artist: selected.attributes?.artistName,
+                    appleId: appleId
+                })
+
+                if (!identity.isValid()) {
+                    console.warn(
+                        `[APIClient] ⚠️ REJECTED: "${selected.attributes?.name}" ` +
+                        `(${(identity.matchConfidence * 100).toFixed(0)}% match to "${albumName}")`
+                    )
+                    console.log('[APIClient] Debug:', identity.getDebugInfo())
+                    // Fallback to legacy API
+                    return this._fetchAlbumFromAPI(query)
+                }
+
+                console.log(
+                    `[APIClient] ✅ ACCEPTED: "${selected.attributes?.name}" ` +
+                    `(${(identity.matchConfidence * 100).toFixed(0)}% confidence)`
+                )
 
                 // Get Full Details (Tracks)
                 const fullAlbum = await musicKitService.getAlbumDetails(appleId)
@@ -144,7 +170,7 @@ export class APIClient {
                         console.warn('[APIClient] Spotify enrichment skipped:', spotifyError.message)
                     }
 
-                    this.cache.set(query, album)
+                    await this.cache.set(query, album)
                     return album
                 }
             }

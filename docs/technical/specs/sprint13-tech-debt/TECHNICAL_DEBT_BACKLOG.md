@@ -57,15 +57,15 @@
 2.  ✅ **[CRIT-2]** Remove `innerHTML` globally
 3.  ✅ **[CRIT-4]** Firestore Rules for series/albums path
 4.  ✅ **[ARCH-1]** Explode `PlaylistsView` → Controller + Renderer + DragHandler
+5.  ✅ **[ARCH-2]** Standardize Stores - SpotifyEnrichmentRepository created
+6.  ✅ **[ARCH-3]** Implement BaseCard + BatchGroupCard enhancements (collapsible, expandable)
+7.  ✅ **[DEBT-2]** IndexedDB Persistence - Already implemented (verified working!)
 
 **Pending:**
-5.  🟠 **[ARCH-2]** Standardize Stores - See [spec](specs/sprint13-tech-debt/arch-2-standardize-stores_spec.md)
-6.  🟠 **[ARCH-3]** Implement BaseCard - See [spec](specs/sprint13-tech-debt/arch-3-basecard_spec.md)
-7.  🟠 **[DEBT-2]** IndexedDB Persistence - See [spec](specs/sprint13-tech-debt/debt-2-indexeddb_spec.md)
-
-**Verification Blocked by Bugs:**
 8.  🟠 **[#93]** Reconfigure Panel Ignores Ingredients - See [DEBUG_LOG #93](../debug/DEBUG_LOG.md#issue-93)
-9.  🔴 **[CRIT-5/#92]** Album Cache/Display Architectural Flaw - See [DEBUG_LOG #92](../debug/DEBUG_LOG.md#issue-92)
+
+**Resolved this session:**
+9.  ✅ **[CRIT-5/#92]** Album Cache Validation - AlbumIdentity model + similarity validation
 
 ---
 

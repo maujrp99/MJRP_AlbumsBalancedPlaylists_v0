@@ -1,55 +1,34 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-25
+**Last Updated**: 2025-12-26
 **Current Version**: v3.0.0
-**Current Sprint**: Sprint 13: Tech Debt & V3 Architecture
+**Current Sprint**: Sprint 14: Clean Architecture Continuation
 
 ---
 
 ## 🚧 Current Sprint
 
-### Sprint 13: Technical Debt, Persistence & V3 Architecture
-**Goal**: Resolve critical persistence risks (Atomic Saves) and Execute V3 Architecture Plan (Modularization).
+### Sprint 14: Clean Architecture Continuation
+**Goal**: Continue V3 architecture improvements, fix remaining UX issues.
 **Duration**: 2 weeks
-**Priority**: Critical
-**Status**: 🔄 **IN PROGRESS** (Partial Complete)
-**Branch**: `sprint-13`
+**Priority**: Medium
+**Status**: 🔄 **IN PROGRESS**
+**Branch**: `sprint-14`
 
-#### Part A: Critical Technical Debt (Security & Persistence) ✅ COMPLETE
-- [x] **CRIT-1: Atomic Playlist Saves**
-  - Implemented `WriteBatch` in `PlaylistsStore.runBatchSave()`.
-  - Spec: `crit-1-atomic-saves_spec.md`
-- [x] **CRIT-2: Security Hardening (innerHTML)**
-  - Replaced `innerHTML` with `createElement`/`textContent` in `HomeView`, `SavedPlaylistsView`, `SeriesModals`.
-  - Spec: `crit-2-innerhtml_spec.md`
-- [x] **CRIT-4: Firestore Rules**
-  - Added rules for `users/{userId}/series/{seriesId}/albums` path.
-- [x] **Production Hotfix: Album Persistence**
-  - Fixed `AlbumsStore` hydration bug (`updateDoc` -> `setDoc`).
+#### Part A: Architectural Refactors (Carryover)
+- [ ] **ARCH-4: Album Search Modularization**
+  - Extract search logic from SeriesView
+  - Create AlbumSearchService
+  - Spec: `arch-4-album-search-modularization_spec.md`
 
-#### Part B: Architecture V3 (Modularization) - PARTIAL
-- [x] **ARCH-1: PlaylistsView Refactor**
-  - Created `PlaylistsController.js`, `PlaylistsGridRenderer.js`, `PlaylistsDragHandler.js`.
-  - `PlaylistsView` reduced to thin orchestrator.
-  - Spec: `arch-1-playlistsview_spec.md`
-- [ ] **ARCH-2: Standardize Stores**
-  - Refactor `SpotifyEnrichmentStore` to use `BaseRepository` pattern.
-  - Spec: `arch-2-standardize-stores_spec.md`
-- [ ] **ARCH-3: UI Components**
-  - Implement `BaseCard` to reduce code duplication.
-  - Spec: `arch-3-basecard_spec.md`
+#### Part B: Bug Fixes
+- [ ] **Issue #95: Series Filter Dropdown Empty on First Load**
+  - Toolbar mounted before albumSeriesStore loads
+  - Solution: Reactive toolbar or await store before mount
 
-#### Part C: Documentation & Audit - PARTIAL
-- [x] **Documentation Audit**: Consolidated reports, archived old specs, updated codebase_analysis.md.
-- [ ] **Onboarding Protocol**: Verify `onboarding_protocol.md` reflects V3 architecture.
-
-#### Part D: Album Data Pipeline (NEW - Fixing #92, #93)
-- [ ] **CRIT-5: Album Data Pipeline Refactoring**
-  - Fix cache key ≠ album identity issue
-  - Add similarity validation to Apple Music results
-  - Series-scoped album loading
-  - Spec: `crit-5-album-pipeline_spec.md`
-  - Analysis: `album-data-pipeline-analysis.md`
+#### Part C: Documentation & Cleanup
+- [ ] **Onboarding Protocol**: Verify reflects V3 architecture
+- [ ] **Code Quality Assessment**: Run protocol, address findings
 
 ---
 
@@ -86,6 +65,24 @@
 ---
 
 ## ✅ Completed Sprints (Reverse Chronological)
+
+### Sprint 13: Tech Debt & V3 Architecture (Dec 2025) - DONE ✅
+**Delivered**: 2025-12-26 (v3.1.0)
+
+**Deliverables**:
+- ✅ **ARCH-1: PlaylistsView Modularization** - Controller/Renderer/DragHandler split
+- ✅ **ARCH-2: Store Pattern Standardization** - SpotifyEnrichmentRepository
+- ✅ **ARCH-3: Component Reuse Foundation** - BaseCard, BatchGroupCard
+- ✅ **ARCH-5: Cache Consolidation** - AlbumCache → IndexedDB via CacheManager
+- ✅ **ARCH-6: SeriesView Loading Optimization** - Incremental render, store cache
+- ✅ **CRIT-1 to CRIT-5**: Atomic saves, innerHTML security, Firestore rules, album pipeline fixes
+- ✅ **Issues #92, #93, #94**: Album cache/display, reconfigure panel, progress bar
+
+**Remaining (moved to Sprint 14)**:
+- ARCH-4: Album Search Modularization
+- Issue #95: Series filter dropdown empty on first load
+
+---
 
 ### Sprint 12: Critical Fixes & Architecture Refactor (Dec 2025) - DONE ✅
 **Delivered**: 2025-12-24 (v3.0.0)

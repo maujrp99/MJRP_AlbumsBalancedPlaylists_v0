@@ -1,7 +1,7 @@
 import { playlistsStore } from '../stores/playlists.js'
 import { albumsStore } from '../stores/albums.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
-import { playlistGenerationService } from '../services/PlaylistGenerationService.js'
+import { blendingController } from './BlendingController.js'
 import { createAlgorithm } from '../algorithms/index.js'
 import toast from '../components/Toast.js'
 import { getIcon } from '../components/Icons.js'
@@ -110,10 +110,18 @@ export class PlaylistsController {
     }
 
     async loadAlbumsForSeries(seriesId) {
-        // Check if albums are already cached
-        if (albumsStore.getAlbums().length > 0) {
-            console.log('[PlaylistsController] Albums already in memory, skipping load')
+        // Check if albums are already cached FOR THIS SERIES
+        const currentSeriesId = albumsStore.activeAlbumSeriesId
+        const albumsInMemory = albumsStore.getAlbums().length > 0
+
+        if (albumsInMemory && currentSeriesId === seriesId) {
+            console.log('[PlaylistsController] Albums already in memory for this series, skipping load')
             return
+        }
+
+        // Albums in memory are for a different series - need to reload
+        if (albumsInMemory && currentSeriesId !== seriesId) {
+            console.log(`[PlaylistsController] Albums in memory are for different series (${currentSeriesId}), reloading for ${seriesId}`)
         }
 
         console.log('[PlaylistsController] Albums not in memory. Loading via API pipeline for series:', seriesId)
@@ -187,10 +195,14 @@ export class PlaylistsController {
 
     /**
      * Generate playlists using selected config
+     * Uses BlendingController for centralized generation logic
      */
     async handleGenerate(config) {
-        // config = { algorithmId, rankingId } from UI
+        // config = { algorithmId, rankingId, targetDuration, outputMode, discoveryMode } from UI
         if (!config) config = { algorithmId: 'mjrp-balanced-cascade', rankingId: 'balanced' }
+
+        // Issue #93 Debug: Log received config
+        console.log('[PlaylistsController] handleGenerate config:', config)
 
         const albums = albumsStore.getAlbums()
         if (albums.length === 0) {
@@ -210,10 +222,8 @@ export class PlaylistsController {
             this.view.isGenerating = true;
             if (this.view.update) this.view.update(); // Trigger loading state
 
-            const result = playlistGenerationService.generate(albums, config)
-            const activeSeries = albumSeriesStore.getActiveSeries()
-
-            playlistsStore.setPlaylists(result.playlists, activeSeries ? activeSeries.id : null)
+            // Use BlendingController for centralized generation
+            const result = await blendingController.regenerate(config)
             toast.success(`Generated ${result.playlists.length} playlists`)
 
         } catch (err) {

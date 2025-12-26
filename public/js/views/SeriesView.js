@@ -180,12 +180,6 @@ export default class SeriesView extends BaseView {
         const activeSeries = albumSeriesStore.getActiveSeries();
         const allSeries = albumSeriesStore.getSeries();
 
-        // Setup inline progress container
-        const progressContainer = document.getElementById('loading-progress-container');
-        if (progressContainer) {
-            this.inlineProgress = new InlineProgress(progressContainer);
-        }
-
         this.components.toolbar = new SeriesToolbar({
             container: mount,
             props: {
@@ -205,6 +199,12 @@ export default class SeriesView extends BaseView {
             }
         });
         this.components.toolbar.mount();
+
+        // FIX: Setup inline progress container AFTER toolbar is mounted (so DOM exists)
+        const progressContainer = document.getElementById('loading-progress-container');
+        if (progressContainer) {
+            this.inlineProgress = new InlineProgress(progressContainer);
+        }
     }
 
     async mountGrid() {
@@ -260,12 +260,20 @@ export default class SeriesView extends BaseView {
 
         this.components.modals = new SeriesModals({
             onSeriesUpdated: (seriesId) => {
+                // ARCH-6: Invalidate cache to prevent stale data
+                albumsStore.clearAlbumSeries(seriesId);
+                albumsStore.clearAlbumSeries('ALL_SERIES_VIEW');
+
                 this.updateHeader();
                 if (this.controller) {
                     this.controller.loadScope(this.currentScope, this.targetSeriesId, true);
                 }
             },
             onSeriesDeleted: (seriesId) => {
+                // ARCH-6: Invalidate cache
+                albumsStore.clearAlbumSeries(seriesId);
+                albumsStore.clearAlbumSeries('ALL_SERIES_VIEW');
+
                 if (this.targetSeriesId === seriesId) {
                     router.navigate('/albums');
                 } else {
@@ -307,11 +315,21 @@ export default class SeriesView extends BaseView {
     }
 
     handleSeriesChange(value) {
-        if (value === 'all') {
-            router.navigate('/albums');
-        } else {
-            router.navigate(`/albums?seriesId=${value}`);
+        const seriesId = value === 'all' ? null : value;
+        const scopeType = seriesId ? 'SINGLE' : 'ALL';
+
+        // ARCH-6: Direct call, no router remount
+        if (this.controller) {
+            this.controller.loadScope(scopeType, seriesId);
         }
+
+        // Update URL without navigation
+        const url = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
+        window.history.replaceState({}, '', url);
+
+        // Update internal state
+        this.currentScope = scopeType;
+        this.targetSeriesId = seriesId;
     }
 
     handleFilter(type, value) {
