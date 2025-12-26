@@ -98,8 +98,17 @@ export default class SeriesController {
             // ARCH-6: Check store cache BEFORE reset/fetch
             if (!skipCache && albumsStore.hasAlbumsForSeries(storeContextId)) {
                 console.log('[SeriesController] ✅ Using cached albums from store');
+
+                // Sync albumSeriesStore active series (for toolbar)
+                if (scopeType === 'ALL') {
+                    albumSeriesStore.setActiveSeries(null);
+                } else {
+                    albumSeriesStore.setActiveSeries(seriesId);
+                }
+
                 albumsStore.setActiveAlbumSeriesId(storeContextId);
                 this.notifyView('header', this.getHeaderData());
+                this.notifyView('toolbar', { activeSeriesId: seriesId }); // Sync toolbar
                 this.notifyView('albums', albumsStore.getAlbumsForSeries(storeContextId));
                 this.notifyView('loading', false);
                 this.state.isLoading = false;
@@ -157,6 +166,7 @@ export default class SeriesController {
 
             // Notify view about header/series change
             this.notifyView('header', this.getHeaderData());
+            this.notifyView('toolbar', { activeSeriesId: seriesId }); // Sync toolbar
 
             // Load albums
             if (queriesToLoad.length > 0) {
@@ -340,6 +350,9 @@ export default class SeriesController {
                 break;
             case 'header':
                 if (this.view.updateHeader) this.view.updateHeader(data);
+                break;
+            case 'toolbar':
+                if (this.view.updateToolbar) this.view.updateToolbar(data);
                 break;
         }
     }

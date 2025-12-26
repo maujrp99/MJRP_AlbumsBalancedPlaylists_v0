@@ -477,6 +477,26 @@ export default class SeriesView extends BaseView {
         });
     }
 
+    /**
+     * ARCH-6: Update toolbar filter dropdown to match active series
+     * Called when using store cache to keep UI in sync
+     */
+    updateToolbar(data) {
+        const seriesFilter = document.getElementById('seriesFilter');
+        if (!seriesFilter) return;
+
+        // Update dropdown value without triggering change event
+        const newValue = data.activeSeriesId || 'all';
+        if (seriesFilter.value !== newValue) {
+            console.log('[SeriesView] Syncing toolbar filter:', newValue);
+            seriesFilter.value = newValue;
+        }
+
+        // Also update internal scope state
+        this.currentScope = data.activeSeriesId ? 'SINGLE' : 'ALL';
+        this.targetSeriesId = data.activeSeriesId;
+    }
+
     // =========================================
     // LIFECYCLE
     // =========================================
