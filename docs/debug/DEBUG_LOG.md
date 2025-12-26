@@ -18,6 +18,7 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
+| #95 | **Series Filter Dropdown Empty on First Load** | 🚧 IN PROGRESS | [Details](#issue-95) |
 | #94 | **SeriesView Progress Bar Not Showing** | ✅ RESOLVED | [Details](#issue-94) |
 | #93 | **Reconfigure Panel Ignores Ingredients (Edit Mode)** | ✅ RESOLVED | [Details](#issue-93) |
 | #92 | **Album Cache/Display Architectural Flaw** | ✅ RESOLVED | [Details](#issue-92) |
@@ -38,6 +39,56 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #95: Series Filter Dropdown Empty on First Load
+**Status**: 🚧 **IN PROGRESS**
+**Date**: 2025-12-26 12:20
+**Severity**: MEDIUM (UX Degradation)
+**Type**: Component Lifecycle / Race Condition
+**Component**: `SeriesView`, `SeriesToolbar`, `albumSeriesStore`
+**Related**: ARCH-6 implementation
+
+#### Problem Summary
+On first load of `/albums` (cold cache), the series filter dropdown shows only "All Series" with no options to filter by specific series. All albums load and display correctly, but user cannot filter until they navigate away and back.
+
+#### Symptom
+```
+User opens /albums (fresh page load)
+├── Toolbar mounted with empty seriesList
+├── loadScope() starts, calls albumSeriesStore.loadFromFirestore()
+├── Albums load incrementally (1-by-1) ✅
+├── BUT filter dropdown still shows only "All Series" ❌
+└── After nav away/back → dropdown works correctly ✅
+```
+
+#### Console Log Evidence
+```
+SeriesView.js:98 [SeriesView] Mounting...
+SeriesController.js:83 [SeriesController] loadScope: ALL, seriesId=null
+(... albums load 1-67 ...)
+SeriesView.js:140 [SeriesView] All components mounted ✅
+```
+
+Note: Toolbar is mounted BEFORE `loadFromFirestore()` completes.
+
+#### Root Cause Analysis (Preliminary)
+1. `SeriesView.mount()` calls `mountToolbar()` which uses `albumSeriesStore.getSeries()`
+2. At this point, `getSeries()` returns empty array (store not loaded yet)
+3. Later, `loadScope()` calls `albumSeriesStore.loadFromFirestore()`
+4. `albumSeriesStore` now has series, but toolbar isn't re-rendered
+
+#### Potential Solutions
+1. **Await store load before mounting toolbar** - delay toolbar mount
+2. **Reactive toolbar** - subscribe to `albumSeriesStore` changes
+3. **Re-mount toolbar after load** - explicit update call
+
+#### Files Involved
+- `public/js/views/SeriesView.js` - `mount()`, `mountToolbar()`
+- `public/js/controllers/SeriesController.js` - `loadScope()`
+- `public/js/components/series/SeriesToolbar.js`
+- `public/js/stores/albumSeries.js`
+
+---
 
 ### Issue #94: SeriesView Progress Bar Not Showing
 **Status**: ✅ **RESOLVED**
