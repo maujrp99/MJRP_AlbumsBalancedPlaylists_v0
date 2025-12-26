@@ -31,9 +31,9 @@ export class APIClient {
      * @returns {Promise<Album>} Album data
      */
     async fetchAlbum(query, skipCache = false) {
-        // 1. Check cache (if not skipped)
+        // 1. Check cache (if not skipped) - ARCH-5: Now async for IndexedDB
         if (!skipCache) {
-            const cached = this.cache.get(query)
+            const cached = await this.cache.get(query)
             if (cached) {
                 console.log('[APIClient] Returning cached album:', query)
                 // HYDRATION: Convert cached JSON back to Album instance
@@ -170,7 +170,7 @@ export class APIClient {
                         console.warn('[APIClient] Spotify enrichment skipped:', spotifyError.message)
                     }
 
-                    this.cache.set(query, album)
+                    await this.cache.set(query, album)
                     return album
                 }
             }
