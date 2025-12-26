@@ -1127,6 +1127,7 @@ export class AlbumsView extends BaseView {
         await this.loadAlbumsFromQueries(queriesToLoad, skipCache)
       } else {
         this.isLoading = false
+        if (this.inlineProgress) this.inlineProgress.finish()
         this.updateAlbumsGrid([])
       }
 
@@ -1242,6 +1243,7 @@ export class AlbumsView extends BaseView {
     } finally {
       this.isLoading = false
       globalProgress.finish()
+      if (this.inlineProgress) this.inlineProgress.finish()
 
       // Remove loading overlay
       const overlay = this.$('.loading-overlay')

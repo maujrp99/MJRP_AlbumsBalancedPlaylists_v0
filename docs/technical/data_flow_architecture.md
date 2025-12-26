@@ -1,7 +1,7 @@
 # Album Data Flow Architecture
 
-**Updated**: 2025-12-24
-**Version**: 2.6 (Playlist Refactor & Data Schema Canonicalization)
+**Updated**: 2025-12-25
+**Version**: 2.7 (PlaylistsView V3 + Sprint 13 Documentation)
 
 ## Overview
 
@@ -20,14 +20,16 @@ This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** fo
 - **Sprint 12**: **Blending Menu** - 4-step wizard UI + TopN algorithms + Mixin pattern (see below).
 - **Sprint 12**: **Conditional Ingredients Panel** - Parameters show/hide based on selected algorithm.
 - **Sprint 12**: **Spotify Enrichment Modularization** - SpotifyEnrichmentStore, SpotifyEnrichmentService, SpotifyEnrichmentHelper with cache-first pattern.
+- **Sprint 13**: **PlaylistsView V3 Architecture** - Thin orchestrator with PlaylistsController, PlaylistsGridRenderer, PlaylistsDragHandler. Atomic saves with WriteBatch.
 
 ---
 
 ## Table of Contents
 
 1. [System Architecture](#system-high-level-architecture)
-2. [SeriesView V3 Architecture](#seriesview-v3-architecture) ← **Sprint 12**
-3. [Blending Menu Architecture](#blending-menu-architecture) ← **NEW (Sprint 12)**
+2. [SeriesView V3 Architecture](#seriesview-v3-architecture) ← Sprint 12
+3. [PlaylistsView V3 Architecture](#playlistsview-v3-architecture) ← **NEW (Sprint 13)**
+4. [Blending Menu Architecture](#blending-menu-architecture) ← Sprint 12
 4. [App Initialization](#app-initialization-flow)
 5. [View Lifecycle & Navigation](#view-lifecycle--navigation)
 6. [Navigation Map](#navigation-map)
@@ -103,7 +105,100 @@ sequenceDiagram
 
 ---
 
-## Blending Menu Architecture
+## PlaylistsView V3 Architecture
+
+> **Added**: Sprint 13 (2025-12-25)
+> **Pattern**: Thin Orchestrator + Controller + Renderer
+> **Status**: ✅ IMPLEMENTED
+
+### Component Hierarchy
+
+```
+PlaylistsView.js (~300 LOC - Orchestrator)
+    │
+    ├── PlaylistsController.js (338 LOC - Pure Business Logic)
+    │   ├── initialize()         → Detect CREATE/EDIT mode, load data
+    │   ├── handleGenerate()     → Algorithm execution
+    │   ├── handleSave()         → Persistence (atomic batch)
+    │   ├── loadAlbumsForSeries()→ API pipeline album loading
+    │   └── loadEditBatch()      → Load from Firestore for edit
+    │
+    ├── PlaylistsGridRenderer.js (HTML Generation)
+    │   ├── renderControls()
+    │   ├── renderSettings()
+    │   └── renderEmptyState()
+    │
+    ├── PlaylistsDragHandler.js (SortableJS)
+    │   ├── setup(container)
+    │   ├── destroy()
+    │   └── onMove/onReorder callbacks
+    │
+    └── Services
+        ├── PlaylistGenerationService    → Algorithm + Track Transform
+        └── PlaylistPersistenceService   → Firestore CRUD
+
+```
+
+### Data Flow Pattern
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant View as PlaylistsView
+    participant Controller as PlaylistsController
+    participant GenService as PlaylistGenerationService
+    participant Store as PlaylistsStore
+    participant AlbumStore as AlbumsStore
+    
+    User->>View: mount(params)
+    View->>Controller: initialize(mode, params)
+    
+    alt EDIT Mode
+        Controller->>Controller: loadEditBatch(batchName)
+        Controller->>AlbumStore: loadAlbumsForSeries()
+    end
+    
+    User->>View: Click Generate
+    View->>Controller: handleGenerate(config)
+    Controller->>AlbumStore: getAlbums()
+    Controller->>GenService: generate(albums, config)
+    GenService-->>Controller: { playlists }
+    Controller->>Store: setPlaylists(playlists)
+    Store-->>View: notify()
+    View->>View: update()
+```
+
+### Album Loading Pipeline (Edit Mode)
+
+```mermaid
+graph LR
+    A[Edit Mode Entry] --> B{Albums Cached?}
+    B -->|Yes| C[Use Cached]
+    B -->|No| D[Get albumQueries from Series]
+    D --> E[apiClient.fetchMultipleAlbums]
+    E --> F[Backend /api/generate]
+    F --> G[AI + BestEver Scraper]
+    G --> H[albumsStore.addAlbumToSeries]
+```
+
+### Key Patterns
+
+| Pattern | Implementation |
+|---------|----------------|
+| **Thin Orchestrator** | PlaylistsView reduced from 960 to ~300 LOC |
+| **Controller Decoupling** | PlaylistsController has 0 DOM references |
+| **Service Layer** | PlaylistGenerationService, PlaylistPersistenceService |
+| **Atomic Saves** | WriteBatch for transactional playlist saves |
+
+### Mode Detection
+
+| Entry Point | Mode | Data Source |
+|-------------|------|-------------|
+| `/playlists` | CREATE | In-memory generation |
+| `/playlists/edit?edit=X&seriesId=Y` | EDIT | Firestore → API reload |
+
+---
+
 
 > **Added**: Sprint 12 (2025-12-23)
 > **Route**: `/blend`

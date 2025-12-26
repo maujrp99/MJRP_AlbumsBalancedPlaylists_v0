@@ -4,6 +4,8 @@
 **Role**: DevOps Engineer / SRE
 **Goal**: Maintain build pipelines, manage secrets, and ensure stable deployments.
 
+> **See Also**: [Product Vision](../MJRP_PRODUCT_VISION.md) for long-term architecture goals.
+
 ---
 
 ## 🏗️ Architecture Overview

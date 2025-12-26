@@ -24,6 +24,11 @@
 
 ## 📚 PHASE 1: Project Context (15 minutes)
 
+### **Step 1.0: The North Star**
+📄 **Read**: `docs/MJRP_PRODUCT_VISION.md`
+- **Purpose**: Understand the core philosophy and long-term vision
+- **Focus on**: The "Why" behind the project
+
 ### **Step 1.1: What is this project?**
 📄 **Read**: `docs/README.md`
 - **Purpose**: Understand project goals, live demo, key links
@@ -319,5 +324,76 @@ See `docs/debug/DEBUG_LOG.md` for current active issues.
 
 ---
 
-**Last Updated**: 2025-12-08  
 **Status**: Being updated as Sprint 5 blockers are resolved
+
+---
+
+## 📏 Standards & Protocols (Merged from CONTRIBUTING)
+
+### 🔀 Git Workflow & Branching
+
+**Branch Strategy**:
+- `main`: Production-ready code
+- `feature/*`: New features (e.g., `feature/albums-view-refinement`)
+- `fix/*`: Bug fixes (e.g., `fix/issue-description`)
+- `refactor/*`: Code refactoring
+- `hotfix/*`: Production hotfixes
+
+**Tagging**:
+- `vX.Y.Z`: Releases (SemVer)
+- `sprint-X.Y-done`: Milestones
+- `pre-*` / `backup-*`: Checkpoints
+
+### 📝 Commit Conventions
+Format: `<type>(<scope>): <subject>`
+
+**Types**:
+- `feat`: New feature
+- `fix`: Bug fix
+- `refactor`: Code restructuring
+- `docs`: Documentation
+- `style`: Formatting
+- `test`: Adding/updating tests
+- `chore`: Maintenance
+- `perf`: Performance
+
+**Examples**:
+- `feat(playlists): add series consolidation`
+- `fix(ranking): correct track order display`
+
+### 🎨 Code Style
+
+**JavaScript/ES6+**:
+- Use ES6 modules (`import`/`export`)
+- Prefer `const` over `let`/`var`
+- Arrow functions for callbacks
+- Template literals for strings
+
+**View Pattern (BaseView)**:
+All views extend `BaseView` and implement `render(params)` and `mount(params)`.
+```javascript
+import { BaseView } from './BaseView.js'
+export class MyView extends BaseView { ... }
+```
+
+**Tailwind CSS**:
+- Use utilities over custom CSS.
+- Group by purpose: Layout -> Box Model -> Visuals -> Interaction.
+
+### 🧪 Testing Guidelines
+Run tests: `npm test`
+Location: `/test`
+Format:
+```javascript
+import { describe, it, expect } from '@jest/globals'
+describe('Component', () => { ... })
+```
+
+### 🚀 Release Process
+1. `npm test` && `npm run build`
+2. Update `package.json` version.
+3. Commit: `chore(release): bump version to ...`
+4. Tag: `git tag -a vX.Y.Z -m "..."`
+5. Push: `git push origin main --tags`
+6. Deploy: `firebase deploy`
+

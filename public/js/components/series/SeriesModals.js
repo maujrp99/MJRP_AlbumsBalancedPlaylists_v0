@@ -194,23 +194,34 @@ export default class SeriesModals {
                 return;
             }
 
-            albumsList.innerHTML = this.editingAlbumQueries.map((query, i) => `
-                <div class="album-item flex items-center justify-between p-2 bg-white/5 rounded-lg">
-                    <span class="text-sm truncate flex-1 mr-2">${this.escapeHtml(query)}</span>
-                    <button type="button" class="btn btn-ghost btn-sm text-red-400 hover:text-red-300" data-action="remove-album-from-edit" data-index="${i}">
-                        ${getIcon('X', 'w-4 h-4')}
-                    </button>
-                </div>
-            `).join('');
+            albumsList.innerHTML = '';
+            const fragment = document.createDocumentFragment();
 
-            // Add remove handlers
-            albumsList.querySelectorAll('[data-action="remove-album-from-edit"]').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const index = parseInt(e.currentTarget.dataset.index, 10);
-                    this.editingAlbumQueries.splice(index, 1);
+            this.editingAlbumQueries.forEach((query, i) => {
+                const row = document.createElement('div');
+                row.className = 'album-item flex items-center justify-between p-2 bg-white/5 rounded-lg';
+
+                const span = document.createElement('span');
+                span.className = 'text-sm truncate flex-1 mr-2';
+                span.textContent = query;
+                row.appendChild(span);
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn btn-ghost btn-sm text-red-400 hover:text-red-300';
+                btn.innerHTML = getIcon('X', 'w-4 h-4'); // Icon is trusted
+
+                // Direct event listener - no delegation needed
+                btn.addEventListener('click', () => {
+                    this.editingAlbumQueries.splice(i, 1);
                     this.renderAlbumsList();
                 });
+
+                row.appendChild(btn);
+                fragment.appendChild(row);
             });
+
+            albumsList.appendChild(fragment);
         }
     }
 

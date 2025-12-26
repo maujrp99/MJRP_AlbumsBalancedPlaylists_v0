@@ -335,21 +335,32 @@ export class PlaylistsStore {
      * @param {string} userId - Current User ID
      * @returns {Promise<void>}
      */
+    /**
+     * Save playlists to Firestore (Atomic Batch)
+     * @param {Object} db - Firestore instance
+     * @param {Object} cacheManager - Cache manager instance
+     * @param {string} userId - Current User ID
+     * @returns {Promise<void>}
+     */
     async saveToFirestore(db, cacheManager, userId) {
         if (!this.seriesId || !db) {
             throw new Error('Cannot save: Missing database connection or Series ID')
         }
 
         const { PlaylistRepository } = await import('../repositories/PlaylistRepository.js')
+        const { writeBatch } = await import('firebase/firestore')
+
         const repo = new PlaylistRepository(db, cacheManager, userId || 'anonymous-user', this.seriesId)
 
-        // 1. Sanitize Data (Deep Clean)
+        // 1. Start Batch
+        const batch = writeBatch(db)
+
+        // 2. Sanitize Data (Deep Clean)
         // Convert custom Track objects to plain objects using JSON serialization
         const sanitizedPlaylists = JSON.parse(JSON.stringify(this.playlists))
 
-        // 2. Save each playlist with order field
-        // We use repo.save() (upsert) because playlists might have local IDs but not exist in DB yet
-        const promises = sanitizedPlaylists.map((playlist, index) => {
+        // 3. Add operations to batch
+        const promises = sanitizedPlaylists.map(async (playlist, index) => {
             // Include timestamp, metadata, and order for proper sorting when loading
             const playlistData = {
                 ...playlist,
@@ -357,22 +368,35 @@ export class PlaylistsStore {
                 updatedAt: new Date().toISOString()
             }
 
-            // Always use save (upsert)
-            // If it has an ID, use it. If not (rare), create one or let repo handle it?
-            // Generator assigns IDs like 'playlist-1', so we use those as doc IDs or let Firestore generate?
-            // Ideally we want stable IDs.
+            // Use batch in repo calls
             if (playlist.id) {
-                return repo.save(playlist.id, playlistData)
+                return repo.save(playlist.id, playlistData, batch)
             } else {
-                return repo.create(playlistData)
+                // For create, we need to assign the ID back to the playlist object if possible
+                // repo.create returns the ID synchronously if we used the modified version?
+                // Wait, logic in BaseRepository.create for batch: returns docRef.id immediately.
+                const newId = await repo.create(playlistData, batch)
+                // Update local playlist ID so subsequent saves use ID
+                this.playlists[index].id = newId
+                return newId
             }
         })
 
+        // Wait for all IDs to be generated/assigned (the operations are just added to batch)
         await Promise.all(promises)
+
+        // 4. Commit Batch Transaction
+        try {
+            await batch.commit()
+            console.log('[PlaylistsStore] Batch save successful')
+        } catch (err) {
+            console.error('[PlaylistsStore] Batch save FAILED', err)
+            throw new Error('Failed to save playlists. Please check your connection and try again.')
+        }
 
         this.isDirty = false
         this.isSynchronized = true
-        this.saveToLocalStorage() // Sycn local too
+        this.saveToLocalStorage() // Sync local too
         this.notify()
     }
 

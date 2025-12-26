@@ -37,6 +37,7 @@ export class RegeneratePanel {
       seriesId,
       batchName,
       existingPlaylistIds = [],
+      count = 0,
       currentConfig = {},
       expanded = false
     } = options
@@ -44,7 +45,7 @@ export class RegeneratePanel {
     // Store initial config
     this.currentConfig = { ...currentConfig }
 
-    const playlistCount = existingPlaylistIds.length
+    const playlistCount = count || existingPlaylistIds.length
 
     return `
       <div class="regenerate-panel bg-surface rounded-xl border border-white/10 mb-6" 

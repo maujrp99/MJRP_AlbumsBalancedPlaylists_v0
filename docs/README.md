@@ -45,11 +45,12 @@ See [CHANGELOG.md](CHANGELOG.md) for full version history.
 docs/
 ├── README.md                 # This index
 ├── PROJECT_SUMMARY.md        # Executive summary
+├── MJRP_PRODUCT_VISION.md    # Product Vision & North Star 🌟
 ├── ROADMAP.md                # Future plans
 ├── ARCHITECTURE.md           # System design & decisions
 ├── CONSTITUTION.md           # Core Methodology (Spec-Kit)
 ├── CHANGELOG.md              # Version history
-├── CONTRIBUTING.md           # Guidelines
+├── CONTRIBUTING.md           # Pointer to Onboarding
 │
 ├── onboarding/               # Guides for new team members
 │   ├── DEVELOPER.md          # Dev setup & context

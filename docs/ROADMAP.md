@@ -1,56 +1,55 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-20
-**Current Version**: v2.12.0
-**Current Sprint**: Sprint 12: Critical Fixes & Refactor (Phase 1 Done)
+**Last Updated**: 2025-12-25
+**Current Version**: v3.0.0
+**Current Sprint**: Sprint 13: Tech Debt & V3 Architecture
 
 ---
 
 ## 🚧 Current Sprint
 
-### Sprint 12: Critical Fixes & Architecture Refactor
-**Goal**: Resolve the Ranking Table bug and begin "AlbumsView" modularization.
-**Duration**: 1-2 weeks  
-**Priority**: High  
-**Status**: 🔄 **IN PROGRESS**
-**Branch**: `feature/albumsview-refactor`
-
-#### Part A: Bug Fixes & Ranking Strategy (COMPLETED ✅)
-- [x] **Critical: Wrong Tracks in Ranking Table (#71)**
-  - Fixed Album ID passing and data flow in `TracksRankingComparison`
-  - Restored **Duration/Time** column for verification
-- [x] **Ranking Strategy Pattern Implementation**
-  - Decoupled ranking logic (Balanced, Spotify, BEA) from algorithms
-  - Integrated UI selectors in `PlaylistsView`
-- [x] **Event-Driven Persistence Fix (#58/87)**
-  - Fixed "Enrich Data" not saving to Firestore (Data loss on navigation bug)
-  - Standardized Firebase DB injection in `AlbumsStateController`
-- [ ] **Loading UX Improvements (#70)**
-  - Smoother transition between skeleton and multi-source ranking (In Progress)
-
-#### Part B: AlbumsView Modularization
-- [ ] **Break down God-File**
-  - Extract `renderAlbumCard` logic to a dedicated module
-  - Modularize event delegation setup
-  - Decouple stores from view lifecycle (Dependency Injection foundation)
-
----
-
-## 📋 Upcoming Sprints / Backlog
-
-### Sprint 13: V3 Architecture Refactor & "The Blending Menu"
-**Status**: Planned
+### Sprint 13: Technical Debt, Persistence & V3 Architecture
+**Goal**: Resolve critical persistence risks (Atomic Saves) and Execute V3 Architecture Plan (Modularization).
+**Duration**: 2 weeks
 **Priority**: Critical
-**Focus**: Modularization, Componentization, and Algorithm Parametrization.
+**Status**: 🔄 **IN PROGRESS** (Partial Complete)
+**Branch**: `sprint-13`
 
-#### Part A: Core Componentization
-- [ ] **Feature Mapping**: Create `FEATURE_COMPONENT_MAP.md` to catalog all `AlbumsView` logic.
-- [ ] **Surgical Extraction**: Break `AlbumsView` into `AlbumsGrid`, `AlbumsFilterBar`, `SeriesHeader`.
-- [ ] **View Cleanup**: Ensure Views only handle routing and layout, not logic.
+#### Part A: Critical Technical Debt (Security & Persistence) ✅ COMPLETE
+- [x] **CRIT-1: Atomic Playlist Saves**
+  - Implemented `WriteBatch` in `PlaylistsStore.runBatchSave()`.
+  - Spec: `crit-1-atomic-saves_spec.md`
+- [x] **CRIT-2: Security Hardening (innerHTML)**
+  - Replaced `innerHTML` with `createElement`/`textContent` in `HomeView`, `SavedPlaylistsView`, `SeriesModals`.
+  - Spec: `crit-2-innerhtml_spec.md`
+- [x] **CRIT-4: Firestore Rules**
+  - Added rules for `users/{userId}/series/{seriesId}/albums` path.
+- [x] **Production Hotfix: Album Persistence**
+  - Fixed `AlbumsStore` hydration bug (`updateDoc` -> `setDoc`).
 
-#### Part B: Logic Modularization
-- [ ] **Service Layer Enforcement**: Move all business logic from Views to Controllers/Services.
-- [ ] **Parametrization Schema**: Define the JSON schema for "Blending Menu" inputs.
+#### Part B: Architecture V3 (Modularization) - PARTIAL
+- [x] **ARCH-1: PlaylistsView Refactor**
+  - Created `PlaylistsController.js`, `PlaylistsGridRenderer.js`, `PlaylistsDragHandler.js`.
+  - `PlaylistsView` reduced to thin orchestrator.
+  - Spec: `arch-1-playlistsview_spec.md`
+- [ ] **ARCH-2: Standardize Stores**
+  - Refactor `SpotifyEnrichmentStore` to use `BaseRepository` pattern.
+  - Spec: `arch-2-standardize-stores_spec.md`
+- [ ] **ARCH-3: UI Components**
+  - Implement `BaseCard` to reduce code duplication.
+  - Spec: `arch-3-basecard_spec.md`
+
+#### Part C: Documentation & Audit - PARTIAL
+- [x] **Documentation Audit**: Consolidated reports, archived old specs, updated codebase_analysis.md.
+- [ ] **Onboarding Protocol**: Verify `onboarding_protocol.md` reflects V3 architecture.
+
+#### Part D: Album Data Pipeline (NEW - Fixing #92, #93)
+- [ ] **CRIT-5: Album Data Pipeline Refactoring**
+  - Fix cache key ≠ album identity issue
+  - Add similarity validation to Apple Music results
+  - Series-scoped album loading
+  - Spec: `crit-5-album-pipeline_spec.md`
+  - Analysis: `album-data-pipeline-analysis.md`
 
 ---
 
@@ -87,6 +86,18 @@
 ---
 
 ## ✅ Completed Sprints (Reverse Chronological)
+
+### Sprint 12: Critical Fixes & Architecture Refactor (Dec 2025) - DONE ✅
+**Delivered**: 2025-12-24 (v3.0.0)
+
+**Deliverables**:
+- ✅ **Ranking Bug Fixes**: Corrected ID passing in ranking comparison.
+- ✅ **Persistence Production Fixes**: Solved `updateDoc` error in `AlbumsStore`.
+- ✅ **Firestore Rules**: Fixed permissions for `spotify_enrichment`.
+- ✅ **UI Polish**: New `AlbumCascade` component and `TopNav` restoration.
+- ✅ **Ranking Strategy Pattern**: Decoupled ranking algorithms.
+
+---
 
 ### Sprint 11: Spotify Integration & Documentation (Dec 2025) - DONE ✅
 **Delivered**: 2025-12-19 (v2.11.0)

@@ -296,7 +296,8 @@ export class SavedPlaylistsView extends BaseView {
 
         // Event Listeners
         this.on(document.getElementById('app'), 'click', (e) => {
-            const btn = e.target.closest('button[data-action]') || e.target.closest('[data-action="view-playlist"]')
+            // Match buttons and divs with data-action (for toggles)
+            const btn = e.target.closest('[data-action]')
             if (!btn) return
 
             const action = btn.dataset.action
@@ -379,6 +380,51 @@ export class SavedPlaylistsView extends BaseView {
                 const batchName = btn.dataset.batchName
                 const count = btn.dataset.count
                 this.handleDeleteBatch(seriesId, batchName, count)
+            }
+
+            // Toggle collapse/expand for batch group card header
+            // Skip if clicked on a button (which has its own action)
+            if (action === 'toggle-collapse') {
+                if (e.target.closest('button')) return // Don't toggle if clicking a button
+
+                const card = btn.closest('.batch-group-card')
+                if (card) {
+                    const isCollapsed = card.dataset.collapsed === 'true'
+                    card.dataset.collapsed = !isCollapsed
+
+                    // Toggle playlist list visibility
+                    const playlistsList = card.querySelector('.batch-playlists')
+                    if (playlistsList) {
+                        playlistsList.classList.toggle('hidden')
+                    }
+
+                    // Rotate chevron icon
+                    const icon = card.querySelector('.collapse-icon')
+                    if (icon) {
+                        icon.style.transform = isCollapsed ? 'rotate(90deg)' : 'rotate(0deg)'
+                    }
+                }
+            }
+
+            // Toggle expand/collapse for individual playlist tracks
+            // Skip if clicked on a button (which has its own action)
+            if (action === 'toggle-playlist-tracks') {
+                if (e.target.closest('button')) return // Don't toggle if clicking a button
+
+                const wrapper = btn.closest('.playlist-row-wrapper')
+                if (wrapper) {
+                    const tracksList = wrapper.querySelector('.playlist-tracks-list')
+                    const icon = wrapper.querySelector('.expand-icon')
+
+                    if (tracksList) {
+                        const isHidden = tracksList.classList.contains('hidden')
+                        tracksList.classList.toggle('hidden')
+
+                        if (icon) {
+                            icon.style.transform = isHidden ? 'rotate(90deg)' : 'rotate(0deg)'
+                        }
+                    }
+                }
             }
         })
     }
@@ -581,20 +627,53 @@ export class SavedPlaylistsView extends BaseView {
         if (modalDur) modalDur.textContent = this.formatDuration(playlist.tracks)
 
         if (modalTracks) {
-            modalTracks.innerHTML = (playlist.tracks || []).map((track, i) => `
-                <div class="track-item flex items-center justify-between p-3 rounded bg-white/5 hover:bg-white/10 transition-colors border-b border-white/5 last:border-0">
-                    <div class="flex items-center gap-3 overflow-hidden">
-                        <span class="text-muted font-mono text-sm w-6 text-right">${i + 1}</span>
-                        <div class="min-w-0">
-                            <div class="font-bold truncate text-sm text-white">${this.escapeHtml(track.title)}</div>
-                            <div class="text-xs text-muted truncate">${this.escapeHtml(track.artist)} • ${track.album || 'Unknown Album'}</div>
-                        </div>
-                    </div>
-                    <div class="text-xs font-mono text-muted pl-2">
-                        ${this.formatTime(track.duration)}
-                    </div>
-                </div>
-            `).join('')
+            modalTracks.innerHTML = '' // Clear existing content
+            const fragment = document.createDocumentFragment()
+
+            const tracks = playlist.tracks || []
+            tracks.forEach((track, i) => {
+                const row = document.createElement('div')
+                row.className = 'track-item flex items-center justify-between p-3 rounded bg-white/5 hover:bg-white/10 transition-colors border-b border-white/5 last:border-0'
+
+                // Left Section (Index + Info)
+                const leftDiv = document.createElement('div')
+                leftDiv.className = 'flex items-center gap-3 overflow-hidden'
+
+                // Index
+                const indexSpan = document.createElement('span')
+                indexSpan.className = 'text-muted font-mono text-sm w-6 text-right'
+                indexSpan.textContent = i + 1
+                leftDiv.appendChild(indexSpan)
+
+                // Info Container
+                const infoDiv = document.createElement('div')
+                infoDiv.className = 'min-w-0'
+
+                // Title
+                const titleDiv = document.createElement('div')
+                titleDiv.className = 'font-bold truncate text-sm text-white'
+                titleDiv.textContent = track.title
+                infoDiv.appendChild(titleDiv)
+
+                // Artist • Album
+                const artistDiv = document.createElement('div')
+                artistDiv.className = 'text-xs text-muted truncate'
+                artistDiv.textContent = `${track.artist} • ${track.album || 'Unknown Album'}`
+                infoDiv.appendChild(artistDiv)
+
+                leftDiv.appendChild(infoDiv)
+                row.appendChild(leftDiv)
+
+                // Right Section (Duration)
+                const durationDiv = document.createElement('div')
+                durationDiv.className = 'text-xs font-mono text-muted pl-2'
+                durationDiv.textContent = this.formatTime(track.duration)
+                row.appendChild(durationDiv)
+
+                fragment.appendChild(row)
+            })
+
+            modalTracks.appendChild(fragment)
         }
 
         // Show Modal with Animation
