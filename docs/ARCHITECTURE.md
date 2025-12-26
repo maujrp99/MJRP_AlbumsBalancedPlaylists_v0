@@ -22,9 +22,9 @@
 | **ARCH-1** | PlaylistsView Modularization | ✅ Complete | Exploded God Class into Controller + Renderer + DragHandler |
 | **ARCH-2** | Store Pattern Standardization | ✅ Complete | SpotifyEnrichmentStore → Repository pattern |
 | **ARCH-3** | Component Reuse Foundation | ✅ Complete | BaseCard + BatchGroupCard enhancements |
-| **ARCH-4** | Album Search Modularization | 📋 Planned | Extract search logic from SeriesView |
+| **ARCH-4** | Album Search Modularization | 📋 Sprint 14 | Extract search logic from SeriesView |
 | **ARCH-5** | Cache Consolidation | ✅ Complete | AlbumCache → CacheManager (IndexedDB) |
-| **ARCH-6** | SeriesView Loading Optimization | 📋 Planned | Store-level caching, unified loading flow |
+| **ARCH-6** | SeriesView Loading Optimization | ✅ Complete | Incremental render, store-level caching |
 
 ### ARCH-1: PlaylistsView Modularization
 
@@ -77,6 +77,27 @@ Store (runtime state) → Repository (Firestore CRUD)
 - `public/js/api/client.js` - Updated to await cache methods
 
 **Spec**: [arch-5-cache-consolidation_spec.md](technical/specs/arch-5-cache-consolidation_spec.md)
+
+---
+
+### ARCH-6: SeriesView Loading Optimization
+
+**Problem**: Albums displayed all at once at end, filter changes caused full remount.
+
+**Solution**:
+- Incremental render: albums appear 1-by-1 synced with progress bar
+- Store-level cache check before fetching
+- Filter changes call loadScope directly (no router remount)
+- Navigation back uses cached albums (instant)
+
+**Files Changed**:
+- `public/js/controllers/SeriesController.js` - Cache check, incremental notify
+- `public/js/views/SeriesView.js` - Direct loadScope calls
+- `public/js/stores/albums.js` - Preserve Map on reset
+
+**Spec**: [arch-6-series-loading-optimization_spec.md](technical/specs/arch-6-series-loading-optimization_spec.md)
+
+**Known Issue**: #95 - Series filter dropdown empty on first load (Sprint 14)
 
 ---
 
