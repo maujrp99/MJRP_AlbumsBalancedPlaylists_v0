@@ -9,7 +9,7 @@ export class AlbumCache {
     constructor() {
         this.memoryCache = new Map() // L1 cache (RAM)
         this.ttl = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
-        this.version = '3.0' // Bumped for Sprint 7.5 fixes (Enrichment + Normalization)
+        this.version = '3.1' // CRIT-5: Bumped to invalidate old incorrect cached albums
 
         // Cleanup expired entries on init
         try {
@@ -76,6 +76,18 @@ export class AlbumCache {
         // L1: Memory cache
         this.memoryCache.set(query, album)
 
+        // CRIT-5c: Also cache by album identity key
+        if (album.artist && album.title) {
+            const albumKey = this.getAlbumKey(album.artist, album.title)
+            this.memoryCache.set(albumKey, album)
+
+            // Store query → albumKey mapping for debugging
+            if (!this.queryToAlbumKey) {
+                this.queryToAlbumKey = new Map()
+            }
+            this.queryToAlbumKey.set(query, albumKey)
+        }
+
         // L2: localStorage
         const storageKey = this.getStorageKey(query)
         try {
@@ -100,6 +112,54 @@ export class AlbumCache {
                 console.error('Failed to cache even after cleanup:', retryError)
             }
         }
+    }
+
+    /**
+     * Get album by identity (artist + title) instead of query
+     * CRIT-5c: Alternative lookup that doesn't depend on query string
+     * 
+     * @param {string} artist - Artist name
+     * @param {string} title - Album title
+     * @returns {Object|null} Cached album or null
+     */
+    getByIdentity(artist, title) {
+        const albumKey = this.getAlbumKey(artist, title)
+
+        // L1: Memory cache
+        if (this.memoryCache.has(albumKey)) {
+            console.log('✅ L1 cache hit (by identity):', albumKey)
+            return this.memoryCache.get(albumKey)
+        }
+
+        // L2: localStorage
+        const cached = localStorage.getItem(albumKey)
+        if (!cached) return null
+
+        try {
+            const { data, timestamp, version } = JSON.parse(cached)
+            if (version !== this.version) return null
+            if (Date.now() - timestamp > this.ttl) return null
+
+            console.log('✅ L2 cache hit (by identity):', albumKey)
+            this.memoryCache.set(albumKey, data)
+            return data
+        } catch {
+            return null
+        }
+    }
+
+    /**
+     * Generate cache key from album identity (artist + title)
+     * CRIT-5c: Key based on ACTUAL album, not query
+     * 
+     * @param {string} artist - Artist name
+     * @param {string} title - Album title
+     * @returns {string} Normalized album key
+     */
+    getAlbumKey(artist, title) {
+        const normalizedArtist = (artist || '').toLowerCase().replace(/\s+/g, '_').replace(/[^\w_-]/g, '')
+        const normalizedTitle = (title || '').toLowerCase().replace(/\s+/g, '_').replace(/[^\w_-]/g, '')
+        return `album_${normalizedArtist}_${normalizedTitle}`
     }
 
     /**
