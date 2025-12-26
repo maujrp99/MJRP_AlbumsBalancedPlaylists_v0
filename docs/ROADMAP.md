@@ -43,9 +43,13 @@
 - [x] **Documentation Audit**: Consolidated reports, archived old specs, updated codebase_analysis.md.
 - [ ] **Onboarding Protocol**: Verify `onboarding_protocol.md` reflects V3 architecture.
 
-#### Blockers Discovered During Verification
-- 🟠 **[#93] Reconfigure Panel Ignores Ingredients**: Panel toggle works but config not applied on regenerate. See [DEBUG_LOG #93](debug/DEBUG_LOG.md#issue-93).
-- 🔴 **[CRIT-5/#92] Album Cache/Display Architectural Flaw**: Wrong albums appearing in series due to cache key mismatch. See [DEBUG_LOG #92](debug/DEBUG_LOG.md#issue-92).
+#### Part D: Album Data Pipeline (NEW - Fixing #92, #93)
+- [ ] **CRIT-5: Album Data Pipeline Refactoring**
+  - Fix cache key ≠ album identity issue
+  - Add similarity validation to Apple Music results
+  - Series-scoped album loading
+  - Spec: `crit-5-album-pipeline_spec.md`
+  - Analysis: `album-data-pipeline-analysis.md`
 
 ---
 
