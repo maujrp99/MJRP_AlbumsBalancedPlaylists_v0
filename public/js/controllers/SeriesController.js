@@ -84,8 +84,6 @@ export default class SeriesController {
 
         this.state.currentScope = scopeType;
         this.state.targetSeriesId = seriesId;
-        this.state.isLoading = true;
-        this.notifyView('loading', true);
 
         // Update URL without reload
         const newUrl = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
@@ -94,12 +92,27 @@ export default class SeriesController {
         }
 
         try {
-            // Reset store context
+            // Determine store context ID
             const storeContextId = scopeType === 'ALL' ? 'ALL_SERIES_VIEW' : seriesId;
-            albumsStore.setActiveAlbumSeriesId(storeContextId);
-            albumsStore.reset(true);
 
-            this.notifyView('albums', []);
+            // ARCH-6: Check store cache BEFORE reset/fetch
+            if (!skipCache && albumsStore.hasAlbumsForSeries(storeContextId)) {
+                console.log('[SeriesController] ✅ Using cached albums from store');
+                albumsStore.setActiveAlbumSeriesId(storeContextId);
+                this.notifyView('header', this.getHeaderData());
+                this.notifyView('albums', albumsStore.getAlbumsForSeries(storeContextId));
+                this.notifyView('loading', false);
+                this.state.isLoading = false;
+                return;
+            }
+
+            // No cache hit - proceed with loading
+            this.state.isLoading = true;
+            this.notifyView('loading', true);
+
+            // Reset store context (only clears this series, not all)
+            albumsStore.setActiveAlbumSeriesId(storeContextId);
+            albumsStore.clearAlbumSeries(storeContextId);
 
             // Resolve queries to load
             let queriesToLoad = [];
@@ -182,8 +195,7 @@ export default class SeriesController {
             albumsStore.setLastLoadedAlbumSeriesId(targetSeries.id);
         }
 
-        albumsStore.reset(true);
-        this.notifyView('albums', []);
+        // ARCH-6: Don't reset here - already handled in loadScope via clearAlbumSeries
 
         this.state.isLoading = true;
         this.state.loadProgress = { current: 0, total: queries.length };
