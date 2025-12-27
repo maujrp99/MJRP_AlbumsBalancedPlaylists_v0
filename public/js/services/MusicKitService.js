@@ -300,13 +300,16 @@ class MusicKitService {
                 appleMusicId: album.id,
                 title: album.attributes.name,
                 artist: album.attributes.artistName,
-                year: album.attributes.releaseDate?.split('-')[0] || null,
+                year: album.attributes.releaseDate ? album.attributes.releaseDate.split('-')[0] : null,
                 albumType: this._classifyAlbumType(album.attributes),
                 artworkTemplate: this._extractArtworkTemplate(album.attributes.artwork),
                 trackCount: album.attributes.trackCount,
                 isLive: album.attributes.name.toLowerCase().includes('live'),
                 isSingle: album.attributes.isSingle || false,
-                isCompilation: album.attributes.isCompilation || false
+                isCompilation: album.attributes.isCompilation || false,
+                resultUrl: album.attributes.url,
+                releaseDate: album.attributes.releaseDate,
+                raw: album
             }));
         } catch (error) {
             console.error('[MusicKit] Get artist albums failed:', error);

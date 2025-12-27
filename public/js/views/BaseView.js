@@ -114,4 +114,31 @@ export class BaseView {
         return dateObj.toLocaleDateString()
     }
 
+    /**
+         * Set page title
+         * @param {string} title - Page title
+         */
+    setTitle(title) {
+        document.title = title
+    }
+
+    /**
+     * Delegate event listener to a parent element
+     * @param {string} selector - Child selector
+     * @param {string} event - Event name
+     * @param {Function} handler - Event handler
+     */
+    $delegate(selector, event, handler) {
+        const parent = this.container || document.getElementById('app');
+        if (!parent) return;
+
+        const wrappedHandler = (e) => {
+            const target = e.target.closest(selector);
+            if (target && parent.contains(target)) {
+                handler(e, target);
+            }
+        };
+
+        this.on(parent, event, wrappedHandler);
+    }
 }

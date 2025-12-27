@@ -76,8 +76,10 @@ Ranked by business risk and technical debt impact.
     *   Create `components/modals/BaseModal.js`.
     *   Refactor `Modals.js` and `InventoryModals.js` into atomic components.
 
-3.  **HomeView Refactor (P2)**
-    *   Apply the successful V3 pattern from Inventory/Series views.
+3.- [ ] **ARCH-11: HomeView Refactor** (Priority: High)
+  - **Status**: [IN PROGRESS](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/technical/specs/sprint14-home-refactor/arch-11-home-v3-spec.md)
+  - **Proto**: `static_prototype_v3.html`
+  - **Specs**: Split-Panel Layout, Controllers.
 
 ### Architectural Roadmap (Sprint 15+)
 
