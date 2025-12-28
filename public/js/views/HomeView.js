@@ -15,7 +15,7 @@ export class HomeView extends BaseView {
         // V3 Split-Panel Layout (Nano/Flame Style)
         // Structure taken from static_prototype_v3.html
         return `
-    <div class="h-[calc(100vh-64px)] overflow-hidden flex flex-col md:flex-row relative">
+    <div class="min-h-[calc(100vh-64px)] overflow-y-auto md:overflow-hidden flex flex-col md:flex-row relative">
         
         <!-- Background (Dynamic Flame) -->
         <div class="absolute inset-0 z-0 pointer-events-none">
@@ -23,8 +23,8 @@ export class HomeView extends BaseView {
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
         </div>
 
-        <!-- LEFT PANEL (Controls) - 40% Width -->
-        <aside class="relative z-10 w-full md:w-[400px] lg:w-[450px] h-full flex flex-col border-r border-white/10 glass-panel shadow-2xl shrink-0 bg-black/60 backdrop-blur-md">
+        <!-- LEFT PANEL (Controls) - Full width on mobile, fixed width on desktop -->
+        <aside class="relative z-10 w-full md:w-[400px] lg:w-[450px] md:h-full flex flex-col border-b md:border-b-0 md:border-r border-white/10 glass-panel shadow-2xl shrink-0 bg-black/60 backdrop-blur-md">
             
             <!-- Header / Brand -->
             <div class="p-6 border-b border-white/5 flex items-center gap-3">
@@ -40,10 +40,11 @@ export class HomeView extends BaseView {
             <!-- Scrollable Content in Left Panel -->
             <div class="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
                 
-                <!-- 1. Series Name -->
+                <!-- 1. Series Configuration -->
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">01 // Series Name</label>
-                    <input type="text" id="seriesNameInput" value="Start Your Series" class="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:border-orange-500 focus:outline-none transition-colors" placeholder="Name your series...">
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">01 // Series Configuration</label>
+                    <span class="text-[10px] text-gray-500 uppercase tracking-wider block">Your Albums Series Name</span>
+                    <input type="text" id="seriesNameInput" value="" class="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:border-orange-500 focus:outline-none transition-colors" placeholder="e.g., 'Summer Vibes 2024'">
                 </div>
 
                 <!-- 2. Search / Bulk Toggle -->
@@ -52,20 +53,22 @@ export class HomeView extends BaseView {
                     <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
 
                     <div class="bg-black/40 p-3 border-b border-white/5 flex justify-between items-center pl-4">
-                        <span class="text-xs font-bold text-orange-500 uppercase">02 // Input Method</span>
+                        <span class="text-xs font-bold text-orange-500 uppercase">02a // Artist Filter</span>
                         <div class="flex gap-2">
                             <button id="btnModeVisual" class="text-[10px] bg-orange-500 text-white px-2 py-1 rounded hover:opacity-80 transition-opacity">Visual</button>
-                            <button id="btnModeBulk" class="text-[10px] bg-white/5 text-gray-400 px-2 py-1 rounded hover:bg-white/10 transition-colors">Bulk</button>
+                            <button id="btnModeBulk" class="text-[10px] bg-white/5 text-gray-400 px-2 py-1 rounded hover:bg-white/10 transition-colors">Bulk Paste</button>
                         </div>
                     </div>
                     
                     <div class="p-4 space-y-4">
                         <!-- Visual Search Mode -->
-                        <div id="visualInputs" class="relative">
-                            <span class="absolute left-3 top-3 text-gray-500 w-5 h-5 flex items-center justify-center">${getIcon('Search', 'w-4 h-4')}</span>
-                            <input type="text" id="artistScanInput" class="w-full bg-black/50 border border-white/10 rounded-lg py-3 pl-10 text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none transition-all" placeholder="Scan Artist Discography...">
-                            <button id="btnScanArtist" class="absolute right-2 top-2 bg-white/10 hover:bg-white/20 p-1.5 rounded-md text-gray-300 transition-colors">
-                                ${getIcon('ScanLine', 'w-4 h-4')}
+                        <div id="visualInputs" class="flex gap-2">
+                            <div class="flex-1 relative">
+                                <span class="absolute left-3 top-3 text-gray-500 w-5 h-5 flex items-center justify-center">${getIcon('Search', 'w-4 h-4')}</span>
+                                <input type="text" id="artistScanInput" class="w-full bg-black/50 border border-white/10 rounded-lg py-3 pl-10 pr-3 text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none transition-all" placeholder="Type artist name...">
+                            </div>
+                            <button id="btnScanArtist" class="px-4 py-2 bg-flame-gradient rounded-lg text-white text-sm font-bold hover:opacity-90 transition-opacity flex items-center gap-2 shrink-0">
+                                ${getIcon('ScanLine', 'w-4 h-4')} Scan
                             </button>
                         </div>
 
@@ -74,17 +77,17 @@ export class HomeView extends BaseView {
                             <textarea id="bulkPasteInput" class="w-full h-32 bg-black/50 border border-white/10 rounded-lg p-3 text-xs text-mono text-white focus:border-orange-500 focus:outline-none custom-scrollbar" placeholder="Paste: Artist - Album&#10;One per line..."></textarea>
                         </div>
                         
-                        <div class="flex items-center gap-2 text-xs text-green-400 bg-green-900/20 p-2 rounded border border-green-500/20">
-                            ${getIcon('CheckCircle', 'w-3 h-3')}
-                            <span>Ready to scan Apple Music Catalog</span>
+                        <div class="flex items-center gap-2 text-xs text-gray-500 p-2">
+                            ${getIcon('Info', 'w-3 h-3')}
+                            <span>Filtering by artist unlocks the verified discography grid.</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. Staging Area (Stack) -->
+                <!-- 3. Selected Albums -->
                 <div class="flex-1 min-h-[200px] flex flex-col">
                     <div class="flex justify-between items-end mb-2">
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">03 // Staging Stack</label>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">03 // Selected Albums</label>
                         <span id="stagingCount" class="text-xs text-orange-500 font-mono">(0 Albums)</span>
                     </div>
                     
@@ -105,25 +108,33 @@ export class HomeView extends BaseView {
             </div>
         </aside>
 
-        <!-- RIGHT PANEL (Results) - Remaining Width -->
-        <main class="flex-1 relative h-full overflow-hidden flex flex-col bg-black/20">
+        <!-- RIGHT PANEL (Results) - Remaining Width, visible on mobile -->
+        <main class="flex-1 relative min-h-[50vh] md:h-full overflow-hidden flex flex-col bg-black/20">
             
             <!-- Top Toolbar (Sticky) -->
-            <div class="h-16 border-b border-white/5 bg-black/40 backdrop-blur-md flex items-center justify-between px-6 shrink-0 z-20">
+            <div class="min-h-14 border-b border-white/5 bg-black/40 backdrop-blur-md flex flex-col md:flex-row md:items-center md:justify-between px-4 py-2 md:px-6 shrink-0 z-20 gap-2">
                 
-                <!-- Breadcrumbs / Status -->
-                <div class="flex items-center gap-2 text-sm text-gray-400">
+                <!-- Breadcrumbs / Status - Hidden on very small screens -->
+                <div class="hidden sm:flex items-center gap-2 text-sm text-gray-400 shrink-0">
                     <span>Discography Scan</span>
                     ${getIcon('ChevronRight', 'w-4 h-4')}
-                    <span id="statusArtistName" class="text-white font-bold">Waiting...</span>
+                    <span id="statusArtistName" class="text-white font-bold truncate max-w-[150px]">Waiting...</span>
                 </div>
 
-                <!-- Filters -->
-                <div class="flex items-center gap-2">
-                    <button class="px-3 py-1.5 rounded-lg bg-flame-gradient text-white text-xs font-bold shadow-lg shadow-orange-500/20 flex items-center gap-2">
-                        ${getIcon('Disc', 'w-3 h-3')} Albums
+                <!-- Filters - Horizontal scroll on mobile -->
+                <div class="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1 -mb-1">
+                    <button id="btnFilterAlbums" class="filter-btn px-3 py-1.5 rounded-lg bg-flame-gradient text-white text-xs font-bold shadow-lg shadow-orange-500/20 flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0" data-filter="albums">
+                        ${getIcon('Disc', 'w-3 h-3')} <span>Studio</span>
                     </button>
-                    <!-- More filters can be re-enabled via Controller later -->
+                    <button id="btnFilterSingles" class="filter-btn px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 text-xs font-bold border border-white/5 flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0" data-filter="singles">
+                        ${getIcon('Music2', 'w-3 h-3')} <span>Singles/EP</span>
+                    </button>
+                    <button id="btnFilterLive" class="filter-btn px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 text-xs font-bold border border-white/5 flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0" data-filter="live">
+                        ${getIcon('Mic2', 'w-3 h-3')} <span>Live</span>
+                    </button>
+                    <button id="btnFilterCompilations" class="filter-btn px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 text-xs font-bold border border-white/5 flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0" data-filter="compilations">
+                        ${getIcon('Library', 'w-3 h-3')} <span>Compilations</span>
+                    </button>
                 </div>
             </div>
 
@@ -169,6 +180,22 @@ export class HomeView extends BaseView {
             visualBtn.className = "text-[10px] bg-white/5 text-gray-400 px-2 py-1 rounded hover:bg-white/10 transition-colors";
             bulkInputs.classList.remove('hidden');
             visualInputs.classList.add('hidden');
+        }
+
+    }
+
+    setLoading(isLoading) {
+        const btn = this.$('#btnScanArtist');
+        const grid = this.$('#discographyGridContainer');
+        const status = this.$('#statusArtistName');
+
+        if (isLoading) {
+            if (btn) btn.innerHTML = `<div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>`;
+            if (grid) grid.classList.add('opacity-50', 'pointer-events-none');
+            if (status) status.textContent = "Scanning...";
+        } else {
+            if (btn) btn.innerHTML = getIcon('ScanLine', 'w-4 h-4');
+            if (grid) grid.classList.remove('opacity-50', 'pointer-events-none');
         }
     }
 }

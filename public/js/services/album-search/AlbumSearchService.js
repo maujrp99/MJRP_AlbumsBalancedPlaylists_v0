@@ -101,14 +101,21 @@ export class AlbumSearchService {
     }
 
     _processDiscography(albums) {
-        // 1. Map to consistent format
+        // 1. Map to consistent format (including all type flags for filtering)
         const mapped = albums.map(a => ({
             id: a.appleMusicId, // Note: MusicKitService returns 'appleMusicId'
             title: a.title,
             artist: a.artist,
             year: a.year,
             coverUrl: musicKitService.getArtworkUrl(a.artworkTemplate, 300),
-            type: a.albumType, // 'Album', 'Single', 'Compilation', 'Live'
+            artworkTemplate: a.artworkTemplate, // For higher-res rendering
+            type: a.albumType, // 'Album', 'Single', 'Compilation', 'Live', 'EP'
+            albumType: a.albumType, // Alias for consistency
+            isSingle: a.isSingle || false,
+            isCompilation: a.isCompilation || false,
+            isLive: a.isLive || false,
+            releaseDate: a.releaseDate,
+            trackCount: a.trackCount,
             confidence: 1.0, // It's a direct discography fetch, assume 100%
             raw: a
         }));

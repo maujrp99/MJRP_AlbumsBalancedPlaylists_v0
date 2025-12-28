@@ -39,11 +39,15 @@ function groupAlbumsBySeries(albums, seriesList) {
         let found = false
         for (const series of seriesList) {
             const queries = series.albumQueries || []
-            // Bidirectional fuzzy matching
+            // Bidirectional fuzzy matching - handle both string and object formats
             const match = queries.some(q => {
-                const qNorm = q.toLowerCase()
-                const aNorm = album.title.toLowerCase()
-                return qNorm.includes(aNorm) || aNorm.includes(qNorm)
+                // albumQueries can be string ("Artist - Album") or object ({ artist, album })
+                const queryStr = typeof q === 'string' ? q : (q.album || q.title || '');
+                if (!queryStr) return false;
+
+                const qNorm = queryStr.toLowerCase();
+                const aNorm = album.title.toLowerCase();
+                return qNorm.includes(aNorm) || aNorm.includes(qNorm);
             })
 
             if (match) {

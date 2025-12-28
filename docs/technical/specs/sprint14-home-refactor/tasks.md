@@ -4,36 +4,36 @@
 **Plan**: `plan.md`
 
 ## Phase 1: Critical Functional Restoration
-- [ ] **Fix Staging Interaction (Event Delegation)** <!-- id: 1 -->
-    - [ ] Remove `onclick` inline handler from `DiscographyRenderer.js`.
-    - [ ] Add `data-action="toggle-staging"` and `data-id` to the add button.
-    - [ ] Implement `handleGridClick(e)` in `HomeController.js` to catch delegated events.
-    - [ ] Verify clicking "+" correctly calling `stagingController.addAlbum`.
-- [ ] **Implement Filter Logic** <!-- id: 2 -->
-    - [ ] Update `HomeView.js` to render "Filter Pills" using `getIcon` in the Right Panel Toolbar.
-    - [ ] Update `SearchController.js` to include `filterState` (Albums=True, Singles=False, Live=False).
-    - [ ] Implement `applyFilters()` in `SearchController` to filter `this.results` cache.
-    - [ ] Bind filter clicks to `toggleFilter()` method.
+- [x] **Fix Staging Interaction (Event Delegation)** <!-- id: 1 -->
+    - [x] Remove `onclick` inline handler from `DiscographyRenderer.js`.
+    - [x] Add `data-action="toggle-staging"` and `data-id` to the add button.
+    - [x] Implement `handleGridClick(e)` in `HomeController.js` to catch delegated events.
+    - [x] Verify clicking "+" correctly calling `stagingController.addAlbum`.
+- [x] **Implement Filter Logic** <!-- id: 2 -->
+    - [x] Update `HomeView.js` to render "Filter Pills" using `getIcon` in the Right Panel Toolbar.
+    - [x] Update `SearchController.js` to include `filterState` (Albums=True, Singles=False, Live=False).
+    - [x] Implement `applyFilters()` in `SearchController` to filter `this.results` cache.
+    - [x] Bind filter clicks to `toggleFilter()` method.
 
 ## Phase 2: UX Core Improvements
-- [ ] **Loading Feedback** <!-- id: 3 -->
-    - [ ] Add `setLoading(state)` to `HomeView.js` (Spinner replacement + Grid opacity).
-    - [ ] Integrate `setLoading()` into `SearchController.searchArtist()`.
-    - [ ] Verify Spinner appears during API calls.
-- [ ] **Staging Stack UI** <!-- id: 4 -->
-    - [ ] Add "Remove" (X) button to `StagingAreaRenderer` items.
-    - [ ] Verify removing an item updates the count.
+- [x] **Loading Feedback** <!-- id: 3 -->
+    - [x] Add `setLoading(state)` to `HomeView.js` (Spinner replacement + Grid opacity).
+    - [x] Integrate `setLoading()` into `SearchController.searchArtist()`.
+    - [x] Verify Spinner appears during API calls.
+- [x] **Staging Stack UI** <!-- id: 4 -->
+    - [x] Add "Remove" (X) button to `StagingAreaRenderer` items.
+    - [x] Verify removing an item updates the count.
 
 ## Phase 3: Design Parity (Gap Closure)
-- [ ] **Album Badges** <!-- id: 5 -->
-    - [ ] Update `DiscographyRenderer.js` to detect "Deluxe", "Remaster", "Live" keywords.
-    - [ ] Render small badges (e.g., `text-[10px] bg-yellow-500/20 text-yellow-500`) on the card.
-- [ ] **Drag & Drop Reordering** <!-- id: 6 -->
-    - [ ] Research/Integrate simple native Drag & Drop for `#stagingStackContainer`.
-    - [ ] Create `handleDragStart`, `handleDrop` in `StagingAreaController`.
-- [ ] **Bulk Mode Validation** <!-- id: 7 -->
-    - [ ] Update `HomeView.js` bulk input styles for validation readiness.
-    - [ ] (Optional) Add simple line-by-line regex check visual feedback.
+- [x] **Album Badges** <!-- id: 5 -->
+    - [x] Update `DiscographyRenderer.js` to detect "Deluxe", "Remaster", "Live" keywords.
+    - [x] Render small badges (e.g., `text-[10px] bg-yellow-500/20 text-yellow-500`) on the card.
+- [x] **Drag & Drop Reordering** <!-- id: 6 -->
+    - [x] Research/Integrate simple native Drag & Drop for `#stagingStackContainer`.
+    - [x] Create `handleDragStart`, `handleDrop` in `StagingAreaController`.
+- [x] **Bulk Mode Validation** <!-- id: 7 -->
+    - [x] Update `HomeView.js` bulk input styles for validation readiness.
+    - [x] (Optional) Add simple line-by-line regex check visual feedback.
 
 ## Verification Checklist
 - [ ] **Search**: "Pink Floyd" -> 50+ Results.
