@@ -40,6 +40,42 @@
 
 ## Current Debugging Session
 
+### Issue #97: V3 Album Objects Crashing Legacy Systems (The "Thriller" Bug)
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-28 10:45
+**Severity**: CRITICAL (Data Loss / Incorrect Fallback)
+**Type**: Architecture / Compatibility
+**Component**: `AlbumCache`, `APIClient`, `AlbumIdentity`
+
+#### Problem
+1. Albums found in HomeView (V3) failed to load in SeriesView/Blending.
+2. Some searches resulted in "Thriller" by Michael Jackson appearing unexpectedly.
+3. Console errors: `TypeError: query.toLowerCase is not a function`.
+
+#### Root Cause
+**Architectural Mismatch**: HomeView V3 passes **Metadata Objects** (ID, Title, Artist) to the hydration layer.
+However, Legacy components (`AlbumCache`, `AlbumIdentity`) expected **String Queries** ("Artist - Album").
+1. `AlbumCache` crashed trying to normalize the object key.
+2. `AlbumIdentity` crashed trying to compare string similarity.
+3. `APIClient` caught the crash and fell back to the legacy API, sending `[object Object]` as the query.
+4. The Backend returned "Thriller" as a default/mock response for invalid inputs.
+
+#### Solution
+**Compatibility Patch (Hydration Adapter)**:
+1. **AlbumIdentity**: Updated to handle Object queries in constructor.
+2. **APICient**: Updated to stringify objects before sending to legacy API.
+3. **AlbumCache**: Updated `normalizeKey` and `_legacyStorageKey` to extract string representation from objects.
+
+**Architectural Decision**: [ADR: Discovery vs Hydration](file:///c:/Users/Mauricio%20Pedroso/.gemini/antigravity/brain/9bae9fee-eaf9-4880-9275-3355e3b08fdd/adr_discovery_vs_hydration.md)
+
+#### Files Changed
+- `public/js/cache/albumCache.js`
+- `public/js/api/client.js`
+- `public/js/models/AlbumIdentity.js`
+- `public/js/components/series/SeriesModals.js` (UI Fix)
+
+---
+
 ### Issue #96: "Owned" Logic Default Incorrect
 **Status**: ✅ **RESOLVED**
 **Date**: 2025-12-26 15:45

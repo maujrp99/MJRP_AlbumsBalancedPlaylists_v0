@@ -188,12 +188,18 @@ export class APIClient {
      */
     async _fetchAlbumFromAPI(query, retries = this.defaultRetries) {
         try {
+            // Fix: Ensure query is a string for legacy backend
+            let queryStr = query
+            if (typeof query === 'object' && query !== null) {
+                queryStr = `${query.artist || ''} - ${query.title || query.album || ''}`
+            }
+
             const response = await fetch(`${this.baseUrl}/generate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ albumQuery: query })
+                body: JSON.stringify({ albumQuery: queryStr })
             })
 
             if (!response.ok) {
@@ -206,9 +212,9 @@ export class APIClient {
             return this.normalizeAlbumData(data.data || data)
         } catch (error) {
             if (retries > 0) {
-                console.warn(`Retrying fetch for "${query}" (${retries} attempts left)`)
+                console.warn(`Retrying fetch for "${queryStr}" (${retries} attempts left)`)
                 await this.delay(this.retryDelay)
-                return this._fetchAlbumFromAPI(query, retries - 1)
+                return this._fetchAlbumFromAPI(queryStr, retries - 1)
             }
             throw error
         }
@@ -348,7 +354,10 @@ export class APIClient {
      * @private
      */
     extractArtist(query) {
-        if (query.includes(' - ')) {
+        if (typeof query === 'object' && query !== null) {
+            return query.artist || ''
+        }
+        if (query && query.includes(' - ')) {
             return query.split(' - ')[0].trim()
         }
         return ''
@@ -361,10 +370,13 @@ export class APIClient {
      * @private
      */
     extractAlbum(query) {
-        if (query.includes(' - ')) {
+        if (typeof query === 'object' && query !== null) {
+            return query.title || query.album || ''
+        }
+        if (query && query.includes(' - ')) {
             return query.split(' - ')[1].trim()
         }
-        return query.trim()
+        return query ? query.trim() : ''
     }
 
     /**

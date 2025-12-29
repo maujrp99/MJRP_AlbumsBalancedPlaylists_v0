@@ -56,6 +56,23 @@
 - [x] **AlbumsScopedRenderer Compatibility**
     - [x] Fixed `q.toLowerCase` error by handling object-format albumQueries.
 
+## Phase 6: Final Polish (Post-Merge) ✅
+- [x] **TopNav Refinements**
+    - [x] Fix user name overflow (truncate).
+    - [x] Consistent font sizes for menu items.
+    - [x] Integrated "Series Dropdown" styling.
+- [x] **Artist Input & Scan**
+    - [x] Force dark background on autofill inputs (CSS override).
+    - [x] Fix Scan button state losing text/icon on re-render.
+- [x] **Labels**
+    - [x] Update empty stack text to "No albums selected yet".
+    - [x] Update Results header to "02b // Discography Scan".
+
+## Next Steps: Sprint 15 (V4 Redesign) 🚧
+- [ ] **V4 Design Audit**: Map entire UI inventory (Home, Inventory, Playlists).
+- [ ] **AppShell Architecture**: Define `Sidebar` slot pattern.
+- [ ] **Mockups**: Create high-fidelity mocks for all states.
+
 ## Verification Checklist ✅
 - [x] **Search**: "Led Zeppelin" → Results appear.
 - [x] **Filters**: Toggles update grid immediately (client-side).

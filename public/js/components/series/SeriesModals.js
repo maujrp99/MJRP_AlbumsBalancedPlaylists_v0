@@ -203,7 +203,14 @@ export default class SeriesModals {
 
                 const span = document.createElement('span');
                 span.className = 'text-sm truncate flex-1 mr-2';
-                span.textContent = query;
+
+                // Handle both String queries and Object queries (V3)
+                let displayText = query;
+                if (typeof query === 'object' && query !== null) {
+                    displayText = `${query.artist} - ${query.title || query.album}`;
+                }
+
+                span.textContent = displayText;
                 row.appendChild(span);
 
                 const btn = document.createElement('button');

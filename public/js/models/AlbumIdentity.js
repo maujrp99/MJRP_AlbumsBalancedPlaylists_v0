@@ -38,10 +38,13 @@ export class AlbumIdentity {
      * @returns {string} Expected album name
      */
     get expectedAlbum() {
-        if (this.originalQuery.includes(' - ')) {
+        if (typeof this.originalQuery === 'object' && this.originalQuery !== null) {
+            return this.originalQuery.title || this.originalQuery.album || ''
+        }
+        if (this.originalQuery && this.originalQuery.includes(' - ')) {
             return this.originalQuery.split(' - ').slice(1).join(' - ').trim()
         }
-        return this.originalQuery.trim()
+        return (this.originalQuery || '').trim()
     }
 
     /**
@@ -49,7 +52,10 @@ export class AlbumIdentity {
      * @returns {string} Expected artist name
      */
     get expectedArtist() {
-        if (this.originalQuery.includes(' - ')) {
+        if (typeof this.originalQuery === 'object' && this.originalQuery !== null) {
+            return this.originalQuery.artist || ''
+        }
+        if (this.originalQuery && this.originalQuery.includes(' - ')) {
             return this.originalQuery.split(' - ')[0].trim()
         }
         return ''
@@ -68,7 +74,13 @@ export class AlbumIdentity {
 
         const expectedAlbumLower = this.expectedAlbum.toLowerCase()
         const resolvedTitleLower = this.resolvedTitle.toLowerCase()
-        const queryLower = this.originalQuery.toLowerCase()
+
+        let queryLower = ''
+        if (typeof this.originalQuery === 'string') {
+            queryLower = this.originalQuery.toLowerCase()
+        } else if (typeof this.originalQuery === 'object' && this.originalQuery !== null) {
+            queryLower = `${this.originalQuery.artist || ''} ${this.originalQuery.title || this.originalQuery.album || ''}`.toLowerCase()
+        }
 
         // Strategy 1: Direct similarity between expected album and resolved title
         const albumSimilarity = calculateSimilarity(this.expectedAlbum, this.resolvedTitle)

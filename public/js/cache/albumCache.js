@@ -25,7 +25,14 @@ export class AlbumCache {
      * @returns {string} Normalized cache key
      */
     normalizeKey(query) {
-        return `album:${(query || '').toLowerCase().trim().replace(/\s+/g, ' ')}`
+        let str = query
+        // Fix for [object Object] bug: Handle rich album objects from V3
+        if (typeof query === 'object' && query !== null) {
+            const artist = query.artist || ''
+            const title = query.title || query.album || ''
+            str = `${artist} - ${title}`
+        }
+        return `album:${(str || '').toLowerCase().trim().replace(/\s+/g, ' ')}`
     }
 
     /**
@@ -176,7 +183,12 @@ export class AlbumCache {
      * @private
      */
     _legacyStorageKey(query) {
-        const normalized = query.toLowerCase()
+        let str = query
+        if (typeof query === 'object' && query !== null) {
+            str = `${query.artist || ''} - ${query.title || query.album || ''}`
+        }
+
+        const normalized = (str || '').toLowerCase()
             .replace(/\s+/g, '_')
             .replace(/[^\w-]/g, '')
         return `album_cache_v${this.legacyVersion}_${normalized}`
