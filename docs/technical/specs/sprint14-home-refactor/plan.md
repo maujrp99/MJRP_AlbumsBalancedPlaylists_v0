@@ -1,105 +1,134 @@
 # Plan: HomeView V3 Restoration & UX Polish
 
 **Feature**: HomeView V3 Refactor (ARCH-11) - Phase 2: Functional Parity & UX
-**Status**: DRAFT
+**Status**: ✅ IMPLEMENTED
+**Last Updated**: 2025-12-28
 **Related Spec**: `arch-11-home-v3-spec.md`
+**Tasks**: `tasks.md`
 
 ## 1. Goal
-Restore core functionalities (Filters, Staging) lost during the V3 refactor and improve the UX for Search and Staging interactions. The goal is parity with the previous version but with the new V3 architecture and "Nano/Flame" aesthetic.
+Restore core functionalities (Filters, Staging) lost during the V3 refactor and improve the UX for Search and Staging interactions. Achieve parity with the previous version using the new V3 architecture and "Nano/Flame" aesthetic.
 
-## 2. Architecture & Logic Flows
+**Outcome**: All goals achieved. HomeView V3 is fully functional with improved UX.
+
+## 2. Architecture & Logic Flows (Implemented)
 
 ### 2.1 Search & Filter Pipeline
-We will implement a "Pipeline" approach in `SearchController` to handle filtering without re-fetching data.
+Client-side filtering with cached results.
 
 ```mermaid
 graph TD
-    User[User Input] -->|Type + Enter| Search[SearchController.searchArtist()]
-    Search -->|API Call| API[AlbumSearchService]
-    API -->|Raw Results| Cache[this.results Cache]
+    User[User Input] -->|Type + Click Scan| Search[SearchController.searchArtist]
+    Search -->|API Call| API[AlbumSearchService.getArtistDiscography]
+    API -->|Processed Results| Cache[this.results Cache]
     
-    FilterUI[Filter Toggles] -->|Click| Apply[applyFilters()]
+    FilterUI[Filter Buttons: Studio/Singles/Live/Compilations] -->|Click| Toggle[toggleFilter]
+    Toggle --> Apply[applyFilters]
     Cache --> Apply
     
-    Apply -->|Filter: Album/Single/Live| Filtered[Filtered List]
-    Filtered -->|Sort: Newest| Sorted[Sorted List]
+    Apply -->|Type Detection: isSingle, isLive, isCompilation| Filtered[Filtered List]
+    Filtered -->|Sort: Newest First| Sorted[Sorted List]
     Sorted -->|Render| Renderer[DiscographyRenderer]
 ```
 
 ### 2.2 Staging Interaction (Event Delegation)
-To fix the fragile `onclick="window.controller..."` pattern, we will use Event Delegation on the Grid Container.
+Fixed using direct event registration instead of inline handlers.
 
 ```mermaid
 graph TD
-    User -->|Click Add Button| Grid[#discographyGrid]
-    Grid -->|Event Bubble| HomeView[HomeView Delegate]
-    HomeView -->|Handle| HomeController.handleGridClick()
+    User -->|Click Album Card| Grid[#discographyGrid]
+    Grid -->|addEventListener click| HC[HomeController.handleGridClick]
     
-    HomeController -->|Get Album ID| Dataset[data-id]
-    HomeController -->|Lookup| Cache[SearchController.results]
+    HC -->|closest data-action| Dataset[data-id extraction]
+    HC -->|Find album| Cache[SearchController.results]
     
-    HomeController -->|Add/Remove| StagingCtrl[StagingAreaController]
-    StagingCtrl -->|Update State| State[selectedAlbums]
-    StagingCtrl -->|Render| StagingRenderer
+    HC -->|addAlbum| StagingCtrl[StagingAreaController]
+    StagingCtrl -->|Update State| State[selectedAlbums array]
+    StagingCtrl -->|Render| StagingRenderer[StagingAreaRenderer]
 ```
 
-## 3. UI/UX Strategy & Mockups
+### 2.3 Initialize Load Sequence (New)
+Full series creation workflow.
 
-### 3.1 Left Panel: Filter Controls & Staging
-We will add a "Smart Filter" section below the Search Input in the Left Panel (or Top Toolbar depending on space). *Decision: Place in Top Toolbar of Right Panel for better context.*
-
-**Right Panel Top Toolbar:**
+```mermaid
+graph TD
+    User -->|Click Initialize| Btn[#btnInitializeLoad]
+    Btn --> Handler[HomeController.handleInitializeLoad]
+    
+    Handler -->|Get albums| Staging[stagingController.getSelectedAlbums]
+    Handler -->|Get name| Input[#seriesNameInput.value]
+    
+    Handler -->|Create| Store[albumSeriesStore.createSeries]
+    Store -->|Returns| Series[newSeries with ID]
+    
+    Handler -->|Navigate| Router[router.navigate /albums/:id]
+    Router --> View[SeriesView with new series]
 ```
-[ Breadcrumbs ]                                      [ Filters ]
-Home > Pink Floyd                    [x] Albums  [ ] Singles  [ ] Live
-                                     (Pill Buttons: Active=Orange, Inactive=Gray)
+
+## 3. UI/UX Strategy (Implemented)
+
+### 3.1 Labels & Sections
+Restored intuitive labels matching UI Style Guide:
+- **01 // Series Configuration** + sublabel "Your Albums Series Name"
+- **02a // Artist Filter** (replaced technical "INPUT METHOD")
+- **03 // Selected Albums** (replaced jargon "STAGING STACK")
+
+### 3.2 Filter Toolbar (Right Panel)
+```
+[ Discography Scan > Artist Name ]   [Studio] [Singles/EP] [Live] [Compilations]
+                                     (Active=Orange gradient, Inactive=Gray)
 ```
 
-**Loading State (UX):**
-- **Search Button**: Replaced by `<div class="spinner"></div>` during `isScanning`.
-- **Grid Overlay**: A subtle `bg-black/50` overlay on the grid while fetching.
+### 3.3 Scan Button
+- Visible orange gradient button "Scan" next to input
+- Replaces hidden icon-only button
 
-### 3.2 Staging Stack
-- **Visual**: Vertical list in the Left Panel.
-- **Interaction**:
-    - **Add**: Button turns Green checkmark or partial opacity.
-    - **Remove**: "X" button on the Staging Item.
+### 3.4 Mobile Responsiveness
+- Panels stack vertically
+- Filters scroll horizontally with hidden scrollbar
+- Breadcrumbs hidden on small screens
 
-## 4. Implementation Steps
+### 3.5 Staging Area
+- Remove button always visible (not hover-dependent)
+- Larger touch target with red background
+- X icon rendered via `getIcon('X')`
 
-### Step 1: Fix Staging Interaction (Critical)
-- **Refactor `DiscographyRenderer`**:
-    - Remove `onclick` attribute.
-    - Add `data-action="toggle-staging"` and `data-id="${album.id}"`.
-    - Update visual state based on whether album is already in Staging.
-- **Update `HomeController`**:
-    - Add delegate listener for `click` on `#discographyGrid`.
-    - Implement `handleGridClick` to orchestrate `StagingAreaController`.
+## 4. Implementation Summary
 
-### Step 2: Implement Filters
-- **Update `HomeView.js`**:
-    - Add HTML for Filter Pills (Albums, Singles, EPs, Live) in the Right Panel Toolbar.
-- **Update `SearchController.js`**:
-    - Add `filterState = { albums: true, singles: false, ... }`.
-    - Add `applyFilters()` logic.
-    - Bind Filter Buttons to `toggleFilter()`.
+| Step | Description | Status |
+|------|-------------|--------|
+| 1 | Fix event delegation (direct registration) | ✅ Done |
+| 2 | Implement filters (4 categories) | ✅ Done |
+| 3 | Add loading feedback | ✅ Done |
+| 4 | Fix staging UI (remove button) | ✅ Done |
+| 5 | Add album badges | ✅ Done |
+| 6 | Integrate SortableJS for D&D | ✅ Done |
+| 7 | Restore intuitive labels | ✅ Done |
+| 8 | Fix mobile layout | ✅ Done |
+| 9 | Implement Initialize Load | ✅ Done |
+| 10 | Fix AlbumsScopedRenderer bug | ✅ Done |
 
-### Step 3: UX Polish (Loading & Feedback)
-- **Update `HomeView.js`**:
-    - Add `setLoading(bool)` method to toggle UI states.
-- **Update `SearchController.js`**:
-    - Call `setLoading(true)` before search, `false` after.
+## 5. Files Modified
 
-### Step 4: Closing the Design Gaps (Parity & Polish)
-- **Buttons & Badges**:
-    - Add "Deluxe", "Remaster", "Live" badges to Album Cards (`DiscographyRenderer`).
-- **Drag & Drop**:
-    - Implement basic Drag & Drop for Staging Area reordering (`SortableJS` or native).
-- **Bulk Mode**:
-    - Add basic validation visual feedback (Green/Red border on valid lines).
+| File | Changes |
+|------|---------|
+| `HomeView.js` | Labels, mobile layout, filter buttons, scan button |
+| `HomeController.js` | Event delegation, Initialize Load with navigation |
+| `SearchController.js` | Compilations filter, improved type detection |
+| `DiscographyRenderer.js` | Entire card clickable, badges, visual feedback |
+| `StagingAreaRenderer.js` | Always visible remove button with getIcon |
+| `AlbumSearchService.js` | Proper album type flags in _processDiscography |
+| `AlbumsScopedRenderer.js` | Handle both string and object albumQueries |
+| `neon.css` | scrollbar-hide utility |
 
-## 5. Validation
-- **Manual Test**: Search "Pink Floyd", toggle "Live", verify Live albums appear/disappear.
-- **Manual Test**: Add 5 albums to staging, verify count.
-- **Manual Test**: Verify Loading Spinner appears during search.
-- **Manual Test**: Verify Badges on specific albums (e.g. "Dark Side of the Moon 50th").
+## 6. Validation Results
+
+| Test | Result |
+|------|--------|
+| Search "Led Zeppelin" | ✅ 27 albums fetched, 9 studio filtered |
+| Toggle filters | ✅ Immediate client-side update |
+| Click album to stage | ✅ Adds to Selected Albums |
+| Click X to remove | ✅ Removes from stack |
+| Initialize Load | ✅ Creates series, navigates to /albums/:id |
+| Mobile layout | ✅ Panels stack, filters scroll |
+| Badges display | ✅ Deluxe, Remaster, Live badges visible |

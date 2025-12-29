@@ -1,69 +1,104 @@
 # ARCH-11: HomeView V3 ("The Album Blender") Specification
 
-## 1. Overview
-**Goal**: Refactor `HomeView.js` (currently monolithic) into a modular V3 Architecture (Controller + Renderer) and implement the "Split-Panel" design inspired by Nano Banana aesthetics.
-**Status**: IN PROGRESS
+**Status**: ✅ IMPLEMENTED
+**Last Updated**: 2025-12-28
 **Prototype**: `public/static_prototype_v3.html` (Visual Reference)
+**Implementation**: `public/js/views/HomeView.js`
 
-## 2. Architecture Diagram (V3 Pattern)
+## 1. Overview
+**Goal**: Refactor `HomeView.js` (previously monolithic) into a modular V3 Architecture (Controller + Renderers) implementing the "Split-Panel" design with Nano Banana / Flame aesthetics.
+
+**Result**: Successfully implemented. HomeView V3 is fully functional with modular architecture.
+
+## 2. Architecture Diagram (Implemented)
+
 ```mermaid
 graph TD
-    User[User Interaction] --> HC[HomeController.js]
-    HC --> |Search Logic| SC[SearchController.js]
-    HC --> |Staging Logic| SAC[StagingAreaController.js]
+    HV[HomeView.js] -->|mount| HC[HomeController.js]
     
-    SC --> |Fetches| MS[MusicKitService]
-    SC --> |Updates| DR[DiscographyRenderer.js]
+    HC -->|Search Logic| SC[SearchController.js]
+    HC -->|Staging Logic| SAC[StagingAreaController.js]
+    HC -->|Grid Events| DR[DiscographyRenderer.js]
+    HC -->|Stack Events| SAR[StagingAreaRenderer.js]
     
-    SAC --> |Updates| SAR[StagingAreaRenderer.js]
+    SC -->|Fetches| ASS[AlbumSearchService]
+    ASS -->|API| MKS[MusicKitService]
     
-    DR --> |Events| HC
-    SAR --> |Events| HC
+    SC -->|Updates| DR
+    SAC -->|Updates| SAR
+    
+    HC -->|Initialize Load| Store[albumSeriesStore]
+    Store -->|Navigate| Router[router → /albums/:id]
 ```
 
-## 3. UI Design: The Split Panel (Nano Style)
-A 40/60 Split Layout with "Flame Gradient" and Glassmorphism.
+## 3. Component Inventory
 
-### Left Panel (40%): Control Deck
-- **Series Name**: Sticky input.
-- **Input Controllers**:
-    - **Visual Mode**: Search Bar + Autocomplete.
-    - **Bulk Mode**: Textarea (Validation integrated).
-- **Staging Stack**: A list of selected albums (Drawer on Mobile).
-- **Action**: "Initialize Load Sequence" sticky footer.
+| Component | File | Lines | Status |
+|-----------|------|-------|--------|
+| HomeView | `views/HomeView.js` | 202 | ✅ Implemented |
+| HomeController | `controllers/HomeController.js` | 175 | ✅ Implemented |
+| SearchController | `components/home/SearchController.js` | 140 | ✅ Implemented |
+| StagingAreaController | `components/home/StagingAreaController.js` | 70 | ✅ Implemented |
+| DiscographyRenderer | `views/renderers/DiscographyRenderer.js` | 66 | ✅ Implemented |
+| StagingAreaRenderer | `views/renderers/StagingAreaRenderer.js` | 38 | ✅ Implemented |
 
-### Right Panel (60%): Results Matrix
-- **Header**: Breadcrumbs + Filters (Album/Single/Live) + Toggles.
-- **Grid**: Infinite scroll discography.
-- **Sorting**: **Release Date (Newest -> Oldest)** [Default].
+**Total**: 6 modules, ~691 lines
 
-## 4. Components Plan
+## 4. UI Design: Split Panel Layout
 
-### [NEW] `public/js/controllers/HomeController.js`
-- **Role**: Orchestrator. Replaces `HomeView.js`.
-- **State**: `viewMode` (Visual/Bulk), `isScanning`, `seriesName`.
+### Left Panel (400px desktop / full mobile): Control Deck
+- **Header**: Album Blender V3 branding
+- **01 // Series Configuration**: Series name input with sublabel
+- **02a // Artist Filter**: 
+  - Visual Mode: Search input + "Scan" button
+  - Bulk Mode: Textarea with validation feedback
+- **03 // Selected Albums**: Staging stack with drag-drop (SortableJS)
+- **Footer**: "Initialize Load Sequence" button (sticky)
 
-### [NEW] `public/js/components/home/SearchController.js`
-- **Role**: Manages the Artist Search pipeline.
-- **Dependencies**: `AlbumSearchService`, `MusicKitService`.
+### Right Panel (flex-1): Results Matrix
+- **Toolbar**: 
+  - Breadcrumbs (hidden on mobile)
+  - Filter buttons: Studio, Singles/EP, Live, Compilations
+- **Grid**: Responsive album cards (2-5 columns)
+  - Entire card clickable (adds to staging)
+  - Badges: Deluxe, Remaster, Live, Single, Compilation
+  - Hover effects: scale, border glow
 
-### [NEW] `public/js/views/renderers/DiscographyRenderer.js`
-- **Role**: Renders the toggleable grid in the Right Panel.
-- **Features**: 
-    - Hover effects ("Flying Album").
-    - Badge rendering (Deluxe/Remaster).
-    - Sorting logic (Newest First).
+## 5. Key Features Implemented
 
-### [NEW] `public/js/views/renderers/StagingAreaRenderer.js`
-- **Role**: Renders the stack in the Left Panel.
-- **Features**: Drag-drop reordering, remove buttons.
+### 5.1 Search & Filters
+- Client-side filtering with cached results
+- 4 filter categories: Studio, Singles/EP, Live, Compilations
+- Type detection via `albumType` + title keyword fallback
 
-## 5. Mobile & Hero Strategy
-- **Mobile**: Panels stack vertically. Left Panel (Controls) acts as a flexible drawer.
-- **Hero**: **Full-Screen Dynamic Background** (Flame Animation) replaces static banners.
+### 5.2 Staging Area
+- Add: Click entire album card
+- Remove: Always-visible X button with red background
+- Reorder: SortableJS drag-and-drop
+- Count: Real-time "(N Albums)" badge
 
-## 6. Implementation Steps
-1. **Scaffold**: Create folder structure `public/js/components/home/`.
-2. **Prototype Integration**: Port `static_prototype_v3.html` HTML to `HomeView.js` (or `HomeRenderer.js`).
-3. **Logic Migration**: Move search/staging logic to Controllers.
-4. **Verification**: Match functionality with the Prototype.
+### 5.3 Initialize Load Sequence
+- Validates at least one album selected
+- Creates series via `albumSeriesStore.createSeries()`
+- Navigates to `/albums/:seriesId`
+- Toast feedback for success/error
+
+### 5.4 Mobile Responsiveness
+- Panels stack vertically
+- Filters: horizontal scroll with hidden scrollbar
+- Breadcrumbs: hidden on small screens
+- Touch targets: larger buttons (min 44px)
+
+## 6. Known Limitations
+
+| Issue | Workaround |
+|-------|------------|
+| Firestore 400 errors | Unrelated to HomeView; Firebase session issue |
+| Some albums fail to load in SeriesView | Expected when new series albumQueries haven't been enriched yet |
+
+## 7. Future Enhancements (Out of Scope)
+
+- [ ] Album card "selected" state indication (checkmark overlay)
+- [ ] Flying album animation when staging
+- [ ] Search autocomplete for artist names
+- [ ] Bulk mode: highlight resolved lines in real-time

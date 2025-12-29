@@ -1,84 +1,119 @@
 # Design Proposal: Home View V3 (The Album Blender)
 
-**Objective**: Redesign the Home View to better accommodate the new "Discography Scan", "Search", and "Staging Area" workflows while maintaining the premium V3 aesthetic.
+**Status**: ✅ IMPLEMENTED
+**Last Updated**: 2025-12-28
+**Implementation**: See `arch-11-home-v3-spec.md` for final spec
 
-## 1. Core Layout Structure
-Move from a linear vertical form to a **Split-Panel Workspace**.
-
-### Left Panel (40%): The Control Deck
-Fixed or sticky panel containing the input and context.
-- **Hero/Brand**: Compact top branding.
-- **Series Config**: Series Name input (always visible).
-- **Search Logic Controller**:
-    - **Visual Mode**: `ArtistScanner` component (Search bar + Auto-complete).
-    - **Bulk Mode**: `BulkInputPanel` component (Textarea + Validation).
-    - *Toggle between modes with a clear tab switcher.*
-- **Staging Area (Mini)**:
-    - A condensed vertical list or "stack" of selected albums.
-    - Drag-and-drop ordering support.
-    - "Initialize" button at the bottom (always accessible).
-
-### Right Panel (60%): The Result Matrix
-Scrollable content area for results.
-- **Right Panel**: Result Matrix (Discography Grid).
-    - **Sticky Toolbar**: Top bar with filters and sorting controls.
-    - **Default Sort**: **Most Recent -> Oldest** (per user request).
-    - **Grid**: Infinite scroll or paginated grid of album cards.
-    - If scanner fails, toggles to a traditional search result list here.
-
-## 2. Interaction Improvements
-- **"Add" Animation**:
-    - When clicking an album in the grid, animate a "clone" of the cover flying to the Staging Area on the left.
-- **Manual "Bulk Mode" Tab**:
-    - A dedicated tab in the Left Panel for text-based input.
-    - Real-time validation (green checkmarks next to lines that resolve).
-
-## 3. Visuals & Aesthetics
-- **Flattened Depth**: Use glassmorphism for the panels, but keep the background dynamic (the current "Flame" or "Hero" image).
-- **Badge System**: Clearer badges for "Deluxe", "Remaster", "Live" on the album cards to reduce reliance on opening modals to know what version it is.
-
-## 4. "Plain Mock" (Wireframe) - Split Panel View
-
-```text
-+-----------------------------------------------------------------------+
-|  [LOGO] MJRP Blender                                                  |
-+----------------------+------------------------------------------------+
-|  LEFT PANEL (Fixed)  |            RIGHT PANEL (Scrollable)            |
-|                      |                                                |
-|  [Series Name Input] |   [Discography Toolbar (Sticky)]               |
-|                      |   [Filter: Album | Single | Live ]             |
-|  [TAB: Visual | Bulk]|                                                |
-|                      |   +---------------------------------------+    |
-|  [ARTIST SEARCH BAR] |   | [Album Card]  [Album Card] [Album Card]|    |
-|  "Pink Floyd" [Scan] |   | "Dark Side"   "The Wall"   "Animals"  |    |
-|                      |   +---------------------------------------+    |
-|  [SCAN STATUS: OK]   |                                                |
-|                      |   +---------------------------------------+    |
-|  STAGING AREA (Stack)|   | [Album Card]  [Album Card] [Album Card]|    |
-|  +----------------+  |   | 1. Dark Side   |  |   | "Meddle"      "Wish You"   "Piper"    |    |
-|  | 2. The Wall    |  |   +---------------------------------------+    |
-|  | 3. Animals     |  |                                                |
-|  | 4. Meddle      |  |   (Infinite Scroll Down...)                    |
-|  +----------------+  |                                                |
-|                      |                                                |
-|  [INITIALIZE LOAD]   |                                                |
-+----------------------+------------------------------------------------+
-```
-
-## 5. Prototype Plan
-- **Phase 1 (Mock)**: Above ASCII wireframe for structural agreement.
-- **Phase 2 (Visual Prototype)**: `static_prototype_v3.html` created.
-
-![V3 Prototype](file:///C:/Users/Mauricio%20Pedroso/.gemini/antigravity/brain/9bae9fee-eaf9-4880-9275-3355e3b08fdd/prototype_v3_full_png_1766780013610.png)
-*Fig 2: Static Prototype showing the Split Panel layout with Flame gradient and Glassmorphism.*
-
-## 6. Mobile Responsiveness
-- **Stacking**: On mobile, the Left Panel becomes a top header/drawer, and the Right Panel takes the full screen.
-- **Bottom Bar**: Staging Area moves to a collapsible bottom sheet "Selected Albums (5)".
+**Objective**: Redesign the Home View to accommodate "Discography Scan", "Search", and "Staging Area" workflows with premium V3 aesthetic.
 
 ---
 
-**Next Steps (ARCH-11)**:
-1. Create `HomeViewV3.js` (shadow component).
-2. Implement split-panel layout.
-3. Migrate `ArtistScanner` and `StagingArea` logic.
+## 1. Core Layout Structure (Implemented)
+Moved from linear vertical form to **Split-Panel Workspace**.
+
+### Left Panel (~400px desktop): The Control Deck ✅
+Fixed/sticky panel containing input and context.
+- **Header**: Compact branding "Album Blender V3"
+- **01 // Series Configuration**: Series Name input (always visible)
+- **02a // Artist Filter**:
+    - **Visual Mode**: Search bar with visible "Scan" button
+    - **Bulk Mode**: Textarea with validation feedback
+    - *Tab switcher: "Visual" / "Bulk Paste"*
+- **03 // Selected Albums (Staging)**:
+    - Vertical stack with drag-drop reordering
+    - Always-visible X button for removal
+    - Real-time count badge
+- **Footer**: "Initialize Load Sequence" button (sticky)
+
+### Right Panel (flex-1): The Result Matrix ✅
+Scrollable content area for results.
+- **Toolbar**: Filters (Studio, Singles/EP, Live, Compilations) + Breadcrumbs
+- **Default Sort**: Release Date (Newest → Oldest)
+- **Grid**: Responsive columns (2-5 based on viewport)
+- **Cards**: Entire card clickable, badges for album types
+
+---
+
+## 2. Interaction Improvements (Implemented)
+
+| Feature | Status | Implementation |
+|---------|--------|----------------|
+| Click entire album to stage | ✅ | `data-action="toggle-staging"` on card div |
+| Always-visible remove button | ✅ | Red background, larger touch target |
+| Drag & Drop reordering | ✅ | SortableJS integration |
+| Bulk mode validation | ✅ | Border color feedback (green/orange) |
+| Loading feedback | ✅ | `setLoading()` method in HomeView |
+| Initialize Load navigation | ✅ | Creates series → navigates to /albums/:id |
+
+---
+
+## 3. Visuals & Aesthetics (Implemented)
+
+- **Glassmorphism**: `glass-panel` class on left panel
+- **Flame Background**: Dynamic hero_bg.svg with gradient overlay
+- **Badge System**: Deluxe, Remaster, Live, Single, Compilation badges
+- **Hover Effects**: 
+  - Album cards: orange border glow, image scale
+  - Buttons: opacity transitions
+- **Mobile**: Horizontal scroll filters, stacked panels
+
+---
+
+## 4. Final Layout (Implemented)
+
+```
++-----------------------------------------------------------------------+
+|  [TopNav with MJRP branding]                                          |
++----------------------+------------------------------------------------+
+|  LEFT PANEL (400px)  |            RIGHT PANEL (flex-1)                |
+|                      |                                                |
+| 01 // SERIES CONFIG  | [Discography Scan > Artist Name]              |
+| Your Albums Series   | [Studio] [Singles/EP] [Live] [Compilations]   |
+| [___________________]|                                                |
+|                      | +------------------------------------------+  |
+| 02a // ARTIST FILTER | | [Album]    [Album]    [Album]    [Album] |  |
+| [Visual] [Bulk Paste]| | + badge    + badge    + badge    + badge |  |
+|                      | +------------------------------------------+  |
+| 🔍 [Artist...] [Scan]|                                                |
+|                      | +------------------------------------------+  |
+| 03 // SELECTED ALBUMS| | [Album]    [Album]    [Album]    [Album] |  |
+| (3 Albums)           | +------------------------------------------+  |
+| +------------------+ |                                                |
+| | Album 1      [X] | | (Scrollable grid continues...)               |
+| | Album 2      [X] | |                                                |
+| | Album 3      [X] | |                                                |
+| +------------------+ |                                                |
+|                      |                                                |
+| [INITIALIZE LOAD →]  |                                                |
++----------------------+------------------------------------------------+
+```
+
+---
+
+## 5. Mobile Responsiveness (Implemented)
+
+- **Stacking**: Panels stack vertically (left on top, right below)
+- **Filters**: Horizontal scroll with hidden scrollbar
+- **Breadcrumbs**: Hidden on screens < 640px
+- **Touch Targets**: Minimum 44px for buttons
+- **Right Panel**: `min-h-[50vh]` ensures visibility
+
+---
+
+## 6. Post-Implementation Notes
+
+### What Worked Well
+- Split-panel layout provides clear separation of concerns
+- Event delegation solved fragile onclick handlers
+- Client-side filtering provides instant UX feedback
+
+### Lessons Learned
+- Data model consistency critical (object vs string albumQueries)
+- Mobile-first approach needed earlier
+- Hover interactions don't translate to mobile (always-visible buttons)
+
+### Future Enhancements
+- [ ] "Selected" state indicator on album cards
+- [ ] Flying animation when staging albums
+- [ ] Artist autocomplete in search
+- [ ] Bulk mode: real-time line resolution with checkmarks
