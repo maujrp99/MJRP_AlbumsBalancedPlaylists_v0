@@ -6,6 +6,15 @@
     --neon-green: #00ff9d;
 }
 
+/* Force dark background on autofilled inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #111 inset !important;
+    -webkit-text-fill-color: white !important;
+}
+
 .neon-border-blue {
     border: 1px solid rgba(0, 243, 255, 0.5);
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.2), inset 0 0 5px rgba(0, 243, 255, 0.1);
@@ -51,7 +60,7 @@
 
 .nav-link-glow:hover {
     color: var(--neon-orange);
-    text-shadow: 
+    text-shadow:
         0 0 5px rgba(255, 136, 0, 0.6),
         0 0 10px rgba(255, 136, 0, 0.4),
         0 0 20px rgba(255, 136, 0, 0.2);
@@ -60,7 +69,7 @@
 }
 
 .nav-link-glow.text-accent-primary {
-    text-shadow: 
+    text-shadow:
         0 0 5px rgba(255, 136, 0, 0.4),
         0 0 10px rgba(255, 136, 0, 0.2);
 }
@@ -85,10 +94,13 @@
 
 /* Hide scrollbar utility for horizontal scroll areas */
 .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none;
+    /* Chrome, Safari and Opera */
 }

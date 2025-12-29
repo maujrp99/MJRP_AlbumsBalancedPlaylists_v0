@@ -166,7 +166,7 @@ export class TopNav {
             <div class="relative group" id="userMenuDropdownTrigger">
                 <button class="flex items-center gap-2 p-1 rounded-full hover:bg-white/5 transition-colors">
                     ${avatarContent}
-                     <span class="hidden lg:block text-sm font-medium text-white/80 max-w-[100px] truncate">${currentUser.displayName || 'User'}</span>
+                     <span class="hidden lg:block text-xs font-medium text-white/80 max-w-[80px] truncate">${currentUser.displayName || 'User'}</span>
                 </button>
                 
                 <!-- Dropdown -->
@@ -235,7 +235,7 @@ export class TopNav {
 
     const baseClass = isMobile
       ? 'text-2xl font-bold'
-      : 'nav-link-glow text-sm font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg transition-all duration-300'
+      : 'nav-link-glow text-xs font-semibold uppercase tracking-wide px-2.5 py-1.5 rounded-lg transition-all duration-300 text-center whitespace-nowrap'
     const activeClass = isActive ? 'text-accent-primary bg-white/5' : 'text-muted'
 
     return `

@@ -57,7 +57,7 @@ export class SeriesDropdown {
             <div class="relative" id="seriesDropdownContainer">
                 <button 
                     id="seriesDropdownBtn"
-                    class="nav-link-glow text-sm font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg transition-all duration-300 flex items-center gap-1 ${isSeriesActive ? 'text-accent-primary bg-white/5' : 'text-muted'}"
+                    class="nav-link-glow text-xs font-semibold uppercase tracking-wide px-2.5 py-1.5 rounded-lg transition-all duration-300 flex items-center gap-1 whitespace-nowrap ${isSeriesActive ? 'text-accent-primary bg-white/5' : 'text-muted'}"
                 >
                     ${activeLabel}
                     ${getIcon('ChevronDown', `w-4 h-4 transition-transform duration-200 ${this.isOpen ? 'rotate-180' : ''}`)}

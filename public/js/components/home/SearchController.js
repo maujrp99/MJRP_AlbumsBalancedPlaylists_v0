@@ -52,11 +52,11 @@ export class SearchController {
             if (results && results.length > 0) {
                 this.home.state.artist = { name: results[0].artist };
                 const statusEl = this.home.view.$('#statusArtistName');
-                if (statusEl) statusEl.textContent = results[0].artist;
+                if (statusEl) statusEl.textContent = `→ ${results[0].artist}`;
             } else {
                 console.warn('[SearchController] No results found.');
                 const statusEl = this.home.view.$('#statusArtistName');
-                if (statusEl) statusEl.textContent = "Not Found";
+                if (statusEl) statusEl.textContent = '→ Not Found';
                 alert('No albums found for this artist.');
             }
 

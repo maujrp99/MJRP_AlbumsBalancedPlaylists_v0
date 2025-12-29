@@ -10,7 +10,7 @@ export class StagingAreaRenderer {
         if (!this.container) return;
 
         if (!selectedAlbums || selectedAlbums.length === 0) {
-            this.container.innerHTML = `<div class="text-center text-xs text-gray-500 py-4">Stack is empty.</div>`;
+            this.container.innerHTML = `<div class="text-center text-xs text-gray-500 py-8">No albums selected yet.</div>`;
             return;
         }
 

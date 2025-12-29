@@ -62,13 +62,17 @@ export class HomeView extends BaseView {
                     
                     <div class="p-4 space-y-4">
                         <!-- Visual Search Mode -->
-                        <div id="visualInputs" class="flex gap-2">
+                        <div id="visualInputs" class="flex gap-3 items-stretch">
                             <div class="flex-1 relative">
-                                <span class="absolute left-3 top-3 text-gray-500 w-5 h-5 flex items-center justify-center">${getIcon('Search', 'w-4 h-4')}</span>
-                                <input type="text" id="artistScanInput" class="w-full bg-black/50 border border-white/10 rounded-lg py-3 pl-10 pr-3 text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none transition-all" placeholder="Type artist name...">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">${getIcon('Search', 'w-4 h-4')}</span>
+                                <input type="text" id="artistScanInput" 
+                                       style="background-color: #111 !important; color: #fff !important;" 
+                                       class="w-full border border-white/10 rounded-lg py-3 pl-10 pr-3 placeholder-gray-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none transition-all" 
+                                       placeholder="Type artist name...">
                             </div>
-                            <button id="btnScanArtist" class="px-4 py-2 bg-flame-gradient rounded-lg text-white text-sm font-bold hover:opacity-90 transition-opacity flex items-center gap-2 shrink-0">
-                                ${getIcon('ScanLine', 'w-4 h-4')} Scan
+                            <button id="btnScanArtist" class="min-w-[100px] px-5 py-3 bg-flame-gradient rounded-lg text-white text-sm font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shrink-0">
+                                ${getIcon('ScanLine', 'w-4 h-4')}
+                                <span>Scan</span>
                             </button>
                         </div>
 
@@ -112,13 +116,12 @@ export class HomeView extends BaseView {
         <main class="flex-1 relative min-h-[50vh] md:h-full overflow-hidden flex flex-col bg-black/20">
             
             <!-- Top Toolbar (Sticky) -->
-            <div class="min-h-14 border-b border-white/5 bg-black/40 backdrop-blur-md flex flex-col md:flex-row md:items-center md:justify-between px-4 py-2 md:px-6 shrink-0 z-20 gap-2">
+            <div class="min-h-14 border-b border-white/5 bg-black/40 backdrop-blur-md flex flex-col md:flex-row md:items-center md:justify-between px-4 py-3 md:px-6 shrink-0 z-20 gap-2">
                 
-                <!-- Breadcrumbs / Status - Hidden on very small screens -->
-                <div class="hidden sm:flex items-center gap-2 text-sm text-gray-400 shrink-0">
-                    <span>Discography Scan</span>
-                    ${getIcon('ChevronRight', 'w-4 h-4')}
-                    <span id="statusArtistName" class="text-white font-bold truncate max-w-[150px]">Waiting...</span>
+                <!-- Section Header - Matching 2a style -->
+                <div class="flex items-center gap-3 shrink-0">
+                    <span class="text-xs font-bold text-orange-500 uppercase tracking-widest">02b // Discography Scan</span>
+                    <span id="statusArtistName" class="text-sm text-white font-bold truncate max-w-[200px]"></span>
                 </div>
 
                 <!-- Filters - Horizontal scroll on mobile -->
@@ -194,7 +197,7 @@ export class HomeView extends BaseView {
             if (grid) grid.classList.add('opacity-50', 'pointer-events-none');
             if (status) status.textContent = "Scanning...";
         } else {
-            if (btn) btn.innerHTML = getIcon('ScanLine', 'w-4 h-4');
+            if (btn) btn.innerHTML = `${getIcon('ScanLine', 'w-4 h-4')} <span>Scan</span>`;
             if (grid) grid.classList.remove('opacity-50', 'pointer-events-none');
         }
     }
