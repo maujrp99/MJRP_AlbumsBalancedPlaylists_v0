@@ -1,11 +1,13 @@
 import { TracksTable } from './TracksTable.js'
 import { TracksTabs } from './TracksTabs.js'
 import { SpotifyService } from '../../services/SpotifyService.js'
+import { SafeDOM } from '../../utils/SafeDOM.js'
 import toast from '../Toast.js'
 
 /**
  * Smart Container for Multi-Source Ranking Comparison
  * Handles logic, state, and data processing.
+ * REFACTORED: SafeDOM implementation (Sprint 15 Phase 4.3)
  */
 export class TracksRankingComparison {
     /**
@@ -147,7 +149,7 @@ export class TracksRankingComparison {
 
         if (tableContainer) {
             // Clear previous content to avoid appending duplicates if not handled by sub-component
-            tableContainer.innerHTML = ''
+            SafeDOM.clear(tableContainer)
             new TracksTable({
                 tracks: sortedTracks,
                 sortField: this.state.sortField,
@@ -157,7 +159,7 @@ export class TracksRankingComparison {
         }
 
         if (tabsContainer) {
-            tabsContainer.innerHTML = ''
+            SafeDOM.clear(tabsContainer)
             new TracksTabs({
                 tracks: sortedTracks,
                 activeTab: this.state.activeTab,
@@ -170,46 +172,25 @@ export class TracksRankingComparison {
         // Responsive Strategy
         setTimeout(() => this.updateUI(), 0)
 
-        return `
-            <div class="tracks-ranking-comparison w-full space-y-6">
-                
-                <!-- Enrichment Controls -->
-                ${this.album.spotifyId ? '' : `
-                    <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl flex justify-between items-center mb-4">
-                        <span class="text-blue-400 text-sm">Spotify data not linked.</span>
-                        <button class="enrich-btn px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition-colors">
-                            Enrich Data
-                        </button>
-                    </div>
-                `}
+        const children = []
 
-                <!-- Desktop View -->
-                <div class="tracks-table-container hidden md:block">
-                    <!-- TracksTable mounts here -->
-                    <div class="animate-pulse bg-white/5 h-64 rounded-xl"></div>
-                </div>
+        // Enrichment Controls
+        if (!this.album.spotifyId) {
+            const enrichBtn = SafeDOM.button({
+                className: 'enrich-btn px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition-colors',
+                textContent: 'Enrich Data'
+            })
+            // Attach event listener directly here, but we need to match original logic which reused the button.
+            // Actually, in `mount`, we can attach it. Or just attach it here and it will persist if re-rendered.
+            // But `mount` calls `render` so it creates a fresh button. 
+            // The original `mount` code attached the listener. We can keep that pattern or move it here.
+            // Let's keep the structure simple and let `mount` handle the specific "enrich" logic binding if we want specifically to control the button ref,
+            // OR we can bind it right here. Binding here is cleaner.
 
-                <!-- Mobile View -->
-                <div class="tracks-tabs-container md:hidden">
-                    <!-- TracksTabs mounts here -->
-                    <div class="animate-pulse bg-white/5 h-64 rounded-xl"></div>
-                </div>
-
-            </div>
-        `
-    }
-
-    async mount(container) {
-        if (!container) return
-        this.container = container // Store ref for scoped updates
-        container.innerHTML = this.render()
-
-        // Bind Enrichment Button
-        const enrichBtn = container.querySelector('.enrich-btn')
-        if (enrichBtn) {
-            enrichBtn.addEventListener('click', async () => {
-                enrichBtn.disabled = true
-                enrichBtn.textContent = 'Loading...'
+            enrichBtn.onclick = async (e) => {
+                const btn = e.target
+                btn.disabled = true
+                btn.textContent = 'Loading...'
 
                 try {
                     await this.enrichWithSpotifyData()
@@ -217,25 +198,56 @@ export class TracksRankingComparison {
 
                     // Re-render with new data
                     this.state.tracks = this.normalizeTracks(this.album)
-                    container.innerHTML = this.render()
-                    this.mount(container) // Re-bind events
 
-                    // FIX: Dispatch event for persistence
-                    const event = new CustomEvent('album-enriched', {
-                        detail: { album: this.album },
-                        bubbles: true
-                    })
-                    container.dispatchEvent(event)
-                    console.log('[TracksRankingComparison] Dispatched album-enriched event')
+                    // We need to re-mount the whole thing because the "Enrichment Controls" section needs to disappear
+                    if (this.container) {
+                        this.mount(this.container)
+
+                        // User persisted logic
+                        const event = new CustomEvent('album-enriched', {
+                            detail: { album: this.album },
+                            bubbles: true
+                        })
+                        this.container.dispatchEvent(event)
+                    }
 
                 } catch (err) {
                     console.error('[TracksRankingComparison] Enrichment failed:', err)
                     toast.error(err.message || 'Spotify enrichment failed')
-                    enrichBtn.disabled = false
-                    enrichBtn.textContent = 'Enrich Data'
+                    btn.disabled = false
+                    btn.textContent = 'Enrich Data'
                 }
-            })
+            }
+
+            children.push(SafeDOM.div({
+                className: 'bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl flex justify-between items-center mb-4'
+            }, [
+                SafeDOM.span({ className: 'text-blue-400 text-sm' }, 'Spotify data not linked.'),
+                enrichBtn
+            ]))
         }
+
+        // Desktop View Container
+        children.push(SafeDOM.div({
+            className: 'tracks-table-container hidden md:block'
+        }, SafeDOM.div({ className: 'animate-pulse bg-white/5 h-64 rounded-xl' })))
+
+        // Mobile View Container
+        children.push(SafeDOM.div({
+            className: 'tracks-tabs-container md:hidden'
+        }, SafeDOM.div({ className: 'animate-pulse bg-white/5 h-64 rounded-xl' })))
+
+        return SafeDOM.div({
+            className: 'tracks-ranking-comparison w-full space-y-6'
+        }, children)
+    }
+
+    async mount(container) {
+        if (!container) return
+        this.container = container // Store ref for scoped updates
+        SafeDOM.clear(container)
+        container.appendChild(this.render())
+        // Event listener for enrich button is now handled in render(), simpler.
     }
 
     /**

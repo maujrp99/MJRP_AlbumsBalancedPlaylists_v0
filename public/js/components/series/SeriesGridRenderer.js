@@ -13,13 +13,14 @@
  * - Lazy loading via appendItems()
  */
 import Component from '../base/Component.js';
-import EntityCard from './EntityCard.js';
+// EntityCard removed (Legacy) - superseded by Card/AlbumsGridRenderer
 import {
     renderAlbumsGrid,
     renderExpandedList,
     wrapInGrid
 } from '../../views/albums/AlbumsGridRenderer.js';
 import { renderScopedGrid, renderScopedList } from '../../views/albums/AlbumsScopedRenderer.js';
+import { Card } from '../ui/Card.js'; // Import Universal Card for lazy loading
 
 export default class SeriesGridRenderer extends Component {
     /**
@@ -67,9 +68,9 @@ export default class SeriesGridRenderer extends Component {
             // SINGLE series or no grouping
             if (layout === 'grid') {
                 // Use production wrapInGrid + renderAlbumsGrid
+                // Fixed: Removed legacy EntityCard.renderGhostCard()
                 const cardsHtml = renderAlbumsGrid(items, context);
-                const ghostHtml = EntityCard.renderGhostCard();
-                contentHtml = wrapInGrid(cardsHtml + ghostHtml);
+                contentHtml = wrapInGrid(cardsHtml);
             } else {
                 // Expanded list view
                 contentHtml = renderExpandedList(items, context);
@@ -100,8 +101,16 @@ export default class SeriesGridRenderer extends Component {
         // Find ghost card to insert before it
         const ghostCard = gridContainer.querySelector('[data-ghost="true"]');
 
-        // Create new cards HTML
-        const newCardsHtml = newItems.map(album => EntityCard.renderCard(album, 'compact')).join('');
+        // Create new cards HTML using Universal Card adapter
+        const newCardsHtml = newItems.map(album => Card.renderHTML({
+            entity: album,
+            title: album.title,
+            subtitle: album.artist,
+            image: album.coverUrl,
+            variant: 'grid',
+            badge: album.year,
+            onClick: (e) => { /* handled by delegation */ }
+        })).join('');
 
         // Create fragment and insert
         const temp = document.createElement('div');

@@ -79,7 +79,7 @@ export class Card {
             const placeholder = SafeDOM.div({
                 className: 'flex items-center justify-center w-full h-full text-white/20'
             })
-            placeholder.innerHTML = getIcon('Music', 'w-24 h-24')
+            placeholder.appendChild(SafeDOM.fromHTML(getIcon('Music', 'w-24 h-24')))
             imageContent = placeholder
         }
 
@@ -90,7 +90,7 @@ export class Card {
         const hoverIcon = SafeDOM.span({
             className: 'bg-black/50 p-3 rounded-full backdrop-blur text-white'
         })
-        hoverIcon.innerHTML = getIcon('Maximize2', 'w-6 h-6')
+        hoverIcon.appendChild(SafeDOM.fromHTML(getIcon('Maximize2', 'w-6 h-6')))
         hoverOverlay.appendChild(hoverIcon)
 
         // Image container
@@ -118,7 +118,7 @@ export class Card {
                 title: btn.label,
                 dataset: { action: btn.action, id }
             })
-            buttonEl.innerHTML = getIcon(btn.icon, 'w-4 h-4')
+            buttonEl.appendChild(SafeDOM.fromHTML(getIcon(btn.icon, 'w-4 h-4')))
             return buttonEl
         })
 
@@ -194,7 +194,7 @@ export class Card {
                 dataset: { action: btn.action, id }
             })
             const iconSpan = SafeDOM.span({})
-            iconSpan.innerHTML = getIcon(btn.icon, 'w-3 h-3')
+            iconSpan.appendChild(SafeDOM.fromHTML(getIcon(btn.icon, 'w-3 h-3')))
             buttonEl.appendChild(iconSpan)
             buttonEl.appendChild(SafeDOM.text(' ' + btn.label))
             return buttonEl
@@ -217,7 +217,7 @@ export class Card {
             className: 'text-2xl font-bold mb-1 flex items-center gap-2'
         })
         const titleIcon = SafeDOM.span({})
-        titleIcon.innerHTML = getIcon('Music', 'w-6 h-6 text-accent-primary')
+        titleIcon.appendChild(SafeDOM.fromHTML(getIcon('Music', 'w-6 h-6 text-accent-primary')))
         titleHeader.appendChild(titleIcon)
         titleHeader.appendChild(SafeDOM.text(title))
 
@@ -277,7 +277,7 @@ export class Card {
                 className: 'badge badge-primary hover:badge-accent transition-colors flex items-center gap-1',
                 title: 'Acclaim'
             })
-            link.innerHTML = getIcon('ExternalLink', 'w-3 h-3')
+            link.appendChild(SafeDOM.fromHTML(getIcon('ExternalLink', 'w-3 h-3')))
             link.appendChild(SafeDOM.text(' Acclaim'))
             badges.push(link)
         }
@@ -292,7 +292,7 @@ export class Card {
                 style: { background: '#1DB954', color: 'white', border: 'none' },
                 title: 'Spotify'
             })
-            link.innerHTML = getIcon('Spotify', 'w-3 h-3')
+            link.appendChild(SafeDOM.fromHTML(getIcon('Spotify', 'w-3 h-3')))
             link.appendChild(SafeDOM.text(' Spotify'))
             badges.push(link)
         }

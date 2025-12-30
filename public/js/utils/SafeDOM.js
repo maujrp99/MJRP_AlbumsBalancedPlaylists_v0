@@ -102,6 +102,9 @@ export const SafeDOM = {
     div(props, children) { return this.create('div', props, children); },
     span(props, children) { return this.create('span', props, children); },
     p(props, children) { return this.create('p', props, children); },
+    strong(props, children) { return this.create('strong', props, children); },
+    em(props, children) { return this.create('em', props, children); },
+    small(props, children) { return this.create('small', props, children); },
 
     button(props, children) { return this.create('button', { type: 'button', ...props }, children); },
     a(props, children) { return this.create('a', props, children); },

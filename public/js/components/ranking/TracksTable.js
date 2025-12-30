@@ -1,8 +1,10 @@
 import { getIcon } from '../../components/Icons.js'
+import { SafeDOM } from '../../utils/SafeDOM.js'
 
 /**
  * Desktop Presenter: Tracks Table
  * Sortable table with visual bars for popularity and badges for rank.
+ * REFACTORED: SafeDOM implementation (Sprint 15 Phase 4.3)
  */
 export class TracksTable {
     constructor({ tracks, sortField, sortDirection, onSort }) {
@@ -25,19 +27,25 @@ export class TracksTable {
             const isActive = this.sortField === h.id
             const dirIcon = isActive
                 ? (this.sortDirection === 'asc' ? 'ChevronUp' : 'ChevronDown')
-                : ''
+                : null
 
-            return `
-                <div 
-                    class="flex items-center gap-2 px-4 py-3 text-xs font-bold uppercase tracking-wider text-white/50 cursor-pointer hover:text-white transition-colors ${h.width} ${h.align === 'center' ? 'justify-center' : ''} ${h.align === 'right' ? 'justify-end' : ''}"
-                    onclick="window.dispatchEvent(new CustomEvent('reorder-tracks', { detail: '${h.id}' }))"
-                >
-                    ${h.icon ? getIcon(h.icon, 'w-3 h-3') : ''}
-                    <span>${h.label}</span>
-                    ${isActive ? `<span class="text-brand-orange">${getIcon(dirIcon, 'w-3 h-3')}</span>` : ''}
-                </div>
-            `
-        }).join('')
+            const headerChildren = []
+            if (h.icon) headerChildren.push(SafeDOM.fromHTML(getIcon(h.icon, 'w-3 h-3 text-white/50')))
+            headerChildren.push(SafeDOM.span({}, h.label))
+
+            if (isActive) {
+                headerChildren.push(
+                    SafeDOM.span({ className: 'text-brand-orange' },
+                        SafeDOM.fromHTML(getIcon(dirIcon, 'w-3 h-3'))
+                    )
+                )
+            }
+
+            return SafeDOM.div({
+                className: `flex items-center gap-2 px-4 py-3 text-xs font-bold uppercase tracking-wider text-white/50 cursor-pointer hover:text-white transition-colors select-none ${h.width} ${h.align === 'center' ? 'justify-center' : ''} ${h.align === 'right' ? 'justify-end' : ''}`,
+                onClick: () => this.onSort(h.id)
+            }, headerChildren) // SafeDOM handles array of nodes
+        })
     }
 
     renderRow(track) {
@@ -49,115 +57,153 @@ export class TracksTable {
 
         // Data Checks
         const hasRank = track.rank && track.rank < 999
-        const hasPop = track.spotifyPopularity > -1
+        const hasPop = track.spotifyPopularity != null && track.spotifyPopularity > -1
         const positionDisplay = track.position >= 999 ? '-' : track.position
 
         // Color scheme: Acclaim = Orange, Popularity = Spotify Green
         const spotifyGreen = 'bg-[#1DB954]'
 
-        return `
-            <div class="group flex items-center border-b border-white/5 hover:bg-white/5 transition-colors">
-                
-                <!-- Position -->
-                <div class="w-16 px-4 py-3 text-white/50 font-mono text-sm group-hover:text-white">
-                    ${positionDisplay}
-                </div>
+        // -- Columns --
 
-                <!-- Title -->
-                <div class="flex-1 px-4 py-3 min-w-0">
-                    <div class="font-medium text-white truncate group-hover:text-brand-orange transition-colors">
-                        ${track.title}
-                    </div>
-                    <div class="text-xs text-white/30 truncate">${track.artist}</div>
-                </div>
+        // 1. Position
+        const posCol = SafeDOM.div({
+            className: 'w-16 px-4 py-3 text-white/50 font-mono text-sm group-hover:text-white'
+        }, String(positionDisplay))
 
-                <!-- Acclaim Rank -->
-                <div class="w-32 px-4 py-3 flex justify-center">
-                    ${hasRank
-                ? `<div class="flex items-center gap-2">
-                     <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-brand-orange/10 text-brand-orange text-sm font-bold border border-brand-orange/20 shadow-lg shadow-brand-orange/5">#${track.rank}</span>
-                     ${track.rating ? `<span class="flex items-center gap-1 text-sm font-bold text-white/90"><span class="text-brand-orange">★</span>${Number(track.rating).toFixed(0)}</span>` : ''}
-                   </div>`
-                : `<span class="text-white/10 text-xs">-</span>`
+        // 2. Title & Artist
+        const titleCol = SafeDOM.div({ className: 'flex-1 px-4 py-3 min-w-0' }, [
+            SafeDOM.div({
+                className: 'font-medium text-white truncate group-hover:text-brand-orange transition-colors'
+            }, track.title),
+            SafeDOM.div({
+                className: 'text-xs text-white/30 truncate'
+            }, track.artist)
+        ])
+
+        // 3. Acclaim Rank
+        let claimContent
+        if (hasRank) {
+            const badges = [
+                SafeDOM.span({
+                    className: 'inline-flex items-center justify-center w-8 h-8 rounded-full bg-brand-orange/10 text-brand-orange text-sm font-bold border border-brand-orange/20 shadow-lg shadow-brand-orange/5'
+                }, `#${track.rank}`)
+            ]
+
+            if (track.rating) {
+                badges.push(SafeDOM.span({
+                    className: 'flex items-center gap-1 text-sm font-bold text-white/90'
+                }, [
+                    SafeDOM.span({ className: 'text-brand-orange' }, '★'), // text star is safe
+                    SafeDOM.text(Number(track.rating).toFixed(0))
+                ]))
             }
-                </div>
 
-                <!-- Spotify Popularity -->
-                <div class="w-48 px-4 py-3">
-                    ${hasPop
-                ? `
-                            <div class="flex items-center gap-2">
-                                ${track.spotifyRank ? `<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1DB954]/10 text-[#1DB954] text-sm font-bold border border-[#1DB954]/20 shadow-lg shadow-[#1DB954]/5">#${track.spotifyRank}</span>` : ''}
-                                <div class="flex flex-col gap-1 flex-1 max-w-[100px]">
-                                    <div class="flex justify-between items-end text-[10px] text-white/40 uppercase font-bold tracking-wider">
-                                        <span>Score</span>
-                                        <span class="${track.spotifyPopularity > 80 ? 'text-[#1DB954]' : 'text-white/60'}">${track.spotifyPopularity}%</span>
-                                    </div>
-                                    <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                                        <div class="h-full ${spotifyGreen} rounded-full" style="width: ${track.spotifyPopularity}%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                          `
-                : `<span class="text-white/10 text-xs">Not linked</span>`
+            claimContent = SafeDOM.div({ className: 'flex items-center gap-2' }, badges)
+        } else {
+            claimContent = SafeDOM.span({ className: 'text-white/10 text-xs' }, '-')
+        }
+
+        const acclaimCol = SafeDOM.div({
+            className: 'w-32 px-4 py-3 flex justify-center'
+        }, claimContent)
+
+
+        // 4. Spotify Popularity
+        let popContent
+        if (hasPop) {
+            const popColorClass = track.spotifyPopularity > 80 ? 'text-[#1DB954]' : 'text-white/60'
+            const popBarWidth = `${track.spotifyPopularity}%`
+
+            const details = SafeDOM.div({ className: 'flex flex-col gap-1 flex-1 max-w-[100px]' }, [
+                SafeDOM.div({ className: 'flex justify-between items-end text-[10px] text-white/40 uppercase font-bold tracking-wider' }, [
+                    SafeDOM.span({}, 'Score'),
+                    SafeDOM.span({ className: popColorClass }, `${track.spotifyPopularity}%`)
+                ]),
+                SafeDOM.div({ className: 'h-1.5 w-full bg-white/10 rounded-full overflow-hidden' }, [
+                    SafeDOM.div({
+                        className: `h-full ${spotifyGreen} rounded-full`,
+                        style: { width: popBarWidth }
+                    })
+                ])
+            ])
+
+            const badges = []
+            if (track.spotifyRank) {
+                badges.push(SafeDOM.span({
+                    className: 'inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1DB954]/10 text-[#1DB954] text-sm font-bold border border-[#1DB954]/20 shadow-lg shadow-[#1DB954]/5'
+                }, `#${track.spotifyRank}`))
             }
-                </div>
+            badges.push(details)
 
-                <!-- Duration -->
-                <div class="w-20 px-4 py-3 text-right text-white/50 font-mono text-xs group-hover:text-white">
-                    ${time}
-                </div>
-            </div>
-        `
+            popContent = SafeDOM.div({ className: 'flex items-center gap-2' }, badges)
+
+        } else {
+            popContent = SafeDOM.span({ className: 'text-white/10 text-xs' }, 'Not linked')
+        }
+
+        const spotifyCol = SafeDOM.div({ className: 'w-48 px-4 py-3' }, popContent)
+
+
+        // 5. Duration
+        const durationCol = SafeDOM.div({
+            className: 'w-20 px-4 py-3 text-right text-white/50 font-mono text-xs group-hover:text-white'
+        }, time)
+
+
+        return SafeDOM.div({
+            className: 'group flex items-center border-b border-white/5 hover:bg-white/5 transition-colors'
+        }, [posCol, titleCol, acclaimCol, spotifyCol, durationCol])
     }
 
+
     render() {
-        return `
-            <div class="bg-black/20 rounded-xl border border-white/10 overflow-hidden backdrop-blur-sm">
-                <!-- Header -->
-                <div class="flex items-center bg-white/5 border-b border-white/10">
-                    ${this.renderHeaders()}
-                </div>
+        // Wrapper
+        const headerRow = SafeDOM.div({
+            className: 'flex items-center bg-white/5 border-b border-white/10'
+        }, this.renderHeaders())
 
-                <!-- Rows -->
-                <div class="divide-y divide-white/5">
-                    ${this.tracks.map(t => this.renderRow(t)).join('')}
-                </div>
+        const trackRows = this.tracks.map(t => this.renderRow(t))
+        const listContainer = SafeDOM.div({
+            className: 'divide-y divide-white/5'
+        }, trackRows)
 
-                <!-- Footer / Totals -->
-                <div class="p-4 bg-white/5 border-t border-white/10 flex justify-end gap-8 text-sm">
-                    <div class="flex items-center gap-2 text-white/60">
-                         ${getIcon('Award', 'w-4 h-4 text-brand-orange')}
-                         <span>Avg Rank: <strong class="text-white">${this.calculateAvg('rank', true)}</strong></span>
-                    </div>
-                    <div class="flex items-center gap-2 text-white/60">
-                         ${getIcon('SpotifyConfig', 'w-4 h-4 text-[#1DB954]')}
-                         <span>Avg Pop: <strong class="text-white">${this.calculateAvg('spotifyPopularity', false)}%</strong></span>
-                    </div>
-                </div>
-            </div>
-        `
+        const footer = this.renderFooter()
+
+        return SafeDOM.div({
+            className: 'bg-black/20 rounded-xl border border-white/10 overflow-hidden backdrop-blur-sm'
+        }, [headerRow, listContainer, footer])
+    }
+
+    renderFooter() {
+        return SafeDOM.div({
+            className: 'p-4 bg-white/5 border-t border-white/10 flex justify-end gap-8 text-sm'
+        }, [
+            SafeDOM.div({ className: 'flex items-center gap-2 text-white/60' }, [
+                SafeDOM.fromHTML(getIcon('Award', 'w-4 h-4 text-brand-orange')),
+                SafeDOM.span({}, [
+                    SafeDOM.text('Avg Rank: '),
+                    SafeDOM.strong({ className: 'text-white' }, this.calculateAvg('rank', true))
+                ])
+            ]),
+            SafeDOM.div({ className: 'flex items-center gap-2 text-white/60' }, [
+                SafeDOM.fromHTML(getIcon('SpotifyConfig', 'w-4 h-4 text-[#1DB954]')),
+                SafeDOM.span({}, [
+                    SafeDOM.text('Avg Pop: '),
+                    SafeDOM.strong({ className: 'text-white' }, `${this.calculateAvg('spotifyPopularity', false)}%`)
+                ])
+            ])
+        ])
     }
 
     calculateAvg(field, excludeUnranked) {
-        const valid = this.tracks.filter(t => excludeUnranked ? (t[field] && t[field] < 999) : (t[field] > -1))
+        const valid = this.tracks.filter(t => excludeUnranked ? (t[field] && t[field] < 999) : (t[field] != null && t[field] > -1))
         if (!valid.length) return '-'
         const sum = valid.reduce((acc, t) => acc + t[field], 0)
         return (sum / valid.length).toFixed(1)
     }
 
     mount(container) {
-        container.innerHTML = this.render()
-
-        // Attach event listeners for custom sort event (hacky but works for simple decoupling)
-        // Better: Attach click listeners directly
-        // But for now, let's re-bind the onclicks in renderHeaders closer to "React-style" 
-        // by attaching handlers to the generated DOM
-        const headers = container.querySelectorAll('.cursor-pointer') // Select header divs
-        headers.forEach((h, i) => {
-            // We need to map index back to ID. 
-            const ids = ['position', 'title', 'rank', 'spotifyPopularity', 'duration']
-            h.onclick = () => this.onSort(ids[i])
-        })
+        SafeDOM.clear(container)
+        container.appendChild(this.render())
     }
 }

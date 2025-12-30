@@ -18,6 +18,12 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
+| #108 | **App Crash (Missing EntityCard.js)** | ✅ RESOLVED | [Details](#issue-108-app-crash-missing-entitycardjs-regression) |
+| #107 | **Legacy Component Removal (BaseCard/EntityCard)** | ✅ NOT RESOLVED | [Details](#issue-107-legacy-component-removal-basecardentitycard) |
+| #106 | **SafeDOM Migration (Ranking Views)** | ✅ RESOLVED | [Details](#issue-106-safedom-migration-ranking-views) |
+| #105 | **Inventory Grid Layout Overlap (Price/Cover)** | ✅ RESOLVED | [Details](#issue-105-inventory-grid-layout-overlap-pricecover) |
+| #104 | **Inventory/Albums Click Interactions Broken** | ✅ RESOLVED | [Details](#issue-104-inventoryalbums-click-interactions-broken) |
+| #103 | **Raw HTML Rendering in Cards** | ✅ RESOLVED | [Details](#issue-103-raw-html-rendering-in-cards) |
 | #102 | **App Crash - Missing Exports in AlbumsGridRenderer** | ✅ RESOLVED | [Details](#issue-102-app-crash---missing-exports-in-albumsgridrenderer) |
 | #101 | **ConsolidatedRankingView Failures** | ✅ RESOLVED | [Details](#issue-101-consolidatedrankingview-failures-imports--store) |
 | #100 | **BatchGroupCard HTMLDivElement Regression** | ✅ RESOLVED | [Details](#issue-100) |
@@ -44,6 +50,162 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #109: SafeDOM.strong TypeError
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 20:35
+**Severity**: HIGH (Console Error / Partial Render Failure)
+**Type**: Bug / Omission
+**Component**: `SafeDOM.js`
+**Sprint**: 15 Phase 4.4
+
+#### Problem
+User reported `TypeError: SafeDOM.strong is not a function` in the console. This prevented `TracksTable.renderFooter` from executing correctly.
+#### Root Cause
+The `strong` convenience method was missing from the `SafeDOM` utility class, despite being used in the `TracksTable` component during the SafeDOM migration.
+#### Solution
+Added `strong`, `em`, and `small` convenience methods to `SafeDOM.js`.
+
+#### Files Changed
+- `public/js/utils/SafeDOM.js`
+
+---
+
+### Issue #108: App Crash (Missing EntityCard.js Regression)
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 18:55
+**Severity**: CRITICAL (App Crash)
+**Type**: Regression
+**Component**: `SeriesGridRenderer.js`
+**Sprint**: 15 Phase 4.4
+
+#### Problem
+User reported a 404 error for `EntityCard.js`, causing the application to fail to load. This occurred immediately after the file was deleted in Issue #107.
+#### Root Cause
+`SeriesGridRenderer.js` still had an active import of `EntityCard.js` and used it for rendering "ghost cards" and lazy-loaded items. The cleanup in Issue #107 was incomplete as it missed this dependency.
+#### Solution
+1. Removed `import EntityCard` from `SeriesGridRenderer.js`.
+2. Removed legacy ghost card logic.
+3. Replaced `EntityCard.renderCard` usage in `appendItems` with `Card.renderHTML` (Universal UI adapter).
+4. Verified `Card.js` only references EntityCard in comments.
+
+#### Files Changed
+- `public/js/components/series/SeriesGridRenderer.js`
+
+---
+
+### Issue #107: Legacy Component Removal (BaseCard/EntityCard)
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 17:15
+**Severity**: LOW (Tech Debt)
+**Type**: Cleanup
+**Component**: `BaseCard.js`, `EntityCard.js`
+**Sprint**: 15 Phase 4.4
+
+#### Problem
+Legacy component files `BaseCard.js` and `EntityCard.js` were still present in the codebase despite their functionality being superseded by the new `Card.js` and `AlbumsGridRenderer.js`.
+#### Root Cause
+Transition to "Universal UI" pattern left orphaned files.
+#### Solution
+Removed both files after verifying 0 usage.
+- `public/js/components/base/BaseCard.js` [DELETED]
+- `public/js/components/series/EntityCard.js` [DELETED]
+
+---
+
+### Issue #106: SafeDOM Migration (Ranking Views)
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 17:00
+**Severity**: MEDIUM (Security)
+**Type**: Refactoring / XSS Prevention
+**Component**: `RankingView.js`, `TracksTable.js`, `TracksTabs.js`
+**Sprint**: 15 Phase 4.3
+
+#### Problem
+Ranking views (`RankingView.js`) and sub-components (`TracksTable`, `TracksTabs`) were using `innerHTML` with template literals, posing a theoretical XSS risk.
+#### Root Cause
+Legacy rendering pattern of returning HTML strings instead of DOM nodes.
+#### Solution
+1. **Refactored `TracksRankingComparison.js`, `TracksTable.js`, `TracksTabs.js`** to use `SafeDOM.create` and return DOM Nodes.
+2. **Refactored `RankingView.js`** to construct the entire view using `SafeDOM`, eliminating template literals and usage of `renderHTML` where possible (except for top-level `outerHTML` return required by BaseView).
+3. **Refactored `ViewAlbumModal.js`** to use `SafeDOM` for all content.
+
+#### Files Changed
+- `public/js/views/RankingView.js`
+- `public/js/components/ranking/TracksRankingComparison.js`
+- `public/js/components/ranking/TracksTabs.js`
+- `public/js/components/ViewAlbumModal.js`
+- `public/js/components/ui/Card.js` (Icon SafeDOM usage)
+
+---
+
+
+### Issue #105: Inventory Grid Layout Overlap (Price/Cover)
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 15:45
+**Severity**: MEDIUM (Visual Bug)
+**Type**: CSS / Layout
+**Component**: `InventoryGridRenderer.js`
+**Sprint**: 15 Phase 4.2
+
+#### Problem
+In Inventory Grid View, the Album Price (e.g., "$9.99") text was overlapping the Album Cover image.
+#### Root Cause
+The `Card` component was forcing a 100% height (`h-full`), causing it to fight for space with the Price footer injected by the `InventoryGridRenderer`. The Price footer was absolutely positioned or squeezed into the remaining space incorrectly.
+#### Solution
+1. Refactored `InventoryGridRenderer.renderCard` to use a `flex-col` layout wrapper.
+2. Removed `h-full` class from the inner `Card` component string.
+3. Wrapped the Card in a `flex-1` container to allow it to take available space while respecting the Price footer.
+
+#### Files Changed
+- `public/js/views/renderers/InventoryGridRenderer.js`
+
+---
+
+### Issue #104: Inventory/Albums Click Interactions Broken
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 15:00
+**Severity**: HIGH (Interaction Broken)
+**Type**: Event Handling
+**Component**: `InventoryView.js`, `SeriesEventHandler.js`
+**Sprint**: 15 Phase 4.3
+
+#### Problem
+Clicking on Album cards in "Inventory View" (both Grid and List modes) or "Albums View" failed to open the "View Album" modal.
+#### Root Cause
+1. **Attribute Mismatch**: `Card.js` (SafeDOM version) sets `data-id` on the interactive element, but the View event listeners were expecting `data-album-id`.
+2. **Selector Mismatch (Grid)**: The `InventoryView` event delegation selector did not include the specific classes used in the Grid View (e.g., `.album-card-compact` or explicit `[data-action]`), so clicks on the cover/title were ignored.
+3. **Selector Mismatch (List)**: Clicks on the row wrapper in List View were not bubbling up correctly or targeted correctly.
+#### Solution
+1. Updated event listeners in `InventoryView.js` and `SeriesEventHandler.js` to check for `dataset.albumId || dataset.id`.
+2. Expanded the `closest()` selector in `InventoryView.js` to include `.album-card-compact`, `.expanded-album-card`, and `[data-action="view-modal"]`.
+
+#### Files Changed
+- `public/js/views/InventoryView.js`
+- `public/js/components/series/SeriesEventHandler.js`
+
+---
+
+### Issue #103: Raw HTML Rendering in Cards
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 14:00
+**Severity**: MEDIUM (Visual Bug)
+**Type**: Rendering / XSS Prevention
+**Component**: `AlbumsGridRenderer.js`, `InventoryGridRenderer.js`
+**Sprint**: 15 Phase 4.2
+
+#### Problem
+Album cards displayed raw HTML tags (e.g., `<div>...</div>`) in the content area instead of rendering the formatted content.
+#### Root Cause
+The `Card` component (SafeDOM version) treats string input for the `content` prop as **text** by default and escapes it. The Renderers were passing HTML strings for complex layouts.
+#### Solution
+Imported `SafeDOM` in the renderers and used `SafeDOM.fromHTML()` to wrap the content strings, instructing the Card component to treat them as trusted HTML fragments.
+
+#### Files Changed
+- `public/js/views/albums/AlbumsGridRenderer.js`
+- `public/js/views/renderers/InventoryGridRenderer.js`
+
+---
 
 ### Issue #102: App Crash - Missing Exports in AlbumsGridRenderer
 **Status**: ✅ **RESOLVED**

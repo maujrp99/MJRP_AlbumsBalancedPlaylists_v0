@@ -119,25 +119,25 @@ const el = SafeDOM.create('div', { className: 'title' }, title)
 - [x] Fix Edit Batch Bugs (#98, #99)
 
 ### Phase 3: SafeRender Foundation (NEW PRIORITY)
-- [ ] **Create `src/utils/SafeDOM.js`**:
+- [x] **Create `src/utils/SafeDOM.js`**:
     - Fluent API for element creation.
     - Automatic `textContent` for string children.
     - Event listener attachment.
-- [ ] **Upgrade Core Components**:
+- [x] **Upgrade Core Components**:
     - Refactor `Card.js` to use `SafeDOM`.
     - Refactor `TrackRow.js` to use `SafeDOM`.
     - Refactor `BaseModal.js` to use `SafeDOM`.
-- [ ] **Verify**: Ensure `SavedPlaylistsView` (Pilot) works with upgraded components.
+- [x] **Verify**: Ensure `SavedPlaylistsView` (Pilot) works with upgraded components.
 
 ### Phase 4: Holistic Migration (The "Safe" Grind)
 *Now safe to copy-paste everywhere.*
-- [ ] **Migrate Rankings**: Refactor to `TrackRow` (Safe).
-- [ ] **Migrate Inventory**: Refactor to `Card` (Safe).
-- [ ] **Migrate Albums Grid**: Refactor to `Card` (Safe).
+- [x] **Migrate Rankings**: Refactor to `TrackRow` (Safe).
+- [x] **Migrate Inventory**: Refactor to `Card` (Safe).
+- [x] **Migrate Albums Grid**: Refactor to `Card` (Safe).
 
 ### Phase 5: Cleanup & Final Hardening
-- [ ] Delete legacy folders.
-- [ ] Global search for residual `innerHTML` (Goal: 0 matches).
+- [x] Delete legacy folders.
+- [x] Global search for residual `innerHTML` (Goal: 0 matches).
 
 ## 7. Success Metrics (Definition of Done)
 

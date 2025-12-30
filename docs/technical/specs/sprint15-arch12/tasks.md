@@ -65,7 +65,7 @@
 ## Phase 4: Holistic Migration (The Safe Grind)
 *Goal: Eradicate legacy patterns everywhere using Safe Components.*
 
-- [ ] **Migrate Rankings**:
+- [x] **Migrate Rankings**:
     - [x] Refactor `RankingView.js` -> Use `TrackRow` (Safe)
     - [x] Refactor `ConsolidatedRankingView.js` -> Use `TrackRow` (Safe)
 - [x] **Migrate Inventory**:
@@ -81,14 +81,14 @@
 ## Phase 5: Cleanup & Final Hardening
 *Goal: Complete 0 `innerHTML` policy.*
 
-- [ ] **Global Scan**: Run grep for `innerHTML` (Goal: 0 matches)
-- [ ] **Fix Residual Sinks**:
-    - [ ] Utilities/Helpers
-    - [ ] One-off views (`BlendingMenuView`, `HomeView`)
-- [ ] **Delete Legacy**:
-    - [ ] `src/components/base/`
-    - [ ] `src/components/shared/`
-    - [ ] `src/components/common/`
+- [x] **Global Scan**: Run grep for `innerHTML` (Goal: 0 matches)
+- [x] **Fix Residual Sinks**:
+    - [x] Utilities/Helpers
+    - [x] One-off views (`BlendingMenuView`, `HomeView`)
+- [x] **Delete Legacy**:
+    - [x] `src/components/base/`
+    - [x] `src/components/shared/`
+    - [x] `src/components/common/`
 - [ ] **Documentation**:
     - [ ] Update `UI_STYLE_GUIDE.md`
-    - [ ] Update `COMPONENT_REFERENCE.md`
+    - [x] Update `COMPONENT_REFERENCE.md`

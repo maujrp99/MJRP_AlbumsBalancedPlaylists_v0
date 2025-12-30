@@ -5,12 +5,14 @@ import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import { escapeHtml } from '../utils/stringUtils.js'
 import { TrackRow } from '../components/ui/TrackRow.js'
+import { SafeDOM } from '../utils/SafeDOM.js'
 
 /**
  * RankingView (MODE 2)
  * Single Album Detail with dual tracklists:
  * - Ranked by Acclaim (sorted by rating)
  * - Original Album Order (AS IS)
+ * REFACTORED: SafeDOM implementation (Sprint 15 Phase 4.3)
  */
 
 export class RankingView extends BaseView {
@@ -29,109 +31,131 @@ export class RankingView extends BaseView {
     const avgRating = this.calculateAverageRating(album.tracks)
     const trackCount = album.tracks?.length || 0
 
-    return `
-      <div class="ranking-view container">
-        <header class="view-header mb-8 fade-in">
-          ${Breadcrumb.render(`/ranking/${albumId}`, params)}
-          
-          <!-- Back Button -->
-          <button id="backToAlbums" class="btn btn-secondary mb-4 inline-flex items-center gap-2">
-            ${getIcon('ArrowLeft', 'w-4 h-4')}
-            Back to Albums
-          </button>
+    // Header
+    const backBtn = SafeDOM.button({
+      id: 'backToAlbums',
+      className: 'btn btn-secondary mb-4 inline-flex items-center gap-2'
+    })
+    backBtn.appendChild(SafeDOM.fromHTML(getIcon('ArrowLeft', 'w-4 h-4')))
+    backBtn.appendChild(SafeDOM.text(' Back to Albums'))
 
-          <!-- Album Header Card -->
-          <div class="glass-panel p-6 mb-6">
-            <div class="flex items-start gap-6">
-              <!-- Album Cover Placeholder -->
-              <div class="album-cover-large w-32 h-32 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl flex items-center justify-center flex-shrink-0">
-                ${album.coverUrl ?
-        `<img src="${album.coverUrl}" alt="${escapeHtml(album.title)}" class="w-full h-full object-cover rounded-xl" />` :
-        `<div class="text-4xl opacity-20">${getIcon('Music', 'w-16 h-16')}</div>`
-      }
-              </div>
+    const coverContainer = SafeDOM.div({
+      className: 'album-cover-large w-32 h-32 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl flex items-center justify-center flex-shrink-0'
+    })
 
-              <!-- Album Info -->
-              <div class="flex-1">
-                <h1 class="text-3xl font-bold mb-2">${getIcon('Music', 'w-8 h-8 inline mr-2')}${escapeHtml(album.title)}</h1>
-                <p class="text-accent-primary text-xl mb-3">${escapeHtml(album.artist)}</p>
-                <div class="flex flex-wrap gap-3 text-sm">
-                  ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
-                  <span class="badge badge-neutral">${trackCount} tracks</span>
-                  ${avgRating ? `<span class="badge badge-success">Avg Rating: ${avgRating}</span>` : ''}
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
+    if (album.coverUrl) {
+      coverContainer.appendChild(SafeDOM.img({
+        src: album.coverUrl,
+        alt: album.title,
+        className: 'w-full h-full object-cover rounded-xl'
+      }))
+    } else {
+      const iconDiv = SafeDOM.div({ className: 'text-4xl opacity-20' })
+      iconDiv.appendChild(SafeDOM.fromHTML(getIcon('Music', 'w-16 h-16')))
+      coverContainer.appendChild(iconDiv)
+    }
 
-        <!-- Dual Tracklists -->
-        <div class="dual-tracklists grid gap-8">
-          ${this.renderRankedTracklist(album)}
-          ${this.renderOriginalTracklist(album)}
-        </div>
+    const ratingsBadges = []
+    if (album.year) ratingsBadges.push(SafeDOM.span({ className: 'badge badge-neutral' }, String(album.year)))
+    ratingsBadges.push(SafeDOM.span({ className: 'badge badge-neutral' }, `${trackCount} tracks`))
+    if (avgRating) ratingsBadges.push(SafeDOM.span({ className: 'badge badge-success' }, `Avg Rating: ${avgRating}`))
 
-        <footer class="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
-          <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
-        </footer>
-      </div>
-    `
+    const albumInfo = SafeDOM.div({ className: 'flex-1' }, [
+      SafeDOM.h1({ className: 'text-3xl font-bold mb-2 flex items-center gap-2' }, [
+        SafeDOM.fromHTML(getIcon('Music', 'w-8 h-8')),
+        SafeDOM.text(album.title)
+      ]),
+      SafeDOM.p({ className: 'text-accent-primary text-xl mb-3' }, album.artist),
+      SafeDOM.div({ className: 'flex flex-wrap gap-3 text-sm' }, ratingsBadges)
+    ])
+
+    const headerCard = SafeDOM.div({ className: 'glass-panel p-6 mb-6' },
+      SafeDOM.div({ className: 'flex items-start gap-6' }, [coverContainer, albumInfo])
+    )
+
+    const header = SafeDOM.header({ className: 'view-header mb-8 fade-in' }, [
+      // Breadcrumb is tricky because it returns string. We wrap it.
+      SafeDOM.fromHTML(Breadcrumb.render(`/ranking/${albumId}`, params)),
+      backBtn,
+      headerCard
+    ])
+
+    // Dual Tracklists
+    const dualTracklists = SafeDOM.div({ className: 'dual-tracklists grid gap-8' }, [
+      this.renderRankedTracklist(album),
+      this.renderOriginalTracklist(album)
+    ])
+
+    // Footer
+    const footer = SafeDOM.footer({ className: 'view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6' },
+      SafeDOM.p({ className: 'last-update' }, `Last updated: ${new Date().toLocaleTimeString()}`)
+    )
+
+    const container = SafeDOM.div({ className: 'ranking-view container' }, [
+      header, dualTracklists, footer
+    ])
+
+    return container.outerHTML
+    // NOTE: BaseView.js expects a string or promise wrapping string for render(). 
+    // Ideally we should update router to accept Nodes, but that's a bigger change.
+    // For now, outerHTML is safe because we controlled the creation.
+    // Wait, if BaseView sets innerHTML, then returning outerHTML is fine.
+    // The point of SafeDOM is construction.
   }
 
   renderRankedTracklist(album) {
     const tracks = album.tracks || []
     if (tracks.length === 0) {
-      return '<p class="text-muted">No tracks available</p>'
+      return SafeDOM.p({ className: 'text-muted' }, 'No tracks available')
     }
 
     // Sort by rating (descending)
     const rankedTracks = [...tracks].sort((a, b) => (b.rating || 0) - (a.rating || 0))
 
-    return `
-      <div class="tracklist-section glass-panel p-6 fade-in">
-        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
-          ${getIcon('TrendingUp', 'w-6 h-6 text-accent-primary')}
-          Ranked by Acclaim
-        </h3>
-        <div class="tracks-list space-y-2">
-          ${rankedTracks.map((track, idx) => TrackRow.renderHTML({
-      track,
-      index: idx + 1,
-      variant: 'ranking', // Using 'ranking' variant for specialized display
-      primaryRanking: 'acclaim'
-    })).join('')}
-        </div>
-      </div>
-    `
+    const title = SafeDOM.h3({ className: 'text-xl font-bold mb-6 flex items-center gap-2' }, [
+      SafeDOM.fromHTML(getIcon('TrendingUp', 'w-6 h-6 text-accent-primary')),
+      SafeDOM.text(' Ranked by Acclaim')
+    ])
+
+    const list = SafeDOM.div({ className: 'tracks-list space-y-2' },
+      rankedTracks.map((track, idx) => TrackRow.render({
+        track,
+        index: idx + 1,
+        variant: 'ranking',
+        primaryRanking: 'acclaim'
+      }))
+    )
+
+    return SafeDOM.div({ className: 'tracklist-section glass-panel p-6 fade-in' }, [title, list])
   }
 
   renderOriginalTracklist(album) {
-    // FIX: Use tracksOriginalOrder if available
     const tracks = album.tracksOriginalOrder || album.tracks || []
 
     if (tracks.length === 0) {
-      return '<p class="text-muted">No tracks available</p>'
+      return SafeDOM.p({ className: 'text-muted' }, 'No tracks available')
     }
 
-    return `
-      <div class="tracklist-section glass-panel p-6 fade-in" style="animation-delay: 0.1s">
-        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
-          ${getIcon('List', 'w-6 h-6 text-accent-secondary')}
-          Original Album Order
-        </h3>
-        <div class="tracks-list space-y-2">
-          ${tracks.map((track, idx) => {
-      // Use track position if available, otherwise index
-      const position = track.position || (idx + 1)
-      return TrackRow.renderHTML({
-        track,
-        index: position,
-        variant: 'detailed'
+    const title = SafeDOM.h3({ className: 'text-xl font-bold mb-6 flex items-center gap-2' }, [
+      SafeDOM.fromHTML(getIcon('List', 'w-6 h-6 text-accent-secondary')),
+      SafeDOM.text(' Original Album Order')
+    ])
+
+    const list = SafeDOM.div({ className: 'tracks-list space-y-2' },
+      tracks.map((track, idx) => {
+        const position = track.position || (idx + 1)
+        return TrackRow.render({
+          track,
+          index: position,
+          variant: 'detailed'
+        })
       })
-    }).join('')}
-        </div>
-      </div>
-    `
+    )
+
+    return SafeDOM.div({
+      className: 'tracklist-section glass-panel p-6 fade-in',
+      style: { animationDelay: '0.1s' }
+    }, [title, list])
   }
 
   renderNotFound() {
@@ -155,7 +179,8 @@ export class RankingView extends BaseView {
     // Attach breadcrumb listeners
     Breadcrumb.attachListeners(this.container)
 
-    // Back button
+    // Back button (We can use simple ID check or scoped check if we refactor render to not return string)
+    // Since we return outerHTML, the elements are new and in DOM now.
     const backBtn = this.$('#backToAlbums')
     if (backBtn) {
       this.on(backBtn, 'click', () => {
@@ -173,12 +198,6 @@ export class RankingView extends BaseView {
 
   findAlbum(albumId) {
     const albums = albumsStore.getAlbums()
-
-    console.log('[RankingView] Looking for album:', albumId)
-    console.log('[RankingView] Available albums:', albums.map(a => a.id))
-
-    // FIX #20: Only return album if ID matches exactly
-    // DO NOT fallback to first album - that causes wrong album to display
     const album = albums.find(a => a.id === albumId)
 
     if (!album) {
