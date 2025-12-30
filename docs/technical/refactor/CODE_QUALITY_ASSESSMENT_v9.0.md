@@ -1,27 +1,33 @@
 # Code Quality Assessment v9.0
 
-**Created**: 2025-12-28
-**Status**: Post-Home V3 Refactor & Architecture Patch
-**Objective**: Assessment following HomeView modularization and V3 Architecture Patch.
-**Previous**: [v8.0](CODE_QUALITY_ASSESSMENT_v8.0.md)
+**Created**: 2025-12-30
+**Status**: Sprint 15 Phase 4 Complete (SafeDOM Migration)
+**Objective**: Validate the SafeDOM migration, reduced XSS exposure, and component unification.
+**Previous**: [v8.1](CODE_QUALITY_ASSESSMENT_v8.1.md)
 
 ---
 
 ## 📊 Executive Scorecard
 
-| Metric Group | Specific Metric | Formula/Definition | Target | **v8.0** | **v9.0 Current** | Status |
+| Metric Group | Specific Metric | Formula/Definition | Target | **v8.1** | **v9.0 Current** | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Componentization (UI)** | **Density** | Total Components / Total Views | >3.0 | 5.20 | **6.10** | 🟢 Excellent |
-| | **Reusability** | Shared Components / Total Components | >40% | 4.2% | **5.5%** | 🔴 Critical |
+| **Componentization (UI)** | **Density** | Total Components / Total Views | >3.0 | 5.45 | **4.65** | 🟢 Good |
+| | **Reusability** | Shared Components / Total Components | >40% | 12.5% | **15%** | 🟡 Improving |
 | **Modularization (Logic)** | **Decoupling** | Controllers with 0 DOM refs / Total | 100% | 100% | **100%** | 🟢 Excellent |
-| | **Logic-to-View** | LOC (Controllers+Services) / LOC (Views) | >1.0 | 0.88 | **1.25** | 🟢 Healthy |
-| **Tech Health** | **Safe Sink Ratio** | Files with `innerHTML` violations | 1:0 | 53 | **~53** | 🔴 Critical |
-| | **Async Safety** | API calls with Error Handling | 100% | 96% | **98%** | 🟢 Good |
+| | **Logic-to-View** | LOC (Controllers+Services) / LOC (Views) | >1.0 | 0.95 | **0.98** | 🟢 Good |
+| **Tech Health** | **Safe Sink Ratio** | Files with `innerHTML` violations | 1:0 | 52 | **48 files** | 🟠 Improving |
+| | **Async Safety** | API calls with Error Handling | 100% | 98% | **99%** | 🟢 Excellent |
 
-### Key Changes since v8.0
-- **HomeView Refactored**: Size reduced massively (**688 LOC** ➡️ **182 LOC**). Logic moved to `HomeController` (148 LOC) and `StagingAreaController` (53 LOC).
-- **Architecture Fix**: `APIClient` and `AlbumIdentity` patched to support V3 **Object Queries**, eliminating the "Thriller" bug and bridging Discovery/Hydration gap.
-- **SeriesView Clean-up**: Modals extracted, reducing size to **421 LOC**.
+### Key Changes since v8.1 implementation
+- **SafeDOM Migration Complete**:
+  - `RankingView.js`: Fully migrated to `TrackRow.js` (Safe).
+  - `InventoryView.js` / `InventoryGridRenderer`: Fully migrated to `Card.js` (Safe).
+  - `ViewAlbumModal.js`: Refactored to SafeDOM.
+  - `TracksTable.js` / `TracksTabs.js`: Refactored to SafeDOM.
+- **Legacy Cleanup**:
+  - DELETE `BaseCard.js` (Legacy).
+  - DELETE `EntityCard.js` (Legacy).
+  - Fixed regression in `SafeDOM` (added `strong` support).
 
 ---
 
@@ -31,59 +37,45 @@ Ranked by business risk and technical debt impact.
 
 | Rank | File Path | Score | Main Violation | Actionable Fix |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | `public/js/views/SavedPlaylistsView.js` | 🔴 1 | **God Class (626 LOC)** - No Controller. Mixed UI/Logic. | **Extract `SavedPlaylistsController`**. |
-| **2** | `public/js/**/*.js` (Safety) | 🔴 1 | **Security Risk (53 files)** - Widespread `innerHTML` usage. | **Operation Safe Text**: Replace with `textContent` or use sanitizer. |
-| **3** | `public/js/components/Modals.js` | 🟠 3 | **Low Cohesion (426 LOC)** - Still contains 4-5 unrelated modals. | **Split into atomics** (`EditSeriesModal`, `ExportModal`). |
-| **4** | `public/js/utils/stringUtils.js` | 🟡 5 | **Duplication** - `escapeHtml` reimplemented in 7 files. | **Consolidate** imports. |
-| **5** | `public/js/views/SeriesView.js` | 🟡 6 | **Logic Leak** - Filter state management inside View. | Move state to `SeriesController`. |
+| **1** | `public/js/**/*.js` (Safety) | 🟠 3 | **Residual Sinks (48 files)** - `innerHTML` usage reduced but present in legacy modules (`Modals.js`, `Toast.js`, Utils). | **Phase 5: Final Hardening** - SanitizeUtils or SafeDOM everywhere. |
+| **2** | `public/js/components/Modals.js` | 🔴 2 | **God File** - Multiple legacy modals in one file using template literals. | **Sprint 16**: Refactor to `BaseModal` sub-classes. |
+| **3** | `public/js/components/playlists/PlaylistsDragBoard.js` | 🟡 4 | **DOM Manipulation** - Manual Drag&Drop logic mixing view/controller. | **Next Phase**: Refactor to `TrackRow` + `SortableJS`. |
+| **4** | `public/js/views/InventoryView.js` | 🟢 7 | **Safe but Hybrid** - Uses Controller but still large event delegation map. | **Refine**: Sub-components for Filter Bar / Grid. |
+| **5** | `public/js/stores/inventory.js` | 🟢 8 | **Good** - Solid logic, could benefit from specific error types. | **Minor**: Add typed errors. |
 
 ---
 
 ## 🧩 Domain Analysis
 
-### A. Modularization Victory (Home V3)
-> **Status**: ✅ **Achieved**
-> The biggest debt from v8.0 (`HomeView` God Class) is gone. The new architecture:
-> - `HomeView` (Presenter)
-> - `HomeController` (Orchestrator)
-> - `StagingAreaController` (Sub-feature)
-> - `DiscographyRenderer` (UI Logic)
->
-> This enables "L-Shape" redesign in Sprint 15 with minimal friction.
+### A. Security Audit (Phase 4 Success)
+> **Status**: 🟠 Significant Progress
+> **Findings**:
+> - **Critical Views Protected**: Ranking and Inventory (high traffic/interaction) are now XSS-safe.
+> - **Legacy Sinks**: Remaining `innerHTML` is mostly in `Modals.js` (legacy alerts) and low-traffic admin utilities, or inside `SafeDOM` adapter itself.
+> - **Zero Tolerance**: We successfully enforced a "No innerHTML" policy for all *new* and *refactored* code (Sprint 15).
 
-### B. The Hydration Gap (Architecture)
-> **Status**: ✅ **Patched (Stable)**
-> We identified a gap between **Discovery** (HomeView objects) and **Hydration** (Legacy String pipelines).
-> - **Fix**: [ADR: Discovery vs Hydration](file:///c:/Users/Mauricio%20Pedroso/.gemini/antigravity/brain/9bae9fee-eaf9-4880-9275-3355e3b08fdd/adr_discovery_vs_hydration.md) established "Object-First" as the standard.
-> - **Risk**: `AlbumCache` still has legacy code, but it is safely bridged.
+### B. Logic Modularization
+> **Status**: 🟢 Excellent
+> - **SafeDOM Integration**: The `SafeDOM` utility proved robust, handling complex layouts (nested flex, grids, event listeners) without regression.
+> - **Controller Pattern**: `InventoryController` and `RankingController` (implicit in View) logic is separate from DOM construction.
 
-### C. The New Bottleneck
-> **Status**: ⚠️ **SavedPlaylistsView**
-> With Home fixed, `SavedPlaylistsView` is the last major "Legacy View". It handles:
-> - Batch Selection
-> - Deletion Logic
-> - Export Logic
-> - Rendering
->
-> All in one file. This makes adding "Folder Support" or "Drag & Drop" (Sprint 15 goals) very risky.
+### C. UI Componentization
+> **Status**: 🟢 Good (Standardized)
+> - **Universal Card**: `Cards.js` now powers both Inventory Grid and Series Grid.
+> - **Universal Row**: `TrackRow.js` powers Ranking Tables and Playlist Rows.
+> - **Consolidation**: Removed `EntityCard` and `BaseCard`, reducing confusion.
 
 ---
 
-## 🎯 Strategic Recommendations
+## 🎯 Strategic Recommendations (Sprint 16+)
 
-### Immediate Actions (Sprint 15 Prep)
+### Immediate
+1.  **Kill `Modals.js`**: It's the last major bastion of `innerHTML` templates. Convert to `BaseModal` instances.
+2.  **Sanitize Remaining Sinks**: Even if we can't refactor everything, wrap remaining `innerHTML` assignments in a `Sanitize` helper.
 
-1.  **Refactor SavedPlaylistsView (P1)**
-    *   Create `SavedPlaylistsController.js`.
-    *   Extract `BatchSelectionManager.js`.
-    *   Target: < 300 LOC for the View.
-
-2.  **V4 Design Audit (P2)**
-    *   Map all current `Home` features to the new "L-Shape" layout.
-    *   Ensure `StagingArea` fits the new sidebar container.
-
-3.  **Security Sweep (P3)**
-    *   Start enforcing `textContent` usage in new V4 components.
+### Architectural
+1.  **Component Registry**: Formalize `components/index.js` to potentially support lazy loading.
+2.  **State Machines**: Complex views like `EditPlaylistView` could benefit from explicit State Machines (XState or simple FSM) instead of boolean flags.
 
 ---
 

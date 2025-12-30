@@ -21,6 +21,8 @@ The official, step-by-step protocol is located at:
 - [v6.0 (Post-Sprint 13 Onboarding Audit)](CODE_QUALITY_ASSESSMENT_v6.0.md)
 - [v7.0 (Pre-Sprint 14 Baseline)](CODE_QUALITY_ASSESSMENT_v7.0.md)
 - [v8.0 (Post-Inventory Refactor)](CODE_QUALITY_ASSESSMENT_v8.0.md)
+- [v8.1 (Sprint 15 Mid-Sprint)](CODE_QUALITY_ASSESSMENT_v8.1.md)
+- [v9.0 (SafeDOM Migration Complete)](CODE_QUALITY_ASSESSMENT_v9.0.md)
 
 ---
-**Last Updated**: 2025-12-26
+**Last Updated**: 2025-12-30
