@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-25 22:30
+**Last Updated**: 2025-12-29 22:04
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -18,6 +18,9 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
+| #100 | **BatchGroupCard [object HTMLDivElement] Regression** | ✅ RESOLVED | [Details](#issue-100) |
+| #99 | **Edit Batch Stale Data (Switching Batches)** | ✅ RESOLVED | [Details](#issue-99) |
+| #98 | **Edit Batch Functionality Failure (Legacy Fallback)** | ✅ RESOLVED | [Details](#issue-98) |
 | #95 | **Series Filter Dropdown Empty on First Load** | 🚧 IN PROGRESS | [Details](#issue-95) |
 | #94 | **SeriesView Progress Bar Not Showing** | ✅ RESOLVED | [Details](#issue-94) |
 | #93 | **Reconfigure Panel Ignores Ingredients (Edit Mode)** | ✅ RESOLVED | [Details](#issue-93) |
@@ -39,6 +42,139 @@
 ---
 
 ## Current Debugging Session
+ 
+### Issue #100: BatchGroupCard [object HTMLDivElement] Regression
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 10:30
+**Severity**: HIGH (Visual Regression)
+**Type**: Rendering / Migration
+**Component**: `BatchGroupCard`, `TrackRow`
+**Sprint**: 15 Phase 3
+ 
+#### Problem
+After refactoring `TrackRow` to use `SafeDOM` (returning DOM nodes), the `BatchGroupCard` started displaying `[object HTMLDivElement]` instead of track rows.
+ 
+#### Symptom
+Playlist expansion showed textual `[object HTMLDivElement]` repeated for each track.
+ 
+#### Root Cause
+`BatchGroupCard.js` (line 188) interpolated `TrackRow.render()` result directly into a template literal. Since `render()` now returns a DOM Element, implicit string conversion resulted in `[object HTMLDivElement]`.
+ 
+#### Solution
+Updated `BatchGroupCard.js` to use the newly created `TrackRow.renderHTML()` adapter method, which returns `outerHTML` string, maintaining backwards compatibility with the string-based template.
+ 
+#### Files Changed
+- `public/js/components/playlists/BatchGroupCard.js`
+ 
+---
+ 
+### Issue #99: Edit Batch Stale Data (Switching Batches)
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-29 22:04
+**Resolved**: 2025-12-29 22:14
+**Severity**: MEDIUM (UX Bug)
+**Type**: State Management / Race Condition
+**Component**: `PlaylistsController`, `SavedPlaylistsController`
+**Sprint**: 15 Phase 2
+
+#### Problem
+When clicking "Edit Batch" on **Batch A**, then returning to `SavedPlaylistsView` and clicking "Edit Batch" on **Batch B**, the `PlaylistsView` continues displaying Batch A's data instead of loading Batch B.
+
+#### Symptom Flow
+```
+1. User clicks "Edit Batch" on "Friday Vibes" → View shows Friday Vibes ✅
+2. User navigates back to /saved-playlists
+3. User clicks "Edit Batch" on "Workout Mix"
+4. View STILL shows "Friday Vibes" data ❌
+```
+
+#### Root Cause Analysis
+
+**The Bug is in `PlaylistsController.initialize()` line 30-39:**
+
+```javascript
+// ORIGINAL CODE (BUGGY)
+if (editBatchName) {
+    console.log('[PlaylistsController] Mode: EDIT', editBatchName)
+
+    // Only load if not already matching (prevents refresh loop issues)
+    if (playlistsStore.mode !== 'EDITING' || playlistsStore.editContext?.batchName !== editBatchName) {
+        playlistsStore.setEditMode(decodeURIComponent(editBatchName), seriesIdParam, null)
+        await this.loadPlaylistsForEdit(decodeURIComponent(editBatchName), seriesIdParam)
+    }
+    return
+}
+```
+
+**Why this fails:**
+
+| Step | Action | Store State | Result |
+|------|--------|-------------|--------|
+| 1 | User clicks "Edit Batch A" | `mode: 'CREATING'` | Conditional TRUE → loads Batch A ✅ |
+| 2 | User clicks "Edit Batch B" | `mode: 'EDITING'` (still set) | — |
+| 2a | `SavedPlaylistsController.editBatch('Batch B')` | Sets `batchName: 'Batch B'` | — |
+| 2b | Router navigates to `/playlists/edit?edit=Batch%20B` | — | — |
+| 2c | `PlaylistsController.initialize()` runs | `mode === 'EDITING'` AND `batchName === 'Batch B'` | Conditional FALSE → **SKIPS** reload ❌ |
+
+The problem: `SavedPlaylistsController.editBatch()` calls `playlistsStore.setEditMode(newBatchName)` **BEFORE** navigation. When `PlaylistsController.initialize()` runs, it sees the **new** batch name already matches the URL param, so it **incorrectly skips** the reload.
+
+#### Solution
+
+Remove the conditional guard entirely – always reload when navigating to Edit Mode:
+
+```javascript
+// FIXED CODE
+if (editBatchName) {
+    console.log('[PlaylistsController] Mode: EDIT', editBatchName)
+
+    // Sprint 15 Fix: ALWAYS reload on Edit Mode navigation.
+    // Previous guard caused stale data when switching between batches.
+    playlistsStore.setEditMode(decodeURIComponent(editBatchName), seriesIdParam, null)
+    await this.loadPlaylistsForEdit(decodeURIComponent(editBatchName), seriesIdParam)
+    return
+}
+```
+
+**Rationale**: The guard was intended to "prevent refresh loops" but that concern is unfounded – the router lifecycle already handles re-mounting properly.
+
+#### Files Changed
+- `public/js/controllers/PlaylistsController.js` (lines 30-39)
+
+#### Verification
+1. Navigate to `/saved-playlists`
+2. Click "Edit Batch" on Batch A → Verify correct data loads
+3. Navigate back to `/saved-playlists`
+4. Click "Edit Batch" on Batch B → **Batch B's data should load**
+
+---
+
+### Issue #98: Edit Batch Functionality Failure (Legacy Fallback)
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-29
+**Severity**: HIGH (Feature Broken)
+**Type**: Logic / Legacy Compatibility
+**Component**: `PlaylistsController` (Legacy), `SavedPlaylistsView` (New)
+
+#### Problem
+Clicking "Edit Batch" in `SavedPlaylistsView` failed to load the batch data in the (Legacy) `PlaylistsView`. Instead, it showed the "Generation Settings" (Create Mode) UI.
+
+#### Root Cause
+1. **URL Navigation**: `SavedPlaylistsController` was navigating to `/playlists` without the `edit` query parameter required by the legacy controller initialization logic.
+2. **Data Filtering Failure**: Even with the correct URL, `PlaylistsController` failed to find playlists because the batch name matching was sensitive to whitespace (`'Name ' !== 'Name'`).
+3. **UI Fallback**: When the playlist array was empty (due to the filter failure), `PlaylistsGridRenderer` defaulted to showing the "Initial Settings" UI, which looked like a broken state.
+
+#### Solution
+1. **Frontend Navigation**: Updated `SavedPlaylistsController.editBatch` to pass `?edit=BATCH_NAME`.
+2. **Robust Logic**: Updated `PlaylistsController` loop to use `.trim()` for batch name comparison.
+3. **Error Handling**: Updated `PlaylistsView.renderGenerationSection` to display a specific **"Batch Not Found"** error when in Edit Mode with 0 playlists, instead of the generic creation UI.
+4. **UI Cleanup**: Conditionally hid the "No albums loaded" warning when the specific error is displayed.
+
+#### Files Changed
+- `public/js/components/playlists/SavedPlaylistsController.js`
+- `public/js/controllers/PlaylistsController.js`
+- `public/js/views/PlaylistsView.js`
+
+---
 
 ### Issue #97: V3 Album Objects Crashing Legacy Systems (The "Thriller" Bug)
 **Status**: ✅ **RESOLVED**

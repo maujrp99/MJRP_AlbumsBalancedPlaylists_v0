@@ -89,39 +89,63 @@ const row = TrackRow.render({
     -   Triggers local `playlistModal` (HTML hardcoded in View currently).
     -   Renders track list (Scrollable).
 
-## 5. Holistic Migration Map (The "Grand" Scope)
-*We will migrate all legacy fragments to the New System.*
+## 5. Security Strategy: SafeRender Foundation (New Phase 3)
+*Goal: Fix the root cause of XSS risk before spreading components.*
 
-### Target: `Card.js` Consumers
-- [ ] **AlbumsGridRenderer.js**: Legacy `album-card`. Update to `Card.render()`.
-- [ ] **InventoryGridRenderer.js**: Legacy logic. Update to `Card.render()`.
-- [ ] **EntityCard.js**: Modernize to extend `Card`.
+### The Problem
+Current components (`Card.js`, `TrackRow.js`) use `innerHTML` with template literals. While `escapeHtml` is used, it relies on developer discipline and is prone to regressions.
 
-### Target: `TrackRow.js` Consumers
-- [ ] **SavedPlaylistsView.js**: Manual `track-item`.
-- [ ] **RankingView.js**: Manual `track-row`.
-- [ ] **ConsolidatedRankingView.js**: Manual `track-row`.
-- [ ] **BlendingView.js**: Check for manual rows.
+### The Solution: `SafeRender` Utility
+A lightweight wrapper around `document.createElement` to allow declarative DOM construction without innerHTML.
+
+```javascript
+// Before (Risk of XSS if sanitize missed)
+el.innerHTML = `<div class="title">${title}</div>`
+
+// After (Safe by default)
+const el = SafeDOM.create('div', { className: 'title' }, title)
+```
 
 ## 6. Execution Plan using SDD
 
-### Phase 1: Core Library (`src/components/ui/`)
-- [ ] Consolidate `TrackItem.js` (from playlists dir) -> `TrackRow.js`.
-- [ ] Consolidate `BaseCard.js` -> `Card.js`.
-- [ ] Create `BaseModal.js` (Standardize Backdrop/Close).
+### Phase 1: Core Foundation (Completed)
+- [x] Create Directory Structure
+- [x] Create `Card.js` (Alpha)
+- [x] Create `TrackRow.js` (Alpha)
+- [x] Create `BaseModal.js` (Alpha)
 
-### Phase 2: Refactor & Migration
-- [ ] **Pilot**: SavedPlaylistsView Refactor (Controller + Components).
-- [ ] **Expansion**: Migrate `RankingView` and `InventoryGridRenderer`.
+### Phase 2: Pilot Refactor (Completed)
+- [x] Refactor `SavedPlaylistsView`
+- [x] Fix Edit Batch Bugs (#98, #99)
 
-### Phase 3: Cleanup
-- [ ] Delete legacy folders (`base`, `shared`, `common`).
-- [ ] Security Sweep (53 sinks).
+### Phase 3: SafeRender Foundation (NEW PRIORITY)
+- [ ] **Create `src/utils/SafeDOM.js`**:
+    - Fluent API for element creation.
+    - Automatic `textContent` for string children.
+    - Event listener attachment.
+- [ ] **Upgrade Core Components**:
+    - Refactor `Card.js` to use `SafeDOM`.
+    - Refactor `TrackRow.js` to use `SafeDOM`.
+    - Refactor `BaseModal.js` to use `SafeDOM`.
+- [ ] **Verify**: Ensure `SavedPlaylistsView` (Pilot) works with upgraded components.
+
+### Phase 4: Holistic Migration (The "Safe" Grind)
+*Now safe to copy-paste everywhere.*
+- [ ] **Migrate Rankings**: Refactor to `TrackRow` (Safe).
+- [ ] **Migrate Inventory**: Refactor to `Card` (Safe).
+- [ ] **Migrate Albums Grid**: Refactor to `Card` (Safe).
+
+### Phase 5: Cleanup & Final Hardening
+- [ ] Delete legacy folders.
+- [ ] Global search for residual `innerHTML` (Goal: 0 matches).
 
 ## 7. Success Metrics (Definition of Done)
 
 ### A. Outputs (Entregáveis Tangíveis)
+- **SafeDOM Utility**: `public/js/utils/SafeDOM.js` implemented.
 - **Unified Component Library**: `src/components/ui/` populated.
+- **Secure Components**: All `src/components/ui/` components free of `innerHTML`.
+- **Legacy Extinction**: ALL legacy views migrated to secure components.
 - **Refactored Views**: `SavedPlaylistsView.js` rewritten using new components.
 - **Cleaned Codebase**: Deletion of `components/base`, `components/shared`, `components/common`.
 - **Security Patches**: 53 files patched to replace `innerHTML`.
@@ -135,6 +159,8 @@ const row = TrackRow.render({
 - **Duplication**: **0** instances of manual `track-row` HTML construction.
 
 #### Qualitative
+- **Security**: 0 XSS Vectors (innerHTML).
 - **Visual Consistency**: Changing `Card.js` updates Home, Search, and Series instantly.
 - **Developer Experience**: "Assembly" vs "Construction". Devs compose UI instead of writing HTML strings.
 - **Security Posture**: "Zero Tolerance" policy enforcement prevents future regressions.
+- **Performance**: Faster rendering (direct DOM nodes vs parser).

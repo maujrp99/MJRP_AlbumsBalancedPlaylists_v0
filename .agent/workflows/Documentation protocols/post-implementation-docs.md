@@ -14,6 +14,8 @@ description: Post-implementation documentation checklist - run after completing 
 
 ## Checklist
 
+### 0. Update the "last-update" mark of the documentation
+
 ### 1. Architecture Docs (if structure changed)
 - [ ] Update `docs/ARCHITECTURE.md` if new patterns or components added
 - [ ] Update `docs/technical/data_flow_architecture.md` if:

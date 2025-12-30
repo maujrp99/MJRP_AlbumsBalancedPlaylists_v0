@@ -46,37 +46,49 @@
     - [x] Check Thumbnails (Optimized Loader)
     - [x] Check Edit/Delete Actions (Modals work?)
 
-## Phase 3: Holistic Migration (The Grind)
-*Goal: Eradicate legacy patterns everywhere.*
+## Phase 3: SafeRender Foundation (Security First)
+*Goal: Eliminate `innerHTML` usage in core components before migration.*
+
+- [x] **Create `SafeDOM` Utility**:
+    - [x] Create `public/js/utils/SafeDOM.js`
+    - [x] Implement `create(tag, props, children)`
+    - [x] Implement `clear(element)`
+- [x] **Upgrade Core Components**:
+    - [x] Refactor `Card.js` -> Use `SafeDOM`
+    - [x] Refactor `TrackRow.js` -> Use `SafeDOM`
+    - [x] Refactor `BaseModal.js` -> Use `SafeDOM`
+- [x] **Verification**:
+    - [x] Test `SavedPlaylistsView` (Pilot) with new Safe components.
+    - [x] Inspect DOM to ensure no regression in structure.
+    - [x] Fix `BatchGroupCard.js` to use `renderHTML()`.
+
+## Phase 4: Holistic Migration (The Safe Grind)
+*Goal: Eradicate legacy patterns everywhere using Safe Components.*
 
 - [ ] **Migrate Rankings**:
-    - [ ] Refactor `RankingView.js` -> Use `TrackRow` (`variant="ranking"`)
-    - [ ] Refactor `ConsolidatedRankingView.js` -> Use `TrackRow`
+    - [ ] Refactor `RankingView.js` -> Use `TrackRow` (Safe)
+    - [ ] Refactor `ConsolidatedRankingView.js` -> Use `TrackRow` (Safe)
 - [ ] **Migrate Inventory**:
-    - [ ] Refactor `InventoryGridRenderer.js` -> Use `Card`
+    - [ ] Refactor `InventoryGridRenderer.js` -> Use `Card` (Safe)
     - [ ] Verify selection/multi-select logic
 - [ ] **Migrate Albums Grid**:
-    - [ ] Refactor `AlbumsGridRenderer.js` -> Use `Card`
+    - [ ] Refactor `AlbumsGridRenderer.js` -> Use `Card` (Safe)
     - [ ] Deprecate `AlbumsGridRenderer` (if possible, or keep as simple wrapper)
 - [ ] **Migrate Playlists**:
     - [ ] Refactor `PlaylistsDragDrop.js` -> Update selector to `.track-row`
     - [ ] Verify Drag & Drop still works
 
-## Phase 4: Security Hardening (Zero Tolerance)
-*Goal: 0 `innerHTML` sinks.*
+## Phase 5: Cleanup & Final Hardening
+*Goal: Complete 0 `innerHTML` policy.*
 
-- [ ] **Global Scan**: Run grep for `innerHTML`
-- [ ] **Fix Batch 1**: Views (remaining legacy views)
-- [ ] **Fix Batch 2**: Components (remaining legacy components)
-- [ ] **Fix Batch 3**: Utilities/Helpers
-- [ ] **Verification**: Manual Audit of all fixed files
-
-## Phase 5: Cleanup & Documentation
+- [ ] **Global Scan**: Run grep for `innerHTML` (Goal: 0 matches)
+- [ ] **Fix Residual Sinks**:
+    - [ ] Utilities/Helpers
+    - [ ] One-off views (`BlendingMenuView`, `HomeView`)
 - [ ] **Delete Legacy**:
     - [ ] `src/components/base/`
     - [ ] `src/components/shared/`
     - [ ] `src/components/common/`
-    - [ ] `src/components/playlists/TrackItem.js` (replaced)
-- [ ] **Update Documentation**:
-    - [ ] `UI_STYLE_GUIDE.md` (Add new components)
-    - [ ] `COMPONENT_REFERENCE.md`
+- [ ] **Documentation**:
+    - [ ] Update `UI_STYLE_GUIDE.md`
+    - [ ] Update `COMPONENT_REFERENCE.md`

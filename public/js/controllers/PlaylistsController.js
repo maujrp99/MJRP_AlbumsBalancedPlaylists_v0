@@ -31,11 +31,11 @@ export class PlaylistsController {
         if (editBatchName) {
             console.log('[PlaylistsController] Mode: EDIT', editBatchName)
 
-            // Only load if not already matching (prevents refresh loop issues)
-            if (playlistsStore.mode !== 'EDITING' || playlistsStore.editContext?.batchName !== editBatchName) {
-                playlistsStore.setEditMode(decodeURIComponent(editBatchName), seriesIdParam, null)
-                await this.loadPlaylistsForEdit(decodeURIComponent(editBatchName), seriesIdParam)
-            }
+            // Sprint 15 Fix (#99): ALWAYS reload on Edit Mode navigation.
+            // Previous guard caused stale data when switching between batches
+            // because SavedPlaylistsController.editBatch() sets editContext BEFORE navigation.
+            playlistsStore.setEditMode(decodeURIComponent(editBatchName), seriesIdParam, null)
+            await this.loadPlaylistsForEdit(decodeURIComponent(editBatchName), seriesIdParam)
             return
         }
 

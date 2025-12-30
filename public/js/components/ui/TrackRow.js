@@ -1,15 +1,17 @@
 /**
- * Universal TrackRow Component
+ * Universal TrackRow Component (SafeDOM Version)
  * 
  * Standardizes track list items across the application.
  * Replaces: TrackItem.js (Components), manual track HTML (SavedPlaylists, Rankings).
+ * 
+ * Sprint 15 Phase 3: Refactored to use SafeDOM for zero innerHTML.
  * 
  * @module components/ui/TrackRow
  * @since Sprint 15 (ARCH-12)
  */
 
+import { SafeDOM } from '../../utils/SafeDOM.js'
 import { getIcon } from '../Icons.js'
-import { escapeHtml } from '../../utils/stringUtils.js'
 
 /**
  * @typedef {Object} TrackRowProps
@@ -25,9 +27,9 @@ import { escapeHtml } from '../../utils/stringUtils.js'
 
 export class TrackRow {
     /**
-     * Render the TrackRow HTML
+     * Render the TrackRow as a DOM Node
      * @param {TrackRowProps} props
-     * @returns {string} HTML string
+     * @returns {HTMLElement} DOM Node
      */
     static render(props) {
         const {
@@ -44,104 +46,114 @@ export class TrackRow {
         const duration = this.formatDuration(track.duration)
         const isRanking = variant === 'ranking'
 
-        // Badges Logic
-        const badges = this.buildBadges({
-            primaryRanking,
-            track,
-            variant // Pass variant to potential modify badge logic
-        })
-
-        // Position Logic (Medals for Ranking variant)
-        let positionContent = `<span class="text-muted font-bold text-sm w-8 text-center">${index}</span>`
+        // Position element (medals for ranking variant)
+        let positionEl
         if (isRanking && index <= 3) {
             const medal = index === 1 ? '🥇' : index === 2 ? '🥈' : '🥉'
-            positionContent = `<span class="text-xl w-8 text-center">${medal}</span>`
+            positionEl = SafeDOM.span({ className: 'text-xl w-8 text-center' }, medal)
+        } else {
+            positionEl = SafeDOM.span({ className: 'text-muted font-bold text-sm w-8 text-center' }, String(index))
         }
 
-        // Drag Handle
-        const dragHandle = draggable ? `
-            <div class="track-drag-handle absolute left-2 top-1/2 -translate-y-1/2 text-muted opacity-0 group-hover:opacity-50 hover:!opacity-100 cursor-grab">
-                ${getIcon('GripVertical', 'w-4 h-4')}
-            </div>
-        ` : ''
+        // Drag handle
+        let dragHandleEl = null
+        if (draggable) {
+            dragHandleEl = SafeDOM.div({
+                className: 'track-drag-handle absolute left-2 top-1/2 -translate-y-1/2 text-muted opacity-0 group-hover:opacity-50 hover:!opacity-100 cursor-grab'
+            })
+            dragHandleEl.innerHTML = getIcon('GripVertical', 'w-4 h-4')
+        }
 
-        // Rating Badge (Specific for Ranking View)
-        let ratingBadge = ''
+        // Badges
+        const badges = this.buildBadges({ primaryRanking, track })
+
+        // Rating badge (ranking mode only)
+        let ratingBadgeEl = null
         if (isRanking) {
             const rating = track.rating || 0
-            const ratingClass = this.getRatingClass(rating)
             if (rating > 0) {
-                ratingBadge = `
-                 <span class="badge ${ratingClass === 'excellent' ? 'badge-success' :
-                        ratingClass === 'great' ? 'badge-primary' :
-                            ratingClass === 'good' ? 'badge-warning' : 'badge-neutral'} ml-2">
-                    ⭐ ${rating}
-                 </span>`
+                const ratingClass = this.getRatingClass(rating)
+                const badgeClass = ratingClass === 'excellent' ? 'badge-success' :
+                    ratingClass === 'great' ? 'badge-primary' :
+                        ratingClass === 'good' ? 'badge-warning' : 'badge-neutral'
+                ratingBadgeEl = SafeDOM.span({ className: `badge ${badgeClass} ml-2` }, `⭐ ${rating}`)
             } else {
-                ratingBadge = `<span class="badge badge-neutral opacity-50 ml-2">-</span>`
+                ratingBadgeEl = SafeDOM.span({ className: 'badge badge-neutral opacity-50 ml-2' }, '-')
             }
         }
 
-        // Action Buttons
-        const actionButtons = actions.map(btn => `
-            <button class="p-1 text-gray-400 hover:text-white hover:bg-white/10 rounded transition-colors ${btn.class || ''}"
-                title="${escapeHtml(btn.label)}"
-                data-action="${btn.action}"
-                data-id="${track.id}"
-                data-playlist-index="${playlistIndex}"
-                data-track-index="${trackIndex}">
-                ${getIcon(btn.icon, 'w-4 h-4')}
-            </button>
-        `).join('')
+        // Action buttons
+        const actionButtons = actions.map(btn => {
+            const buttonEl = SafeDOM.button({
+                className: `p-1 text-gray-400 hover:text-white hover:bg-white/10 rounded transition-colors ${btn.class || ''}`,
+                title: btn.label,
+                dataset: {
+                    action: btn.action,
+                    id: track.id,
+                    playlistIndex: playlistIndex,
+                    trackIndex: trackIndex
+                }
+            })
+            buttonEl.innerHTML = getIcon(btn.icon, 'w-4 h-4')
+            return buttonEl
+        })
 
-        return `
-        <div 
-            class="track-row flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors group relative ${draggable ? 'pl-8' : ''}"
-            data-id="${track.id}"
-            data-playlist-index="${playlistIndex}"
-            data-track-index="${trackIndex}"
-        >
-            ${dragHandle}
+        // Title info row
+        const titleRow = SafeDOM.div({ className: 'flex items-center gap-2' }, [
+            SafeDOM.span({
+                className: 'font-medium text-sm truncate text-white',
+                title: track.title
+            }, track.title),
+            !isRanking ? badges.primaryEl : null,
+            !isRanking ? badges.secondaryEl : null
+        ])
 
-            <!-- Position -->
-            ${positionContent}
+        // Info container
+        const infoChildren = [titleRow]
+        if (variant === 'detailed') {
+            infoChildren.push(
+                SafeDOM.div({ className: 'text-xs text-muted truncate' }, [
+                    track.artist || '',
+                    track.album ? ` • ${track.album}` : ''
+                ])
+            )
+        }
+        const infoContainer = SafeDOM.div({
+            className: 'flex-1 min-w-0 flex flex-col justify-center'
+        }, infoChildren)
 
-            <!-- Info -->
-            <div class="flex-1 min-w-0 flex flex-col justify-center">
-                <div class="flex items-center gap-2">
-                    <span class="font-medium text-sm truncate text-white" title="${escapeHtml(track.title)}">
-                        ${escapeHtml(track.title)}
-                    </span>
-                    ${!isRanking ? badges.primary : ''}
-                    ${!isRanking ? badges.secondary : ''}
-                </div>
-                
-                ${variant === 'detailed' ? `
-                    <div class="text-xs text-muted truncate">
-                        ${escapeHtml(track.artist)} • ${escapeHtml(track.album || '')}
-                    </div>
-                ` : ''}
-            </div>
+        // Actions container
+        const actionsContainer = SafeDOM.div({
+            className: 'flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity'
+        }, actionButtons)
 
-            <!-- Rating (Ranking Mode) -->
-            ${ratingBadge}
+        // Duration element
+        const durationEl = SafeDOM.div({
+            className: 'text-xs text-muted font-mono w-12 text-right'
+        }, duration)
 
-            <!-- Actions (Hover) -->
-            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                ${actionButtons}
-            </div>
+        // Main row
+        const row = SafeDOM.div({
+            className: `track-row flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors group relative ${draggable ? 'pl-8' : ''}`,
+            dataset: {
+                id: track.id,
+                playlistIndex: playlistIndex,
+                trackIndex: trackIndex
+            }
+        }, [
+            dragHandleEl,
+            positionEl,
+            infoContainer,
+            ratingBadgeEl,
+            actionsContainer,
+            durationEl
+        ])
 
-            <!-- Duration -->
-            <div class="text-xs text-muted font-mono w-12 text-right">
-                ${duration}
-            </div>
-        </div>
-        `
+        return row
     }
 
     /**
-     * Build badge HTML logic
-     * Ported from TrackItem.js
+     * Build badge elements
      * @private
      */
     static buildBadges({ primaryRanking, track }) {
@@ -156,24 +168,49 @@ export class TrackRow {
         const hasSpotifyPop = spotifyPopularity != null && spotifyPopularity > -1
 
         // Acclaim badge (orange)
-        const acclaimBadge = hasAcclaimRank
-            ? `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-orange/10 text-brand-orange text-[10px] font-bold border border-brand-orange/20" title="Acclaim Rank">#${acclaimRank}</span>`
-            : hasAcclaimRating
-                ? `<span class="flex items-center gap-0.5 text-[10px] font-bold text-brand-orange" title="Acclaim Rating">★${acclaimRating}</span>`
-                : ''
+        let acclaimBadgeEl = null
+        if (hasAcclaimRank) {
+            acclaimBadgeEl = SafeDOM.span({
+                className: 'inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-orange/10 text-brand-orange text-[10px] font-bold border border-brand-orange/20',
+                title: 'Acclaim Rank'
+            }, `#${acclaimRank}`)
+        } else if (hasAcclaimRating) {
+            acclaimBadgeEl = SafeDOM.span({
+                className: 'flex items-center gap-0.5 text-[10px] font-bold text-brand-orange',
+                title: 'Acclaim Rating'
+            }, `★${acclaimRating}`)
+        }
 
         // Spotify badge (green)
-        const spotifyBadge = hasSpotifyRank
-            ? `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1DB954]/10 text-[#1DB954] text-[10px] font-bold border border-[#1DB954]/20" title="Spotify Rank">#${spotifyRank}</span>`
-            : hasSpotifyPop
-                ? `<span class="text-[10px] font-bold text-[#1DB954]" title="Spotify Popularity">${spotifyPopularity}%</span>`
-                : ''
+        let spotifyBadgeEl = null
+        if (hasSpotifyRank) {
+            spotifyBadgeEl = SafeDOM.span({
+                className: 'inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1DB954]/10 text-[#1DB954] text-[10px] font-bold border border-[#1DB954]/20',
+                title: 'Spotify Rank'
+            }, `#${spotifyRank}`)
+        } else if (hasSpotifyPop) {
+            spotifyBadgeEl = SafeDOM.span({
+                className: 'text-[10px] font-bold text-[#1DB954]',
+                title: 'Spotify Popularity'
+            }, `${spotifyPopularity}%`)
+        }
 
         if (primaryRanking === 'spotify') {
-            return { primary: spotifyBadge, secondary: acclaimBadge }
+            return { primaryEl: spotifyBadgeEl, secondaryEl: acclaimBadgeEl }
         } else {
-            return { primary: acclaimBadge, secondary: spotifyBadge }
+            return { primaryEl: acclaimBadgeEl, secondaryEl: spotifyBadgeEl }
         }
+    }
+
+    /**
+     * Backwards-compatible HTML string renderer
+     * Use this when you need HTML string (for template literals or innerHTML)
+     * @param {TrackRowProps} props
+     * @returns {string} HTML string
+     */
+    static renderHTML(props) {
+        const el = this.render(props)
+        return el.outerHTML
     }
 
     static formatDuration(seconds) {

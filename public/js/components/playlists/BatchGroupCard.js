@@ -185,7 +185,7 @@ export class BatchGroupCard {
       return '<div class="text-sm text-muted italic py-2">No tracks</div>'
     }
 
-    return tracks.map((track, i) => TrackRow.render({
+    return tracks.map((track, i) => TrackRow.renderHTML({
       track,
       index: i + 1,
       variant: 'detailed',

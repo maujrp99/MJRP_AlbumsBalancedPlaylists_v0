@@ -277,7 +277,7 @@ export class SavedPlaylistsView extends BaseView {
              </button>
         `
 
-        const html = BaseModal.render({
+        const html = BaseModal.renderHTML({
             id: 'delete-batch-modal',
             title: 'Delete Batch?',
             content,
@@ -307,7 +307,7 @@ export class SavedPlaylistsView extends BaseView {
              </button>
         `
 
-        const html = BaseModal.render({
+        const html = BaseModal.renderHTML({
             id: 'delete-modal',
             title: 'Delete All Playlists?',
             content,
@@ -343,7 +343,7 @@ export class SavedPlaylistsView extends BaseView {
                 <span><span class="text-white font-bold">${durationStr}</span> duration</span>
             </div>
             <div class="space-y-1">
-                ${(playlist.tracks || []).map((t, i) => TrackRow.render({
+                ${(playlist.tracks || []).map((t, i) => TrackRow.renderHTML({
             track: t,
             index: i + 1,
             variant: 'compact',
@@ -356,7 +356,7 @@ export class SavedPlaylistsView extends BaseView {
              <button class="btn btn-secondary" data-action="close-modal">Close</button>
         `
 
-        const html = BaseModal.render({
+        const html = BaseModal.renderHTML({
             id: 'playlist-modal',
             title: playlist.name,
             content,
