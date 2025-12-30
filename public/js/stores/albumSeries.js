@@ -258,6 +258,15 @@ export class AlbumSeriesStore {
     }
 
     /**
+     * Get series by ID
+     * @param {string} id - Series ID
+     * @returns {Object|undefined} Series object
+     */
+    getById(id) {
+        return this.series.find(s => s.id === id)
+    }
+
+    /**
      * Get active series
      * @returns {Object|null} Active series or null
      */

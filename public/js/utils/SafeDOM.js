@@ -173,6 +173,18 @@ export const SafeDOM = {
      */
     text(text) {
         return document.createTextNode(String(text ?? ''));
+    },
+
+    /**
+     * Parses an HTML string and returns a DocumentFragment containing the nodes.
+     * USE WITH CAUTION: Only use with trusted HTML (e.g., SVG icons).
+     * @param {string} html - HTML string to parse
+     * @returns {DocumentFragment}
+     */
+    fromHTML(html) {
+        const template = document.createElement('template');
+        template.innerHTML = html ? String(html).trim() : '';
+        return template.content;
     }
 };
 

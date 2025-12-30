@@ -4,6 +4,7 @@ import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import { escapeHtml } from '../utils/stringUtils.js'
+import { TrackRow } from '../components/ui/TrackRow.js'
 
 /**
  * RankingView (MODE 2)
@@ -93,7 +94,12 @@ export class RankingView extends BaseView {
           Ranked by Acclaim
         </h3>
         <div class="tracks-list space-y-2">
-          ${rankedTracks.map((track, idx) => this.renderTrackRow(track, idx + 1, true)).join('')}
+          ${rankedTracks.map((track, idx) => TrackRow.renderHTML({
+      track,
+      index: idx + 1,
+      variant: 'ranking', // Using 'ranking' variant for specialized display
+      primaryRanking: 'acclaim'
+    })).join('')}
         </div>
       </div>
     `
@@ -117,52 +123,12 @@ export class RankingView extends BaseView {
           ${tracks.map((track, idx) => {
       // Use track position if available, otherwise index
       const position = track.position || (idx + 1)
-      return this.renderTrackRow(track, position, false)
+      return TrackRow.renderHTML({
+        track,
+        index: position,
+        variant: 'detailed'
+      })
     }).join('')}
-        </div>
-      </div>
-    `
-  }
-
-  renderTrackRow(track, position, showRating) {
-    const rating = track.rating || 0
-    const ratingClass = this.getRatingClass(rating)
-    const duration = track.duration ? this.formatDuration(track.duration) : '-'
-
-    // Medal icons for top 3 in ranked list
-    const medal = showRating && position <= 3 ?
-      (position === 1 ? '🥇' : position === 2 ? '🥈' : '🥉') : ''
-
-    return `
-      <div class="track-row flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors">
-        <!-- Position -->
-        <div class="track-position w-8 text-center font-bold text-muted">
-          ${medal || position}
-        </div>
-
-        <!-- Track Title -->
-        <div class="track-title flex-1 font-medium">
-          ${escapeHtml(track.title || track.name)}
-        </div>
-
-        <!-- Rating (only in ranked list) -->
-        ${showRating && rating > 0 ? `
-          <div class="track-rating">
-            <span class="badge ${ratingClass === 'excellent' ? 'badge-success' :
-          ratingClass === 'great' ? 'badge-primary' :
-            ratingClass === 'good' ? 'badge-warning' : 'badge-neutral'}">
-              ⭐ ${rating}
-            </span>
-          </div>
-        ` : showRating ? `
-          <div class="track-rating">
-            <span class="badge badge-neutral opacity-50">-</span>
-          </div>
-        ` : ''}
-
-        <!-- Duration -->
-        <div class="track-duration text-muted text-sm w-16 text-right">
-          ${duration}
         </div>
       </div>
     `
@@ -220,20 +186,6 @@ export class RankingView extends BaseView {
     }
 
     return album || null
-  }
-
-  getRatingClass(rating) {
-    if (rating >= 90) return 'excellent'
-    if (rating >= 80) return 'great'
-    if (rating >= 70) return 'good'
-    return 'fair'
-  }
-
-  formatDuration(seconds) {
-    if (!seconds) return '-'
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
   calculateAverageRating(tracks) {

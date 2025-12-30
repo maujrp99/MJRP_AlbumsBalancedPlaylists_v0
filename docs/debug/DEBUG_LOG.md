@@ -18,7 +18,9 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
-| #100 | **BatchGroupCard [object HTMLDivElement] Regression** | ✅ RESOLVED | [Details](#issue-100) |
+| #102 | **App Crash - Missing Exports in AlbumsGridRenderer** | ✅ RESOLVED | [Details](#issue-102-app-crash---missing-exports-in-albumsgridrenderer) |
+| #101 | **ConsolidatedRankingView Failures** | ✅ RESOLVED | [Details](#issue-101-consolidatedrankingview-failures-imports--store) |
+| #100 | **BatchGroupCard HTMLDivElement Regression** | ✅ RESOLVED | [Details](#issue-100) |
 | #99 | **Edit Batch Stale Data (Switching Batches)** | ✅ RESOLVED | [Details](#issue-99) |
 | #98 | **Edit Batch Functionality Failure (Legacy Fallback)** | ✅ RESOLVED | [Details](#issue-98) |
 | #95 | **Series Filter Dropdown Empty on First Load** | 🚧 IN PROGRESS | [Details](#issue-95) |
@@ -42,7 +44,58 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #102: App Crash - Missing Exports in AlbumsGridRenderer
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 12:00
+**Severity**: CRITICAL (App Crash)
+**Type**: Syntax / Missing Export
+**Component**: `AlbumsGridRenderer.js`, `app.js`
+**Sprint**: 15 Phase 4.2
+
+#### Problem
+1. **App Loader Failure**: The application was stuck on "Loading...".
+2. **Console Error**: `SyntaxError: The requested module ... does not provide an export named 'renderExpandedList'`.
+3. **Cascading Failure**: The barrel file `js/views/albums/index.js` failed to export functions, causing `SeriesView.js` import to fail, which halted `app.js` bootstrap.
+
+#### Root Cause
+- During refactoring in Phase 4.2, several helper functions (`renderLoadingProgress`, etc.) and `renderExpandedList` were accidentally deleted/commented out in `AlbumsGridRenderer.js`.
+
+#### Solution
+- Restored original implementations of missing helper functions.
+- Re-implemented `renderExpandedList` using the new `Card.renderHTML` adapter.
+
+#### Files Changed
+- `public/js/views/albums/AlbumsGridRenderer.js`
+
+---
  
+### Issue #101: ConsolidatedRankingView Failures (Imports & Store)
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 11:30
+**Severity**: CRITICAL (App Crash)
+**Type**: Syntax / Missing Method
+**Component**: `ConsolidatedRankingView`, `albumSeriesStore`
+**Sprint**: 15 Phase 4.1
+
+#### Problem
+1. **App Loader Failure:** The application was stuck on "Loading..." because `ConsolidatedRankingView.js` contained duplicate import statements, causing a SyntaxError that halted script execution.
+2. **Runtime Error:** After fixing imports, navigating to the view caused `TypeError: albumSeriesStore.getById is not a function`.
+
+#### Root Cause
+1. **Duplicate Imports:** Refactoring code was pasted without removing existing imports, creating invalid ES Module syntax.
+2. **Missing Store Method:** The `ConsolidatedRankingView` relied on `albumSeriesStore.getById(id)` which was presumed to exist but was not implemented in the store class.
+
+#### Solution
+1. **Consolidated Imports:** Removed duplicate lines in `ConsolidatedRankingView.js`.
+2. **Extended Store:** Added `getById(id)` method to `AlbumSeriesStore` class to support direct series lookup.
+
+#### Files Changed
+- `public/js/views/ConsolidatedRankingView.js`
+- `public/js/stores/albumSeries.js`
+
+---
+
 ### Issue #100: BatchGroupCard [object HTMLDivElement] Regression
 **Status**: ✅ **RESOLVED**
 **Date**: 2025-12-30 10:30

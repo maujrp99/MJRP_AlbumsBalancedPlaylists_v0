@@ -66,14 +66,14 @@
 *Goal: Eradicate legacy patterns everywhere using Safe Components.*
 
 - [ ] **Migrate Rankings**:
-    - [ ] Refactor `RankingView.js` -> Use `TrackRow` (Safe)
-    - [ ] Refactor `ConsolidatedRankingView.js` -> Use `TrackRow` (Safe)
-- [ ] **Migrate Inventory**:
-    - [ ] Refactor `InventoryGridRenderer.js` -> Use `Card` (Safe)
-    - [ ] Verify selection/multi-select logic
-- [ ] **Migrate Albums Grid**:
-    - [ ] Refactor `AlbumsGridRenderer.js` -> Use `Card` (Safe)
-    - [ ] Deprecate `AlbumsGridRenderer` (if possible, or keep as simple wrapper)
+    - [x] Refactor `RankingView.js` -> Use `TrackRow` (Safe)
+    - [x] Refactor `ConsolidatedRankingView.js` -> Use `TrackRow` (Safe)
+- [x] **Migrate Inventory**:
+    - [x] Refactor `InventoryGridRenderer.js` -> Use `Card` (Safe)
+    - [x] Verify selection/multi-select logic
+- [x] **Migrate Albums Grid**:
+    - [x] Refactor `AlbumsGridRenderer.js` -> Use `Card` (Safe)
+    - [x] Deprecate `AlbumsGridRenderer` (if possible, or keep as simple wrapper)
 - [ ] **Migrate Playlists**:
     - [ ] Refactor `PlaylistsDragDrop.js` -> Update selector to `.track-row`
     - [ ] Verify Drag & Drop still works

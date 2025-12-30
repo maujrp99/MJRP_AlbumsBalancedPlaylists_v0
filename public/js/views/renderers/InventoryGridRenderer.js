@@ -9,6 +9,8 @@
 
 import { escapeHtml } from '../../utils/stringUtils.js'
 import { getIcon } from '../../components/Icons.js'
+import { Card } from '../../components/ui/Card.js'
+import { SafeDOM } from '../../utils/SafeDOM.js'
 
 export class InventoryGridRenderer {
 
@@ -17,7 +19,6 @@ export class InventoryGridRenderer {
         const { filteredAlbums, viewMode, isLoading } = state
 
         if (isLoading) {
-            // Use existing skeletons
             return InventoryGridRenderer.renderLoading()
         }
 
@@ -47,20 +48,42 @@ export class InventoryGridRenderer {
     }
 
     static renderCard(album) {
-        // Logic: 
-        // 3-way dropdown for status
         const isOwned = album.owned === true
         const isWishlist = album.owned === false
-        // null/undefined is "Not Owned" (Backlog/Inbox)
 
-        let borderColor = 'border-gray-600 text-gray-400'
+        // Normalize album data for Card
+        const cardProps = {
+            variant: 'grid',
+            entity: album,
+            title: album.title,
+            subtitle: album.artist,
+            image: album.albumData?.coverUrl || album.coverUrl,
+            badge: InventoryGridRenderer.getFormatLabel(album.format),
+            actions: [
+                { icon: 'Eye', label: 'View', action: 'view-modal', class: 'view-album-btn' },
+                { icon: 'Edit', label: 'Edit', action: 'edit-modal', class: 'edit-album-btn text-blue-400' },
+                { icon: 'Trash2', label: 'Delete', action: 'delete-modal', class: 'delete-album-btn text-red-400' }
+            ],
+            // Custom click handling for specific targets is managed by View delegation
+            // so we don't attach specific onClick props here for the adapter mode
+        }
+
+        // We wrap the Card in a relative container to overlay the custom Inventory Status Dropdown
+        // This preserves the specific Inventory requirement while reusing the Card UI
+        // Fix: Remove h-full from Card to facilitate custom footer stacking without overlap
+        const cardHTML = Card.renderHTML(cardProps).replace('h-full', '')
+
+        // Inject Status Dropdown (This is specific to Inventory, so we inject it into the card container)
+        // Note: The Card render creates a div. We will wrap it or rely on absolute positioning.
+        // To avoid parsing HTML, we can render the status dropdown and append it, 
+        // BUT since we are returning a string, we concatenate.
+
+        let borderColor = 'border-gray-600'
         if (isOwned) borderColor = 'border-green-500/50 text-green-400'
         else if (isWishlist) borderColor = 'border-pink-500/50 text-pink-400'
 
-        return `
-      <div class="album-card glass-panel p-4 relative group" data-album-id="${album.id}">
-        <!-- Status Dropdown (top right) -->
-        <div class="absolute top-2 right-2 z-10 w-32">
+        const statusDropdown = `
+        <div class="absolute top-2 right-2 z-20 w-32 user-select-none">
           <div class="relative group/dropdown">
             <select 
               class="status-select w-full appearance-none pl-3 pr-8 py-1 rounded-full text-xs font-medium border cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors bg-gray-900 ${borderColor}"
@@ -71,85 +94,58 @@ export class InventoryGridRenderer {
               <option value="owned" ${isOwned ? 'selected' : ''} class="bg-gray-900 text-green-400">✓ Owned</option>
               <option value="wishlist" ${isWishlist ? 'selected' : ''} class="bg-gray-900 text-pink-400">♡ Wishlist</option>
             </select>
-            <!-- Custom Arrow -->
             <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-current opacity-70">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </div>
           </div>
-        </div>
-        
-        <!-- Album Cover -->
-        <div class="album-cover mb-4 aspect-square bg-surface-light rounded-lg flex items-center justify-center cursor-pointer overflow-hidden relative view-album-btn"
-             data-album-id="${album.id}">
-            ${album.albumData?.coverUrl ? `
-                <img src="${album.albumData.coverUrl}" alt="${escapeHtml(album.title)}" 
-                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-            ` : `
-                <div class="text-gray-600">${getIcon('Disc', 'w-12 h-12')}</div>
-            `}
-            
-            <!-- Quick Actions Overlay -->
-            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-sm">
-                 <button class="btn btn-sm btn-ghost view-album-btn text-white" data-album-id="${album.id}" title="View Details">
-                    ${getIcon('Eye', 'w-5 h-5')}
-                 </button>
-                 <button class="btn btn-sm btn-ghost edit-album-btn text-blue-400" data-album-id="${album.id}" title="Edit">
-                    ${getIcon('Edit', 'w-5 h-5')}
-                 </button>
-                 <button class="btn btn-sm btn-ghost delete-album-btn text-red-400" data-album-id="${album.id}" title="Delete">
-                    ${getIcon('Trash2', 'w-5 h-5')}
-                 </button>
+        </div>`
+
+        // Hacky but effective: The Card is 1 root element. We put it in a wrapper with relative positioning so the dropdown works.
+        // And we ensure data-album-id is on the wrapper for delegation.
+        // Updated Layout: Use flex-col to stack Card and Footer properly.
+        return `
+            <div class="inventory-card-wrapper relative group h-full flex flex-col" data-album-id="${album.id}">
+                ${statusDropdown}
+                <div class="flex-1 min-h-0 w-full">
+                    ${cardHTML}
+                </div>
+                
+                <div class="mt-2 flex justify-between items-center px-1 shrink-0">
+                     <span class="font-mono text-accent-primary font-bold">
+                        ${InventoryGridRenderer.formatPrice(album.purchasePrice, album.currency)}
+                    </span>
+                </div>
             </div>
-        </div>
-        
-        <!-- Info -->
-        <div class="album-info">
-            <h3 class="font-bold text-lg mb-1 truncate text-white" title="${escapeHtml(album.title)}">${escapeHtml(album.title)}</h3>
-            <p class="text-sm text-gray-400 truncate mb-2">${escapeHtml(album.artist)}</p>
-            
-            <div class="flex items-center justify-between mt-3">
-                ${InventoryGridRenderer.renderFormatBadge(album.format)}
-                <span class="font-mono text-accent-primary font-bold">
-                    ${InventoryGridRenderer.formatPrice(album.purchasePrice, album.currency)}
-                </span>
-            </div>
-        </div>
-      </div>
         `
     }
 
     static renderRow(album) {
-        // Logic for List Mode
-        // ... (Simplified for brevity, following similar patterns)
+        const cardProps = {
+            variant: 'list',
+            entity: album,
+            title: album.title,
+            subtitle: album.artist,
+            image: album.albumData?.coverUrl || album.coverUrl,
+            content: SafeDOM.fromHTML(`
+                 <div class="flex items-center gap-4 mt-2">
+                    ${InventoryGridRenderer.renderFormatBadge(album.format)}
+                    <span class="font-mono text-accent-primary font-bold">
+                        ${InventoryGridRenderer.formatPrice(album.purchasePrice, album.currency)}
+                    </span>
+                 </div>
+            `),
+            actions: [
+                { icon: 'Edit', label: 'Edit', action: 'edit-modal', class: 'edit-album-btn' },
+                { icon: 'Trash2', label: 'Delete', action: 'delete-modal', class: 'delete-album-btn text-red-400' }
+            ]
+        }
         return `
-            <div class="album-row glass-panel p-3 flex items-center gap-4 hover:bg-white/5 transition-colors" data-album-id="${album.id}">
-                <div class="w-12 h-12 bg-surface-light rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
-                     ${album.albumData?.coverUrl ? `
-                        <img src="${album.albumData.coverUrl}" class="w-full h-full object-cover" />
-                    ` : getIcon('Disc', 'w-6 h-6 text-gray-600')}
-                </div>
-                
-                <div class="flex-1 min-w-0">
-                    <h4 class="font-bold truncate">${escapeHtml(album.title)}</h4>
-                    <p class="text-xs text-muted truncate">${escapeHtml(album.artist)}</p>
-                </div>
-
-                <div class="hidden md:block">
-                     ${InventoryGridRenderer.renderFormatBadge(album.format)}
-                </div>
-
-                <div class="font-mono text-accent-primary font-bold whitespace-nowrap">
-                    ${InventoryGridRenderer.formatPrice(album.purchasePrice, album.currency)}
-                </div>
-
-                <div class="actions flex gap-1">
-                     <button class="btn btn-icon btn-sm btn-ghost edit-album-btn" data-album-id="${album.id}">${getIcon('Edit', 'w-4 h-4')}</button>
-                     <button class="btn btn-icon btn-sm btn-ghost text-red-400 delete-album-btn" data-album-id="${album.id}">${getIcon('Trash2', 'w-4 h-4')}</button>
-                </div>
+            <div class="inventory-row-wrapper relative cursor-pointer hover:bg-white/5 transition-colors rounded-xl overflow-hidden" data-album-id="${album.id}">
+                ${Card.renderHTML(cardProps)}
             </div>
-         `
+        `
     }
 
     static renderLoading() {
@@ -164,6 +160,14 @@ export class InventoryGridRenderer {
         const val = Number(price) || 0
         if (currency === 'BRL') return `R$ ${val.toFixed(2)}`
         return `$${val.toFixed(2)}`
+    }
+
+    static getFormatLabel(format) {
+        const f = (format || '').toLowerCase()
+        if (f.includes('vinyl') || f.includes('lp')) return 'Vinyl'
+        if (f.includes('cd')) return 'CD'
+        if (f.includes('digital')) return 'Digital'
+        return format || 'Unknown'
     }
 
     static renderFormatBadge(format) {

@@ -65,7 +65,8 @@ export default class SeriesEventHandler extends Component {
         if (!target) return;
 
         const action = target.dataset.action;
-        const albumId = target.dataset.albumId;
+        // Card component uses data-id, while legacy components might use data-album-id
+        const albumId = target.dataset.albumId || target.dataset.id;
         const seriesId = target.dataset.seriesId;
 
         // Handle series actions first

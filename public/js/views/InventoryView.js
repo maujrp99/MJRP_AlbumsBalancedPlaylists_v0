@@ -202,18 +202,22 @@ export class InventoryView extends BaseView {
     const grid = document.getElementById('inventory-grid-container')
     if (grid) {
       grid.addEventListener('click', (e) => {
-        // Handle Button/Div clicks (Edit, Delete, View)
-        const target = e.target.closest('.view-album-btn, .edit-album-btn, .delete-album-btn')
+        // Handle Button/Div clicks (Edit, Delete, View, Row Click)
+        // Handle Button/Div clicks (Edit, Delete, View, Row Click)
+        // We act on specific buttons, OR on the main card wrapper for "View" action
+        // Added .album-card-compact and [data-action] for Grid View cover clicks
+        const target = e.target.closest('.view-album-btn, .edit-album-btn, .delete-album-btn, .inventory-row-wrapper, .expanded-album-card, .album-card-compact, [data-action="view-modal"]')
         if (!target) return
 
-        const albumId = target.dataset.albumId
+        const albumId = target.dataset.albumId || target.dataset.id
         if (!albumId) return
 
         if (target.classList.contains('delete-album-btn')) {
           this.handleDeleteWithModal(albumId)
         } else if (target.classList.contains('edit-album-btn')) {
           this.handleEditWithModal(albumId)
-        } else if (target.classList.contains('view-album-btn')) {
+        } else {
+          // Default action for row/card click or view button is "View"
           this.handleViewWithModal(albumId)
         }
       })

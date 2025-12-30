@@ -7,6 +7,8 @@
 import { albumLoader } from '../../services/AlbumLoader.js'
 import { getIcon } from '../../components/Icons.js'
 import { escapeHtml } from '../../utils/stringUtils.js'
+import { Card } from '../../components/ui/Card.js'
+import { SafeDOM } from '../../utils/SafeDOM.js'
 
 /**
  * Render loading progress overlay
@@ -179,52 +181,34 @@ export function renderRankingBadge(album) {
 export function renderExpandedAlbumCard(album, idx) {
   const coverUrl = albumLoader.getArtworkUrl(album, 150)
 
+  // Prepare props for Card.renderList (Expanded Variant)
+  const cardProps = {
+    variant: 'expanded',
+    entity: album,
+    title: album.title,
+    subtitle: album.artist,
+    image: coverUrl,
+    // Content includes the ranking comparison placeholder and extra badges logic
+    // we use SafeDOM.fromHTML to prevent specific HTML string from being escaped by Card component
+    content: SafeDOM.fromHTML(`
+        <div class="flex flex-wrap gap-2 text-sm mb-4">
+             ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
+             <span class="badge badge-neutral">${album.tracks?.length || 0} tracks</span>
+             <!-- Badges are handled by Card internally but we can inject extras here if needed -->
+        </div>
+        <!-- Ranking UI Container (Mounts TracksRankingComparison) -->
+        <div class="ranking-comparison-container mt-6" data-album-id="${album.id}"></div>
+    `),
+    actions: [
+      { icon: 'Plus', label: 'Inventory', action: 'add-to-inventory' },
+      { icon: 'Trash', label: 'Remove', action: 'remove-album', class: 'tech-btn-danger' }
+    ]
+  }
+
+  // Animation wrapper
   return `
-    <div class="expanded-album-card glass-panel p-6 mb-6 rounded-2xl animate-in fade-in slide-in-from-bottom-4 duration-500" style="animation-delay: ${idx * 50}ms" data-album-id="${album.id || ''}">
-      <div class="flex flex-col md:flex-row gap-6 items-start">
-        <!-- Album Cover & Actions Column -->
-        <div class="flex flex-col gap-4 shrink-0">
-          <div class="relative group">
-            <div class="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg bg-gray-800 border border-white/10">
-              <img
-                src="${coverUrl}"
-                alt="${escapeHtml(album.title)}"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-            </div>
-          </div>
-          <!-- Action Buttons -->
-          <div class="flex flex-wrap gap-2 justify-center md:justify-start">
-            <button class="tech-btn tech-btn-secondary text-xs px-4 py-2 flex items-center gap-2 hover:bg-white/20"
-              data-action="add-to-inventory"
-              data-album-id="${album.id || ''}">
-              ${getIcon('Plus', 'w-3 h-3')} Inventory
-            </button>
-            <button class="tech-btn tech-btn-danger text-xs px-4 py-2 flex items-center gap-2"
-              data-action="remove-album"
-              data-album-id="${album.id || ''}">
-              ${getIcon('Trash', 'w-3 h-3')} Remove
-            </button>
-          </div>
-        </div>
-        <!-- Content Column -->
-        <div class="flex-1 w-full min-w-0">
-          <h3 class="text-2xl font-bold mb-1 flex items-center gap-2">
-            ${getIcon('Music', 'w-6 h-6 text-accent-primary')}
-            ${escapeHtml(album.title)}
-          </h3>
-          <p class="text-accent-primary text-lg mb-3">${escapeHtml(album.artist)}</p>
-          <!-- Badges -->
-          <div class="flex flex-wrap gap-2 text-sm mb-4">
-            ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
-            <span class="badge badge-neutral">${album.tracks?.length || 0} tracks</span>
-            ${renderRankingBadge(album)}
-          </div>
-          <!-- Ranking UI Container (Mounts TracksRankingComparison) -->
-          <div class="ranking-comparison-container mt-6" data-album-id="${album.id}"></div>
-        </div>
-      </div>
+    <div class="animate-in fade-in slide-in-from-bottom-4 duration-500" style="animation-delay: ${idx * 50}ms">
+        ${Card.renderHTML(cardProps)}
     </div>
   `
 }
@@ -255,74 +239,38 @@ export function renderCompactAlbumCard(album) {
   const coverUrl = albumLoader.getArtworkUrl(album, 300)
   const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
 
-  return `
-    <div class="album-card-compact flex flex-col gap-3 h-full relative" data-album-id="${album.id || ''}">
-      <!-- Image Container -->
-      <div 
-        class="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-800 border border-white/5 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
-        data-action="view-modal"
-        data-album-id="${album.id || ''}"
-      >
-        ${coverUrl ?
-      `<img src="${coverUrl}" alt="${escapeHtml(album.title)}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />` :
-      `<div class="flex items-center justify-center w-full h-full text-white/20">${getIcon('Music', 'w-24 h-24')}</div>`
-    }
-        <!-- Hover Overlay -->
-        <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-          <span class="bg-black/50 p-3 rounded-full backdrop-blur text-white">
-            ${getIcon('Maximize2', 'w-6 h-6')}
-          </span>
-        </div>
-      </div>
-      
-      <!-- Metadata Container -->
-      <div class="flex flex-col gap-1 px-1">
-        <div class="flex justify-between items-start gap-2">
-          <div class="min-w-0 flex-1">
-            <h3 class="font-bold text-white text-base truncate leading-tight" title="${escapeHtml(album.title)}">
-              ${escapeHtml(album.title)}
-            </h3>
-            <p class="text-gray-400 text-sm truncate hover:text-white transition-colors">
-              ${escapeHtml(album.artist)}
-            </p>
-          </div>
-          <!-- Action Buttons -->
-          <div class="flex items-center gap-1 shrink-0">
-            <button class="p-1.5 text-gray-400 hover:text-green-400 hover:bg-white/10 rounded-lg transition-colors" 
-              title="Add to Inventory" 
-              data-action="add-to-inventory" 
-              data-album-id="${album.id || ''}">
-              ${getIcon('Plus', 'w-4 h-4')}
-            </button>
-            <button class="p-1.5 text-gray-400 hover:text-red-400 hover:bg-white/10 rounded-lg transition-colors" 
-              title="Remove" 
-              data-action="remove-album" 
-              data-album-id="${album.id || ''}">
-              ${getIcon('Trash', 'w-4 h-4')}
-            </button>
-          </div>
-        </div>
-        <!-- Badges Row -->
-        <div class="flex items-center justify-between mt-2 gap-2">
-          <div class="flex flex-wrap gap-2">
-            <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
-              ${album.year || 'N/A'}
-            </span>
-            <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
-              ${album.tracks?.length || 0}
-            </span>
-            ${!hasRatings ? `<span class="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 flex items-center gap-1">${getIcon('AlertTriangle', 'w-3 h-3')}</span>` : ''}
-          </div>
-          <button
-            class="text-xs px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 text-accent-primary hover:bg-white/10 hover:border-accent-primary/50 transition-all flex items-center gap-1 whitespace-nowrap"
-            data-action="view-modal"
-            data-album-id="${album.id || ''}">
-            View Tracks
-          </button>
-        </div>
-      </div>
-    </div>
-  `
+  // Determine badges
+  let badgeText = ''
+  if (album.year) badgeText = album.year
+
+  // Warnings
+  // If no ratings, we might want to show a warning icon in the card.
+  // The Card component doesn't have a generic "status icon" slot other than badges.
+  // We can pass a badge prop.
+
+  const cardProps = {
+    variant: 'grid',
+    entity: album,
+    title: album.title,
+    subtitle: album.artist,
+    image: coverUrl,
+    badge: badgeText,
+    actions: [
+      { icon: 'Plus', label: 'Add', action: 'add-to-inventory' },
+      { icon: 'Trash', label: 'Remove', action: 'remove-album' }
+    ],
+    // OnClick logic is handled by the Card (view-modal by default) or by View delegation
+  }
+
+  const cardHTML = Card.renderHTML(cardProps)
+
+  // We need to inject the "View Tracks" button into the footer row if possible, 
+  // or simple rely on the main card click 'view-modal'.
+  // The original design had a specific "View Tracks" button.
+  // The new Card has a "Maximize" overlay which does the same thing.
+  // So we can stick with standard Card behavior.
+
+  return cardHTML
 }
 
 /**
