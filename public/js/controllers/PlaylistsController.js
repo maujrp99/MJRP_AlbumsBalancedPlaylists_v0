@@ -88,8 +88,10 @@ export class PlaylistsController {
             const repo = new PlaylistRepository(db, cacheManager, userId, seriesId)
 
             const allPlaylists = await repo.findAll()
+
             const batchPlaylists = allPlaylists
-                .filter(p => p.batchName === batchName)
+                .filter(p => !p.batchName || p.batchName.trim() === batchName.trim())
+                .filter(p => p.batchName && p.batchName.trim() === batchName.trim())
                 .sort((a, b) => (a.order || 0) - (b.order || 0))
 
             if (batchPlaylists.length === 0) {

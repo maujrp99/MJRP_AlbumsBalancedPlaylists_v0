@@ -107,7 +107,7 @@ export class PlaylistsView extends BaseView {
 
                 <!-- Grid -->
                 <div id="mainContent" class="fade-in" style="animation-delay: 0.1s">
-                    ${playlists.length === 0 ? PlaylistsGridRenderer.renderEmptyState() : ''}
+                    ${playlists.length === 0 && !isEditMode ? PlaylistsGridRenderer.renderEmptyState() : ''}
                     <div id="playlistsGrid">
                         ${PlaylistsGridRenderer.renderGrid(playlists)}
                     </div>
@@ -145,11 +145,31 @@ export class PlaylistsView extends BaseView {
   }
 
   renderGenerationSection(playlists, activeSeries) {
+    // Check Edit Mode from Store
+    const isEditMode = playlistsStore.isEditingExistingBatch()
+
     if (playlists.length > 0) {
       // Reconfiguration Panel (Always available)
       return PlaylistsGridRenderer.renderGenerationControls(playlists, activeSeries, this.isRegeneratePanelExpanded)
+    } else if (isEditMode) {
+      // ERROR: Edit Mode but no playlists found
+      return `
+        <div class="alert alert-error bg-red-500/10 border border-red-500/20 text-red-200 p-6 rounded-xl mb-6">
+            <div class="flex items-center gap-3">
+                ${getIcon('AlertTriangle', 'w-8 h-8 text-red-500')}
+                <div>
+                    <h3 class="font-bold text-lg">Batch Not Found</h3>
+                    <p class="text-sm opacity-80">Could not load playlists for batch "${escapeHtml(playlistsStore.editContext?.batchName || 'Unknown')}".</p>
+                    <p class="text-xs mt-2">The batch may have been deleted or the name/series attributes are mismatched.</p>
+                </div>
+            </div>
+            <div class="mt-4 flex gap-4">
+                <a href="/saved-playlists" class="btn btn-sm btn-ghost hover:bg-white/10">Return to Saved Playlists</a>
+            </div>
+        </div>
+      `
     } else {
-      // Initial Settings (No playlists yet)
+      // Create Mode (Initial Settings) - Valid fallback
       const algorithms = getAllAlgorithms()
       const rankingStrategies = [BalancedRankingStrategy.metadata, SpotifyRankingStrategy.metadata, BEARankingStrategy.metadata]
       // Defaults

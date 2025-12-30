@@ -8,27 +8,21 @@
 
 ## 🚧 Current Sprint
 
-### Sprint 14: Clean Architecture Continuation
-**Goal**: Continue V3 architecture improvements, fix remaining UX issues.
+### Sprint 15: Structural Integrity (ARCH-12)
+**Goal**: Unified Component System & Technical Debt Elimination
 **Duration**: 2 weeks
-**Priority**: Medium
+**Priority**: Critical
 **Status**: 🔄 **IN PROGRESS**
-**Branch**: `sprint-14`
+**Branch**: `sprint-15-arch-12`
 
-#### Part A: Architectural Refactors (Carryover)
-- [ ] **ARCH-4: Album Search Modularization**
-  - Extract search logic from SeriesView
-  - Create AlbumSearchService
-  - Spec: `arch-4-album-search-modularization_spec.md`
+#### Part A: Componentization (ARCH-12)
+- [ ] **Unified Component Library**: `src/components/ui/{Card, TrackRow, Modal}`
+- [ ] **Refactor Base Components**: Clean up `base/`, `shared/`, `common/`
+- [ ] **SavedPlaylistsView Refactor**: Pilot implementation of new system
 
-#### Part B: Bug Fixes
-- [ ] **Issue #95: Series Filter Dropdown Empty on First Load**
-  - Toolbar mounted before albumSeriesStore loads
-  - Solution: Reactive toolbar or await store before mount
-
-#### Part C: Documentation & Cleanup
-- [ ] **Onboarding Protocol**: Verify reflects V3 architecture
-- [ ] **Code Quality Assessment**: Run protocol, address findings
+#### Part B: Security & Quality
+- [ ] **Safety Patch**: Fix 53 `innerHTML` sinks
+- [ ] **Documentation**: Update UI Style Guide
 
 ---
 
@@ -65,6 +59,18 @@
 ---
 
 ## ✅ Completed Sprints (Reverse Chronological)
+
+### Sprint 14: Home Refactor & V3 Architecture (Dec 2025) - DONE ✅
+**Delivered**: 2025-12-28 (v3.2.0)
+
+**Deliverables**:
+- ✅ **ARCH-11: HomeView Refactor** - Reduced GridRenderer/Controller split (688 -> 182 LOC).
+- ✅ **ARCH-4: Search Modularization** - Independent Album Search Service.
+- ✅ **V3 Design System**: Split-Panel Staging Area & Search.
+- ✅ **Performance**: Optimized V3 DOM updates.
+- ✅ **Critical Fix**: "Thriller" bug (#97) via Object Query compatibility patch.
+
+---
 
 ### Sprint 13: Tech Debt & V3 Architecture (Dec 2025) - DONE ✅
 **Delivered**: 2025-12-26 (v3.1.0)

@@ -4,17 +4,14 @@
  * Card for displaying a batch of playlists in SavedPlaylistsView.
  * Shows batch header with metadata and playlist list with actions.
  * 
- * Features:
- * - Collapsible header (default: collapsed)
- * - Album count in header
- * - Expandable playlist rows with tracks
- * 
  * @module components/playlists/BatchGroupCard
- * @since Sprint 12.5, Enhanced ARCH-3
+ * @since Sprint 12.5, Refactored Sprint 15 (ARCH-12)
  */
 
-import { BaseCard } from '../base/BaseCard.js'
 import { getIcon } from '../Icons.js'
+import { escapeHtml } from '../../utils/stringUtils.js'
+import { TrackRow } from '../ui/TrackRow.js'
+import { AlbumCascade } from '../common/AlbumCascade.js'
 
 /**
  * @typedef {Object} BatchGroupCardOptions
@@ -43,19 +40,19 @@ export class BatchGroupCard {
     const playlistCount = playlists.length
     const totalTracks = playlists.reduce((sum, p) => sum + (p.tracks?.length || 0), 0)
     const albumCount = this.countUniqueAlbums(playlists)
-    const dateStr = BaseCard.formatDate(createdAt)
+    const dateStr = new Date(createdAt).toLocaleDateString()
 
     // Calculate total duration from all tracks
-    const allTracks = playlists.flatMap(p => p.tracks || [])
-    const totalDuration = BaseCard.formatDuration(allTracks)
+    const allTracks = playlists.map(p => p.tracks || []).flat()
+    const totalDuration = this.formatDuration(allTracks)
 
     const playlistsHtml = playlists.map((playlist, idx) =>
       this.renderPlaylistRow(seriesId, playlist, idx)
     ).join('')
 
     // Use AlbumCascade for visual richness
-    const cascadeHtml = globalThis.AlbumCascade
-      ? globalThis.AlbumCascade.render(thumbnails)
+    const cascadeHtml = AlbumCascade
+      ? AlbumCascade.render(thumbnails)
       : `
             <div class="p-3 rounded-lg bg-gradient-to-br from-brand-orange to-red-500 shadow-lg">
                 ${getIcon('Music', 'w-6 h-6 text-white')}
@@ -65,7 +62,7 @@ export class BatchGroupCard {
     return `
       <div class="batch-group-card bg-surface rounded-xl border border-white/10 overflow-hidden mb-6 transition-all duration-300 hover:border-brand-orange/30" 
            data-series-id="${seriesId}" 
-           data-batch-name="${BaseCard.escapeHtml(batchName)}"
+           data-batch-name="${escapeHtml(batchName)}"
            data-collapsed="true">
         
         <!-- Collapsible Batch Header -->
@@ -78,7 +75,7 @@ export class BatchGroupCard {
                </span>
                ${cascadeHtml}
                <div>
-                  <h3 class="font-bold text-xl text-white tracking-tight">${BaseCard.escapeHtml(batchName)}</h3>
+                  <h3 class="font-bold text-xl text-white tracking-tight">${escapeHtml(batchName)}</h3>
                   <div class="flex items-center gap-3 text-sm text-muted mt-1">
                     <span class="flex items-center gap-1">${getIcon('List', 'w-3 h-3')} ${playlistCount} playlists</span>
                     <span class="flex items-center gap-1">${getIcon('Music', 'w-3 h-3')} ${totalTracks} tracks</span>
@@ -93,14 +90,15 @@ export class BatchGroupCard {
               <button class="btn btn-secondary btn-sm flex items-center gap-2 hover:bg-white/20 transition-all shadow-md" 
                       data-action="edit-batch" 
                       data-series-id="${seriesId}" 
-                      data-batch-name="${BaseCard.escapeHtml(batchName)}"
+                      data-batch-name="${escapeHtml(batchName)}"
+                      data-saved-at="${createdAt}"
                       title="Edit this batch">
                 ${getIcon('Edit', 'w-4 h-4')} Edit Batch
               </button>
               <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors" 
                       data-action="delete-batch" 
                       data-series-id="${seriesId}" 
-                      data-batch-name="${BaseCard.escapeHtml(batchName)}"
+                      data-batch-name="${escapeHtml(batchName)}"
                       data-count="${playlistCount}"
                       title="Delete entire batch">
                 ${getIcon('Trash', 'w-4 h-4')}
@@ -118,7 +116,7 @@ export class BatchGroupCard {
   }
 
   /**
-   * Count unique albums from all playlists
+   * Count unique albums
    * @private
    */
   static countUniqueAlbums(playlists) {
@@ -134,12 +132,12 @@ export class BatchGroupCard {
   }
 
   /**
-   * Render a single playlist row (expandable)
+   * Render a single playlist row
    * @private
    */
   static renderPlaylistRow(seriesId, playlist, index) {
     const trackCount = playlist.tracks?.length || 0
-    const duration = BaseCard.formatDuration(playlist.tracks)
+    const duration = this.formatDuration(playlist.tracks || [])
 
     return `
       <div class="playlist-row-wrapper" data-playlist-index="${index}">
@@ -154,7 +152,7 @@ export class BatchGroupCard {
               ${getIcon('Disc', 'w-4 h-4')}
             </div>
             <div>
-              <div class="font-medium text-white group-hover:text-brand-orange transition-colors">${BaseCard.escapeHtml(playlist.name)}</div>
+              <div class="font-medium text-white group-hover:text-brand-orange transition-colors">${escapeHtml(playlist.name)}</div>
               <div class="text-xs text-muted font-mono mt-0.5">${trackCount} tracks • ${duration}</div>
             </div>
           </div>
@@ -179,7 +177,7 @@ export class BatchGroupCard {
   }
 
   /**
-   * Render tracks list for expandable playlist
+   * Render tracks list using TrackRow
    * @private
    */
   static renderTracksList(tracks) {
@@ -187,12 +185,18 @@ export class BatchGroupCard {
       return '<div class="text-sm text-muted italic py-2">No tracks</div>'
     }
 
-    return tracks.map((track, i) => `
-      <div class="flex items-center gap-3 py-1.5 text-sm border-l-2 border-white/10 pl-3 hover:border-brand-orange/50 transition-colors">
-        <span class="text-muted font-mono w-5 text-right">${i + 1}.</span>
-        <span class="text-white truncate flex-1">${BaseCard.escapeHtml(track.title || track.name)}</span>
-        <span class="text-muted truncate max-w-[150px]">${BaseCard.escapeHtml(track.artist || '')}</span>
-      </div>
-    `).join('')
+    return tracks.map((track, i) => TrackRow.render({
+      track,
+      index: i + 1,
+      variant: 'detailed',
+      playlistIndex: -1, // Not draggable context
+      trackIndex: i
+    })).join('')
+  }
+
+  static formatDuration(tracks) {
+    if (!tracks) return '0m'
+    const seconds = tracks.reduce((acc, t) => acc + (t.duration || 0), 0)
+    return Math.floor(seconds / 60) + 'm'
   }
 }
