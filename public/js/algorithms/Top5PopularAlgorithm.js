@@ -13,9 +13,9 @@ import { SpotifyRankingStrategy } from '../ranking/SpotifyRankingStrategy.js'
 export class Top5PopularAlgorithm extends TopNAlgorithm {
     static metadata = {
         id: 'top-5-popular',
-        name: 'Greatest Hits',
+        name: 'Top 5 Songs by Spotify Popularity',
         badge: 'TOP 5',
-        description: 'As 5 faixas mais populares de cada álbum - seleção estendida para fãs.',
+        description: 'Extended popular selection - the top 5 most played tracks from Spotify.',
         isRecommended: false
     }
 

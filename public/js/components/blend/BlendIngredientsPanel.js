@@ -18,7 +18,8 @@ const ALGORITHM_INGREDIENTS = {
         duration: true,
         outputMode: false,      // Auto-split internally
         rankingType: true,      // Spotify / BEA / Combined
-        discoveryMode: true     // Include unranked
+        discoveryMode: true,    // Include unranked
+        groupingStrategy: false // Generally strictly chronological/balanced
     },
     'mjrp-cascade-v0': {
         duration: true,
@@ -39,26 +40,30 @@ const ALGORITHM_INGREDIENTS = {
         discoveryMode: true
     },
     'top-3-popular': {
-        duration: true,
+        groupingStrategy: true,
         outputMode: true,
+        duration: false,        // Fixed count, duration irrelevant
         rankingType: false,     // Locked: Spotify
         discoveryMode: false    // Requires ranking data
     },
     'top-3-acclaimed': {
-        duration: true,
+        groupingStrategy: true,
         outputMode: true,
+        duration: false,        // Fixed count
         rankingType: false,     // Locked: BEA
         discoveryMode: false
     },
     'top-5-popular': {
-        duration: true,
+        groupingStrategy: true,
         outputMode: true,
+        duration: false,        // Fixed count
         rankingType: false,
         discoveryMode: false
     },
     'top-5-acclaimed': {
-        duration: true,
+        groupingStrategy: true,
         outputMode: true,
+        duration: false,        // Fixed count
         rankingType: false,
         discoveryMode: false
     }
@@ -72,6 +77,7 @@ export class BlendIngredientsPanel {
         this.config = {
             duration: opts.duration || 60,
             outputMode: opts.outputMode || 'auto',
+            groupingStrategy: opts.groupingStrategy || 'by_album',
             rankingType: opts.rankingType || 'combined',
             discoveryMode: opts.discoveryMode || false,
             ...opts.config
@@ -113,6 +119,16 @@ export class BlendIngredientsPanel {
     ]
 
     /**
+     * Grouping Strategy options (New for Sprint 15.5)
+     */
+    static GROUPING_STRATEGIES = [
+        { value: 'by_album', label: 'By Album', description: 'Preserves album structure (Chronological)', icon: 'Disc' },
+        { value: 'flat_ranked', label: 'Global Rank', description: 'Best songs first (Interleaved)', icon: 'TrendingUp' },
+        { value: 'artist_rank', label: 'Artist Cluster', description: 'Grouped by Artist (Best First)', icon: 'Users' },
+        { value: 'shuffle', label: 'Shuffle', description: 'Random mix', icon: 'Shuffle' }
+    ]
+
+    /**
      * Update selected flavor (called from parent view)
      */
     setFlavor(flavor) {
@@ -125,8 +141,9 @@ export class BlendIngredientsPanel {
     getIngredientConfig() {
         const flavorId = this.selectedFlavor?.id
         return ALGORITHM_INGREDIENTS[flavorId] || {
-            duration: true,
+            groupingStrategy: true,
             outputMode: true,
+            duration: true,
             rankingType: true,
             discoveryMode: true
         }
@@ -143,11 +160,14 @@ export class BlendIngredientsPanel {
 
         container.innerHTML = `
             <div class="space-y-6">
-                <!-- Duration (always shown) -->
-                ${this.renderDurationSection()}
-                
-                <!-- Output Mode (conditional) -->
+                 <!-- 1. Grouping Strategy (New First) -->
+                ${ingredients.groupingStrategy ? this.renderGroupingSection() : ''}
+
+                <!-- 2. Output Mode -->
                 ${ingredients.outputMode ? this.renderOutputModeSection() : ''}
+
+                <!-- 3. Duration (Now Conditional) -->
+                ${ingredients.duration ? this.renderDurationSection() : ''}
                 
                 <!-- Ranking Type (conditional) -->
                 ${ingredients.rankingType ? this.renderRankingTypeSection() : ''}
@@ -284,6 +304,37 @@ export class BlendIngredientsPanel {
     }
 
     /**
+     * Render Grouping Strategy section
+     */
+    renderGroupingSection() {
+        return `
+            <div>
+                <label class="block text-sm font-medium mb-3 text-muted">
+                    ${getIcon('Layers', 'w-4 h-4 inline mr-2')}Grouping Strategy
+                </label>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    ${BlendIngredientsPanel.GROUPING_STRATEGIES.map(g => `
+                        <button type="button"
+                            class="blend-grouping-btn p-3 rounded-lg border text-left transition-all duration-200
+                                ${this.config.groupingStrategy === g.value
+                ? 'border-orange-400 bg-orange-400/20 ring-1 ring-orange-400'
+                : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'}"
+                            data-grouping="${g.value}">
+                            <div class="flex items-center gap-2 mb-1">
+                                <div class="${this.config.groupingStrategy === g.value ? 'text-orange-400' : 'text-muted'}">
+                                    ${getIcon(g.icon, 'w-4 h-4')}
+                                </div>
+                                <span class="font-medium text-sm ${this.config.groupingStrategy === g.value ? 'text-orange-400' : ''}">${g.label}</span>
+                            </div>
+                            <span class="text-[10px] text-muted block leading-tight">${g.description}</span>
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `
+    }
+
+    /**
      * Attach event listeners
      */
     attachListeners() {
@@ -300,6 +351,15 @@ export class BlendIngredientsPanel {
         document.querySelectorAll('.blend-output-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 this.config.outputMode = btn.dataset.output
+                this.onConfigChange(this.config)
+                this.render()
+            })
+        })
+
+        // Grouping Strategy buttons
+        document.querySelectorAll('.blend-grouping-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.config.groupingStrategy = btn.dataset.grouping
                 this.onConfigChange(this.config)
                 this.render()
             })
@@ -348,6 +408,7 @@ export class BlendIngredientsPanel {
             targetDuration: this.config.duration * 60, // minutes → seconds
             rankingId: rankingMapping[this.config.rankingType] || 'balanced',
             outputMode: this.config.outputMode,
+            groupingStrategy: this.config.groupingStrategy,
             discoveryMode: this.config.discoveryMode
         }
     }

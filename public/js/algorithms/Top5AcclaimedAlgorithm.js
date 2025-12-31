@@ -13,9 +13,9 @@ import { BEARankingStrategy } from '../ranking/BEARankingStrategy.js'
 export class Top5AcclaimedAlgorithm extends TopNAlgorithm {
     static metadata = {
         id: 'top-5-acclaimed',
-        name: 'Deep Cuts',
+        name: 'Top 5 Acclaimed songs on BestEverAlbums',
         badge: 'TOP 5',
-        description: 'As 5 faixas mais aclamadas de cada álbum - para o verdadeiro conhecedor.',
+        description: 'Deep dive critical selection - top 5 best rated tracks from BestEverAlbums.',
         isRecommended: false
     }
 

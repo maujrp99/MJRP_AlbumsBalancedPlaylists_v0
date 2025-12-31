@@ -147,8 +147,8 @@ export function renderRankingBadge(album) {
 
   if (hasBestEver) {
     badges.push(`
-      <a href="https://www.besteveralbums.com/thechart.php?a=${album.bestEverAlbumId}" target="_blank" rel="noopener noreferrer" class="badge badge-primary hover:badge-accent transition-colors flex items-center gap-1" title="Ranking by Community Acclaim">
-        ${getIcon('ExternalLink', 'w-3 h-3')} Acclaim
+      <a href="https://www.besteveralbums.com/thechart.php?a=${album.bestEverAlbumId}" target="_blank" rel="noopener noreferrer" class="badge badge-primary hover:badge-accent transition-colors flex items-center gap-1" title="Ranking by BestEverAlbums">
+        ${getIcon('ExternalLink', 'w-3 h-3')} BestEverAlbums
       </a>`)
   }
 

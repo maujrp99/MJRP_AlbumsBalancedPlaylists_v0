@@ -13,9 +13,9 @@ import { BEARankingStrategy } from '../ranking/BEARankingStrategy.js'
 export class Top3AcclaimedAlgorithm extends TopNAlgorithm {
     static metadata = {
         id: 'top-3-acclaimed',
-        name: "Critics' Choice",
+        name: "Top 3 Acclaimed songs on BestEverAlbums",
         badge: 'TOP 3',
-        description: 'As 3 faixas mais aclamadas de cada álbum - escolha dos críticos.',
+        description: 'The definitive critical selection - best rated tracks from BestEverAlbums.',
         isRecommended: false
     }
 

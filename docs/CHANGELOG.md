@@ -2,6 +2,25 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
+## v3.16 - Sprint 15.5: Prod Polish & Blending Fixes (2025-12-31)
+
+**Status**: 🚀 **RELEASED**
+**Tag**: `v3.16`
+
+### ✨ New Features
+- **Grouping Strategy**: New parameters in Blending Menu to control playlist structure (By Album, Global Rank, etc.).
+- **BestEverAlbums Branding**: "Acclaim" badges renamed to explicit "BestEverAlbums" source.
+
+### 🛠 Improvements
+- **Blending Menu UI**:
+  - Reordered ingredients: Grouping -> Output -> Duration.
+  - **Smart Duration Logic**: Target Duration hidden for Top N algorithms (fixed count).
+  - **Renamed Algorithms**: "Crowd Favorites" -> "Top 3 by Spotify", etc.
+  - **Thumbnail Resilience**: Improved fallback logic for loading series covers.
+
+### 🐛 Bug Fixes
+- **SAFEGUARD**: Removed dangerous duplicate method definitions in `albumSeries.js`.
+
 ## v3.15 - Sprint 15: Structural Integrity & SafeDOM (2025-12-31)
 
 **Status**: 🚀 **RELEASED**

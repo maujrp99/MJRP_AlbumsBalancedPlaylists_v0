@@ -172,12 +172,12 @@ export class TrackRow {
         if (hasAcclaimRank) {
             acclaimBadgeEl = SafeDOM.span({
                 className: 'inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-orange/10 text-brand-orange text-[10px] font-bold border border-brand-orange/20',
-                title: 'Acclaim Rank'
+                title: 'BestEverAlbums Rank'
             }, `#${acclaimRank}`)
         } else if (hasAcclaimRating) {
             acclaimBadgeEl = SafeDOM.span({
                 className: 'flex items-center gap-0.5 text-[10px] font-bold text-brand-orange',
-                title: 'Acclaim Rating'
+                title: 'BestEverAlbums Rating'
             }, `★${acclaimRating}`)
         }
 

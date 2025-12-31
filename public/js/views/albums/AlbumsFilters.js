@@ -126,7 +126,7 @@ export function getDecadeOptions() {
 export function getSourceOptions() {
     return [
         { value: 'all', label: 'All Sources' },
-        { value: 'acclaim', label: 'Acclaim (BestEver)' },
+        { value: 'acclaim', label: 'BestEverAlbums' },
         { value: 'popularity', label: 'Popularity (Spotify)' },
         { value: 'ai', label: 'AI Enriched' },
         { value: 'pending', label: 'Pending' }

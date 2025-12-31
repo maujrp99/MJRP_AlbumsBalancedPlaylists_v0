@@ -19,6 +19,7 @@ import { TrackTransformer } from '../transformers/TrackTransformer.js'
  * @property {number} [targetDuration] - Target duration in seconds
  * @property {string} [outputMode] - 'single' | 'multiple' | 'auto'
  * @property {boolean} [discoveryMode] - Enable discovery tracks
+ * @property {string} [groupingStrategy] - 'by_album'|'flat_ranked'|'shuffle'
  */
 
 /**
@@ -66,7 +67,8 @@ export class PlaylistGenerationService {
             rankingStrategy,
             targetDuration: config.targetDuration,
             outputMode: config.outputMode,
-            discoveryMode: config.discoveryMode
+            discoveryMode: config.discoveryMode,
+            groupingStrategy: config.groupingStrategy
         })
 
         // Transform result to normalized playlist format

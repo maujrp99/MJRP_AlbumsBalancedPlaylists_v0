@@ -114,7 +114,7 @@ export class RankingView extends BaseView {
 
     const title = SafeDOM.h3({ className: 'text-xl font-bold mb-6 flex items-center gap-2' }, [
       SafeDOM.fromHTML(getIcon('TrendingUp', 'w-6 h-6 text-accent-primary')),
-      SafeDOM.text(' Ranked by Acclaim')
+      SafeDOM.text(' Ranked by BestEverAlbums')
     ])
 
     const list = SafeDOM.div({ className: 'tracks-list space-y-2' },

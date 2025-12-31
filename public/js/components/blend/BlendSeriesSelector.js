@@ -88,9 +88,24 @@ export class BlendSeriesSelector {
             const query = queries[i]
             let coverUrl = null
 
-            if (typeof query === 'object' && query.imageUrl) {
-                coverUrl = query.imageUrl
-            } else if (typeof query === 'string' && query.includes(' - ')) {
+            // Handle various query formats
+            if (typeof query === 'object') {
+                // Direct properties
+                if (query.imageUrl) coverUrl = query.imageUrl
+                else if (query.coverUrl) coverUrl = query.coverUrl
+                else if (query.artwork?.url) coverUrl = query.artwork.url
+
+                // Fallback to name parsing if object but no image
+                const name = query.name || query.title
+                if (!coverUrl && name && typeof name === 'string' && name.includes(' - ')) {
+                    const [artist, ...albumParts] = name.split(' - ')
+                    try {
+                        const found = await optimizedAlbumLoader.findAlbum(artist, albumParts.join(' - '))
+                        if (found) coverUrl = optimizedAlbumLoader.getArtworkUrl(found, 100)
+                    } catch (e) { }
+                }
+            }
+            else if (typeof query === 'string' && query.includes(' - ')) {
                 // Parse "Artist - Album" format
                 const [artist, ...albumParts] = query.split(' - ')
                 const album = albumParts.join(' - ')

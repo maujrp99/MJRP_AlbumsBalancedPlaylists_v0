@@ -11,154 +11,6 @@ export class AlbumSeriesStore {
 
     /**
      * Create new series
-     */
-    async createSeries(seriesData) {
-        if (!this.repository) {
-            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
-        }
-
-        globalProgress.start()
-        try {
-            const series = {
-                name: seriesData.name || 'Untitled Series',
-                albumQueries: seriesData.albumQueries || [],
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                status: seriesData.status || 'pending',
-                notes: seriesData.notes || ''
-            }
-
-            // 1. Save to Firestore (source of truth)
-            const id = await this.repository.create(series)
-            series.id = id
-
-            // 2. Update memory
-            this.series.unshift(series)
-            this.activeSeries = series
-
-            // 3. Update localStorage cache
-            this.saveToLocalStorage()
-            this.notify()
-
-            return series
-        } finally {
-            globalProgress.finish()
-        }
-    }
-
-    // ...
-
-    /**
-     * Load series from Firestore (source of truth)
-     */
-    async loadFromFirestore() {
-        if (!this.repository) {
-            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
-        }
-
-        this.loading = true
-        this.error = null
-        this.notify()
-        globalProgress.start()
-
-        try {
-            // Use repository to fetch all series
-            const firestoreSeries = await this.repository.findAll({
-                orderBy: ['updatedAt', 'desc'],
-                limit: 20
-            })
-
-            this.series = firestoreSeries.map(s => ({
-                ...s,
-                createdAt: s.createdAt?.toDate ? s.createdAt.toDate() : new Date(s.createdAt),
-                updatedAt: s.updatedAt?.toDate ? s.updatedAt.toDate() : new Date(s.updatedAt)
-            }))
-
-            // Update localStorage cache
-            this.saveToLocalStorage()
-            this.notify()
-            return this.series
-        } catch (error) {
-            this.error = error.message
-            this.notify()
-            throw error
-        } finally {
-            this.loading = false
-            globalProgress.finish()
-            this.notify()
-        }
-    }
-
-    /**
-     * Update existing series
-     */
-    async updateSeries(id, updates) {
-        if (!this.repository) {
-            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
-        }
-
-        const index = this.series.findIndex(s => s.id === id)
-        if (index === -1) throw new Error('Series not found')
-
-        globalProgress.start()
-        try {
-            // 1. Update in Firestore FIRST (source of truth)
-            await this.repository.update(id, updates)
-
-            // 2. Update memory
-            const updatedSeries = {
-                ...this.series[index],
-                ...updates,
-                updatedAt: new Date()
-            }
-            this.series[index] = updatedSeries
-
-            if (this.activeSeries && this.activeSeries.id === id) {
-                this.activeSeries = updatedSeries
-            }
-
-            // 3. Update localStorage cache
-            this.saveToLocalStorage()
-            this.notify()
-
-            return updatedSeries
-        } finally {
-            globalProgress.finish()
-        }
-    }
-
-    // ... (lines 272-342)
-
-    /**
-     * Delete series
-     */
-    async deleteSeries(id) {
-        if (!this.repository) {
-            throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
-        }
-
-        const index = this.series.findIndex(s => s.id === id)
-        if (index === -1) throw new Error('Series not found')
-
-        globalProgress.start()
-        try {
-            // 1. Delete from Firestore FIRST (source of truth)
-            await this.repository.delete(id)
-
-            // 2. Update memory
-            this.series.splice(index, 1)
-
-            if (this.activeSeries && this.activeSeries.id === id) {
-                this.activeSeries = null
-            }
-
-            // 3. Update localStorage cache
-            this.saveToLocalStorage()
-            this.notify()
-        } finally {
-            globalProgress.finish()
-        }
-    }
     constructor() {
         this.series = []
         this.activeSeries = null
@@ -306,19 +158,24 @@ export class AlbumSeriesStore {
             notes: seriesData.notes || ''
         }
 
-        // 1. Save to Firestore (source of truth)
-        const id = await this.repository.create(series)
-        series.id = id
+        globalProgress.start()
+        try {
+            // 1. Save to Firestore (source of truth)
+            const id = await this.repository.create(series)
+            series.id = id
 
-        // 2. Update memory
-        this.series.unshift(series)
-        this.activeSeries = series
+            // 2. Update memory
+            this.series.unshift(series)
+            this.activeSeries = series
 
-        // 3. Update localStorage cache
-        this.saveToLocalStorage()
-        this.notify()
+            // 3. Update localStorage cache
+            this.saveToLocalStorage()
+            this.notify()
 
-        return series
+            return series
+        } finally {
+            globalProgress.finish()
+        }
     }
 
     // ========== PERSISTENCE ==========
@@ -361,6 +218,7 @@ export class AlbumSeriesStore {
         this.loading = true
         this.error = null
         this.notify()
+        globalProgress.start()
 
         try {
             // Use repository to fetch all series
@@ -375,7 +233,6 @@ export class AlbumSeriesStore {
                 updatedAt: s.updatedAt?.toDate ? s.updatedAt.toDate() : new Date(s.updatedAt)
             }))
 
-            // Update localStorage cache
             this.saveToLocalStorage()
             this.notify()
             return this.series
@@ -385,6 +242,7 @@ export class AlbumSeriesStore {
             throw error
         } finally {
             this.loading = false
+            globalProgress.finish()
             this.notify()
         }
     }
@@ -400,29 +258,35 @@ export class AlbumSeriesStore {
             throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
         }
 
-        const index = this.series.findIndex(s => s.id === id)
-        if (index === -1) throw new Error('Series not found')
+        globalProgress.start()
 
-        // 1. Update in Firestore FIRST (source of truth)
-        await this.repository.update(id, updates)
+        try {
+            const index = this.series.findIndex(s => s.id === id)
+            if (index === -1) throw new Error('Series not found')
 
-        // 2. Update memory
-        const updatedSeries = {
-            ...this.series[index],
-            ...updates,
-            updatedAt: new Date()
+            // 1. Update in Firestore FIRST (source of truth)
+            await this.repository.update(id, updates)
+
+            // 2. Update memory
+            const updatedSeries = {
+                ...this.series[index],
+                ...updates,
+                updatedAt: new Date()
+            }
+            this.series[index] = updatedSeries
+
+            if (this.activeSeries && this.activeSeries.id === id) {
+                this.activeSeries = updatedSeries
+            }
+
+            // 3. Update localStorage cache
+            this.saveToLocalStorage()
+            this.notify()
+
+            return updatedSeries
+        } finally {
+            globalProgress.finish()
         }
-        this.series[index] = updatedSeries
-
-        if (this.activeSeries && this.activeSeries.id === id) {
-            this.activeSeries = updatedSeries
-        }
-
-        // 3. Update localStorage cache
-        this.saveToLocalStorage()
-        this.notify()
-
-        return updatedSeries
     }
 
     /**
@@ -526,19 +390,24 @@ export class AlbumSeriesStore {
         const index = this.series.findIndex(s => s.id === id)
         if (index === -1) throw new Error('Series not found')
 
-        // 1. Delete from Firestore FIRST (source of truth)
-        await this.repository.delete(id)
+        globalProgress.start()
+        try {
+            // 1. Delete from Firestore FIRST (source of truth)
+            await this.repository.delete(id)
 
-        // 2. Update memory
-        this.series.splice(index, 1)
+            // 2. Update memory
+            this.series.splice(index, 1)
 
-        if (this.activeSeries && this.activeSeries.id === id) {
-            this.activeSeries = null
+            if (this.activeSeries && this.activeSeries.id === id) {
+                this.activeSeries = null
+            }
+
+            // 3. Update localStorage cache
+            this.saveToLocalStorage()
+            this.notify()
+        } finally {
+            globalProgress.finish()
         }
-
-        // 3. Update localStorage cache
-        this.saveToLocalStorage()
-        this.notify()
     }
 
     /**

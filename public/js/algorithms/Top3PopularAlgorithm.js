@@ -25,7 +25,7 @@ export class Top3PopularAlgorithm extends TopNAlgorithm {
             trackCount: 3,
             rankingStrategy: new SpotifyRankingStrategy(),
             defaultRankingSource: {
-                name: 'Crowd Favorites',
+                name: 'Top 3 Songs by Spotify Popularity',
                 type: 'spotify',
                 description: 'Top 3 by Spotify Popularity',
                 secure: true
