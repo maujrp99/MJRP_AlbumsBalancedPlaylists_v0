@@ -14,6 +14,7 @@ import { SavedPlaylistsController } from '../components/playlists/SavedPlaylists
 import { BatchGroupCard } from '../components/playlists/BatchGroupCard.js'
 import { BaseModal } from '../components/ui/BaseModal.js'
 import { TrackRow } from '../components/ui/TrackRow.js'
+import { SafeDOM } from '../utils/SafeDOM.js'
 import { escapeHtml } from '../utils/stringUtils.js'
 
 export class SavedPlaylistsView extends BaseView {
@@ -280,8 +281,8 @@ export class SavedPlaylistsView extends BaseView {
         const html = BaseModal.renderHTML({
             id: 'delete-batch-modal',
             title: 'Delete Batch?',
-            content,
-            footer,
+            content: SafeDOM.fromHTML(content),
+            footer: SafeDOM.fromHTML(footer),
             size: 'sm'
         })
 
@@ -310,8 +311,8 @@ export class SavedPlaylistsView extends BaseView {
         const html = BaseModal.renderHTML({
             id: 'delete-modal',
             title: 'Delete All Playlists?',
-            content,
-            footer,
+            content: SafeDOM.fromHTML(content),
+            footer: SafeDOM.fromHTML(footer),
             size: 'sm'
         })
 
@@ -359,8 +360,8 @@ export class SavedPlaylistsView extends BaseView {
         const html = BaseModal.renderHTML({
             id: 'playlist-modal',
             title: playlist.name,
-            content,
-            footer,
+            content: SafeDOM.fromHTML(content),
+            footer: SafeDOM.fromHTML(footer),
             size: 'lg'
         })
 

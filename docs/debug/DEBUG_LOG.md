@@ -50,26 +50,49 @@
 ---
 
 ## Current Debugging Session
+### Issue #111: Delete Modal Shows Raw HTML
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 21:15
+**Severity**: MEDIUM (Visual Regression)
+**Type**: Rendering
+**Component**: `SavedPlaylistsView.js`, `BaseModal`
+
+#### Problem
+Delete modals in "Saved Playlists" view displayed raw HTML tags (e.g., `<div class="...">`) as text instead of rendering the elements.
+#### Root Cause
+`SavedPlaylistsView` passed raw HTML strings to `BaseModal.renderHTML`. `BaseModal` (SafeDOM version) treats string content as text by default for security, escaping the HTML tags.
+#### Solution
+Updated `SavedPlaylistsView.js` to parse the HTML strings using `SafeDOM.fromHTML()` before passing them to the modal. This converts them to DOM Nodes, which `BaseModal` accepts and renders without escaping.
+
+#### Files Changed
+- `public/js/views/SavedPlaylistsView.js`
+
+---
 
 ### Issue #110: Apple Music/Spotify Export Data Loss
-**Status**: ❌ **REOPENED** (Fix Failed)
-**Date**: 2025-12-30 20:55
+**Status**: 🔄 **PENDING VERIFICATION**
+**Date**: 2025-12-30 21:10
 **Severity**: HIGH (Data Integrity)
-**Type**: Logic Error
-**Component**: `PlaylistsExport.js`, `MusicKitService.js`
+**Type**: Logic Error / Data Schema Flaw
+**Component**: `PlaylistsExport.js`, `MusicKitService.js`, `SeriesModals.js`
 
 #### Problem
 User reported that albums found by Apple MusicKit were "lost" during export (re-searched and failed).
 
-#### Attempted Solution (Failed)
-1. Updated `MusicKitService.js` to ingest `appleMusicId`.
-2. Updated `PlaylistsExport.js` to prioritize existing IDs.
-**Result**: User reported "Did not resolve". Likely due to existing data in Store not having the ID yet (requires re-import?) or logic flaw.
+#### Root Cause (Multi-Point)
+1. **Export**: `PlaylistsExport.js` ignored existing `appleMusicId` and forced search for every track.
+2. **Ingestion**: `MusicKitService.js` didn't explicitly map `appleMusicId` to the track object.
+3. **Source Data**: `SeriesModals.js` saved album queries as Strings (`Artist - Album`) instead of Object Queries, causing data loss at the source.
+
+#### Solution (3-Part Fix)
+1. **MusicKitService.js**: Explicitly map `appleMusicId: t.id` in `getAlbumDetails()`.
+2. **PlaylistsExport.js**: Prioritize existing IDs (`appleMusicId`, `spotifyUri/spotifyId`) before fuzzy search.
+3. **SeriesModals.js**: Push Object Queries `{ artist, title, year, coverUrl }` instead of strings.
 
 #### Files Changed
-- `public/js/services/MusicKitService.js`
-- `public/js/views/playlists/PlaylistsExport.js`
-- `docs/technical/specs/sprint15-arch12/tasks.md`
+- `public/js/services/MusicKitService.js` (Line 220)
+- `public/js/views/playlists/PlaylistsExport.js` (Lines 85-106, 205-215)
+- `public/js/components/series/SeriesModals.js` (Lines 248-281)
 
 ---
 
