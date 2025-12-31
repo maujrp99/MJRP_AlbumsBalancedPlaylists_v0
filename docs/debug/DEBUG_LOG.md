@@ -51,6 +51,28 @@
 
 ## Current Debugging Session
 
+### Issue #110: Apple Music/Spotify Export Data Loss
+**Status**: ❌ **REOPENED** (Fix Failed)
+**Date**: 2025-12-30 20:55
+**Severity**: HIGH (Data Integrity)
+**Type**: Logic Error
+**Component**: `PlaylistsExport.js`, `MusicKitService.js`
+
+#### Problem
+User reported that albums found by Apple MusicKit were "lost" during export (re-searched and failed).
+
+#### Attempted Solution (Failed)
+1. Updated `MusicKitService.js` to ingest `appleMusicId`.
+2. Updated `PlaylistsExport.js` to prioritize existing IDs.
+**Result**: User reported "Did not resolve". Likely due to existing data in Store not having the ID yet (requires re-import?) or logic flaw.
+
+#### Files Changed
+- `public/js/services/MusicKitService.js`
+- `public/js/views/playlists/PlaylistsExport.js`
+- `docs/technical/specs/sprint15-arch12/tasks.md`
+
+---
+
 ### Issue #109: SafeDOM.strong TypeError
 **Status**: ✅ **RESOLVED**
 **Date**: 2025-12-30 20:35

@@ -90,5 +90,11 @@
     - [x] `src/components/shared/`
     - [x] `src/components/common/`
 - [ ] **Documentation**:
-    - [ ] Update `UI_STYLE_GUIDE.md`
     - [x] Update `COMPONENT_REFERENCE.md`
+
+## Phase 6: Critical Export Integrity (Hotfix)
+*Goal: Ensure matched IDs are preserved during export.*
+
+- [ ] **Fix Data Loss** (Attempt Failed):
+    - [ ] Update `MusicKitService` to ingest `appleMusicId` (Needs Verification).
+    - [ ] Update `PlaylistsExport` to prioritize existing IDs (Needs Verification).
