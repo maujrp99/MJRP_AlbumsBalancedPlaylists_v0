@@ -5,12 +5,6 @@ import { dataSyncService } from '../services/DataSyncService.js'
 import { globalProgress } from '../components/GlobalProgress.js'
 
 export class AlbumSeriesStore {
-    // ... constructor ...
-
-    // ... (lines 14-138)
-
-    /**
-     * Create new series
     constructor() {
         this.series = []
         this.activeSeries = null
