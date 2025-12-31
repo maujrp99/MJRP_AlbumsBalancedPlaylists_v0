@@ -92,9 +92,23 @@
 - [ ] **Documentation**:
     - [x] Update `COMPONENT_REFERENCE.md`
 
-## Phase 6: Critical Export Integrity (Hotfix)
-*Goal: Ensure matched IDs are preserved during export.*
+## Phase 6: Critical Export Integrity (Hotfix) ✅
+*Goal: Ensure matched IDs are preserved during export + Unify search logic.*
 
-- [ ] **Fix Data Loss** (Attempt Failed):
-    - [ ] Update `MusicKitService` to ingest `appleMusicId` (Needs Verification).
-    - [ ] Update `PlaylistsExport` to prioritize existing IDs (Needs Verification).
+- [x] **Storefront Strategy**:
+    - [x] Add `getBrowserStorefront()` to `MusicKitService`
+    - [x] Remove eager `authorize()` from `init()` (lazy authorize)
+    - [x] Add `authorizeAndValidate()` for persist-time check
+- [x] **Edit Modal Search Refactor**:
+    - [x] Replace Autocomplete with artist scan + filters
+    - [x] Use `getArtistDiscography` (same as Home)
+    - [x] Add filter buttons (Albums/Singles/Live/Compilations)
+- [x] **Deprecations**:
+    - [x] Mark `Autocomplete.js` as deprecated (still used elsewhere, not deleted)
+    - [x] Mark `MusicKitSearchAdapter.js` as deprecated (no longer used by SeriesModals)
+- [x] **Verification**:
+    - [x] Test search with browser locale (no authorize popup on init)
+    - [x] Test artist scan finds "Pink Floyd", "trex" correctly
+    - [x] Test adding albums to series
+
+See: [Phase 6 Hotfix Plan](./phase6-hotfix-plan.md)

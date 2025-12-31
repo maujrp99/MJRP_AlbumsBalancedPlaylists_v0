@@ -7,12 +7,12 @@
  * - Renders modal HTML
  * - Manages modal state (open/close)
  * - Handles form submission
- * - Provides autocomplete for album addition
+ * - Provides artist scan + filters for album addition (Phase 6)
  */
 
 import { getIcon } from '../Icons.js';
-import { Autocomplete } from '../Autocomplete.js';
-import { optimizedAlbumLoader } from '../../services/OptimizedAlbumLoader.js';
+import { albumSearchService } from '../../services/album-search/AlbumSearchService.js';
+import { musicKitService } from '../../services/MusicKitService.js';
 import { toast } from '../Toast.js';
 import { albumSeriesStore } from '../../stores/albumSeries.js';
 import { escapeHtml } from '../../utils/stringUtils.js';
@@ -27,6 +27,10 @@ export default class SeriesModals {
         this.editingSeriesId = null;
         this.editingAlbumQueries = [];
         this.deletingSeriesId = null;
+
+        // Artist scan state (Phase 6) - use singleton
+        this.searchResults = [];
+        this.filterState = { albums: true, singles: false, live: false, compilations: false };
     }
 
     /**
@@ -57,12 +61,34 @@ export default class SeriesModals {
                                 <span id="editSeriesAlbumCount" class="badge badge-neutral text-xs">0 albums</span>
                             </div>
                             
-                            <div id="editSeriesAlbumsList" class="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar mb-4 bg-black/20 rounded-lg p-3">
+                            <div id="editSeriesAlbumsList" class="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar mb-4 bg-black/20 rounded-lg p-3">
                                 <!-- Albums rendered dynamically -->
                             </div>
                             
-                            <div id="editSeriesAutocompleteWrapper" class="mb-4 relative z-50"></div>
-                            <p class="text-xs text-muted mt-1">Format: Artist - Album Title (e.g., Pink Floyd - The Wall)</p>
+                            <!-- Artist Scan Section (Phase 6) -->
+                            <div id="artistScanSection" class="mt-4 p-3 bg-white/5 rounded-lg">
+                                <div class="flex gap-2 mb-3">
+                                    <input type="text" id="artistScanInput" class="form-control flex-1" placeholder="Enter artist name (e.g., Pink Floyd, T-Rex)">
+                                    <button type="button" id="btnScanArtist" class="btn btn-primary px-4">
+                                        ${getIcon('Search', 'w-4 h-4')} Scan
+                                    </button>
+                                </div>
+                                
+                                <!-- Filter Buttons -->
+                                <div id="artistScanFilters" class="flex flex-wrap gap-2 mb-3 hidden">
+                                    <button type="button" data-filter="albums" class="filter-btn px-3 py-1.5 rounded-lg bg-flame-gradient text-white text-xs font-bold">Albums</button>
+                                    <button type="button" data-filter="singles" class="filter-btn px-3 py-1.5 rounded-lg bg-white/5 text-gray-400 text-xs font-bold border border-white/5">Singles/EPs</button>
+                                    <button type="button" data-filter="live" class="filter-btn px-3 py-1.5 rounded-lg bg-white/5 text-gray-400 text-xs font-bold border border-white/5">Live</button>
+                                    <button type="button" data-filter="compilations" class="filter-btn px-3 py-1.5 rounded-lg bg-white/5 text-gray-400 text-xs font-bold border border-white/5">Compilations</button>
+                                </div>
+                                
+                                <!-- Search Results -->
+                                <div id="artistScanResults" class="space-y-1 max-h-[200px] overflow-y-auto custom-scrollbar hidden">
+                                    <!-- Results rendered dynamically -->
+                                </div>
+                                
+                                <p id="artistScanHint" class="text-xs text-muted mt-2">Type artist name and click Scan to find albums</p>
+                            </div>
                         </div>
                         
                         <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
@@ -139,7 +165,7 @@ export default class SeriesModals {
 
         if (nameInput) nameInput.value = series.name || '';
         this.renderAlbumsList();
-        this.initAutocomplete();
+        this.initArtistSearch();
 
         if (modal) modal.classList.remove('hidden');
     }
@@ -233,39 +259,256 @@ export default class SeriesModals {
     }
 
     /**
-     * Initialize Autocomplete for adding albums
+     * Initialize Artist Search (Phase 6)
+     * Uses getArtistDiscography + filters (same logic as Home page)
      */
-    initAutocomplete() {
-        const wrapper = this.container.querySelector('#editSeriesAutocompleteWrapper');
-        if (!wrapper) return;
+    initArtistSearch() {
+        const scanInput = this.container.querySelector('#artistScanInput');
+        const scanBtn = this.container.querySelector('#btnScanArtist');
+        const filtersEl = this.container.querySelector('#artistScanFilters');
+        const resultsEl = this.container.querySelector('#artistScanResults');
+        const hintEl = this.container.querySelector('#artistScanHint');
 
-        wrapper.innerHTML = '';
-        optimizedAlbumLoader.load().catch(console.error);
+        if (!scanInput || !scanBtn) return;
 
-        const autocomplete = new Autocomplete({
-            placeholder: 'Search to add album...',
-            loader: optimizedAlbumLoader,
-            onSelect: (item) => {
-                const entry = `${item.artist} - ${item.album}`;
+        // Clear previous state
+        this.searchResults = [];
+        this.filterState = { albums: true, singles: false, live: false, compilations: false };
+        scanInput.value = '';
+        if (filtersEl) filtersEl.classList.add('hidden');
+        if (resultsEl) resultsEl.classList.add('hidden');
+        if (hintEl) hintEl.classList.remove('hidden');
 
-                if (this.editingAlbumQueries.includes(entry)) {
-                    toast.warning('This album is already in the list');
-                    return;
-                }
+        // Scan button click
+        scanBtn.addEventListener('click', () => this.scanArtist());
 
-                this.editingAlbumQueries.push(entry);
-                this.renderAlbumsList();
-                toast.success(`Added: ${item.album}`);
-
-                const input = wrapper.querySelector('input');
-                if (input) {
-                    input.value = '';
-                    input.focus();
-                }
+        // Enter key in input
+        scanInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.scanArtist();
             }
         });
 
-        wrapper.appendChild(autocomplete.render());
+        // Filter buttons
+        if (filtersEl) {
+            filtersEl.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const filterType = btn.dataset.filter;
+                    this.toggleFilter(filterType);
+                });
+            });
+        }
+    }
+
+    /**
+     * Scan artist discography
+     */
+    async scanArtist() {
+        const scanInput = this.container.querySelector('#artistScanInput');
+        const filtersEl = this.container.querySelector('#artistScanFilters');
+        const resultsEl = this.container.querySelector('#artistScanResults');
+        const hintEl = this.container.querySelector('#artistScanHint');
+        const scanBtn = this.container.querySelector('#btnScanArtist');
+
+        const query = scanInput?.value?.trim();
+        if (!query) return;
+
+        // Show loading
+        if (scanBtn) scanBtn.disabled = true;
+        if (scanBtn) scanBtn.innerHTML = `${getIcon('Loader', 'w-4 h-4 animate-spin')} Scanning...`;
+        if (hintEl) hintEl.textContent = 'Searching Apple Music...';
+
+        try {
+            // Initialize MusicKit if needed
+            await musicKitService.init();
+
+            // Use the same method as Home page
+            console.log(`[SeriesModals] Scanning discography for: ${query}`);
+            this.searchResults = await albumSearchService.getArtistDiscography(query);
+
+            console.log(`[SeriesModals] Found ${this.searchResults?.length || 0} albums`);
+
+            if (this.searchResults && this.searchResults.length > 0) {
+                // Show filters and results
+                if (filtersEl) filtersEl.classList.remove('hidden');
+                if (resultsEl) resultsEl.classList.remove('hidden');
+                if (hintEl) hintEl.classList.add('hidden');
+
+                // Update filter UI
+                this.updateFilterUI();
+
+                // Apply filters and render
+                this.applyFilters();
+            } else {
+                if (hintEl) {
+                    hintEl.textContent = 'No albums found. Try a different artist name.';
+                    hintEl.classList.remove('hidden');
+                }
+                if (filtersEl) filtersEl.classList.add('hidden');
+                if (resultsEl) resultsEl.classList.add('hidden');
+            }
+        } catch (error) {
+            console.error('[SeriesModals] Artist scan failed:', error);
+            if (hintEl) {
+                hintEl.textContent = 'Search failed. Please try again.';
+                hintEl.classList.remove('hidden');
+            }
+            toast.error('Failed to search artist');
+        } finally {
+            if (scanBtn) {
+                scanBtn.disabled = false;
+                scanBtn.innerHTML = `${getIcon('Search', 'w-4 h-4')} Scan`;
+            }
+        }
+    }
+
+    /**
+     * Toggle filter state
+     */
+    toggleFilter(type) {
+        this.filterState[type] = !this.filterState[type];
+        this.updateFilterUI();
+        this.applyFilters();
+    }
+
+    /**
+     * Update filter button UI
+     */
+    updateFilterUI() {
+        const filtersEl = this.container.querySelector('#artistScanFilters');
+        if (!filtersEl) return;
+
+        filtersEl.querySelectorAll('.filter-btn').forEach(btn => {
+            const type = btn.dataset.filter;
+            const active = this.filterState[type];
+            if (active) {
+                btn.className = 'filter-btn px-3 py-1.5 rounded-lg bg-flame-gradient text-white text-xs font-bold';
+            } else {
+                btn.className = 'filter-btn px-3 py-1.5 rounded-lg bg-white/5 text-gray-400 text-xs font-bold border border-white/5';
+            }
+        });
+    }
+
+    /**
+     * Apply filters and render results
+     */
+    applyFilters() {
+        if (!this.searchResults) return;
+
+        const filtered = this.searchResults.filter(album => {
+            const title = (album.title || '').toLowerCase();
+            const isSingle = album.isSingle || album.albumType === 'Single';
+            const isLive = album.isLive || title.includes('(live') || title.includes('[live');
+            const isCompilation = album.isCompilation || title.includes('greatest hits') || title.includes('best of');
+            const isEP = album.albumType === 'EP';
+            const isStudioAlbum = !isSingle && !isLive && !isCompilation && !isEP;
+
+            if (isStudioAlbum && this.filterState.albums) return true;
+            if ((isSingle || isEP) && this.filterState.singles) return true;
+            if (isLive && this.filterState.live) return true;
+            if (isCompilation && this.filterState.compilations) return true;
+
+            return false;
+        });
+
+        this.renderSearchResults(filtered);
+    }
+
+    /**
+     * Render search results as compact list
+     */
+    renderSearchResults(results) {
+        const resultsEl = this.container.querySelector('#artistScanResults');
+        if (!resultsEl) return;
+
+        if (!results || results.length === 0) {
+            resultsEl.innerHTML = '<p class="text-gray-500 text-sm italic py-2">No albums match filters</p>';
+            return;
+        }
+
+        resultsEl.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+
+        results.forEach(album => {
+            const row = document.createElement('div');
+            row.className = 'album-result flex items-center gap-3 p-2 bg-white/5 rounded-lg hover:bg-white/10 cursor-pointer transition-colors';
+
+            // Cover
+            const coverUrl = album.coverUrl?.replace('{w}', '50').replace('{h}', '50') || '/assets/images/cover_placeholder.png';
+            const img = document.createElement('img');
+            img.src = coverUrl;
+            img.alt = album.title;
+            img.className = 'w-10 h-10 rounded object-cover';
+            row.appendChild(img);
+
+            // Info
+            const info = document.createElement('div');
+            info.className = 'flex-1 min-w-0';
+            const titleEl = document.createElement('div');
+            titleEl.className = 'text-sm font-medium truncate';
+            titleEl.textContent = album.title;
+            const yearEl = document.createElement('div');
+            yearEl.className = 'text-xs text-gray-400';
+            yearEl.textContent = album.year || '';
+            info.appendChild(titleEl);
+            info.appendChild(yearEl);
+            row.appendChild(info);
+
+            // Add button
+            const addBtn = document.createElement('button');
+            addBtn.type = 'button';
+            addBtn.className = 'btn btn-ghost btn-sm text-green-400 hover:text-green-300';
+            addBtn.innerHTML = getIcon('Plus', 'w-4 h-4');
+            addBtn.title = 'Add to series';
+            row.appendChild(addBtn);
+
+            // Click to add
+            const handleAdd = () => this.addAlbumToSeries(album);
+            row.addEventListener('click', handleAdd);
+            addBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                handleAdd();
+            });
+
+            fragment.appendChild(row);
+        });
+
+        resultsEl.appendChild(fragment);
+    }
+
+    /**
+     * Add album to series list
+     */
+    addAlbumToSeries(album) {
+        const entry = {
+            artist: album.artist,
+            title: album.title,
+            album: album.title,
+            appleMusicId: album.id || album.appleMusicId,
+            year: album.year || null,
+            coverUrl: album.coverUrl || null
+        };
+
+        // Check for duplicates
+        const isDuplicate = this.editingAlbumQueries.some(q => {
+            if (typeof q === 'object' && q !== null) {
+                if (entry.appleMusicId && q.appleMusicId) {
+                    return q.appleMusicId === entry.appleMusicId;
+                }
+                return q.artist === entry.artist && (q.title === entry.title || q.album === entry.title);
+            }
+            return q === `${entry.artist} - ${entry.title}`;
+        });
+
+        if (isDuplicate) {
+            toast.warning('This album is already in the list');
+            return;
+        }
+
+        this.editingAlbumQueries.push(entry);
+        this.renderAlbumsList();
+        toast.success(`Added: ${entry.title}`);
     }
 
     /**

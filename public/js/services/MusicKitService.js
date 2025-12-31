@@ -18,21 +18,38 @@ class MusicKitService {
 
     /**
      * Get user's storefront (region) for catalog searches
-     * Falls back to 'us' if not available
+     * Uses browser locale as fallback when not authorized
      * @returns {string} Storefront code (e.g., 'us', 'br', 'gb')
      */
     _getStorefront() {
         if (this._storefront) {
             return this._storefront;
         }
-        // Try to get from MusicKit instance
+        // Try to get from MusicKit instance (authorized user)
         if (this.music?.storefrontId) {
             this._storefront = this.music.storefrontId;
-            console.log(`[MusicKit] Using storefront: ${this._storefront}`);
+            console.log(`[MusicKit] Using authorized storefront: ${this._storefront}`);
             return this._storefront;
         }
-        // Fallback to US
-        return 'us';
+        // Fallback to browser locale
+        return this.getBrowserStorefront();
+    }
+
+    /**
+     * Get storefront from browser locale (Phase 6 lazy authorize)
+     * @returns {string} Storefront code based on navigator.language
+     */
+    getBrowserStorefront() {
+        try {
+            const locale = navigator.language || 'en-US';
+            // Parse "pt-BR" -> "br", "en-US" -> "us", "en-GB" -> "gb"
+            const parts = locale.split('-');
+            const country = parts[1]?.toLowerCase() || 'us';
+            console.log(`[MusicKit] Using browser locale storefront: ${country}`);
+            return country;
+        } catch {
+            return 'us';
+        }
     }
 
     /**
@@ -82,6 +99,12 @@ class MusicKitService {
             });
 
             this.music = window.MusicKit.getInstance();
+
+            // 4. Use browser locale storefront (lazy authorize - no popup on init)
+            // Authorize will be called later when persisting to Firestore
+            this._storefront = this.getBrowserStorefront();
+            console.log(`[MusicKit] Using browser locale storefront: ${this._storefront}`);
+
             this.isInitialized = true;
             console.log('[MusicKit] Initialized successfully');
 
@@ -90,6 +113,37 @@ class MusicKitService {
             console.error('[MusicKit] Initialization failed:', error);
             this.initPromise = null; // Allow retry
             throw error;
+        }
+    }
+
+    /**
+     * Wait for storefront (region) to be detected
+     * Polls until storefrontId is available or timeout
+     * @private
+     */
+    async _waitForStorefront() {
+        // Already cached from previous call
+        if (this._storefront) {
+            console.log(`[MusicKit] Storefront already known: ${this._storefront}`);
+            return;
+        }
+
+        // Poll for storefrontId (max 2 seconds, 100ms intervals)
+        const maxAttempts = 20;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            if (this.music?.storefrontId) {
+                this._storefront = this.music.storefrontId;
+                console.log(`[MusicKit] Storefront detected: ${this._storefront}`);
+                return;
+            }
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        // Timeout - use fallback
+        console.warn('[MusicKit] Storefront detection timed out, using fallback');
+        // Try one last time from the instance
+        if (this.music?.storefrontId) {
+            this._storefront = this.music.storefrontId;
         }
     }
 
@@ -216,7 +270,8 @@ class MusicKitService {
                 discNumber: t.attributes?.discNumber || 1,
                 previewUrl: t.attributes?.previews?.[0]?.url,
                 artist: t.attributes?.artistName, // Sometimes tracks have different artists
-                id: t.id
+                id: t.id,
+                appleMusicId: t.id
             }));
 
             return {
@@ -377,6 +432,44 @@ class MusicKitService {
         } catch (error) {
             console.error('[MusicKit] Authorization failed:', error);
             throw error;
+        }
+    }
+
+    /**
+     * Authorize and validate storefront (Phase 6 - call on persist)
+     * Detects if browser locale differs from Apple Music account region
+     * @returns {Promise<Object>} { authorized, storefrontMismatch, browserStorefront, accountStorefront }
+     */
+    async authorizeAndValidate() {
+        const browserStorefront = this.getBrowserStorefront();
+
+        try {
+            await this.authorize();
+
+            // After auth, MusicKit should have the real storefront
+            const accountStorefront = this.music?.storefrontId || browserStorefront;
+            const storefrontMismatch = browserStorefront !== accountStorefront;
+
+            if (storefrontMismatch) {
+                console.warn(`[MusicKit] Storefront mismatch! Browser: ${browserStorefront}, Account: ${accountStorefront}`);
+                // Update to use the correct storefront
+                this._storefront = accountStorefront;
+            }
+
+            return {
+                authorized: true,
+                storefrontMismatch,
+                browserStorefront,
+                accountStorefront
+            };
+        } catch (error) {
+            console.error('[MusicKit] Authorization failed:', error);
+            return {
+                authorized: false,
+                storefrontMismatch: false,
+                browserStorefront,
+                accountStorefront: browserStorefront
+            };
         }
     }
 

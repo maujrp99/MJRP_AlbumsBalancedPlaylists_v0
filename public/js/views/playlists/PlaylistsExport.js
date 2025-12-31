@@ -83,7 +83,26 @@ export async function handleExportToAppleMusic(options = {}) {
             const notFound = []
 
             for (const track of playlist.tracks) {
-                // Use improved matching with album name and live album detection
+                // DEBUG: Log track data to see what IDs are available
+                console.log('[AppleMusic Export] Track data:', {
+                    title: track.title,
+                    artist: track.artist,
+                    album: track.album,
+                    appleMusicId: track.appleMusicId,
+                    id: track.id,
+                    spotifyId: track.spotifyId,
+                    hasAppleMusicId: !!track.appleMusicId
+                })
+
+                // 1. Check for existing Apple Music ID (Fast Path)
+                if (track.appleMusicId) {
+                    console.log(`[AppleMusic Export] ✅ FAST PATH: Using existing ID ${track.appleMusicId} for "${track.title}"`)
+                    trackIds.push(track.appleMusicId)
+                    continue
+                }
+
+                // 2. Fallback to Search (Slow Path)
+                console.log(`[AppleMusic Export] ⚠️ SLOW PATH: Searching for "${track.title}" by ${track.artist}`)
                 const isLiveAlbum = track.album?.toLowerCase().includes('live') || false
                 const found = await musicKitService.findTrackFromAlbum(
                     track.title,
@@ -92,16 +111,26 @@ export async function handleExportToAppleMusic(options = {}) {
                     isLiveAlbum
                 )
                 if (found) {
+                    console.log(`[AppleMusic Export] Found via search: ${found.id}`)
                     trackIds.push(found.id)
                 } else {
+                    console.log(`[AppleMusic Export] ❌ NOT FOUND: "${track.artist} - ${track.title}"`)
                     notFound.push(`${track.artist} - ${track.title}`)
                 }
             }
 
             if (trackIds.length > 0) {
+                // DEBUG: Log what we're sending to Apple
+                console.log(`[AppleMusic Export] 📤 Creating playlist "${playlistName}" with ${trackIds.length} tracks:`, trackIds)
+
                 // Create playlist inside series folder
-                await musicKitService.createPlaylistInFolder(playlistName, trackIds, folderId)
-                successCount++
+                try {
+                    const result = await musicKitService.createPlaylistInFolder(playlistName, trackIds, folderId)
+                    console.log(`[AppleMusic Export] 📥 API Response:`, result)
+                    successCount++
+                } catch (apiError) {
+                    console.error(`[AppleMusic Export] ❌ API ERROR:`, apiError)
+                }
 
                 if (notFound.length > 0) {
                     console.warn(`[AppleMusic] Tracks not found in ${playlist.name}:`, notFound)
@@ -194,6 +223,20 @@ export async function handleExportToSpotify(options = {}) {
 
             for (const track of playlist.tracks) {
                 totalTracks++
+
+                // 1. Check for existing Spotify URI/ID (Fast Path)
+                if (track.spotifyUri) {
+                    trackUris.push(track.spotifyUri)
+                    matchedTracks++
+                    continue
+                }
+                if (track.spotifyId) {
+                    trackUris.push(`spotify:track:${track.spotifyId}`)
+                    matchedTracks++
+                    continue
+                }
+
+                // 2. Fallback to Search (Slow Path)
                 const found = await SpotifyService.searchTrack(
                     track.title || track.name,
                     track.artist,

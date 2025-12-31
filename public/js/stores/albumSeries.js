@@ -447,6 +447,17 @@ export class AlbumSeriesStore {
 
             targetSeries = this.series.find(s => {
                 return (s.albumQueries || []).some(query => {
+                    // Object Query Support (New)
+                    if (typeof query === 'object' && query !== null) {
+                        const titleMatch = query.title === album.title
+                        const artistMatch = !query.artist || query.artist === album.artist
+                        const idMatch = (query.id && query.id === album.id)
+                        return idMatch || (titleMatch && artistMatch)
+                    }
+
+                    // String Query Support (Legacy)
+                    if (typeof query !== 'string') return false;
+
                     const q = norm(query)
                     const t = norm(album.title)
                     const a = norm(album.artist)
@@ -466,7 +477,18 @@ export class AlbumSeriesStore {
 
         // Find the query that matches this album
         // Query format is typically "Artist Album Title" or just "Album Title"
+        // Now supports Object Queries
         const queryToRemove = albumQueries.find(query => {
+            // Object Query Support (New)
+            if (typeof query === 'object' && query !== null) {
+                const titleMatch = query.title === album.title
+                const artistMatch = !query.artist || query.artist === album.artist
+                const idMatch = (query.id && query.id === album.id)
+                return idMatch || (titleMatch && artistMatch)
+            }
+
+            if (typeof query !== 'string') return false;
+
             const queryLower = query.toLowerCase()
             const titleLower = album.title?.toLowerCase() || ''
             const artistLower = album.artist?.toLowerCase() || ''

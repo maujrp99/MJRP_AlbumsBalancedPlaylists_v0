@@ -50,6 +50,43 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #113: Edit Modal Search/Storefront Refactoring
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-31 00:00
+**Resolved**: 2025-12-31 00:13
+**Severity**: HIGH (Architectural Improvement)
+**Type**: Refactoring / Component Reuse
+**Component**: `SeriesModals.js`, `MusicKitService.js`, `Autocomplete.js`
+**Sprint**: 15 Phase 6 (Hotfix)
+
+#### Problem
+1. Edit modal search used Autocomplete with `MusicKitSearchAdapter`, but Home used `getArtistDiscography`.
+2. Storefront required `authorize()` on init, causing popup on first page load.
+3. Artist searches like "trex" worked on Home but failed in Edit due to different search methods.
+
+#### Root Causes
+1. **Different search methods**: Home uses `getArtistDiscography`, Edit used `search()` - fundamentally different APIs.
+2. **Eager authorize**: `MusicKitService.init()` called `authorize()` immediately, forcing Apple Music login popup on every app load.
+3. **No storefront fallback**: Without authorize, defaulted to 'us' instead of using browser locale.
+
+#### Solution (4-Part Fix)
+1. **Lazy Authorize**: Remove `authorize()` from `init()`, only call on persist to Firestore.
+2. **Browser Locale Storefront**: Use `navigator.language` to infer storefront for searches.
+3. **Deprecate Autocomplete**: Replace with artist scan + filters (same as Home).
+4. **Storefront Validation**: On persist, call authorize and detect region mismatch.
+
+#### Implementation Plan
+See: [Phase 6 Hotfix Plan](./sprint15-arch12/phase6-hotfix-plan.md)
+
+#### Files To Change
+- `MusicKitService.js`: Add `getBrowserStorefront()`, remove eager authorize
+- `SeriesModals.js`: Replace Autocomplete with artist scan + filters
+- `Autocomplete.js`: [DEPRECATE]
+- `MusicKitSearchAdapter.js`: [DEPRECATE]
+
+---
+
 ### Issue #111: Delete Modal Shows Raw HTML
 **Status**: ✅ **RESOLVED**
 **Date**: 2025-12-30 21:15
@@ -67,32 +104,52 @@ Updated `SavedPlaylistsView.js` to parse the HTML strings using `SafeDOM.fromHTM
 #### Files Changed
 - `public/js/views/SavedPlaylistsView.js`
 
+### Issue #112: App Crash on Album Removal
+**Status**: ✅ **RESOLVED**
+**Date**: 2025-12-30 21:20
+**Severity**: HIGH (App Crash)
+**Type**: Regression / Data Type Mismatch
+**Component**: `albumSeriesStore.js`
+
+#### Problem
+Removing an album triggered `TypeError: str.toLowerCase is not a function`.
+#### Root Cause
+The `removeAlbumFromSeries` method assumed `albumQueries` were always strings. Since recent updates introduced Object Queries (to support Export integrity), the legacy string normalization logic crashed when encountering an object.
+#### Solution
+Updated `removeAlbumFromSeries` to safely handle both String and Object queries. It now checks `typeof query` and performs exact property matching (ID/Title/Artist) for objects, while maintaining legacy string matching for older data.
+
+#### Files Changed
+- `public/js/stores/albumSeries.js`
+
 ---
 
 ### Issue #110: Apple Music/Spotify Export Data Loss
 **Status**: 🔄 **PENDING VERIFICATION**
-**Date**: 2025-12-30 21:10
+**Date**: 2025-12-30 21:40
 **Severity**: HIGH (Data Integrity)
-**Type**: Logic Error / Data Schema Flaw
-**Component**: `PlaylistsExport.js`, `MusicKitService.js`, `SeriesModals.js`
+**Type**: Logic Error / Data Schema Flaw / Region Mismatch
+**Component**: `PlaylistsExport.js`, `MusicKitService.js`, `SeriesModals.js`, `MusicKitSearchAdapter.js`
 
 #### Problem
-User reported that albums found by Apple MusicKit were "lost" during export (re-searched and failed).
+User reported that albums found by Apple MusicKit were "lost" during export (re-searched and failed). T. Rex tracks silently failed because IDs were from wrong region.
 
 #### Root Cause (Multi-Point)
 1. **Export**: `PlaylistsExport.js` ignored existing `appleMusicId` and forced search for every track.
 2. **Ingestion**: `MusicKitService.js` didn't explicitly map `appleMusicId` to the track object.
-3. **Source Data**: `SeriesModals.js` saved album queries as Strings (`Artist - Album`) instead of Object Queries, causing data loss at the source.
+3. **Source Data**: `SeriesModals.js` used static JSON (`OptimizedAlbumLoader`) with US Apple Music IDs, not user's storefront.
+4. **Region Mismatch**: IDs from US catalog don't work in Brazil library.
 
-#### Solution (3-Part Fix)
+#### Solution (4-Part Fix)
 1. **MusicKitService.js**: Explicitly map `appleMusicId: t.id` in `getAlbumDetails()`.
-2. **PlaylistsExport.js**: Prioritize existing IDs (`appleMusicId`, `spotifyUri/spotifyId`) before fuzzy search.
-3. **SeriesModals.js**: Push Object Queries `{ artist, title, year, coverUrl }` instead of strings.
+2. **PlaylistsExport.js**: Prioritize existing IDs before fuzzy search.
+3. **MusicKitSearchAdapter.js** (**NEW**): Adapter wrapping `AlbumSearchService` for live Apple MusicKit search with user's storefront.
+4. **SeriesModals.js**: Use `MusicKitSearchAdapter` instead of static JSON, preserving region-specific `appleMusicId`.
 
 #### Files Changed
 - `public/js/services/MusicKitService.js` (Line 220)
-- `public/js/views/playlists/PlaylistsExport.js` (Lines 85-106, 205-215)
-- `public/js/components/series/SeriesModals.js` (Lines 248-281)
+- `public/js/views/playlists/PlaylistsExport.js` (Lines 85-120)
+- `public/js/services/MusicKitSearchAdapter.js` (**NEW**)
+- `public/js/components/series/SeriesModals.js` (Lines 15, 235-290)
 
 ---
 

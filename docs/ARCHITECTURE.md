@@ -1,6 +1,6 @@
 # Architecture Documentation
 
-**Last Updated**: 2025-12-26
+**Last Updated**: 2025-12-31
 **Workflow**: See `.agent/workflows/architecture_protocol.md`
 
 > **For project overview, features, and deployment info, see:**
@@ -9,10 +9,10 @@
 
 ---
 
-## Architectural Evolution (Sprint 13-14)
+## Architectural Evolution (Sprint 13-15)
 
 > [!NOTE]
-> This section documents architectural changes made during Sprint 13-14 refactoring.
+> This section documents architectural changes made during Sprint 13-15 refactoring.
 > For detailed specs, see `docs/technical/specs/arch-*` files.
 
 ### Summary Table
@@ -22,11 +22,12 @@
 | **ARCH-1** | PlaylistsView Modularization | ✅ Complete | Exploded God Class into Controller + Renderer + DragHandler |
 | **ARCH-2** | Store Pattern Standardization | ✅ Complete | SpotifyEnrichmentStore → Repository pattern |
 | **ARCH-3** | Component Reuse Foundation | ✅ Complete | BaseCard + BatchGroupCard enhancements |
-| **ARCH-4** | Album Search Modularization | 📋 Sprint 14 | Extract search logic from SeriesView |
+| **ARCH-4** | Album Search Modularization | ✅ Complete | Extract search logic from SeriesView |
 | **ARCH-5** | Cache Consolidation | ✅ Complete | AlbumCache → CacheManager (IndexedDB) |
 | **ARCH-6** | SeriesView Loading Optimization | ✅ Complete | Incremental render, store-level caching |
 | **ARCH-8** | InventoryView V3 Refactor | ✅ Complete | Modularized InventoryView (Controller + Renderer) |
-| **ARCH-8** | InventoryView V3 Refactor | ✅ Complete | Modularized InventoryView (Controller + Renderer) |
+| **ARCH-12** | SafeDOM Migration | ✅ Complete | Eliminated innerHTML XSS sinks (Sprint 15) |
+| **ARCH-13** | Lazy Authorize + Browser Locale | ✅ Complete | MusicKit storefront via navigator.language (Sprint 15 Phase 6) |
 
 ### ARCH-1: PlaylistsView Modularization
 
@@ -116,6 +117,36 @@ Store (runtime state) → Repository (Firestore CRUD)
 - **Strict Ownership**: Explicit tri-state logic (Owned, Wishlist, Not Owned).
 - **Currency Support**: Split stats for USD/BRL.
 - **Performance**: Use `OptimizedAlbumLoader` for covers.
+
+---
+
+### ARCH-12: SafeDOM Migration (Sprint 15)
+
+**Problem**: Widespread use of `innerHTML` created theoretical XSS vulnerabilities.
+
+**Solution**:
+- Created `SafeDOM.js` utility for programmatic DOM construction
+- Migrated all core components (`Card`, `TrackRow`, `BaseModal`) to SafeDOM
+- Added `.renderHTML()` adapters for backward compatibility
+
+**Result**: Eliminated 50+ innerHTML sinks. See [Sprint 15 Tasks](technical/specs/sprint15-arch12/tasks.md).
+
+---
+
+### ARCH-13: Lazy Authorize + Browser Locale (Sprint 15 Phase 6)
+
+**Problem**: MusicKit required `authorize()` on init, causing popup on every page load.
+
+**Solution**:
+- **Lazy Authorize**: Removed `authorize()` from `init()`, only call on Firestore persist
+- **Browser Locale**: Use `navigator.language` to infer storefront (e.g., "pt-BR" → "br")
+- **`authorizeAndValidate()`**: Detects storefront mismatch on persist
+
+**Files Changed**:
+- `MusicKitService.js` - `getBrowserStorefront()`, `authorizeAndValidate()`
+- `SeriesModals.js` - Artist scan + filters (deprecated Autocomplete)
+
+**Spec**: [Phase 6 Hotfix Plan](technical/specs/sprint15-arch12/phase6-hotfix-plan.md)
 
 ---
 

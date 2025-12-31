@@ -18,19 +18,20 @@ The MJRP Playlist Generator, **"The Album Blender"**, is a strategic curation pl
 
 ### Current Status ✅ Production Stable
 - **v2.12.0** (Sprint 12: Critical Fixes & AlbumsView Modularization)
+- **v3.0.0-beta** (Sprint 15: SafeDOM & Component Architecture)
 - Frontend: `https://mjrp-playlist-generator.web.app`
 - Backend API: Cloud Run (`mjrp-proxy`)
 - Core features operational
 
 > [!NOTE]
-> **Current Sprint (Sprint 12 - In Progress)**:
-> - 🟢 **Ranking Strategy**: Implemented Multi-Source Ranking (Spotify/BEA).
-> - 🟢 **SeriesView V3**: Completed componentization (575 LOC thin orchestrator).
-> - 🚧 **AlbumsView Refactor**: Applying same V3 pattern to reduce ~1220 LOC God Class.
-> - 🚧 **Blending Menu**: Preparing parametrized algorithm inputs.
+> **Current Sprint (Sprint 16 - Cleanup & Integrity)**:
+> - 🎯 **Goal**: Eradicate legacy patterns (`Modals.js`) and ensure Export data integrity.
+> - 🟢 **Sprint 15 Complete**: Achieved 0 `innerHTML` in core components. Exported logical issues identified and patched (Sprint 16 verifications needed). 
+> - 🚧 **Critical Fixes**: Export Data Loss & Series Management (Object Queries).
+> - 🚧 **Legacy Removal**: Deleting `Modals.js` and implementing `DialogService`.
 
 > [!TIP]
-> **Previous**: v2.9.0 (Sprint 9-11) delivered Spotify OAuth, EditPlaylistView, and GlobalProgress components.
+> **Previous**: Sprint 15 delivered SafeDOM architecture, reducing XSS risks and standardizing UI components (`Card.js`, `TrackRow.js`).
 
 ---
 

@@ -80,7 +80,7 @@ export class Autocomplete {
 
     async performSearch(query) {
         try {
-            const results = await this.loader.search(query, 50) // Increased from 10 to show more options
+            const results = await this.loader.search(query, 10) // Reduced from 50 to avoid Apple Music API 400 errors
             this.renderResults(results)
         } finally {
             this.spinner.classList.add('hidden')
