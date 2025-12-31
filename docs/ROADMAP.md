@@ -8,21 +8,42 @@
 
 ## 🚧 Current Sprint
 
-### Sprint 15: Structural Integrity (ARCH-12)
-**Goal**: Unified Component System & Technical Debt Elimination
-**Duration**: 2 weeks
-**Priority**: Critical
-**Status**: 🔄 **IN PROGRESS**
-**Branch**: `sprint-15-arch-12`
+### Sprint 16: Cleanup & Critical Integrity
+**Goal**: Legacy Eradication (`Modals.js`) & Component Consolidation
+**Duration**: 1 week
+**Priority**: High
+**Status**: 🚀 **STARTING**
+**Spec**: `docs/technical/specs/sprint16-cleanup`
 
-#### Part A: Componentization (ARCH-12)
-- [ ] **Unified Component Library**: `src/components/ui/{Card, TrackRow, Modal}`
-- [ ] **Refactor Base Components**: Clean up `base/`, `shared/`, `common/`
-- [ ] **SavedPlaylistsView Refactor**: Pilot implementation of new system
+#### Objectives
+- [ ] **Modals Killer**: Replace `Modals.js` with `SafeDOM` components and `DialogService`.
+- [ ] **Component Consolidation**: Standardize on `Card` and `TrackRow`.
+- [ ] **Clean Data Flows**: Remove duplicate logic from `SavedPlaylistsView`.
 
-#### Part B: Security & Quality
-- [ ] **Safety Patch**: Fix 53 `innerHTML` sinks
-- [ ] **Documentation**: Update UI Style Guide
+---
+
+## 🔮 Upcoming Sprints
+
+### Sprint 17: Architectural Modularization (God Class Refactor)
+**Goal**: Break down monolithic services identified in code assessment.
+**Focus**:
+- **MusicKitService**: Split into Auth, Catalog, Library services.
+- **Curation Engine**: Implement Strategy Pattern for algorithms.
+- **Store Cleanup**: Fix `albumSeries.js` duplication.
+
+---
+
+## ✅ Completed Sprints (Reverse Chronological)
+
+### Sprint 15: Structural Integrity & Release v3.15 (Dec 2025) - DONE ✅
+**Delivered**: 2025-12-31 (v3.15)
+
+**Deliverables**:
+- ✅ **ARCH-12: SafeDOM Migration** - Eliminated 50+ `innerHTML` sinks.
+- ✅ **ARCH-13: Lazy Authorize** - Improved UX, no popup on load.
+- ✅ **Storefront Strategy**: Smart detection via browser locale.
+- ✅ **Edit Modal Refactor**: Artist scan with filters (Home parity).
+- ✅ **Release v3.15**: Consolidated stability release.
 
 ---
 

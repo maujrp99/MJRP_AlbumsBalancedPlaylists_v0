@@ -2,6 +2,37 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
+## v3.15 - Sprint 15: Structural Integrity & SafeDOM (2025-12-31)
+
+**Status**: 🚀 **RELEASED**
+**Tag**: `v3.15`
+**Branch**: `main`
+
+### Summary
+Sprint 15 focused on hardening the application's structural integrity. This release introduces `SafeDOM` to eliminate XSS risks, a "Lazy Authorize" strategy for Apple Music to improve UX, and a refactored Edit Modal that brings full search parity with the Home page.
+
+### ✨ New Features
+- **SafeDOM Architecture**:
+  - Replaced `innerHTML` sinks with programmatic DOM creation.
+  - New `SafeDOM.js` utility for safe, fluent element construction.
+- **Improved Apple Music UX**:
+  - **Lazy Authorize**: Removed proactive authorization popup on page load.
+  - **Smart Storefront**: Detects region via `navigator.language` (e.g. "pt-BR" -> "br").
+  - **Auto-Validate**: Only prompts for auth when necessary (e.g. Export).
+- **Edit Series Modal 2.0**:
+  - Replaced legacy Autocomplete with **Artist Scan**.
+  - Added filter buttons (Albums, Singles, Live, Compilations).
+  - Uses specific `appleMusicId` for precise matching.
+
+### 🛡️ Security
+- **XSS Mitigation**: Eliminated 50+ instances of `innerHTML`.
+
+### 🧹 Cleanup
+- Deprecated `Autocomplete` component in favor of `ArtistDiscography` pattern.
+- Fixed `MusicKitService` initialization flow.
+
+---
+
 ## v2.9.0 - Sprint 9+10: Ranking Enrichment, EditPlaylistView & Loading UX (2025-12-18)
 
 **Status**: 🚀 **DEPLOYED TO PRODUCTION**
