@@ -47,10 +47,17 @@ export class PlaylistGrid {
       const playlistSpecificRanking = rankingId ? ((rankingId === 'spotify') ? 'spotify' : 'acclaim') : primaryRanking
 
       // Sprint 15.5: Build display title with batch name and index
-      const originalTitle = playlist.title || playlist.name || `Playlist ${index + 1}`
-      const displayTitle = batchName
-        ? `${index + 1}. ${batchName} - ${originalTitle}`
-        : `${index + 1}. ${originalTitle}`
+      // Note: Algorithm-generated title (e.g., "Greatest Hits Vol. 1") doesn't have index prefix
+      const playlistTitle = playlist.title || playlist.name || `Playlist ${index + 1}`
+
+      let displayTitle
+      if (batchName) {
+        // Format: "1. BatchName - Title" (e.g., "1. Batch 555 - Greatest Hits Vol. 1")
+        displayTitle = `${index + 1}. ${batchName} - ${playlistTitle}`
+      } else {
+        // Without batch name, show index + original title for visual clarity
+        displayTitle = `${index + 1}. ${playlistTitle}`
+      }
 
       return PlaylistCard.render({
         playlist,

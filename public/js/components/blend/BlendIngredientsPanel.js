@@ -404,6 +404,15 @@ export class BlendIngredientsPanel {
             'bea': 'bea'
         }
 
+        // DEBUG: Log the config being returned
+        console.log('[BlendIngredientsPanel] getConfig() returning:', {
+            targetDuration: this.config.duration * 60,
+            rankingId: rankingMapping[this.config.rankingType] || 'balanced',
+            outputMode: this.config.outputMode,
+            groupingStrategy: this.config.groupingStrategy,
+            discoveryMode: this.config.discoveryMode
+        })
+
         return {
             targetDuration: this.config.duration * 60, // minutes → seconds
             rankingId: rankingMapping[this.config.rankingType] || 'balanced',

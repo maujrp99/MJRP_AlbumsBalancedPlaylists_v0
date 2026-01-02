@@ -90,6 +90,9 @@ class BlendingController {
         albumSeriesStore.setActiveSeries(seriesId)
         playlistsStore.setPlaylists(result.playlists, seriesId)
 
+        // Sprint 15.5 Fix: Reset to CREATE mode to clear any stale edit context/batchName
+        playlistsStore.setCreateMode()
+
         console.log(`[BlendingController] Generated ${result.playlists.length} playlist(s) from ${albums.length} albums`)
 
         return {

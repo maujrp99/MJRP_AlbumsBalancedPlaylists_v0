@@ -129,13 +129,18 @@ export class RegeneratePanel {
     this.flavorCard.render()
 
 
-    // Initialize Ingredients Panel
+    // Initialize Ingredients Panel with current config values
     this.ingredientsPanel = new BlendIngredientsPanel({
       containerId: 'regenerate-ingredients-container',
       selectedFlavor: initialFlavor,
       config: {
-        // Map currentConfig props to panel props
-        // This assumes PlaylistsView passed a config object roughly matching expected keys or we use defaults
+        // Pass current config so user selections are preserved
+        duration: (this.currentConfig.targetDuration || 3600) / 60, // seconds → minutes
+        outputMode: this.currentConfig.outputMode || 'auto',
+        groupingStrategy: this.currentConfig.groupingStrategy || 'by_album',
+        rankingType: this.currentConfig.rankingId === 'spotify' ? 'spotify' :
+          this.currentConfig.rankingId === 'bea' ? 'bea' : 'combined',
+        discoveryMode: this.currentConfig.discoveryMode || false
       },
       onConfigChange: (newConfig) => {
         // Merge updates into our tracked config

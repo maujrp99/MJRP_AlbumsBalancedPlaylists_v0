@@ -82,6 +82,9 @@ export class TopNAlgorithm extends BaseAlgorithm {
             }
         }
 
+        // DEBUG: Log what grouping strategy is being applied
+        console.log('[TopNAlgorithm] Applying groupingStrategy:', groupingStrategy)
+
         // Apply grouping/sorting
         this._applyGrouping(allSelectedTracks, groupingStrategy)
 

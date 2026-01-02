@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2026-01-02 09:45
+**Last Updated**: 2026-01-02 16:00
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -18,6 +18,10 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
+| #116 | **Apple Music Export 500 Error (Invalid Track IDs)** | ✅ RESOLVED | [Details](#issue-116-apple-music-export-500-error-invalid-track-ids) |
+| #117 | **Playlist Index Duplication (1. 1. Title)** | ✅ RESOLVED | [Details](#issue-117-playlist-index-duplication-1-1-title) |
+| #118 | **Batch Name Input Losing Focus** | ✅ RESOLVED | [Details](#issue-118-batch-name-input-losing-focus) |
+| #119 | **Grouping Strategy Not Applied on Reconfigure** | ✅ RESOLVED | [Details](#issue-119-grouping-strategy-not-applied-on-reconfigure) |
 | #108 | **App Crash (Missing EntityCard.js)** | ✅ RESOLVED | [Details](#issue-108-app-crash-missing-entitycardjs-regression) |
 | #107 | **Legacy Component Removal (BaseCard/EntityCard)** | ✅ NOT RESOLVED | [Details](#issue-107-legacy-component-removal-basecardentitycard) |
 | #106 | **SafeDOM Migration (Ranking Views)** | ✅ RESOLVED | [Details](#issue-106-safedom-migration-ranking-views) |
@@ -53,6 +57,109 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #116: Apple Music Export 500 Error (Invalid Track IDs)
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-02 15:00
+**Resolved**: 2026-01-02 15:49
+**Severity**: HIGH (Critical Export Failure)
+**Type**: API Integration
+**Component**: `PlaylistsExport.js`
+**Sprint**: 15.5
+
+#### Problem
+Apple Music export returned 500 Internal Server Error for some playlists.
+
+#### Root Cause
+Some tracks had invalid Apple Music IDs like `"track-3"`, `"track-5"` instead of numeric IDs like `"1492263130"`. The Apple Music API rejects non-numeric track IDs with a 500 error.
+
+#### Solution
+Added validation function `isValidAppleMusicId()` that checks if ID is numeric (`/^\d+$/`). Invalid IDs now fallback to search instead of causing API errors.
+
+#### Files Modified
+- `public/js/views/playlists/PlaylistsExport.js`: Added ID validation
+
+---
+
+### Issue #117: Playlist Index Duplication (1. 1. Title)
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-02 15:00
+**Resolved**: 2026-01-02 15:41
+**Severity**: MEDIUM (Visual Bug)
+**Type**: Data Flow
+**Component**: `PlaylistGenerationService.js`
+**Sprint**: 15.5
+
+#### Problem
+Playlist titles showed duplicated index like "1. 1. Greatest Hits Vol. 1".
+
+#### Root Cause
+`PlaylistGenerationService.generate()` was adding index to playlist name (`${index + 1}. ${p.title}`), AND `PlaylistGrid` was also adding index for display.
+
+#### Solution
+Removed index addition from `PlaylistGenerationService`. Index is now only added in:
+- `PlaylistGrid` for UI display
+- `PlaylistsExport` for export naming
+
+#### Files Modified
+- `public/js/services/PlaylistGenerationService.js`: Removed index from name
+
+---
+
+### Issue #118: Batch Name Input Losing Focus
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-02 15:00
+**Resolved**: 2026-01-02 15:38
+**Severity**: HIGH (UX Critical)
+**Type**: UI/Reactivity
+**Component**: `playlists.js`, `PlaylistsView.js`
+**Sprint**: 15.5
+
+#### Problem
+Typing in the Batch Name input field caused it to lose focus on every keystroke.
+
+#### Root Cause
+`updateBatchName()` called `notify()` which triggered a full View re-render, recreating the input element and losing focus.
+
+#### Solution
+1. Removed `notify()` from `updateBatchName()`
+2. Added partial DOM update in `PlaylistsView.js` that only re-renders the playlist grid, not the input.
+
+#### Files Modified
+- `public/js/stores/playlists.js`: Removed notify() from updateBatchName
+- `public/js/views/PlaylistsView.js`: Added partial grid update
+
+---
+
+### Issue #119: Grouping Strategy Not Applied on Reconfigure
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-02 15:56
+**Resolved**: 2026-01-02 16:04
+**Severity**: MEDIUM (Feature Bug)
+**Type**: Parameter Passing
+**Component**: `RegeneratePanel.js`
+**Sprint**: 15.5
+
+#### Problem
+Changing Track Grouping option in Reconfigure panel had no effect on regenerated playlists.
+
+#### Root Cause
+`RegeneratePanel.mount()` passed an empty `config: {}` object to `BlendIngredientsPanel`, ignoring current configuration values.
+
+#### Solution
+Pass current config values when initializing `BlendIngredientsPanel`:
+```javascript
+config: {
+  duration: (this.currentConfig.targetDuration || 3600) / 60,
+  groupingStrategy: this.currentConfig.groupingStrategy || 'by_album',
+  // ... other params
+}
+```
+
+#### Files Modified
+- `public/js/components/playlists/RegeneratePanel.js`: Pass currentConfig to BlendIngredientsPanel
+
+---
 
 ### Issue #113: Edit Modal Search/Storefront Refactoring
 **Status**: ✅ **RESOLVED**

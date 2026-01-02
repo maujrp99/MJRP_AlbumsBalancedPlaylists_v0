@@ -240,12 +240,20 @@ export class PlaylistsView extends BaseView {
       })
     }
 
-    // Batch Name Input - Sprint 15.5: Update store reactively
+    // Batch Name Input - Sprint 15.5: Update store and refresh grid only
     const nameInput = this.container.querySelector('#batchNameInput')
     if (nameInput) {
       nameInput.addEventListener('input', (e) => {
-        // Sprint 15.5: Sync with store for reactive UI updates
+        // Update store (without notify to preserve focus)
         playlistsStore.updateBatchName(e.target.value)
+
+        // Partial DOM update: Re-render only the playlist grid section
+        const gridContainer = this.container.querySelector('#playlistsGrid')
+        if (gridContainer) {
+          const state = playlistsStore.getState()
+          const batchName = playlistsStore.batchName || ''
+          gridContainer.innerHTML = PlaylistsGridRenderer.renderGrid(state.playlists, batchName)
+        }
       })
     }
 

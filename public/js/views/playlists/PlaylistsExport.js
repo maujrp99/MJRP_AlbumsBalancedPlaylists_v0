@@ -79,12 +79,22 @@ export async function handleExportToAppleMusic(options = {}) {
         // 6. Export each playlist
         for (let i = 0; i < playlists.length; i++) {
             const playlist = playlists[i]
-            // Sprint 15.5: Use batch name format: "1. BatchName - Title"
-            const originalTitle = playlist.title || playlist.name
-            const playlistName = batchName
-                ? `${i + 1}. ${batchName} - ${originalTitle}`
-                : `${i + 1}. ${originalTitle}`
-            if (btn) btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} Exporting ${originalTitle}...`
+
+            // Note: Algorithm-generated title (e.g., "Greatest Hits Vol. 1") doesn't have index prefix
+            const playlistTitle = playlist.title || playlist.name
+
+            let playlistName
+            if (batchName) {
+                // Format: "1. BatchName - Original Title" (e.g., "1. Batch 555 - Greatest Hits Vol. 1")
+                playlistName = `${i + 1}. ${batchName} - ${playlistTitle}`
+            } else {
+                // Original format that worked (series name prefix)
+                playlistName = `${seriesName} - ${playlistTitle}`
+            }
+
+            // DEBUG: Log the exact playlist name being sent
+            console.log('[AppleMusic Export] Playlist name:', playlistName)
+            if (btn) btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} Exporting ${playlistTitle}...`
 
             // Find tracks in Apple Music catalog with improved matching
             const trackIds = []
@@ -102,15 +112,23 @@ export async function handleExportToAppleMusic(options = {}) {
                     hasAppleMusicId: !!track.appleMusicId
                 })
 
-                // 1. Check for existing Apple Music ID (Fast Path)
-                if (track.appleMusicId) {
+                // Helper: Check if ID is a valid Apple Music catalog ID (numeric)
+                const isValidAppleMusicId = (id) => id && /^\d+$/.test(id)
+
+                // 1. Check for existing VALID Apple Music ID (Fast Path)
+                if (isValidAppleMusicId(track.appleMusicId)) {
                     console.log(`[AppleMusic Export] ✅ FAST PATH: Using existing ID ${track.appleMusicId} for "${track.title}"`)
                     trackIds.push(track.appleMusicId)
                     continue
                 }
 
+                // ID exists but is invalid (e.g., "track-3") - log and search
+                if (track.appleMusicId && !isValidAppleMusicId(track.appleMusicId)) {
+                    console.warn(`[AppleMusic Export] ⚠️ Invalid ID format "${track.appleMusicId}" for "${track.title}" - searching...`)
+                }
+
                 // 2. Fallback to Search (Slow Path)
-                console.log(`[AppleMusic Export] ⚠️ SLOW PATH: Searching for "${track.title}" by ${track.artist}`)
+                console.log(`[AppleMusic Export] 🔍 SLOW PATH: Searching for "${track.title}" by ${track.artist}`)
                 const isLiveAlbum = track.album?.toLowerCase().includes('live') || false
                 const found = await musicKitService.findTrackFromAlbum(
                     track.title,
@@ -226,12 +244,19 @@ export async function handleExportToSpotify(options = {}) {
         // 4. Export each playlist
         for (let i = 0; i < playlists.length; i++) {
             const playlist = playlists[i]
-            // Sprint 15.5: Use batch name format: "1. BatchName - Title"
-            const originalTitle = playlist.title || playlist.name
-            const playlistName = batchName
-                ? `${i + 1}. ${batchName} - ${originalTitle}`
-                : `${i + 1}. ${originalTitle}`
-            if (btn) btn.innerHTML = `${getIcon('Spotify', 'w-5 h-5')} Exporting ${originalTitle}...`
+
+            // Note: Algorithm-generated title doesn't have index prefix
+            const playlistTitle = playlist.title || playlist.name
+
+            let playlistName
+            if (batchName) {
+                // Format: "1. BatchName - Original Title"
+                playlistName = `${i + 1}. ${batchName} - ${playlistTitle}`
+            } else {
+                // Original format that worked (series name prefix)
+                playlistName = `${seriesName} - ${playlistTitle}`
+            }
+            if (btn) btn.innerHTML = `${getIcon('Spotify', 'w-5 h-5')} Exporting ${playlistTitle}...`
 
             // Find tracks in Spotify catalog
             const trackUris = []

@@ -72,8 +72,10 @@ export class PlaylistGenerationService {
         })
 
         // Transform result to normalized playlist format
+        // Note: Do NOT add index here - index is for DISPLAY (Grid) and EXPORT only
         const playlists = result.playlists.map((p, index) => ({
-            name: `${index + 1}. ${p.title}`,
+            name: p.title, // Pure title without index (e.g., "Greatest Hits Vol. 1")
+            title: p.title, // Also set title for consistency
             tracks: this.transformTracks(p.tracks),
             // Preserve metadata for regeneration
             _meta: {
