@@ -52,6 +52,7 @@ export class TopNAlgorithm extends BaseAlgorithm {
     generate(albums, opts = {}) {
         const targetDuration = opts.targetDuration || this.targetDuration
         const outputMode = opts.outputMode || this.outputMode
+        const groupingStrategy = opts.groupingStrategy || 'by_album'
 
         // Collect top N tracks from each album
         const allSelectedTracks = []
@@ -81,6 +82,9 @@ export class TopNAlgorithm extends BaseAlgorithm {
             }
         }
 
+        // Apply grouping/sorting
+        this._applyGrouping(allSelectedTracks, groupingStrategy)
+
         // Calculate total duration
         const totalDuration = this.calculateTotalDuration(allSelectedTracks)
 
@@ -108,11 +112,20 @@ export class TopNAlgorithm extends BaseAlgorithm {
                 })
             }
 
-            // Distribute tracks round-robin to balance durations
-            allSelectedTracks.forEach((track, idx) => {
-                const playlistIdx = idx % numPlaylists
-                playlists[playlistIdx].tracks.push(track)
-            })
+            // Distribute tracks sequentially to fill playlists (preserves grouping)
+            let currentPlaylistIdx = 0
+
+            for (const track of allSelectedTracks) {
+                // If current playlist is full (over target) AND not the last playlist, move to next
+                const currentPlaylist = playlists[currentPlaylistIdx]
+                const currentDuration = this.calculateTotalDuration(currentPlaylist.tracks)
+
+                if (currentDuration >= targetDuration && currentPlaylistIdx < numPlaylists - 1) {
+                    currentPlaylistIdx++
+                }
+
+                playlists[currentPlaylistIdx].tracks.push(track)
+            }
         }
 
         // Build summary
@@ -122,6 +135,38 @@ export class TopNAlgorithm extends BaseAlgorithm {
             playlists,
             rankingSummary,
             rankingSources: this.getRankingSources()
+        }
+    }
+
+    /**
+     * Sort tracks based on grouping strategy
+     * @param {Array} tracks 
+     * @param {string} strategy 
+     */
+    _applyGrouping(tracks, strategy) {
+        switch (strategy) {
+            case 'flat_ranked': // Determine by local rank (interleaved: 1s, 2s, 3s...)
+                tracks.sort((a, b) => (a._rank || 0) - (b._rank || 0))
+                break
+
+            case 'artist_rank': // Cluster by Artist, then by Rank
+                tracks.sort((a, b) => {
+                    const artistA = (a.artistName || '').toLowerCase()
+                    const artistB = (b.artistName || '').toLowerCase()
+                    if (artistA < artistB) return -1
+                    if (artistA > artistB) return 1
+                    return (a._rank || 0) - (b._rank || 0)
+                })
+                break
+
+            case 'shuffle':
+                tracks.sort(() => Math.random() - 0.5)
+                break
+
+            case 'by_album':
+            default:
+                // Preserve original order (by album index)
+                break
         }
     }
 

@@ -16,7 +16,7 @@ export class TracksTabs {
     renderTabs() {
         const tabs = [
             { id: 'original', label: 'Original', icon: 'List' },
-            { id: 'acclaim', label: 'Acclaim', icon: 'Award' },
+            { id: 'acclaim', label: 'BestEverAlbums', icon: 'Award' },
             { id: 'spotify', label: 'Spotify', icon: 'SpotifyConfig' }
         ]
 

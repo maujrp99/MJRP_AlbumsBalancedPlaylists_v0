@@ -13,7 +13,7 @@ import { BEARankingStrategy } from '../ranking/BEARankingStrategy.js'
 export class Top5AcclaimedAlgorithm extends TopNAlgorithm {
     static metadata = {
         id: 'top-5-acclaimed',
-        name: 'Top 5 Acclaimed songs on BestEverAlbums',
+        name: 'Top 5 Acclaimed Tracks on BestEverAlbums',
         badge: 'TOP 5',
         description: 'Deep dive critical selection - top 5 best rated tracks from BestEverAlbums.',
         isRecommended: false
@@ -25,7 +25,7 @@ export class Top5AcclaimedAlgorithm extends TopNAlgorithm {
             trackCount: 5,
             rankingStrategy: new BEARankingStrategy(),
             defaultRankingSource: {
-                name: 'Deep Cuts',
+                name: 'Top 5 Acclaimed Tracks on BestEverAlbums',
                 type: 'bea',
                 description: 'Top 5 by BEA Rating',
                 secure: true
@@ -34,7 +34,7 @@ export class Top5AcclaimedAlgorithm extends TopNAlgorithm {
     }
 
     getPlaylistTitle() {
-        return 'Deep Cuts'
+        return 'Top 5 Acclaimed Tracks on BestEverAlbums'
     }
 }
 

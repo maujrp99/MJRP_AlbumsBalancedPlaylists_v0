@@ -26,7 +26,7 @@ const BaseWithTrimming = DurationTrimmingMixin(BaseAlgorithm)
 export class MJRPBalancedCascadeAlgorithm extends BaseWithTrimming {
     static metadata = {
         id: 'mjrp-balanced-cascade',
-        name: 'MJRP Balanced Cascade',
+        name: 'MJRP Zé\'s Full Balanced Playlists',
         badge: 'RECOMMENDED',
         description: 'Cria playlists balanceadas mesclando as melhores faixas de cada álbum. Playlists curtas são combinadas automaticamente.',
         isRecommended: true
@@ -40,7 +40,7 @@ export class MJRPBalancedCascadeAlgorithm extends BaseWithTrimming {
         this.minimumDuration = opts.minimumDuration || MINIMUM_DURATION
 
         this.defaultRankingSource = this.registerRankingSource(opts.defaultRankingSource || {
-            name: 'MJRP Balanced Cascade',
+            name: 'MJRP Zé\'s Full Balanced Playlists',
             type: 'internal',
             description: 'Curadoria MJRP Balanced Cascade',
             secure: true

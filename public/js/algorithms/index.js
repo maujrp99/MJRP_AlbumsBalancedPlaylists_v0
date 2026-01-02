@@ -29,8 +29,8 @@ algorithms.set('s-draft-original', SDraftOriginalAlgorithm)
 algorithms.set('legacy-roundrobin', LegacyRoundRobinAlgorithm)
 // Top N algorithms (Blending Menu flavors)
 algorithms.set('top-3-popular', Top3PopularAlgorithm)
-algorithms.set('top-3-acclaimed', Top3AcclaimedAlgorithm)
 algorithms.set('top-5-popular', Top5PopularAlgorithm)
+algorithms.set('top-3-acclaimed', Top3AcclaimedAlgorithm)
 algorithms.set('top-5-acclaimed', Top5AcclaimedAlgorithm)
 
 /**

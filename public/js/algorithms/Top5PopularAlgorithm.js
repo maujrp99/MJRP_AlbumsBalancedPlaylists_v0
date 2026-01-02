@@ -13,7 +13,7 @@ import { SpotifyRankingStrategy } from '../ranking/SpotifyRankingStrategy.js'
 export class Top5PopularAlgorithm extends TopNAlgorithm {
     static metadata = {
         id: 'top-5-popular',
-        name: 'Top 5 Songs by Spotify Popularity',
+        name: 'Top 5 Tracks by Spotify Popularity',
         badge: 'TOP 5',
         description: 'Extended popular selection - the top 5 most played tracks from Spotify.',
         isRecommended: false
@@ -25,7 +25,7 @@ export class Top5PopularAlgorithm extends TopNAlgorithm {
             trackCount: 5,
             rankingStrategy: new SpotifyRankingStrategy(),
             defaultRankingSource: {
-                name: 'Greatest Hits',
+                name: 'Top 5 Tracks by Spotify Popularity',
                 type: 'spotify',
                 description: 'Top 5 by Spotify Popularity',
                 secure: true
@@ -34,7 +34,7 @@ export class Top5PopularAlgorithm extends TopNAlgorithm {
     }
 
     getPlaylistTitle() {
-        return 'Greatest Hits'
+        return 'Top 5 Tracks by Spotify Popularity'
     }
 }
 

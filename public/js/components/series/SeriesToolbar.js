@@ -101,7 +101,7 @@ export default class SeriesToolbar extends Component {
                         <select id="sourceFilter" class="form-control appearance-none cursor-pointer pr-8">
                             <option value="all">All Sources</option>
                             <option value="pending" ${filters.source === 'pending' ? 'selected' : ''}>Pending</option>
-                            <option value="acclaim" ${filters.source === 'acclaim' ? 'selected' : ''}>Acclaim</option>
+                            <option value="acclaim" ${filters.source === 'acclaim' ? 'selected' : ''}>BestEverAlbums</option>
                             <option value="popularity" ${filters.source === 'popularity' ? 'selected' : ''}>Popularity</option>
                             <option value="ai" ${filters.source === 'ai' ? 'selected' : ''}>AI Enriched</option>
                         </select>

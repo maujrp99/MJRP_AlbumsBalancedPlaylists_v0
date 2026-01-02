@@ -275,10 +275,10 @@ export class Card {
                 target: '_blank',
                 rel: 'noopener noreferrer',
                 className: 'badge badge-primary hover:badge-accent transition-colors flex items-center gap-1',
-                title: 'Acclaim'
+                title: 'Ranking by BestEverAlbums'
             })
             link.appendChild(SafeDOM.fromHTML(getIcon('ExternalLink', 'w-3 h-3')))
-            link.appendChild(SafeDOM.text(' Acclaim'))
+            link.appendChild(SafeDOM.text(' BestEverAlbums'))
             badges.push(link)
         }
 

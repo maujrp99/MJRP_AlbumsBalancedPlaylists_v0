@@ -77,7 +77,7 @@ export function renderRankedTracklist(album) {
     <div class="tracklist-section">
       <h4 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-primary">
         ${getIcon('TrendingUp', 'w-4 h-4')}
-        Ranked by Acclaim
+        Ranked by BestEverAlbums
       </h4>
       <div class="tracks-list-compact space-y-1 text-sm">
         ${rankedTracks.map((track, idx) => {

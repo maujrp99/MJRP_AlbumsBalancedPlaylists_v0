@@ -15,6 +15,7 @@ trigger: always_on
 5. **Documentation Sync**: After implementing a feature or fix, always update the documentation following `Documentation protocols/post-implementation-docs.md.
 6. **Debug Traceability**: Always log failed attempts and solutions in the debug log following debug_protocol.md.
 7. **User Validation**: Never mark asfixed or done, while human user do not confirm it is really ok.
-8. **Never break a working feature*: Ensure that new implementation (fixes and features) do not break existing functionalities if it was not requested.
+8. **Never commit without verifyng and confirming with evidence the functionalities integrity.
+9. **Never break a working feature*: Ensure that new implementation (fixes and features) do not break existing functionalities if it was not requested.
 
 Read and follow the developer-protocol.md in .agent/worflows

@@ -13,7 +13,7 @@ import { SpotifyRankingStrategy } from '../ranking/SpotifyRankingStrategy.js'
 export class Top3PopularAlgorithm extends TopNAlgorithm {
     static metadata = {
         id: 'top-3-popular',
-        name: 'Crowd Favorites',
+        name: 'Top 3 Tracks by Spotify Popularity',
         badge: 'TOP 3',
         description: 'As 3 faixas mais populares de cada álbum - o que as pessoas realmente ouvem.',
         isRecommended: false
@@ -34,7 +34,7 @@ export class Top3PopularAlgorithm extends TopNAlgorithm {
     }
 
     getPlaylistTitle() {
-        return 'Crowd Favorites'
+        return 'Top 3 Tracks by Spotify Popularity'
     }
 }
 

@@ -160,14 +160,14 @@ export class BlendIngredientsPanel {
 
         container.innerHTML = `
             <div class="space-y-6">
-                 <!-- 1. Grouping Strategy (New First) -->
+                 <!-- 1. Grouping Tracks (Renamed) -->
                 ${ingredients.groupingStrategy ? this.renderGroupingSection() : ''}
 
                 <!-- 2. Output Mode -->
                 ${ingredients.outputMode ? this.renderOutputModeSection() : ''}
 
-                <!-- 3. Duration (Now Conditional) -->
-                ${ingredients.duration ? this.renderDurationSection() : ''}
+                <!-- 3. Duration (Conditional: Show if algorithm supports it OR if Multiple Playlists selected) -->
+                ${(ingredients.duration || (ingredients.outputMode && this.config.outputMode === 'multiple')) ? this.renderDurationSection() : ''}
                 
                 <!-- Ranking Type (conditional) -->
                 ${ingredients.rankingType ? this.renderRankingTypeSection() : ''}
@@ -310,7 +310,7 @@ export class BlendIngredientsPanel {
         return `
             <div>
                 <label class="block text-sm font-medium mb-3 text-muted">
-                    ${getIcon('Layers', 'w-4 h-4 inline mr-2')}Grouping Strategy
+                    ${getIcon('Layers', 'w-4 h-4 inline mr-2')}Grouping Tracks
                 </label>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                     ${BlendIngredientsPanel.GROUPING_STRATEGIES.map(g => `

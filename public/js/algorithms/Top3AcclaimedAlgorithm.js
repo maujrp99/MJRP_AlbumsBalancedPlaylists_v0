@@ -13,7 +13,7 @@ import { BEARankingStrategy } from '../ranking/BEARankingStrategy.js'
 export class Top3AcclaimedAlgorithm extends TopNAlgorithm {
     static metadata = {
         id: 'top-3-acclaimed',
-        name: "Top 3 Acclaimed songs on BestEverAlbums",
+        name: "Top 3 Acclaimed Tracks on BestEverAlbums",
         badge: 'TOP 3',
         description: 'The definitive critical selection - best rated tracks from BestEverAlbums.',
         isRecommended: false
@@ -25,7 +25,7 @@ export class Top3AcclaimedAlgorithm extends TopNAlgorithm {
             trackCount: 3,
             rankingStrategy: new BEARankingStrategy(),
             defaultRankingSource: {
-                name: "Critics' Choice",
+                name: "Top 3 Acclaimed Tracks on BestEverAlbums",
                 type: 'bea',
                 description: 'Top 3 by BEA Rating',
                 secure: true
@@ -34,7 +34,7 @@ export class Top3AcclaimedAlgorithm extends TopNAlgorithm {
     }
 
     getPlaylistTitle() {
-        return "Critics' Choice"
+        return "Top 3 Acclaimed Tracks on BestEverAlbums"
     }
 }
 
