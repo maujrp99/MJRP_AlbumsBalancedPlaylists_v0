@@ -1,24 +1,25 @@
 # MJRP Playlist Generator - Product Roadmap
 
-**Last Updated**: 2025-12-26
-**Current Version**: v3.0.0
-**Current Sprint**: Sprint 14: Clean Architecture Continuation
+**Last Updated**: 2026-01-02
+**Current Version**: v3.15.5
+**Current Sprint**: Sprint 16: Cleanup & Batch Naming
 
 ---
 
 ## 🚧 Current Sprint
 
-### Sprint 16: Cleanup & Critical Integrity
-**Goal**: Legacy Eradication (`Modals.js`) & Component Consolidation
+### Sprint 16: Cleanup & Batch Naming Feature
+**Goal**: Batch naming integration and legacy cleanup
 **Duration**: 1 week
 **Priority**: High
-**Status**: 🚀 **STARTING**
+**Status**: 🚀 **IN PROGRESS**
 **Spec**: `docs/technical/specs/sprint16-cleanup`
 
 #### Objectives
-- [ ] **Modals Killer**: Replace `Modals.js` with `SafeDOM` components and `DialogService`.
-- [ ] **Component Consolidation**: Standardize on `Card` and `TrackRow`.
-- [ ] **Clean Data Flows**: Remove duplicate logic from `SavedPlaylistsView`.
+- [ ] **Batch Naming**: Integrate batch name into playlist titles and exports
+- [ ] **Modals Killer**: Replace `Modals.js` with `SafeDOM` components and `DialogService`
+- [ ] **Component Consolidation**: Standardize on `Card` and `TrackRow`
+- [ ] **Clean Data Flows**: Remove duplicate logic from `SavedPlaylistsView`
 
 ---
 
@@ -34,6 +35,20 @@
 ---
 
 ## ✅ Completed Sprints (Reverse Chronological)
+
+### Sprint 15.5: Prod Polish & Blending Fixes (Jan 2026) - DONE ✅
+**Delivered**: 2026-01-02 (v3.15.5)
+
+**Deliverables**:
+- ✅ **Algorithm Renaming**: Self-explanatory names ("Top 3 Tracks by Spotify Popularity", etc.)
+- ✅ **Grouping Tracks**: New parameter with 4 strategies (By Album, Global Rank, Artist Cluster, Shuffle)
+- ✅ **Sequential Distribution**: Multiple Playlists now fill sequentially (preserves grouping)
+- ✅ **Smart Duration Visibility**: Target Duration hidden for fixed-count algorithms unless Multiple mode
+- ✅ **Flavor Grouping**: Spotify/BEA algorithms visually grouped in Blending Menu
+- ✅ **BestEverAlbums Branding**: "Acclaim" badges renamed across all UI components
+- ✅ **Bug Fixes**: Issues #114, #115 resolved
+
+---
 
 ### Sprint 15: Structural Integrity & Release v3.15 (Dec 2025) - DONE ✅
 **Delivered**: 2025-12-31 (v3.15)

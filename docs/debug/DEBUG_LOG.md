@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2025-12-29 22:04
+**Last Updated**: 2026-01-02 09:45
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -23,8 +23,8 @@
 | #106 | **SafeDOM Migration (Ranking Views)** | ✅ RESOLVED | [Details](#issue-106-safedom-migration-ranking-views) |
 | #105 | **Inventory Grid Layout Overlap (Price/Cover)** | ✅ RESOLVED | [Details](#issue-105-inventory-grid-layout-overlap-pricecover) |
 | #104 | **Inventory/Albums Click Interactions Broken** | ✅ RESOLVED | [Details](#issue-104-inventoryalbums-click-interactions-broken) |
-| #115 | **Target Duration Visibility (Multiple Playlist)** | 🚧 IN PROGRESS | [Details](#issue-115-target-duration-visibility-multiple-playlist) |
-| #114 | **Crowd Favorites Label Not Updated** | 🚧 IN PROGRESS | [Details](#issue-114-crowd-favorites-label-not-updated) |
+| #115 | **Target Duration Visibility (Multiple Playlist)** | ✅ RESOLVED | [Details](#issue-115-target-duration-visibility-multiple-playlist) |
+| #114 | **Crowd Favorites Label Not Updated** | ✅ RESOLVED | [Details](#issue-114-crowd-favorites-label-not-updated) |
 | #113 | **Edit Modal Search/Storefront Refactoring** | ✅ RESOLVED | [Details](#issue-113-edit-modal-searchstorefront-refactoring) |
 | #103 | **Raw HTML Rendering in Cards** | ✅ RESOLVED | [Details](#issue-103-raw-html-rendering-in-cards) |
 | #102 | **App Crash - Missing Exports in AlbumsGridRenderer** | ✅ RESOLVED | [Details](#issue-102-app-crash---missing-exports-in-albumsgridrenderer) |

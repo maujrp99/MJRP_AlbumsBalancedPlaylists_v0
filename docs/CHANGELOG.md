@@ -2,24 +2,59 @@
 
 All notable changes to the MJRP Albums Balanced Playlists project.
 
-## v3.16 - Sprint 15.5: Prod Polish & Blending Fixes (2025-12-31)
+## v3.15.5 - Sprint 15.5: Prod Polish & Blending Fixes (2026-01-02)
 
 **Status**: 🚀 **RELEASED**
-**Tag**: `v3.16`
+**Tag**: `v3.15.5`
+**Branch**: `main`
+
+### Summary
+Sprint 15.5 focused on polishing the Blending Menu UX and standardizing algorithm naming. This release introduces self-explanatory algorithm names, grouping strategies for track organization, and improved UI visibility logic.
 
 ### ✨ New Features
-- **Grouping Strategy**: New parameters in Blending Menu to control playlist structure (By Album, Global Rank, etc.).
-- **BestEverAlbums Branding**: "Acclaim" badges renamed to explicit "BestEverAlbums" source.
+- **Grouping Tracks**: New parameter in Blending Menu to control playlist structure:
+  - `By Album`: Preserves album order (default)
+  - `Global Rank`: Interleaved by rank (1s, 2s, 3s...)
+  - `Artist Cluster`: Grouped by artist name
+  - `Shuffle`: Randomized order
+- **Sequential Distribution**: Multiple Playlists now fill sequentially (preserves grouping) instead of round-robin.
 
 ### 🛠 Improvements
+- **Algorithm Renaming** (Self-Explanatory Names):
+  - `Crowd Favorites` → `Top 3 Tracks by Spotify Popularity`
+  - `Critic's Choice` → `Top 3 Acclaimed Tracks on BestEverAlbums`
+  - `Greatest Hits` → `Top 5 Tracks by Spotify Popularity`
+  - `Deep Cuts` → `Top 5 Acclaimed Tracks on BestEverAlbums`
+  - `MJRP Balanced Cascade` → `MJRP Zé's Full Balanced Playlists`
 - **Blending Menu UI**:
-  - Reordered ingredients: Grouping -> Output -> Duration.
-  - **Smart Duration Logic**: Target Duration hidden for Top N algorithms (fixed count).
-  - **Renamed Algorithms**: "Crowd Favorites" -> "Top 3 by Spotify", etc.
-  - **Thumbnail Resilience**: Improved fallback logic for loading series covers.
+  - Renamed `Grouping Strategy` label to `Grouping Tracks`
+  - Reordered ingredients: Grouping → Output → Duration
+  - **Smart Duration Visibility**: Target Duration hidden for fixed-count algorithms, appears when "Multiple Playlists" is selected
+  - **Flavor Grouping**: Spotify-based and BEA-based algorithms now visually grouped together
+  - **Thumbnail Resilience**: Improved fallback logic for loading series covers
+- **BestEverAlbums Branding**: "Acclaim" badges renamed to "BestEverAlbums" across UI
 
 ### 🐛 Bug Fixes
-- **SAFEGUARD**: Removed dangerous duplicate method definitions in `albumSeries.js`.
+- **#114**: Algorithm label "Crowd Favorites" now correctly shows renamed value
+- **#115**: Target Duration visibility logic fixed for Multiple Playlists mode
+- **SAFEGUARD**: Removed dangerous duplicate method definitions in `albumSeries.js`
+
+### 📁 Files Modified
+```
+public/js/algorithms/Top3PopularAlgorithm.js
+public/js/algorithms/Top3AcclaimedAlgorithm.js
+public/js/algorithms/Top5PopularAlgorithm.js
+public/js/algorithms/Top5AcclaimedAlgorithm.js
+public/js/algorithms/TopNAlgorithm.js (+ grouping logic)
+public/js/algorithms/MJRPBalancedCascadeAlgorithm.js
+public/js/algorithms/index.js (flavor ordering)
+public/js/components/blend/BlendIngredientsPanel.js
+public/js/components/ui/Card.js
+public/js/components/ranking/TracksTable.js
+public/js/components/ranking/TracksTabs.js
+public/js/components/series/SeriesToolbar.js
+public/js/views/albums/AlbumsGridRenderer.js
+```
 
 ## v3.15 - Sprint 15: Structural Integrity & SafeDOM (2025-12-31)
 
