@@ -109,7 +109,7 @@ export class PlaylistsView extends BaseView {
                 <div id="mainContent" class="fade-in" style="animation-delay: 0.1s">
                     ${playlists.length === 0 && !isEditMode ? PlaylistsGridRenderer.renderEmptyState() : ''}
                     <div id="playlistsGrid">
-                        ${PlaylistsGridRenderer.renderGrid(playlists)}
+                        ${PlaylistsGridRenderer.renderGrid(playlists, playlistsStore.batchName || playlistsStore.editContext?.batchName || '')}
                     </div>
                 </div>
 
@@ -240,13 +240,12 @@ export class PlaylistsView extends BaseView {
       })
     }
 
-    // Batch Name Input (Update local state / store edit context?)
+    // Batch Name Input - Sprint 15.5: Update store reactively
     const nameInput = this.container.querySelector('#batchNameInput')
     if (nameInput) {
       nameInput.addEventListener('input', (e) => {
-        // Update store context to preserve across re-renders?
-        // Or just let it be read on save.
-        // Better to sync with store if possible, or just local controller.
+        // Sprint 15.5: Sync with store for reactive UI updates
+        playlistsStore.updateBatchName(e.target.value)
       })
     }
 

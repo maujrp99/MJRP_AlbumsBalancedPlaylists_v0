@@ -66,6 +66,9 @@ export async function handleExportToAppleMusic(options = {}) {
         const activeSeries = albumSeriesStore.getActiveSeries()
         const seriesName = activeSeries?.name || 'MJRP Playlists'
 
+        // Sprint 15.5: Get batch name from store for playlist naming
+        const batchName = playlistsStore.batchName || playlistsStore.editContext?.batchName || ''
+
         // 5. Create or find folder with series name
         if (btn) btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} Creating folder...`
         const folderId = await musicKitService.createOrGetFolder(seriesName)
@@ -74,9 +77,14 @@ export async function handleExportToAppleMusic(options = {}) {
         let warningCount = 0
 
         // 6. Export each playlist
-        for (const playlist of playlists) {
-            const playlistName = `${seriesName} - ${playlist.name}`
-            if (btn) btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} Exporting ${playlist.name}...`
+        for (let i = 0; i < playlists.length; i++) {
+            const playlist = playlists[i]
+            // Sprint 15.5: Use batch name format: "1. BatchName - Title"
+            const originalTitle = playlist.title || playlist.name
+            const playlistName = batchName
+                ? `${i + 1}. ${batchName} - ${originalTitle}`
+                : `${i + 1}. ${originalTitle}`
+            if (btn) btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} Exporting ${originalTitle}...`
 
             // Find tracks in Apple Music catalog with improved matching
             const trackIds = []
@@ -208,14 +216,22 @@ export async function handleExportToSpotify(options = {}) {
         const activeSeries = albumSeriesStore.getActiveSeries()
         const seriesName = activeSeries?.name || 'MJRP'
 
+        // Sprint 15.5: Get batch name from store for playlist naming
+        const batchName = playlistsStore.batchName || playlistsStore.editContext?.batchName || ''
+
         let successCount = 0
         let totalTracks = 0
         let matchedTracks = 0
 
         // 4. Export each playlist
-        for (const playlist of playlists) {
-            const playlistName = `${seriesName} - ${playlist.title || playlist.name}`
-            if (btn) btn.innerHTML = `${getIcon('Spotify', 'w-5 h-5')} Exporting ${playlist.title || playlist.name}...`
+        for (let i = 0; i < playlists.length; i++) {
+            const playlist = playlists[i]
+            // Sprint 15.5: Use batch name format: "1. BatchName - Title"
+            const originalTitle = playlist.title || playlist.name
+            const playlistName = batchName
+                ? `${i + 1}. ${batchName} - ${originalTitle}`
+                : `${i + 1}. ${originalTitle}`
+            if (btn) btn.innerHTML = `${getIcon('Spotify', 'w-5 h-5')} Exporting ${originalTitle}...`
 
             // Find tracks in Spotify catalog
             const trackUris = []

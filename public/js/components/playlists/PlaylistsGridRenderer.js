@@ -67,14 +67,21 @@ export class PlaylistsGridRenderer {
         `
     }
 
-    static renderGrid(playlists) {
+    /**
+     * Render the playlist grid with batch name formatting
+     * @param {Array} playlists - Playlists to render
+     * @param {string} batchName - Optional batch name for title formatting
+     * @returns {string} HTML string
+     */
+    static renderGrid(playlists, batchName = '') {
         if (!playlists || playlists.length === 0) return ''
 
         // Use the existing PlaylistGrid component
         return PlaylistGrid.render({
             playlists,
             editable: true,
-            primaryRanking: 'acclaim'
+            primaryRanking: 'acclaim',
+            batchName // Sprint 15.5: Pass batch name for title formatting
         })
     }
 

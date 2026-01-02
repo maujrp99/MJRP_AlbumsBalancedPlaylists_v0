@@ -18,6 +18,7 @@ import { escapeHtml } from '../../utils/stringUtils.js'
  * @property {number} index - Playlist index
  * @property {boolean} [editable=true] - Enable name editing
  * @property {'spotify' | 'acclaim'} [primaryRanking='spotify'] - Ranking order for TrackItems
+ * @property {string} [displayTitle] - Formatted display title (Sprint 15.5)
  * @property {Function} [onNameChange] - Callback for name change
  */
 
@@ -32,12 +33,16 @@ export class PlaylistCard {
       playlist,
       index,
       editable = true,
-      primaryRanking = 'spotify'
+      primaryRanking = 'spotify',
+      displayTitle = null
     } = options
 
     const tracks = playlist.tracks || []
     const totalDuration = this.calculateDuration(tracks)
     const trackCount = tracks.length
+
+    // Sprint 15.5: Use displayTitle if provided, otherwise fallback to playlist.name
+    const titleToShow = displayTitle || playlist.name
 
     const tracksHtml = tracks.map((track, trackIndex) =>
       TrackItem.render({
@@ -57,9 +62,9 @@ export class PlaylistCard {
               <h3 class="playlist-name text-lg font-bold cursor-text hover:bg-white/5 rounded px-2 py-1 -ml-2"
                   contenteditable="true" 
                   data-playlist-index="${index}" 
-                  spellcheck="false">${escapeHtml(playlist.name)}</h3>
+                  spellcheck="false">${escapeHtml(titleToShow)}</h3>
             ` : `
-              <h3 class="text-lg font-bold">${escapeHtml(playlist.name)}</h3>
+              <h3 class="text-lg font-bold">${escapeHtml(titleToShow)}</h3>
             `}
           </div>
           <div class="flex items-center gap-3 text-sm text-muted">

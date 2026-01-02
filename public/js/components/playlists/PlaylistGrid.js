@@ -14,6 +14,7 @@ import { PlaylistCard } from './PlaylistCard.js'
  * @property {Object[]} playlists - Array of playlists
  * @property {boolean} [editable=true] - Enable editing
  * @property {'spotify' | 'acclaim'} [primaryRanking='spotify'] - Ranking order
+ * @property {string} [batchName] - Batch name for title formatting (Sprint 15.5)
  */
 
 export class PlaylistGrid {
@@ -26,7 +27,8 @@ export class PlaylistGrid {
     const {
       playlists,
       editable = true,
-      primaryRanking = 'spotify'
+      primaryRanking = 'spotify',
+      batchName = ''
     } = options
 
     if (!playlists || playlists.length === 0) {
@@ -44,11 +46,18 @@ export class PlaylistGrid {
       const rankingId = playlist._meta?.rankingId
       const playlistSpecificRanking = rankingId ? ((rankingId === 'spotify') ? 'spotify' : 'acclaim') : primaryRanking
 
+      // Sprint 15.5: Build display title with batch name and index
+      const originalTitle = playlist.title || playlist.name || `Playlist ${index + 1}`
+      const displayTitle = batchName
+        ? `${index + 1}. ${batchName} - ${originalTitle}`
+        : `${index + 1}. ${originalTitle}`
+
       return PlaylistCard.render({
         playlist,
         index,
         editable,
-        primaryRanking: playlistSpecificRanking
+        primaryRanking: playlistSpecificRanking,
+        displayTitle // Sprint 15.5: Pass formatted title
       })
     }).join('')
 

@@ -123,6 +123,26 @@ export class PlaylistsStore {
             playlist.savedAt = timestamp
         })
         this.batchName = batchName
+        // Also update editContext if in edit mode
+        if (this.editContext) {
+            this.editContext.batchName = batchName
+        }
+        this.notify()
+    }
+
+    /**
+     * Sprint 15.5: Update batch name reactively (called from input onChange)
+     * Updates editContext and triggers re-render for UI reactivity
+     * @param {string} batchName - New batch name value
+     */
+    updateBatchName(batchName) {
+        // Initialize editContext if not present
+        if (!this.editContext) {
+            this.editContext = { batchName: '', seriesId: this.seriesId, savedAt: null }
+        }
+        this.editContext.batchName = batchName
+        this.batchName = batchName
+        console.log('[PlaylistsStore] Batch name updated:', batchName)
         this.notify()
     }
 
