@@ -4,6 +4,7 @@
  * View for displaying saved playlists grouped by Series and Batches.
  * Refactored in Sprint 15 (ARCH-12) to use Controller-View pattern and Core Components.
  * Refactored in Sprint 16 to replace legacy modals with DialogService.
+ * Refactored in Sprint 16 (Phase 5) to use SafeDOM and eliminate innerHTML.
  * 
  * @module views/SavedPlaylistsView
  */
@@ -12,11 +13,10 @@ import { BaseView } from './BaseView.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import { SavedPlaylistsController } from '../components/playlists/SavedPlaylistsController.js'
-import { BatchGroupCard } from '../components/playlists/BatchGroupCard.js'
+import { AlbumCascade } from '../components/common/AlbumCascade.js'
 import { BaseModal } from '../components/ui/BaseModal.js'
 import { TrackRow } from '../components/ui/TrackRow.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
-import { escapeHtml } from '../utils/stringUtils.js'
 import { dialogService } from '../services/DialogService.js'
 
 export class SavedPlaylistsView extends BaseView {
@@ -44,32 +44,45 @@ export class SavedPlaylistsView extends BaseView {
 
     update() {
         if (this.container) {
-            this.container.innerHTML = this.render()
-            this.bindEvents()
+            SafeDOM.clear(this.container)
+            this.container.appendChild(this.render())
+            // No strict bindEvents needed as we use direct event handlers in SafeDOM
         }
     }
 
     render() {
-        return `
-        <div class="saved-playlists-view container">
-            <header class="view-header mb-8 fade-in">
-                ${Breadcrumb.render('/saved-playlists')}
-                
-                <div class="header-content mt-6 flex justify-between items-center mb-6">
-                    <h1 class="text-4xl font-bold flex items-center gap-3">
-                        ${getIcon('History', 'w-8 h-8')} Your Playlists Series
-                    </h1>
-                </div>
-            </header>
+        const header = SafeDOM.fragment([
+            SafeDOM.header({ className: 'view-header mb-8 fade-in' }, [
+                SafeDOM.fromHTML(Breadcrumb.render('/saved-playlists')),
 
-            <div id="mainContent" class="fade-in" style="animation-delay: 0.1s">
-                ${this.isLoading ? this.renderLoading() : this.renderContent()}
-            </div>
-            
-            <!-- Modals Container (Dynamic) -->
-            <div id="modalsContainer"></div>
-        </div>
-        `
+                SafeDOM.div({ className: 'header-content mt-6 flex justify-between items-center mb-6' }, [
+                    SafeDOM.h1({ className: 'text-4xl font-bold flex items-center gap-3' }, [
+                        SafeDOM.fromHTML(getIcon('History', 'w-8 h-8')),
+                        ' Your Playlists Series'
+                    ])
+                ])
+            ])
+        ]);
+
+        const mainContent = SafeDOM.div({
+            id: 'mainContent',
+            className: 'fade-in',
+            style: { animationDelay: '0.1s' }
+        })
+
+        if (this.isLoading) {
+            mainContent.appendChild(this.renderLoading())
+        } else {
+            mainContent.appendChild(this.renderContent())
+        }
+
+        const modalsContainer = SafeDOM.div({ id: 'modalsContainer' })
+
+        return SafeDOM.div({ className: 'saved-playlists-view container' }, [
+            header,
+            mainContent,
+            modalsContainer
+        ])
     }
 
     renderContent() {
@@ -77,45 +90,65 @@ export class SavedPlaylistsView extends BaseView {
             return this.renderEmptyState()
         }
 
-        return `
-        <div class="series-groups space-y-8">
-            ${this.controller.data.map(group => this.renderSeriesGroup(group)).join('')}
-        </div>
-        `
+        const groupsContainer = SafeDOM.div({ className: 'series-groups space-y-8' })
+
+        this.controller.data.forEach(group => {
+            const groupNode = this.renderSeriesGroup(group)
+            if (groupNode) {
+                groupsContainer.appendChild(groupNode)
+            }
+        })
+
+        return groupsContainer
     }
 
     renderSeriesGroup(group) {
-        if (!group.playlists || group.playlists.length === 0) return ''
+        if (!group.playlists || group.playlists.length === 0) return null
 
-        return `
-        <div class="series-group glass-panel p-6 rounded-xl animate-scale-in">
-            <div class="group-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-white/10 pb-4">
-                <div class="mb-4 md:mb-0">
-                    <h2 class="text-2xl font-bold text-accent-primary flex items-center gap-2">
-                        ${getIcon('Layers', 'w-6 h-6')} ${escapeHtml(group.series.name)}
-                    </h2>
-                    <span class="text-xs text-muted font-mono bg-black/30 px-2 py-1 rounded ml-8">ID: ${group.series.id.slice(0, 8)}...</span>
-                </div>
-                <div class="flex gap-2">
-                    <button class="btn btn-primary btn-sm flex items-center gap-1 group-hover:bg-accent-primary group-hover:text-white transition-colors" 
-                        data-action="add-playlists" data-id="${group.series.id}">
-                        ${getIcon('Plus', 'w-4 h-4')} Add Playlists
-                    </button>
-                    <button class="btn btn-secondary btn-sm group-hover:bg-white/10 transition-colors" 
-                        data-action="open-series" data-id="${group.series.id}">
-                        Open Series Manager ${getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1')}
-                    </button>
-                    <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-colors" 
-                        data-action="delete-all-playlists" data-id="${group.series.id}" data-name="${escapeHtml(group.series.name)}" 
-                        title="Delete all playlists in this series">
-                        ${getIcon('Trash', 'w-4 h-4')}
-                    </button>
-                </div>
-            </div>
+        const headerTitle = SafeDOM.div({ className: 'mb-4 md:mb-0' }, [
+            SafeDOM.h2({ className: 'text-2xl font-bold text-accent-primary flex items-center gap-2' }, [
+                SafeDOM.fromHTML(getIcon('Layers', 'w-6 h-6')),
+                SafeDOM.text(' ' + group.series.name)
+            ]),
+            SafeDOM.span({ className: 'text-xs text-muted font-mono bg-black/30 px-2 py-1 rounded ml-8' },
+                `ID: ${group.series.id.slice(0, 8)}...`
+            )
+        ])
 
-            ${group.batches.map(batch => this.renderPlaylistBatch(batch, group.series.id)).join('')}
-        </div>
-        `
+        const buttons = SafeDOM.div({ className: 'flex gap-2' }, [
+            SafeDOM.button({
+                className: 'btn btn-primary btn-sm flex items-center gap-1 group-hover:bg-accent-primary group-hover:text-white transition-colors',
+                onClick: () => this.controller.navigateBlend()
+            }, [
+                SafeDOM.fromHTML(getIcon('Plus', 'w-4 h-4')),
+                ' Add Playlists'
+            ]),
+            SafeDOM.button({
+                className: 'btn btn-secondary btn-sm group-hover:bg-white/10 transition-colors',
+                onClick: () => this.controller.openSeriesManager(group.series.id)
+            }, [
+                'Open Series Manager ',
+                SafeDOM.fromHTML(getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1'))
+            ]),
+            SafeDOM.button({
+                className: 'btn btn-ghost btn-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-colors',
+                title: 'Delete all playlists in this series',
+                onClick: () => this.handleDeleteAll(group.series.id, group.series.name)
+            }, SafeDOM.fromHTML(getIcon('Trash', 'w-4 h-4')))
+        ])
+
+        const header = SafeDOM.div({
+            className: 'group-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-white/10 pb-4'
+        }, [headerTitle, buttons])
+
+        const batchesContainer = SafeDOM.fragment(
+            group.batches.map(batch => this.renderPlaylistBatch(batch, group.series.id))
+        )
+
+        return SafeDOM.div({ className: 'series-group glass-panel p-6 rounded-xl animate-scale-in' }, [
+            header,
+            batchesContainer
+        ])
     }
 
     renderPlaylistBatch(batch, seriesId) {
@@ -133,118 +166,167 @@ export class SavedPlaylistsView extends BaseView {
         const allTracks = playlists.map(p => p.tracks || []).flat()
         const totalDuration = this.formatDuration(allTracks)
 
-        const playlistsHtml = playlists.map((playlist, idx) =>
-            this.renderPlaylistRow(seriesId, playlist, idx)
-        ).join('')
+        // Cascade
+        // Use renderNode (we updated AlbumCascade to support it)
+        const cascadeNode = AlbumCascade.renderNode(thumbnails)
 
-        const cascadeHtml = AlbumCascade.render(thumbnails)
+        // Info Block
+        const infoBlock = SafeDOM.div({}, [
+            SafeDOM.h3({ className: 'font-bold text-xl text-white tracking-tight' }, batchName),
+            SafeDOM.div({ className: 'flex items-center gap-3 text-sm text-muted mt-1' }, [
+                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('List', 'w-3 h-3')), ` ${playlistCount} playlists`]),
+                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('Music', 'w-3 h-3')), ` ${totalTracks} tracks`]),
+                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('Disc', 'w-3 h-3')), ` ${albumCount} albums`]),
+                SafeDOM.span({ className: 'flex items-center gap-1 font-mono' }, [SafeDOM.fromHTML(getIcon('Clock', 'w-3 h-3')), ` ${totalDuration}`]),
+                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('Calendar', 'w-3 h-3')), ` ${dateStr}`])
+            ])
+        ])
 
-        return `
-            <div class="batch-group-card bg-surface rounded-xl border border-white/10 overflow-hidden mb-6 transition-all duration-300 hover:border-brand-orange/30" 
-                data-series-id="${seriesId}" 
-                data-batch-name="${escapeHtml(batchName)}"
-                data-collapsed="true">
-            
-            <div class="batch-header p-5 bg-gradient-to-r from-white/5 to-transparent border-b border-white/10 cursor-pointer"
-                    data-action="toggle-collapse">
-                <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <span class="collapse-icon text-muted transition-transform duration-200">
-                        ${getIcon('ChevronRight', 'w-5 h-5')}
-                    </span>
-                    ${cascadeHtml}
-                    <div>
-                        <h3 class="font-bold text-xl text-white tracking-tight">${escapeHtml(batchName)}</h3>
-                        <div class="flex items-center gap-3 text-sm text-muted mt-1">
-                        <span class="flex items-center gap-1">${getIcon('List', 'w-3 h-3')} ${playlistCount} playlists</span>
-                        <span class="flex items-center gap-1">${getIcon('Music', 'w-3 h-3')} ${totalTracks} tracks</span>
-                        <span class="flex items-center gap-1">${getIcon('Disc', 'w-3 h-3')} ${albumCount} albums</span>
-                        <span class="flex items-center gap-1 font-mono">${getIcon('Clock', 'w-3 h-3')} ${totalDuration}</span>
-                        <span class="flex items-center gap-1">${getIcon('Calendar', 'w-3 h-3')} ${dateStr}</span>
-                        </div>
-                    </div>
-                </div>
+        // Buttons
+        const buttons = SafeDOM.div({ className: 'batch-card-buttons flex items-center gap-2' }, [
+            SafeDOM.button({
+                className: 'btn btn-secondary btn-sm flex items-center gap-2 hover:bg-white/20 transition-all shadow-md',
+                title: 'Edit this batch',
+                onClick: (e) => {
+                    e.stopPropagation()
+                    this.controller.editBatch(seriesId, batchName, createdAt)
+                }
+            }, [SafeDOM.fromHTML(getIcon('Edit', 'w-4 h-4')), ' Edit Batch']),
+            SafeDOM.button({
+                className: 'btn btn-ghost btn-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors',
+                title: 'Delete entire batch',
+                onClick: (e) => {
+                    e.stopPropagation()
+                    this.handleDeleteBatch(seriesId, batchName, playlistCount)
+                }
+            }, SafeDOM.fromHTML(getIcon('Trash', 'w-4 h-4')))
+        ])
 
-                <div class="batch-card-buttons flex items-center gap-2">
-                    <button class="btn btn-secondary btn-sm flex items-center gap-2 hover:bg-white/20 transition-all shadow-md" 
-                            data-action="edit-batch" 
-                            data-series-id="${seriesId}" 
-                            data-batch-name="${escapeHtml(batchName)}"
-                            data-saved-at="${createdAt}"
-                            title="Edit this batch">
-                    ${getIcon('Edit', 'w-4 h-4')} Edit Batch
-                    </button>
-                    <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors" 
-                            data-action="delete-batch" 
-                            data-series-id="${seriesId}" 
-                            data-batch-name="${escapeHtml(batchName)}"
-                            data-count="${playlistCount}"
-                            title="Delete entire batch">
-                    ${getIcon('Trash', 'w-4 h-4')}
-                    </button>
-                </div>
-                </div>
-            </div>
+        // Collapse logic
+        const playlistsContainer = SafeDOM.div({ className: 'batch-playlists divide-y divide-white/5 bg-black/20 hidden' })
+        const iconSpan = SafeDOM.span({ className: 'collapse-icon text-muted transition-transform duration-200' })
+        iconSpan.appendChild(SafeDOM.fromHTML(getIcon('ChevronRight', 'w-5 h-5')))
 
-            <div class="batch-playlists divide-y divide-white/5 bg-black/20 hidden">
-                ${playlistsHtml || '<div class="p-6 text-center text-muted italic">No playlists in this batch</div>'}
-            </div>
-            </div>
-        `
+        const toggleCollapse = () => {
+            const isHidden = playlistsContainer.classList.contains('hidden')
+            if (isHidden) {
+                playlistsContainer.classList.remove('hidden')
+                iconSpan.style.transform = 'rotate(90deg)'
+                card.dataset.collapsed = 'false'
+            } else {
+                playlistsContainer.classList.add('hidden')
+                iconSpan.style.transform = 'rotate(0deg)'
+                card.dataset.collapsed = 'true'
+            }
+        }
+
+        const batchHeader = SafeDOM.div({
+            className: 'batch-header p-5 bg-gradient-to-r from-white/5 to-transparent border-b border-white/10 cursor-pointer',
+            onClick: toggleCollapse
+        }, [
+            SafeDOM.div({ className: 'flex items-center justify-between' }, [
+                SafeDOM.div({ className: 'flex items-center gap-4' }, [
+                    iconSpan,
+                    cascadeNode,
+                    infoBlock
+                ]),
+                buttons
+            ])
+        ])
+
+        // Playlists Rows
+        if (playlists.length > 0) {
+            playlists.forEach((p, idx) => {
+                playlistsContainer.appendChild(this.renderPlaylistRow(seriesId, p, idx))
+            })
+        } else {
+            playlistsContainer.appendChild(SafeDOM.div({
+                className: 'p-6 text-center text-muted italic'
+            }, 'No playlists in this batch'))
+        }
+
+        const card = SafeDOM.div({
+            className: 'batch-group-card bg-surface rounded-xl border border-white/10 overflow-hidden mb-6 transition-all duration-300 hover:border-brand-orange/30',
+            dataset: { seriesId, batchName, collapsed: 'true' }
+        }, [batchHeader, playlistsContainer])
+
+        return card
     }
 
     renderPlaylistRow(seriesId, playlist, index) {
         const trackCount = playlist.tracks?.length || 0
         const duration = this.formatDuration(playlist.tracks || [])
 
-        return `
-        <div class="playlist-row-wrapper" data-playlist-index="${index}">
-            <div class="playlist-row p-4 flex items-center justify-between hover:bg-white/5 transition-colors group cursor-pointer"
-                data-action="toggle-playlist-tracks"
-                data-playlist-id="${playlist.id}">
-            <div class="flex items-center gap-4">
-                <span class="expand-icon text-muted transition-transform duration-200">
-                ${getIcon('ChevronRight', 'w-4 h-4')}
-                </span>
-                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-muted group-hover:text-brand-orange group-hover:bg-brand-orange/10 transition-colors">
-                ${getIcon('Disc', 'w-4 h-4')}
-                </div>
-                <div>
-                <div class="font-medium text-white group-hover:text-brand-orange transition-colors">${escapeHtml(playlist.name)}</div>
-                <div class="text-xs text-muted font-mono mt-0.5">${trackCount} tracks • ${duration}</div>
-                </div>
-            </div>
-            
-            <div class="playlist-row-buttons flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <button class="btn btn-ghost btn-sm text-muted hover:text-white" 
-                        data-action="view-playlist" 
-                        data-series="${seriesId}" 
-                        data-id="${playlist.id}"
-                        title="View Details">
-                ${getIcon('Eye', 'w-4 h-4')}
-                </button>
-            </div>
-            </div>
-            
-            <div class="playlist-tracks-list hidden bg-black/30 pl-16 pr-4 py-2">
-            ${this.renderTracksList(playlist.tracks)}
-            </div>
-        </div>
-        `
-    }
+        // Row Content
+        const icon = SafeDOM.div({ className: 'w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-muted group-hover:text-brand-orange group-hover:bg-brand-orange/10 transition-colors' })
+        icon.appendChild(SafeDOM.fromHTML(getIcon('Disc', 'w-4 h-4')))
 
-    renderTracksList(tracks) {
-        if (!tracks || tracks.length === 0) {
-            return '<div class="text-sm text-muted italic py-2">No tracks</div>'
+        const info = SafeDOM.div({}, [
+            SafeDOM.div({ className: 'font-medium text-white group-hover:text-brand-orange transition-colors' }, playlist.name),
+            SafeDOM.div({ className: 'text-xs text-muted font-mono mt-0.5' }, `${trackCount} tracks • ${duration}`)
+        ])
+
+        const expandIcon = SafeDOM.span({ className: 'expand-icon text-muted transition-transform duration-200' })
+        expandIcon.appendChild(SafeDOM.fromHTML(getIcon('ChevronRight', 'w-4 h-4')))
+
+        const leftSide = SafeDOM.div({ className: 'flex items-center gap-4' }, [
+            expandIcon,
+            icon,
+            info
+        ])
+
+        const viewBtn = SafeDOM.button({
+            className: 'btn btn-ghost btn-sm text-muted hover:text-white',
+            title: 'View Details',
+            onClick: (e) => {
+                e.stopPropagation()
+                this.openPlaylistModal(seriesId, playlist.id)
+            }
+        }, SafeDOM.fromHTML(getIcon('Eye', 'w-4 h-4')))
+
+        const buttons = SafeDOM.div({ className: 'playlist-row-buttons flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200' }, [viewBtn])
+
+        // Tracks List
+        const tracksList = SafeDOM.div({ className: 'playlist-tracks-list hidden bg-black/30 pl-16 pr-4 py-2' })
+
+        // Lazy render tracks logic could be added here, but for now we render immediately
+        if (playlist.tracks && playlist.tracks.length > 0) {
+            playlist.tracks.forEach((t, i) => {
+                // TrackRow.render returns a Node
+                const row = TrackRow.render({
+                    track: t,
+                    index: i + 1,
+                    variant: 'detailed',
+                    playlistIndex: -1,
+                    trackIndex: i
+                })
+                tracksList.appendChild(row)
+            })
+        } else {
+            tracksList.appendChild(SafeDOM.div({ className: 'text-sm text-muted italic py-2' }, 'No tracks'))
         }
 
-        return tracks.map((track, i) => TrackRow.renderHTML({
-            track,
-            index: i + 1,
-            variant: 'detailed',
-            playlistIndex: -1,
-            trackIndex: i
-        })).join('')
+        const toggleTracks = () => {
+            const isHidden = tracksList.classList.contains('hidden')
+            if (isHidden) {
+                tracksList.classList.remove('hidden')
+                expandIcon.style.transform = 'rotate(90deg)'
+            } else {
+                tracksList.classList.add('hidden')
+                expandIcon.style.transform = 'rotate(0deg)'
+            }
+        }
+
+        const row = SafeDOM.div({
+            className: 'playlist-row p-4 flex items-center justify-between hover:bg-white/5 transition-colors group cursor-pointer',
+            onClick: toggleTracks,
+            dataset: { playlistId: playlist.id }
+        }, [leftSide, buttons])
+
+        return SafeDOM.div({
+            className: 'playlist-row-wrapper',
+            dataset: { playlistIndex: index }
+        }, [row, tracksList])
     }
 
     countUniqueAlbums(playlists) {
@@ -266,105 +348,41 @@ export class SavedPlaylistsView extends BaseView {
     }
 
     renderLoading() {
-        return `
-        <div class="loading-state text-center py-12">
-            <div class="loading-spinner w-12 h-12 border-4 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p class="text-xl">Scanning all series for playlists...</p>
-        </div>
-        `
+        return SafeDOM.div({ className: 'loading-state text-center py-12' }, [
+            SafeDOM.div({ className: 'loading-spinner w-12 h-12 border-4 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-4' }),
+            SafeDOM.p({ className: 'text-xl' }, 'Scanning all series for playlists...')
+        ])
     }
 
     renderEmptyState() {
-        return `
-        <div class="empty-state text-center py-12 opacity-50">
-            ${getIcon('List', 'w-16 h-16 mx-auto mb-4 opacity-50')}
-            <h3 class="text-xl font-bold mb-2">No Playlists Found</h3>
-            <p>Generate and save playlists in your series to see them here.</p>
-            <button class="btn btn-primary mt-4" data-action="go-home">Create Series</button>
-        </div>
-        `
+        return SafeDOM.div({ className: 'empty-state text-center py-12 opacity-50' }, [
+            SafeDOM.div({ className: 'mb-4 opacity-50' }, [SafeDOM.fromHTML(getIcon('List', 'w-16 h-16 mx-auto'))]),
+            SafeDOM.h3({ className: 'text-xl font-bold mb-2' }, 'No Playlists Found'),
+            SafeDOM.p({}, 'Generate and save playlists in your series to see them here.'),
+            SafeDOM.button({
+                className: 'btn btn-primary mt-4',
+                onClick: () => window.location.hash = '/home'
+            }, 'Create Series')
+        ])
     }
 
     renderErrorState() {
-        this.update() // Will render generic structure
-        // But mainContent is separate. 
-        // We can inject error message manually
-        const main = document.getElementById('mainContent')
-        if (main) main.innerHTML = '<p class="text-red-500 text-center">Failed to load data.</p>'
+        // Fallback error rendering
+        if (this.container) {
+            SafeDOM.clear(this.container)
+            const errorMsg = SafeDOM.p({ className: 'text-red-500 text-center mt-10' }, 'Failed to load data.')
+            this.container.appendChild(this.render()) // Re-render shell
+            const main = this.container.querySelector('#mainContent')
+            if (main) {
+                SafeDOM.clear(main)
+                main.appendChild(errorMsg)
+            }
+        }
     }
 
     // --- Interaction ---
 
-    bindEvents() {
-        // BatchGroupCard interactions (Collapse)
-        this.$delegate('[data-action="toggle-collapse"]', 'click', (e, target) => {
-            const card = target.closest('.batch-group-card')
-            if (card) {
-                const content = card.querySelector('.batch-playlists')
-                const icon = card.querySelector('.collapse-icon')
-                const isCollapsed = card.dataset.collapsed === 'true'
-
-                if (isCollapsed) {
-                    content.classList.remove('hidden')
-                    icon.style.transform = 'rotate(90deg)'
-                    card.dataset.collapsed = 'false'
-                } else {
-                    content.classList.add('hidden')
-                    icon.style.transform = 'rotate(0deg)'
-                    card.dataset.collapsed = 'true'
-                }
-            }
-        })
-
-        // Playlist Row Expand
-        this.$delegate('[data-action="toggle-playlist-tracks"]', 'click', (e, target) => {
-            const rowWrapper = target.closest('.playlist-row-wrapper')
-            if (rowWrapper) {
-                const tracksList = rowWrapper.querySelector('.playlist-tracks-list')
-                const icon = rowWrapper.querySelector('.expand-icon')
-
-                if (tracksList.classList.contains('hidden')) {
-                    tracksList.classList.remove('hidden')
-                    icon.style.transform = 'rotate(90deg)'
-                } else {
-                    tracksList.classList.add('hidden')
-                    icon.style.transform = 'rotate(0deg)'
-                }
-            }
-        })
-
-        // Controller Actions
-        this.$delegate('[data-action="add-playlists"]', 'click', (e, t) => {
-            this.controller.navigateBlend()
-        })
-
-        this.$delegate('[data-action="open-series"]', 'click', (e, t) => {
-            this.controller.openSeriesManager(t.dataset.id)
-        })
-
-        this.$delegate('[data-action="edit-batch"]', 'click', (e, t) => {
-            // Updated to pass full context (Parity Fix)
-            this.controller.editBatch(t.dataset.seriesId, t.dataset.batchName, t.dataset.savedAt)
-        })
-
-        this.$delegate('[data-action="go-home"]', 'click', () => {
-            window.location.hash = '/home' // Or router.navigate
-        })
-
-        // Modals via DialogService
-        this.$delegate('[data-action="delete-all-playlists"]', 'click', (e, t) => {
-            this.handleDeleteAll(t.dataset.id, t.dataset.name)
-        })
-
-        this.$delegate('[data-action="delete-batch"]', 'click', (e, t) => {
-            this.handleDeleteBatch(t.dataset.seriesId, t.dataset.batchName, t.dataset.count)
-        })
-
-        this.$delegate('[data-action="view-playlist"]', 'click', (e, t) => {
-            e.stopPropagation() // Prevent row toggle
-            this.openPlaylistModal(t.dataset.series, t.dataset.id)
-        })
-    }
+    // Note: bindEvents removed as we use direct SafeDOM onClick handlers
 
     async handleDeleteBatch(seriesId, batchName, count) {
         const confirmed = await dialogService.confirm({
@@ -458,5 +476,6 @@ export class SavedPlaylistsView extends BaseView {
 
     onThumbnailLoaded(seriesId) {
         // Optional re-render logic
+        // Could trigger this.update() or a targeted update
     }
 }

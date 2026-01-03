@@ -44,51 +44,46 @@ import { TracksRankingComparison } from '../components/ranking/TracksRankingComp
 // Sprint 12: Enrichment integration - auto-apply cached Spotify data
 import { applyEnrichmentToAlbums } from '../helpers/SpotifyEnrichmentHelper.js';
 
+import { SafeDOM } from '../utils/SafeDOM.js';
+
 export default class SeriesView extends BaseView {
     constructor(controller) {
         super();
         this.controller = controller;
         this.components = {};
-
-        // State
-        this.currentScope = 'ALL';
-        this.targetSeriesId = null;
         this.searchQuery = '';
-        this.filters = { artist: 'all', year: 'all', source: 'all' };
+        this.filters = { artist: '', year: '', source: '' };
         this.viewMode = localStorage.getItem('albumsViewMode') || 'compact';
         this.isLoading = false;
-
-        // Progress
-        this.inlineProgress = null;
+        this.currentScope = 'ALL';
+        this.targetSeriesId = null;
     }
 
     /**
      * Render - Returns a thin shell with mount points for components
      */
     async render(params) {
-        return `
-            <div class="albums-view container">
-                <!-- Header Component Mount -->
-                <header class="view-header mb-8 fade-in">
-                    <div id="series-header-mount"></div>
-                    <div id="series-toolbar-mount"></div>
-                </header>
+        return SafeDOM.div({ className: 'albums-view container' }, [
+            // Header Component Mount
+            SafeDOM.header({ className: 'view-header mb-8 fade-in' }, [
+                SafeDOM.div({ id: 'series-header-mount' }),
+                SafeDOM.div({ id: 'series-toolbar-mount' })
+            ]),
 
-                <!-- Grid Component Mount -->
-                <div id="series-grid-mount"></div>
+            // Grid Component Mount
+            SafeDOM.div({ id: 'series-grid-mount' }),
 
-                <!-- Empty State (shown when no albums) -->
-                <div id="emptyStateContainer"></div>
-                
-                <!-- Footer -->
-                <footer class="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
-                    <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
-                </footer>
+            // Empty State
+            SafeDOM.div({ id: 'emptyStateContainer' }),
 
-                <!-- Series Modals Mount Point -->
-                <div id="series-modals-mount"></div>
-            </div>
-        `;
+            // Footer
+            SafeDOM.footer({ className: 'view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6' }, [
+                SafeDOM.p({ className: 'last-update' }, `Last updated: ${new Date().toLocaleTimeString()}`)
+            ]),
+
+            // Series Modals Mount Point
+            SafeDOM.div({ id: 'series-modals-mount' })
+        ]);
     }
 
     /**
@@ -423,19 +418,24 @@ export default class SeriesView extends BaseView {
         const container = document.getElementById('emptyStateContainer');
         if (!container) return;
 
+        SafeDOM.clear(container);
+
         if (albumCount === 0 && !this.isLoading) {
-            container.innerHTML = `
-                <div class="empty-state text-center py-16 glass-panel">
-                    <div class="text-6xl mb-6 opacity-30">${getIcon('Music', 'w-24 h-24 mx-auto')}</div>
-                    <h2 class="text-2xl font-bold mb-2">No albums in library</h2>
-                    <p class="text-muted mb-8">Create a series from the home page to get started</p>
-                    <button class="btn btn-primary" onclick="window.location.href='/home'">
-                        ${getIcon('ArrowLeft', 'w-4 h-4 mr-2')} Go to Home
-                    </button>
-                </div>
-            `;
-        } else {
-            container.innerHTML = '';
+            const emptyState = SafeDOM.div({ className: 'empty-state text-center py-16 glass-panel' }, [
+                SafeDOM.div({ className: 'text-6xl mb-6 opacity-30' }, [
+                    SafeDOM.fromHTML(getIcon('Music', 'w-24 h-24 mx-auto'))
+                ]),
+                SafeDOM.h2({ className: 'text-2xl font-bold mb-2' }, 'No albums in library'),
+                SafeDOM.p({ className: 'text-muted mb-8' }, 'Create a series from the home page to get started'),
+                SafeDOM.button({
+                    className: 'btn btn-primary',
+                    onclick: () => window.location.href = '/home'
+                }, [
+                    SafeDOM.fromHTML(getIcon('ArrowLeft', 'w-4 h-4 mr-2')),
+                    ' Go to Home'
+                ])
+            ]);
+            container.appendChild(emptyState);
         }
     }
 

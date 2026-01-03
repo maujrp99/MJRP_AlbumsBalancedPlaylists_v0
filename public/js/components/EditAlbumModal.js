@@ -1,111 +1,83 @@
 /**
  * Edit Album Modal
  * Allows editing album metadata (Title, Artist, Year, Cover)
+ * Refactored to use BaseModal and SafeDOM (Sprint 16)
  */
 
+import { BaseModal } from './ui/BaseModal.js'
+import { SafeDOM } from '../utils/SafeDOM.js'
 import toast from './Toast.js'
-import { escapeHtml } from '../utils/stringUtils.js'
 
 export function showEditAlbumModal(album, onSave) {
-  const modal = document.createElement('div')
-  modal.className = 'modal-overlay'
-  modal.innerHTML = `
-    <div class="modal-container glass-panel max-w-md">
-      <!-- Header -->
-      <div class="modal-header p-6 border-b border-surface-light">
-        <h2 class="text-2xl font-bold flex items-center gap-3">
-          <svg class="w-6 h-6 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-          </svg>
-          Edit Album Details
-        </h2>
-      </div>
+  const modalId = 'edit-album-modal'
 
-      <!-- Content -->
-      <div class="modal-content p-6 space-y-4">
-        
-        <!-- Title -->
-        <div>
-          <label class="block mb-2 text-sm font-medium text-gray-300">Album Title:</label>
-          <input 
-            type="text" 
-            id="titleInput"
-            class="form-control w-full"
-            value="${escapeHtml(album.title)}"
-            required
-          />
-        </div>
+  // Inputs
+  const titleInput = SafeDOM.input({
+    type: 'text',
+    id: 'titleInput',
+    className: 'form-control w-full',
+    value: album.title,
+    required: true
+  })
 
-        <!-- Artist -->
-        <div>
-          <label class="block mb-2 text-sm font-medium text-gray-300">Artist:</label>
-          <input 
-            type="text" 
-            id="artistInput"
-            class="form-control w-full"
-            value="${escapeHtml(album.artist)}"
-            required
-          />
-        </div>
+  const artistInput = SafeDOM.input({
+    type: 'text',
+    id: 'artistInput',
+    className: 'form-control w-full',
+    value: album.artist,
+    required: true
+  })
 
-        <!-- Year -->
-        <div>
-          <label class="block mb-2 text-sm font-medium text-gray-300">Year:</label>
-          <input 
-            type="number" 
-            id="yearInput"
-            class="form-control w-full"
-            value="${album.year || ''}"
-            placeholder="YYYY"
-            min="1900"
-            max="${new Date().getFullYear() + 1}"
-          />
-        </div>
+  const yearInput = SafeDOM.input({
+    type: 'number',
+    id: 'yearInput',
+    className: 'form-control w-full',
+    value: album.year || '',
+    placeholder: 'YYYY',
+    min: '1900',
+    max: new Date().getFullYear() + 1
+  })
 
-        <!-- Cover URL -->
-        <div>
-          <label class="block mb-2 text-sm font-medium text-gray-300">Cover Image URL:</label>
-          <input 
-            type="url" 
-            id="coverUrlInput"
-            class="form-control w-full"
-            value="${escapeHtml(album.coverUrl || '')}"
-            placeholder="https://..."
-          />
-        </div>
+  const coverUrlInput = SafeDOM.input({
+    type: 'url',
+    id: 'coverUrlInput',
+    className: 'form-control w-full',
+    value: album.coverUrl || '',
+    placeholder: 'https://...'
+  })
 
-      </div>
+  // Form Groups
+  const createField = (label, input) => SafeDOM.div({}, [
+    SafeDOM.label({ className: 'block mb-2 text-sm font-medium text-gray-300' }, label),
+    input
+  ])
 
-      <!-- Actions -->
-      <div class="modal-footer p-6 border-t border-surface-light flex gap-3 justify-end">
-        <button class="btn btn-secondary" data-action="cancel">Cancel</button>
-        <button class="btn btn-primary" data-action="save">Save Changes</button>
-      </div>
-    </div>
-  `
+  const content = SafeDOM.div({ className: 'space-y-4' }, [
+    createField('Album Title:', titleInput),
+    createField('Artist:', artistInput),
+    createField('Year:', yearInput),
+    createField('Cover Image URL:', coverUrlInput)
+  ])
 
-  const titleInput = modal.querySelector('#titleInput')
-  const artistInput = modal.querySelector('#artistInput')
-  const yearInput = modal.querySelector('#yearInput')
-  const coverUrlInput = modal.querySelector('#coverUrlInput')
-  const cancelBtn = modal.querySelector('[data-action="cancel"]')
-  const saveBtn = modal.querySelector('[data-action="save"]')
-
-  const close = () => modal.remove()
-
-  cancelBtn.addEventListener('click', close)
-
-  saveBtn.addEventListener('click', async () => {
+  // Save Handler
+  const handleSave = async (modal) => {
     const title = titleInput.value.trim()
     const artist = artistInput.value.trim()
+
+    // Find buttons in the modal (a bit hacky but standardized via BaseModal)
+    // Better: store reference to saveBtn. But BaseModal creates it.
+    // We can disable all buttons in footer.
+    const saveBtn = modal.querySelector('[data-action="save"]')
 
     if (!title || !artist) {
       toast.warning('Title and Artist are required.')
       return
     }
 
-    saveBtn.disabled = true
-    saveBtn.textContent = 'Saving...'
+    if (saveBtn) {
+      saveBtn.disabled = true
+      saveBtn.textContent = 'Saving...'
+    }
 
     try {
       const updates = {
@@ -116,31 +88,39 @@ export function showEditAlbumModal(album, onSave) {
       }
 
       await onSave(album.id, updates)
-      close()
+      BaseModal.unmount(modal)
     } catch (error) {
       console.error('Failed to save album:', error)
-      saveBtn.disabled = false
-      saveBtn.textContent = 'Save Changes'
+      if (saveBtn) {
+        saveBtn.disabled = false
+        saveBtn.textContent = 'Save Changes'
+      }
       toast.error(`Failed to save: ${error.message}`)
     }
+  }
+
+  // Modal Construction
+  const closeModal = () => BaseModal.unmount(modalId)
+
+  const footer = BaseModal.createFooterButtons({
+    confirmText: 'Save Changes',
+    onCancel: closeModal,
+    onConfirm: () => handleSave(document.getElementById(modalId)),
+    confirmAction: 'save'
   })
 
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) close()
+  const modal = BaseModal.render({
+    id: modalId,
+    title: 'Edit Album Details',
+    content,
+    footer,
+    onClose: closeModal
   })
 
-  document.addEventListener('keydown', function handleEscape(e) {
-    if (e.key === 'Escape') {
-      close()
-      document.removeEventListener('keydown', handleEscape)
-    }
-  })
+  BaseModal.mount(modal)
 
-  document.body.appendChild(modal)
-
-  // Focus title input
+  // Focus title
   setTimeout(() => titleInput.focus(), 100)
 
   return modal
 }
-

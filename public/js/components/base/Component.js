@@ -37,7 +37,15 @@ export default class Component {
      */
     unmount() {
         this.onUnmount();
-        this.container.innerHTML = '';
+        // SafeDOM.clear logic inlined to avoid dependency if desired, 
+        // but importing SafeDOM is better for consistency.
+        // However, adding an import to the base class effectively adds it everywhere.
+        // Let's stick to raw DOM manipulation for the base class to keep it lightweight 
+        // OR import SafeDOM. Given the project direction, SafeDOM is standard.
+        // But to avoid circular deps or heavy imports in base, I'll inline the clear loop.
+        while (this.container.firstChild) {
+            this.container.removeChild(this.container.firstChild);
+        }
         this.elements = {};
     }
 

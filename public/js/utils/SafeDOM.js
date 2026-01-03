@@ -140,6 +140,15 @@ export const SafeDOM = {
     ul(props, children) { return this.create('ul', props, children); },
     li(props, children) { return this.create('li', props, children); },
 
+    // Semantic Sectioning
+    aside(props, children) { return this.create('aside', props, children); },
+    header(props, children) { return this.create('header', props, children); },
+    footer(props, children) { return this.create('footer', props, children); },
+    section(props, children) { return this.create('section', props, children); },
+    nav(props, children) { return this.create('nav', props, children); },
+    article(props, children) { return this.create('article', props, children); },
+    main(props, children) { return this.create('main', props, children); },
+
     input(props) { return this.create('input', props); },
     label(props, children) { return this.create('label', props, children); },
     textarea(props, children) { return this.create('textarea', props, children); },

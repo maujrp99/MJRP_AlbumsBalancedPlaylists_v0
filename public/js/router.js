@@ -139,8 +139,19 @@ export class Router {
 
             // Render view HTML
             if (this.currentView && this.currentView.render) {
-                const html = await this.currentView.render(params)
-                container.innerHTML = html
+                const result = await this.currentView.render(params)
+
+                // SafeDOM Support (DOM Node)
+                if (result instanceof Node) {
+                    while (container.firstChild) {
+                        container.removeChild(container.firstChild)
+                    }
+                    container.appendChild(result)
+                }
+                // Legacy Support (HTML String)
+                else if (typeof result === 'string') {
+                    container.innerHTML = result
+                }
             }
 
             // Call view's mount lifecycle

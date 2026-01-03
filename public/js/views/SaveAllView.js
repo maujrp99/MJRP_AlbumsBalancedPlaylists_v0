@@ -4,6 +4,7 @@ import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
 import { getAuth } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js'
+import { SafeDOM } from '../utils/SafeDOM.js'
 
 /**
  * SaveAllView
@@ -23,85 +24,94 @@ export class SaveAllView extends BaseView {
   }
 
   async render() {
+    return this.renderContent()
+  }
+
+  renderContent() {
     const hasPending = this.hasPendingMigration()
 
-    return `
-      <div class="save-all-view container py-8 max-w-4xl mx-auto">
-        <header class="mb-8">
-          <h1 class="text-3xl font-syne font-bold text-white mb-2">
-            ${getIcon('Database', 'w-8 h-8 inline-block mr-3 text-accent-primary')}
-            Data Migration
-          </h1>
-          <p class="text-gray-400">
-            Migrate your local browser data to cloud storage for cross-device sync.
-          </p>
-        </header>
+    const container = SafeDOM.div({ className: 'save-all-view container py-8 max-w-4xl mx-auto' })
 
-        <section class="glass-panel p-8 mb-8">
-          <div class="flex items-center gap-4 mb-6">
-            <div class="w-16 h-16 rounded-full bg-accent-primary/20 flex items-center justify-center">
-              ${getIcon('CloudUpload', 'w-8 h-8 text-accent-primary')}
-            </div>
-            <div>
-              <h2 class="text-xl font-bold text-white">Migration Status</h2>
-              <p class="text-gray-400" id="migrationStatusText">
-                ${hasPending ? 'Old data detected. Ready to migrate.' : 'No pending migrations.'}
-              </p>
-            </div>
-          </div>
+    // Header
+    const header = SafeDOM.header({ className: 'mb-8' })
+    const h1 = SafeDOM.h1({ className: 'text-3xl font-syne font-bold text-white mb-2' })
+    h1.appendChild(SafeDOM.fromHTML(getIcon('Database', 'w-8 h-8 inline-block mr-3 text-accent-primary')))
+    h1.appendChild(SafeDOM.text(' Data Migration'))
+    header.appendChild(h1)
+    header.appendChild(SafeDOM.p({ className: 'text-gray-400' }, 'Migrate your local browser data to cloud storage for cross-device sync.'))
+    container.appendChild(header)
 
-          <div id="migrationProgressSection" class="hidden mb-6">
-            <div class="flex justify-between text-sm text-gray-400 mb-2">
-              <span id="migrationProgressText">Processing...</span>
-              <span id="migrationProgressPercent">0%</span>
-            </div>
-            <div class="w-full bg-gray-700 rounded-full h-2">
-              <div id="migrationProgressBar" class="bg-accent-primary h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
-            </div>
-          </div>
+    // Status Section
+    const statusSection = SafeDOM.section({ className: 'glass-panel p-8 mb-8' })
 
-          <div class="flex gap-4">
-            <button 
-              id="startMigrationBtn" 
-              class="btn btn-primary"
-              ${!hasPending ? 'disabled' : ''}
-            >
-              ${getIcon('Play', 'w-5 h-5 mr-2')}
-              Start Migration
-            </button>
-            <button id="checkMigrationBtn" class="btn btn-secondary">
-              ${getIcon('RefreshCw', 'w-5 h-5 mr-2')}
-              Re-check Status
-            </button>
-          </div>
-        </section>
+    const statusRow = SafeDOM.div({ className: 'flex items-center gap-4 mb-6' })
+    const iconContainer = SafeDOM.div({ className: 'w-16 h-16 rounded-full bg-accent-primary/20 flex items-center justify-center' })
+    iconContainer.appendChild(SafeDOM.fromHTML(getIcon('CloudUpload', 'w-8 h-8 text-accent-primary')))
+    statusRow.appendChild(iconContainer)
 
-        <section class="glass-panel p-8">
-          <h3 class="text-lg font-bold text-white mb-4">What gets migrated?</h3>
-          <ul class="space-y-3 text-gray-300">
-            <li class="flex items-center gap-3">
-              ${getIcon('Check', 'w-5 h-5 text-green-500')}
-              Album Series (names, queries, settings)
-            </li>
-            <li class="flex items-center gap-3">
-              ${getIcon('Check', 'w-5 h-5 text-green-500')}
-              Playlist Series (curation preferences)
-            </li>
-            <li class="flex items-center gap-3">
-              ${getIcon('Check', 'w-5 h-5 text-green-500')}
-              Inventory (owned albums)
-            </li>
-            <li class="flex items-center gap-3">
-              ${getIcon('Check', 'w-5 h-5 text-green-500')}
-              Generated Playlists
-            </li>
-          </ul>
-        </section>
-      </div>
-    `
+    const infoDiv = SafeDOM.div({})
+    infoDiv.appendChild(SafeDOM.h2({ className: 'text-xl font-bold text-white' }, 'Migration Status'))
+    infoDiv.appendChild(SafeDOM.p({ className: 'text-gray-400', id: 'migrationStatusText' }, hasPending ? 'Old data detected. Ready to migrate.' : 'No pending migrations.'))
+    statusRow.appendChild(infoDiv)
+    statusSection.appendChild(statusRow)
+
+    // Progress Bar
+    const progressSection = SafeDOM.div({ id: 'migrationProgressSection', className: 'hidden mb-6' })
+    const progressLabels = SafeDOM.div({ className: 'flex justify-between text-sm text-gray-400 mb-2' })
+    progressLabels.appendChild(SafeDOM.span({ id: 'migrationProgressText' }, 'Processing...'))
+    progressLabels.appendChild(SafeDOM.span({ id: 'migrationProgressPercent' }, '0%'))
+    progressSection.appendChild(progressLabels)
+
+    const progressTrack = SafeDOM.div({ className: 'w-full bg-gray-700 rounded-full h-2' })
+    progressTrack.appendChild(SafeDOM.div({ id: 'migrationProgressBar', className: 'bg-accent-primary h-2 rounded-full transition-all duration-300', style: { width: '0%' } }))
+    progressSection.appendChild(progressTrack)
+    statusSection.appendChild(progressSection)
+
+    // Buttons
+    const btnRow = SafeDOM.div({ className: 'flex gap-4' })
+    const startBtn = SafeDOM.button({
+      id: 'startMigrationBtn',
+      className: 'btn btn-primary',
+      disabled: !hasPending
+    })
+    startBtn.appendChild(SafeDOM.fromHTML(getIcon('Play', 'w-5 h-5 mr-2')))
+    startBtn.appendChild(SafeDOM.text(' Start Migration'))
+    btnRow.appendChild(startBtn)
+
+    const checkBtn = SafeDOM.button({ id: 'checkMigrationBtn', className: 'btn btn-secondary' })
+    checkBtn.appendChild(SafeDOM.fromHTML(getIcon('RefreshCw', 'w-5 h-5 mr-2')))
+    checkBtn.appendChild(SafeDOM.text(' Re-check Status'))
+    btnRow.appendChild(checkBtn)
+
+    statusSection.appendChild(btnRow)
+    container.appendChild(statusSection)
+
+    // Info Section
+    const infoSection = SafeDOM.section({ className: 'glass-panel p-8' })
+    infoSection.appendChild(SafeDOM.h3({ className: 'text-lg font-bold text-white mb-4' }, 'What gets migrated?'))
+
+    const list = SafeDOM.ul({ className: 'space-y-3 text-gray-300' })
+    const items = [
+      'Album Series (names, queries, settings)',
+      'Playlist Series (curation preferences)',
+      'Inventory (owned albums)',
+      'Generated Playlists'
+    ]
+    items.forEach(item => {
+      const li = SafeDOM.li({ className: 'flex items-center gap-3' })
+      li.appendChild(SafeDOM.fromHTML(getIcon('Check', 'w-5 h-5 text-green-500')))
+      li.appendChild(SafeDOM.text(' ' + item))
+      list.appendChild(li)
+    })
+    infoSection.appendChild(list)
+    container.appendChild(infoSection)
+
+    return container
   }
 
   async mount() {
+    this.container = document.getElementById('app')
+
     // Start Migration Button
     const startBtn = this.$('#startMigrationBtn')
     if (startBtn) {

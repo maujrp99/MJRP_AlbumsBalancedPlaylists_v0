@@ -26,7 +26,7 @@ export default class SeriesHeader extends Component {
         const canGenerate = albumCount > 0;
 
         // Clear container
-        this.container.innerHTML = '';
+        SafeDOM.clear(this.container);
 
         const headerContainer = SafeDOM.div({ className: 'view-header mb-8 fade-in' });
 

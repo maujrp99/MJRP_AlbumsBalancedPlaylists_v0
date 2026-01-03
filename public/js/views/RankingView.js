@@ -3,7 +3,6 @@ import { albumsStore } from '../stores/albums.js'
 import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
-import { escapeHtml } from '../utils/stringUtils.js'
 import { TrackRow } from '../components/ui/TrackRow.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 
@@ -12,7 +11,7 @@ import { SafeDOM } from '../utils/SafeDOM.js'
  * Single Album Detail with dual tracklists:
  * - Ranked by Acclaim (sorted by rating)
  * - Original Album Order (AS IS)
- * REFACTORED: SafeDOM implementation (Sprint 15 Phase 4.3)
+ * REFACTORED: SafeDOM implementation (Sprint 16)
  */
 
 export class RankingView extends BaseView {
@@ -74,7 +73,7 @@ export class RankingView extends BaseView {
     )
 
     const header = SafeDOM.header({ className: 'view-header mb-8 fade-in' }, [
-      // Breadcrumb is tricky because it returns string. We wrap it.
+      // Breadcrumb returns string
       SafeDOM.fromHTML(Breadcrumb.render(`/ranking/${albumId}`, params)),
       backBtn,
       headerCard
@@ -95,12 +94,8 @@ export class RankingView extends BaseView {
       header, dualTracklists, footer
     ])
 
-    return container.outerHTML
-    // NOTE: BaseView.js expects a string or promise wrapping string for render(). 
-    // Ideally we should update router to accept Nodes, but that's a bigger change.
-    // For now, outerHTML is safe because we controlled the creation.
-    // Wait, if BaseView sets innerHTML, then returning outerHTML is fine.
-    // The point of SafeDOM is construction.
+    // Return Node directly (supported by router.js update)
+    return container
   }
 
   renderRankedTracklist(album) {
@@ -159,18 +154,20 @@ export class RankingView extends BaseView {
   }
 
   renderNotFound() {
-    return `
-      <div class="not-found container text-center py-16">
-        <div class="glass-panel p-12 max-w-md mx-auto">
-          <div class="text-6xl mb-6 opacity-30">${getIcon('AlertTriangle', 'w-24 h-24 mx-auto')}</div>
-          <h2 class="text-2xl font-bold mb-2">Album Not Found</h2>
-          <p class="text-muted mb-8">The requested album doesn't exist in your library.</p>
-          <button class="btn btn-primary" id="goHomeBtn">
-            ${getIcon('ArrowLeft', 'w-4 h-4 mr-2')} Go to Home
-          </button>
-        </div>
-      </div>
-    `
+    const container = SafeDOM.div({ className: 'not-found container text-center py-16' });
+    const panel = SafeDOM.div({ className: 'glass-panel p-12 max-w-md mx-auto' });
+
+    panel.appendChild(SafeDOM.div({ className: 'text-6xl mb-6 opacity-30' }, [SafeDOM.fromHTML(getIcon('AlertTriangle', 'w-24 h-24 mx-auto'))]));
+    panel.appendChild(SafeDOM.h2({ className: 'text-2xl font-bold mb-2' }, 'Album Not Found'));
+    panel.appendChild(SafeDOM.p({ className: 'text-muted mb-8' }, "The requested album doesn't exist in your library."));
+
+    const btn = SafeDOM.button({ className: 'btn btn-primary', id: 'goHomeBtn' });
+    btn.appendChild(SafeDOM.fromHTML(getIcon('ArrowLeft', 'w-4 h-4 mr-2')));
+    btn.appendChild(SafeDOM.text(' Go to Home'));
+    panel.appendChild(btn);
+
+    container.appendChild(panel);
+    return container;
   }
 
   async mount(params) {
@@ -179,20 +176,20 @@ export class RankingView extends BaseView {
     // Attach breadcrumb listeners
     Breadcrumb.attachListeners(this.container)
 
-    // Back button (We can use simple ID check or scoped check if we refactor render to not return string)
-    // Since we return outerHTML, the elements are new and in DOM now.
-    const backBtn = this.$('#backToAlbums')
+    // Event Delegation for buttons
+    // Note: Since elements are created via SafeDOM and appended, we could attach listeners directly during creation if we wanted.
+    // But maintaining existing pattern for now.
+
+    const backBtn = this.container.querySelector('#backToAlbums')
     if (backBtn) {
-      this.on(backBtn, 'click', () => {
-        // Remember to go back to the view mode the user was in
+      backBtn.addEventListener('click', () => {
         router.navigate('/albums')
       })
     }
 
-    // Go home if not found
-    const goHomeBtn = this.$('#goHomeBtn')
+    const goHomeBtn = this.container.querySelector('#goHomeBtn')
     if (goHomeBtn) {
-      this.on(goHomeBtn, 'click', () => router.navigate('/home'))
+      goHomeBtn.addEventListener('click', () => router.navigate('/home'))
     }
   }
 

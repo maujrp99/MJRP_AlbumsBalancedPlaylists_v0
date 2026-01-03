@@ -28,18 +28,26 @@
 ## Phase 3: Component Consolidation
 *Goal: Reduce maintenance by removing redundant components.*
 
-- [ ] **Deprecate Legacy Cards**:
-    - [ ] Refactor `BatchGroupCard` usages to use `Card`/`TrackRow`.
-    - [ ] Delete `PlaylistCard.js` (if exists/unused).
-    - [ ] Delete `BatchGroupCard.js`.
-- [ ] **Standardize**: Ensures all lists use `TrackRow` for items and `Card` for entities.
+- [x] **Deprecate Legacy Cards**:
+    - [x] Refactor `BatchGroupCard` usages to use `Card`/`TrackRow`.
+    - [x] Delete `PlaylistCard.js` (if exists/unused).
+    - [x] Delete `BatchGroupCard.js`.
+- [x] **Standardize**: Ensures all lists use `TrackRow` for items and `Card` for entities.
 
 ## Phase 4: Final Security Sweep
 *Goal: Reach < 25 innerHTML sinks.*
 
 - [ ] **Audit Sinks**:
-    - [ ] Run `grep -r "innerHTML" public/js/`
-    - [ ] Refactor remaining low-hanging fruit.
+    - [x] Run `grep -r "innerHTML" public/js/` (Initial count > 40)
+    - [x] Refactor `SeriesView.js` (Shell + Router support)
+    - [x] Refactor `SavedPlaylistsView.js`
+    - [x] Refactor `EditAlbumModal.js` & `BaseModal.js`
+    - [x] Delete `ConfirmationModal.js` (Legacy)
+    - [x] Refactor `PlaylistsView.js` & Renderers (`StagingAreaRenderer`, `DiscographyRenderer`)
+    - [x] Refactor `HomeView.js`
+    - [x] Refactor `RankingView.js` & `InventoryView.js`
+    - [x] Refactor `BlendingMenuView.js`, `ConsolidatedRankingView.js`, `SaveAllView.js`
+    - [x] Refactor remaining low-hanging fruit.
 
 ## Phase 5: Batch Naming Consistency (New)
 *Goal: Fix UX issues with Playlist Naming (Ghost playlists, empty inputs).*

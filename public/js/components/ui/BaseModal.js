@@ -56,8 +56,9 @@ export class BaseModal {
             dataset: { action: closeAction },
             onClick: onClose
         })
-        // Insert icon (getIcon returns HTML string, we need to parse it)
-        closeBtn.innerHTML = getIcon('X', 'w-5 h-5')
+
+        // Insert icon
+        closeBtn.appendChild(SafeDOM.fromHTML(getIcon('X', 'w-5 h-5')))
 
         // Header
         const header = SafeDOM.div({

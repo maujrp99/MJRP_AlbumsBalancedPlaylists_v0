@@ -4,6 +4,7 @@ import { InventoryGridRenderer } from './renderers/InventoryGridRenderer.js'
 import { inventoryStore } from '../stores/inventory.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
+import { SafeDOM } from '../utils/SafeDOM.js'
 
 export class InventoryView extends BaseView {
   constructor() {
@@ -39,123 +40,127 @@ export class InventoryView extends BaseView {
       // Try to use Controller defaults
     }
 
-    const content = InventoryGridRenderer.render(state)
+    const container = SafeDOM.div({ className: 'inventory-view container pb-20' })
+
+    // Header Structure
     const stats = state.stats || {}
 
-    const html = `
-            <div class="inventory-view container pb-20">
-                <header class="view-header mb-8 fade-in">
-                    ${Breadcrumb.render('/inventory')}
-                    
-                     <div class="header-title-row mb-6">
-                        <h1 class="text-4xl font-bold mb-3 flex items-center gap-3">
-                        ${getIcon('Archive', 'w-8 h-8 text-accent-primary')}
-                        My Collection
-                        </h1>
-                        
-                        <div class="stats-row flex flex-wrap items-center gap-4 text-sm md:text-lg">
-                            <span class="text-accent-primary font-semibold">
-                                ${stats.totalCount || 0} albums
-                            </span>
-                            <div class="flex gap-2">
-                                <span class="badge badge-success text-xs">✓ ${stats.ownedCount || 0} Owned</span>
-                                <span class="badge badge-neutral text-xs">${stats.wishlistCount || 0} Wishlist</span>
-                            </div>
-                            <div class="flex items-center gap-3 ml-auto">
-                                <span class="text-sm text-gray-400">Total Owned:</span>
-                                <span class="text-lg font-bold text-accent-primary">
-                                    ${state.viewCurrency === 'USD'
-        ? InventoryGridRenderer.formatPrice(stats.ownedValueUSD, 'USD')
-        : InventoryGridRenderer.formatPrice(stats.ownedValueBRL, 'BRL')}
-                                </span>
-                                <button 
-                                  id="currencySelector"
-                                  class="text-xs px-2 py-1 rounded bg-surface-light hover:bg-surface-lighter border border-surface-light text-gray-300 hover:text-white transition-colors uppercase"
-                                  title="Toggle Currency"
-                                >
-                                  ${state.viewCurrency}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+    // Header Title Row
+    const titleRow = SafeDOM.div({ className: 'header-title-row mb-6' })
 
-                    ${this.renderFilters(state)}
-                </header>
+    const h1 = SafeDOM.h1({ className: 'text-4xl font-bold mb-3 flex items-center gap-3' })
+    h1.appendChild(SafeDOM.fromHTML(getIcon('Archive', 'w-8 h-8 text-accent-primary')))
+    h1.appendChild(SafeDOM.text(' My Collection'))
 
-                <div id="inventory-grid-container">
-                    ${content}
-                </div>
-            </div>
-        `
+    const statsRow = SafeDOM.div({ className: 'stats-row flex flex-wrap items-center gap-4 text-sm md:text-lg' })
+
+    statsRow.appendChild(SafeDOM.span({ className: 'text-accent-primary font-semibold' }, `${stats.totalCount || 0} albums`))
+
+    const badges = SafeDOM.div({ className: 'flex gap-2' }, [
+      SafeDOM.span({ className: 'badge badge-success text-xs' }, `✓ ${stats.ownedCount || 0} Owned`),
+      SafeDOM.span({ className: 'badge badge-neutral text-xs' }, `${stats.wishlistCount || 0} Wishlist`)
+    ])
+    statsRow.appendChild(badges)
+
+    const valueSection = SafeDOM.div({ className: 'flex items-center gap-3 ml-auto' })
+    valueSection.appendChild(SafeDOM.span({ className: 'text-sm text-gray-400' }, 'Total Owned:'))
+
+    const valueText = state.viewCurrency === 'USD'
+      ? InventoryGridRenderer.formatPrice(stats.ownedValueUSD, 'USD')
+      : InventoryGridRenderer.formatPrice(stats.ownedValueBRL, 'BRL')
+
+    valueSection.appendChild(SafeDOM.span({ className: 'text-lg font-bold text-accent-primary' }, valueText))
+
+    valueSection.appendChild(SafeDOM.button({
+      id: 'currencySelector',
+      className: 'text-xs px-2 py-1 rounded bg-surface-light hover:bg-surface-lighter border border-surface-light text-gray-300 hover:text-white transition-colors uppercase',
+      title: 'Toggle Currency',
+      onClick: () => this.controller.handleCurrencyChange() // Direct binding
+    }, state.viewCurrency))
+
+    statsRow.appendChild(valueSection)
+    titleRow.appendChild(h1)
+    titleRow.appendChild(statsRow)
+
+    const header = SafeDOM.header({ className: 'view-header mb-8 fade-in' }, [
+      SafeDOM.fromHTML(Breadcrumb.render('/inventory')),
+      titleRow,
+      this.renderFilters(state)
+    ])
+
+    container.appendChild(header)
+
+    // Grid Container
+    const gridContainer = SafeDOM.div({ id: 'inventory-grid-container' })
+    // Using fromHTML for the grid content as it comes from Renderer (string based)
+    gridContainer.appendChild(SafeDOM.fromHTML(InventoryGridRenderer.render(state)))
+    container.appendChild(gridContainer)
 
     // If called by Controller (Update), manually update DOM
     if (isUpdate) {
       const app = document.getElementById('app')
       if (app) {
-        app.innerHTML = html
-        this.attachEventListeners()
+        SafeDOM.clear(app)
+        app.appendChild(container)
+        this.attachEventListeners() // Re-attach for delegated events inside grid
       }
     }
 
-    // Always return HTML for Router
-    return html
+    return container
   }
 
   renderFilters(state) {
     const { filters, viewMode } = state
-    return `
-          <div class="filters-section glass-panel p-4 mb-6">
-            <div class="filters-row flex flex-wrap gap-3 items-center">
-              <!-- Search -->
-              <div class="search-bar relative flex-1 min-w-[200px]">
-                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  ${getIcon('Search', 'w-5 h-5')}
-                </span>
-                <input 
-                  type="search" 
-                  id="inventorySearch" 
-                  placeholder="Search collection..."
-                  class="form-control pl-10 w-full"
-                  value="${filters.search || ''}"
-                />
-              </div>
-              
-              <!-- Format Filter -->
-              <div class="filter-dropdown relative">
-                <select id="formatFilter" class="form-control appearance-none cursor-pointer pr-8">
-                  <option value="all">All Formats</option>
-                  <option value="cd" ${filters.format === 'cd' ? 'selected' : ''}>CD</option>
-                  <option value="vinyl" ${filters.format === 'vinyl' ? 'selected' : ''}>Vinyl</option>
-                  <option value="digital" ${filters.format === 'digital' ? 'selected' : ''}>Digital</option>
-                </select>
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                  ${getIcon('ChevronDown', 'w-4 h-4')}
-                </span>
-              </div>
-              
-              <!-- Ownership Filter -->
-              <div class="filter-dropdown relative">
-                <select id="ownershipFilter" class="form-control appearance-none cursor-pointer pr-8">
-                  <option value="all" ${filters.ownership === 'all' ? 'selected' : ''}>All Status</option>
-                  <option value="owned" ${filters.ownership === 'owned' ? 'selected' : ''}>✓ Owned Only</option>
-                  <option value="wishlist" ${filters.ownership === 'wishlist' ? 'selected' : ''}>Wishlist Only</option>
-                </select>
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                  ${getIcon('ChevronDown', 'w-4 h-4')}
-                </span>
-              </div>
-              
-              <!-- View Mode Toggle -->
-              <button 
-                id="toggleViewMode" 
-                class="btn ${viewMode === 'grid' ? 'btn-primary' : 'btn-secondary'}"
-                title="Toggle grid/list view"
-              >
-                ${getIcon(viewMode === 'grid' ? 'Grid' : 'List', 'w-5 h-5')}
-              </button>
-            </div>
-          </div>
-        `
+
+    const container = SafeDOM.div({ className: 'filters-section glass-panel p-4 mb-6' })
+    const row = SafeDOM.div({ className: 'filters-row flex flex-wrap gap-3 items-center' })
+
+    // Search
+    const searchDiv = SafeDOM.div({ className: 'search-bar relative flex-1 min-w-[200px]' })
+    searchDiv.appendChild(SafeDOM.span({ className: 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' }, [SafeDOM.fromHTML(getIcon('Search', 'w-5 h-5'))]))
+    searchDiv.appendChild(SafeDOM.input({
+      type: 'search',
+      id: 'inventorySearch',
+      placeholder: 'Search collection...',
+      className: 'form-control pl-10 w-full',
+      value: filters.search || ''
+    }))
+    row.appendChild(searchDiv)
+
+    // Format Filter
+    const formatDiv = SafeDOM.div({ className: 'filter-dropdown relative' })
+    const formatSelect = SafeDOM.select({ id: 'formatFilter', className: 'form-control appearance-none cursor-pointer pr-8' }, [
+      SafeDOM.option({ value: 'all' }, 'All Formats'),
+      SafeDOM.option({ value: 'cd', selected: filters.format === 'cd' }, 'CD'),
+      SafeDOM.option({ value: 'vinyl', selected: filters.format === 'vinyl' }, 'Vinyl'),
+      SafeDOM.option({ value: 'digital', selected: filters.format === 'digital' }, 'Digital')
+    ])
+    formatDiv.appendChild(formatSelect)
+    formatDiv.appendChild(SafeDOM.span({ className: 'absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400' }, [SafeDOM.fromHTML(getIcon('ChevronDown', 'w-4 h-4'))]))
+    row.appendChild(formatDiv)
+
+    // Ownership Filter
+    const ownershipDiv = SafeDOM.div({ className: 'filter-dropdown relative' })
+    const ownershipSelect = SafeDOM.select({ id: 'ownershipFilter', className: 'form-control appearance-none cursor-pointer pr-8' }, [
+      SafeDOM.option({ value: 'all', selected: filters.ownership === 'all' }, 'All Status'),
+      SafeDOM.option({ value: 'owned', selected: filters.ownership === 'owned' }, '✓ Owned Only'),
+      SafeDOM.option({ value: 'wishlist', selected: filters.ownership === 'wishlist' }, 'Wishlist Only')
+    ])
+    ownershipDiv.appendChild(ownershipSelect)
+    ownershipDiv.appendChild(SafeDOM.span({ className: 'absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400' }, [SafeDOM.fromHTML(getIcon('ChevronDown', 'w-4 h-4'))]))
+    row.appendChild(ownershipDiv)
+
+    // View Mode
+    const viewBtn = SafeDOM.button({
+      id: 'toggleViewMode',
+      className: `btn ${viewMode === 'grid' ? 'btn-primary' : 'btn-secondary'}`,
+      title: 'Toggle grid/list view'
+    })
+    viewBtn.appendChild(SafeDOM.fromHTML(getIcon(viewMode === 'grid' ? 'Grid' : 'List', 'w-5 h-5')))
+    row.appendChild(viewBtn)
+
+    container.appendChild(row)
+    return container
   }
 
   attachEventListeners() {
@@ -165,7 +170,11 @@ export class InventoryView extends BaseView {
       searchInput.addEventListener('input', (e) => {
         this.controller.handleFilterChange('search', e.target.value)
       })
-      // Maintain focus
+      // Maintain focus hack needed because we are replacing DOM on update
+      // In a real VDOM/fine-grained setup this wouldn't be needed.
+      // But since we are full-replacing, the focus is lost.
+      // Ideally update() shouldn't replace entire DOM if only grid changed.
+      // But keeping it simple for now.
       searchInput.focus()
       const val = searchInput.value
       searchInput.value = ''
@@ -186,9 +195,10 @@ export class InventoryView extends BaseView {
       this.controller.handleViewModeChange(current === 'grid' ? 'list' : 'grid')
     })
 
-    document.getElementById('currencySelector')?.addEventListener('click', () => {
-      this.controller.handleCurrencyChange()
-    })
+    // Currency listener already bound in render, but if we used ID selector there:
+    // ... wait, I used onClick in render for currency selector.
+    // But update() re-attaches listeners.
+    // However, duplicate listeners? No, DOM is replaced.
 
     // Grid Delegation for Buttons
     const grid = document.getElementById('inventory-grid-container')
@@ -200,9 +210,6 @@ export class InventoryView extends BaseView {
         const albumId = target.dataset.albumId || target.dataset.id
         if (!albumId) return
 
-        // Check if user clicked a link inside, to avoid double action?
-        // But these are button classes.
-
         // Prioritize Delete/Edit buttons inside the card/row
         if (target.classList.contains('delete-album-btn')) {
           e.stopPropagation()
@@ -211,7 +218,7 @@ export class InventoryView extends BaseView {
           e.stopPropagation()
           this.handleEditWithModal(albumId)
         } else {
-          // Default action is View, unless we clicked an inner interactive element
+          // Default action is View
           this.handleViewWithModal(albumId)
         }
       })

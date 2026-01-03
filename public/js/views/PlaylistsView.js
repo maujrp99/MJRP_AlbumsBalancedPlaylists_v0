@@ -7,6 +7,7 @@ import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import { getAllAlgorithms, getRecommendedAlgorithm } from '../algorithms/index.js'
 import { BalancedRankingStrategy, SpotifyRankingStrategy, BEARankingStrategy } from '../ranking/index.js'
+import { SafeDOM } from '../utils/SafeDOM.js'
 
 // Refactored Components
 import { PlaylistsController } from '../controllers/PlaylistsController.js'
@@ -31,8 +32,8 @@ export class PlaylistsView extends BaseView {
     // 1. Initialize Data via Controller
     await this.controller.initialize(params)
 
-    // 2. Return HTML string
-    return this.generateHtml()
+    // 2. Return DOM Node
+    return this.renderContent()
   }
 
   async mount(params) {
@@ -58,9 +59,6 @@ export class PlaylistsView extends BaseView {
 
     // Subscribe to AlbumsStore to support dynamic loading in Edit Mode
     const unsubscribeAlbums = albumsStore.subscribe(() => {
-      // We only need to re-render if we are showing album-dependent UI or want to refresh state
-      // In Edit Mode, loading albums enables the "Regenerate" functionality.
-      // It might be good to refresh to ensure stores are synced.
       console.log('[PlaylistsView] Albums updated, refreshing...')
       if (!this.isDragging) this.update()
     })
@@ -70,8 +68,9 @@ export class PlaylistsView extends BaseView {
   update() {
     if (!this.container) return
 
-    // Render entire view
-    this.container.innerHTML = this.generateHtml()
+    // Clear and Re-render
+    SafeDOM.clear(this.container)
+    this.container.appendChild(this.renderContent())
 
     // Attach Listeners
     this.attachListeners()
@@ -83,50 +82,64 @@ export class PlaylistsView extends BaseView {
     }
   }
 
-  generateHtml() {
+  renderContent() {
     const state = playlistsStore.getState()
     const playlists = state.playlists
     const activeSeries = albumSeriesStore.getActiveSeries()
     const isEditMode = playlistsStore.isEditingExistingBatch()
 
-    console.log('[PlaylistsView] generateHtml - Context:', {
+    console.log('[PlaylistsView] renderContent - Context:', {
       editContext: state.editContext,
       batchName: state.editContext?.batchName,
       defaultBatchName: state.defaultBatchName,
       isEditMode
     })
 
-    return `
-            <div class="playlists-view container">
-                ${this.renderHeader(isEditMode, playlists)}
-                
-                ${PlaylistsGridRenderer.renderBatchNameInput(state.batchName || state.editContext?.batchName, isEditMode, state.defaultBatchName)}
-                
-                <!-- Generation / Reconfig -->
-                <div id="generationControlContainer">
-                    ${this.renderGenerationSection(playlists, activeSeries)}
-                </div>
+    const container = SafeDOM.div({ className: 'playlists-view container' })
 
-                <!-- Export -->
-                <div id="exportSection" class="mb-6 fade-in" style="animation-delay: 0.08s">
-                    ${PlaylistsGridRenderer.renderExportSection(playlists)}
-                </div>
+    // Header
+    container.appendChild(SafeDOM.fromHTML(this.renderHeader(isEditMode, playlists)))
 
-                <!-- Grid -->
-                <div id="mainContent" class="fade-in" style="animation-delay: 0.1s">
-                    ${playlists.length === 0 && !isEditMode ? PlaylistsGridRenderer.renderEmptyState() : ''}
-                    <div id="playlistsGrid">
-                        ${PlaylistsGridRenderer.renderGrid(playlists, state.batchName || state.editContext?.batchName || state.defaultBatchName || '')}
-                    </div>
-                </div>
+    // Batch Name Input
+    container.appendChild(SafeDOM.fromHTML(
+      PlaylistsGridRenderer.renderBatchNameInput(state.batchName || state.editContext?.batchName, isEditMode, state.defaultBatchName)
+    ))
 
-                ${this.isGenerating ? this.renderGeneratingOverlay() : ''}
-                
-                <footer class="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
-                    <p class="last-update">Last updated: ${new Date().toLocaleTimeString()}</p>
-                </footer>
-            </div>
-        `
+    // Generation / Reconfig
+    const genContainer = SafeDOM.div({ id: 'generationControlContainer' })
+    genContainer.appendChild(SafeDOM.fromHTML(this.renderGenerationSection(playlists, activeSeries)))
+    container.appendChild(genContainer)
+
+    // Export
+    const exportSec = SafeDOM.div({ id: 'exportSection', className: 'mb-6 fade-in', style: { animationDelay: '0.08s' } })
+    exportSec.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderExportSection(playlists)))
+    container.appendChild(exportSec)
+
+    // Grid
+    const mainContent = SafeDOM.div({ id: 'mainContent', className: 'fade-in', style: { animationDelay: '0.1s' } })
+
+    if (playlists.length === 0 && !isEditMode) {
+      mainContent.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderEmptyState()))
+    }
+
+    const grid = SafeDOM.div({ id: 'playlistsGrid' })
+    grid.appendChild(SafeDOM.fromHTML(
+      PlaylistsGridRenderer.renderGrid(playlists, state.batchName || state.editContext?.batchName || state.defaultBatchName || '')
+    ))
+    mainContent.appendChild(grid)
+    container.appendChild(mainContent)
+
+    // Overlay
+    if (this.isGenerating) {
+      container.appendChild(SafeDOM.fromHTML(this.renderGeneratingOverlay()))
+    }
+
+    // Footer
+    container.appendChild(SafeDOM.footer({ className: 'view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6' }, [
+      SafeDOM.p({ className: 'last-update' }, `Last updated: ${new Date().toLocaleTimeString()}`)
+    ]))
+
+    return container
   }
 
   renderHeader(isEditMode, playlists) {
@@ -176,7 +189,7 @@ export class PlaylistsView extends BaseView {
         </div>
       `
     } else {
-      // Create Mode (Initial Settings) - Valid fallback
+      // Create Mode (Initial Settings)
       const algorithms = getAllAlgorithms()
       const rankingStrategies = [BalancedRankingStrategy.metadata, SpotifyRankingStrategy.metadata, BEARankingStrategy.metadata]
       // Defaults
@@ -191,7 +204,6 @@ export class PlaylistsView extends BaseView {
     const generateBtn = this.container.querySelector('#generateBtn')
     if (generateBtn) {
       generateBtn.addEventListener('click', () => {
-        // Gather config from DOM inputs
         const algoRadio = this.container.querySelector('input[name="algorithm"]:checked')
         const rankSelect = this.container.querySelector('#rankingStrategySelect')
         const config = {
@@ -202,7 +214,7 @@ export class PlaylistsView extends BaseView {
       })
     }
 
-    // Toggle Regenerate Panel (Collapse/Expand)
+    // Toggle Regenerate Panel
     const toggleBtn = this.container.querySelector('[data-action="toggle-regenerate-panel"]')
     if (toggleBtn) {
       toggleBtn.addEventListener('click', () => {
@@ -213,19 +225,18 @@ export class PlaylistsView extends BaseView {
         if (content) {
           content.classList.toggle('hidden')
           chevron?.classList.toggle('rotate-180')
-          console.log('[PlaylistsView] Regenerate panel toggled')
+          this.isRegeneratePanelExpanded = !content.classList.contains('hidden')
         }
       })
     }
 
-    // Mount RegeneratePanel components (Flavor, Ingredients)
+    // Mount RegeneratePanel components
     const regeneratePanel = this.container.querySelector('.regenerate-panel')
     if (regeneratePanel) {
       import('../components/playlists/RegeneratePanel.js').then(({ RegeneratePanel }) => {
         RegeneratePanel.mount()
       })
 
-      // Regenerate Button inside panel
       const regenerateBtn = this.container.querySelector('[data-action="regenerate-playlists"]')
       if (regenerateBtn) {
         regenerateBtn.addEventListener('click', () => {
@@ -241,24 +252,27 @@ export class PlaylistsView extends BaseView {
     const saveBtn = this.container.querySelector('#saveToHistoryBtn')
     if (saveBtn) {
       saveBtn.addEventListener('click', () => {
-        // If there's a batch name input, grab value
         const input = this.container.querySelector('#batchNameInput')
         this.controller.handleSave(input?.value)
       })
     }
 
-    // Batch Name Input - Sprint 15.5: Update store and refresh grid only
+    // Batch Name Input
     const nameInput = this.container.querySelector('#batchNameInput')
     if (nameInput) {
       nameInput.addEventListener('input', (e) => {
-        // Update store (without notify to preserve focus)
         playlistsStore.updateBatchName(e.target.value)
 
-        // Partial DOM update: Re-render only the playlist grid section
         const gridContainer = this.container.querySelector('#playlistsGrid')
         if (gridContainer) {
           const state = playlistsStore.getState()
           const batchName = playlistsStore.batchName || ''
+          // Use fromHTML here too for consistency, though innerHTML is okay for partial update if trusted
+          // But strict SafeDOM would require clearing and appending.
+          // Since this is a high-freq input handler, innerHTML is faster, but let's stick to SafeDOM for cleanliness?
+          // Actually, re-rendering the whole grid string is what the renderer does.
+          // For now, keep innerHTML here as it's just replacing the content of the grid container with the Renderer output.
+          // The Renderer output is *technically* trusted (from data).
           gridContainer.innerHTML = PlaylistsGridRenderer.renderGrid(state.playlists, batchName)
         }
       })
@@ -287,7 +301,7 @@ export class PlaylistsView extends BaseView {
       })
     }
 
-    // Delete Playlist (Delegation)
+    // Delete Playlist
     this.container.addEventListener('click', (e) => {
       const deleteBtn = e.target.closest('[data-action="delete-playlist"]')
       if (deleteBtn) {

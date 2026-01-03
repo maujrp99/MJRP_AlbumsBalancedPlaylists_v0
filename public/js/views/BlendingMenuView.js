@@ -20,6 +20,7 @@ import { BlendSeriesSelector } from '../components/blend/BlendSeriesSelector.js'
 import { BlendFlavorCard } from '../components/blend/BlendFlavorCard.js'
 import { BlendIngredientsPanel } from '../components/blend/BlendIngredientsPanel.js'
 import { blendingController } from '../controllers/BlendingController.js'
+import { SafeDOM } from '../utils/SafeDOM.js'
 
 export class BlendingMenuView extends BaseView {
     constructor() {
@@ -44,100 +45,100 @@ export class BlendingMenuView extends BaseView {
         // Progressive disclosure state
         const step1Complete = !!this.selectedSeries
         const step2Complete = !!this.selectedFlavor
-        // ALL algorithms now show Step 3 for duration selection
         const algorithmHasParams = true
-        const step3Skipped = false // Never skip Step 3
+        const step3Skipped = false
         const step3Complete = step2Complete && this.config.duration !== null
 
-        return `
-            <div class="container mx-auto px-4 py-8 max-w-5xl">
-                <!-- Header -->
-                <div class="text-center mb-8">
-                    <div class="inline-flex items-center gap-3 mb-3">
-                        <span class="text-4xl">🍹</span>
-                        <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">
-                            The Blending Menu
-                        </h1>
-                    </div>
-                    <p class="text-muted text-lg mb-6">"Your Music, Your Recipe"</p>
-                    
-                    <!-- Progressive Disclosure Stepper -->
-                    <div class="inline-flex items-center gap-2 md:gap-4 px-4 py-3 rounded-2xl bg-white/5 border border-white/10">
-                        ${this.renderStepper()}
-                    </div>
-                </div>
+        const container = SafeDOM.div({ className: 'container mx-auto px-4 py-8 max-w-5xl' })
 
-                <!-- Step 1: Choose Your Blend - Always visible -->
-                <section class="glass-panel rounded-2xl p-6 mb-6">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="text-2xl">🍹</span>
-                        <h2 class="text-xl font-bold">Choose Your Blend</h2>
-                        <span class="text-xs text-muted px-2 py-1 bg-white/5 rounded-full">Step 1</span>
-                    </div>
-                    <div id="blend-series-selector"></div>
-                </section>
+        // Header
+        const header = SafeDOM.div({ className: 'text-center mb-8' })
 
-                <!-- Step 2: Choose Your Flavor - Visible only when Step 1 complete -->
-                ${step1Complete ? `
-                <section class="glass-panel rounded-2xl p-6 mb-6 animate-fadeIn">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="text-2xl">🍬</span>
-                        <h2 class="text-xl font-bold">Choose Your Flavor</h2>
-                        <span class="text-xs text-muted px-2 py-1 bg-white/5 rounded-full">Step 2</span>
-                    </div>
-                    <div id="blend-flavor-cards"></div>
-                </section>
-                ` : `
-                <section class="glass-panel rounded-2xl p-6 mb-6 opacity-40">
-                    <div class="flex items-center gap-3">
-                        <span class="text-2xl">🔒</span>
-                        <h2 class="text-xl font-medium text-muted">Choose Your Flavor</h2>
-                        <span class="text-xs text-muted px-2 py-1 bg-white/5 rounded-full">Step 2</span>
-                    </div>
-                    <p class="text-sm text-muted mt-2">Complete Step 1 to unlock</p>
-                </section>
-                `}
+        const titleRow = SafeDOM.div({ className: 'inline-flex items-center gap-3 mb-3' })
+        titleRow.appendChild(SafeDOM.span({ className: 'text-4xl' }, '🍹'))
+        titleRow.appendChild(SafeDOM.h1({ className: 'text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent' }, 'The Blending Menu'))
+        header.appendChild(titleRow)
 
-                <!-- Step 3: Pick Your Ingredients - Only show if algorithm has params -->
-                ${step2Complete && algorithmHasParams ? `
-                <section class="glass-panel rounded-2xl p-6 mb-6 animate-fadeIn">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="text-2xl">🥗</span>
-                        <h2 class="text-xl font-bold">Pick Your Ingredients</h2>
-                        <span class="text-xs text-muted px-2 py-1 bg-white/5 rounded-full">Step 3</span>
-                    </div>
-                    <div id="blend-ingredients-panel"></div>
-                </section>
-                ` : ''}
+        header.appendChild(SafeDOM.p({ className: 'text-muted text-lg mb-6' }, '"Your Music, Your Recipe"'))
 
-                <!-- Step 4: Blend It! - Visible when Step 2 complete (and Step 3 if applicable) -->
-                ${(step2Complete && step3Skipped) || step3Complete ? `
-                <section class="glass-panel rounded-2xl p-6 border-2 border-orange-400/30 animate-fadeIn">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="text-2xl">🎛️</span>
-                        <h2 class="text-xl font-bold">Blend It!</h2>
-                        <span class="text-xs text-muted px-2 py-1 bg-white/5 rounded-full">${algorithmHasParams ? 'Step 4' : 'Step 3'}</span>
-                    </div>
-                    <div id="blend-generate-section" class="text-center py-4">
-                        ${this.renderGenerateButton()}
-                    </div>
-                </section>
-                ` : step1Complete && !step2Complete ? `
-                <section class="glass-panel rounded-2xl p-6 opacity-40">
-                    <div class="flex items-center gap-3">
-                        <span class="text-2xl">🔒</span>
-                        <h2 class="text-xl font-medium text-muted">Blend It!</h2>
-                        <span class="text-xs text-muted px-2 py-1 bg-white/5 rounded-full">${algorithmHasParams ? 'Step 4' : 'Step 3'}</span>
-                    </div>
-                    <p class="text-sm text-muted mt-2">Complete previous steps to unlock</p>
-                </section>
-                ` : ''}
+        // Progressive Disclosure Stepper
+        const stepperContainer = SafeDOM.div({ className: 'inline-flex items-center gap-2 md:gap-4 px-4 py-3 rounded-2xl bg-white/5 border border-white/10' })
+        stepperContainer.appendChild(SafeDOM.fromHTML(this.renderStepper()))
+        header.appendChild(stepperContainer)
 
-                <!-- Results Area -->
-                <section id="blend-results" class="mt-8 hidden">
-                </section>
-            </div>
-        `
+        container.appendChild(header)
+
+        // Step 1: Choose Your Blend - Always visible
+        const step1 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 mb-6' })
+        const step1Header = SafeDOM.div({ className: 'flex items-center gap-3 mb-4' }, [
+            SafeDOM.span({ className: 'text-2xl' }, '🍹'),
+            SafeDOM.h2({ className: 'text-xl font-bold' }, 'Choose Your Blend'),
+            SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, 'Step 1')
+        ])
+        step1.appendChild(step1Header)
+        step1.appendChild(SafeDOM.div({ id: 'blend-series-selector' }))
+        container.appendChild(step1)
+
+        // Step 2: Choose Your Flavor
+        if (step1Complete) {
+            const step2 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 mb-6 animate-fadeIn' })
+            step2.appendChild(SafeDOM.div({ className: 'flex items-center gap-3 mb-4' }, [
+                SafeDOM.span({ className: 'text-2xl' }, '🍬'),
+                SafeDOM.h2({ className: 'text-xl font-bold' }, 'Choose Your Flavor'),
+                SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, 'Step 2')
+            ]))
+            step2.appendChild(SafeDOM.div({ id: 'blend-flavor-cards' }))
+            container.appendChild(step2)
+        } else {
+            const step2 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 mb-6 opacity-40' })
+            step2.appendChild(SafeDOM.div({ className: 'flex items-center gap-3' }, [
+                SafeDOM.span({ className: 'text-2xl' }, '🔒'),
+                SafeDOM.h2({ className: 'text-xl font-medium text-muted' }, 'Choose Your Flavor'),
+                SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, 'Step 2')
+            ]))
+            step2.appendChild(SafeDOM.p({ className: 'text-sm text-muted mt-2' }, 'Complete Step 1 to unlock'))
+            container.appendChild(step2)
+        }
+
+        // Step 3: Pick Your Ingredients
+        if (step2Complete && algorithmHasParams) {
+            const step3 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 mb-6 animate-fadeIn' })
+            step3.appendChild(SafeDOM.div({ className: 'flex items-center gap-3 mb-4' }, [
+                SafeDOM.span({ className: 'text-2xl' }, '🥗'),
+                SafeDOM.h2({ className: 'text-xl font-bold' }, 'Pick Your Ingredients'),
+                SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, 'Step 3')
+            ]))
+            step3.appendChild(SafeDOM.div({ id: 'blend-ingredients-panel' }))
+            container.appendChild(step3)
+        }
+
+        // Step 4: Blend It!
+        if ((step2Complete && step3Skipped) || step3Complete) {
+            const step4 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 border-2 border-orange-400/30 animate-fadeIn' })
+            step4.appendChild(SafeDOM.div({ className: 'flex items-center gap-3 mb-4' }, [
+                SafeDOM.span({ className: 'text-2xl' }, '🎛️'),
+                SafeDOM.h2({ className: 'text-xl font-bold' }, 'Blend It!'),
+                SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, algorithmHasParams ? 'Step 4' : 'Step 3')
+            ]))
+            const genSection = SafeDOM.div({ id: 'blend-generate-section', className: 'text-center py-4' })
+            genSection.appendChild(SafeDOM.fromHTML(this.renderGenerateButton()))
+            step4.appendChild(genSection)
+            container.appendChild(step4)
+        } else if (step1Complete && !step2Complete) {
+            const step4 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 opacity-40' })
+            step4.appendChild(SafeDOM.div({ className: 'flex items-center gap-3' }, [
+                SafeDOM.span({ className: 'text-2xl' }, '🔒'),
+                SafeDOM.h2({ className: 'text-xl font-medium text-muted' }, 'Blend It!'),
+                SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, algorithmHasParams ? 'Step 4' : 'Step 3')
+            ]))
+            step4.appendChild(SafeDOM.p({ className: 'text-sm text-muted mt-2' }, 'Complete previous steps to unlock'))
+            container.appendChild(step4)
+        }
+
+        // Results Area
+        container.appendChild(SafeDOM.section({ id: 'blend-results', className: 'mt-8 hidden' }))
+
+        return container
     }
 
     /**
@@ -160,7 +161,6 @@ export class BlendingMenuView extends BaseView {
         return steps.map((step, idx) => {
             const isActive = step.num === currentStep
             const isDone = step.num < currentStep
-            const isFuture = step.num > currentStep
 
             const stepClass = isDone
                 ? 'bg-green-500 text-white border-green-500'
@@ -200,7 +200,6 @@ export class BlendingMenuView extends BaseView {
         const entityLabel = entityType.charAt(0).toUpperCase() + entityType.slice(1, -1) // albums -> Album
         const isMultiple = this.config.outputMode === 'multiple'
         const plural = isMultiple ? 's' : ''
-
         const isReady = this.selectedSeries && this.selectedFlavor
 
         return `
@@ -241,14 +240,14 @@ export class BlendingMenuView extends BaseView {
             onEntityChange: (entity) => this.fullUpdate(),
             onSeriesSelect: (series) => {
                 this.selectedSeries = series
-                this.fullUpdate() // Trigger full re-render for progressive disclosure
+                this.fullUpdate()
             }
         })
 
         this.flavorCard = new BlendFlavorCard({
             onFlavorSelect: (flavor) => {
                 this.selectedFlavor = flavor
-                this.fullUpdate() // Trigger full re-render for progressive disclosure
+                this.fullUpdate()
             }
         })
 
@@ -273,11 +272,15 @@ export class BlendingMenuView extends BaseView {
      * Full update - re-render entire view for progressive disclosure
      */
     async fullUpdate() {
-        const container = this.container || document.getElementById('app')
-        if (!container) return
+        const navContainer = document.getElementById('app')
+        if (!navContainer) return
 
-        // Re-render entire view
-        container.innerHTML = await this.render()
+        // Wait for render
+        const newContent = await this.render()
+
+        // Use SafeDOM.clear and appendChild
+        SafeDOM.clear(navContainer)
+        navContainer.appendChild(newContent)
 
         // Re-mount components
         this.seriesSelector.render()
@@ -301,7 +304,8 @@ export class BlendingMenuView extends BaseView {
         // Update generate button
         const section = document.getElementById('blend-generate-section')
         if (section) {
-            section.innerHTML = this.renderGenerateButton()
+            SafeDOM.clear(section)
+            section.appendChild(SafeDOM.fromHTML(this.renderGenerateButton()))
             this.attachGenerateListener()
         }
     }
@@ -312,7 +316,8 @@ export class BlendingMenuView extends BaseView {
     updateStepper() {
         const stepperContainer = document.querySelector('.inline-flex.items-center.gap-2')
         if (stepperContainer) {
-            stepperContainer.innerHTML = this.renderStepper()
+            SafeDOM.clear(stepperContainer)
+            stepperContainer.appendChild(SafeDOM.fromHTML(this.renderStepper()))
         }
     }
 
@@ -328,7 +333,6 @@ export class BlendingMenuView extends BaseView {
 
     /**
      * Handle playlist generation
-     * Loads albums from series, sets in stores, navigates to PlaylistsView
      */
     async handleGenerate() {
         if (!this.selectedSeries || !this.selectedFlavor) return
@@ -378,12 +382,13 @@ export class BlendingMenuView extends BaseView {
         if (!container) return
 
         container.classList.remove('hidden')
-        container.innerHTML = `
+        SafeDOM.clear(container)
+        container.appendChild(SafeDOM.fromHTML(`
             <div class="glass-panel rounded-2xl p-6 text-center">
                 <div class="animate-spin rounded-full h-10 w-10 border-3 border-orange-400 border-t-transparent mx-auto mb-4"></div>
                 <p class="text-muted">${message}</p>
             </div>
-        `
+        `))
     }
 
     /**
@@ -394,7 +399,8 @@ export class BlendingMenuView extends BaseView {
         if (!container) return
 
         container.classList.remove('hidden')
-        container.innerHTML = `
+        SafeDOM.clear(container)
+        container.appendChild(SafeDOM.fromHTML(`
             <div class="glass-panel rounded-2xl p-6">
                 <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
                     ${getIcon('CheckCircle', 'w-6 h-6 text-green-400')}
@@ -417,7 +423,7 @@ export class BlendingMenuView extends BaseView {
                     </button>
                 </div>
             </div>
-        `
+        `))
     }
 
     /**
@@ -428,14 +434,15 @@ export class BlendingMenuView extends BaseView {
         if (!container) return
 
         container.classList.remove('hidden')
-        container.innerHTML = `
+        SafeDOM.clear(container)
+        container.appendChild(SafeDOM.fromHTML(`
             <div class="glass-panel rounded-2xl p-6 border-2 border-red-400/30">
                 <div class="flex items-center gap-3 text-red-400">
                     ${getIcon('AlertCircle', 'w-6 h-6')}
                     <span class="font-semibold">${message}</span>
                 </div>
             </div>
-        `
+        `))
     }
 }
 
