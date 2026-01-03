@@ -58,6 +58,53 @@
 
 ## Current Debugging Session
 
+
+### Issue #121: SeriesView Component Initialization Failure
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-03 17:30
+**Resolved**: 2026-01-03 17:45
+**Severity**: CRITICAL (Regression / App Crash)
+**Type**: Class Initialization / SafeDOM Migration
+**Component**: `SeriesView.js`
+**Sprint**: 16 Phase 4
+
+#### Problem
+During regression testing, clicking "Initialize Load Sequence" caused a `TypeError: Cannot set properties of undefined (setting 'header')`. This occurred because `this.components` was undefined in the `SeriesView` instance.
+
+#### Root Cause
+The `SeriesView` class lacked a `constructor` to initialize the `this.components` object. In the previous version, this might have been handled differently or inherited, but the SafeDOM refactor made explicit initialization necessary.
+
+#### Solution
+Added a constructor to `SeriesView.js` to initialize `this.components = {}` and other default state.
+
+#### Files Modified
+- `public/js/views/SeriesView.js`
+
+---
+
+### Issue #120: SafeDOM Missing Semantic Tags
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-03 17:00
+**Resolved**: 2026-01-03 17:15
+**Severity**: HIGH (Render Failure)
+**Type**: API Omission
+**Component**: `SafeDOM.js`
+**Sprint**: 16 Phase 4
+
+#### Problem
+Regression test failed immediatey with `SafeDOM.aside is not a function` (and similar for `header`, `footer`).
+
+#### Root Cause
+The `SafeDOM.js` utility class was missing convenience methods for semantic HTML5 tags (`aside`, `header`, `footer`, `nav`, `section`, `article`, `main`), which were introduced in the SafeDOM refactor of `HomeView` and others.
+
+#### Solution
+Added the missing static methods to `SafeDOM` class.
+
+#### Files Modified
+- `public/js/utils/SafeDOM.js`
+
+---
+
 ### Issue #116: Apple Music Export 500 Error (Invalid Track IDs)
 **Status**: ✅ **RESOLVED**
 **Date**: 2026-01-02 15:00

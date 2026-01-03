@@ -37,7 +37,7 @@
 ## Phase 4: Final Security Sweep
 *Goal: Reach < 25 innerHTML sinks.*
 
-- [ ] **Audit Sinks**:
+- [x] **Audit Sinks**:
     - [x] Run `grep -r "innerHTML" public/js/` (Initial count > 40)
     - [x] Refactor `SeriesView.js` (Shell + Router support)
     - [x] Refactor `SavedPlaylistsView.js`

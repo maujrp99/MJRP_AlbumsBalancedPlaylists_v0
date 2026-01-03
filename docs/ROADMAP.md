@@ -8,30 +8,37 @@
 
 ## 🚧 Current Sprint
 
-### Sprint 16: Cleanup & Batch Naming Feature
-**Goal**: Batch naming integration and legacy cleanup
+## 🚧 Current Sprint
+
+### Sprint 17: Architectural Modularization (Frontend Specialization)
+**Goal**: Decouple "Thick Client" Monoliths into distinct Controllers and Services to improve maintainability using "Thin Orchestrator" pattern.
 **Duration**: 1 week
 **Priority**: High
-**Status**: 🚀 **IN PROGRESS**
-**Spec**: `docs/technical/specs/sprint16-cleanup`
+**Status**: 📋 **PLANNING**
+**Spec**: TBD
 
-#### Objectives
-- [ ] **Batch Naming**: Integrate batch name into playlist titles and exports
-- [ ] **Modals Killer**: Replace `Modals.js` with `SafeDOM` components and `DialogService`
-- [ ] **Component Consolidation**: Standardize on `Card` and `TrackRow`
-- [ ] **Clean Data Flows**: Remove duplicate logic from `SavedPlaylistsView`
+
 
 ---
 
 ## 🔮 Upcoming Sprints
 
-### Sprint 17: Architectural Modularization (Frontend Specialization)
-**Goal**: Decouple "Thick Client" Monoliths into distinct Controllers and Services to improve maintainability without moving logic to backend.
-**Focus**:
-- **SeriesView Refactor**: Split 500+ LOC monolith into `SeriesController` (Logic), `SeriesFilterService` (Filtering), and Dumb View.
-- **MusicKitService**: Split God Service (692 LOC) into Auth, Catalog, and Library services.
-- **CurationEngine**: Implement Strategy Pattern and **Variable Top N Parametrization** (Top 1..N).
-- **Data Normalization Layer**: Ensure API returns "clean" data to reduce frontend patching code.
+
+---
+
+## ✅ Completed Sprints (Reverse Chronological)
+
+### Sprint 16: Cleanup & Batch Naming Feature (Jan 2026) - DONE ✅
+**Delivered**: 2026-01-03 (v3.16.0)
+
+**Deliverables**:
+- ✅ **Batch Naming Integration**: Consistent naming across create/edit/export flows.
+- ✅ **SafeDOM Migration**: Eliminated all innerHTML sinks (>50).
+- ✅ **Modals Killer**: Replaced legacy Modals.js with DialogService.
+- ✅ **Context-Aware Loading**: Fixed Series cross-contamination bug (ARCH-14).
+- ✅ **Component Consolidation**: Removed BatchGroupCard/PlaylistCard legacy code.
+
+
 
 ---
 

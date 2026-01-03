@@ -36,9 +36,9 @@
 | [SavedPlaylistsView.js](file:///public/js/views/SavedPlaylistsView.js) | View saved batches | 31KB | ✅ |
 | [InventoryView.js](file:///public/js/views/InventoryView.js) | Personal collection | 30KB | ✅ |
 | [EditPlaylistView.js](file:///public/js/views/EditPlaylistView.js) | Edit existing batch | 22KB | ✅ |
-| [ConsolidatedRankingView.js](file:///public/js/views/ConsolidatedRankingView.js) | Cross-album ranking | 11KB | ✅ SafeDOM |
-| [RankingView.js](file:///public/js/views/RankingView.js) | Single album ranking | 8KB | ✅ SafeDOM |
-| [SaveAllView.js](file:///public/js/views/SaveAllView.js) | Data migration | 6KB | ✅ |
+| [ConsolidatedRankingView.js](file:///public/js/views/ConsolidatedRankingView.js) | Cross-album ranking | 11KB | ✅ SafeDOM (Node) |
+| [RankingView.js](file:///public/js/views/RankingView.js) | Single album ranking | 8KB | ✅ SafeDOM (Node) |
+| [SaveAllView.js](file:///public/js/views/SaveAllView.js) | Data migration | 6KB | ✅ SafeDOM (Node) |
 | [BaseView.js](file:///public/js/views/BaseView.js) | View base class | 3KB | ✅ |
 
 #### View Architecture
@@ -229,6 +229,7 @@ Usage: `getAlgorithmById('id').generate(...)`
 **Key API**:
 - `create(tag, props, children)`: Factory method
 - `div(props, children)`, `span(props, children)`, etc.
+- `header()`, `aside()`, `section()`, etc. (Semantic Tags)
 - `renderHTML(componentProps)`: Adapter pattern for legacy string support
 
 #### Component Updates (Sprint 15)
