@@ -31,7 +31,27 @@ export const SafeDOM = {
      * @returns {HTMLElement} The created DOM element
      */
     create(tag, props = {}, children = null) {
-        const el = document.createElement(tag);
+        // Standard HTML creation
+        return this._createWithFactory(tag, props, children, (t) => document.createElement(t));
+    },
+
+    /**
+     * Create Namespaced Element (e.g. SVG)
+     * @param {string} namespace - URI (e.g., 'http://www.w3.org/2000/svg')
+     * @param {string} tag 
+     * @param {Object} props 
+     * @param {*} children 
+     */
+    createNS(namespace, tag, props = {}, children = null) {
+        return this._createWithFactory(tag, props, children, (t) => document.createElementNS(namespace, t));
+    },
+
+    /**
+     * Internal factory to share logic between standard and namespaced creation
+     * @private
+     */
+    _createWithFactory(tag, props, children, factoryFn) {
+        const el = factoryFn(tag);
 
         // Process props
         if (props && typeof props === 'object') {
@@ -39,7 +59,12 @@ export const SafeDOM = {
                 if (val === null || val === undefined) return;
 
                 if (key === 'className') {
-                    el.className = val;
+                    // SVG uses classList or setAttribute('class', ...) - className property behaves differently on SVGElement
+                    if (el instanceof SVGElement) {
+                        el.setAttribute('class', val);
+                    } else {
+                        el.className = val;
+                    }
                 } else if (key === 'style' && typeof val === 'object') {
                     Object.assign(el.style, val);
                 } else if (key === 'dataset' && typeof val === 'object') {
@@ -49,17 +74,13 @@ export const SafeDOM = {
                         }
                     });
                 } else if (key.startsWith('on') && typeof val === 'function') {
-                    // Event handlers: onClick -> click, onMouseEnter -> mouseenter
                     const eventName = key.substring(2).toLowerCase();
                     el.addEventListener(eventName, val);
                 } else if (key === 'htmlFor') {
-                    // Special case for label's 'for' attribute
                     el.setAttribute('for', val);
                 } else if (typeof val === 'boolean') {
-                    // Boolean attributes (disabled, checked, etc.)
                     if (val) el.setAttribute(key, '');
                 } else {
-                    // Standard attributes
                     el.setAttribute(key, String(val));
                 }
             });
@@ -131,6 +152,14 @@ export const SafeDOM = {
     tr(props, children) { return this.create('tr', props, children); },
     th(props, children) { return this.create('th', props, children); },
     td(props, children) { return this.create('td', props, children); },
+
+    // SVG Support
+    svg(props, children) { return this.createNS('http://www.w3.org/2000/svg', 'svg', props, children); },
+    path(props, children) { return this.createNS('http://www.w3.org/2000/svg', 'path', props, children); },
+    circle(props, children) { return this.createNS('http://www.w3.org/2000/svg', 'circle', props, children); },
+    rect(props, children) { return this.createNS('http://www.w3.org/2000/svg', 'rect', props, children); },
+    polyline(props, children) { return this.createNS('http://www.w3.org/2000/svg', 'polyline', props, children); },
+    line(props, children) { return this.createNS('http://www.w3.org/2000/svg', 'line', props, children); },
 
     // ============================================================
     // Utility Methods

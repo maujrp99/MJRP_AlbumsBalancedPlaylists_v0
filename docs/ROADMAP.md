@@ -25,12 +25,13 @@
 
 ## 🔮 Upcoming Sprints
 
-### Sprint 17: Architectural Modularization (God Class Refactor)
-**Goal**: Break down monolithic services identified in code assessment.
+### Sprint 17: Architectural Modularization (Frontend Specialization)
+**Goal**: Decouple "Thick Client" Monoliths into distinct Controllers and Services to improve maintainability without moving logic to backend.
 **Focus**:
-- **MusicKitService**: Split into Auth, Catalog, Library services.
-- **Curation Engine**: Implement Strategy Pattern for algorithms.
-- **Store Cleanup**: Fix `albumSeries.js` duplication.
+- **SeriesView Refactor**: Split 500+ LOC monolith into `SeriesController` (Logic), `SeriesFilterService` (Filtering), and Dumb View.
+- **MusicKitService**: Split God Service (692 LOC) into Auth, Catalog, and Library services.
+- **CurationEngine**: Implement Strategy Pattern and **Variable Top N Parametrization** (Top 1..N).
+- **Data Normalization Layer**: Ensure API returns "clean" data to reduce frontend patching code.
 
 ---
 

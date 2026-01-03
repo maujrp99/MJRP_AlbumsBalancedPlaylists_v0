@@ -150,6 +150,22 @@ Store (runtime state) → Repository (Firestore CRUD)
 
 ---
 
+### ARCH-14: Context-Aware Series Loading (Sprint 16)
+
+**Problem**: "Cross-contamination" of albums between series due to fuzzy matching in `AlbumsScopedRenderer`. Albums like "Blonde" (Frank Ocean) would appear in "Bob Dylan" series (matching "Blonde on Blonde").
+
+**Solution**:
+- **Context Preservation**: `SeriesController` attaches `_sourceSeriesId` to queries during load.
+- **Strict Ownership**: Albums are tagged with `seriesIds` indicating exactly which series requested/owns them.
+- **Precise Rendering**: View uses strict ID inclusion checks instead of fuzzy string matching.
+
+**Files Changed**:
+- `SeriesController.js`
+- `AlbumsScopedRenderer.js`
+- `albumsStore.js`
+
+---
+
 ## High-Level Architecture
 
 ```mermaid

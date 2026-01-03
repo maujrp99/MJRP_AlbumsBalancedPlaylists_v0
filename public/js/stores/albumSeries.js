@@ -290,14 +290,19 @@ export class AlbumSeriesStore {
      * @returns {Promise<Object>} Updated series
      */
     async removeAlbumFromSeries(album, seriesId = null) {
-        let targetSeries = this.activeSeries
+        let targetSeries = null;
 
-        // Fallback 1: Use provided seriesId if activeSeries is missing
-        if (!targetSeries && seriesId) {
+        // 1. Prioritize explicit seriesId (Correct Context)
+        if (seriesId) {
             targetSeries = this.series.find(s => s.id === seriesId)
         }
 
-        // Fallback 2 (Global Search): If still no target, search ALL series for this album query
+        // 2. Fallback to activeSeries if no explicit context
+        if (!targetSeries && this.activeSeries) {
+            targetSeries = this.activeSeries
+        }
+
+        // 3. Global Search (Last Resort)
         if (!targetSeries) {
             console.log('[AlbumSeriesStore] No context series. Searching all series for album:', album.title)
             // We need to find which series has a query matching this album
@@ -316,10 +321,18 @@ export class AlbumSeriesStore {
                     // String Query Support (Legacy)
                     if (typeof query !== 'string') return false;
 
+                    // Robust normalization for legacy string matching
                     const q = norm(query)
-                    const t = norm(album.title)
-                    const a = norm(album.artist)
-                    return q.includes(t) || (q.includes(a) && q.includes(t))
+                    const title = norm(album.title)
+                    const artist = norm(album.artist)
+
+                    // Exact match attempt first
+                    if (q === title) return true
+                    if (q === `${artist} - ${title}`) return true
+                    if (q === `${artist} ${title}`) return true
+
+                    // Loose match
+                    return q.includes(title) || (q.includes(artist) && q.includes(title))
                 })
             })
         }
@@ -336,7 +349,7 @@ export class AlbumSeriesStore {
         // Find the query that matches this album
         // Query format is typically "Artist Album Title" or just "Album Title"
         // Now supports Object Queries
-        const queryToRemove = albumQueries.find(query => {
+        let queryToRemove = albumQueries.find(query => {
             // Object Query Support (New)
             if (typeof query === 'object' && query !== null) {
                 const titleMatch = query.title === album.title
@@ -347,18 +360,58 @@ export class AlbumSeriesStore {
 
             if (typeof query !== 'string') return false;
 
-            const queryLower = query.toLowerCase()
-            const titleLower = album.title?.toLowerCase() || ''
-            const artistLower = album.artist?.toLowerCase() || ''
+            // Improved Normalization for robust matching
+            const norm = str => str?.toLowerCase().replace(/[^\w\s]/g, '').trim() || ''
 
-            // Match if query contains both artist and title, or just title
-            return queryLower.includes(titleLower) ||
-                (queryLower.includes(artistLower) && queryLower.includes(titleLower))
+            const q = typeof query === 'string' ? query : (query.title || '')
+            const qNorm = norm(q)
+            const titleNorm = norm(album.title)
+            const artistNorm = norm(album.artist)
+
+            // 1. Check ID (High confidence)
+            if (typeof query === 'object' && query.id && query.id === album.id) return true
+
+            // 2. Check Exact Title Match (Medium confidence)
+            if (qNorm === titleNorm) return true
+
+            // 3. Check "Artist - Title" format (Common legacy)
+            const compositeNorm = norm(`${album.artist} - ${album.title}`)
+            const compositeNorm2 = norm(`${album.artist} ${album.title}`)
+            if (qNorm === compositeNorm) return true
+            if (qNorm === compositeNorm2) return true
+
+            // 4. Fallback: Contains title AND artist (Loose)
+            // Only if query is long enough to avoid false positives on common words
+            if (qNorm.length > 5 && qNorm.includes(titleNorm) && qNorm.includes(artistNorm)) return true
+
+            return false
         })
 
         if (!queryToRemove) {
+            console.warn('[AlbumSeriesStore] Robust match failed. Falling back to manual selection or loose heuristic.')
+
+            // 5. Fallback: Ultra-loose match (any token match?) - Dangerous, might delete wrong thing.
+            // Better: Find ALL queries that *could* be candidates and ask user?
+            // Since we are in a Store, we can't easily pop UI unless we import DialogService.
+
+            // Let's try one more heuristic: Substring match of ANY word > 4 chars
+            queryToRemove = albumQueries.find(query => {
+                const q = typeof query === 'string' ? query : (query.title || '')
+                const qNorm = str => str?.toLowerCase().replace(/[^\w\s]/g, '').trim() || ''
+                const qN = qNorm(q)
+                const titleN = qNorm(album.title)
+
+                // If the query contains the title or vice versa
+                if (qN.includes(titleN) || titleN.includes(qN)) return true
+
+                return false
+            })
+        }
+
+        if (!queryToRemove) {
             console.error('[AlbumSeriesStore] Could not find matching query for:', album.title)
-            throw new Error('Could not find album query in series')
+            console.log('Available Queries:', albumQueries)
+            throw new Error(`Could not find album query in series. Expected similar to "${album.title}". See console for available queries.`)
         }
 
         // Remove the query from the array

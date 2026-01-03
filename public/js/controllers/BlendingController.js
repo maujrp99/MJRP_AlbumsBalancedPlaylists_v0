@@ -93,6 +93,10 @@ class BlendingController {
         // Sprint 15.5 Fix: Reset to CREATE mode to clear any stale edit context/batchName
         playlistsStore.setCreateMode()
 
+        // Sprint 16: Set default batch name
+        const defaultName = this._generateDefaultBatchName()
+        playlistsStore.setDefaultBatchName(defaultName)
+
         console.log(`[BlendingController] Generated ${result.playlists.length} playlist(s) from ${albums.length} albums`)
 
         return {
@@ -157,11 +161,31 @@ class BlendingController {
         const activeSeries = albumSeriesStore.getActiveSeries()
         playlistsStore.setPlaylists(result.playlists, activeSeries?.id)
 
+        // Sprint 16: Set default batch name if creating
+        // If we are editing, we preserve the original name (handled by store logic via editContext)
+        // But for "new" generation in Create mode, we update the default.
+        if (!playlistsStore.isEditingExistingBatch()) {
+            const defaultName = this._generateDefaultBatchName()
+            playlistsStore.setDefaultBatchName(defaultName)
+        }
+
         return {
             playlists: result.playlists,
             albums,
             stats: result.stats
         }
+    }
+
+    /**
+     * Generate default batch name based on current timestamp
+     * Format: "TheAlbumBlender Playlist YYYY-MM-DD HH:mm"
+     * @private
+     */
+    _generateDefaultBatchName() {
+        const date = new Date()
+        const dateStr = date.toISOString().split('T')[0]
+        const timeStr = date.toTimeString().split(' ')[0].substring(0, 5)
+        return `TheAlbumBlender Playlist ${dateStr} ${timeStr}`
     }
 }
 

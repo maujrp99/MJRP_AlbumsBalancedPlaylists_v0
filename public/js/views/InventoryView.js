@@ -27,15 +27,10 @@ export class InventoryView extends BaseView {
 
   /**
    * Render the view state
-   * @param {Object} state - The state from Controller
-   */
-  /**
-   * Render the view state
    * @param {Object} input - Route params (from Router) or State object (from Controller)
    */
   async render(input) {
     // Determine if input is state or route params
-    // Controller state has 'filteredAlbums' array. Route params usually don't.
     const isUpdate = input && Array.isArray(input.filteredAlbums)
     const state = isUpdate ? input : this.controller.state
 
@@ -171,10 +166,7 @@ export class InventoryView extends BaseView {
         this.controller.handleFilterChange('search', e.target.value)
       })
       // Maintain focus
-      // A bit tricky with full re-render. Ideally use debounce or diff.
-      // For now, simple re-render.
       searchInput.focus()
-      // Set cursor to end
       const val = searchInput.value
       searchInput.value = ''
       searchInput.value = val
@@ -202,22 +194,24 @@ export class InventoryView extends BaseView {
     const grid = document.getElementById('inventory-grid-container')
     if (grid) {
       grid.addEventListener('click', (e) => {
-        // Handle Button/Div clicks (Edit, Delete, View, Row Click)
-        // Handle Button/Div clicks (Edit, Delete, View, Row Click)
-        // We act on specific buttons, OR on the main card wrapper for "View" action
-        // Added .album-card-compact and [data-action] for Grid View cover clicks
         const target = e.target.closest('.view-album-btn, .edit-album-btn, .delete-album-btn, .inventory-row-wrapper, .expanded-album-card, .album-card-compact, [data-action="view-modal"]')
         if (!target) return
 
         const albumId = target.dataset.albumId || target.dataset.id
         if (!albumId) return
 
+        // Check if user clicked a link inside, to avoid double action?
+        // But these are button classes.
+
+        // Prioritize Delete/Edit buttons inside the card/row
         if (target.classList.contains('delete-album-btn')) {
+          e.stopPropagation()
           this.handleDeleteWithModal(albumId)
         } else if (target.classList.contains('edit-album-btn')) {
+          e.stopPropagation()
           this.handleEditWithModal(albumId)
         } else {
-          // Default action for row/card click or view button is "View"
+          // Default action is View, unless we clicked an inner interactive element
           this.handleViewWithModal(albumId)
         }
       })
@@ -226,7 +220,7 @@ export class InventoryView extends BaseView {
       grid.addEventListener('change', (e) => {
         if (e.target.classList.contains('status-select')) {
           const albumId = e.target.dataset.albumId
-          const status = e.target.value // 'owned', 'wishlist', 'not-owned'
+          const status = e.target.value
           this.controller.handleStatusChange(albumId, status)
         }
       })
@@ -234,21 +228,28 @@ export class InventoryView extends BaseView {
   }
 
   async handleDeleteWithModal(albumId) {
-    const { showDeleteAlbumModal } = await import('../components/Modals.js')
+    const { dialogService } = await import('../services/DialogService.js')
     const album = this.controller.state.albums.find(a => a.id === albumId)
     if (!album) return
 
-    showDeleteAlbumModal(albumId, `${album.title}`, async (id) => {
-      await this.controller.handleDelete(id)
+    const confirmed = await dialogService.confirm({
+      title: 'Remove from Inventory?',
+      message: `Are you sure you want to remove "${album.title}" from your collection?`,
+      confirmText: 'Remove',
+      variant: 'danger'
     })
+
+    if (confirmed) {
+      await this.controller.handleDelete(albumId)
+    }
   }
 
   async handleEditWithModal(albumId) {
-    const { showEditInventoryModal } = await import('../components/InventoryModals.js')
+    const { InventoryEditModal } = await import('../components/InventoryEditModal.js')
     const album = this.controller.state.albums.find(a => a.id === albumId)
     if (!album) return
 
-    showEditInventoryModal(album, async (id, updates) => {
+    InventoryEditModal.open(album, async (id, updates) => {
       await this.controller.handleUpdateAlbum(id, updates)
     })
   }

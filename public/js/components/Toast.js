@@ -2,9 +2,12 @@
  * Toast Component
  * Global notification system for success/error/info messages
  * Replaces all alert() calls throughout the app
+ * 
+ * Refactored to SafeDOM in Sprint 16
  */
 
-import { escapeHtml } from '../utils/stringUtils.js'
+import { SafeDOM } from '../utils/SafeDOM.js'
+import { getIcon } from './Icons.js' // Assuming getIcon is exported or we can replicate SVGs
 
 const TOAST_DURATION = 4000
 const TOAST_ANIMATION_DURATION = 300
@@ -15,9 +18,10 @@ let toastContainer = null
 function ensureContainer() {
     if (toastContainer && document.body.contains(toastContainer)) return toastContainer
 
-    toastContainer = document.createElement('div')
-    toastContainer.id = 'toast-container'
-    toastContainer.className = 'fixed top-4 right-4 z-[9999] flex flex-col gap-2 pointer-events-none'
+    toastContainer = SafeDOM.div({
+        id: 'toast-container',
+        className: 'fixed top-4 right-4 z-[9999] flex flex-col gap-2 pointer-events-none'
+    })
     document.body.appendChild(toastContainer)
 
     return toastContainer
@@ -32,26 +36,44 @@ function ensureContainer() {
 export function showToast(message, type = 'info', duration = TOAST_DURATION) {
     const container = ensureContainer()
 
-    const toast = document.createElement('div')
-    toast.className = `
-        toast pointer-events-auto
-        flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg
-        transform translate-x-full opacity-0 transition-all duration-300
-        ${getToastStyles(type)}
-    `.replace(/\s+/g, ' ').trim()
+    // Get styles
+    const styles = getToastStyles(type)
 
-    toast.innerHTML = `
-        <span class="toast-icon">${getToastIcon(type)}</span>
-        <span class="toast-message flex-1">${escapeHtml(message)}</span>
-        <button class="toast-close opacity-60 hover:opacity-100 transition-opacity" aria-label="Close">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
-    `
+    // Close button
+    const closeBtn = SafeDOM.button({
+        className: 'toast-close opacity-60 hover:opacity-100 transition-opacity',
+        ariaLabel: 'Close',
+        onClick: () => dismissToast(toast)
+    })
+    // SVG built manually or via getIcon if available. 
+    // Icons.js getIcon returns HTML string usually, so we might need SafeDOM wrapper or inline SVG.
+    // Let's use inline SVG with SafeDOM for internal consistency if getIcon isn't SafeDOM-ready yet.
+    // Step 1850 showed BaseModal using getIcon + innerHTML. 
+    // We want to avoid innerHTML.
+    // Let's construct the close icon SVG manually for 100% safety.
+    closeBtn.appendChild(
+        SafeDOM.svg({ className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }, [
+            SafeDOM.path({ strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: '2', d: 'M6 18L18 6M6 6l12 12' })
+        ])
+    )
 
-    // Close button handler
-    toast.querySelector('.toast-close').addEventListener('click', () => dismissToast(toast))
+    // Icon container
+    const iconContainer = SafeDOM.span({ className: 'toast-icon' })
+    // We can use innerHTML here IF we trust getIcon return value, BUT aiming for 0 sinks.
+    // Let's use a helper to render the specific icon type as SVG node.
+    iconContainer.appendChild(renderToastIconSvg(type))
+
+    // Message
+    const msgSpan = SafeDOM.span({ className: 'flex-1' }, message)
+
+    // Main Toast Element
+    const toast = SafeDOM.div({
+        className: `toast pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg transform translate-x-full opacity-0 transition-all duration-300 ${styles}`
+    }, [
+        iconContainer,
+        msgSpan,
+        closeBtn
+    ])
 
     container.appendChild(toast)
 
@@ -93,26 +115,31 @@ function getToastStyles(type) {
     }
 }
 
-function getToastIcon(type) {
+function renderToastIconSvg(type) {
+    const props = { className: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }
+    let d = ''
     switch (type) {
         case 'success':
-            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>`
+            d = 'M5 13l4 4L19 7'
+            break
         case 'error':
-            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>`
+            d = 'M6 18L18 6M6 6l12 12'
+            break
         case 'warning':
-            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>`
+            // Warning path is complex, usually two paths in original
+            // d="M12 9v2m0 4h.01m-6.938 4h13.856..." 
+            // Let's simplify or use the complex string
+            d = 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'
+            break
         case 'info':
         default:
-            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>`
+            d = 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+            break
     }
+
+    return SafeDOM.svg(props, [
+        SafeDOM.path({ strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: '2', d })
+    ])
 }
 
 
@@ -125,3 +152,4 @@ export const toast = {
 }
 
 export default toast
+

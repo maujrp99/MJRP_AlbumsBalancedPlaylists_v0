@@ -89,11 +89,18 @@ export class PlaylistsView extends BaseView {
     const activeSeries = albumSeriesStore.getActiveSeries()
     const isEditMode = playlistsStore.isEditingExistingBatch()
 
+    console.log('[PlaylistsView] generateHtml - Context:', {
+      editContext: state.editContext,
+      batchName: state.editContext?.batchName,
+      defaultBatchName: state.defaultBatchName,
+      isEditMode
+    })
+
     return `
             <div class="playlists-view container">
                 ${this.renderHeader(isEditMode, playlists)}
                 
-                ${PlaylistsGridRenderer.renderBatchNameInput(state.editContext?.batchName, isEditMode)}
+                ${PlaylistsGridRenderer.renderBatchNameInput(state.batchName || state.editContext?.batchName, isEditMode, state.defaultBatchName)}
                 
                 <!-- Generation / Reconfig -->
                 <div id="generationControlContainer">
@@ -109,7 +116,7 @@ export class PlaylistsView extends BaseView {
                 <div id="mainContent" class="fade-in" style="animation-delay: 0.1s">
                     ${playlists.length === 0 && !isEditMode ? PlaylistsGridRenderer.renderEmptyState() : ''}
                     <div id="playlistsGrid">
-                        ${PlaylistsGridRenderer.renderGrid(playlists, playlistsStore.batchName || playlistsStore.editContext?.batchName || '')}
+                        ${PlaylistsGridRenderer.renderGrid(playlists, state.batchName || state.editContext?.batchName || state.defaultBatchName || '')}
                     </div>
                 </div>
 

@@ -13,18 +13,45 @@ import { getIcon } from '../../components/Icons.js'
  * Export playlists as JSON file
  * @param {Array} playlists - Array of playlist objects
  */
+/**
+ * Helper: Resolve effective batch name with fallback
+ * @returns {string} Effective batch name
+ */
+function getEffectiveBatchName() {
+    const storeState = playlistsStore.getState()
+    return playlistsStore.batchName ||
+        playlistsStore.editContext?.currentBatchName ||
+        playlistsStore.editContext?.batchName ||
+        storeState.defaultBatchName ||
+        'Unsaved Batch'
+}
+
+/**
+ * Export playlists as JSON file
+ * @param {Array} playlists - Array of playlist objects
+ */
 export function handleExportJson(playlists) {
     if (!playlists || playlists.length === 0) {
         playlists = playlistsStore.getPlaylists()
     }
 
-    const json = JSON.stringify(playlists, null, 2)
+    const batchName = getEffectiveBatchName()
+
+    // Ensure playlists have the batch name attached (for unsaved batches)
+    const exportData = playlists.map(p => ({
+        ...p,
+        batchName: p.batchName || batchName
+    }))
+
+    const json = JSON.stringify(exportData, null, 2)
     const blob = new Blob([json], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
 
     const a = document.createElement('a')
     a.href = url
-    a.download = `playlists_${new Date().toISOString().split('T')[0]}.json`
+    // Sanitize batch name for filename
+    const safeName = batchName.replace(/[^a-z0-9 -]/gi, '_')
+    a.download = `playlists_${safeName}_${new Date().toISOString().split('T')[0]}.json`
     a.click()
 
     URL.revokeObjectURL(url)
@@ -66,8 +93,7 @@ export async function handleExportToAppleMusic(options = {}) {
         const activeSeries = albumSeriesStore.getActiveSeries()
         const seriesName = activeSeries?.name || 'MJRP Playlists'
 
-        // Sprint 15.5: Get batch name from store for playlist naming
-        const batchName = playlistsStore.batchName || playlistsStore.editContext?.batchName || ''
+        const batchName = getEffectiveBatchName()
 
         // 5. Create or find folder with series name
         if (btn) btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} Creating folder...`
@@ -234,8 +260,7 @@ export async function handleExportToSpotify(options = {}) {
         const activeSeries = albumSeriesStore.getActiveSeries()
         const seriesName = activeSeries?.name || 'MJRP'
 
-        // Sprint 15.5: Get batch name from store for playlist naming
-        const batchName = playlistsStore.batchName || playlistsStore.editContext?.batchName || ''
+        const batchName = getEffectiveBatchName()
 
         let successCount = 0
         let totalTracks = 0

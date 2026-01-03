@@ -21,6 +21,7 @@ import {
 } from '../../views/albums/AlbumsGridRenderer.js';
 import { renderScopedGrid, renderScopedList } from '../../views/albums/AlbumsScopedRenderer.js';
 import { Card } from '../ui/Card.js'; // Import Universal Card for lazy loading
+import { SafeDOM } from '../../utils/SafeDOM.js';
 
 export default class SeriesGridRenderer extends Component {
     /**
@@ -77,11 +78,13 @@ export default class SeriesGridRenderer extends Component {
             }
         }
 
-        this.container.innerHTML = `
-            <div id="series-grid-inner" class="pb-8">
-                ${contentHtml}
-            </div>
-        `;
+        // SafeDOM Rendering
+        const innerDiv = SafeDOM.div({
+            id: 'series-grid-inner',
+            className: 'pb-8'
+        }, SafeDOM.fromHTML(contentHtml));
+
+        SafeDOM.replaceChildren(this.container, innerDiv);
 
         this.gridElement = this.container.querySelector('#series-grid-inner');
     }
@@ -112,14 +115,8 @@ export default class SeriesGridRenderer extends Component {
             onClick: (e) => { /* handled by delegation */ }
         })).join('');
 
-        // Create fragment and insert
-        const temp = document.createElement('div');
-        temp.innerHTML = newCardsHtml;
-
-        const fragment = document.createDocumentFragment();
-        while (temp.firstChild) {
-            fragment.appendChild(temp.firstChild);
-        }
+        // Create fragment using SafeDOM
+        const fragment = SafeDOM.fromHTML(newCardsHtml);
 
         if (ghostCard) {
             ghostCard.parentNode.insertBefore(fragment, ghostCard);

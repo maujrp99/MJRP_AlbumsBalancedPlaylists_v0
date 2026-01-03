@@ -37,6 +37,27 @@ function groupAlbumsBySeries(albums, seriesList) {
 
     albums.forEach(album => {
         let found = false
+
+        // 1. Strict Match via Series ID (Context-Aware Architecture)
+        if (album.seriesIds && Array.isArray(album.seriesIds)) {
+            for (const series of seriesList) {
+                if (album.seriesIds.includes(series.id)) {
+                    const group = seriesGroups.get(series.id)
+                    if (group) group.albums.push(album)
+                    found = true
+                    // Continue checking other series? An album can be in multiple. 
+                    // But here we just want to ensure it's in at least one.
+                    // Actually, if we want multi-series display, we shouldn't break.
+                    // BUT, duplicates in "All Series" view might be confusing if not handled.
+                    // The current UI design likely renders strict blocks. 
+                    // Let's allow multi-grouping because the model supports it.
+                }
+            }
+            if (found) return; // Skip fuzzy fallbacks if strict match worked
+        }
+
+        // 2. Legacy Fuzzy Match (Fallback for old cached albums without context)
+        // Only run if strict match failed to find ANY series
         for (const series of seriesList) {
             const queries = series.albumQueries || []
             // Bidirectional fuzzy matching - handle both string and object formats
@@ -130,7 +151,7 @@ export function renderScopedGrid(context) {
         if (group.albums.length === 0) return
 
         html += `
-        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5">
+        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${group.series.id}">
             ${renderSeriesHeader(group.series, group.albums.length)}
             ${wrapInGrid(renderAlbumsGrid(group.albums))}
         </div>`
@@ -175,7 +196,7 @@ export function renderScopedList(context) {
         if (group.albums.length === 0) return
 
         html += `
-        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5">
+        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${group.series.id}">
             ${renderSeriesHeader(group.series, group.albums.length)}
             ${renderExpandedList(group.albums)}
         </div>`

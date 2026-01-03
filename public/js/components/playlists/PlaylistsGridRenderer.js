@@ -76,24 +76,26 @@ export class PlaylistsGridRenderer {
     static renderGrid(playlists, batchName = '') {
         if (!playlists || playlists.length === 0) return ''
 
-        // Use the existing PlaylistGrid component
+        // Batch name is fully resolved by the View before calling this.
+
         return PlaylistGrid.render({
             playlists,
             editable: true,
             primaryRanking: 'acclaim',
-            batchName // Sprint 15.5: Pass batch name for title formatting
+            batchName // Pass through
         })
     }
 
-    static renderBatchNameInput(currentName, isEditMode) {
+    static renderBatchNameInput(currentName, isEditMode, defaultBatchName = '') {
         // ALWAYS render the input, even in Create Mode, so users can name their batch before saving.
         return `
             <div id="batchNameSection" class="mb-6 fade-in glass-panel p-4 rounded-xl" style="animation-delay: 0.03s">
                 <label class="block text-sm font-medium mb-2">Batch Name</label>
+                <label class="block text-sm font-medium mb-2">Batch Name</label>
                 <input 
                     type="text" 
                     id="batchNameInput" 
-                    value="${escapeHtml(currentName || '')}"
+                    value="${escapeHtml(currentName || defaultBatchName || '')}"
                     class="input input-bordered w-full max-w-md bg-white/5 border-white/10 rounded-lg px-4 py-2"
                     placeholder="Enter batch name (e.g., 'My Beatles Mix')"
                 />

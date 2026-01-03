@@ -13,17 +13,17 @@
 ## Phase 2: Operation Modal-Swap (The "Modals.js" Killer)
 *Goal: Replace ad-hoc `innerHTML` modals with proper components and Service.*
 
-- [ ] **Create Safe Modals**:
-    - [ ] `src/components/ui/modals/ConfirmModal.js`
-    - [ ] `src/components/ui/modals/InputModal.js`
-- [ ] **Create `DialogService.js`**:
-    - [ ] Implement `confirm()` and `prompt()` using new modals.
-- [ ] **Refactor Consumers**:
-    - [ ] `SeriesView.js` -> Use `DialogService`
-    - [ ] `PlaylistsView.js` -> Use `DialogService`
-    - [ ] `SavedPlaylistsView.js` -> Use `DialogService` (move logic to Controller).
-- [ ] **Delete Legacy**:
-    - [ ] Delete `public/js/components/Modals.js` 🗑️
+- [x] **Create Safe Modals**:
+    - [x] `src/components/ui/modals/ConfirmModal.js`
+    - [x] `src/components/ui/modals/InputModal.js`
+- [x] **Create `DialogService.js`**:
+    - [x] Implement `confirm()` and `prompt()` using new modals.
+- [x] **Refactor Consumers**:
+    - [x] `SeriesView.js` -> Use `DialogService`
+    - [x] `PlaylistsView.js` -> Use `DialogService`
+    - [x] `SavedPlaylistsView.js` -> Use `DialogService` (move logic to Controller).
+- [x] **Delete Legacy**:
+    - [x] Delete `public/js/components/Modals.js` 🗑️
 
 ## Phase 3: Component Consolidation
 *Goal: Reduce maintenance by removing redundant components.*
@@ -40,3 +40,23 @@
 - [ ] **Audit Sinks**:
     - [ ] Run `grep -r "innerHTML" public/js/`
     - [ ] Refactor remaining low-hanging fruit.
+
+## Phase 5: Batch Naming Consistency (New)
+*Goal: Fix UX issues with Playlist Naming (Ghost playlists, empty inputs).*
+
+- [x] **Refactor `PlaylistsStore.js`**:
+    - [x] Implement `defaultBatchName` state.
+    - [x] Add `editContext` to track `originalBatchName`.
+    - [x] Update `saveToLocalStorage` to persist these fields (fix Refresh bug).
+- [x] **Refactor `BlendingController.js`**:
+    - [x] Create `_generateDefaultBatchName` helper (Format: "TheAlbumBlender Playlist...").
+    - [x] Call this helper in `generateFromSeries` (Wizard) and `regenerate`.
+- [x] **Refactor `PlaylistsController.js`**:
+    - [x] Update `handleSave` to use `editContext.originalBatchName` for overwrite target.
+    - [x] Remove redundant default name logic (delegate to BlendingController).
+- [x] **Refactor Export Logic**:
+    - [x] Update `PlaylistsGridRenderer` / Export Utils to fallback to `defaultBatchName`.
+
+## Bug Fixes & Regressions
+- [x] Fix Edit Mode Batch Name Revert (#102)
+- [x] Fix Series View Album Deletion (#103) - *Verified: Fixed via Context-Aware Loading*

@@ -122,7 +122,14 @@ export default class SeriesController {
                 await albumSeriesStore.loadFromFirestore();
                 const allSeries = albumSeriesStore.getSeries();
                 allSeries.forEach(s => {
-                    if (s.albumQueries) queriesToLoad.push(...s.albumQueries);
+                    // ARCH-FIX: Attach _sourceSeriesId to query to preserve context
+                    if (s.albumQueries) {
+                        const queriesWithContext = s.albumQueries.map(q => {
+                            if (typeof q === 'string') return { title: q, _sourceSeriesId: s.id };
+                            return { ...q, _sourceSeriesId: s.id };
+                        });
+                        queriesToLoad.push(...queriesWithContext);
+                    }
                 });
                 albumSeriesStore.setActiveSeries(null);
             } else {
@@ -152,7 +159,11 @@ export default class SeriesController {
 
                 if (series) {
                     albumSeriesStore.setActiveSeries(series.id);
-                    queriesToLoad = series.albumQueries || [];
+                    // ARCH-FIX: Attach context even for single series for consistency
+                    queriesToLoad = (series.albumQueries || []).map(q => {
+                        if (typeof q === 'string') return { title: q, _sourceSeriesId: series.id };
+                        return { ...q, _sourceSeriesId: series.id };
+                    });
                 }
             }
 
@@ -218,7 +229,10 @@ export default class SeriesController {
                     this.notifyView('progress', { current, total, label: progressLabel });
 
                     if (result.status === 'success' && result.album) {
-                        this.hydrateAndAddAlbum(result.album);
+                        // ARCH-FIX: Pass sourceSeriesId from query context
+                        const sourceSeriesId = result.query?._sourceSeriesId;
+                        this.hydrateAndAddAlbum(result.album, sourceSeriesId);
+
                         // ARCH-6: Incremental render - sync with progress bar
                         this.notifyView('albums', albumsStore.getAlbums());
                     }
@@ -248,12 +262,25 @@ export default class SeriesController {
 
     /**
      * Hydrate album with cover and add to store
+     * @param {Object} album - Album object
+     * @param {string} sourceSeriesId - Series ID this album belongs to
      */
-    async hydrateAndAddAlbum(album) {
+    async hydrateAndAddAlbum(album, sourceSeriesId) {
         if (!album.coverUrl && !album.artworkTemplate) {
             const localMatch = await optimizedAlbumLoader.findAlbum(album.artist, album.title);
             if (localMatch) {
                 album.coverUrl = optimizedAlbumLoader.getArtworkUrl(localMatch, 500);
+            }
+        }
+
+        // ARCH-FIX: Multi-series ownership support
+        // Attach the source ID to the album instance so the View can strict-match it
+        if (sourceSeriesId) {
+            if (!album.seriesIds) album.seriesIds = [];
+            if (!album.seriesIds.includes(sourceSeriesId)) {
+                album.seriesIds.push(sourceSeriesId);
+                // Also add legacy property for single-series backward compat if needed (optional)
+                // album._seriesId = sourceSeriesId 
             }
         }
 

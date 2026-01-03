@@ -2,16 +2,7 @@
  * SeriesEventHandler.js
  * 
  * V3 Component: Event Delegation for Card Actions
- * 
- * Following Clean Architecture principles:
- * - Single Responsibility: Handles all card-level user interactions
- * - Dependency Inversion: Depends on abstractions (callbacks) not concrete implementations
- * - Open/Closed: New actions can be added without modifying existing code
- * 
- * This component is responsible for:
- * - Album actions: view-modal, add-to-inventory, remove-album
- * - Series actions: edit-series, delete-series
- * - Event delegation pattern for dynamically rendered content
+ * Refactored in Sprint 16 to use DialogService and SafeDOM Modals
  */
 
 import Component from '../base/Component.js';
@@ -19,6 +10,8 @@ import { albumsStore } from '../../stores/albums.js';
 import { albumSeriesStore } from '../../stores/albumSeries.js';
 import { showViewAlbumModal } from '../ViewAlbumModal.js';
 import { toast } from '../Toast.js';
+import { dialogService } from '../../services/DialogService.js';
+import { InventoryAddModal } from '../InventoryAddModal.js';
 
 export default class SeriesEventHandler extends Component {
     /**
@@ -65,7 +58,6 @@ export default class SeriesEventHandler extends Component {
         if (!target) return;
 
         const action = target.dataset.action;
-        // Card component uses data-id, while legacy components might use data-album-id
         const albumId = target.dataset.albumId || target.dataset.id;
         const seriesId = target.dataset.seriesId;
 
@@ -80,7 +72,7 @@ export default class SeriesEventHandler extends Component {
         if (!albumId) return;
         e.stopPropagation();
 
-        await this.handleAlbumAction(action, albumId);
+        await this.handleAlbumAction(action, albumId, target);
     }
 
     /**
@@ -102,7 +94,7 @@ export default class SeriesEventHandler extends Component {
     /**
      * Handle album-level actions (view, add to inventory, remove)
      */
-    async handleAlbumAction(action, albumId) {
+    async handleAlbumAction(action, albumId, targetElement = null) {
         // Find album in store
         const album = albumsStore.getAlbums().find(a => a.id === albumId);
 
@@ -113,71 +105,121 @@ export default class SeriesEventHandler extends Component {
 
         switch (action) {
             case 'view-modal':
-                showViewAlbumModal(album);
+                showViewAlbumModal(album); // Verified SafeDOM
                 break;
 
             case 'add-to-inventory':
-                await this.handleAddToInventory(album);
+                InventoryAddModal.open(album, () => {
+                    console.log('[SeriesEventHandler] Album added to inventory:', album.title);
+                });
                 break;
 
             case 'remove-album':
-                await this.handleRemoveAlbum(album);
+                await this.handleRemoveAlbum(album, targetElement);
                 break;
-        }
-    }
-
-    /**
-     * Add album to inventory via modal
-     */
-    async handleAddToInventory(album) {
-        try {
-            const { showAddToInventoryModal } = await import('../InventoryModals.js');
-            showAddToInventoryModal(album, () => {
-                // Optional success callback - modal handles toast
-                console.log('[SeriesEventHandler] Album added to inventory:', album.title);
-            });
-        } catch (err) {
-            console.error('[SeriesEventHandler] Failed to load inventory modal:', err);
-            toast.error('Failed to open inventory modal');
         }
     }
 
     /**
      * Remove album from series with confirmation
      */
-    async handleRemoveAlbum(album) {
+    async handleRemoveAlbum(album, targetElement = null) {
+        const confirmed = await dialogService.confirm({
+            title: 'Remove Album?',
+            message: `Are you sure you want to remove "${album.title} - ${album.artist}" from this series?`,
+            confirmText: 'Remove',
+            variant: 'danger'
+        })
+
+        if (!confirmed) return;
+
         try {
-            const { showDeleteAlbumModal } = await import('../Modals.js');
+            const urlParams = new URLSearchParams(window.location.search);
+            let seriesId = urlParams.get('seriesId');
 
-            showDeleteAlbumModal(
-                album.id,
-                `${album.title} - ${album.artist}`,
-                async () => {
-                    try {
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const seriesId = urlParams.get('seriesId');
-
-                        // 1. Remove from series (Persistence)
-                        await albumSeriesStore.removeAlbumFromSeries(album, seriesId);
-
-                        // 2. Remove from local view store (Immediate UI Feedback)
-                        albumsStore.removeAlbum(album.id);
-
-                        // 3. Success Toast
-                        toast.success('Album removed from series');
-
-                        // 4. Notify parent if callback provided
-                        const { onAlbumRemoved } = this.props;
-                        if (onAlbumRemoved) onAlbumRemoved(album);
-                    } catch (err) {
-                        console.error('[SeriesEventHandler] Failed to remove album:', err);
-                        toast.error('Failed to remove album: ' + err.message);
-                    }
+            // Fix for All Series View: Try to find series context from DOM if not in URL
+            if (!seriesId && targetElement) {
+                const seriesGroup = targetElement.closest('[data-series-id]');
+                if (seriesGroup) {
+                    seriesId = seriesGroup.dataset.seriesId;
+                    console.log(`[SeriesEventHandler] Resolved series context from DOM: ${seriesId}`);
                 }
-            );
+            }
+
+            // 1. Remove from series (Persistence)
+            await albumSeriesStore.removeAlbumFromSeries(album, seriesId);
+
+            // 2. Remove from local view store (Immediate UI Feedback)
+            albumsStore.removeAlbum(album.id);
+
+            // 3. Success Toast
+            toast.success('Album removed from series');
+
+            // 4. Notify parent if callback provided
+            const { onAlbumRemoved } = this.props;
+            if (onAlbumRemoved) onAlbumRemoved(album);
         } catch (err) {
-            console.error('[SeriesEventHandler] Failed to load delete modal:', err);
-            toast.error('Failed to open delete confirmation');
+            console.error('[SeriesEventHandler] Failed to remove album:', err);
+
+            // Checking for specific matching error to trigger manual fallback
+            if (err.message.includes('Could not find album query in series')) {
+                // Get series and its queries
+                const urlParams = new URLSearchParams(window.location.search);
+                let seriesId = urlParams.get('seriesId');
+                if (!seriesId && targetElement) {
+                    const seriesGroup = targetElement.closest('[data-series-id]');
+                    if (seriesGroup) seriesId = seriesGroup.dataset.seriesId;
+                }
+
+                const series = albumSeriesStore.getById(seriesId) || albumSeriesStore.getActiveSeries();
+
+                if (series && series.albumQueries) {
+                    // Normalize queries for display
+                    const options = series.albumQueries.map(q => {
+                        return typeof q === 'string' ? q : (q.title || JSON.stringify(q))
+                    });
+
+                    // Prompt user manually (using prompt for now as DialogService doesn't have a "Select" modal yet, 
+                    // but we can use prompt with a list instructions or implement a SelectModal later.
+                    // For now, let's use a standard prompt asking for the exact string to remove, pre-filled with nothing.)
+
+                    // Actually, let's just ask if they want to FORCE remove the matching query if we can find partials.
+                    // But since we already failed partials in store...
+
+                    // Let's use `window.prompt` as a last resort fallback MVP
+                    // Or reuse InputModal via DialogService.prompt
+
+                    const manualQuery = await dialogService.prompt({
+                        title: 'Manual Removal Required',
+                        message: `We couldn't automatically match this album to a record in your series. \n\nPlease type the exact name/query to remove from the list below:\n\n${options.slice(0, 10).join('\n')}${options.length > 10 ? '\n...' : ''}`,
+                        defaultValue: album.title,
+                        confirmText: 'Remove Query'
+                    });
+
+                    if (manualQuery) {
+                        try {
+                            // Try to remove the manually entered string directly
+                            // We need a store method for "remove specific query string" 
+                            // OR we assume the store's removeAlbumFromSeries will match this if we pass a "fake" album 
+                            // with this title? No, removeAlbumFromSeries matches against Queries.
+                            // If I pass an ID-less album object with title = manualQuery, it might match exact string.
+
+                            await albumSeriesStore.removeAlbumFromSeries({ title: manualQuery, artist: '' }, seriesId);
+                            albumsStore.removeAlbum(album.id);
+                            toast.success('Album removed manually');
+                            const { onAlbumRemoved } = this.props;
+                            if (onAlbumRemoved) onAlbumRemoved(album);
+                            return;
+
+                        } catch (manualErr) {
+                            toast.error('Manual removal failed: ' + manualErr.message);
+                        }
+                    }
+                    return;
+                }
+            }
+
+            toast.error('Failed to remove album: ' + err.message);
         }
     }
 }

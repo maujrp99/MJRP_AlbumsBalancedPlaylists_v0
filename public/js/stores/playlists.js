@@ -25,6 +25,9 @@ export class PlaylistsStore {
         this.versions = []
         this.currentVersionIndex = -1
         this.maxVersions = 20
+
+        // Sprint 16: Default naming
+        this.defaultBatchName = null
     }
 
     /**
@@ -139,11 +142,24 @@ export class PlaylistsStore {
     updateBatchName(batchName) {
         this.batchName = batchName
         // Initialize editContext if not present (for consistency)
-        if (this.editContext) {
-            this.editContext.batchName = batchName
+        if (!this.editContext) {
+            // Note: If we are in CREATE mode, we might not have an editContext yet.
+            // But if we are editing the name, we should track it.
+            // However, strictly speaking, editContext is for EDIT mode.
+            // For CREATE mode, we just update this.batchName.
+        } else {
+            this.editContext.currentBatchName = batchName
         }
-        // NO notify() - this prevents the input from losing focus
         console.log('[PlaylistsStore] Batch name updated:', batchName)
+    }
+
+    /**
+     * Sprint 16: Set default batch name (e.g. from generation timestamp)
+     * @param {string} name 
+     */
+    setDefaultBatchName(name) {
+        this.defaultBatchName = name
+        this.notify()
     }
 
     /**
@@ -154,7 +170,13 @@ export class PlaylistsStore {
      */
     setEditMode(batchName, seriesId, savedAt) {
         this.mode = 'EDITING'
-        this.editContext = { batchName, seriesId, savedAt }
+        this.editContext = {
+            originalBatchName: batchName, // Immutable reference
+            currentBatchName: batchName,  // Mutable input
+            seriesId,
+            savedAt
+        }
+        this.batchName = batchName // Set active name
         console.log('[PlaylistsStore] Mode: EDITING', this.editContext)
     }
 
@@ -226,6 +248,11 @@ export class PlaylistsStore {
             playlists: this.playlists,
             seriesId: this.seriesId,
             config: this.config,
+            // Sprint 16: Expose naming/mode state
+            mode: this.mode,
+            editContext: this.editContext,
+            batchName: this.batchName,
+            defaultBatchName: this.defaultBatchName,
             isDirty: this.isDirty,
             isSynchronized: this.isSynchronized,
             canUndo: this.currentVersionIndex > 0,
@@ -314,6 +341,11 @@ export class PlaylistsStore {
                 playlists: JSON.parse(JSON.stringify(this.playlists)), // Deep copy & sanitize
                 seriesId: this.seriesId,
                 config: this.config,
+                // Persistence Fix: Save context to survive refresh
+                mode: this.mode,
+                editContext: this.editContext,
+                batchName: this.batchName,
+                defaultBatchName: this.defaultBatchName,
                 timestamp: Date.now()
             }
             localStorage.setItem('mjrp_current_playlists', JSON.stringify(data))
@@ -339,6 +371,13 @@ export class PlaylistsStore {
             this.playlists = data.playlists || []
             this.seriesId = data.seriesId
             this.config = data.config || this.config
+
+            // Restore Context
+            this.mode = data.mode || 'CREATING'
+            this.editContext = data.editContext || null
+            this.batchName = data.batchName || ''
+            this.defaultBatchName = data.defaultBatchName || null
+
             // Reset dirty state since we just loaded
             this.isDirty = false
             this.notify()
@@ -471,6 +510,12 @@ export class PlaylistsStore {
             p1p2Rule: true
         }
         this.seriesId = null
+        // Context Reset
+        this.mode = 'CREATING'
+        this.editContext = null
+        this.batchName = ''
+        this.defaultBatchName = null
+
         this.isDirty = false
         this.isSynchronized = true
         this.versions = []

@@ -7,6 +7,7 @@
 import Component from '../base/Component.js';
 import { getIcon } from '../Icons.js';
 import { Breadcrumb } from '../Breadcrumb.js';
+import { SafeDOM } from '../../utils/SafeDOM.js';
 
 export default class SeriesHeader extends Component {
     /**
@@ -24,40 +25,40 @@ export default class SeriesHeader extends Component {
         const albumCount = propCount ?? metadata?.albumCount ?? 0;
         const canGenerate = albumCount > 0;
 
-        this.container.innerHTML = `
-            <div class="view-header mb-8 fade-in">
-                ${Breadcrumb.render('/albums')}
+        // Clear container
+        this.container.innerHTML = '';
 
-                <!-- Title Row -->
-                <div class="header-title-row mb-6 flex justify-between items-center">
-                    <h1 class="text-4xl font-bold flex items-center gap-3">
-                        ${getIcon('Disc', 'w-8 h-8 text-accent-primary')}
-                        ${this.escapeHtml(title)}
-                    </h1>
+        const headerContainer = SafeDOM.div({ className: 'view-header mb-8 fade-in' });
 
-                    <button
-                        id="generatePlaylistsBtn"
-                        class="tech-btn-primary px-8 py-3 text-base rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform"
-                        ${!canGenerate ? 'disabled' : ''}
-                    >
-                        ${getIcon('Sliders', 'w-5 h-5')}
-                        Blend your Albums
-                    </button>
-                </div>
-            </div>
-        `;
+        // Breadcrumb (Legacy String -> DOM)
+        const breadcrumbNode = SafeDOM.fromHTML(Breadcrumb.render('/albums'));
+        headerContainer.appendChild(breadcrumbNode);
 
-        // Bind generate button
-        const btn = this.container.querySelector('#generatePlaylistsBtn');
-        if (btn && onGeneratePlaylists) {
-            btn.addEventListener('click', onGeneratePlaylists);
-        }
-    }
+        // Title Row
+        const titleRow = SafeDOM.div({ className: 'header-title-row mb-6 flex justify-between items-center' });
 
-    escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+        // H1 Title
+        const h1 = SafeDOM.h1({ className: 'text-4xl font-bold flex items-center gap-3' }, [
+            SafeDOM.fromHTML(getIcon('Disc', 'w-8 h-8 text-accent-primary')),
+            title // SafeDOM text content (auto-escaped)
+        ]);
+        titleRow.appendChild(h1);
+
+        // Generate Button
+        const btn = SafeDOM.button({
+            id: 'generatePlaylistsBtn',
+            className: 'tech-btn-primary px-8 py-3 text-base rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform',
+            disabled: !canGenerate,
+            onclick: canGenerate ? onGeneratePlaylists : null
+        }, [
+            SafeDOM.fromHTML(getIcon('Sliders', 'w-5 h-5')),
+            'Blend your Albums'
+        ]);
+        titleRow.appendChild(btn);
+
+        headerContainer.appendChild(titleRow);
+
+        // Mount
+        this.container.appendChild(headerContainer);
     }
 }

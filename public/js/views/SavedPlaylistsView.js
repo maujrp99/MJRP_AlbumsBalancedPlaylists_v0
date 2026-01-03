@@ -3,6 +3,7 @@
  * 
  * View for displaying saved playlists grouped by Series and Batches.
  * Refactored in Sprint 15 (ARCH-12) to use Controller-View pattern and Core Components.
+ * Refactored in Sprint 16 to replace legacy modals with DialogService.
  * 
  * @module views/SavedPlaylistsView
  */
@@ -16,6 +17,7 @@ import { BaseModal } from '../components/ui/BaseModal.js'
 import { TrackRow } from '../components/ui/TrackRow.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { escapeHtml } from '../utils/stringUtils.js'
+import { dialogService } from '../services/DialogService.js'
 
 export class SavedPlaylistsView extends BaseView {
     constructor() {
@@ -118,13 +120,149 @@ export class SavedPlaylistsView extends BaseView {
 
     renderPlaylistBatch(batch, seriesId) {
         const thumbnails = this.controller.getThumbnails(seriesId)
-        return BatchGroupCard.render({
-            seriesId,
-            batchName: batch.name,
-            playlists: batch.playlists,
-            createdAt: batch.savedAt,
-            thumbnails: thumbnails
+        const playlists = batch.playlists
+        const batchName = batch.name
+        const createdAt = batch.savedAt
+
+        const playlistCount = playlists.length
+        const totalTracks = playlists.reduce((sum, p) => sum + (p.tracks?.length || 0), 0)
+        const albumCount = this.countUniqueAlbums(playlists)
+        const dateStr = new Date(createdAt).toLocaleDateString()
+
+        // Calculate total duration from all tracks
+        const allTracks = playlists.map(p => p.tracks || []).flat()
+        const totalDuration = this.formatDuration(allTracks)
+
+        const playlistsHtml = playlists.map((playlist, idx) =>
+            this.renderPlaylistRow(seriesId, playlist, idx)
+        ).join('')
+
+        const cascadeHtml = AlbumCascade.render(thumbnails)
+
+        return `
+            <div class="batch-group-card bg-surface rounded-xl border border-white/10 overflow-hidden mb-6 transition-all duration-300 hover:border-brand-orange/30" 
+                data-series-id="${seriesId}" 
+                data-batch-name="${escapeHtml(batchName)}"
+                data-collapsed="true">
+            
+            <div class="batch-header p-5 bg-gradient-to-r from-white/5 to-transparent border-b border-white/10 cursor-pointer"
+                    data-action="toggle-collapse">
+                <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <span class="collapse-icon text-muted transition-transform duration-200">
+                        ${getIcon('ChevronRight', 'w-5 h-5')}
+                    </span>
+                    ${cascadeHtml}
+                    <div>
+                        <h3 class="font-bold text-xl text-white tracking-tight">${escapeHtml(batchName)}</h3>
+                        <div class="flex items-center gap-3 text-sm text-muted mt-1">
+                        <span class="flex items-center gap-1">${getIcon('List', 'w-3 h-3')} ${playlistCount} playlists</span>
+                        <span class="flex items-center gap-1">${getIcon('Music', 'w-3 h-3')} ${totalTracks} tracks</span>
+                        <span class="flex items-center gap-1">${getIcon('Disc', 'w-3 h-3')} ${albumCount} albums</span>
+                        <span class="flex items-center gap-1 font-mono">${getIcon('Clock', 'w-3 h-3')} ${totalDuration}</span>
+                        <span class="flex items-center gap-1">${getIcon('Calendar', 'w-3 h-3')} ${dateStr}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="batch-card-buttons flex items-center gap-2">
+                    <button class="btn btn-secondary btn-sm flex items-center gap-2 hover:bg-white/20 transition-all shadow-md" 
+                            data-action="edit-batch" 
+                            data-series-id="${seriesId}" 
+                            data-batch-name="${escapeHtml(batchName)}"
+                            data-saved-at="${createdAt}"
+                            title="Edit this batch">
+                    ${getIcon('Edit', 'w-4 h-4')} Edit Batch
+                    </button>
+                    <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors" 
+                            data-action="delete-batch" 
+                            data-series-id="${seriesId}" 
+                            data-batch-name="${escapeHtml(batchName)}"
+                            data-count="${playlistCount}"
+                            title="Delete entire batch">
+                    ${getIcon('Trash', 'w-4 h-4')}
+                    </button>
+                </div>
+                </div>
+            </div>
+
+            <div class="batch-playlists divide-y divide-white/5 bg-black/20 hidden">
+                ${playlistsHtml || '<div class="p-6 text-center text-muted italic">No playlists in this batch</div>'}
+            </div>
+            </div>
+        `
+    }
+
+    renderPlaylistRow(seriesId, playlist, index) {
+        const trackCount = playlist.tracks?.length || 0
+        const duration = this.formatDuration(playlist.tracks || [])
+
+        return `
+        <div class="playlist-row-wrapper" data-playlist-index="${index}">
+            <div class="playlist-row p-4 flex items-center justify-between hover:bg-white/5 transition-colors group cursor-pointer"
+                data-action="toggle-playlist-tracks"
+                data-playlist-id="${playlist.id}">
+            <div class="flex items-center gap-4">
+                <span class="expand-icon text-muted transition-transform duration-200">
+                ${getIcon('ChevronRight', 'w-4 h-4')}
+                </span>
+                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-muted group-hover:text-brand-orange group-hover:bg-brand-orange/10 transition-colors">
+                ${getIcon('Disc', 'w-4 h-4')}
+                </div>
+                <div>
+                <div class="font-medium text-white group-hover:text-brand-orange transition-colors">${escapeHtml(playlist.name)}</div>
+                <div class="text-xs text-muted font-mono mt-0.5">${trackCount} tracks • ${duration}</div>
+                </div>
+            </div>
+            
+            <div class="playlist-row-buttons flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <button class="btn btn-ghost btn-sm text-muted hover:text-white" 
+                        data-action="view-playlist" 
+                        data-series="${seriesId}" 
+                        data-id="${playlist.id}"
+                        title="View Details">
+                ${getIcon('Eye', 'w-4 h-4')}
+                </button>
+            </div>
+            </div>
+            
+            <div class="playlist-tracks-list hidden bg-black/30 pl-16 pr-4 py-2">
+            ${this.renderTracksList(playlist.tracks)}
+            </div>
+        </div>
+        `
+    }
+
+    renderTracksList(tracks) {
+        if (!tracks || tracks.length === 0) {
+            return '<div class="text-sm text-muted italic py-2">No tracks</div>'
+        }
+
+        return tracks.map((track, i) => TrackRow.renderHTML({
+            track,
+            index: i + 1,
+            variant: 'detailed',
+            playlistIndex: -1,
+            trackIndex: i
+        })).join('')
+    }
+
+    countUniqueAlbums(playlists) {
+        const albumSet = new Set()
+        playlists.forEach(playlist => {
+            playlist.tracks?.forEach(track => {
+                if (track.album) {
+                    albumSet.add(track.album.toLowerCase())
+                }
+            })
         })
+        return albumSet.size
+    }
+
+    formatDuration(tracks) {
+        if (!tracks) return '0m'
+        const seconds = tracks.reduce((acc, t) => acc + (t.duration || 0), 0)
+        return Math.floor(seconds / 60) + 'm'
     }
 
     renderLoading() {
@@ -213,110 +351,47 @@ export class SavedPlaylistsView extends BaseView {
             window.location.hash = '/home' // Or router.navigate
         })
 
-        // Modals
+        // Modals via DialogService
         this.$delegate('[data-action="delete-all-playlists"]', 'click', (e, t) => {
-            this.openDeleteModal(t.dataset.id, t.dataset.name)
+            this.handleDeleteAll(t.dataset.id, t.dataset.name)
         })
 
         this.$delegate('[data-action="delete-batch"]', 'click', (e, t) => {
-            this.openDeleteBatchModal(t.dataset.seriesId, t.dataset.batchName, t.dataset.count)
+            this.handleDeleteBatch(t.dataset.seriesId, t.dataset.batchName, t.dataset.count)
         })
 
         this.$delegate('[data-action="view-playlist"]', 'click', (e, t) => {
             e.stopPropagation() // Prevent row toggle
             this.openPlaylistModal(t.dataset.series, t.dataset.id)
         })
+    }
 
-        // Modal Close (Generic for BaseModal)
-        this.$delegate('[data-action="close-modal"]', 'click', (e, t) => {
-            const modal = t.closest('.fixed') // BaseModal root
-            if (modal) modal.remove()
+    async handleDeleteBatch(seriesId, batchName, count) {
+        const confirmed = await dialogService.confirm({
+            title: 'Delete Batch?',
+            message: `Are you sure you want to delete batch "${batchName}"? Contains ${count} playlists.`,
+            confirmText: 'Delete Batch',
+            variant: 'danger'
         })
 
-        // Modal Actions
-        this.$delegate('[data-action="confirm-delete"]', 'click', async (e, t) => {
-            const seriesId = t.dataset.seriesId
-            const seriesName = t.dataset.seriesName
-
-            // Close modal
-            const modal = document.getElementById('delete-modal')
-            if (modal) modal.remove()
-
-            await this.controller.deleteAllPlaylists(seriesId, seriesName)
-            this.update() // Re-render view
-        })
-
-        this.$delegate('[data-action="confirm-delete-batch"]', 'click', async (e, t) => {
-            const seriesId = t.dataset.seriesId
-            const batchName = t.dataset.batchName
-
-            const modal = document.getElementById('delete-batch-modal')
-            if (modal) modal.remove()
-
+        if (confirmed) {
             await this.controller.deleteBatch(seriesId, batchName)
             this.update()
-        })
+        }
     }
 
-    openDeleteBatchModal(seriesId, batchName, count) {
-        const content = `
-            <div class="text-center">
-                  <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
-                      ${getIcon('AlertTriangle', 'w-8 h-8 text-red-500')}
-                  </div>
-                  <p class="text-muted mb-4">Are you sure you want to delete batch <strong>${escapeHtml(batchName)}</strong>?</p>
-                  <p class="text-sm text-gray-400 mb-4">Contains ${count} playlists.</p>
-            </div>
-        `
-        const footer = `
-             <button class="btn btn-secondary" data-action="close-modal">Cancel</button>
-             <button class="btn btn-danger bg-red-600 hover:bg-red-700" 
-                data-action="confirm-delete-batch" 
-                data-series-id="${seriesId}" 
-                data-batch-name="${escapeHtml(batchName)}">
-                Delete Batch
-             </button>
-        `
-
-        const html = BaseModal.renderHTML({
-            id: 'delete-batch-modal',
-            title: 'Delete Batch?',
-            content: SafeDOM.fromHTML(content),
-            footer: SafeDOM.fromHTML(footer),
-            size: 'sm'
-        })
-
-        this.injectModal(html)
-    }
-
-    openDeleteModal(seriesId, seriesName) {
-        const content = `
-            <div class="text-center">
-                  <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
-                      ${getIcon('AlertTriangle', 'w-8 h-8 text-red-500')}
-                  </div>
-                  <p class="text-muted mb-4">This will permanently delete all playlists in <strong>${escapeHtml(seriesName)}</strong>. The series and its albums will remain.</p>
-            </div>
-        `
-        const footer = `
-             <button class="btn btn-secondary" data-action="close-modal">Cancel</button>
-             <button class="btn btn-danger bg-red-600 hover:bg-red-700" 
-                data-action="confirm-delete" 
-                data-series-id="${seriesId}" 
-                data-series-name="${escapeHtml(seriesName)}">
-                Delete All Playlists
-             </button>
-        `
-
-        const html = BaseModal.renderHTML({
-            id: 'delete-modal',
+    async handleDeleteAll(seriesId, seriesName) {
+        const confirmed = await dialogService.confirm({
             title: 'Delete All Playlists?',
-            content: SafeDOM.fromHTML(content),
-            footer: SafeDOM.fromHTML(footer),
-            size: 'sm'
+            message: `This will permanently delete all playlists in "${seriesName}". The series and its albums will remain.`,
+            confirmText: 'Delete All Playlists',
+            variant: 'danger'
         })
 
-        this.injectModal(html)
+        if (confirmed) {
+            await this.controller.deleteAllPlaylists(seriesId, seriesName)
+            this.update()
+        }
     }
 
     openPlaylistModal(seriesId, playlistId) {
@@ -332,64 +407,56 @@ export class SavedPlaylistsView extends BaseView {
         if (!playlist) return
 
         const trackCount = playlist.tracks?.length || 0
-        const duration = this.controller.constructor.formatDuration(playlist.tracks) // Need to access static or duplicated helper?
-        // Actually Controller didn't export static helper. BatchGroupCard has it. TrackRow has formatDuration.
-        // Let's use TrackRow.formatDuration(seconds). We need total seconds.
         const totalSeconds = (playlist.tracks || []).reduce((acc, t) => acc + (t.duration || 0), 0)
         const durationStr = TrackRow.formatDuration(totalSeconds)
 
-        const content = `
-            <div class="mb-4 text-xs text-muted flex gap-3 border-b border-white/10 pb-4">
-                <span><span class="text-white font-bold">${trackCount}</span> tracks</span>
-                <span><span class="text-white font-bold">${durationStr}</span> duration</span>
-            </div>
-            <div class="space-y-1">
-                ${(playlist.tracks || []).map((t, i) => TrackRow.renderHTML({
-            track: t,
-            index: i + 1,
-            variant: 'compact',
-            actions: [] // No actions in view-only modal? Or maybe play?
-        })).join('')}
-            </div>
-        `
+        // SafeDOM Content Construction
+        const header = SafeDOM.div({ className: 'mb-4 text-xs text-muted flex gap-3 border-b border-white/10 pb-4' }, [
+            SafeDOM.span({}, [SafeDOM.span({ className: 'text-white font-bold' }, trackCount), ' tracks']),
+            SafeDOM.span({}, [SafeDOM.span({ className: 'text-white font-bold' }, durationStr), ' duration'])
+        ])
 
-        const footer = `
-             <button class="btn btn-secondary" data-action="close-modal">Close</button>
-        `
+        const listContainer = SafeDOM.div({ className: 'space-y-1' })
 
-        const html = BaseModal.renderHTML({
-            id: 'playlist-modal',
-            title: playlist.name,
-            content: SafeDOM.fromHTML(content),
-            footer: SafeDOM.fromHTML(footer),
-            size: 'lg'
+        // Append tracks
+        const tracks = playlist.tracks || []
+        tracks.forEach((t, i) => {
+            const row = TrackRow.render({
+                track: t,
+                index: i + 1,
+                variant: 'compact',
+                actions: []
+            })
+            listContainer.appendChild(row)
         })
 
-        this.injectModal(html)
-    }
+        const content = SafeDOM.div({}, [header, listContainer])
 
-    injectModal(html) {
-        const container = document.getElementById('modalsContainer')
-        if (container) {
-            container.innerHTML = html
-        } else {
-            // Fallback if view not mounted? Should be.
-            document.body.insertAdjacentHTML('beforeend', html)
+        // Footer
+        const closeModal = () => {
+            BaseModal.unmount('playlist-modal')
         }
+
+        const manualFooter = SafeDOM.div({ className: 'flex justify-end' }, [
+            SafeDOM.button({
+                className: 'btn btn-secondary',
+                onClick: closeModal
+            }, 'Close')
+        ])
+
+        const modal = BaseModal.render({
+            id: 'playlist-modal',
+            title: playlist.name,
+            content: content,
+            footer: manualFooter,
+            size: 'lg',
+            onClose: closeModal
+        })
+
+        BaseModal.mount(modal)
     }
 
     onThumbnailLoaded(seriesId) {
-        // Optional: Re-render specific series card?
-        // For simplicity, we can ignore or re-render all.
-        // If we re-render all, it might close open accordions.
-        // Better: Find the BatchGroupCards for this series and update their thumbnails?
-        // This is complex DOM manipulation.
-        // For v1 of Refactor, let's accept that thumbnails pop in only if we re-render or if we used Image elements that lazy load.
-        // But BatchGroupCard uses AlbumCascade which takes URLs.
-        // We might just update() if isLoading is false.
-        // But that resets UI state.
-        // Let's leave it manual for now (user won't see thumbs until refresh or nav back/forth) or implement smart update later.
-        // Actually, Controller preloads BEFORE render returns? No, non-blocking.
-        // We can just rely on the fact that if user navigates away and back, they are cached.
+        // Optional re-render logic
     }
 }

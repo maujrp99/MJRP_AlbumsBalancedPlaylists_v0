@@ -780,24 +780,31 @@ When clicking "Edit" on a saved playlist and using the **Reconfigure panel** to 
 ---
 
 ### Issue #92: Album Cache/Display Architectural Flaw
-**Status**: 🔴 **CRITICAL - REQUIRES ARCHITECTURAL FIX**
+**Status**: ✅ **RESOLVED**
 **Date**: 2025-12-25 22:30
+**Resolved**: 2026-01-03 14:45
 **Severity**: CRITICAL (Data Corruption + UI Flaw)
 **Type**: Architecture / State Management
 **Component**: `apiClient`, `albumCache`, `albumsStore`, `SeriesView`, `SeriesController`
 
 #### Problem Summary
-When viewing albums in Single Series mode, **wrong albums appear** (e.g., "Physical Graffiti" and "Mothership" appear in "Robert Plant 00-10s" series, which should only have 7 albums).
+When viewing albums in Single Series mode, **wrong albums appear** (e.g., "Blonde" by Frank Ocean appearing in "Blonde on Blonde" series). This "cross-contamination" occurred because the renderer used fuzzy string matching to guess which series an album belonged to.
 
-Additionally, **Series Filter dropdown** doesn't properly update when navigating via URL with `?seriesId=X`.
+#### Root Cause
+1. **Context Loss**: `SeriesController` loaded albums into a flat list, stripping the series context.
+2. **Fuzzy Guessing**: `AlbumsScopedRenderer` attempted to redistribute albums to series using loose string matching (`query.includes(album.title)`), leading to false positives.
 
-#### Symptoms
+#### Solution
+Implemented **Context-Aware Loading (ARCH-14)**:
+1. **Source Tagging**: `SeriesController` now attaches `_sourceSeriesId` to every query it loads.
+2. **Strict Ownership**: `apiClient` preserves this tag, and `albumsStore` attaches it to the Album instance as `seriesIds`.
+3. **Precise Rendering**: `AlbumsScopedRenderer` now uses strict `album.seriesIds.includes(seriesId)` checks, falling back to fuzzy matching only for legacy cached data.
 
-| Filter Mode | Expected | Actual |
-|-------------|----------|--------|
-| All Series → Group "Robert Plant 00-10s" | 7 albums | ✅ 7 albums |
-| URL `?seriesId=4pYonlM3ruTNV8H9auMM` | 7 albums, filter shows series name | ❌ 9 albums, filter shows "All Series" |
-| Click series dropdown again | 7 albums | ❌ Still 9 albums (with Mothership, Physical Graffiti) |
+#### Files Changed
+- `public/js/controllers/SeriesController.js`
+- `public/js/views/albums/AlbumsScopedRenderer.js`
+- `public/js/stores/albums.js`
+- `public/js/stores/albumSeries.js` (Crash fix for deletion)
 
 #### Root Cause Analysis (ARCHITECTURAL)
 

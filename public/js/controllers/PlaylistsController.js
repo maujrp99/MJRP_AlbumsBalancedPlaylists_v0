@@ -226,6 +226,10 @@ export class PlaylistsController {
 
             // Use BlendingController for centralized generation
             const result = await blendingController.regenerate(config)
+
+            // Sprint 16: Default name logic now centralized in BlendingController - REMOVED redundant internal logic
+            // The BlendingController already called playlistsStore.setDefaultBatchName() if needed.
+
             toast.success(`Generated ${result.playlists.length} playlists`)
 
         } catch (err) {
@@ -245,8 +249,11 @@ export class PlaylistsController {
         let batchName = customBatchName
 
         // If Edit Mode, use existing name if not provided (or updated name from input)
+        // Sprint 16: Use defaultBatchName if available (for new unsaved batches)
         if (isEditMode && !batchName) {
             batchName = playlistsStore.getEditContext()?.batchName
+        } else if (!batchName && playlistsStore.defaultBatchName) {
+            batchName = playlistsStore.defaultBatchName
         }
 
         if (!batchName) {
@@ -307,9 +314,13 @@ export class PlaylistsController {
             // If Edit Mode -> Always delete original batch name first (handles rename case too if we track original)
 
             if (isEditMode) {
+                // Sprint 16 Fix: Use originalBatchName to find the target to delete.
+                // This handles the "Rename" scenario: If I rename "Beatles" to "Beatles v2",
+                // I need to find "Beatles" to delete it, otherwise I get a ghost.
                 const originalName = playlistsStore.editContext?.originalBatchName || playlistsStore.editContext?.batchName
+
                 if (originalName) {
-                    console.log('[PlaylistsController] Deleting old batch:', originalName)
+                    console.log('[PlaylistsController] Overwriting/Renaming batch - Deleting old:', originalName)
                     const all = await repo.findAll()
                     const old = all.filter(p => p.batchName === originalName)
                     for (const p of old) await repo.delete(p.id)
@@ -331,6 +342,14 @@ export class PlaylistsController {
                     btn.disabled = false;
                     btn.innerHTML = `${getIcon('Cloud', 'w-5 h-5')} ${isEditMode ? 'Save Changes' : 'Save to History'}`
                 }, 2000)
+            }
+
+            // Sprint 16 Fix: After saving in Create Mode, switch to Edit Mode
+            // This prevents "Save" from creating duplicates if clicked again, 
+            // and ensures the UI reflects that we are now working with a saved batch.
+            if (!isEditMode) {
+                console.log('[PlaylistsController] Switching to Edit Mode after save')
+                playlistsStore.setEditMode(batchName, seriesId, new Date().toISOString())
             }
 
         } catch (err) {
