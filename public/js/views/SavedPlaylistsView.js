@@ -127,7 +127,7 @@ export class SavedPlaylistsView extends BaseView {
                 className: 'btn btn-secondary btn-sm group-hover:bg-white/10 transition-colors',
                 onClick: () => this.controller.openSeriesManager(group.series.id)
             }, [
-                'Open Series Manager ',
+                'Open Albums Series ',
                 SafeDOM.fromHTML(getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1'))
             ]),
             SafeDOM.button({

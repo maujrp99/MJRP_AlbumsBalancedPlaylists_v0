@@ -6,15 +6,12 @@
  * @module algorithms/index
  */
 
-import { LegacyRoundRobinAlgorithm } from './LegacyRoundRobinAlgorithm.js'
-import { SDraftOriginalAlgorithm } from './SDraftOriginalAlgorithm.js'
 import { MJRPBalancedCascadeAlgorithm } from './MJRPBalancedCascadeAlgorithm.js'
-import { MJRPBalancedCascadeV0Algorithm } from './MJRPBalancedCascadeV0Algorithm.js'
 // Top N algorithms for Blending Menu
-import { Top3PopularAlgorithm } from './Top3PopularAlgorithm.js'
-import { Top3AcclaimedAlgorithm } from './Top3AcclaimedAlgorithm.js'
-import { Top5PopularAlgorithm } from './Top5PopularAlgorithm.js'
-import { Top5AcclaimedAlgorithm } from './Top5AcclaimedAlgorithm.js'
+// Top N algorithms for Blending Menu
+import { TopNAlgorithm } from './TopNAlgorithm.js'
+import { TopNPopularAlgorithm } from './TopNPopularAlgorithm.js'
+import { TopNAcclaimedAlgorithm } from './TopNAcclaimedAlgorithm.js'
 
 /**
  * Registry of all available algorithms
@@ -24,14 +21,10 @@ const algorithms = new Map()
 
 // Register all algorithms (order matters for UI display)
 algorithms.set('mjrp-balanced-cascade', MJRPBalancedCascadeAlgorithm) // RECOMMENDED first
-algorithms.set('mjrp-cascade-v0', MJRPBalancedCascadeV0Algorithm)
-algorithms.set('s-draft-original', SDraftOriginalAlgorithm)
-algorithms.set('legacy-roundrobin', LegacyRoundRobinAlgorithm)
 // Top N algorithms (Blending Menu flavors)
-algorithms.set('top-3-popular', Top3PopularAlgorithm)
-algorithms.set('top-5-popular', Top5PopularAlgorithm)
-algorithms.set('top-3-acclaimed', Top3AcclaimedAlgorithm)
-algorithms.set('top-5-acclaimed', Top5AcclaimedAlgorithm)
+// Sprint 17.5: Consolidated to 2 generic flavors
+algorithms.set('top-n-popular', TopNPopularAlgorithm)
+algorithms.set('top-n-acclaimed', TopNAcclaimedAlgorithm)
 
 /**
  * Get algorithm class by ID
@@ -90,15 +83,11 @@ export function createAlgorithm(id, opts = {}) {
 }
 
 // Export algorithm classes for direct import if needed
-export { LegacyRoundRobinAlgorithm } from './LegacyRoundRobinAlgorithm.js'
-export { SDraftOriginalAlgorithm } from './SDraftOriginalAlgorithm.js'
+// Export algorithm classes for direct import if needed
 export { MJRPBalancedCascadeAlgorithm } from './MJRPBalancedCascadeAlgorithm.js'
-export { MJRPBalancedCascadeV0Algorithm } from './MJRPBalancedCascadeV0Algorithm.js'
 // Top N algorithms
 export { TopNAlgorithm } from './TopNAlgorithm.js'
-export { Top3PopularAlgorithm } from './Top3PopularAlgorithm.js'
-export { Top3AcclaimedAlgorithm } from './Top3AcclaimedAlgorithm.js'
-export { Top5PopularAlgorithm } from './Top5PopularAlgorithm.js'
-export { Top5AcclaimedAlgorithm } from './Top5AcclaimedAlgorithm.js'
+export { TopNPopularAlgorithm } from './TopNPopularAlgorithm.js'
+export { TopNAcclaimedAlgorithm } from './TopNAcclaimedAlgorithm.js'
 
 

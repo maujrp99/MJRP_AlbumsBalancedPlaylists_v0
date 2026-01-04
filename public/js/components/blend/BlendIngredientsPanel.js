@@ -39,7 +39,7 @@ const ALGORITHM_INGREDIENTS = {
         rankingType: false,
         discoveryMode: true
     },
-    'top-3-popular': {
+    'top-n-popular': {
         groupingStrategy: true,
         outputMode: true,
         duration: false,        // Fixed count, duration irrelevant
@@ -47,27 +47,11 @@ const ALGORITHM_INGREDIENTS = {
         discoveryMode: false,   // Requires ranking data
         trackCount: true        // Sprint 17: Variable N
     },
-    'top-3-acclaimed': {
+    'top-n-acclaimed': {
         groupingStrategy: true,
         outputMode: true,
         duration: false,        // Fixed count
         rankingType: false,     // Locked: BEA
-        discoveryMode: false,
-        trackCount: true
-    },
-    'top-5-popular': {
-        groupingStrategy: true,
-        outputMode: true,
-        duration: false,        // Fixed count
-        rankingType: false,
-        discoveryMode: false,
-        trackCount: true
-    },
-    'top-5-acclaimed': {
-        groupingStrategy: true,
-        outputMode: true,
-        duration: false,        // Fixed count
-        rankingType: false,
         discoveryMode: false,
         trackCount: true
     }
@@ -83,7 +67,7 @@ export class BlendIngredientsPanel {
             outputMode: opts.outputMode || 'auto',
             groupingStrategy: opts.groupingStrategy || 'by_album',
             rankingType: opts.rankingType || 'combined',
-            discoveryMode: opts.discoveryMode || false,
+            discoveryMode: opts.discoveryMode !== undefined ? opts.discoveryMode : true, // Default true
             trackCount: opts.trackCount || 3, // Default for Top N
             ...opts.config
         }
@@ -127,10 +111,11 @@ export class BlendIngredientsPanel {
      * Grouping Strategy options (New for Sprint 15.5)
      */
     static GROUPING_STRATEGIES = [
-        { value: 'by_album', label: 'By Album', description: 'Preserves album structure (Chronological)', icon: 'Disc' },
-        { value: 'flat_ranked', label: 'Global Rank', description: 'Best songs first (Interleaved)', icon: 'TrendingUp' },
-        { value: 'artist_rank', label: 'Artist Cluster', description: 'Grouped by Artist (Best First)', icon: 'Users' },
-        { value: 'shuffle', label: 'Shuffle', description: 'Random mix', icon: 'Shuffle' }
+        { value: 'by_album', label: 'By Album', description: 'Keep Album Sequence', icon: 'Disc' },
+        { value: 'flat_ranked', label: 'By Ranking', description: 'Flow by Popularity', icon: 'TrendingUp' },
+        { value: 'artist_rank', label: 'By Artist then By Rank', description: 'Cluster by Artist', icon: 'Users' },
+        { value: 'ranked_interleave', label: 'Balanced Interleave', description: 'Round Robin by Rank', icon: 'GitMerge' },
+        { value: 'shuffle', label: 'Shuffle', description: 'Surprise Me', icon: 'Shuffle' }
     ]
 
     /**
@@ -200,20 +185,29 @@ export class BlendIngredientsPanel {
     /**
      * Render Track Count section (Sprint 17)
      */
+    /**
+     * Render Track Count section (Sprint 17.5: Swapped to Buttons)
+     */
     renderTrackCountSection() {
+        // Top 1 to Top 10
+        const counts = Array.from({ length: 10 }, (_, i) => i + 1)
+
         return `
             <div>
                  <label class="block text-sm font-medium mb-3 text-muted">
-                    ${getIcon('Music', 'w-4 h-4 inline mr-2')}Tracks per Album (N)
+                    ${getIcon('Music', 'w-4 h-4 inline mr-2')}Choose your Top #
                 </label>
-                <div class="flex items-center gap-4">
-                    <input type="range" min="1" max="10" step="1" 
-                        id="blend-track-count-slider"
-                        value="${this.config.trackCount || 3}" 
-                        class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-orange-400">
-                    <span id="blend-track-count-display" class="text-2xl font-bold text-orange-400 w-8 text-center">
-                        ${this.config.trackCount || 3}
-                    </span>
+                <div class="grid grid-cols-5 gap-2">
+                    ${counts.map(n => `
+                        <button type="button" 
+                            class="blend-track-count-btn px-3 py-2 rounded-lg border transition-all duration-200 text-center
+                                ${this.config.trackCount === n
+                ? 'border-orange-400 bg-orange-400/20 text-orange-400 ring-1 ring-orange-400'
+                : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'}"
+                            data-count="${n}">
+                            <span class="font-semibold text-sm">Top ${n}</span>
+                        </button>
+                    `).join('')}
                 </div>
                 <p class="text-xs text-muted mt-2">Select how many top tracks to pick from each album.</p>
             </div>
@@ -223,24 +217,25 @@ export class BlendIngredientsPanel {
     /**
      * Render Duration section
      */
+    /**
+     * Render Duration section (Sprint 17.5: Swapped to Slider)
+     */
     renderDurationSection() {
         return `
             <div>
                 <label class="block text-sm font-medium mb-3 text-muted">
                     ${getIcon('Clock', 'w-4 h-4 inline mr-2')}Target Duration (minutes)
                 </label>
-                <div class="grid grid-cols-5 gap-2">
-                    ${BlendIngredientsPanel.DURATIONS.map(d => `
-                        <button type="button" 
-                            class="blend-duration-btn px-3 py-2 rounded-lg border transition-all duration-200 text-center
-                                ${this.config.duration === d.value
-                ? 'border-orange-400 bg-orange-400/20 text-orange-400 ring-1 ring-orange-400'
-                : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'}"
-                            data-duration="${d.value}">
-                            <span class="font-semibold text-sm">${d.label}</span>
-                        </button>
-                    `).join('')}
+                <div class="flex items-center gap-4">
+                    <input type="range" min="30" max="180" step="5" 
+                        id="blend-duration-slider"
+                        value="${this.config.duration || 60}" 
+                        class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-orange-400">
+                    <span id="blend-duration-display" class="text-2xl font-bold text-orange-400 w-12 text-center">
+                        ${this.config.duration || 60}m
+                    </span>
                 </div>
+                <p class="text-xs text-muted mt-2">How long should each volume be?</p>
             </div>
         `
     }
@@ -252,7 +247,7 @@ export class BlendIngredientsPanel {
         return `
             <div>
                 <label class="block text-sm font-medium mb-3 text-muted">
-                    ${getIcon('LayoutGrid', 'w-4 h-4 inline mr-2')}Output Mode
+                    ${getIcon('LayoutGrid', 'w-4 h-4 inline mr-2')}Playlist Structure
                 </label>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     ${BlendIngredientsPanel.OUTPUT_MODES.map(m => `
@@ -378,14 +373,17 @@ export class BlendIngredientsPanel {
      * Attach event listeners
      */
     attachListeners() {
-        // Duration buttons
-        document.querySelectorAll('.blend-duration-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.config.duration = parseInt(btn.dataset.duration)
+        // Duration Slider (Sprint 17.5)
+        const durationSlider = document.getElementById('blend-duration-slider')
+        const durationDisplay = document.getElementById('blend-duration-display')
+        if (durationSlider && durationDisplay) {
+            durationSlider.addEventListener('input', (e) => {
+                const val = parseInt(e.target.value)
+                durationDisplay.textContent = val + 'm'
+                this.config.duration = val
                 this.onConfigChange(this.config)
-                this.render()
             })
-        })
+        }
 
         // Output mode buttons
         document.querySelectorAll('.blend-output-btn').forEach(btn => {
@@ -424,17 +422,14 @@ export class BlendIngredientsPanel {
             })
         }
 
-        // Sprint 17: Track Count Slider
-        const trackSlider = document.getElementById('blend-track-count-slider')
-        const trackDisplay = document.getElementById('blend-track-count-display')
-        if (trackSlider && trackDisplay) {
-            trackSlider.addEventListener('input', (e) => {
-                const val = parseInt(e.target.value)
-                trackDisplay.textContent = val
-                this.config.trackCount = val
+        // Sprint 17.5: Track Count Buttons
+        document.querySelectorAll('.blend-track-count-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.config.trackCount = parseInt(btn.dataset.count)
                 this.onConfigChange(this.config)
+                this.render()
             })
-        }
+        })
     }
 
     /**
@@ -455,15 +450,6 @@ export class BlendIngredientsPanel {
             'spotify': 'spotify',
             'bea': 'bea'
         }
-
-        // DEBUG: Log the config being returned
-        console.log('[BlendIngredientsPanel] getConfig() returning:', {
-            targetDuration: this.config.duration * 60,
-            rankingId: rankingMapping[this.config.rankingType] || 'balanced',
-            outputMode: this.config.outputMode,
-            groupingStrategy: this.config.groupingStrategy,
-            discoveryMode: this.config.discoveryMode
-        })
 
         return {
             targetDuration: this.config.duration * 60, // minutes → seconds

@@ -195,8 +195,9 @@ export class SavedPlaylistsController {
         router.navigate('/blend')
     }
 
-    openSeriesManager(seriesId) {
-        this.editSeries(seriesId)
+    async openSeriesManager(seriesId) {
+        // Sprint 17.5: Navigate to Albums Series view
+        router.navigate(`/albums?seriesId=${seriesId}`)
     }
 
     async deleteBatch(seriesId, batchName) {

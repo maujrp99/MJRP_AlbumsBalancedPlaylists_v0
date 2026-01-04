@@ -26,7 +26,7 @@ const BaseWithTrimming = DurationTrimmingMixin(BaseAlgorithm)
 export class MJRPBalancedCascadeAlgorithm extends BaseWithTrimming {
     static metadata = {
         id: 'mjrp-balanced-cascade',
-        name: 'MJRP Zé\'s Full Balanced Playlists',
+        name: '[MJRP] Zé\'s Balanced Playlists',
         badge: 'RECOMMENDED',
         description: 'Cria playlists balanceadas mesclando as melhores faixas de cada álbum. Playlists curtas são combinadas automaticamente.',
         isRecommended: true

@@ -49,10 +49,8 @@ export class BlendFlavorCard {
             's-draft-original': 'Shuffle',
             'legacy-roundrobin': 'RefreshCw',
             // Top N (Curated Selection)
-            'top-3-popular': 'TrendingUp',
-            'top-3-acclaimed': 'Award',
-            'top-5-popular': 'Star',
-            'top-5-acclaimed': 'Gem'
+            'top-n-popular': 'TrendingUp',
+            'top-n-acclaimed': 'Award'
         }
         return icons[id] || 'Music'
     }
@@ -69,10 +67,9 @@ export class BlendFlavorCard {
             's-draft-original': { from: 'from-indigo-500', to: 'to-purple-500' },
             'legacy-roundrobin': { from: 'from-slate-500', to: 'to-gray-600' },
             // Top N (Curated Selection)
-            'top-3-popular': { from: 'from-orange-500', to: 'to-red-500' },
-            'top-3-acclaimed': { from: 'from-purple-500', to: 'to-pink-500' },
-            'top-5-popular': { from: 'from-yellow-400', to: 'to-orange-500' },
-            'top-5-acclaimed': { from: 'from-blue-500', to: 'to-cyan-400' }
+            // Top N (Curated Selection)
+            'top-n-popular': { from: 'from-green-500', to: 'to-emerald-600' }, // Spotify Green
+            'top-n-acclaimed': { from: 'from-rose-500', to: 'to-orange-500' } // BEA Red/Orange
         }
         return colors[id] || { from: 'from-gray-500', to: 'to-gray-600' }
     }
@@ -88,6 +85,10 @@ export class BlendFlavorCard {
         let badgeClass = 'bg-gray-500/20 text-gray-400'
         if (isRecommended) {
             badgeClass = 'bg-amber-400/20 text-amber-400 font-bold'
+        } else if (flavor.badge === 'SPOTIFY') {
+            badgeClass = 'bg-green-500/20 text-green-400 font-semibold'
+        } else if (flavor.badge === 'BEA') {
+            badgeClass = 'bg-rose-500/20 text-rose-400 font-semibold'
         } else if (flavor.badge === 'TOP 3') {
             badgeClass = 'bg-orange-500/20 text-orange-400'
         } else if (flavor.badge === 'TOP 5') {

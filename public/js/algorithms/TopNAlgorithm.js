@@ -158,8 +158,16 @@ export class TopNAlgorithm extends BaseAlgorithm {
 
             case 'artist_rank': // Cluster by Artist, then by Rank
                 tracks.sort((a, b) => {
-                    const artistA = (a.artistName || '').toLowerCase()
-                    const artistB = (b.artistName || '').toLowerCase()
+                    // Robust artist name check
+                    const getArtist = (t) => {
+                        if (t.artistName) return t.artistName
+                        if (Array.isArray(t.artists) && t.artists[0]) return t.artists[0].name
+                        return ''
+                    }
+
+                    const artistA = getArtist(a).toLowerCase()
+                    const artistB = getArtist(b).toLowerCase()
+
                     if (artistA < artistB) return -1
                     if (artistA > artistB) return 1
                     return (a._rank || 0) - (b._rank || 0)
@@ -170,11 +178,75 @@ export class TopNAlgorithm extends BaseAlgorithm {
                 tracks.sort(() => Math.random() - 0.5)
                 break
 
+            case 'ranked_interleave': // Group by Rank, then Round-Robin by Artist
+                // 1. Bucket by Rank
+                const rankBuckets = {}
+                tracks.forEach(track => {
+                    const rank = track._rank || 999
+                    if (!rankBuckets[rank]) rankBuckets[rank] = []
+                    rankBuckets[rank].push(track)
+                })
+
+                const sortedRanks = Object.keys(rankBuckets).sort((a, b) => Number(a) - Number(b))
+                const finalList = []
+
+                // 2. Process each rank bucket
+                for (const rank of sortedRanks) {
+                    const bucketTracks = rankBuckets[rank]
+
+                    // Group by Artist within this bucket
+                    const artistGroups = {}
+                    const artistOrder = [] // Maintain discovery order for stability
+
+                    bucketTracks.forEach(t => {
+                        const artist = this._getArtistName(t)
+                        if (!artistGroups[artist]) {
+                            artistGroups[artist] = []
+                            artistOrder.push(artist)
+                        }
+                        artistGroups[artist].push(t)
+                    })
+
+                    // Round Robin Interleave
+                    const maxTracksInGroup = Math.max(...Object.values(artistGroups).map(g => g.length))
+
+                    for (let i = 0; i < maxTracksInGroup; i++) {
+                        for (const artist of artistOrder) {
+                            if (artistGroups[artist][i]) {
+                                finalList.push(artistGroups[artist][i])
+                            }
+                        }
+                    }
+                }
+
+                // Replace original array contents while keeping reference
+                tracks.length = 0
+                tracks.push(...finalList)
+                break
+
             case 'by_album':
             default:
                 // Preserve original order (by album index)
                 break
         }
+    }
+
+    /**
+     * Helper to safely get artist name
+     */
+    _getArtistName(t) {
+        // Tactic 1: Explicit Track Artist
+        if (t.artist) return t.artist // Common property on Apple Music/Spotify objects
+        if (t.artistName) return t.artistName
+        if (Array.isArray(t.artists) && t.artists[0]) return t.artists[0].name
+
+        // Tactic 2: Album Artist (fallback)
+        if (t._originAlbumId && this.albumLookup) {
+            const album = this.albumLookup.get(t._originAlbumId)
+            if (album && album.artist) return album.artist
+        }
+
+        return 'Unknown Artist'
     }
 
     /**

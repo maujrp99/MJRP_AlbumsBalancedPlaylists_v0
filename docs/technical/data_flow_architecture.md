@@ -1,7 +1,7 @@
 # Album Data Flow Architecture
 
-**Updated**: 2025-12-25
-**Version**: 2.7 (PlaylistsView V3 + Sprint 13 Documentation)
+**Updated**: 2026-01-04
+**Version**: 2.9 (Sprint 17 Modularization)
 
 ## Overview
 
@@ -21,6 +21,7 @@ This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** fo
 - **Sprint 12**: **Conditional Ingredients Panel** - Parameters show/hide based on selected algorithm.
 - **Sprint 12**: **Spotify Enrichment Modularization** - SpotifyEnrichmentStore, SpotifyEnrichmentService, SpotifyEnrichmentHelper with cache-first pattern.
 - **Sprint 13**: **PlaylistsView V3 Architecture** - Thin orchestrator with PlaylistsController, PlaylistsGridRenderer, PlaylistsDragHandler. Atomic saves with WriteBatch.
+- **Sprint 17**: **Modularization & Strategy** - `MusicKitService` split (Facade), `SeriesView` V4 (Passive w/ Controller), `PlaylistGenerationService` (Strategy Pattern w/ Top N).
 
 ---
 
@@ -46,6 +47,7 @@ This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** fo
    - Ranking Generation
    - Algorithm Generation
    - Spotify Integration
+   - MusicKit Modularization (Facade)
 
 ---
 
@@ -408,6 +410,45 @@ graph LR
     API --> MusicKitService
     AlbumSeriesStore --> Firestore
     InventoryStore --> Firestore
+
+---
+
+## MusicKit Modularization Architecture
+
+> **Added**: Sprint 17 (2026-01-04)
+> **Pattern**: Facade + Domain Services
+
+### Component Hierarchy
+
+```
+MusicKitService (Facade)
+    │
+    ├── MusicKitAuth.js (Auth & Token Management)
+    │
+    ├── MusicKitCatalog.js (Search & Metadata)
+    │   └── API: v1/catalog/{storefront}/search
+    │
+    └── MusicKitLibrary.js (User Content)
+        ├── API: v1/me/library/playlists
+        └── Logic: Export to Apple Music
+```
+
+### Data Flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Facade as MusicKitService
+    participant Auth as MusicKitAuth
+    participant Catalog as MusicKitCatalog
+
+    Client->>Facade: search(query)
+    Facade->>Auth: ensureAuthorized()
+    Auth-->>Facade: token
+    Facade->>Catalog: search(query, token)
+    Catalog-->>Facade: results
+    Facade-->>Client: results
+```
 
 ---
 

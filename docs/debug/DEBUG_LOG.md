@@ -18,6 +18,9 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
+| #123 | **Router Infinite Loop (PushState)** | ✅ RESOLVED | [Details](#issue-123-router-infinite-loop-pushstate) |
+| #122 | **SeriesController Bind Error** | ✅ RESOLVED | [Details](#issue-122-seriescontroller-bind-error) |
+| #121 | **SeriesView Component Initialization Failure** | ✅ RESOLVED | [Details](#issue-121-seriesview-component-initialization-failure) |
 | #116 | **Apple Music Export 500 Error (Invalid Track IDs)** | ✅ RESOLVED | [Details](#issue-116-apple-music-export-500-error-invalid-track-ids) |
 | #117 | **Playlist Index Duplication (1. 1. Title)** | ✅ RESOLVED | [Details](#issue-117-playlist-index-duplication-1-1-title) |
 | #118 | **Batch Name Input Losing Focus** | ✅ RESOLVED | [Details](#issue-118-batch-name-input-losing-focus) |
@@ -58,6 +61,41 @@
 
 ## Current Debugging Session
 
+
+### Issue #123: Router Infinite Loop (PushState)
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-04
+**Severity**: CRITICAL (App Hang)
+**Type**: Implementation Error
+**Component**: `router.js`
+**Sprint**: 17 Phase 5
+
+#### Problem
+Application entered infinite loop updating URL when switching views.
+
+#### Solution
+Corrected `pushState` logic invocation in `router.navigate`.
+
+---
+
+### Issue #122: SeriesController Bind Error
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-04
+**Severity**: CRITICAL (App Crash)
+**Type**: Syntax Error
+**Component**: `SeriesController.js`
+**Sprint**: 17 Phase 5
+
+#### Problem
+`TypeError: Cannot read properties of undefined` in constructor.
+
+#### Root Cause
+Invalid `.bind(this)` calls for non-existent methods (`handleFilter` vs `handleFilterChange`).
+
+#### Solution
+Updated constructor to bind correct method names.
+
+---
 
 ### Issue #121: SeriesView Component Initialization Failure
 **Status**: ✅ **RESOLVED**
