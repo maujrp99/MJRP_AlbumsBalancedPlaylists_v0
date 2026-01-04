@@ -36,8 +36,6 @@ Every curation action creates a **Series**. The "Series" is the fundamental unit
 **The Golden Pipeline**: `Entity Series` -> `Blending Menu` (Algorithm) -> `Playlist`.
 *   **Inventory**: Remains a separate utility for collectors to manage their "Pool" of albums.
 
-**The Golden Pipeline**: `Entity Series` -> `Blending Menu` (Algorithm) -> `Playlist`.
-*   **Inventory**: Remains a separate utility for collectors to manage their "Pool" of albums.
 
 ---
 
@@ -70,7 +68,12 @@ To enable a true "Menu" experience, the algorithms must be highly parametrized. 
 *   **Single Playlist**: The consolidated "Best Of".
 *   **Multiple Playlists (Series)**: Breaking down large collections (e.g., "The Experimental Years", "The Pop Years").
 
-##The blendin menu overall description is:  seguir a metafora do restaurate: Choose your blend" para selecionar as series, (um drop down/filter que tenha as entidades e que depois de selecionado a entidade carrega as series para a entidade selecionada),. Aí a seção de "chose your flavor" para os algoritmos, "pick your ingredientes" para a parametrizacao que será passada ao algoritmo (duration, single/multiple e # playlists, discover mode, etc.) , e por fim, o botão de blend it and generate your playlist(s) 
+## 6. The Blending Menu Metaphor
+The Blending Menu is the heart of the experience, designed around a "Restaurant" metaphor:
+
+1.  **"Choose your Blend"**: A filter/dropdown to select the Entity (Core Ingredient).
+2.  **"Pick your Ingredients"**: Parametrization section for the algorithm (Duration, Discovery Mode, # of Playlists).
+3.  **"Cook"**: The "Blend It" action that generates the final playlist(s).
 
 ---
 

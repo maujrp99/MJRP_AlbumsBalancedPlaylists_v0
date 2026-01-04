@@ -1,7 +1,7 @@
 # Documentation
 
 **Project**: MJRP Album-Balanced Playlists Generator  
-**Last Updated**: 2025-12-08
+**Last Updated**: 2026-01-04
 
 > **Note**: This is the documentation index. For quick start, see below.
 
@@ -33,7 +33,7 @@ npm run test:e2e      # E2E tests (Puppeteer)
 ```
 
 ### Current Version
-**v2.1.0** - Sprint 5 Complete: Persistence & Production Ready (✅ DEPLOYED)
+**v3.16.0** - Sprint 16 Complete: SafeDOM Migration & Batch Naming (✅ DEPLOYED)
 
 See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
