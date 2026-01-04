@@ -61,20 +61,27 @@ export class HomeView extends BaseView {
                 SafeDOM.input({
                     type: 'text',
                     id: 'artistScanInput',
-                    style: { backgroundColor: '#111 !important', color: '#fff !important' },
-                    className: 'w-full border border-white/10 rounded-lg py-3 pl-10 pr-3 placeholder-gray-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none transition-all',
+                    className: 'w-full bg-white/5 border border-white/10 rounded-lg py-3 pl-10 pr-3 text-white placeholder-gray-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none transition-all',
                     placeholder: 'Type artist name...'
                 })
             ]),
             scanBtn
         ]);
 
+        const parseBtn = SafeDOM.button({
+            id: 'btnProcessBulk',
+            className: 'w-full mt-2 px-4 py-2 bg-flame-gradient rounded-lg text-white text-xs font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2'
+        });
+        parseBtn.appendChild(SafeDOM.fromHTML(getIcon('Search', 'w-3 h-3')));
+        parseBtn.appendChild(SafeDOM.span({}, 'Process List'));
+
         const bulkInputs = SafeDOM.div({ id: 'bulkInputs', className: 'hidden' }, [
             SafeDOM.textarea({
                 id: 'bulkPasteInput',
-                className: 'w-full h-32 bg-black/50 border border-white/10 rounded-lg p-3 text-xs text-mono text-white focus:border-orange-500 focus:outline-none custom-scrollbar',
+                className: 'w-full h-32 bg-black/50 border border-white/10 rounded-lg p-3 text-xs text-mono text-white focus:border-orange-500 focus:outline-none custom-scrollbar resize-none',
                 placeholder: 'Paste: Artist - Album\nOne per line...'
-            })
+            }),
+            parseBtn
         ]);
 
         const techPanel = SafeDOM.div({ className: 'tech-panel rounded-xl p-0 border border-white/10 bg-black/40 relative overflow-hidden' }, [

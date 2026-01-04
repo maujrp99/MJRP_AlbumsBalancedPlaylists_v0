@@ -18,8 +18,13 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
+| #128 | **Bulk Paste Artwork Error** | ✅ RESOLVED | [Details](#issue-128-bulk-paste-artwork-error) |
 | #123 | **Router Infinite Loop (PushState)** | ✅ RESOLVED | [Details](#issue-123-router-infinite-loop-pushstate) |
 | #122 | **SeriesController Bind Error** | ✅ RESOLVED | [Details](#issue-122-seriescontroller-bind-error) |
+| #127 | **Balanced Interleave Clustering (Artist Resolution)** | ✅ RESOLVED | [Details](#issue-127-balanced-interleave-clustering-artist-resolution) |
+| #126 | **By Artist Grouping Failure** | ✅ RESOLVED | [Details](#issue-126-by-artist-grouping-failure) |
+| #125 | **Top N Ingredients Visibility** | ✅ RESOLVED | [Details](#issue-125-top-n-ingredients-visibility) |
+| #124 | **Flavor Card Styling Loss** | ✅ RESOLVED | [Details](#issue-124-flavor-card-styling-loss) |
 | #121 | **SeriesView Component Initialization Failure** | ✅ RESOLVED | [Details](#issue-121-seriesview-component-initialization-failure) |
 | #116 | **Apple Music Export 500 Error (Invalid Track IDs)** | ✅ RESOLVED | [Details](#issue-116-apple-music-export-500-error-invalid-track-ids) |
 | #117 | **Playlist Index Duplication (1. 1. Title)** | ✅ RESOLVED | [Details](#issue-117-playlist-index-duplication-1-1-title) |
@@ -61,6 +66,88 @@
 
 ## Current Debugging Session
 
+
+### Issue #127: Balanced Interleave Clustering (Artist Resolution)
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-04
+**Severity**: HIGH (Feature Broken)
+**Type**: Logic Error / Data Access
+**Component**: `TopNAlgorithm.js`
+**Sprint**: 17.5
+
+#### Problem
+"Balanced Interleave" grouping strategy failed to interleave artists, resulting in clustered output (Dylan, Dylan...) identical to "By Album".
+
+#### Root Cause
+The algorithm treated all tracks as "Unknown Artist" because it looked for `t.artistName` (Apple Music) or `t.artists` array (Spotify) but missed the simple `t.artist` property present on the hydrated track objects. This caused all tracks to fall into a single "Unknown" bucket, defeating the Round Robin logic.
+
+#### Solution
+Updated `_getArtistName` to check `t.artist` explicitly. Also added fallback to lookup Album Artist via `albumLookup`.
+
+#### Files Modified
+- `public/js/algorithms/TopNAlgorithm.js`
+
+---
+
+### Issue #126: By Artist Grouping Failure
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-04
+**Severity**: MEDIUM (Feature Broken)
+**Type**: Logic Error
+**Component**: `TopNAlgorithm.js`
+**Sprint**: 17.5
+
+#### Problem
+"By Artist then By Rank" grouping didn't sort correctly.
+
+#### Root Cause
+Similar to #127, sorting logic relied on `artistName` which wasn't consistently present or detected.
+
+#### Solution
+Refactored artist detection into helper `_getArtistName` (which was later improved in #127).
+
+---
+
+### Issue #125: Top N Ingredients Visibility
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-04
+**Severity**: MEDIUM (UI Bug)
+**Type**: Configuration Error
+**Component**: `BlendIngredientsPanel.js`
+**Sprint**: 17.5
+
+#### Problem
+Selecting "Top N Popular" or "Top N Acclaimed" did not show the "Track Count" (Top 1..10) buttons.
+
+#### Root Cause
+`ALGORITHM_INGREDIENTS` configuration map used old IDs (`top-3-popular`) instead of new generic IDs (`top-n-popular`).
+
+#### Solution
+Updated `ALGORITHM_INGREDIENTS` keys to match new Algorithm IDs.
+
+---
+
+### Issue #124: Flavor Card Styling Loss
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-04
+**Severity**: LOW (Visual Bug)
+**Type**: Static Data Error
+**Component**: `BlendFlavorCard.js`
+**Sprint**: 17.5
+
+#### Problem
+Flavor cards for Top N algorithms appeared gray with default icons.
+
+#### Root Cause
+Styles (colors/icons) were hardcoded to legacy IDs (`top-3-popular`). New generic IDs were missing from the style maps.
+
+#### Solution
+Added `top-n-*` mappings to `getFlavorIcon` and `getFlavorColor`. Added support for `SPOTIFY` and `BEA` badges.
+
+#### Files Modified
+- `public/js/components/blend/BlendFlavorCard.js`
+
+---
 
 ### Issue #123: Router Infinite Loop (PushState)
 **Status**: ✅ **RESOLVED**

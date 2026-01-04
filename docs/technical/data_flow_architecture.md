@@ -22,6 +22,7 @@ This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** fo
 - **Sprint 12**: **Spotify Enrichment Modularization** - SpotifyEnrichmentStore, SpotifyEnrichmentService, SpotifyEnrichmentHelper with cache-first pattern.
 - **Sprint 13**: **PlaylistsView V3 Architecture** - Thin orchestrator with PlaylistsController, PlaylistsGridRenderer, PlaylistsDragHandler. Atomic saves with WriteBatch.
 - **Sprint 17**: **Modularization & Strategy** - `MusicKitService` split (Facade), `SeriesView` V4 (Passive w/ Controller), `PlaylistGenerationService` (Strategy Pattern w/ Top N).
+- **Sprint 17.5**: **UI Polish & Hybrid Algorithms** - Balanced Interleave Grouping, Top N UI Improvements, Flavor Card Styling.
 
 ---
 

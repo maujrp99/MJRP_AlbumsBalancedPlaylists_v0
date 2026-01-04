@@ -48,10 +48,10 @@ class MusicKitSearchAdapter {
                 title: album.attributes?.name || '',
                 year: album.attributes?.releaseDate?.substring(0, 4) || '',
                 coverUrl: musicKitService.getArtworkUrl(
-                    musicKitService._extractArtworkTemplate(album.attributes?.artwork),
+                    musicKitService.extractArtworkTemplate(album.attributes?.artwork),
                     100
                 ),
-                artworkTemplate: musicKitService._extractArtworkTemplate(album.attributes?.artwork)
+                artworkTemplate: musicKitService.extractArtworkTemplate(album.attributes?.artwork)
             }));
         } catch (error) {
             console.error('[MusicKitSearchAdapter] Search failed:', error);

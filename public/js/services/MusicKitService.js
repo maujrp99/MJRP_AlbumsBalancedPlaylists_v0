@@ -65,6 +65,10 @@ class MusicKitService {
         return musicKitCatalog.findTrackFromAlbum(title, artist, albumName, isLiveAlbum);
     }
 
+    extractArtworkTemplate(artwork) {
+        return musicKitCatalog.extractArtworkTemplate(artwork);
+    }
+
     getArtworkUrl(template, size) {
         return musicKitCatalog.getArtworkUrl(template, size);
     }

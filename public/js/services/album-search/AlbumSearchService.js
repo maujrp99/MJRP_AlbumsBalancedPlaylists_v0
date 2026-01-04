@@ -148,7 +148,7 @@ export class AlbumSearchService {
                 title: album.attributes.name,
                 artist: album.attributes.artistName,
                 year: album.attributes.releaseDate ? album.attributes.releaseDate.substring(0, 4) : 'Unknown',
-                coverUrl: album.attributes.artwork ? musicKitService._extractArtworkTemplate(album.attributes.artwork) : null,
+                coverUrl: album.attributes.artwork ? musicKitService.extractArtworkTemplate(album.attributes.artwork) : null,
                 confidence: score,
                 raw: album
             };

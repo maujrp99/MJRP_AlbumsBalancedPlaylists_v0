@@ -102,7 +102,7 @@ class MusicKitCatalog {
                 id: album.id,
                 title: album.attributes?.name,
                 artist: album.attributes?.artistName,
-                artworkTemplate: this._extractArtworkTemplate(album.attributes?.artwork),
+                artworkTemplate: this.extractArtworkTemplate(album.attributes?.artwork),
                 releaseDate: album.attributes?.releaseDate,
                 year: album.attributes?.releaseDate?.split('-')[0],
                 tracks: tracks,
@@ -117,6 +117,7 @@ class MusicKitCatalog {
             throw error;
         }
     }
+
 
     /**
      * Get artist's albums (official discography)
@@ -172,7 +173,7 @@ class MusicKitCatalog {
                 artist: album.attributes.artistName,
                 year: album.attributes.releaseDate ? album.attributes.releaseDate.split('-')[0] : null,
                 albumType: this._classifyAlbumType(album.attributes),
-                artworkTemplate: this._extractArtworkTemplate(album.attributes.artwork),
+                artworkTemplate: this.extractArtworkTemplate(album.attributes.artwork),
                 trackCount: album.attributes.trackCount,
                 isLive: album.attributes.name.toLowerCase().includes('live'),
                 isSingle: album.attributes.isSingle || false,
@@ -262,7 +263,7 @@ class MusicKitCatalog {
         return 'Album';
     }
 
-    _extractArtworkTemplate(artwork) {
+    extractArtworkTemplate(artwork) {
         if (!artwork || !artwork.url) return null;
         return artwork.url;
     }
