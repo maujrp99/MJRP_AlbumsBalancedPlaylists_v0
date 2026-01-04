@@ -28,6 +28,10 @@
 | **ARCH-8** | InventoryView V3 Refactor | ✅ Complete | Modularized InventoryView (Controller + Renderer) |
 | **ARCH-12** | SafeDOM Migration | ✅ Complete | Eliminated innerHTML XSS sinks (Sprint 15) |
 | **ARCH-13** | Lazy Authorize + Browser Locale | ✅ Complete | MusicKit storefront via navigator.language (Sprint 15 Phase 6) |
+| **ARCH-14** | Context-Aware Series Loading | ✅ Complete | Strict Series ID filtering (Sprint 16) |
+| **ARCH-15** | MusicKit Modularization | ✅ Complete | Split God Service into Auth/Catalog/Library modules (Sprint 17) |
+| **ARCH-16** | SeriesView Thin Refactor | ✅ Complete | MVVM Pattern: Passive View, Logic in Controller (Sprint 17) |
+| **ARCH-17** | Variable Top N Strategy | ✅ Complete | Parametrized Strategy Pattern for Top N Algorithms (Sprint 17) |
 
 ### ARCH-1: PlaylistsView Modularization
 

@@ -44,28 +44,32 @@ const ALGORITHM_INGREDIENTS = {
         outputMode: true,
         duration: false,        // Fixed count, duration irrelevant
         rankingType: false,     // Locked: Spotify
-        discoveryMode: false    // Requires ranking data
+        discoveryMode: false,   // Requires ranking data
+        trackCount: true        // Sprint 17: Variable N
     },
     'top-3-acclaimed': {
         groupingStrategy: true,
         outputMode: true,
         duration: false,        // Fixed count
         rankingType: false,     // Locked: BEA
-        discoveryMode: false
+        discoveryMode: false,
+        trackCount: true
     },
     'top-5-popular': {
         groupingStrategy: true,
         outputMode: true,
         duration: false,        // Fixed count
         rankingType: false,
-        discoveryMode: false
+        discoveryMode: false,
+        trackCount: true
     },
     'top-5-acclaimed': {
         groupingStrategy: true,
         outputMode: true,
         duration: false,        // Fixed count
         rankingType: false,
-        discoveryMode: false
+        discoveryMode: false,
+        trackCount: true
     }
 }
 
@@ -80,6 +84,7 @@ export class BlendIngredientsPanel {
             groupingStrategy: opts.groupingStrategy || 'by_album',
             rankingType: opts.rankingType || 'combined',
             discoveryMode: opts.discoveryMode || false,
+            trackCount: opts.trackCount || 3, // Default for Top N
             ...opts.config
         }
     }
@@ -133,6 +138,13 @@ export class BlendIngredientsPanel {
      */
     setFlavor(flavor) {
         this.selectedFlavor = flavor
+        // Auto-detect default N from flavor ID (e.g., 'top-5-popular' -> 5)
+        if (flavor && flavor.id) {
+            const match = flavor.id.match(/top-(\d+)/)
+            if (match) {
+                this.config.trackCount = parseInt(match[1])
+            }
+        }
     }
 
     /**
@@ -143,9 +155,11 @@ export class BlendIngredientsPanel {
         return ALGORITHM_INGREDIENTS[flavorId] || {
             groupingStrategy: true,
             outputMode: true,
+            outputMode: true,
             duration: true,
             rankingType: true,
-            discoveryMode: true
+            discoveryMode: true,
+            trackCount: false
         }
     }
 
@@ -160,6 +174,9 @@ export class BlendIngredientsPanel {
 
         container.innerHTML = `
             <div class="space-y-6">
+                 <!-- 0. Track Count (Sprint 17: Top NParametrization) -->
+                ${ingredients.trackCount ? this.renderTrackCountSection() : ''}
+
                  <!-- 1. Grouping Tracks (Renamed) -->
                 ${ingredients.groupingStrategy ? this.renderGroupingSection() : ''}
 
@@ -178,6 +195,29 @@ export class BlendIngredientsPanel {
         `
 
         this.attachListeners(container)
+    }
+
+    /**
+     * Render Track Count section (Sprint 17)
+     */
+    renderTrackCountSection() {
+        return `
+            <div>
+                 <label class="block text-sm font-medium mb-3 text-muted">
+                    ${getIcon('Music', 'w-4 h-4 inline mr-2')}Tracks per Album (N)
+                </label>
+                <div class="flex items-center gap-4">
+                    <input type="range" min="1" max="10" step="1" 
+                        id="blend-track-count-slider"
+                        value="${this.config.trackCount || 3}" 
+                        class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-orange-400">
+                    <span id="blend-track-count-display" class="text-2xl font-bold text-orange-400 w-8 text-center">
+                        ${this.config.trackCount || 3}
+                    </span>
+                </div>
+                <p class="text-xs text-muted mt-2">Select how many top tracks to pick from each album.</p>
+            </div>
+        `
     }
 
     /**
@@ -383,6 +423,18 @@ export class BlendIngredientsPanel {
                 this.render()
             })
         }
+
+        // Sprint 17: Track Count Slider
+        const trackSlider = document.getElementById('blend-track-count-slider')
+        const trackDisplay = document.getElementById('blend-track-count-display')
+        if (trackSlider && trackDisplay) {
+            trackSlider.addEventListener('input', (e) => {
+                const val = parseInt(e.target.value)
+                trackDisplay.textContent = val
+                this.config.trackCount = val
+                this.onConfigChange(this.config)
+            })
+        }
     }
 
     /**
@@ -418,7 +470,8 @@ export class BlendIngredientsPanel {
             rankingId: rankingMapping[this.config.rankingType] || 'balanced',
             outputMode: this.config.outputMode,
             groupingStrategy: this.config.groupingStrategy,
-            discoveryMode: this.config.discoveryMode
+            discoveryMode: this.config.discoveryMode,
+            trackCount: this.config.trackCount // Pass N to service
         }
     }
 }

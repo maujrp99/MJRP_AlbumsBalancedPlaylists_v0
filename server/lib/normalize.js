@@ -1,5 +1,5 @@
 // Helpers to normalize provider responses into the canonical album object
-function cleanFencedMarkdown (s) {
+function cleanFencedMarkdown(s) {
   if (!s || typeof s !== 'string') return s
   let cleaned = s
   cleaned = cleaned.replace(/```\w*\n?/g, '')
@@ -7,7 +7,7 @@ function cleanFencedMarkdown (s) {
   return cleaned.trim()
 }
 
-function tryParseJson (s) {
+function tryParseJson(s) {
   if (!s || typeof s !== 'string') return null
   try {
     return JSON.parse(s)
@@ -24,7 +24,7 @@ function tryParseJson (s) {
   }
 }
 
-function tryRecoverRankingFromText (s) {
+function tryRecoverRankingFromText(s) {
   if (!s || typeof s !== 'string') return null
   const rankKeyMatch = s.match(/"ranking"\s*:\s*\[/i)
   if (!rankKeyMatch) return null
@@ -64,7 +64,7 @@ function tryRecoverRankingFromText (s) {
   return null
 }
 
-function parseNumberedList (s) {
+function parseNumberedList(s) {
   if (!s || typeof s !== 'string') return null
   const lines = s.split(/\r?\n/).map(l => l.trim()).filter(Boolean)
   const results = []
@@ -82,7 +82,7 @@ function parseNumberedList (s) {
   return results.length ? results : null
 }
 
-function extractFromCandidate (response) {
+function extractFromCandidate(response) {
   const candidateText = response?.data?.candidates?.[0]?.content?.parts?.[0]?.text
   if (candidateText && typeof candidateText === 'string') {
     const cleaned = cleanFencedMarkdown(candidateText)
@@ -92,19 +92,58 @@ function extractFromCandidate (response) {
   return null
 }
 
-function extractFromData (response) {
+function extractFromData(response) {
   if (response?.data?.data && typeof response.data.data === 'object') return response.data.data
   if (response?.data && typeof response.data === 'object') return response.data
   return null
 }
 
 // Main normalization function: returns { album } or null
-function extractAlbum (response) {
+// Main normalization function: returns { album } or null
+function ensureArray(maybeArray) {
+  if (Array.isArray(maybeArray)) return maybeArray
+  if (maybeArray && typeof maybeArray === 'object') {
+    // Handle "Query Object" case where array is returned as {0: val, 1: val}
+    const values = Object.values(maybeArray)
+    if (values.length > 0 && values.every(v => typeof v === 'object')) {
+      return values
+    }
+  }
+  return []
+}
+
+function normalizeAlbumFields(album) {
+  if (!album) return null
+
+  // FIX: Thriller Bug - Ensure tracks is an array
+  album.tracks = ensureArray(album.tracks)
+
+  // Ensure consistency
+  album.artist = album.artist || 'Unknown Artist'
+  album.title = album.title || 'Unknown Album'
+  album.series = album.series || null
+  album.spotifyId = album.spotifyId || null
+  album.bestEverScore = album.bestEverScore || null
+
+  return album
+}
+
+function extractAlbum(response) {
   if (!response || typeof response !== 'object') return null
+
+  let candidate = null
   const fromCandidate = extractFromCandidate(response)
-  if (fromCandidate && Array.isArray(fromCandidate.tracks)) return fromCandidate
-  const fromData = extractFromData(response)
-  if (fromData && Array.isArray(fromData.tracks)) return fromData
+  if (fromCandidate) candidate = fromCandidate
+
+  if (!candidate) {
+    const fromData = extractFromData(response)
+    if (fromData) candidate = fromData
+  }
+
+  if (candidate) {
+    return normalizeAlbumFields(candidate)
+  }
+
   return null
 }
 
@@ -121,7 +160,7 @@ const logger = (() => {
   try { return require('./logger') } catch (e) { return console }
 })()
 
-async function validateAndSanitizeEntries (entries) {
+async function validateAndSanitizeEntries(entries) {
   if (!Array.isArray(entries)) return entries
   const { verifyUrl, isBestEverUrl } = validateSourceHelpers || {}
   await Promise.all(entries.map(async (ent) => {
@@ -139,7 +178,7 @@ async function validateAndSanitizeEntries (entries) {
           }
         }
       } catch (e) {
-        try { logger.warn('reference_url_validation_error', { url: ent.referenceUrl, err: (e && e.message) || String(e) }) } catch (er) {}
+        try { logger.warn('reference_url_validation_error', { url: ent.referenceUrl, err: (e && e.message) || String(e) }) } catch (er) { }
         ent.referenceUrl = null
       }
     }
@@ -147,7 +186,7 @@ async function validateAndSanitizeEntries (entries) {
   return entries
 }
 
-function normalizeRankingEntry (entry, fallbackPosition) {
+function normalizeRankingEntry(entry, fallbackPosition) {
   if (!entry || typeof entry !== 'object') return null
   // Accept multiple possible key names (English/Portuguese/variants)
   const providerField = entry.provider || entry.name || entry.source || entry.fontes || entry.providers
@@ -175,7 +214,7 @@ function normalizeRankingEntry (entry, fallbackPosition) {
   }
 }
 
-function extractRankingPayload (response) {
+function extractRankingPayload(response) {
   // Try multiple locations where provider text may appear.
   const tryText = (s) => (s && typeof s === 'string') ? s : null
 
@@ -212,7 +251,7 @@ function extractRankingPayload (response) {
   return null
 }
 
-function extractRankingEntries (response) {
+function extractRankingEntries(response) {
   const payload = extractRankingPayload(response)
   if (!payload) return []
   let entries = []
@@ -227,13 +266,13 @@ function extractRankingEntries (response) {
 }
 
 // Async extractor that validates reference URLs using the centralized helper
-async function extractAndValidateRankingEntries (response) {
+async function extractAndValidateRankingEntries(response) {
   const entries = extractRankingEntries(response)
   await validateAndSanitizeEntries(entries)
   return entries
 }
 
-function rankingEntriesToSources (entries) {
+function rankingEntriesToSources(entries) {
   if (!Array.isArray(entries)) return []
   return entries.map(entry => ({
     name: entry.provider,

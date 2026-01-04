@@ -13,7 +13,8 @@
 1. [Frontend Components](#frontend-components)
    - [Views](#views-10-files)
    - [Stores](#stores-5-files)
-   - [Services](#services-6-files)
+   - [Controllers](#controllers-3-files)
+   - [Services](#services-9-files)
    - [Algorithms](#algorithms-7-files)
    - [Models](#models-4-files)
    - [Repositories](#repositories-5-files)
@@ -88,6 +89,16 @@
 
 ---
 
+### Controllers (3 files)
+
+| Controller | Purpose | Status |
+|---|---|---|
+| [SeriesController.js](file:///public/js/controllers/SeriesController.js) | Music Series Orchestrator | ✅ Sprint 17 |
+| [PlaylistsController.js](file:///public/js/controllers/PlaylistsController.js) | Playlist Generation Logic | ✅ Sprint 13 |
+| [InventoryController.js](file:///public/js/controllers/InventoryController.js) | Inventory Management | ✅ Sprint 14 |
+
+---
+
 ### Stores (5 files)
 
 | Store | Purpose | Status |
@@ -126,7 +137,12 @@
 
 | Service | Purpose | Status |
 |---------|---------|--------|
-| [MusicKitService.js](file:///public/js/services/MusicKitService.js) | Apple Music API integration | ✅ |
+| [MusicKitService.js](file:///public/js/services/MusicKitService.js) | **Facade**: Apple Music API | ✅ Sprint 17 |
+| [MusicKitAuth.js](file:///public/js/services/musickit/MusicKitAuth.js) | **Module**: Auth & Tokens | ✅ Sprint 17 |
+| [MusicKitCatalog.js](file:///public/js/services/musickit/MusicKitCatalog.js) | **Module**: Search & Metadata | ✅ Sprint 17 |
+| [MusicKitLibrary.js](file:///public/js/services/musickit/MusicKitLibrary.js) | **Module**: Library & Playlists | ✅ Sprint 17 |
+| [SeriesFilterService.js](file:///public/js/services/SeriesFilterService.js) | Pure func filtering logic | ✅ Sprint 17 |
+| [PlaylistGenerationService.js](file:///public/js/services/PlaylistGenerationService.js) | **Strategy**: Curation Pipeline | ✅ Sprint 17 |
 | [SpotifyService.js](file:///public/js/services/SpotifyService.js) | Spotify API (search, tracks, export) | ✅ |
 | [SpotifyAuthService.js](file:///public/js/services/SpotifyAuthService.js) | OAuth PKCE flow | ✅ |
 | [AlbumLoader.js](file:///public/js/services/AlbumLoader.js) | Load local album data | ✅ |

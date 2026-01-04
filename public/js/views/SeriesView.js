@@ -32,10 +32,10 @@ import SeriesEventHandler from '../components/series/SeriesEventHandler.js';
 import SeriesModals from '../components/series/SeriesModals.js';
 
 // Utilities (for filtering)
+// Utilities
 import {
-    filterAlbums as filterAlbumsFn,
     getUniqueArtists as getUniqueArtistsFn
-} from './albums/index.js';
+} from '../services/SeriesFilterService.js';
 import { escapeHtml } from '../utils/stringUtils.js';
 
 // Ranking component for expanded view
@@ -51,8 +51,10 @@ export default class SeriesView extends BaseView {
         super();
         this.controller = controller;
         this.components = {};
-        this.searchQuery = '';
-        this.filters = { artist: '', year: '', source: '' };
+        this.components = {};
+        // State delegated to controller, but viewMode kept local for UI toggle (or sync?)
+        // Actually viewMode is also in controller. Let's rely on controller for initial, but keep local logic simple?
+        // No, controller has viewMode.
         this.viewMode = localStorage.getItem('albumsViewMode') || 'compact';
         this.isLoading = false;
         this.currentScope = 'ALL';
@@ -175,12 +177,14 @@ export default class SeriesView extends BaseView {
         const activeSeries = albumSeriesStore.getActiveSeries();
         const allSeries = albumSeriesStore.getSeries();
 
+        const { searchQuery, filters, viewMode } = this.controller.getState();
+
         this.components.toolbar = new SeriesToolbar({
             container: mount,
             props: {
-                searchQuery: this.searchQuery,
-                filters: this.filters,
-                viewMode: this.viewMode,
+                searchQuery,
+                filters,
+                viewMode,
                 artists: getUniqueArtistsFn(albums),
                 seriesList: allSeries,
                 activeSeries,
@@ -207,7 +211,11 @@ export default class SeriesView extends BaseView {
         if (!mount) return;
 
         const albums = albumsStore.getAlbums();
-        const filteredAlbums = this.filterAlbums(albums);
+        // Initial Load: Controller will update this shortly after mount.
+        // We render empty or wait ?
+        // If we render albumsStore.getAlbums() it might be unfiltered.
+        // But Controller.loadScope calls notifyView.
+        const filteredAlbums = []; // Start empty or wait for update
         const allSeries = albumSeriesStore.getSeries();
 
         this.components.grid = new SeriesGridRenderer({
@@ -305,8 +313,7 @@ export default class SeriesView extends BaseView {
     // =========================================
 
     handleSearch(query) {
-        this.searchQuery = query;
-        this.refreshGrid();
+        if (this.controller) this.controller.handleSearch(query);
     }
 
     handleSeriesChange(value) {
@@ -328,8 +335,7 @@ export default class SeriesView extends BaseView {
     }
 
     handleFilter(type, value) {
-        this.filters[type] = value;
-        this.refreshGrid();
+        if (this.controller) this.controller.handleFilterChange(type, value);
     }
 
     handleRefresh() {
@@ -362,18 +368,13 @@ export default class SeriesView extends BaseView {
     // HELPER METHODS
     // =========================================
 
-    filterAlbums(albums) {
-        return filterAlbumsFn(albums, {
-            searchQuery: this.searchQuery,
-            filters: this.filters
-        });
-    }
-
-    async refreshGrid() {
+    async refreshGrid(providedAlbums = null) {
         if (!this.components.grid) return;
 
-        const albums = albumsStore.getAlbums();
-        let filteredAlbums = this.filterAlbums(albums);
+        // Use provided albums (from Controller) or cache.
+        // If neither, fallback to empty array (don't pull from store directly to avoid state mismatch)
+        const filteredAlbums = providedAlbums || this.lastRenderedAlbums || [];
+
         const allSeries = albumSeriesStore.getSeries();
 
         // Sprint 12: Apply cached Spotify enrichment to albums before rendering
@@ -387,12 +388,14 @@ export default class SeriesView extends BaseView {
             console.warn('[SeriesView] Enrichment application failed:', e.message);
         }
 
+        const { searchQuery, filters } = this.controller ? this.controller.getState() : { searchQuery: '', filters: {} };
+
         this.components.grid.update({
             items: filteredAlbums,
             layout: this.viewMode === 'compact' ? 'grid' : 'list',
             scope: this.currentScope,
             seriesList: allSeries,
-            context: { searchQuery: this.searchQuery, filters: this.filters }
+            context: { searchQuery, filters }
         });
 
         // Hydrate TracksRankingComparison components for expanded view
@@ -458,7 +461,8 @@ export default class SeriesView extends BaseView {
 
     updateAlbums(albums) {
         console.log('[SeriesView] updateAlbums:', albums?.length);
-        this.refreshGrid();
+        this.lastRenderedAlbums = albums; // Cache for toggle view
+        this.refreshGrid(albums);
         this.updateHeader();
     }
 

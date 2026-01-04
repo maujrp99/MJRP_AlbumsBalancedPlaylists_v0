@@ -15,6 +15,7 @@ import { albumsStore } from '../stores/albums.js';
 import { albumSeriesStore } from '../stores/albumSeries.js';
 import { apiClient } from '../api/client.js';
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js';
+import { filterAlbums } from '../services/SeriesFilterService.js';
 import { globalProgress } from '../components/GlobalProgress.js';
 import toast from '../components/Toast.js';
 
@@ -25,7 +26,8 @@ export default class SeriesController {
             currentScope: 'ALL',       // 'ALL' | 'SINGLE'
             targetSeriesId: null,
             viewMode: 'grid',          // 'grid' | 'list'
-            filterMode: 'all',
+            filterMode: 'all',         // 'all' | 'ranked' | 'unranked'
+            filters: { artist: '', year: '', source: '' }, // Detailed filters
             searchQuery: '',
             isLoading: false,
             loadProgress: { current: 0, total: 0 }
@@ -42,7 +44,8 @@ export default class SeriesController {
 
         // Bind methods
         this.handleSearch = this.handleSearch.bind(this);
-        this.handleFilter = this.handleFilter.bind(this);
+        this.handleFilterMode = this.handleFilterMode.bind(this);
+        this.handleFilterChange = this.handleFilterChange.bind(this);
         this.handleSort = this.handleSort.bind(this);
     }
 
@@ -252,11 +255,9 @@ export default class SeriesController {
             this.state.isLoading = false;
             globalProgress.finish();
 
-            const finalAlbums = albumsStore.getAlbums();
-            console.log('[SeriesController] Load complete:', finalAlbums?.length, 'albums');
-
+            console.log('[SeriesController] Load complete. Applying filters...');
             this.notifyView('loading', false);
-            this.notifyView('albums', finalAlbums);
+            this.applyFilters();
         }
     }
 
@@ -305,10 +306,21 @@ export default class SeriesController {
     }
 
     /**
-     * Handle filter mode change
+     * Handle filter mode change (Ranked/Unranked)
      */
-    handleFilter(mode) {
+    handleFilterMode(mode) {
         this.state.filterMode = mode;
+        this.applyFilters();
+    }
+
+    /**
+     * Handle explicit filter change (Artist, Year, Source)
+     * @param {string} type - 'artist' | 'year' | 'source'
+     * @param {string} value 
+     */
+    handleFilterChange(type, value) {
+        if (!this.state.filters) this.state.filters = {};
+        this.state.filters[type] = value;
         this.applyFilters();
     }
 
@@ -326,23 +338,18 @@ export default class SeriesController {
      */
     applyFilters() {
         const allAlbums = albumsStore.getAlbums();
-        let filtered = [...allAlbums];
 
-        // Text search
-        if (this.state.searchQuery) {
-            const q = this.state.searchQuery.toLowerCase();
-            filtered = filtered.filter(a =>
-                a.title?.toLowerCase().includes(q) ||
-                a.artist?.toLowerCase().includes(q)
-            );
-        }
-
-        // Filter mode
-        if (this.state.filterMode === 'ranked') {
-            filtered = filtered.filter(a => a.rankingStatus === 'RANKED');
-        } else if (this.state.filterMode === 'unranked') {
-            filtered = filtered.filter(a => a.rankingStatus !== 'RANKED');
-        }
+        // Sprint 17: Use pure service for filtering (T17-202)
+        const filtered = filterAlbums(allAlbums, {
+            searchQuery: this.state.searchQuery,
+            filters: this.state.filters || {}, // Ensure filters object exists in state? 
+            // Wait, this.state.filters was not explicit in constructor but SeriesView had it.
+            // I need to ensure SeriesController tracks 'filters'.
+            // In Constructor, only 'filterMode' was there.
+            // SeriesToolbar props passed `filters: this.filters` from View.
+            // I need to add filters to Controller state!
+            filterMode: this.state.filterMode
+        });
 
         this.notifyView('albums', filtered);
     }

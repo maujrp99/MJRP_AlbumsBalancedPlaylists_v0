@@ -56,7 +56,12 @@ docs/
 │   ├── DEVELOPER.md          # Dev setup & context
 │   ├── DEVOPS.md             # Infrastructure & deploy
 │   ├── QA_ENGINEER.md        # Testing protocols
+│   ├── UX_UI.md              # Design & UX specs
 │   └── README.md             # Onboarding index
+│
+├── archive/                  # Historical specs (organized by date)
+│   ├── 2025-12/              # Sprint 1-15 archives
+│   └── 2026-01/              # Sprint 16+ archives
 │
 ├── technical/                # Single Source for Engineering Docs
 │   ├── devops/               # Infrastructure & deploy guides

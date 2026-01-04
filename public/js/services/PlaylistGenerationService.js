@@ -68,7 +68,9 @@ export class PlaylistGenerationService {
             targetDuration: config.targetDuration,
             outputMode: config.outputMode,
             discoveryMode: config.discoveryMode,
-            groupingStrategy: config.groupingStrategy
+            groupingStrategy: config.groupingStrategy,
+            // Sprint 17: Pass variable track count (N)
+            trackCount: config.trackCount || config.n
         })
 
         // Transform result to normalized playlist format
