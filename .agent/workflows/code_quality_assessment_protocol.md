@@ -1,110 +1,108 @@
 ---
-description: Systematic process for assessing codebase quality and architectural alignment
+description: Systematic process for assessing codebase quality, architectural integrity, and modularity
 ---
 
-# Code Quality Assessment Protocol
+# Code Quality Assessment Protocol v2.0
 
-Execute this protocol at the end of every sprint or major architectural milestone or whenever the human user request.
-The goal is to provide a quantitative and qualitative measure of clean architecture, modularity of backend logic, componetization of UI and frontend elementtechnical debt and clean code compliance.
+Execute this protocol at the end of every sprint or major architectural milestone or whenever the human user requests.
+The goal is to provide a quantitative and qualitative measure of **Real Code Quality**: Architecture Compliance, Domain Modularity, Design Pattern Integrity, and Cognitive Load.
 
 ---
 
 ## 1. Preparation
-1.  **Identify Scope**: Determine if the assessment covers the entire project or specific components (e.g., "V3 Refactor").
+1.  **Identify Scope**: Determine if the assessment covers the entire project or specific components (e.g., "Sprint 17 Modularization").
 2.  **Environment Check**: Ensure the repository is in a stable state (passing builds/tests).
 3.  **Baseline**: Locate the previous assessment (e.g., `docs/technical/refactor/CODE_QUALITY_ASSESSMENT_vN.md`).
 
-## 2. Quantitative Scan
-1.  **Line Count Analysis**:
-    - Identify "God Classes" (>500 lines for Views, >300 lines for Modules).
-    - Compare total LOC (Lines of Code) against the baseline.
-2.  **Quantitative Scorecard**:
+## 2. Quantitative Scan (The "Cold" Hard Numbers)
+
+### A. Line Count & Structure
+- **Identify God Classes**:
+    - Views > 350 LOC (Strict)
+    - Controllers > 300 LOC
+    - Services > 200 LOC
+- **Nesting Depth**: Count functions with indentation depth > 3 levels.
+
+### B. V2 Scorecard Metrics
 
 | Metric Group | Specific Metric | Formula/Definition | Target |
 | :--- | :--- | :--- | :--- |
-| **Componentization (UI)** | **Density** | Total Components / Total Views | >3.0 |
-| | **Reusability** | Components in `shared/` / Total Components | >40% |
-| **Modularization (Logic)** | **Decoupling** | Modules with 0 DOM refs / Total Logic Modules | 100% |
-| | **Logic-to-View** | LOC (Controllers+Algos) / LOC (Views) | >1.0 |
-| **Tech Health** | **Safe Sink Ratio** | Usage of `textContent` vs `innerHTML` | 1:0 |
-| | **Async Safety** | % of API calls with explicit Error Handling | 100% |
+| **Componentization** | **Atomic Density** | "Dumb" Components / Total Components | > 70% |
+| | **Component Reusability** | Usage Count > 1 across Views | > 30% |
+| **Modularization** | **Layer Violations** | View -> Repository or Controller -> DOM imports | **0** |
+| | **Logic Isolation** | Services with 0 UI dependencies | 100% |
+| **Maintainability** | **Cognitive Load** | Max Nesting Depth per file | < 3 |
+| **Tech Health** | **Safe Sink Ratio** | Usage of `textContent`/`SafeDOM` vs `innerHTML` | 100% : 0% |
 
-
+---
 
 ## 3. Qualitative Scoring (The 1-10 Scale)
 
-Evaluate core files using the following criteria:
+Evaluate core files using the following criteria. Penalize heavily for "Hidden Complexity".
 
 | Score | Label | Description |
 |-------|-------|-------------|
-| 🔴 1-2 | Critical | God Class, mixed responsibilities, hard to test, >500 LOC. |
-| 🟠 3-4 | High | Needs refactor soon. 300-500 LOC, some pattern violations. |
-| 🟡 5-6 | Medium | Acceptable but contains tech debt. 150-300 LOC. |
-| 🟢 7-8 | Good | Clean code, single responsibility, well-documented. |
-| 🔵 9-10 | Excellent | Exemplary patterns, modular, fully tested. |
+| 🔴 1-2 | **Critical Debt** | "God Class", circular dependencies, side-effects, >500 LOC. |
+| 🟠 3-4 | **High Debt** | Layer violations (e.g., View limits DB), hard to test, copy-paste logic. |
+| 🟡 5-6 | **Acceptable** | Functional but needs refactor. <300 LOC but high nesting or low cohesion. |
+| 🟢 7-8 | **Good** | Clean Separation of Concerns, Standard Pattern usage, predictable state. |
+| 🔵 9-10 | **Exemplary** | "Dumb" Views, Pure Functions, 100% Testable, <150 LOC. |
 
-## 4. Critical Domains Analysis
+---
 
-### A. Frontend Componentization (UI focused)
-- **Visual Consistency**: Does the component strictly follow the `UI_STYLE_GUIDE.md`?
-- **Lifecycle compliance**: Do UI components implement `mount`, `unmount`, and `update`?
-- **Prop Logic**: Is the component "dumb" (receiving all data via props)?
+## 4. Deep Architecture Audit (The "Real Quality" Check)
 
-### B. Logic Modularization (Infrastructure/Backend focused)
-- **State Isolation**: Does the logic module manage its state without leaking to other modules?
-- **Dependency Injection**: Are external services (like Firestore or Spotify API) injected rather than hardcoded?
-- **Testability**: Can this logic be tested without a browser environment?
+### A. Layer Compliance (Strict Boundaries)
+*Verify if strict boundaries are respected:*
+- **Views**: MUST ONLY talk to Controllers or Components. NEVER import Repositories or logic Services.
+- **Controllers**: MUST ONLY manage State/Data. NEVER manipulate DOM directly (use View binding).
+- **Services**: MUST be environment-agnostic. NEVER import `views/` or `components/`.
+- **Stores**: MUST be Observable. State changes MUST happen via Actions, not direct mutation.
 
-### C. Performance Assessment
-- **DOM Efficiency**: Are we re-rendering the whole grid or just changed cards?
-- **Debouncing**: Are search/filter inputs debounced to prevent API spam?
-- **Memory Management**: Are event listeners being cleaned up in `unmount()`?
+### B. Design Pattern Integrity
+*Audit the fidelity of implemented patterns:*
+- **Strategy Pattern**: Do all strategies implement the exact same interface? (Verify `generate()` signature).
+- **Passive View**: Does the View contain ANY business logic (`if (user.isPremium)`)? If yes, Fail.
+- **Repository Pattern**: Are raw Firestore calls leaked into Controllers? (Should be in Repos).
+- **Facade Pattern**: Are complex subsystems (MusicKit) truly hidden behind a simple API?
 
+### C. Component Atomicity
+*Check the quality of UI components:*
+- **Purity**: Does the component rely *only* on Props? (Smart vs Dumb).
+- **Lifecycle**: Are event listeners explicitly removed in `unmount()`?
+- **Style Isolation**: Does it use utility classes (Tailwind) or leak global CSS?
 
-### C. Security & Vulnerabilities
-- **Injection Risks**: Any usage of `innerHTML` or `eval()`? (Use `textContent` or templates).
-- **Sanitization**: Is user-provided content (e.g., Series titles) sanitized?
-- **Secrets**: Are there any hardcoded API keys or Firebase secrets?
-- **Auth Guarding**: Are internal routes/actions checked against `UserStore.isLoggedIn`?
+### D. Cognitive Load & Readability
+- **Import Clarity**: Does a file import > 15 modules? (Sign of high coupling).
+- **Naming**: Do names reflect *Intent* (`loadSeries`) or *Implementation* (`getFirebaseData`)?
+- **Magic Numbers**: Are configs/constants hardcoded in logic?
 
-## 5. Architectural Gap Analysis
-1.  **Diagram Check**: Compare the current filesystem against `ARCHITECTURE.md` diagrams.
-2.  **Pattern Compliance**: Verify if core patterns (MVC, Observer, Repository) are strictly followed.
-3.  **Documentation Sync**: Identify outdated sections in specs or technical guides.
+---
 
+## 5. Report Generation (Template)
+Create a new file `docs/technical/refactor/CODE_QUALITY_ASSESSMENT_v[N+1].md`:
 
-## 5. Report Generation (Actionable Template)
-Create a new file `docs/technical/refactor/CODE_QUALITY_ASSESSMENT_v[N+1].md` structured as follows:
+### 📊 Metric Scorecard
+*(Insert Table from Section 2)*
 
-### 📊 Executive Scorecard
-Construct the table from Section 2, highlighting **Current** vs **Previous** values.
+### 🔍 Deep Audit Findings
+- **Layer Violations Detected**: (List files breaking the rules).
+- **Pattern Integrity**: (Pass/Fail for key patterns).
+- **Cognitive Hotspots**: (List files with dangerous nesting/complexity).
 
-### 🔴 Priority Matrix (The "Top 5 Fixes")
-Rank the 5 most critical files or modules based on the 1-10 scale.
-- **Each entry must include**: `File Path`, `Score`, `Main Violation`, and `Actionable Fix`.
-
-### 🧩 Domain Analysis
-A concise summary of findings from Section 4:
-1.  **UI Componentization**: Status of the Lego-block migration.
-2.  **Logic Modularization**: State of the "Brain-separation" (Controllers/Services).
-3.  **Performance & Security**: Identified leaks, bottlenecks, or sinks.
+### 🔴 Top 3 Refactor Targets
+| File | Current Score | Primary Violation | Recommended Fix |
+| :--- | :--- | :--- | :--- |
+| `path/to/file.js` | 3 | View importing Repository | Move logic to Controller |
 
 ### 🎯 Strategic Recommendations
-- **Immediate (Sprint N+1)**: Tasks for the very next cycle.
-- **Architectural (Long-term)**: Changes to patterns or infrastructure.
-
-## 6. Cleanup & Archiving
-1.  Link the new assessment in `docs/technical/refactor/PROTOCOL.md`.
-2.  Update the `onboarding_protocol.md` if relevant metrics or target folders changed.
+- **Immediate**: fix layer violations.
+- **Mid-term**: split complex components.
 
 ---
 
 ## Completion Checklist
-
-- [ ] Quantitative data collected (LOC, File count).
-- [ ] Scoring applied to all changed files.
-- [ ] Componentization & Modularization review completed.
-- [ ] Performance & Security checks performed.
-- [ ] Architectural gaps identified.
-- [ ] New report file created and linked.
-- [ ] Next steps/Recommendations proposed.
+- [ ] Computed Quantitative Metrics (including Layer Violations).
+- [ ] Audited Design Pattern fidelity.
+- [ ] Reviewed Cognitive Load (nesting/imports).
+- [ ] Generated Report Argument.

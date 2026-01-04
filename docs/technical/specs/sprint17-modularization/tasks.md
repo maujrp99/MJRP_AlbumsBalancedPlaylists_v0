@@ -65,7 +65,7 @@ description: "Tasks for Sprint 17: Frontend Specialization & Modularization"
 ---
 
 ## Phase 5: Documentation & Polish 📝
-- [ ] **T17-501** Run Code Quality Assessment v11.0 to verify new LOC counts.
-- [ ] **T17-502** Update `component_reference.md` with new Controller/Service structure.
+- [x] **T17-501** Run Code Quality Assessment v11.0 to verify new LOC counts.
+- [x] **T17-502** Update `component_reference.md` with new Controller/Service structure.
 - [x] **T17-503** Full Regression Test (Browser Agent) - Verified on Port 5000.
 - [x] **T17-504** Bug Fix: `SeriesController` bind error and Router infinite loop.
