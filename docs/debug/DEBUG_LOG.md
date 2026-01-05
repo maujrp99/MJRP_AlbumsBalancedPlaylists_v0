@@ -18,8 +18,7 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
-| #138 | **Artist Search Accuracy (T-Rex)** | ✅ RESOLVED | [Details](#issue-138-artist-search-accuracy-t-rex) |
-| #137 | **Studio Filter Includes Remixes/Mixes** | ✅ RESOLVED | [Details](#issue-137-studio-filter-includes-remixesmixes) |
+| #137 | **Electronic Music Studio Filter (Singles/EPs)** | ✅ RESOLVED | [Details](#issue-137-electronic-music-studio-filter) |
 | #136 | **Discography Pagination 404 (Paul Oakenfold)** | ✅ RESOLVED | [Details](#issue-136-discography-pagination-404) |
 | #135 | **Discography Title Truncation** | ✅ RESOLVED | [Details](#issue-135-discography-title-truncation) |
 | #134 | **Home View Discography Layout** | ✅ RESOLVED | [Details](#issue-134-home-view-discography-layout) |
@@ -76,43 +75,25 @@
 
 ## Current Debugging Session
 
-### Issue #137: Studio Filter Includes Remixes/Mixes
+### Issue #137: Electronic Music Studio Filter (Singles/EPs)
 **Status**: ✅ **RESOLVED**
 **Date**: 2026-01-05
-**Severity**: LOW (UX)
-**Type**: Logic/Metadata
+**Severity**: LOW (Content Accuracy)
+**Type**: Logic / Data Classification
 **Component**: `MusicKitCatalog.js`
 **Sprint**: 17.75
 
 #### Problem
-Electronic artists often have "Remix" albums or "DJ Mixes" that Apple Music classifies as "Albums". This caused the "Studio" filter to be cluttered with non-studio content.
+The "Studio Albums" filter was including "Maxi-Singles" and "EPs" for Electronic Music artists (e.g., Groove Armada, Paul Oakenfold).
+These releases often have 2-6 tracks (Remixes, Radio Edits), so Apple Music's `count=1` based `isSingle` flag was false, causing them to fall back to "Album" classification.
 
 #### Solution
-Updated `_classifyAlbumType` to:
-1.  Check `genreNames` for Electronic/Dance context.
-2.  Explicitly capture known non-studio keywords in these genres: `(DJ Mix)`, `Remix`, `Session`, `Vol.`, `Collection`.
-3.  Classify these as `'Compilation'`.
+Implemented industry-standard heuristics (matching Apple Music's own internal display logic) to classify these releases correctly:
+- **Single**: `<= 3 Tracks` (or explicitly flagged)
+- **EP**: `4-6 Tracks` (or explicitly flagged in title)
+- **Album**: `7+ Tracks`
 
-#### Files Modified
-- `public/js/services/musickit/MusicKitCatalog.js`
-
----
-
-### Issue #138: Artist Search Accuracy (T-Rex)
-**Status**: ✅ **RESOLVED**
-**Date**: 2026-01-05
-**Severity**: MEDIUM (Search Failure)
-**Type**: Logic
-**Component**: `MusicKitCatalog.js`
-**Sprint**: 17.75
-
-#### Problem
-Searching for artists with common names or punctuation variations (e.g., "T-Rex" vs "T. Rex") often returned the wrong artist if the exact match wasn't the #1 result. The API call `limit` was set to 1.
-
-#### Solution
-1.  Increased API search `limit` to 5.
-2.  Implemented "Exact Match" logic: normalize query and results (remove punctuation/case) and check for equality.
-3.  Prioritize the exact match if found; otherwise fallback to the first result.
+This ensures that only true full-length albums appear in the "Studio" filter.
 
 #### Files Modified
 - `public/js/services/musickit/MusicKitCatalog.js`

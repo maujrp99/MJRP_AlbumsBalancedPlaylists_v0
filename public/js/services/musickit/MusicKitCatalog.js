@@ -131,7 +131,7 @@ class MusicKitCatalog {
             const artistSearch = await music.api.music(`/v1/catalog/${storefront}/search`, {
                 term: artistName,
                 types: 'artists',
-                limit: 5 // Fetch more to find exact match
+                limit: 1
             });
 
             const artists = artistSearch.data?.results?.artists?.data;
@@ -140,15 +140,7 @@ class MusicKitCatalog {
                 return [];
             }
 
-            // Find best match (exact string match preference)
-            const normalizedQuery = artistName.toLowerCase().replace(/[^\w\s]/g, ''); // Remove punctuation for comparison
-            const bestMatch = artists.find(a => {
-                const normalizedName = a.attributes.name.toLowerCase().replace(/[^\w\s]/g, '');
-                return normalizedName === normalizedQuery;
-            });
-
-            const artistId = bestMatch ? bestMatch.id : artists[0].id;
-            console.log(`[MusicKit] Selected artist: ${bestMatch ? bestMatch.attributes.name : artists[0].attributes.name} (ID: ${artistId})`);
+            const artistId = artists[0].id;
 
             // Then get their albums (paginate to get ALL)
             let allAlbums = [];
@@ -272,37 +264,43 @@ class MusicKitCatalog {
         }
     }
 
+    /**
+     * Classify album type using Apple Music standards.
+     * 
+     * NOTE: Apple Music API does NOT return an explicit 'isEP' or 'releaseType' attribute.
+     * The `isSingle` attribute is only true for 1-track releases.
+     * 
+     * To correctly categorize "Maxi-Singles" and "EPs" (which are common in Electronic music),
+     * we must implement the industry-standard heuristics used by Apple Music for display:
+     * 
+     * - **Single**: 1-3 tracks, < 30 mins (we simplified to just track count for now)
+     * - **EP**: 4-6 tracks
+     * - **Album**: 7+ tracks
+     * 
+     * @param {Object} attributes - Album attributes from API
+     * @returns {'Album'|'Single'|'EP'|'Compilation'|'Live'}
+     */
     _classifyAlbumType(attributes) {
         const name = (attributes.name || '').toLowerCase();
-        const genreNames = (attributes.genreNames || []).map(g => g.toLowerCase());
+        const trackCount = attributes.trackCount || 0;
 
-        if (attributes.isSingle) return 'Single';
+        // 1. Explicit API Flags (Strongest signal)
         if (attributes.isCompilation) return 'Compilation';
+        if (name.includes('live') || name.includes('unplugged') || name.includes('concert')) return 'Live';
 
-        // Live Detection
-        // Check contentTraits if available (future proofing), otherwise rely on title
-        if (name.includes('live') || name.includes('unplugged') || name.includes('concert') || name.includes(' at ')) return 'Live';
-
-        // EP Detection
+        // 2. Explicit Title Signals (Override heuristics)
         if (name.includes(' ep') || name.endsWith(' ep')) return 'EP';
+        if (name.includes(' single') || name.endsWith(' single')) return 'Single';
 
-        // Electronic/Remix/DJ Mix Detection (Treat as Compilation to exclude from Studio)
-        // 1. Explicit "(DJ Mix)" in name (Standard Apple metadata)
-        if (name.includes('(dj mix)') || name.includes(' dj mix')) return 'Compilation';
+        // 3. Apple Music Hueristics
+        // Standard Definition: Single = 1-3 tracks
+        if (attributes.isSingle || trackCount <= 3) return 'Single';
 
-        // 2. "Remix" albums (usually not main studio albums)
-        if (name.includes('remix') || name.includes('remixed')) return 'Compilation';
+        // Standard Definition: EP = 4-6 tracks
+        if (trackCount >= 4 && trackCount <= 6) return 'EP';
 
-        // 3. "Sessions", "Mix", "Vol." often indicate compilations in Electronic genre
-        const isElectronic = genreNames.some(g => g.includes('electronic') || g.includes('dance') || g.includes('house') || g.includes('techno') || g.includes('trance'));
-
-        if (isElectronic) {
-            if (name.includes(' mix') || name.includes('session') || name.includes('vol.') || name.includes('collection')) {
-                return 'Compilation';
-            }
-        }
-
-        return 'Album'; // "Studio"
+        // Default to Album (7+ tracks)
+        return 'Album';
     }
 
     extractArtworkTemplate(artwork) {
