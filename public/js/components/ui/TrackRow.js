@@ -162,23 +162,32 @@ export class TrackRow {
         const spotifyRank = track.spotifyRank
         const spotifyPopularity = track.spotifyPopularity
 
+
         const hasAcclaimRank = acclaimRank && acclaimRank < 999
         const hasAcclaimRating = acclaimRating && acclaimRating > 0
         const hasSpotifyRank = spotifyRank && spotifyRank < 999
         const hasSpotifyPop = spotifyPopularity != null && spotifyPopularity > -1
 
         // Acclaim badge (orange)
-        let acclaimBadgeEl = null
+        const acclaimItems = []
+
         if (hasAcclaimRank) {
-            acclaimBadgeEl = SafeDOM.span({
+            acclaimItems.push(SafeDOM.span({
                 className: 'inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-orange/10 text-brand-orange text-[10px] font-bold border border-brand-orange/20',
                 title: 'BestEverAlbums Rank'
-            }, `#${acclaimRank}`)
-        } else if (hasAcclaimRating) {
-            acclaimBadgeEl = SafeDOM.span({
+            }, `#${acclaimRank}`))
+        }
+
+        if (hasAcclaimRating) {
+            acclaimItems.push(SafeDOM.span({
                 className: 'flex items-center gap-0.5 text-[10px] font-bold text-brand-orange',
                 title: 'BestEverAlbums Rating'
-            }, `★${acclaimRating}`)
+            }, `★${acclaimRating}`))
+        }
+
+        let acclaimBadgeEl = null
+        if (acclaimItems.length > 0) {
+            acclaimBadgeEl = SafeDOM.span({ className: 'flex items-center gap-1' }, acclaimItems)
         }
 
         // Spotify badge (green)

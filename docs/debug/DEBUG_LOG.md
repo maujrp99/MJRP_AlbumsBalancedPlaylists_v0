@@ -18,6 +18,7 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
+| #129 | **BEA Badge Dual Display** | ✅ RESOLVED | [Details](#issue-129-bea-badge-dual-display) |
 | #128 | **Bulk Paste Artwork Error** | ✅ RESOLVED | [Details](#issue-128-bulk-paste-artwork-error) |
 | #123 | **Router Infinite Loop (PushState)** | ✅ RESOLVED | [Details](#issue-123-router-infinite-loop-pushstate) |
 | #122 | **SeriesController Bind Error** | ✅ RESOLVED | [Details](#issue-122-seriescontroller-bind-error) |
@@ -65,6 +66,25 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #129: BEA Badge Dual Display
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-05
+**Severity**: LOW (UX Enhancement)
+**Type**: Visual/Logic
+**Component**: `TrackRow.js`
+**Sprint**: 17.5
+
+#### Problem
+User requested that BestEverAlbums (BEA) badge display **both** the Ranking (#1) and Rating (★95) when available, rather than prioritizing one over the other.
+
+#### Solution
+Updated `TrackRow.buildBadges` to collect both BEA metrics into a flex container instead of using an `if/else` exclusive logic.
+
+#### Files Modified
+- `public/js/components/ui/TrackRow.js`
+
+---
 
 
 ### Issue #127: Balanced Interleave Clustering (Artist Resolution)
