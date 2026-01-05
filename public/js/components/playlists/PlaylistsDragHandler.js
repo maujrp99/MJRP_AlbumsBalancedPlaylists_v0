@@ -32,7 +32,7 @@ export class PlaylistsDragHandler {
                 animation: 150,
                 ghostClass: 'bg-white/5',
                 dragClass: 'opacity-100',
-                handle: '.track-item', // Make the whole item draggable
+                handle: '.track-row', // Updated to match TrackRow component (Sprint 17.75)
                 delay: 100, // Slight delay to prevent accidental drags on touch
                 delayOnTouchOnly: true,
                 touchStartThreshold: 3,

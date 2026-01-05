@@ -44,25 +44,13 @@ export class PlaylistsView extends BaseView {
     this.subscribeStores()
 
     // 4. Attach Listeners & Setup Drag
-    this.attachListeners()
+    this.attachDelegatedListeners() // Call ONCE
+    this.attachElementListeners()   // Call on every render
+
     const state = playlistsStore.getState()
     if (state.playlists.length > 0) {
       this.dragHandler.setup(this.container)
     }
-  }
-
-  subscribeStores() {
-    const unsubscribePlaylists = playlistsStore.subscribe(() => {
-      if (!this.isDragging) this.update()
-    })
-    this.subscriptions.push(unsubscribePlaylists)
-
-    // Subscribe to AlbumsStore to support dynamic loading in Edit Mode
-    const unsubscribeAlbums = albumsStore.subscribe(() => {
-      console.log('[PlaylistsView] Albums updated, refreshing...')
-      if (!this.isDragging) this.update()
-    })
-    this.subscriptions.push(unsubscribeAlbums)
   }
 
   update() {
@@ -72,8 +60,8 @@ export class PlaylistsView extends BaseView {
     SafeDOM.clear(this.container)
     this.container.appendChild(this.renderContent())
 
-    // Attach Listeners
-    this.attachListeners()
+    // Attach Element Listeners (Re-bind recreated elements)
+    this.attachElementListeners()
 
     // Setup Drag & Drop
     const state = playlistsStore.getState()
@@ -81,6 +69,138 @@ export class PlaylistsView extends BaseView {
       this.dragHandler.setup(this.container)
     }
   }
+
+  attachDelegatedListeners() {
+    // Delete Playlist
+    this.on(this.container, 'click', (e) => {
+      const deleteBtn = e.target.closest('[data-action="delete-playlist"]')
+      if (deleteBtn) {
+        const index = parseInt(deleteBtn.dataset.playlistIndex)
+        this.controller.deletePlaylist(index)
+      }
+    })
+
+    // Remove Track
+    this.on(this.container, 'click', (e) => {
+      const btn = e.target.closest('button[data-action="remove-track"]')
+      if (btn) {
+        e.stopPropagation()
+        const playlistIndex = parseInt(btn.dataset.playlistIndex)
+        const trackIndex = parseInt(btn.dataset.trackIndex)
+        if (!isNaN(playlistIndex) && !isNaN(trackIndex)) {
+          this.controller.deleteTrack(playlistIndex, trackIndex)
+        }
+      }
+    })
+  }
+
+  subscribeStores() {
+    this.subscriptions = [
+      playlistsStore.subscribe(() => this.update()),
+      albumSeriesStore.subscribe(() => this.update()),
+      albumsStore.subscribe(() => this.update())
+    ]
+  }
+
+  attachElementListeners() {
+    // Generation Listeners (Initial Generate Button)
+    const generateBtn = this.container.querySelector('#generateBtn')
+    if (generateBtn) {
+      generateBtn.addEventListener('click', () => {
+        const algoRadio = this.container.querySelector('input[name="algorithm"]:checked')
+        const rankSelect = this.container.querySelector('#rankingStrategySelect')
+        const config = {
+          algorithmId: algoRadio?.value,
+          rankingId: rankSelect?.value
+        }
+        this.controller.handleGenerate(config)
+      })
+    }
+
+    // Toggle RegeneratePanel
+    const toggleBtn = this.container.querySelector('[data-action="toggle-regenerate-panel"]')
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        const panel = this.container.querySelector('.regenerate-panel')
+        const content = panel?.querySelector('.regenerate-content')
+        const chevron = panel?.querySelector('.regenerate-chevron')
+
+        if (content) {
+          content.classList.toggle('hidden')
+          chevron?.classList.toggle('rotate-180')
+          this.isRegeneratePanelExpanded = !content.classList.contains('hidden')
+        }
+      })
+    }
+
+    // Mount RegeneratePanel components
+    const regeneratePanel = this.container.querySelector('.regenerate-panel')
+    if (regeneratePanel) {
+      import('../components/playlists/RegeneratePanel.js').then(({ RegeneratePanel }) => {
+        RegeneratePanel.mount()
+      })
+
+      const regenerateBtn = this.container.querySelector('[data-action="regenerate-playlists"]')
+      if (regenerateBtn) {
+        regenerateBtn.addEventListener('click', () => {
+          import('../components/playlists/RegeneratePanel.js').then(({ RegeneratePanel }) => {
+            const config = RegeneratePanel.getConfig()
+            this.controller.handleGenerate(config)
+          })
+        })
+      }
+    }
+
+    // Export/Save Listeners
+    const saveBtn = this.container.querySelector('#saveToHistoryBtn')
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => {
+        const input = this.container.querySelector('#batchNameInput')
+        this.controller.handleSave(input?.value)
+      })
+    }
+
+    // Batch Name Input
+    const nameInput = this.container.querySelector('#batchNameInput')
+    if (nameInput) {
+      nameInput.addEventListener('input', (e) => {
+        playlistsStore.updateBatchName(e.target.value)
+
+        const gridContainer = this.container.querySelector('#playlistsGrid')
+        if (gridContainer) {
+          const state = playlistsStore.getState()
+          const batchName = playlistsStore.batchName || ''
+          gridContainer.innerHTML = PlaylistsGridRenderer.renderGrid(state.playlists, batchName)
+        }
+      })
+    }
+
+    // Export Buttons
+    const spotifyBtn = this.container.querySelector('#exportSpotifyBtn')
+    if (spotifyBtn) {
+      spotifyBtn.addEventListener('click', async () => {
+        const { showSpotifyExportModal } = await import('../components/SpotifyExportModal.js')
+        showSpotifyExportModal()
+      })
+    }
+
+    const jsonBtn = this.container.querySelector('#exportJsonBtn')
+    if (jsonBtn) {
+      jsonBtn.addEventListener('click', () => {
+        import('./playlists/index.js').then(({ handleExportJson }) => handleExportJson())
+      })
+    }
+
+    const appleBtn = this.container.querySelector('#exportAppleMusicBtn')
+    if (appleBtn) {
+      appleBtn.addEventListener('click', () => {
+        import('./playlists/index.js').then(({ handleExportToAppleMusic }) => handleExportToAppleMusic())
+      })
+    }
+
+    // Note: Delegated listeners (Delete/Remove) are in attachDelegatedListeners()
+  }
+
 
   renderContent() {
     const state = playlistsStore.getState()
@@ -199,132 +319,8 @@ export class PlaylistsView extends BaseView {
     }
   }
 
-  attachListeners() {
-    // Generation Listeners (Initial Generate Button)
-    const generateBtn = this.container.querySelector('#generateBtn')
-    if (generateBtn) {
-      generateBtn.addEventListener('click', () => {
-        const algoRadio = this.container.querySelector('input[name="algorithm"]:checked')
-        const rankSelect = this.container.querySelector('#rankingStrategySelect')
-        const config = {
-          algorithmId: algoRadio?.value,
-          rankingId: rankSelect?.value
-        }
-        this.controller.handleGenerate(config)
-      })
-    }
 
-    // Toggle Regenerate Panel
-    const toggleBtn = this.container.querySelector('[data-action="toggle-regenerate-panel"]')
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', () => {
-        const panel = this.container.querySelector('.regenerate-panel')
-        const content = panel?.querySelector('.regenerate-content')
-        const chevron = panel?.querySelector('.regenerate-chevron')
 
-        if (content) {
-          content.classList.toggle('hidden')
-          chevron?.classList.toggle('rotate-180')
-          this.isRegeneratePanelExpanded = !content.classList.contains('hidden')
-        }
-      })
-    }
-
-    // Mount RegeneratePanel components
-    const regeneratePanel = this.container.querySelector('.regenerate-panel')
-    if (regeneratePanel) {
-      import('../components/playlists/RegeneratePanel.js').then(({ RegeneratePanel }) => {
-        RegeneratePanel.mount()
-      })
-
-      const regenerateBtn = this.container.querySelector('[data-action="regenerate-playlists"]')
-      if (regenerateBtn) {
-        regenerateBtn.addEventListener('click', () => {
-          import('../components/playlists/RegeneratePanel.js').then(({ RegeneratePanel }) => {
-            const config = RegeneratePanel.getConfig()
-            this.controller.handleGenerate(config)
-          })
-        })
-      }
-    }
-
-    // Export/Save Listeners
-    const saveBtn = this.container.querySelector('#saveToHistoryBtn')
-    if (saveBtn) {
-      saveBtn.addEventListener('click', () => {
-        const input = this.container.querySelector('#batchNameInput')
-        this.controller.handleSave(input?.value)
-      })
-    }
-
-    // Batch Name Input
-    const nameInput = this.container.querySelector('#batchNameInput')
-    if (nameInput) {
-      nameInput.addEventListener('input', (e) => {
-        playlistsStore.updateBatchName(e.target.value)
-
-        const gridContainer = this.container.querySelector('#playlistsGrid')
-        if (gridContainer) {
-          const state = playlistsStore.getState()
-          const batchName = playlistsStore.batchName || ''
-          // Use fromHTML here too for consistency, though innerHTML is okay for partial update if trusted
-          // But strict SafeDOM would require clearing and appending.
-          // Since this is a high-freq input handler, innerHTML is faster, but let's stick to SafeDOM for cleanliness?
-          // Actually, re-rendering the whole grid string is what the renderer does.
-          // For now, keep innerHTML here as it's just replacing the content of the grid container with the Renderer output.
-          // The Renderer output is *technically* trusted (from data).
-          gridContainer.innerHTML = PlaylistsGridRenderer.renderGrid(state.playlists, batchName)
-        }
-      })
-    }
-
-    // Export Buttons
-    const spotifyBtn = this.container.querySelector('#exportSpotifyBtn')
-    if (spotifyBtn) {
-      spotifyBtn.addEventListener('click', async () => {
-        const { showSpotifyExportModal } = await import('../components/SpotifyExportModal.js')
-        showSpotifyExportModal()
-      })
-    }
-
-    const jsonBtn = this.container.querySelector('#exportJsonBtn')
-    if (jsonBtn) {
-      jsonBtn.addEventListener('click', () => {
-        import('./playlists/index.js').then(({ handleExportJson }) => handleExportJson())
-      })
-    }
-
-    const appleBtn = this.container.querySelector('#exportAppleMusicBtn')
-    if (appleBtn) {
-      appleBtn.addEventListener('click', () => {
-        import('./playlists/index.js').then(({ handleExportToAppleMusic }) => handleExportToAppleMusic())
-      })
-    }
-
-    // Remove Track
-    this.container.addEventListener('click', (e) => {
-      const btn = e.target.closest('button[data-action="remove-track"]')
-      if (btn) {
-        // Prevent drag handler from firing
-        e.stopPropagation()
-        const playlistIndex = parseInt(btn.dataset.playlistIndex)
-        const trackIndex = parseInt(btn.dataset.trackIndex)
-        // Verify indices are valid numbers (0 is falsy, check for NaN)
-        if (!isNaN(playlistIndex) && !isNaN(trackIndex)) {
-          this.controller.deleteTrack(playlistIndex, trackIndex)
-        }
-      }
-    })
-
-    // Delete Playlist
-    this.container.addEventListener('click', (e) => {
-      const deleteBtn = e.target.closest('[data-action="delete-playlist"]')
-      if (deleteBtn) {
-        const index = parseInt(deleteBtn.dataset.playlistIndex)
-        this.controller.deletePlaylist(index)
-      }
-    })
-  }
 
   renderGeneratingOverlay() {
     return `
