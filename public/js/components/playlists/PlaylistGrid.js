@@ -100,6 +100,7 @@ export class PlaylistGrid {
     const tracksHtml = tracks.map((track, trackIndex) =>
       TrackRow.renderHTML({
         track,
+        index: trackIndex + 1, // Visual index (1-based)
         playlistIndex: index,
         trackIndex,
         primaryRanking,
