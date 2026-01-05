@@ -62,7 +62,7 @@ export class DiscographyRenderer {
 
         // Text Content (Below Image)
         const textContent = SafeDOM.div({ className: 'mt-3 pl-1' }, [
-            SafeDOM.h3({ className: 'text-white font-bold text-sm leading-tight truncate group-hover:text-orange-500 transition-colors', title: title }, title),
+            SafeDOM.h3({ className: 'text-white font-bold text-sm leading-tight group-hover:text-orange-500 transition-colors line-clamp-2', title: title }, title),
             SafeDOM.p({ className: 'text-gray-400 text-xs truncate mt-0.5' }, year)
         ]);
 

@@ -151,19 +151,29 @@ class MusicKitCatalog {
             console.log(`[MusicKit] Fetching full discography for ${artistName}...`);
 
             while (hasMore) {
-                const albumsResult = await music.api.music(
-                    `/v1/catalog/${storefront}/artists/${artistId}/albums`,
-                    { limit, offset }
-                );
+                try {
+                    const albumsResult = await music.api.music(
+                        `/v1/catalog/${storefront}/artists/${artistId}/albums`,
+                        { limit, offset }
+                    );
 
-                const page = albumsResult.data?.data || [];
-                allAlbums = allAlbums.concat(page);
+                    const page = albumsResult.data?.data || [];
+                    allAlbums = allAlbums.concat(page);
 
-                if (page.length < limit) {
-                    hasMore = false;
-                } else {
-                    offset += limit;
-                    if (offset > 500) hasMore = false;
+                    if (page.length < limit) {
+                        hasMore = false;
+                    } else {
+                        offset += limit;
+                        if (offset > 500) hasMore = false; // Safety cap
+                    }
+                } catch (err) {
+                    // Apple Music API returns 404 when offset >= total count
+                    if (err.response?.status === 404 || err.status === 404 || err.message?.includes('404')) {
+                        console.log(`[MusicKit] Pagination reached end (404) at offset ${offset}`);
+                        hasMore = false;
+                    } else {
+                        throw err; // Re-throw generic errors
+                    }
                 }
             }
 

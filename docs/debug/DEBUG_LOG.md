@@ -18,6 +18,8 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
+| #136 | **Discography Pagination 404 (Paul Oakenfold)** | ✅ RESOLVED | [Details](#issue-136-discography-pagination-404) |
+| #135 | **Discography Title Truncation** | ✅ RESOLVED | [Details](#issue-135-discography-title-truncation) |
 | #134 | **Home View Discography Layout** | ✅ RESOLVED | [Details](#issue-134-home-view-discography-layout) |
 | #133 | **Undefined Track Numbers** | ✅ RESOLVED | [Details](#issue-133-undefined-track-numbers) |
 | #132 | **Drag & Drop Logic Broken** | ✅ RESOLVED | [Details](#issue-132-drag--drop-logic-broken) |
@@ -71,6 +73,48 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #136: Discography Pagination 404 (Paul Oakenfold)
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-05
+**Severity**: MEDIUM (Scan Failure)
+**Type**: API Logic
+**Component**: `MusicKitCatalog.js`
+**Sprint**: 17.75
+
+#### Problem
+Fetching discography for artists with many albums (e.g., Paul Oakenfold) failed with a `404 Not Found` error.
+Log: `GET .../albums?limit=100&offset=300 404 (Not Found)`
+
+#### Root Cause
+The `getArtistAlbums` pagination loop was aggressive (`while(hasMore)`). When the `offset` exceeded the total number of items, the Apple Music API returned a 404 error instead of an empty list. The code did not catch this specific error, causing the entire promise chain to fail.
+
+#### Solution
+Wrapped the API call in a `try/catch` block inside the loop. If the error status is 404, it is interpreted as "End of List" (`hasMore = false`), allowing the function to return the albums collected so far.
+
+#### Files Modified
+- `public/js/services/musickit/MusicKitCatalog.js`
+
+---
+
+### Issue #135: Discography Title Truncation
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-05
+**Severity**: LOW (UX)
+**Type**: CSS
+**Component**: `DiscographyRenderer.js`
+**Sprint**: 17.75
+
+#### Problem
+Album titles were being truncated with `truncate` (one line), hiding important information.
+
+#### Solution
+Replaced `truncate` with `line-clamp-2` to allow up to 2 lines of text.
+
+#### Files Modified
+- `public/js/views/renderers/DiscographyRenderer.js`
+
+---
 
 ### Issue #134: Home View Discography Layout
 **Status**: ✅ **RESOLVED**
