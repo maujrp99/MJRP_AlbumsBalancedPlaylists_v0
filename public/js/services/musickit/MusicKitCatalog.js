@@ -131,7 +131,7 @@ class MusicKitCatalog {
             const artistSearch = await music.api.music(`/v1/catalog/${storefront}/search`, {
                 term: artistName,
                 types: 'artists',
-                limit: 1
+                limit: 5 // Fetch more to find exact match
             });
 
             const artists = artistSearch.data?.results?.artists?.data;
@@ -140,7 +140,15 @@ class MusicKitCatalog {
                 return [];
             }
 
-            const artistId = artists[0].id;
+            // Find best match (exact string match preference)
+            const normalizedQuery = artistName.toLowerCase().replace(/[^\w\s]/g, ''); // Remove punctuation for comparison
+            const bestMatch = artists.find(a => {
+                const normalizedName = a.attributes.name.toLowerCase().replace(/[^\w\s]/g, '');
+                return normalizedName === normalizedQuery;
+            });
+
+            const artistId = bestMatch ? bestMatch.id : artists[0].id;
+            console.log(`[MusicKit] Selected artist: ${bestMatch ? bestMatch.attributes.name : artists[0].attributes.name} (ID: ${artistId})`);
 
             // Then get their albums (paginate to get ALL)
             let allAlbums = [];
@@ -266,11 +274,35 @@ class MusicKitCatalog {
 
     _classifyAlbumType(attributes) {
         const name = (attributes.name || '').toLowerCase();
+        const genreNames = (attributes.genreNames || []).map(g => g.toLowerCase());
+
         if (attributes.isSingle) return 'Single';
         if (attributes.isCompilation) return 'Compilation';
-        if (name.includes('live') || name.includes('unplugged')) return 'Live';
+
+        // Live Detection
+        // Check contentTraits if available (future proofing), otherwise rely on title
+        if (name.includes('live') || name.includes('unplugged') || name.includes('concert') || name.includes(' at ')) return 'Live';
+
+        // EP Detection
         if (name.includes(' ep') || name.endsWith(' ep')) return 'EP';
-        return 'Album';
+
+        // Electronic/Remix/DJ Mix Detection (Treat as Compilation to exclude from Studio)
+        // 1. Explicit "(DJ Mix)" in name (Standard Apple metadata)
+        if (name.includes('(dj mix)') || name.includes(' dj mix')) return 'Compilation';
+
+        // 2. "Remix" albums (usually not main studio albums)
+        if (name.includes('remix') || name.includes('remixed')) return 'Compilation';
+
+        // 3. "Sessions", "Mix", "Vol." often indicate compilations in Electronic genre
+        const isElectronic = genreNames.some(g => g.includes('electronic') || g.includes('dance') || g.includes('house') || g.includes('techno') || g.includes('trance'));
+
+        if (isElectronic) {
+            if (name.includes(' mix') || name.includes('session') || name.includes('vol.') || name.includes('collection')) {
+                return 'Compilation';
+            }
+        }
+
+        return 'Album'; // "Studio"
     }
 
     extractArtworkTemplate(artwork) {
