@@ -1,6 +1,6 @@
 # Component Reference
 
-**Updated**: 2025-12-30
+**Updated**: 2026-01-05
 **Purpose**: Inventory and API reference for all system components
 
 > For data flows and sequence diagrams, see [data_flow_architecture.md](data_flow_architecture.md)
@@ -130,6 +130,28 @@
 - `loginWithApple()`: Firebase Apple auth
 - `logout()`: Sign out
 - `handleAuthChange(user)`: Called by AuthService on state change
+
+#### PlaylistsStore (547 lines, 30 methods)
+**Purpose**: Manages generated playlists, curation state, and localized edits
+**State**: `{ playlists, seriesId, mode, editContext, isDirty, history }`
+
+**API**:
+- `setPlaylists(playlists, seriesId)`: Initialize state
+- `setEditMode(batchName, seriesId)`: Enable editing of existing batch
+- `moveTrack(p1, p2, t1, t2)`: Drag and drop support
+- `removeTrack(playlistIndex, trackIndex)`: Delete track logic
+- `undo()` / `redo()`: Version history management
+- `saveToFirestore()`: Atomic batch persistence
+
+#### PlaylistsController (381 lines, 8 methods)
+**Purpose**: Business logic for PlaylistView (Generation, Editing, Persistence)
+
+**Key Methods**:
+- `initialize(params)`: Route handler (detects Create vs Edit mode)
+- `handleGenerate(config)`: Orchestrates blending algorithm
+- `deleteTrack(playlistIndex, trackIndex)`: Proxies delete to store
+- `handleSave(batchName)`: Atomic save (with overwrite protection)
+- `loadPlaylistsForEdit(batchName)`: Hydrates store from backend
 
 ---
 

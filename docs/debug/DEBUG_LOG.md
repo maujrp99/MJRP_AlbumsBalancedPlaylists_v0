@@ -1,6 +1,6 @@
 # Debug Log
 
-**Last Updated**: 2026-01-02 16:00
+**Last Updated**: 2026-01-05 14:00
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -18,6 +18,11 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
+| #134 | **Home View Discography Layout** | ✅ RESOLVED | [Details](#issue-134-home-view-discography-layout) |
+| #133 | **Undefined Track Numbers** | ✅ RESOLVED | [Details](#issue-133-undefined-track-numbers) |
+| #132 | **Drag & Drop Logic Broken** | ✅ RESOLVED | [Details](#issue-132-drag--drop-logic-broken) |
+| #131 | **"Delete All" Wipe Out Bug (Listener Leak)** | ✅ RESOLVED | [Details](#issue-131-delete-all-wipe-out-bug-listener-leak) |
+| #130 | **Track Deletion & Grid Unification** | ✅ RESOLVED | [Details](#issue-130-track-deletion--grid-unification) |
 | #129 | **BEA Badge Dual Display** | ✅ RESOLVED | [Details](#issue-129-bea-badge-dual-display) |
 | #128 | **Bulk Paste Artwork Error** | ✅ RESOLVED | [Details](#issue-128-bulk-paste-artwork-error) |
 | #123 | **Router Infinite Loop (PushState)** | ✅ RESOLVED | [Details](#issue-123-router-infinite-loop-pushstate) |
@@ -66,6 +71,120 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #134: Home View Discography Layout
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-05
+**Severity**: LOW (UX/Visual)
+**Type**: CSS/Layout
+**Component**: `DiscographyRenderer.js`
+**Sprint**: 17.75
+
+#### Problem
+In the Home View "Discography Scan" grid, the album title and year were overlaying the bottom of the cover image, making it hard to read and obstructing artwork.
+
+#### Solution
+Refactored `createAlbumCard` to move the text container out of the image wrapper.
+- **Before**: Absolute positioning overlay.
+- **After**: Flex column layout (Image -> Title -> Year).
+
+#### Files Modified
+- `public/js/views/renderers/DiscographyRenderer.js`
+
+---
+
+### Issue #133: Undefined Track Numbers
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-05
+**Severity**: LOW (Visual Regression)
+**Type**: Props Mismatch
+**Component**: `PlaylistGrid.js`, `TrackRow.js`
+**Sprint**: 17.75
+
+#### Problem
+Tracks in the playlist grid displayed "undefined." instead of "1.", "2.", etc.
+
+#### Root Cause
+`TrackRow` expected a `trackIndex` prop, but `PlaylistGrid` (the parent) was not passing it during the render loop (or passing it with a different name).
+
+#### Solution
+Updated `PlaylistGrid.js` to explicitly pass `trackIndex={index}` to the `TrackRow.renderHTML` call.
+
+#### Files Modified
+- `public/js/components/playlists/PlaylistGrid.js`
+
+---
+
+### Issue #132: Drag & Drop Logic Broken
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-05
+**Severity**: HIGH (Regression)
+**Type**: DOM Selector Mismatch
+**Component**: `PlaylistsDragHandler.js`
+**Sprint**: 17.75
+
+#### Problem
+Dragging tracks to reorder them stopped working; the drag handle was unresponsive.
+
+#### Root Cause
+The drag handler was initialized with the selector `.track-item` (legacy class), but the new unified grid renders rows with the class `.track-row`.
+
+#### Solution
+Updated `PlaylistsDragHandler.js` to listen for `.track-row`.
+
+#### Files Modified
+- `public/js/controllers/PlaylistsDragHandler.js`
+
+---
+
+### Issue #131: "Delete All" Wipe Out Bug (Listener Leak)
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-05
+**Severity**: CRITICAL (Data Loss Risk)
+**Type**: Memory Leak / Event Listener Stacking
+**Component**: `PlaylistsView.js`
+**Sprint**: 17.75
+
+#### Problem
+Deleting a single track from a playlist caused multiple tracks to be deleted sequentially (e.g., clicking "X" on Track 1 deleted Track 1, then Track 2, then Track 3 if the page had been visited 3 times).
+
+#### Root Cause
+**Memory Leak in Event Listeners**:
+`PlaylistsView.attachDelegatedListeners()` manually added click listeners to the container (`#app`) using `addEventListener`.
+Because `PlaylistsView` is destroyed and re-mounted on navigation, but the `#app` container persists, new listeners were added *on top* of old ones every time the view was mounted.
+The old listeners were never removed because `destroy()` only cleans up listeners registered via `this.subscriptions`.
+
+#### Solution
+Refactored `attachDelegatedListeners` to use `this.on(element, event, handler)` from `BaseView`. This method registers the listener in `this.subscriptions`, ensuring it is automatically removed when `destroy()` is called.
+
+#### Files Modified
+- `public/js/views/PlaylistsView.js`
+
+---
+
+### Issue #130: Track Deletion & Grid Unification
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-05
+**Severity**: HIGH (Feature)
+**Type**: Logic
+**Component**: `PlaylistsStore.js`, `PlaylistsController.js`
+**Sprint**: 17.75
+
+#### Problem
+Users could not delete individual tracks from a playlist in "Edit Batch" mode.
+
+#### Solution
+1.  Implemented `removeTrack(playlistIndex, trackIndex)` in `PlaylistsStore`.
+2.  Implemented `deleteTrack` action in `PlaylistsController`.
+3.  Updated `TrackRow` to expose a Delete button.
+4.  Wired up event listeners in `PlaylistsView` (see Issue #131 for the fix).
+
+#### Files Modified
+- `public/js/stores/playlists.js`
+- `public/js/controllers/PlaylistsController.js`
+- `public/js/components/ui/TrackRow.js`
+
+---
 
 ### Issue #129: BEA Badge Dual Display
 **Status**: ✅ **RESOLVED**

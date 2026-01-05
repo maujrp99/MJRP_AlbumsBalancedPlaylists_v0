@@ -1,6 +1,6 @@
 # Album Data Flow Architecture
 
-**Updated**: 2026-01-04
+**Updated**: 2026-01-05
 **Version**: 2.9 (Sprint 17 Modularization)
 
 ## Overview
@@ -199,6 +199,24 @@ graph LR
 |-------------|------|-------------|
 | `/playlists` | CREATE | In-memory generation |
 | `/playlists/edit?edit=X&seriesId=Y` | EDIT | Firestore → API reload |
+
+### Track Deletion Flow (Sprint 17.75)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant View as PlaylistsView
+    participant Controller as PlaylistsController
+    participant Store as PlaylistsStore
+
+    User->>View: Click "X" (Delete Track)
+    View->>View: Event Listener (Delegated)
+    View->>Controller: deleteTrack(playlistIndex, trackIndex)
+    Controller->>Store: removeTrack(playlistIndex, trackIndex)
+    Store->>Store: splice(trackIndex, 1)
+    Store-->>View: notify()
+    View->>View: update() -> Re-render Grid
+```
 
 ---
 

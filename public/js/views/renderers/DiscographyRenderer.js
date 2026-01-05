@@ -43,31 +43,35 @@ export class DiscographyRenderer {
         );
 
         // Images & Overlays
-        const img = SafeDOM.img({ src: coverUrl, className: 'w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300', alt: title, loading: 'lazy' });
-        const imgContainer = SafeDOM.div({ className: 'absolute inset-0 bg-gray-800/50' }, [img]);
-        const gradient = SafeDOM.div({ className: 'absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity' });
+        const img = SafeDOM.img({ src: coverUrl, className: 'w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300', alt: title, loading: 'lazy' });
 
-        // Badge Container
-        const badgeContainer = SafeDOM.div({ className: 'absolute top-2 left-2 flex flex-wrap gap-1 max-w-[80%] pointer-events-none' }, badgeElements);
-
-        // Plus Icon (Top Right)
-        const plusIcon = SafeDOM.div({ className: 'absolute top-2 right-2 bg-black/40 group-hover:bg-orange-500 text-white p-1.5 rounded-full transition-all pointer-events-none' });
-        plusIcon.appendChild(SafeDOM.fromHTML(getIcon('Plus', 'w-4 h-4')));
-
-        // Text Content
-        const textContent = SafeDOM.div({ className: 'absolute bottom-0 left-0 right-0 p-4 transform translate-y-2 group-hover:translate-y-0 transition-transform bg-gradient-to-t from-black/80 to-transparent pointer-events-none' }, [
-            SafeDOM.h3({ className: 'text-white font-bold text-sm leading-tight', title: title }, title),
-            SafeDOM.p({ className: 'text-gray-400 text-xs truncate' }, year)
+        // Image Container (Relative parent for overlays)
+        const imageWrapper = SafeDOM.div({ className: 'relative aspect-square rounded-xl overflow-hidden bg-white/5 border border-white/5 group-hover:border-orange-500/50 group-hover:shadow-lg group-hover:shadow-orange-500/20 transition-all' }, [
+            img,
+            // Gradient Overlay (subtle)
+            SafeDOM.div({ className: 'absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity' }),
+            // Badge Container (Top Left)
+            SafeDOM.div({ className: 'absolute top-2 left-2 flex flex-wrap gap-1 max-w-[80%] pointer-events-none' }, badgeElements),
+            // Plus Icon (Top Right)
+            (() => {
+                const icon = SafeDOM.div({ className: 'absolute top-2 right-2 bg-black/40 group-hover:bg-orange-500 text-white p-1.5 rounded-full transition-all pointer-events-none' });
+                icon.appendChild(SafeDOM.fromHTML(getIcon('Plus', 'w-4 h-4')));
+                return icon;
+            })()
         ]);
 
+        // Text Content (Below Image)
+        const textContent = SafeDOM.div({ className: 'mt-3 pl-1' }, [
+            SafeDOM.h3({ className: 'text-white font-bold text-sm leading-tight truncate group-hover:text-orange-500 transition-colors', title: title }, title),
+            SafeDOM.p({ className: 'text-gray-400 text-xs truncate mt-0.5' }, year)
+        ]);
+
+        // Main Card Container (Flex Column)
         return SafeDOM.div({
-            className: 'group relative aspect-square rounded-xl overflow-hidden border border-white/5 hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/20 cursor-pointer transition-all bg-white/5',
+            className: 'group cursor-pointer flex flex-col',
             dataset: { action: 'toggle-staging', id: album.id }
         }, [
-            imgContainer,
-            gradient,
-            badgeContainer,
-            plusIcon,
+            imageWrapper,
             textContent
         ]);
     }
