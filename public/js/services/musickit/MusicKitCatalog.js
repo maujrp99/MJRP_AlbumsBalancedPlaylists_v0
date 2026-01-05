@@ -182,7 +182,7 @@ class MusicKitCatalog {
                 title: album.attributes.name,
                 artist: album.attributes.artistName,
                 year: album.attributes.releaseDate ? album.attributes.releaseDate.split('-')[0] : null,
-                albumType: this._classifyAlbumType(album.attributes, artistName),
+                albumType: this._classifyAlbumType(album.attributes),
                 artworkTemplate: this.extractArtworkTemplate(album.attributes.artwork),
                 trackCount: album.attributes.trackCount,
                 isLive: album.attributes.name.toLowerCase().includes('live'),
@@ -271,57 +271,12 @@ class MusicKitCatalog {
      * @param {string} targetArtist - The artist we are searching for (to detect mislabeled compilations)
      * @returns {'Album'|'Single'|'EP'|'Compilation'|'Live'}
      */
-    _classifyAlbumType(attributes, targetArtist = '') {
+    _classifyAlbumType(attributes) {
         const name = (attributes.name || '').toLowerCase();
-        const artistName = (attributes.artistName || '').toLowerCase();
-        const targetName = targetArtist.toLowerCase();
-        const trackCount = attributes.trackCount || 0;
-        const genres = (attributes.genreNames || []).map(g => g.toLowerCase());
-
-        const isElectronic = genres.some(g =>
-            g.includes('electronic') || g.includes('dance') || g.includes('house') ||
-            g.includes('techno') || g.includes('trance') || g.includes('dubstep') || g.includes('dj')
-        );
-
-        // --- PHASE 1: COMPILATION LOGIC (Tiesto Fix) ---
-        // Apple often flags albums with many feats as Compilations.
-        // Rule: If it's flagged as Compilation, but the artist matches our Search Target,
-        // (and it's NOT a Various Artists album), treat it as an Album (or fallback to other logic).
-        let isCompilation = attributes.isCompilation;
-        if (isCompilation && artistName.includes(targetName) && !artistName.includes('various')) {
-            isCompilation = false; // Override: It's a studio album with guests
-        }
-
-        if (isCompilation) return 'Compilation';
-
-        // --- PHASE 2: TITLE KEYWORDS ---
-        if (name.includes('live') || name.includes('unplugged') || name.includes('concert') || name.includes(' at ')) return 'Live';
-        if (name.includes('continuous mix') || name.includes('dj mix') || name.includes('mixed by')) return 'Compilation';
-        if (name.includes('remixes') || name.includes('remixed')) return 'Compilation';
-        if (name.includes('soundtrack') || name.includes(' ost') || name.includes('score')) return 'Compilation';
-
-        // --- PHASE 3: EXPLICIT FORMATS ---
+        if (attributes.isSingle) return 'Single';
+        if (attributes.isCompilation) return 'Compilation';
+        if (name.includes('live') || name.includes('unplugged')) return 'Live';
         if (name.includes(' ep') || name.endsWith(' ep')) return 'EP';
-        if (name.includes(' single') || name.endsWith(' single')) return 'Single';
-
-        // --- PHASE 4: GENRE-AWARE TRACK COUNT (Yes vs Groove Armada Fix) ---
-
-        // ELECTRONIC MUSIC: Strict rules for Singles/EPs (Maxi-Singles are common)
-        if (isElectronic) {
-            if (attributes.isSingle || trackCount <= 3) return 'Single';
-            if (trackCount >= 4 && trackCount <= 6) return 'EP';
-        }
-        // ROCK / POP / JAZZ: Relaxed rules (Short LPs exist, e.g. Yes - Close to the Edge)
-        else {
-            // If it's NOT explicitly a single in metadata, and has 3+ tracks, treat as Album
-            // This catches "Close to the Edge" (3 tracks, !isSingle)
-            if (!attributes.isSingle && trackCount >= 3) return 'Album';
-
-            // Otherwise follow standard
-            if (attributes.isSingle || trackCount <= 2) return 'Single';
-        }
-
-        // --- DEFAULT ---
         return 'Album';
     }
 

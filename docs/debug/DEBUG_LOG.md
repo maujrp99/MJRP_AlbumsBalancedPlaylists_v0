@@ -18,7 +18,7 @@
 
 | # | Description | Status | Link |
 |---|-------------|--------|------|
-| #137 | **Electronic Music Studio Filter (Singles/EPs)** | ✅ RESOLVED | [Details](#issue-137-electronic-music-studio-filter) |
+| #137 | **Electronic Music Studio Filter (Singles/EPs)** | ⚠️ IN PROGRESS | [Details](#issue-137-electronic-music-studio-filter) |
 | #136 | **Discography Pagination 404 (Paul Oakenfold)** | ✅ RESOLVED | [Details](#issue-136-discography-pagination-404) |
 | #135 | **Discography Title Truncation** | ✅ RESOLVED | [Details](#issue-135-discography-title-truncation) |
 | #134 | **Home View Discography Layout** | ✅ RESOLVED | [Details](#issue-134-home-view-discography-layout) |
@@ -76,7 +76,7 @@
 ## Current Debugging Session
 
 ### Issue #137: Electronic Music Studio Filter (Singles/EPs)
-**Status**: ✅ **RESOLVED**
+**Status**: ⚠️ **IN PROGRESS** (Reverted)
 **Date**: 2026-01-05
 **Severity**: LOW (Content Accuracy)
 **Type**: Logic / Data Classification
@@ -84,21 +84,14 @@
 **Sprint**: 17.75
 
 #### Problem
-The "Studio Albums" filter was including "Maxi-Singles" and "EPs" for Electronic Music artists (e.g., Groove Armada, Paul Oakenfold).
-These releases often have 2-6 tracks (Remixes, Radio Edits), so Apple Music's `count=1` based `isSingle` flag was false, causing them to fall back to "Album" classification.
+The "Studio Albums" filter includes "Maxi-Singles" and "EPs" for Electronic Music artists (false positives).
+Previous heuristics fix was reverted as it caused regressions for other genres (e.g., Tiesto Compilations vs Albums).
 
-#### Solution (Refined)
-Implemented smart, genre-aware heuristics in `_classifyAlbumType`:
-1.  **Compilation False Positive Fix**: If Apple flags an album as `isCompilation` (often due to features) but the artist name matches the search target, we override it to **Album** (Fixes Tiesto).
-2.  **Genre-Specific Rules**:
-    *   **Electronic**: Strict track counts to catch Maxi-Singles. `<=3` (Single), `4-6` (EP).
-    *   **Rock/Pop/Prog**: Relaxed rules to support short LPs (e.g., Yes). `3+ Tracks` is an Album if `isSingle` is false.
-3.  **Universal Filters**: `Live`, `DJ Mix`, `Remixes` are moved to Compilation/Live to clean up Studio.
-
-This successfully distinguishes Tiesto's studio albums from his compilations while preserving Prog Rock masterpieces like *Close to the Edge*.
+#### Solution
+(Pending new user proposal)
 
 #### Files Modified
-- `public/js/services/musickit/MusicKitCatalog.js`
+- `public/js/services/musickit/MusicKitCatalog.js` (Reverted)
 
 ---
 
