@@ -107,6 +107,23 @@ export class PlaylistsStore {
     }
 
     /**
+     * Remove a track from a playlist
+     * @param {number} playlistIndex - Playlist index
+     * @param {number} trackIndex - Track index to remove
+     */
+    removeTrack(playlistIndex, trackIndex) {
+        const playlist = this.playlists[playlistIndex]
+        if (!playlist || !playlist.tracks) return
+
+        const [removedTrack] = playlist.tracks.splice(trackIndex, 1)
+
+        this.isDirty = true
+        this.isSynchronized = false
+        this.createSnapshot(`Removed "${removedTrack.title}" from ${playlist.name}`)
+        this.notify()
+    }
+
+    /**
      * Mark as synchronized (after save)
      */
     markSynchronized() {

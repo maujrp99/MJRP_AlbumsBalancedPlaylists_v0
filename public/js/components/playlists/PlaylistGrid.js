@@ -9,7 +9,7 @@
 
 import { getIcon } from '../Icons.js'
 import { escapeHtml } from '../../utils/stringUtils.js'
-import { TrackItem } from './TrackItem.js'
+import { TrackRow } from '../ui/TrackRow.js'
 
 /**
  * @typedef {Object} PlaylistGridOptions
@@ -98,12 +98,20 @@ export class PlaylistGrid {
     const titleToShow = displayTitle || playlist.name
 
     const tracksHtml = tracks.map((track, trackIndex) =>
-      TrackItem.render({
+      TrackRow.renderHTML({
         track,
         playlistIndex: index,
         trackIndex,
         primaryRanking,
-        draggable: true
+        draggable: true,
+        variant: 'compact',
+        // Sprint 17.75: Add Delete Action
+        actions: editable ? [{
+          icon: 'X',
+          label: 'Remove Track',
+          action: 'remove-track',
+          class: 'text-muted hover:text-red-400 p-1 opacity-0 group-hover:opacity-100 transition-opacity'
+        }] : []
       })
     ).join('')
 

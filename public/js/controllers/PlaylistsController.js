@@ -196,6 +196,18 @@ export class PlaylistsController {
     }
 
     /**
+     * Delete a specific track from a playlist
+     */
+    deleteTrack(playlistIndex, trackIndex) {
+        // Validate
+        const playlists = playlistsStore.getPlaylists()
+        if (!playlists[playlistIndex] || !playlists[playlistIndex].tracks[trackIndex]) return
+
+        playlistsStore.removeTrack(playlistIndex, trackIndex)
+        // Toast optional, but could be noisy if deleting many. Let UI feedback suffice (grid updates).
+    }
+
+    /**
      * Generate playlists using selected config
      * Uses BlendingController for centralized generation logic
      */

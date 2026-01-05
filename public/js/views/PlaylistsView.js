@@ -301,6 +301,21 @@ export class PlaylistsView extends BaseView {
       })
     }
 
+    // Remove Track
+    this.container.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action="remove-track"]')
+      if (btn) {
+        // Prevent drag handler from firing
+        e.stopPropagation()
+        const playlistIndex = parseInt(btn.dataset.playlistIndex)
+        const trackIndex = parseInt(btn.dataset.trackIndex)
+        // Verify indices are valid numbers (0 is falsy, check for NaN)
+        if (!isNaN(playlistIndex) && !isNaN(trackIndex)) {
+          this.controller.deleteTrack(playlistIndex, trackIndex)
+        }
+      }
+    })
+
     // Delete Playlist
     this.container.addEventListener('click', (e) => {
       const deleteBtn = e.target.closest('[data-action="delete-playlist"]')
