@@ -265,17 +265,13 @@ class MusicKitCatalog {
     }
 
     /**
-     * Classify album type using Apple Music standards.
+     * Classify album type using Apple Music standards + Genre-specific heuristics.
      * 
      * NOTE: Apple Music API does NOT return an explicit 'isEP' or 'releaseType' attribute.
      * The `isSingle` attribute is only true for 1-track releases.
      * 
-     * To correctly categorize "Maxi-Singles" and "EPs" (which are common in Electronic music),
-     * we must implement the industry-standard heuristics used by Apple Music for display:
-     * 
-     * - **Single**: 1-3 tracks, < 30 mins (we simplified to just track count for now)
-     * - **EP**: 4-6 tracks
-     * - **Album**: 7+ tracks
+     * To correctly categorize "Maxi-Singles", "EPs", and "DJ Mixes" (common in Electronic music),
+     * we implement a waterfall of heuristics. The goal is to isolate TRUE "Studio Albums".
      * 
      * @param {Object} attributes - Album attributes from API
      * @returns {'Album'|'Single'|'EP'|'Compilation'|'Live'}
@@ -284,22 +280,46 @@ class MusicKitCatalog {
         const name = (attributes.name || '').toLowerCase();
         const trackCount = attributes.trackCount || 0;
 
-        // 1. Explicit API Flags (Strongest signal)
+        // --- PHASE 1: EXPLICIT API FLAGS ---
+        // Strongest signal: API says it's a compilation (Various Artists, etc.)
         if (attributes.isCompilation) return 'Compilation';
-        if (name.includes('live') || name.includes('unplugged') || name.includes('concert')) return 'Live';
 
-        // 2. Explicit Title Signals (Override heuristics)
+        // --- PHASE 2: TITLE KEYWORDS (CONTENT TYPE) ---
+        // Live Albums: Explicitly labeled
+        if (name.includes('live') || name.includes('unplugged') || name.includes('concert') || name.includes(' at ')) return 'Live';
+
+        // DJ Mixes / Continuous Mixes:
+        // In Electronic music, these are "Albums" by track count, but "Compilations" by nature (curated).
+        // identifying "Global Underground", "FabricLive", or just "Continuous Mix".
+        if (name.includes('continuous mix') || name.includes('dj mix') || name.includes('mixed by')) return 'Compilation';
+
+        // Remix Albums:
+        // "Album Name (Remixes)" is technically an album format, but user likely wants to filter these 
+        // OUT of the main Studio Discography. We classify as 'Compilation' to facilitate filtering.
+        if (name.includes('remixes') || name.includes('remixed')) return 'Compilation';
+
+        // Soundtracks / Scores:
+        if (name.includes('soundtrack') || name.includes(' ost') || name.includes('score')) return 'Compilation';
+
+        // --- PHASE 3: EXPLICIT TITLE FLAGS (FORMAT) ---
+        // Explicit "EP" or "Single" in title overrides track counts
         if (name.includes(' ep') || name.endsWith(' ep')) return 'EP';
         if (name.includes(' single') || name.endsWith(' single')) return 'Single';
 
-        // 3. Apple Music Hueristics
-        // Standard Definition: Single = 1-3 tracks
+        // --- PHASE 4: TRACK COUNT HEURISTICS (FORMAT) ---
+        // This is the fallback for when metadata is generic.
+        // Electronic Music "Maxi-Singles" often have 2-6 tracks (Original + Radio + Remix A + Remix B)
+
+        // Single: Standard definition is 1-3 tracks.
+        // We include `isSingle` from API (strictly 1 track) OR count <= 3.
         if (attributes.isSingle || trackCount <= 3) return 'Single';
 
-        // Standard Definition: EP = 4-6 tracks
+        // EP: Standard definition is 4-6 tracks.
+        // Many "Singles" in electronic music fall here.
         if (trackCount >= 4 && trackCount <= 6) return 'EP';
 
-        // Default to Album (7+ tracks)
+        // --- DEFAULT ---
+        // If it survived all filters and has 7+ tracks, it's a Studio Album.
         return 'Album';
     }
 

@@ -88,12 +88,20 @@ The "Studio Albums" filter was including "Maxi-Singles" and "EPs" for Electronic
 These releases often have 2-6 tracks (Remixes, Radio Edits), so Apple Music's `count=1` based `isSingle` flag was false, causing them to fall back to "Album" classification.
 
 #### Solution
-Implemented industry-standard heuristics (matching Apple Music's own internal display logic) to classify these releases correctly:
-- **Single**: `<= 3 Tracks` (or explicitly flagged)
-- **EP**: `4-6 Tracks` (or explicitly flagged in title)
-- **Album**: `7+ Tracks`
+Implemented a comprehensive waterfall of heuristics in `_classifyAlbumType`, heavily documented for future maintenance:
+1.  **Explicit API Flags**: `isCompilation`.
+2.  **Content Type Keywords**:
+    *   `Live`, `Unplugged`, `Concert` -> **Live**
+    *   `Continuous Mix`, `DJ Mix`, `Mixed By` -> **Compilation** (Electronic Music specific)
+    *   `Remixes`, `Remixed` -> **Compilation** (Electronic Music specific - keeps Studio clean)
+    *   `Soundtrack`, `OST`, `Score` -> **Compilation**
+3.  **Format Keywords**: `EP`, `Single` in title explicitly overrides counts.
+4.  **Track Counts (Apple Standards)**:
+    *   `<= 3 Tracks` -> **Single**
+    *   `4-6 Tracks` -> **EP**
+    *   `7+ Tracks` -> **Album** (Default)
 
-This ensures that only true full-length albums appear in the "Studio" filter.
+This robust logic cleans up the "Studio Albums" view by properly categorizing extended singles, remix albums, and DJ mixes.
 
 #### Files Modified
 - `public/js/services/musickit/MusicKitCatalog.js`
