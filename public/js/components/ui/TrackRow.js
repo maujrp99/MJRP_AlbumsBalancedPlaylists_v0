@@ -157,10 +157,12 @@ export class TrackRow {
      * @private
      */
     static buildBadges({ primaryRanking, track }) {
-        const acclaimRank = track.rank
+        const acclaimRank = track.rank || track.acclaimRank
         const acclaimRating = track.rating
         const spotifyRank = track.spotifyRank
         const spotifyPopularity = track.spotifyPopularity
+
+
 
 
         const hasAcclaimRank = acclaimRank && acclaimRank < 999
