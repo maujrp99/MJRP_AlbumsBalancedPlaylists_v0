@@ -87,21 +87,15 @@
 The "Studio Albums" filter was including "Maxi-Singles" and "EPs" for Electronic Music artists (e.g., Groove Armada, Paul Oakenfold).
 These releases often have 2-6 tracks (Remixes, Radio Edits), so Apple Music's `count=1` based `isSingle` flag was false, causing them to fall back to "Album" classification.
 
-#### Solution
-Implemented a comprehensive waterfall of heuristics in `_classifyAlbumType`, heavily documented for future maintenance:
-1.  **Explicit API Flags**: `isCompilation`.
-2.  **Content Type Keywords**:
-    *   `Live`, `Unplugged`, `Concert` -> **Live**
-    *   `Continuous Mix`, `DJ Mix`, `Mixed By` -> **Compilation** (Electronic Music specific)
-    *   `Remixes`, `Remixed` -> **Compilation** (Electronic Music specific - keeps Studio clean)
-    *   `Soundtrack`, `OST`, `Score` -> **Compilation**
-3.  **Format Keywords**: `EP`, `Single` in title explicitly overrides counts.
-4.  **Track Counts (Apple Standards)**:
-    *   `<= 3 Tracks` -> **Single**
-    *   `4-6 Tracks` -> **EP**
-    *   `7+ Tracks` -> **Album** (Default)
+#### Solution (Refined)
+Implemented smart, genre-aware heuristics in `_classifyAlbumType`:
+1.  **Compilation False Positive Fix**: If Apple flags an album as `isCompilation` (often due to features) but the artist name matches the search target, we override it to **Album** (Fixes Tiesto).
+2.  **Genre-Specific Rules**:
+    *   **Electronic**: Strict track counts to catch Maxi-Singles. `<=3` (Single), `4-6` (EP).
+    *   **Rock/Pop/Prog**: Relaxed rules to support short LPs (e.g., Yes). `3+ Tracks` is an Album if `isSingle` is false.
+3.  **Universal Filters**: `Live`, `DJ Mix`, `Remixes` are moved to Compilation/Live to clean up Studio.
 
-This robust logic cleans up the "Studio Albums" view by properly categorizing extended singles, remix albums, and DJ mixes.
+This successfully distinguishes Tiesto's studio albums from his compilations while preserving Prog Rock masterpieces like *Close to the Edge*.
 
 #### Files Modified
 - `public/js/services/musickit/MusicKitCatalog.js`

@@ -182,7 +182,7 @@ class MusicKitCatalog {
                 title: album.attributes.name,
                 artist: album.attributes.artistName,
                 year: album.attributes.releaseDate ? album.attributes.releaseDate.split('-')[0] : null,
-                albumType: this._classifyAlbumType(album.attributes),
+                albumType: this._classifyAlbumType(album.attributes, artistName),
                 artworkTemplate: this.extractArtworkTemplate(album.attributes.artwork),
                 trackCount: album.attributes.trackCount,
                 isLive: album.attributes.name.toLowerCase().includes('live'),
@@ -267,59 +267,61 @@ class MusicKitCatalog {
     /**
      * Classify album type using Apple Music standards + Genre-specific heuristics.
      * 
-     * NOTE: Apple Music API does NOT return an explicit 'isEP' or 'releaseType' attribute.
-     * The `isSingle` attribute is only true for 1-track releases.
-     * 
-     * To correctly categorize "Maxi-Singles", "EPs", and "DJ Mixes" (common in Electronic music),
-     * we implement a waterfall of heuristics. The goal is to isolate TRUE "Studio Albums".
-     * 
      * @param {Object} attributes - Album attributes from API
+     * @param {string} targetArtist - The artist we are searching for (to detect mislabeled compilations)
      * @returns {'Album'|'Single'|'EP'|'Compilation'|'Live'}
      */
-    _classifyAlbumType(attributes) {
+    _classifyAlbumType(attributes, targetArtist = '') {
         const name = (attributes.name || '').toLowerCase();
+        const artistName = (attributes.artistName || '').toLowerCase();
+        const targetName = targetArtist.toLowerCase();
         const trackCount = attributes.trackCount || 0;
+        const genres = (attributes.genreNames || []).map(g => g.toLowerCase());
 
-        // --- PHASE 1: EXPLICIT API FLAGS ---
-        // Strongest signal: API says it's a compilation (Various Artists, etc.)
-        if (attributes.isCompilation) return 'Compilation';
+        const isElectronic = genres.some(g =>
+            g.includes('electronic') || g.includes('dance') || g.includes('house') ||
+            g.includes('techno') || g.includes('trance') || g.includes('dubstep') || g.includes('dj')
+        );
 
-        // --- PHASE 2: TITLE KEYWORDS (CONTENT TYPE) ---
-        // Live Albums: Explicitly labeled
+        // --- PHASE 1: COMPILATION LOGIC (Tiesto Fix) ---
+        // Apple often flags albums with many feats as Compilations.
+        // Rule: If it's flagged as Compilation, but the artist matches our Search Target,
+        // (and it's NOT a Various Artists album), treat it as an Album (or fallback to other logic).
+        let isCompilation = attributes.isCompilation;
+        if (isCompilation && artistName.includes(targetName) && !artistName.includes('various')) {
+            isCompilation = false; // Override: It's a studio album with guests
+        }
+
+        if (isCompilation) return 'Compilation';
+
+        // --- PHASE 2: TITLE KEYWORDS ---
         if (name.includes('live') || name.includes('unplugged') || name.includes('concert') || name.includes(' at ')) return 'Live';
-
-        // DJ Mixes / Continuous Mixes:
-        // In Electronic music, these are "Albums" by track count, but "Compilations" by nature (curated).
-        // identifying "Global Underground", "FabricLive", or just "Continuous Mix".
         if (name.includes('continuous mix') || name.includes('dj mix') || name.includes('mixed by')) return 'Compilation';
-
-        // Remix Albums:
-        // "Album Name (Remixes)" is technically an album format, but user likely wants to filter these 
-        // OUT of the main Studio Discography. We classify as 'Compilation' to facilitate filtering.
         if (name.includes('remixes') || name.includes('remixed')) return 'Compilation';
-
-        // Soundtracks / Scores:
         if (name.includes('soundtrack') || name.includes(' ost') || name.includes('score')) return 'Compilation';
 
-        // --- PHASE 3: EXPLICIT TITLE FLAGS (FORMAT) ---
-        // Explicit "EP" or "Single" in title overrides track counts
+        // --- PHASE 3: EXPLICIT FORMATS ---
         if (name.includes(' ep') || name.endsWith(' ep')) return 'EP';
         if (name.includes(' single') || name.endsWith(' single')) return 'Single';
 
-        // --- PHASE 4: TRACK COUNT HEURISTICS (FORMAT) ---
-        // This is the fallback for when metadata is generic.
-        // Electronic Music "Maxi-Singles" often have 2-6 tracks (Original + Radio + Remix A + Remix B)
+        // --- PHASE 4: GENRE-AWARE TRACK COUNT (Yes vs Groove Armada Fix) ---
 
-        // Single: Standard definition is 1-3 tracks.
-        // We include `isSingle` from API (strictly 1 track) OR count <= 3.
-        if (attributes.isSingle || trackCount <= 3) return 'Single';
+        // ELECTRONIC MUSIC: Strict rules for Singles/EPs (Maxi-Singles are common)
+        if (isElectronic) {
+            if (attributes.isSingle || trackCount <= 3) return 'Single';
+            if (trackCount >= 4 && trackCount <= 6) return 'EP';
+        }
+        // ROCK / POP / JAZZ: Relaxed rules (Short LPs exist, e.g. Yes - Close to the Edge)
+        else {
+            // If it's NOT explicitly a single in metadata, and has 3+ tracks, treat as Album
+            // This catches "Close to the Edge" (3 tracks, !isSingle)
+            if (!attributes.isSingle && trackCount >= 3) return 'Album';
 
-        // EP: Standard definition is 4-6 tracks.
-        // Many "Singles" in electronic music fall here.
-        if (trackCount >= 4 && trackCount <= 6) return 'EP';
+            // Otherwise follow standard
+            if (attributes.isSingle || trackCount <= 2) return 'Single';
+        }
 
         // --- DEFAULT ---
-        // If it survived all filters and has 7+ tracks, it's a Studio Album.
         return 'Album';
     }
 
