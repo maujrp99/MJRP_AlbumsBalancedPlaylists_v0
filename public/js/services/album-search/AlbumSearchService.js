@@ -74,7 +74,7 @@ export class AlbumSearchService {
     }
 
     /**
-     * Get full discography for an artist with filtering capabilities
+     * Get full discography for an artist with AI-enhanced filtering
      * @param {string} artistName 
      * @returns {Promise<Array>} Grouped albums
      */
@@ -82,46 +82,255 @@ export class AlbumSearchService {
         const normalizedArtist = this.normalizer.normalize(artistName);
         console.log(`[AlbumSearch] Fetching discography for "${normalizedArtist}"`);
 
-        // We use the existing MusicKitService for the heavy lifting of ID lookup + fetch
-        // But we wrap it to ensure consistent types
-        const rawAlbums = await musicKitService.getArtistAlbums(normalizedArtist);
+        // Parallel Fetch: MusicKit Data + AI Trusted List
+        const [rawAlbums, aiStudioAlbums] = await Promise.all([
+            musicKitService.getArtistAlbums(normalizedArtist),
+            this._fetchAIStudioAlbums(normalizedArtist)
+        ]);
 
         if (rawAlbums.length === 0) {
             // Fallback: Try alternatives?
             const alternatives = this.normalizer.getAlternatives(artistName);
             if (alternatives.length > 1) {
                 console.log(`[AlbumSearch] No results, trying alternative: "${alternatives[1]}"`);
+                // Note: Not strictly recursive with AI here to save tokens/complexity for now
                 const altAlbums = await musicKitService.getArtistAlbums(alternatives[1]);
-                if (altAlbums.length > 0) return this._processDiscography(altAlbums);
+                if (altAlbums.length > 0) return this._processDiscography(altAlbums, aiStudioAlbums);
             }
             return [];
         }
 
-        return this._processDiscography(rawAlbums);
+        return this._processDiscography(rawAlbums, aiStudioAlbums);
     }
 
-    _processDiscography(albums) {
-        // 1. Map to consistent format (including all type flags for filtering)
-        const mapped = albums.map(a => ({
-            id: a.appleMusicId, // Note: MusicKitService returns 'appleMusicId'
-            title: a.title,
-            artist: a.artist,
-            year: a.year,
-            coverUrl: musicKitService.getArtworkUrl(a.artworkTemplate, 300),
-            artworkTemplate: a.artworkTemplate, // For higher-res rendering
-            type: a.albumType, // 'Album', 'Single', 'Compilation', 'Live', 'EP'
-            albumType: a.albumType, // Alias for consistency
-            isSingle: a.isSingle || false,
-            isCompilation: a.isCompilation || false,
-            isLive: a.isLive || false,
-            releaseDate: a.releaseDate,
-            trackCount: a.trackCount,
-            confidence: 1.0, // It's a direct discography fetch, assume 100%
-            raw: a
-        }));
+    async _fetchAIStudioAlbums(artistName) {
+        try {
+            const res = await fetch('/api/ai/studio-albums', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ artistName })
+            });
+            const data = await res.json();
+            return data.albums || [];
+        } catch (err) {
+            console.warn('[AlbumSearch] AI fetch failed, falling back to heuristics:', err);
+            return [];
+        }
+    }
 
-        // 2. Group Variants (Standard, Deluxe, etc)
+    _processDiscography(albums, aiList = []) {
+        console.log(`[AlbumSearch] Classifying ${albums.length} albums against ${aiList.length} AI titles.`);
+
+        // 1. Map and Classify
+        const mapped = albums.map(a => {
+            // Re-classify using Hybrid Logic (AI + Heuristics)
+            const classification = this._classifyWithAI(a, aiList);
+
+            return {
+                id: a.appleMusicId,
+                title: a.title,
+                artist: a.artist,
+                year: a.year,
+                coverUrl: musicKitService.getArtworkUrl(a.artworkTemplate, 300),
+                artworkTemplate: a.artworkTemplate,
+                type: classification,
+                albumType: classification,
+                isSingle: classification === 'Single',
+                isCompilation: classification === 'Compilation',
+                isLive: classification === 'Live',
+                isEP: classification === 'EP',
+                releaseDate: a.releaseDate,
+                trackCount: a.trackCount,
+                confidence: 1.0,
+                raw: a.raw
+            };
+        });
+
+        // 2. Group Variants
         return this.groupVariants(mapped);
+    }
+
+    /**
+     * Hybrid Classification Logic (Robust Version)
+     * 
+     * Priority Order (CRITICAL - do not change order):
+     * 1. Title Keywords (DJ Mix, Single, Live, EP, Remix, etc.) - catches obvious patterns
+     * 2. Explicit Apple Metadata (isSingle, isCompilation)
+     * 3. AI Whitelist → Album (Studio) - EXACT match for confirmed studio albums
+     * 4. Genre-Aware Track Count + Duration (protects prog rock)
+     * 5. Default: Compilation for electronic, Album for others
+     */
+    _classifyWithAI(album, aiList) {
+        const title = (album.title || '').toLowerCase();
+        const originalTitle = album.title || '';
+        const attributes = album.raw?.attributes || {};
+        const trackCount = album.trackCount || attributes.trackCount || 0;
+        const durationMs = attributes.durationInMillis || 0;
+        const durationMin = durationMs / 60000; // Convert to minutes
+        const genres = (attributes.genreNames || []).map(g => g.toLowerCase());
+
+        // Genre Detection
+        const isElectronic = genres.some(g =>
+            g.includes('electronic') || g.includes('dance') || g.includes('house') ||
+            g.includes('techno') || g.includes('trance') || g.includes('dubstep') || g.includes('dj')
+        );
+        const isProgRock = genres.some(g =>
+            g.includes('progressive') || g.includes('art rock') || g.includes('prog')
+        );
+
+        // =====================================================================
+        // STEP 1: TITLE KEYWORDS (check FIRST to catch DJ Mixes, Singles, etc.)
+        // =====================================================================
+
+        // Live / Concert
+        if (title.includes('(live)') || title.includes('[live]') ||
+            title.includes('live at') || title.includes('live from') ||
+            title.includes('unplugged') || title.includes('in concert') ||
+            title.includes('concert') || title.includes('tour ') ||
+            title.includes(' at the ')) {
+            console.log(`[Classify] "${originalTitle}" → Live (keyword)`);
+            return 'Live';
+        }
+
+        // DJ Mixes / Continuous Mixes / Radio Shows (CRITICAL for electronic music)
+        // Catch numbered episodes like "Group Therapy 278", "ASOT 1000", etc.
+        const djMixPatterns = [
+            '(dj mix)', '[dj mix]', 'dj mix', 'continuous mix',
+            'mixed by', 'in the mix', 'club mix', 'megamix',
+            // NOTE: 'group therapy', 'a state of trance', 'pure trance' are NOT here
+            // because we only want to match them when followed by numbers (via regex below)
+            'in search of sunrise', 'trance nation', 'corsten\'s countdown',
+            'anjunabeats worldwide', 'radio show',
+            'podcast', '(mix)', 'ministry of sound',
+            'cream ibiza', 'godskitchen', 'gatecrasher', 'trance energy',
+            'electronic mixes', 'club life', 'hardwell on air',
+            'ultra music festival', 'electric daisy carnival',
+            'tomorrowland mix', 'edc mix', 'sensation', 'dreamstate'
+        ];
+        // Check for DJ Mix patterns OR numbered episode format (word + number at end)
+        const isDjMix = djMixPatterns.some(p => title.includes(p)) ||
+            // Match patterns like "Group Therapy 500", "ASOT 1000" (word(s) + number at end)
+            /^(group therapy|asot|a state of trance|pure trance|corsten's countdown)\s*\d+/.test(title);
+
+        if (isDjMix) {
+            console.log(`[Classify] "${originalTitle}" → Compilation (DJ Mix/Radio Show)`);
+            return 'Compilation';
+        }
+
+        // Singles - explicit markers (common patterns from Apple Music)
+        if (title.includes('- single') || title.includes('(single)') ||
+            title.endsWith(' single') || title.includes('[single]')) {
+            console.log(`[Classify] "${originalTitle}" → Single (keyword)`);
+            return 'Single';
+        }
+
+        // EPs - explicit markers
+        if (title.includes(' - ep') || title.endsWith(' ep') ||
+            title.includes('(ep)') || title.includes('[ep]') ||
+            / ep$/i.test(title)) {
+            console.log(`[Classify] "${originalTitle}" → EP (keyword)`);
+            return 'EP';
+        }
+
+        // Remixes
+        if (title.includes('remixes') || title.includes('remixed') ||
+            title.includes('remix album') || title.includes('the remixes') ||
+            (title.includes('remix') && !title.includes('single'))) {
+            console.log(`[Classify] "${originalTitle}" → Compilation (remixes)`);
+            return 'Compilation';
+        }
+
+        // Greatest Hits / Compilations
+        if (title.includes('best of') || title.includes('greatest hits') ||
+            title.includes('collection') || title.includes('anthology') ||
+            title.includes('complete') || title.includes('definitive') ||
+            title.includes('essential') || title.includes('gold') ||
+            title.includes('classics') || title.includes('retrospective')) {
+            console.log(`[Classify] "${originalTitle}" → Compilation (greatest hits)`);
+            return 'Compilation';
+        }
+
+        // Soundtracks
+        if (title.includes('soundtrack') || title.includes(' ost') ||
+            title.includes('motion picture') || title.includes('score')) {
+            console.log(`[Classify] "${originalTitle}" → Compilation (soundtrack)`);
+            return 'Compilation';
+        }
+
+        // =====================================================================
+        // STEP 2: EXPLICIT APPLE METADATA
+        // =====================================================================
+        if (attributes.isCompilation) {
+            console.log(`[Classify] "${originalTitle}" → Compilation (Apple metadata)`);
+            return 'Compilation';
+        }
+        if (attributes.isSingle) {
+            console.log(`[Classify] "${originalTitle}" → Single (Apple metadata)`);
+            return 'Single';
+        }
+
+        // =====================================================================
+        // STEP 3: AI WHITELIST CHECK (EXACT MATCH ONLY)
+        // =====================================================================
+        const normalizedAlbumTitle = this._normalizeTitleForGrouping(title);
+
+        const isAiMatch = aiList.some(aiTitle => {
+            const normalizedAiTitle = this._normalizeTitleForGrouping(aiTitle);
+            // STRICT: Must be EXACT match only after normalization
+            // Example: "Kaleidoscope" → "kaleidoscope" matches "Kaleidoscope"
+            // But: "Group Therapy 278" → "grouptherapy278" does NOT match "Group Therapy" → "grouptherapy"
+            return normalizedAlbumTitle === normalizedAiTitle;
+        });
+
+        if (isAiMatch) {
+            console.log(`[Classify] "${originalTitle}" → Album (AI whitelist EXACT match)`);
+            return 'Album';
+        }
+
+        // =====================================================================
+        // STEP 4: GENRE-AWARE TRACK COUNT + DURATION
+        // =====================================================================
+
+        if (isElectronic) {
+            // Electronic Music: STRICT rules
+            if (trackCount <= 3) {
+                console.log(`[Classify] "${originalTitle}" → Single (electronic, ${trackCount} tracks)`);
+                return 'Single';
+            }
+            if (trackCount >= 4 && trackCount <= 6) {
+                console.log(`[Classify] "${originalTitle}" → EP (electronic, ${trackCount} tracks)`);
+                return 'EP';
+            }
+            // 7+ tracks: Default to Album (studio album)
+            // The AI whitelist already confirmed known studio albums, but AI may be incomplete
+            // So we default to Album unless other heuristics above caught it
+            console.log(`[Classify] "${originalTitle}" → Album (electronic, ${trackCount} tracks)`);
+            return 'Album';
+        }
+
+        // Progressive Rock: Protect albums with few but long tracks
+        if (isProgRock && durationMin >= 35 && trackCount >= 3) {
+            console.log(`[Classify] "${originalTitle}" → Album (prog rock, ${trackCount} tracks, ${durationMin.toFixed(0)} min)`);
+            return 'Album';
+        }
+
+        // Rock/Pop/Other: More relaxed rules
+        if (trackCount <= 2) {
+            console.log(`[Classify] "${originalTitle}" → Single (${trackCount} tracks)`);
+            return 'Single';
+        }
+        if (trackCount >= 3 && trackCount <= 4) {
+            console.log(`[Classify] "${originalTitle}" → EP (${trackCount} tracks)`);
+            return 'EP';
+        }
+        if (trackCount === 5 && durationMin < 25) {
+            console.log(`[Classify] "${originalTitle}" → EP (5 tracks, ${durationMin.toFixed(0)} min)`);
+            return 'EP';
+        }
+
+        // 6+ tracks = likely Album for non-electronic
+        console.log(`[Classify] "${originalTitle}" → Album (default, ${trackCount} tracks)`);
+        return 'Album';
     }
 
     /**

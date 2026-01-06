@@ -10,8 +10,8 @@ async function callProvider({ prompt, albumQuery, model, maxTokens, aiEndpoint, 
   let payload
 
   if (aiUrl.includes('generativelanguage.googleapis.com')) {
-    const modelName = aiModelEnv || 'models/gemini-2.5-flash'
-    requestUrl = `https://generativelanguage.googleapis.com/v1/${modelName}:generateContent?key=${encodeURIComponent(aiApiKey)}`
+    const modelName = aiModelEnv || 'models/gemini-3-flash-preview'
+    requestUrl = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${encodeURIComponent(aiApiKey)}`
 
     const promptText = (prompt && typeof prompt === 'string')
       ? prompt

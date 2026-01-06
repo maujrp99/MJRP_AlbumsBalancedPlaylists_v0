@@ -135,6 +135,10 @@ const { router: debugRoutes, initDebugRoutes } = require('./routes/debug')
 initDebugRoutes(routeDeps)
 app.use('/api', debugRoutes)
 
+// AI Assistant Routes
+const aiRoutes = require('./routes/ai')
+app.use('/api/ai', aiRoutes)
+
 // ============================================================================
 // Export for tests
 // ============================================================================
