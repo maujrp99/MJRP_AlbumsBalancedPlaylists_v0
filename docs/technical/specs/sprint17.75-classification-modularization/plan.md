@@ -382,4 +382,46 @@ async execute(album, context) {
 }
 ```
 
-**Note**: Making `AIWhitelistStrategy.execute()` async requires updating `AlbumTypeClassifier.classify()` to use `await`.
+### 7.7 Refinement: AI Feedback Loop (Scorecard Pattern) [Sprint 17.75-C]
+
+> [!IMPORTANT]
+> **Problem**: "First Strategy Wins" logic is too rigid. Heuristics like `RemixTracksStrategy` can incorrectly classify Studio Albums as EPs/Singles, preventing the AI from validating them.
+> **Solution**: Implement a **Feedback Loop / Override Pattern**.
+
+#### 7.7.1 Revised Logic Flow
+For Electronic Music, the AI Whitelist acts as a **Supreme Court** with veto power.
+
+```mermaid
+graph TD
+    A[Album Input] --> B{Is Electronic?}
+    
+    B -->|No| C[Run Standard Heuristics]
+    C --> D[Result: Album/EP/Single]
+    D --> E[Final Result]
+    
+    B -->|Yes| F[Run Heuristics (Scorecard)]
+    F --> G[Preliminary: EP (e.g., Remixes detected)]
+    G --> H{Check AI Whitelist}
+    
+    H -->|In List| I[OVERRIDE: Studio Album]
+    H -->|Not in List| J[CONFIRM: EP/Uncategorized]
+```
+
+#### 7.7.2 Implementation Details
+1. **`AlbumTypeClassifier.js`**:
+   - Change loop to capture `preliminaryResult`.
+   - If `preliminaryResult` is found BUT genre is Electronic:
+     - DO NOT RETURN yet.
+     - Call `AIWhitelistStrategy.validate(album, preliminaryResult)`.
+   - `AIWhitelistStrategy` determines if it should override the preliminary result.
+
+2. **`AIWhitelistStrategy.js`**:
+   - Add `validate(album, currentType)` method.
+   - If `currentType` is 'EP' or 'Single' or 'Compilation' AND album is in AI List → Return 'Album'.
+   - If `currentType` is 'Album' AND album is NOT in AI List → Return 'Uncategorized' (or keep as is if confident).
+
+### 7.8 Sprint 17.75-C: Tasks
+1. Refactor `AlbumTypeClassifier` to support override logic.
+2. Update `AIWhitelistStrategy` to handle validation/override.
+3. Verify Tiesto (Kaleidoscope) is rescued from "EP" to "Album".
+
