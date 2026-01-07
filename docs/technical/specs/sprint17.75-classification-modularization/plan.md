@@ -2,7 +2,7 @@
 
 **Sprint**: 17.75
 **Created**: 2026-01-06
-**Status**: 📋 AWAITING APPROVAL
+**Status**: 🚧 IN PROGRESS
 **Prerequisite**: [spec.md](spec.md) ✅ COMPLETE
 
 ---

@@ -21,26 +21,31 @@ router.post('/studio-albums', async (req, res) => {
 
         const response = await callProvider({
             prompt,
-            maxTokens: 2000, // Increased for longer lists
+            maxTokens: 10000, // Increased to prevent truncation for large discographies
             aiApiKey: process.env.AI_API_KEY
         })
 
         // Parse the response
-        // Gemini often wraps JSON in markdown code blocks like ```json ... ```
         let text = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || '[]'
 
         console.log(`[AI] Raw Gemini response: ${text}`)
 
-        // Clean up code blocks if present
+        // Clean up code blocks if present (handle ```json, ```, and potential whitespace)
         text = text.replace(/```json/g, '').replace(/```/g, '').trim()
 
         let albums = []
         try {
             albums = JSON.parse(text)
         } catch (parseErr) {
-            console.error('[AI] Failed to parse JSON response:', text)
-            // Fallback: try to split by newlines if JSON fails
-            albums = text.split('\n').filter(line => line.length > 2).map(l => l.replace(/^- /, '').replace(/^\d+\.\s*/, '').trim())
+            console.error('[AI] Failed to parse JSON response:', parseErr.message)
+
+            // Fallback: Robust Regex Extraction
+            // Finds all strings inside double quotes that are likely array elements
+            // This handles newlines, missing commas, or other JSON formatting errors
+            const matches = text.match(/"([^"]+)"/g)
+            if (matches) {
+                albums = matches.map(m => m.replace(/^"|"$/g, '').trim())
+            }
         }
 
         if (!Array.isArray(albums)) {

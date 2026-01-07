@@ -12,6 +12,7 @@
 export const ELECTRONIC_GENRES = [
     // Main categories
     'electronic', 'electronica', 'dance', 'edm',
+    'eletrônica', 'electrónica', // Portuguese/Spanish variants
 
     // House (12 subgenres)
     'house', 'deep house', 'progressive house', 'tech house',

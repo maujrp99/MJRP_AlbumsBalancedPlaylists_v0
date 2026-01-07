@@ -2,7 +2,7 @@
 
 **Sprint**: 17.75
 **Updated**: 2026-01-06 16:16
-**Status**: 📋 PLANNING
+**Status**: 🚧 IN PROGRESS
 
 ---
 
