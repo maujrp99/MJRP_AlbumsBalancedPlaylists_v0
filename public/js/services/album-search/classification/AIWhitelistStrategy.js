@@ -21,12 +21,8 @@ export class AIWhitelistStrategy extends BaseStrategy {
         const genres = context.genres || [];
         const trackCount = album.trackCount || context.trackCount || 0;
 
-        // Non-electronic with 7+ tracks → Direct Studio Album (no AI needed!)
-        // This skips AI call entirely for rock, pop, jazz, etc.
-        if (!isElectronic(genres) && trackCount >= 7) {
-            this.log(album.title, 'Album', `non-electronic, ${trackCount} tracks (no AI)`);
-            return 'Album';
-        }
+        // Note: Non-electronic albums are now handled by GenreGateStrategy (Etapa 2.5)
+        // So anything reaching here is guaranteed to be Electronic (or have no genre).
 
         // Electronic music: needs AI whitelist check
         if (isElectronic(genres)) {
@@ -35,19 +31,44 @@ export class AIWhitelistStrategy extends BaseStrategy {
                 ? await context.getAiList()
                 : context.aiList || [];
 
-            const normalizedTitle = this._normalizeTitle(album.title);
+            const normalizedAlbumTitle = this._normalizeTitle(album.title);
 
+            // Debug: Log first few AI titles for troubleshooting
+            if (aiList.length > 0) {
+                console.log(`[AI:Match] Checking "${album.title}" -> normalized: "${normalizedAlbumTitle}"`);
+                console.log(`[AI:Match] AI list has ${aiList.length} titles:`, aiList.slice(0, 5));
+            }
+
+            // Try exact match first
+            let matchedTitle = null;
             const isInWhitelist = aiList.some(aiTitle => {
                 const normalizedAiTitle = this._normalizeTitle(aiTitle);
-                return normalizedTitle === normalizedAiTitle;
+                const isMatch = normalizedAlbumTitle === normalizedAiTitle;
+                if (isMatch) matchedTitle = aiTitle;
+                return isMatch;
             });
 
             if (isInWhitelist) {
+                console.log(`[AI:Match] ✅ EXACT match: "${album.title}" matched "${matchedTitle}"`);
                 this.log(album.title, 'Album', 'AI whitelist match');
                 return 'Album';
             }
 
+            // Fuzzy match: check if album title CONTAINS or IS CONTAINED BY any AI title
+            const fuzzyMatch = aiList.find(aiTitle => {
+                const normalizedAiTitle = this._normalizeTitle(aiTitle);
+                return normalizedAlbumTitle.includes(normalizedAiTitle) ||
+                    normalizedAiTitle.includes(normalizedAlbumTitle);
+            });
+
+            if (fuzzyMatch) {
+                console.log(`[AI:Match] ✅ FUZZY match: "${album.title}" matched "${fuzzyMatch}"`);
+                this.log(album.title, 'Album', `AI fuzzy match: ${fuzzyMatch}`);
+                return 'Album';
+            }
+
             // Electronic but NOT in AI whitelist → Uncategorized
+            console.log(`[AI:Match] ❌ No match for "${album.title}" (normalized: "${normalizedAlbumTitle}")`);
             this.log(album.title, 'Uncategorized', 'electronic, not in AI whitelist');
             return 'Uncategorized';
         }

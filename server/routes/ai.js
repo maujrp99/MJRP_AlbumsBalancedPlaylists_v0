@@ -13,8 +13,8 @@ router.post('/studio-albums', async (req, res) => {
         }
 
         // Prompt engineered for strict JSON output of Studio Albums only
-        // Be explicit about wanting the COMPLETE discography including aliases (e.g., System F for Ferry Corsten)
-        const prompt = `List ALL original studio albums from the complete discography of ${artistName}, including any work under aliases or side projects. Exclude compilations, EPs, singles, DJ mixes, live albums, and remix albums. Reply ONLY with a valid JSON array of album title strings in chronological order. Do not include any other text. Example format: ["Album 1", "Album 2"]`
+        // Be explicit about wanting the COMPLETE discography
+        const prompt = `List ALL original studio albums from the complete discography of ${artistName} . Exclude compilations, EPs, singles, DJ mixes, live albums, and remix albums. Reply ONLY with a valid JSON array of album title strings in chronological order. Do not include any other text. Example format: ["Album 1", "Album 2"]`
 
         console.log(`[AI] Fetching studio albums for: ${artistName}`)
         console.log(`[AI] Prompt: ${prompt}`)

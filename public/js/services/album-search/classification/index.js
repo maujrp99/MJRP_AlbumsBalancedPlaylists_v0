@@ -11,9 +11,11 @@ export { BaseStrategy } from './BaseStrategy.js';
 // Strategies (in pipeline order)
 export { AppleMetadataStrategy } from './AppleMetadataStrategy.js';
 export { TitleKeywordStrategy } from './TitleKeywordStrategy.js';
+export { GenreGateStrategy } from './GenreGateStrategy.js'; // Etapa 2.5
 export { RemixTracksStrategy } from './RemixTracksStrategy.js';
 export { TrackCountStrategy } from './TrackCountStrategy.js';
 export { AIWhitelistStrategy } from './AIWhitelistStrategy.js';
+
 
 // Helpers
 export {

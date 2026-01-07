@@ -10,6 +10,7 @@
 import {
     AppleMetadataStrategy,
     TitleKeywordStrategy,
+    GenreGateStrategy,
     RemixTracksStrategy,
     TrackCountStrategy,
     AIWhitelistStrategy
@@ -21,6 +22,7 @@ export class AlbumTypeClassifier {
         this.pipeline = [
             new AppleMetadataStrategy(),  // Etapa 1: Apple isSingle/isCompilation
             new TitleKeywordStrategy(),   // Etapa 2: Title patterns
+            new GenreGateStrategy(),      // Etapa 2.5: Bifurcation (Non-electronic -> Album)
             new RemixTracksStrategy(),    // Etapa 3: Remix track detection
             new TrackCountStrategy(),     // Etapa 4: Track count + duration
             new AIWhitelistStrategy()     // Etapa 5: AI for electronic
@@ -79,19 +81,25 @@ export class AlbumTypeClassifier {
 
     /**
      * Classify multiple albums
+     * Sprint 17.75-B: Made async to match async classify()
      * @param {Object[]} albums - Array of albums
      * @param {Object} context - Shared context
-     * @returns {Object[]} - Albums with type property added
+     * @returns {Promise<Object[]>} - Albums with type property added
      */
-    classifyAll(albums, context = {}) {
-        return albums.map(album => ({
-            ...album,
-            type: this.classify(album, context),
-            // Also set boolean flags for backward compatibility
-            isSingle: this.classify(album, context) === 'Single',
-            isCompilation: this.classify(album, context) === 'Compilation',
-            isLive: this.classify(album, context) === 'Live'
-        }));
+    async classifyAll(albums, context = {}) {
+        const results = [];
+        for (const album of albums) {
+            const type = await this.classify(album, context);
+            results.push({
+                ...album,
+                type,
+                // Also set boolean flags for backward compatibility
+                isSingle: type === 'Single',
+                isCompilation: type === 'Compilation',
+                isLive: type === 'Live'
+            });
+        }
+        return results;
     }
 }
 

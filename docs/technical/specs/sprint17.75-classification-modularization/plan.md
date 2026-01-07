@@ -294,6 +294,40 @@ getArtistDiscography("Ferry Corsten")
 | Ferry Corsten (1st search) | 1 AI call | 1 AI call |
 | Ferry Corsten (2nd search) | 1 AI call | **0 AI calls** (cache) |
 | Yes (prog rock) | 1 AI call | **0 AI calls** |
+#### 7.5.3 Optimization Results
+- **Non-Electronic (Pink Floyd)**: 0 AI calls (skipped entirely).
+- **Electronic (Ferry Corsten)**: 1 AI call (first search), then 0 (cached).
+- **Cache**: Persists for the session, reducing 15s wait to <3s.
+
+### 7.6 Refinement: Genre Bifurcation (GenreGateStrategy)
+
+To preventing non-electronic artists (e.g., Pink Floyd, Yes) from being incorrectly classified by electronic-specific strategies (like Track Count or AI Whitelist), we introduce a bifurcation step.
+
+#### 7.6.1 Logic Flow
+```mermaid
+graph TD
+    A[Album Input] --> B[AppleMetadataStrategy]
+    B -->|Classified| END[Return Type]
+    B -->|Next| C[TitleKeywordStrategy]
+    C -->|Classified| END
+    C -->|Next| D[GenreGateStrategy] <--- NEW STEP 2.5
+    
+    D -->|Non-Electronic| E[Return 'Album']
+    D -->|Electronic| F[RemixTracksStrategy]
+    
+    F -->|Classified| END
+    F -->|Next| G[TrackCountStrategy]
+    G -->|Classified| END
+    G -->|Next| H[AIWhitelistStrategy]
+    H -->|Match| END
+    H -->|No Match| I[Uncategorized]
+```
+
+#### 7.6.2 GenreGateStrategy Implementation
+- **Role**: Validates if the artist needs further heuristic processing.
+- **Logic**:
+  - If **Non-Electronic**: Returns `'Album'` immediately (Trusts Apple API/Metadata for Rock, Pop, Jazz, etc.).
+  - If **Electronic**: Returns `null` (Passes through to Remix, EPs, and AI checks).
 
 #### Code Changes
 
