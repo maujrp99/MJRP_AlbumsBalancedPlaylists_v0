@@ -2,7 +2,15 @@ export class SearchController {
     constructor(homeController) {
         this.home = homeController; // Parent Controller
         this.service = homeController.albumSearchService;
-        this.filterState = { albums: true, singles: false, live: false, compilations: false };
+        // ARCH-18: Updated filter state to include EP and Uncategorized
+        this.filterState = {
+            albums: true,
+            eps: false,
+            singles: false,
+            live: false,
+            compilations: false,
+            uncategorized: false
+        };
     }
 
     initialize() {
@@ -53,6 +61,10 @@ export class SearchController {
                 this.home.state.artist = { name: results[0].artist };
                 const statusEl = this.home.view.$('#statusArtistName');
                 if (statusEl) statusEl.textContent = `→ ${results[0].artist}`;
+
+                // ARCH-18: Calculate and update filter counts
+                const counts = this.calculateTypeCounts();
+                this.home.view.updateFilterCounts(counts);
             } else {
                 console.warn('[SearchController] No results found.');
                 const statusEl = this.home.view.$('#statusArtistName');
@@ -94,10 +106,13 @@ export class SearchController {
             }
         };
 
+        // ARCH-18: Update all filter buttons including EP and Uncategorized
         updateBtn('#btnFilterAlbums', this.filterState.albums);
+        updateBtn('#btnFilterEPs', this.filterState.eps);
         updateBtn('#btnFilterSingles', this.filterState.singles);
         updateBtn('#btnFilterLive', this.filterState.live);
         updateBtn('#btnFilterCompilations', this.filterState.compilations);
+        updateBtn('#btnFilterUncategorized', this.filterState.uncategorized);
     }
 
     applyFilters() {
@@ -106,31 +121,50 @@ export class SearchController {
         console.log('[SearchController] Applying filters:', this.filterState);
 
         const filtered = this.results.filter(album => {
-            // Use data from AlbumSearchService (now properly mapped)
-            const title = (album.title || '').toLowerCase();
+            // ARCH-18: Use album.type directly from classification pipeline
+            const type = album.type || 'Uncategorized';
 
-            // Type detection with multiple fallbacks
-            const isSingle = album.isSingle || album.albumType === 'Single' || album.type === 'Single';
-            const isLive = album.isLive || album.albumType === 'Live' || album.type === 'Live' ||
-                title.includes('(live') || title.includes('[live');
-            const isCompilation = album.isCompilation || album.albumType === 'Compilation' || album.type === 'Compilation' ||
-                title.includes('greatest hits') || title.includes('best of') ||
-                title.includes('anthology') || title.includes('collection');
-            const isEP = album.albumType === 'EP' || album.type === 'EP';
-
-            // Studio album = not single, not live, not compilation, not EP
-            const isStudioAlbum = !isSingle && !isLive && !isCompilation && !isEP;
-
-            // Check if enabled
-            if (isStudioAlbum && this.filterState.albums) return true;
-            if ((isSingle || isEP) && this.filterState.singles) return true;
-            if (isLive && this.filterState.live) return true;
-            if (isCompilation && this.filterState.compilations) return true;
+            // Map filter state to album types
+            if (type === 'Album' && this.filterState.albums) return true;
+            if (type === 'EP' && this.filterState.eps) return true;
+            if (type === 'Single' && this.filterState.singles) return true;
+            if (type === 'Live' && this.filterState.live) return true;
+            if (type === 'Compilation' && this.filterState.compilations) return true;
+            if (type === 'Uncategorized' && this.filterState.uncategorized) return true;
 
             return false;
         });
 
         console.log(`[SearchController] Filtered ${this.results.length} -> ${filtered.length}`);
         this.home.discographyRenderer.render(filtered);
+    }
+
+    /**
+     * ARCH-18: Calculate counts for each type from results
+     * @returns {Object} - { Album: n, EP: n, Single: n, Compilation: n, Live: n, Uncategorized: n }
+     */
+    calculateTypeCounts() {
+        if (!this.results) return {};
+
+        const counts = {
+            Album: 0,
+            EP: 0,
+            Single: 0,
+            Compilation: 0,
+            Live: 0,
+            Uncategorized: 0
+        };
+
+        this.results.forEach(album => {
+            const type = album.type || 'Uncategorized';
+            if (counts.hasOwnProperty(type)) {
+                counts[type]++;
+            } else {
+                counts.Uncategorized++;
+            }
+        });
+
+        console.log('[SearchController] Type counts:', counts);
+        return counts;
     }
 }

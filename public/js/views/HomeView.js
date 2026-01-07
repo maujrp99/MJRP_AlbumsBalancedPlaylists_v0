@@ -134,7 +134,7 @@ export class HomeView extends BaseView {
 
         // --- RIGHT PANEL ---
 
-        // Toolbar
+        // ARCH-18: Updated to include EP and Uncategorized filters with counter support
         const createFilterBtn = (id, icon, text, filter) => {
             const btn = SafeDOM.button({
                 id,
@@ -142,18 +142,24 @@ export class HomeView extends BaseView {
                 dataset: { filter }
             });
             btn.appendChild(SafeDOM.fromHTML(getIcon(icon, 'w-3 h-3')));
-            btn.appendChild(SafeDOM.span({}, text));
+            const textSpan = SafeDOM.span({ className: 'filter-btn-text' }, text);
+            // Span for count display, initially hidden
+            const countSpan = SafeDOM.span({ className: 'filter-btn-count text-[10px] opacity-70', id: `${id}Count` });
+            btn.appendChild(textSpan);
+            btn.appendChild(countSpan);
             return btn;
         }
 
         const filterBtns = [
             createFilterBtn('btnFilterAlbums', 'Disc', 'Studio', 'albums'),
-            createFilterBtn('btnFilterSingles', 'Music2', 'Singles/EP', 'singles'),
+            createFilterBtn('btnFilterEPs', 'Disc3', 'EPs', 'eps'),
+            createFilterBtn('btnFilterSingles', 'Music2', 'Singles', 'singles'),
             createFilterBtn('btnFilterLive', 'Mic2', 'Live', 'live'),
-            createFilterBtn('btnFilterCompilations', 'Library', 'Compilations', 'compilations')
+            createFilterBtn('btnFilterCompilations', 'Library', 'Compendiums', 'compilations'),
+            createFilterBtn('btnFilterUncategorized', 'HelpCircle', '?', 'uncategorized')
         ];
 
-        // Fix first button style
+        // Fix first button style (Studio is active by default)
         filterBtns[0].className = 'filter-btn px-3 py-1.5 rounded-lg bg-flame-gradient text-white text-xs font-bold shadow-lg shadow-orange-500/20 flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0';
 
         const toolbar = SafeDOM.div({ className: 'min-h-14 border-b border-white/5 bg-black/40 backdrop-blur-md flex flex-col md:flex-row md:items-center md:justify-between px-4 py-3 md:px-6 shrink-0 z-20 gap-2' }, [
@@ -214,6 +220,30 @@ export class HomeView extends BaseView {
             visualInputs.classList.add('hidden');
         }
 
+    }
+
+    /**
+     * ARCH-18: Update filter button counts from search results
+     * @param {Object} counts - { Album: n, EP: n, Single: n, Compilation: n, Live: n, Uncategorized: n }
+     */
+    updateFilterCounts(counts) {
+        const updateCount = (btnId, count) => {
+            const countSpan = this.$(`#${btnId}Count`);
+            if (countSpan) {
+                countSpan.textContent = count > 0 ? ` (${count})` : '';
+            }
+        };
+
+        updateCount('btnFilterAlbums', counts.Album || 0);
+        updateCount('btnFilterEPs', counts.EP || 0);
+        updateCount('btnFilterSingles', counts.Single || 0);
+        updateCount('btnFilterLive', counts.Live || 0);
+        updateCount('btnFilterCompilations', counts.Compilation || 0);
+        updateCount('btnFilterUncategorized', counts.Uncategorized || 0);
+
+        // Update total count in status area
+        const totalCount = Object.values(counts).reduce((sum, n) => sum + n, 0);
+        console.log(`[HomeView] Updated filter counts, total: ${totalCount}`);
     }
 
     setLoading(isLoading) {

@@ -56,11 +56,13 @@ export class HomeController {
             stack.addEventListener('click', (e) => this.handleStackClick(e));
         }
 
-        // Filter Delegation
+        // Filter Delegation - ARCH-18: Added EP and Uncategorized handlers
         this.view.$delegate('#btnFilterAlbums', 'click', () => this.searchController.toggleFilter('albums'));
+        this.view.$delegate('#btnFilterEPs', 'click', () => this.searchController.toggleFilter('eps'));
         this.view.$delegate('#btnFilterSingles', 'click', () => this.searchController.toggleFilter('singles'));
         this.view.$delegate('#btnFilterLive', 'click', () => this.searchController.toggleFilter('live'));
         this.view.$delegate('#btnFilterCompilations', 'click', () => this.searchController.toggleFilter('compilations'));
+        this.view.$delegate('#btnFilterUncategorized', 'click', () => this.searchController.toggleFilter('uncategorized'));
 
         // Bulk Validation & Action
         const bulkInput = this.view.$('#bulkPasteInput');

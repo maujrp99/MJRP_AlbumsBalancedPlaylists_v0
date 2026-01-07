@@ -3,6 +3,8 @@
  * 
  * Renders filter controls for the Discography Grid.
  * Emits 'filter-change' events when user toggles buttons.
+ * 
+ * ARCH-18: Added item counters and Uncategorized filter
  */
 import { getIcon } from '../Icons.js';
 
@@ -14,6 +16,26 @@ export class DiscographyToolbar {
             types: ['Album'], // Default to Albums only
             editions: ['standard', 'remaster']
         };
+        // ARCH-18: Album counts for each type
+        this.counts = {
+            Album: 0,
+            Single: 0,
+            EP: 0,
+            Compilation: 0,
+            Live: 0,
+            Uncategorized: 0
+        };
+    }
+
+    /**
+     * ARCH-18: Update the counts displayed on type buttons
+     * @param {Object} counts - { Album: n, Single: n, EP: n, Compilation: n, Live: n, Uncategorized: n }
+     */
+    setCounts(counts) {
+        this.counts = { ...this.counts, ...counts };
+        if (this.container) {
+            this._refresh();
+        }
     }
 
     render() {
@@ -25,9 +47,11 @@ export class DiscographyToolbar {
                     <div class="flex flex-wrap gap-2">
                         <span class="text-xs font-bold text-gray-500 uppercase tracking-wider self-center mr-2">Show:</span>
                         ${this._renderTypeBtn('Album', 'Albums')}
+                        ${this._renderTypeBtn('EP', 'EPs')}
                         ${this._renderTypeBtn('Single', 'Singles')}
                         ${this._renderTypeBtn('Compilation', 'Compendiums')}
                         ${this._renderTypeBtn('Live', 'Live')}
+                        ${this._renderTypeBtn('Uncategorized', '?')}
                     </div>
 
                     <!-- Edition Filters -->
@@ -49,11 +73,17 @@ export class DiscographyToolbar {
             ? 'bg-flame-gradient text-white shadow-lg shadow-brand-orange/20 border-white/20'
             : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border-transparent hover:border-white/10';
 
-        // Icons for types
+        // ARCH-18: Icons for types (including new EP and Uncategorized)
         let icon = 'Disc';
         if (type === 'Single') icon = 'Music';
+        if (type === 'EP') icon = 'Disc3';
         if (type === 'Live') icon = 'Mic';
         if (type === 'Compilation') icon = 'Layers';
+        if (type === 'Uncategorized') icon = 'HelpCircle';
+
+        // ARCH-18: Get count for this type
+        const count = this.counts[type] || 0;
+        const countDisplay = count > 0 ? ` (${count})` : '';
 
         return `
             <button 
@@ -62,7 +92,7 @@ export class DiscographyToolbar {
                 onclick="window.handleDiscographyType('${type}')"
             >
                 ${getIcon(icon, `w-3 h-3 ${isActive ? 'text-white' : 'text-gray-500 group-hover:text-white'}`)}
-                ${label}
+                ${label}${countDisplay}
             </button>
         `;
     }

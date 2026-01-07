@@ -32,6 +32,7 @@
 | **ARCH-15** | MusicKit Modularization | ✅ Complete | Split God Service into Auth/Catalog/Library modules (Sprint 17) |
 | **ARCH-16** | SeriesView Thin Refactor | ✅ Complete | MVVM Pattern: Passive View, Logic in Controller (Sprint 17) |
 | **ARCH-17** | Variable Top N Strategy | ✅ Complete | Parametrized Strategy Pattern for Top N Algorithms (Sprint 17) |
+| **ARCH-18** | Album Classification Modularization | 📋 Planned | Extract classification heuristics from AlbumSearchService into dedicated strategies (Sprint 17.75) |
 
 ### ARCH-1: PlaylistsView Modularization
 
@@ -167,6 +168,31 @@ Store (runtime state) → Repository (Firestore CRUD)
 - `SeriesController.js`
 - `AlbumsScopedRenderer.js`
 - `albumsStore.js`
+
+---
+
+### ARCH-18: Album Classification Modularization (Sprint 17.75)
+
+**Problem**: Classification logic (~100 LOC) embedded inline in `AlbumSearchService._classifyWithAI()` as a "God Method" with multiple responsibilities: DJ Mix detection, track count heuristics, electronic genre detection, AI whitelist checking.
+
+**Solution**: Extracted into modular **5-stage funnel** using Chain of Responsibility pattern:
+1. `AppleMetadataStrategy` - Uses Apple API flags (`isSingle`, `isCompilation`, `albumType`, `contentTraits`)
+2. `TitleKeywordStrategy` - Pattern matching (Live, DJ Mix, EP, Remix, etc.)
+3. `RemixTracksStrategy` - Track analysis (≥50% remix tracks = remix package)
+4. `TrackCountStrategy` - Track count + duration (with prog rock protection)
+5. `AIWhitelistStrategy` - AI confirmation for electronic music
+
+**Files Created**:
+- `AlbumTypeClassifier.js` - Pipeline orchestrator
+- `classification/BaseStrategy.js` - Abstract interface
+- `classification/AppleMetadataStrategy.js`, `TitleKeywordStrategy.js`, etc.
+
+**Result**:
+- `album.type` property set by centralized classifier
+- Backward-compatible flags (`isSingle`, `isCompilation`, `isLive`) maintained
+- Single Source of Truth for classification across all consumers
+
+**Spec**: [sprint17.75-classification-modularization/spec.md](technical/specs/sprint17.75-classification-modularization/spec.md)
 
 ---
 

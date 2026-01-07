@@ -23,6 +23,20 @@
 
 ## 🔮 Upcoming Sprints
 
+### Sprint 17.75: Classification Modularization (Jan 2026)
+**Goal**: Extract album classification heuristics from `AlbumSearchService` into modular strategy classes (ARCH-18).
+**Duration**: 2-3 days
+**Priority**: P2 (Tech Debt)
+**Status**: 📋 **PLANNING**
+**Spec**: [sprint17.75-classification-modularization/spec.md](technical/specs/sprint17.75-classification-modularization/spec.md)
+
+**Deliverables**:
+- [ ] `AlbumTypeClassifier.js` - Orchestrator using Chain of Responsibility pattern
+- [ ] `classification/` folder with 5 strategy classes (TitleKeyword, AIWhitelist, AppleMetadata, ElectronicHeuristics, GenericTrackCount)
+- [ ] Remove `_classifyWithAI()` from `AlbumSearchService.js`
+
+**Why**: The `_classifyWithAI` function has grown to ~100+ LOC with 5+ inline heuristics, violating Single Responsibility Principle. Recent fixes (Singles appearing in Studio filter) required modifying deeply nested conditionals. Modularizing into strategies will improve maintainability and testability.
+
 
 ---
 
