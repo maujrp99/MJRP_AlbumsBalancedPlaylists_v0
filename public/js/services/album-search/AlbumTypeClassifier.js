@@ -13,7 +13,8 @@ import {
     GenreGateStrategy,
     RemixTracksStrategy,
     TrackCountStrategy,
-    AIWhitelistStrategy
+    AIWhitelistStrategy,
+    TypeSanityCheckStrategy // NEW
 } from './classification/index.js';
 
 export class AlbumTypeClassifier {
@@ -27,6 +28,7 @@ export class AlbumTypeClassifier {
             new TrackCountStrategy(),     // Etapa 4: Track count + duration
             new AIWhitelistStrategy()     // Etapa 5: AI for electronic
         ];
+        this.sanityCheck = new TypeSanityCheckStrategy();
     }
 
     /**
@@ -41,14 +43,14 @@ export class AlbumTypeClassifier {
         const enrichedContext = this._buildContext(album, context);
 
         let preliminaryType = null;
-        let aiStrategy = null;
+        // FIX: Find AI Strategy immediately, don't wait for loop
+        const aiStrategy = this.pipeline.find(s => s.name === 'AIWhitelist');
 
         // Run through pipeline
         for (const strategy of this.pipeline) {
-            // Identify AI Strategy to call it explicitly later if needed
+            // Skip AI Strategy in main loop (it handles Judgment Day later)
             if (strategy.name === 'AIWhitelist') {
-                aiStrategy = strategy;
-                continue; // Don't run AI in the normal loop yet
+                continue;
             }
 
             try {
@@ -57,23 +59,12 @@ export class AlbumTypeClassifier {
 
                 if (result !== null) {
                     // SPRINT 17.75-C: FEEDBACK LOOP / SCORECARD PATTERN
-                    // Instead of returning immediately, we check if we need AI validation.
-
-                    const isElectronic = import('./classification/ElectronicGenreDetector.js').then(m => m.isElectronic(enrichedContext.genres)).catch(() => false);
-                    // Note: We need to resolve import or use the helper function directly if available. 
-                    // To keep it simple, we check enrichedContext.genres against the list if we imported it, 
-                    // but since ElectronicGenreDetector is used inside strategies, let's rely on the context behavior.
-
-                    // Better approach: Check if it's electronic using the helper if possible, 
-                    // or rely on the fact that GenreGateStrategy would have returned null for Electronic.
 
                     // Logic:
                     // If GenreGate passed (returned null) -> It acts as an implicit "Is Electronic" or "Check Deeply".
                     // But if TitleKeyword or RemixTracks returned a result (e.g. 'EP'), we need to know if we should override.
 
                     // We only "Rescue" if it's Electronic.
-                    // How do we know if it's Electronic here in the loop? 
-                    // We can check the strategy name or re-check genres.
 
                     // Let's use a simpler heuristic for Phase F:
                     // If the result is 'EP', 'Single', or 'Compilation', AND it's Electronic, defer to AI.
@@ -81,23 +72,21 @@ export class AlbumTypeClassifier {
                     // Assuming EnrichedContext has genres. We can check them.
                     const isElec = enrichedContext.genres && enrichedContext.genres.length > 0 &&
                         (enrichedContext.genres.some(g =>
-                            ['electronic', 'dance', 'trance', 'house', 'techno', 'edm', 'eletrônica'].some(gen => g.includes(gen))
+                            ['electronic', 'dance', 'trance', 'house', 'techno', 'edm', 'eletrônica', 'electrónica'].some(gen => g.includes(gen))
                         ));
 
                     if (isElec) {
                         preliminaryType = result;
-                        // DO NOT RETURN. Continue to find AI Strategy.
-                        // But we should stop running other heuristics (like TrackCount) if we already have a hit (e.g. RemixTracks).
-                        // So we break the loop and go to AI?
+                        // DO NOT RETURN. Continue to AI Strategy (Judgment Day).
+                        // We break the loop so no other heuristics run.
                         break;
                     } else {
-                        // Non-electronic -> Accept the result immediately (Legacy/Standard behavior)
-                        return result;
+                        // Non-electronic -> Accept the result immediately (Legacy/Standard behavior), BUT run sanity check
+                        return this._finalize(result, album, enrichedContext);
                     }
                 }
             } catch (error) {
                 console.error(`[AlbumTypeClassifier] Error in ${strategy.name}:`, error);
-                // Continue to next strategy
             }
         }
 
@@ -120,7 +109,7 @@ export class AlbumTypeClassifier {
             const aiResult = await aiStrategy.execute(album, aiContext);
 
             if (aiResult) {
-                return aiResult; // AI Overrode (Studio) or Uncategorized
+                return this._finalize(aiResult, album, enrichedContext);
             }
 
             // If AI returned null (shouldn't happen for whitelist, but just in case),
@@ -128,12 +117,33 @@ export class AlbumTypeClassifier {
         }
 
         if (preliminaryType) {
-            return preliminaryType;
+            return this._finalize(preliminaryType, album, enrichedContext);
         }
 
         // Nothing classified → Uncategorized
         console.log(`[Classify] "${album.title}" → Uncategorized (no strategy matched)`);
         return 'Uncategorized';
+    }
+
+    /**
+     * Finalize classification processing (Sanity Checks)
+     */
+    _finalize(type, album, context) {
+        // --- STEP 6: TYPE SANITY CHECK (POST-PROCESSING) ---
+        // Final guard against "Albums" that are actually EPs/Singles
+
+        // --- STEP 6: TYPE SANITY CHECK (POST-PROCESSING) ---
+        // Final guard against "Albums" that are actually EPs/Singles
+
+        const sanityContext = { ...context, currentType: type };
+        const sanityCorrection = this.sanityCheck.execute(album, sanityContext);
+
+        if (sanityCorrection) {
+            console.log(`[Classifier] 🧹 Sanity Check corrected "${type}" to "${sanityCorrection}" for "${album.title}"`);
+            return sanityCorrection;
+        }
+
+        return type;
     }
 
     /**

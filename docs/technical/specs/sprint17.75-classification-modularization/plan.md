@@ -425,3 +425,63 @@ graph TD
 2. Update `AIWhitelistStrategy` to handle validation/override.
 3. Verify Tiesto (Kaleidoscope) is rescued from "EP" to "Album".
 
+### 7.9 Refinement: Type Sanity Check (Post-Processing)
+
+To improve architecture and SRP, we are extracting ad-hoc heuristic checks from `AIWhitelistStrategy` into a dedicated post-processing step.
+
+#### 7.9.1 Logic Flow
+```mermaid
+graph TD
+    A[AIWhitelistStrategy] -->|Returns Type| B{TypeSanityCheck}
+    B -->|Type=Album + Title has 'EP'| C[Downgrade to EP]
+    B -->|Type=Album + Title has 'Single'| D[Downgrade to Single]
+    B -->|Otherwise| E[Keep Original Type]
+```
+
+#### 7.9.2 Implementation Details
+- **Component**: `TypeSanityCheckStrategy`
+- **Role**: Final verification of the classification.
+- **Rules**:
+  - If type is `Album` but title contains `EP`, `Vol.`, `Pt.`, `Part` (without matching context) -> Downgrade.
+  - This removes the "patchy" logic from the AI Strategy.
+
+### Implementation Plan - AI Client Upgrade & Whitelist Refinement
+Goal
+Update 
+aiClient.js
+ to use a modern Gemini model (Gemini 2.5 Flash) that correctly identifies recent albums (e.g., "Connect") and ensure reliability of the whitelist mechanism by preventing response truncation and parsing errors.
+
+Completed Changes
+server/lib/aiClient.js
+Model: Switched to models/gemini-2.5-flash.
+Grounding: Enabled tools: [{ google_search: {} }] to ensure fresh data access.
+AI Whitelist Strategy Refinement
+Normalization Fix: Logic updated to handle titles with symbols/Morse code (e.g. ".----") by ignoring fuzzy keys that normalize to empty or very short strings (< 2 chars).
+Safe Rescue Expansion: "Rescue" logic now explicitly blocks overrides if the album title contains keywords like "Presents", "Volume", "Compilation", "Collection", or "Anthology" unless the whitelisted title also contains them.
+Token-Based Fuzzy Matching: Replaced loose includes() substring check with strict token matching. "Album Title" must match exact tokens in the whitelist. This prevents "Anyone" matching "One" or "Fireisland" matching "Island".
+Goal: Prevent "Solarstone Presents Pure Trance" (Compilation) from being rescued to "Pure" (Studio Album) via fuzzy matching.
+server/routes/ai.js
+Max Tokens: Increased from 2000 to 10000. This fixes the critical bug where the JSON response was being cut off mid-stream, causing parsing errors and missing valid albums.
+Parsing Logic: REPLACED fragile split-based fallback with a Robust Regex Extraction (/"([^"]+)"/g). This ensures that even if the JSON is slightly malformed or fails to parse, we extract every valid string between double quotes, eliminating "garbage" parsing results like '"Album",'.
+Prompt: Updated to strictly exclude holiday/Christmas albums, preventing "Santa's X-Mas Dance Party" clutter.
+public/js/services/album-search/classification/ElectronicGenreDetector.js
+Localization Fix: Added eletrônica and electrónica.
+Architectural Refactoring: Type Sanity Check Strategy (Post-Processing)
+Goal: Extract "patchy" heuristic logic (e.g. downgrading "Albums" that contain 'EP' in the title) from 
+AIWhitelistStrategy
+ into a dedicated post-processing step to adhere to SRP (Single Responsibility Principle).
+Component: TypeSanityCheckStrategy (New Class)
+Logic:
+Runs AFTER AI Whitelist Strategy.
+Inspects the final proposed classification.
+Downgrade Logic: If Type is 'Album' BUT title contains 'EP', 'Single', 'Sampler', etc. -> Downgrade to 'EP' or 'Compilation'.
+Safety: Ensures that even if the AI or Heuristics say "Album", we have a final sanity check based on strong title keywords.
+Benefit: Keeps 
+AIWhitelistStrategy
+ focused only on Whitelist matching and 
+AlbumTypeClassifier
+ focused on coordination.
+Automated: 
+test_ai_models.js
+ confirms Gemini 2.5 + Search finds 2024 albums.
+Manual: User to clear cache and re-scan. Results should be free of malformed strings and holiday garbage, improving signal-to-noise ratio significantly.

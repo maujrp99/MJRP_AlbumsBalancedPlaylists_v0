@@ -26,6 +26,6 @@ export class BaseStrategy {
      * @param {string} reason - Reason for classification
      */
     log(title, type, reason) {
-        console.log(`[Classify] "${title}" → ${type} (${this.name}: ${reason})`);
+        // console.log(`[Classify] "${title}" → ${type} (${this.name}: ${reason})`);
     }
 }

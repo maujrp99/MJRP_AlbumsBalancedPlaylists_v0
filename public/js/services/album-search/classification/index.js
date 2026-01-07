@@ -15,6 +15,7 @@ export { GenreGateStrategy } from './GenreGateStrategy.js'; // Etapa 2.5
 export { RemixTracksStrategy } from './RemixTracksStrategy.js';
 export { TrackCountStrategy } from './TrackCountStrategy.js';
 export { AIWhitelistStrategy } from './AIWhitelistStrategy.js';
+export { TypeSanityCheckStrategy } from './TypeSanityCheckStrategy.js';
 
 
 // Helpers
