@@ -75,6 +75,78 @@
 
 ## Current Debugging Session
 
+### Issue #140: AI Whitelist Response Truncation (JSON Parse Error)
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-06
+**Severity**: HIGH (Data Loss - Valid Albums Rejected)
+**Type**: API Configuration / Model Behavior
+**Component**: `server/routes/ai.js`
+**Sprint**: 17.75-B
+
+#### Problem
+Valid albums (e.g., "WKND", "Blueprint") were being classified as `Uncategorized` despite being studio albums.
+Console logs showed: `[AI] Failed to parse JSON response`.
+Raw response was truncated mid-string: `... "Hello World", "Hell` due to token limit.
+
+#### Root Cause
+The `maxTokens` parameter was set to 2000 (default/low). For artists with large discographies (like Ferry Corsten), the JSON list exceeded this limit, causing the response to be cut off. The `JSON.parse` then failed, and the fallback logic was insufficient to recover the partial data.
+
+#### Solution
+1. **Increased `maxTokens` to 10,000**: Ensures the full JSON payload is received.
+2. **Robust Regex Fallback**: Replaced line-splitting logic with `text.match(/"([^"]+)"/g)` to extract all valid strings even if the JSON structure is broken.
+
+#### Files Modified
+- `server/routes/ai.js`
+
+---
+
+### Issue #139: GenreGate Localization Leak (Total Eclipse)
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-06
+**Severity**: MEDIUM (False Positives)
+**Type**: Logic Error / Localization
+**Component**: `ElectronicGenreDetector.js`
+**Sprint**: 17.75-B
+
+#### Problem
+Albums like "Total Eclipse" (Electronic) were erroneously appearing in the main "Albums" list without passing the AI Whitelist check.
+They should have been checked by AI and likely rejected (Uncategorized), but were bypassing the check entirely.
+
+#### Root Cause
+The `ElectronicGenreDetector` only checked for English genre names (`electronic`, `dance`).
+The Apple Music API returned localized genres for some albums (e.g., `Eletrônica` in Portuguese).
+The detector returned `false`, causing the system to treat it as a "Non-Electronic" album (like Rock/Pop), which trusts the metadata blindly and skips the AI Whitelist.
+
+#### Solution
+Added `eletrônica` and `electrónica` to the `ELECTRONIC_GENRES` list. Now these albums are correctly flagged as electronic, forced through the AI check, and filtered out if not in the whitelist.
+
+#### Files Modified
+- `public/js/services/album-search/classification/ElectronicGenreDetector.js`
+
+---
+
+### Issue #138: Prompt "Garbage" Output (Christmas Albums)
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-06
+**Severity**: LOW (Data Quality)
+**Type**: Prompt Engineering
+**Component**: `server/routes/ai.js`
+**Sprint**: 17.75-B
+
+#### Problem
+AI returned "Santa's X-Mas Dance Party" and other irrelevant compilations in the whitelist.
+
+#### Root Cause
+Google Search grounding combined with a "complete discography" prompt sometimes pulled in obscure holiday compilations.
+
+#### Solution
+Reverted to the **original strict prompt** (as requested by user) which excludes compilations and mixes. The improved `maxTokens` and parsing logic now allow this strict prompt to work without truncating valid data.
+
+#### Files Modified
+- `server/routes/ai.js`
+
+---
+
 ### Issue #137: Electronic Music Studio Filter (Singles/EPs)
 **Status**: ⚠️ **IN PROGRESS** (Reverted)
 **Date**: 2026-01-05
