@@ -35,8 +35,7 @@ export class AIWhitelistStrategy extends BaseStrategy {
 
             // Debug: Log first few AI titles for troubleshooting
             if (aiList.length > 0) {
-                console.log(`[AI:Match] Checking "${album.title}" -> normalized: "${normalizedAlbumTitle}"`);
-                console.log(`[AI:Match] AI list has ${aiList.length} titles:`, aiList.slice(0, 5));
+                // console.log(`[AI:Match] Checking "${album.title}"`); 
             }
 
             // Try exact match first
@@ -50,6 +49,12 @@ export class AIWhitelistStrategy extends BaseStrategy {
 
             if (isInWhitelist) {
                 console.log(`[AI:Match] ✅ EXACT match: "${album.title}" matched "${matchedTitle}"`);
+
+                // SPRINT 17.75-C: FEEDBACK LOOP OVERRIDE
+                if (context.preliminaryType && context.preliminaryType !== 'Album') {
+                    console.warn(`[AI:Override] ⚠️ Rescuing "${album.title}" from "${context.preliminaryType}" to "Album"!`);
+                }
+
                 this.log(album.title, 'Album', 'AI whitelist match');
                 return 'Album';
             }
@@ -63,11 +68,26 @@ export class AIWhitelistStrategy extends BaseStrategy {
 
             if (fuzzyMatch) {
                 console.log(`[AI:Match] ✅ FUZZY match: "${album.title}" matched "${fuzzyMatch}"`);
+
+                // SPRINT 17.75-C: FEEDBACK LOOP OVERRIDE
+                if (context.preliminaryType && context.preliminaryType !== 'Album') {
+                    console.warn(`[AI:Override] ⚠️ Rescuing "${album.title}" from "${context.preliminaryType}" to "Album"!`);
+                }
+
                 this.log(album.title, 'Album', `AI fuzzy match: ${fuzzyMatch}`);
                 return 'Album';
             }
 
-            // Electronic but NOT in AI whitelist → Uncategorized
+            // SPRINT 17.75-C: FALLBACK / CONFIRMATION
+            // If we are here, it is NOT in the AI Whitelist.
+
+            // If we had a preliminary type (e.g. 'EP' or 'Compilation'), CONFIRM it.
+            if (context.preliminaryType) {
+                console.log(`[AI:Match] ❌ No match. Confirming preliminary type: "${context.preliminaryType}"`);
+                return context.preliminaryType;
+            }
+
+            // Electronic but NOT in AI whitelist and NO preliminary type → Uncategorized
             console.log(`[AI:Match] ❌ No match for "${album.title}" (normalized: "${normalizedAlbumTitle}")`);
             this.log(album.title, 'Uncategorized', 'electronic, not in AI whitelist');
             return 'Uncategorized';
