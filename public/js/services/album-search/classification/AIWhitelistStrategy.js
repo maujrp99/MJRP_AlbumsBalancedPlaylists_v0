@@ -48,11 +48,11 @@ export class AIWhitelistStrategy extends BaseStrategy {
             });
 
             if (isInWhitelist) {
-                console.log(`[AI:Match] ✅ EXACT match: "${album.title}" matched "${matchedTitle}"`);
+                // console.log(`[AI:Match] ✅ EXACT match: "${album.title}" matched "${matchedTitle}"`);
 
                 // SPRINT 17.75-C: FEEDBACK LOOP OVERRIDE
                 if (context.preliminaryType && context.preliminaryType !== 'Album') {
-                    // SAFETY CHECK: confirm it's safe to override (even for exact match, normalized titles might hide 'Single')
+                    // SAFETY CHECK: confirm it's safe to rescue
                     if (this._isSafeToRescue(album.title, matchedTitle)) {
                         console.warn(`[AI:Override] ⚠️ Rescuing "${album.title}" from "${context.preliminaryType}" to "Album"!`);
                         this.log(album.title, 'Album', 'AI whitelist match (Rescued)');
@@ -81,26 +81,18 @@ export class AIWhitelistStrategy extends BaseStrategy {
                 if (normalizedAlbumTitle === normalizedAiTitle) return true;
 
                 // 2. Normalize with spaces carefully to check for whole words
-                // We need to re-normalize WITHOUT stripping spaces for this check, or rely on boundaries
-                // The current _normalizeTitle strips spaces ("fireisland"), which destroys word boundaries.
-                // We need a specific "tokenizable" normalization here.
-
                 const albumTokens = this._tokenize(album.title);
                 const aiTokens = this._tokenize(aiTitle);
 
-                // Check if ALL tokens of the SHORTER string are present in the LONGER string
-                // AND in the correct relative order (simplified: just subset for now)
+                // Check subset
                 const source = aiTokens.length < albumTokens.length ? aiTokens : albumTokens;
                 const target = aiTokens.length < albumTokens.length ? albumTokens : aiTokens;
-
-                // e.g. source=["one"], target=["is","there","anyone","out","there"] -> "one" != "anyone"
-                // e.g. source=["island"], target=["fireisland"] -> "island" != "fireisland"
 
                 return source.every(sToken => target.includes(sToken));
             });
 
             if (fuzzyMatch) {
-                console.log(`[AI:Match] ✅ FUZZY match: "${album.title}" matched "${fuzzyMatch}"`);
+                // console.log(`[AI:Match] ✅ FUZZY match: "${album.title}" matched "${fuzzyMatch}"`);
 
                 // SPRINT 17.75-C: FEEDBACK LOOP OVERRIDE
                 if (context.preliminaryType && context.preliminaryType !== 'Album') {
@@ -112,18 +104,15 @@ export class AIWhitelistStrategy extends BaseStrategy {
                     } else {
                         // console.log(`[AI:Override] 🛑 Blocked rescue for "${album.title}" (Contains Remix/Single/EP/Comp keyword but match does not)`);
 
-                        // SPRINT 17.75-C FIX: If preliminary type was 'Album' but we blocked it due to risky keywords,
-                        // we MUST downgrade it to prevent "Feel Again, Pt. 1" (EP) from staying as "Album".
+                        // SPRINT 17.75-C FIX: Blocked rescue downgrade logic...
                         if (context.preliminaryType === 'Album') {
-                            console.log(`[AI:Correction] 📉 Downgrading "${album.title}" from Album to EP/Compilation due to blocked rescue.`);
+                            // console.log(`[AI:Correction] 📉 Downgrading "${album.title}" from Album to EP/Compilation due to blocked rescue.`);
                             const lowerTitle = album.title.toLowerCase();
                             if (lowerTitle.includes('ep') || lowerTitle.includes('pt.') || lowerTitle.includes('part')) {
                                 return 'EP';
                             }
                             return 'Compilation';
                         }
-
-                        // Fallback to confirming preliminary type (e.g. Single stays Single)
                         return context.preliminaryType;
                     }
                 }
@@ -132,10 +121,8 @@ export class AIWhitelistStrategy extends BaseStrategy {
                 return 'Album';
             }
 
-            // SPRINT 17.75-C: FALLBACK / CONFIRMATION
-            // ... (rest of method)
             if (context.preliminaryType) {
-                console.log(`[AI:Match] ❌ No match. Confirming preliminary type: "${context.preliminaryType}"`);
+                // console.log(`[AI:Match] ❌ No match. Confirming preliminary type: "${context.preliminaryType}"`);
                 return context.preliminaryType;
             }
 

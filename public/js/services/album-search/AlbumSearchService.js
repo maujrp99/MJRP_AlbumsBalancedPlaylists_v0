@@ -110,12 +110,12 @@ export class AlbumSearchService {
     async _fetchAIWithCache(artistName) {
         // Cache check
         if (this.aiCache.has(artistName)) {
-            console.log(`[AI] Cache hit for "${artistName}"`);
+            // console.log(`[AI] Cache hit for "${artistName}"`);
             return this.aiCache.get(artistName);
         }
 
         // Fetch and cache
-        console.log(`[AI] Cache miss for "${artistName}", fetching...`);
+        // console.log(`[AI] Cache miss for "${artistName}", fetching...`);
         const aiList = await this._fetchAIStudioAlbums(artistName);
         this.aiCache.set(artistName, aiList);
         return aiList;
