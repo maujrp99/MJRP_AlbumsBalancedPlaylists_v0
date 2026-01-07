@@ -177,15 +177,15 @@ class MusicKitCatalog {
                 }
             }
 
+            // Note: albumType removed - ARCH-18 AlbumSearchService._processDiscography handles classification
             return allAlbums.map(album => ({
                 appleMusicId: album.id,
                 title: album.attributes.name,
                 artist: album.attributes.artistName,
                 year: album.attributes.releaseDate ? album.attributes.releaseDate.split('-')[0] : null,
-                albumType: this._classifyAlbumType(album.attributes),
                 artworkTemplate: this.extractArtworkTemplate(album.attributes.artwork),
                 trackCount: album.attributes.trackCount,
-                isLive: album.attributes.name.toLowerCase().includes('live'),
+                // Preserve raw flags for downstream classification
                 isSingle: album.attributes.isSingle || false,
                 isCompilation: album.attributes.isCompilation || false,
                 resultUrl: album.attributes.url,
@@ -264,21 +264,8 @@ class MusicKitCatalog {
         }
     }
 
-    /**
-     * Classify album type using Apple Music standards + Genre-specific heuristics.
-     * 
-     * @param {Object} attributes - Album attributes from API
-     * @param {string} targetArtist - The artist we are searching for (to detect mislabeled compilations)
-     * @returns {'Album'|'Single'|'EP'|'Compilation'|'Live'}
-     */
-    _classifyAlbumType(attributes) {
-        const name = (attributes.name || '').toLowerCase();
-        if (attributes.isSingle) return 'Single';
-        if (attributes.isCompilation) return 'Compilation';
-        if (name.includes('live') || name.includes('unplugged')) return 'Live';
-        if (name.includes(' ep') || name.endsWith(' ep')) return 'EP';
-        return 'Album';
-    }
+    // _classifyAlbumType() REMOVED - Sprint 17.75-B (ARCH-18)
+    // Classification now handled by AlbumTypeClassifier in AlbumSearchService._processDiscography()
 
     extractArtworkTemplate(artwork) {
         if (!artwork || !artwork.url) return null;

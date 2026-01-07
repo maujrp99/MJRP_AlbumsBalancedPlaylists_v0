@@ -13,19 +13,28 @@ import { isElectronic } from './ElectronicGenreDetector.js';
 export class AIWhitelistStrategy extends BaseStrategy {
     name = 'AIWhitelist';
 
-    execute(album, context) {
+    /**
+     * Sprint 17.75-B: Made async to support lazy AI fetching
+     * AI is only called if album is electronic AND reaches this stage
+     */
+    async execute(album, context) {
         const genres = context.genres || [];
-        const aiList = context.aiList || [];
         const trackCount = album.trackCount || context.trackCount || 0;
 
-        // Non-electronic with 7+ tracks → Direct Studio Album (no AI needed)
+        // Non-electronic with 7+ tracks → Direct Studio Album (no AI needed!)
+        // This skips AI call entirely for rock, pop, jazz, etc.
         if (!isElectronic(genres) && trackCount >= 7) {
-            this.log(album.title, 'Album', `non-electronic, ${trackCount} tracks`);
+            this.log(album.title, 'Album', `non-electronic, ${trackCount} tracks (no AI)`);
             return 'Album';
         }
 
-        // Electronic music: check AI whitelist
+        // Electronic music: needs AI whitelist check
         if (isElectronic(genres)) {
+            // Sprint 17.75-B: Lazy AI fetch - only fetches now if not cached
+            const aiList = typeof context.getAiList === 'function'
+                ? await context.getAiList()
+                : context.aiList || [];
+
             const normalizedTitle = this._normalizeTitle(album.title);
 
             const isInWhitelist = aiList.some(aiTitle => {
@@ -43,7 +52,7 @@ export class AIWhitelistStrategy extends BaseStrategy {
             return 'Uncategorized';
         }
 
-        // Fallback for edge cases
+        // Fallback for edge cases (e.g., no genres, low track count)
         return null;
     }
 

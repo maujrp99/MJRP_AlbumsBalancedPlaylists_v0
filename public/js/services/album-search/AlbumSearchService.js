@@ -16,7 +16,8 @@ export class AlbumSearchService {
         this.normalizer = new ArtistNormalizer();
         this.scorer = new ScoreCalculator();
         this.filter = new EditionFilter();
-        this.cache = new Map(); // Simple in-memory cache
+        this.cache = new Map(); // Album search cache
+        this.aiCache = new Map(); // Sprint 17.75-B: Cache for AI studio album responses
     }
 
     /**
@@ -83,25 +84,41 @@ export class AlbumSearchService {
         const normalizedArtist = this.normalizer.normalize(artistName);
         console.log(`[AlbumSearch] Fetching discography for "${normalizedArtist}"`);
 
-        // Parallel Fetch: MusicKit Data + AI Trusted List
-        const [rawAlbums, aiStudioAlbums] = await Promise.all([
-            musicKitService.getArtistAlbums(normalizedArtist),
-            this._fetchAIStudioAlbums(normalizedArtist)
-        ]);
+        // Sprint 17.75-B: Lazy AI fetch - only fetch when actually needed by AIWhitelistStrategy
+        const rawAlbums = await musicKitService.getArtistAlbums(normalizedArtist);
 
         if (rawAlbums.length === 0) {
-            // Fallback: Try alternatives?
             const alternatives = this.normalizer.getAlternatives(artistName);
             if (alternatives.length > 1) {
                 console.log(`[AlbumSearch] No results, trying alternative: "${alternatives[1]}"`);
-                // Note: Not strictly recursive with AI here to save tokens/complexity for now
                 const altAlbums = await musicKitService.getArtistAlbums(alternatives[1]);
-                if (altAlbums.length > 0) return this._processDiscography(altAlbums, aiStudioAlbums);
+                if (altAlbums.length > 0) {
+                    return await this._processDiscography(altAlbums, normalizedArtist);
+                }
             }
             return [];
         }
 
-        return this._processDiscography(rawAlbums, aiStudioAlbums);
+        return await this._processDiscography(rawAlbums, normalizedArtist);
+    }
+
+    /**
+     * Sprint 17.75-B: Fetch AI studio albums with caching
+     * @param {string} artistName - Normalized artist name
+     * @returns {Promise<string[]>} - Array of AI-verified studio album titles
+     */
+    async _fetchAIWithCache(artistName) {
+        // Cache check
+        if (this.aiCache.has(artistName)) {
+            console.log(`[AI] Cache hit for "${artistName}"`);
+            return this.aiCache.get(artistName);
+        }
+
+        // Fetch and cache
+        console.log(`[AI] Cache miss for "${artistName}", fetching...`);
+        const aiList = await this._fetchAIStudioAlbums(artistName);
+        this.aiCache.set(artistName, aiList);
+        return aiList;
     }
 
     async _fetchAIStudioAlbums(artistName) {
@@ -119,16 +136,24 @@ export class AlbumSearchService {
         }
     }
 
-    _processDiscography(albums, aiList = []) {
-        console.log(`[AlbumSearch] Classifying ${albums.length} albums against ${aiList.length} AI titles.`);
+    /**
+     * Process discography with async classification
+     * Sprint 17.75-B: Uses lazy AI fetching via context.getAiList()
+     */
+    async _processDiscography(albums, artistName) {
+        console.log(`[AlbumSearch] Classifying ${albums.length} albums for "${artistName}"`);
 
-        // 1. Map and Classify
-        const mapped = albums.map(a => {
-            // ARCH-18: Use modular classification pipeline
-            const context = { aiList }; // Pass AI whitelist to strategies
-            const classification = albumTypeClassifier.classify(a, context);
+        // Sprint 17.75-B: Pass lazy AI fetcher in context
+        const context = {
+            getAiList: () => this._fetchAIWithCache(artistName)
+        };
 
-            return {
+        // Classify all albums (some may trigger async AI fetch)
+        const mapped = [];
+        for (const a of albums) {
+            const classification = await albumTypeClassifier.classify(a, context);
+
+            mapped.push({
                 id: a.appleMusicId,
                 title: a.title,
                 artist: a.artist,
@@ -145,10 +170,10 @@ export class AlbumSearchService {
                 trackCount: a.trackCount,
                 confidence: 1.0,
                 raw: a.raw
-            };
-        });
+            });
+        }
 
-        // 2. Group Variants
+        // Group Variants
         return this.groupVariants(mapped);
     }
 

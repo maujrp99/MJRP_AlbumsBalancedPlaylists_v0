@@ -155,18 +155,16 @@ export class ArtistScanner {
         if (!this.searchResults) return
 
         const filtered = this.searchResults.filter(album => {
-            const title = (album.title || '').toLowerCase()
-            const isSingle = album.isSingle || album.albumType === 'Single'
-            const isLive = album.isLive || title.includes('(live') || title.includes('[live')
-            const isCompilation = album.isCompilation || title.includes('greatest hits') || title.includes('best of')
-            const isEP = album.albumType === 'EP'
-            const isStudioAlbum = !isSingle && !isLive && !isCompilation && !isEP
+            // ARCH-18: Use album.type from centralized classification
+            const type = album.type || 'Uncategorized';
 
-            if (isStudioAlbum && this.filterState.albums) return true
-            if ((isSingle || isEP) && this.filterState.singles) return true
-            if (isLive && this.filterState.live) return true
-            if (isCompilation && this.filterState.compilations) return true
-            return false
+            // Studio Album = type is 'Album' or Uncategorized
+            if ((type === 'Album' || type === 'Uncategorized') && this.filterState.albums) return true;
+            // Singles/EPs filter includes both types
+            if ((type === 'Single' || type === 'EP') && this.filterState.singles) return true;
+            if (type === 'Live' && this.filterState.live) return true;
+            if (type === 'Compilation' && this.filterState.compilations) return true;
+            return false;
         })
 
         this.renderResults(filtered)

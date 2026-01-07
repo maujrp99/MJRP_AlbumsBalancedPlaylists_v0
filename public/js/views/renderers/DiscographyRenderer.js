@@ -29,14 +29,19 @@ export class DiscographyRenderer {
         const year = album.year || 'Unknown';
         const coverUrl = album.coverUrl ? album.coverUrl.replace('{w}', '300').replace('{h}', '300') : '/assets/images/cover_placeholder.png';
 
-        // Badge Logic
+        // Badge Logic - ARCH-18: Use album.type for type badges
         const badges = [];
         const lowerTitle = title.toLowerCase();
+
+        // Edition badges (title-based)
         if (lowerTitle.includes('deluxe')) badges.push('Deluxe');
         if (lowerTitle.includes('remaster')) badges.push('Remaster');
-        if (lowerTitle.includes('live') || album.isLive) badges.push('Live');
-        if (album.isSingle) badges.push('Single');
-        if (album.isCompilation) badges.push('Comp');
+
+        // Type badges (from ARCH-18 classification)
+        if (album.type === 'Live') badges.push('Live');
+        if (album.type === 'Single') badges.push('Single');
+        if (album.type === 'EP') badges.push('EP');
+        if (album.type === 'Compilation') badges.push('Comp');
 
         const badgeElements = badges.map(b =>
             SafeDOM.span({ className: 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-black/60 backdrop-blur-md text-white border border-white/10 uppercase tracking-wider' }, b)

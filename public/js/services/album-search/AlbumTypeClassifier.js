@@ -29,18 +29,20 @@ export class AlbumTypeClassifier {
 
     /**
      * Classify an album through the pipeline
+     * Sprint 17.75-B: Made async to support lazy AI fetching in AIWhitelistStrategy
      * @param {Object} album - Album data with raw.attributes, title, trackCount
-     * @param {Object} context - Context with aiList, genres, etc.
-     * @returns {string} - Album type: Album, Single, EP, Compilation, Live, Uncategorized
+     * @param {Object} context - Context with getAiList(), genres, etc.
+     * @returns {Promise<string>} - Album type: Album, Single, EP, Compilation, Live, Uncategorized
      */
-    classify(album, context = {}) {
+    async classify(album, context = {}) {
         // Build enriched context
         const enrichedContext = this._buildContext(album, context);
 
         // Run through pipeline
         for (const strategy of this.pipeline) {
             try {
-                const result = strategy.execute(album, enrichedContext);
+                // Sprint 17.75-B: await in case strategy.execute is async
+                const result = await strategy.execute(album, enrichedContext);
                 if (result !== null) {
                     return result; // Classified!
                 }
