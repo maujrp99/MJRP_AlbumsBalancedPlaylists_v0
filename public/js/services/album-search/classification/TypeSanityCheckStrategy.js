@@ -12,6 +12,7 @@
  */
 
 import { BaseStrategy } from './BaseStrategy.js';
+import { isElectronic } from './ElectronicGenreDetector.js';
 
 export class TypeSanityCheckStrategy extends BaseStrategy {
     name = 'TypeSanityCheck';
@@ -56,11 +57,6 @@ export class TypeSanityCheckStrategy extends BaseStrategy {
             return 'Compilation';
         }
 
-        // 4. Track Count Safety Net
-        // If it got here as an "Album" (likely via AI Rescue), but has very few tracks,
-        // we should be skeptical. Standard Albums usually have 7+ tracks.
-        // "Hello World 1" (EP) has 6 tracks. "Feel Again, Pt. 1" (Album) has 10 tracks.
-
         // Ensure trackCount is a valid number
         let trackCount = parseInt(context.trackCount);
         if (isNaN(trackCount)) trackCount = 0;
@@ -73,9 +69,19 @@ export class TypeSanityCheckStrategy extends BaseStrategy {
             return 'EP';
         }
 
+        // 4. Track Count Safety Net
+        // WARNING: ONLY apply this to Electronic music. 
+        // Prog Rock/Jazz often have < 7 tracks (e.g. Pink Floyd "Animals").
+        const genres = context.genres || [];
+
         if (trackCount > 0 && trackCount <= 6) {
-            this.log(album.title, 'EP', `Sanity Check: Classified as Album but has only ${trackCount} tracks. Downgrading.`);
-            return 'EP';
+            if (isElectronic(genres)) {
+                this.log(album.title, 'EP', `Sanity Check: Classified as Album but has only ${trackCount} tracks (Electronic). Downgrading.`);
+                return 'EP';
+            } else {
+                // Non-electronic: Trust the 'Album' classification even with low track count
+                return null;
+            }
         }
 
         // Note: We intentionally DO NOT check for "Pt." or "Part" here, 
