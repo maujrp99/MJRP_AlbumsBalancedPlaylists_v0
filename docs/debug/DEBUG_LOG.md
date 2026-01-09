@@ -75,6 +75,54 @@
 
 ## Current Debugging Session
 
+### Issue #142: Non-Electronic Albums Downgraded to EP (Pink Floyd)
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-07
+**Severity**: HIGH (Classification Logic Regression)
+**Type**: Logic Error
+**Component**: `TypeSanityCheckStrategy.js`
+**Sprint**: 17.75-C
+
+#### Problem
+Non-electronic albums with few tracks (e.g., Pink Floyd's "Animals" with 5 tracks) were being incorrectly downgraded to "EP" by the new `TypeSanityCheckStrategy`.
+This violated the `GenreGate` logic which is supposed to trust metadata for non-electronic genres.
+
+#### Root Cause
+The `TypeSanityCheckStrategy` applied the "Track Count <= 6" heuristic blindly to all albums, including Rock/Pop, without checking if the genre was Electronic.
+
+#### Solution
+Imported `isElectronic` from `ElectronicGenreDetector` and wrapped the track count heuristic in a conditional check. Now, low track counts only trigger a downgrade if the genre is explicitly Electronic.
+
+#### Files Modified
+- `public/js/services/album-search/classification/TypeSanityCheckStrategy.js`
+
+---
+
+### Issue #141: "Hello World" (EP) & "Listening To" (Comp) Misclassification
+**Status**: ✅ **RESOLVED**
+**Date**: 2026-01-07
+**Severity**: MEDIUM (Classification Accuracy)
+**Type**: Heuristic Refinement
+**Component**: `TypeSanityCheckStrategy.js`, `AlbumTypeClassifier.js`
+**Sprint**: 17.75-C
+
+#### Problem
+1. Ferry Corsten's "Hello World" EPs were classified as "Album" because they have 7-11 tracks (exceeding generic EP limit).
+2. "Why I'm Now Listening To" playlists were classified as "Album" instead of "Compilation" because the existing heuristic was bypassed.
+
+#### Solution
+1. **New Strategy**: Extracted post-processing logic into `TypeSanityCheckStrategy.js`.
+2. **Specific Heuristics**:
+    - Added specific regex `/hello world \d+$/` to force "EP" status regardless of track count.
+    - Added "listening to" keyword to force "Compilation".
+3. **Global Application**: Refactored `AlbumTypeClassifier` to run this sanity check on *all* results (`_finalize`), preventing bypasses.
+
+#### Files Modified
+- `public/js/services/album-search/classification/TypeSanityCheckStrategy.js` (Created)
+- `public/js/services/album-search/AlbumTypeClassifier.js`
+
+---
+
 ### Issue #140: AI Whitelist Response Truncation (JSON Parse Error)
 **Status**: ✅ **RESOLVED**
 **Date**: 2026-01-06

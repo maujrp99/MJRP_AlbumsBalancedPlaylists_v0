@@ -181,6 +181,7 @@ Store (runtime state) → Repository (Firestore CRUD)
 3. `RemixTracksStrategy` - Track analysis (≥50% remix tracks = remix package)
 4. `TrackCountStrategy` - Track count + duration (with prog rock protection)
 5. `AIWhitelistStrategy` - AI confirmation for electronic music
+6. `TypeSanityCheckStrategy` - Final post-processing safety net (e.g., force "Hello World" to EP)
 
 **Files Created**:
 - `AlbumTypeClassifier.js` - Pipeline orchestrator
