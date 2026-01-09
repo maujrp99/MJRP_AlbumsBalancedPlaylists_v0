@@ -10,7 +10,7 @@ All notable changes to the "The Album Blender" (MJRP) project will be documented
 ## [Unreleased]
 
 ### Added
-- **Manual v3.0**: Published the [Comprehensive Manual](../manual/00_Manual_Index.md) ("Deep Dive") to `docs/manual/`.
+- **Manual v3.0**: Published the [Reference Guide](MJRP_Album_Blender_Ref_Guide.md) ("Deep Dive") to `docs/`.
 - **New Protocols**: Implemented `onboarding_protocol_v2` and `documentation_audit_v2`.
 - **Docs**: Created `docs/manual/00_Deployment_and_Setup.md` as the unified deployment guide.
 
