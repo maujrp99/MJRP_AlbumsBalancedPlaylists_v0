@@ -1,6 +1,6 @@
 # MJRP Comprehensive Manual (Clean Room)
 
-> **Note**: This file mirrors the active **[Master Snapshot](MasterManualSnapshot_20260108.md)**.
+> **Note**: This file mirrors the active **[Master Snapshot](manual/MasterManualSnapshot_20260108.md)**.
 > For the latest line-by-line analysis, verify the date of the Snapshot against the Roadmap.
 
 ## 1. Core Architecture

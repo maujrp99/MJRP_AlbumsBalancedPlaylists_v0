@@ -23,9 +23,9 @@ Consult `docs/MJRP_Album_Blender_Ref_Guide.md` to find the relevant chapters.
 1. Read `docs/CHANGELOG.md`.
 
 ## 5. The Snapshot Protocol (Master Manual)
-~ **Logic**: The `docs/MasterManualSnapshot_YYYYMMDD.md` is a static "State of the Union".
+~ **Logic**: The `docs/manual/MasterManualSnapshot_YYYYMMDD.md` is a static "State of the Union".
 1. **Inspect**: Check the date in the filename against `docs/ROADMAP.md`.
 2. **Decide**: If the Snapshot is > 1 significant Sprint old or Key Features have changed:
    - **Archive**: Move the old Snapshot to `docs/archive/`.
-   - **Regenerate**: Create a NEW `MasterManualSnapshot_YYYYMMDD.md` reflecting the current state.
+   - **Regenerate**: Create a NEW `manual/MasterManualSnapshot_YYYYMMDD.md` reflecting the current state.
 3. **Verify**: Ensure the new Snapshot accurately summarizes the "Deep Dive" chapters in `docs/manual/`.

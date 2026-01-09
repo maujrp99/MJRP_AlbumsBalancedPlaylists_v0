@@ -16,7 +16,8 @@ All notable changes to the "The Album Blender" (MJRP) project will be documented
 
 ### Changed
 - **Documentation Overhaul**: Restructured `docs/` folder.
-    - Promoted "Forensic Analysis" files to be the Active Manual.
+    - Established **Snapshot Strategy**: `docs/manual/MasterManualSnapshot_*.md` is now the static content source.
+    - Created **Reference Guide**: `docs/MJRP_Album_Blender_Ref_Guide.md` as the primary index.
     - Archived legacy technical specs to `docs/archive/2025_technical/`.
     - Consolidated `PROJECT_SUMMARY.md` into the Root `README.md`.
 - **Code Structure**:
