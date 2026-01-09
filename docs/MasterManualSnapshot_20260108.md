@@ -258,4 +258,43 @@ Once raw data is gathered, it is merged via a **Borda Count Variant**:
     *   `test/views/`: Component rendering logic (Mocked).
 
 ## 2. Legacy Debt
-*   **Note**: `public/legacy/` contains deprecated V2 views (`AlbumsView_DEPRECATED`) that are safe to delete as they have been fully replaced by the V3 Controller architecture.
+
+# PART 9: TECHNICAL CODEX (DEEP DIVE FILES)
+
+> **Note**: For line-by-line forensic analysis, consult the specific manual chapters below, located in `docs/manual/`.
+
+## 1. Server-Side
+*   [**02_Server_Core.md**](manual/02_Server_Core.md) - `index.js` & Middleware.
+*   [**03_Server_Libraries.md**](manual/03_Server_Libraries.md) - `lib/` Utils.
+*   [**04_Server_Logic.md**](manual/04_Server_Logic.md) - Borda Count & Ranking.
+*   [**05_Server_Routes.md**](manual/05_Server_Routes.md) - API Endpoints.
+
+## 2. Frontend Architecture
+*   [**06_Frontend_Data_Store.md**](manual/06_Frontend_Data_Store.md) - `stores/`.
+*   [**07_Frontend_Data_Infra.md**](manual/07_Frontend_Data_Infra.md) - Persistence Layer.
+*   [**08_Frontend_Models.md**](manual/08_Frontend_Models.md) - MVC Models.
+*   [**19_Frontend_JS_Root.md**](manual/19_Frontend_JS_Root.md) - Root JS Analysis.
+*   [**21_Dynamic_UI_Mapping.md**](manual/21_Dynamic_UI_Mapping.md) - UI State Logic.
+
+## 3. Frontend Views & UI
+*   [**09_Frontend_Views.md**](manual/09_Frontend_Views.md) - Base Views.
+*   [**10_Frontend_Renderers.md**](manual/10_Frontend_Renderers.md) - Specific Renderers.
+*   [**11_Frontend_Components_Root.md**](manual/11_Frontend_Components_Root.md) - Component Overview.
+*   [**12_Frontend_Components_Core.md**](manual/12_Frontend_Components_Core.md) - Core UI.
+*   [**13_Frontend_Components_Shared.md**](manual/13_Frontend_Components_Shared.md) - Shared UI.
+*   [**14_Frontend_Components_Features.md**](manual/14_Frontend_Components_Features.md) - Feature Components.
+*   [**15_Frontend_Complexity.md**](manual/15_Frontend_Complexity.md) - Complex Interactions.
+*   [**16_Frontend_Search_Ranking.md**](manual/16_Frontend_Search_Ranking.md) - Search Logic.
+
+## 4. Logic & Services
+*   [**17_Frontend_Services.md**](manual/17_Frontend_Services.md) - API Services.
+*   [**18_Frontend_Logic_Core.md**](manual/18_Frontend_Logic_Core.md) - Business Logic.
+*   [**20_MusicKit_Internals.md**](manual/20_MusicKit_Internals.md) - Apple Music Integration.
+*   [**22_Album_Search_Engine.md**](manual/22_Album_Search_Engine.md) - Search Algorithm.
+*   [**28_Frontend_Infra_Utilities.md**](manual/28_Frontend_Infra_Utilities.md) - Utilities.
+
+## 5. Shared & Legacy
+*   [**23_Shared_Code.md**](manual/23_Shared_Code.md) - Isomorphic Code.
+*   [**24_Test_Suite.md**](manual/24_Test_Suite.md) - Testing Infrastructure.
+*   [**25_Legacy_Analysis.md**](manual/25_Legacy_Analysis.md) - Historic Context.
+*   [**30_Component_Reference.md**](manual/30_Component_Reference.md) - Component API Reference.

@@ -1,5 +1,7 @@
 # System Architecture & Design Patterns
 
+> **[⬅️ Back to Reference Guide](../MJRP_Album_Blender_Ref_Guide.md)**
+
 > **Master Map**: This document provides the holistic "Big Picture" of the MJRP codebase. It consolidates architectural decisions, design patterns, data flows, and project structure into a single source of truth.
 
 ## 1. High-Level Architecture
