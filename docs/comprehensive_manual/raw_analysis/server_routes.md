@@ -21,6 +21,31 @@
 ### Architecture
 Uses a **Factory Pattern** (`initAlbumRoutes`) to inject dependencies (`callProvider`, `scrapers`, etc.) instead of requiring them directly. This facilitates testing and decoupling.
 
+```mermaid
+classDiagram
+    class App {
+        +init()
+    }
+    class RouteFactory {
+        +initAlbumRoutes(dependencies)
+    }
+    class Dependencies {
+        +callProvider
+        +getBestEverRanking
+        +fetchRankingForAlbum
+        +validateAlbum
+    }
+    class AlbumController {
+        +enrichAlbum()
+        +generateAlbum()
+    }
+
+    App ..> Dependencies : Creates
+    App ..> RouteFactory : Calls
+    RouteFactory ..> AlbumController : Instantiates with Deps
+    AlbumController o-- Dependencies : Uses
+```
+
 ### Endpoints
 -   `POST /enrich-album`:
     -   **Input**: `{ albumData: { title, artist, tracks } }`
@@ -77,3 +102,23 @@ Uses a **Factory Pattern** (`initAlbumRoutes`) to inject dependencies (`callProv
     -   **Input**: `{ albums: [], options: { minDuration, maxDuration, ... } }`
     -   **Logic**: Converts duration targets to seconds and delegates to `curateAlbums` (shared logic) to generate balanced playlists.
     -   **Response**: `{ playlists: [...], summary, sources }`
+
+### Playlist Logic Flow
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Route as PlaylistRoute
+    participant Curation as Shared/Curation
+    
+    Client->>Route: POST /playlists { albums, options }
+    Route->>Route: Import shared/curation.js
+    Route->>Route: Calculate Target Seconds
+    
+    Route->>Curation: curateAlbums(albums, options)
+    Curation->>Curation: Bucket Tracks (P1, P2, DeepCuts)
+    Curation->>Curation: Distribute & Balance (Swap Heuristic)
+    Curation-->>Route: Generated Playlists (Internal Objects)
+    
+    Route->>Route: Format for API Response
+    Route-->>Client: JSON { playlists, summary }
+```

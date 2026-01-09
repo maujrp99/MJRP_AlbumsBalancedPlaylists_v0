@@ -15,6 +15,28 @@
 -   **`ui/Card.js`**: Universal Entity Card.
     -   **Variants**: `Grid` (Compact) and `List` (Expanded).
     -   **Logic**: Handles ranking badges (Spotify/BestEverAlbums) and generic action buttons.
+    -*   **Old Way**: `AlbumCard.js` for albums, `PlaylistCard.js` for playlists, `SeriesCard.js` for series.
+*   **New Way**: `Card.js` handles all of these via `props.variant` and flexible content slots.
+
+### Universal Card Diagram
+```mermaid
+classDiagram
+    class Card {
+        +variant: "grid"|"list"
+        +entityType: "album"|"playlist"
+        +render()
+    }
+    class Slots {
+        +Header
+        +Media
+        +ActiveContent
+        +Footer
+    }
+    
+    Card *-- Slots : Composes
+    
+    note for Card "Renders different layouts\nbased on variant prop\nwithout inheritance"
+```
 -   **`ui/TrackRow.js`**: Universal Track List Item.
     -   **Variants**: `Compact`, `Detailed`, `Ranking`.
     -   **Logic**: Handles Drag & Drop handles, ranking medals (🥇, 🥈, 🥉), rating stars, and duration formatting.

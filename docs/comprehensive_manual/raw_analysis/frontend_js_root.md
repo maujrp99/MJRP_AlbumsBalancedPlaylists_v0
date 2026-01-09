@@ -12,6 +12,31 @@
     -   `spotify-auth-success`: Triggers background enrichment via `SpotifyEnrichmentService`.
 -   **Router**: Registers all application routes (`/home`, `/albums`, `/playlists`, etc.).
 
+### Boot Sequence Diagram
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant App as app.js
+    participant Auth as AuthService
+    participant Router
+    participant View
+
+    Browser->>App: DOMContentLoaded
+    App->>Auth: init()
+    App->>Auth: waitForAuth()
+    
+    rect rgb(240, 248, 255)
+        Note right of Auth: Auth Gate
+        Auth->>Auth: Check Firebase Status
+        Auth-->>App: Resolved (User/Guest)
+    end
+
+    App->>Router: init()
+    Router->>Router: resolveCurrentRoute()
+    Router->>View: render(params)
+    View-->>Browser: DOM Updates
+```
+
 ---
 
 ## 2. Router: `public/js/router.js`

@@ -6,6 +6,14 @@
 -   **`home/SearchController.js`**:
     -   **Role**: Orchestrates the Artist Search flow.
     -   **Logic**: Calls `AlbumSearchService`, sorts results by date, and handles filtering (Albums/EPs/Singles/Live/Compilations). Maintains `filterState`.
+
+    ```mermaid
+    flowchart LR
+        Input[User Typing] -->|Debounce 300ms| Service[AlbumSearchService]
+        Service -->|Raw Results| Sort[Sort By Date Desc]
+        Sort --> Filter{Apply Filters}
+        Filter -->|EP/Single/Album| Final[Render Grid]
+    ```
 -   **`home/StagingAreaController.js`**:
     -   **Role**: Manages the "Staging Stack" (drag-and-drop area).
     -   **Logic**: Uses `SortableJS` for reordering. Syncs state with the `StagingRenderer`.

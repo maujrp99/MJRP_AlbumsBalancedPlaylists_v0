@@ -19,6 +19,37 @@ The application handles data using a **"Three-Tiered Persistence Strategy"**:
     *   **Write**: Writes to Firestore -> Invalidates Cache (Optimistic Concurrency).
 *   **Tech**: Uses Firebase Modular SDK (`getDoc`, `query`, `orderBy`).
 
+### Data Access Architecture Diagram
+```mermaid
+classDiagram
+    class BaseRepository {
+        +findAll()
+        +findById()
+        +save()
+        +delete()
+    }
+    class CacheManager {
+        +get(key)
+        +set(key, value)
+        +invalidate(key)
+    }
+    class SeriesRepository {
+        +findWithAlbums()
+    }
+    class AlbumRepository {
+        +findBySeriesId()
+    }
+    class Firestore {
+        +getDoc()
+        +setDoc()
+    }
+
+    BaseRepository o-- CacheManager : Uses Strategy
+    BaseRepository ..> Firestore : Fallback Read / Write
+    SeriesRepository --|> BaseRepository : Extends
+    AlbumRepository --|> BaseRepository : Extends
+```
+
 ### SeriesRepository (`public/js/repositories/SeriesRepository.js`)
 *   **Path**: `artifacts/{appId}/users/{userId}/curator/data/series`
 *   **Features**:

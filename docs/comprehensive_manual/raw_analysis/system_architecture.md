@@ -1,94 +1,207 @@
-# System Architecture & Map
+# System Architecture & Design Patterns
 
-> **Purpose**: This document serves as the high-level map for the entire codebase, linking specific features to their detailed documentation and source files. Used for navigation and "Big Picture" understanding.
+> **Master Map**: This document provides the holistic "Big Picture" of the MJRP codebase. It consolidates architectural decisions, design patterns, data flows, and project structure into a single source of truth.
 
 ## 1. High-Level Architecture
-**Status**: `[ACTIVE]`
+**Type**: Hybrid SPA/SSR (Single Page Application with rich Server-Side Intelligence).
 
-The system follows a **Hybrid SPA/SSR** architecture with a Node.js Backend (AI Proxy & Scraper) and a Vanilla JS Frontend (MVC Pattern).
+The system splits responsibilities into two distinct layers:
+1.  **Frontend (The Client)**: A Vanilla JS SPA (Model-View-Controller) responsible for user interaction, state management, and final playlist curation.
+2.  **Backend (The Brain)**: A Node.js/Express server responsible for AI orchestration, HTML scraping, and "Truth" application (Ranking verification).
 
 ```mermaid
 graph TD
-    Client[Frontend (Vanilla JS)] <--> Backend[Server (Express/Node)]
-    Backend <--> External[External Services]
+    Client[Frontend Client] <-->|JSON API| Server[Node.js Server]
     
-    subgraph Client Layer
+    subgraph "Frontend Layer (Browser)"
         Router[SPA Router]
-        Stores[State Stores]
-        Views[MVC Views]
-        Services[Client Services]
+        Store[State Store (MobX-like)]
+        View[MVC Views]
+        Controller[Controllers]
     end
     
-    subgraph Server Layer
+    subgraph "Server Layer (Node.js)"
         API[Express API]
-        Controller[Route Controllers]
-        Scrapers[HTML Scrapers]
-        Orchestrator[Ranking Orchestrator]
+        Orchestrator[Ranking Engine]
+        Scraper[HTML Scrapers]
+        AI_Proxy[Google Gemini Client]
     end
     
-    subgraph External
-        Spotify[Spotify Web API]
-        BEA[BestEverAlbums]
-        AI[LLM Provider]
+    subgraph "Persistence Layer"
         Firebase[Firestore DB]
+        Cache[IndexedDB / LocalStorage]
     end
+
+    subgraph "External Ecosystem"
+        Spotify[Spotify API]
+        Apple[Apple MusicKit]
+        BEA[BestEverAlbums.com]
+    end
+
+    View --> Controller
+    Controller --> Store
+    Store --> Router
     
-    Client -- Fetch API --> API
-    API -- Axios --> External
-    Views -- Subscribe --> Stores
-    Stores -- Sync --> Firebase
+    API --> Orchestrator
+    Orchestrator --> Scraper
+    Orchestrator --> AI_Proxy
+    
+    Store <--> Firebase
+    Client <--> Spotify
+    Server <--> BEA
 ```
 
 ---
 
-## 2. Feature Map & Documentation Index
+## 2. Domain & Data Architecture (ERD)
+The application models a "Music Curator" domain, focusing on the relationship between **Series** (Artist Discographies) and **Playlists** (Curated Outputs).
 
-### 📍 Playlist Generation Algorithms
-*   **Documentation**: `docs/comprehensive_manual/raw_analysis/shared_code.md`
-*   **Source Code**: `shared/curation.js`
-*   **Key Logic**:
-    *   **P1/P2/DeepCuts Distribution**: How tracks arebucketed driven by "Acclaim Rank".
-    *   **Swap Balancing**: The algorithm that balances playlist durations (Swap Heuristic).
+```mermaid
+classDiagram
+    direction LR
+    
+    class Series {
+        +id: UUID
+        +name: String
+        +albums: Album[]
+        +metadata: Object
+    }
+    
+    class Album {
+        +id: String
+        +title: String
+        +artist: String
+        +releaseDate: Date
+        +tracks: Track[]
+        +ratings: RatingSource[]
+        +calculatedScore: Float
+    }
+    
+    class Track {
+        +id: String
+        +title: String
+        +duration: Seconds
+        +acclaim: 0-100
+        +popularity: 0-100
+    }
+    
+    class Playlist {
+        +id: UUID
+        +name: String
+        +items: Track[]
+        +filters: FilterConfig
+        +isLocked: Boolean
+    }
 
-### 📍 Component & Module Map
-*   **Frontend Modules**: `docs/comprehensive_manual/raw_analysis/frontend_views.md`
-    *   Maps **Views** (`PlaylistsView`) -> **Controllers** (`PlaylistsController`) -> **Renderers** (`PlaylistsGridRenderer`).
-*   **Server Modules**: `docs/comprehensive_manual/raw_analysis/server_core.md`
-    *   Maps **Express Routes** -> **Controllers** -> **Libraries**.
-
-### 📍 Album Scanning & Classification
-*   **Classification**: `docs/comprehensive_manual/raw_analysis/server_core.md` (Section 4: `server/lib/ranking.js`)
-    *   **Logic**: Borda Count Consolidation (Merging BestEver + Spotify + AI ratings).
-*   **Scanning (Scrapers)**: `docs/comprehensive_manual/raw_analysis/server_core.md` (Section 5: `server/lib/scrapers/besteveralbums.js`)
-    *   **Logic**: Cheerio-based HTML parsing logic.
-*   **Searching (Spotify)**: `docs/comprehensive_manual/raw_analysis/frontend_data_layer.md`
-    *   **Logic**: Fuzzy Matching & Search Heuristics in `SpotifyService.js`.
-
-### 📍 Blending Menu Logic
-*   **Documentation**: `docs/comprehensive_manual/raw_analysis/frontend_views.md` (Section 4.1)
-*   **Source Code**: `public/js/views/BlendingMenuView.js`
-*   **Logic**: The "Wizard" state machine (Blend -> Flavor -> Ingredients).
+    Series "1" --* "*" Album : Aggregates
+    Album "1" --* "*" Track : Composed of
+    Playlist "1" ..> "*" Track : References
+    Playlist "*" ..> "1" Series : Derived From
+```
 
 ---
 
-## 3. Directory Structure Overview
+## 3. Design Patterns Registry
+Top-level architectural patterns chosen to solve specific problems.
+
+| Pattern | Where It's Used | Why It Was Chosen |
+| :--- | :--- | :--- |
+| **Model-View-Controller (MVC)** | `js/views/`, `js/controllers/`, `js/stores/` | **Separation of Concerns**. Keeps UI rendering (`Views`) separate from Business Logic (`Controllers`) and State (`Stores`). Essential for maintainability in Vanilla JS. |
+| **Observer/PubSub** | `js/stores/*.js`, `BaseView.js` | **Reactivity**. Stores (Subject) notify Views (Observer) when state changes (e.g., `inventoryStore.subscribe(this.render)`). Decouples data updates from UI updates. |
+| **Strategy Pattern** | `ranking/*Strategy.js`, `album-search/classification/` | **Flexibility**. Allows hot-swapping algorithms (e.g., switching between `BestEverRanking` and `SpotifyPopularity`) without changing the consuming code. |
+| **Factory Pattern** | `server/routes/albums.js` | **Dependency Injection**. Routes are initialized (`initAlbumRoutes`) by injecting their dependencies. Makes testing significantly easier by allowing mocks. |
+| **Singleton Pattern** | `js/services/*.js`, `js/stores/*.js` | **State Consistency**. Services like `AuthService` and Stores must have only one instance to ensure the app doesn't have conflicting truths (e.g., two different "Logged In" states). |
+| **Command Pattern** | `js/controllers/InventoryController.js` | **Action Encapsulation**. User actions (Delete, Update) are encapsulated as methods in controllers, allowing Views to simply "Delegate" commands without knowing internal logic. |
+| **Facade Pattern** | `server/lib/fetchRanking.js` | **Simplification**. Hides the complex complexity of Scraping + AI + Fallbacks behind a single simple function call (`fetchRankingForAlbum`). |
+
+---
+
+## 4. Core Logic Architectures
+
+### 4.1 Server-Side: The "Acclaim" Waterfall
+How the system determines the "Truth" about a song's quality.
+
+```mermaid
+flowchart LR
+    Start([Request Ranking]) --> BEA{Check BestEverAlbums}
+    
+    BEA -- "Good Data (>40%)" --> Enrich[AI Enrichment]
+    BEA -- "Sparse/Missing" --> Spotify{Check Spotify}
+    
+    Spotify -- "Good Data (>50%)" --> Win[Use Spotify Popularity]
+    Spotify -- "Missing" --> Enrich
+    
+    Enrich --> Borda[Borda Count Consolidation]
+    Borda --> Final[Final Tracklist]
+    Win --> Final
+```
+
+### 4.2 Client-Side: The "Balanced Cascade" Generator
+How the system constructs a playlist that flows well.
+
+```mermaid
+flowchart TD
+    Input[Albums] --> Filter[Apply Filters]
+    Filter --> Buckets[Categorize Tracks]
+    
+    Buckets --> P1[P1: Hit Singles]
+    Buckets --> P2[P2: Fan Favorites]
+    Buckets --> DC[Deep Cuts: Hidden Gems]
+    
+    P1 & P2 & DC --> Distro[Distribution Algorithm]
+    Distro --> Draft[Draft Playlist]
+    
+    Draft --> Balance{Check Duration}
+    Balance -- "Too Long" --> Swap[Swap Long for Short]
+    Balance -- "Too Short" --> Filling[Add Filling Track]
+    Balance -- "Perfect" --> Output([Final Playlist])
+    
+    Swap --> Balance
+    Filling --> Balance
+```
+
+---
+
+## 5. Comprehensive Directory Structure
+The physical layout of the codebase, annotated with purpose.
+
 ```text
-/server
-  /index.js           # Entry Point & Polyfills
-  /routes             # API Endpoints
-  /lib                # Core Business Logic (Ranking, Scraping)
-  /services           # Auth Services (MusicKit)
-
-/public/js
-  /app.js             # Bootstrapper
-  /router.js          # SPA Routing
-  /views              # UI Pages (MVC View)
-  /controllers        # UI Logic (MVC Controller)
-  /stores             # State Management (Singleton)
-  /services           # external Integration (Spotify, Auth)
-  /components         # Reusable UI Blocks
-
-/shared
-  /curation.js        # The "Brain" (Playlist Algo) - Shared
-  /normalize.js       # String Utilities
+/
+├── .github/                # CI/CD Workflows
+├── config/
+│   └── prompts.json        # Externalized AI Prompts (Configuration as Code)
+├── docs/                   # Documentation & Analysis
+├── public/                 # FRONTEND (Hosted Static Assets)
+│   ├── css/                # Vanilla CSS (Split by Domain: animations, modals, etc.)
+│   ├── js/
+│   │   ├── algorithms/     # Core Logic (Pure Functions, e.g., TopN)
+│   │   ├── cache/          # Persistence Layers (IndexedDB, Memory)
+│   │   ├── components/     # UI Web Components (Reusable Blocks)
+│   │   ├── controllers/    # MVC Controllers (User Input -> Logic)
+│   │   ├── models/         # Domain Objects (Album, Track)
+│   │   ├── ranking/        # Ranking Strategies (BEA, Spotify)
+│   │   ├── repositories/   # Data Access Layer (Abstracts Stores/Cache)
+│   │   ├── services/       # External Integrations (Spotify, Auth)
+│   │   ├── stores/         # State Management (The "Truth")
+│   │   ├── utils/          # Helpers (SafeDOM, Formatting)
+│   │   ├── views/          # MVC Views (DOM Manipulation)
+│   │   ├── workers/        # Web Workers (Off-main-thread Search)
+│   │   ├── app.js          # App Entry Point
+│   │   └── router.js       # Client-Side Router
+│   └── index.html          # Single Page Application Shell
+├── server/                 # BACKEND (Node.js API)
+│   ├── lib/                # Business Logic (The "Brain")
+│   │   ├── scrapers/       # HTML Scrapers (BestEverAlbums)
+│   │   ├── fetchRanking.js # Orchestrator Facade
+│   │   └── ranking.js      # Consolidation Math
+│   ├── routes/             # Express Route Definitions
+│   ├── schema/             # JSON Schemas (Validation)
+│   ├── services/           # Backend Services (Tokens, Auth)
+│   └── index.js            # Server Entry Point
+├── shared/                 # ISOMORPHIC CODE (Runs on Client & Server)
+│   ├── curation.js         # Playlist Generation Logic
+│   └── normalize.js        # Data Sanitization
+└── test/                   # VERIFICATION
+    ├── e2e/                # End-to-End Tests (Puppeteer)
+    └── unit/               # Unit Tests (Jest/Vitest)
 ```

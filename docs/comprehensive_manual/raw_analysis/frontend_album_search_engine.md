@@ -48,6 +48,37 @@ This document covers the **Search Pipeline** and the sophisticated **Classificat
     7.  **TypeSanityCheckStrategy (Post-Process)**:
         *   A final safety net. Even if AI says "Album", if the title says "EP", we force downgrade it.
 
+### Pipeline Flowchart
+```mermaid
+flowchart TD
+    Start([Album Data]) --> Apple{Apple Metadata Says?}
+    Apple -- "Single" --> EndSingle([Single])
+    Apple -- "Compilation" --> EndComp([Compilation])
+    Apple -- "Album" --> Title{Title Keywords?}
+    
+    Title -- "EP/Mix" --> EndEP([EP])
+    Title -- Safe --> Genre{Is Electronic?}
+    
+    Genre -- No --> EndAlbum([Album])
+    Genre -- Yes --> Remix{>50% Remixes?}
+    
+    Remix -- Yes --> SingleCalc
+    Remix -- No --> Count{Track Count?}
+    
+    Count -- <4 --> SingleCalc
+    Count -- 4-6 --> EPCalc
+    Count -- >6 --> AlbumCalc
+    
+    subgraph "AI Rescue Loop (Feedback)"
+        SingleCalc[Single] --> Rescue{In AI Studio List? & Safe?}
+        EPCalc[EP] --> Rescue
+        AlbumCalc[Album] --> EndAlbum
+        
+        Rescue -- Yes --> EndAlbum
+        Rescue -- No --> FinalType
+    end
+```
+
 ## 3. Strategies Deep Dive
 
 ### Score Calculator (`ScoreCalculator.js`)

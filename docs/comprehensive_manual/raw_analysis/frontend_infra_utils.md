@@ -35,6 +35,26 @@ This document analyzes the "Plumbing" of the frontend: The utilities, transforme
     *   `toCanonical(raw, context)`: The factory method.
     *   `mergeSpotifyData(track, spotifyData)`: Late-binding enrichment.
 
+### Transformer Class Diagram
+```mermaid
+classDiagram
+    class TrackTransformer {
+        +toCanonical(rawSource, context) Track
+        +mergeSpotifyData(track, spotifyData) Track
+        -generateId()
+    }
+    class Track {
+        +id: UUID
+        +title: String
+        +artist: String
+        +acclaimRank: Number
+        +spotifyPopularity: Number
+        +source: "spotify"|"apple"|"manual"
+    }
+    
+    TrackTransformer ..> Track : Creates
+```
+
 ---
 
 ## 4. Other Utilities

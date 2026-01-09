@@ -32,7 +32,27 @@ These components handle the visualization, management, and export of generated p
 | **`SavedPlaylistsController.js`** | Business logic for the "Saved Playlists" view (History). | `SeriesRepository`, `PlaylistRepository` | Groups playlists by "Batch", handles lazy loading of series thumbnails, and manages Delete/Edit workflows. |
 | **`TrackItem.js`** | Visual row for a single track. | `Icons` | **Smart Badging**: Left badge = Primary Ranking (used for sort), Right badge = Secondary. Supports drag handles. |
 | **`PlaylistsDragBoard.js`** | Kanban-style board for dragging tracks *between* playlists. | `SortableJS` | Renders playlists as columns. Warning: Contains some legacy logic (might be superseded by Grid view). |
-| **`PlaylistsDragHandler.js`** | Headless logic controller for Drag & Drop operations. | `SortableJS`, `PlaylistsStore` | Manages `Sortable` instances, auto-scroll, and commits changes to `PlaylistsStore`. |
+*   **PlaylistsDragHandler.js**: Headless logic controller for Drag & Drop operations. Manages `Sortable` instances, auto-scroll, and commits changes to `PlaylistsStore`.
+
+### Drag & Drop Sequence
+```mermaid
+sequenceDiagram
+    participant User
+    participant DOM as SortableJS
+    participant Handler as DragHandler
+    participant Store as PlaylistsStore
+
+    User->>DOM: Drag Start (Track)
+    DOM->>Handler: onStart() (Haptic Feedback)
+    
+    User->>DOM: Drop into Target Playlist
+    DOM->>Handler: onEnd(evt)
+    
+    Handler->>Handler: Calculate New Order
+    Handler->>Store: moveTrack(fromId, toId, newIndex)
+    Store->>Store: saveState() (Undo Snapshot)
+    Store-->>Handler: State Updated
+```
 
 ### Key Patterns
 *   **Renderer Pattern**: `PlaylistsGridRenderer` separates markup generation from the View's life-cycle, making the large `PlaylistsView.js` more manageable.

@@ -14,7 +14,35 @@ This document fills the remaining gaps in the "Brain" and "Data" layers, specifi
         *   Uses `_sourceSeriesId` context in queries to ensure fetched albums are strictly associated with the correct Series ID.
     4.  **Optimized Loading**:
         *   Checks `albumsStore.hasAlbumsForSeries()` to skip API calls if data is already in memory.
+        *   Checks `albumsStore.hasAlbumsForSeries()` to skip API calls if data is already in memory.
         *   Uses `AbortController` to cancel stale requests if the user navigates away quickly.
+
+### Series Scope Sequence
+```mermaid
+sequenceDiagram
+    participant User
+    participant Router
+    participant Ctrl as SeriesController
+    participant Store as AlbumsStore
+    participant API as ApiClient
+
+    User->>Router: Navigate /series/ID
+    Router->>Ctrl: loadScope("SINGLE", ID)
+    
+    Ctrl->>Store: setActiveSeries(ID)
+    Ctrl->>Store: getAlbums(ID)
+    
+    alt In Memory
+        Store-->>Ctrl: Return Cached Albums
+    else Not Cached
+        Store-->>Ctrl: Empty
+        Ctrl->>API: fetchAlbums(ID)
+        API-->>Ctrl: JSON Data
+        Ctrl->>Store: setAlbums(ID, Data)
+    end
+    
+    Ctrl->>Ctrl: notifyView()
+```
 
 ## 2. The Data Models (`public/js/models/`)
 

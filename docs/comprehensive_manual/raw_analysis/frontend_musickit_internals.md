@@ -15,6 +15,29 @@ This folder contains the core logic for interacting with the Apple Music API on 
         *   Fallback: Uses browser locale (e.g., `navigator.language` "pt-BR" -> "br") for guests.
     *   **Validation**: Checks for mismatches between the Browser Storefront (what we guessed) and Account Storefront (what they actually have) to warn about catalog availability issues.
 
+### Auth Sequence Diagram
+```mermaid
+sequenceDiagram
+    participant App
+    participant Service as MusicKitAuth
+    participant API as Server (Node)
+    participant Apple as Apple Music SDK
+
+    App->>Service: init()
+    Service->>API: GET /musickit-token
+    API-->>Service: Signed JWT (ES256)
+    
+    Service->>Apple: configure(developerToken, appName)
+    Apple-->>Service: Instance Ready
+    
+    Service->>Service: Detect Storefront (Browser Locale)
+    
+    Note over Service, Apple: User authorizes via Pop-up
+    Service->>Apple: authorize()
+    Apple-->>Service: User Token
+    Service->>Apple: stop() -> wait -> authorize() (Refresh Hack)
+```
+
 ### MusicKit Catalog (`MusicKitCatalog.js`)
 *   **Role**: The "Read" interface for Apple Music.
 *   **Capabilities**:

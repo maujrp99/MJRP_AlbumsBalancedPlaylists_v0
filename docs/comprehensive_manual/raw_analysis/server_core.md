@@ -173,6 +173,17 @@ sequenceDiagram
         *   Updates cache.
     5.  **Output**: Returns `{ token, expiresAt }`.
 
+### Token Generation Flow
+```mermaid
+flowchart LR
+    Req[Request Token] --> Cache{Cache Valid?}
+    Cache -- Yes --> Return[Return Cached Token]
+    Cache -- No --> Load[Load Env Vars]
+    Load --> Sign[Sign JWT (ES256)]
+    Sign --> SetCache[Update Cache (TTL 180d)]
+    SetCache --> Return
+```
+
 ---
 
 ## 4. Libraries & Business Logic

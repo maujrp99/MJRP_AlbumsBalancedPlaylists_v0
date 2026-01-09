@@ -24,8 +24,24 @@
     -   If BestEver has insufficient data (few rated tracks), triggers **Spotify Popularity** fallback.
     -   If Spotify Popularity has good coverage (>=50% tracks), it **replaces** the weak BestEver data entirely.
 4.  **Enrichment**:
-    -   If Primary/Fallback sources are good but incomplete, uses **AI Enrichment** to fill gaps (asking LLM to rank tracks based on internet knowledge).
     -   Consolidates AI results with scraper results.
+
+### Architecture Diagram
+```mermaid
+flowchart TD
+    Start([Fetch Ranking]) --> BEA[BestEverAlbums Scraper]
+    BEA --> Check{Suffient Data?}
+    Check -- Yes --> AI_Check{Enrichment Needed?}
+    Check -- No --> Spotify[Spotify Popularity Fallback]
+    Spotify --> SpotCheck{Spotify Coverage >= 50%?}
+    SpotCheck -- Yes --> UseSpotify[Use Spotify Data exclusively]
+    SpotCheck -- No --> AI[AI Enrichment (Gemini)]
+    AI_Check -- Yes --> AI
+    AI_Check -- No --> Return
+    AI --> Norm[Normalize & Merge]
+    Norm --> Return([Return Ranking])
+    UseSpotify --> Return
+```
 
 ---
 
@@ -109,6 +125,30 @@
 -   **Parsers**:
     -   `parseChartRankingById`: Extracts ratings from chart tables (looking for "Rating: 84 (398 votes)").
     -   `parseAlbumRanking`: HTML fallback if no chart table found.
+
+    -   `parseAlbumRanking`: HTML fallback if no chart table found.
+
+### Scraper Discovery Sequence
+```mermaid
+sequenceDiagram
+    participant Scraper
+    participant BEA as BestEverAlbums
+    
+    Scraper->>BEA: suggest.php?q=Artist
+    BEA-->>Scraper: JSON { suggestions }
+    
+    alt Match Found (Fast Accept)
+        Scraper->>Scraper: Use Suggested Album ID
+    else No Match
+        Scraper->>BEA: search.php?q=Album+Artist
+        BEA-->>Scraper: HTML Search Results
+        Scraper->>Scraper: Parse & Verify Title Match
+    end
+    
+    Scraper->>BEA: GET /album/{id}
+    BEA-->>Scraper: Album HTML
+    Scraper->>Scraper: parseChartRankingById()
+```
 
 ---
 

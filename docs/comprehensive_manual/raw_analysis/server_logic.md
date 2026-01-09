@@ -63,6 +63,28 @@ graph TD
 > *   `spotifyPopularity.js` is in `server/lib/services/`.
 > *   Recommendation: Consolidate all third-party integration services into `server/services/` in a future refactor.
 
+### Consolidation Logic (Borda Count)
+This diagram details the `consolidateRanking` function logic in `server/lib/ranking.js`.
+
+```mermaid
+flowchart TD
+    Input[Sources: BEA, Spotify, AI] --> Norm[Normalize Keys]
+    Norm --> Match{Match Official Tracks?}
+    
+    Match -- Exact Match --> Score[Assign Score (N - Rank)]
+    Match -- Fuzzy > 40% --> Score
+    Match -- No Match --> Div[Add to Divergence List]
+    
+    Score --> Accum[Accumulate Scores per Track]
+    Accum --> Sort[Sort Tracks]
+    Sort --> Rule1{Has Explicit Rating?}
+    Rule1 -- Yes --> Rank1[Primary Sort]
+    Rule1 -- No --> Rank2[Secondary Sort (Borda Score)]
+    
+    Rank1 --> Final[Final Ordered Tracklist]
+    Rank2 --> Final
+```
+
 ---
 
 ## 4. AI Prompts & Configuration

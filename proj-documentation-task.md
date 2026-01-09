@@ -265,3 +265,67 @@
 191. - [x] **Code-to-Doc Integrity Check**
     192. - [x] Verify every file in `gap_analysis.md` has a corresponding entry in `comprehensive_manual/`.
     193. - [x] Compile all `raw_analysis/*.md` files into the final `MJRP_COMPREHENSIVE_MANUAL.md`.
+
+### Phase 9: Visual Architecture Enrichment
+> **Goal**: Revisit each "Deep Dive" module to add Mermaid diagrams where applicable.
+> **Status**: `[ ]` Pending | `[/]` In Progress | `[x]` Complete (Justification Required)
+##Diagram Strategy Plan
+
+Plan to implement Mermaid.js diagrams that are strictly semantically appropriate for each module's content.
+
+Here are the specific types I am preparing to implement:
+
+a.Sequence Diagrams (sequenceDiagram):
+- Use Case: Time-based interactions between objects.
+- Target: frontend_js_root.md (App Boot Sequence: DOMContentLoaded -> AuthService -> Router -> Initial View).
+b.Flowcharts (flowchart TD/LR):
+- Use Case: Decision trees and complex algorithms.
+- Target: frontend_logic_core.md (The "Balanced Cascade" Logic: Serpentine Distro -> Rebalancing Loop).
+c.Class Diagrams (classDiagram):
+- Use Case: Object-Oriented structure and dependency injection.
+- Target: server_routes.md (Factory Pattern) - Already done.
+d.State Diagrams (stateDiagram-v2):
+- Use Case: Complex UI component states (e.g., Wizard Steps).
+- Target: frontend_views.md (Blending Menu Wizard: Selection -> Flavor -> Ingredients).
+
+#### Batch 1: Server Side (Logic & Routes)
+1. [x] `server_core.md` (Added: MusicKit Token Flowchart)
+2. [x] `server_libs.md` (Added: Waterfall Strategy Flowchart)
+3. [x] `server_logic.md` (Added: Borda Count Consolidation Flowchart)
+4. [x] `server_routes.md` (Added: Factory Pattern Class Diagram & Playlist Sequence Diagram)
+5. [x] `system_architecture.md` (Added: Entity Relationship Diagram & High-Level System Map)
+
+#### Batch 2: Frontend Core & Logic
+6. [x] `frontend_js_root.md` (Added: Boot Sequence Diagram)
+7. [x] `frontend_core.md` (No Diagram: Static HTML/CSS Structure)
+8. [x] `frontend_logic_core.md` (Added: Balanced Cascade Flowchart)
+9. [x] `frontend_infra_utils.md` (Added: Transformer Class Diagram)
+10. [x] `shared_code.md` (Diagram: Curation Flowchart already present)
+
+#### Batch 3: Data Layer & Services
+11. [x] `frontend_data_layer.md` (Diagram: Enrichment Loop Sequence already present)
+12. [x] `frontend_data_infra.md` (Added: Data Access Class Diagram)
+13. [x] `frontend_services.md` (Diagrams: Generation Loop & Background Worker flows present)
+14. [x] `frontend_musickit_internals.md` (Added: Auth Sequence Diagram)
+15. [x] `dynamic_ui_mapping.md` (Diagrams: Extensive Sequence/Flowcharts present)
+
+#### Batch 4: UI Components (Granular)
+16. [x] `frontend_components_root.md` (Added: Export Modal State Diagram)
+17. [x] `frontend_components_core.md` (Added: Universal Card Class Diagram)
+18. [x] `frontend_components_shared.md` (Justified: Pure Presentational)
+19. [x] `frontend_components_feature.md` (Added: Drag & Drop Sequence Diagram)
+20. [x] `frontend_components_features.md` (Added: Search Logic Flowchart)
+21. [x] `frontend_components_complex.md` (Added: Event Delegation Sequence Diagram)
+22. [x] `frontend_components_search_ranking.md` (Diagram: Data Flow Diagram already present)
+
+#### Batch 5: Views & Special Logic
+23. [x] `frontend_views.md` (Added: Blending Wizard State Diagram)
+24. [x] `frontend_views_renderers.md` (Justified: Pure Presentational)
+25. [x] `frontend_album_search_engine.md` (Added: Classification Pipeline Flowchart)
+26. [x] `frontend_models_controllers_gap.md` (Added: Series Scope Sequence Diagram)
+
+#### Batch 6: Verification & Legacy
+27. [x] `test_suite_analysis.md` (Added: E2E Test Sequence Diagram)
+
+### Phase 10: System Architecture Overhaul
+29. [x] `docs/comprehensive_manual/raw_analysis/system_architecture.md` (Objective: Create the "Master Map" - Consolidate diagrams, patterns, and structure)

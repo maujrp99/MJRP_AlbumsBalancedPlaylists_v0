@@ -37,9 +37,32 @@ The test suite is structured into clear layers, mirroring the application archit
 ### View Layer (`test/views/`)
 *   **Technique**: **Dependency Injection / Mocking**.
 *   **Example (`ConsolidatedRankingView.test.js`)**:
-    *   Mocks `albumsStore` and `seriesStore` using `vi.mock`.
-    *   Instantiates the view with specific mock data.
-    *   Verifies:
+    *   **Steps**:
+        1.  Setup: Create 3 Albums (Series A, Series B, Series C).
+        2.  Navigate: Go to Series A.
+        3.  Assert: Only Album A is visible.
+        4.  Navigate: Switch to Series B.
+        5.  Assert: Only Album B is visible (Album A is gone).
+
+### Ghost Test Sequence
+```mermaid
+sequenceDiagram
+    participant Test as Playwright/Jest
+    participant Page as Browser Page
+    participant DOM
+
+    Test->>Page: goto('/series/A')
+    Page->>DOM: Render Series A
+    Test->>DOM: expect(AlbumA).toBeVisible()
+    Test->>DOM: expect(AlbumB).not.toBeVisible()
+    
+    Test->>Page: click('Series B')
+    Page->>DOM: Render Series B
+    
+    Note over DOM: Critical Check
+    Test->>DOM: expect(AlbumA).not.toBeVisible()
+    Test->>DOM: expect(AlbumB).toBeVisible()
+```
         *   Filtering logic (`getFilteredTracks`).
         *   Sorting logic (`rank` vs `rating`).
         *   DOM updates (checking `querySelectorAll`).

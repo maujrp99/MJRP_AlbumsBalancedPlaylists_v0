@@ -15,6 +15,28 @@
 -   **`series/SeriesEventHandler.js`**:
     -   **Role**: centralized event delegation for Series actions (Edit, Delete, Remove Album).
     -   **Logic**: Intercepts clicks, identifies actions via `data-action`, and delegates to `DialogService` or Stores.
+
+### Command Delegation Flow
+```mermaid
+sequenceDiagram
+    participant User
+    participant Grid as SeriesGrid
+    participant Handler as SeriesEventHandler
+    participant Service as DialogService
+
+    User->>Grid: Click [data-action="delete"]
+    Grid->>Handler: Bubble Event (Click)
+    
+    Handler->>Handler: extract Action & ID
+    
+    alt Action == delete
+        Handler->>Service: confirm("Are you sure?")
+        Service-->>Handler: Yes
+        Handler->>Store: deleteSeries(id)
+    else Action == edit
+        Handler->>Modal: openEditModal(id)
+    end
+```
 -   **`navigation/SeriesDropdown.js`**:
     -   **Role**: Top navigation dropdown for switching entity modes (Albums, Playlists, etc.).
     -   **Logic**: Checks `window.location.pathname` to highlight active route.

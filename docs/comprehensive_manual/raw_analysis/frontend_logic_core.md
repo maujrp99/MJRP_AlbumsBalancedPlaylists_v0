@@ -48,6 +48,31 @@ The application uses a **Strategy Pattern** for both Playlist Generation and Tra
         *   **Merge**: Combines adjacent small playlists (e.g., Vol 4 + Vol 5) if their combined length < 48min.
         *   **Trim**: Moves tracks exceeding the 48min (LP) or 80min (CD) limit to "Orphan Tracks".
 
+### Algorithm Flowchart
+```mermaid
+flowchart TD
+    Start([Input: Sorted Albums]) --> Extract{Rank 1 & 2}
+    Extract --> Hits[Greatest Hits Vol 1 & 2]
+    Extract --> Deep[Deep Cuts Pool]
+    
+    Deep --> Calc{Calc N Volumes}
+    Calc --> Serp[Serpentine Distribution]
+    
+    subgraph "Serpentine Logic"
+    direction LR
+    Odd[Odd Albums: Back-to-Front]
+    Even[Even Albums: Front-to-Back]
+    end
+    
+    Serp --> Odd
+    Serp --> Even
+    Odd --> Buckets[Vol 1, Vol 2 ... Vol N]
+    Even --> Buckets
+    
+    Buckets --> Casc[Cascade Rebalancing]
+    Casc --> Final([Final Playlists])
+```
+
 ### Top N Algorithm (`TopNAlgorithm.js`)
 *   **Status**: **Flexible** (Used for "Flavors").
 *   **Logic**: simpler selection of Top 3, 5, or N tracks per album.

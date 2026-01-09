@@ -97,6 +97,34 @@ sequenceDiagram
 
 ## 3. Strategies & Renderers
 
+### Blending Wizard State Machine
+```mermaid
+stateDiagram-v2
+    [*] --> SELECTION: User Enters
+    
+    state SELECTION {
+        [*] --> SERIES: Select Entity
+        SERIES --> VALIDATING: Check Cache
+        VALIDATING --> READY: Thumbnails Loaded
+    }
+    
+    SELECTION --> FLAVOR: Next Step
+    
+    state FLAVOR {
+        [*] --> BROWSING
+        BROWSING --> SELECTED: Algorithm Picked
+    }
+    
+    FLAVOR --> INGREDIENTS: Next Step
+    
+    state INGREDIENTS {
+        [*] --> CONFIGURING
+        CONFIGURING --> GENERATING: Click "Blend It!"
+    }
+    
+    GENERATING --> [*]: Redirect to Playlists
+```
+
 ### 3.1 `strategies/ViewModeStrategy.js`
 **Purpose**: Toggles between specific rendering layouts (Compact Card vs Expanded Row) based on user preference, persisting to LocalStorage.
 

@@ -89,8 +89,21 @@
 2.  **MATCHING**: Iterates tracks -> Calls `SpotifyService.searchTrack`. Builds `notFoundTracks` list.
 3.  **CREATING**: Calls `SpotifyService.createPlaylist`.
 4.  **ADDING**: Calls `SpotifyService.addTracks`.
-5.  **SUCCESS**: Shows Match Rate % and "Open in Spotify" link.
 6.  **ERROR**: Displays specific failure reason.
+
+### Export State Machine
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE
+    IDLE --> MATCHING: User Clicks Export
+    MATCHING --> CREATING: All Tracks Found
+    MATCHING --> ERROR: API Error
+    CREATING --> ADDING: Playlist Created
+    CREATING --> ERROR: Network Fail
+    ADDING --> SUCCESS: Tracks Added
+    SUCCESS --> [*]: User Closes
+    ERROR --> IDLE: Retry
+```
 
 ### 4.3 `ViewAlbumModal.js`
 **Purpose**: Detailed Read-Only View.
