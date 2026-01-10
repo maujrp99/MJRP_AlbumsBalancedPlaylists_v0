@@ -104,7 +104,9 @@
     2.  **[STORE]** `playlistsStore.saveBatch()` -> `PlaylistRepository.create()`.
 *   **Spotify Export**:
     1.  **[UI]** Click "Export to Spotify".
-    2.  **[FN]** `SpotifyExportModal` opens -> `SpotifyService.createPlaylist()`.
+    2.  **[FN]** `SpotifyExportModal.handleExport()` -> `SpotifyExportService.exportPlaylists()`.
+    3.  **[FN]** Service orchestrates `SpotifyService` calls (Search -> Create -> Add).
+    4.  **[UI]** Modal updates progress based on Service callbacks.
 
 ---
 

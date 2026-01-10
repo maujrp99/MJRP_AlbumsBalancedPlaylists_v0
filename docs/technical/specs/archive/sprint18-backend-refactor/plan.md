@@ -1,6 +1,7 @@
-# Implementation Plan - Sprint 18: Backend Refactor (Track B)
+# Implementation Plan - Sprint 18: Quality & Refactor (Holistic)
+**Status**: ✅ [IMPLEMENTED] - 2026-01-10
 
-**Goal**: Decouple `albums.js` God Route AND Refactor `SpotifyExportModal.js`.
+**Goal**: Resolve "God Files" and "Route Thinness" across Backend and Frontend.
 **Scope**: Server-side & Frontend.
 
 **Branch**: `feature/sprint-18-recipes-and-refactor` (Shared)
@@ -53,6 +54,18 @@
 #### [MODIFY] [public/js/components/SpotifyExportModal.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/SpotifyExportModal.js)
 - **Change**: Delegating logic to `SpotifyExportService`.
 - **Outcome**: Focus purely on UI Rendering (Progress updates). LOC reduction > 50%.
+
+## Track D: Frontend God Files (Renderers)
+
+### 6. Component Slimming: SeriesGridRenderer
+#### [MODIFY] [public/js/components/SeriesGridRenderer.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/SeriesGridRenderer.js)
+- **Issue**: File exceeds 400 LOC, mixing grid logic with card rendering.
+- **Action**: Extract `AlbumCardRenderer` logic into a sub-component.
+
+### 7. Component Slimming: TopNav
+#### [MODIFY] [public/js/components/TopNav.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/TopNav.js)
+- **Issue**: File exceeds 400 LOC, mixing navigation logic with auth rendering.
+- **Action**: Extract Auth section into `AuthNavComponent.js`.
 
 ## Verification Plan
 1.  **Manual Test**: Check `docs/debug/DEBUG_LOG.md` for historical test cases.

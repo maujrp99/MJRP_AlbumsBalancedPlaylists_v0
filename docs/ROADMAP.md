@@ -8,16 +8,26 @@
 
 ## 🚧 Current Sprint
 
-## 🚧 Current Sprint
+### Sprint 18: Holistic Quality & Refactor (Backend + Frontend)
+**Goal**: Resolve identified "God Class/File" warnings and "Route Thinness" failures to improve architectural health.
+**Status**: ✅ **DONE** (2026-01-10)
+**Spec**: [sprint18-backend-refactor/plan.md](technical/specs/archive/sprint18-backend-refactor/plan.md)
+**Deliverables**:
+- ✅ **Track A**: Recipe Rebranding (Merged from 17.9)
+- ✅ **Track B**: Backend Route Thinness (`albums.js`)
+- ✅ **Track C**: Frontend God File - Export (`SpotifyExportModal.js`)
+- ✅ **Track D**: Frontend God Files - Renderers (`TopNav.js`, `AlbumsGridRenderer.js`)
 
-### Sprint 17.9: Recipe Rebranding (Conceptual Alignment)
-**Goal**: Rename "Flavor" to "Recipe" to align with "Menu" metaphor and support future sharing.
-**Status**: 🚧 **IN PROGRESS**
-**Spec**: [sprint17.9-flavor-to-recipe/spec.md](technical/specs/sprint17.9-flavor-to-recipe/spec.md)
-
-### Sprint 18: TBD
-**Goal**: TBD
+### Sprint 19: Frontend Modularization
+**Goal**: Refactor identified "God Views" and "Thick Stores" from the Code Quality Assessment.
 **Status**: 📋 **PLANNING**
+**Scope**:
+- Refactor `SeriesView.js` (422 LOC) → Extract child components.
+- Refactor `SavedPlaylistsView.js` (412 LOC) → Extract child components.
+- Split `playlists.js` store (484 LOC) → Store + Service.
+- Split `albumSeries.js` store (427 LOC) → Store + Service.
+
+---
 
 
 
@@ -32,7 +42,15 @@
 
 ---
 
-## ✅ Completed Sprints (Reverse Chronological)
+
+### Sprint 17.9: Recipe Rebranding (Conceptual Alignment) - DONE ✅
+**Delivered**: 2026-01-11
+**Goal**: Rename "Flavor" to "Recipe" to align with "Menu" metaphor and support future sharing.
+**Deliverables**:
+- ✅ Global string/variable/UI rename completed by Track A agent.
+- ✅ Documentation synchronized (ADR-015).
+
+---
 
 ### Sprint 17.75: Classification Modularization (Jan 2026) - DONE ✅
 **Delivered**: 2026-01-10 (v3.17.5)

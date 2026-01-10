@@ -34,8 +34,12 @@ We rely on a **Manual-Based** documentation system, not a chronological log.
     - If YES: Update the chapter to match the new code.
 - [ ] **Check Regression**: Did I add a new critical flow?
     - If YES: Add it to `docs/manual/regression_checklist.md`.
-- [ ] **Check Specs**: Is there a `docs/technical/specs/` file?
-    - If YES: Mark it as `[IMPLEMENTED]`.
+- [ ] **Check Specs**: Is there a `docs/technical/specs/` folder for this task?
+    - If YES: Mark tasks as `[x]`, update `spec.md` as `[IMPLEMENTED]`, and **MOVE** the folder to `docs/technical/specs/archive/` (unless ongoing).
+- [ ] **Check Roadmap**: Update `docs/ROADMAP.md`.
+    - Mark the completed Sprint as `DONE ✅`.
+    - Move it to the "Completed Sprints" section with the delivery date.
+    - Update the "Current Sprint" to the next planned one.
 
 ### 🐞 For Bug Fixes
 - [ ] **Debug Log**: Add entry to `docs/debug/DEBUG_LOG.md`.

@@ -111,8 +111,9 @@ Top-level architectural patterns chosen to solve specific problems.
 | **Model-View-Controller (MVC)** | `js/views/`, `js/controllers/`, `js/stores/` | **Separation of Concerns**. Keeps UI rendering (`Views`) separate from Business Logic (`Controllers`) and State (`Stores`). Essential for maintainability in Vanilla JS. |
 | **Observer/PubSub** | `js/stores/*.js`, `BaseView.js` | **Reactivity**. Stores (Subject) notify Views (Observer) when state changes (e.g., `inventoryStore.subscribe(this.render)`). Decouples data updates from UI updates. |
 | **Strategy Pattern** | `ranking/*Strategy.js`, `album-search/classification/` | **Flexibility**. Allows hot-swapping algorithms (e.g., switching between `BestEverRanking` and `SpotifyPopularity`) without changing the consuming code. |
-| **Factory Pattern** | `server/routes/albums.js` | **Dependency Injection**. Routes are initialized (`initAlbumRoutes`) by injecting their dependencies. Makes testing significantly easier by allowing mocks. |
-| **Singleton Pattern** | `js/services/*.js`, `js/stores/*.js` | **State Consistency**. Services like `AuthService` and Stores must have only one instance to ensure the app doesn't have conflicting truths (e.g., two different "Logged In" states). |
+| **Factory Pattern** | `server/routes/albums.js` | **Dependency Injection**. Routes are initialized (`initAlbumRoutes`) by injecting Services (`EnrichmentService`, `GenerationService`). Makes testing significantly easier by allowing mocks. |
+| **Singleton Pattern** | `js/services/*.js`, `js/stores/*.js` | **State Consistency**. Services like `AuthService`, `SpotifyExportService` and Stores must have only one instance. |
+| **Service Layer** | `server/lib/services/`, `public/js/services/` | **Logic Decoupling**. Extracts complex business logic (Scraping, AI, State Machines) from Routes and Components into testable, reusable classes. |
 | **Command Pattern** | `js/controllers/InventoryController.js` | **Action Encapsulation**. User actions (Delete, Update) are encapsulated as methods in controllers, allowing Views to simply "Delegate" commands without knowing internal logic. |
 | **Facade Pattern** | `server/lib/fetchRanking.js` | **Simplification**. Hides the complex complexity of Scraping + AI + Fallbacks behind a single simple function call (`fetchRankingForAlbum`). |
 
@@ -192,13 +193,14 @@ The physical layout of the codebase, annotated with purpose.
 │   │   └── router.js       # Client-Side Router
 │   └── index.html          # Single Page Application Shell
 ├── server/                 # BACKEND (Node.js API)
-│   ├── lib/                # Business Logic (The "Brain")
+│   ├── lib/
 │   │   ├── scrapers/       # HTML Scrapers (BestEverAlbums)
+│   │   ├── services/       # Core Services (Enrichment, Generation)
 │   │   ├── fetchRanking.js # Orchestrator Facade
 │   │   └── ranking.js      # Consolidation Math
-│   ├── routes/             # Express Route Definitions
+│   ├── routes/             # Express Route Definitions (Thin Routes)
 │   ├── schema/             # JSON Schemas (Validation)
-│   ├── services/           # Backend Services (Tokens, Auth)
+│   ├── services/           # Backend Auth Services (Tokens)
 │   └── index.js            # Server Entry Point
 ├── shared/                 # ISOMORPHIC CODE (Runs on Client & Server)
 │   ├── curation.js         # Playlist Generation Logic
