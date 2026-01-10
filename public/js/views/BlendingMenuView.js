@@ -71,7 +71,7 @@ export class BlendingMenuView extends BaseView {
         // Step 1: Choose Your Blend - Always visible
         const step1 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 mb-6' })
         const step1Header = SafeDOM.div({ className: 'flex items-center gap-3 mb-4' }, [
-            SafeDOM.img({ src: '/assets/icons/mix.png', className: 'w-8 h-8 object-contain', alt: 'Mix' }),
+            SafeDOM.div({ className: 'w-8 h-8 text-orange-400 flex items-center justify-center' }, SafeDOM.fromHTML(getIcon('Disc', 'w-full h-full'))),
             SafeDOM.h2({ className: 'text-xl font-bold' }, 'Choose Your Mix'),
             SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, 'Step 1')
         ])
@@ -83,7 +83,7 @@ export class BlendingMenuView extends BaseView {
         if (step1Complete) {
             const step2 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 mb-6 animate-fadeIn' })
             step2.appendChild(SafeDOM.div({ className: 'flex items-center gap-3 mb-4' }, [
-                SafeDOM.img({ src: '/assets/icons/recipe.png', className: 'w-8 h-8 object-contain', alt: 'Recipe' }),
+                SafeDOM.div({ className: 'w-8 h-8 text-orange-400 flex items-center justify-center' }, SafeDOM.fromHTML(getIcon('FileText', 'w-full h-full'))),
                 SafeDOM.h2({ className: 'text-xl font-bold' }, 'Choose Your Recipe'),
                 SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, 'Step 2')
             ]))
@@ -104,7 +104,7 @@ export class BlendingMenuView extends BaseView {
         if (step2Complete && algorithmHasParams) {
             const step3 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 mb-6 animate-fadeIn' })
             step3.appendChild(SafeDOM.div({ className: 'flex items-center gap-3 mb-4' }, [
-                SafeDOM.img({ src: '/assets/icons/ingredients.png', className: 'w-8 h-8 object-contain', alt: 'Ingredients' }),
+                SafeDOM.div({ className: 'w-8 h-8 text-orange-400 flex items-center justify-center' }, SafeDOM.fromHTML(getIcon('List', 'w-full h-full'))),
                 SafeDOM.h2({ className: 'text-xl font-bold' }, 'Pick Your Ingredients'),
                 SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, 'Step 3')
             ]))
@@ -116,7 +116,7 @@ export class BlendingMenuView extends BaseView {
         if ((step2Complete && step3Skipped) || step3Complete) {
             const step4 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 border-2 border-orange-400/30 animate-fadeIn' })
             step4.appendChild(SafeDOM.div({ className: 'flex items-center gap-3 mb-4' }, [
-                SafeDOM.img({ src: '/assets/icons/blend.png', className: 'w-8 h-8 object-contain', alt: 'Blend It!' }),
+                SafeDOM.div({ className: 'w-8 h-8 text-orange-400 flex items-center justify-center' }, SafeDOM.fromHTML(getIcon('Sparkles', 'w-full h-full'))),
                 SafeDOM.h2({ className: 'text-xl font-bold' }, 'Blend It!'),
                 SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, algorithmHasParams ? 'Step 4' : 'Step 3')
             ]))
@@ -146,10 +146,10 @@ export class BlendingMenuView extends BaseView {
      */
     renderStepper() {
         const steps = [
-            { num: 1, label: 'Mix', icon: '/assets/icons/mix.png', done: !!this.selectedSeries },
-            { num: 2, label: 'Recipe', icon: '/assets/icons/recipe.png', done: !!this.selectedRecipe },
-            { num: 3, label: 'Ingredients', icon: '/assets/icons/ingredients.png', done: this.config.duration !== null },
-            { num: 4, label: 'Blend it! Ready!', icon: '/assets/icons/blend.png', done: false }
+            { num: 1, label: 'Mix', icon: 'Disc', done: !!this.selectedSeries },
+            { num: 2, label: 'Recipe', icon: 'FileText', done: !!this.selectedRecipe },
+            { num: 3, label: 'Ingredients', icon: 'List', done: this.config.duration !== null },
+            { num: 4, label: 'Blend it! Ready!', icon: 'Sparkles', done: false }
         ]
 
         // Determine current step
@@ -182,7 +182,7 @@ export class BlendingMenuView extends BaseView {
                 <div class="flex items-center gap-1 md:gap-2">
                     <div class="flex flex-col items-center">
                         <div class="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center text-sm transition-all ${stepClass}">
-                            ${isDone ? '✓' : `<img src="${step.icon}" class="w-2/3 h-2/3 object-contain" alt="">`}
+                            ${isDone ? '✓' : getIcon(step.icon, 'w-2/3 h-2/3')}
                         </div>
                         <span class="text-[10px] md:text-xs mt-1 ${labelClass}">${step.label}</span>
                     </div>
