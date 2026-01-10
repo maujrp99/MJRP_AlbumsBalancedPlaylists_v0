@@ -53,7 +53,7 @@ Our recommendations are grounded in a triangulation of specific data points to e
 
 ## 4. 🎨 UX Reframing: "Mix Styles"
 
-We are eliminating technical friction. The term "Algorithm" is forbidden in user-facing UI.
+We are eliminating technical friction. The term "Algorithm" is forbidden in user-facing UI. "Recipe" is the preferred term for algorithmic strategies.
 
 ### "The Blending Menu" & Parametrization
 To enable a true "Menu" experience, the algorithms must be highly parametrized. The user configures the "Order", and the kitchen (Algorithm) cooks it.

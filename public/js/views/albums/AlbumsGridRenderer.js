@@ -9,6 +9,7 @@ import { getIcon } from '../../components/Icons.js'
 import { escapeHtml } from '../../utils/stringUtils.js'
 import { Card } from '../../components/ui/Card.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
+import { AlbumCardRenderer } from '../../components/ui/AlbumCardRenderer.js'
 
 /**
  * Render loading progress overlay
@@ -179,38 +180,7 @@ export function renderRankingBadge(album) {
  * @returns {string} HTML string
  */
 export function renderExpandedAlbumCard(album, idx) {
-  const coverUrl = albumLoader.getArtworkUrl(album, 150)
-
-  // Prepare props for Card.renderList (Expanded Variant)
-  const cardProps = {
-    variant: 'expanded',
-    entity: album,
-    title: album.title,
-    subtitle: album.artist,
-    image: coverUrl,
-    // Content includes the ranking comparison placeholder and extra badges logic
-    // we use SafeDOM.fromHTML to prevent specific HTML string from being escaped by Card component
-    content: SafeDOM.fromHTML(`
-        <div class="flex flex-wrap gap-2 text-sm mb-4">
-             ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
-             <span class="badge badge-neutral">${album.tracks?.length || 0} tracks</span>
-             <!-- Badges are handled by Card internally but we can inject extras here if needed -->
-        </div>
-        <!-- Ranking UI Container (Mounts TracksRankingComparison) -->
-        <div class="ranking-comparison-container mt-6" data-album-id="${album.id}"></div>
-    `),
-    actions: [
-      { icon: 'Plus', label: 'Inventory', action: 'add-to-inventory' },
-      { icon: 'Trash', label: 'Remove', action: 'remove-album', class: 'tech-btn-danger' }
-    ]
-  }
-
-  // Animation wrapper
-  return `
-    <div class="animate-in fade-in slide-in-from-bottom-4 duration-500" style="animation-delay: ${idx * 50}ms">
-        ${Card.renderHTML(cardProps)}
-    </div>
-  `
+  return AlbumCardRenderer.renderExpanded(album, idx)
 }
 
 /**
@@ -236,41 +206,7 @@ export function renderExpandedList(albums, context = {}) {
  * @returns {string} HTML string
  */
 export function renderCompactAlbumCard(album) {
-  const coverUrl = albumLoader.getArtworkUrl(album, 300)
-  const hasRatings = album.acclaim?.hasRatings || album.tracks?.some(t => t.rating > 0)
-
-  // Determine badges
-  let badgeText = ''
-  if (album.year) badgeText = album.year
-
-  // Warnings
-  // If no ratings, we might want to show a warning icon in the card.
-  // The Card component doesn't have a generic "status icon" slot other than badges.
-  // We can pass a badge prop.
-
-  const cardProps = {
-    variant: 'grid',
-    entity: album,
-    title: album.title,
-    subtitle: album.artist,
-    image: coverUrl,
-    badge: badgeText,
-    actions: [
-      { icon: 'Plus', label: 'Add', action: 'add-to-inventory' },
-      { icon: 'Trash', label: 'Remove', action: 'remove-album' }
-    ],
-    // OnClick logic is handled by the Card (view-modal by default) or by View delegation
-  }
-
-  const cardHTML = Card.renderHTML(cardProps)
-
-  // We need to inject the "View Tracks" button into the footer row if possible, 
-  // or simple rely on the main card click 'view-modal'.
-  // The original design had a specific "View Tracks" button.
-  // The new Card has a "Maximize" overlay which does the same thing.
-  // So we can stick with standard Card behavior.
-
-  return cardHTML
+  return AlbumCardRenderer.renderCompact(album)
 }
 
 /**

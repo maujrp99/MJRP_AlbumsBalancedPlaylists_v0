@@ -74,7 +74,7 @@ flowchart TD
 ```
 
 ### Top N Algorithm (`TopNAlgorithm.js`)
-*   **Status**: **Flexible** (Used for "Flavors").
+*   **Status**: **Flexible** (Used for "Recipes").
 *   **Logic**: simpler selection of Top 3, 5, or N tracks per album.
 *   **Grouping Modes**:
     *   `by_album`: Preserves album order.
@@ -126,14 +126,14 @@ The application uses a **"Restaurant Metaphor"** in the UI to simplify complex a
 | Metaphor | UI Component | Code Concept | Implementation |
 | :--- | :--- | :--- | :--- |
 | **Blend** | `BlendSeriesSelector` | **Input Data** | Selection of `Series` or Inventory Albums. |
-| **Flavor** | `BlendFlavorCard` | **Algorithm Class** | Selects the `algorithmId` (e.g., `top-n-popular` -> `TopNAlgorithm`). |
+| **Recipe** | `BlendRecipeCard` | **Algorithm Class** | Selects the `algorithmId` (e.g., `top-n-popular` -> `TopNAlgorithm`). |
 | **Ingredients** | `BlendIngredientsPanel` | **Configuration** | Constructs the `options` object passed to `algorithm.generate()`. |
 
 ### Parameter Connectivity
 The connection is primarily managed by `BlendIngredientsPanel.js` and `PlaylistGenerationService.js`.
 
 1.  **Visibility Matrix** (`BlendIngredientsPanel.js`):
-    *   Defining `ALGORITHM_INGREDIENTS` constant controls which options are shown for which flavor.
+    *   Defining `ALGORITHM_RECIPES` constant controls which options are shown for which recipe.
     *   *Example*: `mjrp-balanced-cascade` shows `Target Duration` but hides `Output Mode` (because it auto-calculates splits).
     *   *Example*: `top-n-popular` shows `Top N Count` but hides `Ranking Source` (because it's locked to Spotify).
 

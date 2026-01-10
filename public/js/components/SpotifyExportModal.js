@@ -1,22 +1,14 @@
 /**
  * SpotifyExportModal
  * Export playlists to Spotify with visual progress feedback
- * 
- * State Machine:
- * 1. IDLE: Initial state, showing playlist name input
- * 2. MATCHING: "Searching Spotify for track X/Y..."
- * 3. CREATING: "Creating playlist..."
- * 4. ADDING: "Adding tracks..."
- * 5. SUCCESS: "Done! [Open in Spotify]"
- * 6. ERROR: Warning list of unmatched tracks
- * 
- * @module components/SpotifyExportModal
+ * Refactored in Sprint 18 to use SpotifyExportService
  */
 
 import { getIcon } from './Icons.js'
 import toast from './Toast.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
+import { SpotifyExportService } from '../services/SpotifyExportService.js'
 
 // State constants
 const STATES = {
@@ -103,13 +95,8 @@ export class SpotifyExportModal {
         const nameInput = this.container.querySelector('#playlistNameInput')
         const openSpotifyBtn = this.container.querySelector('#openSpotifyBtn')
 
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => this.close())
-        }
-
-        if (exportBtn) {
-            exportBtn.addEventListener('click', () => this.handleExport())
-        }
+        if (closeBtn) closeBtn.addEventListener('click', () => this.close())
+        if (exportBtn) exportBtn.addEventListener('click', () => this.handleExport())
 
         if (nameInput) {
             nameInput.addEventListener('input', (e) => {
@@ -129,17 +116,6 @@ export class SpotifyExportModal {
      */
     async handleExport() {
         try {
-            // Import services
-            const { SpotifyAuthService } = await import('../services/SpotifyAuthService.js')
-            const { SpotifyService } = await import('../services/SpotifyService.js')
-
-            // Check auth
-            if (!SpotifyAuthService.isAuthenticated()) {
-                toast.warning('Connect to Spotify first')
-                this.close()
-                return
-            }
-
             const playlists = playlistsStore.getPlaylists()
             if (playlists.length === 0) {
                 toast.warning('No playlists to export')
@@ -148,116 +124,35 @@ export class SpotifyExportModal {
 
             // Get Export Mode
             const modeEl = this.container.querySelector('input[name="exportMode"]:checked')
-            const isSeparate = modeEl && modeEl.value === 'separate'
+            const mode = (modeEl && modeEl.value === 'separate') ? 'separate' : 'merge'
 
-            // Calculate total tracks
-            const totalTracks = playlists.reduce((sum, p) => sum + (p.tracks?.length || 0), 0)
-            this.progress.total = totalTracks
-
-            let processedTracks = 0
-
-            // Structure to hold matched URIs per playlist
-            const playlistMatches = playlists.map(p => ({
-                name: p.name, // e.g. "S Tier"
-                title: p.title || p.name,
-                uris: []
-            }))
-
+            // Reset trackers
             this.notFoundTracks = []
             this.matchedCount = 0
 
-            // Phase 1: MATCHING - Find all tracks on Spotify
-            this.state = STATES.MATCHING
-            this.updateUI()
-
-            // Iterate matching index to map back to playlistMatches
-            for (let i = 0; i < playlists.length; i++) {
-                const playlist = playlists[i]
-                for (const track of (playlist.tracks || [])) {
-                    processedTracks++
-                    this.progress.current = processedTracks
-                    this.progress.message = `Searching: ${track.title || track.name}`
-                    this.updateUI()
-
-                    const found = await SpotifyService.searchTrack(
-                        track.title || track.name,
-                        track.artist,
-                        track.album || ''
-                    )
-
-                    if (found) {
-                        playlistMatches[i].uris.push(found.uri)
-                        this.matchedCount++
-                    } else {
-                        this.notFoundTracks.push({
-                            title: track.title || track.name,
-                            artist: track.artist,
-                            playlist: playlist.title || playlist.name
-                        })
-                    }
-
-                    // Rate limiting
-                    await new Promise(r => setTimeout(r, 80))
-                }
-            }
-
-            if (this.matchedCount === 0) {
-                this.state = STATES.ERROR
-                this.progress.message = 'No tracks found on Spotify'
-                this.updateUI()
-                return
-            }
-
-            // Phase 2: EXPORTING
-            this.state = STATES.CREATING
-            this.updateUI()
-
-            if (isSeparate) {
-                // SEPARATE PLAYLISTS MODE
-                this.progress.message = `Creating ${playlists.length} separate playlists...`
-                this.updateUI()
-
-                // Create array of { name, tracks: [uris] } for the service
-                const exportData = playlistMatches.map(pm => ({
-                    name: pm.name,
-                    tracks: pm.uris.map(uri => ({ spotifyUri: uri })) // Service expects objects with uri prop
-                }))
-
-                await SpotifyService.createSeriesPlaylists(
-                    exportData,
-                    this.playlistName, // Series name prefix
-                    (curr, total, msg) => {
-                        this.progress.message = msg
+            // Delegate to Service
+            const result = await SpotifyExportService.exportPlaylists(
+                playlists,
+                { mode, name: this.playlistName },
+                {
+                    onProgress: (stage, current, total, message) => {
+                        this.state = stage // MATCHING, CREATING, ADDING
+                        this.progress = { current, total, message }
                         this.updateUI()
+                    },
+                    onMatch: (count) => {
+                        this.matchedCount = count
+                    },
+                    onNotFound: (track) => {
+                        this.notFoundTracks.push(track)
                     }
-                )
+                }
+            )
 
-                // For success state, just link to profile or first playlist?
-                // Let's link to the first created one or just Generic success
-                this.createdPlaylistUrl = null // Can't link to single URL easily
-
-            } else {
-                // MERGED MODE (Legacy)
-                this.progress.message = `Creating "${this.playlistName}"...`
-                this.updateUI()
-
-                const description = `Generated by MJRP Album Blender • ${this.matchedCount}/${totalTracks} tracks`
-                const createdPlaylist = await SpotifyService.createPlaylist(this.playlistName, description)
-
-                // Flatten all URIs
-                const allTrackUris = playlistMatches.flatMap(pm => pm.uris)
-
-                // Phase 3: ADDING - Add tracks
-                this.state = STATES.ADDING
-                this.progress.message = `Adding ${allTrackUris.length} tracks...`
-                this.updateUI()
-
-                await SpotifyService.addTracksToPlaylist(createdPlaylist.id, allTrackUris)
-
-                this.createdPlaylistUrl = createdPlaylist.external_urls?.spotify || `https://open.spotify.com/playlist/${createdPlaylist.id}`
-            }
-
-            // Phase 4: SUCCESS
+            // Success State
+            this.createdPlaylistUrl = result.createdUrl
+            this.matchedCount = result.matchCount
+            this.progress.total = result.totalTracks
             this.state = STATES.SUCCESS
             this.updateUI()
 

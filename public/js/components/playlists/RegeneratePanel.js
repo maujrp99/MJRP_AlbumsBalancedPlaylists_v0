@@ -2,14 +2,14 @@
  * RegeneratePanel Component
  * 
  * Collapsible panel in PlaylistsView Detail for regenerating playlists.
- * Reuses BlendFlavorCard and BlendIngredientsPanel components.
+ * Reuses BlendRecipeCard and BlendIngredientsPanel components.
  * 
  * @module components/playlists/RegeneratePanel
  * @since Sprint 12.5
  */
 
 import { getIcon } from '../Icons.js'
-import { BlendFlavorCard } from '../blend/BlendFlavorCard.js'
+import { BlendRecipeCard } from '../blend/BlendRecipeCard.js'
 import { BlendIngredientsPanel } from '../blend/BlendIngredientsPanel.js'
 
 /**
@@ -23,7 +23,7 @@ import { BlendIngredientsPanel } from '../blend/BlendIngredientsPanel.js'
 
 export class RegeneratePanel {
   // Store instances to access state later
-  static flavorCard = null
+  static recipeCard = null
   static ingredientsPanel = null
   static currentConfig = {}
 
@@ -68,8 +68,8 @@ export class RegeneratePanel {
         <!-- Collapsible Content -->
         <div class="regenerate-content ${expanded ? '' : 'hidden'} border-t border-white/10 p-4 space-y-4">
           
-          <!-- Step 1: Flavor (Algorithm) -->
-          <div id="regenerate-flavor-container"></div>
+          <!-- Step 1: Recipe (Algorithm) -->
+          <div id="regenerate-recipe-container"></div>
 
           <!-- Step 2: Ingredients (Params) -->
           <div id="regenerate-ingredients-container"></div>
@@ -93,46 +93,46 @@ export class RegeneratePanel {
    * Must be called after render()
    */
   static mount() {
-    // Initialize Flavor Card
-    this.flavorCard = new BlendFlavorCard({
-      containerId: 'regenerate-flavor-container',
-      selectedFlavor: { id: this.currentConfig.algorithmId }, // Partial flavor supported by selector logic? 
-      // Note: BlendFlavorCard expects full flavor object or logic to find it. 
+    // Initialize Recipe Card
+    this.recipeCard = new BlendRecipeCard({
+      containerId: 'regenerate-recipe-container',
+      selectedRecipe: { id: this.currentConfig.algorithmId }, // Partial recipe supported by selector logic? 
+      // Note: BlendRecipeCard expects full recipe object or logic to find it. 
       // We'll let it execute its internal logic if possible or update it shortly.
-      onFlavorSelect: (flavor) => {
-        this.currentConfig.algorithmId = flavor.id
-        // Update ingredients visibility based on flavor
+      onRecipeSelect: (recipe) => {
+        this.currentConfig.algorithmId = recipe.id
+        // Update ingredients visibility based on recipe
         if (this.ingredientsPanel) {
-          this.ingredientsPanel.setFlavor(flavor)
+          this.ingredientsPanel.setRecipe(recipe)
           this.ingredientsPanel.render()
         }
       }
     })
 
-    // Trick: We need to set the initial flavor selection correctly. 
-    // BlendFlavorCard constructor usually takes `selectedFlavor` object. 
+    // Trick: We need to set the initial recipe selection correctly. 
+    // BlendRecipeCard constructor usually takes `selectedRecipe` object. 
     // If we only have ID, we might need to find it first or force update after init.
-    // For now, let's rely on BlendFlavorCard handling init or select first one if null.
-    // Explicitly finding the flavor would be better if possible, but getAllAlgorithms is inside component logic.
+    // For now, let's rely on BlendRecipeCard handling init or select first one if null.
+    // Explicitly finding the recipe would be better if possible, but getAllAlgorithms is inside component logic.
     // Let's rely on internal init for now, then clean up if needed.
 
-    // Correction: BlendFlavorCard gets algorithms internally. 
-    // We can access this.flavorCard.flavors after construction to set correct initial selection.
-    const algorithms = this.flavorCard.flavors || []
-    const initialFlavor = algorithms.find(a => a.id === this.currentConfig.algorithmId) || algorithms[0]
+    // Correction: BlendRecipeCard gets algorithms internally. 
+    // We can access this.recipeCard.recipes after construction to set correct initial selection.
+    const algorithms = this.recipeCard.recipes || []
+    const initialRecipe = algorithms.find(a => a.id === this.currentConfig.algorithmId) || algorithms[0]
 
-    if (initialFlavor) {
-      this.flavorCard.selectedFlavor = initialFlavor
-      this.currentConfig.algorithmId = initialFlavor.id
+    if (initialRecipe) {
+      this.recipeCard.selectedRecipe = initialRecipe
+      this.currentConfig.algorithmId = initialRecipe.id
     }
 
-    this.flavorCard.render()
+    this.recipeCard.render()
 
 
     // Initialize Ingredients Panel with current config values
     this.ingredientsPanel = new BlendIngredientsPanel({
       containerId: 'regenerate-ingredients-container',
-      selectedFlavor: initialFlavor,
+      selectedRecipe: initialRecipe,
       config: {
         // Pass current config so user selections are preserved
         duration: (this.currentConfig.targetDuration || 3600) / 60, // seconds → minutes

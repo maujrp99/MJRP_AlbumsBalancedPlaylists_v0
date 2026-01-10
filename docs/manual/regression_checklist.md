@@ -25,7 +25,7 @@
 - [ ] **Filter Logic**: Click "EPs" -> Only EPs show. Click "Owned" -> Only owned show.
 
 ### [BLEND] Blending Menu
-- [ ] **Wizard Flow**: Series Selector -> Flavor Card -> Ingredients -> Generate Button unlocks sequentially.
+- [ ] **Wizard Flow**: Series Selector -> Recipe Card -> Ingredients -> Generate Button unlocks sequentially.
 - [ ] **Generation**: Clicking "Blend It!" creates valid playlists.
 - [ ] **Entity Switch**: Changing "Albums" to "Tracks" updates the UI context.
 
@@ -58,3 +58,4 @@
 npm test              # Unit Tests
 npm run test:e2e      # Browser Flows
 ```
+Use the agent browser for final confimation.

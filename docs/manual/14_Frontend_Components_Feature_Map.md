@@ -31,8 +31,8 @@
 -   **`blend/BlendSeriesSelector.js` (Step 1)**:
     -   **Role**: Allows user to select an Entity (Album Series, Artist, Genre).
     -   **Logic**: Loads series from `albumSeriesStore`, handles cache-based thumbnail preloading (`preloadAllThumbnails`), and renders a grid of `BlendSeriesCard`s.
--   **`blend/BlendFlavorCard.js` (Step 2)**:
-    -   **Role**: Displays available generation algorithms ("Flavors").
+-   **`blend/BlendRecipeCard.js` (Step 2)**:
+    -   **Role**: Displays available generation algorithms ("Recipes").
     -   **Logic**: Renders cards with metadata (icons, colors, badges) derived from `getAllAlgorithms()`. Highlights "Recommended" algorithms.
 -   **`blend/BlendIngredientsPanel.js` (Step 3)**:
     -   **Role**: Configuration panel for the selected algorithm.

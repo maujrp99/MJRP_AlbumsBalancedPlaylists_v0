@@ -68,9 +68,9 @@
 *   **Step 1: Blend (Series)**
     1.  **[UI]** `BlendSeriesSelector` renders cards.
     2.  **[FN]** Select Series -> `selectedSeries` set -> Unlock Step 2.
-*   **Step 2: Flavor (Algorithm)**
-    1.  **[UI]** `BlendFlavorCard` renders options (Balanced/Spotify/BEA).
-    2.  **[FN]** Select Flavor -> `selectedFlavor` set (e.g., `mjrp-balanced-cascade`).
+*   **Step 2: Recipe (Algorithm)**
+    1.  **[UI]** `BlendRecipeCard` renders options (Balanced/Spotify/BEA).
+    2.  **[FN]** Select Recipe -> `selectedRecipe` set (e.g., `mjrp-balanced-cascade`).
 *   **Step 3: Ingredients (Config)**
     1.  **[UI]** `BlendIngredientsPanel` renders inputs (Duration, Mode).
     2.  **[FN]** `onConfigChange` updates `this.config`.
@@ -104,7 +104,9 @@
     2.  **[STORE]** `playlistsStore.saveBatch()` -> `PlaylistRepository.create()`.
 *   **Spotify Export**:
     1.  **[UI]** Click "Export to Spotify".
-    2.  **[FN]** `SpotifyExportModal` opens -> `SpotifyService.createPlaylist()`.
+    2.  **[FN]** `SpotifyExportModal.handleExport()` -> `SpotifyExportService.exportPlaylists()`.
+    3.  **[FN]** Service orchestrates `SpotifyService` calls (Search -> Create -> Add).
+    4.  **[UI]** Modal updates progress based on Service callbacks.
 
 ---
 

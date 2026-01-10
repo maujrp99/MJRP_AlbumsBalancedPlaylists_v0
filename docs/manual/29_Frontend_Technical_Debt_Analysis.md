@@ -59,7 +59,7 @@ Detailed controller-view logic for the Playlists feature.
     -   **Logic**: `DragBoard` provides a Kanban-style layout (horizontal columns). `DragHandler` wraps `SortableJS` to manage track movement between playlists (drag-and-drop across lists).
 -   **`playlists/RegeneratePanel.js`**:
     -   **Role**: "Reconfigure" UI letting users change algorithms on an existing batch.
-    -   **Reuse**: Reuses `BlendFlavorCard` and `BlendIngredientsPanel` from the Blend Wizard.
+    -   **Reuse**: Reuses `BlendRecipeCard` and `BlendIngredientsPanel` from the Blend Wizard.
 
 ## Ranking System (`ranking/`)
 **Status**: `[ACTIVE]`

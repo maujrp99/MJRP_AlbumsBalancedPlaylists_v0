@@ -13,14 +13,14 @@
  * - Lazy loading via appendItems()
  */
 import Component from '../base/Component.js';
-// EntityCard removed (Legacy) - superseded by Card/AlbumsGridRenderer
 import {
     renderAlbumsGrid,
     renderExpandedList,
     wrapInGrid
 } from '../../views/albums/AlbumsGridRenderer.js';
 import { renderScopedGrid, renderScopedList } from '../../views/albums/AlbumsScopedRenderer.js';
-import { Card } from '../ui/Card.js'; // Import Universal Card for lazy loading
+import { Card } from '../ui/Card.js';
+import { AlbumCardRenderer } from '../ui/AlbumCardRenderer.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 
 export default class SeriesGridRenderer extends Component {
@@ -104,16 +104,8 @@ export default class SeriesGridRenderer extends Component {
         // Find ghost card to insert before it
         const ghostCard = gridContainer.querySelector('[data-ghost="true"]');
 
-        // Create new cards HTML using Universal Card adapter
-        const newCardsHtml = newItems.map(album => Card.renderHTML({
-            entity: album,
-            title: album.title,
-            subtitle: album.artist,
-            image: album.coverUrl,
-            variant: 'grid',
-            badge: album.year,
-            onClick: (e) => { /* handled by delegation */ }
-        })).join('');
+        // Create new cards HTML using Centralized AlbumCardRenderer
+        const newCardsHtml = newItems.map(album => AlbumCardRenderer.renderCompact(album)).join('');
 
         // Create fragment using SafeDOM
         const fragment = SafeDOM.fromHTML(newCardsHtml);

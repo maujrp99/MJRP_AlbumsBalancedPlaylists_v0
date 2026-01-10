@@ -1,47 +1,47 @@
 /**
- * BlendFlavorCard.js
+ * BlendRecipeCard.js
  * 
- * Step 2: 🍬 Choose Your Flavor
+ * Step 2: 🍬 Choose Your Recipe
  * Algorithm selection with visual cards
  * 
- * @module components/blend/BlendFlavorCard
+ * @module components/blend/BlendRecipeCard
  */
 
 import { getIcon } from '../Icons.js'
 import { getAllAlgorithms } from '../../algorithms/index.js'
 
-export class BlendFlavorCard {
+export class BlendRecipeCard {
     constructor(opts = {}) {
-        this.containerId = opts.containerId || 'blend-flavor-cards'
-        this.onFlavorSelect = opts.onFlavorSelect || (() => { })
-        this.selectedFlavor = opts.selectedFlavor || null
+        this.containerId = opts.containerId || 'blend-recipe-cards'
+        this.onRecipeSelect = opts.onRecipeSelect || (() => { })
+        this.selectedRecipe = opts.selectedRecipe || null
 
         // Get ALL algorithms for Blending Menu
-        this.flavors = this.getBlendingFlavors()
+        this.recipes = this.getBlendingRecipes()
     }
 
     /**
      * Get all algorithms that are valid for blending
      */
-    getBlendingFlavors() {
+    getBlendingRecipes() {
         const algorithms = getAllAlgorithms()
 
-        // Map implementation details to flavor properties
+        // Map implementation details to recipe properties
         return algorithms.map(algo => ({
             id: algo.id,
             name: algo.name,
             description: algo.description,
-            icon: this.getFlavorIcon(algo.id),
-            color: this.getFlavorColor(algo.id),
+            icon: this.getRecipeIcon(algo.id),
+            color: this.getRecipeColor(algo.id),
             badge: algo.badge,
             isRecommended: algo.isRecommended
         }))
     }
 
     /**
-     * Get icon for each flavor
+     * Get icon for each recipe
      */
-    getFlavorIcon(id) {
+    getRecipeIcon(id) {
         const icons = {
             // Recommended / Full Experience
             'mjrp-balanced-cascade': 'Sparkles',
@@ -56,9 +56,9 @@ export class BlendFlavorCard {
     }
 
     /**
-     * Get color theme for each flavor
+     * Get color theme for each recipe
      */
-    getFlavorColor(id) {
+    getRecipeColor(id) {
         const colors = {
             // Recommended - Golden gradient
             'mjrp-balanced-cascade': { from: 'from-amber-400', to: 'to-orange-500' },
@@ -67,7 +67,6 @@ export class BlendFlavorCard {
             's-draft-original': { from: 'from-indigo-500', to: 'to-purple-500' },
             'legacy-roundrobin': { from: 'from-slate-500', to: 'to-gray-600' },
             // Top N (Curated Selection)
-            // Top N (Curated Selection)
             'top-n-popular': { from: 'from-green-500', to: 'to-emerald-600' }, // Spotify Green
             'top-n-acclaimed': { from: 'from-rose-500', to: 'to-orange-500' } // BEA Red/Orange
         }
@@ -75,35 +74,35 @@ export class BlendFlavorCard {
     }
 
     /**
-     * Render individual flavor card
+     * Render individual recipe card
      */
-    renderFlavorCard(flavor) {
-        const isSelected = this.selectedFlavor?.id === flavor.id
-        const isRecommended = flavor.isRecommended // Will need to ensure this property exists or is derived
+    renderRecipeCard(recipe) {
+        const isSelected = this.selectedRecipe?.id === recipe.id
+        const isRecommended = recipe.isRecommended // Will need to ensure this property exists or is derived
 
         // Determine badge style
         let badgeClass = 'bg-gray-500/20 text-gray-400'
         if (isRecommended) {
             badgeClass = 'bg-amber-400/20 text-amber-400 font-bold'
-        } else if (flavor.badge === 'SPOTIFY') {
+        } else if (recipe.badge === 'SPOTIFY') {
             badgeClass = 'bg-green-500/20 text-green-400 font-semibold'
-        } else if (flavor.badge === 'BEA') {
+        } else if (recipe.badge === 'BEA') {
             badgeClass = 'bg-rose-500/20 text-rose-400 font-semibold'
-        } else if (flavor.badge === 'TOP 3') {
+        } else if (recipe.badge === 'TOP 3') {
             badgeClass = 'bg-orange-500/20 text-orange-400'
-        } else if (flavor.badge === 'TOP 5') {
+        } else if (recipe.badge === 'TOP 5') {
             badgeClass = 'bg-blue-500/20 text-blue-400'
         }
 
         const borderClass = isSelected
-            ? `border-amber-400 bg-gradient-to-br ${flavor.color.from}/10 ${flavor.color.to}/10 ring-2 ring-orange-400 shadow-lg shadow-orange-400/20`
+            ? `border-amber-400 bg-gradient-to-br ${recipe.color.from}/10 ${recipe.color.to}/10 ring-2 ring-orange-400 shadow-lg shadow-orange-400/20`
             : isRecommended
                 ? `border-amber-400/40 bg-gradient-to-br from-amber-900/10 to-orange-900/5 hover:border-amber-400/60`
                 : `border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10`
 
         return `
-            <div class="blend-flavor-card group relative cursor-pointer p-4 rounded-xl border transition-all duration-300 transform hover:scale-[1.02] ${borderClass}"
-                 data-flavor-id="${flavor.id}">
+            <div class="blend-recipe-card group relative cursor-pointer p-4 rounded-xl border transition-all duration-300 transform hover:scale-[1.02] ${borderClass}"
+                 data-recipe-id="${recipe.id}">
                 
                 ${isRecommended ? `
                     <div class="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-400 text-black whitespace-nowrap">
@@ -112,18 +111,18 @@ export class BlendFlavorCard {
                 ` : ''}
 
                 <div class="flex items-center justify-center mb-3">
-                    <div class="w-12 h-12 mx-auto mb-2 rounded-xl bg-gradient-to-br ${flavor.color.from} ${flavor.color.to} flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
-                        ${getIcon(flavor.icon, 'w-6 h-6 text-white')}
+                    <div class="w-12 h-12 mx-auto mb-2 rounded-xl bg-gradient-to-br ${recipe.color.from} ${recipe.color.to} flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+                        ${getIcon(recipe.icon, 'w-6 h-6 text-white')}
                     </div>
                 </div>
 
-                <h4 class="font-bold text-base mb-1 ${isSelected || isRecommended ? 'text-amber-400' : ''}">${flavor.name}</h4>
+                <h4 class="font-bold text-base mb-1 ${isSelected || isRecommended ? 'text-amber-400' : ''}">${recipe.name}</h4>
                 
                 <span class="inline-block px-2 py-0.5 text-[10px] rounded-full mb-2 ${badgeClass}">
-                    ${flavor.badge || 'ALGORITHM'}
+                    ${recipe.badge || 'ALGORITHM'}
                 </span>
 
-                <p class="text-[11px] text-muted leading-snug line-clamp-2">${flavor.description}</p>
+                <p class="text-[11px] text-muted leading-snug line-clamp-2">${recipe.description}</p>
             </div>
         `
     }
@@ -135,7 +134,7 @@ export class BlendFlavorCard {
         const container = document.getElementById(this.containerId)
         if (!container) return
 
-        const cards = this.flavors.map(f => this.renderFlavorCard(f)).join('')
+        const cards = this.recipes.map(r => this.renderRecipeCard(r)).join('')
 
         // 4 columns on desktop, 2 on mobile - handles 8 cards nicely
         container.innerHTML = `
@@ -151,12 +150,12 @@ export class BlendFlavorCard {
      * Attach event listeners
      */
     attachListeners(container) {
-        container.querySelectorAll('.blend-flavor-card').forEach(card => {
+        container.querySelectorAll('.blend-recipe-card').forEach(card => {
             card.addEventListener('click', () => {
-                const flavorId = card.dataset.flavorId
-                const flavor = this.flavors.find(f => f.id === flavorId)
-                this.selectedFlavor = flavor
-                this.onFlavorSelect(flavor)
+                const recipeId = card.dataset.recipeId
+                const recipe = this.recipes.find(r => r.id === recipeId)
+                this.selectedRecipe = recipe
+                this.onRecipeSelect(recipe)
                 this.render()
             })
         })
@@ -166,8 +165,8 @@ export class BlendFlavorCard {
      * Get current selection
      */
     getSelection() {
-        return this.selectedFlavor
+        return this.selectedRecipe
     }
 }
 
-export default BlendFlavorCard
+export default BlendRecipeCard
