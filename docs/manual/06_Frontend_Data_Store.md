@@ -7,25 +7,35 @@
 **Pattern**: Singleton Observables (Flux-like)
 
 ### 1.1 `stores/albums.js` (AlbumsStore)
-**Purpose**: Manages album entities, handling caching, persistence (Firestore), and Series context validation.
+**Purpose**: Manages album entities, handling caching, persistence (Firestore), and Series context validation. (Standard Store Pattern).
 
-*   **Key Logic: Ghost Album Prevention**:
-    *   **Problem**: Albums from Series A showing up when viewing Series B.
-    *   **Solution (`addAlbumToSeries`)**:
-        1.  Checks internal `activeAlbumSeriesId`.
-        2.  *Validation*: If `albumSeriesId` != `activeAlbumSeriesId`, **REJECTS** the addition and logs warning.
-        3.  *Storage*: Uses a `Map<SeriesId, Album[]>` instead of a flat array, enforcing strict separation.
+### 1.2 Pure State Containers (Sprint 19)
+**Status**: `[REFACTORED]`
+**Pattern**: Pure State (Setters/Getters only)
 
-*   **Sync Flow**:
-    1.  **Load**: `loadFromFirestore(db)` -> Fetch All -> Filter into `albumsByAlbumSeriesId`.
-    2.  **Save**: `saveToFirestore(db, album)` -> Uses `setDoc` with `{merge: true}` to support hydrated-but-unsaved entities.
-    3.  **Notify**: Triggers generic `notify()` to all subscribers (Views).
+The following stores were refactored to remove all business logic, delegating it to specialized Services. They now only hold reactive state and expose thin setters.
+
+*   **`stores/playlists.js`**: Holds generated playlists, edit mode context, and undo history.
+*   **`stores/albumSeries.js`**: Holds the list of series, active series index, and database context.
 
 ---
 
 ## 2. Service Layer
+The Service Layer orchestrates complex operations and state transitions, isolating business logic from the pure state containers.
 
-### 2.1 `services/SpotifyService.js`
+### 2.1 `services/PlaylistsService.js` [NEW]
+**Purpose**: Orchestrates playlist lifecycle, history, and persistence.
+*   **History Management**: Manages undo/redo stacks.
+*   **Persistence**: Handles `localStorage` backups and Firestore CRUD orchestration.
+*   **Track Ops**: Business logic for moving/removing/reordering tracks.
+
+### 2.2 `services/SeriesService.js` [NEW]
+**Purpose**: Manages Music Series lifecycle and album mapping.
+*   **CRUD**: Create, Update, and Delete logic for series.
+*   **Context Management**: Syncs user context and database instances to the store.
+*   **Persistence**: Handles `localStorage` for quick-start data.
+
+### 2.3 `services/SpotifyService.js`
 **Status**: `[ACTIVE]`
 **Type**: API Gateway / Adapter
 **Dependencies**: `SpotifyAuthService` (Tokens)

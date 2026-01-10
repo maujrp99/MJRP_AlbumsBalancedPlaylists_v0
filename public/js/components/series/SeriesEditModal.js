@@ -4,6 +4,7 @@ import { ArtistScanner } from './ArtistScanner.js'
 import { getIcon } from '../Icons.js'
 import { toast } from '../Toast.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
+import { getSeriesService } from '../../services/SeriesService.js'
 
 export class SeriesEditModal {
     static async open(seriesId, onUpdated) {
@@ -145,7 +146,13 @@ export class SeriesEditModal {
             }
 
             try {
-                await albumSeriesStore.updateSeries(seriesId, {
+                const db = albumSeriesStore.getDb()
+                if (!db) {
+                    toast.error('Database not initialized')
+                    return
+                }
+                const service = getSeriesService(db, null, albumSeriesStore.getUserId())
+                await service.updateSeries(seriesId, {
                     name: currentName,
                     albumQueries: editingAlbumQueries
                 })

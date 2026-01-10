@@ -20,12 +20,11 @@
 
 ### Sprint 19: Frontend Modularization
 **Goal**: Refactor identified "God Views" and "Thick Stores" from the Code Quality Assessment.
-**Status**: 📋 **PLANNING**
+**Status**: 🚧 **IN PROGRESS** (Track B DONE ✅)
 **Scope**:
-- Refactor `SeriesView.js` (422 LOC) → Extract child components.
-- Refactor `SavedPlaylistsView.js` (412 LOC) → Extract child components.
-- Split `playlists.js` store (484 LOC) → Store + Service.
-- Split `albumSeries.js` store (427 LOC) → Store + Service.
+- ✅ **Track B**: Split `playlists.js` and `albumSeries.js` → Pure Stores + Services. (2026-01-10)
+- ✅ **Track A**: Refactor `SeriesView.js` & `SavedPlaylistsView.js` → Extract components. (2026-01-10)
+- ✅ **LOC Achievement**: All refactored stores < 150 LOC. Significant reduction in Views.
 
 ---
 

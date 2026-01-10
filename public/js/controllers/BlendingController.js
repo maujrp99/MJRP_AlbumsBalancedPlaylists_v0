@@ -18,6 +18,7 @@ import { albumsStore } from '../stores/albums.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { playlistGenerationService } from '../services/PlaylistGenerationService.js'
+import { getPlaylistsService } from '../services/PlaylistsService.js'
 
 /**
  * @typedef {Object} GenerationConfig
@@ -91,7 +92,13 @@ class BlendingController {
         playlistsStore.setPlaylists(result.playlists, seriesId)
 
         // Sprint 15.5 Fix: Reset to CREATE mode to clear any stale edit context/batchName
-        playlistsStore.setCreateMode()
+        // Use service to set mode
+        import('../app.js').then(({ db }) => {
+            import('../cache/CacheManager.js').then(({ cacheManager }) => {
+                const service = getPlaylistsService(db, cacheManager)
+                service.setCreateMode()
+            })
+        })
 
         // Sprint 16: Set default batch name
         const defaultName = this._generateDefaultBatchName()

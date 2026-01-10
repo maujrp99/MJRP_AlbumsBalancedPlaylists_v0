@@ -1,160 +1,175 @@
 /**
  * SeriesService.js
  * 
- * Service layer for Album Series operations (CRUD, album management, enrichment).
- * Extracted from AlbumSeriesStore to achieve separation of concerns.
+ * Service layer for ALL album series operations:
+ * - CRUD (create, update, delete series)
+ * - Album management (add, remove albums)
+ * - Enrichment orchestration
+ * - LocalStorage persistence
+ * - User context management
  * 
- * @module services/SeriesService
+ * Extracted from AlbumSeriesStore (Sprint 19).
  */
 
 import { SeriesRepository } from '../repositories/SeriesRepository.js'
 import { globalProgress } from '../components/GlobalProgress.js'
+import { albumSeriesStore } from '../stores/albumSeries.js'
+import { cacheManager } from '../cache/CacheManager.js'
+import { dataSyncService } from './DataSyncService.js'
+
+const STORAGE_KEY = 'mjrp_series'
 
 export class SeriesService {
-    /**
-     * @param {Object} db - Firestore instance
-     * @param {Object} cacheManager - Cache manager instance
-     * @param {string} userId - Current user ID
-     */
-    constructor(db, cacheManager, userId) {
+    constructor(db, userId) {
         this.db = db
-        this.cacheManager = cacheManager
         this.userId = userId || 'anonymous-user'
         this.repository = new SeriesRepository(db, cacheManager, this.userId)
+
+        // Update store context
+        albumSeriesStore.setDb(db)
+        albumSeriesStore.setUserId(this.userId)
     }
 
-    /**
-     * Update user ID context (e.g., after login)
-     * @param {string} userId - New user ID
-     */
+    // ========== CONTEXT MANAGEMENT ==========
+
     setUserId(userId) {
         this.userId = userId || 'anonymous-user'
-        this.repository = new SeriesRepository(this.db, this.cacheManager, this.userId)
+        this.repository = new SeriesRepository(this.db, cacheManager, this.userId)
+        albumSeriesStore.setUserId(this.userId)
+    }
+
+    async handleUserChange(state) {
+        const newUser = state.currentUser
+        const newUserId = newUser ? newUser.uid : 'anonymous-user'
+        const currentUserId = albumSeriesStore.getUserId()
+
+        if (currentUserId !== newUserId) {
+            console.log(`[SeriesService] Switching user: ${currentUserId} -> ${newUserId}`)
+
+            // Capture guest data for migration
+            let seriesToMigrate = []
+            if (currentUserId === 'anonymous-user' && albumSeriesStore.getSeries().length > 0 && newUserId !== 'anonymous-user') {
+                seriesToMigrate = [...albumSeriesStore.getSeries()]
+                console.log(`[SeriesService] Found ${seriesToMigrate.length} series to migrate`)
+            }
+
+            this.setUserId(newUserId)
+
+            // Migrate if needed
+            if (seriesToMigrate.length > 0) {
+                try {
+                    const count = await dataSyncService.migrateSeries(this.repository, seriesToMigrate)
+                    if (count > 0) console.log(`[SeriesService] Migrated ${count} series`)
+                    await this.loadFromFirestore()
+                } catch (err) {
+                    console.error('[SeriesService] Migration failed', err)
+                }
+            } else {
+                await this.loadFromFirestore().catch(err => console.error('Reload failed:', err))
+            }
+        }
     }
 
     // ========== CRUD ==========
 
-    /**
-     * Create a new series
-     * @param {Object} seriesData - Series data (name, albumQueries, etc.)
-     * @returns {Promise<Object>} Created series with ID
-     */
     async createSeries(seriesData) {
-        const series = {
-            name: seriesData.name || 'Untitled Series',
-            albumQueries: seriesData.albumQueries || [],
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            status: seriesData.status || 'pending',
-            notes: seriesData.notes || ''
-        }
-
         globalProgress.start()
         try {
+            const series = {
+                name: seriesData.name || 'Untitled Series',
+                albumQueries: seriesData.albumQueries || [],
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                status: seriesData.status || 'pending',
+                notes: seriesData.notes || ''
+            }
+
             const id = await this.repository.create(series)
-            return { ...series, id }
+            series.id = id
+
+            albumSeriesStore.addSeries(series)
+            albumSeriesStore.setActiveSeries(id)
+            this.saveToLocalStorage()
+
+            return series
         } finally {
             globalProgress.finish()
         }
     }
 
-    /**
-     * Update an existing series
-     * @param {string} id - Series ID to update
-     * @param {Object} updates - Fields to update
-     * @returns {Promise<void>}
-     */
     async updateSeries(id, updates) {
         globalProgress.start()
         try {
-            await this.repository.update(id, {
-                ...updates,
-                updatedAt: new Date()
-            })
+            await this.repository.update(id, { ...updates, updatedAt: new Date() })
+            albumSeriesStore.updateSeriesById(id, updates)
+            this.saveToLocalStorage()
         } finally {
             globalProgress.finish()
         }
     }
 
-    /**
-     * Delete a series
-     * @param {string} id - Series ID to delete
-     * @returns {Promise<void>}
-     */
     async deleteSeries(id) {
         globalProgress.start()
         try {
             await this.repository.delete(id)
+            albumSeriesStore.removeSeriesById(id)
+            this.saveToLocalStorage()
         } finally {
             globalProgress.finish()
         }
     }
 
-    /**
-     * Load all series for the current user
-     * @param {Object} options - Query options (orderBy, limit)
-     * @returns {Promise<Array>} Series list
-     */
-    async loadAllSeries(options = {}) {
+    async loadFromFirestore() {
+        albumSeriesStore.setLoading(true)
+        albumSeriesStore.setError(null)
         globalProgress.start()
+
         try {
             const firestoreSeries = await this.repository.findAll({
-                orderBy: options.orderBy || ['updatedAt', 'desc'],
-                limit: options.limit || 20
+                orderBy: ['updatedAt', 'desc'],
+                limit: 20
             })
 
-            return firestoreSeries.map(s => ({
+            const series = firestoreSeries.map(s => ({
                 ...s,
                 createdAt: s.createdAt?.toDate ? s.createdAt.toDate() : new Date(s.createdAt),
                 updatedAt: s.updatedAt?.toDate ? s.updatedAt.toDate() : new Date(s.updatedAt)
             }))
+
+            albumSeriesStore.setSeries(series)
+            this.saveToLocalStorage()
+            return series
+        } catch (error) {
+            albumSeriesStore.setError(error.message)
+            throw error
         } finally {
+            albumSeriesStore.setLoading(false)
             globalProgress.finish()
         }
     }
 
     // ========== ALBUM MANAGEMENT ==========
 
-    /**
-     * Add an album to a series
-     * @param {string} seriesId - Target series ID
-     * @param {Object} album - Album object with title, artist
-     * @returns {Promise<void>}
-     */
     async addAlbumToSeries(seriesId, album) {
-        // Fetch current series
-        const series = await this.repository.findById(seriesId)
+        const series = albumSeriesStore.getById(seriesId)
         if (!series) throw new Error('Series not found')
 
         const albumQueries = series.albumQueries || []
 
-        // Add as object query (new format)
-        const newQuery = {
-            id: album.id || null,
-            title: album.title,
-            artist: album.artist
-        }
-
-        // Avoid duplicates
+        // Check for duplicates
         const exists = albumQueries.some(q =>
             (typeof q === 'object' && q.title === album.title && q.artist === album.artist) ||
             (typeof q === 'string' && q.toLowerCase().includes(album.title.toLowerCase()))
         )
 
         if (!exists) {
-            albumQueries.push(newQuery)
+            albumQueries.push({ id: album.id || null, title: album.title, artist: album.artist })
             await this.updateSeries(seriesId, { albumQueries })
         }
     }
 
-    /**
-     * Remove an album from a series
-     * @param {string} seriesId - Target series ID
-     * @param {Object} album - Album object with title, artist
-     * @returns {Promise<void>}
-     */
     async removeAlbumFromSeries(seriesId, album) {
-        const series = await this.repository.findById(seriesId)
+        const series = albumSeriesStore.getById(seriesId)
         if (!series) throw new Error('Series not found')
 
         const albumQueries = series.albumQueries || []
@@ -162,31 +177,22 @@ export class SeriesService {
 
         // Find matching query
         const matchIndex = albumQueries.findIndex(query => {
-            // Object query
             if (typeof query === 'object' && query !== null) {
-                const titleMatch = query.title === album.title
-                const artistMatch = !query.artist || query.artist === album.artist
-                const idMatch = query.id && query.id === album.id
-                return idMatch || (titleMatch && artistMatch)
+                if (query.id && query.id === album.id) return true
+                return query.title === album.title && (!query.artist || query.artist === album.artist)
             }
-
-            // String query (legacy)
             if (typeof query === 'string') {
                 const q = norm(query)
                 const title = norm(album.title)
                 const artist = norm(album.artist)
-
-                if (q === title) return true
-                if (q === `${artist} - ${title}`) return true
-                if (q === `${artist} ${title}`) return true
-                if (q.includes(title) && q.includes(artist)) return true
+                return q === title || q === `${artist} - ${title}` || q === `${artist} ${title}` ||
+                    (q.includes(title) && q.includes(artist))
             }
-
             return false
         })
 
         if (matchIndex === -1) {
-            throw new Error(`Could not find album query in series. Album: "${album.title}"`)
+            throw new Error(`Could not find album "${album.title}" in series`)
         }
 
         albumQueries.splice(matchIndex, 1)
@@ -194,35 +200,71 @@ export class SeriesService {
         console.log(`[SeriesService] Removed "${album.title}" from series "${series.name}"`)
     }
 
-    // ========== ENRICHMENT ORCHESTRATION ==========
+    findSeriesContainingAlbum(album) {
+        const norm = str => str?.toLowerCase().trim() || ''
 
-    /**
-     * Enrich all albums in a series (stub - delegates to enrichment service)
-     * @param {string} seriesId - Series ID
-     * @param {Function} onProgress - Progress callback
-     * @returns {Promise<void>}
-     */
+        return albumSeriesStore.getSeries().find(s =>
+            (s.albumQueries || []).some(query => {
+                if (typeof query === 'object' && query !== null) {
+                    return (query.id && query.id === album.id) || query.title === album.title
+                }
+                if (typeof query === 'string') {
+                    return norm(query).includes(norm(album.title))
+                }
+                return false
+            })
+        )
+    }
+
+    // ========== ENRICHMENT ==========
+
     async enrichAllAlbums(seriesId, onProgress) {
-        // TODO: Wire to SpotifyEnrichmentService or RankingEnrichmentService
-        console.log(`[SeriesService] enrichAllAlbums called for series ${seriesId}`)
-        // This is a stub - actual enrichment happens via dedicated enrichment services
+        // Stub - actual enrichment via dedicated enrichment services
+        console.log(`[SeriesService] enrichAllAlbums called for ${seriesId}`)
         if (onProgress) onProgress({ current: 0, total: 0, status: 'pending' })
+    }
+
+    // ========== LOCALSTORAGE ==========
+
+    saveToLocalStorage() {
+        try {
+            const series = albumSeriesStore.getSeries()
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(series))
+        } catch (e) {
+            console.error('[SeriesService] Failed to save to localStorage', e)
+        }
+    }
+
+    loadFromLocalStorage() {
+        try {
+            const data = localStorage.getItem(STORAGE_KEY)
+            if (data) {
+                const series = JSON.parse(data).map(s => ({
+                    ...s,
+                    createdAt: new Date(s.createdAt),
+                    updatedAt: new Date(s.updatedAt)
+                }))
+                albumSeriesStore.setSeries(series)
+                return true
+            }
+        } catch (e) {
+            console.error('[SeriesService] Failed to load from localStorage', e)
+        }
+        return false
+    }
+
+    reset() {
+        localStorage.removeItem(STORAGE_KEY)
+        albumSeriesStore.reset()
     }
 }
 
-// Singleton factory (lazy initialization)
+// Singleton factory
 let _instance = null
 
-/**
- * Get or create SeriesService singleton
- * @param {Object} db - Firestore instance
- * @param {Object} cacheManager - Cache manager
- * @param {string} userId - User ID
- * @returns {SeriesService}
- */
 export function getSeriesService(db, cacheManager, userId) {
     if (!_instance && db) {
-        _instance = new SeriesService(db, cacheManager, userId)
+        _instance = new SeriesService(db, userId)
     } else if (_instance && userId && _instance.userId !== userId) {
         _instance.setUserId(userId)
     }

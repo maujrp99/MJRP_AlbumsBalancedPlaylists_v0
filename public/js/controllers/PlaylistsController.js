@@ -1,6 +1,8 @@
 import { playlistsStore } from '../stores/playlists.js'
 import { albumsStore } from '../stores/albums.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
+import { getPlaylistsService } from '../services/PlaylistsService.js'
+import { getSeriesService } from '../services/SeriesService.js'
 import { blendingController } from './BlendingController.js'
 import { createAlgorithm } from '../algorithms/index.js'
 import toast from '../components/Toast.js'
@@ -32,9 +34,10 @@ export class PlaylistsController {
             console.log('[PlaylistsController] Mode: EDIT', editBatchName)
 
             // Sprint 15 Fix (#99): ALWAYS reload on Edit Mode navigation.
-            // Previous guard caused stale data when switching between batches
-            // because SavedPlaylistsController.editBatch() sets editContext BEFORE navigation.
-            playlistsStore.setEditMode(decodeURIComponent(editBatchName), seriesIdParam, null)
+            const { db } = await import('../app.js')
+            const { cacheManager } = await import('../cache/CacheManager.js')
+            const service = getPlaylistsService(db, cacheManager)
+            service.setEditMode(decodeURIComponent(editBatchName), seriesIdParam, null)
             await this.loadPlaylistsForEdit(decodeURIComponent(editBatchName), seriesIdParam)
             return
         }
@@ -48,8 +51,10 @@ export class PlaylistsController {
             console.log('[PlaylistsController] Mode: CREATE (Preserving existing generation)')
         } else {
             console.log('[PlaylistsController] Mode: CREATE (Resetting)')
-            playlistsStore.setCreateMode()
-            playlistsStore.playlists = [] // Clear stale
+            const { db } = await import('../app.js')
+            const { cacheManager } = await import('../cache/CacheManager.js')
+            const service = getPlaylistsService(db, cacheManager)
+            service.setCreateMode()
         }
 
         // Auto-generate if requested
@@ -135,7 +140,11 @@ export class PlaylistsController {
 
             if (!activeSeries || activeSeries.id !== seriesId) {
                 // Ensure series is set
-                await albumSeriesStore.loadFromFirestore()
+                const db = albumSeriesStore.getDb()
+                if (db) {
+                    const seriesService = getSeriesService(db, null, albumSeriesStore.getUserId())
+                    await seriesService.loadFromFirestore()
+                }
                 albumSeriesStore.setActiveSeries(seriesId)
                 activeSeries = albumSeriesStore.getActiveSeries()
             }
@@ -203,8 +212,13 @@ export class PlaylistsController {
         const playlists = playlistsStore.getPlaylists()
         if (!playlists[playlistIndex] || !playlists[playlistIndex].tracks[trackIndex]) return
 
-        playlistsStore.removeTrack(playlistIndex, trackIndex)
-        // Toast optional, but could be noisy if deleting many. Let UI feedback suffice (grid updates).
+        // Use service for track removal
+        import('../app.js').then(({ db }) => {
+            import('../cache/CacheManager.js').then(({ cacheManager }) => {
+                const service = getPlaylistsService(db, cacheManager)
+                service.removeTrack(playlistIndex, trackIndex)
+            })
+        })
     }
 
     /**
@@ -343,8 +357,9 @@ export class PlaylistsController {
             }
 
             // 3. Set Batch Name and Save
-            playlistsStore.setBatchName(batchName)
-            await playlistsStore.saveToFirestore(db, cacheManager, userId)
+            const service = getPlaylistsService(db, cacheManager)
+            service.applyBatchName(batchName)
+            await service.saveBatch(userId, seriesId, playlistsStore.getPlaylists())
 
             toast.success(`Saved "${batchName}" successfully!`)
 
@@ -361,7 +376,7 @@ export class PlaylistsController {
             // and ensures the UI reflects that we are now working with a saved batch.
             if (!isEditMode) {
                 console.log('[PlaylistsController] Switching to Edit Mode after save')
-                playlistsStore.setEditMode(batchName, seriesId, new Date().toISOString())
+                service.setEditMode(batchName, seriesId, new Date().toISOString())
             }
 
         } catch (err) {

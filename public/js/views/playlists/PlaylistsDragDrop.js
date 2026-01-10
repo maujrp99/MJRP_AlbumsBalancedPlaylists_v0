@@ -6,6 +6,7 @@
 
 import Sortable from 'sortablejs'
 import { playlistsStore } from '../../stores/playlists.js'
+import { getPlaylistsService } from '../../services/PlaylistsService.js'
 
 /**
  * Initialize drag-and-drop for playlist containers
@@ -59,13 +60,23 @@ export function setupDragAndDrop(view) {
                 const toPlaylistIndex = parseInt(to.dataset.playlistIndex)
 
                 if (from === to) {
-                    // Reorder within same playlist
+                    // Reorder within same playlist - use service
                     console.log(`[Sortable] Reorder in playlist ${fromPlaylistIndex}: ${oldIndex} -> ${newIndex}`)
-                    playlistsStore.reorderTrack(fromPlaylistIndex, oldIndex, newIndex)
+                    import('../../app.js').then(({ db }) => {
+                        import('../../cache/CacheManager.js').then(({ cacheManager }) => {
+                            const service = getPlaylistsService(db, cacheManager)
+                            service.reorderTrack(fromPlaylistIndex, oldIndex, newIndex)
+                        })
+                    })
                 } else {
-                    // Move to different playlist
+                    // Move to different playlist - use service
                     console.log(`[Sortable] Move ${fromPlaylistIndex}->${toPlaylistIndex}: ${oldIndex} -> ${newIndex}`)
-                    playlistsStore.moveTrack(fromPlaylistIndex, toPlaylistIndex, oldIndex, newIndex)
+                    import('../../app.js').then(({ db }) => {
+                        import('../../cache/CacheManager.js').then(({ cacheManager }) => {
+                            const service = getPlaylistsService(db, cacheManager)
+                            service.moveTrack(fromPlaylistIndex, toPlaylistIndex, oldIndex, newIndex)
+                        })
+                    })
                 }
 
                 // Re-enable re-render AFTER store update is processed

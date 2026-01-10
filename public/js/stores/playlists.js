@@ -1,495 +1,158 @@
 /**
- * Playlists Store
- * Manages playlist generation, curation, and drag-and-drop state.
- * CRUD operations delegated to PlaylistsService (Sprint 19).
+ * Playlists Store - PURE STATE CONTAINER
+ * 
+ * Only holds state and exposes simple setters/getters.
+ * All logic delegated to PlaylistsService (Sprint 19).
  */
-
-import { getPlaylistsService } from '../services/PlaylistsService.js'
 
 export class PlaylistsStore {
     constructor() {
+        // Core state
         this.playlists = []
-        this.config = {
-            playlistCount: 3,
-            maxDuration: 75, // minutes
-            p1p2Rule: true
-        }
-        this.seriesId = null // FIX: Track active series ID
-        this.isDirty = false // Unsaved changes
-        this.isSynchronized = true
-        this.listeners = new Set()
-
-        // Sprint 8.5: Explicit mode for edit vs create
-        // Solves Ghost Playlist issue by making intent explicit
-        this.mode = 'CREATING' // 'CREATING' | 'EDITING'
-        this.editContext = null // { batchName, seriesId, savedAt } when editing
-
-        // Version history for undo/redo
-        this.versions = []
-        this.currentVersionIndex = -1
-        this.maxVersions = 20
-
-        // Sprint 16: Default naming
-        this.defaultBatchName = null
-    }
-
-    /**
-     * Get all playlists
-     * @returns {Array} Current playlists
-     */
-    getPlaylists() {
-        return this.playlists
-    }
-
-    /**
-     * Set playlists (e.g., after generation)
-     * @param {Array} playlists - Generated playlists
-     * @param {string} seriesId - ID of the series these playlists belong to
-     */
-    setPlaylists(playlists, seriesId = null) {
-        this.playlists = playlists
-        this.seriesId = seriesId // Track which series these belong to
-        this.isDirty = false
-        this.isSynchronized = false
-        this.createSnapshot('Initial generation')
-        this.notify()
-    }
-
-    /**
-     * Get playlist configuration
-     * @returns {Object} Current config
-     */
-    getConfig() {
-        return { ...this.config }
-    }
-
-    /**
-     * Update playlist configuration
-     * @param {Object} newConfig - Config updates
-     */
-    updateConfig(newConfig) {
-        this.config = { ...this.config, ...newConfig }
-        this.notify()
-    }
-
-    /**
-     * Move track between playlists (drag-and-drop)
-     * @param {number} fromPlaylistIndex - Source playlist index
-     * @param {number} toPlaylistIndex - Target playlist index
-     * @param {number} trackIndex - Track index in source
-     * @param {number} newIndex - Target position
-     */
-    moveTrack(fromPlaylistIndex, toPlaylistIndex, trackIndex, newIndex) {
-        const fromPlaylist = this.playlists[fromPlaylistIndex]
-        const toPlaylist = this.playlists[toPlaylistIndex]
-
-        const [track] = fromPlaylist.tracks.splice(trackIndex, 1)
-        toPlaylist.tracks.splice(newIndex, 0, track)
-
-        this.isDirty = true
-        this.isSynchronized = false
-        this.createSnapshot(`Moved track from ${fromPlaylist.name} to ${toPlaylist.name}`)
-        this.notify()
-    }
-
-    /**
-     * Reorder track within same playlist
-     * @param {number} playlistIndex - Playlist index
-     * @param {number} oldIndex - Current track position
-     * @param {number} newIndex - New track position
-     */
-    reorderTrack(playlistIndex, oldIndex, newIndex) {
-        const playlist = this.playlists[playlistIndex]
-        const [track] = playlist.tracks.splice(oldIndex, 1)
-        playlist.tracks.splice(newIndex, 0, track)
-
-        this.isDirty = true
-        this.isSynchronized = false
-        this.createSnapshot(`Reordered track in ${playlist.name}`)
-        this.notify()
-    }
-
-    /**
-     * Remove a track from a playlist
-     * @param {number} playlistIndex - Playlist index
-     * @param {number} trackIndex - Track index to remove
-     */
-    removeTrack(playlistIndex, trackIndex) {
-        const playlist = this.playlists[playlistIndex]
-        if (!playlist || !playlist.tracks) return
-
-        const [removedTrack] = playlist.tracks.splice(trackIndex, 1)
-
-        this.isDirty = true
-        this.isSynchronized = false
-        this.createSnapshot(`Removed "${removedTrack.title}" from ${playlist.name}`)
-        this.notify()
-    }
-
-    /**
-     * Mark as synchronized (after save)
-     */
-    markSynchronized() {
-        this.isDirty = false
-        this.isSynchronized = true
-        this.notify()
-    }
-
-    /**
-     * Set batch name on all playlists (used when saving to history)
-     * @param {string} batchName - Name for this playlist batch
-     */
-    setBatchName(batchName) {
-        const timestamp = new Date().toISOString()
-        this.playlists.forEach(playlist => {
-            playlist.batchName = batchName
-            playlist.savedAt = timestamp
-        })
-        this.batchName = batchName
-        // Also update editContext if in edit mode
-        if (this.editContext) {
-            this.editContext.batchName = batchName
-        }
-        this.notify()
-    }
-
-    /**
-     * Sprint 15.5: Update batch name (called from input onChange)
-     * NOTE: Does NOT call notify() to prevent input re-render losing focus.
-     * The batchName is read on-demand during export/save operations.
-     * @param {string} batchName - New batch name value
-     */
-    updateBatchName(batchName) {
-        this.batchName = batchName
-        // Initialize editContext if not present (for consistency)
-        if (!this.editContext) {
-            // Note: If we are in CREATE mode, we might not have an editContext yet.
-            // But if we are editing the name, we should track it.
-            // However, strictly speaking, editContext is for EDIT mode.
-            // For CREATE mode, we just update this.batchName.
-        } else {
-            this.editContext.currentBatchName = batchName
-        }
-        console.log('[PlaylistsStore] Batch name updated:', batchName)
-    }
-
-    /**
-     * Sprint 16: Set default batch name (e.g. from generation timestamp)
-     * @param {string} name 
-     */
-    setDefaultBatchName(name) {
-        this.defaultBatchName = name
-        this.notify()
-    }
-
-    /**
-     * Sprint 8.5: Set EDITING mode (called when user clicks "Edit Batch")
-     * @param {string} batchName - Name of batch being edited
-     * @param {string} seriesId - Series ID
-     * @param {string} savedAt - Original savedAt timestamp (for overwrite)
-     */
-    setEditMode(batchName, seriesId, savedAt) {
-        this.mode = 'EDITING'
-        this.editContext = {
-            originalBatchName: batchName, // Immutable reference
-            currentBatchName: batchName,  // Mutable input
-            seriesId,
-            savedAt
-        }
-        this.batchName = batchName // Set active name
-        console.log('[PlaylistsStore] Mode: EDITING', this.editContext)
-    }
-
-    /**
-     * Sprint 8.5: Set CREATING mode (called when user starts new batch)
-     */
-    setCreateMode() {
-        this.mode = 'CREATING'
-        this.editContext = null
-        this.batchName = '' // Sprint 15.5: Clear batch name to prevent stale data
-        console.log('[PlaylistsStore] Mode: CREATING')
-    }
-
-    /**
-     * Sprint 8.5: Check if currently in edit mode
-     * @returns {boolean}
-     */
-    isEditingExistingBatch() {
-        return this.mode === 'EDITING' && this.editContext !== null
-    }
-
-    /**
-     * Sprint 8.5: Get current edit context
-     * @returns {Object|null}
-     */
-    getEditContext() {
-        return this.editContext
-    }
-
-    /**
-     * Calculate total duration of playlist
-     * @param {number} playlistIndex - Playlist index
-     * @returns {number} Total duration in minutes
-     */
-    getPlaylistDuration(playlistIndex) {
-        const playlist = this.playlists[playlistIndex]
-        if (!playlist || !playlist.tracks) return 0
-
-        return playlist.tracks.reduce((total, track) => {
-            const duration = track.duration || track.durationSeconds || 0
-            return total + duration
-        }, 0) / 60 // Convert to minutes
-    }
-
-    /**
-     * Subscribe to store changes
-     * @param {Function} listener - Callback fired on state change
-     * @returns {Function} Unsubscribe function
-     */
-    subscribe(listener) {
-        this.listeners.add(listener)
-        return () => this.listeners.delete(listener)
-    }
-
-    /**
-     * Notify all listeners of state change
-     * @private
-     */
-    notify() {
-        this.listeners.forEach(listener => listener(this.getState()))
-    }
-
-    /**
-     * Get complete state snapshot
-     * @returns {Object} Current state
-     */
-    getState() {
-        return {
-            playlists: this.playlists,
-            seriesId: this.seriesId,
-            config: this.config,
-            // Sprint 16: Expose naming/mode state
-            mode: this.mode,
-            editContext: this.editContext,
-            batchName: this.batchName,
-            defaultBatchName: this.defaultBatchName,
-            isDirty: this.isDirty,
-            isSynchronized: this.isSynchronized,
-            canUndo: this.currentVersionIndex > 0,
-            canRedo: this.currentVersionIndex < this.versions.length - 1
-        }
-    }
-
-    /**
-     * Create version snapshot for undo/redo
-     * @param {string} description - Change description
-     * @private
-     */
-    createSnapshot(description) {
-        // Remove future history if we branch off
-        if (this.currentVersionIndex < this.versions.length - 1) {
-            this.versions = this.versions.slice(0, this.currentVersionIndex + 1)
-        }
-
-        this.versions.push({
-            playlists: JSON.parse(JSON.stringify(this.playlists)),
-            seriesId: this.seriesId, // FIX: Snapshot seriesId
-            timestamp: new Date().toISOString(),
-            description
-        })
-
-        // Limit history size
-        if (this.versions.length > this.maxVersions) {
-            this.versions.shift()
-        }
-        this.currentVersionIndex = this.versions.length - 1
-    }
-
-    /**
-     * Undo to previous version
-     * @returns {boolean} True if undo was successful
-     */
-    undo() {
-        if (this.currentVersionIndex > 0) {
-            this.currentVersionIndex--
-            const version = this.versions[this.currentVersionIndex]
-            this.playlists = JSON.parse(JSON.stringify(version.playlists))
-            this.seriesId = version.seriesId // FIX: Restore seriesId
-            this.isDirty = true
-            this.notify()
-            return true
-        }
-        return false
-    }
-
-    /**
-     * Redo to next version
-     * @returns {boolean} True if redo was successful
-     */
-    redo() {
-        if (this.currentVersionIndex < this.versions.length - 1) {
-            this.currentVersionIndex++
-            const version = this.versions[this.currentVersionIndex]
-            this.playlists = JSON.parse(JSON.stringify(version.playlists))
-            this.seriesId = version.seriesId // FIX: Restore seriesId
-            this.isDirty = true
-            this.notify()
-            return true
-        }
-        return false
-    }
-
-    /**
-     * Get version history
-     * @returns {Array} Version history with current indicator
-     */
-    getVersionHistory() {
-        return this.versions.map((v, index) => ({
-            ...v,
-            isCurrent: index === this.currentVersionIndex
-        }))
-    }
-
-    /**
-     * Save current state to LocalStorage
-     */
-    saveToLocalStorage() {
-        if (!this.seriesId) return
-
-        try {
-            const data = {
-                playlists: JSON.parse(JSON.stringify(this.playlists)), // Deep copy & sanitize
-                seriesId: this.seriesId,
-                config: this.config,
-                // Persistence Fix: Save context to survive refresh
-                mode: this.mode,
-                editContext: this.editContext,
-                batchName: this.batchName,
-                defaultBatchName: this.defaultBatchName,
-                timestamp: Date.now()
-            }
-            localStorage.setItem('mjrp_current_playlists', JSON.stringify(data))
-        } catch (e) {
-            console.warn('Failed to save playlists to LocalStorage:', e)
-        }
-    }
-
-    /**
-     * Load state from LocalStorage
-     * @returns {boolean} True if loaded successfully
-     */
-    loadFromLocalStorage() {
-        try {
-            const saved = localStorage.getItem('mjrp_current_playlists')
-            if (!saved) return false
-
-            const data = JSON.parse(saved)
-
-            // Validate data freshness (optional: e.g. expires after 24h)
-            // const isFresh = Date.now() - data.timestamp < 24 * 60 * 60 * 1000
-
-            this.playlists = data.playlists || []
-            this.seriesId = data.seriesId
-            this.config = data.config || this.config
-
-            // Restore Context
-            this.mode = data.mode || 'CREATING'
-            this.editContext = data.editContext || null
-            this.batchName = data.batchName || ''
-            this.defaultBatchName = data.defaultBatchName || null
-
-            // Reset dirty state since we just loaded
-            this.isDirty = false
-            this.notify()
-            return true
-        } catch (e) {
-            console.warn('Failed to load playlists from LocalStorage:', e)
-            return false
-        }
-    }
-
-    /**
-     * Save playlists to Firestore via PlaylistsService
-     * @param {Object} db - Firestore instance
-     * @param {Object} cacheManager - Cache manager instance
-     * @param {string} userId - Current User ID
-     * @returns {Promise<void>}
-     */
-    async saveToFirestore(db, cacheManager, userId) {
-        if (!this.seriesId || !db) {
-            throw new Error('Cannot save: Missing database connection or Series ID')
-        }
-
-        const service = getPlaylistsService(db, cacheManager)
-        const savedPlaylists = await service.saveBatch(userId, this.seriesId, this.playlists)
-
-        // Update local playlists with returned IDs
-        this.playlists = savedPlaylists
-        this.isDirty = false
-        this.isSynchronized = true
-        this.saveToLocalStorage()
-        this.notify()
-    }
-
-    /**
-     * Load playlists from Firestore via PlaylistsService
-     * @param {Object} db - Firestore instance
-     * @param {Object} cacheManager - Cache manager
-     * @param {string} userId - Current User ID
-     * @param {string} seriesId - Series ID to load
-     */
-    async loadFromFirestore(db, cacheManager, userId, seriesId) {
-        if (!seriesId || !db) return
-
-        this.seriesId = seriesId
-
-        try {
-            const service = getPlaylistsService(db, cacheManager)
-            const playlists = await service.loadBatch(userId, seriesId)
-
-            if (playlists && playlists.length > 0) {
-                this.playlists = playlists
-                this.isSynchronized = true
-                this.isDirty = false
-                this.saveToLocalStorage()
-                this.notify()
-                return true
-            }
-        } catch (e) {
-            console.error('Failed to load playlists from Firestore:', e)
-        }
-        return false
-    }
-
-    /**
-     * Clean LocalStorage
-     */
-    clearLocalStorage() {
-        localStorage.removeItem('mjrp_current_playlists')
-    }
-
-    /**
-     * Reset store to initial state
-     */
-    reset() {
-        this.playlists = []
-        this.config = {
-            playlistCount: 3,
-            maxDuration: 75,
-            p1p2Rule: true
-        }
         this.seriesId = null
-        // Context Reset
+        this.config = { playlistCount: 3, maxDuration: 75, p1p2Rule: true }
+
+        // Sync state
+        this.isDirty = false
+        this.isSynchronized = true
+        this.loading = false
+
+        // Mode state
         this.mode = 'CREATING'
         this.editContext = null
         this.batchName = ''
         this.defaultBatchName = null
 
+        // Undo state (managed by service, stored here)
+        this.canUndo = false
+        this.canRedo = false
+
+        // Observer pattern
+        this.listeners = new Set()
+    }
+
+    // ========== SIMPLE SETTERS ==========
+
+    setPlaylists(playlists, seriesId = null) {
+        this.playlists = playlists
+        if (seriesId) this.seriesId = seriesId
+        this.notify()
+    }
+
+    setSeriesId(seriesId) {
+        this.seriesId = seriesId
+        this.notify()
+    }
+
+    setConfig(config) {
+        this.config = { ...this.config, ...config }
+        this.notify()
+    }
+
+    setLoading(loading) {
+        this.loading = loading
+        this.notify()
+    }
+
+    setDirty(isDirty) {
+        this.isDirty = isDirty
+        this.notify()
+    }
+
+    setSynchronized(isSynchronized) {
+        this.isSynchronized = isSynchronized
+        this.notify()
+    }
+
+    setMode(mode) {
+        this.mode = mode
+        this.notify()
+    }
+
+    setEditContext(editContext) {
+        this.editContext = editContext
+        this.notify()
+    }
+
+    setBatchName(batchName) {
+        this.batchName = batchName
+        // Note: No notify() to prevent input re-render
+    }
+
+    setDefaultBatchName(name) {
+        this.defaultBatchName = name
+        this.notify()
+    }
+
+    setUndoState(canUndo, canRedo) {
+        this.canUndo = canUndo
+        this.canRedo = canRedo
+        this.notify()
+    }
+
+    // ========== SIMPLE GETTERS ==========
+
+    getPlaylists() {
+        return this.playlists
+    }
+
+    getSeriesId() {
+        return this.seriesId
+    }
+
+    getConfig() {
+        return { ...this.config }
+    }
+
+    getEditContext() {
+        return this.editContext
+    }
+
+    isEditingExistingBatch() {
+        return this.mode === 'EDITING' && this.editContext !== null
+    }
+
+    // ========== OBSERVER PATTERN ==========
+
+    subscribe(listener) {
+        this.listeners.add(listener)
+        return () => this.listeners.delete(listener)
+    }
+
+    notify() {
+        this.listeners.forEach(listener => listener(this.getState()))
+    }
+
+    getState() {
+        return {
+            playlists: this.playlists,
+            seriesId: this.seriesId,
+            config: this.config,
+            loading: this.loading,
+            isDirty: this.isDirty,
+            isSynchronized: this.isSynchronized,
+            mode: this.mode,
+            editContext: this.editContext,
+            batchName: this.batchName,
+            defaultBatchName: this.defaultBatchName,
+            canUndo: this.canUndo,
+            canRedo: this.canRedo
+        }
+    }
+
+    reset() {
+        this.playlists = []
+        this.seriesId = null
+        this.config = { playlistCount: 3, maxDuration: 75, p1p2Rule: true }
         this.isDirty = false
         this.isSynchronized = true
-        this.versions = []
-        this.currentVersionIndex = -1
-        this.clearLocalStorage() // Clear storage on reset
+        this.loading = false
+        this.mode = 'CREATING'
+        this.editContext = null
+        this.batchName = ''
+        this.defaultBatchName = null
+        this.canUndo = false
+        this.canRedo = false
         this.notify()
     }
 }

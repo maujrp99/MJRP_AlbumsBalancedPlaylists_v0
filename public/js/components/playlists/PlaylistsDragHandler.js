@@ -1,5 +1,6 @@
 import Sortable from 'sortablejs'
 import { playlistsStore } from '../../stores/playlists.js'
+import { getPlaylistsService } from '../../services/PlaylistsService.js'
 
 /**
  * PlaylistsDragHandler
@@ -59,9 +60,14 @@ export class PlaylistsDragHandler {
                         return
                     }
 
-                    // Perform move via store
-                    // Note: Store update will trigger view.update(), re-rendering the grid
-                    playlistsStore.moveTrack(fromPlaylistIndex, toPlaylistIndex, oldIndex, newIndex)
+                    // Perform move via service
+                    // Note: Service update will trigger store update, which re-renders
+                    import('../../app.js').then(({ db }) => {
+                        import('../../cache/CacheManager.js').then(({ cacheManager }) => {
+                            const service = getPlaylistsService(db, cacheManager)
+                            service.moveTrack(fromPlaylistIndex, toPlaylistIndex, oldIndex, newIndex)
+                        })
+                    })
                 }
             })
 

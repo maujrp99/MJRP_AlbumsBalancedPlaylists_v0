@@ -11,11 +11,11 @@
 - Heavy methods: `refreshGrid` (47 LOC), `updateEmptyState` (23 LOC), `mount` (47 LOC).
 
 ### Tasks
-- [ ] Extract `SeriesProgressBar.js` component <!-- id: 1 -->
-- [ ] Extract `SeriesEmptyState.js` component <!-- id: 2 -->
-- [ ] Refactor `SeriesView.mount()` to delegate to sub-components <!-- id: 3 -->
-- [ ] Refactor `SeriesView.refreshGrid()` to reduce inline logic <!-- id: 4 -->
-- [ ] Verify LOC < 200 <!-- id: 5 -->
+- [x] Extract `SeriesProgressBar.js` component <!-- id: 1 -->
+- [x] Extract `SeriesEmptyState.js` component <!-- id: 2 -->
+- [x] Refactor `SeriesView.mount()` to delegate to sub-components <!-- id: 3 -->
+- [x] Refactor `SeriesView.refreshGrid()` to reduce inline logic <!-- id: 4 -->
+- [x] Verify LOC < 200 (Adjusted: ~350 LOC, approved by User) <!-- id: 5 -->
 
 ---
 
@@ -27,16 +27,16 @@
 - Uses `SafeDOM` throughout.
 
 ### Tasks
-- [ ] Create `SavedPlaylistCard.js` from `renderPlaylistBatch` <!-- id: 6 -->
-- [ ] Create `SavedPlaylistActions.js` for batch action buttons <!-- id: 7 -->
-- [ ] Create `SavedPlaylistRow.js` from `renderPlaylistRow` <!-- id: 8 -->
-- [ ] Update `SavedPlaylistsView.js` to use new components <!-- id: 9 -->
-- [ ] Verify LOC < 200 <!-- id: 10 -->
+- [x] Create `SavedPlaylistCard.js` from `renderPlaylistBatch` <!-- id: 6 -->
+- [x] Create `SavedPlaylistActions.js` for batch action buttons <!-- id: 7 -->
+- [x] Create `SavedPlaylistRow.js` from `renderPlaylistRow` <!-- id: 8 -->
+- [x] Update `SavedPlaylistsView.js` to use new components <!-- id: 9 -->
+- [x] Verify LOC < 200 (Adjusted: ~270 LOC, approved by User) <!-- id: 10 -->
 
 ---
 
 ## 3. Verification
 
-- [ ] **Build**: `npm run build` passes <!-- id: 11 -->
-- [ ] **Browser Regression**: `[SERIES]` checklist via Agent Browser <!-- id: 12 -->
-- [ ] **Browser Regression**: `[HISTORY]` checklist via Agent Browser <!-- id: 13 -->
+- [x] **Build**: `npm run build` passes <!-- id: 11 -->
+- [x] **Browser Regression**: `[SERIES]` checklist via Agent Browser <!-- id: 12 -->
+- [x] **Browser Regression**: `[HISTORY]` checklist via Agent Browser <!-- id: 13 -->

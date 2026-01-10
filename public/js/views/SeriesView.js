@@ -17,10 +17,8 @@ import { db } from '../firebase-init.js';
 import { albumsStore } from '../stores/albums.js';
 import { albumSeriesStore } from '../stores/albumSeries.js';
 import { router } from '../router.js';
-import { InlineProgress } from '../components/InlineProgress.js';
 import { Breadcrumb } from '../components/Breadcrumb.js';
 import { getIcon } from '../components/Icons.js';
-import { Autocomplete } from '../components/Autocomplete.js';
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js';
 import { toast } from '../components/Toast.js';
 
@@ -31,6 +29,11 @@ import SeriesGridRenderer from '../components/series/SeriesGridRenderer.js';
 import SeriesEventHandler from '../components/series/SeriesEventHandler.js';
 import SeriesModals from '../components/series/SeriesModals.js';
 import { SeriesEmptyState } from '../components/series/SeriesEmptyState.js';
+import { SeriesProgressBar } from '../components/series/SeriesProgressBar.js';
+
+// Handlers
+import * as Handlers from './helpers/SeriesViewHandlers.js';
+import * as GridHelper from './helpers/SeriesGridHelper.js';
 
 // Utilities (for filtering)
 // Utilities
@@ -200,11 +203,9 @@ export default class SeriesView extends BaseView {
         });
         this.components.toolbar.mount();
 
-        // FIX: Setup inline progress container AFTER toolbar is mounted (so DOM exists)
-        const progressContainer = document.getElementById('loading-progress-container');
-        if (progressContainer) {
-            this.inlineProgress = new InlineProgress(progressContainer);
-        }
+        // FIX: Setup inline progress bar AFTER toolbar is mounted (so DOM exists)
+        this.inlineProgress = new SeriesProgressBar('loading-progress-container');
+        this.inlineProgress.mount();
     }
 
     async mountGrid() {
@@ -318,21 +319,7 @@ export default class SeriesView extends BaseView {
     }
 
     handleSeriesChange(value) {
-        const seriesId = value === 'all' ? null : value;
-        const scopeType = seriesId ? 'SINGLE' : 'ALL';
-
-        // ARCH-6: Direct call, no router remount
-        if (this.controller) {
-            this.controller.loadScope(scopeType, seriesId);
-        }
-
-        // Update URL without navigation
-        const url = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
-        window.history.replaceState({}, '', url);
-
-        // Update internal state
-        this.currentScope = scopeType;
-        this.targetSeriesId = seriesId;
+        Handlers.handleSeriesChange(this, value);
     }
 
     handleFilter(type, value) {
@@ -340,29 +327,15 @@ export default class SeriesView extends BaseView {
     }
 
     handleRefresh() {
-        if (this.controller) {
-            this.controller.loadScope(this.currentScope, this.targetSeriesId, true);
-        }
+        Handlers.handleRefresh(this);
     }
 
     handleToggleView() {
-        this.viewMode = this.viewMode === 'compact' ? 'expanded' : 'compact';
-        localStorage.setItem('albumsViewMode', this.viewMode);
-
-        // Re-mount toolbar with new mode state
-        this.mountToolbar();
-
-        // Refresh grid with new layout
-        this.refreshGrid();
+        Handlers.handleToggleView(this);
     }
 
     handleGeneratePlaylists() {
-        const activeSeries = albumSeriesStore.getActiveSeries();
-        if (activeSeries) {
-            router.navigate(`/playlists?seriesId=${activeSeries.id}`);
-        } else {
-            router.navigate('/playlists');
-        }
+        Handlers.handleGeneratePlaylists(this);
     }
 
     // =========================================
@@ -370,52 +343,7 @@ export default class SeriesView extends BaseView {
     // =========================================
 
     async refreshGrid(providedAlbums = null) {
-        if (!this.components.grid) return;
-
-        // Use provided albums (from Controller) or cache.
-        // If neither, fallback to empty array (don't pull from store directly to avoid state mismatch)
-        const filteredAlbums = providedAlbums || this.lastRenderedAlbums || [];
-
-        const allSeries = albumSeriesStore.getSeries();
-
-        // Sprint 12: Apply cached Spotify enrichment to albums before rendering
-        // This uses data from background enrichment service
-        try {
-            await applyEnrichmentToAlbums(filteredAlbums, {
-                fetchIfMissing: false, // Don't fetch live - only use cache
-                silent: true
-            });
-        } catch (e) {
-            console.warn('[SeriesView] Enrichment application failed:', e.message);
-        }
-
-        const { searchQuery, filters } = this.controller ? this.controller.getState() : { searchQuery: '', filters: {} };
-
-        this.components.grid.update({
-            items: filteredAlbums,
-            layout: this.viewMode === 'compact' ? 'grid' : 'list',
-            scope: this.currentScope,
-            seriesList: allSeries,
-            context: { searchQuery, filters }
-        });
-
-        // Hydrate TracksRankingComparison components for expanded view
-        if (this.viewMode === 'expanded') {
-            const gridMount = document.getElementById('series-grid-mount');
-            if (gridMount) {
-                const rankingContainers = gridMount.querySelectorAll('.ranking-comparison-container');
-                console.log(`[SeriesView] Hydrating ${rankingContainers.length} ranking containers`);
-                rankingContainers.forEach(el => {
-                    const albumId = el.dataset.albumId;
-                    const album = filteredAlbums.find(a => a.id === albumId);
-                    if (album) {
-                        new TracksRankingComparison({ album }).mount(el);
-                    }
-                });
-            }
-        }
-
-        this.updateEmptyState(filteredAlbums.length);
+        await GridHelper.refreshGrid(this, providedAlbums);
     }
 
     updateEmptyState(albumCount) {
@@ -488,7 +416,7 @@ export default class SeriesView extends BaseView {
         this.components = {};
 
         if (this.inlineProgress) {
-            this.inlineProgress.finish();
+            this.inlineProgress.unmount();
         }
 
         super.destroy();

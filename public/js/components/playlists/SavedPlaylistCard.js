@@ -8,6 +8,7 @@ import { SafeDOM } from '../../utils/SafeDOM.js';
 import { getIcon } from '../Icons.js';
 import { AlbumCascade } from '../common/AlbumCascade.js';
 import { SavedPlaylistRow } from './SavedPlaylistRow.js';
+import { SavedPlaylistActions } from './SavedPlaylistActions.js';
 
 export class SavedPlaylistCard {
     constructor(options) {
@@ -47,25 +48,15 @@ export class SavedPlaylistCard {
             ])
         ]);
 
-        // Buttons
-        const buttons = SafeDOM.div({ className: 'batch-card-buttons flex items-center gap-2' }, [
-            SafeDOM.button({
-                className: 'btn btn-secondary btn-sm flex items-center gap-2 hover:bg-white/20 transition-all shadow-md',
-                title: 'Edit this batch',
-                onClick: (e) => {
-                    e.stopPropagation();
-                    if (this.onEdit) this.onEdit(this.seriesId, batchName, createdAt);
-                }
-            }, [SafeDOM.fromHTML(getIcon('Edit', 'w-4 h-4')), ' Edit Batch']),
-            SafeDOM.button({
-                className: 'btn btn-ghost btn-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors',
-                title: 'Delete entire batch',
-                onClick: (e) => {
-                    e.stopPropagation();
-                    if (this.onDelete) this.onDelete(this.seriesId, batchName, playlistCount);
-                }
-            }, SafeDOM.fromHTML(getIcon('Trash', 'w-4 h-4')))
-        ]);
+        // Buttons - delegated to SavedPlaylistActions
+        const buttons = SavedPlaylistActions.renderBatchActions({
+            seriesId: this.seriesId,
+            batchName,
+            createdAt,
+            playlistCount,
+            onEdit: this.onEdit,
+            onDelete: this.onDelete
+        });
 
         // Collapse logic
         const playlistsContainer = SafeDOM.div({ className: 'batch-playlists divide-y divide-white/5 bg-black/20 hidden' });

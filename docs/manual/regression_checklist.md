@@ -4,6 +4,7 @@
 **Last Updated**: 2026-01-10
 
 > **Usage**: Ask the agent to "Run the [TAG] checklist".
+> **Service Layer Check**: Verify that `[BLEND]` and `[PLAYLIST_MGR]` operations correctly trigger Store updates via their respective Services.
 
 ## 🔴 [CORE] Core Loop (The Must Pass)
 - [ ] **Load App**: App loads on `localhost:5000` without console crash.

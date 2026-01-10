@@ -13,6 +13,7 @@
 import { auth, db } from '../firebase-init.js';
 import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { albumSeriesStore } from '../stores/albumSeries.js';
+import { getSeriesService } from './SeriesService.js';
 
 class AuthServiceClass {
     constructor() {
@@ -42,8 +43,12 @@ class AuthServiceClass {
                 this._user = user;
                 this._ready = true;
 
-                // Initialize stores that depend on user ID
-                albumSeriesStore.init(db, user.uid);
+                // Initialize stores and services that depend on user ID
+                albumSeriesStore.setDb(db);
+                albumSeriesStore.setUserId(user.uid);
+
+                // Initialize SeriesService (it will also update store context)
+                getSeriesService(db, null, user.uid);
 
                 document.body.classList.add('authenticated');
                 this._resolveReady(user);

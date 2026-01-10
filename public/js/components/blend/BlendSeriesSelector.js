@@ -9,6 +9,7 @@
 
 import { getIcon } from '../Icons.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
+import { getSeriesService } from '../../services/SeriesService.js'
 import { AlbumCascade } from '../common/AlbumCascade.js'
 import { optimizedAlbumLoader } from '../../services/OptimizedAlbumLoader.js'
 
@@ -43,7 +44,11 @@ export class BlendSeriesSelector {
 
         try {
             if (this.selectedEntity === 'albums') {
-                await albumSeriesStore.loadFromFirestore()
+                const db = albumSeriesStore.getDb()
+                if (db) {
+                    const service = getSeriesService(db, null, albumSeriesStore.getUserId())
+                    await service.loadFromFirestore()
+                }
                 this.series = albumSeriesStore.getSeries()
             } else {
                 // Other entity types not yet implemented

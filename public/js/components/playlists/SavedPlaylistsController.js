@@ -13,6 +13,7 @@
 import { SeriesRepository } from '../../repositories/SeriesRepository.js'
 import { PlaylistRepository } from '../../repositories/PlaylistRepository.js'
 import { optimizedAlbumLoader } from '../../services/OptimizedAlbumLoader.js'
+import { getPlaylistsService } from '../../services/PlaylistsService.js'
 import { playlistsStore } from '../../stores/playlists.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { albumsStore } from '../../stores/albums.js'
@@ -179,7 +180,11 @@ export class SavedPlaylistsController {
      */
     async editBatch(seriesId, batchName, savedAt) {
         // Set context in store so PlaylistsView knows we are editing
-        playlistsStore.setEditMode(batchName, seriesId, savedAt)
+        // Use service to set edit mode
+        const { db } = await import('../../app.js')
+        const { cacheManager } = await import('../../cache/CacheManager.js')
+        const service = getPlaylistsService(db, cacheManager)
+        service.setEditMode(batchName, seriesId, savedAt)
 
         // Legacy PlaylistsController expects 'edit' param to trigger initialization
         const encodedName = encodeURIComponent(batchName)

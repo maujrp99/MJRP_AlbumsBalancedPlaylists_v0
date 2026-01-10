@@ -4,6 +4,7 @@ import { StagingAreaController } from '../components/home/StagingAreaController.
 import { StagingAreaRenderer } from '../views/renderers/StagingAreaRenderer.js';
 import { DiscographyRenderer } from '../views/renderers/DiscographyRenderer.js';
 import { albumSeriesStore } from '../stores/albumSeries.js';
+import { getSeriesService } from '../services/SeriesService.js';
 import { router } from '../router.js';
 import toast from '../components/Toast.js';
 
@@ -242,8 +243,14 @@ export class HomeController {
                 year: album.year
             }));
 
-            // Create the series
-            const newSeries = await albumSeriesStore.createSeries({
+            // Create the series via Service
+            const db = albumSeriesStore.getDb()
+            if (!db) {
+                toast.error('Database not initialized')
+                return
+            }
+            const service = getSeriesService(db, null, albumSeriesStore.getUserId())
+            const newSeries = await service.createSeries({
                 name: seriesName,
                 albumQueries: albumQueries,
                 status: 'pending'

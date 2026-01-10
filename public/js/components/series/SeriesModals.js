@@ -12,6 +12,7 @@
 import { dialogService } from '../../services/DialogService.js'
 import { SeriesEditModal } from './SeriesEditModal.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
+import { getSeriesService } from '../../services/SeriesService.js'
 import { toast } from '../Toast.js'
 
 export default class SeriesModals {
@@ -67,7 +68,13 @@ export default class SeriesModals {
 
         if (confirmed) {
             try {
-                await albumSeriesStore.deleteSeries(seriesId)
+                const db = albumSeriesStore.getDb()
+                if (!db) {
+                    toast.error('Database not initialized')
+                    return
+                }
+                const service = getSeriesService(db, null, albumSeriesStore.getUserId())
+                await service.deleteSeries(seriesId)
                 toast.success('Series deleted successfully')
                 this.onSeriesDeleted(seriesId)
             } catch (err) {

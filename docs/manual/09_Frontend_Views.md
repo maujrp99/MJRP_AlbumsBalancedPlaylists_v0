@@ -89,9 +89,34 @@ sequenceDiagram
 ### 2.3 Series Browser: `views/SeriesView.js` (V3)
 **Status**: `[ACTIVE]`
 **Pattern**: "Thin View" / Orchestrator
+**LOC**: ~350 (Refactored Sprint 19)
 
-*   **Purpose**: Browse albums grouped by Series.
-*   **Refactor Note**: This view was recently refactored to delegate almost all logic to `SeriesController` and sub-components (`SeriesHeader`, `SeriesToolbar`), making it much lighter than typical views.
+*   **purpose**: Browse albums grouped by Series.
+*   **Refactor Note**: This view delegates logic to specialized components and helpers to maintain a thin orchestrator role.
+*   **Sub-Components**:
+    *   `SeriesHeader`: Page title and action button.
+    *   `SeriesToolbar`: Filters (Artist, Year, Source), Search, and View Toggles.
+    *   `SeriesProgressBar`: Handles inline loading states.
+    *   `SeriesEmptyState`: Renders when no albums match the current scope.
+    *   `SeriesGridRenderer`: Responsible for the main content layout (Grid/List).
+*   **Helpers**:
+    *   `SeriesViewHandlers`: Extracts event handling logic from the main class.
+    *   `SeriesGridHelper`: Manages grid refresh and ranking hydration.
+
+### 2.4 Playlists History: `views/SavedPlaylistsView.js`
+**Status**: `[ACTIVE]`
+**Pattern**: Component-Driven View
+**LOC**: ~270 (Refactored Sprint 19)
+
+*   **Purpose**: Display saved playlists grouped by Series and Batches.
+*   **Key Behavior**:
+    1.  **Iterative Rendering**: Delegates rendering of complex data structures (Series -> Batches -> Playlists) to components.
+    2.  **Lazy Hydration**: Playlist tracks are rendered into hidden containers and toggled via safe DOM manipulation.
+*   **Sub-Components**:
+    *   `SavedPlaylistCard`: Renders a full batch with cascade thumbnails and batch-level actions.
+    *   `SavedPlaylistRow`: Renders individual playlists with track lists.
+    *   `SavedPlaylistActions`: Centralizes action buttons for series, batches, and rows.
+
 
 ---
 

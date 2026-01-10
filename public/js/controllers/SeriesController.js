@@ -13,6 +13,7 @@
 
 import { albumsStore } from '../stores/albums.js';
 import { albumSeriesStore } from '../stores/albumSeries.js';
+import { getSeriesService } from '../services/SeriesService.js';
 import { apiClient } from '../api/client.js';
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js';
 import { filterAlbums } from '../services/SeriesFilterService.js';
@@ -122,7 +123,11 @@ export default class SeriesController {
             let queriesToLoad = [];
 
             if (scopeType === 'ALL') {
-                await albumSeriesStore.loadFromFirestore();
+                const db = albumSeriesStore.getDb()
+                if (db) {
+                    const service = getSeriesService(db, null, albumSeriesStore.getUserId())
+                    await service.loadFromFirestore()
+                }
                 const allSeries = albumSeriesStore.getSeries();
                 allSeries.forEach(s => {
                     // ARCH-FIX: Attach _sourceSeriesId to query to preserve context
@@ -144,7 +149,11 @@ export default class SeriesController {
                     let retries = 0;
                     while (retries < 5) {
                         try {
-                            await albumSeriesStore.loadFromFirestore();
+                            const db = albumSeriesStore.getDb()
+                            if (db) {
+                                const service = getSeriesService(db, null, albumSeriesStore.getUserId())
+                                await service.loadFromFirestore()
+                            }
                             break;
                         } catch (err) {
                             if (err.message.includes('Repository not initialized')) {
