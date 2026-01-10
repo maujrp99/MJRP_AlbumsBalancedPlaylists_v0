@@ -18,6 +18,7 @@ import { BaseModal } from '../components/ui/BaseModal.js'
 import { TrackRow } from '../components/ui/TrackRow.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { dialogService } from '../services/DialogService.js'
+import { SavedPlaylistCard } from '../components/playlists/SavedPlaylistCard.js'
 
 export class SavedPlaylistsView extends BaseView {
     constructor() {
@@ -152,182 +153,21 @@ export class SavedPlaylistsView extends BaseView {
     }
 
     renderPlaylistBatch(batch, seriesId) {
-        const thumbnails = this.controller.getThumbnails(seriesId)
-        const playlists = batch.playlists
-        const batchName = batch.name
-        const createdAt = batch.savedAt
-
-        const playlistCount = playlists.length
-        const totalTracks = playlists.reduce((sum, p) => sum + (p.tracks?.length || 0), 0)
-        const albumCount = this.countUniqueAlbums(playlists)
-        const dateStr = new Date(createdAt).toLocaleDateString()
-
-        // Calculate total duration from all tracks
-        const allTracks = playlists.map(p => p.tracks || []).flat()
-        const totalDuration = this.formatDuration(allTracks)
-
-        // Cascade
-        // Use renderNode (we updated AlbumCascade to support it)
-        const cascadeNode = AlbumCascade.renderNode(thumbnails)
-
-        // Info Block
-        const infoBlock = SafeDOM.div({}, [
-            SafeDOM.h3({ className: 'font-bold text-xl text-white tracking-tight' }, batchName),
-            SafeDOM.div({ className: 'flex items-center gap-3 text-sm text-muted mt-1' }, [
-                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('List', 'w-3 h-3')), ` ${playlistCount} playlists`]),
-                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('Music', 'w-3 h-3')), ` ${totalTracks} tracks`]),
-                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('Disc', 'w-3 h-3')), ` ${albumCount} albums`]),
-                SafeDOM.span({ className: 'flex items-center gap-1 font-mono' }, [SafeDOM.fromHTML(getIcon('Clock', 'w-3 h-3')), ` ${totalDuration}`]),
-                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('Calendar', 'w-3 h-3')), ` ${dateStr}`])
-            ])
-        ])
-
-        // Buttons
-        const buttons = SafeDOM.div({ className: 'batch-card-buttons flex items-center gap-2' }, [
-            SafeDOM.button({
-                className: 'btn btn-secondary btn-sm flex items-center gap-2 hover:bg-white/20 transition-all shadow-md',
-                title: 'Edit this batch',
-                onClick: (e) => {
-                    e.stopPropagation()
-                    this.controller.editBatch(seriesId, batchName, createdAt)
-                }
-            }, [SafeDOM.fromHTML(getIcon('Edit', 'w-4 h-4')), ' Edit Batch']),
-            SafeDOM.button({
-                className: 'btn btn-ghost btn-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors',
-                title: 'Delete entire batch',
-                onClick: (e) => {
-                    e.stopPropagation()
-                    this.handleDeleteBatch(seriesId, batchName, playlistCount)
-                }
-            }, SafeDOM.fromHTML(getIcon('Trash', 'w-4 h-4')))
-        ])
-
-        // Collapse logic
-        const playlistsContainer = SafeDOM.div({ className: 'batch-playlists divide-y divide-white/5 bg-black/20 hidden' })
-        const iconSpan = SafeDOM.span({ className: 'collapse-icon text-muted transition-transform duration-200' })
-        iconSpan.appendChild(SafeDOM.fromHTML(getIcon('ChevronRight', 'w-5 h-5')))
-
-        const toggleCollapse = () => {
-            const isHidden = playlistsContainer.classList.contains('hidden')
-            if (isHidden) {
-                playlistsContainer.classList.remove('hidden')
-                iconSpan.style.transform = 'rotate(90deg)'
-                card.dataset.collapsed = 'false'
-            } else {
-                playlistsContainer.classList.add('hidden')
-                iconSpan.style.transform = 'rotate(0deg)'
-                card.dataset.collapsed = 'true'
-            }
-        }
-
-        const batchHeader = SafeDOM.div({
-            className: 'batch-header p-5 bg-gradient-to-r from-white/5 to-transparent border-b border-white/10 cursor-pointer',
-            onClick: toggleCollapse
-        }, [
-            SafeDOM.div({ className: 'flex items-center justify-between' }, [
-                SafeDOM.div({ className: 'flex items-center gap-4' }, [
-                    iconSpan,
-                    cascadeNode,
-                    infoBlock
-                ]),
-                buttons
-            ])
-        ])
-
-        // Playlists Rows
-        if (playlists.length > 0) {
-            playlists.forEach((p, idx) => {
-                playlistsContainer.appendChild(this.renderPlaylistRow(seriesId, p, idx))
-            })
-        } else {
-            playlistsContainer.appendChild(SafeDOM.div({
-                className: 'p-6 text-center text-muted italic'
-            }, 'No playlists in this batch'))
-        }
-
-        const card = SafeDOM.div({
-            className: 'batch-group-card bg-surface rounded-xl border border-white/10 overflow-hidden mb-6 transition-all duration-300 hover:border-brand-orange/30',
-            dataset: { seriesId, batchName, collapsed: 'true' }
-        }, [batchHeader, playlistsContainer])
-
-        return card
+        const thumbnails = this.controller.getThumbnails(seriesId);
+        const card = new SavedPlaylistCard({
+            batch,
+            seriesId,
+            thumbnails,
+            onEdit: (sid, name, date) => this.controller.editBatch(sid, name, date),
+            onDelete: (sid, name, count) => this.handleDeleteBatch(sid, name, count),
+            onOpenPlaylistModal: (sid, pid) => this.openPlaylistModal(sid, pid),
+            formatDuration: (tracks) => this.formatDuration(tracks),
+            countUniqueAlbums: (pls) => this.countUniqueAlbums(pls)
+        });
+        return card.render();
     }
 
-    renderPlaylistRow(seriesId, playlist, index) {
-        const trackCount = playlist.tracks?.length || 0
-        const duration = this.formatDuration(playlist.tracks || [])
-
-        // Row Content
-        const icon = SafeDOM.div({ className: 'w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-muted group-hover:text-brand-orange group-hover:bg-brand-orange/10 transition-colors' })
-        icon.appendChild(SafeDOM.fromHTML(getIcon('Disc', 'w-4 h-4')))
-
-        const info = SafeDOM.div({}, [
-            SafeDOM.div({ className: 'font-medium text-white group-hover:text-brand-orange transition-colors' }, playlist.name),
-            SafeDOM.div({ className: 'text-xs text-muted font-mono mt-0.5' }, `${trackCount} tracks • ${duration}`)
-        ])
-
-        const expandIcon = SafeDOM.span({ className: 'expand-icon text-muted transition-transform duration-200' })
-        expandIcon.appendChild(SafeDOM.fromHTML(getIcon('ChevronRight', 'w-4 h-4')))
-
-        const leftSide = SafeDOM.div({ className: 'flex items-center gap-4' }, [
-            expandIcon,
-            icon,
-            info
-        ])
-
-        const viewBtn = SafeDOM.button({
-            className: 'btn btn-ghost btn-sm text-muted hover:text-white',
-            title: 'View Details',
-            onClick: (e) => {
-                e.stopPropagation()
-                this.openPlaylistModal(seriesId, playlist.id)
-            }
-        }, SafeDOM.fromHTML(getIcon('Eye', 'w-4 h-4')))
-
-        const buttons = SafeDOM.div({ className: 'playlist-row-buttons flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200' }, [viewBtn])
-
-        // Tracks List
-        const tracksList = SafeDOM.div({ className: 'playlist-tracks-list hidden bg-black/30 pl-16 pr-4 py-2' })
-
-        // Lazy render tracks logic could be added here, but for now we render immediately
-        if (playlist.tracks && playlist.tracks.length > 0) {
-            playlist.tracks.forEach((t, i) => {
-                // TrackRow.render returns a Node
-                const row = TrackRow.render({
-                    track: t,
-                    index: i + 1,
-                    variant: 'detailed',
-                    playlistIndex: -1,
-                    trackIndex: i
-                })
-                tracksList.appendChild(row)
-            })
-        } else {
-            tracksList.appendChild(SafeDOM.div({ className: 'text-sm text-muted italic py-2' }, 'No tracks'))
-        }
-
-        const toggleTracks = () => {
-            const isHidden = tracksList.classList.contains('hidden')
-            if (isHidden) {
-                tracksList.classList.remove('hidden')
-                expandIcon.style.transform = 'rotate(90deg)'
-            } else {
-                tracksList.classList.add('hidden')
-                expandIcon.style.transform = 'rotate(0deg)'
-            }
-        }
-
-        const row = SafeDOM.div({
-            className: 'playlist-row p-4 flex items-center justify-between hover:bg-white/5 transition-colors group cursor-pointer',
-            onClick: toggleTracks,
-            dataset: { playlistId: playlist.id }
-        }, [leftSide, buttons])
-
-        return SafeDOM.div({
-            className: 'playlist-row-wrapper',
-            dataset: { playlistIndex: index }
-        }, [row, tracksList])
-    }
+    // renderPlaylistRow method removed - now handled by SavedPlaylistRow component via SavedPlaylistCard
 
     countUniqueAlbums(playlists) {
         const albumSet = new Set()

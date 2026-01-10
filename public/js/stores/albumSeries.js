@@ -3,6 +3,7 @@ import { cacheManager } from '../cache/CacheManager.js'
 import { userStore } from './UserStore.js'
 import { dataSyncService } from '../services/DataSyncService.js'
 import { globalProgress } from '../components/GlobalProgress.js'
+import { getSeriesService } from '../services/SeriesService.js'
 
 export class AlbumSeriesStore {
     constructor() {
@@ -134,42 +135,25 @@ export class AlbumSeriesStore {
     }
 
     /**
-     * Create new series
+     * Create new series via SeriesService
      * @param {Object} seriesData - Series data (name, albumQueries, etc.)
      * @returns {Promise<Object>} Created series
      */
     async createSeries(seriesData) {
-        if (!this.repository) {
+        if (!this.db) {
             throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
         }
 
-        const series = {
-            name: seriesData.name || 'Untitled Series',
-            albumQueries: seriesData.albumQueries || [],
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            status: seriesData.status || 'pending',
-            notes: seriesData.notes || ''
-        }
+        const service = getSeriesService(this.db, cacheManager, this.userId)
+        const series = await service.createSeries(seriesData)
 
-        globalProgress.start()
-        try {
-            // 1. Save to Firestore (source of truth)
-            const id = await this.repository.create(series)
-            series.id = id
+        // Update memory
+        this.series.unshift(series)
+        this.activeSeries = series
+        this.saveToLocalStorage()
+        this.notify()
 
-            // 2. Update memory
-            this.series.unshift(series)
-            this.activeSeries = series
-
-            // 3. Update localStorage cache
-            this.saveToLocalStorage()
-            this.notify()
-
-            return series
-        } finally {
-            globalProgress.finish()
-        }
+        return series
     }
 
     // ========== PERSISTENCE ==========
@@ -242,45 +226,38 @@ export class AlbumSeriesStore {
     }
 
     /**
-     * Update existing series
+     * Update existing series via SeriesService
      * @param {string} id - Series ID to update
      * @param {Object} updates - Fields to update
      * @returns {Promise<Object>} Updated series
      */
     async updateSeries(id, updates) {
-        if (!this.repository) {
+        if (!this.db) {
             throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
         }
 
-        globalProgress.start()
+        const index = this.series.findIndex(s => s.id === id)
+        if (index === -1) throw new Error('Series not found')
 
-        try {
-            const index = this.series.findIndex(s => s.id === id)
-            if (index === -1) throw new Error('Series not found')
+        const service = getSeriesService(this.db, cacheManager, this.userId)
+        await service.updateSeries(id, updates)
 
-            // 1. Update in Firestore FIRST (source of truth)
-            await this.repository.update(id, updates)
-
-            // 2. Update memory
-            const updatedSeries = {
-                ...this.series[index],
-                ...updates,
-                updatedAt: new Date()
-            }
-            this.series[index] = updatedSeries
-
-            if (this.activeSeries && this.activeSeries.id === id) {
-                this.activeSeries = updatedSeries
-            }
-
-            // 3. Update localStorage cache
-            this.saveToLocalStorage()
-            this.notify()
-
-            return updatedSeries
-        } finally {
-            globalProgress.finish()
+        // Update memory
+        const updatedSeries = {
+            ...this.series[index],
+            ...updates,
+            updatedAt: new Date()
         }
+        this.series[index] = updatedSeries
+
+        if (this.activeSeries && this.activeSeries.id === id) {
+            this.activeSeries = updatedSeries
+        }
+
+        this.saveToLocalStorage()
+        this.notify()
+
+        return updatedSeries
     }
 
     /**
@@ -425,36 +402,30 @@ export class AlbumSeriesStore {
     }
 
     /**
-     * Delete series
+     * Delete series via SeriesService
      * @param {string} id - Series ID to delete
      * @returns {Promise<void>}
      */
     async deleteSeries(id) {
-        if (!this.repository) {
+        if (!this.db) {
             throw new Error('[AlbumSeriesStore] Repository not initialized. Call init() first.')
         }
 
         const index = this.series.findIndex(s => s.id === id)
         if (index === -1) throw new Error('Series not found')
 
-        globalProgress.start()
-        try {
-            // 1. Delete from Firestore FIRST (source of truth)
-            await this.repository.delete(id)
+        const service = getSeriesService(this.db, cacheManager, this.userId)
+        await service.deleteSeries(id)
 
-            // 2. Update memory
-            this.series.splice(index, 1)
+        // Update memory
+        this.series.splice(index, 1)
 
-            if (this.activeSeries && this.activeSeries.id === id) {
-                this.activeSeries = null
-            }
-
-            // 3. Update localStorage cache
-            this.saveToLocalStorage()
-            this.notify()
-        } finally {
-            globalProgress.finish()
+        if (this.activeSeries && this.activeSeries.id === id) {
+            this.activeSeries = null
         }
+
+        this.saveToLocalStorage()
+        this.notify()
     }
 
     /**

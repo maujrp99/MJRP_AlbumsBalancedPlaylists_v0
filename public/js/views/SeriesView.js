@@ -30,6 +30,7 @@ import SeriesToolbar from '../components/series/SeriesToolbar.js';
 import SeriesGridRenderer from '../components/series/SeriesGridRenderer.js';
 import SeriesEventHandler from '../components/series/SeriesEventHandler.js';
 import SeriesModals from '../components/series/SeriesModals.js';
+import { SeriesEmptyState } from '../components/series/SeriesEmptyState.js';
 
 // Utilities (for filtering)
 // Utilities
@@ -424,21 +425,13 @@ export default class SeriesView extends BaseView {
         SafeDOM.clear(container);
 
         if (albumCount === 0 && !this.isLoading) {
-            const emptyState = SafeDOM.div({ className: 'empty-state text-center py-16 glass-panel' }, [
-                SafeDOM.div({ className: 'text-6xl mb-6 opacity-30' }, [
-                    SafeDOM.fromHTML(getIcon('Music', 'w-24 h-24 mx-auto'))
-                ]),
-                SafeDOM.h2({ className: 'text-2xl font-bold mb-2' }, 'No albums in library'),
-                SafeDOM.p({ className: 'text-muted mb-8' }, 'Create a series from the home page to get started'),
-                SafeDOM.button({
-                    className: 'btn btn-primary',
-                    onclick: () => window.location.href = '/home'
-                }, [
-                    SafeDOM.fromHTML(getIcon('ArrowLeft', 'w-4 h-4 mr-2')),
-                    ' Go to Home'
-                ])
-            ]);
-            container.appendChild(emptyState);
+            const emptyState = new SeriesEmptyState({
+                message: 'No albums in library',
+                subMessage: 'Create a series from the home page to get started',
+                ctaText: 'Go to Home',
+                ctaHref: '/home'
+            });
+            emptyState.mount(container);
         }
     }
 
