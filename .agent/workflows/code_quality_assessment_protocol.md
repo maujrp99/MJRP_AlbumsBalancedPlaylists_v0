@@ -19,6 +19,7 @@ Execute this protocol at the end of every sprint or major architectural mileston
 | **Modularization** | **Feature Coupling** | Cross-feature imports (e.g. Playlist -> Inventory internal) | **0** |
 | **SoC** | **Layer Violations** | View -> Repository or Controller -> DOM imports | **0** |
 | **Tech Health** | **Safe Sink Ratio** | Usage of `SafeDOM` vs `innerHTML` | 100% : 0% |
+| **Maintainability** | **God Files** | Files > 400 LOC | 0 |
 | **Backend Health** | **Route Thinness** | Routes > 50 LOC (Should delegate to Lib) | 0 |
 
 ## 3. Structural Stress Tests (The "Real Quality" Integrals)

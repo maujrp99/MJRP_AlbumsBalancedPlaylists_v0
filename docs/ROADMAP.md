@@ -10,6 +10,11 @@
 
 ## 🚧 Current Sprint
 
+### Sprint 17.9: Recipe Rebranding (Conceptual Alignment)
+**Goal**: Rename "Flavor" to "Recipe" to align with "Menu" metaphor and support future sharing.
+**Status**: 🚧 **IN PROGRESS**
+**Spec**: [sprint17.9-flavor-to-recipe/spec.md](technical/specs/sprint17.9-flavor-to-recipe/spec.md)
+
 ### Sprint 18: TBD
 **Goal**: TBD
 **Status**: 📋 **PLANNING**

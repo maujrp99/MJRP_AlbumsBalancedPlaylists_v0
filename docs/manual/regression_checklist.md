@@ -58,3 +58,4 @@
 npm test              # Unit Tests
 npm run test:e2e      # Browser Flows
 ```
+Use the agent browser for final confimation.

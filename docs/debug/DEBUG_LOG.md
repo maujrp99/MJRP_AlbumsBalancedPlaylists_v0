@@ -75,6 +75,23 @@
 
 ## Current Debugging Session
 
+### Issue #143: Regression Test Failures (Unrelated)
+**Status**: ⚠️ **OPEN**
+**Date**: 2026-01-10
+**Severity**: MEDIUM (Test Debt)
+**Type**: Automated Test Failure
+**Component**: `tests/`
+**Sprint**: 17.9
+
+#### Problem
+`npm test` reported 14 failing test files during Sprint 17.9 regression check.
+A grep search confirmed that none of the failing tests reference the modified code (`BlendFlavorCard` or "Flavor" strings), indicating these are likely pre-existing failures or unrelated environment issues (e.g., Router navigation loops in tests).
+
+#### Proposed Action
+Schedule a dedicated task to audit and fix the test suite.
+
+---
+
 ### Issue #142: Non-Electronic Albums Downgraded to EP (Pink Floyd)
 **Status**: ✅ **RESOLVED**
 **Date**: 2026-01-07

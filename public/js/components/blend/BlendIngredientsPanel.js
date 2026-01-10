@@ -3,7 +3,7 @@
  * 
  * Step 3: 🥗 Pick Your Ingredients
  * Parameter configuration (duration, output mode, ranking type, discovery mode)
- * Shows/hides options conditionally based on selected algorithm flavor
+ * Shows/hides options conditionally based on selected algorithm recipe
  * 
  * @module components/blend/BlendIngredientsPanel
  */
@@ -13,7 +13,7 @@ import { getIcon } from '../Icons.js'
 /**
  * Configuration for which ingredients each algorithm supports
  */
-const ALGORITHM_INGREDIENTS = {
+const ALGORITHM_RECIPES = {
     'mjrp-balanced-cascade': {
         duration: true,
         outputMode: false,      // Auto-split internally
@@ -61,7 +61,7 @@ export class BlendIngredientsPanel {
     constructor(opts = {}) {
         this.containerId = opts.containerId || 'blend-ingredients-panel'
         this.onConfigChange = opts.onConfigChange || (() => { })
-        this.selectedFlavor = opts.selectedFlavor || null
+        this.selectedRecipe = opts.selectedRecipe || null
         this.config = {
             duration: opts.duration || 60,
             outputMode: opts.outputMode || 'auto',
@@ -121,11 +121,11 @@ export class BlendIngredientsPanel {
     /**
      * Update selected flavor (called from parent view)
      */
-    setFlavor(flavor) {
-        this.selectedFlavor = flavor
-        // Auto-detect default N from flavor ID (e.g., 'top-5-popular' -> 5)
-        if (flavor && flavor.id) {
-            const match = flavor.id.match(/top-(\d+)/)
+    setRecipe(recipe) {
+        this.selectedRecipe = recipe
+        // Auto-detect default N from recipe ID (e.g., 'top-5-popular' -> 5)
+        if (recipe && recipe.id) {
+            const match = recipe.id.match(/top-(\d+)/)
             if (match) {
                 this.config.trackCount = parseInt(match[1])
             }
@@ -136,8 +136,8 @@ export class BlendIngredientsPanel {
      * Get ingredient visibility for current flavor
      */
     getIngredientConfig() {
-        const flavorId = this.selectedFlavor?.id
-        return ALGORITHM_INGREDIENTS[flavorId] || {
+        const recipeId = this.selectedRecipe?.id
+        return ALGORITHM_RECIPES[recipeId] || {
             groupingStrategy: true,
             outputMode: true,
             outputMode: true,

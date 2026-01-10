@@ -8,7 +8,7 @@
 
 import { MJRPBalancedCascadeAlgorithm } from './MJRPBalancedCascadeAlgorithm.js'
 // Top N algorithms for Blending Menu
-// Top N algorithms for Blending Menu
+// Top N algorithms for Blending Menu Recipes
 import { TopNAlgorithm } from './TopNAlgorithm.js'
 import { TopNPopularAlgorithm } from './TopNPopularAlgorithm.js'
 import { TopNAcclaimedAlgorithm } from './TopNAcclaimedAlgorithm.js'

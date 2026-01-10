@@ -4,17 +4,17 @@ This document provides a comprehensive analysis of the feature-specific UI compo
 
 ## 1. Blend Components (`components/blend/`)
 
-The Blend system is the core "Wizard" for creating playlists. It uses a stepwise approach (Series -> Flavor -> Ingredients).
+The Blend system is the core "Wizard" for creating playlists. It uses a stepwise approach (Series -> Recipe -> Ingredients).
 
 | Component | Responsibility | Dependencies | State Management |
 | :--- | :--- | :--- | :--- |
 | **`BlendSeriesSelector.js`** | Step 1: Selection of entity type (Albums/Artists) and specific Series to blend. Features a sophisticated cascade thumbnail display. | `AlbumCascade`, `OptimizedAlbumLoader`, `AlbumSeriesStore` | Manages `selectedEntity` and `selectedSeries`. Implements `preloadAllThumbnails()` for non-blocking UI updates. |
-| **`BlendFlavorCard.js`** | Step 2: Algorithm selection. Renders visual cards for strategies like 'Balanced Cascade', 'Round Robin', etc. | `Icons`, `AlgorithmRegistry` | Pure rendering of provided algorithms. Handles selection events. |
-| **`BlendIngredientsPanel.js`** | Step 3: Configuration. Dynamic form that shows/hides fields (Duration, Output Mode, Ranking Source) based on the selected Flavor's capabilities. | `Icons` | Complex configuration object `{ duration, outputMode, groupingStrategy, rankingType, discoveryMode }`. Normalizes config for service layer via `getConfig()`. |
+| **`BlendRecipeCard.js`** | Step 2: Recipe (Algorithm) selection. Renders visual cards for strategies like 'Balanced Cascade', 'Round Robin', etc. | `Icons`, `AlgorithmRegistry` | Pure rendering of provided algorithms. Handles selection events. |
+| **`BlendIngredientsPanel.js`** | Step 3: Configuration. Dynamic form that shows/hides fields (Duration, Output Mode, Ranking Source) based on the selected Recipe's capabilities. | `Icons` | Complex configuration object `{ duration, outputMode, groupingStrategy, rankingType, discoveryMode }`. Normalizes config for service layer via `getConfig()`. |
 
 ### Key Patterns
 *   **Wizard State**: Each component handles a specific stage of the `BlendingMenuView`.
-*   **Dynamic Configuration**: `BlendIngredientsPanel` uses a static `ALGORITHM_INGREDIENTS` map to toggle UI controls based on the selected algorithm, ensuring users only see relevant options.
+*   **Dynamic Configuration**: `BlendIngredientsPanel` uses a static `ALGORITHM_RECIPES` map to toggle UI controls based on the selected algorithm, ensuring users only see relevant options.
 *   **Thumbnail Caching**: `BlendSeriesSelector` implements an aggressive preload strategy (`preloadAllThumbnails`) to fetch album art for series visualization without blocking the UI.
 
 ---
@@ -27,7 +27,7 @@ These components handle the visualization, management, and export of generated p
 | :--- | :--- | :--- | :--- |
 | **`PlaylistGrid.js`** | High-level container for rendering a grid of `PlaylistCard`s. | `TrackRow`, `Icons` | Responsive grid layout (1/2/3 cols). Handles "Batch Name" formatting logic (e.g., "1. Batch Name - Playlist Title"). |
 | **`PlaylistsGridRenderer.js`** | Stateless rendering logic for the entire Playlists View. Decouples structure from state. | `PlaylistGrid`, `RegeneratePanel` | Renders Empty States, Initial Settings Form, Export Toolbar, and the main Grid. Pure functional rendering. |
-| **`RegeneratePanel.js`** | Collapsible panel allowing users to "Re-roll" specific playlists or the entire batch with new settings. | `BlendFlavorCard`, `BlendIngredientsPanel` | reuses the Blend wizard components in a condensed, collapsible inline inspector pane. |
+| **`RegeneratePanel.js`** | Collapsible panel allowing users to "Re-roll" specific playlists or the entire batch with new settings. | `BlendRecipeCard`, `BlendIngredientsPanel` | reuses the Blend wizard components in a condensed, collapsible inline inspector pane. |
 | **`PlaylistExportToolbar.js`** | Floating/Fixed toolbar for high-level actions (Save, Export to Spotify/Apple). | `Component` | Visual status indicator ("Ready to Export") and action buttons. |
 | **`SavedPlaylistsController.js`** | Business logic for the "Saved Playlists" view (History). | `SeriesRepository`, `PlaylistRepository` | Groups playlists by "Batch", handles lazy loading of series thumbnails, and manages Delete/Edit workflows. |
 | **`TrackItem.js`** | Visual row for a single track. | `Icons` | **Smart Badging**: Left badge = Primary Ranking (used for sort), Right badge = Secondary. Supports drag handles. |
@@ -56,7 +56,7 @@ sequenceDiagram
 
 ### Key Patterns
 *   **Renderer Pattern**: `PlaylistsGridRenderer` separates markup generation from the View's life-cycle, making the large `PlaylistsView.js` more manageable.
-*   **Component Reuse**: `RegeneratePanel` directly imports `BlendFlavorCard` and `BlendIngredientsPanel`, ensuring that the "Reconfigure" UI matches the "Create" UI exactly.
+*   **Component Reuse**: `RegeneratePanel` directly imports `BlendRecipeCard` and `BlendIngredientsPanel`, ensuring that the "Reconfigure" UI matches the "Create" UI exactly.
 *   **Dual Ranking Visualization**: `TrackItem.js` dynamically swaps the position of "Spotify" and "Acclaim" badges based on which metric was used to generate the playlist.
 
 ---

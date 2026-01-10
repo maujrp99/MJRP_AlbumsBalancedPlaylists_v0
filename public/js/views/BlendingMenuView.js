@@ -6,7 +6,7 @@
  * 
  * Steps:
  * 1. 🍹 Choose Your Blend - Entity/Series selection
- * 2. 🍬 Choose Your Flavor - Algorithm selection
+ * 2. 🍬 Choose Your Recipe - Algorithm selection
  * 3. 🥗 Pick Your Ingredients - Parameters
  * 4. 🎛️ Blend It! - Generate button (dynamic CTA)
  * 
@@ -17,7 +17,7 @@ import { BaseView } from './BaseView.js'
 import { getIcon } from '../components/Icons.js'
 import { escapeHtml } from '../utils/stringUtils.js'
 import { BlendSeriesSelector } from '../components/blend/BlendSeriesSelector.js'
-import { BlendFlavorCard } from '../components/blend/BlendFlavorCard.js'
+import { BlendRecipeCard } from '../components/blend/BlendRecipeCard.js'
 import { BlendIngredientsPanel } from '../components/blend/BlendIngredientsPanel.js'
 import { blendingController } from '../controllers/BlendingController.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
@@ -26,12 +26,12 @@ export class BlendingMenuView extends BaseView {
     constructor() {
         super()
         this.seriesSelector = null
-        this.flavorCard = null
+        this.recipeCard = null
         this.ingredientsPanel = null
 
         // State
         this.selectedSeries = null
-        this.selectedFlavor = null
+        this.selectedRecipe = null
         this.config = {
             duration: 60,
             outputMode: 'auto',
@@ -44,7 +44,7 @@ export class BlendingMenuView extends BaseView {
     async render(params) {
         // Progressive disclosure state
         const step1Complete = !!this.selectedSeries
-        const step2Complete = !!this.selectedFlavor
+        const step2Complete = !!this.selectedRecipe
         const algorithmHasParams = true
         const step3Skipped = false
         const step3Complete = step2Complete && this.config.duration !== null
@@ -79,21 +79,21 @@ export class BlendingMenuView extends BaseView {
         step1.appendChild(SafeDOM.div({ id: 'blend-series-selector' }))
         container.appendChild(step1)
 
-        // Step 2: Choose Your Flavor
+        // Step 2: Choose Your Recipe
         if (step1Complete) {
             const step2 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 mb-6 animate-fadeIn' })
             step2.appendChild(SafeDOM.div({ className: 'flex items-center gap-3 mb-4' }, [
                 SafeDOM.span({ className: 'text-2xl' }, '🍬'),
-                SafeDOM.h2({ className: 'text-xl font-bold' }, 'Choose Your Flavor'),
+                SafeDOM.h2({ className: 'text-xl font-bold' }, 'Choose Your Recipe'),
                 SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, 'Step 2')
             ]))
-            step2.appendChild(SafeDOM.div({ id: 'blend-flavor-cards' }))
+            step2.appendChild(SafeDOM.div({ id: 'blend-recipe-cards' }))
             container.appendChild(step2)
         } else {
             const step2 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 mb-6 opacity-40' })
             step2.appendChild(SafeDOM.div({ className: 'flex items-center gap-3' }, [
                 SafeDOM.span({ className: 'text-2xl' }, '🔒'),
-                SafeDOM.h2({ className: 'text-xl font-medium text-muted' }, 'Choose Your Flavor'),
+                SafeDOM.h2({ className: 'text-xl font-medium text-muted' }, 'Choose Your Recipe'),
                 SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, 'Step 2')
             ]))
             step2.appendChild(SafeDOM.p({ className: 'text-sm text-muted mt-2' }, 'Complete Step 1 to unlock'))
@@ -147,7 +147,7 @@ export class BlendingMenuView extends BaseView {
     renderStepper() {
         const steps = [
             { num: 1, label: 'Blend', icon: '🍹', done: !!this.selectedSeries },
-            { num: 2, label: 'Flavor', icon: '🍬', done: !!this.selectedFlavor },
+            { num: 2, label: 'Recipe', icon: '🍬', done: !!this.selectedRecipe },
             { num: 3, label: 'Ingredients', icon: '🥗', done: this.config.duration !== null },
             { num: 4, label: 'Ready!', icon: '🎛️', done: false }
         ]
@@ -155,8 +155,8 @@ export class BlendingMenuView extends BaseView {
         // Determine current step
         let currentStep = 1
         if (this.selectedSeries) currentStep = 2
-        if (this.selectedFlavor) currentStep = 3
-        if (this.selectedSeries && this.selectedFlavor) currentStep = 4
+        if (this.selectedRecipe) currentStep = 3
+        if (this.selectedSeries && this.selectedRecipe) currentStep = 4
 
         return steps.map((step, idx) => {
             const isActive = step.num === currentStep
@@ -200,14 +200,14 @@ export class BlendingMenuView extends BaseView {
         const entityLabel = entityType.charAt(0).toUpperCase() + entityType.slice(1, -1) // albums -> Album
         const isMultiple = this.config.outputMode === 'multiple'
         const plural = isMultiple ? 's' : ''
-        const isReady = this.selectedSeries && this.selectedFlavor
+        const isReady = this.selectedSeries && this.selectedRecipe
 
         return `
             <div class="space-y-4">
                 ${!isReady ? `
                     <p class="text-muted text-sm">
                         ${!this.selectedSeries ? '👈 Select a series' : ''}
-                        ${this.selectedSeries && !this.selectedFlavor ? '👈 Select a flavor' : ''}
+                        ${this.selectedSeries && !this.selectedRecipe ? '👈 Select a recipe' : ''}
                     </p>
                 ` : ''}
                 
@@ -225,7 +225,7 @@ export class BlendingMenuView extends BaseView {
 
                 ${isReady ? `
                     <p class="text-sm text-muted">
-                        Using <strong>${escapeHtml(this.selectedFlavor.name)}</strong> on 
+                        Using <strong>${escapeHtml(this.selectedRecipe.name)}</strong> on 
                         <strong>${escapeHtml(this.selectedSeries.name)}</strong>
                         (${this.config.duration} min, ${this.config.outputMode} mode)
                     </p>
@@ -244,9 +244,9 @@ export class BlendingMenuView extends BaseView {
             }
         })
 
-        this.flavorCard = new BlendFlavorCard({
-            onFlavorSelect: (flavor) => {
-                this.selectedFlavor = flavor
+        this.recipeCard = new BlendRecipeCard({
+            onRecipeSelect: (recipe) => {
+                this.selectedRecipe = recipe
                 this.fullUpdate()
             }
         })
@@ -261,7 +261,7 @@ export class BlendingMenuView extends BaseView {
         // Render components
         this.seriesSelector.render()
         await this.seriesSelector.loadSeries()
-        this.flavorCard.render()
+        this.recipeCard.render()
         this.ingredientsPanel.render()
 
         // Attach generate button listener
@@ -284,10 +284,10 @@ export class BlendingMenuView extends BaseView {
 
         // Re-mount components
         this.seriesSelector.render()
-        this.flavorCard.render()
+        this.recipeCard.render()
 
-        // Pass selected flavor to ingredients panel for conditional rendering
-        this.ingredientsPanel.setFlavor(this.selectedFlavor)
+        // Pass selected recipe to ingredients panel for conditional rendering
+        this.ingredientsPanel.setRecipe(this.selectedRecipe)
         this.ingredientsPanel.render()
 
         // Attach listeners
@@ -335,7 +335,7 @@ export class BlendingMenuView extends BaseView {
      * Handle playlist generation
      */
     async handleGenerate() {
-        if (!this.selectedSeries || !this.selectedFlavor) return
+        if (!this.selectedSeries || !this.selectedRecipe) return
 
         this.isGenerating = true
         this.updateGenerateButton()
@@ -347,7 +347,7 @@ export class BlendingMenuView extends BaseView {
             // Build config from flavor + ingredients
             const ingredientsConfig = this.ingredientsPanel.getConfig()
             const config = {
-                algorithmId: this.selectedFlavor.id,
+                algorithmId: this.selectedRecipe.id,
                 ...ingredientsConfig
             }
 
