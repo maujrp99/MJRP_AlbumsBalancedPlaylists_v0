@@ -20,12 +20,14 @@
 - [x] Refactor `server/routes/albums.js`: Replace `/generate` logic <!-- id: 10 -->
 
 ## 4. Frontend Refactor (Spotify Export)
-- [/] Create `public/js/services/SpotifyExportService.js` <!-- id: 13 -->
-- [/] Move `searchSpotify` logic to Service <!-- id: 14 -->
-- [/] Move `createPlaylist` logic to Service <!-- id: 15 -->
-- [/] Move `addTracks` logic to Service <!-- id: 16 -->
-- [ ] Refactor `SpotifyExportModal.js` to use Service <!-- id: 17 -->
+- [x] Create `public/js/services/SpotifyExportService.js` <!-- id: 13 -->
+- [x] Move `searchSpotify` logic to Service <!-- id: 14 -->
+- [x] Move `createPlaylist` logic to Service <!-- id: 15 -->
+- [x] Move `addTracks` logic to Service <!-- id: 16 -->
+- [x] Refactor `SpotifyExportModal.js` to use Service <!-- id: 17 -->
 
 ## 5. Verification
 - [x] **Code Quality Check**: Verify `albums.js` LOC < 60 <!-- id: 11 -->
 - [x] **Manual Test**: Generate an album successfully <!-- id: 12 -->
+- [x] **Code Quality Check**: Verify `SpotifyExportModal.js` LOC reduction (511 -> 405) <!-- id: 18 -->
+- [ ] **Manual Test**: Export a playlist to Spotify <!-- id: 19 -->

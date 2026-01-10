@@ -72,7 +72,7 @@ export class BlendingMenuView extends BaseView {
         const step1 = SafeDOM.section({ className: 'glass-panel rounded-2xl p-6 mb-6' })
         const step1Header = SafeDOM.div({ className: 'flex items-center gap-3 mb-4' }, [
             SafeDOM.span({ className: 'text-2xl' }, '🍹'),
-            SafeDOM.h2({ className: 'text-xl font-bold' }, 'Choose Your Blend'),
+            SafeDOM.h2({ className: 'text-xl font-bold' }, 'Choose Your Mix'),
             SafeDOM.span({ className: 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full' }, 'Step 1')
         ])
         step1.appendChild(step1Header)
@@ -146,10 +146,10 @@ export class BlendingMenuView extends BaseView {
      */
     renderStepper() {
         const steps = [
-            { num: 1, label: 'Blend', icon: '🍹', done: !!this.selectedSeries },
+            { num: 1, label: 'Mix', icon: '🍹', done: !!this.selectedSeries },
             { num: 2, label: 'Recipe', icon: '🍬', done: !!this.selectedRecipe },
             { num: 3, label: 'Ingredients', icon: '🥗', done: this.config.duration !== null },
-            { num: 4, label: 'Ready!', icon: '🎛️', done: false }
+            { num: 4, label: 'Blend it! Ready!', icon: '🎛️', done: false }
         ]
 
         // Determine current step
