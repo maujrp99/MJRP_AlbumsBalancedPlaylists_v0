@@ -1750,7 +1750,7 @@ TypeError: Cannot read properties of null (reading 'render') at Router.renderVie
 - Unified localStorage/cookies (no session splits)
 - Same experience as production
 
-**Setup Guide**: [LOCAL_DOMAIN_SETUP.md](../onboarding/LOCAL_DOMAIN_SETUP.md)
+**Setup Guide**: *(Guide Removed - Local Domain Setup Abandoned)*
 
 **Files Modified**: `vite.config.js`, new doc created
 
