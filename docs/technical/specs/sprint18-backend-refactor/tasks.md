@@ -19,6 +19,13 @@
 - [x] Refactor `server/routes/albums.js`: Replace `/enrich-album` logic <!-- id: 9 -->
 - [x] Refactor `server/routes/albums.js`: Replace `/generate` logic <!-- id: 10 -->
 
-## 4. Verification
+## 4. Frontend Refactor (Spotify Export)
+- [/] Create `public/js/services/SpotifyExportService.js` <!-- id: 13 -->
+- [/] Move `searchSpotify` logic to Service <!-- id: 14 -->
+- [/] Move `createPlaylist` logic to Service <!-- id: 15 -->
+- [/] Move `addTracks` logic to Service <!-- id: 16 -->
+- [ ] Refactor `SpotifyExportModal.js` to use Service <!-- id: 17 -->
+
+## 5. Verification
 - [x] **Code Quality Check**: Verify `albums.js` LOC < 60 <!-- id: 11 -->
 - [x] **Manual Test**: Generate an album successfully <!-- id: 12 -->

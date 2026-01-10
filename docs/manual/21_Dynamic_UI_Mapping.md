@@ -68,9 +68,9 @@
 *   **Step 1: Blend (Series)**
     1.  **[UI]** `BlendSeriesSelector` renders cards.
     2.  **[FN]** Select Series -> `selectedSeries` set -> Unlock Step 2.
-*   **Step 2: Flavor (Algorithm)**
-    1.  **[UI]** `BlendFlavorCard` renders options (Balanced/Spotify/BEA).
-    2.  **[FN]** Select Flavor -> `selectedFlavor` set (e.g., `mjrp-balanced-cascade`).
+*   **Step 2: Recipe (Algorithm)**
+    1.  **[UI]** `BlendRecipeCard` renders options (Balanced/Spotify/BEA).
+    2.  **[FN]** Select Recipe -> `selectedRecipe` set (e.g., `mjrp-balanced-cascade`).
 *   **Step 3: Ingredients (Config)**
     1.  **[UI]** `BlendIngredientsPanel` renders inputs (Duration, Mode).
     2.  **[FN]** `onConfigChange` updates `this.config`.

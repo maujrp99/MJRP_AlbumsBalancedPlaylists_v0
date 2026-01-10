@@ -1,7 +1,7 @@
 # Implementation Plan - Sprint 18: Backend Refactor (Track B)
 
-**Goal**: Decouple `albums.js` God Route to improve "Backend Health" score.
-**Scope**: Server-side only.
+**Goal**: Decouple `albums.js` God Route AND Refactor `SpotifyExportModal.js`.
+**Scope**: Server-side & Frontend.
 
 **Branch**: `feature/sprint-18-recipes-and-refactor` (Shared)
 
@@ -37,6 +37,22 @@
       res.json(result);
   });
   ```
+
+## Track C: Frontend Refactor (Spotify Export)
+
+### 4. New Service: SpotifyExportService
+#### [NEW] [public/js/services/SpotifyExportService.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/services/SpotifyExportService.js)
+- **Responsibility**: Handle Spotify API interaction state machine (Search -> Create -> Add).
+- **Methods**:
+    - `exportPlaylist(name, tracks, callbacks)`: Handles the entire workflow.
+    - `_findTrack(artist, title)`
+    - `_createPlaylist(userId, name)`
+    - `_addTracks(playlistId, uris)`
+
+### 5. Component Slimming
+#### [MODIFY] [public/js/components/SpotifyExportModal.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/SpotifyExportModal.js)
+- **Change**: Delegating logic to `SpotifyExportService`.
+- **Outcome**: Focus purely on UI Rendering (Progress updates). LOC reduction > 50%.
 
 ## Verification Plan
 1.  **Manual Test**: Check `docs/debug/DEBUG_LOG.md` for historical test cases.

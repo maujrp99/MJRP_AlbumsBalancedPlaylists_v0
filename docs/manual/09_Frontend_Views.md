@@ -108,14 +108,14 @@ stateDiagram-v2
         VALIDATING --> READY: Thumbnails Loaded
     }
     
-    SELECTION --> FLAVOR: Next Step
+    SELECTION --> RECIPE: Next Step
     
-    state FLAVOR {
+    state RECIPE {
         [*] --> BROWSING
         BROWSING --> SELECTED: Algorithm Picked
     }
     
-    FLAVOR --> INGREDIENTS: Next Step
+    RECIPE --> INGREDIENTS: Next Step
     
     state INGREDIENTS {
         [*] --> CONFIGURING
