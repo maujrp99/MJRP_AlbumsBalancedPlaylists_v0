@@ -1,3 +1,7 @@
+---
+description: Onboarding context for AI Agents
+---
+
 # Context Loader Protocol (Onboarding v2)
 
 **Purpose**: Establishing the "Mental Model" for Agents and Humans before starting work.

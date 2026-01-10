@@ -10,12 +10,9 @@
 
 ## 🚧 Current Sprint
 
-### Sprint 17: Architectural Modularization (Frontend Specialization)
-**Goal**: Decouple "Thick Client" Monoliths into distinct Controllers and Services to improve maintainability using "Thin Orchestrator" pattern.
-**Duration**: 1 week
-**Priority**: High
+### Sprint 18: TBD
+**Goal**: TBD
 **Status**: 📋 **PLANNING**
-**Spec**: TBD
 
 
 
@@ -23,24 +20,32 @@
 
 ## 🔮 Upcoming Sprints
 
-### Sprint 17.75: Classification Modularization (Jan 2026)
-**Goal**: Extract album classification heuristics from `AlbumSearchService` into modular strategy classes (ARCH-18).
-**Duration**: 2-3 days
-**Priority**: P2 (Tech Debt)
-**Status**: 📋 **PLANNING**
-**Spec**: [sprint17.75-classification-modularization/spec.md](technical/specs/sprint17.75-classification-modularization/spec.md)
+(See backlog)
 
-**Deliverables**:
-- [ ] `AlbumTypeClassifier.js` - Orchestrator using Chain of Responsibility pattern
-- [ ] `classification/` folder with 5 strategy classes (TitleKeyword, AIWhitelist, AppleMetadata, ElectronicHeuristics, GenericTrackCount)
-- [ ] Remove `_classifyWithAI()` from `AlbumSearchService.js`
 
-**Why**: The `_classifyWithAI` function has grown to ~100+ LOC with 5+ inline heuristics, violating Single Responsibility Principle. Recent fixes (Singles appearing in Studio filter) required modifying deeply nested conditionals. Modularizing into strategies will improve maintainability and testability.
 
 
 ---
 
 ## ✅ Completed Sprints (Reverse Chronological)
+
+### Sprint 17.75: Classification Modularization (Jan 2026) - DONE ✅
+**Delivered**: 2026-01-10 (v3.17.5)
+**Goal**: Extract album classification heuristics from `AlbumSearchService` into modular strategy classes (ARCH-18).
+**Deliverables**:
+- ✅ **AlbumTypeClassifier.js**: Orchestrator using Chain of Responsibility pattern.
+- ✅ **Modular Strategies**: TitleKeyword, AIWhitelist, AppleMetadata.
+- ✅ **Refactored Service**: `AlbumSearchService` uses injected strategies.
+
+---
+
+### Sprint 17: Architectural Modularization (Frontend Specialization) - DONE ✅
+**Delivered**: 2026-01-08 (v3.17.0)
+**Goal**: Decouple "Thick Client" Monoliths into distinct Controllers and Services to improve maintainability using "Thin Orchestrator" pattern.
+**Deliverables**:
+- ✅ **SeriesView Refactor**: Converted to Thin Orchestrator (ARCH-16).
+- ✅ **MusicKit Modularization**: Split God Service (ARCH-15).
+- ✅ **Variable Top N Strategy**: Patternized strategies (ARCH-17).
 
 ### Sprint 16: Cleanup & Batch Naming Feature (Jan 2026) - DONE ✅
 **Delivered**: 2026-01-03 (v3.16.0)
