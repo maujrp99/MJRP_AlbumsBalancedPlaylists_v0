@@ -282,19 +282,19 @@ Once raw data is gathered, it is merged via a **Borda Count Variant**:
 *   [**11_Frontend_Components_Root.md**](manual/11_Frontend_Components_Root.md) - Component Overview.
 *   [**12_Frontend_Components_Core.md**](manual/12_Frontend_Components_Core.md) - Core UI.
 *   [**13_Frontend_Components_Shared.md**](manual/13_Frontend_Components_Shared.md) - Shared UI.
-*   [**14_Frontend_Components_Features.md**](manual/14_Frontend_Components_Features.md) - Feature Components.
-*   [**15_Frontend_Complexity.md**](manual/15_Frontend_Complexity.md) - Complex Interactions.
-*   [**16_Frontend_Search_Ranking.md**](manual/16_Frontend_Search_Ranking.md) - Search Logic.
+*   [**14_Frontend_Components_Feature_Map.md**](manual/14_Frontend_Components_Feature_Map.md) - Feature Components.
+*   [**29_Frontend_Technical_Debt_Analysis.md**](manual/29_Frontend_Technical_Debt_Analysis.md) - Complex Interactions.
+*   [**16_Frontend_Components_Search_and_Ranking.md**](manual/16_Frontend_Components_Search_and_Ranking.md) - Search Logic.
 
 ## 4. Logic & Services
 *   [**17_Frontend_Services.md**](manual/17_Frontend_Services.md) - API Services.
 *   [**18_Frontend_Logic_Core.md**](manual/18_Frontend_Logic_Core.md) - Business Logic.
 *   [**20_MusicKit_Internals.md**](manual/20_MusicKit_Internals.md) - Apple Music Integration.
 *   [**22_Album_Search_Engine.md**](manual/22_Album_Search_Engine.md) - Search Algorithm.
-*   [**28_Frontend_Infra_Utilities.md**](manual/28_Frontend_Infra_Utilities.md) - Utilities.
+*   [**07b_Frontend_Utilities_and_Workers.md**](manual/07b_Frontend_Utilities_and_Workers.md) - Utilities.
 
 ## 5. Shared & Legacy
 *   [**23_Shared_Code.md**](manual/23_Shared_Code.md) - Isomorphic Code.
 *   [**24_Test_Suite.md**](manual/24_Test_Suite.md) - Testing Infrastructure.
-*   [**25_Legacy_Analysis.md**](manual/25_Legacy_Analysis.md) - Historic Context.
-*   [**30_Component_Reference.md**](manual/30_Component_Reference.md) - Component API Reference.
+*   [**98_Archived_Legacy_Analysis.md**](manual/98_Archived_Legacy_Analysis.md) - Historic Context.
+*   [**99_Frontend_Component_Reference_Sheet.md**](manual/99_Frontend_Component_Reference_Sheet.md) - Component API Reference.

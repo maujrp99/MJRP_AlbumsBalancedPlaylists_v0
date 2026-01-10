@@ -191,15 +191,15 @@ npm run test:e2e
 
 ### Current Status (Transiente)
 - [DEBUG_LOG.md](../debug/DEBUG_LOG.md) - Open/resolved issues
-- [CHANGELOG.md](../CHANGELOG.md) - Development history (sprints, UAT issues/fixes, architectural changes, refactors, new designs)
+- [CHANGELOG.md](../CHANGELOG.md) - Development history
 
 ### Deep Dive (Permanente)
-- [ARCHITECTURE.md](../ARCHITECTURE.md) - Technical architecture
-- [data_flow_architecture.md](../technical/data_flow_architecture.md) - Data flows
+- [System Architecture](../manual/01_System_Architecture.md) - Technical architecture
+- [Data Infrastructure](../manual/07_Frontend_Data_Infra.md) - Data flows & Persistence
 
 ### Test Artifacts
 - [test/e2e/README.md](../../test/e2e/README.md) - Puppeteer framework setup
-- [test_specification.md](../../artifacts/test_specification.md) - Complete test spec
+- [Test Suite Audit](../manual/24_Test_Suite.md) - Analysis of the current test suite
 - [Test Results](../../test/e2e/screenshots/) - Evidence screenshots
 
 ---
@@ -207,7 +207,7 @@ npm run test:e2e
 ## Part 7: Test Artifacts & Evidence
 
 ### Test Specifications
-- **Location**: `artifacts/test_specification.md`
+- **Location**: See `test/e2e/README.md` and `docs/manual/24_Test_Suite.md`.
 - **Contents**: Navigation scenarios, User Stories, ACs, TCs
 - **Ownership**: QA Engineer maintains
 

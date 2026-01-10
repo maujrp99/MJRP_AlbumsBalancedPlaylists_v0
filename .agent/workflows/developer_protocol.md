@@ -2,19 +2,25 @@
 description: Golden rules for development
 ---
 
-### PROJECT CONSTITUTION
-> [!IMPORTANT]
-> **ALWAYS** follow the Project Constitution defined in `docs/CONSTITUTION.md`.
-> It defines the Core Principles for User-Centric Quality, Clean Code, Documentation, and Testing.
-> Follow clean code and clean architecture concepts and guidelines of Robert Cecil Martin books
+# General Development Protocol
 
+1. **Context & Planning**
+   - [ ] Check for SDD files (`spec.md`, `plan.md`, `task.md`) OR `implementation_plan.md`.
+   - [ ] **Missing Docs?**: Ask the user: "Do we need an SDD for this?"
+   - [ ] Create/Update the plan if required.
+   - [ ] Check `docs/CONSTITUTION.md` for alignment.
 
-### GOLDEN RULES
-1. **Context First**: Always ask if you have full project context and what is the full context of the demand.
-2. **Docs Verification**: Read carefully all documentation and point out contradictions.
-3. > ***Implement always seeking to modularize the logic of the backend and componetize the functionalities of the frontend.
-4. **Spec-Driven**: For complex features, check and ask if it needs to apply the SDD Protocols/SDD-Full-protocol.md
-5. **Documentation Sync**: After implementing a feature or fix, always update the documentation following `Documentation protocols/post-implementation-docs.md.
-6. **Debug Traceability**: Always log failed attempts and solutions in the debug log following debug_protocol.md.
-7. **User Validation**: Never mark asfixed or done, while human user do not confirm it is really ok.
-8. **Never break a working feature*: Ensure that new implementation (fixes and features) do not break existing functionalities if it was not requested.
+2. **Execution (SDD)**
+   - [ ] If strictly new feature -> Check `specs/`.
+   - [ ] Implement changes (Modular/Componentized). Follow the defined architecture standards and design patters.
+
+3. **Verification**
+   - [ ] Run Tests (`npm test`).
+   - [ ] Verify functionality (Evidence required).
+
+4. **Documentation Sync**
+   - [ ] Run `post-implementation-docs` workflow.
+
+5. **Completion**
+   - [ ] Log in `DEBUG_LOG.md` (if bug fix).
+   - [ ] Request User Review.

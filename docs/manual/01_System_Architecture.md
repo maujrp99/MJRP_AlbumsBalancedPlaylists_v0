@@ -1,6 +1,6 @@
 # System Architecture & Design Patterns
 
-> **[⬅️ Back to Reference Guide](../MJRP_Album_Blender_Ref_Guide.md)**
+> **[⬅️ Back to Reference Guide Index](00_MJRP_Album_Blender_Ref_Guide_Index.md)**
 
 > **Master Map**: This document provides the holistic "Big Picture" of the MJRP codebase. It consolidates architectural decisions, design patterns, data flows, and project structure into a single source of truth.
 

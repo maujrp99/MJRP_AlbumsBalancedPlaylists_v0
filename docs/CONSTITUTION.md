@@ -23,7 +23,7 @@ We favor simplicity and standard web technologies over complex framework lock-in
 
 ### III. Documentation First
 Documentation is a living part of the codebase, not an afterthought.
-- **Single Source of Truth**: `ARCHITECTURE.md`, `ROADMAP.md`, and `technical/devops/DEVOPS_GUIDE.md` must reflect reality.
+- **Single Source of Truth**: `docs/manual/01_System_Architecture.md`, `ROADMAP.md`, and `manual/00_Deployment_and_Setup.md` must reflect reality.
 - **Traceability**: Every bug fix requires an entry in `DEBUG_LOG.md`.
 - **Planning**: No code is written without an `implementation_plan.md` or `Implementation Guide` approved by the user.
 - **Issues ONLY in DEBUG_LOG**: Bug tracking, known issues, and investigation notes MUST be in `docs/debug/DEBUG_LOG.md`. Never add "Known Issues" sections to architecture or technical docs.

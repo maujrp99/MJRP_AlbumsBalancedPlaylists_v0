@@ -7,7 +7,7 @@
 ---
 
 ## 🎨 Design Philosophy: "Nebula" Theme
-> **See Also**: [Product Vision](../MJRP_PRODUCT_VISION.md) for the "Why" behind the design.
+> **See Also**: [Product Vision](../MJRP_Album_Blender_Prod_Vision.md) for the "Why" behind the design.
 
 We are building a **premium, immersive music curation experience**.
 - **Aesthetics**: Dark mode, Glassmorphism, Vibrant Gradients.

@@ -4,7 +4,7 @@
 **Role**: DevOps Engineer / SRE
 **Goal**: Maintain build pipelines, manage secrets, and ensure stable deployments.
 
-> **See Also**: [Product Vision](../MJRP_PRODUCT_VISION.md) for long-term architecture goals.
+> **See Also**: [Product Vision](../MJRP_Album_Blender_Prod_Vision.md) for long-term architecture goals.
 
 ---
 
@@ -24,18 +24,13 @@
 ## 🚀 Local Development (The "Happy Path")
 
 ### 1. Start Everything
-We use a unified script to start the Backend Proxy and Frontend Dev Server.
+Refer to **[`docs/manual/00_Deployment_and_Setup.md`](../manual/00_Deployment_and_Setup.md)** for detailed start/stop instructions.
+
 ```bash
 ./scripts/start-local.sh
 ```
 - **Access UI**: `http://localhost:5000/`
 - **Access API**: `http://localhost:3000/`
-- **Logs**: Tail `.local_logs/server.log`
-
-### 2. Stop Everything
-```bash
-./scripts/stop-local.sh
-```
 
 ---
 
@@ -47,27 +42,16 @@ npm run build
 # Output: ../dist (relative to project root)
 ```
 
-### 2. Docker Build (Production)
-The `Dockerfile` is in the root. It builds the frontend and serves it via the Node.js backend.
-```bash
-docker build -t mjrp-v2 .
-docker run -p 8080:8080 --env-file server/.env mjrp-v2
-```
-
 ### 3. Deployment (Google Cloud Run)
-Refer to `docs/devops/PRODUCTION_DEPLOY.md` for the full pipeline.
-```bash
-# Quick deploy (requires gcloud auth)
-gcloud run deploy mjrp-v2 --source .
-```
+Refer to **[`docs/manual/00_Deployment_and_Setup.md`](../manual/00_Deployment_and_Setup.md)** for the full pipeline.
 
 ---
 
 ## 🔐 Secrets Management
 **CRITICAL**: We do not commit `.env` files.
 - **Local**: Create `server/.env` with `AI_API_KEY=...`.
-- **Production**: Secrets are managed via Google Secret Manager and injected as env vars in Cloud Run.
-- **Rotation**: See `docs/devops/SECRET_ROTATION_RUNBOOK.md`.
+- **Production**: Secrets are managed via Google Secret Manager.
+- **Rotation**: See `docs/manual/00_Deployment_and_Setup.md`.
 
 ---
 
@@ -79,18 +63,12 @@ gcloud run deploy mjrp-v2 --source .
 
 ### "AI_API_KEY not set"
 - Ensure `server/.env` exists.
-- Ensure you are running the server from the root or `server/` correctly (the script handles this).
-
-### "CORS Errors"
-- The proxy is configured to allow `localhost:5000`.
-- Check `server/index.js` cors configuration if you change ports.
 
 ---
 
 ## 📂 Important Directories
-- `docs/devops/`: Runbooks and guides.
+- `docs/manual/`: Operational guides.
 - `scripts/`: Helper shell scripts.
-- `.github/workflows/`: CI/CD pipelines (if applicable).
 
 ---
 

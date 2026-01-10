@@ -30,7 +30,7 @@ Verifies fix for ghost albums appearing when switching series:
 - Switches between series
 - Verifies no albums from previous series persist
 
-**Reference**: DEBUG_LOG.md Issue #15, TESTER_ONBOARDING_GUIDE.md Scenario #1
+**Reference**: `docs/debug/DEBUG_LOG.md` Issue #15
 
 ### 3. **Issue #16: View Toggle** (`issue-16-view-toggle.test.js`)
 Verifies view mode toggle functionality:
@@ -38,7 +38,7 @@ Verifies view mode toggle functionality:
 - Checks for album duplication
 - Verifies persistence after page reload
 
-**Reference**: DEBUG_LOG.md Issue #16, TESTER_ONBOARDING_GUIDE.md Scenario #2
+**Reference**: `docs/debug/DEBUG_LOG.md` Issue #16
 
 ## Project Structure
 

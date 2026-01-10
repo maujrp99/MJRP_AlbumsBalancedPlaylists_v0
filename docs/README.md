@@ -12,6 +12,6 @@
 
 ## Key Files
 *   **[Product Vision](MJRP_Album_Blender_Prod_Vision.md)**: The "Why" behind the project.
-*   **[Reference Guide](MJRP_Album_Blender_Ref_Guide.md)**: The "How" (Forensic Manual & Master Index).
+*   **[Reference Guide Index](manual/00_MJRP_Album_Blender_Ref_Guide_Index.md)**: The "How" (Forensic Manual & Master Index).
 *   [**ROADMAP.md**](ROADMAP.md)
 *   [**CHANGELOG.md**](CHANGELOG.md)
