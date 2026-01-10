@@ -31,7 +31,7 @@ We rely on a **Manual-Based** documentation system, not a chronological log.
 
 ### ✅ Immediate Actions
 - [ ] **Check Manuals**: Did I touch a feature covered in `docs/manual/`?
-    - If YES: Update the chapter to match the new code.
+    - If YES: Update the chapter to match the new code. Add in the md header a last update timestamp.
 - [ ] **Check Regression**: Did I add a new critical flow?
     - If YES: Add it to `docs/manual/regression_checklist.md`.
 - [ ] **Check Specs**: Is there a `docs/technical/specs/` folder for this task?
@@ -40,6 +40,8 @@ We rely on a **Manual-Based** documentation system, not a chronological log.
     - Mark the completed Sprint as `DONE ✅`.
     - Move it to the "Completed Sprints" section with the delivery date.
     - Update the "Current Sprint" to the next planned one.
+- [ ] **Check new files creation**: Did i create new files?
+    - If YES: Update the directory and file structure mapping in  `docs/manual/00_Dir_File_Structure_Map.md` adding the files pinpoint where it is it's documentation related file. (follow the existing patter in the file)
 
 ### 🐞 For Bug Fixes
 - [ ] **Debug Log**: Add entry to `docs/debug/DEBUG_LOG.md`.

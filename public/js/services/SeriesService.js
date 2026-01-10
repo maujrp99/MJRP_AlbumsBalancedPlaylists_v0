@@ -15,15 +15,20 @@ import { SeriesRepository } from '../repositories/SeriesRepository.js'
 import { globalProgress } from '../components/GlobalProgress.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { cacheManager } from '../cache/CacheManager.js'
-import { dataSyncService } from './DataSyncService.js'
+import { StorageService } from './infra/StorageService.js'
+import { UserSyncService } from './auth/UserSyncService.js'
 
-const STORAGE_KEY = 'mjrp_series'
+const STORAGE_KEY = 'series' // prefix will be added
 
 export class SeriesService {
-    constructor(db, userId) {
+    constructor(db, userId, storageService, userSyncService) {
         this.db = db
         this.userId = userId || 'anonymous-user'
         this.repository = new SeriesRepository(db, cacheManager, this.userId)
+
+        // Dependencies
+        this.storage = storageService || new StorageService()
+        this.userSync = userSyncService || new UserSyncService()
 
         // Update store context
         albumSeriesStore.setDb(db)
@@ -43,30 +48,25 @@ export class SeriesService {
         const newUserId = newUser ? newUser.uid : 'anonymous-user'
         const currentUserId = albumSeriesStore.getUserId()
 
-        if (currentUserId !== newUserId) {
-            console.log(`[SeriesService] Switching user: ${currentUserId} -> ${newUserId}`)
-
-            // Capture guest data for migration
-            let seriesToMigrate = []
-            if (currentUserId === 'anonymous-user' && albumSeriesStore.getSeries().length > 0 && newUserId !== 'anonymous-user') {
-                seriesToMigrate = [...albumSeriesStore.getSeries()]
+        await this.userSync.handleUserChange(newUser, currentUserId, async () => {
+            // Migration Callback
+            if (albumSeriesStore.getSeries().length > 0) {
+                const seriesToMigrate = [...albumSeriesStore.getSeries()]
                 console.log(`[SeriesService] Found ${seriesToMigrate.length} series to migrate`)
-            }
 
+                // We need to temporarily set the new ID to perform the save, managed by repo
+                // Actually relying on UserSyncService to orchestrate this via DataSyncService
+                // But for now, we'll keep the logic local but cleaner
+                this.setUserId(newUserId)
+                const count = await this.userSync.migrateSeries(this.repository, seriesToMigrate)
+                if (count > 0) await this.loadFromFirestore()
+            }
+        })
+
+        // If simply switching user without migration
+        if (currentUserId !== newUserId && currentUserId !== 'anonymous-user') {
             this.setUserId(newUserId)
-
-            // Migrate if needed
-            if (seriesToMigrate.length > 0) {
-                try {
-                    const count = await dataSyncService.migrateSeries(this.repository, seriesToMigrate)
-                    if (count > 0) console.log(`[SeriesService] Migrated ${count} series`)
-                    await this.loadFromFirestore()
-                } catch (err) {
-                    console.error('[SeriesService] Migration failed', err)
-                }
-            } else {
-                await this.loadFromFirestore().catch(err => console.error('Reload failed:', err))
-            }
+            await this.loadFromFirestore().catch(err => console.error('Reload failed:', err))
         }
     }
 
@@ -224,37 +224,29 @@ export class SeriesService {
         if (onProgress) onProgress({ current: 0, total: 0, status: 'pending' })
     }
 
-    // ========== LOCALSTORAGE ==========
+    // ========== LOCALSTORAGE (Delegated) ==========
 
     saveToLocalStorage() {
-        try {
-            const series = albumSeriesStore.getSeries()
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(series))
-        } catch (e) {
-            console.error('[SeriesService] Failed to save to localStorage', e)
-        }
+        const series = albumSeriesStore.getSeries()
+        this.storage.save(STORAGE_KEY, series)
     }
 
     loadFromLocalStorage() {
-        try {
-            const data = localStorage.getItem(STORAGE_KEY)
-            if (data) {
-                const series = JSON.parse(data).map(s => ({
-                    ...s,
-                    createdAt: new Date(s.createdAt),
-                    updatedAt: new Date(s.updatedAt)
-                }))
-                albumSeriesStore.setSeries(series)
-                return true
-            }
-        } catch (e) {
-            console.error('[SeriesService] Failed to load from localStorage', e)
+        const data = this.storage.load(STORAGE_KEY)
+        if (data) {
+            const series = data.map(s => ({
+                ...s,
+                createdAt: new Date(s.createdAt),
+                updatedAt: new Date(s.updatedAt)
+            }))
+            albumSeriesStore.setSeries(series)
+            return true
         }
         return false
     }
 
     reset() {
-        localStorage.removeItem(STORAGE_KEY)
+        this.storage.remove(STORAGE_KEY)
         albumSeriesStore.reset()
     }
 }
@@ -264,7 +256,9 @@ let _instance = null
 
 export function getSeriesService(db, cacheManager, userId) {
     if (!_instance && db) {
-        _instance = new SeriesService(db, userId)
+        const storage = new StorageService()
+        const userSync = new UserSyncService()
+        _instance = new SeriesService(db, userId, storage, userSync)
     } else if (_instance && userId && _instance.userId !== userId) {
         _instance.setUserId(userId)
     }

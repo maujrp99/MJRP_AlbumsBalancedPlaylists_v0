@@ -6,6 +6,9 @@
 *   [**00_Deployment_and_Setup.md**](00_Deployment_and_Setup.md) - Installation & Env.
 *   [**01_System_Architecture.md**](01_System_Architecture.md) - High-level conceptual map.
 
+## 00. Project Directory Structure and Files Map
+*   [**00_Dir_File_Structure_Map.md**](00_Dir_File_Structure_Map.md) - Complete File & Directory Map.
+
 ## 02. The Backend (Node/Express/Firebase)
 *   [**02_Server_Structure.md**](02_Server_Structure.md) - Root structure.
 *   [**03_Backend_API_Layer.md**](03_Backend_API_Layer.md) - Routes & Endpoints.

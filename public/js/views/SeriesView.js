@@ -22,20 +22,14 @@ import { getIcon } from '../components/Icons.js';
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js';
 import { toast } from '../components/Toast.js';
 
-// V3 Components
-import SeriesHeader from '../components/series/SeriesHeader.js';
-import SeriesToolbar from '../components/series/SeriesToolbar.js';
-import SeriesGridRenderer from '../components/series/SeriesGridRenderer.js';
+import { SeriesViewMounter } from './helpers/SeriesViewMounter.js';
 import SeriesEventHandler from '../components/series/SeriesEventHandler.js';
-import SeriesModals from '../components/series/SeriesModals.js';
-import { SeriesEmptyState } from '../components/series/SeriesEmptyState.js';
-import { SeriesProgressBar } from '../components/series/SeriesProgressBar.js';
-
-// Handlers
 import * as Handlers from './helpers/SeriesViewHandlers.js';
 import * as GridHelper from './helpers/SeriesGridHelper.js';
+import { SeriesModalsManager } from './helpers/SeriesModalsManager.js';
+import { SeriesEmptyState } from '../components/series/SeriesEmptyState.js';
 
-// Utilities (for filtering)
+// Utilities
 // Utilities
 import {
     getUniqueArtists as getUniqueArtistsFn
@@ -119,10 +113,12 @@ export default class SeriesView extends BaseView {
             this.controller.init(db, this);
         }
 
-        // Mount V3 components
-        await this.mountHeader();
-        await this.mountToolbar();
-        await this.mountGrid();
+        // Mount V3 components via Mounter
+        const mounted = await SeriesViewMounter.mountAll(this);
+        this.components.header = mounted.header;
+        this.components.toolbar = mounted.toolbar;
+        this.components.grid = mounted.grid;
+        this.inlineProgress = mounted.inlineProgress;
 
         // Setup event handler for card actions (CRUD)
         this.setupEventHandler();
@@ -145,96 +141,11 @@ export default class SeriesView extends BaseView {
     // COMPONENT MOUNTING
     // =========================================
 
-    async mountHeader() {
-        const mount = document.getElementById('series-header-mount');
-        if (!mount) return;
+    // =========================================
+    // COMPONENT MOUNTING (Delegated to SeriesViewMounter)
+    // =========================================
 
-        const activeSeries = albumSeriesStore.getActiveSeries();
-        const albums = albumsStore.getAlbums();
-        const pageTitle = this.currentScope === 'ALL'
-            ? 'All Albums Series'
-            : (activeSeries ? escapeHtml(activeSeries.name) : 'Albums');
-
-        this.components.header = new SeriesHeader({
-            container: mount,
-            props: {
-                pageTitle,
-                albumCount: albums.length,
-                onGeneratePlaylists: () => {
-                    const activeSeries = albumSeriesStore.getActiveSeries();
-                    if (activeSeries) {
-                        router.navigate(`/blend?seriesId=${activeSeries.id}`);
-                    } else {
-                        router.navigate('/blend');
-                    }
-                }
-            }
-        });
-        this.components.header.mount();
-    }
-
-    async mountToolbar() {
-        const mount = document.getElementById('series-toolbar-mount');
-        if (!mount) return;
-
-        const albums = albumsStore.getAlbums();
-        const activeSeries = albumSeriesStore.getActiveSeries();
-        const allSeries = albumSeriesStore.getSeries();
-
-        const { searchQuery, filters, viewMode } = this.controller.getState();
-
-        this.components.toolbar = new SeriesToolbar({
-            container: mount,
-            props: {
-                searchQuery,
-                filters,
-                viewMode,
-                artists: getUniqueArtistsFn(albums),
-                seriesList: allSeries,
-                activeSeries,
-                onSearch: (q) => this.handleSearch(q),
-                onSeriesChange: (v) => this.handleSeriesChange(v),
-                onArtistFilter: (v) => this.handleFilter('artist', v),
-                onYearFilter: (v) => this.handleFilter('year', v),
-                onSourceFilter: (v) => this.handleFilter('source', v),
-                onRefresh: () => this.handleRefresh(),
-                onToggleView: () => this.handleToggleView()
-            }
-        });
-        this.components.toolbar.mount();
-
-        // FIX: Setup inline progress bar AFTER toolbar is mounted (so DOM exists)
-        this.inlineProgress = new SeriesProgressBar('loading-progress-container');
-        this.inlineProgress.mount();
-    }
-
-    async mountGrid() {
-        const mount = document.getElementById('series-grid-mount');
-        if (!mount) return;
-
-        const albums = albumsStore.getAlbums();
-        // Initial Load: Controller will update this shortly after mount.
-        // We render empty or wait ?
-        // If we render albumsStore.getAlbums() it might be unfiltered.
-        // But Controller.loadScope calls notifyView.
-        const filteredAlbums = []; // Start empty or wait for update
-        const allSeries = albumSeriesStore.getSeries();
-
-        this.components.grid = new SeriesGridRenderer({
-            container: mount,
-            props: {
-                items: filteredAlbums,
-                layout: this.viewMode === 'compact' ? 'grid' : 'list',
-                scope: this.currentScope,
-                seriesList: allSeries,
-                context: { searchQuery: this.searchQuery, filters: this.filters }
-            }
-        });
-        this.components.grid.mount();
-
-        // Show empty state if needed
-        this.updateEmptyState(filteredAlbums.length);
-    }
+    // mountHeader, mountToolbar, mountGrid moved to SeriesViewMounter
 
     // =========================================
     // EVENT HANDLER & MODALS SETUP
@@ -263,50 +174,25 @@ export default class SeriesView extends BaseView {
         const mount = this.$('#series-modals-mount');
         if (!mount) return;
 
-        this.components.modals = new SeriesModals({
-            onSeriesUpdated: (seriesId) => {
-                // ARCH-6: Invalidate cache to prevent stale data
-                albumsStore.clearAlbumSeries(seriesId);
-                albumsStore.clearAlbumSeries('ALL_SERIES_VIEW');
-
-                this.updateHeader();
-                if (this.controller) {
-                    this.controller.loadScope(this.currentScope, this.targetSeriesId, true);
-                }
-            },
-            onSeriesDeleted: (seriesId) => {
-                // ARCH-6: Invalidate cache
-                albumsStore.clearAlbumSeries(seriesId);
-                albumsStore.clearAlbumSeries('ALL_SERIES_VIEW');
-
-                if (this.targetSeriesId === seriesId) {
-                    router.navigate('/albums');
-                } else {
-                    this.refreshGrid();
-                }
-            },
-            escapeHtml: escapeHtml
-        });
-
-        mount.innerHTML = this.components.modals.render();
-        this.components.modals.mount(mount);
+        this.modalsManager = new SeriesModalsManager(this);
+        this.modalsManager.mount(mount);
     }
 
     /**
-     * Open Edit Series Modal (delegates to SeriesModals)
+     * Open Edit Series Modal (delegates to Manager)
      */
     openEditSeriesModal(seriesId) {
-        if (this.components.modals) {
-            this.components.modals.openEdit(seriesId);
+        if (this.modalsManager) {
+            this.modalsManager.openEdit(seriesId);
         }
     }
 
     /**
-     * Open Delete Series Modal (delegates to SeriesModals)
+     * Open Delete Series Modal (delegates to Manager)
      */
     openDeleteSeriesModal(seriesId) {
-        if (this.components.modals) {
-            this.components.modals.openDelete(seriesId);
+        if (this.modalsManager) {
+            this.modalsManager.openDelete(seriesId);
         }
     }
 
@@ -414,6 +300,10 @@ export default class SeriesView extends BaseView {
             if (c && typeof c.unmount === 'function') c.unmount();
         });
         this.components = {};
+
+        if (this.modalsManager) {
+            this.modalsManager.unmount();
+        }
 
         if (this.inlineProgress) {
             this.inlineProgress.unmount();

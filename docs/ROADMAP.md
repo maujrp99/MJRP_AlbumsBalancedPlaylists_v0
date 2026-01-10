@@ -24,6 +24,8 @@
 **Scope**:
 - ✅ **Track B**: Split `playlists.js` and `albumSeries.js` → Pure Stores + Services. (2026-01-10)
 - ✅ **Track A**: Refactor `SeriesView.js` & `SavedPlaylistsView.js` → Extract components. (2026-01-10)
+- ✅ **Track C**: Service Layer Refinement (Sub-services & Orchestrators). (2026-01-10)
+- ✅ **Track D**: View Modularization (Components & Helpers). (2026-01-10)
 - ✅ **LOC Achievement**: All refactored stores < 150 LOC. Significant reduction in Views.
 
 ---

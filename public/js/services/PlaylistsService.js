@@ -10,23 +10,25 @@
  * - Export helpers
  * 
  * Extracted from PlaylistsStore (Sprint 19).
+ * Refactored for modularity (Track C).
  */
 
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { writeBatch } from 'firebase/firestore'
 import { playlistsStore } from '../stores/playlists.js'
+import { StorageService } from './infra/StorageService.js'
+import { PlaylistHistoryService } from './playlists/PlaylistHistoryService.js'
 
-const STORAGE_KEY = 'mjrp_current_playlists'
-const MAX_VERSIONS = 20
+const STORAGE_KEY = 'current_playlists' // prefix will be added by service
 
 export class PlaylistsService {
-    constructor(db, cacheManager) {
+    constructor(db, cacheManager, storageService, historyService) {
         this.db = db
         this.cacheManager = cacheManager
 
-        // Undo/Redo history
-        this.versions = []
-        this.currentVersionIndex = -1
+        // Dependencies
+        this.storage = storageService || new StorageService()
+        this.history = historyService || new PlaylistHistoryService()
     }
 
     // ========== TRACK OPERATIONS ==========
@@ -35,45 +37,48 @@ export class PlaylistsService {
         const playlists = [...playlistsStore.getPlaylists()]
         const fromPlaylist = playlists[fromPlaylistIndex]
         const toPlaylist = playlists[toPlaylistIndex]
+        const seriesId = playlistsStore.getSeriesId()
 
         const [track] = fromPlaylist.tracks.splice(trackIndex, 1)
         toPlaylist.tracks.splice(newIndex, 0, track)
 
-        this.createSnapshot(playlists, playlistsStore.getSeriesId(),
+        this.history.createSnapshot(playlists, seriesId,
             `Moved track from ${fromPlaylist.name} to ${toPlaylist.name}`)
 
-        playlistsStore.setPlaylists(playlists)
-        playlistsStore.setDirty(true)
-        playlistsStore.setSynchronized(false)
-        this.saveToLocalStorage()
+        this._updateState(playlists, seriesId)
     }
 
     reorderTrack(playlistIndex, oldIndex, newIndex) {
         const playlists = [...playlistsStore.getPlaylists()]
         const playlist = playlists[playlistIndex]
+        const seriesId = playlistsStore.getSeriesId()
+
         const [track] = playlist.tracks.splice(oldIndex, 1)
         playlist.tracks.splice(newIndex, 0, track)
 
-        this.createSnapshot(playlists, playlistsStore.getSeriesId(),
+        this.history.createSnapshot(playlists, seriesId,
             `Reordered track in ${playlist.name}`)
 
-        playlistsStore.setPlaylists(playlists)
-        playlistsStore.setDirty(true)
-        playlistsStore.setSynchronized(false)
-        this.saveToLocalStorage()
+        this._updateState(playlists, seriesId)
     }
 
     removeTrack(playlistIndex, trackIndex) {
         const playlists = [...playlistsStore.getPlaylists()]
         const playlist = playlists[playlistIndex]
+        const seriesId = playlistsStore.getSeriesId()
+
         if (!playlist?.tracks) return
 
         const [removedTrack] = playlist.tracks.splice(trackIndex, 1)
 
-        this.createSnapshot(playlists, playlistsStore.getSeriesId(),
+        this.history.createSnapshot(playlists, seriesId,
             `Removed "${removedTrack.title}" from ${playlist.name}`)
 
-        playlistsStore.setPlaylists(playlists)
+        this._updateState(playlists, seriesId)
+    }
+
+    _updateState(playlists, seriesId) {
+        playlistsStore.setPlaylists(playlists, seriesId)
         playlistsStore.setDirty(true)
         playlistsStore.setSynchronized(false)
         this.saveToLocalStorage()
@@ -154,35 +159,17 @@ export class PlaylistsService {
         playlistsStore.setPlaylists(playlists)
     }
 
-    // ========== UNDO/REDO ==========
+    // ========== UNDO/REDO (Delegated) ==========
 
     createSnapshot(playlists, seriesId, description) {
-        if (this.currentVersionIndex < this.versions.length - 1) {
-            this.versions = this.versions.slice(0, this.currentVersionIndex + 1)
-        }
-
-        this.versions.push({
-            playlists: JSON.parse(JSON.stringify(playlists)),
-            seriesId,
-            timestamp: new Date().toISOString(),
-            description
-        })
-
-        if (this.versions.length > MAX_VERSIONS) {
-            this.versions.shift()
-        }
-        this.currentVersionIndex = this.versions.length - 1
+        this.history.createSnapshot(playlists, seriesId, description)
         this.updateUndoState()
     }
 
     undo() {
-        if (this.currentVersionIndex > 0) {
-            this.currentVersionIndex--
-            const version = this.versions[this.currentVersionIndex]
-            playlistsStore.setPlaylists(
-                JSON.parse(JSON.stringify(version.playlists)),
-                version.seriesId
-            )
+        const state = this.history.undo()
+        if (state) {
+            playlistsStore.setPlaylists(state.playlists, state.seriesId)
             playlistsStore.setDirty(true)
             this.updateUndoState()
             return true
@@ -191,13 +178,9 @@ export class PlaylistsService {
     }
 
     redo() {
-        if (this.currentVersionIndex < this.versions.length - 1) {
-            this.currentVersionIndex++
-            const version = this.versions[this.currentVersionIndex]
-            playlistsStore.setPlaylists(
-                JSON.parse(JSON.stringify(version.playlists)),
-                version.seriesId
-            )
+        const state = this.history.redo()
+        if (state) {
+            playlistsStore.setPlaylists(state.playlists, state.seriesId)
             playlistsStore.setDirty(true)
             this.updateUndoState()
             return true
@@ -206,59 +189,47 @@ export class PlaylistsService {
     }
 
     updateUndoState() {
-        playlistsStore.setUndoState(
-            this.currentVersionIndex > 0,
-            this.currentVersionIndex < this.versions.length - 1
-        )
+        const stats = this.history.getStats()
+        playlistsStore.setUndoState(stats.canUndo, stats.canRedo)
     }
 
-    // ========== LOCALSTORAGE ==========
+    // ========== LOCALSTORAGE (Delegated) ==========
 
     saveToLocalStorage() {
         const state = playlistsStore.getState()
         if (!state.seriesId) return
 
-        try {
-            const data = {
-                playlists: JSON.parse(JSON.stringify(state.playlists)),
-                seriesId: state.seriesId,
-                config: state.config,
-                mode: state.mode,
-                editContext: state.editContext,
-                batchName: state.batchName,
-                defaultBatchName: state.defaultBatchName,
-                timestamp: Date.now()
-            }
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-        } catch (e) {
-            console.warn('Failed to save to LocalStorage:', e)
+        const data = {
+            playlists: state.playlists, // Store is pure, safe to save directly
+            seriesId: state.seriesId,
+            config: state.config,
+            mode: state.mode,
+            editContext: state.editContext,
+            batchName: state.batchName,
+            defaultBatchName: state.defaultBatchName,
+            timestamp: Date.now()
         }
+
+        this.storage.save(STORAGE_KEY, data)
     }
 
     loadFromLocalStorage() {
-        try {
-            const saved = localStorage.getItem(STORAGE_KEY)
-            if (!saved) return false
+        const data = this.storage.load(STORAGE_KEY)
+        if (!data) return false
 
-            const data = JSON.parse(saved)
+        playlistsStore.setPlaylists(data.playlists || [], data.seriesId)
+        playlistsStore.setConfig(data.config || {})
+        playlistsStore.setMode(data.mode || 'CREATING')
+        playlistsStore.setEditContext(data.editContext || null)
+        playlistsStore.setBatchName(data.batchName || '')
+        playlistsStore.setDefaultBatchName(data.defaultBatchName || null)
+        playlistsStore.setDirty(false)
 
-            playlistsStore.setPlaylists(data.playlists || [], data.seriesId)
-            playlistsStore.setConfig(data.config || {})
-            playlistsStore.setMode(data.mode || 'CREATING')
-            playlistsStore.setEditContext(data.editContext || null)
-            playlistsStore.setBatchName(data.batchName || '')
-            playlistsStore.setDefaultBatchName(data.defaultBatchName || null)
-            playlistsStore.setDirty(false)
-
-            return true
-        } catch (e) {
-            console.warn('Failed to load from LocalStorage:', e)
-            return false
-        }
+        return true
     }
 
     clearLocalStorage() {
-        localStorage.removeItem(STORAGE_KEY)
+        this.storage.remove(STORAGE_KEY)
     }
 
     // ========== FIRESTORE CRUD ==========
@@ -333,6 +304,7 @@ export class PlaylistsService {
     // ========== INITIALIZATION ==========
 
     initializeWithPlaylists(playlists, seriesId) {
+        this.history.clear() // Reset history on new init
         this.createSnapshot(playlists, seriesId, 'Initial generation')
         playlistsStore.setPlaylists(playlists, seriesId)
         playlistsStore.setDirty(false)
@@ -341,8 +313,7 @@ export class PlaylistsService {
     }
 
     reset() {
-        this.versions = []
-        this.currentVersionIndex = -1
+        this.history.clear()
         this.clearLocalStorage()
         playlistsStore.reset()
     }
@@ -353,7 +324,9 @@ let _instance = null
 
 export function getPlaylistsService(db, cacheManager) {
     if (!_instance && db) {
-        _instance = new PlaylistsService(db, cacheManager)
+        const storage = new StorageService()
+        const history = new PlaylistHistoryService()
+        _instance = new PlaylistsService(db, cacheManager, storage, history)
     }
     return _instance
 }

@@ -44,3 +44,16 @@
 -   **`inventory/InventoryGrid.js`**:
     -   **Role**: Main view for the User's Inventory.
     -   **Logic**: A wrapper around `SeriesGridRenderer`. Adds generic event delegation for Inventory actions (Click, Context Menu). Handles "Zero State" (Empty Inventory) display.
+
+## Playlists & History (`playlists/`)
+**Status**: `[ACTIVE]`
+
+-   **`playlists/SavedSeriesGroup.js`**:
+    -   **Role**: Container for a Series within the History view.
+    -   **Logic**: Renders the Series Header (with collapse toggle) and holds the `SavedPlaylistCard` grid.
+-   **`playlists/PlaylistDetailsModal.js`**:
+    -   **Role**: Read-only view of a specific generated playlist.
+    -   **Logic**: Uses `DialogService` to render a list of tracks with cover art and duration.
+-   **`playlists/SavedPlaylistCard.js`**:
+    -   **Role**: Represents a "Batch" of playlists.
+    -   **Logic**: Displays a collage of album art from the playlists.

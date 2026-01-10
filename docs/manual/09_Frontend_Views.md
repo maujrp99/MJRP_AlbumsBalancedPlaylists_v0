@@ -102,6 +102,8 @@ sequenceDiagram
 *   **Helpers**:
     *   `SeriesViewHandlers`: Extracts event handling logic from the main class.
     *   `SeriesGridHelper`: Manages grid refresh and ranking hydration.
+    *   `SeriesViewMounter` [NEW]: Abstract Factory for instantiating and mounting Header, Toolbar, and Grid components.
+    *   `SeriesModalsManager` [NEW]: Encapsulates logic for opening Edit/Delete/Filter modals.
 
 ### 2.4 Playlists History: `views/SavedPlaylistsView.js`
 **Status**: `[ACTIVE]`
@@ -113,6 +115,8 @@ sequenceDiagram
     1.  **Iterative Rendering**: Delegates rendering of complex data structures (Series -> Batches -> Playlists) to components.
     2.  **Lazy Hydration**: Playlist tracks are rendered into hidden containers and toggled via safe DOM manipulation.
 *   **Sub-Components**:
+    *   `SavedSeriesGroup` [NEW]: Standalone component for rendering a Series header and its batch container.
+    *   `PlaylistDetailsModal` [NEW]: Reusable modal logic for viewing playlist track details.
     *   `SavedPlaylistCard`: Renders a full batch with cascade thumbnails and batch-level actions.
     *   `SavedPlaylistRow`: Renders individual playlists with track lists.
     *   `SavedPlaylistActions`: Centralizes action buttons for series, batches, and rows.

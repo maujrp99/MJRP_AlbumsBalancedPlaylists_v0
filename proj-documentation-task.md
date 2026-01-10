@@ -45,6 +45,7 @@
 26. - [x] `public/js/models/AlbumIdentity.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
 27. - [x] `public/js/api.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
 28. - [x] `docs/manual/01_System_Architecture.md` (System Map)
+28a. - [x] `docs/manual/00_Dir_File_Structure_Map.md` (File Map)
 
 ### Phase X: Gap Analysis
 29. - [x] Counted total files (120+) vs Documented files (~25).
@@ -267,10 +268,23 @@
 189. [x] `test/views/ConsolidatedRankingView.test.js` (Analysis: `manual/24_Test_Suite.md`)
 190. [x] `test/views/PlaylistsView.test.js` (Analysis: `manual/24_Test_Suite.md`)
 
+### Phase 7.5: Sprint 19 Refactoring (Views & Stores)
+191. [ ] `public/js/services/PlaylistsService.js` (Analysis: `manual/17_Frontend_Services.md`)
+192. [ ] `public/js/services/SeriesService.js` (Analysis: `manual/17_Frontend_Services.md`)
+193. [ ] `public/js/components/playlists/SavedPlaylistActions.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
+194. [ ] `public/js/components/playlists/SavedPlaylistCard.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
+195. [ ] `public/js/components/playlists/SavedPlaylistRow.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
+196. [ ] `public/js/components/series/SeriesEmptyState.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
+197. [ ] `public/js/components/series/SeriesProgressBar.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
+198. [ ] `public/js/views/helpers/SeriesGridHelper.js` (Analysis: `manual/09_Frontend_Views.md`)
+199. [ ] `public/js/views/helpers/SeriesViewHandlers.js` (Analysis: `manual/09_Frontend_Views.md`)
+200. [ ] `docs/decisions/adr-017-pure-state-stores.md` (Analysis: `manual/01_System_Architecture.md`)
+201. [ ] `docs/decisions/adr-018-fine-grained-services.md` (Analysis: `manual/01_System_Architecture.md`)
+
 ### Phase 8: Final Synthesis
-191. - [x] **Code-to-Doc Integrity Check**
-    192. - [x] Verify every file in `manual/26_Gap_Analysis.md` has a corresponding entry in `comprehensive_manual/`.
-    193. - [x] Compile all `raw_analysis/*.md` files into the final `MJRP_ALBUM_BLENDER_REFERENCE_GUIDE.md`.
+202. - [x] **Code-to-Doc Integrity Check**
+    203. - [x] Verify every file in `manual/26_Gap_Analysis.md` has a corresponding entry in `comprehensive_manual/`.
+    204. - [x] Compile all `raw_analysis/*.md` files into the final `MJRP_ALBUM_BLENDER_REFERENCE_GUIDE.md`.
 
 ### Phase 9: Visual Architecture Enrichment
 > **Goal**: Revisit each "Deep Dive" module to add Mermaid diagrams where applicable.

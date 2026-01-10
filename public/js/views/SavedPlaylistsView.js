@@ -19,6 +19,8 @@ import { TrackRow } from '../components/ui/TrackRow.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { dialogService } from '../services/DialogService.js'
 import { SavedPlaylistCard } from '../components/playlists/SavedPlaylistCard.js'
+import { PlaylistDetailsModal } from '../components/playlists/PlaylistDetailsModal.js'
+import { SavedSeriesGroup } from '../components/playlists/SavedSeriesGroup.js'
 
 export class SavedPlaylistsView extends BaseView {
     constructor() {
@@ -104,68 +106,26 @@ export class SavedPlaylistsView extends BaseView {
     }
 
     renderSeriesGroup(group) {
-        if (!group.playlists || group.playlists.length === 0) return null
-
-        const headerTitle = SafeDOM.div({ className: 'mb-4 md:mb-0' }, [
-            SafeDOM.h2({ className: 'text-2xl font-bold text-accent-primary flex items-center gap-2' }, [
-                SafeDOM.fromHTML(getIcon('Layers', 'w-6 h-6')),
-                SafeDOM.text(' ' + group.series.name)
-            ]),
-            SafeDOM.span({ className: 'text-xs text-muted font-mono bg-black/30 px-2 py-1 rounded ml-8' },
-                `ID: ${group.series.id.slice(0, 8)}...`
-            )
-        ])
-
-        const buttons = SafeDOM.div({ className: 'flex gap-2' }, [
-            SafeDOM.button({
-                className: 'btn btn-primary btn-sm flex items-center gap-1 group-hover:bg-accent-primary group-hover:text-white transition-colors',
-                onClick: () => this.controller.navigateBlend()
-            }, [
-                SafeDOM.fromHTML(getIcon('Plus', 'w-4 h-4')),
-                ' Add Playlists'
-            ]),
-            SafeDOM.button({
-                className: 'btn btn-secondary btn-sm group-hover:bg-white/10 transition-colors',
-                onClick: () => this.controller.openSeriesManager(group.series.id)
-            }, [
-                'Open Albums Series ',
-                SafeDOM.fromHTML(getIcon('ArrowLeft', 'w-4 h-4 rotate-180 ml-1'))
-            ]),
-            SafeDOM.button({
-                className: 'btn btn-ghost btn-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-colors',
-                title: 'Delete all playlists in this series',
-                onClick: () => this.handleDeleteAll(group.series.id, group.series.name)
-            }, SafeDOM.fromHTML(getIcon('Trash', 'w-4 h-4')))
-        ])
-
-        const header = SafeDOM.div({
-            className: 'group-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-white/10 pb-4'
-        }, [headerTitle, buttons])
-
-        const batchesContainer = SafeDOM.fragment(
-            group.batches.map(batch => this.renderPlaylistBatch(batch, group.series.id))
-        )
-
-        return SafeDOM.div({ className: 'series-group glass-panel p-6 rounded-xl animate-scale-in' }, [
-            header,
-            batchesContainer
-        ])
-    }
-
-    renderPlaylistBatch(batch, seriesId) {
-        const thumbnails = this.controller.getThumbnails(seriesId);
-        const card = new SavedPlaylistCard({
-            batch,
-            seriesId,
-            thumbnails,
-            onEdit: (sid, name, date) => this.controller.editBatch(sid, name, date),
-            onDelete: (sid, name, count) => this.handleDeleteBatch(sid, name, count),
-            onOpenPlaylistModal: (sid, pid) => this.openPlaylistModal(sid, pid),
-            formatDuration: (tracks) => this.formatDuration(tracks),
-            countUniqueAlbums: (pls) => this.countUniqueAlbums(pls)
+        const component = new SavedSeriesGroup({
+            group,
+            handlers: {
+                onNavigate: () => this.controller.navigateBlend(),
+                onOpenSeries: (sid) => this.controller.openSeriesManager(sid),
+                onDeleteAll: (sid, name) => this.handleDeleteAll(sid, name),
+                onEditBatch: (sid, name, date) => this.controller.editBatch(sid, name, date),
+                onDeleteBatch: (sid, name, count) => this.handleDeleteBatch(sid, name, count),
+                onOpenPlaylist: (sid, pid) => this.openPlaylistModal(sid, pid)
+            },
+            helpers: {
+                getThumbnails: (sid) => this.controller.getThumbnails(sid),
+                formatDuration: (tracks) => this.formatDuration(tracks),
+                countUniqueAlbums: (pls) => this.countUniqueAlbums(pls)
+            }
         });
-        return card.render();
+        return component.render();
     }
+
+    // renderPlaylistBatch removed - handled by SavedSeriesGroup
 
     // renderPlaylistRow method removed - now handled by SavedPlaylistRow component via SavedPlaylistCard
 
@@ -264,54 +224,8 @@ export class SavedPlaylistsView extends BaseView {
         const playlist = batch.playlists.find(p => p.id === playlistId)
         if (!playlist) return
 
-        const trackCount = playlist.tracks?.length || 0
-        const totalSeconds = (playlist.tracks || []).reduce((acc, t) => acc + (t.duration || 0), 0)
-        const durationStr = TrackRow.formatDuration(totalSeconds)
-
-        // SafeDOM Content Construction
-        const header = SafeDOM.div({ className: 'mb-4 text-xs text-muted flex gap-3 border-b border-white/10 pb-4' }, [
-            SafeDOM.span({}, [SafeDOM.span({ className: 'text-white font-bold' }, trackCount), ' tracks']),
-            SafeDOM.span({}, [SafeDOM.span({ className: 'text-white font-bold' }, durationStr), ' duration'])
-        ])
-
-        const listContainer = SafeDOM.div({ className: 'space-y-1' })
-
-        // Append tracks
-        const tracks = playlist.tracks || []
-        tracks.forEach((t, i) => {
-            const row = TrackRow.render({
-                track: t,
-                index: i + 1,
-                variant: 'compact',
-                actions: []
-            })
-            listContainer.appendChild(row)
-        })
-
-        const content = SafeDOM.div({}, [header, listContainer])
-
-        // Footer
-        const closeModal = () => {
-            BaseModal.unmount('playlist-modal')
-        }
-
-        const manualFooter = SafeDOM.div({ className: 'flex justify-end' }, [
-            SafeDOM.button({
-                className: 'btn btn-secondary',
-                onClick: closeModal
-            }, 'Close')
-        ])
-
-        const modal = BaseModal.render({
-            id: 'playlist-modal',
-            title: playlist.name,
-            content: content,
-            footer: manualFooter,
-            size: 'lg',
-            onClose: closeModal
-        })
-
-        BaseModal.mount(modal)
+        // Delegate to component
+        PlaylistDetailsModal.open(playlist);
     }
 
     onThumbnailLoaded(seriesId) {
