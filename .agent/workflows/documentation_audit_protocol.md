@@ -1,3 +1,7 @@
+---
+description: Revision/audit to keep documentation up-to-date
+---
+
 # Documentation Audit Protocol
 
 **Purpose**: Systematic process to verifying that the **Manuals** match the **Code**.

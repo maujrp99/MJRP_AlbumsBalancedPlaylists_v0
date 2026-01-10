@@ -1,3 +1,7 @@
+---
+description: Architecture Decision Protocol (ADR)
+---
+
 # Architecture Decision Protocol (ADR)
 Architecture Decision Records (ADR) provide a historical log of significant design choices, separating "Why we did it" (History) from "How it works clearly" (Manuals).
 

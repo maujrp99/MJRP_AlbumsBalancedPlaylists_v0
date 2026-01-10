@@ -1,3 +1,7 @@
+---
+description: Debugging Protocol
+---
+
 # Debug Protocol v2.0 (Integrated)
 
 **Purpose**: Systematic process for finding, fixing, and documenting issues.

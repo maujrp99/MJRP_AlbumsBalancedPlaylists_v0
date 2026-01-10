@@ -1,3 +1,7 @@
+---
+description: Code and Architecture quality Assessment
+---
+
 # Code Quality Assessment Protocol v3.0
 
 Execute this protocol at the end of every sprint or major architectural milestone or everytime human user requests it.

@@ -1,3 +1,7 @@
+---
+description: Documentation protocol
+---
+
 # Documentation Protocol & Post-Implementation Checklist
 
 **Purpose**: Defines the Single Source of Truth for documentation and the mandatory checklist for developers after coding.
