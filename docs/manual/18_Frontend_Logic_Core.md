@@ -75,12 +75,32 @@ flowchart TD
 
 ### Top N Algorithm (`TopNAlgorithm.js`)
 *   **Status**: **Flexible** (Used for "Recipes").
-*   **Logic**: simpler selection of Top 3, 5, or N tracks per album.
-*   **Grouping Modes**:
-    *   `by_album`: Preserves album order.
-    *   `flat_ranked`: Interleaves #1s (Energy Wave), then #2s.
-    *   `artist_rank`: Clusters by Artist.
-    *   `shuffle`: Randomizes.
+*   **Logic**: Simpler selection of Top 1-10 tracks per album.
+*   **Last Updated**: 2026-01-11
+
+#### Playlist Title Format (Sprint 20)
+Generated playlists use a standardized title format:
+```
+{SOURCE} Top {N} {GROUPING} [Vol. X]
+```
+*   **{SOURCE}**: `SPFY` (Spotify Popularity) or `BEA` (BestEverAlbums).
+*   **{N}**: Track count selected (1-10).
+*   **{GROUPING}**: `By Album`, `By Rank`, `By Artist`, `Bal.Intv.`, or `Shuffle`.
+*   **[Vol. X]**: Appended for multiple playlists mode.
+
+| Recipe | Top N | Grouping | Title |
+| :--- | :--- | :--- | :--- |
+| Spotify Popular | 6 | By Album | `SPFY Top 6 By Album` |
+| BEA Acclaimed | 5 | Bal.Intv. | `BEA Top 5 Bal.Intv. Vol. 1` |
+
+#### Grouping Modes
+| Mode | Internal Value | Description |
+| :--- | :--- | :--- |
+| By Album | `by_album` | Preserves album order. |
+| By Ranking | `flat_ranked` | Interleaves #1s (Energy Wave), then #2s. |
+| By Artist | `artist_rank` | Clusters by Artist. |
+| Balanced Interleave | `ranked_interleave` | Round Robin by Rank. |
+| Shuffle | `shuffle` | Randomizes. |
 
 ---
 

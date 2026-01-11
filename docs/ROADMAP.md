@@ -8,6 +8,15 @@
 
 ## 🚧 Current Sprint
 
+### Sprint 20: TopN Suffix Enhancement (Jan 2026)
+**Goal**: Improve playlist title clarity with source prefix and grouping suffix.
+**Status**: ✅ **DONE** (2026-01-11)
+**Deliverables**:
+- ✅ **SPFY/BEA Prefix**: Playlist titles now indicate ranking source.
+- ✅ **Dynamic Track Count**: Fixed bug where title always showed "Top 3".
+- ✅ **Grouping Suffix**: Titles include "By Album", "By Rank", "By Artist", "Bal.Intv.", or "Shuffle".
+- ✅ **Example**: `SPFY Top 6 By Artist Vol. 1`
+
 ### Sprint 18: Holistic Quality & Refactor (Backend + Frontend)
 **Goal**: Resolve identified "God Class/File" warnings and "Route Thinness" failures to improve architectural health.
 **Status**: ✅ **DONE** (2026-01-10)
