@@ -46,16 +46,7 @@ export class TrackRow {
         const duration = this.formatDuration(track.duration)
         const isRanking = variant === 'ranking'
 
-        // Position element (medals for ranking variant)
-        let positionEl
-        if (isRanking && index <= 3) {
-            const medal = index === 1 ? '🥇' : index === 2 ? '🥈' : '🥉'
-            positionEl = SafeDOM.span({ className: 'text-xl w-8 text-center' }, medal)
-        } else {
-            positionEl = SafeDOM.span({ className: 'text-muted font-bold text-sm w-8 text-center' }, String(index))
-        }
-
-        // Drag handle
+        // --- Drag Handle ---
         let dragHandleEl = null
         if (draggable) {
             dragHandleEl = SafeDOM.div({
@@ -64,25 +55,51 @@ export class TrackRow {
             dragHandleEl.innerHTML = getIcon('GripVertical', 'w-4 h-4')
         }
 
-        // Badges
-        const badges = this.buildBadges({ primaryRanking, track })
-
-        // Rating badge (ranking mode only)
-        let ratingBadgeEl = null
-        if (isRanking) {
-            const rating = track.rating || 0
-            if (rating > 0) {
-                const ratingClass = this.getRatingClass(rating)
-                const badgeClass = ratingClass === 'excellent' ? 'badge-success' :
-                    ratingClass === 'great' ? 'badge-primary' :
-                        ratingClass === 'good' ? 'badge-warning' : 'badge-neutral'
-                ratingBadgeEl = SafeDOM.span({ className: `badge ${badgeClass} ml-2` }, `⭐ ${rating}`)
-            } else {
-                ratingBadgeEl = SafeDOM.span({ className: 'badge badge-neutral opacity-50 ml-2' }, '-')
-            }
+        // --- Position / Index (Line 1) ---
+        let positionEl
+        if (isRanking && index <= 3) {
+            const medal = index === 1 ? '🥇' : index === 2 ? '🥈' : '🥉'
+            positionEl = SafeDOM.span({ className: 'text-xl w-6 text-center shrink-0' }, medal)
+        } else {
+            positionEl = SafeDOM.span({ className: 'text-muted font-bold text-sm w-6 text-center shrink-0' }, String(index))
         }
 
-        // Action buttons
+        // --- Title (Line 1) --- 
+        // No truncate as requested
+        const titleEl = SafeDOM.span({
+            className: 'font-medium text-sm text-white',
+            title: track.title
+        }, track.title)
+
+        // --- Duration (Line 1) ---
+        const durationEl = SafeDOM.div({
+            className: 'text-xs text-muted font-mono ml-auto pl-2 shrink-0'
+        }, duration)
+
+        // --- Line 1 Container ---
+        const line1 = SafeDOM.div({ className: 'flex items-center w-full' }, [
+            positionEl,
+            SafeDOM.div({ className: 'ml-2 flex-1' }, titleEl),
+            durationEl
+        ])
+
+        // --- Badges (Line 2) ---
+        const badges = this.buildBadges({ primaryRanking, track })
+
+        // Rating Badge (treat as part of BEA info in Line 2)
+        // Rating is already handled in buildBadges
+        // User requested right alignment under duration
+        const line2 = SafeDOM.div({ className: 'flex items-center gap-2 mt-0.5 justify-end text-xs w-full' }, [
+            badges.primaryEl,
+            badges.secondaryEl
+        ].filter(Boolean))
+
+
+        // --- Actions (Absolute/Overlay) ---
+        // Actions traditionally float to the right. 
+        // Let's keep them absolute or floating to not mess with the flow?
+        // Or put them at end of Line 1?
+        // Usually actions appear on hover.
         const actionButtons = actions.map(btn => {
             const buttonEl = SafeDOM.button({
                 className: `p-1 text-gray-400 hover:text-white hover:bg-white/10 rounded transition-colors ${btn.class || ''}`,
@@ -98,43 +115,21 @@ export class TrackRow {
             return buttonEl
         })
 
-        // Title info row
-        const titleRow = SafeDOM.div({ className: 'flex items-center gap-2' }, [
-            SafeDOM.span({
-                className: 'font-medium text-sm truncate text-white',
-                title: track.title
-            }, track.title),
-            !isRanking ? badges.primaryEl : null,
-            !isRanking ? badges.secondaryEl : null
-        ])
-
-        // Info container
-        const infoChildren = [titleRow]
-        if (variant === 'detailed') {
-            infoChildren.push(
-                SafeDOM.div({ className: 'text-xs text-muted truncate' }, [
-                    track.artist || '',
-                    track.album ? ` • ${track.album}` : ''
-                ])
-            )
-        }
-        const infoContainer = SafeDOM.div({
-            className: 'flex-1 min-w-0 flex flex-col justify-center'
-        }, infoChildren)
-
-        // Actions container
         const actionsContainer = SafeDOM.div({
-            className: 'flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity'
+            className: 'absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 rounded px-1'
         }, actionButtons)
 
-        // Duration element
-        const durationEl = SafeDOM.div({
-            className: 'text-xs text-muted font-mono w-12 text-right'
-        }, duration)
 
-        // Main row
+        // --- Main Container ---
+        const contentContainer = SafeDOM.div({ className: 'flex flex-col flex-1 min-w-0 py-1' }, [
+            line1,
+            line2
+        ])
+
+        const rowClasses = `track-row flex items-start gap-0 p-2 rounded-lg hover:bg-white/5 transition-colors group relative ${draggable ? 'pl-8' : ''}`
+
         const row = SafeDOM.div({
-            className: `track-row flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors group relative ${draggable ? 'pl-8' : ''}`,
+            className: rowClasses,
             dataset: {
                 id: track.id,
                 playlistIndex: playlistIndex,
@@ -142,11 +137,8 @@ export class TrackRow {
             }
         }, [
             dragHandleEl,
-            positionEl,
-            infoContainer,
-            ratingBadgeEl,
-            actionsContainer,
-            durationEl
+            contentContainer,
+            actionsContainer
         ])
 
         return row

@@ -26,7 +26,8 @@ export default class SeriesController {
         this.state = {
             currentScope: 'ALL',       // 'ALL' | 'SINGLE'
             targetSeriesId: null,
-            viewMode: 'grid',          // 'grid' | 'list'
+            // ARCH-FIX: Default to 'compact' (Grid) and persist user preference
+            viewMode: localStorage.getItem('albumsViewMode') || 'compact',
             filterMode: 'all',         // 'all' | 'ranked' | 'unranked'
             filters: { artist: '', year: '', source: '' }, // Detailed filters
             searchQuery: '',
@@ -132,7 +133,7 @@ export default class SeriesController {
             this.notifyView('loading', true);
 
             albumsStore.setActiveAlbumSeriesId(storeContextId);
-            albumsStore.clearAlbumSeries(storeContextId); // Safe to clear only if we are truly reloading
+            // albumsStore.clearAlbumSeries(storeContextId); // Safe to clear only if we are truly reloading
 
             // ARCH-FIX: Soft Loading - Do NOT clear albums immediately
             // this.notifyView('albums', []); 
@@ -151,7 +152,14 @@ export default class SeriesController {
                     // ARCH-FIX: Attach _sourceSeriesId to query to preserve context
                     if (s.albumQueries) {
                         const queriesWithContext = s.albumQueries.map(q => {
-                            if (typeof q === 'string') return { title: q, _sourceSeriesId: s.id };
+                            if (typeof q === 'string') {
+                                // FIX: Parse string queries ensuring Artist field is populated
+                                if (q.includes(' - ')) {
+                                    const [artist, title] = q.split(' - ')
+                                    return { artist: artist.trim(), title: title.trim(), _sourceSeriesId: s.id }
+                                }
+                                return { title: q, _sourceSeriesId: s.id }
+                            }
                             return { ...q, _sourceSeriesId: s.id };
                         });
                         queriesToLoad.push(...queriesWithContext);
@@ -191,7 +199,14 @@ export default class SeriesController {
                     albumSeriesStore.setActiveSeries(series.id);
                     // ARCH-FIX: Attach context even for single series for consistency
                     queriesToLoad = (series.albumQueries || []).map(q => {
-                        if (typeof q === 'string') return { title: q, _sourceSeriesId: series.id };
+                        if (typeof q === 'string') {
+                            // FIX: Parse string queries ensuring Artist field is populated
+                            if (q.includes(' - ')) {
+                                const [artist, title] = q.split(' - ')
+                                return { artist: artist.trim(), title: title.trim(), _sourceSeriesId: series.id }
+                            }
+                            return { title: q, _sourceSeriesId: series.id }
+                        }
                         return { ...q, _sourceSeriesId: series.id };
                     });
                 }
@@ -237,14 +252,14 @@ export default class SeriesController {
             albumsStore.setLastLoadedAlbumSeriesId(targetSeries.id);
         }
 
-        albumsStore.reset(true);
-        albumsStore.reset(true);
+        this.state.isLoading = true;
+        this.notifyView('loading', true);
+
+        // albumsStore.reset(true);
         // ARCH-FIX: Soft Loading - Do NOT clear albums immediately
         // this.notifyView('albums', []);
 
-        this.state.isLoading = true;
         this.state.loadProgress = { current: 0, total: queries.length };
-        this.notifyView('loading', true);
         this.notifyView('progress', this.state.loadProgress);
 
         try {
@@ -422,6 +437,13 @@ export default class SeriesController {
                 if (this.view.setLoading) this.view.setLoading(data);
                 break;
             case 'albums':
+                // ARCH-FIX: Soft Loading Suppression
+                // If we are loading, do NOT wipe the screen with an empty array.
+                // Wait for the final load completion or incremental updates which have data.
+                if (this.state.isLoading && Array.isArray(data) && data.length === 0) {
+                    console.log('[SeriesController] 🛡️ Suppressing empty album update during load');
+                    return;
+                }
                 if (this.view.updateAlbums) this.view.updateAlbums(data);
                 break;
             case 'progress':

@@ -39,7 +39,12 @@ export class AlbumIdentity {
      */
     get expectedAlbum() {
         if (typeof this.originalQuery === 'object' && this.originalQuery !== null) {
-            return this.originalQuery.title || this.originalQuery.album || ''
+            const val = this.originalQuery.title || this.originalQuery.album || ''
+            // FIX: If value has " - " and artist is missing from object, extract album part
+            if (val.includes(' - ') && !this.originalQuery.artist) {
+                return val.split(' - ').slice(1).join(' - ').trim()
+            }
+            return val
         }
         if (this.originalQuery && this.originalQuery.includes(' - ')) {
             return this.originalQuery.split(' - ').slice(1).join(' - ').trim()
@@ -53,7 +58,14 @@ export class AlbumIdentity {
      */
     get expectedArtist() {
         if (typeof this.originalQuery === 'object' && this.originalQuery !== null) {
-            return this.originalQuery.artist || ''
+            if (this.originalQuery.artist) return this.originalQuery.artist
+
+            // FIX: If artist missing but title has " - ", extract artist part
+            const val = this.originalQuery.title || this.originalQuery.album || ''
+            if (val.includes(' - ')) {
+                return val.split(' - ')[0].trim()
+            }
+            return ''
         }
         if (this.originalQuery && this.originalQuery.includes(' - ')) {
             return this.originalQuery.split(' - ')[0].trim()

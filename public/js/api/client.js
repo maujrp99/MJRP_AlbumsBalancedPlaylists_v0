@@ -355,7 +355,13 @@ export class APIClient {
      */
     extractArtist(query) {
         if (typeof query === 'object' && query !== null) {
-            return query.artist || ''
+            // FIX: If artist is missing but title has " - ", try to extract from title
+            if (query.artist) return query.artist;
+            const titleField = query.title || query.album;
+            if (titleField && titleField.includes(' - ')) {
+                return titleField.split(' - ')[0].trim();
+            }
+            return '';
         }
         if (query && query.includes(' - ')) {
             return query.split(' - ')[0].trim()
@@ -371,7 +377,16 @@ export class APIClient {
      */
     extractAlbum(query) {
         if (typeof query === 'object' && query !== null) {
-            return query.title || query.album || ''
+            const val = query.title || query.album || ''
+            // FIX: If value has " - " and artist was inferred from it, we should take the second part
+            // But we must be careful. Usually title is just title. 
+            // However, if the query object was constructed from a string "Artist - Album", 
+            // it might be put into 'title' field by SeriesController?
+            // Yes: SeriesController line 154: return { title: q, ... } where q is "Artist - Album"
+            if (val.includes(' - ') && !query.artist) {
+                return val.split(' - ')[1].trim()
+            }
+            return val;
         }
         if (query && query.includes(' - ')) {
             return query.split(' - ')[1].trim()

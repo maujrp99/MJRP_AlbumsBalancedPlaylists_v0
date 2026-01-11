@@ -94,7 +94,21 @@ export class AlbumsStore {
             albums.push(album)
         } else {
             const index = albums.indexOf(existing)
-            albums[index] = album
+
+            // ARCH-FIX: Safe Merge - Do not blindly overwrite.
+            // When loading ALL series, the same album might appear in multiple series contexts.
+            // We want to preserve the fact that it exists.
+            // For now, checks if we have better data (e.g. valid ID vs undefined)
+            const isUpgrade = !existing.id && album.id;
+
+            if (isUpgrade) {
+                albums[index] = album;
+            } else {
+                // If it's just a re-add of the same album from a different context, 
+                // we might want to track multiple sourceSeriesIds if we supported it.
+                // For now, keep the existing one which might be more complete.
+                // console.log(`[AlbumsStore] Skipping overwrite of ${album.title}`);
+            }
         }
 
         this.notify()

@@ -1,10 +1,15 @@
 
 ### [2026-01-10] [Issue-144] [Album Data Flashing/Erasing on Load]
 - **Description**: The user reports consistent album loading but with a disruptive "flashing" effect where data is erased before being re-rendered during updates or scope switches.
-- **Root Cause**: `SeriesController.js` performs destructive UI updates (`notifyView('albums', [])`) at the start of `loadScope` and `loadAlbumsFromQueries` to clear the view, instead of using a non-destructive loading overlay or diffing strategy.
-- **Solution Proposed**: Implement "Soft Loading": Retain current albums in view while loading new data (showing a spinner overlay), and only replace data when the new set is ready. Remove explicit `[]` notifications where possible.
-- **Status**: ✅ **RESOLVED**
-- **Resolution**: Commented out destructive `notifyView('albums', [])` calls in `SeriesController.js`. The View now retains existing albums until the new set is ready or incrementally updated, eliminating the flash. Validated via static code analysis (no clearing on load start).
+- **Root Cause Analysis (Deep Dive)**: 
+    1.  **Primary Cause (Data Malformation)**: `SeriesController.js` (lines 154, 194) blindly wrapped string queries (e.g., "Artist - Album") into objects `{ title: "Artist - Album" }`. This created "headless" objects missing the `artist` property. Downstream logic (Client, Filter, Dedupe) incorrectly identified these as having `artist: undefined`.
+    2.  **Secondary Cause (Destructive Overwrite)**: `albumsStore.js` (line 97) blindly overwrote existing albums in the `albumsByAlbumSeriesId` map. When "All Series" loaded multiple series containing the same album (e.g., "Manic Nirvana" in both "Robert Plant" and "Gilmour & Plant" series), the second load (often containing the malformed "headless" object) overwrote the first valid load (which had the correct Series Context). This caused the valid data to "flash" and disappear/be replaced by invalid data.
+- **Solution Proposed**: 
+    1.  **Fix Controller**: Updated `SeriesController.js` to parse "Artist - Album" strings immediately into `{ artist, title }` objects before wrapping.
+    2.  **Fix Store**: Updated `albumsStore.js` to implement "Safe Merging" - only overwrite existing albums if the new data is strictly better (e.g., has a database ID).
+    3.  **Harden Client**: Updated `client.js` and `AlbumIdentity.js` to handle malformed objects defensively (parsing artist from title if missing).
+- **Status**: ✅ **RESOLVED (Root Cause Fixed)**
+- **Resolution**: Implementation of Safe Parsing in Controller and Safe Merging in Store. Defensive coding in Client retained for robustness.
 
 **Last Updated**: 2026-01-05 14:00
 **Workflow**: See `.agent/workflows/debug_protocol.md`
@@ -80,6 +85,30 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #145: Series View UI Refinements (Track Row & View Toggle)
+- **Status**: ✅ **RESOLVED**
+- **Date**: 2026-01-10
+- **Severity**: LOW (UX Enhancement)
+- **Type**: UI/UX Refactor
+- **Component**: `TrackRow.js`, `SeriesToolbar.js`
+- **Sprint**: 17.9
+
+#### Problem
+1. **Duplicate Ratings**: Track row displayed ratings twice (once as orange text, once as a grey badge).
+2. **Confusing View Toggle**: The "View Compact" / "View Expanded" button label was ambiguous (looked like a status indicator rather than a button).
+3. **Missing Grid Icon**: The Grid view button was invisible due to an incorrect icon name (`Grid3X3`).
+
+#### Solution
+1. **Track Row**: Removed the explicit `ratingBadgeEl` creation (which was redundant) and right-aligned the stats row for cleaner layout.
+2. **View Toggle**: Replaced the single text button with two distinct, icon-only buttons ("Grid" and "List") using brand colors for the active state.
+3. **Icons**: Corrected `Grid3X3` to `Grid` in `SeriesToolbar.js`.
+
+#### Files Modified
+- `public/js/components/ui/TrackRow.js`
+- `public/js/components/series/SeriesToolbar.js`
+
+---
 
 ### Issue #143: Regression Test Failures (Unrelated)
 **Status**: ⚠️ **OPEN**

@@ -115,10 +115,23 @@ export default class SeriesToolbar extends Component {
                         ${getIcon('RefreshCw', 'w-4 h-4')} Refresh
                     </button>
 
-                    <!-- View Mode -->
-                    <button id="toggleViewMode" class="${viewBtnClass}">
-                        ${getIcon(viewBtnIcon, 'w-5 h-5')} ${viewBtnLabel}
-                    </button>
+                    <!-- View Mode Icons -->
+                    <div class="flex items-center gap-2">
+                        <button 
+                            id="viewModeGrid" 
+                            class="p-2 rounded-lg transition-all border border-transparent ${viewMode === 'compact' ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20 scale-105 active:scale-95' : 'bg-brand-dark/50 text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10'}"
+                            title="Grid View"
+                        >
+                            ${getIcon('Grid', 'w-5 h-5')}
+                        </button>
+                        <button 
+                            id="viewModeList" 
+                            class="p-2 rounded-lg transition-all border border-transparent ${viewMode !== 'compact' ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20 scale-105 active:scale-95' : 'bg-brand-dark/50 text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10'}"
+                            title="List View"
+                        >
+                            ${getIcon('List', 'w-5 h-5')}
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Progress container -->
@@ -168,10 +181,20 @@ export default class SeriesToolbar extends Component {
             refresh.addEventListener('click', onRefresh);
         }
 
-        // View toggle
-        const toggle = this.container.querySelector('#toggleViewMode');
-        if (toggle && onToggleView) {
-            toggle.addEventListener('click', onToggleView);
+        // View toggle (Grid)
+        const gridBtn = this.container.querySelector('#viewModeGrid');
+        if (gridBtn && onToggleView) {
+            gridBtn.addEventListener('click', () => {
+                if (this.props.viewMode !== 'compact') onToggleView();
+            });
+        }
+
+        // View toggle (List)
+        const listBtn = this.container.querySelector('#viewModeList');
+        if (listBtn && onToggleView) {
+            listBtn.addEventListener('click', () => {
+                if (this.props.viewMode === 'compact') onToggleView();
+            });
         }
     }
 

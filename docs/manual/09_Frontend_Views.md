@@ -95,7 +95,7 @@ sequenceDiagram
 *   **Refactor Note**: This view delegates logic to specialized components and helpers to maintain a thin orchestrator role.
 *   **Sub-Components**:
     *   `SeriesHeader`: Page title and action button.
-    *   `SeriesToolbar`: Filters (Artist, Year, Source), Search, and View Toggles.
+    *   `SeriesToolbar`: Filters (Artist, Year, Source), Search, and View Toggles (Grid/List Icons).
     *   `SeriesProgressBar`: Handles inline loading states.
     *   `SeriesEmptyState`: Renders when no albums match the current scope.
     *   `SeriesGridRenderer`: Responsible for the main content layout (Grid/List).

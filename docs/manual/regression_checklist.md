@@ -21,6 +21,9 @@
 
 ### [SERIES] Albums & Ranking
 - [ ] **View Toggle**: Switch Grid ↔ List. Layout updates instantly.
+- [ ] **View Modes**: Toggle Compact ↔ Expanded. Data persists and layout shifts correctly (No data loss).
+    - *Verify*: Tracks load with Index, Title, Duration, and Badges (Spotify/BEA).
+    - *Verify*: No "undefined" values in Track Row.
 - [ ] **Edit Name**: Click Pencil -> Rename Series -> Header updates.
 - [ ] **Delete Series**: Click Trash -> Confirm -> Redirects to `/albums`.
 - [ ] **Filter Logic**: Click "EPs" -> Only EPs show. Click "Owned" -> Only owned show.
