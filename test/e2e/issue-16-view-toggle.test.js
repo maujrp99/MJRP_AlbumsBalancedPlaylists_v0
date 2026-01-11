@@ -37,7 +37,7 @@ export async function testViewToggle() {
         }
 
         await toggleButton.click();
-        await page.waitForTimeout(1500);
+        await sleep(1500);
 
         const afterGrid = await page.$('#albumsGrid');
         const afterMode = afterGrid ? 'grid' : 'list';

@@ -45,11 +45,11 @@ export class Album {
 
         // DEBUG: Trace Spotify Data Load
         if (data.spotifyId || data.spotifyPopularity) {
-            console.log(`[Album Model] Loaded Spotify Data for ${this.title}:`, {
-                id: this.spotifyId,
-                pop: this.spotifyPopularity,
-                source: data.rankingSource
-            })
+            // console.log(`[Album Model] Loaded Spotify Data for ${this.title}:`, {
+            //     id: this.spotifyId,
+            //     pop: this.spotifyPopularity,
+            //     source: data.rankingSource
+            // })
         }
     }
 

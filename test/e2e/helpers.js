@@ -9,9 +9,10 @@ export const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
 export const SELECTORS = {
     // Navigation
     nav: {
-        home: 'a[href="/"]',
+        home: 'a[href="/home"]',
         albums: 'a[href="/albums"]',
         playlists: 'a[href="/playlists"]',
+        blend: 'a[href="/blend"]',
         inventory: 'a[href="/inventory"]'
     },
 
@@ -40,6 +41,16 @@ export const SELECTORS = {
         track: '.track-item',
         seriesSelector: '#seriesSelector, select[name="series"]',
         generateButton: 'button:has-text("Generate")'
+    },
+
+    // Blending Wizard
+    blend: {
+        seriesSelector: '#blend-series-selector',
+        seriesCard: '.blend-series-card',
+        recipeCard: '.blend-recipe-card',
+        ingredientsPanel: '#blend-ingredients-panel',
+        generateButton: '#blend-generate-btn',
+        results: '#blend-results'
     },
 
     // Common UI
@@ -121,36 +132,61 @@ export async function getAlbumTitles(page) {
 export async function createSeries(page, seriesName, albums) {
     await navigateTo(page, '/');
 
-    // Fill in series name (if input exists)
-    const seriesNameInput = await page.$('#seriesName, input[placeholder*="series name"]');
+    // Fill in series name
+    const seriesNameInput = await page.$('#seriesNameInput');
     if (seriesNameInput) {
+        // Clear existing value if any
+        await seriesNameInput.click({ clickCount: 3 });
         await seriesNameInput.type(seriesName);
+    } else {
+        console.warn('⚠️ Could not find #seriesNameInput');
     }
 
-    // Fill in albums
+    // Switch to Bulk Mode
+    const bulkBtn = await page.$('#btnModeBulk');
+    if (bulkBtn) {
+        await bulkBtn.click();
+        await new Promise(r => setTimeout(r, 500)); // Animation
+    }
+
+    // Fill in albums (Bulk Input)
     const albumsText = albums.join('\n');
-    const albumsInput = await page.$('#albumList, #albumQueries');
-    if (albumsInput) {
-        await albumsInput.click({ clickCount: 3 }); // Select all
-        await albumsInput.type(albumsText);
+    const bulkInput = await page.$('#bulkPasteInput');
+    if (bulkInput) {
+        await bulkInput.click();
+        await bulkInput.type(albumsText);
+    } else {
+        console.error('❌ Could not find #bulkPasteInput');
+        return;
     }
 
-    // Click Load Albums button using evaluate (works with all Puppeteer versions)
-    await page.evaluate(() => {
-        const buttons = Array.from(document.querySelectorAll('button'));
-        const loadBtn = buttons.find(b =>
-            b.textContent.includes('Load Albums') ||
-            b.textContent.includes('🚀') ||
-            b.textContent.includes('Create Series')
-        );
-        if (loadBtn) loadBtn.click();
-    });
+    // Process List
+    const processBtn = await page.$('#btnProcessBulk');
+    if (processBtn) {
+        await processBtn.click();
+        // Wait for staging area to fill (simple pause or check count)
+        await new Promise(r => setTimeout(r, 1000));
+    }
+
+    // Initialize Load Sequence
+    const initBtn = await page.$('#btnInitializeLoad');
+    if (initBtn) {
+        await initBtn.click();
+    } else {
+        console.error('❌ Could not find #btnInitializeLoad');
+    }
 
     // Wait for navigation to albums page
     try {
-        await page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 10000 });
+        await page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 15000 });
+        // Double check we are on /albums
+        const url = page.url();
+        if (!url.includes('/albums')) {
+            console.warn(`⚠️ Navigation might have failed, current URL: ${url}`);
+        }
     } catch (e) {
         // May not navigate immediately - wait using standard Promise
+        console.warn('⚠️ waitForNavigation timed out, continuing...');
         await new Promise(r => setTimeout(r, 2000));
     }
 
@@ -167,7 +203,7 @@ export async function switchSeries(page, seriesName) {
     const selector = await page.$(SELECTORS.playlists.seriesSelector);
     if (selector) {
         await selector.select(seriesName);
-        await page.waitForTimeout(1000); // Wait for state update
+        await new Promise(r => setTimeout(r, 1000)); // Wait for state update
         console.log(`✓ Switched to series: ${seriesName}`);
         return;
     }

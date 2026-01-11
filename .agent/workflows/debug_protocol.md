@@ -14,13 +14,14 @@ description: Debugging Protocol
 3.  **Reproduce**: Confirm the issue.
 
 ## 2. Analysis (The "Why")
-1.  **Consult Manuals**: Check `docs/manual/01_System_Architecture.md` to understand *intended* behavior.
+1.  **Consult Manuals**: Check `docs/manual/01_System_Architecture.md` to understand *intended* behavior. consulte o `docs/00_MJRP_Album_Blender_Ref_Guide_Index.md`
 2.  **Hypothesis**: Formulate a theory.
 3.  **Plan**: Describe the fix.
     -   *Check*: If fix requires changing a Core Pattern -> **STOP**. Write an ADR first (`docs/decisions/`).
 
 ## 3. Implementation
-1.  **Apply Fix**: Edit the code.
+1.  **Apply Fix**: Edit the code making analysis to implement a fix with componentization and modularity reuse whenever possible. If not possible try to modularize or componetize the fix.
+2.  **Legacy Code**: If the fix replace a code, clean it and add to the debug log the deleted/replaced code.
 2.  **Code Check**: Confirm no Layer Violations (`View` -> `Repository`).
 
 ## 4. Verification (The "Safety Net")

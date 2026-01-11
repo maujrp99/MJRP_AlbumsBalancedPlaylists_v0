@@ -1,4 +1,10 @@
-# Debug Log
+
+### [2026-01-10] [Issue-144] [Album Data Flashing/Erasing on Load]
+- **Description**: The user reports consistent album loading but with a disruptive "flashing" effect where data is erased before being re-rendered during updates or scope switches.
+- **Root Cause**: `SeriesController.js` performs destructive UI updates (`notifyView('albums', [])`) at the start of `loadScope` and `loadAlbumsFromQueries` to clear the view, instead of using a non-destructive loading overlay or diffing strategy.
+- **Solution Proposed**: Implement "Soft Loading": Retain current albums in view while loading new data (showing a spinner overlay), and only replace data when the new set is ready. Remove explicit `[]` notifications where possible.
+- **Status**: ✅ **RESOLVED**
+- **Resolution**: Commented out destructive `notifyView('albums', [])` calls in `SeriesController.js`. The View now retains existing albums until the new set is ready or incrementally updated, eliminating the flash. Validated via static code analysis (no clearing on load start).
 
 **Last Updated**: 2026-01-05 14:00
 **Workflow**: See `.agent/workflows/debug_protocol.md`

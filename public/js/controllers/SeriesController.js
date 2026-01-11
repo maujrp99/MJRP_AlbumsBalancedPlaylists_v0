@@ -48,6 +48,7 @@ export default class SeriesController {
         this.handleFilterMode = this.handleFilterMode.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
         this.handleSort = this.handleSort.bind(this);
+        this.handleViewModeChange = this.handleViewModeChange.bind(this);
     }
 
     /**
@@ -95,14 +96,29 @@ export default class SeriesController {
             window.history.pushState({}, '', newUrl);
         }
 
+        // ARCH-FIX: Reset filters when switching scope to prevent context contamination
+        this.state.filters = { artist: '', year: '', source: '' };
+        this.state.searchQuery = '';
+        this.notifyView('header', this.getHeaderData()); // Update header to clear any filter indicators
+
         try {
             const storeContextId = scopeType === 'ALL' ? 'ALL_SERIES_VIEW' : seriesId;
 
-            // ARCH-6: Check store cache BEFORE loading
+            // ARCH-SPEC: Check store cache BEFORE any clearing
             if (!skipCache && albumsStore.hasAlbumsForSeries(storeContextId)) {
-                console.log('[SeriesController] ✅ Cache HIT - instant render');
+                console.log(`[SeriesController] ✅ Cache HIT for ${storeContextId} - preventing reload`);
                 albumsStore.setActiveAlbumSeriesId(storeContextId);
-                albumSeriesStore.setActiveSeries(scopeType === 'ALL' ? null : seriesId);
+
+                if (scopeType === 'ALL') {
+                    // Start background sync without clearing view
+                    this.syncAllSeriesInBackground();
+                } else if (seriesId) {
+                    // Set active series for context
+                    const series = albumSeriesStore.getSeries().find(s => s.id === seriesId);
+                    if (series) albumSeriesStore.setActiveSeries(series.id);
+                }
+
+                // Notify view immediately with cached data
                 this.notifyView('header', this.getHeaderData());
                 this.notifyView('albums', albumsStore.getAlbumsForSeries(storeContextId));
                 this.notifyView('loading', false);
@@ -110,14 +126,16 @@ export default class SeriesController {
                 return;
             }
 
-            // Cache MISS - proceed with loading
+            // Cache MISS - Only now do we clear and load
+            // console.log(`[SeriesController] ⚠️ Cache MISS for ${storeContextId} - fetching fresh data`);
             this.state.isLoading = true;
             this.notifyView('loading', true);
 
             albumsStore.setActiveAlbumSeriesId(storeContextId);
-            albumsStore.clearAlbumSeries(storeContextId); // Clear only this series
+            albumsStore.clearAlbumSeries(storeContextId); // Safe to clear only if we are truly reloading
 
-            this.notifyView('albums', []);
+            // ARCH-FIX: Soft Loading - Do NOT clear albums immediately
+            // this.notifyView('albums', []); 
 
             // Resolve queries to load
             let queriesToLoad = [];
@@ -220,7 +238,9 @@ export default class SeriesController {
         }
 
         albumsStore.reset(true);
-        this.notifyView('albums', []);
+        albumsStore.reset(true);
+        // ARCH-FIX: Soft Loading - Do NOT clear albums immediately
+        // this.notifyView('albums', []);
 
         this.state.isLoading = true;
         this.state.loadProgress = { current: 0, total: queries.length };
@@ -334,6 +354,20 @@ export default class SeriesController {
     }
 
     /**
+     * Handle view mode change (Grid/List/Expanded)
+     * @param {string} mode - 'grid' | 'list' | 'compact' | 'expanded'
+     */
+    handleViewModeChange(mode) {
+        console.log('[SeriesController] View mode changed:', mode);
+        this.state.viewMode = mode;
+        localStorage.setItem('albumsViewMode', mode);
+
+        // Trigger re-render by re-applying filters (which notifies view 'albums')
+        // We also explicitly notify 'header' just in case view depends on mode there
+        this.applyFilters();
+    }
+
+    /**
      * Handle sort change
      */
     handleSort(sortKey) {
@@ -346,12 +380,20 @@ export default class SeriesController {
      * Apply current filters to albums and notify view
      */
     applyFilters() {
-        const allAlbums = albumsStore.getAlbums();
+        // ARCH-FIX: Select data source based on scope to prevent ghosting
+        let allAlbums;
+        if (this.state.currentScope === 'SINGLE' && this.state.targetSeriesId) {
+            // Explicitly fetch only this series' albums from store map
+            allAlbums = albumsStore.getAlbumsForSeries(this.state.targetSeriesId);
+        } else {
+            // Use default behavior (relies on ActiveAlbumSeriesId being set in Store)
+            allAlbums = albumsStore.getAlbums();
+        }
 
         // Sprint 17: Use pure service for filtering (T17-202)
         const filtered = filterAlbums(allAlbums, {
             searchQuery: this.state.searchQuery,
-            filters: this.state.filters || {}, // Ensure filters object exists in state? 
+            filters: this.state.filters || {},
             // Wait, this.state.filters was not explicit in constructor but SeriesView had it.
             // I need to ensure SeriesController tracks 'filters'.
             // In Constructor, only 'filterMode' was there.
@@ -397,8 +439,21 @@ export default class SeriesController {
 
     onAlbumsChange() {
         if (!this.state.isLoading) {
-            // Only update if not in middle of loading
-            this.notifyView('albums', albumsStore.getAlbums());
+            // ARCH-FIX: Ensure we fetch the correct scope's data to avoid "flashing" wrong sets
+            let albums;
+            if (this.state.currentScope === 'SINGLE' && this.state.targetSeriesId) {
+                albums = albumsStore.getAlbumsForSeries(this.state.targetSeriesId);
+                // Apply filters manually since getAlbumsForSeries returns raw data
+                // Wait, notifyView('albums') expects filtered data if we rely on applyFilters?
+                // Actually applyFilters() gets albumsStore.getAlbums().
+                // Let's defer to applyFilters() but ensure store active ID is correct?
+                // Safer: Just call applyFilters() which is the central point for "Get From Store -> Filter -> Notify".
+                this.applyFilters();
+                return;
+            }
+
+            // Fallback for ALL scope or general updates
+            this.applyFilters();
         }
     }
 
@@ -420,6 +475,21 @@ export default class SeriesController {
             seriesList: allSeries,
             activeSeriesId: activeSeries?.id || null
         };
+    }
+
+    /**
+     * Background Sync for ALL Series View
+     * Fetches series definitions without clearing the view.
+     */
+    async syncAllSeriesInBackground() {
+        console.log('[SeriesController] 🔄 Starting background sync...');
+        const db = albumSeriesStore.getDb();
+        if (db) {
+            const service = getSeriesService(db, null, albumSeriesStore.getUserId())
+            await service.loadFromFirestore()
+            // Notify header in case series list changed size
+            this.notifyView('header', this.getHeaderData());
+        }
     }
 
     getState() {

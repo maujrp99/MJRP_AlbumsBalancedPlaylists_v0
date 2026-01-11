@@ -38,7 +38,7 @@ export async function testGhostAlbums() {
 
         console.log('\nStep 2: Navigate to Home');
         await navigateTo(page, '/');
-        await page.waitForTimeout(1000);
+        await sleep(1000);
 
         console.log('\nStep 3: Create Series B');
         await createSeries(page, seriesB.name, seriesB.albums);

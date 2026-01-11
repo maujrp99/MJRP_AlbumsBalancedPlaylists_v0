@@ -35,7 +35,7 @@ export class APIClient {
         if (!skipCache) {
             const cached = await this.cache.get(query)
             if (cached) {
-                console.log('[APIClient] Returning cached album:', query)
+                // console.log('[APIClient] Returning cached album:', query)
                 // HYDRATION: Convert cached JSON back to Album instance
                 return cached instanceof Album ? cached : new Album(cached)
             }

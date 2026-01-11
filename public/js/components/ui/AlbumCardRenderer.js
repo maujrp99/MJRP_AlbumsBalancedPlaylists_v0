@@ -9,6 +9,7 @@ import { getIcon } from '../Icons.js';
 import { escapeHtml } from '../../utils/stringUtils.js';
 import { Card } from './Card.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
+import { TracksTable } from '../ranking/TracksTable.js';
 
 export class AlbumCardRenderer {
     /**
@@ -41,6 +42,10 @@ export class AlbumCardRenderer {
      * @param {number} idx - For animation delay
      * @returns {string} HTML string
      */
+    /**
+     * Render an Expanded Album Card (List/Detail view)
+     * Uses Card.renderHTML with 'expanded' variant
+     */
     static renderExpanded(album, idx = 0) {
         const coverUrl = albumLoader.getArtworkUrl(album, 150);
 
@@ -55,8 +60,9 @@ export class AlbumCardRenderer {
                      ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
                      <span class="badge badge-neutral">${album.tracks?.length || 0} tracks</span>
                 </div>
-                <!-- Ranking UI Container -->
-                <div class="ranking-comparison-container mt-6" data-album-id="${album.id}"></div>
+                
+                <!-- Detailed Ranked Table (Print 3 Style) -->
+                ${AlbumCardRenderer.renderDetailedTable(album)}
             `),
             actions: [
                 { icon: 'Plus', label: 'Inventory', action: 'add-to-inventory' },
@@ -72,35 +78,52 @@ export class AlbumCardRenderer {
     }
 
     /**
-     * Render tracklist helpers (if needed separate from comparison component)
+     * Render Detailed Track Table (Reusing TracksTable Component)
+     * Matches the UI of the Compact View Modal exactly.
      */
-    static renderTracklist(album, type = 'ranked') {
-        const tracks = type === 'ranked'
-            ? [...(album.tracks || [])].sort((a, b) => (b.rating || 0) - (a.rating || 0))
-            : (album.tracksOriginalOrder || album.tracks || []);
+    static renderDetailedTable(album) {
+        // 1. Normalize Tracks (same logic as TracksRankingComparison to ensure data shape)
+        const enrichedTracks = album.getTracks('acclaim')
+        const enrichedMap = new Map()
+        const norm = (str) => str?.toLowerCase().trim().replace(/[^a-z0-9]/g, '') || ''
+        enrichedTracks.forEach(t => enrichedMap.set(norm(t.title), t))
+
+        const tracks = album.getTracks('original').map((track, idx) => {
+            const enriched = enrichedMap.get(norm(track.title))
+            return {
+                ...track,
+                rank: enriched?.rank || track.rank || 999,
+                rating: enriched?.rating || track.rating || null,
+                spotifyPopularity: (enriched?.spotifyPopularity !== undefined) ? Number(enriched.spotifyPopularity) : (track.spotifyPopularity || -1),
+                position: Number(track.position) || (idx + 1),
+                duration: enriched?.duration || track.duration || 0
+            }
+        })
+
+        // 2. Sort by Rank (Default view)
+        tracks.sort((a, b) => {
+            const rankA = (a.rank && a.rank < 999) ? a.rank : 999999
+            const rankB = (b.rank && b.rank < 999) ? b.rank : 999999
+            return rankA - rankB
+        })
 
         if (tracks.length === 0) return '<p class="text-muted text-sm">No tracks available</p>';
 
-        const title = type === 'ranked' ? 'Ranked by BestEverAlbums' : 'Original Album Order';
-        const icon = type === 'ranked' ? 'TrendingUp' : 'List';
-        const accent = type === 'ranked' ? 'text-accent-primary' : 'text-accent-secondary';
+        // 3. Render using shared component
+        // We create an instance and render it.
+        // Note: Event listeners (sorting) won't persist if this string is injected via innerHTML,
+        // but it ensures VISUAL consistency as requested.
+        const table = new TracksTable({
+            tracks: tracks,
+            sortField: 'rank',      // Default
+            sortDirection: 'asc',
+            onSort: () => { }        // No-op for static view
+        });
 
-        return `
-            <div class="tracklist-section">
-                <h4 class="text-sm font-bold mb-3 flex items-center gap-2 ${accent}">
-                    ${getIcon(icon, 'w-4 h-4')}
-                    ${title}
-                </h4>
-                <div class="tracks-list-compact space-y-1 text-sm">
-                    ${tracks.map((track, idx) => `
-                        <div class="track-row-compact flex items-center gap-2 py-1 px-2 rounded hover:bg-white/5">
-                            <span class="track-pos w-6 text-xs text-muted text-center">${idx + 1}</span>
-                            <span class="track-name flex-1 truncate">${escapeHtml(track.title || track.name)}</span>
-                            ${track.rating > 0 ? `<span class="track-rating badge badge-sm">⭐ ${track.rating}</span>` : ''}
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
+        // TracksTable.render() returns a DOM Node
+        const tableNode = table.render();
+
+        // Return outerHTML for string injection
+        return tableNode.outerHTML;
     }
 }

@@ -10,6 +10,8 @@ import { escapeHtml } from '../../utils/stringUtils.js';
 import { SeriesEmptyState } from '../../components/series/SeriesEmptyState.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 
+import { getUniqueArtists } from '../../services/SeriesFilterService.js';
+
 export class SeriesViewUpdater {
     constructor(components) {
         this.components = components; // { header, toolbar, grid, inlineProgress }
@@ -71,5 +73,28 @@ export class SeriesViewUpdater {
             });
             emptyState.mount(container);
         }
+    }
+
+
+    updateToolbar(state, currentScope) {
+        if (!this.components.toolbar) return;
+
+        const { searchQuery, filters, viewMode } = state;
+        const activeSeries = albumSeriesStore.getActiveSeries();
+        const allSeries = albumSeriesStore.getSeries();
+        const albums = albumsStore.getAlbums();
+
+        // Regenerate dynamic options
+        const artists = getUniqueArtists(albums);
+
+        // Update toolbar with synchronized state
+        this.components.toolbar.update({
+            searchQuery,
+            filters,
+            viewMode,
+            activeSeries: currentScope === 'ALL' ? null : activeSeries,
+            seriesList: allSeries,
+            artists
+        });
     }
 }

@@ -47,7 +47,7 @@ export class AlbumCache {
         let data = await cacheManager.get(key)
 
         if (data) {
-            console.log('✅ IndexedDB cache hit:', query)
+            // console.log('✅ IndexedDB cache hit:', query)
             return data
         }
 

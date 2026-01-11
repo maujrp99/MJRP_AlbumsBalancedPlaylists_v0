@@ -13,6 +13,7 @@ All notable changes to the "The Album Blender" (MJRP) project will be documented
 - **Manual v3.0**: Published the [Reference Guide](MJRP_Album_Blender_Ref_Guide.md) ("Deep Dive") to `docs/`.
 - **New Protocols**: Implemented `onboarding_protocol_v2` and `documentation_audit_v2`.
 - **Docs**: Created `docs/manual/00_Deployment_and_Setup.md` as the unified deployment guide.
+- **Testing**: Added `blending-wizard.test.js` for golden path verification.
 
 ### Changed
 - **Documentation Overhaul**: Restructured `docs/` folder.
@@ -23,6 +24,10 @@ All notable changes to the "The Album Blender" (MJRP) project will be documented
 - **Code Structure**:
     - Moved root test scripts to `test/scripts/`.
     - Archived `deprecated_curation.js` and removed legacy `api.js`.
+- **Test Suite**:
+    - Revamped `helpers.js` to support V3 Home View workflow (Batch/Process/Initialize).
+    - Removed deprecated `waitForTimeout` in favor of implementation-agnostic `sleep`.
+    - Updated `topn.test.js` to match Sprint 17.5 Generic Algorithm architecture.
 
 ### Fixed
 - **Link Rot**: Updated all internal links in `proj-documentation-task.md` and architecture maps.

@@ -79,7 +79,10 @@ export class SeriesComponentFactory {
                 onYearFilter: (v) => controller.handleFilterChange('year', v),
                 onSourceFilter: (v) => controller.handleFilterChange('source', v),
                 onRefresh: () => controller.loadScope(view.currentScope, view.targetSeriesId, true),
-                onToggleView: () => controller.handleViewModeChange(view.viewMode === 'grid' ? 'list' : 'grid')
+                onToggleView: () => {
+                    const newMode = view.viewMode === 'compact' ? 'expanded' : 'compact';
+                    controller.handleViewModeChange(newMode);
+                }
             }
         });
         toolbar.mount();

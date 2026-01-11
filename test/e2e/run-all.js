@@ -9,6 +9,7 @@ import { testViewToggle } from './issue-16-view-toggle.test.js';
 import { testSeriesSwitching } from './issue-19-series-switching.test.js';
 import { testStickyPlaylists } from './issue-21-sticky-playlists.test.js';
 import { testUIComponents } from './ui-components.test.js';
+import { runBlendingWizardTest } from './blending-wizard.test.js';
 
 async function runAllTests() {
     console.log('\n' + '='.repeat(60));
@@ -49,11 +50,16 @@ async function runAllTests() {
     totalPassed += issue21Result.passed;
     totalFailed += issue21Result.failed;
 
-    // Run UI Components Test
     const uiResult = await testUIComponents();
     results.push({ name: 'UI Components', ...uiResult });
     totalPassed += uiResult.passed;
     totalFailed += uiResult.failed;
+
+    // Run Blending Wizard Test (Golden Path)
+    const blendResult = await runBlendingWizardTest();
+    results.push({ name: 'Blending Wizard', ...blendResult });
+    totalPassed += blendResult.passed;
+    totalFailed += blendResult.failed;
 
     // Summary
     console.log('\n' + '='.repeat(60));

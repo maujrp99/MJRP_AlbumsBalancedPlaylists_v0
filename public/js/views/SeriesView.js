@@ -146,7 +146,17 @@ export default class SeriesView extends BaseView {
     }
 
     updateAlbums(albums) {
-        console.log('[SeriesView] updateAlbums:', albums?.length);
+        // console.log('[SeriesView] updateAlbums:', albums?.length);
+
+        // Sync state from controller
+        if (this.controller) {
+            const state = this.controller.getState();
+            this.viewMode = state.viewMode || this.viewMode;
+
+            // ARCH-FIX: Ensure Toolbar is synced with Controller state (Filters, Active Series)
+            this.updater?.updateToolbar(state, this.currentScope);
+        }
+
         this.updater?.updateGrid(albums, this.viewMode, this.currentScope, this.controller.getState().filters, this.controller.getState().searchQuery);
         this.updater?.updateHeader(this.currentScope);
         this.updater?.updateEmptyState('emptyStateContainer', albums.length, this.isLoading);

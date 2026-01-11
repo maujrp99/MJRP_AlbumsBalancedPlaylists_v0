@@ -23,8 +23,14 @@ The test suite is structured into clear layers, mirroring the application archit
 *   **Setup**: `setup.js` handles browser launching and page creation. `helpers.js` provides navigation utilities.
 *   **Smoke Test (`smoke.test.js`)**:
     *   Verifies core app visibility: Title, Header, Logo, Navigation Links.
-    *   Navigates to critical routes (`/albums`).
-*   **Coverage**: Basic sanity checks. Needs expansion for complex user flows (e.g., specific playlist generation scenarios).
+    *   Navigates to critical routes (`/albums`, `/blend`, `/inventory`).
+    *   **Revamped (Sprint 19)**: Updated to match V3 Navigation Logic (`/home` redirection).
+*   **Blending Wizard (`blending-wizard.test.js`)**:
+    *   **Golden Path**: Automates the V3 Blending flow: Select Series -> Configure Ingredients -> Generate Playlist.
+    *   Verifies the full "Creation Pipeline".
+*   **Legacy Regressions (`issue-*.test.js`)**:
+    *   Cover historical bugs (#15 Ghost Albums, #16 View Toggle, #19 Series Switching).
+*   **Coverage**: High coverage of critical paths. `helpers.js` now supports the V3 "Initialize Load" workflow.
 
 ### Store Layer (`test/stores/`)
 *   **Pattern**: Tests the **Public Interface** of stores (`add`, `remove`, `subscribe`, `getState`).
@@ -78,8 +84,8 @@ sequenceDiagram
 
 ## 3. Analysis Verdict
 *   **Status**: **Healthy / Active**.
-*   **Tech Stack**: Modern (Vitest + ESM).
-*   **Gap**: While the *infrastructure* is great, the **logic coverage** for complex algorithms (e.g., `MJRPBalancedCascadeAlgorithm`) needs to be verified in `test/algorithms/`.
+*   **Tech Stack**: Modern (Vitest + Puppeteer).
+*   **Gap**: ~Logic coverage for algorithms~ (Resolved: `topn.test.js` updated for Sprint 17.5). Remaining gap: E2E test reliability on local dev environments (timeouts).
 
 ## 4. Recommendations
 1.  **Expand E2E**: Add a "Golden Path" test: *Login -> Select Series -> Generate Playlist -> Verify Output*.
