@@ -7,11 +7,14 @@
 
 import Component from '../base/Component.js';
 import { albumsStore } from '../../stores/albums.js';
+import { app, auth, db } from '../../firebase-init.js';
 import { albumSeriesStore } from '../../stores/albumSeries.js';
 import { showViewAlbumModal } from '../ViewAlbumModal.js';
 import { toast } from '../Toast.js';
 import { dialogService } from '../../services/DialogService.js';
 import { InventoryAddModal } from '../InventoryAddModal.js';
+import { UserRankModal } from '../ranking/UserRankModal.js';  // Sprint 20
+import { AlbumCardRenderer } from '../ui/AlbumCardRenderer.js';
 
 export default class SeriesEventHandler extends Component {
     /**
@@ -54,6 +57,14 @@ export default class SeriesEventHandler extends Component {
      * Main event handler with delegation
      */
     async handleClick(e) {
+        // 1. Check for sort header click FIRST (delegation)
+        const sortHeader = e.target.closest('[data-sort]');
+        if (sortHeader) {
+            e.stopPropagation();
+            this.handleTableSort(sortHeader);
+            return;
+        }
+
         const target = e.target.closest('[data-action]');
         if (!target) return;
 
@@ -70,9 +81,60 @@ export default class SeriesEventHandler extends Component {
 
         // Album actions require albumId
         if (!albumId) return;
-        e.stopPropagation();
 
+        e.stopPropagation();
         await this.handleAlbumAction(action, albumId, target);
+    }
+
+    /**
+     * Handle Table Sort Delegation (Sprint 20 Fix)
+     * Re-renders the static table HTML with new sort parameters
+     */
+    handleTableSort(header) {
+        const tableRoot = header.closest('.tracks-table-root');
+        // Search for both patterns to be robust across different card variants
+        const albumCard = header.closest('[data-album-id], [data-id]');
+        const albumId = albumCard?.dataset.albumId || albumCard?.dataset.id;
+
+        if (!albumId) {
+            console.warn('[SeriesEventHandler] Sort failed: No album context found');
+            return;
+        }
+
+        const field = header.dataset.sort;
+        const currentDirection = header.dataset.direction || 'asc';
+        const newDirection = currentDirection === 'asc' ? 'desc' : 'asc'; // Toggle
+
+        // Get album
+        const album = albumsStore.getAlbums().find(a => a.id === albumId);
+        if (!album) return;
+
+        console.log(`[SeriesEventHandler] Sorting album ${albumId} by ${field} (${newDirection})`);
+
+        // Re-render table HTML
+        // Note: We need to update the entire container to ensure event delegation still works 
+        // and visual state is consistent.
+        // AlbumCardRenderer.renderDetailedTable returns the OUTER HTML of the table/wrapper.
+
+        // Import Renderer dynamically to avoid circular dependency if possible, 
+        // or ensure it's imported at top (it's not).
+        // We need to import AlbumCardRenderer at the top of this file.
+        // Wait, I haven't imported AlbumCardRenderer in this file properly yet!
+
+        // I will add the import in a separate block if needed, but for now assuming logic here.
+        // Actually, let's use the global class if available or import it.
+        // I need to add `import { AlbumCardRenderer } from '../ui/AlbumCardRenderer.js';`
+
+        // Re-render table HTML
+        const newTableHTML = AlbumCardRenderer.renderDetailedTable(album, {
+            sortField: field,
+            sortDirection: newDirection
+        });
+
+        // Find container to replace
+        if (tableRoot && tableRoot.parentNode) {
+            tableRoot.outerHTML = newTableHTML;
+        }
     }
 
     /**
@@ -116,6 +178,11 @@ export default class SeriesEventHandler extends Component {
 
             case 'remove-album':
                 await this.handleRemoveAlbum(album, targetElement);
+                break;
+
+            // Sprint 20: User Ranking
+            case 'rank-album':
+                this.handleRankAlbum(album);
                 break;
         }
     }
@@ -221,5 +288,39 @@ export default class SeriesEventHandler extends Component {
 
             toast.error('Failed to remove album: ' + err.message);
         }
+    }
+
+    /**
+     * Sprint 20: Open User Ranking Modal
+     * @param {Object} album - Album to rank
+     */
+    handleRankAlbum(album) {
+        // Get current user ID (from actual auth state)
+        const userId = auth.currentUser?.uid || 'anonymous-user';
+
+        const modal = new UserRankModal({
+            album,
+            userId,
+            onSave: (rankings) => {
+                // 1. Update local album object state immediately for UI consistency
+                // Use the new Model method to ensure all track lists are updated
+                album.setUserRankings(rankings);
+
+                toast.success(`Rankings saved for "${album.title}"`);
+                console.log('[V2] [SeriesEventHandler] Rankings saved and local state updated:', rankings);
+
+                // 2. Trigger re-render
+                const { onAlbumRemoved } = this.props;
+                if (onAlbumRemoved) {
+                    console.log('[V2] [SeriesEventHandler] Triggering onAlbumRemoved (refresh)');
+                    onAlbumRemoved();
+                }
+            },
+            onClose: () => {
+                console.log('[SeriesEventHandler] Rank modal closed');
+            }
+        });
+
+        modal.show();
     }
 }

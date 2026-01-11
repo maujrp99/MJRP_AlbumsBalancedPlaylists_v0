@@ -181,6 +181,7 @@ Use these IDs to reference specific UI elements:
 ### Data Source Color Coding
 
 > **Added**: Sprint 12 (2025-12-23)
+> **Updated**: Sprint 20 (2026-01-11) - Added User Ranking
 
 Use consistent colors to visually distinguish data sources:
 
@@ -188,16 +189,17 @@ Use consistent colors to visually distinguish data sources:
 |--------|------------|-----|----------------|-------|
 | **Acclaim** (BEA) | Brand Orange | `#FF6B00` | `text-brand-orange`, `bg-brand-orange` | Rankings, ratings, acclaim badges, ★ stars |
 | **Popularity** (Spotify) | Spotify Green | `#1DB954` | `text-[#1DB954]`, `bg-[#1DB954]` | Popularity scores, rank badges, progress bars |
+| **User Ranking** (NEW) | Incandescent Blue | `#0EA5E9` | `text-sky-500`, `bg-sky-500` | User rank badges, "Rank It" button, My Rank column |
 
 **UI Elements by Source:**
 
-| Element | Acclaim (Orange) | Popularity (Green) |
-|---------|-----------------|-------------------|
-| Rank badge | `#1` orange circle | `#1` green circle |
-| Score indicator | `★ 93` with orange star | `78%` with green text |
-| Progress bar | N/A | Green bar (`#1DB954`) |
-| Header icon | Award (orange) | SpotifyConfig (green) |
-| Footer average | "Avg Rank" with orange | "Avg Pop" with green |
+| Element | Acclaim (Orange) | Popularity (Green) | User (Blue) |
+|---------|-----------------|-------------------|-------------|
+| Rank badge | `#1` orange circle | `#1` green circle | `#1` blue circle |
+| Score indicator | `★ 93` with orange star | `78%` with green text | N/A |
+| Progress bar | N/A | Green bar (`#1DB954`) | N/A |
+| Header icon | Award (orange) | SpotifyConfig (green) | Star (blue) |
+| Footer average | "Avg Rank" with orange | "Avg Pop" with green | "Avg User Rank" (blue) |
 
 ---
 

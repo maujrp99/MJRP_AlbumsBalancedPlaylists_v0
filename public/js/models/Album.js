@@ -64,6 +64,29 @@ export class Album {
     }
 
     /**
+     * Inject user rankings into both track lists
+     * @param {Object[]} rankings - Array of { trackTitle, userRank }
+     */
+    setUserRankings(rankings) {
+        if (!rankings) return
+
+        this.hasUserRanking = true
+        const rankMap = new Map(rankings.map(r => [r.trackTitle.toLowerCase().trim(), r.userRank]))
+
+        const updateList = (list) => {
+            list.forEach(t => {
+                const key = t.title.toLowerCase().trim()
+                if (rankMap.has(key)) {
+                    t.userRank = rankMap.get(key)
+                }
+            })
+        }
+
+        updateList(this.tracks)
+        updateList(this.tracksOriginalOrder)
+    }
+
+    /**
      * Ensures all tracks have valid ranking data.
      * Fallback Strategy:
      * 1. If no external rank, use 'position' (Original Order) as 'rank'.

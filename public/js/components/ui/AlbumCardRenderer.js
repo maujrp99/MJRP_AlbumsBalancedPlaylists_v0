@@ -28,6 +28,17 @@ export class AlbumCardRenderer {
             image: coverUrl,
             badge: album.year,
             actions: [
+                // Sprint 20: User Ranking button (Dynamically styled)
+                {
+                    icon: 'Star',
+                    // Dynamic Label & Style based on state
+                    label: album.hasUserRanking ? 'Ranked' : 'Rank It',
+                    action: 'rank-album',
+                    // Add checkmark if ranked, distinct styling
+                    class: album.hasUserRanking
+                        ? 'text-sky-400 font-bold bg-sky-500/20 ring-1 ring-sky-500/50'
+                        : 'text-sky-500 hover:text-sky-400'
+                },
                 { icon: 'Plus', label: 'Add', action: 'add-to-inventory' },
                 { icon: 'Trash', label: 'Remove', action: 'remove-album' }
             ]
@@ -65,6 +76,15 @@ export class AlbumCardRenderer {
                 ${AlbumCardRenderer.renderDetailedTable(album)}
             `),
             actions: [
+                // Sprint 20: User Ranking button
+                {
+                    icon: 'Star',
+                    label: album.hasUserRanking ? 'Ranked' : 'Rank It',
+                    action: 'rank-album',
+                    class: album.hasUserRanking
+                        ? 'text-sky-400 font-bold bg-sky-500/20 ring-1 ring-sky-500/50'
+                        : 'text-sky-500 hover:text-sky-400'
+                },
                 { icon: 'Plus', label: 'Inventory', action: 'add-to-inventory' },
                 { icon: 'Trash', label: 'Remove', action: 'remove-album', class: 'tech-btn-danger' }
             ]
@@ -81,7 +101,9 @@ export class AlbumCardRenderer {
      * Render Detailed Track Table (Reusing TracksTable Component)
      * Matches the UI of the Compact View Modal exactly.
      */
-    static renderDetailedTable(album) {
+    static renderDetailedTable(album, options = {}) {
+        const { sortField = 'rank', sortDirection = 'asc' } = options;
+
         // 1. Normalize Tracks (same logic as TracksRankingComparison to ensure data shape)
         const enrichedTracks = album.getTracks('acclaim')
         const enrichedMap = new Map()
@@ -93,6 +115,7 @@ export class AlbumCardRenderer {
             return {
                 ...track,
                 rank: enriched?.rank || track.rank || 999,
+                userRank: track.userRank, // Ensure userRank is passed through (injected by Controller)
                 rating: enriched?.rating || track.rating || null,
                 spotifyPopularity: (enriched?.spotifyPopularity !== undefined) ? Number(enriched.spotifyPopularity) : (track.spotifyPopularity || -1),
                 position: Number(track.position) || (idx + 1),
@@ -100,11 +123,33 @@ export class AlbumCardRenderer {
             }
         })
 
-        // 2. Sort by Rank (Default view)
+        // 2. Dynamic Sort
         tracks.sort((a, b) => {
-            const rankA = (a.rank && a.rank < 999) ? a.rank : 999999
-            const rankB = (b.rank && b.rank < 999) ? b.rank : 999999
-            return rankA - rankB
+            let valA, valB;
+
+            // Value extraction strategy
+            switch (sortField) {
+                case 'rank':
+                case 'userRank':
+                    // Low number is better. Missing/High = bad.
+                    valA = (a[sortField] && a[sortField] < 999) ? Number(a[sortField]) : 999999;
+                    valB = (b[sortField] && b[sortField] < 999) ? Number(b[sortField]) : 999999;
+                    break;
+                case 'rating':
+                case 'spotifyPopularity':
+                case 'duration':
+                    // High number is usually better/bigger, but let's treat strictly numeric.
+                    valA = Number(a[sortField]) || -1;
+                    valB = Number(b[sortField]) || -1;
+                    break;
+                default: // title, etc.
+                    valA = a[sortField] || '';
+                    valB = b[sortField] || '';
+            }
+
+            if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+            if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
         })
 
         if (tracks.length === 0) return '<p class="text-muted text-sm">No tracks available</p>';
@@ -115,13 +160,15 @@ export class AlbumCardRenderer {
         // but it ensures VISUAL consistency as requested.
         const table = new TracksTable({
             tracks: tracks,
-            sortField: 'rank',      // Default
-            sortDirection: 'asc',
+            sortField: sortField,
+            sortDirection: sortDirection,
             onSort: () => { }        // No-op for static view
         });
 
         // TracksTable.render() returns a DOM Node
         const tableNode = table.render();
+        // ARCH-FIX: Add albumId directly to the table root for easy event delegation context
+        tableNode.dataset.albumId = album.id;
 
         // Return outerHTML for string injection
         return tableNode.outerHTML;

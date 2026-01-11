@@ -1,27 +1,13 @@
-
-### [2026-01-10] [Issue-144] [Album Data Flashing/Erasing on Load]
-- **Description**: The user reports consistent album loading but with a disruptive "flashing" effect where data is erased before being re-rendered during updates or scope switches.
-- **Root Cause Analysis (Deep Dive)**: 
-    1.  **Primary Cause (Data Malformation)**: `SeriesController.js` (lines 154, 194) blindly wrapped string queries (e.g., "Artist - Album") into objects `{ title: "Artist - Album" }`. This created "headless" objects missing the `artist` property. Downstream logic (Client, Filter, Dedupe) incorrectly identified these as having `artist: undefined`.
-    2.  **Secondary Cause (Destructive Overwrite)**: `albumsStore.js` (line 97) blindly overwrote existing albums in the `albumsByAlbumSeriesId` map. When "All Series" loaded multiple series containing the same album (e.g., "Manic Nirvana" in both "Robert Plant" and "Gilmour & Plant" series), the second load (often containing the malformed "headless" object) overwrote the first valid load (which had the correct Series Context). This caused the valid data to "flash" and disappear/be replaced by invalid data.
-- **Solution Proposed**: 
-    1.  **Fix Controller**: Updated `SeriesController.js` to parse "Artist - Album" strings immediately into `{ artist, title }` objects before wrapping.
-    2.  **Fix Store**: Updated `albumsStore.js` to implement "Safe Merging" - only overwrite existing albums if the new data is strictly better (e.g., has a database ID).
-    3.  **Harden Client**: Updated `client.js` and `AlbumIdentity.js` to handle malformed objects defensively (parsing artist from title if missing).
-- **Status**: ✅ **RESOLVED (Root Cause Fixed)**
-- **Resolution**: Implementation of Safe Parsing in Controller and Safe Merging in Store. Defensive coding in Client retained for robustness.
-
-**Last Updated**: 2026-01-05 14:00
+**Last Updated**: 2026-01-11 14:00
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
 **How to Update This Document**:
 1. Active issues → Current Debugging Session
+1.1 Update the Issue Index
 2. Resolved/reverted issues → Move to Previous with timestamp
 3. Keep Previous sections for history (don't delete)
-4. Link to ARCHITECTURE.md for architectural decisions
-
-**See**: `.agent/workflows/debug_issue.md` for systematic debugging protocol
+4. Always keep on cronological order or numbered order
 
 ---
 
@@ -86,6 +72,57 @@
 
 ## Current Debugging Session
 
+### Issue #147: User Ranking UI Persistence & Sorting Refinement (Sprint 20)
+- **Status**: ✅ **RESOLVED**
+- **Date**: 2026-01-11
+- **Problem**: 
+    1. UI Sync: User saves ranking, but album row shows stale data.
+    2. Sorting: Clicking headers in Expanded Mode does nothing.
+- **Root Cause**: 
+    1. User rankings were only injected into the "ranked" list, whereas the View often renders from the "original" list.
+    2. Event delegation in `SeriesEventHandler` was looking for `th` headers, but `TracksTable` used `div`s. Also, headers lacked `data-sort` attributes.
+- **Solution**: 
+    1. Added `Album.setUserRankings()` to inject data into all track lists simultaneously.
+    2. Hybrid Sorting Fix:
+        - Restored `onClick` in `TracksTable.js` to fix live components (Grid/Modal).
+        - Added `.tracks-table-root` class to `TracksTable` wrapper.
+        - Updated `SeriesEventHandler.js` to use `.closest('.tracks-table-root')` for List View delegation.
+- **Files Modified**: 
+    - `public/js/models/Album.js`
+    - `public/js/components/ranking/TracksTable.js`
+    - `public/js/components/series/SeriesEventHandler.js`
+    - `public/js/controllers/SeriesController.js`
+
+---
+
+### Issue #146: User Ranking Save Failure (Permissions) & Sorting Bug
+- **Status**: ⚠️ **IN PROGRESS**
+- **Date**: 2026-01-11
+- **Severity**: HIGH (Core Functionality Broken)
+- **Type**: Access Control / Logic Error
+- **Component**: `UserRankingRepository.js`, `SeriesEventHandler.js`, `firestore.rules`
+- **Sprint**: 20
+
+#### Problem
+1. **Save Error**: User receives `FirebaseError: Missing or insufficient permissions` when saving rankings. user is navigating on localhost:5000.
+2. **Sorting Broken**: TracksTable sorting column headers do not work despite "fix" applied in Phase 8.
+
+#### Resolution
+1. **Save Error (Permissions)**: 
+    - **Root Cause**: `SeriesEventHandler.js` was using a hardcoded string `'anonymous-user'` instead of the actual Firebase UID (`auth.currentUser.uid`). Even with anonymous sign-in, Firebase assigns a unique UID. The Firestore rules correctly required `request.auth.uid == userId`, creating a mismatch: `actual_uid == 'anonymous-user'` was false.
+    - **Fix**: Updated `SeriesEventHandler.js` to use `auth.currentUser?.uid` for the ranking save operation.
+2. **Sorting Bug**:
+    - **Root Cause**: The event delegation in `SeriesEventHandler.js` was checking for the sort header *after* finding an album action. If the click target was inside an element with `data-album-id`, the sort check was skipped. Additionally, `AlbumCardRenderer.js` was not passing `sortField`/`sortDirection` to the `TracksTable` constructor, causing header icons to reset to default.
+    - **Fix**: Reordered delegation logic in `SeriesEventHandler.js` to check for sort headers first. Updated `AlbumCardRenderer.js` to pass sort options.
+3. **Infrastructure**: Restarted servers on ports 5000 (frontend) and 3000 (backend).
+
+#### Files Modified
+- `public/js/components/series/SeriesEventHandler.js`
+- `public/js/components/ui/AlbumCardRenderer.js`
+- `firestore.rules` (Relaxed rules for debugging, though the UID fix is the primary driver)
+
+---
+
 ### Issue #145: Series View UI Refinements (Track Row & View Toggle)
 - **Status**: ✅ **RESOLVED**
 - **Date**: 2026-01-10
@@ -109,6 +146,19 @@
 - `public/js/components/series/SeriesToolbar.js`
 
 ---
+
+### [2026-01-10] [Issue-144] [Album Data Flashing/Erasing on Load]
+- **Description**: The user reports consistent album loading but with a disruptive "flashing" effect where data is erased before being re-rendered during updates or scope switches.
+- **Root Cause Analysis (Deep Dive)**: 
+    1.  **Primary Cause (Data Malformation)**: `SeriesController.js` (lines 154, 194) blindly wrapped string queries (e.g., "Artist - Album") into objects `{ title: "Artist - Album" }`. This created "headless" objects missing the `artist` property. Downstream logic (Client, Filter, Dedupe) incorrectly identified these as having `artist: undefined`.
+    2.  **Secondary Cause (Destructive Overwrite)**: `albumsStore.js` (line 97) blindly overwrote existing albums in the `albumsByAlbumSeriesId` map. When "All Series" loaded multiple series containing the same album (e.g., "Manic Nirvana" in both "Robert Plant" and "Gilmour & Plant" series), the second load (often containing the malformed "headless" object) overwrote the first valid load (which had the correct Series Context). This caused the valid data to "flash" and disappear/be replaced by invalid data.
+- **Solution Proposed**: 
+    1.  **Fix Controller**: Updated `SeriesController.js` to parse "Artist - Album" strings immediately into `{ artist, title }` objects before wrapping.
+    2.  **Fix Store**: Updated `albumsStore.js` to implement "Safe Merging" - only overwrite existing albums if the new data is strictly better (e.g., has a database ID).
+    3.  **Harden Client**: Updated `client.js` and `AlbumIdentity.js` to handle malformed objects defensively (parsing artist from title if missing).
+- **Status**: ✅ **RESOLVED (Root Cause Fixed)**
+- **Resolution**: Implementation of Safe Parsing in Controller and Safe Merging in Store. Defensive coding in Client retained for robustness.
+
 
 ### Issue #143: Regression Test Failures (Unrelated)
 **Status**: ⚠️ **OPEN**

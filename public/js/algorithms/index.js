@@ -12,6 +12,7 @@ import { MJRPBalancedCascadeAlgorithm } from './MJRPBalancedCascadeAlgorithm.js'
 import { TopNAlgorithm } from './TopNAlgorithm.js'
 import { TopNPopularAlgorithm } from './TopNPopularAlgorithm.js'
 import { TopNAcclaimedAlgorithm } from './TopNAcclaimedAlgorithm.js'
+import { TopNUserAlgorithm } from './TopNUserAlgorithm.js'
 
 /**
  * Registry of all available algorithms
@@ -23,8 +24,10 @@ const algorithms = new Map()
 algorithms.set('mjrp-balanced-cascade', MJRPBalancedCascadeAlgorithm) // RECOMMENDED first
 // Top N algorithms (Blending Menu flavors)
 // Sprint 17.5: Consolidated to 2 generic flavors
+// Sprint 20: Added User-Generated-Rank flavor
 algorithms.set('top-n-popular', TopNPopularAlgorithm)
 algorithms.set('top-n-acclaimed', TopNAcclaimedAlgorithm)
+algorithms.set('top-n-user', TopNUserAlgorithm)
 
 /**
  * Get algorithm class by ID
@@ -89,5 +92,6 @@ export { MJRPBalancedCascadeAlgorithm } from './MJRPBalancedCascadeAlgorithm.js'
 export { TopNAlgorithm } from './TopNAlgorithm.js'
 export { TopNPopularAlgorithm } from './TopNPopularAlgorithm.js'
 export { TopNAcclaimedAlgorithm } from './TopNAcclaimedAlgorithm.js'
+export { TopNUserAlgorithm } from './TopNUserAlgorithm.js'
 
 

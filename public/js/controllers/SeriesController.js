@@ -19,6 +19,7 @@ import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js';
 import { filterAlbums } from '../services/SeriesFilterService.js';
 import { globalProgress } from '../components/GlobalProgress.js';
 import toast from '../components/Toast.js';
+import { userRankingRepository } from '../repositories/UserRankingRepository.js'; // Sprint 20
 
 export default class SeriesController {
     constructor() {
@@ -65,7 +66,7 @@ export default class SeriesController {
         albumsStore.subscribe(() => this.onAlbumsChange());
         albumSeriesStore.subscribe(() => this.onSeriesChange());
 
-        console.log('🧠 SeriesController Initialized');
+        console.log('🧠 [V2] SeriesController Initialized');
     }
 
     /**
@@ -306,6 +307,15 @@ export default class SeriesController {
     }
 
     /**
+     * Refresh the current view
+     * Re-applies filters and notifies view.
+     */
+    refresh() {
+        console.log('[V2] SeriesController.refresh() called');
+        this.applyFilters();
+    }
+
+    /**
      * Hydrate album with cover and add to store
      * @param {Object} album - Album object
      * @param {string} sourceSeriesId - Series ID this album belongs to
@@ -327,6 +337,17 @@ export default class SeriesController {
                 // Also add legacy property for single-series backward compat if needed (optional)
                 // album._seriesId = sourceSeriesId 
             }
+        }
+
+        // Sprint 20: Inject User Ranking
+        try {
+            const userId = albumSeriesStore.getUserId();
+            const ranking = await userRankingRepository.getRanking(userId, album.id);
+            if (ranking) {
+                album.setUserRankings(ranking.rankings);
+            }
+        } catch (err) {
+            console.error('[SeriesController] Failed to inject user ranking:', err);
         }
 
         albumsStore.addAlbum(album);

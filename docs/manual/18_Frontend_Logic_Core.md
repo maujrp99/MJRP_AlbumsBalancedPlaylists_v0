@@ -83,15 +83,16 @@ Generated playlists use a standardized title format:
 ```
 {SOURCE} Top {N} {GROUPING} [Vol. X]
 ```
-*   **{SOURCE}**: `SPFY` (Spotify Popularity) or `BEA` (BestEverAlbums).
+*   **{SOURCE}**: `SPFY` (Spotify Popularity), `BEA` (BestEverAlbums), or `UGR` (User-Generated-Rank, Sprint 20).
 *   **{N}**: Track count selected (1-10).
 *   **{GROUPING}**: `By Album`, `By Rank`, `By Artist`, `Bal.Intv.`, or `Shuffle`.
 *   **[Vol. X]**: Appended for multiple playlists mode.
 
-| Recipe | Top N | Grouping | Title |
-| :--- | :--- | :--- | :--- |
-| Spotify Popular | 6 | By Album | `SPFY Top 6 By Album` |
-| BEA Acclaimed | 5 | Bal.Intv. | `BEA Top 5 Bal.Intv. Vol. 1` |
+| Recipe | Source | Top N | Grouping | Title |
+| :--- | :--- | :--- | :--- | :--- |
+| Spotify Popular | SPFY | 6 | By Album | `SPFY Top 6 By Album` |
+| BEA Acclaimed | BEA | 5 | Bal.Intv. | `BEA Top 5 Bal.Intv. Vol. 1` |
+| My Own Ranking | UGR | 4 | By Album | `UGR Top 4 By Album` |
 
 #### Grouping Modes
 | Mode | Internal Value | Description |
@@ -118,6 +119,15 @@ Generated playlists use a standardized title format:
 ### Spotify Ranking Strategy
 *   **Role**: Pure popularity-based sorting.
 *   **Logic**: Sorts exclusively by `spotifyPopularity` (Desc). Useful for "Modern Appeal" playlists.
+
+### User Ranking Strategy (`UserRankingStrategy.js`) - Sprint 20
+*   **Role**: User-defined track ordering.
+*   **Logic**:
+    1.  Retrieves user's custom ranking for the album (from `UserRankingRepository`).
+    2.  Matches tracks by normalized title key.
+    3.  Falls back to original album order for unranked tracks.
+*   **Color**: Incandescent Blue (`#0EA5E9` / `sky-500`).
+*   **Playlist Prefix**: `UGR Top N ...`
 
 ---
 

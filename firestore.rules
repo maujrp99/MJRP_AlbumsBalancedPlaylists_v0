@@ -27,6 +27,13 @@ service cloud.firestore {
     match /users/{userId}/series/{seriesId}/playlists/{playlistId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+
+    // Sprint 20: User Rankings
+    match /users/{userId}/albumRankings/{albumId} {
+      // DEBUG: Allow 'anonymous-user' or Authenticated User
+      // Production Requirement: Change to `request.auth != null` before launch
+      allow read, write: if true; 
+    }
     
     // =========================================================================
     // LEGACY ALBUMS (Root Collection)

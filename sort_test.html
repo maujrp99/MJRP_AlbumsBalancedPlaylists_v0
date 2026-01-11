@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Logic Verification</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; padding: 20px; }
+        .card { background: #333; padding: 20px; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { cursor: pointer; text-align: left; padding: 10px; border-bottom: 1px solid #555; }
+        th:hover { background: #444; }
+        td { padding: 10px; border-bottom: 1px solid #444; }
+        .log { margin-top: 20px; padding: 10px; background: #222; border: 1px solid #444; height: 200px; overflow-y: auto; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>Sorting Verification</h1>
+    <div id="container" class="card" data-album-id="test-album-1">
+        <!-- Table will be injected here -->
+    </div>
+    <div class="log" id="log"></div>
+
+    <script type="module">
+        import { AlbumCardRenderer } from './public/js/components/ui/AlbumCardRenderer.js';
+        
+        // Mock Data
+        const mockAlbum = {
+            id: 'test-album-1',
+            title: 'Test Album',
+            artist: 'Test Artist',
+            year: 2023,
+            tracks: [
+                { title: 'Track B', position: 2, rank: 5, spotifyPopularity: 30, duration: 200000 },
+                { title: 'Track A', position: 1, rank: 1, spotifyPopularity: 80, duration: 180000 },
+                { title: 'Track C', position: 3, rank: 999, spotifyPopularity: 50, duration: 240000 }
+            ],
+            getTracks: (type) => mockAlbum.tracks, // Mock helper
+            hasUserRanking: false
+        };
+
+        const logEl = document.getElementById('log');
+        function log(msg) {
+            logEl.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+            console.log(msg);
+        }
+
+        // --- Render Initial Table ---
+        const container = document.getElementById('container');
+        
+        function renderTable(options = {}) {
+            log(`Rendering table with sort: ${options.sortField || 'default'} (${options.sortDirection || 'default'})`);
+            const html = AlbumCardRenderer.renderDetailedTable(mockAlbum, options);
+            container.innerHTML = html;
+        }
+
+        renderTable(); 
+
+        // --- Simulate Event Delegation (Copying Logic from SeriesEventHandler) ---
+        container.addEventListener('click', (e) => {
+            const sortHeader = e.target.closest('th[data-sort]');
+            if (sortHeader) {
+                e.stopPropagation();
+                handleTableSort(sortHeader);
+            }
+        });
+
+        function handleTableSort(header) {
+            const table = header.closest('table');
+            const albumId = 'test-album-1'; // Hardcoded for test
+
+            const field = header.dataset.sort;
+            const currentDirection = header.dataset.direction || 'asc';
+            const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+
+            log(`CLICKED header: ${field}. New Direction: ${newDirection}`);
+
+            const newTableHTML = AlbumCardRenderer.renderDetailedTable(mockAlbum, {
+                sortField: field,
+                sortDirection: newDirection
+            });
+
+            if (table) {
+                table.outerHTML = newTableHTML;
+                log('DOM Updated successfully');
+            } else {
+                log('ERROR: Table element not found for replacement');
+            }
+        }
+    </script>
+</body>
+</html>
