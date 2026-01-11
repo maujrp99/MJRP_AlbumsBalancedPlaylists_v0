@@ -56,6 +56,7 @@ export class TopNAlgorithm extends BaseAlgorithm {
 
         // Sprint 17: Determine N (allow override from opts)
         const trackCount = opts.trackCount || this.trackCount
+        this._currentTrackCount = trackCount // Sprint 20: Store for getPlaylistTitle()
 
         // Collect top N tracks from each album
         const allSelectedTracks = []
@@ -254,7 +255,8 @@ export class TopNAlgorithm extends BaseAlgorithm {
      * @returns {string}
      */
     getPlaylistTitle() {
-        return `Top ${this.trackCount}`
+        const n = this._currentTrackCount || this.trackCount
+        return `Top ${n}`
     }
 }
 

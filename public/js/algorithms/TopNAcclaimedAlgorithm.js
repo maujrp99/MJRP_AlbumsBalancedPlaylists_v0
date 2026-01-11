@@ -20,4 +20,12 @@ export class TopNAcclaimedAlgorithm extends TopNAlgorithm {
             })
         })
     }
+
+    /**
+     * Override to add BEA prefix
+     */
+    getPlaylistTitle() {
+        const n = this._currentTrackCount || this.trackCount
+        return `BEA Top ${n}`
+    }
 }

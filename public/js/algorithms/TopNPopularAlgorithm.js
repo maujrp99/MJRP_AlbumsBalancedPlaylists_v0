@@ -20,4 +20,12 @@ export class TopNPopularAlgorithm extends TopNAlgorithm {
             })
         })
     }
+
+    /**
+     * Override to add SPFY prefix
+     */
+    getPlaylistTitle() {
+        const n = this._currentTrackCount || this.trackCount
+        return `SPFY Top ${n}`
+    }
 }
