@@ -57,6 +57,7 @@ export class TopNAlgorithm extends BaseAlgorithm {
         // Sprint 17: Determine N (allow override from opts)
         const trackCount = opts.trackCount || this.trackCount
         this._currentTrackCount = trackCount // Sprint 20: Store for getPlaylistTitle()
+        this._currentGroupingStrategy = groupingStrategy // Sprint 20: Store for title suffix
 
         // Collect top N tracks from each album
         const allSelectedTracks = []
@@ -251,12 +252,28 @@ export class TopNAlgorithm extends BaseAlgorithm {
     }
 
     /**
+     * Get grouping strategy suffix for playlist title
+     * @returns {string}
+     */
+    getGroupingSuffix() {
+        const strategyMap = {
+            'by_album': 'By Album',
+            'flat_ranked': 'By Rank',
+            'artist_rank': 'By Artist',
+            'ranked_interleave': 'Bal.Intv.',
+            'shuffle': 'Shuffle'
+        }
+        return strategyMap[this._currentGroupingStrategy] || ''
+    }
+
+    /**
      * Get playlist title - override in subclass
      * @returns {string}
      */
     getPlaylistTitle() {
         const n = this._currentTrackCount || this.trackCount
-        return `Top ${n}`
+        const grouping = this.getGroupingSuffix()
+        return `Top ${n}${grouping ? ' ' + grouping : ''}`
     }
 }
 

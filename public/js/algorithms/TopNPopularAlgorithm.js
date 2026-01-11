@@ -26,6 +26,7 @@ export class TopNPopularAlgorithm extends TopNAlgorithm {
      */
     getPlaylistTitle() {
         const n = this._currentTrackCount || this.trackCount
-        return `SPFY Top ${n}`
+        const grouping = this.getGroupingSuffix()
+        return `SPFY Top ${n}${grouping ? ' ' + grouping : ''}`
     }
 }

@@ -26,6 +26,7 @@ export class TopNAcclaimedAlgorithm extends TopNAlgorithm {
      */
     getPlaylistTitle() {
         const n = this._currentTrackCount || this.trackCount
-        return `BEA Top ${n}`
+        const grouping = this.getGroupingSuffix()
+        return `BEA Top ${n}${grouping ? ' ' + grouping : ''}`
     }
 }
