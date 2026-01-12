@@ -90,6 +90,7 @@ export class TrackRow {
         // Rating is already handled in buildBadges
         // User requested right alignment under duration
         const line2 = SafeDOM.div({ className: 'flex items-center gap-2 mt-0.5 justify-end text-xs w-full' }, [
+            badges.userBadgeEl,
             badges.primaryEl,
             badges.secondaryEl
         ].filter(Boolean))
@@ -153,38 +154,43 @@ export class TrackRow {
         const acclaimRating = track.rating
         const spotifyRank = track.spotifyRank
         const spotifyPopularity = track.spotifyPopularity
-
-
-
+        const userRank = track.userRank
 
         const hasAcclaimRank = acclaimRank && acclaimRank < 999
         const hasAcclaimRating = acclaimRating && acclaimRating > 0
         const hasSpotifyRank = spotifyRank && spotifyRank < 999
         const hasSpotifyPop = spotifyPopularity != null && spotifyPopularity > -1
+        const hasUserRank = userRank && userRank < 999
 
-        // Acclaim badge (orange)
+        // 1. User badge (incandescent blue, white text)
+        let userBadgeEl = null
+        if (hasUserRank) {
+            userBadgeEl = SafeDOM.span({
+                className: 'inline-flex items-center justify-center w-5 h-5 rounded-full bg-sky-500 text-white text-[10px] font-bold',
+                title: 'Your Rank'
+            }, `#${userRank}`)
+        }
+
+        // 2. Acclaim badge (orange)
         const acclaimItems = []
-
         if (hasAcclaimRank) {
             acclaimItems.push(SafeDOM.span({
                 className: 'inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-orange/10 text-brand-orange text-[10px] font-bold border border-brand-orange/20',
                 title: 'BestEverAlbums Rank'
             }, `#${acclaimRank}`))
         }
-
         if (hasAcclaimRating) {
             acclaimItems.push(SafeDOM.span({
                 className: 'flex items-center gap-0.5 text-[10px] font-bold text-brand-orange',
                 title: 'BestEverAlbums Rating'
             }, `★${acclaimRating}`))
         }
-
         let acclaimBadgeEl = null
         if (acclaimItems.length > 0) {
             acclaimBadgeEl = SafeDOM.span({ className: 'flex items-center gap-1' }, acclaimItems)
         }
 
-        // Spotify badge (green)
+        // 3. Spotify badge (green)
         let spotifyBadgeEl = null
         if (hasSpotifyRank) {
             spotifyBadgeEl = SafeDOM.span({
@@ -199,9 +205,9 @@ export class TrackRow {
         }
 
         if (primaryRanking === 'spotify') {
-            return { primaryEl: spotifyBadgeEl, secondaryEl: acclaimBadgeEl }
+            return { userBadgeEl, primaryEl: spotifyBadgeEl, secondaryEl: acclaimBadgeEl }
         } else {
-            return { primaryEl: acclaimBadgeEl, secondaryEl: spotifyBadgeEl }
+            return { userBadgeEl, primaryEl: acclaimBadgeEl, secondaryEl: spotifyBadgeEl }
         }
     }
 

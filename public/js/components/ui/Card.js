@@ -266,8 +266,20 @@ export class Card {
 
         const hasBestEver = !!entity.bestEverAlbumId
         const hasSpotify = !!entity.spotifyId
+        const hasUserRanking = !!entity.hasUserRanking || (entity.userRanking?.length > 0)
 
         const badges = []
+
+        if (hasUserRanking) {
+            const badge = SafeDOM.span({
+                className: 'badge flex items-center gap-1 transition-colors',
+                style: { background: '#0EA5E9', color: 'white', border: 'none' },
+                title: 'Your Personal Ranking'
+            })
+            badge.appendChild(SafeDOM.fromHTML(getIcon('Star', 'w-3 h-3')))
+            badge.appendChild(SafeDOM.text(' MY RANKING'))
+            badges.push(badge)
+        }
 
         if (hasBestEver) {
             const link = SafeDOM.a({
