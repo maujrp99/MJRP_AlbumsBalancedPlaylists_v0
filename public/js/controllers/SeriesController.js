@@ -111,6 +111,11 @@ export default class SeriesController {
                 console.log(`[SeriesController] ✅ Cache HIT for ${storeContextId} - preventing reload`);
                 albumsStore.setActiveAlbumSeriesId(storeContextId);
 
+                // Sprint 20 Fix: Even on cache hit, we should ensure rankings are up to date
+                // This prevents "lost" rankings after navigation if the store was preserved
+                const cachedAlbums = albumsStore.getAlbumsForSeries(storeContextId);
+                await this.refreshRankings(cachedAlbums); // Await ranking refresh
+
                 if (scopeType === 'ALL') {
                     // Start background sync without clearing view
                     this.syncAllSeriesInBackground();
@@ -266,7 +271,7 @@ export default class SeriesController {
         try {
             const { results, errors } = await apiClient.fetchMultipleAlbums(
                 queries,
-                (current, total, result) => {
+                async (current, total, result) => {
                     if (this.abortController.signal.aborted) return;
 
                     this.state.loadProgress = { current, total };
@@ -279,7 +284,8 @@ export default class SeriesController {
                     if (result.status === 'success' && result.album) {
                         // ARCH-FIX: Pass sourceSeriesId from query context
                         const sourceSeriesId = result.query?._sourceSeriesId;
-                        this.hydrateAndAddAlbum(result.album, sourceSeriesId);
+                        // Sprint 20 FIX: MUST AWAIT hydration to avoid race conditions with UI
+                        await this.hydrateAndAddAlbum(result.album, sourceSeriesId);
 
                         // ARCH-6: Incremental render - sync with progress bar
                         this.notifyView('albums', albumsStore.getAlbums());
@@ -344,7 +350,9 @@ export default class SeriesController {
             const userId = albumSeriesStore.getUserId();
             const ranking = await userRankingRepository.getRanking(userId, album.id);
             if (ranking) {
-                album.setUserRankings(ranking.rankings);
+                // rankings record contains a '.rankings' array
+                const rankArray = ranking.rankings || (Array.isArray(ranking) ? ranking : [])
+                album.setUserRankings(rankArray);
             }
         } catch (err) {
             console.error('[SeriesController] Failed to inject user ranking:', err);
@@ -356,6 +364,35 @@ export default class SeriesController {
         if (this.db) {
             albumsStore.saveToFirestore(this.db, album).catch(console.warn);
         }
+    }
+
+    /**
+     * Refresh rankings for a list of albums (e.g. after cache hit)
+     * @param {Album[]} albums 
+     */
+    async refreshRankings(albums) {
+        if (!albums || albums.length === 0) return;
+        const userId = albumSeriesStore.getUserId();
+        if (!userId) {
+            console.warn('[SeriesController] Cannot refresh rankings - no user ID');
+            return;
+        }
+
+        console.log(`[SeriesController] Refreshing rankings for ${albums.length} albums...`);
+        const promises = albums.map(async (album) => {
+            try {
+                const ranking = await userRankingRepository.getRanking(userId, album.id);
+                if (ranking) {
+                    const rankArray = ranking.rankings || (Array.isArray(ranking) ? ranking : [])
+                    album.setUserRankings(rankArray);
+                }
+            } catch (err) {
+                console.warn(`[SeriesController] Failed to refresh ranking for ${album.id}:`, err);
+            }
+        });
+
+        await Promise.all(promises);
+        this.notifyView('albums', albumsStore.getAlbums()); // Refresh view
     }
 
     // =========================================

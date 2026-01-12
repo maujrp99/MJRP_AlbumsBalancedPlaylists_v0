@@ -19,6 +19,7 @@ import { playlistsStore } from '../stores/playlists.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { playlistGenerationService } from '../services/PlaylistGenerationService.js'
 import { getPlaylistsService } from '../services/PlaylistsService.js'
+import { userRankingRepository } from '../repositories/UserRankingRepository.js'
 
 /**
  * @typedef {Object} GenerationConfig
@@ -131,6 +132,17 @@ class BlendingController {
             try {
                 const album = await apiClient.fetchAlbum(query)
                 if (album) {
+                    // Sprint 20 Fix: Hydrate User Ranking for Blending Menu
+                    const userId = albumSeriesStore.getUserId()
+                    if (userId) {
+                        const ranking = await userRankingRepository.getRanking(userId, album.id)
+                        if (ranking) {
+                            // Extract rankings array from record object
+                            const rankArray = ranking.rankings || (Array.isArray(ranking) ? ranking : [])
+                            album.setUserRankings(rankArray)
+                            console.log(`[BlendingController] Hydrated ranking for: ${album.title}`)
+                        }
+                    }
                     albums.push(album)
                 }
             } catch (err) {

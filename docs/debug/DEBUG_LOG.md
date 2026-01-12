@@ -11,11 +11,9 @@
 
 ---
 
-## 📑 Issue Index
-
-| # | Description | Status | Link |
-|---|-------------|--------|------|
-| #137 | **Electronic Music Studio Filter (Singles/EPs)** | ⚠️ IN PROGRESS | [Details](#issue-137-electronic-music-studio-filter) |
+| #148 | **User Ranking Persistence & Blending Gap** | ✅ RESOLVED | [Details](#issue-148-user-ranking-persistence--blending-gap) |
+| #149 | **PlaylistsView TypeError** | ✅ RESOLVED | [Details](#issue-149-playlistsview-typeerror) |
+| #147 | **User Ranking UI Persistence & Sorting Refinement** | ✅ RESOLVED | [Details](#issue-147-user-ranking-ui-persistence) |
 | #136 | **Discography Pagination 404 (Paul Oakenfold)** | ✅ RESOLVED | [Details](#issue-136-discography-pagination-404) |
 | #135 | **Discography Title Truncation** | ✅ RESOLVED | [Details](#issue-135-discography-title-truncation) |
 | #134 | **Home View Discography Layout** | ✅ RESOLVED | [Details](#issue-134-home-view-discography-layout) |
@@ -71,6 +69,45 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #148: User Ranking Persistence & Blending Gap
+- **Status**: ✅ **RESOLVED**
+- **Date**: 2026-01-12
+- **Problem**: 
+    1. User rankings were lost after page refresh or navigation.
+    2. "My Own Ranking" recipe failed in Blending Menu (0 albums found).
+- **Root Cause**: 
+    1. **Gap in BlendingController**: Albums were loaded without hydration (ranking fetch), causing the algorithm to receive albums without user rankings.
+    2. **State Mismatch**: `UserRankingStrategy` expected `album.userRanking` property, but it was not stored in the `Album` model.
+    3. **Race Condition**: `SeriesController` did not await ranking hydration during parallel album loading, causing UI to render before rankings were applied.
+    4. **Cache HIT Bypass**: On cache hit, `SeriesController` skipped ranking hydration entirely.
+- **Solution**: 
+    1. Updated `Album.js` to store `raw rankings` in `this.userRanking` and hardened `setUserRankings` to handle both object/array formats.
+    2. Updated `BlendingController.js` to hydrate rankings and correctly extract the `rankings` array.
+    3. Updated `SeriesController.js` to `await` hydration, implemented `refreshRankings`, and fixed a `TypeError` by correctly extracting the rankings array from the record object.
+    4. Updated `UserRankingStrategy.js` to fallback to track-level `userRank`.
+- **Files Modified**: 
+    - `public/js/models/Album.js`
+    - `public/js/controllers/BlendingController.js`
+    - `public/js/controllers/SeriesController.js`
+    - `public/js/ranking/UserRankingStrategy.js`
+
+---
+
+### Issue #149: PlaylistsView TypeError
+- **Status**: ✅ **RESOLVED**
+- **Date**: 2026-01-12
+- **Problem**: `TypeError: playlistsStore.updateBatchName is not a function` at `PlaylistsView.js:167` when typing in the batch name input.
+- **Root Cause**: Inconsistent method naming after refactoring. `PlaylistsView` was calling `updateBatchName`, but the store method was named `setBatchName`.
+- **Solution**: 
+    1. Renamed the call in `PlaylistsView.js` to `setBatchName`.
+    2. Synchronized internal property access to use `state.batchName` for consistency.
+- **Files Modified**: 
+    - `public/js/views/PlaylistsView.js`
+
+---
+
+## Previous Debugging Sessions (Sprint 20)
 
 ### Issue #147: User Ranking UI Persistence & Sorting Refinement (Sprint 20)
 - **Status**: ✅ **RESOLVED**

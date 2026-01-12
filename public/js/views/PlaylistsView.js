@@ -164,12 +164,12 @@ export class PlaylistsView extends BaseView {
     const nameInput = this.container.querySelector('#batchNameInput')
     if (nameInput) {
       nameInput.addEventListener('input', (e) => {
-        playlistsStore.updateBatchName(e.target.value)
+        playlistsStore.setBatchName(e.target.value)
 
         const gridContainer = this.container.querySelector('#playlistsGrid')
         if (gridContainer) {
           const state = playlistsStore.getState()
-          const batchName = playlistsStore.batchName || ''
+          const batchName = state.batchName || ''
           gridContainer.innerHTML = PlaylistsGridRenderer.renderGrid(state.playlists, batchName)
         }
       })
@@ -210,7 +210,8 @@ export class PlaylistsView extends BaseView {
 
     console.log('[PlaylistsView] renderContent - Context:', {
       editContext: state.editContext,
-      batchName: state.editContext?.batchName,
+      batchName: state.batchName, // The local input name
+      editBatchName: state.editContext?.batchName, // The name in the saved context
       defaultBatchName: state.defaultBatchName,
       isEditMode
     })

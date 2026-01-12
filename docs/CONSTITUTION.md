@@ -16,7 +16,7 @@ We favor simplicity and standard web technologies over complex framework lock-in
     - **Repository Pattern** for data access (Firestore, LocalStorage).
     - **Service Layer** for external integrations (AI, Auth).
     - **Service Layer** for external integrations (AI, Auth).
-- **Structure**: Separation of concerns (View vs Logic vs Data).
+- **Structure**: Separation of concerns (View vs Logic vs Data). Modularization of logic and data access. Componentization of UI.
 - **Naming Conventions**:
     - **Universal Series Model**: All curation contexts must be suffixed with `Series` (e.g., `AlbumSeries`, `ArtistSeries`, `GenreSeries`) and flow through the `Blending Menu`.
     - **Pipeline**: `create[Entity]Series` -> `blendSeries` -> `generatePlaylist`.

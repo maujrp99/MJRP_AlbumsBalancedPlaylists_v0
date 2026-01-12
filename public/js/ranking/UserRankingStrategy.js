@@ -36,8 +36,17 @@ export class UserRankingStrategy extends RankingStrategy {
             return []
         }
 
-        // Check if album has user ranking data
+        // Check if album has user ranking data (Sprint 20 Robustness)
         if (!album.userRanking || album.userRanking.length === 0) {
+            // Fallback: If album was hydrated but the specific property is missing, 
+            // check if tracks themselves carry userRank (set by setUserRankings)
+            const hasTrackRankings = album.tracks.some(t => t.userRank != null && t.userRank < 999);
+
+            if (hasTrackRankings) {
+                console.log(`[UserRankingStrategy] No album.userRanking, but found track-level rankings for: ${album.title}`);
+                return [...album.tracks].sort((a, b) => (a.userRank ?? 999) - (b.userRank ?? 999));
+            }
+
             // Fallback: original album position
             return this._fallbackToOriginalOrder(album)
         }

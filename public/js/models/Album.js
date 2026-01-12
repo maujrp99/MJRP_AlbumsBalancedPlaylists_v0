@@ -67,10 +67,19 @@ export class Album {
      * Inject user rankings into both track lists
      * @param {Object[]} rankings - Array of { trackTitle, userRank }
      */
-    setUserRankings(rankings) {
-        if (!rankings) return
+    setUserRankings(rankData) {
+        if (!rankData) return
+
+        // Robustness: Handle both full record object and raw array (Sprint 20 Fix)
+        const rankings = Array.isArray(rankData) ? rankData : (rankData.rankings || [])
+
+        if (!Array.isArray(rankings)) {
+            console.error('[Album] setUserRankings: rankings is not an array', rankData)
+            return
+        }
 
         this.hasUserRanking = true
+        this.userRanking = rankings // Always store the array for strategies to use
         const rankMap = new Map(rankings.map(r => [r.trackTitle.toLowerCase().trim(), r.userRank]))
 
         const updateList = (list) => {

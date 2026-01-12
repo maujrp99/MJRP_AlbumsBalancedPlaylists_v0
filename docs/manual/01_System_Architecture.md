@@ -4,6 +4,10 @@
 
 > **Master Map**: This document provides the holistic "Big Picture" of the MJRP codebase. It consolidates architectural decisions, design patterns, data flows, and project structure into a single source of truth.
 
+## 0. Ground Rule
+Respect the Separation of concerns (View vs Logic vs Data), the Modularization of logic and data access, and the Componentization of UI.
+
+
 ## 1. High-Level Architecture
 **Type**: Hybrid SPA/SSR (Single Page Application with rich Server-Side Intelligence).
 
