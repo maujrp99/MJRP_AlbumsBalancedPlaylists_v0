@@ -35,6 +35,23 @@ All notable changes to the "The Album Blender" (MJRP) project will be documented
 
 ---
 
+## [3.20.0] - 2026-01-12
+### Added
+- **User Ranking System**: Drag-and-drop modal for custom track ranking within albums.
+- **"My Own Ranking" Recipe**: New blending recipe that prioritizes user-defined track orders.
+- **Persistence Layer**: Firestore and IndexedDB storage for user rankings with full hydration on load.
+- **UGR Prefix**: Integrated "UGR" (User-Generated Rank) prefix in playlist titles.
+
+### Changed
+- **TracksTable**: Repositioned average statistics to a cleaner header row.
+- **System Architecture**: Codified Ground Rules for modularity and componentization in `01_System_Architecture.md`.
+
+### Fixed
+- **Hydration Race Condition**: Ensured rankings are fully loaded before rendering the Blending Menu (Issue #148).
+- **PlaylistsView TypeError**: Fixed method call mismatch (`setBatchName` vs `updateBatchName`) in the batch naming input (Issue #149).
+
+---
+
 ## [3.16.0] - 2026-01-08
 ### Added
 - **SafeDOM**: Full migration to `SafeDOM` utility for XSS prevention.
