@@ -36,8 +36,12 @@ The ranking system strictly follows the Container/Presenter pattern.
 | Component | Viewport | Details |
 | :--- | :--- | :--- |
 | **`TracksRankingComparison.js`** | **Universal** | **Smart Container**. Handling logic, API enrichment (Spotify/BEA), and state management for the comparison view. |
-| **`TracksTable.js`** | **Desktop** | • **Rich Visualization**: Renders popularity as percentage bars (`width: %`) and rankings as gold/silver badges.<br>• **Sorting**: Clickable headers triggering `onSort` callback.<br>• **Columns**: Position, Title, Rank (BEA), Popularity (Spotify), Duration. |
 | **`TracksTabs.js`** | **Mobile** | • **Adaptive UI**: Instead of squeezing columns, it uses Tabs to toggle the *context*.<br>• **Tab 1 (Original)**: Shows standard track numbers.<br>• **Tab 2 (Acclaim)**: Highlights critical ranking badges.<br>• **Tab 3 (Spotify)**: Visualizes popularity bars next to track names. |
+| **`UserRankModal.js`** | **Universal** | • **Interactive State**: Glass-morphism modal for drag-and-drop ranking.<br>• **SortableJS**: Powers the reordering logic.<br>• **Persistence**: Saves directly to `UserRankingRepository`. |
+
+### Updated `TracksTable.js` (Sprint 20)
+*   **Columns**: Position, Title, **My Rank** (User), Rank (BEA), Popularity (Spotify), Duration.
+*   **Stats Header**: Displays Average Acclaim, Spotify Popularity, and **My Average** (User) statistics at the top.
 
 
 ### Data Flow Diagram
@@ -46,12 +50,16 @@ The ranking system strictly follows the Container/Presenter pattern.
 graph TD
     A[Album Data] --> B[TracksRankingComparison]
     C[Spotify Service] --> B
+    G[User Ranking Repo] --> B
     B -- Normalizes & Merges --> D{Viewport?}
     D -- Desktop --> E[TracksTable]
     D -- Mobile --> F[TracksTabs]
     
     User[User Interaction] --> E
     User --> F
+    User -- Saves Ranking --> H[UserRankModal]
+    H -- Updates --> G
+    
     E -- onSort --> B
     F -- onTabChange --> B
     B -- setState() --> D

@@ -51,6 +51,7 @@ sequenceDiagram
 *   **Key Distinction**: Supports **Dual-Tracklists**.
     *   `tracksOriginalOrder`: The disk order (1..N).
     *   `tracks` (or `tracksByAcclaim`): The sorted order based on ranking.
+*   **User Ranking (Sprint 20)**: Implements `setUserRankings(rankings)` to inject personal track order across both tracklists simultaneously, ensuring UI consistency.
 *   **Integrity**: `ensureRankingIntegrity()` ensures that if external ranking data is missing, the model falls back to using the Original Order as the "Ranking" to prevent crashes in the Algorithm layer.
 
 ### Album Identity (`AlbumIdentity.js`)

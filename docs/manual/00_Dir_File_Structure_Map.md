@@ -94,6 +94,7 @@
 75. `public/js/components/ranking/TracksRankingComparison.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
 76. `public/js/components/ranking/TracksTable.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
 77. `public/js/components/ranking/TracksTabs.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
+96a. `public/js/components/ranking/UserRankModal.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
 78. `public/js/components/home/SearchController.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
 79. `public/js/components/home/StagingAreaController.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
 
@@ -131,9 +132,11 @@
 103. `public/js/algorithms/MJRPBalancedCascadeAlgorithm.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
 104. `public/js/algorithms/TopNAlgorithm.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
 105. `public/js/algorithms/LegacyRoundRobinAlgorithm.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
+105a. `public/js/algorithms/TopNUserAlgorithm.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
 106. `public/js/ranking/BalancedRankingStrategy.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
 107. `public/js/ranking/SpotifyRankingStrategy.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
 108. `public/js/ranking/BEARankingStrategy.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
+108a. `public/js/ranking/UserRankingStrategy.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
 
 ### Batch 7: Data Layer
 109. `public/js/repositories/BaseRepository.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
@@ -142,6 +145,7 @@
 112. `public/js/repositories/PlaylistRepository.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
 113. `public/js/repositories/InventoryRepository.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
 114. `public/js/repositories/SpotifyEnrichmentRepository.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
+114a. `public/js/repositories/UserRankingRepository.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
 115. `public/js/models/Series.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
 116. `public/js/models/Track.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
 117. `public/js/cache/CacheManager.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)

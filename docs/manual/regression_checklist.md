@@ -27,9 +27,11 @@
 - [ ] **Edit Name**: Click Pencil -> Rename Series -> Header updates.
 - [ ] **Delete Series**: Click Trash -> Confirm -> Redirects to `/albums`.
 - [ ] **Filter Logic**: Click "EPs" -> Only EPs show. Click "Owned" -> Only owned show.
+- [ ] **Rank Tracks (Sprint 20)**: Click "Rank It" -> Drag & Drop -> Save. Verify "Ranked" badge and table update.
 
 ### [BLEND] Blending Menu
 - [ ] **Wizard Flow**: Series Selector -> Recipe Card -> Ingredients -> Generate Button unlocks sequentially.
+- [ ] **My Own Ranking (Sprint 20)**: Select "My Own Ranking" recipe -> Generate. Verify tracks match user order.
 - [ ] **Generation**: Clicking "Blend It!" creates valid playlists.
 - [ ] **Entity Switch**: Changing "Albums" to "Tracks" updates the UI context.
 

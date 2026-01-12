@@ -1,21 +1,19 @@
 # MJRP Playlist Generator - Product Roadmap
 
 **Last Updated**: 2026-01-11
-**Current Version**: v3.19.0
-**Current Sprint**: Sprint 19: Frontend Modularization ✅ DONE
+**Current Version**: v3.20.0
+**Current Sprint**: Sprint 21: Upcoming Features 🏗️
 
 ---
 
 ## 🚧 Current Sprint
 
-### Sprint 20: TopN Suffix Enhancement (Jan 2026)
-**Goal**: Improve playlist title clarity with source prefix and grouping suffix.
-**Status**: ✅ **DONE** (2026-01-11)
-**Deliverables**:
-- ✅ **SPFY/BEA Prefix**: Playlist titles now indicate ranking source.
-- ✅ **Dynamic Track Count**: Fixed bug where title always showed "Top 3".
-- ✅ **Grouping Suffix**: Titles include "By Album", "By Rank", "By Artist", "Bal.Intv.", or "Shuffle".
-- ✅ **Example**: `SPFY Top 6 By Artist Vol. 1`
+### Sprint 21: Blending Context & Discovery (Jan 2026)
+**Goal**: Expand the blending experience with cross-series context and enhanced discovery tools.
+**Status**: 🏗️ **IN PROGRESS**
+**Scope**:
+- [ ] Cross-Series Recipe Execution.
+- [ ] Recommendation Engine Integration.
 
 ### Sprint 18: Holistic Quality & Refactor (Backend + Frontend)
 **Goal**: Resolve identified "God Class/File" warnings and "Route Thinness" failures to improve architectural health.
@@ -95,6 +93,18 @@
 ---
 
 ## ✅ Completed Sprints (Reverse Chronological)
+
+### Sprint 20: User-Ranking & Title Enhancements (Jan 2026)
+**Goal**: Implement personal track ranking and improve playlist title clarity.
+**Status**: ✅ **DONE** (2026-01-11)
+**Deliverables**:
+- ✅ **User Ranking System**: Drag-and-drop ranking modal with Firestore persistence.
+- ✅ **Recipe: My Own Ranking**: New blending option using TopN-User algorithm.
+- ✅ **TracksTable Refactor**: New "My Rank" column and repositioned statistics.
+- ✅ **Hybrid Sorting**: Fixed cross-view sorting regression via event delegation.
+- ✅ **Title Prefixes**: `SPFY`/`BEA`/`UGR` prefixes for ranking source identification.
+- ✅ **Dynamic Quantities**: Resolved "Top 3" hardcoded title bug.
+- ✅ **Grouping Suffixes**: Clearer suffixes like `By Album` or `Bal.Intv.`.
 
 ### Sprint 15.5: Prod Polish & Blending Fixes (Jan 2026) - DONE ✅
 **Delivered**: 2026-01-02 (v3.15.5)
