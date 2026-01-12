@@ -146,4 +146,4 @@
 
 ### D.1 Firestore Security Rules
 - [x] Update `firestore.rules` locally to allow `albumRankings` write
-- [ ] **PENDING DEPLOY**: Verify `firebase deploy` to apply rules to cloud
+- [x] **READY FOR DEPLOY**: Rules and code synchronized. (Persistence Fix verified locally).

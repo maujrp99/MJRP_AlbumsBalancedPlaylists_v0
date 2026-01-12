@@ -15,9 +15,10 @@ Finalize the integration of the "My Own Ranking" recipe into the Blending Menu. 
 - [x] User can drag-and-drop reorder tracks within an album.
 - [x] User ranking is persisted per album (Firestore + IndexedDB).
 - [x] **Functional Recipe**: "My Own Ranking" recipe appears in Blending Menu and is selectable.
-- [ ] **Option Parity**: The recipe must show "Top N Count" and "Grouping" options.
-- [ ] **Execution Logic**: Selecting this recipe must correctly trigger `TopNUserAlgorithm` using the user's custom rankings.
-- [ ] **Verification**: Playlists generated with this recipe must follow the user's specific track order (falling back to original order for unranked tracks).
+- [x] **Option Parity**: The recipe must show "Top N Count" and "Grouping" options.
+- [x] **Execution Logic**: Selecting this recipe must correctly trigger `TopNUserAlgorithm` using the user's custom rankings.
+- [x] **Verification**: Playlists generated with this recipe must follow the user's specific track order (falling back to original order for unranked tracks).
+- [x] **Persistence Fix (Issue #148)**: Rankings are awaited during hydration and survive page refresh.
 
 ---
 

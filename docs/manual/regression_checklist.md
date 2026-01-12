@@ -9,7 +9,8 @@
 ## 🔴 [CORE] Core Loop (The Must Pass)
 - [ ] **Load App**: App loads on `localhost:5000` without console crash.
 - [ ] **Series Isolation**: Switching Series A -> B clears the grid and loads B's albums.
-- [ ] **Persistence**: Reloading preserves the active Series, View Mode, and Ranking order.
+- [ ] **Persistence**: Reloading preserves the active Series, View Mode, and Ranking order (Verified Issue #148: Rankings survive refresh).
+- [ ] **Playlists Persistence**: Navigating to /playlists and back to /albums preserves generated playlists state (Issue #149 fix).
 
 ## 🟡 Modular Checklists
 
