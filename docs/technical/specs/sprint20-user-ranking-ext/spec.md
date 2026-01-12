@@ -1,28 +1,23 @@
-# User-Generated Track Ranking - Specification
+# User-Generated Track Ranking - Specification (Extended)
 
-**Sprint**: 20
-**Status**: ✅ [IMPLEMENTED]
-**Last Updated**: 2026-01-11
-**Author**: AgAA (Antigravity Agentic AI)
+**Sprint**: 20 (Phase 2: Functional Completion)
+**Status**: ✅ COMPLETED
+**Last Updated**: 2026-01-12
 
 ---
 
 ## 1. Overview
 
 ### 1.1 What
-Allow users to **personally rank tracks within an album** and use this ranking as a recipe option in the Blending Menu. The user's ranking becomes a new "source of truth" alongside Spotify Popularity and BestEverAlbums Acclaim.
+Finalize the integration of the "My Own Ranking" recipe into the Blending Menu. While the ranking data and UI are functional, the recipe itself needs to be fully wired up to behave like the existing Top N recipes (BEA/Spotify).
 
-### 1.2 Why
-- **User Sovereignty**: Core philosophy of "The Album Blender" is empowering users beyond algorithmic recommendations.
-- **Personal Curation**: Users may disagree with critic rankings or popularity metrics.
-- **Completeness**: Fills gap for albums with no BEA data or low Spotify linkage.
-
-### 1.3 Success Criteria
-- [ ] User can drag-and-drop reorder tracks within an album (partial or full ranking allowed).
-- [ ] User ranking is persisted per album (Firestore + IndexedDB).
-- [ ] User rank badge (INCANDESCENT BLUE) appears in TracksTable, TrackItem, and playlist cards.
-- [ ] "Top Tracks by My Own Ranking" appears as a recipe option in Blending Menu (TopN algorithm).
-- [ ] Playlists generated with user ranking show "UGR Top N" prefix (User-Generated-Rank).
+### 1.2 Success Criteria
+- [x] User can drag-and-drop reorder tracks within an album.
+- [x] User ranking is persisted per album (Firestore + IndexedDB).
+- [x] **Functional Recipe**: "My Own Ranking" recipe appears in Blending Menu and is selectable.
+- [ ] **Option Parity**: The recipe must show "Top N Count" and "Grouping" options.
+- [ ] **Execution Logic**: Selecting this recipe must correctly trigger `TopNUserAlgorithm` using the user's custom rankings.
+- [ ] **Verification**: Playlists generated with this recipe must follow the user's specific track order (falling back to original order for unranked tracks).
 
 ---
 

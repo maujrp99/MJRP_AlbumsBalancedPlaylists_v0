@@ -1,7 +1,7 @@
 # User-Generated Track Ranking - Implementation Plan
 
 **Sprint**: 20
-**Status**: 🟡 DRAFT
+**Status**: ✅ APPROVED
 **Spec**: [spec.md](./spec.md)
 **Last Updated**: 2026-01-11
 
@@ -361,3 +361,87 @@ npm run build
 | Dependency | Version | Purpose | Install |
 |------------|---------|---------|---------|
 | SortableJS | ^1.15.0 | Drag-and-drop | `npm install sortablejs` |
+
+---
+
+## 8. Extended Phase: Functional Completion (1-2h)
+
+### 8.1 Menu Option Parity
+Enable `trackCount`, `outputMode`, and `groupingStrategy` for the `top-n-user` recipe.
+
+#### [MODIFY] [BlendIngredientsPanel.js](../../public/js/components/blend/BlendIngredientsPanel.js)
+```javascript
+const ALGORITHM_RECIPES = {
+    // ... items
+    'top-n-user': {
+        groupingStrategy: true,
+        outputMode: true,
+        duration: false,
+        rankingType: false,
+        discoveryMode: false,
+        trackCount: true
+    }
+}
+```
+
+#### [MODIFY] [BlendRecipeCard.js](../../public/js/components/blend/BlendRecipeCard.js)
+```javascript
+// Add icon and color for top-n-user
+getRecipeIcon(id) {
+    const icons = {
+        // ...
+        'top-n-user': 'User'
+    }
+    return icons[id] || 'Music'
+}
+
+getRecipeColor(id) {
+    const colors = {
+        // ...
+        'top-n-user': { from: 'from-sky-500', to: 'to-blue-600' }
+    }
+    return colors[id] || { from: 'from-gray-500', to: 'to-gray-600' }
+}
+```
+
+### 8.2 Execution Logic Refinement
+Ensure `PlaylistGenerationService` correctly identifies and locks the `user` ranking strategy for the new recipe.
+
+#### [MODIFY] [PlaylistGenerationService.js](../../public/js/services/PlaylistGenerationService.js)
+```javascript
+// Inside generate() method
+let rankingId = config.rankingId || 'balanced'
+if (config.algorithmId.includes('popular')) {
+    rankingId = 'spotify'
+} else if (config.algorithmId.includes('acclaimed')) {
+    rankingId = 'bea'
+} else if (config.algorithmId.includes('user')) {
+    rankingId = 'user' // NEW: Lock for User-Generated-Rank
+}
+```
+
+---
+
+## 9. Extended Verification Plan
+
+### Manual Verification (Specific for UGR)
+1. **Setup**:
+   - Create a new Series with 2-3 albums.
+   - For one album, use the **Rank It** modal to set a specific (and non-default) order (e.g., move the last track to #1).
+   - Save the ranking.
+2. **Configuration**:
+   - Go to the Blending Menu.
+   - Select **"Top Tracks by My Own Ranking"**.
+   - Verify that **Top #** and **Grouping** options appear.
+   - Set **Top 1**.
+3. **Execution**:
+   - Click **Generate**.
+4. **Validation**:
+   - Check the resulting playlist. 
+   - **Expectation**: The tracks selected from each album MUST be the ones you ranked as #1.
+   - Verify the title starts with `UGR Top 1`.
+
+---
+
+## 10. Dependencies
+(No new dependencies for this phase)

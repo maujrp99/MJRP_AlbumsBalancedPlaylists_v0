@@ -50,7 +50,8 @@ export class BlendRecipeCard {
             'legacy-roundrobin': 'RefreshCw',
             // Top N (Curated Selection)
             'top-n-popular': 'TrendingUp',
-            'top-n-acclaimed': 'Award'
+            'top-n-acclaimed': 'Award',
+            'top-n-user': 'User'
         }
         return icons[id] || 'Music'
     }
@@ -68,7 +69,8 @@ export class BlendRecipeCard {
             'legacy-roundrobin': { from: 'from-slate-500', to: 'to-gray-600' },
             // Top N (Curated Selection)
             'top-n-popular': { from: 'from-green-500', to: 'to-emerald-600' }, // Spotify Green
-            'top-n-acclaimed': { from: 'from-rose-500', to: 'to-orange-500' } // BEA Red/Orange
+            'top-n-acclaimed': { from: 'from-rose-500', to: 'to-orange-500' }, // BEA Red/Orange
+            'top-n-user': { from: 'from-sky-500', to: 'to-blue-600' } // User Blue
         }
         return colors[id] || { from: 'from-gray-500', to: 'to-gray-600' }
     }

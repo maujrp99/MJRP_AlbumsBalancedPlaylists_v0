@@ -1,10 +1,28 @@
-# User-Generated Track Ranking - Task List
+# User-Generated Track Ranking - Task List (Extended)
 
-**Sprint**: 20
+**Sprint**: 20 (Phase 2)
 **Status**: ✅ COMPLETE
 **Spec**: [spec.md](./spec.md) ✅ APPROVED
 **Plan**: [plan.md](./plan.md) ✅ APPROVED
-**Last Updated**: 2026-01-11
+**Last Updated**: 2026-01-12
+
+---
+
+## Phase 8: Extended Functional Completion (1-2h)
+
+### 8.1 Menu Option Parity
+- [x] Update `public/js/components/blend/BlendIngredientsPanel.js` to enable all Top N options for `top-n-user`.
+- [x] Update `public/js/components/blend/BlendRecipeCard.js` with correct User icon and Sky color theme.
+
+### 8.2 Execution Logic
+- [x] Update `public/js/services/PlaylistGenerationService.js` to lock `user` ranking strategy when the user recipe is selected.
+- [x] Verify `TopNUserAlgorithm.js` generates the correct title prefix (`UGR Top N`).
+
+### 8.3 Manual Verification (UGR Flow)
+- [x] **Rank Albums**: Manually rank 2-3 albums in a test Series.
+- [x] **Configure Blend**: Select "My Own Ranking", set Top 1, and choosing a specific grouping.
+- [x] **Verify Playlist**: Ensure the generated playlist contains the specific tracks ranked as #1 by the user.
+- [x] **Verify Persistence**: Hard refresh and ensure the UGR recipe still uses the saved data.
 
 ---
 

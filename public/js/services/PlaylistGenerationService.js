@@ -56,6 +56,8 @@ export class PlaylistGenerationService {
             rankingId = 'spotify' // Locked for TopN Popular
         } else if (config.algorithmId.includes('acclaimed')) {
             rankingId = 'bea' // Locked for TopN Acclaimed
+        } else if (config.algorithmId.includes('user')) {
+            rankingId = 'user' // Locked for TopN User
         }
 
         const rankingStrategy = createRankingStrategy(rankingId)

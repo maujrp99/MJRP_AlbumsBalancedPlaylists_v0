@@ -54,6 +54,14 @@ const ALGORITHM_RECIPES = {
         rankingType: false,     // Locked: BEA
         discoveryMode: false,
         trackCount: true
+    },
+    'top-n-user': {
+        groupingStrategy: true,
+        outputMode: true,
+        duration: false,        // Fixed count, duration irrelevant
+        rankingType: false,     // Locked: User
+        discoveryMode: false,   // Requires ranking data
+        trackCount: true        // Use custom N
     }
 }
 
