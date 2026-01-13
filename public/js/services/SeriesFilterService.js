@@ -69,9 +69,10 @@ export function filterAlbums(albums, context = {}) {
             const hasRatings = tracks.some(t => t.rating > 0);
 
             // Determine primary source
-            // This logic mimics backend priority: BestEver > Popularity > AI
+            // Sprint 20: User Ranking has top priority for filtering
             let source = 'pending';
-            if (hasBestEver) source = 'acclaim';
+            if (album.hasUserRanking) source = 'user';
+            else if (hasBestEver) source = 'acclaim';
             else if (album.acclaim?.providerType === 'popularity') source = 'popularity';
             else if (hasRatings) source = 'ai';
 
@@ -135,6 +136,7 @@ export function getDecadeOptions() {
 export function getSourceOptions() {
     return [
         { value: 'all', label: 'All Sources' },
+        { value: 'user', label: 'My Ranking' },
         { value: 'acclaim', label: 'BestEverAlbums' },
         { value: 'popularity', label: 'Popularity (Spotify)' },
         { value: 'ai', label: 'AI Enriched' },

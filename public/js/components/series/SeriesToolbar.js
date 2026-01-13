@@ -100,6 +100,7 @@ export default class SeriesToolbar extends Component {
                     <div class="filter-dropdown relative">
                         <select id="sourceFilter" class="form-control appearance-none cursor-pointer pr-8">
                             <option value="all">All Sources</option>
+                            <option value="user" ${filters.source === 'user' ? 'selected' : ''}>My Ranking</option>
                             <option value="pending" ${filters.source === 'pending' ? 'selected' : ''}>Pending</option>
                             <option value="acclaim" ${filters.source === 'acclaim' ? 'selected' : ''}>BestEverAlbums</option>
                             <option value="popularity" ${filters.source === 'popularity' ? 'selected' : ''}>Popularity</option>
