@@ -1,15 +1,18 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { AlbumsStore } from '@stores/albums.js'
+import { AlbumsStore } from '../../public/js/stores/albums.js'
 
 describe('AlbumsStore', () => {
     let store
+    const MOCK_SERIES_ID = 'mock-series-id'
 
     beforeEach(() => {
         store = new AlbumsStore()
+        store.setActiveAlbumSeriesId(MOCK_SERIES_ID)
     })
 
     describe('constructor', () => {
         it('should initialize with empty state', () => {
+            // Note: getAlbums() returns albums for active series
             expect(store.getAlbums()).toEqual([])
             expect(store.getCurrentAlbum()).toBeNull()
             expect(store.getState().loading).toBe(false)
@@ -54,6 +57,7 @@ describe('AlbumsStore', () => {
                 title: 'The Wall',
                 artist: 'Pink Floyd',
                 year: 1979,
+                id: '123', // Upgrade with ID
                 tracks: []
             }
 
@@ -61,7 +65,8 @@ describe('AlbumsStore', () => {
             store.addAlbum(album2)
 
             expect(store.getAlbums()).toHaveLength(1)
-            expect(store.getAlbums()[0].tracks).toEqual([])
+            // It should upgrade to the version with ID
+            expect(store.getAlbums()[0].id).toBe('123')
         })
 
         it('should notify listeners when album added', () => {
@@ -173,7 +178,8 @@ describe('AlbumsStore', () => {
                 albums: [album],
                 currentAlbum: album,
                 loading: false,
-                error: null
+                error: null,
+                activeAlbumSeriesId: MOCK_SERIES_ID
             })
         })
     })
@@ -185,7 +191,8 @@ describe('AlbumsStore', () => {
 
             store.reset()
 
-            expect(store.getAlbums()).toEqual([])
+            // After reset, active series is null unless preserved
+            expect(store.getAlbums()).toEqual([]) // Default empty [] if no series
             expect(store.getCurrentAlbum()).toBeNull()
             expect(store.getState().loading).toBe(false)
             expect(store.getState().error).toBeNull()

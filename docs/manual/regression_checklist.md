@@ -28,6 +28,7 @@
 - [ ] **Edit Name**: Click Pencil -> Rename Series -> Header updates.
 - [ ] **Delete Series**: Click Trash -> Confirm -> Redirects to `/albums`.
 - [ ] **Filter Logic**: Click "EPs" -> Only EPs show. Click "Owned" -> Only owned show.
+- [ ] **Sorting (Sprint 21)**: Click Sort -> "Name (A-Z)" sorts alpha. "Album Count" sorts by size. "Recently Added" sorts by date.
 - [ ] **Rank Tracks (Sprint 20)**: Click "Rank It" -> Drag & Drop -> Save. Verify "Ranked" badge and table update.
 
 ### [BLEND] Blending Menu

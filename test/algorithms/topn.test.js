@@ -108,9 +108,9 @@ describe('TopNAcclaimedAlgorithm', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('Algorithm Registry', () => {
-    it('should include 3 core algorithms', () => {
+    it('should include 4 core algorithms', () => {
         const all = getAllAlgorithms()
-        expect(all.length).toBe(3) // mjrp-balanced + 2 TopN generics
+        expect(all.length).toBe(4) // mjrp-balanced + 3 TopN generics (Pop, Acc, User)
     })
 
     it('should find top-n-popular by ID', () => {

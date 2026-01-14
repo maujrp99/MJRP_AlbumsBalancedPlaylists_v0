@@ -1,4 +1,5 @@
-# Specification: Sprint 21 - Mobile UX & Layout Refresh
+# SDD Phase 1: Specification [IMPLEMENTED]
+: Sprint 21 - Mobile UX & Layout Refresh
 
 ## 1. Goal
 Improve the overall User Experience on mobile devices (specifically iPhone), focusing on layout consistency, responsive data presentation, and mobile-friendly interactions for drag-and-drop.

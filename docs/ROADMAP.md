@@ -8,9 +8,9 @@
 
 ## 🚧 Current Sprint
 
-### Sprint 21: Blending Context & Discovery (Jan 2026)
+### Sprint 22: Blending Context & Discovery (Jan 2026)
 **Goal**: Expand the blending experience with cross-series context and enhanced discovery tools.
-**Status**: 🏗️ **IN PROGRESS**
+**Status**: 🏗️ **PLANNED**
 **Scope**:
 - [ ] Cross-Series Recipe Execution.
 - [ ] Recommendation Engine Integration.
@@ -28,7 +28,17 @@
 - ✅ **Execution Logic**: Locked user strategy for UGR playlists.
 - ✅ **TracksTable Refactor**: New "My Rank" column and repositioned statistics.
 - ✅ **Hybrid Sorting**: Fixed cross-view sorting regression via event delegation.
+- ✅ **Hybrid Sorting**: Fixed cross-view sorting regression via event delegation.
 - ✅ **Title Prefixes**: `SPFY`/`BEA`/`UGR` prefixes for ranking source identification.
+
+### Sprint 21: Mobile UX & Layout Refresh (Jan 2026)
+**Goal**: Comprehensive Mobile UX overhaul, including layout responsiveness, virtual scrolling, and functional series sorting.
+**Status**: ✅ **DONE** (2026-01-14)
+**Deliverables**:
+- ✅ **Mobile Layout**: Responsive grid/list, fullscreen modals, touch-friendly tables.
+- ✅ **Series Performance**: Virtual scrolling with `VirtualScrollObserver`, skeletons, and lazy loading.
+- ✅ **Series Sorting**: Functional sorting by Name (A-Z/Z-A), Album Count, and Recency.
+- ✅ **Visual Polish**: Pulse animations, consolidated CSS, better empty states.
 
 ---
 
@@ -247,7 +257,7 @@
 
 ## 🔮 Upcoming Sprints
 
-### Sprint 21: Blending Context & Discovery
+### Sprint 22: Blending Context & Discovery
 **Goal**: Expand the blending experience with cross-series context and enhanced discovery tools.
 **Scope**:
 - [ ] Cross-Series Recipe Execution.

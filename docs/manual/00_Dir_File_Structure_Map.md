@@ -83,6 +83,9 @@
 69. `public/js/components/ui/Card.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
 70. `public/js/components/ui/TrackRow.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
 71. `public/js/components/base/Component.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
+71a. `public/js/components/ui/LoadMoreButton.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
+71b. `public/js/components/ui/skeletons/AlbumSkeleton.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
+71c. `public/js/components/ui/skeletons/SeriesSkeleton.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
 72. `public/js/components/common/AlbumCascade.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
 72a. `public/js/components/navigation/SeriesDropdown.js` (Missing / Superseded)
 73. `public/js/components/shared/ContextMenu.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
@@ -165,6 +168,7 @@
 129. `public/js/helpers/dom-helpers.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
 130. `public/js/transformers/SpotifyTransformer.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
 131. `public/js/transformers/PlaylistTransformer.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
+131a. `public/js/utils/VirtualScrollObserver.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
 
 ### Batch 9: Frontend Views & Renderers 
 132. `public/js/views/SaveAllView.js` (Analysis: `manual/10_Frontend_Renderers.md`)

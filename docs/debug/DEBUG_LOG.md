@@ -1,4 +1,4 @@
-**Last Updated**: 2026-01-14 00:30
+**Last Updated**: 2026-01-14 15:35
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -11,6 +11,7 @@
 
 ---
 
+| #151 | **All Series View Loading Logic Discrepancy** | 🔴 OPEN | [Details](#issue-151-all-series-view-loading-logic-discrepancy) |
 | #150 | **Series Sorting UI Not Updating** | ✅ RESOLVED | [Details](#issue-150-series-sorting-ui-not-updating) |
 | #148 | **User Ranking Persistence & Blending Gap** | ✅ RESOLVED | [Details](#issue-148-user-ranking-persistence--blending-gap) |
 | #149 | **PlaylistsView TypeError** | ✅ RESOLVED | [Details](#issue-149-playlistsview-typeerror) |
@@ -70,6 +71,18 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #151: All Series View Loading Logic Discrepancy
+- **Status**: 🔴 **OPEN**
+- **Date**: 2026-01-14
+- **Problem**: 
+    1. User reports that loading "All Series" behaves differently than loading a specific series or editing a series.
+    2. Suggests that logic might not be correctly using `seriesID` in the "All Series" context, potentially leading to incorrect album data or state.
+    3. Specific series filters and edit views show correct album data, implying the issue is specific to the "All Series" scope.
+- **Hypothesis**: The "All Series" view might be iterating through series but failing to apply the correct context/ID when fetching or rendering albums, possibly in `SeriesController.js` or `SeriesView.js`.
+- **Action**: Deferred to next sprint. Logged for tracking before production release.
+
+---
 
 ### Issue #150: Series Sorting UI Not Updating
 - **Status**: ✅ **RESOLVED**
