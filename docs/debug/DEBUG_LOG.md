@@ -11,7 +11,7 @@
 
 ---
 
-| #151 | **All Series View Loading Logic Discrepancy** | 🔴 OPEN | [Details](#issue-151-all-series-view-loading-logic-discrepancy) |
+| #151 | **All Series View Loading Logic Discrepancy** | ✅ RESOLVED | [Details](#issue-151-all-series-view-loading-logic-discrepancy) |
 | #150 | **Series Sorting UI Not Updating** | ✅ RESOLVED | [Details](#issue-150-series-sorting-ui-not-updating) |
 | #148 | **User Ranking Persistence & Blending Gap** | ✅ RESOLVED | [Details](#issue-148-user-ranking-persistence--blending-gap) |
 | #149 | **PlaylistsView TypeError** | ✅ RESOLVED | [Details](#issue-149-playlistsview-typeerror) |
@@ -73,14 +73,17 @@
 ## Current Debugging Session
 
 ### Issue #151: All Series View Loading Logic Discrepancy
-- **Status**: 🔴 **OPEN**
+- **Status**: ✅ **RESOLVED**
 - **Date**: 2026-01-14
 - **Problem**: 
     1. User reports that loading "All Series" behaves differently than loading a specific series or editing a series.
     2. Suggests that logic might not be correctly using `seriesID` in the "All Series" context, potentially leading to incorrect album data or state.
     3. Specific series filters and edit views show correct album data, implying the issue is specific to the "All Series" scope.
-- **Hypothesis**: The "All Series" view might be iterating through series but failing to apply the correct context/ID when fetching or rendering albums, possibly in `SeriesController.js` or `SeriesView.js`.
-- **Action**: Deferred to next sprint. Logged for tracking before production release.
+- **Root Cause**: `AlbumsStore.js` dedupes albums by Artist/Title but ignored the `seriesIds` context of the *new* recurring instance. This meant an album belonging to multiple series would only be tagged with the first loaded series, disappearing from subsequent groups in the UI.
+- **Solution**: Updated `addAlbumToSeries` in `AlbumsStore.js` to merge the `seriesIds` array when a duplicate album is detected, preventing context loss.
+- **Files Modified**: 
+    - `public/js/stores/albums.js`
+    - `test/stores/albums.test.js` (Added regression test)
 
 ---
 

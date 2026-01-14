@@ -1,6 +1,16 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { AlbumsStore } from '../../public/js/stores/albums.js'
 
+// Helper for creating mock albums
+function createMockAlbum(id, title, artist) {
+    return {
+        id,
+        title,
+        artist,
+        seriesIds: []
+    }
+}
+
 describe('AlbumsStore', () => {
     let store
     const MOCK_SERIES_ID = 'mock-series-id'
@@ -205,6 +215,31 @@ describe('AlbumsStore', () => {
             store.reset()
 
             expect(listener).toHaveBeenCalled()
+        })
+    })
+
+    describe('Issue #151 - Multi-Series Context', () => {
+        it('should merge seriesIds when adding duplicate album from key', () => {
+            store.setActiveAlbumSeriesId('ALL_SERIES_VIEW')
+
+            const albumA = createMockAlbum('1', 'Test Album', 'Test Artist')
+            albumA.seriesIds = ['SERIES_A']
+
+            const albumB = createMockAlbum('1', 'Test Album', 'Test Artist') // Same ID/Meta
+            albumB.seriesIds = ['SERIES_B']
+
+            // 1. Add first instance
+            store.addAlbumToSeries('ALL_SERIES_VIEW', albumA)
+
+            // 2. Add second instance (should update existing)
+            store.addAlbumToSeries('ALL_SERIES_VIEW', albumB)
+
+            const stored = store.getAlbums()[0]
+
+            // Expectation: Should have both IDs
+            expect(stored.seriesIds).toContain('SERIES_A')
+            expect(stored.seriesIds).toContain('SERIES_B')
+            expect(stored.seriesIds.length).toBe(2)
         })
     })
 })

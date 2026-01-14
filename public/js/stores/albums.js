@@ -108,6 +108,15 @@ export class AlbumsStore {
                 // we might want to track multiple sourceSeriesIds if we supported it.
                 // For now, keep the existing one which might be more complete.
                 // console.log(`[AlbumsStore] Skipping overwrite of ${album.title}`);
+                // Issue #151: Merge seriesIds context
+                if (album.seriesIds && Array.isArray(album.seriesIds)) {
+                    if (!existing.seriesIds) existing.seriesIds = []
+                    album.seriesIds.forEach(sid => {
+                        if (!existing.seriesIds.includes(sid)) {
+                            existing.seriesIds.push(sid)
+                        }
+                    })
+                }
             }
         }
 
