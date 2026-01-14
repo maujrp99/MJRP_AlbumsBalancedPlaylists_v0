@@ -66,6 +66,20 @@ export default class SeriesToolbar extends Component {
                         </span>
                     </div>
 
+                    <!-- Series Sort (NEW Phase 3.5) -->
+                    <div class="sort-dropdown relative">
+                        <select id="seriesSort" class="form-control appearance-none cursor-pointer pr-8 bg-brand-dark/30 border-white/10 text-xs py-1">
+                            <option value="count_asc" ${this.props.seriesSortMode === 'count_asc' ? 'selected' : ''}>Album Count (Lowest)</option>
+                            <option value="count_desc" ${this.props.seriesSortMode === 'count_desc' ? 'selected' : ''}>Album Count (Highest)</option>
+                            <option value="alpha" ${this.props.seriesSortMode === 'alpha' ? 'selected' : ''}>Name (A-Z)</option>
+                            <option value="alpha_desc" ${this.props.seriesSortMode === 'alpha_desc' ? 'selected' : ''}>Name (Z-A)</option>
+                            <option value="recent" ${this.props.seriesSortMode === 'recent' ? 'selected' : ''}>Recently Added</option>
+                        </select>
+                        <span class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                             ${getIcon('ChevronDown', 'w-3 h-3')}
+                        </span>
+                    </div>
+
                     <!-- Artist Filter -->
                     <div class="filter-dropdown relative">
                         <select id="artistFilter" class="form-control appearance-none cursor-pointer pr-8">
@@ -156,6 +170,12 @@ export default class SeriesToolbar extends Component {
         const series = this.container.querySelector('#seriesFilter');
         if (series && onSeriesChange) {
             series.addEventListener('change', (e) => onSeriesChange(e.target.value));
+        }
+
+        // Series Sort
+        const sortSelect = this.container.querySelector('#seriesSort');
+        if (sortSelect && this.props.onSort) {
+            sortSelect.addEventListener('change', (e) => this.props.onSort(e.target.value));
         }
 
         // Artist

@@ -50,14 +50,16 @@ export class SeriesComponentFactory {
         const activeSeries = albumSeriesStore.getActiveSeries();
         const allSeries = albumSeriesStore.getSeries();
 
-        const { searchQuery, filters, viewMode } = controller.getState();
+        const { searchQuery, filters, viewMode, seriesSortMode } = controller.getState(); // Added seriesSortMode
 
         const toolbar = new SeriesToolbar({
             container,
             props: {
                 searchQuery,
                 filters,
+                filters,
                 viewMode,
+                seriesSortMode, // New Prop
                 artists: getUniqueArtistsFn(albums),
                 seriesList: allSeries,
                 activeSeries,
@@ -79,6 +81,7 @@ export class SeriesComponentFactory {
                 onYearFilter: (v) => controller.handleFilterChange('year', v),
                 onSourceFilter: (v) => controller.handleFilterChange('source', v),
                 onRefresh: () => controller.loadScope(view.currentScope, view.targetSeriesId, true),
+                onSort: (key) => controller.handleSort(key),
                 onToggleView: () => {
                     const newMode = view.viewMode === 'compact' ? 'expanded' : 'compact';
                     controller.handleViewModeChange(newMode);

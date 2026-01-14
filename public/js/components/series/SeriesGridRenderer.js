@@ -18,10 +18,17 @@ import {
     renderExpandedList,
     wrapInGrid
 } from '../../views/albums/AlbumsGridRenderer.js';
-import { renderScopedGrid, renderScopedList } from '../../views/albums/AlbumsScopedRenderer.js';
+import {
+    renderScopedGrid,
+    renderScopedList,
+    groupAlbumsBySeries,
+    renderSeriesHeader
+} from '../../views/albums/AlbumsScopedRenderer.js';
 import { Card } from '../ui/Card.js';
 import { AlbumCardRenderer } from '../ui/AlbumCardRenderer.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
+import { VirtualScrollObserver } from '../../utils/VirtualScrollObserver.js';
+import { SeriesSkeleton } from '../ui/skeletons/SeriesSkeleton.js';
 
 export default class SeriesGridRenderer extends Component {
     /**
@@ -35,6 +42,10 @@ export default class SeriesGridRenderer extends Component {
     constructor(config) {
         super(config);
         this.gridElement = null;
+        // Initialize Observer with 200px margin (load before user sees it)
+        this.observer = new VirtualScrollObserver({ rootMargin: '0px 0px 400px 0px', threshold: 0.01 });
+        // Track rendered series to prevent duplicates
+        this.renderedSeriesIds = new Set();
     }
 
     render() {
@@ -48,16 +59,16 @@ export default class SeriesGridRenderer extends Component {
 
         let contentHtml;
 
+        // Disconnect previous observer
+        this.observer.disconnect();
+        this.renderedSeriesIds.clear();
+
         if (scope === 'ALL' && seriesList.length > 0) {
-            // Use scoped renderer for ALL series view
+            // VIRTUALIZED RENDERING STRATEGY
             if (layout === 'grid') {
-                contentHtml = renderScopedGrid({
-                    albums: items,
-                    seriesList,
-                    currentScope: scope,
-                    renderAlbumsGrid: (albums) => renderAlbumsGrid(albums, context)
-                });
+                contentHtml = this._renderVirtualScopedGrid(items, seriesList, context);
             } else {
+                // List view virtualization not prioritized yet, fallback to standard
                 contentHtml = renderScopedList({
                     albums: items,
                     seriesList,
@@ -66,14 +77,11 @@ export default class SeriesGridRenderer extends Component {
                 });
             }
         } else {
-            // SINGLE series or no grouping
+            // SINGLE series or no grouping (Standard Render)
             if (layout === 'grid') {
-                // Use production wrapInGrid + renderAlbumsGrid
-                // Fixed: Removed legacy EntityCard.renderGhostCard()
                 const cardsHtml = renderAlbumsGrid(items, context);
                 contentHtml = wrapInGrid(cardsHtml);
             } else {
-                // Expanded list view
                 contentHtml = renderExpandedList(items, context);
             }
         }
@@ -85,8 +93,172 @@ export default class SeriesGridRenderer extends Component {
         }, SafeDOM.fromHTML(contentHtml));
 
         SafeDOM.replaceChildren(this.container, innerDiv);
-
         this.gridElement = this.container.querySelector('#series-grid-inner');
+
+        // Post-render: Attach Observers to Skeletons
+        this._attachObservers();
+    }
+
+    /**
+     * Virtual Strategy: Renders first 3 series real + Skeletons for rest
+     */
+    _renderVirtualScopedGrid(albums, seriesList, context) {
+        const { seriesGroups, otherAlbums } = groupAlbumsBySeries(albums, seriesList);
+        let html = '<div class="all-series-container space-y-12">';
+        let index = 0;
+
+        // Render each series group
+        seriesGroups.forEach(group => {
+            if (group.albums.length === 0) return;
+
+            const isVisibleInitially = index < 3; // Render first 3 immediately
+
+            if (isVisibleInitially) {
+                html += this._renderRealSeriesGroup(group.series, group.albums, context);
+                this.renderedSeriesIds.add(group.series.id);
+            } else {
+                // Render Skeleton Placeholder
+                html += `
+                <div class="series-group-skeleton" data-series-id="${group.series.id}" data-series-index="${index}">
+                    ${SeriesSkeleton.render()}
+                </div>`;
+            }
+            index++;
+        });
+
+        // Render orphan albums (Always at bottom, usually rendered real or skeleton?)
+        // Let's render real for now as it's usually the "rest"
+        if (otherAlbums.length > 0) {
+            html += `
+            <div class="series-group mt-12">
+                <div class="series-group-header flex items-center gap-4 mb-6 pb-2 border-b border-white/10">
+                    <h2 class="text-2xl font-bold text-gray-400">Uncategorized</h2>
+                    <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full">${otherAlbums.length} albums</span>
+                </div>
+                ${wrapInGrid(renderAlbumsGrid(otherAlbums, context))}
+            </div>`;
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    _renderRealSeriesGroup(series, albums, context) {
+        const INITIAL_LIMIT = 12;
+        const total = albums.length;
+        const shouldCap = total > INITIAL_LIMIT;
+
+        const shownAlbums = shouldCap ? albums.slice(0, INITIAL_LIMIT) : albums;
+
+        let html = `
+        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${series.id}">
+            ${renderSeriesHeader(series, total)}
+            ${wrapInGrid(renderAlbumsGrid(shownAlbums, context))}
+            ${shouldCap ? LoadMoreButton.render(series.id, total, shownAlbums.length) : ''}
+        </div>`;
+
+        return html;
+    }
+
+    _attachObservers() {
+        if (!this.gridElement) return;
+
+        const skeletons = this.gridElement.querySelectorAll('.series-group-skeleton');
+        skeletons.forEach(skeleton => {
+            this.observer.observe(skeleton, (entry) => {
+                this._hydrateSkeleton(entry.target);
+            });
+        });
+    }
+
+    _attachEventListeners() {
+        if (!this.gridElement) return;
+
+        // Use Event Delegation on the main container
+        // This handles both initial buttons and lazy-loaded ones
+        this.gridElement.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-action="load-more-series"]');
+            if (btn) {
+                this._handleLoadMore(e, btn);
+            }
+        });
+    }
+
+    _handleLoadMore(e, btn) {
+        const seriesId = btn.dataset.seriesId;
+        const groupEl = btn.closest('.series-group');
+        const gridEl = groupEl.querySelector('.albums-grid');
+
+        // Find data
+        const { items = [], seriesList = [] } = this.props;
+        // Optimization: Use cached map if available, or just filtering
+        // Since we don't have the Group Map cached easily without re-running grouping...
+        // We can just find the albums for this series.
+        // Or re-run grouping (it's consistent).
+        const { seriesGroups } = groupAlbumsBySeries(items, seriesList);
+        const group = seriesGroups.get(seriesId);
+
+        if (!group) return;
+
+        // Render *all* albums (or just the remaining ones?)
+        // Easiest: Render all remaining and append.
+
+        const INITIAL_LIMIT = 12;
+        const remainingAlbums = group.albums.slice(INITIAL_LIMIT);
+
+        // Render new cards
+        // Context needed? Yes.
+        const { context = {} } = this.props;
+        const newCardsHtml = renderAlbumsGrid(remainingAlbums, context);
+
+        // Append to grid
+        const fragment = SafeDOM.fromHTML(newCardsHtml);
+        gridEl.appendChild(fragment);
+
+        // Remove button
+        // Maybe animate removal?
+        btn.parentElement.remove(); // Remove the wrapper div
+    }
+
+    _hydrateSkeleton(element) {
+        const seriesId = element.dataset.seriesId;
+        if (this.renderedSeriesIds.has(seriesId)) return;
+
+        // Find data for this series
+        // We need access to 'albums' and 'seriesList' again. 
+        // Ideally we shouldn't re-process grouping.
+        // Optimization: Store mapped groups in a property during render?
+        // Or re-group (expensive-ish). 
+        // Better: We can store the *data* needed to render on the element? No, too big.
+        // We will re-group for now (it's fast enough for 50 items) or cache it.
+
+        this._hydrateSeriesGroup(element, seriesId);
+    }
+
+    _hydrateSeriesGroup(element, seriesId) {
+        const { items = [], seriesList = [], context = {} } = this.props;
+        // Optimization: We could cache this map in render()
+        const { seriesGroups } = groupAlbumsBySeries(items, seriesList);
+        const group = seriesGroups.get(seriesId);
+
+        if (group) {
+            const realHtml = this._renderRealSeriesGroup(group.series, group.albums, context);
+            // Replace Outer HTML (Skeleton Div) with Real Group Div
+            // Using SafeDOM logic?
+            // Element is the wrapper <div class="series-group-skeleton">
+            // We want to replace it.
+
+            // Create temp container
+            const temp = document.createElement('div');
+            temp.innerHTML = realHtml;
+            const newNode = temp.firstElementChild;
+
+            // Fade in effect
+            newNode.classList.add('animate-in', 'zoom-in');
+
+            element.replaceWith(newNode);
+            this.renderedSeriesIds.add(seriesId);
+        }
     }
 
     /**
@@ -97,17 +269,9 @@ export default class SeriesGridRenderer extends Component {
         if (!this.gridElement || !newItems?.length) return;
 
         const { context = {} } = this.props;
-
-        // Find the grid container within (could be nested in scoped view)
         const gridContainer = this.gridElement.querySelector('.albums-grid') || this.gridElement;
-
-        // Find ghost card to insert before it
         const ghostCard = gridContainer.querySelector('[data-ghost="true"]');
-
-        // Create new cards HTML using Centralized AlbumCardRenderer
         const newCardsHtml = newItems.map(album => AlbumCardRenderer.renderCompact(album)).join('');
-
-        // Create fragment using SafeDOM
         const fragment = SafeDOM.fromHTML(newCardsHtml);
 
         if (ghostCard) {

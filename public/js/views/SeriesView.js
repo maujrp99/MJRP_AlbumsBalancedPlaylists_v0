@@ -4,7 +4,7 @@
  * V3 Architecture: THIN ORCHESTRATOR
  * 
  * This view is a thin shell that:
- * 1. Renders the basic page structure (header, toolbar mount, grid mount)
+ * 1. Renders the basic page structure (header, toolbar, mount grid)
  * 2. Mounts V3 components (SeriesHeader, SeriesToolbar, SeriesGridRenderer)
  * 3. Delegates all rendering to components (which use existing production functions)
  * 
@@ -27,10 +27,8 @@ export default class SeriesView extends BaseView {
         super();
         this.controller = controller;
         this.components = {};
-        this.components = {};
         // State delegated to controller, but viewMode kept local for UI toggle (or sync?)
-        // Actually viewMode is also in controller. Let's rely on controller for initial, but keep local logic simple?
-        // No, controller has viewMode.
+        // Actually viewMode is also in controller.
         this.viewMode = localStorage.getItem('albumsViewMode') || 'compact';
         this.isLoading = false;
         this.currentScope = 'ALL';
@@ -148,6 +146,8 @@ export default class SeriesView extends BaseView {
     updateAlbums(albums) {
         // console.log('[SeriesView] updateAlbums:', albums?.length);
 
+        let sortedSeriesList = null;
+
         // Sync state from controller
         if (this.controller) {
             const state = this.controller.getState();
@@ -155,11 +155,31 @@ export default class SeriesView extends BaseView {
 
             // ARCH-FIX: Ensure Toolbar is synced with Controller state (Filters, Active Series)
             this.updater?.updateToolbar(state, this.currentScope);
+
+            // ARCH-FIX: Retrieve SORTED series list from controller state/helper
+            // We use getHeaderData() because getSortedSeries isn't always public, but getHeaderData() calls it.
+            // Or we can call getSortedSeries directly if public? Yes it is.
+            // But we need the raw list first.
+            const allSeries = this.controller.getHeaderData().seriesList; // getHeaderData returns sorted 'seriesList' property
+            sortedSeriesList = allSeries;
         }
 
-        this.updater?.updateGrid(albums, this.viewMode, this.currentScope, this.controller.getState().filters, this.controller.getState().searchQuery);
-        this.updater?.updateHeader(this.currentScope);
+        this.updater?.updateGrid(
+            albums,
+            this.viewMode,
+            this.currentScope,
+            this.controller.getState().filters,
+            this.controller.getState().searchQuery,
+            sortedSeriesList // <--- Pass sorted list
+        );
+        // this.updater?.updateHeader(this.currentScope); // Old signature
         this.updater?.updateEmptyState('emptyStateContainer', albums.length, this.isLoading);
+    }
+
+    // New Method called by Controller
+    updateHeader(data) {
+        // data = { title, description, seriesList, activeSeriesId }
+        this.updater?.updateHeaderPayload(data);
     }
 
     // =========================================

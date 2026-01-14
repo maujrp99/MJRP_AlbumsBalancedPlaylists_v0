@@ -32,16 +32,35 @@ export class SeriesViewUpdater {
         });
     }
 
-    updateGrid(albums, viewMode, currentScope, filters, searchQuery) {
+    /**
+     * Revised updateHeader signature to accept full payload
+     */
+    updateHeaderPayload(data) {
+        if (!this.components.header) return;
+        this.components.header.update({
+            pageTitle: data.title,
+            albumCount: data.description // reuse or separate
+        });
+
+        // Critical: Update Grid with Sorted Series
+        if (this.components.grid && data.seriesList) {
+            this.components.grid.update({
+                seriesList: data.seriesList
+            });
+        }
+    }
+
+    updateGrid(albums, viewMode, currentScope, filters, searchQuery, sortedSeriesList = null) {
         if (!this.components.grid) return;
 
-        const allSeries = albumSeriesStore.getSeries();
+        // ARCH-FIX: Use sorted list if provided (from Controller), otherwise fallback to store (unsorted)
+        const seriesList = sortedSeriesList || albumSeriesStore.getSeries();
 
         this.components.grid.update({
             items: albums,
             layout: viewMode === 'compact' ? 'grid' : 'list',
             scope: currentScope,
-            seriesList: allSeries,
+            seriesList: seriesList,
             context: { searchQuery, filters }
         });
     }
@@ -94,6 +113,7 @@ export class SeriesViewUpdater {
             viewMode,
             activeSeries: currentScope === 'ALL' ? null : activeSeries,
             seriesList: allSeries,
+            seriesSortMode: state.seriesSortMode, // Sync sort state
             artists
         });
     }

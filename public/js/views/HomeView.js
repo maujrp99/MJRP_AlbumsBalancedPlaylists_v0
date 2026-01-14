@@ -21,7 +21,7 @@ export class HomeView extends BaseView {
         // --- LEFT PANEL ---
 
         // Header
-        const header = SafeDOM.div({ className: 'p-6 border-b border-white/5 flex items-center gap-3' }, [
+        const header = SafeDOM.div({ id: 'home-header', className: 'p-6 border-b border-white/5 flex items-center gap-3' }, [
             SafeDOM.div({ className: 'w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20' }, [
                 SafeDOM.fromHTML(getIcon('Music', 'text-white w-6 h-6'))
             ]),
@@ -35,7 +35,7 @@ export class HomeView extends BaseView {
         ]);
 
         // Series Config
-        const seriesConfig = SafeDOM.div({ className: 'space-y-2' }, [
+        const seriesConfig = SafeDOM.div({ id: 'home-series-config', className: 'space-y-2' }, [
             SafeDOM.label({ className: 'text-xs font-bold text-gray-400 uppercase tracking-widest' }, '01 // Series Configuration'),
             SafeDOM.span({ className: 'text-[10px] text-gray-500 uppercase tracking-wider block' }, 'Your Albums Series Name'),
             SafeDOM.input({
@@ -84,7 +84,7 @@ export class HomeView extends BaseView {
             parseBtn
         ]);
 
-        const techPanel = SafeDOM.div({ className: 'tech-panel rounded-xl p-0 border border-white/10 bg-black/40 relative overflow-hidden' }, [
+        const techPanel = SafeDOM.div({ id: 'home-tech-panel', className: 'tech-panel rounded-xl p-0 border border-white/10 bg-black/40 relative overflow-hidden' }, [
             SafeDOM.div({ className: 'absolute top-0 left-0 w-1 h-full bg-orange-500' }),
             SafeDOM.div({ className: 'bg-black/40 p-3 border-b border-white/5 flex justify-between items-center pl-4' }, [
                 SafeDOM.span({ className: 'text-xs font-bold text-orange-500 uppercase' }, '02a // Artist Filter'),
@@ -101,7 +101,7 @@ export class HomeView extends BaseView {
         ]);
 
         // Staging Area
-        const stagingArea = SafeDOM.div({ className: 'flex-1 min-h-[200px] flex flex-col' }, [
+        const stagingArea = SafeDOM.div({ id: 'home-staging-area', className: 'flex-1 min-h-[200px] flex flex-col' }, [
             SafeDOM.div({ className: 'flex justify-between items-end mb-2' }, [
                 SafeDOM.label({ className: 'text-xs font-bold text-gray-400 uppercase tracking-widest' }, '03 // Selected Albums'),
                 SafeDOM.span({ id: 'stagingCount', className: 'text-xs text-orange-500 font-mono' }, '(0 Albums)')
@@ -114,7 +114,7 @@ export class HomeView extends BaseView {
             ])
         ]);
 
-        const leftContent = SafeDOM.div({ className: 'flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar' }, [
+        const leftContent = SafeDOM.div({ id: 'home-left-content', className: 'flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar' }, [
             seriesConfig,
             techPanel,
             stagingArea
@@ -124,9 +124,9 @@ export class HomeView extends BaseView {
         initBtn.appendChild(SafeDOM.span({}, 'Initialize Load Sequence'));
         initBtn.appendChild(SafeDOM.fromHTML(getIcon('ArrowRight', 'w-5 h-5')));
 
-        const leftFooter = SafeDOM.div({ className: 'p-6 border-t border-white/10 bg-black/40 backdrop-blur-md z-20' }, [initBtn]);
+        const leftFooter = SafeDOM.div({ id: 'home-left-footer', className: 'p-6 border-t border-white/10 bg-black/40 backdrop-blur-md z-20' }, [initBtn]);
 
-        const leftPanel = SafeDOM.aside({ className: 'relative z-10 w-full md:w-[400px] lg:w-[450px] md:h-full flex flex-col border-b md:border-b-0 md:border-r border-white/10 glass-panel shadow-2xl shrink-0 bg-black/60 backdrop-blur-md' }, [
+        const leftPanel = SafeDOM.aside({ id: 'home-left-panel', className: 'relative z-10 w-full md:w-[400px] lg:w-[450px] md:h-full flex flex-col border-b md:border-b-0 md:border-r border-white/10 glass-panel shadow-2xl shrink-0 bg-black/60 backdrop-blur-md' }, [
             header,
             leftContent,
             leftFooter
@@ -162,7 +162,7 @@ export class HomeView extends BaseView {
         // Fix first button style (Studio is active by default)
         filterBtns[0].className = 'filter-btn px-3 py-1.5 rounded-lg bg-flame-gradient text-white text-xs font-bold shadow-lg shadow-orange-500/20 flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0';
 
-        const toolbar = SafeDOM.div({ className: 'min-h-14 border-b border-white/5 bg-black/40 backdrop-blur-md flex flex-col md:flex-row md:items-center md:justify-between px-4 py-3 md:px-6 shrink-0 z-20 gap-2' }, [
+        const toolbar = SafeDOM.div({ id: 'home-toolbar', className: 'min-h-14 border-b border-white/5 bg-black/40 backdrop-blur-md flex flex-col md:flex-row md:items-center md:justify-between px-4 py-3 md:px-6 shrink-0 z-20 gap-2' }, [
             SafeDOM.div({ className: 'flex items-center gap-3 shrink-0' }, [
                 SafeDOM.span({ className: 'text-xs font-bold text-orange-500 uppercase tracking-widest' }, '02b // Discography Scan'),
                 SafeDOM.span({ id: 'statusArtistName', className: 'text-sm text-white font-bold truncate max-w-[200px]' })
@@ -178,7 +178,7 @@ export class HomeView extends BaseView {
             ])
         ]);
 
-        const rightPanel = SafeDOM.main({ className: 'flex-1 relative min-h-[50vh] md:h-full overflow-hidden flex flex-col bg-black/20' }, [
+        const rightPanel = SafeDOM.main({ id: 'home-right-panel', className: 'flex-1 relative min-h-[50vh] md:h-full overflow-hidden flex flex-col bg-black/20' }, [
             toolbar,
             SafeDOM.div({ id: 'discographyGridContainer', className: 'flex-1 overflow-y-auto p-6 custom-scrollbar' }, [grid])
         ]);

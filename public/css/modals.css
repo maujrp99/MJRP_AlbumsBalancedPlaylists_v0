@@ -226,3 +226,17 @@
 .modal-overlay.hidden {
   display: none !important;
 }
+
+/* Fullscreen Modal Override for Mobile */
+.fullscreen-modal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}

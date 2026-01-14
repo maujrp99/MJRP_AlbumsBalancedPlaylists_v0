@@ -1,0 +1,61 @@
+/* HomeView Specific Styles */
+
+/* 
+ * Mobile Layout Reordering 
+ * Spec: "Discography Scan" (02B - Toolbar) must appear before "Staging Area" (03 - LeftPanel)
+ * Solution: "Unwrap" the panels using display: contents so children become siblings in the main container.
+ */
+@media (max-width: 768px) {
+    /* Unwrap the main structural panels */
+    #home-left-panel, 
+    #home-right-panel,
+    #home-left-content {
+        display: contents;
+    }
+
+    /* 
+     * Now all children are direct flex items of the main container.
+     * We use `order` property to rearrange them.
+     */
+    
+    /* 1. Header (LeftPanel child) */
+    #home-header {
+        order: 1;
+    }
+
+    /* 2. Series Config (LeftContent child) */
+    #home-series-config {
+        order: 2;
+    }
+
+    /* 3. Tech Panel (LeftContent child) - 02a */
+    #home-tech-panel {
+        order: 3;
+    }
+
+    /* 4. Toolbar (RightPanel child) - 02b */
+    #home-toolbar {
+        order: 4;
+        /* Ensure it sticks or behaves nicely */
+        position: sticky;
+        top: 0;
+        z-index: 30; /* Higher than others */
+    }
+
+    /* 5. Staging Area (LeftContent child) - 03 */
+    #home-staging-area {
+        order: 5;
+    }
+
+    /* 6. Grid Container (RightPanel child) */
+    #discographyGridContainer {
+        order: 6;
+        /* Ensure it matches the remaining height behavior if possible, 
+           or just lets the body scroll (which is default on mobile) */
+    }
+
+    /* 7. Footer (LeftPanel child) */
+    #home-left-footer {
+        order: 7;
+    }
+}

@@ -32,6 +32,7 @@ export default class SeriesController {
             filterMode: 'all',         // 'all' | 'ranked' | 'unranked'
             filters: { artist: '', year: '', source: '' }, // Detailed filters
             searchQuery: '',
+            seriesSortMode: 'count_asc', // Default: Smallest (Performance)
             isLoading: false,
             loadProgress: { current: 0, total: 0 }
         };
@@ -443,10 +444,40 @@ export default class SeriesController {
     /**
      * Handle sort change
      */
+    /**
+     * Handle sort change
+     */
     handleSort(sortKey) {
         console.log('[SeriesController] Sort by:', sortKey);
-        // TODO: Implement sorting logic
-        this.applyFilters();
+        this.state.seriesSortMode = sortKey;
+        this.notifyView('header', this.getHeaderData());
+    }
+
+    /**
+     * Get sorted series list based on current mode
+     */
+    getSortedSeries(seriesList) {
+        if (!seriesList) return [];
+        const mode = this.state.seriesSortMode || 'count_asc'; // Default: Smallest first (Performance)
+
+        return [...seriesList].sort((a, b) => {
+            switch (mode) {
+                case 'alpha':
+                    return a.name.localeCompare(b.name);
+                case 'alpha_desc':
+                    return b.name.localeCompare(a.name);
+                case 'count_asc':
+                    // ARCH-FIX: Use albumQueries as proxy for series size (more reliable than hydrating albums)
+                    return (a.albumQueries?.length || 0) - (b.albumQueries?.length || 0);
+                case 'count_desc':
+                    return (b.albumQueries?.length || 0) - (a.albumQueries?.length || 0);
+                case 'recent':
+                    // Fallback to ID or created date if available
+                    return (b.createdAt || 0) - (a.createdAt || 0);
+                default:
+                    return 0;
+            }
+        });
     }
 
     /**
@@ -552,7 +583,7 @@ export default class SeriesController {
         return {
             title: activeSeries?.name || 'All Albums Series',
             description: activeSeries?.description || `${allSeries.length} series available`,
-            seriesList: allSeries,
+            seriesList: this.getSortedSeries(allSeries),
             activeSeriesId: activeSeries?.id || null
         };
     }

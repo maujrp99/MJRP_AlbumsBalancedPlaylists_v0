@@ -175,9 +175,64 @@ export class TracksTable {
 
 
         // Column order: position, title, userRank (NEW), acclaim, spotify, duration
-        return SafeDOM.div({
-            className: 'group flex items-center border-b border-white/5 hover:bg-white/5 transition-colors'
+        const desktopRow = SafeDOM.div({
+            className: 'hidden md:flex group items-center border-b border-white/5 hover:bg-white/5 transition-colors'
         }, [posCol, titleCol, userRankCol, acclaimCol, spotifyCol, durationCol])
+
+        const mobileRow = this._renderMobileRow(track, positionDisplay, time, hasUserRank, hasRank, hasPop)
+
+        return SafeDOM.div({}, [desktopRow, mobileRow])
+    }
+
+    _renderMobileRow(track, positionDisplay, time, hasUserRank, hasRank, hasPop) {
+        // Mobile Layout: Stacked
+        // Row 1: # | Title        | Time
+        // Row 2:   | Artist       | Badges
+
+        // Badges for Mobile
+        const badges = []
+
+        // User Rank Badge
+        if (hasUserRank) {
+            badges.push(SafeDOM.span({
+                className: 'inline-flex items-center justify-center w-6 h-6 rounded-full bg-sky-500/10 text-sky-500 text-xs font-bold border border-sky-500/20'
+            }, `#${track.userRank}`))
+        }
+
+        // Star Rating (if any)
+        if (track.rating) {
+            badges.push(SafeDOM.span({
+                className: 'flex items-center gap-1 text-xs font-bold text-white/90'
+            }, [
+                SafeDOM.span({ className: 'text-brand-orange' }, '★'),
+                SafeDOM.text(Number(track.rating).toFixed(0))
+            ]))
+        }
+
+        // Spotify Pop (Tiny Bar)
+        if (hasPop) {
+            const popBarWidth = `${track.spotifyPopularity}%`
+            const spotifyGreen = 'bg-[#1DB954]'
+            badges.push(SafeDOM.div({ className: 'w-16 h-1 bg-white/10 rounded-full overflow-hidden ml-2' }, [
+                SafeDOM.div({ className: `h-full ${spotifyGreen} rounded-full`, style: { width: popBarWidth } })
+            ]))
+        }
+
+        return SafeDOM.div({
+            className: 'md:hidden flex flex-col p-3 border-b border-white/5 hover:bg-white/5 active:bg-white/10 transition-colors gap-1'
+        }, [
+            SafeDOM.div({ className: 'flex items-center justify-between gap-3' }, [
+                SafeDOM.div({ className: 'flex items-center gap-3 min-w-0' }, [
+                    SafeDOM.span({ className: 'text-white/40 font-mono text-xs w-6 text-center' }, String(positionDisplay)),
+                    SafeDOM.span({ className: 'font-medium text-white text-sm truncate' }, track.title)
+                ]),
+                SafeDOM.span({ className: 'text-xs text-white/40 font-mono whitespace-nowrap' }, time)
+            ]),
+            SafeDOM.div({ className: 'flex items-center justify-between pl-9 mt-0.5' }, [
+                SafeDOM.span({ className: 'text-xs text-white/30 truncate flex-1' }, track.artist),
+                SafeDOM.div({ className: 'flex items-center gap-2 shrink-0' }, badges)
+            ])
+        ])
     }
 
 
@@ -186,7 +241,7 @@ export class TracksTable {
         const statsHeader = this.renderStatsHeader()
 
         const headerRow = SafeDOM.div({
-            className: 'flex items-center bg-white/5 border-b border-white/10'
+            className: 'hidden md:flex items-center bg-white/5 border-b border-white/10'
         }, this.renderHeaders())
 
         const trackRows = this.tracks.map(t => this.renderRow(t))

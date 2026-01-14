@@ -21,7 +21,13 @@ function wrapInGrid(content) {
  * @param {Array} seriesList - Array of series objects
  * @returns {Object} { seriesGroups: Map, otherAlbums: Array }
  */
-function groupAlbumsBySeries(albums, seriesList) {
+/**
+ * Group albums by series using fuzzy matching
+ * @param {Array} albums - Array of album objects
+ * @param {Array} seriesList - Array of series objects
+ * @returns {Object} { seriesGroups: Map, otherAlbums: Array }
+ */
+export function groupAlbumsBySeries(albums, seriesList) {
     const seriesGroups = new Map()
 
     // Initialize groups for all series to ensure order
@@ -90,7 +96,13 @@ function groupAlbumsBySeries(albums, seriesList) {
  * @param {number} albumCount - Number of albums
  * @returns {string} HTML string
  */
-function renderSeriesHeader(series, albumCount) {
+/**
+ * Render series group header with edit/delete buttons
+ * @param {Object} series - Series object
+ * @param {number} albumCount - Number of albums
+ * @returns {string} HTML string
+ */
+export function renderSeriesHeader(series, albumCount) {
     return `
     <div class="series-group-header flex items-center justify-between mb-6 pb-2 border-b border-white/10">
         <div class="flex items-center gap-4">

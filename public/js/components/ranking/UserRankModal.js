@@ -48,6 +48,14 @@ export class UserRankModal {
     }
 
     /**
+     * Check if device is mobile
+     * @returns {boolean}
+     */
+    get isMobile() {
+        return window.innerWidth <= 768
+    }
+
+    /**
      * Render and show the modal
      */
     show() {
@@ -145,8 +153,12 @@ export class UserRankModal {
             }
         })
 
+        const baseClasses = 'glass-panel flex flex-col'
+        const desktopClasses = 'w-full max-w-2xl max-h-[85vh] rounded-2xl border border-white/10 shadow-2xl m-4'
+        const mobileClasses = 'fullscreen-modal'
+
         const modal = SafeDOM.div({
-            className: 'glass-panel w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl border border-white/10 shadow-2xl m-4'
+            className: `${baseClasses} ${this.isMobile ? mobileClasses : desktopClasses}`
         })
 
         // Header

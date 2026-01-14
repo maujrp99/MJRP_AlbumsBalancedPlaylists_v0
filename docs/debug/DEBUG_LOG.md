@@ -1,4 +1,4 @@
-**Last Updated**: 2026-01-11 14:00
+**Last Updated**: 2026-01-14 00:30
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -11,6 +11,7 @@
 
 ---
 
+| #150 | **Series Sorting UI Not Updating** | ✅ RESOLVED | [Details](#issue-150-series-sorting-ui-not-updating) |
 | #148 | **User Ranking Persistence & Blending Gap** | ✅ RESOLVED | [Details](#issue-148-user-ranking-persistence--blending-gap) |
 | #149 | **PlaylistsView TypeError** | ✅ RESOLVED | [Details](#issue-149-playlistsview-typeerror) |
 | #147 | **User Ranking UI Persistence & Sorting Refinement** | ✅ RESOLVED | [Details](#issue-147-user-ranking-ui-persistence) |
@@ -69,6 +70,24 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #150: Series Sorting UI Not Updating
+- **Status**: ✅ **RESOLVED**
+- **Date**: 2026-01-14
+- **Problem**: 
+    1. User reported "sorting mechanism is not working".
+    2. Changing the Sort Dropdown (Smallest/Largest/A-Z) did not update the grid immediately (required refresh).
+- **Root Cause**: 
+    1. **View/Controller Disconnect**: `SeriesController` sent a `notifyView('header', data)` signal containing the sorted list.
+    2. **Missing Handler**: `SeriesView.js` (and `SeriesViewUpdater.js`) disregarded the `seriesList` payload in the 'header' update, only updating the title/metadata. The Grid component never received the sorted data.
+- **Solution**: 
+    1. Updated `SeriesView.js` to route `updateHeader(data)` calls to the updater.
+    2. Updated `SeriesViewUpdater.js` to implement `updateHeaderPayload(data)`, which extracts `data.seriesList` and explicitly updates the `SeriesGridRenderer`.
+- **Files Modified**: 
+    - `public/js/views/SeriesView.js`
+    - `public/js/views/helpers/SeriesViewUpdater.js`
+
+---
 
 ### Issue #148: User Ranking Persistence & Blending Gap
 - **Status**: ✅ **RESOLVED**
