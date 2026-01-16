@@ -43,7 +43,7 @@ export class APIClient {
 
         // 2. Sprint 7.5: Try Apple Music + Enrichment First
         try {
-            console.log('[APIClient] Searching Apple Music:', query)
+
             // Extract Artist/Album from query for better search
             const artist = this.extractArtist(query)
             const albumName = this.extractAlbum(query)
@@ -55,10 +55,6 @@ export class APIClient {
                 // First result is already scored/sorted by searchAlbums (standard editions prioritized)
                 const selected = appleAlbums[0]
                 const appleId = selected.id
-                console.log(`[APIClient] Selected from ${appleAlbums.length} results: "${selected.attributes?.name}" (${appleId})`)
-                if (appleAlbums.length > 1) {
-                    console.log(`[APIClient] Other options: ${appleAlbums.slice(1, 3).map(a => a.attributes?.name).join(', ')}`)
-                }
 
                 // CRIT-5a: Validate album match before processing
                 const identity = new AlbumIdentity(query, {
@@ -69,16 +65,16 @@ export class APIClient {
 
                 if (!identity.isValid()) {
                     console.warn(
-                        `[APIClient] ⚠️ REJECTED: "${selected.attributes?.name}" ` +
+                        `Album "${selected.attributes?.name}" by "${selected.attributes?.artistName}" (Apple ID: ${appleId}) did not match query "${query}". ` +
                         `(${(identity.matchConfidence * 100).toFixed(0)}% match to "${albumName}")`
                     )
-                    console.log('[APIClient] Debug:', identity.getDebugInfo())
+
                     // Fallback to legacy API
                     return this._fetchAlbumFromAPI(query)
                 }
 
                 console.log(
-                    `[APIClient] ✅ ACCEPTED: "${selected.attributes?.name}" ` +
+                    `Album "${selected.attributes?.name}" by "${selected.attributes?.artistName}" (Apple ID: ${appleId}) matched query "${query}". ` +
                     `(${(identity.matchConfidence * 100).toFixed(0)}% confidence)`
                 )
 
@@ -87,7 +83,7 @@ export class APIClient {
 
                 if (fullAlbum) {
                     // 3. Enrich with Rankings (Backend)
-                    console.log('[APIClient] Enriching album with BestEver data...')
+
                     const enrichResp = await axios.post(`${this.baseUrl}/enrich-album`, {
                         albumData: {
                             title: fullAlbum.title,
@@ -167,7 +163,7 @@ export class APIClient {
                         const { applyEnrichmentToAlbum } = await import('../helpers/SpotifyEnrichmentHelper.js')
                         await applyEnrichmentToAlbum(album, { fetchIfMissing: true })
                     } catch (spotifyError) {
-                        console.warn('[APIClient] Spotify enrichment skipped:', spotifyError.message)
+                        console.warn(`Spotify enrichment failed for ${album.artist} - ${album.title}:`, spotifyError.message)
                     }
 
                     await this.cache.set(query, album)
@@ -175,7 +171,7 @@ export class APIClient {
                 }
             }
         } catch (e) {
-            console.warn('[APIClient] Apple Music fetch failed/skipped, falling back to Legacy:', e)
+            console.error(`Error fetching from Apple Music for "${query}":`, e)
         }
 
         // 5. Fallback: Legacy Generate API
@@ -235,7 +231,7 @@ export class APIClient {
         for (let i = 0; i < queries.length; i++) {
             // Check cancellation
             if (signal && signal.aborted) {
-                console.log('[APIClient] fetchMultipleAlbums aborted')
+                console.log('[APIClient] Fetch multiple albums aborted.')
                 break
             }
 
@@ -246,7 +242,7 @@ export class APIClient {
 
                 // Check cancellation again after await
                 if (signal && signal.aborted) {
-                    console.log('[APIClient] fetchMultipleAlbums aborted after fetch')
+                    console.log('[APIClient] Fetch multiple albums aborted after fetch.')
                     break
                 }
 
@@ -411,7 +407,7 @@ export class APIClient {
         const id = this.generateAlbumId(data)
 
         // DEBUG: Log raw API data
-        console.log('[APIClient] normalizeAlbumData - Raw data:', {
+        console.debug('[APIClient] Raw API data received:', {
             hasTracks: !!data.tracks,
             hasTracksByAcclaim: !!data.tracksByAcclaim,
             tracksCount: data.tracks?.length,
@@ -422,7 +418,7 @@ export class APIClient {
         const rankedTracks = data.tracksByAcclaim || data.rankingConsolidated || []
 
         // DEBUG: Inspect track lists before processing
-        console.log('[APIClient] normalizeAlbumData - Track Lists:', {
+        console.debug('[APIClient] Track lists before processing:', {
             originalFirst: originalTracks[0]?.title,
             originalLength: originalTracks.length,
             rankedFirst: rankedTracks[0]?.title,
@@ -503,7 +499,7 @@ export class APIClient {
         const album = new Album(albumData)
 
         // DEBUG: Log normalized output
-        console.log('[APIClient] normalizeAlbumData - Normalized Album:', {
+        console.debug('[APIClient] Normalized album output:', {
             id: album.id,
             title: album.title,
             tracksCount: album.tracks.length,
@@ -549,7 +545,7 @@ export class APIClient {
 
         // AlbumLoader must be already loaded (it's loaded on app init)
         if (!albumLoader.isLoaded || !albumLoader.albums) {
-            console.log('[APIClient] AlbumLoader not ready, skipping cover lookup')
+            console.warn('[APIClient] AlbumLoader not loaded or albums not available for cover lookup.')
             return null
         }
 
@@ -564,11 +560,9 @@ export class APIClient {
         })
 
         if (match?.coverUrl) {
-            console.log(`[APIClient] Cover found for "${artist} - ${album}"`)
             return match.coverUrl
         }
 
-        console.log(`[APIClient] No cover found for "${artist} - ${album}"`)
         return null
     }
 }

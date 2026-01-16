@@ -19,17 +19,6 @@
 
 ## ✅ Completed Sprints (Reverse Chronological)
 
-### Sprint 20: User-Ranking & Recipe Parity (Jan 2026)
-**Goal**: Implement personal track ranking and ensure functional parity for the "My Own Ranking" recipe.
-**Status**: ✅ **DONE** (2026-01-12)
-**Deliverables**:
-- ✅ **User Ranking System**: Drag-and-drop ranking modal with Firestore persistence.
-- ✅ **Recipe Parity**: "My Own Ranking" now supports Top-N and Grouping options.
-- ✅ **Execution Logic**: Locked user strategy for UGR playlists.
-- ✅ **TracksTable Refactor**: New "My Rank" column and repositioned statistics.
-- ✅ **Hybrid Sorting**: Fixed cross-view sorting regression via event delegation.
-- ✅ **Hybrid Sorting**: Fixed cross-view sorting regression via event delegation.
-- ✅ **Title Prefixes**: `SPFY`/`BEA`/`UGR` prefixes for ranking source identification.
 
 ### Sprint 21: Mobile UX & Layout Refresh (Jan 2026)
 **Goal**: Comprehensive Mobile UX overhaul, including layout responsiveness, virtual scrolling, and functional series sorting.
@@ -42,7 +31,19 @@
 
 ---
 
-## ✅ Completed Sprints (Reverse Chronological)
+### Sprint 20: User-Ranking & Recipe Parity (Jan 2026)
+**Goal**: Implement personal track ranking and ensure functional parity for the "My Own Ranking" recipe.
+**Status**: ✅ **DONE** (2026-01-12)
+**Deliverables**:
+- ✅ **User Ranking System**: Drag-and-drop ranking modal with Firestore persistence.
+- ✅ **Recipe Parity**: "My Own Ranking" now supports Top-N and Grouping options.
+- ✅ **Execution Logic**: Locked user strategy for UGR playlists.
+- ✅ **TracksTable Refactor**: New "My Rank" column and repositioned statistics.
+- ✅ **Hybrid Sorting**: Fixed cross-view sorting regression via event delegation.
+- ✅ **Hybrid Sorting**: Fixed cross-view sorting regression via event delegation.
+- ✅ **Title Prefixes**: `SPFY`/`BEA`/`UGR` prefixes for ranking source identification.
+
+---
 
 ### Sprint 19: Frontend Modularization
 **Goal**: Refactor identified "God Views" and "Thick Stores" from the Code Quality Assessment.

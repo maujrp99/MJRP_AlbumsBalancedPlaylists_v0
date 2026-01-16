@@ -188,7 +188,7 @@
   opacity: 1;
 }
 
-/* Standard Pulse for Skeletons (Fallback if Tailwind missing) */
+/* Standard Pulse for Skeletons (Tailwind-compatible) */
 @keyframes pulse {
 
   0%,
@@ -201,6 +201,7 @@
   }
 }
 
+.animate-pulse,
 .animate-pulse-custom {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

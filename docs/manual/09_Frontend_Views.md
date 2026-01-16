@@ -97,7 +97,7 @@ sequenceDiagram
     *   `SeriesHeader`: Page title and action button.
     *   `SeriesToolbar`: Filters (Artist, Year, Source), Search, and View Toggles (Grid/List Icons).
         *   **Sorting**: Supports "Name (A-Z)", "Name (Z-A)", "Album Count (Lowest)", "Album Count (Highest)", and "Recently Added". Sorting logic is handled by `SeriesController`.
-    *   `SeriesProgressBar`: Handles inline loading states.
+    *   ~~`SeriesProgressBar`~~: Removed (Sprint 21.5) - Skeleton loading provides visual feedback.
     *   `SeriesEmptyState`: Renders when no albums match the current scope.
     *   `SeriesGridRenderer`: Responsible for the main content layout (Grid/List).
 *   **Helpers**:

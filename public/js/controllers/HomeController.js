@@ -237,7 +237,7 @@ export class HomeController {
             // Create album queries from selected albums
             const albumQueries = albums.map(album => ({
                 artist: album.artist,
-                album: album.title,
+                title: album.title, // FIX #154: Changed from 'album:' to 'title:' to match SeriesService expectation
                 appleMusicId: album.id || album.appleMusicId,
                 coverUrl: album.coverUrl || album.artworkTemplate,
                 year: album.year

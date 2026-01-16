@@ -101,15 +101,28 @@ export default class SeriesGridRenderer extends Component {
 
     /**
      * Virtual Strategy: Renders first 3 series real + Skeletons for rest
+     * FIX #152: Now distinguishes between loading state (show skeleton) and filtered state (skip)
      */
     _renderVirtualScopedGrid(albums, seriesList, context) {
+        const { isLoading = false } = this.props; // FIX #152: Get isLoading state
         const { seriesGroups, otherAlbums } = groupAlbumsBySeries(albums, seriesList);
         let html = '<div class="all-series-container space-y-12">';
         let index = 0;
 
         // Render each series group
         seriesGroups.forEach(group => {
-            if (group.albums.length === 0) return;
+            // FIX #152: Distinguish between loading (show skeleton) and filtered (skip)
+            if (group.albums.length === 0) {
+                if (isLoading) {
+                    // Loading state: Show skeleton placeholder
+                    html += `
+                    <div class="series-group-skeleton" data-series-id="${group.series.id}" data-series-index="${index}">
+                        ${SeriesSkeleton.render()}
+                    </div>`;
+                }
+                // Filtered state (isLoading=false): Skip this series entirely
+                return;
+            }
 
             const isVisibleInitially = index < 3; // Render first 3 immediately
 
@@ -117,7 +130,7 @@ export default class SeriesGridRenderer extends Component {
                 html += this._renderRealSeriesGroup(group.series, group.albums, context);
                 this.renderedSeriesIds.add(group.series.id);
             } else {
-                // Render Skeleton Placeholder
+                // Render Skeleton Placeholder for lazy loading
                 html += `
                 <div class="series-group-skeleton" data-series-id="${group.series.id}" data-series-index="${index}">
                     ${SeriesSkeleton.render()}
@@ -236,17 +249,27 @@ export default class SeriesGridRenderer extends Component {
     }
 
     _hydrateSeriesGroup(element, seriesId) {
-        const { items = [], seriesList = [], context = {} } = this.props;
+        const { items = [], seriesList = [], context = {}, isLoading = false } = this.props;
         // Optimization: We could cache this map in render()
         const { seriesGroups } = groupAlbumsBySeries(items, seriesList);
         const group = seriesGroups.get(seriesId);
 
         if (group) {
+            // FIX: Handle empty groups during hydration
+            if (group.albums.length === 0) {
+                if (isLoading) {
+                    // Still loading, keep skeleton
+                    return;
+                } else {
+                    // Loaded but empty (filtered out) - Remove element
+                    element.remove();
+                    this.renderedSeriesIds.add(seriesId); // Mark handled
+                    return;
+                }
+            }
+
             const realHtml = this._renderRealSeriesGroup(group.series, group.albums, context);
             // Replace Outer HTML (Skeleton Div) with Real Group Div
-            // Using SafeDOM logic?
-            // Element is the wrapper <div class="series-group-skeleton">
-            // We want to replace it.
 
             // Create temp container
             const temp = document.createElement('div');

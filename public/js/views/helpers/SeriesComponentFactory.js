@@ -7,7 +7,7 @@
 import SeriesHeader from '../../components/series/SeriesHeader.js';
 import SeriesToolbar from '../../components/series/SeriesToolbar.js';
 import SeriesGridRenderer from '../../components/series/SeriesGridRenderer.js';
-import { SeriesProgressBar } from '../../components/series/SeriesProgressBar.js';
+// FIX #152B: SeriesProgressBar removed - skeletons replace progress bar
 import { albumsStore } from '../../stores/albums.js';
 import { albumSeriesStore } from '../../stores/albumSeries.js';
 import { router } from '../../router.js';
@@ -92,11 +92,7 @@ export class SeriesComponentFactory {
         return toolbar;
     }
 
-    static createProgressBar(containerId) {
-        const progress = new SeriesProgressBar(containerId);
-        progress.mount();
-        return progress;
-    }
+    // FIX #152B: createProgressBar removed - skeletons replace progress bar as loading feedback
 
     static createGrid(container, { view, controller }) {
         if (!container) return null;

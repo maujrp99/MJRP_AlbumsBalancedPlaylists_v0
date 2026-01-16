@@ -7,6 +7,9 @@ description: Debugging Protocol
 **Purpose**: Systematic process for finding, fixing, and documenting issues.
 **Trigger**: A reported bug or critical failure.
 
+## The GOLDEN RULES
+1. Ensure you follow the GOLDEN RULES of .agent/developer_rules.md
+
 ## 1. Intake (Grounding)
 
 1.  **Grounding**: Read `docs/onboarding/DEVELOPER.md` to load context.
@@ -24,9 +27,12 @@ description: Debugging Protocol
 3.  **Reproduce**: Confirm the issue.
 
 ## 2. Analysis (The "Why")
+
 1.  **Consult Manuals**: Check `docs/manual/01_System_Architecture.md` to understand *intended* behavior. consulte o `docs/00_MJRP_Album_Blender_Ref_Guide_Index.md`
-2.  **Hypothesis**: Formulate a theory.
-3.  **Plan**: Describe the fix.
+2. Consider this: what's your overall/holistic impact analysis of the potential fix? Have you reallu checked all markdow manuals related with thr bug context to ensure you have the big picture and awareness of all functionalities that may be impacted? What functionalities could be impacted and mostly important what functionalities/code/interface you believe it will not break?
+3.  After the throughour analysis of the 2 previous steps:
+    **Hypothesis**: Formulate a theory.
+4.  **Plan**: Describe the fix.
     -   *Check*: If fix requires changing a Core Pattern -> **STOP**. Write an ADR first (`docs/decisions/`).
 
 ## 3. Implementation

@@ -38,7 +38,7 @@ class GlobalProgressManager {
         if (this.element) {
             this.element.style.display = 'block'
         }
-        console.log('[GlobalProgress] Started', this.activeLoaders)
+
     }
 
     /**
@@ -55,7 +55,7 @@ class GlobalProgressManager {
                 }
             }, 200)
         }
-        console.log('[GlobalProgress] Finished', this.activeLoaders)
+
     }
 
     /**

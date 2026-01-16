@@ -15,6 +15,7 @@ import { dialogService } from '../../services/DialogService.js';
 import { InventoryAddModal } from '../InventoryAddModal.js';
 import { UserRankModal } from '../ranking/UserRankModal.js';  // Sprint 20
 import { AlbumCardRenderer } from '../ui/AlbumCardRenderer.js';
+import { getSeriesService } from '../../services/SeriesService.js';  // FIX #154
 
 export default class SeriesEventHandler extends Component {
     /**
@@ -60,6 +61,7 @@ export default class SeriesEventHandler extends Component {
         // 1. Check for sort header click FIRST (delegation)
         const sortHeader = e.target.closest('[data-sort]');
         if (sortHeader) {
+            e.preventDefault(); // Safety
             e.stopPropagation();
             this.handleTableSort(sortHeader);
             return;
@@ -67,6 +69,9 @@ export default class SeriesEventHandler extends Component {
 
         const target = e.target.closest('[data-action]');
         if (!target) return;
+
+        e.preventDefault(); // FIX: Prevent default browser action (navigation)
+        e.stopPropagation();
 
         const action = target.dataset.action;
         const albumId = target.dataset.albumId || target.dataset.id;
@@ -213,8 +218,9 @@ export default class SeriesEventHandler extends Component {
                 }
             }
 
-            // 1. Remove from series (Persistence)
-            await albumSeriesStore.removeAlbumFromSeries(album, seriesId);
+            // 1. Remove from series (Persistence) - FIX #154: Use SeriesService, not store
+            const seriesService = getSeriesService(db, null, auth.currentUser?.uid);
+            await seriesService.removeAlbumFromSeries(seriesId, album);
 
             // 2. Remove from local view store (Immediate UI Feedback)
             albumsStore.removeAlbum(album.id);
@@ -271,7 +277,9 @@ export default class SeriesEventHandler extends Component {
                             // with this title? No, removeAlbumFromSeries matches against Queries.
                             // If I pass an ID-less album object with title = manualQuery, it might match exact string.
 
-                            await albumSeriesStore.removeAlbumFromSeries({ title: manualQuery, artist: '' }, seriesId);
+                            // FIX #154: Use SeriesService for consistent method access
+                            const seriesService = getSeriesService(db, null, auth.currentUser?.uid);
+                            await seriesService.removeAlbumFromSeries(seriesId, { title: manualQuery, artist: '' });
                             albumsStore.removeAlbum(album.id);
                             toast.success('Album removed manually');
                             const { onAlbumRemoved } = this.props;

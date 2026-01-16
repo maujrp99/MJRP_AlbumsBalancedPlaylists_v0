@@ -81,7 +81,7 @@ export default class SeriesView extends BaseView {
             document.getElementById('series-grid-mount'),
             { view: this, controller: this.controller }
         );
-        this.components.inlineProgress = SeriesComponentFactory.createProgressBar('loading-progress-container');
+        // FIX #152B: Progress bar removed - skeletons provide loading feedback
 
         // 2. Updater: Initialize
         this.updater = new SeriesViewUpdater(this.components);
@@ -136,15 +136,14 @@ export default class SeriesView extends BaseView {
 
     setLoading(isLoading) {
         this.isLoading = isLoading;
-        this.updater?.updateLoading(isLoading);
+        // FIX #152B: updateLoading removed - skeletons provide loading feedback via isLoading prop
     }
 
-    updateProgress(progress) {
-        this.updater?.updateProgress(progress);
-    }
+    // FIX #152B: updateProgress removed - skeletons provide loading feedback
 
-    updateAlbums(albums) {
-        // console.log('[SeriesView] updateAlbums:', albums?.length);
+    updateAlbums(albums, isLoading = false) {
+        // FIX #152: Accept isLoading from controller to distinguish loading vs filtered state
+        // console.log('[SeriesView] updateAlbums:', albums?.length, 'isLoading:', isLoading);
 
         let sortedSeriesList = null;
 
@@ -170,10 +169,11 @@ export default class SeriesView extends BaseView {
             this.currentScope,
             this.controller.getState().filters,
             this.controller.getState().searchQuery,
-            sortedSeriesList // <--- Pass sorted list
+            sortedSeriesList, // <--- Pass sorted list
+            isLoading         // FIX #152: Pass isLoading to distinguish skeleton vs filtered
         );
         // this.updater?.updateHeader(this.currentScope); // Old signature
-        this.updater?.updateEmptyState('emptyStateContainer', albums.length, this.isLoading);
+        this.updater?.updateEmptyState('emptyStateContainer', albums.length, isLoading);
     }
 
     // New Method called by Controller

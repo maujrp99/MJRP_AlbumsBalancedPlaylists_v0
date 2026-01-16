@@ -246,7 +246,7 @@
 194. `public/js/components/playlists/SavedPlaylistCard.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
 195. `public/js/components/playlists/SavedPlaylistRow.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
 196. `public/js/components/series/SeriesEmptyState.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-197. `public/js/components/series/SeriesProgressBar.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
+197. ~~`public/js/components/series/SeriesProgressBar.js`~~ [REMOVED Sprint 21.5] - Replaced by skeleton loading
 198. `public/js/views/helpers/SeriesGridHelper.js` (Analysis: `manual/09_Frontend_Views.md`)
 199. `public/js/views/helpers/SeriesViewHandlers.js` (Analysis: `manual/09_Frontend_Views.md`)
 200. `docs/decisions/adr-017-pure-state-stores.md` (Analysis: `manual/01_System_Architecture.md`)

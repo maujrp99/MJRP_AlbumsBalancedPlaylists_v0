@@ -33,29 +33,24 @@ export class SeriesModalsManager {
     }
 
     handleSeriesUpdated(seriesId) {
-        // ARCH-6: Invalidate cache to prevent stale data
-        albumsStore.clearAlbumSeries(seriesId);
-        albumsStore.clearAlbumSeries('ALL_SERIES_VIEW');
-
-        if (this.view.updateHeader) {
-            this.view.updateHeader();
-        }
-
+        // FIX #158: Soft reload for Edit Series prevents flash
+        // remove clearAlbumSeries calls
         if (this.view.controller) {
             this.view.controller.loadScope(this.view.currentScope, this.view.targetSeriesId, true);
         }
     }
 
     handleSeriesDeleted(seriesId) {
-        // ARCH-6: Invalidate cache
-        albumsStore.clearAlbumSeries(seriesId);
-        albumsStore.clearAlbumSeries('ALL_SERIES_VIEW');
+        // ARCH-6: Invalidate cache (Granular update handled by Service/Store now)
+        // albumsStore.clearAlbumSeries(seriesId); // Service does this
+        // albumsStore.clearAlbumSeries('ALL_SERIES_VIEW'); // Service does this granularly
 
         if (this.view.targetSeriesId === seriesId) {
             router.navigate('/albums');
-        } else if (this.view.refreshGrid) {
-            this.view.refreshGrid();
         }
+        // FIX #158: No need to reload scope manually anymore.
+        // The store update (removeAlbumsBySeriesIdFromContext) will trigger reactivity.
+        // Calling loadScope or refreshGrid caused the "No albums" flash because it cleared view before loading.
     }
 
     openEdit(seriesId) {

@@ -3,7 +3,7 @@
 **Status**: Active - v2.0 (Modular)
 **Last Updated**: 2026-01-10
 
-> **Usage**: Ask the agent to "Run the [TAG] checklist".
+> **Usage**: Ask the agent to "Run the [TAG] checklist" or full regression to all [TAG] checklists.
 > **Service Layer Check**: Verify that `[BLEND]` and `[PLAYLIST_MGR]` operations correctly trigger Store updates via their respective Services.
 
 ## 🔴 [CORE] Core Loop (The Must Pass)
@@ -25,8 +25,9 @@
 - [ ] **View Modes**: Toggle Compact ↔ Expanded. Data persists and layout shifts correctly (No data loss).
     - *Verify*: Tracks load with Index, Title, Duration, and Badges (Spotify/BEA).
     - *Verify*: No "undefined" values in Track Row.
-- [ ] **Edit Name**: Click Pencil -> Rename Series -> Header updates.
-- [ ] **Delete Series**: Click Trash -> Confirm -> Redirects to `/albums`.
+- [ ] **Edit Name**: Click Pencil -> Rename Series -> Header updates **immediately** (No double toast).
+- [ ] **Delete Series**: Click Trash -> Confirm -> Redirects to `/albums` -> **Verify Series is REMOVED from list** (Stale Cache Check).
+- [ ] **Delete Album from Series**: Click Trash on Album -> Confirm -> **Verify Card Disappears** (No UI Freeze).
 - [ ] **Filter Logic**: Click "EPs" -> Only EPs show. Click "Owned" -> Only owned show.
 - [ ] **Sorting (Sprint 21)**: Click Sort -> "Name (A-Z)" sorts alpha. "Album Count" sorts by size. "Recently Added" sorts by date.
 - [ ] **Rank Tracks (Sprint 20)**: Click "Rank It" -> Drag & Drop -> Save. Verify "Ranked" badge and table update.

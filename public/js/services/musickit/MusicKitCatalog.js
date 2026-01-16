@@ -164,7 +164,7 @@ class MusicKitCatalog {
                         hasMore = false;
                     } else {
                         offset += limit;
-                        if (offset > 500) hasMore = false; // Safety cap
+                        if (offset > 2000) hasMore = false; // Safety cap bumped to 2000 (Fix #157)
                     }
                 } catch (err) {
                     // Apple Music API returns 404 when offset >= total count

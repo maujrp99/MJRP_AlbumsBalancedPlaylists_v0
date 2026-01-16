@@ -267,7 +267,7 @@ export default class SeriesController {
         // this.notifyView('albums', []);
 
         this.state.loadProgress = { current: 0, total: queries.length };
-        this.notifyView('progress', this.state.loadProgress);
+        // FIX #152B: notifyView('progress') removed - skeletons provide loading feedback
 
         try {
             const { results, errors } = await apiClient.fetchMultipleAlbums(
@@ -279,8 +279,8 @@ export default class SeriesController {
                     const progressLabel = result.album
                         ? `Loading: ${result.album.artist} - ${result.album.title}`
                         : `Processing... (${Math.round((current / total) * 100)}%)`;
+                    // FIX #152B: notifyView('progress') removed - skeletons provide loading feedback
 
-                    this.notifyView('progress', { current, total, label: progressLabel });
 
                     if (result.status === 'success' && result.album) {
                         // ARCH-FIX: Pass sourceSeriesId from query context
@@ -307,7 +307,7 @@ export default class SeriesController {
             this.state.isLoading = false;
             globalProgress.finish();
 
-            console.log('[SeriesController] Load complete. Applying filters...');
+
             this.notifyView('loading', false);
             this.applyFilters();
         }
@@ -318,7 +318,7 @@ export default class SeriesController {
      * Re-applies filters and notifies view.
      */
     refresh() {
-        console.log('[V2] SeriesController.refresh() called');
+
         this.applyFilters();
     }
 
@@ -388,7 +388,7 @@ export default class SeriesController {
                     album.setUserRankings(rankArray);
                 }
             } catch (err) {
-                console.warn(`[SeriesController] Failed to refresh ranking for ${album.id}:`, err);
+
             }
         });
 
@@ -432,7 +432,7 @@ export default class SeriesController {
      * @param {string} mode - 'grid' | 'list' | 'compact' | 'expanded'
      */
     handleViewModeChange(mode) {
-        console.log('[SeriesController] View mode changed:', mode);
+
         this.state.viewMode = mode;
         localStorage.setItem('albumsViewMode', mode);
 
@@ -448,7 +448,7 @@ export default class SeriesController {
      * Handle sort change
      */
     handleSort(sortKey) {
-        console.log('[SeriesController] Sort by:', sortKey);
+
         this.state.seriesSortMode = sortKey;
         this.notifyView('header', this.getHeaderData());
     }
@@ -526,14 +526,10 @@ export default class SeriesController {
                 if (this.view.setLoading) this.view.setLoading(data);
                 break;
             case 'albums':
-                // ARCH-FIX: Soft Loading Suppression
-                // If we are loading, do NOT wipe the screen with an empty array.
-                // Wait for the final load completion or incremental updates which have data.
-                if (this.state.isLoading && Array.isArray(data) && data.length === 0) {
-                    console.log('[SeriesController] 🛡️ Suppressing empty album update during load');
-                    return;
-                }
-                if (this.view.updateAlbums) this.view.updateAlbums(data);
+                // FIX #152: Pass isLoading to view so GridRenderer can distinguish:
+                // - Empty + isLoading = Show Skeleton
+                // - Empty + !isLoading = Filtered out (hide)
+                if (this.view.updateAlbums) this.view.updateAlbums(data, this.state.isLoading);
                 break;
             case 'progress':
                 if (this.view.updateProgress) this.view.updateProgress(data);
@@ -593,7 +589,7 @@ export default class SeriesController {
      * Fetches series definitions without clearing the view.
      */
     async syncAllSeriesInBackground() {
-        console.log('[SeriesController] 🔄 Starting background sync...');
+
         const db = albumSeriesStore.getDb();
         if (db) {
             const service = getSeriesService(db, null, albumSeriesStore.getUserId())

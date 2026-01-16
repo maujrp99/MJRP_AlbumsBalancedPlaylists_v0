@@ -14,7 +14,7 @@ import { getUniqueArtists } from '../../services/SeriesFilterService.js';
 
 export class SeriesViewUpdater {
     constructor(components) {
-        this.components = components; // { header, toolbar, grid, inlineProgress }
+        this.components = components; // { header, toolbar, grid } - FIX #152B: inlineProgress removed
     }
 
     updateHeader(currentScope) {
@@ -36,7 +36,9 @@ export class SeriesViewUpdater {
      * Revised updateHeader signature to accept full payload
      */
     updateHeaderPayload(data) {
-        if (!this.components.header) return;
+        // FIX #153: Guard against undefined data to prevent TypeError
+        if (!this.components.header || !data) return;
+
         this.components.header.update({
             pageTitle: data.title,
             albumCount: data.description // reuse or separate
@@ -50,7 +52,7 @@ export class SeriesViewUpdater {
         }
     }
 
-    updateGrid(albums, viewMode, currentScope, filters, searchQuery, sortedSeriesList = null) {
+    updateGrid(albums, viewMode, currentScope, filters, searchQuery, sortedSeriesList = null, isLoading = false) {
         if (!this.components.grid) return;
 
         // ARCH-FIX: Use sorted list if provided (from Controller), otherwise fallback to store (unsorted)
@@ -61,21 +63,12 @@ export class SeriesViewUpdater {
             layout: viewMode === 'compact' ? 'grid' : 'list',
             scope: currentScope,
             seriesList: seriesList,
-            context: { searchQuery, filters }
+            context: { searchQuery, filters },
+            isLoading: isLoading // FIX #152: Pass isLoading to GridRenderer
         });
     }
 
-    updateLoading(isLoading) {
-        if (this.components.inlineProgress) {
-            isLoading ? this.components.inlineProgress.start() : this.components.inlineProgress.finish();
-        }
-    }
-
-    updateProgress({ current, total, label }) {
-        if (this.components.inlineProgress) {
-            this.components.inlineProgress.update(current, total, label);
-        }
-    }
+    // FIX #152B: updateLoading and updateProgress removed - skeletons provide loading feedback
 
     updateEmptyState(containerId, albumCount, isLoading) {
         const container = document.getElementById(containerId);

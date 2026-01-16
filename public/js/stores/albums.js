@@ -202,6 +202,34 @@ export class AlbumsStore {
     }
 
     /**
+     * Remove albums belonging to a specific series from a larger context (e.g. ALL_SERIES_VIEW)
+     * @param {string} seriesId - The series ID to remove albums for
+     * @param {string} contextId - The context ID to remove from (default: ALL_SERIES_VIEW)
+     */
+    removeAlbumsBySeriesIdFromContext(seriesId, contextId = 'ALL_SERIES_VIEW') {
+        if (!this.albumsByAlbumSeriesId.has(contextId)) return;
+
+        const albums = this.albumsByAlbumSeriesId.get(contextId);
+        // Filter out albums that have this seriesId in their context list
+        // OR rely on fuzzy matching if needed, but context ID is best.
+        // Issue #151: Albums have 'seriesIds' array.
+
+        const filtered = albums.filter(album => {
+            // Keep album if it does NOT include the seriesId
+            if (album.seriesIds && Array.isArray(album.seriesIds)) {
+                return !album.seriesIds.includes(seriesId);
+            }
+            // Fallback: If no seriesIds, we can't be sure, so maybe keep it? 
+            // Or if we know it came from this series... 
+            // In V3, we inject seriesIds. So this should be safe.
+            return true;
+        });
+
+        this.albumsByAlbumSeriesId.set(contextId, filtered);
+        this.notify();
+    }
+
+    /**
      * Check if series has cached albums
      * @param {string} seriesId - Series ID
      * @returns {boolean} True if cached

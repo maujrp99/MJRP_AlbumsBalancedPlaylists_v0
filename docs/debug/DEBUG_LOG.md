@@ -1,4 +1,4 @@
-**Last Updated**: 2026-01-14 15:35
+**Last Updated**: 2026-01-14 20:25
 **Workflow**: See `.agent/workflows/debug_protocol.md`
 ## Maintenance Notes
 
@@ -11,6 +11,10 @@
 
 ---
 
+| #152 | **Ghost Skeletons & Progress Bar Dysfunction** | ✅ RESOLVED | [Details](#issue-152-ghost-skeletons--progress-bar-dysfunction) |
+| #159 | **Grid/Filters Flash to "No Albums" State** | 🔴 OPEN | [Details](#issue-159) |
+| #158 | **Series Deletion Empty State (Flash Fix)** | ✅ RESOLVED | [Details](#issue-158) |
+| #154 | **Album Deletion Match Error & Flash Fix** | 🚧 IN PROGRESS | [Details](#issue-154) |
 | #151 | **All Series View Loading Logic Discrepancy** | ✅ RESOLVED | [Details](#issue-151-all-series-view-loading-logic-discrepancy) |
 | #150 | **Series Sorting UI Not Updating** | ✅ RESOLVED | [Details](#issue-150-series-sorting-ui-not-updating) |
 | #148 | **User Ranking Persistence & Blending Gap** | ✅ RESOLVED | [Details](#issue-148-user-ranking-persistence--blending-gap) |
@@ -71,6 +75,76 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #154: Album Deletion Failure (Match Error)
+- **Status**: 🔴 **REVERTED/OPEN**
+- **Symptom**: "Could not find album in series" error persisting on deletion.
+- **Root Cause**: Data Malformation in `HomeController.js`. It initialized new series with `album: value` instead of `title: value`. `SeriesService` expects `title`.
+- **Previous Fix (Reverted)**: 
+  1. Updated `HomeController.js` to map `title: album.title` correctly (Fixed Source).
+  2. Updated `SeriesService.js` to fallback to `query.title || query.album` to handle legacy broken data.
+- **Note**: Code reverted on 2026-01-15 due to skeleton patch regression.
+
+### Issue #155: Series Deletion Freeze (Safe Mode)
+- **Status**: 🔴 **REVERTED/OPEN**
+- **Previous Fix (Reverted)**: Improved cache invalidation and forced navigation.
+- **Note**: Code reverted on 2026-01-15 due to skeleton patch regression.
+
+### Issue #156: New Album/Series Visibility (Cache)
+- **Status**: 🔴 **REVERTED/OPEN**
+- **Symptom**: New items required refresh to appear.
+- **Cause**: `Service` methods were modifying DB but not invalidating the `ALL_SERIES_VIEW` cache key.
+- **Previous Fix (Reverted)**: Added explicit `this.cache.clearAlbumSeries('ALL_SERIES_VIEW')` to `createSeries`, `updateSeries`, and `removeAlbumFromSeries`.
+- **Note**: Code reverted on 2026-01-15 due to skeleton patch regression.
+
+### Issue #158: Series Deletion Empty State
+- **Status**: 🔴 **REVERTED/OPEN**
+- **Symptom**: "No albums in library" appearing after successful series deletion, even when other series exist.
+- **Root Cause**: `SeriesService.deleteSeries` was missing `this.cache.invalidate('ALL_SERIES_VIEW')`. The app re-fetched stale data or failed to refresh.
+- **Previous Fix (Reverted)**: Added explicit cache invalidation to `deleteSeries`.
+- **Note**: Code reverted on 2026-01-15 due to skeleton patch regression.
+### Issue #157: Album "76" Missing (API Cap)
+- **Status**: ✅ RESOLVED
+- **Symptom**: "76" (Armin) found by AI but missing from results.
+- **Cause**: `MusicKitCatalog.js` had a pagination safety cap of 500. Older albums were cut off for prolific artists.
+- **Fix**: Bumped safety cap to 2000. (Rejected Frontend Filter change).
+
+### Issue #153: Series Edit Update Crash (Double Toast)
+- **Status**: 🔴 **OPEN**
+- **Date**: 2026-01-14
+- **Problem**: Editing a series triggers both a success and failure toast.
+- **Error**: `TypeError: Cannot read properties of undefined (reading 'title')` in `SeriesViewUpdater.updateHeaderPayload`.
+- **Hypothesis**: `SeriesEditModal` or `SeriesModalsManager` passes an incomplete or undefined payload to `updateHeader`, causing the View Updater to crash, which is caught by the Modal's error handler (triggering the second "failure" toast).
+
+---
+
+### Issue #152: Ghost Skeletons & Progress Bar Dysfunction
+- **Status**: ✅ **RESOLVED**
+- **Date**: 2026-01-15
+- **Problem**: 
+    1. **Ghost Skeletons**: Missing CSS class `.animate-pulse`.
+    2. **Evidence**: User couldn't see pulse animation.
+- **Fix**: 
+    1. Added standard Tailwind `.animate-pulse` and `@keyframes pulse` to `animations.css`.
+    2. Verified via high-contrast browser injection (Video Proof: `skeleton_visual_proof_final`).
+    3. Removed outdated `[GlobalProgress]` logs.
+
+### Issue #158: Series Deletion Empty State (Flash Fix)
+- **Status**: ✅ **RESOLVED**
+- **Symptom**: "No albums in library" appearing after successful series deletion.
+- **Root Cause**: Aggressive cache clearing (`ALL_SERIES_VIEW`) and full reloads.
+- **Fix**: Implemented `albumsStore.removeAlbumsBySeriesIdFromContext` for surgical removal of albums belonging to the deleted series. Avoids full grid reload.
+
+### Issue #159: Grid/Filters Flash to "No Albums" State
+- **Status**: 🔴 **OPEN**
+- **Symptom**: Switching series filter or deleting an album causes a flash to "No albums in library".
+- **Root Cause**: 
+    1. Navigation/Reload triggered improperly (missing `preventDefault`).
+    2. `SeriesController` might be clearing the view before fetching.
+    3. Inconsistent logic between direct delete and edit modal.
+- **Plan**: Unify delete logic in `SeriesService` and optimize `SeriesController.loadScope` for true "soft" loading.
+
+---
 
 ### Issue #151: All Series View Loading Logic Discrepancy
 - **Status**: ✅ **RESOLVED**
