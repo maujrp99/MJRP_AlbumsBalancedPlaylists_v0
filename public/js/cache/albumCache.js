@@ -76,7 +76,7 @@ export class AlbumCache {
 
         // Store in CacheManager (Memory L1 + IndexedDB L2)
         await cacheManager.set(key, album, this.ttl)
-        console.log('💾 Cached to IndexedDB:', query)
+        //console.log('💾 Cached to IndexedDB:', query)
 
         // Also cache by album identity for getByIdentity() lookups
         if (album && album.artist && album.title) {

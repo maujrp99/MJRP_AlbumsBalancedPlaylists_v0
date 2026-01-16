@@ -99,7 +99,6 @@ sequenceDiagram
         *   **Sorting**: Supports "Name (A-Z)", "Name (Z-A)", "Album Count (Lowest)", "Album Count (Highest)", and "Recently Added". Sorting logic is handled by `SeriesController`.
     *   ~~`SeriesProgressBar`~~: Removed (Sprint 21.5) - Skeletons provide visual feedback.
     *   `SeriesEmptyState`: Renders when no albums match the current scope.
-        *   **FIX #159 (Sprint 21.5)**: Implements 300ms delay + store re-check + fade-in to prevent flash during series transitions.
     *   `SeriesGridRenderer`: Responsible for the main content layout (Grid/List).
 *   **Helpers**:
     *   `SeriesViewUpdater` [NEW]: Handles DOM updates (Header, Grid, Toolbar) based on Controller state.

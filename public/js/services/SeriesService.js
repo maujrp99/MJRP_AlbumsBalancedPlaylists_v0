@@ -18,6 +18,7 @@ import { albumsStore } from '../stores/albums.js' // FIX #156: For cache invalid
 import { cacheManager } from '../cache/CacheManager.js'
 import { StorageService } from './infra/StorageService.js'
 import { UserSyncService } from './auth/UserSyncService.js'
+import { apiClient } from '../api/client.js' // Fix #156: Needed for enrichment
 
 const STORAGE_KEY = 'series' // prefix will be added
 
@@ -92,8 +93,8 @@ export class SeriesService {
             albumSeriesStore.setActiveSeries(id)
             this.saveToLocalStorage()
 
-            // FIX #156: Invalidate cache so UI refreshes immediately
-            albumsStore.clearAlbumSeries('ALL_SERIES_VIEW')
+            // FIX #156/161: No more aggressive cache clearing.
+            // If albums were created separately, they should be injected manually by caller.
 
             return series
         } finally {
@@ -108,8 +109,8 @@ export class SeriesService {
             albumSeriesStore.updateSeriesById(id, updates)
             this.saveToLocalStorage()
 
-            // FIX #156: Invalidate cache so UI refreshes immediately
-            albumsStore.clearAlbumSeries('ALL_SERIES_VIEW')
+            // FIX #156/161: No more aggressive cache clearing.
+            // Callers (SeriesEditModal) responsible for injecting new albums via injectAlbumsIntoViewCache.
         } finally {
             globalProgress.finish()
         }
@@ -175,7 +176,11 @@ export class SeriesService {
 
         if (!exists) {
             albumQueries.push({ id: album.id || null, title: album.title, artist: album.artist })
+            // Note: updateSeries is cleaner now (no cache wipe)
             await this.updateSeries(seriesId, { albumQueries })
+
+            // FIX #156: Surgically inject into view
+            await this.injectAlbumsIntoViewCache([album], seriesId)
         }
     }
 
@@ -213,47 +218,99 @@ export class SeriesService {
 
         console.log(`[SeriesService] 🗑️ Successfully removed album "${album.title}" from series "${series.name}" (ID: ${seriesId})`)
 
-        // FIX #158 (Album Variant): Do NOT clear entire cache effectively causing "No Albums" screen.
-        // Instead, perform surgical removal from the store.
-        // The View (SeriesEventHandler) already calls albumsStore.removeAlbum(album.id) for immediate visual feedback.
-        // But we must also update the underlying cached series context if it exists.
 
-        // 1. Remove from 'ALL_SERIES_VIEW' context if present
-        if (albumsStore.hasAlbumsForSeries('ALL_SERIES_VIEW')) {
-            // We can reuse the granular removal tool we just made for Series, 
-            // but here we are removing a single ALBUM, not a group of albums by series.
-            // Actually, `albumsStore.removeAlbum(album.id)` removes it from the *currently active* list.
-            // If we are in 'ALL' view, active IS 'ALL_SERIES_VIEW'.
-            // So Step 2 below (View Handler) covers the active view.
-
-            // We just need to ensure we don't nuking the cache.
-            // Removing the `clearAlbumSeries` calls is the fix.
-        }
-
-        // We DO want to mark the specific series cache as stale though, so next time it is opened alone it reloads?
-        // Or better: Just let the store update happen.
-        // albumsStore.clearAlbumSeries(seriesId); // Maybe keep this to force reload of single series view later?
-        // No, let's trust the granular update.
-
-        console.log(`[SeriesService] ✅ Cache updated surgically. UI should NOT flash empty state.`)
     }
 
-    findSeriesContainingAlbum(album) {
-        const norm = str => str?.toLowerCase().trim() || ''
 
-        return albumSeriesStore.getSeries().find(s =>
-            (s.albumQueries || []).some(query => {
-                if (typeof query === 'object' && query !== null) {
-                    // FIX #154: Fallback for legacy data
-                    const queryTitle = query.title || query.album;
-                    return (query.id && query.id === album.id) || queryTitle === album.title
+
+    // ========== SURGICAL CACHE UPDATES (FIX #156) ==========
+
+    /**
+     * Surgically inject albums into the active view cache.
+     * Handles enrichment and store hydration logic.
+     * @param {Array<Object>} albums - List of album objects
+     * @param {string} seriesId - Context series ID (optional)
+     */
+    async injectAlbumsIntoViewCache(albums, seriesId = null) {
+        if (!albums || albums.length === 0) return
+
+        console.log(`[SeriesService] 💉 Surgically injecting ${albums.length} albums into view cache...`)
+
+        // 1. Enrich (BestEver Ratings) if missing
+        const enrichedAlbums = await Promise.all(albums.map(async (album) => {
+            // Clone to avoid mutation side effects on original reference locally
+            const enriched = { ...album, tracks: album.tracks ? [...album.tracks] : [] }
+
+            // Basic check if enrichment is needed (e.g. no ratings data)
+            // We assume if it came from Search, it might have Tracks but no Acclaim data
+            const needsEnrichment = !enriched.bestEverUrl && (!enriched.acclaim || !enriched.acclaim.hasRatings)
+
+            if (needsEnrichment && enriched.artist && enriched.title) {
+                // console.log(`[SeriesService] Enriching ${enriched.title}...`)
+                const enrichment = await apiClient.BEAenrichAlbum({
+                    title: enriched.title,
+                    artist: enriched.artist,
+                    tracks: enriched.tracks || []
+                })
+
+                if (enrichment && enrichment.trackRatings) {
+                    // Merge ratings
+                    const ratingsMap = new Map()
+                    enrichment.trackRatings.forEach(r => {
+                        if (r.rating !== null) ratingsMap.set(r.title.toLowerCase().trim(), r.rating)
+                    })
+
+                    // Apply to tracks
+                    if (enriched.tracks) {
+                        enriched.tracks.forEach(t => {
+                            const key = t.title.toLowerCase().trim()
+                            if (ratingsMap.has(key)) {
+                                t.rating = ratingsMap.get(key)
+                            }
+                        })
+                        // Sort by rating? Logic exists in APIClient, duplication risk.
+                        // For surgical update, simple rating injection is usually enough for visual badges.
+                        enriched.acclaim = { hasRatings: true, source: 'surgical-enrichment' }
+                        enriched.bestEverUrl = enrichment.bestEverInfo?.url
+                    }
                 }
-                if (typeof query === 'string') {
-                    return norm(query).includes(norm(album.title))
+            }
+            return enriched
+        }))
+
+        // 2. Hydrate & Inject
+        // We can reuse the Controller logic style manual injection
+        // But we need to be careful about hydration dependencies (OptimizedLoader etc)
+        // Ideally, we persist them as proper Album Models.
+
+        // Dynamic import to avoid circular dependency
+        const { Album } = await import('../models/Album.js')
+        const { optimizedAlbumLoader } = await import('../services/OptimizedAlbumLoader.js')
+        const { userRankingRepository } = await import('../repositories/UserRankingRepository.js')
+
+        for (const albumData of enrichedAlbums) {
+            // Hydrate logic copied/adapted from SeriesController.hydrateAndAddAlbum
+            // Ideally should be a shared utility, but for now we keep it here to avoid refactoring Controller.
+
+            const album = albumData instanceof Album ? albumData : new Album(albumData)
+
+            if (!album.coverUrl && !album.artworkTemplate) {
+                const localMatch = await optimizedAlbumLoader.findAlbum(album.artist, album.title)
+                if (localMatch) {
+                    album.coverUrl = optimizedAlbumLoader.getArtworkUrl(localMatch, 500)
                 }
-                return false
-            })
-        )
+            }
+
+            // Inject into ALL_SERIES_VIEW context
+            albumsStore.addAlbumToSeries('ALL_SERIES_VIEW', album)
+
+            // Inject into Specific Series Context if active
+            if (seriesId && albumsStore.getActiveAlbumSeriesId() === seriesId) {
+                albumsStore.addAlbumToSeries(seriesId, album)
+            }
+        }
+
+        console.log(`[SeriesService] ✅ Injection complete.`)
     }
 
     // ========== ENRICHMENT ==========

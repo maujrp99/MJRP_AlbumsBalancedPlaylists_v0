@@ -77,7 +77,12 @@ export class AlbumsStore {
      */
     addAlbumToSeries(albumSeriesId, album) {
         // GHOST ALBUM PREVENTION: Reject if not for active series
-        if (albumSeriesId !== this.activeAlbumSeriesId) {
+        // FIX #156: Allow injection into ALL_SERIES_VIEW context even if active series is different (or same)
+        // AND allow injection if keys match.
+        const isActive = albumSeriesId === this.activeAlbumSeriesId
+        const isGlobalContext = albumSeriesId === 'ALL_SERIES_VIEW'
+
+        if (!isActive && !isGlobalContext) {
             console.warn(`[AlbumsStore] Rejecting album for inactive series: ${albumSeriesId} (active: ${this.activeAlbumSeriesId})`)
             return false
         }

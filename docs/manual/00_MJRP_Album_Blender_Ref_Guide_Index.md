@@ -12,7 +12,7 @@
 ## 02. The Backend (Node/Express/Firebase)
 *   [**02_Server_Structure.md**](02_Server_Structure.md) - Root structure.
 *   [**03_Backend_API_Layer.md**](03_Backend_API_Layer.md) - Routes & Endpoints.
-*   [**04_Backend_Logic_Services.md**](04_Backend_Logic_Services.md) - Service Layer.
+*   [**04_Backend_Logic_Services.md**](04_Backend_Logic_Services.md) - Service Layer and Libraries.
 *   [**05_Backend_Data_Schema.md**](05_Backend_Data_Schema.md) - Schema definitions.
 
 ## 06. Frontend Data Layer

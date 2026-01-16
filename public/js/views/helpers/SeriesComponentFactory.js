@@ -72,8 +72,12 @@ export class SeriesComponentFactory {
                 // Actually SeriesViewHandlers.handleSeriesChange does router navigation. 
                 // So we should bind that logic here or use a controller method that does it.
                 // For now, let's keep the logic close to what it was but bound here.
-                // FIX #159: Use controller.switchSeries to avoid view remount
-                onSeriesChange: (v) => controller.switchSeries(v),
+                onSeriesChange: (v) => {
+                    // FIX #159: Use controller directly to prevent full view reset (Flash)
+                    const scopeType = v === 'all' ? 'ALL' : 'SINGLE';
+                    const seriesId = v === 'all' ? null : v;
+                    controller.loadScope(scopeType, seriesId, false);
+                },
                 onArtistFilter: (v) => controller.handleFilterChange('artist', v),
                 onYearFilter: (v) => controller.handleFilterChange('year', v),
                 onSourceFilter: (v) => controller.handleFilterChange('source', v),

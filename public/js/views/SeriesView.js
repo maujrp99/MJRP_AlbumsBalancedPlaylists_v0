@@ -153,7 +153,7 @@ export default class SeriesView extends BaseView {
             this.viewMode = state.viewMode || this.viewMode;
 
             // ARCH-FIX: Ensure Toolbar is synced with Controller state (Filters, Active Series)
-            this.updater?.updateToolbar(state, this.currentScope);
+            this.updater?.updateToolbar(state, state.currentScope);
 
             // ARCH-FIX: Retrieve SORTED series list from controller state/helper
             // We use getHeaderData() because getSortedSeries isn't always public, but getHeaderData() calls it.

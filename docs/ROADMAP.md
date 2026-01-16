@@ -16,13 +16,13 @@
 - [ ] Recommendation Engine Integration.
 
 ### Sprint 21.5: Stability & Bug Fixing (Jan 2026)
-**Goal**: Resolve critical UX issues (ghost skeletons, deletions flashes) and clean up technical debt (logs, aggressive caching).
-**Status**: 🏗️ **IN PROGRESS**
+**Goal**: Resolve critical UX issues (ghost skeletons, deletions flashes) and clean up technical debt.
+**Status**: ✅ **DONE** (2026-01-16)
 **Scope**:
-- ✅ **Deletion Flashes**: Fixed "No albums" flash on series/album deletion (#158).
+- ✅ **Deletion Flashes**: Fixed "No albums" flash on series/album deletion (#159, #158).
+- ✅ **Series Sync**: Fixed Toolbar Dropdown Sync (#160).
 - ✅ **Visual Feedback**: Verified skeleton animations and removed progress bars (#152).
-- ✅ **Series Filter Flash**: Fixed empty state flash when switching series (#159).
-- 🚧 **Album Deletion**: Fixing match error on album deletion (#154).
+- ✅ **Clean Log**: Resolved all open critical issues in DEBUG_LOG.
 
 ---
 

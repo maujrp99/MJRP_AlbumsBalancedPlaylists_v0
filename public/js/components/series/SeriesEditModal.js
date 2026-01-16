@@ -152,10 +152,47 @@ export class SeriesEditModal {
                     return
                 }
                 const service = getSeriesService(db, null, albumSeriesStore.getUserId())
+
+                // FIX #162: Identify newly added albums to surgically inject them
+                const oldQueries = series.albumQueries || []
+                const newQueries = editingAlbumQueries
+
+                // Diff: Find items in newQueries that are NOT in oldQueries
+                // We assume objects are new if they weren't in the original list
+                // Since editingAlbumQueries is just a list of query objects/strings
+                // We need the ACTUAL album objects generated in handleAddAlbum
+                // Limitation: handleAddAlbum pushes { artist, title... } but we don't store them separately easily.
+                // Re-strategy: The 'scanner' (ArtistScanner) is where we got the full album object.
+                // But simplified: the objects in editingAlbumQueries ARE effectively Hydrated Album Data
+                // (see handleAddAlbum line 64-72)
+
+                const addedQueryObjects = newQueries.filter(nq => {
+                    // Simple check: if it wasn't in the original list length or value
+                    // This is imperfect if we deleted then re-added.
+                    // Better: Check if this specific object reference or value exists in old
+                    // But old strings vs new objects mix.
+
+                    // For now, let's just optimistically try to inject objects that are definitely 'Objects' and look like full albums
+                    if (typeof nq !== 'object') return false
+
+                    // Check if deep equal match in old?
+                    const match = oldQueries.find(oq => {
+                        if (typeof oq === 'string') return false
+                        return (oq.appleMusicId && oq.appleMusicId === nq.appleMusicId)
+                    })
+                    return !match
+                })
+
                 await service.updateSeries(seriesId, {
                     name: currentName,
                     albumQueries: editingAlbumQueries
                 })
+
+                // Surgical Injection of NEW items
+                if (addedQueryObjects.length > 0) {
+                    await service.injectAlbumsIntoViewCache(addedQueryObjects, seriesId)
+                }
+
                 toast.success('Series updated')
                 onUpdated(seriesId)
                 closeModal()

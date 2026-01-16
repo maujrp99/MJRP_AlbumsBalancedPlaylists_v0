@@ -73,10 +73,7 @@ export class APIClient {
                     return this._fetchAlbumFromAPI(query)
                 }
 
-                console.log(
-                    `Album "${selected.attributes?.name}" by "${selected.attributes?.artistName}" (Apple ID: ${appleId}) matched query "${query}". ` +
-                    `(${(identity.matchConfidence * 100).toFixed(0)}% confidence)`
-                )
+                //console.log( `Album "${selected.attributes?.name}" by "${selected.attributes?.artistName}" (Apple ID: ${appleId}) matched query "${query}". ` +`(${(identity.matchConfidence * 100).toFixed(0)}% confidence)`)
 
                 // Get Full Details (Tracks)
                 const fullAlbum = await musicKitService.getAlbumDetails(appleId)
@@ -176,6 +173,34 @@ export class APIClient {
 
         // 5. Fallback: Legacy Generate API
         return this._fetchAlbumFromAPI(query)
+    }
+
+    /**
+     * Enrich an existing album object with ratings from besteveralbums.com
+     * @param {Object} albumData - { title, artist, tracks }
+     * @returns {Promise<Object>} Enrichment result { bestEverInfo, trackRatings }
+     */
+    async BEAenrichAlbum(albumData) {
+        try {
+            const response = await fetch(`${this.baseUrl}/enrich-album`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ albumData })
+            })
+
+            if (!response.ok) {
+                console.warn(`Enrichment failed: HTTP ${response.status}`)
+                return null
+            }
+
+            const json = await response.json()
+            return json.data || {}
+        } catch (error) {
+            console.error('[APIClient] Enrichment error:', error)
+            return null
+        }
     }
 
     /**

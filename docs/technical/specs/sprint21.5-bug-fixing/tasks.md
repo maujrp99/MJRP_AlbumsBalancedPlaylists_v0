@@ -10,9 +10,9 @@
 
 ## Issue #154: Album Deletion Match Error
 
-- [ ] **154.1** Fix `HomeController.js`: Change `album: value` to `title: album.title`
-- [ ] **154.2** Fix `SeriesService.js`: Add fallback `query.title || query.album`
-- [ ] **154.3** Verify: Delete album from series → No error message
+- [x] **154.1** Fix `HomeController.js`: Change `album: value` to `title: album.title`
+- [x] **154.2** Fix `SeriesService.js`: Add fallback `query.title || query.album`
+- [x] **154.3** Verify: Delete album from series → No error message
 
 ---
 
@@ -29,8 +29,8 @@
 
 ## Issue #155: Series Deletion Freeze
 
-- [ ] **155.1** Fix `SeriesModalsManager.js`: Force navigation after delete
-- [ ] **155.2** Verify: Delete series → App remains responsive
+- [x] **155.1** Fix `SeriesModalsManager.js`: Force navigation after delete
+- [x] **155.2** Verify: Delete series → App remains responsive
 
 ---
 
@@ -70,17 +70,17 @@
 
 ## Final Verification
 
-- [ ] **V.1** Run `npm run test` - All tests pass
-- [ ] **V.2** Run `npm run build` - Build succeeds
-- [ ] **V.3** Browser test: Full regression on Series view
-- [ ] **V.4** Update `DEBUG_LOG.md` with resolutions
+- [x] **V.1** Run `npm run test` - All tests pass
+- [x] **V.2** Run `npm run build` - Build succeeds
+- [x] **V.3** Browser test: Full regression on Series view
+- [x] **V.4** Update `DEBUG_LOG.md` with resolutions
 
 ---
 
 ## Approval
 
-- [ ] User Review
-- [ ] Approved to proceed to EXECUTION phase
+- [x] User Review
+- [x] Approved to proceed to EXECUTION phase
 
 ---
 
