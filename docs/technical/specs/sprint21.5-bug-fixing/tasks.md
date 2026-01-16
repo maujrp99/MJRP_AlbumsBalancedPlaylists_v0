@@ -18,12 +18,12 @@
 
 ## Issue #156 & #158: Cache Invalidation
 
-- [ ] **156.1** Add `this.cache.clearAlbumSeries('ALL_SERIES_VIEW')` to `createSeries()`
-- [ ] **156.2** Add cache clear to `updateSeries()`
-- [ ] **156.3** Add cache clear to `removeAlbumFromSeries()`
-- [ ] **158.1** Add `this.cache.invalidate('ALL_SERIES_VIEW')` to `deleteSeries()`
-- [ ] **156.4** Verify: Create series → Appears without refresh
-- [ ] **158.2** Verify: Delete series → Other series intact
+- [x] **156.1** Add `this.cache.clearAlbumSeries('ALL_SERIES_VIEW')` to `createSeries()`
+- [x] **156.2** Add cache clear to `updateSeries()`
+- [x] **156.3** Add cache clear to `removeAlbumFromSeries()`
+- [x] **158.1** Add `this.cache.invalidate('ALL_SERIES_VIEW')` to `deleteSeries()`
+- [x] **156.4** Verify: Create series → Appears without refresh
+- [x] **158.2** Verify: Delete series → Other series intact
 
 ---
 
@@ -36,35 +36,35 @@
 
 ## Issue #153: Series Edit Double Toast
 
-- [ ] **153.1** Add null check in `SeriesModalsManager.handleSeriesUpdated()`
-- [ ] **153.2** Add defensive check in `SeriesViewUpdater.updateHeaderPayload()`
-- [ ] **153.3** Verify: Edit series → Single success toast
+- [x] **153.1** Add null check in `SeriesModalsManager.handleSeriesUpdated()`
+- [x] **153.2** Add defensive check in `SeriesViewUpdater.updateHeaderPayload()`
+- [x] **153.3** Verify: Edit series → Single success toast
 
 ---
 
 ## Issue #152: Ghost Skeletons
 
-- [ ] **152.1** Modify `SeriesController.js`: Add `isLoading` to notifyView
-- [ ] **152.2** Modify `SeriesView.js`: Pass `isLoading` to updater
-- [ ] **152.3** Modify `SeriesViewUpdater.js`: Pass `isLoading` to grid
-- [ ] **152.4** Modify `SeriesGridRenderer._renderVirtualScopedGrid()`:
-  - [ ] If `empty && isLoading` → Render skeleton
-  - [ ] If `empty && !isLoading` → Skip (filtered)
-- [ ] **152.5** Verify: Load All Series → Skeletons appear
-- [ ] **152.6** Verify: Apply filter → Empty series hidden
+- [x] **152.1** Modify `SeriesController.js`: Add `isLoading` to notifyView
+- [x] **152.2** Modify `SeriesView.js`: Pass `isLoading` to updater
+- [x] **152.3** Modify `SeriesViewUpdater.js`: Pass `isLoading` to grid
+- [x] **152.4** Modify `SeriesGridRenderer._renderVirtualScopedGrid()`:
+  - [x] If `empty && isLoading` → Render skeleton
+  - [x] If `empty && !isLoading` → Skip (filtered)
+- [x] **152.5** Verify: Load All Series → Skeletons appear
+- [x] **152.6** Verify: Apply filter → Empty series hidden
 
 ---
 
 ## Issue #152B: Progress Bar Cleanup
 
-- [ ] **152B.1** DELETE `SeriesProgressBar.js`
-- [ ] **152B.2** Remove progress bar from `SeriesView.js`
-- [ ] **152B.3** Remove `inlineProgress` from `SeriesViewUpdater.js`
-- [ ] **152B.4** Remove progress bar from `SeriesComponentFactory.js`
-- [ ] **152B.5** Remove `notifyView('progress', ...)` from `SeriesController.js`
-- [ ] **152B.6** Update `docs/manual/09_Frontend_Views.md`
-- [ ] **152B.7** Update `docs/manual/00_Dir_File_Structure_Map.md`
-- [ ] **152B.8** Verify: No progress bar in Series views
+- [x] **152B.1** DELETE `SeriesProgressBar.js`
+- [x] **152B.2** Remove progress bar from `SeriesView.js`
+- [x] **152B.3** Remove `inlineProgress` from `SeriesViewUpdater.js`
+- [x] **152B.4** Remove progress bar from `SeriesComponentFactory.js`
+- [x] **152B.5** Remove `notifyView('progress', ...)` from `SeriesController.js`
+- [x] **152B.6** Update `docs/manual/09_Frontend_Views.md`
+- [x] **152B.7** Update `docs/manual/00_Dir_File_Structure_Map.md`
+- [x] **152B.8** Verify: No progress bar in Series views
 
 ---
 

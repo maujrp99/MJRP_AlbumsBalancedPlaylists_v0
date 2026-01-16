@@ -77,6 +77,25 @@ export default class SeriesController {
         this.view = view;
     }
 
+    /**
+     * Switch series without remounting the view (FIX #159)
+     * Updates URL and loads new scope in-place
+     * @param {string} seriesIdOrAll - 'all' or a specific series ID
+     */
+    switchSeries(seriesIdOrAll) {
+        console.log(`[SeriesController] 🔄 switchSeries called: ${seriesIdOrAll}`);
+
+        const scopeType = seriesIdOrAll === 'all' ? 'ALL' : 'SINGLE';
+        const seriesId = seriesIdOrAll === 'all' ? null : seriesIdOrAll;
+
+        // Update URL without triggering router remount
+        const newUrl = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
+        window.history.pushState({}, '', newUrl);
+
+        // Load new scope - keeps View instance alive
+        this.loadScope(scopeType, seriesId, false);
+    }
+
     // =========================================
     // DATA LOADING
     // =========================================

@@ -7,7 +7,10 @@
 **Pattern**: Singleton Observables (Flux-like)
 
 ### 1.1 `stores/albums.js` (AlbumsStore)
-**Purpose**: Manages album entities, handling caching, persistence (Firestore), and Series context validation. (Standard Store Pattern).
+**Purpose**: Manages album entities, handling caching, persistence (Firestore), and Series context validation.
+    *   **Features**:
+        *   **Contextual Caching**: Maps albums to specific series contexts (`ALL_SERIES_VIEW` vs specific Series ID).
+        *   **Granular Removal** (Sprint 21.5): Supports reducing cache via `removeAlbumsBySeriesIdFromContext` to prevent UI flashes during series deletion.
 
 ### 1.2 Pure State Containers (Sprint 19)
 **Status**: `[REFACTORED]`

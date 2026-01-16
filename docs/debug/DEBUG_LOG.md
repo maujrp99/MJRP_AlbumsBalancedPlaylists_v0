@@ -12,7 +12,7 @@
 ---
 
 | #152 | **Ghost Skeletons & Progress Bar Dysfunction** | ✅ RESOLVED | [Details](#issue-152-ghost-skeletons--progress-bar-dysfunction) |
-| #159 | **Grid/Filters Flash to "No Albums" State** | 🔴 OPEN | [Details](#issue-159) |
+| #159 | **Series Filter Flash to "No Albums" State** | ✅ RESOLVED | [Details](#issue-159-series-filter-flash-to-no-albums-state) |
 | #158 | **Series Deletion Empty State (Flash Fix)** | ✅ RESOLVED | [Details](#issue-158) |
 | #154 | **Album Deletion Match Error & Flash Fix** | 🚧 IN PROGRESS | [Details](#issue-154) |
 | #151 | **All Series View Loading Logic Discrepancy** | ✅ RESOLVED | [Details](#issue-151-all-series-view-loading-logic-discrepancy) |
@@ -118,31 +118,49 @@
 
 ---
 
-### Issue #152: Ghost Skeletons & Progress Bar Dysfunction
+### Issue #152: Ghost Skeletons & Progress Bar Dysfunction (Sprint 21.5)
 - **Status**: ✅ **RESOLVED**
 - **Date**: 2026-01-15
 - **Problem**: 
-    1. **Ghost Skeletons**: Missing CSS class `.animate-pulse`.
-    2. **Evidence**: User couldn't see pulse animation.
+    1. **Ghost Skeletons**: Skeletons were structurally present but invisible to the user.
+    2. **Progress Bar**: Replaced by Skeleton UX, but cleanup was incomplete.
+- **Root Cause**: 
+    1. **Missing Animation**: The `.animate-pulse` class relies on Tailwind's utility layer, but the specific `@keyframes pulse` definition was missing or overridden in `animations.css` for the specific context.
+    2. **Low Contrast**: The skeleton background color `#374151` (gray-700) was too subtle against the dark theme background `#111827` (gray-900) on some monitors without the pulse animation to draw attention.
 - **Fix**: 
-    1. Added standard Tailwind `.animate-pulse` and `@keyframes pulse` to `animations.css`.
-    2. Verified via high-contrast browser injection (Video Proof: `skeleton_visual_proof_final`).
-    3. Removed outdated `[GlobalProgress]` logs.
+    1. **CSS**: Explicitly added standard Tailwind `.animate-pulse` and `@keyframes pulse` to `public/css/animations.css`.
+    2. **Verification**: Injected high-contrast overlay to prove animation cycle works.
 
 ### Issue #158: Series Deletion Empty State (Flash Fix)
 - **Status**: ✅ **RESOLVED**
-- **Symptom**: "No albums in library" appearing after successful series deletion.
-- **Root Cause**: Aggressive cache clearing (`ALL_SERIES_VIEW`) and full reloads.
-- **Fix**: Implemented `albumsStore.removeAlbumsBySeriesIdFromContext` for surgical removal of albums belonging to the deleted series. Avoids full grid reload.
-
-### Issue #159: Grid/Filters Flash to "No Albums" State
-- **Status**: 🔴 **OPEN**
-- **Symptom**: Switching series filter or deleting an album causes a flash to "No albums in library".
+- **Symptom**: "No albums in library" appearing momentarily or persistently after successful series deletion.
 - **Root Cause**: 
-    1. Navigation/Reload triggered improperly (missing `preventDefault`).
-    2. `SeriesController` might be clearing the view before fetching.
-    3. Inconsistent logic between direct delete and edit modal.
-- **Plan**: Unify delete logic in `SeriesService` and optimize `SeriesController.loadScope` for true "soft" loading.
+    1. **Aggressive Cache Clearing**: The `SeriesService.deleteSeries` method called `albumsStore.clearAlbumSeries('ALL_SERIES_VIEW')`. This wiped the entire in-memory dataset for the main view.
+    2. **Race Condition**: The UI reacted to the empty store *before* the background fetch could repopulate it.
+- **Fix**: 
+    1. **Granular Removal**: Implemented `albumsStore.removeAlbumsBySeriesIdFromContext(seriesId, contextId)`.
+    2. **Surgical Update**: Instead of clearing the whole view, we now only remove the albums belonging to the deleted series from the cached list.
+
+### Issue #159: Series Filter Flash to "No Albums" State
+- **Status**: ✅ **RESOLVED**
+- **Date**: 2026-01-16
+- **Symptom**: Switching series via the dropdown filter caused a flash of "No albums in library" before the actual albums loaded.
+- **Root Cause**: 
+    1. **Router Remount**: The `SeriesComponentFactory.onSeriesChange` used `router.navigate()`, which triggered a full View destruction and recreation.
+    2. **Empty State Rendered Immediately**: The `SeriesEmptyState.mount()` method rendered the empty state synchronously, without checking if albums were still loading.
+    3. **Race Condition**: The new View instance showed `albumCount=0` before the Controller had time to fetch and populate the store.
+- **Failed Attempts**:
+    1. Option B (Controller.switchSeries): Added `window.history.pushState` + `controller.loadScope` directly. Did not work because the View was still being remounted by other parts of the routing logic.
+    2. Option C (Delay in SeriesViewUpdater): Added setTimeout in `updateEmptyState`. Did not work because the entire Updater instance was destroyed by router remount.
+- **Fix (E + F + H Combined)**:
+    1. **(E) Delayed Mount in SeriesEmptyState**: Show skeleton immediately, wait 300ms before deciding.
+    2. **(H) Re-check Store**: After delay, call `albumsStore.getAlbums().length` to verify if albums arrived.
+    3. **(F) Fade-in CSS**: Added `.animate-fade-in-delayed` class for smooth visual transition.
+- **Files Changed**:
+    - `public/js/components/series/SeriesEmptyState.js`: Rewrote `mount()` with delay + store re-check.
+    - `public/css/animations.css`: Added `@keyframes fadeInDelayed` and `.animate-fade-in-delayed`.
+    - `public/js/controllers/SeriesController.js`: Added `switchSeries()` method (kept for future use).
+    - `public/js/views/helpers/SeriesComponentFactory.js`: Updated to use `controller.switchSeries()` (kept for future use).
 
 ---
 

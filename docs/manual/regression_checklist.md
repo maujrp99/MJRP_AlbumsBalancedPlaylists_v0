@@ -26,8 +26,8 @@
     - *Verify*: Tracks load with Index, Title, Duration, and Badges (Spotify/BEA).
     - *Verify*: No "undefined" values in Track Row.
 - [ ] **Edit Name**: Click Pencil -> Rename Series -> Header updates **immediately** (No double toast).
-- [ ] **Delete Series**: Click Trash -> Confirm -> Redirects to `/albums` -> **Verify Series is REMOVED from list** (Stale Cache Check).
-- [ ] **Delete Album from Series**: Click Trash on Album -> Confirm -> **Verify Card Disappears** (No UI Freeze).
+- [ ] **Delete Series**: Click Trash -> Confirm -> Redirects to `/albums` -> **Verify Series is REMOVED from list** (Stale Cache Check). **Verify NO Flash** of "No Albums" empty state.
+- [ ] **Delete Album from Series**: Click Trash on Album -> Confirm -> **Verify Card Disappears** (No UI Freeze). **Verify NO Grid Reload/Flash**.
 - [ ] **Filter Logic**: Click "EPs" -> Only EPs show. Click "Owned" -> Only owned show.
 - [ ] **Sorting (Sprint 21)**: Click Sort -> "Name (A-Z)" sorts alpha. "Album Count" sorts by size. "Recently Added" sorts by date.
 - [ ] **Rank Tracks (Sprint 20)**: Click "Rank It" -> Drag & Drop -> Save. Verify "Ranked" badge and table update.

@@ -8,6 +8,7 @@ import { albumSeriesStore } from '../../stores/albumSeries.js';
 import { albumsStore } from '../../stores/albums.js';
 import { escapeHtml } from '../../utils/stringUtils.js';
 import { SeriesEmptyState } from '../../components/series/SeriesEmptyState.js';
+import { SeriesSkeleton } from '../../components/ui/skeletons/SeriesSkeleton.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 
 import { getUniqueArtists } from '../../services/SeriesFilterService.js';
@@ -77,6 +78,7 @@ export class SeriesViewUpdater {
         SafeDOM.clear(container);
 
         if (albumCount === 0 && !isLoading) {
+            console.log('[SeriesViewUpdater] 📭 Showing "No albums in library" empty state');
             const emptyState = new SeriesEmptyState({
                 message: 'No albums in library',
                 subMessage: 'Create a series from the home page to get started',

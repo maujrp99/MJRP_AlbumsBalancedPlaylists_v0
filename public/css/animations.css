@@ -205,3 +205,21 @@
 .animate-pulse-custom {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* FIX #159: Delayed Fade-in for Empty State */
+@keyframes fadeInDelayed {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-delayed {
+  opacity: 0;
+  animation: fadeInDelayed 0.4s ease-out forwards;
+}

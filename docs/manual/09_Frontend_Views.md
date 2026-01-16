@@ -97,14 +97,14 @@ sequenceDiagram
     *   `SeriesHeader`: Page title and action button.
     *   `SeriesToolbar`: Filters (Artist, Year, Source), Search, and View Toggles (Grid/List Icons).
         *   **Sorting**: Supports "Name (A-Z)", "Name (Z-A)", "Album Count (Lowest)", "Album Count (Highest)", and "Recently Added". Sorting logic is handled by `SeriesController`.
-    *   ~~`SeriesProgressBar`~~: Removed (Sprint 21.5) - Skeleton loading provides visual feedback.
+    *   ~~`SeriesProgressBar`~~: Removed (Sprint 21.5) - Skeletons provide visual feedback.
     *   `SeriesEmptyState`: Renders when no albums match the current scope.
+        *   **FIX #159 (Sprint 21.5)**: Implements 300ms delay + store re-check + fade-in to prevent flash during series transitions.
     *   `SeriesGridRenderer`: Responsible for the main content layout (Grid/List).
 *   **Helpers**:
-    *   `SeriesViewHandlers`: Extracts event handling logic from the main class.
-    *   `SeriesGridHelper`: Manages grid refresh and ranking hydration.
-    *   `SeriesViewMounter` [NEW]: Abstract Factory for instantiating and mounting Header, Toolbar, and Grid components.
-    *   `SeriesModalsManager` [NEW]: Encapsulates logic for opening Edit/Delete/Filter modals.
+    *   `SeriesViewUpdater` [NEW]: Handles DOM updates (Header, Grid, Toolbar) based on Controller state.
+    *   `SeriesComponentFactory` [NEW]: Abstract Factory for instantiating Header, Toolbar, and Grid components with correct props.
+    *   `SeriesModalsManager` [NEW]: Encapsulates logic for opening Edit/Delete modals and handling "Soft Reloads".
 
 ### 2.4 Playlists History: `views/SavedPlaylistsView.js`
 **Status**: `[ACTIVE]`

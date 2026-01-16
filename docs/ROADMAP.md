@@ -15,6 +15,15 @@
 - [ ] Cross-Series Recipe Execution.
 - [ ] Recommendation Engine Integration.
 
+### Sprint 21.5: Stability & Bug Fixing (Jan 2026)
+**Goal**: Resolve critical UX issues (ghost skeletons, deletions flashes) and clean up technical debt (logs, aggressive caching).
+**Status**: 🏗️ **IN PROGRESS**
+**Scope**:
+- ✅ **Deletion Flashes**: Fixed "No albums" flash on series/album deletion (#158).
+- ✅ **Visual Feedback**: Verified skeleton animations and removed progress bars (#152).
+- ✅ **Series Filter Flash**: Fixed empty state flash when switching series (#159).
+- 🚧 **Album Deletion**: Fixing match error on album deletion (#154).
+
 ---
 
 ## ✅ Completed Sprints (Reverse Chronological)

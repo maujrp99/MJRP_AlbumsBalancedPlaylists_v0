@@ -72,11 +72,8 @@ export class SeriesComponentFactory {
                 // Actually SeriesViewHandlers.handleSeriesChange does router navigation. 
                 // So we should bind that logic here or use a controller method that does it.
                 // For now, let's keep the logic close to what it was but bound here.
-                onSeriesChange: (v) => {
-                    // Replicating SeriesViewHandlers.handleSeriesChange logic concisely:
-                    if (v === 'all') router.navigate('/albums');
-                    else router.navigate(`/albums?seriesId=${v}`);
-                },
+                // FIX #159: Use controller.switchSeries to avoid view remount
+                onSeriesChange: (v) => controller.switchSeries(v),
                 onArtistFilter: (v) => controller.handleFilterChange('artist', v),
                 onYearFilter: (v) => controller.handleFilterChange('year', v),
                 onSourceFilter: (v) => controller.handleFilterChange('source', v),
