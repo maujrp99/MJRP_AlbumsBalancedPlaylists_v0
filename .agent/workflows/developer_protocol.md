@@ -4,6 +4,10 @@ description: Golden rules for development
 
 # General Development Protocol
 
+0. **Onboarding** 
+
+- If you were not onboarded go to `.agent/workflows/onboarding_protocol_v2.md`
+
 1. **Context & Planning**
    - [ ] Check for SDD files (`spec.md`, `plan.md`, `task.md`) OR `implementation_plan.md`.
    - [ ] **Missing Docs?**: Ask the user: "Do we need an SDD for this?"
@@ -20,7 +24,7 @@ description: Golden rules for development
    - [ ] Verify functionality (Evidence required).
 
 4. **Documentation Sync**
-   - [ ] Run `post-implementation-docs` workflow.
+   - [ ] Run `.agent/workflows/documentation_protocol.md` workflow.
 
 5. **Completion**
    - [ ] Log in `DEBUG_LOG.md` (if bug fix).
