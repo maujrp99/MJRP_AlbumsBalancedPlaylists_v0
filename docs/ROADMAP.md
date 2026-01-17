@@ -10,24 +10,25 @@
 
 ### Sprint 22: Blending Context & Discovery (Jan 2026)
 **Goal**: Expand the blending experience with cross-series context and enhanced discovery tools.
-**Status**: 🏗️ **PLANNED**
+**Status**: 🏗️ **IN PROGRESS**
 **Scope**:
 - [ ] Cross-Series Recipe Execution.
 - [ ] Recommendation Engine Integration.
-
-### Sprint 21.5: Stability & Bug Fixing (Jan 2026)
-**Goal**: Resolve critical UX issues (ghost skeletons, deletions flashes) and clean up technical debt.
-**Status**: ✅ **DONE** (2026-01-16)
-**Scope**:
-- ✅ **Deletion Flashes**: Fixed "No albums" flash on series/album deletion (#159, #158).
-- ✅ **Series Sync**: Fixed Toolbar Dropdown Sync (#160).
-- ✅ **Visual Feedback**: Verified skeleton animations and removed progress bars (#152).
-- ✅ **Clean Log**: Resolved all open critical issues in DEBUG_LOG.
 
 ---
 
 ## ✅ Completed Sprints (Reverse Chronological)
 
+### Sprint 21.5: Stability & Bug Fixing (Jan 2026)
+**Goal**: Resolve critical UX issues (ghost skeletons, deletions flashes) and clean up technical debt.
+**Status**: ✅ **DONE** (2026-01-16)
+**Deliverables**:
+- ✅ **Deletion Flashes**: Fixed "No albums" flash on series/album deletion (#159, #158, #161).
+- ✅ **Surgical Cache**: Implemented instant "Surgical Injection" for new/deleted items (#156).
+- ✅ **New Album Enrichment**: Real-time BestEverAlbums rating fetch for new additions (#156).
+- ✅ **Series Sync**: Fixed Toolbar Dropdown Sync (#160).
+- ✅ **Visual Feedback**: Verified skeleton animations and removed progress bars (#152).
+- ✅ **Clean Log**: Resolved all open critical issues in DEBUG_LOG.
 
 ### Sprint 21: Mobile UX & Layout Refresh (Jan 2026)
 **Goal**: Comprehensive Mobile UX overhaul, including layout responsiveness, virtual scrolling, and functional series sorting.

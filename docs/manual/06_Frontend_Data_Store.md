@@ -10,7 +10,8 @@
 **Purpose**: Manages album entities, handling caching, persistence (Firestore), and Series context validation.
     *   **Features**:
         *   **Contextual Caching**: Maps albums to specific series contexts (`ALL_SERIES_VIEW` vs specific Series ID).
-        *   **Granular Removal** (Sprint 21.5): Supports reducing cache via `removeAlbumsBySeriesIdFromContext` to prevent UI flashes during series deletion.
+        *   **Granular Removal** (Sprint 21.5): Supports reducing cache via `removeAlbumsBySeriesIdFromContext`.
+        *   **Surgical Injection** (Sprint 21.5): Supports injecting albums into `ALL_SERIES_VIEW` context even if they belong to a specific series, enabling instant UI updates for "All Series" view.
 
 ### 1.2 Pure State Containers (Sprint 19)
 **Status**: `[REFACTORED]`

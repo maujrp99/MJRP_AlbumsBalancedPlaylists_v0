@@ -3,14 +3,14 @@
 > **Source**: Derived from `proj-documentation-task.md` (Master Task List) and active file system.
 
 ## 1. Server-Side Enrichment 
-4. `server/index.js` (Analysis: `manual/02_Server_Core.md`)
-5. `server/lib/ranking.js` (Analysis: `manual/03_Server_Libraries.md`)
-6. `server/lib/fetchRanking.js` (Analysis: `manual/03_Server_Libraries.md`)
-7. `server/services/MusicKitTokenService.js` (Analysis: `manual/02_Server_Core.md`)
-8. `server/routes/albums.js` (Analysis: `manual/05_Server_Routes.md`)
-9. `server/routes/playlists.js` (Analysis: `manual/05_Server_Routes.md`)
-10. `server/lib/scrapers/besteveralbums.js` (Analysis: `manual/03_Server_Libraries.md`)
-11. `server/schema/album.schema.json` (Analysis: `manual/02_Server_Core.md`)
+46. `server/index.js` (Analysis: `manual/02_Server_Structure.md`)
+7. `server/lib/ranking.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+8. `server/lib/fetchRanking.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+9. `server/services/MusicKitTokenService.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+10. `server/routes/albums.js` (Analysis: `manual/03_Backend_API_Layer.md`)
+11. `server/routes/playlists.js` (Analysis: `manual/03_Backend_API_Layer.md`)
+12. `server/lib/scrapers/besteveralbums.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+13. `server/schema/album.schema.json` (Analysis: `manual/05_Backend_Data_Schema.md`)
 
 ## 2. Shared Code Enrichment
 12. `shared/curation.js` (Analysis: `manual/23_Shared_Code.md`)
