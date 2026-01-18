@@ -58,8 +58,8 @@ export class SavedPlaylistsView extends BaseView {
             SafeDOM.header({ className: 'view-header mb-8 fade-in' }, [
                 SafeDOM.fromHTML(Breadcrumb.render('/saved-playlists')),
 
-                SafeDOM.div({ className: 'header-content mt-6 flex justify-between items-center mb-6' }, [
-                    SafeDOM.h1({ className: 'text-4xl font-bold flex items-center gap-3' }, [
+                SafeDOM.div({ className: 'header-content mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6' }, [
+                    SafeDOM.h1({ className: 'text-2xl md:text-4xl font-bold flex items-center gap-3' }, [
                         SafeDOM.fromHTML(getIcon('History', 'w-8 h-8')),
                         ' Your Playlists Series'
                     ])

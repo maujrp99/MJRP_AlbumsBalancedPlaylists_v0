@@ -94,7 +94,9 @@ sequenceDiagram
 *   **purpose**: Browse albums grouped by Series.
 *   **Refactor Note**: This view delegates logic to specialized components and helpers to maintain a thin orchestrator role.
 *   **Sub-Components**:
-    *   `SeriesHeader`: Page title and action button.
+    *   `SeriesHeader`: Page title and "Blend Your Albums" action button.
+        *   **Responsive**: Uses `flex-col md:flex-row` to stack on mobile.
+        *   **Blend Button**: Direct link to `/blend`. Checks for album count on click (Toast feedback), no longer strictly disabled.
     *   `SeriesToolbar`: Filters (Artist, Year, Source), Search, and View Toggles (Grid/List Icons).
         *   **Sorting**: Supports "Name (A-Z)", "Name (Z-A)", "Album Count (Lowest)", "Album Count (Highest)", and "Recently Added". Sorting logic is handled by `SeriesController`.
     *   ~~`SeriesProgressBar`~~: Removed (Sprint 21.5) - Skeletons provide visual feedback.

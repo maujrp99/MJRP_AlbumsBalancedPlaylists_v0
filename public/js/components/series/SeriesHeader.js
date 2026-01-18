@@ -35,10 +35,10 @@ export default class SeriesHeader extends Component {
         headerContainer.appendChild(breadcrumbNode);
 
         // Title Row
-        const titleRow = SafeDOM.div({ className: 'header-title-row mb-6 flex justify-between items-center' });
+        const titleRow = SafeDOM.div({ className: 'header-title-row mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4' });
 
         // H1 Title
-        const h1 = SafeDOM.h1({ className: 'text-4xl font-bold flex items-center gap-3' }, [
+        const h1 = SafeDOM.h1({ className: 'text-2xl md:text-4xl font-bold flex items-center gap-3' }, [
             SafeDOM.fromHTML(getIcon('Disc', 'w-8 h-8 text-accent-primary')),
             title // SafeDOM text content (auto-escaped)
         ]);
@@ -47,9 +47,11 @@ export default class SeriesHeader extends Component {
         // Generate Button
         const btn = SafeDOM.button({
             id: 'generatePlaylistsBtn',
-            className: 'tech-btn-primary px-8 py-3 text-base rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform',
-            disabled: !canGenerate,
-            onclick: canGenerate ? onGeneratePlaylists : null
+            className: `tech-btn-primary w-full md:w-auto justify-center px-8 py-3 text-base rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform mt-4 md:mt-0`,
+            onclick: (e) => {
+                console.log('[SeriesHeader] Blend button clicked.');
+                onGeneratePlaylists(e);
+            }
         }, [
             SafeDOM.fromHTML(getIcon('Sliders', 'w-5 h-5')),
             'Blend your Albums'

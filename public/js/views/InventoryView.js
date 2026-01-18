@@ -46,13 +46,13 @@ export class InventoryView extends BaseView {
     const stats = state.stats || {}
 
     // Header Title Row
-    const titleRow = SafeDOM.div({ className: 'header-title-row mb-6' })
+    const titleRow = SafeDOM.div({ className: 'header-title-row mb-6 flex flex-col md:flex-row items-start md:items-center gap-4 justify-between' })
 
-    const h1 = SafeDOM.h1({ className: 'text-4xl font-bold mb-3 flex items-center gap-3' })
+    const h1 = SafeDOM.h1({ className: 'text-2xl md:text-4xl font-bold mb-0 flex items-center gap-3' }) // Removed mb-3, handled by gap
     h1.appendChild(SafeDOM.fromHTML(getIcon('Archive', 'w-8 h-8 text-accent-primary')))
     h1.appendChild(SafeDOM.text(' My Collection'))
 
-    const statsRow = SafeDOM.div({ className: 'stats-row flex flex-wrap items-center gap-4 text-sm md:text-lg' })
+    const statsRow = SafeDOM.div({ className: 'stats-row flex flex-wrap items-center gap-4 text-sm md:text-lg w-full md:w-auto' })
 
     statsRow.appendChild(SafeDOM.span({ className: 'text-accent-primary font-semibold' }, `${stats.totalCount || 0} albums`))
 
@@ -62,7 +62,7 @@ export class InventoryView extends BaseView {
     ])
     statsRow.appendChild(badges)
 
-    const valueSection = SafeDOM.div({ className: 'flex items-center gap-3 ml-auto' })
+    const valueSection = SafeDOM.div({ className: 'flex items-center gap-3 ml-0 md:ml-auto mt-2 md:mt-0 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 border-white/10 pt-2 md:pt-0' })
     valueSection.appendChild(SafeDOM.span({ className: 'text-sm text-gray-400' }, 'Total Owned:'))
 
     const valueText = state.viewCurrency === 'USD'

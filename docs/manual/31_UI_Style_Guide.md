@@ -42,6 +42,7 @@ Use these IDs to reference specific UI elements:
 | `albums.card-cover` | Album Cover (Compact) | `aspect-square rounded-xl` |
 | `albums.series-group` | Series Group Container | `rounded-xl border border-white/5 p-6 bg-white/5` |
 | `albums.series-header` | Series Group Title | `text-2xl font-bold text-accent-primary` |
+| `albums.blend-btn` | Blend Albums Button | `tech-btn-primary w-full md:w-auto` |
 | `albums.modal-overlay` | Modal Background | `modal-overlay` |
 | `albums.modal-container` | Modal Content Box | `glass-panel max-w-2xl rounded-xl` |
 
@@ -49,7 +50,7 @@ Use these IDs to reference specific UI elements:
 
 | Element ID | Description | Current |
 |------------|-------------|---------|
-| `playlists.header` | "Playlist Management" | text-4xl font-bold |
+| `playlists.header` | "Playlist Management" | text-2xl md:text-4xl, responsive (flex-col md:flex-row) |
 | `playlists.track-item` | Draggable track | p-3 rounded-lg |
 
 ---
@@ -201,6 +202,22 @@ Use consistent colors to visually distinguish data sources:
 | Header icon | Award (orange) | SpotifyConfig (green) | Star (blue) |
 | Footer average | "Avg Rank" with orange | "Avg Pop" with green | "Avg User Rank" (blue) |
 
+### Badge Layouts (Card)
+
+> **Updated**: Sprint 22 (Refetch)
+
+**Split Row Layout**:
+*   **Top Row**: Acclaim (BEA) - Full width if present.
+*   **Bottom Row**: Split 50/50 between Spotify (Left) and User Rank (Right).
+
+**Micro-Badges**:
+*   Usage: Card overlays, crowded metadata.
+*   Class: `text-[9px]`, `px-1.5`, `py-0.5`.
+*   Style: `rounded-md`, `tabular-nums`.
+
+**Year Pill**:
+*   Style: `border border-white/10 bg-black/40 px-2 py-0.5 rounded-md text-xs font-mono text-white/70`.
+
 ---
 
 ## Component Classes
@@ -279,7 +296,7 @@ Use consistent colors to visually distinguish data sources:
 
 | Element | Recommended |
 |---------|-------------|
-| Page headers | `text-3xl md:text-4xl font-bold` |
+| Page headers | `text-2xl md:text-3xl lg:text-4xl font-bold` (Responsive) |
 | Section headers | `text-xl font-bold` |
 | Card titles | `text-lg font-bold` |
 | Body text | `text-sm` or `text-base` |

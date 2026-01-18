@@ -10,7 +10,10 @@ To keep the main View classes (like `AlbumsView` and `InventoryView`) maintainab
 *   **Key Exported Functions**:
     *   `renderCompactAlbumCard(album)`: Generates the standard grid card (Mode 1).
     *   `renderExpandedAlbumCard(album)`: Generates the detailed row (Mode 3) with ranking comparison.
-    *   `renderRankingBadge(album)`: Logic for displaying "BestEverAlbums", "Spotify", or "AI" badges based on data provider.
+    *   `renderVisualHeader(album)`: Reusable component for the album cover and action bar (Refetch Button + Year).
+    *   `renderRankingBadge(album)`: Logic for displaying badges. **New (Sprint 22)**: Uses a "Split Row" layout:
+        *   **Top**: BestEverAlbums (Orange)
+        *   **Bottom**: Spotify (Green) | User Rank (Blue)
     *   `renderLoadingProgress(progress)`: Centralized visual for the loading spinner and progress bar.
 
 ### Inventory Grid Renderer (`public/js/views/renderers/InventoryGridRenderer.js`)

@@ -13,7 +13,7 @@ We rely on a **Manual-Based** documentation system, not a chronological log.
 -   **Location**: `docs/manual/`
 -   **Purpose**: Describes the *current* state of the system.
 -   **Rule**: If you change code, you **MUST** update the corresponding Manual chapter.
--   **Index**: [00_MJRP_Album_Blender_Ref_Guide_Index.md](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/manual/00_MJRP_Album_Blender_Ref_Guide_Index.md)
+-   **Index**: [00_MJRP_Album_Blender_Ref_Guide_Index.md](docs/manual/00_MJRP_Album_Blender_Ref_Guide_Index.md)
 
 ### **Architecture Decision Records (The History)**
 -   **Location**: `docs/decisions/`
