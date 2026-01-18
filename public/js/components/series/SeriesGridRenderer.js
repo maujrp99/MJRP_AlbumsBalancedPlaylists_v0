@@ -29,6 +29,7 @@ import { AlbumCardRenderer } from '../ui/AlbumCardRenderer.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 import { VirtualScrollObserver } from '../../utils/VirtualScrollObserver.js';
 import { SeriesSkeleton } from '../ui/skeletons/SeriesSkeleton.js';
+import { LoadMoreButton } from '../ui/LoadMoreButton.js';
 
 export default class SeriesGridRenderer extends Component {
     /**

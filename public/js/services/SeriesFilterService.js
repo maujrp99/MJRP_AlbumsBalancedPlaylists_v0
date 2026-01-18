@@ -3,7 +3,10 @@
  * 
  * Pure functional service for filtering and sorting albums.
  * Part of Sprint 17: SeriesView Refactor ("Thin View")
+ * Refactored Sprint 22: Uses FilterUtils.
  */
+
+import { FilterUtils } from '../utils/FilterUtils.js'
 
 /**
  * Filter albums based on search query, filter state, and view mode
@@ -32,10 +35,8 @@ export function filterAlbums(albums, context = {}) {
 
     // Search filter
     if (searchQuery) {
-        const query = searchQuery.toLowerCase();
         filtered = filtered.filter(album =>
-            album.title?.toLowerCase().includes(query) ||
-            album.artist?.toLowerCase().includes(query)
+            FilterUtils.textMatch(album, ['title', 'artist'], searchQuery)
         );
     }
 

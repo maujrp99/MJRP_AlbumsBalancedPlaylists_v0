@@ -21,12 +21,20 @@ import { dialogService } from '../services/DialogService.js'
 import { SavedPlaylistCard } from '../components/playlists/SavedPlaylistCard.js'
 import { PlaylistDetailsModal } from '../components/playlists/PlaylistDetailsModal.js'
 import { SavedSeriesGroup } from '../components/playlists/SavedSeriesGroup.js'
+import FilterToolbar from '../components/ui/FilterToolbar.js'
+import { SavedPlaylistsFilterService } from '../services/SavedPlaylistsFilterService.js'
 
 export class SavedPlaylistsView extends BaseView {
     constructor() {
         super()
         this.controller = new SavedPlaylistsController(this)
         this.isLoading = true
+        this.filterState = {
+            search: '',
+            seriesId: 'all',
+            batchName: 'all',
+            sort: 'updated_desc'
+        }
     }
 
     async mount() {
@@ -67,6 +75,9 @@ export class SavedPlaylistsView extends BaseView {
             ])
         ]);
 
+        // Render Toolbar
+        const toolbar = this.renderToolbar();
+
         const mainContent = SafeDOM.div({
             id: 'mainContent',
             className: 'fade-in',
@@ -83,6 +94,7 @@ export class SavedPlaylistsView extends BaseView {
 
         return SafeDOM.div({ className: 'saved-playlists-view container' }, [
             header,
+            toolbar, // Add toolbar to view
             mainContent,
             modalsContainer
         ])
@@ -95,8 +107,21 @@ export class SavedPlaylistsView extends BaseView {
 
         const groupsContainer = SafeDOM.div({ className: 'series-groups space-y-8' })
 
-        this.controller.data.forEach(group => {
-            const groupNode = this.renderSeriesGroup(group)
+        // 1. Filter Data
+        const FLAT_DATA = this.controller.data.map(g => ({
+            ...g.series, // id, name, updatedAt
+            batches: g.batches,
+            _originalGroup: g // Keep reference
+        }))
+
+        const filteredList = SavedPlaylistsFilterService.filterSeries(FLAT_DATA, this.filterState)
+
+        if (filteredList.length === 0) {
+            return SafeDOM.div({ className: 'text-center py-12 opacity-50' }, 'No matches found.')
+        }
+
+        filteredList.forEach(flatItem => {
+            const groupNode = this.renderSeriesGroup(flatItem._originalGroup)
             if (groupNode) {
                 groupsContainer.appendChild(groupNode)
             }
@@ -125,10 +150,6 @@ export class SavedPlaylistsView extends BaseView {
         return component.render();
     }
 
-    // renderPlaylistBatch removed - handled by SavedSeriesGroup
-
-    // renderPlaylistRow method removed - now handled by SavedPlaylistRow component via SavedPlaylistCard
-
     countUniqueAlbums(playlists) {
         const albumSet = new Set()
         playlists.forEach(playlist => {
@@ -145,6 +166,70 @@ export class SavedPlaylistsView extends BaseView {
         if (!tracks) return '0m'
         const seconds = tracks.reduce((acc, t) => acc + (t.duration || 0), 0)
         return Math.floor(seconds / 60) + 'm'
+    }
+
+    renderToolbar() {
+        const flatData = this.controller.data.map(g => ({
+            ...g.series,
+            batches: g.batches
+        }))
+
+        const { seriesOptions, batchOptions } = SavedPlaylistsFilterService.getDropdownOptions(flatData)
+
+        const container = document.createElement('div')
+
+        const toolbar = new FilterToolbar({
+            container,
+            props: {
+                searchQuery: this.filterState.search,
+                onSearch: (val) => this.handleFilterChange('search', val),
+
+                sortOptions: [
+                    { value: 'updated_desc', label: 'Recently Updated' },
+                    { value: 'name_asc', label: 'Name (A-Z)' },
+                    { value: 'name_desc', label: 'Name (Z-A)' }
+                ],
+                currentSort: this.filterState.sort,
+                onSort: (val) => this.handleFilterChange('sort', val),
+
+                filterGroups: [
+                    {
+                        id: 'series',
+                        label: 'All Series',
+                        value: this.filterState.seriesId,
+                        options: seriesOptions,
+                        onChange: (val) => this.handleFilterChange('seriesId', val),
+                        icon: 'Layers'
+                    },
+                    {
+                        id: 'batch',
+                        label: 'All Batches',
+                        value: this.filterState.batchName,
+                        options: batchOptions,
+                        onChange: (val) => this.handleFilterChange('batchName', val),
+                        icon: 'Grid'
+                    }
+                ],
+
+                onRefresh: async () => {
+                    this.isLoading = true
+                    this.update()
+                    const { db, cacheManager, auth } = await import('../app.js')
+                    await this.controller.loadData({ db, cacheManager, auth })
+                    this.isLoading = false
+                    this.update()
+                }
+            }
+        })
+
+        toolbar.render()
+
+        return container
+    }
+
+    handleFilterChange(key, value) {
+        this.filterState[key] = value
+        this.update()
     }
 
     renderLoading() {
@@ -179,10 +264,6 @@ export class SavedPlaylistsView extends BaseView {
             }
         }
     }
-
-    // --- Interaction ---
-
-    // Note: bindEvents removed as we use direct SafeDOM onClick handlers
 
     async handleDeleteBatch(seriesId, batchName, count) {
         const confirmed = await dialogService.confirm({

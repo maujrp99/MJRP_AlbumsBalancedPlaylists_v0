@@ -88,26 +88,90 @@ export class SeriesViewUpdater {
     }
 
 
-    updateToolbar(state, currentScope) {
+    updateToolbar(state, currentScope, controller) {
         if (!this.components.toolbar) return;
 
-        const { searchQuery, filters, viewMode } = state;
+        const { searchQuery, filters, viewMode, seriesSortMode } = state;
         const activeSeries = albumSeriesStore.getActiveSeries();
         const allSeries = albumSeriesStore.getSeries();
         const albums = albumsStore.getAlbums();
 
-        // Regenerate dynamic options
+        // 1. Regenerate Options
         const artists = getUniqueArtists(albums);
+        const seriesOptions = allSeries.map(s => ({ value: s.id, label: s.name }));
+        const artistOptions = artists.map(a => ({ value: a, label: a }));
 
-        // Update toolbar with synchronized state
+        const yearOptions = [
+            { value: 'all', label: 'All Years' },
+            { value: '1960s', label: '1960s' },
+            { value: '1970s', label: '1970s' },
+            { value: '1980s', label: '1980s' },
+            { value: '1990s', label: '1990s' },
+            { value: '2000s', label: '2000s+' }
+        ];
+
+        const sourceOptions = [
+            { value: 'all', label: 'All Sources' },
+            { value: 'user', label: 'My Ranking' },
+            { value: 'pending', label: 'Pending' },
+            { value: 'acclaim', label: 'BestEverAlbums' },
+            { value: 'popularity', label: 'Popularity' },
+            { value: 'ai', label: 'AI Enriched' }
+        ];
+
+        // 2. Safety Check
+        if (!controller) {
+            console.warn('[SeriesViewUpdater] Controller missing in updateToolbar');
+            return;
+        }
+
+        // 3. Reconstruct Filter Groups
+        const filterGroups = [
+            {
+                id: 'series',
+                label: 'All Series',
+                // FIX #160: Respect currentScope to ensure dropdown syncs with "Soft Navigation"
+                value: (currentScope === 'ALL') ? 'all' : (activeSeries ? activeSeries.id : 'all'),
+                options: seriesOptions,
+                onChange: (v) => {
+                    const scopeType = v === 'all' ? 'ALL' : 'SINGLE';
+                    const seriesId = v === 'all' ? null : v;
+                    controller.loadScope(scopeType, seriesId, false);
+                },
+                icon: 'Layers'
+            },
+            {
+                id: 'artist',
+                label: 'All Artists',
+                value: filters.artist || 'all',
+                options: artistOptions,
+                onChange: (v) => controller.handleFilterChange('artist', v),
+                icon: 'Mic'
+            },
+            {
+                id: 'year',
+                label: 'All Years',
+                value: filters.year || 'all',
+                options: yearOptions,
+                onChange: (v) => controller.handleFilterChange('year', v),
+                icon: 'Calendar'
+            },
+            {
+                id: 'source',
+                label: 'All Sources',
+                value: filters.source || 'all',
+                options: sourceOptions,
+                onChange: (v) => controller.handleFilterChange('source', v),
+                icon: 'Database'
+            }
+        ];
+
+        // 4. Update Component
         this.components.toolbar.update({
             searchQuery,
-            filters,
             viewMode,
-            activeSeries: currentScope === 'ALL' ? null : activeSeries,
-            seriesList: allSeries,
-            seriesSortMode: state.seriesSortMode, // Sync sort state
-            artists
+            currentSort: seriesSortMode,
+            filterGroups
         });
     }
 }

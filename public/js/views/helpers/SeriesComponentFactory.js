@@ -5,7 +5,7 @@
  * Handles all props mapping and component instantiation.
  */
 import SeriesHeader from '../../components/series/SeriesHeader.js';
-import SeriesToolbar from '../../components/series/SeriesToolbar.js';
+import FilterToolbar from '../../components/ui/FilterToolbar.js';
 import SeriesGridRenderer from '../../components/series/SeriesGridRenderer.js';
 // FIX #152B: SeriesProgressBar removed - skeletons replace progress bar
 import { albumsStore } from '../../stores/albums.js';
@@ -49,47 +49,106 @@ export class SeriesComponentFactory {
         const albums = albumsStore.getAlbums();
         const activeSeries = albumSeriesStore.getActiveSeries();
         const allSeries = albumSeriesStore.getSeries();
+        const { searchQuery, filters, viewMode, seriesSortMode } = controller.getState();
 
-        const { searchQuery, filters, viewMode, seriesSortMode } = controller.getState(); // Added seriesSortMode
+        // 1. Prepare Options
+        const seriesOptions = allSeries.map(s => ({ value: s.id, label: s.name }));
+        const artistOptions = getUniqueArtistsFn(albums).map(a => ({ value: a, label: a }));
 
-        const toolbar = new SeriesToolbar({
+        const yearOptions = [
+            { value: 'all', label: 'All Years' },
+            { value: '1960s', label: '1960s' },
+            { value: '1970s', label: '1970s' },
+            { value: '1980s', label: '1980s' },
+            { value: '1990s', label: '1990s' },
+            { value: '2000s', label: '2000s+' }
+        ];
+
+        const sourceOptions = [
+            { value: 'all', label: 'All Sources' },
+            { value: 'user', label: 'My Ranking' },
+            { value: 'pending', label: 'Pending' },
+            { value: 'acclaim', label: 'BestEverAlbums' },
+            { value: 'popularity', label: 'Popularity' },
+            { value: 'ai', label: 'AI Enriched' }
+        ];
+
+        const sortOptions = [
+            { value: 'count_asc', label: 'Album Count (Lowest)' },
+            { value: 'count_desc', label: 'Album Count (Highest)' },
+            { value: 'alpha', label: 'Name (A-Z)' },
+            { value: 'alpha_desc', label: 'Name (Z-A)' },
+            { value: 'recent', label: 'Recently Added' }
+        ];
+
+        // 2. Instantiate FilterToolbar
+        const toolbar = new FilterToolbar({
             container,
             props: {
                 searchQuery,
-                filters,
-                filters,
-                viewMode,
-                seriesSortMode, // New Prop
-                artists: getUniqueArtistsFn(albums),
-                seriesList: allSeries,
-                activeSeries,
-                // Direct binding: no wrappers needed in View
                 onSearch: (q) => controller.handleSearch(q),
-                onSeriesChange: (v) => controller.handleSeriesChange(v), // This one needs logic from Handlers? No, Controller handles it. 
-                // Wait, original View used Handlers.handleSeriesChange.
-                // Checking SeriesViewHandlers: it calls router or controller. 
-                // Let's assume controller.handleSeriesChange is sufficient or we bind the right logic here.
-                // Actually SeriesViewHandlers.handleSeriesChange does router navigation. 
-                // So we should bind that logic here or use a controller method that does it.
-                // For now, let's keep the logic close to what it was but bound here.
-                onSeriesChange: (v) => {
-                    // FIX #159: Use controller directly to prevent full view reset (Flash)
-                    const scopeType = v === 'all' ? 'ALL' : 'SINGLE';
-                    const seriesId = v === 'all' ? null : v;
-                    controller.loadScope(scopeType, seriesId, false);
-                },
-                onArtistFilter: (v) => controller.handleFilterChange('artist', v),
-                onYearFilter: (v) => controller.handleFilterChange('year', v),
-                onSourceFilter: (v) => controller.handleFilterChange('source', v),
-                onRefresh: () => controller.loadScope(view.currentScope, view.targetSeriesId, true),
+
+                sortOptions,
+                currentSort: seriesSortMode,
                 onSort: (key) => controller.handleSort(key),
+
+                filterGroups: [
+                    {
+                        id: 'series',
+                        label: 'All Series',
+                        value: activeSeries ? activeSeries.id : 'all',
+                        options: seriesOptions,
+                        onChange: (v) => {
+                            const scopeType = v === 'all' ? 'ALL' : 'SINGLE';
+                            const seriesId = v === 'all' ? null : v;
+                            // FIX #159: Use controller directly to prevent full view reset
+                            controller.loadScope(scopeType, seriesId, false);
+                        },
+                        icon: 'Layers'
+                    },
+                    {
+                        id: 'artist',
+                        label: 'All Artists',
+                        value: filters.artist || 'all',
+                        options: artistOptions,
+                        onChange: (v) => controller.handleFilterChange('artist', v),
+                        icon: 'Mic'
+                    },
+                    {
+                        id: 'year',
+                        label: 'All Years',
+                        value: filters.year || 'all',
+                        options: yearOptions,
+                        onChange: (v) => controller.handleFilterChange('year', v),
+                        icon: 'Calendar'
+                    },
+                    {
+                        id: 'source',
+                        label: 'All Sources',
+                        value: filters.source || 'all',
+                        options: sourceOptions,
+                        onChange: (v) => controller.handleFilterChange('source', v),
+                        icon: 'Database'
+                    }
+                ],
+
+                viewMode,
                 onToggleView: () => {
                     const newMode = view.viewMode === 'compact' ? 'expanded' : 'compact';
                     controller.handleViewModeChange(newMode);
-                }
+                },
+
+                onRefresh: () => controller.loadScope(view.currentScope, view.targetSeriesId, true)
             }
         });
+
         toolbar.mount();
+        // Adding explicit render call to be consistent with SavedPlaylistsView verification findings
+        // assuming Component.mount logic is identical across usage.
+        if (typeof toolbar.render === 'function') {
+            toolbar.render();
+        }
+
         return toolbar;
     }
 

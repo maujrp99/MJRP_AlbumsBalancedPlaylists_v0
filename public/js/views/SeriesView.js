@@ -154,26 +154,25 @@ export default class SeriesView extends BaseView {
             this.viewMode = state.viewMode || this.viewMode;
 
             // ARCH-FIX: Ensure Toolbar is synced with Controller state (Filters, Active Series)
-            this.updater?.updateToolbar(state, state.currentScope);
+            this.updater?.updateToolbar(state, state.currentScope, this.controller);
 
             // ARCH-FIX: Retrieve SORTED series list from controller state/helper
-            // We use getHeaderData() because getSortedSeries isn't always public, but getHeaderData() calls it.
-            // Or we can call getSortedSeries directly if public? Yes it is.
-            // But we need the raw list first.
-            const allSeries = this.controller.getHeaderData().seriesList; // getHeaderData returns sorted 'seriesList' property
+            const allSeries = this.controller.getHeaderData().seriesList;
             sortedSeriesList = allSeries;
         }
+
+        const currentState = this.controller ? this.controller.getState() : {};
+        const currentScope = currentState.currentScope || this.currentScope; // Fallback to local if no controller (unlikely)
 
         this.updater?.updateGrid(
             albums,
             this.viewMode,
-            this.currentScope,
-            this.controller.getState().filters,
-            this.controller.getState().searchQuery,
-            sortedSeriesList, // <--- Pass sorted list
-            isLoading         // FIX #152: Pass isLoading to distinguish skeleton vs filtered
+            currentScope,      // FIX #160: Use authoritative scope from controller
+            currentState.filters || {},
+            currentState.searchQuery || '',
+            sortedSeriesList,
+            isLoading
         );
-        // this.updater?.updateHeader(this.currentScope); // Old signature
         this.updater?.updateEmptyState('emptyStateContainer', albums.length, isLoading);
     }
 

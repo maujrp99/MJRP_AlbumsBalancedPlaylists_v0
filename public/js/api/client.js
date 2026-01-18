@@ -81,34 +81,16 @@ export class APIClient {
                 if (fullAlbum) {
                     // 3. Enrich with Rankings (Backend)
 
-                    const enrichResp = await axios.post(`${this.baseUrl}/enrich-album`, {
-                        albumData: {
-                            title: fullAlbum.title,
-                            artist: fullAlbum.artist,
-                            tracks: fullAlbum.tracks
-                        }
-                    })
-
-                    const enrichment = enrichResp.data?.data || {}
-                    const ratingsMap = new Map()
-                    if (enrichment.trackRatings) {
-                        enrichment.trackRatings.forEach(r => {
-                            // Normalize key on client too just to be safe, or direct match
-                            if (r.rating !== null) ratingsMap.set(r.title, r.rating)
-                        })
-                    }
-
-                    // 4. Construct Album Model Data
+                    // 3. Construct Base Album Model (Clean, no ratings yet)
                     const stableId = this.generateAlbumId({ title: fullAlbum.title, artist: fullAlbum.artist })
 
-                    // Sprint 12.5: Use TrackTransformer for canonical track creation
                     const albumContext = {
                         artist: fullAlbum.artist,
                         album: fullAlbum.title,
                         albumId: stableId
                     }
 
-                    // Map Apple Music tracks to canonical format
+                    // Map Apple Music tracks to canonical format (no ratings initially)
                     const allTracks = fullAlbum.tracks.map(t => TrackTransformer.toCanonical({
                         id: t.id || `track_${stableId}_${t.trackNumber}`,
                         title: t.title,
@@ -119,25 +101,14 @@ export class APIClient {
                         isrc: t.isrc,
                         previewUrl: t.previewUrl,
                         appleMusicId: t.id,
-                        rating: ratingsMap.get(t.title) || null
+                        rating: null // Will be enriched by Helper
                     }, albumContext))
 
                     const tracksOriginalOrder = [...allTracks].sort((a, b) => a.trackNumber - b.trackNumber)
-
-                    // Calculate Acclaim Order (Sorted by Rating Desc)
-                    let tracksByAcclaim = [...allTracks]
-
-                    const hasRatings = tracksByAcclaim.some(t => t.rating !== null)
-                    if (hasRatings) {
-                        tracksByAcclaim.sort((a, b) => {
-                            const rA = a.rating !== null ? a.rating : -1
-                            const rB = b.rating !== null ? b.rating : -1
-                            if (rA !== rB) return rB - rA
-                            return a.trackNumber - b.trackNumber
-                        })
-                    }
-                    // Assign Rank (1..N)
-                    tracksByAcclaim.forEach((t, idx) => t.rank = idx + 1)
+                    const tracksByAcclaim = [...allTracks] // Initial order, will be sorted by Helper if needed, or we might need to re-sort after enrichment?
+                    // Actually, enrichment updates properties. We might need to re-sort 'tracks' if we want them rating-sorted.
+                    // But initially Apple Music returns disk order usually. 
+                    // Let's create the Album.
 
                     const albumData = {
                         id: stableId,
@@ -145,17 +116,35 @@ export class APIClient {
                         artist: fullAlbum.artist,
                         year: fullAlbum.year,
                         coverUrl: musicKitService.getArtworkUrl(fullAlbum.artworkTemplate, 600),
-                        tracks: tracksByAcclaim, // Ranked List
-                        tracksOriginalOrder: tracksOriginalOrder, // Disk List
-                        bestEverUrl: enrichment.bestEverInfo?.url,
-                        bestEverAlbumId: enrichment.bestEverInfo?.albumId,
+                        tracks: tracksByAcclaim,
+                        tracksOriginalOrder: tracksOriginalOrder,
                         metadata: { source: 'Apple Music', sourceId: fullAlbum.id }
                     }
 
                     const album = new Album(albumData)
 
-                    // Sprint 12: Use modular SpotifyEnrichmentHelper
-                    // This checks cache first, then fetches fresh if needed
+                    // 4. Enrich with BEA (Encapsulated)
+                    // This handles API call, mapping, and updates album.bestEverUrl, album.acclaim, and track.rating
+                    try {
+                        const { enrichAlbum } = await import('../helpers/BEAEnrichmentHelper.js')
+                        await enrichAlbum(album, { silent: true })
+
+                        // Re-sort tracks by rating if enrichment happened
+                        if (album.acclaim && album.acclaim.hasRatings) {
+                            album.tracks.sort((a, b) => {
+                                const rA = a.rating !== null ? a.rating : -1
+                                const rB = b.rating !== null ? b.rating : -1
+                                if (rA !== rB) return rB - rA
+                                return a.trackNumber - b.trackNumber
+                            })
+                            // Re-assign ranks
+                            album.tracks.forEach((t, idx) => t.rank = idx + 1)
+                        }
+                    } catch (beaError) {
+                        console.warn(`BEA enrichment failed for ${album.title}:`, beaError)
+                    }
+
+                    // 5. Enrich with Spotify (Encapsulated)
                     try {
                         const { applyEnrichmentToAlbum } = await import('../helpers/SpotifyEnrichmentHelper.js')
                         await applyEnrichmentToAlbum(album, { fetchIfMissing: true })

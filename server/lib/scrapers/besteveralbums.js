@@ -373,6 +373,9 @@ async function parseChartRankingById(id) {
     }
   })
 
+  if (rows.length === 0) console.log(`[Scraper DEBUG] chartById ${id}: Table parsing yielded 0 rows. URL: ${chartUrl}`);
+  else console.log(`[Scraper DEBUG] chartById ${id}: Found ${rows.length} rows via table parsing.`);
+
   // fallback: try parsing rows under '#tracks' anchor lists
   if (rows.length === 0) {
     // look for the modern div-based tracks listing
@@ -488,6 +491,8 @@ async function parseAlbumRanking(albumUrl) {
     }
   })
 
+  console.log(`[Scraper DEBUG] parseAlbumRanking ${albumUrl}: Found ${evidence.length} rows via table parsing.`);
+
   // Fallback: look for lists of tracks
   if (evidence.length === 0) {
     $('li').each((i, li) => {
@@ -516,6 +521,7 @@ async function parseAlbumRanking(albumUrl) {
 async function getRankingForAlbum(albumTitle, albumArtist) {
   try {
     // 1) Try artist→discography lookup (more reliable)
+    console.log(`[Scraper DEBUG] getRankingForAlbum: "${albumTitle}" by "${albumArtist}"`);
     if (albumArtist) {
       const artistId = await findArtistPage(albumArtist)
       if (artistId) {
@@ -543,6 +549,8 @@ async function getRankingForAlbum(albumTitle, albumArtist) {
       }
     }
 
+    console.log(`[Scraper DEBUG] Option 1 (Artist) failed/skipped for "${albumArtist}".`);
+
     // 2) Try to find chart id by searching album+artist text
     const id = await findAlbumId(albumTitle, albumArtist)
     if (id) {
@@ -550,8 +558,12 @@ async function getRankingForAlbum(albumTitle, albumArtist) {
       return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId, evidence: parsed.evidence }
     }
 
+    console.log(`[Scraper DEBUG] Option 2 (AlbumId) failed for "${albumTitle}".`);
+
     // 3) fallback: try generic album page parsing using search heuristics
     const albumUrl = await fetchAlbumPage(albumTitle, albumArtist)
+    console.log(`[Scraper DEBUG] Option 3 (Generic Page) result: ${albumUrl}`);
+
     if (!albumUrl) return null
     const parsed = await parseAlbumRanking(albumUrl)
     // parseAlbumRanking may not know the chart id; return albumUrl and evidence

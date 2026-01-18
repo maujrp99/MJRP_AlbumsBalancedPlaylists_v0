@@ -45,6 +45,8 @@ export async function enrichAlbum(album, options = {}) {
             tracks: album.tracks || []
         })
 
+        console.log('[BEA DEBUG] Raw Enrichment Data:', JSON.stringify(enrichmentData, null, 2))
+
         if (enrichmentData) {
             applyBEAData(album, enrichmentData)
             log(`[BEAEnrichmentHelper] ✅ Enriched "${album.title}" with ${enrichmentData.trackRatings?.length || 0} ratings.`)
