@@ -195,7 +195,7 @@ export class SavedPlaylistsView extends BaseView {
                 filterGroups: [
                     {
                         id: 'series',
-                        label: 'All Series',
+                        label: 'All Albums Series',
                         value: this.filterState.seriesId,
                         options: seriesOptions,
                         onChange: (val) => this.handleFilterChange('seriesId', val),
@@ -203,7 +203,7 @@ export class SavedPlaylistsView extends BaseView {
                     },
                     {
                         id: 'batch',
-                        label: 'All Batches',
+                        label: 'All Playlist Series',
                         value: this.filterState.batchName,
                         options: batchOptions,
                         onChange: (val) => this.handleFilterChange('batchName', val),
@@ -310,7 +310,10 @@ export class SavedPlaylistsView extends BaseView {
     }
 
     onThumbnailLoaded(seriesId) {
-        // Optional re-render logic
-        // Could trigger this.update() or a targeted update
+        // Debounce update to avoid excessive re-renders during batch loads
+        if (this._thumbTimeout) clearTimeout(this._thumbTimeout);
+        this._thumbTimeout = setTimeout(() => {
+            this.update();
+        }, 300);
     }
 }

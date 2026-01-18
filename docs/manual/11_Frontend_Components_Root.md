@@ -50,6 +50,14 @@
 **Why**: Replaces inconsistent emojis/images with scalable, recolorable vectors.
 **Usage**: `getIcon('Name', 'classes')` returns an SVG string.
 
+### 2.4 `FilterToolbar.js` [NEW]
+**Role**: Generic, Reusable Filter Bar.
+**Used By**: `SeriesView` and `SavedPlaylistsView`.
+**Features**:
+*   **Search**: Fuzzy text search.
+*   **Filters**: Supports multiple dropdown slots (render props pattern).
+*   **Sort**: Standardized sort dropdown.
+
 ---
 
 ## 3. Feedback Systems

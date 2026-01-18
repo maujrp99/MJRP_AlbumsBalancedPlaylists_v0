@@ -4486,3 +4486,17 @@ The user suspects the current "patch" approach is insufficient and requires a "g
 - Functionality: Validated via Regression Test (Track B).
 
 ---
+
+- **ID**: #160 (Regression)
+  - **Status**: [RESOLVED]
+  - **Date**: 2026-01-18
+  - **Component**: SeriesView / SeriesViewUpdater
+  - **Description**: "All Series" filter dropdown remained selected even after switching to a specific series (Soft Navigation).
+  - **Correction**: Updated `SeriesView` and `SeriesViewUpdater` to use the authoritative `state.currentScope` from the controller instead of stale local properties.
+
+- **ID**: #162
+  - **Status**: [RESOLVED]
+  - **Date**: 2026-01-18
+  - **Component**: SeriesGridRenderer
+  - **Description**: `ReferenceError: LoadMoreButton is not defined` when rendering series groups > 12 albums.
+  - **Correction**: Added missing import `import { LoadMoreButton } from '../ui/LoadMoreButton.js';` to `SeriesGridRenderer.js`.

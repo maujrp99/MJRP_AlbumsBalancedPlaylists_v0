@@ -97,8 +97,10 @@ sequenceDiagram
     *   `SeriesHeader`: Page title and "Blend Your Albums" action button.
         *   **Responsive**: Uses `flex-col md:flex-row` to stack on mobile.
         *   **Blend Button**: Direct link to `/blend`. Checks for album count on click (Toast feedback), no longer strictly disabled.
-    *   `SeriesToolbar`: Filters (Artist, Year, Source), Search, and View Toggles (Grid/List Icons).
+    *   `FilterToolbar` [NEW]: Generic, state-driven toolbar handling Filters (Artist, Year, Source), Search, and Sort.
+        *   **Reusability**: Replaces the legacy `SeriesToolbar`, now shared with `SavedPlaylistsView`.
         *   **Sorting**: Supports "Name (A-Z)", "Name (Z-A)", "Album Count (Lowest)", "Album Count (Highest)", and "Recently Added". Sorting logic is handled by `SeriesController`.
+    *   ~~`SeriesToolbar`~~: Removed (Sprint 22) - Replaced by `FilterToolbar`.
     *   ~~`SeriesProgressBar`~~: Removed (Sprint 21.5) - Skeletons provide visual feedback.
     *   `SeriesEmptyState`: Renders when no albums match the current scope.
     *   `SeriesGridRenderer`: Responsible for the main content layout (Grid/List).

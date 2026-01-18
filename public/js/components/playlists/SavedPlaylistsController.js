@@ -152,15 +152,17 @@ export class SavedPlaylistsController {
             let coverUrl = null
 
             // Logic ported from SavedPlaylistsView
-            if (typeof query === 'object' && query.imageUrl) {
-                coverUrl = query.imageUrl
+            if (typeof query === 'object') {
+                if (query.imageUrl) coverUrl = query.imageUrl;
+                else if (query.coverUrl) coverUrl = query.coverUrl;
+                else if (query.artwork?.url) coverUrl = query.artwork.url;
             } else if (typeof query === 'string' && query.includes(' - ')) {
-                const [artist, ...albumParts] = query.split(' - ')
-                const albumName = albumParts.join(' - ')
+                const [artist, ...albumParts] = query.split(' - ');
+                const albumName = albumParts.join(' - ');
                 try {
-                    const found = await optimizedAlbumLoader.findAlbum(artist, albumName)
+                    const found = await optimizedAlbumLoader.findAlbum(artist, albumName);
                     if (found) {
-                        coverUrl = optimizedAlbumLoader.getArtworkUrl(found, 100)
+                        coverUrl = optimizedAlbumLoader.getArtworkUrl(found, 100);
                     }
                 } catch (e) { /* ignore */ }
             }

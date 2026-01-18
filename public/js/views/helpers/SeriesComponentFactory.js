@@ -74,11 +74,12 @@ export class SeriesComponentFactory {
         ];
 
         const sortOptions = [
-            { value: 'count_asc', label: 'Album Count (Lowest)' },
-            { value: 'count_desc', label: 'Album Count (Highest)' },
+            { value: 'count_asc', label: '# of Albums (↑)' },
+            { value: 'count_desc', label: '# of Albums (↓)' },
             { value: 'alpha', label: 'Name (A-Z)' },
             { value: 'alpha_desc', label: 'Name (Z-A)' },
-            { value: 'recent', label: 'Recently Added' }
+            { value: 'recent_desc', label: 'Newest' },
+            { value: 'recent_asc', label: 'Oldest' }
         ];
 
         // 2. Instantiate FilterToolbar
@@ -95,7 +96,7 @@ export class SeriesComponentFactory {
                 filterGroups: [
                     {
                         id: 'series',
-                        label: 'All Series',
+                        label: 'All Albums Series',
                         value: activeSeries ? activeSeries.id : 'all',
                         options: seriesOptions,
                         onChange: (v) => {

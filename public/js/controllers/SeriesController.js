@@ -99,6 +99,13 @@ export default class SeriesController {
             window.history.pushState({}, '', newUrl);
         }
 
+        // ARCH-FIX: Sync store active series immediately to ensure header title matches
+        if (scopeType === 'ALL') {
+            albumSeriesStore.setActiveSeries(null);
+        } else if (seriesId) {
+            albumSeriesStore.setActiveSeries(seriesId);
+        }
+
         // ARCH-FIX: Reset filters when switching scope to prevent context contamination
         this.state.filters = { artist: '', year: '', source: '' };
         this.state.searchQuery = '';
@@ -120,10 +127,6 @@ export default class SeriesController {
                 if (scopeType === 'ALL') {
                     // Start background sync without clearing view
                     this.syncAllSeriesInBackground();
-                } else if (seriesId) {
-                    // Set active series for context
-                    const series = albumSeriesStore.getSeries().find(s => s.id === seriesId);
-                    if (series) albumSeriesStore.setActiveSeries(series.id);
                 }
 
                 // Notify view immediately with cached data
@@ -507,9 +510,12 @@ export default class SeriesController {
                     return (a.albumQueries?.length || 0) - (b.albumQueries?.length || 0);
                 case 'count_desc':
                     return (b.albumQueries?.length || 0) - (a.albumQueries?.length || 0);
-                case 'recent':
+                case 'recent_desc':
+                case 'recent': // legacy support
                     // Fallback to ID or created date if available
                     return (b.createdAt || 0) - (a.createdAt || 0);
+                case 'recent_asc':
+                    return (a.createdAt || 0) - (b.createdAt || 0);
                 default:
                     return 0;
             }

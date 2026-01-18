@@ -12,8 +12,8 @@
 **Goal**: Expand the blending experience with cross-series context and enhanced discovery tools.
 **Status**: 🏗️ **IN PROGRESS**
 **Scope**:
-- [ ] Encapsulate Filter Logic.
-- [ ] Encapsulate BEA Enrichment.
+- [x] Encapsulate Filter Logic.
+- [x] Encapsulate BEA Enrichment.
 - [ ] Improve the Enrichment Results for BEA and Spotify.
 
 ---

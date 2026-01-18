@@ -7,7 +7,9 @@ The goal of this sprint is to improve code modularity and logic reuse by:
 
 ---
 
-## 2. Requirement 1: Filter Logic Reuse (`SavedPlaylistsView`)
+## 2. Requirement 1: Filter Logic Reuse (`SavedPlaylistsView`) [IMPLEMENTED]
+...
+## 3. Requirement 2: BEA Enrichment Encapsulation [IMPLEMENTED]
 
 ### 2.1 Problem Analysis
 ### 2.2 Solution Options
