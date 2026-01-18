@@ -8,12 +8,13 @@
 
 ## 🚧 Current Sprint
 
-### Sprint 22: Blending Context & Discovery (Jan 2026)
+### Sprint 22: Encapsulate Filter Logic, BEA Enrichment and Improve the Enrichment Results
 **Goal**: Expand the blending experience with cross-series context and enhanced discovery tools.
 **Status**: 🏗️ **IN PROGRESS**
 **Scope**:
-- [ ] Cross-Series Recipe Execution.
-- [ ] Recommendation Engine Integration.
+- [ ] Encapsulate Filter Logic.
+- [ ] Encapsulate BEA Enrichment.
+- [ ] Improve the Enrichment Results for BEA and Spotify.
 
 ---
 

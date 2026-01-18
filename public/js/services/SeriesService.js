@@ -237,46 +237,23 @@ export class SeriesService {
         console.log(`[SeriesService] 💉 Surgically injecting ${albums.length} albums into view cache...`)
 
         // 1. Enrich (BestEver Ratings) if missing
-        const enrichedAlbums = await Promise.all(albums.map(async (album) => {
+        const enriched = await Promise.all(albums.map(async (album) => {
             // Clone to avoid mutation side effects on original reference locally
-            const enriched = { ...album, tracks: album.tracks ? [...album.tracks] : [] }
+            const clone = { ...album, tracks: album.tracks ? [...album.tracks] : [] }
 
             // Basic check if enrichment is needed (e.g. no ratings data)
-            // We assume if it came from Search, it might have Tracks but no Acclaim data
-            const needsEnrichment = !enriched.bestEverUrl && (!enriched.acclaim || !enriched.acclaim.hasRatings)
+            const needsEnrichment = !clone.bestEverUrl && (!clone.acclaim || !clone.acclaim.hasRatings)
 
-            if (needsEnrichment && enriched.artist && enriched.title) {
-                // console.log(`[SeriesService] Enriching ${enriched.title}...`)
-                const enrichment = await apiClient.BEAenrichAlbum({
-                    title: enriched.title,
-                    artist: enriched.artist,
-                    tracks: enriched.tracks || []
-                })
-
-                if (enrichment && enrichment.trackRatings) {
-                    // Merge ratings
-                    const ratingsMap = new Map()
-                    enrichment.trackRatings.forEach(r => {
-                        if (r.rating !== null) ratingsMap.set(r.title.toLowerCase().trim(), r.rating)
-                    })
-
-                    // Apply to tracks
-                    if (enriched.tracks) {
-                        enriched.tracks.forEach(t => {
-                            const key = t.title.toLowerCase().trim()
-                            if (ratingsMap.has(key)) {
-                                t.rating = ratingsMap.get(key)
-                            }
-                        })
-                        // Sort by rating? Logic exists in APIClient, duplication risk.
-                        // For surgical update, simple rating injection is usually enough for visual badges.
-                        enriched.acclaim = { hasRatings: true, source: 'surgical-enrichment' }
-                        enriched.bestEverUrl = enrichment.bestEverInfo?.url
-                    }
-                }
+            if (needsEnrichment && clone.artist && clone.title) {
+                // Use Helper for encapsulated logic
+                const { enrichAlbum } = await import('../helpers/BEAEnrichmentHelper.js')
+                await enrichAlbum(clone, { silent: true })
             }
-            return enriched
+            return clone
         }))
+
+        // Rename variable for clarity in loop below
+        const enrichedAlbums = enriched
 
         // 2. Hydrate & Inject
         // We can reuse the Controller logic style manual injection
@@ -334,16 +311,30 @@ export class SeriesService {
         // Each service handles its own errors internally or we catch them here.
 
         const services = [
-            // 1. BestEverAlbums (Backend)
+            // 1. BestEverAlbums (Backend via Helper)
             (async () => {
                 try {
-                    const data = await apiClient.BEAenrichAlbum({
-                        title: album.title,
-                        artist: album.artist,
-                        tracks: album.tracks || []
-                    });
-                    console.log(`[SeriesService] 🟢 BEA Response for "${album.title}":`, data);
-                    return { type: 'bea', data };
+                    const { enrichAlbum } = await import('../helpers/BEAEnrichmentHelper.js');
+                    // We pass a clone or the album itself? 
+                    // refetchAlbumMetadata implementation below creates 'enriched' clone later.
+                    // But here we need to return DATA to be merged.
+                    // Actually, the Helper maps data onto the object.
+                    // Strategy: Let the helper work on a temp object, then extract the data?
+                    // OR: Let's create a temp object just for this call.
+                    const tempAlbum = { ...album, tracks: album.tracks ? [...album.tracks] : [] };
+                    await enrichAlbum(tempAlbum, { force: true });
+
+                    // Return the data we care about (BEA fields)
+                    return {
+                        type: 'bea',
+                        data: {
+                            bestEverInfo: { url: tempAlbum.bestEverUrl, albumId: tempAlbum.bestEverAlbumId },
+                            // Helper applies ratings to tracks directly.
+                            // We need to extract them back if we want to follow the "Parallel Merge" pattern below.
+                            // OR we trust the helper done its job on tempAlbum.
+                            tracks: tempAlbum.tracks // Pass back enriched tracks
+                        }
+                    };
                 } catch (err) {
                     console.warn('[SeriesService] BEA enrichment failed:', err);
                     return { type: 'bea', error: err };
@@ -404,13 +395,19 @@ export class SeriesService {
             }
         }
 
-        // Apply BEA Data
+        // Apply BEA Data (Adapted from Helper Result)
         if (beaData) {
             enriched.bestEverUrl = beaData.bestEverInfo?.url
-            if (beaData.trackRatings && enriched.tracks) {
+            if (beaData.bestEverInfo?.albumId) enriched.bestEverAlbumId = beaData.bestEverInfo.albumId
+
+            // If the Helper ran, it applied ratings to 'beaData.tracks'.
+            // We need to merge those rating changes into 'enriched.tracks' if they differ.
+            // Since we ran parallel, 'enriched' is a fresh clone of 'album'.
+            // We need to map the results from the tempAlbum tracks back to 'enriched'
+            if (beaData.tracks && enriched.tracks) {
                 const rateMap = new Map()
-                beaData.trackRatings.forEach(r => {
-                    if (r.rating !== null) rateMap.set(r.title.toLowerCase().trim(), r.rating)
+                beaData.tracks.forEach(t => {
+                    if (t.rating !== undefined && t.rating !== null) rateMap.set(t.title.toLowerCase().trim(), t.rating)
                 })
 
                 enriched.tracks.forEach(track => {
@@ -419,6 +416,15 @@ export class SeriesService {
                         track.rating = rateMap.get(key)
                     }
                 })
+                // Also update original order to be safe
+                if (enriched.tracksOriginalOrder) {
+                    enriched.tracksOriginalOrder.forEach(track => {
+                        const key = track.title.toLowerCase().trim()
+                        if (rateMap.has(key)) {
+                            track.rating = rateMap.get(key)
+                        }
+                    })
+                }
                 enriched.acclaim = { hasRatings: true, source: 'surgical-enrichment' }
             }
         }
