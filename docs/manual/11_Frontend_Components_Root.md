@@ -55,9 +55,9 @@
 **Used By**: `SeriesView` and `SavedPlaylistsView`.
 **Features**:
 *   **Search**: Fuzzy text search.
-*   **Filters**: Supports multiple dropdown slots (render props pattern).
-*   **Sort**: Standardized sort dropdown.
-
+*   **Filters**: Supports multiple dropdown slots (render props pattern). Includes standardized options like "**All Albums Series**" and "**All Playlist Series**".
+*   **Sort**: Standardized sort dropdown. Supports bidirectional sorting (e.g., "**# of Albums (↑/↓)**", "**Newest/Oldest**").
+*   **View Toggles**: Integrated Grid/List view switching.
 ---
 
 ## 3. Feedback Systems

@@ -99,7 +99,8 @@ sequenceDiagram
         *   **Blend Button**: Direct link to `/blend`. Checks for album count on click (Toast feedback), no longer strictly disabled.
     *   `FilterToolbar` [NEW]: Generic, state-driven toolbar handling Filters (Artist, Year, Source), Search, and Sort.
         *   **Reusability**: Replaces the legacy `SeriesToolbar`, now shared with `SavedPlaylistsView`.
-        *   **Sorting**: Supports "Name (A-Z)", "Name (Z-A)", "Album Count (Lowest)", "Album Count (Highest)", and "Recently Added". Sorting logic is handled by `SeriesController`.
+        *   **Sorting**: Supports "**Name (A-Z)**", "**Name (Z-A)**", "**# of Albums (↑)**", "**# of Albums (↓)**", "**Newest**", and "**Oldest**". Sorting logic is handled by `SeriesController.js`.
+        *   **Labels**: Uses standardized labels like "**All Albums Series**" and "**All Playlist Series**" for consistency across views (Sprint 22).
     *   ~~`SeriesToolbar`~~: Removed (Sprint 22) - Replaced by `FilterToolbar`.
     *   ~~`SeriesProgressBar`~~: Removed (Sprint 21.5) - Skeletons provide visual feedback.
     *   `SeriesEmptyState`: Renders when no albums match the current scope.
