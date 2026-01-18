@@ -396,6 +396,42 @@ export default class SeriesController {
         this.notifyView('albums', albumsStore.getAlbums()); // Refresh view
     }
 
+    /**
+     * Handle refetching metadata for an album
+     * @param {Object} album 
+     */
+    async handleRefetchMetadata(album) {
+        if (!album || !album.title) return;
+
+        try {
+            this.notifyView('loading', true);
+            toast.info(`Refetching metadata for "${album.title}"...`);
+
+            // Use SeriesService directly as it now encapsulates the logic
+            // Get service instance (using current user ID)
+            const userId = albumSeriesStore.getUserId();
+            const db = albumSeriesStore.getDb();
+            const seriesService = getSeriesService(db, null, userId);
+
+            // Fetch!
+            // Note: We use the current target series ID context if available, or just null for general update
+            // Passing seriesId ensures if the album is in a specific series cache context, it gets updated there too.
+            const seriesId = this.state.targetSeriesId || 'ALL_SERIES_VIEW';
+
+            const enrichedAlbum = await seriesService.refetchAlbumMetadata(album, seriesId);
+
+            toast.success(`Metadata updated for "${enrichedAlbum.title}"`);
+
+            // UI should update automatically via store subscription (onAlbumsChange -> applyFilters -> notifyView)
+
+        } catch (error) {
+            console.error('[SeriesController] Refetch failed:', error);
+            toast.error(`Refetch failed: ${error.message}`);
+        } finally {
+            this.notifyView('loading', false);
+        }
+    }
+
     // =========================================
     // FILTERING & SORTING
     // =========================================

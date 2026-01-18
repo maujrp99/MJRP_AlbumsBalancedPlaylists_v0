@@ -313,7 +313,122 @@ export class SeriesService {
         console.log(`[SeriesService] ✅ Injection complete.`)
     }
 
-    // ========== ENRICHMENT ==========
+    // ========== ENRICHMENT (FIX #156) ==========
+
+    /**
+     * Force-refetch metadata for a specific album from backend APIs (BEA + Spotify).
+     * Bypasses local cache to ensure fresh data.
+     * @param {Object} album - The album object to enrich
+     * @param {string} seriesId - Context series ID (optional)
+     * @returns {Promise<Object>} The enriched album
+     */
+    async refetchAlbumMetadata(album, seriesId = null) {
+        if (!album || !album.title || !album.artist) {
+            throw new Error('Invalid album data for refetch')
+        }
+
+        console.log(`[SeriesService] 🔄 Refetching metadata for "${album.title}"...`)
+
+        // PARALLEL ENRICHMENT STRATEGY
+        // We run both enrichment services in parallel to speed up the process.
+        // Each service handles its own errors internally or we catch them here.
+
+        const services = [
+            // 1. BestEverAlbums (Backend)
+            (async () => {
+                try {
+                    const data = await apiClient.BEAenrichAlbum({
+                        title: album.title,
+                        artist: album.artist,
+                        tracks: album.tracks || []
+                    });
+                    console.log(`[SeriesService] 🟢 BEA Response for "${album.title}":`, data);
+                    return { type: 'bea', data };
+                } catch (err) {
+                    console.warn('[SeriesService] BEA enrichment failed:', err);
+                    return { type: 'bea', error: err };
+                }
+            })(),
+
+            // 2. Spotify (Frontend Service)
+            (async () => {
+                try {
+                    // Dynamic import to avoid circular dependency
+                    const { SpotifyService } = await import('./SpotifyService.js');
+                    const data = await SpotifyService.enrichAlbumData(album.artist, album.title);
+                    console.log(`[SeriesService] 🟢 Spotify Response for "${album.title}":`, data ? 'Found Data' : 'No Data');
+                    return { type: 'spotify', data };
+                } catch (err) {
+                    console.warn('[SeriesService] Spotify enrichment failed:', err);
+                    return { type: 'spotify', error: err };
+                }
+            })()
+        ];
+
+        const results = await Promise.allSettled(services);
+
+        // Process Results
+        let beaData = null;
+        let spotifyData = null;
+
+        results.forEach(result => {
+            if (result.status === 'fulfilled') {
+                const val = result.value;
+                if (val.type === 'bea' && !val.error) beaData = val.data;
+                if (val.type === 'spotify' && !val.error) spotifyData = val.data;
+            }
+        });
+
+        // 3. Merge Results
+        // Clone original album to start fresh
+        const enriched = { ...album, tracks: album.tracks ? [...album.tracks] : [] }
+
+        // Apply Spotify Data
+        if (spotifyData) {
+            enriched.spotifyId = spotifyData.spotifyId
+            enriched.spotifyUrl = spotifyData.spotifyUrl
+            enriched.spotifyPopularity = spotifyData.spotifyPopularity
+            if (spotifyData.spotifyArtwork) enriched.coverUrl = spotifyData.spotifyArtwork
+
+            // Map Spotify popularity to tracks
+            if (spotifyData.spotifyTracks && enriched.tracks) {
+                const popMap = new Map()
+                spotifyData.spotifyTracks.forEach(t => popMap.set(t.name.toLowerCase().trim(), t.popularity))
+
+                enriched.tracks.forEach(track => {
+                    const key = track.title.toLowerCase().trim()
+                    if (popMap.has(key)) {
+                        track.spotifyPopularity = popMap.get(key)
+                    }
+                })
+            }
+        }
+
+        // Apply BEA Data
+        if (beaData) {
+            enriched.bestEverUrl = beaData.bestEverInfo?.url
+            if (beaData.trackRatings && enriched.tracks) {
+                const rateMap = new Map()
+                beaData.trackRatings.forEach(r => {
+                    if (r.rating !== null) rateMap.set(r.title.toLowerCase().trim(), r.rating)
+                })
+
+                enriched.tracks.forEach(track => {
+                    const key = track.title.toLowerCase().trim()
+                    if (rateMap.has(key)) {
+                        track.rating = rateMap.get(key)
+                    }
+                })
+                enriched.acclaim = { hasRatings: true, source: 'surgical-enrichment' }
+            }
+        }
+
+        // 4. Update Store/Cache
+        // Use the existing surgical injection method to handle store updates
+        await this.injectAlbumsIntoViewCache([enriched], seriesId)
+
+        return enriched
+    }
 
     async enrichAllAlbums(seriesId, onProgress) {
         // Stub - actual enrichment via dedicated enrichment services

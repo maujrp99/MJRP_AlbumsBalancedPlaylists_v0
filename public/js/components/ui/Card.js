@@ -268,49 +268,80 @@ export class Card {
         const hasSpotify = !!entity.spotifyId
         const hasUserRanking = !!entity.hasUserRanking || (entity.userRanking?.length > 0)
 
-        const badges = []
+        if (!hasBestEver && !hasSpotify && !hasUserRanking) return null
 
+        // 1. Create Badge Nodes
+        let userBadge = null
         if (hasUserRanking) {
-            const badge = SafeDOM.span({
-                className: 'badge flex items-center gap-1 transition-colors',
+            userBadge = SafeDOM.span({
+                className: 'badge flex items-center gap-1 transition-colors text-[9px] px-1 py-0 h-auto min-h-0',
                 style: { background: '#0EA5E9', color: 'white', border: 'none' },
                 title: 'Your Personal Ranking'
             })
-            badge.appendChild(SafeDOM.fromHTML(getIcon('Star', 'w-3 h-3')))
-            badge.appendChild(SafeDOM.text(' MY RANKING'))
-            badges.push(badge)
+            userBadge.appendChild(SafeDOM.fromHTML(getIcon('Star', 'w-2 h-2')))
+            userBadge.appendChild(SafeDOM.text(' MY RANKING'))
         }
 
+        let beaBadge = null
         if (hasBestEver) {
-            const link = SafeDOM.a({
+            beaBadge = SafeDOM.a({
                 href: `https://www.besteveralbums.com/thechart.php?a=${entity.bestEverAlbumId}`,
                 target: '_blank',
                 rel: 'noopener noreferrer',
-                className: 'badge badge-primary hover:badge-accent transition-colors flex items-center gap-1',
+                className: 'badge badge-primary hover:badge-accent transition-colors flex items-center gap-1 text-[9px] px-1 py-0 h-auto min-h-0',
                 title: 'Ranking by BestEverAlbums'
             })
-            link.appendChild(SafeDOM.fromHTML(getIcon('ExternalLink', 'w-3 h-3')))
-            link.appendChild(SafeDOM.text(' BestEverAlbums'))
-            badges.push(link)
+            beaBadge.appendChild(SafeDOM.fromHTML(getIcon('ExternalLink', 'w-2 h-2')))
+            beaBadge.appendChild(SafeDOM.text(' BestEverAlbums'))
         }
 
+        let spotifyBadge = null
         if (hasSpotify) {
             const spotifyUrl = entity.spotifyUrl || `https://open.spotify.com/album/${entity.spotifyId}`
-            const link = SafeDOM.a({
+            spotifyBadge = SafeDOM.a({
                 href: spotifyUrl,
                 target: '_blank',
                 rel: 'noopener noreferrer',
-                className: 'badge flex items-center gap-1 transition-colors hover:opacity-80',
+                className: 'badge flex items-center gap-1 transition-colors hover:opacity-80 text-[9px] px-1 py-0 h-auto min-h-0',
                 style: { background: '#1DB954', color: 'white', border: 'none' },
                 title: 'Spotify'
             })
-            link.appendChild(SafeDOM.fromHTML(getIcon('Spotify', 'w-3 h-3')))
-            link.appendChild(SafeDOM.text(' Spotify'))
-            badges.push(link)
+            spotifyBadge.appendChild(SafeDOM.fromHTML(getIcon('Spotify', 'w-2 h-2')))
+            spotifyBadge.appendChild(SafeDOM.text(' Spotify'))
         }
 
-        if (badges.length === 0) return null
+        // 2. Assemble Layout
+        // Request: "BEA above. MyRanking Left, Spotify Right."
 
-        return SafeDOM.fragment(badges)
+        const container = SafeDOM.div({ className: 'flex flex-col gap-1 w-full mt-1' })
+
+        // Top Row: BEA
+        if (beaBadge) {
+            const topRow = SafeDOM.div({ className: 'flex justify-start w-full' }, [beaBadge])
+            container.appendChild(topRow)
+        }
+
+        // Bottom Row: Spotify (Left) + User (Right)
+        // Only create row if at least one exists
+        if (userBadge || spotifyBadge) {
+            const bottomRow = SafeDOM.div({ className: 'flex justify-between items-center w-full' })
+
+            // Left side (Spotify)
+            if (spotifyBadge) {
+                bottomRow.appendChild(spotifyBadge)
+            } else {
+                // Spacer if Spotify missing but User exists (to keep User on right)
+                if (userBadge) bottomRow.appendChild(SafeDOM.div({}))
+            }
+
+            // Right side (User)
+            if (userBadge) {
+                bottomRow.appendChild(userBadge)
+            }
+
+            container.appendChild(bottomRow)
+        }
+
+        return container
     }
 }

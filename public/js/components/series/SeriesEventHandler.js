@@ -25,6 +25,7 @@ export default class SeriesEventHandler extends Component {
      * @param {Function} config.props.onEditSeries - Callback for edit series
      * @param {Function} config.props.onDeleteSeries - Callback for delete series
      * @param {Function} config.props.onAlbumRemoved - Callback after album removal
+     * @param {Function} config.props.onRefetchMetadata - Callback for refetch
      */
     constructor(config) {
         super(config);
@@ -188,6 +189,12 @@ export default class SeriesEventHandler extends Component {
             // Sprint 20: User Ranking
             case 'rank-album':
                 this.handleRankAlbum(album);
+                break;
+
+            // Sprint 22: Refetch Metadata
+            case 'refetch-metadata':
+                const { onRefetchMetadata } = this.props;
+                if (onRefetchMetadata) onRefetchMetadata(album);
                 break;
         }
     }

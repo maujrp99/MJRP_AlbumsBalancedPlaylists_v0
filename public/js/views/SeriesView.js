@@ -116,7 +116,8 @@ export default class SeriesView extends BaseView {
             props: {
                 onEditSeries: (sid) => this.modalsManager?.openEdit(sid),
                 onDeleteSeries: (sid) => this.modalsManager?.openDelete(sid),
-                onAlbumRemoved: () => this.controller.refresh()
+                onAlbumRemoved: () => this.controller.refresh(),
+                onRefetchMetadata: (album) => this.controller.handleRefetchMetadata(album)
             }
         });
         this.components.eventHandler.mount();

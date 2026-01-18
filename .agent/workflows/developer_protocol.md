@@ -13,11 +13,12 @@ description: Golden rules for development
    - [ ] **Missing Docs?**: Ask the user: "Do we need an SDD for this?"
    - [ ] Create/Update the plan if required.
    - [ ] Check, read, analyze `docs/CONSTITUTION.md` for following it.
-   - [ ] Check, read, analyze `agent/developer_rules.md` for following it.
+   - [ ] Check, read, analyze `.agent/rules/developer_rules.md` for following it.
 
 2. **Execution (SDD)**
    - [ ] If strictly new feature -> Check `specs/`.
-   - [ ] Implement changes (Modular/Componentized). Follow the defined architecture standards and design patters.
+   - [ ] Implement changes (Modular/Componentized). Follow the defined system architecture standards and design patters.
+   - [ ] Run build
 
 3. **Verification**
    - [ ] Run Tests (`npm test`).

@@ -14,87 +14,158 @@ import { TracksTable } from '../ranking/TracksTable.js';
 export class AlbumCardRenderer {
     /**
      * Render a Compact Album Card (Grid view)
+     * Redesigned Sprint 22: Bordered Card, Vertical Actions, Refetch Button
+     * @param {Object} album 
+     * @returns {string} HTML string
+     */
+    /**
+     * Render the Visual Header Component (Reusable)
+     * Includes Full Width Cover + Horizontal Action Bar
+     * extracted for reuse in both Grid and List views per user request.
+     * @param {Object} album
+     * @returns {HTMLElement} DOM Element (Container with Cover+Actions)
+     */
+    static renderVisualHeader(album) {
+        const coverUrl = albumLoader.getArtworkUrl(album, 300); // Consistent quality
+
+        // 1. Cover (Full Width / Aspect Square)
+        const coverImg = SafeDOM.img({
+            src: coverUrl,
+            alt: album.title,
+            className: 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-105',
+            loading: 'lazy'
+        });
+
+        const coverSection = SafeDOM.div({
+            className: 'relative aspect-square overflow-hidden group border-b border-white/5',
+            dataset: { action: 'view-modal', id: album.id }
+        }, [
+            coverImg,
+            // Hover overlay
+            SafeDOM.div({ className: 'absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer' }, [
+                SafeDOM.fromHTML(getIcon('Maximize2', 'w-10 h-10 text-white drop-shadow-lg'))
+            ])
+        ]);
+
+        // 2. Actions Bar (Horizontal, immediately below cover)
+        // Refetch button as last item
+        const actions = [
+            { icon: 'Star', label: album.hasUserRanking ? 'Ranked' : 'Rank', action: 'rank-album', class: album.hasUserRanking ? 'text-sky-400 bg-sky-400/10' : 'text-gray-400 hover:text-white hover:bg-white/5' },
+            { icon: 'Plus', label: 'Add', action: 'add-to-inventory', class: 'text-gray-400 hover:text-white hover:bg-white/5' },
+            { icon: 'Trash', label: 'Del', action: 'remove-album', class: 'text-gray-400 hover:text-red-400 hover:bg-red-400/10' },
+            { icon: 'RefreshCw', label: 'Refetch', action: 'refetch-metadata', class: 'text-gray-500 hover:text-accent-primary hover:bg-accent-primary/10 ml-auto' }
+        ];
+
+        const actionsBar = SafeDOM.div({
+            className: 'flex items-center justify-between p-2 border-b border-white/5 bg-gray-900/50'
+        }, actions.map(btn => {
+            const b = SafeDOM.button({
+                className: `flex-1 flex justify-center items-center py-1.5 rounded mx-0.5 transition-colors ${btn.class}`,
+                title: btn.label,
+                dataset: { action: btn.action, id: album.id }
+            });
+            b.appendChild(SafeDOM.fromHTML(getIcon(btn.icon, 'w-4 h-4')));
+            return b;
+        }));
+
+        const container = SafeDOM.div({ className: 'flex flex-col bg-gray-800' }, [coverSection, actionsBar]);
+        return container;
+    }
+
+    /**
+     * Render a Compact Album Card (Grid view)
+     * Redesigned Sprint 22: Bordered Card, Vertical Actions, Refetch Button
      * @param {Object} album 
      * @returns {string} HTML string
      */
     static renderCompact(album) {
-        const coverUrl = albumLoader.getArtworkUrl(album, 300);
+        // Reuse visual header (Cover + Actions)
+        const visualHeader = this.renderVisualHeader(album);
 
-        const cardProps = {
-            variant: 'grid',
-            entity: album,
-            title: album.title,
-            subtitle: album.artist,
-            image: coverUrl,
-            badge: album.year,
-            actions: [
-                // Sprint 20: User Ranking button (Dynamically styled)
-                {
-                    icon: 'Star',
-                    // Dynamic Label & Style based on state
-                    label: album.hasUserRanking ? 'Ranked' : 'Rank It',
-                    action: 'rank-album',
-                    // Add checkmark if ranked, distinct styling
-                    class: album.hasUserRanking
-                        ? 'text-sky-400 font-bold bg-sky-500/20 ring-1 ring-sky-500/50'
-                        : 'text-sky-500 hover:text-sky-400'
-                },
-                { icon: 'Plus', label: 'Add', action: 'add-to-inventory' },
-                { icon: 'Trash', label: 'Remove', action: 'remove-album' }
-            ]
-        };
+        // 3. Details Section
+        const titleEl = SafeDOM.h3({
+            className: 'font-bold text-white text-base leading-tight line-clamp-2 mb-1 pt-2',
+            title: album.title
+        }, album.title);
 
-        return Card.renderHTML(cardProps);
+        // Artist + Year Row (Year pushed to right, bordered, smaller)
+        const artistRow = SafeDOM.div({ className: 'flex justify-between items-center gap-2 mb-2' }, [
+            SafeDOM.span({ className: 'text-sm text-gray-400 truncate min-w-0', title: album.artist }, album.artist),
+            album.year ? SafeDOM.span({ className: 'text-[10px] text-gray-500 border border-white/10 px-1.5 py-0.5 rounded bg-white/5 shrink-0 tabular-nums' }, album.year) : null
+        ]);
+
+        // Badges Row (Smaller font size requested: text-[10px] or text-xs)
+        const badgesRow = SafeDOM.div({ className: 'flex flex-wrap gap-1 mt-auto pb-2 text-xs opacity-90' },
+            Card.renderRankingBadge(album) ? [Card.renderRankingBadge(album)] : []
+        );
+
+        const detailsSection = SafeDOM.div({ className: 'px-3 flex flex-col flex-1 bg-gray-800' }, [
+            titleEl,
+            artistRow,
+            badgesRow
+        ]);
+
+        // Card Container
+        const card = SafeDOM.div({
+            className: 'flex flex-col rounded-xl overflow-hidden border border-white/10 bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 isolate',
+            dataset: { id: album.id }
+        }, [visualHeader, detailsSection]);
+
+        return card.outerHTML;
     }
 
     /**
      * Render an Expanded Album Card (List/Detail view)
+     * Redesigned Sprint 22: Consistent visual look with Grid layout (shared Header)
      * @param {Object} album 
      * @param {number} idx - For animation delay
      * @returns {string} HTML string
      */
-    /**
-     * Render an Expanded Album Card (List/Detail view)
-     * Uses Card.renderHTML with 'expanded' variant
-     */
     static renderExpanded(album, idx = 0) {
-        const coverUrl = albumLoader.getArtworkUrl(album, 150);
+        // 1. Visual Header (Cover + Actions) - Reused from Grid
+        // Wrapped in a fixed width container for List View sidebar
+        const visualHeader = this.renderVisualHeader(album);
 
-        const cardProps = {
-            variant: 'expanded',
-            entity: album,
-            title: album.title,
-            subtitle: album.artist,
-            image: coverUrl,
-            content: SafeDOM.fromHTML(`
-                <div class="flex flex-wrap gap-2 text-sm mb-4">
-                     ${album.year ? `<span class="badge badge-neutral">${album.year}</span>` : ''}
-                     <span class="badge badge-neutral">${album.tracks?.length || 0} tracks</span>
-                </div>
-                
-                <!-- Detailed Ranked Table (Print 3 Style) -->
-                ${AlbumCardRenderer.renderDetailedTable(album)}
-            `),
-            actions: [
-                // Sprint 20: User Ranking button
-                {
-                    icon: 'Star',
-                    label: album.hasUserRanking ? 'Ranked' : 'Rank It',
-                    action: 'rank-album',
-                    class: album.hasUserRanking
-                        ? 'text-sky-400 font-bold bg-sky-500/20 ring-1 ring-sky-500/50'
-                        : 'text-sky-500 hover:text-sky-400'
-                },
-                { icon: 'Plus', label: 'Inventory', action: 'add-to-inventory' },
-                { icon: 'Trash', label: 'Remove', action: 'remove-album', class: 'tech-btn-danger' }
-            ]
-        };
+        const leftColumn = SafeDOM.div({
+            className: 'w-32 md:w-40 shrink-0 rounded-xl overflow-hidden shadow-lg border border-white/10 self-start'
+        }, [visualHeader]);
 
-        return `
-            <div class="animate-in fade-in slide-in-from-bottom-4 duration-500" style="animation-delay: ${idx * 50}ms">
-                ${Card.renderHTML(cardProps)}
-            </div>
-        `;
+        // 3. Info Section
+        const titleEl = SafeDOM.h3({ className: 'text-xl font-bold text-white leading-tight' }, [
+            SafeDOM.text(album.title),
+            album.year ? SafeDOM.span({ className: 'text-gray-400 font-normal ml-2 text-base' }, `(${album.year})`) : null
+        ]);
+
+        // Artist only (Refetch moved to visual header)
+        const artistRow = SafeDOM.div({ className: 'flex items-center gap-3 mb-2' }, [
+            SafeDOM.p({ className: 'text-lg text-accent-primary' }, album.artist)
+        ]);
+
+        const badgesRow = SafeDOM.div({ className: 'flex flex-wrap gap-1 mt-auto' },
+            Card.renderRankingBadge(album) ? [Card.renderRankingBadge(album)] : []
+        );
+
+        const infoCol = SafeDOM.div({ className: 'flex-1 min-w-0' }, [
+            titleEl,
+            artistRow,
+            badgesRow,
+            // Track Table Injection
+            SafeDOM.fromHTML(this.renderDetailedTable(album))
+        ]);
+
+        // Layout Assembly
+        const innerLayout = SafeDOM.div({ className: 'flex gap-4' }, [
+            leftColumn,
+            infoCol
+        ]);
+
+        const card = SafeDOM.div({
+            className: 'expanded-album-card glass-panel p-6 mb-4 rounded-xl border border-white/5 animate-in fade-in slide-in-from-bottom-2',
+            style: { animationDelay: `${idx * 50}ms` },
+            dataset: { id: album.id }
+        }, [innerLayout]);
+
+        return card.outerHTML;
     }
 
     /**
