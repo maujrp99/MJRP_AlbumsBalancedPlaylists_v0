@@ -105,23 +105,27 @@ export class TracksTable {
         }, userRankContent)
 
         // 4. Acclaim Rank (BestEverAlbums - Orange)
-        let claimContent
+        // 4. Acclaim Rank (BestEverAlbums - Orange)
+        const badges = []
         if (hasRank) {
-            const badges = [
+            badges.push(
                 SafeDOM.span({
                     className: 'inline-flex items-center justify-center w-8 h-8 rounded-full bg-brand-orange/10 text-brand-orange text-sm font-bold border border-brand-orange/20 shadow-lg shadow-brand-orange/5'
                 }, `#${track.rank}`)
-            ]
+            )
+        }
 
-            if (track.rating) {
-                badges.push(SafeDOM.span({
-                    className: 'flex items-center gap-1 text-sm font-bold text-white/90'
-                }, [
-                    SafeDOM.span({ className: 'text-brand-orange' }, '★'),
-                    SafeDOM.text(Number(track.rating).toFixed(0))
-                ]))
-            }
+        if (track.rating !== null && track.rating !== undefined) {
+            badges.push(SafeDOM.span({
+                className: 'flex items-center gap-1 text-sm font-bold text-white/90'
+            }, [
+                SafeDOM.span({ className: 'text-brand-orange' }, '★'),
+                SafeDOM.text(Number(track.rating).toFixed(0))
+            ]))
+        }
 
+        let claimContent
+        if (badges.length > 0) {
             claimContent = SafeDOM.div({ className: 'flex items-center gap-2' }, badges)
         } else {
             claimContent = SafeDOM.span({ className: 'text-white/10 text-xs' }, '-')

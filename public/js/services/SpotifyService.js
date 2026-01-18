@@ -1,5 +1,6 @@
 
 import { SpotifyAuthService } from './SpotifyAuthService.js'
+import { NormalizationUtils } from '../utils/NormalizationUtils.js'
 
 /**
  * SpotifyService
@@ -77,14 +78,8 @@ export const SpotifyService = {
     async searchAlbum(artist, albumName) {
         if (!artist || !albumName) return null
 
-        // Clean album name - remove common suffixes that may differ
-        let cleanAlbumName = albumName
-            .replace(/\s*\(Remastered(\s*\d+)?\)\s*/gi, '')
-            .replace(/\s*\(Deluxe\s*(Edition)?\)\s*/gi, '')
-            .replace(/\s*\(Anniversary\s*Edition\)\s*/gi, '')
-            .replace(/\s*\(Expanded\s*Edition\)\s*/gi, '')
-            .replace(/\s*-\s*EP\s*$/gi, '')
-            .trim()
+        // Clean album name using central utility
+        let cleanAlbumName = NormalizationUtils.cleanTitle(albumName)
 
         // Try with structured query first
         let result = await this._searchAlbumQuery(artist, cleanAlbumName)
@@ -133,8 +128,12 @@ export const SpotifyService = {
      * @private
      */
     _similarityScore(str1, str2) {
-        const s1 = str1.toLowerCase().replace(/[^a-z0-9]/g, '')
-        const s2 = str2.toLowerCase().replace(/[^a-z0-9]/g, '')
+        const s1 = NormalizationUtils.toCore(str1)
+        const s2 = NormalizationUtils.toCore(str2)
+        if (s1 === s2) return 1
+        // Containment bonus for things like Blonde vs Blond
+        if (s1.includes(s2) || s2.includes(s1)) return 0.9
+
         const maxLen = Math.max(s1.length, s2.length)
         if (maxLen === 0) return 1
         const distance = this._levenshteinDistance(s1, s2)
@@ -145,36 +144,56 @@ export const SpotifyService = {
      * Search by artist only and fuzzy match album name
      * @private
      */
-    async _searchByArtistFuzzy(artist, targetAlbumName) {
+    async _searchByArtist(artistName) {
+        // Cleaning: Preserve diacritics for Spotify but remove other noise
+        // or just use NormalizationUtils.toCore to be safe if search fails
+        const q = `artist:${artistName}`.replace(/['"()]/g, '')
         const params = new URLSearchParams({
-            q: `artist:${artist.replace(/[^\w\s.-]/g, '')}`,
+            q,
             type: 'album',
             limit: 20
         })
+        return await this._fetch(`/search?${params.toString()}`)
+    },
 
+    /**
+     * Search by artist only and fuzzy match album name
+     * @private
+     */
+    async _searchByArtistFuzzy(artist, targetAlbumName) {
         try {
-            const data = await this._fetch(`/search?${params.toString()}`)
+            console.log(`[SpotifyService] Trying artist-only search for: "${artist}"`)
+            const data = await this._searchByArtist(artist)
+            const albums = data?.albums?.items || []
+            if (albums.length === 0) return null
 
-            if (!data.albums || data.albums.items.length === 0) {
-                return null
-            }
+            const targetCore = NormalizationUtils.toFuzzyCore(targetAlbumName)
+            const targetArtistCore = NormalizationUtils.normalizeArtist(artist)
 
             // Score all albums by similarity to target name
-            const scored = data.albums.items.map(album => ({
-                album,
-                score: this._similarityScore(album.name, targetAlbumName)
-            }))
+            const scored = albums.map(album => {
+                const candidateTitleCore = NormalizationUtils.toFuzzyCore(album.name)
+                const candidateArtistCore = NormalizationUtils.normalizeArtist(album.artists?.[0]?.name || '')
+
+                // Score based on whether title matches (exact or containment)
+                let score = (candidateTitleCore.includes(targetCore) || targetCore.includes(candidateTitleCore)) ? 1 : 0
+
+                // Boost if artist also matches
+                const artistSim = this._similarityScore(album.artists?.[0]?.name || '', artist)
+                if (artistSim > 0.8) score += 0.5
+
+                return { album, score }
+            }).filter(c => c.score >= 0.8) // Lowered from 1 to 0.8 to catch close matches
 
             // Sort by score descending
             scored.sort((a, b) => b.score - a.score)
 
-            // Accept if best match has score > 0.5 (50% similar)
-            if (scored[0].score > 0.5) {
-                console.log(`[SpotifyService] Fuzzy match found: "${scored[0].album.name}" (score: ${(scored[0].score * 100).toFixed(0)}%)`)
+            if (scored.length > 0) {
+                console.log(`[SpotifyService] Fuzzy match found: "${scored[0].album.name}" (score: ${scored[0].score})`)
                 return scored[0].album
             }
 
-            console.log(`[SpotifyService] No good fuzzy match. Best: "${scored[0].album.name}" (score: ${(scored[0].score * 100).toFixed(0)}%)`)
+            console.log(`[SpotifyService] No good fuzzy match for artist "${artist}".`)
             return null
         } catch (error) {
             console.warn('[SpotifyService] Artist-only search failed:', error.message)
@@ -187,9 +206,10 @@ export const SpotifyService = {
      * @private
      */
     async _searchAlbumQuery(artist, albumName) {
-        // Try structured query first
-        const query = `artist:${artist} album:${albumName}`
-            .replace(/[^\w\s:.-]/g, '')
+        // Clean query but preserve diacritics. Spotify handles them well.
+        const cleanArtist = artist.replace(/['"()]/g, '')
+        const cleanAlbum = albumName.replace(/['"()]/g, '')
+        const query = `artist:${cleanArtist} album:${cleanAlbum}`
 
         const params = new URLSearchParams({
             q: query,

@@ -4500,3 +4500,21 @@ The user suspects the current "patch" approach is insufficient and requires a "g
   - **Component**: SeriesGridRenderer
   - **Description**: `ReferenceError: LoadMoreButton is not defined` when rendering series groups > 12 albums.
   - **Correction**: Added missing import `import { LoadMoreButton } from '../ui/LoadMoreButton.js';` to `SeriesGridRenderer.js`.
+
+### [2026-01-18] Sprint 22.5 - Enrichment Fuzzy Matching Refactor (Deep Debug & Fix)
+
+**Issue**: Initial fuzzy matching failed for several edge cases:
+- **Tiësto**: Mismatch due to diacritic (ë vs e).
+- **Joni Mitchell - Court and Spark (2022 Remaster)**: Regex missed "(2022 Remaster)" because it was too specific.
+- **Robert Plant - Dreamland (Bonus Tracks) [Remastered]**: Combined brackets and nested specific suffixes.
+- **Ratings Null**: Track matching in `BEAEnrichmentHelper` failed because it didn't handle suffixes/brackets properly.
+
+**Fixes implemented**:
+1.  **Diacritic Removal**: Added `normalize('NFD').replace(/[\u0300-\u036f]/g, '')` to all normalization logic (frontend and backend).
+2.  **Aggressive Suffix Cleaning**: Updated regex to catch any content containing keywords like "Remaster", "Edition", "Bonus", "Disc" inside parentheses or brackets.
+3.  **Containment Scoring**: Switched from Levenshtein to Containment Check (`toCore(A).includes(toCore(B))`) for Spotify Search.
+4.  **Artist Match Boost**: Added +0.5 score boost if the normalized artist name matches exactly, ensuring correct selection among multiple releases.
+5.  **Unified Core Normalization**: Synced `server/lib/normalize.js` and `public/js/utils/NormalizationUtils.js` to guarantee consistency between searching and matching.
+6.  **Track Matching**: Updated `BEAEnrichmentHelper.js` to use `toCore(title)` for track matching, resolving "Track Title (Remastered)" vs "Track Title" mismatches.
+
+**Result**: High confidence in matching "In My Memory", "Era Vulgaris", and "Court and Spark" across all services.

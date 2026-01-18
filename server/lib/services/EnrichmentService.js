@@ -39,31 +39,46 @@ class EnrichmentService {
             try {
                 const normalizeKey = await this.normalizeRankingKey()
 
-                // Index the evidence by normalized key
+                // 1. Index evidence by normalized key
                 const evidenceIndex = new Map()
                 bestEver.evidence.forEach(e => {
                     const trackTitle = e.trackTitle || e.title
                     if (trackTitle && e.rating !== undefined && e.rating !== null) {
                         const key = normalizeKey(trackTitle)
-                        console.log(`[Enrichment DEBUG] BestEver track: "${trackTitle}" -> key: "${key}" -> rating: ${e.rating}`)
                         if (key) evidenceIndex.set(key, e.rating)
                     }
                 })
 
-                console.log(`[Enrichment DEBUG] Evidence index has ${evidenceIndex.size} entries:`, [...evidenceIndex.keys()])
+                // 2. Map to request tracks (Two-Pass Match)
+                const { toFuzzyCore } = require('../normalize')
 
-                // Map to request tracks
                 tracks.forEach(t => {
-                    const key = normalizeKey(t.title || t.name || '')
-                    console.log(`[Enrichment DEBUG] Apple track: "${t.title}" -> key: "${key}" -> hasMatch: ${evidenceIndex.has(key)}`)
+                    const title = t.title || t.name || ''
+                    const standardKey = normalizeKey(title)
                     let rating = null
-                    if (key && evidenceIndex.has(key)) {
-                        rating = Number(evidenceIndex.get(key))
+
+                    // Pass 1: Standard Match
+                    if (standardKey && evidenceIndex.has(standardKey)) {
+                        const r = evidenceIndex.get(standardKey)
+                        if (r !== null && r !== undefined) rating = Number(r)
                     }
-                    ratingsMap.push({ title: t.title, rating })
+                    // Pass 2: Fuzzy/Edge Case Match
+                    else {
+                        const fuzzyKey = toFuzzyCore(title)
+                        // Try matching against fuzzy keys of evidence
+                        for (const e of bestEver.evidence) {
+                            if (toFuzzyCore(e.trackTitle || e.title) === fuzzyKey) {
+                                if (e.rating !== null && e.rating !== undefined) {
+                                    rating = Number(e.rating)
+                                }
+                                break
+                            }
+                        }
+                    }
+                    ratingsMap.push({ title, rating })
                 })
 
-                console.log(`[Enrichment] Success for ${title}: Found ${evidenceIndex.size} ratings, matched ${ratingsMap.filter(r => r.rating !== null).length} tracks.`)
+                console.log(`[Enrichment] Success for ${title}: Found ${bestEver.evidence.length} rankings, matched ${ratingsMap.filter(r => r.rating !== null).length} tracks.`)
 
             } catch (e) {
                 console.error('[Enrichment] Mapping failed:', e)

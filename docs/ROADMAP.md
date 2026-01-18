@@ -8,13 +8,16 @@
 
 ## 🚧 Current Sprint
 
-### Sprint 22: Encapsulate Filter Logic, BEA Enrichment and Improve the Enrichment Results
-**Goal**: Expand the blending experience with cross-series context and enhanced discovery tools.
-**Status**: 🏗️ **IN PROGRESS**
-**Scope**:
-- [x] Encapsulate Filter Logic.
-- [x] Encapsulate BEA Enrichment.
-- [ ] Improve the Enrichment Results for BEA and Spotify.
+### Sprint 22: Enrichment & Advanced Filters [DONE]
+- [x] Integrate BestEverAlbums (BEA) ratings.
+- [x] Encapsulate BEA Logic in `BEAEnrichmentHelper.js`.
+- [x] Refactor Filters to `FilterToolbar.js` (Resuable).
+- [x] Standardize UI Labels and Sort Options.
+
+### Sprint 22.5: Fuzzy Enrichment Matching [DONE]
+- [x] Implement `NormalizationUtils.js` for string cleaning.
+- [x] Improve BEA matching success rate via fuzzy lookup.
+- [x] Enhance Spotify search resilience for mismatched metadata.
 
 ---
 

@@ -9,6 +9,7 @@
  */
 
 import { apiClient } from '../api/client.js'
+import { NormalizationUtils } from '../utils/NormalizationUtils.js'
 
 /**
  * Apply BestEverAlbums enrichment to an album.
@@ -128,5 +129,5 @@ function applyBEAData(album, enrichmentData) {
  */
 function normalizeTrackTitle(title) {
     if (!title) return ''
-    return title.toLowerCase().trim()
+    return NormalizationUtils.toCore(title)
 }

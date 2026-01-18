@@ -1,4 +1,74 @@
 // Helpers to normalize provider responses into the canonical album object
+
+const removeDiacritics = (str) => {
+  if (!str) return ''
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+}
+
+function cleanTitle(title) {
+  if (!title || typeof title !== 'string') return ''
+
+  return removeDiacritics(title)
+    // Common edition/remaster suffixes in parentheses or brackets
+    .replace(/\s*[\(\[][^()]*?(?:Remaster|Edition|Version|Anniversary|Expanded|Special|Bonus|Disc|Digital|Live)[^()]*?[\)\]]/gi, ' ')
+    .replace(/\s*-\s*.*?EP\s*$/gi, '')
+    .replace(/\s*-\s*.*?Single\s*$/gi, '')
+    .replace(/\s*-\s*.*?(?:Remaster|Edition|Version|Mix).*?$/gi, ' ') // " - 2022 Remaster"
+    .trim()
+    .replace(/\s+/g, ' ') // Collapse multiple spaces
+}
+
+function normalizeArtist(name) {
+  if (!name || typeof name !== 'string') return ''
+  let normalized = removeDiacritics(name).toLowerCase().trim()
+  if (normalized.startsWith('the ')) normalized = normalized.substring(4)
+  return normalized.replace(/[^a-z0-9]/g, '')
+}
+
+/**
+ * Standard normalization for matching.
+ */
+function toCore(str) {
+  if (!str) return ''
+  return removeDiacritics(str).toLowerCase()
+    .replace(/\s*[\(\[][^()]*?[\)\]]/g, '') // Remove parentheses/brackets content entirely
+    .replace(/[^a-z0-9]/g, '')
+    .trim()
+}
+
+/**
+ * Robust version for edge cases. Handles "The " prefix and aggressive pruning.
+ */
+function toFuzzyCore(str) {
+  if (!str) return ''
+  // BEA often appends " by [Artist]" to labels in suggest responses
+  // Also prune subtitles after : or - (e.g. "Unreal Unearth: Unheard" -> "Unreal Unearth")
+  let core = str.toLowerCase().split(' by ')[0].split(':')[0].split(' - ')[0]
+
+  core = removeDiacritics(core)
+    .replace(/\s*[\(\[][^()]*?[\)\]]/g, '') // Remove parentheses/brackets content entirely
+    .replace(/[^a-z0-9]/g, '')
+    .trim()
+
+  if (core.startsWith('the')) core = core.substring(3)
+
+  // Handle Blonde -> Blond, etc. (suffix variation)
+  if (core.endsWith('e') && core.length > 4) core = core.slice(0, -1)
+
+  return core
+}
+
+function normalizeFuzzy(str) {
+  if (!str) return ''
+  let norm = removeDiacritics(str).toLowerCase()
+    .replace(/\s*[\(\[][^()]*?(?:Remaster|Edition|Version|Anniversary|Expanded|Special|Bonus|Disc|Digital|Live)[^()]*?[\)\]]/gi, ' ')
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  if (norm.startsWith('the ')) norm = norm.substring(4)
+  return norm
+}
+
 function cleanFencedMarkdown(s) {
   if (!s || typeof s !== 'string') return s
   let cleaned = s
@@ -290,5 +360,10 @@ module.exports = {
   tryParseJson,
   extractRankingEntries,
   extractAndValidateRankingEntries,
-  rankingEntriesToSources
+  rankingEntriesToSources,
+  cleanTitle,
+  normalizeArtist,
+  toCore,
+  toFuzzyCore,
+  normalizeFuzzy
 }

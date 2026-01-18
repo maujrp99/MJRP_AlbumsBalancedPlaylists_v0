@@ -100,19 +100,32 @@ export class AlbumsStore {
         } else {
             const index = albums.indexOf(existing)
 
-            // ARCH-FIX: Safe Merge - Do not blindly overwrite.
-            // When loading ALL series, the same album might appear in multiple series contexts.
-            // We want to preserve the fact that it exists.
-            // For now, checks if we have better data (e.g. valid ID vs undefined)
+            // ARCH-FIX: Safe Merge - Do not blindly overwrite, but ENSURE enrichment data is preserved.
+            // If the incoming album has enrichment IDs (bestEver, spotify) that the existing one lacks,
+            // or if it's an explicit "upgrade" from ghost/query to full data.
             const isUpgrade = !existing.id && album.id;
 
             if (isUpgrade) {
                 albums[index] = album;
             } else {
-                // If it's just a re-add of the same album from a different context, 
-                // we might want to track multiple sourceSeriesIds if we supported it.
-                // For now, keep the existing one which might be more complete.
-                // console.log(`[AlbumsStore] Skipping overwrite of ${album.title}`);
+                // MERGE Enrichment Data (Crucial for UI badges and ratings)
+                if (album.bestEverAlbumId) existing.bestEverAlbumId = album.bestEverAlbumId;
+                if (album.bestEverUrl) existing.bestEverUrl = album.bestEverUrl;
+                if (album.spotifyId) existing.spotifyId = album.spotifyId;
+                if (album.spotifyUrl) existing.spotifyUrl = album.spotifyUrl;
+                if (album.spotifyPopularity) existing.spotifyPopularity = album.spotifyPopularity;
+                if (album.acclaim) existing.acclaim = album.acclaim;
+
+                // If the new album has enriched tracks, update the existing one.
+                // We assume if one has ratings and the other doesn't, we take the one with ratings.
+                if (album.tracks && album.tracks.some(t => t.rating !== null && t.rating !== undefined)) {
+                    existing.tracks = album.tracks;
+                    // FIX: Also update tracksOriginalOrder as it is used for the primary track table rendernig
+                    if (album.tracksOriginalOrder) {
+                        existing.tracksOriginalOrder = album.tracksOriginalOrder;
+                    }
+                }
+
                 // Issue #151: Merge seriesIds context
                 if (album.seriesIds && Array.isArray(album.seriesIds)) {
                     if (!existing.seriesIds) existing.seriesIds = []

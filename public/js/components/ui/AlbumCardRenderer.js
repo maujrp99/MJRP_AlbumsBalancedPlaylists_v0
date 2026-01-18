@@ -187,8 +187,8 @@ export class AlbumCardRenderer {
                 ...track,
                 rank: enriched?.rank || track.rank || 999,
                 userRank: track.userRank, // Ensure userRank is passed through (injected by Controller)
-                rating: enriched?.rating || track.rating || null,
-                spotifyPopularity: (enriched?.spotifyPopularity !== undefined) ? Number(enriched.spotifyPopularity) : (track.spotifyPopularity || -1),
+                rating: (enriched && enriched.rating !== undefined && enriched.rating !== null) ? enriched.rating : (track.rating !== undefined ? track.rating : null),
+                spotifyPopularity: (enriched?.spotifyPopularity !== undefined && enriched?.spotifyPopularity !== null) ? Number(enriched.spotifyPopularity) : (track.spotifyPopularity || -1),
                 position: Number(track.position) || (idx + 1),
                 duration: enriched?.duration || track.duration || 0
             }

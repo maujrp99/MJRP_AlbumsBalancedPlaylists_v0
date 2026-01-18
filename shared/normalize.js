@@ -2,7 +2,7 @@
  * Normalizes a string for fuzzy matching/deduplication.
  * Removes diacritics, replaces non-alphanumerics with space, collapses spaces, and lowercases.
  *
- * @param {string} s - The string to normalize.
+ * @param {string} str - The string to normalize.
  * @returns {string} The normalized string.
  */
 export function normalizeKey(str) {

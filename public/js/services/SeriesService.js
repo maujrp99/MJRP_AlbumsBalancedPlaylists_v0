@@ -371,8 +371,13 @@ export class SeriesService {
         });
 
         // 3. Merge Results
-        // Clone original album to start fresh
-        const enriched = { ...album, tracks: album.tracks ? [...album.tracks] : [] }
+        // Clone original album to start fresh, ensuring we preserve both track lists
+        const enriched = {
+            ...album,
+            tracks: album.tracks ? [...album.tracks] : [],
+            tracksOriginalOrder: album.tracksOriginalOrder ? [...album.tracksOriginalOrder] : undefined
+        }
+        console.log(`[SeriesService] Merging results. Enriched has tracksOriginalOrder? ${!!enriched.tracksOriginalOrder}`)
 
         // Apply Spotify Data
         if (spotifyData) {
