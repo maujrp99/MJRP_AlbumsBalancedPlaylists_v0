@@ -39,8 +39,9 @@ The ranking system strictly follows the Container/Presenter pattern.
 | **`TracksTabs.js`** | **Mobile** | • **Adaptive UI**: Instead of squeezing columns, it uses Tabs to toggle the *context*.<br>• **Tab 1 (Original)**: Shows standard track numbers.<br>• **Tab 2 (Acclaim)**: Highlights critical ranking badges.<br>• **Tab 3 (Spotify)**: Visualizes popularity bars next to track names. |
 | **`UserRankModal.js`** | **Universal** | • **Interactive State**: Glass-morphism modal for drag-and-drop ranking.<br>• **SortableJS**: Powers the reordering logic.<br>• **Persistence**: Saves directly to `UserRankingRepository`. |
 
-### Updated `TracksTable.js` (Sprint 20)
+### Updated `TracksTable.js` (Sprint 20 & 22.6)
 *   **Columns**: Position, Title, **My Rank** (User), Rank (BEA), Popularity (Spotify), Duration.
+*   **Decoupling Logic**: Ratings (★88) are now displayed independently of ranking badges (#5). A track can be rated without being ranked in the top chart.
 *   **Stats Header**: Displays Average Acclaim, Spotify Popularity, and **My Average** (User) statistics at the top.
 
 

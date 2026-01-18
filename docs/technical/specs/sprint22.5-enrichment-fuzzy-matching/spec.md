@@ -1,4 +1,4 @@
-# Specification: Sprint 22.5 - Fuzzy Enrichment Matching
+# Specification: Sprint 22.5 - Fuzzy Enrichment Matching [IMPLEMENTED]
 
 ## 1. Goal
 Improve the success rate of album enrichment from external sources (Spotify, BestEverAlbums) by implementing fuzzy matching and normalization logic for artist and album names.

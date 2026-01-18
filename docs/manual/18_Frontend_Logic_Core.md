@@ -140,7 +140,11 @@ How `server_logic.md` connects to this document.
 
 | Layer | Component | Responsibility | Data Shape |
 | :--- | :--- | :--- | :--- |
-| **SERVER** | `fetchRanking.js` | **Acquisition**. Scrapes BEA, calls Spotify, queries AI. Aggregates data into the Album object. | `album.bestEverEvidence`, `album.rankingAcclaim` (Raw Arrays) |
+### Enrichment (Sprint 22)
+*   **Method**: `refetchAlbumMetadata(album, seriesId)`
+*   **Parallel Execution**: Calls `BEAEnrichmentHelper` and `SpotifyService` concurrently.
+*   **Merge Logic**: Carefully merges enriched data back into the album object. **Crucial**: Explicitly preserves `tracksOriginalOrder` to ensure UI stability.
+*   **Cache Update**: Uses surgical injection to update the store without a full reload.
 | **CLIENT** | `TrackTransformer` | **Normalization**. Maps raw server arrays to canonical properties on the `Track` object. | `track.acclaimRank`, `track.spotifyPopularity` (Unified Properties) |
 | **CLIENT** | `RankingStrategy` | **Sorting**. Uses the normalized properties to decide `track._rank`. | `track._rank = 1` |
 | **CLIENT** | `BaseAlgorithm` | **Distribution**. Uses `_rank` to move tracks into Playlists. | `playlist.tracks.push(track)` |

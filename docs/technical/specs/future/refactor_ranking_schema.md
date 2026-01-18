@@ -1,51 +1,50 @@
 # Refactor Plan: Consolidated Ranking Schema (Technical Debt)
 
 ## Context
-The current implementation of the `Album` and `Track` models uses a **Flattened Model** where ranking data is stored directly on track objects (`rating`, `spotifyPopularity`, `acclaimRank`).
+The current implementation suffers from a "Flattened Model" where:
+1.  **Backend (`fetchRanking.js`)**: Eagerly consolidates data using `mergeRankingEvidence`, picking winners and discarding source provenance.
+2.  **Frontend Normalization (`TrackTransformer`)**: Flattens raw server data into single `rating` and `spotifyPopularity` fields on the `Track` model.
+3.  **Frontend Logic (`RankingStrategy`)**: `BalancedRankingStrategy` makes decisions based on these flattened fields, losing the nuance of the original sources.
 
-The detailed data schema (`docs/manual/32_Data_Schema_Reference.md`) describes a more robust `rankingConsolidated` object that centralizes `sources`, `weights`, and `provider` metadata. This schema is currently aspirational and not implemented.
+The documentation (`docs/manual/18_Frontend_Logic_Core.md`) confirms that we *already* have a robust **Strategy Pattern** and a **TrackTransformer**. We should evolve these rather than inventing new services.
 
 ## Problem
-The flattened model leads to:
-1.  **Data Overwrites**: Multiple data sources (BEA, Spotify, AI) fight for the single `rating` field.
-2.  **Loss of Provenance**: We lose the ability to tell *where* a rating came from (Was it a user vote? A critic score? A Spotify popularity index?).
-3.  **Complex Merging Logic**: Components like `SeriesService` and `AlbumCardRenderer` contain duplicated, fragile logic to "guess" the best rating to display.
+1.  **Data Loss**: Provenance is discarded during the `TrackTransformer` phase.
+2.  **Rigid Scoring**: The backend hardcodes the "winning" logic.
+3.  **Opaque UI**: The UI cannot explain *why* a track is ranked #1 because the evidence is gone.
 
 ## Proposed Solution
-Implement the `rankingConsolidated` schema as the Single Source of Truth for track rankings.
+Implement the `rankingConsolidated` schema as the Single Source of Truth, preserving the full evidence chain from Backend to Frontend.
 
-### 1. Update Models
-Refactor `Track.js` to include the `ranking` property:
+### 1. Backend Refactor (`fetchRanking.js`)
+Stop returning a flattened list. Return the `rankingConsolidated` object structure defined in `32_Data_Schema_Reference.md`.
+- Expose the internal `evidence` array (BEA votes, Spotify popularity, etc.) instead of just the final merged score.
 
-```javascript
-/* Track.js */
-this.ranking = {
-  finalScore: 0, // Weighted average
-  currentRank: 1,
-  sources: [
-    { provider: 'best-ever-albums', score: 88, weight: 1.0, count: 341 },
-    { provider: 'spotify', score: 72, weight: 0.5 },
-    { provider: 'user', score: 90, weight: 2.0 }
-  ]
-}
-```
+### 2. Frontend Transformer Refactor (`TrackTransformer.js`)
+Update `TrackTransformer` to:
+- **Preserve Evidence**: Map the raw backend `evidence` array to `track.ranking.evidence`.
+- **Backward Compatibility**: Continue to populate `track.rating` and `track.spotifyPopularity` (calculated from evidence) until the UI is fully migrated.
 
-### 2. Create `RankingService`
-Move all "winning score" logic out of Renderers and into a dedicated service.
-- `RankingService.calculateScore(track)`: Returns the final display score.
-- `RankingService.mergeSources(track, newSourceData)`: Handles the logic of updating just one source without wiping others.
+### 3. Strategy Refactor (`BalancedRankingStrategy.js`)
+Update the strategies to consume `track.ranking`:
+- Logic: `track.ranking.evidence.find(e => e.source === 'BestEverAlbums').score`
+- This allows for more complex tie-breaking (e.g., "If BEA votes < 10, prefer Spotify").
 
-### 3. Update Renderers
-Update `AlbumCardRenderer` and `TracksTable` to consume `track.ranking.finalScore` and `track.ranking.currentRank`. 
-- Allows for tooltips showing the breakdown ("88 from BEA, 72 from Spotify").
+### 4. UI Refactor (`TracksTable.js` & `AlbumCardRenderer`)
+- Use `track.ranking.evidence` to render detailed tooltips ("90 from BEA, 75 from Spotify").
+- Remove the "Smart Container" merging logic in `AlbumCardRenderer` since the `Track` object will now be self-contained.
 
-### 4. Migration Strategy
-1.  **Phase 1**: Add `ranking` object to generic `metadata` bag (Non-breaking).
-2.  **Phase 2**: Update `EnrichmentService` to populate `metadata.ranking`.
-3.  **Phase 3**: Switch UI to prefer `metadata.ranking` over `track.rating`.
-4.  **Phase 4**: deprecate `track.rating` and `track.spotifyPopularity`.
+## Migration Strategy
+1.  **Phase 1 (Backend)**: Update `fetchRanking.js` to return `rankingConsolidated` alongside legacy data.
+2.  **Phase 2 (Frontend Logic)**: Update `TrackTransformer` to populate `track.ranking`.
+3.  **Phase 3 (Frontend Strategies)**: Update `BalancedRankingStrategy` to use `track.ranking`.
+4.  **Phase 4 (UI)**: Update `TracksTable` to visualize the rich data.
+5.  **Phase 5 (Cleanup)**: Remove legacy flattened fields and backend eager merging.
 
-## Estimated Effort
-- **T-Shirt Size**: Large (L)
-- **Risk**: High (Core Data Structure Change)
-- **Impact**: High (Enables flexible scoring, personalized weighting, and cleaner debug views).
+## Alignment with Architecture
+This plan respects:
+- **Waterfall Strategy** (Backend Logic)
+- **TrackTransformer** (Frontend Normalization)
+- **Strategy Pattern** (Frontend Sorting)
+
+It simply upgrades the *data payload* passing through this existing pipeline.

@@ -18,6 +18,7 @@
 - [x] Implement `NormalizationUtils.js` for string cleaning.
 - [x] Improve BEA matching success rate via fuzzy lookup.
 - [x] Enhance Spotify search resilience for mismatched metadata.
+- [x] **Refinement (Round 2)**: Fix visual bugs (UI Display) and Data Gaps (BEA Grid Parsing). [DONE]
 
 ---
 

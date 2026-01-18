@@ -143,6 +143,7 @@
 114. `public/js/ranking/SpotifyRankingStrategy.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
 115. `public/js/ranking/BEARankingStrategy.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
 116. `public/js/ranking/UserRankingStrategy.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
+117. `public/js/helpers/BEAEnrichmentHelper.js` (Analysis: `manual/17_Frontend_Services.md`)
 
 ### Batch 7: Data Layer
 117. `public/js/repositories/BaseRepository.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
@@ -297,7 +298,8 @@
 28. `docs/manual/13_Frontend_Components_Shared.md`
 29. `docs/manual/14_Frontend_Components_Feature_Map.md`
 30. `docs/manual/15_Frontend_Components_Blend_Wizard.md`
-31. `docs/manual/16_Frontend_Components_Search_and_Ranking.md`
+32. `docs/manual/16_Frontend_Components_Search_and_Ranking.md`
+33. `docs/technical/specs/future/refactor_ranking_schema.md`
 32. `docs/manual/17_Frontend_Services.md`
 33. `docs/manual/18_Frontend_Logic_Core.md`
 34. `docs/manual/19_Frontend_JS_Root.md`
