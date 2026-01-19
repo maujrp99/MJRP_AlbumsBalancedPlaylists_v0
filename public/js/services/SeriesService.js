@@ -391,12 +391,18 @@ export class SeriesService {
                 const popMap = new Map()
                 spotifyData.spotifyTracks.forEach(t => popMap.set(t.name.toLowerCase().trim(), t.popularity))
 
-                enriched.tracks.forEach(track => {
+                const applySpotifyData = (track) => {
                     const key = track.title.toLowerCase().trim()
                     if (popMap.has(key)) {
                         track.spotifyPopularity = popMap.get(key)
                     }
-                })
+                }
+
+                enriched.tracks.forEach(applySpotifyData)
+
+                if (enriched.tracksOriginalOrder) {
+                    enriched.tracksOriginalOrder.forEach(applySpotifyData)
+                }
             }
         }
 
@@ -411,14 +417,21 @@ export class SeriesService {
             // We need to map the results from the tempAlbum tracks back to 'enriched'
             if (beaData.tracks && enriched.tracks) {
                 const rateMap = new Map()
+                const evidenceMap = new Map() // Sprint 23
+
                 beaData.tracks.forEach(t => {
-                    if (t.rating !== undefined && t.rating !== null) rateMap.set(t.title.toLowerCase().trim(), t.rating)
+                    const key = t.title.toLowerCase().trim()
+                    if (t.rating !== undefined && t.rating !== null) rateMap.set(key, t.rating)
+                    if (t.ranking) evidenceMap.set(key, t.ranking) // Capture ranking object
                 })
 
                 enriched.tracks.forEach(track => {
                     const key = track.title.toLowerCase().trim()
                     if (rateMap.has(key)) {
                         track.rating = rateMap.get(key)
+                    }
+                    if (evidenceMap.has(key)) {
+                        track.ranking = evidenceMap.get(key) // Apply ranking (evidence)
                     }
                 })
                 // Also update original order to be safe
@@ -428,15 +441,34 @@ export class SeriesService {
                         if (rateMap.has(key)) {
                             track.rating = rateMap.get(key)
                         }
+                        if (evidenceMap.has(key)) {
+                            track.ranking = evidenceMap.get(key) // Apply ranking (evidence)
+                        }
                     })
                 }
                 enriched.acclaim = { hasRatings: true, source: 'surgical-enrichment' }
             }
         }
 
-        // 4. Update Store/Cache
-        // Use the existing surgical injection method to handle store updates
-        await this.injectAlbumsIntoViewCache([enriched], seriesId)
+        // 4. Update the View Cache (Surgical)
+        this.injectAlbumsIntoViewCache([enriched], seriesId)
+
+        // 5. Persist to Firestore (Sprint 23 Fix)
+        try {
+            // Determine format if possible, default to 'digital'
+            if (!enriched.format) enriched.format = 'digital'
+
+            await albumsStore.updateAlbum(this.db, enriched)
+
+            // Sprint 23 Fix: Update API Cache to ensure Blending Menu sees the new data
+            // APIClient uses "Artist - Title" as key
+            const { albumCache } = await import('../cache/albumCache.js')
+            await albumCache.set(`${enriched.artist} - ${enriched.title}`, enriched)
+
+            console.log(`[SeriesService] Persisted enriched metadata for "${enriched.title}" to Firestore and Cache`)
+        } catch (persistErr) {
+            console.warn('[SeriesService] Failed to persist enriched metadata:', persistErr)
+        }
 
         return enriched
     }

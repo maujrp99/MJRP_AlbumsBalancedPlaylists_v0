@@ -44,31 +44,53 @@ function normalizeRating(rating, source) {
  * @param {Array} musicboardEvidence - Evidence from Musicboard
  * @returns {Array} Merged evidence with best rating per track
  */
+/**
+ * Merge evidence from multiple sources into a consolidated structure (Sprint 23)
+ * Preserves all source data in an 'evidence' array properly.
+ * 
+ * @param {Array} bestEverEvidence - Evidence from BestEverAlbums
+ * @param {Array} musicboardEvidence - Evidence from Musicboard
+ * @returns {Array} consolidated tracks with { trackTitle, evidence: [], rating: Number }
+ */
 function mergeRankingEvidence(bestEverEvidence = [], musicboardEvidence = []) {
     const merged = new Map()
 
-    // First, add all BestEver evidence (highest priority)
-    for (const e of bestEverEvidence) {
-        if (!e || !e.trackTitle) continue
-        const key = String(e.trackTitle).toLowerCase().trim()
-        merged.set(key, {
-            ...e,
-            rating: normalizeRating(e.rating, 'BestEverAlbums'),
-            source: 'BestEverAlbums'
-        })
-    }
+    // Helper to add evidence
+    const addEvidence = (item, sourceName) => {
+        if (!item || !item.trackTitle) return
+        const key = String(item.trackTitle).toLowerCase().trim()
 
-    // Then, fill gaps with Musicboard evidence
-    for (const e of musicboardEvidence) {
-        if (!e || !e.trackTitle) continue
-        const key = String(e.trackTitle).toLowerCase().trim()
         if (!merged.has(key)) {
             merged.set(key, {
-                ...e,
-                rating: normalizeRating(e.rating, 'Musicboard'),
-                source: 'Musicboard'
+                trackTitle: item.trackTitle,
+                evidence: [],
+                rating: 0 // Max rating placeholder
             })
         }
+
+        const track = merged.get(key)
+        const normalizedRating = normalizeRating(item.rating, sourceName)
+
+        track.evidence.push({
+            ...item,
+            source: sourceName,
+            normalizedRating
+        })
+
+        // Legacy compatibility: Top-level rating is the best valid rating
+        if (typeof normalizedRating === 'number' && normalizedRating > track.rating) {
+            track.rating = normalizedRating
+        }
+    }
+
+    // 1. Process BestEverAlbums
+    for (const e of bestEverEvidence) {
+        addEvidence(e, 'BestEverAlbums')
+    }
+
+    // 2. Process Musicboard
+    for (const e of musicboardEvidence) {
+        addEvidence(e, 'Musicboard')
     }
 
     return Array.from(merged.values())

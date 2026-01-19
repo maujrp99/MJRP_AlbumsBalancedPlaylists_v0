@@ -371,7 +371,8 @@ async function parseChartRankingById(id) {
 
   const normalized = rows.map(r => ({
     trackTitle: r.trackTitle
-      .replace(/^\s*\d+[\s\.\)-]*/, '')
+      // FIX: Only strip numbers if followed by separator (dot, paren, -) to preserve "72 Seasons"
+      .replace(/^\s*\d+(?:[\.\):]|\s-\s)\s*/, '')
       .replace(/^Track \d+[\s\.\)-]*/i, '')
       .trim(),
     rating: typeof r.rating === 'number' ? r.rating : null

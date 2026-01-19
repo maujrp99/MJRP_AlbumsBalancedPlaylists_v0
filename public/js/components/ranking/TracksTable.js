@@ -116,8 +116,17 @@ export class TracksTable {
         }
 
         if (track.rating !== null && track.rating !== undefined) {
+            // Sprint 23: Evidence Tooltip
+            let tooltip = 'Aggregated Rating'
+            if (track.ranking && Array.isArray(track.ranking.evidence) && track.ranking.evidence.length > 0) {
+                tooltip = track.ranking.evidence
+                    .map(e => `${e.source}: ${e.score || e.rating}${e.votes ? ` (${e.votes} votes)` : ''}`)
+                    .join(' | ')
+            }
+
             badges.push(SafeDOM.span({
-                className: 'flex items-center gap-1 text-sm font-bold text-white/90'
+                className: 'flex items-center gap-1 text-sm font-bold text-white/90 cursor-help',
+                title: tooltip
             }, [
                 SafeDOM.span({ className: 'text-brand-orange' }, '★'),
                 SafeDOM.text(Number(track.rating).toFixed(0))

@@ -34,6 +34,7 @@ class EnrichmentService {
 
         // 2. Map Scraped Ratings to Official Tracklist
         const ratingsMap = []
+        const evidenceMap = [] // Sprint 23: Evidence Container
 
         if (bestEver && Array.isArray(bestEver.evidence) && bestEver.evidence.length > 0) {
             try {
@@ -45,7 +46,7 @@ class EnrichmentService {
                     const trackTitle = e.trackTitle || e.title
                     if (trackTitle && e.rating !== undefined && e.rating !== null) {
                         const key = normalizeKey(trackTitle)
-                        if (key) evidenceIndex.set(key, e.rating)
+                        if (key) evidenceIndex.set(key, e) // Store WHOLE object for evidence extraction
                     }
                 })
 
@@ -56,26 +57,37 @@ class EnrichmentService {
                     const title = t.title || t.name || ''
                     const standardKey = normalizeKey(title)
                     let rating = null
+                    let match = null
+
+                    // DEBUG: 72 Seasons logging (removed for clean prod code, but keeping logic)
 
                     // Pass 1: Standard Match
                     if (standardKey && evidenceIndex.has(standardKey)) {
-                        const r = evidenceIndex.get(standardKey)
-                        if (r !== null && r !== undefined) rating = Number(r)
+                        match = evidenceIndex.get(standardKey)
+                        if (match && match.rating !== null) rating = Number(match.rating)
                     }
                     // Pass 2: Fuzzy/Edge Case Match
                     else {
                         const fuzzyKey = toFuzzyCore(title)
-                        // Try matching against fuzzy keys of evidence
-                        for (const e of bestEver.evidence) {
-                            if (toFuzzyCore(e.trackTitle || e.title) === fuzzyKey) {
-                                if (e.rating !== null && e.rating !== undefined) {
-                                    rating = Number(e.rating)
-                                }
-                                break
-                            }
+                        match = bestEver.evidence.find(e => toFuzzyCore(e.trackTitle || e.title) === fuzzyKey)
+                        if (match && match.rating !== null) {
+                            rating = Number(match.rating)
                         }
                     }
+
                     ratingsMap.push({ title, rating })
+
+                    // Sprint 23: Populate Evidence
+                    const trackEvidence = []
+                    if (match && rating !== null) {
+                        trackEvidence.push({
+                            source: 'BestEverAlbums',
+                            score: rating,
+                            votes: null,
+                            url: bestEver.albumUrl || bestEver.referenceUrl
+                        })
+                    }
+                    evidenceMap.push({ title, evidence: trackEvidence })
                 })
 
                 console.log(`[Enrichment] Success for ${title}: Found ${bestEver.evidence.length} rankings, matched ${ratingsMap.filter(r => r.rating !== null).length} tracks.`)
@@ -85,8 +97,22 @@ class EnrichmentService {
             }
         } else {
             console.warn(`[Enrichment] No ratings found for [${title}] by [${artist}]. Using original order.`)
-            tracks.forEach(t => ratingsMap.push({ title: t.title, rating: null }))
+            tracks.forEach(t => {
+                ratingsMap.push({ title: t.title, rating: null })
+                evidenceMap.push({ title: t.title, evidence: [] })
+            })
         }
+
+
+
+        // Re-construct evidence map if we didn't enter the block above (fallback)
+        // Actually, let's make sure 'evidenceMap' is available in scope or handle it in return.
+        // Quick fix: define evidenceMap outside or map it from ratingsMap if needed (but we want provenance).
+        // Better: let's do a cleaner return construction.
+
+        // RE-RUNNING THE ABOVE LOGIC CLEANLY for evidenceMap constant scope issue? 
+        // I'll just rely on the fact that I'm inside the try block for the main mapped data. 
+        // But wait, if bestEver is null, I need fallback.
 
         return {
             data: {
@@ -95,7 +121,9 @@ class EnrichmentService {
                     url: bestEver.albumUrl || bestEver.referenceUrl,
                     evidenceCount: bestEver.evidence?.length || 0
                 } : null,
-                trackRatings: ratingsMap
+                trackRatings: ratingsMap,
+                // NEW: Consolidated Evidence for Sprint 23
+                trackEvidence: (typeof evidenceMap !== 'undefined') ? evidenceMap : []
             }
         }
     }

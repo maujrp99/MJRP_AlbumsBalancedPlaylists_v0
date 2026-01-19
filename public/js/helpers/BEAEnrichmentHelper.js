@@ -119,8 +119,55 @@ function applyBEAData(album, enrichmentData) {
                 enrichedAt: new Date().toISOString()
             }
         }
+
+        // 4. Map Evidence (Sprint 23)
+        if (enrichmentData.trackEvidence && Array.isArray(enrichmentData.trackEvidence)) {
+            const evidenceLookup = new Map()
+            enrichmentData.trackEvidence.forEach(e => {
+                if (e.evidence && e.evidence.length > 0) {
+                    evidenceLookup.set(normalizeTrackTitle(e.title), e.evidence)
+                }
+            })
+
+            const applyEvidence = (track) => {
+                const key = normalizeTrackTitle(track.title)
+                if (evidenceLookup.has(key)) {
+                    // Ensure ranking object exists
+                    if (!track.ranking) track.ranking = {}
+                    track.ranking.evidence = evidenceLookup.get(key)
+                }
+            }
+
+            if (album.tracks) album.tracks.forEach(applyEvidence)
+            if (album.tracksOriginalOrder) album.tracksOriginalOrder.forEach(applyEvidence)
+        }
+
+        // 5. Re-sort album.tracks by Rating (Desc) now that we have fresh data
+        // This ensures the "Acclaim" view is actually sorted by acclaim
+        if (album.tracks) {
+            album.tracks.sort((a, b) => {
+                const ratingA = (typeof a.rating === 'number') ? a.rating : -1
+                const ratingB = (typeof b.rating === 'number') ? b.rating : -1
+
+                // Primary: Rating Descending
+                if (ratingA !== ratingB) return ratingB - ratingA
+
+                // Secondary: Track Number Ascending (for ties)
+                const numA = a.trackNumber || a.position || 0
+                const numB = b.trackNumber || b.position || 0
+                return numA - numB
+            })
+
+            // Re-assign ranks based on new sort order
+            album.tracks.forEach((t, idx) => {
+                t.rank = idx + 1
+                if (t.ranking) t.ranking.rank = idx + 1
+            })
+        }
     }
 }
+
+
 
 /**
  * Helper: Normalize track title for fuzzy matching key

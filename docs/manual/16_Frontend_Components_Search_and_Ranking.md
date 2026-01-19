@@ -43,6 +43,7 @@ The ranking system strictly follows the Container/Presenter pattern.
 *   **Columns**: Position, Title, **My Rank** (User), Rank (BEA), Popularity (Spotify), Duration.
 *   **Decoupling Logic**: Ratings (★88) are now displayed independently of ranking badges (#5). A track can be rated without being ranked in the top chart.
 *   **Stats Header**: Displays Average Acclaim, Spotify Popularity, and **My Average** (User) statistics at the top.
+*   **Evidence Tooltips (Sprint 23)**: Hovering the star rating reveals full provenance (e.g., `BestEverAlbums: 90 | Spotify: 80`).
 
 
 ### Data Flow Diagram

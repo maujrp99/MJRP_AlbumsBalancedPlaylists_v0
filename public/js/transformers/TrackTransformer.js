@@ -25,6 +25,7 @@
  * @property {number|null} acclaimRank - Position by BEA/Acclaim (1-N)
  * @property {number|null} acclaimScore - Normalized score 0-100
  * @property {number|null} rating - Star rating (alias for display)
+ * @property {Object} ranking - Consolidated ranking evidence { evidence: [] }
  * 
  * @property {number|null} spotifyRank - Position by Spotify popularity (1-N)
  * @property {number|null} spotifyPopularity - Spotify popularity 0-100
@@ -68,6 +69,11 @@ export class TrackTransformer {
             acclaimRank: raw.acclaimRank ?? raw.rank ?? raw.finalPosition ?? null,
             acclaimScore: raw.acclaimScore ?? raw.normalizedScore ?? null,
             rating: raw.rating ?? null,
+
+            // Sprint 23: Consolidated Ranking Schema (Evidence)
+            ranking: {
+                evidence: Array.isArray(raw.evidence) ? raw.evidence : (raw.ranking?.evidence || [])
+            },
 
             // Spotify
             spotifyRank: raw.spotifyRank ?? null,

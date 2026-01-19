@@ -114,6 +114,9 @@ flowchart TD
     -   If Spotify Popularity has good coverage (>=50% tracks), it **replaces** the weak BestEver data entirely.
 4.  **Enrichment**:
     -   Consolidates AI results with scraper results.
+5.  **Consolidation (Sprint 23)**:
+    -   Merges all evidence (Community + Popularity + AI) into a single `evidence` array per track.
+    -   Provides full provenance: `{ source: 'BestEverAlbums', score: 90, votes: 25 }`.
 
 ### Architecture Diagram
 ```mermaid

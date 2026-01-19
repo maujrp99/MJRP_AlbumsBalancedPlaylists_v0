@@ -299,7 +299,7 @@
 29. `docs/manual/14_Frontend_Components_Feature_Map.md`
 30. `docs/manual/15_Frontend_Components_Blend_Wizard.md`
 32. `docs/manual/16_Frontend_Components_Search_and_Ranking.md`
-33. `docs/technical/specs/future/refactor_ranking_schema.md`
+33. `docs/technical/specs/sprint23-ranking-refactor/plan.md`
 32. `docs/manual/17_Frontend_Services.md`
 33. `docs/manual/18_Frontend_Logic_Core.md`
 34. `docs/manual/19_Frontend_JS_Root.md`
