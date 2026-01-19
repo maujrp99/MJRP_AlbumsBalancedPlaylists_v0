@@ -115,8 +115,8 @@ flowchart TD
 4.  **Enrichment**:
     -   Consolidates AI results with scraper results.
 5.  **Consolidation (Sprint 23)**:
-    -   Merges all evidence (Community + Popularity + AI) into a single `evidence` array per track.
-    -   Provides full provenance: `{ source: 'BestEverAlbums', score: 90, votes: 25 }`.
+    -   Merges all evidence (Community + Popularity + AI) into a single `evidence: []` array per track.
+    -   Provides full provenance: `evidence: [{ source: 'BestEverAlbums', score: 90, votes: 25 }, { source: 'Spotify', score: 85 }]`.
 
 ### Architecture Diagram
 ```mermaid
@@ -216,7 +216,9 @@ flowchart TD
     -   **Verification**: Checks page HTML (`h1`, `title`) to ensure the album matches the requested Artist/Title (prevents tribute/cover album mix-ups).
 -   **Parsers**:
     -   `parseChartRankingById`: Extracts ratings from chart tables (looking for "Rating: 84 (398 votes)").
+    -   `parseChartRankingById`: Extracts ratings from chart tables (looking for "Rating: 84 (398 votes)").
     -   `parseAlbumRanking`: HTML fallback if no chart table found.
+    -   **Regex Robustness (Sprint 23)**: Improved matching regex to handle track titles starting with numbers (e.g., "72 Seasons") by requiring explicit separators (dot, paren, dash).
 
     -   `parseAlbumRanking`: HTML fallback if no chart table found.
 

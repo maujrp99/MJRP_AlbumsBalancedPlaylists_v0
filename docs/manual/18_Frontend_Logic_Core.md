@@ -110,11 +110,10 @@ Generated playlists use a standardized title format:
 ### Balanced Ranking Strategy (`BalancedRankingStrategy.js`)
 *   **Role**: The client-side consumer of server-side data.
 *   **Waterfall Logic (The Decision Tree)**:
-    1.  **Acclaim Rank** (Primary): Checks `acclaimRank` (derived from BestEverAlbums `finalPosition`). Smallest is best.
-    2.  **Rating** (Secondary): Checks `rating` (User/Community stars). Highest is best.
-    3.  **Score** (Tertiary): Checks `acclaimScore`.
-    4.  **Spotify Popularity** (Fallback): Used if no acclaim data exists.
-    5.  **Original Order** (Last Resort).
+    1.  **Rating (0-100)** (Primary): Prioritizes explicit ratings (derived from BestEverAlbums or User). Highest is best.
+    2.  **Acclaim Rank** (Secondary): If ratings are tied/missing, checks `acclaimRank` (BestEverAlbums final position).
+    3.  **Spotify Popularity** (Fallback): Used if no acclaim/rating data exists.
+    4.  **Original Order** (Last Resort).
 
 ### Spotify Ranking Strategy
 *   **Role**: Pure popularity-based sorting.

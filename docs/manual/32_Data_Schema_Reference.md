@@ -48,6 +48,20 @@ Individual song entity.
   "rank": "number", // Acclaim Rank (1 = Highest)
   "position": "number", // Disc Position (1 = First Track)
   "popularity": "number (0-100)", // Spotify Pop Index
+  "rating": "number (0-100)", // Legacy BEA Rating (Backward Comp)
+
+  // Ranking & Evidence (Sprint 23+)
+  "ranking": {
+      "rank": "number",
+      "evidence": [
+          {
+              "source": "string ('BestEverAlbums' | 'Spotify')",
+              "score": "number",
+              "votes": "number | null",
+              "url": "string | null"
+          }
+      ]
+  },
   
   // Audio Properties
   "durationMs": "number",
@@ -55,7 +69,7 @@ Individual song entity.
   
   // Physical Metadata
   "discNumber": "number (Default: 1)",
-  "dtrackNumber": "number"
+  "trackNumber": "number"
 }
 ```
 

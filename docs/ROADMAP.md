@@ -8,17 +8,26 @@
 
 ## 🚧 Current Sprint
 
-### Sprint 22: Enrichment & Advanced Filters [DONE]
-- [x] Integrate BestEverAlbums (BEA) ratings.
-- [x] Encapsulate BEA Logic in `BEAEnrichmentHelper.js`.
-- [x] Refactor Filters to `FilterToolbar.js` (Resuable).
-- [x] Standardize UI Labels and Sort Options.
+## 🚧 Current Sprint
 
-### Sprint 22.5: Fuzzy Enrichment Matching [DONE]
-- [x] Implement `NormalizationUtils.js` for string cleaning.
-- [x] Improve BEA matching success rate via fuzzy lookup.
-- [x] Enhance Spotify search resilience for mismatched metadata.
-- [x] **Refinement (Round 2)**: Fix visual bugs (UI Display) and Data Gaps (BEA Grid Parsing). [DONE]
+### Sprint 24: QA & Stability
+- [ ] End-to-End Testing (Cypress/Playwright).
+- [ ] Performance Audit (Lighthouse).
+- [ ] Documentation Cleanup.
+
+---
+
+## ✅ Completed Sprints (Reverse Chronological)
+
+### Sprint 23: Consolidated Ranking Refactor (Jan 2026)
+**Goal**: Resolve ranking inconsistencies and unify all ranking data into a single `evidence` array.
+**Status**: ✅ **DONE** (2026-01-19)
+**Deliverables**:
+- ✅ **Schema Consolidation**: Track `evidence` array merges BEA, Spotify, and AI data.
+- ✅ **Evidence UI**: Tooltips displaying score breakdown per source.
+- ✅ **Persistence Logic**: Fixed `SeriesService` to save enriched data to Firestore.
+- ✅ **Cache Sync**: Fixed "Refetch" to immediately update Blending Menu cache.
+- ✅ **Ranking Fixes**: Regex fix for "72 Seasons", forced sort by rating in BEA Enrichment.
 
 ---
 

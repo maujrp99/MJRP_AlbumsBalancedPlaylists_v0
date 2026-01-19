@@ -242,6 +242,8 @@
 198. `test/stores/series.test.js` (Analysis: `manual/24_Test_Suite.md`)
 199. `test/views/ConsolidatedRankingView.test.js` (Analysis: `manual/24_Test_Suite.md`)
 200. `test/views/PlaylistsView.test.js` (Analysis: `manual/24_Test_Suite.md`)
+200. `test/transformers/TrackTransformer.test.js` (Analysis: `manual/24_Test_Suite.md`)
+201. `reproduce_match.js` (Root Utility)
 
 ## 7. Sprint 19 Refactoring 
 201. `public/js/services/PlaylistsService.js` (Analysis: `manual/17_Frontend_Services.md`)

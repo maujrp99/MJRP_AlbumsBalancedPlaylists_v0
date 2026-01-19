@@ -11,6 +11,9 @@
 
 ---
 
+| #165 | **"72 Seasons" Last Place Ranking (Ranking Sort)** | ✅ RESOLVED | [Details](#issue-165-72-seasons-last-place-ranking-ranking-sort) |
+| #164 | **Data Sync (Refetch Cache)** | ✅ RESOLVED | [Details](#issue-164-data-sync-refetch-cache) |
+| #163 | **"72 Seasons" Scraper Mismatch (Regex)** | ✅ RESOLVED | [Details](#issue-163-72-seasons-scraper-mismatch-regex) |
 | #162 | **Edit Modal Album Visibility** | ✅ RESOLVED | [Details](#issue-162-edit-modal-album-visibility) |
 | #161 | **Aggressive Cache Invalidation Regression** | ✅ RESOLVED | [Details](#issue-161-aggressive-cache-invalidation-regression) |
 | #160 | **Series Toolbar Dropdown Sync** | ✅ RESOLVED | [Details](#issue-160-series-toolbar-dropdown-sync) |
@@ -81,6 +84,27 @@
 ---
 
 ## Current Debugging Session
+
+### Issue #165: "72 Seasons" Last Place Ranking (Ranking Sort)
+- **Status**: ✅ **RESOLVED**
+- **Date**: 2026-01-18
+- **Symptom**: "72 Seasons" (Track) had a high rating (83) but appeared at the bottom of the track list (Rank #12).
+- **Root Cause**: The scraper returned tracks in disc order (or arbitrary order), and `BEAEnrichmentHelper` applied ratings without *re-sorting* the `album.tracks` array. The UI (and playlist generator) relied on the array order.
+- **Fix**: Added explicit sorting logic in `BEAEnrichmentHelper.js` to sort tracks by `rating` (descending) immediately after enrichment.
+
+### Issue #164: Data Sync (Refetch Cache)
+- **Status**: ✅ **RESOLVED**
+- **Date**: 2026-01-18
+- **Symptom**: Clicking "Refetch Metadata" updated Firestore, but the Blending Menu continued to show old ratings/data until a page reload.
+- **Root Cause**: The `Refetch` operation updated the database but failed to invalidate/update the client-side `AlbumCache` used by the Blending Wizard.
+- **Fix**: Updated `SeriesService.js` to explicitly call `updateAlbumInCache` (via `injectAlbumsIntoViewCache` logic) after a successful refetch and persistence.
+
+### Issue #163: "72 Seasons" Scraper Mismatch (Regex)
+- **Status**: ✅ **RESOLVED**
+- **Date**: 2026-01-18
+- **Symptom**: "72 Seasons" (the track) was not matching with the BestEverAlbums data, resulting in a 0 rating.
+- **Root Cause**: The scraper regex `^\d+\.\s+(.+)` (Number Dot Space) failed to match "1. 72 Seasons" correctly because the capture group `(.+)` consumed the entire string. When matching against "72 Seasons", strict equality checks failed if leading numbers were ambiguous.
+- **Fix**: Updated the regex in `besteveralbums.js` to robustly handle tracks starting with numbers and improved the fuzzy matching logic in `EnrichmentService`.
 
 ### Issue #161: Aggressive Cache Invalidation Regression
 - **Status**: ✅ **RESOLVED**
