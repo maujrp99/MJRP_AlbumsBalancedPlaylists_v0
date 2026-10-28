@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 r"""
 now_questions_check.py - does `MEMORY.md ## Now` copy the conformance audit's questions? A clause of the `memory-layer` catalog item
 (memory-layer@2, CM-0062).

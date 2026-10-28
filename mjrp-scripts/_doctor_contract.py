@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_contract.py - the doctor's checks of the contract itself: its schema, enums and gates (I1, W3, W6 stack, F2).
 

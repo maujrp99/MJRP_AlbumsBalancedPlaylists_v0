@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-24
 fontes: [conventionalcommits.org, mjrp-deployer (aposentada, S-76), 1999-fowler-refactoring]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Governança de git** é o conjunto de regras que faz o histórico de um projeto ser legível por quem vem depois —

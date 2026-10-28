@@ -92,3 +92,6 @@ coverage/
 
 # Vite cache
 .vite/
+# new_project.py --refresh-kernel
+.mjrp/
+__pycache__/

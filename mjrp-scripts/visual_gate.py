@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """visual_gate.py -- a screen feature is merged with the independent visual recheck's report: evaluated, with no P0.
 
 Born 2026-10-12 (ADR-0017 of the harness, revised after its architecture audit; decision of the MJRP): the Control

@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-11
 fontes: [2026-claude-code-auto-memory, 2026-04-04-karpathy-llm-wiki, 2023-10-memgpt-virtual-context, 2025-cline-memory-bank, 2023-09-coala-cognitive-architectures-language-agents, 2025-anthropic-effective-context-engineering]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 A memória do harness é o que persiste **fora da janela** e precisa ser trazido de volta. Esta

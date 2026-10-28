@@ -4,7 +4,7 @@ item: inception-notes
 from: 0
 to: 1
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0039 · inception-notes@0 → inception-notes@1
 
 ## Por que

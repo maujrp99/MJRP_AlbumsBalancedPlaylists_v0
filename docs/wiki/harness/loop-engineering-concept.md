@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-07
 fontes: [wiki/sources/2026-10-07-mjrp-loop-engineering-handbook.md, pasquadev-harness-e-loop-engineering, waldemar-neto-loop-engineering-500k-linhas, google-cloud-tech-graph-engineering-101, google-cloud-tech-ai-agents-explained, karpathy-no-priors-skill-issue, austin-marchese-karpathy-method]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Loop engineering** é projetar o ciclo que roda **sem você**: o agente raciocina, age, observa e

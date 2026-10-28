@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // The structural and style facts of a screen, read in the page — the same function on the prototype and on the product.
 // Self-contained: Playwright serializes it into the browser, so it may not reference anything outside its body; what
 // it needs from the project (selectors, the text-health thresholds) arrives as one plain-data argument.

@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _skills.py - the SKILL.md side of the checks: where the skills are, and the digest that says whether one changed (F73 R7).
 

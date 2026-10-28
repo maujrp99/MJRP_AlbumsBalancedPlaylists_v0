@@ -4,7 +4,7 @@ item: report-names
 from: 3
 to: 4
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0060 · report-names@3 → report-names@4
 
 ## Por que

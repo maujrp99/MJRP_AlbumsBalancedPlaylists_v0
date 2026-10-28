@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "format": "report_types@1",
   "about": "A lista única dos tipos de relatório do harness (decisão do MJRP, 2026-10-17 22:48). Todo relatório sob reports/ declara no cabeçalho `type:` um destes. Quem lê: o report_types_check.py (o juiz do item report-names@2, vendorizado para os filhos) e o Control Center (tira o tema do relatório daqui). Um tipo novo entra AQUI, no harness, por decisão do MJRP — nunca é inventado num filho. Detalhe: docs/wiki/kernel/ways-of-working/report-types.md.",
   "required_since": "2026-10-17",

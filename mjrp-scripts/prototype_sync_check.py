@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """prototype_sync_check.py -- a prototype, its screen inventory and its wireframes move together.
 
 09/10/2026 19:36 (MJRP): the Control Center v3.5 changed after approval and its data went stale, but only 3 of its

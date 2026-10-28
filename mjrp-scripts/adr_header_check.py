@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """adr_header_check.py - the header of every ADR in `docs/decisions/`: the TITLE line and the STATUS line (catalog item `adr-names`, CM-0076).
 
 The check that passed the file NAME while the Control Center could not READ the file (MJRPpersonal, 2026-10-18: ADRs titled

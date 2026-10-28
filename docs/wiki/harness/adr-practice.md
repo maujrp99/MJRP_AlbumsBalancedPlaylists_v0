@@ -6,7 +6,7 @@ tags: [harness, decisao, processo]
 status: em formação
 atualizado: 2026-10-09
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Uma **ADR** registra uma decisão grande — a que tem alternativas, custos e consequências
