@@ -1,4 +1,4 @@
-# ADR-017: Pure State Container Store Pattern
+# ADR-0017: Pure State Container Store Pattern
 
 **Date**: 2026-01-10
 **Status**: Accepted
@@ -34,4 +34,4 @@ We decouple the Store from the Business Logic by converting Stores into **Pure S
 2.  **Maintaining Thick Stores**: Rejected as it failed to meet the LOC targets and architectural goals of Sprint 19.
 
 ## Notes
-This pattern complements **ADR-016 (Service Layer Extraction)** by specifically applying it to Data Stores. Future "thick" stores should follow this split.
+This pattern complements **ADR-0016 (Service Layer Extraction)** by specifically applying it to Data Stores. Future "thick" stores should follow this split.

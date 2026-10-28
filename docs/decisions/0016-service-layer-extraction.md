@@ -1,4 +1,4 @@
-# ADR-016: Service Layer Extraction Pattern
+# ADR-0016: Service Layer Extraction Pattern
 
 **Date**: 2026-01-10
 **Status**: Accepted

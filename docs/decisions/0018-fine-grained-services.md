@@ -1,4 +1,4 @@
-# ADR-018: Fine-Grained Service Modularization
+# ADR-0018: Fine-Grained Service Modularization
 
 **Date**: 2026-01-10
 **Status**: Proposed

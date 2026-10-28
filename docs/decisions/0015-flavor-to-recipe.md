@@ -1,8 +1,8 @@
-# ADR 15: "Flavor" to "Recipe" Terminology Shift
+# ADR-0015: "Flavor" to "Recipe" Terminology Shift
 
-> **Status**: APPROVED
-> **Date**: 2026-01-10
-> **Sprint**: 17.9
+**Status**: APPROVED
+**Date**: 2026-01-10
+**Sprint**: 17.9
 
 ## Context
 The application originally used the metaphor "Flavor" to describe algorithmic strategies for playlist generation (e.g., "Top N Popular", "Balanced Cascade").

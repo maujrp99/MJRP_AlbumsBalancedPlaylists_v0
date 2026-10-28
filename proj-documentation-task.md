@@ -278,8 +278,8 @@
 197. [ ] `public/js/components/series/SeriesProgressBar.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
 198. [ ] `public/js/views/helpers/SeriesGridHelper.js` (Analysis: `manual/09_Frontend_Views.md`)
 199. [ ] `public/js/views/helpers/SeriesViewHandlers.js` (Analysis: `manual/09_Frontend_Views.md`)
-200. [ ] `docs/decisions/adr-017-pure-state-stores.md` (Analysis: `manual/01_System_Architecture.md`)
-201. [ ] `docs/decisions/adr-018-fine-grained-services.md` (Analysis: `manual/01_System_Architecture.md`)
+200. [ ] `docs/decisions/0017-pure-state-stores.md` (Analysis: `manual/01_System_Architecture.md`)
+201. [ ] `docs/decisions/0018-fine-grained-services.md` (Analysis: `manual/01_System_Architecture.md`)
 
 ### Phase 8: Final Synthesis
 202. - [x] **Code-to-Doc Integrity Check**

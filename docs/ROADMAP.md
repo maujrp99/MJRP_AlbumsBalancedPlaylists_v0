@@ -95,7 +95,7 @@
 **Delivered**: 2026-01-11
 **Deliverables**:
 - ✅ Global string/variable/UI rename completed by Track A agent.
-- ✅ Documentation synchronized (ADR-015).
+- ✅ Documentation synchronized (ADR-0015).
 
 ### Sprint 17.75: Classification Modularization (Jan 2026)
 **Goal**: Extract album classification heuristics from `AlbumSearchService` into modular strategy classes.

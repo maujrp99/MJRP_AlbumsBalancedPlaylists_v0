@@ -254,8 +254,8 @@
 206. `public/js/components/series/SeriesEmptyState.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
 207. `public/js/views/helpers/SeriesGridHelper.js` (Analysis: `manual/09_Frontend_Views.md`)
 208. `public/js/views/helpers/SeriesViewHandlers.js` (Analysis: `manual/09_Frontend_Views.md`)
-209. `docs/decisions/adr-017-pure-state-stores.md` (Analysis: `manual/01_System_Architecture.md`)
-210. `docs/decisions/adr-018-fine-grained-services.md` (Analysis: `manual/01_System_Architecture.md`)
+209. `docs/decisions/0017-pure-state-stores.md` (Analysis: `manual/01_System_Architecture.md`)
+210. `docs/decisions/0018-fine-grained-services.md` (Analysis: `manual/01_System_Architecture.md`)
 211. `public/js/services/infra/StorageService.js` (Analysis: `manual/17_Frontend_Services.md`)
 212. `public/js/services/playlists/PlaylistHistoryService.js` (Analysis: `manual/17_Frontend_Services.md`)
 213. `public/js/services/auth/UserSyncService.js` (Analysis: `manual/17_Frontend_Services.md`)
@@ -274,10 +274,10 @@
 6. `docs/ROADMAP.md`
 
 ### Decisions (ADR)
-7. `docs/decisions/adr-015-flavor-to-recipe.md`
-8. `docs/decisions/adr-016-service-layer-extraction.md`
-9. `docs/decisions/adr-017-pure-state-stores.md` (Also in Refactoring)
-10. `docs/decisions/adr-018-fine-grained-services.md` (Also in Refactoring)
+7. `docs/decisions/0015-flavor-to-recipe.md`
+8. `docs/decisions/0016-service-layer-extraction.md`
+9. `docs/decisions/0017-pure-state-stores.md` (Also in Refactoring)
+10. `docs/decisions/0018-fine-grained-services.md` (Also in Refactoring)
 
 ### Manuals (The Reference Guide)
 11. `docs/manual/00_Deployment_and_Setup.md`
