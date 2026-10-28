@@ -80,7 +80,6 @@ A desenhar: ainda não há protótipo aprovado nem `docs/specs/info-arch.md`, e 
 ## Candidatos (Intake)
 
 - **Séries por artista, por gênero e de faixas soltas.** A documentação descreve os quatro fluxos de série (Prod_Vision:26-34); no código as rotas de artista, gênero e faixas mostram «em breve» (inventário do V1, seção 1.9). A triar: vira épico de OUT-03 quando o MJRP decidir.
-- **Itens do Sprint 24 («QA & Stability»).** Testes ponta a ponta (Cypress/Playwright), auditoria de desempenho (Lighthouse) e limpeza da documentação (docs/ROADMAP.md:13-16). Decidido pelo agente, revisável pelo MJRP (2026-10-28): saúde técnica é restrição, não resultado nem épico; viram requisito não funcional (a regra, escrita uma vez) mais itens de conserto (cada lugar em que a regra não é cumprida). O próximo pacote (mjrp-writing-reqs) escreve o requisito não funcional.
 - **Achados do mapa do V1 sobre o v0.** Problemas e riscos já verificados no código, por exemplo regras do Firestore abertas para rankings, servidor sem autenticação nem limite de taxa, exclusão de item do inventário que não funciona, migração de usuário convidado quebrada, desfazer/refazer sem botão (mapa do V1, seções 2.D a 2.G). A triar: o que vira conserto, o que vira risco aceito.
 
 ## Premissas e questões em aberto
@@ -107,34 +106,146 @@ O mapa dos requisitos: cada requisito é um arquivo em `docs/specs/requirements/
 folder:: ep-01-album-series
 serves:: [[ROADMAP#^OUT-03]] ^EP-01
 
+![[S-01-create-a-named-album-series]]
+
+![[S-02-find-an-artists-albums-and-pick-the-ones-to-mix]]
+
+![[S-03-paste-a-list-of-albums-to-build-a-series]]
+
+![[S-04-browse-every-series-and-its-albums-in-the-library]]
+
+![[S-05-find-an-album-in-the-library-by-search-and-filters]]
+
+![[S-06-edit-a-series-rename-it-remove-and-add-albums]]
+
+![[S-07-delete-a-series-without-deleting-inventory-albums]]
+
+![[S-08-sort-the-series-by-name-album-count-or-date]]
+
+![[S-45-see-all-albums-of-a-series-on-the-all-series-panel]]
+
+![[S-49-build-a-series-from-an-artists-discography]]
+
+![[S-50-build-a-series-from-a-genre-or-a-vibe]]
+
+![[S-51-build-a-series-from-loose-tracks-or-singles]]
+
 ### EP-02 · Misturar uma série escolhendo a receita
 folder:: ep-02-blend-recipes
 serves:: [[ROADMAP#^OUT-02]] ^EP-02
+
+![[S-09-generate-balanced-playlists-from-a-series]]
+
+![[S-10-choose-among-several-recipes-to-build-the-playlist]]
+
+![[S-11-build-the-blend-in-steps-series-recipe-ingredients]]
+
+![[S-12-tune-the-recipe-tracks-per-album-grouping-length]]
+
+![[S-13-regenerate-with-another-recipe-in-place]]
+
+![[S-46-open-the-blending-menu-with-the-series-chosen]]
+
+![[S-47-turn-on-discovery-mode-and-see-the-playlist-change]]
 
 ### EP-03 · Revisar as playlists geradas e guardadas
 folder:: ep-03-review-playlists
 serves:: [[ROADMAP#^OUT-01]] ^EP-03
 
+![[S-14-see-the-generated-playlists-tracks-and-lengths]]
+
+![[S-15-reorder-playlists-by-dragging-and-removing-tracks]]
+
+![[S-16-save-generated-playlists-as-a-batch-in-the-cloud]]
+
+![[S-17-name-a-batch-of-playlists]]
+
+![[S-18-browse-the-saved-playlists-by-series-and-by-batch]]
+
+![[S-19-edit-a-batch-of-playlists-already-saved]]
+
+![[S-20-delete-a-batch-or-all-playlists-of-a-series]]
+
+![[S-41-undo-and-redo-changes-in-a-playlist]]
+
+![[S-42-delete-a-playlist-from-the-batch-before-saving]]
+
+![[S-43-rename-a-playlist-and-have-the-name-stay]]
+
+![[S-44-recover-generated-playlists-after-a-page-reload]]
+
 ### EP-04 · Exportar a playlist para Spotify ou Apple Music
 folder:: ep-04-export-playlists
 serves:: [[ROADMAP#^OUT-01]] ^EP-04
+
+![[S-21-download-the-playlists-as-a-json-file]]
+
+![[S-22-send-the-playlists-to-apple-music]]
+
+![[S-23-connect-my-spotify-account]]
+
+![[S-24-send-the-playlists-to-spotify-merged-or-separate]]
+
+![[S-48-open-on-spotify-the-playlists-sent-separately]]
 
 ### EP-05 · Ordenar as faixas por crítica, popularidade ou gosto pessoal
 folder:: ep-05-track-ranking
 serves:: [[ROADMAP#^OUT-01]] ^EP-05
 
+![[S-25-see-album-tracks-with-the-besteveralbums-rating]]
+
+![[S-26-compare-the-critics-rating-with-spotify-popularity]]
+
+![[S-27-give-the-tracks-my-own-order-and-blend-by-it]]
+
+![[S-28-see-where-each-tracks-rating-comes-from]]
+
+![[S-29-fetch-an-albums-data-again]]
+
+![[S-52-reach-album-ranking-and-all-tracks-ranking-by-link]]
+
 ### EP-06 · Usar o Album Blender no celular
 folder:: ep-06-mobile-use
 serves:: [[ROADMAP#^OUT-04]] ^EP-06
+
+![[S-30-navigate-the-app-on-a-phone-with-the-drawer-menu]]
+
+![[S-31-read-album-tracks-on-a-phone-stacked-rows-and-tabs]]
+
+![[S-32-order-an-albums-tracks-by-touch-full-screen]]
+
+![[S-54-remove-a-track-or-open-details-by-touch-alone]]
 
 ### EP-07 · Gerenciar o inventário de álbuns que a pessoa possui
 folder:: ep-07-album-inventory
 serves:: [[ROADMAP#^OUT-03]] ^EP-07
 
+![[S-33-see-my-collection-how-many-i-own-and-its-worth]]
+
+![[S-34-add-to-the-collection-an-album-i-saw-in-a-series]]
+
+![[S-35-mark-albums-owned-or-wanted-and-fix-their-details]]
+
+![[S-36-search-and-filter-the-collection]]
+
+![[S-40-delete-an-album-from-the-collection]]
+
 ### EP-08 · Entrar com a conta e guardar tudo na nuvem
 folder:: ep-08-account-cloud
 serves:: [[ROADMAP#^OUT-01]] ^EP-08
 
+![[S-37-sign-in-with-google-or-apple-or-continue-as-guest]]
+
+![[S-38-keep-series-playlists-and-collection-in-the-cloud]]
+
+![[S-39-open-the-app-with-no-login-or-authorization-window]]
+
+![[S-53-move-the-data-kept-in-the-browser-to-the-cloud]]
+
 ### Transversais
 
 Os requisitos não funcionais valem para todas as features e não são importados por nenhuma: cada um é um arquivo `docs/specs/requirements/nfr/NFR-xx-<slug>.md`.
+
+![[NFR-01-the-products-main-flows-have-end-to-end-tests]]
+
+![[NFR-02-the-apps-performance-is-measured-with-lighthouse]]
