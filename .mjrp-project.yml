@@ -18,7 +18,7 @@ mjrp_harness:
     setup: nenhum             # comando de setup, ou 'nenhum' se não há pré-requisito
     runtime: ""               # ex.: 'python3, node' - preencha quando a stack existir
   conformance:                # ADR-0019: a conformidade canônica do projeto
-    applied: [CM-0029, CM-0047, CM-0002, CM-0017, CM-0025, CM-0041, CM-0045, CM-0003, CM-0046, CM-0078, CM-0051, CM-0077, CM-0030, CM-0048, CM-0032, CM-0053, CM-0072, CM-0071, CM-0033, CM-0054, CM-0012, CM-0024, CM-0076, CM-0085, CM-0013, CM-0031, CM-0049, CM-0037, CM-0067, CM-0019, CM-0020, CM-0021, CM-0022, CM-0027, CM-0028, CM-0058, CM-0069, CM-0079, CM-0082, CM-0074]               # as notas de migração (CM-NNNN) cumpridas - a bootstrap, modo conform, acrescenta
+    applied: [CM-0029, CM-0047, CM-0002, CM-0017, CM-0025, CM-0041, CM-0045, CM-0003, CM-0046, CM-0078, CM-0051, CM-0077, CM-0030, CM-0048, CM-0032, CM-0053, CM-0072, CM-0071, CM-0033, CM-0054, CM-0012, CM-0024, CM-0076, CM-0085, CM-0013, CM-0031, CM-0049, CM-0037, CM-0067, CM-0019, CM-0020, CM-0021, CM-0022, CM-0027, CM-0028, CM-0058, CM-0069, CM-0079, CM-0082, CM-0074, CM-0006, CM-0016, CM-0043, CM-0059, CM-0060, CM-0065]               # as notas de migração (CM-NNNN) cumpridas - a bootstrap, modo conform, acrescenta
     asked:                    # perguntas ao MJRP sem resposta (path + hora da entrada do log que cita o arquivo)
       - {path: reports/harness-feedback/2026-10-28-mjrpalbumblender-v0-checks-pass-untouched-templates.md, asked_at: "2026-10-28 12:10"}
     received: {}              # <item>@<versão>: data - escrito só pelo new_project.py --refresh-kernel; a carência conta daí
