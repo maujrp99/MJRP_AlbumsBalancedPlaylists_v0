@@ -1,0 +1,31 @@
+mjrp_harness:
+  version: "1.0"
+  profile: code-app          # code-app | content | meta
+  # id_prefix: XX  # só projeto aninhado no repositório de outro (apps/<app>/): prefixo de resultado, épico, NFR e ADR (ADR-0020 D.3)
+  process_level: standard     # minimal | standard | full
+  context: lazy              # eager | lazy
+  orchestration: assisted    # assisted | autonomous
+  # project_palette:         # ADR-0022: a cor deste projeto no Control Center - um par da biblioteca de paletas (kernel design/palette-library.md); a bootstrap pergunta
+  #   light: L1              # L1-L8; projeto só escuro: omita esta linha
+  #   dark: D1               # D1-D5; projeto só claro: omita esta linha
+  gates: []                # [] por padrão: o humano aprova o «Pronto para construir» (os requisitos Ready); acrescente spec | plan | tasks para aprovar também
+  gate_sla_days: 14
+  gates_open: []
+  requirements:
+    format: story           # story | use-case | ears - a mjrp-writing-reqs lê daqui
+    stale_days: 14                            # In progress sem feature aberta nem atividade há N dias - o sensor do grafo acusa
+  environment:
+    setup: nenhum             # comando de setup, ou 'nenhum' se não há pré-requisito
+    runtime: ""               # ex.: 'python3, node' - preencha quando a stack existir
+  conformance:                # ADR-0019: a conformidade canônica do projeto
+    applied: []               # as notas de migração (CM-NNNN) cumpridas - a bootstrap, modo conform, acrescenta
+    received: {}              # <item>@<versão>: data - escrito só pelo new_project.py --refresh-kernel; a carência conta daí
+  screen: [web/src/]          # onde mora a tela (prefixos, caminhos ou globs) - o A2 do doctor e o hook pre-merge-commit leem daqui
+  sensors:
+    lint:  "npm run lint"
+    test:  "npm test -- --run"
+    build:  "npm run build"
+    # visual:                 # projeto com tela e referência visual aprovada (info-arch.md § Protótipos aprovados): o doctor (A2) exige
+    #   cmd: "node mjrp-scripts/visual_parity/run.mjs web/visual.config.mjs"   # o kit do kernel (só em projeto com tela)
+    #   config: web/visual.config.mjs   # o config visual do projeto: referência (viva ou estática), cenários, condições
+    #   when: pre-merge         # só o visual pode: roda na reconferência visual; o hook pre-merge-commit cobra o relatório
