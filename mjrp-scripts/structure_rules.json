@@ -1,0 +1,461 @@
+{
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
+  "version": "2026-10-09",
+  "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
+  "screenshots": {
+    "rule": "screenshot: dado → data/raw/<assunto>/ · referência de como deve ser → design/references/<assunto>/ · evidência de UAT ou prova de entrega → reports/evidence/<TASK-ID>/ · nome: <TASK-ID|assunto>-<viewport|origem>-AAAA-MM-DD.<ext> · captura do agente entra no git só quando uma task a cita; dado sensível fica fora do git, como em data/raw",
+    "folder_names": [
+      "screenshots",
+      "screenshot",
+      "prints",
+      "print",
+      "captures",
+      "capturas",
+      "images",
+      "imagens",
+      "img"
+    ]
+  },
+  "sdd": {
+    "files": [
+      "spec.md",
+      "plan.md",
+      "tasks.md"
+    ],
+    "history_dir": "milestones",
+    "features_dir": "features",
+    "feature_pattern": "^F\\d{2,}-[a-z0-9-]+$",
+    "rule": "cada feature tem a sua pasta docs/specs/features/Fxx-slug/ com spec.md, plan.md e tasks.md (S-63, grafo de requisitos); docs/specs/milestones/<id>/ é histórico congelado; spec, plan e tasks planos em docs/specs/ são o modelo anterior, aceito até o refresh do projeto"
+  },
+  "name_decides": {
+    "rule": "o nome decide a casa em qualquer pasta de artefato (raiz, design/, reports/; src/ e tests/ ficam fora — código pode ter 'proposal' no nome): proposta é <assunto>-proposal.<ext> (html, png, md, pdf...) e mora em design/proposals/",
+    "patterns": [
+      {
+        "regex": "(^|[-_.])proposals?$",
+        "to": "design/proposals"
+      }
+    ],
+    "scope_roots": [
+      "design",
+      "reports"
+    ]
+  },
+  "natures": {
+    "docs": "MEMÓRIA",
+    "reports": "OBSERVAÇÃO",
+    "design": "DESENHO",
+    "data": "DADO"
+  },
+  "profiles": {
+    "code-app": {
+      "roots": [
+        "docs",
+        "reports",
+        "design",
+        "data"
+      ],
+      "docs_allowed": [
+        "log.md",
+        "decisions",
+        "specs",
+        "wiki",
+        "TECHNICAL_DEBT.md",
+        "folder-index.md",
+        "index.md",
+        "README.md",
+        "originals"
+      ]
+    },
+    "meta": {
+      "roots": [
+        "docs",
+        "reports",
+        "design",
+        "data"
+      ],
+      "docs_allowed": [
+        "log.md",
+        "decisions",
+        "specs",
+        "wiki",
+        "TECHNICAL_DEBT.md",
+        "folder-index.md",
+        "index.md",
+        "README.md",
+        "originals",
+        "diagrams.md"
+      ]
+    },
+    "content": {
+      "roots": [
+        "docs",
+        "reports",
+        "design"
+      ],
+      "docs_allowed": [
+        "log.md",
+        "decisions",
+        "specs",
+        "wiki",
+        "TECHNICAL_DEBT.md",
+        "folder-index.md",
+        "index.md",
+        "README.md",
+        "originals"
+      ]
+    }
+  },
+  "subfolders": {
+    "reports": [
+      "audits",
+      "handoffs",
+      "harness-feedback",
+      "presentations",
+      "evidence"
+    ],
+    "design": [
+      "inception",
+      "wireframes",
+      "prototypes",
+      "proposals",
+      "references",
+      "diagrams"
+    ],
+    "data": [
+      "fixtures",
+      "raw",
+      "prompts",
+      "canonical"
+    ]
+  },
+  "diagram_themes": {
+    "root": "design/diagrams",
+    "rule": "todo diagrama desenhado numa conversa mora num tema: design/diagrams/<tema>/AAAA-MM-DD-HHMM-<name>.png (+ o .svg fonte ao lado); o diagrama de um épico pode ir na subpasta do épico dentro do tema, design/diagrams/<tema>/ep-NN/ (decisão do MJRP, 2026-10-09 18:49: muitos diagramas por épico). Nenhuma outra subpasta. O tema é o assunto, não a fase do PDLC (um diagrama atravessa fases); a fase vai na linha do diagrama no folder-index.md do tema. Tema novo entra aqui, no harness, com o OK do MJRP. Quem gera o caminho certo é o render_diagram.js (--theme, --name, --epic).",
+    "name_regex": "^\\d{4}-\\d{2}-\\d{2}-\\d{4}-[a-z0-9]+(-[a-z0-9]+)*\\.(png|svg)$",
+    "epic_subfolder_regex": "^ep-\\d{2}$",
+    "themes": {
+      "ways-of-working": "como trabalhamos — o fluxo do PDLC, a descoberta (Rapid x Full), o Ways of Working",
+      "skills": "o sistema de skills — arquétipos, papéis, quem faz o quê",
+      "architecture": "estrutura e stack — NFRs, estilos, camadas, o que é o núcleo",
+      "roadmap": "épicos, releases, o que ficou dentro e fora do escopo"
+    }
+  },
+  "wireframes": {
+    "root": "design/wireframes",
+    "rule": "o wireframe de cada rodada mora junto do inventário da tela (info-arch.md § Inventário do protótipo): design/wireframes/<name>-vN-<screen>.png (+ o .svg fonte ao lado, quando houver), as caixas com os IDs do inventário. Uma pasta só, sem subpastas; toda versão do protótipo (design/inception/<name>-vN.html) tem o wireframe de TODAS as telas, não só das que mudaram — mudança de dado conta; o antigo fica. Tela retirada de propósito se declara no info-arch.md com <!-- wireframe-retired: <tela> -->. Guardado pelo commit-msg (prototype_sync_check.py: protótipo no commit sem o info-arch e os wireframes da versão é recusado) e pelo doctor W14 (decisão do MJRP, 2026-10-09 19:36). Quem escreve é a mjrp-designing-ui, na mesma rodada do render (decisão do MJRP, 2026-10-09).",
+    "name_regex": "^[a-z0-9]+(-[a-z0-9]+)*-v\\d+(\\.\\d+)*(-[a-z0-9]+)+\\.(png|svg)$"
+  },
+  "kernel_themes": {
+    "root": "docs/wiki/kernel",
+    "rule": "a fonte do kernel (só o harness tem) se organiza por tema: docs/wiki/kernel/<tema>/<página>.md. O tema é o assunto, como nos diagramas; o filho recebe as páginas achatadas em docs/wiki/harness/, com o índice agrupado por tema. Na raiz do kernel ficam só o glossário e os índices. Tema novo entra aqui, com o OK do MJRP (decisão dele, 2026-10-09: os temas dos diagramas + design, refinados depois).",
+    "root_files": [
+      "terms.md",
+      "folder-index.md",
+      "index.md"
+    ],
+    "themes": {
+      "ways-of-working": "como trabalhamos — o PDLC em loops, a descoberta, o SDD, git, decisões, o kaizen",
+      "skills": "o sistema de skills e de agentes — arquétipos, papéis, o que um agente é",
+      "architecture": "estrutura do harness — camadas, memória, perfis, sensores, hooks, grafos",
+      "roadmap": "intenção e escopo — a visão, os resultados, épicos e releases no grafo de requisitos",
+      "design": "o cânone de design e os padrões de saída visual — telas, planilhas, paletas"
+    }
+  },
+  "tolerated_in_every_folder": [
+    "folder-index.md",
+    "index.md",
+    "README.md",
+    ".DS_Store",
+    ".gitkeep"
+  ],
+  "folder_aliases": {
+    "audits": "reports/audits",
+    "handoffs": "reports/handoffs",
+    "harness-feedback": "reports/harness-feedback",
+    "presentations": "reports/presentations",
+    "proposals": "design/proposals",
+    "prototypes": "design/prototypes",
+    "inception": "design/inception",
+    "fixtures": "data/fixtures",
+    "infographics": {
+      "meta": "docs/originals/infographics",
+      "content": "docs/originals/infographics",
+      "code-app": "data/raw/infographics"
+    },
+    "evidence": "reports/evidence",
+    "references": "design/references",
+    "wireframes": "design/wireframes"
+  },
+  "retired_folders": {
+    "sessions": "aposentada em 09/09 — o histórico é docs/log.md; mova para _archive/",
+    "architecture": "aposentada pela ADR-0001 — decisão em docs/decisions/, arquitetura em docs/specs/arch.md",
+    "archive": "arquivo não mora em docs/ — o aposentado vai para _archive/; audit vai para reports/audits/",
+    "debug": "o DEBUG_LOG foi aposentado (ADR-0014 §4) — mova para _archive/ depois de redistribuir"
+  },
+  "retired_files": {
+    "debug_log.md": "DEBUG_LOG aposentado (ADR-0014 §4): bug visto pelo humano → issue no docs/specs/uat.md; causa que virou regra → ## History da página na wiki; episódio → docs/log.md; depois, o arquivo vai para _archive/",
+    "debug-log.md": "DEBUG_LOG aposentado (ADR-0014 §4): bug visto pelo humano → issue no docs/specs/uat.md; causa que virou regra → ## History da página na wiki; episódio → docs/log.md; depois, o arquivo vai para _archive/"
+  },
+  "name_patterns": [
+    {
+      "regex": "(^ux-audit|quality_assessment|audit-report|^audit-|-audit-\\d{4}|-audit\\.(md|html)$|-code-quality\\.md$|-quality-review\\.md$|-bootstrap-report\\.md$)",
+      "to": "reports/audits"
+    },
+    {
+      "regex": "handoff",
+      "to": "reports/handoffs"
+    },
+    {
+      "regex": "proposal",
+      "to": "design/proposals"
+    },
+    {
+      "regex": "(^prototype|-prototype|prototype-)",
+      "to": "design/prototypes"
+    }
+  ],
+  "name_patterns_scope": [
+    "docs/specs"
+  ],
+  "name_patterns_exempt": [
+    "^(s|uc|ea|nfr)-\\d{2,}(-[a-z0-9]+)*\\.md$"
+  ],
+  "_name_patterns_exempt": "MJRP, 2026-10-09: requirement files are <ID>-<slug>.md; the slug is the English title and may name a prototype or a handoff as its subject, not as the file's nature",
+  "data_extensions": [
+    ".xlsx",
+    ".xls",
+    ".csv",
+    ".tsv",
+    ".parquet",
+    ".sqlite",
+    ".db",
+    ".jsonl"
+  ],
+  "visual_extensions": [
+    ".html",
+    ".pdf"
+  ],
+  "skip_inside_docs": [
+    "wiki/harness",
+    "wiki/kernel",
+    "wiki/feedback-from-other-projects",
+    "wiki/sources"
+  ],
+  "_originals_note": "docs/originals/ (ADR-0016; was docs/raw/) is the Karpathy chain in every profile (original source TEXT the agent reads: drafts, requirements, transcripts); a DATA file (xlsx, csv...) inside it still goes to data/raw/.",
+  "_deletion_classes": "ADR-0023 (F74): the four classes of a path - 1 insubstituível, 2 versionado, 3 derivado, 4 rotativo - are decided by `_pathclass.classify`, which reads these three sections from the rules file of the PROJECT THAT CONTAINS THE PATH (the global entries, from the file beside `_pathclass.py`). Sections are append-only (VT-05); a missing section is an empty list. An entry is {glob, owner, why}; `glob` is relative to the project root in `project`, absolute in `global` (`$TMPDIR` and `~` are expanded). `*` and `?` do not cross a `/`, a segment `**` is any number of folders, a trailing `/` means folders only, and a glob that matches a folder covers everything under it. Linked worktrees are NOT listed: four git tests decide them (the ancestor of main, a clean status, no ignored file outside `derived`, no lock). The F75 daily backup reads `derived.project` for what it leaves out of the copy.",
+  "derived": {
+    "_about": "class 3: not versioned and regenerable - whoever creates it, deletes it (`_safe.py discard`). Never copied into `_backups/`.",
+    "project": [
+      {
+        "glob": "**/node_modules/",
+        "owner": "npm install",
+        "why": "rebuilt from package-lock.json"
+      },
+      {
+        "glob": "**/__pycache__/",
+        "owner": "the Python interpreter",
+        "why": "bytecode, rebuilt on the next import"
+      },
+      {
+        "glob": "**/.venv/",
+        "owner": "python -m venv, pip install",
+        "why": "rebuilt from the requirements file"
+      },
+      {
+        "glob": "**/.pytest_cache/",
+        "owner": "pytest",
+        "why": "the runner's own cache"
+      },
+      {
+        "glob": "**/.ruff_cache/",
+        "owner": "ruff",
+        "why": "the linter's own cache (it writes its own .gitignore inside); the next run draws it again (UAT-401: it held several merged worktrees)"
+      },
+      {
+        "glob": "**/_backups/README.md",
+        "owner": "mjrp-scripts/_safe.py (_make_backups writes it the first time it creates `_backups/`)",
+        "why": "the folder's own explanation, written again the next time `_backups/` is created. Only this file: a retired copy in `_backups/` is class 4 and keeps the worktree from being derived"
+      },
+      {
+        "glob": "**/.DS_Store",
+        "owner": "macOS Finder",
+        "why": "view state of a folder"
+      },
+      {
+        "glob": "**/UAT-visual/*",
+        "owner": "the visual judge (mjrp-scripts/visual_parity), the run that created it",
+        "why": "raw captures of one run; the sensor draws them again. A file git tracks (the run's summary and diff) is class 2, never derived (F52 TASK-00)"
+      },
+      {
+        "glob": "**/.playwright/",
+        "owner": "the visual judge",
+        "why": "Playwright's own state, rebuilt by the next run"
+      },
+      {
+        "glob": "**/web/test-results/",
+        "owner": "the web test runner",
+        "why": "failure artifacts of the last run"
+      },
+      {
+        "glob": "dist/",
+        "owner": "mjrp-scripts/build_plugin.py",
+        "why": "plugin build output, rebuilt from mjrp-skills/ (AGENTS.md)"
+      },
+      {
+        "glob": "mjrp-skills-packages/",
+        "owner": "mjrp-scripts/package_dual.py",
+        "why": "packages for the Cowork, rebuilt from mjrp-skills/ (AGENTS.md)"
+      },
+      {
+        "glob": "**/.mjrp/sensors.json",
+        "owner": "the sensors and session scripts that write it (doctor, stop_gate, session_lease, loop)",
+        "why": "the last result of the declared sensors; the doctor writes it again on its next run"
+      },
+      {
+        "glob": "**/.mjrp/*_state.json",
+        "owner": "the sensors and session scripts that write it (doctor, stop_gate, session_lease, loop)",
+        "why": "the state a sensor keeps for the Control Center (<owner>__<ledger>_state.json, conformance_state.json); rebuilt by the next pass"
+      },
+      {
+        "glob": "**/.mjrp/*.lock",
+        "owner": "the sensors and session scripts that write it (doctor, stop_gate, session_lease, loop)",
+        "why": "the lock of a state file; empty, recreated on use"
+      },
+      {
+        "glob": "**/.mjrp/bashsnap-*.json",
+        "owner": "mjrp-scripts/stop_gate.py",
+        "why": "the snapshot of the tree before one Bash command of a session"
+      },
+      {
+        "glob": "**/.mjrp/touched-*.json",
+        "owner": "mjrp-scripts/stop_gate.py",
+        "why": "the files one session touched this turn; it dies with the session"
+      },
+      {
+        "glob": "**/.import_linter_cache/",
+        "owner": "import-linter",
+        "why": "the tool's own cache, rebuilt on the next run"
+      }
+    ],
+    "global": [
+      {
+        "glob": "$TMPDIR/",
+        "owner": "the process that created each file in it; macOS clears it over time",
+        "why": "scratch space outside every project (ADR-0023 § 1: the $TMPDIR is derived by declaration)"
+      },
+      {
+        "glob": "/tmp/claude-*/",
+        "owner": "the Claude Code session that created it",
+        "why": "the session's scratchpad"
+      },
+      {
+        "glob": "/**/.DS_Store",
+        "owner": "macOS Finder",
+        "why": "view state of a folder, in or out of a project"
+      },
+      {
+        "glob": "/private/tmp/claude-*/",
+        "owner": "the Claude Code session that created it",
+        "why": "the session's scratchpad (macOS resolves /tmp to /private/tmp)"
+      },
+      {
+        "glob": "~/.mjrp/control-center/bin/",
+        "owner": "apps/control-center/ops/install-service.sh (whoever installs the service compiles it)",
+        "why": "the Touch ID utility of the Control Center (CC-ADR-0031), compiled from the committed ops/presence/presence.swift; the next install builds it again"
+      }
+    ]
+  },
+  "rotating": {
+    "_about": "class 4: the owner overwrites it (tmp + os.replace) and prunes what passed the ceiling or the age - only what it created. Nobody else removes it (`_safe.py discard` refuses).",
+    "project": [
+      {
+        "glob": "**/_backups/*.[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9]",
+        "owner": "mjrp-scripts/_safe.py (retire and snapshot prune it by the ceiling of `budgets`: 30 days and 1 GB)",
+        "why": "a copy the safe module made, named <path>.<YYYYMMDD-HHMMSS>"
+      },
+      {
+        "glob": "**/_backups/*.[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9].[0-9]*",
+        "owner": "mjrp-scripts/_safe.py",
+        "why": "a second copy in the same second, named <path>.<YYYYMMDD-HHMMSS>.<n>"
+      },
+      {
+        "glob": "**/.mjrp/sessions/",
+        "owner": "mjrp-scripts/session_lease.py",
+        "why": "one lease per agent session; a lease not released goes stale by itself (LEASE_HOURS)"
+      },
+      {
+        "glob": "**/.mjrp/turn.json",
+        "owner": "mjrp-scripts/stop_gate.py",
+        "why": "the turn of the session, overwritten by tmp + os.replace"
+      },
+      {
+        "glob": "**/.mjrp/turn-*.json",
+        "owner": "mjrp-scripts/stop_gate.py",
+        "why": "the turn of one session, overwritten by tmp + os.replace"
+      }
+    ],
+    "global": [
+      {
+        "glob": "~/_MJRP-BCKPS/daily/",
+        "owner": "mjrp-scripts/daily_backup.py (F75, ADR-0024 § 7)",
+        "why": "the daily copy of all projects; the script keeps the newest verified ones and prunes the rest"
+      }
+    ]
+  },
+  "released_copies": {
+    "_about": "F84 (UAT-367). A stamped copy in a worktree's `_backups/` (class 4) does not keep a MERGED, clean worktree from leaving when its `source` is listed here AND the copy's content is already in the history of `main` at that path (the judge checks the blob; a copy of an uncommitted hand edit stays). Only generated files that git versions belong here. Nothing is deleted by this list: it only tells the judge of a worktree what the copy protected.",
+    "project": [
+      {
+        "source": "STRUCTURE.md",
+        "owner": "mjrp-scripts/tree.py (snapshots it before each rewrite)",
+        "why": "generated from the disk + structure.yml and versioned; every committed version is in git, so a stamped copy of one is redundant"
+      }
+    ],
+    "global": []
+  },
+  "budgets": {
+    "_about": "ADR-0023 § 3 (ceilings decided by the agent under the MJRP's delegation, log 2026-10-26 01:08, revisable). The doctor's W18 measures each entry and WARNS above the ceiling (an error would take a 13th slot of ADR-0002, which belongs to W13). An entry: id, what it measures (`glob`, or `kind`), the ceiling (`max_gb`, `max_files`, `max_days`, `max_count`, `max_growth`), `owner` (who cleans) and `when`. A path the doctor cannot see from where it runs is a 'não avaliável' note, never 0 GB.",
+    "project": [
+      {
+        "id": "retired-backups",
+        "glob": "_backups/",
+        "max_gb": 1,
+        "max_days": 30,
+        "owner": "mjrp-scripts/_safe.py (prune)",
+        "when": "30 days or 1 GB, whichever comes first; the safety net against the agent's mistake, not a backup (ADR-0023 § 4)"
+      },
+      {
+        "id": "merged-worktrees",
+        "kind": "merged_clean_worktrees",
+        "max_count": 0,
+        "owner": "the integrator, at the end of the train (`merge_train.py clean-worktrees --apply`, which discards each one through `_safe.py discard`)",
+        "when": "none left after the train: a merged, clean worktree has nothing to keep; one held only by the `.mjrp/` of an ended session or by stamped `_backups/` copies counts (F120: `_pathclass.judge_worktree`)"
+      },
+      {
+        "id": "worktrees-total",
+        "kind": "worktrees_total",
+        "max_gb": 10,
+        "owner": "the integrator, at the end of the train (`merge_train.py clean-worktrees --apply`, which `merge_train.py merge` runs by itself when the merge lands on `main`)",
+        "when": "10 GB for the whole `.claude/worktrees/` of the main checkout, whatever the class of each worktree (about ten live ones at ~1 GB); above it the cleanup did not run or the worktrees are held (UAT-401, F120)"
+      }
+    ],
+    "global": [
+      {
+        "id": "tmp-cc",
+        "glob": "$TMPDIR/cc-*",
+        "max_gb": 5,
+        "owner": "the process that created each folder (render.mjs and the visual judge remove their own, in a finally)",
+        "when": "5 GB in total; a visual judge round needs 400 to 600 MB"
+      },
+      {
+        "id": "daily-copies",
+        "glob": "~/_MJRP-BCKPS/daily/projects-*.tar.gz",
+        "max_files": 3,
+        "max_growth": 2,
+        "owner": "mjrp-scripts/daily_backup.py (F75)",
+        "when": "three verified archives at most (two plus the last one in which every project was ok); warns when the newest is over 2x the previous (ADR-0024 § 7)"
+      }
+    ]
+  }
+}

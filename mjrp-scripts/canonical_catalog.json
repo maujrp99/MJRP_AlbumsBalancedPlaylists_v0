@@ -1,0 +1,3610 @@
+{
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "version": "2026-10-14",
+  "default_grace_days": 30,
+  "open_warning_notes": {
+    "_about": "notas cujo aviso do sensor É o trabalho que a nota manda fazer: o --check-note só passa sem aviso em aberto, e cada aviso que sobra tem de estar registrado como pergunta ao MJRP em `conformance.asked.<nota>: [arquivos]` do contrato (auditoria do pedroso-incorp, 2026-10-18, ponto 6)",
+    "CM-0043": "report_types_check.py",
+    "CM-0059": "report_types_check.py",
+    "CM-0060": "report_types_check.py",
+    "CM-0074": "feature_history_check.py"
+  },
+  "pattern_carriers": [
+    "mjrp-skills/mjrp-sw-factory/*/*/templates/*"
+  ],
+  "not_canonical": [
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/meta/mjrp-inventorying-folders/templates/folder-index.md",
+      "reason": "MJRP decision. Artefato opcional",
+      "marked_at": "2026-10-16 11:27",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/meta/mjrp-inventorying-folders/templates/log-entry.md",
+      "reason": "MJRP decision. Artefato opcional",
+      "marked_at": "2026-10-16 11:27",
+      "batch": "20261016-112741-4368d6f5"
+    }
+  ],
+  "awaiting_item": [],
+  "items": [
+    {
+      "id": "uat",
+      "version": 3,
+      "title": "uat.md com a coluna Reportado por (as trilhas Humano e Agente)",
+      "path": "docs/specs/uat.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/specs/uat.md"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "ADR-0009 do Control Center, F12, 2026-10-12 (a gravidade virou coluna do UAT) · v3 (2026-10-19): o MJRP separou o trabalho em duas trilhas, Humano e Agente (F48, S-155); o uat.md ganha a coluna `Reportado por` e a regra de quando uma issue de agente sobe (P0 ou segurança)",
+      "owner_skill": "mjrp-specifying-sdd-artifacts",
+      "judge_skill": "mjrp-ensuring-quality",
+      "check": {
+        "kind": "script",
+        "script": "uat_tracks_check.py",
+        "label": "o uat.md não separa as trilhas Humano e Agente"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/uat.md",
+        "mjrp-scripts/uat_tracks_check.py"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/uat.md": "sha256:25390950f95d26d1fd9a60734caf6a41260348ec39653db038dccd5b1edf23b1",
+        "mjrp-scripts/uat_tracks_check.py": "sha256:3c37505029b78e73c0990dc80e663dff6a162f75a55de977e92b17e0dddd98d5"
+      },
+      "migration": "CM-0081",
+      "superseded": [
+        {
+          "version": 2,
+          "migration": "CM-0001",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "uat@2",
+              "label": "não declara o formato `uat@2`",
+              "path": "docs/specs/uat.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^\\|[^\\n]*\\bGravidade\\b[^\\n]*\\|",
+              "label": "sem a coluna `Gravidade` na tabela de issues",
+              "path": "docs/specs/uat.md"
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "migration": null,
+          "check": {
+            "kind": "exists",
+            "paths": [
+              "docs/specs/uat.md"
+            ]
+          }
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/uat.md"
+    },
+    {
+      "id": "roadmap",
+      "version": 6,
+      "title": "ROADMAP em Now/Next/Later, com resultados ^OUT-xx, tags:: e os campos rotulados que a tela mostra",
+      "path": "ROADMAP.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes); o ROADMAP do fin-control era fases com checklist de TASKs · v5 (2026-10-17): decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato para nosso PDLC.» (problem-outcome-doc.md: o resultado = problema, quem sente, medida) · v6 (2026-10-17): decisão do MJRP de 2026-10-17 23:02: o dono do conteúdo é a skill do papel, e o modelo mora com o dono",
+      "owner_skill": "mjrp-coaching-pm",
+      "judge_skill": "mjrp-coaching-pm",
+      "check": [
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Now\\b",
+          "label": "sem a seção Now",
+          "path": "ROADMAP.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Next\\b",
+          "label": "sem a seção Next",
+          "path": "ROADMAP.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Later\\b",
+          "label": "sem a seção Later",
+          "path": "ROADMAP.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "\\^(?:[A-Z]+-)?OUT-\\d+\\s*$",
+          "label": "sem resultados `^OUT-xx` ancorados (cada um com medida; o aninhado leva o `id_prefix`: `^CC-OUT-xx`)",
+          "path": "ROADMAP.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^tags::",
+          "label": "sem linhas `tags::`",
+          "path": "ROADMAP.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^- \\*\\*Problema:\\*\\*",
+          "label": "sem `- **Problema:**` (o campo que a tela mostra; rótulo em negrito, numa linha de lista, na seção `###` do resultado)",
+          "path": "ROADMAP.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^- \\*\\*Quem sente:\\*\\*",
+          "label": "sem `- **Quem sente:**` (o campo que a tela mostra; rótulo em negrito, numa linha de lista, na seção `###` do resultado)",
+          "path": "ROADMAP.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^- \\*\\*Medida:\\*\\*",
+          "label": "sem `- **Medida:**` (o campo que a tela mostra; rótulo em negrito, numa linha de lista, na seção `###` do resultado)",
+          "path": "ROADMAP.md"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/roadmap.md",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/problem-outcome-doc.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/roadmap.md": "sha256:d2eb8be6e89692ccb0edbe9f81b2df2714c5af7cdd3ed9f21ec799cb63e7f431",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/problem-outcome-doc.md": "sha256:8bc9006d2faff1dc95d614d6ec60abe03b00927d52e7bd684c94c908e3c25691"
+      },
+      "migration": "CM-0045",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": null,
+          "check": {
+            "kind": "exists",
+            "paths": [
+              "ROADMAP.md"
+            ]
+          }
+        },
+        {
+          "version": 2,
+          "migration": "CM-0002",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Now\\b",
+              "label": "sem a seção Now",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Next\\b",
+              "label": "sem a seção Next",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Later\\b",
+              "label": "sem a seção Later",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "\\^OUT-\\d+\\s*$",
+              "label": "sem resultados `^OUT-xx` ancorados (cada um com medida)",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^tags::",
+              "label": "sem linhas `tags::`",
+              "path": "ROADMAP.md"
+            }
+          ]
+        },
+        {
+          "version": 3,
+          "migration": "CM-0017",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Now\\b",
+              "label": "sem a seção Now",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Next\\b",
+              "label": "sem a seção Next",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Later\\b",
+              "label": "sem a seção Later",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "\\^(?:[A-Z]+-)?OUT-\\d+\\s*$",
+              "label": "sem resultados `^OUT-xx` ancorados (cada um com medida; o aninhado leva o `id_prefix`: `^CC-OUT-xx`)",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^tags::",
+              "label": "sem linhas `tags::`",
+              "path": "ROADMAP.md"
+            }
+          ]
+        },
+        {
+          "version": 4,
+          "migration": "CM-0025",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Now\\b",
+              "label": "sem a seção Now",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Next\\b",
+              "label": "sem a seção Next",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Later\\b",
+              "label": "sem a seção Later",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "\\^(?:[A-Z]+-)?OUT-\\d+\\s*$",
+              "label": "sem resultados `^OUT-xx` ancorados (cada um com medida; o aninhado leva o `id_prefix`: `^CC-OUT-xx`)",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^tags::",
+              "label": "sem linhas `tags::`",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^- \\*\\*Problema:\\*\\*",
+              "label": "sem `- **Problema:**` (o campo que a tela mostra; rótulo em negrito, numa linha de lista, na seção `###` do resultado)",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^- \\*\\*Quem sente:\\*\\*",
+              "label": "sem `- **Quem sente:**` (o campo que a tela mostra; rótulo em negrito, numa linha de lista, na seção `###` do resultado)",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^- \\*\\*Medida:\\*\\*",
+              "label": "sem `- **Medida:**` (o campo que a tela mostra; rótulo em negrito, numa linha de lista, na seção `###` do resultado)",
+              "path": "ROADMAP.md"
+            }
+          ]
+        },
+        {
+          "version": 5,
+          "migration": "CM-0041",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Now\\b",
+              "label": "sem a seção Now",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Next\\b",
+              "label": "sem a seção Next",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Later\\b",
+              "label": "sem a seção Later",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "\\^(?:[A-Z]+-)?OUT-\\d+\\s*$",
+              "label": "sem resultados `^OUT-xx` ancorados (cada um com medida; o aninhado leva o `id_prefix`: `^CC-OUT-xx`)",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^tags::",
+              "label": "sem linhas `tags::`",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^- \\*\\*Problema:\\*\\*",
+              "label": "sem `- **Problema:**` (o campo que a tela mostra; rótulo em negrito, numa linha de lista, na seção `###` do resultado)",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^- \\*\\*Quem sente:\\*\\*",
+              "label": "sem `- **Quem sente:**` (o campo que a tela mostra; rótulo em negrito, numa linha de lista, na seção `###` do resultado)",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^- \\*\\*Medida:\\*\\*",
+              "label": "sem `- **Medida:**` (o campo que a tela mostra; rótulo em negrito, numa linha de lista, na seção `###` do resultado)",
+              "path": "ROADMAP.md"
+            }
+          ]
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/roadmap.md"
+    },
+    {
+      "id": "releases",
+      "version": 3,
+      "title": "releases ^REL-xx (no ROADMAP.md, de onde o Control Center os lê)",
+      "path": "ROADMAP.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes) · v2 (2026-10-17): decisão do MJRP de 2026-10-17 23:02: o dono do conteúdo é a skill do papel, e o modelo mora com o dono · v3 (2026-10-19): o modelo `templates/prd.md`, que o item compartilha com o `prd`, mudou para a regra «o PRD é a fonte do conteúdo» (`prd@2`, CM-0077); o check não muda",
+      "owner_skill": "mjrp-coaching-pm",
+      "judge_skill": "mjrp-coaching-pm",
+      "check": {
+        "kind": "contains",
+        "pattern": "\\^REL-\\d+",
+        "label": "sem nenhum release `^REL-xx` — escreva-os no ROADMAP.md, de onde o Control Center os lê (um `^REL` só no PRD nunca chega à tela)",
+        "paths": [
+          "ROADMAP.md",
+          "docs/specs/prd.md"
+        ]
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/prd.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/prd.md": "sha256:8735551526c71e9f6e51fae45316df7a76c00a474e42d2e9dca360778b1fc8da"
+      },
+      "migration": "CM-0078",
+      "superseded": [
+        {
+          "version": 2,
+          "migration": "CM-0046",
+          "check": {
+            "kind": "contains",
+            "pattern": "\\^REL-\\d+",
+            "label": "sem nenhum release `^REL-xx` — escreva-os no ROADMAP.md, de onde o Control Center os lê (um `^REL` só no PRD nunca chega à tela)",
+            "paths": [
+              "ROADMAP.md",
+              "docs/specs/prd.md"
+            ]
+          }
+        },
+        {
+          "version": 1,
+          "migration": "CM-0003",
+          "check": {
+            "kind": "contains",
+            "pattern": "\\^REL-\\d+",
+            "label": "sem nenhum release `^REL-xx` — escreva-os no ROADMAP.md, de onde o Control Center os lê (um `^REL` só no PRD nunca chega à tela)",
+            "paths": [
+              "ROADMAP.md",
+              "docs/specs/prd.md"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "feature-track",
+      "version": 2,
+      "title": "lane: e solution_type: no frontmatter de cada feature (as duas vias e o tipo)",
+      "path": "docs/specs/features/",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/specs/features/*/spec.md"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes); F11 do Control Center já declara `track: Fix`; v2: decisão do MJRP de 2026-10-25 12:23 — o `track:` virou dois campos, `lane` (a via do PDLC v12: standard | fast) e `solution_type` (o tipo: feature | fix)",
+      "owner_skill": "mjrp-specifying-sdd-artifacts",
+      "judge_skill": "mjrp-ensuring-sdd",
+      "check": [
+        {
+          "kind": "frontmatter_key",
+          "glob": "docs/specs/features/*/spec.md",
+          "key": "lane"
+        },
+        {
+          "kind": "frontmatter_key",
+          "glob": "docs/specs/features/*/spec.md",
+          "key": "solution_type"
+        },
+        {
+          "kind": "frontmatter_key",
+          "glob": "docs/specs/features/*/spec.md",
+          "key": "fixes",
+          "if": {
+            "key": "solution_type",
+            "equals": "fix"
+          },
+          "min": 0
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/spec.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/spec.md": "sha256:a574097cd22a4068e18d0098f106e6c2c59f1e3f15817ccf7a9232d98c0b098c"
+      },
+      "migration": "CM-0083",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0004",
+          "check": [
+            {
+              "kind": "frontmatter_key",
+              "glob": "docs/specs/features/*/spec.md",
+              "key": "track"
+            },
+            {
+              "kind": "frontmatter_key",
+              "glob": "docs/specs/features/*/spec.md",
+              "key": "fixes",
+              "if": {
+                "key": "track",
+                "equals": "Fix"
+              },
+              "min": 0
+            }
+          ]
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/spec.md"
+    },
+    {
+      "id": "evidence-folder",
+      "version": 4,
+      "title": "reports/evidence/<TASK-ID>/ (a evidência de cada feature mora ali, não só a pasta)",
+      "path": "reports/evidence/",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/specs/features/*/spec.md"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-implementing-tasks",
+      "judge_skill": "mjrp-ensuring-quality",
+      "check": {
+        "kind": "script",
+        "script": "evidence_folder_check.py",
+        "label": "a evidência não mora em reports/evidence/<TASK-ID>/"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/reference/feature-artifacts.md",
+        "mjrp-scripts/evidence_folder_check.py"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/reference/feature-artifacts.md": "sha256:1294d74fa3480f937322f8e18f68c4c93a7b10b6ec6d0959db6733289b6dcfbb",
+        "mjrp-scripts/evidence_folder_check.py": "sha256:c8b8811fee165d356078ecd977bfb122889f8dd648fae6612e2d3cb23896c808"
+      },
+      "migration": "CM-0080",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0005",
+          "check": {
+            "kind": "exists",
+            "paths": [
+              "reports/evidence/"
+            ]
+          }
+        },
+        {
+          "version": 2,
+          "migration": "CM-0026",
+          "check": {
+            "kind": "script",
+            "script": "evidence_folder_check.py",
+            "label": "a evidência não mora em reports/evidence/<TASK-ID>/"
+          }
+        },
+        {
+          "version": 3,
+          "migration": "CM-0068",
+          "check": {
+            "kind": "script",
+            "script": "evidence_folder_check.py",
+            "label": "a evidência não mora em reports/evidence/<TASK-ID>/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "contract-screen",
+      "version": 1,
+      "title": "screen: no contrato (onde mora a tela)",
+      "path": ".mjrp-project.yml",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_screen"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "ADR-0017 do harness, 2026-10-12; auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-pdlc-bootstrap",
+      "judge_skill": null,
+      "check": {
+        "kind": "contract_key",
+        "key": "screen"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml": "sha256:ba3baf4a1719ddb0f5595a874ca600f69dcf7b729664b92f076d748f1afa0204"
+      },
+      "migration": "CM-0006",
+      "superseded": []
+    },
+    {
+      "id": "visual-sensor",
+      "version": 2,
+      "title": "sensors.visual no contrato (paridade visual)",
+      "path": ".mjrp-project.yml",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_screen"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "ADR-0017 do harness, 2026-10-12 (o Control Center 1.0 chegou ao UAT longe do protótipo, com todos os sensores verdes)",
+      "owner_skill": "mjrp-pdlc-bootstrap",
+      "judge_skill": "mjrp-ensuring-quality",
+      "check": [
+        {
+          "kind": "contract_key",
+          "key": "sensors.visual"
+        },
+        {
+          "kind": "delegated",
+          "code": "A2",
+          "requires": [
+            {
+              "kind": "contract_key",
+              "key": "screen"
+            },
+            {
+              "kind": "contains",
+              "pattern": "Aprovado por:",
+              "label": "sem referência visual aprovada (`Aprovado por:`)",
+              "path": "docs/specs/info-arch.md"
+            }
+          ]
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-scripts/visual_gate.py"
+      ],
+      "pattern_digest": {
+        "mjrp-scripts/visual_gate.py": "sha256:0bc8a6f9237bafecf2560d7e2839a7b6d38019b8686c6a7a37e6d3dd73942be3"
+      },
+      "migration": "CM-0023",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0007",
+          "check": [
+            {
+              "kind": "contract_key",
+              "key": "sensors.visual"
+            },
+            {
+              "kind": "delegated",
+              "code": "A2",
+              "requires": [
+                {
+                  "kind": "contract_key",
+                  "key": "screen"
+                },
+                {
+                  "kind": "contains",
+                  "pattern": "Aprovado por:",
+                  "label": "sem referência visual aprovada (`Aprovado por:`)",
+                  "path": "docs/specs/info-arch.md"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "info-arch",
+      "version": 1,
+      "title": "info-arch.md (inventário da UI, estados com block ID)",
+      "path": "docs/specs/info-arch.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_screen"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes); sem ele, cinco requisitos do fin-control (S-48, S-49, S-50, S-57, S-58) não avançam",
+      "owner_skill": "mjrp-designing-ui",
+      "judge_skill": "mjrp-critiquing-ux",
+      "check": [
+        {
+          "kind": "exists",
+          "paths": [
+            "docs/specs/info-arch.md"
+          ]
+        },
+        {
+          "kind": "contains",
+          "pattern": "^\\|\\s*UI-\\d+",
+          "label": "sem nenhuma linha de inventário `UI-xx`",
+          "path": "docs/specs/info-arch.md"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/info-arch.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/info-arch.md": "sha256:b05466ad71c95a8f3eddca3c94ad5bda3be69d91c55c8aa8a285d6b0408b72e0"
+      },
+      "migration": "CM-0008",
+      "superseded": []
+    },
+    {
+      "id": "wireframes",
+      "version": 1,
+      "title": "design/wireframes/ (wireframes por tela)",
+      "path": "design/wireframes/",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_screen"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "MJRP, 2026-10-09: protótipo, info-arch e wireframes andam juntos; auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-designing-ui",
+      "judge_skill": "mjrp-critiquing-ux",
+      "check": [
+        {
+          "kind": "glob",
+          "pattern": "design/wireframes/**/*.png",
+          "min": 1
+        },
+        {
+          "kind": "delegated",
+          "code": "W14",
+          "requires": {
+            "kind": "exists",
+            "paths": [
+              "docs/specs/info-arch.md"
+            ]
+          }
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/prototype-inventory.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/prototype-inventory.md": "sha256:99a7aea57fc7968f47c6d8093428ba6c15640343c31e321c38fa68d8cd8e50ee"
+      },
+      "migration": "CM-0009",
+      "superseded": []
+    },
+    {
+      "id": "design-system",
+      "version": 6,
+      "title": "design-system.md que declara os temas e traz as Identity Specs",
+      "path": "docs/specs/design-system.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_screen"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "Control Center: o produto troca de paleta; auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes) · v3 (2026-10-17): decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato para nosso PDLC.» (identity-specs.md) · v4 (2026-10-18): o design-system.md traz a linha **Status: …** que a tela do Control Center lê (a mesma expressão do leitor; o modelo nasce com **Status: Draft**); o fin-control esbarrou nisso em 2026-10-17 e o pedroso-incorp em 2026-10-18 · v5 (2026-10-18): decisão do MJRP de 2026-10-18 (a crítica de UX do v4.10 achou a sobrecarga e não propôs forma visual): o modelo ganha a seção opcional `## Densidade`, onde o projeto declara o N da lista, os níveis e a altura expandida; o check não muda · v6 (2026-10-18): decisão do MJRP de 2026-10-18 (o card Tech Stack do v4.11 aninhou o conteúdo em forma que o design-system.md não declarava): o design-system.md é o artefato vivo e a fonte de todo padrão visual; o modelo ganha o checklist de padrões em Key Components; o check não muda",
+      "owner_skill": "mjrp-defining-design-systems",
+      "judge_skill": "mjrp-critiquing-ux",
+      "check": [
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Themes?\\b",
+          "label": "não declara os temas (seção `## Themes`)",
+          "path": "docs/specs/design-system.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "Identity Specs",
+          "label": "sem as Identity Specs (Concept, Palette, Type, Rhythm, Surface) em `Concept & DNA`",
+          "path": "docs/specs/design-system.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "\\*\\*Status:?\\*\\*:?\\s*([^\\n]+)|\\*\\*Status:\\s*([^*\\n]+)\\*\\*",
+          "label": "sem a linha `**Status: …**` que a tela do Control Center lê (`**Status: Draft**`, ou `**Status: Aprovado pelo MJRP em AAAA-MM-DD**` com a aprovação registrada)",
+          "path": "docs/specs/design-system.md"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/templates/design-system.md",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/templates/identity-specs.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/templates/design-system.md": "sha256:32b7ac2b8ce1296998d169b4a9420504c3b45923d34e24aa5f2390cf3a30101c",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/templates/identity-specs.md": "sha256:74ba922d930b346ab4911e1c1ed79423b26241a349884fec8b25d7ae519dfbf8"
+      },
+      "migration": "CM-0075",
+      "superseded": [
+        {
+          "version": 5,
+          "migration": "CM-0064",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Themes?\\b",
+              "label": "não declara os temas (seção `## Themes`)",
+              "path": "docs/specs/design-system.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "Identity Specs",
+              "label": "sem as Identity Specs (Concept, Palette, Type, Rhythm, Surface) em `Concept & DNA`",
+              "path": "docs/specs/design-system.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "\\*\\*Status:?\\*\\*:?\\s*([^\\n]+)|\\*\\*Status:\\s*([^*\\n]+)\\*\\*",
+              "label": "sem a linha `**Status: …**` que a tela do Control Center lê (`**Status: Draft**`, ou `**Status: Aprovado pelo MJRP em AAAA-MM-DD**` com a aprovação registrada)",
+              "path": "docs/specs/design-system.md"
+            }
+          ]
+        },
+        {
+          "version": 4,
+          "migration": "CM-0061",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Themes?\\b",
+              "label": "não declara os temas (seção `## Themes`)",
+              "path": "docs/specs/design-system.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "Identity Specs",
+              "label": "sem as Identity Specs (Concept, Palette, Type, Rhythm, Surface) em `Concept & DNA`",
+              "path": "docs/specs/design-system.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "\\*\\*Status:?\\*\\*:?\\s*([^\\n]+)|\\*\\*Status:\\s*([^*\\n]+)\\*\\*",
+              "label": "sem a linha `**Status: …**` que a tela do Control Center lê (`**Status: Draft**`, ou `**Status: Aprovado pelo MJRP em AAAA-MM-DD**` com a aprovação registrada)",
+              "path": "docs/specs/design-system.md"
+            }
+          ]
+        },
+        {
+          "version": 3,
+          "migration": "CM-0040",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Themes?\\b",
+              "label": "não declara os temas (seção `## Themes`)",
+              "path": "docs/specs/design-system.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "Identity Specs",
+              "label": "sem as Identity Specs (Concept, Palette, Type, Rhythm, Surface) em `Concept & DNA`",
+              "path": "docs/specs/design-system.md"
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "migration": null,
+          "check": {
+            "kind": "exists",
+            "paths": [
+              "docs/specs/design-system.md"
+            ]
+          }
+        },
+        {
+          "version": 2,
+          "migration": "CM-0010",
+          "check": {
+            "kind": "contains",
+            "pattern": "^##\\s+Themes?\\b",
+            "label": "não declara os temas (seção `## Themes`)",
+            "path": "docs/specs/design-system.md"
+          }
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/templates/design-system.md"
+    },
+    {
+      "id": "arch-critique",
+      "version": 1,
+      "title": "crítica de arquitetura (relatório de auditoria)",
+      "path": "reports/audits/",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/decisions"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "a regra da ADR no AGENTS.md (crítica antes do aceite); auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-critiquing-architecture",
+      "judge_skill": null,
+      "check": {
+        "kind": "glob",
+        "pattern": "reports/audits/*architecture-audit*.md",
+        "min": 1
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-architecture/templates/architecture-audit.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-architecture/templates/architecture-audit.md": "sha256:768c998394ea0a2d9b401907fbbdef2bfd59bc8ee413a01837d95c19d2b481b1"
+      },
+      "migration": "CM-0011",
+      "superseded": []
+    },
+    {
+      "id": "adr-names",
+      "version": 4,
+      "title": "ADRs com nome NNNN-kebab em inglês e cabeçalho que a tela lê (título `# ADR-NNNN: título` e linha `**Status**:`), não só o nome do arquivo; e, desde 2026-10-26, curtas (6.000 caracteres) e com a via do aceite (tech lead ou MJRP)",
+      "path": "docs/decisions/",
+      "applies_to": {
+        "profiles": [
+          "code-app",
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/decisions"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "a regra de nomes do CLAUDE.md (2026-09-09); auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes) · MJRPpersonal, 2026-10-18: 4 ADRs com `# ADR 0002: …` (espaço) e `## Status` (a palavra na linha de baixo) e o nome passava; o leitor do Control Center não os lia (5º caso de «o check não pede o que a tela lê») · v4 (2026-10-26): o MJRP achou a ADR verbosa e difícil de revisar (2026-10-24 11:10, F62) e tirou de si o aceite da ADR técnica, que passa a um agente tech lead (2026-10-24 14:21, F66): o molde curto decision@3 e a linha Acceptance",
+      "owner_skill": "mjrp-recording-decisions",
+      "judge_skill": "mjrp-auditing-docs",
+      "check": [
+        {
+          "kind": "name_pattern",
+          "glob": "docs/decisions/*.md",
+          "regex": "^\\d{4}-[a-z0-9]+(-[a-z0-9]+)*\\.md$",
+          "deny_words": [
+            "assinaturas",
+            "assinatura",
+            "cartao",
+            "cartoes",
+            "esteira",
+            "metodologia",
+            "taxonomia",
+            "despesas",
+            "despesa",
+            "receitas",
+            "receita",
+            "reserva",
+            "caixinhas",
+            "caixinha",
+            "glossario",
+            "nomenclatura",
+            "modularizacao",
+            "controle",
+            "independente",
+            "decisao",
+            "decisoes",
+            "visao",
+            "arquitetura",
+            "requisitos",
+            "orcamento",
+            "fatura",
+            "faturas",
+            "gestao",
+            "politica",
+            "regras",
+            "relatorio",
+            "usuario",
+            "projeto",
+            "projetos",
+            "padrao",
+            "padroes",
+            "estrategia",
+            "definicao",
+            "analise",
+            "migracao",
+            "ajuste",
+            "paleta",
+            "temas",
+            "da",
+            "dos",
+            "das",
+            "para",
+            "uma",
+            "pelo",
+            "pela",
+            "como",
+            "nao",
+            "uso",
+            "escolha",
+            "banco",
+            "dados",
+            "modulo",
+            "modulos",
+            "camada",
+            "camadas",
+            "servico",
+            "servicos",
+            "tela",
+            "telas",
+            "fluxo",
+            "rotina",
+            "planilha",
+            "planilhas",
+            "arquivo",
+            "arquivos",
+            "abas",
+            "regra",
+            "lista",
+            "listas",
+            "tabela",
+            "tabelas",
+            "versao",
+            "entrega",
+            "entregas",
+            "botao",
+            "pagina",
+            "paginas",
+            "conta",
+            "contas",
+            "memoria",
+            "formato",
+            "formatos",
+            "criterio",
+            "criterios",
+            "leitura",
+            "lote",
+            "permissao",
+            "painel",
+            "paineis",
+            "vez"
+          ],
+          "deny_suffixes": [
+            "cao",
+            "coes",
+            "dade",
+            "dades",
+            "mento",
+            "mentos",
+            "ncia",
+            "ncias"
+          ],
+          "allow_words": [
+            "cacao",
+            "macao",
+            "curacao",
+            "memento",
+            "pimento",
+            "sacramento",
+            "portamento",
+            "valencia"
+          ],
+          "skip": [
+            "folder-index.md"
+          ]
+        },
+        {
+          "kind": "script",
+          "script": "adr_header_check.py",
+          "label": "ADR com o cabeçalho fora do que a tela do Control Center lê (título `# ADR-NNNN: título`; linha `**Status**: x`)"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-scripts/adr_header_check.py",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-recording-decisions/templates/decision-record.md"
+      ],
+      "pattern_digest": {
+        "mjrp-scripts/adr_header_check.py": "sha256:58c9bf19c70cec3730f9192f9960fcf18d90563aa750364ab7665db81f7f6305",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-recording-decisions/templates/decision-record.md": "sha256:780c3fa58914409f2aa26c732dcbea8ffdcf78a69fff53de9ce7ee8ebd7cb6e6"
+      },
+      "migration": "CM-0085",
+      "superseded": [
+        {
+          "version": 3,
+          "migration": "CM-0076",
+          "check": [
+            {
+              "kind": "name_pattern",
+              "glob": "docs/decisions/*.md",
+              "regex": "^\\d{4}-[a-z0-9]+(-[a-z0-9]+)*\\.md$",
+              "deny_words": [
+                "assinaturas",
+                "assinatura",
+                "cartao",
+                "cartoes",
+                "esteira",
+                "metodologia",
+                "taxonomia",
+                "despesas",
+                "despesa",
+                "receitas",
+                "receita",
+                "reserva",
+                "caixinhas",
+                "caixinha",
+                "glossario",
+                "nomenclatura",
+                "modularizacao",
+                "controle",
+                "independente",
+                "decisao",
+                "decisoes",
+                "visao",
+                "arquitetura",
+                "requisitos",
+                "orcamento",
+                "fatura",
+                "faturas",
+                "gestao",
+                "politica",
+                "regras",
+                "relatorio",
+                "usuario",
+                "projeto",
+                "projetos",
+                "padrao",
+                "padroes",
+                "estrategia",
+                "definicao",
+                "analise",
+                "migracao",
+                "ajuste",
+                "paleta",
+                "temas",
+                "da",
+                "dos",
+                "das",
+                "para",
+                "uma",
+                "pelo",
+                "pela",
+                "como",
+                "nao",
+                "uso",
+                "escolha",
+                "banco",
+                "dados",
+                "modulo",
+                "modulos",
+                "camada",
+                "camadas",
+                "servico",
+                "servicos",
+                "tela",
+                "telas",
+                "fluxo",
+                "rotina",
+                "planilha",
+                "planilhas",
+                "arquivo",
+                "arquivos",
+                "abas",
+                "regra",
+                "lista",
+                "listas",
+                "tabela",
+                "tabelas",
+                "versao",
+                "entrega",
+                "entregas",
+                "botao",
+                "pagina",
+                "paginas",
+                "conta",
+                "contas",
+                "memoria",
+                "formato",
+                "formatos",
+                "criterio",
+                "criterios",
+                "leitura",
+                "lote",
+                "permissao",
+                "painel",
+                "paineis",
+                "vez"
+              ],
+              "deny_suffixes": [
+                "cao",
+                "coes",
+                "dade",
+                "dades",
+                "mento",
+                "mentos",
+                "ncia",
+                "ncias"
+              ],
+              "allow_words": [
+                "cacao",
+                "macao",
+                "curacao",
+                "memento",
+                "pimento",
+                "sacramento",
+                "portamento",
+                "valencia"
+              ],
+              "skip": [
+                "folder-index.md"
+              ]
+            },
+            {
+              "kind": "script",
+              "script": "adr_header_check.py",
+              "label": "ADR com o cabeçalho fora do que a tela do Control Center lê (título `# ADR-NNNN: título`; linha `**Status**: x`)"
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "migration": "CM-0012",
+          "check": {
+            "kind": "name_pattern",
+            "glob": "docs/decisions/*.md",
+            "regex": "^\\d{4}-[a-z0-9]+(-[a-z0-9]+)*\\.md$",
+            "skip": [
+              "folder-index.md"
+            ]
+          }
+        },
+        {
+          "version": 2,
+          "migration": "CM-0024",
+          "check": {
+            "kind": "name_pattern",
+            "glob": "docs/decisions/*.md",
+            "regex": "^\\d{4}-[a-z0-9]+(-[a-z0-9]+)*\\.md$",
+            "deny_words": [
+              "assinaturas",
+              "assinatura",
+              "cartao",
+              "cartoes",
+              "esteira",
+              "metodologia",
+              "taxonomia",
+              "despesas",
+              "despesa",
+              "receitas",
+              "receita",
+              "reserva",
+              "caixinhas",
+              "caixinha",
+              "glossario",
+              "nomenclatura",
+              "modularizacao",
+              "controle",
+              "independente",
+              "decisao",
+              "decisoes",
+              "visao",
+              "arquitetura",
+              "requisitos",
+              "orcamento",
+              "fatura",
+              "faturas",
+              "gestao",
+              "politica",
+              "regras",
+              "relatorio",
+              "usuario",
+              "projeto",
+              "projetos",
+              "padrao",
+              "padroes",
+              "estrategia",
+              "definicao",
+              "analise",
+              "migracao",
+              "ajuste",
+              "paleta",
+              "temas",
+              "da",
+              "dos",
+              "das",
+              "para",
+              "uma",
+              "pelo",
+              "pela",
+              "como",
+              "nao",
+              "uso",
+              "escolha",
+              "banco",
+              "dados",
+              "modulo",
+              "modulos",
+              "camada",
+              "camadas",
+              "servico",
+              "servicos",
+              "tela",
+              "telas",
+              "fluxo",
+              "rotina",
+              "planilha",
+              "planilhas",
+              "arquivo",
+              "arquivos",
+              "abas",
+              "regra",
+              "lista",
+              "listas",
+              "tabela",
+              "tabelas",
+              "versao",
+              "entrega",
+              "entregas",
+              "botao",
+              "pagina",
+              "paginas",
+              "conta",
+              "contas",
+              "memoria",
+              "formato",
+              "formatos",
+              "criterio",
+              "criterios",
+              "leitura",
+              "lote",
+              "permissao",
+              "painel",
+              "paineis",
+              "vez"
+            ],
+            "deny_suffixes": [
+              "cao",
+              "coes",
+              "dade",
+              "dades",
+              "mento",
+              "mentos",
+              "ncia",
+              "ncias"
+            ],
+            "allow_words": [
+              "cacao",
+              "macao",
+              "curacao",
+              "memento",
+              "pimento",
+              "sacramento",
+              "portamento",
+              "valencia"
+            ],
+            "skip": [
+              "folder-index.md"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "english-names",
+      "version": 1,
+      "title": "arquivos de docs/wiki com nome em inglês",
+      "path": "docs/wiki/",
+      "applies_to": {
+        "profiles": [
+          "code-app",
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "a regra de nomes do CLAUDE.md; auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-syncing-docs",
+      "judge_skill": "mjrp-auditing-docs",
+      "check": {
+        "kind": "name_pattern",
+        "glob": "docs/wiki/*.md",
+        "skip": [
+          "index.md",
+          "folder-index.md"
+        ],
+        "deny_words": [
+          "assinaturas",
+          "assinatura",
+          "cartao",
+          "cartoes",
+          "esteira",
+          "metodologia",
+          "taxonomia",
+          "despesas",
+          "despesa",
+          "receitas",
+          "receita",
+          "reserva",
+          "caixinhas",
+          "caixinha",
+          "glossario",
+          "nomenclatura",
+          "modularizacao",
+          "controle",
+          "independente",
+          "decisao",
+          "decisoes",
+          "visao",
+          "arquitetura",
+          "requisitos",
+          "orcamento",
+          "fatura",
+          "faturas",
+          "gestao",
+          "politica",
+          "regras",
+          "relatorio",
+          "usuario",
+          "projeto",
+          "projetos",
+          "padrao",
+          "padroes",
+          "estrategia",
+          "definicao",
+          "analise",
+          "migracao",
+          "ajuste",
+          "paleta",
+          "temas"
+        ]
+      },
+      "pattern_sources": [
+        "CLAUDE.md#Nomes — arquivo, pasta e código"
+      ],
+      "pattern_digest": {
+        "CLAUDE.md#Nomes — arquivo, pasta e código": "sha256:0dd5672b0a9b0650365691376d55abb3c9ac16752013c680e6852fa1d149d371"
+      },
+      "migration": "CM-0013",
+      "superseded": [],
+      "max_severity": "warning"
+    },
+    {
+      "id": "purpose",
+      "version": 2,
+      "title": "propósito declarado (VISION.md ou Core/PROJECT_CONTEXT.md)",
+      "path": "VISION.md",
+      "applies_to": {
+        "profiles": [
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "a onboarding abre pelo propósito (perfil content da bootstrap) · v2 (2026-10-17): decisão do MJRP de 2026-10-17 23:02: o dono do conteúdo é a skill do papel, e o modelo mora com o dono",
+      "owner_skill": "mjrp-coaching-pm",
+      "judge_skill": "mjrp-coaching-pm",
+      "check": {
+        "kind": "exists",
+        "paths": [
+          "VISION.md",
+          "Core/PROJECT_CONTEXT.md"
+        ]
+      },
+      "pattern_sources": [
+        "docs/wiki/kernel/roadmap/vision-document.md"
+      ],
+      "pattern_digest": {
+        "docs/wiki/kernel/roadmap/vision-document.md": "sha256:6a0bbaac7101759176d6bd9886b5b270406ab8a97dcae97e0b47b6f4a816ea47"
+      },
+      "migration": "CM-0050",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0014",
+          "check": {
+            "kind": "exists",
+            "paths": [
+              "VISION.md",
+              "Core/PROJECT_CONTEXT.md"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "content-map",
+      "version": 2,
+      "title": "CONTENT_MAP.md (mapa do conteúdo)",
+      "path": "CONTENT_MAP.md",
+      "applies_to": {
+        "profiles": [
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "o scaffold do perfil content (new_project.py) · v2 (2026-10-18): decisão do MJRP de 2026-10-18 (o mapa do conteúdo é a estrutura do conteúdo, a lente de IA do desenho): o dono do conteúdo passa da mjrp-pdlc-bootstrap para a mjrp-designing-ui, que traz o modelo; a bootstrap só cria o arquivo vazio",
+      "owner_skill": "mjrp-designing-ui",
+      "judge_skill": "mjrp-critiquing-ux",
+      "check": {
+        "kind": "exists",
+        "paths": [
+          "CONTENT_MAP.md"
+        ]
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/content-map.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/content-map.md": "sha256:18ad721e34b5061002e0fdf3aec97ab0bfa037b7e6363aeb0c83c633d1ea9edd"
+      },
+      "migration": "CM-0056",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0015",
+          "check": {
+            "kind": "exists",
+            "paths": [
+              "CONTENT_MAP.md"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "report-names",
+      "version": 5,
+      "title": "relatórios com nome AAAA-MM-DD-<projeto>-<tipo>, com `type:` da lista de tipos do harness (e `status:` nas críticas) e pareceres em `reports/harness-feedback/` com o nome na regra",
+      "path": "reports/",
+      "applies_to": {
+        "profiles": [
+          "code-app",
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:reports"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP (2026-10-13, aceite da ADR-0019): a data vem primeiro, como os modelos das skills do harness já prescrevem; o fin-control usava tipo primeiro; decisão do MJRP (2026-10-17 22:48, «sim, siga com as três»): relatório sempre com tipo — a lista única no harness, os modelos com `type:`, o `report-names` cobrando (o fin-control tinha seis relatórios sem tema no Control Center) · v3 (2026-10-18): o nome em reports/harness-feedback/ segue a regra (data, projeto, inglês; só aviso, em qualquer data); a nota só se aplica sem aviso em aberto — cada aviso que sobra vira pergunta ao MJRP em conformance.asked; auditoria do pedroso-incorp, 2026-10-18, pontos 6 e 7 · v4 (2026-10-18): os tipos de crítica (ux-audit, architecture-audit) trazem o status: que a tela exige — declarar o tipo sem ele é erro em qualquer data (o type: sozinho em 17 relatórios do pedroso-incorp os fez ilegíveis no Control Center, 2026-10-18) · v5 (2026-10-18): decisão do MJRP de 2026-10-18 (vinda do pedroso-incorp): o tipo `data-reconciliation` entra na lista — a conferência dos dados importados contra a fonte (o `…-migration-reconciliation.md` do pedroso-incorp não cabia em nenhum tipo); o check é o mesmo",
+      "owner_skill": "mjrp-syncing-docs",
+      "judge_skill": "mjrp-auditing-docs",
+      "check": [
+        {
+          "kind": "name_pattern",
+          "glob": "reports/audits/*.md",
+          "regex": "^\\d{4}-\\d{2}-\\d{2}-[a-z0-9]+([-.][a-z0-9]+)*\\.md$",
+          "skip": [
+            "folder-index.md"
+          ]
+        },
+        {
+          "kind": "script",
+          "script": "report_types_check.py",
+          "label": "relatório fora da regra do `report_types_check.py` (`type:` da lista, `status:` da crítica, nome do parecer; mjrp-scripts/report_types.json)"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-architecture/templates/architecture-audit.md",
+        "mjrp-scripts/report_types_check.py",
+        "mjrp-scripts/report_types.json"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-architecture/templates/architecture-audit.md": "sha256:768c998394ea0a2d9b401907fbbdef2bfd59bc8ee413a01837d95c19d2b481b1",
+        "mjrp-scripts/report_types_check.py": "sha256:9480a3f7b6fc193f48fe31e0d7cf06a97615f76bc52547cbf66b138ebc56cb51",
+        "mjrp-scripts/report_types.json": "sha256:5ac8b0dd10671d3f306fcacb563bddc30a79bca9ab48697f244d6374152875fc"
+      },
+      "migration": "CM-0065",
+      "superseded": [
+        {
+          "version": 4,
+          "migration": "CM-0060",
+          "check": [
+            {
+              "kind": "name_pattern",
+              "glob": "reports/audits/*.md",
+              "regex": "^\\d{4}-\\d{2}-\\d{2}-[a-z0-9]+([-.][a-z0-9]+)*\\.md$",
+              "skip": [
+                "folder-index.md"
+              ]
+            },
+            {
+              "kind": "script",
+              "script": "report_types_check.py",
+              "label": "relatório fora da regra do `report_types_check.py` (`type:` da lista, `status:` da crítica, nome do parecer; mjrp-scripts/report_types.json)"
+            }
+          ]
+        },
+        {
+          "version": 3,
+          "migration": "CM-0059",
+          "check": [
+            {
+              "kind": "name_pattern",
+              "glob": "reports/audits/*.md",
+              "regex": "^\\d{4}-\\d{2}-\\d{2}-[a-z0-9]+([-.][a-z0-9]+)*\\.md$",
+              "skip": [
+                "folder-index.md"
+              ]
+            },
+            {
+              "kind": "script",
+              "script": "report_types_check.py",
+              "label": "relatório sem `type:` da lista de tipos (mjrp-scripts/report_types.json)"
+            }
+          ]
+        },
+        {
+          "version": 2,
+          "migration": "CM-0043",
+          "check": [
+            {
+              "kind": "name_pattern",
+              "glob": "reports/audits/*.md",
+              "regex": "^\\d{4}-\\d{2}-\\d{2}-[a-z0-9]+([-.][a-z0-9]+)*\\.md$",
+              "skip": [
+                "folder-index.md"
+              ]
+            },
+            {
+              "kind": "script",
+              "script": "report_types_check.py",
+              "label": "relatório sem `type:` da lista de tipos (mjrp-scripts/report_types.json)"
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "migration": "CM-0016",
+          "check": {
+            "kind": "name_pattern",
+            "glob": "reports/audits/*.md",
+            "regex": "^\\d{4}-\\d{2}-\\d{2}-[a-z0-9]+([-.][a-z0-9]+)*\\.md$",
+            "skip": [
+              "folder-index.md"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "project-palette",
+      "version": 2,
+      "title": "project_palette: no contrato (a cor do projeto no portfólio)",
+      "path": ".mjrp-project.yml",
+      "applies_to": {
+        "profiles": [
+          "code-app",
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "max_severity": "warning",
+      "born_of": "ADR-0022 do harness; UAT-107 do Control Center, 2026-10-13 20:42 (os pares escolhidos pelo MJRP) · v2 (2026-10-18): decisão do MJRP de 2026-10-18 (a escolha da paleta é decisão de design): o dono do conteúdo passa da mjrp-pdlc-bootstrap para a mjrp-defining-design-systems; a bootstrap só escreve a linha no contrato",
+      "owner_skill": "mjrp-defining-design-systems",
+      "judge_skill": "mjrp-critiquing-ux",
+      "check": {
+        "kind": "contract_key",
+        "key": "project_palette"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/SKILL.md#Procedure — the palette question"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/SKILL.md#Procedure — the palette question": "sha256:78e91897e1ae0624084ab4ab5b8cacad759e640f0ff31aa8f9f787de2e529dd0"
+      },
+      "migration": "CM-0055",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0018",
+          "check": {
+            "kind": "contract_key",
+            "key": "project_palette"
+          }
+        }
+      ]
+    },
+    {
+      "id": "product-structure",
+      "version": 10,
+      "title": "a estrutura de produto que o Control Center mostra (resultados, épicos, releases, stories no Board, features e UAT)",
+      "path": "ROADMAP.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-14",
+      "grace_days": 30,
+      "born_of": "o Board vazio do fin-control, 2026-10-14 19:57 (épicos certos, nenhum ^REL nem planned_for; o releases@1 só pedia algum ^REL) · v7 (2026-10-18): o PRD (§ Entregue) é cruzado com o status: dos specs (avisos entregue_status_mismatch e entregue_done_not_cited); auditoria do pedroso-incorp, 2026-10-18, ponto 4 · v8 (2026-10-18): o nome do épico na tabela do PRD é exigido como a tela o lê (`epic_name_missing`, uma lacuna por linha) — no MJRPpersonal a tela mostrava «EP-01 · OUT-03» em todo épico, porque o leitor tomava a coluna Serve por nome e o check copiava o leitor; terceira vez no dia que o check não exige o que a tela exige · v9 (2026-10-19): sai a comparação do PRD (§ Entregue) com o status dos specs (`entregue_status_mismatch`, `entregue_done_not_cited`, da v7): o modelo do PRD perdeu a seção Entregue (prd@2, CM-0077); o check só perde dois avisos, nada novo · v10 (2026-10-19): o leitor aceita o cabeçalho de nove colunas do uat.md (`Reportado por`, uat@3 / CM-0081); só afrouxa",
+      "owner_skill": "mjrp-pdlc-bootstrap",
+      "judge_skill": null,
+      "check": {
+        "kind": "script",
+        "script": "product_structure_check.py",
+        "label": "o Control Center não mostra o produto inteiro"
+      },
+      "pattern_sources": [
+        "mjrp-scripts/product_structure_check.py"
+      ],
+      "pattern_digest": {
+        "mjrp-scripts/product_structure_check.py": "sha256:ba21d449fcaa2410295c45438aa272340d1dc63b1ec60cb508269014a5ea386b"
+      },
+      "migration": "CM-0082",
+      "superseded": [
+        {
+          "version": 9,
+          "migration": "CM-0079",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        },
+        {
+          "version": 8,
+          "migration": "CM-0069",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        },
+        {
+          "version": 7,
+          "migration": "CM-0058",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        },
+        {
+          "version": 6,
+          "migration": "CM-0028",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        },
+        {
+          "version": 5,
+          "migration": "CM-0027",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        },
+        {
+          "version": 4,
+          "migration": "CM-0022",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        },
+        {
+          "version": 3,
+          "migration": "CM-0021",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        },
+        {
+          "version": 2,
+          "migration": "CM-0020",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        },
+        {
+          "version": 1,
+          "migration": "CM-0019",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vision",
+      "version": 2,
+      "title": "VISION.md com Propósito, Visão, Objetivo e Como (o porquê do projeto)",
+      "path": "VISION.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato para o nosso harness.» · v2 (2026-10-17): decisão do MJRP de 2026-10-17 23:02: o dono do conteúdo é a skill do papel, e o modelo mora com o dono",
+      "owner_skill": "mjrp-coaching-pm",
+      "judge_skill": "mjrp-coaching-pm",
+      "check": [
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Prop[óo]sito\\b",
+          "label": "sem a seção `## Propósito (WHY)` — o porquê do projeto",
+          "path": "VISION.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Objetivo\\b",
+          "label": "sem a seção `## Objetivo (WHAT)` — a meta e o que se entrega",
+          "path": "VISION.md"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/vision.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/vision.md": "sha256:76214925c7e96642503d8cd76d596aceb0653eaf904f46269efe7324342cf54a"
+      },
+      "migration": "CM-0047",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0029",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Prop[óo]sito\\b",
+              "label": "sem a seção `## Propósito (WHY)` — o porquê do projeto",
+              "path": "VISION.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Objetivo\\b",
+              "label": "sem a seção `## Objetivo (WHAT)` — a meta e o que se entrega",
+              "path": "VISION.md"
+            }
+          ]
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/vision.md"
+    },
+    {
+      "id": "constitution",
+      "version": 2,
+      "title": "constitution.md (o que é da stack do projeto, herdando o PRINCIPLES.md)",
+      "path": "docs/specs/constitution.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato para o nosso harness. (SDD)» · v2 (2026-10-17): decisão do MJRP de 2026-10-17 23:02: o dono do conteúdo é a skill do papel, e o modelo mora com o dono",
+      "owner_skill": "mjrp-designing-architecture",
+      "judge_skill": "mjrp-critiquing-architecture",
+      "check": {
+        "kind": "contains",
+        "pattern": "^#\\s+Constitution\\b",
+        "label": "sem o título `# Constitution` — o documento nasce do modelo da `mjrp-designing-architecture`",
+        "path": "docs/specs/constitution.md"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-architecture/templates/constitution.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-architecture/templates/constitution.md": "sha256:6e8b84b84127921df4740470bcdf1545723beab6ae251729db84153d238ca03e"
+      },
+      "migration": "CM-0048",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0030",
+          "check": {
+            "kind": "contains",
+            "pattern": "^#\\s+Constitution\\b",
+            "label": "sem o título `# Constitution` — o documento nasce do modelo da bootstrap",
+            "path": "docs/specs/constitution.md"
+          }
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-architecture/templates/constitution.md"
+    },
+    {
+      "id": "behavior",
+      "version": 2,
+      "title": "behavior.md (os estados observáveis que não são tela, com block ID)",
+      "path": "docs/specs/behavior.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato para o nosso harness.» · v2 (2026-10-17): decisão do MJRP de 2026-10-17 23:02: o dono do conteúdo é a skill do papel, e o modelo mora com o dono",
+      "owner_skill": "mjrp-writing-reqs",
+      "judge_skill": "mjrp-writing-reqs",
+      "check": {
+        "kind": "contains",
+        "pattern": "^#\\s+(?:Behavior|Comportamento)\\b",
+        "label": "sem o título `# Behavior` — o documento nasce do modelo da `mjrp-writing-reqs`",
+        "path": "docs/specs/behavior.md"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/behavior.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/behavior.md": "sha256:bee988263dcdd1f46e217f4bfd9bfa96671e2d8735867fc60708eb36e83ffa93"
+      },
+      "migration": "CM-0049",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0031",
+          "check": {
+            "kind": "contains",
+            "pattern": "^#\\s+(?:Behavior|Comportamento)\\b",
+            "label": "sem o título `# Behavior` — o documento nasce do modelo da bootstrap",
+            "path": "docs/specs/behavior.md"
+          }
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/behavior.md"
+    },
+    {
+      "id": "arch",
+      "version": 3,
+      "title": "arch.md (a arquitetura: componentes, fluxo de dados, infraestrutura, restrições)",
+      "path": "docs/specs/arch.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Arquivo de arquitetura é do engineering canon, tem que estar em todos os subprojetos que tenham código.» · v2 (2026-10-17): decisão do MJRP de 2026-10-17 23:02 (o modelo mora com a skill dona do conteúdo): o modelo vai da mjrp-specifying-sdd-artifacts para a mjrp-designing-architecture · v3 (2026-10-18): decisão do MJRP de 2026-10-18 (a stack tem artefato próprio, `tech-stack.md`): o modelo troca a coluna `Technology` por `Stack layer` e ganha a seção `## Stack` que aponta para ele; o check não muda",
+      "owner_skill": "mjrp-designing-architecture",
+      "judge_skill": "mjrp-critiquing-architecture",
+      "check": {
+        "kind": "contains",
+        "pattern": "^#\\s+Architecture\\b",
+        "label": "sem o título `# Architecture` — o arquivo de arquitetura do projeto com código",
+        "path": "docs/specs/arch.md"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-architecture/templates/arch.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-architecture/templates/arch.md": "sha256:b0ffdb00d9884e9c52daead4ab844f07258d1e2bd51764d97f9e91e4cc0467c3"
+      },
+      "migration": "CM-0072",
+      "superseded": [
+        {
+          "version": 2,
+          "migration": "CM-0053",
+          "check": {
+            "kind": "contains",
+            "pattern": "^#\\s+Architecture\\b",
+            "label": "sem o título `# Architecture` — o arquivo de arquitetura do projeto com código",
+            "path": "docs/specs/arch.md"
+          }
+        },
+        {
+          "version": 1,
+          "migration": "CM-0032",
+          "check": {
+            "kind": "contains",
+            "pattern": "^#\\s+Architecture\\b",
+            "label": "sem o título `# Architecture` — o arquivo de arquitetura do projeto com código",
+            "path": "docs/specs/arch.md"
+          }
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-architecture/templates/arch.md"
+    },
+    {
+      "id": "tech-stack",
+      "version": 1,
+      "title": "tech-stack.md (com o que o produto é construído: a stack, o que se decidiu não usar, as restrições)",
+      "path": "docs/specs/tech-stack.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-18",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-18 (aprovou o modelo do artefato): a stack do produto não tinha casa — ora no `arch.md`, ora na constituição, ora só no manifesto — e ninguém via qual escolha tinha ADR; a stack só muda por ADR, a coluna `Decisão` a cita, e o `arch.md` aponta para o arquivo. Onde o produto roda (infra, CI/CD) é da aba de Ops, quando existir · rodada de correção do juiz (2026-10-18): o valor do `status:` sem comentário na linha, a gramática da célula Decisão e dos links de ADR (`tech_stack_check.py`, com as expressões num lugar só que o leitor do Control Center espelha), `## Decidido não usar` opcional",
+      "owner_skill": "mjrp-designing-architecture",
+      "judge_skill": "mjrp-critiquing-architecture",
+      "check": [
+        {
+          "kind": "contains",
+          "pattern": "^status:\\s*(Draft|Aprovado pelo MJRP em \\d{4}-\\d{2}-\\d{2})\\s*$",
+          "label": "sem `status: Draft` nem `status: Aprovado pelo MJRP em AAAA-MM-DD` no frontmatter (só o valor, sem comentário na linha)",
+          "path": "docs/specs/tech-stack.md"
+        },
+        {
+          "kind": "script",
+          "script": "tech_stack_check.py",
+          "label": "o tech-stack.md fora da forma do modelo (a seção `## Stack` com a tabela de cinco colunas, a Decisão de cada linha `—` ou `[[ADR-NNNN]]` que resolve, a seção `## Restrições`)"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-architecture/templates/tech-stack.md",
+        "mjrp-scripts/tech_stack_check.py"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-architecture/templates/tech-stack.md": "sha256:ea9d8537645290ead8276954c27bca3d9ce38f00b31a22af0e912c6e4d59ca72",
+        "mjrp-scripts/tech_stack_check.py": "sha256:a684cfdc0b92a14326fe2e38de23e91a4c2c924097a1702e16dd5db93405b0d2"
+      },
+      "migration": "CM-0071",
+      "superseded": []
+    },
+    {
+      "id": "data-model",
+      "version": 2,
+      "title": "data-model.md (as entidades, relações e persistência)",
+      "path": "docs/specs/data-model.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Arquivo de arquitetura é do engineering canon, tem que estar em todos os subprojetos que tenham código.» · v2 (2026-10-17): decisão do MJRP de 2026-10-17 23:02 (o modelo mora com a skill dona do conteúdo): o modelo vai da mjrp-specifying-sdd-artifacts para a mjrp-designing-architecture",
+      "owner_skill": "mjrp-designing-architecture",
+      "judge_skill": "mjrp-critiquing-architecture",
+      "check": {
+        "kind": "contains",
+        "pattern": "^#\\s+Data Model\\b",
+        "label": "sem o título `# Data Model` — o modelo de dados do projeto com código",
+        "path": "docs/specs/data-model.md"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-architecture/templates/data-model.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-architecture/templates/data-model.md": "sha256:6cf64b82ddfba538853809b98e7df8cb6ff3b19be48c7ab86d8965d9cafcd32b"
+      },
+      "migration": "CM-0054",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0033",
+          "check": {
+            "kind": "contains",
+            "pattern": "^#\\s+Data Model\\b",
+            "label": "sem o título `# Data Model` — o modelo de dados do projeto com código",
+            "path": "docs/specs/data-model.md"
+          }
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-architecture/templates/data-model.md"
+    },
+    {
+      "id": "record-shapes",
+      "version": 2,
+      "title": "os registros das skills na forma dos modelos (plan, tasks e Test plan de cada feature, relatórios por tipo, linhas do History)",
+      "path": "docs/specs/features/",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato SDD deve existir segundo nosso PDLC. (plan, tasks) · Artefato para nosso PDLC. (coverage-report, history-section) · Artefato para o nosso harness. (os demais modelos de relatório)»",
+      "owner_skill": "mjrp-pdlc-bootstrap",
+      "judge_skill": "mjrp-ensuring-sdd",
+      "check": {
+        "kind": "script",
+        "script": "record_shapes_check.py",
+        "label": "os registros não têm a forma dos modelos"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/plan.md",
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/tasks.md",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/test-plan.md",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/quality-review.md",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/bug-report.md",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-ux/templates/ux-audit.md",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-auditing-docs/templates/doc-audit.md",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-auditing-docs/templates/staleness-audit.md",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-assessing-code-quality/templates/code-quality-report.md",
+        "mjrp-skills/mjrp-sw-factory/guardian/mjrp-ensuring-sdd/templates/coverage-report.md",
+        "mjrp-skills/mjrp-sw-factory/fixer/mjrp-syncing-docs/templates/history-section.md",
+        "mjrp-scripts/record_shapes_check.py"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/plan.md": "sha256:0371fc0a6dc84e61d2a1a127e190dc5a4fb2b8260c672d3550e014f213727b14",
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/tasks.md": "sha256:aa06e0c570611984cf8f735a2fece3cc658a3ccc7cf4ac7c3b66005d9337c069",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/test-plan.md": "sha256:39b26c10cd9a30ff023dcb831906831dfdf1e3dbcd4175fa87b83ef344c70c87",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/quality-review.md": "sha256:067072d787e3751bd2dfe9a1fd4f514a8f93b227a6c86bbef39e9df80c94eb66",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/bug-report.md": "sha256:b1b376bf04e70845e91bc90121795779f1c55a7aef856a1564a0a7d4a6665190",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-ux/templates/ux-audit.md": "sha256:695ba57e0de9269e2c1a6ca5bdcc52746888e87659b016631f6e6e9e29958480",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-auditing-docs/templates/doc-audit.md": "sha256:1e44c59b3d204990ab107649056870dc96eaf19be0f579d4ef9a77e16a93dc2f",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-auditing-docs/templates/staleness-audit.md": "sha256:e2f71818dab0910fd64c8bbcedbfb706efcf6f760a94485378632bce4e6b00bc",
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-assessing-code-quality/templates/code-quality-report.md": "sha256:5a1bbf8d4282a3d952119779b4e9651600aa31b3223714346568da6d962013fd",
+        "mjrp-skills/mjrp-sw-factory/guardian/mjrp-ensuring-sdd/templates/coverage-report.md": "sha256:39cb31b3278f99fdadf248e3219515b66323642fd1fc3a9914aa81fe040e741b",
+        "mjrp-skills/mjrp-sw-factory/fixer/mjrp-syncing-docs/templates/history-section.md": "sha256:e2bdd06f41575bc8340b358803ac3b97d9ab84a9908b05d2b3da24e6c90f578b",
+        "mjrp-scripts/record_shapes_check.py": "sha256:8bb6410cdde8fc8b33e06b1e4fee654f9fa8d226ea314a4239f114c5a1615b2d"
+      },
+      "migration": "CM-0044",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0034",
+          "check": {
+            "kind": "script",
+            "script": "record_shapes_check.py",
+            "label": "os registros não têm a forma dos modelos"
+          }
+        }
+      ]
+    },
+    {
+      "id": "memory-layer",
+      "version": 2,
+      "title": "a camada de memória: MEMORY.md com o ## Now em quatro blocos e docs/log.md com entradas no formato do harness",
+      "path": "MEMORY.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato do nosso harness. (now, retroactive-entry, session-entry, brief) · Artefato para nosso PDLC. (log-entry)» · v2 (2026-10-18): decisão do MJRP de 2026-10-18 (as perguntas da auditoria de conformidade vivem só no relatório; o `## Now` aponta para ele e não as copia — a tela do Control Center as mostra em um grupo, e a cópia no `## Now` as mostrava duas vezes; o check `now_questions_check.py` acha a cópia, porque `contains` não pede o que está AUSENTE)",
+      "owner_skill": "mjrp-saving-context",
+      "judge_skill": "mjrp-auditing-docs",
+      "check": [
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Now\\b",
+          "label": "sem a seção `## Now` (o estado, sobrescrito)",
+          "path": "MEMORY.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^\\*\\*Where the Work Stopped\\.\\*\\*",
+          "label": "sem o bloco `**Where the Work Stopped.**` no ## Now",
+          "path": "MEMORY.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^\\*\\*Pending on Agent\\.\\*\\*",
+          "label": "sem o bloco `**Pending on Agent.**` no ## Now",
+          "path": "MEMORY.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^\\*\\*Pending on Human\\.\\*\\*",
+          "label": "sem o bloco `**Pending on Human.**` no ## Now",
+          "path": "MEMORY.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^\\*\\*Do Not Forget\\.\\*\\*",
+          "label": "sem o bloco `**Do Not Forget.**` no ## Now",
+          "path": "MEMORY.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^## \\[\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}\\] (?:decision|session|inventory|ingest|harness-feedback|review) — ",
+          "label": "nenhuma entrada no formato `## [AAAA-MM-DD HH:MM] <tipo> — <título>` (tipos: decision, session, inventory, ingest, harness-feedback, review)",
+          "path": "docs/log.md"
+        },
+        {
+          "kind": "script",
+          "script": "now_questions_check.py",
+          "label": "o `Pending on Human` do `## Now` copia as perguntas da auditoria de conformidade (elas moram só no relatório: um ponteiro, nunca a lista)"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/now.md",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/session-entry.md",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/retroactive-entry.md",
+        "mjrp-skills/mjrp-sw-factory/fixer/mjrp-debugging/templates/log-entry.md",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-structuring-requests/templates/brief.md",
+        "mjrp-scripts/now_questions_check.py"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/now.md": "sha256:bed6aff4ff397e4e7ae47ede8383edbbf298ed4cbe0d1b79fb82ca140e8579d2",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/session-entry.md": "sha256:86fb06299c6d6cc724a304c35199f1ad755409c46acf599189e4de5b3e2ee2f8",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/retroactive-entry.md": "sha256:fe8d317008bc57f992661135323f0fcc38f28520f2f12865bc7141d6ac4c83a8",
+        "mjrp-skills/mjrp-sw-factory/fixer/mjrp-debugging/templates/log-entry.md": "sha256:28c0dc77221fed49d5e508dc0e8a37bf4f22b634ae7af82f13ace7c618bb6f24",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-structuring-requests/templates/brief.md": "sha256:e6c8ea6d0011ad304e643e03fbd627149101e29b896148f54deba52021428161",
+        "mjrp-scripts/now_questions_check.py": "sha256:e6fa3f4bb4fad220b659859b9aef336d24b548654998a2a1f7542e2034b8267d"
+      },
+      "migration": "CM-0062",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0035",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Now\\b",
+              "label": "sem a seção `## Now` (o estado, sobrescrito)",
+              "path": "MEMORY.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^\\*\\*Where the Work Stopped\\.\\*\\*",
+              "label": "sem o bloco `**Where the Work Stopped.**` no ## Now",
+              "path": "MEMORY.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^\\*\\*Pending on Agent\\.\\*\\*",
+              "label": "sem o bloco `**Pending on Agent.**` no ## Now",
+              "path": "MEMORY.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^\\*\\*Pending on Human\\.\\*\\*",
+              "label": "sem o bloco `**Pending on Human.**` no ## Now",
+              "path": "MEMORY.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^\\*\\*Do Not Forget\\.\\*\\*",
+              "label": "sem o bloco `**Do Not Forget.**` no ## Now",
+              "path": "MEMORY.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^## \\[\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}\\] (?:decision|session|inventory|ingest|harness-feedback|review) — ",
+              "label": "nenhuma entrada no formato `## [AAAA-MM-DD HH:MM] <tipo> — <título>` (tipos: decision, session, inventory, ingest, harness-feedback, review)",
+              "path": "docs/log.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "regression-checklist",
+      "version": 1,
+      "title": "regression_checklist.md com as tags e as caixas de marcar (quando o projeto o tem)",
+      "path": "docs/specs/regression_checklist.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/specs/regression_checklist.md"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato para o nosso harness.»",
+      "owner_skill": "mjrp-ensuring-quality",
+      "judge_skill": "mjrp-ensuring-quality",
+      "check": [
+        {
+          "kind": "contains",
+          "pattern": "^#{2,3}\\s.*\\[[A-Z][A-Z0-9_-]*\\]",
+          "label": "sem nenhum título com a tag do módulo (`### [CORE] …`, `## [CADASTRO] …`)",
+          "path": "docs/specs/regression_checklist.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^- \\[[ xX]\\]",
+          "label": "sem nenhuma caixa de marcar `- [ ]`",
+          "path": "docs/specs/regression_checklist.md"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/regression-checklist.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/regression-checklist.md": "sha256:2ab95d2260e651f019ab39b8bf9473a864305cc5478ff1bae134ec675d638100"
+      },
+      "migration": "CM-0036",
+      "superseded": [],
+      "template": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/regression-checklist.md"
+    },
+    {
+      "id": "requirement-nodes",
+      "version": 2,
+      "title": "os nós de requisito com id, type e status no frontmatter",
+      "path": "docs/specs/requirements/",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/specs/requirements/*/*.md"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato para nosso PDLC.»",
+      "owner_skill": "mjrp-writing-reqs",
+      "judge_skill": "mjrp-writing-reqs",
+      "check": [
+        {
+          "kind": "frontmatter_key",
+          "glob": "docs/specs/requirements/*/*.md",
+          "key": "id"
+        },
+        {
+          "kind": "frontmatter_key",
+          "glob": "docs/specs/requirements/*/*.md",
+          "key": "type"
+        },
+        {
+          "kind": "frontmatter_key",
+          "glob": "docs/specs/requirements/*/*.md",
+          "key": "status"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-ears.md",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-nfr.md",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-story-backlog.md",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-story-ready.md",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-use-case.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-ears.md": "sha256:cf81af7f25dbd436956409dd84589783a928e921d528dd2b00cd0f8539531c0f",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-nfr.md": "sha256:ad177e4eae1df6c6be1e572e452807171af49ad55e33b37386f4e4767e31a617",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-story-backlog.md": "sha256:ea165cc56254719d53c889b5d976c78afeea5e4517f95a89a989860b3168772f",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-story-ready.md": "sha256:01d35bc46a25a99d4a6703a43373d5816444b1f10709acd15daaa9a235279130",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-use-case.md": "sha256:3460d56680fe6a91c1c457d8485bb4d541e9af8e1801215f48907315d61ddba4"
+      },
+      "migration": "CM-0067",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0037",
+          "check": [
+            {
+              "kind": "frontmatter_key",
+              "glob": "docs/specs/requirements/*/*.md",
+              "key": "id"
+            },
+            {
+              "kind": "frontmatter_key",
+              "glob": "docs/specs/requirements/*/*.md",
+              "key": "type"
+            },
+            {
+              "kind": "frontmatter_key",
+              "glob": "docs/specs/requirements/*/*.md",
+              "key": "status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "info-arch-sections",
+      "version": 1,
+      "title": "as seções do info-arch.md que o desenho da tela escreve (Protótipos aprovados, Flow, Content Map)",
+      "path": "docs/specs/info-arch.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_screen"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato para nosso PDLC.»",
+      "owner_skill": "mjrp-designing-ui",
+      "judge_skill": "mjrp-critiquing-ux",
+      "check": [
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Prot[óo]tipos aprovados\\b",
+          "label": "sem a seção `## Protótipos aprovados` (uma entrada por versão aprovada: ferramenta, referência, `shows::`, `Aprovado por:`)",
+          "path": "docs/specs/info-arch.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^#{2,3}\\s+(?:\\d+\\.\\s*)?(?:Flow|Fluxos?|Jornadas?)\\b",
+          "label": "sem nenhum fluxo (`## Flow: <nome>` — entrada, objetivo, caminho feliz, caminhos de erro, bordas)",
+          "path": "docs/specs/info-arch.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Content Map\\b",
+          "label": "sem nenhum `## Content Map — <tela>` (definição, como ler, referência, o que fazer, posição, estado vazio/erro)",
+          "path": "docs/specs/info-arch.md"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/prototype-record.md",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/flow.md",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/content-map.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/prototype-record.md": "sha256:b47fe0c0effddb8994af929152213f43c9499c73e01f24d0884f58aa7c7ab5dc",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/flow.md": "sha256:2065c76fc4adc33e8e7a0d8ec5327574d9e62389cff41c4684d931a37972585a",
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/content-map.md": "sha256:18ad721e34b5061002e0fdf3aec97ab0bfa037b7e6363aeb0c83c633d1ea9edd"
+      },
+      "migration": "CM-0038",
+      "superseded": []
+    },
+    {
+      "id": "inception-notes",
+      "version": 1,
+      "title": "inception-notes.md com uma seção por rodada (quando o projeto o tem)",
+      "path": "docs/specs/inception-notes.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/specs/inception-notes.md"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato para nosso PDLC.»",
+      "owner_skill": "mjrp-designing-ui",
+      "judge_skill": null,
+      "check": {
+        "kind": "contains",
+        "pattern": "(?i)^##\\s.*\\brodada\\b",
+        "label": "sem nenhuma seção de rodada (`## Rodada N · AAAA-MM-DD HH:MM · design/inception/<nome>-vN.html`)",
+        "path": "docs/specs/inception-notes.md"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/inception-notes.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/inception-notes.md": "sha256:e321f4f8748a36ddbcf186d35b60e3bb96402a3c581d9ca6da3def965cbe2cd3"
+      },
+      "migration": "CM-0039",
+      "superseded": [],
+      "template": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/inception-notes.md"
+    },
+    {
+      "id": "skill-standard",
+      "version": 1,
+      "title": "as skills do harness no padrão do SKILL.template (name, description e metadata no frontmatter)",
+      "path": "mjrp-skills/",
+      "applies_to": {
+        "profiles": [
+          "meta"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-16 11:27 (commit 85cd8f7e, a fila `awaiting_item` do catálogo): «Artefato para o nosso harness.»",
+      "owner_skill": "mjrp-crafting-skills",
+      "judge_skill": null,
+      "check": [
+        {
+          "kind": "frontmatter_key",
+          "glob": "mjrp-skills/*/*/*/SKILL.md",
+          "key": "name"
+        },
+        {
+          "kind": "frontmatter_key",
+          "glob": "mjrp-skills/*/*/*/SKILL.md",
+          "key": "description"
+        },
+        {
+          "kind": "frontmatter_key",
+          "glob": "mjrp-skills/*/*/*/SKILL.md",
+          "key": "metadata"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/SKILL.template.md",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/ledger.template.md",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/removed-section.template.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/SKILL.template.md": "sha256:e6f9b5fcadc1524b1b5c83aa3e41ddf032aa700fc62924323c34d464820f74dd",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/ledger.template.md": "sha256:a405f7d8b3edfc782e453e9b686c8a522d597c20946ea3f2ddfd606743af0c29",
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/removed-section.template.md": "sha256:021a15f347bf47a10de353cdaaf43e5ff6683200e1b924f2be97861c92636b28"
+      },
+      "migration": "CM-0042",
+      "superseded": []
+    },
+    {
+      "id": "prd",
+      "version": 2,
+      "title": "prd.md com as seções do guia (Objetivo apontando para o ROADMAP, Dependências, Desenho e protótipo, Mudanças; sem Entregue), a tabela de épicos `Épico | Serve` sem estado nem contagem, na forma que a tela lê, e todo requisito embutido (o prd.md é a fonte do conteúdo; a tela só o organiza)",
+      "path": "docs/specs/prd.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "pergunta do MJRP de 2026-10-17 («desde quando bootstrap é dono de artefato de produto, do conteúdo dele?») e decisão das 23:02: o `prd.md` existe em todo code-app standard/full e vira item do catálogo, com a `mjrp-coaching-pm` por dona (o topo do PRD; os requisitos seguem da `mjrp-writing-reqs`) · v2 (2026-10-19, decisão do MJRP: «o source of truth do conteúdo é o prd.md; a tela é apenas uma renderização organizada do prd.md… o harness conformance precisa garantir isso também»): a tabela de épicos do PRD tinha a coluna `Estado` com contagens escritas à mão («7/9 Done · 2 Backlog»), que resumem as stories que o próprio PRD embute e nunca eram atualizadas — o PRD do Control Center estava desatualizado em 3 de 6 épicos; a cláusula nova cobra: sem estado nem contagem na tabela, a tabela na forma que o leitor lê, e todo nó de requisito embutido no prd.md · v2, as seis mudanças do modelo (MJRP, 2026-10-19, «Sim, as seis», de uma pesquisa de modelos de PRD): `## Dependências`, `## Desenho e protótipo` e `## Mudanças` entram; «Objetivo e métricas» vira `## Objetivo` (as medidas têm uma fonte só, o ROADMAP); `## Entregue` sai (duplica o estado das stories embutidas, o mesmo problema da coluna Estado); `## Candidatos (Intake)` fica; o critério de saída do épico sai da tabela para a linha `exit::` da seção dele",
+      "owner_skill": "mjrp-coaching-pm",
+      "judge_skill": "mjrp-coaching-pm",
+      "check": [
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Objetivo\\s*$",
+          "label": "sem a seção `## Objetivo` — o alvo em uma ou duas frases, apontando para o ROADMAP.md (que tem os resultados e as medidas); o título «Objetivo e métricas» foi renomeado",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Contexto\\b",
+          "label": "sem a seção `## Contexto e encaixe estratégico` — por que agora e como serve o VISION.md",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Personas\\b",
+          "label": "sem a seção `## Personas e cenários` — quem usa e em que situação",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Regras de neg[óo]cio\\b",
+          "label": "sem a seção `## Regras de negócio e restrições` — o que o sistema não pode fazer",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Depend[êe]ncias\\b",
+          "label": "sem a seção `## Dependências` — o que vem de fora (outro sistema, time ou projeto) e o que bloqueia; vazio vale («nenhuma conhecida»)",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Fora de escopo\\b",
+          "label": "sem a seção `## Fora de escopo` — o que foi considerado e rejeitado, com o motivo",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Desenho e prot[óo]tipo\\b",
+          "label": "sem a seção `## Desenho e protótipo` — os links para o protótipo aprovado e para a arquitetura de informação da tela",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+(?:Epics|[ÉE]picos)\\b",
+          "label": "sem a seção `## Epics` — cada épico liga a um resultado do ROADMAP.md",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Candidatos\\b",
+          "label": "sem a seção `## Candidatos (Intake)` — a porta de entrada do que ainda não tem épico",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Premissas\\b",
+          "label": "sem a seção `## Premissas e questões em aberto`",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Mudan[çc]as\\b",
+          "label": "sem a seção `## Mudanças` — uma linha datada por mudança relevante do PRD; vazia até a primeira",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Requisitos por [ée]pico\\b",
+          "label": "sem a seção `## Requisitos por épico` — o mapa dos requisitos",
+          "path": "docs/specs/prd.md"
+        },
+        {
+          "kind": "script",
+          "script": "prd_source_check.py",
+          "label": "o prd.md não é a fonte do conteúdo (tabela de épicos com estado ou contagem escrita à mão, tabela que a tela não lê, ou requisito que não está embutido)"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/prd.md",
+        "mjrp-scripts/prd_source_check.py"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/prd.md": "sha256:aebd75af0fc9aa26f0efb3839c49d4addce1aaf5d0f859986834e71c5d927eba",
+        "mjrp-scripts/prd_source_check.py": "sha256:4d47787b85252666400c753d032556d52a0732e1f3396656554fc2202995c9a5"
+      },
+      "migration": "CM-0077",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0051",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Objetivo\\b",
+              "label": "sem a seção `## Objetivo e métricas` — o alvo e como se sabe que foi atingido",
+              "path": "docs/specs/prd.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Contexto\\b",
+              "label": "sem a seção `## Contexto e encaixe estratégico` — por que agora e como serve o VISION.md",
+              "path": "docs/specs/prd.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Personas\\b",
+              "label": "sem a seção `## Personas e cenários` — quem usa e em que situação",
+              "path": "docs/specs/prd.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Regras de neg[óo]cio\\b",
+              "label": "sem a seção `## Regras de negócio e restrições` — o que o sistema não pode fazer",
+              "path": "docs/specs/prd.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Fora de escopo\\b",
+              "label": "sem a seção `## Fora de escopo` — o que foi considerado e rejeitado, com o motivo",
+              "path": "docs/specs/prd.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+(?:Epics|[ÉE]picos)\\b",
+              "label": "sem a seção `## Epics` — cada épico liga a um resultado do ROADMAP.md",
+              "path": "docs/specs/prd.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Entregue\\b",
+              "label": "sem a seção `## Entregue` — o que já existe, por resultado",
+              "path": "docs/specs/prd.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Candidatos\\b",
+              "label": "sem a seção `## Candidatos (Intake)` — a porta de entrada do que ainda não tem épico",
+              "path": "docs/specs/prd.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Premissas\\b",
+              "label": "sem a seção `## Premissas e questões em aberto`",
+              "path": "docs/specs/prd.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Requisitos por [ée]pico\\b",
+              "label": "sem a seção `## Requisitos por épico` — o mapa dos requisitos",
+              "path": "docs/specs/prd.md"
+            }
+          ]
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/prd.md"
+    },
+    {
+      "id": "content-audit",
+      "version": 5,
+      "title": "auditoria de conteúdo do conform (relatório com o veredito de conteúdo item por item e nenhum P0 aberto)",
+      "path": "reports/audits/",
+      "applies_to": {
+        "profiles": [
+          "code-app",
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-17",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP de 2026-10-17 23:25: os arquivos canônicos que a bootstrap gerou nos filhos «não ficaram bons» e o check de forma não vê; a auditoria de conteúdo roda em todo filho, pela skill que julga cada item (`judge_skill`), mesmo com o conform em dia · v2 (2026-10-18): o arquivo que o contrato declara para o item conta como âncora do juiz (sensors.visual.config do visual-sensor) e o arquivo âncora com commit depois do judged do juiz avisa (anchor_aging); auditoria do pedroso-incorp, 2026-10-18, pontos 3 e 5 · v3 (2026-10-18): decisão do MJRP de 2026-10-18 (as perguntas da auditoria têm forma fixa e marca de resposta, lidas pela tela do Control Center): o `content_audit_check.py` traz o parse único da seção `## Perguntas para o MJRP` — a forma é aviso até o filho aplicar a CM-0063 e lacuna depois (cláusula `audit_questions_check.py`, com rótulo próprio: o relatório antigo não é «auditoria não feita»); marca sem entrada `decision` no log é sempre aviso · v4 (2026-10-18): decisão do MJRP de 2026-10-18 (ele não pode ser o gargalo de perguntas; o pedroso-incorp recebeu 22 perguntas e o fin-control uma lista de «o que fica aberto», quase todas técnicas ou reversíveis): cada pergunta aberta da auditoria declara `classe: b|c` (e a `c` o «por que o agente não podia»); a `classe: a` não é pergunta — o agente decide, corrige e registra «decidido pelo agente — revisável». A cláusula das perguntas conta a classe (aviso até o filho aplicar a CM-0066, lacuna depois); o relatório declara no frontmatter `avoidable_questions` e `bent_rules` (os achados abertos da auditoria, como o `content_p0`) e o conform não fecha com nenhum acima de 0; a decisão em si é a regra da `mjrp-pdlc-bootstrap` (decide, registra, revisável; a regra antes do código) · v5 (2026-10-18): o item novo que o filho recebeu e ainda não aplicou, dentro da própria carência, não pede linha na tabela da auditoria — a carência de um item novo pode acabar depois da do `content-audit`, e o filho não fecharia o conform nem aplicando a nota (achado do juiz do `tech-stack`, 2026-10-18); a linha que existe continua sendo julgada",
+      "owner_skill": "mjrp-pdlc-bootstrap",
+      "judge_skill": null,
+      "check": [
+        {
+          "kind": "script",
+          "script": "content_audit_check.py",
+          "label": "a auditoria de conteúdo do conform não foi feita (relatório com uma linha de conteúdo por item, nenhum P0 aberto e, com a CM-0066 aplicada, nenhuma pergunta evitável nem regra dobrada aberta)"
+        },
+        {
+          "kind": "script",
+          "script": "audit_questions_check.py",
+          "label": "perguntas da auditoria fora da forma P-NN ou sem `classe: b|c` (`### P-NN · item: <id> · <assunto>`, uma opção por linha; só reprova no filho que aplicou a CM-0063, e a classe só no que aplicou a CM-0066)"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-scripts/content_audit_check.py",
+        "mjrp-scripts/audit_questions_check.py"
+      ],
+      "pattern_digest": {
+        "mjrp-scripts/content_audit_check.py": "sha256:e78c089b87741d964e5b70d009824f83b2923cb960facf329f4fcfe081bf9159",
+        "mjrp-scripts/audit_questions_check.py": "sha256:552212ce898dda81bf921b929be1055f57b8b6b6c5eb0ed3bc69ba49509453a7"
+      },
+      "migration": "CM-0073",
+      "superseded": [
+        {
+          "version": 4,
+          "migration": "CM-0066",
+          "check": [
+            {
+              "kind": "script",
+              "script": "content_audit_check.py",
+              "label": "a auditoria de conteúdo do conform não foi feita (relatório com uma linha de conteúdo por item, nenhum P0 aberto e, com a CM-0066 aplicada, nenhuma pergunta evitável nem regra dobrada aberta)"
+            },
+            {
+              "kind": "script",
+              "script": "audit_questions_check.py",
+              "label": "perguntas da auditoria fora da forma P-NN ou sem `classe: b|c` (`### P-NN · item: <id> · <assunto>`, uma opção por linha; só reprova no filho que aplicou a CM-0063, e a classe só no que aplicou a CM-0066)"
+            }
+          ]
+        },
+        {
+          "version": 3,
+          "migration": "CM-0063",
+          "check": [
+            {
+              "kind": "script",
+              "script": "content_audit_check.py",
+              "label": "a auditoria de conteúdo do conform não foi feita (relatório com uma linha de conteúdo por item e nenhum P0 aberto)"
+            },
+            {
+              "kind": "script",
+              "script": "audit_questions_check.py",
+              "label": "perguntas da auditoria fora da forma P-NN (`### P-NN · item: <id> · <assunto>`, uma opção por linha; só reprova no filho que aplicou a CM-0063)"
+            }
+          ]
+        },
+        {
+          "version": 2,
+          "migration": "CM-0057",
+          "check": [
+            {
+              "kind": "script",
+              "script": "content_audit_check.py",
+              "label": "a auditoria de conteúdo do conform não foi feita (relatório com uma linha de conteúdo por item e nenhum P0 aberto)"
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "migration": "CM-0052",
+          "check": [
+            {
+              "kind": "script",
+              "script": "content_audit_check.py",
+              "label": "a auditoria de conteúdo do conform não foi feita (relatório com uma linha de conteúdo por item e nenhum P0 aberto)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "release-features",
+      "version": 1,
+      "title": "toda release com story feita tem a feature que a entregou (o histórico entregue antes do harness migrado para docs/specs/features/)",
+      "path": "docs/specs/features/",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-18",
+      "grace_days": 30,
+      "born_of": "UAT-257 (MJRPpersonal, 2026-10-18): quatro releases com toda story feita (11/11, 19/19, 12/12, 8/8) e nenhuma pasta em `docs/specs/features/` — o que se entregou antes do harness mora em `docs/specs/milestones/M0..M11`; a aba Releases do Control Center mostra uma release pelas features e só a REL-03 (a única com issues) apareceu, e o `product-structure` dizia VERDE porque julga o que uma feature tem, não que uma release não tem nenhuma. Item próprio e não uma versão nova do `product-structure`: a CM-0069 (ramo fix/epic-names-nfr-board-20261018) também sobe esse item, e dois ramos na mesma versão colidem na cadeia de notas; um item aditivo não depende da ordem das integrações",
+      "owner_skill": "mjrp-specifying-sdd-artifacts",
+      "judge_skill": null,
+      "check": {
+        "kind": "script",
+        "script": "feature_history_check.py",
+        "label": "release com story feita e nenhuma feature (o histórico entregue antes do harness não migrou para docs/specs/features/)"
+      },
+      "pattern_sources": [
+        "mjrp-scripts/feature_history_check.py"
+      ],
+      "pattern_digest": {
+        "mjrp-scripts/feature_history_check.py": "sha256:e77e37671a80d09646286e4c04f882a7869d69676ec7bc05c5ca69211e16618c"
+      },
+      "migration": "CM-0074",
+      "superseded": []
+    }
+  ],
+  "history": [
+    {
+      "at": "2026-10-13 12:39",
+      "change": "catálogo criado (ADR-0019)"
+    },
+    {
+      "at": "2026-10-13 20:55",
+      "change": "roadmap@3: o resultado ancorado aceita o prefixo do projeto (^CC-OUT-xx, id_prefix do contrato — ADR-0020 D.3)"
+    },
+    {
+      "at": "2026-10-13 23:00",
+      "change": "project-palette@1: o par de paletas do projeto (project_palette) no contrato, a cor dele no Control Center — aviso, nunca erro (ADR-0022; nota CM-0018)"
+    },
+    {
+      "at": "2026-10-13 23:20",
+      "change": "visual-sensor: owner_skill passa de mjrp-designing-ui para mjrp-pdlc-bootstrap — quem declara sensors.visual é a bootstrap, no modo conform (a CM-0007 já dizia isso); mudança só de dado, sem versão nova"
+    },
+    {
+      "at": "2026-10-14 13:27",
+      "change": "contract-screen: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 13:27",
+      "change": "info-arch: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 13:27",
+      "change": "adr-names: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 13:27",
+      "change": "content-map: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 14:37",
+      "change": "project-palette: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 20:55",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 21:31",
+      "change": "product-structure: owner_skill → mjrp-pdlc-bootstrap (a mjrp-organizing-product-structure aposentada; decisão do MJRP de 2026-10-14 21:21)"
+    },
+    {
+      "at": "2026-10-14 21:59",
+      "change": "product-structure: v2 (CM-0020) — só a story em Backlog não precisa de release (a régua do sensor do grafo: a partir de Prioritized), o NFR transversal fora das contagens; o script ganha `code` por lacuna e `--story` (o portão); v1 em superseded"
+    },
+    {
+      "at": "2026-10-14 21:59",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 22:28",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/arch.md: marcado canônico pela tela — MJRP decision. Arquivo de arquitetura é do engineering canon, tem que estar em todos os subprojetos que tenham código.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/data-model.md: marcado canônico pela tela — MJRP decision. Arquivo de arquitetura é do engineering canon, tem que estar em todos os subprojetos que tenham código.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/plan.md: marcado canônico pela tela — MJRP decision. Artefato SDD deve existir segundo nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/tasks.md: marcado canônico pela tela — MJRP decision. Artefato SDD deve existir segundo nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/problem-outcome-doc.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/templates/identity-specs.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/content-map.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/flow.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/inception-notes.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/prototype-record.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-ears.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-nfr.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-story-backlog.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-story-ready.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-use-case.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/fixer/mjrp-debugging/templates/log-entry.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/fixer/mjrp-syncing-docs/templates/history-section.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/guardian/mjrp-ensuring-sdd/templates/coverage-report.md: marcado canônico pela tela — MJRP decision. Artefato para nosso PDLC.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/SKILL.template.md: marcado canônico pela tela — MJRP decision. Artefato para nosso harness",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/ledger.template.md: marcado canônico pela tela — MJRP decision. Artefato para nosso harness",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/removed-section.template.md: marcado canônico pela tela — MJRP decision. Artefato para nosso harness",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/meta/mjrp-inventorying-folders/templates/folder-index.md: marcado não canônico pela tela — MJRP decision. Artefato opcional",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/meta/mjrp-inventorying-folders/templates/log-entry.md: marcado não canônico pela tela — MJRP decision. Artefato opcional",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/now.md: marcado canônico pela tela — MJRP decision. Artefato do nosso harness",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/retroactive-entry.md: marcado canônico pela tela — MJRP decision. Artefato do nosso harness",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/session-entry.md: marcado canônico pela tela — MJRP decision. Artefato do nosso harness",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/meta/mjrp-structuring-requests/templates/brief.md: marcado canônico pela tela — MJRP decision. Artefato do nosso harness",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/behavior.md: marcado canônico pela tela — MJRP decision. Artefato para o nosso harness.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/constitution.md: marcado canônico pela tela — MJRP decision. Artefato para o nosso harness. (SDD)",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/vision.md: marcado canônico pela tela — MJRP decision. Artefato para o nosso harness.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-assessing-code-quality/templates/code-quality-report.md: marcado canônico pela tela — MJRP decision. Artefato para o nosso harness.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-auditing-docs/templates/doc-audit.md: marcado canônico pela tela — MJRP decision. Artefato para o nosso harness.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-auditing-docs/templates/staleness-audit.md: marcado canônico pela tela — MJRP decision. Artefato para o nosso harness.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-ux/templates/ux-audit.md: marcado canônico pela tela — MJRP decision. Artefato para o nosso harness.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/bug-report.md: marcado canônico pela tela — MJRP decision. Artefato para o nosso harness.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/quality-review.md: marcado canônico pela tela — MJRP decision. Artefato para o nosso harness.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/regression-checklist.md: marcado canônico pela tela — MJRP decision. Artefato para o nosso harness.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:27",
+      "change": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/test-plan.md: marcado canônico pela tela — MJRP decision. Artefato para o nosso harness.",
+      "batch": "20261016-112741-4368d6f5"
+    },
+    {
+      "at": "2026-10-16 11:58",
+      "change": "product-structure: v3 (CM-0021) — toda feature com o `## Summary` em três parágrafos (**A feature:** · **Por quê:** · **Como saber que funcionou:**) logo antes do Problem Statement; lacunas feature_summary_*; v2 em superseded (pedido do MJRP sobre a UAT-203, F32)"
+    },
+    {
+      "at": "2026-10-16 11:58",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-16 18:43",
+      "change": "product-structure: v4 (CM-0022) — a `Descrição` de cada issue de UAT em partes rotuladas (`uat@3`: **O que acontece:** · **O que deveria acontecer:** · **Como ver:** · **Evidência:** · **Causa:** opcional), cobrada de toda issue não fechada e de toda reportada a partir de 2026-10-16; lacunas uat_issue_unlabeled e uat_issue_labels; v3 em superseded (pedido do MJRP sobre a UAT-212, F36)"
+    },
+    {
+      "at": "2026-10-16 18:43",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-17 10:04",
+      "change": "visual-sensor: v2 (CM-0023) — o portão do merge de tela (`visual_gate.py` e o hook `pre-merge-commit`) aceita a reconferência com `verdict: pass` ou `fail` desde que `p0: 0` e avaliada; `verdict: incomplete` (o juiz não avaliou), `p0` > 0 e a falta do relatório seguem barrando; o relatório do juiz agora traz `p0` no frontmatter; v1 em superseded (decisão do MJRP, 2026-10-17: a 1ª rodada vai para a main, o juiz avalia e não barra)"
+    },
+    {
+      "at": "2026-10-17 10:04",
+      "change": "visual-sensor: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-17 11:30",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-17 15:25",
+      "change": "adr-names: v2 (CM-0024) — o check passa a olhar o idioma do nome (palavras inteiras em português, terminações -cao/-dade/-mento/-ncia, lista de exceções), não só o formato NNNN-kebab; v1 em superseded (auditoria da conformidade do fin-control, 2026-10-17: `0001-modularizacao-backend-gas.md` passou)"
+    },
+    {
+      "at": "2026-10-17 17:40",
+      "change": "roadmap: v3 → v4 (CM-0025) — o ROADMAP exige os campos rotulados que a tela mostra (`- **Problema:**`, `- **Quem sente:**`, `- **Medida:**`); v3 em superseded (auditoria da conformidade do fin-control, 2026-10-17: «Quem sente» numa linha solta e sem «Problema», a tela mostrava os dois campos vazios)"
+    },
+    {
+      "at": "2026-10-17 17:46",
+      "change": "evidence-folder: v1 → v2 (CM-0026) — o check passa a ser o evidence_folder_check.py: a evidência mora de fato em reports/evidence/<TASK-ID>/ (não só a pasta existe); v1 em superseded (auditoria da conformidade do fin-control, 2026-10-17: só UAT-visual/ na pasta e o log dizia que a evidência morava por TASK-ID)"
+    },
+    {
+      "at": "2026-10-17 17:46",
+      "change": "evidence-folder: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-17 17:51",
+      "change": "product-structure: v4 → v5 (CM-0027) — o product_structure_check.py ganha o canal de AVISOS (não mudam o exit code): campos Problema/Quem sente por resultado, o ciclo do resultado (em monitoramento, achieved::, ## Alcançados, Now > 5), os sinais de tamanho da feature (8 stories, 3 épicos, 12 tasks) e o conteúdo da descrição da issue (nome de código, relato de correção, «Aberta por:» faltando); ## Alcançados deixa de ser «sem horizonte»; v4 em superseded (auditoria da conformidade do fin-control, 2026-10-17)"
+    },
+    {
+      "at": "2026-10-17 17:51",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-17 18:22",
+      "change": "product-structure: v5 → v6 (CM-0028) — o detector de relato de correção pega «**Corrigido**:» (os dois-pontos fora do negrito, a UAT-02 do fin-control) e o aprendizado aceita «O que aprendemos»; v5 em superseded (crítica independente do ramo das duas frentes, 2026-10-17: P1-4 e P2-3)"
+    },
+    {
+      "at": "2026-10-17 18:22",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-17 21:17",
+      "change": "docs: os documentos do projeto com código viram itens do catálogo (vision, constitution, behavior, arch, data-model)"
+    },
+    {
+      "at": "2026-10-17 21:20",
+      "change": "records: record-shapes, memory-layer, regression-checklist e requirement-nodes entram no catálogo (CM-0034..CM-0037); 21 linhas saem de awaiting_item"
+    },
+    {
+      "at": "2026-10-17 21:23",
+      "change": "screen: info-arch-sections e inception-notes entram (CM-0038, CM-0039); design-system v2 → v3 (CM-0040, Identity Specs) e roadmap v4 → v5 (CM-0041, problem-outcome-doc vira fonte do padrão); 6 linhas saem de awaiting_item"
+    },
+    {
+      "at": "2026-10-17 21:27",
+      "change": "skills: skill-standard entra no catálogo para o perfil meta (CM-0042); SKILL.template, ledger.template e removed-section.template saem de awaiting_item; o brief vira fonte do memory-layer (a regra 9 da mjrp-structuring-requests: o brief aprovado é uma entrada de docs/log.md) e a fila fica vazia"
+    },
+    {
+      "at": "2026-10-17 22:57",
+      "change": "report-names: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-17 22:57",
+      "change": "record-shapes: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-17 23:12",
+      "change": "owners: o dono do conteúdo é a skill do papel — vision e purpose (coaching-pm), constitution (designing-architecture) e behavior (writing-reqs) trocam o owner_skill; roadmap, releases, vision, constitution e behavior trocam o caminho do modelo (a bootstrap só cria o esqueleto); versão +1 e nota CM-0045..CM-0050 (troca de dono e de caminho, o check não muda); o item novo `prd` (CM-0051) cobra as seções do guia do PRD (decisão do MJRP, 2026-10-17 23:02)"
+    },
+    {
+      "at": "2026-10-17 23:20",
+      "change": "judge_skill: cada item passa a nomear a skill que julga o CONTEÚDO do artefato na auditoria de fechamento do conform (null = só a forma); o Learn gate exige o campo e que a skill exista. Mudança de esquema, não de padrão: nenhum check nem pattern_source mudou, então nenhuma versão sobe e nenhuma nota CM nova é devida (decisão do MJRP, 2026-10-17: a auditoria do conform julga o conteúdo dos artefatos canônicos)"
+    },
+    {
+      "at": "2026-10-17 23:20",
+      "change": "purpose: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-17 23:29",
+      "change": "content-audit: item novo (CM-0052) — o filho só aplica a nota com o relatório da auditoria de conteúdo do conform (`reports/audits/*conformance-audit*.md`, de depois da chegada da nota, uma linha por item que se aplica com o veredito de conteúdo e a skill juíza, `content_p0: 0`); o check é o `content_audit_check.py` (decisão do MJRP, 2026-10-17 23:25)"
+    },
+    {
+      "at": "2026-10-17 23:33",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 00:00",
+      "change": "arch e data-model: v1 → v2 (CM-0053, CM-0054) — o modelo vai da mjrp-specifying-sdd-artifacts para a mjrp-designing-architecture, a dona do conteúdo (troca de caminho, o check não muda); content-map ganha judge_skill mjrp-critiquing-ux (a IA do cofre); v1 em superseded"
+    },
+    {
+      "at": "2026-10-18 00:04",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 00:40",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 01:44",
+      "change": "project-palette e content-map: v1 → v2 (CM-0055, CM-0056) — o dono do conteúdo sai da mjrp-pdlc-bootstrap (project-palette → mjrp-defining-design-systems, com a seção «Procedure — the palette question» por fonte do padrão; content-map → mjrp-designing-ui, com templates/content-map.md por fonte, que também é fonte de info-arch-sections); o check não muda; v1 em superseded"
+    },
+    {
+      "at": "2026-10-18 09:55",
+      "change": "content-audit: v1 → v2 (CM-0057) — âncora no arquivo que o contrato declara para o item; aviso de âncora que envelhece; o check (a cláusula script) não muda, v1 em superseded"
+    },
+    {
+      "at": "2026-10-18 09:56",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 10:00",
+      "change": "product-structure: v6 → v7 (CM-0058) — avisos entregue_status_mismatch e entregue_done_not_cited no product_structure_check (PRD § Entregue x status do spec); só avisos, a cláusula não muda, v6 em superseded"
+    },
+    {
+      "at": "2026-10-18 10:00",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 10:08",
+      "change": "report-names: v2 → v3 (CM-0059) — regra de nome em reports/harness-feedback/ (só aviso, em qualquer data) e open_warning_notes (CM-0043 e CM-0059 só se aplicam sem aviso do report_types_check em aberto; o que sobra é pergunta ao MJRP em conformance.asked); as cláusulas do item não mudam, v2 em superseded"
+    },
+    {
+      "at": "2026-10-18 10:08",
+      "change": "report-names: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 10:14",
+      "change": "report-names: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 10:23",
+      "change": "report-names: v3 → v4 (CM-0060) — required_fields.status nos tipos ux-audit e architecture-audit (erro em qualquer data; a lista e a tela leem as mesmas palavras, um teste do Control Center confere); CM-0060 entra em open_warning_notes; as cláusulas do item não mudam, v3 em superseded"
+    },
+    {
+      "at": "2026-10-18 10:23",
+      "change": "report-names: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 10:30",
+      "change": "design-system: v3 → v4 (CM-0061) — cláusula contains com a expressão do leitor da tela para a linha **Status: …**; o modelo traz **Status: Draft** no topo; v3 em superseded"
+    },
+    {
+      "at": "2026-10-18 11:05",
+      "change": "report-names: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 11:05",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 11:14",
+      "change": "report-names: report_types.json entra em pattern_sources (a lista e a regra de campos obrigatórios mudam o que se pede ao filho); conformance.asked passa a {path, asked_at} com entrada no log, uma entrada por arquivo para todas as notas que dividem o sensor; a versão superada só é julgada pelas cláusulas estáticas (um script é sempre o atual)"
+    },
+    {
+      "at": "2026-10-18 12:25",
+      "change": "memory-layer: v1 → v2 (CM-0062) — o modelo do `## Now` diz que Pending on Human aponta para o relatório da auditoria de conformidade e não copia as perguntas; o check não muda, v1 em superseded"
+    },
+    {
+      "at": "2026-10-18 12:26",
+      "change": "memory-layer: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 12:50",
+      "change": "memory-layer: v2 (CM-0062) ganha a cláusula `script` now_questions_check.py (a nota passava no filho que ainda copiava as perguntas) e a pattern_source dela; a nota ainda não circulou"
+    },
+    {
+      "at": "2026-10-18 12:50",
+      "change": "memory-layer: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 12:50",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 12:51",
+      "change": "content-audit: v2 → v3 (CM-0063) — a seção de perguntas do relatório tem forma (parse único em content_audit_check.py; aviso antes de 2026-10-19, lacuna depois); a cláusula script não muda, v2 em superseded"
+    },
+    {
+      "at": "2026-10-18 12:52",
+      "change": "memory-layer: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 12:56",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 12:59",
+      "change": "memory-layer: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 13:15",
+      "change": "content-audit: v3 (CM-0063) troca a chave de calendário (2026-10-19) por `conformance.applied` e ganha a cláusula `script` audit_questions_check.py com rótulo próprio — a forma das perguntas só reprova no filho que aplicou a CM-0063; a nota ainda não circulou"
+    },
+    {
+      "at": "2026-10-18 13:22",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 13:22",
+      "change": "memory-layer: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 13:23",
+      "change": "design-system: v4 → v5 (CM-0064) — o modelo ganha a seção opcional `## Densidade` (N da lista, níveis, altura expandida); o check não muda; v4 em superseded"
+    },
+    {
+      "at": "2026-10-18 13:25",
+      "change": "report-names: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 13:26",
+      "change": "report-names: v4 → v5 (CM-0065) — report_types.json ganha `data-reconciliation` (tema migration, sem skill dona) e o `closest` do report_types_check desempata pela dica mais específica; a cláusula não muda, v4 em superseded"
+    },
+    {
+      "at": "2026-10-18 13:36",
+      "change": "report-names: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 14:14",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 14:15",
+      "change": "content-audit: v3 → v4 (CM-0066) — a política de decisão do agente: cada pergunta aberta da auditoria declara `classe: b|c` (a `c`, o «por que o agente não podia»), lida pelo parse único e conferida pela cláusula das perguntas (aviso até a CM-0066 aplicada, lacuna depois); a v3 em superseded"
+    },
+    {
+      "at": "2026-10-18 14:27",
+      "change": "requirement-nodes: v1 → v2 (CM-0067) e evidence-folder: v2 → v3 (CM-0068) — o NFR não é importado por feature de produto, mas a feature `track: Fix` que paga um `violates::` o importa (modelo req-nfr.md e feature-artifacts.md); as cláusulas não mudam, as versões anteriores em superseded"
+    },
+    {
+      "at": "2026-10-18 14:27",
+      "change": "requirement-nodes: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 14:27",
+      "change": "evidence-folder: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 14:46",
+      "change": "content-audit: v4 corrigida na rodada do juiz — o relatório declara `avoidable_questions` e `bent_rules` (achados abertos, como o `content_p0`; o conform não fecha com nenhum acima de 0 na CM-0066 aplicada, aviso antes); `--parse-questions` sai 1 com problema de classe; `classe:` repetida ou depois do texto é problema de forma"
+    },
+    {
+      "at": "2026-10-18 14:47",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 14:48",
+      "change": "evidence-folder: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 15:06",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 17:49",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 17:50",
+      "change": "product-structure: v7 → v8 (CM-0069) — lacuna epic_name_missing (nome do épico na tabela do PRD como o leitor do Control Center o acha: `EP-xx · nome` na célula ou o nome na coluna com cabeçalho Nome/Épico); v7 em superseded"
+    },
+    {
+      "at": "2026-10-18 17:56",
+      "change": "tech-stack: item novo (CM-0071) — `docs/specs/tech-stack.md` do perfil code-app, modelo `templates/tech-stack.md` da mjrp-designing-architecture (juiz: mjrp-critiquing-architecture); o check cobra `status:`, `## Stack` com a tabela de cinco colunas e `## Restrições`; o filho o escreve do que o código usa, classe (a), Draft até o MJRP aprovar (decisão do MJRP, 2026-10-18)"
+    },
+    {
+      "at": "2026-10-18 17:56",
+      "change": "arch: v3 (CM-0072) — o modelo troca a coluna `Technology` por `Stack layer` e ganha a seção `## Stack` que aponta para o tech-stack.md; o check não muda"
+    },
+    {
+      "at": "2026-10-18 18:22",
+      "change": "tech-stack: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 18:22",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 18:30",
+      "change": "tech-stack: o item sai do `template` (como os itens com cláusula script) e ganha a cláusula `tech_stack_check.py` (valor do `status:`, tabela de cinco colunas, célula Decisão, links `[[ADR-NNNN]]` que resolvem); `status:` com a expressão exata; `## Decidido não usar` opcional; a nota CM-0071 inclui a linha do item na auditoria do conform (rodada de correção do juiz, 2026-10-18)"
+    },
+    {
+      "at": "2026-10-18 18:30",
+      "change": "content-audit: v5 (CM-0073) — o item novo recebido, ainda não aplicado e dentro da própria carência não pede linha na tabela da auditoria; o check não muda"
+    },
+    {
+      "at": "2026-10-18 18:35",
+      "change": "release-features: item novo (CM-0074) — toda release com story Done/Accepted tem a feature que a entregou; aviso num projeto com histórico legado (docs/specs/milestones/), lacuna nos demais; o check é o `feature_history_check.py` (UAT-257, MJRPpersonal); item próprio, e não a v8/v9 do product-structure, porque a CM-0069 (ramo fix/epic-names-nfr-board-20261018) também o sobe"
+    },
+    {
+      "at": "2026-10-18 18:50",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-18 22:29",
+      "change": "design-system: v5 → v6 (CM-0075) — o modelo ganha o checklist de padrões em Key Components (lista todo padrão repetido, o aninhamento incluído); o check não muda; v5 em superseded"
+    },
+    {
+      "at": "2026-10-18 23:07",
+      "change": "adr-names: v2 → v3 (CM-0076) — o check passa a conferir também o cabeçalho de cada ADR (`adr_header_check.py`: o título `# ADR-NNNN: título`, ou o prefixo do contrato, e a linha `**Status**: x`), a forma que o leitor do Control Center lê; o leitor passa a aceitar `# ADR 0002:` e o check segue estrito a uma forma; v2 em superseded"
+    },
+    {
+      "at": "2026-10-19 10:37",
+      "change": "prd: v1 → v2 (CM-0077) — o PRD é a fonte do conteúdo: a tabela de épicos não tem coluna de estado nem contagem escrita à mão, está na forma que o leitor do Control Center lê (`Épico | Serve | Critério de saída`, o épico em negrito) e todo nó de `docs/specs/requirements/` está embutido no `prd.md` pelo nome inteiro (`prd_source_check.py`); v1 em superseded"
+    },
+    {
+      "at": "2026-10-19 11:08",
+      "change": "releases: v2 → v3 (CM-0078) — o modelo do PRD, fonte do padrão que ele compartilha com o `prd`, mudou (CM-0077); o check não muda; v2 em superseded"
+    },
+    {
+      "at": "2026-10-19 11:57",
+      "change": "prd (v2, CM-0077): as seis mudanças do modelo — `## Dependências`, `## Desenho e protótipo` e `## Mudanças` entram, `## Objetivo` no lugar de «Objetivo e métricas», `## Entregue` sai; product-structure: v8 → v9 (CM-0079) — sai a comparação do PRD § Entregue com os specs (os dois avisos da v7); v8 em superseded"
+    },
+    {
+      "at": "2026-10-19 15:16",
+      "change": "evidence-folder: v3 → v4 (CM-0080) — o ponteiro para `reports/evidence/` que não está no disco só é lacuna numa task feita; numa task pendente é aviso (`evidence_pointer_future`); o check é o mesmo script, só afrouxa; v3 em superseded"
+    },
+    {
+      "at": "2026-10-19 15:16",
+      "change": "evidence-folder: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-19 15:42",
+      "change": "evidence-folder: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-19 19:40",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-19 19:49",
+      "change": "uat: v2 → v3 (CM-0081) — coluna `Reportado por` (MJRP · juiz · agente) e a regra da prioridade humana (P0 ou segurança); o check é o `uat_tracks_check.py`; v2 em superseded"
+    },
+    {
+      "at": "2026-10-19 19:49",
+      "change": "product-structure: v9 → v10 (CM-0082) — o leitor aceita o cabeçalho de nove colunas do uat.md; só afrouxa; v9 em superseded"
+    },
+    {
+      "at": "2026-10-19 20:33",
+      "change": "uat: pattern_digest reestampado na mesma versão (v3, a nota CM-0081 ainda não está na main) — o modelo e o `uat_tracks_check.py`; o item tem `template`, então a rota `--rebaseline` recusa e o mapa foi escrito com o `source_digest` do próprio `conformance_check.py`"
+    },
+    {
+      "at": "2026-10-25 16:50",
+      "change": "feature-track: v1 → v2 (CM-0083) — `lane:` e `solution_type:` no lugar do `track:`; o leitor aceita o `track:` legado; v1 em superseded"
+    },
+    {
+      "at": "2026-10-25 16:50",
+      "change": "releases: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-25 16:50",
+      "change": "evidence-folder: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-25 16:50",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-25 16:50",
+      "change": "release-features: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-25 18:11",
+      "change": "visual-sensor: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-25 18:11",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-25 18:11",
+      "change": "record-shapes: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-25 18:11",
+      "change": "report-names: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-25 18:11",
+      "change": "tech-stack: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-26 10:07",
+      "change": "evidence-folder: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-26 10:07",
+      "change": "record-shapes: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-26 10:07",
+      "change": "requirement-nodes: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-26 10:07",
+      "change": "contract-screen: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-27 22:04",
+      "change": "adr-names: v3 → v4 (CM-0085) — a ADR curta (decision@3, 6.000 caracteres) e a via do aceite (tech lead | MJRP), medidas nas ADRs datadas a partir de 2026-10-26; v3 em superseded"
+    }
+  ]
+}

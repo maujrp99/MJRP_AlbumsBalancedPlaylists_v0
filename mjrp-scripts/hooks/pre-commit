@@ -1,0 +1,209 @@
+#!/bin/sh
+# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# pre-commit - structure by nature (EP-09) and the coherence of the requirements graph (S-67). Blocks a commit that ADDS something outside its nature
+# (docs/ only memory; reports/, design/, data/ with their declared subfolders). Only what this commit
+# adds is judged - an old misplacement is the doctor's W9 warning, not a blocked commit.
+#
+# Installed per clone by:  git config core.hooksPath mjrp-scripts/hooks   (new_project.py does it)
+# Bypass is the human's call, never the agent's:  git commit --no-verify
+#
+# 2026-10-25 (F72, R25): the sensors' exit codes mean different things and the hook now says which, as the stop_gate does:
+#   0  passed
+#   1  FAILED - the commit adds something wrong (blocks; fix the commit)
+#   2  NOT EVALUATED - the sensor could not judge (bad path, unreadable contract), or it crashed (a Python traceback also exits 1,
+#      so the output is read for it). Blocks too - "not evaluated" is not "approved" (ADR-0002 section 8) - but the message says the
+#      fault is the sensor, not the commit.
+# And a missing python3 or a missing sensor is a WARNING on stderr, never a silent pass: the commit goes through unchecked, and the
+# person reading the terminal knows it.
+ROOT=$(git rev-parse --show-toplevel) || exit 0
+
+# run_sensor <label> <command...>: prints the sensor's output; returns 0 passed, 1 failed, 2 not evaluated.
+run_sensor() {
+  label=$1; shift
+  out=$("$@" 2>&1); code=$?
+  [ -n "$out" ] && printf '%s\n' "$out"
+  case "$code" in
+    0) return 0 ;;
+    1) if printf '%s' "$out" | grep -q 'Traceback (most recent call last)'; then
+         echo "  [pre-commit] $label: o sensor QUEBROU (traceback acima) - NÃO AVALIOU. O defeito é do sensor, não deste commit: avise o MJRP." >&2
+         return 2
+       fi
+       return 1 ;;
+    *) echo "  [pre-commit] $label: o sensor saiu $code - NÃO AVALIOU (exit 2 = não avaliável). Corrija o sensor ou o caminho, não o commit." >&2
+       return 2 ;;
+  esac
+}
+
+CHECK="$ROOT/mjrp-scripts/structure_check.py"
+GRAPH="$ROOT/mjrp-scripts/requirements_graph_check.py"
+if [ ! -f "$CHECK" ] && [ ! -f "$GRAPH" ]; then
+  exit 0                                   # a project that carries neither sensor: nothing to run, nothing to warn about
+fi
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "  [pre-commit] AVISO: python3 não foi encontrado - a estrutura por natureza e o grafo de requisitos NÃO foram conferidos neste commit." >&2
+  exit 0
+fi
+if [ -f "$CHECK" ]; then
+  run_sensor "estrutura por natureza" python3 "$CHECK" "$ROOT" --staged
+  code=$?
+  if [ "$code" -eq 1 ]; then
+    echo ""
+    echo "  commit bloqueado: REPROVOU - o que ele acrescenta está fora da natureza da pasta."
+    echo "  cada linha acima diz para onde vai (e o git mv que sara). Regra: mjrp-scripts/structure_rules.json"
+    exit 1
+  elif [ "$code" -eq 2 ]; then
+    exit 1
+  fi
+else
+  echo "  [pre-commit] AVISO: mjrp-scripts/structure_check.py não existe - a estrutura por natureza NÃO foi conferida." >&2
+fi
+# F67 (S-168, 2026-10-26): each status has ONE source, and what derives from it goes into THIS commit. status_sync.py reads the
+# index (what the commit carries), derives only from what the commit touches (a feature's tasks.md -> its spec, the requirements it
+# imports, the UAT rows fixing it) and writes the index and the working tree; the post-commit aligns the real index after a
+# `git commit -- <paths>`. It runs before the graph, so the graph judges the derived statuses. It never fails a commit (exit 1):
+# exit 2 - it could not read the index - blocks, because a derived status left behind is the drift F67 ends.
+SYNC="$ROOT/mjrp-scripts/status_sync.py"
+if [ -f "$SYNC" ]; then
+  run_sensor "status derivado" python3 "$SYNC" "$ROOT" --staged
+  if [ $? -ne 0 ]; then
+    echo "  commit bloqueado: o status derivado NÃO foi gravado (linha acima)." >&2
+    exit 1
+  fi
+elif [ -f "$GRAPH" ]; then
+  echo "  [pre-commit] AVISO: mjrp-scripts/status_sync.py não existe - o status derivado NÃO foi gravado neste commit." >&2
+fi
+# S-67 (2026-10-04): a status is checked against reality. A commit that touches a requirement node or a feature
+# and leaves a contradiction in it (Done with no evidence, Accepted with no acceptance, Done feature with an open
+# task) is refused; contradictions in nodes it does not touch are the daily pass's.
+# F67 TASK-02: the graph runs for the top AND for each nested project the commit touches (apps/control-center has its own
+# graph; run only at the top, its nodes were never judged in a commit). The project paths carry no spaces.
+if [ -f "$GRAPH" ]; then
+  NESTED=""
+  if [ -f "$SYNC" ]; then
+    NESTED=$(python3 "$SYNC" "$ROOT" --touched-projects)
+    if [ $? -ne 0 ]; then
+      printf '%s\n' "$NESTED"
+      echo "  [pre-commit] grafo de requisitos: não sei quais projetos o commit toca - NÃO AVALIOU." >&2
+      exit 1
+    fi
+  fi
+  for P in $(printf '.\n%s\n' "$NESTED" | sort -u); do
+    if [ "$P" = "." ]; then where="$ROOT"; name="grafo de requisitos"; else where="$ROOT/$P"; name="grafo de requisitos ($P)"; fi
+    run_sensor "$name" python3 "$GRAPH" "$where" --staged
+    code=$?
+    if [ "$code" -eq 1 ]; then
+      echo "  commit bloqueado: REPROVOU - o $name tem uma contradição nos nós que ele toca (linhas acima)." >&2
+      exit 1
+    elif [ "$code" -eq 2 ]; then
+      exit 1
+    fi
+  done
+fi
+# F95 (2026-10-26): a feature follows the SDD templates, charged by machine. From F43 to F94 no feature had the spec.md in the shape of the
+# template of mjrp-specifying-sdd-artifacts and nothing charged it (the skill that checks it only runs when someone calls it). The sensor reads
+# the required sections from the templates themselves and judges the INDEX copy of the features this commit adds or changes: a feature that is
+# `Done`/`Accepted` (the status_sync above already wrote the derived one into the index) without them is refused; an open one only warns (the fast
+# lane documents afterwards, but before the close). Cost: nothing unless the commit touches a features/Fxx-*/ file; then one python process.
+SDDCHK="$ROOT/mjrp-scripts/sdd_shape_check.py"
+if [ ! -f "$SDDCHK" ] && git -c core.quotePath=false diff --cached --name-only --diff-filter=AMR | grep -Eq '(^|/)docs/specs/features/F[0-9]+-[^/]+/(spec|plan|tasks)\.md$'; then
+  # recheck of 2026-10-27, P2-4: a sensor that is absent is said, never skipped in silence (a child does not carry this one by design)
+  echo "  [pre-commit] AVISO: mjrp-scripts/sdd_shape_check.py não existe - a forma do SDD das features deste commit NÃO foi conferida." >&2
+fi
+if [ -f "$SDDCHK" ] && git -c core.quotePath=false diff --cached --name-only --diff-filter=AMR | grep -Eq '(^|/)docs/specs/features/F[0-9]+-[^/]+/(spec|plan|tasks)\.md$'; then
+  run_sensor "forma do SDD" python3 "$SDDCHK" "$ROOT" --staged
+  code=$?
+  if [ "$code" -eq 1 ]; then
+    echo "  commit bloqueado: REPROVOU - uma feature FECHADA do commit está fora dos moldes do SDD (linhas acima: a seção que falta)." >&2
+    exit 1
+  elif [ "$code" -eq 2 ]; then
+    exit 1
+  fi
+fi
+# F101 (S-186, 2026-10-27): the fast lane's retroactive step, charged by machine. A commit that takes a `lane: fast` feature to Done (the
+# index closed, HEAD not) is refused when a row of the PDLC artifact registry (mjrp-scripts/artifacts.json, `retro` always or if, checked as its
+# `retro_check` says) is missing: the incident was the F83 closing with the step half done, the integrator messaging each session. The sensor
+# reads the SDD through sdd_shape_check and pdlc_vocabulary_check (no third reader); it runs only when the commit touches a feature file.
+RETRO="$ROOT/mjrp-scripts/retro_step_check.py"
+if git -c core.quotePath=false diff --cached --name-only --diff-filter=AMR | grep -Eq '(^|/)docs/specs/features/F[0-9]+-[^/]+/(spec|plan|tasks)\.md$'; then
+  if [ ! -f "$RETRO" ]; then
+    echo "  [pre-commit] AVISO: mjrp-scripts/retro_step_check.py não existe - o passo retroativo das features deste commit NÃO foi conferido." >&2
+  else
+    run_sensor "passo retroativo" python3 "$RETRO" "$ROOT" --staged
+    code=$?
+    if [ "$code" -eq 1 ]; then
+      echo "  commit bloqueado: REPROVOU - uma feature da via rápida vai a Done sem o passo retroativo (linhas acima: o que falta e como sanar)." >&2
+      exit 1
+    elif [ "$code" -eq 2 ]; then
+      exit 1
+    fi
+  fi
+fi
+# F101 (S-186, REQ-04): the maps generated from one source stay in step with it. A commit that touches a skill (mjrp-skills/: the SKILL.md
+# frontmatter feeds the skills map, the templates feed the SDD), the artifact registry, the skills map's generator, or a mapped folder
+# (docs/specs/, design/, reports/ of any project: a new kind of file nobody mapped) runs the catalog sensor, which checks the README
+# catalog, the artifact map (artifact_map.py --check) and the skills map (gen_skills_map.py --check, when it exists). It reads the disk.
+CATCHK="$ROOT/mjrp-scripts/gen_catalog.py"
+if [ -f "$CATCHK" ] && git -c core.quotePath=false diff --cached --name-only | grep -Eq '^mjrp-skills/|^mjrp-scripts/(artifacts\.json|artifact_map\.py|gen_skills_map\.py|gen_catalog\.py)$|(^|/)(docs/specs|design|reports)/'; then
+  run_sensor "mapas gerados" python3 "$CATCHK" --check
+  code=$?
+  if [ "$code" -eq 1 ]; then
+    echo "  commit bloqueado: REPROVOU - um mapa gerado (o catálogo do README, o mapa de artefatos ou o das skills) não bate com a fonte (linhas acima)." >&2
+    echo "  regere: python3 mjrp-scripts/gen_catalog.py · python3 mjrp-scripts/artifact_map.py · python3 mjrp-scripts/gen_skills_map.py; leve o gerado no commit" >&2
+    exit 1
+  elif [ "$code" -eq 2 ]; then
+    exit 1
+  fi
+fi
+# UAT-375 (2026-10-26): a `docs/specs/uat.md` the Control Center cannot read is refused here, with the line and the reason. The reader fails
+# the WHOLE table on one row outside the grammar (a Status that is not `open` | `fixing (Fxx)` | `fixed (...)`, a Gravidade, a short row, an
+# unknown header) and the two tracks of the UAT Board go empty; until now nothing at commit time read the Status (the incident: `fixing (UAT-373: ...)`
+# went in). uat_readable_check.py calls the app's reader mirrored (product_structure_check.parse_uat) and pinned to it by a test; it judges the INDEX (what the commit
+# will contain), for every project's uat.md the commit adds or changes, so it needs no contract.
+UATCHK="$ROOT/mjrp-scripts/uat_readable_check.py"
+UATS=$(git -c core.quotePath=false diff --cached --name-only --diff-filter=AMR | grep -E '(^|/)docs/specs/uat\.md$')
+if [ -n "$UATS" ]; then
+  if [ ! -f "$UATCHK" ]; then
+    echo "  [pre-commit] AVISO: mjrp-scripts/uat_readable_check.py não existe - a leitura da uat.md NÃO foi conferida neste commit." >&2
+  else
+    UATTMP=$(mktemp) || { echo "  [pre-commit] leitura da uat.md: sem arquivo temporário - NÃO AVALIOU." >&2; exit 1; }
+    printf '%s\n' "$UATS" | while IFS= read -r UAT; do
+      git show ":$UAT" > "$UATTMP" 2>/dev/null || { echo "  [pre-commit] $UAT: não saiu do índice - NÃO AVALIOU." >&2; exit 2; }
+      run_sensor "leitura da uat.md" python3 "$UATCHK" "$UATTMP" --label "$UAT" || exit $?
+    done
+    code=$?
+    rm -f "$UATTMP"
+    if [ "$code" -eq 1 ]; then
+      echo "  commit bloqueado: REPROVOU - a uat.md do commit não é legível pelo Control Center (a linha e o motivo acima)." >&2
+      exit 1
+    elif [ "$code" -eq 2 ]; then
+      exit 1
+    fi
+  fi
+fi
+# F73 TASK-02b (UAT-347): conformance_check.py is GENERATED from mjrp-scripts/conformance/*.py. A commit that touches the generated
+# file, a fragment or the generator is refused when the generated file drifted from the fragments (a hand edit in the generated file
+# would be lost on the next generation). Only when the commit touches them, and only where the generator exists.
+# It judges what the commit WILL CONTAIN - the index - not the disk: the fragments and the generated file are exported from the index
+# to a temporary folder and the generator's --check runs there. (With the fragment regenerated on disk but only the fragment in a
+# `git commit -- <paths>`, the disk is in sync and the stale generated file would still go into the commit.)
+GEN="$ROOT/mjrp-scripts/gen_conformance_check.py"
+if [ -f "$GEN" ] && git diff --cached --name-only | grep -Eq '^mjrp-scripts/(conformance/|conformance_check\.py$|gen_conformance_check\.py$)'; then
+  IDX=$(mktemp -d) || { echo "  [pre-commit] conformance_check.py gerado: sem pasta temporária - NÃO AVALIOU." >&2; exit 1; }
+  git ls-files -z --cached -- mjrp-scripts/conformance mjrp-scripts/conformance_check.py | xargs -0 git checkout-index --prefix="$IDX/" -- 2>/dev/null
+  if [ -d "$IDX/mjrp-scripts/conformance" ]; then
+    run_sensor "conformance_check.py gerado (o índice)" python3 "$GEN" --check --scripts-dir "$IDX/mjrp-scripts"
+    code=$?
+  else
+    echo "  [pre-commit] conformance_check.py gerado: os fragmentos não saíram do índice - NÃO AVALIOU." >&2
+    code=2
+  fi
+  rm -rf "$IDX"
+  if [ "$code" -eq 1 ]; then
+    echo "  commit bloqueado: REPROVOU - o conformance_check.py do commit não bate com os fragmentos de mjrp-scripts/conformance/ do commit (linha acima)." >&2
+    echo "  edite os fragmentos, rode: python3 mjrp-scripts/gen_conformance_check.py, e leve os DOIS no commit" >&2
+    exit 1
+  elif [ "$code" -eq 2 ]; then
+    exit 1
+  fi
+fi
+exit 0

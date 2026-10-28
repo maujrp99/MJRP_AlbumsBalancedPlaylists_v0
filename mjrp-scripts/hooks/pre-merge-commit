@@ -1,0 +1,18 @@
+#!/bin/sh
+# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# pre-merge-commit - a branch that changed a screen is merged with the independent visual recheck's report: evaluated
+# (`verdict: pass` or `fail`, never `incomplete`) and with `p0: 0`. ADR-0017 of the harness, 2026-10-12; revised
+# 2026-10-17 (decision of the MJRP, pdlc-loops § 5): the judge evaluates, it does not block - a `fail` without P0
+# goes to main and each finding becomes an issue of uat.md; a P0 or a judge that could not evaluate still stops it.
+# Born from the Control Center 1.0: the UI reached the UAT far from the approved prototype with every sensor green,
+# and the skill holding the check was never invoked.
+#
+# Installed per clone by:  git config core.hooksPath mjrp-scripts/hooks   (new_project.py does it)
+# It runs on `git merge` when a merge commit is made (--no-ff, the governance's merge); a fast-forward makes none.
+# Bypass is the human's call, never the agent's:  git merge --no-verify, or VISUAL_RECHECK_SKIP="<reason>" git merge …
+# (it is the way out of a P0: the agent brings the owner what it is, and he decides)
+ROOT=$(git rev-parse --show-toplevel) || exit 0
+GATE="$ROOT/mjrp-scripts/visual_gate.py"
+[ -f "$GATE" ] || exit 0
+command -v python3 >/dev/null 2>&1 || exit 0
+cd "$ROOT" && python3 "$GATE" --hook

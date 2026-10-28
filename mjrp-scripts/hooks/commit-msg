@@ -1,0 +1,95 @@
+#!/bin/sh
+# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# commit-msg - every commit brings a new entry in the project log (S-61). Born 2026-10-03/04: commits
+# without a log entry, and decisions that survived a context compaction only in the AI Platform's summary.
+# It runs wherever git runs, so it guards local and cloud sessions alike.
+#
+# Installed per clone by:  git config core.hooksPath mjrp-scripts/hooks   (new_project.py does it)
+# Bypass is the human's call, never the agent's:  git commit --no-verify
+#
+# 2026-10-25 (F72, R25): as in pre-commit, a sensor's exit 1 is REPROVOU and anything else (2, or a traceback) is NÃO AVALIOU, with
+# the message that says which; and a missing python3 or sensor is a warning on stderr, never a silent pass.
+ROOT=$(git rev-parse --show-toplevel) || exit 0
+
+# run_sensor <label> <command...>: prints the sensor's output; returns 0 passed, 1 failed, 2 not evaluated.
+run_sensor() {
+  label=$1; shift
+  out=$("$@" 2>&1); code=$?
+  [ -n "$out" ] && printf '%s\n' "$out"
+  case "$code" in
+    0) return 0 ;;
+    1) if printf '%s' "$out" | grep -q 'Traceback (most recent call last)'; then
+         echo "  [commit-msg] $label: o sensor QUEBROU (traceback acima) - NÃO AVALIOU. O defeito é do sensor, não deste commit: avise o MJRP." >&2
+         return 2
+       fi
+       return 1 ;;
+    *) echo "  [commit-msg] $label: o sensor saiu $code - NÃO AVALIOU (exit 2 = não avaliável). Corrija o sensor ou o caminho, não o commit." >&2
+       return 2 ;;
+  esac
+}
+
+# gate <label> <command...>: runs a sensor and ends the hook (exit 1) unless it passed.
+gate() {
+  run_sensor "$@"
+  code=$?
+  if [ "$code" -eq 1 ]; then
+    echo "  [commit-msg] commit bloqueado: REPROVOU em $1 (linhas acima)." >&2
+    exit 1
+  elif [ "$code" -eq 2 ]; then
+    exit 1
+  fi
+}
+
+HAVE_PY=yes
+if ! command -v python3 >/dev/null 2>&1; then
+  HAVE_PY=no
+  echo "  [commit-msg] AVISO: python3 não foi encontrado - os carimbos do humano, a entrada no log e o espelho do protótipo NÃO foram conferidos neste commit." >&2
+fi
+
+# 2026-10-13 (ADR-0019): the human's valves - the trailers `Conformance-waiver:` and `Catalog-editorial:` - are refused in a
+# commit that also carries an agent's `Co-Authored-By:`. The agent signs what it writes, so the two cannot live together.
+# First, so that it runs even where the log check is absent.
+CONF="$ROOT/mjrp-scripts/conformance_check.py"
+if [ "$HAVE_PY" = yes ] && [ -f "$CONF" ]; then
+  gate "carimbos do humano" python3 "$CONF" --check-msg "$1"
+fi
+# 2026-10-24 (F60): a merge left open in this checkout is closed by the next `git commit`, whoever makes it. On 2026-10-24 a
+# routine session committed inside the F52 merge. This only WARNS (never blocks); the merge's own commit is silent.
+TRAIN="$ROOT/mjrp-scripts/merge_train.py"
+if [ "$HAVE_PY" = yes ] && [ -f "$TRAIN" ]; then
+  python3 "$TRAIN" check-open-merge "$1" || true
+fi
+CHECK="$ROOT/mjrp-scripts/log_entry_check.py"
+if [ ! -f "$CHECK" ]; then
+  [ "$HAVE_PY" = yes ] && echo "  [commit-msg] AVISO: mjrp-scripts/log_entry_check.py não existe - a entrada no log NÃO foi conferida neste commit." >&2
+  exit 0
+fi
+[ "$HAVE_PY" = yes ] || exit 0
+
+# Is this commit an --amend? Judged against the parent of the commit being amended, not HEAD (log_entry_check.py).
+# 2026-10-25 (F72, R25): the old test read the command line of the parent process (`ps`) and that is fragile (a wrapper, a
+# differently-named parent, an unreadable `ps`). git hands every hook the AUTHOR DATE of the commit in progress, and an amend KEEPS
+# the author date of the commit it replaces, so "GIT_AUTHOR_DATE equals HEAD's author date" is the signal. Its one blind spot is a
+# normal commit made in the same second as its parent (equal dates); `ps` is only the TIEBREAKER there, and for the cases that
+# change the author date on purpose (`--amend --reset-author`, `--date`), where `ps` is the only witness.
+AMEND=""
+HEAD_DATE=$(git log -1 --format=%ad --date=raw HEAD 2>/dev/null)
+PS_ARGS=$(ps -o args= -p "$PPID" 2>/dev/null)
+case "$PS_ARGS" in
+  *--amend*) PS=yes ;;
+  "") PS=unknown ;;
+  *) PS=no ;;
+esac
+if [ -n "$HEAD_DATE" ] && [ "${GIT_AUTHOR_DATE#@}" = "$HEAD_DATE" ]; then DATE=yes; else DATE=no; fi
+if [ "$PS" = yes ] || { [ "$DATE" = yes ] && [ "$PS" != no ]; }; then AMEND="--amend"; fi
+# 2026-10-14 (CC-ADR-0014 section 6): the message goes to the check too - the narrow exemption of the catalog marking
+# reads it. `--msg ""` (no file) is read as "no message": the check then only applies the normal rule.
+cd "$ROOT" || exit 0
+gate "entrada no log" python3 "$CHECK" $AMEND --msg "$1"
+# 2026-10-09 (MJRP): a prototype that changes brings its info-arch.md and the wireframes of every screen of its
+# version in the same commit. The message is read for the human's escape trailer ("Prototype-sync: skip — <why>").
+SYNC="$ROOT/mjrp-scripts/prototype_sync_check.py"
+[ -f "$SYNC" ] || exit 0
+# 2026-10-27 (F117, UAT-394): --amend, so that the gate's own trailer of the commit being amended is not read as a forged one.
+gate "espelho do protótipo" python3 "$SYNC" "$ROOT" --staged $AMEND --msg "$1"
+exit 0

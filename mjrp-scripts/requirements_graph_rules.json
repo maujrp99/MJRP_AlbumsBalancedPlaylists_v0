@@ -1,0 +1,389 @@
+{
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_about": "Single declaration of the requirements graph (S-63, kernel page requirements-graph). The sensor reads this file; the kernel page explains it for humans. Edges are written in one direction only; the inverse is computed. Each edge is enforced only from the status declared in 'enforced_from' (lesson of SDD_chain_artifacts_check: checking every pair everywhere produced 366 false positives).",
+  "version": 1,
+  "paths": {
+    "requirements": "docs/specs/requirements",
+    "features": "docs/specs/features",
+    "prd": "docs/specs/prd.md",
+    "roadmap": "ROADMAP.md",
+    "info_arch": "docs/specs/info-arch.md",
+    "behavior": "docs/specs/behavior.md",
+    "uat": "docs/specs/uat.md",
+    "nfr_folder": "nfr",
+    "design_system": "docs/specs/design-system.md"
+  },
+  "file_name": {
+    "_about": "MJRP, 2026-10-09: a requirement file is <ID>-<slug>.md (S-31-decide-how-data-reaches-the-screen.md). The ID is the identity (frontmatter `id:` and `aliases: [ID]`); the slug is the English title in lowercase ASCII kebab-case, at most slug_max characters, set at birth and frozen (renaming is explicit: req_file_names.py --reslug). Links and embeds name the whole stem, the ID is the display text: [[S-31-decide-how-data-reaches-the-screen|S-31]]. slug_required/alias_required stay false during the migration; a file with no slug has the ID as its whole stem, so [[S-31]] is the right link to it.",
+    "pattern": "^(?P<id>(?:S|UC|EA|(?:[A-Z]{2,}-)?NFR)-\\d{2,})(?:-(?P<slug>[a-z0-9]+(?:-[a-z0-9]+)*))?$",
+    "slug_max": 50,
+    "slug_required": false,
+    "alias_required": false,
+    "link_form": "stem"
+  },
+  "edge_syntax": {
+    "file_node": "YAML frontmatter key in the node's own file: `epic: \"[[prd#^EP-01]]\"`, lists for many targets",
+    "inline_node": "Inline field on the line under the node inside its document: `serves:: [[ROADMAP#^OUT-01]]` (epics in prd.md, releases in ROADMAP.md)",
+    "block_anchor": "`^ID` at the end of the paragraph or list item that holds the node (outcomes, releases, observable states); letters, digits and hyphens only"
+  },
+  "statuses": [
+    "Backlog",
+    "Prioritized",
+    "Ready",
+    "In progress",
+    "Done",
+    "Accepted"
+  ],
+  "off_track_statuses": [
+    "Deferred",
+    "Cancelled"
+  ],
+  "_off_track": "valid statuses outside the lifecycle order: never count as reached for enforced_from, never open (MJRP, 2026-10-04 14:28: Deferred joins the rules; 2026-10-13 17:15, ADR-0020 A.6: Cancelled joins it -- a requirement that will not be done, superseded or given up; it keeps its ID and its edges (`epic` is still required, `supersedes` says who replaced it) and, unlike Deferred, never comes back: the return is a new node. It does not count in the progress)",
+  "open_feature_statuses": [
+    "Ready",
+    "In progress"
+  ],
+  "derivation": {
+    "_about": "F67 (S-168): each status has ONE source; what derives from it is computed by status_sync.py and written by the pre-commit hook in the same commit. The derivation only moves forward: it never demotes a delivered status, never writes Accepted (the human's acceptance or the independent recheck) and never closes a UAT issue (the human's OK). Epic and release statuses are never stored: whoever shows them computes them from their requirements, so there is nothing to write and no second source.",
+    "feature": {
+      "source": "tasks.md (the boxes outside code fences)",
+      "field": "spec.md frontmatter `status:`",
+      "never_touch": ["Accepted", "Cancelled", "Deferred"],
+      "all_ticked": "Done",
+      "some_ticked": "In Progress",
+      "done_with_open_box": "unchanged (a finding of done_feature_complete, never a rewrite: the derivation does not demote)",
+      "none_ticked": "unchanged"
+    },
+    "requirement": {
+      "source": "the features that import it (after their own derivation)",
+      "field": "node frontmatter `status:`",
+      "never_touch": ["Done", "Accepted", "Deferred", "Cancelled"],
+      "any_feature_open": "In progress",
+      "open_feature_statuses": ["In Progress", "In progress"],
+      "all_features_delivered": "Done",
+      "delivered_feature_statuses": ["Done", "Accepted"],
+      "note": "a requirement already In progress only moves to Done; one in Backlog, Prioritized or Ready moves to In progress or Done. A feature in Draft or Ready (nothing ticked) moves nothing."
+    },
+    "uat_issue": {
+      "source": "the feature in `fixing (Fxx)`",
+      "field": "uat.md, the `Status` cell of the row",
+      "fixing_to_fixed_when": ["Done", "Accepted"],
+      "note": "`fixing (Fxx)` becomes `fixed (Fxx)` when Fxx is Done or Accepted (also the old rows whose feature is already Accepted, UAT-312 with F48). `closed` is never derived: it is the human's OK, or the independent recheck on the agent track."
+    },
+    "epic": "computed, never stored: from its requirements",
+    "release": "computed, never stored: from what is planned_for it",
+    "scope_in_commit": "the pre-commit derives only from what the commit touches: a touched feature (its own status, the requirements it imports, the UAT rows fixing it), a touched requirement (from its importers) and every row of a touched uat.md. Drift in nodes the commit does not touch is left to `status_sync.py --check` (never swept into someone else's branch)."
+  },
+  "release_required": {
+    "_about": "ADR-0020 A.5: `planned_for` is optional unless the project's contract turns it on with `mjrp_harness.requirements.release_required: true`; then a requirement must have a release from this status on (a Backlog requirement may still be unplanned). The epic's own `planned_for` satisfies it -- it is a shortcut for all the epic's requirements.",
+    "contract_field": "mjrp_harness.requirements.release_required",
+    "default": false,
+    "from": "Prioritized"
+  },
+  "identity": {
+    "_about": "ADR-0020 D.3: an ID is unique in the REPOSITORY. A project nested in the repository of another one (its contract is under the git toplevel whose root has another contract) carries `mjrp_harness.id_prefix` (e.g. CC) on every per-project sequence the containing project also uses: the prefix is optional in the patterns of these node types, and the sensor refuses a node ID repeated between the nested project and the root one.",
+    "contract_field": "mjrp_harness.id_prefix",
+    "prefixed_types": ["outcome", "epic", "nfr"],
+    "unique_types": ["outcome", "release", "epic", "requirement", "nfr"]
+  },
+  "node_types": {
+    "outcome": {
+      "id_pattern": "^OUT-\\d{2}$",
+      "lives_in": "roadmap",
+      "form": "block_anchor"
+    },
+    "release": {
+      "id_pattern": "^REL-\\d{2}$",
+      "lives_in": "roadmap",
+      "form": "block_anchor",
+      "optional": true,
+      "fields": [
+        "kind",
+        "date"
+      ]
+    },
+    "epic": {
+      "id_pattern": "^EP-\\d{2}$",
+      "lives_in": "prd",
+      "form": "inline_node"
+    },
+    "requirement": {
+      "id_pattern": "^(S|UC|EA)-\\d{2,}$",
+      "lives_in": "requirements",
+      "form": "file_node",
+      "fields": [
+        "id",
+        "type",
+        "format",
+        "status"
+      ]
+    },
+    "nfr": {
+      "id_pattern": "^NFR-\\d{2}$",
+      "lives_in": "requirements",
+      "form": "file_node",
+      "fields": [
+        "id",
+        "type",
+        "status"
+      ]
+    },
+    "feature": {
+      "id_pattern": "^F\\d{2,}$",
+      "lives_in": "features",
+      "form": "folder",
+      "folder_pattern": "^F\\d{2,}-[a-z0-9-]+$",
+      "files": [
+        "spec.md",
+        "plan.md",
+        "tasks.md"
+      ]
+    },
+    "spec_req": {
+      "id_pattern": "^REQ-\\d{2}$",
+      "lives_in": "feature:spec.md",
+      "form": "local_id"
+    },
+    "task": {
+      "id_pattern": "^TASK-\\d{2}$",
+      "lives_in": "feature:tasks.md",
+      "form": "local_id"
+    },
+    "observable_state": {
+      "id_pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "lives_in": [
+        "info_arch",
+        "behavior"
+      ],
+      "form": "block_anchor",
+      "note": "a situation of the system surface the human sees and judges: a screen state of the judged prototype (info-arch.md, visual surface) or a behavior state (behavior.md, non-visual surface: command output, exit code, generated file, hook block, API response, agent behavior). MJRP, 2026-10-04 14:41: one rule for every requirement, no exemption by project type or by date. A link with a path (apps/<app>/docs/specs/info-arch#^x) resolves in that nested project."
+    },
+    "test": {
+      "lives_in": "tests or uat",
+      "form": "path_or_uat_entry"
+    }
+  },
+  "edges": [
+    {
+      "name": "contributes_to",
+      "from": "outcome",
+      "to": "outcome",
+      "min": 0,
+      "max": 1,
+      "enforced_from": "always",
+      "scope": "same_repository",
+      "target_form": "relative_path",
+      "on_unreachable": "not_evaluable",
+      "note": "ADR-0020 A.2: an outcome declares the outcome of ANOTHER roadmap it contributes to (`contributes_to:: [[../../ROADMAP#^OUT-03]]` in its section). The target is always a path relative to the declaring file + #^ID, never a bare ID, and is read only when it is the ROADMAP.md of a project with a contract in the same repository. Resolved: passes. Missing (the block does not exist, the target is the own roadmap, a bare ID, a cycle): error, exit 1. Unreachable (outside the repository, not on disk, not a project's ROADMAP.md): not evaluable, exit 2 -- never green, never read."
+    },
+    {
+      "name": "serves",
+      "from": "epic",
+      "to": "outcome",
+      "min": 1,
+      "max": 1,
+      "enforced_from": "always"
+    },
+    {
+      "name": "epic",
+      "from": "requirement",
+      "to": "epic",
+      "min": 1,
+      "max": 1,
+      "enforced_from": "always"
+    },
+    {
+      "name": "planned_for",
+      "from": [
+        "requirement",
+        "epic"
+      ],
+      "to": "release",
+      "min": 0,
+      "max": 1,
+      "enforced_from": "always",
+      "note": "on an epic it is a shortcut for all its requirements; the requirement overrides"
+    },
+    {
+      "name": "points_to",
+      "from": "requirement",
+      "to": "observable_state",
+      "min": 1,
+      "max": null,
+      "enforced_from": "Ready",
+      "enforced_from_fast_lane": "Done",
+      "note": "F67, decision of the MJRP (2026-10-26 11:30): on the fast lane the feature starts before the requirement is Ready, and the requirement moves to In progress with it (derivation). When EVERY feature that imports the requirement declares `lane: fast`, the edge is enforced from `enforced_from_fast_lane` -- the retroactive step, before the item closes."
+    },
+    {
+      "name": "imports",
+      "from": "feature",
+      "to": "requirement",
+      "min": 1,
+      "max": null,
+      "enforced_from": "always",
+      "nfr_tracks": ["Fix"],
+      "note": "fin-control, 2026-10-18: a feature imports requirements, and an NFR is a constraint of every feature, so it is not imported -- except by a feature of the tracks in `nfr_tracks` (Fix: the item that pays a place where the NFR is not met, `violates:: [[NFR-xx]]`). That feature may import ONLY NFRs (an engineering feature needs no invented story), or none when it names the constitution article it violates (`violates:: [[constitution#N]]` in its spec) -- but only with `fixes:` (the issue it pays; the card takes its release from there), a `violates::` naming that same NFR or an existing article, and a live NFR (rule fix_nfr_import). An NFR import never counts toward one_open_feature or the release of the feature."
+    },
+    {
+      "name": "implements",
+      "from": "task",
+      "to": "spec_req",
+      "min": 1,
+      "max": null,
+      "enforced_from": "always"
+    },
+    {
+      "name": "verified_by",
+      "from": "spec_req",
+      "to": "test",
+      "min": 1,
+      "max": null,
+      "enforced_from": "Done"
+    },
+    {
+      "name": "supersedes",
+      "from": "requirement",
+      "to": "requirement",
+      "min": 0,
+      "max": null,
+      "enforced_from": "always",
+      "note": "required when a Done requirement changes: the change is a new requirement that supersedes the old one"
+    },
+    {
+      "name": "delivered_by",
+      "from": "requirement",
+      "to": "commit",
+      "min": 0,
+      "max": null,
+      "enforced_from": "always",
+      "note": "the commit that delivered a requirement with no Done feature (meta work, or delivered before the graph); evidence for Done"
+    },
+    {
+      "name": "accepted_in",
+      "from": "requirement",
+      "to": "acceptance",
+      "min": 0,
+      "max": 1,
+      "enforced_from": "always",
+      "note": "the human's acceptance: an entry of uat.md ([[uat#^UAT-xx]]) or of the log ('log YYYY-MM-DD HH:MM'); evidence for Accepted; or, for brownfield work closed before the harness, 'histórico anterior ao harness — regra do MJRP de 2026-10-18' (at least one delivered_by commit exists and none is newer than the contract's first commit; the sensor prints the count)"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "one_open_feature",
+      "text": "a requirement is imported by at most one open feature (MJRP, 2026-10-04: requirement -> feature 0..1 open at a time)"
+    },
+    {
+      "id": "feature_has_requirement",
+      "text": "a feature imports 1..n requirements; a fix (`solution_type: fix`) with a non-empty `fixes:` imports none -- its requirement is the issue it fixes (PDLC v12, F94)"
+    },
+    {
+      "id": "nfr_not_imported",
+      "text": "an NFR is not imported by a product feature; it constrains all of them and is checked in review with constitution.md. The one importer is a feature of `imports.nfr_tracks` (Fix) that pays a violation of it (see fix_nfr_import)"
+    },
+    {
+      "id": "fix_nfr_import",
+      "text": "a Fix feature that imports an NFR (or imports nothing and names a constitution article) has a non-empty `fixes:`, a `violates::` outside a code fence naming that same NFR (or an article that exists in docs/specs/constitution.md), and the NFR is live: not Cancelled, not superseded"
+    },
+    {
+      "id": "spec_req_implemented",
+      "text": "every REQ of a feature is implemented by at least one TASK of the same feature"
+    },
+    {
+      "id": "feature_single_release",
+      "text": "all requirements imported by one feature are planned for the same release (when the project declares releases)"
+    },
+    {
+      "id": "target_exists",
+      "text": "every edge target resolves: file, heading or block anchor exists"
+    },
+    {
+      "id": "evidence_done",
+      "text": "a Done or Accepted requirement has evidence: a Done or Accepted feature imports it, or delivered_by names a commit that exists (the feature that accepts a requirement leaves it Accepted, CC-ADR-0024)"
+    },
+    {
+      "id": "evidence_accepted",
+      "text": "an Accepted requirement has accepted_in pointing to the human's acceptance (uat.md entry or log entry)"
+    },
+    {
+      "id": "acceptance_stamped",
+      "text": "a node (requirement or feature) that became Accepted after 2026-10-19 23:36 came in a commit stamped `Human-accepted: <the feature that imports it | requirements>` with no agent Co-Authored-By: the human's acceptance is the commit his command makes, never a status written by hand (CC-ADR-0024 section 6, step 2 of ADR-0019 section 2); not evaluable without git or in a shallow clone; and an ADR born on the MJRP's route (`**Acceptance**: MJRP`, or no route line and dated from 2026-10-26) became Accepted in a commit stamped `Human-accepted: adr:<ID>`, keeping the route it was born with (CC-ADR-0028); and a cell `OK do humano` of the uat.md that became the MJRP's (the form of `uat_tracks_check._HUMAN_OK`) after the commit that accepted CC-ADR-0029 came in a commit stamped `Human-accepted: issue:UAT-nn` (or the feature that links the issue) with no agent Co-Authored-By; until that ADR is Accepted here the effect judges nothing and the output says so (CC-ADR-0029)"
+    },
+    {
+      "id": "acceptance_coherent",
+      "text": "an Accepted feature has an accepted_in that resolves (log entry or uat.md anchor) and every requirement it imports, NFRs apart, is Accepted: the feature and its requirements are accepted together (CC-ADR-0024 section 6)"
+    },
+    {
+      "id": "status_stale",
+      "text": "an In progress requirement has an open feature, or activity in stale_days (a commit on the node or its feature, or a log entry citing it) — time rule, daily pass"
+    },
+    {
+      "id": "ready_state_changed",
+      "text": "the observable state a Ready requirement points to did not change after the requirement was last touched — time rule, daily pass"
+    },
+    {
+      "id": "state_judged",
+      "text": "a Ready requirement that points to a screen state (info-arch.md, nested included) points to a state an approved prototype shows: the state's block ID is in a shows:: line of the record in § Protótipos aprovados. Behavior states are exempt (MJRP, 2026-10-04)"
+    },
+    {
+      "id": "done_feature_complete",
+      "text": "a Done or Accepted feature is complete: no unchecked box (- [ ]) in its tasks.md, whatever the task ID looks like, and every REQ of its spec.md -- even one with a project-style ID such as REQ-F-05 -- has a verified_by (audit of pedroso-incorp, 2026-10-18, point 2). There is no warning phase: the graph check has no severity or date cut, every rule is a finding enforced from its status"
+    },
+    {
+      "id": "uat_fixes_cited",
+      "text": "WARNING (printed as `aviso`, never a finding, never an exit code): a feature of the Fix track declares in `fixes:` every issue of uat.md that is still open (empty «OK do humano») and whose Status cell cites it (`fixing (Fxx)`, `fixed (Fxx: ...)`). The Delivery station of a Fix feature reads only `fixes:` (CC-ADR-0009 section 1, row 2), so an issue that cites the feature and is not declared lets the board show it «Aceito» while the work is open. Incident: UAT-290 (2026-10-24, F52 shown «Aceito» with UAT-285, 287 and 288 `fixing (F52)`)"
+    },
+    {
+      "id": "node_folder",
+      "text": "requirement files live in the folder their epic declares with folder:: in prd.md (ep-NN-<english-slug>/), NFRs in nfr/; dormant while no epic declares folder:: (S-123, MJRP 2026-10-05)"
+    },
+    {
+      "id": "node_slug",
+      "text": "a requirement file is named <ID>-<slug>.md: the slug is lowercase ASCII kebab-case, at most file_name.slug_max characters; required when file_name.slug_required (MJRP, 2026-10-09)"
+    },
+    {
+      "id": "link_stem",
+      "text": "with file_name.link_form = stem, a link or embed to a requirement names the node's whole file stem ([[S-31-decide-how-data-reaches-the-screen|S-31]]); a bare ID or an outdated slug is flagged (Obsidian resolves file names, not aliases) (MJRP, 2026-10-09)"
+    },
+    {
+      "id": "design_system_exists",
+      "text": "a Ready requirement that points to a screen state (info-arch.md, nested included) requires docs/specs/design-system.md in the same project as that info-arch.md -- the visual identity is decided before the contract (audit C F10, MJRP 2026-10-09)"
+    },
+    {
+      "id": "id_unique",
+      "text": "a node ID of a project nested in a repository is not repeated in the root project of that repository (ADR-0020 D.3): the nested one carries the contract's id_prefix"
+    },
+    {
+      "id": "contributes_to_target",
+      "text": "a contributes_to target is a relative path + #^ID to an outcome of the ROADMAP.md of another project of the same repository: never a bare ID, never the own roadmap, no cycle (ADR-0020 A.2)"
+    },
+    {
+      "id": "bilingual",
+      "text": "every node has a non-empty `## <lang>` section for each language in `languages` (S-110)"
+    }
+  ],
+  "defaults": {
+    "stale_days": 14,
+    "_note": "the contract overrides: mjrp_harness.requirements.stale_days"
+  },
+  "_evidence": "S-67 (MJRP, 2026-10-04): status asks for evidence, one rule for every project — the feature for code-app work, the commit for meta work or work delivered before the graph.",
+  "languages": [
+    "pt-BR",
+    "en"
+  ],
+  "_languages": "S-110 (MJRP, 2026-10-05 09:39): every requirement and NFR node carries one `## <lang>` section per language, same file, same ID; the contract's mjrp_harness.requirements.languages overrides ([] turns it off)",
+  "tags": {
+    "field": "tags",
+    "pattern": "^#[a-z0-9]+(-[a-z0-9]+)*$",
+    "outcome": {
+      "min": 1,
+      "max": 3
+    },
+    "epic_own": {
+      "min": 0,
+      "max": 3
+    },
+    "epic_inherits": true
+  },
+  "_tags": "MJRP, 2026-10-06: every outcome carries 1 to 3 category tags (`tags:: #a #b` in its ROADMAP section) and every epic inherits the tags of the outcome it serves and may add up to 3 of its own (`tags::` under its heading in prd.md). Free vocabulary: the sensor checks only the format (English kebab-case after #) and the count."
+}

@@ -1,0 +1,455 @@
+#!/usr/bin/env python3
+# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte a194e58f2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+"""
+status_sync.py - each status has ONE source; what derives from it is written in the same commit (F67, S-168).
+
+The rules live in requirements_graph_rules.json -> `derivation` (one place). In short: a feature's status comes from its
+tasks.md; a requirement's from the features that import it; a UAT issue in `fixing (Fxx)` becomes `fixed (Fxx)` when Fxx
+is delivered. The derivation only moves forward: it never demotes a delivered status, never writes Accepted and never
+closes an issue. Epic and release statuses are computed by whoever shows them, never stored.
+
+  python3 mjrp-scripts/status_sync.py [root] --check            the drift of the whole project: exit 1 with the list, 0 none, 2 not evaluable
+  python3 mjrp-scripts/status_sync.py [root] --apply            writes every derived status of the project to the working tree
+  python3 mjrp-scripts/status_sync.py <top> --daily            the daily pass (status_sync_daily.py): writes the derivation of the root and the nested
+                                                                projects in the main checkout (never commits), lists what is the MJRP's and the agent's
+  python3 mjrp-scripts/status_sync.py <top> --staged            pre-commit: for each project the staged work touches, derives from the
+                                                                INDEX what the commit touches and writes it to the index AND the working tree
+  python3 mjrp-scripts/status_sync.py <top> --touched-projects  the projects (relative to the top, `.` for it) the staged work touches
+  python3 mjrp-scripts/status_sync.py <top> --post-commit       post-commit: after a `git commit -- <paths>`, aligns the real index
+                                                                with HEAD for the files the pre-commit wrote
+
+Why the index and not the disk (--staged): the commit carries the index. Reading the disk would derive from an edit that is
+not in the commit, and writing the disk and `git add`-ing it would sweep someone's unstaged edit into the commit.
+"""
+import json
+import os
+import re
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+import pathlib as _pl, sys as _sys  # noqa: E401  (this script's folder on sys.path even when it is loaded by path)
+_sys.path[:0] = [d for d in [str(_pl.Path(__file__).resolve().parent)] if d not in _sys.path]
+import _boot  # noqa: F401,E402
+import _git  # noqa: E402
+from _fm import parse_with_body as frontmatter  # noqa: E402
+from requirements_graph_check import link_targets, node_id  # noqa: E402
+
+HERE = Path(__file__).resolve().parent
+RULES = HERE / "requirements_graph_rules.json"
+CONTRACT = ".mjrp-project.yml"
+WRITTEN = "status_sync-written"          # under the git dir: the files the pre-commit wrote, for the post-commit
+OPEN_BOX = re.compile(r"^\s*[-*]\s+\[ \]")
+TICKED_BOX = re.compile(r"^\s*[-*]\s+\[[xX]\]")
+STATUS_LINE = re.compile(r"^(status:[ \t]*)(.*?)([ \t]*)$", re.M)
+UAT_ROW = re.compile(r"^\|\s*(UAT-\d+)\s*\|")
+CELL_SPLIT = re.compile(r"(?<!\\)\|")
+FIXING = re.compile(r"^fixing(\s*\(\s*(F\d{2,})\b)")
+
+
+class NotEvaluable(Exception):
+    """The derivation could not read what it needs: never an empty answer."""
+
+
+# ---- reading a project -----------------------------------------------------------------------------------------
+def read(path):
+    try:
+        return path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return None
+
+
+def boxes(tasks_text):
+    """(ticked, open) boxes of a tasks.md, outside code fences (the graph's Done rule counts the same boxes)."""
+    ticked = opened = 0
+    fenced = False
+    for line in (tasks_text or "").splitlines():
+        if line.lstrip().startswith("```"):
+            fenced = not fenced
+            continue
+        if fenced:
+            continue
+        if OPEN_BOX.match(line):
+            opened += 1
+        elif TICKED_BOX.match(line):
+            ticked += 1
+    return ticked, opened
+
+
+def load(project, rules):
+    """The features, the requirement nodes and the UAT rows of a project folder (a working tree or an index export)."""
+    paths = rules["paths"]
+    feats, reqs, rows = {}, {}, []
+    fdir = project / paths["features"]
+    if fdir.is_dir():
+        for d in sorted(x for x in fdir.iterdir() if x.is_dir() and re.match(r"^F\d{2,}-", x.name)):
+            spec = read(d / "spec.md")
+            if spec is None:
+                continue
+            fm, _ = frontmatter(spec)
+            ticked, opened = boxes(read(d / "tasks.md"))
+            feats[d.name[:d.name.index("-")]] = {
+                "dir": d.name, "rel": f"{paths['features']}/{d.name}/spec.md",
+                "status": str(fm.get("status") or "").strip(), "lane": str(fm.get("lane") or "standard").strip().casefold(),
+                "imports": [t[1] for t in link_targets(fm.get("imports"))], "ticked": ticked, "open": opened}
+    rdir = project / paths["requirements"]
+    if rdir.is_dir():
+        for f in sorted(rdir.rglob("*.md")):
+            fm, _ = frontmatter(read(f) or "")
+            nid = str(fm.get("id") or node_id(f.stem)).strip()
+            if fm.get("type") == "requirement" and nid:
+                reqs[nid] = {"rel": f.relative_to(project).as_posix(), "status": str(fm.get("status") or "").strip()}
+    uat = read(project / paths["uat"])
+    if uat:
+        col = by_col = ok_col = None
+        for line in uat.splitlines():
+            cells = [c.strip() for c in CELL_SPLIT.split(line)]
+            if line.startswith("|") and len(cells) > 2 and cells[1] == "ID":
+                col = next((i for i, c in enumerate(cells) if c == "Status"), None)
+                by_col = next((i for i, c in enumerate(cells) if c == "Reportado por"), None)
+                ok_col = next((i for i, c in enumerate(cells) if c == "OK do humano"), None)
+                continue
+            m = UAT_ROW.match(line)
+            if m and col is not None and col < len(cells):
+                # `by` and `ok` only feed the daily pass's lists (who the issue waits for); the derivation reads `status`
+                rows.append({"id": m.group(1), "col": col, "status": cells[col],
+                             "by": cells[by_col] if by_col is not None and by_col < len(cells) else "",
+                             "ok": cells[ok_col] if ok_col is not None and ok_col < len(cells) else ""})
+    return feats, reqs, rows
+
+
+# ---- the derivation (pure) -------------------------------------------------------------------------------------
+def rank(status, rules):
+    order = [s.casefold() for s in rules["statuses"]]
+    s = (status or "").casefold()
+    return order.index(s) if s in order else -1
+
+
+def feature_target(ft, rules):
+    d = rules["derivation"]["feature"]
+    st = ft["status"]
+    if st.casefold() in {s.casefold() for s in d["never_touch"]} or ft["ticked"] + ft["open"] == 0:
+        return None
+    if ft["open"] == 0:
+        want = d["all_ticked"]
+    elif ft["ticked"] > 0:
+        want = d["some_ticked"]
+    else:
+        return None
+    # the derivation only moves forward (F67; F94, UAT-374): a `Done` feature whose tasks.md still has an open box is a FINDING for
+    # the graph sensor (`done_feature_complete`: the tasks.md is stale or the Done is wrong), never a rewrite back to In Progress
+    if st.casefold() == d["all_ticked"].casefold() and want.casefold() != st.casefold():
+        return None
+    return want if want.casefold() != st.casefold() else None
+
+
+def requirement_target(req, importers, rules):
+    """`importers`: the effective statuses of the features that import the requirement."""
+    d = rules["derivation"]["requirement"]
+    st = req["status"]
+    if not importers or st.casefold() in {s.casefold() for s in d["never_touch"]}:
+        return None
+    open_ = {s.casefold() for s in d["open_feature_statuses"]}
+    delivered = {s.casefold() for s in d["delivered_feature_statuses"]}
+    sts = [s.casefold() for s in importers]
+    if any(s in open_ for s in sts):
+        want = d["any_feature_open"]
+    elif all(s in delivered for s in sts):
+        want = d["all_features_delivered"]
+    else:
+        return None
+    return want if rank(want, rules) > rank(st, rules) else None
+
+
+def uat_target(row, feature_status, rules):
+    m = FIXING.match(row["status"])
+    if not m or m.group(2) not in feature_status:
+        return None
+    if feature_status[m.group(2)].casefold() in {s.casefold() for s in rules["derivation"]["uat_issue"]["fixing_to_fixed_when"]}:
+        return "fixed" + row["status"][len("fixing"):]
+    return None
+
+
+def derive(feats, reqs, rows, rules, scope=None):
+    """The changes [(rel, kind, key, old, new)], kind `status` (frontmatter) or `uat` (the row `key`).
+    `scope` None: the whole project. Otherwise {"features": {Fxx}, "requirements": {ids}, "uat": bool}: only what the commit touches."""
+    changes = []
+    write_feats = set(feats) if scope is None else scope["features"] & set(feats)
+    effective = {}
+    for fid, ft in feats.items():
+        want = feature_target(ft, rules) if fid in write_feats else None
+        effective[fid] = want or ft["status"]
+        if want:
+            changes.append((ft["rel"], "status", fid, ft["status"], want))
+    importers = {}
+    for fid, ft in feats.items():
+        for rid in ft["imports"]:
+            importers.setdefault(rid, []).append(effective[fid])
+    if scope is None:
+        write_reqs = set(reqs)
+    else:
+        write_reqs = set(scope["requirements"]) | {r for f in write_feats for r in feats[f]["imports"]}
+    for rid in sorted(write_reqs & set(reqs)):
+        want = requirement_target(reqs[rid], importers.get(rid, []), rules)
+        if want:
+            changes.append((reqs[rid]["rel"], "status", rid, reqs[rid]["status"], want))
+    uat_rel = rules["paths"]["uat"]
+    for row in rows:
+        m = FIXING.match(row["status"])
+        if scope is not None and not scope["uat"] and not (m and m.group(2) in write_feats):
+            continue
+        want = uat_target(row, effective, rules)
+        if want:
+            changes.append((uat_rel, "uat", row["id"], row["status"], want))
+    return changes
+
+
+# ---- editing a text (the same edit for the index blob and the working tree) -------------------------------------
+def edit(text, kind, key, old, new):
+    """The text with the change applied, or None when the text does not hold `old` where the change expects it."""
+    if kind == "status":
+        m = re.match(r"\A﻿?---[ \t]*\r?\n(.*?)\r?\n---", text, re.S)
+        if not m:
+            return None
+        block = m.group(1)
+        s = STATUS_LINE.search(block)
+        if not s or s.group(2).strip().strip("\"'") != old:
+            return None
+        start = m.start(1) + s.start(2)
+        return text[:start] + new + text[m.start(1) + s.end(2):]
+    out, hit = [], False
+    for line in text.splitlines(keepends=True):
+        m = UAT_ROW.match(line)
+        if m and m.group(1) == key and not hit:
+            parts = CELL_SPLIT.split(line)
+            for i, cell in enumerate(parts):
+                if i > 1 and cell.strip() == old:
+                    parts[i] = cell.replace(old, new, 1)
+                    line, hit = "|".join(parts), True
+                    break
+        out.append(line)
+    return "".join(out) if hit else None
+
+
+def label(change):
+    rel, kind, key, old, new = change
+    return f"{key}: {old or '(vazio)'} → {new}  ({rel})"
+
+
+# ---- projects --------------------------------------------------------------------------------------------------
+def git_ok(top, *args, **kw):
+    r = _git.run(top, *args, **kw)
+    if r.code != 0:
+        raise NotEvaluable(f"git {' '.join(args)} saiu {r.code}: {(r.err or r.out).strip()[:200]}")
+    return r.out
+
+
+def staged_paths(top):
+    return [p for p in git_ok(top, "diff", "--cached", "--name-only", "-z").split("\0") if p]
+
+
+def project_of(top, rel):
+    """The nearest folder holding a contract, from the path up to the top (`.` for the top), or None."""
+    p = Path(rel).parent
+    while True:
+        if (top / p / CONTRACT).is_file():
+            return p.as_posix()
+        if p == Path("."):
+            return None
+        p = p.parent
+
+
+def touched_projects(top, rules, paths=None):
+    """{project rel: [paths relative to the project]} - only projects that carry a requirements graph."""
+    out = {}
+    for rel in staged_paths(top) if paths is None else paths:
+        proj = project_of(top, rel)
+        if proj is None or not (top / proj / rules["paths"]["requirements"]).is_dir():
+            continue
+        inner = rel if proj == "." else rel[len(proj) + 1:]
+        out.setdefault(proj, []).append(inner)
+    return out
+
+
+def scope_of(inner_paths, rules):
+    feat = rules["paths"]["features"].rstrip("/") + "/"
+    req = rules["paths"]["requirements"].rstrip("/") + "/"
+    sc = {"features": set(), "requirements": set(), "uat": False}
+    for p in inner_paths:
+        if p.startswith(feat):
+            folder = p[len(feat):].split("/")[0]
+            if re.match(r"^F\d{2,}-", folder):
+                sc["features"].add(folder[:folder.index("-")])
+        elif p.startswith(req) and p.endswith(".md"):
+            sc["requirements"].add(node_id(Path(p).stem))
+        elif p == rules["paths"]["uat"]:
+            sc["uat"] = True
+    return sc
+
+
+# ---- the modes -------------------------------------------------------------------------------------------------
+def whole(root, rules, apply):
+    feats, reqs, rows = load(root, rules)
+    changes = derive(feats, reqs, rows, rules)
+    if not apply:
+        if not changes:
+            print(f"[status_sync] VERDE — nenhum status derivado fora da fonte ({len(feats)} feature(s), {len(reqs)} requisito(s))")
+            return 0
+        print(f"[status_sync] {len(changes)} status derivado(s) fora da fonte (rode --apply, ou commite o nó: o pre-commit grava):")
+        for c in changes:
+            print(f"  {label(c)}")
+        return 1
+    for c in changes:
+        path = root / c[0]
+        new = edit(read(path) or "", *c[1:])
+        if new is None:
+            raise NotEvaluable(f"{c[0]}: não achei o status {c[3]!r} de {c[2]} para trocar")
+        path.write_text(new, encoding="utf-8")
+        print(f"[status_sync] gravado — {label(c)}")
+    if not changes:
+        print("[status_sync] nada a gravar")
+    return 0
+
+
+def export_index(top, proj, rules, dest):
+    """The project's specs as the commit will carry them (the index), under `dest`."""
+    roots = [rules["paths"]["features"], rules["paths"]["requirements"], rules["paths"]["uat"]]
+    pre = "" if proj == "." else proj + "/"
+    listed = git_ok(top, "ls-files", "-z", "--cached", "--", *[pre + r for r in roots])
+    files = [p for p in listed.split("\0") if p]
+    if files:
+        git_ok(top, "checkout-index", f"--prefix={dest}/", "--", *files)
+    return dest / proj
+
+
+def write_index(top, rel, content):
+    """Puts `content` as the index entry of `rel` (keeping its mode), without touching the working tree."""
+    entry = git_ok(top, "ls-files", "-s", "--", rel).split()
+    if not entry:
+        raise NotEvaluable(f"{rel}: não está no índice")
+    sha = _git.run(top, "hash-object", "-w", "--stdin", f"--path={rel}", input=content)
+    if sha.code != 0:
+        raise NotEvaluable(f"git hash-object {rel}: {sha.err.strip()[:200]}")
+    git_ok(top, "update-index", "--cacheinfo", f"{entry[0]},{sha.out.strip()},{rel}")
+
+
+def staged(top, rules):
+    written = []
+    with tempfile.TemporaryDirectory(prefix="cc-status-sync-") as tmp:
+        for proj, inner in sorted(touched_projects(top, rules).items()):
+            sc = scope_of(inner, rules)
+            if not (sc["features"] or sc["requirements"] or sc["uat"]):
+                continue
+            base = export_index(top, proj, rules, Path(tmp) / "idx")
+            changes = derive(*load(base, rules), rules, scope=sc)
+            by_file = {}
+            for c in changes:
+                by_file.setdefault(c[0], []).append(c)
+            for inner_rel, cs in by_file.items():
+                rel = inner_rel if proj == "." else f"{proj}/{inner_rel}"
+                idx = read(base / inner_rel)
+                disk_path = top / rel
+                disk = read(disk_path)
+                for c in cs:
+                    new_idx = edit(idx or "", *c[1:])
+                    if new_idx is None:
+                        raise NotEvaluable(f"{rel}: não achei o status {c[3]!r} de {c[2]} no índice")
+                    idx = new_idx
+                    # the working tree takes the same edit only where it still holds the old status: an unstaged edit
+                    # of the status line is the person's, never overwritten
+                    new_disk = edit(disk, *c[1:]) if disk is not None else None
+                    if new_disk is not None:
+                        disk = new_disk
+                    else:
+                        print(f"[status_sync] aviso — {rel}: a cópia de trabalho tem outro status para {c[2]}; só o commit recebe {c[4]}")
+                    print(f"[status_sync] derivado no commit — {label((rel,) + c[1:])}")
+                write_index(top, rel, idx)
+                if disk is not None:
+                    disk_path.write_text(disk, encoding="utf-8")
+                written.append(rel)
+    remember(top, written)
+    return 0
+
+
+def git_path(top, name, env=None):
+    p = Path(git_ok(top, "rev-parse", "--git-path", name, env=env).strip())
+    return p if p.is_absolute() else top / p
+
+
+def remember(top, written):
+    """A `git commit -- <paths>` commits a temporary index: the real one keeps the old blobs of the files written here,
+    and `git status` would show the derived line as a change to undo. The post-commit aligns them; it needs the list."""
+    target = git_path(top, WRITTEN)
+    index = os.environ.get("GIT_INDEX_FILE", "")
+    if not written or not Path(index).name.startswith("next-index"):
+        if target.exists():
+            target.unlink()                       # the owner removes its own stale state
+        return
+    head = _git.run(top, "rev-parse", "-q", "--verify", "HEAD").out.strip()
+    tmp = target.with_name(target.name + ".tmp")
+    tmp.write_text(json.dumps({"parent": head, "files": written}), encoding="utf-8")
+    os.replace(tmp, target)
+
+
+def real_index_git(top, *args):
+    """git on the REAL index: the post-commit may inherit the GIT_INDEX_FILE of the temporary one."""
+    env = {k: v for k, v in os.environ.items() if k != "GIT_INDEX_FILE"}
+    p = subprocess.run(["git", *args], cwd=top, env=env, capture_output=True, text=True, timeout=_git.TIMEOUT)
+    return p.stdout.strip() if p.returncode == 0 else ""
+
+
+def post_commit(top):
+    target = git_path(top, WRITTEN)
+    if not target.exists():
+        return 0
+    try:
+        data = json.loads(target.read_text(encoding="utf-8"))
+    finally:
+        target.unlink()                           # the owner removes its own state, read or not
+    if real_index_git(top, "rev-parse", "-q", "--verify", "HEAD^") != data.get("parent"):
+        return 0                                  # a list left by an aborted commit: not this commit's
+    for rel in data.get("files", []):
+        entry = real_index_git(top, "ls-files", "-s", "--", rel).split()
+        before = real_index_git(top, "rev-parse", "-q", "--verify", f"HEAD^:{rel}")
+        after = real_index_git(top, "rev-parse", "-q", "--verify", f"HEAD:{rel}")
+        if not entry or not after or entry[1] != before:
+            # the real index holds another prepared change of this file: it is the person's, never replaced
+            print(f"[status_sync] aviso — {rel}: o índice tem outra mudança preparada; não alinhei com o commit")
+            continue
+        real_index_git(top, "update-index", "--cacheinfo", f"{entry[0]},{after},{rel}")
+    return 0
+
+
+def main(argv):
+    args = [a for a in argv if not a.startswith("--")]
+    root = Path(args[0] if args else ".").resolve()
+    try:
+        rules = json.loads(RULES.read_text(encoding="utf-8"))
+        if "derivation" not in rules:
+            raise NotEvaluable(f"{RULES.name} não declara `derivation`")
+        if "--post-commit" in argv:
+            return post_commit(root)
+        if "--touched-projects" in argv:
+            for proj in sorted(touched_projects(root, rules)):
+                print(proj)
+            return 0
+        if "--daily" in argv:
+            import status_sync_daily as daily          # imported here: it imports this module
+            res = daily.run(root, rules=rules)
+            for line in daily.report_lines(res):
+                print(f"[status_sync] {line}")
+            return 2 if res["error"] else 0
+        if "--staged" in argv:
+            return staged(root, rules)
+        if not (root / rules["paths"]["requirements"]).is_dir():
+            print("[status_sync] sem docs/specs/requirements/ — projeto sem grafo de requisitos (não avaliável)")
+            return 2
+        return whole(root, rules, apply="--apply" in argv)
+    except (NotEvaluable, _git.GitError, OSError, ValueError) as e:
+        print(f"[status_sync] NÃO AVALIÁVEL — {e}")
+        return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

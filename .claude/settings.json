@@ -1,0 +1,149 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/path_guard.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\"",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "G=\"${CLAUDE_PROJECT_DIR:-.}/mjrp-scripts/hooks/catalog_marks_guard.py\"; [ -f \"$G\" ] || exit 0; python3 \"$G\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/hooks/human_valves_guard.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/hooks/deletion_guard.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\"",
+            "timeout": 20
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/stop_gate.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" --hook bash-pre",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/session_journal.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" precompact",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/stop_gate.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" --hook session-start",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/session_journal.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" reinject",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/stop_gate.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\"",
+            "timeout": 60
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/session_journal.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" gate",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/requirements_graph_check.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" . --changed --gate",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/session_journal.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" skill",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/stop_gate.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" --hook bash-post",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/stop_gate.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" --hook record-edit",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

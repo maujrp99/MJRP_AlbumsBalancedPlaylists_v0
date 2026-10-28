@@ -9,3 +9,4 @@ Tabela de assuntos deste projeto. Cada linha aponta para uma página com `## His
 
 | Assunto | O que responde |
 |---|---|
+| [harness/](harness/index.md) | o kernel do MJRP Harness — o que os campos do VISION, a memória, o perfil e os sensores significam | kernel |
