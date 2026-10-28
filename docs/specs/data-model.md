@@ -1,9 +1,10 @@
 # Data Model: MJRP_AlbumsBalancedPlaylists_v0 (Album Blender v0)
 
 > Escrito em 2026-10-28 (conform do harness) **do que o código grava e lê**, não do ideal. Fontes: `docs/manual/05_Backend_Data_Schema.md` e `32_Data_Schema_Reference.md` (a forma pretendida), o Apêndice F do mapa do código feito pelo V1 (`MJRPalbumblender-v1/reports/audits/2026-10-27-mjrpalbumblender-v1-project-bootstrap-report.md`, §7 e §8, com `arquivo:linha` do v0; nada foi executado) e o Apêndice B §3.7 (modelos). Onde o manual e o código discordam, vale o código. `firestore.rules` e os repositórios em `public/js/repositories/` são a prova.
+> Corrigido no mesmo dia depois da crítica independente (`reports/audits/2026-10-28-mjrpalbumblender-v0-architecture-audit.md`), que releu as âncoras no código.
 > Estado: **Draft**. Campos que o mapa não leu por inteiro vão marcados `TBD`.
 
-Convenções: `Timestamp (servidor)` é `serverTimestamp()` do Firestore, escrito por `BaseRepository` (`repositories/BaseRepository.js:158-251`); `uid` é o id do usuário do Firebase Auth (login anônimo automático). `appId` é fixo `mjrp-albums` no código (`InventoryRepository.js:20-21`).
+Convenções: `Timestamp (servidor)` é `serverTimestamp()` do Firestore, escrito por `BaseRepository` (`repositories/BaseRepository.js:158-251`); `uid` é o id do usuário do Firebase Auth (login anônimo automático). `appId` é a constante `mjrp-albums` no caminho `artifacts/{appId}/...` (`InventoryRepository.js:20-21`): é um **segmento de caminho**, não o projeto Firebase (o projeto é `mjrp-playlist-generator`, ver *Persistence*).
 
 ## Entities
 
@@ -13,14 +14,16 @@ Guarda a **lista de pedidos** de álbuns, não os álbuns (Apêndice B §2). O s
 |-------|------|----------|-------------|
 | id | string (id automático; também gravado como campo no upsert) | ✅ | identificador da série |
 | name | string | ✅ | nome da série |
-| albumQueries | lista de texto ou de objetos `{artist, title, ...}` | ✅ | os pedidos de álbum que o carregamento resolve (quatro formatos aceitos; TBD o detalhe de cada um) |
+| albumQueries | lista de texto ou de objetos `{artist, title, ...}` | ✅ | os pedidos de álbum que o carregamento resolve (quatro formatos aceitos; TBD o detalhe de cada um). **O array inteiro é regravado a cada inclusão** (`SeriesService.js:176-180`, `updateSeries(seriesId, { albumQueries })`): duas abas ou aparelhos editando a mesma série, o último a gravar vence |
 | status | string (padrão `'pending'`) | ✅ | estado de carga da série |
 | notes | string | ❌ | notas livres |
 | sourceType | string (`'manual'`, `'inventory'`) | ❌ | só nos caminhos de migração e em `createFromInventory` |
 | createdAt | Timestamp (servidor) | ✅ | a data enviada pelo cliente é sobrescrita (`BaseRepository.js:161`) |
-| updatedAt | Timestamp | ❌ | ordena a lista de séries; documento sem ele não aparece na consulta `orderBy('updatedAt')` com `limit 20` (`SeriesService.js:140-143`) |
+| updatedAt | Timestamp | ❌ | ordena a lista de séries; documento sem ele não aparece na consulta `orderBy('updatedAt', 'desc')` com `limit 20` (`SeriesService.js:140-143`); `createSeries` o grava, os caminhos de migração e `createFromInventory` não |
 | _schemaVersion | número `1` | ✅ | versão do esquema; o `update` direto não a grava |
 | _migratedFrom, _migrationDate | string, data | ❌ | só em série vinda de migração |
+
+**Corte de 20 séries.** A lista de séries do usuário é lida com `limit 20` e sem paginação (`SeriesService.js:140-143`): quem tem 21 séries deixa de ver a 21ª, e nada na tela avisa; a série sem `updatedAt` também não aparece. É o comportamento do código; se o teto de 20 é limite de produto ou acidente, é decisão do MJRP.
 
 ### Playlist (playlist gerada) - `.../series/{seriesId}/playlists/{playlistId}`
 Não existe documento de "lote": o lote é o campo `batchName` repetido em cada playlist (Apêndice D §2).
@@ -33,7 +36,7 @@ Não existe documento de "lote": o lote é o campo `batchName` repetido em cada 
 | name / title | string | ✅ | o nome aparece como `name` (`PlaylistRepository.rename`, `:56`) ou como `title` (`models/Playlist.js:14`); TBD qual é o canônico |
 | tracks | lista de Track (cópia) | ✅ | as faixas da playlist, com os campos de Track abaixo |
 | createdAt | Timestamp ou texto ISO | ✅ | o tipo depende do caminho que gravou |
-| updatedAt | Timestamp ou texto ISO | ❌ | texto ISO quando o documento nasce por `create` (`PlaylistsService.js:253`); Timestamp quando passa por `save`/`update` |
+| updatedAt | Timestamp ou texto ISO | ❌ | texto ISO quando o documento nasce por `create` (`PlaylistsService.js:248`); Timestamp quando passa por `save`/`update` |
 | _schemaVersion | número `1` | ✅ | versão do esquema |
 
 Os demais campos vêm do objeto que o gerador produz e dependem do módulo gerador: TBD.
@@ -56,7 +59,7 @@ Os demais campos vêm do objeto que o gerador produz e dependem do módulo gerad
 | _schemaVersion | número `1` | ✅ | versão do esquema |
 
 ### Album (álbum hidratado) - `albums/{albumId}` (coleção na raiz) e `models/Album.js` (memória)
-O app grava o álbum na coleção raiz `albums` (`stores/albums.js:312-315`); o carregamento passa pela API e pelo cache, não por essa coleção. O `id` é o "slug" `artista_album` (`api/client.js:534-538`); duplicata é o mesmo título e artista exatos (`stores/albums.js:78-100`).
+O app grava o álbum na coleção raiz `albums` (`stores/albums.js:312-315`, `setDoc(..., { merge: true })` ou `addDoc`, com `JSON.parse(JSON.stringify(album))`); o carregamento passa pela API e pelo cache, não por essa coleção. **Ciclo de vida:** a coleção é **global e sem dono**: quem escreve é qualquer visitante autenticado (inclusive anônimo, `firestore.rules:42-43`); não há regra de conflito (o último a gravar vence, com `merge`); não há retenção nem purga (cresce sem limite); e a serialização cega grava também campos de execução. O `id` é o "slug" `artista_album` (`api/client.js:534-538`); duplicata é o mesmo título e artista exatos (`stores/albums.js:78-100`).
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | id | string | ✅ | slug `artista_album` ou id do provedor |
@@ -89,7 +92,7 @@ O app grava o álbum na coleção raiz `albums` (`stores/albums.js:312-315`); o 
 | metadata | objeto | ❌ | saco de metadados |
 
 ### UserRanking (ranking do usuário por álbum) - `users/{uid}/albumRankings/{albumIdSanitizado}`
-O `albumId` troca `/` e `\` por `_` (`UserRankingRepository.js:55`).
+**Esta coleção é legível e gravável por qualquer pessoa, até sem login** (`firestore.rules:32-35`, `allow read, write: if true`, com o comentário "DEBUG ... antes do lançamento"). O `albumId` troca `/` e `\` por `_` (`UserRankingRepository.js:55`).
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | albumId | string | ✅ | álbum ranqueado |
@@ -99,7 +102,7 @@ O `albumId` troca `/` e `\` por `_` (`UserRankingRepository.js:55`).
 | updatedAt | Timestamp (servidor) | ✅ | última gravação |
 
 ### SpotifyEnrichment (cache global de enriquecimento) - `spotify_enrichment/{chaveNormalizada}`
-Coleção **global**, compartilhada por todos os usuários. A chave é `artista-álbum` em minúsculas, sem acento, não alfanumérico vira `-`, no máximo 100 caracteres (`SpotifyEnrichmentRepository.js:35-44`).
+Coleção **global**, compartilhada por todos os usuários, sem dono: qualquer visitante autenticado, inclusive anônimo, lê e escreve (`firestore.rules:49-51`); quem escreve no código é `SpotifyEnrichmentRepository`. **Ciclo de vida:** o último a gravar vence; os 30 dias de validade só valem na **leitura** (um registro vencido é tratado como inexistente), nada apaga o registro vencido; só a leitura preguiçosa remove órfãos (`SpotifyEnrichmentStore.js:49-55`). A chave é `artista-álbum` em minúsculas, sem acento, não alfanumérico vira `-`, no máximo 100 caracteres (`SpotifyEnrichmentRepository.js:35-44`).
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | spotifyId | string | ✅ | sem ele o registro é inválido (`:67`) |
@@ -133,9 +136,10 @@ Resultado da consolidação do servidor (`server/lib/ranking.js`, Borda Count) d
 - UserRanking → refers to → Album por `albumId`. SpotifyEnrichment → refers to → Album por `artista-álbum` normalizado (sem dono).
 
 ## Persistence
-- Primary: **Firestore** (projeto Firebase `mjrp-albums`, `firebase-init.js:10`), acessado só pelo navegador. Caminhos e regras: inventário e `curator` sob `artifacts/{appId}/users/{uid}/` escopados ao dono (`firestore.rules:8-14`); `users/{uid}/albumRankings` (`:32-36`), `albums` (`:42-44`) e `spotify_enrichment` (`:49-52`) com regras próprias, descritas no mapa do V1 (Apêndice F §7.10). Não há `firestore.indexes.json`: a única consulta ordenada é `orderBy('updatedAt', 'desc')` com `limit 20` nas séries, de campo único.
+- Primary: **Firestore** do projeto Firebase **`mjrp-playlist-generator`**, acessado só pelo navegador. O projeto vem de `public/js/firebase-config.js:3-10` (`window.__firebase_config`), carregado por `public/index.html:111` antes do `app.js`; o bloco `mjrp-albums` de `public/js/firebase-init.js:6-13` é só um valor reserva com chave de marcador, que não funciona. Caminhos e regras (`firestore.rules`): inventário e `curator` sob `artifacts/{appId}/users/{uid}/` escopados ao dono (`:8-13`); `users/{uid}/series/**` ao dono (`:19-28`, sem uso); `users/{uid}/albumRankings` **aberta a qualquer pessoa** (`:32-35`); `albums` e `spotify_enrichment` abertas a **qualquer autenticado, inclusive anônimo** (`:42-43`, `:49-51`), porque o app faz login anônimo sozinho. Nenhum pipeline do repositório publica `firestore.rules` (`firebase.json` sem bloco `firestore`; a CI implanta só o hosting). Regra: dado do usuário não fica aberto a qualquer visitante (constituição, Art. V). Conserto: achado 2 da auditoria. O SDK do Firestore é importado por três arquivos fora de `repositories/` (ver `arch.md`). Não há `firestore.indexes.json`: a única consulta ordenada é `orderBy('updatedAt', 'desc')` com `limit 20` nas séries, de campo único; o corte em 20 é descrito na entidade Series.
 - Cache: IndexedDB `mjrp-cache` (L2) e memória (L1) no navegador; TTL padrão de 7 dias; `findAll` do repositório não passa pelo cache.
-- Sync: o `localStorage` guarda cópia local da lista de séries e o rascunho de playlists, e o login anônimo do Firebase dá um `uid` desde a primeira visita. A migração do convidado para o usuário é de `DataSyncService`/`UserSyncService`.
+- Sync: o `localStorage` guarda cópia local da lista de séries (`mjrp_series`, que pode divergir do Firestore) e o rascunho de playlists, e o login anônimo do Firebase dá um `uid` desde a primeira visita. **A migração do convidado para o usuário existe no código mas não executa**: `UserSyncService.js:22` só migra se o usuário anterior for `'guest'`, valor que nenhum código atribui (a store usa `'anonymous-user'`, `stores/albumSeries.js:19, 74`); e, se rodasse, `UserSyncService.js:38` chama `dataSyncService.saveSeries`, que não existe (`DataSyncService` só tem `migrateInventory` e `migrateSeries`), e `SeriesService.js:63` chama `migrateSeries(repositório, séries)` onde a assinatura é `migrateSeries(series)`. Além disso, o login com Google/Apple (`signInWithPopup`, `shared/services/AuthService.js:22`) troca de `uid`, deixando os dados da sessão anônima no `uid` antigo. Regra: sem falha silenciosa (`PRINCIPLES.md` §I.8). Conserto: achado 6 da auditoria.
+- Versão de esquema: `_schemaVersion` é gravado por `BaseRepository` em todos os documentos criados ou salvos por ele, mas **só `SpotifyEnrichmentRepository` o lê** (versão diferente de 1 invalida o registro); nenhum outro leitor confere versão.
 
 ## Migration Notes
 - `_schemaVersion` é `1` em todos os repositórios, exceto `AlbumRepository` (2, usado só pela migração).

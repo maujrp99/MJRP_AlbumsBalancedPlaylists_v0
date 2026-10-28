@@ -2,16 +2,16 @@
 
 Este projeto segue o `PRINCIPLES.md` do MJRP Harness, versão 1.0 - cópia carimbada na raiz deste projeto (`PRINCIPLES.md`).
 
-> **Origem.** Os artigos abaixo são os da constituição do v0 (`docs/CONSTITUTION.md`, **v1.0.0, ratificada em 2025-12-10**), com as palavras aprovadas mantidas em inglês, como foram escritas; só a forma passou ao modelo do harness (2026-10-28). Nenhum artigo foi reescrito para casar com o código: onde o código diverge, a regra manda e o código é dívida (registrada no relatório do conform).
+> **Origem.** Os artigos abaixo são os da constituição do v0 (`docs/CONSTITUTION.md`, **v1.0.0, ratificada em 2025-12-10**), com as palavras aprovadas mantidas em inglês, como foram escritas; só a forma passou ao modelo do harness (2026-10-28). Nenhum artigo foi reescrito para casar com o código: onde o código diverge, a regra manda e o código é dívida, registrada como itens de Fix com `violates::` no relatório de auditoria `reports/audits/2026-10-28-mjrpalbumblender-v0-architecture-audit.md`.
 
 ## O que é da stack deste projeto
 
 - **Tipagem:** JavaScript puro em ES Modules, sem TypeScript (Art. II, *Tech Stack*).
-- **Tamanho de arquivo:** acima de 200 linhas acende o alarme (sinal, não regra: investigue qual responsabilidade sobrou). É o alvo que o projeto já usou no Sprint 19 para views e serviços orquestradores (ADR-0018, ADR-0017: store pura abaixo de 150); "God File" é o que a ADR-0016 combate.
-- **Nomes:** o **Universal Series Model** (Art. II, *Naming Conventions*); o algoritmo de geração é uma **Recipe** ("Flavor" não se usa mais - ADR-0015); serviço especializado: `[Domínio][Responsabilidade]Service` (ADR-0018).
+- **Tamanho de arquivo:** acima de 200 linhas acende o alarme (sinal, não regra: investigue qual responsabilidade sobrou). É o alvo que o projeto já usou no Sprint 19 para views e componentes (`docs/technical/specs/archive/sprint19-frontend-modularization/`); a store pura fica abaixo de 150 (ADR-0017); "God File" é o que a ADR-0016 combate.
+- **Nomes:** o **Universal Series Model** (Art. II, *Naming Conventions*); o algoritmo de geração é uma **Recipe** ("Flavor" não se usa mais - ADR-0015). A convenção `[Domínio][Responsabilidade]Service` é só uma proposta da ADR-0018 (`Proposed`) e **não é regra** até essa ADR ser aceita.
 - **Padrões com endereço** (catálogo: `design-patterns`; padrão novo entra aqui com endereço e motivo):
     - **Store Pattern, Observer** (`DP-05`) em `public/js/stores/`: a store só guarda o estado e avisa quem assinou; sem lógica, sem API, sem efeito colateral (ADR-0017).
-    - **Repository** (`DP-01`) em `public/js/repositories/`: um por fonte de dados (Firestore, LocalStorage), sobre `BaseRepository`.
+    - **Repository** (`DP-01`) em `public/js/repositories/`: o adaptador do Firestore, um por coleção, sobre `BaseRepository`; trocar a fonte de dados é mexer só aqui (`PRINCIPLES.md` §I.3). O `localStorage` passa por `public/js/services/infra/StorageService.js`.
     - **Service Layer** (`DP-12`) em `server/lib/services/` e `public/js/services/`: rota e componente são "orquestradores finos" que recebem a entrada, chamam o Service e devolvem a saída; a lógica de negócio nova nasce como Service (ADR-0016). Integrações externas (IA, Auth) também ficam em Service.
     - **Strategy** (`DP-04`) em `public/js/ranking/`, `public/js/algorithms/` e `public/js/services/album-search/classification/`: trocar o algoritmo sem mudar quem o usa.
     - **Facade** (`DP-11`) em `server/lib/fetchRanking.js`: esconde raspagem, IA e fallbacks atrás de `fetchRankingForAlbum`.
