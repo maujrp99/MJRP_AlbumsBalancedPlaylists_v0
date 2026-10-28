@@ -20,7 +20,7 @@ mjrp_harness:
   conformance:                # ADR-0019: a conformidade canônica do projeto
     applied: []               # as notas de migração (CM-NNNN) cumpridas - a bootstrap, modo conform, acrescenta
     received: {}              # <item>@<versão>: data - escrito só pelo new_project.py --refresh-kernel; a carência conta daí
-  screen: [web/src/]          # onde mora a tela (prefixos, caminhos ou globs) - o A2 do doctor e o hook pre-merge-commit leem daqui
+  screen: [public/]          # onde mora a tela (prefixos, caminhos ou globs) - o A2 do doctor e o hook pre-merge-commit leem daqui
   sensors:
     lint:  "npm run lint"
     test:  "npm test -- --run"
