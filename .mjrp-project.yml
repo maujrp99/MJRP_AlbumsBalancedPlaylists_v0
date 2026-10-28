@@ -18,7 +18,7 @@ mjrp_harness:
     setup: nenhum             # comando de setup, ou 'nenhum' se não há pré-requisito
     runtime: ""               # ex.: 'python3, node' - preencha quando a stack existir
   conformance:                # ADR-0019: a conformidade canônica do projeto
-    applied: []               # as notas de migração (CM-NNNN) cumpridas - a bootstrap, modo conform, acrescenta
+    applied: [CM-0029, CM-0047]               # as notas de migração (CM-NNNN) cumpridas - a bootstrap, modo conform, acrescenta
     received: {}              # <item>@<versão>: data - escrito só pelo new_project.py --refresh-kernel; a carência conta daí
   screen: [public/]          # onde mora a tela (prefixos, caminhos ou globs) - o A2 do doctor e o hook pre-merge-commit leem daqui
   sensors:
