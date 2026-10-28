@@ -80,7 +80,7 @@ A desenhar: ainda não há protótipo aprovado nem `docs/specs/info-arch.md`, e 
 ## Candidatos (Intake)
 
 - **Séries por artista, por gênero e de faixas soltas.** A documentação descreve os quatro fluxos de série (Prod_Vision:26-34); no código as rotas de artista, gênero e faixas mostram «em breve» (inventário do V1, seção 1.9). A triar: vira épico de OUT-03 quando o MJRP decidir.
-- **Achados do mapa do V1 sobre o v0.** Problemas e riscos já verificados no código, por exemplo regras do Firestore abertas para rankings, servidor sem autenticação nem limite de taxa, exclusão de item do inventário que não funciona, migração de usuário convidado quebrada, desfazer/refazer sem botão (mapa do V1, seções 2.D a 2.G). A triar: o que vira conserto, o que vira risco aceito.
+- **Achados do mapa do V1 sobre o v0.** Problemas e riscos já verificados no código, por exemplo regras do Firestore abertas para rankings, servidor sem autenticação nem limite de taxa, exclusão de item do inventário que não funciona, migração de usuário convidado quebrada, desfazer/refazer sem botão (mapa do V1, seções 2.D a 2.G). Triados em 2026-10-28: o que o código tenta e não cumpre virou as issues UAT-01 a UAT-13 e a dívida técnica virou UAT-14 a UAT-25, na trilha do agente (`docs/specs/uat.md`); o que vira risco aceito segue com o MJRP.
 
 ## Premissas e questões em aberto
 
@@ -122,8 +122,6 @@ serves:: [[ROADMAP#^OUT-03]] ^EP-01
 
 ![[S-08-sort-the-series-by-name-album-count-or-date]]
 
-![[S-45-see-all-albums-of-a-series-on-the-all-series-panel]]
-
 ![[S-49-build-a-series-from-an-artists-discography]]
 
 ![[S-50-build-a-series-from-a-genre-or-a-vibe]]
@@ -144,10 +142,6 @@ serves:: [[ROADMAP#^OUT-02]] ^EP-02
 
 ![[S-13-regenerate-with-another-recipe-in-place]]
 
-![[S-46-open-the-blending-menu-with-the-series-chosen]]
-
-![[S-47-turn-on-discovery-mode-and-see-the-playlist-change]]
-
 ### EP-03 · Revisar as playlists geradas e guardadas
 folder:: ep-03-review-playlists
 serves:: [[ROADMAP#^OUT-01]] ^EP-03
@@ -166,14 +160,6 @@ serves:: [[ROADMAP#^OUT-01]] ^EP-03
 
 ![[S-20-delete-a-batch-or-all-playlists-of-a-series]]
 
-![[S-41-undo-and-redo-changes-in-a-playlist]]
-
-![[S-42-delete-a-playlist-from-the-batch-before-saving]]
-
-![[S-43-rename-a-playlist-and-have-the-name-stay]]
-
-![[S-44-recover-generated-playlists-after-a-page-reload]]
-
 ### EP-04 · Exportar a playlist para Spotify ou Apple Music
 folder:: ep-04-export-playlists
 serves:: [[ROADMAP#^OUT-01]] ^EP-04
@@ -185,8 +171,6 @@ serves:: [[ROADMAP#^OUT-01]] ^EP-04
 ![[S-23-connect-my-spotify-account]]
 
 ![[S-24-send-the-playlists-to-spotify-merged-or-separate]]
-
-![[S-48-open-on-spotify-the-playlists-sent-separately]]
 
 ### EP-05 · Ordenar as faixas por crítica, popularidade ou gosto pessoal
 folder:: ep-05-track-ranking
@@ -202,8 +186,6 @@ serves:: [[ROADMAP#^OUT-01]] ^EP-05
 
 ![[S-29-fetch-an-albums-data-again]]
 
-![[S-52-reach-album-ranking-and-all-tracks-ranking-by-link]]
-
 ### EP-06 · Usar o Album Blender no celular
 folder:: ep-06-mobile-use
 serves:: [[ROADMAP#^OUT-04]] ^EP-06
@@ -213,8 +195,6 @@ serves:: [[ROADMAP#^OUT-04]] ^EP-06
 ![[S-31-read-album-tracks-on-a-phone-stacked-rows-and-tabs]]
 
 ![[S-32-order-an-albums-tracks-by-touch-full-screen]]
-
-![[S-54-remove-a-track-or-open-details-by-touch-alone]]
 
 ### EP-07 · Gerenciar o inventário de álbuns que a pessoa possui
 folder:: ep-07-album-inventory
@@ -228,8 +208,6 @@ serves:: [[ROADMAP#^OUT-03]] ^EP-07
 
 ![[S-36-search-and-filter-the-collection]]
 
-![[S-40-delete-an-album-from-the-collection]]
-
 ### EP-08 · Entrar com a conta e guardar tudo na nuvem
 folder:: ep-08-account-cloud
 serves:: [[ROADMAP#^OUT-01]] ^EP-08
@@ -239,8 +217,6 @@ serves:: [[ROADMAP#^OUT-01]] ^EP-08
 ![[S-38-keep-series-playlists-and-collection-in-the-cloud]]
 
 ![[S-39-open-the-app-with-no-login-or-authorization-window]]
-
-![[S-53-move-the-data-kept-in-the-browser-to-the-cloud]]
 
 ### Transversais
 
