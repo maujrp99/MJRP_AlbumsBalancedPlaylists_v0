@@ -95,3 +95,6 @@ coverage/
 # new_project.py --refresh-kernel
 .mjrp/
 __pycache__/
+
+# Harness MJRP: copias de seguranca do agente (_safe.py), nao versionadas
+_backups/
