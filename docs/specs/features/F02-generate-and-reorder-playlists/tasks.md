@@ -1,0 +1,18 @@
+<!-- docs/specs/features/F02-generate-and-reorder-playlists/tasks.md — o QUANDO, reconstituído: cada task é uma entrega que um commit `delivered_by` já fez; só está marcada onde esse commit existe. Sem `rounds::`: o número de voltas Execute ⇄ Verify nunca foi medido e não se inventa. -->
+# Tasks — Feature F02: Gerar playlists equilibradas a partir de uma série e reorganizá-las arrastando as faixas · Plan: [[plan]]
+**Approved**: not a gate
+
+## Pre-Implementation
+- [x] ramo da feature: não houve; a entrega foi feita antes do harness, direto na linha principal, pelos commits `delivered_by` das histórias
+- [x] spec e plan conferidos entre si: cada REQ tem fluxo e commit no plan e uma task abaixo; escritos no conform de 2026-10-28
+
+## Implementation
+- [x] TASK-01 Gerar as playlists equilibradas a partir de uma série (cascata balanceada sobre a ordem de aclamação, avisos de sem nota e sem álbuns) — commit `c8be9fa` (2025-11-27) · implements:: REQ-01 · model:: opus
+- [x] TASK-02 Mostrar as playlists geradas: grade com título, faixas, duração e selos de posição por fonte de nota — commit `c8be9fa` (2025-11-27) · implements:: REQ-02 · model:: sonnet
+- [x] TASK-03 Arrastar faixas dentro de uma playlist e entre playlists e tirar faixas — commit `c8be9fa` (2025-11-27) · implements:: REQ-03 · model:: opus
+
+## Verification
+- [x] TASK-04 Prova da entrega: em produção desde 2025-11-27 pelos commits `c8be9fa`; os testes existentes que cobrem cada REQ estão no `verified_by` da spec e a evidência fica em `reports/evidence/F02/evidence.md` · implements:: REQ-01, REQ-02, REQ-03 · model:: sonnet
+
+## Documentation
+- [x] spec, plan e tasks reconstituídos do que foi entregue · feature Done sem aceite próprio (regra do MJRP de 2026-10-18); esta pasta e a de evidência entram no commit do conform
