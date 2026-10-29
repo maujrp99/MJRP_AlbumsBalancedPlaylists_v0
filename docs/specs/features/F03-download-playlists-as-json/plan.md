@@ -9,7 +9,7 @@ Fluxo curto no navegador: o quadro «Actions & Export» da tela de playlists cha
 O fluxo de cada REQ é o que o código faz hoje (arch.md e behavior.md). Os arquivos de «Entregue em» são os dos commits entregues e os de «Onde mora», os do `Origem:` da história; o código seguiu evoluindo depois (as Sprints 17 a 19 refatoraram views e stores), então o caminho de hoje pode ser outro. É o registro do que foi feito, não um desenho novo.
 
 - [REQ-01] (S-21) Fluxo: Quadro «Actions & Export» → PlaylistsExport monta o JSON a partir da store de playlists e dispara o download no navegador.
-  - Onde mora (origem da história): inventário do V1: P15, E3 (`components/playlists/PlaylistsExport.js:33-58`); ROADMAP legado, Sprint 4.
+  - Onde mora (origem da história): inventário do V1: P15, E3 (`views/playlists/PlaylistsExport.js:33-58`); ROADMAP legado, Sprint 4.
   - Entregue em `c8be9fa` (2025-11-27, «feat(sprint4): complete playlist management, fix series mixing and rank display»): `public/js/api/client.js`, `public/js/cache/albumCache.js`, `public/js/components/Breadcrumb.js`, `public/js/stores/playlists.js`, `public/js/stores/series.js`, `public/js/views/AlbumsView.js`, `public/js/views/HomeView.js`, `public/js/views/PlaylistsView.js`, `public/js/views/RankingView.js` e mais 1.
 
 ## UI/UX Design

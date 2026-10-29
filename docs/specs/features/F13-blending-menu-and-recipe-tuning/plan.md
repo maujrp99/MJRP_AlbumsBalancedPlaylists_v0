@@ -20,7 +20,7 @@ O fluxo de cada REQ é o que o código faz hoje (arch.md e behavior.md). Os arqu
   - Onde mora (origem da história): inventário do V1: P7 (`components/playlists/RegeneratePanel.js:35-151`); ROADMAP legado, Sprint 13 («Issues #92, #93, #94: reconfigure panel»).
   - Entregue em `333e72b` (2025-12-23, «feat: create playlist UI components (Phase 2)»): `public/js/components/playlists/BatchGroupCard.js`, `public/js/components/playlists/PlaylistCard.js`, `public/js/components/playlists/PlaylistGrid.js`, `public/js/components/playlists/RegeneratePanel.js`, `public/js/components/playlists/TrackItem.js`, `public/js/components/playlists/index.js`.
 - [REQ-04] (S-17) Fluxo: Campo de nome do lote (PlaylistsGridRenderer) → store de playlists guarda o nome → PlaylistGrid e PlaylistsExport o usam nos títulos.
-  - Onde mora (origem da história): inventário do V1: P6 (`views/renderers/PlaylistsGridRenderer.js:89-104`, `components/playlists/PlaylistGrid.js:55-62`); ROADMAP legado, Sprint 16 («Batch Naming Integration»).
+  - Onde mora (origem da história): inventário do V1: P6 (`components/playlists/PlaylistsGridRenderer.js:89-104`, `components/playlists/PlaylistGrid.js:55-62`); ROADMAP legado, Sprint 16 («Batch Naming Integration»).
   - Entregue em `d3ed5e1` (2026-01-02, «feat: Batch Naming integration (Sprint 15.5)»): `public/js/components/playlists/PlaylistCard.js`, `public/js/components/playlists/PlaylistGrid.js`, `public/js/components/playlists/PlaylistsGridRenderer.js`, `public/js/stores/playlists.js`, `public/js/views/PlaylistsView.js`, `public/js/views/playlists/PlaylistsExport.js`.
 
 ## UI/UX Design

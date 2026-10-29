@@ -17,15 +17,15 @@ planned_for: "[[ROADMAP#^REL-05]]"
 **Como saber que funcionou:** abaixo de 768 px o menu aparece como ☰ e abre a gaveta; a tabela de faixas não tem rolagem horizontal; «Rank It» abre em tela cheia.
 
 ## Problem Statement
-O app, desenhado para o computador, não cabia na tela do celular (S-30, S-31, S-32). Proveniência: Sprint 21 do ROADMAP legado («Mobile Layout: responsive grid/list, fullscreen modals, touch-friendly tables») e sua spec arquivada (docs/technical/specs/archive/sprint21-mobile-ux/); commits 8bd0b5c (2025-12-06), 29b3f5e e 6d79577 (ambos de 2026-01-14). Feature reconstituída no conform de 2026-10-28.
+O app, desenhado para o computador, não cabia na tela do celular (S-30, S-31, S-32). Proveniência: Sprint 21 do ROADMAP legado («Mobile Layout: responsive grid/list, fullscreen modals, touch-friendly tables») e sua spec arquivada (docs/technical/specs/archive/sprint21-mobile-ux/); commits 9ebed2b (2025-12-06), 11747c3 (2025-12-09), b9530f1 (2025-12-19) e 29b3f5e (2026-01-14). Feature reconstituída no conform de 2026-10-28.
 
 ## Requirements
 - [REQ-01] No celular, abaixo de 768 px, o menu vira o botão ☰ que abre uma gaveta com todas as telas; a gaveta fecha ao tocar num link, no fundo, no ✕ ou ao ampliar a janela, e trava a rolagem da página. · from [[S-30-navigate-the-app-on-a-phone-with-the-drawer-menu|S-30]]
-  verified_by:: sem teste automatizado próprio (o NFR-01 registra a falta de testes de ponta a ponta); a prova é a entrega em produção, commit 8bd0b5c (2025-12-06), 6d79577 (2026-01-14) — ver reports/evidence/F18/evidence.md
+  verified_by:: sem teste automatizado próprio (o NFR-01 registra a falta de testes de ponta a ponta); a prova é a entrega em produção, commit 9ebed2b (2025-12-06), 11747c3 (2025-12-09) — ver reports/evidence/F18/evidence.md
 - [REQ-02] No celular, a tabela de faixas de um álbum empilha as linhas e a janela de detalhes troca a tabela larga pelas abas Original, BestEverAlbums e Spotify. · from [[S-31-read-album-tracks-on-a-phone-stacked-rows-and-tabs|S-31]]
-  verified_by:: sem teste automatizado próprio (o NFR-01 registra a falta de testes de ponta a ponta); a prova é a entrega em produção, commit 6d79577 (2026-01-14) — ver reports/evidence/F18/evidence.md
+  verified_by:: sem teste automatizado próprio (o NFR-01 registra a falta de testes de ponta a ponta); a prova é a entrega em produção, commit b9530f1 (2025-12-19), 29b3f5e (2026-01-14) — ver reports/evidence/F18/evidence.md
 - [REQ-03] No celular, até 768 px de largura, a janela «Rank It» ocupa a tela toda e a pessoa arrasta as faixas com o dedo. · from [[S-32-order-an-albums-tracks-by-touch-full-screen|S-32]]
-  verified_by:: sem teste automatizado próprio (o NFR-01 registra a falta de testes de ponta a ponta); a prova é a entrega em produção, commit 29b3f5e (2026-01-14), 6d79577 (2026-01-14) — ver reports/evidence/F18/evidence.md
+  verified_by:: sem teste automatizado próprio (o NFR-01 registra a falta de testes de ponta a ponta); a prova é a entrega em produção, commit 29b3f5e (2026-01-14) — ver reports/evidence/F18/evidence.md
 
 ## Observable States
 - S-30 · [[behavior#^app-mobile-drawer]]

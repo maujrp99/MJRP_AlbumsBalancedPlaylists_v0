@@ -17,13 +17,13 @@ planned_for: "[[ROADMAP#^REL-02]]"
 **Como saber que funcionou:** entrar com uma conta mostra a foto e o nome no menu; as séries e as playlists continuam lá depois de fechar e abrir o app, inclusive em outro navegador.
 
 ## Problem Statement
-Sem conta e sem nuvem, o que a pessoa monta fica preso a um navegador. As duas histórias entregam o par: guardar na nuvem por conta (S-38) e entrar com Google ou Apple, sair ou seguir como convidado (S-37). Proveniência: Sprints 5 e 6 do ROADMAP legado («Firestore Persistence: Cloud sync for Albums, Series, and Playlists», «Google Sign-In», «Apple Sign-In»); commits b85f473 (2025-12-03), 2f980d0 (2025-12-09) e 18fbfc4 (2025-12-11). Feature reconstituída no conform de 2026-10-28.
+Sem conta e sem nuvem, o que a pessoa monta fica preso a um navegador. As duas histórias entregam o par: guardar na nuvem por conta (S-38) e entrar com Google ou Apple, sair ou seguir como convidado (S-37). Proveniência: Sprints 5 e 6 do ROADMAP legado («Firestore Persistence: Cloud sync for Albums, Series, and Playlists», «Google Sign-In», «Apple Sign-In»); commits 6eb6682 (2025-11-28), b85f473 (2025-12-03), edc38ee (2025-12-21) e 18fbfc4 (2025-12-11). Feature reconstituída no conform de 2026-10-28.
 
 ## Requirements
 - [REQ-01] A pessoa entra com a conta Google ou Apple, sai quando quiser ou segue como convidado; a janela de entrada tem três opções e não fecha com Esc, os erros viram frases como «Sign-in cancelled» e, depois de entrar, o menu mostra a foto e o nome e oferece «Sign Out». · from [[S-37-sign-in-with-google-or-apple-or-continue-as-guest|S-37]]
   verified_by:: test/services/AuthService.test.js (Google, Apple, sair) e test/stores/UserStore.test.js; entrega em produção: commit 18fbfc4 (2025-12-11) — ver reports/evidence/F04/evidence.md
 - [REQ-02] As séries, as playlists e a coleção ficam guardadas na nuvem, ligadas à conta; ao abrir, o app entra sozinho como convidado e, se isso falhar, avisa «Authentication issue. Some features may be limited.». · from [[S-38-keep-series-playlists-and-collection-in-the-cloud|S-38]]
-  verified_by:: test/services/DataSyncService.test.js e test/services/auth/UserSyncService.test.js (migração do convidado para a conta); entrega em produção: commit b85f473 (2025-12-03), 2f980d0 (2025-12-09) — ver reports/evidence/F04/evidence.md
+  verified_by:: test/services/DataSyncService.test.js (a função que copia séries e álbuns para um repositório) e test/services/auth/UserSyncService.test.js (duas funções soltas, com a entrada montada à mão); a migração real das séries do visitante ao entrar com uma conta NÃO está provada e não funciona hoje: [[uat#^UAT-12]]; testes não executados nesta sessão (falta npm ci); entrega em produção: commit 6eb6682 (2025-11-28), b85f473 (2025-12-03), edc38ee (2025-12-21) — ver reports/evidence/F04/evidence.md
 
 ## Observable States
 - S-37 · [[behavior#^auth-login-modal]] · [[behavior#^auth-login-result]] · [[behavior#^auth-user-menu]] · [[behavior#^auth-sign-out]]

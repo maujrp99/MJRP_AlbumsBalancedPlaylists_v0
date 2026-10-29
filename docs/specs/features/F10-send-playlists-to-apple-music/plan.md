@@ -9,7 +9,7 @@ PlaylistsExport (navegador) → MusicKit JS com autorização sob demanda; o tok
 O fluxo de cada REQ é o que o código faz hoje (arch.md e behavior.md). Os arquivos de «Entregue em» são os dos commits entregues e os de «Onde mora», os do `Origem:` da história; o código seguiu evoluindo depois (as Sprints 17 a 19 refatoraram views e stores), então o caminho de hoje pode ser outro. É o registro do que foi feito, não um desenho novo.
 
 - [REQ-01] (S-22) Fluxo: PlaylistsExport → MusicKit (autorização sob demanda; o token de desenvolvedor vem do servidor em /api/musickit-token) → busca no catálogo e criação das playlists na pasta.
-  - Onde mora (origem da história): inventário do V1: P16, L7 (`components/playlists/PlaylistsExport.js:66-225`, `services/musickit/MusicKitAuth.js:54-176`); ROADMAP legado, Sprint 7 («Apple Music Integration»).
+  - Onde mora (origem da história): inventário do V1: P16, L7 (`views/playlists/PlaylistsExport.js:66-225`, `services/musickit/MusicKitAuth.js:54-176`); ROADMAP legado, Sprint 7 («Apple Music Integration»).
   - Entregue em `0be7441` (2025-12-12, «feat(export): implement Apple Music playlist export with MusicKit authorization»): `public/js/views/PlaylistsView.js`.
 
 ## UI/UX Design

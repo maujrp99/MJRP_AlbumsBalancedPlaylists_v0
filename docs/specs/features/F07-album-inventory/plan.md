@@ -13,10 +13,11 @@ O fluxo de cada REQ é o que o código faz hoje (arch.md e behavior.md). Os arqu
   - Entregue em `bf561e0` (2025-11-28, «Sprint 5.3 Partial: InventoryView + InventoryStore»): `public/assets/images/newMJRPlogo.png`, `public/assets/images/newMJRPlogorealistic.png`, `public/js/stores/inventory.js`, `public/js/views/InventoryView.js`.
   - Entregue em `165c055` (2025-12-09, «fix(inventory): Loop fix, header UI simplification, owned dropdown»): `public/js/views/InventoryView.js`.
 - [REQ-02] (S-34) Fluxo: Botão «+» do cartão → janela de registro → InventoryStore.addAlbum → InventoryRepository grava sob o uid.
-  - Onde mora (origem da história): inventário do V1: A15, I9, I10 (`components/modals/InventoryAddModal.js:15-160`, `repositories/InventoryRepository.js:41-65`); ROADMAP legado, Sprint 5 («Inventory CRUD»).
-  - Entregue em `2f980d0` (2025-12-09, «chore(release): Consolidate HTML entry points and configure production deployment settings»): o commit não mexe em código de produto (só configuração, documentos ou testes).
+  - Onde mora (origem da história): inventário do V1: A15, I9, I10 (`components/InventoryAddModal.js:15-160`, `repositories/InventoryRepository.js:41-65`); ROADMAP legado, Sprint 5 («Inventory CRUD»).
+  - Entregue em `2093d63` (2025-11-29, «docs: Update documentation for Sprint 5.3 completion and bump version to v2.0.0-alpha.2»; apesar do título, o commit traz código de produto): `public/js/components/InventoryModals.js` (a janela de registro, com formato, moeda, preço e notas), `public/js/views/AlbumsView.js` (o botão do cartão do álbum), `public/js/views/InventoryView.js`, `public/js/repositories/InventoryRepository.js`, `public/css/modals.css` e mais 9.
+  - Entregue em `cd7dff4` (2025-12-11, «Fix: Prevent duplicate albums in inventory with check in InventoryRepository»): `public/js/repositories/InventoryRepository.js` (o álbum já registrado é recusado).
 - [REQ-03] (S-35) Fluxo: InventoryController.changeStatus e a janela de editar → InventoryStore atualiza o item (otimista, com volta atrás se a gravação falha) → InventoryRepository.
-  - Onde mora (origem da história): inventário do V1: I5, I7 (`controllers/InventoryController.js:259-312`, `components/inventory/InventoryEditModal.js:18-121`); ROADMAP legado, Sprint 5.
+  - Onde mora (origem da história): inventário do V1: I5, I7 (`controllers/InventoryController.js:259-312`, `components/InventoryEditModal.js:18-121`); ROADMAP legado, Sprint 5.
   - Entregue em `730a9d2` (2025-12-08, «feat(inventory): add View Album Details modal, Owned status toggle, and ownership filter»): `public/js/components/ViewAlbumModal.js`, `public/js/views/InventoryView.js`.
 - [REQ-04] (S-36) Fluxo: InventoryView aplica busca e filtros sobre os itens carregados pelo InventoryController.
   - Onde mora (origem da história): inventário do V1: I3 (`views/InventoryView.js:119-151`, `controllers/InventoryController.js:112-151`); ROADMAP legado, Sprint 5.
@@ -35,4 +36,4 @@ Nenhuma nova.
 - ROADMAP legado (docs/ROADMAP.md) e, quando há, a spec arquivada em docs/technical/specs/archive/.
 
 ## Risks & Considerations
-inventory.js é uma store que faz I/O (arch.md, achado 5); a coleção depende das regras do Firestore, que são a única autorização (arch.md). O commit 2f980d0, citado em S-34, mexe só em configuração de entrada e implantação (firebase.json, index.html, vite.config.js).
+inventory.js é uma store que faz I/O (arch.md, achado 5); a coleção depende das regras do Firestore, que são a única autorização (arch.md). O commit 2f980d0, que o nó S-34 citava antes, mexe só em configuração de entrada e implantação (firebase.json, index.html, vite.config.js) e não é entrega da coleção; a entrega do registro está em 2093d63 e cd7dff4.
