@@ -17,7 +17,7 @@ accepted_in: "histórico anterior ao harness — regra do MJRP de 2026-10-18"
 Como quem cura playlists a partir de álbuns, quero dar um nome ao lote de playlists e ver os títulos da grade acompanharem o que digito, para que eu reconheça cada lote quando voltar a ele ou o exportar.
 Hoje (fato lido do código): o campo está sempre à vista, com um nome padrão; ao digitar, os títulos viram «1. Lote - Título» na hora; o nome vale também para a exportação.
 Entrega (histórico, antes do harness): 2026-01-02 (d3ed5e1); aceita pela regra de brownfield do MJRP de 2026-10-18.
-Origem: inventário do V1: P6 (`views/renderers/PlaylistsGridRenderer.js:89-104`, `components/playlists/PlaylistGrid.js:55-62`); ROADMAP legado, Sprint 16 («Batch Naming Integration»).
+Origem: inventário do V1: P6 (`components/playlists/PlaylistsGridRenderer.js:89-104`, `components/playlists/PlaylistGrid.js:55-62`); ROADMAP legado, Sprint 16 («Batch Naming Integration»).
 
 ## en
 
@@ -26,4 +26,4 @@ Origem: inventário do V1: P6 (`views/renderers/PlaylistsGridRenderer.js:89-104`
 As someone who curates playlists from albums, I want to give the batch of playlists a name and see the grid titles follow what I type, so that I recognize each batch when I return to it or export it.
 Today (read from the code): the field is always visible, with a default name; as I type, the titles become “1. Batch - Title” right away; the name also applies to the export.
 Delivery (history, before the harness): 2026-01-02 (d3ed5e1); accepted under the MJRP's brownfield rule of 2026-10-18.
-Origin: the V1 inventory of the v0: P6 (`views/renderers/PlaylistsGridRenderer.js:89-104`, `components/playlists/PlaylistGrid.js:55-62`); legacy ROADMAP, Sprint 16 (“Batch Naming Integration”).
+Origin: the V1 inventory of the v0: P6 (`components/playlists/PlaylistsGridRenderer.js:89-104`, `components/playlists/PlaylistGrid.js:55-62`); legacy ROADMAP, Sprint 16 (“Batch Naming Integration”).

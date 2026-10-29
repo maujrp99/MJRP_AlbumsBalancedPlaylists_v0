@@ -17,7 +17,7 @@ accepted_in: "histórico anterior ao harness — regra do MJRP de 2026-10-18"
 Como quem cura playlists a partir de álbuns, quero procurar um artista, ver a discografia do mais novo ao mais antigo, filtrar por tipo (estúdio, EP, single, ao vivo) e escolher os álbuns, para que eu monte a série sem digitar o título de cada álbum.
 Hoje (fato lido do código): «Studio» começa ligado; escolher um álbum o põe no conjunto, que se reordena arrastando; o app classifica cada álbum pelo tipo (álbum, EP, single, ao vivo, coletânea) e entende apelidos de artista como «led zep».
 Entrega (histórico, antes do harness): 2025-12-28 (4c62a82); aceita pela regra de brownfield do MJRP de 2026-10-18.
-Origem: inventário do V1: H2, H4, H5, H6, H7, H9 (`controllers/SearchController.js:20-169`, `services/album-search/AlbumTypeClassifier.js:19-60`); ROADMAP legado, Sprint 14 («Split-Panel Staging Area & Search») e Sprint 17.75 (classificação por tipo).
+Origem: inventário do V1: H2, H4, H5, H6, H7, H9 (`components/home/SearchController.js:20-169`, `services/album-search/AlbumTypeClassifier.js:19-60`); ROADMAP legado, Sprint 14 («Split-Panel Staging Area & Search») e Sprint 17.75 (classificação por tipo).
 
 ## en
 
@@ -26,4 +26,4 @@ Origem: inventário do V1: H2, H4, H5, H6, H7, H9 (`controllers/SearchController
 As someone who curates playlists from albums, I want to search for an artist, see the discography from newest to oldest, filter by type (studio, EP, single, live) and pick the albums, so that I build the series without typing every album title.
 Today (read from the code): “Studio” starts on; picking an album puts it in the chosen set, which is reordered by dragging; the app classifies each album by type (album, EP, single, live, compilation) and understands artist nicknames such as “led zep”.
 Delivery (history, before the harness): 2025-12-28 (4c62a82); accepted under the MJRP's brownfield rule of 2026-10-18.
-Origin: the V1 inventory of the v0: H2, H4, H5, H6, H7, H9 (`controllers/SearchController.js:20-169`, `services/album-search/AlbumTypeClassifier.js:19-60`); legacy ROADMAP, Sprint 14 (“Split-Panel Staging Area & Search”) and Sprint 17.75 (classification by type).
+Origin: the V1 inventory of the v0: H2, H4, H5, H6, H7, H9 (`components/home/SearchController.js:20-169`, `services/album-search/AlbumTypeClassifier.js:19-60`); legacy ROADMAP, Sprint 14 (“Split-Panel Staging Area & Search”) and Sprint 17.75 (classification by type).
