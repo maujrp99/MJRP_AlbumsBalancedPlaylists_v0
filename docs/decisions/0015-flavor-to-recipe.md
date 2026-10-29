@@ -1,6 +1,6 @@
 # ADR-0015: "Flavor" to "Recipe" Terminology Shift
 
-**Status**: APPROVED
+**Status**: Accepted (registro original de 2026-01-10: APPROVED)
 **Date**: 2026-01-10
 **Sprint**: 17.9
 
