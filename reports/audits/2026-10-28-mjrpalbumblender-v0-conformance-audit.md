@@ -2,19 +2,33 @@
 type: conformance-audit
 subject: "A conformidade canônica de MJRP_AlbumsBalancedPlaylists_v0 (o conform de 2026-10-28, 59 notas aplicadas) — auditoria do conteúdo, nota a nota"
 project: mjrpalbumblender-v0
-judged: "2026-10-28 13:16"
+judged: "2026-10-29 18:59"
 who_judged: separate-agent (juíza B do conform do v0, a pedido da orquestradora do harness; a executora foi a sessão A)
-verdict: não conforme
-content_p0: 2                      # o P0 da prova do F04 (ensuring-quality) e o P0 da S-04 (writing-reqs); acima de 0 o conform não fecha
-avoidable_questions: 7             # P-26, P-29, P-30, P-32, P-34, P-35, P-36 (abaixo)
-bent_rules: 1                      # P-36 (abaixo)
+verdict: conforme, com pontos fracos
+content_p0: 0                      # os dois P0 (evidência da F04 e história S-04) fechados na releitura de 2026-10-29; acima de 0 o conform não fecha
+avoidable_questions: 0             # as 7 (P-26, P-29, P-30, P-32, P-34, P-35, P-36) fechadas na releitura de 2026-10-29
+bent_rules: 0                      # a regra dobrada (P-36) fechada na releitura de 2026-10-29
 ---
 
 # Auditoria da conformidade de MJRP_AlbumsBalancedPlaylists_v0 · 2026-10-28
 
 > Pedido pela orquestradora do harness, depois que a executora (sessão A) parou no último commit `6cca392`, árvore limpa, sem push. A juíza B leu o projeto só em leitura: sete agentes separados em Sonnet (um por skill juíza) escreveram um arquivo cada em `reports/audits/`, e a juíza B rodou o `conformance_check.py` de dentro do harness e conferiu o que a executora tocou. O `HEAD` e o `git status` do projeto só mudaram pelos oito relatórios novos desta auditoria. O relatório volta à orquestradora e, por ela, ao MJRP.
 
-## Veredito: não conforme
+## Veredito: conforme, com pontos fracos
+
+**Releitura de 2026-10-29 (só o que falhou): PASSOU.** A executora fez a rodada de correção em 4 commits locais (`8350503`, `3a4d838`, `5fee9c2`, `5de63ed`; `HEAD` `5de63ed`, 34 commits à frente de `origin/main`, que segue em `c9cf80f`: sem push). Nenhum arquivo de código, nenhuma válvula do MJRP. Os cinco pontos que falharam, um a um:
+
+| Ponto | Estado | Âncora (arquivo:linha e o que a linha diz) |
+|---|---|---|
+| P0 1: evidência da F04 × UAT-12 | **fechado** | `reports/evidence/F04/evidence.md:21` «NÃO provam o fluxo real do visitante que entra com uma conta, e esse fluxo não funciona hoje: UAT-12»; `docs/specs/features/F04-*/spec.md:26` o `verified_by` do REQ-02 diz que a migração real «NÃO está pr[ovada]»; `evidence.md:23` «Nenhum destes testes foi executado nesta passagem» |
+| P0 2: S-04 × UAT-24 e UAT-06 | **fechado** | `docs/specs/requirements/ep-01-album-series/S-04-…md:17` «Defeitos abertos hoje (a história segue aceita por histórico; estes casos a contradizem até serem consertados)», com `[[uat#^UAT-24]]` e `[[uat#^UAT-06]]`; mesma ressalva em S-37, S-38 (UAT-12), S-15, S-12 e S-24; o sensor do grafo segue VERDE (175 nós) |
+| 7 perguntas evitáveis e a regra dobrada | **fechadas** (fora da lista ao MJRP, regra citada) | `docs/log.md:8-19` (entrada de 2026-10-29 18:55): P-29 → UAT-28 pelo §I.14; P-30 → UAT-14 pelo §I.3; P-32 → `docs/decisions/0015-flavor-to-recipe.md:3` `**Status**: Accepted (registro original de 2026-01-10: APPROVED)` (o `adr_header_check` passa); P-26 → a ADR-0018 fica `Proposed` para a via técnica; P-34 → a regra de economia até 2026-10-30 responde; P-35 → resolvida no git; P-36 → a regra vale (`loop.py:194`), a pendência virou UAT-29 e o parecer ao harness `reports/harness-feedback/2026-10-29-mjrpalbumblender-v0-loop-rounds-no-legacy-exemption.md` |
+| H10 e S8 sem issue | **fechado** | `docs/specs/uat.md` linhas 38-39: UAT-26 «Home · colar lista de álbuns vazia» (confere: `HomeController.js:132` chama `toast.warn`, e `Toast.js:148-151` só tem `success`, `error` e `info`) e UAT-27 «botão «Create Series» do estado vazio» (confere: `SavedPlaylistsView.js:249` faz `window.location.hash = '/home'`, e o roteador lê `window.location.pathname`, `router.js:85`) |
+| `delivered_by` fraco de S-30, 31, 32, 34, 38 | **fechado** | commits novos, todos de antes do contrato (`54fd54c`) e todos com código de produto (`public/js`, `server/`, `shared/` ou `public/index`): S-30 `9ebed2b`, `11747c3`; S-31 `b9530f1`, `29b3f5e`; S-32 `29b3f5e`; S-34 `2093d63`, `cd7dff4`; S-38 `6eb6682`, `b85f473`, `edc38ee` (conferi cada um com `git show --name-only`); `6d79577` (só documentos) e `2f980d0` (só configuração) saíram |
+
+**Os quatro itens de tela seguem abertos de propósito**: `info-arch`, `info-arch-sections`, `wireframes` e `design-system` não têm arquivo (e `visual-sensor` e `project-palette`, só o contrato), porque dependem do MJRP (P-33 e a válvula de dispensar de vez) e da economia até 30/10; o conform **não está fechado**: `conformance_check.py … --pending --gaps` (do harness) segue em 7 lacunas e 17 notas pendentes. O que a releitura não refez: o P1 do F01 («todas as séries» no REQ-02 sem o limite de 20), os demais P1 e P2 dos juízes e o ponto de que nenhum teste citado foi executado (falta `npm ci`); continuam abertos nos arquivos dos juízes e na rodada seguinte. O `content_audit_check.py` ainda reprova só pelos quatro itens de tela sem arquivo (ver «Em aberto»).
+
+## Histórico do veredito (2026-10-28, antes da correção): não conforme
 
 **Mecânico.** `conformance_check.py ../MJRP_AlbumsBalancedPlaylists_v0 --pending --gaps` (do harness): 7 lacunas, 0 não avaliáveis, 17 notas pendentes. As 7 lacunas e as 17 notas são todas dos itens de tela (`visual-sensor`, `info-arch`, `info-arch-sections`, `wireframes`, `design-system`), da paleta (`project-palette`) e da própria auditoria de conteúdo (`content-audit`, esta). As 59 notas aplicadas passam no script. O catálogo não está incompleto (nenhuma linha «catálogo incompleto»). A executora declarou os itens de tela fora por economia até 30/10 e pela regra do MJRP de 2026-10-18 (sensor visual não roda no fechado em produção); o sensor visual segue só comentado no contrato. Nenhum arquivo de código do v0 foi alterado, apagado ou movido: dos 338 arquivos mudados desde `c9cf80f`, 329 são novos e 9 modificados, todos de documento ou de configuração do harness (`.gitignore`, a constituição gerada em `.specify/`, `docs/ROADMAP.md`, `docs/manual/00_Dir_File_Structure_Map.md`, `proj-documentation-task.md`, quatro ADRs renomeadas por `git mv`). Nenhum push (`origin/main` segue em `c9cf80f`, a `main` local está 29 commits à frente), nenhuma válvula do MJRP nos commits (nenhum `Human-accepted:`, `Conformance-waiver:`, `Catalog-editorial:` nem `--no-verify` nas mensagens).
 
@@ -43,7 +57,7 @@ Todas as notas aplicadas passam no script (a forma); o veredito de conteúdo é 
 | `data-model@2` (CM-0033, 0054) | **sólida** | só polimento (faltam `subtitle` e `description` da Playlist) |
 | `adr-names@4` (CM-0012, 0024, 0076, 0085) | **sólida** | nenhum ponteiro velho sobrou fora do log; as 4 ADRs têm `# ADR-NNNN:` e status; ADR-0015 diz `APPROVED`, as outras `Accepted` |
 | `behavior@2` (CM-0031, 0049) | **fraca** | `behavior.md:133` lista «Excluir» do inventário e `:108` «Open in Spotify» sem ressalva (UAT-01, UAT-09); o cabeçalho (`:21`) diz que o que não funciona vira story em Backlog, e virou issue de UAT; 16 caminhos de código não existem como escritos |
-| `requirement-nodes@2` (CM-0037, 0067) | **errada** | S-04 sem ressalva contra UAT-24 e UAT-06 (P0); S-37 e S-38 sem a ressalva da UAT-12; S-15, S-12 e S-24 dizem que o defeito «está em outra story» que não existe |
+| `requirement-nodes@2` (CM-0037, 0067) | **fraca** (era errada até a releitura de 2026-10-29) | o P0 da S-04 fechou; segue: S-37 e S-38 sem a ressalva da UAT-12; S-15, S-12 e S-24 dizem que o defeito «está em outra story» que não existe |
 | `product-structure@10` (CM-0019 a 0082) | só a forma | o script passa; o conteúdo dele é lido nos itens `roadmap`, `releases`, `prd`, `uat` e `feature-track` |
 | `release-features@1` (CM-0074) | só a forma | idem |
 | `contract-screen@1` (CM-0006) | só a forma | `screen: [public/]` em `.mjrp-project.yml:52` |
@@ -62,7 +76,7 @@ Todas as notas aplicadas passam no script (a forma); o veredito de conteúdo é 
 | `roadmap@6` | resultados com Problema, Quem sente e Medida | `ROADMAP.md`, 5 resultados; medida em nenhum | **ok** | **fraca** por `mjrp-coaching-pm`, arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-coaching-pm.md` |
 | `releases@3` | releases com histórias | `ROADMAP.md`, REL-01 a REL-05 com 8, 10, 7, 7 e 7 histórias | **ok** | **fraca** por `mjrp-coaching-pm`, arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-coaching-pm.md` |
 | `feature-track@2` | features com spec, plan e tasks ligadas aos requisitos | `docs/specs/features/F01` a `F18` | **ok** | **fraca** por `mjrp-ensuring-sdd`, arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-ensuring-sdd.md` |
-| `evidence-folder@4` | evidência de entrega onde a regra diz | `reports/evidence/F01` a `F18`, cada uma com `evidence.md` | **ok** | **fraca**, com um P0 aberto, por `mjrp-ensuring-quality`, arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-ensuring-quality.md` |
+| `evidence-folder@4` | evidência de entrega onde a regra diz | `reports/evidence/F01` a `F18`, cada uma com `evidence.md` | **ok** | **fraca** por `mjrp-ensuring-quality` (o P0 da F04 fechou na releitura de 2026-10-29), arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-ensuring-quality.md` |
 | `contract-screen@1` | o contrato diz onde mora a tela | `.mjrp-project.yml:52` `screen: [public/]` | **ok** | **só a forma** (sem juiz) |
 | `visual-sensor@2` | `sensors.visual` no contrato | só o modelo comentado (`.mjrp-project.yml:57`); `config: web/visual.config.mjs` aponta pasta que não existe | **lacuna** (aviso até 2026-11-27) | **fraca** por `mjrp-ensuring-quality`, arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-ensuring-quality.md` |
 | `info-arch@1` | `docs/specs/info-arch.md` | não existe | **lacuna** (aviso até 2026-11-27) | **sem artefato** (não julgado; o item está na carência e o arquivo não existe): o juiz de UX registra, na seção «Itens sem artefato» de `2026-10-28-mjrpalbumblender-v0-content-mjrp-critiquing-ux.md`, o que o arquivo ausente teria de trazer |
@@ -82,7 +96,7 @@ Todas as notas aplicadas passam no script (a forma); o veredito de conteúdo é 
 | `data-model@2` | `docs/specs/data-model.md` | existe | **ok** | **sólida** por `mjrp-critiquing-architecture`, arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-critiquing-architecture.md` |
 | `record-shapes@2` | plan, tasks e Test plan de cada feature na forma | 18 features | **ok** | **fraca** por `mjrp-ensuring-sdd`, arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-ensuring-sdd.md` |
 | `memory-layer@2` | `MEMORY.md`, `## Now`, log | existem; log diz «não fechado» | **ok** | **fraca** por `mjrp-auditing-docs`, arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-auditing-docs.md` |
-| `requirement-nodes@2` | um nó por requisito, com `id`, `type`, `status` | 44 nós (42 histórias e 2 requisitos não funcionais) | **ok** | **errada** por `mjrp-writing-reqs`, arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-writing-reqs.md` |
+| `requirement-nodes@2` | um nó por requisito, com `id`, `type`, `status` | 44 nós (42 histórias e 2 requisitos não funcionais) | **ok** | **fraca** por `mjrp-writing-reqs` (era **errada** até a releitura de 2026-10-29, quando o P0 da S-04 fechou), arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-writing-reqs.md` |
 | `info-arch-sections@1` | seções Protótipos aprovados, Flow e Content Map no `info-arch.md` | o `info-arch.md` não existe | **lacuna** (aviso até 2026-11-27) | **sem artefato** (não julgado; o item está na carência e o arquivo não existe): o juiz de UX registra, na seção «Itens sem artefato» de `2026-10-28-mjrpalbumblender-v0-content-mjrp-critiquing-ux.md`, o que o arquivo ausente teria de trazer |
 | `prd@2` | `docs/specs/prd.md` com tabela de épicos e nós embutidos | tabela `Épico \| Serve`; os 44 nós embutidos, nenhum fora | **ok** | **fraca** por `mjrp-coaching-pm`, arquivo do juiz: `2026-10-28-mjrpalbumblender-v0-content-mjrp-coaching-pm.md` |
 | `content-audit@5` | esta auditoria | este relatório | **lacuna** até este relatório ser commitado e o conform fechar (o `content_p0`, `avoidable_questions` e `bent_rules` precisam ir a 0) | **só a forma** (sem juiz) |
@@ -90,8 +104,8 @@ Todas as notas aplicadas passam no script (a forma); o veredito de conteúdo é 
 
 Os achados vivem nos arquivos dos juízes (`[P0|P1|P2] <âncora> — <o que> — <teste Y/N> — <dono>`). Os dois P0 abertos:
 
-- [P0] `reports/evidence/F04/evidence.md:17` — a evidência cita `UserSyncService.test.js` como prova da migração do convidado para a conta e a UAT-12 diz que essa migração não acontece; o teste passa porque recebe `'guest'` à mão — dono: `mjrp-ensuring-quality` (juiz de qualidade).
-- [P0] `docs/specs/requirements/ep-01-album-series/S-04-browse-every-series-and-its-albums-in-the-library.md:17` — S-04 aceita sem ressalva, contra UAT-24 e UAT-06 — dono: `mjrp-writing-reqs` (juiz de requisitos).
+- [P0 fechado 2026-10-29] `reports/evidence/F04/evidence.md:17` — a evidência cita `UserSyncService.test.js` como prova da migração do convidado para a conta e a UAT-12 diz que essa migração não acontece; o teste passa porque recebe `'guest'` à mão — dono: `mjrp-ensuring-quality` (juiz de qualidade).
+- [P0 fechado 2026-10-29] `docs/specs/requirements/ep-01-album-series/S-04-browse-every-series-and-its-albums-in-the-library.md:17` — S-04 aceita sem ressalva, contra UAT-24 e UAT-06 — dono: `mjrp-writing-reqs` (juiz de requisitos).
 
 Os P1 mais graves, de cada juiz, em uma linha:
 - `mjrp-writing-reqs`: S-37 e S-38 sem a ressalva da UAT-12; `behavior.md:133` («Excluir») e `:108` («Open in Spotify») sem ressalva; o cabeçalho de `behavior.md:21` contradiz a decisão do MJRP (o que não funciona virou issue de UAT, não story em Backlog); S-15, S-12 e S-24 apontam para uma «outra story» que não existe.
@@ -110,9 +124,11 @@ Os sete juízes rodaram em paralelo, em Sonnet, só leitura, com um arquivo cada
 
 ## Em aberto
 
-- A rodada de correção da executora, com os achados dos sete juízes como ordem de serviço (a lista está nos arquivos dos juízes), e a releitura só do que falhou.
+- Depois da correção: os P1 e P2 dos sete juízes que a rodada não tocou (por exemplo o «Open Questions: Nenhuma» das 18 specs apontando para o «relatório do pacote D1» que não existe, o «Aberta por» igual nas 25 issues, o `behavior.md:133`/`:108`, o `MEMORY.md:11`, o F01 REQ-02 sem o limite de 20), ainda abertos nos arquivos dos juízes.
+- A ADR-0018 segue `Proposed`, à espera do aceite técnico (via tech lead, não do MJRP); a P-34 ficou fechada só em parte: a regra responde «quando» (depois de 30/10), mas dispensar os itens de tela de vez continua sendo uma válvula do MJRP.
+- O MJRP pediu para segurar as perguntas a ele por ora: nenhuma pergunta nova foi aberta na releitura, e as 34 que seguem na seção abaixo ficam registradas, sem envio.
 - As questões em aberto do PRD ainda não têm número de P (a executora disse no rascunho); o conteúdo é do MJRP e o agente não podia redigir o texto sem a fonte: vão para a rodada de correção como perguntas P-NN novas.
-- **O `content_audit_check.py` ainda reprova, por duas razões que se esperam:** (1) 2 P0 abertos (`audit_p0_open`); (2) os 4 itens de tela sem arquivo (`info-arch`, `info-arch-sections`, `wireframes`, `design-system`) pedem veredito de conteúdo ancorado em arquivo do próprio item, e esse arquivo não existe (`audit_row_missing`, `judge_file_invalid`). A segunda só some quando os arquivos nascerem (decisão do MJRP, P-33 e P-34): o juiz de UX não pode inventar âncora, e este relatório não finge veredito. O `harness-feedback` fica em «O que o harness faz com isto».
+- **O `content_audit_check.py` ainda reprova, por uma razão que se espera** (a dos 2 P0 abertos, `audit_p0_open`, acabou na releitura de 2026-10-29): os 4 itens de tela sem arquivo (`info-arch`, `info-arch-sections`, `wireframes`, `design-system`) pedem veredito de conteúdo ancorado em arquivo do próprio item, e esse arquivo não existe (`audit_row_missing`, `judge_file_invalid`). A segunda só some quando os arquivos nascerem (decisão do MJRP, P-33 e P-34): o juiz de UX não pode inventar âncora, e este relatório não finge veredito. O `harness-feedback` fica em «O que o harness faz com isto».
 - Os itens de tela e a paleta esperam a decisão do MJRP (P-33, P-34); o conform não fecha enquanto o critério do passo 1 não chegar a exit 0 e enquanto os números do frontmatter não forem a 0. Pendência dita pelo juiz de qualidade: nenhum teste citado como evidência foi executado (falta `npm ci`).
 - O push dos commits locais é do MJRP.
 
@@ -136,19 +152,21 @@ A executora registrou treze decisões de classe (a) no `docs/log.md`, cada uma c
 | issues de UAT: o que não funciona vira issue na trilha do agente | `uat` | `docs/log.md#2026-10-28-1258` | `2026-10-28 12:58` |
 | 18 features de histórico, cada história importada por uma | `feature-track` | `docs/log.md#2026-10-28-1302` | `2026-10-28 13:02` |
 | notas de uat, trilha e evidência registradas | `evidence-folder` | `docs/log.md#2026-10-28-1303` | `2026-10-28 13:03` |
+| sete perguntas evitáveis (P-26, 29, 30, 32, 34, 35, 36) decididas como classe (a), a P-36 sem dobrar a regra; UAT-26 a UAT-29 abertas | `uat` | `PRINCIPLES.md` §I.3 e §I.14; `loop.py:194`; regra de economia até 2026-10-30 | `2026-10-29 18:55` |
+| histórias aceitas com defeito aberto apontam as issues; `delivered_by` de S-30, 31, 32, 34 e 38 refeito no git | `requirement-nodes` | regra do MJRP de 2026-10-18 (aceite por histórico) e `git merge-base --is-ancestor 54fd54c` | `2026-10-29 18:55` |
 
 ## Achados sobre as perguntas e as recomendações
 
 A juíza B leu as 37 perguntas do rascunho da executora e as recomendações. Os sete primeiros achados são **pergunta evitável** (a classe verdadeira é (a): derivável de regra aprovada, ou técnica e reversível); o último é **regra dobrada**. Cada um entra na rodada de correção: o agente decide, corrige, registra em «Decidido pelo agente» e tira a pergunta.
 
-- [P1] pergunta evitável · P-26 — a ADR-0018 `Proposed`: a própria pergunta diz que a decisão é técnica e que a via é o aceitador técnico (a skill de aceite de decisões), não o MJRP; o agente não pode aceitar ADR por si, mas a pergunta deve ir a essa via, não ao MJRP — teste S/N: o MJRP precisa decidir? N — dono: a executora com o aceitador técnico.
-- [P1] pergunta evitável · P-29 — o `PRINCIPLES.md` §I.14 só admite credencial no cliente com o BYOK aprovado na constituição, e a constituição não o aprova: pela regra «a regra antes do código», o token do Spotify no `localStorage` é um defeito de código (Fix) e a constituição só muda se o MJRP emendá-la por conta própria — teste S/N: dá para responder da regra aprovada? S — dono: a executora.
-- [P1] pergunta evitável · P-30 — «há exceção para o P0 do VT-06?»: o `PRINCIPLES.md` §I.3 manda e a pergunta mesma recomenda «sem exceção»; sem exceção aprovada, o código é o defeito e vira item de conserto — teste S/N: dá para responder da regra aprovada? S — dono: a executora.
-- [P1] pergunta evitável · P-32 — o status `APPROVED` da ADR-0015 para `Accepted`: edição de uma palavra do cabeçalho, técnica e reversível — teste S/N: técnica e reversível? S — dono: a executora com o aceitador técnico.
-- [P1] pergunta evitável · P-34 — «quando entram os itens de tela?»: a resposta já está nas regras do MJRP (economia até 30/10; sensor visual não roda no fechado em produção; `MEMORY.md ## Do Not Forget`); a opção (a) recomendada repete a regra — teste S/N: dá para responder da regra aprovada? S — dono: a executora (dispensar o item de vez continua sendo do MJRP, e é outra pergunta).
-- [P1] pergunta evitável · P-35 — repontar o `delivered_by` de cinco histórias cujo commit citado é fraco: é correção de prova técnica e reversível (o juiz de SDD e o de requisitos a levantaram como P1); o MJRP não precisa decidir — teste S/N: técnica e reversível? S — dono: a executora (`mjrp-writing-reqs`).
-- [P1] pergunta evitável · P-36 — as 61 tasks fechadas sem `rounds::`: o próprio texto diz que é lacuna do harness, e lacuna de check se reporta ao harness (`harness-feedback`), nunca se pergunta ao MJRP do v0 — teste S/N: a resposta é do MJRP do v0? N — dono: a executora (entrada em `reports/harness-feedback/`).
-- [P1] regra dobrada · P-36 — a recomendação (a) «deixar sem `rounds::`» aceita que o `loop.py --check-tasks` reprovaria 61 tasks, porque «nada o roda hoje»: muda o resultado da regra porque o código (as tasks) faz diferente, sem mostrar que a regra está errada — teste S/N: muda a regra porque o artefato diverge, sem mostrar que a regra está errada? S — dono: a executora (julgar a regra primeiro: ela vale; então a pendência vira item de conserto ou parecer ao harness).
+- [P1 fechado 2026-10-29] pergunta evitável · P-26 — a ADR-0018 `Proposed`: a própria pergunta diz que a decisão é técnica e que a via é o aceitador técnico (a skill de aceite de decisões), não o MJRP; o agente não pode aceitar ADR por si, mas a pergunta deve ir a essa via, não ao MJRP — teste S/N: o MJRP precisa decidir? N — dono: a executora com o aceitador técnico.
+- [P1 fechado 2026-10-29] pergunta evitável · P-29 — o `PRINCIPLES.md` §I.14 só admite credencial no cliente com o BYOK aprovado na constituição, e a constituição não o aprova: pela regra «a regra antes do código», o token do Spotify no `localStorage` é um defeito de código (Fix) e a constituição só muda se o MJRP emendá-la por conta própria — teste S/N: dá para responder da regra aprovada? S — dono: a executora.
+- [P1 fechado 2026-10-29] pergunta evitável · P-30 — «há exceção para o P0 do VT-06?»: o `PRINCIPLES.md` §I.3 manda e a pergunta mesma recomenda «sem exceção»; sem exceção aprovada, o código é o defeito e vira item de conserto — teste S/N: dá para responder da regra aprovada? S — dono: a executora.
+- [P1 fechado 2026-10-29] pergunta evitável · P-32 — o status `APPROVED` da ADR-0015 para `Accepted`: edição de uma palavra do cabeçalho, técnica e reversível — teste S/N: técnica e reversível? S — dono: a executora com o aceitador técnico.
+- [P1 fechado 2026-10-29] pergunta evitável · P-34 — «quando entram os itens de tela?»: a resposta já está nas regras do MJRP (economia até 30/10; sensor visual não roda no fechado em produção; `MEMORY.md ## Do Not Forget`); a opção (a) recomendada repete a regra — teste S/N: dá para responder da regra aprovada? S — dono: a executora (dispensar o item de vez continua sendo do MJRP, e é outra pergunta).
+- [P1 fechado 2026-10-29] pergunta evitável · P-35 — repontar o `delivered_by` de cinco histórias cujo commit citado é fraco: é correção de prova técnica e reversível (o juiz de SDD e o de requisitos a levantaram como P1); o MJRP não precisa decidir — teste S/N: técnica e reversível? S — dono: a executora (`mjrp-writing-reqs`).
+- [P1 fechado 2026-10-29] pergunta evitável · P-36 — as 61 tasks fechadas sem `rounds::`: o próprio texto diz que é lacuna do harness, e lacuna de check se reporta ao harness (`harness-feedback`), nunca se pergunta ao MJRP do v0 — teste S/N: a resposta é do MJRP do v0? N — dono: a executora (entrada em `reports/harness-feedback/`).
+- [P1 fechado 2026-10-29] regra dobrada · P-36 — a recomendação (a) «deixar sem `rounds::`» aceita que o `loop.py --check-tasks` reprovaria 61 tasks, porque «nada o roda hoje»: muda o resultado da regra porque o código (as tasks) faz diferente, sem mostrar que a regra está errada — teste S/N: muda a regra porque o artefato diverge, sem mostrar que a regra está errada? S — dono: a executora (julgar a regra primeiro: ela vale; então a pendência vira item de conserto ou parecer ao harness).
 
 Também, como P2 (não contados): as perguntas P-14 e P-17 a P-23 (classe c) não trazem «— não:» nas opções (exceção só para medida, problema e quem sente); as linhas «(o que muda na tela …)» são genéricas; e a opção (a) de P-02 e de P-33 citava cores que o CSS não tem (corrigidas abaixo, ver «Processo»).
 
@@ -352,14 +370,6 @@ O `tech-stack.md` está aprovado? (o que muda na tela: o `status: Draft` do `tec
 - b) aprovar depois de pedir ADR para alguma tecnologia (diga qual)
 - c) deixar Draft até a crítica de arquitetura (CM-0011) ler os três arquivos
 
-### P-26 · item: adr-names · ADR-0018 Proposed: quem aceita?
-classe: b
-por que o agente não podia: o registro original diz `Proposed` (2026-01-10) e o molde manda que só o aceitador da via mude esse status; o agente não aceita ADR. É decisão técnica, então a via é o tech lead (agente, skill `mjrp-accepting-decisions`), não o MJRP, salvo se ele quiser vetar. A prática já andou: `PlaylistHistoryService` (`public/js/services/playlists/`) e `StorageService` (`services/infra/`) existem; `UserMigrationService` não existe (há `UserSyncService`)
-Como fica a ADR-0018? (o que muda na tela: o status da ADR-0018 deixa de ser `Proposed`, ou ganha uma ADR que a substitui)
-- a) o tech lead aceita, retroativamente, como está (Recomendado)
-- b) nova ADR que corrige o alvo (`UserMigrationService`) e substitui a 0018
-- c) rejeitar ou arquivar (a parte feita fica sem decisão)
-
 ### P-27 · item: arch · Quem escreve em /albums e em spotify_enrichment
 classe: b
 Quem pode escrever em `/albums` e em `spotify_enrichment`? Hoje as regras (`firestore.rules:42-43` e `:49-51`) aceitam qualquer login, e `AuthService.js:58` faz `signInAnonymously` para todo visitante; o ranking por usuário está aberto até sem login (`firestore.rules:35`, `if true`). É decisão de modelo de autorização do produto; o juiz recomenda (b) ou (a). (o que muda na tela: o item de conserto das regras do Firestore passa a ter a regra-alvo escrita)
@@ -374,18 +384,6 @@ O teto de 20 séries (`SeriesService.js:140-143`, `findAll({ orderBy: ['updatedA
 - b) subir o teto e documentar
 - c) manter 20 e sinalizar na tela
 
-### P-29 · item: constitution · O §I.14 cobre o token OAuth do Spotify no localStorage?
-classe: b
-O `PRINCIPLES.md` §I.14 (segredos) cobre o token OAuth do Spotify guardado no `localStorage` (`SpotifyAuthService.js:179,182,191`)? O §I.14 só admite credencial no cliente com o padrão BYOK aprovado na `constitution.md`, e a constituição não o aprova. (o que muda na tela: o item de conserto do token abre, ou a constituição ganha a emenda que aceita o padrão)
-- a) sim, cobre — o conserto é do código (item de Fix)
-- b) não cobre — a constituição passa a dizer por escrito que o padrão é aceito (emendar a constituição é dele)
-
-### P-30 · item: arch-critique · Exceção para o P0 do juiz (SDK do Firestore fora dos adaptadores)
-classe: b
-Há exceção para o P0 do juiz (VT-06): o SDK do Firestore importado fora de `repositories/` (`PlaylistsService.js:17`, `stores/albums.js:9`, `SaveAllView.js:5-6`)? (o que muda na tela: o P0 vira item de conserto, ou ganha uma exceção registrada)
-- a) sem exceção — o código é o defeito e vira item de conserto; a camada Repository que o corrige já existe (o juiz e o agente recomendam) (Recomendado)
-- b) abrir exceção, registrada na ADR-0017 ou na constituição — não: o `PRINCIPLES.md` §I.3 manda e o custo de conformar é pequeno
-
 ### P-31 · item: tech-stack · Qual receita implantou o backend em produção
 classe: b
 Qual receita implantou o backend em produção? As duas divergem: `cloudbuild.yaml` não copia `config/` nem marca `shared/` como ESM (o contêiner ficaria sem `prompts.json` e o `import()` de `shared/` falharia), e `scripts/deploy-backend.sh` faz as duas coisas; o relatório não sabe qual gerou a produção atual. São fatos que só o MJRP tem. (o que muda na tela: o `arch.md` e o `tech-stack.md` passam a dizer qual receita vale)
@@ -395,12 +393,6 @@ Qual receita implantou o backend em produção? As duas divergem: `cloudbuild.ya
 
 Seguimento (sem opções): o projeto Firebase vivo é de fato `mjrp-playlist-generator`? O código aponta para ele (`firebase-config.js:3-10`, `.firebaserc`, `scripts/deploy-backend.sh`), mas o repositório não prova.
 
-### P-32 · item: adr-names · ADR-0015 com status APPROVED
-classe: b
-A ADR-0015 tem status `APPROVED`, fora do vocabulário `Proposed`/`Accepted` do molde: vira `Accepted`? (o que muda na tela: o status da ADR-0015 passa a `Accepted`, ou segue como no registro original)
-- a) sim, o tech lead edita só o status
-- b) manter o registro original
-
 ### P-33 · item: project-palette · Par de paletas que identifica o projeto no portfólio
 classe: c
 por que o agente não podia: a cor do projeto no portfólio é um par da biblioteca de paletas declarado no contrato (`project_palette: {light, dark}`), e nenhuma regra aprovada escolhe o par do v0; o v0 só tem tema escuro neon (`public/css/neon.css`: ciano `#00f3ff`, laranja `#ff8800`, verde `#00ff9d`)
@@ -408,30 +400,6 @@ Qual par da biblioteca (`docs/wiki/harness/palette-library.md`) identifica o pro
 - a) só escuro, D3 Cyberpunk Neon (primário `#FF2E88`, destaque `#00E5FF`, fundo `#05050A`) — é a paleta neon escura da biblioteca; o CSS do app usa ciano `#00f3ff`, laranja `#ff8800` e verde `#00ff9d` (`public/css/neon.css:4-6`), que não são as cores do D3 (Recomendado)
 - b) só escuro, D1 Moderna / Tech (primário `#7B5CFA`, destaque `#2FE6D6`, fundo `#0E0E16`) — não: o primário roxo não existe no tema atual do app (ciano, laranja, verde)
 - c) par claro + escuro (diga qual: L1–L8 e D1–D5) — não: o v0 só tem tema escuro, então uma paleta clara não identifica nada do app hoje
-
-### P-34 · item: design-system · Quando entram os itens de tela
-classe: c
-por que o agente não podia: o conform deixou fora, por economia e até 30/10, os itens de tela (`info-arch`, `info-arch-sections`, `wireframes`, `design-system`, `visual-sensor`); quando eles entram, ou se são dispensados, é decisão dele
-Quando entram os itens de tela no conform? (o que muda na tela: os cinco itens deixam de aparecer como pendentes de tela, ou voltam à fila na data escolhida)
-- a) depois de 30/10, na próxima rodada — o projeto é brownfield em produção e as regras de 2026-10-18 dispensam sensor visual e aceite do que está fechado (Recomendado)
-- b) agora, só `design-system.md` e `info-arch.md`, extraídos do CSS e do inventário (sem wireframe nem protótipo) — não: gasta agora o que o conform quis poupar até 30/10
-- c) nunca para o v0 (a tela é reescrita no V1) — não: o v0 segue em produção até o V1; só vale se ele dispensar por escrito
-
-### P-35 · item: requirement-nodes · Commits `delivered_by` fracos em cinco histórias aceitas por histórico
-classe: c
-por que o agente não podia: mexe em nós que nasceram aceitos pela regra do MJRP de 2026-10-18; trocar o commit que prova a entrega ou tirar o aceite é decisão dele.
-Os commits que S-30, S-31, S-32, S-34 e S-38 citam só mexem em documentos, testes ou configuração (6d79577, 2f980d0, 8bd0b5c); o código do celular está em 29b3f5e, que o nó de S-31 não cita. Reponto o `delivered_by`? (o que muda na tela: nada; muda a prova que o grafo lê)
-- a) deixar como está; as features F04, F07 e F18 registram a ressalva em `Risks` e no `evidence.md` (Recomendado)
-- b) uma passada da `mjrp-writing-reqs` para repontar o `delivered_by` — não: não muda o que a pessoa vê e gasta o uso que o conform quis poupar
-- c) tirar o aceite por histórico dessas cinco histórias — não: o código existe e está em produção, só o commit citado é fraco
-
-### P-36 · item: record-shapes · Tasks fechadas das features de histórico sem `rounds::`
-classe: c
-por que o agente não podia: é lacuna do harness, não do v0; a exceção para histórico legado é decisão do MJRP no harness.
-O `loop.py --check-tasks` reprovaria as 61 tasks fechadas sem `rounds:: N`, e nada o roda hoje para features `lane: standard`. Como tratar? (o que muda na tela: nada hoje)
-- a) deixar sem `rounds::` (Recomendado)
-- b) o harness ganha exceção para histórico legado — não: é pedido ao harness, não ao v0
-- c) escrever `rounds:: 1` em tudo — não: falsifica a medida
 
 ### P-37 · item: product-structure · A troca «flavor → recipe» (Sprint 17.9, ADR-0015) não está em nenhuma história entregue
 classe: c
