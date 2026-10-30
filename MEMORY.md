@@ -2,7 +2,7 @@
 
 ## Now
 
-**Where the Work Stopped.** (2026-10-29 18:57) O v0 do Album Blender é projeto brownfield em produção do harness (decisão do MJRP de 2026-10-28). A juíza B julgou o conform e deu «não conforme» (`reports/audits/2026-10-28-mjrpalbumblender-v0-conformance-audit.md`); a sessão A fez a rodada de correção dos achados (prova do F04, histórias com defeito aberto, `delivered_by` fraco, UAT-26 a UAT-29, sete perguntas decididas pelo agente) e espera a releitura da juíza. Código do v0 intocado; commits locais na `main`, sem push.
+**Where the Work Stopped.** (2026-10-30 18:19) Cascade do harness encerrado nesta pasta: a releitura da juíza B passou (`b7955c5`, «conforme, com pontos fracos»); o conform segue aberto só no que é do MJRP: as perguntas da auditoria (entre elas a P-01, a Visão, agora sem o limite de uma frase pela F126 do harness, e a P-33, a paleta) e os itens de tela que dependem delas. As sessões do cascade foram arquivadas. O v0 do Album Blender é projeto brownfield em produção do harness (decisão do MJRP de 2026-10-28). A juíza B julgou o conform e deu «não conforme» (`reports/audits/2026-10-28-mjrpalbumblender-v0-conformance-audit.md`); a sessão A fez a rodada de correção dos achados (prova do F04, histórias com defeito aberto, `delivered_by` fraco, UAT-26 a UAT-29, sete perguntas decididas pelo agente) e espera a releitura da juíza. Código do v0 intocado; commits locais na `main`, sem push.
 
 **Pending on Agent.** (2026-10-29) Nada em voo; a juíza relê só o que falhou. Notas abertas: tela (`info-arch`, `info-arch-sections`, `wireframes`, `design-system`, `visual-sensor`), `project-palette` e `content-audit` (a auditoria acima).
 
