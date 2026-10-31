@@ -64,6 +64,7 @@ A desenhar: ainda não há protótipo aprovado nem `docs/specs/info-arch.md`, e 
 | **EP-06 · Usar o Album Blender no celular** | `^OUT-04` |
 | **EP-07 · Gerenciar o inventário de álbuns que a pessoa possui** | `^OUT-03` |
 | **EP-08 · Entrar com a conta e guardar tudo na nuvem** | `^OUT-01` |
+| **EP-09 · Achar o álbum certo no catálogo oficial (capas, discografia oficial, busca por artista, filtros por tipo, correspondência aproximada)** | `^OUT-03` |
 
 <!-- Como os épicos foram derivados (decidido pelo agente, revisável pelo MJRP, 2026-10-28): um por grande área funcional do produto, na ordem do fluxo (série, mistura, playlist, exportação, ranking), uma para o celular e duas para áreas
      que a documentação não liga a nenhum resultado (inventário e conta/nuvem); cada um serve o objetivo permanente do ROADMAP.md que a documentação liga àquela área:
@@ -106,21 +107,13 @@ O mapa dos requisitos: cada requisito é um arquivo em `docs/specs/requirements/
 folder:: ep-01-album-series
 serves:: [[ROADMAP#^OUT-03]] ^EP-01
 
-![[S-01-create-a-named-album-series]]
 
-![[S-02-find-an-artists-albums-and-pick-the-ones-to-mix]]
 
-![[S-03-paste-a-list-of-albums-to-build-a-series]]
 
-![[S-04-browse-every-series-and-its-albums-in-the-library]]
 
-![[S-05-find-an-album-in-the-library-by-search-and-filters]]
 
-![[S-06-edit-a-series-rename-it-remove-and-add-albums]]
 
-![[S-07-delete-a-series-without-deleting-inventory-albums]]
 
-![[S-08-sort-the-series-by-name-album-count-or-date]]
 
 ![[S-49-build-a-series-from-an-artists-discography]]
 
@@ -132,91 +125,65 @@ serves:: [[ROADMAP#^OUT-03]] ^EP-01
 folder:: ep-02-blend-recipes
 serves:: [[ROADMAP#^OUT-02]] ^EP-02
 
-![[S-09-generate-balanced-playlists-from-a-series]]
 
-![[S-10-choose-among-several-recipes-to-build-the-playlist]]
 
-![[S-11-build-the-blend-in-steps-series-recipe-ingredients]]
 
-![[S-12-tune-the-recipe-tracks-per-album-grouping-length]]
 
-![[S-13-regenerate-with-another-recipe-in-place]]
 
 ### EP-03 · Revisar as playlists geradas e guardadas
 folder:: ep-03-review-playlists
 serves:: [[ROADMAP#^OUT-01]] ^EP-03
 
-![[S-14-see-the-generated-playlists-tracks-and-lengths]]
 
-![[S-15-reorder-playlists-by-dragging-and-removing-tracks]]
 
-![[S-16-save-generated-playlists-as-a-batch-in-the-cloud]]
 
-![[S-17-name-a-batch-of-playlists]]
 
-![[S-18-browse-the-saved-playlists-by-series-and-by-batch]]
 
-![[S-19-edit-a-batch-of-playlists-already-saved]]
 
-![[S-20-delete-a-batch-or-all-playlists-of-a-series]]
 
 ### EP-04 · Exportar a playlist para Spotify ou Apple Music
 folder:: ep-04-export-playlists
 serves:: [[ROADMAP#^OUT-01]] ^EP-04
 
-![[S-21-download-the-playlists-as-a-json-file]]
 
-![[S-22-send-the-playlists-to-apple-music]]
 
-![[S-23-connect-my-spotify-account]]
 
-![[S-24-send-the-playlists-to-spotify-merged-or-separate]]
 
 ### EP-05 · Ordenar as faixas por crítica, popularidade ou gosto pessoal
 folder:: ep-05-track-ranking
 serves:: [[ROADMAP#^OUT-01]] ^EP-05
 
-![[S-25-see-album-tracks-with-the-besteveralbums-rating]]
 
-![[S-26-compare-the-critics-rating-with-spotify-popularity]]
 
-![[S-27-give-the-tracks-my-own-order-and-blend-by-it]]
 
-![[S-28-see-where-each-tracks-rating-comes-from]]
 
-![[S-29-fetch-an-albums-data-again]]
 
 ### EP-06 · Usar o Album Blender no celular
 folder:: ep-06-mobile-use
 serves:: [[ROADMAP#^OUT-04]] ^EP-06
 
-![[S-30-navigate-the-app-on-a-phone-with-the-drawer-menu]]
 
-![[S-31-read-album-tracks-on-a-phone-stacked-rows-and-tabs]]
 
-![[S-32-order-an-albums-tracks-by-touch-full-screen]]
 
 ### EP-07 · Gerenciar o inventário de álbuns que a pessoa possui
 folder:: ep-07-album-inventory
 serves:: [[ROADMAP#^OUT-03]] ^EP-07
 
-![[S-33-see-my-collection-how-many-i-own-and-its-worth]]
 
-![[S-34-add-to-the-collection-an-album-i-saw-in-a-series]]
 
-![[S-35-mark-albums-owned-or-wanted-and-fix-their-details]]
 
-![[S-36-search-and-filter-the-collection]]
 
 ### EP-08 · Entrar com a conta e guardar tudo na nuvem
 folder:: ep-08-account-cloud
 serves:: [[ROADMAP#^OUT-01]] ^EP-08
 
-![[S-37-sign-in-with-google-or-apple-or-continue-as-guest]]
 
-![[S-38-keep-series-playlists-and-collection-in-the-cloud]]
 
-![[S-39-open-the-app-with-no-login-or-authorization-window]]
+
+
+### EP-09 · Achar o álbum certo no catálogo oficial (capas, discografia oficial, busca por artista, filtros por tipo, correspondência aproximada)
+folder:: ep-09-achar-o-album-certo-no-catalog
+serves:: [[ROADMAP#^OUT-03]] ^EP-09
 
 ### Transversais
 
