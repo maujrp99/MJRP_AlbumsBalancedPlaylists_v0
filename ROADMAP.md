@@ -60,39 +60,39 @@ tags:: #cross-series #discovery
 
 ## Releases
 
-- **Versão do produto v1.5** — 2025-11-25 · «v1.5 Refactor»; anterior à Sprint 1 numerada, sem feature SDD · tag v1.5.0. version:: v1.5 ^REL-06
-- **Versão do produto v1.6.1 (sem tag)** — 2025-11-26 · «Hotfix: Production Deployment»; anterior à Sprint 1 numerada, sem feature SDD · sem tag no git. version:: v1.6.1 ^REL-07
-- **Versão do produto v2.0.0-alpha.1 (sem tag)** — 2025-11-26 · Sprint 1: Foundation Setup · sem tag no git. version:: v2.0.0-alpha.1 ^REL-08
-- **Versão do produto v2.0.0-alpha.2 (sem tag)** — 2025-11-26 · Sprint 2: Router & Views · sem tag no git. version:: v2.0.0-alpha.2 ^REL-09
-- **Versão do produto v2.0.0-alpha.3 (sem tag)** — 2025-11-26 · Sprint 3: Albums & Ranking Views · sem tag no git. version:: v2.0.0-alpha.3 ^REL-10
-- **Versão do produto v2.0.0-alpha.4** — 2025-11-26 · Sprint 4: Playlists Management · tag v2.0.0-alpha.4. version:: v2.0.0-alpha.4 ^REL-11
-- **Versão do produto v2.0.0-alpha.5 (sem tag)** — 2025-11-28 · Sprint 4.5 Phase 1: Landing View UI/UX · sem tag no git. version:: v2.0.0-alpha.5 ^REL-12
-- **Versão do produto v2.0.0-alpha.6 (sem tag)** — 2025-11-28 · Sprint 4.5 Phase 2: Albums View Modes · sem tag no git. version:: v2.0.0-alpha.6 ^REL-13
-- **Versão do produto v2.0.3** — 2025-11-30 · Critical Bug Fixes & UAT Ready (ciclo da Sprint 5) · tag v2.0.3. version:: v2.0.3 ^REL-14
-- **Versão do produto v2.0.4** — 2025-12-02 · First Production Deployment v1.6 → v2.0 (ciclo da Sprint 5) · tag v2.0.4. version:: v2.0.4 ^REL-15
-- **Versão do produto v2.1.0** — 2025-12-09 · Sprint 5 Complete: Persistence & Production Ready; o CHANGELOG cita a tag v2.1.0, que o git não tem (só v2.1.0-ready-for-prod-20251209 e pré-lançamentos) · tag v2.1.0-ready-for-prod-20251209. version:: v2.1.0 ^REL-16
-- **Versão do produto v2.1.1** — 2025-12-12 · Sprint 6 segundo o roadmap; o CHANGELOG arquivado põe a Sprint 6 em v2.2.0 e v2.2.1 · tag v2.1.1. version:: v2.1.1 ^REL-17
-- **Versão do produto v2.2.0** — 2025-12-12 · Sprint 6 Feature Freeze · tag v2.2.0. version:: v2.2.0 ^REL-18
-- **Versão do produto v2.2.1** — 2025-12-13 · Sprint 6 Complete & Mobile Polish · tag v2.2.1. version:: v2.2.1 ^REL-19
-- **Versão do produto v2.4.0** — 2025-12-13 · UX Revamp & Autocomplete (Sprint 7, Load Albums) · tag v2.4.0. version:: v2.4.0 ^REL-20
-- **Versão do produto v2.4.1** — 2025-12-13 · Navigation Fixes (Sprint 7) · tag v2.4.1. version:: v2.4.1 ^REL-21
-- **Versão do produto v2.5.0** — 2025-12-14 · Sprint 7 Phase C: Apple Music & Drag-n-Drop Stability · tag v2.5.0. version:: v2.5.0 ^REL-22
-- **Versão do produto v2.6.0** — 2025-12-14 · Sprint 7 Phase D: UI Polish & Style Guide · tag v2.6.0. version:: v2.6.0 ^REL-23
-- **Versão do produto v2.7.0** — 2025-12-15 · Sprint 7.5: AlbumsView Polish & Refactor · tag v2.7.0. version:: v2.7.0 ^REL-24
-- **Versão do produto v2.7.1** — 2025-12-15 · Sprint 7.5.1: SeriesView Consolidation · tag v2.7.1. version:: v2.7.1 ^REL-25
-- **Versão do produto v2.8.0** — 2025-12-16 · Sprint 8: Algorithm Strategy Pattern · tag v2.8.0. version:: v2.8.0 ^REL-26
-- **Versão do produto v2.8.5** — 2025-12-17 · Sprint 8.5: Algorithm Improvements & Playlist Fixes · tag v2.8.5. version:: v2.8.5 ^REL-27
-- **Versão do produto v2.9.0** — 2025-12-18 · Sprint 9+10: Ranking Enrichment, EditPlaylistView & Loading UX · tag v2.9.0. version:: v2.9.0 ^REL-28
-- **Versão do produto v2.11.0 (sem tag)** — 2025-12-19 · Sprint 11 segundo o roadmap · sem tag no git. version:: v2.11.0 ^REL-29
-- **Versão do produto v3.0.0 (sem tag)** — 2025-12-24 · Sprint 12 segundo o roadmap · sem tag no git. version:: v3.0.0 ^REL-30
-- **Versão do produto v3.1.0 (sem tag)** — 2025-12-26 · Sprint 13 segundo o roadmap · sem tag no git. version:: v3.1.0 ^REL-31
-- **Versão do produto v3.2.0 (sem tag)** — 2025-12-28 · Sprint 14 segundo o roadmap · sem tag no git. version:: v3.2.0 ^REL-32
-- **Versão do produto v3.15** — 2025-12-31 · Sprint 15: Structural Integrity & SafeDOM · tag v3.15. version:: v3.15 ^REL-33
-- **Versão do produto v3.15.5** — 2026-01-02 · Sprint 15.5: Prod Polish & Blending Fixes · tag v3.15.5. version:: v3.15.5 ^REL-34
-- **Versão do produto v3.16.0** — 2026-01-03 no roadmap e na tag v3.16; 2026-01-08 no CHANGELOG (data em conflito) · Sprint 16: SafeDOM e Batch Naming · tag v3.16. version:: v3.16.0 ^REL-35
-- **Versão do produto v3.17.0** — 2026-01-08 no roadmap; a tag v3.17 é de 2026-01-04 · Sprint 17: Architectural Modularization · tag v3.17. version:: v3.17.0 ^REL-36
-- **Versão do produto v3.17.5** — 2026-01-10 no roadmap; a tag v3.17.5 é de 2026-01-04 · Sprint 17.75: Classification Modularization · tag v3.17.5. version:: v3.17.5 ^REL-37
-- **Versão do produto v3.20.0 (sem tag)** — 2026-01-12 · Sprint 20: User Ranking (CHANGELOG e «Current Version» do roadmap) · sem tag no git. version:: v3.20.0 ^REL-38
+- **v1.5 · v1.5 Refactor** — 2025-11-25 · «v1.5 Refactor»; anterior à Sprint 1 numerada, sem feature SDD · tag v1.5.0. version:: v1.5 ^REL-06
+- **v1.6.1 · Hotfix: Production Deployment** — 2025-11-26 · «Hotfix: Production Deployment»; anterior à Sprint 1 numerada, sem feature SDD · sem tag no git. version:: v1.6.1 ^REL-07
+- **v2.0.0-alpha.1 · Sprint 1: Foundation Setup** — 2025-11-26 · Sprint 1: Foundation Setup · sem tag no git. version:: v2.0.0-alpha.1 ^REL-08
+- **v2.0.0-alpha.2 · Sprint 2: Router & Views** — 2025-11-26 · Sprint 2: Router & Views · sem tag no git. version:: v2.0.0-alpha.2 ^REL-09
+- **v2.0.0-alpha.3 · Sprint 3: Albums & Ranking Views** — 2025-11-26 · Sprint 3: Albums & Ranking Views · sem tag no git. version:: v2.0.0-alpha.3 ^REL-10
+- **v2.0.0-alpha.4 · Sprint 4: Playlists Management** — 2025-11-26 · Sprint 4: Playlists Management · tag v2.0.0-alpha.4. version:: v2.0.0-alpha.4 ^REL-11
+- **v2.0.0-alpha.5 · Sprint 4.5 Phase 1: Landing View UI/UX** — 2025-11-28 · Sprint 4.5 Phase 1: Landing View UI/UX · sem tag no git. version:: v2.0.0-alpha.5 ^REL-12
+- **v2.0.0-alpha.6 · Sprint 4.5 Phase 2: Albums View Modes** — 2025-11-28 · Sprint 4.5 Phase 2: Albums View Modes · sem tag no git. version:: v2.0.0-alpha.6 ^REL-13
+- **v2.0.3 · Critical Bug Fixes & UAT Ready** — 2025-11-30 · Critical Bug Fixes & UAT Ready (ciclo da Sprint 5) · tag v2.0.3. version:: v2.0.3 ^REL-14
+- **v2.0.4 · First Production Deployment v1.6 → v2.0** — 2025-12-02 · First Production Deployment v1.6 → v2.0 (ciclo da Sprint 5) · tag v2.0.4. version:: v2.0.4 ^REL-15
+- **v2.1.0 · Sprint 5 Complete: Persistence & Production Ready** — 2025-12-09 · Sprint 5 Complete: Persistence & Production Ready; o CHANGELOG cita a tag v2.1.0, que o git não tem (só v2.1.0-ready-for-prod-20251209 e pré-lançamentos) · tag v2.1.0-ready-for-prod-20251209. version:: v2.1.0 ^REL-16
+- **v2.1.1 · Sprint 6** — 2025-12-12 · Sprint 6 segundo o roadmap; o CHANGELOG arquivado põe a Sprint 6 em v2.2.0 e v2.2.1 · tag v2.1.1. version:: v2.1.1 ^REL-17
+- **v2.2.0 · Sprint 6 Feature Freeze** — 2025-12-12 · Sprint 6 Feature Freeze · tag v2.2.0. version:: v2.2.0 ^REL-18
+- **v2.2.1 · Sprint 6 Complete & Mobile Polish** — 2025-12-13 · Sprint 6 Complete & Mobile Polish · tag v2.2.1. version:: v2.2.1 ^REL-19
+- **v2.4.0 · UX Revamp & Autocomplete** — 2025-12-13 · UX Revamp & Autocomplete (Sprint 7, Load Albums) · tag v2.4.0. version:: v2.4.0 ^REL-20
+- **v2.4.1 · Navigation Fixes** — 2025-12-13 · Navigation Fixes (Sprint 7) · tag v2.4.1. version:: v2.4.1 ^REL-21
+- **v2.5.0 · Sprint 7 Phase C: Apple Music & Drag-n-Drop Stability** — 2025-12-14 · Sprint 7 Phase C: Apple Music & Drag-n-Drop Stability · tag v2.5.0. version:: v2.5.0 ^REL-22
+- **v2.6.0 · Sprint 7 Phase D: UI Polish & Style Guide** — 2025-12-14 · Sprint 7 Phase D: UI Polish & Style Guide · tag v2.6.0. version:: v2.6.0 ^REL-23
+- **v2.7.0 · Sprint 7.5: AlbumsView Polish & Refactor** — 2025-12-15 · Sprint 7.5: AlbumsView Polish & Refactor · tag v2.7.0. version:: v2.7.0 ^REL-24
+- **v2.7.1 · Sprint 7.5.1: SeriesView Consolidation** — 2025-12-15 · Sprint 7.5.1: SeriesView Consolidation · tag v2.7.1. version:: v2.7.1 ^REL-25
+- **v2.8.0 · Sprint 8: Algorithm Strategy Pattern** — 2025-12-16 · Sprint 8: Algorithm Strategy Pattern · tag v2.8.0. version:: v2.8.0 ^REL-26
+- **v2.8.5 · Sprint 8.5: Algorithm Improvements & Playlist Fixes** — 2025-12-17 · Sprint 8.5: Algorithm Improvements & Playlist Fixes · tag v2.8.5. version:: v2.8.5 ^REL-27
+- **v2.9.0 · Sprint 9+10: Ranking Enrichment, EditPlaylistView & Loading UX** — 2025-12-18 · Sprint 9+10: Ranking Enrichment, EditPlaylistView & Loading UX · tag v2.9.0. version:: v2.9.0 ^REL-28
+- **v2.11.0 · Sprint 11** — 2025-12-19 · Sprint 11 segundo o roadmap · sem tag no git. version:: v2.11.0 ^REL-29
+- **v3.0.0 · Sprint 12** — 2025-12-24 · Sprint 12 segundo o roadmap · sem tag no git. version:: v3.0.0 ^REL-30
+- **v3.1.0 · Sprint 13** — 2025-12-26 · Sprint 13 segundo o roadmap · sem tag no git. version:: v3.1.0 ^REL-31
+- **v3.2.0 · Sprint 14** — 2025-12-28 · Sprint 14 segundo o roadmap · sem tag no git. version:: v3.2.0 ^REL-32
+- **v3.15 · Sprint 15: Structural Integrity & SafeDOM** — 2025-12-31 · Sprint 15: Structural Integrity & SafeDOM · tag v3.15. version:: v3.15 ^REL-33
+- **v3.15.5 · Sprint 15.5: Prod Polish & Blending Fixes** — 2026-01-02 · Sprint 15.5: Prod Polish & Blending Fixes · tag v3.15.5. version:: v3.15.5 ^REL-34
+- **v3.16.0 · Sprint 16: SafeDOM e Batch Naming** — 2026-01-03 no roadmap e na tag v3.16; 2026-01-08 no CHANGELOG (data em conflito) · Sprint 16: SafeDOM e Batch Naming · tag v3.16. version:: v3.16.0 ^REL-35
+- **v3.17.0 · Sprint 17: Architectural Modularization** — 2026-01-08 no roadmap; a tag v3.17 é de 2026-01-04 · Sprint 17: Architectural Modularization · tag v3.17. version:: v3.17.0 ^REL-36
+- **v3.17.5 · Sprint 17.75: Classification Modularization** — 2026-01-10 no roadmap; a tag v3.17.5 é de 2026-01-04 · Sprint 17.75: Classification Modularization · tag v3.17.5. version:: v3.17.5 ^REL-37
+- **v3.20.0 · Sprint 20: User Ranking** — 2026-01-12 · Sprint 20: User Ranking (CHANGELOG e «Current Version» do roadmap) · sem tag no git. version:: v3.20.0 ^REL-38
 <!-- Uma linha por release, em ordem, com o block ID. O Control Center lê releases só daqui e monta o Board por release;
      o nome em negrito é o que a rodada de UAT cita (`## Rodada 1 — R1 · [nome]`). Cada story aponta a sua (`planned_for:`).
      Agrupamento decidido pelo agente em 2026-10-28 12:00, revisável pelo MJRP: os 23 sprints do legado (docs/ROADMAP.md:22-281) em 5 marcos

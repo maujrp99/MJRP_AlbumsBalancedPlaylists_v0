@@ -6,7 +6,7 @@
 # UAT — MJRP_AlbumsBalancedPlaylists_v0
 **Status**: Live · **Atualizado**: 2026-10-29 18:45
 
-## Rodada 1 — Versão do produto v3.20.0 (sem tag)
+## Rodada 1 — v3.20.0
 
 | ID | Contexto | Tipo | Gravidade | Reportado em | Reportado por | Descrição | Status | OK do humano |
 |---|---|---|---|---|---|---|---|---|
