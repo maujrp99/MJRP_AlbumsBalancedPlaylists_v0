@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 loop.py - the TASK loop.
 
@@ -43,7 +43,8 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 STATE_FILE = ROOT_DIR / ".mjrp" / "loop-state.md"
 DEFAULT_MAX = 3  # rounds per task (decision of 2026-10-13: was 5)
 MODELS = ("opus", "sonnet")  # `model::` values in tasks.md; mandatory on every task (no default)
-TASK_RE = re.compile(r"^- \[(?P<done>[ xX])\] (?P<id>TASK-\w+)\b(?P<rest>.*)$")
+# F134 (ADR-0025 § 1.1): the one form of the task id -- TASK-NN, a split task takes the letter (TASK-02a)
+TASK_RE = re.compile(r"^- \[(?P<done>[ xX])\] (?P<id>TASK-\d{2,}[a-z]?)\b(?P<rest>.*)$")
 MARK_RE = re.compile(r"\b(?P<key>model|rounds)::\s*(?P<val>[^\s·]+)")
 DEFAULT_AGENT = os.environ.get("MJRP_LOOP_AGENT", "claude -p")
 

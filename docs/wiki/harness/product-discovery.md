@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-09
 fontes: [originals/product-discovery-handbook/2026-10-07-handbook-v0.md, originals/product-discovery-handbook/2026-10-07-handbook-v1.md, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, kernel/roadmap/requirements-graph, kernel/design/sketch-vs-prototype]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Product Discovery — do problema à decisão (Rapid × Full)
 
@@ -73,7 +73,7 @@ o passo 1 fechar.
 ### Passo 2 · Resultado e medida
 
 - **Perguntas.** O que muda no comportamento de quem sente? Como saberemos que mudou? Qual o valor hoje e o alvo?
-- **Produz.** Um resultado `^OUT-xx` com medida (hoje → alvo) e 1 a 3 tags de categoria, em *Now*, *Next* ou *Later*. Quando o
+- **Produz.** Um resultado `^OUT-xx` com medida (hoje → alvo; opcional — sem ela, `sem medida`) e 1 a 3 tags de categoria, em *Now*, *Next* ou *Later*. Quando o
   produto é de uso recorrente, a retenção é a medida mais forte (o "modelo escova de dentes": usado duas ou mais vezes ao dia).
 - **Mora em.** `ROADMAP.md` — formato e tags em [[requirements-graph]].
 
@@ -139,7 +139,7 @@ O Full é o Rapid mais as técnicas que o PM marca no início. Cada técnica apr
 Não é portão: é o que o processo recomenda ter claro antes de seguir para o Desenhar. O PM decide quanto basta.
 
 1. O problema está escrito como dor, não como solução.
-2. O resultado tem medida (hoje → alvo) e tags no `ROADMAP.md`.
+2. O resultado tem tags e a linha de medida no `ROADMAP.md` (hoje → alvo, ou `sem medida`: a medida é opcional).
 3. Os quatro riscos têm "o que precisa ser verdade" e o teste de cada um.
 4. A premissa mais arriscada foi testada, ou o PM a aceitou como risco aberto.
 5. Cada épico serve exatamente um resultado (`serves::`).
@@ -188,6 +188,7 @@ problema qualificado na matriz (Vencedores ou Nicho) e a usabilidade testada com
 
 ## History
 
+- **2026-10-29 20:19** · A medida do resultado é opcional (ordem do MJRP, UAT-409, F127): o passo 2 pede hoje → alvo só quando há medida; sem ela a linha diz `sem medida` ([[conformance-notes]]).
 - **2026-10-13 19:00** · A linha *Épicos e fora de escopo* perde a exceção do subprojeto (ADR-0020): o app dentro do harness tem épicos próprios.
 - **2026-10-09 20:55** · Revisão geral de 2026-10-09: o inventário do protótipo é escrito pela `mjrp-designing-ui` na mesma rodada da tela (com os wireframes); o coach lê, manda escrever se faltar e liga cada item a uma função do produto ou a um resultado; no subprojeto do harness o `prd.md` organiza por release, sem épicos.
 - **2026-10-07 20:29** · Onda E do PDLC em loops (`design/proposals/pdlc-loops-migration-plan.md`): a numeração antiga de fases deu lugar às estações e ao contrato de [[pdlc-loops]] §11.

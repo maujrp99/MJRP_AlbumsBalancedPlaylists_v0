@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirements_graph_check.py -- checks the requirements graph of a project against its single declaration,
 requirements_graph_rules.json (S-63, kernel page requirements-graph).
 
@@ -47,6 +47,24 @@ Evidence (S-67, MJRP 2026-10-04): a status is checked against reality, never tru
 feature or recent activity; Done needs a Done feature or `delivered_by:` with the commit; Accepted also needs
 `accepted_in:` pointing to the human's acceptance; Ready is warned when its observable state changed afterwards.
 
+Story sentence (F137, UAT-416, MJRP 2026-10-30): a story's sentence follows the template of mjrp-writing-reqs -- one of the two forms
+(Cohn's «Como <persona>, quero …, para que …» or Klement's «Quando <situação>, quero …, para que …», never both), one sentence of at most
+`story_form.max_chars` characters, no internal reference (ID, file, version, rule code, backtick, parenthesis), and every other language
+mirroring it with the title in bold and the same form (story_form_problems). A story whose TEXT the commit adds or changes is refused
+(--staged, --changed), whatever the date; a status-only change is not a change of the text. An untouched story in
+`story_form.judged_statuses` warns until `story_form.turn_date` and is a finding from then on (the W20 pattern); a delivered one is not edited,
+so it is not judged.
+
+Feature closure (F139, S-206, the MJRP 2026-10-30): a Done feature with nothing for the MJRP to see, decide or secure closes by the
+independent recheck (`closed_by: "recheck independente: <relatório>, <AAAA-MM-DD HH:MM>"`), never Accepted; a `closed_by` that does not
+stand by feature_closure.py -- the rule the Control Center's board and acceptance also load -- or that cites a missing report is
+closed_by_fits, and the mark that sends a feature to him anyway (`needs_human:`) is judged by needs_human_shape. The stories of a
+closed feature keep their evidence: a Done feature.
+
+Board configuration (F134, ADR-0025 § 6, ADR-0026): board_defaults.json (next to this script) merged with the project's
+docs/specs/board.json is judged by _board.py -- every shape refusal and a phase x category pair of a board that falls in no
+column or in two is `board_config_shape`; a file the disk does not let read is not evaluable (exit 2 under --strict and --staged).
+
 Usage:
   python3 mjrp-scripts/requirements_graph_check.py [root] [--strict] [--summary] [--tags] [--rules path]
   python3 mjrp-scripts/requirements_graph_check.py [root] --staged          (pre-commit: exit 1 on a contradiction in a staged node)
@@ -56,7 +74,7 @@ import json
 import re
 import sys
 import time
-from datetime import timedelta
+from datetime import date, timedelta
 from pathlib import Path
 
 import pathlib as _pl, sys as _sys  # noqa: E401  (F73 GV-06: this script's folder on sys.path even when it is loaded by path)
@@ -89,6 +107,10 @@ from _contract import read_yaml, log_rel  # one YAML reader and log path for eve
 WIKILINK = re.compile(r"\[\[([^\]|#]*)(?:#([^\]|]*))?(?:\|[^\]]*)?\]\]")
 # a spec's requirements and their evidence: one reader, shared with the Control Center's acceptance (F116, UAT-391)
 from requirement_evidence import _WIDE_REQ_BODY, INLINE_FIELD, WIDE_REQ, spec_requirements  # noqa: E402
+# who closes a feature, the MJRP's acceptance or the independent recheck: one rule, shared with the Control Center's board and
+# acceptance (F139, S-206)
+import feature_closure  # noqa: E402
+import uat_tracks_check  # noqa: E402
 # the IDs a feature's spec.md defines for itself: REQ-01, REQ-F-05 and the NFR of the feature (NFR-F-02, a letter segment
 # marks it as local -- NFR-08 is a node). prototype_inventory.py (W11) reads the same pattern.
 SPEC_LOCAL_ID_IN_TEXT = re.compile(r"(?<![\w-])(?:" + _WIDE_REQ_BODY + r"|NFR-[A-Za-z][A-Za-z0-9]*(?:-[A-Za-z][A-Za-z0-9]*)*-\d{2,})(?!\w)")
@@ -136,6 +158,14 @@ def link_targets(value):
             a = (a or "").strip()
             out.append((f, a.lstrip("^") if a else node_id(Path(f).stem)))
     return out
+
+
+def grouping_targets(value):
+    """F128: a feature's `sprint:` and `epic:` -> [(file, id)]: a wikilink as link_targets reads it, or a bare id (`SPR-05`, `EP-03`)."""
+    out = link_targets(value)
+    if out:
+        return out
+    return [("", str(item).strip()) for item in as_list(value) if str(item).strip() and "[[" not in str(item)]
 
 
 def local_ids(value, pattern):
@@ -186,6 +216,96 @@ def requirement_graph_view(root):
     return {"nodes": set(g.nodes), "live": {n for n in g.nodes if g.is_live(n)}, "successor": successor}
 
 
+# F137 (UAT-416): the parts of a story the template judges. A labelled line (`Origem:`, `Origin:`, `Exemplos para o AC:`) after the
+# sentence ends it; the bold first line of a section is the mirrored title.
+STORY_LABEL_LINE = re.compile(r"^[A-ZÀ-Ý][^\s:]*(?: [^\s:]+){0,4}:\s")
+STORY_TITLE_LINE = re.compile(r"^\*\*([^*].*?)\*\*$")
+STORY_PUNCT_NAME = {"`": "crase", "(": "parêntese", ")": "parêntese", "[": "colchete", "]": "colchete", "{": "chave", "}": "chave"}
+STORY_SECOND_SENTENCE = re.compile(r"[.!?…]\s+(?=[A-ZÀ-Ý«\"“])")
+
+
+def second_sentence(sentence, abbreviations):
+    """True when `sentence` holds more than one sentence: a stop followed by a capital, unless the word before it is a declared
+    abbreviation («Sra. Silva», «Dr. Souza»)."""
+    abbr = {a.casefold().rstrip(".") for a in abbreviations}
+    for m in STORY_SECOND_SENTENCE.finditer(sentence[:-1]):
+        word = re.search(r"([\w.]+)$", sentence[:m.start()])
+        if not (sentence[m.start()] == "." and word and word.group(1).casefold().rstrip(".") in abbr):
+            return True
+    return False
+
+
+def lang_section(body, lang):
+    """The text of the `## <lang>` section of a node's body, or None."""
+    m = re.search(r"^## " + re.escape(lang) + r"\s*\n(.*?)(?=^## |\Z)", body or "", re.M | re.S)
+    return m.group(1) if m else None
+
+
+def story_parts(section):
+    """(title, sentence) of a `## <lang>` section: the bold first line when there is one, and the paragraph after it up to a blank
+    or a labelled line, joined into one line."""
+    lines = [ln.strip() for ln in (section or "").strip().splitlines()]
+    title, i = None, 0
+    if lines and STORY_TITLE_LINE.match(lines[0]):
+        title, i = STORY_TITLE_LINE.match(lines[0]).group(1).strip(), 1
+    while i < len(lines) and not lines[i]:
+        i += 1
+    sentence = []
+    for ln in lines[i:]:
+        if not ln or (sentence and STORY_LABEL_LINE.match(ln)):
+            break
+        sentence.append(ln)
+    return title, " ".join(sentence)
+
+
+def story_key(raw, langs):
+    """What a commit must not change without the template judging it: the title and the sentence of each language section."""
+    _, body = frontmatter(raw or "")
+    return tuple(story_parts(lang_section(body, lang)) for lang in langs)
+
+
+def story_form_problems(body, langs, cfg):
+    """F137 (UAT-416): what keeps a story's text out of the template of mjrp-writing-reqs, each reason saying what to change; []
+    when it is in. The first language is the source; the others mirror it (the title in bold, the same form). A missing section
+    is the `bilingual` rule's, not this one's."""
+    present = [lang for lang in langs if lang in cfg["forms"] and (lang_section(body, lang) or "").strip()]
+    problems, kinds = [], {}
+    for n, lang in enumerate(present):
+        where = f"`## {lang}`"
+        title, sentence = story_parts(lang_section(body, lang))
+        if n and not title:
+            problems.append(f"{where}: falta o título em negrito na primeira linha (`**<title>**`), o espelho do título da story")
+        match = None
+        for kind, pat in cfg["forms"][lang].items():
+            match = re.match(pat, sentence)
+            if match:
+                kinds[lang] = kind
+                break
+        if not match:
+            problems.append(f"{where}: a frase não está numa das duas formas do template — escreva {cfg['hint'][lang]}")
+        else:
+            who, want = match.group("who").strip(), match.group("want").strip()
+            ctx = (cfg.get("context_in_role_form") or {}).get(lang)
+            if kinds[lang] == "Cohn" and ctx and (re.search(ctx, who, re.I) or re.search(ctx, want, re.I)):
+                problems.append(f"{where}: mistura as duas formas — a situação está dentro da forma de papel; quando ela pesa mais que o "
+                                "papel, use a de Klement (Quando <situação>, quero …); senão, tire-a")
+            if cfg.get("generic_persona") and re.match(cfg["generic_persona"], who, re.I):
+                problems.append(f"{where}: a persona «{who}» é genérica — nomeie quem é, ou use a forma de Klement")
+        if second_sentence(sentence, cfg.get("abbreviations") or []):
+            problems.append(f"{where}: mais de uma frase — a story é uma frase só; o resto vai para a linha `Origem:` ou uma nota")
+        if len(sentence) > cfg["max_chars"]:
+            problems.append(f"{where}: {len(sentence)} caracteres, acima do teto de {cfg['max_chars']} — tire do «quero» a solução (como é "
+                            "feito, a lista das partes) e deixe o que a pessoa passa a poder fazer")
+        found = {m.group(0) for m in re.finditer(cfg["internal_reference"], sentence)}
+        refs = sorted(r for r in found if len(r) > 1) + sorted({STORY_PUNCT_NAME[r] for r in found if r in STORY_PUNCT_NAME})
+        if refs:
+            problems.append(f"{where}: referência interna na frase — {', '.join(refs[:5])}{' …' if len(refs) > 5 else ''}; sem ID, arquivo, "
+                            "versão, código de regra, crase nem parêntese: a fonte vai na linha `Origem:`")
+    if len(set(kinds.values())) > 1:
+        problems.append("as línguas usam formas diferentes (" + ", ".join(f"{k}: {v}" for k, v in kinds.items()) + ") — a mesma forma em todas")
+    return problems
+
+
 def contract_of(root):
     """The `mjrp_harness` block of the project contract at `root` ({} when absent or unreadable)."""
     f = Path(root) / ".mjrp-project.yml"
@@ -217,6 +337,8 @@ class Graph:
         pfx = contract.get("id_prefix")
         self.prefix = str(pfx).strip() if pfx else None
         # ADR-0020 A.5: planned_for is optional unless the contract turns release_required on
+        # F128 (ADR-0025 § 2): the optional groupings the contract declares (`groupings: [release, sprint]`); absent = [release]
+        self.groupings = [str(g).strip().lower() for g in as_list(contract.get("groupings"))] or ["release"]
         rr = (self.rules.get("release_required") or {})
         opt = (contract.get("requirements") or {}).get("release_required", rr.get("default", False))
         self.release_required = opt is True or str(opt).strip().lower() == "true"
@@ -235,6 +357,8 @@ class Graph:
         # a warning is printed and never fails the check (exit code, --staged and --changed ignore it): a rule that is new on data
         # that was already there (UAT-290) warns first
         self.warnings = []
+        # F134: why the board configuration could not be read (the disk refused a file): not evaluable, never green
+        self.board_unevaluable = None
 
     def find(self, rule, msg):
         self.findings.append((rule, msg))
@@ -389,7 +513,12 @@ class Graph:
                 self.find("node_id", f"{nid}: dois arquivos com o mesmo ID ({self.nodes[nid]['path'].relative_to(d)}, {f.relative_to(d)})")
             self.nodes[nid] = {"type": t, "file": f.name, "path": f, "stem": f.stem, "status": status, "edges": edges,
                                "delivered_by": [str(x).strip().strip("`") for x in as_list(fm.get("delivered_by"))],
-                               "accepted_in": str(fm.get("accepted_in") or "").strip()}
+                               "accepted_in": str(fm.get("accepted_in") or "").strip(),
+                               # F134: the declared wait (S-197) and the origin (ADR-0026 § 2)
+                               "waiting": fm.get("waiting"), "nature": fm.get("nature"), "origin_stage": fm.get("origin_stage"),
+                               # F137: why the story's text is out of the template (judged by check_story_form)
+                               "story_form": (story_form_problems(body, self.languages(), self.story_form_cfg())
+                                              if self.is_story(nid, fm) and self.story_form_cfg() else [])}
 
     def load_features(self):
         d = self.p["features"]
@@ -409,12 +538,21 @@ class Graph:
                     "track": feature_track(fm),
                     "solution_type": str(fm.get("solution_type") or "").strip().casefold(),
                     "accepted_in": str(fm.get("accepted_in") or "").strip(),
+                    # F139: the independent recheck that closed it, and the mark that sends it to the MJRP anyway
+                    "closed_by": fm.get("closed_by"), "needs_human": fm.get("needs_human"),
                     "fixes": [str(x).strip() for x in as_list(fm.get("fixes")) if str(x).strip()],
                     # F67: the PDLC lane (`standard` | `fast`); the fast lane moves `points_to` to `enforced_from_fast_lane`
                     "lane": str(fm.get("lane") or "standard").strip().casefold(),
                     # what the feature pays: `violates:: [[NFR-xx]]` or, for a constitution article (not a graph node),
                     # `violates:: [[constitution#N]]`. A line inside a code fence is an example, not a declaration.
                     "violates": violates_targets(body),
+                    # F134: the declared wait (S-197), the origin (ADR-0026 § 2) and the ticked boxes (has the work started?)
+                    "waiting": fm.get("waiting"), "nature": fm.get("nature"), "origin_stage": fm.get("origin_stage"),
+                    # F128: the sprint it closed in, and -- for a legacy feature with no story -- its own version and epic, and the
+                    # commits that date it (the requirement's legacy proof, extended to the feature)
+                    "sprint": grouping_targets(fm.get("sprint")), "planned_for": link_targets(fm.get("planned_for")),
+                    "epic": grouping_targets(fm.get("epic")), "stem": fd.name, "path": spec,
+                    "delivered_by": [str(x).strip().strip("`") for x in as_list(fm.get("delivered_by"))],
                     "reqs": {}, "tasks": {}}
             for f in ("spec.md", "plan.md", "tasks.md"):
                 if not (fd / f).exists():
@@ -426,9 +564,28 @@ class Graph:
             if tasks.exists():
                 cur = None
                 fenced = False
+                section = None
                 for n, line in enumerate(tasks.read_text(encoding="utf-8").splitlines(), 1):
                     if line.lstrip().startswith("```"):
                         fenced = not fenced
+                    if line.startswith("## ") and not fenced:
+                        section = line
+                    # F134 (ADR-0025 § 1.1): a top-level box of `## Implementation`/`## Verification` is a task, a card of the board:
+                    # its id opens the line in the one form, and is unique in the feature (a nested box is a step of a task)
+                    if (not fenced and section and section.startswith(("## Implementation", "## Verification"))
+                            and re.match(r"^[-*]\s+\[[ xX]\]", line)):
+                        own = TASK_LINE.match(line)
+                        if own:
+                            feat.setdefault("task_ids", []).append((own.group(1), n))
+                            marks = dict(TASK_MARK.findall(line))
+                            if "waiting" in marks:
+                                on, _, reason = marks["waiting"].partition("—")
+                                feat.setdefault("task_waits", []).append((own.group(1), {
+                                    "on": on.strip(), "reason": reason.strip(), "item": marks.get("item"), "until": marks.get("until")}))
+                            if re.match(r"^[-*]\s+\[[xX]\]", line):
+                                feat["ticked"] = feat.get("ticked", 0) + 1
+                        else:
+                            feat.setdefault("task_shape_bad", []).append(n)
                     # ANY unchecked box counts, whatever the task ID looks like (T-230, TASK-F-01, none): the Done rule
                     # must not depend on the project having used `TASK-nn`
                     box_open = re.match(r"^\s*[-*]\s+\[ \]", line)
@@ -453,7 +610,32 @@ class Graph:
         self.load_anchors("behavior", {"observable_state"})
         self.load_inline_nodes("prd", "epic")
         self.load_requirements()
+        self.load_sprints()
         self.load_features()
+
+    def load_sprints(self):
+        """F128 (ADR-0025 § 2): one file per sprint in docs/specs/groupings/sprints/, the id in its frontmatter and opening the file
+        name. Read only when the contract declares the grouping; declared with no home is grouping_home_missing (the board would show
+        no sprint and say nothing)."""
+        if "sprint" not in self.groupings:
+            return
+        d = self.p.get("groupings_sprints")
+        if not d or not d.is_dir():
+            self.find("grouping_home_missing", f"o contrato declara `groupings: [..., sprint]` e a casa das sprints não existe "
+                                               f"({self.rules['paths'].get('groupings_sprints')}/)")
+            return
+        pat = self.id_pattern("sprint")
+        for f in sorted(d.glob("*.md")):
+            if f.name.lower() in ("readme.md", "folder-index.md", "index.md"):
+                continue
+            fm, _ = frontmatter(f.read_text(encoding="utf-8", errors="replace"))
+            nid = str(fm.get("id") or "").strip()
+            if not re.match(pat, nid) or not (f.stem == nid or f.stem.startswith(nid + "-")):
+                self.find("node_id", f"groupings/sprints/{f.name}: o `id:` ({nid or 'ausente'}) não é uma sprint SPR-… que abre o nome do arquivo")
+                continue
+            if nid in self.nodes:
+                self.find("node_id", f"{nid}: duas sprints com o mesmo ID ({self.nodes[nid]['file']}, {f.name})")
+            self.nodes[nid] = {"type": "sprint", "file": f.name, "path": f, "stem": f.stem, "status": fm.get("status"), "edges": {}}
 
     # ---- checks ----------------------------------------------------------------------------
     def status_rank(self, s):
@@ -719,7 +901,10 @@ class Graph:
                 for t in articles:
                     if t not in real_articles:
                         self.find("fix_nfr_import", f"{ft['dir']}: `violates:: [[constitution#{t[1]}]]` — o artigo não existe em docs/specs/constitution.md")
-            if len(ft["imports"]) < imp_edge["min"] and not by_article and not by_issue:
+            # F128: a legacy feature (closed before the harness, the date proof) imports nothing; it says its own version and epic
+            legacy = self.legacy_feature(ft)
+            self.check_feature_groupings(ft, legacy)
+            if len(ft["imports"]) < imp_edge["min"] and not by_article and not by_issue and not legacy:
                 self.find("feature_has_requirement", f"{ft['dir']}: não importa nenhum requisito"
                           + ("" if pays_debt else " (uma feature de engenharia da trilha Fix importa o NFR que serve)"))
             nfr_edge = {**imp_edge, "to": [imp_edge["to"], "nfr"]} if pays_debt else imp_edge
@@ -760,6 +945,54 @@ class Graph:
         for rid, dirs in open_by_req.items():
             if len(dirs) > 1:
                 self.find("one_open_feature", f"{rid}: importado por mais de uma feature aberta ({', '.join(dirs)}) — fatie o requisito")
+
+    def mapped_legacy_features(self):
+        """F128: the feature ids the approved from-to mapping brought from the legacy - the `feature` items of docs/specs/board-mapping.json
+        in a brownfield or conform record (judged strict by board_mapping_check.py). An unreadable record brings none."""
+        if "_mapped_legacy" not in self.__dict__:
+            f = self.root / "docs" / "specs" / "board-mapping.json"
+            try:
+                m = json.loads(f.read_text(encoding="utf-8")) if f.is_file() else {}
+            except (OSError, ValueError):
+                m = {}
+            ok = isinstance(m, dict) and m.get("mode") in ("brownfield", "conform")
+            self._mapped_legacy = {str(i.get("id")) for i in (m.get("items") or []) if ok and isinstance(i, dict) and i.get("type") == "feature"}
+        return self._mapped_legacy
+
+    def legacy_feature(self, ft):
+        """F128: a feature closed before the harness -- Done or Accepted, `accepted_in:` with the legacy phrase, the legacy date proof on its
+        own `delivered_by:` (legacy_acceptance_holds), AND an item of the approved mapping (judge's P1-1: the date proof alone let a feature
+        written today pass as legacy by citing an old commit). The SDD-only legacy (no stories) enters the board this way."""
+        if ft["status"] not in ("Done", "Accepted"):
+            return False
+        if not ft.get("accepted_in", "").strip().lower().startswith(self.LEGACY_ACCEPTANCE):
+            return False
+        fid = re.match(r"^(F\d{2,})-", ft["dir"])
+        if not fid or fid.group(1) not in self.mapped_legacy_features():
+            return False
+        return self.legacy_acceptance_holds(ft)
+
+    def check_feature_groupings(self, ft, legacy):
+        """F128: `sprint:` (0..1, a declared grouping), `planned_for:` (0..1, a release) and `epic:` (0..1, an epic; only a legacy feature
+        says it -- the others take it from the stories they import)."""
+        sprint_edge = next((e for e in self.rules["edges"] if e["name"] == "sprint"), None)
+        if ft["sprint"]:
+            if "sprint" not in self.groupings:
+                self.find("grouping_undeclared", f"{ft['dir']}: `sprint:` num projeto cujo contrato não declara o agrupamento "
+                                                 "(`groupings: [release, sprint]` no `.mjrp-project.yml`)")
+            elif sprint_edge:
+                for t in ft["sprint"]:
+                    self.check_target(ft["dir"], sprint_edge, t)
+            if len(ft["sprint"]) > 1:
+                self.find("edge_sprint", f"{ft['dir']}: no máximo 1 sprint, tem {len(ft['sprint'])} — a sprint em que a feature fechou")
+        for name, to in (("planned_for", "release"), ("epic", "epic")):
+            targets = ft[name]
+            for t in targets:
+                self.check_target(ft["dir"], {"name": name, "to": to}, t)
+            if len(targets) > 1:
+                self.find(f"edge_{name}", f"{ft['dir']}: no máximo 1 aresta '{name}', tem {len(targets)}")
+        if ft["epic"] and ft["imports"] and not legacy:
+            self.find("edge_epic", f"{ft['dir']}: `epic:` numa feature que importa stories — o épico vem delas; só a feature legada sem story o declara")
 
     # ---- evidence: the status is checked against reality, not trusted (S-67, MJRP 2026-10-04) --------------
     def git(self, *args):
@@ -834,6 +1067,84 @@ class Graph:
                 pass
         self._langs = list(langs)
         return self._langs
+
+    def story_form_cfg(self):
+        """F137: the template of the story sentence (rules `story_form`); {} turns the rule off."""
+        return self.rules.get("story_form") or {}
+
+    def is_story(self, nid, fm):
+        """The node's `format:` wins; without it, an `S-` node is a story unless the contract declares another format
+        (`mjrp_harness.requirements.format`, CM-0093: a project in `ears` or `use-case` is not judged by the story template)."""
+        fmt = str(fm.get("format") or "").strip()
+        if fmt:
+            return fmt == "story"
+        declared = str((contract_of(self.root).get("requirements") or {}).get("format") or "").strip()
+        return nid.startswith("S-") and declared in ("", "story")
+
+    def head_path_of(self, nid):
+        """UAT-420: where node `nid` lives in HEAD (relative to the project), found by its ID -- a story moved to another epic's folder
+        keeps its ID, so the commit that moves it compares its text with the old file, never with nothing. None: not in HEAD."""
+        if getattr(self, "_head_paths", None) is None:
+            self._head_paths = {}
+            req = self.rules["paths"]["requirements"].rstrip("/")
+            r = _git.run(self.root, "ls-tree", "-r", "--name-only", "HEAD", "--", req, timeout=GIT_TIMEOUT)
+            for line in (r.out.splitlines() if r.code == 0 else []):
+                if line.endswith(".md"):
+                    self._head_paths.setdefault(node_id(Path(line).stem), line)
+        return self._head_paths.get(nid)
+
+    def check_story_form(self):
+        """F137 (UAT-416): a story not delivered whose text is out of the template warns until `turn_date` and is an error from then on
+        (the W20 pattern: the rule is new on data that was already there). A delivered one is not edited, so it is not judged; the
+        story a commit adds or changes is judged by main(), whatever the date."""
+        cfg = self.story_form_cfg()
+        if not cfg:
+            return
+        turn = date.fromisoformat(str(cfg["turn_date"]))
+        turned = _clock.today() >= turn
+        judged = set(cfg.get("judged_statuses") or [])
+        for nid in sorted(self.nodes):
+            node = self.nodes[nid]
+            if not node.get("story_form") or node.get("status") not in judged:
+                continue
+            msg = self.story_form_message(nid, node["story_form"])
+            if turned:
+                self.find("story_form", msg)
+            else:
+                self.warn("story_form", f"{msg} (aviso até {turn.isoformat()}; erro a partir daí)")
+
+    @staticmethod
+    def story_form_message(nid, problems):
+        return f"{nid}: a story fora do template da `mjrp-writing-reqs` — " + " · ".join(problems)
+
+    def story_text_changed(self, nid, mode):
+        """F137: the findings of the story whose text (title and sentence of each language) THIS work adds or changes -- judged from
+        the content the commit carries (the index for --staged, the disk for --changed), not from the disk's. A status-only change
+        (the sync, the acceptance) is not a change of the text."""
+        node, cfg = self.nodes.get(nid), self.story_form_cfg()
+        if not cfg or not node or not node.get("path") or node.get("type") != "requirement":
+            return []
+        rel = node["path"].relative_to(self.root).as_posix()
+        try:
+            new = node["path"].read_text(encoding="utf-8", errors="replace") if mode == "changed" else None
+            if new is None:
+                r = _git.run(self.root, "show", f":./{rel}", timeout=GIT_TIMEOUT)
+                if r.code != 0:
+                    return []                       # not in the index: removed by this commit
+                new = r.out
+            old = _git.run(self.root, "show", f"HEAD:./{rel}", timeout=GIT_TIMEOUT)
+            if old.code != 0 and self.head_path_of(nid):
+                old = _git.run(self.root, "show", f"HEAD:./{self.head_path_of(nid)}", timeout=GIT_TIMEOUT)
+        except _git.GitError as e:
+            raise GitUnavailable(str(e)) from e
+        fm, body = frontmatter(new)
+        if not self.is_story(nid, fm):
+            return []
+        langs = self.languages()
+        if old.code == 0 and story_key(old.out, langs) == story_key(new, langs):
+            return []
+        problems = story_form_problems(body, langs, cfg)
+        return [("story_form", self.story_form_message(nid, problems))] if problems else []
 
     def stale_days(self):
         days = (self.rules.get("defaults") or {}).get("stale_days", 14)
@@ -1008,6 +1319,43 @@ class Graph:
             cache[(sha, rel)] = None if value is None else str(value).strip()
         return cache[(sha, rel)]
 
+    def prefetch_status(self, pairs):
+        """Reads the `status:` of many (rev, rel) in ONE `git cat-file --batch` and fills status_at's cache (UAT-415: one `git show`
+        per (commit, file) of every merge since the cut was 26 512 processes and 300 s, over the doctor's deadline). The value is kept
+        by blob too, so a version seen in many commits is parsed once. Any failure leaves the cache as it was: status_at reads alone."""
+        cache = self.__dict__.setdefault("_status_at", {})
+        by_blob = self.__dict__.setdefault("_status_by_blob", {})
+        todo = [p for p in dict.fromkeys(pairs) if p not in cache]
+        top = repo_top(self.root)
+        if not todo or top is None:
+            return
+        base = self.root.resolve()
+        names = [f"{rev}:{(base / rel[2:]).relative_to(top).as_posix()}" for rev, rel in todo]
+        try:
+            r = _git.run(self.root, "cat-file", "--batch", input="".join(n + "\n" for n in names).encode(), text=False,
+                         timeout=GIT_TIMEOUT)
+        except _git.GitError:
+            return
+        if r.code != 0:
+            return
+        out, pos, found = r.out, 0, {}
+        for key in todo:
+            nl = out.find(b"\n", pos)
+            if nl < 0:
+                return                                    # a short answer: keep nothing of it, status_at reads alone
+            head = out[pos:nl].split()
+            pos = nl + 1
+            if len(head) != 3 or not head[2].isdigit():   # "<name> missing", "ambiguous": the file is not there
+                found[key] = None
+                continue
+            blob, size = head[0], int(head[2])
+            body, pos = out[pos:pos + size], pos + size + 1
+            if blob not in by_blob:
+                value = frontmatter(body.decode("utf-8", "surrogateescape"))[0].get("status") if head[1] == b"blob" else None
+                by_blob[blob] = None if value is None else str(value).strip()
+            found[key] = by_blob[blob]
+        cache.update(found)
+
     def cut_in_history(self):
         if "_cut_known" not in self.__dict__:
             self._cut_known = self.git("cat-file", "-e", ACCEPTANCE_CUT_SHA + "^{commit}")[0] == 0
@@ -1032,6 +1380,17 @@ class Graph:
         if tuple(span) not in topo:                       # F78: one walk of the history for every Accepted node, not one per node
             topo[tuple(span)] = self.git("log", "--topo-order", "--format=%H %ct %P", *span)
         code, out = topo[tuple(span)]
+        if reader is None:                                # UAT-415: every version the walk below may ask for, read in one batch
+            pairs = []
+            for line in (out.splitlines() if code == 0 else []):
+                sha, ts, *parents = line.split()
+                if not span and self.brasilia(ts) < ACCEPTANCE_STAMPED_SINCE:
+                    continue
+                if sha in touched:
+                    pairs += [(sha, touched[sha][0]), (sha + "^", touched[sha][1])]
+                elif len(parents) > 1:
+                    pairs += [(sha, rel)] + [(par, rel) for par in parents]
+            self.prefetch_status(pairs)
         for line in (out.splitlines() if code == 0 else []):
             sha, ts, *parents = line.split()
             if not span and self.brasilia(ts) < ACCEPTANCE_STAMPED_SINCE:
@@ -1064,7 +1423,8 @@ class Graph:
         out = [(nid, n["path"], {fid for fid, ft in self.features.items() if nid in [r for _, r in ft["imports"]]} or {"requirements"})
                for nid, n in self.nodes.items() if n["type"] == "requirement" and n["status"] == "Accepted"
                and not str(n["accepted_in"]).strip().lower().startswith(self.LEGACY_ACCEPTANCE)]
-        return out + [(ft["dir"], self.p["features"] / ft["dir"] / "spec.md", {fid}) for fid, ft in self.features.items() if ft["status"] == "Accepted"]
+        return out + [(ft["dir"], self.p["features"] / ft["dir"] / "spec.md", {fid}) for fid, ft in self.features.items() if ft["status"] == "Accepted"
+                      and not self.legacy_feature(ft)]       # F128: the legacy feature takes the phrase under the date proof, as the requirement does
 
     def check_acceptance(self):
         """acceptance_stamped: every node that became Accepted after ACCEPTANCE_STAMPED_SINCE came in a commit stamped
@@ -1102,7 +1462,7 @@ class Graph:
         for ft in self.features.values():
             if ft["status"] != "Accepted":
                 continue
-            if not (ft.get("accepted_in") and self.acceptance_resolves(ft["accepted_in"])):
+            if not (ft.get("accepted_in") and self.acceptance_resolves(ft["accepted_in"], ft)):
                 self.find("acceptance_coherent", f"{ft['dir']}: feature Accepted sem `accepted_in` que aponte o aceite do humano (entrada do log ou do uat.md)")
             for _, rid in ft["imports"]:
                 node = self.nodes.get(rid)
@@ -1240,6 +1600,60 @@ class Graph:
             self.warn("uat_fixes_cited", f"{uat.name}:{number}: {cells[0]} está `{cited.group('verb')} ({cited.group('f')})`, mas o `fixes:` da {ft['dir']} não a lista — "
                       "o quadro do Delivery lê só o `fixes:` (CC-ADR-0009 § 1) e pode pôr a feature em «Aceito» com a issue aberta (UAT-290)")
 
+    def issue_owners(self):
+        """{UAT id: his} from uat.md -- `his` true for the MJRP's row or an agent row that went up to him (`prioridade: humano`),
+        false for an agent's, as uat_tracks_check reads the `Reportado por` cell. A row it cannot place is absent."""
+        uat = self.p.get("uat")
+        if not uat or not uat.exists():
+            return {}
+        out, at = {}, None
+        for line in uat.read_text(encoding="utf-8").splitlines():
+            if not line.startswith("|"):
+                continue
+            cells = uat_tracks_check.cells(line)
+            if line.startswith("| ID "):
+                at = cells.index("Reportado por") if "Reportado por" in cells else None
+                continue
+            if at is None or len(cells) <= at or not cells[0].startswith("UAT-"):
+                continue
+            value = uat_tracks_check.VALUE.match(cells[at])
+            if value:
+                out[cells[0]] = value.group("who") == "MJRP" or bool(value.group("prio"))
+        return out
+
+    def check_closure(self):
+        """F139 (S-206, AGENTS.md § Duas trilhas, the MJRP 2026-10-30): a feature with nothing for the MJRP to see, decide or
+        secure closes by the independent recheck -- `closed_by: "recheck independente: <relatório>, <AAAA-MM-DD HH:MM>"` on a
+        Done spec. closed_by_fits: the declaration stands by feature_closure (the form, a Done spec, nothing that needs his eye)
+        and the report it cites exists inside the repository, passes (verdict pass | can-go) and has no P0 nor P1; a feature that needs his eye closes only by his acceptance. needs_human_shape: the
+        mark is `<decidir|ver|segurança>: <motivo>`."""
+        owners = None
+        for ft in self.features.values():
+            mark = ft.get("needs_human")
+            if mark is not None and str(mark).strip() and not feature_closure.NEEDS_HUMAN.match(str(mark).strip()):
+                self.find("needs_human_shape", f"{ft['dir']}: `needs_human: {mark}` — a forma é `<decidir|ver|segurança>: <motivo>`")
+            value = ft.get("closed_by")
+            if value is None or not str(value).strip():
+                continue
+            if owners is None:
+                owners = self.issue_owners()
+            stories = [(rid, [f"{f}#^{tid}" for f, tid in self.nodes[rid]["edges"].get("points_to", [])] if rid in self.nodes else None)
+                       for _, rid in ft["imports"]]
+            eye = feature_closure.eye_reasons(stories, [(u, owners.get(u)) for u in ft["fixes"]], mark)
+            problem = feature_closure.closed_by_problem(value, ft["status"], eye)
+            if problem:
+                self.find("closed_by_fits", f"{ft['dir']}: `closed_by` {problem}")
+                continue
+            if ft.get("accepted_in"):
+                self.find("closed_by_fits", f"{ft['dir']}: `closed_by` e `accepted_in` juntos — fechada pela reconferência ou aceita pelo MJRP, nunca os dois")
+            report = feature_closure.report_of(value)
+            top = repo_top(self.root)
+            text = next((f.read_text(encoding="utf-8", errors="replace") for base in (self.root, top) if base
+                         and not Path(report).is_absolute() and (f := base / report).is_file()), None)
+            problem = feature_closure.report_problem(value, text)
+            if problem:
+                self.find("closed_by_fits", f"{ft['dir']}: `closed_by` — {problem}")
+
     def check_link_stems(self):
         """MJRP, 2026-10-09: with link_form = stem, a link or embed to a requirement names its whole file stem --
         Obsidian resolves file names, not aliases, so [[S-31]] to S-31-some-slug.md is a broken link there. Checked
@@ -1318,7 +1732,7 @@ class Graph:
             if not re.match(r"^(?:[a-z]+-)?ep-\d{2}-[a-z0-9]+(-[a-z0-9]+)*$", fd) or not fd.startswith(nid.lower() + "-"):
                 self.find("node_folder", f"{nid}: folder:: {fd} fora do padrão {nid.lower()}-<slug-em-inglês>")
         for nid, n in self.nodes.items():
-            if not n.get("path"):
+            if not n.get("path") or n["type"] not in ("requirement", "nfr"):
                 continue
             where = str(n["path"].parent.relative_to(d)).replace("\\", "/")
             if n["type"] == "nfr":
@@ -1347,7 +1761,161 @@ class Graph:
         self.check_design_system()
         self.check_link_stems()
         self.check_uat_fixes_cited()
+        self.check_board_config()
+        self.check_task_items()
+        self.check_uat_types()
+        self.check_waiting()
+        self.check_origin()
+        self.check_story_form()
+        self.check_closure()
         return self.findings
+
+    @staticmethod
+    def waiting_of(raw):
+        """A declared wait as {on, reason, item, until}; None when there is none. YAML 1.1 reads the key `on` as True:
+        both spellings are the same key (S-197 R2 writes `on:`)."""
+        if raw is None:
+            return None
+        if not isinstance(raw, dict):
+            return {"on": "", "reason": "", "item": None, "until": None, "bad": True}
+        on = raw.get("on", raw.get(True))
+        return {"on": str(on or "").strip(), "reason": str(raw.get("reason") or "").strip(),
+                "item": str(raw["item"]).strip() if raw.get("item") else None,
+                "until": str(raw["until"]).strip() if raw.get("until") else None}
+
+    def item_status(self, ident):
+        """The status of an item a wait can wait for: a feature's spec, a node, an issue row; None when unknown."""
+        if re.fullmatch(r"F\d{2,}", ident or ""):
+            f = self.features.get(ident)
+            return str(f.get("status") or "").strip().casefold() if f else None
+        if ident in self.nodes:
+            return str(self.nodes[ident].get("status") or "").strip().casefold()
+        uat = self.p.get("uat")
+        if uat and uat.exists() and re.fullmatch(r"UAT-\d{2,}", ident or ""):
+            for line in uat.read_text(encoding="utf-8").splitlines():
+                cells = [c.strip() for c in UAT_CELLS.split(line)[1:-1]]
+                if cells and cells[0] == ident and len(cells) >= 8:
+                    return cells[7].split("(")[0].strip().casefold()
+        return None
+
+    def check_waiting(self):
+        """F134 (S-197 R1, R6): a declared wait has its shape (`on` in human | item | time | resource, a reason, `item` with
+        `on: item`, `until` with `on: time`) -- `waiting_shape`; is declared only on what started -- `waiting_not_started`;
+        and is erased once it ended on its own (the awaited item done, closed or accepted; the day passed) -- `waiting_resolved`.
+        Inactivity is never a finding: it is computed, never written."""
+        today = _clock.today().isoformat()
+        declared = []
+        for f in self.features.values():
+            started = str(f.get("status") or "").strip().casefold() in STARTED_FEATURE or f.get("ticked", 0) > 0
+            if f.get("waiting") is not None:
+                declared.append((f["dir"], self.waiting_of(f["waiting"]), started))
+            for tid, wait in f.get("task_waits", []):
+                declared.append((f"{f['dir']}/{tid}", wait, started))
+        for nid, node in self.nodes.items():
+            if node.get("waiting") is not None:
+                declared.append((nid, self.waiting_of(node["waiting"]), str(node.get("status") or "") == "In progress"))
+        for where, wait, started in declared:
+            why = None
+            if wait.get("bad") or wait["on"] not in WAITING_ON:
+                why = f"`on` é um de {', '.join(WAITING_ON)} (veio {wait['on']!r})"
+            elif not wait["reason"]:
+                why = "falta o `reason` (o que falta, numa frase)"
+            elif wait["on"] == "item" and not wait["item"]:
+                why = "`on: item` sem o `item` esperado"
+            elif wait["on"] == "time" and not wait["until"]:
+                why = "`on: time` sem o `until`"
+            if why:
+                self.find("waiting_shape", f"{where}: o `waiting:` está fora da forma: {why} (S-197)")
+                continue
+            if not started:
+                self.find("waiting_not_started", f"{where}: `waiting:` declarado num item que não começou — o que não começou está na fila, não esperando (S-197 R1)")
+            elif wait["on"] == "item" and self.item_status(wait["item"]) in OVER_STATUS:
+                self.find("waiting_resolved", f"{where}: espera a {wait['item']}, que já chegou — apague o `waiting:` (S-197 R4)")
+            elif wait["on"] == "time" and wait["until"][:10] < today:
+                self.find("waiting_resolved", f"{where}: esperava até {wait['until'][:10]}, que já passou — apague o `waiting:` (S-197 R4)")
+
+    def check_origin(self):
+        """F134 (ADR-0026 § 2, ADR-0027): the type of an improvement follows its origin -- born in the stage Homologação, an issue of the
+        register (the type the first matching `origin_rules` gives); outside it, a feature. An item without `nature` is not
+        judged, nor one born before the rule (no `origin_stage` and no `nature`). The recorded stage is history (ADR-0027): read as
+        written, never checked against the stages the project declares today."""
+        import _board
+        try:
+            default, project = _board.read(_board.DEFAULTS), _board.read(self.root / _board.PROJECT_REL)
+        except _board.Unreadable:
+            return
+        if not isinstance(default, dict) or isinstance(project, str):
+            return
+        rules = _board.merge(default, project if isinstance(project, dict) else None).get("origin_rules", [])
+        items = [(f["dir"], "feature", f) for f in self.features.values()] + [
+            (nid, "story", n) for nid, n in self.nodes.items() if n.get("type") == "requirement"]
+        for where, kind, item in items:
+            nature = str(item.get("nature") or "").strip()
+            if not nature:
+                continue
+            facts = {"nature": nature, "origin_stage": str(item.get("origin_stage") or "").strip()}
+            rule = next((r for r in rules if isinstance(r, dict) and all(facts.get(k) == v for k, v in (r.get("when") or {}).items())), None)
+            if rule and rule.get("type") != kind:
+                self.find("origin_rule", f"{where}: uma {nature} nascida na etapa {facts['origin_stage'] or '(não declarada)'} é do tipo "
+                          f"{rule.get('type')}, não {kind} (ADR-0026 § 2: a regra da origem do board.json)")
+
+    def check_task_items(self):
+        """F134 (ADR-0025 § 1.1): each task is a card whose id goes into the human's order (`F129/TASK-03` in priority.md), so the
+        id is in the one form and unique in the feature (task_id_unique, every feature). A box with no id would vanish from the
+        board in silence: task_line_shape, judged on the open features only (a closed feature's lines are history)."""
+        for f in self.features.values():
+            ids = [i for i, _ in f.get("task_ids", [])]
+            for tid in sorted({i for i in ids if ids.count(i) > 1}):
+                lines = ", ".join(str(n) for i, n in f["task_ids"] if i == tid)
+                self.find("task_id_unique", f"{f['dir']}: {tid} aparece duas vezes no tasks.md (linhas {lines}) — o id da task nunca se repete "
+                          "nem se renumera: a task partida ganha a letra (TASK-02a)")
+            bad = f.get("task_shape_bad")
+            if bad and str(f.get("status") or "").strip().casefold() not in CLOSED_FEATURE:
+                self.find("task_line_shape", f"{f['dir']}: a(s) linha(s) {', '.join(map(str, bad))} do tasks.md são caixas de task sem o id na forma "
+                          "`- [ ] TASK-NN …` — cada task é um card do board; uma caixa sem id sumiria dele")
+
+    def check_uat_types(self):
+        """F134 (ADR-0025 § 1.2): the type of a register row comes from its `Tipo` cell, read by a board@1 record type; a value no type
+        reads is a finding, never a bug by default. Skipped when the board configuration itself does not read or is wrong (that is
+        board_config_shape's)."""
+        uat = self.p.get("uat")
+        if not uat or not uat.exists():
+            return
+        import _board
+        try:
+            default, project = _board.read(_board.DEFAULTS), _board.read(self.root / _board.PROJECT_REL)
+        except _board.Unreadable:
+            return
+        if not isinstance(default, dict) or isinstance(project, str):
+            return
+        cfg = _board.merge(default, project if isinstance(project, dict) else None)
+        reads = {v.strip().casefold() for r in cfg.get("record_types", []) if isinstance(r, dict) for v in r.get("tipo") or [] if isinstance(v, str)}
+        tipo_at = None
+        for number, line in enumerate(uat.read_text(encoding="utf-8").splitlines(), start=1):
+            if not line.startswith("|"):
+                continue
+            cells = [c.strip() for c in UAT_CELLS.split(line)[1:-1]]
+            if line.startswith("| ID "):
+                tipo_at = cells.index("Tipo") if "Tipo" in cells else None
+                continue
+            if tipo_at is None or len(cells) <= tipo_at or not cells[0].startswith("UAT-"):
+                continue
+            if cells[tipo_at].casefold() not in reads:
+                self.find("uat_type_unknown", f"{uat.name}:{number}: {cells[0]}: a célula Tipo {cells[tipo_at][:60]!r} não é lida por nenhum tipo de registro "
+                          f"do board ({', '.join(sorted(reads))}) — acrescente o valor a um tipo no board.json, ou corrija a célula")
+
+    def check_board_config(self):
+        """F134 (ADR-0025 § 6, ADR-0026): the harness default (board_defaults.json) and the project's docs/specs/board.json, merged,
+        judged by _board: every shape refusal and the coverage of each board is `board_config_shape`. The message opens with the
+        file's name, the token --staged matches against the touched files (touched_nodes)."""
+        import _board
+        try:
+            found = _board.check(self.root)
+        except _board.Unreadable as e:
+            self.board_unevaluable = str(e)
+            return
+        for label, code, where, reason in found:
+            self.find("board_config_shape", f"{label}: {where}: {reason} ({code})")
 
 
 def adr_fields(text):
@@ -1357,6 +1925,18 @@ def adr_fields(text):
     route = next((m["route"] for m in (re.search(ACCEPTANCE_RE, l) for l in head) if m), None)
     status = next((m["word"] for m in (re.search(STATUS_RE, l) for l in head) if m), None)
     return route, status, record_date(text)
+
+
+# F134 (ADR-0025 § 1.1): the one form of a task line -- the box, then the local id (TASK-02a: a split task)
+TASK_LINE = re.compile(r"^[-*]\s+\[[ xX]\]\s+(?:\*\*)?(TASK-\d{2,}[a-z]?)\b")
+CLOSED_FEATURE = {"done", "accepted", "cancelled", "deferred"}
+# F134 (S-197 R2): the marks of a task's declared wait, on its line: `waiting:: <on> — <reason>`, `item::`, `until::`, `since::`
+TASK_MARK = re.compile(r"(waiting|item|until|since)::\s*([^·]+?)\s*(?=·|$)")
+WAITING_ON = ("human", "item", "time", "resource")
+STARTED_FEATURE = {"in progress", "in-progress", "done", "accepted"}   # priority_next.STARTED_STATUS
+OVER_STATUS = {"done", "accepted", "fixed", "closed"}                  # the awaited item arrived
+BOARD_PROJECT_REL = "docs/specs/board.json"           # _board.PROJECT_REL
+BOARD_DEFAULTS_REL = "mjrp-scripts/board_defaults.json"
 
 
 class GitUnavailable(Exception):
@@ -1401,7 +1981,13 @@ def touched_nodes(root, rules, mode):
             if not p.startswith(prefix):
                 continue
             p = p[len(prefix):]
-        if p.startswith(req) and p.endswith(".md"):
+        if p == BOARD_PROJECT_REL:
+            ids.add("board.json")               # F134: the board configuration is judged when the commit touches it
+        elif p == rules["paths"].get("uat"):
+            ids.add(Path(p).name)               # F134: uat_type_unknown, judged when the commit touches the register
+        elif p == BOARD_DEFAULTS_REL:
+            ids.add("board_defaults.json")
+        elif p.startswith(req) and p.endswith(".md"):
             ids.add(node_id(Path(p).stem))      # MJRP, 2026-10-09: <ID>-<slug>.md -> the node is the ID
         elif p.startswith(feat):
             ids.add(p[len(feat):].split("/")[0])
@@ -1437,12 +2023,25 @@ def main(argv):
     findings = g.run()
     if mode:
         mine = [(r, m) for r, m in findings if r not in Graph.TIME_RULES and re.split(r"[:/ ]", m, maxsplit=1)[0] in nodes]
+        # F137: the story whose text this work adds or changes is in the template, whatever the date and the status
+        try:
+            for nid in sorted(nodes):
+                mine += [f for f in g.story_text_changed(nid, mode) if f not in mine]
+        except GitUnavailable as e:
+            print(f"[requirements_graph] NÃO AVALIÁVEL — não sei se o texto das stories mudou ({e}); nada foi julgado")
+            return 2
+        if g.board_unevaluable and nodes & {"board.json", "board_defaults.json"}:
+            print(f"[requirements_graph] NÃO AVALIÁVEL — a configuração do board: {g.board_unevaluable}")
+            return 2
         if not mine:
             return 0
         print(f"[requirements_graph] {len(mine)} contradição(ões) nos nós que este trabalho toca:")
         for r, m in mine:
             print(f"  [{r}] {m}")
-        print("  conserte o status ou a evidência (delivered_by, accepted_in, tarefas) — ou reconcilie: kernel requirements-graph § Reconciliação")
+        if any(r == "story_form" for r, _ in mine):
+            print("  a story: reescreva a frase pelo template da `mjrp-writing-reqs` (templates/req-story-backlog.md) — cada motivo acima diz o que mudar")
+        if any(r != "story_form" for r, _ in mine):
+            print("  conserte o status ou a evidência (delivered_by, accepted_in, tarefas) — ou reconcilie: kernel requirements-graph § Reconciliação")
         return 2 if "--gate" in argv else 1
     n_nodes = len(g.nodes)
     for rule, msg in g.warnings:
@@ -1472,7 +2071,10 @@ def main(argv):
     if g.acceptance_unevaluable:
         findings_text = "NÃO AVALIÁVEL" if not findings else "além disso, NÃO AVALIÁVEL"
         print(f"[requirements_graph] {findings_text} — o carimbo do aceite (`Human-accepted:`): {g.acceptance_unevaluable}")
-    if not findings and not g.unreachable and not g.legacy_unevaluable and not g.acceptance_unevaluable:
+    if g.board_unevaluable:
+        findings_text = "NÃO AVALIÁVEL" if not findings else "além disso, NÃO AVALIÁVEL"
+        print(f"[requirements_graph] {findings_text} — a configuração do board: {g.board_unevaluable}")
+    if not findings and not g.unreachable and not g.legacy_unevaluable and not g.acceptance_unevaluable and not g.board_unevaluable:
         print(f"[requirements_graph] VERDE — {n_nodes} nó(s), {len(g.features)} feature(s), nenhuma regra violada")
         return 0
     if findings:

@@ -1,0 +1,518 @@
+{
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_about": "The harness default of the board configuration (board@1; ADR-0025 § 6, ADR-0026). A project's docs/specs/board.json adds record types and boards and replaces the stages of a phase (it may leave one out: ADR-0027), columns, hidden_categories, origin_rules and waiting_after_days; states and structure_types are the harness's. Judged by mjrp-scripts/_board.py (board_config_shape) and read by the Control Center's itemboard. No waiting_after_days here: a project without it falls back to its contract's requirements.stale_days.",
+  "format": "board@1",
+  "phases": [
+    {
+      "id": "discovery",
+      "stages": [
+        {
+          "id": "explore"
+        },
+        {
+          "id": "frame"
+        }
+      ]
+    },
+    {
+      "id": "design",
+      "stages": [
+        {
+          "id": "draw"
+        },
+        {
+          "id": "ready"
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "stages": [
+        {
+          "id": "specify"
+        },
+        {
+          "id": "plan"
+        },
+        {
+          "id": "tasks"
+        },
+        {
+          "id": "execute_verify"
+        }
+      ]
+    },
+    {
+      "id": "release",
+      "stages": [
+        {
+          "id": "homologation"
+        },
+        {
+          "id": "deploy"
+        },
+        {
+          "id": "accepted",
+          "from_fact": "accepted"
+        }
+      ]
+    }
+  ],
+  "structure_types": {
+    "epic": {
+      "in_filter": true,
+      "accept_by_children": true
+    },
+    "feature": {
+      "in_filter": true
+    },
+    "story": {
+      "in_filter": true
+    },
+    "task": {
+      "in_filter": true,
+      "follows_parent": true
+    }
+  },
+  "record_types": [
+    {
+      "id": "bug",
+      "label": {
+        "pt-BR": "Bug",
+        "en": "Bug"
+      },
+      "tipo": [
+        "bug"
+      ]
+    },
+    {
+      "id": "improvement",
+      "label": {
+        "pt-BR": "Melhoria",
+        "en": "Improvement"
+      },
+      "tipo": [
+        "improvement",
+        "melhoria",
+        "enhancement",
+        "change",
+        "mudança"
+      ]
+    },
+    {
+      "id": "tech-debt",
+      "label": {
+        "pt-BR": "Tech debt",
+        "en": "Tech debt"
+      },
+      "tipo": [
+        "tech-debt",
+        "tech debt"
+      ]
+    }
+  ],
+  "states": {
+    "epic": {
+      "planned": {
+        "stage": "explore",
+        "category": "not_started"
+      },
+      "doing": {
+        "stage": "execute_verify",
+        "category": "in_progress"
+      },
+      "done": {
+        "stage": "homologation",
+        "category": "done"
+      }
+    },
+    "feature": {
+      "prep": {
+        "stage": "specify",
+        "category": "not_started"
+      },
+      "prioritized": {
+        "stage": "specify",
+        "category": "not_started"
+      },
+      "specify": {
+        "stage": "specify",
+        "category": "in_progress"
+      },
+      "plan": {
+        "stage": "plan",
+        "category": "in_progress"
+      },
+      "tasks": {
+        "stage": "tasks",
+        "category": "in_progress"
+      },
+      "execute_verify": {
+        "stage": "execute_verify",
+        "category": "in_progress"
+      },
+      "pr_merge": {
+        "stage": "execute_verify",
+        "category": "in_progress"
+      },
+      "ready_for_uat": {
+        "stage": "homologation",
+        "category": "done"
+      },
+      "closed": {
+        "stage": "homologation",
+        "category": "closed"
+      },
+      "accepted": {
+        "stage": "homologation",
+        "category": "closed"
+      },
+      "cancelled": {
+        "stage": "specify",
+        "category": "off"
+      },
+      "deferred": {
+        "stage": "specify",
+        "category": "off"
+      }
+    },
+    "story": {
+      "backlog": {
+        "stage": "explore",
+        "category": "not_started"
+      },
+      "prioritized": {
+        "stage": "frame",
+        "category": "not_started"
+      },
+      "ready": {
+        "stage": "ready",
+        "category": "not_started"
+      },
+      "doing": {
+        "stage": "execute_verify",
+        "category": "in_progress"
+      },
+      "done": {
+        "stage": "homologation",
+        "category": "done"
+      },
+      "closed": {
+        "stage": "homologation",
+        "category": "closed"
+      },
+      "accepted": {
+        "stage": "homologation",
+        "category": "done"
+      },
+      "deferred": {
+        "stage": "explore",
+        "category": "off"
+      },
+      "cancelled": {
+        "stage": "explore",
+        "category": "off"
+      }
+    },
+    "task": {
+      "open": {
+        "stage": "execute_verify",
+        "category": "in_progress"
+      },
+      "closed": {
+        "stage": "execute_verify",
+        "category": "done"
+      }
+    },
+    "record": {
+      "open": {
+        "stage": "homologation",
+        "category": "not_started"
+      },
+      "fixing": {
+        "stage": "homologation",
+        "category": "in_progress"
+      },
+      "fixed": {
+        "stage": "homologation",
+        "category": "done"
+      },
+      "closed": {
+        "stage": "homologation",
+        "category": "closed"
+      }
+    }
+  },
+  "columns": [
+    {
+      "id": "prep",
+      "categories": [
+        "not_started"
+      ]
+    },
+    {
+      "id": "queue",
+      "categories": [
+        "queued"
+      ]
+    },
+    {
+      "id": "loop",
+      "categories": [
+        "in_progress"
+      ]
+    },
+    {
+      "id": "waiting",
+      "categories": [
+        "waiting"
+      ]
+    },
+    {
+      "id": "ready",
+      "categories": [
+        "done"
+      ]
+    },
+    {
+      "id": "closed",
+      "categories": [
+        "closed"
+      ]
+    },
+    {
+      "id": "accepted",
+      "categories": [
+        "accepted"
+      ]
+    }
+  ],
+  "hidden_categories": [
+    "off"
+  ],
+  "boards": [
+    {
+      "id": "features",
+      "filter": {
+        "types": [
+          "feature"
+        ]
+      },
+      "columns": "by_category"
+    },
+    {
+      "id": "stories",
+      "filter": {
+        "types": [
+          "story"
+        ]
+      },
+      "columns": "by_category"
+    },
+    {
+      "id": "epics",
+      "filter": {
+        "types": [
+          "epic"
+        ]
+      },
+      "columns": "by_category"
+    },
+    {
+      "id": "tasks",
+      "filter": {
+        "types": [
+          "task"
+        ]
+      },
+      "columns": [
+        {
+          "id": "prep",
+          "match": {
+            "categories": [
+              "not_started"
+            ]
+          }
+        },
+        {
+          "id": "loop",
+          "match": {
+            "categories": [
+              "in_progress"
+            ]
+          }
+        },
+        {
+          "id": "waiting",
+          "match": {
+            "categories": [
+              "waiting"
+            ]
+          }
+        },
+        {
+          "id": "ready",
+          "match": {
+            "categories": [
+              "done"
+            ]
+          }
+        },
+        {
+          "id": "closed",
+          "match": {
+            "categories": [
+              "closed"
+            ]
+          }
+        },
+        {
+          "id": "accepted",
+          "match": {
+            "categories": [
+              "accepted"
+            ]
+          }
+        }
+      ],
+      "hidden": {
+        "categories": [
+          "off",
+          "queued"
+        ]
+      }
+    },
+    {
+      "id": "all",
+      "filter": {},
+      "columns": "by_category"
+    },
+    {
+      "id": "discovery",
+      "filter": {
+        "phases": [
+          "discovery"
+        ]
+      },
+      "columns": "by_stage"
+    },
+    {
+      "id": "design",
+      "filter": {
+        "phases": [
+          "design"
+        ]
+      },
+      "columns": "by_stage"
+    },
+    {
+      "id": "delivery",
+      "filter": {
+        "phases": [
+          "delivery"
+        ]
+      },
+      "columns": "by_stage"
+    },
+    {
+      "id": "release",
+      "filter": {
+        "phases": [
+          "release"
+        ]
+      },
+      "columns": "by_stage"
+    },
+    {
+      "id": "end-to-end",
+      "filter": {},
+      "columns": [
+        {
+          "id": "discovery",
+          "match": {
+            "phases": [
+              "discovery"
+            ],
+            "categories": [
+              "not_started",
+              "queued",
+              "in_progress",
+              "waiting",
+              "done",
+              "closed"
+            ]
+          }
+        },
+        {
+          "id": "design",
+          "match": {
+            "phases": [
+              "design"
+            ],
+            "categories": [
+              "not_started",
+              "queued",
+              "in_progress",
+              "waiting",
+              "done",
+              "closed"
+            ]
+          }
+        },
+        {
+          "id": "delivery",
+          "match": {
+            "phases": [
+              "delivery"
+            ],
+            "categories": [
+              "not_started",
+              "queued",
+              "in_progress",
+              "waiting",
+              "done",
+              "closed"
+            ]
+          }
+        },
+        {
+          "id": "release",
+          "match": {
+            "phases": [
+              "release"
+            ],
+            "categories": [
+              "not_started",
+              "queued",
+              "in_progress",
+              "waiting",
+              "done",
+              "closed",
+              "accepted"
+            ]
+          }
+        }
+      ],
+      "hidden": {
+        "categories": [
+          "off"
+        ]
+      }
+    }
+  ],
+  "origin_rules": [
+    {
+      "when": {
+        "origin_stage": "homologation",
+        "nature": "improvement"
+      },
+      "type": "improvement"
+    },
+    {
+      "when": {
+        "nature": "improvement"
+      },
+      "type": "feature"
+    }
+  ]
+}

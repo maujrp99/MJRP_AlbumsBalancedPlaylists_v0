@@ -1,11 +1,15 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # pre-merge-commit - a branch that changed a screen is merged with the independent visual recheck's report: evaluated
 # (`verdict: pass` or `fail`, never `incomplete`) and with `p0: 0`. ADR-0017 of the harness, 2026-10-12; revised
 # 2026-10-17 (decision of the MJRP, pdlc-loops § 5): the judge evaluates, it does not block - a `fail` without P0
 # goes to main and each finding becomes an issue of uat.md; a P0 or a judge that could not evaluate still stops it.
 # Born from the Control Center 1.0: the UI reached the UAT far from the approved prototype with every sensor green,
 # and the skill holding the check was never invoked.
+# 2026-10-30 (F61, pdlc-loops § 2): on the fast lane the judge of the screen is the MJRP, so a branch whose feature specs all
+# say `lane: fast` and that holds no report makes the gate ask for HIS Touch ID (the Control Center's presence, the proof of
+# the Aceite): his finger is the visual verdict. The dialog waits 35 s (inside the train's 60 s per git call); a report an agent wrote for him
+# (`who_judged: human`) is not a verdict.
 #
 # Installed per clone by:  git config core.hooksPath mjrp-scripts/hooks   (new_project.py does it)
 # It runs on `git merge` when a merge commit is made (--no-ff, the governance's merge); a fast-forward makes none.

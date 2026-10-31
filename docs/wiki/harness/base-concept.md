@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-09-14
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 A **cadeia de intenção** que ordena todo documento do MJRP que declara para onde se vai:
@@ -101,8 +101,9 @@ Três modos de falha, todos encontrados no próprio `VISION.md` do harness na re
 Quatro perguntas. Falhar em qualquer uma significa que o que está escrito é outro elo:
 
 1. **É inspiradora?** Diz o estado futuro e o **tamanho do impacto** — não a implementação.
-2. **Cabe em uma frase, lida em voz alta, sem paráfrase?** Frase que precisa de fôlego no meio
-   ainda não está pronta.
+2. **É concisa e clara, lida em voz alta, sem paráfrase?** Sem limite de frases: o tamanho é o que a
+   ideia pede. Texto que precisa de fôlego no meio ou de paráfrase para fazer sentido sozinho
+   ainda não está pronto.
 3. **Sobrevive à troca de stack?** Se trocar a tecnologia invalida a frase, era arquitetura.
 4. **É desta organização?** Se trocar o nome por qualquer outra empresa e a frase continuar
    verdadeira, é slogan — não visão. É o teste que mais reprova, porque linguagem inspiradora
@@ -141,6 +142,7 @@ esta página e o template divergem — por isso o status é *em formação*.
 ## History
 
 > A decisão mora na página do assunto que ela muda, com data (ADR-0008).
+- **2026-10-29 19:10** · **O teste 2 da visão pronta não conta frases.** O MJRP: «não tem essa constraint de uma frase e uma sentença, isso é bem ruim e limitante. Ser conciso e claro é importante, mas regra especifica de uma frase nao». O teste passa de «cabe em uma frase» para «é concisa e clara, lida em voz alta, sem paráfrase». Ver [[vision-document]] (UAT-408, F126).
 - **2026-09-14 20:51** · **O MJRP cortou uma regra que eu tinha deduzido e usado como bloqueio.** Na entrada
   de 18:36 eu escrevi que *"a cadeia exige que a visão instancie o propósito, não que o exceda"* e
   abri o BACKLOG #48 ("decidir o nível org × projeto") como pré-condição de propagar o template.

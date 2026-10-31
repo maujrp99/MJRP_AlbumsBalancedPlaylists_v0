@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 structure_check.py - the structure-by-nature sensor (ADR-0014, EP-09).
 
@@ -53,6 +53,12 @@ def read_profile(root):
 
 def _finding(path, msg, to=None):
     return {"path": path, "msg": msg, "to": to}
+
+
+def _legacy_copy(rel_docs, rules):
+    """F128: the original SDD files of a legacy sprint, copied verbatim into its feature (`specs/features/Fxx-slug/legacy/`): their names
+    are the sprint author's, not an agent's output, and a rename would rewrite the record."""
+    return any(re.match(rx, rel_docs) for rx in rules.get("skip_inside_docs_patterns", []))
 
 
 def _suggest(name, rules, profile):
@@ -158,7 +164,7 @@ def _check_docs(root, rules, prof, profile, out):
             continue                                       # already reported by A
         if any(part in IGNORE for part in p.parts):
             continue
-        if any(rel_docs == s or rel_docs.startswith(s + "/") for s in skip):
+        if any(rel_docs == s or rel_docs.startswith(s + "/") for s in skip) or _legacy_copy(rel_docs, rules):
             continue
         if any(rel_docs.startswith(f + "/") for f in flagged_dirs):
             continue
@@ -477,7 +483,7 @@ def judge_path(root, rel, rules=None):
                 dest = " — decida a natureza (regra de bolso no structure_rules.json)"
             return _finding(rel, f"fora da natureza de docs/ (MEMÓRIA){dest}", to)
         inner = "/".join(parts[1:])
-        if any(inner == sk or inner.startswith(sk + "/") for sk in rules["skip_inside_docs"]):
+        if any(inner == sk or inner.startswith(sk + "/") for sk in rules["skip_inside_docs"]) or _legacy_copy(inner, rules):
             return None
         if _sdd_note(parts[1:], rules):
             return _finding(rel, _sdd_note(parts[1:], rules))

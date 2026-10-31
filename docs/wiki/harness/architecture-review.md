@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-09
 fontes: [originals/architecture-review-handbook/2026-10-09-handbook-v0.md, wiki/sources/2026-10-09-mjrp-architecture-review-handbook.md, kernel/architecture/engineering-canon]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Architecture Review — o cânone da crítica de arquitetura
 

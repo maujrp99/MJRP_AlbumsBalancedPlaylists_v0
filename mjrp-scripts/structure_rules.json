@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
   "version": "2026-10-09",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
@@ -112,7 +112,8 @@
       "handoffs",
       "harness-feedback",
       "presentations",
-      "evidence"
+      "evidence",
+      "research"
     ],
     "design": [
       "inception",
@@ -174,6 +175,7 @@
     "handoffs": "reports/handoffs",
     "harness-feedback": "reports/harness-feedback",
     "presentations": "reports/presentations",
+    "research": "reports/research",
     "proposals": "design/proposals",
     "prototypes": "design/prototypes",
     "inception": "design/inception",
@@ -242,6 +244,10 @@
     "wiki/feedback-from-other-projects",
     "wiki/sources"
   ],
+  "skip_inside_docs_patterns": [
+    "^specs/features/F\\d{2,}-[a-z0-9-]+/legacy(/|$)"
+  ],
+  "_skip_inside_docs_patterns": "F128 (UAT-410): a legacy sprint's original SDD files, copied verbatim into the feature it became (`legacy/`); their names are the sprint author's, and renaming them would rewrite the record.",
   "_originals_note": "docs/originals/ (ADR-0016; was docs/raw/) is the Karpathy chain in every profile (original source TEXT the agent reads: drafts, requirements, transcripts); a DATA file (xlsx, csv...) inside it still goes to data/raw/.",
   "_deletion_classes": "ADR-0023 (F74): the four classes of a path - 1 insubstituível, 2 versionado, 3 derivado, 4 rotativo - are decided by `_pathclass.classify`, which reads these three sections from the rules file of the PROJECT THAT CONTAINS THE PATH (the global entries, from the file beside `_pathclass.py`). Sections are append-only (VT-05); a missing section is an empty list. An entry is {glob, owner, why}; `glob` is relative to the project root in `project`, absolute in `global` (`$TMPDIR` and `~` are expanded). `*` and `?` do not cross a `/`, a segment `**` is any number of folders, a trailing `/` means folders only, and a glob that matches a folder covers everything under it. Linked worktrees are NOT listed: four git tests decide them (the ancestor of main, a clean status, no ignored file outside `derived`, no lock). The F75 daily backup reads `derived.project` for what it leaves out of the copy.",
   "derived": {
@@ -336,6 +342,11 @@
         "glob": "**/.import_linter_cache/",
         "owner": "import-linter",
         "why": "the tool's own cache, rebuilt on the next run"
+      },
+      {
+        "glob": "**/web/dist/",
+        "owner": "npm run build (the screen's check, test:server and visual build first) and merge_train.py dist-resolve",
+        "why": "the Control Center's built screen, not versioned since F57 (CC-ADR-0027 § 1): rebuilt from web/src; a file git still tracks there (a branch older than F57) is class 2"
       }
     ],
     "global": [

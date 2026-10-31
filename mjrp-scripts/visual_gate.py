@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """visual_gate.py -- a screen feature is merged with the independent visual recheck's report: evaluated, with no P0.
 
 Born 2026-10-12 (ADR-0017 of the harness, revised after its architecture audit; decision of the MJRP): the Control
@@ -43,9 +43,26 @@ The decision table (the newest report after the last screen commit):
                                                                          exit 2: no Node or Playwright, no facts, zero
                                                                          scenarios); nothing was compared
     no `verdict`, or a word other than the four above ................... refuse - the report does not say
+    a report with `who_judged: human` .................................. not read - the human's OK is not written by
+                                                                         an agent (F61); the table goes on without it
+    fast lane, no report after the last screen commit ................... ask the MJRP's Touch ID (`--hook` only):
+                                                                         granted -> allow; anything else -> refuse
+
+The fast lane (F61, 2026-10-30; kernel page `pdlc-loops` § 2): on a branch whose changed feature specs all say `lane: fast`,
+the judge of the screen is the MJRP looking at it - there is no agent judge, so there is no recheck report to read. When
+such a branch changed a screen and holds no acceptable report after the last screen commit, the gate in `--hook` mode asks
+for HIS presence: the Touch ID of the Control Center (`~/.mjrp/control-center/bin/presence`, CC-ADR-0031, the same proof
+as the Aceite), with a dialog that names the features, the branch and its tip. His finger is the visual verdict (pass, no
+P0); a cancel, a timeout or a Mac with no Touch ID refuses the merge. The OK is written nowhere an agent writes: the gate
+asks for it live, and records it afterwards only as an audit note (`git notes --ref=mjrp-visual-ok show <tip>`), which
+it never reads back. A report with `who_judged: human` - the OK of the chat that an agent transcribed (the practice of
+2026-10-26 to 2026-10-29) - no longer counts as a verdict: an agent wrote it, so it is not his. A branch with any
+standard-lane feature, or with no feature spec, keeps the recheck report; on the Agent track of the fast lane the
+independent recheck writes its report and the finger is not asked.
 
 Modes:
-  python3 visual_gate.py --hook                 git pre-merge-commit: judges the revisions in GIT_REFLOG_ACTION; exit 1
+  python3 visual_gate.py --hook                 git pre-merge-commit: judges the revisions in GIT_REFLOG_ACTION, and refuses a staged
+                                                screen file none of them changed; exit 1
                                                 blocks the merge
   python3 visual_gate.py --check <rev> [--base <rev>]   the same judgement for a revision, from any shell
 
@@ -55,6 +72,9 @@ P0: the agent brings the owner what the P0 is, and he decides whether it goes to
 """
 import fnmatch
 import os
+import pwd
+import subprocess
+import time
 import re
 import sys
 from pathlib import Path
@@ -73,6 +93,19 @@ VERDICT = re.compile(r"^verdict:[ \t]*[\"']?([A-Za-z-]+)[\"']?[ \t]*(#.*)?$", re
 P0_FIELD = re.compile(r"^p0:[ \t]*[\"']?(\d+)[\"']?[ \t]*(#.*)?$", re.M)
 VERDICTS = {"pass": "pass", "passes": "pass",      # `passes`: legacy, see the docstring
             "fail": "fail", "incomplete": "incomplete"}
+WHO_JUDGED = re.compile(r"^who_judged:[ \t]*[\"']?([A-Za-z-]+)", re.M)
+FEATURE_SPEC = re.compile(r"(^|/)docs/specs/features/(F\d+)[^/]*/spec\.md$")
+LANE = re.compile(r"^lane:[ \t]*[\"']?([A-Za-z-]+)", re.M)
+# The proof of presence of the Control Center (CC-ADR-0031). The home comes from the account, never from $HOME: a variable on the
+# merge's command line must not be able to point the gate at another binary.
+PRESENCE = Path(pwd.getpwuid(os.getuid()).pw_dir) / ".mjrp" / "control-center" / "bin" / "presence"
+# Seconds the dialog waits for his finger. The integrator merges through `merge_train.py merge`, whose deadline on every git call is
+# GIT_TIMEOUT (60 s): the dialog, its margin (PRESENCE_MARGIN) and the rest of the hook must end before it, or the train kills
+# `git merge` mid-way (F61 judge, P1-1). The selftest holds PRESENCE_TIMEOUT + PRESENCE_MARGIN < merge_train.GIT_TIMEOUT.
+PRESENCE_TIMEOUT = 35
+PRESENCE_MARGIN = 10
+NOTES_REF = "refs/notes/mjrp-visual-ok"              # the audit trail of the OK; the gate never reads it back
+SKIP_VAR = "VISUAL_RECHECK_SKIP"                     # the human's valve, read here; only he sets it
 
 
 # ---------------------------------------------------------------------------------------------- the contract
@@ -191,6 +224,34 @@ def report_decision(text):
     return "ok", "o juiz avaliou e não achou P0"
 
 
+def judged_by_human(text):
+    """Whether a recheck report's frontmatter says `who_judged: human`: the OK of the human transcribed by an agent, which the gate no
+    longer reads as a verdict (F61). Only the frontmatter."""
+    fm = FRONTMATTER.match(text or "")
+    m = WHO_JUDGED.search(fm.group(1)) if fm else None
+    return bool(m) and m.group(1).lower() == "human"
+
+
+def spec_lane(text):
+    """The `lane:` of a feature spec's frontmatter, lower case ("fast" | "standard" | ...), or "" when it says none."""
+    fm = FRONTMATTER.match(text or "")
+    m = LANE.search(fm.group(1)) if fm else None
+    return m.group(1).lower() if m else ""
+
+
+def ask_presence(reason, timeout=PRESENCE_TIMEOUT):
+    """(code, detail) of the Touch ID asked to the owner of the Mac: 0 granted, 2 denied, 3 unavailable, 4 timed out (the exits of
+    `presence`, CC-ADR-0031); 3 also when the binary is missing or does not run. The only place the gate talks to a person."""
+    if not PRESENCE.is_file() or not os.access(PRESENCE, os.X_OK):
+        return 3, f"{PRESENCE} não existe (o Control Center o instala: ops/install-service.sh)"
+    try:
+        r = subprocess.run([str(PRESENCE), reason, str(timeout)], capture_output=True, text=True,
+                           timeout=timeout + PRESENCE_MARGIN)
+    except (OSError, subprocess.SubprocessError) as e:
+        return 3, f"{type(e).__name__}: {e}"
+    return r.returncode, (r.stderr or "").strip()
+
+
 def verdict_passes(text):
     """Whether a recheck report's frontmatter says `verdict: pass` (or the legacy `passes`). Only the frontmatter."""
     return report_fields(text)[0] == "pass"
@@ -219,10 +280,48 @@ def _projects_of(root, rev, files):
     return groups
 
 
-def judge_full(root, rev, base="HEAD"):
+def branch_lanes(root, rev, changed):
+    """({fast feature ids}, {other feature ids}): the features whose spec.md the branch changed, split by the `lane:` of the spec
+    at `rev`. The branch is on the fast lane when the first set is not empty and the second is."""
+    fast, other = set(), set()
+    for path in changed:
+        m = FEATURE_SPEC.search(path)
+        if not m:
+            continue
+        (fast if spec_lane(_show(root, rev, path)) == "fast" else other).add(m.group(2))
+    return fast, other
+
+
+def _human_ok(root, rev, label, fast, waiting, ask):
+    """The MJRP's OK on the screen for a fast-lane branch: ([(kind, message)], [note]). `waiting` is [(project name, what changed)];
+    `ask` is None outside the hook (nothing is asked: the merge will ask) or ask_presence."""
+    ids = ", ".join(sorted(fast, key=lambda f: int(f[1:])))
+    where = "; ".join(f"{n}: {s}" for n, s in waiting)
+    if ask is None:
+        return [("human_ok", f"via rápida ({ids}): falta o OK do MJRP na tela ({where}) - o merge pede o Touch ID dele")], []
+    tip = _git(root, "rev-parse", "--short=8", rev)[1].strip() or rev
+    into = _git(root, "rev-parse", "--abbrev-ref", "HEAD")[1].strip() or "a main"
+    code, detail = ask(f"MJRP Harness: OK visual de {ids} - o ramo {label or rev} @ {tip} entra em {into}")
+    if code == 0:
+        when = time.strftime("%Y-%m-%d %H:%M")
+        full = _git(root, "rev-parse", rev)[1].strip() or rev
+        note = (f"visual-ok: {ids}\npresence: touch-id\nat: {when}\nbranch: {label or rev}\ntip: {full}\nscreen: {where}\n"
+                f"by: visual_gate.py (F61, pdlc-loops § 2)\n")
+        saved = _git(root, "notes", f"--ref={NOTES_REF}", "add", "-f", "-m", note, full)[0] == 0
+        tail = "" if saved else " (o registro de auditoria não foi gravado; o OK vale)"
+        return [], [f"via rápida ({ids}): o MJRP deu o OK na tela com o Touch ID ({when}) - é o veredito visual{tail}"]
+    why = {2: "o MJRP não confirmou (Touch ID cancelado ou recusado)",
+           4: "o Touch ID expirou sem resposta"}.get(code, f"o Touch ID não pôde ser pedido aqui ({detail or f'exit {code}'})")
+    kind = "human_no" if code in (2, 4) else "human_unavailable"
+    return [(kind, f"via rápida ({ids}): {where} - {why}")], []
+
+
+def judge_full(root, rev, base="HEAD", ask=None, label_of_branch=None):
     """([(kind, message)], [note]) for merging `rev` into `base`. A problem is one line per project whose screen
-    changed without an acceptable recheck (kind: "missing" | "p0" | "incomplete" | "invalid"); a note is what the
-    merge may go with (a `fail` report whose findings are issues of the feature). No problem: the merge may go."""
+    changed without an acceptable recheck (kind: "missing" | "p0" | "incomplete" | "invalid"), or one line for the
+    MJRP's OK of a fast-lane branch ("human_ok" outside the hook, "human_no", "human_unavailable"); a note is what the
+    merge may go with (a `fail` report whose findings are issues of the feature, the OK he gave). No problem: the merge
+    may go. `ask` asks for his presence (ask_presence in the hook; None elsewhere); `label_of_branch` is the branch's name."""
     root = str(root)
     code, mb = _git(root, "merge-base", base, rev)
     if code != 0:
@@ -232,7 +331,9 @@ def judge_full(root, rev, base="HEAD"):
     changed = [l for l in out.splitlines() if l]
     _, order = _git(root, "rev-list", "--topo-order", f"{mb}..{rev}")
     position = {c: i for i, c in enumerate(order.split())}          # 0 = the newest commit of the branch
-    problems, notes = [], []
+    fast, other = branch_lanes(root, rev, changed)
+    fast_lane = bool(fast) and not other
+    problems, notes, waiting = [], [], []
     for prefix, rels in _projects_of(root, rev, changed).items():
         profile, declared = contract_fields(_show(root, rev, f"{prefix}.mjrp-project.yml"))
         if profile != "code-app" or not approved_reference(_show(root, rev, f"{prefix}docs/specs/info-arch.md")):
@@ -252,8 +353,15 @@ def judge_full(root, rev, base="HEAD"):
             _, rc = _git(root, "log", "-1", "--format=%H", rev, "--", rp)
             rc = rc.strip()
             if rc and rc != last and _git(root, "merge-base", "--is-ancestor", last, rc)[0] == 0:
+                if judged_by_human(_show(root, rev, rp)):
+                    notes.append(f"{name}: {rp} diz `who_judged: human` - o OK do humano escrito por um agente não vale como "
+                                 f"veredito (F61); na via rápida o OK é o Touch ID que o merge pede")
+                    continue
                 after.append((position.get(rc, len(position)), rp))
         shown = f"{', '.join(screen[:3])}{'…' if len(screen) > 3 else ''}; último commit de tela {last[:8]}"
+        if not after and fast_lane:
+            waiting.append((name, shown))
+            continue
         if not after:
             problems.append(("missing", f"{name}: o ramo mudou a tela ({shown}) e não traz reconferência visual "
                              f"(`verdict: pass` ou `fail`, com `p0: 0`, no frontmatter) commitada depois dele "
@@ -270,12 +378,34 @@ def judge_full(root, rev, base="HEAD"):
             continue
         label = {"p0": "tem P0", "incomplete": "não avaliou", "invalid": "não diz o veredito"}[kind]
         problems.append((kind, f"{name}: o ramo mudou a tela ({shown}) e a reconferência mais nova ({newest}) {label}: {why}"))
+    if waiting and problems and ask is not None:
+        notes.append("via rápida: o Touch ID não foi pedido - o merge já é recusado pelo que vem abaixo")
+        ask = None
+    if waiting:
+        p, n = _human_ok(root, rev, label_of_branch, fast, waiting, ask)
+        problems += p
+        notes += n
     return problems, notes
 
 
 def judge(root, rev, base="HEAD"):
     """The problems that block merging `rev` into `base`, as text lines; an empty list means the merge may go."""
     return [msg for _kind, msg in judge_full(root, rev, base)[0]]
+
+
+PROTECTED_BRANCH = "main"
+
+
+def _merge_heads(root):
+    """The revisions of an open merge (MERGE_HEAD, one per line): the pre-commit's `--hook` when a merge into main is closed by
+    `git commit` - after a refusal or a conflict - where git runs no pre-merge-commit and sets no GIT_REFLOG_ACTION (UAT-418)."""
+    code, path = _git(root, "rev-parse", "--git-path", "MERGE_HEAD")
+    f = Path(path.strip()) if code == 0 and path.strip() else None
+    if f is not None and not f.is_absolute():
+        f = Path(root) / f
+    if f is None or not f.is_file():
+        return []
+    return [l.strip() for l in f.read_text(encoding="utf-8").splitlines() if l.strip()]
 
 
 def _revs_from_reflog_action():
@@ -286,23 +416,72 @@ def _revs_from_reflog_action():
     return [p for p in parts[1:] if not p.startswith("-")]
 
 
+def staged_screen_files(root):
+    """The screen files (repository paths) this merge brings into HEAD - read from what git staged (HEAD against the index), with
+    the contract and info-arch.md of each project read from the index. The hook learns WHICH revisions are merged only from
+    GIT_REFLOG_ACTION, and git writes MERGE_HEAD only after the hook; this is the content side of the same merge."""
+    _, out = _git(root, "diff", "--cached", "--name-only", "HEAD")
+    staged = [l for l in out.splitlines() if l]
+    _, listed = _git(root, "ls-files")
+    contracts = sorted({p[: -len(".mjrp-project.yml")] for p in listed.splitlines() if p.endswith(".mjrp-project.yml")},
+                       key=len, reverse=True)
+    found = set()
+    for f in staged:
+        prefix = next((c for c in contracts if f.startswith(c)), None)
+        if prefix is None:
+            continue
+        profile, declared = contract_fields(_show(root, "", f"{prefix}.mjrp-project.yml"))
+        if profile != "code-app" or not approved_reference(_show(root, "", f"{prefix}docs/specs/info-arch.md")):
+            continue
+        if is_screen_file(f[len(prefix):], declared):
+            found.add(f)
+    return found
+
+
+def unjudged_screen(root, revs, base="HEAD"):
+    """The staged screen files that none of the named revisions changed since its merge base with `base`: what the merge brings
+    and the gate would not have judged. `GIT_REFLOG_ACTION=x git merge ...` (or `merge main`) named nothing - or the wrong thing
+    - and used to skip the whole gate (F61 judge, pre-existing); now the gate refuses what it cannot tie to a named revision."""
+    staged = staged_screen_files(root)
+    covered = set()
+    for rev in revs:
+        code, mb = _git(root, "merge-base", base, rev)
+        if code == 0:
+            covered |= set(_git(root, "diff", "--name-only", mb.strip(), rev)[1].splitlines())
+    return sorted(staged - covered)
+
+
 def main(argv):
     root = _git(".", "rev-parse", "--show-toplevel")[1].strip() or "."
     if "--hook" in argv:
-        revs = _revs_from_reflog_action()
-        if not revs:
-            return 0                       # not a `git merge <rev>` we can name: nothing to judge
+        into = _git(root, "rev-parse", "--abbrev-ref", "HEAD")[1].strip()
+        if into != PROTECTED_BRANCH:
+            # UAT-418: the gate guards what enters main; `git merge main` inside a feature branch brings work main already holds
+            print(f"  [visual] merge em {into or 'HEAD destacado'}, não na {PROTECTED_BRANCH}: a trava visual julga só o que entra na {PROTECTED_BRANCH}")
+            return 0
+        revs = [(r, r) for r in _revs_from_reflog_action()] or [(r, r) for r in _merge_heads(root)]
     elif "--check" in argv:
-        revs = [argv[argv.index("--check") + 1]]
+        rev = argv[argv.index("--check") + 1]
+        revs = [(rev, rev)]
     else:
         print(__doc__)
         return 2
     base = argv[argv.index("--base") + 1] if "--base" in argv else "HEAD"
     problems, notes = [], []
-    for rev in revs:
-        p, n = judge_full(root, rev, base)
+    # only a merge asks for the finger (--check says what the merge will ask), and not one the human already released
+    released = bool(os.environ.get(SKIP_VAR, "").strip())
+    ask = ask_presence if "--hook" in argv and not released else None
+    for rev, label in revs:
+        p, n = judge_full(root, rev, base, ask=ask, label_of_branch=label)
         problems += p
         notes += n
+    if "--hook" in argv:
+        loose = unjudged_screen(root, [r for r, _l in revs], base)
+        if loose:
+            shown = f"{', '.join(loose[:3])}{'…' if len(loose) > 3 else ''}"
+            named = os.environ.get("GIT_REFLOG_ACTION", "")
+            problems.append(("unnamed", f"o merge traz tela ({shown}) que nenhuma revisão nomeada mudou (GIT_REFLOG_ACTION="
+                                        f"{named!r}): a trava não sabe o que está julgando"))
     for n in notes:
         print(f"  [visual] {n}")
     if not problems:
@@ -314,7 +493,8 @@ def main(argv):
         print(f"  [visual] merge liberado pelo humano: VISUAL_RECHECK_SKIP — {skip}")
         return 0
     kinds = {k for k, _m in problems}
-    print("\n  merge recusado: feature de tela sem reconferência visual independente avaliada e sem P0 (pdlc-loops § 5).")
+    print("\n  merge recusado: feature de tela sem veredito visual - a reconferência independente avaliada e sem P0 (pdlc-loops § 5)"
+          "\n  ou, na via rápida, o OK do MJRP na tela (pdlc-loops § 2).")
     if kinds & {"missing", "invalid"}:
         print("  rode a reconferência (mjrp-ensuring-quality, modo visual parity, por um agente que não implementou),\n"
               "  commite o relatório no ramo depois do último commit de tela e faça o merge de novo\n"
@@ -325,6 +505,14 @@ def main(argv):
               "  rode a reconferência de novo - nada foi comparado, e isso não é paridade.")
     if "p0" in kinds:
         print("  P0 é do MJRP: traga a ele o que é; ele decide se entra na main mesmo assim.")
+    if kinds & {"human_ok", "human_no"}:
+        print("  via rápida: o juiz da tela é o MJRP. O merge pede o Touch ID dele (o diálogo nomeia as features, o ramo e o tip);\n"
+              "  sem o dedo dele não entra. Combine com ele e faça o merge de novo - o OK não se escreve em relatório.")
+    if "unnamed" in kinds:
+        print("  faça o merge pelo nome do ramo (`git merge <ramo>` ou `merge_train.py merge <ramo>`), sem trocar o GIT_REFLOG_ACTION.")
+    if "human_unavailable" in kinds:
+        print("  o Touch ID não está disponível nesta máquina ou neste processo (sem o Control Center instalado, sem sessão gráfica,\n"
+              "  sandbox): faça o merge no Mac do MJRP, onde o diálogo aparece.")
     print("  a saída é do humano, nunca do agente: VISUAL_RECHECK_SKIP=\"<motivo>\" git merge … ou git merge --no-verify.")
     return 1
 

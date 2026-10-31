@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 product_structure_check.py - can the Control Center show this product? Reads a project the way the Control Center
 reads it and says, per screen, what it cannot render: the judge of the `product-structure` catalog item.
@@ -18,8 +18,10 @@ to the real parsers on the Control Center itself and on the harness root: change
 until this file follows.
 
 What is a gap (each with file:line and the owner skill):
-  - outcomes (ROADMAP.md): the file, its format, at least one outcome, each in Now/Next/Later, with its measure
-    (`- **Medida:**` in its own `###` section - the only way the screen shows it) and its `tags::`; a declared
+  - outcomes (ROADMAP.md): the file, its format, at least one outcome, each in Now/Next/Later, with its measure line
+    (`- **Medida:**` in its own `###` section - the only way the screen shows it) and its `tags::`. The measure is
+    OPTIONAL (F127, roadmap@7, CM-0088): the line stays required, but `- **Medida:** sem medida` is a valid value
+    (`_no_measure`); a missing line is still the gap `outcome_no_measure`; a declared
     `contributes_to::` that the screen would not resolve (rules/contribution.py: the target is the ROADMAP.md of a
     project with a contract, inside the same repository, not the roadmap itself, holds that `^OUT-xx` block - a `^REL`
     is not one - and the edges close no cycle);
@@ -63,7 +65,8 @@ content that a pattern can only approximate, so they point at what a separate-ag
     file-level demand is the catalog's `roadmap@4`); the OUTCOME CYCLE - an outcome in Now whose stories are all done and
     that has no `achieved:: AAAA-MM-DD` (`outcome_done_not_achieved`: it is "em monitoramento", only the MJRP marks it
     achieved), one that has `achieved::` and is still in Now (`outcome_achieved_in_now`), one achieved or in `## Alcançados`
-    that lacks the date or the `- **Valor medido:**` / `- **Aprendizado:**` bullets (`outcome_achieved_incomplete`), and more
+    that lacks the date or the `- **Valor medido:**` / `- **Aprendizado:**` bullets (`outcome_achieved_incomplete`; an outcome
+    `sem medida` has no value to measure, so it owes only the date and the learning - the MJRP's judgment is the proof), and more
     than 5 outcomes in progress in Now (`now_too_many`; "em monitoramento" does not count);
   - features: the SIZE SIGNALS of a feature - a feature is the smallest vertical slice that delivers value observable by
     whoever uses it, fits one round of execution and verification and is confirmed with a single verification - more than
@@ -219,6 +222,11 @@ def _fields(lines):
             parts.append(follow)
         found.setdefault(label, plain(" ".join(parts)).lstrip(":").strip())
     return found
+
+
+def _no_measure(text):
+    """True when the measure line says, explicitly, that the outcome has none (F127: `- **Medida:** sem medida`)."""
+    return re.sub(r"[\W_]+", " ", plain(text or "")).strip().casefold() == "sem medida"
 
 
 def _pick(fields, *names):
@@ -643,6 +651,7 @@ def read_feature(root, folder):
             "lane": lane, "solution_type": solution_type,
             "track": "fix" if solution_type == "fix" else "normal",
             "has_track": declared, "fixes": _UAT_ID.findall(front.get("fixes", "")),
+            "planned_for": (lambda m: m.group(1) if m else None)(_RELEASE.search(front.get("planned_for", ""))),
             "status": front.get("status", "").strip(), "status_line": at.get("status", 1),
             "imports_line": at.get("imports", 1), "fixes_line": at.get("fixes", 1),
             "summary": summary_problems(spec_text) if spec_text is not None else [], "tasks_total": tasks_total}
@@ -858,7 +867,10 @@ def parse_uat(text):
 def feature_release(feature, by_id, uat_rows, releases):
     """modules/tracking/delivery.py `_release_of`: the release a feature card lands in - the one most of its stories
     (a normal feature) or of its UAT issues' rounds (a Fix) sit in. A tie is left to the screen's set order; here the
-    smallest id, so the output is stable (the pin test never feeds a tie)."""
+    smallest id, so the output is stable (the pin test never feeds a tie). The release its spec declares (`planned_for:`) wins when
+    the ROADMAP has it (product-structure@12, the screen's own reading: a legacy feature with no story says its version)."""
+    if feature.get("planned_for") and any(r["id"] == feature["planned_for"] for r in releases):
+        return feature["planned_for"]
     if feature["track"] == "fix":
         found = [release_id(uat_rows[i]["release_name"], releases) for i in feature["fixes"] if i in uat_rows]
     else:
@@ -1000,6 +1012,23 @@ def _in_achieved(o):
     return (o.get("section") or "").casefold().startswith("alcançad")
 
 
+def legacy_mapping(root):
+    """product-structure@12 (F128): (versions, features) the approved from-to mapping brought from the legacy - the `release` groupings
+    and the `feature` items of docs/specs/board-mapping.json in a brownfield or conform record. What closed before the harness is
+    history, and the MJRP's rule of 2026-10-18 judges only what is not closed: a version «sem stories» and a feature with no story are
+    planning gaps, never ones of an SDD-only legacy (it had no stories; the feature says its own `planned_for`). An unreadable record
+    exempts nothing (board_mapping_check.py judges it)."""
+    f = Path(root) / "docs" / "specs" / "board-mapping.json"
+    try:
+        m = json.loads(f.read_text(encoding="utf-8")) if f.is_file() else {}
+    except (OSError, ValueError):
+        return set(), set()
+    if not isinstance(m, dict) or m.get("mode") not in ("brownfield", "conform"):
+        return set(), set()
+    rows = [x for x in (m.get("groupings") or []) + (m.get("items") or []) if isinstance(x, dict)]
+    return ({x.get("id") for x in rows if x.get("kind") == "release"}, {x.get("id") for x in rows if x.get("type") == "feature"})
+
+
 def check(root):
     """The Report of a code-app project. Raises FileNotFoundError / ValueError for "not evaluable"."""
     root = Path(root)
@@ -1035,7 +1064,7 @@ def check(root):
                 r.warn("Produto", ROADMAP_FILE, o["line"], f"{where} sem `- **Quem sente:**` (linha de lista com o rótulo em negrito): a tela mostra o campo vazio",
                        OWNER_PM, code="outcome_no_who")
             if not o["measure"]:
-                r.gap("Produto", ROADMAP_FILE, o["line"], f"{where} sem medida: escreva `- **Medida:** <hoje → alvo> ^{o['id']}` na seção dele", OWNER_PM, code="outcome_no_measure")
+                r.gap("Produto", ROADMAP_FILE, o["line"], f"{where} sem medida: escreva `- **Medida:** <hoje → alvo> ^{o['id']}` na seção dele ou, se não há medida, `- **Medida:** sem medida` (a medida é opcional; a linha, não)", OWNER_PM, code="outcome_no_measure")
             if not o["tags"]:
                 r.gap("Produto", ROADMAP_FILE, o["line"], f"{where} sem `tags::` (1 a 3) na seção dele", OWNER_PM, code="outcome_no_tags")
             if o["contributes_to"]:
@@ -1115,6 +1144,7 @@ def check(root):
 
     # ---- features (Delivery board)
     by_id = {n["id"]: n for n in nodes or ()}
+    legacy_features = legacy_mapping(root)[1]
     uat_rows, uat = {}, None
     uat_text = _read(root, UAT_FILE, r, "Delivery", OWNER_SDD, "uat_not_utf8")
     if isinstance(uat_text, str):
@@ -1164,7 +1194,7 @@ def check(root):
                 elif i in uat_rows:
                     found.append(release_id(uat_rows[i]["release_name"], releases))
         else:
-            if not f["imports"]:
+            if not f["imports"] and f["id"] not in legacy_features:
                 r.gap("Delivery", f["spec"], f["imports_line"], f"{f['id']} não importa nenhuma story (`imports: [\"[[S-xx-slug]]\"]`): o card fica sem release", OWNER_SDD, code="feature_no_imports")
             missing = [s for s in f["imports"] if s not in by_id]
             if nodes is not None and missing:
@@ -1198,11 +1228,12 @@ def check(root):
         statuses = {n["id"]: story_status(n["status"]) for n in nodes}
         counted = [n for n in nodes if not n["nfr"]]       # a transversal NFR is in no release and not in "sem release" (F22)
         rel_counts = []
+        legacy = legacy_mapping(root)[0]
         for x in releases:
             mine = [statuses[n["id"]] for n in counted if n["release"] == x["id"]]
             d, live = tally(mine)
             rel_counts.append({"id": x["id"], "name": x["name"], "done": d, "of": live})
-            if not live:
+            if not live and x["id"] not in legacy:
                 r.gap("Releases", ROADMAP_FILE, x["line"], f"{x['id']} ({x['name']}) sem nenhuma story que conte: o Board e a tela da release ficam \"sem stories\" — "
                       "ou ela ganha stories (`planned_for:`), ou ainda não é release (decisão do humano)", OWNER_PM, code="release_empty")
         loose = [statuses[n["id"]] for n in counted if n["release"] is None]
@@ -1234,13 +1265,14 @@ def check(root):
             if o["horizon"] == "Now" and monitoring(o) and not o["achieved"]:
                 x = done_of[o["id"]]
                 r.warn("Produto", ROADMAP_FILE, o["line"], f"{where} tem {x['done']} de {x['of']} stories feitas e segue em Now sem `achieved:: AAAA-MM-DD`: está em monitoramento. "
-                       "Só o MJRP marca o resultado como alcançado (o agente não propõe): medida atingida, ele põe `achieved::` e o resultado vai para `## Alcançados` com "
-                       "`- **Valor medido:**` e `- **Aprendizado:**`; impacto parcial ou nulo, segue no Now e volta à Discovery", OWNER_PM, code="outcome_done_not_achieved")
+                       "Só o MJRP marca o resultado como alcançado (o agente não propõe): medida atingida (ou, no resultado `sem medida`, o julgamento dele), ele põe `achieved::` e o resultado vai para "
+                       "`## Alcançados` com `- **Valor medido:**` (só quando há medida) e `- **Aprendizado:**`; impacto parcial ou nulo, segue no Now e volta à Discovery", OWNER_PM, code="outcome_done_not_achieved")
             if o["horizon"] == "Now" and o["achieved"]:
                 r.warn("Produto", ROADMAP_FILE, o["line"], f"{where} tem `achieved:: {o['achieved']}` e segue em `## Now`: alcançado sai do Now para `## Alcançados`",
                        OWNER_PM, code="outcome_achieved_in_now")
             if o["achieved"] or _in_achieved(o):
-                missing = [name for name, ok in (("`achieved:: AAAA-MM-DD`", o["achieved"]), ("`- **Valor medido:**`", o["has_value"]),
+                no_value_owed = _no_measure(o["measure"])      # `sem medida`: nothing to measure; the MJRP's judgment is the proof
+                missing = [name for name, ok in (("`achieved:: AAAA-MM-DD`", o["achieved"]), ("`- **Valor medido:**`", o["has_value"] or no_value_owed),
                                                   ("`- **Aprendizado:**`", o["has_learning"])) if not ok]
                 if missing:
                     r.warn("Produto", ROADMAP_FILE, o["line"], f"{where} alcançado e sem {', '.join(missing)}: o histórico guarda a data, o valor medido e o aprendizado",

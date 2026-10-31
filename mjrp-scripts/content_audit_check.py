@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 r"""
 content_audit_check.py - did the conform's CONTENT audit really run on this project? The judge of the `content-audit`
 catalog item (content-audit@4: CM-0052, CM-0057, CM-0063, CM-0066).

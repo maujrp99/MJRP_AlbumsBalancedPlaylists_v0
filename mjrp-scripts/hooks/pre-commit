@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # pre-commit - structure by nature (EP-09) and the coherence of the requirements graph (S-67). Blocks a commit that ADDS something outside its nature
 # (docs/ only memory; reports/, design/, data/ with their declared subfolders). Only what this commit
 # adds is judged - an old misplacement is the doctor's W9 warning, not a blocked commit.
@@ -16,6 +16,17 @@
 # And a missing python3 or a missing sensor is a WARNING on stderr, never a silent pass: the commit goes through unchecked, and the
 # person reading the terminal knows it.
 ROOT=$(git rev-parse --show-toplevel) || exit 0
+
+# F57 (CC-ADR-0027 § 1): the Control Center's built screen is derived, never versioned - the service builds it from the sources. Any index
+# entry under it is refused, the whole index and not only what this commit adds: that also catches the `git add` that settles the
+# modify/delete conflict of a branch older than F57 by keeping the branch's side. Pure git, before any sensor, so a missing python3 skips nothing.
+BUILT_SCREEN="apps/control-center/web/dist"
+if [ -n "$(git -C "$ROOT" ls-files -- "$BUILT_SCREEN/" | head -n 1)" ]; then
+  echo "  commit bloqueado: REPROVOU - o índice tem arquivos da tela compilada ($BUILT_SCREEN), que não é versionada (CC-ADR-0027 § 1)." >&2
+  echo "  tire do índice sem apagar do disco (é derivado): git rm -r -q --cached $BUILT_SCREEN" >&2
+  echo "  num merge de ramo anterior à F57: python3 mjrp-scripts/merge_train.py dist-resolve" >&2
+  exit 1
+fi
 
 # run_sensor <label> <command...>: prints the sensor's output; returns 0 passed, 1 failed, 2 not evaluated.
 run_sensor() {
@@ -34,6 +45,18 @@ run_sensor() {
   esac
 }
 
+# UAT-418 (2026-10-30): a merge into main closed by `git commit` - after the pre-merge-commit refused it, or after a conflict - runs no
+# pre-merge-commit, so the visual gate ran nowhere (the batch recheck's P2-2: a refused merge went in this way). The gate runs here on that
+# commit, reading the merged revisions from MERGE_HEAD; on any other branch it is not asked (it guards main only).
+VGATE="$ROOT/mjrp-scripts/visual_gate.py"
+if [ -f "$VGATE" ] && git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1 && [ "$(git rev-parse --abbrev-ref HEAD)" = "main" ]; then
+  run_sensor "trava visual do merge (fechado por git commit)" python3 "$VGATE" --hook
+  code=$?
+  if [ "$code" -ne 0 ]; then
+    echo "  commit bloqueado: o merge na main que mudou tela não entra por \`git commit\` sem o veredito visual (linhas acima)." >&2
+    exit 1
+  fi
+fi
 CHECK="$ROOT/mjrp-scripts/structure_check.py"
 GRAPH="$ROOT/mjrp-scripts/requirements_graph_check.py"
 if [ ! -f "$CHECK" ] && [ ! -f "$GRAPH" ]; then
@@ -42,6 +65,23 @@ fi
 if ! command -v python3 >/dev/null 2>&1; then
   echo "  [pre-commit] AVISO: python3 não foi encontrado - a estrutura por natureza e o grafo de requisitos NÃO foram conferidos neste commit." >&2
   exit 0
+fi
+# F132 (UAT-411, 2026-10-30): the board sees a branch's work only by its name (branch-convention@2, F67). A commit on a work branch outside it
+# (`f127-x`, `worktree-agent-x`) is refused with the `git branch -m` that cures it; the main line, `wip/`, `archive/`, `integrate/`, a detached HEAD
+# and a rebase pass. The convention is read from the Control Center's rules/delivery.py (in a child, from the harness), never copied. First: it
+# is the cheapest check, and a refused name makes every other verdict moot.
+BRANCHCHK="$ROOT/mjrp-scripts/branch_name_check.py"
+if [ ! -f "$BRANCHCHK" ]; then
+  echo "  [pre-commit] AVISO: mjrp-scripts/branch_name_check.py não existe - o nome do ramo NÃO foi conferido neste commit." >&2
+else
+  run_sensor "nome do ramo" python3 "$BRANCHCHK" "$ROOT"
+  code=$?
+  if [ "$code" -eq 1 ]; then
+    echo "  commit bloqueado: REPROVOU - o ramo deste commit está fora da convenção de nomes que o board lê (linha acima: o comando que renomeia)." >&2
+    exit 1
+  elif [ "$code" -eq 2 ]; then
+    exit 1
+  fi
 fi
 if [ -f "$CHECK" ]; then
   run_sensor "estrutura por natureza" python3 "$CHECK" "$ROOT" --staged
@@ -117,6 +157,26 @@ if [ -f "$SDDCHK" ] && git -c core.quotePath=false diff --cached --name-only --d
     exit 1
   elif [ "$code" -eq 2 ]; then
     exit 1
+  fi
+fi
+# F125 (UAT-407, 2026-10-29): the «Priorizada» column governs what starts (AGENTS.md § A coluna «Priorizada» manda no que começa). A commit that
+# STARTS a Human-track feature (its tasks.md gets the first ticked task, or its spec leaves Draft for In progress) is refused when the feature is not
+# in the project's `docs/specs/priority.md`; inside the list it passes (a warning when one above it has not started); the Agent track and the
+# registration of a Draft always pass. A list that cannot be read is exit 2 (not evaluated), never a pass. Runs only when the commit touches a
+# feature's spec.md or tasks.md. The refusal prints its own sentence (the drag on the board is the human's).
+PRIOGATE="$ROOT/mjrp-scripts/priority_gate_check.py"
+if git -c core.quotePath=false diff --cached --name-only --diff-filter=AMR | grep -Eq '(^|/)docs/specs/features/F[0-9]+-[^/]+/(spec|tasks)\.md$'; then
+  if [ ! -f "$PRIOGATE" ]; then
+    echo "  [pre-commit] AVISO: mjrp-scripts/priority_gate_check.py não existe - a «Priorizada» NÃO foi conferida neste commit." >&2
+  else
+    run_sensor "«Priorizada»" python3 "$PRIOGATE" "$ROOT" --staged
+    code=$?
+    if [ "$code" -eq 1 ]; then
+      echo "  commit bloqueado: REPROVOU - este commit começa uma feature da trilha Humano que o MJRP não priorizou (linha acima)." >&2
+      exit 1
+    elif [ "$code" -eq 2 ]; then
+      exit 1
+    fi
   fi
 fi
 # F101 (S-186, 2026-10-27): the fast lane's retroactive step, charged by machine. A commit that takes a `lane: fast` feature to Done (the

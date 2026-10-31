@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-12
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -1128,3 +1128,5 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 [[memory-architecture]] · [[context-vs-memory]] · recurring-pains · ADR-0008
 
 - **2026-10-28 12:16** · Quem insere uma entrada no `docs/log.md` pela primeira linha que começa com `## [` cai no exemplo do cabeçalho (`> \`## [AAAA-MM-DD HH:MM] <tipo>\``, partido em duas linhas) e grava dentro dele: o integrador em 27/10 e a tarefa agendada de inventário (Cowork) em 28/10 08:07. O doctor pega (F1, entrada fora do formato), mas só no doctor completo. Lição: inserir antes da primeira entrada datada (`\n## [20`), nunca pela primeira `## [`; vale corrigir a skill `mjrp-inventorying-folders` e oferecer um ajudante único no `mjrp-scripts/` — depois de 30/10.
+
+- **2026-10-30 21:02** · **Sessão de feature nascida de um commit velho da `main`.** O `start_session` sem `source_branch` corta o worktree da base da sessão integradora (o commit em que ela começou), não da ponta da `main`: a F131 nasceu 237 commits atrás, e a sessão da UAT-421, 238 — sem a auditoria que ela devia aplicar. Lição: o integrador passa `source_branch: main` em toda sessão que abre, e a sessão confere a base no primeiro passo (o commit de início já vem depois de um `git merge --ff-only main`).

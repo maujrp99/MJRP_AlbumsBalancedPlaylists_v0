@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 sdd_shape_check.py - do the features follow the SDD templates? The sensor of the SHAPE of `spec.md`, `plan.md` and `tasks.md` (F95, 2026-10-26).
 
@@ -56,11 +56,14 @@ import _git  # noqa: E402
 HERE = Path(__file__).resolve().parent
 TEMPLATES_REL = Path("mjrp-skills") / "mjrp-sw-factory" / "builder" / "mjrp-specifying-sdd-artifacts" / "templates"
 FEATURES_REL = "docs/specs/features"
+RECORD_REL = "docs/specs/board-mapping.json"         # F128: the approved from-to mapping, what came from the legacy
 KINDS = ("spec", "plan", "tasks")
 CLOSED = {"done", "accepted"}
 OPEN = {"draft", "ready", "in progress", "in-progress", "queued", "backlog"}     # the cycle runs: gaps only warn
 OFF_TRACK = {"cancelled", "deferred"}                                           # never delivered, never judged (requirements_graph_rules.json: off_track)
 STATUS_VOCABULARY = "Draft · Ready · Queued · Backlog · In Progress · Done · Accepted · Cancelled · Deferred"
+# F128: the legacy phrase in a closed spec's frontmatter (the requirements graph proves it by date: delivered_by older than the contract)
+_LEGACY = re.compile(r"\A---\s*\n(?:(?!---).*\n)*?accepted_in:\s*[\"']?histórico anterior ao harness", re.M)
 SINCE_FEATURE = 43            # the first feature judged: the day (2026-10-19) the shape stopped being followed
 PENDING_ERROR_FROM = 96       # the first feature born by new_feature.py: a «a escrever» left in it, once closed, is an error
 PENDING_TURN_DATE = date(2026, 11, 30)   # from this day a «a escrever» left in a CLOSED feature of the acervo (F43 to F95) is an error too:
@@ -195,7 +198,24 @@ def gaps_of(kind, text, shape):
     return gaps
 
 
-def feature_findings(num, status, texts, shapes, since=SINCE_FEATURE, pending_error_from=PENDING_ERROR_FROM, today=None):
+def legacy_numbers(record_text):
+    """F128: the numbers of the features the approved from-to mapping brought from the legacy (the `feature` items of a brownfield or conform
+    docs/specs/board-mapping.json). The phrase alone is not enough (judge's P1-2): the record is judged strict by board_mapping_check.py."""
+    try:
+        m = json.loads(record_text) if record_text else {}
+    except ValueError:
+        return set()
+    if not isinstance(m, dict) or m.get("mode") not in ("brownfield", "conform"):
+        return set()
+    out = set()
+    for i in m.get("items") or []:
+        hit = isinstance(i, dict) and i.get("type") == "feature" and re.match(r"^F(\d{2,})$", str(i.get("id")))
+        if hit:
+            out.add(int(hit.group(1)))
+    return out
+
+
+def feature_findings(num, status, texts, shapes, since=SINCE_FEATURE, pending_error_from=PENDING_ERROR_FROM, today=None, legacy=False):
     """[(level, kind, message)] for one feature; level is `error` | `warn`. `texts` maps spec/plan/tasks to the text or None. Pure.
     A status outside the vocabulary is an ERROR (a feature graded by another word would escape the gate)."""
     if num < since:
@@ -203,6 +223,8 @@ def feature_findings(num, status, texts, shapes, since=SINCE_FEATURE, pending_er
     key = (status or "").strip().casefold()
     if key in OFF_TRACK:
         return []
+    if legacy and key in CLOSED and _LEGACY.search(texts.get("spec") or ""):
+        return []           # F128: a legacy feature (closed before the harness) keeps the shape its sprint wrote, in `legacy/`
     if key not in CLOSED and key not in OPEN:
         return [("error", "spec", f"status `{(status or '').strip()}` fora do vocabulário ({STATUS_VOCABULARY}): o portão da forma não sabe se a feature fechou")]
     closed = key in CLOSED
@@ -253,6 +275,7 @@ def findings(root, shapes=None, since=SINCE_FEATURE, pending_error_from=PENDING_
     shapes = shapes or load_shapes(root)
     out = []
     for pre, proj in projects_of(root):
+        mapped = legacy_numbers(read(proj / RECORD_REL))
         for d in sorted(x for x in (proj / FEATURES_REL).iterdir() if x.is_dir() and _FEATURE_DIR.match(x.name)):
             num = int(_FEATURE_DIR.match(d.name).group(1))
             if num < since:
@@ -261,7 +284,8 @@ def findings(root, shapes=None, since=SINCE_FEATURE, pending_error_from=PENDING_
             if texts["spec"] is None:
                 out.append(("warn", f"{pre}{FEATURES_REL}/{d.name}", "spec", "spec.md ausente"))
                 continue
-            for level, kind, msg in feature_findings(num, status_of(texts["spec"]), texts, shapes, since, pending_error_from):
+            for level, kind, msg in feature_findings(num, status_of(texts["spec"]), texts, shapes, since, pending_error_from,
+                                                     legacy=num in mapped):
                 out.append((level, f"{pre}{FEATURES_REL}/{d.name}", kind, msg))
     return out
 
@@ -316,7 +340,10 @@ def staged_findings(root, shapes=None, since=SINCE_FEATURE, pending_error_from=P
         if texts["spec"] is None:
             out.append(("warn", folder, "spec", "spec.md fora do índice"))
             continue
-        for level, kind, msg in feature_findings(num, status_of(texts["spec"]), texts, shapes, since, pending_error_from):
+        rec = _git.run(top, "show", f":{folder.split(FEATURES_REL)[0]}{RECORD_REL}")
+        mapped = legacy_numbers(rec.out if rec.code == 0 else "")
+        for level, kind, msg in feature_findings(num, status_of(texts["spec"]), texts, shapes, since, pending_error_from,
+                                                 legacy=num in mapped):
             out.append((level, folder, kind, msg))
     return out
 

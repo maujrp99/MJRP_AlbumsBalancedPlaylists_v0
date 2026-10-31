@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _pathclass.py - the four classes of a path, decided by machine (ADR-0023 § 1; F74 TASK-03; the engine of `_safe.py discard`
 and of the deletion guard hook).

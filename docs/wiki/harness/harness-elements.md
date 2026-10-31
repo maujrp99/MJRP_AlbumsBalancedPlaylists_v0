@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-27
 fontes: [pasquadev-loop-engineering, anthropic-context-engineering, ibm-skills-mcp-rag-memory, fowler-guides-sensors]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Os **sete elementos** que compõem o entorno de um modelo de linguagem para que ele produza trabalho confiável — os
@@ -28,7 +28,7 @@ cada elemento absorveu.
 |---|---|---|---|---|
 | HE-1 | Loops | loop de execução | Plataforma + Harness | o do turno, emprestado; o da tarefa: `loop.py`, nível 2; os loops do PDLC — Intake, Discovery, Delivery, Learn — com critério de saída |
 | HE-2 | Orchestration & Evals (Human and/or Agentic) | orquestração; os juízes | Harness | a `mjrp-pdlc` roteia; executor, juiz independente e integrador; os evals são os juízes humanos e agênticos |
-| HE-3 | Governance (Human & Agentic) & Observability (Human) | governança, sensores, observabilidade | Harness | hooks que recusam; o aceite por feature; o `doctor` e os sensores; o Control Center |
+| HE-3 | Governance (Human & Agentic) & Observability (Human) | governança, sensores, observabilidade | Harness | hooks que recusam; o aceite do que o humano vê ou decide; o `doctor` e os sensores; o Control Center |
 | HE-4 | Context Engineering | context engineering, memória | Harness + Instância | a `mjrp-pdlc-onboarding` faz o *select*; seis tipos de memória, com casa |
 | HE-5 | Tools & Guides | ferramentas, guides | Harness + Instância | as skills da fábrica (guias procedurais) e o catálogo de scripts; `tools:` no contrato, pendente |
 | HE-6 | Security & Sandbox | ambiente de execução; os limites da Plataforma | Plataforma → Harness | as proteções que já rodam; o sandbox do agente no roadmap (EP-04) |
@@ -70,8 +70,8 @@ o que cada passo entregou. O avaliador pode ser humano, agente, ou os dois. ^he-
 grafo** (o fluxo é conhecido de antemão); **dentro de cada fase, loop** (o trabalho do papel é exploratório). No
 Delivery, três papéis: o **executor** faz, o **juiz** confere sem ter feito (um por lote) e o **integrador** é o único
 que escreve na `main`. Os **evals** são esses juízes: a reconferência visual, as críticas de UX e de arquitetura, a
-reconferência independente da trilha Agente, os cenários de eval de cada skill — e o humano, que dá o aceite por
-feature. Falta o agente por papel (EP-03) e os evals das skills rodando sozinhos.
+reconferência independente da trilha Agente, os cenários de eval de cada skill — e o humano, que dá o aceite do que há
+para ele ver ou decidir. Falta o agente por papel (EP-03) e os evals das skills rodando sozinhos.
 
 ### HE-3 · Governance (Human & Agentic) & Observability (Human)
 **Governança — o que é.** Quem pode fazer o quê, e o que exige aprovação. No nível da chamada de ferramenta: *always do
@@ -79,7 +79,7 @@ feature. Falta o agente por papel (EP-03) e os evals das skills rodando sozinhos
 
 **No MJRP.** **Mecanizada onde dói.** Hooks que recusam: o `path_guard` (arquivo novo fora da sua natureza), o
 `pre-commit`, o `commit-msg`, o `pre-merge-commit` (a trava visual), o `Stop` e os `PreToolUse` que barram as válvulas do
-humano ([[hooks-concept]]). O aceite de cada feature é do humano, com carimbo que o agente não escreve. O resto segue
+humano ([[hooks-concept]]). O aceite do que o humano vê ou decide é dele, com carimbo que o agente não escreve; o resto fecha pela reconferência independente (Fechado). O resto segue
 escrito — as classes de decisão (a)(b)(c) no `AGENTS.md`.
 
 **Sensores — o que é.** O que detecta **depois** da ação que algo saiu errado, sem depender do agente cooperar.
@@ -146,10 +146,10 @@ elemento, mude aqui, com data no `## History`.
 | Capacidade | Lente | Status | O que existe | O que falta | Página |
 |---|---|---|---|---|---|
 | [[harness-elements#^he-1\|HE-1]] Loops | O coração: tudo se organiza em volta dele | rodando | Cada trabalho passa por loops com começo, meio e fim: entender o pedido, descobrir a solução, construir e aprender com o resultado. Nenhum loop começa sem saber quando termina. | loops que rodam sozinhos do começo ao fim | [[pdlc-loops]] |
-| [[harness-elements#^he-2\|HE-2]] Orchestration & Evals | Quem faz o quê, e quem confere | rodando e evoluindo | Cada etapa tem um responsável. Quem constrói nunca é quem confere: um avaliador independente revisa o trabalho, e a entrega só vale com o aceite de uma pessoa. | um agente especializado para cada papel; as avaliações rodando sozinhas | [[agents-agentic-concepts]] |
-| [[harness-elements#^he-3\|HE-3]] Governance & Observability | Regras claras e tudo à vista | rodando e evoluindo | O sistema recusa sozinho o que viola as regras. Cada entrega pede a aprovação de uma pessoa. Um painel mostra o estado de cada projeto, os alertas e o custo. | o registro detalhado do que cada agente fez | [[doctor]] |
+| [[harness-elements#^he-2\|HE-2]] Orchestration & Evals | Quem faz o quê, e quem confere | rodando e evoluindo | Cada etapa tem um responsável. Quem constrói nunca é quem confere: um avaliador independente revisa o trabalho, e o que a pessoa vê ou decide só vale com o aceite dela; o resto fecha pela reconferência independente. | um agente especializado para cada papel; as avaliações rodando sozinhas | [[agents-agentic-concepts]] |
+| [[harness-elements#^he-3\|HE-3]] Governance & Observability | Regras claras e tudo à vista | rodando e evoluindo | O sistema recusa sozinho o que viola as regras. O que a pessoa precisa ver, decidir ou é de segurança pede a aprovação dela. Um painel mostra o estado de cada projeto, os alertas e o custo. | o registro detalhado do que cada agente fez | [[doctor]] |
 | [[harness-elements#^he-4\|HE-4]] Context Engineering | A memória certa na hora certa | rodando | O sistema lembra onde o trabalho parou, as decisões tomadas e o que foi aprendido. Carrega só o que a tarefa pede, e o custo disso é medido. | medir o que cada agente realmente lê | [[context-vs-memory]] |
-| [[harness-elements#^he-5\|HE-5]] Tools & Guides | Os procedimentos e as ferramentas | rodando e em construção | 25 guias de procedimento, um para cada tipo de trabalho, e mais de 150 ferramentas automáticas catalogadas. | o inventário de ferramentas declarado em cada projeto | tools |
+| [[harness-elements#^he-5\|HE-5]] Tools & Guides | Os procedimentos e as ferramentas | rodando e em construção | 26 guias de procedimento, um para cada tipo de trabalho, e mais de 150 ferramentas automáticas catalogadas. | o inventário de ferramentas declarado em cada projeto | tools |
 | [[harness-elements#^he-6\|HE-6]] Security & Sandbox | O ambiente e a segurança | rodando e em construção | Tudo é recuperável. Nenhuma senha ou segredo fica guardado em arquivo. Acessos protegidos. | um ambiente isolado para cada agente trabalhar | [[hooks-concept]] |
 | [[harness-elements#^he-7\|HE-7]] Guardrails & Foundation | As regras que sempre valem | rodando | Cada projeto declara suas regras, seus princípios e seu jeito de trabalhar, e o sistema confere tudo automaticamente. | — | [[project-profiles]] |
 
@@ -164,6 +164,7 @@ elemento, mude aqui, com data no `## History`.
 
 ## History
 
+- **2026-10-30 21:25** · **O OK de uma pessoa deixou de ser de toda entrega** (UAT-421, auditoria do Overview, achados 16 e 17): as linhas do HE-2 e do HE-3 (a faixa do card «Entenda o Harness») diziam «a entrega só vale com o aceite de uma pessoa» e «cada entrega pede a aprovação de uma pessoa». Pela regra de 2026-10-30 20:22 (`AGENTS.md` § Duas trilhas), só o que há para a pessoa ver, decidir ou de segurança pede o OK; o resto fecha pela reconferência independente, em Fechado. O mesmo nas linhas da tabela, do «Como se divide» e das hooks. E o HE-5 passou de 25 para 26 guias (a `mjrp-configuring-boards`, F136), o número que o mapa das skills do mesmo card já mostrava.
 - **2026-10-27 13:42** · as onze peças, e as cinco capacidades do card → os sete elementos do diagrama do PDLC em loops, na ordem do
   MJRP (HE-1 Loops, o núcleo; HE-2 Orchestration & Evals; HE-3 Governance & Observability; HE-4 Context Engineering; HE-5 Tools &
   Guides; HE-6 Security & Sandbox; HE-7 Guardrails & Foundation), cada um com o id `^he-n` que o card mostra entre colchetes, e

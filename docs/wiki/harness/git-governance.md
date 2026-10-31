@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-24
 fontes: [conventionalcommits.org, mjrp-deployer (aposentada, S-76), 1999-fowler-refactoring]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Governança de git** é o conjunto de regras que faz o histórico de um projeto ser legível por quem vem depois —
@@ -55,8 +55,11 @@ spec, plan e tasks em esboço, com a via e o tipo declarados — `lane` e `solut
 
 ### Ramos e a evidência
 - **`main`**: estável, implantável. **Não há `dev`:** a feature sai de `main` e volta a `main` por PR.
-- **Um ramo por feature ou fix**, curto: `feat/<nome>-<AAAAMMDD>`, `fix/<nome>-<AAAAMMDD>` — ex.:
-  `feat/bookshelf-filters-20260217`, `fix/cover-loading-20260217`.
+- **Um ramo por feature ou fix, com o número dela no nome** (`branch-convention@2`): `claude/fNN-<slug>` (o worktree de uma sessão;
+  `claude/fNN-fMM-<slug>` leva várias), `feat/fNN-<slug>`, `fix/fNN-<slug>` — ex.: `claude/f132-branch-name-gate`,
+  `fix/f41-cover-loading`. O board só enxerga o trabalho de um ramo por esse nome; com outro, o card fica parado enquanto a
+  feature anda. Sem feature, não há ramo de trabalho: crie a feature no board, na `main`, antes. Fora da convenção, e de
+  propósito, só a `main`, `wip/` (rascunho), `archive/` (guarda) e `integrate/` (o trem do integrador).
 - **O ramo entregue leva a evidência:** os requisitos cobertos (REQ-IDs), o verificador verde (testes, sensores, grafo sem
   contradição), o link da spec e o relatório do juiz independente. O agente não altera o verificador no ramo que ele verifica.
 
@@ -79,7 +82,8 @@ spec, plan e tasks em esboço, com a via e o tipo declarados — `lane` e `solut
 - **O que a integração quebrar** volta à sessão dona do ramo; o integrador não conserta código de feature, só conflito mecânico,
   derivado regenerado e id renumerado. Em último caso, `git revert` do merge enquanto a dona corrige.
 - **O portão visual:** o hook `pre-merge-commit` recusa o merge de ramo que mudou tela sem relatório de reconferência avaliado e
-  sem P0 ([[pdlc-loops]] §5); a saída (`VISUAL_RECHECK_SKIP`, `--no-verify`) é do humano, nunca do integrador.
+  sem P0 ([[pdlc-loops]] §5); na via rápida, sem relatório, o próprio merge pede o Touch ID do MJRP, que é o veredito (§2, F61);
+  a saída (`VISUAL_RECHECK_SKIP`, `--no-verify`) é do humano, nunca do integrador.
 - **O humano decide, não executa**, só quando pede ou quando há risco de impacto financeiro ou de negócio (apagar ou
   quebrar algo e perder o cliente). Toda integração aparece no Control Center. O aceite da feature é outro ato, o «Dar o OK»
   dele ([[pdlc-loops]] §6).
@@ -150,12 +154,28 @@ clean` passam. Se o próprio hook falha, sai 0 com «nao avaliou». Portas que e
   é decisão do humano, nunca do agente.
 - **`pre-commit`:** a estrutura por natureza (inclusive `design/wireframes/` e `design/diagrams/<tema>/ep-NN/`) e as
   contradições do grafo de requisitos nos nós tocados.
+- **`pre-commit` e o nome do ramo (F132, UAT-411):** o commit num ramo de trabalho fora da `branch-convention@2` é recusado, com o
+  comando exato que o renomeia (`git branch -m claude/fNN-<slug>`); passam a `main`, `wip/`, `archive/`, `integrate/`, o HEAD destacado e o
+  rebase em curso. A convenção não é copiada: o `branch_name_check.py` a lê do `rules/delivery.py` do Control Center, o mesmo que o board usa
+  (no filho, do harness achado pelo `harness_root:` do contrato); sem ela, num ramo de trabalho, é «não avaliável», nunca passe.
+- **`pre-commit` e a «Priorizada» (F125, UAT-407):** o commit que COMEÇA uma feature da trilha Humano (a primeira task marcada, ou o spec que sai de
+  Draft para `In progress`) é recusado quando a feature não está no `docs/specs/priority.md` do projeto — o humano a arrasta no board; dentro da lista
+  passa, e avisa se uma de cima não começou; a trilha Agente e o registro de um Draft passam; lista ilegível ou apagada é «não avaliável», nunca passe
+  (`priority_gate_check.py`; `priority_next.py` é o comando que lista as não começadas e o bloco do início de sessão).
+- **`pre-commit` e a tela compilada (F57, CC-ADR-0027):** recusa qualquer entrada do índice sob `apps/control-center/web/dist/`,
+  que não é versionada (o serviço compila a tela). Num merge de ramo anterior à F57, `merge_train.py dist-resolve` mantém a
+  remoção (`git rm --cached`; o disco fica, derivado).
 - **`commit-msg` e os carimbos de aceite (CC-ADR-0024):** recusa `Human-accepted:` e `Human-reopened:` ao lado de um
   `Co-Authored-By:` de agente — o aceite e a reabertura de uma feature são do MJRP, pelo «Dar o OK».
 - **`commit-msg` e o merge aberto (F60):** com `MERGE_HEAD` e uma mensagem que não é a do merge, o hook só avisa.
 - **Duas sessões no mesmo repositório:** commit só por *pathspec* — nunca `git add -A` com outra sessão ativa.
 
 ## History
+
+- **2026-10-30 21:14** · **A feature fecha pela reconferência quando não há nada para o MJRP** (F139, S-206; o pedido do MJRP de 2026-10-30 20:22, sobre a F57; decidido pelo agente nos detalhes, revisável pelo MJRP). A regra do `AGENTS.md` § Duas trilhas ganhou o registro e o board. A spec `Done` que não pede o olho dele declara `closed_by: "recheck independente: <relatório>, <AAAA-MM-DD HH:MM>"` e fica no estado **Fechado**, nunca «Aceito» (o `Human-accepted:` continua só dele). Quem sobe é um arquivo do kernel, o `mjrp-scripts/feature_closure.py`: uma story que ela importa e aponta para um estado de **tela** (o de comportamento não é), uma issue **dele** em `fixes:`, ou a marca `needs_human: "<decidir|ver|segurança>: <motivo>"`. O sensor do grafo recusa o `closed_by` nesses casos (`closed_by_fits`, `needs_human_shape`); o board põe a feature em `closed` (a coluna «Fechado» da página Board, com a story dela; a estação `closed` no contrato do Delivery); a trava do aceite recusa preparar o «Dar o OK» dela (`not_his`). Aplicada à F57, F129, F130, F134 e F136; F124, F127, F132, F137 e F138 seguem com ele. Escolhas do agente: só o `info-arch` conta como tela; a issue conta só pelo `fixes:`; a regra ilegível não fecha nada.
+- **2026-10-30 11:54** · **O nome do ramo, por máquina** (F132, UAT-411; a opção 1 do MJRP em 2026-10-30: só a trava, sem o Control Center reconhecer o ramo pelo conteúdo). O board lia o trabalho em ramo só pela `branch-convention@2` (F67) e nada a cobrava: a F127 andou num `f127-outcome-measure-optional` e os subagentes das F119 a F125 em `worktree-agent-…`, com os cards parados na «Priorizada». O `branch_name_check.py` roda primeiro no `pre-commit` e recusa o commit num ramo de trabalho fora da convenção, com o `git branch -m` que sana (o número da feature já no nome vira `claude/fNN-<resto>`; sem ele, o molde). A convenção é lida do `rules/delivery.py` pela árvore sintática — o módulo importa o contrato do app e o pydantic, que um hook não deve exigir —, nunca copiada. O molde antigo desta página (`feat/<nome>-<AAAAMMDD>`) saiu. Escolhas do agente, revisáveis pelo MJRP: o `integrate/` do trem passa (leva várias features, e o `merge_train` o cria); `master` conta como linha principal num filho que ainda a tem; o filho que não acha o harness, num ramo de trabalho, é exit 2 (o mesmo do conform), e na `main` nem procura. Autoteste: `branch_name_check_selftest.py`, com 6 mutações.
+- **2026-10-30 11:51** · **A tela compilada sai do git** (F57 TASK-03, CC-ADR-0027 §§ 1 e 12; decidido pelo agente, revisável pelo MJRP). O `apps/control-center/web/dist` saiu do índice e do `.gitignore` do app; o `pre-commit` da raiz recusa qualquer entrada do índice ali (o índice inteiro, não só o commit: pega o `git add` que resolve um *modify/delete* guardando o lado do ramo); o `merge_train.py dist-resolve` mantém a remoção quando um dos lados não versiona mais o build (nos dois sentidos), sem compilar, e o `merge` acusa um merge limpo que traga o build de volta. Um commit que tira um caminho só do índice não vai por *pathspec*: o `git commit -- <caminho>` o devolve (provado num repositório descartável); vai pelo índice do próprio worktree, conferida a lista. O `web/dist` local ficou classe 3 (`structure_rules.json → derived`), para não prender worktrees (P1-1 do juiz).
+- **2026-10-29 19:18** · **A «Priorizada» manda no que começa, por máquina** (F125, UAT-407; o pedido do MJRP de 2026-10-28; decidido pelo agente, revisável pelo MJRP). A regra «fora da lista não começa» vivia só como disciplina do orquestrador. Agora são três peças: `priority_next.py` (as features da ordem do MJRP que não começaram, com o título; o `--session-start` é o bloco do hook de início de sessão, mudo sem o que perguntar), o `priority_gate_check.py` no `pre-commit` (recusa o commit que começa uma feature da trilha Humano fora do `priority.md`; avisa a de cima não começada; Agente, registro de Draft e segunda task passam; lista ilegível ou apagada é exit 2) e o passo da skill `mjrp-integrating-branches` (rodar o comando e perguntar com `AskUserQuestion` antes de despachar trabalho novo da trilha Humano). As regras do app (formato da lista, «começou», ramo da feature, trilha) são espelhadas, cada uma citada no docstring. Escolhas do agente: o projeto sem `priority.md` não tem coluna e o portão o deixa passar; o spec `In progress` sem task marcada já é «começou»; o filho recebe o portão e o comando, não o lembrete de início de sessão. Autoteste: `priority_gate_check_selftest.py`, com 13 mutações.
 
 - **2026-10-28 10:35** · **A limpeza poupa o worktree recém-aberto e o que foi mexido na última hora** (F123, UAT-405, P2-2 da reconferência do lote F119–F122; decidido pelo agente, revisável pelo MJRP). «Mesclado» era «o ramo está contido na `main`», o que vale também para o ramo sem commit nenhum; com o fim do trem automático da F120, o worktree que o app acabou de abrir, antes do primeiro commit e da trava, saía no merge do integrador. O `judge_worktree` (o único juiz da limpeza do fim do trem, do `clean-worktrees --apply` e do W18) agora poupa, depois das quatro regras de git: o worktree cujo `HEAD` está na linha de primeiro pai da `main` (sem commit próprio) enquanto algo nele foi mexido nos últimos 7 dias (`FRESH_WORKTREE_DAYS`), com a razão «recém-aberto, sem commit próprio»; e qualquer worktree com arquivo modificado na última hora (`ACTIVE_WORKTREE_SECONDS`), em qualquer ponto da árvore. A idade é o mtime do sistema de arquivos, sem o `.git` da raiz. Consequência aceita: o ramo que acabou de ser juntado, com arquivo escrito há menos de uma hora, sai no trem seguinte. Autotestes: bloco «UAT-405 (F123)» do `_pathclass_selftest.py` e `case_clean_worktrees_f123` do `merge_train_selftest.py`.
 

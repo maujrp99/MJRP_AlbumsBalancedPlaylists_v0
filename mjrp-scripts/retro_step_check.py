@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """retro_step_check.py - the fast lane's retroactive step, charged by machine (F101, S-186).
 
 Born from an incident (ADR-0002 asks for one): on 2026-10-27 the F83 closed with the retroactive step half done, and the integrator

@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-09
 fontes: [productplan-vision-vs-strategy, productcompass-vision-strategy-goals]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O documento que responde **por que este projeto existe e onde ele quer chegar**. Estado, medição, configuração e ordem de execução moram em outros lugares e são apontados daqui.
@@ -36,10 +36,10 @@ documento e ensinado pela `mjrp-coaching-pm` (dona do modelo e do guia; a `mjrp-
 
 | Campo | Responde | Horizonte | Tamanho |
 |---|---|---|---|
-| **Propósito (WHY)** | a razão de ser — a necessidade que se quer resolver | sem prazo | **1 frase** |
-| **Visão (WHERE)** | o horizonte a alcançar — uma instanciação do propósito | longo prazo | **1 frase** + contexto |
-| **Objetivo (WHAT)** | a meta que leva à visão, e **o que se entrega** para chegar lá — o único lugar onde stack pode aparecer; inclui **as funções do produto** (ex.: informar, ajudar a decidir, agir), a que cada item do inventário do protótipo se liga | curto a médio prazo | o corpo do documento |
-| **Como (HOW)** | o plano e a estratégia que sustentam o objetivo | curto a médio prazo | ponteiro + estratégia |
+| **Propósito (WHY)** | a razão de ser — a necessidade que se quer resolver | sem prazo | **concisa e clara**, sem limite de frases |
+| **Visão (WHERE)** | o horizonte a alcançar — uma instanciação do propósito | longo prazo | **concisa e clara**, sem limite de frases |
+| **Objetivo (WHAT)** | a meta que leva à visão, e **o que se entrega** para chegar lá — o único lugar onde stack pode aparecer; inclui **as funções do produto** (ex.: informar, ajudar a decidir, agir), a que cada item do inventário do protótipo se liga | curto a médio prazo | o corpo do documento, conciso e claro |
+| **Como (HOW)** | o plano e a estratégia que sustentam o objetivo | curto a médio prazo | ponteiro + estratégia, concisa e clara |
 
 Os quatro campos são os quatro elos da **cadeia de intenção** ([[base-concept]]). **O plano não é
 resumido aqui:** o `Como (HOW)` aponta para o `ROADMAP.md` e carrega a estratégia — no MJRP, os
@@ -67,6 +67,7 @@ custar uma sessão.
 
 ## History
 
+- **2026-10-29 19:10** · **Nenhum dos quatro campos tem limite de frase.** O MJRP: «não tem essa constraint de uma frase e uma sentença, isso é bem ruim e limitante. Ser conciso e claro é importante, mas regra especifica de uma frase nao» e «isso serve para tudo, proposito, visao, objetivo, como». A coluna *Tamanho* passa a dizer o critério único — conciso e claro, do tamanho que a ideia pedir. O limite de «1 frase» veio com o modelo que o agente escreveu, não de decisão dele (UAT-408, F126).
 - **2026-10-09 20:55** · Revisão geral de 2026-10-09: o *Objetivo* do template passa a incluir as funções do produto (informar, ajudar a decidir, agir), onde cada item do inventário do protótipo termina; o link quebrado do `MEMORY.md` foi corrigido; as ADRs citadas passam a dizer "do harness", em texto.
 
 > A decisão mora na página do assunto que ela muda, com data (ADR-0008). As entradas abaixo

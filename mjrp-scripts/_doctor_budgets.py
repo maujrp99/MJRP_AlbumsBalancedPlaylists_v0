@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_budgets.py - the doctor's W18, second half: the TOTAL ceiling and the owner of everything that writes outside the
 versioning (ADR-0023 § 3; F74 TASK-05). The first half (free disk) is `_doctor_repo.w18_free_disk`.

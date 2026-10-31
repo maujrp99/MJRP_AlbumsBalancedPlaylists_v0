@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // The visual parity sensor of a project: the approved prototype against the product, same screen, same state, same
 // conditions — exit 0 parity, 1 a real P0/P1 divergence, 2 not evaluable (no config, no Playwright, no facts).
 //

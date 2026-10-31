@@ -4,7 +4,7 @@ item: purpose
 from: 0
 to: 1
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-10-28 · fonte 7ef3a2bef · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0014 · purpose@0 → purpose@1
 
 ## Por que
