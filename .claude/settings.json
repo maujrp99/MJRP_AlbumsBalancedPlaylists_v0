@@ -82,6 +82,15 @@
             "timeout": 15
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/screen_answers.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" --session-start",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "Stop": [

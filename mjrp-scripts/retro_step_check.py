@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """retro_step_check.py - the fast lane's retroactive step, charged by machine (F101, S-186).
 
 Born from an incident (ADR-0002 asks for one): on 2026-10-27 the F83 closed with the retroactive step half done, and the integrator
@@ -21,7 +21,11 @@ ONE source for what the step updates: the registry `mjrp-scripts/artifacts.json`
                   «atualizado» or «sem mudança»; «atualizado» also needs a commit of the feature touching it, in the feature's project or at
                   the repository top (`at_top`: only at the top)
     screen        when the feature touched a screen file (the contract's `screen:`, visual_gate), a commit of it touches `paths`;
-                  `none_ok`: `**Prototype**: none - <who>` in the spec.md lets it go (the human said no prototype is needed)
+                  `none_ok`: `**Prototype**: none - <who>` in the spec.md lets it go (the human said no prototype is needed);
+                  `touch_id_ok`: on the Human track the MJRP's Touch ID at the merge fills the row (F154, UAT-454): the audit note the gate
+                  writes (`git notes --ref=mjrp-visual-ok`, on a commit the judged copy reaches) names the feature and this project's screen.
+                  There is no agent judge on that track, so no report (pdlc-loops § 2). A fix whose issues are all the agents' is on the Agent
+                  track (`uat_tracks_check.VALUE` reads `Reportado por`; AGENTS.md § Duas trilhas): its judge is the recheck, the row asks the report
     fixes         when the spec's `fixes:` is not empty, a commit of the feature touches `paths` (the uat.md); for a fix
                   (`solution_type: fix`) each issue's Status cell in that uat.md also reads `fixed (<Fxx>: <commit> · <test or steps → result>)` (F111; the one format, UAT-393 / F117)
     sensor        another sensor checks it (`sensor`): listed, not judged here
@@ -38,6 +42,9 @@ sdd_shape_check.SINCE_FEATURE is not judged.
 
     python3 mjrp-scripts/retro_step_check.py <root> --staged                    the pre-commit: the INDEX against HEAD
     python3 mjrp-scripts/retro_step_check.py <root> --branch REF [--base REF]   merge_train.py merge: REF against the base (default HEAD)
+In a MERGE commit (MERGE_HEAD exists) `--staged` judges a feature the other parent already closed by that parent's commits, as `--branch`
+does, not by the diff of the merge (F147, UAT-439: the diff does not show what the branch already held); the feature this branch closes is
+judged as in any commit.
 Exit 0 nothing missing (the unchecked rows are printed) · 1 a fast-lane feature goes to Done without its step · 2 not evaluable (git did
 not answer, the registry is not JSON). A repository that versions no registry (a child without the harness's scripts) exits 0 saying
 it was NOT checked. Stdlib only (ADR-0015).
@@ -55,6 +62,7 @@ import _git  # noqa: E402
 import loop  # noqa: E402
 import pdlc_vocabulary_check as pvc  # noqa: E402
 import sdd_shape_check as ssc  # noqa: E402
+import uat_tracks_check  # noqa: E402
 import visual_gate  # noqa: E402
 from _contract import read_yaml  # noqa: E402
 
@@ -68,6 +76,8 @@ THEN = re.compile(r"\b(?:Então|Entao|Then)\b")
 WIKI_LINK = re.compile(r"\[\[([^\]|#]+)")
 DOCS_CONSULTED = "documents consulted"
 ISSUE_ID = re.compile(r"\bUAT-\d+\b")
+FEATURE_ID = re.compile(r"\bF\d{2,}\b")
+ROOT_PROJECT = "o projeto da raiz"   # how the note's `screen:` names the repository's root project (visual_gate.py; the selftest holds it)
 UAT_CELLS = re.compile(r"(?<!\\)\|")
 NOT_APPLICABLE = "não se aplica"   # the prefix of an unchecked reason that is not the agent's judgement: the row does not apply here
 
@@ -173,16 +183,21 @@ def _hit(touched, base, globs):
 
 def uat_status(text, uid):
     """The Status cell of issue `uid` in a uat.md text (the column named «Status» of the table it sits in); None when absent."""
+    return uat_cell(text, uid, "Status")
+
+
+def uat_cell(text, uid, column):
+    """The cell of issue `uid` under `column`, in the table it sits in; None when the row or the column is absent."""
     header = None
     for line in (text or "").splitlines():
         if not line.lstrip().startswith("|"):
             header = None if not line.strip() else header
             continue
         cells = [c.strip() for c in UAT_CELLS.split(line.strip())[1:-1]]
-        if cells and cells[0] == "ID" and "Status" in cells:
+        if cells and cells[0] == "ID" and column in cells:
             header = cells
         elif header and cells and cells[0] == uid and len(cells) >= len(header):   # the row may end in its ^block-id cell
-            return cells[header.index("Status")]
+            return cells[header.index(column)]
     return None
 
 
@@ -191,10 +206,49 @@ def fixed_by(status, fid):
     return bool(re.match(rf"^fixed\s*\(\s*{re.escape(fid)}\s*:\s*\S", status or ""))
 
 
-def judge(feature, rows, touched, src, shapes, globs):
+def on_agent_track(is_fix, fixes, uat_text):
+    """A fix whose issues are all the agents' (the Control Center's `_feature_track` says the same): `juiz` or `agente`, not raised to the
+    human. An issue nobody can place (no row, outside the grammar) stays with the human, as in feature_closure.py."""
+    ids = [m.group(0) for f in fixes for m in [ISSUE_ID.search(f)] if m]
+    if not is_fix or not ids:
+        return False
+    cells = [uat_cell(uat_text, uid, "Reportado por") for uid in ids]
+    found = [uat_tracks_check.VALUE.match(c or "") for c in cells]
+    return all(m and m.group("who") != "MJRP" and not m.group("prio") for m in found)
+
+
+def read_touch_ids(top, revs):
+    """[(features, screens)] of the Touch ID notes on the commits `revs` reach. The gate never reads these back (it asks live); this reads them
+    to tell the row is filled, with the same trust as a report an agent commits: it opens neither a merge nor an acceptance."""
+    r = _git.run(top, "notes", f"--ref={visual_gate.NOTES_REF}", "list")
+    if r.code != 0:
+        raise NotEvaluable(f"git notes saiu {r.code}: {(r.err or r.out).strip()[:160]}")
+    pairs = [ln.split() for ln in r.out.splitlines() if ln.strip()]
+    if not pairs:
+        return []
+    h = _git.run(top, "rev-list", *revs)
+    if h.code != 0:
+        raise NotEvaluable(f"git rev-list saiu {h.code}: {(h.err or h.out).strip()[:160]}")
+    reached = set(h.out.split())
+    out = []
+    for blob, tip in pairs:
+        text = _git.run(top, "cat-file", "-p", blob).out if tip in reached else ""
+        fields = dict(line.partition(": ")[::2] for line in text.splitlines())
+        if fields.get("presence") == "touch-id":
+            out.append((set(FEATURE_ID.findall(fields.get("visual-ok", ""))), fields.get("screen", "").split("; ")))
+    return out
+
+
+def touch_id_holds(fingers, fid, proj):
+    name = proj.rstrip("/") or ROOT_PROJECT
+    return any(fid in features and any(s.startswith(f"{name}: ") for s in screens) for features, screens in fingers)
+
+
+def judge(feature, rows, touched, src, shapes, globs, fingers=()):
     """(missing, unchecked) for one feature going to Done on the fast lane.
     `feature`: {"folder", "proj", "fid", "num", "texts": {spec, plan, tasks}} · `rows`: the registry's always/if rows ·
-    `touched`: repository-relative paths the feature's commits touch · `src.read`/`src.files`: the judged copy.
+    `touched`: repository-relative paths the feature's commits touch · `src.read`/`src.files`: the judged copy ·
+    `fingers`: the Touch ID notes (read_touch_ids).
     missing: [(row, what is missing and how to fix it)]; unchecked: [(row, why the machine does not judge it)]."""
     proj, texts = feature["proj"], feature["texts"]
     spec = texts.get("spec") or ""
@@ -289,9 +343,14 @@ def judge(feature, rows, touched, src, shapes, globs):
                 continue
             if rc.get("none_ok") and proto_none:
                 continue
+            human = rc.get("touch_id_ok") and not on_agent_track(is_fix, _list(fm.get("fixes")), src.read(f"{proj}docs/specs/uat.md"))
+            if human and touch_id_holds(fingers, feature["fid"], proj):
+                continue
             if not _hit(touched, proj, rc["paths"]):
                 tip = (" — ou, se o humano disse que não precisa de protótipo, `**Prototype**: none — <quem disse>` no spec.md"
                        if rc.get("none_ok") else "")
+                tip += (" — ou o Touch ID do humano no merge, a nota `mjrp-visual-ok` que o portão visual grava: a via rápida da trilha "
+                        "Humano não tem juiz agente, então junte o ramo antes de fechar" if human else "")
                 say(f"a feature mexeu na tela e nenhum commit dela toca {', '.join(proj + p for p in rc['paths'])}{tip}")
         elif by == "fixes":
             fixes = _list(fm.get("fixes"))
@@ -354,7 +413,21 @@ def staged(top):
     has_head = _git.run(top, "rev-parse", "--verify", "-q", "HEAD").code == 0
     now = Source(top)
     before = Source(top, "HEAD") if has_head else _Nothing()
-    return now, before, _closing(_folders(names), now, before), (lambda fid: (feature_paths(top, fid, "HEAD") if has_head else set()) | set(names))
+    features = _closing(_folders(names), now, before)
+    # a merge commit (UAT-439, F147): the diff against HEAD carries what the OTHER parent brought, and a feature it closed has its step in
+    # ITS commits, not in the diff of the merge. Judged like `--branch` does: by the commits of the other parent. The feature this branch
+    # itself closes (not closed on the other side) keeps the rule of any commit. An octopus merge (several MERGE_HEADs) is judged as before.
+    merging = has_head and _git.run(top, "rev-parse", "--verify", "-q", "MERGE_HEAD").code == 0
+    other_side = set()
+    if merging:
+        theirs = Source(top, "MERGE_HEAD")
+        other_side = {f["fid"] for f in features if _closed(theirs.read(f"{f['folder']}/spec.md") or "")}
+
+    def touched_of(fid):
+        if fid in other_side:
+            return feature_paths(top, fid, "MERGE_HEAD") | feature_paths(top, fid, "HEAD")
+        return (feature_paths(top, fid, "HEAD") if has_head else set()) | set(names)
+    return now, before, features, touched_of
 
 
 def branch(top, ref, base="HEAD"):
@@ -376,6 +449,8 @@ def check(top, mode, ref=None, base="HEAD"):
     now, before, features, touched_of = staged(top) if mode == "staged" else branch(top, ref, base)
     if not features:
         return []
+    revs = [ref] if mode == "branch" else [r for r in ("HEAD", "MERGE_HEAD") if _git.run(top, "rev-parse", "--verify", "-q", r).code == 0]
+    fingers = read_touch_ids(top, revs) if revs else []
     # the rule is read from the copy BEFORE the change (HEAD, the base): a commit or a branch does not loosen its own gate; only a
     # repository whose base has no registry yet reads it from the judged copy
     try:
@@ -385,7 +460,7 @@ def check(top, mode, ref=None, base="HEAD"):
     shapes = load_shapes(now)
     out = []
     for f in features:
-        missing, unchecked = judge(f, rows, touched_of(f["fid"]), now, shapes, screen_globs(now, f["proj"]))
+        missing, unchecked = judge(f, rows, touched_of(f["fid"]), now, shapes, screen_globs(now, f["proj"]), fingers)
         out.append((f, missing, unchecked))
     return out
 

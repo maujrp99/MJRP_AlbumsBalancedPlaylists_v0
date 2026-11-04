@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "Single declaration of the requirements graph (S-63, kernel page requirements-graph). The sensor reads this file; the kernel page explains it for humans. Edges are written in one direction only; the inverse is computed. Each edge is enforced only from the status declared in 'enforced_from' (lesson of SDD_chain_artifacts_check: checking every pair everywhere produced 366 false positives).",
   "version": 1,
   "paths": {
@@ -69,7 +69,8 @@
       "source": "the feature in `fixing (Fxx)`",
       "field": "uat.md, the `Status` cell of the row",
       "fixing_to_fixed_when": ["Done", "Accepted"],
-      "note": "`fixing (Fxx)` becomes `fixed (Fxx)` when Fxx is Done or Accepted (also the old rows whose feature is already Accepted, UAT-312 with F48). `closed` is never derived: it is the human's OK, or the independent recheck on the agent track."
+      "and_cited_by": "the feature's folder (spec.md, plan.md, tasks.md) cites the issue id: its `fixes:`, a task, the text. UAT-429: a feature already Done does not fix the issue opened after it.",
+      "note": "`fixing (Fxx)` becomes `fixed (Fxx)` when Fxx is Done or Accepted AND its folder cites the issue (also the old rows whose feature is already Accepted, UAT-312 with F48). A feature already Done when the issue was opened, and that never cites it, leaves it `fixing`: the fixer writes `fixed (Fxx: <commit> · ...)` himself. `closed` is never derived: it is the human's OK, or the independent recheck on the agent track."
     },
     "epic": "computed, never stored: from its requirements",
     "release": "computed, never stored: from what is planned_for it",
@@ -440,7 +441,6 @@
   "story_form": {
     "max_chars": 220,
     "turn_date": "2026-11-30",
-    "judged_statuses": ["Backlog", "Prioritized", "Ready", "In progress", "Deferred"],
     "forms": {
       "pt-BR": {
         "Cohn": "^Como (?P<who>.+?), quero (?P<want>.+?),? para que (?P<why>.+)\\.$",

@@ -4,10 +4,10 @@ aliases: [git-governance, governança de git, conventional commits, convenção 
 summary: como se commita, ramifica, integra e marca versão num projeto do harness — tipos e formato do commit, os commits de cada etapa do Delivery, o ramo por feature, a integração (a sessão integradora, os trens, o juiz por lote e o portão do pre-merge-commit) e suas condições, tags, brownfield, e o que os hooks exigem
 tags: [kernel, git, processo]
 status: firme
-atualizado: 2026-10-24
+atualizado: 2026-11-01
 fontes: [conventionalcommits.org, mjrp-deployer (aposentada, S-76), 1999-fowler-refactoring]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Governança de git** é o conjunto de regras que faz o histórico de um projeto ser legível por quem vem depois —
@@ -85,7 +85,7 @@ spec, plan e tasks em esboço, com a via e o tipo declarados — `lane` e `solut
   sem P0 ([[pdlc-loops]] §5); na via rápida, sem relatório, o próprio merge pede o Touch ID do MJRP, que é o veredito (§2, F61);
   a saída (`VISUAL_RECHECK_SKIP`, `--no-verify`) é do humano, nunca do integrador.
 - **O humano decide, não executa**, só quando pede ou quando há risco de impacto financeiro ou de negócio (apagar ou
-  quebrar algo e perder o cliente). Toda integração aparece no Control Center. O aceite da feature é outro ato, o «Dar o OK»
+  quebrar algo e perder o cliente). Toda integração aparece no Control Center. O aceite da feature é outro ato, o «Aceite»
   dele ([[pdlc-loops]] §6).
 - **Pré-condições da integração autônoma:** tudo versionado, rollback possível (o revert do merge) e backup recorrente do
   repositório. **O backup** é uma cópia diária de todos os projetos (ADR-0024): um `.tar.gz` por dia em
@@ -93,7 +93,7 @@ spec, plan e tasks em esboço, com a via e o tipo declarados — `lane` e `solut
   (inclusive o que não tem commit); dois arquivos ficam, relidos antes de valer, e restaura com
   `python3 mjrp-scripts/daily_backup.py --restore-test` (o teste) ou abrindo o arquivo e `git clone <arquivo>.bundle`. Quem
   grava é um agendamento do macOS (`daily_backup.py`, às 07:00); o doctor reprova quando a última cópia passa de 24 h, e o
-  MJRP leva o arquivo ao disco externo, à mão. Entre uma cópia e outra o que protege é o git (o histórico e o reflog) e o
+  MJRP move o arquivo para fora do Mac e o registra (`--mark-moved`: em `daily/` fica só o marcador, ADR-0030) e o leva ao disco externo, à mão. Entre uma cópia e outra o que protege é o git (o histórico e o reflog) e o
   GitHub até o último push. **O push é do humano** (`git push origin main`): não há PR remoto —
   o agente trabalha no ramo, roda o verificador e o integrador faz o merge local em `main`.
 - **Isolamento:** um worktree por sessão de página; a trava de sessão avisa quando há outra no repositório.
@@ -158,6 +158,7 @@ clean` passam. Se o próprio hook falha, sai 0 com «nao avaliou». Portas que e
   comando exato que o renomeia (`git branch -m claude/fNN-<slug>`); passam a `main`, `wip/`, `archive/`, `integrate/`, o HEAD destacado e o
   rebase em curso. A convenção não é copiada: o `branch_name_check.py` a lê do `rules/delivery.py` do Control Center, o mesmo que o board usa
   (no filho, do harness achado pelo `harness_root:` do contrato); sem ela, num ramo de trabalho, é «não avaliável», nunca passe.
+- **`pre-commit` e a mudança de copy (F158, S-208):** na linha principal, o commit que muda uma linha de `Tipo` `copy` do `uat.md` só toca `content/copy/*.json`, o `uat.md` e o `docs/log.md`, e dentro do JSON só o `pt` e o `en` de entradas que existem, que continuam texto, com os mesmos marcadores e até 10 entradas (`copy_change_check.py`; saída 0, 1 e 2). Só uma linha nova nasce `copy`. A página de texto mudada sem uma linha `copy` também é recusada, menos o salvar da tela (só páginas, cada uma com item novo no `history`), que só muda o texto, sem a conferência de marcador. Um `--amend` é julgado pelo commit inteiro. Ramo, merge e o primeiro commit do repositório não são julgados, nem o arquivo em `content/copy/` de quem não tem esse registro; a regra é a de [[pdlc-loops]] § 2.
 - **`pre-commit` e a «Priorizada» (F125, UAT-407):** o commit que COMEÇA uma feature da trilha Humano (a primeira task marcada, ou o spec que sai de
   Draft para `In progress`) é recusado quando a feature não está no `docs/specs/priority.md` do projeto — o humano a arrasta no board; dentro da lista
   passa, e avisa se uma de cima não começou; a trilha Agente e o registro de um Draft passam; lista ilegível ou apagada é «não avaliável», nunca passe
@@ -166,12 +167,14 @@ clean` passam. Se o próprio hook falha, sai 0 com «nao avaliou». Portas que e
   que não é versionada (o serviço compila a tela). Num merge de ramo anterior à F57, `merge_train.py dist-resolve` mantém a
   remoção (`git rm --cached`; o disco fica, derivado).
 - **`commit-msg` e os carimbos de aceite (CC-ADR-0024):** recusa `Human-accepted:` e `Human-reopened:` ao lado de um
-  `Co-Authored-By:` de agente — o aceite e a reabertura de uma feature são do MJRP, pelo «Dar o OK».
+  `Co-Authored-By:` de agente — o aceite e a reabertura de uma feature são do humano, pelo «Aceite».
 - **`commit-msg` e o merge aberto (F60):** com `MERGE_HEAD` e uma mensagem que não é a do merge, o hook só avisa.
 - **Duas sessões no mesmo repositório:** commit só por *pathspec* — nunca `git add -A` com outra sessão ativa.
 
 ## History
+- **2026-11-01 23:02** · **A mudança de copy direto na `main`, por máquina** (F158, S-208; a regra é do MJRP, 2026-11-01): a exceção a «feature nasce no board» é a issue de tipo `copy`, e o `copy_change_check.py` a segura no que ela é. Só o integrador escreve na `main`, como antes.
 
+- **2026-10-31 00:46** · **O ramo recém-aberto lê-se como começado, no board e na trava** (F140, UAT-424; o pedido do MJRP de 2026-10-30 20:48; decidido pelo agente, revisável pelo MJRP). «Mesclado» era «a ponta do ramo é ancestral da `main`», o que vale também para o ramo sem commit próprio; a F131 e a F139 apareciam na «Priorizada» com as sessões trabalhando. Agora é «ancestral da `main` **e** fora da linha de primeiro pai dela» (o trem junta com `--no-ff`, então o ramo mesclado tem a ponta fora da linha; o recém-aberto, não — o critério do `has_own_commit` da F123), no adaptador git do board (`adapters/git_cli/branches.py`) e em `priority_next.branch_features`. A `mjrp-implementing-tasks` traz o commit de início como item 6 do pré-voo. Custo: um ramo antigo e vazio, ainda na linha de primeiro pai, lê-se como começado (o lado seguro; o spec `Done` na `main` encerra a questão).
 - **2026-10-30 21:14** · **A feature fecha pela reconferência quando não há nada para o MJRP** (F139, S-206; o pedido do MJRP de 2026-10-30 20:22, sobre a F57; decidido pelo agente nos detalhes, revisável pelo MJRP). A regra do `AGENTS.md` § Duas trilhas ganhou o registro e o board. A spec `Done` que não pede o olho dele declara `closed_by: "recheck independente: <relatório>, <AAAA-MM-DD HH:MM>"` e fica no estado **Fechado**, nunca «Aceito» (o `Human-accepted:` continua só dele). Quem sobe é um arquivo do kernel, o `mjrp-scripts/feature_closure.py`: uma story que ela importa e aponta para um estado de **tela** (o de comportamento não é), uma issue **dele** em `fixes:`, ou a marca `needs_human: "<decidir|ver|segurança>: <motivo>"`. O sensor do grafo recusa o `closed_by` nesses casos (`closed_by_fits`, `needs_human_shape`); o board põe a feature em `closed` (a coluna «Fechado» da página Board, com a story dela; a estação `closed` no contrato do Delivery); a trava do aceite recusa preparar o «Dar o OK» dela (`not_his`). Aplicada à F57, F129, F130, F134 e F136; F124, F127, F132, F137 e F138 seguem com ele. Escolhas do agente: só o `info-arch` conta como tela; a issue conta só pelo `fixes:`; a regra ilegível não fecha nada.
 - **2026-10-30 11:54** · **O nome do ramo, por máquina** (F132, UAT-411; a opção 1 do MJRP em 2026-10-30: só a trava, sem o Control Center reconhecer o ramo pelo conteúdo). O board lia o trabalho em ramo só pela `branch-convention@2` (F67) e nada a cobrava: a F127 andou num `f127-outcome-measure-optional` e os subagentes das F119 a F125 em `worktree-agent-…`, com os cards parados na «Priorizada». O `branch_name_check.py` roda primeiro no `pre-commit` e recusa o commit num ramo de trabalho fora da convenção, com o `git branch -m` que sana (o número da feature já no nome vira `claude/fNN-<resto>`; sem ele, o molde). A convenção é lida do `rules/delivery.py` pela árvore sintática — o módulo importa o contrato do app e o pydantic, que um hook não deve exigir —, nunca copiada. O molde antigo desta página (`feat/<nome>-<AAAAMMDD>`) saiu. Escolhas do agente, revisáveis pelo MJRP: o `integrate/` do trem passa (leva várias features, e o `merge_train` o cria); `master` conta como linha principal num filho que ainda a tem; o filho que não acha o harness, num ramo de trabalho, é exit 2 (o mesmo do conform), e na `main` nem procura. Autoteste: `branch_name_check_selftest.py`, com 6 mutações.
 - **2026-10-30 11:51** · **A tela compilada sai do git** (F57 TASK-03, CC-ADR-0027 §§ 1 e 12; decidido pelo agente, revisável pelo MJRP). O `apps/control-center/web/dist` saiu do índice e do `.gitignore` do app; o `pre-commit` da raiz recusa qualquer entrada do índice ali (o índice inteiro, não só o commit: pega o `git add` que resolve um *modify/delete* guardando o lado do ramo); o `merge_train.py dist-resolve` mantém a remoção quando um dos lados não versiona mais o build (nos dois sentidos), sem compilar, e o `merge` acusa um merge limpo que traga o build de volta. Um commit que tira um caminho só do índice não vai por *pathspec*: o `git commit -- <caminho>` o devolve (provado num repositório descartável); vai pelo índice do próprio worktree, conferida a lista. O `web/dist` local ficou classe 3 (`structure_rules.json → derived`), para não prender worktrees (P1-1 do juiz).
@@ -187,6 +190,7 @@ clean` passam. Se o próprio hook falha, sai 0 com «nao avaliou». Portas que e
 
 - **2026-10-27 16:10** · **O wireframe regenerado idêntico conta como refeito** (F111, UAT-387; decidido pelo agente, revisável pelo MJRP). O merge da F67 precisou do `Prototype-sync: skip` do MJRP porque, regerados os 11 wireframes, só o do Tracking mudou e os outros, idênticos, não entram no índice. O `prototype_sync_check.py --staged` aceita a prova da regeneração: o arquivo no disco igual byte a byte ao do HEAD e ao do índice, e mais novo que o protótipo no disco. O que não foi regenerado (mais velho) segue recusado; o regenerado diferente tem de entrar no commit.
 
+- **2026-10-31 10:20** · **O `.tar.gz` da cópia diária sai do Mac e deixa o marcador em `daily/`** (F81, S-171, ADR-0030, que emenda a ADR-0024; decidido pelo MJRP em 2026-10-26 10:23, desenho do agente, revisável). `daily_backup.py --mark-moved <destino>` confere o tamanho e o `sha256` do arquivo que ele moveu contra o manifest e grava `projects-<data>.moved.json`; o manifest, as entradas e o registro contam como cópia feita, então o `--check`, o W13 e a passada das 07:00 não refazem o dia. Mover sem registrar é acusado, e a passada sem `--force` manda registrar em vez de refazer. A poda tira só o marcador; o arquivo no destino é do MJRP.
 - **2026-10-26 05:33** · **O backup deixa de ser um bundle a cada commit no iCloud e passa a ser a cópia diária de todos os projetos** (F75 TASK-08, ADR-0024). Saem o hook `post-commit` (e os `post-merge`, `post-rewrite` e o `backup-trigger` que dividiam o corpo dele) e o `backup_repo.py`; o parágrafo «O backup» e a lista «O que os hooks exigem» dizem o novo. Motivo: o upload de ~1,2 GB por commit (203 + 329 GB no iCloud), o custo de manter (13 correções, F70) e a cobertura de um projeto só. A primeira cópia real foi relida e restaurada (8,65 GiB, 5 min 30 s; restauração em 112 s) antes de qualquer remoção.
 - **2026-10-26 03:22** · **Seção nova: as quatro classes de caminho e o `_backups/`** (F74 TASK-04 e TASK-06, ADR-0023, Accepted 2026-10-25). O `_backups/` passa a dizer o que é: rede contra engano do agente, não backup (mora no mesmo disco; teto de 30 dias e 1 GB). O `README.md` dentro dele é gerado pelo `_safe`. Nasceu de quatro incidentes de disco por acúmulo e de a regra «nada é apagado sem cópia» sugerir mais proteção do que dava.
 

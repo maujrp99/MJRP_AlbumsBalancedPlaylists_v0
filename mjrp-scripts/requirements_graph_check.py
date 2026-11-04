@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirements_graph_check.py -- checks the requirements graph of a project against its single declaration,
 requirements_graph_rules.json (S-63, kernel page requirements-graph).
 
@@ -51,9 +51,9 @@ Story sentence (F137, UAT-416, MJRP 2026-10-30): a story's sentence follows the 
 (Cohn's «Como <persona>, quero …, para que …» or Klement's «Quando <situação>, quero …, para que …», never both), one sentence of at most
 `story_form.max_chars` characters, no internal reference (ID, file, version, rule code, backtick, parenthesis), and every other language
 mirroring it with the title in bold and the same form (story_form_problems). A story whose TEXT the commit adds or changes is refused
-(--staged, --changed), whatever the date; a status-only change is not a change of the text. An untouched story in
-`story_form.judged_statuses` warns until `story_form.turn_date` and is a finding from then on (the W20 pattern); a delivered one is not edited,
-so it is not judged.
+(--staged, --changed), whatever the date; a status-only change is not a change of the text. An untouched story warns until
+`story_form.turn_date` and is a finding from then on (the W20 pattern), in EVERY status: F164 (UAT-467, MJRP 2026-11-03) rewrote the
+delivered ones too, the one edit a delivered story takes (the form of its sentence, meaning kept).
 
 Feature closure (F139, S-206, the MJRP 2026-10-30): a Done feature with nothing for the MJRP to see, decide or secure closes by the
 independent recheck (`closed_by: "recheck independente: <relatório>, <AAAA-MM-DD HH:MM>"`), never Accepted; a `closed_by` that does not
@@ -110,6 +110,7 @@ from requirement_evidence import _WIDE_REQ_BODY, INLINE_FIELD, WIDE_REQ, spec_re
 # who closes a feature, the MJRP's acceptance or the independent recheck: one rule, shared with the Control Center's board and
 # acceptance (F139, S-206)
 import feature_closure  # noqa: E402
+import priority_next  # noqa: E402  (the one predicate of a start, shared with the «Priorizada» gate; F161)
 import uat_tracks_check  # noqa: E402
 # the IDs a feature's spec.md defines for itself: REQ-01, REQ-F-05 and the NFR of the feature (NFR-F-02, a letter segment
 # marks it as local -- NFR-08 is a node). prototype_inventory.py (W11) reads the same pattern.
@@ -220,6 +221,8 @@ def requirement_graph_view(root):
 # sentence ends it; the bold first line of a section is the mirrored title.
 STORY_LABEL_LINE = re.compile(r"^[A-ZÀ-Ý][^\s:]*(?: [^\s:]+){0,4}:\s")
 STORY_TITLE_LINE = re.compile(r"^\*\*([^*].*?)\*\*$")
+# F164: the acceptance criteria heading or a list item also ends the sentence, with no blank line before it (children's stories glue them)
+STORY_CRITERIA_LINE = re.compile(r"^(?:\*\*)?(?:Crit[eé]rios?|Acceptance criteria|Criteria)\b|^(?:[-*]|\d+[.)])\s", re.I)
 STORY_PUNCT_NAME = {"`": "crase", "(": "parêntese", ")": "parêntese", "[": "colchete", "]": "colchete", "{": "chave", "}": "chave"}
 STORY_SECOND_SENTENCE = re.compile(r"[.!?…]\s+(?=[A-ZÀ-Ý«\"“])")
 
@@ -252,10 +255,37 @@ def story_parts(section):
         i += 1
     sentence = []
     for ln in lines[i:]:
-        if not ln or (sentence and STORY_LABEL_LINE.match(ln)):
+        if not ln or (sentence and (STORY_LABEL_LINE.match(ln) or STORY_CRITERIA_LINE.match(ln))):
             break
         sentence.append(ln)
     return title, " ".join(sentence)
+
+
+# F164 (UAT-467): a block that is a note, not a story. No paragraph says «quero» / «I want» and the first one is neither shaped like a
+# story («Como …», «Quando …», «As …», «When …») nor was it written as one: a source line («Origem no backlog: …») or the description of a
+# tab. There is no statement to put in the form, and forcing one would invent the persona and the outcome.
+STORY_SOURCE_FIRST = re.compile(r"^(?:Origem|Origin|Fonte|Source|Contexto|Context|Entregue|Delivered|Depende|Depends)\b[^:]{0,40}:", re.I)
+STORY_WANT = re.compile(r"\bquero\b|\bi want\b", re.I)
+STORY_SHAPED = re.compile(r"^(?:\*\*)?(?:Como|Quando|As|When)\b", re.I)
+
+
+def story_has_statement(section):
+    """False when `section` (the text of a `## <lang>` block) holds no statement of its own."""
+    lines = [ln.strip() for ln in (section or "").strip().splitlines()]
+    if lines and STORY_TITLE_LINE.match(lines[0]):
+        lines = lines[1:]
+    paras, cur = [], []
+    for ln in lines + [""]:
+        if ln:
+            cur.append(ln)
+        elif cur:
+            paras.append(" ".join(cur))
+            cur = []
+    if not paras:
+        return True
+    if any(STORY_WANT.search(p.replace("*", "")) for p in paras) or STORY_SHAPED.match(paras[0]):
+        return True
+    return False
 
 
 def story_key(raw, langs):
@@ -357,6 +387,7 @@ class Graph:
         # a warning is printed and never fails the check (exit code, --staged and --changed ignore it): a rule that is new on data
         # that was already there (UAT-290) warns first
         self.warnings = []
+        self._open_branches = None  # read once, by has_open_branch (F161)
         # F134: why the board configuration could not be read (the disk refused a file): not evaluable, never green
         self.board_unevaluable = None
 
@@ -518,7 +549,10 @@ class Graph:
                                "waiting": fm.get("waiting"), "nature": fm.get("nature"), "origin_stage": fm.get("origin_stage"),
                                # F137: why the story's text is out of the template (judged by check_story_form)
                                "story_form": (story_form_problems(body, self.languages(), self.story_form_cfg())
-                                              if self.is_story(nid, fm) and self.story_form_cfg() else [])}
+                                              if self.is_story(nid, fm) and self.story_form_cfg() else []),
+                               # F164: a block that is a note, not a story, is shown as a warning, never as a finding
+                               "story_no_statement": bool(self.is_story(nid, fm) and self.languages()
+                                                          and not story_has_statement(lang_section(body, self.languages()[0])))}
 
     def load_features(self):
         d = self.p["features"]
@@ -529,7 +563,7 @@ class Graph:
             if not re.match(fpat, fd.name):
                 self.find("node_id", f"features/{fd.name}: pasta fora do padrão Fxx-slug")
                 continue
-            fid = fd.name[:3]
+            fid = re.match(r"F\d+", fd.name)[0]  # the whole id (F159, UAT-460): a cut of three characters left the last feature of each ten
             spec = fd / "spec.md"
             tasks = fd / "tasks.md"
             fm, body = frontmatter(spec.read_text(encoding="utf-8")) if spec.exists() else ({}, "")
@@ -577,11 +611,12 @@ class Graph:
                         own = TASK_LINE.match(line)
                         if own:
                             feat.setdefault("task_ids", []).append((own.group(1), n))
-                            marks = dict(TASK_MARK.findall(line))
+                            marks = dict(TASK_MARK.findall(QUOTED_MARK.sub("", line)))
                             if "waiting" in marks:
                                 on, _, reason = marks["waiting"].partition("—")
                                 feat.setdefault("task_waits", []).append((own.group(1), {
-                                    "on": on.strip(), "reason": reason.strip(), "item": marks.get("item"), "until": marks.get("until")}))
+                                    "on": on.strip(), "reason": reason.strip(), "action": (marks.get("action") or "").strip(),
+                                    "item": marks.get("item"), "until": marks.get("until")}))
                             if re.match(r"^[-*]\s+\[[xX]\]", line):
                                 feat["ticked"] = feat.get("ticked", 0) + 1
                         else:
@@ -1094,18 +1129,21 @@ class Graph:
         return self._head_paths.get(nid)
 
     def check_story_form(self):
-        """F137 (UAT-416): a story not delivered whose text is out of the template warns until `turn_date` and is an error from then on
-        (the W20 pattern: the rule is new on data that was already there). A delivered one is not edited, so it is not judged; the
-        story a commit adds or changes is judged by main(), whatever the date."""
+        """F137 (UAT-416): a story whose text is out of the template warns until `turn_date` and is an error from then on (the W20
+        pattern: the rule is new on data that was already there). F164 (UAT-467): every status is judged, the delivered included -- the
+        form of their sentence was rewritten. The story a commit adds or changes is judged by main(), whatever the date."""
         cfg = self.story_form_cfg()
         if not cfg:
             return
         turn = date.fromisoformat(str(cfg["turn_date"]))
         turned = _clock.today() >= turn
-        judged = set(cfg.get("judged_statuses") or [])
         for nid in sorted(self.nodes):
             node = self.nodes[nid]
-            if not node.get("story_form") or node.get("status") not in judged:
+            if not node.get("story_form"):
+                continue
+            if node.get("story_no_statement"):
+                self.warn("story_no_statement", f"{nid}: o bloco não tem enunciado de story (só a linha de origem e uma nota); a forma do template "
+                                                "não se aplica enquanto o MJRP não disser a persona e o resultado")
                 continue
             msg = self.story_form_message(nid, node["story_form"])
             if turned:
@@ -1772,14 +1810,15 @@ class Graph:
 
     @staticmethod
     def waiting_of(raw):
-        """A declared wait as {on, reason, item, until}; None when there is none. YAML 1.1 reads the key `on` as True:
+        """A declared wait as {on, reason, action, item, until}; None when there is none. YAML 1.1 reads the key `on` as True:
         both spellings are the same key (S-197 R2 writes `on:`)."""
         if raw is None:
             return None
         if not isinstance(raw, dict):
-            return {"on": "", "reason": "", "item": None, "until": None, "bad": True}
+            return {"on": "", "reason": "", "action": "", "item": None, "until": None, "bad": True}
         on = raw.get("on", raw.get(True))
         return {"on": str(on or "").strip(), "reason": str(raw.get("reason") or "").strip(),
+                "action": str(raw.get("action") or "").strip(),
                 "item": str(raw["item"]).strip() if raw.get("item") else None,
                 "until": str(raw["until"]).strip() if raw.get("until") else None}
 
@@ -1798,15 +1837,30 @@ class Graph:
                     return cells[7].split("(")[0].strip().casefold()
         return None
 
+    def has_open_branch(self, feature_dir):
+        """Whether the feature (`F145-slug`) has an open branch; git is asked once, and only for a wait on a spec with no start of its own."""
+        if self._open_branches is None:
+            try:
+                self._open_branches = priority_next.branch_features(self.root)
+            except priority_next.NotEvaluable as error:
+                self.warn("waiting_not_started", f"os ramos abertos não se leram, então o ramo não conta como início nesta passada: {error}")
+                self._open_branches = set()
+        number = re.match(r"F(\d+)", feature_dir)
+        return bool(number) and int(number[1]) in self._open_branches
+
     def check_waiting(self):
         """F134 (S-197 R1, R6): a declared wait has its shape (`on` in human | item | time | resource, a reason, `item` with
-        `on: item`, `until` with `on: time`) -- `waiting_shape`; is declared only on what started -- `waiting_not_started`;
-        and is erased once it ended on its own (the awaited item done, closed or accepted; the day passed) -- `waiting_resolved`.
-        Inactivity is never a finding: it is computed, never written."""
+        `on: item`, `until` with `on: time`) and, since F161 (UAT-464), the action that unblocks it -- `waiting_shape`; is declared
+        only on what started -- `waiting_not_started`, by the one predicate of a start (`priority_next.has_started`: the open branch
+        counts, and the start commit lives on the branch, F161) -- and is erased once it ended on its own (the awaited item done,
+        closed or accepted; the day passed) -- `waiting_resolved`. Inactivity is not computed here: only the served board knows
+        what is idle, so an idle item nobody explained is `board_served_check.py`'s `waiting_unexplained`."""
         today = _clock.today().isoformat()
         declared = []
         for f in self.features.values():
-            started = str(f.get("status") or "").strip().casefold() in STARTED_FEATURE or f.get("ticked", 0) > 0
+            if f.get("waiting") is None and not f.get("task_waits"):
+                continue
+            started = priority_next.has_started(f.get("status"), f.get("ticked", 0)) or self.has_open_branch(f["dir"])
             if f.get("waiting") is not None:
                 declared.append((f["dir"], self.waiting_of(f["waiting"]), started))
             for tid, wait in f.get("task_waits", []):
@@ -1820,6 +1874,10 @@ class Graph:
                 why = f"`on` é um de {', '.join(WAITING_ON)} (veio {wait['on']!r})"
             elif not wait["reason"]:
                 why = "falta o `reason` (o que falta, numa frase)"
+            elif not wait["action"]:
+                why = "falta a `action` (o que destrava o item e o tira de «Esperando», numa frase; F161)"
+            elif max(len(wait["reason"]), len(wait["action"])) > WAITING_TEXT_MAX:
+                why = f"o `reason` e a `action` têm até {WAITING_TEXT_MAX} caracteres cada: o quadro fica no topo da gaveta, acima das abas"
             elif wait["on"] == "item" and not wait["item"]:
                 why = "`on: item` sem o `item` esperado"
             elif wait["on"] == "time" and not wait["until"]:
@@ -1931,9 +1989,11 @@ def adr_fields(text):
 TASK_LINE = re.compile(r"^[-*]\s+\[[ xX]\]\s+(?:\*\*)?(TASK-\d{2,}[a-z]?)\b")
 CLOSED_FEATURE = {"done", "accepted", "cancelled", "deferred"}
 # F134 (S-197 R2): the marks of a task's declared wait, on its line: `waiting:: <on> — <reason>`, `item::`, `until::`, `since::`
-TASK_MARK = re.compile(r"(waiting|item|until|since)::\s*([^·]+?)\s*(?=·|$)")
+TASK_MARK = re.compile(r"(waiting|action|item|until|since)::\s*([^·]+?)\s*(?=·|$)")
+# a mark quoted between backticks is the task's prose talking about the mark, not the mark (F159: F134/TASK-05, TASK-08, TASK-14)
+QUOTED_MARK = re.compile(r"`[^`]*::[^`]*`")
 WAITING_ON = ("human", "item", "time", "resource")
-STARTED_FEATURE = {"in progress", "in-progress", "done", "accepted"}   # priority_next.STARTED_STATUS
+WAITING_TEXT_MAX = 240   # F161 (the UX critique's finding 4): the notice sits above the drawer's tabs; decided by the agent, revisable by the MJRP
 OVER_STATUS = {"done", "accepted", "fixed", "closed"}                  # the awaited item arrived
 BOARD_PROJECT_REL = "docs/specs/board.json"           # _board.PROJECT_REL
 BOARD_DEFAULTS_REL = "mjrp-scripts/board_defaults.json"

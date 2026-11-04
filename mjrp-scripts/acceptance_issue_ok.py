@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 acceptance_issue_ok.py - the effect `acceptance_stamped` gained with CC-ADR-0029 (step 2 of ADR-0019 section 2 for the
 issue): a cell `OK do humano` of `docs/specs/uat.md` that BECAME the MJRP's OK (the form `uat_tracks_check._HUMAN_OK`) came

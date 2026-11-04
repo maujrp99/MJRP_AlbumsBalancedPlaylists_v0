@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 product_structure_check.py - can the Control Center show this product? Reads a project the way the Control Center
 reads it and says, per screen, what it cannot render: the judge of the `product-structure` catalog item.
@@ -663,7 +663,10 @@ _HEAD_V2 = ["ID", "Contexto", "Tipo", "Gravidade", "Reportado em", "Descrição"
 _HEAD_V3 = ["ID", "Contexto", "Tipo", "Gravidade", "Reportado em", "Reportado por", "Descrição", "Status", "OK do humano"]
 _SEVERITY = re.compile(r"^P[012]$")
 _FIXING = re.compile(r"^fixing\s*\((?P<f>F\d{2,})\)")
+COPY_KIND = "copy"              # F158: the `Tipo` whose row goes straight to work, with no feature (`adapters/repo_fs/uat.py`)
 _DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
+_MACHINE_OK = re.compile(r"^\s*(recheck independente|testes verdes)\b", re.I)    # rules/tracks.py machine_ok
+_HIS_ROW = re.compile(r"^(?:MJRP|(?:MJRP|juiz|agente)\s+·\s+prioridade: humano\s+—\s+(?:decidir|ver|segurança|P0):\s*\S.*)$")
 UAT3_SINCE = "2026-10-16"       # `uat@3`: an issue reported on or after this day is judged even when closed
 UAT_PARTS = (("happens", "O que acontece"), ("expected", "O que deveria acontecer"), ("how_to_see", "Como ver"),
              ("evidence", "Evidência"), ("cause", "Causa"))
@@ -811,12 +814,14 @@ def _uat_cells(line):
     return [p.strip() for p in re.split(r"(?<!\\)\|", line)[1:-1]]
 
 
-def _uat_state(status, human_ok):
+def _uat_state(status, human_ok, kind):
     if _DATE.search(human_ok):
         return "closed", None
     fixing = _FIXING.match(status)
     if fixing:
         return "fixing", fixing.group("f")
+    if status.strip() == "fixing" and kind.strip().casefold() == COPY_KIND:
+        return "fixing", None
     for word in ("fixed", "open"):
         if status.startswith(word):
             return word, None
@@ -847,14 +852,16 @@ def parse_uat(text):
             raise FormatError(number, "linha fora do formato")
         if fmt == "uat@1":
             cells = [*cells[:3], "—", *cells[3:]]
+        his = False
         if tracks:
+            his = bool(_HIS_ROW.match(cells[5].strip()))   # adapters/repo_fs/uat.py: the machine's cell closes nothing on a row of his
             cells = [*cells[:5], *cells[6:]]      # the column is judged by uat_tracks_check.py; the reader does not need it
-        ident, _context, _kind, severity, reported, cell, status, human = cells[:8]
+        ident, _context, kind, severity, reported, cell, status, human = cells[:8]
         text_, opened_by, opened_by_who = split_opened_by(cell)
         if severity != "—" and not _SEVERITY.match(severity):
             raise FormatError(number, "Gravidade fora de P0 · P1 · P2 · —")
         try:
-            state, feature = _uat_state(status, human)
+            state, feature = _uat_state(status, "" if his and _MACHINE_OK.match(human) else human, kind)
         except ValueError as exc:
             raise FormatError(number, str(exc))
         rows.append({"id": ident, "round": round_n, "release_name": release, "state": state, "feature": feature,

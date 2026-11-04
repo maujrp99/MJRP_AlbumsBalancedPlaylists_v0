@@ -4,7 +4,7 @@ item: constitution
 from: 1
 to: 2
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0048 · constitution@1 → constitution@2
 
 ## Por que

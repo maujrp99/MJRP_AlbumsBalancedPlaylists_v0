@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _board.py - the board configuration (board@1) as the harness sensors judge it: the default merged with the project's file, every
 shape refusal and the coverage of each board (F134; ADR-0025 § 6, ADR-0026, ADR-0027).
@@ -15,7 +15,7 @@ Where the two files live:
   - the harness default: `board_defaults.json`, next to this file (carried to every child with the kernel);
   - the project's: `docs/specs/board.json` (optional). It ADDS record types and boards (a board with a default's id replaces it)
     and REPLACES the stages of a phase the default declares (it may leave a stage out; it adds no phase), columns,
-    hidden_categories, origin_rules and waiting_after_days; states and structure_types are the harness's and a project file that
+    hidden_categories, origin_rules and waiting_after_days (days, or a text with its unit: "30m", "2h", "1d"; F146); states and structure_types are the harness's and a project file that
     writes them is refused.
 
 The stages (ADR-0027): each phase lists its stages; a stage id is unique across the phases (the phase comes from it); exactly one
@@ -23,25 +23,43 @@ stage is `from_fact: "accepted"`; a state of the table points to a declared stag
 filtered to one phase, and the global hidden categories apply to it.
 
 Coverage: for each board, every stage x category pair an item can reach - the base pair of each state of each type the filter
-admits, plus `queued` from `not_started` and `waiting` from `in_progress` in the same stage, and `accepted` in the accepted stage
+admits, plus `queued` from `not_started` and `waiting` from `in_progress` in the same stage, `reopened` from `in_progress`, `done`
+and `closed` of a type that `reopens` (F143; a type that follows its parent never takes it), `evaluating` and `done` from
+`in_progress` of a type with `evaluated` (the judge's rule R7, F146), and `accepted` in the accepted stage
 (from `done` and `closed`, or from any category of a type that follows its parent) - that the filter keeps and the hidden set does
 not hide must fall in EXACTLY one column.
 """
 import json
+import re
 from pathlib import Path
 
 FORMAT = "board@1"
 DEFAULTS = Path(__file__).resolve().parent / "board_defaults.json"
 PROJECT_REL = "docs/specs/board.json"
-CATEGORIES = ("not_started", "queued", "in_progress", "waiting", "done", "closed", "accepted", "off")
-# the state table may give only these; queued, waiting and accepted come from facts (ADR-0026 § Consequences)
+CATEGORIES = ("not_started", "queued", "reopened", "in_progress", "waiting", "evaluating", "done", "closed", "accepted", "off")
+# the state table may give only these; queued, reopened, waiting, evaluating and accepted come from facts (ADR-0026 § Consequences;
+# F143; F146)
 TABLE_CATEGORIES = ("not_started", "in_progress", "done", "closed", "off")
 RECORD = "record"                       # the `states` row every record type takes
 BY_CATEGORY = "by_category"
 BY_STAGE = "by_stage"
 PROJECT_FIXED = ("states", "structure_types")
-STRUCTURE_FLAGS = ("in_filter", "follows_parent", "accept_by_children")
+STRUCTURE_FLAGS = ("in_filter", "follows_parent", "accept_by_children", "reopens", "evaluated")
 GROWS = {"not_started": {"queued"}, "in_progress": {"waiting"}}   # R1, R2/R4, in the same stage
+REOPENS = ("in_progress", "done", "closed")                       # R6, a type that `reopens`, in the same stage (F143)
+JUDGED = {"in_progress": {"evaluating", "done"}}                  # R7, of an `evaluated` type only (F146)
+SPAN = re.compile(r"^\s*(\d+)\s*([mhd])\s*$")                    # `waiting_after_days` with its unit (F146)
+
+
+def waiting_after_ok(value):
+    """Whether `waiting_after_days` reads: an integer of days from 1 up, or a text with its unit ("30m", "2h", "1d"), at least 1
+    (the twin of itemboard.checks.waiting_after)."""
+    if isinstance(value, bool):
+        return False
+    if isinstance(value, int):
+        return value >= 1
+    m = SPAN.match(value) if isinstance(value, str) else None
+    return bool(m) and int(m.group(1)) >= 1
 
 
 class Unreadable(Exception):
@@ -149,8 +167,8 @@ def problems(cfg):
             bad("origin_rule", where, f"a etapa {when['origin_stage']!r} não está declarada")
 
     days = cfg.get("waiting_after_days")
-    if days is not None and (isinstance(days, bool) or not isinstance(days, int) or days < 1):
-        bad("waiting_after_days", "waiting_after_days", "waiting_after_days é um inteiro de 1 para cima")
+    if days is not None and not waiting_after_ok(days):
+        bad("waiting_after_days", "waiting_after_days", 'waiting_after_days é um inteiro de dias de 1 para cima, ou um texto com a unidade ("30m", "2h", "1d")')
     return out
 
 
@@ -249,7 +267,7 @@ def _states(spec, structure, records, stage_phase, accepted, bad):
                 bad("state_from_fact", where, f"nenhum estado aponta a etapa {accepted!r}: só o aceite do humano leva a ela")
             if row.get("category") not in TABLE_CATEGORIES:
                 bad("state_category", where, f"a categoria {row.get('category')!r} não sai da tabela (só {', '.join(TABLE_CATEGORIES)}; "
-                                             "queued, waiting e accepted vêm de fatos)")
+                                             "queued, reopened, waiting e accepted vêm de fatos)")
     for t in sorted(structure):
         if t not in spec:
             bad("states", f"states.{t}", f"o tipo {t!r} não tem linha na tabela de estados")
@@ -352,16 +370,26 @@ class _Reach:
         return [r for r in table.values() if isinstance(r, dict) and r.get("stage") in self.stage_phase
                 and r.get("stage") != self.accepted and r.get("category") in TABLE_CATEGORIES]
 
+    def flag(self, t, name):
+        return isinstance(self.structure.get(t), dict) and bool(self.structure[t].get(name))
+
+    def grown(self, t, cat):
+        out = {cat, *GROWS.get(cat, ())}
+        if self.flag(t, "evaluated"):
+            out |= JUDGED.get(cat, set())
+        return out | {"reopened"} if self.flag(t, "reopens") and cat in REOPENS else out
+
     def pairs(self, only):
         every_type = list(self.structure) + list(self.records)
-        every = {c for t in every_type for r in self.rows(t) for c in {r["category"], *GROWS.get(r["category"], ())}}
+        # a child follows its open mother, except into «Reaberto»: the reopening is the mother's
+        every = {c for t in every_type for r in self.rows(t) for c in self.grown(t, r["category"])} - {"reopened"}
         out = set()
         for t in every_type:
             if only is not None and t not in only:
                 continue
-            follows = isinstance(self.structure.get(t), dict) and bool(self.structure[t].get("follows_parent"))
+            follows = self.flag(t, "follows_parent")
             for r in self.rows(t):
-                cats = every if follows else {r["category"], *GROWS.get(r["category"], ())}
+                cats = every if follows else self.grown(t, r["category"])
                 out |= {(r["stage"], c) for c in cats}
                 if self.accepted and (follows or r["category"] in ("done", "closed")):
                     out.add((self.accepted, "accepted"))

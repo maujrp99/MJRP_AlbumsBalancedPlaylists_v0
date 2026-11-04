@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-14
 fontes: [design/proposals/requirements-knowledge-graph-proposal.md, decisions/0020-control-center-as-product-contributes-to, kernel/architecture/knowledge-graph-concept, kernel/architecture/linked-notes-concept, kernel/architecture/graph-engineering-concept, kernel/ways-of-working/spec-kit]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **grafo de requisitos** é a documentação do PDLC tratada como grafo de conhecimento: cada requisito, épico,
@@ -205,10 +205,10 @@ sem edição (In progress parado, estado mudado depois do Ready).
 
 ### O status derivado no mesmo commit (F67)
 Cada status tem uma fonte só. O que deriva de outro — a feature do `tasks.md`, o requisito das features que o importam, a issue
-de UAT `fixing (Fxx)` da Fxx — é gravado pelo `pre-commit` no mesmo commit (`status_sync.py --staged`, que lê o índice e deriva só o
+de UAT `fixing (Fxx)` da Fxx **quando a pasta da Fxx cita a issue** (UAT-429: a feature já pronta não conserta sozinha a issue aberta depois dela) — é gravado pelo `pre-commit` no mesmo commit (`status_sync.py --staged`, que lê o índice e deriva só o
 que o commit toca); as regras moram em `requirements_graph_rules.json` → `derivation`. Só para a frente: `Accepted` e `closed` nunca
 são derivados. Épico e release são calculados por quem os mostra, nunca gravados. `status_sync.py --check` acusa o drift fora dos
-commits; `--apply` o grava. **A passada diária** (`status_sync_daily.py`, chamada pelo `doctor` antes das checagens; à mão, `status_sync.py --daily`) aplica o derivado do projeto inteiro, a raiz e cada app aninhado com grafo, e **grava nos arquivos sem commitar** (decisão do integrador, 2026-10-27: só o integrador escreve na `main`, e todo commit leva entrada no log; quem leva o derivado é o integrador ou o próximo commit, em que o `pre-commit` alinha). O relatório do `doctor` diz quantos status gravou e quais nós. Só grava no checkout principal, na `main`, sem merge, rebase nem `index.lock` abertos, e nunca em arquivo com edição sem commit; num worktree ou fora da `main` só mede. O que o derivado não decide (um `Done` com tarefa aberta, um requisito à frente da feature, uma issue `fixed` com a feature aberta) vai para o rastro do sensor de cada projeto, trilha do agente; à lista do MJRP só chega o que é dele (o «Dar o OK», o aceite, o OK de uma issue da trilha dele).
+commits; `--apply` o grava. **A passada diária** (`status_sync_daily.py`, chamada pelo `doctor` antes das checagens; à mão, `status_sync.py --daily`) aplica o derivado do projeto inteiro, a raiz e cada app aninhado com grafo, e **grava nos arquivos sem commitar** (decisão do integrador, 2026-10-27: só o integrador escreve na `main`, e todo commit leva entrada no log; quem leva o derivado é o integrador ou o próximo commit, em que o `pre-commit` alinha). O relatório do `doctor` diz quantos status gravou e quais nós. Só grava no checkout principal, na `main`, sem merge, rebase nem `index.lock` abertos, e nunca em arquivo com edição sem commit; num worktree ou fora da `main` só mede. O que o derivado não decide (um `Done` com tarefa aberta, um requisito à frente da feature, uma issue `fixed` com a feature aberta) vai para o rastro do sensor de cada projeto, trilha do agente; à lista do MJRP só chega o que é dele (o «Aceite», o aceite, o OK de uma issue da trilha dele).
 
 ### Reconciliação (Guardian)
 Quando o sensor acusa contradição ou status apodrecido, quem lê o grafo **reconcilia antes de rotear**:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 r"""
 content_audit_check.py - did the conform's CONTENT audit really run on this project? The judge of the `content-audit`
 catalog item (content-audit@4: CM-0052, CM-0057, CM-0063, CM-0066).
@@ -534,7 +534,7 @@ def marks_without_log(questions, report_name, log_text):
         for kind, at, line in ([("marca", mk["at"], mk["line"]) for mk in q["marks"]]
                                + [("resposta do seguimento", fa["at"], fa["line"]) for fa in q["follow_up_answers"]]):
             token = re.compile(r"(?<![\w-])" + re.escape(q["id"]) + r"(?!\d)")
-            backed = any(typ == "decision" and token.search(body) and report_name in body for typ, body in entries.get(at, []))
+            backed = any(typ in ("decision", "answer") and token.search(body) and report_name in body for typ, body in entries.get(at, []))
             if not backed:
                 out.append(f"mark_without_log: linha {line}: {q['id']} tem a {kind} de {at}, mas o log não tem uma entrada `## [{at}] decision — …` "
                            f"que cite {q['id']} e {report_name}")

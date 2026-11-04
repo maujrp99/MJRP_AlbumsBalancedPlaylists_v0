@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 uat_readable_check.py - can the Control Center read this `uat.md`? The pre-commit's read of one file (UAT-375, 2026-10-26).
 
 Born from an incident: the integrator wrote `fixing (UAT-373: ...)` in the Status cell of a row. The Control Center's reader
-(`adapters/repo_fs/uat.py`, `parse_uat`) accepts only `open` | `fixing (Fxx)` | `fixed (...)` there and, on ONE row outside the
+(`adapters/repo_fs/uat.py`, `parse_uat`) accepts only `open` | `fixing (Fxx)` | `fixed (...)` there (and the bare `fixing` on a row of
+`Tipo` `copy`, F158) and, on ONE row outside the
 format, fails the WHOLE read: the two tracks of the UAT Board went empty ("O uat.md nao pode ser lido"). Nothing at commit time
 read the Status (`uat_tracks_check` judges the `Reportado por` column; `product_structure_check` is not in the hook).
 
@@ -63,7 +64,7 @@ def main(argv):
         return 0
     line, reason = found
     print(f"  {label or args[0]}:{line}: {reason} - o Control Center falharia a leitura INTEIRA da uat.md "
-          "(Status: `open` | `fixing (Fxx)` | `fixed (<evidência>)`; Gravidade: P0 | P1 | P2 | -; uma linha com as células do cabeçalho)")
+          "(Status: `open` | `fixing (Fxx)` | `fixed (<evidência>)`, e `fixing` sem feature só no Tipo `copy`; Gravidade: P0 | P1 | P2 | -; uma linha com as células do cabeçalho)")
     return 1
 
 

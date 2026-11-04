@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The harness default of the board configuration (board@1; ADR-0025 § 6, ADR-0026). A project's docs/specs/board.json adds record types and boards and replaces the stages of a phase (it may leave one out: ADR-0027), columns, hidden_categories, origin_rules and waiting_after_days; states and structure_types are the harness's. Judged by mjrp-scripts/_board.py (board_config_shape) and read by the Control Center's itemboard. No waiting_after_days here: a project without it falls back to its contract's requirements.stale_days.",
   "format": "board@1",
   "phases": [
@@ -49,11 +49,11 @@
           "id": "homologation"
         },
         {
-          "id": "deploy"
-        },
-        {
           "id": "accepted",
           "from_fact": "accepted"
+        },
+        {
+          "id": "deploy"
         }
       ]
     }
@@ -64,7 +64,9 @@
       "accept_by_children": true
     },
     "feature": {
-      "in_filter": true
+      "in_filter": true,
+      "reopens": true,
+      "evaluated": true
     },
     "story": {
       "in_filter": true
@@ -108,6 +110,16 @@
       "tipo": [
         "tech-debt",
         "tech debt"
+      ]
+    },
+    {
+      "id": "copy",
+      "label": {
+        "pt-BR": "Copy",
+        "en": "Copy"
+      },
+      "tipo": [
+        "copy"
       ]
     }
   ],
@@ -257,6 +269,12 @@
       ]
     },
     {
+      "id": "reopened",
+      "categories": [
+        "reopened"
+      ]
+    },
+    {
       "id": "loop",
       "categories": [
         "in_progress"
@@ -269,21 +287,27 @@
       ]
     },
     {
+      "id": "evaluating",
+      "categories": [
+        "evaluating"
+      ]
+    },
+    {
       "id": "ready",
       "categories": [
         "done"
       ]
     },
     {
-      "id": "closed",
-      "categories": [
-        "closed"
-      ]
-    },
-    {
       "id": "accepted",
       "categories": [
         "accepted"
+      ]
+    },
+    {
+      "id": "closed",
+      "categories": [
+        "closed"
       ]
     }
   ],
@@ -351,10 +375,26 @@
           }
         },
         {
+          "id": "evaluating",
+          "match": {
+            "categories": [
+              "evaluating"
+            ]
+          }
+        },
+        {
           "id": "ready",
           "match": {
             "categories": [
               "done"
+            ]
+          }
+        },
+        {
+          "id": "accepted",
+          "match": {
+            "categories": [
+              "accepted"
             ]
           }
         },
@@ -365,12 +405,71 @@
               "closed"
             ]
           }
+        }
+      ],
+      "hidden": {
+        "categories": [
+          "off",
+          "queued"
+        ]
+      }
+    },
+    {
+      "id": "uat",
+      "filter": {
+        "types": [
+          "bug",
+          "improvement",
+          "tech-debt",
+          "copy"
+        ]
+      },
+      "columns": [
+        {
+          "id": "prep",
+          "match": {
+            "categories": [
+              "not_started"
+            ]
+          }
+        },
+        {
+          "id": "loop",
+          "match": {
+            "categories": [
+              "in_progress"
+            ]
+          }
+        },
+        {
+          "id": "waiting",
+          "match": {
+            "categories": [
+              "waiting"
+            ]
+          }
+        },
+        {
+          "id": "ready",
+          "match": {
+            "categories": [
+              "done"
+            ]
+          }
         },
         {
           "id": "accepted",
           "match": {
             "categories": [
               "accepted"
+            ]
+          }
+        },
+        {
+          "id": "closed",
+          "match": {
+            "categories": [
+              "closed"
             ]
           }
         }
@@ -436,8 +535,10 @@
             "categories": [
               "not_started",
               "queued",
+              "reopened",
               "in_progress",
               "waiting",
+              "evaluating",
               "done",
               "closed"
             ]
@@ -452,8 +553,10 @@
             "categories": [
               "not_started",
               "queued",
+              "reopened",
               "in_progress",
               "waiting",
+              "evaluating",
               "done",
               "closed"
             ]
@@ -468,8 +571,10 @@
             "categories": [
               "not_started",
               "queued",
+              "reopened",
               "in_progress",
               "waiting",
+              "evaluating",
               "done",
               "closed"
             ]
@@ -484,8 +589,10 @@
             "categories": [
               "not_started",
               "queued",
+              "reopened",
               "in_progress",
               "waiting",
+              "evaluating",
               "done",
               "closed",
               "accepted"

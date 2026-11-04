@@ -7,7 +7,7 @@ status: vivo
 atualizado: 2026-10-18
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 
@@ -93,6 +93,7 @@ entra com a linha aqui e o teste, ou com a frase «sem check do harness» e o po
 cobra que ela cubra todos os arquivos de `repo_fs/` (proposta de 18:03, no `harness-kaizen`).
 
 ## History
+- **2026-11-03 19:51** · **O refresh leva o kit visual inteiro — `visual-sensor@5` (CM-0099; F167, UAT-472).** O `collect.mjs` entrou no kit na F52 sem entrar na lista do refresh, e o sensor visual de cinco filhos quebrava ao abrir, com o `check` do item verde, porque ele lê o contrato e não abre o kit. A lista ganha o arquivo, e o `new_project_selftest.py` passa a ler os `import` do kit contra ela. O `check` não muda.
 - **2026-10-30 18:24** · **A trava visual guarda só a `main`, e o merge fechado por `git commit` também — `visual-sensor@4` (CM-0091; UAT-418).** O `--hook` julga só o merge na `main` e lê o `MERGE_HEAD` quando o `GIT_REFLOG_ACTION` não nomeia o merge; o `pre-commit` o roda no commit que fecha um merge na `main`. Decidido pelo agente, revisável pelo MJRP.
 - **2026-10-30 13:41** · **Na via rápida, o OK visual é o Touch ID do MJRP no merge — `visual-sensor@3` (CM-0090; F61, S-162).** A F61 mudou o `visual_gate.py` e foi juntada sem subir o item: o portão do Learn (`--learn-gate`) e o autoteste do catálogo reprovaram a `main`. O integrador subiu o item, escreveu a nota e reestampou o padrão. Decidido pelo agente, revisável pelo MJRP: a rota foi a nota de migração (o comportamento do portão mudou), não o `Catalog-editorial:`.
 - **2026-10-30 18:55** · **A frase da story no template — `requirement-nodes@3` (CM-0093; F137, UAT-416).** O modelo da story passou a dizer a frase única de até 220 caracteres, sem referência interna, com o `## en` espelhado, e o sensor do grafo a confere (regra `story_form`): o commit recusa a story cujo texto muda fora do molde; a aberta avisa até 2026-11-30. O check do item não muda; o filho reescreve as abertas que o aviso lista.

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 status_sync.py - each status has ONE source; what derives from it is written in the same commit (F67, S-168).
 
 The rules live in requirements_graph_rules.json -> `derivation` (one place). In short: a feature's status comes from its
 tasks.md; a requirement's from the features that import it; a UAT issue in `fixing (Fxx)` becomes `fixed (Fxx)` when Fxx
-is delivered. The derivation only moves forward: it never demotes a delivered status, never writes Accepted and never
+is delivered AND its folder cites the issue (UAT-429: a feature already Done does not fix the issue opened after it).
+The derivation only moves forward: it never demotes a delivered status, never writes Accepted and never
 closes an issue. Epic and release statuses are computed by whoever shows them, never stored.
 
   python3 mjrp-scripts/status_sync.py [root] --check            the drift of the whole project: exit 1 with the list, 0 none, 2 not evaluable
@@ -46,6 +47,7 @@ STATUS_LINE = re.compile(r"^(status:[ \t]*)(.*?)([ \t]*)$", re.M)
 UAT_ROW = re.compile(r"^\|\s*(UAT-\d+)\s*\|")
 CELL_SPLIT = re.compile(r"(?<!\\)\|")
 FIXING = re.compile(r"^fixing(\s*\(\s*(F\d{2,})\b)")
+UAT_ID = re.compile(r"\bUAT-\d+\b")
 
 
 class NotEvaluable(Exception):
@@ -89,17 +91,20 @@ def load(project, rules):
                 continue
             fm, _ = frontmatter(spec)
             ticked, opened = boxes(read(d / "tasks.md"))
+            # the issues the feature's own record cites (its `fixes:`, its tasks, its text): the fixer writes the issue into the folder
+            cites = {m for name in ("spec.md", "plan.md", "tasks.md") for m in UAT_ID.findall(read(d / name) or "")}
             feats[d.name[:d.name.index("-")]] = {
                 "dir": d.name, "rel": f"{paths['features']}/{d.name}/spec.md",
                 "status": str(fm.get("status") or "").strip(), "lane": str(fm.get("lane") or "standard").strip().casefold(),
-                "imports": [t[1] for t in link_targets(fm.get("imports"))], "ticked": ticked, "open": opened}
+                "imports": [t[1] for t in link_targets(fm.get("imports"))], "ticked": ticked, "open": opened, "cites": cites}
     rdir = project / paths["requirements"]
     if rdir.is_dir():
         for f in sorted(rdir.rglob("*.md")):
             fm, _ = frontmatter(read(f) or "")
             nid = str(fm.get("id") or node_id(f.stem)).strip()
             if fm.get("type") == "requirement" and nid:
-                reqs[nid] = {"rel": f.relative_to(project).as_posix(), "status": str(fm.get("status") or "").strip()}
+                reqs[nid] = {"rel": f.relative_to(project).as_posix(), "status": str(fm.get("status") or "").strip(),
+                             "points_to": bool(link_targets(fm.get("points_to")))}
     uat = read(project / paths["uat"])
     if uat:
         col = by_col = ok_col = None
@@ -144,8 +149,21 @@ def feature_target(ft, rules):
     return want if want.casefold() != st.casefold() else None
 
 
-def requirement_target(req, importers, rules):
-    """`importers`: the effective statuses of the features that import the requirement."""
+def points_to_threshold(rules, fast_only):
+    """The status from which the graph gate refuses a requirement with no `points_to` edge (None: the rules declare no such edge)."""
+    edge = next((e for e in rules.get("edges", []) if e.get("name") == "points_to"), None)
+    if edge is None:
+        return None
+    if fast_only and edge.get("enforced_from_fast_lane"):
+        return edge["enforced_from_fast_lane"]
+    return edge.get("enforced_from")
+
+
+def requirement_target(req, importers, rules, fast_only=False, refused=None):
+    """`importers`: the effective statuses of the features that import the requirement.
+    `fast_only`: every feature that imports it is on the fast lane (the graph gate then enforces `points_to` later).
+    `refused`: a list that receives {rel, want, from} when the derivation would write a status the graph gate refuses for a
+    requirement with no `points_to` edge (F169: the deadlock of a project with no info-arch.md). Such a status is not written."""
     d = rules["derivation"]["requirement"]
     st = req["status"]
     if not importers or st.casefold() in {s.casefold() for s in d["never_touch"]}:
@@ -159,21 +177,34 @@ def requirement_target(req, importers, rules):
         want = d["all_features_delivered"]
     else:
         return None
-    return want if rank(want, rules) > rank(st, rules) else None
+    if rank(want, rules) <= rank(st, rules):
+        return None
+    threshold = points_to_threshold(rules, fast_only)
+    if threshold and not req.get("points_to", True) and rank(want, rules) >= rank(threshold, rules):
+        if refused is not None:
+            refused.append({"rel": req["rel"], "want": want, "from": threshold})
+        return None
+    return want
 
 
-def uat_target(row, feature_status, rules):
+def uat_target(row, feature_status, rules, cites=None):
+    """`fixing (Fxx)` -> `fixed (Fxx)` when Fxx is delivered AND its folder cites the issue (`cites`: {Fxx: {UAT ids}}).
+    UAT-429: a feature that was already Done when the issue was opened used to close it in the commit that opened it; the
+    issue is fixed by a conserto that names it, never by the feature's status alone."""
     m = FIXING.match(row["status"])
     if not m or m.group(2) not in feature_status:
+        return None
+    if row["id"] not in (cites or {}).get(m.group(2), ()):
         return None
     if feature_status[m.group(2)].casefold() in {s.casefold() for s in rules["derivation"]["uat_issue"]["fixing_to_fixed_when"]}:
         return "fixed" + row["status"][len("fixing"):]
     return None
 
 
-def derive(feats, reqs, rows, rules, scope=None):
+def derive(feats, reqs, rows, rules, scope=None, refused=None):
     """The changes [(rel, kind, key, old, new)], kind `status` (frontmatter) or `uat` (the row `key`).
-    `scope` None: the whole project. Otherwise {"features": {Fxx}, "requirements": {ids}, "uat": bool}: only what the commit touches."""
+    `scope` None: the whole project. Otherwise {"features": {Fxx}, "requirements": {ids}, "uat": bool}: only what the commit touches.
+    `refused`: a list that receives (rid, want, threshold) for each requirement whose derived status the graph gate would refuse."""
     changes = []
     write_feats = set(feats) if scope is None else scope["features"] & set(feats)
     effective = {}
@@ -191,15 +222,20 @@ def derive(feats, reqs, rows, rules, scope=None):
     else:
         write_reqs = set(scope["requirements"]) | {r for f in write_feats for r in feats[f]["imports"]}
     for rid in sorted(write_reqs & set(reqs)):
-        want = requirement_target(reqs[rid], importers.get(rid, []), rules)
+        lanes = {feats[f]["lane"] for f in feats if rid in feats[f]["imports"]}
+        blocked = []
+        want = requirement_target(reqs[rid], importers.get(rid, []), rules, fast_only=lanes == {"fast"}, refused=blocked)
         if want:
             changes.append((reqs[rid]["rel"], "status", rid, reqs[rid]["status"], want))
+        if blocked and refused is not None:
+            refused.append((rid, blocked[0]["want"], blocked[0]["from"]))
     uat_rel = rules["paths"]["uat"]
+    cites = {fid: ft.get("cites", ()) for fid, ft in feats.items()}
     for row in rows:
         m = FIXING.match(row["status"])
         if scope is not None and not scope["uat"] and not (m and m.group(2) in write_feats):
             continue
-        want = uat_target(row, effective, rules)
+        want = uat_target(row, effective, rules, cites)
         if want:
             changes.append((uat_rel, "uat", row["id"], row["status"], want))
     return changes
@@ -249,11 +285,18 @@ def staged_paths(top):
     return [p for p in git_ok(top, "diff", "--cached", "--name-only", "-z").split("\0") if p]
 
 
+FIXTURE_DIR = "tests"
+
+
 def project_of(top, rel):
-    """The nearest folder holding a contract, from the path up to the top (`.` for the top), or None."""
+    """The nearest folder holding a contract, from the path up to the top (`.` for the top), or None.
+
+    A contract under a `tests/` folder belongs to a test sample (a kernel sample copies a whole child project), not to a
+    project: the sample's synthetic nodes would be judged as real ones and refuse the commit that adds it (F148). Its files
+    count for the project that owns the `tests/` folder."""
     p = Path(rel).parent
     while True:
-        if (top / p / CONTRACT).is_file():
+        if FIXTURE_DIR not in p.parts and (top / p / CONTRACT).is_file():
             return p.as_posix()
         if p == Path("."):
             return None
@@ -289,9 +332,17 @@ def scope_of(inner_paths, rules):
 
 
 # ---- the modes -------------------------------------------------------------------------------------------------
+def report_refused(refused):
+    for rid, want, threshold in refused:
+        print(f"[status_sync] não gravei — {rid}: o status derivado «{want}» exige `points_to` (a trava do grafo cobra a partir de "
+              f"«{threshold}»); a story não aponta para nenhum estado observável")
+
+
 def whole(root, rules, apply):
     feats, reqs, rows = load(root, rules)
-    changes = derive(feats, reqs, rows, rules)
+    refused = []
+    changes = derive(feats, reqs, rows, rules, refused=refused)
+    report_refused(refused)
     if not apply:
         if not changes:
             print(f"[status_sync] VERDE — nenhum status derivado fora da fonte ({len(feats)} feature(s), {len(reqs)} requisito(s))")
@@ -342,7 +393,9 @@ def staged(top, rules):
             if not (sc["features"] or sc["requirements"] or sc["uat"]):
                 continue
             base = export_index(top, proj, rules, Path(tmp) / "idx")
-            changes = derive(*load(base, rules), rules, scope=sc)
+            refused = []
+            changes = derive(*load(base, rules), rules, scope=sc, refused=refused)
+            report_refused(refused)
             by_file = {}
             for c in changes:
                 by_file.setdefault(c[0], []).append(c)

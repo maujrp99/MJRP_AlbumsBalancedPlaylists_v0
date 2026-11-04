@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_memory.py - the doctor's checks of the memory layer: MEMORY.md, the shape of the log and the growth of the
 Ways of Working (F1).
@@ -53,7 +53,7 @@ def f1_memory(root, rep, cfg=None):
 LOG_HEADER = "# log — o que aconteceu, em ordem"
 
 
-LOG_ENTRY = re.compile(r"^## \[(\d{4}-\d{2}-\d{2})( \d{2}:\d{2})?\] (session|decision|ingest|inventory|harness-feedback|review|acceptance)\b.* — ")
+LOG_ENTRY = re.compile(r"^## \[(\d{4}-\d{2}-\d{2})( \d{2}:\d{2})?\] (session|decision|ingest|inventory|harness-feedback|review|acceptance|answer)\b.* — ")
 
 
 LOG_TIME_REQUIRED_FROM = "2026-09-10"   # the hour became mandatory on this date (log.md header)

@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
   "version": "2026-10-09",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
@@ -132,7 +132,7 @@
   },
   "diagram_themes": {
     "root": "design/diagrams",
-    "rule": "todo diagrama desenhado numa conversa mora num tema: design/diagrams/<tema>/AAAA-MM-DD-HHMM-<name>.png (+ o .svg fonte ao lado); o diagrama de um épico pode ir na subpasta do épico dentro do tema, design/diagrams/<tema>/ep-NN/ (decisão do MJRP, 2026-10-09 18:49: muitos diagramas por épico). Nenhuma outra subpasta. O tema é o assunto, não a fase do PDLC (um diagrama atravessa fases); a fase vai na linha do diagrama no folder-index.md do tema. Tema novo entra aqui, no harness, com o OK do MJRP. Quem gera o caminho certo é o render_diagram.js (--theme, --name, --epic).",
+    "rule": "todo diagrama desenhado numa conversa mora num tema: design/diagrams/<tema>/AAAA-MM-DD-HHMM-<name>.png (+ o .svg fonte ao lado); o diagrama de um épico pode ir na subpasta do épico dentro do tema, design/diagrams/<tema>/ep-NN/ (decisão do MJRP, 2026-10-09 18:49: muitos diagramas por épico). Nenhuma outra subpasta. O tema é o assunto, não a fase do PDLC (um diagrama atravessa fases); a fase vai na linha do diagrama no folder-index.md do tema. Tema novo entra aqui, no harness, com o OK do MJRP. Quem gera o caminho certo é o render_diagram.js (--theme, --name, --epic). O diagrama gerado em código também mora aqui (MJRP, 2026-11-02 11:38, F160): o carimbo do nome é o do nascimento e fica; o gerador reescreve o mesmo arquivo, o histórico é o do git, e o SVG basta quando nada lê um PNG.",
     "name_regex": "^\\d{4}-\\d{2}-\\d{2}-\\d{4}-[a-z0-9]+(-[a-z0-9]+)*\\.(png|svg)$",
     "epic_subfolder_regex": "^ep-\\d{2}$",
     "themes": {
@@ -465,7 +465,21 @@
         "max_files": 3,
         "max_growth": 2,
         "owner": "mjrp-scripts/daily_backup.py (F75)",
-        "when": "three verified archives at most (two plus the last one in which every project was ok); warns when the newest is over 2x the previous (ADR-0024 § 7)"
+        "when": "three verified archives at most (two plus the last one in which every project was ok); warns when the newest is over 2x the previous (ADR-0024 § 7). A copy the MJRP moved out (`--mark-moved`, ADR-0030) leaves only its small marker here and no .tar.gz, so it counts zero; the file at its destination is his"
+      },
+      {
+        "id": "daily-doctor-log",
+        "glob": "~/Library/Logs/mjrp-daily-doctor*.log",
+        "max_gb": 0.005,
+        "owner": "mjrp-scripts/daily_doctor.py (F106): it rotates its own log past 1 MB; launchd's own output file stays empty unless the script fails to start",
+        "when": "5 MB for the pass's log and launchd's together; above it the rotation did not run"
+      },
+      {
+        "id": "cc-git-cache",
+        "glob": "~/.mjrp/control-center/cache/git*.json",
+        "max_gb": 0.03,
+        "owner": "apps/control-center `adapters/git_cli/memo_runner.py` (git.json, cap 8 MB, oldest immutable answers dropped) and `change_index.py` (git-changes.json, cap 12 MB, oldest repository dropped) (F163)",
+        "when": "30 MB for the two files together; they are disposable (deleted, they are rebuilt from git) and each one prunes itself when it is written"
       }
     ]
   }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 board_mapping_check.py - the judge of how a project's existing items enter the board (F136, S-202; the board@1 of ADR-0025,
 ADR-0026 and ADR-0027, read by _board.py).
@@ -58,7 +58,7 @@ STAGE_LABEL = {"explore": "Explorar", "frame": "Enquadrar", "draw": "Desenhar", 
                "specify": "Specify", "plan": "Plan", "tasks": "Tasks", "execute_verify": "Executar ⇄ Verificar",
                "homologation": "Homologação", "deploy": "Deploy", "accepted": "Aceito"}
 PHASE_LABEL = {"discovery": "Discovery", "design": "Design", "delivery": "Delivery", "release": "Release"}
-CATEGORY_LABEL = {"not_started": "Não começado", "queued": "Na fila", "in_progress": "Em andamento", "waiting": "Esperando",
+CATEGORY_LABEL = {"not_started": "Não começado", "queued": "Na fila", "reopened": "Reaberto", "in_progress": "Em andamento", "waiting": "Esperando",
                   "done": "Feito", "closed": "Fechado", "accepted": "Aceito", "off": "Fora"}
 KIND_LABEL = {"release": "versão do produto", "sprint": "sprint", "milestone": "milestone"}   # «Release» alone is the phase
 BOARD_LABEL = {"all": "Tudo", "epics": "Épicos", "features": "Features", "stories": "Stories", "tasks": "Tasks",

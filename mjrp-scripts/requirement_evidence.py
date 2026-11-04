@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirement_evidence.py - which requirements of a feature's spec.md have no test that proves them (`verified_by::`).
 
 One rule, two readers (F116, UAT-391). The requirements graph (requirements_graph_check.py) reads the requirements of every

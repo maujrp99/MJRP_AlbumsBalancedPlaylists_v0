@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """log_entry_check.py -- every commit brings a new entry in the project log (S-61).
 
 Born 2026-10-03 17:48: in the skills revision, four commits went out with no entry in docs/log.md, and on
@@ -97,7 +97,18 @@ from _contract import CONTRACT, log_rel, read_yaml  # the same contract reading 
 
 ENTRY = re.compile(r"^## \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}\].*$", re.MULTILINE)
 KIND = re.compile(r"^## \[[^\]]+\] *([^\s—]*)")
-KINDS = ("session", "decision", "inventory", "ingest", "harness-feedback", "review", "acceptance")   # the types the logs use;
+def answer_entry_ok(log_text, head):
+    """The entry of type `answer` names its question in the title and its report in the body (CC-ADR-0039 section 9)."""
+    if re.search(r"\] answer — auditoria P-\d{2,}\b", head) is None:
+        return False
+    at = (log_text or "").find(head)
+    rest = (log_text or "")[at + len(head):] if at >= 0 else ""
+    following = re.search(r"^## \[", rest, re.M)
+    body = rest[: following.start()] if following else rest
+    return re.search(r"^- Relatório: `[^`\n]+`", body, re.M) is not None
+
+
+KINDS = ("session", "decision", "inventory", "ingest", "harness-feedback", "review", "acceptance", "answer")   # the types the logs use;
 # review: a critique pass (UX, architecture) pointing to its report — MJRP, 2026-10-09 22:49
 # acceptance: the entry the human's acceptance commit writes (CC-ADR-0024); the doctor's F1 does not count it as session state
 DERIVED_NAMES = ("folder-index.md",)
@@ -577,6 +588,10 @@ def check(root, amend=False, msg=None):
                 # `acceptance` in any other commit would silence F1 with nobody having accepted anything
                 fails.append((where, log, f"a entrada `{head[:60]}` é do tipo `acceptance`, que só vale num commit com o carimbo "
                                           "`Human-accepted:` ou `Human-reopened:` (o commit do comando da tela do MJRP)"))
+            if kind == "answer" and not answer_entry_ok(git(root, "show", f":{log}")[1], head):
+                # CC-ADR-0039 section 9: the type the F1 does not count belongs to an answer of the screen, with its question and its report
+                fails.append((where, log, f"a entrada `{head[:60]}` é do tipo `answer`, que só vale para uma resposta da tela: o título "
+                                          "`auditoria P-NN: …` e, no corpo, `- Relatório: `<arquivo>``"))
             tzname = contract_timezone(root, proj)
             ahead = future_entry(head, tzname)
             if ahead:

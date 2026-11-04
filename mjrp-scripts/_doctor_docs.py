@@ -1,20 +1,23 @@
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_docs.py - the doctor's checks of the documents: paths that exist, links that resolve, the identity files,
 the folder indexes, the scripts catalog and the shape of the features (I2, I3, I4, I5 inheritance, W6 charter, W17, W19, W20).
 
 Family module of the doctor (F73 R5).
 """
+import datetime as dt
 import os
 import re
 import sys
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from _doctor_kernel import kernel_in_repo, repo_kernel_root
 from _skills import frontmatter
 
 
-IDENTITY_DOCS = ["AGENTS.md", "CLAUDE.md", "GEMINI.md", "README.md", "VISION.md"]
+# F103 (CC-ADR-0033): MEMORY.md too — it is read first in every session and cites the wiki as [[page]]; docs/log.md is in docs/**
+IDENTITY_DOCS = ["AGENTS.md", "CLAUDE.md", "GEMINI.md", "README.md", "VISION.md", "MEMORY.md"]
 
 
 ABS_PATH = re.compile(r"[`'\"( ](~?/Users/[A-Za-z0-9._-]+/[^\s`'\")\]]+)")
@@ -128,7 +131,8 @@ def _wiki_targets(root, cfg=None):
 
 def i3_links(root, rep, cfg=None):
     inc = "a renomeação para mjrp-harness quebrou dois caminhos no visual-notes-hub sem que nada acusasse"
-    inc_wiki = "a revisão de 07/09 tirou definições do VISION apontando para páginas de conceito que não existiam, e nada acusou"
+    inc_wiki = ("a revisão de 07/09 tirou definições do VISION apontando para páginas de conceito que não existiam, e nada acusou; "
+                "o MJRP (2026-10-27) pediu o link quebrado acusado também no MEMORY.md e no log (F103)")
     docs = [root / d for d in IDENTITY_DOCS] + sorted((root / "docs").rglob("*.md"))
     targets = _wiki_targets(root, cfg)
     n = nw = 0
@@ -319,3 +323,20 @@ def w20_sdd_shape(root, cfg, rep):
                         f"(a aberta documenta antes do fecho). `python3 mjrp-scripts/sdd_shape_check.py .` diz a seção de cada uma", inc, warned[0])
     else:
         rep.note("W20", "as features (F43+) estão nos moldes do SDD, sem «a escrever» pendente")
+
+
+def w21_screen_answers(root, rep):
+    """W21 - an answer given on the Control Center's screen that stayed unexecuted for more than a day (F166, CC-ADR-0039 section 8), with the commit
+    to make when it has none. A warning: the ceiling of error checks of ADR-0002 is full."""
+    inc = ("2026-11-03: o MJRP perguntou como o agente do projeto fica sabendo de uma resposta dada na tela; o tipo `answer` fica fora do F1 e "
+           "o ## Now não muda, então a resposta podia ficar parada sem ninguém executar")
+    sys.dont_write_bytecode = True
+    try:
+        import screen_answers as sa
+    except ModuleNotFoundError:
+        return
+    state = sa.state_of(root)
+    limit = (dt.datetime.now(ZoneInfo("America/Sao_Paulo")) - dt.timedelta(days=1)).strftime("%Y-%m-%d %H:%M")
+    old = [a for a in state.pending if a.at < limit]
+    if old:
+        rep.warn("W21", f"{len(old)} resposta(s) da tela parada(s) há mais de um dia: {', '.join(a.id for a in old)}. " + " ".join(s.strip() for s in sa.lines_of(state)[1:]), inc)

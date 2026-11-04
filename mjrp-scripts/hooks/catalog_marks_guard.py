@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 catalog_marks_guard.py - the PreToolUse hook that refuses an AGENT's command that would produce the human's valve on
 the canonical catalog (CC-ADR-0014 section 10, accepted by the MJRP on 2026-10-14 15:09; CC-ADR-0016 section 1) and on the acceptance of a
@@ -20,6 +20,7 @@ It refuses (exit 2, one line on stderr that Claude Code hands back to the agent)
      `Human-accepted:`, `Human-reopened:` or `Human-prioritized:` (any case, the way git reads a footer key): in `-m`/`--message`, in a
      `--trailer` whose key is one of those, in the file of `-F`/`--file` (read from the cwd, up to 64 KB, if it exists)
      or in the body of a heredoc when it is `-F -`.
+  (F166, CC-ADR-0039 section 7: `/audit-answers` is treated as `/acceptances` here: an answer to an audit question is the human's fact.)
   3. A simple command is `curl`, `wget`, `http` or `https` (HTTPie), it sends a body or names a method other than GET
      (`-X`, `-d`, `--data*`, `--json`, `--request`, `--post-data`, or HTTPie's POST/DELETE word) and a URL of
      `127.0.0.1` or `localhost` whose path starts with `/acceptances`: that is the route that PREPARES the acceptance
@@ -104,7 +105,7 @@ STAMP_LINE = re.compile(r"^(Catalog-editorial|Human-accepted|Human-reopened|Huma
 SEEN = []                                                  # the stamp keys the judge met, to pick the sentence of the refusal
 # this machine, however it is spelled (127.0.0.1, 127.1, localhost, [::1], 0.0.0.0), with or without the scheme, or HTTPie's `:8765/...`
 LOOPBACK = r"(?:127(?:\.\d{1,3}){1,3}|localhost|0\.0\.0\.0|\[::1\]|::1|\d{8,10}|0x[0-9a-f]{8})"   # 2130706433 and 0x7f000001 are 127.0.0.1 too
-ACCEPTANCE_URL = re.compile(r"(?<![\w.\-~/])(?:(?:https?:)?//)?(?:" + LOOPBACK + r"(?::[\w{}$%]+)?|:\d{2,5})(?:/\.{1,2}|/[\w.\-~%]+/\.\.)*/acceptances(?![\w-])",
+ACCEPTANCE_URL = re.compile(r"(?<![\w.\-~/])(?:(?:https?:)?//)?(?:" + LOOPBACK + r"(?::[\w{}$%]+)?|:\d{2,5})(?:/\.{1,2}|/[\w.\-~%]+/\.\.)*/(?:acceptances|audit-answers)(?![\w-])",
                             re.IGNORECASE)
 HTTP_CLIENTS = {"curl", "wget", "aria2c"}
 HTTPIE = {"http", "https", "xh", "xhs", "httpie"}                    # a body is a POST unless the method says otherwise

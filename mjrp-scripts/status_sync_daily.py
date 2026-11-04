@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 status_sync_daily.py - the daily pass applies the derived status and proposes to the MJRP only what is his (F67 TASK-03).
 
@@ -23,7 +23,7 @@ What it does, and what it does not:
 
 Then it splits what is left in two lists:
   - the MJRP's: an issue of his track (`MJRP`, or `agente · prioridade: humano`) fixed and waiting for his OK, one by one; the `Done`
-    features and requirements waiting for his «Dar o OK» and acceptance, as a count (the Control Center discounts what he accepted);
+    features and requirements waiting for the human's «Aceite», as a count (the Control Center discounts what the human accepted);
   - the agent's: what the derivation cannot decide (a contradiction: `Done` with an open task, a requirement ahead of its feature,
     an issue `fixed` while its feature is open), and the issues of the agent track waiting for the independent recheck. The
     contradictions are written to the sensor ledger of each project (`daily-checks/`, owner `status_sync`), where the agent
@@ -100,14 +100,14 @@ def lists(feats, reqs, rows, rules):
 
     The MJRP's list here is what the repository alone decides: the issues of his track fixed and waiting for his OK, one by one. A
     `Done` feature or requirement is his too, but whether he already accepted it is on the Control Center's record (the `accept:`
-    commits, the log), so they come as one count and the Control Center, which discounts what he accepted, keeps the list itself."""
+    commits, the log), so they come as one count and the Control Center, which discounts what the human accepted, keeps the list itself."""
     mjrp, agent, contradictions = [], [], []
     open_ = {s.casefold() for s in rules["derivation"]["requirement"]["open_feature_statuses"]}
     delivered = _delivered(rules)
     done_feats = [fid for fid, ft in sorted(feats.items()) if ft["status"].casefold() == "done"]
     done_reqs = [rid for rid, rq in sorted(reqs.items()) if rq["status"].casefold() == "done"]
     if done_feats:
-        mjrp.append(f"{len(done_feats)} feature(s) Done esperam o «Dar o OK» (o Control Center desconta as já aceitas)")
+        mjrp.append(f"{len(done_feats)} feature(s) Done esperam o «Aceite» (o Control Center desconta as já aceitas)")
     if done_reqs:
         mjrp.append(f"{len(done_reqs)} requisito(s) Done esperam o aceite (o Control Center desconta os já aceitos)")
     rechecks, ahead = [], {}                              # issues of the agent track awaiting the recheck; Fxx -> issues fixed ahead of it
@@ -136,6 +136,12 @@ def lists(feats, reqs, rows, rules):
     for fid, ids in sorted(ahead.items()):
         contradictions.append((f"{fid}:issues-fixed-ahead", f"{len(ids)} issue(s) estão fixed ({', '.join(ids[:4])}"
                                f"{'…' if len(ids) > 4 else ''}) e a {fid} segue {feats[fid]['status']}: a issue está à frente da feature"))
+    refused = []                                          # F169: a story the graph gate would refuse, and the derivation does not write
+    ss.derive(feats, reqs, rows, rules, refused=refused)
+    for rid, want, threshold in refused:
+        contradictions.append((f"{rid}:derivation-blocked-by-points_to",
+                               f"{rid} deveria estar «{want}» pelas features que o importam, mas não tem `points_to` e a trava do grafo "
+                               f"cobra a partir de «{threshold}»: falta apontar o estado observável (mjrp-writing-reqs); o status_sync não gravou"))
     agent += [text for _k, text in contradictions]
     return mjrp, agent, contradictions
 

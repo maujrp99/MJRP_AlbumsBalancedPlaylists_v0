@@ -5,7 +5,7 @@ summary: as 30 páginas do harness que este projeto carrega — o que os campos 
 
 ## Definition
 
-Cópia carimbada (versão **2026-10-30**, fonte `9dc987dce`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
+Cópia carimbada (versão **2026-11-03**, fonte `79ddf31a1`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
 
 As páginas vêm achatadas nesta pasta; os grupos abaixo são os temas da fonte (no harness, `docs/wiki/kernel/<tema>/`).
 
@@ -19,7 +19,7 @@ As páginas vêm achatadas nesta pasta; os grupos abaixo são os temas da fonte 
 | [harness-kaizen](harness-kaizen.md) | onde o harness falhou e o que se aprendeu com isso — o erro e a correção no mesmo lugar |
 | [git-governance](git-governance.md) | como se commita, ramifica, integra e marca versão num projeto do harness — tipos e formato do commit, os commits de cada etapa do Delivery, o ramo por feature, a integração (a sessão integradora, os trens, o juiz por lote e o portão do pre-merge-commit) e suas condições, tags, brownfield, e o que os hooks exigem |
 | [product-discovery](product-discovery.md) | o processo da etapa Enquadrar da Discovery do MJRP — Rapid (cinco passos essenciais, iterativo com o LLM) e Full (o Rapid mais técnicas que o PM marca no início), os quatro riscos transformados em teste, a decisão matar · iterar · avançar e onde cada saída mora no grafo do projeto |
-| [pdlc-loops](pdlc-loops.md) | o ciclo de vida do produto no MJRP como uma fundação e cinco loops — Intake com duas vias (padrão e rápida), Discovery (o que construir), Design (a tela e a descrição dela, com o portão Pronto para construir como saída), Delivery em SDD com executor, juiz e integrador (construir certo), Release (Homologação, Deploy e Aceito) e Learn (deu certo?) —, cada um com critério de saída, verificador e regras de parada; o humano na intenção, no aceite do que há para ele ver, decidir ou de segurança e no risco de negócio |
+| [pdlc-loops](pdlc-loops.md) | o ciclo de vida do produto no MJRP como uma fundação e cinco loops — Intake com duas vias (padrão e rápida), Discovery (o que construir), Design (a tela e a descrição dela, com o portão Pronto para construir como saída), Delivery em SDD com executor, juiz e integrador (construir certo), Release (Homologação, Aceito e Deploy) e Learn (deu certo?) —, cada um com critério de saída, verificador e regras de parada; o humano na intenção, no aceite do que há para ele ver, decidir ou de segurança e no risco de negócio |
 | [conformance-notes](conformance-notes.md) | como a skill dona de um item do catálogo canônico executa uma nota de migração (CM-NNNN) de um filho — o check do catálogo é o juiz, o conteúdo do projeto é editado no lugar, o que é do humano é perguntado e quem registra é o modo conform da bootstrap |
 
 ### skills · o sistema de skills e de agentes — arquétipos, papéis, o que um agente é

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 feature_closure.py - who closes a feature: the MJRP's acceptance or the independent recheck (F139, S-206).
 
@@ -20,6 +20,10 @@ state is Closed, never Accepted: the acceptance (`Human-accepted:`) stays his.
 One place, three readers: the requirements graph (requirements_graph_check.py: a `closed_by` that does not stand is a finding),
 the Control Center's board (the station `closed`, the category «Fechado») and its acceptance (the preparation refuses a closed
 feature). The app loads this file by path (adapters/kernel_uat/closure.py), so it imports nothing but the stdlib.
+
+The report a `closed_by:` cites is looked for in the project and at the repository's root (the graph hands `text` to report_problem). The
+board reads a judge's verdict from the same two places (F156, UAT-459: adapters/git_cli/evaluations.py), so a report that closes a feature
+is a report the board can see.
 """
 import re
 from datetime import datetime

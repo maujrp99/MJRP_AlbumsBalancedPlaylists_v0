@@ -1,19 +1,19 @@
 ---
 title: PDLC em loops — Intake, Discovery, Design, Delivery, Release, Learn
-aliases: [pdlc-loops, PDLC, ciclo de vida, lifecycle, loops do PDLC, Intake, triagem, vias, via padrão, via rápida, standard lane, fast lane, Discovery loop, Design loop, Delivery loop, Release loop, Learn loop, Pronto para construir, Ready to build, escalada, integrador, Dar o OK]
-summary: o ciclo de vida do produto no MJRP como uma fundação e cinco loops — Intake com duas vias (padrão e rápida), Discovery (o que construir), Design (a tela e a descrição dela, com o portão Pronto para construir como saída), Delivery em SDD com executor, juiz e integrador (construir certo), Release (Homologação, Deploy e Aceito) e Learn (deu certo?) —, cada um com critério de saída, verificador e regras de parada; o humano na intenção, no aceite do que há para ele ver, decidir ou de segurança e no risco de negócio
+aliases: [pdlc-loops, PDLC, ciclo de vida, lifecycle, loops do PDLC, Intake, triagem, vias, via padrão, via rápida, standard lane, fast lane, Discovery loop, Design loop, Delivery loop, Release loop, Learn loop, Pronto para construir, Ready to build, escalada, integrador, Aceite]
+summary: o ciclo de vida do produto no MJRP como uma fundação e cinco loops — Intake com duas vias (padrão e rápida), Discovery (o que construir), Design (a tela e a descrição dela, com o portão Pronto para construir como saída), Delivery em SDD com executor, juiz e integrador (construir certo), Release (Homologação, Aceito e Deploy) e Learn (deu certo?) —, cada um com critério de saída, verificador e regras de parada; o humano na intenção, no aceite do que há para ele ver, decidir ou de segurança e no risco de negócio
 tags: [kernel, pdlc, loop, discovery, delivery, processo]
 status: em formação
-atualizado: 2026-10-30
+atualizado: 2026-11-01
 fontes: [kernel/ways-of-working/product-discovery, kernel/ways-of-working/loop-engineering-concept, kernel/design/sketch-vs-prototype, kernel/roadmap/requirements-graph, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, wiki/sources/2026-10-07-mjrp-loop-engineering-handbook.md, wiki/sources/2026-10-07-mjrp-agentic-ai-handbook.md]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # PDLC em loops — Intake, Discovery, Design, Delivery, Release, Learn
 
 > Kernel · página de processo · criada 2026-10-07 · nasce da proposta `design/proposals/pdlc-loop-engineering-proposal.md`
 > (decisões do MJRP de 2026-10-07, 18:02 a 18:30) · **o diagrama é um só, o do card «O ciclo de vida» do Overview do Control Center**
-> (fonte: `apps/control-center/design/inception/pdlc-loops-diagram-v13.svg`, aprovado pelo MJRP em 2026-10-30) — esta página tem as regras;
+> (fonte: `design/diagrams/ways-of-working/2026-10-30-2115-pdlc-loops-v13.svg`, aprovado pelo MJRP em 2026-10-30) — esta página tem as regras;
 > o desenho, as etapas e os papéis no card · substitui a numeração de fases (0 · 1a · 1b · 2 · 2→3 · 3 · 4 · 5), que as skills ainda
 > usam até migrarem — a §11 traduz.
 
@@ -57,20 +57,20 @@ A fundação não produz a arquitetura: o esqueleto (`arch.md`, `data-model.md`)
 ## 2. Intake — a porta de entrada e as duas vias
 
 **Intake** é a triagem: receber a demanda, qualificar (vale a pena? serve a qual resultado do `ROADMAP.md`?), escolher a
-via — ou rejeitar com motivo. Entra: pedido ou mudança do MJRP, requisito novo, issue da Homologação (Bug, Melhoria ou Tech debt), achado de sensor,
+via — ou rejeitar com motivo. Entra: pedido ou mudança do humano, requisito novo, issue da Homologação (Bug, Melhoria ou Tech debt), achado de sensor,
 aprendizado do Learn. Mora no `prd.md` de cada projeto (§ *Candidatos*) e na entrada do log da triagem. No sentido amplo,
 Intake é a pré-venda (captar a oportunidade, estimar, mandar proposta) — vale quando houver cliente; hoje é a triagem.
 
 | Via | Quando | Caminho |
 |---|---|---|
 | **Padrão** | resultado novo ou feature nova | a Discovery antes, **do tamanho da novidade** (explorar, enquadrar e desenhar, ou só o que falta) → Pronto para construir → Delivery |
-| **Rápida** | mudança, criar ou atualizar, que o MJRP quer ver na hora; inclui o conserto de defeito | brief → issue no board → execução → **o MJRP valida na tela** → documentação e protótipo depois |
+| **Rápida** | mudança, criar ou atualizar, que o humano quer ver na hora; inclui o conserto de defeito | brief → issue no board → execução → **o humano valida na tela** → documentação e protótipo depois |
 
 Não há mais quatro trilhas, Fast track, quick fix nem a distinção Full × Standard (decisão do MJRP, 2026-10-24: «fundir a fix
 com fast lane» e dois caminhos). Não confundir com as duas **trilhas de issue**, Humano e Agente (§6).
 
 **A via rápida** (decisão do MJRP, 2026-10-24 11:19 e 11:23) serve para fazer uma mudança de forma ágil, e o humano a valida
-olhando a tela. **O juiz é o MJRP** na trilha Humano, ou a reconferência independente na trilha Agente — a via não tem juiz
+olhando a tela. **O juiz é o humano** na trilha Humano, ou a reconferência independente na trilha Agente — a via não tem juiz
 agente próprio. Os cinco passos: (1) o brief, o da `mjrp-structuring-requests`; (2) a issue no board — uma task ou feature
 quando o pedido é melhoria, uma issue do `uat.md` só quando é defeito ou mudança achada ao usar — a feature **nasce do molde, por
 `new_feature.py`**, nunca à mão; (3) a execução; (4) a validação dele na tela; (5) a documentação e o protótipo, atualizados
@@ -79,7 +79,7 @@ quando o pedido é melhoria, uma issue do `uat.md` só quando é defeito ou muda
 relatório de reconferência faz o próprio `pre-merge-commit` pedir o **Touch ID dele** — a mesma prova de presença do Aceite
 (`~/.mjrp/control-center/bin/presence`, CC-ADR-0031), num diálogo que nomeia as features, o ramo e o tip. Com o dedo o merge entra;
 cancelado, expirado (35 s, dentro do prazo do `merge_train.py`) ou sem Touch ID na máquina, não entra. Ninguém escreve o OK: o portão o pede ao vivo e só depois o
-anota para auditoria (`git notes --ref=mjrp-visual-ok show <tip>`), sem nunca ler essa nota. O relatório `who_judged: human` — o OK do
+anota para auditoria (`git notes --ref=mjrp-visual-ok show <tip>`), sem nunca ler essa nota (quem a lê é a trava do passo retroativo, para dar por cumprida a linha da reconferência visual: F154; e o board, para pôr em «Feito» a feature da via rápida da trilha Humano com a construção feita: F151). O relatório `who_judged: human` — o OK do
 chat que um agente transcrevia (2026-10-26 a 29) — não vale mais como veredito. Na trilha Agente, a reconferência independente escreve
 o relatório e o dedo não é pedido; o ramo que também leva feature da via padrão segue pedindo o relatório.
 **Três salvaguardas** (aceitas por ele): o passo retroativo é **obrigatório e cobrado por sensor** — o `sdd_shape_check.py` recusa, no
@@ -87,10 +87,12 @@ o relatório e o dedo não é pedido; o ramo que também leva feature da via pad
 valem, sem exceção; **quem pede a via rápida é ele** — nunca o agente, para poupar os portões. A diferença para a padrão é a
 ordem: na padrão a documentação completa e o protótipo vêm **antes**; na rápida, **depois**.
 
+**A pequena mudança de texto não entra em via nenhuma** (decisão do MJRP, 2026-11-01; F158, S-208). Ela é uma issue de `Tipo` `copy` no `uat.md`: sem feature, sem brief e sem a «Priorizada», vai direto a «Em andamento» (`fixing`, sem feature, só nesse tipo), e o integrador a faz direto na `main`. Feita, vai à coluna de pronto, e só o OK do humano a fecha, mesmo a que um agente abriu. O juiz do atalho é a trava `copy_change_check.py` no `pre-commit`: na `main`, o commit dessa issue só toca `content/copy/*.json`, o `uat.md` e o log, e dentro do JSON só o texto de entradas que existem, com os mesmos marcadores e até 10 entradas. Só uma linha nova nasce `copy`. O que não couber nisso segue por um ramo, na via que lhe cabe.
+
 ### 2.1 O passo retroativo da via rápida — o que atualiza e como fecha
 
-Na via rápida o código vem antes dos documentos; o passo retroativo os traz ao que foi construído **depois do OK do juiz e antes
-de o ramo ir ao integrador**, no próprio ramo. Sem ele a próxima sessão julga a tela contra a regra antiga e desfaz o que o MJRP
+Na via rápida o código vem antes dos documentos; o passo retroativo os traz ao que foi construído **depois do aceite do juiz e antes
+de o ramo ir ao integrador**, no próprio ramo. Sem ele a próxima sessão julga a tela contra a regra antiga e desfaz o que o humano
 aprovou. O dono é a `mjrp-syncing-docs` (§ *the fast lane's retroactive step*); a feature só fecha com ele feito.
 
 **O que ele atualiza** está num lugar só: o registro `mjrp-scripts/artifacts.json` — o campo `retro` de cada artefato, `always`,
@@ -168,7 +170,7 @@ inventário (W11), do protótipo × info-arch × wireframes (W14, `commit-msg`),
 Entre o Design e o Delivery há um **portão, não uma etapa de trabalho**, e ele é a **saída do Design** (decisão do MJRP, 2026-10-24: o nome «Pronto para
 construir» substitui «contrato»): a aprovação dos requisitos Ready, com os critérios apontando para estados julgados. É a
 decisão de intenção do humano — um erro aqui o loop repete dezenas de vezes antes de alguém ver. Aprovar a spec e as tasks é
-**opção do contrato do projeto** (o `.mjrp-project.yml`, `gates:`), não padrão. A via rápida não passa por ele: o MJRP já
+**opção do contrato do projeto** (o `.mjrp-project.yml`, `gates:`), não padrão. A via rápida não passa por ele: o humano já
 está olhando a tela.
 
 **O portão Design → Delivery, por story.** Uma story Ready só entra em Delivery se o Control Center consegue
@@ -198,8 +200,8 @@ sem ter feito (`mjrp-ensuring-quality`, `mjrp-ensuring-sdd`, e o crítico no por
   motivo no log; só a story ainda não entregue pode sair, e isso o humano decide. **Nunca uma feature por release, nunca
   feature aberta para release futura**: ela nasce quando o trabalho entra em Delivery, do tamanho de uma fatia.
 - **Etapas:** especificar (`spec.md`) → planejar (`plan.md`) → quebrar (`tasks.md`) → executar ⇄ verificar (testes,
-  sensores, grafo) → **reconferência visual independente** (só em feature que toca tela; o juiz avalia, não barra; **no brownfield, só na tela nova ou alterada depois do harness** — a já fechada e em produção não se compara, a não ser que o MJRP peça; o portão de merge não muda — ramo que toca arquivo de tela ainda pede a reconferência, e a tela legada alterada tem como base a tela em produção antes da mudança)
-  → **ramo entregue ao integrador** (a 1ª rodada vai para a `main` pelo trem) → **Release** (§6): homologação, deploy e aceito.
+  sensores, grafo) → **reconferência visual independente** (só em feature que toca tela; o juiz avalia, não barra; **no brownfield, só na tela nova ou alterada depois do harness** — a já fechada e em produção não se compara, a não ser que o humano peça; o portão de merge não muda — ramo que toca arquivo de tela ainda pede a reconferência, e a tela legada alterada tem como base a tela em produção antes da mudança)
+  → **ramo entregue ao integrador** (a 1ª rodada vai para a `main` pelo trem) → **Release** (§6): homologação, aceito e deploy.
 - **Tela se compara com a referência visual aprovada, não se "vê rodando"** (`PRINCIPLES.md` I.12). Referência visual
   aprovada é qualquer ferramenta que dê o visual da tela aprovada — o protótipo em HTML (viva) ou as exportações do
   Figma ou de outra ferramenta de design (estática) —, registrada no `info-arch.md` com o tipo e onde mora. No executar ⇄
@@ -219,20 +221,20 @@ sem ter feito (`mjrp-ensuring-quality`, `mjrp-ensuring-sdd`, e o crítico no por
   O relatório (`reports/audits/<data>-<produto>-visual-parity-recheck[-n].md`, com `verdict: pass | fail | incomplete`
   e `p0: <n>` no frontmatter, em inglês — os únicos campos que o hook lê; a prosa pode dizer "Veredito: passa" para o
   humano) vai no ramo, depois do último commit de tela.
-- **A 1ª rodada vai para a `main`; o MJRP também julga.** Feita a primeira rodada de executar ⇄ verificar e o juiz, a
-  feature é entregue ao integrador e integrada — mesmo com o juiz achando o que corrigir —, porque a liberação ajuda o MJRP a ser juiz também: ele
+- **A 1ª rodada vai para a `main`; o humano também julga.** Feita a primeira rodada de executar ⇄ verificar e o juiz, a
+  feature é entregue ao integrador e integrada — mesmo com o juiz achando o que corrigir —, porque a liberação ajuda o humano a ser juiz também: ele
   vê a tela rodando, acha o que o juiz não achou, ou decide que está ok do jeito que está. Cada achado do juiz é uma
   issue do `uat.md` (`uat@3`) **reportada por `juiz`**, com `Status` `fixing (<Fxx>)` da **mesma feature** (o achado volta à feature dona: o fechar-antes-de-abrir segue) e o
   relatório na `Evidência`. A coluna `Reportado por` (`MJRP` · `juiz` · `agente`) diz de quem é — §6. A feature na `main` está **em homologação** e fecha quando cada issue dela está fechada. Quem
   fecha depende de quem reportou (§ 6): o achado do juiz é de agente, então um agente que não o corrigiu o
-  confere contra a evidência e o fecha; a issue que o MJRP abrir ao olhar a feature espera o OK dele, o pedido de
+  confere contra a evidência e o fecha; a issue que o humano abrir ao olhar a feature espera o aceite dele, o pedido de
   correção (uma rodada nova da mesma feature) ou o «fica como está». **P0:** o agente traz ao MJRP o que é, e ele decide
   se entra na `main` mesmo assim — o hook segura o relatório com `p0` > 0, e a saída é a válvula dele, nunca do agente.
 - **O hook `pre-merge-commit` segura a etapa.** Ele recusa o merge de um ramo que mudou arquivo de tela (o `screen:` do
   contrato) sem relatório de reconferência commitado depois do último commit de tela do ramo, e recusa o relatório que
   barra: `p0` maior que 0, `verdict: incomplete` (o juiz não avaliou), `fail` sem o campo `p0` ou sem veredito. O mais
   novo decide. Um `fail` com `p0: 0` entra, com o aviso de que os achados são issues. Na via rápida, sem relatório, o
-  veredito é o Touch ID do MJRP, pedido pelo próprio hook (§ 2, F61). A saída é do humano, nunca do
+  veredito é o Touch ID do humano, pedido pelo próprio hook (§ 2, F61). A saída é do humano, nunca do
   agente (`VISUAL_RECHECK_SKIP="<motivo>"` ou `git merge --no-verify`), como o trailer `Prototype-sync: skip` — é a
   saída do P0. Só o sensor visual pode ser de etapa (`when: pre-merge`); o doctor reprova qualquer outro.
 - **Pronto** = o verificador passa (exit 0); nunca o auto-relato do agente. Na feature de tela, o juiz também avaliou e não achou P0; o que ele achou vira issue da feature, não bloqueio.
@@ -256,17 +258,18 @@ sem ter feito (`mjrp-ensuring-quality`, `mjrp-ensuring-sdd`, e o crítico no por
   executa — só quando pede ou quando há risco de impacto financeiro ou de negócio.
 - **Isolamento:** um worktree por sessão de página; a trava de sessão avisa quando há outra no repositório.
 
-## 6. Release — Homologação, Deploy e Aceito
+## 6. Release — Homologação, Aceito e Deploy
 
 A quarta fase do ciclo (ADR-0027): Discovery · Design · Delivery · **Release**.
-É quando a versão do produto chega a quem usa, em três etapas — **Homologação** (o UAT: o humano usa o entregue rodando e
-registra no `uat.md` o que acha — Bug, Melhoria, Tech debt), **Deploy** (a fronteira irreversível: publicar; o projeto sem deploy
-omite a etapa) e **Aceito** (o aceite do humano: aceito → nó Accepted e operação). O que a homologação acha volta pelo Intake (via
+É quando a versão do produto chega a quem usa, em três etapas, **nesta ordem** (ADR-0029) —
+**Homologação** (o UAT: o humano usa o entregue rodando e registra no `uat.md` o que acha — Bug, Melhoria, Tech debt), **Aceito**
+(o aceite do humano: aceito → nó Accepted; **o aceite dele autoriza a publicação**) e **Deploy** (a fronteira irreversível: publicar; só
+depois do aceito, e o projeto sem deploy omite a etapa). O que a homologação acha volta pelo Intake (via
 rápida ou padrão); a melhoria percebida aqui é issue de UAT do tipo Melhoria, e fora daqui é feature (a regra da fase de
 origem). A **versão do produto** (1.0, 1.1) é o conjunto que passa junto por esta fase; «release» é o nome da fase, não do
 conjunto (ADR-0028).
 
-**O aceite é por feature** (CC-ADR-0024): o MJRP aceita a feature inteira com um OK; o Control Center prepara o commit e
+**O aceite é por feature** (CC-ADR-0024): o humano aceita a feature inteira num só aceite; o Control Center prepara o commit e
 **ele** o roda e assina — o agente nunca escreve `Human-accepted:` nem `Human-reopened:` (o `commit-msg` e o hook recusam). **Mas nem toda
 feature pede o OK** (MJRP, 2026-10-30 20:22): só a que tem algo para ele ver, decidir ou de segurança, ou que conserta issue dele; a outra
 **fecha pela reconferência independente** e termina em **Fechado**, nunca em Aceito — fechar não é aceitar (`AGENTS.md` § Duas
@@ -274,18 +277,18 @@ trilhas; o fechamento no board é a F139). Se a issue achada na Homologação n�
 feature fecha: «↻ a issue volta ao Intake · sem nada a ver: Fechado».
 
 **A feature fecha de dois jeitos** (F139, S-206; o MJRP, 2026-10-30): a que tem algo para o humano **ver** (uma story que ela
-importa aponta para um estado de **tela**; o comportamento que ele usa leva a marca `needs_human: "ver: …"`), **decidir** ou **segurança**, ou que **conserta uma issue dele**, espera o «Dar o OK»
+importa aponta para um estado de **tela**; o comportamento que ele usa leva a marca `needs_human: "ver: …"`), **decidir** ou **segurança**, ou que **conserta uma issue dele**, espera o «Aceite»
 dele — estado **Aceito**. A que não tem nada disso (engenharia, modelo, núcleo, skill, sensor sem efeito que ele veja) **fecha pela
 reconferência independente**, como a issue de agente: a spec `Done` declara `closed_by: "recheck independente: <relatório>,
-<AAAA-MM-DD HH:MM>"` e o estado é **Fechado**, nunca «Aceito» — o aceite (`Human-accepted:`) continua só dele. A marca `needs_human:
+<AAAA-MM-DD HH:MM>"` e o estado é **Fechado**, nunca «Aceito» — o aceite (`Human-accepted:`) continua só dele; o Fechado também vem **antes do Deploy**, como o Aceito. A marca `needs_human:
 "<decidir|ver|segurança>: <motivo>"` na spec manda ao aceite o que o grafo não vê, e o sensor recusa o `closed_by` numa feature
 assim. A regra é um arquivo só (`mjrp-scripts/feature_closure.py`), lido pelo grafo, pelo board e pela trava do aceite.
 
 **As duas trilhas de issue** (`uat@3`, F48): a coluna `Reportado por` — `MJRP` · `juiz` · `agente` — diz em qual a issue está.
-- **Humano:** os requisitos do PRD e as issues que o MJRP abriu; é a prioridade, e ele aceita a feature quando há o que ver ou decidir.
-- **Agente:** as issues que juízes e agentes abrem. Quem acha registra o conserto no board (`solution_type: fix`) e delega na hora, sem esperar o MJRP; **a
+- **Humano:** os requisitos do PRD e as issues que o humano abriu; é a prioridade, e ele aceita a feature quando há o que ver ou decidir.
+- **Agente:** as issues que juízes e agentes abrem. Quem acha registra o conserto no board (`solution_type: fix`) e delega na hora, sem esperar o humano; **a
   reconferência independente fecha** (um agente que não a corrigiu a confere contra a evidência).
-- **O que sobe:** só o que pede o MJRP — **decidir**, **ver** (defeito visível usando o produto) ou **segurança** —, marcado na célula
+- **O que sobe:** só o que pede o humano — **decidir**, **ver** (defeito visível usando o produto) ou **segurança** —, marcado na célula
   (`agente · prioridade: humano — decidir|ver|segurança: <motivo>`). Um P0 técnico, sem nada para ele ver nem decidir, fica na trilha Agente,
   fecha com a reconferência e vira aviso. O MJRP continua podendo fechar qualquer uma.
 
@@ -307,7 +310,7 @@ medida do `ROADMAP.md` mexeu?) → kaizen ([[harness-kaizen]]: a lição vai par
   curso, com os épicos dele sendo entregues; **«em monitoramento»** é um estado **derivado** — todas as stories dos épicos
   que o servem estão feitas e o resultado segue em Now — e **nunca se escreve à mão**: o time para de construir e o Learn
   mede; **Alcançados** é a seção `## Alcançados` do `ROADMAP.md`, para onde vai o resultado cuja medida foi atingida e
-  estável, com `achieved:: AAAA-MM-DD` na seção dele e as linhas `- **Valor medido:**` e `- **Aprendizado:**`. **Só o MJRP
+  estável, com `achieved:: AAAA-MM-DD` na seção dele e as linhas `- **Valor medido:**` e `- **Aprendizado:**`. **Só o humano
   marca «alcançado»** (`achieved::`); o agente não propõe. Resultado `sem medida` (a medida é opcional, 2026-10-29): não há alvo para
   atingir, então o alcançado é o julgamento dele, `achieved::` com a frase dele, sem `- **Valor medido:**`. Impacto parcial ou nulo: o resultado fica no Now e volta à
   Discovery. Liberou o Now, o Next sobe e o Later é reavaliado. O **foco** é um aviso: mais de 5 resultados **em curso** em
@@ -379,6 +382,15 @@ concluída**.
 
 ## History
 
+- **2026-11-02 00:24** · **A dispensa do aceite sai** (`acceptance_waived:`, a linha de 2026-11-01 23:02): a reconferência a reprovou com um P1, porque é uma válvula do humano que um agente escreve numa linha (`apps/control-center/reports/audits/2026-11-02-recheck-f159-closures.md`). O humano decide de manhã.
+- **2026-11-02 00:20** · **«Pequena» ganha teto na issue de tipo `copy`: até 10 entradas por commit** (§ 2; F158; a reconferência `apps/control-center/reports/audits/2026-11-02-recheck-f158.md`, P2-2; o número é decisão do orquestrador, revisável pelo MJRP, que disse «pequenas mudanças»). A linha que já existe não vira `copy`. O salvar da tela só muda o texto, que continua texto; marcador e texto vazio não se conferem nele, para um salvar recusado não travar o Admin (decisão do orquestrador, revisável pelo MJRP; `2026-11-02-recheck-f158.md`, P2-B).
+- **2026-11-01 23:02** · **A issue de tipo `copy` vai direto a «Em andamento», sem feature e sem a «Priorizada»** (§ 2; F158, S-208; a regra é do MJRP, 2026-11-01: «o tipo copy deve liberar o agente pra colocar direto em andamento»). O integrador a faz direto na `main`, a trava `copy_change_check.py` só deixa passar o texto de entradas que existem, com o `uat.md` e o log, e o OK é sempre do humano. Decidido pelo agente, revisável pelo MJRP: a página de texto mudada na `main` sem uma linha `copy` também é recusada, menos o salvar da tela do Admin.
+- **2026-11-01 23:02** · **O humano pode dispensar o próprio aceite, feature por feature** (§ «A feature fecha de dois jeitos»; o MJRP, 2026-11-01 22:34, sobre a F127, a F132 e a F137): a spec `acceptance_waived: "MJRP, <AAAA-MM-DD HH:MM>"` tira só o motivo «conserta uma issue dele». Antes a feature que conserta uma issue dele só fechava pelo aceite. Nome e forma do campo decididos pelo agente, revisáveis pelo MJRP.
+- **2026-11-01 22:57** · **O board também lê a nota do Touch ID** (§ 2; F151, UAT-449): a frase dizia que só a trava do passo retroativo a lê. A nota põe um card em «Feito», não abre merge nem aceite, e o portão continua sem lê-la. A feature da via rápida que não mudou tela não recebe o dedo e segue «aguardando o juiz».
+- **2026-11-01 20:28** · **Na via rápida da trilha Humano, a feature que não muda tela fecha pela reconferência independente** (MJRP, resposta de 2026-11-01): o Touch ID só é pedido quando o merge muda tela, e sem tela não há o que ele julgue. O estado é Fechado, nunca Aceito; quem pede o olho dele continua com `needs_human`.
+- **2026-11-01 12:25** · **Na via rápida da trilha Humano, o Touch ID no merge cumpre a linha da reconferência visual do passo retroativo** (§ 2; F154, UAT-454). A trava pedia um relatório que essa via não tem, e parou o passo retroativo de cinco features. A regra fica, e a trava era o defeito. A via padrão e a trilha Agente seguem com o relatório. Decidido pelo agente, revisável pelo MJRP: a nota vale se está num commit que o ramo alcança e nomeia a feature e a tela do projeto; ela tem a mesma confiança de um relatório que um agente commita, e não abre merge nem aceite.
+- **2026-10-31 09:11** · **A página passa a «Aceite» e «o humano»** (F105, S-190; o MJRP, 2026-10-27 12:54): o aceite da feature se chama «Aceite» (antes «Dar o OK») e o MJRP como papel de um processo é «o humano»; a atribuição datada e a marca ficam. O diagrama vigente (v13) e os textos da tela seguem a mesma linguagem; a skill se cita sempre com o prefixo `mjrp-`.
+- **2026-10-30 23:41** · **Na fase Release, a ordem passa a Homologação → Aceito → Deploy** (ADR-0029, emenda de ordem da ADR-0027; decisão do MJRP de 2026-10-30 23:40): o OK dele autoriza a publicação, e o Deploy é a fronteira irreversível — por isso o aceite vem antes; a feature que fecha pela reconferência (Fechado) também fecha antes do Deploy. O § 6 (título e texto), o resumo, o § 5 e a linha do ciclo seguem. O texto anterior dizia «Homologação, Deploy e Aceito» e punha o aceite depois da publicação. O § 8 e o § 9 não citam a ordem das etapas, e ficam.
 - **2026-10-30 21:37** · **O ciclo passa a cinco loops: o Design deixa de ser etapa da Discovery** (UAT-421, o desenho v13 aprovado pelo MJRP em 2026-10-30; o card «O ciclo de vida», o mapa das skills e o `pdlc-artifact-map` seguem). O § 3 se divide em 3.1 (Discovery: Explorar ⇄ Enquadrar, ↻ pivotar · iterar · avançar) e 3.2 (Design: Desenhar → Criticar → Ver na tela, uma volta por versão do protótipo); o portão «Pronto para construir» do § 4 é a **saída do Design**; as tabelas dos §§ 8, 9 e 11 ganham a linha do Design e chamam o UAT de Release; a Definition, o título e o resumo dizem cinco loops; os loops andam ao mesmo tempo, em itens diferentes (a trilha dupla). O § 6 diz que nem toda feature pede o OK (fecha pela reconferência, Fechado). O texto anterior dizia: «design é Discovery: as três etapas são uma só volta», «uma fundação e três loops», «matar · iterar · avançar», «Dar o OK» por feature em toda parte, e chamava a quarta etapa de UAT. O mesmo passo fecha o P2-2 do juiz da F63 (`reports/audits/2026-10-30-f63-pdlc-docs-judge.md`: o título, a Definition, o § 0 e as linhas «UAT» dos §§ 8, 9 e 11 no vocabulário de 24/10).
 - **2026-10-30 21:17** · **A feature sem nada para o MJRP ver ou decidir fecha pela reconferência, no estado Fechado** (§ 6; F139, S-206; o pedido do MJRP em 2026-10-30, sobre a F57). Estende à feature o critério da issue de agente: sobe ao «Dar o OK» só a que tem tela, decisão, segurança ou issue dele; a outra declara `closed_by` na spec e o board a põe em «Fechado», nunca «Aceito». A regra mora em `mjrp-scripts/feature_closure.py`.
 - **2026-10-30 18:48** · **O § 6 vira a fase Release** (ADR-0027, ADR-0028; decisões do MJRP de 2026-10-30): as fases são Discovery, Design, Delivery e Release; a Release tem as etapas Homologação (o UAT), Deploy e Aceito; o conjunto que passa junto por ela é a versão do produto, não «a release». O Learn (§ 7) não é fase.

@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "version": "2026-10-14",
   "default_grace_days": 30,
   "open_warning_notes": {
@@ -30,7 +30,7 @@
   "items": [
     {
       "id": "uat",
-      "version": 3,
+      "version": 4,
       "title": "uat.md com a coluna Reportado por (as trilhas Humano e Agente)",
       "path": "docs/specs/uat.md",
       "applies_to": {
@@ -46,7 +46,7 @@
       },
       "since": "2026-10-13",
       "grace_days": 30,
-      "born_of": "ADR-0009 do Control Center, F12, 2026-10-12 (a gravidade virou coluna do UAT) · v3 (2026-10-19): o MJRP separou o trabalho em duas trilhas, Humano e Agente (F48, S-155); o uat.md ganha a coluna `Reportado por` e a regra de quando uma issue de agente sobe (P0 ou segurança)",
+      "born_of": "ADR-0009 do Control Center, F12, 2026-10-12 (a gravidade virou coluna do UAT) · v3 (2026-10-19): o MJRP separou o trabalho em duas trilhas, Humano e Agente (F48, S-155); o uat.md ganha a coluna `Reportado por` e a regra de quando uma issue de agente sobe (P0 ou segurança) · v4 (2026-11-01): o juiz aceita `testes verdes` na trilha Agente e os recusa numa issue do MJRP (F159, UAT-461)",
       "owner_skill": "mjrp-specifying-sdd-artifacts",
       "judge_skill": "mjrp-ensuring-quality",
       "check": {
@@ -62,8 +62,17 @@
         "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/uat.md": "sha256:25390950f95d26d1fd9a60734caf6a41260348ec39653db038dccd5b1edf23b1",
         "mjrp-scripts/uat_tracks_check.py": "sha256:3c37505029b78e73c0990dc80e663dff6a162f75a55de977e92b17e0dddd98d5"
       },
-      "migration": "CM-0081",
+      "migration": "CM-0096",
       "superseded": [
+        {
+          "version": 3,
+          "migration": "CM-0081",
+          "check": {
+            "kind": "script",
+            "script": "uat_tracks_check.py",
+            "label": "o uat.md não separa as trilhas Humano e Agente"
+          }
+        },
         {
           "version": 2,
           "migration": "CM-0001",
@@ -665,7 +674,7 @@
     },
     {
       "id": "visual-sensor",
-      "version": 4,
+      "version": 5,
       "title": "sensors.visual no contrato (paridade visual)",
       "path": ".mjrp-project.yml",
       "applies_to": {
@@ -712,8 +721,34 @@
       "pattern_digest": {
         "mjrp-scripts/visual_gate.py": "sha256:063c9f4c444429d538a80d99bcd934d8bf7c41470554f001150ad370e30717f3"
       },
-      "migration": "CM-0091",
+      "migration": "CM-0099",
       "superseded": [
+        {
+          "version": 4,
+          "migration": "CM-0091",
+          "check": [
+            {
+              "kind": "contract_key",
+              "key": "sensors.visual"
+            },
+            {
+              "kind": "delegated",
+              "code": "A2",
+              "requires": [
+                {
+                  "kind": "contract_key",
+                  "key": "screen"
+                },
+                {
+                  "kind": "contains",
+                  "pattern": "Aprovado por:",
+                  "label": "sem referência visual aprovada (`Aprovado por:`)",
+                  "path": "docs/specs/info-arch.md"
+                }
+              ]
+            }
+          ]
+        },
         {
           "version": 3,
           "migration": "CM-0090",
@@ -1861,7 +1896,7 @@
     },
     {
       "id": "product-structure",
-      "version": 12,
+      "version": 14,
       "title": "a estrutura de produto que o Control Center mostra (resultados, épicos, releases, stories no Board, features e UAT)",
       "path": "ROADMAP.md",
       "applies_to": {
@@ -1876,7 +1911,7 @@
       },
       "since": "2026-10-14",
       "grace_days": 30,
-      "born_of": "o Board vazio do fin-control, 2026-10-14 19:57 (épicos certos, nenhum ^REL nem planned_for; o releases@1 só pedia algum ^REL) · v7 (2026-10-18): o PRD (§ Entregue) é cruzado com o status: dos specs (avisos entregue_status_mismatch e entregue_done_not_cited); auditoria do pedroso-incorp, 2026-10-18, ponto 4 · v8 (2026-10-18): o nome do épico na tabela do PRD é exigido como a tela o lê (`epic_name_missing`, uma lacuna por linha) — no MJRPpersonal a tela mostrava «EP-01 · OUT-03» em todo épico, porque o leitor tomava a coluna Serve por nome e o check copiava o leitor; terceira vez no dia que o check não exige o que a tela exige · v9 (2026-10-19): sai a comparação do PRD (§ Entregue) com o status dos specs (`entregue_status_mismatch`, `entregue_done_not_cited`, da v7): o modelo do PRD perdeu a seção Entregue (prd@2, CM-0077); o check só perde dois avisos, nada novo · v10 (2026-10-19): o leitor aceita o cabeçalho de nove colunas do uat.md (`Reportado por`, uat@3 / CM-0081); só afrouxa · v11 (2026-10-29): a medida do resultado é opcional (roadmap@7, CM-0088, F127): `sem medida` não é lacuna e o resultado alcançado sem medida não deve `Valor medido`; só afrouxa",
+      "born_of": "o Board vazio do fin-control, 2026-10-14 19:57 (épicos certos, nenhum ^REL nem planned_for; o releases@1 só pedia algum ^REL) · v7 (2026-10-18): o PRD (§ Entregue) é cruzado com o status: dos specs (avisos entregue_status_mismatch e entregue_done_not_cited); auditoria do pedroso-incorp, 2026-10-18, ponto 4 · v8 (2026-10-18): o nome do épico na tabela do PRD é exigido como a tela o lê (`epic_name_missing`, uma lacuna por linha) — no MJRPpersonal a tela mostrava «EP-01 · OUT-03» em todo épico, porque o leitor tomava a coluna Serve por nome e o check copiava o leitor; terceira vez no dia que o check não exige o que a tela exige · v9 (2026-10-19): sai a comparação do PRD (§ Entregue) com o status dos specs (`entregue_status_mismatch`, `entregue_done_not_cited`, da v7): o modelo do PRD perdeu a seção Entregue (prd@2, CM-0077); o check só perde dois avisos, nada novo · v10 (2026-10-19): o leitor aceita o cabeçalho de nove colunas do uat.md (`Reportado por`, uat@3 / CM-0081); só afrouxa · v11 (2026-10-29): a medida do resultado é opcional (roadmap@7, CM-0088, F127): `sem medida` não é lacuna e o resultado alcançado sem medida não deve `Valor medido`; só afrouxa · v13 (2026-11-02): a célula de máquina numa issue do MJRP não muda o estado que o leitor do `uat.md` devolve (F159, UAT-461) · v14 (2026-11-02): o leitor do `uat.md` aceita o `fixing` sem feature na linha de `Tipo` `copy` (F158, S-208); só afrouxa",
       "owner_skill": "mjrp-pdlc-bootstrap",
       "judge_skill": null,
       "check": {
@@ -1888,10 +1923,28 @@
         "mjrp-scripts/product_structure_check.py"
       ],
       "pattern_digest": {
-        "mjrp-scripts/product_structure_check.py": "sha256:cd1787779cc8b948424e1c3c9e4e64f73c3155593a3c0a7714de2bd150f48762"
+        "mjrp-scripts/product_structure_check.py": "sha256:1fa99ecb74e56df5e37e95d3c141cd75ebdda32ec296a19a2be44e72029fcba7"
       },
-      "migration": "CM-0094",
+      "migration": "CM-0098",
       "superseded": [
+        {
+          "version": 13,
+          "migration": "CM-0097",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        },
+        {
+          "version": 12,
+          "migration": "CM-0094",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        },
         {
           "version": 11,
           "migration": "CM-0089",
@@ -2980,7 +3033,7 @@
     },
     {
       "id": "content-audit",
-      "version": 5,
+      "version": 6,
       "title": "auditoria de conteúdo do conform (relatório com o veredito de conteúdo item por item e nenhum P0 aberto)",
       "path": "reports/audits/",
       "applies_to": {
@@ -3017,11 +3070,27 @@
         "mjrp-scripts/audit_questions_check.py"
       ],
       "pattern_digest": {
-        "mjrp-scripts/content_audit_check.py": "sha256:e78c089b87741d964e5b70d009824f83b2923cb960facf329f4fcfe081bf9159",
+        "mjrp-scripts/content_audit_check.py": "sha256:a22891a6a5987e968b39467483c2504aa175ba9af627731fe47f5206c060a319",
         "mjrp-scripts/audit_questions_check.py": "sha256:552212ce898dda81bf921b929be1055f57b8b6b6c5eb0ed3bc69ba49509453a7"
       },
-      "migration": "CM-0073",
+      "migration": "CM-0100",
       "superseded": [
+        {
+          "version": 5,
+          "migration": "CM-0073",
+          "check": [
+            {
+              "kind": "script",
+              "script": "content_audit_check.py",
+              "label": "a auditoria de conteúdo do conform não foi feita (relatório com uma linha de conteúdo por item, nenhum P0 aberto e, com a CM-0066 aplicada, nenhuma pergunta evitável nem regra dobrada aberta)"
+            },
+            {
+              "kind": "script",
+              "script": "audit_questions_check.py",
+              "label": "perguntas da auditoria fora da forma P-NN ou sem `classe: b|c` (`### P-NN · item: <id> · <assunto>`, uma opção por linha; só reprova no filho que aplicou a CM-0063, e a classe só no que aplicou a CM-0066)"
+            }
+          ]
+        },
         {
           "version": 4,
           "migration": "CM-0066",
@@ -3114,7 +3183,7 @@
     },
     {
       "id": "board",
-      "version": 1,
+      "version": 2,
       "title": "docs/specs/board.json (a configuração do board) e, quando o projeto tinha histórico, o registro do de-para",
       "path": "docs/specs/board.json",
       "applies_to": {
@@ -3143,11 +3212,21 @@
         "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-configuring-boards/templates/board-mapping.json"
       ],
       "pattern_digest": {
-        "mjrp-scripts/board_mapping_check.py": "sha256:9e60550394bd47c4ae09bd259ebe812bf025ec8b46a1d226b4e19cce0af66795",
+        "mjrp-scripts/board_mapping_check.py": "sha256:7fc1baba95446baea894338a22004639d635d0b6ff1927c0bcd288ca33e30ec2",
         "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-configuring-boards/templates/board-mapping.json": "sha256:d6f6bea2f001de8d738e700ce1a844c00cb12c034d4e05584cbfd48595d3c20d"
       },
-      "migration": "CM-0092",
-      "superseded": []
+      "migration": "CM-0095",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0092",
+          "check": {
+            "kind": "script",
+            "script": "board_mapping_check.py",
+            "label": "o projeto não tem o board.json, ou tem item fora dele"
+          }
+        }
+      ]
     }
   ],
   "history": [
@@ -3856,6 +3935,46 @@
     {
       "at": "2026-10-30 19:54",
       "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-31 15:14",
+      "change": "board: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-11-01 23:40",
+      "change": "uat: v3 → v4 (CM-0096) — o juiz aceita `testes verdes` na trilha Agente; numa issue do MJRP eles passam a ser lacuna (F159, UAT-461)"
+    },
+    {
+      "at": "2026-11-02 00:33",
+      "change": "product-structure: v12 → v13 (CM-0097) — a célula de máquina numa issue do MJRP não muda o estado que o leitor do `uat.md` devolve (F159, UAT-461)"
+    },
+    {
+      "at": "2026-11-02 00:33",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-11-02 01:20",
+      "change": "product-structure: v13 → v14 (CM-0098) — o leitor aceita o `fixing` sem feature na linha de `Tipo` `copy` (F158, S-208); só afrouxa; v13 em superseded"
+    },
+    {
+      "at": "2026-11-02 01:19",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-11-03 19:51",
+      "change": "visual-sensor: v4 → v5 (CM-0099) — o refresh passa a levar o `collect.mjs` do kit de paridade visual (UAT-472, F167); o check não muda; v4 em superseded"
+    },
+    {
+      "at": "2026-11-03 21:10",
+      "change": "content-audit@6: a resposta dada na tela do Control Center (F166, CC-ADR-0039)"
+    },
+    {
+      "at": "2026-11-03 21:10",
+      "change": "content-audit: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-11-03 21:12",
+      "change": "content-audit: pattern_digest reestampado"
     }
   ]
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # GENERATED - do not edit (GERADO - não edite). Edit the fragments in mjrp-scripts/conformance/ and run
 # `python3 mjrp-scripts/gen_conformance_check.py`; the sensor `--check` fails when this file drifts from them.
 """

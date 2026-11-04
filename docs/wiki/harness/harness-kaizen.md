@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-12
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -38,6 +38,53 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 > próprio harness`.
 
 ## Findings
+
+- **2026-11-03 19:51** · **O sensor visual de cinco filhos quebrava ao abrir, e nenhum sensor do harness viu (UAT-472, F167).** O juiz da auditoria do `MJRPpersonal` achou o `ERR_MODULE_NOT_FOUND`: o `collect.mjs` entrou no kit em 19/10 e não entrou na lista do refresh.
+  - **Por que ficou calado:** a guarda do que os filhos recebem (`vendoring_gaps`) só lê `import` de Python, os testes do kit rodam no harness, onde o arquivo existe, e o `check` do item `visual-sensor` lê o contrato. O sensor roda só antes de um merge de tela, então um filho podia passar duas semanas sem abri-lo.
+  - **Correção:** o `new_project_selftest.py` lê os `import` do kit contra a `VISUAL_FILES` e abre o `run.mjs` num filho descartável.
+  - **O limite da guarda (F167, reconferência de 2026-11-03):** a leitura dos `import` não vê subpasta do kit, `import` com template nem `from'./y'` sem espaço; quem cobre a cadeia real é o `node` abrindo o `run.mjs`, e sem `node` na máquina esse teste dá `skip`.
+  - **Lição:** uma cópia para o filho só está testada quando o teste roda na pasta do filho. Uma lista à mão de arquivos de outra linguagem precisa da mesma guarda que a lista de Python tem.
+
+- **2026-11-01 11:37** · **Recomendei um juiz visual para sete features da via rápida, e a regra diz o contrário.** Em 31/10, às 16:34, o integrador disse ao MJRP que a F59, a F96, a F103, a F104, a F106, a F133 e a F135 só estavam abertas porque faltava a reconferência, e recomendou um juiz agente. O MJRP aprovou essa premissa falsa. Na manhã de 01/11 ele perguntou onde estava a regra, e ela não existe: o `pdlc-loops` § 2 diz que a via «não tem juiz agente próprio» e que o OK dele é o veredito visual do merge (a F61). Custou uma sessão de juiz à toa; o veredito não mudou, porque o Touch ID de 31/10 17:31 nomeia todas.
+  - **De onde veio a confusão:** a `mjrp-integrating-branches` pedia relatório de juiz para todo ramo, nos passos 2 e 6 e na verificação, sem ressalvar a via rápida. Só a linha sobre o portão fazia a ressalva. A regra aprovada estava certa, e a skill que o integrador lê em todo trem a contradizia.
+  - **Correção:** a skill agora ressalva a via rápida da trilha Humano nas restrições, no passo 2, no passo 6, na verificação e no `reference/judge-and-escalation.md`, com um cenário novo nas evals.
+  - **A segunda fonte, achada em 2026-11-01 12:12:** a trava do passo retroativo (`art-visual-recheck`, em `artifacts.json`) também pedia o relatório, com uma nota que a F61 já tinha aposentado. A skill e a trava erravam juntas; a trava é a F154 (UAT-454).
+  - **Lição:** uma exceção escrita numa linha só perde para a regra geral repetida em três. Quando a skill diz «todo ramo», a exceção precisa estar onde a regra geral está.
+
+- **2026-10-31 00:14** · **A reconferência visual da F135 passou com a aba selecionada reta ao lado de filtros arredondados (UAT-432).** O MJRP, homologando o board novo, viu que a aba selecionada («Por tipo», «Features 26») tem a borda reta e os filtros logo abaixo («Fase: todas») são pílulas; a reconferência `2026-10-30-control-center-visual-parity-recheck-31.md` deu pass.
+  - **Por que não pegou:** a causa é a (a) e a (b) juntas. O desvio está **no protótipo aprovado**: medido hoje no v4.19 (`#s=v414-f135-v419-filter-elevar`), a aba `.on` da linha de visões tem `border-radius: 0px` e o botão do filtro `.f135-chip`, `16px`; a tela entregue copiou o protótipo (o comentário de `itemboard.css` diz «the v4.18's computed look»), e a paridade só prova que a tela é igual ao protótipo. E o juiz (`mjrp-scripts/visual_parity/rules.mjs`, a regra `cardRadius`, linha 530) compara o raio só do **primeiro card** da tela contra o do protótipo; nenhuma regra compara os cantos de componentes vizinhos entre si.
+  - **Lição:** paridade com o protótipo não é coerência. Um defeito de desenho que o protótipo já tem passa na paridade e na reconferência, e só o olho do MJRP o pega; a coerência entre componentes vizinhos (cantos, alturas, pesos) é do `mjrp-critiquing-ux` sobre o protótipo, antes da aprovação, e hoje ele não tem a linha «um padrão só de canto por faixa». Fica de pendência para a skill e para o kit; o conserto da tela é da UAT-432.
+
+- **2026-10-31 00:10** · **A `mjrp-configuring-boards` gravou a história da v0, declarou pronto e o board ficou ilegível na tela.** O MJRP abriu o board e o Roadmap da v0 depois da importação (`2455db3` na v0) e não entendeu o que tinha sido feito.
+  - **O que ele viu:**
+    - as abas dizem «Features 0» com 26 cards em Aceito;
+    - o filtro de versão planejada mostra «→ Versão» em todas as 15 opções;
+    - a linha do tempo de Versões quebra o nome letra a letra, e 18 versões antigas aparecem como «Planejada»;
+    - os épicos aparecem em 0/0, e o resultado OUT-01 diz «sem stories»;
+    - a aba UAT mostra 47 de 171 issues.
+
+  A falha tem cinco camadas, e qualquer uma delas, sozinha, teria segurado o «pronto»:
+  - **(1) A aprovação foi feita sobre uma réplica.** A prévia que o MJRP aprovou às 22:15 (`board_mapping_check.py --preview`, linhas 439–506) monta o board com HTML e regras próprias. Ela não passa pelo código do Control Center, então nenhum dos sintomas podia aparecer nela.
+  - **(2) O fecho mediu os arquivos, não a tela.** Os juízes deram exit 0: o de-para, o grafo, a estrutura, o histórico e as trilhas. O agente não foi o juiz, mas o juiz media a coisa errada. Também não segurou o «pronto» que o doctor da v0 estivesse vermelho e o conform aberto.
+  - **(3) A tela só sabia ler os dados do próprio Control Center.** Cada regra abaixo funciona com os dados dele e quebra com os de um filho brownfield:
+    - o rótulo da versão pega a primeira palavra do nome (`web/src/modules/board/map.ts:64`);
+    - um nome sem «·» vai inteiro para o negrito da linha do tempo (`versionsPresenter.ts:39`);
+    - uma versão sem item é «Planejada», porque `all([])` dá verdadeiro (`rules/board_versions.py:47`);
+    - o progresso do épico conta só stories, e a feature nem lê o seu `epic:` (`modules/tracking/build.py:149`, `ports_delivery.py:56`);
+    - a aba conta só os itens abertos e não diz isso (`web/src/itemboard/model.ts:83`).
+
+    A reconferência visual da F135 julgou a tela com os dados do próprio Control Center.
+  - **(4) A importação escreveu numa forma que a tela não lê.** O nome «Versão do produto v1.5 (sem tag)», em vez de «v1.5 · Refactor». O épico ficou só no `epic:` das features, sem nenhuma story.
+  - **(5) O orquestrador repassou o «pronto» sem abrir a tela.** A nota da sessão é o relato dela, não prova de que a tela ficou certa.
+
+  **Lição:**
+  - Um trabalho que muda o que o MJRP vê só fecha quando um juiz lê o que o Control Center serve. A aprovação dele é feita na prévia real (uma porta de prévia lendo o projeto), nunca numa réplica.
+  - Toda regra de tela que depende da forma do dado é testada com pelo menos um projeto filho, não só com os dados do próprio Control Center.
+
+  **Conserto:**
+  - UAT-436 (a skill fecha só com um juiz da tela e a aprovação na prévia real), pela sessão da F136;
+  - UAT-434 e UAT-435 (a linha do tempo, o estado da versão sem itens e o épico contando as features), pela sessão da F136;
+  - UAT-437 (a aba diz que conta os abertos, e o rótulo da versão vem do `version::`), pela sessão da F135, junto com a UAT-432.
 
 - **2026-10-27 14:43** · **O passo retroativo da via rápida era cobrado por mensagem, e a história mostra o custo.** Rodada a trava nova (F101, `retro_step_check.py`) sobre os merges da semana, só a F100 — a feature que escreveu o registro de artefatos e o aplicou linha a linha — passava; a F58, F98, F90, F93, F82 e F87 teriam sido recusadas (protótipo que não veio, documentos não declarados no `plan.md`, task fechada sem `rounds::`, nó sem `delivered_by`, o `## Now` do app sem commit da feature). O `loop.py --check-tasks` já existia e ninguém o rodava. **Lição:** regra que o agente aplica quando lembra vira lista que cada um resume do seu jeito (o próprio integrador a resumiu a «plan, info-arch e protótipo»); a lista mora num registro e a máquina a cobra no commit e no merge, lendo-a da cópia de antes, para o commit não afrouxar a própria trava. Achado lateral: o guarda das válvulas recusa todo comando com `core.hooksPath`, também o que LIGA os hooks num clone descartável — o caminho foi copiar os hooks para o `.git/hooks` do clone.
 

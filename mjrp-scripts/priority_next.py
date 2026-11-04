@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 priority_next.py - what the MJRP prioritized and nobody started: the «Priorizada» column as a command (F125, UAT-407; any item, F134).
 
@@ -194,19 +194,30 @@ def read_priority(project):
 
 
 def branch_features(root):
-    """The feature numbers that have an UNMERGED branch by the convention (rules/delivery.py `features_of`, `branch_open`). One git call."""
+    """The feature numbers that have an UNMERGED branch by the convention (rules/delivery.py `features_of`, `branch_open`). A branch is
+    merged when its head is an ancestor of `main` AND off the first-parent line of `main`: the train merges with `--no-ff`, so a merged
+    branch's tip is off that line, while a branch just opened (no commit of its own, F140, UAT-424) sits on it and counts as started.
+    F156 (UAT-458) does not change this: the board stops counting such a branch of a delivered feature, and here the only reader is
+    has_started, where a delivered spec has already started, with or without the branch."""
     try:
         have = lambda ref: _git.run(root, "rev-parse", "--verify", "-q", ref).ok   # noqa: E731
         main = next((m for m in ("main", "master") if have(f"refs/heads/{m}")), None)
-        args = ["for-each-ref", "--format=%(refname:short)"] + ([f"--no-merged={main}"] if main else []) + ["refs/heads"]
-        r = _git.run(root, *args)
+        r = _git.run(root, "for-each-ref", "--format=%(refname:short) %(objectname)", "refs/heads")
+        merged, line = set(), set()
+        if main and r.code == 0:
+            m = _git.run(root, "for-each-ref", "--format=%(objectname)", f"--merged={main}", "refs/heads")
+            first = _git.run(root, "rev-list", "--first-parent", main)
+            if m.code != 0 or first.code != 0:
+                raise NotEvaluable(f"git não disse os ramos mesclados ou a linha principal da `{main}`: {((m.err or first.err) or '').strip()[:200]}")
+            merged, line = {h for h in m.out.split()}, set(first.out.split())
     except _git.GitError as exc:
         raise NotEvaluable(f"git não respondeu: {exc}") from exc
     if r.code != 0:
-        raise NotEvaluable(f"git {' '.join(args)} saiu {r.code}: {(r.err or r.out).strip()[:200]}")
+        raise NotEvaluable(f"git for-each-ref saiu {r.code}: {(r.err or r.out).strip()[:200]}")
     out = set()
-    for name in r.out.split():
-        if name == main:
+    for row in r.out.splitlines():
+        name, _, head = row.partition(" ")
+        if name == main or (head in merged and head not in line):
             continue
         if m := _BRANCH.match(name):
             out.add(int(m["n"]))

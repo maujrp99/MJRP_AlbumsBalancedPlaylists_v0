@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _now_shape.py - the form of `## Now` in MEMORY.md and the check that it is not behind the log (F73 R7).
 
@@ -15,7 +15,7 @@ import _clock
 from _contract import log_rel
 
 
-IGNORED_LOG_TYPES = ("inventory", "acceptance")   # entries that are not session state (S-61, CC-ADR-0024)
+IGNORED_LOG_TYPES = ("inventory", "acceptance", "answer")   # entries that are not session state (S-61, CC-ADR-0024, CC-ADR-0039)
 
 
 def now_behind_log(root, now_body):

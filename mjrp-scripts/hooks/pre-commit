@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # pre-commit - structure by nature (EP-09) and the coherence of the requirements graph (S-67). Blocks a commit that ADDS something outside its nature
 # (docs/ only memory; reports/, design/, data/ with their declared subfolders). Only what this commit
 # adds is judged - an old misplacement is the doctor's W9 warning, not a blocked commit.
@@ -201,14 +201,14 @@ fi
 # F101 (S-186, REQ-04): the maps generated from one source stay in step with it. A commit that touches a skill (mjrp-skills/: the SKILL.md
 # frontmatter feeds the skills map, the templates feed the SDD), the artifact registry, the skills map's generator, or a mapped folder
 # (docs/specs/, design/, reports/ of any project: a new kind of file nobody mapped) runs the catalog sensor, which checks the README
-# catalog, the artifact map (artifact_map.py --check) and the skills map (gen_skills_map.py --check, when it exists). It reads the disk.
+# catalog, the artifact map (artifact_map.py --check) the skills map (gen_skills_map.py --check, when it exists) and the harness diagram (gen_harness_layers.py --check). It reads the disk.
 CATCHK="$ROOT/mjrp-scripts/gen_catalog.py"
-if [ -f "$CATCHK" ] && git -c core.quotePath=false diff --cached --name-only | grep -Eq '^mjrp-skills/|^mjrp-scripts/(artifacts\.json|artifact_map\.py|gen_skills_map\.py|gen_catalog\.py)$|(^|/)(docs/specs|design|reports)/'; then
+if [ -f "$CATCHK" ] && git -c core.quotePath=false diff --cached --name-only | grep -Eq '^mjrp-skills/|^mjrp-scripts/(artifacts\.json|artifact_map\.py|gen_skills_map\.py|gen_harness_layers\.py|gen_catalog\.py)$|(^|/)(docs/specs|design|reports)/'; then
   run_sensor "mapas gerados" python3 "$CATCHK" --check
   code=$?
   if [ "$code" -eq 1 ]; then
     echo "  commit bloqueado: REPROVOU - um mapa gerado (o catálogo do README, o mapa de artefatos ou o das skills) não bate com a fonte (linhas acima)." >&2
-    echo "  regere: python3 mjrp-scripts/gen_catalog.py · python3 mjrp-scripts/artifact_map.py · python3 mjrp-scripts/gen_skills_map.py; leve o gerado no commit" >&2
+    echo "  regere: python3 mjrp-scripts/gen_catalog.py · python3 mjrp-scripts/artifact_map.py · python3 mjrp-scripts/gen_skills_map.py · python3 mjrp-scripts/gen_harness_layers.py; leve o gerado no commit" >&2
     exit 1
   elif [ "$code" -eq 2 ]; then
     exit 1
@@ -234,6 +234,33 @@ if [ -n "$UATS" ]; then
     rm -f "$UATTMP"
     if [ "$code" -eq 1 ]; then
       echo "  commit bloqueado: REPROVOU - a uat.md do commit não é legível pelo Control Center (a linha e o motivo acima)." >&2
+      exit 1
+    elif [ "$code" -eq 2 ]; then
+      exit 1
+    fi
+  fi
+fi
+# F158 (S-208, 2026-11-01): a small text change goes straight to `main`, free of the «Priorizada» and of a feature. Only that goes: on the main line, a commit
+# that changes a `copy` row of a `uat.md` touches only `content/copy/*.json`, the `uat.md` and the log, and inside the JSON only the text of existing entries; a
+# page changed with no `copy` row is refused too, except the screen's own save, content checked. Another branch and a merge are not judged. Runs only when the commit touches a page or a `uat.md`.
+# An --amend is judged whole, against the parent of the commit it replaces, so it runs even when what it adds to HEAD is neither a page nor a uat.md. The same signal as
+# the commit-msg: an amend keeps HEAD's author date; `ps` breaks the tie.
+COPYCHK="$ROOT/mjrp-scripts/copy_change_check.py"
+COPY_AMEND=""
+COPY_PS=$(ps -o args= -p "$PPID" 2>/dev/null)
+COPY_HEAD_DATE=$(git log -1 --format=%ad --date=raw HEAD 2>/dev/null)
+case "$COPY_PS" in
+  *--amend*) COPY_AMEND="--amend" ;;
+  "") if [ -n "$COPY_HEAD_DATE" ] && [ "${GIT_AUTHOR_DATE#@}" = "$COPY_HEAD_DATE" ]; then COPY_AMEND="--amend"; fi ;;
+esac
+if [ -n "$COPY_AMEND" ] || git -c core.quotePath=false diff --cached --name-only --no-renames | grep -Eq '(^|/)content/copy/[^/]+\.json$|(^|/)docs/specs/uat\.md$'; then
+  if [ ! -f "$COPYCHK" ]; then
+    echo "  [pre-commit] AVISO: mjrp-scripts/copy_change_check.py não existe - a mudança de copy direto na main NÃO foi conferida neste commit." >&2
+  else
+    run_sensor "mudança de copy" python3 "$COPYCHK" "$ROOT" --staged $COPY_AMEND
+    code=$?
+    if [ "$code" -eq 1 ]; then
+      echo "  commit bloqueado: REPROVOU - este commit direto na main não é só uma mudança de copy (linhas acima)." >&2
       exit 1
     elif [ "$code" -eq 2 ]; then
       exit 1

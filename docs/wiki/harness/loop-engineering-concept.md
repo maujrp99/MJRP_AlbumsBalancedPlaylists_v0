@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-30
 fontes: [wiki/sources/2026-10-07-mjrp-loop-engineering-handbook.md, pasquadev-harness-e-loop-engineering, waldemar-neto-loop-engineering-500k-linhas, google-cloud-tech-graph-engineering-101, google-cloud-tech-ai-agents-explained, karpathy-no-priors-skill-issue, austin-marchese-karpathy-method]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-30 · fonte 9dc987dce · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Loop engineering** é projetar o ciclo que roda **sem você**: o agente raciocina, age, observa e
@@ -193,11 +193,11 @@ verificador determinístico (UX, conteúdo), o juiz é o humano, com o LLM de ap
 !O PDLC do MJRP em cinco loops: Discovery, Design, Delivery, Release e Learn
 
 O ciclo do produto é **cinco loops** dentro da moldura do harness (o desenho aprovado pelo MJRP em 2026-10-30; a fonte é
-`apps/control-center/design/inception/pdlc-loops-diagram-v13.svg`, e o mesmo desenho é o card «O ciclo de vida» do Overview do Control
+`design/diagrams/ways-of-working/2026-10-30-2115-pdlc-loops-v13.svg`, e o mesmo desenho é o card «O ciclo de vida» do Overview do Control
 Center). O **Intake** põe cada demanda numa via — a padrão passa pela Discovery e pelo Design, a rápida pula os dois —; **Discovery**
 (Explorar ⇄ Enquadrar, ↻ pivotar · iterar · avançar) e **Design** (Desenhar → Criticar → Ver na tela, ↻ uma volta por versão do protótipo)
 terminam no portão «Pronto para construir»; o **Delivery** (Spec, Plano, Tasks, Executar/QA, com executor → juiz → integrador, ↻ falhou:
-corrige) entrega ao **Release** (Homologação → Deploy → Aceito, ↻ a issue volta ao Intake · sem nada a ver: Fechado), de onde sai o
+corrige) entrega ao **Release** (Homologação → Aceito → Deploy, ↻ a issue volta ao Intake · sem nada a ver: Fechado), de onde sai o
 software pronto para usar; o **Learn** devolve o aprendizado ao harness. Discovery, Design e Delivery **andam ao mesmo tempo, em itens
 diferentes** (a trilha dupla), e setas finas e tracejadas voltam um loop quando se aprende algo (do Delivery ao Design, do Design à
 Discovery). As regras de cada loop estão no [[pdlc-loops]].
@@ -218,7 +218,7 @@ Os tipos de eval têm os nomes da seção «Evals» logo abaixo: **regras** (not
 | **Design** | Desenhar → Criticar → Ver na tela, a cada versão do protótipo | o protótipo julgado sem P0 e aprovado, os requisitos Ready; sai pelo «Pronto para construir» | o juiz de UX (`mjrp-critiquing-ux`) e o humano, que vê a tela | **LLM como juiz** (o cânone de design, por id) + **regras** (os sensores do inventário, W11, e do protótipo × info-arch × wireframes, W14) + **humano** (o olho na tela) |
 | **Delivery** | Spec → Plano → Tasks → Executar/QA; executor → juiz → integrador | o verificador passa, o juiz (um por lote) sem P0, o integrador junta | o juiz, que não fez (`mjrp-ensuring-quality`, `mjrp-ensuring-sdd`, `mjrp-assessing-code-quality`) | **regras** (o `doctor` e os sensores, que dão 0 ou 1) + **execução** (os testes; a reconferência visual, que captura os dois lados e dá 0 ou 1 por regra) + **LLM como juiz** (a rubrica de qualidade); cada critério aponta o teste que o prova (`verified_by`) |
 | **↳ Executar ⇄ Verificar** (aninhado no Delivery) | uma task: implementar ⇄ rodar o verificador | o `--until` dá exit 0, ou o teto de 3 rodadas, a falta de progresso ou o orçamento de tokens | o verificador, uma máquina (`loop.py`) | **regras** e **execução**: o código de saída do comando declarado; sem critério, o loop recusa começar (II.4) |
-| **Release** | Homologação → Deploy → Aceito | Aceito (o OK do humano), ou Fechado pela reconferência independente; a issue achada volta ao Intake | o humano, no que há para ele ver, decidir ou de segurança; senão a reconferência independente | **humano** (ele usa o entregue) ou **LLM como juiz** (a reconferência independente: outro agente confere o entregue contra a evidência) |
+| **Release** | Homologação → Aceito → Deploy | Aceito (o OK do humano), ou Fechado pela reconferência independente; a issue achada volta ao Intake | o humano, no que há para ele ver, decidir ou de segurança; senão a reconferência independente | **humano** (ele usa o entregue) ou **LLM como juiz** (a reconferência independente: outro agente confere o entregue contra a evidência) |
 | **Learn** | operar → medir → kaizen | a medida do resultado atingida (só o MJRP marca «alcançado») ou a lição na fundação | os sensores diários, o auditor e o humano | **regras** (o portão do Learn, `conformance_check.py --learn-gate`, e os sensores diários) + a **medida de produto** do `ROADMAP.md` |
 
 **Os loops do harness** (o que o harness roda sobre si mesmo):
@@ -360,6 +360,7 @@ Verified, o URL de WebArena, OSWorld e BrowseComp, e a magnitude exata dos viese
 
 ## History
 
+- **2026-10-30 23:43** · **O Release passa a Homologação → Aceito → Deploy** (ADR-0029; decisão do MJRP de 2026-10-30 23:40): o OK do humano autoriza a publicação. O desenho do ciclo (v13) e a linha «Release» da tabela dos loops trocam a ordem. Antes: «Homologação → Deploy → Aceito».
 - **2026-10-30 21:59** · **A seção «Evals»** (UAT-421; o MJRP, 2026-10-30 21:15, sobre a pesquisa `reports/research/2026-10-30-evals-for-agents.md`): a definição, os tipos (regras, LLM como juiz com os vieses e a mitigação, execução, humano, red teaming e injeção de prompt), as evals de agente (resultado, trajetória, `pass@k` e `pass^k`), a prática (o golden set, o CI, a barra de erro) e a tabela «tipo de eval → onde o harness já tem → lacuna», com as lacunas **a revisar**, não como plano. A coluna «a eval» da tabela dos loops passa a usar os mesmos nomes de tipo; antes dizia «determinística», «rubrica com juiz separado», «mista» e «pelo humano».
 - **2026-10-30 21:38** · **«How MJRP uses it» ganha o desenho do ciclo (v13) e a tabela de todos os loops, com a eval de cada um** (UAT-421; o MJRP, 2026-10-30 21:15: «cinco loops» e a coluna «a eval»). A seção «Evals» — os tipos, as fontes e as lacunas — espera o relatório de pesquisa `reports/research/2026-10-30-evals-for-agents.md` e **não foi escrita só com o que o MJRP passou**. Até aqui a página tinha só os quatro bullets de como o MJRP usa o conceito (o `loop.py`, o critério de saída, o `doctor`, a distinção loop fixo × criador) e não dizia quais são os loops do harness.
 - **2026-10-13 09:58** · O teto do `loop.py` passa de 5 para 3 rodadas por task, alinhado às fontes; cada task registra `rounds::` e `model::` no `tasks.md` (ver [[pdlc-loops]]).
