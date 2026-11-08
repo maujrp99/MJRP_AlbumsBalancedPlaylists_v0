@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # GENERATED - do not edit (GERADO - não edite). Edit the fragments in mjrp-scripts/conformance/ and run
 # `python3 mjrp-scripts/gen_conformance_check.py`; the sensor `--check` fails when this file drifts from them.
 """
@@ -91,6 +91,7 @@ MAX_WAIVER_COMMITS = 2                # the waiver and one renewal; the third is
 TRAILER_WAIVER, TRAILER_EDITORIAL = "Conformance-waiver", "Catalog-editorial"
 TRAILER_ACCEPTED, TRAILER_REOPENED = "Human-accepted", "Human-reopened"   # CC-ADR-0024: the human's acceptance of a feature, and its inverse
 TRAILER_PRIORITIZED = "Human-prioritized"   # CC-ADR-0029: the human's order of the features that did not start
+TRAILER_PASSKEY = "Human-passkey"   # CC-ADR-0038: a key of the remote approval enrolled or revoked, or a lost note acknowledged
 AGENT_SIGNATURE = re.compile(r"^Co-Authored-By:.*(claude|anthropic|codex|gemini|copilot|cursor|gpt|openai)", re.I | re.M)
 
 # clause kind -> (required, optional); a parameter outside both is an invalid catalog
@@ -1142,17 +1143,32 @@ def git_trailer_commits(root, trailer, item_id):
 
 
 def git_digest_changes(base, item_id):
-    """[(commit_message, version_changed)] for every commit of the catalog that changed this item's pattern_digest."""
+    """[(messages, version_changed, first, commit)] for every commit of the principal branch that changed this item's pattern_digest.
+    `messages` is where the human's stamp may be: the commit's own message; for a merge, also the messages of the commits it brought in
+    (the integrator writes the merge's message, so a stamp on the branch is the only one a merged change can carry); and the
+    `Catalog-editorial: <item> — ...` lines of any commit in the principal branch's history (merged in or not) that names this commit by its hash (7+ hex
+    digits): the cure of an unstamped change already in the history, without rewriting it (F208, UAT-508: the merge `38e17187c` changed
+    `process-sensors` with no stamp, and the error had no fix but waiting for it to leave the last 200 commits)."""
     try:
         # the history that counts is the principal branch's: an unmerged branch may rewrite its own catalog freely
         ok_main = subprocess.run(["git", "rev-parse", "--verify", "-q", "main"], cwd=str(base), capture_output=True,
                                  timeout=GIT_TIMEOUT).returncode == 0
-        log = subprocess.run(["git", "log", "main" if ok_main else "HEAD", "--first-parent", "--format=%H", "-n", "200", "--", CATALOG_REL], cwd=str(base),
+        ref = "main" if ok_main else "HEAD"
+        log = subprocess.run(["git", "log", ref, "--first-parent", "--format=%H", "-n", "200", "--", CATALOG_REL], cwd=str(base),
                              capture_output=True, text=True, timeout=60)
+        # a cure counts anywhere in the principal branch's history, not only on its first-parent line: the human's cure commit
+        # reaches main through the integrator's merge (F219, UAT-542: `23cbc852f` came in by the train merge `01dff473e`). A branch
+        # not merged into main is outside `ref`'s history and still cures nothing; authenticity stays with commit-msg (no agent co-author).
+        cures = subprocess.run(["git", "log", ref, "-E", f"--grep=^{TRAILER_EDITORIAL}:", "--format=%B%x1e"],
+                               cwd=str(base), capture_output=True, text=True, timeout=60)
     except Exception:
         return None
-    if log.returncode != 0:
+    if log.returncode != 0 or cures.returncode != 0:
         return None
+    cure_lines = [ln for ln in cures.stdout.splitlines() if re.match(rf"^{TRAILER_EDITORIAL}:\s*{re.escape(item_id)}\b", ln)]
+
+    def cures_of(h):
+        return [ln for ln in cure_lines if any(h.startswith(tok.lower()) for tok in re.findall(r"\b[0-9a-fA-F]{7,40}\b", ln))]
 
     def at(rev):
         p = subprocess.run(["git", "show", f"{rev}:{CATALOG_REL}"], cwd=str(base), capture_output=True, text=True,
@@ -1172,7 +1188,12 @@ def git_digest_changes(base, item_id):
             if prev is None or prev.get("pattern_digest") != cur.get("pattern_digest"):
                 msg = subprocess.run(["git", "log", "-1", "--format=%B", h], cwd=str(base), capture_output=True, text=True,
                                      timeout=GIT_TIMEOUT).stdout
-                out.append((msg, prev is not None and prev.get("version") != cur.get("version"), prev is None))
+                if subprocess.run(["git", "rev-parse", "--verify", "-q", f"{h}^2"], cwd=str(base), capture_output=True,
+                                  timeout=GIT_TIMEOUT).returncode == 0:
+                    msg += "\n" + subprocess.run(["git", "log", "--format=%B", f"{h}^1..{h}^2"], cwd=str(base), capture_output=True,
+                                                  text=True, timeout=60).stdout
+                msg += "\n" + "\n".join(cures_of(h))
+                out.append((msg, prev is not None and prev.get("version") != cur.get("version"), prev is None, h))
     except subprocess.TimeoutExpired:
         return None                                  # git stopped answering: not evaluable, like "git cannot answer"
     return out
@@ -1514,10 +1535,12 @@ def learn_gate(items=None, notes_dir=None, base=None, doc=None, use_git=True, no
             if ch is None:
                 problems.append(f"{it['id']}: sem git não há como conferir o trailer `{TRAILER_EDITORIAL}:` do rebaseline")
             else:
-                for msg, bumped, first in ch:
+                for msg, bumped, first, commit in ch:
                     if not bumped and not first and not re.search(rf"^{TRAILER_EDITORIAL}:\s*{re.escape(it['id'])}\b", msg, re.M):
-                        problems.append(f"{it['id']}: o pattern_digest mudou sem subir a versão e o commit não tem o trailer "
-                                        f"`{TRAILER_EDITORIAL}: {it['id']} — <motivo>` (só o humano o escreve)")
+                        problems.append(f"{it['id']}: o pattern_digest mudou sem subir a versão no commit {commit[:9]}, e nem ele nem um "
+                                        f"commit que ele trouxe tem o trailer `{TRAILER_EDITORIAL}: {it['id']} — <motivo>` (só o humano o "
+                                        f"escreve). Sana-se depois, sem reescrever a história, com um commit do humano na main que o nomeia: "
+                                        f"`{TRAILER_EDITORIAL}: {it['id']} — sana {commit[:9]}: <motivo>`")
         ch = chain(it, notes)
         if not ch:
             problems.append(f"{it['id']}: sem nota de migração na cadeia — o catálogo mudou e o filho não tem como saber")
@@ -1614,10 +1637,10 @@ def rebaseline(item_id, catalog_path=None, base=None, notes_dir=None, now=None):
 
 def message_problem(text):
     """The commit-msg rule: the human's valve trailers cannot sit next to an agent's Co-Authored-By."""
-    valves = (TRAILER_WAIVER, TRAILER_EDITORIAL, TRAILER_ACCEPTED, TRAILER_REOPENED, TRAILER_PRIORITIZED)
+    valves = (TRAILER_WAIVER, TRAILER_EDITORIAL, TRAILER_ACCEPTED, TRAILER_REOPENED, TRAILER_PRIORITIZED, TRAILER_PASSKEY)
     if re.search(rf"^({'|'.join(valves)}):", text, re.M) and AGENT_SIGNATURE.search(text):
         return (f"os trailers `{TRAILER_WAIVER}:`, `{TRAILER_EDITORIAL}:`, `{TRAILER_ACCEPTED}:`, `{TRAILER_REOPENED}:` e "
-                f"`{TRAILER_PRIORITIZED}:` são válvulas do humano e este commit leva `Co-Authored-By:` de agente — o humano "
+                f"`{TRAILER_PRIORITIZED}:` e `{TRAILER_PASSKEY}:` são válvulas do humano e este commit leva `Co-Authored-By:` de agente — o humano "
                 "comita sem a assinatura do agente")
     return None
 

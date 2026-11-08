@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """tech_stack_check.py - the form of `docs/specs/tech-stack.md` (catalog item `tech-stack`, CM-0071).
 
 The ONE place of the expressions that the file's form rests on. The catalog clause for `status:` carries STATUS_RE verbatim; the Control Center

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 stop_gate.py - the only point in the harness where it can PREVENT, not just warn.
 
@@ -194,6 +194,45 @@ def session_id(payload: dict = None) -> str:
     return clean_id((payload or {}).get("session_id")) or clean_id(os.environ.get(SESSION_ENV))
 
 
+# 2026-11-07 (F208, UAT-476): the hooks run `$CLAUDE_PROJECT_DIR/mjrp-scripts/stop_gate.py`, the MAIN checkout's script, while a session
+# in a worktree runs `--declare` from its own folder: the turn lived in two `.mjrp/` folders, the gate read the one with no criterion, and a
+# file the Control Center wrote in the main checkout during the turn counted as the session's. The hook payload carries the session's
+# `cwd`; when it lies in another worktree of THIS repository (the same git common dir), every hook mode judges that worktree.
+def session_root(payload: dict):
+    """The toplevel of the checkout the session works in, when the payload's `cwd` is in another worktree of this repository; else None."""
+    cwd = (payload or {}).get("cwd")
+    if not isinstance(cwd, str) or not cwd or not Path(cwd).is_dir():
+        return None
+    code, out = _git.run_tuple(cwd, "rev-parse", "--show-toplevel", "--git-common-dir", timeout=20)
+    mine_code, mine = _git.run_tuple(ROOT_DIR, "rev-parse", "--git-common-dir", timeout=20)
+    lines = out.splitlines()
+    if code != 0 or mine_code != 0 or len(lines) != 2:
+        return None
+    top = Path(lines[0]).resolve()
+    common = (Path(cwd) / lines[1]).resolve()
+    if top == ROOT_DIR.resolve() or common != (ROOT_DIR / mine.strip()).resolve():
+        return None
+    return top
+
+
+def bind_root(root: Path) -> None:
+    """Points every path the gate reads and writes at `root` (the session's own checkout)."""
+    global ROOT_DIR, STATE_DIR, TURN_FILE, CONFORM_FILE
+    ROOT_DIR = root
+    STATE_DIR = root / ".mjrp"
+    TURN_FILE = STATE_DIR / "turn.json"
+    CONFORM_FILE = STATE_DIR / "conform.json"
+
+
+def read_session_payload() -> dict:
+    """The hook payload, with the gate bound to the session's own checkout when the payload says it is another worktree (UAT-476)."""
+    payload = read_payload()
+    root = session_root(payload)
+    if root is not None:
+        bind_root(root)
+    return payload
+
+
 def turn_file(sid: str) -> Path:
     return STATE_DIR / f"turn-{sid}.json" if sid else TURN_FILE
 
@@ -254,7 +293,7 @@ def dirty_mtimes() -> dict:
 
 def hook_mode(mode: str) -> int:
     """The bookkeeping hooks (never block, always exit 0): session-start, record-edit, bash-pre, bash-post."""
-    payload = read_payload()
+    payload = read_session_payload()
     sid = session_id(payload)
     if not sid:
         return 0
@@ -416,7 +455,26 @@ def declare(cmd: str) -> int:
 
 
 def gate() -> int:
-    sid = session_id(read_payload())
+    payload = read_session_payload()
+    code = work_gate(session_id(payload))
+    return code if code else returned_gate(payload)
+
+
+# 2026-11-07 (F220, S-226): the MJRP handed back thirteen stuck items from the iPhone and nothing made the owning agent act. The orchestrator of
+# the project (the session in the MAIN checkout, never a page session in a linked worktree) cannot end its turn while a message is late past the
+# contract's deadline; once per stop chain, so the gate never loops. The measure is returned_check.py's (also the doctor's W22).
+def returned_gate(payload: dict) -> int:
+    try:
+        import returned_check                     # vendored beside this file in every project
+    except ImportError:
+        return 0
+    code, text = returned_check.gate_block(ROOT_DIR, STATE_DIR, session_id(payload), bool((payload or {}).get("stop_hook_active")))
+    if code:
+        print(text, file=sys.stderr)
+    return code
+
+
+def work_gate(sid: str) -> int:
     files_ = changed_files()
     if sid and session_marked(sid):               # R21: this session is judged by what IT touched, not by the whole checkout
         mine = touched_by(sid)
@@ -460,6 +518,7 @@ def gate() -> int:
     print("  [stop_gate] BLOQUEADO — " + porque + ".", file=sys.stderr)
     print(f"  {len(files_)} arquivo(s) mudaram em área vigiada: "
           f"{', '.join(files_[:5])}{' …' if len(files_) > 5 else ''}", file=sys.stderr)
+    print(f"  (o turno desta sessão é lido em {turn_file(sid)}: o --declare roda nesta pasta, {ROOT_DIR})", file=sys.stderr)
     print("  Declare e rode o critério antes de encerrar:", file=sys.stderr)
     if in_conform:
         print("  (há um conform em andamento: o critério é o dele, não o doctor)", file=sys.stderr)

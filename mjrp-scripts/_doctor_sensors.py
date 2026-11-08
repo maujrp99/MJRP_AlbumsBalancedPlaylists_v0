@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_sensors.py - the doctor's checks that RUN the sensors the contract declares, and the visual sensor's
 declaration (A1, A2), with the cache of their results and the fingerprint that says which state of the repository a result
@@ -8,6 +8,7 @@ Family module of the doctor (F73 R5).
 """
 import hashlib
 import json
+import os
 import re
 import sys
 from datetime import datetime
@@ -27,7 +28,48 @@ STATION_SENSOR, STATION_WHEN = "visual", "pre-merge"
 SENSOR_CACHE = ".mjrp/sensors.json"
 
 
-SENSOR_TIMEOUT = 300
+# 2026-11-05 (UAT-481): the ceiling was 300 s, and the selftests take 412 s with other sessions working on the machine (85 of 85
+# passing): the doctor turned red on a clock, saying nothing about the work. The ceiling now fits the suite, and a sensor that
+# still runs out of time is «não avaliável» (the verdict never came), never a failure the sensor did not give.
+SENSOR_TIMEOUT = 900
+SENSOR_TIMEOUT_ENV = "MJRP_SENSOR_TIMEOUT"   # seconds; a positive number (the selftest shortens it to prove the timeout path)
+TIMED_OUT = 124                               # _run.py: the deadline passed
+
+
+def sensor_timeout() -> float:
+    try:
+        value = float(os.environ.get(SENSOR_TIMEOUT_ENV, ""))
+    except ValueError:
+        return SENSOR_TIMEOUT
+    return value if value > 0 else SENSOR_TIMEOUT
+
+
+CI_FAIL_LINE = re.compile(r"FAIL|FALH|ERRO|falha|✖|not ok|Traceback|Error\b")
+CI_TAIL = 15                                   # the last lines of a sensor's output, always shown
+CI_MAX = 80                                    # the most lines shown per sensor
+
+
+def ci_failure_lines(out):
+    """The lines of a failed sensor's output worth reading on a runner nobody can log into: the ones that say a failure, then the tail."""
+    lines = (out or "").splitlines()
+    head, tail = lines[:-CI_TAIL], lines[-CI_TAIL:]
+    return [l[:300] for l in [l for l in head if CI_FAIL_LINE.search(l)][-(CI_MAX - CI_TAIL):] + tail]
+
+
+def _ci_dump(name, code, out):
+    """UAT-377 (F209): on the CI runner the A1 line kept only the LAST line of a sensor that failed («1 erro(s)», «estourou 300s»), and three
+    selftests that fail only there could not be read. Under GitHub Actions, the failing lines and the tail go to the log, in a fold."""
+    if os.environ.get("GITHUB_ACTIONS") != "true" or not out:
+        return
+    print(f"::group::sensor '{name}' (exit {code}): as linhas de falha e o fim da saída", file=sys.stderr)
+    for line in ci_failure_lines(out):
+        print(line, file=sys.stderr)
+    print("::endgroup::", file=sys.stderr, flush=True)
+
+
+def _timed_out(rep, name, limit, inc):
+    rep.unevaluable("A1", f"sensor '{name}' passou do limite de {limit:g} s antes de dar o veredito (tempo, não defeito do trabalho): "
+                          f"rode-o direto para saber", inc)
 
 
 # Cache format version. A record written by an older doctor has no fingerprint and cannot be
@@ -126,6 +168,8 @@ def a1_sensors(root, cfg, rep, skip):
                 rep.fail("A1", f"sensor '{name}' nunca foi executado (sem registro)", inc)
             elif agora is None or r.get("fingerprint") != agora:
                 velhos.append(name)
+            elif r.get("code") == TIMED_OUT:
+                _timed_out(rep, name, r.get("limit") or SENSOR_TIMEOUT, inc)
             elif r.get("code") != 0:
                 rep.fail("A1", f"sensor '{name}' falhou na última execução ({r.get('when','?')})", inc)
             else:
@@ -152,7 +196,8 @@ def a1_sensors(root, cfg, rep, skip):
                 continue
             cmd = str(cmd.get("cmd")).strip()
         try:
-            code, out = sh(cmd, root, SENSOR_TIMEOUT)
+            limit = sensor_timeout()
+            code, out = sh(cmd, root, limit)
         except ShellNeeded as e:
             # F71 R8: not run, not green. Red (not a quiet «não avaliável»): until R3 is decided that level exits 0, and a
             # sensor that used to run must not turn into one that is silently skipped.
@@ -160,8 +205,12 @@ def a1_sensors(root, cfg, rep, skip):
                            f"— vire um script (`python3 mjrp-scripts/x.py`) e declare o script", inc)
             continue
         cache[name] = {"code": code, "when": datetime.now().isoformat(timespec="seconds"),
-                       "fingerprint": agora, "v": SENSOR_CACHE_VERSION}
-        if code == 127:
+                       "fingerprint": agora, "v": SENSOR_CACHE_VERSION, **({"limit": limit} if code == TIMED_OUT else {})}
+        if code != 0:
+            _ci_dump(name, code, out)
+        if code == TIMED_OUT:
+            _timed_out(rep, name, limit, inc)
+        elif code == 127:
             rep.fail("A1", f"sensor '{name}' não executa: {out[:120]}", inc)
         elif code != 0:
             rep.fail("A1", f"sensor '{name}' reprovou (exit {code}): {out.splitlines()[-1][:120] if out else ''}", inc)

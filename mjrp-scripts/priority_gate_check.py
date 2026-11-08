@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 priority_gate_check.py - the «Priorizada» column governs what starts: the pre-commit's gate (F125, UAT-407).
 
@@ -29,7 +29,10 @@ commit started too). "Started" is `priority_next.has_started` (the app's `not_st
   - the list out of the format, an id that names no item of the project, git without an answer
                                                       exit 2 (NOT EVALUABLE; "não avaliável" is never a pass, ADR-0002 § 8)
 
-It judges the INDEX (what the commit will contain). `priority.md` is the human's: the agent never writes it, and a commit that carries it
+It judges the INDEX (what the commit will contain) against the list AT `main` (F217, UAT-537): the board's drag commits there wherever the
+checkout is, and a branch opened before the drag carries an old copy - on 2026-11-07 the F205, dragged to `main`'s list, would have been
+refused on its own branch. Only a commit that changes `priority.md` itself is judged by its own copy; a repository with no `main`, by the
+index. `priority.md` is the human's: the agent never writes it, and a commit that carries it
 stamped (`Human-prioritized:`) touches no feature file, so this gate does not run for it.
 
 Usage: python3 mjrp-scripts/priority_gate_check.py <root> --staged
@@ -56,6 +59,14 @@ def blob(top, ref, rel):
     except _git.GitError as exc:
         raise pn.NotEvaluable(f"git show {ref}:{rel}: {exc}") from exc
     return r.out if r.code == 0 else None
+
+
+def has_main(top):
+    """The repository has `main`: the list the screen writes is read there (F217)."""
+    try:
+        return _git.run(top, "rev-parse", "--verify", "-q", pn.TARGET_REF).code == 0
+    except _git.GitError as exc:
+        raise pn.NotEvaluable(f"git rev-parse {pn.TARGET_REF}: {exc}") from exc
 
 
 def staged_features(top):
@@ -110,7 +121,8 @@ def merging(top):
 def worked_on_branch(top, proj, folder):
     """The current branch has commits of its own on the feature's folder since it left `main`: the work started before this commit.
     The board's `not_started` counts the open branch of the feature as started (CC-ADR-0029); the gate follows it. On `main` (or with no
-    `main`) the range is empty and the commit is judged by the list."""
+    `main`) the range is empty and the commit is judged by the list. F212 (UAT-533): a branch whose diff touches only Discovery artifacts
+    (the prototype, the screen's record, the sketch) did not start the work, as the board says: its start commit is judged by the list."""
     try:
         base = _git.run(top, "merge-base", "HEAD", "refs/heads/main")
         if base.code != 0:
@@ -118,7 +130,9 @@ def worked_on_branch(top, proj, folder):
         r = _git.run(top, "log", "--format=%H", f"{base.out.strip()}..HEAD", "--", f"{proj}{pn.FEATURES_REL}/{folder}")
     except _git.GitError as exc:
         raise pn.NotEvaluable(f"git log da feature no ramo: {exc}") from exc
-    return r.code == 0 and bool(r.out.strip())
+    if r.code != 0 or not r.out.strip():
+        return False
+    return not pn.discovery_only(pn.changed_paths(top, "refs/heads/main", "HEAD"))
 
 
 def judge(top):
@@ -135,10 +149,11 @@ def judge(top):
     for proj, started in sorted(groups.items()):
         project = Path(top) / proj if proj else Path(top)
         plist_rel = f"{proj}{pn.PRIORITY_REL}"
-        text = blob(top, ":", plist_rel)
+        staged, head = blob(top, ":", plist_rel), blob(top, "HEAD", plist_rel)
+        if staged is None and head is not None:
+            raise pn.NotEvaluable(f"{plist_rel}: o commit apaga a «Priorizada» - ela é do humano (o board a escreve)")
+        text = staged if staged != head or not has_main(top) else blob(top, pn.TARGET_REF, plist_rel)
         if text is None:
-            if blob(top, "HEAD", plist_rel) is not None:
-                raise pn.NotEvaluable(f"{plist_rel}: o commit apaga a «Priorizada» - ela é do humano (o board a escreve)")
             continue                                  # no column in this project: no gate
         order = pn.parse_priority(text)
         uat = blob(top, ":", f"{proj}{pn.UAT_REL}")

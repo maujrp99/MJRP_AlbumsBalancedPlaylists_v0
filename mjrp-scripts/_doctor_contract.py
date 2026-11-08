@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_contract.py - the doctor's checks of the contract itself: its schema, enums and gates (I1, W3, W6 stack, F2).
 
@@ -62,6 +62,9 @@ SCHEMA = {
     # 2026-10-19: the harness a child is refreshed from (written once by `new_project.py --refresh-kernel`); the conform and the
     # child's own conformance_check.py find the source here to compare their catalog with it (conformance_check.find_harness).
     "harness_root": str,
+    # 2026-11-07 (F220, S-226): hours an agent has to act on what the MJRP handed back from the iPhone before returned_check.py charges it
+    # (the doctor's W22 and the orchestrator's Stop gate). Absent: 24. An int in (0, 168]: the message lives a week.
+    "returned_deadline_hours": int,
 }
 
 

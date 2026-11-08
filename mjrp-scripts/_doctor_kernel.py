@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_kernel.py - the doctor's checks of what the harness hands down to a project: the kernel pages, the vendored
 copies, the canonical catalog, the constitution mirror and the portfolio (I5 kernel, W7, W16, I5 constitution, I6).
@@ -7,7 +7,10 @@ Family module of the doctor (F73 R5). `kernel_divergentes` and `vendored_diverge
 (F73 IV-03): the comparison of "what the stamp would write now" is the builder's, and the builder uses it directly, so the two
 families no longer import each other. This module reaches the builder only through that one lazy import.
 """
+import re
+import subprocess
 import sys
+import time
 from datetime import date
 from datetime import datetime
 from pathlib import Path
@@ -56,6 +59,7 @@ def i5_kernel(root, cfg, rep, ctx=None):
     if not k:
         rep.warn("I5", "contrato sem `kernel:` — o projeto não carrega os conceitos do harness; "
                        "rode `new_project.py --refresh-kernel <pasta>`", inc)
+        i5_process_sensors(root, cfg, rep)   # UAT-501 (the F182 recheck's P2-3): the extreme child, with none of it, is told what it lacks
         return
     if kernel_in_repo(cfg):
         _i5_kernel_in_repo(root, cfg, rep)
@@ -74,6 +78,7 @@ def i5_kernel(root, cfg, rep, ctx=None):
         idade = (_clock.today() - vd).days
     except (TypeError, ValueError):
         rep.fail("I5", f"kernel.version inválido ({v!r}) — esperado AAAA-MM-DD", inc)
+        i5_process_sensors(root, cfg, rep)
         return
 
     # 16/09: o carimbo media IDADE, nunca CONTEUDO. Os 4 projetos ficaram com 3 paginas
@@ -135,6 +140,141 @@ def i5_kernel(root, cfg, rep, ctx=None):
         elif has_kit and not has_screen:
             rep.warn("I5", "o kit de paridade visual está vendorizado num projeto sem tela — o próximo "
                            "`--refresh-kernel` não o traz mais; ele pode ir para `_archive/`", inc_v)
+    i5_process_sensors(root, cfg, rep)
+    i5_merge_options(root, rep)
+    i5_merge_drivers(root, rep)
+
+
+CHILD_PASSKEY_START = "def project_of(root)"   # = remote_approval.CHILD_START: the copy that first carries the passkey into a child
+REFLOG_DATE = re.compile(r"@\{(\d+)\}")
+
+
+def i5_merge_options(root, rep):
+    """CC-ADR-0041: a child's main takes a branch by a merge commit, or no hook runs - no visual gate, no Touch ID, no passkey.
+    The refresh writes `branch.main.mergeoptions=--no-ff`, a default against the error and not a lock; its absence fails. Since the
+    refresh that brought the passkey, each step of main in the reflog is judged by the graph, not by its message: a new commit or a merge
+    commit (its first parent is the step before) passes, unless git itself wrote `Fast-forward` for a merge (a branch of one commit looks
+    like a new commit); a sync passes only when `origin/main` already pointed at that commit BEFORE the step (its own reflog), so a push
+    made later does not hide the shortcut. Anything else is a dated warning, never a failure, which leaves by itself when the reflog entry
+    expires. Only a project with its own repository."""
+    if not (Path(root) / ".git").exists():
+        return
+    inc = "2026-11-05: o MJRPpersonal juntou seis ramos na main por avanço rápido, sem hook nenhum (CC-ADR-0041)"
+
+    def g(*args):
+        try:
+            r = subprocess.run(["git", *args], cwd=str(root), capture_output=True, text=True, timeout=20, check=False)
+        except (OSError, subprocess.SubprocessError):
+            return None
+        return r.stdout if r.returncode == 0 else None
+
+    if "--no-ff" not in (g("config", "--get", "branch.main.mergeoptions") or "").split():
+        rep.fail("I5", "falta `branch.main.mergeoptions=--no-ff`: um merge por avanço rápido na main não roda hook nenhum - rode "
+                       "`new_project.py --refresh-kernel <pasta>`", inc)
+        return
+    first = (g("log", "--reverse", "--format=%H", "-S", CHILD_PASSKEY_START, "main", "--", "mjrp-scripts/_passkey.py") or "").split()
+    if not first:
+        return
+    since = (g("log", "-1", "--format=%ct", first[0]) or "").strip()
+    rows = [line.split(" ", 2) for line in (g("reflog", "show", "--date=unix", "--format=%H %gd %gs", "refs/heads/main") or "").splitlines()]
+    synced = []                                   # (commit, when) origin/main pointed at, by its own reflog
+    for row in (g("reflog", "show", "--date=unix", "--format=%H %gd", "refs/remotes/origin/main") or "").splitlines():
+        sha, _, when = row.partition(" ")
+        at = REFLOG_DATE.search(when)
+        if at:
+            synced.append((sha, int(at.group(1))))
+    found = []
+    for (new, when, what), (old, _when, _what) in zip(rows, rows[1:]):
+        at = REFLOG_DATE.search(when)
+        if not at or not since or int(at.group(1)) < int(since):
+            break
+        moment = int(at.group(1))                 # whole seconds: a fetch and its pull share one; a push right after a merge too
+        if any(sha == new and (t < moment or (t == moment and what.startswith("pull"))) for sha, t in synced):
+            continue
+        fast = "Fast-forward" in what and not what.startswith("pull")
+        if not fast and (g("rev-parse", "-q", "--verify", f"{new}^1") or "").strip() == old:
+            continue
+        found.append(f"{time.strftime('%Y-%m-%d %H:%M', time.localtime(int(at.group(1))))} ({what[:60]})")
+    if found:
+        rep.warn("I5", f"a main avançou {len(found)} vez(es) sem um commit novo nem um merge commit, e nenhum hook rodou: "
+                       f"{'; '.join(found[:5])} - um aviso, que sai quando a entrada do reflog expira", inc)
+
+
+def i5_merge_drivers(root, rep):
+    """F218 (UAT-539): a child with its own repository has its log and its memory tied to the merge drivers (`.gitattributes`, written by
+    the refresh) and the drivers configured in this clone, running a script that is there. The tie is versioned and its absence fails;
+    the config is per clone (a fresh clone lacks it until `install-driver`) and its absence warns - without it git merges as before."""
+    if not (Path(root) / ".git").exists():
+        return
+    inc = ("2026-11-07: no MJRPpersonal o `install-driver` dizia «instalado», o `.gitattributes` não ligava o log nem a memória e o "
+           "script do driver não existia: os merges seguiam em conflito, e um deles custou ao MJRP uma segunda passkey (UAT-539)")
+    try:
+        import merge_train as mt
+    except ImportError:
+        rep.fail("I5", "falta `mjrp-scripts/merge_train.py`, que os drivers de merge do log e da memória rodam - rode "
+                       "`new_project.py --refresh-kernel <pasta>`", inc)
+        return
+    left = mt.unwired_drivers(Path(root))
+    if left is None:
+        rep.unevaluable("I5", "o git não respondeu ao `check-attr`: a ligação dos drivers de merge não foi conferida", inc)
+        return
+    for path, drv, line in left:
+        rep.fail("I5", f"`{path}` não está ligado ao driver de merge `{drv}` (falta `{line}` no `.gitattributes`, ou outra linha o "
+                       f"desliga): dois ramos que o mudam conflitam no merge - rode `new_project.py --refresh-kernel <pasta>` ou "
+                       f"`python3 {mt.DRIVER_SCRIPT} install-driver`", inc)
+    if left:
+        return
+    try:
+        r = subprocess.run(["git", "config", "--get-regexp", r"^merge\.mjrp-(log|memory)\.driver$"], cwd=str(root),
+                           capture_output=True, text=True, timeout=20, check=False)
+    except (OSError, subprocess.SubprocessError):
+        rep.unevaluable("I5", "o git não respondeu: a configuração dos drivers de merge não foi conferida", inc)
+        return
+    have = {ln.split(" ", 1)[0]: ln.split(" ", 1)[-1] for ln in r.stdout.splitlines()}
+    missing = [d for d in (mt.DRIVER, mt.MEMORY_DRIVER) if f"merge.{d}.driver" not in have]
+    if missing:
+        rep.warn("I5", f"o `.gitattributes` liga o log e a memória, mas este clone não configurou {', '.join(missing)}: o git une como "
+                       f"texto e conflita - rode `python3 {mt.DRIVER_SCRIPT} install-driver`", inc)
+    elif not (Path(root) / mt.DRIVER_SCRIPT).is_file():
+        rep.fail("I5", f"os drivers de merge rodam `{mt.DRIVER_SCRIPT}`, que não existe aqui: todo merge que mude o log ou a memória "
+                       f"falha - rode `new_project.py --refresh-kernel <pasta>`", inc)
+
+
+def i5_process_sensors(root, cfg, rep):
+    """The process sensors a child inherits are there and run (F182, UAT-489; the MJRP, 2026-11-04: «sensor do processo é parte do kernel»).
+
+    `mjrp-scripts/process_sensors.json` is the single manifest (the harness's `new_project_selftest` closes it over the disk): each sensor a
+    child receives, where it runs, and the commands a sensor that only runs when declared (`runs: contract`) must have in the contract's
+    `sensors:`. A manifest sensor missing from the disk, a declared-only sensor the contract does not run, or a manifest that is gone is an
+    ERROR: a green doctor without the process's sensors is the failure this exists to prevent. Reads only the child's own files (no harness)."""
+    inc = ("2026-11-04: o MJRPpersonal passava verde com 6 sensores declarados contra 73 do harness; as travas do fecho vinham sem o que julgam, "
+           "o pdlc_vocabulary_check chegava e nada o rodava, e cinco features fecharam sem o passo retroativo")
+    import json
+    path = Path(root) / "mjrp-scripts" / "process_sensors.json"
+    if not path.is_file():
+        rep.fail("I5", "mjrp-scripts/process_sensors.json ausente: o filho não sabe quais sensores do processo herda nem se rodam "
+                       "— rode `new_project.py --refresh-kernel <pasta>`", inc)
+        return
+    try:
+        manifest = json.loads(path.read_text(encoding="utf-8"))
+        sensors = manifest["sensors"]
+    except (ValueError, KeyError) as e:
+        rep.fail("I5", f"mjrp-scripts/process_sensors.json ilegível ({e.__class__.__name__}) — rode `--refresh-kernel`", inc)
+        return
+    missing = [n for n in sensors if not (Path(root) / "mjrp-scripts" / n).is_file()]
+    if missing:
+        rep.fail("I5", f"{len(missing)} sensor(es) do processo herdado(s) ausente(s) em mjrp-scripts/: {', '.join(missing[:6])}"
+                       f"{' …' if len(missing) > 6 else ''} — rode `new_project.py --refresh-kernel <pasta>`", inc)
+    declared = " ".join(str(v) for v in (cfg.get("sensors") or {}).values())
+    # the declared-only sensors judge a code-app's features and graph (the catalog item `process-sensors` applies to code-app too); a content project has neither
+    idle = [(n, e["command"]) for n, e in sensors.items()
+            if cfg.get("profile") == "code-app" and "contract" in e.get("runs", []) and e.get("command") and n not in declared]
+    if idle:
+        rep.fail("I5", f"{len(idle)} sensor(es) do processo chegam ao filho mas nada os roda (o contrato não os declara em `sensors:`): "
+                       + " · ".join(f"{n} → `{cmd}`" for n, cmd in idle[:4])
+                       + f"{' …' if len(idle) > 4 else ''}. Declare cada um em `sensors:` do .mjrp-project.yml (nota de migração CM-0107)", inc)
+    if not missing and not idle:
+        rep.note("I5", f"sensores do processo: {len(sensors)} herdados, presentes e rodando (hook, doctor, catálogo ou contrato)")
 
 
 def _i5_kernel_in_repo(root, cfg, rep):

@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # pre-commit - structure by nature (EP-09) and the coherence of the requirements graph (S-67). Blocks a commit that ADDS something outside its nature
 # (docs/ only memory; reports/, design/, data/ with their declared subfolders). Only what this commit
 # adds is judged - an old misplacement is the doctor's W9 warning, not a blocked commit.
@@ -27,6 +27,12 @@ if [ -n "$(git -C "$ROOT" ls-files -- "$BUILT_SCREEN/" | head -n 1)" ]; then
   echo "  num merge de ramo anterior à F57: python3 mjrp-scripts/merge_train.py dist-resolve" >&2
   exit 1
 fi
+
+# closing_feature_staged: the index takes a feature's spec.md to Done/Accepted (F182, UAT-489). Read from the diff, not from a script: it must work
+# in the very repository whose checker script is missing, which is the case it exists for.
+closing_feature_staged() {
+  git -c core.quotePath=false diff --cached -U0 --diff-filter=AMR -- ':(glob)**/docs/specs/features/F*/spec.md' | grep -Eiq '^\+status: *(Done|Accepted)'
+}
 
 # run_sensor <label> <command...>: prints the sensor's output; returns 0 passed, 1 failed, 2 not evaluated.
 run_sensor() {
@@ -59,11 +65,17 @@ if [ -f "$VGATE" ] && git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1 && [ 
 fi
 CHECK="$ROOT/mjrp-scripts/structure_check.py"
 GRAPH="$ROOT/mjrp-scripts/requirements_graph_check.py"
-if [ ! -f "$CHECK" ] && [ ! -f "$GRAPH" ]; then
-  exit 0                                   # a project that carries neither sensor: nothing to run, nothing to warn about
+# UAT-501 (F209): both early exits used to skip the closing gates below too, so a commit that takes a feature to Done (the one that ends a
+# conflicted merge, in a child with neither sensor) went in unjudged. A closing goes on to the gates; one that cannot be judged is refused (F182).
+if [ ! -f "$CHECK" ] && [ ! -f "$GRAPH" ] && ! closing_feature_staged; then
+  exit 0                                   # a project that carries neither sensor and closes nothing: nothing to run, nothing to warn about
 fi
 if ! command -v python3 >/dev/null 2>&1; then
   echo "  [pre-commit] AVISO: python3 não foi encontrado - a estrutura por natureza e o grafo de requisitos NÃO foram conferidos neste commit." >&2
+  if closing_feature_staged; then
+    echo "  commit bloqueado: este commit fecha uma feature (Done/Accepted) e, sem o python3, as travas do fecho não têm como conferir." >&2
+    exit 1
+  fi
   exit 0
 fi
 # F132 (UAT-411, 2026-10-30): the board sees a branch's work only by its name (branch-convention@2, F67). A commit on a work branch outside it
@@ -148,6 +160,11 @@ SDDCHK="$ROOT/mjrp-scripts/sdd_shape_check.py"
 if [ ! -f "$SDDCHK" ] && git -c core.quotePath=false diff --cached --name-only --diff-filter=AMR | grep -Eq '(^|/)docs/specs/features/F[0-9]+-[^/]+/(spec|plan|tasks)\.md$'; then
   # recheck of 2026-10-27, P2-4: a sensor that is absent is said, never skipped in silence (a child does not carry this one by design)
   echo "  [pre-commit] AVISO: mjrp-scripts/sdd_shape_check.py não existe - a forma do SDD das features deste commit NÃO foi conferida." >&2
+  if closing_feature_staged; then
+    # UAT-489 (F182): a warning is for a commit that closes nothing; a closing that cannot be judged is refused, not waved through
+    echo "  commit bloqueado: este commit fecha uma feature (Done/Accepted) e a trava da forma do SDD não está neste repositório - sem ela não há como conferir. Traga-a: no harness, \`python3 mjrp-scripts/new_project.py <este projeto> --refresh-kernel\`." >&2
+    exit 1
+  fi
 fi
 if [ -f "$SDDCHK" ] && git -c core.quotePath=false diff --cached --name-only --diff-filter=AMR | grep -Eq '(^|/)docs/specs/features/F[0-9]+-[^/]+/(spec|plan|tasks)\.md$'; then
   run_sensor "forma do SDD" python3 "$SDDCHK" "$ROOT" --staged
@@ -187,6 +204,10 @@ RETRO="$ROOT/mjrp-scripts/retro_step_check.py"
 if git -c core.quotePath=false diff --cached --name-only --diff-filter=AMR | grep -Eq '(^|/)docs/specs/features/F[0-9]+-[^/]+/(spec|plan|tasks)\.md$'; then
   if [ ! -f "$RETRO" ]; then
     echo "  [pre-commit] AVISO: mjrp-scripts/retro_step_check.py não existe - o passo retroativo das features deste commit NÃO foi conferido." >&2
+    if closing_feature_staged; then
+      echo "  commit bloqueado: este commit fecha uma feature (Done/Accepted) e a trava do passo retroativo não está neste repositório - sem ela não há como conferir. Traga-a: no harness, \`python3 mjrp-scripts/new_project.py <este projeto> --refresh-kernel\`." >&2
+      exit 1
+    fi
   else
     run_sensor "passo retroativo" python3 "$RETRO" "$ROOT" --staged
     code=$?

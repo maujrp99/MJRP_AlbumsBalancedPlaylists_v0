@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // Captures every scenario on both sides — the approved prototype and the product — under every condition of the
 // project (browser × viewport × palette), and writes the pair of screenshots and the facts of both sides in the
 // layout judge.mjs reads. It only captures; the judge compares.

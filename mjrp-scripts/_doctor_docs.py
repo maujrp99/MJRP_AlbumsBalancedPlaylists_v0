@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_docs.py - the doctor's checks of the documents: paths that exist, links that resolve, the identity files,
 the folder indexes, the scripts catalog and the shape of the features (I2, I3, I4, I5 inheritance, W6 charter, W17, W19, W20).
@@ -340,3 +340,25 @@ def w21_screen_answers(root, rep):
     old = [a for a in state.pending if a.at < limit]
     if old:
         rep.warn("W21", f"{len(old)} resposta(s) da tela parada(s) há mais de um dia: {', '.join(a.id for a in old)}. " + " ".join(s.strip() for s in sa.lines_of(state)[1:]), inc)
+
+
+def w22_returned(root, rep):
+    """W22 - what the MJRP handed back from the iPhone (F205) and no agent acted on past the contract's deadline (F220, S-226; `returned_check.py`).
+    A warning: the ceiling of error checks of ADR-0002 is full; the block is the Stop gate of the project's orchestrator (stop_gate.py). A measure
+    that does not read (a folder outside the account's projects, the bridge) is a note, never a red doctor: the sensor itself exits 2 for it."""
+    inc = ("2026-11-07: o MJRP devolveu pelo iPhone treze itens travados de quatro projetos; a mensagem aparecia no início de sessão e nada "
+           "obrigava o agente dono a agir («nao adianta eu devolver e ficar sem acao, precisamos de um sensor»)")
+    sys.dont_write_bytecode = True
+    try:
+        import returned_check as rc
+    except ModuleNotFoundError:
+        return
+    try:
+        project, hours, late = rc.charged(root)
+    except rc.Unevaluable as e:
+        rep.note("W22", f"o que o MJRP devolve pelo iPhone não foi medido aqui ({e})")
+        return
+    if late:
+        rep.warn("W22", " ".join(rc.report_lines(project, hours, late)), inc)
+    else:
+        rep.note("W22", f"nada do que o MJRP devolveu ao {project} está sem ação além de {hours:g} h")

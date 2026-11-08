@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """log_entry_check.py -- every commit brings a new entry in the project log (S-61).
 
 Born 2026-10-03 17:48: in the skills revision, four commits went out with no entry in docs/log.md, and on
@@ -59,6 +59,7 @@ Rule (MJRP, 2026-10-04 14:11):
     ahead -- and no sensor caught it). The clock is the system's, never the entry's; the zone is read from the
     committed contract of the owning project (HEAD, like the other rules), falling back to the root's. Only entries
     the commit adds are judged, never old ones; a merge is exempt, as above;
+  - a new entry of the type `acceptance` also passes in the commit of the key list with `Human-passkey: enroll|revoke` (CC-ADR-0038);
   - a new entry of the type `acceptance` (CC-ADR-0024) needs a `Human-accepted:` or `Human-reopened:` line in the message: that type is
     the one the doctor's F1 does not count, so it is the human's acceptance commit's, never a session's;
   - a NEW entry that closes a conform (heading «conform fechado», «conform N fechado», «fechamento do conform…: fechado»; never
@@ -74,7 +75,14 @@ default docs/log.md. Python 3 stdlib only (constitution, ADR-0015: this is core)
 
 Usage:
   python3 mjrp-scripts/log_entry_check.py [--amend] [--msg <commit-message-file>]   (from the hook: judges what is staged)
+  python3 mjrp-scripts/log_entry_check.py --insert <log.md> <entry.md>   (writes one entry above the newest one, never in the preamble)
+  python3 mjrp-scripts/log_entry_check.py --headings <log.md>            (exit 1 when a `## ` line of the log is no entry)
 Exit: 0 passed or exempt · 1 blocked.
+
+UAT-529 (F209): a writer that does not go through the hook (the scheduled inventory, by the Cowork bridge) looked for the first
+`## [` anywhere and put its entry INSIDE the preamble's line that shows the format; the next commit of every session was refused.
+`--insert` puts the entry before the first line that IS an entry (`^## [AAAA-MM-DD HH:MM]`), and refuses to write a log that
+would have a `## ` line the reader cannot read; `--headings` is the same check for a log already written.
 """
 import fnmatch
 import json
@@ -124,11 +132,31 @@ PRIORITY_STAMP = re.compile(r"^Human-prioritized:[ \t]*\S", re.IGNORECASE | re.M
 HUMAN_STAMP = re.compile(r"^Human-(?:accepted|reopened):[ \t]*\S", re.IGNORECASE | re.MULTILINE)   # CC-ADR-0024
 STAMP_FORM = re.compile(r"^Catalog-editorial:[ \t]+(?P<path>.+?) — (?P<verdict>canônico|não canônico|devolvido): (?P<reason>.+)$",
                         re.IGNORECASE)
+# CC-ADR-0038: a key enrolled or revoked is the same kind of commit, run by the server after the Touch ID. Only with this stamp and only in a commit of the list; `note-lost` is another act.
+PASSKEY_STAMP = re.compile(r"^Human-passkey:[ \t]*(?:enroll|revoke)[ \t]+\S", re.IGNORECASE | re.MULTILINE)
+PASSKEY_LIST = "apps/control-center/ops/passkeys/trusted.json"
 CO_AUTHORED = re.compile(r"^Co-Authored-By:", re.IGNORECASE | re.MULTILINE)
 DERIVED_DIRS = ("daily-checks/", "_backups/")
 TOLERANCE_MIN = 2                      # a new entry may be at most this many minutes ahead of the clock
 DEFAULT_TZ = _clock.TZ_NAME
 STAMP_TIME = re.compile(r"^## \[(\d{4}-\d{2}-\d{2} \d{2}:\d{2})\]")
+# 2026-11-05: a fragment of the log's own header, glued at the end of the Control Center log by a merge (`808b2ddb2`, 2026-10-31),
+# broke the screen's log reader for five days, and no commit noticed: this check read only the new entries. Every `## ` line of a
+# staged log, outside a code fence, must now be an entry the reader understands (the same shape as `repo_fs/log.py`'s `_ENTRY`).
+HEADING = re.compile(r"^## \[(\d{4}-\d{2}-\d{2})(?: (\d{2}:\d{2}))?\][ \t]+([A-Za-z][A-Za-z0-9-]*)"
+                     r"(?:[ \t]+(\([^)]*\)))?[ \t]+—[ \t]+(\S.*?)[ \t]*$")
+FENCE = re.compile(r"^\s*(```|~~~)")
+
+
+def bad_headings(text):
+    """The line numbers of the `## ` lines, outside a fence, that are no entry the screen's reader can read."""
+    out, in_fence = [], False
+    for number, line in enumerate(text.splitlines(), start=1):
+        if FENCE.match(line):
+            in_fence = not in_fence
+        if not in_fence and line.startswith("## ") and not HEADING.match(line):
+            out.append(number)
+    return out
 
 
 # F71 R9: the deadline of every git call here, in seconds. This runs inside the commit hook: a git stuck on a locked index
@@ -562,6 +590,11 @@ def check(root, amend=False, msg=None):
         new = entries(root, f":{log}")
         old = entries(root, f"{base}:{log}") if has_head else set()
         where = proj or "raiz"
+        if log in files:
+            broken = bad_headings(git(root, "show", f":{log}")[1])
+            if broken:
+                fails.append((where, log, f"o log tem linha `## ` que não é entrada (linha {', '.join(map(str, broken[:5]))}): "
+                                          f"o leitor da tela para nela e o card do log some inteiro; corrija a linha ou tire o pedaço"))
         if not (new - old):
             fails.append((where, log, "o commit não acrescenta entrada nova" if log in files
                           else "o log não está no commit"))
@@ -583,11 +616,11 @@ def check(root, amend=False, msg=None):
             if kind not in KINDS:
                 fails.append((where, log, f"a entrada `{head[:60]}` tem o tipo `{kind or '(vazio)'}`, fora de "
                                           f"{', '.join(KINDS)}"))
-            if kind == "acceptance" and not HUMAN_STAMP.search(msg or ""):
+            if kind == "acceptance" and not HUMAN_STAMP.search(msg or "") and not (PASSKEY_STAMP.search(msg or "") and PASSKEY_LIST in files):
                 # CC-ADR-0024: the type that the doctor's F1 does not count belongs to the human's acceptance commit. An entry typed
                 # `acceptance` in any other commit would silence F1 with nobody having accepted anything
                 fails.append((where, log, f"a entrada `{head[:60]}` é do tipo `acceptance`, que só vale num commit com o carimbo "
-                                          "`Human-accepted:` ou `Human-reopened:` (o commit do comando da tela do MJRP)"))
+                                          "`Human-accepted:` ou `Human-reopened:` (o commit do comando da tela do MJRP), ou com `Human-passkey:` no commit da lista de chaves"))
             if kind == "answer" and not answer_entry_ok(git(root, "show", f":{log}")[1], head):
                 # CC-ADR-0039 section 9: the type the F1 does not count belongs to an answer of the screen, with its question and its report
                 fails.append((where, log, f"a entrada `{head[:60]}` é do tipo `answer`, que só vale para uma resposta da tela: o título "
@@ -614,7 +647,50 @@ def read_msg(argv):
         return None
 
 
+def insert_entry(text, entry):
+    """The log with `entry` above its newest entry (the first line that IS one), or at the end when it has none yet. The preamble is
+    never searched for a `## [`: its own line that shows the format is not an entry (UAT-529)."""
+    entry = entry.strip("\n") + "\n\n"
+    if not ENTRY.match(entry):
+        raise ValueError("a entrada não começa por `## [AAAA-MM-DD HH:MM] <tipo> — <título>`")
+    first = ENTRY.search(text)
+    if first is None:
+        return text.rstrip("\n") + "\n\n" + entry
+    return text[:first.start()] + entry + text[first.start():]
+
+
+def _log_tool(argv):
+    """`--insert <log> <entry>` and `--headings <log>`: 0 done, 1 refused (the reason printed), 2 wrong use."""
+    if argv[0] == "--headings" and len(argv) == 2:
+        broken = bad_headings(Path(argv[1]).read_text(encoding="utf-8"))
+        if broken:
+            print(f"log_entry_check: {argv[1]} tem linha `## ` que não é entrada (linha {', '.join(map(str, broken[:5]))})")
+            return 1
+        return 0
+    if argv[0] == "--insert" and len(argv) == 3:
+        log = Path(argv[1])
+        text = log.read_text(encoding="utf-8")
+        try:
+            new = insert_entry(text, Path(argv[2]).read_text(encoding="utf-8"))
+        except ValueError as e:
+            print(f"log_entry_check: nada gravado - {e}")
+            return 1
+        broken = bad_headings(new)
+        if broken:
+            print(f"log_entry_check: nada gravado - o log ficaria com linha `## ` que não é entrada (linha {', '.join(map(str, broken[:5]))})")
+            return 1
+        tmp = log.with_name(log.name + ".tmp")
+        tmp.write_text(new, encoding="utf-8")
+        os.replace(tmp, log)
+        print(f"log_entry_check: entrada gravada em {log}, acima da mais nova")
+        return 0
+    print(__doc__)
+    return 2
+
+
 def main(argv):
+    if argv and argv[0] in ("--insert", "--headings"):
+        return _log_tool(argv)
     root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel")[1].strip() or ".")
     fails = check(root, amend="--amend" in argv, msg=read_msg(argv))
     if not fails:

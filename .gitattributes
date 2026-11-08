@@ -1,0 +1,4 @@
+# merge drivers (F218): the log merges by entry, newest first; the ## Now joins the blocks both sides prepended to.
+# They act only where `python3 mjrp-scripts/merge_train.py install-driver` ran (the refresh of the kernel runs it).
+**/docs/log.md merge=mjrp-log
+**/MEMORY.md merge=mjrp-memory

@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # pre-merge-commit - a branch that changed a screen is merged with the independent visual recheck's report: evaluated
 # (`verdict: pass` or `fail`, never `incomplete`) and with `p0: 0`. ADR-0017 of the harness, 2026-10-12; revised
 # 2026-10-17 (decision of the MJRP, pdlc-loops § 5): the judge evaluates, it does not block - a `fail` without P0
@@ -15,8 +15,32 @@
 # It runs on `git merge` when a merge commit is made (--no-ff, the governance's merge); a fast-forward makes none.
 # Bypass is the human's call, never the agent's:  git merge --no-verify, or VISUAL_RECHECK_SKIP="<reason>" git merge …
 # (it is the way out of a P0: the agent brings the owner what it is, and he decides)
+# 2026-11-04 (F182, UAT-489): the closing gates also hold here. A child has no merge train, so `git merge` is the only door: a merge that takes
+# a feature to Done must pass the fast lane's retroactive step (retro_step_check.py) and the SDD shape (sdd_shape_check.py), both judged on the
+# merge result against HEAD (`--staged`; in a merge it reads the other parent's commits, F147). A gate that cannot judge (exit 2) or is not
+# there while a feature closes REFUSES the merge: «not checked» is no approval. The commit that ends a conflicted merge goes through the
+# pre-commit, which runs the same two gates. A fast-forward makes no merge commit and no hook runs (merge with --no-ff).
 ROOT=$(git rev-parse --show-toplevel) || exit 0
+cd "$ROOT" || exit 0
+closing=$(git -c core.quotePath=false diff --cached -U0 --diff-filter=AMR -- ':(glob)**/docs/specs/features/F*/spec.md' 2>/dev/null | grep -Eic '^\+status: *(Done|Accepted)')
+for gate in retro_step_check sdd_shape_check; do
+  if [ -f "$ROOT/mjrp-scripts/$gate.py" ] && command -v python3 >/dev/null 2>&1; then
+    python3 "$ROOT/mjrp-scripts/$gate.py" "$ROOT" --staged || {
+      echo "  merge bloqueado: $gate.py recusou ou não pôde julgar o fecho de uma feature (linhas acima). Corrija no ramo e junte de novo." >&2
+      exit 1
+    }
+  elif [ "${closing:-0}" -gt 0 ]; then
+    echo "  merge bloqueado: o merge fecha uma feature (Done/Accepted) e $gate.py (ou o python3) não está neste repositório - sem ele não há como conferir. No harness: python3 mjrp-scripts/new_project.py <este projeto> --refresh-kernel." >&2
+    exit 1
+  elif [ -f "$ROOT/mjrp-scripts/$gate.py" ]; then
+    # UAT-501 (the F182 recheck's P2-6): the script is there and python3 is not - the merge closes nothing, so it goes in, but never in silence
+    echo "  [pre-merge-commit] AVISO: python3 não foi encontrado - $gate.py NÃO conferiu este merge (ele não fecha feature, então entra)." >&2
+  fi
+done
 GATE="$ROOT/mjrp-scripts/visual_gate.py"
 [ -f "$GATE" ] || exit 0
-command -v python3 >/dev/null 2>&1 || exit 0
-cd "$ROOT" && python3 "$GATE" --hook
+command -v python3 >/dev/null 2>&1 || {
+  echo "  [pre-merge-commit] AVISO: python3 não foi encontrado - a trava visual NÃO conferiu este merge." >&2
+  exit 0
+}
+python3 "$GATE" --hook

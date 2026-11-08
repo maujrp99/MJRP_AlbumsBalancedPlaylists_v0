@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 priority_next.py - what the MJRP prioritized and nobody started: the «Priorizada» column as a command (F125, UAT-407; any item, F134).
 
@@ -17,7 +17,10 @@ and `priority_gate_check.py` (the pre-commit) imports its rules. Exit: 0 | 2 NOT
 or git did not answer (never "an empty list": a file that cannot be read must not look like «nothing to ask»).
 
 Where the lists are: the root project and each `apps/*/` that carries a `.mjrp-project.yml` (the same nested projects `status_sync.py` treats),
-at `docs/specs/priority.md`. A project with NO `priority.md` has no column (the app reads an absent file as an empty list): nothing to ask,
+at `docs/specs/priority.md`, READ AT `main` (F217, UAT-537): the board's drag commits there wherever the checkout is, so this reader, the
+SessionStart hook, the pre-commit gate and the board read the one copy the screen writes - never the working tree of whatever branch the
+cwd is on (on 2026-11-07 the root sat on the train's branch and the readers disagreed about the MJRP's order). A repository with no
+`main` is read from its working tree. A project with NO `priority.md` has no column (the app reads an absent file as an empty list): nothing to ask,
 and the gate does not apply to it. The features of a project: `docs/specs/features/Fxx-*/spec.md`.
 
 The rules are MIRRORS of the Control Center's (stdlib only, ADR-0015: the scripts cannot import the app); each says which:
@@ -30,6 +33,8 @@ The rules are MIRRORS of the Control Center's (stdlib only, ADR-0015: the script
   - "started" .............. `rules/delivery.py` `not_started` (a task ticked, an unmerged branch of the feature, or the spec delivered) plus the
                              spec `In progress` (an `In progress` spec with no tick is work under way too)
   - the branch of a feature  `rules/delivery.py` `features_of` (`feat|fix/fNN-…`, `claude/fNN-…`; a `worktree-agent-*` branch names no feature)
+  - a Discovery branch ..... `rules/delivery.py` `DISCOVERY`, `discovery_only` and `building` (F212, UAT-533): a branch whose diff against
+                             `main` touches only Discovery artifacts is not a start, unless the spec of the feature at its head started
   - the ticked tasks ....... `rules/delivery.py` `ticked_tasks` (only under `## Implementation…` and `## Verification…`)
   - the track of a feature . `rules/tracks.py` `issue_track` (see `is_agent_track`)
 Stdlib only; vendored into every child with the kernel.
@@ -46,6 +51,8 @@ import _fm  # noqa: E402
 import _git  # noqa: E402
 
 PRIORITY_REL = "docs/specs/priority.md"
+TARGET_BRANCH = "main"                 # the app's ports_acceptance.py TARGET_BRANCH: where every batch of the screen commits (F217)
+TARGET_REF = f"refs/heads/{TARGET_BRANCH}"
 FEATURES_REL = "docs/specs/features"
 UAT_REL = "docs/specs/uat.md"
 CONTRACT = ".mjrp-project.yml"
@@ -65,6 +72,12 @@ _AGENT_BRANCH = re.compile(r"^claude/(?P<fs>f\d{2,}(?:-f\d{2,})*)-")
 # rules/delivery.py: _TICKED
 _TICKED = re.compile(r"^- \[[xX]\]\s*(?P<label>.*?)\s*$")
 _FEATURE_DIR = re.compile(r"^(F\d{2,})-")
+# rules/delivery.py `DISCOVERY` (F212): the prototype and the comparator, the screen's record, the visual system, the bookkeeping and the
+# feature's sketch -- paths from the repository's root, a project inside `apps/<name>/` under that prefix
+DISCOVERY = re.compile(r"^(?:apps/[^/]+/)?(?:design/.+|daily-checks/.+|MEMORY\.md|docs/log\.md"
+                       r"|docs/specs/(?:info-arch|design-system)\.md"
+                       r"|docs/specs/features/F\d{2,}-[^/]+/(?:spec|plan|tasks)\.md)$")
+_SPEC_PATH = re.compile(r"^(?:apps/[^/]+/)?docs/specs/features/F(?P<n>\d{2,})-[^/]+/spec\.md$")
 _TITLE = re.compile(r"^#\s+Feature\s+F\d{2,}:\s*(?P<t>.+?)\s*$", re.M)
 _STORY_ID = re.compile(r"(?<![\w-])(?:S|UC|EA)-\d{2,}(?![\w])")
 _EPIC_REF = re.compile(r"\^((?:[A-Z]{2,}-)?EP-\d{2,})")
@@ -183,14 +196,30 @@ def projects(root):
     """The folders of the repository that may carry a «Priorizada»: the root and each `apps/*/` with a contract; only those with the file."""
     root = Path(root)
     found = [root] + sorted(p.parent for p in (root / "apps").glob(f"*/{CONTRACT}")) if (root / "apps").is_dir() else [root]
-    return [p for p in found if (p / PRIORITY_REL).is_file()]
+    return [p for p in found if priority_text(p) is not None]
+
+
+def priority_text(project):
+    """The text of the project's `priority.md` at `main` (F217); None when `main` has none. The working tree only when the repository
+    has no `main`. Raises NotEvaluable when git does not answer or the file does not read."""
+    project = Path(project)
+    try:
+        has = _git.run(project, "rev-parse", "--verify", "-q", TARGET_REF)
+        if has.code == 0:
+            shown = _git.run(project, "show", f"{TARGET_REF}:./{PRIORITY_REL}")
+            return shown.out if shown.code == 0 else None
+    except _git.GitError as exc:
+        raise NotEvaluable(f"{PRIORITY_REL}: git não respondeu ({exc})") from exc
+    try:
+        target = project / PRIORITY_REL
+        return target.read_text(encoding="utf-8") if target.is_file() else None
+    except (OSError, UnicodeDecodeError) as exc:
+        raise NotEvaluable(f"{PRIORITY_REL}:1: o arquivo não se lê ({exc})") from exc
 
 
 def read_priority(project):
-    try:
-        return parse_priority((Path(project) / PRIORITY_REL).read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError) as exc:
-        raise NotEvaluable(f"{PRIORITY_REL}:1: o arquivo não se lê ({exc})") from exc
+    text = priority_text(project)
+    return parse_priority(text) if text is not None else parse_priority("")
 
 
 def branch_features(root):
@@ -198,7 +227,8 @@ def branch_features(root):
     merged when its head is an ancestor of `main` AND off the first-parent line of `main`: the train merges with `--no-ff`, so a merged
     branch's tip is off that line, while a branch just opened (no commit of its own, F140, UAT-424) sits on it and counts as started.
     F156 (UAT-458) does not change this: the board stops counting such a branch of a delivered feature, and here the only reader is
-    has_started, where a delivered spec has already started, with or without the branch."""
+    has_started, where a delivered spec has already started, with or without the branch. F212 (UAT-533): a branch whose diff touches only
+    Discovery artifacts does not count (`building`), whatever its name."""
     try:
         have = lambda ref: _git.run(root, "rev-parse", "--verify", "-q", ref).ok   # noqa: E731
         main = next((m for m in ("main", "master") if have(f"refs/heads/{m}")), None)
@@ -219,11 +249,52 @@ def branch_features(root):
         name, _, head = row.partition(" ")
         if name == main or (head in merged and head not in line):
             continue
+        carried = set()
         if m := _BRANCH.match(name):
-            out.add(int(m["n"]))
+            carried.add(int(m["n"]))
         elif m := _AGENT_BRANCH.match(name):
-            out.update(int(f[1:]) for f in m["fs"].split("-"))
+            carried.update(int(f[1:]) for f in m["fs"].split("-"))
+        if carried:
+            out.update(building(root, main, head, carried))   # F212: a Discovery branch is not a start
     return out
+
+
+def discovery_only(changed):
+    """The diff touches nothing but Discovery artifacts (rules/discovery.py `discovery_only`). An empty diff (a branch just opened, with no
+    commit of its own: the F219 case) touches no construction either: the start is the start commit. A diff git did not give (None)
+    counts as a start, the rule before F212."""
+    if changed is None:
+        return False
+    return all(DISCOVERY.match(p) for p in changed if p)
+
+
+def changed_paths(root, base, head):
+    """The paths `head` changes since it left `base` (`git diff --name-only <base>...<head>`); None when git refused."""
+    try:
+        r = _git.run(root, "-c", "core.quotepath=false", "diff", "--name-only", "--no-renames", f"{base}...{head}")
+    except _git.GitError as exc:
+        raise NotEvaluable(f"git diff do ramo: {exc}") from exc
+    return [line for line in r.out.splitlines() if line] if r.code == 0 else None
+
+
+def building(root, base, head, carried):
+    """F212 (UAT-533): the features of `carried` that the branch at `head` starts (rules/delivery.py `building`). A branch whose diff
+    against `base` is not Discovery-only starts all of them; a Discovery-only one starts only the feature whose spec it changed into a
+    started status (the start commit: the spec `In progress`, on such a branch)."""
+    changed = changed_paths(root, base, head) if base else None
+    if not discovery_only(changed):
+        return set(carried)
+    started = set()
+    for path in changed:
+        m = _SPEC_PATH.match(path)
+        if m and int(m["n"]) in carried:
+            try:
+                r = _git.run(root, "show", f"{head}:{path}")
+            except _git.GitError as exc:
+                raise NotEvaluable(f"git show {path}: {exc}") from exc
+            if r.code == 0 and (_fm.scalars(r.out).get("status") or "").strip().casefold() in STARTED_STATUS:
+                started.add(int(m["n"]))
+    return started
 
 
 def feature_dirs(project):
@@ -363,7 +434,7 @@ def checked(items, order):
 
 def unstarted(project, branches, order=None, items=None):
     """[(id, type word, title)] of the project's list that did not start, in the MJRP's order. `order`: the ids to judge when the caller
-    already holds the list (the gate reads the index copy); default, the file on disk."""
+    already holds the list); default, the list at `main` (F217)."""
     items = items or Items(project, branches)
     order = read_priority(project) if order is None else order
     checked(items, order)
@@ -387,7 +458,7 @@ def all_unstarted(root):
 
 # ---- the output -------------------------------------------------------------------------------------------------
 def session_block(groups):
-    """The SessionStart block: the list in order and the rule. Empty string when there is nothing to ask."""
+    """The SessionStart block: the list in order and the rule. Empty string when nothing waits to start."""
     if not groups:
         return ""
     lines = ["«Priorizada» — o MJRP ordenou estes itens e eles ainda não começaram:"]
@@ -395,7 +466,7 @@ def session_block(groups):
         if len(groups) > 1 or label != ".":
             lines.append(f"  [{label}]")
         lines += [f"  {n}. {item} ({kind}) — {title}" for n, (item, kind, title) in enumerate(rows, start=1)]
-    lines.append(f"Regra: pergunte ao MJRP o que fazer antes de começar trabalho novo da trilha Humano ({RULE}).")
+    lines.append(f"Regra: o que está na lista começa sem perguntar, de cima para baixo; ao MJRP só vai o item que trava em algo dele ({RULE}).")
     return "\n".join(lines)
 
 

@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-11-01
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Termos — o glossário
 
@@ -215,7 +215,7 @@ está na última seção, separado de propósito.
 | **[Biblioteca de paletas MJRP](palette-library.md)** | A **MJRP Personal Palette Library** é o conjunto de paletas curadas para output com a identidade visual pessoal do MJRP — infográficos de reunião, dossiês, decks, site pessoal. |
 | **Board architecture — v0** | O **board** é o kanban do Control Center: o lugar em que o humano vê o trabalho das features e das issues andar e **decide** arrastando — aceitar, reabrir, ordenar a fila, fechar uma issue. |
 | **Board architecture — v1** | O **board** é a perspectiva do **como anda** do Control Center: itens de qualquer tipo (épico, feature, story, task e os registros Bug, Melhoria, Tech debt, Copy), cada um com a sua **fase** (Discovery, Design, Delivery, Release), a sua **etapa** e a sua **categoria de estado**, mostrados em **visões salvas** — por tipo, por fase e de ponta a ponta —, com a versão planejada e a sprint como filtros. |
-| **[Cânone de design](design-canon.md)** | O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e conteúdo explicativo do MJRP — 41 fontes fichadas em `docs/wiki/sources/`, organizadas em oito disciplinas, cada regra com um **ID estável** que as skills de design citam em vez de recitar. |
+| **[Cânone de design](design-canon.md)** | O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e conteúdo explicativo do MJRP — 53 fontes fichadas em `docs/wiki/sources/`, organizadas em dez disciplinas (a IA, arquitetura da informação, e a CW, copy de site, desde 2026-11-07), cada regra com um **ID estável** que as skills de design citam em vez de recitar. |
 | **[Cânone de engenharia](engineering-canon.md)** | O **cânone** é o corpo de referência que fundamenta os princípios de engenharia do MJRP: *The Pragmatic Programmer* (Andrew Hunt e David Thomas), *Clean Code* e *Clean Architecture* (Robert C. Martin) e *Refactoring* (Martin Fowler; ficha em `docs/wiki/sources/1999-fowler-refactoring.md`), que dá nome aos sinais de código ruim e à refatoração que resolve cada um. |
 | **Catálogo de ferramentas** | O **catálogo** é a **prateleira**: o registro vivo do que a MJRP já tem à mão, para o agente consultar **antes de pesquisar na web**. |
 | **[Conceitos base](base-concept.md)** | A **cadeia de intenção** que ordena todo documento do MJRP que declara para onde se vai: **Propósito → Visão → Objetivo → Roadmap**. |
@@ -227,6 +227,7 @@ está na última seção, separado de propósito.
 | **[Executar uma nota de conformidade](conformance-notes.md)** | Uma **nota de migração** (`mjrp-scripts/migrations/CM-NNNN-*.md`, no projeto) é um passo de versão de um item do **catálogo canônico** (`mjrp-scripts/canonical_catalog.json`): diz o que o projeto precisa ter para ficar conforme, por quê, e os passos — cada um com a skill que o faz. |
 | **External locations** | A memória de **referência** (ADR-0008): fato durável sobre **onde algo está**, que o agente não descobre sozinho. |
 | **Ferramentas** | Tudo o que um agente ou uma pessoa pode **chamar para agir** — em três camadas (do produto, da construção, do agente) e três estados de operação, sendo que a ferramenta que só o humano opera é um gate não declarado. |
+| **Fundamentos visuais** | Esta página fixa o **cânone estável** de cor, tipografia e elementos de UI: o que um padrão (WCAG, Apple HIG, Material, NN/g) ou um estudo já conferido diz, e que muda devagar. |
 | **[Governança de git](git-governance.md)** | **Governança de git** é o conjunto de regras que faz o histórico de um projeto ser legível por quem vem depois — humano ou agente: cada commit diz o tipo da mudança e o porquê, os estágios do SDD deixam marca no histórico, e o que é estável fica separado do que está em curso. |
 | **[Grafo de requisitos — nós, arestas tipadas e releases](requirements-graph.md)** | O **grafo de requisitos** é a documentação do PDLC tratada como grafo de conhecimento: cada requisito, épico, release, feature, REQ do spec, task, estado observável e teste é um **nó com ID estável**, e cada relação entre eles é uma **aresta tipada** — com nome, direção, origem e destino permitidos e cardinalidade. |
 | **[Graph engineering — o conceito](graph-engineering-concept.md)** | **Graph engineering** é desenhar o fluxo do agente como um **grafo** — um organograma de nós e arestas — em vez de um loop único. |

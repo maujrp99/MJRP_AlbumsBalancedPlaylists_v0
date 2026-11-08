@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 copy_change_check.py - a small text change goes straight to `main`, and only a text change does: the pre-commit's gate (F158, S-208).
 
@@ -17,18 +17,19 @@ It judges a direct commit on the main line (`main`, or `master` where a child st
       - a path other than `content/copy/*.json`, `docs/specs/uat.md`, `docs/log.md` of that project ... REFUSED
       - and it touches a page:
           - no entry in the project's `docs/log.md`, or a changed row of another type ...... REFUSED
-          - more than MAX_ENTRIES entries changed ........................................... REFUSED: that is not small, it takes a branch
+          - more than MAX_ENTRIES entries changed, counting the copy commits right before it . REFUSED: that is not small, it takes a branch
           - inside the page, anything but the `pt` and `en` of an existing entry ............ REFUSED
   - the commit touches a page with no `copy` row:
       - the screen's own save (only pages, each with a new `history` item: the `self_logged` of the contract, CC-ADR-0030) passes when it changes
-        only `pt` and `en`, which stay strings, plus a new `version` and well-formed new `history` items. The markers and an emptied text are not
-        judged there: the text is the MJRP's on his screen, and a refused save would leave it written and uncommitted, refusing every save after it
+        only `pt` and `en`, which stay strings, plus a new `version` and well-formed new `history` items, and every text it changes is in a new
+        item whose `after` is the new text. The markers and an emptied text are not judged there: the text is the MJRP's on his screen, and a
+        refused save would leave it written and uncommitted, refusing every save after it
       - anything else ................................................................... REFUSED: a text change on `main` is carried by a `copy` issue
   - git without an answer, the board configuration unreadable .............................. exit 2 (NOT EVALUABLE; ADR-0002 § 8)
 
 Inside an entry, `pt` and `en` stay text (a string): one `null` fails the app's read of the WHOLE registry. On a `copy` row's commit they are also not
-emptied, and their markers (`{x}`, `{ s }`, `%s`) stay the same, counted, because the code fills them. A page that does not parse at the base is not compared: the commit that repairs
-it passes when the new page reads. `--amend` judges the whole commit being amended, against its parent, in both directions (the pre-commit tells
+emptied, and their markers (`{x}`, `{ s }`, `%s`) stay the same, counted, because the code fills them. A page that does not parse at the base is compared
+with its last version that does (MAX_WALK commits back on the main line); with none, the commit that repairs it passes when the new page reads. `--amend` judges the whole commit being amended, against its parent, in both directions (the pre-commit tells
 an amend apart as the commit-msg does).
 
 It judges the INDEX (what the commit will contain). What the `Tipo` cell says is read from the board configuration (`_board`, the record type
@@ -54,6 +55,10 @@ import uat_tracks_check as tracks  # noqa: E402
 MAIN_LINE = ("main", "master")
 COPY_RECORD = "copy"                    # the record type's id in the board configuration
 MAX_ENTRIES = 10                        # «pequenas mudanças», the MJRP: the coordinator's ceiling of 2026-11-02, revisable by him; the one place it lives
+# 2026-11-07 (F208, UAT-463 P2-C): the ceiling held each commit, and three commits of ten passed. It holds the small change: the copy commits in a row on
+# the main line, since the last commit that is not one, add up (the agent's decision of 2026-11-05, by the MJRP's delegation, revisable by him).
+# MAX_WALK bounds how far back the gate reads, here and for the last readable version of a page.
+MAX_WALK = 50
 ENTRY_TEXT = ("pt", "en")               # what an entry says on the screen; `where`, `purpose` and `deprecated_by` describe it
 TEXTS = "texts"
 HISTORY = "history"
@@ -184,6 +189,56 @@ def has_registry(top, proj, base):
     return False
 
 
+def last_readable(top, ref, rel):
+    """The text of the newest version of the page `rel`, at `ref` or before it on the main line, that reads with its `texts`; None when none does."""
+    r = _run(top, "log", "--first-parent", f"-n{MAX_WALK}", "--format=%H", ref, "--", rel)
+    if r.code != 0:
+        raise NotEvaluable(f"git log saiu {r.code}: {(r.err or r.out).strip()[:200]}")
+    for commit in r.out.split():
+        text = blob(top, commit, rel)
+        if _has_texts(_page(text)):
+            return text
+    return None
+
+
+def comparable(top, ref, rel):
+    """What a page at `ref` is compared with: its text there, or, when it does not read there, its last version that does (F208, UAT-463 P2-C:
+    the commit that repaired an unreadable page went in with entries added and fields changed, because only `pt` and `en` were judged)."""
+    text = blob(top, ref, rel)
+    if text is None or _page(text) is not None:
+        return text
+    return last_readable(top, ref, rel) or text
+
+
+def is_copy_commit(top, parent, commit, paths):
+    """The commit changes a `copy` row of a uat.md: a commit of the small change."""
+    for rel in (p for p in paths if _UAT.match(p)):
+        if changed_rows(blob(top, parent, rel), blob(top, commit, rel), copy_values(top, _UAT.match(rel)["proj"]))[0]:
+            return True
+    return False
+
+
+def earlier_copy_entries(top, base):
+    """How many entries the copy commits right before this one changed, walking the main line back from `base` until a commit that is not one
+    (a merge, a repository's first commit, any other commit), at most MAX_WALK."""
+    r = _run(top, "log", "--first-parent", f"-n{MAX_WALK}", "--format=%H %P", base)
+    if r.code != 0:
+        raise NotEvaluable(f"git log saiu {r.code}: {(r.err or r.out).strip()[:200]}")
+    total = 0
+    for line in r.out.splitlines():
+        commit, *parents = line.split()
+        if len(parents) != 1:
+            break
+        d = _run(top, "-c", "core.quotePath=false", "diff", "--name-only", "--no-renames", "-z", parents[0], commit)
+        if d.code != 0:
+            raise NotEvaluable(f"git diff saiu {d.code}: {(d.err or d.out).strip()[:200]}")
+        paths = [p for p in d.out.split("\0") if p]
+        if not is_copy_commit(top, parents[0], commit, paths):
+            break
+        total += sum(changed_entries(comparable(top, parents[0], rel), blob(top, commit, rel)) for rel in paths if _PAGE.match(rel))
+    return total
+
+
 def changed_entries(before, after):
     """How many entries of a page the commit changes (0 when it cannot be compared: the page's problems say why)."""
     old, new = _page(before), _page(after)
@@ -235,9 +290,28 @@ def _save_problems(rel, old, new):
     if not isinstance(items, list):
         return [*out, f"{rel}: `{HISTORY}` não é uma lista"]
     seen = {_item_key(item) for item in old.get(HISTORY) or []}
-    for item in items:
-        if _item_key(item) not in seen and not _edit_is_read(item):
+    fresh = [item for item in items if _item_key(item) not in seen]
+    for item in fresh:
+        if not _edit_is_read(item):
             out.append(f"{rel}: um item novo do `{HISTORY}` está fora da forma que o app lê")
+    # 2026-11-07 (F208, UAT-463 P2-A): a well-formed item of any key let a save change sixty texts. Each text the save changes is in a new item
+    # whose `after` is the new text: one edit or undo (`key`, `lang`, `after` a string), or the reset (`after` a map key -> language -> text).
+    recorded = set()
+    for item in fresh:
+        after = item.get("after") if isinstance(item, dict) else None
+        if isinstance(after, str):
+            recorded.add((item.get("key"), item.get("lang"), after))
+        elif isinstance(after, dict):
+            recorded |= {(key, lang, text) for key, texts in after.items() if isinstance(texts, dict) for lang, text in texts.items()}
+    was, now = old.get(TEXTS), new.get(TEXTS)
+    if isinstance(was, dict) and isinstance(now, dict):
+        for key in sorted(was.keys() & now.keys()):
+            a, b = was[key], now[key]
+            if not isinstance(a, dict) or not isinstance(b, dict):
+                continue                              # the entry's change of shape is said by _entry_problems
+            for lang in ENTRY_TEXT:
+                if a.get(lang) != b.get(lang) and (key, lang, b.get(lang)) not in recorded:
+                    out.append(f"{rel}: {key} ({lang}) mudou sem um item novo do `{HISTORY}` com o texto novo")
     return out
 
 
@@ -290,7 +364,10 @@ def judge(top, amend=False):
     if base is None:
         return []
     paths = staged_paths(top, base)
-    read = lambda ref, rel: blob(top, base if ref == "base" else ref, rel)  # noqa: E731
+    def read(ref, rel):
+        if ref != "base":
+            return blob(top, ref, rel)
+        return comparable(top, base, rel) if _PAGE.match(rel) else blob(top, base, rel)
     candidates = {_PAGE.match(p)["proj"] for p in paths if _PAGE.match(p)}
     registries = {proj for proj in candidates if has_registry(top, proj, base)}
     pages = [p for p in paths if _PAGE.match(p) and _PAGE.match(p)["proj"] in registries]
@@ -313,10 +390,11 @@ def judge(top, amend=False):
                     for rel in pages for line in page_problems(rel, read("base", rel), read(":", rel), screen=True)]
         return [f"texto em `content/copy/` direto na main sem uma issue de tipo `copy` neste commit: {', '.join(pages)}. "
                 f"Registre a issue no `uat.md`, no mesmo commit, ou siga o caminho normal, por um ramo ({RULE})"]
-    return _copy_commit_problems(paths, pages, copy_ids, other_ids, projects, read)
+    earlier = earlier_copy_entries(top, base) if pages else 0
+    return _copy_commit_problems(paths, pages, copy_ids, other_ids, projects, read, earlier)
 
 
-def _copy_commit_problems(paths, pages, copy_ids, other_ids, projects, read):
+def _copy_commit_problems(paths, pages, copy_ids, other_ids, projects, read, earlier=0):
     named = ", ".join(i for ids in copy_ids.values() for i in ids)
     if len(projects) > 1:
         return [f"o commit da issue de tipo `copy` ({named}) toca mais de um projeto: {', '.join(sorted(p or '.' for p in projects))}. Um commit por projeto"]
@@ -333,8 +411,10 @@ def _copy_commit_problems(paths, pages, copy_ids, other_ids, projects, read):
         if other_ids.get(proj):
             out.append(f"o commit que muda o texto da issue de tipo `copy` ({named}) muda também a linha de outra issue: {', '.join(other_ids[proj])}. Um commit para cada")
         changed = sum(changed_entries(read("base", rel), read(":", rel)) for rel in pages)
-        if changed > MAX_ENTRIES:
-            out.append(f"o commit muda {changed} entradas de texto, e a mudança pequena vai até {MAX_ENTRIES}. Acima disso segue o caminho normal, por um ramo ({RULE})")
+        if changed + earlier > MAX_ENTRIES:
+            more = f", somadas às {earlier} dos commits de copy seguidos logo antes dele," if earlier else ""
+            out.append(f"o commit muda {changed} entradas de texto{more} e a mudança pequena vai até {MAX_ENTRIES}. Acima disso segue o caminho "
+                       f"normal, por um ramo ({RULE})")
         for rel in pages:
             out += [f"{line}. Mudança de copy é só o texto das entradas; o resto segue por um ramo ({RULE})"
                     for line in page_problems(rel, read("base", rel), read(":", rel))]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 record_shapes_check.py - do the records the harness's skills write follow the shape of their templates? The judge of the
 `record-shapes` catalog item (record-shapes@1, CM-0034).
@@ -54,7 +54,7 @@ _HISTORY_LINE = re.compile(r"^- \*\*\d{4}-\d{2}-\d{2} \d{2}:\d{2}\*\*")
 
 # the type in the file name -> (owner skill, [(regex, what it is)]); the regexes read the template, nothing more
 REPORT_SHAPES = {
-    "ux-audit": ("mjrp-critiquing-ux", [(r"^#\s+UX audit\b", "o título `# UX audit — <tela> · <data>`")]),
+    "ux-audit": ("mjrp-critiquing-ux-ui", [(r"^#\s+UX audit\b", "o título `# UX audit — <tela> · <data>`")]),
     "doc-audit": ("mjrp-auditing-docs", [(r"^#\s+Doc audit\b", "o título `# Doc audit — <escopo> · <data>`"),
                                          (r"^##\s+Divergences\b", "a seção `## Divergences`")]),
     "staleness-audit": ("mjrp-auditing-docs", [(r"^#\s+Staleness audit\b", "o título `# Staleness audit — <documento> · <data>`")]),

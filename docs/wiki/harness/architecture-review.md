@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-09
 fontes: [originals/architecture-review-handbook/2026-10-09-handbook-v0.md, wiki/sources/2026-10-09-mjrp-architecture-review-handbook.md, kernel/architecture/engineering-canon]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Architecture Review — o cânone da crítica de arquitetura
 
@@ -21,7 +21,7 @@ fontes: [originals/architecture-review-handbook/2026-10-09-handbook-v0.md, wiki/
 A **Architecture Review** é a passada que julga uma decisão de arquitetura — uma ADR em `Proposed`, os esqueletos
 `arch.md` e `data-model.md`, a `constitution.md` — ou o código no portão de um marco, contra um checklist externo. Esta
 página é esse checklist: cada regra tem um **ID estável**, o enunciado em uma ou duas frases e um **teste binário**.
-É para a `mjrp-critiquing-architecture` o que o [[design-canon]] é para a `mjrp-critiquing-ux`: a skill **cita o ID**,
+É para a `mjrp-critiquing-architecture` o que o [[design-canon]] é para a `mjrp-critiquing-ux-ui`: a skill **cita o ID**,
 nunca recita a regra; quem quer o porquê abre esta página, e quem quer o porquê de cada princípio de engenharia abre o
 [[engineering-canon]].
 
@@ -182,7 +182,7 @@ integração. Na decisão, cada regra que a ADR impõe nomeia o seu sensor (GV-0
 
 **Quem julga.** A `mjrp-critiquing-architecture`, sempre separada da produção (GV-04): troca de chapéu declarada no
 mesmo agente, ou agente separado que recebe só a skill e os artefatos. A auditoria diz qual das duas. A mesma regra vale
-para a `mjrp-critiquing-ux`.
+para a `mjrp-critiquing-ux-ui`.
 
 **Os momentos.**
 

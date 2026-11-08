@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-09
 fontes: [originals/product-discovery-handbook/2026-10-07-handbook-v0.md, originals/product-discovery-handbook/2026-10-07-handbook-v1.md, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, kernel/roadmap/requirements-graph, kernel/design/sketch-vs-prototype]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Product Discovery — do problema à decisão (Rapid × Full)
 
@@ -108,7 +108,7 @@ o passo 1 fechar.
 | Risco | A pergunta | Teste mais barato | Quem julga no MJRP |
 |---|---|---|---|
 | **Valor** | Vão escolher usar (ou comprar)? | Concierge ou Wizard of Oz (o valor entregue à mão, sem código); teste de fumaça; pré-cadastro | O PM — e o cliente, quando houver |
-| **Usabilidade** | Conseguem usar sem ajuda? | Protótipo navegável com tarefas reais, de baixa fidelidade (referência: 5 pessoas do público) | `mjrp-critiquing-ux` e o PM |
+| **Usabilidade** | Conseguem usar sem ajuda? | Protótipo navegável com tarefas reais, de baixa fidelidade (referência: 5 pessoas do público) | `mjrp-critiquing-ux-ui` e o PM |
 | **Viabilidade técnica** | Conseguimos construir com o que temos? | *Spike* — prova de conceito técnica curta | `mjrp-designing-architecture` |
 | **Viabilidade de negócio** | Funciona para o negócio (custo, margem, legal)? | Simulação de margem e custo; análise legal ou regulatória | O PM |
 

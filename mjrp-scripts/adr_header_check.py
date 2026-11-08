@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """adr_header_check.py - the header of every ADR in `docs/decisions/`: the TITLE line and the STATUS line (catalog item `adr-names`, CM-0076).
 
 The check that passed the file NAME while the Control Center could not READ the file (MJRPpersonal, 2026-10-18: ADRs titled
@@ -38,6 +38,19 @@ ACCEPTANCE_RE = r"\*\*Acceptance(?:\*\*:|:\*\*)\s*(?P<route>tech lead|MJRP)\b"
 DECIDERS_RE = r"\*\*Deciders(?:\*\*:|:\*\*)\s*(?P<who>.+)"
 SHORT_SINCE = "2026-10-26"               # decision@3: the short record (F62) and the acceptance route (F66)
 MAX_CHARS = 6000                         # the whole file; the evidence goes to the critique, the plan or the wiki page
+# F188 (UAT-498): the notice that a LATER decision amended or superseded this one is written INTO the old ADR when the new one is accepted, and an
+# accepted ADR is not edited otherwise; that pointer is not part of the decision, so the ceiling does not count it (ADR-0005 of the MJRPpersonal went
+# from 5,961 to 6,017 characters by the notice alone).
+# F188 (recheck P1-1): the exemption is for the POINTER only - the label, then the ADR id (a link or a bare id) and a date, in a short line.
+# A line that is not that, or that is longer than NOTICE_MAX, is counted whole. The real notices run 120 to 1,255 characters (the longest
+# is one line that lists four amending ADRs), so the limit leaves room for those and not for a decision hidden behind a label.
+NOTICE_POINTER_RE = r"^\s*(?:[-*]\s+)?\*\*(?:Emendada por|Superada por)(?::\*\*|\*\*:)\s*\[?(?:[A-Z][A-Z0-9]*-)?ADR-\d{4}\b"
+NOTICE_DATE_RE = r"\d{4}-\d{2}-\d{2}|\d{2}/\d{2}"
+NOTICE_MAX = 1500
+# F188 (recheck P1-2): NOTICE_MAX is per line, so many pointer-shaped lines hid text without a limit (40 lines hid 60,040 characters). The
+# discount is capped in TOTAL per ADR: what the pointers sum beyond NOTICE_TOTAL_MAX counts like any other text. The real ADRs sum at most
+# 3,101 characters in 9 lines. 4,000 is the integrator's call (2026-11-05), open to the MJRP's review.
+NOTICE_TOTAL_MAX = 4000
 STATUS_RE = r"\*\*Status(?:\*\*:|:\*\*)\s*[*_]*\s*(?P<word>[^\s*_.,;:(·]+)"
 
 
@@ -77,14 +90,30 @@ def record_date(text):
     return m["date"] if m else None
 
 
+def is_notice(line):
+    """True when the line is the pointer to a later amendment or supersession: the label, an ADR id (link or bare) and a date, within NOTICE_MAX."""
+    return (len(line) <= NOTICE_MAX and re.match(NOTICE_POINTER_RE, line) is not None
+            and re.search(NOTICE_DATE_RE, line) is not None)
+
+
+def counted_chars(text):
+    """The size the ceiling judges: the whole file less the pointer lines (`is_notice`), the discount capped at NOTICE_TOTAL_MAX
+    in total. Returns (counted, discounted)."""
+    lines = text.splitlines(keepends=False)
+    discounted = min(sum(len(line) + 1 for line in lines if is_notice(line)), NOTICE_TOTAL_MAX)
+    return sum(len(line) + 1 for line in lines) - discounted - (0 if text.endswith("\n") else 1), discounted
+
+
 def short_problems(text):
     """Why a decision@3 record (dated on or after SHORT_SINCE) is not short or does not declare who accepts it; [] for older ones."""
     date = record_date(text)
     if date is None or date < SHORT_SINCE:
         return []
     found = []
-    if len(text) > MAX_CHARS:
-        found.append(f"a ADR tem {len(text)} caracteres; o teto e {MAX_CHARS} (decision@3): a decisao e o porque, cada alternativa numa "
+    size, discounted = counted_chars(text)
+    if size > MAX_CHARS:
+        found.append(f"a ADR tem {size} caracteres contados ({discounted} descontados nas linhas `Emendada por`/`Superada por` na forma do aviso: "
+                     f"o rotulo, o id da ADR e a data, ate {NOTICE_MAX} caracteres por linha e {NOTICE_TOTAL_MAX} no total; fora disso conta inteiro); o teto e {MAX_CHARS} (decision@3): a decisao e o porque, cada alternativa numa "
                      "linha, as consequencias em topicos, os arquivos; a evidencia vai para a critica, o plan.md ou a pagina da wiki")
     head = text.splitlines()[:HEADER_LINES]
     route = next((m["route"] for m in (re.search(ACCEPTANCE_RE, l) for l in head) if m), None)

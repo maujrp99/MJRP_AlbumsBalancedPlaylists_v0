@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 r"""
 content_audit_check.py - did the conform's CONTENT audit really run on this project? The judge of the `content-audit`
-catalog item (content-audit@4: CM-0052, CM-0057, CM-0063, CM-0066).
+catalog item (content-audit@4: CM-0052, CM-0057, CM-0063, CM-0066; F179, UAT-486).
 
 Born 2026-10-17 (the MJRP): the canonical files the bootstrap produced in the children "did not come out good", and the
 form check cannot tell. The closing audit of the conform has each item's `judge_skill` judge the content of its artifact.
@@ -37,15 +37,30 @@ no such section is not asked for one. Content-audit@4 (CM-0066, the decision pol
 `avoidable_questions: N` and `bent_rules: N` (the open findings «pergunta evitável» / «regra dobrada», written as `- [P1] <name> · P-NN — …`
 bullets; the count must equal the bullets); above 0, `audit_avoidable_open` / `audit_bent_rule_open` hold the close in a child that applied
 CM-0066 (a warning before it). `--parse-questions` exits 1 on a shape or a class problem.
+Content-audit@7 (CM-0101, the wording): each OPEN question carries `Contexto:` (at most two sentences, 320 characters, no `file:line`, no `.py`,
+no internal id) and `Pergunta:` (one decision, ending in «?»), and each option has at least four words; a question that asks for an
+acceptance says «não é o aceite» and «Touch ID» in its context. `text_problems` judges it: `questions_text`, a warning until the child applies
+CM-0101 and an error after it. Whether the wording is understood is the cold-read judge's (`question_cold_read.py`), not this sensor's.
 
 What is NOT a gap but is printed (`[aviso] anchor_aging`, `--json` `warnings`): an anchored LINE RANGE of an item file that changed in a commit AFTER the
 judge file's `judged:` (`git log -L`; not the whole file - MEMORY.md and the log change every session) - the quoted passage may still be on its line while the fact moved (pedroso-incorp, 2026-10-18). The cure is a re-read.
+Content-audit@8 (CM-0102, F171, UAT-477): when the quoted passage no longer holds because the MJRP APPROVED the change after the judge read it
+(a `decision` entry of the log whose heading says the MJRP approved and names the item, dated after `judged:` and not before the change: `_approved_after`), no judge is called again. The anchor counts as
+good and the report prints `[aviso] anchor_moved_by_approval` - the gap stays visible, it is not hidden and not an error. A moved anchor with no such
+decision is still `judge_anchor_missing`.
+F179 (UAT-486, after content-audit@8): the PASSAGE decides, the line is a hint. A new round on top of `uat.md` moves every line below it and used to
+fail the doctor with the passage intact (and push the agents to file the issue in the wrong round to dodge it). Now an anchor whose line no
+longer says the passage is good when the passage sits ONCE in the file (the report prints `[aviso] anchor_line_moved`, one line per judge
+file); gone, it is `judge_anchor_missing` as before (the judge re-reads); sitting more than once and not on the hinted line it is also
+`judge_anchor_missing` - which one the judge read cannot be known, and the message lists the lines. The line still counts when it holds.
 The files that count as the item's own include the one the contract itself declares for it (`sensors.visual.config` for `visual-sensor`).
 
 What is a gap (exit 1): audit_missing · audit_future (a date after now) · audit_before_note (judged before the newest `received`
 stamp of ANY note, or before the last commit of the catalog = the last refresh) · audit_no_who · audit_p0_open ·
 audit_row_missing · judge_file_missing · judge_file_invalid · judge_anchor_missing · (CM-0066 applied) audit_policy_count · audit_policy_unrecognized · audit_avoidable_open ·
 audit_bent_rule_open. Exit 2: not evaluable. `--quiet`: gap lines only.
+`--fix-hints` (UAT-488): rewrites, in the judge files, the line of each anchor that followed its passage, so the `anchor_line_moved`
+aviso ends without a new judge (only the line changes; the passage, the text and `judged:` stay).
 
 Usage:
   python3 mjrp-scripts/content_audit_check.py <project> [--quiet] [--json]
@@ -53,6 +68,7 @@ Stdlib only (ADR-0015); vendored into every child with the kernel, next to `conf
 """
 import fnmatch
 import json
+import os
 import re
 import sys
 from datetime import date, datetime, timedelta
@@ -81,6 +97,17 @@ SLACK = timedelta(minutes=2)
 
 def _frontmatter(text):
     return _fm.scalars(text)
+
+
+def _judge_names(judge):
+    """The names a judge skill answers to: its own, plus every retired name that points to it (mjrp-scripts/retired_skills.json,
+    vendored to the child). A child's judge file and audit row keep the name of their day (F176: mjrp-critiquing-ux became
+    mjrp-critiquing-ux-ui) and stay valid until the judge re-reads; the file is not rewritten, so the trace is not faked."""
+    try:
+        retired = json.loads((HERE / "retired_skills.json").read_text(encoding="utf-8"))["skills"]
+    except (OSError, ValueError, KeyError):
+        return {judge}
+    return {judge} | {old for old, new in retired.items() if new == judge}
 
 
 def _stamp(value):
@@ -207,29 +234,105 @@ def _in_item(root, rel, it, cfg=None):
     return False
 
 
+def _passage_spans(lines, quote):
+    """Every place the normalized `quote` sits in the file, as 1-based (first line, last line) pairs, one per occurrence
+    (overlapping ones count: a passage that can be read two ways is a repeated passage)."""
+    flat, spans, pos = [], [], 0                    # spans: (start offset, end offset, line number) of each non-empty line
+    for n, line in enumerate(lines, 1):
+        s = _norm(line)
+        if s:
+            spans.append((pos, pos + len(s), n))
+            flat.append(s)
+            pos += len(s) + 1                       # the " " that joins the lines, as `_norm(" ".join(lines))` does
+    text = " ".join(flat)
+    found, at = [], text.find(quote) if quote else -1
+    while at != -1:
+        first = next(n for s, e, n in spans if s <= at < e + 1)
+        last = next(n for s, e, n in spans if s <= at + len(quote) - 1 < e + 1)
+        found.append((first, last))
+        at = text.find(quote, at + 1)
+    return found
+
+
 def _anchor(root, it, text, cfg=None):
-    """(key, None) when the anchor of a finding is good, else (None, reason). Good = it points into the item's own files, the
-    line (or range) exists, and the QUOTED passage is what that line (or range) says, whitespace normalized."""
+    """(key, None) when the anchor of a finding is good, else (None, reason). Good = it points into the item's own files and the
+    QUOTED passage is what the file says, whitespace normalized. The PASSAGE decides, the line is a hint (F179,
+    UAT-486): the line (or range) says it -> good as written; it does not, but the passage sits ONCE in the file -> good, and the key
+    is where the passage is NOW (a new round on top of the file moves every line below it, the passage did not change); gone ->
+    reprova (the judge re-reads); sits more than once and not on the hinted line -> reprova (which one did the judge read? nobody
+    can tell from here - the line was the only thing that said)."""
     m = _ANCHOR.match(text.strip())
     if not m:
         return None, "sem âncora `caminho:linha` seguida do trecho entre crases (ou depois de `>`)"
     rel, a, z = m.group(1), int(m.group(2)), int(m.group(3) or m.group(2))
     quote = _norm(m.group(4) or m.group(5) or "")
+    if not quote:                                   # UAT-488: a quote of only spaces is "in" every line, and two of them closed the minimum
+        return None, "o trecho entre crases está vazio (só espaços): a âncora cita o que o juiz leu, e espaço não é leitura"
     if not _in_item(root, rel, it, cfg):
         return None, f"{rel} não é arquivo do item `{it['id']}` (o `path` do catálogo ou o que o check lê)"
     f = Path(root) / rel
     if not f.is_file():
         return None, f"{rel} não existe"
     lines = f.read_text(encoding="utf-8", errors="replace").splitlines()
-    if not (1 <= a <= z <= len(lines)):
-        return None, f"{rel}:{a}-{z} fora do arquivo ({len(lines)} linhas)"
-    if quote not in _norm(" ".join(lines[a - 1:z])):
-        return None, f"o trecho não está em {rel}:{a}" + (f"-{z}" if z != a else "")
-    return (rel, a, z), None
+    if 1 <= a <= z <= len(lines) and quote in _norm(" ".join(lines[a - 1:z])):
+        return (rel, a, z), None
+    where = f"{rel}:{a}" + (f"-{z}" if z != a else "")
+    spans = _passage_spans(lines, quote)
+    if len(spans) == 1:
+        return (rel, *spans[0]), None
+    if spans:
+        return None, (f"o trecho não está em {where} e aparece {len(spans)} vezes em {rel} (linhas "
+                      + ", ".join(str(s[0]) for s in spans[:4]) + ("..." if len(spans) > 4 else "") + "): não dá para saber qual o juiz leu")
+    return None, f"o trecho não está em {rel} (a âncora era {where})"
 
 
-def _judge_file(root, name, it, floor, last_refresh, now, row_verdict, cfg=None, warnings=None):
-    """(gaps, open_p0) for one judge file read for one item. `warnings` (a list, optional) receives the AGING anchors."""
+APPROVAL_HEADING = re.compile(r"\bMJRP\s+aprovou\b|\baprovad[oa]s?\s+pel[oa]\s+MJRP\b", re.I)
+
+
+def _approved_after(log_text, item_id, when, changed):
+    """The stamp of the first `decision` entry of the log whose HEADING says the MJRP approved and names the item, dated after
+    `when` (the judge's `judged:`, plus SLACK) and not before `changed` (the commit that moved the line): the trace of his approval
+    of that change (content-audit@8, CM-0102, F171). None when there is none or the log cannot be read. An entry the agent writes
+    itself can still carry the words: the residual the script does not close, and the warning shows the entry for him to check."""
+    if not log_text or when is None or changed is None:
+        return None
+    token = re.compile(r"(?<![\w-])" + re.escape(item_id) + r"(?![\w-])")
+    for m in re.finditer(r"^## \[(\d{4}-\d{2}-\d{2} \d{2}:\d{2})\] decision — ([^\n]*)", log_text, re.M):
+        at = _stamp(m.group(1))
+        heading = m.group(2)
+        if at and at > when + SLACK and at >= changed - SLACK and APPROVAL_HEADING.search(heading) and token.search(heading):
+            return m.group(1)
+    return None
+
+
+def _moved_by_approval(root, it, text, when, log_text, cfg=None):
+    """(key, changed, approved) for a finding whose anchor no longer holds ONLY because the MJRP approved the change: the quoted
+    line (or range) is not what it says now, the file changed AFTER the judge read it (`changed`), and `_approved_after` finds his
+    decision (`approved`). The judgment of what he approved is closed (F171, UAT-477): the anchor counts as good and no judge is
+    called again. None for any other anchor - it stays `judge_anchor_missing`."""
+    m = _ANCHOR.match(text.strip())
+    if not m or when is None:
+        return None
+    rel, a, z = m.group(1), int(m.group(2)), int(m.group(3) or m.group(2))
+    quote = _norm(m.group(4) or m.group(5) or "")
+    if not _in_item(root, rel, it, cfg) or not (Path(root) / rel).is_file():
+        return None
+    lines = (Path(root) / rel).read_text(encoding="utf-8", errors="replace").splitlines()
+    if not (1 <= a <= z <= len(lines)) or quote in _norm(" ".join(lines[a - 1:z])):
+        return None
+    changed = _last_commit(root, rel, (a, z))           # the anchored RANGE, as in the aging check
+    if not changed or changed <= when + SLACK:
+        return None
+    approved = _approved_after(log_text, it["id"], when, changed)
+    if not approved:
+        return None
+    return (rel, a, z), changed, approved
+
+
+def _judge_file(root, name, it, floor, last_refresh, now, row_verdict, cfg=None, warnings=None, hints=None):
+    """(gaps, open_p0) for one judge file read for one item. `warnings` (a list, optional) receives the AGING anchors and the
+    anchors moved by the MJRP's approval (`anchor_moved_by_approval`). `hints` (a list, optional) receives (judge file, hinted
+    (rel, a, z), where the passage is now) for each anchor that followed its passage - what `--fix-hints` rewrites."""
     rel = f"{AUDITS}/{name}"
     p = Path(root) / AUDITS / name
     if not p.is_file():
@@ -241,7 +344,7 @@ def _judge_file(root, name, it, floor, last_refresh, now, row_verdict, cfg=None,
         bad("sem `type: content-judgment`")
     if not fm.get("who_judged", "").startswith("separate-agent"):
         bad("sem `who_judged: separate-agent` - o juiz não é um agente separado")
-    if fm.get("judge_skill") != it["judge_skill"]:
+    if fm.get("judge_skill") not in _judge_names(it["judge_skill"]):
         bad(f"`judge_skill` é {fm.get('judge_skill')!r}, o item `{it['id']}` pede `{it['judge_skill']}`")
     when = _stamp(fm.get("judged"))
     if when is None:
@@ -265,18 +368,47 @@ def _judge_file(root, name, it, floor, last_refresh, now, row_verdict, cfg=None,
     body = text[start:min(nxt) if nxt else len(text)]
     findings = [(m.group(1), m.group(2), m.group(3)) for m in (_FINDING.match(l) for l in body.splitlines()) if m]
     open_p0 = sum(1 for sev, closed, _ in findings if sev == "P0" and not closed)
-    good, why = {}, []
+    good, why, moved, followed = {}, [], {}, []
+    log_text = _read_log(root)
     for sev, _closed, ftext in findings:
         key, reason = _anchor(root, it, ftext, cfg)
         if key:
             good[key] = (sev, (_ANCHOR.match(ftext.strip()).group(6) or "").strip())
+            am = _ANCHOR.match(ftext.strip())
+            hint = (am.group(1), int(am.group(2)), int(am.group(3) or am.group(2)))
+            if key != hint:                                     # the passage is where it was read, on another line (F179)
+                followed.append((hint, key))
+            continue
+        by = _moved_by_approval(root, it, ftext, when, log_text, cfg)
+        if by:
+            key, changed, approved = by
+            good[key] = (sev, (_ANCHOR.match(ftext.strip()).group(6) or "").strip())
+            moved[key] = (changed, approved)
         else:
             why.append(reason)
+    # LINE FOLLOWED THE PASSAGE (F179, UAT-486): the line the judge wrote is not where the passage is now, but the
+    # passage sits once in the file. Not a gap: one line per judge file, so a new round on top of the file does not flood the report.
+    if warnings is not None and followed:
+        shown = "; ".join(f"{h[0]}:{h[1]} -> :{k[1]}" for h, k in followed[:2]) + ("; ..." if len(followed) > 2 else "")
+        warnings.append(f"anchor_line_moved: {len(followed)} âncora(s) de `{it['id']}` em {rel} seguiram o trecho para outra linha ({shown}) - "
+                        f"o trecho decide, a linha era dica; nada a reler (`content_audit_check.py <projeto> --fix-hints` reescreve a linha e o aviso some)")
+    if hints is not None:
+        hints.extend((p, h, k) for h, k in followed)
+    # MOVED BY APPROVAL (content-audit@8, CM-0102, F171): the quoted line changed after the judge read it, and the MJRP approved that
+    # change. Not a gap and no new judge: the anchor counts, and the warning keeps the gap on the report instead of hiding it.
+    if warnings is not None:
+        for rel_file, a, z in sorted(moved):
+            changed, approved = moved[(rel_file, a, z)]
+            where = f"{rel_file}:{a}" + (f"-{z}" if z != a else "")
+            warnings.append(f"anchor_moved_by_approval: {where} (âncora de `{it['id']}` em {rel}) mudou em {changed.strftime('%Y-%m-%d %H:%M')}, "
+                            f"por aprovação do MJRP (decisão de {approved}); o juiz não é chamado de novo - a releitura da linha fica para o próximo juiz")
     # AGING anchors (audit of pedroso-incorp, 2026-10-18, point 5): the quoted passage still sits on its line, but the file moved
     # AFTER the judge read it (a fact that changed elsewhere, `730db0e`, kept `[ok] prd.md:88` green). A warning, never a gap: a
     # commit after `judged:` is often the fix of the judge's own P0, and a re-read is the cure, not a blocked conform.
     if warnings is not None and when is not None:
         for rel_file, a, z in sorted(good):
+            if (rel_file, a, z) in moved:                       # already printed as moved by approval
+                continue
             changed = _last_commit(root, rel_file, (a, z))      # the anchored RANGE, not the file: MEMORY.md and the log move every session
             if changed and changed > when + SLACK:
                 where = f"{rel_file}:{a}" + (f"-{z}" if z != a else "")
@@ -321,6 +453,10 @@ def _judge_file(root, name, it, floor, last_refresh, now, row_verdict, cfg=None,
 QUESTIONS_SECTION = re.compile(r"^##[ \t]+Perguntas para o MJRP[ \t]*$", re.M)
 QUESTIONS_NOTE = "CM-0063"                      # the child that applied this note has the skills of the shape: its shape problems are errors
 CLASS_NOTE = "CM-0066"                          # the child that applied this note has the decision policy: an open question with no/odd class is an error
+TEXT_NOTE = "CM-0101"                           # the child that applied this note has the wording shape (Contexto:/Pergunta:): an open question with a bad wording is an error
+CONTEXT_MAX_SENTENCES = 2                       # the Contexto: line says the situation in at most two sentences
+CONTEXT_MAX_CHARS = 320
+OPTION_MIN_WORDS = 4                            # an option says what happens next: fewer words is a label, not an option
 _Q_STAMP = r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2})"
 _Q_HEAD = re.compile(r"^### (P-\d{2,}) · item: (\S+) · (\S.*)$")
 _Q_OPT = re.compile(r"^- ([a-z])\) (\S.*)$")
@@ -331,9 +467,15 @@ _Q_ASKED = re.compile(r"^perguntada em " + _Q_STAMP + r"$")
 _Q_CHECKED = re.compile(r"^conferida na releitura de " + _Q_STAMP + r"$")
 _Q_CLASS = re.compile(r"^classe: (\S.*)$")
 _Q_WHY_NOT = re.compile(r"^por que o agente não podia: (\S.*)$")
+_Q_CONTEXT = re.compile(r"^Contexto: (\S.*)$")
+_Q_ASK = re.compile(r"^Pergunta: (\S.*)$")
 _Q_NONE = re.compile(r"^(Nenhuma pergunta|Sem perguntas)\b")
 _Q_ITEM = re.compile(r"^[a-z][a-z0-9-]*$")
 _Q_RECOMMENDED = " (Recomendado)"
+_Q_PATH_LINE = re.compile(r"\S+\.(md|py|json|ts|tsx|yml):\d+")          # a file and a line: the MJRP does not read `file.py:12`
+_Q_PY = re.compile(r"\.py\b")                                           # a script name
+_Q_INTERNAL_ID = re.compile(r"\b(F\d{2,3}|UAT-\d+|CC-ADR-\d+|ADR-\d+|TASK-\d+|REQ-\d+|S-\d+)\b")  # ids of the project, not of the MJRP
+_Q_ACCEPT = re.compile(r"\baceit", re.I)                                # a question that asks for an acceptance
 
 
 def _q_stamp(value):
@@ -347,7 +489,8 @@ def parse_questions(text, catalog_ids=None, now=None):
     """(questions, problems) of the report's `## Perguntas para o MJRP` section. `catalog_ids`: the item ids of the catalog (None = do
     not check `item:` against it). `now`: a naive datetime; a stamp after it is a problem (None = not checked). No section: ([], []).
     A question: {id, item, subject, line, asked_at, options: {letter: text}, recommended, follow_up, marks: [{at, letters, other, line}],
-    follow_up_answers: [{at, text, line}], state: 'open' | 'answered', follow_up_open: bool, classe: str|None, why_not: str|None}.
+    follow_up_answers: [{at, text, line}], state: 'open' | 'answered', follow_up_open: bool, classe: str|None, why_not: str|None,
+    context: str|None, ask: str|None (the CM-0101 wording lines, read here and judged in `text_problems`)}.
     A problem is `linha N: ...` (1-based, in the file). The class lines are READ here but judged in `class_problems` (a gate of its own: CLASS_NOTE)."""
     lines = text.splitlines()
     start = next((i for i, l in enumerate(lines) if QUESTIONS_SECTION.match(l)), None)
@@ -394,7 +537,8 @@ def parse_questions(text, catalog_ids=None, now=None):
                 bad(i, f"{cur['id']} aparece duas vezes (o id é único e não se renumera)")
             seen_ids.add(cur["id"])
             cur.update({"asked_at": None, "options": {}, "recommended": None, "follow_up": None, "marks": [],
-                        "follow_up_answers": [], "checked_at": None, "classe": None, "why_not": None})
+                        "follow_up_answers": [], "checked_at": None, "classe": None, "why_not": None,
+                        "context": None, "ask": None})
             text_seen = False
             continue
         if not s.strip():
@@ -466,6 +610,18 @@ def parse_questions(text, catalog_ids=None, now=None):
                 bad(i, f"{cur['id']}: `conferida na releitura de` com data inválida")
             cur["checked_at"] = m.group(1)
             continue
+        m = _Q_CONTEXT.match(s) or _Q_ASK.match(s)
+        if m:
+            # the wording lines (CM-0101): one of each, before the options; they are the question's text, so a class line cannot follow them
+            key = "context" if s.startswith("Contexto: ") else "ask"
+            label = "Contexto:" if key == "context" else "Pergunta:"
+            if has_options:
+                bad(i, f"{cur['id']}: `{label}` vem antes das opções")
+            if cur[key] is not None:
+                bad(i, f"{cur['id']}: mais de uma linha `{label}` (uma só)")
+            cur[key] = m.group(1).strip()
+            text_seen = True
+            continue
         m = _Q_CLASS.match(s)
         if m:
             if has_options or text_seen:
@@ -519,6 +675,53 @@ def class_problems(questions):
     return sorted(out, key=lambda p: int(p.split()[1].rstrip(":")))
 
 
+def text_problems(questions):
+    """The wording of each OPEN question (content-audit@7, CM-0101): the `Pergunta:` line ends in «?» and asks one decision; the `Contexto:`
+    line is at most two sentences and 320 characters, with no file:line, no `.py` and no internal id, and when the question asks for an
+    acceptance it says «não é o aceite» and «Touch ID»; each option has at least four words (the «(Recomendado)» mark does not count).
+    An answered question is history and is not judged. Whether the wording is UNDERSTOOD is the cold-read judge's finding, not this one's.
+    [str], `linha N: P-NN: ...`."""
+    out = []
+    for q in questions:
+        if q["state"] == "answered":
+            continue
+        at, ask, ctx = q["line"], q["ask"], q["context"]
+        msgs = []
+        if ask is None:
+            msgs.append("sem a linha `Pergunta: …` (uma decisão só, que termina em «?»)")
+        else:
+            if not ask.endswith("?"):
+                msgs.append("a `Pergunta:` não termina em «?»")
+            if ask.count("?") > 1:
+                msgs.append("a `Pergunta:` tem mais de um «?» (uma decisão só, uma pergunta só)")
+        if ctx is None:
+            msgs.append("sem a linha `Contexto: …` (até duas frases: o que o MJRP precisa para decidir)")
+        else:
+            sentences = [x for x in re.split(r"(?<=[.!?])\s+", ctx.strip()) if x]
+            if len(sentences) > CONTEXT_MAX_SENTENCES:
+                msgs.append(f"o `Contexto:` tem {len(sentences)} frases, o máximo é {CONTEXT_MAX_SENTENCES}")
+            if len(ctx) > CONTEXT_MAX_CHARS:
+                msgs.append(f"o `Contexto:` tem {len(ctx)} caracteres, o máximo é {CONTEXT_MAX_CHARS}")
+            m = _Q_PATH_LINE.search(ctx)
+            if m:
+                msgs.append(f"o `Contexto:` traz caminho com linha (`{m.group(0)}`): o MJRP não lê arquivo:linha")
+            if _Q_PY.search(ctx):
+                msgs.append("o `Contexto:` cita um script `.py`")
+            m = _Q_INTERNAL_ID.search(ctx)
+            if m:
+                msgs.append(f"o `Contexto:` traz o id interno `{m.group(0)}`: diga o que ele é, em palavras comuns")
+            if ask is not None and _Q_ACCEPT.search(ask):
+                low = ctx.lower()
+                if "não é o aceite" not in low or "touch id" not in low:
+                    msgs.append("a `Pergunta:` pede aceite: o `Contexto:` tem de dizer «não é o aceite» e «Touch ID» (o aceite é do MJRP, na tela de aceite)")
+        for letter, text in q["options"].items():
+            words = (text[:-len(_Q_RECOMMENDED)] if text.endswith(_Q_RECOMMENDED) else text).split()
+            if len(words) < OPTION_MIN_WORDS:
+                msgs.append(f"a opção `{letter})` tem {len(words)} palavra(s), o mínimo é {OPTION_MIN_WORDS}: diga o que acontece depois")
+        out += [f"linha {at}: {q['id']}: {msg}" for msg in msgs]
+    return sorted(out, key=lambda p: int(p.split()[1].rstrip(":")))
+
+
 def marks_without_log(questions, report_name, log_text):
     """The marks (and follow-up answers) that no `decision` entry of the log backs: a mark needs `## [AAAA-MM-DD HH:MM] decision — …` at the
     SAME time whose text names the question (`P-NN`) and the report file. [str]; empty when `log_text` is None (the log could not be read).
@@ -541,10 +744,10 @@ def marks_without_log(questions, report_name, log_text):
     return out
 
 
-def question_findings(text, strict, catalog_ids=None, now=None, log_text=None, report_name="", class_strict=False):
+def question_findings(text, strict, catalog_ids=None, now=None, log_text=None, report_name="", class_strict=False, text_strict=False):
     """(errors, warnings) for the questions section: the shape problems are errors when `strict` (the child applied QUESTIONS_NOTE) and
-    warnings otherwise; the class problems (`questions_class`) likewise with `class_strict` (the child applied CLASS_NOTE); a mark with no
-    log entry is always a warning."""
+    warnings otherwise; the class problems (`questions_class`) likewise with `class_strict` (the child applied CLASS_NOTE); the wording
+    problems (`questions_text`, CM-0101) likewise with `text_strict`; a mark with no log entry is always a warning."""
     questions, problems = parse_questions(text, catalog_ids, now)
     shaped = [f"questions_shape: {p}" for p in problems]
     errors, warns = (shaped, []) if strict else ([], shaped)
@@ -553,6 +756,11 @@ def question_findings(text, strict, catalog_ids=None, now=None, log_text=None, r
         errors += classed
     else:
         warns += classed
+    worded = [f"questions_text: {p}" for p in text_problems(questions)]
+    if text_strict:
+        errors += worded
+    else:
+        warns += worded
     warns += marks_without_log(questions, report_name, log_text)
     return errors, warns
 
@@ -577,7 +785,7 @@ def questions_gate(root):
         ids = None
     applied = (cfg.get("conformance") or {}).get("applied") or []
     errors, warns = question_findings(path.read_text(encoding="utf-8", errors="replace"), QUESTIONS_NOTE in applied, ids, _now(cc) + SLACK,
-                                      _read_log(root), path.name, CLASS_NOTE in applied)
+                                      _read_log(root), path.name, CLASS_NOTE in applied, TEXT_NOTE in applied)
     rel = path.relative_to(root).as_posix()
     return [f"{rel}: {e}" for e in errors], [f"{rel}: {w}" for w in warns], None
 
@@ -656,8 +864,9 @@ def _new_in_grace(cc, it, cfg, today):
     return today <= cc.grace_until(it, cfg)
 
 
-def problems(root, warnings=None):
-    """(list of gap lines, error or None). `warnings` (a list, optional) receives the lines that are NOT a gap (`anchor_aging`)."""
+def problems(root, warnings=None, hints=None):
+    """(list of gap lines, error or None). `warnings` (a list, optional) receives the lines that are NOT a gap (`anchor_aging`);
+    `hints` (a list, optional), the anchors whose line followed the passage, from the judge files that count (`_judge_file`)."""
     root = Path(root).resolve()
     sys.dont_write_bytecode = True
     import conformance_check as cc
@@ -716,7 +925,7 @@ def problems(root, warnings=None):
             continue
         v = _VERDICT.search(row)
         files = JUDGE_FILE.findall(row)
-        if not v or judge not in row:
+        if not v or not any(re.search(rf"(?<![\w-]){re.escape(n)}(?![\w-])", row) for n in _judge_names(judge)):
             out.append(f"audit_row_missing: a linha de `{it['id']}` não traz o veredito de conteúdo (sólida/fraca/errada) de `{judge}`")
         if not files:
             out.append(f"judge_file_missing: a linha de `{it['id']}` não cita o arquivo do juiz (`AAAA-MM-DD-<projeto>-content-<juiz>.md`) - "
@@ -724,12 +933,14 @@ def problems(root, warnings=None):
             continue
         gaps, p0 = [], 0
         for name in dict.fromkeys(files):
-            aging = []
-            g, p0 = _judge_file(root, name, it, floor, last_refresh, now, v.group(0) if v else None, cfg, aging)
+            aging, moved = [], []
+            g, p0 = _judge_file(root, name, it, floor, last_refresh, now, v.group(0) if v else None, cfg, aging, moved)
             gaps = g
             if not g:
                 if warnings is not None:
                     warnings.extend(aging)
+                if hints is not None:
+                    hints.extend(moved)
                 break
         out += gaps
         open_p0 += p0
@@ -745,6 +956,35 @@ def problems(root, warnings=None):
     if warnings is not None:
         warnings.extend(p_warns)
     return out, None
+
+
+def fix_hints(hints):
+    """Rewrites, in each judge file, the LINE of the anchors that followed their passage (UAT-488, the recheck's P2-3: the
+    `anchor_line_moved` aviso had no end short of a new judge). Only the line hint changes: the quoted passage, the text and
+    `judged:` stay as the judge wrote them - the passage is what was read, and it did not change. Returns the lines rewritten."""
+    by_file = {}
+    for path, hint, key in hints:
+        by_file.setdefault(Path(path), {})[hint] = key
+    done = []
+    for path, moves in by_file.items():
+        lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+        for i, line in enumerate(lines):
+            fm_ = _FINDING.match(line)
+            am = _ANCHOR.match(fm_.group(3).strip()) if fm_ else None
+            if not am:
+                continue
+            hint = (am.group(1), int(am.group(2)), int(am.group(3) or am.group(2)))
+            if hint not in moves:
+                continue
+            old = f"{am.group(1)}:{am.group(2)}" + (f"-{am.group(3)}" if am.group(3) else "")
+            k = moves[hint]
+            new = f"{k[0]}:{k[1]}" + (f"-{k[2]}" if k[2] != k[1] else "")
+            lines[i] = line.replace(old, new, 1)
+            done.append(f"{path.name}: {old} -> {new}")
+        tmp = path.with_name(path.name + ".tmp")
+        tmp.write_text("".join(lines), encoding="utf-8")
+        os.replace(tmp, path)
+    return done
 
 
 def _parse_cli(argv):
@@ -773,11 +1013,17 @@ def main(argv):
     if not args:
         print(__doc__)
         return 2
-    warns = []
-    gaps, err = problems(args[0], warns)
+    warns, hints = [], []
+    gaps, err = problems(args[0], warns, hints)
     if err:
         print(f"content_audit_check: {err} (não avaliável)")
         return 2
+    if "--fix-hints" in argv:
+        for line in fix_hints(hints):
+            print(f"  linha da âncora reescrita: {line}")
+        if not hints:
+            print("content_audit_check: nenhuma âncora com a linha fora do trecho")
+        return 1 if gaps else 0
     if "--json" in argv:
         print(json.dumps({"gaps": gaps, "warnings": warns}, ensure_ascii=False, indent=2))
     elif gaps:

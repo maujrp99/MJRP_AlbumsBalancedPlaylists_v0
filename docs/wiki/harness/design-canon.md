@@ -1,18 +1,18 @@
 ---
 title: Cânone de design
 aliases: [design-canon, canone de design, cânone de UX, cânone de UI, ux canon, design canon]
-summary: as fontes elevadas que fundamentam UX, UI e conteúdo explicativo no MJRP — organizadas em oito disciplinas com regras de ID estável que as skills citam em vez de recitar
+summary: as fontes elevadas que fundamentam UX, UI, conteúdo explicativo e copy de site no MJRP — organizadas em dez disciplinas com regras de ID estável que as skills citam em vez de recitar
 tags: [harness, design, ux, kernel]
 status: vivo
-atualizado: 2026-10-18
-fontes: [few-information-dashboard-design, tufte-visual-display, knaflic-storytelling-with-data, wexler-big-book-of-dashboards, shneiderman-the-eyes-have-it, nngroup-dashboards-preattentive, smashing-dashboard-decluttering, a11y-collective-accessible-charts, sigma-color-blindness, 925studios-whoop-breakdown, sahha-readiness-scores, nielsen-ten-heuristics, krug-dont-make-me-think, cooper-about-face, yablonski-laws-of-ux, google-apple-m3-hig, w3c-wcag-2-2, gigerenzer-risk-communication, case-calm-technology, cdc-clear-communication-index, andrews-info-we-trust, design-council-double-diamond-knapp-sprint, baghai-three-horizons, tmap-crud-test, kaplan-nngroup-empty-states, larson-czerwinski-web-page-design, zaphiris-shneiderman-norman-expandable-indexes, nielsen-nngroup-progressive-disclosure, nngroup-flat-vs-deep-hierarchies, baymard-truncation-design, nngroup-accordions-complex-content, baymard-pagination-infinite-scroll-load-more, munzner-marks-and-channels, nngroup-scrolling-and-attention, han-nacenta-heatmap-digits, nngroup-infinite-scrolling, atlassian-elevation, carbon-accordion, carbon-color-layering, govuk-accordion, govuk-pagination]
+atualizado: 2026-11-07
+fontes: [few-information-dashboard-design, tufte-visual-display, knaflic-storytelling-with-data, wexler-big-book-of-dashboards, shneiderman-the-eyes-have-it, nngroup-dashboards-preattentive, smashing-dashboard-decluttering, a11y-collective-accessible-charts, sigma-color-blindness, 925studios-whoop-breakdown, sahha-readiness-scores, nielsen-ten-heuristics, krug-dont-make-me-think, cooper-about-face, yablonski-laws-of-ux, google-apple-m3-hig, w3c-wcag-2-2, gigerenzer-risk-communication, case-calm-technology, cdc-clear-communication-index, andrews-info-we-trust, design-council-double-diamond-knapp-sprint, baghai-three-horizons, tmap-crud-test, kaplan-nngroup-empty-states, larson-czerwinski-web-page-design, zaphiris-shneiderman-norman-expandable-indexes, nielsen-nngroup-progressive-disclosure, nngroup-flat-vs-deep-hierarchies, baymard-truncation-design, nngroup-accordions-complex-content, baymard-pagination-infinite-scroll-load-more, munzner-marks-and-channels, nngroup-scrolling-and-attention, han-nacenta-heatmap-digits, nngroup-infinite-scrolling, atlassian-elevation, carbon-accordion, carbon-color-layering, govuk-accordion, govuk-pagination, rosenfeld-morville-arango-information-architecture, morkes-nielsen-concise-scannable-objective, redish-letting-go-of-the-words, moran-nngroup-tone-of-voice-dimensions, mailchimp-voice-and-tone, handley-everybody-writes, dunford-obviously-awesome, cialdini-influence, w3c-wai-images-tutorial, iso-24495-1-plain-language, brasil-cdc-publicidade, ftc-endorsement-guides]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e
-conteúdo explicativo do MJRP — 41 fontes fichadas em `docs/wiki/sources/`, organizadas em oito
-disciplinas, cada regra com um **ID estável** que as skills de design citam em vez de recitar.
+conteúdo explicativo do MJRP — 53 fontes fichadas em `docs/wiki/sources/`, organizadas em dez
+disciplinas (a IA, arquitetura da informação, e a CW, copy de site, desde 2026-11-07), cada regra com um **ID estável** que as skills de design citam em vez de recitar.
 A barra de qualidade não vem do gosto do agente: vem daqui. É **referência inicial, não teto** —
 o cânone cresce com o que os projetos-filho descobrem (ver § *Como o cânone evolui*).
 
@@ -34,9 +34,9 @@ Cada regra tem três partes: **ID** (estável — nunca se renumera; regra retir
   existisse. É o que `mjrp-designing-ui` e `mjrp-defining-design-systems`
   carregam como checklist.
 - **julgamento** — não dá para impor na produção; só se pega na crítica. É o que só a
-  `mjrp-critiquing-ux` verifica.
+  `mjrp-critiquing-ux-ui` verifica.
 
-A `mjrp-critiquing-ux` verifica os dois tipos. A fonte de cada regra é a ficha em `docs/wiki/sources/`;
+A `mjrp-critiquing-ux-ui` verifica os dois tipos. A fonte de cada regra é a ficha em `docs/wiki/sources/`;
 o *porquê* mora lá e nesta página, nunca na skill.
 
 ### HI · Hierarquia
@@ -50,6 +50,7 @@ o *porquê* mora lá e nesta página, nunca na skill.
 | **HI-05** | A atenção é dirigida com um atributo pré-atentivo por vez (cor de destaque única, tamanho ou posição); dois destaques competindo = nenhum destaque. | julgamento | Knaflic; NN/g; Few |
 | **HI-06** | Há um elemento de destaque claro por tela (Von Restorff); se tudo é destaque, a regra falha. | julgamento | Yablonski |
 | **HI-07** | Cada nível de aninhamento difere do nível-pai em **pelo menos dois canais visuais**, entre: recuo, tamanho ou peso da tipografia, filete ou borda, e degrau de tom. O tom só conta como canal quando o design system não lhe dá outro significado (se o tom é o papel do card, ele não marca nível). Nunca só o matiz. | produção | Munzner (canais separáveis); Carbon (camadas por degrau de luminosidade); Atlassian (o tom também sinaliza estado); Krug (aninhamento = contenção visual); NN/g preattentive e WCAG 1.4.1 (matiz sozinho não basta) · dois canais: decisão da casa — MJRP 2026-10-18 |
+| **HI-08** | O `design-system.md` declara, por tema, a **proporção de cor recomendada**, com a cor principal no topo — a que o humano declarou — e a fonte da escolha (data e decisão). Ao lado, como **fato**, vem a medida do protótipo aprovado: cada pixel da página inteira levado à cor mais próxima da paleta, em 1440 e em 390 px. A proporção é recomendação para peça nova, conferida com o humano antes de construir; a medida nunca vira meta, e nenhuma das duas reprova ou muda uma tela já aprovada. **Dois eixos que não se misturam** (emenda de 2026-11-07, F214): o **papel** (a ordem de destaque, a principal primeiro) e a **área** (quanto da tela cada cor ocupa), declarados em linhas separadas, por tema. A cor principal não é necessariamente a de maior área: a base neutra de leitura costuma ser a maior, e uma cor de apoio mais escura pesa mais ao olho (Itten) e fica com menos área que a principal. Teste: a cor principal da proporção escrita é a que o humano declarou, a ordem de destaque não foi lida como ordem de área, e nenhuma tela aprovada foi mudada para chegar à proporção. | produção | Origem do formato: a proporção 60-30-10 do design de interiores, com variantes de quatro níveis (como 70/20/5/5), o Material (cor por papel, sem percentuais) e Itten (proporção pelo brilho de cada cor) — referências de fora, ainda sem ficha; o cânone só tinha o acento, em HI-05 e HI-06 · a recomendação como intenção do humano, separada da medida do aprovado: decisão do MJRP 2026-11-06 (MJRPpersonal) |
 
 ### DE · Densidade
 
@@ -72,11 +73,35 @@ o *porquê* mora lá e nesta página, nunca na skill.
 | **CO-01** | Toda métrica não-óbvia tem definição de uma linha, em linguagem simples, ao lado da métrica — não em glossário separado. | produção | CDC (letramento é do emissor); Andrews |
 | **CO-02** | Todo gráfico incomum tem um "como ler" de uma a duas linhas. | produção | Andrews (anotação como guia); Knaflic |
 | **CO-03** | O conteúdo explicativo fica **acima** do gráfico ou do número que explica, nunca abaixo nem em tooltip apenas (regra do MJRP, 19/09). | produção | MJRP (health-control Wave 2); CDC (mensagem principal primeiro) |
-| **CO-04** | Nenhum número sem referência: baseline, meta, Δ ou micro-tendência (sparkline) ao lado do valor. Número puro é achado. Sparkline é uma *forma* da referência, não regra própria (decisão 21/09, teste da `ux-critic`). | produção | Wexler (KPI com contexto); Few (bullet graph) |
+| **CO-04** | Nenhum número sem referência: baseline, meta, Δ ou micro-tendência (sparkline) ao lado do valor. Número puro é achado. Sparkline é uma *forma* da referência, não regra própria (decisão 21/09, teste da `ux-critic`). Quando a vista mostra só parte do universo que o filtro casa (um mapa em que só alguns itens têm lugar), a tela mostra os dois números, diz por quê e aponta o caminho para ver os outros; total que diz um número enquanto a tela mostra outro, sem explicar, é achado. | produção | Wexler (KPI com contexto); Few (bullet graph); RC-03 (classe de referência) · o subconjunto da vista: MJRPpersonal 2026-11-06 («2 na floresta · 18 acesos»), emenda de 2026-11-07 |
 | **CO-05** | Todo número diz o que fazer ou o que significa (CDC item 16): "X — abaixo da sua média; nada a fazer" vale; "X" sozinho não. | produção | CDC; Gigerenzer |
 | **CO-06** | Voz ativa, uma ideia por frase, palavra do dia a dia; jargão só com definição inline. | produção | CDC; Krug (omit needless words) |
 | **CO-07** | Anotação de insight (o que este gráfico mostra de relevante) aparece no próprio gráfico, não só no texto ao redor. | julgamento | Knaflic; Andrews |
 | **CO-08** | O explicativo (CO-01/02/03) tem peso visual de **guia de leitura**, não de rodapé: rótulo/eyebrow, fundo ou borda, cor de texto plena (não *muted*) — o bastante para ser lido antes do gráfico, nunca maior que o veredito (HI-05/06). Explicativo em cor de nota, sem rótulo e sem separação do fundo é achado. | produção | Knaflic (anotação precisa de proeminência); NN/g (hierarquia dirige a leitura); MJRP (health-control R23c, 21/09) |
+| **CO-09** | Texto feito para uma pessoa ler: um assunto por parágrafo; linha em branco entre blocos; cada rótulo (`**Campo**: valor`) em sua linha própria; itens numa lista, com a fonte ao lado de cada um que cita algo. Texto corrido quebrado à mão continua um parágrafo só. | julgamento | MJRP (UAT-485, 2026-11-04: a ADR lida grudada; F177) |
+| **CO-10** | Texto com `text-transform: uppercase` (ou caixa alta digitada) que contém um nome de marca com caixa própria deixa o nome fora da transformação. Teste: a marca aparece na grafia oficial em toda tela, também dentro de rótulo em caixa alta. | produção | MJRPpersonal 2026-11-06 (pedido do MJRP: «com K maiúsculo, nao está maiusculo em todos os lugares»; «FOUNDER · ZenKraft ENTERPRISES»); sem fonte externa |
+
+### CW · Copy de site
+
+O texto que apresenta e vende um site: posicionamento, prova, chamada, descrição de serviço e de projeto, texto alternativo.
+Complementa o CO (o texto que explica um dado na tela); a skill que produz é a `mjrp-copywriting`. As fontes estão no
+`README.md` das fichas, § *Fichas do copy de site*.
+
+| ID | Regra (testável) | Tipo | Fonte |
+|---|---|---|---|
+| **CW-01** | Cada linha de copy proposta abre dizendo que tipo de texto é, onde aparece e quem a lê, antes das opções (o texto alternativo diz que só o leitor de tela o lê). | produção | Redish (conteúdo é conversa com quem lê); ISO 24495-1 (relevante); MJRP (S-216: não entendeu propostas sem isso) |
+| **CW-02** | Título, subtítulo e descrições de serviço respondem à mesma frase de posicionamento — para quem, contra que alternativa real, com que atributo único, entregando que valor. Opção que serve a qualquer empresa é achado. | produção | Dunford (as alternativas reais antes da categoria e do slogan) |
+| **CW-03** | Nenhuma afirmação de superioridade sem fato: «o melhor», «líder», «inovador», «excelência», «soluções completas» saem; o fato que as sustentaria entra no lugar. | produção | Morkes e Nielsen (o texto promocional perde em quase toda medida); Mailchimp (cortar o exagero); Handley |
+| **CW-04** | A mensagem principal vem primeiro, numa frase; uma ideia por frase; o título e a chamada carregam a palavra que o visitante procura. | produção | Morkes e Nielsen (conciso e escaneável); Redish (comece pela mensagem-chave); ISO 24495-1 (encontrável) |
+| **CW-05** | Toda prova (número, cliente, resultado, prêmio) tem o dado que a sustenta, guardado e mostrado a quem aprova; sem ele, a afirmação sai do texto e vira pergunta. Número que o dono disse não valer mais não entra, nem arredondado. | produção | CDC arts. 36 e 38 (o dado guardado; o ônus da prova é de quem anuncia); FTC 16 CFR 255.2 (sustentação); Handley |
+| **CW-06** | Depoimento é a opinião real de quem o deu, nas palavras dela quando aparece como citação; resultado fora do comum não se apresenta como o esperado; a competência de quem endossa é a verdadeira. | produção | FTC 16 CFR 255.1–255.3; Cialdini (prova social e autoridade verdadeiras) |
+| **CW-07** | Persuasão só com o que existe: prova social, autoridade e escassez apontam um fato verdadeiro; urgência, escassez ou omissão que induz a erro são achado. | julgamento | Cialdini (o uso honesto aponta, o desonesto fabrica); CDC art. 37 (enganosa também por omissão) |
+| **CW-08** | A voz é uma por marca e constante; o tom muda com o estado de quem lê. A proposta declara a voz e de onde a leu — nas quatro dimensões (formal↔casual, sério↔engraçado, respeitoso↔irreverente, objetivo↔entusiasmado) e com palavras de antitom quando o projeto as tiver. | produção | Moran (NN/g); Mailchimp (voz constante, tom que muda); Handley (a voz definida de propósito) |
+| **CW-09** | A chamada diz a ação e o que a pessoa ganha; o texto de um link faz sentido sozinho ou com o contexto imediato — «clique aqui» e «saiba mais» sozinhos são achado. | produção | WCAG 2.4.4 (propósito do link no contexto); Redish (o link diz para onde vai) |
+| **CW-10** | O texto alternativo segue o tipo da imagem: informativa → o significado, numa frase curta; decorativa ou repetida no texto ao lado → vazio (`alt=""`); funcional → a ação ou o destino; com texto → o texto; complexa → uma frase e a informação completa na página. Sem «imagem de». | produção | W3C WAI Images Tutorial e a árvore de decisão; WCAG 1.1.1 |
+| **CW-11** | O texto alternativo é escrito olhando a imagem que a página publica, e diz «dados de exemplo» só quando os dados são inventados; dado pessoal real exposto numa imagem é pergunta ao dono, salvo se ele já aprovou mostrá-lo. | produção | W3C WAI (transmitir o que a imagem mostra); MJRP (F204, rodada real: 3 de 6 textos descreviam outra tela) |
+| **CW-12** | Linguagem simples se mede pelo uso — o leitor acha, entende e consegue agir —, nunca por fórmula de legibilidade. | julgamento | ISO 24495-1; CDC Clear Communication Index |
+| **CW-13** | Um nome (antigo empregador, cliente, quem recomendou) só entra no texto quando o dono pode citá-lo: sem acordo de confidencialidade ou de saída que o impeça, e a recomendação pública, nunca a mensagem privada. Sem saber, a opção evita o nome e a linha pergunta. | produção | FTC 16 CFR 255.1 (o endosso é de quem o deu, como ele o deu); decisão do agente, revisável pelo MJRP (nenhuma ficha cobre a confidencialidade) |
 
 ### CP · Composição
 
@@ -85,16 +110,18 @@ o *porquê* mora lá e nesta página, nunca na skill.
 | **CP-01** | Mesmo esqueleto para o mesmo tipo de tela: todos os domínios/seções do mesmo nível usam o mesmo template (zonas, ordem, componentes). | produção | Wexler (consistência entre views); Nielsen H4 |
 | **CP-02** | Uma pergunta por tela: a tela responde a uma pergunta declarável em uma frase; se responde a duas, são duas telas. | produção | Wexler (scenario-driven); 925 Studios |
 | **CP-03** | Sequência de leitura segue o olho (topo-esquerda → baixo-direita em LTR); o mais importante ocupa o quadrante de entrada. | produção | Few; Krug (scan) |
-| **CP-04** | Elementos relacionados agrupados por proximidade e alinhamento; relação que precisa de linha ou caixa para existir é relação mal composta. | produção | Few; Tufte |
+| **CP-04** | Elementos relacionados agrupados por proximidade e alinhamento; relação que precisa de linha ou caixa para existir é relação mal composta. Exemplo: num bloco de número grande com explicação, o número, a explicação e o título do grupo dividem o mesmo eixo de alinhamento; número centralizado com a explicação à esquerda falha. | produção | Few; Tufte · o exemplo: MJRPpersonal 2026-11-06 (decisão do MJRP entre três prévias: «Número e texto no centro») |
 | **CP-05** | Small multiples para comparar séries do mesmo tipo — não um gráfico com 8 linhas. | produção | Tufte |
 | **CP-06** | Convenção de plataforma antes de invenção: navegação, gestos, alvos e estados seguem Material/HIG; desvio é decisão registrada, não default. | produção | Google/Apple; Krug; Jakob's Law |
 | **CP-07** | Fundo escuro ou claro é decisão com função declarada (contexto de uso, paleta), não estética; o design system registra o porquê. | julgamento | 925 Studios; palette-library |
+| **CP-08** | Tipografia usa a escala e os papéis declarados no `design-system.md` (por exemplo display, headline, title, body, label) e poucas famílias; nenhum tamanho ou família fora deles. A razão da escala é convenção, não regra. Teste: cada tamanho e família da tela mapeia a um papel declarado. | produção | Apple HIG Typography (limitar famílias; hierarquia por peso, tamanho e cor); material-web Typography (papéis como tokens) · `visual-foundations.md` § Escala |
+| **CP-09** | Um título de display declara os grupos de palavras que não se separam (`white-space: nowrap` por grupo) e quebra só entre eles. O tamanho do display não é reduzido para caber numa linha. Teste: nenhuma linha quebra dentro de um grupo e o tamanho nunca cai abaixo do declarado no CP-08 para caber. | produção | CP-08 (escala declarada) · os grupos inquebráveis: MJRPpersonal 2026-11-06 (o MJRP desfez a fonte menor no computador: «acho que vamos ter que quebrar mesmo») |
 
 ### IN · Interação
 
 | ID | Regra (testável) | Tipo | Fonte |
 |---|---|---|---|
-| **IN-01** | Overview → zoom & filter → details-on-demand: a interação segue o mantra; detalhe nunca esconde o contexto de onde veio. | produção | Shneiderman |
+| **IN-01** | Overview → zoom & filter → details-on-demand: a interação segue o mantra; detalhe nunca esconde o contexto de onde veio. Do detalhe, a volta (o link de volta ou o voltar do navegador) reabre o contexto do jeito que estava: a mesma escolha, a mesma forma de ver e o mesmo zoom. O estado viaja no endereço, e o link de volta só aceita destino do próprio site. | produção | Shneiderman · a volta que preserva o estado: MJRPpersonal 2026-11-06 (pedido do MJRP: «qdo clicar no livro poder voltar para a constelação com a seleção feita»), emenda de 2026-11-07 |
 | **IN-02** | Período/tempo tem controle direto: presets + navegação ‹/› + range; nenhum filtro só por tooltip. | produção | Shneiderman (zoom e filtro como controle direto); Cooper (modeless) |
 | **IN-03** | Alvo de toque ≥ 44×44 pt (HIG) / 48×48 dp (Material); WCAG 2.5.8 mínimo 24×24. | produção | Google/Apple; WCAG 2.2 |
 | **IN-04** | Resposta < 400 ms ou feedback de progresso visível (Doherty); status do sistema sempre visível (Nielsen H1). | produção | Yablonski; Nielsen |
@@ -104,6 +131,12 @@ o *porquê* mora lá e nesta página, nunca na skill.
 | **IN-08** | O fim do fluxo é desenhado com cuidado (Peak-End): a última tela confirma, resume e aponta o próximo passo. | julgamento | Yablonski |
 | **IN-09** | Toda entidade que o usuário mantém tem, no protótipo, onde **criar, ver, editar e excluir/inativar** — ou a ausência é decisão escrita. Teste: a matriz entidade × operação (entidades do `data-model.md`) sem célula vazia sem motivo. | produção | TMAP (teste CRUD); Kaplan/NN/g |
 | **IN-10** | O protótipo mostra o **primeiro uso com o sistema vazio** — o caminho de "zero" até "pronto para o dia a dia", cada vazio apontando a ação que o preenche. Dado de exemplo pronto esconde esse caminho. | produção | Kaplan/NN/g |
+| **IN-11** | Um link ou botão cujo rótulo nomeia um subconjunto («Ver os 21 resumos abertos») abre a lista com o filtro já aplicado e visível. Teste: o clique chega à lista só com o subconjunto prometido; abrir a lista inteira falha. | produção | CO-05 (o número diz o que fazer; aqui a ação prometida chega cumprida) · MJRPpersonal 2026-11-06 (ressalva do MJRP à sinopse: «qdo clico pra ver os 21 livros ele volta pra estante mas sem os 21 livros com resumo estarem selecionados») |
+| **IN-12** | Com filtro ativo, o que não casa recua (opacidade de 10% ou menos) sem mudar de lugar. Num grafo, todo nome sem nenhum item aceso e toda linha que chega a um item apagado recuam junto. Teste: não sobra aceso um rótulo ou uma linha que não leva a nada aceso, e nenhum item muda de posição ao filtrar. | produção | DE-03 (remove-se ruído, não informação) · o efeito em cascata do filtro e a constância de posição, para o mapa mental não se perder: MJRPpersonal 2026-11-06 (pedido do MJRP: «seria legal “apagar” tudo que nao for selecionado, hj parece que atua somente no nós») |
+| **IN-13** | Num mapa com níveis, a 100% de zoom só os rótulos do primeiro nível aparecem; cada nível mais fundo aparece a partir de um limiar de zoom declarado. Nomes e linhas mantêm o tamanho na tela e os pontos crescem devagar. Teste: a 100%, rótulos de dois níveis não competem. | produção | IN-01 (overview first); DE-04 (agrupar antes de listar) · o zoom semântico: Perlin e Fox 1993 (Pad), referência de fora ainda sem ficha · MJRPpersonal 2026-11-06 (pedido do MJRP: as categorias primeiro, as subcategorias com o zoom) |
+| **IN-14** | Num mapa ou gráfico embutido numa página que rola, a roda do mouse sem modificador não é capturada: a página rola. O zoom fica com a pinça, Ctrl ou ⌘ com a roda, botões e duplo clique, e uma legenda no canto diz isso. Teste: rolar com a roda sobre o mapa rola a página. | produção | CP-06 (convenção de plataforma) · a referência de fora é o `gestureHandling: 'cooperative'` da Google Maps JavaScript API, ainda sem ficha |
+| **IN-15** | Um grafo com centenas de pontos não aparece em tela de celular: vira a lista dos mesmos grupos, que abre e fecha, e o item tocado abre a mesma ficha numa folha de baixo (padrão **grafo em lista com folha de baixo**). Teste: no celular não existe o grafo em miniatura sem como tocar um ponto de 44 pt. | produção | IN-03 (alvo de 44 pt); IN-07 (o estático é o padrão) · MJRPpersonal 2026-11-06 (a Constelação, no mesmo modelo do mapa da wiki do Control Center) |
+| **IN-16** | Ao arrastar um item numa lista ou num Kanban: o item sobe e um espaço marcado mostra onde cai; os vizinhos deslizam para abrir o espaço (técnica FLIP) em vez de saltar; o número de ordem pulsa ao mudar; Esc desfaz; no toque é preciso segurar antes de arrastar. Existe sempre a alternativa sem arrastar (↑, ↓ e «Mover para»). Teste: sem a alternativa, ou com vizinhos que saltam, falha. | produção | AH-04 (teclado); WCAG 2.2 SC 2.5.7 (Dragging Movements) · FLIP (Paul Lewis) e as diretrizes do Pragmatic drag and drop (Atlassian): referências de fora ainda sem ficha · MJRPpersonal 2026-11-06 (pedido do MJRP: dar «efeito que está empurrando pra cima e pra baixo os items») |
 
 ### AH · Acessibilidade e honestidade
 
@@ -117,6 +150,10 @@ o *porquê* mora lá e nesta página, nunca na skill.
 | **AH-06** | Precisão honesta: casas decimais limitadas pela qualidade do dado, não pela planilha; incerteza declarada em palavras simples. | produção | Gigerenzer; Andrews |
 | **AH-07** | Score composto mostra os fatores, não só a nota; janela, escala e pergunta que ele responde são explícitas. | produção | Sahha; Gigerenzer |
 | **AH-08** | Uma cor, um conceito, em todo o produto (consistência semântica); a mesma cor não significa duas coisas. | produção | Sigma; Wexler |
+| **AH-09** | Toda cor de superfície, texto, acento e status vem de um papel declarado no `design-system.md`, não de valor solto; a mesma cor não faz dois papéis (separador como texto, rótulo secundário como fundo). Teste: nenhuma cor na tela sem papel nomeado. | produção | Apple HIG Color (cor por papel); `visual-foundations.md` § Papéis |
+| **AH-10** | Em modo claro e escuro cada papel de cor mantém o mesmo significado e passa em AH-01; o escuro não é a inversão do claro e não se justifica como ganho de legibilidade. Teste: o par de capturas tem os mesmos papéis e contraste medido ≥ 4.5:1 nas duas aparências. | julgamento | WCAG 1.4.3; Apple HIG Dark Mode; Piepenbrock 2013; Sethi e Ziat 2023 (`visual-foundations.md` § Modo escuro) |
+| **AH-11** | Texto aguenta o uso: na web amplia a 200% sem perder conteúdo ou função e reflui a 320 px CSS de largura (tabela de dados e diagrama isentos); em app nativo nenhum texto fica abaixo do mínimo da plataforma (iOS e iPadOS 11 pt, macOS 10 pt). | julgamento | WCAG 1.4.4 e 1.4.10; Apple HIG Typography |
+| **AH-12** | Texto corrido (três ou mais linhas) tem linha de até ~80 caracteres e entrelinha ≥ 1,5; nível AAA do WCAG, adotado como piso de legibilidade, não como ótimo comprovado. Nenhum texto corrido usa `text-align: justify` (abre vãos desiguais numa coluna estreita, e a web não garante a hifenização); a frase que é uma ideia só fica num parágrafo, sem `<br>` dentro, com `text-wrap: pretty`. | julgamento | WCAG 1.4.8; Butterick, *Practical Typography* («Justified text»: só com hifenização); evidência de linha curta ou longa é mista (Ling e van Schaik 2006: `visual-foundations.md` § Legibilidade) · piso: decisão do agente, revisável pelo MJRP · sem justificado e sem quebra manual: MJRPpersonal 2026-11-06 (o MJRP recusou a quebra manual: «achei que com a quebra ficaria mellhor [...] mas ficou pior»), emenda de 2026-11-07 |
 
 ### RC · Comunicação de risco e calm technology
 
@@ -132,15 +169,27 @@ o *porquê* mora lá e nesta página, nunca na skill.
 | **RC-08** | Funciona mesmo quando falha: sem dado, a tela diz o que falta e o que ainda vale, em vez de tela vazia ou número zerado. | produção | Case (princípio VI); Nielsen H9 |
 | **RC-09** | Tom não-clínico em dado de saúde: linguagem de bem-estar, sem vermelho/alarme por default; cor de alerta reservada ao que exige ação. | produção | Case; 925 Studios; palette-library (Zen/Calma) |
 
+### IA · Arquitetura da informação
+
+Os quatro sistemas de Rosenfeld, Morville e Arango (organização, rotulagem, navegação e busca) e o tripé de onde nasce cada decisão — contexto, conteúdo e usuários. As regras julgam o `info-arch.md` e a tela que ele descreve. São todas de produção: a `mjrp-designing-ui` as escreve no `info-arch.md`, e a `mjrp-critiquing-ux-ui` as confere.
+
+| ID | Regra (testável) | Tipo | Fonte |
+|---|---|---|---|
+| **IA-01** | Cada seção do Sitemap do `info-arch.md` declara o seu **esquema de organização** — exato (alfabético, cronológico, geográfico) ou ambíguo (por assunto, tarefa ou público) — e qual, um por nível. Teste: nenhuma seção do Sitemap sem esquema nomeado, e nenhum nível com dois esquemas misturados. | produção | Rosenfeld, Morville e Arango 2015 (sistemas de organização) · onde apareceu: a estante do MJRPpersonal (categoria, estágio, ordem de leitura) |
+| **IA-02** | Um conceito tem **um rótulo só** em todas as telas e em todos os idiomas do produto — no menu, nos títulos, nos botões e nos links. O `info-arch.md` mantém a lista dos rótulos. Teste: nenhum conceito com dois nomes («Depoimentos» no menu e «Recomendações» no admin) e nenhum rótulo de tela fora da lista. | produção | Rosenfeld, Morville e Arango 2015 (sistemas de rotulagem); CO-06 (palavra do dia a dia) · MJRPpersonal 2026-11-07 (decisão do MJRP: «Remover», nunca «Tirar») |
+| **IA-03** | Cada modelo de página declara a navegação **global, local e contextual**. O projeto declara no `info-arch.md` a partir de quantas páginas a navegação **suplementar** (mapa do site, índice ou busca) passa a ser exigida; sem a declaração, a decisão de ter ou não ter uma fica escrita, com o motivo. Teste: nenhum modelo sem as três; nenhum produto sem a decisão sobre a suplementar. | produção | Rosenfeld, Morville e Arango 2015 (sistemas de navegação) · onde apareceu: o rodapé completo e a faixa das etapas nas páginas de caso do MJRPpersonal · o limiar declarado pelo projeto, não fixado aqui: o livro não dá número |
+| **IA-04** | Um produto com busca declara no `info-arch.md` **o que entra no índice, a forma do resultado e o estado sem resultado** (que diz o que fazer, IN-06). Teste: as três declarações existem para cada busca do produto. | produção | Rosenfeld, Morville e Arango 2015 (sistemas de busca) · onde apareceu: a busca do Jardim no MJRPpersonal |
+| **IA-05** | As categorias e subcategorias vêm de um **mapa declarado**; um sinônimo leva ao termo do mapa. Teste: nenhuma categoria na tela fora do mapa, e a busca por um sinônimo chega ao termo do mapa. | produção | Rosenfeld, Morville e Arango 2015 (vocabulários controlados, ligados à rotulagem) · onde apareceu: a regra do MJRP de só usar as subcategorias dos mapas dele (MJRPpersonal) |
+
 ### MP · Método de produção
 
-As sete disciplinas acima julgam **o artefato**. Esta julga **como ele foi produzido**: as regras de produção
+As oito disciplinas acima julgam **o artefato**. Esta julga **como ele foi produzido**: as regras de produção
 e o checklist são filtros convergentes — matam a opção ruim, não geram a boa. Onde o gosto do humano é o
 insumo que decide, entregar uma opção só lê como rigidez (achado do `mjrp-health-control`, 21/09/2026).
 
 | ID | Regra (testável) | Tipo | Fonte |
 |---|---|---|---|
-| **MP-01** | **Divergir antes de convergir.** Onde a decisão de tratamento visual ou de estrutura tem latitude (mais de uma solução defensável, e o humano decide pelo gosto), a skill produtora entrega **três opções** espalhadas sobre **um eixo nomeado**, igualmente acabadas, com a âncora no meio (o sistema como projetado), nomeadas por intenção — **Consolidar / Elevar / Transformar** — e cada uma com a régua *toca / preserva / arrisca*. O humano escolhe; só a escolhida segue para o checklist e o gate. Sem latitude (tela fechada por template e tokens), uma opção só — três seria teatro. | produção | Design Council (Double Diamond); Knapp (*Sprint*); Baghai, Coley e White (três horizontes) |
+| **MP-01** | **Divergir antes de convergir.** Onde a decisão de tratamento visual ou de estrutura tem latitude (mais de uma solução defensável, e o humano decide pelo gosto), a skill produtora entrega **três opções** espalhadas sobre **um eixo nomeado**, igualmente acabadas, com a âncora no meio (o sistema como projetado), nomeadas por intenção — **Consolidar / Elevar / Transformar** — e cada uma com a régua *toca / preserva / arrisca*. O humano escolhe; só a escolhida segue para o checklist e o gate. Sem latitude (tela fechada por template e tokens), uma opção só — três seria teatro. **A forma muda com o momento** (emenda de 2026-11-07, F214): na **primeira rodada do redesenho** de uma tela que o humano já usa, o eixo é a ambição, com **dois** níveis, Elevar e Transformar, e a **tela de hoje** como âncora («Referência», no lugar do «sistema como projetado»), sem perguntar o tamanho; Consolidar entra só quando apertar o que existe responde ao pedido. Num **elemento novo** dentro de uma direção já escolhida, os **três** níveis. Numa **dúvida visual** dentro do nível escolhido, **duas ou três prévias** num eixo. Variantes soltas, sem eixo nomeado, falham em todos os casos. | produção | Design Council (Double Diamond); Knapp (*Sprint*); Baghai, Coley e White (três horizontes) |
 
 Os três níveis, por intenção (do parecer):
 
@@ -191,7 +240,6 @@ O cânone é **referência inicial, não limitante** (MJRP, 19/09/2026). Três m
    o que vira regra sobe com o antes/depois como evidência. As cinco primeiras regras assim
    (HI-01, HI-02, DE-05, CO-04, CO-01/CO-03) vieram do `mjrp-health-control`.
 3. **Regra retirada não some.** Fica marcada *retirada*, com data e motivo, no `## History`; o
-- **2026-10-07 20:29** · Onda E do PDLC em loops (`design/proposals/pdlc-loops-migration-plan.md`): a numeração antiga de fases deu lugar às etapas e ao contrato de [[pdlc-loops]] §11.
    ID não é reusado — a auditoria antiga que o citava continua legível.
 
 ## How MJRP uses it
@@ -200,9 +248,9 @@ O cânone é **referência inicial, não limitante** (MJRP, 19/09/2026). Três m
   `docs/wiki/harness/`, e o I5 do `doctor` confere que chegou e que o carimbo não envelheceu.
 - **Lê-se sob demanda.** Quem vai desenhar uma tela, escrever o texto dela ou julgá-la abre;
   as skills de design citam o ID e mandam ler daqui. Nenhuma sessão carrega o cânone inteiro.
-- **As skills que citam:** `mjrp-designing-ui` (Explorar e Desenhar — a tela e a descrição dela: HI, DE, CP, IN, MP-01, e o
-  texto da tela: CO, AH-06/07, RC), `mjrp-defining-design-systems` (Desenhar, sistema visual — AH-01/02/08, CP-07), `mjrp-critiquing-ux` (tudo, os dois tipos), `mjrp-infographic-designer` (CO, HI,
-  AH no toolkit).
+- **As skills que citam:** `mjrp-designing-ui` (Explorar e Desenhar — a tela e a descrição dela: HI, DE, CP, IN, MP-01, a arquitetura da informação no `info-arch.md`: IA, e o
+  texto da tela: CO, AH-06/07, RC), `mjrp-defining-design-systems` (Desenhar, sistema visual — AH-01/02/08, CP-07, HI-08), `mjrp-critiquing-ux-ui` (tudo, os dois tipos), `mjrp-infographic-designer` (CO, HI,
+  AH no toolkit), `mjrp-copywriting` (o copy de site: CW, com CO-06 e AH-03).
 - **Quando o cânone e o projeto discordarem, o projeto decide** — desde que a decisão esteja
   escrita na `constitution.md` ou no `design-system.md` dele, e desde que não contrarie um
   princípio do `PRINCIPLES.md`.
@@ -243,6 +291,7 @@ O cânone é **referência inicial, não limitante** (MJRP, 19/09/2026). Três m
   P0 na critic. A 2c passa a exigir o `info-arch.md` com a matriz e as jornadas — inclusive sobre
   protótipo que já existia (Inception).
 
+- **2026-10-07 20:29** · Onda E do PDLC em loops (`design/proposals/pdlc-loops-migration-plan.md`): a numeração antiga de fases deu lugar às etapas e ao contrato de [[pdlc-loops]] §11.
 - **2026-10-18 12:45** · **Informação densa em vários níveis: HI-07, DE-07, DE-08 entram e DE-01 ganha um orçamento.**
   Incidente do protótipo v4.10 do Control Center: o card de conformidade aberto tinha 121 linhas e, com "Expandir tudo",
   8.985 px a 1440 (18.068 a 390); a crítica de UX marcou a sobrecarga como P1 (DE-01) mas não propôs forma visual
@@ -284,6 +333,27 @@ O cânone é **referência inicial, não limitante** (MJRP, 19/09/2026). Três m
   recolhe e um grupo dentro dele recolhe"; um terceiro recolhível dentro do grupo passa dela. A cláusula "divulgação dentro de
   divulgação não existe" saiu (contradizia o 2). O GOV.UK é mais estrito (nenhum acordeão dentro de acordeão, 1 nível) para página de
   conteúdo; o projeto declara onde está. "Menos níveis onde se compara ou se lê tudo" ficou como orientação, aqui.
+- **2026-11-04 23:58** · **CO-09: texto para pessoa ler tem linha e parágrafo** (UAT-485, F177). O MJRP mostrou a gaveta da ADR com o cabeçalho grudado; a tela já desenha cada rótulo em sua linha. O que o cânone passa a exigir é a forma do texto que se escreve: um assunto por parágrafo, espaço entre blocos, lista para item. Sem sensor: um parágrafo por assunto é juízo, e a máquina só contaria linhas, o que não diz isso.
+
+- **2026-11-04 12:33** · a cor e a tipografia não tinham regra testável → AH-09 a AH-12 e CP-08 (papéis de cor, modo escuro, ampliação e linha, escala tipográfica), cada uma com a fonte aberta em `visual-foundations.md` (F174). Nenhuma assenta em «cor = emoção», que fica na página como pesquisa e contexto.
+- **2026-11-07 08:57** · **As lições de design do MJRPpersonal entram (F200).** Dois relatórios do projeto filho, lidos inteiros:
+  `reports/harness-feedback/2026-11-06-mjrppersonal-personal-design-lessons.md` (30 lições, três comparadores de tela e a decisão do MJRP de 2026-11-03 a 06) e
+  `reports/harness-feedback/2026-11-07-mjrppersonal-information-architecture-source.md` (Rosenfeld, Morville e Arango). **Entram:** HI-08 (proporção de cor como
+  recomendação, a medida do aprovado como fato); CO-10 (marca em caixa alta); CP-09 (título que quebra entre grupos de palavras); IN-11 a IN-16 (o botão que nomeia um
+  subconjunto, o filtro que apaga sem reorganizar, o zoom por camadas, a roda que rola a página, o grafo em lista no celular, o arrastar que mostra para onde vai);
+  e a disciplina nova **IA** (IA-01 a IA-05), com a ficha `2015-rosenfeld-morville-arango-information-architecture.md`, que sobe a contagem para 42 fontes e nove
+  disciplinas. **Emendas na mesma linha:** IN-01 (a volta preserva o estado), CO-04 (a vista que mostra só parte do universo mostra os dois números), CP-04
+  (número e explicação no mesmo eixo), AH-12 (sem texto justificado nem quebra manual). **Decidido pelo agente, revisável pelo MJRP:** IA vira disciplina própria em
+  vez de IDs espalhados em CO, CP e IN, porque as cinco regras vêm de uma fonte só e o `info-arch.md` as reúne; o limiar de páginas da IA-03 fica a cargo do projeto
+  (o livro não dá número). As referências de fora das regras novas (Itten, FLIP, Pragmatic drag and drop, Google Maps, Perlin e Fox) estão marcadas *ainda sem ficha*.
+  Fora do cânone, nas skills: a comparação de versões, a prévia, a revisão de texto e o vocabulário (`mjrp-designing-ui`), as checagens de manutenção do protótipo
+  (`mjrp-critiquing-ux-ui`) e o registro de decisão de identidade no log (`mjrp-saving-context`).
+
+- **2026-11-07 09:54** · **Nasce a disciplina CW · Copy de site** (F204, S-216). O MJRP devolveu a skill `mjrp-copywriting` antes do merge: «a 204 precisa mesmo ser devolvida e baseada em fontes externas, me diga quais foram». Onze fontes novas fichadas (Morkes e Nielsen, Redish, Moran, Mailchimp, Handley, Dunford, Cialdini, W3C WAI, ISO 24495-1, CDC arts. 36–38, FTC 16 CFR 255), mais a WCAG 2.2, o CDC Clear Communication Index e Krug, já fichados: doze regras, CW-01 a CW-12. A disciplina entra nesta página, e não num cânone de copy à parte, porque esta já viaja no kernel e um arquivo novo pediria mudar a lista do kernel (decidido pelo agente, revisável pelo MJRP). Sem sensor novo: a forma da proposta já tem juiz (`copy_proposal_check.py`, na skill), que cobra CW-01, CW-05, o tipo da imagem de CW-10 e o teto do texto alternativo.
+
+- **2026-11-07 11:39** · **CW-13: citar um nome só quando se pode** (F204, revisão independente da skill, P1-6). A regra de nome que a `mjrp-copywriting` já trazia não tinha ID nem fonte; entra com a FTC (o endosso é de quem o deu) e, na parte da confidencialidade, como decisão do agente, revisável pelo MJRP. Os números do título da aba e da descrição para busca saem da skill: nenhuma fonte fichada os dá.
+
+- **2026-11-07 14:15** · **Duas emendas da F214 (S-222): a MP-01 e a HI-08.** O how-to da sessão Designer do `MJRPpersonal`, aprovado pelo MJRP, trouxe duas lições que divergiam do cânone. **MP-01 × B5 (dois níveis de ambição):** não é contradição, é a forma que a MP-01 toma na primeira rodada de um redesenho — o humano pediu um redesenho, apertar o que existe raramente responde, e a tela de hoje, posta como «Referência», faz o papel da âncora; o padrão se repetiu fora do filho (a F205, as telas do iPhone, escolheu Transformar na primeira olhada). Os três níveis ficam para o elemento novo numa direção escolhida, e as prévias, para a dúvida visual. **HI-08 × A6 (proporção como recomendação), refinada pelo MJRP em 2026-11-07:** o papel e a área são eixos diferentes; a regra antiga lia a ordem de destaque como ordem de área («a minha cor principal é a vinho, é a primeira pra destaque e depois é navy, o prata é pra contrastar com ambas e o nevoa creio que seria o maior percentual da tela»). Itten continua *ainda sem ficha*. O porquê da rodada inteira está em [[design-round]]. Decidido pelo agente sobre o que o MJRP aprovou, revisável por ele.
 
 ## Related
 [[engineering-canon]] · [[palette-library]] · [[harness-elements]] · [[terms]] · [[harness-kaizen]] · [[doctor]]

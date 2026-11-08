@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // The rules of the visual parity kit, as pure functions: no file, no browser, no clock. They compare the facts of the
 // approved prototype and of the product (facts.mjs) for one screen, one state and one condition, and say what diverges
 // and how much: P0 breaks the identity or misses the component, P1 diverges the form visibly, P2 is detail (does not
@@ -46,6 +46,7 @@ export const LABELS = {
   table: (problem) => `table-${problem}`,
   drawerNoRow: (kind) => `drawer ${kind}: no-row`,
   drawerNotOpen: (kind) => `drawer ${kind}: does-not-open`,
+  drawerNotButton: (kind) => `drawer ${kind}: card-not-a-button`,
   drawerWideMismatch: (kind) => `drawer ${kind}: wide-mismatch`,
   drawerRatio: (kind) => `drawer ${kind}: width-ratio`,
   drawerEdge: (kind) => `drawer ${kind}: past-screen-edge`,
@@ -429,6 +430,12 @@ export function textHealthChecks(pt, qt, { labels, where = '' } = {}) {
 // clickable row of one drawer kind on both sides (the record's `drawer`, the action `drawer:<kind>` with `row` and
 // `opened`); the data inside differs, so the form is compared: the drawer's width over the viewport, its edges, and the
 // text health inside it.
+// UAT-427 (F209, kit 1.3): the click is judged on the PRODUCT's side alone - a row the product has and that does not open its
+// drawer is a P0, whatever the prototype did (a product whose cards open nothing used to pass with no finding). A drawer
+// scenario that clicks by a plain gesture (`click`, `click:<sel>`, `clickText:<re>`, with no `drawer:<kind>` action) is
+// judged the same way: the gesture found its target = the row, a drawer in the side's facts = opened. And a side that
+// counts its cards (`cards` on the `drawer:<kind>` action: the cards on screen, clickable or not) and has no clickable row
+// while cards are there has a card that is not a button (P0), told apart from a row the data does not have (P2 no-row).
 
 /** The drawer's width over the viewport may differ by this much (0.05 of 1440 px is 72 px). */
 export const DRAWER_RATIO_TOLERANCE = 0.05;
@@ -447,18 +454,27 @@ export function drawerChecks(rec, { labels } = {}) {
   const out = [];
   const add = (id, sev, proto, product) => out.push({ id, sev, proto, product });
   const kind = rec.drawer;
-  const find = (list) => (list ?? []).find((a) => a.action === `drawer:${kind}`);
-  const pa = find(rec.protoActions);
-  const qa = find(rec.productActions);
   const pd = rec.proto?.drawer;
   const qd = rec.product?.drawer;
+  const find = (list, drawer) => {
+    const own = (list ?? []).find((a) => a.action === `drawer:${kind}`);
+    if (own) return own;
+    const click = [...(list ?? [])].reverse().find((a) => /^click(Text)?(:|$)/.test(String(a.action)));
+    return click && { action: click.action, available: click.available, row: !!click.available, opened: !!drawer };
+  };
+  const pa = find(rec.protoActions, pd);
+  const qa = find(rec.productActions, qd);
+  if (!qa?.row && qa?.cards > 0) {
+    add(label(labels, 'drawerNotButton', kind), 'P0', pa?.row ? 'abre' : '—', `${qa.cards} card(s) na tela, nenhum é botão`);
+    return out;
+  }
   if (pa?.row && !qa?.row) {
     add(label(labels, 'drawerNoRow', kind), 'P2', 'abre', 'nenhuma linha');
     return out;
   }
   if (!qa?.row) return out;                             // neither side has the row: nothing to compare
   if (!qa.opened || !qd) {
-    if (pa?.opened) add(label(labels, 'drawerNotOpen', kind), 'P1', pd?.title ?? 'abre', 'não abre');
+    add(label(labels, 'drawerNotOpen', kind), 'P0', pa?.opened ? (pd?.title ?? 'abre') : '—', 'não abre');
     return out;
   }
   // the wide drawer is for an image: when the first row is an image on one side and a text on the other, the data

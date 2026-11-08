@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 product_structure_check.py - can the Control Center show this product? Reads a project the way the Control Center
 reads it and says, per screen, what it cannot render: the judge of the `product-structure` catalog item.
@@ -61,6 +61,9 @@ What is a gap (each with file:line and the owner skill):
 WARNINGS (`product-structure@5`, CM-0027; born of the audit of the fin-control conform, 2026-10-17, where notes passed by
 form only): printed after the gaps, in `--json` under `warnings`, and they NEVER change the exit code. They are judgments of
 content that a pattern can only approximate, so they point at what a separate-agent audit must read:
+  - features: a path or a file name in backticks in the `## Summary` of a feature still being written (`feature_summary_path`,
+    `product-structure@15`, CM-0106, F175): on the screen a code span is text, it does not open, and a folder names no document;
+    the document the person will want to open is written `[[file|plain words]]`. A closed feature is not rewritten at once.
   - outcomes: a `###` outcome without `- **Problema:**` / `- **Quem sente:**` (`outcome_no_problem`, `outcome_no_who`; the
     file-level demand is the catalog's `roadmap@4`); the OUTCOME CYCLE - an outcome in Now whose stories are all done and
     that has no `achieved:: AAAA-MM-DD` (`outcome_done_not_achieved`: it is "em monitoramento", only the MJRP marks it
@@ -615,6 +618,25 @@ def summary_problems(text):
     return [("feature_summary_labels", f"o `## Summary` não está em três parágrafos ({labels}): {'; '.join(why)}", at)]
 
 
+_PATH_IN_CODE = re.compile(r"`((?:[\w.@-]+/)+[\w.@-]*|[\w@-]+(?:\.[\w@-]+)*\.(?:md|py|json|yml|yaml|html|pdf|mjs|tsx?|png))`")
+_CLOSED_STATUS = ("done", "accepted", "cancelled", "deferred")
+
+
+def summary_paths(text):
+    """[(path, line)] written in backticks in a feature's `## Summary` (product-structure@15, F175): on the screen a code span is text,
+    it does not open, and a folder names no document. The document the person will want to open is `[[file|plain words]]`."""
+    lines = (text or "").splitlines()
+    start = next((i for i, x in enumerate(lines) if _SUMMARY.fullmatch(x)), None)
+    if start is None:
+        return []
+    out = []
+    for i in range(start + 1, len(lines)):
+        if lines[i].startswith("## "):
+            break
+        out.extend((m.group(1), i + 1) for m in _PATH_IN_CODE.finditer(lines[i]))
+    return out
+
+
 def feature_kind(front):
     """(lane, solution_type, declared) of a spec's frontmatter. `solution_type:` (`feature | fix`) wins; the legacy
     `track:` still reads (`Fix` = fix, any other value = feature); an absent `lane:` (`standard | fast`) reads as
@@ -654,7 +676,8 @@ def read_feature(root, folder):
             "planned_for": (lambda m: m.group(1) if m else None)(_RELEASE.search(front.get("planned_for", ""))),
             "status": front.get("status", "").strip(), "status_line": at.get("status", 1),
             "imports_line": at.get("imports", 1), "fixes_line": at.get("fixes", 1),
-            "summary": summary_problems(spec_text) if spec_text is not None else [], "tasks_total": tasks_total}
+            "summary": summary_problems(spec_text) if spec_text is not None else [], "tasks_total": tasks_total,
+            "summary_paths": summary_paths(spec_text) if spec_text is not None else []}
 
 
 _ROUND = re.compile(r"^## Rodada (?P<n>\d+)\s+—\s+(?P<release>[^·(]+?)\s*(?:[·(].*)?$")
@@ -1177,6 +1200,10 @@ def check(root):
             continue
         for code, why, line in f["summary"]:
             r.gap("Delivery", f["spec"], line, f"{f['id']}: {why}", OWNER_SDD, code=code)
+        if f["status"].casefold() not in _CLOSED_STATUS:      # product-structure@15 (F175): a feature being written; the closed ones are rewritten when touched
+            for path, line in f["summary_paths"]:
+                r.warn("Delivery", f["spec"], line, f"{f['id']}: o Summary cita `{path}` em crase; na tela é texto e não abre (uma pasta nem nomeia um documento) — "
+                       "aponte o arquivo exato como [[arquivo|palavras comuns]]", OWNER_SDD, code="feature_summary_path")
         n_stories = len(f["imports"])
         n_epics = len({by_id[s]["epic"] for s in f["imports"] if s in by_id and by_id[s]["epic"]})
         size = "uma feature é a menor fatia vertical que entrega valor observável a quem usa, cabe numa rodada de execução e verificação e se confirma com uma verificação só"

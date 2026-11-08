@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // Tests of the visual parity kit: the rules on sample facts (a pair that must pass, one that must fail), the judge on
 // facts written to a temporary folder, and — when the consuming project's Playwright is reachable — the whole sensor
 // end to end on two small pages (a prototype and a product that differ in the menu, the font and a component).
@@ -294,6 +294,40 @@ test('drawers: width over the screen, past the edge, and the text health inside,
   assert.deepEqual(baseChecks(rec, OPTS).map((c) => c.id), drawerChecks(rec).map((c) => c.id));
   const noRow = { ...rec, productActions: [{ action: 'drawer:adr', available: false, row: false }] };
   assert.deepEqual(drawerChecks(noRow).map((c) => `${c.sev} ${c.id}`), ['P2 drawer adr: no-row']);
+});
+
+// UAT-427 (F209, kit 1.3): the facts as the Control Center's capture of the `f135-card-drawer-*` scenarios writes them
+// (web/visual/parity.spec.ts: `drawer:<kind>` with row/opened/cards; the plain `click` with only `available`), with the
+// product's card that opens nothing - the case that used to give 0 findings.
+test('drawers: a card the product has and that opens nothing is a P0, whatever the prototype did (the f135-card-drawer-* facts)', () => {
+  const drawerSide = (d) => ({ ...side(), viewport: { width: 1440, height: 900 }, drawer: d, textHealth: th() });
+  const open = { width: 560, left: 880, right: 1440, ratio: 0.389, wide: false, title: 'F135' };
+  // -feature: the prototype's hash reaches no row (recheck-30, R30-01); the product clicks its card and no drawer opens
+  const feature = {
+    scenario: 'f135-card-drawer-feature', drawer: 'delivery-feature',
+    proto: drawerSide(null), product: drawerSide(null),
+    protoActions: [{ action: 'drawer:delivery-feature', available: false, row: false, opened: false }],
+    productActions: [{ action: 'drawer:delivery-feature', available: false, row: true, opened: false }],
+  };
+  assert.deepEqual(drawerChecks(feature).map((c) => `${c.sev} ${c.id}`), ['P0 drawer delivery-feature: does-not-open']);
+  assert.deepEqual(drawerChecks({ ...feature, protoActions: [{ action: 'drawer:delivery-feature', available: true, row: true, opened: true }], proto: drawerSide(open) })
+    .map((c) => `${c.sev} ${c.id}`), ['P0 drawer delivery-feature: does-not-open']);
+  // the product opens it: no finding about the click
+  assert.deepEqual(drawerChecks({ ...feature, product: drawerSide(open), productActions: [{ action: 'drawer:delivery-feature', available: true, row: true, opened: true }] }), []);
+  // -story and -epic click by the plain gesture: the prototype is there by its hash, the product clicks
+  const story = {
+    scenario: 'f135-card-drawer-story', drawer: 'board-story',
+    proto: drawerSide(open), product: drawerSide(null),
+    protoActions: [{ action: 'click', available: true }], productActions: [{ action: 'click', available: true }],
+  };
+  assert.deepEqual(baseChecks(story, OPTS).map((c) => `${c.sev} ${c.id}`), ['P0 drawer board-story: does-not-open']);
+  assert.deepEqual(drawerChecks({ ...story, product: drawerSide(open) }), []);
+  // the gesture found no target: a row the data may not have, as before (P2 when the prototype has it)
+  assert.deepEqual(drawerChecks({ ...story, productActions: [{ action: 'click', available: false }] }).map((c) => `${c.sev} ${c.id}`), ['P2 drawer board-story: no-row']);
+  // cards on screen and none of them a button: its own rule (P0), not the no-row the data may explain
+  const notButton = { ...feature, productActions: [{ action: 'drawer:delivery-feature', available: false, row: false, opened: false, cards: 4 }] };
+  assert.deepEqual(drawerChecks(notButton).map((c) => `${c.sev} ${c.id}`), ['P0 drawer delivery-feature: card-not-a-button']);
+  assert.deepEqual(drawerChecks({ ...notButton, productActions: [{ action: 'drawer:delivery-feature', available: false, row: false, opened: false, cards: 0 }] }), []);
 });
 
 test('facts: components, a table cell too narrow and an open drawer are measured in the page', { skip: !playwright && 'Playwright not reachable from here' }, async () => {

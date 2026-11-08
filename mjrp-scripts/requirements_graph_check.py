@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirements_graph_check.py -- checks the requirements graph of a project against its single declaration,
 requirements_graph_rules.json (S-63, kernel page requirements-graph).
 
@@ -270,10 +270,9 @@ STORY_SHAPED = re.compile(r"^(?:\*\*)?(?:Como|Quando|As|When)\b", re.I)
 
 
 def story_has_statement(section):
-    """False when `section` (the text of a `## <lang>` block) holds no statement of its own."""
+    """False when `section` (the text of a `## <lang>` block) holds no statement of its own. The bold first line stays in: since F172
+    it can be the sentence itself."""
     lines = [ln.strip() for ln in (section or "").strip().splitlines()]
-    if lines and STORY_TITLE_LINE.match(lines[0]):
-        lines = lines[1:]
     paras, cur = [], []
     for ln in lines + [""]:
         if ln:
@@ -288,10 +287,59 @@ def story_has_statement(section):
     return False
 
 
+# F172 (UAT-479): the title of a story IS its sentence. The source language's sentence is the H1 (`# <id> · <sentence>`), and each
+# mirror's is the bold first line of its section; the paragraph that used to repeat it is out of the body. The old layout (a short verb
+# title, the sentence under `## pt-BR`) is still read as the sentence, so a child that has not had the refresh keeps passing story_form.
+STORY_H1_LINE = re.compile(r"^# [^\n]*? · (.+?)\s*$", re.M)
+
+
+def story_h1_title(body):
+    """F172: the title of the node's H1 (`# <id> · <title>`), or None when the H1 has no such shape."""
+    m = STORY_H1_LINE.search(body or "")
+    return m.group(1).strip() if m else None
+
+
+def story_statement_text(body, lang):
+    """F172: what the no-statement judgment reads. The H1 opens the text when it is already a story («Como …»), so a sentence that lives
+    only in the title is a statement too; otherwise it comes last, and the old layout's first paragraph still opens the section."""
+    h1, section = story_h1_title(body) or "", lang_section(body, lang) or ""
+    if h1 and STORY_SHAPED.match(h1):
+        return f"{h1}\n\n{section}"
+    return f"{section}\n\n{h1}"
+
+
+def story_title_and_paragraph(body, lang, first):
+    """F172: (title, paragraph) of a `## <lang>` section. The title is the H1 for the source language and the bold first line of a
+    mirror; the paragraph is the sentence the body still holds (the old layout). A labelled line (`Origem:`) is no paragraph."""
+    title, para = story_parts(lang_section(body, lang))
+    if first:
+        title = story_h1_title(body)
+    if para and STORY_LABEL_LINE.match(para):
+        para = ""
+    return title, para
+
+
+def story_fits(sentence, pats):
+    """True when `sentence` is in one of the forms `pats` (the regexes of one language)."""
+    return bool(sentence) and any(re.match(p, sentence) for p in pats)
+
+
+def story_sentence(body, lang, cfg, first):
+    """F172: the sentence the form judges, and whether it is the title: the title when it is in a form, else the paragraph of the old
+    layout when that is, else the title or the paragraph as found (the finding quotes it)."""
+    title, para = story_title_and_paragraph(body, lang, first)
+    pats = list(cfg["forms"][lang].values())
+    if story_fits(title, pats):
+        return title, True
+    if story_fits(para, pats):
+        return para, False
+    return (title or para or ""), bool(title)
+
+
 def story_key(raw, langs):
-    """What a commit must not change without the template judging it: the title and the sentence of each language section."""
+    """What a commit must not change without the template judging it: the H1 title and the title and sentence of each language section."""
     _, body = frontmatter(raw or "")
-    return tuple(story_parts(lang_section(body, lang)) for lang in langs)
+    return (story_h1_title(body),) + tuple(story_parts(lang_section(body, lang)) for lang in langs)
 
 
 def story_form_problems(body, langs, cfg):
@@ -302,7 +350,8 @@ def story_form_problems(body, langs, cfg):
     problems, kinds = [], {}
     for n, lang in enumerate(present):
         where = f"`## {lang}`"
-        title, sentence = story_parts(lang_section(body, lang))
+        sentence, _ = story_sentence(body, lang, cfg, n == 0)
+        title, _ = story_title_and_paragraph(body, lang, False)
         if n and not title:
             problems.append(f"{where}: falta o título em negrito na primeira linha (`**<title>**`), o espelho do título da story")
         match = None
@@ -333,6 +382,23 @@ def story_form_problems(body, langs, cfg):
                             "versão, código de regra, crase nem parêntese: a fonte vai na linha `Origem:`")
     if len(set(kinds.values())) > 1:
         problems.append("as línguas usam formas diferentes (" + ", ".join(f"{k}: {v}" for k, v in kinds.items()) + ") — a mesma forma em todas")
+    return problems
+
+
+def story_title_problems(body, langs, cfg):
+    """F172 (UAT-479): the title of a story is its sentence, and no paragraph of the body repeats it. Each language's title (the H1 for
+    the source, the bold first line of a mirror) must be in a form; a paragraph that still holds a sentence in a form is the old layout's,
+    and the sentence sits in the title only. [] when the story is in the layout."""
+    present = [lang for lang in langs if lang in cfg["forms"] and (lang_section(body, lang) or "").strip()]
+    problems = []
+    for n, lang in enumerate(present):
+        title, para = story_title_and_paragraph(body, lang, n == 0)
+        pats = list(cfg["forms"][lang].values())
+        where = "o título (`# <id> · <título>`)" if n == 0 else f"o título em negrito de `## {lang}`"
+        if not story_fits(title, pats):
+            problems.append(f"{where} não é a frase — escreva a frase no título: {cfg['hint'][lang]}")
+        if story_fits(para, pats):
+            problems.append(f"`## {lang}`: a frase também está no parágrafo do corpo — tire o parágrafo; a frase fica só no título")
     return problems
 
 
@@ -388,6 +454,7 @@ class Graph:
         # that was already there (UAT-290) warns first
         self.warnings = []
         self._open_branches = None  # read once, by has_open_branch (F161)
+        self._adr_statuses = None  # read once, by adr_statuses (F195)
         # F134: why the board configuration could not be read (the disk refused a file): not evaluable, never green
         self.board_unevaluable = None
 
@@ -550,9 +617,12 @@ class Graph:
                                # F137: why the story's text is out of the template (judged by check_story_form)
                                "story_form": (story_form_problems(body, self.languages(), self.story_form_cfg())
                                               if self.is_story(nid, fm) and self.story_form_cfg() else []),
+                               # F172 (UAT-479): why the title is not the sentence (judged by check_story_title)
+                               "story_title": (story_title_problems(body, self.languages(), self.story_form_cfg())
+                                               if self.is_story(nid, fm) and self.story_form_cfg() else []),
                                # F164: a block that is a note, not a story, is shown as a warning, never as a finding
                                "story_no_statement": bool(self.is_story(nid, fm) and self.languages()
-                                                          and not story_has_statement(lang_section(body, self.languages()[0])))}
+                                                          and not story_has_statement(story_statement_text(body, self.languages()[0])))}
 
     def load_features(self):
         d = self.p["features"]
@@ -616,7 +686,8 @@ class Graph:
                                 on, _, reason = marks["waiting"].partition("—")
                                 feat.setdefault("task_waits", []).append((own.group(1), {
                                     "on": on.strip(), "reason": reason.strip(), "action": (marks.get("action") or "").strip(),
-                                    "item": marks.get("item"), "until": marks.get("until")}))
+                                    "item": marks.get("item"), "until": marks.get("until"),
+                                    "closed": bool(re.match(r"^[-*]\s+\[[xX]\]", line))}))
                             if re.match(r"^[-*]\s+\[[xX]\]", line):
                                 feat["ticked"] = feat.get("ticked", 0) + 1
                         else:
@@ -1155,6 +1226,28 @@ class Graph:
     def story_form_message(nid, problems):
         return f"{nid}: a story fora do template da `mjrp-writing-reqs` — " + " · ".join(problems)
 
+    def check_story_title(self):
+        """F172 (UAT-479): a story whose title is not its sentence warns until `turn_date` and is a finding from then on, in every status
+        (the check_story_form pattern: the refresh of a child is what turns it). A story with no statement is a note, not judged."""
+        cfg = self.story_form_cfg()
+        if not cfg:
+            return
+        turn = date.fromisoformat(str(cfg.get("title_turn_date") or cfg["turn_date"]))
+        turned = _clock.today() >= turn
+        for nid in sorted(self.nodes):
+            node = self.nodes[nid]
+            if not node.get("story_title") or node.get("story_no_statement"):
+                continue
+            msg = self.story_title_message(nid, node["story_title"])
+            if turned:
+                self.find("story_title", msg)
+            else:
+                self.warn("story_title", f"{msg} (aviso até {turn.isoformat()}; erro a partir daí)")
+
+    @staticmethod
+    def story_title_message(nid, problems):
+        return f"{nid}: o título da story não é a frase — " + " · ".join(problems)
+
     def story_text_changed(self, nid, mode):
         """F137: the findings of the story whose text (title and sentence of each language) THIS work adds or changes -- judged from
         the content the commit carries (the index for --staged, the disk for --changed), not from the disk's. A status-only change
@@ -1182,7 +1275,13 @@ class Graph:
         if old.code == 0 and story_key(old.out, langs) == story_key(new, langs):
             return []
         problems = story_form_problems(body, langs, cfg)
-        return [("story_form", self.story_form_message(nid, problems))] if problems else []
+        found = [("story_form", self.story_form_message(nid, problems))] if problems else []
+        # F172: the title is judged for a story with a statement, the note of a block that is not one never is
+        if langs and story_has_statement(story_statement_text(body, langs[0])):
+            title = story_title_problems(body, langs, cfg)
+            if title:
+                found.append(("story_title", self.story_title_message(nid, title)))
+        return found
 
     def stale_days(self):
         days = (self.rules.get("defaults") or {}).get("stale_days", 14)
@@ -1805,6 +1904,7 @@ class Graph:
         self.check_waiting()
         self.check_origin()
         self.check_story_form()
+        self.check_story_title()
         self.check_closure()
         return self.findings
 
@@ -1854,21 +1954,28 @@ class Graph:
         only on what started -- `waiting_not_started`, by the one predicate of a start (`priority_next.has_started`: the open branch
         counts, and the start commit lives on the branch, F161) -- and is erased once it ended on its own (the awaited item done,
         closed or accepted; the day passed) -- `waiting_resolved`. Inactivity is not computed here: only the served board knows
-        what is idle, so an idle item nobody explained is `board_served_check.py`'s `waiting_unexplained`."""
+        what is idle, so an idle item nobody explained is `board_served_check.py`'s `waiting_unexplained`.
+        F195 (UAT-511): the written wait stands only for what the facts do not show, so a wait the facts contradict is
+        `waiting_contradicted` -- `--staged` refuses it in the commit that touches it: the item already closed (a Done or Accepted
+        feature or node, a ticked task), or its text says an ADR of this project awaits the acceptance and the ADR is no longer
+        `Proposed` (the F150's wait, on 5/11, still waited for the CC-ADR-0037, accepted that night)."""
         today = _clock.today().isoformat()
         declared = []
         for f in self.features.values():
             if f.get("waiting") is None and not f.get("task_waits"):
                 continue
             started = priority_next.has_started(f.get("status"), f.get("ticked", 0)) or self.has_open_branch(f["dir"])
+            closed = str(f.get("status") or "").strip().casefold() in CLOSED_FEATURE
             if f.get("waiting") is not None:
-                declared.append((f["dir"], self.waiting_of(f["waiting"]), started))
+                declared.append((f["dir"], self.waiting_of(f["waiting"]), started, closed))
             for tid, wait in f.get("task_waits", []):
-                declared.append((f"{f['dir']}/{tid}", wait, started))
+                declared.append((f"{f['dir']}/{tid}", wait, started, closed or wait.get("closed", False)))
         for nid, node in self.nodes.items():
             if node.get("waiting") is not None:
-                declared.append((nid, self.waiting_of(node["waiting"]), str(node.get("status") or "") == "In progress"))
-        for where, wait, started in declared:
+                status = str(node.get("status") or "")
+                declared.append((nid, self.waiting_of(node["waiting"]), status == "In progress",
+                                 status.strip().casefold() in OVER_STATUS))
+        for where, wait, started, closed in declared:
             why = None
             if wait.get("bad") or wait["on"] not in WAITING_ON:
                 why = f"`on` é um de {', '.join(WAITING_ON)} (veio {wait['on']!r})"
@@ -1885,12 +1992,41 @@ class Graph:
             if why:
                 self.find("waiting_shape", f"{where}: o `waiting:` está fora da forma: {why} (S-197)")
                 continue
-            if not started:
+            contradiction = "o item já fechou: o que fechou não espera" if closed else self.awaited_adr_decided(wait)
+            if contradiction:
+                self.find("waiting_contradicted", f"{where}: o `waiting:` diz o que os fatos desmentem — {contradiction}; reescreva-o com "
+                          "o que falta hoje, ou apague-o: o board calcula dos fatos as tasks abertas e com quem está (F195)")
+            elif not started:
                 self.find("waiting_not_started", f"{where}: `waiting:` declarado num item que não começou — o que não começou está na fila, não esperando (S-197 R1)")
-            elif wait["on"] == "item" and self.item_status(wait["item"]) in OVER_STATUS:
+            elif wait["item"] and self.item_status(wait["item"]) in OVER_STATUS:
                 self.find("waiting_resolved", f"{where}: espera a {wait['item']}, que já chegou — apague o `waiting:` (S-197 R4)")
             elif wait["on"] == "time" and wait["until"][:10] < today:
                 self.find("waiting_resolved", f"{where}: esperava até {wait['until'][:10]}, que já passou — apague o `waiting:` (S-197 R4)")
+
+    def adr_statuses(self):
+        """The status word of each ADR of this project (`CC-ADR-0037` -> `Accepted`), read once from `docs/decisions/`."""
+        if self._adr_statuses is None:
+            self._adr_statuses = {}
+            folder = self.root / "docs" / "decisions"
+            for f in sorted(folder.glob("[0-9][0-9][0-9][0-9]-*.md")) if folder.is_dir() else ():
+                text = f.read_text(encoding="utf-8", errors="replace")
+                title = ADR_TITLE.search(text)
+                if title:
+                    ident = f"{title['prefix'] + '-' if title['prefix'] else ''}ADR-{title['number']}"
+                    self._adr_statuses[ident] = adr_fields(text)[1]
+        return self._adr_statuses
+
+    def awaited_adr_decided(self, wait):
+        """F195: the wait's text says an ADR awaits the acceptance (`espera o aceite`, `aguarda a aprovação`) and that ADR of this
+        project is no longer `Proposed`: why, or None. An ADR of another project, or one with no status, is not judged."""
+        text = f"{wait.get('reason') or ''} {wait.get('action') or ''}"
+        if not AWAITS_ACCEPTANCE.search(text):
+            return None
+        for ident in dict.fromkeys(m.group(0) for m in ADR_ID.finditer(text)):
+            status = self.adr_statuses().get(ident)
+            if status and status != "Proposed":
+                return f"a {ident} já está {status}, e o texto diz que ela espera o aceite"
+        return None
 
     def check_origin(self):
         """F134 (ADR-0026 § 2, ADR-0027): the type of an improvement follows its origin -- born in the stage Homologação, an issue of the
@@ -1995,6 +2131,10 @@ QUOTED_MARK = re.compile(r"`[^`]*::[^`]*`")
 WAITING_ON = ("human", "item", "time", "resource")
 WAITING_TEXT_MAX = 240   # F161 (the UX critique's finding 4): the notice sits above the drawer's tabs; decided by the agent, revisable by the MJRP
 OVER_STATUS = {"done", "accepted", "fixed", "closed"}                  # the awaited item arrived
+# F195: a wait whose text says something awaits the acceptance, and the ADR ids it may name
+AWAITS_ACCEPTANCE = re.compile(r"\b(?:espera|aguarda|falta|pende)\w*\s+(?:\w+\s+){0,2}?(?:aceite|aceitar|aprovação|aprovar|accept\w*)\b",
+                               re.I)
+ADR_ID = re.compile(r"\b(?:[A-Z][A-Z0-9]*-)?ADR-\d{4}\b")
 BOARD_PROJECT_REL = "docs/specs/board.json"           # _board.PROJECT_REL
 BOARD_DEFAULTS_REL = "mjrp-scripts/board_defaults.json"
 
@@ -2100,7 +2240,9 @@ def main(argv):
             print(f"  [{r}] {m}")
         if any(r == "story_form" for r, _ in mine):
             print("  a story: reescreva a frase pelo template da `mjrp-writing-reqs` (templates/req-story-backlog.md) — cada motivo acima diz o que mudar")
-        if any(r != "story_form" for r, _ in mine):
+        if any(r == "story_title" for r, _ in mine):
+            print("  o título da story: a frase do template vai no título (`# <id> · <frase>`, e a linha em negrito de `## en`), sem parágrafo repetido")
+        if any(r not in ("story_form", "story_title") for r, _ in mine):
             print("  conserte o status ou a evidência (delivered_by, accepted_in, tarefas) — ou reconcilie: kernel requirements-graph § Reconciliação")
         return 2 if "--gate" in argv else 1
     n_nodes = len(g.nodes)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """visual_gate.py -- a screen feature is merged with the independent visual recheck's report: evaluated, with no P0.
 
 Born 2026-10-12 (ADR-0017 of the harness, revised after its architecture audit; decision of the MJRP): the Control
@@ -60,6 +60,12 @@ it never reads back. A report with `who_judged: human` - the OK of the chat that
 standard-lane feature, or with no feature spec, keeps the recheck report; on the Agent track of the fast lane the
 independent recheck writes its report and the finger is not asked.
 
+The remote approval (F153, CC-ADR-0038): before asking for the finger, and only in the repository of the harness, the gate looks for a passkey
+signature of this tip, approved on the MJRP's iPhone. A valid one is the verdict: the note says `presence: passkey` and carries the signature,
+and the nonce is spent only after the note is saved (a note that does not save voids the approval). An invalid one refuses without the finger.
+With no record, the Touch ID as always; with the verifier or the list out, the gate says so and asks for the Touch ID. A merge released by the
+human's valve leaves a note saying `presence: human-released`.
+
 Modes:
   python3 visual_gate.py --hook                 git pre-merge-commit: judges the revisions in GIT_REFLOG_ACTION, and refuses a staged
                                                 screen file none of them changed; exit 1
@@ -83,6 +89,10 @@ import pathlib as _pl, sys as _sys  # noqa: E401  (F73 GV-06: this script's fold
 _sys.path[:0] = [d for d in [str(_pl.Path(__file__).resolve().parent)] if d not in _sys.path]
 import _boot  # noqa: F401  (the scripts folder on sys.path, F73 R17)
 from _git import run_tuple as _git   # (code, stdout) with a deadline on every call: this runs in the pre-merge-commit hook (F73)
+try:
+    import _passkey                      # CC-ADR-0038 and CC-ADR-0041: the harness and the children
+except ImportError:
+    _passkey = None
 
 UI_SUFFIXES = {".tsx", ".jsx", ".vue", ".svelte", ".html", ".css", ".scss"}
 DOC_NAMES = re.compile(r"(^|/)(readme[^/]*|[^/]*\.md|\.gitkeep|\.gitignore)$", re.I)
@@ -99,9 +109,9 @@ LANE = re.compile(r"^lane:[ \t]*[\"']?([A-Za-z-]+)", re.M)
 # The proof of presence of the Control Center (CC-ADR-0031). The home comes from the account, never from $HOME: a variable on the
 # merge's command line must not be able to point the gate at another binary.
 PRESENCE = Path(pwd.getpwuid(os.getuid()).pw_dir) / ".mjrp" / "control-center" / "bin" / "presence"
-# Seconds the dialog waits for his finger. The integrator merges through `merge_train.py merge`, whose deadline on every git call is
-# GIT_TIMEOUT (60 s): the dialog, its margin (PRESENCE_MARGIN) and the rest of the hook must end before it, or the train kills
-# `git merge` mid-way (F61 judge, P1-1). The selftest holds PRESENCE_TIMEOUT + PRESENCE_MARGIN < merge_train.GIT_TIMEOUT.
+# Seconds the dialog waits for his finger. The integrator merges through `merge_train.py merge`, whose deadline on the merge itself is
+# MERGE_TIMEOUT (300 s, UAT-490): the dialog, its margin (PRESENCE_MARGIN) and the rest of the hook must end before it, or the train kills
+# `git merge` mid-way (F61 judge, P1-1). The selftest holds PRESENCE_TIMEOUT + PRESENCE_MARGIN < merge_train.MERGE_TIMEOUT.
 PRESENCE_TIMEOUT = 35
 PRESENCE_MARGIN = 10
 NOTES_REF = "refs/notes/mjrp-visual-ok"              # the audit trail of the OK; the gate never reads it back
@@ -292,28 +302,85 @@ def branch_lanes(root, rev, changed):
     return fast, other
 
 
+def _far_command(root, *args):
+    """A command of the remote approval as it runs where the gate speaks: the harness's own script, by its full path and with `--root` in a
+    child, where there is no copy of it (F199)."""
+    if _passkey.is_harness_repo(root):
+        return f"python3 mjrp-scripts/remote_approval.py {' '.join(args)}"
+    return f"python3 {_passkey.harness_path() / 'mjrp-scripts' / 'remote_approval.py'} {' '.join(args)} --root {root}"
+
+
+def _other_tip(root, full, scope):
+    """(request id, short tip) of the newest remote approval of this branch for another tip, or None: a new commit left it behind (F199)."""
+    found = [(p["issued_at"] if isinstance(p.get("issued_at"), int) else 0, path.stem, str(p.get("subject", ""))[:8], p.get("project"))
+             for path, _r, p in _passkey.signed_records() if p.get("kind") == "merge" and p.get("scope") == scope and p.get("subject") != full]
+    if not found:
+        return None                          # the common case reads no project: this runs in the hook, under its deadline
+    try:
+        project = _passkey.project_of(root)
+    except _passkey.Unevaluable:
+        return None
+    found = [f for f in found if f[3] == project]
+    return max(found)[1:3] if found else None
+
+
 def _human_ok(root, rev, label, fast, waiting, ask):
     """The MJRP's OK on the screen for a fast-lane branch: ([(kind, message)], [note]). `waiting` is [(project name, what changed)];
     `ask` is None outside the hook (nothing is asked: the merge will ask) or ask_presence."""
     ids = ", ".join(sorted(fast, key=lambda f: int(f[1:])))
     where = "; ".join(f"{n}: {s}" for n, s in waiting)
     if ask is None:
-        return [("human_ok", f"via rápida ({ids}): falta o OK do MJRP na tela ({where}) - o merge pede o Touch ID dele")], []
+        far = (f", ou a aprovação de longe, que vale para a ponta de agora (um commit novo pede outra): {_far_command(root, 'request', label or rev)}"
+               if _passkey else "")
+        return [("human_ok", f"via rápida ({ids}): falta o OK do MJRP na tela ({where}) - o merge pede o Touch ID dele{far}")], []
     tip = _git(root, "rev-parse", "--short=8", rev)[1].strip() or rev
     into = _git(root, "rev-parse", "--abbrev-ref", "HEAD")[1].strip() or "a main"
+    full = _git(root, "rev-parse", rev)[1].strip() or rev
+    state, why, record, payload = _passkey.judge_tip(root, full, label or rev) if _passkey else ("none", "", None, None)
+    notes = []
+    if state == "invalid":
+        return [("human_invalid", f"via rápida ({ids}): a aprovação de longe de {label or rev} @ {tip} foi recusada: {why}; "
+                                  f"o Touch ID não é pedido por cima dela")], []
+    if state == "valid":
+        when = time.strftime("%Y-%m-%d %H:%M")
+        note = (f"visual-ok: {ids}\npresence: passkey\nat: {when}\nbranch: {label or rev}\ntip: {full}\nscreen: {where}\n"
+                f"signature: {_passkey.signature_line(record)}\nby: visual_gate.py (F153, CC-ADR-0038, CC-ADR-0041)\n")
+        if _git(root, "notes", f"--ref={NOTES_REF}", "add", "-f", "-m", note, full)[0] != 0:
+            return [("human_note_failed", f"via rápida ({ids}): a nota da aprovação de longe não foi gravada; sem o rastro a aprovação não "
+                                          f"vale, e o pedido continua aberto")], []
+        if not _passkey.consume_nonce(payload.get("nonce"), "visual_gate.py"):
+            return [("human_invalid", f"via rápida ({ids}): a assinatura já foi usada por outro merge")], []
+        return [], [f"via rápida ({ids}): o MJRP aprovou de longe, com a passkey ({when}) - é o veredito visual"]
+    if state == "unavailable":
+        notes.append(f"via rápida ({ids}): a aprovação de longe não pôde ser avaliada ({why}); pedindo o Touch ID")
+    behind = _other_tip(root, full, label or rev) if _passkey and state == "none" else None
+    if behind:
+        rid, old = behind
+        reason = '"<motivo>"'
+        notes.append(f"via rápida ({ids}): a aprovação de longe {rid} é da ponta {old} de {label or rev}, não de {tip}: ela vale só para a "
+                     f"ponta que mostrou, e um commit novo pede outra - {_far_command(root, 'discard', rid, reason)} e "
+                     f"{_far_command(root, 'request', label or rev)}; pedindo o Touch ID")
     code, detail = ask(f"MJRP Harness: OK visual de {ids} - o ramo {label or rev} @ {tip} entra em {into}")
     if code == 0:
         when = time.strftime("%Y-%m-%d %H:%M")
-        full = _git(root, "rev-parse", rev)[1].strip() or rev
         note = (f"visual-ok: {ids}\npresence: touch-id\nat: {when}\nbranch: {label or rev}\ntip: {full}\nscreen: {where}\n"
                 f"by: visual_gate.py (F61, pdlc-loops § 2)\n")
         saved = _git(root, "notes", f"--ref={NOTES_REF}", "add", "-f", "-m", note, full)[0] == 0
         tail = "" if saved else " (o registro de auditoria não foi gravado; o OK vale)"
-        return [], [f"via rápida ({ids}): o MJRP deu o OK na tela com o Touch ID ({when}) - é o veredito visual{tail}"]
-    why = {2: "o MJRP não confirmou (Touch ID cancelado ou recusado)",
+        return [], [*notes, f"via rápida ({ids}): o MJRP deu o OK na tela com o Touch ID ({when}) - é o veredito visual{tail}"]
+    denied = {2: "o MJRP não confirmou (Touch ID cancelado ou recusado)",
            4: "o Touch ID expirou sem resposta"}.get(code, f"o Touch ID não pôde ser pedido aqui ({detail or f'exit {code}'})")
     kind = "human_no" if code in (2, 4) else "human_unavailable"
-    return [(kind, f"via rápida ({ids}): {where} - {why}")], []
+    return [(kind, f"via rápida ({ids}): {where} - {denied}")], notes
+
+
+def _note_released(root, revs, reason):
+    """The human's valve leaves a mark (CC-ADR-0038): the audit tells this merge from a merge with no OK at all."""
+    when = time.strftime("%Y-%m-%d %H:%M")
+    for rev in revs:
+        full = _git(root, "rev-parse", rev)[1].strip() or rev
+        note = f"presence: human-released\nat: {when}\ntip: {full}\nreason: {reason}\nby: visual_gate.py (F153, CC-ADR-0038)\n"
+        _git(root, "notes", f"--ref={NOTES_REF}", "add", "-f", "-m", note, full)
 
 
 def judge_full(root, rev, base="HEAD", ask=None, label_of_branch=None):
@@ -491,6 +558,8 @@ def main(argv):
         print(f"  [visual] {msg}")
     if skip:
         print(f"  [visual] merge liberado pelo humano: VISUAL_RECHECK_SKIP — {skip}")
+        if "human_ok" in {k for k, _m in problems} and "--hook" in argv:
+            _note_released(root, [r for r, _l in revs], skip)
         return 0
     kinds = {k for k, _m in problems}
     print("\n  merge recusado: feature de tela sem veredito visual - a reconferência independente avaliada e sem P0 (pdlc-loops § 5)"
@@ -508,6 +577,11 @@ def main(argv):
     if kinds & {"human_ok", "human_no"}:
         print("  via rápida: o juiz da tela é o MJRP. O merge pede o Touch ID dele (o diálogo nomeia as features, o ramo e o tip);\n"
               "  sem o dedo dele não entra. Combine com ele e faça o merge de novo - o OK não se escreve em relatório.")
+    if "human_invalid" in kinds:
+        print(f"  a aprovação de longe existe e não vale: peça outra (`{_far_command(root, 'request', '<ramo>')}`), ou, para voltar\n"
+              f"  ao Touch ID, tire o registro vencido (`{_far_command(root, 'prune')}`).")
+    if "human_note_failed" in kinds:
+        print("  a aprovação de longe continua aberta: resolva o que impediu a nota (git notes) e faça o merge de novo.")
     if "unnamed" in kinds:
         print("  faça o merge pelo nome do ramo (`git merge <ramo>` ou `merge_train.py merge <ramo>`), sem trocar o GIT_REFLOG_ACTION.")
     if "human_unavailable" in kinds:

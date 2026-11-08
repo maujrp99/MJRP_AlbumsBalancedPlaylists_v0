@@ -4,7 +4,7 @@ item: visual-sensor
 from: 3
 to: 4
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0091 · visual-sensor@3 → visual-sensor@4
 
 ## Por que

@@ -1,4 +1,4 @@
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # PRINCIPLES — as regras que regulam a ação no MJRP
 
 > Princípio é **a regra que regula a ação e serve de base ao método**; visão é para onde se vai;
@@ -100,7 +100,7 @@ específico da linguagem ou do framework dele.
     § *Protótipos aprovados*, uma entrada por versão, com `shows::` listando os estados que ele
     mostra. *O como* (19/09): o protótipo sai da **ferramenta de prototipagem
     declarada no contrato** (`tools.prototyping`, receita na `mjrp-designing-ui`), passa pela
-    **`mjrp-critiquing-ux`** contra o [[design-canon]] (nenhum P0 aberto) e só então chega ao dono;
+    **`mjrp-critiquing-ux-ui`** contra o [[design-canon]] (nenhum P0 aberto) e só então chega ao dono;
     HTML/React cru da própria AI Platform é último recurso, declarado no registro. Não substitui o 12
     (verificação Playwright pós-implementação) — cobre a ponta oposta: decidir a tela **antes** de
     especificar, não confirmar que ela renderiza depois de pronta; o mesmo cânone julga as duas

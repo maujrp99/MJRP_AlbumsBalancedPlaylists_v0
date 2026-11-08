@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 sdd_shape_check.py - do the features follow the SDD templates? The sensor of the SHAPE of `spec.md`, `plan.md` and `tasks.md` (F95, 2026-10-26).
 
@@ -35,7 +35,9 @@ Modes:
 Exit: 0 no error (warnings are printed) | 1 a closed feature is out of the shape | 2 not evaluable (no root, templates not found, git failed).
 `--staged` reads the templates from the INDEX (the copy the commit will contain), never from the disk, like the features. Exception: the repository
 versions no template at all - nothing in the index AND nothing in HEAD under their path (the throwaway repository of the acceptance test, a project
-without the harness's skills) - exits 0 with the notice «NÃO foi conferido». If the index or HEAD has them and the index lacks a file (a `git mv`
+without the harness's skills) - exits 0 with the notice «NÃO foi conferido», UNLESS the commit closes a feature (Done/Accepted in the index, not
+in HEAD): a closing that cannot be judged is exit 2, never a pass (UAT-489, F182: a child got this script without the templates, and five
+features closed unjudged). If the index or HEAD has them and the index lacks a file (a `git mv`
 in the same commit), it is exit 2; a `mv` or a sparse-checkout changes nothing (CI of 2026-10-27, test_acceptance_real_hooks; recheck P1-1).
 Stdlib only (ADR-0015).
 """
@@ -69,6 +71,9 @@ PENDING_ERROR_FROM = 96       # the first feature born by new_feature.py: a «a 
 PENDING_TURN_DATE = date(2026, 11, 30)   # from this day a «a escrever» left in a CLOSED feature of the acervo (F43 to F95) is an error too:
 #   the markers of the lot of F95 have an owner (the integrator, who writes each one when the feature closes) and a deadline; a warning with
 #   no date teaches to ignore it (ADR-0002 section 3). Decided by the agent, class (a), reversible: one constant.
+SUMMARY_LINK_FROM = 175       # F175 (UAT-483): from this feature on, a path in backticks in the `## Summary` is a WARNING (it is born as text, not as a link).
+#   The warning becomes an error once the rule reached the children (the conformance note of F175); decided by the agent, class (a), reversible: one constant.
+_PATH_IN_CODE = re.compile(r"`((?:[\w.@-]+/)+[\w.@-]*|[\w@-]+(?:\.[\w@-]+)*\.(?:md|py|json|yml|yaml|html|pdf|mjs|tsx?|png))`")
 PENDING = re.compile(r"(?i)«\s*a\s+escrever")      # tolerant: any case, any spacing, no need for the closing »
 _ZERO_WIDTH = re.compile("[\u200b-\u200f\u2060\ufeff\u00a0\u00ad]")      # zero-width, no-break and soft-hyphen: invisible in the page
 _INVISIBLE = re.compile("[\u200b-\u200f\u2060\ufeff\u00ad]")          # the ones that hide inside a word (the marker is read through them)
@@ -215,6 +220,13 @@ def legacy_numbers(record_text):
     return out
 
 
+def summary_paths(spec_text):
+    """The paths (a folder, a file with its folder, or a bare file name) written in backticks in the `## Summary` of a spec. They go to the
+    screen as text: the Control Center opens `[[file|plain words]]` (F175), never a code span. Pure."""
+    body = "\n".join(sections_of(spec_text).get("Summary", []))
+    return [m.group(1) for m in _PATH_IN_CODE.finditer(body)]
+
+
 def feature_findings(num, status, texts, shapes, since=SINCE_FEATURE, pending_error_from=PENDING_ERROR_FROM, today=None, legacy=False):
     """[(level, kind, message)] for one feature; level is `error` | `warn`. `texts` maps spec/plan/tasks to the text or None. Pure.
     A status outside the vocabulary is an ERROR (a feature graded by another word would escape the gate)."""
@@ -238,6 +250,9 @@ def feature_findings(num, status, texts, shapes, since=SINCE_FEATURE, pending_er
             continue
         for _what, detail in gaps_of(kind, text, shapes[kind]):
             out.append((level, kind, detail))
+        if kind == "spec" and num >= SUMMARY_LINK_FROM:
+            for path in summary_paths(text):
+                out.append(("warn", kind, f"o Summary cita `{path}` em crase: na tela é texto e não abre. Aponte o arquivo exato como [[arquivo|palavras comuns]] (F175)"))
         n = len(PENDING.findall(_INVISIBLE.sub("", _strip_comments(text))))
         if n and closed:
             hard = num >= pending_error_from or turned
@@ -315,6 +330,20 @@ def staged_shapes(root, top):
     return shapes
 
 
+def _closing_in_index(top, touched):
+    """The touched feature folders whose spec.md the INDEX takes to a closed status and HEAD does not hold closed (or lacks): a closing."""
+    out = []
+    for folder in sorted(touched):
+        now = _git.run(top, "show", f":{folder}/spec.md")
+        if now.code != 0 or status_of(now.out).strip().casefold() not in CLOSED:
+            continue
+        before = _git.run(top, "show", f"HEAD:{folder}/spec.md")
+        if before.code == 0 and status_of(before.out).strip().casefold() in CLOSED:
+            continue
+        out.append(folder)
+    return out
+
+
 def staged_findings(root, shapes=None, since=SINCE_FEATURE, pending_error_from=PENDING_ERROR_FROM):
     """The same, for the features the commit adds or changes, read from the INDEX (what the commit will contain)."""
     top = _git.toplevel(root)
@@ -330,7 +359,15 @@ def staged_findings(root, shapes=None, since=SINCE_FEATURE, pending_error_from=P
             touched[m.group("proj") + FEATURES_REL + "/" + m.group("dir")] = int(m.group("num"))
     if not touched:
         return []
-    shapes = shapes or staged_shapes(root, top)
+    try:
+        shapes = shapes or staged_shapes(root, top)
+    except TemplatesMissing as exc:
+        closing = _closing_in_index(top, touched)
+        if closing:
+            raise NotEvaluable(f"{exc}; o commit fecha {', '.join(Path(f).name.split('-')[0] for f in closing)} e sem os moldes não há como "
+                               f"conferir a forma - não é um aviso para seguir adiante. Como sanar: no harness, `python3 "
+                               f"mjrp-scripts/new_project.py <este projeto> --refresh-kernel` traz os moldes") from exc
+        raise
     out = []
     for folder, num in sorted(touched.items()):
         texts = {}

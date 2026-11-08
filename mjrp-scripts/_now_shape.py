@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _now_shape.py - the form of `## Now` in MEMORY.md and the check that it is not behind the log (F73 R7).
 
@@ -84,6 +84,12 @@ def _latest_date(text, today):
     return max(found) if found else None
 
 
+def _earliest_date(text, today):
+    found = [date(int(y), int(m), int(d)) for y, m, d in _ISO_RE.findall(text)]
+    found += [date(today.year, int(m), int(d)) for d, m in _DM_RE.findall(text)]
+    return min(found) if found else None
+
+
 def _norm(s):
     return re.sub(r"[^a-z0-9]+", " ", s.lower()).strip()
 
@@ -96,6 +102,12 @@ def now_shape(root, text, cfg=None):
     cfg = cfg or {}
     mem = cfg.get("memory") or {}
     expiry = int(mem.get("pending_expiry_days", 7))
+    # 2026-11-05 (MJRP: «o memory onde parei, nao está muito longo nao? considerando que temos o log?»): the Control Center's
+    # «Where the Work Stopped» had grown to 7,000 characters, a diary back to 31/10, because every session appended and none
+    # replaced. The block says where the work IS; the history is the log's. Over the ceiling, or spanning more days than the
+    # age, it fails - the cap is on this block only, never on Pending/Do-Not-Forget (the 09/09 lesson below stands).
+    stopped_chars = int(mem.get("stopped_max_chars", 1500))
+    stopped_days = int(mem.get("stopped_max_age_days", 2))
     budget = int(mem.get("layer0_budget_chars", 12000))
     fails, warns, notes = [], [], []
     body = now_section(text)
@@ -134,6 +146,16 @@ def now_shape(root, text, cfg=None):
             if ptr not in names and ptr not in aliases:
                 fails.append(f"## Now aponta para [[{ptr}]] e não existe docs/wiki/{ptr}.md (nem alias) — "
                              f"ponteiro que não resolve é detalhe perdido")
+        if b == "Where the Work Stopped":
+            if len(txt) > stopped_chars:
+                fails.append(f"'Where the Work Stopped' com {len(txt)} caracteres, acima de {stopped_chars} "
+                             f"(memory.stopped_max_chars): o bloco diz onde o trabalho está agora; o histórico é do log — reescreva, não acrescente")
+            # the span of the block's own dates, not their age: a block left alone is the job of now_behind_log; a block that
+            # keeps 30/10 next to 05/11 is a diary
+            oldest, newest = _earliest_date(txt, today), _latest_date(txt, today)
+            if oldest is not None and (newest - oldest).days > stopped_days:
+                fails.append(f"'Where the Work Stopped' vai de {oldest.isoformat()} a {newest.isoformat()}, {(newest - oldest).days} dias "
+                             f"(limite {stopped_days}, memory.stopped_max_age_days): o que já passou mora no log — reescreva o bloco")
         n = len(ls)
         if b != "Do Not Forget" and n > 3 and not ptrs:
             fails.append(f"bloco '{b}' com {n} linhas e nenhum ponteiro — detalhe que mora no lugar errado; "

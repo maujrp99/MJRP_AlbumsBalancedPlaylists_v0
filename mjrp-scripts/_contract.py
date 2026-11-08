@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _contract.py - how the harness scripts read the project contract (`.mjrp-project.yml`) and any YAML.
 
@@ -24,6 +24,24 @@ class YamlNaoSuportado(Exception):
     """The minimal parser hit YAML it cannot read. It SHOUTS instead of inventing."""
 
 
+def _flow_items(text):
+    """The items of a flow collection, split at the commas outside quotes. A comma inside a quoted string is text: the spec's `waiting: {reason: "a, b"}`
+    used to read as a broken map, and the whole frontmatter came back empty (F153, 2026-11-04)."""
+    items, current, quote = [], "", None
+    for char in text:
+        if quote:
+            quote = None if char == quote else quote
+        elif char in "\"'":
+            quote = char
+        elif char == ",":
+            items.append(current)
+            current = ""
+            continue
+        current += char
+    items.append(current)
+    return items
+
+
 def _esc(v):
     v = v.strip()
     if not v or v.startswith("#"):
@@ -36,10 +54,10 @@ def _esc(v):
     if (v.startswith("[") and not v.endswith("]")) or (v.startswith("{") and not v.endswith("}")):
         raise YamlNaoSuportado(f"coleção inline que não fecha — {v[:40]}")
     if v.startswith("[") and v.endswith("]"):
-        return [x.strip().strip("\"'") for x in v[1:-1].split(",") if x.strip()]
+        return [x.strip().strip("\"'") for x in _flow_items(v[1:-1]) if x.strip()]
     if v.startswith("{") and v.endswith("}"):
         d = {}
-        for par in v[1:-1].split(","):
+        for par in _flow_items(v[1:-1]):
             if not par.strip():
                 continue
             if ":" not in par:

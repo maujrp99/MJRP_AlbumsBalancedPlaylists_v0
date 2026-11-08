@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # commit-msg - every commit brings a new entry in the project log (S-61). Born 2026-10-03/04: commits
 # without a log entry, and decisions that survived a context compaction only in the AI Platform's summary.
 # It runs wherever git runs, so it guards local and cloud sessions alike.
@@ -52,6 +52,11 @@ fi
 CONF="$ROOT/mjrp-scripts/conformance_check.py"
 if [ "$HAVE_PY" = yes ] && [ -f "$CONF" ]; then
   gate "carimbos do humano" python3 "$CONF" --check-msg "$1"
+fi
+# 2026-11-01 (F153, CC-ADR-0038): the list of keys of the remote approval changes only with the stamp of the server's commit.
+PASSKEY="$ROOT/mjrp-scripts/remote_approval.py"
+if [ "$HAVE_PY" = yes ] && [ -f "$PASSKEY" ]; then
+  gate "lista de chaves" python3 "$PASSKEY" check-commit "$1"
 fi
 # 2026-10-24 (F60): a merge left open in this checkout is closed by the next `git commit`, whoever makes it. On 2026-10-24 a
 # routine session committed inside the F52 merge. This only WARNS (never blocks); the merge's own commit is silent.

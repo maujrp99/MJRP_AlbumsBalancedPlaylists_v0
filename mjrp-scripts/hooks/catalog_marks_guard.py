@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 catalog_marks_guard.py - the PreToolUse hook that refuses an AGENT's command that would produce the human's valve on
 the canonical catalog (CC-ADR-0014 section 10, accepted by the MJRP on 2026-10-14 15:09; CC-ADR-0016 section 1) and on the acceptance of a
@@ -93,19 +93,23 @@ HTTP_CALL = re.compile(r"urlopen|requests\.|httpx|fetch\(|http\.client|urllib|ax
 ROUTE_INTERPRETERS = re.compile(r"^(python[0-9.]*|node|nodejs|deno|bun|ruby|perl|php|lua|osascript)$")
 REFUSAL_ACCEPTANCE = ("catalog-marks-guard: o aceite de uma feature é do MJRP — ele roda o comando da tela no terminal dele "
                       "(CC-ADR-0024 § 4; AGENTS.md, válvulas do humano)")
-ACCEPTANCE_SIGNAL = re.compile(r"acceptances|Human-(?:accepted|reopened|prioritized)", re.IGNORECASE)
+ACCEPTANCE_SIGNAL = re.compile(r"acceptances|Human-(?:accepted|reopened|prioritized|passkey)", re.IGNORECASE)
 # a full batch id, or a glob where the id goes (`acceptances/*/change.patch`: the batch found by pattern)
 BATCH_DIR = re.compile(r"(?:catalog-marks|acceptances)/(?:\d{8}-\d{6}-[0-9a-f]{8}|[^\s/'\"]*[*?\[][^\s/'\"]*)")
-STAMP_WORD = re.compile(r"Catalog-editorial|Human-accepted|Human-reopened|Human-prioritized", re.IGNORECASE)
-STAMP_ANYWHERE = re.compile(r"(?:Catalog-editorial|Human-accepted|Human-reopened|Human-prioritized):", re.IGNORECASE)
-TRAILER_ALIAS = re.compile(r"^trailer\.[^=]*\.key=\s*(?:Catalog-editorial|Human-accepted|Human-reopened|Human-prioritized)\s*:?\s*$", re.IGNORECASE)
+STAMP_WORD = re.compile(r"Catalog-editorial|Human-accepted|Human-reopened|Human-prioritized|Human-passkey", re.IGNORECASE)
+STAMP_ANYWHERE = re.compile(r"(?:Catalog-editorial|Human-accepted|Human-reopened|Human-prioritized|Human-passkey):", re.IGNORECASE)
+TRAILER_ALIAS = re.compile(r"^trailer\.[^=]*\.key=\s*(?:Catalog-editorial|Human-accepted|Human-reopened|Human-prioritized|Human-passkey)\s*:?\s*$", re.IGNORECASE)
 CAT_SUBST = re.compile(r"(?:\$\(|`)\s*cat\s+([^\s)`]+)")
-STAMP_KEYS = ("catalog-editorial", "human-accepted", "human-reopened", "human-prioritized")
-STAMP_LINE = re.compile(r"^(Catalog-editorial|Human-accepted|Human-reopened|Human-prioritized):", re.IGNORECASE | re.MULTILINE)
+STAMP_KEYS = ("catalog-editorial", "human-accepted", "human-reopened", "human-prioritized", "human-passkey")
+STAMP_LINE = re.compile(r"^(Catalog-editorial|Human-accepted|Human-reopened|Human-prioritized|Human-passkey):", re.IGNORECASE | re.MULTILINE)
+# CC-ADR-0038: the commands that would change what a remote approval is checked against, or open the machine further
+REFUSAL_PASSKEY = ("catalog-marks-guard: a aprovação de longe é do MJRP: `tailscale serve` e `funnel`, `git replace` e mexer na main por "
+                   "`update-ref` ou `branch -f` o agente não roda (CC-ADR-0038; AGENTS.md, válvulas do humano)")
+REPLACE_READS = {"-l", "--list"}
 SEEN = []                                                  # the stamp keys the judge met, to pick the sentence of the refusal
 # this machine, however it is spelled (127.0.0.1, 127.1, localhost, [::1], 0.0.0.0), with or without the scheme, or HTTPie's `:8765/...`
 LOOPBACK = r"(?:127(?:\.\d{1,3}){1,3}|localhost|0\.0\.0\.0|\[::1\]|::1|\d{8,10}|0x[0-9a-f]{8})"   # 2130706433 and 0x7f000001 are 127.0.0.1 too
-ACCEPTANCE_URL = re.compile(r"(?<![\w.\-~/])(?:(?:https?:)?//)?(?:" + LOOPBACK + r"(?::[\w{}$%]+)?|:\d{2,5})(?:/\.{1,2}|/[\w.\-~%]+/\.\.)*/(?:acceptances|audit-answers)(?![\w-])",
+ACCEPTANCE_URL = re.compile(r"(?<![\w.\-~/])(?:(?:https?:)?//)?(?:(?:" + LOOPBACK + r"|[\w.-]+\.ts\.net)(?::[\w{}$%]+)?|:\d{2,5})(?:/\.{1,2}|/[\w.\-~%]+/\.\.)*/(?:acceptances|audit-answers|approvals|passkeys|remote)(?![\w-])",
                             re.IGNORECASE)
 HTTP_CLIENTS = {"curl", "wget", "aria2c"}
 HTTPIE = {"http", "https", "xh", "xhs", "httpie"}                    # a body is a POST unless the method says otherwise
@@ -118,7 +122,14 @@ HEREDOC = re.compile(r"<<(-?)[ \t]*([\"']?)([A-Za-z0-9_]+)\2")
 ASSIGN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
 REDIRECT = re.compile(r"^[<>]+[&|]?$")
 SHELLS = {"sh", "bash", "zsh", "dash", "ksh"}
-WRAPPERS = {"env", "command", "exec", "nohup", "sudo", "time"}
+# A closed list: a wrapper not named here hides the command, the limit of a text reader (the written rule is the second line of defence).
+WRAPPERS = {"env", "command", "exec", "nohup", "sudo", "time", "nice", "timeout", "gtimeout", "caffeinate", "stdbuf", "ionice", "setsid", "taskpolicy",
+            "arch", "xargs"}
+# the options of a wrapper that take the next word, and the wrappers with a positional before the command
+WRAPPER_VALUES = {"env": {"-u"}, "nice": {"-n", "--adjustment"}, "timeout": {"-k", "-s", "--kill-after", "--signal"}, "gtimeout": {"-k", "-s", "--kill-after", "--signal"},
+                  "taskpolicy": {"-c", "-d", "-g", "-t", "-l", "-p"}, "arch": {"-e", "-d"}, "xargs": {"-I", "-J", "-L", "-n", "-P", "-R", "-S", "-s", "-E"}, "caffeinate": {"-t", "-w"},
+                  "stdbuf": {"-i", "-o", "-e"}, "ionice": {"-c", "-n", "-p"}, "sudo": {"-u", "-g", "-h", "-p"}}
+WRAPPER_POSITIONAL = {"timeout", "gtimeout"}
 SHELL_WORDS = {"{", "}", "!", "then", "do", "else", "if", "while", "until", "elif", "fi", "done"}
 LONG_WITH_ARG = {"--author", "--date", "--cleanup", "--reuse-message", "--reedit-message", "--fixup", "--squash",
                  "--template", "--pathspec-from-file"}
@@ -224,10 +235,12 @@ def strip_prefix(argv):
         if t in SHELL_WORDS or ASSIGN.match(t):
             a.pop(0)
         elif os.path.basename(t) in WRAPPERS:
-            a.pop(0)
+            wrapper = os.path.basename(a.pop(0))
             while a and (a[0].startswith("-") or ASSIGN.match(a[0])):
-                if a[0] == "-u" and len(a) > 1:
+                if a[0] in WRAPPER_VALUES.get(wrapper, ()) and len(a) > 1:
                     a.pop(0)
+                a.pop(0)
+            if wrapper in WRAPPER_POSITIONAL and a:
                 a.pop(0)
         else:
             break
@@ -335,6 +348,29 @@ def commit_carries_stamp(rest, cwd, heredocs, other_words, whole=""):
     return any(has_stamp(x) for x in texts)
 
 
+def touches_passkey_trust(argv):
+    """`tailscale serve|funnel`, `git replace` (its list is a read), `git update-ref` or `git branch -f` over main (CC-ADR-0038). A script file that does the same
+    passes: the limit that ADR names."""
+    if os.path.basename(argv[0]).lower() == "tailscale":              # the app's binary is `Tailscale`
+        rest = [w for w in argv[1:] if w in ("serve", "funnel")]
+        if not rest:
+            return False
+        after = argv[argv.index(rest[0]) + 1:]
+        return not (after and after[0] == "status")                   # the status is a read, only right after the subcommand
+    parts = git_parts(argv)
+    if parts is None:
+        return False
+    sub, rest = parts[0], parts[1]
+    if sub == "replace":
+        return not (REPLACE_READS & set(rest))
+    if sub == "update-ref":                                          # HEAD and --stdin may be main: what cannot be told is refused
+        return any(w in ("main", "refs/heads/main", "HEAD", "--stdin") for w in rest)
+    if sub == "branch":
+        forced = any(w == "--force" or re.match(r"^-[A-Za-z]*[fM]", w) for w in rest)
+        return forced and any(w in ("main", "refs/heads/main") for w in rest)
+    return False
+
+
 def calls_acceptance_route(argv):
     """True when argv is a client that WRITES (a method other than GET, or a body) to `/acceptances` on this machine, or an
     interpreter whose script names that route (`node -e fetch(...)`, `python3 -c urlopen(...)`: no GET exists there, so any mention)."""
@@ -414,6 +450,9 @@ def judge(command, cwd, depth=0, whole=None):
         a = strip_prefix(argv)
         if not a:
             continue
+        if touches_passkey_trust(a):
+            SEEN.append("passkey")
+            return True
         base = os.path.basename(a[0])
         if depth < MAX_DEPTH:
             if base in SHELLS or base in ("source", "."):
@@ -506,7 +545,7 @@ def main():
         print(f"catalog-marks-guard: não avaliou ({exc})", file=sys.stderr)
         return 0
     if refuse:
-        print(REFUSAL_ROUTE if "route" in SEEN else REFUSAL_ACCEPTANCE if ACCEPTANCE_SIGNAL.search(command) or any(k.startswith("human-") for k in SEEN) else REFUSAL, file=sys.stderr)
+        print(REFUSAL_PASSKEY if "passkey" in SEEN else REFUSAL_ROUTE if "route" in SEEN else REFUSAL_ACCEPTANCE if ACCEPTANCE_SIGNAL.search(command) or any(k.startswith("human-") for k in SEEN) else REFUSAL, file=sys.stderr)
         return 2
     return 0
 

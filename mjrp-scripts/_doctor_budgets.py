@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_budgets.py - the doctor's W18, second half: the TOTAL ceiling and the owner of everything that writes outside the
 versioning (ADR-0023 § 3; F74 TASK-05). The first half (free disk) is `_doctor_repo.w18_free_disk`.
@@ -156,7 +156,8 @@ def _measure_worktrees(entry, root, rep):
         rep.warn("W18", f"budget `{bid}` estourou: {len(merged)} worktree(s) mesclado(s) e limpo(s) ainda montado(s), acima de {ceiling} "
                         f"({', '.join(merged[:4])}{'…' if len(merged) > 4 else ''}). Dono: {entry.get('owner', '?')}. "
                         f"Saem com `python3 mjrp-scripts/merge_train.py clean-worktrees --apply` (solta antes o `.mjrp/` de sessão encerrada e as cópias do "
-                        f"`_backups/`, que vão para o `_backups/` do principal); um só, por `python3 mjrp-scripts/_safe.py discard <caminho>`", INCIDENT)
+                        f"`_backups/`, que vão para o `_backups/` do principal, e devolve ao último commit o rastro que o doctor e o build reescrevem, F207); "
+                        f"o `python3 mjrp-scripts/_safe.py discard <caminho>` tira um só, e só se nada disso sobrou nele", INCIDENT)
     else:
         rep.note("W18", f"budget `{bid}`: {len(merged)} worktree(s) mesclado(s) e limpo(s) (teto {ceiling})")
 

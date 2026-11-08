@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _pathclass.py - the four classes of a path, decided by machine (ADR-0023 § 1; F74 TASK-03; the engine of `_safe.py discard`
 and of the deletion guard hook).
@@ -23,6 +23,8 @@ Format (the F75 daily backup reads the same `derived.project` list for its exclu
     "budgets":  {"project": [...], "global": [...]}                 (read by the doctor's W18, see _doctor_budgets.py)
     "released_copies": {"project": [{"source": "STRUCTURE.md", "owner": "mjrp-scripts/tree.py", "why": "..."}], "global": []}
                  (read only by the judge of a MERGED WORKTREE: see `_release_test`)
+    "rewritten_traces": {"project": [{"glob": "**/daily-checks/sensor-*.md", "owner": "...", "why": "..."}], "global": []}
+                 (read only by the judge of a MERGED WORKTREE: see `release_plan`)
 
 A `glob` is relative to the project root (`project`) or absolute (`global`; `$TMPDIR`, `${TMPDIR}` and a leading `~` are
 expanded). `*` and `?` do not cross a `/`; a segment `**` is any number of folders; a trailing `/` says "folders only". A glob
@@ -33,7 +35,7 @@ A SYMLINK is classified as the link, never as its target - but a link to a folde
 ends in `/`: the `node_modules` of a worktree is a link into the main checkout's, and `**/node_modules/` must cover it (UAT-401, F120).
 
 A MERGED WORKTREE that is held only by what its own session left behind (the rotating `.mjrp/` of an ENDED session, the stamped copies
-in its `_backups/`) is judged by `judge_worktree`: it says what would leave first (`ReleasePlan`) and judges the worktree as if it had.
+in its `_backups/`, the unstaged rewrite of a tracked file declared in `rewritten_traces`, an untracked file `derived` covers) is judged by `judge_worktree`: it says what would leave first (`ReleasePlan`) and judges the worktree as if it had.
 `_safe.release_worktree` is what makes it so, and moves the copies into the MAIN checkout's `_backups/` (nothing is lost).
 
 Stdlib only: this module travels to the child projects with the kernel (VENDORED_FILES, the `_*.py` rule).
@@ -53,7 +55,7 @@ IRREPLACEABLE, VERSIONED, DERIVED, ROTATING = 1, 2, 3, 4
 NAMES = {IRREPLACEABLE: "insubstituível", VERSIONED: "versionado", DERIVED: "derivado", ROTATING: "rotativo"}
 _PROTECTION = {IRREPLACEABLE: 4, VERSIONED: 3, ROTATING: 2, DERIVED: 1}      # the more protective class wins in a folder
 RULES_FILE = "structure_rules.json"
-SECTIONS = ("derived", "rotating", "budgets", "released_copies")
+SECTIONS = ("derived", "rotating", "budgets", "released_copies", "rewritten_traces")
 MAIN_REF = "refs/heads/main"
 
 
@@ -192,6 +194,7 @@ class Declared:
         self.released_sources = [e["source"] for e in project["released_copies"]["project"] if isinstance(e.get("source"), str)] if top else []
         self.derived_rel = _entry_globs(project["derived"]["project"]) if top else []
         self.rotating_rel = _entry_globs(project["rotating"]["project"]) if top else []
+        self.rewritten_rel = _entry_globs(project["rewritten_traces"]["project"]) if top else []
         self.derived_abs = [f for g in _entry_globs(glob_rules["derived"]["global"]) for f in expand_global(g)]
         self.rotating_abs = [f for g in _entry_globs(glob_rules["rotating"]["global"]) for f in expand_global(g)]
 
@@ -217,6 +220,14 @@ class Declared:
             if any(glob_covers(g, parts_abs, is_dir) for g in absolute):
                 return kind
         return None
+
+    def rewritten(self, abs_path):
+        """True when a tracked file at `abs_path` is a trace a tool rewrites in place (`rewritten_traces`, F207)."""
+        try:
+            parts = Path(abs_path).relative_to(self.top).parts if self.top else None
+        except ValueError:
+            return False
+        return bool(parts) and any(glob_covers(g, parts, False) for g in self.rewritten_rel)
 
 
 # ---------------------------------------------------------------- git helpers
@@ -289,10 +300,11 @@ def worktree_class(p, declared=None, departing=()):
             return PathClass(IRREPLACEABLE, "worktree com commits que a `main` ainda não tem (ramo não mesclado, ou rebase/squash)")
         if anc.code != 0:
             return PathClass(IRREPLACEABLE, f"worktree: o git não respondeu à pergunta do ancestral ({anc.err.strip()[:80]})")
-        dirty = [n for xy, n in _status_lines(p) if xy != "!!"]
+        top = p.resolve()
+        gone = frozenset(Path(d) for d in departing)
+        dirty = [n for xy, n in _status_lines(p) if xy != "!!" and not _departs(top / n.rstrip("/"), n.endswith("/"), gone)]
         if dirty:
             return PathClass(IRREPLACEABLE, f"worktree com edição ou arquivo novo sem commit ({dirty[0]})")
-        top = p.resolve()
         declared = declared or Declared(project_rules(top), global_rules(), top)
         if departing:
             declared.departing = frozenset(Path(d) for d in departing)
@@ -318,6 +330,22 @@ def worktree_class(p, declared=None, departing=()):
     except _git.GitError as e:
         return PathClass(IRREPLACEABLE, f"worktree: o git não respondeu ({e})")
     return PathClass(DERIVED, "worktree de agente mesclado na `main`, limpo, sem ignorado fora de `derived` e sem trava")
+
+
+def _departs(path, is_dir, gone):
+    """True when `path` is about to leave (F207): it is in `gone`, or it is a folder git collapsed and everything in it is. An empty
+    `gone` is always False - the strict judge of `classify` and the deletion guard."""
+    if not gone:
+        return False
+    if path in gone:
+        return True
+    if not is_dir:
+        return False
+    try:
+        children = list(os.scandir(path))
+    except OSError:
+        return False
+    return all(_departs(Path(c.path), c.is_dir(follow_symlinks=False), gone) for c in children)
 
 
 _COPY_NAME = re.compile(r"^(?P<flat>.+)\.\d{8}-\d{6}(?:\.\d+)?$")      # what `_safe._unique_dest` writes: <path with / as __>.<stamp>[.n]
@@ -404,14 +432,19 @@ SESSION_QUIET_SECONDS = 3600       # a `.mjrp/` written within this window may s
 class ReleasePlan(NamedTuple):
     """What a merged worktree gives up before it is judged (UAT-401, F120): `runtime`, the rotating entries of `<worktree>/.mjrp/` (leases,
     turn files) of a session that ended; `copies`, the stamped copies directly in `<worktree>/_backups/`, which `_safe.release_worktree`
-    moves into the MAIN checkout's `_backups/`. `kept` says why `.mjrp/` stays, when it does."""
+    moves into the MAIN checkout's `_backups/` - since F207 every entry there git does not version, stamped or not (the MJRPpersonal does not ignore
+    its `_backups/`, and an entry git versions is never moved: git has it). `kept` says why `.mjrp/` stays, when it does. F207 (UAT-527): `restored`, the tracked files
+    `rewritten_traces` declares with an unstaged rewrite (`_safe.restore` gives the committed content back); `strays`, the untracked files a
+    `derived` glob covers (discarded as class 3)."""
     runtime: tuple = ()
     copies: tuple = ()
     kept: str = ""
+    restored: tuple = ()
+    strays: tuple = ()
 
     @property
     def paths(self):
-        return self.runtime + self.copies
+        return self.runtime + self.copies + self.restored + self.strays
 
     def describe(self):
         bits = []
@@ -419,6 +452,10 @@ class ReleasePlan(NamedTuple):
             bits.append(f"{len(self.runtime)} item(ns) de sessão do `.mjrp/`")
         if self.copies:
             bits.append(f"{len(self.copies)} cópia(s) do `_backups/` para o `_backups/` do principal")
+        if self.restored:
+            bits.append(f"{len(self.restored)} rastro(s) rastreado(s) reescrito(s), restaurado(s) do último commit")
+        if self.strays:
+            bits.append(f"{len(self.strays)} derivado(s) não rastreado(s)")
         return " + ".join(bits)
 
 
@@ -455,10 +492,26 @@ def session_ended(top, now=None):
     return True, ""
 
 
+def _rewritten_and_strays(top, declared):
+    """(restored, strays) of the worktree at `top` (F207, UAT-527): the tracked files `rewritten_traces` declares whose ONLY change is in the
+    work tree (` M`, ` D`: a staged change is somebody's work), and the untracked entries a `derived` glob covers. Any other line of
+    `git status` is not in either list, and keeps the worktree as class 1. Raises GitError when git does not answer."""
+    restored, strays = [], []
+    for xy, name in _status_lines(top):
+        path = top / name.rstrip("/")
+        if xy == "??":
+            if _declared_or_stray(path, name.endswith("/"), declared).klass == DERIVED:
+                strays.append(path)
+        elif xy[0] == " " and xy[1] in "MD" and declared.rewritten(path):
+            restored.append(path)
+    return restored, strays
+
+
 def release_plan(top, declared, now=None):
-    """The ReleasePlan of the worktree at `top` under `declared` (the rules of the main). Read-only. Only what is declared ROTATING and sits
-    directly in `<top>/.mjrp/` (when its session ended) or `<top>/_backups/` is in it: a stray, a link or a nested folder is not, and keeps
-    the worktree as class 1."""
+    """The ReleasePlan of the worktree at `top` under `declared` (the rules of the main). Read-only. In it: what is declared ROTATING directly in
+    `<top>/.mjrp/` (when its session ended); every entry directly in `<top>/_backups/` that is not a link, not derived and not versioned by git
+    (F207: the copies move to the main checkout's `_backups/`, nothing is deleted); the rewritten traces and the derived untracked entries
+    (`_rewritten_and_strays`). Anything else keeps the worktree as class 1."""
     top = Path(top)
     runtime, copies, kept = [], [], ""
     mj = top / ".mjrp"
@@ -470,8 +523,10 @@ def release_plan(top, declared, now=None):
             kept = why
     bk = top / "_backups"
     if _is_dir(bk):
-        copies = [c for c in _entries(bk) if not c.is_symlink() and declared.kind(c, _is_dir(c)) == ROTATING]
-    return ReleasePlan(tuple(runtime), tuple(copies), kept)
+        held = {h.split("/")[1] for h in _listing(top, ["ls-files"], "_backups") if "/" in h}   # what git versions there stays: git has it
+        copies = [c for c in _entries(bk) if not c.is_symlink() and c.name not in held and declared.kind(c, _is_dir(c)) != DERIVED]
+    restored, strays = _rewritten_and_strays(top, declared)
+    return ReleasePlan(tuple(runtime), tuple(copies), kept, tuple(restored), tuple(strays))
 
 
 ACTIVE_WORKTREE_SECONDS = 3600     # a file modified within this window anywhere in the worktree: a session may be working there, lease or not (F123)
@@ -557,6 +612,33 @@ def judge_worktree(p, glob_rules=None, now=None):
         return PathClass(IRREPLACEABLE, f"worktree: as regras da `main` não puderam ser lidas ({e})"), ReleasePlan()
     except _git.GitError as e:
         return PathClass(IRREPLACEABLE, f"worktree: o git não respondeu ({e})"), ReleasePlan()
+
+
+def archive_blockers(p, glob_rules=None):
+    """What archiving the session of the LINKED worktree `p` would erase (F206, S-218): the app removes the worktree with it, and
+    `git worktree remove` takes the ignored files along. Returns [reason], one per ignored entry that is neither derived nor rotating,
+    judged by the rules COMMITTED on `main` (a `.env`, a hand-made folder). The rotating entries go with no loss: the stamped copies of
+    `_backups/` move to the main checkout first (`_safe.move_backup_copies`), and `.mjrp/` holds only the session's own runtime. Unlike
+    `worktree_class` the branch need not be merged (it waits for the integrator) and the tracked edits are the close check's to judge.
+    Never raises: an answer git does not give is a blocker, the safe side."""
+    p = Path(p)
+    try:
+        top = p.resolve()
+        declared = Declared(main_rules(p), glob_rules if glob_rules is not None else global_rules(), top)
+        out = []
+        for xy, name in _status_lines(p, "--ignored"):
+            if xy != "!!":
+                continue                       # `.mjrp/` too: only what `rotating`/`derived` declare there may go (the diary, a hand-placed
+            #                                    file or the conform's state are class 1 - F206 recheck P1-3)
+            found = _declared_or_stray(top / name.rstrip("/"), name.endswith("/"), declared)
+            if found.klass == IRREPLACEABLE:
+                out.append(f"`{name}` é ignorado e não é derivado ({found.reason}): o arquivamento o apagaria; "
+                           "leve-o para fora com `python3 mjrp-scripts/_safe.py retire <caminho>` ou declare-o em `derived`")
+        return out
+    except ValueError as e:
+        return [f"as regras da `main` não puderam ser lidas ({e}): não sei o que o arquivamento apagaria"]
+    except (_git.GitError, OSError) as e:
+        return [f"o git não respondeu sobre os ignorados ({e}): não sei o que o arquivamento apagaria"]
 
 
 def _classify_leaf(p, declared, tracked, top):

@@ -1,0 +1,191 @@
+{
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+ "version": 1,
+ "about": "O manifesto único dos sensores do processo (F182, UAT-489). Todo mjrp-scripts/*_check.py está em `sensors` (vai ao filho, e `runs` diz onde roda) ou em `harness_only` (com o motivo). Quem confere: o autoteste do kernel (new_project_selftest) no harness, e o I5 do doctor no filho. Para um sensor novo: ponha-o aqui E em VENDORED_FILES (new_project_kernel.py).",
+ "runs_values": {
+  "pre-commit": "o hook pre-commit o chama",
+  "commit-msg": "o hook commit-msg o chama",
+  "pre-merge-commit": "o hook pre-merge-commit o chama (o filho não tem o trem)",
+  "doctor": "o próprio doctor o importa",
+  "catalog": "o conformance_check o roda como cláusula `script` de um item do catálogo",
+  "contract": "só roda se o contrato do filho o declara em `sensors:`; `contract_sensor` e `command` dizem como",
+  "skill": "a skill dona o roda à mão, logo antes do passo que ele julga (nenhum hook o chama); `skill` diz qual"
+ },
+ "sensors": {
+  "adr_header_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "audit_questions_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "board_mapping_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "branch_name_check.py": {
+   "runs": [
+    "pre-commit"
+   ]
+  },
+  "conformance_check.py": {
+   "runs": [
+    "doctor",
+    "pre-commit"
+   ]
+  },
+  "content_audit_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "copy_change_check.py": {
+   "runs": [
+    "pre-commit"
+   ]
+  },
+  "delivery_strategy_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "design_system_mirror_check.py": {
+   "runs": [
+    "skill"
+   ],
+   "skill": "mjrp-defining-design-systems"
+  },
+  "evidence_folder_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "feature_history_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "inventory_check.py": {
+   "runs": [
+    "doctor"
+   ]
+  },
+  "log_entry_check.py": {
+   "runs": [
+    "commit-msg",
+    "doctor"
+   ]
+  },
+  "now_questions_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "pdlc_vocabulary_check.py": {
+   "runs": [
+    "contract"
+   ],
+   "contract_sensor": "pdlc_vocabulary",
+   "command": "python3 mjrp-scripts/pdlc_vocabulary_check.py ."
+  },
+  "prd_source_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "priority_gate_check.py": {
+   "runs": [
+    "pre-commit"
+   ]
+  },
+  "product_structure_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "prototype_sync_check.py": {
+   "runs": [
+    "commit-msg",
+    "doctor"
+   ]
+  },
+  "record_shapes_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "report_types_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "requirements_graph_check.py": {
+   "runs": [
+    "pre-commit",
+    "contract"
+   ],
+   "contract_sensor": "requirements_graph_check",
+   "command": "python3 mjrp-scripts/requirements_graph_check.py ."
+  },
+  "retired_names_check.py": {
+   "runs": [
+    "doctor"
+   ]
+  },
+  "retro_step_check.py": {
+   "runs": [
+    "pre-commit",
+    "pre-merge-commit"
+   ]
+  },
+  "returned_check.py": {
+   "runs": [
+    "doctor"
+   ]
+  },
+  "sdd_shape_check.py": {
+   "runs": [
+    "pre-commit",
+    "pre-merge-commit",
+    "contract"
+   ],
+   "contract_sensor": "sdd_shape",
+   "command": "python3 mjrp-scripts/sdd_shape_check.py ."
+  },
+  "structure_check.py": {
+   "runs": [
+    "pre-commit",
+    "doctor"
+   ]
+  },
+  "tech_stack_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  },
+  "uat_readable_check.py": {
+   "runs": [
+    "pre-commit"
+   ]
+  },
+  "uat_tracks_check.py": {
+   "runs": [
+    "catalog"
+   ]
+  }
+ },
+ "harness_only": {
+  "board_served_check.py": "julga o board que o servidor do Control Center serve; o filho não tem o servidor",
+  "code_name_check.py": "cobra o nome ao lado dos códigos que a página «Regras e códigos» do harness define (docs/wiki/rules-and-codes.md, gerada por gen_rules_codes.py); o filho não tem a página, e o harness a declara em sensors:",
+  "cowork_sync_check.py": "sincronia entre o repositório e as sessões Cowork do MJRP; só existe na máquina dele",
+  "entry_check.py": "a porta de entrada do harness: clona o repositório para provar o primeiro uso; vale para o harness, não para o filho",
+  "gen_conformance_check.py": "gera o conformance_check.py a partir dos fragmentos em mjrp-scripts/conformance/, que o filho não recebe",
+  "harness_feedback_check.py": "leva o feedback que os filhos escrevem até a caixa de entrada do harness; é o canal de volta, lido só no harness",
+  "memory_check.py": "prova da migração de memória (uma vez, no harness); não é sensor contínuo",
+  "scripts_catalog_check.py": "cobra a entrada de cada script no scripts-catalog.yml, que é do harness (o W19 do doctor se cala no filho)"
+ }
+}

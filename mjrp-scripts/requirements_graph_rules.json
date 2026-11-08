@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "Single declaration of the requirements graph (S-63, kernel page requirements-graph). The sensor reads this file; the kernel page explains it for humans. Edges are written in one direction only; the inverse is computed. Each edge is enforced only from the status declared in 'enforced_from' (lesson of SDD_chain_artifacts_check: checking every pair everywhere produced 366 false positives).",
   "version": 1,
   "paths": {
@@ -412,6 +412,10 @@
     {
       "id": "story_form",
       "text": "a story's sentence is in the template of mjrp-writing-reqs, and the other languages mirror it (F137, see story_form)"
+    },
+    {
+      "id": "story_title",
+      "text": "a story's title is its sentence: the H1 for the source language and the bold first line of each mirror are in the template, and no paragraph repeats the sentence (F172, UAT-479, the story_form turn_date)"
     }
   ],
   "defaults": {
@@ -441,6 +445,7 @@
   "story_form": {
     "max_chars": 220,
     "turn_date": "2026-11-30",
+    "title_turn_date": "2026-11-30",
     "forms": {
       "pt-BR": {
         "Cohn": "^Como (?P<who>.+?), quero (?P<want>.+?),? para que (?P<why>.+)\\.$",

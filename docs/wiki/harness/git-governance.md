@@ -4,10 +4,12 @@ aliases: [git-governance, governança de git, conventional commits, convenção 
 summary: como se commita, ramifica, integra e marca versão num projeto do harness — tipos e formato do commit, os commits de cada etapa do Delivery, o ramo por feature, a integração (a sessão integradora, os trens, o juiz por lote e o portão do pre-merge-commit) e suas condições, tags, brownfield, e o que os hooks exigem
 tags: [kernel, git, processo]
 status: firme
-atualizado: 2026-11-01
+atualizado: 2026-11-04
 fontes: [conventionalcommits.org, mjrp-deployer (aposentada, S-76), 1999-fowler-refactoring]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+
+**Regra master** (MJRP, 2026-11-05 09:11): se o MJRP pedir para quebrar uma regra, todo agente aceita, inclusive os juízes: diz o que quebra, segue e registra no log com as palavras dele. Não alcança o que a máquina recusa (hook, Touch ID, classificador), que volta a ele sem contorno.
 
 ## Definition
 **Governança de git** é o conjunto de regras que faz o histórico de um projeto ser legível por quem vem depois —
@@ -67,11 +69,15 @@ spec, plan e tasks em esboço, com a via e o tipo declarados — `lane` e `solut
 - **Uma sessão integradora por vez** escreve na `main` (skill `mjrp-integrating-branches`). As sessões de página — as que
   implementam, corrigem ou escrevem uma feature — trabalham no próprio ramo e no próprio worktree, terminam com o relatório
   do juiz independente e **não mergeiam**, nem a própria feature. O pedido de merge vira ramo entregue.
+- **Commitar no próprio ramo e entregar à integração não se pergunta ao MJRP** (a feature F171, «o MJRP é o juiz final», e a issue UAT-477): é o caminho da feature, não uma decisão dele. Num projeto com uma só sessão orquestradora, ela é também a integradora: junta o próprio ramo pelo trem, quando o verificador passa, sem pedir a ele: é a única exceção ao «sessões de página não mergeiam». O juiz do lote e o Touch ID onde o portão pede seguem a seção de integração.
 - **O trem:** o integrador abre `integrate/<lote>-onto-main`, junta cada ramo com `--no-ff`, regenera os derivados, chama
   **um juiz por lote** (nunca o próprio integrador) e só então mergeia o ramo de integração na `main`. As regras de
   conflito por arquivo e a renumeração de UAT estão na skill; a mecânica, em `mjrp-scripts/merge_train.py`.
-- **Logs:** união por entrada, mais nova primeiro (o driver `mjrp-log` do `.gitattributes`, ou `merge_train.py log-union`).
-  O `merge=union` do git **não** serve: guarda as linhas e perde a ordem das datas.
+- **Logs e memória:** o log se une por entrada, mais nova primeiro (o driver `mjrp-log`, ou `merge_train.py log-union`), e o
+  `## Now` do `MEMORY.md` junta o que os dois lados acrescentaram a um bloco (o driver `mjrp-memory`). O `merge=union` do git
+  **não** serve: guarda as linhas e perde a ordem das datas. Os drivers só agem com as duas peças: a linha do `.gitattributes`
+  que liga o arquivo (versionada; o refresh do kernel a escreve) e a configuração do clone (`merge_train.py install-driver`,
+  que só diz «instalado» quando o `git check-attr` confirma a ligação). O I5 do doctor cobra a ligação.
 - **Id de UAT:** `merge_train.py next-uat-id --reserve` (main + ramos abertos + reservas dos worktrees). Se mesmo assim
   colidir, o integrador renumera o segundo e abre uma linha NOVA no log — entrada antiga nunca se edita.
 - **Merge aberto de outra sessão:** o `commit-msg` avisa (nunca bloqueia) quando há `MERGE_HEAD` e o commit não é o merge.
@@ -79,6 +85,8 @@ spec, plan e tasks em esboço, com a via e o tipo declarados — `lane` e `solut
 ### A integração
 - **O merge é do integrador**, quando o verificador passa (exit 0) e o juiz do lote avalia — nunca pelo auto-relato. Merge com
   commit de merge (`--no-ff`): os commits de cada etapa ficam no histórico, e reverter a feature é reverter um commit.
+  O avanço rápido não faz commit de merge e **nenhum hook roda**: no projeto sem trem, onde o `git merge` é a única porta, as
+  travas do fecho do `pre-merge-commit` (o passo retroativo e a forma do SDD) só valem com `--no-ff`.
 - **O que a integração quebrar** volta à sessão dona do ramo; o integrador não conserta código de feature, só conflito mecânico,
   derivado regenerado e id renumerado. Em último caso, `git revert` do merge enquanto a dona corrige.
 - **O portão visual:** o hook `pre-merge-commit` recusa o merge de ramo que mudou tela sem relatório de reconferência avaliado e
@@ -96,6 +104,12 @@ spec, plan e tasks em esboço, com a via e o tipo declarados — `lane` e `solut
   MJRP move o arquivo para fora do Mac e o registra (`--mark-moved`: em `daily/` fica só o marcador, ADR-0030) e o leva ao disco externo, à mão. Entre uma cópia e outra o que protege é o git (o histórico e o reflog) e o
   GitHub até o último push. **O push é do humano** (`git push origin main`): não há PR remoto —
   o agente trabalha no ramo, roda o verificador e o integrador faz o merge local em `main`.
+- **«Só o MJRP dá push, a `main` fica local» é a estratégia de entrega do harness** (que não tem site no ar) **e o padrão de um projeto até ele
+  escrever a dele.** Um projeto com preview e produção não herda esse desenho: ele escreve, na seção `## Delivery strategy` do `docs/specs/arch.md`,
+  que ramos existem, o que gera preview, o que vai a produção, quem envia cada um, o que se confere em cada etapa, como se volta atrás e se o
+  preview usa as credenciais e os dados de produção — ou uma linha «Sem produção: …». O bootstrap pergunta se ela existe e, se não, propõe
+  (`mjrp-pdlc-bootstrap`, `reference/delivery-strategy.md`), marcada como proposta até o MJRP confirmar; o juiz é `delivery_strategy_check.py`
+  (item `delivery-strategy`, CM-0111). A trava `human_valves_guard.py` não muda: o push continua sendo do humano em qualquer estratégia.
 - **Isolamento:** um worktree por sessão de página; a trava de sessão avisa quando há outra no repositório.
 
 ### Tags
@@ -131,7 +145,13 @@ ao disco externo e o GitHub até o último push). Cada mecanismo que grava fora 
 `python3 mjrp-scripts/merge_train.py clean-worktrees --apply` (cada um por `_safe.py discard`; o que não está nesse estado fica, com o motivo);
 o `merge_train.py merge` que cai na `main` roda isso por si. Antes de julgar, a limpeza solta o `.mjrp/` de uma sessão encerrada e move as
 cópias carimbadas do `_backups/` do worktree para o `_backups/` do checkout principal (`_safe.release_worktree`); o link `node_modules` casa a regra de
-derivado; e o W18 mede o `.claude/worktrees/` inteiro contra 10 GB, seja qual for a classe de cada um (F120). Mesclado não é abandonado
+derivado; e o W18 mede o `.claude/worktrees/` inteiro contra 10 GB, seja qual for a classe de cada um (F120). O rastro que uma ferramenta
+reescreve também não segura o worktree mesclado (F207): o arquivo rastreado declarado em `structure_rules.json → rewritten_traces` (o
+`daily-checks/sensor-*.md` do doctor, o `web/dist/` de um ramo anterior à F57) com mudança só no disco volta ao último commit pelo
+`_safe.restore`, com a edição guardada no `_backups/` do principal, e o não rastreado que `derived` cobre sai como classe 3; mudança no
+índice, edição de outro arquivo e arquivo novo não declarado continuam segurando. Nos filhos vale o mesmo (o build do Next entra nas regras), e
+todo o `_backups/` do worktree que o git não versiona vai para o do principal, com o nome do worktree; o versionado fica, e a poda nunca o
+toca. Mesclado não é abandonado
 (F123): o worktree sem commit próprio fica até 7 dias parado, e o com arquivo mexido na última hora fica, na limpeza automática e na manual.
 
 **Para o agente é mecanismo, não pedido** (Claude Code): o hook `PreToolUse(Bash)` `deletion_guard.py` recusa `rm`, `find -delete`,
@@ -163,6 +183,11 @@ clean` passam. Se o próprio hook falha, sai 0 com «nao avaliou». Portas que e
   Draft para `In progress`) é recusado quando a feature não está no `docs/specs/priority.md` do projeto — o humano a arrasta no board; dentro da lista
   passa, e avisa se uma de cima não começou; a trilha Agente e o registro de um Draft passam; lista ilegível ou apagada é «não avaliável», nunca passe
   (`priority_gate_check.py`; `priority_next.py` é o comando que lista as não começadas e o bloco do início de sessão).
+  **A lista se lê na `main`** (F217, UAT-537): o arraste grava sempre na `main`, e o board, o comando, o hook e a trava leem a `priority.md` de lá,
+  nunca a cópia do ramo em que o checkout está (a trava usa a cópia do índice só no commit que muda a própria lista).
+  **Sem a lista não há trava** (F173, UAT-480): um projeto sem `docs/specs/priority.md` não tem ordem nenhuma (o app lê o arquivo ausente
+  como lista vazia), e o `priority_gate_check.py` deixa passar os commits dele. Com a lista, a trilha Humano só começa o que está nela, e o que já começou quando ela existe segue
+  (não é recusado). O refresh do kernel não cria a lista nem liga a trava. O primeiro arraste dele cria a lista com a ordem que ele deu, com o título `# Prioridade` (emenda à CC-ADR-0029 § 3, aceita pelo MJRP como CC-ADR-0040): o commit de ordem leva o arquivo novo, e a lista passa a existir.
 - **`pre-commit` e a tela compilada (F57, CC-ADR-0027):** recusa qualquer entrada do índice sob `apps/control-center/web/dist/`,
   que não é versionada (o serviço compila a tela). Num merge de ramo anterior à F57, `merge_train.py dist-resolve` mantém a
   remoção (`git rm --cached`; o disco fica, derivado).
@@ -172,6 +197,13 @@ clean` passam. Se o próprio hook falha, sai 0 com «nao avaliou». Portas que e
 - **Duas sessões no mesmo repositório:** commit só por *pathspec* — nunca `git add -A` com outra sessão ativa.
 
 ## History
+- **2026-11-07 13:49** · **Driver de merge só vale ligado** (F218, UAT-539): no `MJRPpersonal` o `install-driver` dizia «instalado» e os merges seguiam em conflito no log e no `## Now`, porque o filho não tinha as linhas do `.gitattributes` nem o `merge_train.py` que o driver chama; um desses conflitos custou ao MJRP uma segunda passkey. O kernel passou a levar o script e as linhas, o `install-driver` confere a ligação e o I5 do doctor a cobra (decidido pelo agente, revisável pelo MJRP).
+- **2026-11-07 13:16** · **Todo lote da tela grava na `main`, e a ordem se lê lá** (F217, UAT-537; decidido pelo agente, revisável pelo MJRP). No trem de 2026-11-07 o checkout da raiz estava no `integrate/…`; o lote anotava o ramo do checkout e o comando commitava nele, e os arrastes do MJRP (a F205 entre eles) ficaram fora da `main` que o orquestrador e o `priority_next.py` liam, enquanto o board lia o disco do checkout. Agora o lote (aceite, reabertura, troca de chaves, ordem) é preparado com os arquivos da `main` e commitado nela: no worktree que a tem, ou num worktree temporário (`$TMPDIR/cc-main.*`) que o comando abre e remove; `main` ausente ou presa num merge recusa com o motivo. A marcação do catálogo recusa com a raiz fora da `main`. O board, o `priority_next.py` (e o hook de início de sessão) e a trava leem a lista na `main`. A regra: **o checkout não diz para onde vai um commit da tela**.
+- **2026-11-07 09:21** · **A limpeza vale nos filhos: o build do Next e o `_backups/` do worktree** (F207, UAT-527; o `_backups/` inteiro ao principal é decisão do integrador, o resto do agente; revisáveis pelo MJRP). No `MJRPpersonal` nenhum dos 44 worktrees mesclados saía. A soltura levava só a cópia carimbada e movia a versionada (o que sujou 7 deles); agora leva tudo o que o git não versiona e nunca o versionado, e a poda do `_backups/` não apaga cópia versionada. Prévia: 25 dos 44 sairiam.
+- **2026-11-07 09:15** · **O avanço rápido não roda hook, e a página diz isso ao filho** (F209, UAT-501: o P2-2 da reconferência da F182; decidido pelo agente, revisável pelo MJRP). A nota CM-0107 publicada não muda (o portão do catálogo recusa a nota publicada que muda de bytes), e o filho lê esta página do kernel: a regra do `--no-ff` passou a dizer por quê, no próprio lugar da integração.
+- **2026-11-07 09:08** · **O rastro do doctor e do build não segura o worktree mesclado** (F207, UAT-527; decidido pelo agente, revisável pelo MJRP). A limpeza de 7/11 viu 37 worktrees e tirou 4: uns 20 ficavam só pelo `daily-checks/sensor-*.md` reescrito, pelo `web/dist/` de ramos antigos ou pelo `.mypy_cache/`. Agora o juiz conta esse rastro como de saída (a seção nova `rewritten_traces`, e o `.mypy_cache/` em `derived`), e o `_safe.release_worktree` o desfaz antes da remoção: o rastreado pelo `_safe.restore`, guardando a edição no `_backups/` do principal. A remoção continua exigindo `git status` vazio; o `classify` e o hook de deleção não mudam.
+- **2026-11-04 22:10** · A F186 (UAT-496) separa a estratégia do harness da do projeto: «só o MJRP dá push, a `main` fica local» é a do harness e o padrão até o projeto escrever a dele (seção `## Delivery strategy` do `arch.md`, item `delivery-strategy`, CM-0111). Nasceu de a regra ter sido copiada para o site pessoal, com preview e produção, e de um lote de 50 commits ir direto ao ar. Decisão do MJRP de 4/11: a estratégia é escrita para o projeto, não copiada.
+- **2026-11-04 11:25** · **Commitar no próprio ramo e entregar à integração não se pergunta ao MJRP; a sessão orquestradora única também integra** (F171, UAT-477; a regra do juiz final está em `pdlc-loops` § 2; decidido pelo agente, revisável pelo MJRP).
 - **2026-11-01 23:02** · **A mudança de copy direto na `main`, por máquina** (F158, S-208; a regra é do MJRP, 2026-11-01): a exceção a «feature nasce no board» é a issue de tipo `copy`, e o `copy_change_check.py` a segura no que ela é. Só o integrador escreve na `main`, como antes.
 
 - **2026-10-31 00:46** · **O ramo recém-aberto lê-se como começado, no board e na trava** (F140, UAT-424; o pedido do MJRP de 2026-10-30 20:48; decidido pelo agente, revisável pelo MJRP). «Mesclado» era «a ponta do ramo é ancestral da `main`», o que vale também para o ramo sem commit próprio; a F131 e a F139 apareciam na «Priorizada» com as sessões trabalhando. Agora é «ancestral da `main` **e** fora da linha de primeiro pai dela» (o trem junta com `--no-ff`, então o ramo mesclado tem a ponta fora da linha; o recém-aberto, não — o critério do `has_own_commit` da F123), no adaptador git do board (`adapters/git_cli/branches.py`) e em `priority_next.branch_features`. A `mjrp-implementing-tasks` traz o commit de início como item 6 do pré-voo. Custo: um ramo antigo e vazio, ainda na linha de primeiro pai, lê-se como começado (o lado seguro; o spec `Done` na `main` encerra a questão).

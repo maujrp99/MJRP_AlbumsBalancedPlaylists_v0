@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
   "version": "2026-10-09",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
@@ -121,7 +121,8 @@
       "prototypes",
       "proposals",
       "references",
-      "diagrams"
+      "diagrams",
+      "copy"
     ],
     "data": [
       "fixtures",
@@ -344,6 +345,21 @@
         "why": "the tool's own cache, rebuilt on the next run"
       },
       {
+        "glob": "**/.mypy_cache/",
+        "owner": "mypy",
+        "why": "the type checker's own cache, rebuilt on the next run (F207, UAT-527: it held merged worktrees as class 1)"
+      },
+      {
+        "glob": "**/.next/",
+        "owner": "next build / next dev",
+        "why": "the Next.js build (BUILD_ID, the compiled pages), rebuilt from the sources (F207: it held 33 merged worktrees of the MJRPpersonal)"
+      },
+      {
+        "glob": "**/*.tsbuildinfo",
+        "owner": "tsc (incremental build)",
+        "why": "the TypeScript compiler's incremental state, rebuilt on the next run (F207)"
+      },
+      {
         "glob": "**/web/dist/",
         "owner": "npm run build (the screen's check, test:server and visual build first) and merge_train.py dist-resolve",
         "why": "the Control Center's built screen, not versioned since F57 (CC-ADR-0027 § 1): rebuilt from web/src; a file git still tracks there (a branch older than F57) is class 2"
@@ -373,7 +389,12 @@
       {
         "glob": "~/.mjrp/control-center/bin/",
         "owner": "apps/control-center/ops/install-service.sh (whoever installs the service compiles it)",
-        "why": "the Touch ID utility of the Control Center (CC-ADR-0031), compiled from the committed ops/presence/presence.swift; the next install builds it again"
+        "why": "the Touch ID utility of the Control Center (CC-ADR-0031) and the verifier of the remote approval (CC-ADR-0038), compiled from the committed sources in ops/presence/; the next install builds them again"
+      },
+      {
+        "glob": "~/.mjrp/control-center/reading/",
+        "owner": "apps/control-center/src/control_center/adapters/files_reading.py (each print removes its own folder; one a killed process left goes at the next print, past an hour)",
+        "why": "the page, the browser's profile and the PDF of a print in progress (CC-ADR-0037, F150); the PDF goes back in the answer and nothing here is kept"
       }
     ]
   },
@@ -404,9 +425,29 @@
         "glob": "**/.mjrp/turn-*.json",
         "owner": "mjrp-scripts/stop_gate.py",
         "why": "the turn of one session, overwritten by tmp + os.replace"
+      },
+      {
+        "glob": "**/.mjrp/session-*.json",
+        "owner": "mjrp-scripts/stop_gate.py (the SessionStart hook writes it once, tmp + os.replace)",
+        "why": "the mark that a session started (it holds only the start time); found undeclared by F206 TASK-07: it kept the close of every real page session red"
+      },
+      {
+        "glob": "**/.mjrp/to-archive/",
+        "owner": "mjrp-scripts/session_close.py (the Stop hook writes a mark by tmp + os.replace; the SessionStart hook of the main checkout removes the mark whose worktree left)",
+        "why": "the page sessions whose close passed and that were ordered to archive themselves (F206): one mark per worktree, until the worktree leaves"
+      },
+      {
+        "glob": "**/.mjrp/close-red/",
+        "owner": "mjrp-scripts/session_close.py (the Stop hook writes one by tmp + os.replace when it holds a red close; the green close and the SessionStart hook remove it)",
+        "why": "the page sessions whose close the hook held red (F206 recheck P1-2): so a fix made by a commit is told to write the closing entry again"
       }
     ],
     "global": [
+      {
+        "glob": "~/.mjrp/control-center/approvals/",
+        "owner": "the Control Center and mjrp-scripts/remote_approval.py prune (F153, CC-ADR-0038)",
+        "why": "the requests and signatures of the remote approval; each dies at its deadline, except a record whose note did not save, and the book of used nonces only grows by appending"
+      },
       {
         "glob": "~/_MJRP-BCKPS/daily/",
         "owner": "mjrp-scripts/daily_backup.py (F75, ADR-0024 § 7)",
@@ -421,6 +462,37 @@
         "source": "STRUCTURE.md",
         "owner": "mjrp-scripts/tree.py (snapshots it before each rewrite)",
         "why": "generated from the disk + structure.yml and versioned; every committed version is in git, so a stamped copy of one is redundant"
+      }
+    ],
+    "global": []
+  },
+  "rewritten_traces": {
+    "_about": "F207 (UAT-527). A TRACKED file a tool rewrites in place on each run (the doctor's trace, the build of a branch older than F57, the Next build's `next-env.d.ts`, a `_backups/` a project versions). In a MERGED worktree, an unstaged rewrite of one (a ` M` or ` D` in `git status`), and an untracked file a `derived` glob covers, do not keep it: `_pathclass.judge_worktree` judges the worktree as if they were gone, and `_safe.release_worktree` makes it so before the removal - the tracked one by `_safe.restore` (the edit copied into the MAIN checkout's `_backups/`), the untracked derived one by the discard of class 3. Nothing else changes: a staged change, an edit to any other file, and `classify` (the deletion guard, the main checkout) still see class 1.",
+    "project": [
+      {
+        "glob": "**/daily-checks/sensor-*.md",
+        "owner": "mjrp-scripts/doctor.py (rewrites the trace of warnings and errors on each run)",
+        "why": "the doctor's trace: a run inside a worktree rewrites it, and the main checkout keeps the history of it"
+      },
+      {
+        "glob": "**/web/dist/",
+        "owner": "npm run build",
+        "why": "a branch older than F57 still tracks the built screen, and a build in its worktree rewrites `.source-hash` and the hashed assets"
+      },
+      {
+        "glob": "**/next-env.d.ts",
+        "owner": "next build / next dev",
+        "why": "versioned in the Next projects and rewritten by every build (F207: it held 15 merged worktrees of the MJRPpersonal)"
+      },
+      {
+        "glob": "**/*.tsbuildinfo",
+        "owner": "tsc (incremental build)",
+        "why": "a project that versions it gets it rewritten by every build (F207)"
+      },
+      {
+        "glob": "**/_backups/",
+        "owner": "mjrp-scripts/_safe.py (release_worktree before F207 moved versioned copies out of the worktree)",
+        "why": "a project that versions its `_backups/` (the MJRPpersonal) keeps every committed copy in git: a deleted or changed one comes back from the last commit, and a changed one leaves its edit in the main checkout's `_backups/`"
       }
     ],
     "global": []
@@ -460,6 +532,13 @@
         "when": "5 GB in total; a visual judge round needs 400 to 600 MB"
       },
       {
+        "id": "remote-approvals",
+        "glob": "~/.mjrp/control-center/approvals/",
+        "max_gb": 1,
+        "owner": "the Control Center and mjrp-scripts/remote_approval.py prune (F153, CC-ADR-0038)",
+        "when": "a request or a signature lasts at most 24 h; a few kilobytes each, with a ceiling of 20 open"
+      },
+      {
         "id": "daily-copies",
         "glob": "~/_MJRP-BCKPS/daily/projects-*.tar.gz",
         "max_files": 3,
@@ -480,6 +559,13 @@
         "max_gb": 0.03,
         "owner": "apps/control-center `adapters/git_cli/memo_runner.py` (git.json, cap 8 MB, oldest immutable answers dropped) and `change_index.py` (git-changes.json, cap 12 MB, oldest repository dropped) (F163)",
         "when": "30 MB for the two files together; they are disposable (deleted, they are rebuilt from git) and each one prunes itself when it is written"
+      },
+      {
+        "id": "cc-reading-jobs",
+        "glob": "~/.mjrp/control-center/reading/job-*",
+        "max_gb": 0.1,
+        "owner": "apps/control-center/src/control_center/adapters/files_reading.py (F150): each print removes its own folder, and the next print removes what a killed process left, past an hour",
+        "when": "0.1 GB, about 50 folders of 2 MB; normally empty between prints, so above it prints are dying and nothing printed since"
       }
     ]
   }

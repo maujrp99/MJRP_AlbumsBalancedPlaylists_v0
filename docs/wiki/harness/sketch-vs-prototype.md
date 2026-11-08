@@ -1,4 +1,4 @@
-<!-- kernel do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # Esboço vs. protótipo — desenhar para descobrir
 
 > Kernel · página conceitual · criada 2026-09-21 19:00 · atualizada 2026-10-09 · fonte: Buxton, *Sketching User Experiences* (2007)
@@ -17,10 +17,10 @@ pode fazer com o resultado (referenciar num spec? levar a um gate?).
 
 - **Discovery · Explorar** (`mjrp-designing-ui`, [[pdlc-loops]] §3) produz esboços e protótipos *para o humano reagir*:
   fidelidade livre e crescente; cada versão já vem com a descrição da tela (`info-arch.md`, wireframes de todas as
-  telas — o `commit-msg` recusa sem eles), mas sem passada da `mjrp-critiquing-ux`.
+  telas — o `commit-msg` recusa sem eles), mas sem passada da `mjrp-critiquing-ux-ui`.
   O humano detalha requisito olhando. O resultado fica em `design/inception/`.
 - **Discovery · Desenhar**, o passo do protótipo (`mjrp-designing-ui`), produz o protótipo *julgado* §I.13: com
-  `info-arch.md` consolidado, passado pela `mjrp-critiquing-ux` e aprovado pelo humano, referenciado pelo `spec.md`.
+  `info-arch.md` consolidado, passado pela `mjrp-critiquing-ux-ui` e aprovado pelo humano, referenciado pelo `spec.md`.
 - O protótipo do Explorar que ficou bom **não é descartado**: é o ponto de partida do protótipo do Desenhar — ou,
   se o humano julgar que basta, dispensa esse passo — não o sistema visual: a identidade que o protótipo usa vai para o
   `design-system.md` antes do «Pronto para construir». Na **via rápida**, o protótipo é opcional e vem depois da execução (só se o MJRP pedir): o protótipo rápido sobre o design system que
@@ -81,4 +81,4 @@ o que falta.
 
 ## Related
 
-[[design-canon]] · [[harness-kaizen]] · `mjrp-designing-ui` · `mjrp-critiquing-ux`
+[[design-canon]] · [[harness-kaizen]] · `mjrp-designing-ui` · `mjrp-critiquing-ux-ui`

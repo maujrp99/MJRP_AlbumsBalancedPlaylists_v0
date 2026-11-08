@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -33,7 +33,8 @@ from _contract import CONTRACT, UnreadableYaml, read_yaml_strict
 from _doctor_budgets import w18_budgets
 from _doctor_contract import f2_gates, i1_contract
 from _doctor_docs import (i2_paths, i3_links, i4_agents, i5_principles_inheritance, w6_charter_not_migrated,
-                          w17_folder_index, w19_scripts_catalog, w20_sdd_shape, w21_screen_answers)
+                          w17_folder_index, w19_scripts_catalog, w20_sdd_shape, w21_screen_answers,
+                          w22_returned)
 from _doctor_kernel import (i5_constitution_generated, i5_kernel, i6_conformance, w7_kernel_downstream,
                             w16_portfolio_conformance)
 from _doctor_memory import f1_log_shape, f1_memory, f1_wow_growth
@@ -170,6 +171,7 @@ CHECKS = [
     Check("W19", w19_scripts_catalog, ("root", "cfg", "rep",), AVISO),
     Check("W20", w20_sdd_shape, ("root", "cfg", "rep",), AVISO),
     Check("W21", w21_screen_answers, ("root", "rep",), AVISO),
+    Check("W22", w22_returned, ("root", "rep",), AVISO),
 ]
 
 

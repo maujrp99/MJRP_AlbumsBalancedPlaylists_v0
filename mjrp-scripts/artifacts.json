@@ -1,0 +1,1500 @@
+{
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "about": "O registro dos artefatos do PDLC (F100, S-185): a fonte única. mjrp-scripts/artifact_map.py gera daqui a tabela da página docs/wiki/kernel/ways-of-working/pdlc-artifact-map.md e o diagrama design/diagrams/ways-of-working/2026-10-27-1124-pdlc-artifact-map.svg, e o Control Center o lê ao vivo no card «O ciclo de vida». Edite aqui, rode o gerador; --check cobra que o gerado bate, que created_by existe (uma skill, um script de mjrp-scripts/ ou MJRP), que todo tipo do report_types.json está numa linha e que todo arquivo de docs/specs/, design/ e reports/ casa com um padrão. Cada linha que o passo retroativo toca (retro always ou if) diz em retro_check como a máquina a confere (F101): mjrp-scripts/retro_step_check.py lê esse campo no pre-commit e no merge_train.py merge e recusa a feature da via rápida que vai a Done sem ela.",
+  "version": 1,
+  "stages": [
+    {
+      "id": "foundation",
+      "name": "Fundação"
+    },
+    {
+      "id": "intake",
+      "name": "Intake"
+    },
+    {
+      "id": "explore",
+      "name": "Discovery · Explorar"
+    },
+    {
+      "id": "frame",
+      "name": "Discovery · Enquadrar"
+    },
+    {
+      "id": "design",
+      "name": "Design · Desenhar"
+    },
+    {
+      "id": "delivery",
+      "name": "Delivery"
+    },
+    {
+      "id": "uat",
+      "name": "Release"
+    },
+    {
+      "id": "learn",
+      "name": "Learn"
+    },
+    {
+      "id": "memory",
+      "name": "Memória"
+    }
+  ],
+  "retro": {
+    "always": "■ entra",
+    "if": "◩ só",
+    "never": "□ não entra"
+  },
+  "ignore": [
+    "**/.gitkeep",
+    "**/.DS_Store"
+  ],
+  "artifacts": [
+    {
+      "id": "art-contract",
+      "name": "Contrato",
+      "what": "O que o projeto declara sobre si — perfil, sensores, telas, portões e stack — e que as ferramentas leem.",
+      "path": ".mjrp-project.yml",
+      "stage": "foundation",
+      "created_by": [
+        "mjrp-pdlc-bootstrap",
+        "new_project.py"
+      ],
+      "note": "",
+      "standard": "quando muda sensor, tela, gates ou stack",
+      "fast": "igual, no commit do código",
+      "retro": "never",
+      "retro_text": "muda com o código, não depois",
+      "source": "[[pdlc-loops]] § 1 · decidido pelo agente"
+    },
+    {
+      "id": "art-vision",
+      "name": "VISION",
+      "what": "Para que o projeto existe e aonde quer chegar: a verdade de onde todo o resto deriva.",
+      "path": "VISION.md",
+      "stage": "foundation",
+      "created_by": [
+        "mjrp-pdlc-bootstrap",
+        "mjrp-coaching-pm"
+      ],
+      "note": "o bootstrap faz o esqueleto",
+      "standard": "só com o humano",
+      "fast": "nunca",
+      "retro": "never",
+      "retro_text": "mudar a VISION é do humano",
+      "source": "`AGENTS.md`, classe (c)"
+    },
+    {
+      "id": "art-principles",
+      "name": "PRINCIPLES",
+      "what": "Os princípios que o agente e o humano seguem em todos os projetos.",
+      "path": "PRINCIPLES.md",
+      "stage": "foundation",
+      "created_by": [
+        "humano"
+      ],
+      "note": "no harness, no kernel; o filho recebe a cópia",
+      "standard": "só no harness, com o humano",
+      "fast": "nunca",
+      "retro": "never",
+      "retro_text": "a cópia do kernel não se edita no filho",
+      "source": "`mjrp-syncing-docs` (where-things-live)"
+    },
+    {
+      "id": "art-constitution",
+      "name": "constitution",
+      "what": "As regras técnicas do projeto — camadas, padrões, o que é proibido —, cada uma com o sensor que a confere.",
+      "path": "docs/specs/constitution.md",
+      "stage": "foundation",
+      "created_by": [
+        "mjrp-designing-architecture"
+      ],
+      "note": "o molde",
+      "standard": "quando entra padrão de código ou dependência",
+      "fast": "no retroativo",
+      "retro": "if",
+      "retro_text": "se a feature trouxe padrão de código ou dependência — declarado no `plan.md`",
+      "retro_check": {
+        "by": "declared",
+        "doc": "docs/specs/constitution.md"
+      },
+      "source": "o MJRP, 2026-10-27 11:05 · tabela do Update da `mjrp-syncing-docs`",
+      "patterns": [
+        "docs/specs/constitution.md"
+      ]
+    },
+    {
+      "id": "art-agents",
+      "name": "AGENTS · CLAUDE",
+      "what": "As instruções para qualquer agente que abre o repositório: como se trabalha aqui.",
+      "path": "`AGENTS.md` · `CLAUDE.md`",
+      "stage": "foundation",
+      "created_by": [
+        "mjrp-pdlc-bootstrap"
+      ],
+      "note": "",
+      "standard": "quando nasce regra operante",
+      "fast": "igual",
+      "retro": "if",
+      "retro_text": "se a feature criou regra de trabalho que precisa ser obedecida",
+      "retro_check": {
+        "by": "judgement"
+      },
+      "source": "`AGENTS.md` «ADR não é onde regra operante mora» · decidido pelo agente"
+    },
+    {
+      "id": "art-intake-candidates",
+      "name": "Candidatos",
+      "what": "A fila de entrada: pedidos e achados ainda não triados, cada um à espera de uma via.",
+      "path": "`docs/specs/prd.md` § Candidatos (Intake)",
+      "stage": "intake",
+      "created_by": [
+        "mjrp-pdlc"
+      ],
+      "note": "a triagem",
+      "standard": "na triagem",
+      "fast": "na triagem; o item vai ao board antes do trabalho",
+      "retro": "never",
+      "retro_text": "a linha muda na triagem, na `main`",
+      "source": "`mjrp-pdlc` (intake-and-lanes) · decidido pelo agente",
+      "patterns": [
+        "docs/specs/prd.md"
+      ]
+    },
+    {
+      "id": "art-brief",
+      "name": "Brief",
+      "what": "O pedido reescrito em poucos campos, para quem pediu reconhecer e aprovar antes de qualquer trabalho.",
+      "path": "a conversa → `docs/log.md`",
+      "stage": "intake",
+      "created_by": [
+        "mjrp-structuring-requests"
+      ],
+      "note": "",
+      "standard": "o longo, quando o pedido pede",
+      "fast": "o curto, antes de tudo",
+      "retro": "never",
+      "retro_text": "vira a spec no retroativo",
+      "source": "[[pdlc-loops]] § 2, passo (1)"
+    },
+    {
+      "id": "art-feature",
+      "name": "A feature no board",
+      "what": "A pasta da feature no board, nascida na main com spec, plan e tasks em esboço.",
+      "path": "`docs/specs/features/Fxx-slug/` (esboço)",
+      "stage": "intake",
+      "created_by": [
+        "new_feature.py"
+      ],
+      "note": "na main",
+      "standard": "quando o trabalho entra em Delivery",
+      "fast": "nasce na `main` antes do ramo, com `lane` e `solution_type`",
+      "retro": "always",
+      "retro_text": "o esboço vira registro (spec, plan, tasks)",
+      "retro_check": {
+        "by": "sketch"
+      },
+      "source": "`AGENTS.md` «feature nasce na `main`» · [[pdlc-loops]] § 2"
+    },
+    {
+      "id": "art-prototype",
+      "name": "Protótipo",
+      "what": "A tela desenhada em HTML para o humano reagir antes de construir.",
+      "path": "design/inception/<nome>-vN.html",
+      "stage": "explore",
+      "created_by": [
+        "mjrp-designing-ui"
+      ],
+      "note": "",
+      "standard": "cada rodada do Explorar",
+      "fast": "antes, só se o humano pedir; senão no retroativo",
+      "retro": "if",
+      "retro_text": "se a tela mudou — ou `**Prototype**: none` dito pelo humano",
+      "retro_check": {
+        "by": "screen",
+        "paths": [
+          "design/inception/*"
+        ],
+        "none_ok": true
+      },
+      "source": "[[pdlc-loops]] § 2.1 · `pdlc_vocabulary_check.py` (doctor)",
+      "patterns": [
+        "design/inception/**"
+      ]
+    },
+    {
+      "id": "art-wireframes",
+      "name": "Wireframes",
+      "what": "O esqueleto de cada tela de uma versão do protótipo, com as caixas nomeadas pelo inventário.",
+      "path": "design/wireframes/<nome>-vN-<tela>.png",
+      "stage": "explore",
+      "created_by": [
+        "mjrp-designing-ui"
+      ],
+      "note": "",
+      "standard": "na mesma rodada e no mesmo commit da versão",
+      "fast": "com o protótipo",
+      "retro": "if",
+      "retro_text": "se a tela mudou — todas as telas da versão",
+      "retro_check": {
+        "by": "screen",
+        "paths": [
+          "design/wireframes/*"
+        ],
+        "none_ok": true
+      },
+      "source": "[[pdlc-loops]] § 2.1 · `commit-msg` (`prototype_sync_check.py`) · W14",
+      "patterns": [
+        "design/wireframes/**"
+      ]
+    },
+    {
+      "id": "art-inception-notes",
+      "name": "inception-notes",
+      "what": "O diário das rodadas de exploração: o que se mostrou e como o humano reagiu.",
+      "path": "docs/specs/inception-notes.md",
+      "stage": "explore",
+      "created_by": [
+        "mjrp-designing-ui"
+      ],
+      "note": "",
+      "standard": "uma seção por rodada de explorar",
+      "fast": "só se houve rodada antes da execução",
+      "retro": "if",
+      "retro_text": "se houve rodada de explorar (o wireframe que o humano pediu)",
+      "retro_check": {
+        "by": "judgement"
+      },
+      "source": "decidido pelo agente",
+      "patterns": [
+        "docs/specs/inception-notes.md"
+      ]
+    },
+    {
+      "id": "art-info-arch",
+      "name": "info-arch",
+      "what": "A regra de cada tela: o que existe, em que estado e para quem, com o id de cada estado.",
+      "path": "docs/specs/info-arch.md",
+      "stage": "explore",
+      "created_by": [
+        "mjrp-designing-ui"
+      ],
+      "note": "A página de leitura (`design/proposals/info-arch/info-arch.html`) é gerada dele pelo `build_info_arch_page.py` da skill, nunca à mão (F214).",
+      "standard": "Explorar e Desenhar: estrutura, estados `^`, inventário, textos",
+      "fast": "no retroativo",
+      "retro": "if",
+      "retro_text": "se a tela mudou — a regra da tela e o id do estado",
+      "retro_check": {
+        "by": "screen",
+        "paths": [
+          "docs/specs/info-arch.md"
+        ],
+        "none_ok": true
+      },
+      "source": "[[pdlc-loops]] § 2.1 · W11 · W14",
+      "patterns": [
+        "docs/specs/info-arch.md"
+      ]
+    },
+    {
+      "id": "art-proposal",
+      "name": "Proposta",
+      "what": "Uma página com opções para o humano escolher, ou o wireframe que ele vê antes de construir.",
+      "path": "design/proposals/<data>-<assunto>-proposal.html",
+      "stage": "explore",
+      "created_by": [
+        "mjrp-designing-ui",
+        "mjrp-copywriting"
+      ],
+      "note": "a proposta de copy da mjrp-copywriting é `<data>-<página>-copy-proposal.md`",
+      "standard": "quando há opções para o humano escolher, ou um wireframe antes de construir",
+      "fast": "só se o humano pedir para ver antes",
+      "retro": "never",
+      "retro_text": "é a mostra da decisão; o que ficou vai ao protótipo e ao info-arch",
+      "source": "`structure_rules.json` → name_decides · decidido pelo agente",
+      "patterns": [
+        "design/proposals/**"
+      ]
+    },
+    {
+      "id": "art-outcome",
+      "name": "Resultado ^OUT",
+      "what": "Um resultado que o produto persegue: o problema, quem sente e a medida (opcional: `sem medida`).",
+      "path": "ROADMAP.md",
+      "stage": "frame",
+      "created_by": [
+        "mjrp-coaching-pm"
+      ],
+      "note": "",
+      "standard": "no Enquadrar; o Learn mede",
+      "fast": "nunca — resultado novo é via padrão",
+      "retro": "never",
+      "retro_text": "problema, medida e «quem sente» são do humano",
+      "source": "`AGENTS.md`, classe (c) · `mjrp-pdlc`"
+    },
+    {
+      "id": "art-release",
+      "name": "Versão do produto ^REL",
+      "what": "O conjunto de itens que sai junto para quem usa, com número e nome (1.0, 1.1); cada story é planejada para uma (a versão planejada, `planned_for`).",
+      "path": "ROADMAP.md",
+      "stage": "frame",
+      "created_by": [
+        "humano",
+        "mjrp-coaching-pm"
+      ],
+      "note": "",
+      "standard": "na aprovação da story",
+      "fast": "a story nasce com `planned_for` (a versão planejada)",
+      "retro": "never",
+      "retro_text": "qual versão é decisão do humano",
+      "source": "[[pdlc-loops]] § 4"
+    },
+    {
+      "id": "art-prd",
+      "name": "Épico ^EP e escopo",
+      "what": "O que o produto é e não é, e os épicos que o compõem.",
+      "path": "docs/specs/prd.md",
+      "stage": "frame",
+      "created_by": [
+        "mjrp-coaching-pm",
+        "mjrp-writing-reqs"
+      ],
+      "note": "",
+      "standard": "no Enquadrar",
+      "fast": "nunca",
+      "retro": "never",
+      "retro_text": "só muda com o aceite do humano",
+      "source": "`mjrp-syncing-docs` (uma mudança no PRD só com o aceite explícito do humano)",
+      "patterns": [
+        "docs/specs/prd.md"
+      ]
+    },
+    {
+      "id": "art-priority",
+      "name": "Prioridade dos itens",
+      "what": "A ordem que o humano dá aos itens que ainda não começaram — feature, story, task, issue ou épico: uma lista numerada, a de cima é a mais prioritária.",
+      "path": "docs/specs/priority.md",
+      "stage": "intake",
+      "created_by": [
+        "humano"
+      ],
+      "note": "pelo arraste na coluna «Priorizada» do Feature Board (F65, CC-ADR-0029)",
+      "standard": "o humano reordena quando quiser",
+      "fast": "o mesmo",
+      "retro": "never",
+      "retro_text": "a ordem é do humano",
+      "source": "CC-ADR-0029 · `rules/priority.py`",
+      "patterns": [
+        "docs/specs/priority.md"
+      ]
+    },
+    {
+      "id": "art-board",
+      "name": "Configuração do board",
+      "what": "As fases com as etapas, os tipos de item, as colunas e os boards como visões salvas do projeto, sobre o padrão do harness; e quantos dias sem movimento põem um item em «Esperando».",
+      "path": "docs/specs/board.json",
+      "stage": "foundation",
+      "created_by": [
+        "mjrp-configuring-boards",
+        "humano"
+      ],
+      "note": "o bootstrap o cria pela `mjrp-configuring-boards` (F136) — os padrões no greenfield, o de-para no brownfield — e o conform o cobra (item `board@1`); sem ele, vale o padrão `mjrp-scripts/board_defaults.json` (F134, ADR-0025 § 6, ADR-0026); depois, muda a pedido do humano, e a tela de configuração é a F133",
+      "standard": "muda a pedido do humano",
+      "fast": "o mesmo",
+      "retro": "never",
+      "retro_text": "é configuração, não documentação do que foi feito",
+      "source": "ADR-0026 · `mjrp-scripts/_board.py`",
+      "patterns": [
+        "docs/specs/board.json"
+      ]
+    },
+    {
+      "id": "art-board-mapping",
+      "name": "De-para do board",
+      "what": "Como os itens que o projeto já tinha entraram no board: cada fonte (sprint, versão, feature, issue, histórico) com o item ou o agrupamento que virou e a razão, as escolhas de configuração e as respostas do humano.",
+      "path": "docs/specs/board-mapping.json",
+      "stage": "foundation",
+      "created_by": [
+        "mjrp-configuring-boards"
+      ],
+      "note": "só no brownfield e no conform, depois da aprovação; julgado por `mjrp-scripts/board_mapping_check.py` (F136)",
+      "standard": "nasce na adoção do harness",
+      "fast": "o mesmo",
+      "retro": "never",
+      "retro_text": "é o registro da adoção, não documentação do que foi feito",
+      "source": "F136 · `mjrp-scripts/board_mapping_check.py`",
+      "patterns": [
+        "docs/specs/board-mapping.json"
+      ]
+    },
+    {
+      "id": "art-sprint-grouping",
+      "name": "Sprint (agrupamento)",
+      "what": "Uma janela de tempo do projeto que foi feito em sprints: o que a define, as features que fecharam nela e as versões do produto em que saíram. Agrupamento, nunca item do board.",
+      "path": "docs/specs/groupings/sprints/SPR-<n>-<slug>.md",
+      "stage": "foundation",
+      "created_by": [
+        "mjrp-pdlc-bootstrap"
+      ],
+      "note": "só no projeto cujo contrato declara `groupings: [release, sprint]`; no brownfield, gravada pelo `mjrp-scripts/legacy_history_import.py` a partir do de-para aprovado (F128)",
+      "standard": "nasce na adoção do harness ou quando a sprint começa",
+      "fast": "o mesmo",
+      "retro": "never",
+      "retro_text": "é o agrupamento no tempo, não documentação do que uma feature fez",
+      "source": "F128 · `mjrp-scripts/legacy_history_import.py`",
+      "patterns": [
+        "docs/specs/groupings/sprints/*.md"
+      ]
+    },
+    {
+      "id": "art-research",
+      "name": "Pesquisa datada",
+      "what": "Uma pesquisa com fontes para apoiar uma decisão (ex.: os tipos de item, os agrupamentos no tempo e o SDD atual): os fatos com a fonte, a proposta separada e as decisões abertas.",
+      "path": "reports/research/AAAA-MM-DD-<assunto>.md",
+      "stage": "explore",
+      "created_by": [
+        "mjrp-coaching-pm"
+      ],
+      "note": "quem pesquisa é a skill da etapa (ex.: a mjrp-coaching-pm na Discovery) ou um agente a pedido do humano; observação, não verdade: a decisão vai para a página da wiki ou a ADR",
+      "standard": "quando uma decisão pede fontes de fora",
+      "fast": "o mesmo",
+      "retro": "never",
+      "retro_text": "é datada e não se atualiza",
+      "source": "`structure_rules.json` → `subfolders.reports` (2026-10-29)",
+      "patterns": [
+        "reports/research/*.md"
+      ]
+    },
+    {
+      "id": "art-requirement",
+      "name": "Story",
+      "what": "Um requisito por arquivo: o que a pessoa precisa, no nível do problema.",
+      "path": "docs/specs/requirements/<épico>/S-xx-*.md",
+      "stage": "frame",
+      "created_by": [
+        "mjrp-writing-reqs",
+        "new_feature.py"
+      ],
+      "note": "na via rápida, na main com a feature",
+      "standard": "Backlog → Ready no portão → Done → Accepted",
+      "fast": "Backlog na `main`; Done no retroativo",
+      "retro": "always",
+      "retro_text": "Done, `delivered_by`, `verified_by`, `points_to`",
+      "retro_check": {
+        "by": "requirement",
+        "part": "edges"
+      },
+      "source": "[[pdlc-loops]] § 2.1 · `requirements_graph_check.py` (pre-commit, CI)",
+      "patterns": [
+        "docs/specs/requirements/*/S-*.md",
+        "docs/specs/requirements/*/*.md"
+      ]
+    },
+    {
+      "id": "art-acceptance-criteria",
+      "name": "Critérios de aceite",
+      "what": "Os exemplos que dizem se a story está feita, cada um apontando o estado julgado da tela.",
+      "path": "a story (Given / When / Then)",
+      "stage": "frame",
+      "created_by": [
+        "mjrp-writing-reqs"
+      ],
+      "note": "Momento 2",
+      "standard": "no portão Pronto para construir, contra o estado julgado",
+      "fast": "no retroativo",
+      "retro": "always",
+      "retro_text": "escritos do que o humano aprovou na tela, apontando o estado",
+      "retro_check": {
+        "by": "requirement",
+        "part": "ac"
+      },
+      "source": "o MJRP, 2026-10-27 11:05"
+    },
+    {
+      "id": "art-nfr",
+      "name": "NFR",
+      "what": "Um requisito de qualidade que vale para tudo: desempenho, segurança, acessibilidade.",
+      "path": "docs/specs/requirements/…/NFR-xx-*.md",
+      "stage": "frame",
+      "created_by": [
+        "mjrp-writing-reqs"
+      ],
+      "note": "",
+      "standard": "no Enquadrar",
+      "fast": "—",
+      "retro": "never",
+      "retro_text": "feature de produto não importa NFR",
+      "source": "o molde do `spec.md` · decidido pelo agente",
+      "patterns": [
+        "docs/specs/requirements/nfr/*.md"
+      ]
+    },
+    {
+      "id": "art-arch",
+      "name": "arch",
+      "what": "Como o sistema é montado: camadas, componentes, rotas e quem depende de quem.",
+      "path": "docs/specs/arch.md",
+      "stage": "frame",
+      "created_by": [
+        "mjrp-designing-architecture"
+      ],
+      "note": "",
+      "standard": "esqueleto no fim do Enquadrar; refinado em cada Plan",
+      "fast": "no retroativo",
+      "retro": "if",
+      "retro_text": "se mudou componente, fluxo técnico ou integração — declarado no `plan.md`",
+      "retro_check": {
+        "by": "declared",
+        "doc": "docs/specs/arch.md"
+      },
+      "source": "o MJRP, 2026-10-27 11:05 · tabela do Update da `mjrp-syncing-docs`",
+      "patterns": [
+        "docs/specs/arch.md"
+      ]
+    },
+    {
+      "id": "art-data-model",
+      "name": "data-model",
+      "what": "As entidades, os campos e as relações que o sistema guarda.",
+      "path": "docs/specs/data-model.md",
+      "stage": "frame",
+      "created_by": [
+        "mjrp-designing-architecture"
+      ],
+      "note": "",
+      "standard": "esqueleto no fim do Enquadrar; refinado em cada Plan",
+      "fast": "no retroativo",
+      "retro": "if",
+      "retro_text": "se mudou entidade, campo ou schema — declarado no `plan.md`",
+      "retro_check": {
+        "by": "declared",
+        "doc": "docs/specs/data-model.md"
+      },
+      "source": "o MJRP, 2026-10-27 11:05 · tabela do Update da `mjrp-syncing-docs`",
+      "patterns": [
+        "docs/specs/data-model.md"
+      ]
+    },
+    {
+      "id": "art-tech-stack",
+      "name": "tech-stack",
+      "what": "As tecnologias escolhidas, com a versão e a decisão que as escolheu.",
+      "path": "docs/specs/tech-stack.md",
+      "stage": "frame",
+      "created_by": [
+        "mjrp-designing-architecture"
+      ],
+      "note": "",
+      "standard": "com a ADR da stack",
+      "fast": "no retroativo",
+      "retro": "if",
+      "retro_text": "se entrou dependência nova — declarado no `plan.md`",
+      "retro_check": {
+        "by": "declared",
+        "doc": "docs/specs/tech-stack.md"
+      },
+      "source": "o MJRP, 2026-10-27 11:05",
+      "patterns": [
+        "docs/specs/tech-stack.md"
+      ]
+    },
+    {
+      "id": "art-adr",
+      "name": "ADR",
+      "what": "Uma decisão difícil de desfazer, com o contexto, as alternativas e as consequências.",
+      "path": "docs/decisions/NNNN-*.md",
+      "stage": "frame",
+      "created_by": [
+        "mjrp-recording-decisions"
+      ],
+      "note": "",
+      "standard": "`Proposed` antes do código (Enquadrar ou Plan); o aceite do tech lead ou do humano",
+      "fast": "igual: antes do código, à `main` pelo integrador",
+      "retro": "if",
+      "retro_text": "se a feature decidiu algo difícil de reverter — o ponteiro no `plan.md`; se a ADR faltou, nasce agora, `Proposed`, dizendo que veio depois",
+      "retro_check": {
+        "by": "judgement"
+      },
+      "source": "o MJRP, 2026-10-27 11:05 · `mjrp-syncing-docs` «before the code, not after»"
+    },
+    {
+      "id": "art-architecture-audit",
+      "name": "Crítica de arquitetura",
+      "what": "A crítica independente de uma ADR ou da arquitetura, com os achados P0, P1 e P2.",
+      "path": "reports/audits/*-architecture-audit.md",
+      "stage": "frame",
+      "created_by": [
+        "mjrp-critiquing-architecture"
+      ],
+      "note": "",
+      "standard": "antes do aceite da ADR; no portão do marco",
+      "fast": "só se houve ADR",
+      "retro": "if",
+      "retro_text": "se houve ADR",
+      "retro_check": {
+        "by": "judgement"
+      },
+      "source": "segue a ADR · decidido pelo agente",
+      "patterns": [
+        "reports/audits/*-architecture-audit*.md"
+      ],
+      "report_types": [
+        "architecture-audit"
+      ]
+    },
+    {
+      "id": "art-design-system",
+      "name": "design-system",
+      "what": "A identidade visual: cores, fontes, componentes e padrões que toda tela usa.",
+      "path": "docs/specs/design-system.md",
+      "stage": "design",
+      "created_by": [
+        "mjrp-defining-design-systems"
+      ],
+      "note": "",
+      "standard": "no Desenhar, quando a estrutura assentou",
+      "fast": "no retroativo",
+      "retro": "if",
+      "retro_text": "se mudou token, fonte, componente compartilhado ou padrão visual — declarado no `plan.md`",
+      "retro_check": {
+        "by": "declared",
+        "doc": "docs/specs/design-system.md"
+      },
+      "source": "o MJRP, 2026-10-27 11:05 · tabela do Update da `mjrp-syncing-docs`",
+      "patterns": [
+        "docs/specs/design-system.md"
+      ]
+    },
+    {
+      "id": "art-behavior",
+      "name": "behavior",
+      "what": "O que se vê sem tela — comando, hook, sensor, API —, com o id de cada estado.",
+      "path": "docs/specs/behavior.md",
+      "stage": "design",
+      "created_by": [
+        "mjrp-writing-reqs"
+      ],
+      "note": "o bootstrap cria vazio",
+      "standard": "Momento 2: o estado sem tela, com id",
+      "fast": "no retroativo",
+      "retro": "if",
+      "retro_text": "se mudou comportamento sem tela (comando, hook, sensor, API) — o id do estado, declarado no `plan.md`",
+      "retro_check": {
+        "by": "declared",
+        "doc": "docs/specs/behavior.md"
+      },
+      "source": "o MJRP, 2026-10-27 11:05",
+      "patterns": [
+        "docs/specs/behavior.md"
+      ]
+    },
+    {
+      "id": "art-prototype-judged",
+      "name": "Protótipo julgado · referência visual",
+      "what": "A referência visual aprovada: é contra ela que a tela construída é comparada.",
+      "path": "`design/prototypes/` · `design/references/`",
+      "stage": "design",
+      "created_by": [
+        "mjrp-designing-ui"
+      ],
+      "note": "",
+      "standard": "no Desenhar, ao convergir",
+      "fast": "no retroativo",
+      "retro": "if",
+      "retro_text": "se a tela mudou — é contra ela que a trava julga a próxima mudança",
+      "retro_check": {
+        "by": "judgement"
+      },
+      "source": "[[pdlc-loops]] § 2.1",
+      "patterns": [
+        "design/prototypes/**",
+        "design/references/**"
+      ]
+    },
+    {
+      "id": "art-ux-audit",
+      "name": "Auditoria de UX",
+      "what": "A crítica de UX de uma tela ou protótipo contra o cânone de design.",
+      "path": "reports/audits/*-ux-audit.md",
+      "stage": "design",
+      "created_by": [
+        "mjrp-critiquing-ux-ui"
+      ],
+      "note": "",
+      "standard": "o protótipo sem P0",
+      "fast": "não há — o juiz é o humano na tela",
+      "retro": "never",
+      "retro_text": "a via rápida não tem juiz agente",
+      "source": "`MEMORY.md` Ways of Working, 2026-10-26 11:26",
+      "patterns": [
+        "reports/audits/*-ux-audit*.md"
+      ],
+      "report_types": [
+        "ux-audit"
+      ]
+    },
+    {
+      "id": "art-diagram",
+      "name": "Diagrama",
+      "what": "Um diagrama desenhado numa conversa ou gerado em código, guardado por tema.",
+      "path": "design/diagrams/<tema>/AAAA-MM-DD-HHMM-<nome>.png",
+      "stage": "design",
+      "created_by": [
+        "mjrp-designing-architecture",
+        "mjrp-designing-ui",
+        "artifact_map.py",
+        "gen_skills_map.py",
+        "gen_harness_layers.py"
+      ],
+      "note": "",
+      "standard": "quando um diagrama é desenhado numa conversa, ou quando a fonte de um gerado muda",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "é registro de uma conversa; o diagrama que é fonte de tela segue o protótipo",
+      "source": "`structure_rules.json` → diagram_themes · decidido pelo agente",
+      "patterns": [
+        "design/diagrams/**"
+      ]
+    },
+    {
+      "id": "art-copy-doc",
+      "name": "Documento de copy",
+      "what": "O mapa de todo o texto de um site, por idioma: o rótulo de cada elemento, o destino de cada link externo e o status de cada linha, revisado pelo humano.",
+      "path": "design/copy/<página>-copy.md",
+      "stage": "design",
+      "created_by": [
+        "mjrp-generating-copy-deck"
+      ],
+      "note": "o manifesto de levantamento fica ao lado",
+      "standard": "quando o texto de um site vai ser revisado por inteiro",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "é o registro de uma revisão; o texto aprovado vai ao código pela feature que o aplica",
+      "source": "F185 (UAT-495) · `structure_rules.json` → subfolders",
+      "patterns": [
+        "design/copy/**"
+      ]
+    },
+    {
+      "id": "art-spec",
+      "name": "spec",
+      "what": "O que a feature entrega e como saber que está pronta: os requisitos e os critérios de sucesso.",
+      "path": "docs/specs/features/Fxx-slug/spec.md",
+      "stage": "delivery",
+      "created_by": [
+        "new_feature.py",
+        "mjrp-specifying-sdd-artifacts"
+      ],
+      "note": "",
+      "standard": "Especificar, antes do plan",
+      "fast": "esboço na `main`; completo no retroativo",
+      "retro": "always",
+      "retro_text": "sai do esboço, sem «a escrever»",
+      "retro_check": {
+        "by": "sdd",
+        "file": "spec"
+      },
+      "source": "[[pdlc-loops]] § 2.1 · `sdd_shape_check.py` (pre-commit, no Done)",
+      "patterns": [
+        "docs/specs/features/*/spec.md"
+      ]
+    },
+    {
+      "id": "art-plan",
+      "name": "plan",
+      "what": "Como a feature foi construída: a abordagem, os arquivos e o plano de testes.",
+      "path": "docs/specs/features/Fxx-slug/plan.md",
+      "stage": "delivery",
+      "created_by": [
+        "new_feature.py",
+        "mjrp-specifying-sdd-artifacts"
+      ],
+      "note": "",
+      "standard": "Planejar",
+      "fast": "no retroativo",
+      "retro": "always",
+      "retro_text": "o plano como executado, e a declaração dos documentos (Documents Consulted)",
+      "retro_check": {
+        "by": "sdd",
+        "file": "plan"
+      },
+      "source": "[[pdlc-loops]] § 2.1 · `sdd_shape_check.py`",
+      "patterns": [
+        "docs/specs/features/*/plan.md"
+      ]
+    },
+    {
+      "id": "art-tasks",
+      "name": "tasks",
+      "what": "Os passos da feature, em ordem, cada um ligado a um requisito.",
+      "path": "docs/specs/features/Fxx-slug/tasks.md",
+      "stage": "delivery",
+      "created_by": [
+        "new_feature.py",
+        "mjrp-specifying-sdd-artifacts"
+      ],
+      "note": "",
+      "standard": "Quebrar; fechadas uma a uma",
+      "fast": "no retroativo",
+      "retro": "always",
+      "retro_text": "fechadas com `rounds::` ou riscadas com o motivo",
+      "retro_check": {
+        "by": "tasks"
+      },
+      "source": "[[pdlc-loops]] § 2.1 · `sdd_shape_check.py` · `loop.py --check-tasks`",
+      "patterns": [
+        "docs/specs/features/*/tasks.md"
+      ]
+    },
+    {
+      "id": "art-feature-note",
+      "name": "Nota da feature (spike)",
+      "what": "Um estudo que a feature pediu antes do plano.",
+      "path": "docs/specs/features/Fxx-slug/<nota>.md",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-specifying-sdd-artifacts"
+      ],
+      "note": "quando a feature pede um estudo antes do plano",
+      "standard": "quando uma dúvida técnica pede um estudo antes do plan",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "é o estudo; o que ele decidiu vai ao `plan.md`",
+      "source": "decidido pelo agente",
+      "patterns": [
+        "docs/specs/features/*/*.md"
+      ]
+    },
+    {
+      "id": "art-code",
+      "name": "Código e testes",
+      "what": "O código e os testes que provam cada requisito.",
+      "path": "`src/` · `tests/`",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-implementing-tasks",
+        "mjrp-debugging"
+      ],
+      "note": "",
+      "standard": "Executar ⇄ verificar",
+      "fast": "primeiro",
+      "retro": "never",
+      "retro_text": "é o que foi construído; o retroativo o descreve",
+      "source": "[[pdlc-loops]] § 5"
+    },
+    {
+      "id": "art-branch",
+      "name": "O ramo da feature",
+      "what": "O ramo onde a sessão constrói a feature, até o integrador juntar na main.",
+      "path": "`claude/<fxx>-<slug>-…` (um worktree por sessão)",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-implementing-tasks"
+      ],
+      "note": "a sessão de página",
+      "standard": "um por feature, até o integrador juntar",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "o retroativo corre nele, antes de ir ao integrador",
+      "source": "[[pdlc-loops]] § 5 · [[git-governance]]"
+    },
+    {
+      "id": "art-screen-copy",
+      "name": "Textos da tela",
+      "what": "Os textos da tela, por página, em português e em inglês.",
+      "path": "`content/copy/<página>.json` (Control Center)",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-implementing-tasks"
+      ],
+      "note": "o executor",
+      "standard": "com o código",
+      "fast": "com o código",
+      "retro": "never",
+      "retro_text": "vão com o código",
+      "source": "CC-ADR-0030"
+    },
+    {
+      "id": "art-visual-recheck",
+      "name": "Reconferência visual",
+      "what": "O julgamento da tela construída contra a referência aprovada, antes do merge.",
+      "path": "reports/audits/<data>-<produto>-visual-parity-recheck[-n].md",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-ensuring-quality"
+      ],
+      "note": "quem não implementou; na via rápida da trilha Humano não há relatório, o veredito é o Touch ID do humano",
+      "standard": "depois da 1ª rodada, antes do merge",
+      "fast": "o Touch ID do humano no merge (a nota `mjrp-visual-ok`); na trilha Agente, o relatório da reconferência",
+      "retro": "if",
+      "retro_text": "se a tela mudou — o relatório commitado depois do último commit de tela, ou, na trilha Humano, o Touch ID no merge",
+      "retro_check": {
+        "by": "screen",
+        "paths": [
+          "reports/audits/*visual-parity-recheck*.md"
+        ],
+        "touch_id_ok": true
+      },
+      "source": "hook `pre-merge-commit` (`visual_gate.py`) · [[pdlc-loops]] § 5",
+      "patterns": [
+        "reports/audits/*-visual-parity-recheck*.md"
+      ],
+      "report_types": [
+        "visual-parity-recheck"
+      ]
+    },
+    {
+      "id": "art-evidence",
+      "name": "Evidência",
+      "what": "Os prints e as saídas que provam uma entrega.",
+      "path": "reports/evidence/<TASK-ID>/",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-ensuring-quality",
+        "mjrp-critiquing-ux-ui"
+      ],
+      "note": "",
+      "standard": "quando a prova é um print",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "opcional; só quando a prova é visual",
+      "source": "`structure_rules.json` → screenshots · decidido pelo agente",
+      "patterns": [
+        "reports/evidence/**"
+      ],
+      "report_types": [
+        "evidence"
+      ]
+    },
+    {
+      "id": "art-tech-debt",
+      "name": "Dívida técnica",
+      "what": "Os atalhos conscientes que ficaram para pagar depois.",
+      "path": "docs/TECHNICAL_DEBT.md",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-syncing-docs"
+      ],
+      "note": "",
+      "standard": "atalho consciente ou achado de dívida",
+      "fast": "igual",
+      "retro": "if",
+      "retro_text": "se a feature tomou um atalho consciente",
+      "retro_check": {
+        "by": "judgement"
+      },
+      "source": "tabela do Update da `mjrp-syncing-docs`"
+    },
+    {
+      "id": "art-structure",
+      "name": "Árvore",
+      "what": "O mapa das pastas do repositório, com o propósito de cada uma.",
+      "path": "`STRUCTURE.md` · `mjrp-scripts/structure.yml`",
+      "stage": "delivery",
+      "created_by": [
+        "tree.py"
+      ],
+      "note": "",
+      "standard": "quando nasce ou muda pasta ou arquivo de primeiro nível",
+      "fast": "igual",
+      "retro": "if",
+      "retro_text": "se criou ou moveu algo de primeiro nível",
+      "retro_check": {
+        "by": "sensor",
+        "sensor": "python3 mjrp-scripts/tree.py --check"
+      },
+      "source": "`AGENTS.md` § A árvore · `tree.py --check` (doctor)"
+    },
+    {
+      "id": "art-derived",
+      "name": "Derivados",
+      "what": "O que é gerado da fonte — a tela compilada, o pacote das skills — e não se edita à mão.",
+      "path": "`web/dist` · `dist/` do plugin",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-integrating-branches"
+      ],
+      "note": "o build",
+      "standard": "a tela compilada: o serviço do Control Center, das fontes (CC-ADR-0027, fora do git); o pacote das skills: o `build_plugin.py`",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "não são versionados: a tela compila no serviço, o pacote no `build_plugin.py` (`merge_train.py dist-resolve` só tira o build do índice num ramo anterior à F57)",
+      "source": "`mjrp-integrating-branches` · `AGENTS.md`"
+    },
+    {
+      "id": "art-main-merge",
+      "name": "O merge na `main`",
+      "what": "A junção do ramo na main, feita só pelo integrador.",
+      "path": "a `main` (o trem do integrador)",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-integrating-branches"
+      ],
+      "note": "",
+      "standard": "o integrador, em trem, com um juiz por lote",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "é do integrador, depois do retroativo",
+      "source": "`AGENTS.md` § Merge na `main`"
+    },
+    {
+      "id": "art-coverage-report",
+      "name": "Relatório de cobertura do SDD",
+      "what": "A conferência de que cada requisito chegou à spec, ao plano, às tasks e ao teste.",
+      "path": "reports/audits/<data>-<Fxx>-coverage-report.md",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-ensuring-sdd"
+      ],
+      "note": "",
+      "standard": "nos portões do SDD",
+      "fast": "a `mjrp-ensuring-sdd` é chamada no fecho",
+      "retro": "never",
+      "retro_text": "no fecho valem o `sdd_shape_check.py` e os cruzamentos; o relatório não é cobrado",
+      "source": "[[pdlc-loops]] § 2 · decidido pelo agente",
+      "patterns": [
+        "reports/audits/*-coverage-report*.md"
+      ],
+      "report_types": [
+        "coverage-report"
+      ]
+    },
+    {
+      "id": "art-quality-review",
+      "name": "Revisão de qualidade",
+      "what": "O passe de qualidade de uma feature: se cada teste prova o que promete.",
+      "path": "reports/audits/<data>-<Fxx>-quality-review.md",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-ensuring-quality"
+      ],
+      "note": "",
+      "standard": "o juiz da feature",
+      "fast": "não há — o juiz é o humano na tela",
+      "retro": "never",
+      "retro_text": "a via rápida não tem juiz agente",
+      "source": "`MEMORY.md` Ways of Working, 2026-10-26 11:26",
+      "patterns": [
+        "reports/audits/*-quality-review*.md"
+      ],
+      "report_types": [
+        "quality-review"
+      ]
+    },
+    {
+      "id": "art-code-quality-report",
+      "name": "Relatório de qualidade de código",
+      "what": "O retrato da saúde do código: dívida, testes e aderência às regras.",
+      "path": "reports/audits/<data>-<escopo>-code-quality.md",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-assessing-code-quality"
+      ],
+      "note": "",
+      "standard": "na revisão do integrador",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "é da revisão do integrador",
+      "source": "[[pdlc-loops]] § 8",
+      "patterns": [
+        "reports/audits/*-code-quality*.md"
+      ],
+      "report_types": [
+        "code-quality"
+      ]
+    },
+    {
+      "id": "art-skill",
+      "name": "A skill (só no harness)",
+      "what": "As instruções que um agente segue numa etapa do PDLC.",
+      "path": "mjrp-skills/<raiz>/<arquétipo>/<skill>/",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-crafting-skills"
+      ],
+      "note": "",
+      "standard": "quando a feature muda como se trabalha",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "a fonte da skill é o código dela e muda com ele; `dist/` é derivado",
+      "source": "`AGENTS.md` «a fonte da verdade de uma skill»"
+    },
+    {
+      "id": "art-catalog",
+      "name": "O catálogo do README (só no harness)",
+      "what": "A lista das skills no README, gerada do disco.",
+      "path": "`README.md` (o catálogo)",
+      "stage": "delivery",
+      "created_by": [
+        "gen_catalog.py"
+      ],
+      "note": "",
+      "standard": "quando muda uma skill",
+      "fast": "igual",
+      "retro": "if",
+      "retro_text": "se a feature mudou uma skill — `gen_catalog.py --check`",
+      "retro_check": {
+        "by": "sensor",
+        "sensor": "python3 mjrp-scripts/gen_catalog.py --check"
+      },
+      "source": "`AGENTS.md` § Sensores"
+    },
+    {
+      "id": "art-uat",
+      "name": "Issues",
+      "what": "As issues: Bug, Melhoria, Tech debt e Copy achados ao usar o produto na Homologação, e quem fecha cada uma.",
+      "path": "docs/specs/uat.md",
+      "stage": "uat",
+      "created_by": [
+        "mjrp-ensuring-quality",
+        "humano"
+      ],
+      "note": "e os juízes",
+      "standard": "a issue do juiz na hora; a rodada da Homologação",
+      "fast": "issue para Bug e Tech debt; a Melhoria só é issue quando percebida na Homologação, senão é feature",
+      "retro": "if",
+      "retro_text": "se a feature conserta issue (`fixes:`) — `fixed`, com a evidência",
+      "retro_check": {
+        "by": "fixes",
+        "paths": [
+          "docs/specs/uat.md"
+        ]
+      },
+      "source": "`mjrp-syncing-docs` · `mjrp-debugging` · `uat_readable_check.py` (pre-commit)",
+      "patterns": [
+        "docs/specs/uat.md"
+      ]
+    },
+    {
+      "id": "art-acceptance",
+      "name": "Aceite",
+      "what": "O aceite do humano a uma feature, assinado por ele.",
+      "path": "`Human-accepted:` · a story `Accepted`",
+      "stage": "uat",
+      "created_by": [
+        "humano"
+      ],
+      "note": "no Control Center",
+      "standard": "por feature, depois da Homologação, quando há algo para o MJRP ver, decidir ou de segurança; senão a feature fecha pela reconferência (Fechado)",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "é do humano",
+      "source": "CC-ADR-0024 (o aceite é do humano; o agente nunca escreve `Human-accepted:`)"
+    },
+    {
+      "id": "art-outcome-measure",
+      "name": "Medida e «alcançado»",
+      "what": "O valor medido de um resultado (quando há medida) e o dia em que o humano o deu por alcançado; sem medida, só o julgamento dele.",
+      "path": "`ROADMAP.md` (`achieved::`)",
+      "stage": "learn",
+      "created_by": [
+        "humano"
+      ],
+      "note": "",
+      "standard": "o Learn mede",
+      "fast": "—",
+      "retro": "never",
+      "retro_text": "só o humano marca",
+      "source": "[[pdlc-loops]] § 7"
+    },
+    {
+      "id": "art-kaizen",
+      "name": "harness-kaizen",
+      "what": "As lições do harness: onde ele falhou e o que mudou por isso.",
+      "path": "docs/wiki/kernel/ways-of-working/harness-kaizen.md",
+      "stage": "learn",
+      "created_by": [
+        "mjrp-saving-context"
+      ],
+      "note": "quem acha a lição",
+      "standard": "na hora",
+      "fast": "na hora",
+      "retro": "never",
+      "retro_text": "é na hora, não no fechamento",
+      "source": "`AGENTS.md` § Onde mora cada memória"
+    },
+    {
+      "id": "art-work-narrative",
+      "name": "Narrativa e procedimento",
+      "what": "Como um trabalho foi feito, contado das fontes longas, e o procedimento genérico tirado dessa história.",
+      "path": "onde o brief da extração combinou, num caminho que a trava aceita",
+      "stage": "learn",
+      "created_by": [
+        "mjrp-extracting-procedures"
+      ],
+      "note": "as notas dos leitores ficam no scratchpad, nunca no projeto",
+      "standard": "quando o método de um trabalho deve virar guia, a pedido do humano",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "é um pedido à parte, com o custo dito antes",
+      "source": "a S-221 · decidido pelo agente"
+    },
+    {
+      "id": "art-doc-audit",
+      "name": "Auditoria de documentos",
+      "what": "A conferência de um documento contra o código ou contra o estado de hoje.",
+      "path": "`reports/audits/*-doc-audit.md` · `*-staleness-audit.md`",
+      "stage": "learn",
+      "created_by": [
+        "mjrp-auditing-docs"
+      ],
+      "note": "",
+      "standard": "no Learn",
+      "fast": "—",
+      "retro": "never",
+      "retro_text": "é do Learn",
+      "source": "[[pdlc-loops]] § 7",
+      "patterns": [
+        "reports/audits/*-doc-audit*.md",
+        "reports/audits/*-staleness-audit*.md"
+      ],
+      "report_types": [
+        "doc-audit",
+        "staleness-audit"
+      ]
+    },
+    {
+      "id": "art-skill-critique",
+      "name": "Crítica de skill",
+      "what": "A crítica independente de uma skill antes do uso, com o veredito e os achados P0, P1 e P2.",
+      "path": "reports/audits/*-skill-critique.md",
+      "stage": "learn",
+      "created_by": [
+        "mjrp-critiquing-skills"
+      ],
+      "note": "",
+      "standard": "antes de uma skill nova ou mudada ir para uso, quando se pede o julgamento",
+      "fast": "só se o humano pedir",
+      "retro": "never",
+      "retro_text": "é a passada de julgamento; a correção vai à skill",
+      "source": "S-224 (F216) · decidido pelo agente",
+      "patterns": [
+        "reports/audits/*-skill-critique*.md"
+      ],
+      "report_types": [
+        "skill-critique"
+      ]
+    },
+    {
+      "id": "art-harness-feedback",
+      "name": "Retorno ao harness",
+      "what": "O parecer de um projeto filho para o harness.",
+      "path": "reports/harness-feedback/",
+      "stage": "learn",
+      "created_by": [
+        "mjrp-syncing-docs",
+        "mjrp-auditing-docs"
+      ],
+      "note": "nos filhos",
+      "standard": "quando o kernel contradiz o projeto",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "é do Learn",
+      "source": "`mjrp-syncing-docs`",
+      "patterns": [
+        "reports/harness-feedback/**"
+      ],
+      "report_types": [
+        "harness-feedback"
+      ]
+    },
+    {
+      "id": "art-report-other",
+      "name": "Outros relatórios",
+      "what": "Os demais relatórios: bugs, medições, verificações, apresentações e passagens de trabalho.",
+      "path": "reports/<pasta>/ (os tipos do `report_types.json`)",
+      "stage": "learn",
+      "created_by": [
+        "mjrp-ensuring-quality",
+        "mjrp-ensuring-sdd",
+        "mjrp-pdlc",
+        "mjrp-pdlc-bootstrap"
+      ],
+      "note": "e os tipos sem skill dona",
+      "standard": "quando a skill dona, ou o agente com a permissão do humano, observa algo",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "cada tipo tem a sua regra no `report_types.json`; nenhum é cobrado no fecho",
+      "source": "`report_types.json` · `report_types_check.py`",
+      "patterns": [
+        "reports/audits/**",
+        "reports/handoffs/**",
+        "reports/presentations/**"
+      ],
+      "report_types": [
+        "bug-report",
+        "tech-debt-survey",
+        "content-audit",
+        "conformance-audit",
+        "content-judgment",
+        "project-bootstrap-report",
+        "graph-reconciliation",
+        "data-reconciliation",
+        "measurement-report",
+        "build-verification",
+        "skill-verification",
+        "handoff",
+        "presentation"
+      ]
+    },
+    {
+      "id": "art-daily-checks",
+      "name": "Checagens diárias",
+      "what": "O resultado diário dos sensores: os avisos e os erros abertos.",
+      "path": "daily-checks/",
+      "stage": "learn",
+      "created_by": [
+        "doctor.py",
+        "daily_checks.py"
+      ],
+      "note": "",
+      "standard": "todo dia",
+      "fast": "—",
+      "retro": "never",
+      "retro_text": "derivado; o integrador commita",
+      "source": "`mjrp-integrating-branches`"
+    },
+    {
+      "id": "art-log",
+      "name": "Log",
+      "what": "O diário de decisões do projeto, uma entrada datada por decisão.",
+      "path": "`docs/log.md` (do projeto dono)",
+      "stage": "memory",
+      "created_by": [
+        "mjrp-saving-context"
+      ],
+      "note": "e todas as skills",
+      "standard": "uma entrada por decisão",
+      "fast": "igual",
+      "retro": "always",
+      "retro_text": "o que mudou, e o fechamento com `Session:`",
+      "retro_check": {
+        "by": "touched",
+        "paths": [
+          "docs/log.md"
+        ]
+      },
+      "source": "[[pdlc-loops]] § 2.1 · `commit-msg` (`log_entry_check.py`)"
+    },
+    {
+      "id": "art-memory",
+      "name": "## Now",
+      "what": "Onde o trabalho parou: o estado de agora e o próximo passo.",
+      "path": "`MEMORY.md` (do app)",
+      "stage": "memory",
+      "created_by": [
+        "mjrp-saving-context"
+      ],
+      "note": "",
+      "standard": "ao fechar",
+      "fast": "igual",
+      "retro": "always",
+      "retro_text": "onde o trabalho parou; o da raiz é do integrador",
+      "retro_check": {
+        "by": "touched",
+        "paths": [
+          "MEMORY.md"
+        ],
+        "nested_only": true
+      },
+      "source": "[[pdlc-loops]] § 2.1 · doctor F1"
+    },
+    {
+      "id": "art-wiki-page",
+      "name": "Página da wiki do assunto",
+      "what": "O que é verdade sobre um assunto, com o histórico das decisões.",
+      "path": "`docs/wiki/<assunto>.md` § History",
+      "stage": "memory",
+      "created_by": [
+        "mjrp-saving-context",
+        "mjrp-syncing-docs"
+      ],
+      "note": "",
+      "standard": "a decisão vai à página na hora",
+      "fast": "no retroativo",
+      "retro": "if",
+      "retro_text": "se a feature mudou regra ou decisão que a página descreve — o corpo e a linha datada no `## History`, declarado no `plan.md`",
+      "retro_check": {
+        "by": "declared",
+        "doc": "docs/wiki/",
+        "token": "wiki",
+        "at_top": true
+      },
+      "source": "o MJRP, 2026-10-27 11:05 · tabela do Update da `mjrp-syncing-docs`"
+    },
+    {
+      "id": "art-wiki-index",
+      "name": "Índice da wiki",
+      "what": "O índice da wiki: de cada assunto para a página dele.",
+      "path": "docs/wiki/index.md",
+      "stage": "memory",
+      "created_by": [
+        "mjrp-saving-context"
+      ],
+      "note": "quem cria a página",
+      "standard": "quando nasce página",
+      "fast": "igual",
+      "retro": "if",
+      "retro_text": "se nasceu página nova",
+      "retro_check": {
+        "by": "judgement"
+      },
+      "source": "decidido pelo agente"
+    },
+    {
+      "id": "art-folder-index",
+      "name": "O inventário da pasta",
+      "what": "O índice de uma pasta: cada arquivo e o que ele é.",
+      "path": "<pasta>/folder-index.md",
+      "stage": "memory",
+      "created_by": [
+        "mjrp-inventorying-folders"
+      ],
+      "note": "",
+      "standard": "quando a pasta inventariada muda",
+      "fast": "igual",
+      "retro": "if",
+      "retro_text": "se a feature mudou uma pasta inventariada — W17",
+      "retro_check": {
+        "by": "sensor",
+        "sensor": "python3 mjrp-scripts/doctor.py . (W17)"
+      },
+      "source": "doctor W17 · decidido pelo agente",
+      "patterns": [
+        "**/folder-index.md"
+      ]
+    },
+    {
+      "id": "art-ways-of-working",
+      "name": "## Ways of Working",
+      "what": "Como o humano quer que se trabalhe, anotado na hora em que ele corrige.",
+      "path": "MEMORY.md",
+      "stage": "memory",
+      "created_by": [
+        "mjrp-saving-context"
+      ],
+      "note": "quem foi corrigido, na hora",
+      "standard": "na hora",
+      "fast": "na hora",
+      "retro": "never",
+      "retro_text": "é na hora, não no fechamento",
+      "source": "`CLAUDE.md`"
+    },
+    {
+      "id": "art-lease",
+      "name": "Lease da sessão",
+      "what": "O registro de que uma sessão está trabalhando no repositório, para outra saber.",
+      "path": "~/.mjrp/",
+      "stage": "memory",
+      "created_by": [
+        "session_lease.py"
+      ],
+      "note": "",
+      "standard": "no início e no fim da sessão",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "é do save context, não da feature",
+      "source": "[[pdlc-loops]] § 2.1 «O fechamento da sessão»"
+    }
+  ]
+}

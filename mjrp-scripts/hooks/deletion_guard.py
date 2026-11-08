@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 deletion_guard.py - the PreToolUse(Bash) hook that refuses an AGENT's command that would delete what cannot come back
 (ADR-0023 section 5; F74 TASK-07). Until now "before `rm`, move it" was a request, and "a request is not a rule" (T4). It is the
@@ -23,7 +23,8 @@ It refuses (exit 2, one line on stderr that Claude Code hands back to the agent)
      `--staged` alone), when a tracked file under the target has an uncommitted edit.
   7. `git clean` without `-n`, judged by the list of `git clean -n` (the files it would remove): any that is not class 3 refuses.
 The message names the way out: `python3 mjrp-scripts/_safe.py discard <path>` for the derived, `... retire <path>` for the class 1, `git rm` for
-the versioned.
+the versioned, and `... restore <file>` to put the committed text back over an uncommitted edit (the copy goes to `_backups/` first; F180, UAT-487:
+the old message pointed to `retire`, which leaves a tracked file that is gone - still a change - and the agents then bypassed the guard).
 
 How it avoids false positives: only `Bash`; only the COMMAND position counts (`echo rm -r x`, `grep "rm -r" docs`, a commit message that
 quotes `git clean`, `git log --grep=reset` pass); a class 3 target (a `node_modules`, anything in $TMPDIR, a merged and clean worktree)
@@ -56,6 +57,11 @@ sys.path.insert(0, str(HERE.parent))                 # _pathclass, _git (the cla
 MAX_DEPTH = 5
 SAFE_WAY = ("Para o derivado: `python3 mjrp-scripts/_safe.py discard <caminho>` (só ele remove); para tirar o insubstituível do lugar: "
             "`python3 mjrp-scripts/_safe.py retire <caminho>`; o versionado sai por `git rm` e commit")
+# The way out of a refused `git restore` / `checkout --` / `reset --hard`. NOT `_safe.py retire`: that moves the file out and leaves a tracked
+# file that is gone, which is still a change to the guard (UAT-487: the agents then rewrote it with `git show HEAD:<file> >`).
+RESTORE_WAY = ("Para devolver o texto commitado de UM arquivo (o que o build reescreveu, por exemplo): `python3 mjrp-scripts/_safe.py restore <arquivo>` "
+               "— guarda a edição em `_backups/` e então restaura. Para ficar com a edição: commite. Não use `retire` aqui: ele tira o arquivo "
+               "do lugar e o git segue vendo uma mudança")
 RM_VERBS = {"rm", "unlink"}
 FIND_EXEC = {"-exec", "-execdir", "-ok", "-okdir"}
 PY_DELETERS = re.compile(r"\brmtree\s*\(|\bos\s*\.\s*(?:remove|unlink|removedirs)\s*\(|\.\s*unlink\s*\(|\b(?:rmSync|rmdirSync|unlinkSync|rimraf|rm_rf)\s*\(")
@@ -292,11 +298,11 @@ def judge_git(sub, rest, cwd, cdir):
     try:
         edits = tracked_edits(where, [] if "." in specs else specs)
     except Exception as e:                               # noqa: BLE001 - a doubt about the repo is a refusal here
-        return (f"deletion-guard: `git {sub}` recusado — não consegui ver se há edição sem commit ({str(e)[:80]}). Veja `git status` e "
-                f"guarde a edição antes (`python3 mjrp-scripts/_safe.py retire <arquivo>` copia para `_backups/`).")
+        return (f"deletion-guard: `git {sub}` recusado — não consegui ver se há edição sem commit ({str(e)[:80]}). Veja `git status`. "
+                f"{RESTORE_WAY}.")
     if edits:
         return (f"deletion-guard: `git {sub}` recusado — há edição sem commit em arquivo rastreado ao alcance dele, e o git não a devolve. "
-                f"Commite, ou guarde antes (`python3 mjrp-scripts/_safe.py retire <arquivo>` move uma cópia para `_backups/`).")
+                f"{RESTORE_WAY}.")
     return None
 
 
@@ -344,6 +350,9 @@ def judge(command, cwd, depth=0):
         if not a:
             continue
         base = os.path.basename(a[0])
+        # 2026-11-05: F153 made `xargs` a prefix the guards look behind (`catalog_marks_guard.strip_prefix`), so `ls | xargs rm`
+        # reached here as a bare `rm` with no target and passed; a delete verb behind `xargs` takes its targets from a pipe
+        piped = any(os.path.basename(w) == "xargs" for w in argv[:len(argv) - len(a)])
         if base in ("cd", "pushd"):
             target = next((w for w in a[1:] if not w.startswith("-")), None)
             try:
@@ -370,7 +379,10 @@ def judge(command, cwd, depth=0):
                 hit = judge(" ".join(a[1:]), here, depth + 1)
                 if hit:
                     return hit
-        if base in RM_VERBS:
+        if base in RM_VERBS and piped:
+            hit = ("deletion-guard: `xargs rm` recusado — os alvos vêm de um pipe e não dá para classificá-los antes. "
+                   "Liste os caminhos e passe cada um ao `python3 mjrp-scripts/_safe.py discard <caminho>`.")
+        elif base in RM_VERBS:
             hit = judge_rm(base, a[1:], here)
         elif base == "xargs" and any(os.path.basename(w) in RM_VERBS for w in a[1:3]):
             hit = ("deletion-guard: `xargs rm` recusado — os alvos vêm de um pipe e não dá para classificá-los antes. "

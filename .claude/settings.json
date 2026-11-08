@@ -91,6 +91,15 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/session_close.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" session-start",
+            "timeout": 60
+          }
+        ]
       }
     ],
     "Stop": [
@@ -117,6 +126,15 @@
           {
             "type": "command",
             "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/requirements_graph_check.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" . --changed --gate",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/session_close.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" stop-hook",
             "timeout": 30
           }
         ]

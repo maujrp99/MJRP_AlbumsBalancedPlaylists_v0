@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _run.py - run a command with a deadline and without a shell (F71 R8/R9), for the doctor and the sensors.
 
@@ -44,7 +44,9 @@ def sh(cmd, cwd, timeout=30):
     try:
         p = subprocess.run(argv, cwd=cwd, text=True, capture_output=True, timeout=timeout)
         return p.returncode, (p.stdout + p.stderr).strip()
-    except subprocess.TimeoutExpired:
-        return 124, f"estourou {timeout}s"
+    except subprocess.TimeoutExpired as e:
+        # UAT-377 (F209): what the command printed before the deadline is the only clue of where it stood; the last line stays the verdict
+        part = "".join(x.decode(errors="replace") if isinstance(x, bytes) else x for x in (e.stdout, e.stderr) if x).strip()
+        return 124, (part + "\n" if part else "") + f"estourou {timeout}s"
     except Exception as e:
         return 127, str(e)

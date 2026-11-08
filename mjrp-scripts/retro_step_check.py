@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-03 · fonte 79ddf31a1 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """retro_step_check.py - the fast lane's retroactive step, charged by machine (F101, S-186).
 
 Born from an incident (ADR-0002 asks for one): on 2026-10-27 the F83 closed with the retroactive step half done, and the integrator
@@ -46,11 +46,16 @@ In a MERGE commit (MERGE_HEAD exists) `--staged` judges a feature the other pare
 does, not by the diff of the merge (F147, UAT-439: the diff does not show what the branch already held); the feature this branch closes is
 judged as in any commit.
 Exit 0 nothing missing (the unchecked rows are printed) · 1 a fast-lane feature goes to Done without its step · 2 not evaluable (git did
-not answer, the registry is not JSON). A repository that versions no registry (a child without the harness's scripts) exits 0 saying
-it was NOT checked. Stdlib only (ADR-0015).
+not answer, the registry is not JSON, or the repository does not version the registry or the SDD templates the judgement reads).
+Born from UAT-489 (F182): a child received this script without `mjrp-scripts/artifacts.json` and the templates, answered «NÃO foi
+conferido» and exited 0, and five fast-lane features reached its main with the prototype late and no waiver. A gate that cannot judge a
+closing does not approve it: that is exit 2, which the pre-commit and the merge train refuse like a 1 (the doctor separates 2 from 0 for the
+same reason). Nothing is asked of a repository whose commit closes no fast-lane feature. Stdlib only (ADR-0015).
 """
 import fnmatch
 import json
+import os
+import pathlib
 import re
 import sys
 
@@ -86,8 +91,9 @@ class NotEvaluable(Exception):
     """The check could not judge (git did not answer, the registry is unreadable): never an empty answer."""
 
 
-class NoRegistry(Exception):
-    """The repository versions no registry: nothing to read the step from (a child without the harness's scripts)."""
+class NoRegistry(NotEvaluable):
+    """The repository versions no registry (or no SDD template): nothing to read the step from. Raised only when a fast-lane feature goes to
+    Done - a child that was handed the script without what it judges with (UAT-489, F182). A kind of NotEvaluable: refused, never passed."""
 
 
 # ---- where the texts come from: the index (the commit) or a revision (a branch, its base) -----------------------------------------
@@ -234,7 +240,7 @@ def read_touch_ids(top, revs):
     for blob, tip in pairs:
         text = _git.run(top, "cat-file", "-p", blob).out if tip in reached else ""
         fields = dict(line.partition(": ")[::2] for line in text.splitlines())
-        if fields.get("presence") == "touch-id":
+        if fields.get("presence") in ("touch-id", "passkey"):   # CC-ADR-0038: the passkey is his OK too; `human-released` is not
             out.append((set(FEATURE_ID.findall(fields.get("visual-ok", ""))), fields.get("screen", "").split("; ")))
     return out
 
@@ -275,9 +281,8 @@ def judge(feature, rows, touched, src, shapes, globs, fingers=()):
                     say(f"o {name} ainda é o esboço (o cabeçalho diz «Esboço»): reescreva-o para o que foi construído e tire a marca")
         elif by in ("sdd", "tasks"):
             kind = rc.get("file") or "tasks"
-            if sdd is None:
-                unchecked.append((row, "os moldes do SDD não estão versionados aqui"))
-                continue
+            if sdd is None:   # never reached through check(), which refuses first; a caller that skips it is not told «unchecked»
+                raise NoRegistry(f"os moldes do SDD não estão versionados em {ssc.TEMPLATES_REL.as_posix()}")
             gaps = [m for lvl, k, m in sdd if k == kind and lvl == "error"]
             if gaps:
                 say(f"o {kind}.md fora do molde: {' · '.join(gaps)} (molde da `mjrp-specifying-sdd-artifacts`)")
@@ -407,6 +412,54 @@ def _names(top, *args):
     return [x for x in r.out.split("\0") if x]
 
 
+INTEGRATION_BRANCHES = ("main", "master")
+
+
+def merge_head_of(top):
+    """The revision being merged into HEAD, or None. `MERGE_HEAD` when it exists (the pre-commit that ends a conflicted merge); in the
+    `pre-merge-commit` hook git has NOT written it yet (F182 follow-up, 2026-11-05: the false positive that refused every `git merge main` into a
+    feature branch), so it is read from `GIT_REFLOG_ACTION` (`merge main`, `merge --no-ff origin/main`) or, for a `git pull`, from FETCH_HEAD."""
+    r = _git.run(top, "rev-parse", "--verify", "-q", "MERGE_HEAD")
+    if r.code == 0 and r.out.strip():
+        return r.out.strip()
+    words = os.environ.get("GIT_REFLOG_ACTION", "").split()
+    names = []
+    if words and words[0] == "merge":
+        names = [w for w in words[1:] if not w.startswith("-")]
+    elif words and words[0] == "pull":
+        f = _git.run(top, "rev-parse", "--git-path", "FETCH_HEAD")
+        path = pathlib.Path(f.out.strip()) if f.code == 0 and f.out.strip() else None
+        if path is not None:
+            path = path if path.is_absolute() else pathlib.Path(top) / path
+            if path.is_file():
+                names = [ln.split("\t")[0] for ln in path.read_text(encoding="utf-8").splitlines() if ln and "not-for-merge" not in ln]
+    for name in names:
+        c = _git.run(top, "rev-parse", "--verify", "-q", f"{name}^{{commit}}")
+        if c.code == 0 and c.out.strip():
+            return c.out.strip()
+    return None
+
+
+def on_integration_line(top):
+    """True when the merge lands on the line the work is integrated into (`main`, `master`, `integrate/*`, or a detached HEAD, as a train leaves it).
+    Merging the line INTO a feature branch brings features that line already closed and judged; those are not this branch's closings."""
+    r = _git.run(top, "symbolic-ref", "-q", "--short", "HEAD")
+    name = r.out.strip() if r.code == 0 else ""
+    return not name or name in INTEGRATION_BRANCHES or name.startswith("integrate/")
+
+
+def from_integration_line(top, rev):
+    """True when `rev` is already on the integration line: equal to or an ancestor of `main`/`master` (local or a remote's) or of an
+    `integrate/*` branch. Only THAT side's closings were judged where they closed (UAT-501, the F182 recheck's P2-7: the exclusion held for any
+    merged branch, so `git merge --no-ff claude/f120-demo` into `tmp-staging` or `develop` took a feature closed without its step, unjudged)."""
+    refs = _git.run(top, "for-each-ref", "--format=%(refname)", *(f"refs/heads/{b}" for b in INTEGRATION_BRANCHES),
+                    *(f"refs/remotes/*/{b}" for b in INTEGRATION_BRANCHES), "refs/heads/integrate/")
+    for ref in (refs.out.split() if refs.code == 0 else []):
+        if _git.run(top, "merge-base", "--is-ancestor", rev, ref).code == 0:
+            return True
+    return False
+
+
 def staged(top):
     """The pre-commit: what the INDEX takes to Done, against HEAD; the feature's commits from HEAD plus what is staged."""
     names = _names(top, "diff", "--cached", "--name-only", "--diff-filter=AMR", "-z")
@@ -417,15 +470,20 @@ def staged(top):
     # a merge commit (UAT-439, F147): the diff against HEAD carries what the OTHER parent brought, and a feature it closed has its step in
     # ITS commits, not in the diff of the merge. Judged like `--branch` does: by the commits of the other parent. The feature this branch
     # itself closes (not closed on the other side) keeps the rule of any commit. An octopus merge (several MERGE_HEADs) is judged as before.
-    merging = has_head and _git.run(top, "rev-parse", "--verify", "-q", "MERGE_HEAD").code == 0
+    theirs_rev = merge_head_of(top) if has_head else None
     other_side = set()
-    if merging:
-        theirs = Source(top, "MERGE_HEAD")
+    if theirs_rev:
+        theirs = Source(top, theirs_rev)
         other_side = {f["fid"] for f in features if _closed(theirs.read(f"{f['folder']}/spec.md") or "")}
+        if not on_integration_line(top) and from_integration_line(top, theirs_rev):
+            # `git merge main` in a feature branch: what main already closed was judged where it closed and is judged again when this branch reaches main.
+            # Any OTHER branch merged into a non-integration branch is judged as a closing of this one (UAT-501, P2-7).
+            features = [f for f in features if f["fid"] not in other_side]
+            other_side = set()
 
     def touched_of(fid):
         if fid in other_side:
-            return feature_paths(top, fid, "MERGE_HEAD") | feature_paths(top, fid, "HEAD")
+            return feature_paths(top, fid, theirs_rev) | feature_paths(top, fid, "HEAD")
         return (feature_paths(top, fid, "HEAD") if has_head else set()) | set(names)
     return now, before, features, touched_of
 
@@ -449,15 +507,21 @@ def check(top, mode, ref=None, base="HEAD"):
     now, before, features, touched_of = staged(top) if mode == "staged" else branch(top, ref, base)
     if not features:
         return []
-    revs = [ref] if mode == "branch" else [r for r in ("HEAD", "MERGE_HEAD") if _git.run(top, "rev-parse", "--verify", "-q", r).code == 0]
+    revs = [ref] if mode == "branch" else [r for r in ("HEAD", merge_head_of(top)) if r and _git.run(top, "rev-parse", "--verify", "-q", r).code == 0]
     fingers = read_touch_ids(top, revs) if revs else []
     # the rule is read from the copy BEFORE the change (HEAD, the base): a commit or a branch does not loosen its own gate; only a
     # repository whose base has no registry yet reads it from the judged copy
+    names = ", ".join(f["fid"] for f in features)
     try:
-        rows = load_registry(before)
-    except NoRegistry:
-        rows = load_registry(now)
-    shapes = load_shapes(now)
+        try:
+            rows = load_registry(before)
+        except NoRegistry:
+            rows = load_registry(now)
+        shapes = load_shapes(now)
+        if shapes is None:
+            raise NoRegistry(f"os moldes do SDD não estão versionados em {ssc.TEMPLATES_REL.as_posix()}")
+    except NoRegistry as exc:
+        raise NoRegistry(f"a via rápida leva {names} a Done e {exc}") from exc
     out = []
     for f in features:
         missing, unchecked = judge(f, rows, touched_of(f["fid"]), now, shapes, screen_globs(now, f["proj"]), fingers)
@@ -518,8 +582,11 @@ def main(argv):
             raise NotEvaluable(f"{args[0]}: não é um repositório git")
         results = check(top, mode, ref, base)
     except NoRegistry as exc:
-        print(f"retro_step_check: {exc}; o passo retroativo NÃO foi conferido (este repositório não versiona o registro)", file=sys.stderr)
-        return 0
+        print(f"retro_step_check: {exc}. O passo retroativo NÃO foi conferido, e sem conferir não se fecha a feature: este repositório "
+              f"recebeu o script sem o que ele julga. Como sanar: no harness, `python3 mjrp-scripts/new_project.py <este projeto> "
+              f"--refresh-kernel` traz o registro e os moldes (ou copie `{REGISTRY}` e `{ssc.TEMPLATES_REL.as_posix()}/`); "
+              f"depois repita o commit - não é um aviso para seguir adiante", file=sys.stderr)
+        return 2
     except (NotEvaluable, _git.GitError) as exc:
         print(f"retro_step_check: {exc} - não avaliável", file=sys.stderr)
         return 2
