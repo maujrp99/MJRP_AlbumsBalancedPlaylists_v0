@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
   "version": "2026-10-09",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
@@ -109,6 +109,7 @@
   "subfolders": {
     "reports": [
       "audits",
+      "proposals",
       "handoffs",
       "harness-feedback",
       "presentations",
@@ -415,6 +416,11 @@
         "glob": "**/.mjrp/sessions/",
         "owner": "mjrp-scripts/session_lease.py",
         "why": "one lease per agent session; a lease not released goes stale by itself (LEASE_HOURS)"
+      },
+      {
+        "glob": "**/.mjrp/orchestrator-wait*.json",
+        "owner": "mjrp-scripts/orchestrator_wait.py",
+        "why": "the marker «a wait is up» (removed when the command ends), the snapshot the last wait handed over and the one-warning-per-session mark of the Stop gate; overwritten by tmp + os.replace"
       },
       {
         "glob": "**/.mjrp/turn.json",

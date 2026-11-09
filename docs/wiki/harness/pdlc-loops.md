@@ -7,13 +7,13 @@ status: em formação
 atualizado: 2026-11-01
 fontes: [kernel/ways-of-working/product-discovery, kernel/ways-of-working/loop-engineering-concept, kernel/design/sketch-vs-prototype, kernel/roadmap/requirements-graph, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, wiki/sources/2026-10-07-mjrp-loop-engineering-handbook.md, wiki/sources/2026-10-07-mjrp-agentic-ai-handbook.md]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # PDLC em loops — Intake, Discovery, Design, Delivery, Release, Learn
 
 > Kernel · página de processo · criada 2026-10-07 · nasce da proposta `design/proposals/pdlc-loop-engineering-proposal.md`
 > (decisões do MJRP de 2026-10-07, 18:02 a 18:30) · **o diagrama é um só, o do card «O ciclo de vida» do Overview do Control Center**
-> (fonte: `design/diagrams/ways-of-working/2026-10-30-2115-pdlc-loops-v13.svg`, aprovado pelo MJRP em 2026-10-30) — esta página tem as regras;
+> (fonte: `design/diagrams/ways-of-working/2026-11-08-1135-pdlc-loops-v14.svg`, aprovado pelo MJRP em 2026-11-08; o v13, de 2026-10-30, dizia que a via rápida pula as fases) — esta página tem as regras;
 > o desenho, as etapas e os papéis no card · substitui a numeração de fases (0 · 1a · 1b · 2 · 2→3 · 3 · 4 · 5), que as skills ainda
 > usam até migrarem — a §11 traduz.
 
@@ -21,7 +21,7 @@ fontes: [kernel/ways-of-working/product-discovery, kernel/ways-of-working/loop-e
 
 O **PDLC do MJRP** é uma **fundação** e **cinco loops** — **Discovery** (o que construir), **Design** (como a tela e a descrição dela
 ficam), **Delivery** (construir certo), **Release** (a versão chega a quem usa) e **Learn** (deu certo?) — alimentados por uma porta de
-entrada única, o **Intake**, que põe cada demanda numa de duas **vias** (a **padrão** e a **rápida**, que pula a Discovery e o Design). A
+entrada única, o **Intake**, que põe cada demanda numa de duas **vias** (a **padrão** e a **rápida**, que comprime a Discovery e o Design, não os pula). A
 saída do Design é um portão, o **Pronto para construir**. Cada loop tem um critério de saída, um verificador e regras de parada; o humano
 entra onde a intenção é definida, no aceite do que há para ele ver, decidir ou de segurança e onde há risco de impacto financeiro ou de
 negócio. Discovery, Design e Delivery andam **ao mesmo tempo, em itens diferentes** (a trilha dupla), e uma volta fina leva o trabalho
@@ -64,17 +64,19 @@ Intake é a pré-venda (captar a oportunidade, estimar, mandar proposta) — val
 | Via | Quando | Caminho |
 |---|---|---|
 | **Padrão** | resultado novo ou feature nova | a Discovery antes, **do tamanho da novidade** (explorar, enquadrar e desenhar, ou só o que falta) → Pronto para construir → Delivery |
-| **Rápida** | mudança, criar ou atualizar, que o humano quer ver na hora; inclui o conserto de defeito | brief → issue no board → execução → **o humano valida na tela** → documentação e protótipo depois |
+| **Rápida** | mudança, criar ou atualizar, que o humano quer ver na hora; inclui o conserto de defeito | brief → (**Quick Prototype**, só se o humano pedir) → issue no board → execução → **o humano valida olhando** → documentos depois |
 
 Não há mais quatro trilhas, Fast track, quick fix nem a distinção Full × Standard (decisão do MJRP, 2026-10-24: «fundir a fix
 com fast lane» e dois caminhos). Não confundir com as duas **trilhas de issue**, Humano e Agente (§6).
 
-**A via rápida** (decisão do MJRP, 2026-10-24 11:19 e 11:23) serve para fazer uma mudança de forma ágil, e o humano a valida
-olhando a tela. **O juiz é o humano** na trilha Humano, ou a reconferência independente na trilha Agente — a via não tem juiz
+**A via rápida não pula a Discovery e o Design: comprime os dois e agiliza o processo completo, eliminando etapas** (decisão do MJRP,
+2026-11-08 10:57, que reescreve a de 2026-10-24 11:19 e 11:23). O pedido vira um brief e vai à Delivery. Quando o humano pede, antes vem um
+**Quick Prototype** direto, sem rodada de perguntas e sem juiz agente: ele julga olhando. Depois vêm os documentos. O Quick Prototype é
+decisão dele: pede ou não pede, e o brief registra a resposta. Serve para fazer uma mudança de forma ágil, e o humano a valida olhando a tela. **O juiz é o humano** na trilha Humano, ou a reconferência independente na trilha Agente — a via não tem juiz
 agente próprio. Os cinco passos: (1) o brief, o da `mjrp-structuring-requests`; (2) a issue no board — uma task ou feature
 quando o pedido é melhoria, uma issue do `uat.md` só quando é defeito ou mudança achada ao usar — a feature **nasce do molde, por
-`new_feature.py`**, nunca à mão; (3) a execução; (4) a validação dele na tela; (5) a documentação e o protótipo, atualizados
-**retroativamente**, e a `mjrp-ensuring-sdd` **chamada no fecho**. Ele também pode pedir protótipo nessa via.
+`new_feature.py`**, nunca à mão; (3) a execução, precedida do Quick Prototype quando o humano o pediu; (4) a validação dele olhando; (5) os documentos, atualizados
+**retroativamente**, e a `mjrp-ensuring-sdd` **chamada no fecho**. O protótipo não é passo retroativo: quando existe, vem antes da Delivery.
 **O OK dele é o veredito visual do merge** (F61): o ramo cujas features mudadas são todas `lane: fast` e que mudou tela sem
 relatório de reconferência faz o próprio `pre-merge-commit` pedir o **Touch ID dele** — a mesma prova de presença do Aceite
 (`~/.mjrp/control-center/bin/presence`, CC-ADR-0031), num diálogo que nomeia as features, o ramo e o tip. Com o dedo o merge entra;
@@ -88,13 +90,13 @@ o relatório e o dedo não é pedido; o ramo que também leva feature da via pad
 **Três salvaguardas** (aceitas por ele): o passo retroativo é **obrigatório e cobrado por sensor** — o `sdd_shape_check.py` recusa, no
 `pre-commit`, a feature que vai a `Done` sem as seções obrigatórias dos moldes do SDD (a aberta só avisa; F95); os testes e os sensores
 valem, sem exceção; **quem pede a via rápida é ele** — nunca o agente, para poupar os portões. A diferença para a padrão é a
-ordem: na padrão a documentação completa e o protótipo vêm **antes**; na rápida, **depois**.
+ordem: na padrão a documentação completa e o protótipo vêm **antes**; na rápida o Quick Prototype, se ele pediu, vem antes da Delivery, e **só os documentos vêm depois**.
 
 **A pequena mudança de texto não entra em via nenhuma** (decisão do MJRP, 2026-11-01; F158, S-208). Ela é uma issue de `Tipo` `copy` no `uat.md`: sem feature, sem brief e sem a «Priorizada», vai direto a «Em andamento» (`fixing`, sem feature, só nesse tipo), e o integrador a faz direto na `main`. Feita, vai à coluna de pronto, e só o OK do humano a fecha, mesmo a que um agente abriu. O juiz do atalho é a trava `copy_change_check.py` no `pre-commit`: na `main`, o commit dessa issue só toca `content/copy/*.json`, o `uat.md` e o log, e dentro do JSON só o texto de entradas que existem, com os mesmos marcadores e até 10 entradas. Só uma linha nova nasce `copy`. O que não couber nisso segue por um ramo, na via que lhe cabe.
 
 ### 2.1 O passo retroativo da via rápida — o que atualiza e como fecha
 
-Na via rápida o código vem antes dos documentos; o passo retroativo os traz ao que foi construído **depois do aceite do juiz e antes
+Na via rápida o código vem antes dos documentos (o Quick Prototype, quando o humano o pediu, vem antes de tudo e não faz parte deste passo); o passo retroativo os traz ao que foi construído **depois do aceite do juiz e antes
 de o ramo ir ao integrador**, no próprio ramo. Sem ele a próxima sessão julga a tela contra a regra antiga e desfaz o que o humano
 aprovou. O dono é a `mjrp-syncing-docs` (§ *the fast lane's retroactive step*); a feature só fecha com ele feito.
 
@@ -397,6 +399,7 @@ concluída**.
 - **2026-11-01 12:25** · **Na via rápida da trilha Humano, o Touch ID no merge cumpre a linha da reconferência visual do passo retroativo** (§ 2; F154, UAT-454). A trava pedia um relatório que essa via não tem, e parou o passo retroativo de cinco features. A regra fica, e a trava era o defeito. A via padrão e a trilha Agente seguem com o relatório. Decidido pelo agente, revisável pelo MJRP: a nota vale se está num commit que o ramo alcança e nomeia a feature e a tela do projeto; ela tem a mesma confiança de um relatório que um agente commita, e não abre merge nem aceite.
 - **2026-10-31 09:11** · **A página passa a «Aceite» e «o humano»** (F105, S-190; o MJRP, 2026-10-27 12:54): o aceite da feature se chama «Aceite» (antes «Dar o OK») e o MJRP como papel de um processo é «o humano»; a atribuição datada e a marca ficam. O diagrama vigente (v13) e os textos da tela seguem a mesma linguagem; a skill se cita sempre com o prefixo `mjrp-`.
 - **2026-10-30 23:41** · **Na fase Release, a ordem passa a Homologação → Aceito → Deploy** (ADR-0029, emenda de ordem da ADR-0027; decisão do MJRP de 2026-10-30 23:40): o OK dele autoriza a publicação, e o Deploy é a fronteira irreversível — por isso o aceite vem antes; a feature que fecha pela reconferência (Fechado) também fecha antes do Deploy. O § 6 (título e texto), o resumo, o § 5 e a linha do ciclo seguem. O texto anterior dizia «Homologação, Deploy e Aceito» e punha o aceite depois da publicação. O § 8 e o § 9 não citam a ordem das etapas, e ficam.
+- **2026-11-08 11:23** · **A via rápida comprime a Discovery e o Design, não os pula** (§ 1, § 2, § 2.1; S-235, F235; decisão do MJRP de 2026-11-08 10:57). O Quick Prototype, quando o humano pede, vem antes da Delivery, sem rodada de perguntas e sem juiz agente; só os documentos ficam no passo retroativo. Supera, quanto ao protótipo, as de 2026-10-24 e 2026-10-27.
 - **2026-11-04 21:30** · **A trava que não consegue julgar o fecho o recusa, em vez de sair 0** (§ 2.1, F182, UAT-489; decidido pelo agente, revisável pelo MJRP). Num filho, o `retro_step_check.py` e o `sdd_shape_check.py` vinham sem o registro e sem os moldes, diziam «NÃO foi conferido» e saíam 0, e cinco features de via rápida entraram na `main` do `MJRPpersonal` sem o passo. Agora o registro e os moldes viajam no refresh, e, sem eles, o fecho sai 2 e é recusado (o commit que não fecha nada segue passando). O `pre-commit` recusa também o fecho quando o script falta, e o `merge_train.py` quando o ramo fecha sem poder ser julgado.
 - **2026-10-30 21:37** · **O ciclo passa a cinco loops: o Design deixa de ser etapa da Discovery** (UAT-421, o desenho v13 aprovado pelo MJRP em 2026-10-30; o card «O ciclo de vida», o mapa das skills e o `pdlc-artifact-map` seguem). O § 3 se divide em 3.1 (Discovery: Explorar ⇄ Enquadrar, ↻ pivotar · iterar · avançar) e 3.2 (Design: Desenhar → Criticar → Ver na tela, uma volta por versão do protótipo); o portão «Pronto para construir» do § 4 é a **saída do Design**; as tabelas dos §§ 8, 9 e 11 ganham a linha do Design e chamam o UAT de Release; a Definition, o título e o resumo dizem cinco loops; os loops andam ao mesmo tempo, em itens diferentes (a trilha dupla). O § 6 diz que nem toda feature pede o OK (fecha pela reconferência, Fechado). O texto anterior dizia: «design é Discovery: as três etapas são uma só volta», «uma fundação e três loops», «matar · iterar · avançar», «Dar o OK» por feature em toda parte, e chamava a quarta etapa de UAT. O mesmo passo fecha o P2-2 do juiz da F63 (`reports/audits/2026-10-30-f63-pdlc-docs-judge.md`: o título, a Definition, o § 0 e as linhas «UAT» dos §§ 8, 9 e 11 no vocabulário de 24/10).
 - **2026-10-30 21:17** · **A feature sem nada para o MJRP ver ou decidir fecha pela reconferência, no estado Fechado** (§ 6; F139, S-206; o pedido do MJRP em 2026-10-30, sobre a F57). Estende à feature o critério da issue de agente: sobe ao «Dar o OK» só a que tem tela, decisão, segurança ou issue dele; a outra declara `closed_by` na spec e o board a põe em «Fechado», nunca «Aceito». A regra mora em `mjrp-scripts/feature_closure.py`.

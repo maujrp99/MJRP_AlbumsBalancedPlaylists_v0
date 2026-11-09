@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 human_valves_guard.py - the PreToolUse(Bash) hook that refuses an AGENT's command that would use one of the human's valves
 (F72, R20; AGENTS.md "Push - e do humano" and "Commit so por pathspec": the push, `--no-verify` and `VISUAL_RECHECK_SKIP` are the

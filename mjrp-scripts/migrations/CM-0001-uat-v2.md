@@ -4,7 +4,7 @@ item: uat
 from: 1
 to: 2
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0001 · uat@1 → uat@2
 
 ## Por que

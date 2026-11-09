@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_sensors.py - the doctor's checks that RUN the sensors the contract declares, and the visual sensor's
 declaration (A1, A2), with the cache of their results and the fingerprint that says which state of the repository a result

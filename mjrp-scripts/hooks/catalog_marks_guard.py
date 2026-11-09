@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 catalog_marks_guard.py - the PreToolUse hook that refuses an AGENT's command that would produce the human's valve on
 the canonical catalog (CC-ADR-0014 section 10, accepted by the MJRP on 2026-10-14 15:09; CC-ADR-0016 section 1) and on the acceptance of a
@@ -20,7 +20,8 @@ It refuses (exit 2, one line on stderr that Claude Code hands back to the agent)
      `Human-accepted:`, `Human-reopened:` or `Human-prioritized:` (any case, the way git reads a footer key): in `-m`/`--message`, in a
      `--trailer` whose key is one of those, in the file of `-F`/`--file` (read from the cwd, up to 64 KB, if it exists)
      or in the body of a heredoc when it is `-F -`.
-  (F166, CC-ADR-0039 section 7: `/audit-answers` is treated as `/acceptances` here: an answer to an audit question is the human's fact.)
+  (F166, CC-ADR-0039 section 7: `/audit-answers` is treated as `/acceptances` here: an answer to an audit question is the human's fact.
+  F181, CC-ADR-0042 section 8: `/proposal-answers`, the answers to an agent's batch of proposals, the same.)
   3. A simple command is `curl`, `wget`, `http` or `https` (HTTPie), it sends a body or names a method other than GET
      (`-X`, `-d`, `--data*`, `--json`, `--request`, `--post-data`, or HTTPie's POST/DELETE word) and a URL of
      `127.0.0.1` or `localhost` whose path starts with `/acceptances`: that is the route that PREPARES the acceptance
@@ -103,13 +104,13 @@ CAT_SUBST = re.compile(r"(?:\$\(|`)\s*cat\s+([^\s)`]+)")
 STAMP_KEYS = ("catalog-editorial", "human-accepted", "human-reopened", "human-prioritized", "human-passkey")
 STAMP_LINE = re.compile(r"^(Catalog-editorial|Human-accepted|Human-reopened|Human-prioritized|Human-passkey):", re.IGNORECASE | re.MULTILINE)
 # CC-ADR-0038: the commands that would change what a remote approval is checked against, or open the machine further
-REFUSAL_PASSKEY = ("catalog-marks-guard: a aprovação de longe é do MJRP: `tailscale serve` e `funnel`, `git replace` e mexer na main por "
-                   "`update-ref` ou `branch -f` o agente não roda (CC-ADR-0038; AGENTS.md, válvulas do humano)")
+REFUSAL_PASSKEY = ("catalog-marks-guard: a aprovação de longe é do MJRP: `tailscale serve` e `funnel`, `git replace`, mexer na main por "
+                   "`update-ref` ou `branch -f` e gravar o destino do push (`cc push-target`) o agente não roda (CC-ADR-0038, CC-ADR-0044; AGENTS.md, válvulas do humano)")
 REPLACE_READS = {"-l", "--list"}
 SEEN = []                                                  # the stamp keys the judge met, to pick the sentence of the refusal
 # this machine, however it is spelled (127.0.0.1, 127.1, localhost, [::1], 0.0.0.0), with or without the scheme, or HTTPie's `:8765/...`
 LOOPBACK = r"(?:127(?:\.\d{1,3}){1,3}|localhost|0\.0\.0\.0|\[::1\]|::1|\d{8,10}|0x[0-9a-f]{8})"   # 2130706433 and 0x7f000001 are 127.0.0.1 too
-ACCEPTANCE_URL = re.compile(r"(?<![\w.\-~/])(?:(?:https?:)?//)?(?:(?:" + LOOPBACK + r"|[\w.-]+\.ts\.net)(?::[\w{}$%]+)?|:\d{2,5})(?:/\.{1,2}|/[\w.\-~%]+/\.\.)*/(?:acceptances|audit-answers|approvals|passkeys|remote)(?![\w-])",
+ACCEPTANCE_URL = re.compile(r"(?<![\w.\-~/])(?:(?:https?:)?//)?(?:(?:" + LOOPBACK + r"|[\w.-]+\.ts\.net)(?::[\w{}$%]+)?|:\d{2,5})(?:/\.{1,2}|/[\w.\-~%]+/\.\.)*/(?:acceptances|audit-answers|proposal-answers|approvals|passkeys|remote)(?![\w-])",
                             re.IGNORECASE)
 HTTP_CLIENTS = {"curl", "wget", "aria2c"}
 HTTPIE = {"http", "https", "xh", "xhs", "httpie"}                    # a body is a POST unless the method says otherwise
@@ -357,6 +358,8 @@ def touches_passkey_trust(argv):
             return False
         after = argv[argv.index(rest[0]) + 1:]
         return not (after and after[0] == "status")                   # the status is a read, only right after the subcommand
+    if "push-target" in argv[1:] or any(w.endswith("push-targets.json") for w in argv[1:]):  # F234, CC-ADR-0044: where his push goes
+        return True
     parts = git_parts(argv)
     if parts is None:
         return False

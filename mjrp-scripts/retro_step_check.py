@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """retro_step_check.py - the fast lane's retroactive step, charged by machine (F101, S-186).
 
 Born from an incident (ADR-0002 asks for one): on 2026-10-27 the F83 closed with the retroactive step half done, and the integrator
@@ -21,7 +21,8 @@ ONE source for what the step updates: the registry `mjrp-scripts/artifacts.json`
                   «atualizado» or «sem mudança»; «atualizado» also needs a commit of the feature touching it, in the feature's project or at
                   the repository top (`at_top`: only at the top)
     screen        when the feature touched a screen file (the contract's `screen:`, visual_gate), a commit of it touches `paths`;
-                  `none_ok`: `**Prototype**: none - <who>` in the spec.md lets it go (the human said no prototype is needed);
+                  `none_ok`: `**Prototype**: none - <who>` in the spec.md lets it go (the human said no screen document is needed). The Quick Prototype
+                  is not a row of this step (F235): it comes before the Delivery, only if the human asked, and the brief records the answer (`**Prototype**: quick - <who>` or `none`);
                   `touch_id_ok`: on the Human track the MJRP's Touch ID at the merge fills the row (F154, UAT-454): the audit note the gate
                   writes (`git notes --ref=mjrp-visual-ok`, on a commit the judged copy reaches) names the feature and this project's screen.
                   There is no agent judge on that track, so no report (pdlc-loops § 2). A fix whose issues are all the agents' is on the Agent
@@ -352,7 +353,7 @@ def judge(feature, rows, touched, src, shapes, globs, fingers=()):
             if human and touch_id_holds(fingers, feature["fid"], proj):
                 continue
             if not _hit(touched, proj, rc["paths"]):
-                tip = (" — ou, se o humano disse que não precisa de protótipo, `**Prototype**: none — <quem disse>` no spec.md"
+                tip = (" — ou, se o humano disse que não precisa, `**Prototype**: none — <quem disse>` no spec.md"
                        if rc.get("none_ok") else "")
                 tip += (" — ou o Touch ID do humano no merge, a nota `mjrp-visual-ok` que o portão visual grava: a via rápida da trilha "
                         "Humano não tem juiz agente, então junte o ramo antes de fechar" if human else "")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 stop_gate.py - the only point in the harness where it can PREVENT, not just warn.
 
@@ -295,6 +295,14 @@ def hook_mode(mode: str) -> int:
     """The bookkeeping hooks (never block, always exit 0): session-start, record-edit, bash-pre, bash-post."""
     payload = read_session_payload()
     sid = session_id(payload)
+    if mode == "session-start":                      # F240 (S-237): the orchestrator with no wait up is told the exact command (a page session: silent)
+        try:
+            import orchestrator_wait
+            line = orchestrator_wait.session_start_line(ROOT_DIR)
+            if line:
+                print(line)
+        except Exception:                           # noqa: BLE001 - a reminder never breaks the session start
+            pass
     if not sid:
         return 0
     try:
@@ -409,10 +417,13 @@ def conform_pending() -> bool:
     return any(l.lstrip().startswith("CM-") for l in r.stdout.splitlines()) or "catálogo defasado" in r.stdout
 
 
+INHERITED_RED_ID = re.compile(r"^\s*\[ERRO (\S+)\]", re.MULTILINE)      # the doctor's «[ERRO I6] …» lines
+
+
 def declare(cmd: str) -> int:
     conform = is_conform_criterion(cmd)
-    if not conform and (CONFORM_FILE.exists() or conform_pending()):
-        print("  [stop_gate] RECUSADO — há um conform em andamento (notas pendentes) e o único critério que vale é o dele:",
+    if not conform and CONFORM_FILE.exists():                        # F233: in progress = started by someone (conform.json), not «a note is pending»
+        print("  [stop_gate] RECUSADO — há um conform em andamento (.mjrp/conform.json) e o único critério que vale é o dele:",
               file=sys.stderr)
         print(f'    python3 mjrp-scripts/stop_gate.py --declare "{CONFORM_CRITERION}"', file=sys.stderr)
         print("  (largar o conform no meio é decisão do MJRP: ele apaga .mjrp/conform.json)", file=sys.stderr)
@@ -439,9 +450,16 @@ def declare(cmd: str) -> int:
         stale = stale or "o leitor do projeto não está mais lá — não avaliável"
         r = subprocess.CompletedProcess(cmd, 1, r.stdout, r.stderr + f"\n  [stop_gate] o critério saiu 0 mas {stale}; rode "
                                         "`new_project.py <esta pasta> --refresh-kernel` (do harness) e o conform de novo\n")
+    # F233 (UAT-560): outside a conform, the doctor's errors that are ONLY the conform note's (I6: pendências herdadas, e.g. from a kernel refresh)
+    # are not the turn's work. Any other error makes the criterion red as before; a criterion that names no `[ERRO <id>]` stays as it exited.
+    inherited_only = False
+    if not conform and r.returncode == 1 and any(Path(a).name == "doctor.py" for a in argv):   # only the doctor's own lines count (recheck P2)
+        ids = INHERITED_RED_ID.findall(r.stdout)
+        inherited_only = bool(ids) and set(ids) == {"I6"}
+    passed = r.returncode == 0 or inherited_only
     write_json_atomic(turn_file(session_id()), {
-        "criterion": cmd, "code": r.returncode, "passed": r.returncode == 0, "when": time.time(), "conform": conform,
-        "catalog_compare": state or None,
+        "criterion": cmd, "code": r.returncode, "passed": passed, "when": time.time(), "conform": conform,
+        "catalog_compare": state or None, "inherited_only": inherited_only,
     })
     if conform:
         if r.returncode == 0:
@@ -449,6 +467,10 @@ def declare(cmd: str) -> int:
         else:
             CONFORM_FILE.write_text(json.dumps({"since": time.time(), "criterion": cmd}, ensure_ascii=False), encoding="utf-8")
     print((r.stdout + r.stderr).rstrip())
+    if inherited_only:
+        print("\n  [stop_gate] os únicos erros são de nota de conformidade pendente (I6), herdados — não são do trabalho deste turno;"
+              "\n  critério registrado como passou. A nota segue como aviso: a conformidade é outro trabalho.")
+        return 0
     print(f"\n  [stop_gate] critério registrado: exit {r.returncode}"
           f" — {'o turno pode fechar' if r.returncode == 0 else 'ainda BLOQUEIA o fim do turno'}")
     return r.returncode
@@ -456,8 +478,26 @@ def declare(cmd: str) -> int:
 
 def gate() -> int:
     payload = read_session_payload()
-    code = work_gate(session_id(payload))
-    return code if code else returned_gate(payload)
+    code = work_gate(session_id(payload), bool((payload or {}).get("stop_hook_active")))
+    code = code if code else returned_gate(payload)
+    code = code if code else pile_up_gate(payload)
+    return code if code else wait_gate(payload)
+
+
+# 2026-11-08 (F240, S-237): the orchestrator that ends a turn with no wait command up is not woken when the MJRP acts. The net: one warning per
+# session (the SessionStart line is the first reminder). The state is orchestrator_wait.py's marker; a page session in a linked worktree is never warned.
+def wait_gate(payload: dict) -> int:
+    try:
+        import orchestrator_wait                  # vendored beside this file in every project
+    except ImportError:
+        return 0
+    try:
+        code, text = orchestrator_wait.gate_block(ROOT_DIR, STATE_DIR, session_id(payload), bool((payload or {}).get("stop_hook_active")))
+    except Exception:                             # noqa: BLE001 - a net that cannot decide lets go
+        return 0
+    if code:
+        print(text, file=sys.stderr)
+    return code
 
 
 # 2026-11-07 (F220, S-226): the MJRP handed back thirteen stuck items from the iPhone and nothing made the owning agent act. The orchestrator of
@@ -474,7 +514,24 @@ def returned_gate(payload: dict) -> int:
     return code
 
 
-def work_gate(sid: str) -> int:
+# 2026-11-08 (F222, S-227): the board piled up outside «Pronto para UAT» and nobody was charged. The orchestrator of the project (the MAIN
+# checkout) cannot end its turn while «Esperando» or the backlog is over its limit, or the «Priorizada» holds an item with a free slot; once per
+# stop chain. Harness only: the child has no pile_up_check.py (no Control Center to serve the board), so the import fails and the gate lets go.
+def pile_up_gate(payload: dict) -> int:
+    try:
+        import pile_up_check
+    except ImportError:
+        return 0
+    try:
+        code, text = pile_up_check.gate_block(ROOT_DIR, STATE_DIR, session_id(payload), bool((payload or {}).get("stop_hook_active")))
+    except Exception:                             # a gate that cannot measure lets go: the doctor's W23 says it did not read
+        return 0
+    if code:
+        print(text, file=sys.stderr)
+    return code
+
+
+def work_gate(sid: str, stop_hook_active: bool = False) -> int:
     files_ = changed_files()
     if sid and session_marked(sid):               # R21: this session is judged by what IT touched, not by the whole checkout
         mine = touched_by(sid)
@@ -484,7 +541,22 @@ def work_gate(sid: str) -> int:
     declared = read_json(turn_file(sid), {})
     if not isinstance(declared, dict):
         declared = {}
-    in_conform = CONFORM_FILE.exists() or conform_pending()       # notes pending: only the conform's criterion releases the turn
+    # F233 (UAT-560): a conform in progress is one somebody STARTED (conform.json): only its criterion releases the turn. A migration note a
+    # kernel refresh left pending is a warning, never a hold: it was not made by this turn and a session doing other work cannot clear it.
+    in_conform = CONFORM_FILE.exists()
+    pending_warning = ("  (aviso: há nota(s) de conformidade pendente(s) neste projeto — não prendem este turno; a conformidade é outro trabalho: "
+                       "`mjrp-pdlc-bootstrap`, modo conform)")
+
+    def recorded_red() -> bool:
+        """The same stop chain, nothing edited since a --declare that ran and recorded its result: block once, never again (F233, REQ-03)."""
+        if not (stop_hook_active and "code" in declared and declared.get("when", 0) >= newest_change_time(files_)):
+            return False
+        print(f"  [stop_gate] o bloqueio já foi dito nesta cadeia e nada mudou depois do critério: o turno encerra com o resultado "
+              f"registrado (exit {declared.get('code')}, em {turn_file(sid)}) — o vermelho fica para a próxima sessão ver.", file=sys.stderr)
+        if conform_pending():
+            print(pending_warning, file=sys.stderr)
+        return True
+
     if declared.get("passed") and declared.get("when", 0) >= newest_change_time(files_) \
             and (declared.get("conform") or not in_conform):
         state, stale = catalog_state() if declared.get("conform") else ("fresh", "")
@@ -493,6 +565,8 @@ def work_gate(sid: str) -> int:
             return 0
         stale = stale or ("o critério foi declarado sem o estado «fresh» do catálogo" if state == "fresh"
                           else "o leitor do projeto não está mais lá — não avaliável")
+        if recorded_red():
+            return 0
         print(f"  [stop_gate] BLOQUEADO — o critério do conform passou, mas {stale}: o conform não fecha num kernel velho.", file=sys.stderr)
         print("  Rode `new_project.py <esta pasta> --refresh-kernel` (do harness) e declare o critério de novo.", file=sys.stderr)
         return 2
@@ -501,6 +575,8 @@ def work_gate(sid: str) -> int:
     # tinham a mesma mensagem, "não passou". São causas diferentes — uma pede corrigir o
     # trabalho, a outra pede corrigir o próprio critério — mesmo a trava sendo igual nos dois
     # casos: "não avaliado" não é "está são" (ADR-0002 §8). Só a explicação muda.
+    if recorded_red():
+        return 0
     if not declared:
         porque = "nenhum critério foi declarado neste turno"
     elif in_conform and declared.get("passed") and not declared.get("conform"):
@@ -525,6 +601,8 @@ def work_gate(sid: str) -> int:
         print(f'    python3 mjrp-scripts/stop_gate.py --declare "{CONFORM_CRITERION}"', file=sys.stderr)
     else:
         print('    python3 mjrp-scripts/stop_gate.py --declare "python3 mjrp-scripts/doctor.py ."', file=sys.stderr)
+    if not in_conform and conform_pending():
+        print(pending_warning, file=sys.stderr)
     print("  PRINCIPLES II.4 — nenhum trabalho termina sem critério verificável.", file=sys.stderr)
     return 2
 

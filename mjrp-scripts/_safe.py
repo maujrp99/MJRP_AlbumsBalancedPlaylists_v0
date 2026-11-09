@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _safe.py - the ONE way a harness script (and the agent) removes or moves a path (ADR-0023; F74).
 
@@ -28,6 +28,7 @@ Which project's `_backups/` is the project ASKED FOR, passed as a value (F73 TAS
 `_context.Context` (its `root`), or `root=` a folder, or - when neither is given - the top of the git project that holds the path,
 or - when the path is in no repository - the repository these scripts live in. There is no module-level ROOT or BACKUPS.
 """
+import hashlib
 import os
 import re
 import shutil
@@ -133,6 +134,23 @@ def _make_backups(backups):
         readme.write_text(README_TEXT, encoding="utf-8")
 
 
+NAME_MAX_BYTES = 255                    # the file-system limit of one name (macOS and Linux), in UTF-8 bytes
+_NAME_RESERVE = len(".YYYYMMDD-HHMMSS") + len(".99999")      # what `_unique_dest` appends: the stamp and a `.n` of up to 5 digits
+
+
+def _fit_name(rel):
+    """`rel` (a path with / as __) cut to what leaves room for the stamp and the `.n` within `NAME_MAX_BYTES` bytes. What fits is returned
+    as it is. What does not keeps the END of the path (it says which file the copy is) behind `<12 hex of the sha256 of the whole path>~`,
+    so two long paths that end alike do not collide and the origin can still be checked (F243, UAT-569: a worktree's copy path passed 255
+    bytes and the cleaning stopped with Errno 63). The stamp stays the tail, so `_STAMPED` and the pruning still recognize the copy."""
+    room = NAME_MAX_BYTES - _NAME_RESERVE
+    if len(rel.encode("utf-8")) <= room:
+        return rel
+    head = hashlib.sha256(rel.encode("utf-8")).hexdigest()[:12] + "~"
+    tail = rel.encode("utf-8")[-(room - len(head)):]
+    return head + tail.decode("utf-8", errors="ignore")      # a cut inside a multi-byte letter drops that letter's stray bytes
+
+
 def _unique_dest(path, top, backups):
     """A name in `backups` that does not exist yet: `<path from the project root, / as __>.<stamp>[.n]`. Two copies in the
     same second get `.1`, `.2`... - never the same name (a second `copy2` would overwrite the first)."""
@@ -143,6 +161,7 @@ def _unique_dest(path, top, backups):
         rel = resolved.relative_to(top).as_posix().replace("/", "__")
     except ValueError:                    # outside the project: keep the whole path so the origin is not lost
         rel = "abs" + resolved.as_posix().replace("/", "__")
+    rel = _fit_name(rel)
     dest = backups / f"{rel}.{_stamp()}"
     n = 1
     while dest.exists():

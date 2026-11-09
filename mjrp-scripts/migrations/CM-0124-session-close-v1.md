@@ -4,7 +4,7 @@ item: session-close
 from: 0
 to: 1
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0124 · session-close@0 → session-close@1
 
 ## Por que

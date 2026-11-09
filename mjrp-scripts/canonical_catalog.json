@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "version": "2026-10-14",
   "default_grace_days": 30,
   "open_warning_notes": {
@@ -4078,7 +4078,7 @@
     },
     {
       "id": "process-sensors",
-      "version": 3,
+      "version": 4,
       "title": "os sensores do processo que o filho herda (`mjrp-scripts/process_sensors.json`) rodam no filho: o contrato declara os que só rodam declarados",
       "path": ".mjrp-project.yml",
       "applies_to": {
@@ -4094,7 +4094,7 @@
       },
       "since": "2026-11-04",
       "grace_days": 30,
-      "born_of": "UAT-489 (MJRPpersonal, 2026-11-04): o contrato do harness declara 73 sensores e o do MJRPpersonal, 6; o pdlc_vocabulary_check chegava ao filho e nada o rodava, e as travas do fecho vinham sem o registro e os moldes que julgam; cinco features de via rápida entraram na main sem o passo retroativo com o doctor verde. O MJRP, 2026-11-04: o sensor do processo é parte do kernel · v2 (2026-11-07): F200 (S-215): chega o design_system_mirror_check.py, o juiz que a mjrp-defining-design-systems roda antes de publicar o design system no Claude, e o manifesto ganha o lugar `skill` (o sensor que a skill dona roda à mão); o check não muda · v3 (2026-11-07): F220 (S-226): chega o returned_check.py, o sensor do que o MJRP devolve pelo iPhone sem ação além do prazo (`returned_deadline_hours` do contrato, padrão 24 h), que o doctor (W22) e a trava de fim de turno do orquestrador importam; o check não muda",
+      "born_of": "UAT-489 (MJRPpersonal, 2026-11-04): o contrato do harness declara 73 sensores e o do MJRPpersonal, 6; o pdlc_vocabulary_check chegava ao filho e nada o rodava, e as travas do fecho vinham sem o registro e os moldes que julgam; cinco features de via rápida entraram na main sem o passo retroativo com o doctor verde. O MJRP, 2026-11-04: o sensor do processo é parte do kernel · v2 (2026-11-07): F200 (S-215): chega o design_system_mirror_check.py, o juiz que a mjrp-defining-design-systems roda antes de publicar o design system no Claude, e o manifesto ganha o lugar `skill` (o sensor que a skill dona roda à mão); o check não muda · v3 (2026-11-07): F220 (S-226): chega o returned_check.py, o sensor do que o MJRP devolve pelo iPhone sem ação além do prazo (`returned_deadline_hours` do contrato, padrão 24 h), que o doctor (W22) e a trava de fim de turno do orquestrador importam; o check não muda · v4 (2026-11-08): F222 (S-227): chega o pile_up_check.py, o sensor do acúmulo do board, só do harness (`harness_only`: o filho não tem o servidor do board); o check não muda",
       "owner_skill": "mjrp-pdlc-bootstrap",
       "judge_skill": null,
       "check": [
@@ -4115,10 +4115,28 @@
         "mjrp-scripts/process_sensors.json"
       ],
       "pattern_digest": {
-        "mjrp-scripts/process_sensors.json": "sha256:e8f8504008a8313121a1435f07e8606ccb32779b3fd04f5b7643cb271cd4bff4"
+        "mjrp-scripts/process_sensors.json": "sha256:5221f0580df93dec4f4175c95357f1e79d6a0c2566b3972f6ca65c1b43f1ca44"
       },
-      "migration": "CM-0129",
+      "migration": "CM-0135",
       "superseded": [
+        {
+          "version": 3,
+          "migration": "CM-0129",
+          "check": [
+            {
+              "kind": "contract_key",
+              "key": "sensors.pdlc_vocabulary"
+            },
+            {
+              "kind": "contract_key",
+              "key": "sensors.sdd_shape"
+            },
+            {
+              "kind": "contract_key",
+              "key": "sensors.requirements_graph_check"
+            }
+          ]
+        },
         {
           "version": 1,
           "migration": "CM-0107",
@@ -5231,6 +5249,14 @@
     {
       "at": "2026-11-07 17:58",
       "change": "session-close: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-11-08 12:00",
+      "change": "process-sensors v4 (CM-0135): o manifesto ganha o pile_up_check.py em harness_only (F222, S-227)"
+    },
+    {
+      "at": "2026-11-08 12:15",
+      "change": "process-sensors: pattern_digest reestampado"
     }
   ]
 }

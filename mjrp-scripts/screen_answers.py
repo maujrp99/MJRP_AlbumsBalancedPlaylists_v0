@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 screen_answers.py - which answers given on the Control Center screen no agent has executed yet (F166, UAT-471; CC-ADR-0039 section 8).
 
@@ -12,9 +12,14 @@ may hold the closing entry.
   python3 mjrp-scripts/screen_answers.py [--root <folder>]     the list, exit 0
   python3 mjrp-scripts/screen_answers.py --session-start       the block the SessionStart hook prints (silent when nothing is pending)
 
+A batch of proposals of an agent (F181, CC-ADR-0042 section 6) is read from its file, not from the log: an item marked `→ respondida` and not
+yet `→ aplicada`/`→ não aplicada` waits for this session; an `answer — lote <nome>` entry that lists an item with no mark of its time is the
+screen failing in the middle (the orphan). The batch's shape is read by `proposal_batches.py`, loaded by path from this same folder.
+
 Standard library only: this script is vendored with the kernel, and its presence in a project is what the screen's route asks for.
 """
 
+import importlib.util
 import re
 import subprocess
 import sys
@@ -26,6 +31,9 @@ AUDITS_REL = "reports/audits"
 _ENTRY = re.compile(r"^## \[(\d{4}-\d{2}-\d{2} \d{2}:\d{2})\] ([\w-]+) — ([^\n]*)\n(.*?)(?=^## \[|\Z)", re.M | re.S)
 _ANSWER_ID = re.compile(r"^auditoria (P-\d{2,})\b")
 _REPORT = re.compile(r"^- Relatório: `([^`\n]+)`", re.M)
+PROPOSALS_REL = "reports/proposals"
+_BATCH_ID = re.compile(r"^lote (\d{4}-\d{2}-\d{2}-\d{4}-[a-z0-9-]+)\s*$")
+_ITEM_ID = re.compile(r"\b[A-Z][A-Z0-9]*-\d+\b")
 
 
 @dataclass
@@ -37,9 +45,19 @@ class Answer:
 
 
 @dataclass
+class Batch:
+    name: str
+    title: str
+    answered: list  # the items marked «respondida» and not yet applied
+    orphans: list  # the items an `answer — lote` entry lists with no mark of its time
+    at: str  # the newest «respondida» of the batch, for the doctor's W21
+
+
+@dataclass
 class State:
     pending: list = field(default_factory=list)  # the answers no decision cites yet
     uncommitted: list = field(default_factory=list)  # the files of an answer the server wrote and nobody committed
+    batches: list = field(default_factory=list)  # the batches of proposals with something answered and not applied (F181)
 
 
 def entries(log_text):
@@ -97,29 +115,82 @@ def _read(path):
         return None
 
 
+def _proposal_batches():
+    """The one home of a batch's shape, by path from this folder; None in a kernel that does not have it yet."""
+    path = Path(__file__).resolve().parent / "proposal_batches.py"
+    if not path.is_file():
+        return None
+    spec = importlib.util.spec_from_file_location("proposal_batches", path)
+    module = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(module)
+    except (OSError, SyntaxError):
+        return None
+    return module
+
+
+def batches_of(main, log_text):
+    """The batches of `reports/proposals/` of the main checkout with an item answered and not applied, or an orphan entry."""
+    pb, folder = _proposal_batches(), Path(main) / PROPOSALS_REL
+    if pb is None or not folder.is_dir():
+        return []
+    entries_by_batch = {}
+    for at, kind, title, body in entries(log_text):
+        found = _BATCH_ID.match(title)
+        if kind == "answer" and found:
+            ids = {i for line in body.splitlines()[1:] if line.startswith("- ") and not line.startswith(("- Lote:", "- Envio:"))
+                   for i in _ITEM_ID.findall(line.split(":", 1)[0] if not line.startswith("- Recomendações") else line)}  # fmt: skip
+            entries_by_batch.setdefault(found.group(1), []).append((at, ids))
+    out = []
+    for path in sorted(p for p in folder.glob("*.md") if not p.is_symlink()):
+        try:
+            data = pb.parse(path.read_text(encoding="utf-8", errors="replace"))
+        except (OSError, ValueError):
+            continue
+        items = {i["id"]: i for i in data["items"]}
+        answered = [i["id"] for i in data["items"] if pb.status(i) == "respondida"]
+        orphans = sorted({iid for at, ids in entries_by_batch.get(path.stem, []) for iid in ids
+                          if iid in items and not any(m["kind"] == "respondida" and m["at"] == at for m in items[iid]["marks"])})  # fmt: skip
+        if answered or orphans:
+            times = [m["at"] for i in data["items"] for m in i["marks"] if m["kind"] == "respondida" and i["id"] in answered]
+            out.append(Batch(path.stem, data["head"].get("title", path.stem), answered, orphans, max(times) if times else ""))
+    return out
+
+
 def state_of(root):
     """What waits in this project. A project with no log has nothing to say."""
     root = Path(root).resolve()
     main = main_checkout(root)
     folders = [main] if main == root else [main, root]
     logs = [_read(folder / LOG_REL) for folder in folders]
-    state = State(pending=pending_in([text for text in logs if text]))
+    state = State(pending=pending_in([text for text in logs if text]), batches=batches_of(main, logs[0] or ""))
     for answer in state.pending:
         answer.marked = has_mark(_read(main / AUDITS_REL / answer.report), answer.id, answer.at)
     if state.pending and logs[0] and "] answer — " in logs[0]:
         rels = [LOG_REL, *sorted({f"{AUDITS_REL}/{a.report}" for a in state.pending})]
         dirty = _git(main, "status", "--porcelain", "--", *rels)
         state.uncommitted = sorted(ln[3:].strip() for ln in (dirty or "").splitlines() if ln.strip())
+    if state.batches:
+        rels = [LOG_REL, *(f"{PROPOSALS_REL}/{b.name}.md" for b in state.batches)]
+        dirty = _git(main, "status", "--porcelain", "--", *rels)
+        state.uncommitted = sorted(set(state.uncommitted) | {ln[3:].strip() for ln in (dirty or "").splitlines() if ln.strip()})
     return state
 
 
 def lines_of(state):
     """The notice, in the MJRP's language; empty when nothing waits."""
-    if not state.pending:
+    if not state.pending and not state.batches:
         return []
+    out = []
+    for b in (b for b in state.batches if b.answered):
+        n = len(b.answered)
+        out.append(f"{n} {'resposta' if n == 1 else 'respostas'} do lote «{b.title}» sem aplicar: {', '.join(b.answered)} ({PROPOSALS_REL}/{b.name}.md)")
+    if any(b.answered for b in state.batches):
+        out.append("  Aplique cada uma e marque: python3 mjrp-scripts/proposal_batches.py mark . <lote> <ITEM> aplicada|nao-aplicada \"<o que fez ou por quê>\".")
+    for b in (b for b in state.batches if b.orphans):
+        out.append(f"Entrada do lote {b.name} sem marca em: {', '.join(b.orphans)}. A tela falhou no meio: reenvie por ela, e não aja sobre estes.")
     done = [a for a in state.pending if a.marked]
     left = [a for a in state.pending if not a.marked]
-    out = []
     for report in sorted({a.report for a in done}):
         ids = [a.id for a in done if a.report == report]
         out.append(f"{len(ids)} {'resposta' if len(ids) == 1 else 'respostas'} da tela sem executar: {', '.join(ids)} ({report})")

@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "about": "O registro dos artefatos do PDLC (F100, S-185): a fonte única. mjrp-scripts/artifact_map.py gera daqui a tabela da página docs/wiki/kernel/ways-of-working/pdlc-artifact-map.md e o diagrama design/diagrams/ways-of-working/2026-10-27-1124-pdlc-artifact-map.svg, e o Control Center o lê ao vivo no card «O ciclo de vida». Edite aqui, rode o gerador; --check cobra que o gerado bate, que created_by existe (uma skill, um script de mjrp-scripts/ ou MJRP), que todo tipo do report_types.json está numa linha e que todo arquivo de docs/specs/, design/ e reports/ casa com um padrão. Cada linha que o passo retroativo toca (retro always ou if) diz em retro_check como a máquina a confere (F101): mjrp-scripts/retro_step_check.py lê esse campo no pre-commit e no merge_train.py merge e recusa a feature da via rápida que vai a Done sem ela.",
   "version": 1,
   "stages": [
@@ -207,17 +207,10 @@
       ],
       "note": "",
       "standard": "cada rodada do Explorar",
-      "fast": "antes, só se o humano pedir; senão no retroativo",
-      "retro": "if",
-      "retro_text": "se a tela mudou — ou `**Prototype**: none` dito pelo humano",
-      "retro_check": {
-        "by": "screen",
-        "paths": [
-          "design/inception/*"
-        ],
-        "none_ok": true
-      },
-      "source": "[[pdlc-loops]] § 2.1 · `pdlc_vocabulary_check.py` (doctor)",
+      "fast": "o Quick Prototype, antes da Delivery e só se o humano pedir (o brief registra); sem pedido, não há",
+      "retro": "never",
+      "retro_text": "o Quick Prototype não é retroativo: vem antes da Delivery, se o humano pediu, e ele julga olhando (F235)",
+      "source": "[[pdlc-loops]] § 2 e § 2.1 · `pdlc_vocabulary_check.py` (doctor)",
       "patterns": [
         "design/inception/**"
       ]
@@ -233,7 +226,7 @@
       ],
       "note": "",
       "standard": "na mesma rodada e no mesmo commit da versão",
-      "fast": "com o protótipo",
+      "fast": "no retroativo, se a tela mudou; o Quick Prototype, se houve, não os gera",
       "retro": "if",
       "retro_text": "se a tela mudou — todas as telas da versão",
       "retro_check": {
@@ -1273,6 +1266,25 @@
       ],
       "report_types": [
         "skill-critique"
+      ]
+    },
+    {
+      "id": "art-proposal-batch",
+      "name": "Lote de propostas",
+      "what": "Um conjunto de decisões de um agente, cada uma com a recomendação, que o humano aprova ou corrige na aba «Agent Proposals».",
+      "path": "reports/proposals/<AAAA-MM-DD-HHMM>-<assunto>.md",
+      "stage": "delivery",
+      "created_by": [
+        "mjrp-pdlc"
+      ],
+      "note": "qualquer agente do projeto escreve; a forma é a do `proposal_batches.py`; nunca leva uma válvula do humano",
+      "standard": "quando há decisões de opções com recomendação",
+      "fast": "igual",
+      "retro": "never",
+      "retro_text": "não é passo do retroativo; é como o agente pergunta",
+      "source": "CC-ADR-0042 (F181) · decidido pelo agente",
+      "patterns": [
+        "reports/proposals/**"
       ]
     },
     {

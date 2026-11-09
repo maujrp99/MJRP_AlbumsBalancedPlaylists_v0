@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """pdlc_vocabulary_check.py - the skills and the kernel speak the PDLC of today (v12), and a fast-lane feature closes with its record.
 
 Two checks in one sensor, both about the same failure: the process changed and the text that teaches it did not.
@@ -21,14 +21,15 @@ Two checks in one sensor, both about the same failure: the process changed and t
      Every hit is an error (exit 1).
 
   2. THE FAST LANE'S RETROACTIVE STEP. A feature with `lane: fast` and `status: Done` has to carry its record: the
-     documentation and the prototype are written AFTER the judge's OK and before the item closes (mjrp-syncing-docs).
+     documentation is written AFTER the judge's OK and before the item closes (mjrp-syncing-docs). The Quick Prototype is not part
+     of it (F235): when the human asks for one, it comes BEFORE the Delivery, and only the screen documents follow.
      What the sensor reads (nothing it reads needs judgement):
        a. no sketch marker: the first six lines of spec.md, plan.md and tasks.md do not say "Esboço" / "Sketch" /
           "Outline" (the opening commit marks them; the retroactive step rewrites them to what was built and drops the mark);
-       b. the prototype, when a screen changed: the commits that cite the feature id (F76) and touch a screen file of
+       b. the screen document, when a screen changed: the commits that cite the feature id (F76) and touch a screen file of
           the project's contract (`mjrp_harness.screen`, the doctor's A2 list; the default web/ and src/ when absent)
-          also touch a prototype (`design/inception/`) and `docs/specs/info-arch.md`; or spec.md carries the line
-          `**Prototype**: none - <who said so>` (the MJRP said no prototype is needed: recorded, as mjrp-designing-ui asks).
+          also touch `docs/specs/info-arch.md`. The prototype is no longer demanded here: the brief records whether the human
+          asked for a Quick Prototype (`**Prototype**: quick - <who asked>` or `none - <who said so>` in spec.md, both accepted).
      What it does NOT read: whether the text is true or good (that is mjrp-auditing-docs), a screen text kept outside
      the contract's `screen:` list, a feature whose commits do not cite its id.
      A feature whose spec.md entered git before RULE_SINCE only WARNS (it closed before the rule existed - ADR-0002's
@@ -60,7 +61,8 @@ RULE_SINCE = "2026-10-26"   # a fast-lane feature whose spec.md entered git befo
 SKILL_DIR = "mjrp-skills"
 KERNEL_DIR = "docs/wiki/kernel"
 SKIP_PARTS = ("_archive", "_backups", "node_modules", "dist", ".git")
-TEXT_SUFFIXES = {SKILL_DIR: {".md", ".yml", ".yaml", ".json", ".txt"}, KERNEL_DIR: {".md"}}   # a skill also carries templates in YAML/JSON/text
+COPY_DIR = "apps/control-center/content/copy"   # F235: the Overview teaches the lanes too (the JSON of the screen's text)
+TEXT_SUFFIXES = {SKILL_DIR: {".md", ".yml", ".yaml", ".json", ".txt"}, KERNEL_DIR: {".md"}, COPY_DIR: {".json"}}   # a skill also carries templates in YAML/JSON/text
 SKIP_NAMES = ("harness-kaizen.md",)   # the kernel's own register of lessons: every line is a record
 
 # ------------------------------------------------------------------------------------------------ the vocabulary
@@ -72,6 +74,13 @@ LANES = (
     (r"\bFull track\b|\btrilha Full\b|\bStandard track\b|\btrilha Standard\b", re.I, "«Full/Standard track»"),
     (r"\bFix track\b|\btrilha Fix\b|\b[Ff]eatures? Fix\b", 0, "«Fix track» / «feature Fix» (the fix rides the fast lane; its kind is `solution_type: fix`)"),
     (r"\bFull\s*(?:·|,|×|/|e|and)\s*Standard\b", 0, "the list «Full · Standard»"),
+)
+SKIP = (
+    # F235 (S-235): the fast lane compresses Discovery and Design, it does not skip them. A negation right before the verb is the new text.
+    (r"(?<!não )(?<!nunca )(?<!nem )\bpula(?:m)? (?:a |o |as |os )?(?:Discovery|Design)\b", re.I, "«pula a Discovery» (the fast lane compresses Discovery and Design, it does not skip them)"),
+    (r"(?<!not )(?<!never )\bskips (?:the )?(?:Discovery|Design)\b", re.I, "«skips Discovery» (the fast lane compresses Discovery and Design, it does not skip them)"),
+    (r"\bdireto (?:à|ao|a) (?:a )?Delivery\b", re.I, "«direto à Delivery» (the brief goes to Delivery; Discovery and Design are compressed, not skipped)"),
+    (r"\bstraight to (?:the )?Delivery\b", re.I, "«straight to Delivery» (the brief goes to Delivery; Discovery and Design are compressed, not skipped)"),
 )
 MERGE = (
     (r"\bmerge do agente\b|\bo merge é do agente\b|\bmerge feito pelo agente\b|\bthe agent'?s merge\b|"
@@ -90,7 +99,7 @@ CONTRACT = (
     (r"\b(?:the human |you )?(?:approves?|approved|decides?) (?:at )?the contract\b|\bMoment 2\s*[—-]\s*the contract\b", re.I,
      "«approve the contract»"),
 )
-RULES = [(re.compile(p, fl), why, kind) for kind, group in (("lane", LANES), ("merge", MERGE), ("contract", CONTRACT)) for p, fl, why in group]
+RULES = [(re.compile(p, fl), why, kind) for kind, group in (("lane", LANES), ("skip", SKIP), ("merge", MERGE), ("contract", CONTRACT)) for p, fl, why in group]
 
 # lines that keep a term on purpose
 PROJECT_CONTRACT = re.compile(r"Pronto para construir|Ready to build|\.mjrp-project|project'?s? contract|contrato do projeto|contrato de instância", re.I)
@@ -144,7 +153,7 @@ def retired_on_purpose(line, m):
 def doc_files(root):
     root = Path(root)
     out = []
-    for base in (SKILL_DIR, KERNEL_DIR):
+    for base in (SKILL_DIR, KERNEL_DIR, COPY_DIR):
         top = root / base
         if not top.is_dir():
             continue
@@ -185,6 +194,8 @@ def vocabulary_findings(root):
             for rx, why, kind in RULES:
                 if kind == "contract" and PROJECT_CONTRACT.search(line):
                     continue
+                if kind != "skip" and rel.startswith(COPY_DIR):   # the screen's text is read for the lanes' wording only
+                    continue
                 m = next((m for m in rx.finditer(line) if not retired_on_purpose(line, m)), None)
                 if m:
                     hits.append((rel, n, why, line.strip()[:160]))
@@ -194,7 +205,7 @@ def vocabulary_findings(root):
 
 # ------------------------------------------------------------------------------------------------ the fast lane's record
 SKETCH = re.compile(r"\b(?:esbo[cç]o|sketch|outline)\b", re.I)
-PROTOTYPE_NONE = re.compile(r"^\*\*Prototype\*\*:\s*none\b", re.I | re.M)
+PROTOTYPE_NONE = re.compile(r"^\*\*Prototype\*\*:\s*none\b", re.I | re.M)   # the human said no screen document is needed either
 RECORD_FILES = ("spec.md", "plan.md", "tasks.md")
 
 
@@ -273,11 +284,9 @@ def fast_lane_findings(root):
                 touched = feature_paths(top, fid)
                 rel_in = {t[len(prefix):] for t in touched if t.startswith(prefix)}
                 if any(visual_gate.is_screen_file(t, globs) for t in rel_in):
-                    if not any(t.startswith("design/inception/") for t in rel_in):
-                        missing.append(f"a feature mexeu na tela e nenhum commit dela atualiza o protótipo (design/inception/); "
-                                       f"se o MJRP disse que não precisa, registre `**Prototype**: none - <quem disse>` no spec.md")
-                    elif "docs/specs/info-arch.md" not in rel_in:
-                        missing.append("a feature mexeu na tela e atualizou o protótipo, mas nenhum commit dela atualiza o docs/specs/info-arch.md")
+                    if "docs/specs/info-arch.md" not in rel_in:
+                        missing.append("a feature mexeu na tela e nenhum commit dela atualiza o docs/specs/info-arch.md "
+                                       "(o Quick Prototype, se o humano pediu, veio antes da Delivery e não se cobra aqui)")
             if not missing:
                 continue
             rel = folder.relative_to(root).as_posix()

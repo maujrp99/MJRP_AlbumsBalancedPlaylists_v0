@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 deletion_guard.py - the PreToolUse(Bash) hook that refuses an AGENT's command that would delete what cannot come back
 (ADR-0023 section 5; F74 TASK-07). Until now "before `rm`, move it" was a request, and "a request is not a rule" (T4). It is the

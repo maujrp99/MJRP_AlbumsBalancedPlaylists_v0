@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_docs.py - the doctor's checks of the documents: paths that exist, links that resolve, the identity files,
 the folder indexes, the scripts catalog and the shape of the features (I2, I3, I4, I5 inheritance, W6 charter, W17, W19, W20).
@@ -338,6 +338,10 @@ def w21_screen_answers(root, rep):
     state = sa.state_of(root)
     limit = (dt.datetime.now(ZoneInfo("America/Sao_Paulo")) - dt.timedelta(days=1)).strftime("%Y-%m-%d %H:%M")
     old = [a for a in state.pending if a.at < limit]
+    stale = [b for b in getattr(state, "batches", []) if b.answered and b.at and b.at < limit]  # F181 (CC-ADR-0042 section 6)
+    if stale:
+        rep.warn("W21", f"{len(stale)} lote(s) de propostas respondido(s) na tela e sem aplicar há mais de um dia: "
+                        f"{', '.join(b.name for b in stale)}. " + " ".join(s.strip() for s in sa.lines_of(state)[1:]), inc)
     if old:
         rep.warn("W21", f"{len(old)} resposta(s) da tela parada(s) há mais de um dia: {', '.join(a.id for a in old)}. " + " ".join(s.strip() for s in sa.lines_of(state)[1:]), inc)
 
@@ -362,3 +366,25 @@ def w22_returned(root, rep):
         rep.warn("W22", " ".join(rc.report_lines(project, hours, late)), inc)
     else:
         rep.note("W22", f"nada do que o MJRP devolveu ao {project} está sem ação além de {hours:g} h")
+
+
+def w23_pile_up(root, rep):
+    """W23 - the board piled up outside «Pronto para UAT» (F222, S-227; `pile_up_check.py`): over 3 features or issues in «Esperando», over 10 in
+    the backlog, or an item of the «Priorizada» not started with a free slot (four at a time). A warning: the ceiling of error checks of ADR-0002
+    is full; the block is the Stop gate of the project's orchestrator. The measure builds the served board (~30 s), so the doctor reads the
+    cache the sensor keeps (CACHE_SECONDS) and says so when there is none: a note, never a pass."""
+    inc = ("2026-11-07: a F150 ficou dias «esperando o MJRP» sem ter ido à `main` e o board acumulava sem ninguém ser cobrado "
+           "(«vamos deixar acumular apenas no pronto pra UAT, aí eu sou o gargalo»)")
+    sys.dont_write_bytecode = True
+    try:
+        import pile_up_check as pc
+    except ModuleNotFoundError:
+        return
+    import time as _time
+    rows = pc.read_cache(Path(root) / ".mjrp", int(_time.time()))
+    if rows is None:
+        rep.note("W23", "o acúmulo do board não foi medido aqui (sem leitura recente; rode `python3 mjrp-scripts/pile_up_check.py`)")
+    elif any(fs for _, fs in rows):
+        rep.warn("W23", " ".join(s.strip() for s in pc.report_lines(rows)), inc)
+    else:
+        rep.note("W23", "o board não acumulou fora do «Pronto para UAT»")

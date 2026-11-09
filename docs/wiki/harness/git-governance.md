@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-11-04
 fontes: [conventionalcommits.org, mjrp-deployer (aposentada, S-76), 1999-fowler-refactoring]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 **Regra master** (MJRP, 2026-11-05 09:11): se o MJRP pedir para quebrar uma regra, todo agente aceita, inclusive os juízes: diz o que quebra, segue e registra no log com as palavras dele. Não alcança o que a máquina recusa (hook, Touch ID, classificador), que volta a ele sem contorno.
 
@@ -81,6 +81,28 @@ spec, plan e tasks em esboço, com a via e o tipo declarados — `lane` e `solut
 - **Id de UAT:** `merge_train.py next-uat-id --reserve` (main + ramos abertos + reservas dos worktrees). Se mesmo assim
   colidir, o integrador renumera o segundo e abre uma linha NOVA no log — entrada antiga nunca se edita.
 - **Merge aberto de outra sessão:** o `commit-msg` avisa (nunca bloqueia) quando há `MERGE_HEAD` e o commit não é o merge.
+
+### O trem, passo a passo
+
+Um trem é um branch temporário que junta vários branches de feature, é verificado uma vez só e entra na `main` em um único merge.
+
+1. **Worktree próprio.** O integrador cria o branch `integrate/<data>-<nome>-onto-main` a partir da `main`, numa pasta separada. O checkout principal fica na `main`, porque é dele que o Control Center e o arraste leem.
+2. **Merge de cada feature**, com `--no-ff`, em ordem: primeiro aquilo de que as outras dependem. É o `merge_train.py merge <branch>`, que confere antes se há merge aberto ou trava, faz o merge e confere os ids do registro de issues.
+3. **Conflitos, por tipo de arquivo:**
+   - log: juntam-se as entradas;
+   - `uat.md`: `uat-merge`, que junta linhas e renumera ids;
+   - hash de contrato e mapas: gerados de novo, nunca editados;
+   - `MEMORY.md`: à mão;
+   - código com duas intenções: desfaz-se o merge, e o branch volta ao dono.
+4. **Verificação no branch do trem:** o doctor e a suíte completa. Os conflitos entre features só aparecem aqui.
+5. **Juiz:** um agente independente faz a reconferência visual. O relatório precisa estar committado depois do último commit de tela. Confere-se isso antes de pedir a aprovação.
+6. **A aprovação do humano:** `remote_approval.py request` vincula o pedido ao commit exato da ponta do trem. Um commit novo invalida o pedido.
+7. **Merge na `main`:** um único `git merge --no-ff`. O hook `pre-merge-commit` roda a trava visual e confere a aprovação. Reverter o trem é reverter esse commit.
+8. **Depois:** build da tela, reinício do serviço, registro no log e limpeza dos worktrees.
+
+**Por que existe:** com muitas sessões em paralelo, juntar cada feature direto na `main` faria a verificação pesada rodar uma vez por feature, e duas features boas ainda podem quebrar juntas. O trem verifica o conjunto, uma vez, antes de tocar na `main`.
+
+**O custo:** a verificação de um trem leva de 30 a 45 minutos com a máquina cheia, e um conflito de código o atrasa. Enquanto um trem espera a aprovação, o seguinte já pode ser montado.
 
 ### A integração
 - **O merge é do integrador**, quando o verificador passa (exit 0) e o juiz do lote avalia — nunca pelo auto-relato. Merge com
@@ -197,6 +219,7 @@ clean` passam. Se o próprio hook falha, sai 0 com «nao avaliou». Portas que e
 - **Duas sessões no mesmo repositório:** commit só por *pathspec* — nunca `git add -A` com outra sessão ativa.
 
 ## History
+- **2026-11-08 22:22** · **O trem, passo a passo** (pedido do MJRP: o texto da explicação técnica vai ao material de CI/CD): a nova seção descreve os oito passos, por que existe e o custo.
 - **2026-11-07 13:49** · **Driver de merge só vale ligado** (F218, UAT-539): no `MJRPpersonal` o `install-driver` dizia «instalado» e os merges seguiam em conflito no log e no `## Now`, porque o filho não tinha as linhas do `.gitattributes` nem o `merge_train.py` que o driver chama; um desses conflitos custou ao MJRP uma segunda passkey. O kernel passou a levar o script e as linhas, o `install-driver` confere a ligação e o I5 do doctor a cobra (decidido pelo agente, revisável pelo MJRP).
 - **2026-11-07 13:16** · **Todo lote da tela grava na `main`, e a ordem se lê lá** (F217, UAT-537; decidido pelo agente, revisável pelo MJRP). No trem de 2026-11-07 o checkout da raiz estava no `integrate/…`; o lote anotava o ramo do checkout e o comando commitava nele, e os arrastes do MJRP (a F205 entre eles) ficaram fora da `main` que o orquestrador e o `priority_next.py` liam, enquanto o board lia o disco do checkout. Agora o lote (aceite, reabertura, troca de chaves, ordem) é preparado com os arquivos da `main` e commitado nela: no worktree que a tem, ou num worktree temporário (`$TMPDIR/cc-main.*`) que o comando abre e remove; `main` ausente ou presa num merge recusa com o motivo. A marcação do catálogo recusa com a raiz fora da `main`. O board, o `priority_next.py` (e o hook de início de sessão) e a trava leem a lista na `main`. A regra: **o checkout não diz para onde vai um commit da tela**.
 - **2026-11-07 09:21** · **A limpeza vale nos filhos: o build do Next e o `_backups/` do worktree** (F207, UAT-527; o `_backups/` inteiro ao principal é decisão do integrador, o resto do agente; revisáveis pelo MJRP). No `MJRPpersonal` nenhum dos 44 worktrees mesclados saía. A soltura levava só a cópia carimbada e movia a versionada (o que sujou 7 deles); agora leva tudo o que o git não versiona e nunca o versionado, e a poda do `_backups/` não apaga cópia versionada. Prévia: 25 dos 44 sairiam.

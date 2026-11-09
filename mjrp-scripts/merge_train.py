@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 merge_train.py - the tools of the integrator's train (F60, S-161): the mechanical parts of merging
 several branches into main, so that the integrator decides instead of retyping.
@@ -448,6 +448,21 @@ def memory_merge(base, ours, theirs):
     return "".join(out), left
 
 
+class UatLostRows(RuntimeError):
+    """The uat.md a merge would write has fewer issue rows than its inputs (UAT-551): the merge stops, the file is not written."""
+    def __init__(self, ids):
+        self.ids = list(ids)
+        super().__init__(f"o resultado perderia {len(self.ids)} linha(s) de issue: {', '.join(self.ids)}")
+
+
+def lost_ids(sources, result):
+    """The ids that some source holds and the result does not, in numeric order. The renumbered row keeps its old id in `ours`, so a
+    renumbering never reads as a loss."""
+    have = set(_row_ids(result))
+    want = {i for t in sources for i in _row_ids(t)}
+    return sorted(want - have, key=lambda x: int(x.split("-")[1]))
+
+
 def uat_merge(base, ours, theirs, free_start=0):
     """Returns (text, report) - report: renumbered {old: new}, conflicts [..], unresolved int."""
     sk, _ = git_merge_file(skeleton(base), skeleton(ours), skeleton(theirs))
@@ -491,8 +506,14 @@ def uat_merge(base, ours, theirs, free_start=0):
             out.append(row_line(merged, names, end))
         else:
             out.append((o or t or b)[0])  # one side only (or deleted on one: a row is never deleted)
+    # UAT-551 (F232): a row is never deleted, so the result holds every id the three texts hold. A result that lost one (an empty
+    # file, say, when the three inputs came from a path git does not hold in conflict) is not a merge: stop, write nothing.
+    text = "\n".join(out)
+    lost = lost_ids([base, ours, theirs], text)
+    if lost:
+        raise UatLostRows(lost)
     # UAT-502: a cell both sides changed is marked inside the row and listed in `conflicts`; it is also unresolved, or the report says 0
-    return "\n".join(out), {"renumbered": renum, "conflicts": conflicts, "unresolved": unresolved + len(conflicts)}
+    return text, {"renumbered": renum, "conflicts": conflicts, "unresolved": unresolved + len(conflicts)}
 
 
 def added_references(old_ids, base_ref, their_ref, cwd=None):
@@ -1138,6 +1159,12 @@ def _merge_state(cwd=None):
     return ("done", "HEAD^1") if len(parents) >= 3 else (None, None)
 
 
+def _fork_point(cwd=None):
+    """Where HEAD left main (F232 recheck P1-1): a branch behind main must not be accused of rows main gained after it forked."""
+    r = git(["merge-base", "HEAD", "main"], cwd=cwd, check=False)
+    return r.stdout.strip() if r.returncode == 0 and r.stdout.strip() else None
+
+
 def uat_check(paths=None, reservations=True, cwd=None):
     """After a merge that touches a `uat.md` - with or without a conflict, committed or still open - confirms that no id is taken
     twice and that every id the merge BROUGHT was reserved (`next-uat-id --reserve` or `uat-merge`). `uat-merge` only runs when git
@@ -1176,6 +1203,12 @@ def uat_check(paths=None, reservations=True, cwd=None):
             at = [str(n) for n, ln in enumerate(text.split("\n"), 1) if re.match(rf"^\|\s*{re.escape(uid)}\s*\|", ln)]
             findings.append(f"{path}: {uid} repetido (linhas {', '.join(at)}) - dois ramos criaram o mesmo id; renumere o segundo")
         old = set(_row_ids(show(ref, path, cwd)))
+        # UAT-551 (F232): a uat.md never loses an issue row. In a merge it is compared with BOTH parents; outside one, with main.
+        refs = [ref] + (["MERGE_HEAD" if state == "open" else "HEAD^2"] if state else ([_fork_point(cwd)] if _fork_point(cwd) and show(_fork_point(cwd), path, cwd) is not None else []))
+        gone = lost_ids([show(r, path, cwd) or "" for r in refs], text)
+        if gone:
+            findings.append(f"{path}: perdeu {len(gone)} linha(s) de issue em relação a {' e '.join(dict.fromkeys(refs))}: {', '.join(gone)} "
+                            f"(o resultado tem {len(set(ids))}); NÃO dê o merge por feito, refaça a junção")
         new = [i for i in dict.fromkeys(ids) if i not in old]
         if reservations and new:
             reserved = set(_reservations(path, cwd)[0])
@@ -1507,7 +1540,15 @@ def main(argv=None):
                 free = int(next_uat_id(path=upath)[1]["highest"])
             except RuntimeError:
                 free = 0
-        text, rep = uat_merge(base, ours, theirs, free_start=free)
+        if a.git and not (ours or theirs):
+            print(f"RECUSADO {a.git}: o git não o tem em conflito (nenhum estágio 2 ou 3 no índice); nada gravado. "
+                  "Já resolvido ou sem conflito: rode `uat-check`; para refazer, `git checkout --merge -- <arquivo>`.", file=sys.stderr)
+            return 2
+        try:
+            text, rep = uat_merge(base, ours, theirs, free_start=free)
+        except UatLostRows as e:
+            print(f"RECUSADO {a.git or a.out or 'uat-merge'}: {e}; nada gravado e o merge segue aberto.", file=sys.stderr)
+            return 2
         if a.out:
             Path(a.out).write_text(text, encoding="utf-8")
         else:

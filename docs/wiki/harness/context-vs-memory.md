@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-09
 fontes: [2023-09-coala-cognitive-architectures-language-agents, 2025-anthropic-effective-context-engineering, 2025-langchain-context-engineering-for-agents, 2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Contexto** é o conjunto de tokens presentes na janela do modelo **nesta chamada**: estado

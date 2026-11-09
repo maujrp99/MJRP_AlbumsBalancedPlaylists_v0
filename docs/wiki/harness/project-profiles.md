@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-09
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Perfil** é o que o projeto **entrega**, e é o que o campo `profile:` do contrato declara:
@@ -75,7 +75,7 @@ já existe**.
 Quatro fases antecedem o ciclo normal: **0 Audit** (inventário + gaps) → **0.5 Extract Foundation**
 (identidade extraída do que existe) → **1B Retrofitting** (documentar features no nível certo) →
 **2B Ativar** (configs de IA apontando para os artefatos novos). Depois disso, entra nos loops: toda demanda nova
-passa pelo Intake, e requisito já Ready vai direto ao Delivery.
+passa pelo Intake, e requisito já Ready vai ao Delivery sem passar de novo pela Discovery.
 
 O esforço do retrofit escala com o projeto: **mínimo** (constitution + lista de features, 1–2h) ·
 **padrão** (+ spec, arch, data-model, 4–6h) · **completo** (tudo + design-system, 1–2 dias).

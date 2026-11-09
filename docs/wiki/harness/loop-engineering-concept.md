@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-30
 fontes: [wiki/sources/2026-10-07-mjrp-loop-engineering-handbook.md, pasquadev-harness-e-loop-engineering, waldemar-neto-loop-engineering-500k-linhas, google-cloud-tech-graph-engineering-101, google-cloud-tech-ai-agents-explained, karpathy-no-priors-skill-issue, austin-marchese-karpathy-method]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Loop engineering** é projetar o ciclo que roda **sem você**: o agente raciocina, age, observa e
@@ -188,13 +188,13 @@ verificador determinístico (UX, conteúdo), o juiz é o humano, com o LLM de ap
 - **Loop fixo × criador é a distinção que o candidato do PRD (ex-BACKLOG #21) pede** para o EP-05 (Autonomous): *"a fase H não
   distingue; muda o teto de iterações e o gate."* O Waldemar deu o vocabulário.
 
-### O desenho do ciclo: cinco loops (v13)
+### O desenho do ciclo: cinco loops (v14)
 
 !O PDLC do MJRP em cinco loops: Discovery, Design, Delivery, Release e Learn
 
-O ciclo do produto é **cinco loops** dentro da moldura do harness (o desenho aprovado pelo MJRP em 2026-10-30; a fonte é
-`design/diagrams/ways-of-working/2026-10-30-2115-pdlc-loops-v13.svg`, e o mesmo desenho é o card «O ciclo de vida» do Overview do Control
-Center). O **Intake** põe cada demanda numa via — a padrão passa pela Discovery e pelo Design, a rápida pula os dois —; **Discovery**
+O ciclo do produto é **cinco loops** dentro da moldura do harness (o desenho aprovado pelo MJRP em 2026-11-08; a fonte é
+`design/diagrams/ways-of-working/2026-11-08-1135-pdlc-loops-v14.svg`, e o mesmo desenho é o card «O ciclo de vida» do Overview do Control
+Center). O **Intake** põe cada demanda numa via — a padrão passa pela Discovery e pelo Design, a rápida comprime os dois, não os pula —; **Discovery**
 (Explorar ⇄ Enquadrar, ↻ pivotar · iterar · avançar) e **Design** (Desenhar → Criticar → Ver na tela, ↻ uma volta por versão do protótipo)
 terminam no portão «Pronto para construir»; o **Delivery** (Spec, Plano, Tasks, Executar/QA, com executor → juiz → integrador, ↻ falhou:
 corrige) entrega ao **Release** (Homologação → Aceito → Deploy, ↻ a issue volta ao Intake · sem nada a ver: Fechado), de onde sai o

@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-07 · fonte b4a466ac2 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
  "version": 1,
  "about": "O manifesto único dos sensores do processo (F182, UAT-489). Todo mjrp-scripts/*_check.py está em `sensors` (vai ao filho, e `runs` diz onde roda) ou em `harness_only` (com o motivo). Quem confere: o autoteste do kernel (new_project_selftest) no harness, e o I5 do doctor no filho. Para um sensor novo: ponha-o aqui E em VENDORED_FILES (new_project_kernel.py).",
  "runs_values": {
@@ -186,6 +186,7 @@
   "gen_conformance_check.py": "gera o conformance_check.py a partir dos fragmentos em mjrp-scripts/conformance/, que o filho não recebe",
   "harness_feedback_check.py": "leva o feedback que os filhos escrevem até a caixa de entrada do harness; é o canal de volta, lido só no harness",
   "memory_check.py": "prova da migração de memória (uma vez, no harness); não é sensor contínuo",
+  "pile_up_check.py": "mede o board que o servidor do Control Center serve (cc snapshot); o filho não tem o servidor, e sem ele a medida seria não avaliável",
   "scripts_catalog_check.py": "cobra a entrada de cada script no scripts-catalog.yml, que é do harness (o W19 do doctor se cala no filho)"
  }
 }
