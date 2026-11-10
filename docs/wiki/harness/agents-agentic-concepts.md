@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-11
 fontes: [google-cloud-tech-ai-agents-explained, ibm-agentic-ai-frameworks-explained, ibm-skills-vs-mcp-vs-rag-vs-memory, ai-agent-building-series]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Um **agente** é software que não apenas responde: decide e age. Formalmente, na definição que a

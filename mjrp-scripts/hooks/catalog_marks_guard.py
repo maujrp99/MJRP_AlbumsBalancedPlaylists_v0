@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 catalog_marks_guard.py - the PreToolUse hook that refuses an AGENT's command that would produce the human's valve on
 the canonical catalog (CC-ADR-0014 section 10, accepted by the MJRP on 2026-10-14 15:09; CC-ADR-0016 section 1) and on the acceptance of a
@@ -349,6 +349,22 @@ def commit_carries_stamp(rest, cwd, heredocs, other_words, whole=""):
     return any(has_stamp(x) for x in texts)
 
 
+GATE_RECORD = "push-gate-passed.json"
+GATE_READERS = {"cat", "head", "tail", "less", "more", "grep", "egrep", "ls", "stat", "wc", "file", "jq", "test", "[", "diff", "cmp"}
+
+
+def writes_gate_record(argv):
+    """True when a simple command may WRITE the file where a project's gate records the SHA it approved (F244, CC-ADR-0045 § 8):
+    anything that names it but a plain reader, and a reader whose output is redirected into it. Reading it stays free: the agent
+    needs it to know why a card is stuck."""
+    hits = [i for i, w in enumerate(argv) if GATE_RECORD in w]
+    if not hits:
+        return False
+    if os.path.basename(argv[0]) not in GATE_READERS:
+        return True
+    return any(re.match(r"^\d*>", argv[i]) or (i > 0 and re.match(r"^\d*>>?\|?$", argv[i - 1])) for i in hits)
+
+
 def touches_passkey_trust(argv):
     """`tailscale serve|funnel`, `git replace` (its list is a read), `git update-ref` or `git branch -f` over main (CC-ADR-0038). A script file that does the same
     passes: the limit that ADR names."""
@@ -359,6 +375,8 @@ def touches_passkey_trust(argv):
         after = argv[argv.index(rest[0]) + 1:]
         return not (after and after[0] == "status")                   # the status is a read, only right after the subcommand
     if "push-target" in argv[1:] or any(w.endswith("push-targets.json") for w in argv[1:]):  # F234, CC-ADR-0044: where his push goes
+        return True
+    if writes_gate_record(argv):                                    # F244, CC-ADR-0045 § 8: the SHA the project's gate approved
         return True
     parts = git_parts(argv)
     if parts is None:

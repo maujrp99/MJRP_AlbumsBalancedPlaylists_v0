@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // Tests of the visual parity kit: the rules on sample facts (a pair that must pass, one that must fail), the judge on
 // facts written to a temporary folder, and — when the consuming project's Playwright is reachable — the whole sensor
 // end to end on two small pages (a prototype and a product that differ in the menu, the font and a component).

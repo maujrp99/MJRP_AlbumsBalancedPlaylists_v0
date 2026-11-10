@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """req_file_names.py -- names every requirement file `<ID>-<slug>.md` and rewrites the links to it (MJRP, 2026-10-09).
 
 The ID is the node's identity (frontmatter `id:` plus `aliases: [ID]`); the slug is the English title -- the bold line

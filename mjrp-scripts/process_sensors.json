@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
  "version": 1,
  "about": "O manifesto único dos sensores do processo (F182, UAT-489). Todo mjrp-scripts/*_check.py está em `sensors` (vai ao filho, e `runs` diz onde roda) ou em `harness_only` (com o motivo). Quem confere: o autoteste do kernel (new_project_selftest) no harness, e o I5 do doctor no filho. Para um sensor novo: ponha-o aqui E em VENDORED_FILES (new_project_kernel.py).",
  "runs_values": {

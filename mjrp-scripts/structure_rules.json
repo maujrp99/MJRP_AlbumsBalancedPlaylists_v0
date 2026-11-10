@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
   "version": "2026-10-09",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
@@ -423,6 +423,11 @@
         "why": "the marker «a wait is up» (removed when the command ends), the snapshot the last wait handed over and the one-warning-per-session mark of the Stop gate; overwritten by tmp + os.replace"
       },
       {
+        "glob": "**/.mjrp/push-gate-passed.json",
+        "owner": "the gate of the project that declared one (F244, CC-ADR-0045): it writes the SHA it approved by tmp + os.replace and erases it when a run fails",
+        "why": "the one commit the iPhone push may send for that project; the agent never writes it, and a stale one only closes the push"
+      },
+      {
         "glob": "**/.mjrp/turn.json",
         "owner": "mjrp-scripts/stop_gate.py",
         "why": "the turn of the session, overwritten by tmp + os.replace"
@@ -441,6 +446,11 @@
         "glob": "**/.mjrp/to-archive/",
         "owner": "mjrp-scripts/session_close.py (the Stop hook writes a mark by tmp + os.replace; the SessionStart hook of the main checkout removes the mark whose worktree left)",
         "why": "the page sessions whose close passed and that were ordered to archive themselves (F206): one mark per worktree, until the worktree leaves"
+      },
+      {
+        "glob": "**/.mjrp/merged-announced.json",
+        "owner": "mjrp-scripts/session_close.py (the Stop hook of the main checkout overwrites it by tmp + os.replace)",
+        "why": "the work branches already announced as merged into the trunk (F245): so the orchestrator is told once to archive their sessions"
       },
       {
         "glob": "**/.mjrp/close-red/",

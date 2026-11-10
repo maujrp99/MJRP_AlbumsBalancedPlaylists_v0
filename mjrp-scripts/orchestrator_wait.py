@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 orchestrator_wait.py - the one wait command of a project's orchestrator: it ends the moment the MJRP acts (F240, S-237).
 
@@ -14,7 +14,9 @@ It ends (exit 0) with what happened as soon as ANY of these is new since the las
   - an answer of the screen no agent applied (`screen_answers.py`: the audit answers and the proposal batches),
   - an open message he handed back from the iPhone to this project (`returned_check.py`; in the harness also the projects with no active orchestrator),
   - a change in a `docs/specs/priority.md` at `main` (`priority_next.py`'s reader),
-  - an approval of a distance request of this project that he signed (`remote_approval.py`'s folders, read through `_passkey`).
+  - an approval of a distance request of this project that he signed (`remote_approval.py`'s folders, read through `_passkey`),
+  - a push the iPhone ordered for this project and the service sent (`approvals/pushed/*.json` with `result: ok`; F244, CC-ADR-0045 § 7): it
+    wakes with the SHA that went, to check production.
 Nothing in `--seconds`: exit 3, saying to run it again. Another wait already up for this folder: exit 4. Not the orchestrator: exit 2.
 
 It only READS (git and the account's approval folders) and writes two small files of its own in `<root>/.mjrp/`: the marker «a wait is up» (the
@@ -143,18 +145,33 @@ def _signed(root, now):
         data = _read_json(path)
         if not data or data.get("project") != project or int(data.get("expires_at", 0) or 0) <= now:
             continue
+        if data.get("kind") == "push":      # the service sends it: `_pushed` wakes with the SHA, and «refaça o merge» would be wrong (CC-ADR-0045 § 7)
+            continue
         if (signed / f"{data.get('id')}.json").exists():
             found.add(f"{data.get('id')} {data.get('kind', '')} {data.get('scope', '')}".strip())
     return found
 
 
+def _pushed(root):
+    """The pushes of this project the service sent (`result: ok`): {"<id> <sha>"}. The project is compared exactly, as `_signed` does."""
+    import _passkey
+    project = _passkey.project_of(root)
+    found = set()
+    for path in sorted((_passkey.approvals_dir() / "pushed").glob("*.json")):
+        data = _read_json(path)
+        if data and data.get("project") == project and data.get("result") == "ok" and data.get("tip"):
+            found.add(f"{path.stem} {data.get('tip')}")
+    return found
+
+
 def snapshot(root, now=None):
-    """What depends on the MJRP in this project right now: {answers, returned, signed: sorted lists, priority: {folder: hash}}.
+    """What depends on the MJRP in this project right now: {answers, returned, signed, pushed: sorted lists, priority: {folder: hash}}.
     A reader that is not there (an older kernel) or does not answer contributes nothing, and says so under `unread`."""
     now = int(time.time() if now is None else now)
-    out, unread = {"answers": [], "returned": [], "signed": [], "priority": {}}, []
+    out, unread = {"answers": [], "returned": [], "signed": [], "pushed": [], "priority": {}}, []
     for key, reader in (("answers", lambda: _answers(root)), ("returned", lambda: _returned(root, now)),
-                        ("signed", lambda: _signed(root, now)), ("priority", lambda: _priority(root))):
+                        ("signed", lambda: _signed(root, now)), ("pushed", lambda: _pushed(root)),
+                        ("priority", lambda: _priority(root))):
         try:
             value = reader()
         except Exception:  # noqa: BLE001 - a reader that cannot answer leaves its part out; the others still wake the session
@@ -183,6 +200,9 @@ def news(before, after):
         out.append(("returned", f"item devolvido pelo iPhone [{item}]  -> python3 mjrp-scripts/remote_approval.py returned"))
     for item in sorted(set(after.get("signed", [])) - set(before.get("signed", []))):
         out.append(("signed", f"aprovação de longe assinada: {item}  -> refaça o merge (remote_approval.py status)"))
+    if "pushed" in before:                       # a record from before this reader existed has no baseline: old pushes are not news
+        for item in sorted(set(after.get("pushed", [])) - set(before["pushed"])):
+            out.append(("pushed", f"push enviado pelo iPhone: {item.split()[-1][:7]} na main  -> confira a produção"))
     was = before.get("priority", {})
     for where, digest in sorted(after.get("priority", {}).items()):
         if where in was and was[where] != digest:

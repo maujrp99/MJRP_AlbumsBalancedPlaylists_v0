@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # pre-merge-commit - a branch that changed a screen is merged with the independent visual recheck's report: evaluated
 # (`verdict: pass` or `fail`, never `incomplete`) and with `p0: 0`. ADR-0017 of the harness, 2026-10-12; revised
 # 2026-10-17 (decision of the MJRP, pdlc-loops § 5): the judge evaluates, it does not block - a `fail` without P0
@@ -37,6 +37,15 @@ for gate in retro_step_check sdd_shape_check; do
     echo "  [pre-merge-commit] AVISO: python3 não foi encontrado - $gate.py NÃO conferiu este merge (ele não fecha feature, então entra)." >&2
   fi
 done
+# UAT-531 (F253): the same fast catalog gate as the pre-commit, on the merge result - F245 reached the trunk by a merge that nothing here judged.
+# F260 (UAT-580): in a child the reader itself exits 0 (the gate is the harness's); the `mjrp-skills/` folder is not what tells them apart.
+CCHK="$ROOT/mjrp-scripts/conformance_check.py"
+if [ -f "$CCHK" ] && [ -d "$ROOT/mjrp-skills" ] && [ -f "$ROOT/mjrp-scripts/canonical_catalog.json" ] && command -v python3 >/dev/null 2>&1; then
+  python3 "$CCHK" "$ROOT" --digest-gate || {
+    echo "  merge bloqueado: um padrão do catálogo canônico mudou sem o item acompanhar (linhas acima). Corrija no ramo (versão do item, nota, --rebaseline) e junte de novo." >&2
+    exit 1
+  }
+fi
 GATE="$ROOT/mjrp-scripts/visual_gate.py"
 [ -f "$GATE" ] || exit 0
 command -v python3 >/dev/null 2>&1 || {

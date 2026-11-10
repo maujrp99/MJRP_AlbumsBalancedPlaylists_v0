@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 priority_gate_check.py - the «Priorizada» column governs what starts: the pre-commit's gate (F125, UAT-407).
 
@@ -18,6 +18,7 @@ commit started too). "Started" is `priority_next.has_started` (the app's `not_st
                                                       the list is allowed, skipping one above only warns)
   - the AGENT track ................................. always passes: a fix whose `fixes:` issues all have `Reportado por` `agente` or `juiz` in
                                                       the project's `uat.md` and none `prioridade: humano` (`priority_next.is_agent_track`)
+  - a fix of open UAT issues ........................ always passes, whoever opened them (the MJRP, 2026-11-09; `priority_next.fixes_open_issues`)
   - registering a feature (Draft, no task ticked) ... never refused: it does not start anything
   - a merge that brings the start in ................ passes: the feature's index state is the one of MERGE_HEAD, so it started on the
                                                       branch that comes in, which this gate judged there (UAT-417: merging `main` with the
@@ -166,6 +167,8 @@ def judge(top):
         for fid, folder, fields in started:
             if fields["solution_type"] == "fix" and pn.is_agent_track(fields["fixes"], uat):
                 continue                              # the Agent track goes straight on (AGENTS.md § Duas trilhas)
+            if fields["solution_type"] == "fix" and pn.fixes_open_issues(fields["fixes"], uat):
+                continue                              # an open UAT issue does not wait for the list (AGENTS.md § A coluna «Priorizada»)
             epics = items.epics_of(fields["imports"]) if has_epic else ()
             rank = pn.rank_of(fid, order, pn.linked_items(fields["imports"], fields["fixes"], epics))
             if rank is None:

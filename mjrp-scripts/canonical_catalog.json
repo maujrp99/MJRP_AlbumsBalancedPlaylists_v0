@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "version": "2026-10-14",
   "default_grace_days": 30,
   "open_warning_notes": {
@@ -4212,7 +4212,7 @@
     },
     {
       "id": "session-close",
-      "version": 2,
+      "version": 4,
       "title": "a sessão de página que fecha verde se arquiva sozinha, e o checkout principal tira os worktrees mesclados (os dois hooks do `session_close.py`)",
       "path": ".claude/settings.json",
       "applies_to": {
@@ -4249,13 +4249,49 @@
         "mjrp-scripts/session_close.py"
       ],
       "pattern_digest": {
-        "mjrp-scripts/session_close.py": "sha256:455a2db88d2fa9464a2abc8f4bd3b19aee6bd74a2f356f8079fb9cfb889ec8bb"
+        "mjrp-scripts/session_close.py": "sha256:37edc74bcbe99eac20767b42378e7f0c127437fbd576a3b4ecfaf731260249c5"
       },
-      "migration": "CM-0132",
+      "migration": "CM-0137",
       "superseded": [
         {
           "version": 1,
           "migration": "CM-0124",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "session_close\\.py.*\\bstop-hook\\b",
+              "label": "sem o hook `Stop` do `session_close.py stop-hook` no `.claude/settings.json` (o refresh do kernel o traz)",
+              "path": ".claude/settings.json"
+            },
+            {
+              "kind": "contains",
+              "pattern": "session_close\\.py.*\\bsession-start\\b",
+              "label": "sem o hook `SessionStart` do `session_close.py session-start` no `.claude/settings.json`",
+              "path": ".claude/settings.json"
+            }
+          ]
+        },
+        {
+          "version": 2,
+          "migration": "CM-0132",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "session_close\\.py.*\\bstop-hook\\b",
+              "label": "sem o hook `Stop` do `session_close.py stop-hook` no `.claude/settings.json` (o refresh do kernel o traz)",
+              "path": ".claude/settings.json"
+            },
+            {
+              "kind": "contains",
+              "pattern": "session_close\\.py.*\\bsession-start\\b",
+              "label": "sem o hook `SessionStart` do `session_close.py session-start` no `.claude/settings.json`",
+              "path": ".claude/settings.json"
+            }
+          ]
+        },
+        {
+          "version": 3,
+          "migration": "CM-0136",
           "check": [
             {
               "kind": "contains",
@@ -5257,6 +5293,22 @@
     {
       "at": "2026-11-08 12:15",
       "change": "process-sensors: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-11-09 18:52",
+      "change": "session-close: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-11-10 10:16",
+      "change": "session-close v4 (CM-0137): a ordem de arquivar só vale para a sessão de uma feature Done; sessão de papel e ramo sem commit próprio ficam sem ordem (F256, UAT-570)"
+    },
+    {
+      "at": "2026-11-10 10:16",
+      "change": "session-close: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-11-10 10:29",
+      "change": "session-close: pattern_digest reestampado"
     }
   ]
 }

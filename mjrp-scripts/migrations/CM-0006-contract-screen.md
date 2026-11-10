@@ -4,7 +4,7 @@ item: contract-screen
 from: 0
 to: 1
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0006 · contract-screen@0 → contract-screen@1
 
 ## Por que

@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # pre-commit - structure by nature (EP-09) and the coherence of the requirements graph (S-67). Blocks a commit that ADDS something outside its nature
 # (docs/ only memory; reports/, design/, data/ with their declared subfolders). Only what this commit
 # adds is judged - an old misplacement is the doctor's W9 warning, not a blocked commit.
@@ -311,6 +311,19 @@ if [ -f "$GEN" ] && git diff --cached --name-only | grep -Eq '^mjrp-scripts/(con
     echo "  edite os fragmentos, rode: python3 mjrp-scripts/gen_conformance_check.py, e leve os DOIS no commit" >&2
     exit 1
   elif [ "$code" -eq 2 ]; then
+    exit 1
+  fi
+fi
+# UAT-531 (F253): a pattern source of the canonical catalog changed without the item's version and digest following. The F245 commit changed
+# session_close.py that way and the trunk went red at the doctor's A1, days later. The full learn gate takes over a minute, so the commit runs
+# its fast part (--digest-gate: pattern_digest against the disk, no git). Harness only: the reader itself says so (F260, UAT-580 - a child also has mjrp-skills/, so the folder decided nothing; `--digest-gate` exits 0 there).
+# A `Catalog-editorial:` re-stamp (the human's valve) goes in with the digest already updated, so it passes here; the full gate judges its trailer.
+CCHK="$ROOT/mjrp-scripts/conformance_check.py"
+if [ -f "$CCHK" ] && [ -d "$ROOT/mjrp-skills" ] && [ -f "$ROOT/mjrp-scripts/canonical_catalog.json" ] && command -v python3 >/dev/null 2>&1; then
+  run_sensor "portão do catálogo (digest)" python3 "$CCHK" "$ROOT" --digest-gate
+  code=$?
+  if [ "$code" -ne 0 ]; then
+    echo "  commit bloqueado: um padrão do catálogo canônico mudou sem o item acompanhar (linhas acima). Suba a versão do item, escreva a nota em mjrp-scripts/migrations/ e rode: python3 mjrp-scripts/conformance_check.py . --rebaseline <item>; leve tudo no commit. Só redação: o trailer Catalog-editorial é do MJRP." >&2
     exit 1
   fi
 fi

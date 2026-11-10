@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # commit-msg - every commit brings a new entry in the project log (S-61). Born 2026-10-03/04: commits
 # without a log entry, and decisions that survived a context compaction only in the AI Platform's summary.
 # It runs wherever git runs, so it guards local and cloud sessions alike.

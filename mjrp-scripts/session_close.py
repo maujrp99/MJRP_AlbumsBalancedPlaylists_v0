@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 session_close.py - the close of a page session, in the harness and in every child (F206, S-218).
 
@@ -11,6 +11,7 @@ A page session works in a linked worktree and declares it is done with its closi
                      the stamped copies of the worktree's `_backups/` move to the main checkout, the mark «ready to archive» is written in
                      the main checkout's `.mjrp/to-archive/`, and the turn is held once with the order to archive the session itself (the app
                      removes the worktree with it). Once per commit. Anywhere else, or with no closing entry, it says nothing.
+                     In the main checkout: the orchestrator is told once which work branches reached the trunk, to archive their sessions (F245).
   session-start      the `SessionStart` hook. In the main checkout only: the marks whose worktree is still there are listed (the session
                      did not archive itself), the others removed; then the merged, clean worktrees are torn down (`clean-worktrees --apply`).
   check WORKTREE     the close check (F101): exit 0 may archive, 1 not yet (each item said), 2 not evaluable. `merge_train.py session-check`
@@ -36,6 +37,7 @@ import _boot  # noqa: F401,E402  (the scripts folder on sys.path, F73 R17)
 import _git  # noqa: E402
 
 MARKS = Path(".mjrp") / "to-archive"      # in the MAIN checkout: rotating, owned by this script (structure_rules.json)
+MERGED = Path(".mjrp") / "merged-announced.json"   # in the MAIN checkout: the work branches already announced as merged (F245), rotating
 REDS = Path(".mjrp") / "close-red"        # the same, for a close the hook held red: not a mark to archive, the memory of the hold
 
 
@@ -106,6 +108,52 @@ def open_tasks(wt, branch):
             text = tasks.read_text(encoding="utf-8", errors="replace")
             found += [(str(tasks.relative_to(wt)), t.group(1)) for t in TASK_OPEN.finditer(text) if "waiting::" not in t.group(2)]
     return found
+
+
+FRONT_STATUS = re.compile(r"\A---[ \t]*\n(.*?)\n---", re.S)
+STATUS_LINE = re.compile(r"^status:[ \t]*[\"']?(\S+?)[\"']?[ \t]*$", re.M)
+
+
+def _status_of(text):
+    """The `status:` of a spec's frontmatter, or None."""
+    front = FRONT_STATUS.match(text or "")
+    found = STATUS_LINE.search(front.group(1)) if front else None
+    return found.group(1) if found else None
+
+
+def feature_number(branch):
+    """The feature a work branch is named after (`claude/f19-x` -> '19'), or None: a role session (the orchestrator, a Designer) is not."""
+    m = BRANCH_FEATURE.match(branch or "")
+    return m.group(1) if m else None
+
+
+def feature_done(wt, branch):
+    """F256 (UAT-570): is the spec of the feature the branch is named after `Done` in the worktree `wt`? The order to archive a session is only
+    for the session of a feature that finished its cycle - the fast lane's retroactive step comes before `Done`. False for a branch that is not
+    named after a feature."""
+    n = feature_number(branch)
+    if n is None:
+        return False
+    wt = Path(wt)
+    roots = [wt / "docs/specs/features", *sorted((wt / "apps").glob("*/docs/specs/features"))]
+    for root in roots:
+        for spec in root.glob(f"F{n}-*/spec.md"):
+            if _status_of(spec.read_text(encoding="utf-8", errors="replace")) == "Done":
+                return True
+    return False
+
+
+def feature_done_on(root, trunk, branch):
+    """The same question for a branch merged into `trunk`: the spec as the trunk has it (`git grep` of the first `status:` line of each spec)."""
+    n = feature_number(branch)
+    if n is None:
+        return False
+    found = _git.run(root, "grep", "-n", "-m", "1", "-E", "^status:", trunk, "--", f":(glob)**/docs/specs/features/F{n}-*/spec.md")
+    for line in found.out.splitlines() if found.code == 0 else []:
+        _ref, _path, _no, text = line.split(":", 3)
+        if _status_of(f"---\n{text}\n---") == "Done":
+            return True
+    return False
 
 
 def session_check(wt, session=None, base="main"):
@@ -328,14 +376,64 @@ def stop_hook(payload, home=None):
         return "", 0
 
 
+MERGED_ORDER = ("Entraram na `main` estes ramos de trabalho: {branches}. Arquive a sessão de cada um agora: `list_sessions` acha a sessão "
+                "pelo ramo e `archive_session` a arquiva. Sessão de papel (designer, orquestradora) não se arquiva, e sessão que ainda trabalha "
+                "fica. Sem essa ferramenta, diga ao MJRP quais sessões arquivar.")
+
+
+MERGED_VERSION = 2     # the file written before F256 also held the branches that had never committed: it is read as a first reading
+
+
+def _merged_branches(root):
+    """(trunk, the work branches merged into it), or None when git does not answer. `integrate/*` is left out: its branches are what counts.
+    A branch whose tip sits on the trunk's first-parent line has no commit of its own (just opened from the trunk): it is not merged, it
+    is new (F256, UAT-570; the same test as `_pathclass.has_own_commit`). A branch the train merged with `--no-ff` has its tip off that line."""
+    trunk = next((b for b in ("main", "master") if _git.run(root, "rev-parse", "--verify", "-q", f"refs/heads/{b}").code == 0), None)
+    if trunk is None:
+        return None
+    found = _git.run(root, "for-each-ref", f"--merged=refs/heads/{trunk}", "--format=%(refname:short) %(objectname)",
+                     "refs/heads/claude", "refs/heads/feat", "refs/heads/fix")
+    line = _git.run(root, "rev-list", "--first-parent", f"refs/heads/{trunk}")
+    if found.code or line.code:
+        return None
+    on_line = set(line.out.split())
+    return trunk, {name for name, sha in (x.split(" ", 1) for x in found.out.splitlines()) if sha not in on_line}
+
+
+def _merged_order(root, payload):
+    """The main checkout's part (F245, S-240): the orchestrator is told once which work branches reached the trunk, so that their sessions
+    are archived. The first reading in a repository only records: what was merged before is not news. F256 (UAT-570): only a branch of a
+    feature whose spec is `Done` on the trunk is told - a role session has no such branch, and a fast-lane feature merged before its
+    retroactive step is not finished; that one is told when the spec turns `Done`."""
+    if payload.get("stop_hook_active"):
+        return "", 0
+    found = _merged_branches(root)
+    if found is None:
+        return "", 0
+    trunk, merged = found
+    path = Path(root) / MERGED
+    seen = _read_mark(path)
+    if seen is None or seen.get("v") != MERGED_VERSION:
+        _write_mark(path, {"v": MERGED_VERSION, "branches": sorted(merged), "at": _now()})
+        return "", 0
+    known = set(seen.get("branches") or []) & merged
+    fresh = sorted(b for b in merged - known if feature_done_on(root, trunk, b))
+    _write_mark(path, {"v": MERGED_VERSION, "branches": sorted(known | set(fresh)), "at": _now()})
+    if not fresh:
+        return "", 0
+    return _block(MERGED_ORDER.format(branches=", ".join(f"`{b}`" for b in fresh))), 0
+
+
 def _stop_hook(payload, home):
     import _pathclass
     wt, linked = session_root(payload, home)
+    if wt is not None and not linked:
+        return _merged_order(wt, payload)
     if wt is None or not linked or not _is_own_checkout(wt, payload):
         return "", 0
     branch = _branch(wt)
-    if not branch:
-        return "", 0
+    if feature_number(branch) is None:
+        return "", 0                                   # F256 (UAT-570): a role session (the orchestrator, a Designer) is never closed by this hook
     state = closing_state(wt, branch)
     if state is None:
         return "", 0
@@ -365,8 +463,10 @@ def _stop_hook(payload, home):
         missing = [x for x in lines[1:] if x.startswith("  ✗ ")] + [f"  ✗ {b}" for b in blockers]
         reason = (f"Fecho vermelho ({wt.name}, ramo {branch}): a sessão escreveu a entrada de fechamento, mas o fecho não passa. Falta:\n"
                   + "\n".join(missing or lines) + "\nResolva cada item e termine de novo; com tudo verde, a sessão recebe a ordem de se "
-                  "arquivar. " + REWRITE_ENTRY)
+                  "arquivar, quando a spec da feature estiver em `Done`. " + REWRITE_ENTRY)
         return _block(reason), 0
+    if not feature_done(wt, branch):
+        return "", 0                                   # F256: green, but the feature is not Done (the fast lane's retroactive step is still to do)
     import _safe
     try:
         moved = _safe.move_backup_copies(wt)

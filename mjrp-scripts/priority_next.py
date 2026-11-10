@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 priority_next.py - what the MJRP prioritized and nobody started: the «Priorizada» column as a command (F125, UAT-407; any item, F134).
 
@@ -165,6 +165,23 @@ def spec_fields(spec_md):
 def has_started(status, ticks, branch_open=False):
     """The work started: a task ticked, an open branch, or the spec in `In progress`/`Done`/`Accepted` (rules/delivery.py `not_started`, + `In progress`)."""
     return bool(branch_open or ticks > 0 or (status or "").strip().casefold() in STARTED_STATUS)
+
+
+def fixes_open_issues(fixes, uat_text):
+    """A fix whose issues are all open lines of `uat.md`: it does not wait for the MJRP's list, whoever opened them (the MJRP, 2026-11-09:
+    an open UAT issue has to be done). An issue the file does not have, or one already fixed: False, the list still decides."""
+    if not fixes or not uat_text:
+        return False
+    import uat_tracks_check as utc
+    status, head_ok = {}, False
+    for line in uat_text.splitlines():
+        if line.startswith("| ID "):
+            head_ok = utc.cells(line) == utc.HEAD
+        elif head_ok and line.startswith("| UAT-"):
+            row = utc.cells(line)
+            if len(row) >= len(utc.HEAD):
+                status[row[0]] = row[utc.HEAD.index("Status")].split(" ")[0]
+    return all(status.get(i) in ("open", "fixing") for i in fixes)
 
 
 def is_agent_track(fixes, uat_text):

@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-12
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -39,6 +39,7 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 
 ## Findings
 
+- **2026-11-09 20:49** · **Do MJRPpersonal: comparador que abre 88 protótipos de uma vez, e o juiz.** O MJRP: «o comparador ficou mais clean pode adotar esse padrao pra todos pls», «isso deve servir de regra de design para todo o agente»; a regra dos comparadores vira a UAT-579, na skill de design. E, sobre o harness: «a qualidade tem que ser garantir pelo executor, idealmente nao deveria precisa de juiz»: a trava de merge ainda exige a reconferência visual, e isso vai a ele como decisão.
 - **2026-11-09 02:34** · **Pedido do MJRPpersonal: o agente designer independente da sessão e a exceção das sessões de papel na trava de fim de sessão.** O `session_close.py stop-hook` cobra o arquivamento da sessão de design a cada turno, e um commit depois do fechamento não o calou. Viram a S-239 e a UAT-570.
 - **2026-11-08 10:55** · **A via rápida comprime, não pula** (o MJRP, conduzindo a plataforma: «não é que ela pula, ela comprime no quick prototype»; «o que hj é dito não é o que ocorreu na prática pq eu aprendi que é melhor o contrário»; S-235, F235). O texto dizia que a via pula a Discovery e o Design e que o protótipo vem depois, e os agentes repetiam. Na prática, o MJRP comprime as duas fases, elimina o burocrático e pede um Quick Prototype quando a demanda precisa, sendo ele o juiz. **Lição:** o processo escrito envelhece enquanto o humano aprende a conduzir; o que ele faz de diferente, repetidas vezes, é kaizen a registrar durante o uso, e não exceção.
 - **2026-11-08 10:31** · **A trava de fim de turno cobrava do turno a dívida do projeto** (relato do orquestrador do `MJRPpersonal`, a pedido do MJRP; UAT-560, F233). O refresh do kernel traz notas de conformidade a todo filho, e a trava lia «há nota pendente» como «há conform em andamento»: toda sessão que editasse um documento ficava presa, em laço. A F181 achou o vizinho: com o doctor completo como único critério, o fim de turno esperou 43 min numa máquina carregada. **Lição:** uma trava de fim de turno mede o que o turno mudou; o que o projeto já devia é do sensor do projeto. E toda trava que bloqueia o fim de turno precisa dizer o que acontece na segunda vez que dispara sem nada ter mudado.

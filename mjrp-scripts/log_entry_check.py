@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """log_entry_check.py -- every commit brings a new entry in the project log (S-61).
 
 Born 2026-10-03 17:48: in the skills revision, four commits went out with no entry in docs/log.md, and on
@@ -121,8 +121,10 @@ def answer_entry_ok(log_text, head):
     return re.search(r"^- Relatório: `[^`\n]+`", body, re.M) is not None
 
 
-KINDS = ("session", "decision", "inventory", "ingest", "harness-feedback", "review", "acceptance", "answer")   # the types the logs use;
+KINDS = ("session", "decision", "inventory", "ingest", "harness-feedback", "review", "acceptance", "answer", "step")   # the types the logs use;
 # review: a critique pass (UX, architecture) pointing to its report — MJRP, 2026-10-09 22:49
+# step: the small step of a feature (a prototype version, a retroactive pass); the Control Center card «Log recente» leaves it
+# out and shows decisions and closings first -- F251, UAT-525
 # acceptance: the entry the human's acceptance commit writes (CC-ADR-0024); the doctor's F1 does not count it as session state
 DERIVED_NAMES = ("folder-index.md",)
 # The catalog marking (CC-ADR-0014 section 6, CC-ADR-0016 section 2): the one `stamp` a contract may declare on a self_logged path.

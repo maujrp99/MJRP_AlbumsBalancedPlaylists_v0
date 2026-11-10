@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_kernel.py - the doctor's checks of what the harness hands down to a project: the kernel pages, the vendored
 copies, the canonical catalog, the constitution mirror and the portfolio (I5 kernel, W7, W16, I5 constitution, I6).

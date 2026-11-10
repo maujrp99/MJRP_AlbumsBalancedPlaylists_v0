@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _now_shape.py - the form of `## Now` in MEMORY.md and the check that it is not behind the log (F73 R7).
 
@@ -40,7 +40,31 @@ def now_behind_log(root, now_body):
     if newest_now is None or newest_now < newest_log:
         return (f"MEMORY.md: o ## Now para em {newest_now or 'nenhuma hora escrita'}, a última entrada do "
                 f"{log_rel(root)} é de {newest_log} — atualize o ## Now com o estado de agora (S-61)")
+    # F251 (UAT-524): the newest stamp of the WHOLE section hid a stale block - the child's «Where the Work Stopped» was rewritten
+    # at every close while both Pending blocks kept the stamp of two days and 165 log entries before. Each state block is judged
+    # alone: its own newest stamp (a bare date counts as that whole day) may not be older than the newest log entry.
+    for name in PENDING_BLOCKS:
+        stamps = _block_stamps(now_body, name)
+        if stamps is None:
+            continue                      # the block is missing: now_shape reports the form, not this check
+        own = max(stamps) if stamps else None
+        if own is None or (own < newest_log if " " in own else own < newest_log[:10]):
+            return (f"MEMORY.md: o bloco '{name}' do ## Now para em {own or 'nenhuma hora escrita'}, a última entrada do "
+                    f"{log_rel(root)} é de {newest_log} — reescreva o que está pendente agora e carimbe o bloco (S-61, F251)")
     return None
+
+
+def _block_stamps(now_body, name):
+    """The `YYYY-MM-DD[ HH:MM]` stamps inside the block `**<name>` of the ## Now lines; None when the block is absent."""
+    inside, found, stamps = False, False, []
+    for line in now_body or []:
+        s = line.strip()
+        if s.startswith("**") and any(s.startswith(f"**{b}") for b in NOW_BLOCKS):
+            inside = s.startswith(f"**{name}")
+            found = found or inside
+        if inside:
+            stamps += [" ".join(p for p in m if p) for m in re.findall(r"(\d{4}-\d{2}-\d{2})(?: (\d{2}:\d{2}))?", s)]
+    return stamps if found else None
 
 
 def now_section(text):

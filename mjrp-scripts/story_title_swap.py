@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """story_title_swap.py — the mechanical swap of a story's title for its sentence (F172, UAT-479). No model writes text here.
 
   plan  <root> [-o out.json]   dry run: each story of <root> that would change, and the reason each other one is left as it is.

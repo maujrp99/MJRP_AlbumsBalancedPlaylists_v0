@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // The judge of the visual parity kit: reads the facts a capture wrote (both sides, every scenario and condition),
 // runs the project's checks over each record, writes summary.md and diff.json next to the captures, draws the
 // side-by-side pairs (prototype left, product right) for the eyes, and says 0 (parity) or 1 (a P0 or P1 diverges).

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-09 · fonte ea576bcde · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # GENERATED - do not edit (GERADO - não edite). Edit the fragments in mjrp-scripts/conformance/ and run
 # `python3 mjrp-scripts/gen_conformance_check.py`; the sensor `--check` fails when this file drifts from them.
 """
@@ -1478,6 +1478,28 @@ def _stamp_check(doc, base, use_git=True):
     return problems, unevaluable
 
 
+def item_digest_problems(it, base):
+    """Rule 3 for one item without a `template`: each pattern source matches its stamped `pattern_digest`."""
+    out = []
+    for spec in it["pattern_sources"]:
+        cur = source_digest(spec, base)
+        if cur is None:
+            out.append(f"{it['id']}: a pattern_source não existe: {spec}")
+        elif cur != it["pattern_digest"].get(spec):
+            out.append(f"{it['id']}: o padrão mudou — {spec}. Suba a versão do item e escreva a nota da cadeia, depois "
+                       f"`conformance_check.py . --rebaseline {it['id']}`; se foi só redação, o rebaseline vai num commit com "
+                       f"`{TRAILER_EDITORIAL}: {it['id']} — <motivo>` (do humano)")
+    return out
+
+
+def digest_problems(items, base=None):
+    """The FAST part of the learn gate (UAT-531, F253): only rule 3's disk half, no git and no notes - a second or two, where the full gate
+    takes over a minute. The commit hook runs it when the commit stages a pattern source, so a changed pattern never reaches the trunk
+    with the item's digest and version left behind. It does not replace the full gate (the doctor's A1)."""
+    base = Path(base) if base else ROOT_OF_SOURCE
+    return [p for it in items if not it.get("template") for p in item_digest_problems(it, base)]
+
+
 def learn_gate(items=None, notes_dir=None, base=None, doc=None, use_git=True, now=None, warnings=None, unevaluable=None):
     """The source-side gate (ADR-0019 § 4), a sensor of the harness contract. Returns the problems:
       1. every pattern carrier (a template in `pattern_carriers`) is a `template` or pattern source of some item, or is in
@@ -1523,14 +1545,7 @@ def learn_gate(items=None, notes_dir=None, base=None, doc=None, use_git=True, no
         if it.get("template"):
             problems += template_problems(it, base)
         else:
-            for spec in it["pattern_sources"]:
-                cur = source_digest(spec, base)
-                if cur is None:
-                    problems.append(f"{it['id']}: a pattern_source não existe: {spec}")
-                elif cur != it["pattern_digest"].get(spec):
-                    problems.append(f"{it['id']}: o padrão mudou — {spec}. Suba a versão do item e escreva a nota da cadeia, depois "
-                                    f"`conformance_check.py . --rebaseline {it['id']}`; se foi só redação, o rebaseline vai num commit com "
-                                    f"`{TRAILER_EDITORIAL}: {it['id']} — <motivo>` (do humano)")
+            problems += item_digest_problems(it, base)
             ch = git_digest_changes(base, it["id"]) if use_git else []
             if ch is None:
                 problems.append(f"{it['id']}: sem git não há como conferir o trailer `{TRAILER_EDITORIAL}:` do rebaseline")
@@ -2061,6 +2076,7 @@ def main(argv):
     ap.add_argument("--pending", action="store_true", help="lista as notas de migração pendentes")
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--learn-gate", action="store_true")
+    ap.add_argument("--digest-gate", action="store_true", help="a parte rápida do portão (o pattern_digest contra o disco, sem git): o hook de commit a roda")
     ap.add_argument("--audit-plan", action="store_true", help="o plano da auditoria de fechamento: cada item que se aplica, o veredito de forma e a skill que julga o conteúdo")
     ap.add_argument("--rebaseline", metavar="ITEM")
     ap.add_argument("--check-note", metavar="CM-NNNN", help="roda o check da versão que a nota alvejou (e diz se a atual passa); não escreve")
@@ -2086,7 +2102,12 @@ def main(argv):
         dest, state = write_conformance_state(root, cfg)
         print(f"conformance_check: {dest} ({state['status']}, {len(state['gaps'])} lacuna(s))")
         return 0
-    catalog = find_catalog(a.path) if not (a.learn_gate or a.rebaseline) else CATALOG_FILE
+    if a.digest_gate and not is_source():
+        # F260, UAT-580: the gate is the harness's. A child vendors the catalog and this reader but not the pattern sources the digests
+        # were taken from, so judging it there refused the commit of `--refresh-kernel`. (Decided in the reader, not in each hook.)
+        print("conformance_check: o portão rápido de digest é do harness; não se aplica num projeto filho.")
+        return 0
+    catalog = find_catalog(a.path) if not (a.learn_gate or a.digest_gate or a.rebaseline) else CATALOG_FILE
     if catalog is None:
         print("conformance_check: ERRO — o projeto não tem mjrp-scripts/canonical_catalog.json; rode "
               "`python3 <harness>/mjrp-scripts/new_project.py <esta pasta> --refresh-kernel`")
@@ -2096,6 +2117,12 @@ def main(argv):
     except CatalogError as e:
         print(f"conformance_check: {e}")
         return 1 if "catálogo" in str(e) and "ausente" not in str(e) else 2
+    if a.digest_gate:
+        problems = digest_problems(items)
+        for p in problems:
+            print(f"  [ERRO digest-gate] {p}")
+        print(f"conformance_check: {len(items)} item(ns), {len(problems)} problema(s) de digest")
+        return 1 if problems else 0
     if a.learn_gate:
         warns, cannot = [], []
         problems = learn_gate(items, doc=doc, warnings=warns, unevaluable=cannot)
