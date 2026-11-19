@@ -153,4 +153,4 @@
     3.  **[STORE]** `inventoryStore.updateAlbum(id, { owned: bool })`.
 *   **Delete**:
     1.  **[UI]** Click Delete Button -> Confirm.
-    2.  **[FN]** `InventoryController.handleDelete(id)` calls `inventoryStore.deleteAlbum(id)`. **Known defect**: the store has no `deleteAlbum` (its method is `removeAlbum`), so the delete does not work today.
+    2.  **[FN]** `InventoryController.handleDelete(id)` calls `inventoryStore.removeAlbum(id)`, which removes the item through `InventoryRepository.removeAlbum` and from the store's own list; the toast is "Album removed from inventory" or, on failure, "Failed to delete album".

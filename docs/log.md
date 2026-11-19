@@ -3,6 +3,19 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:13] session — F54: o commit do conserto anotado nas issues e nas tarefas
+
+UAT-01 e UAT-188 passam a citar o commit `82336c2`; as tarefas 3 e 4 da F54 também.
+
+## [2026-11-19 15:12] session — F54: apagar do inventário apaga (UAT-01) e as faixas mostram a duração (UAT-188)
+
+- **UAT-01:** `InventoryController.handleDelete` chamava `inventoryStore.deleteAlbum`, que não existe; passa a chamar `removeAlbum` e a tratar a falha. O repositório esquece a resposta «já está no inventário» do álbum removido, para ele poder ser adicionado de novo em seguida.
+- **UAT-188:** `utils/duration.js`, um formatador só, em segundos; a janela de ranking e a tabela de faixas liam a duração como milissegundos. Conferido nos dados reais: 2.109 faixas com duração entre 15 e 4.767, em segundos.
+- **Testes:** 9 novos, vistos falhar antes; a suíte tem 443 passando. `vite build` compila.
+- **No navegador:** «GNX», o item de teste, removido do inventário do MJRP (24 para 23, não volta ao recarregar); durações nas duas janelas; botão «Close». `reports/evidence/F54-close-v4-inventory-delete-and-polish/F54-browser-2026-11-19.json`.
+- **Documentos:** spec, plano e tarefas da F54; UAT-01 e UAT-188 em `fixed`; manual e `behavior.md` sem a ressalva dos defeitos.
+- **Ficou de fora:** `TrackRow.formatDuration` e `PlaylistGrid.calculateDuration` ainda formatam por conta própria (certos, em segundos).
+
 ## [2026-11-19 15:05] session — mapa da v5.0: cada achado, por tema, com a feature que o resolve
 
 Pedido do MJRP: «a partir do report, vc gerar um novo como um grande mapa … com cada item mapeado para cada feature e agrupado pelos temas que vc sugeriu». `reports/audits/2026-11-19-mjrpalbumblender-v0-v5-map.md`: os 153 itens do cruzamento em oito temas (segurança 11, perda de dado 10, carga e identidade 33, blend e exportação 16, Home e navegação 20, publicação 9, inventário 5, limpeza 13), mais 33 consertados na v4.0 e 3 que não valem mais; cada item em aberto com a feature (F49, F52, F54 a F65), o estado e o código de origem nos relatórios antigos. Onze issues legadas de 2025-11 a 2026-01 ficaram **sem feature**: não foram relidas e pedem triagem. A tradução e a atribuição são do implementador, sem julgamento separado.

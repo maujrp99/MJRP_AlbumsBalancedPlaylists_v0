@@ -1,4 +1,5 @@
 import { getIcon } from '../../components/Icons.js'
+import { formatDuration } from '../../utils/duration.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
 
 /**
@@ -56,11 +57,7 @@ export class TracksTable {
     }
 
     renderRow(track) {
-        // Format Duration (ms -> mm:ss)
-        const ms = Number(track.duration) || 0
-        const min = Math.floor(ms / 60000)
-        const sec = ((ms % 60000) / 1000).toFixed(0).padStart(2, '0')
-        const time = ms > 1000 ? `${min}:${sec}` : '--:--'
+        const time = formatDuration(track.duration)
 
         // Data Checks
         const hasRank = track.rank && track.rank < 999

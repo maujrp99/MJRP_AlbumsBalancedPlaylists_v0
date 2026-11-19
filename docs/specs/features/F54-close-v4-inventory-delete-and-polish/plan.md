@@ -3,32 +3,35 @@
 # Plan — Feature F54: Fecho da v4.0: apagar do inventário e acabamento · Spec: [[spec]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
+> Escrito depois do código (passo retroativo da via rápida), a partir do `docs/log.md` de 2026-11-19 e dos commits do ramo `fix/f54-close-v4-inventory-delete-and-polish`.
+
 ## Architecture Approach
-<!-- How it fits arch.md; components affected; what this plan refines in arch.md and data-model.md. -->
-«a escrever: como encaixa no arch.md; componentes afetados; o que refina no arch.md e no data-model.md»
+Nenhuma mudança de arquitetura. Três consertos foram feitos no ponto compartilhado em vez de em cada tela, para valerem para todos os usos: o texto como propriedade no `SafeDOM`, a duração num formatador único (`utils/duration.js`, função pura), e o esquecimento do guardado no repositório do inventário, que é quem conhece a chave.
 
 ## Technical Design
-<!-- Data flow first · components/modules (what each receives, renders or returns, emits) · API/interface
-     changes · explicit file paths. Each component names the REQ-xx it addresses. -->
-«a escrever: fluxo de dados, componentes/módulos (o que cada um recebe e devolve), interfaces, caminhos de arquivo — cada componente nomeia o REQ-xx»
+- `public/js/controllers/InventoryController.js`: `handleDelete` chama `inventoryStore.removeAlbum` e trata a falha (REQ-01).
+- `public/js/repositories/InventoryRepository.js`: `removeAlbum` esquece a resposta «já está no inventário» guardada para o álbum do item (REQ-02).
+- `public/js/utils/duration.js`: `formatDuration(seconds)`; usado por `components/ranking/UserRankModal.js` e `components/ranking/TracksTable.js` (REQ-03).
+- `public/js/utils/SafeDOM.js`: `textContent` vira o texto do elemento (REQ-04).
+- `public/index.html`, `public/favicon.png`, `public/apple-touch-icon.png`, `public/favicon.ico`, `public/js/views/HomeView.js`: ícone e título (REQ-05).
+
+## UI/UX Design (if the feature touches a screen)
+Sem desenho novo: rótulo, valores e ícone que já deviam estar lá.
 
 ## Dependencies
-<!-- New dependencies with their justification — aligned with constitution.md and PRINCIPLES.md (Constitution
-     Check); contradicting either needs a recorded decision first (mjrp-recording-decisions). -->
-«a escrever: dependências novas com a justificativa, ou "Nenhuma."»
+Nenhuma.
 
 ## Documents Consulted
-<!-- arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, the NFR nodes. -->
-«a escrever: arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, os NFR»
+- `docs/specs/uat.md` (UAT-01, UAT-188, UAT-195)
+- `reports/audits/2026-11-19-mjrpalbumblender-v0-browser-regression.md`
+- `public/js/models/Track.js` (a duração em segundos)
 
 ## Risks & Considerations
-«a escrever: riscos e o que mais pesa, ou "Nenhum conhecido."»
+- O `SafeDOM` é usado em quase todas as telas: o teste cobre que `textContent` não é lido como HTML e que filhos e cliques continuam funcionando.
+- Faixa sem duração passa a mostrar «--:--» na janela de ranking (antes «0:00» para todas).
 
 ## Test plan
-> Derivado dos REQ do `spec.md` e dos critérios dos requisitos importados · «a escrever: data e hora de Brasília»
-
-| REQ | Caso de teste | Critério / estado | Camada | Automatizado? |
-|---|---|---|---|---|
-| REQ-01 | «a escrever: o caso de teste que prova o REQ» | «a escrever: critério do nó ou estado observável» | «a escrever: camada» | «a escrever: sim ou não» |
-
-Bordas fora dos critérios (achados para a `mjrp-writing-reqs` se mudam o comportamento): «a escrever: ou "Nenhuma."»
+- `test/controllers/InventoryController.delete.test.js`, `test/repositories/InventoryRepository.remove.test.js` (REQ-01, REQ-02), vistos falhar antes.
+- `test/utils/duration.test.js` (REQ-03), visto falhar antes.
+- `test/utils/SafeDOM.test.js` (REQ-04), escrito junto com o conserto.
+- No navegador: a evidência da feature (REQ-01, REQ-03, REQ-04, REQ-05).
