@@ -5,21 +5,22 @@
  * Shared by BlendingMenuView and PlaylistsView/RegeneratePanel.
  * 
  * Responsibilities:
- * - Load albums from a series
+ * - Ask the album load for the albums of a series (it never loads an album itself: F56)
  * - Generate playlists via PlaylistGenerationService
- * - Update stores (albumsStore, playlistsStore)
+ * - Update the playlists store
  * 
  * @module controllers/BlendingController
  * @since Sprint 13 - Issue #93 modularization
  */
 
-import { apiClient } from '../api/client.js'
 import { albumsStore } from '../stores/albums.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { playlistGenerationService } from '../services/PlaylistGenerationService.js'
 import { getPlaylistsService } from '../services/PlaylistsService.js'
-import { userRankingRepository } from '../repositories/UserRankingRepository.js'
+import { albumAsks } from '../services/albums/albumLoading.js'
+import { sourcesForRecipe } from '../models/recipeSources.js'
+import { askNotices, askProgressText, noAlbumsMessage } from '../models/albumAsk.js'
 
 /**
  * @typedef {Object} GenerationConfig
@@ -33,167 +34,116 @@ import { userRankingRepository } from '../repositories/UserRankingRepository.js'
 /**
  * @typedef {Object} GenerationResult
  * @property {Playlist[]} playlists - Generated playlists
- * @property {Album[]} albums - Loaded albums
+ * @property {Album[]} albums - The albums they were generated from (the ones that were ready)
  * @property {Object} stats - Generation statistics
+ * @property {Object} load - what the album load answered (AlbumsResult, models/albumAsk.js)
+ * @property {string[]} notices - what to tell the person: albums left out, sources missing
  */
+
+/** The person left the screen while the albums were loading: nothing was generated. */
+export class BlendCancelledError extends Error {
+    constructor() {
+        super('The blend was cancelled')
+        this.name = 'BlendCancelledError'
+    }
+}
 
 class BlendingController {
     /**
-     * Generate playlists from a series
-     * 
+     * Generate playlists from a series.
+     *
+     * The albums come from the load service (albumAsks.albumsOf): what the albums screen already
+     * loaded is not loaded again, and the blend waits for the sources its recipe reads.
+     * Decision (F56): the blend goes on with the albums that are ready and says which ones were
+     * left out and which sources are missing (`notices`); it stops only when no album is ready.
+     * One album that the catalog does not have should not cost the person the whole blend, and
+     * the playlists say nothing false: they are made of the albums named as ready.
+     *
      * @param {string} seriesId - Series to generate from
      * @param {GenerationConfig} config - Generation configuration
      * @param {Object} options - Additional options
      * @param {Function} [options.onProgress] - Progress callback (message: string)
-     * @param {boolean} [options.useExistingAlbums] - Use albums already in store
+     * @param {AbortSignal} [options.signal] - aborted when the person leaves the screen
      * @returns {Promise<GenerationResult>}
+     * @throws {BlendCancelledError} when the signal was aborted before the albums were ready
      */
     async generateFromSeries(seriesId, config, options = {}) {
-        const { onProgress = () => { }, useExistingAlbums = false } = options
+        const { onProgress = () => { }, signal = null } = options
 
-        // 1. Get series info - setActiveSeries returns the series if found
-        let series = albumSeriesStore.getActiveSeries()
+        const series = albumSeriesStore.getById(seriesId)
+        if (!series) throw new Error(`Series not found: ${seriesId}`)
 
-        // If not active or different series, find and set it
-        if (!series || series.id !== seriesId) {
-            series = albumSeriesStore.setActiveSeries(seriesId)
-        }
+        const load = await this._albumsFor(series, config, { onProgress, signal })
 
-        if (!series) {
-            // Try to find in series list
-            const allSeries = albumSeriesStore.getSeries()
-            series = allSeries.find(s => s.id === seriesId)
-            if (!series) {
-                throw new Error(`Series not found: ${seriesId}`)
-            }
-        }
-
-        // 2. Load albums (or use existing)
-        let albums
-        if (useExistingAlbums) {
-            albums = albumsStore.getAlbums()
-            if (albums.length === 0) {
-                throw new Error('No albums in store. Load albums first.')
-            }
-        } else {
-            onProgress(`Loading ${series.albumQueries?.length || 0} albums...`)
-            albums = await this.loadAlbumsFromSeries(series, onProgress)
-        }
-
-        if (albums.length === 0) {
-            throw new Error('No albums loaded from series')
-        }
-
-        // 3. Generate playlists
         onProgress(`Generating playlists with ${config.algorithmId}...`)
-        const result = playlistGenerationService.generate(albums, config)
+        const result = playlistGenerationService.generate(load.albums, config)
 
-        // 4. Update stores
         albumSeriesStore.setActiveSeries(seriesId)
         playlistsStore.setPlaylists(result.playlists, seriesId)
+        this._enterCreateMode()
+        playlistsStore.setDefaultBatchName(this._generateDefaultBatchName())
 
-        // Sprint 15.5 Fix: Reset to CREATE mode to clear any stale edit context/batchName
-        // Use service to set mode
-        import('../app.js').then(({ db }) => {
-            import('../cache/CacheManager.js').then(({ cacheManager }) => {
-                const service = getPlaylistsService(db, cacheManager)
-                service.setCreateMode()
-            })
-        })
+        console.log(`[BlendingController] Generated ${result.playlists.length} playlist(s) from ${load.albums.length} of ${load.result.total} albums`)
 
-        // Sprint 16: Set default batch name
-        const defaultName = this._generateDefaultBatchName()
-        playlistsStore.setDefaultBatchName(defaultName)
-
-        console.log(`[BlendingController] Generated ${result.playlists.length} playlist(s) from ${albums.length} albums`)
-
-        return {
-            playlists: result.playlists,
-            albums,
-            stats: result.stats
-        }
+        return { playlists: result.playlists, albums: load.albums, stats: result.stats, load: load.result, notices: load.notices }
     }
 
     /**
-     * Load albums from a series via API
-     * 
-     * @param {Object} series - Series object with albumQueries
-     * @param {Function} [onProgress] - Progress callback
-     * @returns {Promise<Album[]>}
+     * Ask the load service for the albums of a series, ready for a recipe.
+     * @returns {Promise<{ albums: Album[], result: Object, notices: string[] }>}
+     * @throws when the ask was dropped, or when no album is ready (the message says why)
      */
-    async loadAlbumsFromSeries(series, onProgress = () => { }) {
-        const albumQueries = series.albumQueries || []
-        const albums = []
+    async _albumsFor(series, config, { onProgress = () => { }, signal = null } = {}) {
+        const result = await albumAsks.albumsOf({
+            series: [series],
+            sources: sourcesForRecipe(config),
+            signal,
+            onProgress: (progress) => onProgress(askProgressText(progress))
+        })
+        if (result.aborted) throw new BlendCancelledError()
+        if (result.albums.length === 0) throw new Error(noAlbumsMessage(result))
 
-        for (let i = 0; i < albumQueries.length; i++) {
-            const query = albumQueries[i]
-            onProgress(`Loading album ${i + 1}/${albumQueries.length}...`)
-
-            try {
-                const album = await apiClient.fetchAlbum(query)
-                if (album) {
-                    // Sprint 20 Fix: Hydrate User Ranking for Blending Menu
-                    const userId = albumSeriesStore.getUserId()
-                    if (userId) {
-                        const ranking = await userRankingRepository.getRanking(userId, album.id)
-                        if (ranking) {
-                            // Extract rankings array from record object
-                            const rankArray = ranking.rankings || (Array.isArray(ranking) ? ranking : [])
-                            album.setUserRankings(rankArray)
-                            console.log(`[BlendingController] Hydrated ranking for: ${album.title}`)
-                        }
-                    }
-                    albums.push(album)
-                }
-            } catch (err) {
-                console.warn(`[BlendingController] Failed to load album: ${query}`, err)
-            }
-        }
-
-        // Store albums in albumsStore for access by other components
+        // Which series the shelf answers for (the load projects its albums there)
         albumsStore.setActiveAlbumSeriesId(series.id)
-        albumsStore.clearAlbumSeries(series.id)
-        albums.forEach(album => albumsStore.addAlbumToSeries(series.id, album))
+        return { albums: result.albums, result, notices: askNotices(result) }
+    }
 
-        return albums
+    /** A new generation is a new set: no edit context or batch name of another set stays. */
+    _enterCreateMode() {
+        Promise.all([import('../app.js'), import('../cache/CacheManager.js')])
+            .then(([{ db }, { cacheManager }]) => getPlaylistsService(db, cacheManager).setCreateMode())
+            .catch(error => console.warn('[BlendingController] could not reset the playlists mode:', error?.message || error))
     }
 
     /**
-     * Regenerate playlists using albums already in store
-     * Used by RegeneratePanel in edit mode
-     * 
+     * Generate again, with another recipe, the playlists on screen (RegeneratePanel).
+     * The albums are asked for again, with the sources of the new recipe: what is loaded or kept
+     * answers at once, and a recipe that reads another source waits for it.
+     *
      * @param {GenerationConfig} config - Generation configuration
+     * @param {Object} [options]
+     * @param {AbortSignal} [options.signal]
      * @returns {Promise<GenerationResult>}
      */
-    async regenerate(config) {
-        const albums = albumsStore.getAlbums()
-
-        if (albums.length === 0) {
-            throw new Error('No albums loaded. Cannot regenerate.')
-        }
-
-        console.log(`[BlendingController] Regenerating with ${albums.length} albums`)
-
-        const result = playlistGenerationService.generate(albums, config)
-
+    async regenerate(config, options = {}) {
         // The playlists stay in the series they belong to: the one of the set on screen. The series
         // active elsewhere only answers when nothing on screen says which series it is.
         const seriesId = playlistsStore.getSeriesId() || albumSeriesStore.getActiveSeries()?.id
+        const series = seriesId ? albumSeriesStore.getById(seriesId) : null
+        if (!series) throw new Error('No series to take the albums from. Open the series first.')
+
+        const load = await this._albumsFor(series, config, options)
+        console.log(`[BlendingController] Regenerating with ${load.albums.length} albums`)
+
+        const result = playlistGenerationService.generate(load.albums, config)
         playlistsStore.setPlaylists(result.playlists, seriesId)
 
-        // Sprint 16: Set default batch name if creating
-        // If we are editing, we preserve the original name (handled by store logic via editContext)
-        // But for "new" generation in Create mode, we update the default.
+        // A set being edited keeps its name; a new one gets the default name of now
         if (!playlistsStore.isEditingExistingBatch()) {
-            const defaultName = this._generateDefaultBatchName()
-            playlistsStore.setDefaultBatchName(defaultName)
+            playlistsStore.setDefaultBatchName(this._generateDefaultBatchName())
         }
 
-        return {
-            playlists: result.playlists,
-            albums,
-            stats: result.stats
-        }
+        return { playlists: result.playlists, albums: load.albums, stats: result.stats, load: load.result, notices: load.notices }
     }
 
     /**

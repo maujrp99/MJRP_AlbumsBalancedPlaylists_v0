@@ -91,6 +91,40 @@ export function createEntry(seriesId, query) {
     }
 }
 
+/** The edition the person chose for a query (the id the series keeps), or null for a query by name. */
+const chosenEdition = (query) => {
+    const id = (typeof query === 'object' && query !== null) ? query.appleMusicId : null
+    return id ? String(id) : null
+}
+
+/**
+ * Does the query ask for the edition the entry already has? Yes when it names no edition, when it
+ * names the one the entry was asked with, or when it names the one the load ended up with (the
+ * load corrects a stored id that led elsewhere and writes it back into the series, F55).
+ */
+function asksSameEdition(entry, query) {
+    const wanted = chosenEdition(query)
+    if (!wanted || wanted === chosenEdition(entry.query)) return true
+    const loaded = entry.album?.metadata?.sourceId
+    return Boolean(loaded) && String(loaded) === wanted
+}
+
+/**
+ * The entry of a query when its series is asked for again: the one it has when the query asks for
+ * the same album; a new one when the query is new; and, when the person chose another edition of
+ * the same title, a new one marked `fresh`, which is found in the catalog and not in what is kept
+ * (what is kept is filed under the name, so it holds the other edition).
+ * @param {Object|undefined} existing - the entry the series has for this query's key
+ * @param {string} seriesId
+ * @param {string|Object} query
+ * @returns {Object}
+ */
+export function reconcileEntry(existing, seriesId, query) {
+    if (!existing) return createEntry(seriesId, query)
+    if (asksSameEdition(existing, query)) return existing
+    return { ...createEntry(seriesId, query), fresh: true }
+}
+
 /** True while the album has not reached a final state. */
 export function isInFlight(entry) {
     return entry.status === AlbumStatus.PENDING || entry.status === AlbumStatus.FINDING

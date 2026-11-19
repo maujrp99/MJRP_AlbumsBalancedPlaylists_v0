@@ -2,9 +2,12 @@
  * SharedAlbumRepository
  * The root collection `albums`: one document per album, shared by every account.
  *
- * Written only by "Refetch Metadata" (SeriesService.refetchAlbumMetadata). The album load does not
- * write here. Because the collection is shared, what belongs to one person never goes into the
- * document: the personal ranking lives in users/{uid}/albumRankings (UserRankingRepository).
+ * It has no caller since F56: its only writer was "Refetch Metadata" outside the album load
+ * (SeriesService.refetchAlbumMetadata), and the reload of an album now goes through the load
+ * service, which writes nothing here. Nothing in the app ever read the collection. The class stays
+ * until the owner decides what the shared collection is for.
+ * Because the collection is shared, what belongs to one person never goes into the document: the
+ * personal ranking lives in users/{uid}/albumRankings (UserRankingRepository).
  */
 
 import { BaseRepository } from './BaseRepository.js'

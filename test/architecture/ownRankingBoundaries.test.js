@@ -55,10 +55,9 @@ describe('own ranking boundaries', () => {
     })
 
     it('the ranking repository is reached only where the services are put together; the known exceptions can only shrink', () => {
-        // BlendingController and SeriesService still read rankings on their own (the load loops of
-        // /blend and the surgical injection, to be moved by their own fixes).
-        const KNOWN = ['controllers/BlendingController.js', 'services/SeriesService.js',
-            'services/albums/albumLoading.js', 'services/ranking/ownRanking.js']
+        // BlendingController and SeriesService left the list in F56: the blend asks the album load,
+        // and the surgical injection is gone.
+        const KNOWN = ['services/albums/albumLoading.js', 'services/ranking/ownRanking.js']
         const importing = listJs('').filter(file => !file.startsWith('repositories/'))
             .filter(file => importsOf(file).some(specifier => specifier.includes('UserRankingRepository')))
         expect(importing.sort()).toEqual([...KNOWN].sort())

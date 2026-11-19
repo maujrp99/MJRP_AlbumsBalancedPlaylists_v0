@@ -1,66 +1,12 @@
 /**
  * BEAEnrichmentHelper
  * 
- * Bridges BestEverAlbums enrichment logic with album models.
- * Encapsulates API calls, data parsing, and application to Album objects.
- * 
- * Usage:
- *   await enrichAlbum(album)
+ * Writes the answer of the ratings source (BestEverAlbums) into an album.
+ * It asks no source: the album load asks (services/albums/adapters/enrichers.js, through its
+ * queue) and hands the answer here. The call that asked on its own left with F56.
  */
 
-import { apiClient } from '../api/client.js'
 import { NormalizationUtils } from '../utils/NormalizationUtils.js'
-
-/**
- * Apply BestEverAlbums enrichment to an album.
- * Fetches fresh data if needed and updates the album object in place.
- * 
- * @param {Album} album - Album object to enrich
- * @param {Object} options - Options
- * @param {boolean} options.force - If true, force re-enrichment even if data exists (default: false)
- * @param {boolean} options.silent - If true, suppress console logs (default: false)
- * @returns {Promise<Album>} Album with BEA data applied (mutates original)
- */
-export async function enrichAlbum(album, options = {}) {
-    const { force = false, silent = false } = options
-
-    if (!album || !album.artist || !album.title) {
-        return album
-    }
-
-    // Already enriched? Skip unless forced
-    if (album.bestEverUrl && !force) {
-        return album
-    }
-
-    const log = silent ? () => { } : console.log
-
-    try {
-        log(`[BEAEnrichmentHelper] Enriching "${album.artist} - ${album.title}"...`)
-
-        // Call API via Client Proxy
-        // Note: The API Client's BEAenrichAlbum method wraps the fetch to /api/enrich-album
-        const enrichmentData = await apiClient.BEAenrichAlbum({
-            title: album.title,
-            artist: album.artist,
-            tracks: album.tracks || []
-        })
-
-        console.log('[BEA DEBUG] Raw Enrichment Data:', JSON.stringify(enrichmentData, null, 2))
-
-        if (enrichmentData) {
-            applyBEAData(album, enrichmentData)
-            log(`[BEAEnrichmentHelper] ✅ Enriched "${album.title}" with ${enrichmentData.trackRatings?.length || 0} ratings.`)
-        } else {
-            log(`[BEAEnrichmentHelper] ⚠️ No data found for "${album.title}".`)
-        }
-
-        return album
-    } catch (error) {
-        console.warn(`[BEAEnrichmentHelper] Failed to enrich "${album.artist} - ${album.title}":`, error.message)
-        return album // Return original on error
-    }
-}
 
 /**
  * Apply BEA data to album object.

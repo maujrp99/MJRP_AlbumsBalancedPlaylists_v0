@@ -4,6 +4,12 @@
  *
  * Exports the app's AlbumLoadService and keeps the albums shelf (stores/albums.js) as a
  * projection of the load store, so the screens that read the shelf keep working.
+ *
+ * Who asks for albums, and how (ADR-0019, decision 1):
+ *   - the albums screen: albumLoadService.load({ scopeKey, series, fresh }) and the load store;
+ *   - any other screen (blend, playlist edit): albumAsks.albumsOf({ series, sources, signal }),
+ *     which waits for the albums of those series and gives a typed result (F56).
+ * No screen or controller loops over album queries or calls the API client for an album.
  */
 
 import { albumLoadStore } from '../../stores/albumLoad.js'
@@ -18,6 +24,7 @@ import { applyBEAData } from '../../helpers/BEAEnrichmentHelper.js'
 import { applyEnrichmentToAlbum } from '../../helpers/SpotifyEnrichmentHelper.js'
 import { userRankingRepository } from '../../repositories/UserRankingRepository.js'
 import { AlbumLoadService } from './AlbumLoadService.js'
+import { AlbumAsks } from './AlbumAsks.js'
 import { holdNotice, queryKey } from '../../models/albumLoadState.js'
 import { auditAlbumIdentity } from './albumIdentityAudit.js'
 import { keptAlbum } from '../../models/askedAlbum.js'
@@ -81,6 +88,9 @@ export const albumLoadService = new AlbumLoadService({
     onHold: showHoldNotice
 })
 
+/** The one way a screen that is not the albums screen gets the albums of a series, ready (F56). */
+export const albumAsks = new AlbumAsks({ service: albumLoadService, store: albumLoadStore })
+
 /**
  * F55: how many albums of the signed-in person's series are not the album asked for, today.
  * READ-ONLY: it reads the series already in memory, the album of each query from the load of this
@@ -107,9 +117,12 @@ export const clearAppAlbumCaches = () => clearAlbumCaches({
     storage: localStorage
 })
 
-/** Copy what the load store has into the shelf the other screens read. */
+/**
+ * Copy what the load store has into the shelf the other screens read: the series of the albums
+ * screen and the ones another screen asked for. The shelf has no other writer of albums.
+ */
 export function projectLoadedAlbums(store = albumLoadStore, shelf = albumsStore, service = albumLoadService) {
-    const bySeries = Object.fromEntries(store.getSeriesIds().map(id => [id, store.getAlbums(id)]))
+    const bySeries = Object.fromEntries(store.getAllSeriesIds().map(id => [id, store.getAlbums(id)]))
     if (service.scopeKey === ALL_SCOPE) bySeries[ALL_SERIES_CONTEXT] = store.getAllAlbums()
     shelf.setAlbumsBySeries(bySeries)
 }

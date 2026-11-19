@@ -1,245 +1,138 @@
+/**
+ * The albums shelf: the albums each series has, for the screens that read it. Its albums have one
+ * writer, the album load, through setAlbumsBySeries (F56: the methods that added or removed one
+ * album are gone, so nothing can put an album on screen around the load).
+ */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { AlbumsStore } from '../../public/js/stores/albums.js'
 
-// Helper for creating mock albums
-function createMockAlbum(id, title, artist) {
-    return {
-        id,
-        title,
-        artist,
-        seriesIds: []
-    }
-}
-
 describe('AlbumsStore', () => {
     let store
-    const MOCK_SERIES_ID = 'mock-series-id'
+    const SERIES = 'mock-series-id'
+    const album = (title) => ({ id: title, title, artist: 'Test' })
 
     beforeEach(() => {
         store = new AlbumsStore()
-        store.setActiveAlbumSeriesId(MOCK_SERIES_ID)
+        store.setActiveAlbumSeriesId(SERIES)
     })
 
-    describe('constructor', () => {
-        it('should initialize with empty state', () => {
-            // Note: getAlbums() returns albums for active series
-            expect(store.getAlbums()).toEqual([])
-            expect(store.getCurrentAlbum()).toBeNull()
-            expect(store.getState().loading).toBe(false)
-            expect(store.getState().error).toBeNull()
-        })
+    it('starts empty', () => {
+        expect(store.getAlbums()).toEqual([])
+        expect(store.getCurrentAlbum()).toBeNull()
+        expect(store.getState().loading).toBe(false)
+        expect(store.getState().error).toBeNull()
     })
 
-    describe('addAlbum', () => {
-        it('should add new album to store', () => {
-            const album = {
-                title: 'The Wall',
-                artist: 'Pink Floyd',
-                year: 1979
-            }
+    describe('setAlbumsBySeries (the projection of the album load)', () => {
+        it('replaces the albums of the series given and leaves the other series as they are', () => {
+            store.setAlbumsBySeries({ [SERIES]: [album('One')], other: [album('Nine')] })
 
-            store.addAlbum(album)
+            store.setAlbumsBySeries({ [SERIES]: [album('Two'), album('Three')] })
 
-            expect(store.getAlbums()).toHaveLength(1)
-            expect(store.getAlbums()[0]).toEqual(album)
+            expect(store.getAlbums().map(a => a.title)).toEqual(['Two', 'Three'])
+            expect(store.getAlbumsForSeries('other').map(a => a.title)).toEqual(['Nine'])
+            expect(store.hasAlbumsForSeries('other')).toBe(true)
+            expect(store.hasAlbumsForSeries('unknown')).toBe(false)
         })
 
-        it('should not duplicate existing album', () => {
-            const album = {
-                title: 'The Wall',
-                artist: 'Pink Floyd',
-                year: 1979
-            }
-
-            store.addAlbum(album)
-            store.addAlbum(album)
+        it('keeps its own list: changing the list given afterwards changes nothing here', () => {
+            const given = [album('One')]
+            store.setAlbumsBySeries({ [SERIES]: given })
+            given.push(album('Two'))
 
             expect(store.getAlbums()).toHaveLength(1)
         })
 
-        it('should update existing album with same title/artist', () => {
-            const album1 = {
-                title: 'The Wall',
-                artist: 'Pink Floyd',
-                year: 1979
-            }
-            const album2 = {
-                title: 'The Wall',
-                artist: 'Pink Floyd',
-                year: 1979,
-                id: '123', // Upgrade with ID
-                tracks: []
-            }
-
-            store.addAlbum(album1)
-            store.addAlbum(album2)
-
-            expect(store.getAlbums()).toHaveLength(1)
-            // It should upgrade to the version with ID
-            expect(store.getAlbums()[0].id).toBe('123')
-        })
-
-        it('should notify listeners when album added', () => {
+        it('tells the listeners once', () => {
             const listener = vi.fn()
             store.subscribe(listener)
 
-            store.addAlbum({ title: 'Test', artist: 'Test' })
+            store.setAlbumsBySeries({ [SERIES]: [album('One')], other: [album('Nine')] })
 
-            expect(listener).toHaveBeenCalled()
+            expect(listener).toHaveBeenCalledTimes(1)
+        })
+    })
+
+    it('has no way to add or remove one album: only the album load writes albums (F56)', () => {
+        const writers = ['addAlbumToSeries', 'addAlbum', 'removeAlbum', 'clearAlbumSeries', 'removeAlbumsBySeriesIdFromContext']
+
+        expect(writers.filter(name => typeof store[name] === 'function')).toEqual([])
+    })
+
+    describe('which series the shelf answers for', () => {
+        it('gives the albums of the active series, and none without one', () => {
+            store.setAlbumsBySeries({ [SERIES]: [album('One')], other: [album('Nine')] })
+
+            store.setActiveAlbumSeriesId('other')
+            expect(store.getAlbums().map(a => a.title)).toEqual(['Nine'])
+
+            store.setActiveAlbumSeriesId(null)
+            expect(store.getAlbums()).toEqual([])
         })
     })
 
     describe('setCurrentAlbum', () => {
-        it('should set current album', () => {
-            const album = { title: 'Test Album', artist: 'Test' }
-
-            store.setCurrentAlbum(album)
-
-            expect(store.getCurrentAlbum()).toEqual(album)
-        })
-
-        it('should notify listeners when current album changes', () => {
+        it('sets the current album and tells the listeners', () => {
             const listener = vi.fn()
             store.subscribe(listener)
+            const current = album('One')
 
-            const album = { title: 'Test Album' }
-            store.setCurrentAlbum(album)
+            store.setCurrentAlbum(current)
 
-            expect(listener).toHaveBeenCalledWith(
-                expect.objectContaining({ currentAlbum: album })
-            )
-        })
-    })
-
-    describe('removeAlbum', () => {
-        it('should remove album from store', () => {
-            const album = { id: '123', title: 'Test', artist: 'Test' }
-            store.addAlbum(album)
-
-            store.removeAlbum('123')
-
-            expect(store.getAlbums()).toHaveLength(0)
-        })
-
-        it('should clear current album if removed', () => {
-            const album = { id: '123', title: 'Test', artist: 'Test' }
-            store.addAlbum(album)
-            store.setCurrentAlbum(album)
-
-            store.removeAlbum('123')
-
-            expect(store.getCurrentAlbum()).toBeNull()
-        })
-
-        it('should not affect current album if different album removed', () => {
-            const album1 = { id: '123', title: 'Test 1', artist: 'Test' }
-            const album2 = { id: '456', title: 'Test 2', artist: 'Test' }
-            store.addAlbum(album1)
-            store.addAlbum(album2)
-            store.setCurrentAlbum(album1)
-
-            store.removeAlbum('456')
-
-            expect(store.getCurrentAlbum()).toEqual(album1)
-        })
-
-        it('should notify listeners when album removed', () => {
-            const listener = vi.fn()
-            const album = { id: '123', title: 'Test', artist: 'Test' }
-            store.addAlbum(album)
-            store.subscribe(listener)
-
-            store.removeAlbum('123')
-
-            expect(listener).toHaveBeenCalled()
+            expect(store.getCurrentAlbum()).toEqual(current)
+            expect(listener).toHaveBeenCalledWith(expect.objectContaining({ currentAlbum: current }))
         })
     })
 
     describe('subscribe', () => {
-        it('should add listener', () => {
+        it('stops telling a listener that unsubscribed', () => {
             const listener = vi.fn()
-
-            store.subscribe(listener)
-            store.addAlbum({ title: 'Test', artist: 'Test' })
-
-            expect(listener).toHaveBeenCalled()
-        })
-
-        it('should return unsubscribe function', () => {
-            const listener = vi.fn()
-
             const unsubscribe = store.subscribe(listener)
+
             unsubscribe()
-            store.addAlbum({ title: 'Test', artist: 'Test' })
+            store.setAlbumsBySeries({ [SERIES]: [album('One')] })
 
             expect(listener).not.toHaveBeenCalled()
         })
     })
 
     describe('getState', () => {
-        it('should return complete state snapshot', () => {
-            const album = { title: 'Test', artist: 'Test' }
-            store.addAlbum(album)
-            store.setCurrentAlbum(album)
+        it('returns the whole state', () => {
+            const one = album('One')
+            store.setAlbumsBySeries({ [SERIES]: [one] })
+            store.setCurrentAlbum(one)
 
-            const state = store.getState()
-
-            expect(state).toEqual({
-                albums: [album],
-                currentAlbum: album,
+            expect(store.getState()).toEqual({
+                albums: [one],
+                currentAlbum: one,
                 loading: false,
                 error: null,
-                activeAlbumSeriesId: MOCK_SERIES_ID
+                activeAlbumSeriesId: SERIES
             })
         })
     })
 
     describe('reset', () => {
-        it('should reset store to initial state', () => {
-            store.addAlbum({ title: 'Test', artist: 'Test' })
-            store.setCurrentAlbum({ title: 'Test', artist: 'Test' })
-
-            store.reset()
-
-            // After reset, active series is null unless preserved
-            expect(store.getAlbums()).toEqual([]) // Default empty [] if no series
-            expect(store.getCurrentAlbum()).toBeNull()
-            expect(store.getState().loading).toBe(false)
-            expect(store.getState().error).toBeNull()
-        })
-
-        it('should notify listeners on reset', () => {
+        it('goes back to the initial state and tells the listeners', () => {
             const listener = vi.fn()
+            store.setAlbumsBySeries({ [SERIES]: [album('One')] })
+            store.setCurrentAlbum(album('One'))
             store.subscribe(listener)
 
             store.reset()
 
+            expect(store.getAlbums()).toEqual([])
+            expect(store.getCurrentAlbum()).toBeNull()
             expect(listener).toHaveBeenCalled()
         })
-    })
 
-    describe('Issue #151 - Multi-Series Context', () => {
-        it('should merge seriesIds when adding duplicate album from key', () => {
-            store.setActiveAlbumSeriesId('ALL_SERIES_VIEW')
+        it('keeps the series and its albums when asked to', () => {
+            store.setAlbumsBySeries({ [SERIES]: [album('One')] })
 
-            const albumA = createMockAlbum('1', 'Test Album', 'Test Artist')
-            albumA.seriesIds = ['SERIES_A']
+            store.reset(true)
 
-            const albumB = createMockAlbum('1', 'Test Album', 'Test Artist') // Same ID/Meta
-            albumB.seriesIds = ['SERIES_B']
-
-            // 1. Add first instance
-            store.addAlbumToSeries('ALL_SERIES_VIEW', albumA)
-
-            // 2. Add second instance (should update existing)
-            store.addAlbumToSeries('ALL_SERIES_VIEW', albumB)
-
-            const stored = store.getAlbums()[0]
-
-            // Expectation: Should have both IDs
-            expect(stored.seriesIds).toContain('SERIES_A')
-            expect(stored.seriesIds).toContain('SERIES_B')
-            expect(stored.seriesIds.length).toBe(2)
+            expect(store.getActiveAlbumSeriesId()).toBe(SERIES)
+            expect(store.getAlbums()).toHaveLength(1)
         })
     })
 })

@@ -198,6 +198,67 @@ describe('TaskQueue', () => {
         })
     })
 
+    describe('a group someone is waiting for now (F56)', () => {
+        it('a boosted group runs before every other, whatever the priorities, also for tasks added later', async () => {
+            const queue = new TaskQueue({ concurrency: 1 })
+            const order = []
+            const task = (name) => async () => { order.push(name) }
+
+            queue.add(async () => { await wait(10) })
+            queue.add(task('screen-high'), { group: 'screen', priority: 100 })
+            queue.add(task('asked-1'), { group: 'asked', priority: 0 })
+            queue.boost('asked')
+            queue.add(task('asked-2'), { group: 'asked', priority: 0 })
+            await queue.onIdle()
+
+            expect(order).toEqual(['asked-1', 'asked-2', 'screen-high'])
+        })
+
+        it('a group that is no longer boosted goes back to its priority', async () => {
+            const queue = new TaskQueue({ concurrency: 1 })
+            const order = []
+            const task = (name) => async () => { order.push(name) }
+
+            queue.add(async () => { await wait(10) })
+            queue.boost('asked')
+            queue.add(task('asked'), { group: 'asked', priority: 0 })
+            queue.add(task('screen'), { group: 'screen', priority: 5 })
+            queue.unboost('asked')
+            await queue.onIdle()
+
+            expect(order).toEqual(['screen', 'asked'])
+        })
+
+        it('cancelGroup drops the waiting and the running tasks of one group and leaves the others', async () => {
+            const queue = new TaskQueue({ concurrency: 2 })
+            let aborted = false
+            const runningAsked = queue.add(({ signal }) => new Promise(() => { signal.addEventListener('abort', () => { aborted = true }) }), { group: 'asked' })
+            const runningScreen = queue.add(async () => { await wait(15); return 'screen' }, { group: 'screen' })
+            const waitingAsked = queue.add(async () => 'never', { group: 'asked' })
+            const waitingScreen = queue.add(async () => 'screen too', { group: 'screen' })
+            await wait(0)
+
+            queue.cancelGroup('asked')
+
+            await expect(runningAsked).rejects.toBeInstanceOf(TaskCancelledError)
+            await expect(waitingAsked).rejects.toBeInstanceOf(TaskCancelledError)
+            expect(aborted).toBe(true)
+            await expect(runningScreen).resolves.toBe('screen')
+            await expect(waitingScreen).resolves.toBe('screen too')
+        })
+
+        it('cancelGroup on the last tasks leaves the queue idle', async () => {
+            const queue = new TaskQueue({ concurrency: 1 })
+            const added = queue.add(() => new Promise(() => { }), { group: 'asked' })
+            await wait(0)
+            queue.cancelGroup('asked')
+
+            await expect(added).rejects.toBeInstanceOf(TaskCancelledError)
+            await queue.onIdle()
+            expect(queue.running + queue.pending).toBe(0)
+        })
+    })
+
     it('imports nothing from the project (it does not know the domain)', async () => {
         const fs = await import('node:fs')
         const path = await import('node:path')

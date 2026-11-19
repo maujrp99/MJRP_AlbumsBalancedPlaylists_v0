@@ -6,7 +6,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
-    load: { load: vi.fn(), refreshSource: vi.fn(), retryFailed: vi.fn(), adoptAlbum: vi.fn() },
+    load: { load: vi.fn(), refreshSource: vi.fn(), retryFailed: vi.fn(), reloadAlbum: vi.fn(() => 1) },
     ranking: { ensureLoaded: vi.fn(async () => true), save: vi.fn(async () => true) }
 }))
 
@@ -27,6 +27,8 @@ vi.mock('../../public/js/components/Toast.js', () => {
 })
 
 import SeriesController from '../../public/js/controllers/SeriesController.js'
+import { getSeriesService } from '../../public/js/services/SeriesService.js'
+import toast from '../../public/js/components/Toast.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
 import { albumLoadStore } from '../../public/js/stores/albumLoad.js'
 import { ownRankingsStore } from '../../public/js/stores/ownRankings.js'
@@ -207,6 +209,38 @@ describe('SeriesController', () => {
             albumLoadStore.setSeriesOrder(['s1'])
             await settle()
             expect(next.updateAlbums).toHaveBeenCalledTimes(1)
+        })
+    })
+
+    describe('"Refetch" of one album (F56)', () => {
+        it('asks the load service to load that album again, and loads nothing by itself', () => {
+            controller.handleRefetchMetadata({ id: 'alb-1', title: 'Animals', artist: 'Pink Floyd' })
+
+            expect(mocks.load.reloadAlbum).toHaveBeenCalledWith('alb-1')
+            expect(toast.info).toHaveBeenCalledWith('Loading "Animals" again...')
+            expect(getSeriesService).not.toHaveBeenCalled()
+        })
+
+        it('says so when the album is not in the load', () => {
+            mocks.load.reloadAlbum.mockReturnValueOnce(0)
+
+            controller.handleRefetchMetadata({ id: 'gone', title: 'Animals' })
+
+            expect(toast.error).toHaveBeenCalledWith('"Animals" is not loaded on this screen')
+        })
+    })
+
+    describe('a series was edited and saved (UAT-191)', () => {
+        it('the load is asked again as it is, never from scratch: only what changed is loaded', async () => {
+            mocks.load.load.mockClear()
+            const { SeriesModalsManager } = await import('../../public/js/views/helpers/SeriesModalsManager.js')
+            const manager = new SeriesModalsManager({ controller, currentScope: 'ALL', targetSeriesId: null })
+
+            manager.handleSeriesUpdated('s1')
+
+            expect(mocks.load.load).toHaveBeenCalledTimes(1)
+            expect(mocks.load.load.mock.calls[0][0].fresh).toBe(false)
+            expect(mocks.load.load.mock.calls[0][0].scopeKey).toBe('ALL')
         })
     })
 

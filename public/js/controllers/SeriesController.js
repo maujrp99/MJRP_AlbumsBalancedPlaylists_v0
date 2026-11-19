@@ -326,40 +326,17 @@ export default class SeriesController {
     }
 
     /**
-     * Handle refetching metadata for an album
-     * @param {Object} album 
+     * "Refetch" on an album card: the album is loaded again by the album load, through its queue
+     * and its state. The card shows as loading, a failure shows as the failure of that album with
+     * "Try again", and nothing is written to the screen from here.
+     * @param {Object} album
      */
-    async handleRefetchMetadata(album) {
-        if (!album || !album.title) return;
+    handleRefetchMetadata(album) {
+        if (!album?.id) return;
 
-        try {
-            this.notifyView('loading', true);
-            toast.info(`Refetching metadata for "${album.title}"...`);
-
-            // Use SeriesService directly as it now encapsulates the logic
-            // Get service instance (using current user ID)
-            const userId = albumSeriesStore.getUserId();
-            const db = albumSeriesStore.getDb();
-            const seriesService = getSeriesService(db, null, userId);
-
-            // Fetch!
-            // Note: We use the current target series ID context if available, or just null for general update
-            // Passing seriesId ensures if the album is in a specific series cache context, it gets updated there too.
-            const seriesId = this.state.targetSeriesId || 'ALL_SERIES_VIEW';
-
-            const enrichedAlbum = await seriesService.refetchAlbumMetadata(album, seriesId);
-            await albumLoadService.adoptAlbum(enrichedAlbum);
-
-            toast.success(`Metadata updated for "${enrichedAlbum.title}"`);
-
-            // UI should update automatically via store subscription (onAlbumsChange -> applyFilters -> notifyView)
-
-        } catch (error) {
-            console.error('[SeriesController] Refetch failed:', error);
-            toast.error(`Refetch failed: ${error.message}`);
-        } finally {
-            this.notifyView('loading', false);
-        }
+        const asked = albumLoadService.reloadAlbum(album.id);
+        if (asked > 0) toast.info(`Loading "${album.title}" again...`);
+        else toast.error(`"${album.title}" is not loaded on this screen`);
     }
 
     // =========================================

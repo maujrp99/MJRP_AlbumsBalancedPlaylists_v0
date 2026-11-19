@@ -1,24 +1,17 @@
 /**
  * F55, slice 1 - the API client accepts an album only when it is the album asked for (UAT-184):
- * the answer of the AI search (POST /api/generate) and the Apple Music search of the old path
- * (fetchAlbum, still used by the blend and the playlists screens).
+ * the answer of the AI search (POST /api/generate). The Apple Music search of the old path
+ * (fetchAlbum) and its cache left with F56: the blend and the playlists ask the album load.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
-const musicKit = vi.hoisted(() => ({ searchAlbums: vi.fn(), getAlbumDetails: vi.fn(), getArtworkUrl: vi.fn(() => 'https://cover/600') }))
-vi.mock('../../public/js/services/MusicKitService.js', () => ({ musicKitService: musicKit }))
 vi.mock('../../public/js/services/AlbumLoader.js', () => ({ albumLoader: {} }))
-const oldCache = vi.hoisted(() => ({ get: vi.fn(async () => null), set: vi.fn(), invalidate: vi.fn() }))
-vi.mock('../../public/js/cache/albumCache.js', () => ({ albumCache: oldCache }))
-vi.mock('../../public/js/helpers/BEAEnrichmentHelper.js', () => ({ enrichAlbum: vi.fn() }))
-vi.mock('../../public/js/helpers/SpotifyEnrichmentHelper.js', () => ({ applyEnrichmentToAlbum: vi.fn() }))
 
 import { APIClient } from '../../public/js/api/client.js'
 
 const STP = 'Stone Temple Pilots'
 const answer = (data, outcome = 'found') => ({ ok: true, status: 200, statusText: 'OK', headers: { get: () => null }, json: async () => ({ data, outcome }) })
 const aiAlbum = (title, artist = STP) => ({ title, artist, year: 1992, tracks: [{ title: 'One' }] })
-const hit = (id, name) => ({ id, attributes: { name, artistName: STP } })
 
 describe('APIClient: only the album asked for', () => {
     let client
@@ -32,11 +25,6 @@ describe('APIClient: only the album asked for', () => {
         vi.spyOn(console, 'warn').mockImplementation(() => {})
         vi.spyOn(console, 'debug').mockImplementation(() => {})
         vi.spyOn(console, 'error').mockImplementation(() => {})
-        musicKit.searchAlbums.mockReset()
-        musicKit.getAlbumDetails.mockReset()
-        oldCache.get.mockReset().mockResolvedValue(null)
-        oldCache.set.mockReset()
-        oldCache.invalidate.mockReset()
     })
 
     afterEach(() => {
@@ -97,76 +85,9 @@ describe('APIClient: only the album asked for', () => {
         })
     })
 
-    describe('what the old cache keeps for a query (fetchAlbum: the blend, the playlists)', () => {
-        const details = { id: 'apple-core', title: 'Core', artist: STP, year: '1992', artworkTemplate: 'tpl', tracks: [{ id: 't1', title: 'One', trackNumber: 1 }] }
-        const kept = (title, metadata) => ({ id: 'kept', title, artist: STP, tracks: [{ id: 'k1', title: 'Kept' }], ...(metadata ? { metadata } : {}) })
-
-        it('is the album asked for: it is used, and no catalog is asked', async () => {
-            oldCache.get.mockResolvedValue(kept('Core (Remastered)'))
-
-            const album = await client.fetchAlbum('Stone Temple Pilots - Core')
-
-            expect(album.title).toBe('Core (Remastered)')
-            expect(musicKit.searchAlbums).not.toHaveBeenCalled()
-            expect(oldCache.invalidate).not.toHaveBeenCalled()
-        })
-
-        it('is ANOTHER album (kept by the old scoring): it is dropped and the album is searched again', async () => {
-            oldCache.get.mockResolvedValue(kept('Shangri-La Dee Da'))
-            musicKit.searchAlbums.mockResolvedValue([hit('apple-core', 'Core')])
-            musicKit.getAlbumDetails.mockResolvedValue(details)
-
-            const album = await client.fetchAlbum('Stone Temple Pilots - Core')
-
-            expect(oldCache.invalidate).toHaveBeenCalledWith('Stone Temple Pilots - Core')
-            expect(album.title).toBe('Core')
-            expect(oldCache.set).toHaveBeenCalledWith('Stone Temple Pilots - Core', album)
-        })
-
-        it('is the title with a subtitle: kept only when a load accepted it by the second tier of the rule', async () => {
-            const live = { id: 'kept', title: 'The Wall: Live in Berlin', artist: 'Pink Floyd', tracks: [] }
-            oldCache.get.mockResolvedValueOnce({ ...live, metadata: { identityReason: 'title-before-subtitle' } })
-            expect((await client.fetchAlbum('Pink Floyd - The Wall')).title).toBe('The Wall: Live in Berlin')
-
-            oldCache.get.mockResolvedValueOnce(live)
-            musicKit.searchAlbums.mockResolvedValue([])
-            fetchMock.mockResolvedValue(answer(null, 'not_found'))
-            await client.fetchAlbum('Pink Floyd - The Wall')
-            expect(oldCache.invalidate).toHaveBeenCalledWith('Pink Floyd - The Wall')
-        })
-    })
-
-    describe('the Apple Music search of fetchAlbum', () => {
-        const details = { id: 'apple-core', title: 'Core', artist: STP, year: '1992', artworkTemplate: 'tpl', tracks: [{ id: 't1', title: 'One', trackNumber: 1 }] }
-
-        it('«Core» asked for, «Shangri-La Dee Da» first in the results: loads «Core»', async () => {
-            musicKit.searchAlbums.mockResolvedValue([hit('apple-shangri', 'Shangri-La Dee Da'), hit('apple-core', 'Core')])
-            musicKit.getAlbumDetails.mockResolvedValue(details)
-
-            const album = await client.fetchAlbum('Stone Temple Pilots - Core')
-
-            expect(musicKit.searchAlbums).toHaveBeenCalledWith(STP, 'Core', 5)
-            expect(musicKit.getAlbumDetails).toHaveBeenCalledWith('apple-core')
-            expect(album.title).toBe('Core')
-        })
-
-        it('the album says by which reason of the rule it was accepted; the catalog with only the subtitled title is the second tier', async () => {
-            const unledded = { ...details, id: 'apple-unledded', title: 'No Quarter: Jimmy Page & Robert Plant Unledded', artist: 'Jimmy Page & Robert Plant' }
-            musicKit.searchAlbums.mockResolvedValue([{ id: 'apple-unledded', attributes: { name: unledded.title, artistName: unledded.artist } }])
-            musicKit.getAlbumDetails.mockResolvedValue(unledded)
-
-            const album = await client.fetchAlbum('Jimmy Page & Robert Plant - No Quarter')
-
-            expect(album.title).toBe(unledded.title)
-            expect(album.metadata).toEqual({ source: 'Apple Music', sourceId: 'apple-unledded', identityReason: 'title-before-subtitle' })
-        })
-
-        it('only another album in the results: it is not loaded; the second source is asked, and its wrong album is refused too', async () => {
-            musicKit.searchAlbums.mockResolvedValue([hit('apple-shangri', 'Shangri-La Dee Da')])
-            fetchMock.mockResolvedValue(answer(aiAlbum('Shangri-La Dee Da')))
-
-            expect(await client.fetchAlbum('Stone Temple Pilots - Core')).toBeNull()
-            expect(musicKit.getAlbumDetails).not.toHaveBeenCalled()
-        })
+    it('has no way of its own to find an album for a screen: the album load is the only loader (F56)', () => {
+        expect(client.fetchAlbum).toBeUndefined()
+        expect(client.fetchMultipleAlbums).toBeUndefined()
+        expect(client.BEAenrichAlbum).toBeUndefined()
     })
 })

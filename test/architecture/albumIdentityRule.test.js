@@ -39,15 +39,14 @@ const SERVER_SIDE = 'server/lib/albumIdentity.js'
  */
 const CALL_SITES = [
     { name: 'Apple Music catalog (the album load)', file: 'public/js/services/albums/adapters/CatalogAdapter.js', asks: /models\/askedAlbum\.js$/ },
-    { name: 'Apple Music catalog (the old path) and the AI answer', file: 'public/js/api/client.js', asks: /models\/askedAlbum\.js$/ },
+    { name: 'the AI answer', file: 'public/js/api/client.js', asks: /models\/askedAlbum\.js$/ },
     { name: 'Spotify', file: 'public/js/services/SpotifyService.js', asks: /models\/askedAlbum\.js$/, from: 'async searchAlbum(', to: 'async getAlbumDetails(' },
     { name: 'the local dataset', file: 'public/js/services/OptimizedAlbumLoader.js', asks: /models\/askedAlbum\.js$/ },
     { name: 'BestEverAlbums (server)', file: 'server/lib/scrapers/besteveralbums.js', asks: /^\.\.\/albumIdentity$/ },
     { name: 'Spotify (server)', file: 'server/lib/services/spotifyPopularity.js', asks: /^\.\.\/albumIdentity$/ },
     { name: 'the read-only count', file: 'public/js/services/albums/albumIdentityAudit.js', asks: /models\/askedAlbum\.js$/ },
     { name: 'the album cache, when it is read', file: 'public/js/services/albums/adapters/AlbumCacheAdapter.js', asks: /models\/askedAlbum\.js$/ },
-    { name: 'the old album cache, when it is read', file: 'public/js/api/client.js', asks: /models\/askedAlbum\.js$/, from: 'async _keptAlbumAskedFor(', to: 'async _post(' },
-    { name: 'adding and removing an album of a series', file: 'public/js/services/SeriesService.js', asks: /models\/askedAlbum\.js$/, from: 'async addAlbumToSeries(', to: 'async injectAlbumsIntoViewCache(' }
+    { name: 'adding and removing an album of a series', file: 'public/js/services/SeriesService.js', asks: /models\/askedAlbum\.js$/, from: 'async addAlbumToSeries(', to: 'async enrichAllAlbums(' }
 ]
 
 describe('one rule says "this is the album asked for"', () => {

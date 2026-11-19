@@ -1,8 +1,10 @@
 /**
  * Albums Store
  * The albums shelf: the albums each series has, in memory, for the screens to read.
- * It holds state only. It is written by the album load (services/albums/albumLoading.js projects
- * the load store into it); it never talks to Firestore (repositories do).
+ * It holds state only. Its albums have ONE writer: the album load, which projects the load store
+ * into it (services/albums/albumLoading.js -> setAlbumsBySeries). Since F56 the shelf has no
+ * method to add or remove one album: whoever wants a series to have another album changes the
+ * series and asks the load, and the load reconciles. It never talks to Firestore (repositories do).
  *
  * ARCHITECTURE: Albums are keyed by AlbumSeriesId to prevent ghost albums
  */
@@ -80,92 +82,6 @@ export class AlbumsStore {
     }
 
     /**
-     * Add album to store - MUST specify seriesId
-     * Rejects albums for inactive series (prevents ghost albums)
-     * @param {string} albumSeriesId - Series ID this album belongs to
-     * @param {Object|Album} album - Album data or instance
-     * @returns {boolean} True if added, false if rejected
-     */
-    addAlbumToSeries(albumSeriesId, album) {
-        // GHOST ALBUM PREVENTION: Reject if not for active series
-        // FIX #156: Allow injection into ALL_SERIES_VIEW context even if active series is different (or same)
-        // AND allow injection if keys match.
-        const isActive = albumSeriesId === this.activeAlbumSeriesId
-        const isGlobalContext = albumSeriesId === 'ALL_SERIES_VIEW'
-
-        if (!isActive && !isGlobalContext) {
-            console.warn(`[AlbumsStore] Rejecting album for inactive series: ${albumSeriesId} (active: ${this.activeAlbumSeriesId})`)
-            return false
-        }
-
-        // Ensure array exists for this series
-        if (!this.albumsByAlbumSeriesId.has(albumSeriesId)) {
-            this.albumsByAlbumSeriesId.set(albumSeriesId, [])
-        }
-
-        const albums = this.albumsByAlbumSeriesId.get(albumSeriesId)
-        const existing = albums.find(a => a.title === album.title && a.artist === album.artist)
-
-        if (!existing) {
-            albums.push(album)
-        } else {
-            const index = albums.indexOf(existing)
-
-            // ARCH-FIX: Safe Merge - Do not blindly overwrite, but ENSURE enrichment data is preserved.
-            // If the incoming album has enrichment IDs (bestEver, spotify) that the existing one lacks,
-            // or if it's an explicit "upgrade" from ghost/query to full data.
-            const isUpgrade = !existing.id && album.id;
-
-            if (isUpgrade) {
-                albums[index] = album;
-            } else {
-                // MERGE Enrichment Data (Crucial for UI badges and ratings)
-                if (album.bestEverAlbumId) existing.bestEverAlbumId = album.bestEverAlbumId;
-                if (album.bestEverUrl) existing.bestEverUrl = album.bestEverUrl;
-                if (album.spotifyId) existing.spotifyId = album.spotifyId;
-                if (album.spotifyUrl) existing.spotifyUrl = album.spotifyUrl;
-                if (album.spotifyPopularity) existing.spotifyPopularity = album.spotifyPopularity;
-                if (album.acclaim) existing.acclaim = album.acclaim;
-
-                // If the new album has enriched tracks, update the existing one.
-                // We assume if one has ratings and the other doesn't, we take the one with ratings.
-                if (album.tracks && album.tracks.some(t => t.rating !== null && t.rating !== undefined)) {
-                    existing.tracks = album.tracks;
-                    // FIX: Also update tracksOriginalOrder as it is used for the primary track table rendernig
-                    if (album.tracksOriginalOrder) {
-                        existing.tracksOriginalOrder = album.tracksOriginalOrder;
-                    }
-                }
-
-                // Issue #151: Merge seriesIds context
-                if (album.seriesIds && Array.isArray(album.seriesIds)) {
-                    if (!existing.seriesIds) existing.seriesIds = []
-                    album.seriesIds.forEach(sid => {
-                        if (!existing.seriesIds.includes(sid)) {
-                            existing.seriesIds.push(sid)
-                        }
-                    })
-                }
-            }
-        }
-
-        this.notify()
-        return true
-    }
-
-    /**
-     * LEGACY: Add album without seriesId - uses active series
-     * @deprecated Use addAlbumToSeries(seriesId, album) instead
-     */
-    addAlbum(album) {
-        if (!this.activeAlbumSeriesId) {
-            console.warn('[AlbumsStore] addAlbum called without active series - rejecting')
-            return false
-        }
-        return this.addAlbumToSeries(this.activeAlbumSeriesId, album)
-    }
-
-    /**
      * Get current active album
      * @returns {Object|null} Current album or null
      */
@@ -182,66 +98,7 @@ export class AlbumsStore {
         this.notify()
     }
 
-    /**
-     * Remove album from store
-     * @param {string} albumId - Album ID to remove
-     */
-    /**
-     * Remove album from store
-     * @param {string} albumId - Album ID to remove
-     */
-    removeAlbum(albumId) {
-        const albums = this.getAlbums()
-        const index = albums.findIndex(a => a.id === albumId)
-        if (index !== -1) {
-            albums.splice(index, 1)
-            if (this.currentAlbum?.id === albumId) {
-                this.currentAlbum = null
-            }
-            this.notify()
-        }
-    }
-
     // ========== SERIES MANAGEMENT ==========
-
-    /**
-     * Clear albums for a specific series
-     * @param {string} seriesId - Series ID to clear
-     */
-    clearAlbumSeries(seriesId) {
-        this.albumsByAlbumSeriesId.delete(seriesId)
-        if (this.activeAlbumSeriesId === seriesId) {
-            this.notify()
-        }
-    }
-
-    /**
-     * Remove albums belonging to a specific series from a larger context (e.g. ALL_SERIES_VIEW)
-     * @param {string} seriesId - The series ID to remove albums for
-     * @param {string} contextId - The context ID to remove from (default: ALL_SERIES_VIEW)
-     */
-    removeAlbumsBySeriesIdFromContext(seriesId, contextId = 'ALL_SERIES_VIEW') {
-        if (!this.albumsByAlbumSeriesId.has(contextId)) return;
-
-        const albums = this.albumsByAlbumSeriesId.get(contextId);
-        // Filter out albums that have this seriesId in their context list
-        // OR rely on fuzzy matching if needed, but context ID is best.
-        // Issue #151: Albums have 'seriesIds' array.
-
-        const filtered = albums.filter(album => {
-            // Keep album if it does NOT include the seriesId
-            if (album.seriesIds && Array.isArray(album.seriesIds)) {
-                return !album.seriesIds.includes(seriesId);
-            }
-            // Fallback: If no seriesIds, we can't be sure, so maybe keep it? 
-            // Or if we know it came from this series... 
-            // In V3, we inject seriesIds. So this should be safe.
-            return true;
-        });
-
-        this.albumsByAlbumSeriesId.set(contextId, filtered);
-        this.notify();
-    }
 
     /**
      * Check if series has cached albums
