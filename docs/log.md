@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:51] session — quarto deploy do site: ícone da aba e título (main `1ca7b39`)
+
+Pedido do MJRP, com «em prod pls». `firebase deploy --only hosting` de uma cópia limpa da `main`; antes: 431 testes passam, o build compila. Conferido por fora: `https://mjrp-playlist-generator.web.app` responde com o título «MJRP The Album Blender - Playlist Generator», o ícone em PNG (7 kB) e o `favicon.ico` com a mesma imagem. Não visto no navegador: a aba em si (o navegador pode guardar o ícone antigo por um tempo). Como voltar: «Rollback» no histórico de versões do Firebase Hosting.
+
 ## [2026-11-19 14:51] session — F54: o ícone da aba é o logo do site e o título é «MJRP The Album Blender - Playlist Generator»
 
 Pedido do MJRP: «sabe o logo do site … pode colocar ele como favicon do browser tb … e no texto do browser "MJRP The Album Blender - Playlist Generator"...em prod». `public/favicon.png` (64 px) e `public/apple-touch-icon.png` (180 px) feitos do `public/assets/images/logo.png`; o `public/favicon.ico`, que estava vazio (0 bytes), recebeu a mesma imagem; `public/index.html` e a Home passam a usar o mesmo título, de modo que ele não muda mais de tela para tela (parte da UAT-192; o resto dela, idioma das receitas e série de origem no blend, segue aberto). O build traz o título e os dois ícones.
