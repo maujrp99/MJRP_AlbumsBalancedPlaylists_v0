@@ -38,8 +38,7 @@ export class BlendingMenuView extends BaseView {
         this.config = {
             duration: 60,
             outputMode: 'auto',
-            rankingType: 'combined',
-            discoveryMode: false
+            rankingType: 'combined'
         }
         this.isGenerating = false
     }
@@ -410,41 +409,6 @@ export class BlendingMenuView extends BaseView {
             <div class="glass-panel rounded-2xl p-6 text-center">
                 <div class="animate-spin rounded-full h-10 w-10 border-3 border-orange-400 border-t-transparent mx-auto mb-4"></div>
                 <p class="text-muted">${escapeHtml(message)}</p>
-            </div>
-        `))
-    }
-
-    /**
-     * Show generation results
-     */
-    showResults(result) {
-        const container = document.getElementById('blend-results')
-        if (!container) return
-
-        container.classList.remove('hidden')
-        SafeDOM.clear(container)
-        container.appendChild(SafeDOM.fromHTML(`
-            <div class="glass-panel rounded-2xl p-6">
-                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-                    ${getIcon('CheckCircle', 'w-6 h-6 text-green-400')}
-                    Playlist${result.playlists.length > 1 ? 's' : ''} Generated!
-                </h3>
-                <div class="space-y-4">
-                    ${result.playlists.map(p => `
-                        <div class="p-4 rounded-lg bg-white/5 border border-white/10">
-                            <h4 class="font-semibold">${escapeHtml(p.title)}</h4>
-                            <p class="text-sm text-muted">${p.tracks.length} tracks</p>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="mt-6 flex flex-wrap gap-3">
-                    <button class="btn btn-primary" onclick="alert('Save to Spotify - Coming Soon')">
-                        ${getIcon('Save', 'w-4 h-4')} Save to Spotify
-                    </button>
-                    <button class="btn btn-secondary" onclick="location.reload()">
-                        ${getIcon('RefreshCw', 'w-4 h-4')} Create Another
-                    </button>
-                </div>
             </div>
         `))
     }

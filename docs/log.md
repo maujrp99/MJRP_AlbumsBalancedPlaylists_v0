@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 20:23] session — F62: cada receita do blend faz o que o nome diz, ou avisa
+
+Ramo `fix/f62-blend-and-export-do-what-they-say`. As quatro receitas do menu têm agora um teste que prova o que o nome promete, pelo caminho que a tela usa (`test/algorithms/recipes.promise.test.js`). Defeitos que existiam na `main` e foram consertados: «By Artist then By Rank» não agrupava por artista (lia `artistName`, que a faixa não tem); «My Own Ranking», num álbum sem ranking da pessoa, usava a ordem de aclamação (`album.tracks`) e não a do álbum; «Top Acclaimed» punha uma faixa sem nota acima de uma com nota quando ela era popular (a popularidade entrava no lugar da nota); o embaralhar era viciado. O aviso da F56 de fonte faltando diz agora a ordem usada no lugar («Their tracks were ordered in album order instead»), e essa frase é conferida contra o que cada ranking faz. «Discovery Mode» saiu do menu: nenhuma receita o lia (UAT-08; decidido pelo agente, revisável). A duração alvo aparece nas receitas Top N quando a saída pode ser dividida (antes dividia por 60 minutos sem mostrar). As playlists geradas guardam a receita inteira em `_meta`.
+
 ## [2026-11-19 20:08] session — F56 em produção (site)
 
 Site publicado da `main` (`042da86`, pacote `main-BZG7nsE3.js`). A F56 não muda o servidor. Auxiliares trabalhando: F68 e F49; a F62 começa agora.

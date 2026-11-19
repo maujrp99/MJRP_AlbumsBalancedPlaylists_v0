@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { BlendIngredientsPanel } from '../../../public/js/components/blend/BlendIngredientsPanel.js'
+import { getAllAlgorithms } from '../../../public/js/algorithms/index.js'
 
 // Mock Icons
 vi.mock('../../../public/js/components/Icons.js', () => ({
@@ -43,8 +44,43 @@ describe('BlendIngredientsPanel', () => {
             // Check for section headers
             expect(container.textContent).toContain('Choose your Top #')
             expect(container.textContent).toContain('Playlist Structure') // Output mode
-            // Should NOT show Duration
+        })
+
+        // F62: an option is shown only where it changes the result
+        it('shows the target duration of a Top N recipe when the output may be split, and hides it for one playlist', () => {
+            panel.setRecipe({ id: 'top-n-popular' })
+
+            panel.config.outputMode = 'auto' // splits when the tracks pass the target: the target is shown
+            panel.render()
+            expect(container.textContent).toContain('Target Duration')
+
+            panel.config.outputMode = 'multiple'
+            panel.render()
+            expect(container.textContent).toContain('Target Duration')
+
+            panel.config.outputMode = 'single'
+            panel.render()
             expect(container.textContent).not.toContain('Target Duration')
+        })
+
+        it('shows «Discovery Mode» for no recipe of the menu: no recipe reads it (UAT-08)', () => {
+            getAllAlgorithms().forEach(recipe => {
+                panel.setRecipe(recipe)
+                panel.render()
+                expect(container.textContent, recipe.id).not.toContain('Discovery Mode')
+            })
+            expect(panel.getConfig()).not.toHaveProperty('discoveryMode')
+        })
+
+        it('says what «Combined» and «By Ranking» really do', () => {
+            panel.setRecipe({ id: 'mjrp-balanced-cascade' })
+            panel.render()
+            expect(container.textContent).toContain('Acclaim first, popularity where unrated')
+
+            panel.setRecipe({ id: 'top-n-user' })
+            panel.render()
+            expect(container.textContent).toContain('Every #1, then every #2')
+            expect(container.textContent).not.toContain('Flow by Popularity')
         })
     })
 

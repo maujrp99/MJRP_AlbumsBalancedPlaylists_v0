@@ -2,13 +2,16 @@
  * BEARankingStrategy
  * 
  * Logic:
- * 1. Prioritize BestEverAlbums Rating (High > Low)
+ * 1. Prioritize BestEverAlbums Rating (High > Low); a track with no rating comes after every rated one
  * 2. Fallback: Canonical Rank (Low > High)
- * 3. Fallback: Spotify Popularity
+ * 3. Fallback: Spotify Popularity (the fallback the blend names when the ratings are missing)
  * 
  * @module ranking/BEARankingStrategy
  */
 import { BalancedRankingStrategy } from './BalancedRankingStrategy.js'
+
+/** The rating the acclaim source gave; a popularity standing in for a missing rating is not one. */
+const acclaimRatingOf = (track) => (track.rating !== null && !track.ratingIsPopularity ? track.rating : -1)
 
 export class BEARankingStrategy extends BalancedRankingStrategy {
     static metadata = {
@@ -24,8 +27,8 @@ export class BEARankingStrategy extends BalancedRankingStrategy {
         // Re-sort based on Rating
         tracks.sort((a, b) => {
             // 1. Rating (High is better)
-            const ratingA = a.rating !== null ? a.rating : -1
-            const ratingB = b.rating !== null ? b.rating : -1
+            const ratingA = acclaimRatingOf(a)
+            const ratingB = acclaimRatingOf(b)
             if (ratingA !== ratingB) return ratingB - ratingA
 
             // 2. Canonical Rank (Low is better - e.g. #1)

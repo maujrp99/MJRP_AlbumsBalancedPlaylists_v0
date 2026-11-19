@@ -144,8 +144,10 @@ export class BalancedRankingStrategy extends RankingStrategy {
             }
 
             // Fallback Rating: If still null, use Spotify Popularity
+            // The mark lets a ranking that is about acclaim alone (BEA) tell a rating from its stand-in.
             if (canonical.rating === null && canonical.spotifyPopularity !== null) {
                 canonical.rating = canonical.spotifyPopularity
+                canonical.ratingIsPopularity = true
             }
 
             // Restore original index for stable sort fallback
