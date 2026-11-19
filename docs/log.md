@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:41] session — manual revisado contra o código: 22 arquivos de `docs/manual/` corrigidos
+
+Pedido do MJRP: «antes de começar o backlog, atualize toda a documentacao». Um agente separado leu cada arquivo do manual ainda não revisado hoje (servidor, blend, playlists, inventário, integrações, ranking, testes, guia de estilo, folha de referência) e corrigiu o que o código contradiz; o implementador conferiu por amostra (a rota de busca que não existe, o `/debug/files`, os módulos sem uso) antes do commit.
+
+- **Tirado do manual por não existir no código:** a rota `GET /api/search/album`; a espera de 300 ms na busca; a lista de permissão do `/debug/files` (ele lista qualquer caminho, o que agrava a UAT-16); o filtro de palavras do raspador; o limite de chamadas do Spotify no servidor; a evidência vinda de três fontes (só o BestEverAlbums chega); o limite de 80 minutos e a playlist «Overflow»; telas, lojas e métodos que não existem mais.
+- **Dito agora como defeito conhecido:** apagar do inventário (UAT-01); o blend e a edição de playlists com laço de carga próprio (UAT-189).
+- **Marcados como sem uso:** onze módulos que nada importa (entre eles `ViewModeStrategy`, `PlaylistsDragBoard`, `ContextMenu`, `SkeletonLoader`) e cinco algoritmos não registrados.
+- **Não verificado, deixado como estava:** trechos do guia de estilo (classes e tamanhos), detalhes dos algoritmos de mistura, o que cada teste de navegador confere, e os campos de duração da faixa em `32_Data_Schema_Reference.md` (o manual diz milissegundos, o modelo guarda segundos; liga com a UAT-188). As linhas 49 a 81 de `24_Test_Suite.md` estão embaralhadas e não foram reorganizadas.
+- **Achados de código, nada mexido:** `server/test/unit-tests.js` importa `public/js/curation.js`, que não existe (é a UAT-21); o `ScoreCalculator` declara uma penalidade de coletânea que nunca aplica.
+
 ## [2026-11-19 14:34] session — ADR-0019 da carga escrita (Proposed) e `behavior.md` em dia com a v4.0
 
 - **ADR:** `docs/decisions/0019-one-owner-for-the-album-load.md`, status `Proposed`. Registra a decisão de um dono só para a carga (o que o MJRP aprovou em conversa em 2026-11-19), as consequências medidas, o que ainda não foi feito e as alternativas recusadas. Escrita depois do código; o texto em si não passou por crítica separada, e o aceite formal está pendente.

@@ -8,7 +8,8 @@
 ### Endpoints
 -   `POST /studio-albums`:
     -   **Input**: `{ artistName }`
-    -   **Logic**: Uses Google Gemini to generate a strict JSON list of "original studio albums" for the artist, excluding complications.
+    -   **Logic**: Uses Google Gemini to generate a strict JSON list of "original studio albums" for the artist, excluding compilations, EPs, singles, DJ mixes, live and remix albums.
+    -   **Response**: `{ albums: [...] }`; on error it still answers 200 with `{ albums: [], error }`.
     -   **Features**: Includes robust JSON parsing fallback (regex extraction) to handle AI formatting errors.
 
 ---
@@ -19,7 +20,7 @@
 **Mount Path**: `/api`
 
 ### Architecture
-Uses a **Factory Pattern** (`initAlbumRoutes`) to inject dependencies (`callProvider`, `scrapers`, etc.) instead of requiring them directly. This facilitates testing and decoupling.
+Uses a **Factory Pattern** (`initAlbumRoutes`) to inject dependencies (`callProvider`, `scrapers`, etc.) instead of requiring them directly. This facilitates testing and decoupling. `initAlbumRoutes(deps)` instantiates `EnrichmentService` and `GenerationService` (`server/lib/services/`) with those dependencies; the route handlers are thin and delegate to them.
 
 ```mermaid
 classDiagram
@@ -35,30 +36,36 @@ classDiagram
         +fetchRankingForAlbum
         +validateAlbum
     }
-    class AlbumController {
-        +enrichAlbum()
-        +generateAlbum()
+    class EnrichmentService {
+        +enrichAlbum(albumData)
+    }
+    class GenerationService {
+        +generateAlbum(reqBody, serverConfig)
     }
 
     App ..> Dependencies : Creates
     App ..> RouteFactory : Calls
-    RouteFactory ..> AlbumController : Instantiates with Deps
-    AlbumController o-- Dependencies : Uses
+    RouteFactory ..> EnrichmentService : Instantiates with Deps
+    RouteFactory ..> GenerationService : Instantiates with Deps
+    EnrichmentService o-- Dependencies : Uses
+    GenerationService o-- Dependencies : Uses
 ```
 
 ### Endpoints
 -   `POST /enrich-album`:
     -   **Input**: `{ albumData: { title, artist, tracks } }`
     -   **Logic**: Scrapes BestEverAlbums for the album to get community ratings/rankings. Maps these ratings to the provided tracklist using fuzzy string normalization.
-    -   **Response**: `{ data: { bestEverInfo, trackRatings } }`
+    -   **Response**: `{ data: { bestEverInfo, trackRatings, trackEvidence } }`
 -   `POST /generate`:
-    -   **Input**: `{ albumQuery, model, maxTokens }`
+    -   **Input**: `{ albumQuery, model, maxTokens, rawStage }` (`rawStage: 'ranking'` returns the raw ranking response)
     -   **Logic**:
         1.  Calls AI to search/generate album metadata.
         2.  Validates response against `album.schema.json`.
-        3.  Fetches external rankings (BestEverAlbums) via `fetchRankingForAlbum`.
+        3.  Fetches external rankings (BestEverAlbums, Spotify popularity, AI) via `fetchRankingForAlbum`.
         4.  Consolidates AI + External data to rank tracks (`consolidateRanking`).
         5.  Sorts tracks by acclaim (`tracksByAcclaim`).
+    -   **Response**: `{ data: albumPayload }` (422 with `validationErrors` when the album fails the schema).
+-   Both endpoints answer 503 when `AI_API_KEY` is not set.
 
 ---
 
@@ -70,7 +77,7 @@ classDiagram
 ### Endpoints
 -   `GET /list-models`: Proxies call to Google Gemini API to list available models.
 -   `POST /debug/raw-ranking`: Returns the raw AI and Scraper responses without normalization, for debugging pipeline issues.
--   `GET /debug/files`: Lists server file system (allow-list restricted) to verify container structure in Cloud Run.
+-   `GET /debug/files`: Lists one directory of the server file system (the server folder, or the one given in the `path` query parameter) to verify container structure in Cloud Run. There is no allow-list; like the other debug routes it only answers when `AI_API_KEY` is set.
 -   `GET /debug/import`: Tests dynamic import of ES modules (specifically `shared/normalize.js`).
 
 ---
@@ -82,10 +89,11 @@ classDiagram
 
 ### Endpoints
 -   `GET /musickit-token`:
-    -   **Logic**: Calls `MusicKitTokenService` to get/generate a signed JWT for Apple Music.
+    -   **Logic**: Calls `MusicKitTokenService` to get/generate a signed JWT for Apple Music. Answers 503 with the `missing` list when the service is not configured.
     -   **Caching**: Returns cached token if valid.
+    -   **Response**: `{ token, expiresAt, expiresIn, cached }`
 -   `GET /musickit-status`:
-    -   **Logic**: Checks if all required Env Vars (Team ID, Key ID, Private Key) are present.
+    -   **Logic**: Checks if all required Env Vars (Team ID, Key ID, Private Key) are present. Returns `{ configured, missing }`.
 
 ---
 
@@ -99,7 +107,7 @@ classDiagram
 
 ### Endpoints
 -   `POST /playlists`:
-    -   **Input**: `{ albums: [], options: { minDuration, maxDuration, ... } }`
+    -   **Input**: `{ albums: [], options: { minDuration, maxDuration, targetDuration } }` (minutes; default target 45 min)
     -   **Logic**: Converts duration targets to seconds and delegates to `curateAlbums` (shared logic) to generate balanced playlists.
     -   **Response**: `{ playlists: [...], summary, sources }`
 

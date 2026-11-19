@@ -1,13 +1,14 @@
 # Album Data Schema Definition (v1.1)
 > **Active Reference**: Defines the shape of Album, Series, and Ranking objects in the application.
 > **Source of Truth**: `public/js/models/Album.js` & `server/schema/album.schema.json`.
+> The Firestore documents (series with `albumQueries`, own rankings) are described in `32_Data_Schema_Reference.md`.
 
 ## 1. Album Object (`Album.js`)
 The core domain entity representing a music album. The frontend model bifurcates tracks into two lists.
 
 ```javascript
 {
-  "id": "string (UUID or SpotifyID)",
+  "id": "string (slug: artist_title)",
   "title": "string",
   "artist": "string",
   "year": "string | number", 
@@ -44,58 +45,64 @@ Individual song entity.
   "title": "string",
   "artist": "string", // Contextual inheritance from Album
   
-  // Sorting Metometrics
-  "rank": "number", // Acclaim Rank (1 = Highest)
-  "position": "number", // Disc Position (1 = First Track)
-  "popularity": "number (0-100)", // Spotify Pop Index
-  
+  "album": "string", // Contextual inheritance from Album
+
+  // Sorting Metrics
+  "acclaimRank": "number | null", // Acclaim Rank (1 = Highest)
+  "rank": "number | null", // Alias of acclaimRank
+  "acclaimScore": "number | null",
+  "rating": "number | null",
+  "position": "number | null", // Disc Position (1 = First Track)
+  "spotifyRank": "number | null",
+  "spotifyPopularity": "number (0-100) | null", // Spotify Pop Index
+
   // Audio Properties
-  "durationMs": "number",
+  "duration": "number (seconds)",
   "previewUrl": "string (URL | null)",
-  
-  // Physical Metadata
-  "discNumber": "number (Default: 1)",
-  "dtrackNumber": "number"
+
+  // Platform ids
+  "spotifyId": "string | null",
+  "spotifyUri": "string | null",
+  "appleMusicId": "string | null",
+  "isrc": "string | null",
+
+  "originAlbumId": "string | null",
+  "metadata": "object"
 }
 ```
 
 ## 3. Series Object (`Series.js`)
-A collection of albums (Discography) with curation scope.
+The in-memory model: a named collection of `Album` objects. The stored series document has a different shape (a list of `albumQueries`); see `32_Data_Schema_Reference.md`, section 3.
 
 ```javascript
 {
   "id": "string (UUID)",
   "name": "string (e.g., 'Pink Floyd Studio')",
-  "type": "string ('artist' | 'curated')",
-  "albumIds": ["string"],
-  "createdAt": "timestamp",
-  "settings": {
-    "excludeLive": "boolean",
-    "excludeCompilations": "boolean"
-  }
+  "description": "string",
+  "createdAt": "string (ISO date)",
+  "albums": ["Album Object"]
 }
 ```
 
 ## 4. Ranking Object (`rankingConsolidated`)
-The source-of-truth for track acclaim, merged from multiple sources.
+The track acclaim merged from multiple sources, as returned by `consolidateRanking` (`server/lib/ranking.js`) in the response of `POST /api/generate`.
 
 ```javascript
 [
   {
-    "trackTitle": "string (Normalized)",
-    "finalScore": "number (0-100)",
-    "position": "number (1-N)",
-    "sources": [
+    "trackTitle": "string (title as in the album tracklist)",
+    "finalPosition": "number (1-N)",
+    "rating": "number | null (BestEverAlbums rating preferred)",
+    "rawScore": "number (Borda points)",
+    "normalizedScore": "number (rawScore / (N * providers))",
+    "supporting": [
       {
-        "provider": "string ('besteveralbums' | 'spotify' | 'ai')",
-        "rawScore": "number",
-        "weight": "number (float)"
+        "provider": "string (e.g. 'BestEverAlbums', 'Spotify')",
+        "position": "number | null",
+        "referenceUrl": "string",
+        "rating": "number | null"
       }
-    ],
-    "meta": {
-      "isInstrumental": "boolean",
-      "isLive": "boolean"
-    }
+    ]
   }
 ]
 ```

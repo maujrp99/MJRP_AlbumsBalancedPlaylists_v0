@@ -17,6 +17,8 @@ The application uses a **Strategy Pattern** for both Playlist Generation and Tra
 
 ## 2. Algorithms (Distribution Layer)
 
+**Registry (`algorithms/index.js`)**: four algorithms are registered and offered as recipes: `mjrp-balanced-cascade`, `top-n-popular`, `top-n-acclaimed`, `top-n-user`. The other files in `public/js/algorithms/` (`LegacyRoundRobinAlgorithm`, `SDraftOriginalAlgorithm`, `SDraftBalancedAlgorithm`, `MJRPBalancedCascadeV0Algorithm`, `Top3*`, `Top5*`) are not registered, so `createAlgorithm` does not return them.
+
 ### Base Class (`BaseAlgorithm.js`)
 *   **Role**: Abstract base ensuring consistent API (`generate()`).
 *   **Key Features**:
@@ -46,7 +48,7 @@ The application uses a **Strategy Pattern** for both Playlist Generation and Tra
         *   Any "Excess Tracks" (Rank #10+) that didn't fit the first pass are distributed in a "Ping-Pong" fashion starting from the last playlist.
     6.  **Phase 5: Cleanup**:
         *   **Merge**: Combines adjacent small playlists (e.g., Vol 4 + Vol 5) if their combined length < 48min.
-        *   **Trim**: Moves tracks exceeding the 48min (LP) or 80min (CD) limit to "Orphan Tracks".
+        *   **Trim**: Moves tracks exceeding the Deep Cuts limit (48min by default; `targetDuration` overrides it) to "Orphan Tracks".
 
 ### Algorithm Flowchart
 ```mermaid
@@ -110,10 +112,13 @@ Generated playlists use a standardized title format:
 ### Balanced Ranking Strategy (`BalancedRankingStrategy.js`)
 *   **Role**: The client-side consumer of server-side data.
 *   **Waterfall Logic (The Decision Tree)**:
-    1.  **Rating (0-100)** (Primary): Prioritizes explicit ratings (derived from BestEverAlbums or User). Highest is best.
-    2.  **Acclaim Rank** (Secondary): If ratings are tied/missing, checks `acclaimRank` (BestEverAlbums final position).
-    3.  **Spotify Popularity** (Fallback): Used if no acclaim/rating data exists.
+    1.  **Acclaim Rank** (Primary): `acclaimRank` (BestEverAlbums final position). Lowest is best; tracks without one go last.
+    2.  **Rating (0-100)** (Secondary): If ranks are tied/missing, compares the rating. Highest is best. A track with no rating takes its `spotifyPopularity` as rating.
+    3.  **Score** (Tertiary): `normalizedScore`. Highest is best.
     4.  **Original Order** (Last Resort).
+
+### BEA Ranking Strategy (`BEARankingStrategy.js`)
+*   **Role**: The strategy used by the `top-n-acclaimed` recipe (`createRankingStrategy('bea')`).
 
 ### Spotify Ranking Strategy
 *   **Role**: Pure popularity-based sorting.
@@ -122,7 +127,7 @@ Generated playlists use a standardized title format:
 ### User Ranking Strategy (`UserRankingStrategy.js`) - Sprint 20
 *   **Role**: User-defined track ordering.
 *   **Logic**:
-    1.  Retrieves user's custom ranking for the album (from `UserRankingRepository`).
+    1.  Reads the user's custom ranking from the album itself (`album.userRanking`, put there when the album is loaded); it does not query the repository.
     2.  Matches tracks by normalized title key.
     3.  Falls back to original album order for unranked tracks.
 *   **Color**: Incandescent Blue (`#0EA5E9` / `sky-500`).
@@ -131,19 +136,19 @@ Generated playlists use a standardized title format:
 ---
 
 ## 4. Key Mixins & Helpers
-*   **`DurationTrimmingMixin`**: Logic to strictly enforce playlist time limits (e.g., 80min CD limit or 48min LP limit), moving overflow to an "Overflow" playlist.
+*   **`DurationTrimmingMixin`**: Logic to strictly enforce playlist time limits (48min by default), moving overflow to an "Orphan Tracks" playlist.
 *   **`TrackTransformer`**: A Data Transfer Object (DTO) factory that normalizes raw JSON from various APIs into a standard `Track` object with `acclaimRank`, `spotifyPopularity`, etc.
 
 ## 5. The "Logic Bridge": Server to Client
-How `server_logic.md` connects to this document.
+How `04_Backend_Logic_Services.md` connects to this document.
 
 | Layer | Component | Responsibility | Data Shape |
 | :--- | :--- | :--- | :--- |
 ### Enrichment (Sprint 22)
-*   **Method**: `refetchAlbumMetadata(album, seriesId)`
-*   **Parallel Execution**: Calls `BEAEnrichmentHelper` and `SpotifyService` concurrently.
+*   **Method**: `SeriesService.refetchAlbumMetadata(album, seriesId)`
+*   **Parallel Execution**: Calls `BEAEnrichmentHelper` and `SpotifyService` concurrently (`Promise.allSettled`).
 *   **Merge Logic**: Carefully merges enriched data back into the album object. **Crucial**: Explicitly preserves `tracksOriginalOrder` to ensure UI stability.
-*   **Cache Update**: Uses surgical injection to update the store without a full reload.
+*   **Store Update**: `SeriesController` hands the enriched album to `albumLoadService.adoptAlbum`, with no full reload.
 | **CLIENT** | `TrackTransformer` | **Normalization**. Maps raw server arrays to canonical properties on the `Track` object. | `track.acclaimRank`, `track.spotifyPopularity` (Unified Properties) |
 | **CLIENT** | `RankingStrategy` | **Sorting**. Uses the normalized properties to decide `track._rank`. | `track._rank = 1` |
 | **CLIENT** | `BaseAlgorithm` | **Distribution**. Uses `_rank` to move tracks into Playlists. | `playlist.tracks.push(track)` |
@@ -158,7 +163,7 @@ The application uses a **"Restaurant Metaphor"** in the UI to simplify complex a
 ### The Metaphor Translation Table
 | Metaphor | UI Component | Code Concept | Implementation |
 | :--- | :--- | :--- | :--- |
-| **Blend** | `BlendSeriesSelector` | **Input Data** | Selection of `Series` or Inventory Albums. |
+| **Blend** | `BlendSeriesSelector` | **Input Data** | Selection of an album `Series`. `BlendingController` then loads its albums in its own loop (`apiClient.fetchAlbum`), not through `AlbumLoadService`. |
 | **Recipe** | `BlendRecipeCard` | **Algorithm Class** | Selects the `algorithmId` (e.g., `top-n-popular` -> `TopNAlgorithm`). |
 | **Ingredients** | `BlendIngredientsPanel` | **Configuration** | Constructs the `options` object passed to `algorithm.generate()`. |
 
@@ -178,5 +183,5 @@ The connection is primarily managed by `BlendIngredientsPanel.js` and `PlaylistG
 3.  **Orchestration** (`PlaylistGenerationService.js`):
     *   Receives the normalized config.
     *   Instantiates the **Algorithm** via `createAlgorithm(config.algorithmId)`.
-    *   Instantiates the **Strategy** via `createRankingStrategy(config.rankingId)`.
+    *   Instantiates the **Strategy** via `createRankingStrategy(rankingId)`. The Top N recipes lock it: `top-n-popular` -> `spotify`, `top-n-acclaimed` -> `bea`, `top-n-user` -> `user`.
     *   Executes `algorithm.generate(albums, { ...options })`.

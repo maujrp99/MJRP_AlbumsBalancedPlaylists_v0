@@ -13,27 +13,28 @@ Use these IDs to reference specific UI elements:
 
 | Element ID | Description | Current Size |
 |------------|-------------|--------------|
-| `home.hero-logo-left` | Left logo (vinyl) | 96px / 112px (md) |
-| `home.hero-logo-right` | Right logo (fire vinyl) | 96px / 112px (md) |
-| `home.hero-title` | "The Album Blender" | text-2xl / text-4xl |
-| `home.hero-subtitle` | Description paragraph | text-lg / text-xl |
-| `home.create-button` | "Initialize Load Sequence" | text-base, rounded-2xl |
+| `home.header-icon` | Orange square with the Music icon (`#home-header`) | 40px (`w-10 h-10 rounded-lg`) |
+| `home.header-title` | "Album Blender V3" | text-xl font-syne font-bold |
+| `home.header-subtitle` | "Balanced Playlist Generator" | text-xs uppercase tracking-widest |
+| `home.create-button` | "Initialize Load Sequence" (`#btnInitializeLoad`) | h-12, rounded-xl, `bg-flame-gradient` |
 | `home.step-01` | "01 // Series Configuration" | text-xs uppercase |
 | `home.step-02a` | "02a // Artist Filter" | text-xs uppercase |
-| `home.step-02b` | "02b // Select Album" | text-xs uppercase |
+| `home.step-02b` | "02b // Discography Scan" | text-xs uppercase |
 
 ### TopNav Elements
 
 | Element ID | Description | Current Size |
 |------------|-------------|--------------|
 | `nav.logo-icon` | MJRP logo in nav | 48px / 64px (md) |
-| `nav.title-image` | "The Album Blender" text image | h-6 / h-10 / h-12 |
+| `nav.title-image` | "The Album Blender" text image | h-8 / h-12 (sm) / h-14 (md) |
 | `nav.menu-item` | Navigation link | text-sm uppercase, font-semibold, `.nav-link-glow` |
 
 ### AlbumsView Elements
+The albums screen is `views/SeriesView.js` today (there is no `AlbumsView.js`); the element IDs below keep the `albums.` prefix.
+
 | Element ID | Description | Class / Style |
 |------------|-------------|---------------|
-| `albums.page-header` | View title | text-4xl font-bold flex gap-3 |
+| `albums.page-header` | View title (`SeriesHeader`) | text-2xl md:text-4xl font-bold flex items-center gap-3 |
 | `albums.series-filter` | Series Dropdown Picker | `form-control` bg-brand-dark/50 |
 | `albums.filters-section` | Filter Bar Container | `glass-panel p-4` |
 | `albums.toggle-view-mode` | Toggle Compact/Expanded | `tech-btn` (Primary/Secondary) |
@@ -72,12 +73,12 @@ Use these IDs to reference specific UI elements:
 
 | View | Element | Current Classes |
 |------|---------|-----------------|
-| **HomeView** | Hero title | `text-2xl md:text-4xl font-syne font-extrabold` |
-| **HomeView** | Hero subtitle | `text-lg md:text-xl` |
-| **HomeView** | Create button | `text-base` |
+| **HomeView** | Header title | `font-syne font-bold text-xl` |
+| **HomeView** | Header subtitle | `text-xs uppercase tracking-widest` |
+| **HomeView** | Create button | `font-bold` (default size) |
 | **HomeView** | Section headers | `text-xs uppercase tracking-widest` |
-| **AlbumSeriesListView** | Page header | `text-4xl font-bold` |
-| **AlbumSeriesListView** | Card title | `text-lg font-bold` |
+| **SeriesView** (albums screen) | Page header | `text-2xl md:text-4xl font-bold` |
+| **SeriesView** (albums screen) | Card title | `text-lg font-bold` |
 | **InventoryView** | Page header | TBD |
 | **PlaylistsView** | Playlist title | TBD |
 | **SavedPlaylistsView** | Series name | TBD |
@@ -110,9 +111,9 @@ Use these IDs to reference specific UI elements:
 
 | Variant | Classes | Location |
 |---------|---------|----------|
-| Primary | `tech-btn-primary` | HomeView create series |
-| Secondary | `tech-btn tech-btn-secondary` | AlbumsView |
-| Danger | `tech-btn tech-btn-danger` | AlbumsView remove |
+| Primary | `tech-btn-primary` | Albums screen "Blend" button (`SeriesHeader`), Blend screen "Blend It!" |
+| Secondary | `tech-btn tech-btn-secondary` | Album card actions (`components/ui/Card.js`) |
+| Danger | `tech-btn tech-btn-danger` | Defined in `tech-theme.css`; no screen uses it today |
 
 ### Icon Buttons
 
@@ -142,7 +143,7 @@ Use these IDs to reference specific UI elements:
 
 | Element | Current | Recommended |
 |---------|---------|-------------|
-| Primary CTA (HomeView) | `px-8 py-4` | Keep |
+| Primary CTA (Blend screen) | `px-8 py-4` | Keep |
 | Standard button | `px-4 py-2` | Keep |
 | Small button | `px-3 py-1.5` | Keep |
 | Large button | `px-6 py-3` | Keep |
@@ -188,7 +189,7 @@ Use consistent colors to visually distinguish data sources:
 
 | Source | Color Name | Hex | Tailwind Class | Usage |
 |--------|------------|-----|----------------|-------|
-| **Acclaim** (BEA) | Brand Orange | `#FF6B00` | `text-brand-orange`, `bg-brand-orange` | Rankings, ratings, acclaim badges, ★ stars |
+| **Acclaim** (BEA) | Brand Orange | `#f97316` (`brand.orange` in the Tailwind config of `index.html`) | `text-brand-orange`, `bg-brand-orange` | Rankings, ratings, acclaim badges, ★ stars |
 | **Popularity** (Spotify) | Spotify Green | `#1DB954` | `text-[#1DB954]`, `bg-[#1DB954]` | Popularity scores, rank badges, progress bars |
 | **User Ranking** (NEW) | Incandescent Blue | `#0EA5E9` | `text-sky-500`, `bg-sky-500` | User rank badges, "Rank It" button, My Rank column |
 
@@ -258,11 +259,11 @@ Use consistent colors to visually distinguish data sources:
 ## View-Specific Elements
 
 ### HomeView
-- Hero: `rounded-3xl`, gradient overlay
-- Tech panels: `tech-panel`, `tech-green-accent`
-- Create button: `tech-btn-primary px-8 py-4 text-base rounded-2xl`
+- Header: `#home-header`, `p-6 border-b border-white/5`; background image `hero_bg.svg` at 30% opacity
+- Tech panels: `tech-panel` (`#home-tech-panel`)
+- Create button: `w-full bg-flame-gradient font-bold h-12 rounded-xl`
 
-### AlbumsView
+### Albums screen (`SeriesView`)
 - Expanded card: `glass-panel p-6 rounded-2xl`
 - Compact card: `aspect-square rounded-xl`
 - Action buttons: `tech-btn text-xs px-4 py-2`
