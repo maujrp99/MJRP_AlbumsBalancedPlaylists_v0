@@ -16,7 +16,7 @@
 *   [**05_Backend_Data_Schema.md**](05_Backend_Data_Schema.md) - Schema definitions.
 
 ## 06. Frontend Data Layer
-*   [**06_Frontend_Data_Stores.md**](06_Frontend_Data_Stores.md) - Pinia/Flux Stores.
+*   [**06_Frontend_Data_Store.md**](06_Frontend_Data_Store.md) - Stores (hand-written subscribe/notify; no Pinia, no MobX).
 *   [**07_Frontend_Data_Infra.md**](07_Frontend_Data_Infra.md) - Repositories & API Clients.
 *   [**07b_Frontend_Utilities_and_Workers.md**](07b_Frontend_Utilities_and_Workers.md) - SafeDOM & Web Workers.
 *   [**08_Frontend_Models.md**](08_Frontend_Models.md) - Domain Objects.

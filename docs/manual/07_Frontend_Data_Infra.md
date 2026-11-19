@@ -15,8 +15,8 @@ The application handles data using a **"Three-Tiered Persistence Strategy"**:
 ### BaseRepository (`public/js/repositories/BaseRepository.js`)
 *   **Role**: Abstract parent class for all data entities.
 *   **Integration**: Tightly coupled with `CacheManager`.
-    *   **Read**: Checks Cache -> Throws to Firestore -> Writes to Cache.
-    *   **Write**: Writes to Firestore -> Invalidates Cache (Optimistic Concurrency).
+    *   **Read**: only `findById` checks the cache first and writes the result back. `findAll` always goes to Firestore.
+    *   **Write**: writes to Firestore, then invalidates the cache keys of that document.
 *   **Tech**: Uses Firebase Modular SDK (`getDoc`, `query`, `orderBy`).
 
 ### Data Access Architecture Diagram
@@ -55,6 +55,8 @@ classDiagram
 *   **Features**:
     *   Subcollection Loading: Fetches `albums` subcollection manually in `findWithAlbums`.
     *   Cascade Awareness: Designed to support cascade deletes (though logic is often distributed).
+    *   `saveAlbumFacts(seriesId, albumQueries)` (v4.0): saves what the app learned about the albums of a series (see [32_Data_Schema_Reference.md](32_Data_Schema_Reference.md)). It leaves `updatedAt` alone: it is not the person editing the series.
+*   **The whole list is read** (v4.0): `SeriesService.loadFromFirestore` asks for every series, with no limit and no `orderBy` (Firestore leaves out a document that lacks the ordered field). The order by update date is applied in the browser.
 
 ---
 

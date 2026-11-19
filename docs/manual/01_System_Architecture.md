@@ -21,7 +21,7 @@ graph TD
     
     subgraph "Frontend Layer (Browser)"
         Router[SPA Router]
-        Store[State Store (MobX-like)]
+        Store[State Store (hand-written observer)]
         View[MVC Views]
         Controller[Controllers]
     end

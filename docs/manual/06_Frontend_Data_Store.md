@@ -6,12 +6,15 @@
 **Status**: `[ACTIVE]`
 **Pattern**: Singleton Observables (Flux-like)
 
-### 1.1 `stores/albums.js` (AlbumsStore)
-**Purpose**: Manages album entities, handling caching, persistence (Firestore), and Series context validation.
-    *   **Features**:
-        *   **Contextual Caching**: Maps albums to specific series contexts (`ALL_SERIES_VIEW` vs specific Series ID).
-        *   **Granular Removal** (Sprint 21.5): Supports reducing cache via `removeAlbumsBySeriesIdFromContext`.
-        *   **Surgical Injection** (Sprint 21.5): Supports injecting albums into `ALL_SERIES_VIEW` context even if they belong to a specific series, enabling instant UI updates for "All Series" view.
+### 1.1 `stores/albumLoad.js` (AlbumLoadStore) - v4.0
+**Purpose**: the one owner of which albums each series has and of the load state of each album. Pure state; only `AlbumLoadService` writes to it. Details in [08_Frontend_Models.md](08_Frontend_Models.md).
+
+### 1.1b `stores/albums.js` (AlbumsStore)
+**Purpose**: the shelf of loaded albums the other screens read.
+*   Since v4.0 it is filled by projection from `AlbumLoadStore` (`setAlbumsBySeries`).
+*   `ALL_SERIES_VIEW` holds the albums of every series on screen; each series id holds its own.
+*   `removeAlbumsBySeriesIdFromContext` and the "surgical injection" of Sprint 21.5 still exist for the edit and delete flows; the next load reconciles them.
+*   It is **not** a pure state container yet: it still carries Firestore code used by "Refetch Metadata" (issue UAT-14).
 
 ### 1.2 Pure State Containers (Sprint 19)
 **Status**: `[REFACTORED]`
@@ -107,4 +110,4 @@ sequenceDiagram
 **Type**: Domain Entities
 
 -   **`Album.js`**: Core entity. Aggregates tracks, manages `original` vs `acclaim` order.
--   **`AlbumIdentity.js`**: Defines the "Identity" (Artist + Title hash) to prevent duplicate lookups in caching layers.
+-   **`AlbumIdentity.js`**: Scores how well an album found by name matches the album asked for. It is not a hash and the cache does not use it.

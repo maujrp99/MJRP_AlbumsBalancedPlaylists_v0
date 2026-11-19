@@ -7,8 +7,13 @@
 > **Service Layer Check**: Verify that `[BLEND]` and `[PLAYLIST_MGR]` operations correctly trigger Store updates via their respective Services.
 
 ## 🔴 [CORE] Core Loop (The Must Pass)
-- [ ] **Load App**: App loads on `localhost:5000` without console crash.
-- [ ] **Series Isolation**: Switching Series A -> B clears the grid and loads B's albums.
+- [ ] **Load App**: App loads on the local dev address without console crash (port 5000 is taken by AirPlay Receiver on macOS; see issue UAT-178).
+- [ ] **Series Isolation**: Switching Series A -> B shows only B's albums.
+- [ ] **Albums load (v4.0)**: with the site data cleared, `/albums` shows the first page of series within seconds; every series ends as albums, or with the notice "N albums did not load · Try again"; none disappears.
+- [ ] **Leave and return (v4.0)**: going to Home mid-load and back shows the same number of series.
+- [ ] **All series (v4.0)**: the count under the grid says the total of series of the account (no cut at 20).
+- [ ] **Paging (v4.0)**: series per page 10 to 100; numbered pages and the growing list both work.
+- [ ] **Search (v4.0)**: typing a whole word in the search field needs no second click; it finds series of other pages.
 - [ ] **Persistence**: Reloading preserves the active Series, View Mode, and Ranking order (Verified Issue #148: Rankings survive refresh).
 - [ ] **Playlists Persistence**: Navigating to /playlists and back to /albums preserves generated playlists state (Issue #149 fix).
 
