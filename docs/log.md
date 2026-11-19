@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:45] session — F53: spec, plano e tarefas escritos; UAT-149 em `fixed`
+
+Passo retroativo da via rápida para a suíte de testes verde: quatro requisitos, o plano e as tarefas como foram feitas, com `status: In Progress`. Duas tarefas ficam abertas com `waiting::` (a origem de uma mensagem de erro que não derruba teste; o aceite do MJRP). O verificador de fecho da sessão apontou as tarefas em branco; a sessão **não** está encerrando: o cruzamento dos relatórios antigos com o plano da v5.0 segue rodando, e os arquivos locais de teste (`.claude/launch.json`, `vite.config.local.js`, o protótipo, o `.env`) continuam no worktree de propósito.
+
 ## [2026-11-19 14:43] session — terceiro deploy do site: a janela de ranking abre na ordem salva (UAT-187); F53, ADR-0019 e documentação na `main`
 
 - **Autorização do MJRP:** «let's do it», em resposta ao pedido de levar a F53 à `main` e publicar o conserto da janela de ranking.
