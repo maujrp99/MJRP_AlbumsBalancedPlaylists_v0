@@ -12,6 +12,8 @@
  * An 'empty' that comes from the server's own word carries it as `reason` ('not_found' or
  * 'no_ratings'): the record the browser keeps is believed for a time that depends on it. An
  * 'empty' with no reason (the server before F52) is believed for a short time only.
+ * A 'not_found' also carries `rule`, the version of the identity rule the server decided it with
+ * (null from a server before F68): the record is believed only while that is the rule of the app.
  */
 
 import { cloneAlbum } from '../../../models/cloneAlbum.js'
@@ -25,6 +27,11 @@ const LEGACY = 'legacy'
 
 /** The answer changes nothing in the album. */
 const unchanged = (album) => album
+
+/** "The source has none", with the server's reason and, for 'not_found', the version of the rule that decided it. */
+const hasNone = (answer, album) => ({
+    status: EMPTY, reason: answer.kind, rule: answer.data?.identityRule ?? null, album, apply: unchanged
+})
 
 /** Track ratings from the server (BestEverAlbums). */
 export class AcclaimEnricher {
@@ -49,7 +56,7 @@ export class AcclaimEnricher {
         // The source answered and has no ratings for this album: nothing is written into it. A page
         // with zero ratings is not "done" (it was, before F52), and its address is not kept, because
         // an album with that address reads as "already has its ratings".
-        if (SOURCE_HAS_NONE.has(answer.kind)) return { status: EMPTY, reason: answer.kind, album, apply: unchanged }
+        if (SOURCE_HAS_NONE.has(answer.kind)) return hasNone(answer, album)
         const data = answer.data || {}
 
         const apply = (target) => {

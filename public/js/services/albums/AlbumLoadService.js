@@ -17,7 +17,7 @@
  *                                                 `reason` says why it is 'empty', when the source said
  *   cache.get(query)                           -> Promise<{ album, enrichment } | null>
  *   cache.saveBase(query, album)               -> Promise<void>
- *   cache.saveEnrichment(query, album, source, status, { reason }) -> Promise<void>
+ *   cache.saveEnrichment(query, album, source, status, { reason, rule? }) -> Promise<void>
  *
  * Hold (F52): a port may throw an error with `hold: { reason, retryAfterMs? }` when the app's own
  * server said "sign in" (reason 'unauthorized', HTTP 401) or "wait" ('rate_limited', HTTP 429).
@@ -518,6 +518,8 @@ export class AlbumLoadService {
         const status = done ? EnrichmentStatus.DONE : EnrichmentStatus.EMPTY
         const reason = done ? null : (result.reason || null)
         const published = this._patch(generation, entry.seriesId, entry.key, { album, enrichment: { [source]: status } })
-        if (published) await this.cache.saveEnrichment(entry.query, album, source, status, { reason })
+        // `rule`: the version of the identity rule a "not found" was decided with, when the source said (F68)
+        const decidedBy = !done && result.rule ? { rule: result.rule } : {}
+        if (published) await this.cache.saveEnrichment(entry.query, album, source, status, { reason, ...decidedBy })
     }
 }

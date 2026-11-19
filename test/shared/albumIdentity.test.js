@@ -105,10 +105,18 @@ describe('an edition of the album is the same album', () => {
 
     it('what is in parentheses and is not an edition is part of the title', () => {
         expect(verdictOf({ artist: 'Weezer', title: 'Weezer (Blue Album)' }, { artist: 'Weezer', title: 'Weezer (Green Album)' })).toBe(Verdict.DIFFERENT)
-        expect(verdictOf({ artist: 'Weezer', title: 'Weezer' }, { artist: 'Weezer', title: 'Weezer (Green Album)' })).toBe(Verdict.DIFFERENT)
         expect(verdictOf({ artist: 'Oasis', title: '(What\'s the Story) Morning Glory?' }, { artist: 'Oasis', title: 'Morning Glory' })).toBe(Verdict.DIFFERENT)
-        expect(verdictOf({ artist: 'Eagles', title: 'Hotel California' }, { artist: 'Eagles', title: 'Hotel California (Live at the Forum \'76)' })).toBe(Verdict.DIFFERENT)
         expect(verdictOf({ artist: 'Elton John', title: 'Greatest Hits' }, { artist: 'Elton John', title: 'Greatest Hits (1970-2002)' })).toBe(Verdict.DIFFERENT)
+    })
+
+    // F68: these two answered `different` until the sweep of 2026-11-19 showed the ratings source
+    // writes «In The Court Of The Crimson King (An Observation By King Crimson)». The short title
+    // is still never "the same" by itself: it is the second tier, for pickAlbum to decide.
+    it('the short title asked for and a candidate with more in parentheses: never "the same" by itself, the second tier', () => {
+        const withMore = { verdict: Verdict.SAME_IF_ALONE, same: false, reason: Reason.TITLE_WITHOUT_PARENTHESES }
+
+        expect(compareAlbumIdentity({ artist: 'Weezer', title: 'Weezer' }, { artist: 'Weezer', title: 'Weezer (Green Album)' })).toEqual(withMore)
+        expect(compareAlbumIdentity({ artist: 'Eagles', title: 'Hotel California' }, { artist: 'Eagles', title: 'Hotel California (Live at the Forum \'76)' })).toEqual(withMore)
     })
 
     it('a title that is itself an edition word is kept', () => {
@@ -216,11 +224,10 @@ describe('the second tier: the catalog only has the title with a subtitle (MJRP,
         expect(reasonFor('No Quarter (Remastered)', 'No Quarter: Unledded')).toBe(Verdict.SAME_IF_ALONE)
     })
 
-    it('is not "one title contains the other": only a subtitle separator opens it', () => {
+    it('is not "one title contains the other": a word more, or a word less, opens nothing', () => {
         const verdictFor = (title, candidate) => compareAlbumIdentity({ artist: 'X', title }, { artist: 'X', title: candidate }).verdict
 
         expect(verdictFor('Core', 'Core Memories')).toBe(Verdict.DIFFERENT)
-        expect(verdictFor('Weezer', 'Weezer (Blue Album)')).toBe(Verdict.DIFFERENT)
         expect(verdictFor('Quarter', 'No Quarter: Unledded')).toBe(Verdict.DIFFERENT)
         expect(verdictFor('Unledded', 'No Quarter: Unledded')).toBe(Verdict.DIFFERENT)
         expect(verdictFor('Self-Titled', 'Self-Titled-Ish')).toBe(Verdict.DIFFERENT)

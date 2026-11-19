@@ -9,6 +9,9 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
+import {
+    ARTIST_EQUIVALENCES, SECOND_TIER_RULES, KNOWN_WRITINGS, IDENTITY_RULE_VERSION, Reason
+} from '../../shared/albumIdentity.js'
 
 const ROOT = process.cwd()
 const read = (relative) => fs.readFileSync(path.join(ROOT, relative), 'utf8')
@@ -94,16 +97,20 @@ describe('one rule says "this is the album asked for"', () => {
 })
 
 /**
- * The second tier (F55, slice 2): "the title asked for is the candidate's title before a subtitle"
- * is the same album only when pickAlbum, seeing every candidate of a source, finds no first-tier
- * candidate and no other album like it. A call site cannot grant it by itself.
+ * The second tier (F55, slice 2; a list of named rules since F68): a candidate one of its rules
+ * accepts is the same album only when pickAlbum, seeing every candidate of a source, finds no
+ * first-tier candidate and no other album like it. A call site cannot grant it by itself.
  */
 describe('the second tier of the rule is granted only by pickAlbum, over the list a source gave', () => {
     const sources = CALL_SITES.map(({ file, from, to }) => ({ file, source: region(file, from, to) }))
     const found = (pattern) => sources.flatMap(({ file, source }) => (source.match(pattern) || []).map(text => `${file}: ${text}`))
 
-    it('no call site names the second-tier verdict or its reason: it reads `same` and `found`, and stores the reason it was given', () => {
-        expect(found(/SAME_IF_ALONE|same-if-alone|TITLE_BEFORE_SUBTITLE|title-before-subtitle/g)).toEqual([])
+    it('no call site names the second-tier verdict or one of its reasons: it reads `same` and `found`, and stores the reason it was given', () => {
+        const reasons = SECOND_TIER_RULES.map(rule => rule.reason)
+        const names = Object.entries(Reason).filter(([, value]) => reasons.includes(value)).map(([name]) => name)
+
+        expect(reasons.length).toBeGreaterThan(1)
+        expect(found(new RegExp(['SAME_IF_ALONE', 'same-if-alone', 'SECOND_TIER_RULES', ...names, ...reasons].join('|'), 'g'))).toEqual([])
     })
 
     it('no call site decides from the kind of verdict: `.verdict` is never compared', () => {
@@ -117,11 +124,89 @@ describe('the second tier of the rule is granted only by pickAlbum, over the lis
         expect(found(/pickAlbum\([^()]*,\s*\[/g)).toEqual([])
     })
 
-    it('only the rule turns the second tier into "same": pickAlbum (candidates in sight) and compareKeptAlbum (the reason a pick left on the album)', () => {
+    it('only the rule turns the second tier into "same", through ONE door: pickAlbum (candidates in sight) and compareKeptAlbum (the reason a pick left on the album)', () => {
         const rule = read(RULE)
-        const granted = rule.match(/SAME\([^)]*\)/g).filter(call => !/Reason\.(EXACT_TITLE|EDITION_OF_TITLE|ARTIST_AND_TITLE_IN_ONE_TEXT)|askedTitle\.whole/.test(call))
+        // every place that builds the verdict `same` (not `.same(...)` of an equivalence, not a mention in a comment)
+        const builtSame = [...rule.matchAll(/(?<![.\w`])same\(([^)]*)\)/g)].map(match => match[1])
+        const throughTheDoor = [...rule.matchAll(/(?<!const )\bacceptedAlone\(([^)]*)\)/g)].map(match => match[1])
 
-        expect(granted).toEqual(['SAME(verdict.reason)', 'SAME(best.verdict.reason)'])
+        expect(builtSame).toEqual([
+            'asked.title.whole === candidate.title.whole ? Reason.EXACT_TITLE : Reason.EDITION_OF_TITLE', // firstTier
+            'Reason.ARTIST_AND_TITLE_IN_ONE_TEXT', // firstTier, a query with no artist
+            'verdict.reason' // the door: acceptedAlone
+        ])
+        expect(throughTheDoor).toEqual(['best.verdict', 'verdict']) // pickAlbum, compareKeptAlbum
+    })
+
+    it('a rule of the second tier only answers for two albums: it builds no verdict and reads nothing else', () => {
+        const rule = read(RULE)
+        const list = rule.slice(rule.indexOf('export const SECOND_TIER_RULES'), rule.indexOf('function secondTier('))
+
+        expect(list.match(/\b(?:same|sameIfAlone|different|acceptedAlone|pickAlbum)\(/g)).toBeNull()
+        expect(list.match(/\.(?:includes|indexOf|startsWith|endsWith)\(/g)).toEqual(['.includes(']) // the keys before a subtitle, whole
+        SECOND_TIER_RULES.forEach(({ reason, says, example, applies }) => {
+            expect(Object.values(Reason), reason).toContain(reason)
+            expect(typeof says, reason).toBe('string')
+            expect(example?.asked?.title && example?.candidate?.title, reason).toBeTruthy()
+            expect(applies.length, reason).toBe(2)
+        })
+    })
+})
+
+/**
+ * The rule is a set of lists (F68). A list that changes can turn a "not found" the browsers keep
+ * into a found album, so the lists and IDENTITY_RULE_VERSION move TOGETHER: add or change a rule,
+ * then bump the version in shared/albumIdentity.js and write both here.
+ */
+describe('the lists of the rule and its version move together', () => {
+    it('version 2: these equivalences of artists, these rules of the second tier, these known writings', () => {
+        expect({
+            version: IDENTITY_RULE_VERSION,
+            artists: ARTIST_EQUIVALENCES.map(equivalence => equivalence.name),
+            secondTier: SECOND_TIER_RULES.map(rule => rule.reason),
+            knownWritings: KNOWN_WRITINGS.map(known => `${known.artist}: ${known.titles.join(' = ')}`)
+        }).toEqual({
+            version: 2,
+            artists: ['same-words', 'same-names-in-another-order'],
+            secondTier: ['title-before-subtitle', 'title-without-parentheses', 'title-in-parentheses', 'title-with-artist-name', 'title-written-otherwise'],
+            knownWritings: ['Frank Ocean: Blonde = Blond', 'Joy Division: Substance 1977-1980 = Substance', 'AC/DC: POWER UP = PWR/UP']
+        })
+    })
+
+    it('the app and the server stamp and check ONE constant, the rule\'s', () => {
+        expect(read(APP_SIDE)).toMatch(/IDENTITY_RULE_VERSION/)
+        expect(read('public/js/services/albums/adapters/AlbumCacheAdapter.js')).toMatch(/saved\.rule === IDENTITY_RULE_VERSION/)
+        expect(read('server/lib/services/EnrichmentService.js')).toMatch(/identityRule: IDENTITY_RULE_VERSION/)
+    })
+})
+
+/**
+ * The text a source is searched with is part of finding an album (F68): it comes from the rule
+ * (`titleWithoutEditionNotes`, `titlesToSearch`). The two title cleaners the app and the server
+ * had, each with its own list of edition words, are gone.
+ */
+describe('one way to take the edition notes out of a title', () => {
+    const sourceFiles = (dir) => fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true }).flatMap(entry => {
+        const relative = `${dir}/${entry.name}`
+        if (entry.name === 'node_modules') return []
+        if (entry.isDirectory()) return sourceFiles(relative)
+        return entry.name.endsWith('.js') ? [relative] : []
+    })
+
+    it('no file of the app or of the server has or calls a title cleaner of its own', () => {
+        const withCleaner = ['public/js', 'server/lib', 'server/routes'].flatMap(sourceFiles).filter(file => /\bcleanTitle\s*\(/.test(read(file)))
+
+        expect(withCleaner).toEqual([])
+    })
+
+    it('the three searches by title ask the rule for the title to send', () => {
+        expect(read('server/lib/scrapers/besteveralbums.js')).toMatch(/titlesToSearch\(asked\)/)
+        expect(read('server/lib/services/spotifyPopularity.js')).toMatch(/titleWithoutEditionNotes\(asked\.title\)/)
+        expect(read('public/js/services/SpotifyService.js')).toMatch(/titleWithoutEditionNotes\(albumName\)/)
+    })
+
+    it('the scraper cuts no title by itself: no split at ":" or " - "', () => {
+        expect(read('server/lib/scrapers/besteveralbums.js').match(/\.split\(\s*['"](?::| - )['"]\s*\)/g)).toBeNull()
     })
 })
 
