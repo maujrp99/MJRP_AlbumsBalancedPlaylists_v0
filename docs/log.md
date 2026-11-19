@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:43] review — varredura da fonte de notas: 16 de 199 álbuns sem página pela regra exata
+
+Relatório em `reports/audits/2026-11-19-mjrpalbumblender-v0-ratings-source-sweep.md`. 183 achados, 16 `not_found`, nenhuma falha (a fila educada segurou 199 pedidos). Os 16 são, na leitura do agente, quase todos custo da regra exata na fonte (artista em outra ordem, qualificador entre parênteses, título escrito de outro jeito). Decidido pelo agente — revisável: a F68 (revisão das regras de identidade) passa na frente e começa agora, com esses 16 casos reais como base.
+
 ## [2026-11-19 19:38] decision — F69 criada: popularidade do Spotify, falha é falha (decidido pelo agente — revisável)
 
 A proposta emendada da F52 deixou este ponto de fora. Feature de via rápida, `^REL-40`, conserta a UAT-206 (aberta agora). Criada na `main` antes de qualquer ramo, sob a dispensa do MJRP de 19:03. Servidor publicado com as fatias 3 e 4 da F52 e o conserto do artista com nota: revisão `mjrp-proxy-00202-ktd` (volta: `mjrp-proxy-00201-kcq`).
