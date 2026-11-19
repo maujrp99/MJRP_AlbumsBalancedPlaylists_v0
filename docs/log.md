@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:14] session — F64 na `main`: um caminho só para publicar (`npm run deploy:site`, `npm run deploy:server`)
+
+O ramo `fix/f64-one-tested-way-to-production`, feito por um agente auxiliar em cópia isolada e conferido pelo integrador, entrou na `main`. O integrador leu os scripts (o que apagam, como tratam o `.env`, onde publicam) e rodou `npm run deploy:site:dry-run` até o fim: exporta a `main` para uma pasta temporária fora do repositório, roda os 493 testes, constrói, confere o pacote (o mesmo `main-DTBLM2CE.js` que está em produção) e para antes de publicar.
+
+- **O que mudou:** `scripts/deploy-site.sh` e `scripts/deploy-server.sh` no lugar dos dois scripts antigos e do `cloudbuild.yaml` (removidos); `.github/workflows/ci.yml` só roda os testes e não publica; o manual `00_Deployment_and_Setup.md` descreve o caminho único e como voltar.
+- **Não provado:** um deploy de verdade com os scripts novos (o próximo já será por eles); o `deploy-server.sh` em modo de ensaio foi rodado pelo agente auxiliar, não repetido pelo integrador; a automação do GitHub nunca rodou.
+- **Decisão que espera o MJRP:** o Node da imagem do servidor continua em 18 (fora de suporte). O agente auxiliar tinha trocado para 26; o integrador reverteu, porque muda o que produção roda.
+- **Segue aberto da UAT-20:** a verificação de código (`eslint`) tem 81 erros e não entra na automação.
+
 ## [2026-11-19 16:13] session — F64 conferida pelo integrador: o Node do servidor fica em 18 até o MJRP decidir; `arch.md` e `tech-stack.md` em dia
 
 O agente auxiliar entregou a F64 com a imagem do servidor em Node 26. Mudar o Node muda o que produção roda, e isso é decisão do MJRP: o `server/Dockerfile` volta a `node:18-slim` (o que está no ar), com a pendência escrita. `docs/specs/arch.md` (segredos, implantação do site e do servidor) e `docs/specs/tech-stack.md` deixam de citar os scripts antigos e o `cloudbuild.yaml`.
