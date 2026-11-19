@@ -37,7 +37,7 @@ export const LOAD_LIMITS = Object.freeze({
     findConcurrency: 3,       // catalog searches; Apple Music answers 429 above this (measured 2026-11-19 with 6)
     findTimeoutMs: 45000,     // the whole search of one album, its retries included
     sourceConcurrency: 6,     // the quick sources (own ranking, stored popularity): they must not take search slots
-    slowConcurrency: 2,       // the acclaim source scrapes a site on the server: start low, raise by measuring
+    slowConcurrency: 4,       // the acclaim source scrapes a site on the server; 2 was too slow for 217 albums, 4 is being measured (2026-11-19)
     enrichTimeoutMs: 20000
 })
 
