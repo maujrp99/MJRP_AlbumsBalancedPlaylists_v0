@@ -5,7 +5,7 @@
  */
 import { describe, it, expect } from 'vitest'
 import {
-    compareAlbumIdentity, compareKeptAlbum, compareOnlyAnswer, pickAlbum, albumFromLabel, sameArtist, Verdict, Reason
+    compareAlbumIdentity, compareKeptAlbum, compareOnlyAnswer, pickAlbum, albumFromLabel, artistNamesFromLabel, sameArtist, Verdict, Reason
 } from '../../shared/albumIdentity.js'
 
 const STP = 'Stone Temple Pilots'
@@ -410,5 +410,29 @@ describe('compareOnlyAnswer: a source that answers one album to a direct questio
         expect(compareOnlyAnswer({ artist: STP, title: 'Core' }, { artist: STP, title: 'Shangri-La Dee Da' }).same).toBe(false)
         expect(compareOnlyAnswer({ artist: STP, title: 'Core' }, { artist: 'Persefone', title: 'Core' }).same).toBe(false)
         expect(compareOnlyAnswer({ artist: STP, title: 'Core' }, null).same).toBe(false)
+    })
+})
+
+describe('the source tells artists of one name apart with a note: "Nirvana (US)"', () => {
+    it('a label is read with and without the note at the end of the artist', () => {
+        expect(albumFromLabel('Nevermind by Nirvana (US)')).toEqual([
+            { title: 'Nevermind', artist: 'Nirvana (US)' },
+            { title: 'Nevermind', artist: 'Nirvana' }
+        ])
+        expect(artistNamesFromLabel('Nirvana (US)')).toEqual(['Nirvana (US)', 'Nirvana'])
+        expect(artistNamesFromLabel('Nirvana')).toEqual(['Nirvana'])
+        expect(artistNamesFromLabel('')).toEqual([])
+    })
+
+    it('Nevermind by Nirvana is found among the real suggestions of the source', () => {
+        const labels = ['Nevermind by Nirvana (US)', 'Nevermind: The Singles by Nirvana (US)', 'Album of the day (#2894): Nevermind by Nirvana by BestEverAlbums']
+        const picked = pickAlbum({ artist: 'Nirvana', title: 'Nevermind' }, labels, albumFromLabel)
+        expect(picked).toMatchObject({ found: true, index: 0 })
+        expect(picked.verdict.reason).toBe(Reason.EXACT_TITLE)
+    })
+
+    it('the note does not make another album or another artist pass', () => {
+        expect(pickAlbum({ artist: 'Nirvana', title: 'In Utero' }, ['Nevermind by Nirvana (US)'], albumFromLabel).found).toBe(false)
+        expect(pickAlbum({ artist: 'Pearl Jam', title: 'Nevermind' }, ['Nevermind by Nirvana (US)'], albumFromLabel).found).toBe(false)
     })
 })

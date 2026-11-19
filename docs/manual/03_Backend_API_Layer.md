@@ -55,7 +55,7 @@ classDiagram
 ### Endpoints
 -   `POST /enrich-album`:
     -   **Input**: `{ albumData: { title, artist, tracks } }`
-    -   **Logic**: Scrapes BestEverAlbums for the album to get community ratings/rankings. Maps these ratings to the provided tracklist using fuzzy string normalization.
+    -   **Logic**: Scrapes BestEverAlbums for the album to get community ratings/rankings. Maps these ratings to the provided tracklist using fuzzy string normalization. The whole request has 15 s and goes to the source at the server's pace (see "Time and pace of the ratings route").
     -   **Response** (F52): `{ data: { bestEverInfo, trackRatings, trackEvidence }, outcome }`:
         -   `found`: the source has the album and at least one rating matched a track asked for;
         -   `not_found`: the source answered every search and has no page for the album (`bestEverInfo: null`);
@@ -87,8 +87,8 @@ One module builds every answer of the album and AI routes, of the last error han
 | `code` | Status | `retryable` | Who answers it |
 | :--- | :--- | :--- | :--- |
 | `upstream_failed` | 502 | true | the outside source failed (network, 5xx) |
-| `upstream_timeout` | 504 | true | the outside source passed its deadline |
-| `upstream_busy` | 503 | true | the outside source said 429 or 503; also the door when Google's keys could not be fetched |
+| `upstream_timeout` | 504 | true | the outside source passed its deadline, or the album request used its whole time (15 s, see "Time and pace") |
+| `upstream_busy` | 503, with `Retry-After` when the server knows until when | true | the outside source said 429 or 503 and kept saying it; also the door when Google's keys could not be fetched |
 | `invalid_request` | 400 (or the 4xx of a request that could not be read) | false | a body the route cannot use |
 | `unauthorized` | 401, and 403 for a guest on a paid route | false | `requireUser.js`, `rateLimit.js` with nobody in the request |
 | `rate_limited` | 429 with `Retry-After` | false | `rateLimit.js` |
@@ -114,7 +114,36 @@ Not yet in this format: `routes/musickit.js`, `routes/playlists.js` and the debu
 The table is data (`AI_PROVIDER_TABLE`), and `test/server/aiProvider.test.js` tests every row on both routes. An error that is not the provider's (a bug of the server) is not in the table: it goes to the last error handler and leaves as 500 `internal`.
 
 ### The ratings scraper propagates failure (F52): `server/lib/scrapers/besteveralbums.js`
-`createBestEverScraper({ http, loadHtml })` receives the HTTP client and the HTML reader (the module also exports one scraper wired to axios and cheerio). Every request goes through one function, `getPage`, which throws an `UpstreamError` on no answer, a deadline or any HTTP status that is not a success. No search path catches it any more: `getRankingForAlbum` returns `null` only when the source answered every search and nothing matched. Before F52 a failed search was read as "not found", a failed album page was accepted unseen, and `getRankingForAlbum` returned `{ error }` instead of throwing. How a match is accepted did not change (that is the next slice of F52), and neither did the 30 s deadline per request.
+`createBestEverScraper({ http, loadHtml })` receives the HTTP client and the HTML reader (the module also exports one scraper wired to axios and cheerio). Every request goes through one function, `getPage`, which throws an `UpstreamError` on no answer, a deadline or any HTTP status that is not a success. No search path catches it any more: `getRankingForAlbum` returns `null` only when the source answered every search and nothing matched. Before F52 a failed search was read as "not found", a failed album page was accepted unseen, and `getRankingForAlbum` returned `{ error }` instead of throwing. How a match is accepted is the one identity rule of F55 (`02_Server_Structure.md`, section 5).
+
+### Time and pace of the ratings route (F52, slice 3)
+Three small modules, each with one job, all with the clock injected (the tests use no real time):
+
+| Module | Job |
+| :--- | :--- |
+| `server/lib/politeQueue.js` | The one owner of the pace with a scraped source. `createPoliteQueue({ concurrency, minIntervalMs, backoff, maxAttempts, maxRetryAfterMs, busyOf, now, sleep }).run(task, { deadlineAt })`: at most `concurrency` requests at once, in order; at least `minIntervalMs` between two starts; when the source says "busy" nobody starts until the wait ends (the source's `Retry-After`, or a wait that grows), and the same request is asked again. It never sleeps past `deadlineAt`: it throws `PaceError` (`reason: 'busy'` with `retryAfterMs`, or `'deadline'`) without touching the source. |
+| `server/lib/timeBudget.js` | The whole time one request may take. `createBudget({ ms })` gives `deadlineAt`, `remainingMs()` and `race(work, source)`, which rejects with `UpstreamError('upstream_timeout')` at the deadline even if the work is still running. |
+| `server/lib/inFlight.js` | `createInFlight().share(key, start)`: identical requests at the same time share one piece of work. The key is forgotten when the work ends, success or failure: it is not a cache. |
+
+How `POST /enrich-album` uses them:
+*   **Budget**: `EnrichmentService` gives each request `ALBUM_BUDGET_MS` = **15 s** (the app waits 20 s for the ratings, `LOAD_LIMITS.enrichTimeoutMs`). The scraper receives `deadlineAt`: it sends no request after it, gives each request `min(8 s, what is left)` (`REQUEST_TIMEOUT_MS` = 8 s; it was 30 s per request, with no total), and the time waited in the queue counts. At 15 s the answer is 504 `upstream_timeout`.
+*   **Pace** (`BEA_PACE` in `scrapers/besteveralbums.js`): 2 requests to BestEverAlbums at once, 250 ms between starts, a 429 or 503 of the source waits 1 s, 2 s, 4 s... up to 30 s (or the source's `Retry-After`, cut at 5 minutes), and one request is asked at most 3 times. A wait that does not fit in the request's time answers 503 `upstream_busy` with `Retry-After` in seconds; while the wait lasts, every request answers the same at once, without touching the source. The queue belongs to the scraper's single `getPage`, so `/generate` and the debug routes go through it too.
+*   **One search per album at a time**: requests with the same artist and title (case and spacing apart) that arrive while a search is running share it; each still gets the ratings of its own tracks. Within one album request the scraper asks each address once (the artist search used to be asked twice).
+*   **No memory between requests.** A short memory of answers was cut by the critique until there is a number (arch.md, F52, seção 11, item 10).
+*   **Per instance.** The queue, the waits and the sharing live in the memory of one server process. With more than one Cloud Run instance each has its own: "the server owns the pace" is true only with one instance (`--max-instances=1`), which is a setting of the service (the deploy script sets none). The app's own limit of 4 ratings requests at once stays as the second brake.
+
+### One line of log per ratings request (F52, measuring)
+`routes/handlers/albums.js` logs, for every `POST /enrich-album`, through `lib/logger.js` (JSON on stdout):
+
+```json
+{"ts":"2026-11-19T22:24:27.679Z","level":"info","msg":"enrich","meta":{"event":"enrich","how":"source","answer":"found","ms":2014,"sourceRequests":3}}
+```
+
+*   `how`: `source` (this request searched the source), `joined` (it waited for an identical request already searching), `none` (the source was not needed: an invalid request).
+*   `answer`: the outcome (`found`, `not_found`, `no_ratings`) or the error code.
+*   `ms`: the time of the request inside the server; `sourceRequests`: how many requests went to BestEverAlbums for it.
+*   Nothing of the person and nothing of the album is in the line.
+*   **Reading it in Cloud Run** (Logs Explorer, or `gcloud logging read`): filter `resource.type="cloud_run_revision" AND resource.labels.service_name="mjrp-proxy" AND jsonPayload.msg="enrich"`. Add `jsonPayload.meta.answer="upstream_timeout"` for the requests that used the whole budget, `jsonPayload.meta.how="joined"` for the shared ones. The first load of the albums screen is the set of lines between opening the screen and the last line; its cost for the source is the sum of `sourceRequests`.
 
 ---
 

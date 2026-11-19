@@ -110,8 +110,8 @@ No DOM, no store, no service: each imports only other models (checked by `test/a
 
 ### Album Load Cache (`public/js/services/albums/adapters/AlbumCacheAdapter.js`) - v4.0
 *   **Storage**: `CacheManager` (memory + IndexedDB `mjrp-cache`), keys `albumload:v1:<album query>`, 7 days.
-*   **Record**: `{ album, enrichment: { <source>: { status, at } } }`. The base album is saved as soon as it is found; each source adds its own status later.
-*   **Rules**: an `empty` answer is trusted for 1 hour only; a failure is never saved; the person's own ranking is never saved with the album; every read gives a new `Album`.
+*   **Record**: `{ album, enrichment: { <source>: { status, at, reason? } } }`. The base album is saved as soon as it is found; each source adds its own status later. `reason` is written only with `empty`, when the source said why.
+*   **Rules**: an `empty` answer is trusted for a time that depends on its reason (`EMPTY_TRUST`, F52 slice 3): `not_found` (the ratings source has no page for the album) 24 hours; `no_ratings` (the page was read and has no rating) 7 days; no reason, or one the app does not know (an answer of the server before F52, a record written before this slice, the popularity source) 1 hour, as before. A failure is never saved; the person's own ranking is never saved with the album; every read gives a new `Album`.
 *   **A record is valid only while it is the album asked for** (F55, slice 2): the key is the query, so a record written when "the right artist was enough" may hold another album. `get` asks the identity rule (`compareKeptAlbum`) and forgets a record that does not pass, so the album is searched again; a record of the title with a subtitle stays only when it carries `metadata.identityReason = 'title-before-subtitle'`. No record version was changed: a record that passes keeps its ratings. `peek` reads without dropping anything.
 
 ### Legacy Album Cache (`public/js/cache/albumCache.js`)

@@ -29,11 +29,11 @@ violates:: [[constitution#I]] (sem falha silenciosa). Issues: UAT-23 (falha de l
 
 ## Fatias (cada uma vai para produção sozinha)
 - **1. Contrato e falha que sobe** — **feita em 2026-11-19 no ramo `fix/f52-server-tells-the-truth`** (falta entrar na `main` e ir para produção: site primeiro, servidor depois). Toda resposta de sucesso diz o desfecho (`outcome`); toda falha sai num formato só (`{ error: { code, retryable } }`); a falha do provedor de IA sai por uma tabela fechada; o raspador de notas lança a falha em todas as buscas; o app lê a resposta num lugar só, decide repetir pelo campo `retryable` e segura a fila em 401 e 429.
-- **2. O raspador aceita só o álbum certo** — não feita. A regra de identidade nos cinco pontos de aceite do raspador (depende da primeira fatia da F55); nova versão do registro guardado no navegador; fatos antigos da série como «desconhecido».
-- **3. Tempo, fila e «não tem» confiável** — não feita. Orçamento de tempo por álbum no servidor (menor que os 20 s do app); fila por instância com uma instância fixa no Cloud Run; «não tem» confiável por 24 horas («álbum sem página») ou 7 dias («página sem notas»).
-- **4. Medir** — não feita. Medir a primeira carga e contar quantos álbuns estavam errados; decidir o guardado persistente com o número.
+- **2. O raspador aceita só o álbum certo** — **entregue pela F55** (fatias 1 e 2, em produção em 2026-11-19): a regra única de identidade (`shared/albumIdentity.js`) vale em todos os pontos de aceite do raspador. No lugar de trocar a versão do registro guardado no navegador, a F55 confere cada registro na leitura e descarta o que não é o álbum pedido. Os fatos antigos da série não viraram «desconhecido»: são reescritos a cada carga terminada (ver Open Questions).
+- **3. Tempo, fila e «não tem» confiável** — **feita em 2026-11-19 no ramo `fix/f52-slices-3-4`** (falta entrar na `main` e ir para produção). No servidor: orçamento de 15 s por álbum e 8 s por requisição à fonte; uma fila educada por instância (2 requisições por vez, 250 ms entre inícios, espera crescente no 429 e no 503, `Retry-After` respeitado); pedidos iguais simultâneos dividem uma busca só. No app: «álbum sem página» vale 24 horas e «página sem notas» vale 7 dias; a resposta do servidor antigo segue valendo 1 hora; a carga das notas espera, em vez de falhar, quando o servidor diz até quando a fonte pediu para esperar.
+- **4. Medir** — **a medição está construída; o número e a decisão, não.** O servidor escreve uma linha de log por pedido de notas (de onde veio a resposta, qual foi, em quanto tempo, quantas requisições à fonte). A contagem dos álbuns errados foi feita pela F55 (227 pedidos, 227 iguais, `reports/evidence/F55/2026-11-19-slice-2-browser-proof.md`). Falta ler o número da primeira carga em produção e o MJRP decidir o guardado persistente.
 
-Fora desta feature, por decisão da seção 11: a popularidade do Spotify com falha como falha (item próprio) e a memória curta por instância.
+Fora desta feature, por decisão da seção 11: a popularidade do Spotify com falha como falha (item próprio, ainda sem feature criada) e a memória curta por instância (cortada até haver número). O que a leitura do código mostrou sobre a popularidade está no plano, em «Risks & Considerations».
 
 ## Requirements
 <!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here.
@@ -48,17 +48,23 @@ Fora desta feature, por decisão da seção 11: a popularidade do Spotify com fa
   verified_by:: `test/api/serverResult.test.js`, `test/api/client.test.js`, `test/services/albums/adapters.test.js`, `test/services/album-search/AlbumSearchService.aiList.test.js`
 - [REQ-05] Um 401 ou um 429 do próprio servidor segura a carga de álbuns em vez de marcar cada álbum como falha: no 429 a carga volta sozinha no prazo do `Retry-After`; no 401 ela para de perguntar e avisa uma vez. · fixes UAT-23
   verified_by:: `test/services/albums/AlbumLoadService.test.js`, `test/utils/TaskQueue.test.js`, `test/models/albumLoadState.test.js`
-- [REQ-06] O raspador de notas só aceita a página do álbum pedido, nos cinco pontos de aceite; o que estava guardado errado no navegador é descartado. (fatia 2, não feita) · fixes UAT-23
-  verified_by:: «a escrever na fatia 2»
-- [REQ-07] O servidor responde dentro de um orçamento de tempo por álbum menor que o prazo do app, controla o ritmo com a fonte raspada, e o app passa a confiar no «não tem» por 24 horas ou 7 dias. (fatia 3, não feita) · fixes UAT-23
-  verified_by:: «a escrever na fatia 3»
-- [REQ-08] A primeira carga é medida e conta-se quantos álbuns estavam com nota errada; o guardado persistente no servidor é decidido com o número. (fatia 4, não feita) · fixes UAT-23
-  verified_by:: «a escrever na fatia 4»
+- [REQ-06] O raspador de notas só aceita a página do álbum pedido, nos cinco pontos de aceite; o que estava guardado errado no navegador é descartado. (fatia 2, entregue pela F55: REQ-05 e REQ-11 dela) · fixes UAT-23
+  verified_by:: `test/server/scraperIdentity.test.js`, `test/server/ratings.test.js`, `test/services/albums/adapters.test.js`
+- [REQ-07] O servidor responde dentro de um orçamento de tempo por álbum menor que o prazo do app, controla o ritmo com a fonte raspada, e o app passa a confiar no «não tem» por 24 horas ou 7 dias. (fatia 3) · fixes UAT-23
+  verified_by:: `test/server/pace.test.js`, `test/server/ratingsPace.test.js`, `test/services/albums/emptyTrust.test.js`, `test/api/serverResult.test.js`, `test/api/oldTabAgainstNewServer.test.js`
+- [REQ-08] A primeira carga é medida e conta-se quantos álbuns estavam com nota errada; o guardado persistente no servidor é decidido com o número. (fatia 4: a linha de log está construída e testada, a contagem veio da F55; o número em produção e a decisão estão abertos, TASK-18 e TASK-25) · fixes UAT-23
+  verified_by:: `test/server/ratingsPace.test.js` (a linha de log), `reports/evidence/F55/2026-11-19-slice-2-browser-proof.md` (a contagem)
+- [REQ-09] Pedidos de notas iguais e simultâneos (mesmo artista e título) fazem uma busca só na fonte, e cada um recebe as notas das suas faixas; nada fica guardado no servidor de um pedido para o outro. (fatia 3) · fixes UAT-23
+  verified_by:: `test/server/pace.test.js`, `test/server/ratingsPace.test.js`
+- [REQ-10] Quando a fonte de notas pede para esperar por mais tempo do que o pedido tem, o servidor responde 503 `upstream_busy` com `Retry-After`, e o app segura a carga das notas até lá, com um aviso, em vez de marcar cada álbum como falha. Uma falha nunca é guardada no navegador, nem pelo «Refetch» do álbum. (fatia 3) · fixes UAT-23
+  verified_by:: `test/server/ratingsPace.test.js`, `test/api/serverResult.test.js`, `test/services/albums/AlbumLoadService.test.js`, `test/models/albumLoadState.test.js`, `test/services/albums/emptyTrust.test.js`
 
 ## Observable States
-N/A: a feature não importa nó de requisito com estado de tela. O que se vê: a nota de um álbum em «falhou» (com «tentar de novo») em vez de «sem nota» quando a fonte falha; um aviso único quando a carga é segurada por 401 ou 429.
+N/A: a feature não importa nó de requisito com estado de tela. O que se vê: a nota de um álbum em «falhou» (com «tentar de novo») em vez de «sem nota» quando a fonte falha; um aviso único quando a carga é segurada por 401 ou 429, e, desde a fatia 3, quando a fonte de notas pediu para esperar («The ratings source asked to slow down. Loading ratings is paused. It resumes by itself at HH:MM.»). Descrito em `docs/specs/behavior.md` (`^library-ratings-load-held`, `^local-album-cache`).
 
 **Mudança de comportamento declarada (seção 11, item 8):** um álbum cuja página na fonte existe e tem zero notas casadas contava como «tem notas» (`done`); com o servidor novo passa a «não tem» (`empty`). Isso muda o filtro «por fonte» e o fato gravado na série para esses álbuns. Os registros já guardados no navegador não são mexidos nesta fatia (a fatia 2 troca a versão do registro).
+
+**Mudança de comportamento declarada (fatia 3):** (1) um álbum que a fonte de notas não tem deixa de ser perguntado a cada hora: volta a ser perguntado depois de 24 horas («sem página») ou 7 dias («página sem notas»); o «Refetch» do álbum pergunta na hora. (2) Um pedido de notas que passa de 15 s no servidor volta como falha (504) com «tentar de novo»; antes o app desistia aos 20 s e o servidor seguia raspando. (3) O «Refetch» que volta sem notas não marca mais as notas como presentes no guardado.
 
 ## Success Criteria
 - Com a fonte de notas fora do ar, `POST /api/enrich-album` responde 502, 503 ou 504 com `{ error: { code, retryable: true } }`, nunca `not_found`.
@@ -66,14 +72,20 @@ N/A: a feature não importa nó de requisito com estado de tela. O que se vê: a
 - Para cada linha da tabela do provedor de IA, a resposta do servidor tem o status, o código e o `retryable` da linha, e nenhum texto do provedor.
 - Uma aba antiga faz uma chamada só a `/api/generate` em cobrança, cota, pedido recusado e resposta inaproveitável.
 - O site novo contra o servidor antigo não guarda nada que o servidor antigo não tenha dito.
+- (fatia 3) Com a fonte de notas lenta, `POST /api/enrich-album` responde em até 15 s com 504 `upstream_timeout`; com a fonte respondendo 429 sem parar, 503 `upstream_busy` com `Retry-After`. Nunca `not_found`.
+- (fatia 3) Dois pedidos iguais ao mesmo tempo aparecem no log como `how: "source"` e `how: "joined"`, e a fonte recebe as requisições de um só.
+- (fatia 3) Um álbum que a fonte não tem não gera novo pedido de notas ao recarregar a tela dentro de 24 horas.
 
 ## Out of Scope
-- Mudar como o raspador aceita um álbum (fatia 2) e a versão do registro guardado (fatia 2).
-- Fila, orçamento de tempo e prazos de confiança no «não tem» (fatia 3): `EMPTY_TRUSTED_FOR_MS` segue em 1 hora.
-- A popularidade do Spotify com falha como falha (item próprio).
+- A popularidade do Spotify com falha como falha (item próprio; a seção 11, item 10, tirou desta feature).
+- A memória curta de respostas por instância e o guardado persistente no servidor (seção 11, item 10; TASK-18).
+- Fixar uma instância no Cloud Run: é configuração do serviço, feita por quem publica (seção 11, item 9); o código não a impõe.
+- O orçamento de tempo de `/api/generate`: a rota passa pela mesma fila e pelo prazo de 8 s por requisição à fonte, mas não tem um total próprio.
 - As rotas `musickit`, `playlists` e de depuração: seguem montando o próprio erro.
 - Uma tela para o estado «carga segurada»: nesta fatia há só o aviso (toast).
 
 ## Open Questions
+- Os prazos de confiança (24 horas e 7 dias), o orçamento (15 s, 8 s por requisição) e o ritmo com a fonte (2 por vez, 250 ms, espera de 1 s dobrando até 30 s, 3 tentativas) foram decididos pelo agente, sem medição de como a fonte responde a uma rajada. — do MJRP, revisáveis com o número do log.
+- Fatos da série gravados antes da F52: a seção 11 (item 8) pedia que valessem como «desconhecido». Não foi construído: os fatos são reescritos a cada carga terminada, e um «sem nota» antigo no navegador vale só 1 hora, então se refazem na primeira carga. Fica um caso sem conserto automático: o álbum que o servidor de antes da F52 marcou como «tem notas» por ter página com zero notas casadas (guardado como `done`, com o endereço da página). Quantos são não foi contado. — do MJRP: aceitar (o «Refetch» do álbum não o conserta; «Clear Cache» sim) ou abrir item.
 - Guardado persistente no servidor: só depois de medir, como proposto, ou já? — do MJRP, na fatia 4.
 - A lista de álbuns por IA mudou de lugar na resposta (`data.albums`); uma aba antiga deixa de lê-la até ser recarregada e cai na classificação sem a lista. Aceitar, ou o servidor manter `albums` no topo por um tempo? — do MJRP; decisão do agente, revisável: aceitar.
