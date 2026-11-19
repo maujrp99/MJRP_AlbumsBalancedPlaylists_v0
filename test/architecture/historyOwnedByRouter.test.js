@@ -21,10 +21,7 @@ const KNOWN = {
     // the /callback route then redirects through the router.
     'services/SpotifyAuthService.js': 1,
     // Marks the edit address after a restore. Left as it is: the file is being rewritten by F56.
-    'controllers/PlaylistsController.js': 1,
-    // UAT-27: the empty state of the saved playlists sets location.hash (and goes nowhere).
-    // Left as it is: the saved playlists code is outside F63. The fix is router.navigate('/home').
-    'views/SavedPlaylistsView.js': 1
+    'controllers/PlaylistsController.js': 1
 }
 
 const WRITES_HISTORY = /history\s*\.\s*(pushState|replaceState)\s*\(|location\s*\.\s*hash\s*=[^=]/g
