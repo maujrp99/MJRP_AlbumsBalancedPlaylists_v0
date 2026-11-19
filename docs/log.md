@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:13] session — F54: o commit do conserto anotado nas issues e nas tarefas
+
+UAT-01 e UAT-188 passam a citar o commit `82336c2`; as tarefas 3 e 4 da F54 também.
+
 ## [2026-11-19 15:12] session — F54: apagar do inventário apaga (UAT-01) e as faixas mostram a duração (UAT-188)
 
 - **UAT-01:** `InventoryController.handleDelete` chamava `inventoryStore.deleteAlbum`, que não existe; passa a chamar `removeAlbum` e a tratar a falha. O repositório esquece a resposta «já está no inventário» do álbum removido, para ele poder ser adicionado de novo em seguida.
