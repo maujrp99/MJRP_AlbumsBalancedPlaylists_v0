@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:30] session — F60 na `main`; UAT-196, UAT-197, UAT-198 e UAT-05 em `fixed`
+
+O ramo `fix/f60-no-saved-work-lost` (agente auxiliar, conferido pelo integrador) entrou na `main` em `fa141c0`. A suíte tem 561 testes passando.
+
+- **Mudanças de comportamento que o MJRP precisa julgar** (o agente auxiliar as fez junto com os consertos): salvar playlists não regrava mais a série inteira a partir da memória; **apagar uma série apaga as playlists dela**, depois de a janela dizer quantas, sem desfazer; a cópia de inventário de visitante para conta saiu (só rodava no caso do defeito); o roteador passa a perguntar também no voltar do navegador; salvar um conjunto vazio é recusado.
+- **Sem conserto, por decisão de desenho pendente:** UAT-12 (dados de visitante ao entrar). A issue traz as três saídas.
+- **Perguntas abertas pelo agente auxiliar:** sair da conta deve recarregar o app? (só o inventário é limpo; séries e playlists em uso ficam na tela); o aviso de sair usa a caixa nativa do navegador, não o diálogo do app.
+- **Achados dele, não consertados:** a data de criação de uma playlist regravada vira um mapa em vez de data; salvar sem conexão fica em «Saving...» sem prazo; apagar um lote e apagar todas as playlists de uma série ainda apagam um documento por vez; os álbuns guardados dentro de uma série não são apagados com ela.
+
 ## [2026-11-19 16:29] session — F60 conferida no navegador pelo integrador (parte); evidência gravada
 
 O ramo veio de um agente auxiliar, com 561 testes passando depois de trazer a `main`. No navegador, com o login do MJRP e uma série de teste: playlists geradas voltam ao recarregar (UAT-05); dois cliques em salvar gravam um lote só; editar e salvar troca o lote sem sobra; o aviso de alteração não salva pergunta e respeita o não; apagar a série avisa que as playlists vão junto. **Não visto no navegador**, só em teste automático: a gravação que falha no meio (UAT-196), o inventário ao sair da conta (UAT-198) e o salvamento na série errada. `reports/evidence/F60-no-saved-work-lost/F60-browser-2026-11-19.json`.

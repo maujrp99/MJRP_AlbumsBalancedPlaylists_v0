@@ -349,3 +349,5 @@
 ---
 **Grand Total Code Files: 217 (Matched with Master List)**
 **Grand Total Doc Files: 47**
+
+> Added in v5.0 (F59, F60, F64), not yet placed in the tree above: `public/js/api/serverFetch.js`, `public/js/views/playlists/unsavedChangesGuard.js`, `public/js/utils/duration.js`, `server/lib/auth/` (`verifyIdToken.js`, `requireUser.js`, `guards.js`), `server/lib/rateLimit.js`, `server/lib/asyncRoute.js`, `server/lib/debugGate.js`, `scripts/deploy-site.sh`, `scripts/deploy-server.sh`, `scripts/lib/deploy-common.sh`.
