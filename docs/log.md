@@ -3,6 +3,40 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:42] session — save: v4.0 em produção e em fecho, regressão completa, v5.0 criada e em espera
+
+> Participantes: MJRP + Claude Code · Branch: fix/f53-test-suite-green
+> Session: claude-code:fix-albums-loading-and-cache (sessão de consertos do v0, aberta pela orquestradora do harness)
+> Duração: o dia 2026-11-19
+
+### Executive Summary
+A v4.0 do Album Blender v0 foi para produção em dois deploys do site (carga de álbuns por um serviço dono, lista inteira de séries, filtros, busca e paginação, cache e nova tentativa, endereço local único, botão do Spotify). Uma regressão completa no navegador achou um fluxo quebrado, três telas lentas e um caso de álbum trocado; virou relatório e onze issues. O MJRP adotou a arquitetura proposta como release v5.0, que só começa depois de documentada e de cruzada com os relatórios do começo da sessão; esse cruzamento estava rodando quando a sessão foi salva.
+
+### Decisions
+- A v5.0 só começa com toda a arquitetura documentada e com o cruzamento dos relatórios do começo da sessão feito e o impacto relatado ao MJRP (dele, na última mensagem antes do save).
+- A arquitetura proposta (todas as telas pelo serviço de carga, regra única de identidade do álbum, peça única de escolher álbuns, contrato de erros e cache no servidor) é a v5.0, pela via rápida; a v4.0 fecha com o que não depende dela mais o conserto da janela de ranking (MJRP).
+- Antes do backlog: consertar os 28 testes, registrar a ADR da carga, atualizar o `behavior.md` e toda a documentação (MJRP). Feito: suíte verde, ADR-0019 `Proposed`, `behavior.md`, 22 arquivos do manual.
+- Cenários, resultados, diagnóstico e análise vão para relatório `.md` (MJRP, duas vezes).
+- O agente pôde ranquear dois álbuns de teste e criar dados de teste na conta dele para a regressão (MJRP); ficaram «GNX» no inventário e dois rankings.
+- Dois deploys do site autorizados por ele («vamos mover pra prod»; «sim, prossiga»). O terceiro, do conserto da janela de ranking, não foi autorizado ainda.
+- Mudança de arquitetura feita e avisada: cada fonte aplica a sua resposta sobre o álbum mais novo e só o último pedido de uma fonte escreve (`arch.md`, seção 19).
+- Desvio de processo registrado, não contornado: o portão de fim de turno pede o `doctor.py`, vermelho desde antes da sessão; o protótipo da paginação ficou fora do git pela trava do espelho.
+
+### Next Session
+1. Ler `side-session-notes/local_a15091e2-6673-441f-a156-65b8e8f594b8/2026-11-19-v0-earlier-reports-vs-v5-plan.md`, conferir o que ele afirma e relatar ao MJRP o impacto na análise e no desenho da v5.0.
+2. Escrever as propostas de arquitetura da v5.0 (F55, F56, F57, F52), com crítica separada, antes do código.
+3. Fechar a v4.0: F54, documentos da F53, o deploy do conserto da janela de ranking quando o MJRP disser sim.
+4. Ver os 24 erros novos do doctor depois do commit do manual.
+
+### Key Data
+- Produção: `https://mjrp-playlist-generator.web.app`, publicado da `main` em `40ca80d`. Servidor (Cloud Run `mjrp-proxy`) não tocado.
+- Testes: 431 passam, 0 falham (`npx vitest run`, código de saída 0). Antes: 28 falhas.
+- Medições: 80 álbuns em 8,5 s; 217 álbuns em 31 s; playlists guardadas 20 s; blend de 2 álbuns já carregados 8 a 18 s.
+- Complexidade: `_enrichOne` 21, `CatalogAdapter.find` 12, `api/client.js fetchAlbum` 18, `PlaylistsController.handleSave` 27.
+- Issues: UAT-182 a UAT-194 abertas nesta sessão; 51 abertas no total, 40 delas antigas e fora de qualquer feature.
+- Doctor: 520 erros (496 antes do commit do manual; 499 no começo da sessão).
+- Nada foi enviado por push.
+
 ## [2026-11-19 14:41] session — manual revisado contra o código: 22 arquivos de `docs/manual/` corrigidos
 
 Pedido do MJRP: «antes de começar o backlog, atualize toda a documentacao». Um agente separado leu cada arquivo do manual ainda não revisado hoje (servidor, blend, playlists, inventário, integrações, ranking, testes, guia de estilo, folha de referência) e corrigiu o que o código contradiz; o implementador conferiu por amostra (a rota de busca que não existe, o `/debug/files`, os módulos sem uso) antes do commit.
