@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:16] session — dez issues de hoje ganham a parte «Evidência», que o board exige
+
+O MJRP perguntou se as features da v5.0 aparecem no Control Center. O leitor do board (`product_structure_check.py`) conta 13 features na v5.0 (`^REL-40`) e 8 na v4.0 (`^REL-39`), mas estava vermelho: dez issues abertas hoje (UAT-182, UAT-183, UAT-187 a UAT-193, UAT-195) não tinham a parte **Evidência:** da gramática. Acrescentada em cada uma, apontando o relato do MJRP, o relatório da regressão ou a evidência da feature. A tela do Control Center em si não foi vista: ela pede login (401).
+
 ## [2026-11-19 15:14] session — quinto deploy do site: F54 (apagar do inventário, duração das faixas, botão «Close»), main `cd96ad3`
 
 Publicado pela regra do MJRP de 2026-11-19 («cada Feature feita deveria ser testar e ir pra prod»): a F54 passou nos testes (443, 0 falhas) e no navegador local antes. `firebase deploy --only hosting` de uma cópia limpa da `main`. Conferido por fora: o site serve `assets/main-DfWvVVfh.js`, o mesmo arquivo do build. Não visto em produção no navegador. O servidor não foi tocado. Como voltar: «Rollback» no histórico do Firebase Hosting.
