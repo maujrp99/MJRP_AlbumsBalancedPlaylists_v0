@@ -1,0 +1,24 @@
+{
+  "feature": "F46",
+  "date": "2026-11-19 14:03",
+  "where": "http://127.0.0.1:5010/albums, conta do MJRP, com autorização dele para ranquear dois álbuns de teste",
+  "albums": [
+    {
+      "album": "Dire Straits - Brothers In Arms",
+      "series": "Dire Straits Vol.1 e mais duas séries",
+      "ranking_de_teste": "«Brothers In Arms» movida do 9º para o 1º lugar; o resto na ordem do disco",
+      "before_fix": "salvo no banco; refletiu numa série e não na outra, cuja nota ainda estava na fila (133 pedidos de nota em curso); 30 s depois continuava sem refletir",
+      "after_fix": "depois de recarregar, as três séries que têm o álbum mostram o ranking"
+    },
+    {
+      "album": "Deep Purple - Rapture of the Deep",
+      "series": "Deep Purple Vol.X",
+      "ranking_de_teste": "«Rapture of the Deep» movida do 4º para o 1º lugar; o resto na ordem do disco",
+      "after_fix": "1,5 s depois de salvar: fonte userRanking = done, ranking na tela (1 Rapture of the Deep, 2 Money Talks, 3 Girls Like That)"
+    }
+  ],
+  "note": "Os dois rankings são de teste e ficaram gravados na conta; o MJRP disse que os refaz.",
+  "not_checked": [
+    "o caso exato de salvar com a nota do mesmo álbum em curso depois do conserto, no navegador (coberto por teste automático)"
+  ]
+}

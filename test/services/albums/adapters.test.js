@@ -215,6 +215,38 @@ describe('enrichers', () => {
         expect((await new UserRankingEnricher({ getUserId: () => null, getRanking: vi.fn() }).enrich(album)).status).toBe('empty')
         expect((await new UserRankingEnricher({ getUserId: () => 'u1', getRanking: async () => null }).enrich(album)).status).toBe('empty')
     })
+
+    it('every source can put its answer on another album, without changing it (apply)', async () => {
+        const newer = makeAlbum({ spotifyId: 'sp1' })
+        const before = snapshot(newer)
+
+        const ranked = await new UserRankingEnricher({
+            getUserId: () => 'u1',
+            getRanking: async () => ({ rankings: [{ trackTitle: 'Two', userRank: 1 }] })
+        }).enrich(makeAlbum())
+        const withRanking = ranked.apply(newer)
+        expect(withRanking.hasUserRanking).toBe(true)
+        expect(withRanking.spotifyId).toBe('sp1') // what the newer album had is kept
+
+        const rated = await new AcclaimEnricher({
+            requestRatings: async () => ({ any: 'data' }),
+            applyRatings: (album) => { album.bestEverUrl = 'https://bea/album' }
+        }).enrich(makeAlbum())
+        const withRating = rated.apply(withRanking)
+        expect(withRating.bestEverUrl).toBe('https://bea/album')
+        expect(withRating.hasUserRanking).toBe(true)
+
+        const popular = await new PopularityEnricher({
+            applyPopularity: async (album) => { album.spotifyId = 'sp2' }
+        }).enrich(makeAlbum())
+        const withPopularity = await popular.apply(withRating)
+        expect(withPopularity.spotifyId).toBe('sp1') // already there: left as it is
+        expect(withPopularity.hasUserRanking).toBe(true)
+
+        const nothing = await new UserRankingEnricher({ getUserId: () => 'u1', getRanking: async () => null }).enrich(makeAlbum())
+        expect(nothing.apply(newer)).toBe(newer)
+        expect(snapshot(newer)).toBe(before)
+    })
 })
 
 describe('AlbumCacheAdapter', () => {

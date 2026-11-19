@@ -376,21 +376,43 @@ describe('AlbumLoadService', () => {
             expect(store.getEntries('s2')[1].album.hasUserRanking).toBeUndefined()
         })
 
-        it('waits for a source still running for that album, so its older answer does not undo the refresh', async () => {
+        it('does not wait for a source still running: the refresh shows at once, and the older answer does not undo it', async () => {
             withIds()
             const slow = deferred()
-            enrichers.acclaim.enrich = vi.fn(async (album) => { await slow.promise; return { status: 'done', album: { ...album, rated: true } } })
+            const rate = (album) => ({ ...album, rated: true })
+            const rank = (album) => ({ ...album, hasUserRanking: true })
+            enrichers.acclaim.enrich = vi.fn(async (album) => { await slow.promise; return { status: 'done', album: rate(album), apply: rate } })
             service.load({ scopeKey: 'ALL', series: [series('s1', 'One')] })
             await wait(20) // found; the slow source is running with the album it was given
-            enrichers.userRanking.enrich = vi.fn(async (album) => ({ status: 'done', album: { ...album, hasUserRanking: true } }))
+            enrichers.userRanking.enrich = vi.fn(async (album) => ({ status: 'done', album: rank(album), apply: rank }))
 
             service.refreshSource('id-One', 'userRanking')
             await wait(20)
-            expect(enrichers.userRanking.enrich).not.toHaveBeenCalled()
+            expect(enrichers.userRanking.enrich).toHaveBeenCalledTimes(1)
+            expect(store.getEntries('s1')[0].album.hasUserRanking).toBe(true) // on screen while the rating is still coming
+            expect(store.getEntries('s1')[0].album.rated).toBeUndefined()
 
             slow.resolve()
             await service.whenIdle()
             expect(store.getEntries('s1')[0].album).toMatchObject({ rated: true, hasUserRanking: true })
+        })
+
+        it('only the latest ask of a source writes: an older answer that arrives later is dropped', async () => {
+            withIds()
+            const first = deferred()
+            enrichers.userRanking.enrich = vi.fn(async (album) => { await first.promise; return { status: 'done', album: { ...album, ranking: 'old' } } })
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One')] })
+            await wait(20) // found; the first read of the ranking is still running
+            enrichers.userRanking.enrich = vi.fn(async (album) => ({ status: 'done', album: { ...album, ranking: 'new' } }))
+
+            service.refreshSource('id-One', 'userRanking')
+            await wait(20)
+            expect(store.getEntries('s1')[0].album.ranking).toBe('new')
+
+            first.resolve()
+            await service.whenIdle()
+            expect(store.getEntries('s1')[0].album.ranking).toBe('new')
+            expect(store.getEntries('s1')[0].enrichment.userRanking).toBe(EnrichmentStatus.DONE)
         })
 
         it('does nothing for an album that is not loaded or for a source that does not exist', async () => {

@@ -404,7 +404,7 @@ Construído no ramo `fix/f46-albums-load-state`. Onde esta seção contradiz as 
 
 **O ranking pessoal ganhou dono no cliente.** `services/ranking/OwnRankingService.js` salva o ranking e mantém a lista de álbuns ranqueados, lida uma vez por pessoa (`ensureLoaded`), com as portas injetadas; `stores/ownRankings.js` guarda a lista e o seu estado, e o índice de busca é derivado. `services/ranking/ownRanking.js` é o único lugar novo que conhece o repositório. A tela e o controlador não falam com `UserRankingRepository`.
 
-**O ranking salvo pelo modal reflete na tela.** `UserRankModal` só mostra e avisa (`onSubmit`); quem salva é `SeriesController.saveRanking`, que depois chama `AlbumLoadService.refreshSource(albumId, 'userRanking')`. O serviço marca a fonte como pendente, roda só ela e publica um álbum novo, em todas as séries que têm o álbum. O trabalho de cada álbum passou a ser encadeado (`_runChain`): o pedido espera a fonte que ainda estiver rodando para aquele álbum, senão a resposta mais antiga apagaria o ranking recém-lido. A tela deixou de mutar o álbum publicado (seção 15, ponto 5).
+**O ranking salvo pelo modal reflete na tela.** `UserRankModal` só mostra e avisa (`onSubmit`); quem salva é `SeriesController.saveRanking`, que depois chama `AlbumLoadService.refreshSource(albumId, 'userRanking')`. O serviço marca a fonte como pendente, roda só ela e publica um álbum novo, em todas as séries que têm o álbum. O trabalho de cada álbum é encadeado na carga (`_runChain`). O pedido de reler uma fonte, porém, **não espera** as outras fontes do álbum (emenda de 2026-11-19 14:03, seção 19). A tela deixou de mutar o álbum publicado (seção 15, ponto 5).
 
 **«My Ranking» sobre todas as séries.** O ranking é guardado sob o id do álbum carregado (`artista_título` em slug), com `artistName` e `albumTitle`; a série guarda o que foi pedido. `models/ownRanking.js` casa os dois por nome, escritos do mesmo jeito dos dois lados (sem caixa, sem acento, «&» como «and», sem pontuação, entidades HTML desfeitas, sem a nota de edição), e pelo id quando o ranking não tem os nomes. O que o nome não casa (o catálogo deu outro título ao álbum) casa de forma exata depois de o álbum carregar. O filtro puro (`filterSeries`) continua recebendo o conjunto de chaves; quem o monta é o controlador, só quando o filtro está ativo.
 
@@ -432,3 +432,18 @@ Construído no ramo `fix/f46-albums-load-state`. Onde esta seção contradiz as 
 ### 14. O que vai para o ADR
 
 A preencher depois da crítica e da aprovação.
+
+### 19. Cada fonte aplica a sua resposta sobre o álbum mais novo (2026-11-19 14:03)
+
+**O defeito visto no navegador.** Com as notas ainda chegando (133 pedidos na fila lenta, depois de limpar o cache), o MJRP autorizou um teste de ranking em «Brothers In Arms». O ranking foi salvo, mas numa das séries o cartão não mudou: o pedido de reler o ranking ficou na fila daquele álbum, atrás da nota, que podia levar minutos.
+
+**A causa.** Cada fonte devolvia o álbum inteiro, copiado do álbum que recebeu. Duas fontes ao mesmo tempo no mesmo álbum se apagariam, e por isso tudo era posto em fila por álbum, inclusive o que a pessoa acabou de fazer.
+
+**O desenho.** A porta das fontes ganhou `apply`: `enrich(album) -> { status, album, apply }`, onde `apply(outro)` põe a mesma resposta numa cópia de outro álbum. Ao publicar, o `AlbumLoadService` confere se o álbum da prateleira ainda é o que a fonte recebeu; se outra fonte publicou um mais novo, aplica a resposta sobre esse. Duas regras saem daí:
+- **Nenhuma fonte desfaz outra**, em qualquer ordem de chegada. A fila por álbum deixa de ser condição de correção; ela fica na carga só pela ordem de prioridade (ranking, popularidade, nota).
+- **Só o último pedido de uma fonte para um álbum escreve** (`_asks`), a mesma regra das gerações, um nível abaixo. Uma leitura antiga do ranking que chegue depois da nova é descartada.
+
+Com isso `refreshSource` roda numa fila própria por álbum e fonte e aparece na tela na hora, com a nota ainda a caminho. A popularidade reaplica lendo o que o primeiro pedido guardou (`applyEnrichmentToAlbum` consulta o guardado antes da rede).
+
+**Testes:** `test/services/albums/AlbumLoadService.test.js` (o pedido não espera a fonte lenta e a resposta antiga não o desfaz; só o último pedido escreve) e `test/services/albums/adapters.test.js` (o `apply` de cada fonte). **No navegador:** `reports/evidence/F46-albums-load-state/F46-ranking-2026-11-19.json`.
+
