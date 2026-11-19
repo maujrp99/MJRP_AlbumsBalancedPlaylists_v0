@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 17:38] review — F52 fatia 1 revisada e provada pelo integrador
+
+Ramo do auxiliar com a `main` junto: 789 testes, build ok. Prova em `reports/evidence/F52/2026-11-19-slice-1-browser-proof.md` (oito cenários; três coisas vistas só em teste de unidade, ditas lá). Escolhas do auxiliar que ficam, revisáveis: erro do provedor de IA sai como 424; página com zero notas casadas passa a `empty`; aba antiga lê a lista da IA só depois de recarregar. UAT-181 e UAT-23 seguem abertas (fatias 2 a 4).
+
 ## [2026-11-19 17:33] session — F52 fatia 1: documentos da feature e manual do contrato de resposta
 
 Documentos da fatia 1 da F52, no ramo `fix/f52-server-tells-the-truth`.
