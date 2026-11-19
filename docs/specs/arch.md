@@ -91,9 +91,9 @@ O desenho acima é a **direção-alvo**; o que o código faz hoje está logo aba
 | `spotify_enrichment/{albumKey}` (`:49-51`) | **qualquer autenticado**, inclusive anônimo; cache global sem dono | `SpotifyEnrichmentRepository` |
 
 Regra: a estabilidade da produção e os dados do usuário não ficam abertos a qualquer visitante (constituição, Art. V). Conserto: achado 2 da auditoria. **Nenhum pipeline do repositório publica `firestore.rules`**: `firebase.json` não tem bloco `firestore`, e `.github/workflows/ci-firebase.yml:73, 120` e `scripts/deploy-prod.sh` implantam só `--only hosting`; o que está em produção pode não ser este arquivo.
-- Segredos: no Secret Manager do Google Cloud, injetados no Cloud Run (`AI_API_KEY`, `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_MUSIC_PRIVATE_KEY`; `cloudbuild.yaml`, `--set-secrets`); em desenvolvimento, `server/.env`.
-- Implantação do **frontend**: GitHub Actions (`.github/workflows/ci-firebase.yml`: lint, testes e build, depois `firebase deploy --only hosting` em `main`, `v0.2` e tags `v*`; canal de pré-visualização em PR) ou `scripts/deploy-prod.sh` (que também copia `firebase-config.js` para `dist/js/`).
-- Implantação do **backend**: existem **duas receitas que divergem**, e o repositório não diz qual gerou a produção atual. `cloudbuild.yaml` copia `shared/` para `server/_shared_temp` e constrói a imagem, mas **não copia `config/`** (o servidor procura `prompts.json` em `server/config/` ou em `<raiz>/config/`, `server/lib/prompts.js:4-5`) e **não grava o `package.json` com `"type": "module"`** em `_shared_temp`, de que o `import()` dinâmico de `shared/*.js` precisa (`server/routes/playlists.js:23`, `server/lib/ranking.js:8`, `server/lib/fetchRanking.js:13`). `scripts/deploy-backend.sh` faz as duas coisas (`:27-33`) e usa `gcloud run deploy --source server`. A CI não implanta o backend. Regra: uma fonte da verdade (`PRINCIPLES.md` §I.5). Conserto: achado 12.
+- Segredos: no Secret Manager do Google Cloud, injetados no Cloud Run (`AI_API_KEY`, `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_MUSIC_PRIVATE_KEY`); a ligação entre segredo e variável mora na configuração do serviço e está descrita em `docs/manual/00_Deployment_and_Setup.md` (seção 2.4); em desenvolvimento, `server/.env`.
+- Implantação do **frontend**: `scripts/deploy-site.sh` (`npm run deploy:site`), da máquina do MJRP, com o login do Firebase CLI: exporta a `main` para uma pasta limpa, roda os testes, constrói com o `.env`, confere o que construiu, publica só o Hosting e confere produção (F64, 2026-11-19). A automação do GitHub (`.github/workflows/ci.yml`) só roda os testes; não publica.
+- Implantação do **backend**: uma receita só, `scripts/deploy-server.sh` (`npm run deploy:server`): exporta a `main`, roda os testes, monta o contexto (`shared/` em `server/_shared_temp`, `config/` em `server/config`), sobe o servidor localmente para conferir, e publica com `gcloud run deploy --source server`, que constrói a imagem pelo `server/Dockerfile`. A segunda receita (`cloudbuild.yaml`), que não copiava `config/`, foi removida na F64. O script imprime a revisão que estava no ar e o comando para voltar a ela.
 - CDN/Assets: Tailwind pelo CDN `cdn.tailwindcss.com`, com `tailwind.config` inline em `public/index.html:23`, e fonte Syne pelo Google Fonts (`:12, 15-17`); o SDK do Apple MusicKit vem de `js-cdn.music.apple.com` (`services/musickit/MusicKitAuth.js:124`); o conjunto de álbuns do autocompletar é o arquivo estático `albums-autocomplete.json`.
 
 ## Constraints
@@ -447,3 +447,137 @@ Com isso `refreshSource` roda numa fila própria por álbum e fonte e aparece na
 
 **Testes:** `test/services/albums/AlbumLoadService.test.js` (o pedido não espera a fonte lenta e a resposta antiga não o desfaz; só o último pedido escreve) e `test/services/albums/adapters.test.js` (o `apply` de cada fonte). **No navegador:** `reports/evidence/F46-albums-load-state/F46-ranking-2026-11-19.json`.
 
+## O servidor diz a verdade — proposta (F52)
+
+> **Crítica separada em 2026-11-19 16:18: «não pode ir ainda».** Dois achados bloqueiam e seis pedem correção antes do código (`reports/audits/2026-11-19-mjrpalbumblender-v0-f52-proposal-critique.md`). As emendas estão na seção 11, que **vale sobre** o que as seções 2, 5 e 7 dizem.
+>
+> **Estado:** proposta, escrita em 2026-11-19 16:12 pelo implementador. Nada daqui está construído. Antes do código ela passa por uma crítica separada e pelo MJRP. Origem: issues UAT-181 e UAT-23; o cruzamento em `reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md` (respostas 1.4 e 1.5, seção F).
+
+### 1. O problema, em uma frase
+
+Quando o servidor não consegue uma resposta, ele diz ao app que **não há nada**, e o app acredita e guarda isso.
+
+### 2. O que acontece hoje (lido no código em 2026-11-19)
+
+| Onde | O que o servidor faz quando falha | O que o app conclui |
+|---|---|---|
+| Notas (`POST /api/enrich-album`, `server/lib/services/EnrichmentService.js`) | o raspador falha (rede, 429, prazo de 30 s), o erro é engolido num aviso de console e a resposta é **200** com as faixas sem nota | «este álbum não tem notas»: grava `empty` no guardado por 1 hora e, desde a F51, grava na série que a fonte «notas» não tem dado |
+| Notas, álbum com página e zero notas casadas | 200 com o endereço da página | fica como `done`, com zero notas (`adapters/enrichers.js`) |
+| Lista de álbuns de um artista por IA (`POST /api/ai/studio-albums`) | qualquer erro vira **200** com lista vazia | «a IA não conhece álbuns deste artista»: a Home classifica sem a lista |
+| Álbum por IA (`POST /api/generate`) | repassa o erro cru do provedor, com o código dele (foi assim que o 402 de cobrança chegou ao app); o prazo é de 60 s | «não encontrado» ou erro genérico |
+| Raspador (`server/lib/scrapers/besteveralbums.js`) | aceita o álbum quando um título **contém** o outro, nos dois sentidos | pode trazer as notas de outro álbum do mesmo artista |
+| Qualquer rota de notas | nenhuma espera entre pedidos ao BestEverAlbums, nenhum tratamento de 429, nenhum guardado | 217 álbuns levam minutos, e cada «sem nota» é perguntado de novo a cada hora |
+
+### 3. Direcionadores
+
+- **Confiança:** uma falha nunca pode ser lida como «não existe». É a mesma regra que a tela de álbuns já segue para achar o álbum (v4.0); falta nas fontes de nota.
+- **Custo:** as rotas de IA são pagas; pedir de novo o que já se sabe custa dinheiro e tempo.
+- **Educação com a fonte:** o BestEverAlbums é raspado; pedidos sem intervalo e sem respeitar 429 arriscam bloqueio.
+- **Um usuário só, hoje.** A solução tem de servir a esse tamanho sem inventar infraestrutura.
+
+### 4. Riscos
+
+| # | Risco | Tipo | Gravidade |
+|---|---|---|---|
+| R1 | Falha gravada como «sem dado» esconde notas que existem, por 1 hora no navegador e sem prazo na série | dados | alta |
+| R2 | Notas de outro álbum aparecem como se fossem do álbum pedido | dados | alta |
+| R3 | Um guardado no servidor, posto antes de acertar o raspador, congela respostas erradas | dados | alta |
+| R4 | O erro cru do provedor de IA chega ao navegador (mensagens internas, e um dia pode trazer mais que isso) | segurança | média |
+| R5 | Pedidos em rajada ao BestEverAlbums levam a bloqueio | operação | média |
+| R6 | Mudar o formato da resposta quebra o app que está aberto numa aba antiga | operação | média |
+| R7 | O contrato novo vira mais uma regra espalhada, em vez de uma só | complexidade | média |
+
+### 5. O desenho proposto
+
+**5.1 Um contrato de resultado, um só, para as rotas do servidor.** Toda rota responde num de três desfechos, e o app os distingue pelo código HTTP e por um campo:
+
+| Desfecho | HTTP | Corpo | O app faz |
+|---|---|---|---|
+| Tem o dado | 200 | `{ data: … }` | usa e guarda |
+| A fonte respondeu e **não tem** (álbum sem página, página sem notas, artista sem álbuns) | 200 | `{ data: …, outcome: 'not_found' \| 'no_ratings' }` | marca `empty`, e pode confiar por dias |
+| **Não deu para saber** (fonte fora do ar, prazo, 429, erro interno) | 502, 504 ou 503 | `{ error: { code, retryable } }` com `code` de uma lista fechada | marca `failed`, mostra «tentar de novo», **não guarda** |
+
+A lista fechada de `code`: `upstream_failed`, `upstream_timeout`, `upstream_busy`, `invalid_request`, `unauthorized`, `rate_limited`, `internal`. Nenhuma mensagem do provedor sai do servidor; ela vai para o log.
+
+No servidor, um módulo só monta essas respostas (`server/lib/outcome.js`), e os serviços devolvem um resultado tipado em vez de engolir o erro. No app, um módulo só lê (`public/js/api/serverResult.js`), usado pelos adaptadores. Padrão DP-19 (resultado tipado), agora atravessando a rede.
+
+**5.2 O raspador só aceita o álbum certo.** A regra de «é o mesmo álbum» sai do «um título contém o outro» para a regra única de identidade da F55 (título tem de bater por conta própria, depois de tirar sufixos de edição). Sem álbum que bata, o desfecho é `not_found`, nunca o vizinho.
+
+**5.3 Guardar o que se sabe, no lugar certo.** A proposta **não** começa por um guardado no servidor:
+
+- O app já guarda cada álbum por 7 dias. O que falta é ele poder confiar no «não tem»: com o contrato, `not_found` e `no_ratings` passam a valer dias em vez de 1 hora, porque deixam de se confundir com falha. Isso tira a maior parte das perguntas repetidas sem nenhuma peça nova.
+- No servidor entra só o que é barato e certo: **um pedido por álbum de cada vez** (pedidos iguais simultâneos esperam o mesmo resultado) e uma memória curta por instância.
+- Um guardado persistente no servidor (em banco) fica para depois de medir, se o tempo da primeira carga ainda incomodar. Ele pede credencial de banco no servidor e uma regra de validade; não se justifica antes do número.
+
+**5.4 Uma fila educada para a fonte raspada.** O servidor passa a ser quem controla o ritmo com o BestEverAlbums: tantos pedidos por vez, intervalo mínimo, e 429 tratado com espera crescente (DP-23). O limite de 4 do app deixa de ser o controle; vira só o quanto o app pede.
+
+**5.5 As fontes do lado do app seguem a mesma regra.** A popularidade do Spotify (token vencido, 401, 429) passa a terminar em `failed`, não em «sem dado».
+
+### 6. Alternativas consideradas
+
+| Alternativa | Por que não |
+|---|---|
+| Só trocar o texto do erro | não resolve R1: a falha continuaria gravada como «sem dado» |
+| Guardado em banco no servidor desde já | R3 (congela erro do raspador) e infraestrutura nova para um usuário; pode entrar depois, medido |
+| Sempre HTTP 200 com um campo de erro | esconde a falha de quem monitora e de qualquer ferramenta; o código HTTP é a primeira coisa que se olha |
+| Deixar o raspador como está e conferir no app | o app não vê a página raspada; quem tem o dado para conferir é o servidor |
+| Levar a carga inteira para o servidor | muda o desenho da v4.0 inteiro; vale reavaliar depois (o motivo antigo para recusar era falso, ver ADR-0019), não dentro desta feature |
+
+### 7. Fatias, cada uma publicada sozinha
+
+| Fatia | O que entrega | Publica |
+|---|---|---|
+| 1 | Contrato de resultado no servidor e no app; notas e lista de álbuns por IA param de responder 200 na falha; `/api/generate` sem erro cru. O app aceita o formato antigo e o novo (R6) | site, depois servidor |
+| 2 | Raspador com a regra de identidade (depende da regra da F55, primeira fatia dela) | servidor |
+| 3 | «Não tem» confiável por dias no app; um pedido por álbum de cada vez e fila educada no servidor | site e servidor |
+| 4 | Popularidade do Spotify com falha como falha | site |
+| 5 | Medir a primeira carga; decidir, com o número, se o guardado persistente entra | — |
+
+A ordem cruza com a F55: a regra de identidade (F55, fatia 1) entra entre as fatias 1 e 2 daqui.
+
+### 8. Como saber que funcionou
+
+- Com o BestEverAlbums fora do ar (simulado em teste), `/api/enrich-album` responde 502 e o álbum aparece no app com a nota em «falhou», com «tentar de novo»; nada é gravado.
+- Um álbum sem página na fonte responde 200 com `not_found`, e o app não pergunta de novo no dia seguinte.
+- A lista de álbuns por IA com a IA fora do ar responde 502, e a Home diz que classificou sem a lista.
+- Nenhuma resposta do servidor traz texto do provedor de IA.
+- Para dois álbuns de nomes parecidos do mesmo artista, as notas são as do álbum pedido.
+- Medido: quantos pedidos ao BestEverAlbums uma segunda visita faz (hoje: um por álbum «sem nota» a cada hora).
+
+### 9. O que só o MJRP decide
+
+1. **Por quantos dias confiar no «não tem».** Proposta: 7 dias para «álbum sem página» e para «página sem notas», com o «Refetch» do álbum furando o prazo.
+2. **A ordem cruzada com a F55** (a regra de identidade entra no meio desta feature).
+3. **Guardado persistente no servidor:** só depois de medir, como proposto, ou já.
+
+### 10. O que esta proposta não sabe
+
+- Quantos dos 217 álbuns hoje estão com notas de outro álbum, ou com «sem nota» que na verdade foi falha. Dá para contar na fatia 2.
+- Como o BestEverAlbums responde a muitos pedidos (se manda 429, se bloqueia): não foi medido.
+- O comportamento do servidor com mais de uma instância: a fila educada e a memória curta valem por instância.
+
+### 11. Emendas depois da crítica (2026-11-19 16:18)
+
+A crítica conferiu a proposta contra o código e achou dez pontos. A direção fica; o que muda:
+
+1. **Onde a falha é engolida (corrige a seção 2).** Não é no serviço de notas: é dentro do raspador. `getRankingForAlbum` nunca lança (devolve um objeto com `error`), e as buscas têm `catch` vazios que transformam prazo e 429 em «não achei». Por isso a **fatia 1 inclui o raspador**: erro de rede ou de HTTP sobe como erro em todas as buscas; «não achei» só quando a fonte respondeu e nada bateu. Critério novo: com a busca da fonte fora do ar, a resposta é erro, nunca `not_found`.
+2. **Erro do provedor de IA não vira 5xx às cegas (corrige 5.1).** O app repete todo 5xx até duas vezes. Uma tabela fechada diz, para cada resposta do provedor, o que o servidor devolve: cobrança (402), cota (429) e pedido inválido (4xx) saem com um status que a aba antiga **não** repete e com `retryable: false`; só falha passageira do provedor sai como 5xx com `retryable: true`. O app novo decide pelo campo `retryable`, nunca pelo status.
+3. **`outcome` sempre presente (corrige a fatia 1).** O caso «tem o dado» responde `outcome: 'found'`. Um 200 sem `outcome` vem do servidor antigo e segue a regra de hoje: «sem nota» vale 1 hora, nunca dias.
+4. **O que já está guardado errado é descartado antes de confiar por dias.** A fatia do raspador troca a versão do registro guardado no navegador, de modo que nota de álbum vizinho e «sem nota» que foi falha se refazem. A confiança começa em 24 horas para «álbum sem página» e 7 dias só para «página conferida, sem notas»; sobe depois de contar quantos estavam errados.
+5. **O raspador tem cinco pontos de aceite, não um (corrige 5.2).** Além do «um título contém o outro»: aceita a página se o cabeçalho tem «by artista»; uma variação da busca procura só pelo artista; aceita sem artista; `fetchAlbumPage` aceita por título **ou** artista. A regra de identidade vale nos cinco. Teste novo: álbum ausente da fonte com o artista presente tem de dar `not_found`.
+6. **Orçamento de tempo.** O app espera 20 s por fonte; o raspador usa 30 s por requisição e encadeia várias. O servidor passa a ter um orçamento total por álbum menor que o prazo do app (15 s, depois `upstream_timeout`), com prazo de 8 a 10 s por requisição. A espera da fila conta nesse orçamento.
+7. **Um formato de erro, de verdade.** Hoje quatro lugares montam erro, cada um do seu jeito (o respondedor de erros, a porta de login, o limite por pessoa, as rotas). Todos passam pelo módulo novo na fatia 1. A tabela de 5.1 ganha as linhas 400, 401 e 429. No app, 401 e 429 **pausam a fila** (respeitando `Retry-After`) em vez de marcar cada álbum como falha. A rota de notas deixa de exigir a chave de IA que não usa. A lista de álbuns por IA deixa de devolver a mensagem do provedor (R4 vale para ela também).
+8. **Fatos já gravados na série.** Um fato gravado antes da fatia do raspador vale como «desconhecido» e se refaz na próxima carga. E fica declarado: página com zero notas hoje conta como «tem notas»; com o contrato passa a «não tem», o que muda o filtro por fonte.
+9. **A fila é por instância.** A promessa de «o servidor controla o ritmo» só vale com uma instância; a fatia que traz a fila fixa uma instância no Cloud Run como pré-condição, e o limite de 4 do app continua como segundo freio.
+10. **Cortes.** A memória curta por instância sai da proposta até haver número. A popularidade do Spotify sai desta feature e vira item próprio (é do lado do app).
+
+**Fatias, refeitas:**
+
+| Fatia | O que entrega | Publica |
+|---|---|---|
+| 1 | Contrato com `outcome` sempre presente, um formato de erro só, tabela do provedor de IA; o raspador propaga falha; o app lê por `retryable` e pausa a fila em 401 e 429 | site, depois servidor |
+| 2 | Regra de identidade nos cinco pontos de aceite do raspador (com a primeira fatia da F55); nova versão do registro guardado; fatos antigos como «desconhecido» | servidor e site |
+| 3 | Orçamento de tempo por álbum; fila por instância com uma instância fixa; «não tem» confiável por 24 horas ou 7 dias | servidor e site |
+| 4 | Medir a primeira carga e contar quantos álbuns estavam errados; decidir o guardado persistente com o número | — |
+
+**Ainda não verificado:** o que uma aba antiga faz com um 502 na lista de álbuns por IA; o prazo e o número de instâncias configurados no Cloud Run; se o caminho de `SeriesService` que aplica as notas por conta própria passa pelo leitor novo.

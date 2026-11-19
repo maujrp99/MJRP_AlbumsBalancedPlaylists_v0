@@ -27,6 +27,19 @@
 - **Visto e não mexido:** as séries e as playlists em memória também não são esvaziadas ao sair (só o inventário tinha issue). Recarregar o app ao sair resolveria tudo de uma vez; é decisão de desenho.
 - **Testes:** 515 passando.
 
+## [2026-11-19 16:18] review — crítica separada da proposta da F52: «não pode ir ainda»; proposta emendada
+
+Relatório: `reports/audits/2026-11-19-mjrpalbumblender-v0-f52-proposal-critique.md`. Agente separado, só de leitura, 5 minutos. Dois achados que bloqueiam, conferidos pelo implementador no código: a falha das notas é engolida dentro do raspador, não no serviço (mudar só o serviço carimbaria «não achei» em falhas); e virar o erro do provedor de IA em 5xx faria o app repetir chamadas pagas. Mais seis correções antes do código e dois cortes. A proposta ganhou a seção 11, que vale sobre as anteriores, com as fatias refeitas. A direção (contrato de três desfechos, sem guardado em banco no servidor por enquanto) foi mantida. Falta o ok do MJRP para ir ao código.
+
+## [2026-11-19 16:14] session — F64 na `main`: um caminho só para publicar (`npm run deploy:site`, `npm run deploy:server`)
+
+O ramo `fix/f64-one-tested-way-to-production`, feito por um agente auxiliar em cópia isolada e conferido pelo integrador, entrou na `main`. O integrador leu os scripts (o que apagam, como tratam o `.env`, onde publicam) e rodou `npm run deploy:site:dry-run` até o fim: exporta a `main` para uma pasta temporária fora do repositório, roda os 493 testes, constrói, confere o pacote (o mesmo `main-DTBLM2CE.js` que está em produção) e para antes de publicar.
+
+- **O que mudou:** `scripts/deploy-site.sh` e `scripts/deploy-server.sh` no lugar dos dois scripts antigos e do `cloudbuild.yaml` (removidos); `.github/workflows/ci.yml` só roda os testes e não publica; o manual `00_Deployment_and_Setup.md` descreve o caminho único e como voltar.
+- **Não provado:** um deploy de verdade com os scripts novos (o próximo já será por eles); o `deploy-server.sh` em modo de ensaio foi rodado pelo agente auxiliar, não repetido pelo integrador; a automação do GitHub nunca rodou.
+- **Decisão que espera o MJRP:** o Node da imagem do servidor continua em 18 (fora de suporte). O agente auxiliar tinha trocado para 26; o integrador reverteu, porque muda o que produção roda.
+- **Segue aberto da UAT-20:** a verificação de código (`eslint`) tem 81 erros e não entra na automação.
+
 ## [2026-11-19 16:13] session — F60: salvar playlists não perde o lote, grava uma vez, na série certa; apagar a série leva as playlists (UAT-196, UAT-197)
 
 - **Ramo:** `fix/f60-no-saved-work-lost`, a partir da `main` em `2adcdef`. Nada publicado, nada mesclado.
@@ -37,6 +50,55 @@
 - **Arquitetura:** `PlaylistsService.js` não importa mais o Firestore (a lista de exceções do teste de fronteiras encolheu para um arquivo); `handleSave` do controlador caiu de complexidade 27 para um caminho curto.
 - **Testes:** suíte com 509 passando (462 antes); `vite build` compila. Arquivos novos: `test/helpers/fakeFirestore.js`, `test/controllers/PlaylistsController.save.test.js`, `test/services/PlaylistsService.save.test.js`, `test/services/SeriesService.delete.test.js`, `test/views/unsavedChangesGuard.test.js`, `test/components/playlists/PlaylistsGridRenderer.save.test.js`.
 - **Falta nesta feature:** UAT-198, a análise da UAT-05 e da UAT-12, os documentos da feature, o manual e o `behavior.md`; a prova no navegador é do agente integrador.
+
+## [2026-11-19 16:13] session — F64 conferida pelo integrador: o Node do servidor fica em 18 até o MJRP decidir; `arch.md` e `tech-stack.md` em dia
+
+O agente auxiliar entregou a F64 com a imagem do servidor em Node 26. Mudar o Node muda o que produção roda, e isso é decisão do MJRP: o `server/Dockerfile` volta a `node:18-slim` (o que está no ar), com a pendência escrita. `docs/specs/arch.md` (segredos, implantação do site e do servidor) e `docs/specs/tech-stack.md` deixam de citar os scripts antigos e o `cloudbuild.yaml`.
+
+## [2026-11-19 16:12] session — proposta de arquitetura da F52 escrita: «O servidor diz a verdade»
+
+`docs/specs/arch.md`, seção nova no fim. O MJRP pôs como condição da v5.0 que a arquitetura esteja documentada antes do código; esta é a proposta da F52, escrita enquanto a F60 e a F64 rodavam em paralelo. Pontos: um contrato de resultado só para as rotas do servidor (tem o dado; a fonte não tem; não deu para saber), com a falha nunca lida como «sem dado»; o raspador só aceita o álbum certo, pela regra de identidade da F55; **não** começar por um guardado no servidor (o app já guarda por 7 dias; falta poder confiar no «não tem»), e medir antes de pôr banco; uma fila educada para a fonte raspada. Sete riscos, cinco alternativas, cinco fatias e três decisões que são do MJRP. Ainda **sem crítica separada**: é o passo seguinte, antes de qualquer código.
+
+- **F64:** o agente auxiliar entregou o ramo `fix/f64-one-tested-way-to-production`; ainda não conferido nem integrado.
+- **Fatia E da F59** (texto inserido como HTML) adiada para depois da F60: o levantamento achou 71 pontos candidatos em 25 arquivos de tela, vários deles os mesmos em que a F60 está mexendo.
+
+## [2026-11-19 16:11] session — F64: spec, plano e tarefas escritos do que foi feito; evidência dos dois ensaios
+
+- **Documentos da feature** (`docs/specs/features/F64-one-tested-way-to-production/`): `spec.md` em `In Progress` com seis requisitos, `plan.md` com o desenho, a decisão sobre as duas receitas da imagem e o risco do Node 26, `tasks.md` com sete tarefas fechadas (commit `fca0108`) e três à espera do MJRP: a primeira publicação real, a automação rodar no GitHub e o aceite.
+- **Evidência:** a saída dos dois ensaios em `reports/evidence/F64-one-tested-way-to-production/` (os caminhos da pasta temporária trocados por `<TMP>`).
+- **Pergunta aberta para o MJRP:** o Node do servidor passa de 18 para 26 na próxima publicação do servidor.
+
+## [2026-11-19 16:08] session — F64: um script para publicar o site e um para o servidor; receitas antigas removidas
+
+- **Scripts novos:** `scripts/deploy-site.sh` e `scripts/deploy-server.sh` (parte comum em `scripts/lib/deploy-common.sh`), chamados por `npm run deploy:site` e `npm run deploy:server`. Fazem os passos que vinham sendo feitos à mão: recusam se a `main` tem mudança não commitada, exportam a `main` para uma pasta temporária do sistema, `npm ci`, `npx vitest run`, constroem ou montam, conferem o que vai ser enviado, publicam, conferem a produção e mostram como voltar atrás. Usam o login do Firebase CLI e do gcloud; chave de conta de serviço é aceita se existir.
+- **`--dry-run`:** faz tudo menos publicar e conferir a produção. Os dois rodaram até o fim na `main` em `e54c80e` (493 testes): o site com o Client ID do Spotify nos scripts, sem `.map`, 40 arquivos em `dist/`; o servidor subiu localmente na arrumação da imagem (`/api/musickit-status` 200, `/api/debug/files` 404, prompts e `shared/` carregados). **Nada foi publicado.**
+- **Removidos:** `scripts/deploy-prod.sh`, `scripts/deploy-backend.sh` e `cloudbuild.yaml`. A produção usa `gcloud run deploy --source` (a imagem em uso vem de `cloud-run-source-deploy`); o `cloudbuild.yaml` era a receita que não copiava os prompts (UAT-22).
+- **Node do servidor:** `server/Dockerfile` passa de `node:18-slim` para `node:26-slim` e de `npm ci --only=production || npm install` para `npm ci --omit=dev`. O servidor sobe no Node 26 com as dependências do lockfile; a assinatura ES256 do token da Apple foi exercitada com uma chave descartável. **Só vale na próxima publicação do servidor, que depende do sim do MJRP.**
+- **Automação do GitHub:** `.github/workflows/ci-firebase.yml` vira `ci.yml`: roda `npx vitest run` em push e pull request e não publica nada. **Não testada: não rodou no GitHub.** O lint ficou de fora (81 erros hoje), então a UAT-20 segue aberta nessa parte.
+- **Manual:** `docs/manual/00_Deployment_and_Setup.md`, seções 1 e 2, reescritas para o caminho único, com o que precisa existir na máquina e como voltar atrás.
+- **Fica de fora (caminhos de outro agente ou fora do combinado):** `docs/specs/arch.md` e `docs/specs/tech-stack.md` ainda citam os scripts antigos e o `cloudbuild.yaml`; os itens 6.1, 6.5, 6.6 e 6.7 do mapa da v5.0.
+
+## [2026-11-19 16:08] session — F59 fatia C em produção: as rotas pagas respondem 401 sem login e funcionam com login
+
+- **Sétimo deploy do site** (main `e54c80e`): o app manda o login em toda chamada ao servidor. 493 testes antes; build sem mapas de código.
+- **Segundo deploy do servidor:** revisão `mjrp-proxy-00197-mps`, de uma cópia limpa da `main`. Ponto de volta: `mjrp-proxy-00196-sj7`.
+- **Conferido em produção:** sem login, as quatro rotas guardadas respondem 401 (antes 200). Com o login real do MJRP (app local falando com o servidor de produção): notas 200, lista de álbuns por IA 200 com 6 álbuns, busca de álbum por IA 200 com «1999». As rotas do Apple Music seguem abertas, de propósito.
+- **Não conferido:** o app publicado num navegador com login depois deste deploy; uma aba aberta desde antes precisa ser recarregada para mandar o login.
+- **F59:** fatias A, B e C em produção; a D virou a F66; falta a E (texto inserido como HTML sem tratamento; Tailwind servido do site).
+
+## [2026-11-19 16:05] session — UAT-16 cita os dois commits da F59
+
+A issue passa a citar `c48689d` (rotas de depuração) e `e253edd` (porta das rotas pagas).
+
+## [2026-11-19 16:05] session — F59, fatia C: as rotas pagas do servidor só respondem a quem está logado, com limite por pessoa
+
+- **O MJRP:** «Go for it pls», à proposta de seguir pela fatia C; e a F60 e a F64 rodam em paralelo com agentes auxiliares, cada um em cópia isolada (ainda sem resultado).
+- **Mudança de arquitetura (o MJRP pediu para ser avisado):** o servidor ganhou uma porta. `verifyIdToken.js` confere o login do Firebase sem o Admin SDK; `requireUser.js` responde 401, 403 ou 503; `rateLimit.js` conta por pessoa; `guards.js` é o único arquivo que conhece o Google e as variáveis. No app, `api/serverFetch.js` passa a ser o único jeito de chamar o próprio servidor, levando o login. Fechado por padrão. O desenho e as alternativas estão no `plan.md` da F59.
+- **Decisão do agente, revisável:** visitante (login anônimo) não usa as rotas pagas de IA; usa as de notas. `PAID_ROUTES_ALLOW_ANONYMOUS=true` reabre.
+- **Limites:** 60 chamadas pagas e 900 de notas por pessoa por hora, contadas na memória de cada instância.
+- **Testes:** 36 novos (31 do servidor, 5 do app), vistos falhar antes; a suíte tem 493 passando. O build compila.
+- **Prova:** numa cópia local do servidor, com o login real do MJRP e as chaves reais do Google: sem login 401; com login 200; a terceira chamada paga com o limite em 2 recebe 429; a tela de álbuns do app carrega as notas. Evidência na pasta da F59.
+- **A publicar, nesta ordem:** o site primeiro (passa a mandar o login), o servidor depois (passa a exigir).
 
 ## [2026-11-19 15:53] decision — o token do Discogs sai da F59 e vira a F66, para a F59 poder fechar
 

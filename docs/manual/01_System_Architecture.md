@@ -468,6 +468,7 @@ One line per component of the album path. "State" says whether it is in producti
 | Utility | `TaskQueue`, `retry`, `duration`, `localAddress`, `SafeDOM` | `utils/*` | queue with limit and deadline; retry; one duration formatter; one local address; DOM without `innerHTML` | v4.0 (`SafeDOM` v3, fixed in v4.0) |
 | Repository | series, playlists, inventory, rankings, shared albums | `repositories/*` | the only door to Firestore | v2; `SharedAlbumRepository` in v4.0 |
 | Cache | `CacheManager` | `cache/CacheManager.js` | memory + IndexedDB | v3 |
+| Edge | `serverFetch` | `api/serverFetch.js` | every call to the app's own server carries the person's login | **v5.0 (F59)** |
 | Legacy | `api/client.js` (`fetchAlbum`) | `api/client.js` | the old find-and-rate call, still used by blend and edit | v3; retired by F56 |
 
 #### Server
@@ -475,6 +476,7 @@ One line per component of the album path. "State" says whether it is in producti
 | Component | File | What it does | State |
 | :--- | :--- | :--- | :--- |
 | Album routes | `server/routes/albums.js` | `/api/generate`, `/api/enrich-album` | v3; error contract in F52 |
+| Route guards | `server/lib/auth/guards.js`, `verifyIdToken.js`, `requireUser.js`, `server/lib/rateLimit.js` | the paid and the costly routes answer only to a signed-in person, each with a limit per person | **v5.0 (F59)** |
 | AI routes | `server/routes/ai.js` | artist's album list by AI; answers 200 and empty on any error | v3; F52 |
 | Debug routes | `server/routes/debug.js`, `server/lib/debugGate.js` | off unless the server starts with `ENABLE_DEBUG_ROUTES=true`; `/debug/files` lists any path when on | v3; off by default since v5.0 (F59) |
 | MusicKit route | `server/routes/musickit.js` | issues the Apple developer token | v3 |

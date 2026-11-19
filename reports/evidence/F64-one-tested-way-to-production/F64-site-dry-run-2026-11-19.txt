@@ -1,0 +1,51 @@
+DRY RUN: nothing will be deployed.
+Site deploy from /Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/agent-a36028aadec71b954, branch main
+
+==> Checking that local 'main' has no uncommitted changes
+    ok: clean (/Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0)
+
+==> Looking for the .env with VITE_SPOTIFY_CLIENT_ID
+    ok: /Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.env defines VITE_SPOTIFY_CLIENT_ID
+
+==> Checking the Firebase CLI
+    ok: the Firebase CLI is logged in
+
+==> Exporting a clean copy of 'main'
+    commit: e54c80e merge: F59, fatia C — rotas pagas só para quem está logado, com limite por pessoa
+    ok: exported to <TMP>/mjrp-deploy-site.iNNN9IlD/src
+
+==> Installing dependencies in the clean copy (npm ci)
+
+added 425 packages in 2s
+    ok: dependencies installed
+
+==> Running the unit tests (npx vitest run)
+    Test Files  58 passed (58)
+    Tests  493 passed (493)
+    Duration  1.86s (transform 590ms, setup 495ms, collect 1.70s, tests 3.05s, environment 11.81s, prepare 1.82s)
+    ok: all tests passed
+
+==> Building the site (npx vite build)
+    ✓ 265 modules transformed.
+    ✓ built in 747ms
+
+==> Copying what Vite does not bundle
+    ok: firebase-config.js, css/, assets/ and favicon.ico copied to dist/
+
+==> Verifying what was built
+    ok: main script: /assets/main-DTBLM2CE.js
+    ok: the Spotify client id is in the built scripts
+    ok: no .map files
+    ok: every local file named by index.html is in dist/
+    ok: css/, assets/ and js/firebase-config.js are complete (40 files in dist/)
+
+==> Deploy skipped (dry run)
+    would run, in the clean copy: firebase deploy --only hosting --project mjrp-playlist-generator
+    would then check that https://mjrp-playlist-generator.web.app/index.html names /assets/main-DTBLM2CE.js
+
+How to roll back the site:
+  Firebase console > Hosting > release history, pick the previous release, "Rollback":
+  https://console.firebase.google.com/project/mjrp-playlist-generator/hosting/sites
+  (Every deploy is kept there as a version; rolling back is immediate and needs no build.)
+
+DRY RUN finished: every step before the deploy passed. Nothing was sent; production was not touched.

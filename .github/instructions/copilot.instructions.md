@@ -34,7 +34,7 @@ Evite listar planos, roteiros de múltiplos passos ou visões gerais longas, a m
 - Start local dev (server + static): `./scripts/start-local.sh` / `./scripts/stop-local.sh`.
 - Server tests: `cd server && npm test` (runs scraper + integration + curation tests).
 - Debug raw model output: `POST /api/debug/raw-ranking` or `curl -X POST http://localhost:3000/api/generate -d '{"albumQuery":"Pink Floyd - The Wall"}' | jq .`
-- Deploy: `./scripts/deploy-prod.sh` (CI/CD wrapper). Env vars: `AI_API_KEY`, `AI_ENDPOINT`, `AI_MODEL`, `FIREBASE_SERVICE_ACCOUNT`, `ALLOWED_ORIGIN`.
+- Deploy: `npm run deploy:site` (Firebase Hosting) and `npm run deploy:server` (Cloud Run), each from a clean copy of committed `main`, after the unit tests; add `:dry-run` to prove everything short of the deploy. See `docs/manual/00_Deployment_and_Setup.md`. There is no other way: no CI job deploys.
 
 ## Integration & pitfalls
 - Scraper-first: `fetchRankingForAlbum` prefers BestEver evidence; if partial, it enriches with model outputs and merges by normalized title.

@@ -29,8 +29,8 @@ Decisão do MJRP de 2026-11-19: tudo entra na v5.0, cada feature pronta e testad
 
 ## Fatias (cada uma vai para produção sozinha)
 - **A. Só o site** — feita em 2026-11-19: arquivo de regras igual às regras em vigor e apontado pelo `firebase.json`; volta do Spotify conferida e segredos do aperto de mão vindos do gerador criptográfico; sair da conta encerra a sessão do Spotify; build sem mapas de código.
-- **B. Servidor, sem mudar o app** — rotas de depuração fora de produção; o processo não cai com entrada ruim. Pede deploy do servidor (o MJRP confirma na primeira vez).
-- **C. Servidor e app** — as rotas pagas (`/api/generate`, `/api/ai/studio-albums`) e a de notas só respondem a quem está logado, com limite por pessoa. Pede proposta curta antes do código.
+- **B. Servidor, sem mudar o app** — feita e publicada em 2026-11-19 (revisão `mjrp-proxy-00196-sj7`): rotas de depuração só com `ENABLE_DEBUG_ROUTES=true`; rota que quebra responde sem derrubar o servidor.
+- **C. Servidor e app** — feita em 2026-11-19: as rotas pagas (`/api/generate`, `/api/ai/*`) só respondem a quem entrou com uma conta, 60 chamadas por hora por pessoa; as de trabalho (`/api/enrich-album`, `/api/playlists`) a qualquer pessoa logada, visitante incluído, 900 por hora. O app manda o login em toda chamada ao servidor, por um lugar só (`api/serverFetch.js`). **Decisão tomada pelo agente, revisável pelo MJRP:** visitante (login anônimo) não usa as rotas pagas; uma variável do servidor reabre isso.
 - **D. Token do Discogs** — saiu desta feature em 2026-11-19, por decisão do MJRP, para a F59 poder fechar: é a F66.
 - **E. Texto e conteúdo** — texto inserido como HTML sem tratamento; política de conteúdo e Tailwind servido do próprio site (UAT-25).
 
