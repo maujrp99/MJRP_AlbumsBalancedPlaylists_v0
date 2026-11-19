@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:38] decision — F69 criada: popularidade do Spotify, falha é falha (decidido pelo agente — revisável)
+
+A proposta emendada da F52 deixou este ponto de fora. Feature de via rápida, `^REL-40`, conserta a UAT-206 (aberta agora). Criada na `main` antes de qualquer ramo, sob a dispensa do MJRP de 19:03. Servidor publicado com as fatias 3 e 4 da F52 e o conserto do artista com nota: revisão `mjrp-proxy-00202-ktd` (volta: `mjrp-proxy-00201-kcq`).
+
 ## [2026-11-19 19:36] review — F52 fatias 3 e 4 provadas; defeito da F55 achado e consertado («Nirvana (US)»)
 
 Prova em `reports/evidence/F52/2026-11-19-slices-3-4-proof.md`. Achado: em produção desde a F55 fatia 1, a fonte de notas respondia «não tem» para álbuns cujo artista a fonte escreve com uma nota no fim («Nevermind by Nirvana (US)»). Consertado na regra (`artistNamesFromLabel`) e na busca da página do artista, com testes tirados da resposta real. Decidido pelo agente — revisável: o serviço do Cloud Run permite até 20 instâncias e a fila educada vale por instância; não mudei a configuração do serviço (fica para o MJRP). Depois de publicar, varrer os álbuns do MJRP atrás de outros «não tem» falsos.
