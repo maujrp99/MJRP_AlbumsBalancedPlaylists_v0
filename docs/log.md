@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:29] session — F60 conferida no navegador pelo integrador (parte); evidência gravada
+
+O ramo veio de um agente auxiliar, com 561 testes passando depois de trazer a `main`. No navegador, com o login do MJRP e uma série de teste: playlists geradas voltam ao recarregar (UAT-05); dois cliques em salvar gravam um lote só; editar e salvar troca o lote sem sobra; o aviso de alteração não salva pergunta e respeita o não; apagar a série avisa que as playlists vão junto. **Não visto no navegador**, só em teste automático: a gravação que falha no meio (UAT-196), o inventário ao sair da conta (UAT-198) e o salvamento na série errada. `reports/evidence/F60-no-saved-work-lost/F60-browser-2026-11-19.json`.
+
 ## [2026-11-19 16:24] session — F60: documentos da feature, `behavior.md` e manual escritos do que foi feito; a UAT-12 fica como pergunta de desenho
 
 - **Feature:** `docs/specs/features/F60-no-saved-work-lost/` com `spec.md` (`status: In Progress`, nove requisitos, oito com o teste que os prova), `plan.md` e `tasks.md` preenchidos a partir dos três commits do ramo. O conferidor de forma e o de tarefas passam; o `doctor.py` segue com os mesmos 520 erros de antes da feature.
