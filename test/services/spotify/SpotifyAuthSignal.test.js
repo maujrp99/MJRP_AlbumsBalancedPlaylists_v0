@@ -53,4 +53,22 @@ describe('Spotify session signal (UAT-182)', () => {
         expect(document.getElementById('spotifyLoginBtn')).not.toBeNull()
         vi.restoreAllMocks()
     })
+
+    it('the X asks in the app\'s own dialog, not in the browser\'s confirm(), and disconnects on yes (UAT-183)', async () => {
+        vi.spyOn(SpotifyAuthService, 'getUserProfile').mockResolvedValue({ display_name: 'Mau' })
+        const native = vi.fn(() => false)
+        vi.stubGlobal('confirm', native)
+        SpotifyAuthService.setSession({ access_token: 't', refresh_token: 'r', expires_in: 3600 })
+        new SpotifyConnectButton('spotify-mount')
+
+        document.getElementById('spotifyLogoutBtn').click()
+        await vi.waitFor(() => expect(document.body.textContent).toContain('Disconnect from Spotify?'))
+        expect(native).not.toHaveBeenCalled()
+
+        const yes = [...document.querySelectorAll('button')].find(b => b.textContent.trim() === 'Disconnect')
+        yes.click()
+        await vi.waitFor(() => expect(document.getElementById('spotifyLoginBtn')).not.toBeNull())
+        expect(SpotifyAuthService.isAuthenticated()).toBe(false)
+        vi.restoreAllMocks()
+    })
 })

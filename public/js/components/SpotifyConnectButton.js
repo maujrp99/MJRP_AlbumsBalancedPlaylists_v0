@@ -2,6 +2,7 @@
 import { SpotifyAuthService } from '../services/SpotifyAuthService.js'
 import { getIcon } from './Icons.js'
 import toast from './Toast.js'
+import { dialogService } from '../services/DialogService.js'
 
 /**
  * SpotifyConnectButton Component
@@ -94,9 +95,16 @@ export class SpotifyConnectButton {
         }
 
         if (logoutBtn) {
-            logoutBtn.addEventListener('click', (e) => {
+            logoutBtn.addEventListener('click', async (e) => {
                 e.preventDefault()
-                if (confirm('Disconnect from Spotify?')) {
+                // The app's own dialog: the browser's native confirm() can be silenced, and then
+                // the click did nothing (UAT-183).
+                const confirmed = await dialogService.confirm({
+                    title: 'Disconnect from Spotify?',
+                    message: 'You can connect again at any time.',
+                    confirmText: 'Disconnect'
+                })
+                if (confirmed) {
                     SpotifyAuthService.logout()
                     toast.info('Disconnected from Spotify')
                 }
