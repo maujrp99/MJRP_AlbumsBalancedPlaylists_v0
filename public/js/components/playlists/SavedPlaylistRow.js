@@ -48,7 +48,7 @@ export class SavedPlaylistRow {
             }
         }, SafeDOM.fromHTML(getIcon('Eye', 'w-4 h-4')));
 
-        const buttons = SafeDOM.div({ className: 'playlist-row-buttons flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200' }, [viewBtn]);
+        const buttons = SafeDOM.div({ className: 'playlist-row-buttons flex items-center [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200' }, [viewBtn]);
 
         const tracksList = SafeDOM.div({ className: 'playlist-tracks-list hidden bg-black/30 pl-16 pr-4 py-2' });
 

@@ -83,7 +83,7 @@ export class SavedPlaylistActions {
      */
     static renderRowActions({ seriesId, playlistId, onViewDetails }) {
         return SafeDOM.div({
-            className: 'playlist-row-buttons flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200'
+            className: 'playlist-row-buttons flex items-center [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200'
         }, [
             SafeDOM.button({
                 className: 'btn btn-ghost btn-sm text-muted hover:text-white',

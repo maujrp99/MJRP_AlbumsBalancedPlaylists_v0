@@ -28,7 +28,7 @@ export class MJRPBalancedCascadeV0Algorithm extends BaseWithMixins {
         id: 'mjrp-cascade-v0',
         name: 'MJRP Cascade v0',
         badge: 'ORIGINAL',
-        description: 'Versão original sem merge: cada Deep Cut fica separada, mesmo as curtas.',
+        description: 'Original version, no merging: each Deep Cuts playlist stays separate, even the short ones.',
         isRecommended: false
     }
 
@@ -43,7 +43,7 @@ export class MJRPBalancedCascadeV0Algorithm extends BaseWithMixins {
         this.defaultRankingSource = this.registerRankingSource(opts.defaultRankingSource || {
             name: 'MJRP Cascade v0',
             type: 'internal',
-            description: 'Curadoria MJRP Cascade v0 (sem merge)',
+            description: 'MJRP Cascade v0 curation (no merging)',
             secure: true
         })
     }
@@ -134,20 +134,20 @@ export class MJRPBalancedCascadeV0Algorithm extends BaseWithMixins {
             playlists.push({
                 id: 'p1',
                 title: 'Greatest Hits',
-                subtitle: 'Rank #1 e #2 de cada álbum',
+                subtitle: 'Rank #1 and #2 from each album',
                 tracks: [...rank1Tracks, ...rank2Tracks]
             })
         } else {
             playlists.push({
                 id: 'p1',
                 title: 'Greatest Hits Vol. 1',
-                subtitle: 'Rank #1 de cada álbum',
+                subtitle: 'Rank #1 from each album',
                 tracks: rank1Tracks
             })
             playlists.push({
                 id: 'p2',
                 title: 'Greatest Hits Vol. 2',
-                subtitle: 'Rank #2 de cada álbum',
+                subtitle: 'Rank #2 from each album',
                 tracks: rank2Tracks
             })
         }

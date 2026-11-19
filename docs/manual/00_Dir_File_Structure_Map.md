@@ -268,6 +268,7 @@
 1. `public/js/utils/TaskQueue.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
 2. `public/js/models/albumLoadState.js` (Analysis: `manual/08_Frontend_Models.md`)
 3. `public/js/models/albumQuery.js` (Analysis: `manual/08_Frontend_Models.md`)
+3b. `public/js/models/bulkPaste.js` (Analysis: `manual/08_Frontend_Models.md`)
 4. `public/js/models/cloneAlbum.js` (Analysis: `manual/08_Frontend_Models.md`)
 5. `public/js/models/seriesFilter.js` (Analysis: `manual/09_Frontend_Views.md`)
 6. `public/js/models/paging.js` (Analysis: `manual/09_Frontend_Views.md`)

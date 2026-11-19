@@ -15,6 +15,9 @@ import { reloadApp } from '../../utils/reloadApp.js';
 export class AuthNav {
     constructor(userState) {
         this.userState = userState;
+        // One listener of each kind for the whole life of the nav, however many times it is drawn
+        this.onDocumentClick = (event) => this.handleDocumentClick(event);
+        this.onDocumentKeydown = (event) => this.handleDocumentKeydown(event);
     }
 
     updateState(state) {
@@ -35,18 +38,18 @@ export class AuthNav {
                 : `<img src="${escapeHtml(currentUser.photoURL || '/assets/images/logo.png')}" class="w-8 h-8 rounded-full border border-white/20" alt="User">`;
 
             return `
-                <div class="relative group" id="userMenuDropdownTrigger">
-                    <button class="flex items-center gap-2 p-1 rounded-full hover:bg-white/5 transition-colors">
+                <div class="relative" id="userMenuDropdownTrigger">
+                    <button id="userMenuBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="userMenu" aria-label="Account menu" class="flex items-center gap-2 p-1 rounded-full hover:bg-white/5 transition-colors">
                         ${avatarContent}
                          <span class="hidden lg:block text-xs font-medium text-white/80 max-w-[80px] truncate">${escapeHtml(currentUser.displayName || 'User')}</span>
                     </button>
                     
-                    <div class="absolute right-0 mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div id="userMenu" role="menu" aria-labelledby="userMenuBtn" class="absolute right-0 mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl opacity-0 invisible transition-all duration-200 z-50">
                         <div class="p-3 border-b border-white/10">
                             <p class="text-xs text-white/50">Signed in as</p>
                             <p class="text-sm font-bold truncate">${escapeHtml(currentUser.displayName || currentUser.email)}</p>
                         </div>
-                        <button id="logoutBtn" class="w-full text-left px-4 py-3 text-sm hover:bg-white/5 text-red-400 flex items-center gap-2">
+                        <button id="logoutBtn" role="menuitem" class="w-full text-left px-4 py-3 text-sm hover:bg-white/5 text-red-400 flex items-center gap-2">
                              ${getIcon('Logout', 'w-4 h-4')} Sign Out
                         </button>
                     </div>
@@ -97,9 +100,71 @@ export class AuthNav {
             }
         };
 
+        this.attachMenuListeners();
+
         loginBtn?.addEventListener('click', openLogin);
         mobileLoginBtn?.addEventListener('click', openLogin);
         logoutBtn?.addEventListener('click', doLogout);
         mobileLogoutBtn?.addEventListener('click', doLogout);
+    }
+
+    // =========================================
+    // ACCOUNT MENU (F63, UAT-13): opens with a tap, a click or the keyboard, never by hover alone
+    // =========================================
+
+    /** The menu is drawn closed each time; the listeners on the page are attached once. */
+    attachMenuListeners() {
+        this.detachListeners();
+        document.addEventListener('click', this.onDocumentClick);
+        document.addEventListener('keydown', this.onDocumentKeydown);
+    }
+
+    /** The nav is gone: nothing of it keeps listening to the page. */
+    detachListeners() {
+        document.removeEventListener('click', this.onDocumentClick);
+        document.removeEventListener('keydown', this.onDocumentKeydown);
+    }
+
+    isMenuOpen() {
+        return document.getElementById('userMenuBtn')?.getAttribute('aria-expanded') === 'true';
+    }
+
+    /**
+     * @param {boolean} open
+     * @returns {boolean} false when there is no menu on the page (nobody signed in)
+     */
+    setMenuOpen(open) {
+        const trigger = document.getElementById('userMenuBtn');
+        const menu = document.getElementById('userMenu');
+        if (!trigger || !menu) return false;
+        trigger.setAttribute('aria-expanded', String(open));
+        menu.classList.toggle('opacity-0', !open);
+        menu.classList.toggle('invisible', !open);
+        return true;
+    }
+
+    /** A click on the avatar toggles; a click anywhere outside the menu closes. */
+    handleDocumentClick(event) {
+        const target = event.target instanceof Element ? event.target : null;
+        if (target?.closest('#userMenuBtn')) {
+            this.setMenuOpen(!this.isMenuOpen());
+            return;
+        }
+        if (this.isMenuOpen() && !target?.closest('#userMenu')) this.setMenuOpen(false);
+    }
+
+    /** Escape closes and gives the focus back; Arrow Down on the avatar opens on the first item. */
+    handleDocumentKeydown(event) {
+        const trigger = document.getElementById('userMenuBtn');
+        if (!trigger) return;
+
+        if (event.key === 'Escape' && this.isMenuOpen()) {
+            this.setMenuOpen(false);
+            trigger.focus();
+        } else if (event.key === 'ArrowDown' && document.activeElement === trigger) {
+            event.preventDefault();
+            this.setMenuOpen(true);
+            document.querySelector('#userMenu [role="menuitem"]')?.focus();
+        }
     }
 }

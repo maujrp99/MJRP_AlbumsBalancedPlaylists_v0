@@ -28,7 +28,7 @@ export class MJRPBalancedCascadeAlgorithm extends BaseWithTrimming {
         id: 'mjrp-balanced-cascade',
         name: '[MJRP] Zé\'s Balanced Playlists',
         badge: 'RECOMMENDED',
-        description: 'Cria playlists balanceadas mesclando as melhores faixas de cada álbum. Playlists curtas são combinadas automaticamente.',
+        description: 'Builds balanced playlists by blending the best tracks of each album. Short playlists are merged automatically.',
         isRecommended: true
     }
 
@@ -42,7 +42,7 @@ export class MJRPBalancedCascadeAlgorithm extends BaseWithTrimming {
         this.defaultRankingSource = this.registerRankingSource(opts.defaultRankingSource || {
             name: 'MJRP Zé\'s Full Balanced Playlists',
             type: 'internal',
-            description: 'Curadoria MJRP Balanced Cascade',
+            description: 'MJRP Balanced Cascade curation',
             secure: true
         })
     }
@@ -148,20 +148,20 @@ export class MJRPBalancedCascadeAlgorithm extends BaseWithTrimming {
             playlists.push({
                 id: 'p1',
                 title: 'Greatest Hits',
-                subtitle: 'Rank #1 e #2 de cada álbum',
+                subtitle: 'Rank #1 and #2 from each album',
                 tracks: [...rank1Tracks, ...rank2Tracks]
             })
         } else {
             playlists.push({
                 id: 'p1',
                 title: 'Greatest Hits Vol. 1',
-                subtitle: 'Rank #1 de cada álbum',
+                subtitle: 'Rank #1 from each album',
                 tracks: rank1Tracks
             })
             playlists.push({
                 id: 'p2',
                 title: 'Greatest Hits Vol. 2',
-                subtitle: 'Rank #2 de cada álbum',
+                subtitle: 'Rank #2 from each album',
                 tracks: rank2Tracks
             })
         }

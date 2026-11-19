@@ -171,6 +171,30 @@ export class BlendSeriesSelector {
         `
 
         this.attachListeners()
+        this.revealChosenCard(container)
+    }
+
+    /**
+     * Choose a series by its id, without a click: the menu was opened from that series
+     * (/blend?seriesId=<id>, F63). Call it after loadSeries().
+     * @param {string|undefined} seriesId
+     * @returns {Object|null} the series, or null when the id is not one of the person's series
+     */
+    selectById(seriesId) {
+        const series = seriesId ? this.series.find(s => s.id === seriesId) : null
+        if (!series) return null
+        this.selectedSeries = series
+        this.revealChosen = true
+        return series
+    }
+
+    /** The list scrolls: a series chosen by the address may be below what shows. Once. */
+    revealChosenCard(container) {
+        if (!this.revealChosen) return
+        const chosen = container.querySelector('.blend-series-card[aria-pressed="true"]')
+        if (!chosen) return
+        this.revealChosen = false
+        if (typeof chosen.scrollIntoView === 'function') chosen.scrollIntoView({ block: 'nearest' })
     }
 
     /**
@@ -190,6 +214,7 @@ export class BlendSeriesSelector {
                 ${isSelected
                 ? 'border-orange-400 bg-orange-400/10 ring-1 ring-orange-400'
                 : 'border-white/10 bg-white/5 hover:border-orange-400/50 hover:bg-white/10'}"
+                role="button" tabindex="0" aria-pressed="${isSelected}"
                 data-series-id="${escapeHtml(series.id)}">
                 <div class="flex items-center gap-3">
                     ${this.renderThumbnailsCascade(thumbnails)}
@@ -246,12 +271,19 @@ export class BlendSeriesSelector {
 
         // Series selection
         document.querySelectorAll('.blend-series-card').forEach(card => {
-            card.addEventListener('click', () => {
+            const choose = () => {
                 const seriesId = card.dataset.seriesId
                 const series = this.series.find(s => s.id === seriesId)
                 this.selectedSeries = series
                 this.onSeriesSelect(series)
                 this.render()
+            }
+            card.addEventListener('click', choose)
+            // The card is a button for the keyboard too
+            card.addEventListener('keydown', (e) => {
+                if (e.key !== 'Enter' && e.key !== ' ') return
+                e.preventDefault()
+                choose()
             })
         })
     }

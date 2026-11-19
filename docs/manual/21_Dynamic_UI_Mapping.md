@@ -27,10 +27,12 @@
 
 ### 1.2 Bulk Processing
 *   **Logic Trace**:
-    1.  **[UI]** User pastes "Artist - Album" list in `#bulkPasteInput`.
-    2.  **[FN]** `HomeController.validateBulkInput` gives visual feedback (Border color).
-    3.  **[UI]** User clicks "Process List" (`#btnProcessBulk`).
-    4.  **[FN]** `HomeController.handleBulkProcess()` loops through lines -> `albumSearchService.search`.
+    1.  **[UI]** User pastes "Artist - Album" list in `#bulkPasteInput`, one album per line.
+    2.  **[FN]** `HomeController.validateBulkInput` -> `bulkInputState(text)` (`models/bulkPaste.js`) -> `HomeView.setBulkInputState`: green border when every line is an album, orange when some line is not, neutral when the box is empty.
+    3.  **[UI]** User clicks "Process List" (`#btnProcessBulk`). An empty box gets the notice "Please paste some "Artist - Album" lines first." and nothing else happens.
+    4.  **[FN]** `HomeController.handleBulkProcess()` -> `readPastedList(text)` (`models/bulkPaste.js`), which reads each line with `parsePastedAlbumLine` (`models/albumQuery.js`, the one parser of "Artist - Album"): only the first " - " separates, so a hyphen in a name is kept ("Jay-Z - The Blueprint", "Artist - Album - Deluxe"); a list number or bullet in front, an en or em dash or a tab as the separator and a space missing on one side of the hyphen are accepted; a hyphen with no space on either side never separates ("Jay-Z-The Blueprint" is refused, not guessed).
+    5.  **[FN]** `stageBulkEntries` searches each good line (`albumSearchService.search(artist, title, { limit: 1 })`) and selects the first result (`toStagedAlbum` -> `StagingAreaController.addAlbum`). One line never stops the others: a line that cannot be read, that the catalog does not have, whose search failed or whose album is already selected is skipped with its reason. The button is busy and disabled meanwhile (`HomeView.setBulkBusy`).
+    6.  **[UI]** `bulkOutcome` says what the screen shows: a toast ("Added N albums.", with "N lines were skipped: see the list under the box." when some were), the skipped lines listed under the box in `#bulkPasteReport` ("Line N: «text» — why"), and the box left with the lines that can be fixed. No `alert`.
 
 ### 1.3 Initialize Series (The Big Bang)
 *   **Logic Trace**:

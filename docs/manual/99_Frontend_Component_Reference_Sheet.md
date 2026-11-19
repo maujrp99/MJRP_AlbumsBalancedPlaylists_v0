@@ -227,7 +227,7 @@ Usage: `createAlgorithm('id').generate(...)` (or `getAlgorithm('id')` for the cl
 | [Track.js](file:///public/js/models/Track.js) | Track entity with ranking data | ✅ |
 | [Playlist.js](file:///public/js/models/Playlist.js) | Playlist entity | ✅ |
 | [Series.js](file:///public/js/models/Series.js) | Album series entity | ✅ |
-| `askedAlbum.js` (in place of `AlbumIdentity.js`, F55), `albumFacts.js`, `albumLoadState.js`, `albumQuery.js`, `cloneAlbum.js`, `ownRanking.js`, `paging.js`, `seriesFilter.js`, `text.js` | Pure rules of the album loading, paging, filters and own ranking; see `08_Frontend_Models.md` | ✅ |
+| `askedAlbum.js` (in place of `AlbumIdentity.js`, F55), `albumFacts.js`, `albumLoadState.js`, `albumQuery.js`, `bulkPaste.js` (F63), `cloneAlbum.js`, `ownRanking.js`, `paging.js`, `seriesFilter.js`, `text.js` | Pure rules of the album loading, paging, filters and own ranking; see `08_Frontend_Models.md` | ✅ |
 
 **Album Model**:
 - `getTracks(order)`: Returns `tracks` (acclaim order) or `tracksOriginalOrder` (disc order)

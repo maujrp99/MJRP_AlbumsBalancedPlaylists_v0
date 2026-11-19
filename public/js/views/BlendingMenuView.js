@@ -234,7 +234,7 @@ export class BlendingMenuView extends BaseView {
         `
     }
 
-    async mount() {
+    async mount(params) {
         // Initialize components
         this.seriesSelector = new BlendSeriesSelector({
             onEntityChange: (entity) => this.fullUpdate(),
@@ -261,6 +261,15 @@ export class BlendingMenuView extends BaseView {
         // Render components
         this.seriesSelector.render()
         await this.seriesSelector.loadSeries()
+
+        // Opened from a series (/blend?seriesId=<id>): that series comes chosen (UAT-07)
+        const fromSeries = this.seriesSelector.selectById(params?.query?.seriesId)
+        if (fromSeries) {
+            this.selectedSeries = fromSeries
+            await this.fullUpdate()
+            return
+        }
+
         this.recipeCard.render()
         this.ingredientsPanel.render()
 

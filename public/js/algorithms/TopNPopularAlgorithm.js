@@ -7,7 +7,7 @@ export class TopNPopularAlgorithm extends TopNAlgorithm {
         id: 'top-n-popular',
         name: 'Top Tracks by Spotify Popularity',
         badge: 'SPOTIFY',
-        description: 'Selecione suas faixas favoritas baseadas na popularidade do Spotify.',
+        description: 'Pick your favorite tracks, based on Spotify popularity.',
         isRecommended: false
     }
 
