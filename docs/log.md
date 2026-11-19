@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:48] session — F63: os itens «Soon» do menu não navegam mais
+
+Confirmado na `main` por teste (UAT-201): By Artist, By Genre e By Track, marcados «Soon» no menu «Music Series», eram links com endereço; o ouvinte do próprio item recusava o clique, mas o roteador, que ouve todo link do app, navegava do mesmo jeito. Agora o item «Soon» não é link (`aria-disabled`, sem endereço), como o `docs/specs/behavior.md` já dizia (`^app-main`). A gaveta do celular continua com os três links, que abrem a tela «Coming Soon»: não mexido.
+
 ## [2026-11-19 19:47] session — F63: Esc num diálogo responde «cancelar»; teste do título único da aba
 
 Confirmado na `main` (UAT-201, «um diálogo fechado com Esc deixa a ação pendurada»): `DialogService` tirava o diálogo da tela no Esc e a promessa de `confirm`/`prompt` nunca era resolvida. Agora o Esc, e um diálogo que toma o lugar de outro, respondem como «Cancel» (`false` / `null`). O título único da aba (metade da UAT-192, consertada pela F54 em `791da82`) ganhou o teste que não tinha: `test/architecture/oneTabTitle.test.js`.
