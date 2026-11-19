@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:43] session — terceiro deploy do site: a janela de ranking abre na ordem salva (UAT-187); F53, ADR-0019 e documentação na `main`
+
+- **Autorização do MJRP:** «let's do it», em resposta ao pedido de levar a F53 à `main` e publicar o conserto da janela de ranking.
+- **`main`:** o ramo `fix/f53-test-suite-green` entrou por `merge_train.py merge` (`ea393c1`): suíte de testes verde, ADR-0019, `behavior.md`, manual, os dois relatórios e o save.
+- **Deploy:** `firebase deploy --only hosting`, de uma cópia limpa da `main` em `ea393c1`, com o `.env`. Antes do envio: 431 testes passam, 0 falham; o build compila. Conferido por fora: o site serve `assets/main-D0HKIHOg.js`.
+- **Não conferido:** a janela de ranking em produção no navegador. O servidor não foi tocado.
+- **Como voltar:** Firebase Console, Hosting, histórico de versões, «Rollback».
+- **A ADR-0019 não está em nenhum remoto** (pergunta do MJRP): nada desta sessão foi enviado por push.
+- O `merge_train` desmontou os worktrees das duas sessões laterais (F46 e F48), já integradas.
+
 ## [2026-11-19 14:42] session — save: v4.0 em produção e em fecho, regressão completa, v5.0 criada e em espera
 
 > Participantes: MJRP + Claude Code · Branch: fix/f53-test-suite-green
