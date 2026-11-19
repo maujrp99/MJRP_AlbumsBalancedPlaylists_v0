@@ -45,13 +45,11 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'api/serverResult.js:readServerResult': 11, // no feature yet: the API client still normalizes by hand what the server sends
     'components/InventoryEditModal.js:open': 14, // no feature yet
     'components/TopNav.js:attachListeners': 12, // no feature yet
-    'components/blend/BlendIngredientsPanel.js:constructor': 11, // F62 holds this code (blend, playlists, export, Spotify)
     'components/blend/BlendRecipeCard.js:renderRecipeCard': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'components/blend/BlendSeriesSelector.js:preloadSeriesThumbnails': 20, // F62 holds this code (blend, playlists, export, Spotify)
     'components/playlists/TrackItem.js:render': 11, // F62 holds this code (blend, playlists, export, Spotify)
     'components/ranking/TracksRankingComparison.js:arrow function': 19, // no feature yet
     'components/ranking/TracksTable.js:renderRow': 16, // no feature yet
-    'components/series/ArtistScanner.js:arrow function': 12, // F57 holds this code (album search, classification, series edit)
     'components/series/SeriesEventHandler.js:handleRemoveAlbum': 19, // no feature yet
     'components/ui/AlbumCardRenderer.js:arrow function': 17, // no feature yet
     'components/ui/AlbumCardRenderer.js:arrow function#2': 18, // no feature yet
@@ -71,27 +69,18 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'models/Track.js:constructor': 39, // no feature yet: the constructor normalizes every shape an album or a track ever had
     'models/seriesFilter.js:describeQuery': 12, // no feature yet: three filters of albums that should be one rule
     'models/seriesFilter.js:matches': 14, // no feature yet: three filters of albums that should be one rule
-    'ranking/BEARankingStrategy.js:arrow function': 14, // F62 holds this code (blend, playlists, export, Spotify)
     'ranking/BalancedRankingStrategy.js:arrow function': 14, // F62 holds this code (blend, playlists, export, Spotify)
     'ranking/BalancedRankingStrategy.js:arrow function#2': 30, // F62 holds this code (blend, playlists, export, Spotify)
     'ranking/BalancedRankingStrategy.js:arrow function#3': 12, // F62 holds this code (blend, playlists, export, Spotify)
     'ranking/SpotifyRankingStrategy.js:arrow function': 11, // F62 holds this code (blend, playlists, export, Spotify)
     'repositories/InventoryRepository.js:addAlbum': 16, // no feature yet
     'services/MusicKitSearchAdapter.js:arrow function': 12, // F57 holds this code (album search, classification, series edit)
-    'services/PlaylistsService.js:restoreDraft': 15, // F62 holds this code (blend, playlists, export, Spotify)
     'services/PlaylistsService.js:_writeCurrentBatch': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'services/SavedPlaylistsFilterService.js:filterSeries': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'services/SeriesFilterService.js:filterAlbums': 21, // no feature yet: three filters of albums that should be one rule
     'services/SeriesFilterService.js:arrow function': 11, // no feature yet: three filters of albums that should be one rule
-    'services/SpotifyExportService.js:exportPlaylists': 20, // F62 holds this code (blend, playlists, export, Spotify)
-    'services/SpotifyService.js:searchTrack': 14, // F62 holds this code (blend, playlists, export, Spotify)
     'services/album-search/AlbumSearchService.js:search': 11, // F57 holds this code (album search, classification, series edit)
-    'services/album-search/AlbumTypeClassifier.js:classify': 13, // F57 holds this code (album search, classification, series edit)
     'services/album-search/ScoreCalculator.js:calculate': 12, // F57 holds this code (album search, classification, series edit)
-    'services/album-search/classification/AIWhitelistStrategy.js:execute': 21, // F57 holds this code (album search, classification, series edit)
-    'services/album-search/classification/AppleMetadataStrategy.js:execute': 12, // F57 holds this code (album search, classification, series edit)
-    'services/album-search/classification/TitleKeywordStrategy.js:execute': 14, // F57 holds this code (album search, classification, series edit)
-    'services/album-search/classification/TypeSanityCheckStrategy.js:execute': 14, // F57 holds this code (album search, classification, series edit)
     'services/musickit/MusicKitCatalog.js:arrow function': 14, // no feature yet: the Apple Music catalog client
     'services/musickit/MusicKitCatalog.js:getAlbumDetails': 21, // no feature yet: the Apple Music catalog client
     'services/musickit/MusicKitCatalog.js:arrow function#2': 13, // no feature yet: the Apple Music catalog client
@@ -104,13 +93,10 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'views/BlendingMenuView.js:render': 12, // F62 holds this code (blend, playlists, export, Spotify)
     'views/BlendingMenuView.js:renderGenerateButton': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'views/InventoryView.js:render': 11, // no feature yet
-    'views/PlaylistsView.js:renderContent': 11, // F62 holds this code (blend, playlists, export, Spotify)
     'views/SeriesView.js:updateAlbums': 19, // no feature yet
     'views/albums/AlbumsFilters.js:filterAlbums': 18, // no feature yet: three filters of albums that should be one rule
     'views/albums/AlbumsFilters.js:arrow function': 11, // no feature yet: three filters of albums that should be one rule
     'views/albums/AlbumsScopedRenderer.js:arrow function': 12, // no feature yet
-    'views/playlists/PlaylistsExport.js:handleExportToAppleMusic': 33, // F62 holds this code (blend, playlists, export, Spotify)
-    'views/playlists/PlaylistsExport.js:handleExportToSpotify': 31, // F62 holds this code (blend, playlists, export, Spotify)
     'workers/search.worker.js:function': 11 // F57 holds this code (album search, classification, series edit)
 })
 
