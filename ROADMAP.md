@@ -93,6 +93,7 @@ tags:: #cross-series #discovery
 - **v3.17.0 · Sprint 17: Architectural Modularization** — 2026-01-08 no roadmap; a tag v3.17 é de 2026-01-04 · Sprint 17: Architectural Modularization · tag v3.17. version:: v3.17.0 ^REL-36
 - **v3.17.5 · Sprint 17.75: Classification Modularization** — 2026-01-10 no roadmap; a tag v3.17.5 é de 2026-01-04 · Sprint 17.75: Classification Modularization · tag v3.17.5. version:: v3.17.5 ^REL-37
 - **v3.20.0 · Sprint 20: User Ranking** — 2026-01-12 · Sprint 20: User Ranking (CHANGELOG e «Current Version» do roadmap) · sem tag no git. version:: v3.20.0 ^REL-38
+- **v4.0 · Carregamento e estabilidade** — aberta em 2026-11-19, em andamento · consertos do que já está em produção, do mais grave ao menos grave, começando pela carga da tela de álbuns (pedido do MJRP de 2026-11-19; as issues estão na Rodada 2 do `docs/specs/uat.md`) · sem tag no git. version:: v4.0 ^REL-39
 <!-- Uma linha por release, em ordem, com o block ID. O Control Center lê releases só daqui e monta o Board por release;
      o nome em negrito é o que a rodada de UAT cita (`## Rodada 1 — R1 · [nome]`). Cada story aponta a sua (`planned_for:`).
      Agrupamento decidido pelo agente em 2026-10-28 12:00, revisável pelo MJRP: os 23 sprints do legado (docs/ROADMAP.md:22-281) em 5 marcos

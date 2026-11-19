@@ -2,13 +2,13 @@
 
 ## Now
 
-**Where the Work Stopped.** (2026-10-31 00:40) O histórico do v0 foi gravado pelas sprints, com o OK do MJRP: 26 features F19–F44 (uma por pasta SDD de sprint, com as funcionalidades implementadas), 31 sprints, 33 versões do produto, 142 issues do `DEBUG_LOG` e o EP-09; o de outubro (F01–F18, 39 stories, REL-01..05) está em `_archive/october-reconstruction/`. Os juízes do board, do grafo e da estrutura do produto saem 0; ponto de volta: a tag `v0-before-history-import`. O conform segue aberto só no que é do MJRP: as perguntas da auditoria, os itens de tela e a paleta.
+**Where the Work Stopped.** (2026-11-19 11:16) O MJRP mandou consertar o v0 pela via rápida, do mais grave ao menos grave, com prova no navegador. A versão «v4.0 · Carregamento e estabilidade» (`^REL-39`) está aberta, com a Rodada 2 do `uat.md` (UAT-172 a 178) e as features F45 a F50 em esboço. A carga do `/albums` foi reproduzida e medida no navegador (evidência em `reports/evidence/F45-*` e `F46-*`); nenhum código foi alterado ainda. Próximo: a F45 (carga em paralelo, com prazo, só as séries à vista), em ramo próprio.
 
-**Pending on Agent.** (2026-10-29) Nada em voo; a juíza relê só o que falhou. Notas abertas: tela (`info-arch`, `info-arch-sections`, `wireframes`, `design-system`, `visual-sensor`), `project-palette` e `content-audit` (a auditoria acima).
+**Pending on Agent.** (2026-11-19 11:16) F45 a F50, uma por ramo, com teste que falha antes e captura de antes e depois. Montar o resto da lista por gravidade a partir das notas dos seis leitores dos apêndices (`v0-appendix-*-verified.md`, na pasta de notas das sessões) e das issues abertas da Rodada 1. Resposta da orquestradora do harness sobre a release só de consertos (o `product_structure_check.py` acusa a REL-39 sem stories). Notas do conform seguem abertas: tela, `project-palette`, `content-audit`.
 
-**Pending on Human.** (2026-10-29) Perguntas do conform (classe b e c): na seção de perguntas do relatório de auditoria acima. Push dos commits locais: é dele.
+**Pending on Human.** (2026-11-19 11:16) Aceite de cada conserto (as issues do MJRP só fecham com o OK dele). Push dos commits locais. Conectar o Spotify no app local quando a F50 pedir. As perguntas do conform (classe b e c) seguem no relatório de auditoria.
 
-**Do Not Forget.** Não alterar, apagar nem mover código do v0 (em produção). O fechado antes do contrato (commit 54fd54c) nasce aceito; sensor visual só na tela alterada depois. Economia de uso até 2026-10-30, repassada pela orquestradora a esta sessão no pedido de 2026-10-28 (decisão do MJRP; registrada em `docs/log.md`): subagentes em Sonnet, sem wireframe nem protótipo, sem o doctor completo a cada turno. As válvulas são do MJRP (`--no-verify`, `Human-accepted:` e as outras): nunca do agente.
+**Do Not Forget.** O código do v0 passou a ser consertado por decisão do MJRP de 2026-11-19 (log); está em produção e só ele usa: a prova no navegador roda contra o servidor e o Firestore de produção, com o login dele. Conserto em `server/` só se prova publicando. O fechado antes do contrato (commit 54fd54c) nasce aceito. As válvulas são do MJRP (`--no-verify`, `Human-accepted:`, push e as outras): nunca do agente. Dúvida sobre o harness: perguntar ao agente mestre do harness.
 
 ## Ways of Working
 
