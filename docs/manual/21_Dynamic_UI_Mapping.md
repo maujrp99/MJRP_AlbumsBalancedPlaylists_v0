@@ -54,9 +54,15 @@
     3.  **[UI]** Expansion loads `TracksRankingComparison` components for each card.
 
 ### 2.2 CRUD Operations
-*   **Edit Name**:
+*   **Edit Name and Albums**:
     1.  **[UI]** Click Pencil Icon -> `SeriesModals.openEdit(id)` -> `SeriesEditModal`.
-    2.  **[FN]** `SeriesService.updateSeries(id, ...)`.
+    2.  **[FN]** `SeriesService.updateSeries(id, ...)` saves the name and the album queries.
+    3.  **[FN]** `SeriesModalsManager.handleSeriesUpdated()` -> `SeriesController.requestLoad(false)` -> `albumLoadService.load(...)` reconciles (F56): an album added is found and enriched through the queue, an album removed leaves, another edition of the same title is found again in the catalog, and every other album and every other series stays as it is. Nothing is injected into the screen by hand.
+*   **Remove one album**:
+    1.  **[FN]** `SeriesEventHandler` -> `SeriesService.removeAlbumFromSeries(seriesId, album)`; the series changed, the load reconciles and the album leaves the screen.
+*   **Refetch one album**:
+    1.  **[UI]** "Refetch" on the album card -> `SeriesController.handleRefetchMetadata(album)`.
+    2.  **[FN]** `albumLoadService.reloadAlbum(album.id)` (F56): the album is found again in the catalog, not in what is kept, and every source is asked again, through the queue. The card shows as loading; a failure is the failure of that album, with "Try again".
 *   **Delete Series**:
     1.  **[UI]** Click Trash Icon -> `SeriesModals.openDelete(id)`.
     2.  **[FN]** `SeriesService.countSavedPlaylists(id)` -> the confirmation says how many saved playlists and batches go with the series (v5.0, F60).
@@ -79,11 +85,15 @@
     2.  **[FN]** `onConfigChange` updates `this.config`.
 *   **Step 4: Generate**
     1.  **[UI]** User clicks "Blend It!".
-    2.  **[FN]** `BlendingMenuView.handleGenerate()` -> `BlendingController.generateFromSeries(seriesId, config)`.
-    3.  **[FN]** `BlendingController.loadAlbumsFromSeries(series)` loads the albums one query at a time with `apiClient.fetchAlbum` (its own loop, not `AlbumLoadService`).
-    4.  **[Service]** `PlaylistGenerationService.generate()` executes algorithm.
-    5.  **[STORE]** `playlistsStore.setPlaylists(results)`.
-    6.  **[FN]** `router.navigate('/playlists?seriesId=...')`.
+    2.  **[FN]** `BlendingMenuView.handleGenerate()` -> `BlendingController.generateFromSeries(seriesId, config, { onProgress, signal })`.
+    3.  **[FN]** `albumAsks.albumsOf({ series, sources, signal })` (F56, `services/albums/AlbumAsks.js`): the series joins the load in force in `AlbumLoadService`. What the albums screen loaded or the browser keeps is not asked again; what is missing goes through the same queue, ahead of what the albums screen still has to load. `sources` are the ones the recipe reads (`models/recipeSources.js`: popularity, acclaim, own ranking, or acclaim and popularity for the balanced ranking); the blend waits for those, each behind the 20 s deadline of a source.
+    4.  **[UI]** While it waits: "Loading albums: i of n..." and then "Waiting for the ratings of i of n albums...".
+    5.  **[FN]** The answer is typed (`models/albumAsk.js`): the albums that are ready, the ones that failed with the reason, the sources missing for some album. The blend goes on with the albums that are ready; it stops, with the reasons on screen, only when none is ready.
+    6.  **[Service]** `PlaylistGenerationService.generate()` executes algorithm.
+    7.  **[STORE]** `playlistsStore.setPlaylists(results)`.
+    8.  **[UI]** One warning toast per thing left out ("1 of 2 albums could not be loaded and was left out: ...", "Acclaim ratings are missing for 1 of 2 albums ...").
+    9.  **[FN]** `router.navigate('/playlists?seriesId=...')`.
+    10. **[FN]** Leaving the screen while it waits (`BlendingMenuView.destroy`) aborts the ask: the series leaves the load unless the albums screen shows it, and nothing is generated.
 
 ---
 
@@ -103,7 +113,10 @@
     2.  **[FN]** `PlaylistsService.moveTrack(...)` -> history snapshot -> updates the store.
 *   **Edit mode (`/playlists/edit`)**:
     1.  **[FN]** `PlaylistsController.loadPlaylistsForEdit(batchName, seriesId)` puts the saved batch in `playlistsStore`.
-    2.  **[FN]** `PlaylistsController.loadAlbumsForSeries(seriesId)` loads the albums with `apiClient.fetchMultipleAlbums` (its own loop, not `AlbumLoadService`).
+    2.  **[FN]** `PlaylistsController.loadAlbumsForSeries(seriesId)` asks `albumAsks.albumsOf` for the albums of the series (F56): what is loaded or kept comes at once. A warning toast says which albums could not be loaded and how many. A second ask, which nobody waits for, keeps every source coming while the screen is open; `PlaylistsController.destroy` aborts both.
+*   **Generate again with another recipe**:
+    1.  **[UI]** "Regenerate Playlists" in the reconfigure panel -> `PlaylistsController.handleGenerate(config)`.
+    2.  **[FN]** `BlendingController.regenerate(config, { signal })` asks `albumAsks.albumsOf` again with the sources of the new recipe, generates from the albums that are ready and returns the notices; the controller shows them as warning toasts. The question "No ratings detected... Continue?" no longer exists.
 
 ### 4.2 Export & Save
 *   **Save Batch**:

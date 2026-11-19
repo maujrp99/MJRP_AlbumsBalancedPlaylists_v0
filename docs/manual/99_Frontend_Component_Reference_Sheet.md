@@ -89,7 +89,7 @@
 |---|---|---|
 | [SeriesController.js](file:///public/js/controllers/SeriesController.js) | Albums screen: says what the screen wants; the load belongs to `AlbumLoadService` | ✅ |
 | [HomeController.js](file:///public/js/controllers/HomeController.js) | Home: scan, staging, bulk paste, new series | ✅ |
-| [BlendingController.js](file:///public/js/controllers/BlendingController.js) | Blend: loads the albums of the series (own loop, `apiClient.fetchAlbum`) and generates | ✅ |
+| [BlendingController.js](file:///public/js/controllers/BlendingController.js) | Blend: asks the album load for the albums of the series (`albumAsks.albumsOf`, F56) and generates from the ones that are ready | ✅ |
 | [PlaylistsController.js](file:///public/js/controllers/PlaylistsController.js) | Playlist Generation, Editing, Saving | ✅ |
 | [InventoryController.js](file:///public/js/controllers/InventoryController.js) | Inventory Management | ✅ |
 
@@ -161,7 +161,8 @@ The operations live in `services/PlaylistsService.js` (`getPlaylistsService(db, 
 - `handleSave(batchName)`: Asks `PlaylistsService.saveCurrentBatch` and tells the person the result; the rule is in the service (v5.0, F60)
 - `deletePlaylist(index)`: Proxies to `PlaylistsService.removePlaylist`
 - `loadPlaylistsForEdit(batchName, seriesId)`: Hydrates store from backend
-- `loadAlbumsForSeries(seriesId)`: In edit mode, loads the albums of the series with `apiClient.fetchMultipleAlbums` (its own loop, not `AlbumLoadService`)
+- `loadAlbumsForSeries(seriesId)`: In edit mode, asks the album load for the albums of the series (`albumAsks.albumsOf`, F56) and says which could not be loaded
+- `handleGenerate(config)`: `BlendingController.regenerate`, which asks for the albums again with the sources of the recipe; shows what was left out
 
 ---
 

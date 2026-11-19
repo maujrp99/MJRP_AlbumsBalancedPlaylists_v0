@@ -44,11 +44,11 @@ The load of albums has **one owner**, `AlbumLoadService` (`public/js/services/al
 - Two ways of loading live side by side until the migration ends (see below).
 
 **Not done yet** (corrected on 2026-11-19 after the cross-check with the earlier reports, `reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md`; decisions 1, 3 and 7 above describe the target, and the code is not there yet):
-- Decision 1: two controllers still loop over albums (blend and playlist edit), and Refetch and `injectAlbumsIntoViewCache` in `services/SeriesService.js` call the ratings route outside the queue.
+- Decision 1: **done in F56** (2026-11-19, on the branch `fix/f56-screens-load-through-the-service`, not yet published). The blend and the playlist edit ask the service through `albumAsks.albumsOf` (`services/albums/AlbumAsks.js`), which joins the load in force (`join` / `leave`) instead of starting a generation; Refetch is `reloadAlbum`, through the queue; `injectAlbumsIntoViewCache` and `refetchAlbumMetadata` are gone, and so are `apiClient.fetchAlbum`, `fetchMultipleAlbums` and `BEAenrichAlbum`. A test keeps it so (`test/architecture/screensLoadThroughTheService.test.js`). Still outside the queue: the "Enrich Data" button of the album window and the background Spotify queue (`SpotifyEnrichmentService`), which ask Spotify on their own.
 - Decision 3: for popularity and ratings a failure can still end as "the source has nothing" (an expired Spotify token, a 401 or a 429; the server answering 200 and empty when the scraper fails), and that answer is now written into the series as a fact.
-- Decision 7: `stores/albums.js` still has other writers besides the projection.
-- The limit of 4 slow sources at once is not the ceiling on the server: the browser's deadline does not stop the scrape, and the callers above skip the queue. The critiques asked to start at 2 and measure.
-- The blend (`BlendingController`) and the playlist edit mode (`PlaylistsController`) still load albums through their own loop (`apiClient.fetchAlbum`); the saved playlists screen scans the series on its own (UAT-186, UAT-189, UAT-191).
+- Decision 7: **done in F56** (same branch). The projection is the only writer of albums in `stores/albums.js`; the methods that added or removed one album were removed from the shelf.
+- The limit of 4 slow sources at once is not the ceiling on the server: the browser's deadline does not stop the scrape. Since F56 no caller of the ratings route skips the queue. The critiques asked to start at 2 and measure.
+- The blend and the playlist edit mode loaded albums through their own loop: **done in F56** (UAT-189), as was "saving the edit of a series reloads every series" (UAT-191: the save now reconciles). The saved playlists screen was done in F61 (UAT-186). What F56 left: it was not seen in a browser by its implementer, and an ask looks at the load again every second because a hold changes no entry of the store (a job for F58).
 - "Is this the album that was asked for?" still accepts any album of the right artist (UAT-184).
 - The server has no cache for ratings and passes the provider's raw error on (F52, UAT-181).
 

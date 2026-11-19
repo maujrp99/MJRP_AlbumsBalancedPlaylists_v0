@@ -145,10 +145,10 @@ How `04_Backend_Logic_Services.md` connects to this document.
 | Layer | Component | Responsibility | Data Shape |
 | :--- | :--- | :--- | :--- |
 ### Enrichment (Sprint 22)
-*   **Method**: `SeriesService.refetchAlbumMetadata(album, seriesId)`
-*   **Parallel Execution**: Calls `BEAEnrichmentHelper` and `SpotifyService` concurrently (`Promise.allSettled`).
-*   **Merge Logic**: Carefully merges enriched data back into the album object. **Crucial**: Explicitly preserves `tracksOriginalOrder` to ensure UI stability.
-*   **Store Update**: `SeriesController` hands the enriched album to `albumLoadService.adoptAlbum`, with no full reload.
+*   **Method** (since F56, on the branch `fix/f56-screens-load-through-the-service`, not yet published): `AlbumLoadService.reloadAlbum(albumId)`, called by `SeriesController.handleRefetchMetadata`. `SeriesService.refetchAlbumMetadata` and `albumLoadService.adoptAlbum` no longer exist.
+*   **Through the queue**: the album is found again in the catalog (what the browser keeps is not read) and every source is asked again, each on its queue, with its deadline and its state.
+*   **On screen**: the card shows as loading; a failure is the failure of that album, with a reason and "Try again". The other albums and series are not touched.
+*   **Not written any more**: the shared `albums` collection (its only writer was the old Refetch; nothing read it).
 | **CLIENT** | `TrackTransformer` | **Normalization**. Maps raw server arrays to canonical properties on the `Track` object. | `track.acclaimRank`, `track.spotifyPopularity` (Unified Properties) |
 | **CLIENT** | `RankingStrategy` | **Sorting**. Uses the normalized properties to decide `track._rank`. | `track._rank = 1` |
 | **CLIENT** | `BaseAlgorithm` | **Distribution**. Uses `_rank` to move tracks into Playlists. | `playlist.tracks.push(track)` |
@@ -163,7 +163,7 @@ The application uses a **"Restaurant Metaphor"** in the UI to simplify complex a
 ### The Metaphor Translation Table
 | Metaphor | UI Component | Code Concept | Implementation |
 | :--- | :--- | :--- | :--- |
-| **Blend** | `BlendSeriesSelector` | **Input Data** | Selection of an album `Series`. `BlendingController` then loads its albums in its own loop (`apiClient.fetchAlbum`), not through `AlbumLoadService`. |
+| **Blend** | `BlendSeriesSelector` | **Input Data** | Selection of an album `Series`. `BlendingController` then asks the album load for its albums (`albumAsks.albumsOf`, F56, on its branch): what is loaded or kept is not asked again. |
 | **Recipe** | `BlendRecipeCard` | **Algorithm Class** | Selects the `algorithmId` (e.g., `top-n-popular` -> `TopNAlgorithm`). |
 | **Ingredients** | `BlendIngredientsPanel` | **Configuration** | Constructs the `options` object passed to `algorithm.generate()`. |
 
