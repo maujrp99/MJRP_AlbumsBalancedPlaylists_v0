@@ -10,6 +10,7 @@ import { authService } from '@shared/services/AuthService.js';
 import { showLoginModal } from '../LoginModal.js';
 import toast from '../Toast.js';
 import { SpotifyAuthService } from '../../services/SpotifyAuthService.js';
+import { reloadApp } from '../../utils/reloadApp.js';
 
 export class AuthNav {
     constructor(userState) {
@@ -89,6 +90,8 @@ export class AuthNav {
                 // The Spotify session belongs to the person who is leaving: it goes with them (F59, UAT-28)
                 SpotifyAuthService.logout();
                 toast.success('Signed out successfully');
+                // A fresh page: nothing of the person who left stays in memory or on screen
+                reloadApp();
             } catch (err) {
                 toast.error('Sign out failed');
             }
