@@ -13,7 +13,7 @@
 
 import { parseAlbumQuery } from './albumQuery.js'
 
-import { Reason } from '@shared/albumIdentity.js'
+import { Reason, compareKeptAlbum } from '@shared/albumIdentity.js'
 
 export { compareAlbumIdentity, compareKeptAlbum, pickAlbum, Verdict, Reason } from '@shared/albumIdentity.js'
 
@@ -60,6 +60,33 @@ export const keptAlbum = (album) => (album ? {
     year: album.year,
     identityReason: album.metadata?.identityReason ?? null
 } : null)
+
+/**
+ * Which of the queries of a series asked for this album (the album on screen)? Each query is what
+ * was ASKED and the album is the candidate. A query with the album's own title comes before a
+ * query the album is only an edition of.
+ * @param {Array<string|Object>} albumQueries
+ * @param {Object} album - a loaded album
+ * @returns {number} the position of the query, or -1 when no query asked for this album
+ */
+export function indexOfQueryFor(albumQueries, album) {
+    const kept = keptAlbum(album)
+    const verdicts = (albumQueries || []).map(query => compareKeptAlbum(askedAlbum(query), kept))
+    const exact = verdicts.findIndex(verdict => verdict.reason === Reason.EXACT_TITLE)
+    return exact !== -1 ? exact : verdicts.findIndex(verdict => verdict.same)
+}
+
+/**
+ * Does a series already ask for this very album? An edition of an album the series asks for is
+ * something else to ask for, so only the album's own title counts.
+ * @param {Array<string|Object>} albumQueries
+ * @param {Object} album - { artist, title }
+ * @returns {boolean}
+ */
+export function alreadyAskedFor(albumQueries, album) {
+    const kept = keptAlbum(album)
+    return (albumQueries || []).some(query => compareKeptAlbum(askedAlbum(query), kept).reason === Reason.EXACT_TITLE)
+}
 
 /**
  * The one line an album shows when it is not, to the letter, the title that was asked for.

@@ -45,7 +45,9 @@ const CALL_SITES = [
     { name: 'BestEverAlbums (server)', file: 'server/lib/scrapers/besteveralbums.js', asks: /^\.\.\/albumIdentity$/ },
     { name: 'Spotify (server)', file: 'server/lib/services/spotifyPopularity.js', asks: /^\.\.\/albumIdentity$/ },
     { name: 'the read-only count', file: 'public/js/services/albums/albumIdentityAudit.js', asks: /models\/askedAlbum\.js$/ },
-    { name: 'the album cache, when it is read', file: 'public/js/services/albums/adapters/AlbumCacheAdapter.js', asks: /models\/askedAlbum\.js$/ }
+    { name: 'the album cache, when it is read', file: 'public/js/services/albums/adapters/AlbumCacheAdapter.js', asks: /models\/askedAlbum\.js$/ },
+    { name: 'the old album cache, when it is read', file: 'public/js/api/client.js', asks: /models\/askedAlbum\.js$/, from: 'async _keptAlbumAskedFor(', to: 'async _post(' },
+    { name: 'adding and removing an album of a series', file: 'public/js/services/SeriesService.js', asks: /models\/askedAlbum\.js$/, from: 'async addAlbumToSeries(', to: 'async injectAlbumsIntoViewCache(' }
 ]
 
 describe('one rule says "this is the album asked for"', () => {
