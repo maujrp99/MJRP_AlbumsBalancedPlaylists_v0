@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 17:33] session — F52 fatia 1: documentos da feature e manual do contrato de resposta
+
+Documentos da fatia 1 da F52, no ramo `fix/f52-server-tells-the-truth`.
+
+- **Feature** (`docs/specs/features/F52-server-album-generation-back/`): `spec.md` em `In Progress`, com as quatro fatias (a 1 feita, as 2 a 4 não), oito requisitos e a mudança de comportamento declarada (página com zero notas deixa de contar como «tem notas»); `plan.md` com o desenho como foi construído e as decisões tomadas na construção; `tasks.md` com 20 tarefas (12 fechadas, duas à espera do MJRP).
+- **Manual:** `03_Backend_API_Layer.md` ganhou o contrato da resposta, a lista fechada de códigos e a tabela do provedor de IA, linha por linha; `07_Frontend_Data_Infra.md` ganhou o leitor único, a carga segurada e o quadro das duas direções da publicação separada. Frases que ficaram falsas foram acertadas em `01`, `02` e `07b`.
+- **`docs/specs/arch.md`:** a proposta diz agora que a fatia 1 está construída e quais dos pontos «ainda não verificados» foram vistos.
+- O título da feature nos três documentos passou a «O servidor diz a verdade», o nome da proposta aprovada (era «A busca de álbum por IA do servidor volta a responder»).
+- **Para o MJRP decidir** (em `spec.md`, Open Questions): aceitar que uma aba antiga fique sem a lista por IA até recarregar, ou o servidor manter `albums` no topo da resposta por um tempo.
+
 ## [2026-11-19 17:33] session — F52 fatia 1, app: um leitor da resposta do servidor, falha como falha, 401 e 429 seguram a carga (UAT-23)
 
 Segunda metade da fatia 1 da F52, no mesmo ramo (`fix/f52-server-tells-the-truth`): o lado do app.

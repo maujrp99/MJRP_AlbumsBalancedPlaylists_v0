@@ -477,7 +477,8 @@ One line per component of the album path. "State" says whether it is in producti
 | :--- | :--- | :--- | :--- |
 | Album routes | `server/routes/albums.js` | `/api/generate`, `/api/enrich-album` | v3; error contract in F52 |
 | Route guards | `server/lib/auth/guards.js`, `verifyIdToken.js`, `requireUser.js`, `server/lib/rateLimit.js` | the paid and the costly routes answer only to a signed-in person, each with a limit per person | **v5.0 (F59)** |
-| AI routes | `server/routes/ai.js` | artist's album list by AI; answers 200 and empty on any error | v3; F52 |
+| AI routes | `server/routes/ai.js`, `server/routes/handlers/ai.js` | artist's album list by AI; a failure leaves by the table of the AI provider, never as 200 and empty | **v5.0 (F52, slice 1)** |
+| Answer contract | `server/lib/outcome.js`, `server/lib/aiProviderOutcome.js` | the one builder of answers (`{ data, outcome }` / `{ error: { code, retryable } }`) and the table of the AI provider | **v5.0 (F52, slice 1)** |
 | Debug routes | `server/routes/debug.js`, `server/lib/debugGate.js` | off unless the server starts with `ENABLE_DEBUG_ROUTES=true`; `/debug/files` lists any path when on | v3; off by default since v5.0 (F59) |
 | MusicKit route | `server/routes/musickit.js` | issues the Apple developer token | v3 |
 | `EnrichmentService` | `server/lib/services/EnrichmentService.js` | ratings per track from BestEverAlbums | v3; F52 |

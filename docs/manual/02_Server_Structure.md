@@ -69,9 +69,9 @@ flowchart TD
 **Purpose**: Enhances a raw album tracklist with "BestEverAlbums" community ratings.
 
 *   **Logic Trace**:
-    1.  **Validation**: the route checks `AI_API_KEY` (503 if missing); the service checks the `albumData` structure (`title` and a `tracks` array), and an invalid body becomes a 400.
+    1.  **Validation**: the service checks the `albumData` structure (`title` and a `tracks` array), and an invalid body becomes a 400 `invalid_request`. The route no longer asks for `AI_API_KEY` (F52).
     2.  **Scraping**: Calls `getBestEverRanking(title, artist)`.
-        *   *Failure Handling*: Logs warning, continues with `bestEver = null`.
+        *   *Failure Handling* (F52): the scraper throws an `UpstreamError`; the service returns a failure with its code (502, 504 or 503). `null` from the scraper means the source has no page: outcome `not_found`.
     3.  **Indexing**:
         *   If evidence found: Normalizes all track titles in evidence using `normalizeRankingKey`.
         *   Creates `evidenceIndex` Map: `NormalizedKey -> evidence entry`.
@@ -80,8 +80,8 @@ flowchart TD
         *   Pass 1: normalizes each track title and looks it up in `evidenceIndex`.
         *   Pass 2: if not found, compares `toFuzzyCore` of both titles (`server/lib/normalize.js`).
         *   Constructs `ratingsMap`: `[{ title, rating }]` and `evidenceMap`: `[{ title, evidence: [{ source: 'BestEverAlbums', score, votes: null, url }] }]`.
-    5.  **Fallback**: If no ratings, fills `ratingsMap` with `null` and `evidenceMap` with empty lists.
-    6.  **Response**: Returns `{ data: { bestEverInfo, trackRatings, trackEvidence } }`.
+    5.  **Fallback**: If no ratings, fills `ratingsMap` with `null` and `evidenceMap` with empty lists (outcome `no_ratings` when the page exists, `not_found` when it does not).
+    6.  **Response**: Returns a typed result of `server/lib/outcome.js`; on the wire, `{ data: { bestEverInfo, trackRatings, trackEvidence }, outcome }`. See `03_Backend_API_Layer.md`.
 
 *   **Side Effects**: External HTTP request to BestEverAlbums. Console logs for debugging match rates.
 

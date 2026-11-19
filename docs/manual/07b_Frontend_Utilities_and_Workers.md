@@ -67,7 +67,7 @@ classDiagram
 ---
 
 ## 4. Task Queue (`public/js/utils/TaskQueue.js`) - v4.0
-*   **Role**: runs async tasks with a limit of tasks at once, a priority (per task or per group), a deadline per task and cancellation.
+*   **Role**: runs async tasks with a limit of tasks at once, a priority (per task or per group), a deadline per task, cancellation, and a pause (`pause()`, `resume()`, `paused`; F52): a paused queue starts no new task and is not idle while tasks wait.
 *   **Contract**: a task is `({ signal }) => Promise`. The signal is aborted at the deadline or when the queue is cancelled. Errors have names: `TaskTimeoutError`, `TaskCancelledError`.
 *   **Boundary**: it imports nothing from the project. The album load uses three queues: catalog searches (3), quick sources (6) and ratings (4).
 
