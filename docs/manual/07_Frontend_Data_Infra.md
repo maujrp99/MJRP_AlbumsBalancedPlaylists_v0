@@ -97,7 +97,7 @@ classDiagram
 *   **Role**: Manages the core Playlist "Workspace".
 *   **Key Features**:
     *   **Modes**: Explicit `CREATING` vs `EDITING` modes to handle "Edit Batch" logic.
-    *   **Undo/Redo**: Implements a Memento Pattern with `versions` array (Snapshotting state on every mutation like drag/drop).
+    *   **Undo/Redo**: Memento pattern. The store only holds the two flags the buttons read (`canUndo`, `canRedo`); the snapshots are in `PlaylistHistoryService` and the rule (which set the history is of, when it starts again) in `PlaylistsService` (F62).
     *   **Pure state** (ADR-0017): the store only holds the working set and its flags (`isDirty`, `isSynchronized`, `isSaving`). The operations are in `PlaylistsService`.
     *   **Draft in the browser** (v5.0, F60): `PlaylistsService.watchStore()` follows the store and keeps the playlists that are not saved yet in `mjrp_current_playlists`, with the `uid` of the person; `restoreDraft({ seriesId })` puts them back after a reload, for the same person and series only.
     *   **Permanent save** (v5.0, F60): `PlaylistsService.saveCurrentBatch` (explicit user action), one at a time.

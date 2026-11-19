@@ -2,8 +2,9 @@
  * BlendIngredientsPanel.js
  * 
  * Step 3: 🥗 Pick Your Ingredients
- * Parameter configuration (duration, output mode, ranking type, discovery mode)
- * Shows/hides options conditionally based on selected algorithm recipe
+ * Parameter configuration (track count, grouping, output mode, duration, ranking type)
+ * An option is shown only for a recipe it changes the result of (F62). «Discovery Mode» was
+ * removed: no recipe ever read it (UAT-08).
  * 
  * @module components/blend/BlendIngredientsPanel
  */
@@ -18,49 +19,42 @@ const ALGORITHM_RECIPES = {
         duration: true,
         outputMode: false,      // Auto-split internally
         rankingType: true,      // Spotify / BEA / Combined
-        discoveryMode: true,    // Include unranked
         groupingStrategy: false // Generally strictly chronological/balanced
     },
     'mjrp-cascade-v0': {
         duration: true,
         outputMode: false,
-        rankingType: true,
-        discoveryMode: true
+        rankingType: true
     },
     's-draft-original': {
         duration: true,
         outputMode: true,       // Single / Multiple
-        rankingType: true,
-        discoveryMode: true
+        rankingType: true
     },
     'legacy-roundrobin': {
         duration: true,
         outputMode: false,
-        rankingType: false,
-        discoveryMode: true
+        rankingType: false
     },
     'top-n-popular': {
         groupingStrategy: true,
         outputMode: true,
-        duration: false,        // Fixed count, duration irrelevant
+        duration: false,        // Shown only when the output may be split (see render)
         rankingType: false,     // Locked: Spotify
-        discoveryMode: false,   // Requires ranking data
         trackCount: true        // Sprint 17: Variable N
     },
     'top-n-acclaimed': {
         groupingStrategy: true,
         outputMode: true,
-        duration: false,        // Fixed count
+        duration: false,        // Shown only when the output may be split (see render)
         rankingType: false,     // Locked: BEA
-        discoveryMode: false,
         trackCount: true
     },
     'top-n-user': {
         groupingStrategy: true,
         outputMode: true,
-        duration: false,        // Fixed count, duration irrelevant
+        duration: false,        // Shown only when the output may be split (see render)
         rankingType: false,     // Locked: User
-        discoveryMode: false,   // Requires ranking data
         trackCount: true        // Use custom N
     }
 }
@@ -75,7 +69,6 @@ export class BlendIngredientsPanel {
             outputMode: opts.outputMode || 'auto',
             groupingStrategy: opts.groupingStrategy || 'by_album',
             rankingType: opts.rankingType || 'combined',
-            discoveryMode: opts.discoveryMode !== undefined ? opts.discoveryMode : true, // Default true
             trackCount: opts.trackCount || 3, // Default for Top N
             ...opts.config
         }
@@ -103,7 +96,7 @@ export class BlendIngredientsPanel {
     static OUTPUT_MODES = [
         { value: 'single', label: 'Single Playlist', description: 'One playlist with all tracks', icon: 'ListMusic' },
         { value: 'multiple', label: 'Multiple Playlists', description: 'Split by duration limits', icon: 'LayoutGrid' },
-        { value: 'auto', label: 'Auto', description: 'Let the algorithm decide', icon: 'Sparkles' }
+        { value: 'auto', label: 'Auto', description: 'One playlist, split when over the target', icon: 'Sparkles' }
     ]
 
     /**
@@ -112,7 +105,7 @@ export class BlendIngredientsPanel {
     static RANKING_TYPES = [
         { value: 'spotify', label: 'Spotify Popularity', description: 'Based on play counts', icon: 'TrendingUp' },
         { value: 'bea', label: 'Critics Choice', description: 'Based on BEA rankings', icon: 'Award' },
-        { value: 'combined', label: 'Combined', description: 'Balanced mix of both', icon: 'Scale' }
+        { value: 'combined', label: 'Combined', description: 'Acclaim first, popularity where unrated', icon: 'Scale' }
     ]
 
     /**
@@ -120,7 +113,7 @@ export class BlendIngredientsPanel {
      */
     static GROUPING_STRATEGIES = [
         { value: 'by_album', label: 'By Album', description: 'Keep Album Sequence', icon: 'Disc' },
-        { value: 'flat_ranked', label: 'By Ranking', description: 'Flow by Popularity', icon: 'TrendingUp' },
+        { value: 'flat_ranked', label: 'By Ranking', description: 'Every #1, then every #2...', icon: 'TrendingUp' },
         { value: 'artist_rank', label: 'By Artist then By Rank', description: 'Cluster by Artist', icon: 'Users' },
         { value: 'ranked_interleave', label: 'Balanced Interleave', description: 'Round Robin by Rank', icon: 'GitMerge' },
         { value: 'shuffle', label: 'Shuffle', description: 'Surprise Me', icon: 'Shuffle' }
@@ -148,12 +141,19 @@ export class BlendIngredientsPanel {
         return ALGORITHM_RECIPES[recipeId] || {
             groupingStrategy: true,
             outputMode: true,
-            outputMode: true,
             duration: true,
             rankingType: true,
-            discoveryMode: true,
             trackCount: false
         }
+    }
+
+    /**
+     * Is the target duration shown? When the recipe is built on it (the balanced playlists), or
+     * when a recipe with an output mode may split by it: «Multiple» always does and «Auto» does
+     * once the tracks pass the target. For «Single» it changes nothing, so it is not shown.
+     */
+    showsDuration(ingredients = this.getIngredientConfig()) {
+        return !!ingredients.duration || (!!ingredients.outputMode && this.config.outputMode !== 'single')
     }
 
     /**
@@ -176,14 +176,11 @@ export class BlendIngredientsPanel {
                 <!-- 2. Output Mode -->
                 ${ingredients.outputMode ? this.renderOutputModeSection() : ''}
 
-                <!-- 3. Duration (Conditional: Show if algorithm supports it OR if Multiple Playlists selected) -->
-                ${(ingredients.duration || (ingredients.outputMode && this.config.outputMode === 'multiple')) ? this.renderDurationSection() : ''}
+                <!-- 3. Duration (only where it changes the result: see showsDuration) -->
+                ${this.showsDuration(ingredients) ? this.renderDurationSection() : ''}
                 
                 <!-- Ranking Type (conditional) -->
                 ${ingredients.rankingType ? this.renderRankingTypeSection() : ''}
-                
-                <!-- Discovery Mode (conditional) -->
-                ${ingredients.discoveryMode ? this.renderDiscoveryModeSection() : ''}
             </div>
         `
 
@@ -317,36 +314,6 @@ export class BlendIngredientsPanel {
     }
 
     /**
-     * Render Discovery Mode section
-     */
-    renderDiscoveryModeSection() {
-        return `
-            <div class="flex items-center justify-between p-4 rounded-lg border ${this.config.discoveryMode
-                ? 'border-orange-400/50 bg-orange-400/10'
-                : 'border-white/10 bg-white/5'} transition-all duration-200">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-surface/60 flex items-center justify-center ${this.config.discoveryMode ? 'text-orange-400' : 'text-muted'}">
-                        ${getIcon('Compass', 'w-5 h-5')}
-                    </div>
-                    <div>
-                        <span class="font-medium block ${this.config.discoveryMode ? 'text-orange-400' : ''}">Discovery Mode</span>
-                        <span class="text-xs text-muted">Include tracks without ranking data</span>
-                    </div>
-                </div>
-                <button type="button" 
-                    id="blend-discovery-toggle"
-                    class="w-12 h-7 rounded-full transition-all duration-200 relative ${this.config.discoveryMode
-                ? 'bg-orange-400'
-                : 'bg-gray-600'}">
-                    <span class="absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-all duration-200 ${this.config.discoveryMode
-                ? 'left-6'
-                : 'left-1'}"></span>
-                </button>
-            </div>
-        `
-    }
-
-    /**
      * Render Grouping Strategy section
      */
     renderGroupingSection() {
@@ -420,16 +387,6 @@ export class BlendIngredientsPanel {
             })
         })
 
-        // Discovery mode toggle
-        const discoveryToggle = document.getElementById('blend-discovery-toggle')
-        if (discoveryToggle) {
-            discoveryToggle.addEventListener('click', () => {
-                this.config.discoveryMode = !this.config.discoveryMode
-                this.onConfigChange(this.config)
-                this.render()
-            })
-        }
-
         // Sprint 17.5: Track Count Buttons
         document.querySelectorAll('.blend-track-count-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -447,7 +404,6 @@ export class BlendIngredientsPanel {
      * - targetDuration: in SECONDS (not minutes)
      * - rankingId: 'balanced' | 'spotify' | 'bea' (not rankingType)
      * - outputMode: as-is
-     * - discoveryMode: as-is
      * 
      * @returns {Object} Normalized config ready for PlaylistGenerationService
      */
@@ -464,7 +420,6 @@ export class BlendIngredientsPanel {
             rankingId: rankingMapping[this.config.rankingType] || 'balanced',
             outputMode: this.config.outputMode,
             groupingStrategy: this.config.groupingStrategy,
-            discoveryMode: this.config.discoveryMode,
             trackCount: this.config.trackCount // Pass N to service
         }
     }

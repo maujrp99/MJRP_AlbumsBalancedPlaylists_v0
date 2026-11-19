@@ -5,12 +5,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { PlaylistsService } from '../../public/js/services/PlaylistsService.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'
+import { PlaylistHistoryService } from '../../public/js/services/playlists/PlaylistHistoryService.js'
 
 const storage = { save: vi.fn(), load: vi.fn(() => null), remove: vi.fn() }
-const history = {
-    createSnapshot: vi.fn(), undo: vi.fn(), redo: vi.fn(), clear: vi.fn(),
-    getStats: vi.fn(() => ({ canUndo: false, canRedo: false }))
-}
 
 describe('PlaylistsService.saveCurrentBatch (F60)', () => {
     let service, repository, repositoryFor
@@ -23,7 +20,7 @@ describe('PlaylistsService.saveCurrentBatch (F60)', () => {
             replaceBatch: vi.fn(async (playlists) => playlists.map((p, order) => ({ ...p, order, id: p.id || `new-${++nextId}` })))
         }
         repositoryFor = vi.fn(() => repository)
-        service = new PlaylistsService({}, {}, storage, history, { playlistRepositoryFor: repositoryFor })
+        service = new PlaylistsService({}, {}, storage, new PlaylistHistoryService(), { playlistRepositoryFor: repositoryFor })
     })
 
     const generated = () => playlistsStore.setPlaylists([{ name: 'Mix 1', tracks: [{ title: 'T1' }] }], 'sA')

@@ -186,7 +186,9 @@ The table lists the main services; the album loading services (`services/albums/
 | [PlaylistsService.js](file:///public/js/services/PlaylistsService.js) | Playlist operations, undo/redo, batch persistence | ✅ |
 | [PlaylistPersistenceService.js](file:///public/js/services/PlaylistPersistenceService.js) | Facade over `PlaylistRepository` / `SeriesRepository` | ✅ |
 | [SeriesService.js](file:///public/js/services/SeriesService.js) | Series CRUD, refetch of album metadata | ✅ |
-| [SpotifyExportService.js](file:///public/js/services/SpotifyExportService.js) | Export of playlists to Spotify | ✅ |
+| [SpotifyExportService.js](file:///public/js/services/SpotifyExportService.js) | Export of playlists to Spotify; answers with a report (created, not created, why) | ✅ F62 |
+| `AppleMusicExportService.js` (`public/js/services/`) | Export of playlists to Apple Music; answers with a report | ✅ F62 |
+| `export/exportLedger.js` (`public/js/services/`) | What this session already exported, so nothing is created twice | ✅ F62 |
 | [albums/AlbumLoadService.js](file:///public/js/services/albums/AlbumLoadService.js) | The one owner of the album load of the albums screen | ✅ |
 | [ranking/OwnRankingService.js](file:///public/js/services/ranking/OwnRankingService.js) | Saving of the person's own ranking | ✅ |
 

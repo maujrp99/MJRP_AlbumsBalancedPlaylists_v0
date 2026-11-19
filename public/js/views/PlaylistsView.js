@@ -4,6 +4,7 @@ import { playlistsStore } from '../stores/playlists.js'
 import { albumsStore } from '../stores/albums.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
+import { RegeneratePanel } from '../components/playlists/RegeneratePanel.js'
 import { getIcon } from '../components/Icons.js'
 import { getAllAlgorithms, getRecommendedAlgorithm } from '../algorithms/index.js'
 import { BalancedRankingStrategy, SpotifyRankingStrategy, BEARankingStrategy } from '../ranking/index.js'
@@ -16,6 +17,13 @@ import { PlaylistsDragHandler } from '../components/playlists/PlaylistsDragHandl
 import { getPlaylistsService } from '../services/PlaylistsService.js'
 import { router } from '../router.js'
 import { installUnsavedChangesGuard } from './playlists/unsavedChangesGuard.js'
+import { attachPlaylistEditActions } from './playlists/playlistEditActions.js'
+
+/** The batch name on screen: what was typed, or the name of the batch being edited. */
+const shownBatchNameOf = (state) => state.batchName || state.editContext?.currentBatchName || ''
+
+/** The name the batch being edited is saved under. */
+const savedBatchNameOf = (state) => state.editContext?.originalBatchName || state.batchName || ''
 
 export class PlaylistsView extends BaseView {
   constructor() {
@@ -23,6 +31,8 @@ export class PlaylistsView extends BaseView {
     this.isGenerating = false
     this.isDragging = false
     this.isRegeneratePanelExpanded = false // UI State
+    this.editActions = null     // undo, redo, delete a playlist, title of a playlist
+    this.updateDeferred = false // a redraw asked for while a title was being typed
 
     // Init Controller
     this.controller = new PlaylistsController(this)
@@ -33,6 +43,7 @@ export class PlaylistsView extends BaseView {
 
   async render(params) {
     // 1. Initialize Data via Controller
+    RegeneratePanel.reset() // the panel opens on the recipe of the playlists of this screen
     await this.controller.initialize(params)
 
     // 2. Return DOM Node
@@ -65,6 +76,13 @@ export class PlaylistsView extends BaseView {
   update() {
     if (!this.container) return
 
+    // A title being typed is not drawn over: the screen is drawn again when the edit ends
+    if (this.editActions?.isEditingTitle()) {
+      this.updateDeferred = true
+      return
+    }
+    this.updateDeferred = false
+
     // Clear and Re-render
     SafeDOM.clear(this.container)
     this.container.appendChild(this.renderContent())
@@ -80,13 +98,10 @@ export class PlaylistsView extends BaseView {
   }
 
   attachDelegatedListeners() {
-    // Delete Playlist
-    this.on(this.container, 'click', (e) => {
-      const deleteBtn = e.target.closest('[data-action="delete-playlist"]')
-      if (deleteBtn) {
-        const index = parseInt(deleteBtn.dataset.playlistIndex)
-        this.controller.deletePlaylist(index)
-      }
+    // Undo, redo, delete a playlist, the title of a playlist (F62)
+    this.editActions = attachPlaylistEditActions(this.container, {
+      controller: this.controller,
+      onEditEnd: () => { if (this.updateDeferred) this.update() }
     })
 
     // Remove Track
@@ -152,9 +167,13 @@ export class PlaylistsView extends BaseView {
       const regenerateBtn = this.container.querySelector('[data-action="regenerate-playlists"]')
       if (regenerateBtn) {
         regenerateBtn.addEventListener('click', () => {
-          import('../components/playlists/RegeneratePanel.js').then(({ RegeneratePanel }) => {
-            const config = RegeneratePanel.getConfig()
-            this.controller.handleGenerate(config)
+          import('../components/playlists/RegeneratePanel.js').then(async ({ RegeneratePanel }) => {
+            const generated = await this.controller.handleGenerate(RegeneratePanel.getConfig())
+            // the new playlists carry their recipe: the panel follows them again
+            if (generated) {
+              RegeneratePanel.reset()
+              this.update()
+            }
           })
         })
       }
@@ -180,6 +199,8 @@ export class PlaylistsView extends BaseView {
           const state = playlistsStore.getState()
           const batchName = state.batchName || ''
           gridContainer.innerHTML = PlaylistsGridRenderer.renderGrid(state.playlists, batchName)
+          // the grid was drawn again: its lists take the drag and drop again
+          this.dragHandler.setup(this.container)
         }
       })
     }
@@ -203,7 +224,7 @@ export class PlaylistsView extends BaseView {
     const appleBtn = this.container.querySelector('#exportAppleMusicBtn')
     if (appleBtn) {
       appleBtn.addEventListener('click', () => {
-        import('./playlists/index.js').then(({ handleExportToAppleMusic }) => handleExportToAppleMusic())
+        import('./playlists/index.js').then(({ handleExportToAppleMusic }) => handleExportToAppleMusic({ btn: appleBtn }))
       })
     }
 
@@ -217,22 +238,17 @@ export class PlaylistsView extends BaseView {
     const activeSeries = albumSeriesStore.getActiveSeries()
     const isEditMode = playlistsStore.isEditingExistingBatch()
 
-    console.log('[PlaylistsView] renderContent - Context:', {
-      editContext: state.editContext,
-      batchName: state.batchName, // The local input name
-      editBatchName: state.editContext?.batchName, // The name in the saved context
-      defaultBatchName: state.defaultBatchName,
-      isEditMode
-    })
-
     const container = SafeDOM.div({ className: 'playlists-view container' })
 
     // Header
-    container.appendChild(SafeDOM.fromHTML(this.renderHeader(isEditMode, playlists)))
+    container.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderHeader({
+      isEditMode,
+      editedBatchName: savedBatchNameOf(state)
+    })))
 
     // Batch Name Input
     container.appendChild(SafeDOM.fromHTML(
-      PlaylistsGridRenderer.renderBatchNameInput(state.batchName || state.editContext?.batchName, isEditMode, state.defaultBatchName)
+      PlaylistsGridRenderer.renderBatchNameInput(shownBatchNameOf(state), isEditMode, state.defaultBatchName)
     ))
 
     // Generation / Reconfig
@@ -242,7 +258,9 @@ export class PlaylistsView extends BaseView {
 
     // Export
     const exportSec = SafeDOM.div({ id: 'exportSection', className: 'mb-6 fade-in', style: { animationDelay: '0.08s' } })
-    exportSec.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderExportSection(playlists, { isSaving: state.isSaving })))
+    exportSec.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderExportSection(playlists, {
+      isSaving: state.isSaving, canUndo: state.canUndo, canRedo: state.canRedo
+    })))
     container.appendChild(exportSec)
 
     // Grid
@@ -254,7 +272,7 @@ export class PlaylistsView extends BaseView {
 
     const grid = SafeDOM.div({ id: 'playlistsGrid' })
     grid.appendChild(SafeDOM.fromHTML(
-      PlaylistsGridRenderer.renderGrid(playlists, state.batchName || state.editContext?.batchName || state.defaultBatchName || '')
+      PlaylistsGridRenderer.renderGrid(playlists, shownBatchNameOf(state) || state.defaultBatchName || '')
     ))
     mainContent.appendChild(grid)
     container.appendChild(mainContent)
@@ -272,28 +290,6 @@ export class PlaylistsView extends BaseView {
     return container
   }
 
-  renderHeader(isEditMode, playlists) {
-    const title = isEditMode ? 'Edit Playlist Batch' : 'Playlist Management'
-    const icon = isEditMode ? 'Edit' : 'Music'
-    const badge = isEditMode
-      ? `<span class="badge badge-success px-3 py-1 rounded-full text-sm">Editing: ${escapeHtml(playlistsStore.editContext?.batchName || '...')}</span>`
-      : ''
-
-    return `
-            <header class="view-header mb-8 fade-in">
-                ${Breadcrumb.render(isEditMode ? '/saved-playlists' : '/albums')}
-                <div class="header-content mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <h1 class="text-2xl md:text-4xl font-bold flex items-center gap-3">
-                        ${getIcon(icon, 'w-8 h-8')} ${title}
-                    </h1>
-                    <div class="header-actions flex flex-wrap items-center gap-4 w-full md:w-auto">
-                        ${badge}
-                    </div>
-                </div>
-            </header>
-        `
-  }
-
   renderGenerationSection(playlists, activeSeries) {
     // Check Edit Mode from Store
     const isEditMode = playlistsStore.isEditingExistingBatch()
@@ -309,7 +305,7 @@ export class PlaylistsView extends BaseView {
                 ${getIcon('AlertTriangle', 'w-8 h-8 text-red-500')}
                 <div>
                     <h3 class="font-bold text-lg">Batch Not Found</h3>
-                    <p class="text-sm opacity-80">Could not load playlists for batch "${escapeHtml(playlistsStore.editContext?.batchName || 'Unknown')}".</p>
+                    <p class="text-sm opacity-80">Could not load playlists for batch "${escapeHtml(playlistsStore.editContext?.originalBatchName || 'Unknown')}".</p>
                     <p class="text-xs mt-2">The batch may have been deleted or the name/series attributes are mismatched.</p>
                 </div>
             </div>
@@ -345,6 +341,8 @@ export class PlaylistsView extends BaseView {
 
   destroy() {
     super.destroy()
+    this.editActions?.detach()
+    this.editActions = null
     this.removeUnsavedChangesGuard?.()
     this.removeUnsavedChangesGuard = null
     this.controller.destroy()

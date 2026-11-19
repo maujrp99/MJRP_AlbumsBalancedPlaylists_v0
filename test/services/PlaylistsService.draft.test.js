@@ -9,11 +9,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { PlaylistsService } from '../../public/js/services/PlaylistsService.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'
+import { PlaylistHistoryService } from '../../public/js/services/playlists/PlaylistHistoryService.js'
 
-const history = () => ({
-    createSnapshot: vi.fn(), undo: vi.fn(), redo: vi.fn(), clear: vi.fn(),
-    getStats: vi.fn(() => ({ canUndo: false, canRedo: false }))
-})
+const history = () => new PlaylistHistoryService()
 const flush = () => new Promise(resolve => setTimeout(resolve, 0))
 
 describe('PlaylistsService draft of the playlists not saved yet (UAT-05)', () => {

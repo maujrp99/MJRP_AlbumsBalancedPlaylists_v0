@@ -40,7 +40,7 @@
     -   **Logic**: Renders cards with metadata (icons, colors, badges) derived from `getAllAlgorithms()`. Highlights "Recommended" algorithms.
 -   **`blend/BlendIngredientsPanel.js` (Step 3)**:
     -   **Role**: Configuration panel for the selected algorithm.
-    -   **Logic**: Dynamically shows/hides inputs (Duration, Output Mode, Ranking Source, Discovery Mode) based on the selected algorithm's capabilities (`ALGORITHM_RECIPES` mapping).
+    -   **Logic**: Shows only the inputs that change the result of the selected recipe (Top #, Grouping, Output Mode, Duration, Ranking Source; `ALGORITHM_RECIPES` mapping and `showsDuration`). "Discovery Mode" was removed in F62: no recipe read it.
 
 ## Inventory (`inventory/`)
 **Status**: `[ACTIVE]`

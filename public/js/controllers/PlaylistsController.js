@@ -177,42 +177,51 @@ export class PlaylistsController {
         askNotices(result).forEach(notice => toast.warning(notice))
     }
 
+    /** The service that owns the set on screen (its edits, its history, its save). */
+    async _service() {
+        const { db } = await import('../app.js')
+        const { cacheManager } = await import('../cache/CacheManager.js')
+        return getPlaylistsService(db, cacheManager)
+    }
+
     /**
      * Deletes a single playlist from the current working set
      */
     async deletePlaylist(index) {
-        if (!playlistsStore.getPlaylists()[index]) return
-
-        const { db } = await import('../app.js')
-        const { cacheManager } = await import('../cache/CacheManager.js')
-        const removed = getPlaylistsService(db, cacheManager).removePlaylist(index)
+        const removed = (await this._service()).removePlaylist(index)
         if (removed) toast.success(`Playlist "${removed.name}" removed`)
     }
 
     /**
      * Delete a specific track from a playlist
      */
-    deleteTrack(playlistIndex, trackIndex) {
-        // Validate
-        const playlists = playlistsStore.getPlaylists()
-        if (!playlists[playlistIndex] || !playlists[playlistIndex].tracks[trackIndex]) return
+    async deleteTrack(playlistIndex, trackIndex) {
+        (await this._service()).removeTrack(playlistIndex, trackIndex)
+    }
 
-        // Use service for track removal
-        import('../app.js').then(({ db }) => {
-            import('../cache/CacheManager.js').then(({ cacheManager }) => {
-                const service = getPlaylistsService(db, cacheManager)
-                service.removeTrack(playlistIndex, trackIndex)
-            })
-        })
+    /** Give a playlist the title the person typed (it is saved with the batch). */
+    async renamePlaylist(playlistIndex, title) {
+        return (await this._service()).renamePlaylist(playlistIndex, title)
+    }
+
+    /** Undo the last change of the set on screen. */
+    async undo() {
+        if (!(await this._service()).undo()) toast.info('Nothing to undo')
+    }
+
+    /** Redo the change that was undone. */
+    async redo() {
+        if (!(await this._service()).redo()) toast.info('Nothing to redo')
     }
 
     /**
      * Generate playlists using selected config
      * Uses BlendingController, which asks the album load for the albums with the sources the
      * recipe reads; what the load left out (albums, sources) is told to the person.
+     * @returns {Promise<Object|null>} what was generated, or null when nothing was
      */
     async handleGenerate(config) {
-        // config = { algorithmId, rankingId, targetDuration, outputMode, discoveryMode } from UI
+        // config = { algorithmId, rankingId, targetDuration, outputMode, groupingStrategy, trackCount } from UI
         if (!config) config = { algorithmId: 'mjrp-balanced-cascade', rankingId: 'balanced' }
 
         try {
@@ -221,10 +230,12 @@ export class PlaylistsController {
 
             ;(result.notices || []).forEach(notice => toast.warning(notice))
             toast.success(`Generated ${result.playlists.length} playlists`)
+            return result
         } catch (err) {
-            if (err?.name === 'BlendCancelledError') return // the person left the screen
+            if (err?.name === 'BlendCancelledError') return null // the person left the screen
             console.error('[PlaylistsController] Generation failed:', err)
             toast.error(err.message)
+            return null
         } finally {
             this._showGenerating(false)
         }
@@ -242,9 +253,8 @@ export class PlaylistsController {
      * The button shows the save in progress from the store (`isSaving`), not from here.
      */
     async handleSave(typedBatchName = null) {
-        const { db, auth } = await import('../app.js')
-        const { cacheManager } = await import('../cache/CacheManager.js')
-        const service = getPlaylistsService(db, cacheManager)
+        const { auth } = await import('../app.js')
+        const service = await this._service()
 
         const batchName = service.resolveBatchName(typedBatchName)
         if (!batchName) {

@@ -96,26 +96,29 @@
 **Error Handling**: Maps Firebase error codes (e.g., `auth/popup-closed-by-user`) to user-friendly Toast messages.
 
 ### 4.2 `SpotifyExportModal.js`
-**Purpose**: Complex Workflow for exporting playlists.
+**Purpose**: The window of the export to Spotify. It runs `SpotifyExportService.exportPlaylists` and always ends on its report (F62).
 **State Machine**:
-1.  **IDLE**: User selects Name & Mode (Merge vs Separate).
-2.  **MATCHING**: Iterates tracks -> Calls `SpotifyService.searchTrack`. Builds `notFoundTracks` list.
-3.  **CREATING**: Calls `SpotifyService.createPlaylist`.
-4.  **ADDING**: Calls `SpotifyService.addTracks`.
-6.  **ERROR**: Displays specific failure reason.
+1.  **IDLE**: User selects Name & Mode (Merge vs Separate). The text under the button follows the mode.
+2.  **MATCHING**: the service finds the Spotify track of each track (the address the track carries, else `SpotifyService.searchTrack`). The modal collects `notFoundTracks`.
+3.  **CREATING**: `SpotifyService.createPlaylist`, once per playlist to create.
+4.  **ADDING**: `SpotifyService.addTracksToPlaylist`.
+5.  **DONE**: the report. "Created (n)" with a link "Open in Spotify" for each playlist, "Created without all their tracks", "Not created", "No track found", the reason the export stopped, and the next step: "Connect to Spotify again" (the access could not be renewed), "Try again" (any other failure), "Close".
+
+One export at a time: a second click on the export button while one runs starts nothing.
 
 ### Export State Machine
 ```mermaid
 stateDiagram-v2
     [*] --> IDLE
     IDLE --> MATCHING: User Clicks Export
-    MATCHING --> CREATING: All Tracks Found
-    MATCHING --> ERROR: API Error
+    MATCHING --> CREATING: Tracks matched
+    MATCHING --> DONE: Reconnect needed / rate limit
     CREATING --> ADDING: Playlist Created
-    CREATING --> ERROR: Network Fail
-    ADDING --> SUCCESS: Tracks Added
-    SUCCESS --> [*]: User Closes
-    ERROR --> IDLE: Retry
+    CREATING --> DONE: Failure (reported with what was created)
+    ADDING --> CREATING: Next playlist (separate mode)
+    ADDING --> DONE: All delivered, or a failure
+    DONE --> MATCHING: Try again
+    DONE --> [*]: User Closes / Connect again
 ```
 
 ### 4.3 `ViewAlbumModal.js`

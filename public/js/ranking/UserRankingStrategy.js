@@ -2,7 +2,8 @@
  * UserRankingStrategy
  * 
  * Ranking strategy that uses user-defined track rankings.
- * Falls back to original album position if no user ranking exists.
+ * Falls back to the order of the album itself if no user ranking exists (the blend says so:
+ * models/recipeSources.js names this fallback in the notice).
  * 
  * Part of the Strategy Pattern for "Source of Truth" selection.
  * Color: Incandescent Blue (#0EA5E9 / sky-500)
@@ -86,13 +87,16 @@ export class UserRankingStrategy extends RankingStrategy {
     }
 
     /**
-     * Fallback: return tracks in original album order
+     * Fallback: the tracks in the order of the album itself. An album keeps its tracks by acclaim
+     * (`tracks`) and in its own order apart (`tracksOriginalOrder`): with no ranking of the
+     * person, the order is the album's, never the acclaim order under the name of "my ranking".
      * @param {Object} album - Album object
      * @returns {Array} Tracks with _rank based on original position
      * @private
      */
     _fallbackToOriginalOrder(album) {
-        return album.tracks.map((track, index) => ({
+        const inAlbumOrder = album.tracksOriginalOrder?.length ? album.tracksOriginalOrder : album.tracks
+        return inAlbumOrder.map((track, index) => ({
             ...track,
             userRank: null,
             _rank: index + 1  // 1-based ranking

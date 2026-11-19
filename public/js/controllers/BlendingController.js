@@ -19,7 +19,7 @@ import { albumSeriesStore } from '../stores/albumSeries.js'
 import { playlistGenerationService } from '../services/PlaylistGenerationService.js'
 import { getPlaylistsService } from '../services/PlaylistsService.js'
 import { albumAsks } from '../services/albums/albumLoading.js'
-import { sourcesForRecipe } from '../models/recipeSources.js'
+import { sourcesForRecipe, fallbacksForRecipe } from '../models/recipeSources.js'
 import { askNotices, askProgressText, noAlbumsMessage } from '../models/albumAsk.js'
 
 /**
@@ -28,7 +28,6 @@ import { askNotices, askProgressText, noAlbumsMessage } from '../models/albumAsk
  * @property {number} targetDuration - Target duration in SECONDS
  * @property {string} rankingId - 'balanced' | 'spotify' | 'bea'
  * @property {string} outputMode - 'auto' | 'single' | 'multiple'
- * @property {boolean} discoveryMode - Include unranked tracks
  */
 
 /**
@@ -37,7 +36,8 @@ import { askNotices, askProgressText, noAlbumsMessage } from '../models/albumAsk
  * @property {Album[]} albums - The albums they were generated from (the ones that were ready)
  * @property {Object} stats - Generation statistics
  * @property {Object} load - what the album load answered (AlbumsResult, models/albumAsk.js)
- * @property {string[]} notices - what to tell the person: albums left out, sources missing
+ * @property {string[]} notices - what to tell the person: albums left out, sources missing and
+ *           how the recipe ordered the tracks of the albums a source is missing for
  */
 
 /** The person left the screen while the albums were loading: nothing was generated. */
@@ -105,7 +105,7 @@ class BlendingController {
 
         // Which series the shelf answers for (the load projects its albums there)
         albumsStore.setActiveAlbumSeriesId(series.id)
-        return { albums: result.albums, result, notices: askNotices(result) }
+        return { albums: result.albums, result, notices: askNotices(result, fallbacksForRecipe(config)) }
     }
 
     /** A new generation is a new set: no edit context or batch name of another set stays. */

@@ -88,9 +88,6 @@ export class TopNAlgorithm extends BaseAlgorithm {
             }
         }
 
-        // DEBUG: Log what grouping strategy is being applied
-        console.log('[TopNAlgorithm] Applying groupingStrategy:', groupingStrategy)
-
         // Apply grouping/sorting
         this._applyGrouping(allSelectedTracks, groupingStrategy)
 
@@ -148,89 +145,70 @@ export class TopNAlgorithm extends BaseAlgorithm {
     }
 
     /**
-     * Sort tracks based on grouping strategy
-     * @param {Array} tracks 
-     * @param {string} strategy 
+     * Put the selected tracks in the order of the grouping chosen in the menu (in place).
+     * An unknown grouping, like «By Album», keeps the order of the albums.
+     * @param {Array} tracks
+     * @param {string} strategy
      */
     _applyGrouping(tracks, strategy) {
-        switch (strategy) {
-            case 'flat_ranked': // Determine by local rank (interleaved: 1s, 2s, 3s...)
-                tracks.sort((a, b) => (a._rank || 0) - (b._rank || 0))
-                break
-
-            case 'artist_rank': // Cluster by Artist, then by Rank
-                tracks.sort((a, b) => {
-                    // Robust artist name check
-                    const getArtist = (t) => {
-                        if (t.artistName) return t.artistName
-                        if (Array.isArray(t.artists) && t.artists[0]) return t.artists[0].name
-                        return ''
-                    }
-
-                    const artistA = getArtist(a).toLowerCase()
-                    const artistB = getArtist(b).toLowerCase()
-
-                    if (artistA < artistB) return -1
-                    if (artistA > artistB) return 1
-                    return (a._rank || 0) - (b._rank || 0)
-                })
-                break
-
-            case 'shuffle':
-                tracks.sort(() => Math.random() - 0.5)
-                break
-
-            case 'ranked_interleave': // Group by Rank, then Round-Robin by Artist
-                // 1. Bucket by Rank
-                const rankBuckets = {}
-                tracks.forEach(track => {
-                    const rank = track._rank || 999
-                    if (!rankBuckets[rank]) rankBuckets[rank] = []
-                    rankBuckets[rank].push(track)
-                })
-
-                const sortedRanks = Object.keys(rankBuckets).sort((a, b) => Number(a) - Number(b))
-                const finalList = []
-
-                // 2. Process each rank bucket
-                for (const rank of sortedRanks) {
-                    const bucketTracks = rankBuckets[rank]
-
-                    // Group by Artist within this bucket
-                    const artistGroups = {}
-                    const artistOrder = [] // Maintain discovery order for stability
-
-                    bucketTracks.forEach(t => {
-                        const artist = this._getArtistName(t)
-                        if (!artistGroups[artist]) {
-                            artistGroups[artist] = []
-                            artistOrder.push(artist)
-                        }
-                        artistGroups[artist].push(t)
-                    })
-
-                    // Round Robin Interleave
-                    const maxTracksInGroup = Math.max(...Object.values(artistGroups).map(g => g.length))
-
-                    for (let i = 0; i < maxTracksInGroup; i++) {
-                        for (const artist of artistOrder) {
-                            if (artistGroups[artist][i]) {
-                                finalList.push(artistGroups[artist][i])
-                            }
-                        }
-                    }
-                }
-
-                // Replace original array contents while keeping reference
-                tracks.length = 0
-                tracks.push(...finalList)
-                break
-
-            case 'by_album':
-            default:
-                // Preserve original order (by album index)
-                break
+        const groupings = {
+            flat_ranked: () => this._byRank(tracks),
+            artist_rank: () => this._byArtistThenRank(tracks),
+            shuffle: () => this._shuffled(tracks),
+            ranked_interleave: () => this._interleavedByRank(tracks)
         }
+        const ordered = groupings[strategy]?.()
+        if (ordered) tracks.splice(0, tracks.length, ...ordered)
+    }
+
+    /** Every first place, then every second place... (the albums keep their order inside a place). */
+    _byRank(tracks) {
+        return [...tracks].sort((a, b) => (a._rank || 0) - (b._rank || 0))
+    }
+
+    /** The tracks of one artist together (artists in alphabetical order), by rank inside the artist. */
+    _byArtistThenRank(tracks) {
+        const artistOf = new Map(tracks.map(track => [track, this._getArtistName(track).toLowerCase()]))
+        return [...tracks].sort((a, b) =>
+            artistOf.get(a).localeCompare(artistOf.get(b)) || (a._rank || 0) - (b._rank || 0))
+    }
+
+    /** An even shuffle (Fisher-Yates): every order is as likely as any other. */
+    _shuffled(tracks) {
+        const shuffled = [...tracks]
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1))
+            ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+        }
+        return shuffled
+    }
+
+    /** Place by place, taking one track of each artist in turn. */
+    _interleavedByRank(tracks) {
+        const byRank = new Map()
+        tracks.forEach(track => {
+            const rank = track._rank || 999
+            if (!byRank.has(rank)) byRank.set(rank, [])
+            byRank.get(rank).push(track)
+        })
+        return [...byRank.keys()].sort((a, b) => a - b).flatMap(rank => this._roundRobinByArtist(byRank.get(rank)))
+    }
+
+    /** One track of each artist in turn, the artists in the order they first appear. */
+    _roundRobinByArtist(tracks) {
+        const byArtist = new Map()
+        tracks.forEach(track => {
+            const artist = this._getArtistName(track)
+            if (!byArtist.has(artist)) byArtist.set(artist, [])
+            byArtist.get(artist).push(track)
+        })
+        const groups = [...byArtist.values()]
+        const longest = Math.max(0, ...groups.map(group => group.length))
+        const turns = []
+        for (let turn = 0; turn < longest; turn++) {
+            groups.forEach(group => { if (group[turn]) turns.push(group[turn]) })
+        }
+        return turns
     }
 
     /**

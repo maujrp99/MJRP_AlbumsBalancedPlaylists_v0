@@ -19,7 +19,6 @@ import { resolveRankingId } from '../models/recipeSources.js'
  * @property {string} rankingId - Ranking strategy ('spotify', 'bea', 'balanced')
  * @property {number} [targetDuration] - Target duration in seconds
  * @property {string} [outputMode] - 'single' | 'multiple' | 'auto'
- * @property {boolean} [discoveryMode] - Enable discovery tracks
  * @property {string} [groupingStrategy] - 'by_album'|'flat_ranked'|'shuffle'
  */
 
@@ -28,6 +27,24 @@ import { resolveRankingId } from '../models/recipeSources.js'
  * @property {Playlist[]} playlists - Generated playlists with normalized tracks
  * @property {Object} stats - Generation statistics
  */
+
+/** The options of a recipe that are remembered with the playlists it generated. */
+const REMEMBERED_OPTIONS = ['trackCount', 'outputMode', 'groupingStrategy', 'targetDuration']
+
+/**
+ * What the generated playlists remember of their recipe. Only what was chosen: an option left
+ * out is not written (the database refuses a field with no value).
+ * @param {GenerationConfig} config
+ * @param {string} rankingId - the ranking the recipe was generated with
+ * @returns {Object}
+ */
+export function generationMeta(config, rankingId) {
+    const meta = { algorithmId: config.algorithmId, rankingId }
+    REMEMBERED_OPTIONS.forEach(option => {
+        if (config[option] !== undefined && config[option] !== null) meta[option] = config[option]
+    })
+    return meta
+}
 
 export class PlaylistGenerationService {
     /**
@@ -63,7 +80,6 @@ export class PlaylistGenerationService {
             rankingStrategy,
             targetDuration: config.targetDuration,
             outputMode: config.outputMode,
-            discoveryMode: config.discoveryMode,
             groupingStrategy: config.groupingStrategy,
             // Sprint 17: Pass variable track count (N)
             trackCount: config.trackCount || config.n
@@ -71,15 +87,14 @@ export class PlaylistGenerationService {
 
         // Transform result to normalized playlist format
         // Note: Do NOT add index here - index is for DISPLAY (Grid) and EXPORT only
-        const playlists = result.playlists.map((p, index) => ({
+        const meta = generationMeta(config, rankingId)
+        const playlists = result.playlists.map(p => ({
             name: p.title, // Pure title without index (e.g., "Greatest Hits Vol. 1")
             title: p.title, // Also set title for consistency
             tracks: this.transformTracks(p.tracks),
-            // Preserve metadata for regeneration
-            _meta: {
-                algorithmId: config.algorithmId,
-                rankingId
-            }
+            // The recipe these playlists were generated with: saved with them, shown again by the
+            // "reconfigure" panel
+            _meta: { ...meta }
         }))
 
         console.log(`[PlaylistGenerationService] Generated ${playlists.length} playlist(s)`)
@@ -114,7 +129,8 @@ export class PlaylistGenerationService {
         // Sprint 12.5: Use TrackTransformer for canonical output
         // We pass empty context as we don't have album context here, 
         // but rawTracks usually have artist/album populated by this stage.
-        return rawTracks.map(t => TrackTransformer.toCanonical(t))
+        // A popularity that stood in for a missing rating while ranking is not shown as a rating.
+        return rawTracks.map(t => TrackTransformer.toCanonical(t.ratingIsPopularity ? { ...t, rating: null } : t))
     }
 
     /**

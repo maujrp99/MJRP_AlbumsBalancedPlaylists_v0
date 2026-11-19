@@ -39,9 +39,7 @@ const WRITTEN_IN_THE_CODE = {
     // the recipes of the blending menu, a list in the same file
     'components/blend/BlendRecipeCard.js': ['recipe.name'],
     // the three "coming soon" features, an object in the same function
-    'views/ComingSoonView.js': ['feature.name'],
-    // one of two constant headings ('Edit Playlist Batch' / 'Playlist Management')
-    'views/PlaylistsView.js': ['title']
+    'views/ComingSoonView.js': ['feature.name']
 }
 
 const listJs = (dir = '') => fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true }).flatMap(entry => {

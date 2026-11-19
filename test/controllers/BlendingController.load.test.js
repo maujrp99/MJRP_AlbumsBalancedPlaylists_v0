@@ -91,7 +91,22 @@ describe('BlendingController and the album load', () => {
 
         const result = await blendingController.generateFromSeries('sA', CONFIG)
 
-        expect(result.notices).toEqual(['Spotify popularity is missing for 1 of 2 albums (1 did not answer): Artist - One.'])
+        // F62: the line also names the order the recipe used for those albums instead
+        expect(result.notices).toEqual([
+            'Spotify popularity is missing for 1 of 2 albums (1 did not answer): Artist - One. ' +
+            'Its tracks were ordered by acclaim where there is one, otherwise in album order instead.'
+        ])
+    })
+
+    it('«My Own Ranking» says which albums have no ranking of the person and the order used for them (F62)', async () => {
+        mocks.albumsOf.mockResolvedValue(resultOf([found('One'), found('Two'), found('Three', { userRanking: 'done' })], ['userRanking']))
+
+        const result = await blendingController.generateFromSeries('sA', { algorithmId: 'top-n-user' })
+
+        expect(result.notices).toEqual([
+            'Your own ranking is missing for 2 of 3 albums (2 have none at the source): Artist - One, Artist - Two. ' +
+            'Their tracks were ordered in album order instead.'
+        ])
     })
 
     it('stops when no album is ready, with the reasons, and generates nothing', async () => {

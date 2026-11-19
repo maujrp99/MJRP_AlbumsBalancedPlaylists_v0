@@ -101,9 +101,9 @@ Generated playlists use a standardized title format:
 | :--- | :--- | :--- |
 | By Album | `by_album` | Preserves album order. |
 | By Ranking | `flat_ranked` | Interleaves #1s (Energy Wave), then #2s. |
-| By Artist | `artist_rank` | Clusters by Artist. |
+| By Artist then By Rank | `artist_rank` | The tracks of one artist together (artists in alphabetical order), by rank inside the artist (it did not group before F62). |
 | Balanced Interleave | `ranked_interleave` | Round Robin by Rank. |
-| Shuffle | `shuffle` | Randomizes. |
+| Shuffle | `shuffle` | An even shuffle (Fisher-Yates, F62). |
 
 ---
 
@@ -129,7 +129,7 @@ Generated playlists use a standardized title format:
 *   **Logic**:
     1.  Reads the user's custom ranking from the album itself (`album.userRanking`, put there when the album is loaded); it does not query the repository.
     2.  Matches tracks by normalized title key.
-    3.  Falls back to original album order for unranked tracks.
+    3.  Tracks the person did not rank come after the ranked ones. An album with no ranking at all is taken in the order of the album itself (`tracksOriginalOrder`), not in the acclaim order of `album.tracks` (F62); the blend names this fallback in its notice (`models/recipeSources.js`).
 *   **Color**: Incandescent Blue (`#0EA5E9` / `sky-500`).
 *   **Playlist Prefix**: `UGR Top N ...`
 

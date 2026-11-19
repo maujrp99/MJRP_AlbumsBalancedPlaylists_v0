@@ -18,15 +18,38 @@ import { BlendIngredientsPanel } from '../blend/BlendIngredientsPanel.js'
  * @property {string} seriesId - Current series ID
  * @property {string} batchName - Current batch name
  * @property {string[]} existingPlaylistIds - IDs to preserve on regenerate
- * @property {Object} currentConfig - Current generation config
+ * @property {Object|null} generatedWith - the recipe the playlists on screen were generated with
  * @property {boolean} [expanded=false] - Initial expanded state
  */
 
+/** The recipe the panel opens on when the playlists do not say how they were generated. */
+const DEFAULT_RECIPE = Object.freeze({ algorithmId: 'mjrp-balanced-cascade', rankingId: 'balanced' })
+
+/** The ranking of a recipe as the ingredients panel names it. */
+const RANKING_TYPE_OF = Object.freeze({ spotify: 'spotify', bea: 'bea' })
+
+/**
+ * The recipe shown is, in this order: what the person changed in the panel and did not generate
+ * yet (`pending`, kept through every redraw of the screen), or the recipe the playlists on screen
+ * were generated with, or the recommended one. Always in the form the generation takes
+ * (algorithmId, rankingId, targetDuration in seconds, outputMode, groupingStrategy, trackCount).
+ */
 export class RegeneratePanel {
   // Store instances to access state later
   static recipeCard = null
   static ingredientsPanel = null
   static currentConfig = {}
+  static pending = null
+
+  /** What the person changed and did not generate yet, else the recipe of the playlists, else the recommended one. */
+  static _recipeToShow(generatedWith) {
+    return { ...(this.pending || generatedWith || DEFAULT_RECIPE) }
+  }
+
+  /** Forget what was changed in the panel: after a generation, and when the screen opens. */
+  static reset() {
+    this.pending = null
+  }
 
   /**
    * Render regenerate panel HTML
@@ -39,12 +62,11 @@ export class RegeneratePanel {
       batchName,
       existingPlaylistIds = [],
       count = 0,
-      currentConfig = {},
+      generatedWith = null,
       expanded = false
     } = options
 
-    // Store initial config
-    this.currentConfig = { ...currentConfig }
+    this.currentConfig = this._recipeToShow(generatedWith)
 
     const playlistCount = count || existingPlaylistIds.length
 
@@ -94,79 +116,59 @@ export class RegeneratePanel {
    * Must be called after render()
    */
   static mount() {
-    // Initialize Recipe Card
     this.recipeCard = new BlendRecipeCard({
       containerId: 'regenerate-recipe-container',
-      selectedRecipe: { id: this.currentConfig.algorithmId }, // Partial recipe supported by selector logic? 
-      // Note: BlendRecipeCard expects full recipe object or logic to find it. 
-      // We'll let it execute its internal logic if possible or update it shortly.
       onRecipeSelect: (recipe) => {
-        this.currentConfig.algorithmId = recipe.id
-        // Update ingredients visibility based on recipe
-        if (this.ingredientsPanel) {
-          this.ingredientsPanel.setRecipe(recipe)
-          this.ingredientsPanel.render()
-        }
+        this.ingredientsPanel.setRecipe(recipe)
+        this.ingredientsPanel.render()
+        this._remember()
       }
     })
-
-    // Trick: We need to set the initial recipe selection correctly. 
-    // BlendRecipeCard constructor usually takes `selectedRecipe` object. 
-    // If we only have ID, we might need to find it first or force update after init.
-    // For now, let's rely on BlendRecipeCard handling init or select first one if null.
-    // Explicitly finding the recipe would be better if possible, but getAllAlgorithms is inside component logic.
-    // Let's rely on internal init for now, then clean up if needed.
-
-    // Correction: BlendRecipeCard gets algorithms internally. 
-    // We can access this.recipeCard.recipes after construction to set correct initial selection.
-    const algorithms = this.recipeCard.recipes || []
-    const initialRecipe = algorithms.find(a => a.id === this.currentConfig.algorithmId) || algorithms[0]
-
-    if (initialRecipe) {
-      this.recipeCard.selectedRecipe = initialRecipe
-      this.currentConfig.algorithmId = initialRecipe.id
-    }
-
+    const recipes = this.recipeCard.recipes || []
+    const initialRecipe = recipes.find(recipe => recipe.id === this.currentConfig.algorithmId) || recipes[0] || null
+    this.recipeCard.selectedRecipe = initialRecipe
     this.recipeCard.render()
 
-
-    // Initialize Ingredients Panel with current config values
     this.ingredientsPanel = new BlendIngredientsPanel({
       containerId: 'regenerate-ingredients-container',
       selectedRecipe: initialRecipe,
-      config: {
-        // Pass current config so user selections are preserved
-        duration: (this.currentConfig.targetDuration || 3600) / 60, // seconds → minutes
-        outputMode: this.currentConfig.outputMode || 'auto',
-        groupingStrategy: this.currentConfig.groupingStrategy || 'by_album',
-        rankingType: this.currentConfig.rankingId === 'spotify' ? 'spotify' :
-          this.currentConfig.rankingId === 'bea' ? 'bea' : 'combined',
-        discoveryMode: this.currentConfig.discoveryMode || false
-      },
-      onConfigChange: (newConfig) => {
-        // Merge updates into our tracked config
-        Object.assign(this.currentConfig, newConfig)
-      }
+      config: this._ingredientsOf(this.currentConfig),
+      onConfigChange: () => this._remember()
     })
     this.ingredientsPanel.render()
+  }
+
+  /** A recipe in the form of the generation, as the options of the ingredients panel. */
+  static _ingredientsOf(config) {
+    const chosen = {
+      duration: config.targetDuration ? config.targetDuration / 60 : undefined, // seconds → minutes
+      outputMode: config.outputMode,
+      groupingStrategy: config.groupingStrategy,
+      rankingType: RANKING_TYPE_OF[config.rankingId] || 'combined',
+      trackCount: config.trackCount
+    }
+    // an option the recipe does not carry keeps the default of the panel
+    return Object.fromEntries(Object.entries(chosen).filter(([, value]) => value !== undefined && value !== null))
+  }
+
+  /** What is in the panel now becomes what the next redraw shows. */
+  static _remember() {
+    this.pending = this.getConfig()
   }
 
   /**
    * Get the current configuration for generation
    * BlendIngredientsPanel.getConfig() already returns normalized format
-   * 
+   * (targetDuration in seconds, rankingId instead of rankingType)
+   *
    * @returns {Object} Config ready for PlaylistGenerationService
    */
   static getConfig() {
-    if (this.ingredientsPanel) {
-      // BlendIngredientsPanel.getConfig() returns normalized config
-      // (targetDuration in seconds, rankingId instead of rankingType)
-      return {
-        algorithmId: this.currentConfig.algorithmId,
-        ...this.ingredientsPanel.getConfig()
-      }
+    if (!this.ingredientsPanel) return { ...this.currentConfig }
+    return {
+      algorithmId: this.recipeCard?.selectedRecipe?.id || this.currentConfig.algorithmId,
+      ...this.ingredientsPanel.getConfig()
     }
-    return this.currentConfig
   }
 
   /**
