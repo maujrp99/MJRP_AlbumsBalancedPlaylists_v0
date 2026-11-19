@@ -49,7 +49,6 @@ async function getAccessToken() {
     }
 }
 
-const { cleanTitle } = require('../normalize');
 const { loadAlbumIdentity } = require('../albumIdentity');
 
 /** A Spotify album as the identity rule reads it. */
@@ -61,16 +60,16 @@ const spotifyCandidate = (item) => ({
 
 /**
  * The Spotify album that is the album asked for, or null.
- * Three searches, from the narrowest to the widest (title and artist, clean title and artist, the
- * albums of the artist). The searches only LIST candidates; which one is accepted is decided by
+ * Three searches, from the narrowest to the widest (title and artist, the title without its edition
+ * notes and artist, the albums of the artist). The title without edition notes is the rule's own. The searches only LIST candidates; which one is accepted is decided by
  * the one identity rule (shared/albumIdentity.js, F55). There is no "first result".
  * @param {{ title: string, artist: string }} asked
  * @param {string} token
  * @param {Object} [http] - { get(url, config) }, axios by default
  */
 async function findSpotifyAlbum(asked, token, http = axios) {
-    const { pickAlbum } = await loadAlbumIdentity();
-    const cleanT = cleanTitle(asked.title);
+    const { pickAlbum, titleWithoutEditionNotes } = await loadAlbumIdentity();
+    const cleanT = titleWithoutEditionNotes(asked.title);
     const searches = [
         { q: `album:${asked.title} artist:${asked.artist}`, limit: 5 },
         ...(cleanT !== asked.title ? [{ q: `album:${cleanT} artist:${asked.artist}`, limit: 5 }] : []),
