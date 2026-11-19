@@ -3,13 +3,25 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:30] review — F61 provada pelo integrador; UAT-186 em fixed
+
+Playlists guardadas, conta do MJRP: primeira série em 0,26 s e lista inteira em 0,79 s (antes, hoje, 4,6 s; 20 s na regressão). Prova em `reports/evidence/F61/2026-11-19-saved-playlists-timing.md`. Proposta de modelo de dados do auxiliar (resumo dos lotes no documento da série) fica anotada no `plan.md` da F61, não feita.
+
 ## [2026-11-19 19:28] review — F59 fatia E provada pelo integrador (Tailwind compilado; endereços conferidos)
 
 Oito telas comparadas com produção por estilo calculado, elemento a elemento, como visitante: iguais (diferenças só de escrita, listadas na prova). Receita selecionada no blend com o gradiente certo, com login. A ADR-0021 fica em `Proposed`: publicado sob a dispensa do MJRP de 2026-11-19 19:03 (decidido pelo agente — revisável); o aceite da ADR é dele. UAT-25 e UAT-199 em `fixed`; UAT-28 segue aberta.
 
+## [2026-11-19 19:24] session — F61: spec, plano, tarefas, arquitetura, comportamento e manual escritos no ramo
+
+A pasta da F61 preenchida para o que foi construído (8 REQ com `verified_by`, 12 tarefas, a prova no navegador com o tempo medido aberta para o integrador); o diagnóstico com arquivo e linha e a proposta de modelo de dados (um resumo das playlists gravado na série, não feita) estão no plano. `docs/specs/arch.md` ganhou a seção «Leitura das playlists guardadas (F61)»; `docs/specs/behavior.md` tem os estados da tela (três novos); manual 00, 01, 06, 09, 14, 17, 21, 24, 29, 99 e a lista de regressão corrigidos. Decisões do agente, revisáveis: 8 leituras juntas com prazo de 15 s; a lista lida antes aparece na hora ao voltar e é relida por trás; série em leitura não tem bloco próprio; sair da tela não cancela a leitura. O doctor segue vermelho com os mesmos 521 erros de antes do ramo, nenhum da F61.
+
 ## [2026-11-19 19:20] session — F59: spec, plano, tarefas, ADR-0021 (proposta), stack, arquitetura e manual escritos no ramo
 
 Ramo `fix/f59-tailwind-local-and-url-schemes`. A pasta da F59 preenchida para tudo o que foi construído nas fatias A, B, C e E (11 REQ com `verified_by`, 14 tarefas; abertas a prova no navegador, do integrador, e o aceite da ADR, do MJRP). ADR-0021 escrita em «Proposed»: o Tailwind fica, compilado junto com o site (aceite do MJRP pendente; a constituição diz «Tailwind only if requested»). `docs/specs/tech-stack.md` (linha do Tailwind: 3.4.19, como é construído, a ADR), `docs/specs/arch.md` (a casca e a linha de CDN/Assets) e o manual (07b com a `safeUrl`, 09a com a folha do Tailwind, 31) dizem o que o código faz agora. Um teste a mais, `test/security/buildHandsOutNoSource.test.js`, para o requisito dos mapas de código ter prova na suíte. 1002 testes. O doctor segue vermelho com 521 erros, como antes do ramo; entre eles um novo, que é do integrador: o `## Now` do `MEMORY.md` ficou atrás do log (este ramo não toca o `MEMORY.md`). Não mexido: o status das issues no `uat.md`.
+
+## [2026-11-19 19:19] session — F61: a leitura das playlists guardadas com um dono só (código e testes, no ramo)
+
+Ramo `fix/f61-saved-playlists-fast`. Causa lida no código antes de mexer: a tela fazia 1 + N leituras, uma depois da outra (48 para 47 séries, nunca duas no ar), e só desenhava depois da última; apagar um lote relia tudo de novo. Agora `SavedPlaylistsReader` (`public/js/services/playlists/`) é o único dono da leitura: uma leitura das séries, depois as playlists de cada série com até 8 no ar e prazo de 15 s; estado por série (lendo, pronta, vazia, falhou com «Try again»); geração e senha por série para a resposta velha não escrever; o que já foi lido fica na tela enquanto é relido. Medido com o banco falso, 47 séries: 48 leituras nos dois casos; esperas em fila até a lista toda: 48 antes, 7 agora; até a primeira série aparecer: 48 antes, 2 agora. Sem navegador: o tempo real fica para o integrador medir. Suíte: 1046 testes (982 antes); `vite build` compila.
 
 ## [2026-11-19 19:15] session — F59: Tailwind compilado junto com o site, sem CDN (UAT-25)
 

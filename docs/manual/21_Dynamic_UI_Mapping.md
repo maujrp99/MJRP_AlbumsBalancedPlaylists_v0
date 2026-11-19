@@ -123,18 +123,28 @@
 ---
 
 ## 5. Playlist Series Management (History)
-**File Context**: `views/SavedPlaylistsView.js`, `components/playlists/SavedPlaylistsController.js`
+**File Context**: `views/SavedPlaylistsView.js`, `components/playlists/SavedPlaylistsController.js`, `services/playlists/SavedPlaylistsReader.js`, `stores/savedPlaylists.js` (v5.0, F61)
 
 ### 5.1 Batch CRUD
-*   **Rendering**:
-    1.  **[FN]** `loadData()` fetches from `PlaylistRepository`.
-    2.  **[FN]** Groups by Series -> Groups by Batch Name.
+*   **Rendering** (v5.0, F61: the screen waits for no read):
+    1.  **[UI]** The router calls `render()`: the page, the toolbar and the line "Reading your series..." are on screen at once.
+    2.  **[FN]** `mount()` subscribes to `SavedPlaylistsStore` and calls `Controller.open()` -> `SavedPlaylistsReader.load()`.
+    3.  **[FN]** The reader reads the series once (`SeriesRepository.findAll`), publishes one entry per series as `loading`, most recently updated first, then reads the playlists of each series (`PlaylistRepository.findAll`), up to 8 at a time, 15 s each.
+    4.  **[FN]** Each answer replaces the entry of its series: `ready` (playlists grouped into batches by `groupIntoBatches`), `empty` or `failed`.
+    5.  **[UI]** On each change of the store, `refreshContent()` draws only the series group that changed; the line above the list says "Reading playlists: 12 of 47 series" and goes away when every series answered.
+    6.  **[UI]** A failed series shows a notice and "Try again" -> `Controller.retrySeries(seriesId)` -> one read. A failed list shows "Your series could not be read." and "Try again" -> `Controller.reload()`.
+    7.  **[UI]** Coming back in the same session: what was read is drawn at once and read again behind ("Updating...").
 *   **Edit Batch**:
     1.  **[UI]** Click "Edit Batch" button.
     2.  **[FN]** `Controller.editBatch()` -> `PlaylistsService.setEditMode(batchName, seriesId, savedAt)` -> Navigates to `/playlists/edit?seriesId=...&edit=...`.
 *   **Delete Batch**:
     1.  **[UI]** Click Trash Icon -> Confirm Modal.
-    2.  **[FN]** `Controller.deleteBatch(seriesId, batchName)` -> deletes the playlists of that batch through `PlaylistRepository`.
+    2.  **[FN]** `Controller.deleteBatch(seriesId, batchName)` -> `SavedPlaylistsReader.removeBatch`: one read of that series, one atomic delete (`PlaylistRepository.deleteMany`), and only that series changes on the list. Nothing else is read again (v5.0, F61).
+*   **Delete All Playlists of a Series**:
+    1.  **[UI]** Click the Trash Icon of the series header -> Confirm Modal.
+    2.  **[FN]** `Controller.deleteAllPlaylists(seriesId, seriesName)` -> `SavedPlaylistsReader.removeAll`: one read, one atomic delete; the series leaves this list and stays in the app.
+*   **Refresh**:
+    1.  **[UI]** Click "Refresh" -> `Controller.reload()` -> `SavedPlaylistsReader.load({ fresh: true })`: a new read of everything; the answers of the read it replaces are dropped.
 
 ---
 

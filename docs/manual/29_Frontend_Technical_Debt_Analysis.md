@@ -49,7 +49,7 @@ Detailed controller-view logic for the Playlists feature.
 
 -   **`playlists/SavedPlaylistsController.js`**:
     -   **Role**: The brain of the Saved Playlists view (`SavedPlaylistsView`, routes `/playlist-series` and `/saved-playlists`).
-    -   **Logic**: Loads Series & Playlists from `SeriesRepository`/`PlaylistRepository`. Groups playlists into "Batches" by `batchName` (newest `savedAt` first). Handles batch deletion and preloads thumbnails.
+    -   **Logic**: Since v5.0 (F61) it reads nothing itself: it asks `SavedPlaylistsReader` (`services/playlists/`) and hands the view what `SavedPlaylistsStore` holds. Grouping playlists into "Batches" by `batchName` (newest `savedAt` first) is a pure rule in `models/savedPlaylists.js`; batch deletion and the covers moved to the reader.
 -   **`playlists/PlaylistsGridRenderer.js`**:
     -   **Role**: Static HTML generator for the playlist grid.
     -   **Logic**: Renders the `RegeneratePanel`, Empty States, and delegates the actual Grid rendering to `PlaylistGrid`.

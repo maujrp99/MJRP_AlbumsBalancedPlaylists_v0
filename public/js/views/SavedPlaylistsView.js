@@ -1,11 +1,10 @@
 /**
  * SavedPlaylistsView
- * 
- * View for displaying saved playlists grouped by Series and Batches.
- * Refactored in Sprint 15 (ARCH-12) to use Controller-View pattern and Core Components.
- * Refactored in Sprint 16 to replace legacy modals with DialogService.
- * Refactored in Sprint 16 (Phase 5) to use SafeDOM and eliminate innerHTML.
- * 
+ *
+ * The saved playlists screen: series, each with its batches of playlists.
+ * The list is read by SavedPlaylistsReader (F61): this view draws what the list holds now and
+ * draws again when the list says it changed. It waits for no read.
+ *
  * @module views/SavedPlaylistsView
  */
 
@@ -13,22 +12,29 @@ import { BaseView } from './BaseView.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import { SavedPlaylistsController } from '../components/playlists/SavedPlaylistsController.js'
-import { AlbumCascade } from '../components/common/AlbumCascade.js'
-import { BaseModal } from '../components/ui/BaseModal.js'
-import { TrackRow } from '../components/ui/TrackRow.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { dialogService } from '../services/DialogService.js'
-import { SavedPlaylistCard } from '../components/playlists/SavedPlaylistCard.js'
 import { PlaylistDetailsModal } from '../components/playlists/PlaylistDetailsModal.js'
 import { SavedSeriesGroup } from '../components/playlists/SavedSeriesGroup.js'
 import FilterToolbar from '../components/ui/FilterToolbar.js'
 import { SavedPlaylistsFilterService } from '../services/SavedPlaylistsFilterService.js'
+import { ListStatus } from '../models/savedPlaylists.js'
+
+/** What a series group shows: when none of it changed, the group on screen is kept as it is. */
+const shownOf = (group) => ({
+    name: group.series.name,
+    status: group.status,
+    error: group.error,
+    batches: group.batches,
+    thumbnails: group.thumbnails
+})
+const sameShown = (a, b) => Object.keys(a).every(key => a[key] === b[key])
 
 export class SavedPlaylistsView extends BaseView {
     constructor() {
         super()
         this.controller = new SavedPlaylistsController(this)
-        this.isLoading = true
+        this.groupNodes = new Map() // seriesId -> { shown, node }
         this.filterState = {
             search: '',
             seriesId: 'all',
@@ -37,20 +43,15 @@ export class SavedPlaylistsView extends BaseView {
         }
     }
 
+    /**
+     * The page is already drawn (the router calls render first). Listen to the list and ask for
+     * it: nothing here waits for the read, each series shows when its own answer arrives.
+     */
     async mount() {
         this.container = document.getElementById('app')
-
-        // Load data via controller
-        try {
-            const { db, cacheManager, auth } = await import('../app.js')
-            await this.controller.loadData({ db, cacheManager, auth })
-            this.isLoading = false
-            this.update()
-        } catch (e) {
-            console.error('Failed to load SavedPlaylists:', e)
-            this.isLoading = false
-            this.renderErrorState()
-        }
+        this.subscriptions.push(this.controller.subscribe(() => this.update()))
+        this.controller.open()
+        this.update()
     }
 
     /**
@@ -71,18 +72,26 @@ export class SavedPlaylistsView extends BaseView {
         this.refreshContent()
     }
 
-    /** Draw the list (or the loading state) inside the page that is already on screen. */
+    /**
+     * Bring the list on screen in line with the list read so far. A series group is drawn again
+     * only when what it shows changed, so the groups on screen do not move or close while the
+     * others arrive.
+     */
     refreshContent() {
-        SafeDOM.clear(this.mainContent)
-        this.mainContent.appendChild(this.isLoading ? this.renderLoading() : this.renderContent())
+        const list = this.controller.getList()
+        const visible = this.visibleGroups(list.groups)
+
+        this.replaceChildren(this.statusNode, this.renderStatus(list))
+        this.syncGroups(visible)
+        this.replaceChildren(this.placeholderNode, this.renderPlaceholder(list, visible))
     }
 
     destroy() {
-        if (this._thumbTimeout) clearTimeout(this._thumbTimeout)
         this.container = null // a late update must not draw this page over another one
         this.mainContent = null
         this.toolbar = null
-        super.destroy()
+        this.groupNodes.clear()
+        super.destroy() // stops listening to the list
     }
 
     render() {
@@ -99,56 +108,66 @@ export class SavedPlaylistsView extends BaseView {
             ])
         ]);
 
-        // Render Toolbar
         const toolbar = this.renderToolbar();
 
-        const mainContent = SafeDOM.div({
+        this.statusNode = SafeDOM.div({ className: 'saved-playlists-status' })
+        this.groupsNode = SafeDOM.div({ className: 'series-groups space-y-8' })
+        this.placeholderNode = SafeDOM.div({ className: 'saved-playlists-placeholder' })
+        this.groupNodes.clear()
+
+        this.mainContent = SafeDOM.div({
             id: 'mainContent',
             className: 'fade-in',
             style: { animationDelay: '0.1s' }
-        })
-
-        this.mainContent = mainContent
+        }, [this.statusNode, this.groupsNode, this.placeholderNode])
         this.refreshContent()
 
         const modalsContainer = SafeDOM.div({ id: 'modalsContainer' })
 
         return SafeDOM.div({ className: 'saved-playlists-view container' }, [
             header,
-            toolbar, // Add toolbar to view
-            mainContent,
+            toolbar,
+            this.mainContent,
             modalsContainer
         ])
     }
 
-    renderContent() {
-        if (this.controller.data.length === 0) {
-            return this.renderEmptyState()
-        }
+    /** The groups the filters let through, in the order the sort asks for. */
+    visibleGroups(groups) {
+        const flat = groups.map(group => ({ ...group.series, batches: group.batches, _group: group }))
+        return SavedPlaylistsFilterService.filterSeries(flat, this.filterState).map(item => item._group)
+    }
 
-        const groupsContainer = SafeDOM.div({ className: 'series-groups space-y-8' })
-
-        // 1. Filter Data
-        const FLAT_DATA = this.controller.data.map(g => ({
-            ...g.series, // id, name, updatedAt
-            batches: g.batches,
-            _originalGroup: g // Keep reference
-        }))
-
-        const filteredList = SavedPlaylistsFilterService.filterSeries(FLAT_DATA, this.filterState)
-
-        if (filteredList.length === 0) {
-            return SafeDOM.div({ className: 'text-center py-12 opacity-50' }, 'No matches found.')
-        }
-
-        filteredList.forEach(flatItem => {
-            const groupNode = this.renderSeriesGroup(flatItem._originalGroup)
-            if (groupNode) {
-                groupsContainer.appendChild(groupNode)
-            }
+    /** Put the groups on screen in order, keeping the node of every group that did not change. */
+    syncGroups(groups) {
+        const wanted = new Set(groups.map(group => group.seriesId))
+        Array.from(this.groupNodes.keys()).filter(id => !wanted.has(id)).forEach(id => {
+            this.groupNodes.get(id).node.remove()
+            this.groupNodes.delete(id)
         })
 
-        return groupsContainer
+        groups.forEach((group, index) => {
+            const node = this.groupNodeOf(group)
+            const inPlace = this.groupsNode.children[index]
+            if (inPlace !== node) this.groupsNode.insertBefore(node, inPlace || null)
+        })
+    }
+
+    /** The node of a group: the one on screen when what it shows is the same, a new one otherwise. */
+    groupNodeOf(group) {
+        const shown = shownOf(group)
+        const drawn = this.groupNodes.get(group.seriesId)
+        if (drawn && sameShown(drawn.shown, shown)) return drawn.node
+
+        const node = this.renderSeriesGroup(group)
+        if (drawn) drawn.node.remove()
+        this.groupNodes.set(group.seriesId, { shown, node })
+        return node
+    }
+
+    replaceChildren(parent, child) {
+        SafeDOM.clear(parent)
+        if (child) parent.appendChild(child)
     }
 
     renderSeriesGroup(group) {
@@ -160,38 +179,16 @@ export class SavedPlaylistsView extends BaseView {
                 onDeleteAll: (sid, name) => this.handleDeleteAll(sid, name),
                 onEditBatch: (sid, name, date) => this.controller.editBatch(sid, name, date),
                 onDeleteBatch: (sid, name, count) => this.handleDeleteBatch(sid, name, count),
-                onOpenPlaylist: (sid, pid) => this.openPlaylistModal(sid, pid)
-            },
-            helpers: {
-                getThumbnails: (sid) => this.controller.getThumbnails(sid),
-                formatDuration: (tracks) => this.formatDuration(tracks),
-                countUniqueAlbums: (pls) => this.countUniqueAlbums(pls)
+                onOpenPlaylist: (sid, pid) => this.openPlaylistModal(sid, pid),
+                onRetry: (sid) => this.controller.retrySeries(sid)
             }
         });
         return component.render();
     }
 
-    countUniqueAlbums(playlists) {
-        const albumSet = new Set()
-        playlists.forEach(playlist => {
-            playlist.tracks?.forEach(track => {
-                if (track.album) {
-                    albumSet.add(track.album.toLowerCase())
-                }
-            })
-        })
-        return albumSet.size
-    }
-
-    formatDuration(tracks) {
-        if (!tracks) return '0m'
-        const seconds = tracks.reduce((acc, t) => acc + (t.duration || 0), 0)
-        return Math.floor(seconds / 60) + 'm'
-    }
-
     /** What the toolbar shows now: built again on each update, the toolbar itself is kept. */
     toolbarProps() {
-        const flatData = this.controller.data.map(g => ({
+        const flatData = this.controller.getList().groups.map(g => ({
             ...g.series,
             batches: g.batches
         }))
@@ -229,14 +226,7 @@ export class SavedPlaylistsView extends BaseView {
                 }
             ],
 
-            onRefresh: async () => {
-                this.isLoading = true
-                this.update()
-                const { db, cacheManager, auth } = await import('../app.js')
-                await this.controller.loadData({ db, cacheManager, auth })
-                this.isLoading = false
-                this.update()
-            }
+            onRefresh: () => this.controller.reload()
         }
     }
 
@@ -252,11 +242,44 @@ export class SavedPlaylistsView extends BaseView {
         this.update()
     }
 
-    renderLoading() {
-        return SafeDOM.div({ className: 'loading-state text-center py-12' }, [
-            SafeDOM.div({ className: 'loading-spinner w-12 h-12 border-4 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-4' }),
-            SafeDOM.p({ className: 'text-xl' }, 'Scanning all series for playlists...')
+    /**
+     * The line above the list: what is being read, or that the list could not be read.
+     * Nothing when the list is whole and up to date.
+     */
+    renderStatus(list) {
+        if (list.status === ListStatus.FAILED) return this.renderListFailure(list)
+        const firstLoad = this.controller.isFirstLoad()
+        if (!firstLoad && !list.busy) return null
+
+        const { total, settled, loading } = list.summary
+        let text = 'Updating...'
+        if (firstLoad) text = 'Reading your series...'
+        else if (loading > 0) text = `Reading playlists: ${settled} of ${total} series`
+
+        return SafeDOM.div({ className: 'loading-state flex items-center gap-3 text-sm text-muted py-3', role: 'status' }, [
+            SafeDOM.div({ className: 'loading-spinner w-4 h-4 border-2 border-accent-primary border-t-transparent rounded-full animate-spin' }),
+            SafeDOM.span({}, text)
         ])
+    }
+
+    renderListFailure(list) {
+        const text = list.groups.length > 0
+            ? 'The list could not be updated. What you see may be out of date.'
+            : 'Your series could not be read.'
+        return SafeDOM.div({ className: 'list-failed flex items-center gap-3 text-red-400 py-3', role: 'alert' }, [
+            SafeDOM.span({}, text),
+            SafeDOM.button({ className: 'btn btn-secondary btn-sm', onClick: () => this.controller.reload() }, 'Try again')
+        ])
+    }
+
+    /** What stands in the place of the list when no series is on it. */
+    renderPlaceholder(list, visible) {
+        if (visible.length > 0) return null
+        if (list.groups.length > 0) {
+            return SafeDOM.div({ className: 'text-center py-12 opacity-50' }, 'No matches found.')
+        }
+        const settled = list.status === ListStatus.READY && list.summary.loading === 0
+        return settled ? this.renderEmptyState() : null
     }
 
     renderEmptyState() {
@@ -271,19 +294,7 @@ export class SavedPlaylistsView extends BaseView {
         ])
     }
 
-    renderErrorState() {
-        // Fallback error rendering
-        if (this.container) {
-            SafeDOM.clear(this.container)
-            const errorMsg = SafeDOM.p({ className: 'text-red-500 text-center mt-10' }, 'Failed to load data.')
-            this.container.appendChild(this.render()) // Re-render shell
-            const main = this.container.querySelector('#mainContent')
-            if (main) {
-                SafeDOM.clear(main)
-                main.appendChild(errorMsg)
-            }
-        }
-    }
+    // The deletes change the list, and the list tells this screen: nothing is drawn again from here.
 
     async handleDeleteBatch(seriesId, batchName, count) {
         const confirmed = await dialogService.confirm({
@@ -293,10 +304,7 @@ export class SavedPlaylistsView extends BaseView {
             variant: 'danger'
         })
 
-        if (confirmed) {
-            await this.controller.deleteBatch(seriesId, batchName)
-            this.update()
-        }
+        if (confirmed) await this.controller.deleteBatch(seriesId, batchName)
     }
 
     async handleDeleteAll(seriesId, seriesName) {
@@ -307,33 +315,11 @@ export class SavedPlaylistsView extends BaseView {
             variant: 'danger'
         })
 
-        if (confirmed) {
-            await this.controller.deleteAllPlaylists(seriesId, seriesName)
-            this.update()
-        }
+        if (confirmed) await this.controller.deleteAllPlaylists(seriesId, seriesName)
     }
 
     openPlaylistModal(seriesId, playlistId) {
-        // Find playlist data from controller
-        const group = this.controller.data.find(g => g.series.id === seriesId)
-        if (!group) return
-
-        // Flatten batches to find playlist
-        const batch = group.batches.find(b => b.playlists.some(p => p.id === playlistId))
-        if (!batch) return
-
-        const playlist = batch.playlists.find(p => p.id === playlistId)
-        if (!playlist) return
-
-        // Delegate to component
-        PlaylistDetailsModal.open(playlist);
-    }
-
-    onThumbnailLoaded(seriesId) {
-        // Debounce update to avoid excessive re-renders during batch loads
-        if (this._thumbTimeout) clearTimeout(this._thumbTimeout);
-        this._thumbTimeout = setTimeout(() => {
-            this.update();
-        }, 300);
+        const playlist = this.controller.findPlaylist(seriesId, playlistId)
+        if (playlist) PlaylistDetailsModal.open(playlist)
     }
 }

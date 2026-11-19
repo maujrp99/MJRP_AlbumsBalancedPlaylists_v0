@@ -1,34 +1,33 @@
 /**
  * SavedPlaylistRow.js
- * 
+ *
  * Extracted from SavedPlaylistsView.js (Sprint 19 Track A)
- * Renders a single playlist row with expand/collapse tracks functionality.
+ * One playlist of a batch. Closed, it shows its name, how many tracks and how long; its tracks
+ * are drawn the first time the row is opened, not before (F61).
  */
 import { SafeDOM } from '../../utils/SafeDOM.js';
 import { getIcon } from '../Icons.js';
 import { TrackRow } from '../ui/TrackRow.js';
+import { batchTotals, formatMinutes } from '../../models/savedPlaylists.js';
 
 export class SavedPlaylistRow {
     constructor(options) {
         this.playlist = options.playlist;
         this.seriesId = options.seriesId;
         this.index = options.index;
-        this.formatDuration = options.formatDuration || (() => '0m');
         this.onOpenModal = options.onOpenModal;
     }
 
     render() {
         const { playlist, seriesId, index } = this;
-        const trackCount = playlist.tracks?.length || 0;
-        const duration = this.formatDuration(playlist.tracks || []);
+        const totals = batchTotals({ playlists: [playlist] });
 
-        // Row Content
         const icon = SafeDOM.div({ className: 'w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-muted group-hover:text-brand-orange group-hover:bg-brand-orange/10 transition-colors' });
         icon.appendChild(SafeDOM.fromHTML(getIcon('Disc', 'w-4 h-4')));
 
         const info = SafeDOM.div({}, [
             SafeDOM.div({ className: 'font-medium text-white group-hover:text-brand-orange transition-colors' }, playlist.name),
-            SafeDOM.div({ className: 'text-xs text-muted font-mono mt-0.5' }, `${trackCount} tracks • ${duration}`)
+            SafeDOM.div({ className: 'text-xs text-muted font-mono mt-0.5' }, `${totals.tracks} tracks • ${formatMinutes(totals.durationSeconds)}`)
         ]);
 
         const expandIcon = SafeDOM.span({ className: 'expand-icon text-muted transition-transform duration-200' });
@@ -51,33 +50,13 @@ export class SavedPlaylistRow {
 
         const buttons = SafeDOM.div({ className: 'playlist-row-buttons flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200' }, [viewBtn]);
 
-        // Tracks List
         const tracksList = SafeDOM.div({ className: 'playlist-tracks-list hidden bg-black/30 pl-16 pr-4 py-2' });
 
-        if (playlist.tracks && playlist.tracks.length > 0) {
-            playlist.tracks.forEach((t, i) => {
-                const row = TrackRow.render({
-                    track: t,
-                    index: i + 1,
-                    variant: 'detailed',
-                    playlistIndex: -1,
-                    trackIndex: i
-                });
-                tracksList.appendChild(row);
-            });
-        } else {
-            tracksList.appendChild(SafeDOM.div({ className: 'text-sm text-muted italic py-2' }, 'No tracks'));
-        }
-
         const toggleTracks = () => {
-            const isHidden = tracksList.classList.contains('hidden');
-            if (isHidden) {
-                tracksList.classList.remove('hidden');
-                expandIcon.style.transform = 'rotate(90deg)';
-            } else {
-                tracksList.classList.add('hidden');
-                expandIcon.style.transform = 'rotate(0deg)';
-            }
+            const opening = tracksList.classList.contains('hidden');
+            if (opening) this.fillTracks(tracksList);
+            tracksList.classList.toggle('hidden', !opening);
+            expandIcon.style.transform = opening ? 'rotate(90deg)' : 'rotate(0deg)';
         };
 
         const row = SafeDOM.div({
@@ -90,5 +69,26 @@ export class SavedPlaylistRow {
             className: 'playlist-row-wrapper',
             dataset: { playlistIndex: index }
         }, [row, tracksList]);
+    }
+
+    /** Draw the tracks of the playlist, once: the first time the row is opened. */
+    fillTracks(container) {
+        if (container.dataset.filled === 'true') return;
+        container.dataset.filled = 'true';
+
+        const tracks = this.playlist.tracks || [];
+        if (tracks.length === 0) {
+            container.appendChild(SafeDOM.div({ className: 'text-sm text-muted italic py-2' }, 'No tracks'));
+            return;
+        }
+        tracks.forEach((track, i) => {
+            container.appendChild(TrackRow.render({
+                track,
+                index: i + 1,
+                variant: 'detailed',
+                playlistIndex: -1,
+                trackIndex: i
+            }));
+        });
     }
 }
