@@ -105,23 +105,23 @@ export default class SeriesGridRenderer extends Component {
      * FIX #152: Now distinguishes between loading state (show skeleton) and filtered state (skip)
      */
     _renderVirtualScopedGrid(albums, seriesList, context) {
-        const { isLoading = false } = this.props; // FIX #152: Get isLoading state
         const { seriesGroups, otherAlbums } = groupAlbumsBySeries(albums, seriesList);
         let html = '<div class="all-series-container space-y-12">';
         let index = 0;
 
         // Render each series group
         seriesGroups.forEach(group => {
-            // FIX #152: Distinguish between loading (show skeleton) and filtered (skip)
             if (group.albums.length === 0) {
-                if (isLoading) {
-                    // Loading state: Show skeleton placeholder
+                const display = this._emptySeriesDisplay(group.series.id);
+                if (display === 'loading') {
                     html += `
                     <div class="series-group-skeleton" data-series-id="${group.series.id}" data-series-index="${index}">
                         ${SeriesSkeleton.render()}
                     </div>`;
+                } else if (display === 'failed') {
+                    html += this._renderFailedSeriesGroup(group.series);
                 }
-                // Filtered state (isLoading=false): Skip this series entirely
+                // 'hidden': the series has no album to show (filtered out, or it asks for none)
                 return;
             }
 
@@ -157,6 +157,42 @@ export default class SeriesGridRenderer extends Component {
         return html;
     }
 
+    /**
+     * What to show for a series that has no album to draw.
+     * The load state of each series comes derived from the load store (props.seriesStates);
+     * a caller that does not give it falls back to the single isLoading flag.
+     * @returns {'loading'|'failed'|'hidden'}
+     */
+    _emptySeriesDisplay(seriesId) {
+        const { isLoading = false, seriesStates = null } = this.props;
+        const state = seriesStates ? seriesStates[seriesId] : null;
+        if (!state) return isLoading ? 'loading' : 'hidden';
+        if (state.status === 'loading') return 'loading';
+        if (state.status === 'failed' && state.found === 0) return 'failed';
+        return 'hidden';
+    }
+
+    /** The notice of albums that did not load, with the way to try again. Empty when none failed. */
+    _renderFailureNotice(series) {
+        const state = this.props.seriesStates ? this.props.seriesStates[series.id] : null;
+        if (!state || state.failed === 0 || state.status === 'loading') return '';
+        const count = state.failed === 1 ? '1 album did not load' : `${state.failed} albums did not load`;
+        return `
+            <div class="series-load-failure flex items-center gap-3 mb-4 px-4 py-3 rounded-lg border border-red-500/30 bg-red-500/10 text-sm text-red-200" role="status">
+                <span>${count}.</span>
+                <button type="button" class="underline font-semibold hover:text-white" data-action="retry-series" data-series-id="${series.id}">Try again</button>
+            </div>`;
+    }
+
+    /** A series whose albums all failed stays on screen, saying so. */
+    _renderFailedSeriesGroup(series) {
+        return `
+        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${series.id}">
+            ${renderSeriesHeader(series, 0)}
+            ${this._renderFailureNotice(series)}
+        </div>`;
+    }
+
     _renderRealSeriesGroup(series, albums, context) {
         const INITIAL_LIMIT = 12;
         const total = albums.length;
@@ -167,6 +203,7 @@ export default class SeriesGridRenderer extends Component {
         let html = `
         <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${series.id}">
             ${renderSeriesHeader(series, total)}
+            ${this._renderFailureNotice(series)}
             ${wrapInGrid(renderAlbumsGrid(shownAlbums, context))}
             ${shouldCap ? LoadMoreButton.render(series.id, total, shownAlbums.length) : ''}
         </div>`;
@@ -250,7 +287,7 @@ export default class SeriesGridRenderer extends Component {
     }
 
     _hydrateSeriesGroup(element, seriesId) {
-        const { items = [], seriesList = [], context = {}, isLoading = false } = this.props;
+        const { items = [], seriesList = [], context = {} } = this.props;
         // Optimization: We could cache this map in render()
         const { seriesGroups } = groupAlbumsBySeries(items, seriesList);
         const group = seriesGroups.get(seriesId);
@@ -258,8 +295,8 @@ export default class SeriesGridRenderer extends Component {
         if (group) {
             // FIX: Handle empty groups during hydration
             if (group.albums.length === 0) {
-                if (isLoading) {
-                    // Still loading, keep skeleton
+                if (this._emptySeriesDisplay(seriesId) !== 'hidden') {
+                    // Still loading (or failed, drawn by the next render): keep the block
                     return;
                 } else {
                     // Loaded but empty (filtered out) - Remove element

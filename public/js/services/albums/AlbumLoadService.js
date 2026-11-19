@@ -34,8 +34,8 @@ export class AlbumNotFoundError extends Error {
 
 /** How much runs at once and how long each step may take. One place, with names. */
 export const LOAD_LIMITS = Object.freeze({
-    findConcurrency: 6,       // catalog searches and the fast enrichment sources
-    findTimeoutMs: 10000,
+    findConcurrency: 3,       // catalog searches and the fast sources; Apple Music answers 429 above this (measured 2026-11-19 with 6)
+    findTimeoutMs: 45000,     // the whole search of one album, its retries included
     slowConcurrency: 2,       // the acclaim source scrapes a site on the server: start low, raise by measuring
     enrichTimeoutMs: 20000
 })
@@ -68,6 +68,7 @@ export class AlbumLoadService {
         this.scopeKey = null
         this._scheduled = new Set()
         this._activeChains = 0
+        this._ignoreCache = false
     }
 
     // =========================================
@@ -81,9 +82,11 @@ export class AlbumLoadService {
      * @param {Object} request
      * @param {string} request.scopeKey - changes when the scope changes (all series, one series)
      * @param {Array<{ id: string, albumQueries: Array }>} request.series - in screen order
+     * @param {boolean} [request.fresh=false] - search everything again, ignoring what the cache has
      */
-    load({ scopeKey, series }) {
-        if (scopeKey !== this.scopeKey) this._startGeneration(scopeKey)
+    load({ scopeKey, series, fresh = false }) {
+        if (fresh || scopeKey !== this.scopeKey) this._startGeneration(scopeKey)
+        this._ignoreCache = fresh
 
         this.store.setSeriesOrder(series.map(s => s.id))
 
@@ -125,6 +128,22 @@ export class AlbumLoadService {
                 this._runChain(chainId, () => this._enrichAll(this.generation, seriesId, entry.key, 0))
             }
         })
+    }
+
+    /**
+     * Put an album that was refetched outside the queue in the place of the loaded one, in every
+     * series that has it, and remember it. (The refetch itself joins the queue in F48.)
+     * @param {Album} album
+     */
+    async adoptAlbum(album) {
+        for (const seriesId of this.store.getSeriesIds()) {
+            for (const entry of this.store.getEntries(seriesId)) {
+                if (entry.album && entry.album.id === album.id) {
+                    this.store.patchEntry(seriesId, entry.key, { album })
+                    await this.cache.saveEnrichment(entry.query, album, 'acclaim', EnrichmentStatus.DONE)
+                }
+            }
+        }
     }
 
     /** Stop waiting for everything in flight. The next load starts a new generation. */
@@ -214,7 +233,7 @@ export class AlbumLoadService {
         if (!this._patch(generation, seriesId, key, { status: AlbumStatus.FINDING })) return
 
         const query = this.store.getEntry(seriesId, key).query
-        const record = await this.cache.get(query)
+        const record = this._ignoreCache ? null : await this.cache.get(query, { seriesId })
 
         let album
         const known = {}
@@ -224,7 +243,7 @@ export class AlbumLoadService {
                 if (FINISHED.has(record.enrichment?.[source])) known[source] = record.enrichment[source]
             })
         } else {
-            album = await this.catalog.find(query, { signal })
+            album = await this.catalog.find(query, { signal, seriesId })
             if (this._isCurrent(generation)) await this.cache.saveBase(query, album)
         }
 

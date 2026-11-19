@@ -1,0 +1,133 @@
+/**
+ * CatalogAdapter - CatalogPort over Apple Music, with the server as the second source (DP-07, DP-14).
+ *
+ * find(query, { seriesId }) returns a NEW Album, with no ratings yet: enrichment is another step.
+ * Throws AlbumNotFoundError when neither source has the album; any other error means the search failed.
+ */
+
+import { Album } from '../../../models/Album.js'
+import { AlbumIdentity } from '../../../models/AlbumIdentity.js'
+import { parseAlbumQuery } from '../../../models/albumQuery.js'
+import { TrackTransformer } from '../../../transformers/TrackTransformer.js'
+import { AlbumNotFoundError } from '../AlbumLoadService.js'
+
+/** How long one Apple Music attempt may take. */
+export const APPLE_DEADLINE_MS = 10000
+
+/**
+ * Waits before each new attempt when Apple Music fails (it answers 429 when asked too fast).
+ * Retry with growing waits and jitter (DP-23); after the last one the search has failed.
+ */
+export const APPLE_RETRY_WAITS_MS = Object.freeze([700, 1800, 4000])
+
+const pause = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const withJitter = (ms) => ms + Math.floor(Math.random() * ms * 0.3)
+
+const discPosition = (track) => track.position ?? track.trackNumber ?? 0
+
+const withDeadline = (promise, ms, label) => new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`${label} passed ${ms} ms`)), ms)
+    promise.then(
+        value => { clearTimeout(timer); resolve(value) },
+        error => { clearTimeout(timer); reject(error) }
+    )
+})
+
+export class CatalogAdapter {
+    /**
+     * @param {Object} deps
+     * @param {Object} deps.musicKit - { searchAlbums, getAlbumDetails, getArtworkUrl }
+     * @param {Function} deps.fetchFromServer - (query) => Promise<Album>, the second source
+     * @param {Function} deps.generateAlbumId - ({ title, artist }) => string, the stable id
+     * @param {Function} [deps.findLocalCover] - (artist, title) => Promise<string|null>
+     */
+    constructor({ musicKit, fetchFromServer, generateAlbumId, findLocalCover = async () => null, retryWaitsMs = APPLE_RETRY_WAITS_MS }) {
+        this.retryWaitsMs = retryWaitsMs
+        this.musicKit = musicKit
+        this.fetchFromServer = fetchFromServer
+        this.generateAlbumId = generateAlbumId
+        this.findLocalCover = findLocalCover
+    }
+
+    async find(query, { seriesId = null, signal = null } = {}) {
+        // A failure of Apple Music (network, 429) is a failed search: it is retried and then reported.
+        // Only "Apple Music has no such album" goes to the second source, which uses paid AI.
+        let album = await this._findInAppleWithRetry(query, signal)
+
+        if (!album) {
+            try {
+                album = await this.fetchFromServer(query)
+            } catch {
+                album = null
+            }
+        }
+        if (!album) throw new AlbumNotFoundError(`No catalog has "${this._label(query)}"`)
+
+        if (!album.coverUrl && !album.artworkTemplate) {
+            album.coverUrl = await this.findLocalCover(album.artist, album.title)
+        }
+        if (seriesId) album.seriesIds = [seriesId]
+        return album
+    }
+
+    _label(query) {
+        const { artist, title } = parseAlbumQuery(query)
+        return artist ? `${artist} - ${title}` : title
+    }
+
+    async _findInAppleWithRetry(query, signal) {
+        for (let attempt = 0; ; attempt++) {
+            try {
+                return await withDeadline(this._findInApple(query), APPLE_DEADLINE_MS, 'Apple Music search')
+            } catch (error) {
+                const wait = this.retryWaitsMs[attempt]
+                if (wait === undefined || signal?.aborted) throw error
+                await pause(withJitter(wait))
+            }
+        }
+    }
+
+    /** @returns {Promise<Album|null>} null when Apple Music has nothing that matches the query */
+    async _findInApple(query) {
+        const { artist, title } = parseAlbumQuery(query)
+        const candidates = await this.musicKit.searchAlbums(artist, title, 5)
+        if (!candidates || candidates.length === 0) return null
+
+        const selected = candidates[0] // already scored: standard editions first
+        const identity = new AlbumIdentity(query, {
+            title: selected.attributes?.name,
+            artist: selected.attributes?.artistName,
+            appleId: selected.id
+        })
+        if (!identity.isValid()) return null
+
+        const full = await this.musicKit.getAlbumDetails(selected.id)
+        if (!full) return null
+
+        const id = this.generateAlbumId({ title: full.title, artist: full.artist })
+        const context = { artist: full.artist, album: full.title, albumId: id }
+        const tracks = full.tracks.map(t => TrackTransformer.toCanonical({
+            id: t.id || `track_${id}_${t.trackNumber}`,
+            title: t.title,
+            artist: t.artist || full.artist,
+            duration: t.duration,
+            position: t.trackNumber,
+            trackNumber: t.trackNumber,
+            isrc: t.isrc,
+            previewUrl: t.previewUrl,
+            appleMusicId: t.id,
+            rating: null
+        }, context))
+
+        return new Album({
+            id,
+            title: full.title,
+            artist: full.artist,
+            year: full.year,
+            coverUrl: this.musicKit.getArtworkUrl(full.artworkTemplate, 600),
+            tracks: [...tracks],
+            tracksOriginalOrder: [...tracks].sort((a, b) => discPosition(a) - discPosition(b)),
+            metadata: { source: 'Apple Music', sourceId: full.id }
+        })
+    }
+}
