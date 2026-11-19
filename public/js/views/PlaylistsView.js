@@ -218,7 +218,7 @@ export class PlaylistsView extends BaseView {
     const appleBtn = this.container.querySelector('#exportAppleMusicBtn')
     if (appleBtn) {
       appleBtn.addEventListener('click', () => {
-        import('./playlists/index.js').then(({ handleExportToAppleMusic }) => handleExportToAppleMusic())
+        import('./playlists/index.js').then(({ handleExportToAppleMusic }) => handleExportToAppleMusic({ btn: appleBtn }))
       })
     }
 
