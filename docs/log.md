@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:47] session — F63: Esc num diálogo responde «cancelar»; teste do título único da aba
+
+Confirmado na `main` (UAT-201, «um diálogo fechado com Esc deixa a ação pendurada»): `DialogService` tirava o diálogo da tela no Esc e a promessa de `confirm`/`prompt` nunca era resolvida. Agora o Esc, e um diálogo que toma o lugar de outro, respondem como «Cancel» (`false` / `null`). O título único da aba (metade da UAT-192, consertada pela F54 em `791da82`) ganhou o teste que não tinha: `test/architecture/oneTabTitle.test.js`.
+
 ## [2026-11-19 19:45] session — F63: as receitas do blend em inglês; teste que recusa texto em português no app (UAT-192)
 
 Confirmado na `main`: 28 textos em português em `public/js/algorithms/*.js` (descrições das receitas, subtítulos das playlists geradas, descrições de curadoria), numa interface em inglês. Passados para o inglês mantendo o sentido (a lista antes → depois está no `spec.md` da F63, para o MJRP rever as palavras). Teste de arquitetura novo, `test/architecture/interfaceInEnglish.test.js`: lê toda string e template de `public/js` (pelo `espree`, sem comentários) e falha em letra acentuada do português ou palavra só do português; exceções nomeadas (`eletrônica`, `electrónica`, `Zé's`). O título da aba (a outra metade da UAT-192) já estava consertado pela F54: um título só, igual ao do `index.html`. Fora de `public/js` e não tocados: `shared/curation.js` (três subtítulos em português, código do servidor) e as páginas `public/debug-*.html`. Playlists já guardadas mantêm o subtítulo antigo: é dado gravado.

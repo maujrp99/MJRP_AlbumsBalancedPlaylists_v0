@@ -16,25 +16,21 @@ class DialogService {
     /**
      * Show a generic modal
      * @private
-     * @param {HTMLElement} modalElement 
+     * @param {HTMLElement} modalElement
+     * @param {Function} [onDismiss] - answers whoever asked when the dialog goes away with no
+     *        answer (Escape, another dialog taking its place): the same as "Cancel"
      */
-    _show(modalElement) {
-        // If there's an active modal, remove it first (prevent stacking for now, or stack if supported)
-        if (this.activeModal) {
-            this.close()
-        }
+    _show(modalElement, onDismiss = null) {
+        // One dialog at a time: the one on screen is dismissed, and whoever asked gets its answer
+        this.dismiss()
 
         this.activeModal = modalElement
+        this._onDismiss = onDismiss
         BaseModal.mount(modalElement, this.container)
 
-        // Handle Escape key globally for the active modal
+        // Escape is "Cancel": the dialog goes away AND the question is answered (F63)
         this._keydownHandler = (e) => {
-            if (e.key === 'Escape') {
-                this.close()
-                // Cancel callback is mostly handled by component, 
-                // but we should ensure promise resolution if wrapper didn't handles it.
-                // For this service, components call inner close callbacks/promises.
-            }
+            if (e.key === 'Escape') this.dismiss()
         }
         document.addEventListener('keydown', this._keydownHandler)
 
@@ -45,10 +41,22 @@ class DialogService {
     }
 
     /**
+     * The dialog goes away with no answer given: whoever asked is answered as cancelled.
+     */
+    dismiss() {
+        if (!this.activeModal) return
+        const onDismiss = this._onDismiss
+        if (onDismiss) onDismiss()
+        else this.close()
+    }
+
+    /**
      * Close the active modal
      */
     close() {
         if (!this.activeModal) return
+
+        this._onDismiss = null
 
         BaseModal.unmount(this.activeModal)
 
@@ -62,52 +70,54 @@ class DialogService {
 
     /**
      * Show Confirmation Dialog
-     * @param {import('../components/ui/modals/ConfirmModal').ConfirmModalProps} options 
+     * @param {import('../components/ui/modals/ConfirmModal').ConfirmModalProps} options
      * @returns {Promise<boolean>} Resolves true if confirmed, false if cancelled
      */
     confirm(options) {
         return new Promise((resolve) => {
+            const cancel = () => {
+                resolve(false)
+                this.close()
+            }
             const modal = ConfirmModal.render({
                 ...options,
                 onConfirm: () => {
                     resolve(true)
                     this.close()
                 },
-                onCancel: () => {
-                    resolve(false)
-                    this.close()
-                }
+                onCancel: cancel
             })
-            this._show(modal)
+            this._show(modal, cancel)
         })
     }
 
     /**
      * Show Input Prompt Dialog
-     * @param {import('../components/ui/modals/InputModal').InputModalProps} options 
+     * @param {import('../components/ui/modals/InputModal').InputModalProps} options
      * @returns {Promise<string|null>} Resolves with value or null if cancelled
      */
     prompt(options) {
         return new Promise((resolve) => {
+            const cancel = () => {
+                resolve(null)
+                this.close()
+            }
             const modal = InputModal.render({
                 ...options,
                 onConfirm: (value) => {
                     resolve(value)
                     this.close()
                 },
-                onCancel: () => {
-                    resolve(null)
-                    this.close()
-                }
+                onCancel: cancel
             })
-            this._show(modal)
+            this._show(modal, cancel)
         })
     }
 
     /**
      * Show Alert Dialog (Single OK button)
-     * @param {string} title 
-     * @param {string} message 
+     * @param {string} title
+     * @param {string} message
      * @returns {Promise<void>}
      */
     alert(title, message) {
@@ -122,16 +132,16 @@ class DialogService {
 }
 
 // Ensure ConfirmModal supports null cancelText for Alert mode
-// (Wait, I need to check ConfirmModal implementation I just wrote. 
-// It does: `cancelText = 'Cancel'`, so it defaults. 
+// (Wait, I need to check ConfirmModal implementation I just wrote.
+// It does: `cancelText = 'Cancel'`, so it defaults.
 // If I pass null, `BaseModal.createFooterButtons` will render it.
-// I should have made sure BaseModal handles it. 
-// BaseModal.createFooterButtons: cancels buttons if onCancel is provided. 
-// Actually it renders cancelBtn always? 
+// I should have made sure BaseModal handles it.
+// BaseModal.createFooterButtons: cancels buttons if onCancel is provided.
+// Actually it renders cancelBtn always?
 // Snippet from BaseModal.js:
 // const cancelBtn = SafeDOM.button(..., cancelText)
 // It doesn't check if cancelText is null to skip rendering.
 // I'll need to patch BaseModal or ConfirmModal to support Alert mode properly later.
-// For now, Alert is low priority. 
+// For now, Alert is low priority.
 
 export const dialogService = new DialogService()
