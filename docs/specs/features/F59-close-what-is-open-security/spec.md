@@ -3,7 +3,7 @@ status: In Progress
 lane: fast
 solution_type: fix
 imports: []
-fixes: ["UAT-15", "UAT-16", "UAT-17", "UAT-28", "UAT-199", "UAT-25"]
+fixes: ["UAT-15", "UAT-16", "UAT-28", "UAT-199", "UAT-25"]
 planned_for: "[[ROADMAP#^REL-40]]"
 ---
 <!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
@@ -18,11 +18,11 @@ planned_for: "[[ROADMAP#^REL-40]]"
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Summary
-**A feature:** O que estava aberto fica fechado: as regras do banco no repositório fecham cada dado no seu dono e são a fonte do que é publicado; o servidor de produção sai sem rotas de depuração e com a IA paga atrás de login e de um limite; o token escrito em scripts é trocado e sai do repositório; a volta do login do Spotify é conferida; o site publicado não entrega o código-fonte.
+**A feature:** O que estava aberto fica fechado: as regras do banco no repositório fecham cada dado no seu dono e são a fonte do que é publicado; o servidor de produção sai sem rotas de depuração e com a IA paga atrás de login e de um limite; a volta do login do Spotify é conferida; o site publicado não entrega o código-fonte.
 
 **Por quê:** O cruzamento com os relatórios anteriores achou que isso é mais grave que tudo no plano da v5.0. A conferência de 2026-11-19 mostrou o tamanho real: em produção as regras do banco já estavam fechadas (aberto estava o arquivo do repositório); as rotas de depuração e a IA paga estão abertas de fato.
 
-**Como saber que funcionou:** Um pedido sem login ao ranking de outra pessoa é recusado; as rotas de depuração respondem 404 em produção; `/api/generate` sem login é recusado; o token antigo não funciona mais; uma volta do Spotify que não bate é recusada.
+**Como saber que funcionou:** Um pedido sem login ao ranking de outra pessoa é recusado; as rotas de depuração respondem 404 em produção; `/api/generate` sem login é recusado; uma volta do Spotify que não bate é recusada.
 
 ## Problem Statement
 Decisão do MJRP de 2026-11-19: tudo entra na v5.0, cada feature pronta e testada vai para produção sozinha; e «Siga a sua prioridade», com a segurança em primeiro. Origem: `reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md`, seção B.
@@ -31,7 +31,7 @@ Decisão do MJRP de 2026-11-19: tudo entra na v5.0, cada feature pronta e testad
 - **A. Só o site** — feita em 2026-11-19: arquivo de regras igual às regras em vigor e apontado pelo `firebase.json`; volta do Spotify conferida e segredos do aperto de mão vindos do gerador criptográfico; sair da conta encerra a sessão do Spotify; build sem mapas de código.
 - **B. Servidor, sem mudar o app** — rotas de depuração fora de produção; o processo não cai com entrada ruim. Pede deploy do servidor (o MJRP confirma na primeira vez).
 - **C. Servidor e app** — as rotas pagas (`/api/generate`, `/api/ai/studio-albums`) e a de notas só respondem a quem está logado, com limite por pessoa. Pede proposta curta antes do código.
-- **D. Token do Discogs** — trocar o token (ação do MJRP no Discogs) e tirar o valor dos scripts.
+- **D. Token do Discogs** — saiu desta feature em 2026-11-19, por decisão do MJRP, para a F59 poder fechar: é a F66.
 - **E. Texto e conteúdo** — texto inserido como HTML sem tratamento; política de conteúdo e Tailwind servido do próprio site (UAT-25).
 
 ## Requirements

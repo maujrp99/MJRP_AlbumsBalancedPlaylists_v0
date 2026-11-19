@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:53] decision — o token do Discogs sai da F59 e vira a F66, para a F59 poder fechar
+
+- **O MJRP:** «Fatia D deixe pra depois, pode até abrir uma feat nova qqr coisa pra não impedir a issue de fechar, até pq nem me lembro o que seria essa feature com discogs».
+- **F66** criada («O token do Discogs sai do repositório», `^REL-40`, via rápida, conserta a UAT-17). A F59 fica com as fatias A e B (feitas), C e E.
+- **O que é o Discogs aqui (lido no código):** `scripts/generate-dataset.js` e `scripts/fetch-missing-artists.js` leem discografias do Discogs para montar o arquivo de álbuns da busca com autocompletar (`public/assets/data/`). São scripts rodados à mão, uma vez; o app em produção não fala com o Discogs. O token está escrito nos dois arquivos e no histórico do git.
+- **Depende do MJRP:** trocar ou apagar o token no site do Discogs. Sem posição na ordem de prioridade; ele decide.
+
 ## [2026-11-19 15:47] session — primeiro deploy do servidor: rotas de depuração fechadas em produção (F59, fatia B)
 
 - **Autorização do MJRP:** «2. Pode, só antes gere uma tag no git pra fechar a v4.0» (a tag `v4.0` foi criada antes).
