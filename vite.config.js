@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite'
 import path from 'path'
+import tailwindcss from 'tailwindcss'
+import tailwindConfig from './tailwind.config.js'
 
 export default defineConfig({
     root: 'public',
@@ -14,6 +16,14 @@ export default defineConfig({
             input: {
                 main: path.resolve(__dirname, 'public/index.html')
             }
+        }
+    },
+
+    // Tailwind is built with the site (F59, UAT-25): every stylesheet Vite handles goes through it,
+    // in the dev server and in the build. The one that asks for it is public/css/tailwind.css.
+    css: {
+        postcss: {
+            plugins: [tailwindcss(tailwindConfig)]
         }
     },
 

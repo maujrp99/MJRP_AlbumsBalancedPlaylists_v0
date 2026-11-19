@@ -6,6 +6,7 @@
  */
 
 import '../css/index.css'
+import '../css/tailwind.css' // Tailwind, built with the site; after the app's own styles (F59)
 import { canonicalLocalUrl } from './utils/localAddress.js'
 
 // One local address (F50): a page opened at `localhost` goes to the same place at 127.0.0.1,
