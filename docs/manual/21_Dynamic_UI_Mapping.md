@@ -17,12 +17,12 @@
 ### 1.1 Artist Search & Staging
 *   **Logic Trace**:
     1.  **[UI]** User types in `#artistScanInput` (visual mode) and presses Enter or clicks the Scan button (`#btnScanArtist`). There is no debounce.
-    2.  **[FN]** `SearchController.searchArtist(query)` -> the scan state goes to `scanning` (`models/scanState.js`) and `HomeView.renderScan` draws it at once: the button busy and disabled ("Scanning…"), the status line, the wait in the panel. While a scan runs, another ask does nothing; an empty field gets the notice "Type an artist name first.". Then it calls `AlbumSearchService.scanArtist(query)`.
+    2.  **[FN]** `AlbumPickerController.searchArtist(query)` (the one album picker, F57; the Home is one of its two frames) -> the scan state goes to `scanning` (`models/scanState.js`) and `HomeView.renderScan` draws it at once: the button busy and disabled ("Scanning…"), the status line, the wait in the panel. While a scan runs, another ask does nothing; an empty field gets the notice "Type an artist name first.". Then it calls `AlbumSearchService.scanArtist(query)`.
     3.  **[API]** Apple Music catalog through MusicKit (`musicKitService.getArtistAlbums`), in the browser, straight to Apple: the app's server sees nothing of it except `GET /api/musickit-token`, once per page load. The catalog step has a deadline of 15 s (`CATALOG_DEADLINE_MS`) and the start of MusicKit one of 10 s (`MUSICKIT_INIT_DEADLINE_MS`).
-    4.  **[UI]** As soon as the catalog answers, `DiscographyRenderer` draws the albums, classified without the AI list, and the filter counts are updated. No album: the panel says "No albums found for «text».". Deadline or failure: the panel says so, with the button "Try again" (`#btnScanRetry`), which scans the same text.
-    4b. **[API]** Only when some album needs it (electronic genres), `POST /api/ai/studio-albums` is asked after that first render (deadline of 60 s, `AI_LIST_DEADLINE_MS`); the status line shows "confirming album types…" meanwhile. When the list arrives the albums are classified again and the grid and the counts are redrawn; when it does not, the albums shown stay.
-    5.  **[UI]** User clicks Album Card (`[data-action="toggle-staging"]`).
-    6.  **[FN]** `HomeController.handleGridClick` -> `StagingAreaController.addAlbum(album)`.
+    4.  **[UI]** As soon as the catalog answers, `DiscographyRenderer` draws the albums, classified by the one classifier (`models/albumType.js`) without the AI list (or with the list remembered from an earlier scan of the same artist), and the filter counts are updated. No album: the panel says "No albums found for «text».". Deadline or failure: the panel says so, with the button "Try again" (`#btnScanRetry`), which scans the same text.
+    4b. **[API]** Only when some album is of an electronic genre (`wantsAiList`), `POST /api/ai/studio-albums` is asked after that first render (deadline of 60 s, `AI_LIST_DEADLINE_MS`); the status line shows "confirming album types…" meanwhile. Until then a full-length electronic album shows under "Studio". When the list arrives the albums are classified again (in the list: "Studio"; not in it: "?") and the grid and the counts are redrawn; when it does not arrive, or is empty, the albums shown stay.
+    5.  **[UI]** User clicks Album Card (`[data-action="pick-album"]`).
+    6.  **[FN]** `HomeController.handleGridClick` -> `AlbumPickerController.pick(id)` -> `onPick` -> `StagingAreaController.addAlbum(album)`.
     7.  **[UI]** `StagingAreaRenderer` adds item to the visual stack.
 
 ### 1.2 Bulk Processing
@@ -58,7 +58,9 @@
 ### 2.2 CRUD Operations
 *   **Edit Name and Albums**:
     1.  **[UI]** Click Pencil Icon -> `SeriesModals.openEdit(id)` -> `SeriesEditModal`.
-    2.  **[FN]** `SeriesService.updateSeries(id, ...)` saves the name and the album queries.
+    1b. **[UI]** Inside the modal, adding albums is the one album picker (`AlbumPickerPanel` -> `AlbumPickerController`, F57): the same trace as 1.1 steps 1 to 5 (same states, deadlines, filters, card and classification). The only difference is the last step: `onPick` -> `SeriesEditModal.addAlbum(album)` -> `toAlbumQuery(album)` joins the list of the series being edited ("Added: …", or "Album already in list"). Nothing is written yet.
+    2.  **[UI]** "Save Changes" -> `SeriesEditModal.saveChanges()`: the button shows "Saving…", busy and disabled, until the write answers; a second click asks nothing (`models/seriesDraft.js`).
+    2b. **[FN]** `SeriesService.updateSeries(id, ...)` saves the name and the album queries. When it fails the modal stays open with the name and the list as the person left them and says "The series could not be saved. Your changes are still here: you can try again.".
     3.  **[FN]** `SeriesModalsManager.handleSeriesUpdated()` -> `SeriesController.requestLoad(false)` -> `albumLoadService.load(...)` reconciles (F56): an album added is found and enriched through the queue, an album removed leaves, another edition of the same title is found again in the catalog, and every other album and every other series stays as it is. Nothing is injected into the screen by hand.
 *   **Remove one album**:
     1.  **[FN]** `SeriesEventHandler` -> `SeriesService.removeAlbumFromSeries(seriesId, album)`; the series changed, the load reconciles and the album leaves the screen.
@@ -83,7 +85,7 @@
     1.  **[UI]** `BlendRecipeCard` renders options (Balanced Cascade, Top N Popular, Top N Acclaimed, Top N by own ranking).
     2.  **[FN]** Select Recipe -> `selectedRecipe` set (e.g., `mjrp-balanced-cascade`).
 *   **Step 3: Ingredients (Config)**
-    1.  **[UI]** `BlendIngredientsPanel` renders inputs (Duration, Mode).
+    1.  **[UI]** `BlendIngredientsPanel` renders only the inputs that change the result of the chosen recipe (F62): the balanced recipe shows Target Duration and Ranking Source; a Top N recipe shows Top #, Grouping Tracks and Playlist Structure, and Target Duration unless the structure is "Single". There is no "Discovery Mode" (no recipe read it).
     2.  **[FN]** `onConfigChange` updates `this.config`.
 *   **Step 4: Generate**
     1.  **[UI]** User clicks "Blend It!".
@@ -91,9 +93,9 @@
     3.  **[FN]** `albumAsks.albumsOf({ series, sources, signal })` (F56, `services/albums/AlbumAsks.js`): the series joins the load in force in `AlbumLoadService`. What the albums screen loaded or the browser keeps is not asked again; what is missing goes through the same queue, ahead of what the albums screen still has to load. `sources` are the ones the recipe reads (`models/recipeSources.js`: popularity, acclaim, own ranking, or acclaim and popularity for the balanced ranking); the blend waits for those, each behind the 20 s deadline of a source.
     4.  **[UI]** While it waits: "Loading albums: i of n..." and then "Waiting for the ratings of i of n albums...".
     5.  **[FN]** The answer is typed (`models/albumAsk.js`): the albums that are ready, the ones that failed with the reason, the sources missing for some album. The blend goes on with the albums that are ready; it stops, with the reasons on screen, only when none is ready.
-    6.  **[Service]** `PlaylistGenerationService.generate()` executes algorithm.
+    6.  **[Service]** `PlaylistGenerationService.generate()` executes algorithm. Each recipe is held to what its name says by `test/algorithms/recipes.promise.test.js` (F62): Top N by popularity, by acclaim (an unrated track never above a rated one) or by the person's own ranking; the balanced recipe with every Deep Cuts playlist within the chosen duration. Each generated playlist carries the whole recipe in `_meta` (`generationMeta`).
     7.  **[STORE]** `playlistsStore.setPlaylists(results)`.
-    8.  **[UI]** One warning toast per thing left out ("1 of 2 albums could not be loaded and was left out: ...", "Acclaim ratings are missing for 1 of 2 albums ...").
+    8.  **[UI]** One warning toast per thing left out ("1 of 2 albums could not be loaded and was left out: ...", "Acclaim ratings are missing for 1 of 2 albums ..."). The line of a missing source also names the order the recipe used for those albums instead (F62, `models/recipeSources.js` `fallbacksForRecipe`): "... Their tracks were ordered in album order instead."
     9.  **[FN]** `router.navigate('/playlists?seriesId=...')`.
     10. **[FN]** Leaving the screen while it waits (`BlendingMenuView.destroy`) aborts the ask: the series leaves the load unless the albums screen shows it, and nothing is generated.
 
@@ -103,21 +105,30 @@
 **File Context**: `views/PlaylistsView.js`, `controllers/PlaylistsController.js`
 
 ### 4.1 Playlist CRUD (In-Memory)
+Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set (the one on screen is not changed in place), records it as a step of the history and shows it. The clicks and the title field are heard in one place, `views/playlists/playlistEditActions.js`, attached once to the container of the screen.
 *   **Delete Playlist**:
-    1.  **[UI]** Click "X" on Playlist Card (`[data-action="delete-playlist"]`).
-    2.  **[FN]** `PlaylistsController.deletePlaylist(index)` -> `PlaylistsService.removePlaylist(index)` (history snapshot; counts as an unsaved change, v5.0, F60).
-    3.  **[STORE]** `playlistsStore.setPlaylists(remaining, seriesId)`, `setDirty(true)`.
+    1.  **[UI]** Click the trash button in the header of the Playlist Card (`[data-action="delete-playlist"]`).
+    2.  **[FN]** `PlaylistsController.deletePlaylist(index)` -> `PlaylistsService.removePlaylist(index)` (a step of the history; counts as an unsaved change, v5.0, F60).
+    3.  **[STORE]** `playlistsStore.setPlaylists(remaining, seriesId)`, `setDirty(true)`. Nothing is written before the save.
+*   **Rename a playlist** (F62):
+    1.  **[UI]** Type over the title of the card (`.playlist-name`, the only editable part: the position and the batch name are drawn beside it) and leave the field or press Enter; Escape gives up.
+    2.  **[FN]** `PlaylistsController.renamePlaylist(index, title)` -> `PlaylistsService.renamePlaylist` sets `name` and `title` of that playlist. The title is saved with the batch and read back in edit mode.
+    3.  **[UI]** While a title is being typed `PlaylistsView.update()` is deferred, so a redraw does not throw the typed text away.
 *   **Remove Track**:
     1.  **[UI]** Click "X" on Track Row.
     2.  **[FN]** `PlaylistsController.deleteTrack(pIndex, tIndex)` -> `PlaylistsService.removeTrack`.
 *   **Reorder**:
     1.  **[UI]** Drag & Drop tracks (handled by `PlaylistsDragHandler`).
-    2.  **[FN]** `PlaylistsService.moveTrack(...)` -> history snapshot -> updates the store.
+    2.  **[FN]** `PlaylistsService.moveTrack(...)` -> a step of the history -> updates the store. A track dropped where it was records nothing.
+*   **Undo / Redo** (F62):
+    1.  **[UI]** "Undo" and "Redo" in "Actions & Export" (`[data-action="undo-edit"]`, `[data-action="redo-edit"]`), drawn disabled from `playlistsStore.canUndo` / `canRedo`. No keyboard shortcut.
+    2.  **[FN]** `PlaylistsController.undo()` / `redo()` -> `PlaylistsService.undo()` / `redo()` -> `PlaylistHistoryService`.
+    3.  **[FN]** The history is of the set the service last showed: it starts at the set as it came to the screen and starts again when another set comes (blend, generate again, a batch opened, a save). `isDirty` goes back to false when every change is undone.
 *   **Edit mode (`/playlists/edit`)**:
     1.  **[FN]** `PlaylistsController.loadPlaylistsForEdit(batchName, seriesId)` puts the saved batch in `playlistsStore`.
     2.  **[FN]** `PlaylistsController.loadAlbumsForSeries(seriesId)` asks `albumAsks.albumsOf` for the albums of the series (F56): what is loaded or kept comes at once. A warning toast says which albums could not be loaded and how many. A second ask, which nobody waits for, keeps every source coming while the screen is open; `PlaylistsController.destroy` aborts both.
 *   **Generate again with another recipe**:
-    1.  **[UI]** "Regenerate Playlists" in the reconfigure panel -> `PlaylistsController.handleGenerate(config)`.
+    1.  **[UI]** "Regenerate Playlists" in the reconfigure panel -> `PlaylistsController.handleGenerate(config)`. The panel opens on the recipe the playlists on screen were generated with (`PlaylistsGridRenderer.generatedWith` reads their `_meta`) and keeps what the person changed in it through every redraw (`RegeneratePanel.pending`); after a generation `RegeneratePanel.reset()` makes it follow the playlists again (F62).
     2.  **[FN]** `BlendingController.regenerate(config, { signal })` asks `albumAsks.albumsOf` again with the sources of the new recipe, generates from the albums that are ready and returns the notices; the controller shows them as warning toasts. The question "No ratings detected... Continue?" no longer exists.
 
 ### 4.2 Export & Save
@@ -129,11 +140,17 @@
     2.  **[FN]** `unsavedChangesGuard` (installed by `PlaylistsView.mount`) asks `PlaylistsService.hasUnsavedChanges()`; the router's `beforeNavigate` hook shows a confirm, `beforeunload` shows the browser's own.
 *   **Reload with playlists not saved yet** (v5.0, F60):
     1.  **[FN]** `PlaylistsController.initialize()` (create mode, nothing in memory) -> `PlaylistsService.restoreDraft({ seriesId })` -> toast "Your unsaved playlists were restored" -> `loadAlbumsForSeries(seriesId)`.
-*   **Spotify Export**:
-    1.  **[UI]** Click "Export to Spotify".
-    2.  **[FN]** `SpotifyExportModal.handleExport()` -> `SpotifyExportService.exportPlaylists()`.
-    3.  **[FN]** Service orchestrates `SpotifyService` calls (Search -> Create -> Add).
-    4.  **[UI]** Modal updates progress based on Service callbacks.
+*   **Spotify Export** (F62):
+    1.  **[UI]** Click "Export to Spotify" -> `SpotifyExportModal`. The text under the export button follows the mode ("Merge All" / "Separate Playlists").
+    2.  **[FN]** `SpotifyExportModal.handleExport()` (one at a time) -> `SpotifyExportService.exportPlaylists()`.
+    3.  **[FN]** The service renews an expired access first (`SpotifyAuthService.getAccessToken`), matches each track (the Spotify address the track carries, else `SpotifyService.searchTrack`), then creates and fills one playlist (merge) or one per playlist (separate). `SpotifyService._fetch` renews the access once on a 401 and repeats the call; on a 429 with `Retry-After` up to 30 s it waits and repeats.
+    4.  **[FN]** What this session already created is not created again (`services/export/exportLedger.js`); a playlist created without all its tracks gets the rest.
+    5.  **[UI]** The modal ends on the report: "Created (n)" with a link "Open in Spotify" for each playlist, "Created without all their tracks", "Not created", "No track found", the reason it stopped, and "Connect to Spotify again" (the access could not be renewed) or "Try again".
+*   **Apple Music Export** (F62):
+    1.  **[UI]** Click "Export to Apple Music" -> `handleExportToAppleMusic({ btn })` (`views/playlists/PlaylistsExport.js`). A click while an export runs creates nothing and says so; the button shows the step.
+    2.  **[FN]** `AppleMusicExportService.exportPlaylists()` authorizes, makes or finds the folder of the series, and creates one playlist per playlist ("i. Batch - Title"). A playlist Apple Music refuses is reported and the others are still tried.
+    3.  **[FN]** A playlist created in this session is not created again: the id Apple Music gave is remembered in `exportLedger` (the library is not searched).
+    4.  **[UI]** `appleExportMessages(report)` -> toasts of 12 s: what was created, what was not and why, tracks not found, a folder that could not be made.
 
 ---
 

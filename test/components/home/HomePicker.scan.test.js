@@ -1,18 +1,21 @@
 /**
  * F67 - a click on Scan always has one visible answer, drawn by the Home view from one state:
  * scanning (button busy), results, no results, or failed with "Try again". No alert().
+ * F57 - the Home is a frame of the one album picker (AlbumPickerController): the real HomeView
+ * and HomeController are mounted here, and only the search service is replaced.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
-vi.mock('../../../public/js/controllers/HomeController.js', () => ({ HomeController: class {} }))
+const service = vi.hoisted(() => ({ scanArtist: vi.fn(), search: vi.fn() }))
+
+vi.mock('../../../public/js/services/album-search/AlbumSearchService.js', () => ({ albumSearchService: service }))
+vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn() }))
 vi.mock('../../../public/js/components/Toast.js', () => ({
     default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() }
 }))
 
 import toast from '../../../public/js/components/Toast.js'
 import { HomeView } from '../../../public/js/views/HomeView.js'
-import { SearchController } from '../../../public/js/components/home/SearchController.js'
-import { DiscographyRenderer } from '../../../public/js/views/renderers/DiscographyRenderer.js'
 import { ScanStatus } from '../../../public/js/models/scanState.js'
 import { DeadlineError } from '../../../public/js/utils/deadline.js'
 
@@ -25,7 +28,7 @@ const deferred = () => {
 const flush = () => new Promise(resolve => setTimeout(resolve, 0))
 
 describe('Home scan (F67)', () => {
-    let app, view, service, controller
+    let app, view, controller
     const $ = (selector) => app.querySelector(selector)
     const type = (text) => { $('#artistScanInput').value = text }
     const clickScan = () => $('#btnScanArtist').click()
@@ -37,16 +40,9 @@ describe('Home scan (F67)', () => {
         document.body.appendChild(app)
         view = new HomeView()
         app.appendChild(await view.render({}))
-
-        service = { scanArtist: vi.fn() }
-        const home = {
-            view,
-            albumSearchService: service,
-            state: { isScanning: false, artist: null },
-            discographyRenderer: new DiscographyRenderer($('#discographyGrid'))
-        }
-        controller = new SearchController(home)
-        controller.initialize()
+        service.scanArtist.mockReset()
+        await view.mount({})
+        controller = view.controller.picker
 
         vi.spyOn(console, 'log').mockImplementation(() => {})
         vi.spyOn(console, 'warn').mockImplementation(() => {})
@@ -250,6 +246,34 @@ describe('Home scan (F67)', () => {
         expect(gridText()).toContain('New One')
         expect(gridText()).not.toContain('Old')
         expect($('#btnFilterAlbumsCount').textContent).toBe(' (1)')
+    })
+
+    it('a click on a filter button shows the albums of that type and marks the button', async () => {
+        service.scanArtist.mockResolvedValue({ albums: [album('Slanted'), album('Watery', 'EP'), album('Odd', 'Uncategorized')], reclassified: null })
+        type('pavement')
+        clickScan()
+        await flush()
+
+        $('#btnFilterEPs').click()
+        $('#btnFilterUncategorized').click()
+        $('#btnFilterAlbums').click()
+
+        const titles = [...app.querySelectorAll('#discographyGrid h3')].map(h => h.textContent)
+        expect(titles).toEqual(['Watery', 'Odd'])
+        expect($('#btnFilterEPs').getAttribute('aria-pressed')).toBe('true')
+        expect($('#btnFilterAlbums').getAttribute('aria-pressed')).toBe('false')
+        expect($('#btnFilterUncategorizedCount').textContent).toBe(' (1)')
+    })
+
+    it('a click on a card hands the album to the Home: it goes to the staging stack', async () => {
+        service.scanArtist.mockResolvedValue({ albums: [album('Slanted'), album('Crooked')], reclassified: null })
+        type('pavement')
+        clickScan()
+        await flush()
+
+        app.querySelector('#discographyGrid [data-id="Crooked"]').click()
+
+        expect(view.controller.stagingController.getSelectedAlbums().map(a => a.title)).toEqual(['Crooked'])
     })
 
     it('a filter click outside the results does not wipe the message in the panel', async () => {

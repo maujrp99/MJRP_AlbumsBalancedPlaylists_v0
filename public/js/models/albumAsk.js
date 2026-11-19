@@ -158,7 +158,7 @@ const failureText = (failure) => `${failure.label} (${REASON_TEXT[failure.reason
 
 const plural = (count) => (count === 1 ? 'album' : 'albums')
 
-function sourceNotice(source, gaps, ready) {
+function sourceNotice(source, gaps, ready, fallback) {
     const text = SOURCE_TEXT[source] || { name: source, verb: 'is' }
     const counts = Object.values(SourceGap)
         .map(gap => ({ gap, count: gaps.filter(item => item.gap === gap).length }))
@@ -167,16 +167,21 @@ function sourceNotice(source, gaps, ready) {
             ? `${item.count} ${item.count === 1 ? 'has' : 'have'} ${GAP_TEXT[item.gap]}`
             : `${item.count} ${GAP_TEXT[item.gap]}`))
         .join(', ')
-    return `${text.name} ${text.verb} missing for ${gaps.length} of ${ready} ${plural(ready)} (${counts}): ${named(gaps, item => item.label)}.`
+    const missing = `${text.name} ${text.verb} missing for ${gaps.length} of ${ready} ${plural(ready)} (${counts}): ${named(gaps, item => item.label)}.`
+    if (!fallback) return missing
+    return `${missing} ${gaps.length === 1 ? 'Its' : 'Their'} tracks were ordered ${fallback} instead.`
 }
 
 /**
  * What to tell the person about an ask that was served with something missing: one line for the
  * albums left out, one line per source that is missing for some album. Empty when nothing is.
  * @param {Object} result - AlbumsResult
+ * @param {Object<string, string>} [fallbacks] - for an asker that orders tracks by a source: how
+ *        the tracks of an album are ordered without it (models/recipeSources.js); the line of that
+ *        source says it
  * @returns {string[]}
  */
-export function askNotices(result) {
+export function askNotices(result, fallbacks = {}) {
     const notices = []
     if (result.failed.length > 0) {
         const left = result.failed.length === 1 ? 'was' : 'were'
@@ -185,7 +190,7 @@ export function askNotices(result) {
     const sources = [...new Set(result.missingSources.map(item => item.source))]
     sources.sort((a, b) => Object.keys(SOURCE_TEXT).indexOf(a) - Object.keys(SOURCE_TEXT).indexOf(b))
     sources.forEach(source => {
-        notices.push(sourceNotice(source, result.missingSources.filter(item => item.source === source), result.albums.length))
+        notices.push(sourceNotice(source, result.missingSources.filter(item => item.source === source), result.albums.length, fallbacks[source]))
     })
     return notices
 }

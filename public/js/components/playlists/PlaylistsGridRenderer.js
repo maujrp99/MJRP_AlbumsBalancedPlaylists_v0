@@ -2,6 +2,7 @@ import { PlaylistGrid } from './PlaylistGrid.js'
 import { RegeneratePanel } from './RegeneratePanel.js'
 import { getIcon } from '../Icons.js'
 import { escapeHtml } from '../../utils/stringUtils.js'
+import { Breadcrumb } from '../Breadcrumb.js'
 
 /**
  * PlaylistsGridRenderer
@@ -26,7 +27,7 @@ export class PlaylistsGridRenderer {
                 batchName: playlists[0].batchName || 'New Batch',
                 existingPlaylistIds: playlists.map(p => p.id).filter(Boolean),
                 count: playlists.length, // Explicit count for UI
-                currentConfig: RegeneratePanel.currentConfig || { algorithmId: 'mjrp-balanced-cascade', rankingId: 'balanced' },
+                generatedWith: this.generatedWith(playlists),
                 expanded: isExpanded
             })}
                 </div>
@@ -38,12 +39,64 @@ export class PlaylistsGridRenderer {
     }
 
     /**
+     * The recipe the playlists on screen were generated with: each generated playlist carries it
+     * (PlaylistGenerationService) and it is saved with the batch. Null for playlists that do not
+     * say (saved before F62 with only part of it, or not generated here).
+     * @param {Array} playlists
+     * @returns {Object|null}
+     */
+    static generatedWith(playlists) {
+        const meta = playlists.find(playlist => playlist?._meta?.algorithmId)?._meta
+        return meta ? { ...meta } : null
+    }
+
+    /**
+     * The top of the screen: where it is, what it is and, for a saved batch, which one.
+     * @param {Object} state
+     * @param {boolean} state.isEditMode - a saved batch is being edited
+     * @param {string} [state.editedBatchName] - the name the batch is saved under
+     */
+    static renderHeader({ isEditMode, editedBatchName = '' }) {
+        const title = isEditMode ? 'Edit Playlist Batch' : 'Playlist Management'
+        const badge = isEditMode && editedBatchName
+            ? `<span class="badge badge-success px-3 py-1 rounded-full text-sm">Editing: ${escapeHtml(editedBatchName)}</span>`
+            : ''
+
+        return `
+            <header class="view-header mb-8 fade-in">
+                ${Breadcrumb.render('/playlists', { editing: isEditMode })}
+                <div class="header-content mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <h1 class="text-2xl md:text-4xl font-bold flex items-center gap-3">
+                        ${getIcon(isEditMode ? 'Edit' : 'Music', 'w-8 h-8')} ${escapeHtml(title)}
+                    </h1>
+                    <div class="header-actions flex flex-wrap items-center gap-4 w-full md:w-auto">
+                        ${badge}
+                    </div>
+                </div>
+            </header>
+        `
+    }
+
+    /** One of the two buttons of the history: drawn from the state, disabled when it has no step to take. */
+    static renderHistoryButton({ action, icon, text, label, enabled }) {
+        return `<button class="btn btn-secondary flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+                            data-action="${action}" aria-label="${label}" title="${label}" ${enabled ? '' : 'disabled'}>
+                        ${getIcon(icon, 'w-5 h-5')} ${text}
+                    </button>`
+    }
+
+    /**
      * @param {Array} playlists
      * @param {Object} [state]
      * @param {boolean} [state.isSaving] - a save is on its way: the button is drawn disabled
+     * @param {boolean} [state.canUndo] - there is a change to undo (the store says)
+     * @param {boolean} [state.canRedo] - there is an undone change to redo (the store says)
      */
-    static renderExportSection(playlists, { isSaving = false } = {}) {
+    static renderExportSection(playlists, { isSaving = false, canUndo = false, canRedo = false } = {}) {
         if (playlists.length === 0) return ''
+
+        const undoButton = this.renderHistoryButton({ action: 'undo-edit', icon: 'Undo', text: 'Undo', label: 'Undo the last change', enabled: canUndo })
+        const redoButton = this.renderHistoryButton({ action: 'redo-edit', icon: 'Redo', text: 'Redo', label: 'Redo the change that was undone', enabled: canRedo })
 
         const saveButton = isSaving
             ? `<button class="btn btn-success flex items-center gap-2" id="saveToHistoryBtn" disabled aria-busy="true">
@@ -59,6 +112,9 @@ export class PlaylistsGridRenderer {
                     ${getIcon('Save', 'w-5 h-5')} Actions & Export
                 </h3>
                 <div class="export-actions flex flex-wrap gap-4">
+                    ${undoButton}
+                    ${redoButton}
+                    <div class="h-auto w-px bg-white/10 mx-2"></div>
                     ${saveButton}
                     <div class="h-auto w-px bg-white/10 mx-2"></div>
                     <button class="btn flex items-center gap-2 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all duration-300" 
@@ -101,8 +157,7 @@ export class PlaylistsGridRenderer {
         // ALWAYS render the input, even in Create Mode, so users can name their batch before saving.
         return `
             <div id="batchNameSection" class="mb-6 fade-in glass-panel p-4 rounded-xl" style="animation-delay: 0.03s">
-                <label class="block text-sm font-medium mb-2">Batch Name</label>
-                <label class="block text-sm font-medium mb-2">Batch Name</label>
+                <label for="batchNameInput" class="block text-sm font-medium mb-2">Batch Name</label>
                 <input 
                     type="text" 
                     id="batchNameInput" 

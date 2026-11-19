@@ -1,6 +1,8 @@
 /**
  * F67 - the scan of an artist: the catalog answers first and has a deadline; the paid AI list
  * comes after, and only then are the albums classified again.
+ * F57 - the albums are classified by the one classifier (models/albumType.js): an electronic album
+ * wants the AI list; without it the album is a studio album, with it the album must be in it.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
@@ -8,17 +10,6 @@ vi.mock('../../../public/js/services/MusicKitService.js', () => ({
     musicKitService: { getArtistAlbums: vi.fn(), getArtworkUrl: () => null }
 }))
 vi.mock('../../../public/js/api/serverFetch.js', () => ({ serverFetch: vi.fn() }))
-// The classifier of the test: an album marked `needsAi` asks for the AI list and is an Album only when the list has it
-vi.mock('../../../public/js/services/album-search/AlbumTypeClassifier.js', () => ({
-    albumTypeClassifier: {
-        classify: vi.fn(async (album, context) => {
-            if (!album.needsAi) return 'Album'
-            const list = await context.getAiList()
-            return list.includes(album.title) ? 'Album' : 'Uncategorized'
-        })
-    }
-}))
-
 import { musicKitService } from '../../../public/js/services/MusicKitService.js'
 import { serverFetch } from '../../../public/js/api/serverFetch.js'
 import { AlbumSearchService } from '../../../public/js/services/album-search/AlbumSearchService.js'
@@ -26,7 +17,10 @@ import { CATALOG_DEADLINE_MS } from '../../../public/js/models/scanState.js'
 import { isDeadlineError } from '../../../public/js/utils/deadline.js'
 
 const answer = (status, body) => ({ ok: status < 300, status, headers: { get: () => null }, json: async () => body })
-const raw = (title, needsAi = false) => ({ appleMusicId: title, title, artist: 'Orbital', year: '1993', needsAi })
+const raw = (title, electronic = false) => ({
+    appleMusicId: title, title, artist: 'Orbital', year: '1993', trackCount: 10,
+    raw: { attributes: { name: title, trackCount: 10, genreNames: electronic ? ['Electronic', 'Music'] : ['Rock', 'Music'] } }
+})
 const deferred = () => {
     let resolve
     const promise = new Promise(r => { resolve = r })
@@ -50,18 +44,22 @@ describe('AlbumSearchService.scanArtist (F67)', () => {
     })
 
     it('gives the albums as soon as the catalog answers, without waiting for the AI list', async () => {
-        musicKitService.getArtistAlbums.mockResolvedValue([raw('Plain'), raw('Brown Album', true)])
+        musicKitService.getArtistAlbums.mockResolvedValue([raw('Plain'), raw('Brown Album', true), raw('Odd One', true)])
         const ai = deferred()
         serverFetch.mockReturnValue(ai.promise)
 
         const { albums, reclassified } = await service.scanArtist('Orbital')
 
-        expect(albums.map(a => [a.title, a.type])).toEqual([['Plain', 'Album'], ['Brown Album', 'Uncategorized']])
+        expect(albums.map(a => [a.title, a.type, a.typeReason])).toEqual([
+            ['Plain', 'Album', 'default-studio'], ['Brown Album', 'Album', 'electronic-no-ai-list'], ['Odd One', 'Album', 'electronic-no-ai-list']
+        ])
         expect(reclassified).toBeInstanceOf(Promise)
 
         ai.resolve(answer(200, { data: { albums: ['Brown Album'] }, outcome: 'found' }))
         const again = await reclassified
-        expect(again.map(a => [a.title, a.type])).toEqual([['Plain', 'Album'], ['Brown Album', 'Album']])
+        expect(again.map(a => [a.title, a.type, a.typeReason])).toEqual([
+            ['Plain', 'Album', 'default-studio'], ['Brown Album', 'Album', 'ai-list'], ['Odd One', 'Uncategorized', 'electronic-not-in-ai-list']
+        ])
         expect(serverFetch).toHaveBeenCalledTimes(1)
     })
 
@@ -82,7 +80,7 @@ describe('AlbumSearchService.scanArtist (F67)', () => {
 
         const { albums, reclassified } = await service.scanArtist('Orbital')
 
-        expect(albums[0].type).toBe('Album')
+        expect(albums[0]).toMatchObject({ type: 'Album', typeReason: 'ai-list' })
         expect(reclassified).toBeNull()
         expect(serverFetch).toHaveBeenCalledTimes(1)
     })
@@ -93,7 +91,7 @@ describe('AlbumSearchService.scanArtist (F67)', () => {
 
         const { albums, reclassified } = await service.scanArtist('Orbital')
 
-        expect(albums[0].type).toBe('Uncategorized')
+        expect(albums[0]).toMatchObject({ type: 'Album', typeReason: 'electronic-no-ai-list' })
         expect(await reclassified).toBeNull()
     })
 
@@ -102,6 +100,42 @@ describe('AlbumSearchService.scanArtist (F67)', () => {
         serverFetch.mockResolvedValue(answer(200, { data: { albums: [] }, outcome: 'not_found' }))
 
         expect(await (await service.scanArtist('Orbital')).reclassified).toBeNull()
+    })
+
+    it('an AI list the AI answered as empty is remembered: the next scan does not ask again', async () => {
+        musicKitService.getArtistAlbums.mockResolvedValue([raw('Brown Album', true)])
+        serverFetch.mockResolvedValue(answer(200, { data: { albums: [] }, outcome: 'not_found' }))
+        await (await service.scanArtist('Orbital')).reclassified
+
+        const { albums, reclassified } = await service.scanArtist('Orbital')
+
+        expect(albums[0].type).toBe('Album')
+        expect(reclassified).toBeNull()
+        expect(serverFetch).toHaveBeenCalledTimes(1)
+    })
+
+    it('UAT-185: a hip-hop discography with "Hardcore Rap" never asks the AI and has no unknown album', async () => {
+        const kendrick = (title, genreNames, trackCount) => ({ appleMusicId: title, title, artist: 'Kendrick Lamar', trackCount, raw: { attributes: { name: title, genreNames, trackCount } } })
+        musicKitService.getArtistAlbums.mockResolvedValue([
+            kendrick('To Pimp a Butterfly', ['Hip-Hop/Rap', 'Music', 'Hardcore Rap', 'West Coast Rap', 'Gangsta Rap', 'Rap'], 16),
+            kendrick('good kid, m.A.A.d city (Deluxe Version)', ['Hip-Hop/Rap', 'Music', 'Gangsta Rap', 'Rap', 'Hardcore Rap', 'West Coast Rap'], 18),
+            kendrick('DAMN.', ['Hip-Hop/Rap', 'Music', 'Rap', 'West Coast Rap'], 14)
+        ])
+
+        const { albums, reclassified } = await service.scanArtist('Kendrick Lamar')
+
+        expect(albums.map(a => a.type)).toEqual(['Album', 'Album', 'Album'])
+        expect(reclassified).toBeNull()
+        expect(serverFetch).not.toHaveBeenCalled()
+    })
+
+    it('titles in another alphabet are not grouped into one album', async () => {
+        musicKitService.getArtistAlbums.mockResolvedValue([raw('宇宙 日本 世田谷'), raw('空中キャンプ'), raw('空中キャンプ (Remastered)')])
+
+        const { albums } = await service.scanArtist('Fishmans')
+
+        expect(albums.map(a => a.title)).toEqual(['宇宙 日本 世田谷', '空中キャンプ'])
+        expect(albums[1].variants).toHaveLength(2)
     })
 
     it('no album in the catalog: an empty list and nothing to wait for', async () => {

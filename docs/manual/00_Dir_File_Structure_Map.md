@@ -68,7 +68,7 @@
 53. `public/js/components/playlists/RegeneratePanel.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
 54. `public/js/components/playlists/SavedPlaylistsController.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
 55. `public/js/components/playlists/TrackItem.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-56. `public/js/components/series/ArtistScanner.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+56. `public/js/components/series/ArtistScanner.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
 57. `public/js/components/series/SeriesDragDrop.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
 58. `public/js/components/series/SeriesEditModal.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
 59. `public/js/components/series/SeriesEventHandler.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
@@ -90,15 +90,15 @@
 73. `public/js/components/navigation/SeriesDropdown.js` (Missing / Superseded)
 74. `public/js/components/shared/ContextMenu.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
 75. `public/js/components/shared/SkeletonLoader.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
-76. `public/js/components/search/DiscographyToolbar.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
-77. `public/js/components/search/VariantPickerModal.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+76. `public/js/components/search/DiscographyToolbar.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
+77. `public/js/components/search/VariantPickerModal.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
 
 ### Search & Ranking & Home
 78. `public/js/components/ranking/TracksRankingComparison.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
 79. `public/js/components/ranking/TracksTable.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
 80. `public/js/components/ranking/TracksTabs.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
 81. `public/js/components/ranking/UserRankModal.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
-82. `public/js/components/home/SearchController.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+82. `public/js/components/home/SearchController.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
 83. `public/js/components/home/StagingAreaController.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
 
 ## 5. Service & Logic Audit 
@@ -197,19 +197,19 @@
 
 ### Batch 11: Album Search & Classification Engine
 159. `public/js/services/album-search/AlbumSearchService.js` (Analysis: `manual/22_Album_Search_Engine.md`)
-160. `public/js/services/album-search/AlbumTypeClassifier.js` (Analysis: `manual/22_Album_Search_Engine.md`)
+160. `public/js/services/album-search/AlbumTypeClassifier.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
 161. `public/js/services/album-search/ArtistNormalizer.js` (Analysis: `manual/22_Album_Search_Engine.md`)
-162. `public/js/services/album-search/EditionFilter.js` (Analysis: `manual/22_Album_Search_Engine.md`)
+162. `public/js/services/album-search/EditionFilter.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
 163. `public/js/services/album-search/ScoreCalculator.js` (Analysis: `manual/22_Album_Search_Engine.md`)
-164. `public/js/services/album-search/classification/AIWhitelistStrategy.js` (Analysis: `manual/22_Album_Search_Engine.md`)
-165. `public/js/services/album-search/classification/AppleMetadataStrategy.js` (Analysis: `manual/22_Album_Search_Engine.md`)
-166. `public/js/services/album-search/classification/BaseStrategy.js` (Analysis: `manual/22_Album_Search_Engine.md`)
-167. `public/js/services/album-search/classification/ElectronicGenreDetector.js` (Analysis: `manual/22_Album_Search_Engine.md`)
-168. `public/js/services/album-search/classification/GenreGateStrategy.js` (Analysis: `manual/22_Album_Search_Engine.md`)
-169. `public/js/services/album-search/classification/RemixTracksStrategy.js` (Analysis: `manual/22_Album_Search_Engine.md`)
-170. `public/js/services/album-search/classification/TitleKeywordStrategy.js` (Analysis: `manual/22_Album_Search_Engine.md`)
-171. `public/js/services/album-search/classification/TrackCountStrategy.js` (Analysis: `manual/22_Album_Search_Engine.md`)
-172. `public/js/services/album-search/classification/TypeSanityCheckStrategy.js` (Analysis: `manual/22_Album_Search_Engine.md`)
+164. `public/js/services/album-search/classification/AIWhitelistStrategy.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
+165. `public/js/services/album-search/classification/AppleMetadataStrategy.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
+166. `public/js/services/album-search/classification/BaseStrategy.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
+167. `public/js/services/album-search/classification/ElectronicGenreDetector.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
+168. `public/js/services/album-search/classification/GenreGateStrategy.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
+169. `public/js/services/album-search/classification/RemixTracksStrategy.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
+170. `public/js/services/album-search/classification/TitleKeywordStrategy.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
+171. `public/js/services/album-search/classification/TrackCountStrategy.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
+172. `public/js/services/album-search/classification/TypeSanityCheckStrategy.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
 
 ### Batch 12: MusicKit Internals
 173. `public/js/services/musickit/MusicKitAuth.js` (Analysis: `manual/20_MusicKit_Internals.md`)
@@ -298,6 +298,14 @@
 4. `public/js/services/playlists/savedPlaylistsReading.js` (Analysis: `manual/17_Frontend_Services.md`)
 5. `public/js/services/playlists/adapters/RepositoryPlaylistsSource.js` (Analysis: `manual/17_Frontend_Services.md`)
 
+## 9b. v5.0 - One album picker and one classifier (F57, 2026-11)
+1. `public/js/models/albumType.js` (Analysis: `manual/22_Album_Search_Engine.md`)
+2. `public/js/models/albumPicker.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+3. `public/js/models/seriesDraft.js` (Analysis: `manual/21_Dynamic_UI_Mapping.md`, section 2.2)
+4. `public/js/components/album-picker/AlbumPickerController.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+5. `public/js/components/album-picker/AlbumPickerPanel.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+6. `public/js/components/album-picker/pickerParts.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+
 ## 10. Project Documentation & Archives
 ### Root Documentation
 1. `docs/CHANGELOG.md`
@@ -359,3 +367,5 @@
 **Grand Total Doc Files: 47**
 
 > Added in v5.0 (F59, F60, F64), not yet placed in the tree above: `public/js/api/serverFetch.js`, `public/js/views/playlists/unsavedChangesGuard.js`, `public/js/utils/duration.js`, `server/lib/auth/` (`verifyIdToken.js`, `requireUser.js`, `guards.js`), `server/lib/rateLimit.js`, `server/lib/asyncRoute.js`, `server/lib/debugGate.js`, `scripts/deploy-site.sh`, `scripts/deploy-server.sh`, `scripts/lib/deploy-common.sh`.
+
+> Added in v5.0 (F62), not yet placed in the tree above: `public/js/services/AppleMusicExportService.js`, `public/js/services/export/exportLedger.js`, `public/js/services/spotify/spotifyErrors.js` (Analysis: `manual/17_Frontend_Services.md`), `public/js/views/playlists/playlistEditActions.js` (Analysis: `manual/21_Dynamic_UI_Mapping.md` section 4.1).

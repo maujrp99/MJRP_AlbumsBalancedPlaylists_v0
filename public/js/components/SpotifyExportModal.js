@@ -2,6 +2,10 @@
  * SpotifyExportModal
  * Export playlists to Spotify with visual progress feedback
  * Refactored in Sprint 18 to use SpotifyExportService
+ *
+ * F62: the window ends on the report of the export (SpotifyExportService): what was created, each
+ * with its link; what was not; why it stopped; and what the person can do next - connect again
+ * when the access could not be renewed, try again otherwise.
  */
 
 import { getIcon } from './Icons.js'
@@ -11,6 +15,7 @@ import toast from './Toast.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { SpotifyExportService } from '../services/SpotifyExportService.js'
+import { SpotifyAuthService } from '../services/SpotifyAuthService.js'
 
 // State constants
 const STATES = {
@@ -18,18 +23,30 @@ const STATES = {
     MATCHING: 'MATCHING',
     CREATING: 'CREATING',
     ADDING: 'ADDING',
-    SUCCESS: 'SUCCESS',
-    ERROR: 'ERROR'
+    DONE: 'DONE' // the export ended: the report is shown, whatever it says
 }
+
+/** What each mode creates, said under the export button (UAT-09). */
+const MODE_NOTES = Object.freeze({
+    merge: 'All playlists will be merged into a single Spotify playlist',
+    separate: 'Each playlist becomes its own Spotify playlist, named after this name and its title'
+})
+
+/** The report of an export that broke where the service did not foresee. */
+const brokenReport = (error) => ({
+    mode: 'merge', totalTracks: 0, matchCount: 0, created: [], incomplete: [], empty: [], notCreated: [],
+    failure: { kind: 'error', message: error?.message || 'Export failed' }
+})
 
 export class SpotifyExportModal {
     constructor() {
         this.state = STATES.IDLE
         this.progress = { current: 0, total: 0, message: '' }
         this.playlistName = ''
-        this.createdPlaylistUrl = null
+        this.mode = 'merge'
+        this.report = null      // what the last export answered
+        this.exporting = false  // one export at a time
         this.notFoundTracks = []
-        this.matchedCount = 0
         this.container = null
 
         // Bind methods
@@ -56,12 +73,13 @@ export class SpotifyExportModal {
 
         // Close on backdrop click
         this.container.addEventListener('click', (e) => {
-            if (e.target === this.container.querySelector('.modal-backdrop')) {
-                if (this.state === STATES.IDLE || this.state === STATES.SUCCESS || this.state === STATES.ERROR) {
-                    this.close()
-                }
-            }
+            if (e.target === this.container.querySelector('.modal-backdrop') && this.canClose()) this.close()
         })
+    }
+
+    /** The window closes when no export is on its way. */
+    canClose() {
+        return this.state === STATES.IDLE || this.state === STATES.DONE
     }
 
     /**
@@ -76,7 +94,7 @@ export class SpotifyExportModal {
         this.state = STATES.IDLE
         this.progress = { current: 0, total: 0, message: '' }
         this.notFoundTracks = []
-        this.createdPlaylistUrl = null
+        this.report = null
     }
 
     /**
@@ -92,80 +110,62 @@ export class SpotifyExportModal {
      * Attach event listeners
      */
     attachListeners() {
-        const closeBtn = this.container.querySelector('#closeModalBtn')
-        const exportBtn = this.container.querySelector('#startExportBtn')
-        const nameInput = this.container.querySelector('#playlistNameInput')
-        const openSpotifyBtn = this.container.querySelector('#openSpotifyBtn')
+        const on = (selector, type, listener) => this.container.querySelector(selector)?.addEventListener(type, listener)
 
-        if (closeBtn) closeBtn.addEventListener('click', () => this.close())
-        if (exportBtn) exportBtn.addEventListener('click', () => this.handleExport())
+        this.container.querySelectorAll('.close-modal-btn').forEach(button => button.addEventListener('click', () => this.close()))
+        on('#startExportBtn', 'click', () => this.handleExport())
+        on('#retryExportBtn', 'click', () => this.handleExport())
+        on('#reconnectSpotifyBtn', 'click', () => SpotifyAuthService.login())
+        on('#playlistNameInput', 'input', (e) => { this.playlistName = e.target.value })
 
-        if (nameInput) {
-            nameInput.addEventListener('input', (e) => {
-                this.playlistName = e.target.value
+        // The text under the button follows the mode chosen (UAT-09)
+        this.container.querySelectorAll('input[name="exportMode"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                this.mode = radio.value === 'separate' ? 'separate' : 'merge'
+                const note = this.container.querySelector('#exportModeNote')
+                if (note) note.textContent = MODE_NOTES[this.mode]
             })
-        }
-
-        // The address of the created playlist comes from Spotify: opened only when it is a web address (F59)
-        const createdUrl = safeUrl(this.createdPlaylistUrl)
-        if (openSpotifyBtn && createdUrl) {
-            openSpotifyBtn.addEventListener('click', () => {
-                window.open(createdUrl, '_blank', 'noopener')
-            })
-        }
+        })
     }
 
     /**
-     * Handle export process
+     * Run the export with the name and the mode chosen, and end on its report. One at a time.
      */
     async handleExport() {
+        if (this.exporting) return
+
+        const playlists = playlistsStore.getPlaylists()
+        if (playlists.length === 0) {
+            toast.warning('No playlists to export')
+            return
+        }
+
+        this.exporting = true
+        this.notFoundTracks = []
         try {
-            const playlists = playlistsStore.getPlaylists()
-            if (playlists.length === 0) {
-                toast.warning('No playlists to export')
-                return
-            }
-
-            // Get Export Mode
-            const modeEl = this.container.querySelector('input[name="exportMode"]:checked')
-            const mode = (modeEl && modeEl.value === 'separate') ? 'separate' : 'merge'
-
-            // Reset trackers
-            this.notFoundTracks = []
-            this.matchedCount = 0
-
-            // Delegate to Service
-            const result = await SpotifyExportService.exportPlaylists(
+            this.report = await SpotifyExportService.exportPlaylists(
                 playlists,
-                { mode, name: this.playlistName },
+                { mode: this.mode, name: this.playlistName },
                 {
                     onProgress: (stage, current, total, message) => {
                         this.state = stage // MATCHING, CREATING, ADDING
                         this.progress = { current, total, message }
                         this.updateUI()
                     },
-                    onMatch: (count) => {
-                        this.matchedCount = count
-                    },
                     onNotFound: (track) => {
                         this.notFoundTracks.push(track)
                     }
                 }
             )
-
-            // Success State
-            this.createdPlaylistUrl = result.createdUrl
-            this.matchedCount = result.matchCount
-            this.progress.total = result.totalTracks
-            this.state = STATES.SUCCESS
-            this.updateUI()
-
         } catch (error) {
             console.error('[SpotifyExportModal] Export failed:', error)
-            this.state = STATES.ERROR
-            this.progress.message = error.message || 'Export failed'
-            this.updateUI()
+            this.report = brokenReport(error)
+        } finally {
+            this.exporting = false
         }
+
+        this.state = STATES.DONE
+        this.updateUI()
     }
 
     /**
@@ -182,7 +182,7 @@ export class SpotifyExportModal {
     }
 
     renderHeader() {
-        const canClose = this.state === STATES.IDLE || this.state === STATES.SUCCESS || this.state === STATES.ERROR
+        const canClose = this.canClose()
         return `
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-3">
@@ -192,7 +192,7 @@ export class SpotifyExportModal {
                     <h2 class="text-xl font-bold text-white">Export to Spotify</h2>
                 </div>
                 ${canClose ? `
-                    <button id="closeModalBtn" class="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+                    <button id="closeModalBtn" aria-label="Close" class="close-modal-btn p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
                         ${getIcon('X', 'w-5 h-5')}
                     </button>
                 ` : ''}
@@ -208,10 +208,8 @@ export class SpotifyExportModal {
             case STATES.CREATING:
             case STATES.ADDING:
                 return this.renderProgressState()
-            case STATES.SUCCESS:
-                return this.renderSuccessState()
-            case STATES.ERROR:
-                return this.renderErrorState()
+            case STATES.DONE:
+                return this.renderReportState()
             default:
                 return ''
         }
@@ -238,11 +236,11 @@ export class SpotifyExportModal {
                     <label class="block text-sm text-white/60">Export Mode</label>
                     <div class="flex gap-4">
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="exportMode" value="merge" checked class="accent-[#1DB954]">
+                            <input type="radio" name="exportMode" value="merge" ${this.mode === 'merge' ? 'checked' : ''} class="accent-[#1DB954]">
                             <span class="text-sm text-white">Merge All</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="exportMode" value="separate" class="accent-[#1DB954]">
+                            <input type="radio" name="exportMode" value="separate" ${this.mode === 'separate' ? 'checked' : ''} class="accent-[#1DB954]">
                             <span class="text-sm text-white">Separate Playlists</span>
                         </label>
                     </div>
@@ -268,9 +266,7 @@ export class SpotifyExportModal {
                     Export to Spotify
                 </button>
 
-                <p class="text-xs text-white/40 text-center">
-                    All playlists will be merged into a single Spotify playlist
-                </p>
+                <p id="exportModeNote" class="text-xs text-white/40 text-center">${MODE_NOTES[this.mode]}</p>
             </div>
         `
     }
@@ -315,88 +311,117 @@ export class SpotifyExportModal {
         `
     }
 
-    renderSuccessState() {
-        const matchRate = this.progress.total > 0
-            ? Math.round((this.matchedCount / this.progress.total) * 100)
-            : 100
+    /**
+     * The end of an export: what it created, what it did not, why it stopped, what to do next.
+     */
+    renderReportState() {
+        const report = this.report
+        const { failure } = report
+        const done = report.created.length + report.incomplete.length
+
+        const heading = !failure ? 'Export Complete! 🎉' : (done > 0 ? 'Export stopped part of the way' : 'Export Failed')
+        const mark = failure
+            ? `<div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-red-500/20">${getIcon('AlertTriangle', 'w-8 h-8 text-red-400')}</div>`
+            : `<div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-[#1DB954]">${getIcon('Check', 'w-8 h-8 text-white')}</div>`
 
         return `
-            <div class="space-y-6 py-4">
+            <div class="space-y-5 py-4">
                 <div class="text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-[#1DB954]">
-                        ${getIcon('Check', 'w-8 h-8 text-white')}
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Export Complete! 🎉</h3>
-                    <p class="text-white/60">"${escapeHtml(this.playlistName)}" created successfully</p>
+                    ${mark}
+                    <h3 class="text-xl font-bold text-white mb-2">${heading}</h3>
+                    ${failure ? `<p class="text-white/80">${escapeHtml(failure.message)}</p>` : ''}
                 </div>
 
-                <div class="bg-white/5 rounded-xl p-4 space-y-2">
-                    <div class="flex justify-between text-sm">
-                        <span class="text-white/60">Tracks matched</span>
-                        <span class="text-[#1DB954] font-medium">${this.matchedCount} / ${this.progress.total}</span>
-                    </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-white/60">Match rate</span>
-                        <span class="text-white font-medium">${matchRate}%</span>
-                    </div>
-                </div>
-
-                ${this.notFoundTracks.length > 0 ? `
-                    <details class="text-sm">
-                        <summary class="text-yellow-400 cursor-pointer hover:text-yellow-300 flex items-center gap-2">
-                            ${getIcon('AlertTriangle', 'w-4 h-4')}
-                            ${this.notFoundTracks.length} tracks not found
-                        </summary>
-                        <ul class="mt-2 space-y-1 text-white/60 max-h-32 overflow-y-auto pl-6">
-                            ${this.notFoundTracks.slice(0, 10).map(t => `
-                                <li class="truncate">• ${escapeHtml(t.artist)} - ${escapeHtml(t.title)}</li>
-                            `).join('')}
-                            ${this.notFoundTracks.length > 10 ? `<li class="text-white/40">...and ${this.notFoundTracks.length - 10} more</li>` : ''}
-                        </ul>
-                    </details>
-                ` : ''}
-
-                <button 
-                    id="openSpotifyBtn"
-                    class="w-full py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2 transition-all hover:scale-[1.02]"
-                    style="background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);"
-                >
-                    ${getIcon('ExternalLink', 'w-5 h-5')}
-                    Open in Spotify
-                </button>
+                ${this.renderCreated(report.created)}
+                ${this.renderNames('Created without all their tracks', report.incomplete.map(p => `${p.name} (${p.tracks} of ${p.total} tracks)`))}
+                ${this.renderNames('Not created', report.notCreated)}
+                ${this.renderNames('No track found', report.empty)}
+                ${this.renderMatchSummary(report)}
+                ${this.renderNextSteps(failure)}
             </div>
         `
     }
 
-    renderErrorState() {
+    /** The playlists that are in Spotify, each with the link that opens it. */
+    renderCreated(created) {
+        if (created.length === 0) return ''
+        const rows = created.map(playlist => {
+            const url = safeUrl(playlist.url) // the address comes from Spotify: a link only when it is a web address (F59)
+            const link = url
+                ? `<a class="created-playlist-link shrink-0 text-[#1DB954] hover:underline inline-flex items-center gap-1" href="${escapeHtml(safeUrl(playlist.url))}" target="_blank" rel="noopener">${getIcon('ExternalLink', 'w-4 h-4')} Open in Spotify</a>`
+                : ''
+            return `
+                <li class="flex items-center justify-between gap-3">
+                    <span class="min-w-0"><span class="text-white">${escapeHtml(playlist.name)}</span>
+                        <span class="text-white/60">· ${playlist.tracks} tracks</span>
+                        ${playlist.alreadyThere ? '<span class="text-white/40">(already exported in this session, not created again)</span>' : ''}</span>
+                    ${link}
+                </li>`
+        }).join('')
         return `
-            <div class="space-y-6 py-4">
-                <div class="text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-red-500/20">
-                        ${getIcon('AlertTriangle', 'w-8 h-8 text-red-400')}
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Export Failed</h3>
-                    <p class="text-white/60">${escapeHtml(this.progress.message)}</p>
-                </div>
+            <div class="bg-white/5 rounded-xl p-4 text-sm">
+                <p class="text-white/60 mb-2">Created (${created.length})</p>
+                <ul class="space-y-2">${rows}</ul>
+            </div>
+        `
+    }
 
-                ${this.notFoundTracks.length > 0 ? `
-                    <div class="bg-white/5 rounded-xl p-4">
-                        <p class="text-sm text-white/60 mb-2">${this.notFoundTracks.length} tracks not found:</p>
-                        <ul class="space-y-1 text-sm text-white/60 max-h-32 overflow-y-auto">
-                            ${this.notFoundTracks.slice(0, 5).map(t => `
+    /** A titled list of names; nothing when the list is empty. */
+    renderNames(title, names) {
+        if (names.length === 0) return ''
+        return `
+            <div class="bg-white/5 rounded-xl p-4 text-sm">
+                <p class="text-yellow-400 mb-2">${escapeHtml(title)} (${names.length})</p>
+                <ul class="space-y-1 text-white/80">${names.map(name => `<li>• ${escapeHtml(name)}</li>`).join('')}</ul>
+            </div>
+        `
+    }
+
+    /** How many tracks were found in Spotify, and the ones that were not. */
+    renderMatchSummary(report) {
+        if (!report.totalTracks) return ''
+        const missing = this.notFoundTracks
+        return `
+            <div class="bg-white/5 rounded-xl p-4 space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-white/60">Tracks matched</span>
+                    <span class="text-[#1DB954] font-medium">${report.matchCount} / ${report.totalTracks}</span>
+                </div>
+                ${missing.length > 0 ? `
+                    <details>
+                        <summary class="text-yellow-400 cursor-pointer hover:text-yellow-300 flex items-center gap-2">
+                            ${getIcon('AlertTriangle', 'w-4 h-4')}
+                            ${missing.length} tracks not found
+                        </summary>
+                        <ul class="mt-2 space-y-1 text-white/60 max-h-32 overflow-y-auto pl-6">
+                            ${missing.slice(0, 10).map(t => `
                                 <li class="truncate">• ${escapeHtml(t.artist)} - ${escapeHtml(t.title)}</li>
                             `).join('')}
+                            ${missing.length > 10 ? `<li class="text-white/40">...and ${missing.length - 10} more</li>` : ''}
                         </ul>
-                    </div>
+                    </details>
                 ` : ''}
-
-                <button 
-                    id="closeModalBtn"
-                    class="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold text-white flex items-center justify-center gap-2 transition-colors"
-                >
-                    Close
-                </button>
             </div>
+        `
+    }
+
+    /** What the person can do after the report: connect again, try again, close. */
+    renderNextSteps(failure) {
+        const primary = 'w-full py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2 transition-all hover:scale-[1.02]'
+        const green = 'style="background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);"'
+        let next = ''
+        if (failure?.kind === 'reconnect') {
+            next = `<button id="reconnectSpotifyBtn" class="${primary}" ${green}>${getIcon('Spotify', 'w-5 h-5')} Connect to Spotify again</button>
+                <p class="text-xs text-white/40 text-center">You will leave this page to sign in to Spotify. Export again when you are back: what was created is not created twice in the same visit, but it is after the page reloads.</p>`
+        } else if (failure) {
+            next = `<button id="retryExportBtn" class="${primary}" ${green}>${getIcon('RefreshCw', 'w-5 h-5')} Try again</button>
+                <p class="text-xs text-white/40 text-center">What was already created is not created again.</p>`
+        }
+        return `
+            ${next}
+            <button class="close-modal-btn w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold text-white flex items-center justify-center gap-2 transition-colors">
+                Close
+            </button>
         `
     }
 }

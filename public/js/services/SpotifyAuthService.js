@@ -77,7 +77,8 @@ export const SpotifyAuthService = {
     async login() {
         if (!CLIENT_ID) {
             console.error('[SpotifyAuth] Missing VITE_SPOTIFY_CLIENT_ID in .env')
-            alert('Spotify Client ID is missing. Please check your configuration.')
+            const { default: toast } = await import('../components/Toast.js')
+            toast.error('Spotify is not set up for this site: its client id is missing.')
             return
         }
 
@@ -230,10 +231,30 @@ export const SpotifyAuthService = {
     },
 
     /**
-     * Refreshes the access token
-     * @param {string} refreshToken 
+     * Renew the access now, whatever its expiry time says: Spotify refused it (F62).
+     * @returns {Promise<string|null>} the new access token, or null when it cannot be renewed
+     *          without the person (no refresh token, or Spotify refused the renewal)
      */
-    async refreshAccessToken(refreshToken) {
+    async renewAccess() {
+        const refreshToken = localStorage.getItem('spotify_refresh_token')
+        return refreshToken ? this.refreshAccessToken(refreshToken) : null
+    },
+
+    /**
+     * Refreshes the access token. One renewal at a time: calls made while one is on its way
+     * share its answer (a refresh token is used once; a second request with it would be refused).
+     * @param {string} refreshToken
+     * @returns {Promise<string|null>}
+     */
+    refreshAccessToken(refreshToken) {
+        if (!this._renewing) {
+            this._renewing = this._requestNewAccess(refreshToken).finally(() => { this._renewing = null })
+        }
+        return this._renewing
+    },
+
+    /** @private */
+    async _requestNewAccess(refreshToken) {
         try {
             const body = new URLSearchParams({
                 grant_type: 'refresh_token',

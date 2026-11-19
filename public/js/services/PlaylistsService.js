@@ -5,8 +5,8 @@
  * - Saving the playlists on screen as a batch (the save rule: saveCurrentBatch)
  * - CRUD orchestration (through PlaylistRepository; no Firestore call here)
  * - Computation (stats, duration)
- * - Track operations (move, reorder, remove)
- * - Undo/Redo history
+ * - Edits of the set on screen (move, reorder and remove a track, remove and rename a playlist)
+ * - Undo/Redo history of those edits
  * - The draft kept in the browser: playlists not saved yet survive a reload (saveToLocalStorage, restoreDraft)
  * - Export helpers
  * 
@@ -21,6 +21,13 @@ import { StorageService } from './infra/StorageService.js'
 import { PlaylistHistoryService } from './playlists/PlaylistHistoryService.js'
 
 const STORAGE_KEY = 'current_playlists' // prefix will be added by service
+
+/** The set with the tracks of one playlist replaced: a new set, the given one is left as it is. */
+const withTracks = (playlists, playlistIndex, change) => playlists.map((playlist, index) =>
+    (index === playlistIndex ? { ...playlist, tracks: change(playlist.tracks || []) } : playlist))
+
+/** The tracks with one more at a position: a new list. */
+const insertedAt = (tracks, position, track) => [...tracks.slice(0, position), track, ...tracks.slice(position)]
 
 export class PlaylistsService {
     /**
@@ -42,52 +49,49 @@ export class PlaylistsService {
         // Dependencies
         this.storage = storageService || new StorageService()
         this.history = historyService || new PlaylistHistoryService()
+
+        // The set of playlists the history is of (see "UNDO / REDO"), and whether it came with unsaved work
+        this._followed = null
+        this._dirtyAtStart = false
     }
 
-    // ========== TRACK OPERATIONS ==========
+    // ========== EDITS OF THE SET ON SCREEN ==========
+    //
+    // Every edit builds a new set (the one on screen is not changed in place), records it as a
+    // step of the history and shows it. See "UNDO / REDO" below for the history itself.
 
     moveTrack(fromPlaylistIndex, toPlaylistIndex, trackIndex, newIndex) {
-        const playlists = [...playlistsStore.getPlaylists()]
-        const fromPlaylist = playlists[fromPlaylistIndex]
-        const toPlaylist = playlists[toPlaylistIndex]
-        const seriesId = playlistsStore.getSeriesId()
+        const playlists = playlistsStore.getPlaylists()
+        const from = playlists[fromPlaylistIndex]
+        const to = playlists[toPlaylistIndex]
+        const track = from?.tracks?.[trackIndex]
+        if (!track || !to) return
+        if (fromPlaylistIndex === toPlaylistIndex && trackIndex === newIndex) return // dropped where it was
 
-        const [track] = fromPlaylist.tracks.splice(trackIndex, 1)
-        toPlaylist.tracks.splice(newIndex, 0, track)
-
-        this.history.createSnapshot(playlists, seriesId,
-            `Moved track from ${fromPlaylist.name} to ${toPlaylist.name}`)
-
-        this._updateState(playlists, seriesId)
+        const taken = withTracks(playlists, fromPlaylistIndex, tracks => tracks.filter((_, index) => index !== trackIndex))
+        const next = withTracks(taken, toPlaylistIndex, tracks => insertedAt(tracks, newIndex, track))
+        this._applyEdit(next, `Moved track from ${from.name} to ${to.name}`)
     }
 
     reorderTrack(playlistIndex, oldIndex, newIndex) {
-        const playlists = [...playlistsStore.getPlaylists()]
+        const playlists = playlistsStore.getPlaylists()
         const playlist = playlists[playlistIndex]
-        const seriesId = playlistsStore.getSeriesId()
+        const track = playlist?.tracks?.[oldIndex]
+        if (!track || oldIndex === newIndex) return
 
-        const [track] = playlist.tracks.splice(oldIndex, 1)
-        playlist.tracks.splice(newIndex, 0, track)
-
-        this.history.createSnapshot(playlists, seriesId,
-            `Reordered track in ${playlist.name}`)
-
-        this._updateState(playlists, seriesId)
+        const next = withTracks(playlists, playlistIndex,
+            tracks => insertedAt(tracks.filter((_, index) => index !== oldIndex), newIndex, track))
+        this._applyEdit(next, `Reordered track in ${playlist.name}`)
     }
 
     removeTrack(playlistIndex, trackIndex) {
-        const playlists = [...playlistsStore.getPlaylists()]
+        const playlists = playlistsStore.getPlaylists()
         const playlist = playlists[playlistIndex]
-        const seriesId = playlistsStore.getSeriesId()
+        const removedTrack = playlist?.tracks?.[trackIndex]
+        if (!removedTrack) return
 
-        if (!playlist?.tracks) return
-
-        const [removedTrack] = playlist.tracks.splice(trackIndex, 1)
-
-        this.history.createSnapshot(playlists, seriesId,
-            `Removed "${removedTrack.title}" from ${playlist.name}`)
-
-        this._updateState(playlists, seriesId)
+        const next = withTracks(playlists, playlistIndex, tracks => tracks.filter((_, index) => index !== trackIndex))
+        this._applyEdit(next, `Removed "${removedTrack.title}" from ${playlist.name}`)
     }
 
     /**
@@ -99,17 +103,42 @@ export class PlaylistsService {
         const removed = playlists[playlistIndex]
         if (!removed) return null
 
-        const seriesId = playlistsStore.getSeriesId()
-        const remaining = playlists.filter((_, index) => index !== playlistIndex)
-        this.history.createSnapshot(remaining, seriesId, `Removed playlist ${removed.name}`)
-        this._updateState(remaining, seriesId)
+        this._applyEdit(playlists.filter((_, index) => index !== playlistIndex), `Removed playlist ${removed.name}`)
         return removed
     }
 
-    _updateState(playlists, seriesId) {
+    /**
+     * Give a playlist of the working set the title the person typed. The title is the playlist's
+     * own (`name` and `title`, the two fields the screens, the save and the exports read), so it
+     * is saved with the batch and comes back when the batch is opened again.
+     * @returns {boolean} false when there is no such playlist, or the title is empty or the same
+     */
+    renamePlaylist(playlistIndex, typedTitle) {
+        const playlists = playlistsStore.getPlaylists()
+        const playlist = playlists[playlistIndex]
+        const title = (typedTitle || '').trim()
+        if (!playlist || !title || title === (playlist.title || playlist.name)) return false
+
+        const next = playlists.map((item, index) => (index === playlistIndex ? { ...item, name: title, title } : item))
+        this._applyEdit(next, `Renamed ${playlist.name} to ${title}`)
+        return true
+    }
+
+    /** One edit: a step of the history, then the screen. */
+    _applyEdit(next, description) {
+        const seriesId = playlistsStore.getSeriesId()
+        this._followScreen()
+        this.history.createSnapshot(next, seriesId, description)
+        this._show(next, seriesId)
+    }
+
+    /** Show a set this service produced (an edit, an undo, a redo) and say what follows from it. */
+    _show(playlists, seriesId) {
+        this._followed = playlists
         playlistsStore.setPlaylists(playlists, seriesId)
-        playlistsStore.setDirty(true)
+        playlistsStore.setDirty(this._dirtyAtStart || this.history.getStats().index > 0)
         playlistsStore.setSynchronized(false)
+        this.updateUndoState()
         this.saveToLocalStorage()
     }
 
@@ -188,38 +217,64 @@ export class PlaylistsService {
         playlistsStore.setPlaylists(playlists)
     }
 
-    // ========== UNDO/REDO (Delegated) ==========
+    // ========== UNDO / REDO ==========
+    //
+    // The history holds the steps of ONE set of playlists: the one this service last showed. Its
+    // first step is that set as it came to the screen (generated, restored, or a saved batch
+    // opened), so the first edit can be undone. Whoever puts another set on screen (the blend,
+    // "generate again", opening a batch, a save) makes the history start again: a step of another
+    // set is never brought back. What the buttons read is the store (`canUndo`, `canRedo`).
 
     createSnapshot(playlists, seriesId, description) {
         this.history.createSnapshot(playlists, seriesId, description)
         this.updateUndoState()
     }
 
+    /**
+     * Make the history follow the set on screen. When that set is not the one this service last
+     * showed, the history starts again from it.
+     * @returns {boolean} whether the history was started again
+     */
+    _followScreen() {
+        const onScreen = playlistsStore.getPlaylists()
+        if (onScreen === this._followed) return false
+        this._startHistory(onScreen, playlistsStore.getSeriesId(), 'As it came to the screen')
+        return true
+    }
+
+    /** The history of a set starts at the set itself, with the unsaved work it already carried. */
+    _startHistory(playlists, seriesId, description) {
+        this.history.clear()
+        this.history.createSnapshot(playlists, seriesId, description)
+        this._followed = playlists
+        this._dirtyAtStart = playlistsStore.getState().isDirty === true
+    }
+
     undo() {
-        const state = this.history.undo()
-        if (state) {
-            playlistsStore.setPlaylists(state.playlists, state.seriesId)
-            playlistsStore.setDirty(true)
-            this.updateUndoState()
-            return true
-        }
-        return false
+        return this._travel(() => this.history.undo())
     }
 
     redo() {
-        const state = this.history.redo()
-        if (state) {
-            playlistsStore.setPlaylists(state.playlists, state.seriesId)
-            playlistsStore.setDirty(true)
-            this.updateUndoState()
-            return true
+        return this._travel(() => this.history.redo())
+    }
+
+    /** One step back or forward, when the history is of the set on screen and has that step. */
+    _travel(step) {
+        const restarted = this._followScreen()
+        const state = restarted ? null : step()
+        if (!state) {
+            if (restarted) this.updateUndoState()
+            return false
         }
-        return false
+        this._show(state.playlists, state.seriesId)
+        return true
     }
 
     updateUndoState() {
         const stats = this.history.getStats()
-        playlistsStore.setUndoState(stats.canUndo, stats.canRedo)
+        const current = playlistsStore.getState()
+        if (current.canUndo === !!stats.canUndo && current.canRedo === !!stats.canRedo) return
+        playlistsStore.setUndoState(!!stats.canUndo, !!stats.canRedo)
     }
 
     // ========== DRAFT IN THE BROWSER ==========
@@ -259,8 +314,9 @@ export class PlaylistsService {
     }
 
     /**
-     * Keep the draft in step with the store, whoever changes it (the blend screen writes the
-     * generated playlists straight into the store). Changes made in the same turn are written once.
+     * Keep the draft and the history in step with the store, whoever changes it (the blend screen
+     * writes the generated playlists straight into the store). Changes made in the same turn are
+     * handled once.
      * @returns {Function} stops watching
      */
     watchStore() {
@@ -270,6 +326,8 @@ export class PlaylistsService {
             scheduled = true
             queueMicrotask(() => {
                 scheduled = false
+                // another set on screen: the buttons of undo and redo answer for it, not for the old one
+                if (this._followScreen()) this.updateUndoState()
                 this.saveToLocalStorage()
             })
         })
@@ -286,13 +344,9 @@ export class PlaylistsService {
     restoreDraft({ seriesId = null } = {}) {
         if (playlistsStore.getPlaylists().length > 0) return false
 
-        const draft = this.storage.load(STORAGE_KEY)
-        if (!draft || !Array.isArray(draft.playlists) || draft.playlists.length === 0 || !draft.seriesId) return false
-        if (!draft.userId || draft.userId !== this.currentUserId()) return false // someone else's, or from an older version
-        if (seriesId && draft.seriesId !== seriesId) return false
+        const draft = this._draftFor(seriesId)
+        if (!draft) return false
 
-        this.history.clear()
-        this.createSnapshot(draft.playlists, draft.seriesId, 'Restored after reload')
         playlistsStore.setMode('CREATING')
         playlistsStore.setEditContext(null)
         playlistsStore.setConfig(draft.config || {})
@@ -301,9 +355,21 @@ export class PlaylistsService {
         playlistsStore.setPlaylists(draft.playlists, draft.seriesId)
         playlistsStore.setDirty(draft.isDirty === true)
         playlistsStore.setSynchronized(false)
+        this._startHistory(draft.playlists, draft.seriesId, 'Restored after reload')
+        this.updateUndoState()
         console.log(`[PlaylistsService] Restored ${draft.playlists.length} unsaved playlists of series ${draft.seriesId}`)
 
         return true
+    }
+
+    /** The draft kept in the browser, when it is whole, of this person and of this series; else null. */
+    _draftFor(seriesId) {
+        const draft = this.storage.load(STORAGE_KEY)
+        const whole = !!draft && Array.isArray(draft.playlists) && draft.playlists.length > 0 && !!draft.seriesId
+        if (!whole) return null
+        if (!draft.userId || draft.userId !== this.currentUserId()) return null // someone else's, or from an older version
+        if (seriesId && draft.seriesId !== seriesId) return null
+        return draft
     }
 
     clearLocalStorage() {
@@ -402,14 +468,23 @@ export class PlaylistsService {
         }
         console.log(`[PlaylistsService] Saved batch "${batchName}": ${stored.length} playlists`)
 
-        // The saved batch is now the one being edited (also after a rename: the next save replaces the new name)
-        playlistsStore.setPlaylists(stored.map(playlist => ({ ...playlist, updatedAt: savedAt })), seriesId)
+        this._showSaved(stored, batchName, seriesId, savedAt)
+        return { status: 'saved', batchName, seriesId, playlists: stored }
+    }
+
+    /**
+     * The saved batch is now the one being edited (also after a rename: the next save replaces
+     * the new name), with nothing left to save, and it is the new starting point of the history.
+     */
+    _showSaved(stored, batchName, seriesId, savedAt) {
+        const onScreen = stored.map(playlist => ({ ...playlist, updatedAt: savedAt }))
+        playlistsStore.setPlaylists(onScreen, seriesId)
         this.setEditMode(batchName, seriesId, savedAt)
         playlistsStore.setDirty(false)
         playlistsStore.setSynchronized(true)
+        this._startHistory(onScreen, seriesId, 'Saved')
+        this.updateUndoState()
         this.saveToLocalStorage()
-
-        return { status: 'saved', batchName, seriesId, playlists: stored }
     }
 
     // ========== FIRESTORE CRUD ==========
@@ -447,16 +522,18 @@ export class PlaylistsService {
     // ========== INITIALIZATION ==========
 
     initializeWithPlaylists(playlists, seriesId) {
-        this.history.clear() // Reset history on new init
-        this.createSnapshot(playlists, seriesId, 'Initial generation')
         playlistsStore.setPlaylists(playlists, seriesId)
         playlistsStore.setDirty(false)
         playlistsStore.setSynchronized(false)
+        this._startHistory(playlists, seriesId, 'Initial generation')
+        this.updateUndoState()
         this.saveToLocalStorage()
     }
 
     reset() {
         this.history.clear()
+        this._followed = null
+        this._dirtyAtStart = false
         this.clearLocalStorage()
         playlistsStore.reset()
     }

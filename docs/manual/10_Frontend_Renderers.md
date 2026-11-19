@@ -25,10 +25,10 @@ To keep the main View classes (like `SeriesView` and `InventoryView`) maintainab
 *   **Format Badges**: Has specific logic to display `Vinyl`, `CD`, or `Digital` badges based on the `format` field.
 
 ### Discography Renderer (`public/js/views/renderers/DiscographyRenderer.js`)
-*   **Role**: Used by `HomeController` to render the artist's discography (the search results) in Home.
+*   **Role**: The album card of the one album picker (F57): used by `HomeController` in Home and by `AlbumPickerPanel` in the series edit modal to render the artist's discography.
 *   **Key Features**:
-    *   **Visual Flair**: Adds subtle gradients and badges: "Deluxe" and "Remaster" derived from title keywords; "Live", "Single", "EP" and "Comp" from `album.type`.
-    *   **Interactivity**: Cards are clickable for "Toggle Staging" (`data-action="toggle-staging"`).
+    *   **Visual Flair**: Adds subtle gradients and badges: "Deluxe" and "Remaster" derived from title keywords; "Live", "Single", "EP" and "Comp" from `album.type` (the rule is `badgesOf` in `models/albumPicker.js`).
+    *   **Interactivity**: Cards are clickable to pick the album (`data-action="pick-album"`); the frame of the screen hears the click and asks `AlbumPickerController.pick`.
 
 ### Scoped Renderer (`public/js/views/albums/AlbumsScopedRenderer.js`)
 *   **Role**: Manages the "All Series" vs "Single Series" grouping logic.
@@ -63,9 +63,9 @@ To keep the main View classes (like `SeriesView` and `InventoryView`) maintainab
 *   **Role**: Handles the "Export" button actions.
 *   **Capabilities**:
     *   **JSON Export** (`handleExportJson`): Dumps the playlist structure to a downloadable JSON file.
-    *   **Apple Music Export** (`handleExportToAppleMusic`): Connects to `MusicKitService`, searches for tracks in the Apple Catalog, and creates playlists in the user's library.
-    *   **Spotify Export** (`handleExportToSpotify`): Connects to `SpotifyService`, resolves URIs, and pushes playlists to Spotify. `PlaylistsView` does not call this function: its Spotify button opens `components/SpotifyExportModal.js`, which uses `SpotifyExportService`.
-*   **Matching Logic**: Uses a "Fast Path" (Existing ID) vs "Slow Path" (Search API) fallback mechanism.
+    *   **Apple Music Export** (`handleExportToAppleMusic`): the screen side of the export (F62). One export at a time; shows the step on the button; hands the work to `services/AppleMusicExportService.js` and says its report in toasts (`appleExportMessages`): what was created, what Apple Music refused and why, tracks not found. A playlist created in this session is not created again (`services/export/exportLedger.js`).
+    *   **Spotify Export**: not here. The Spotify button of `PlaylistsView` opens `components/SpotifyExportModal.js`, which uses `SpotifyExportService`; the unused `handleExportToSpotify` was removed in F62.
+*   **Matching Logic**: "Fast Path" (the id the track carries) vs "Slow Path" (search), in `AppleMusicExportService._catalogIdsOf` and `SpotifyExportService._uriOf`.
 
 ### Configurable Placeholders (`public/js/views/ComingSoonView.js`)
 *   **Role**: A generic placeholder for the routes `/artists`, `/genres` and `/tracks`, which are not yet implemented.

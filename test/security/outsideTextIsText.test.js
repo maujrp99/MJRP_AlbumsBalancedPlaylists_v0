@@ -21,7 +21,7 @@ import { BlendSeriesSelector } from '../../public/js/components/blend/BlendSerie
 import { SpotifyExportModal } from '../../public/js/components/SpotifyExportModal.js'
 import { AuthNav } from '../../public/js/components/navigation/AuthNav.js'
 import { PlaylistGrid } from '../../public/js/components/playlists/PlaylistGrid.js'
-import { showVariantPickerModal } from '../../public/js/components/search/VariantPickerModal.js'
+import { DiscographyRenderer } from '../../public/js/views/renderers/DiscographyRenderer.js'
 import FilterToolbar from '../../public/js/components/ui/FilterToolbar.js'
 
 /** Text that would run as HTML if written into the page as it is. */
@@ -188,15 +188,20 @@ describe('text from outside is shown as text', () => {
         expectOnlyText(host)
         expect(host.querySelector('#playlistNameInput').value).toBe(QUOTED)
 
-        modal.state = 'SUCCESS'
-        draw(modal.render())
-        expectOnlyText(host, QUOTED, TEXT)
-
-        modal.state = 'ERROR'
-        modal.progress = { current: 0, total: 0, message: TEXT }
+        // the end of an export: the names it created or not, the reason it stopped, the tracks not found
+        modal.state = 'DONE'
+        modal.report = {
+            mode: 'separate', totalTracks: 2, matchCount: 1,
+            created: [{ name: TEXT, url: QUOTED, tracks: 1, total: 1, alreadyThere: true }],
+            incomplete: [{ name: TEXT, url: QUOTED, tracks: 1, total: 2 }],
+            empty: [TEXT], notCreated: [TEXT],
+            failure: { kind: 'reconnect', message: TEXT }
+        }
         draw(modal.render())
         expectOnlyText(host, TEXT)
+        expect(host.querySelector('a.created-playlist-link')).toBeNull() // an address that is not a web address is no link
 
+        modal.progress = { current: 0, total: 0, message: TEXT }
         modal.state = 'MATCHING'
         draw(modal.render())
         expectOnlyText(host, TEXT)
@@ -215,14 +220,13 @@ describe('text from outside is shown as text', () => {
         expect(host.querySelector('img').getAttribute('src')).toBe(QUOTED)
     })
 
-    it('edition picker: titles, ids, year and cover address', () => {
-        showVariantPickerModal({ title: TEXT, variants: [{ id: QUOTED, title: TEXT, year: TEXT, trackCount: 10, coverUrl: QUOTED }] }, () => { })
-        const modal = document.body.querySelector('.modal-overlay')
+    it('album picker card (Home and series edit): title, id, year and cover address', () => {
+        new DiscographyRenderer(host).render([{ id: QUOTED, title: TEXT, artist: TEXT, year: TEXT, type: 'Album', coverUrl: QUOTED }])
 
-        expectOnlyText(modal, TEXT)
-        expect(modal.querySelector('.variant-row').dataset.id).toBe(QUOTED)
-        expect(modal.querySelector('input[type="checkbox"]').value).toBe(QUOTED)
-        expect(modal.querySelectorAll('img').length).toBe(1)
+        expectOnlyText(host, TEXT)
+        expect(host.querySelector('[data-action="pick-album"]').dataset.id).toBe(QUOTED)
+        expect(host.querySelectorAll('img').length).toBe(1)
+        expect(host.querySelector('img').getAttribute('src')).toBe(QUOTED)
     })
 
     it('filter list: an artist name with quotes is the value of its option', () => {

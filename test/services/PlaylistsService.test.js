@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { PlaylistsService } from '../../public/js/services/PlaylistsService.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'
+import { PlaylistHistoryService } from '../../public/js/services/playlists/PlaylistHistoryService.js'
 
 // Mock dependencies
 const mockDb = {}
@@ -12,13 +13,9 @@ const mockStorage = {
     remove: vi.fn()
 }
 
-const mockHistory = {
-    createSnapshot: vi.fn(),
-    undo: vi.fn(),
-    redo: vi.fn(),
-    getStats: vi.fn().mockReturnValue({ canUndo: false, canRedo: false }),
-    clear: vi.fn()
-}
+// The history is the real one (F62: the service and the history keep one rule together); the
+// calls the service makes to it are watched
+let mockHistory
 
 describe('PlaylistsService (Refactored)', () => {
     let service
@@ -26,6 +23,9 @@ describe('PlaylistsService (Refactored)', () => {
     beforeEach(() => {
         vi.clearAllMocks()
         playlistsStore.reset()
+        mockHistory = new PlaylistHistoryService()
+        vi.spyOn(mockHistory, 'createSnapshot')
+        vi.spyOn(mockHistory, 'undo')
         // Inject mocks
         service = new PlaylistsService(mockDb, mockCache, mockStorage, mockHistory)
     })
@@ -62,16 +62,15 @@ describe('PlaylistsService (Refactored)', () => {
         })
 
         it('should delegate undo to history service and update store', () => {
-            const restoredState = { playlists: [{ name: 'Restored' }], seriesId: 's1' }
-            mockHistory.undo.mockReturnValue(restoredState)
-            mockHistory.getStats.mockReturnValue({ canUndo: true, canRedo: true })
+            playlistsStore.setPlaylists([{ name: 'Restored', tracks: [{ title: 'T1' }] }], 's1')
+            service.removePlaylist(0)
 
             const result = service.undo()
 
             expect(mockHistory.undo).toHaveBeenCalled()
             expect(result).toBe(true)
             expect(playlistsStore.getPlaylists()[0].name).toBe('Restored')
-            expect(playlistsStore.getState().canUndo).toBe(true) // Updates UI state
+            expect(playlistsStore.getState().canRedo).toBe(true) // Updates UI state
         })
     })
 

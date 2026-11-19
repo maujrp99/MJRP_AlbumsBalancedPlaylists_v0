@@ -116,7 +116,7 @@ Top-level architectural patterns chosen to solve specific problems.
 | :--- | :--- | :--- |
 | **Model-View-Controller (MVC)** | `js/views/`, `js/controllers/`, `js/stores/` | **Separation of Concerns**. Keeps UI rendering (`Views`) separate from Business Logic (`Controllers`) and State (`Stores`). Essential for maintainability in Vanilla JS. |
 | **Observer/PubSub** | `js/stores/*.js`, `BaseView.js` | **Reactivity**. Stores (Subject) notify Views (Observer) when state changes (e.g., `inventoryStore.subscribe(this.render)`). Decouples data updates from UI updates. |
-| **Strategy Pattern** | `ranking/*Strategy.js`, `album-search/classification/` | **Flexibility**. Allows hot-swapping algorithms (e.g., switching between `BestEverRanking` and `SpotifyPopularity`) without changing the consuming code. |
+| **Strategy Pattern** | `ranking/*Strategy.js`, `algorithms/*Algorithm.js` (the album classification stopped being a chain of strategies in F57: it is one pure function, `models/albumType.js`) | **Flexibility**. Allows hot-swapping algorithms (e.g., switching between `BestEverRanking` and `SpotifyPopularity`) without changing the consuming code. |
 | **Factory Pattern** | `server/routes/albums.js` | **Dependency Injection**. Routes are initialized (`initAlbumRoutes`) by injecting Services (`EnrichmentService`, `GenerationService`). Makes testing significantly easier by allowing mocks. |
 | **Singleton Pattern** | `js/services/*.js`, `js/stores/*.js` | **State Consistency**. Services like `AuthService`, `SpotifyExportService` and Stores must have only one instance. |
 | **Service Layer** | `server/lib/services/`, `public/js/services/` | **Logic Decoupling**. Extracts complex business logic (Scraping, AI, State Machines) from Routes and Components into testable, reusable classes. |
@@ -341,7 +341,7 @@ flowchart TB
     B --> ALS
     E --> ALS
     H --> SPR["Saved playlists reader (F61, built on its branch)<br>series once, then each series' playlists, 8 at a time"]
-    HM --> PK["Album picker (new, F57)<br>one component, one classifier"]
+    HM --> PK["Album picker (F57, built on its branch)<br>one controller, one classifier; the series edit uses it too"]
 
     subgraph Load["services/albums/ - the load"]
         ALS["AlbumLoadService<br>the only loader of albums (F56, built on its branch)<br>blend and edit ask through AlbumAsks"]
@@ -400,7 +400,7 @@ This extends the registry of section 3 with the pattern ids of `docs/wiki/harnes
 | Repository | DP-01 | `repositories/*` (`SeriesRepository`, `PlaylistRepository`, `InventoryRepository`, `UserRankingRepository`, `SharedAlbumRepository`) | v2; the load stopped bypassing it in v4.0 | Firestore behind one door per kind of data |
 | Factory | DP-02 | `server/routes/albums.js` (`initAlbumRoutes`), `views/helpers/SeriesComponentFactory.js` | v3 | build with the dependencies given |
 | Singleton | DP-03 | the exported instance of each store and service | v2 | one state per kind of data |
-| Strategy | DP-04 | `ranking/*Strategy.js`, `services/album-search/classification/`, `algorithms/*Algorithm.js` | v3 | swap an algorithm without touching who calls it |
+| Strategy | DP-04 | `ranking/*Strategy.js`, `algorithms/*Algorithm.js` | v3; the album classification left this pattern in F57 (one pure function, `models/albumType.js`) | swap an algorithm without touching who calls it |
 | Observer | DP-05 | every store's `subscribe`; the window event `spotify-auth-change` | v2; one signal for the Spotify session in v4.0 | the screen follows the state |
 | Adapter | DP-07 | `services/albums/adapters/CatalogAdapter.js`, `enrichers.js`, `AlbumCacheAdapter.js` | **v4.0** | Apple Music, the server, Spotify and the cache behind the shape the load expects |
 | Facade | DP-11 | `server/lib/fetchRanking.js` | v3 | one call hides scraping, AI and fallbacks |
@@ -446,8 +446,9 @@ One line per component of the album path. "State" says whether it is in producti
 | Screen | Filter toolbar | `components/ui/FilterToolbar.js` | search and filters; the search field is drawn once | v4.0 |
 | Screen | Pager | `components/ui/Pager.js` | series per page, pages or scroll | v4.0 |
 | Screen | Ranking window | `components/ranking/UserRankModal.js` | opens in the saved order; reports through `onSubmit` | v4.0 |
-| Screen | Album picker (Home) | `components/home/SearchController.js`, `views/renderers/DiscographyRenderer.js` | search an artist, group by type, choose | v3; replaced by one picker in F57 |
-| Screen | Album picker (Edit Series) | `components/series/ArtistScanner.js` | the same task, drawn again | v3; replaced by one picker in F57 |
+| Screen | Album picker | `components/album-picker/AlbumPickerController.js` (the picker), `pickerParts.js` and `views/renderers/DiscographyRenderer.js` (the drawn parts), `models/albumPicker.js` and `models/scanState.js` (the rules) | search an artist, see the albums by type, pick some; the screen says what is done with a pick (`onPick`) | F57 (on its branch); it took the place of `home/SearchController.js` and `series/ArtistScanner.js` |
+| Screen | Album picker frames | `controllers/HomeController.js` + `views/HomeView.js` (Home), `components/album-picker/AlbumPickerPanel.js` inside `components/series/SeriesEditModal.js` (Edit Series) | place the parts of the picker in each screen | F57 (on its branch) |
+| Rule | Album type classifier | `models/albumType.js` | one pure function says the type of a catalog album, with the reason | F57 (on its branch); it took the place of `AlbumTypeClassifier.js` and `classification/` |
 | Controller | `SeriesController` | `controllers/SeriesController.js` | asks for a load; filters and pages over what the series ask for | v4.0 |
 | Controller | `BlendingController` | `controllers/BlendingController.js` | generates playlists from the albums the load service gives it (`albumAsks.albumsOf`, with the sources the recipe reads); goes on with the albums that are ready and returns what was left out | v3; no loop of its own since F56 (on its branch) |
 | Controller | `PlaylistsController` | `controllers/PlaylistsController.js` | edit, save, export; asks `albumAsks.albumsOf` for the albums of the edit and says which failed; the save rule left it for `PlaylistsService.saveCurrentBatch` (F60) | v3; no loop of its own since F56 (on its branch); F58 |

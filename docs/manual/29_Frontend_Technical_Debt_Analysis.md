@@ -6,9 +6,7 @@
 -   **`ui/FilterToolbar.js` & `series/SeriesFilterBar.js`**:
     -   **Role**: UI components for filtering albums/series.
     -   **Logic**: `FilterToolbar` (which replaced `series/SeriesToolbar.js`, a file that no longer exists) is the high-level container combining Search, Filter Dropdowns, and View Toggles. `SeriesFilterBar` is a smaller, older implementation that no module imports.
--   **`series/ArtistScanner.js`**:
-    -   **Role**: Scans Apple Music for albums to add to a series.
-    -   **Logic**: Interactive form with immediate Apple Music API feedback.
+-   **`series/ArtistScanner.js`**: removed in F57. Adding albums in the series edit is the one album picker (`album-picker/AlbumPickerPanel.js`).
 -   **`series/SeriesGridRenderer.js`**:
     -   **Role**: Adapter that delegates rendering to `AlbumsGridRenderer` and `AlbumsScopedRenderer`.
     -   **Pattern**: Supports both 'ALL' setup (grouped by series) and 'SINGLE' setup (flat grid). In the 'ALL' grid each series is cut at 12 albums, with the "Load N more albums" button, unless the view lists it in `expandedSeriesIds` (v5.0, F49).
