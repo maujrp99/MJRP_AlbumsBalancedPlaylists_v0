@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:28] review — F59 fatia E provada pelo integrador (Tailwind compilado; endereços conferidos)
+
+Oito telas comparadas com produção por estilo calculado, elemento a elemento, como visitante: iguais (diferenças só de escrita, listadas na prova). Receita selecionada no blend com o gradiente certo, com login. A ADR-0021 fica em `Proposed`: publicado sob a dispensa do MJRP de 2026-11-19 19:03 (decidido pelo agente — revisável); o aceite da ADR é dele. UAT-25 e UAT-199 em `fixed`; UAT-28 segue aberta.
+
 ## [2026-11-19 19:20] session — F59: spec, plano, tarefas, ADR-0021 (proposta), stack, arquitetura e manual escritos no ramo
 
 Ramo `fix/f59-tailwind-local-and-url-schemes`. A pasta da F59 preenchida para tudo o que foi construído nas fatias A, B, C e E (11 REQ com `verified_by`, 14 tarefas; abertas a prova no navegador, do integrador, e o aceite da ADR, do MJRP). ADR-0021 escrita em «Proposed»: o Tailwind fica, compilado junto com o site (aceite do MJRP pendente; a constituição diz «Tailwind only if requested»). `docs/specs/tech-stack.md` (linha do Tailwind: 3.4.19, como é construído, a ADR), `docs/specs/arch.md` (a casca e a linha de CDN/Assets) e o manual (07b com a `safeUrl`, 09a com a folha do Tailwind, 31) dizem o que o código faz agora. Um teste a mais, `test/security/buildHandsOutNoSource.test.js`, para o requisito dos mapas de código ter prova na suíte. 1002 testes. O doctor segue vermelho com 521 erros, como antes do ramo; entre eles um novo, que é do integrador: o `## Now` do `MEMORY.md` ficou atrás do log (este ramo não toca o `MEMORY.md`). Não mexido: o status das issues no `uat.md`.
