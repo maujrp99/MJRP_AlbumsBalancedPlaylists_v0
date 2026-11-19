@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:34] session — ADR-0019 da carga escrita (Proposed) e `behavior.md` em dia com a v4.0
+
+- **ADR:** `docs/decisions/0019-one-owner-for-the-album-load.md`, status `Proposed`. Registra a decisão de um dono só para a carga (o que o MJRP aprovou em conversa em 2026-11-19), as consequências medidas, o que ainda não foi feito e as alternativas recusadas. Escrita depois do código; o texto em si não passou por crítica separada, e o aceite formal está pendente.
+- **`behavior.md`:** 12 estados reescritos para o que o código faz depois das features F45 a F51, três estados novos (`^library-album-failed`, `^library-paging`, `^app-local-address`) e ressalvas com o número da issue onde a regressão achou defeito (UAT-184, UAT-185, UAT-186, UAT-188, UAT-27). As linhas que não dizem «v4.0» não foram reconferidas.
+- **Decisão do MJRP, 2026-11-19:** «vamos com sua nova arquitetura proposta, mas vamos criar um versao v5.0 … na v4.0, eu fecharia os que nao impactam e dependem da arquitetura mais o fix do ranking que reportei, aí vai todo o restante para a v5.0 via fast lane».
+
 ## [2026-11-19 14:33] session — F53: a suíte de testes está verde (431 passam, 0 falham; antes 28 falhas)
 
 `npx vitest run` sai com código 0. Nenhum código do app mudou: os 28 eram testes fora de dia ou ambiente de teste quebrado.
