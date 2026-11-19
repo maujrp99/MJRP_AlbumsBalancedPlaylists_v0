@@ -26,6 +26,7 @@ export default class SeriesEventHandler extends Component {
      * @param {Function} config.props.onDeleteSeries - Callback for delete series
      * @param {Function} config.props.onAlbumRemoved - Callback after album removal
      * @param {Function} config.props.onRefetchMetadata - Callback for refetch
+     * @param {Function} config.props.onShowAllAlbums - (seriesId) the person asked for the albums a series holds back
      * @param {Function} config.props.onSaveRanking - (album, rankings) => Promise<boolean>, saves the person's ranking
      */
     constructor(config) {
@@ -145,12 +146,15 @@ export default class SeriesEventHandler extends Component {
     }
 
     /**
-     * Handle series-level actions (edit, delete)
+     * Handle series-level actions (edit, delete, try again, show every album)
      */
     async handleSeriesAction(action, seriesId) {
-        const { onEditSeries, onDeleteSeries, onRetrySeries } = this.props;
+        const { onEditSeries, onDeleteSeries, onRetrySeries, onShowAllAlbums } = this.props;
 
         switch (action) {
+            case 'load-more-series':
+                if (onShowAllAlbums) onShowAllAlbums(seriesId);
+                break;
             case 'retry-series':
                 if (onRetrySeries) onRetrySeries(seriesId);
                 break;

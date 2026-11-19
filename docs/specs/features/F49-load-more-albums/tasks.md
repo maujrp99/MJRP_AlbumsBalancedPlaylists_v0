@@ -3,9 +3,12 @@
 # Tasks — Feature F49: O botão de carregar mais álbuns de uma série funciona · Plan: [[plan]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
+> As tarefas como foram feitas em 2026-11-19, no ramo `fix/f49-load-more-albums`. A marca `model::` diz a classe do trabalho (opus: desenho de código; sonnet: mecânico), como o molde pede.
+
 ## Pre-Implementation
-- [ ] create the branch feat/load-more-albums-<timestamp>
-- [ ] verify the spec and the plan of F49 passed their cross-checks (and were approved, where gated)
+- [x] ramo criado: `fix/f49-load-more-albums`, a partir da `main` em `4dc353a`
+- [x] causa lida no código antes de mexer: quem desenha o botão, onde o clique morre, onde estão os álbuns depois do décimo segundo, com arquivo e linha, na seção Problem Statement da spec; o defeito reproduzido em teste da tela inteira (4 dos 8 casos de `test/views/SeriesView.loadMore.test.js` falhavam antes)
+- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -17,11 +20,18 @@
                         default: a task without the mark fails the cross-check.
      rounds:: N       — written when the task CLOSES ([x]): how many Execute ⇄ Verify rounds it took (ceiling 3).
                         `python3 mjrp-scripts/loop.py --check-tasks tasks.md` fails a closed task without it. -->
-- [ ] TASK-01 «a escrever: ação sobre um arquivo ou componente nomeado — o sinal de pronto» · implements:: REQ-01 · model:: «a escrever: sonnet|opus»
+- [x] TASK-01 `public/js/models/seriesExpansion.js` e `test/models/seriesExpansion.test.js`: o limite, o corte e o estado da visita (séries abertas, esquecidas na troca de escopo) — 7 testes passando · implements:: REQ-01, REQ-02, REQ-03 · model:: opus · rounds:: 1
+- [x] TASK-02 `public/js/components/ui/LoadMoreButton.js`: `type="button"`, o número de álbuns retidos, singular e plural — coberto por `test/components/series/SeriesGridRenderer.loadMore.test.js` · implements:: REQ-03, REQ-04 · model:: sonnet · rounds:: 1
+- [x] TASK-03 `public/js/components/series/SeriesGridRenderer.js`: o grupo da série desenhado pelo estado (`props.expandedSeriesIds`), `focusAlbum`, e a retirada de `_attachEventListeners` e `_handleLoadMore` — `test/components/series/SeriesGridRenderer.loadMore.test.js`, 8 testes passando · implements:: REQ-01, REQ-03, REQ-04, REQ-05 · model:: opus · rounds:: 1
+- [x] TASK-04 o clique ligado ao estado: `SeriesEventHandler` (`load-more-series` → `onShowAllAlbums`), `SeriesView` (`expansion`, `showAllAlbums`, `syncExpansionScope`) e `SeriesViewUpdater.updateGrid` (repassa a lista) — `test/views/SeriesView.loadMore.test.js`, 8 testes passando · implements:: REQ-01, REQ-02, REQ-04, REQ-05 · model:: opus · rounds:: 1
 
 ## Verification
-- [ ] TASK-02 «a escrever: a verificação: suíte, build, caminho feliz, regressão» · implements:: REQ-01 · model:: «a escrever: sonnet|opus»
+- [x] TASK-05 suíte (`npx vitest run`: 1330 passando, 1307 antes), `npx vite build` e complexidade até 10 nas funções novas ou mudadas (`npx eslint --rule '{"complexity":["error",10]}'` nos arquivos tocados; as duas acima do limite, `SeriesView.updateAlbums` e `SeriesEventHandler.handleRemoveAlbum`, já estavam e não ganharam caminho) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05 · model:: sonnet · rounds:: 1
+- [ ] TASK-06 prova no navegador pelo roteiro do relatório de entrega: numa série com mais de 12 álbuns, no painel de todas as séries, o clique mostra o resto e o botão some; a série continua aberta depois de ir à página 2 e voltar e de buscar e limpar; volta a 12 depois de abrir a série sozinha e voltar; o botão é alcançado com Tab e responde a Enter, e o foco vai para o primeiro álbum novo · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05 · model:: opus · waiting:: human — quem implementou não tem navegador; a prova roda com o login do MJRP, pelo agente integrador · action:: o integrador roda o roteiro em `http://127.0.0.1:5010` e grava a prova em `reports/evidence/F49/`
+- [ ] TASK-07 julgamento do MJRP (tarefa do humano): o texto do botão («Load N more albums» mantido; o clique não carrega nada) e a escolha valer só para a visita · implements:: REQ-02, REQ-03 · model:: opus · waiting:: human — o aceite da issue é do MJRP · action:: o MJRP confere em produção e dá o OK na UAT-06
 
 ## Documentation
-- [ ] update the specs affected · mark F49 Done in spec.md · commit: feat: implement load-more-albums
+- [x] `docs/specs/behavior.md` (estado novo `^library-series-more-albums`) e `docs/manual/` (09, 12, 15, 29) dizem o que o código faz agora
+- [x] spec, plano e tarefas preenchidos no ramo
+- [ ] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador
 - [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
