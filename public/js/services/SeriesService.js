@@ -20,6 +20,7 @@ import { cacheManager } from '../cache/CacheManager.js'
 import { StorageService } from './infra/StorageService.js'
 import { UserSyncService } from './auth/UserSyncService.js'
 import { apiClient } from '../api/client.js' // Fix #156: Needed for enrichment
+import { alreadyAskedFor, indexOfQueryFor } from '../models/askedAlbum.js'
 
 const STORAGE_KEY = 'series' // prefix will be added
 
@@ -187,11 +188,8 @@ export class SeriesService {
 
         const albumQueries = series.albumQueries || []
 
-        // Check for duplicates
-        const exists = albumQueries.some(q =>
-            (typeof q === 'object' && q.title === album.title && q.artist === album.artist) ||
-            (typeof q === 'string' && q.toLowerCase().includes(album.title.toLowerCase()))
-        )
+        // The series already asks for this album? Decided by the one identity rule (F55)
+        const exists = alreadyAskedFor(albumQueries, album)
 
         if (!exists) {
             albumQueries.push({ id: album.id || null, title: album.title, artist: album.artist })
@@ -208,25 +206,11 @@ export class SeriesService {
         if (!series) throw new Error('Series not found')
 
         const albumQueries = series.albumQueries || []
-        const norm = str => str?.toLowerCase().trim() || ''
 
-        // Find matching query
-        const matchIndex = albumQueries.findIndex(query => {
-            if (typeof query === 'object' && query !== null) {
-                // FIX #154: Fallback for legacy data that used 'album' instead of 'title'
-                if (query.id && query.id === album.id) return true;
-                const queryTitle = query.title || query.album;
-                return queryTitle === album.title && (!query.artist || query.artist === album.artist)
-            }
-            if (typeof query === 'string') {
-                const q = norm(query)
-                const title = norm(album.title)
-                const artist = norm(album.artist)
-                return q === title || q === `${artist} - ${title}` || q === `${artist} ${title}` ||
-                    (q.includes(title) && q.includes(artist))
-            }
-            return false
-        })
+        // The query that keeps the id of the album is that album (legacy data). Otherwise the one
+        // identity rule says which query asked for it (F55): no text is compared here.
+        const byId = albumQueries.findIndex(query => !!query?.id && query.id === album.id)
+        const matchIndex = byId !== -1 ? byId : indexOfQueryFor(albumQueries, album)
 
         if (matchIndex === -1) {
             throw new Error(`Could not find album "${album.title}" in series`)

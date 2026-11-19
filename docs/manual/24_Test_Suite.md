@@ -81,11 +81,12 @@ sequenceDiagram
         *   DOM updates (checking `querySelectorAll`).
 *   **Value**: Critical for ensuring UI logic is decoupled from actual data sources.
 
-### The album identity rule (F55, slice 1)
-*   `test/shared/albumIdentity.test.js`: the rule itself, pair by pair ("Core" is not "Shangri-La Dee Da" nor "Core Memories"; editions; subtitles in both directions; self-titled and numbered titles; the year only orders).
+### The album identity rule (F55, slices 1 and 2)
+*   `test/shared/albumIdentity.test.js`: the rule itself, pair by pair ("Core" is not "Shangri-La Dee Da" nor "Core Memories"; editions; subtitles; self-titled and numbered titles; the year only orders) and, since slice 2, the second tier by candidate list ("No Quarter"; "The Wall" with and without "The Wall" itself; the two "Greatest Hits"; one direction only) and the kept album (`compareKeptAlbum`).
 *   One file per place that accepts an album, each with doubles and no network: `test/services/albums/catalogIdentity.test.js` (Apple Music, the stored id), `test/api/clientIdentity.test.js` (the AI answer, the old Apple path), `test/services/spotify/SpotifyAlbumMatch.test.js`, `test/services/OptimizedAlbumLoader.identity.test.js`, `test/server/scraperIdentity.test.js` (BestEverAlbums, with answers in the shape the source gives), `test/server/spotifyAlbumIdentity.test.js`.
 *   `test/services/albums/albumIdentityAudit.test.js`: the read-only count.
-*   `test/architecture/albumIdentityRule.test.js`: a fitness function; it fails when a call site stops asking the rule or compares texts by itself.
+*   `test/architecture/albumIdentityRule.test.js`: a fitness function; it fails when a call site stops asking the rule or compares texts by itself. Since slice 2 it also fails when a call site names or grants the second tier, when a reader of the album caches or `SeriesService` stops asking the rule, and when a second path to write the corrected Apple Music id appears.
+*   Slice 2: `test/services/series/SeriesFactsService.test.js` (the corrected id written once, with the facts), `test/services/albums/adapters.test.js` and `test/api/clientIdentity.test.js` (a kept album that is not the album asked for is dropped when read), `test/services/SeriesService.identity.test.js` (adding and removing an album), `test/components/ui/AlbumCardIdentityNote.test.js` (the line on the card).
 
 ### Service Layer (`test/services/`)
 *   **Technique**: Mocking External Dependencies (Firebase).

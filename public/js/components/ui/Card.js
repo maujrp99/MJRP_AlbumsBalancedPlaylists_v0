@@ -11,6 +11,7 @@
  */
 
 import { SafeDOM } from '../../utils/SafeDOM.js'
+import { safeUrl } from '../../utils/safeUrl.js'
 import { getIcon } from '../Icons.js'
 
 /**
@@ -297,7 +298,8 @@ export class Card {
 
         let spotifyBadge = null
         if (hasSpotify) {
-            const spotifyUrl = entity.spotifyUrl || `https://open.spotify.com/album/${entity.spotifyId}`
+            // The stored address comes from a provider: a link only when it is a web address (F59)
+            const spotifyUrl = safeUrl(entity.spotifyUrl) || `https://open.spotify.com/album/${encodeURIComponent(entity.spotifyId)}`
             spotifyBadge = SafeDOM.a({
                 href: spotifyUrl,
                 target: '_blank',

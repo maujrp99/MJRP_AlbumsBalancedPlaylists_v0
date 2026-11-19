@@ -3,6 +3,7 @@ import { albumsStore } from '../stores/albums.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { getIcon } from '../components/Icons.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
+import { safeUrl } from '../utils/safeUrl.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 
 export class ConsolidatedRankingView extends BaseView {
@@ -255,10 +256,13 @@ export class ConsolidatedRankingView extends BaseView {
     row.appendChild(SafeDOM.td({ className: 'album-cell p-4 text-sm text-muted' }, track.albumTitle))
 
     const sourceCell = SafeDOM.td({ className: 'source-cell p-4' })
-    if (track.url) {
+    // The source address comes from a provider: a link only when it is a web address (F59)
+    const sourceUrl = safeUrl(track.url)
+    if (sourceUrl) {
       const link = SafeDOM.a({
-        href: track.url,
+        href: sourceUrl,
         target: '_blank',
+        rel: 'noopener noreferrer',
         className: 'btn-icon inline-flex items-center justify-center w-8 h-8 hover:bg-white/10 rounded-full transition-colors',
         title: 'View on BestEverAlbums'
       })

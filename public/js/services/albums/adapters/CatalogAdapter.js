@@ -90,7 +90,10 @@ export class CatalogAdapter {
      * Music no longer has that id here (it answers 404 for an edition of another storefront, or one
      * that was withdrawn), or the id leads to ANOTHER album (F55: the stored id does not win over
      * what was asked). Then the album is searched by name.
+     * An id that leads to the title with a subtitle (the rule's second tier) is not believed alone
+     * either: only the search sees whether the catalog has the album asked for itself.
      * Any other failure is a failed call and is thrown, to be retried.
+     * @returns {Promise<{ details: Object, reason: string } | null>}
      */
     async _detailsOfChosen(appleId, query) {
         let details
@@ -101,7 +104,8 @@ export class CatalogAdapter {
             throw error
         }
         if (!details) return null
-        if (compareAlbumIdentity(askedAlbum(query), details).same) return details
+        const verdict = compareAlbumIdentity(askedAlbum(query), details)
+        if (verdict.same) return { details, reason: verdict.reason }
 
         console.warn(`[CatalogAdapter] the stored id ${appleId} leads to "${details.artist} - ${details.title}", not to "${this._label(query)}": searching by name`)
         return null
@@ -110,12 +114,15 @@ export class CatalogAdapter {
     /**
      * Search by name and keep a result only if it is the album asked for, by the one identity rule
      * (the results come scored, standard editions first; the rule picks among those that pass).
+     * @returns {Promise<{ details: Object, reason: string } | null>}
      */
     async _searchInApple(query) {
         const asked = askedAlbum(query)
         const candidates = await this.musicKit.searchAlbums(asked.artist, asked.title, 5)
         const picked = pickAlbum(asked, candidates, appleCandidate)
-        return picked.found ? this.musicKit.getAlbumDetails(picked.candidate.id) : null
+        if (!picked.found) return null
+        const details = await this.musicKit.getAlbumDetails(picked.candidate.id)
+        return details ? { details, reason: picked.verdict.reason } : null
     }
 
     _label(query) {
@@ -142,12 +149,14 @@ export class CatalogAdapter {
         // or whose id leads elsewhere, is searched by name.
         const chosenId = (typeof query === 'object' && query !== null) ? query.appleMusicId : null
         const chosen = chosenId ? await this._detailsOfChosen(chosenId, query) : null
-        const full = chosen || await this._searchInApple(query)
-        if (!full) return null
+        const accepted = chosen || await this._searchInApple(query)
+        if (!accepted) return null
+        const full = accepted.details
 
-        // The seam for writing the corrected id back to the series (F55, slice 2): the album says
-        // which stored id it did NOT come from. Nothing is written to the series here.
-        const replaced = (chosenId && !chosen) ? { replacedSourceId: chosenId } : {}
+        // What the album says about how it got here (F55): the reason of the rule it was accepted
+        // by, and the stored id it did NOT come from. SeriesFactsService writes the new id back.
+        const identity = { identityReason: accepted.reason }
+        if (chosenId && String(chosenId) !== String(full.id)) identity.replacedSourceId = chosenId
 
         const id = this.generateAlbumId({ title: full.title, artist: full.artist })
         const context = { artist: full.artist, album: full.title, albumId: id }
@@ -172,7 +181,7 @@ export class CatalogAdapter {
             coverUrl: this.musicKit.getArtworkUrl(full.artworkTemplate, 600),
             tracks: [...tracks],
             tracksOriginalOrder: [...tracks].sort((a, b) => discPosition(a) - discPosition(b)),
-            metadata: { source: 'Apple Music', sourceId: full.id, ...replaced }
+            metadata: { source: 'Apple Music', sourceId: full.id, ...identity }
         })
     }
 }

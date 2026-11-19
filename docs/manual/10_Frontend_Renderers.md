@@ -14,6 +14,7 @@ To keep the main View classes (like `SeriesView` and `InventoryView`) maintainab
     *   `renderLoadingProgress(progress)`: Centralized visual for the loading spinner and progress bar.
 *   **Not in this file**:
     *   `AlbumCardRenderer.renderVisualHeader(album)`: Reusable component for the album cover and action bar.
+    *   `AlbumCardRenderer.renderBadges(album)` (F55, slice 2): what goes in the badges row of the grid card and of the list card: the ranking badge and, for an album accepted by the second tier of the identity rule (the catalog only has the title asked for with a subtitle), the one line of `identityNotice` (`models/askedAlbum.js`).
     *   `Card.renderRankingBadge(album)` (`components/ui/Card.js`): Logic for displaying badges. Uses a "Split Row" layout:
         *   **Top**: BestEverAlbums
         *   **Bottom**: Spotify (Green) | User Rank (Blue)

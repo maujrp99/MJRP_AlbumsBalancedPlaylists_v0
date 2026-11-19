@@ -218,7 +218,7 @@ flowchart TD
 -   **Heuristics**:
     -   **Search**: Uses the site's `suggest.php` endpoint first; its results are labelled "Title by Artist", so most albums are accepted with no page load.
     -   **Fallback**: Standard HTML search via `search.php`; each album link it lists is opened and read.
-    -   **Acceptance (F55, slice 1)**: one rule, `shared/albumIdentity.js`, at every point: the label, the page (`<title>` and `h1`) or the link on the artist's page is read into `{ title, artist }` and the rule answers. The title must match on its own (an edition note such as "(Deluxe Edition)" is dropped; "Core" is not "Core Memories"), and the artist must match. No result passes: "not found", never another album of the artist.
+    -   **Acceptance (F55, slice 1)**: one rule, `shared/albumIdentity.js`, at every point: the label, the page (`<title>` and `h1`) or the link on the artist's page is read into `{ title, artist }` and the rule answers. The title must match on its own (an edition note such as "(Deluxe Edition)" is dropped; "Core" is not "Core Memories"), and the artist must match. No result passes: "not found", never another album of the artist. Since slice 2 the rule has a second tier (the title asked for before a subtitle, when it is the only such album): the suggestions and the artist's page get it from `pickAlbum`; a page checked alone (`pageIsTheAlbum`) accepts the first tier only, because the HTML search opens one page at a time and stops at the first it accepts.
 -   **Parsers**:
     -   `parseChartRankingById`: Extracts ratings from chart tables (looking for "Rating: 84 (398 votes)").
     -   `parseAlbumRanking`: HTML fallback if no chart table found.
@@ -255,7 +255,7 @@ sequenceDiagram
 ### Logic
 -   **Auth**: Client Credentials Flow (`grant_type: client_credentials`) to get a server-side Access Token.
 -   **Workflow**:
-    1.  `findSpotifyAlbum`: searches `album:{title} artist:{name}` (5 results), then the cleaned title, then the albums of the artist (20). The searches only list candidates; the one identity rule (`shared/albumIdentity.js`) accepts the album asked for or none (F55, slice 1). Before F55 the first result of the search was taken as it came, and the artist-only search broke on a name that was never imported.
+    1.  `findSpotifyAlbum`: searches `album:{title} artist:{name}` (5 results), then the cleaned title, then the albums of the artist (20). The searches only list candidates; the one identity rule (`shared/albumIdentity.js`) accepts the album asked for or none (F55, slice 1), with the rule's second tier per search since slice 2. Before F55 the first result of the search was taken as it came, and the artist-only search broke on a name that was never imported.
     2.  Get Album (`/v1/albums/{id}`) to read the track IDs.
     3.  **Batch Request**: Query `/v1/tracks` with up to 50 IDs to get the full track objects (which contain the `popularity` field).
     4.  **Output**: Maps `popularity` (0-100) directly to `rating`.

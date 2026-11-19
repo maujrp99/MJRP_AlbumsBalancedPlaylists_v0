@@ -63,7 +63,7 @@ The Service Layer orchestrates complex operations and state transitions, isolati
     2.  **Search 1**: `q=artist:Pink Floyd album:<clean title>` (5 results).
     3.  **Search 2**: the title as written, when cleaning changed it.
     4.  **Search 3**: `artist:Pink Floyd` (20 results).
-    5.  **Acceptance**: the searches only list candidates. After each one, the one identity rule (`shared/albumIdentity.js`, through `models/askedAlbum.js`) picks the album asked for among them: the title must match on its own, the artist must match, the plain album comes before an edition. No candidate passes all three searches: `null`.
+    5.  **Acceptance**: the searches only list candidates. After each one, the one identity rule (`shared/albumIdentity.js`, through `models/askedAlbum.js`) picks the album asked for among them: the title must match on its own, the artist must match, the plain album comes before an edition. When a search lists no such album and exactly one album has the title asked for before a subtitle, that one is taken (the rule's second tier, F55 slice 2). No candidate passes all three searches: `null`.
 *   **What it no longer does**: take the first result when nothing matched, accept a title that contains the other, or score by Levenshtein distance. Those three let another album of the same artist stand in for the album asked for (UAT-184).
 
 #### B. Enrichment Flow (`enrichAlbumData`)
@@ -113,4 +113,4 @@ sequenceDiagram
 **Type**: Domain Entities
 
 -   **`Album.js`**: Core entity. Aggregates tracks, manages `original` vs `acclaim` order.
--   **`askedAlbum.js`**: The app's side of the one identity rule (`shared/albumIdentity.js`): reads a stored query into what was asked, and an Apple Music, Spotify or local-dataset album into a candidate, each as `{ artist, title, year }`. It replaced `AlbumIdentity.js` (a confidence score), removed in F55.
+-   **`askedAlbum.js`**: The app's side of the one identity rule (`shared/albumIdentity.js`): reads a stored query into what was asked, and an Apple Music, Spotify or local-dataset album into a candidate, each as `{ artist, title, year }`. Since slice 2 it also reads an album the app keeps (`keptAlbum`), says which query of a series asked for an album (`indexOfQueryFor`, `alreadyAskedFor`) and gives the one-line notice of an album accepted by the second tier (`identityNotice`). It replaced `AlbumIdentity.js` (a confidence score), removed in F55.
