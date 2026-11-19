@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 20:05] session — F56 junto com a `main`: dois testes do método retirado saem
+
+A F52 fatia 3 tinha consertado `adoptAlbum`; a F56 retirou o método (o «Refetch» agora é `reloadAlbum`, pela fila). No encontro dos dois ramos ficou a versão da F56, e os dois testes do método retirado saíram.
+
 ## [2026-11-19 20:02] session — F56: spec, plano, tarefas, arquitetura, ADR-0019, comportamento e manual escritos no ramo
 
 Ramo `fix/f56-screens-load-through-the-service`. A pasta da F56 preenchida para o que foi construído (9 REQ com `verified_by`, 15 tarefas; abertas a prova no navegador com os tempos, do integrador, e o julgamento do MJRP); o diagnóstico com arquivo e linha e a escolha entre «um contexto por tela» e «juntar-se à geração em vigor» estão no plano. `docs/specs/arch.md` ganhou a seção «Toda tela pede os álbuns ao serviço de carga (F56)»; a lista «Not done yet» da ADR-0019 diz o que a F56 fechou (decisões 1 e 7) e o que ficou (o botão «Enrich Data» e a fila do Spotify em segundo plano ainda pedem por fora da fila); `docs/specs/behavior.md` tem os estados do blend, das playlists e da tela de álbuns (cinco novos); manual 01, 06, 07, 08, 15, 17, 18, 19, 21 e 99 corrigidos. O status da ADR e o `docs/specs/uat.md` não foram tocados.

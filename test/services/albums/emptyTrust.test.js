@@ -178,31 +178,6 @@ describe('AlbumLoadService: the reason reaches the record, and a failure never d
         expect(acclaimSaves(cache)).toEqual([])
         expect(store.getEntries('s1')[0].enrichment.acclaim).toBe('failed')
     })
-
-    describe('"Refetch" of one album (adoptAlbum)', () => {
-        const loaded = async () => {
-            const built = build({ enrich: async (album) => ({ status: 'empty', reason: 'not_found', album }) })
-            await load(built.service)
-            built.cache.saveEnrichment.mockClear()
-            return built
-        }
-
-        it('with ratings: the album replaces the loaded one and the source is saved and shown as done', async () => {
-            const { service, cache, store } = await loaded()
-            await service.adoptAlbum({ id: 'a1', title: 'One', tracks: [], bestEverUrl: 'https://bea/1', acclaim: { hasRatings: true } })
-
-            expect(acclaimSaves(cache)[0].slice(3)).toEqual(['done', { reason: null }])
-            expect(store.getEntries('s1')[0].enrichment.acclaim).toBe('done')
-            expect(store.getEntries('s1')[0].album.bestEverUrl).toBe('https://bea/1')
-        })
-
-        it('without ratings (the source had none, or the refetch failed): nothing is saved as "done"', async () => {
-            const { service, cache, store } = await loaded()
-            await service.adoptAlbum({ id: 'a1', title: 'One', tracks: [] })
-
-            expect(acclaimSaves(cache)).toEqual([])
-            expect(store.getEntries('s1')[0].enrichment.acclaim).toBe('empty')
-            expect(store.getEntries('s1')[0].album).toMatchObject({ id: 'a1' })
-        })
-    })
+    // "Refetch" of one album: since F56 it is AlbumLoadService.reloadAlbum, through the queue; the
+    // source's own answer decides what is kept (test/services/albums/AlbumLoadService.guests.test.js).
 })
