@@ -7,6 +7,7 @@
 
 import { musicKitService } from '../MusicKitService.js'; // Legacy service for raw API calls for now
 import { serverFetch } from '../../api/serverFetch.js'
+import { readServerResult, ResultKind } from '../../api/serverResult.js'
 import { ArtistNormalizer } from './ArtistNormalizer.js';
 import { ScoreCalculator } from './ScoreCalculator.js';
 import { EditionFilter } from './EditionFilter.js';
@@ -105,36 +106,48 @@ export class AlbumSearchService {
 
     /**
      * Sprint 17.75-B: Fetch AI studio albums with caching
+     * Only what the AI answered is remembered (a list, or "there is none"). When it could not be
+     * known (F52), the caller gets an empty list for this once and the next search asks again.
      * @param {string} artistName - Normalized artist name
      * @returns {Promise<string[]>} - Array of AI-verified studio album titles
      */
     async _fetchAIWithCache(artistName) {
-        // Cache check
-        if (this.aiCache.has(artistName)) {
-            // console.log(`[AI] Cache hit for "${artistName}"`);
-            return this.aiCache.get(artistName);
-        }
+        if (this.aiCache.has(artistName)) return this.aiCache.get(artistName);
 
-        // Fetch and cache
-        // console.log(`[AI] Cache miss for "${artistName}", fetching...`);
-        const aiList = await this._fetchAIStudioAlbums(artistName);
-        this.aiCache.set(artistName, aiList);
-        return aiList;
+        const { albums, known } = await this._fetchAIStudioAlbums(artistName);
+        if (known) this.aiCache.set(artistName, albums);
+        return albums;
     }
 
+    /**
+     * One ask to POST /api/ai/studio-albums (a paid route: it is never asked again by itself).
+     * @returns {Promise<{ albums: string[], known: boolean }>} known is false when the server or
+     *          the AI failed: the empty list then means "not known", not "the artist has none"
+     */
     async _fetchAIStudioAlbums(artistName) {
+        const notKnown = (reason) => {
+            console.warn(`[AlbumSearch] AI list not available (${reason}), falling back to heuristics`);
+            return { albums: [], known: false };
+        };
+        const listOf = (albums) => ({ albums: Array.isArray(albums) ? albums : [], known: true });
+
+        let result;
         try {
             const res = await serverFetch('/api/ai/studio-albums', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ artistName })
             });
-            const data = await res.json();
-            return data.albums || [];
+            result = await readServerResult(res);
         } catch (err) {
-            console.warn('[AlbumSearch] AI fetch failed, falling back to heuristics:', err);
-            return [];
+            return notKnown(err?.message || err);
         }
+
+        if (result.kind === ResultKind.FAILED) return notKnown(`HTTP ${result.status} ${result.code}`);
+        if (result.kind !== ResultKind.LEGACY) return listOf(result.data?.albums);
+        // The server before F52 answered 200 with { albums: [], error } when it failed
+        if (result.body?.error) return notKnown('the server reported an error');
+        return listOf(result.body?.albums);
     }
 
     /**
@@ -145,8 +158,10 @@ export class AlbumSearchService {
         console.log(`[AlbumSearch] Classifying ${albums.length} albums for "${artistName}"`);
 
         // Sprint 17.75-B: Pass lazy AI fetcher in context
+        // One ask per search, even when it fails: each ask of the list may be paid
+        let aiList = null;
         const context = {
-            getAiList: () => this._fetchAIWithCache(artistName)
+            getAiList: () => (aiList ??= this._fetchAIWithCache(artistName))
         };
 
         // Classify all albums (some may trigger async AI fetch)

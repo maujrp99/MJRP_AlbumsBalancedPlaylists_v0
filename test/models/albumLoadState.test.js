@@ -3,7 +3,7 @@
  */
 import { describe, it, expect } from 'vitest'
 import {
-    AlbumStatus, EnrichmentStatus, SeriesStatus, FailureReason,
+    AlbumStatus, EnrichmentStatus, SeriesStatus, FailureReason, HoldReason, holdNotice,
     queryKey, createEntry, isInFlight, isEnriching, deriveSeriesState
 } from '../../public/js/models/albumLoadState.js'
 
@@ -110,5 +110,26 @@ describe('isInFlight and isEnriching', () => {
 describe('FailureReason', () => {
     it('names not-found, timeout and network apart', () => {
         expect(new Set(Object.values(FailureReason)).size).toBe(3)
+    })
+})
+
+describe('holdNotice (F52): what the person reads when the server said "sign in" or "wait"', () => {
+    it('"sign in" asks to sign in again, as a warning', () => {
+        const notice = holdNotice({ reason: HoldReason.UNAUTHORIZED, until: null })
+        expect(notice.type).toBe('warning')
+        expect(notice.message).toMatch(/sign in again/i)
+    })
+
+    it('"wait" says the load is paused and when it resumes', () => {
+        const notice = holdNotice({ reason: HoldReason.RATE_LIMITED, until: 1000 }, (ms) => 'T' + ms)
+        expect(notice.type).toBe('info')
+        expect(notice.message).toContain('paused')
+        expect(notice.message).toContain('T1000')
+    })
+
+    it('never says an album failed: a hold is not a failure', () => {
+        for (const reason of Object.values(HoldReason)) {
+            expect(holdNotice({ reason, until: null }).message).not.toMatch(/fail/i)
+        }
     })
 })

@@ -17,11 +17,16 @@
  *   cache.get(query)                           -> Promise<{ album, enrichment } | null>
  *   cache.saveBase(query, album)               -> Promise<void>
  *   cache.saveEnrichment(query, album, source, status) -> Promise<void>
+ *
+ * Hold (F52): a port may throw an error with `hold: { reason, retryAfterMs? }` when the app's own
+ * server said "sign in" (reason 'unauthorized', HTTP 401) or "wait" ('rate_limited', HTTP 429).
+ * That is not a failure of the album: nothing is marked failed, the ask waits and goes again when
+ * the hold ends, and the slow queue (which only talks to that server) starts nothing meanwhile.
  */
 
 import { TaskQueue, TaskTimeoutError, TaskCancelledError } from '../../utils/TaskQueue.js'
 import {
-    AlbumStatus, EnrichmentStatus, FailureReason, ENRICHMENT_SOURCES, createEntry, queryKey
+    AlbumStatus, EnrichmentStatus, FailureReason, HoldReason, ENRICHMENT_SOURCES, createEntry, queryKey
 } from '../../models/albumLoadState.js'
 
 /** The catalog has no album for this query. */
@@ -54,13 +59,20 @@ export class AlbumLoadService {
      * @param {Object} deps.enrichers - { acclaim, popularity, userRanking }
      * @param {Object} deps.cache
      * @param {Object} [deps.limits]
+     * @param {Function} [deps.onHold] - ({ reason, until }) => void, called when a hold starts or
+     *        becomes "sign in" ("sign in" once per load); `until` is a time in ms, or null for "sign in"
+     * @param {Function} [deps.now]
      */
-    constructor({ store, catalog, enrichers, cache, limits = LOAD_LIMITS }) {
+    constructor({ store, catalog, enrichers, cache, limits = LOAD_LIMITS, onHold = null, now = () => Date.now() }) {
         this.store = store
         this.catalog = catalog
         this.enrichers = enrichers
         this.cache = cache
         this.limits = { ...LOAD_LIMITS, ...limits }
+        this.onHold = onHold
+        this.now = now
+        this._hold = null // { reason, until, timer, ended, end } while the server asked to hold
+        this._saidSignIn = false // "sign in" is told once per load, however many times it is heard
 
         this.fastQueue = new TaskQueue({ concurrency: this.limits.findConcurrency })
         this.sourceQueue = new TaskQueue({ concurrency: this.limits.sourceConcurrency })
@@ -89,6 +101,7 @@ export class AlbumLoadService {
      */
     load({ scopeKey, series, fresh = false }) {
         if (fresh || scopeKey !== this.scopeKey) this._startGeneration(scopeKey)
+        this._endHoldOf(HoldReason.UNAUTHORIZED) // the screen asked again: the login may be there now
         this._ignoreCache = fresh
 
         this.store.setSeriesOrder(series.map(s => s.id))
@@ -114,6 +127,7 @@ export class AlbumLoadService {
 
     /** Try again the albums and the enrichment sources of a series that failed. */
     retryFailed(seriesId) {
+        this._endHoldOf(HoldReason.UNAUTHORIZED)
         this.store.getEntries(seriesId).forEach(entry => {
             const chainId = this._chainId(entry)
             if (this._scheduled.has(chainId)) return
@@ -177,10 +191,21 @@ export class AlbumLoadService {
         }
     }
 
+    /** The hold in force, for whoever shows it: { reason, until } or null. */
+    getHold() {
+        return this._hold ? { reason: this._hold.reason, until: this._hold.until } : null
+    }
+
+    /** End the hold now and ask again what was waiting (the person signed in, or asked to try). */
+    resume() {
+        this._endHold()
+    }
+
     /** Stop waiting for everything in flight. The next load starts a new generation. */
     stop() {
         this.scopeKey = null
         this.generation++
+        this._endHold()
         this._scheduled = new Map()
         this._queues().forEach(queue => queue.cancelAll())
     }
@@ -205,6 +230,8 @@ export class AlbumLoadService {
         this._queues().forEach(queue => queue.cancelAll())
         this.scopeKey = scopeKey
         this.generation++
+        this._endHold()
+        this._saidSignIn = false
         this._scheduled = new Map()
         this._asks = new Map()
         this.store.startGeneration(this.generation)
@@ -218,6 +245,88 @@ export class AlbumLoadService {
     _patch(generation, seriesId, key, patch) {
         if (!this._isCurrent(generation)) return false
         return this.store.patchEntry(seriesId, key, patch)
+    }
+
+    // =========================================
+    // HOLD: THE SERVER SAID "WAIT" OR "SIGN IN"
+    // =========================================
+
+    /**
+     * Add a task to a queue. If it ends with an error that carries a hold, nothing has failed: wait
+     * for the hold to end and add it again. Any other error, and a hold of an older load, goes on.
+     */
+    async _addHeld(queue, task, options, generation) {
+        // The hold starts inside the task, before the queue frees its slot: no other ask starts in between
+        const heldTask = async (context) => {
+            try {
+                return await task(context)
+            } catch (error) {
+                if (error?.hold && this._isCurrent(generation)) this._holdFor(error.hold, queue)
+                throw error
+            }
+        }
+        for (;;) {
+            try {
+                return await queue.add(heldTask, options)
+            } catch (error) {
+                if (!error?.hold || !this._isCurrent(generation)) throw error
+                if (this._hold) await this._hold.ended
+                if (!this._isCurrent(generation)) throw new TaskCancelledError()
+            }
+        }
+    }
+
+    /**
+     * Start a hold, or stretch the one in force. "Sign in" has no end of its own (resume(), a new
+     * load or a retry ends it) and wins over "wait"; "wait" ends by itself at the latest time asked.
+     */
+    _holdFor({ reason, retryAfterMs = 0 }, queue) {
+        const started = !this._hold
+        if (started) {
+            let end
+            const ended = new Promise(resolve => { end = resolve })
+            this._hold = { reason, until: null, timer: null, ended, end }
+        }
+        const hold = this._hold
+        const becameSignIn = reason === HoldReason.UNAUTHORIZED && hold.reason !== reason
+
+        if (reason === HoldReason.UNAUTHORIZED) {
+            clearTimeout(hold.timer)
+            Object.assign(hold, { reason, until: null, timer: null })
+        } else if (hold.reason !== HoldReason.UNAUTHORIZED) {
+            const until = this.now() + retryAfterMs
+            if (hold.until === null || until > hold.until) {
+                clearTimeout(hold.timer)
+                Object.assign(hold, { until, timer: setTimeout(() => this._endHold(), retryAfterMs) })
+            }
+        }
+
+        // The slow queue only talks to the app's server: it stops when that server said "wait" to it,
+        // or "sign in" to anyone. The other queues also reach other sources (Apple Music), so they go on.
+        if (queue === this.slowQueue || hold.reason === HoldReason.UNAUTHORIZED) this.slowQueue.pause()
+
+        if (started || becameSignIn) this._tellHold(hold)
+    }
+
+    /** One notice per hold; "sign in" only once per load, even if the screen asks and hears it again. */
+    _tellHold(hold) {
+        const signIn = hold.reason === HoldReason.UNAUTHORIZED
+        if (signIn && this._saidSignIn) return
+        if (signIn) this._saidSignIn = true
+        if (this.onHold) this.onHold({ reason: hold.reason, until: hold.until })
+    }
+
+    _endHold() {
+        const hold = this._hold
+        if (!hold) return
+        this._hold = null
+        clearTimeout(hold.timer)
+        this.slowQueue.resume()
+        hold.end()
+    }
+
+    _endHoldOf(reason) {
+        if (this._hold?.reason === reason) this._endHold()
     }
 
     // =========================================
@@ -237,9 +346,11 @@ export class AlbumLoadService {
 
         this._runChain(chainId, async () => {
             try {
-                await this.fastQueue.add(
+                await this._addHeld(
+                    this.fastQueue,
                     ({ signal }) => this._find(generation, seriesId, key, signal),
-                    { group: seriesId, priority, timeoutMs: this.limits.findTimeoutMs }
+                    { group: seriesId, priority, timeoutMs: this.limits.findTimeoutMs },
+                    generation
                 )
             } catch (error) {
                 this._failFind(generation, seriesId, key, error)
@@ -327,49 +438,72 @@ export class AlbumLoadService {
             return
         }
 
-        // Only the latest ask of a source for an album writes its answer (the same rule the
-        // generations follow, one level down): an older ask that answers later is dropped.
-        const askId = `${seriesId}|${key}|${source}`
-        const ask = (this._asks.get(askId) || 0) + 1
-        this._asks.set(askId, ask)
-        const isLatest = () => this._asks.get(askId) === ask
-
+        const isLatest = this._newAsk(`${seriesId}|${key}|${source}`)
         this._patch(generation, seriesId, key, { enrichment: { [source]: EnrichmentStatus.LOADING } })
-        const queue = SLOW_SOURCES.includes(source) ? this.slowQueue : this.sourceQueue
 
         try {
-            let given = null
-            const result = await queue.add(
-                ({ signal }) => {
-                    given = this.store.getEntry(seriesId, key).album
-                    return enricher.enrich(given, { signal })
-                },
-                { group: seriesId, priority, timeoutMs: this.limits.enrichTimeoutMs }
-            )
+            const answer = await this._askSource(enricher, source, { generation, seriesId, key, priority })
             if (!isLatest()) return
-
-            // The source worked on the album it was given. If another source published a newer
-            // album meanwhile, the answer is applied over that one, so no source undoes another.
-            let album = result.album || given
-            let base = given
-            while (typeof result.apply === 'function') {
-                const current = this.store.getEntry(seriesId, key)?.album
-                if (!current || current === base) break
-                base = current
-                album = await result.apply(current)
-            }
+            const album = await this._overNewestAlbum(answer, seriesId, key)
             if (!isLatest()) return
-
-            const status = result.status === EnrichmentStatus.DONE ? EnrichmentStatus.DONE : EnrichmentStatus.EMPTY
-            const published = this._patch(generation, seriesId, key, { album, enrichment: { [source]: status } })
-            if (published) {
-                await this.cache.saveEnrichment(entry.query, album, source, status)
-            }
+            await this._publishSource(generation, entry, source, album, answer.result.status)
         } catch (error) {
-            if (error instanceof TaskCancelledError) return
-            if (!isLatest()) return
+            if (error instanceof TaskCancelledError || !isLatest()) return
             console.warn(`[AlbumLoadService] ${source} failed for "${key}":`, error?.message || error)
             this._patch(generation, seriesId, key, { enrichment: { [source]: EnrichmentStatus.FAILED } })
         }
+    }
+
+    /**
+     * Only the latest ask of a source for an album writes its answer (the same rule the generations
+     * follow, one level down): an older ask that answers later is dropped.
+     * @returns {Function} () => boolean, true while this ask is still the latest
+     */
+    _newAsk(askId) {
+        const ask = (this._asks.get(askId) || 0) + 1
+        this._asks.set(askId, ask)
+        return () => this._asks.get(askId) === ask
+    }
+
+    /**
+     * Ask one source, on its queue, for the album the store has when the task starts.
+     * @returns {Promise<{ result: Object, given: Album }>}
+     */
+    async _askSource(enricher, source, { generation, seriesId, key, priority }) {
+        const queue = SLOW_SOURCES.includes(source) ? this.slowQueue : this.sourceQueue
+        let given = null
+        const result = await this._addHeld(
+            queue,
+            ({ signal }) => {
+                given = this.store.getEntry(seriesId, key).album
+                return enricher.enrich(given, { signal })
+            },
+            { group: seriesId, priority, timeoutMs: this.limits.enrichTimeoutMs },
+            generation
+        )
+        return { result, given }
+    }
+
+    /**
+     * The source worked on the album it was given. If another source published a newer album
+     * meanwhile, the answer is applied over that one, so no source undoes another.
+     */
+    async _overNewestAlbum({ result, given }, seriesId, key) {
+        let album = result.album || given
+        let base = given
+        while (typeof result.apply === 'function') {
+            const current = this.store.getEntry(seriesId, key)?.album
+            if (!current || current === base) break
+            base = current
+            album = await result.apply(current)
+        }
+        return album
+    }
+
+    /** Put the answer of a source on the screen and, if it got there, in the cache. */
+    async _publishSource(generation, entry, source, album, answered) {
+        const status = answered === EnrichmentStatus.DONE ? EnrichmentStatus.DONE : EnrichmentStatus.EMPTY
+        const published = this._patch(generation, entry.seriesId, entry.key, { album, enrichment: { [source]: status } })
+        if (published) await this.cache.saveEnrichment(entry.query, album, source, status)
     }
 }

@@ -129,6 +129,27 @@ describe('CatalogAdapter', () => {
         await expect(adapter.find('Artist - Album')).rejects.toBeInstanceOf(AlbumNotFoundError)
     })
 
+    it('says "not found" when the second source fails or answers that it has none', async () => {
+        const quiet = vi.spyOn(console, 'warn').mockImplementation(() => { })
+        const nothingInApple = { searchAlbums: vi.fn(async () => []) }
+        const failing = build({ musicKit: nothingInApple, fetchFromServer: vi.fn(async () => { throw new Error('POST /generate answered HTTP 424') }) })
+        const none = build({ musicKit: nothingInApple, fetchFromServer: vi.fn(async () => null) })
+
+        await expect(failing.find('Artist - Album')).rejects.toBeInstanceOf(AlbumNotFoundError)
+        await expect(none.find('Artist - Album')).rejects.toBeInstanceOf(AlbumNotFoundError)
+        quiet.mockRestore()
+    })
+
+    it('when our own server says "sign in" or "wait" (F52), that is not an answer about the album: the error goes on, with its hold', async () => {
+        const held = Object.assign(new Error('POST /generate answered HTTP 429'), { hold: { reason: 'rate_limited', retryAfterMs: 1000 } })
+        const adapter = build({ musicKit: { searchAlbums: vi.fn(async () => []) }, fetchFromServer: vi.fn(async () => { throw held }) })
+
+        const error = await adapter.find('Artist - Album').catch(e => e)
+
+        expect(error).toBe(held)
+        expect(error).not.toBeInstanceOf(AlbumNotFoundError)
+    })
+
     it('says the search failed, not "not found", when Apple Music keeps failing, and never asks the paid second source', async () => {
         const fetchFromServer = vi.fn(async () => makeAlbum())
         const adapter = build({ musicKit: { searchAlbums: vi.fn(async () => { throw new Error('429') }) }, fetchFromServer })
@@ -154,7 +175,7 @@ describe('enrichers', () => {
         const album = makeAlbum()
         const before = snapshot(album)
         const enricher = new AcclaimEnricher({
-            requestRatings: vi.fn(async () => ({ any: 'data' })),
+            requestRatings: vi.fn(async () => ({ kind: 'found', data: { any: 'data' } })),
             applyRatings: (copy) => {
                 copy.bestEverUrl = 'https://bea/1'
                 copy.acclaim = { hasRatings: true }
@@ -172,11 +193,62 @@ describe('enrichers', () => {
     })
 
     it('AcclaimEnricher: "the source has no rating" is empty; a request that failed throws', async () => {
-        const empty = new AcclaimEnricher({ requestRatings: async () => ({}), applyRatings: () => { } })
+        const empty = new AcclaimEnricher({ requestRatings: async () => ({ kind: 'legacy', data: {} }), applyRatings: () => { } })
         const broken = new AcclaimEnricher({ requestRatings: async () => null, applyRatings: () => { } })
 
         await expect(empty.enrich(makeAlbum())).resolves.toMatchObject({ status: 'empty' })
         await expect(broken.enrich(makeAlbum())).rejects.toThrow('failed')
+    })
+
+    describe('AcclaimEnricher and the contract of the server (F52)', () => {
+        /** What applyBEAData does with the page of an album: the address always, the ratings when there are any. */
+        const applyPage = (copy, data) => {
+            if (data.bestEverInfo?.url) copy.bestEverUrl = data.bestEverInfo.url
+            const rated = (data.trackRatings || []).filter(r => r.rating !== null)
+            rated.forEach(r => { copy.tracks.find(t => t.title === r.title).rating = r.rating })
+            if (rated.length > 0) copy.acclaim = { hasRatings: true }
+        }
+        const pageWithoutRatings = { bestEverInfo: { url: 'https://bea/1' }, trackRatings: [{ title: 'One', rating: null }] }
+        const pageWithRatings = { bestEverInfo: { url: 'https://bea/1' }, trackRatings: [{ title: 'One', rating: 80 }] }
+        const enricherFor = (answer) => new AcclaimEnricher({ requestRatings: vi.fn(async () => answer), applyRatings: vi.fn(applyPage) })
+
+        it('found is done, with the ratings applied to a copy', async () => {
+            const result = await enricherFor({ kind: 'found', data: pageWithRatings }).enrich(makeAlbum())
+            expect(result.status).toBe('done')
+            expect(result.album.tracks.find(t => t.title === 'One').rating).toBe(80)
+        })
+
+        it('not_found is empty: the album is handed back as it came, and nothing is applied', async () => {
+            const album = makeAlbum()
+            const enricher = enricherFor({ kind: 'not_found', data: { bestEverInfo: null, trackRatings: [] } })
+
+            const result = await enricher.enrich(album)
+
+            expect(result).toMatchObject({ status: 'empty', album })
+            expect(enricher.applyRatings).not.toHaveBeenCalled()
+            expect(result.apply(album)).toBe(album)
+        })
+
+        it('no_ratings is empty too: a page with zero ratings no longer counts as done, and its address is not written (it would read as "has ratings" next time)', async () => {
+            const album = makeAlbum()
+            const result = await enricherFor({ kind: 'no_ratings', data: pageWithoutRatings }).enrich(album)
+
+            expect(result).toMatchObject({ status: 'empty', album })
+            expect(result.album.bestEverUrl).toBeFalsy()
+        })
+
+        it('the server before F52 (legacy) follows the rule of before: a page counts as done even with zero ratings, and no page is empty', async () => {
+            expect((await enricherFor({ kind: 'legacy', data: pageWithoutRatings }).enrich(makeAlbum())).status).toBe('done')
+            expect((await enricherFor({ kind: 'legacy', data: pageWithRatings }).enrich(makeAlbum())).status).toBe('done')
+            expect((await enricherFor({ kind: 'legacy', data: { bestEverInfo: null, trackRatings: [] } }).enrich(makeAlbum())).status).toBe('empty')
+        })
+
+        it('a failure ends as a failure: what the request threw goes on as it is (its code and its hold with it)', async () => {
+            const failure = Object.assign(new Error('POST /enrich-album answered HTTP 504 (upstream_timeout)'), { code: 'upstream_timeout', hold: null })
+            const enricher = new AcclaimEnricher({ requestRatings: async () => { throw failure }, applyRatings: () => { } })
+
+            await expect(enricher.enrich(makeAlbum())).rejects.toBe(failure)
+        })
     })
 
     it('AcclaimEnricher: an album that already has its ratings is not asked for again', async () => {

@@ -58,15 +58,7 @@ export class CatalogAdapter {
         // Only "Apple Music has no such album" goes to the second source, which uses paid AI.
         let album = await this._findInAppleWithRetry(query, signal)
 
-        if (!album) {
-            try {
-                album = await this.fetchFromServer(query)
-            } catch (error) {
-                // The album ends as "not found", but the reason is not hidden: the status is in the message
-                console.warn(`[CatalogAdapter] second source failed for "${this._label(query)}":`, error?.message || error)
-                album = null
-            }
-        }
+        if (!album) album = await this._findInServer(query)
         if (!album) throw new AlbumNotFoundError(`No catalog has "${this._label(query)}"`)
 
         if (!album.coverUrl && !album.artworkTemplate) {
@@ -74,6 +66,23 @@ export class CatalogAdapter {
         }
         if (seriesId) album.seriesIds = [seriesId]
         return album
+    }
+
+    /**
+     * The second source (the app's server, paid AI).
+     * @returns {Promise<Album|null>} null when it has no such album or when it failed
+     * @throws the error as it came when it carries a `hold`: our own server said "sign in" or "wait"
+     *         (F52), which says nothing about the album, so the load holds and asks again
+     */
+    async _findInServer(query) {
+        try {
+            return await this.fetchFromServer(query)
+        } catch (error) {
+            if (error?.hold) throw error
+            // The album ends as "not found", but the reason is not hidden: the status is in the message
+            console.warn(`[CatalogAdapter] second source failed for "${this._label(query)}":`, error?.message || error)
+            return null
+        }
     }
 
     /**

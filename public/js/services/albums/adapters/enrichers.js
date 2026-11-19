@@ -5,12 +5,20 @@
  * `apply(other)` puts the same answer on another album (a copy again). The load uses it when a
  * newer album was published while the source was working, so no source undoes another.
  * A source that breaks throws; "the source has nothing" is 'empty'.
+ *
+ * The ratings come from the app's server, whose answer says which of the two it is (F52):
+ * 'not_found' and 'no_ratings' are 'empty'; a failure is thrown as it came, with its code and its
+ * hold, so the load marks the source as failed (or holds) and never stores it as "has none".
  */
 
 import { cloneAlbum } from '../../../models/cloneAlbum.js'
 
 const DONE = 'done'
 const EMPTY = 'empty'
+
+/** What the server may answer about the ratings of an album (api/serverResult.js). */
+const SOURCE_HAS_NONE = new Set(['not_found', 'no_ratings'])
+const LEGACY = 'legacy'
 
 /** The answer changes nothing in the album. */
 const unchanged = (album) => album
@@ -19,7 +27,9 @@ const unchanged = (album) => album
 export class AcclaimEnricher {
     /**
      * @param {Object} deps
-     * @param {Function} deps.requestRatings - ({ title, artist, tracks }) => Promise<data|null>; null means the request failed
+     * @param {Function} deps.requestRatings - ({ title, artist, tracks }) => Promise<{ kind, data }>;
+     *        kind is 'found' | 'not_found' | 'no_ratings', or 'legacy' from the server before F52.
+     *        It throws when the request failed.
      * @param {Function} deps.applyRatings - (album, data) => void, writes the data into the album given
      */
     constructor({ requestRatings, applyRatings }) {
@@ -30,8 +40,14 @@ export class AcclaimEnricher {
     async enrich(album) {
         if (album.bestEverUrl) return { status: DONE, album, apply: unchanged }
 
-        const data = await this.requestRatings({ title: album.title, artist: album.artist, tracks: album.tracks || [] })
-        if (data === null || data === undefined) throw new Error('The ratings request failed')
+        const answer = await this.requestRatings({ title: album.title, artist: album.artist, tracks: album.tracks || [] })
+        if (!answer) throw new Error('The ratings request failed')
+
+        // The source answered and has no ratings for this album: nothing is written into it. A page
+        // with zero ratings is not "done" (it was, before F52), and its address is not kept, because
+        // an album with that address reads as "already has its ratings".
+        if (SOURCE_HAS_NONE.has(answer.kind)) return { status: EMPTY, album, apply: unchanged }
+        const data = answer.data || {}
 
         const apply = (target) => {
             const copy = cloneAlbum(target)
@@ -49,7 +65,9 @@ export class AcclaimEnricher {
         }
 
         const copy = apply(album)
-        return { status: copy.acclaim?.hasRatings || copy.bestEverUrl ? DONE : EMPTY, album: copy, apply }
+        // The server before F52 does not say whether the source has ratings: the rule of before
+        const hasData = answer.kind === LEGACY ? Boolean(copy.acclaim?.hasRatings || copy.bestEverUrl) : true
+        return { status: hasData ? DONE : EMPTY, album: copy, apply }
     }
 }
 

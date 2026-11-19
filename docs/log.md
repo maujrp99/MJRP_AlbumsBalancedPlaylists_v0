@@ -3,6 +3,20 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 17:33] session — F52 fatia 1, app: um leitor da resposta do servidor, falha como falha, 401 e 429 seguram a carga (UAT-23)
+
+Segunda metade da fatia 1 da F52, no mesmo ramo (`fix/f52-server-tells-the-truth`): o lado do app.
+
+- **Um módulo lê a resposta do servidor** (`public/js/api/serverResult.js`, puro): `found`, `not_found`, `no_ratings`, ou `failed` com `code`, `retryable`, `status` e `hold`. Um 200 sem `outcome` é o servidor antigo (`legacy`) e segue a regra de antes; o erro antigo `{ error: 'texto' }` é lido pelo status.
+- **Repetir é decidido pelo campo `retryable`**, nunca só pelo status (`api/client.js`, `_fetchAlbumFromAPI`): um 500 que diz «não repita» é uma chamada paga só.
+- **Notas** (`adapters/enrichers.js`): falha é lançada como veio, e a carga marca a fonte como `failed`; `not_found` e `no_ratings` viram `empty`. **Mudança de comportamento:** página com zero notas casadas deixa de contar como `done` com o servidor novo, o que muda o filtro «por fonte» para esses álbuns.
+- **Lista de álbuns por IA** (`AlbumSearchService`): a falha não fica mais guardada como «a IA não conhece álbuns» pela sessão; uma busca pergunta a lista uma vez só.
+- **401 e 429 do próprio servidor seguram a carga** (`AlbumLoadService._addHeld`, `TaskQueue.pause/resume`): nenhum álbum é marcado como falha; no 429 a carga volta no prazo do `Retry-After`; no 401 ela para de perguntar até `resume()`, uma nova carga ou «tentar de novo», com um aviso só. A fila das notas pausa; a da busca de álbuns não (ela também fala com a Apple Music).
+- **`_enrichOne` foi dividido** (tinha complexidade 21): `_newAsk`, `_askSource`, `_overNewestAlbum`, `_publishSource`.
+- **Conferido:** `npx vitest run` com 786 testes (eram 590), `npx vite build` compila. As duas direções da publicação separada têm teste: site novo contra servidor antigo (`serverResult.test.js`, `client.test.js`, `AlbumSearchService.aiList.test.js`) e aba antiga contra servidor novo (`oldTabAgainstNewServer.test.js`).
+- **Não visto:** nada foi conferido num navegador nem publicado. **Limite conhecido:** uma aba antiga deixa de ler a lista por IA do servidor novo até ser recarregada (a lista foi para `data.albums`) e classifica sem ela.
+- **Não mexido:** `EMPTY_TRUSTED_FOR_MS` (1 hora) e a versão do registro guardado.
+
 ## [2026-11-19 17:31] session — F52 fatia 1, servidor: um contrato de resposta, o raspador lança a falha, tabela do provedor de IA (UAT-23, UAT-181)
 
 Ramo `fix/f52-server-tells-the-truth`, de um agente auxiliar, da ponta da `main` (`be346b8`). Primeira metade da fatia 1 da F52 (seção 11 da proposta em `docs/specs/arch.md`): o lado do servidor.

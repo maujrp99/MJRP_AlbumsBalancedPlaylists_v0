@@ -1,7 +1,8 @@
 /**
  * TaskQueue
  *
- * Runs async tasks with a limit of tasks at once, a priority, a deadline per task and cancellation.
+ * Runs async tasks with a limit of tasks at once, a priority, a deadline per task, cancellation,
+ * and a pause (no new task starts until it is resumed).
  * It knows nothing about albums, the network or the screen: it receives functions and returns promises.
  * (arch.md, "Carga da tela de álbuns": the queue behind the album load; patterns DP-20 pure core, DP-22 Timeout.)
  *
@@ -39,6 +40,27 @@ export class TaskQueue {
         this._running = new Set()
         this._sequence = 0
         this._idleResolvers = []
+        this._paused = false
+    }
+
+    /** True while the queue starts no new task. */
+    get paused() {
+        return this._paused
+    }
+
+    /**
+     * Start no new task until resume(). What is running goes on to its end; what is added waits.
+     * A paused queue with tasks waiting is not idle. cancelAll() still drops everything; it does not resume.
+     */
+    pause() {
+        this._paused = true
+    }
+
+    /** Start the waiting tasks again. */
+    resume() {
+        if (!this._paused) return
+        this._paused = false
+        this._startNext()
     }
 
     /** Tasks waiting for a slot. */
@@ -99,7 +121,7 @@ export class TaskQueue {
     }
 
     _startNext() {
-        while (this._running.size < this.concurrency && this._waiting.length > 0) {
+        while (!this._paused && this._running.size < this.concurrency && this._waiting.length > 0) {
             this._run(this._takeNext())
         }
     }

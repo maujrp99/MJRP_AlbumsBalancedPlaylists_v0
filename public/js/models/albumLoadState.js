@@ -32,6 +32,23 @@ export const EnrichmentStatus = Object.freeze({
     FAILED: 'failed'    // the source did not answer
 })
 
+/** Why the load is on hold: the app's own server said "sign in" (401) or "wait" (429). Nothing failed. */
+export const HoldReason = Object.freeze({ UNAUTHORIZED: 'unauthorized', RATE_LIMITED: 'rate_limited' })
+
+/**
+ * What to tell the person when the load goes on hold.
+ * @param {{ reason: string, until: number|null }} hold - `until` is a time in ms, or null
+ * @param {Function} [formatTime] - (ms) => text
+ * @returns {{ message: string, type: string, durationMs: number }}
+ */
+export function holdNotice(hold, formatTime = (ms) => new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) {
+    if (hold.reason === HoldReason.UNAUTHORIZED) {
+        return { message: 'Your sign-in could not be confirmed. Sign in again to keep loading ratings.', type: 'warning', durationMs: 10000 }
+    }
+    const when = hold.until ? ` It resumes by itself at ${formatTime(hold.until)}.` : ''
+    return { message: `The server asked to slow down. Loading is paused.${when}`, type: 'info', durationMs: 10000 }
+}
+
 /** The enrichment sources of an album. */
 export const ENRICHMENT_SOURCES = Object.freeze(['acclaim', 'popularity', 'userRanking'])
 
