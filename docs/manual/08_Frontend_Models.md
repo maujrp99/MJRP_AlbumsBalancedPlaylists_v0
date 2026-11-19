@@ -47,9 +47,9 @@ sequenceDiagram
 | :--- | :--- |
 | `services/albums/AlbumLoadService.js` | The one owner of the load: generations, reconciliation, find then enrich, retry. Imports no network, Firestore or screen. |
 | `services/albums/albumLoading.js` | Puts the service together with its real sources, and projects the load store into `stores/albums.js`. |
-| `services/albums/adapters/CatalogAdapter.js` | Apple Music (by the chosen edition id, else by name), with the server `/api/generate` only when Apple has no such album. Since F55, slice 1, both are checked by the one identity rule: an id that leads to another album is not obeyed (the album is searched by name, and `metadata.replacedSourceId` says which id was not used; nothing is written to the series yet), and the search by name takes only the album asked for among its results. Retries Apple with growing waits. |
+| `services/albums/adapters/CatalogAdapter.js` | Apple Music (by the chosen edition id, else by name), with the server `/api/generate` only when Apple has no such album. Since F55, slice 1, both are checked by the one identity rule: an id that leads to another album is not obeyed (the album is searched by name, and `metadata.replacedSourceId` says which id was not used), and the search by name takes only the album asked for among its results. Since slice 2: the album carries `metadata.identityReason` (the reason of the rule it was accepted by); a title the catalog only has with a subtitle is accepted by the rule's second tier; a stored id that leads to such an album is not believed alone (the search decides); and `SeriesFactsService` writes the new id back to the series. Retries Apple with growing waits. |
 | `services/albums/adapters/enrichers.js` | Ratings, popularity and the person's own ranking; each returns a new album. |
-| `services/albums/adapters/AlbumCacheAdapter.js` | One record per album query: the base album and one status per source. |
+| `services/albums/adapters/AlbumCacheAdapter.js` | One record per album query: the base album and one status per source. Since F55, slice 2, a read drops a record that is not the album the query asks for. |
 | `utils/TaskQueue.js` | Concurrency limit, priority, deadline per task, cancellation. Knows nothing about albums. |
 | `stores/albumLoad.js` | The one owner of "album asked for -> album and its load state". Pure state. |
 
@@ -75,14 +75,15 @@ No DOM, no store, no service: each imports only other models (checked by `test/a
 *   **User Ranking (Sprint 20)**: Implements `setUserRankings(rankings)` to inject personal track order across both tracklists simultaneously, ensuring UI consistency.
 *   **Integrity**: `ensureRankingIntegrity()` ensures that if external ranking data is missing, the model falls back to using the Original Order as the "Ranking" to prevent crashes in the Algorithm layer.
 
-### The album asked for (`askedAlbum.js`) - v5.0 (F55, slice 1)
+### The album asked for (`askedAlbum.js`) - v5.0 (F55, slices 1 and 2)
 *   **Role**: the app's side of the one rule that says "this is the album that was asked for" (`shared/albumIdentity.js`, described in `23_Shared_Code.md`).
 *   **Problem it closes (UAT-184)**: a series asked for "Stone Temple Pilots - Core" and the screen showed "Shangri-La Dee Da". The model it replaced, `AlbumIdentity.js`, gave a confidence score from 0 to 1 in which the right artist alone was enough to pass.
 *   **What it has**:
     *   `askedAlbum(query)`: what a stored query asks for, `{ artist, title, year }` (read through `albumQuery.js`, so HTML entities are already undone).
     *   `appleCandidate`, `spotifyCandidate`, `localCandidate`: what each source gives back, read into the same three fields.
-    *   The rule itself, re-exported: `compareAlbumIdentity`, `pickAlbum`, `Verdict`, `Reason`.
-*   **Who uses it**: `CatalogAdapter` and `api/client.js` (Apple Music, the AI answer), `SpotifyService`, `OptimizedAlbumLoader`, and the read-only count (`services/albums/albumIdentityAudit.js`). A fitness test (`test/architecture/albumIdentityRule.test.js`) fails when one of them stops asking the rule or compares texts by itself. The cache does not use it: the cache key is the album query.
+    *   The rule itself, re-exported: `compareAlbumIdentity`, `compareKeptAlbum`, `pickAlbum`, `Verdict`, `Reason`.
+    *   Slice 2: `keptAlbum(album)` reads an album the app keeps (an `Album`, or the plain data of a cache record) into `{ artist, title, year, identityReason }`; `indexOfQueryFor(albumQueries, album)` says which query of a series asked for the album on screen (the album's own title before a query it is only an edition of); `alreadyAskedFor(albumQueries, album)` says whether a series already asks for that very title; `identityNotice(album)` is the one line the album card shows for an album accepted by the second tier, or `null`.
+*   **Who uses it**: `CatalogAdapter` and `api/client.js` (Apple Music, the AI answer), `SpotifyService`, `OptimizedAlbumLoader`, the read-only count (`services/albums/albumIdentityAudit.js`) and, since slice 2, `AlbumCacheAdapter` (a record is checked when it is read), `SeriesService` (adding and removing an album) and `AlbumCardRenderer` (the notice). A fitness test (`test/architecture/albumIdentityRule.test.js`) fails when one of them stops asking the rule, compares texts by itself, or grants the second tier by itself.
 
 ### Playlist Model (`Playlist.js`)
 *   **Role**: Lightweight DTO for generated playlists.
@@ -110,8 +111,9 @@ No DOM, no store, no service: each imports only other models (checked by `test/a
 *   **Storage**: `CacheManager` (memory + IndexedDB `mjrp-cache`), keys `albumload:v1:<album query>`, 7 days.
 *   **Record**: `{ album, enrichment: { <source>: { status, at } } }`. The base album is saved as soon as it is found; each source adds its own status later.
 *   **Rules**: an `empty` answer is trusted for 1 hour only; a failure is never saved; the person's own ranking is never saved with the album; every read gives a new `Album`.
+*   **A record is valid only while it is the album asked for** (F55, slice 2): the key is the query, so a record written when "the right artist was enough" may hold another album. `get` asks the identity rule (`compareKeptAlbum`) and forgets a record that does not pass, so the album is searched again; a record of the title with a subtitle stays only when it carries `metadata.identityReason = 'title-before-subtitle'`. No record version was changed: a record that passes keeps its ratings. `peek` reads without dropping anything.
 
 ### Legacy Album Cache (`public/js/cache/albumCache.js`)
-*   **Status**: still used by `apiClient.fetchAlbum`, which the Blending Menu and the playlist edit mode call. The Albums screen no longer uses it.
+*   **Status**: still used by `apiClient.fetchAlbum`, which the Blending Menu and the playlist edit mode call. The Albums screen no longer uses it. Since F55, slice 2, `fetchAlbum` uses an entry only while it is the album the query asks for (`_keptAlbumAskedFor`); another album is invalidated and searched again.
 *   **Keys**: `album:<artist - title>` in IndexedDB, plus a 7-day window that still reads old `localStorage` entries. An entry found in `localStorage` is copied to IndexedDB; it is **not** deleted from `localStorage`.
 *   **TTL**: 7 days.
