@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 20:24] review — F68 provada em produção: 193 de 199 álbuns com página de notas; UAT-205 em fixed
+
+Varredura repetida em produção: de 183 para 193 achados; os 6 «não tem» restantes são outro lançamento ou ausência real, todos carimbados com a versão 2 da regra; nenhuma falha. Contagem de álbuns trocados: 227 de 227 iguais. Prova em `reports/evidence/F68/2026-11-19-identity-rules-reviewed-proof.md`. Decisões do auxiliar que ficam, revisáveis pelo MJRP: uma tabela pequena de «escritas conhecidas» mantida à mão (Blonde/Blond, POWER UP/PWR-UP, Substance 1977-1980/Substance); um vizinho aceito quando é o único («Hotel California» com só a versão ao vivo listada), sempre sinalizado no cartão.
+
 ## [2026-11-19 20:20] session — F68 em produção (servidor, depois site)
 
 Servidor publicado primeiro (`764b495`, revisão `mjrp-proxy-00203-lwg`; volta `mjrp-proxy-00202-ktd`), depois o site (pacote `main-Cm36-Baj.js`). Antes de publicar, o servidor local respondeu contra a fonte real como previsto: dos 16 álbuns da varredura, 10 com página e 6 `not_found` com a versão 2 da regra; «Nevermind», «Core (Remastered)», «No Quarter» e «The Wall» nas páginas certas. A varredura em produção roda agora.
