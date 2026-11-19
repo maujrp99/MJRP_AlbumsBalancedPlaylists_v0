@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 20:47] session — F57 e F62 em produção (site)
+
+Duas publicações do site da `main`: `b73b159` (F57: um seletor de álbum e um classificador; UAT-185 `fixed`) e `4f022d8` (F62: receitas, exportações, desfazer e refazer, título; sete issues `fixed`; pacote `main-CY7jC6wt.js`). Nenhuma muda o servidor. Auxiliar trabalhando: F58. A F69 começa agora.
+
 ## [2026-11-19 20:46] review — F62 provada pelo integrador no que não exporta; sete issues em fixed
 
 Prova em `reports/evidence/F62/2026-11-19-blend-and-export-proof.md`: desfazer e refazer, apagar playlist, título editado que fica, caminho da tela, sem «Discovery Mode». As duas exportações (Spotify e Apple Music) só passaram em teste de unidade: prová-las cria playlists de verdade nas contas do MJRP, e isso fica para ele. Em `fixed`: UAT-200, 02, 03, 04, 08, 09, 190. Mudanças de comportamento para o MJRP julgar estão nas Open Questions do `spec.md` da F62 (dez itens).
