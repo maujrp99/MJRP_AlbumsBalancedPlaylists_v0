@@ -37,6 +37,10 @@ Ramo `fix/f55-one-album-identity-rule`, da ponta da `main` local. Primeira parte
 - **Lido da fonte, para conhecer o formato** (cinco leituras do BestEverAlbums, sem login e sem custo): os resultados da busca vêm rotulados «Título by Artista»; a página do álbum diz o mesmo no `<title>` e no cabeçalho; a busca em HTML não devolveu nenhum link de álbum.
 - Testes: 919 no fim da fatia (eram 789). Nada publicado; conserto em `server/` só se prova publicando.
 
+## [2026-11-19 17:47] decision — MJRP: o conserto do Scan (UAT-204) passa na frente depois da F55; a conformidade de 28/10 fica de lado
+
+Palavras do MJRP: «1. Sim pode 2.deixa de lado por enqto». (1) O conserto da UAT-204 (resposta imediata ao clique, prazo na consulta ao catálogo, «tentar de novo») é feito assim que a fatia 1 da F55 entrar na `main`. (2) A conformidade aberta em 2026-10-28 (`.mjrp/conform.json`) não é retomada nem largada agora; a trava de fim de turno segue registrando o vermelho dela.
+
 ## [2026-11-19 17:41] session — F52 fatia 1 em produção (site e servidor)
 
 Site publicado da `main` (`de14155`, pacote `main-DQ1jxjKx.js`) e, depois, o servidor (revisão `mjrp-proxy-00199-hsv`; a volta é `mjrp-proxy-00198-5df`). Conferido em produção: 401 no formato novo sem login; com login, notas `found` e `not_found`, lista da IA `found` e a Home classificando com ela. Não visto: `/api/generate` com a chave, a carga segurando a fila, falha real da fonte. Prova: `reports/evidence/F52/2026-11-19-slice-1-browser-proof.md`. Também hoje: o MJRP disse que o Scan voltou a funcionar; o registro do servidor mostra que o clique que falhou não chegou ao servidor (UAT-204 segue aberta: sem prazo nem aviso na consulta ao catálogo).
