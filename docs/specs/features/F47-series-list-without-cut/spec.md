@@ -4,6 +4,7 @@ lane: fast
 solution_type: fix
 imports: []
 fixes: ["UAT-24"]
+planned_for: "[[ROADMAP#^REL-39]]"
 ---
 <!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
      status: In progress while the cycle runs; Done when every task is closed and every REQ has verified_by.

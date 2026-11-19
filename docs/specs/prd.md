@@ -121,6 +121,8 @@ serves:: [[ROADMAP#^OUT-03]] ^EP-01
 
 ![[S-51-build-a-series-from-loose-tracks-or-singles]]
 
+![[S-52-see-every-series-finish-loading-on-albums-screen]]
+
 ### EP-02 · Misturar uma série escolhendo a receita
 folder:: ep-02-blend-recipes
 serves:: [[ROADMAP#^OUT-02]] ^EP-02
