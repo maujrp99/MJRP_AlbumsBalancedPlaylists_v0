@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: fast
 solution_type: fix
 imports: []
@@ -18,33 +18,44 @@ planned_for: "[[ROADMAP#^REL-39]]"
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Summary
-**A feature:** Apagar um álbum do inventário passa a apagar de verdade; a janela de ranking mostra a duração das faixas; a tela de edição de playlists mostra o nome do lote, um rótulo só e o caminho certo; o título da aba acompanha a tela.
+**A feature:** Apagar um álbum do inventário passa a apagar de verdade; a janela de ranking e a de detalhe do álbum mostram a duração das faixas; o botão de fechar da janela de detalhe tem rótulo; a aba do navegador mostra o logo do site e um título só.
 
-**Por quê:** São os defeitos que a regressão de 2026-11-19 achou e que não dependem de mudar a arquitetura; fecham a v4.0.
+**Por quê:** São os defeitos que a regressão de 2026-11-19 e o MJRP acharam e que não dependem de mudar a arquitetura; fecham a v4.0.
 
-**Como saber que funcionou:** No inventário, confirmar a exclusão remove o item e ele não volta ao recarregar; nas outras telas, cada texto aparece como descrito.
+**Como saber que funcionou:** No inventário, confirmar a exclusão remove o item e ele não volta ao recarregar; nas duas janelas, cada faixa mostra minutos e segundos; o botão mostra «Close».
 
 ## Problem Statement
-O MJRP, em 2026-11-19: «na v4.0, eu fecharia os que nao impactam e dependem da arquitetura mais o fix do ranking que reportei».
+O MJRP, em 2026-11-19: «na v4.0, eu fecharia os que nao impactam e dependem da arquitetura mais o fix do ranking que reportei»; «o botao no canto inferior direito nao tem label é o que?»; «sabe o logo do site … pode colocar ele como favicon do browser tb … e no texto do browser "MJRP The Album Blender - Playlist Generator"».
 
 ## Requirements
-<!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here.
-     Functional and non-functional (performance, security, accessibility) alike are REQ-xx. -->
-- [REQ-01] «a escrever: o que o sistema faz — O QUÊ, nunca COMO» · fixes UAT-01
-  verified_by:: «a escrever: teste ou [[uat#^UAT-01]] — obrigatório antes do Done»
+- [REQ-01] Confirmar a remoção de um item do inventário remove o item, avisa, e ele não volta ao recarregar; uma falha avisa e deixa a tela como estava. · fixes UAT-01
+  verified_by:: `test/controllers/InventoryController.delete.test.js`, `reports/evidence/F54-close-v4-inventory-delete-and-polish/F54-browser-2026-11-19.json`
+- [REQ-02] Um álbum removido do inventário pode ser adicionado de novo em seguida. · fixes UAT-01
+  verified_by:: `test/repositories/InventoryRepository.remove.test.js`
+- [REQ-03] A duração de uma faixa é formatada por uma função só, a partir de segundos, na janela de ranking e na tabela de faixas. · fixes UAT-188
+  verified_by:: `test/utils/duration.test.js`, `reports/evidence/F54-close-v4-inventory-delete-and-polish/F54-browser-2026-11-19.json`
+- [REQ-04] Um texto passado como propriedade a um elemento montado pelo `SafeDOM` aparece como texto. · fixes UAT-195
+  verified_by:: `test/utils/SafeDOM.test.js`, `reports/evidence/F54-close-v4-inventory-delete-and-polish/F54-browser-2026-11-19.json`
+- [REQ-05] A aba do navegador mostra o logo do site como ícone e o título «MJRP The Album Blender - Playlist Generator» em todas as telas. · fixes UAT-195
+  verified_by:: `reports/evidence/F54-close-v4-inventory-delete-and-polish/F54-browser-2026-11-19.json`
 
 ## Observable States
-<!-- What the imported nodes point_to: the screen state in info-arch.md (the prototype the human judged —
-     PRINCIPLES.md §I.13) or the behavior state in behavior.md. N/A only if the nodes point to none. -->
-«a escrever: o estado de tela do info-arch.md ou de comportamento do behavior.md que os nós apontam — ou N/A se não apontam nenhum»
+N/A: a feature não importa nenhum requisito (conserto das issues UAT-01, UAT-188 e UAT-195). Os estados `^inventory-item-card` e `^album-rank-it-modal` do `behavior.md` foram reescritos para o que o código faz agora.
+
+## Prototype Parity (if the feature touches a screen)
+- Prototype: none. Nenhuma tela foi redesenhada: um botão ganhou o rótulo que já devia ter, duas colunas passaram a mostrar o valor certo, e a aba ganhou o logo que o site já usa. O ícone e o título foram pedidos pelo MJRP com o texto exato.
+- Transversal layer touched: `utils/SafeDOM.js` (o ajudante que monta elementos) e a nova `utils/duration.js`.
+- Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
 ## Success Criteria
-<!-- One measurable item per acceptance criterion of the imported nodes. -->
-- «a escrever: um item mensurável e testável por critério de aceite dos nós importados»
+- Remover «GNX» do inventário: de 24 para 23 itens, com aviso, e 23 depois de recarregar. Visto em 2026-11-19.
+- A janela de ranking de «Brothers In Arms» mostra 6:59, 5:12, 8:26; antes, «0:00».
+- A janela de detalhe do álbum não mostra nenhum «--:--» e o botão do rodapé diz «Close».
 
 ## Out of Scope
-- «a escrever: o que esta feature não faz»
+- A tela de edição de playlists (UAT-190) e o resto da UAT-192 (idioma das receitas, série de origem no blend): foram para a F62 e a F63, na v5.0.
+- `TrackRow.formatDuration` e `PlaylistGrid.calculateDuration` continuam formatando por conta própria, em segundos e corretos; juntar ao formatador único fica para a F65.
+- A tela de inventário desenhando por cima de outras telas (achado dos relatórios anteriores): não reproduzido; segue no mapa da v5.0.
 
 ## Open Questions
-<!-- ALL resolved before Plan. -->
-- «a escrever: pergunta — resposta, quem, quando; ou "Nenhuma." se todas estão resolvidas»
+- Nenhuma.

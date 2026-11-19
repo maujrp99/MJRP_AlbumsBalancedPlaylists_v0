@@ -76,3 +76,6 @@ classDiagram
 *   **`stringUtils.js`**: Standard string manipulation (slugify, escapeHtml).
 *   **`dom-helpers.js`**: Low-level DOM traversal/manipulation helpers.
 *   **`SvgGenerator.js`**: Dynamic SVG generation (likely for placeholders or dynamic icons).
+
+### `utils/duration.js`
+`formatDuration(seconds)` is the one formatter of a track duration: "m:ss", "h:mm:ss" from one hour on, and "--:--" when there is none. Durations are kept in **seconds** everywhere (`models/Track.js`; `services/musickit/MusicKitCatalog.js` converts Apple's milliseconds). Used by the ranking window and the track table. `TrackRow.formatDuration` and `PlaylistGrid.calculateDuration` still format on their own (also in seconds).

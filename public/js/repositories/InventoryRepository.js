@@ -128,7 +128,20 @@ export class InventoryRepository extends BaseRepository {
      * @returns {Promise<void>}
      */
     async removeAlbum(albumId) {
-        return this.delete(albumId)
+        // The "already in inventory" answer is kept under the id of the album the item holds:
+        // forget it too, or adding the same album again would be refused while that answer lives.
+        let heldAlbumId = null
+        try {
+            heldAlbumId = (await this.findById(albumId))?.albumData?.id ?? null
+        } catch (error) {
+            console.warn('[InventoryRepository] could not read the item before removing it:', error?.message || error)
+        }
+
+        await this.delete(albumId)
+
+        if (heldAlbumId !== null && this.cache) {
+            await this.cache.invalidate(this.getCacheKey(`album_${heldAlbumId}`))
+        }
     }
 
     /**

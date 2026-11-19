@@ -12,6 +12,7 @@
  */
 
 import Sortable from 'sortablejs'
+import { formatDuration } from '../../utils/duration.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
 import { getIcon } from '../Icons.js'
 
@@ -290,7 +291,7 @@ export class UserRankModal {
         }
 
         // Duration
-        const duration = this._formatDuration(track.duration)
+        const duration = formatDuration(track.duration)
         const durationEl = SafeDOM.div({
             className: 'text-xs text-white/40 font-mono w-12 text-right'
         }, duration)
@@ -302,18 +303,6 @@ export class UserRankModal {
         item.appendChild(durationEl)
 
         return item
-    }
-
-    /**
-     * Format duration in mm:ss
-     * @private
-     */
-    _formatDuration(ms) {
-        if (!ms || ms <= 0) return '--:--'
-        const totalSeconds = Math.floor(ms / 1000)
-        const minutes = Math.floor(totalSeconds / 60)
-        const seconds = totalSeconds % 60
-        return `${minutes}:${seconds.toString().padStart(2, '0')}`
     }
 
     /**

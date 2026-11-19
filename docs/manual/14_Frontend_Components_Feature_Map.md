@@ -47,7 +47,7 @@
     -   **Role**: A grid component for the User's Inventory.
     -   **Logic**: A wrapper around `SeriesGridRenderer`. Adds generic event delegation for Inventory actions (Click, Context Menu). Handles "Zero State" (Empty Inventory) display.
     -   **Usage today**: no module imports it. The inventory screen is `views/InventoryView.js` with `views/renderers/InventoryGridRenderer.js` and `controllers/InventoryController.js`.
-    -   **Known defect**: deleting an album from the inventory does not work: `InventoryController.handleDelete` calls `inventoryStore.deleteAlbum`, which does not exist (the store has `removeAlbum`).
+    -   Deleting an album: `InventoryController.handleDelete` calls `inventoryStore.removeAlbum`; a failure shows "Failed to delete album". The repository also forgets the "already in inventory" answer kept for that album, so it can be added again at once.
 
 ## Playlists & History (`playlists/`)
 **Status**: `[ACTIVE]`

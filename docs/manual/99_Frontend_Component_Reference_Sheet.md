@@ -60,7 +60,7 @@
 - `render(input)`, `renderFilters(state)`: Drawn with `views/renderers/InventoryGridRenderer.js`
 - `attachEventListeners()`: Delegates the actions to the controller (`handleStatusChange`, `handleCurrencyChange`, ...)
 - `handleEditWithModal(albumId)`, `handleViewWithModal(albumId)`: Open the modals
-- `handleDeleteWithModal(albumId)`: Confirms and calls `InventoryController.handleDelete`. **Known defect**: that method calls `inventoryStore.deleteAlbum`, which does not exist (the store has `removeAlbum`), so the delete does not work today.
+- `handleDeleteWithModal(albumId)`: Confirms and calls `InventoryController.handleDelete`, which calls `inventoryStore.removeAlbum`.
 
 #### SavedPlaylistsView (339 lines)
 **Purpose**: View all saved playlist batches grouped by series

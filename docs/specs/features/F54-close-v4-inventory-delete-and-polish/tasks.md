@@ -3,25 +3,24 @@
 # Tasks — Feature F54: Fecho da v4.0: apagar do inventário e acabamento · Plan: [[plan]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
+> As tarefas como foram feitas em 2026-11-19, escritas depois (passo retroativo da via rápida). A marca `model::` diz a classe do trabalho (opus: desenho de código; sonnet: mecânico), como o molde pede.
+
 ## Pre-Implementation
-- [ ] create the branch feat/close-v4-inventory-delete-and-polish-<timestamp>
-- [ ] verify the spec and the plan of F54 passed their cross-checks (and were approved, where gated)
+- [x] causa de cada defeito lida no código antes de mexer; a unidade da duração conferida nos dados reais (2.109 faixas, de 15 a 4.767, em segundos)
+- [x] ramo criado: `fix/f54-close-v4-inventory-delete-and-polish`
+- [ ] conferência cruzada da spec e do plano: fica para o fecho, porque os dois foram escritos depois do código
 
 ## Implementation
-<!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
-     components → composition → polish. -->
-<!-- Marks, after `implements::`, separated by ` · `:
-     model:: sonnet|opus — MANDATORY on every task; the author of this file decides, the implementer never does.
-                        sonnet = MECHANICAL: texts and registry keys, summaries, format samples and tests, derived
-                        files, renames. opus = code design, architecture, critique, visual recheck. There is no
-                        default: a task without the mark fails the cross-check.
-     rounds:: N       — written when the task CLOSES ([x]): how many Execute ⇄ Verify rounds it took (ceiling 3).
-                        `python3 mjrp-scripts/loop.py --check-tasks tasks.md` fails a closed task without it. -->
-- [ ] TASK-01 «a escrever: ação sobre um arquivo ou componente nomeado — o sinal de pronto» · implements:: REQ-01 · model:: «a escrever: sonnet|opus»
+- [x] TASK-01 ícone da aba a partir do logo e título único — commit `791da82` · implements:: REQ-05 · model:: sonnet · rounds:: 1
+- [x] TASK-02 `SafeDOM`: `textContent` como texto; `test/utils/SafeDOM.test.js` — commit `d49eb38` · implements:: REQ-04 · model:: opus · rounds:: 1
+- [x] TASK-03 testes do apagar do inventário (falhavam) e o conserto no controlador e no repositório · implements:: REQ-01, REQ-02 · model:: opus · rounds:: 1
+- [x] TASK-04 `utils/duration.js` com teste (falhava) e o uso na janela de ranking e na tabela de faixas · implements:: REQ-03 · model:: opus · rounds:: 1
 
 ## Verification
-- [ ] TASK-02 «a escrever: a verificação: suíte, build, caminho feliz, regressão» · implements:: REQ-01 · model:: «a escrever: sonnet|opus»
+- [x] TASK-05 no navegador: remover «GNX» do inventário; durações nas duas janelas; botão «Close»; título e ícone; `reports/evidence/F54-close-v4-inventory-delete-and-polish/F54-browser-2026-11-19.json` · implements:: REQ-01, REQ-03, REQ-04, REQ-05 · model:: opus · rounds:: 1
+- [ ] TASK-06 julgamento do MJRP (tarefa do humano) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05 · model:: opus · waiting:: human — o aceite das issues é do MJRP · action:: o MJRP confere em produção e dá o OK na UAT-01, na UAT-188 e na UAT-195
 
 ## Documentation
-- [ ] update the specs affected · mark F54 Done in spec.md · commit: feat: implement close-v4-inventory-delete-and-polish
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] `docs/manual/` (14, 21, 99, 07b) e `docs/specs/behavior.md` dizem que o apagar funciona e onde a duração é formatada
+- [x] spec, plano e tarefas escritos do registro (passo retroativo, 2026-11-19)
+- [ ] fechar chamando a `mjrp-ensuring-sdd` antes do Done; só então `status: Done` (depende do aceite do MJRP)

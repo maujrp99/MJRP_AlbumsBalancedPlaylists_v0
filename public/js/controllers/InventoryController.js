@@ -312,13 +312,16 @@ export class InventoryController {
     }
 
     async handleDelete(albumId) {
-        const success = await inventoryStore.deleteAlbum(albumId)
-        if (success) {
-            toast.success('Album removed from inventory')
-            this.updateStateFromStore()
-            this.refresh()
-        } else {
+        // The store removes from the cloud and from its own list; it throws when the cloud refuses (UAT-01)
+        try {
+            await inventoryStore.removeAlbum(albumId)
+        } catch (error) {
+            console.error('[InventoryController] Failed to remove album:', error)
             toast.error('Failed to delete album')
+            return
         }
+        toast.success('Album removed from inventory')
+        this.updateStateFromStore()
+        this.refresh()
     }
 }

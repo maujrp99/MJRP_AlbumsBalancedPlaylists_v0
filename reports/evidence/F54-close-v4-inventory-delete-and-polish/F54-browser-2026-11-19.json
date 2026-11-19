@@ -1,0 +1,27 @@
+{
+  "feature": "F54",
+  "date": "2026-11-19 15:12",
+  "where": "http://127.0.0.1:5010, conta do MJRP",
+  "checks": [
+    {
+      "what": "Inventory: remover o item de teste «GNX» e confirmar",
+      "result": "aviso «Album removed from inventory»; de 24 para 23 álbuns; depois de recarregar, 23 e «GNX» não volta"
+    },
+    {
+      "what": "janela «Rank Your Album» de «Brothers In Arms»",
+      "result": "as faixas mostram a duração (6:59, 5:12, 8:26); antes, «0:00»"
+    },
+    {
+      "what": "janela de detalhe do álbum",
+      "result": "a coluna Time mostra as durações, nenhum «--:--»; o botão do rodapé mostra «Close»"
+    },
+    {
+      "what": "aba do navegador",
+      "result": "título «MJRP The Album Blender - Playlist Generator» e ícone `/favicon.png`"
+    }
+  ],
+  "not_checked": [
+    "readicionar ao inventário um álbum recém-removido (coberto por teste automático)",
+    "a tela de inventário desenhando por cima de outras telas (achado dos relatórios, não reproduzido)"
+  ]
+}
