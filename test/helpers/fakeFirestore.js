@@ -7,6 +7,9 @@
  * - every call that would go to the network takes a turn of the event loop, so two operations
  *   started together overlap as they do in the browser;
  * - `fake.failNext(kind)` makes the next call of that kind reject ('commit', 'set', 'delete', 'update', 'read');
+ *   `fake.failNext('read', error, { path })` fails only the next read of that path;
+ * - `fake.reads()` lists every read that reached the database, in order, and `fake.maxReadsAtOnce()`
+ *   says how many were in the air together (to count round trips and prove a limit);
  * - `fake.holdNext('commit')` keeps the next batch in the air until the test releases it, to act
  *   while a write is on its way.
  *
@@ -19,14 +22,17 @@ const docs = new Map()
 const failures = []
 const holds = []
 const log = []
+const readLog = []
+let readsInFlight = 0
+let maxReadsInFlight = 0
 let autoId = 0
 
 const network = () => new Promise(resolve => setTimeout(resolve, 0))
 const clone = (value) => JSON.parse(JSON.stringify(value))
 const notFound = (path) => Object.assign(new Error(`No document to update: ${path}`), { code: 'not-found' })
 
-const takeFailure = (kind) => {
-    const at = failures.findIndex(f => f.kind === kind)
+const takeFailure = (kind, path) => {
+    const at = failures.findIndex(f => f.kind === kind && (!f.path || f.path === path))
     if (at === -1) return null
     const [failure] = failures.splice(at, 1)
     return failure.error
@@ -51,6 +57,9 @@ export const fake = {
         failures.length = 0
         holds.length = 0
         log.length = 0
+        readLog.length = 0
+        readsInFlight = 0
+        maxReadsInFlight = 0
         autoId = 0
     },
     /** Put a document in place, as if it had been written before the test. */
@@ -63,7 +72,9 @@ export const fake = {
             .filter(([path]) => path.startsWith(prefix) && !path.slice(prefix.length).includes('/'))
             .map(([path, data]) => ({ id: path.slice(prefix.length), ...clone(data) }))
     },
-    failNext(kind, error = new Error(`fake firestore: ${kind} failed`)) { failures.push({ kind, error }) },
+    failNext(kind, error = new Error(`fake firestore: ${kind} failed`), { path = null } = {}) {
+        failures.push({ kind, error, path })
+    },
     /**
      * Keep the next write of that kind in the air. `reached` resolves when the write arrives;
      * `release()` lets it go on.
@@ -76,7 +87,26 @@ export const fake = {
         return { reached, release }
     },
     /** Every write that reached the database, in order: 'set', 'delete', 'update' or 'commit'. */
-    writes() { return [...log] }
+    writes() { return [...log] },
+    /** Every read that reached the database, in order: the path of the collection or document asked for. */
+    reads() { return [...readLog] },
+    /** The largest number of reads that were in the air at the same time. */
+    maxReadsAtOnce() { return maxReadsInFlight }
+}
+
+/** One read: counted, in the air for a turn of the event loop (or until a hold is released), then answered or failed. */
+const read = async (path) => {
+    readLog.push(path)
+    readsInFlight++
+    maxReadsInFlight = Math.max(maxReadsInFlight, readsInFlight)
+    try {
+        await network()
+        await passHold('read')
+        const error = takeFailure('read', path)
+        if (error) throw error
+    } finally {
+        readsInFlight--
+    }
 }
 
 const snapshot = (path) => ({
@@ -102,15 +132,11 @@ export const firestoreModule = {
     limit: () => null,
     startAfter: () => null,
     getDoc: async (ref) => {
-        await network()
-        const error = takeFailure('read')
-        if (error) throw error
+        await read(ref.path)
         return snapshot(ref.path)
     },
     getDocs: async (collectionRef) => {
-        await network()
-        const error = takeFailure('read')
-        if (error) throw error
+        await read(collectionRef.path)
         return { docs: fake.list(collectionRef.path).map(({ id }) => snapshot(`${collectionRef.path}/${id}`)) }
     },
     setDoc: async (ref, data, options) => {

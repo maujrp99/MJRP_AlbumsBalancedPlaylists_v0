@@ -35,7 +35,7 @@
 | [HomeView.js](file:///public/js/views/HomeView.js) | Artist scan, bulk paste, staging area, new series | 271 lines | ✅ |
 | [BlendingMenuView.js](file:///public/js/views/BlendingMenuView.js) | Blend wizard (`/blend`) | 449 lines | ✅ |
 | [PlaylistsView.js](file:///public/js/views/PlaylistsView.js) | Generated playlists; also the edit mode (`/playlists/edit`) | 353 lines | ✅ |
-| [SavedPlaylistsView.js](file:///public/js/views/SavedPlaylistsView.js) | View saved batches | 339 lines | ✅ |
+| [SavedPlaylistsView.js](file:///public/js/views/SavedPlaylistsView.js) | View saved batches | 325 lines | ✅ |
 | [InventoryView.js](file:///public/js/views/InventoryView.js) | Personal collection | 270 lines | ✅ |
 | [ConsolidatedRankingView.js](file:///public/js/views/ConsolidatedRankingView.js) | Cross-album ranking | 319 lines | ✅ |
 | [RankingView.js](file:///public/js/views/RankingView.js) | Single album ranking | 217 lines | ✅ |
@@ -62,12 +62,14 @@
 - `handleEditWithModal(albumId)`, `handleViewWithModal(albumId)`: Open the modals
 - `handleDeleteWithModal(albumId)`: Confirms and calls `InventoryController.handleDelete`, which calls `inventoryStore.removeAlbum`.
 
-#### SavedPlaylistsView (339 lines)
-**Purpose**: View all saved playlist batches grouped by series
+#### SavedPlaylistsView (325 lines)
+**Purpose**: View all saved playlist batches grouped by series. Since v5.0 (F61) it draws what `SavedPlaylistsStore` holds and waits for no read.
 
 **Key Methods**:
+- `mount()`: Listen to the list and ask for it (`SavedPlaylistsController.open`); nothing is awaited
+- `refreshContent()`: Status line, series groups (only the changed ones are drawn again) and the empty / no-match placeholder
 - `renderSeriesGroup(group)`: Render series with its batches
-- `handleDeleteBatch(seriesId, batchName)`: Delete all playlists in batch
+- `handleDeleteBatch(seriesId, batchName)`: Delete all playlists in batch (one read, one write; the list is not read again)
 - `handleDeleteAll(...)`: Delete all playlists of a series
 - Editing a batch goes through `SavedPlaylistsController.editBatch`, which navigates to `/playlists/edit` (`PlaylistsView`)
 

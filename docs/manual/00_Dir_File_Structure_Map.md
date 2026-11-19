@@ -290,6 +290,13 @@
 23. `public/js/services/ranking/OwnRankingService.js` (Analysis: `manual/17_Frontend_Services.md`)
 24. `public/js/services/ranking/ownRanking.js` (Analysis: `manual/17_Frontend_Services.md`)
 
+## 9. v5.0 - Saved playlists read (F61, 2026-11)
+1. `public/js/models/savedPlaylists.js` (Analysis: `manual/21_Dynamic_UI_Mapping.md`, section 5)
+2. `public/js/stores/savedPlaylists.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
+3. `public/js/services/playlists/SavedPlaylistsReader.js` (Analysis: `manual/17_Frontend_Services.md`)
+4. `public/js/services/playlists/savedPlaylistsReading.js` (Analysis: `manual/17_Frontend_Services.md`)
+5. `public/js/services/playlists/adapters/RepositoryPlaylistsSource.js` (Analysis: `manual/17_Frontend_Services.md`)
+
 ## 10. Project Documentation & Archives
 ### Root Documentation
 1. `docs/CHANGELOG.md`

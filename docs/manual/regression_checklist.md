@@ -61,6 +61,8 @@
 ### [HISTORY] Playlist Series Management
 - [ ] **Save Batch**: "Save to History" works -> Toast "Saved".
 - [ ] **View History**: `/saved-playlists` shows the new batch.
+- [ ] **History opens fast (v5.0, F61)**: the page is on screen at once, the series come in one by one, and the whole list is there in a few seconds; going to another screen and back shows the list at once.
+- [ ] **One series fails (v5.0, F61)**: with the network cut for one read, that series shows a notice with "Try again" and the others stay.
 - [ ] **Expand Batch**: Clicking Batch Header toggles visibility.
 - [ ] **Edit Batch**: Click "Edit" -> Redirects to `/playlists` with data loaded.
 - [ ] **Delete Batch**: Click Trash -> Batch removed.

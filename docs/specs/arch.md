@@ -15,7 +15,7 @@ Os nomes da coluna *Stack layer* são as camadas de `docs/specs/tech-stack.md`.
 ### Navegador (`public/`)
 | Component | Responsibility | Stack layer |
 |-----------|---------------|-------------|
-| Casca da SPA e roteador (`public/index.html`, `js/app.js`, `js/router.js`) | arranque, as **18** rotas registradas por History API (`app.js:113-171`, 18 chamadas `router.register`), CSP e carga do Tailwind | Front |
+| Casca da SPA e roteador (`public/index.html`, `js/app.js`, `js/router.js`) | arranque, as **18** rotas registradas por History API (`app.js:113-171`, 18 chamadas `router.register`), CSP e folhas de estilo (as do app e a do Tailwind, compilada junto com o site: `css/tailwind.css`) | Front |
 | Views (`js/views/`) | desenham uma tela; assinam stores e delegam a ação ao controller | Front |
 | Controllers (`js/controllers/`) | o "cérebro" de uma tela: recebe a entrada, chama Services, atualiza a store. Hoje `PlaylistsController.js:92-93, 312, 325, 334` instancia repositórios, e `SeriesController.js:22` e `BlendingController.js:22` usam `userRankingRepository` direto | Front |
 | Componentes e renderizadores (`js/components/`, `js/views/renderers/`) | blocos de UI reutilizáveis (cartões, modais, assistente de Blend, navegação) | Front |
@@ -95,7 +95,7 @@ Regra: a estabilidade da produção e os dados do usuário não ficam abertos a 
 - Segredos: no Secret Manager do Google Cloud, injetados no Cloud Run (`AI_API_KEY`, `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_MUSIC_PRIVATE_KEY`); a ligação entre segredo e variável mora na configuração do serviço e está descrita em `docs/manual/00_Deployment_and_Setup.md` (seção 2.4); em desenvolvimento, `server/.env`.
 - Implantação do **frontend**: `scripts/deploy-site.sh` (`npm run deploy:site`), da máquina do MJRP, com o login do Firebase CLI: exporta a `main` para uma pasta limpa, roda os testes, constrói com o `.env`, confere o que construiu, publica só o Hosting e confere produção (F64, 2026-11-19). A automação do GitHub (`.github/workflows/ci.yml`) só roda os testes; não publica.
 - Implantação do **backend**: uma receita só, `scripts/deploy-server.sh` (`npm run deploy:server`): exporta a `main`, roda os testes, monta o contexto (`shared/` em `server/_shared_temp`, `config/` em `server/config`), sobe o servidor localmente para conferir, e publica com `gcloud run deploy --source server`, que constrói a imagem pelo `server/Dockerfile`. A segunda receita (`cloudbuild.yaml`), que não copiava `config/`, foi removida na F64. O script imprime a revisão que estava no ar e o comando para voltar a ela.
-- CDN/Assets: Tailwind pelo CDN `cdn.tailwindcss.com`, com `tailwind.config` inline em `public/index.html:23`, e fonte Syne pelo Google Fonts (`:12, 15-17`); o SDK do Apple MusicKit vem de `js-cdn.music.apple.com` (`services/musickit/MusicKitAuth.js:124`); o conjunto de álbuns do autocompletar é o arquivo estático `albums-autocomplete.json`.
+- CDN/Assets: o Tailwind não vem mais de CDN: é compilado junto com o site (`tailwind.config.js`, `public/css/tailwind.css`; [[ADR-0021]], F59). A fonte Syne vem do Google Fonts (`public/index.html`); o SDK do Apple MusicKit vem de `js-cdn.music.apple.com` (`services/musickit/MusicKitAuth.js:124`); o conjunto de álbuns do autocompletar é o arquivo estático `albums-autocomplete.json`.
 
 ## Constraints
 - **Segurança e abuso.**
@@ -686,6 +686,65 @@ flowchart LR
 - *Álbum certo que deixa de ser achado.* Um título de catálogo com um qualificador que não é edição («Weezer (Blue Album)», «(Original Motion Picture Soundtrack)») não bate com o título sem ele. Atinge a consulta digitada à mão e a série antiga cujo título guardado difere do título do catálogo; a contagem só-leitura mostra quantos são antes de publicar.
 - *Formato da fonte raspada.* O rótulo «Título by Artista» e o cabeçalho da página foram lidos da fonte em 2026-11-19; se a fonte mudar o formato, o raspador passa a responder «não achei» (nunca o vizinho).
 - *A busca em HTML da fonte não devolveu nenhum link de álbum em 2026-11-19:* o caminho continua, conferido pela regra, mas na prática quem acha é a busca por sugestões.
+
+**Não verificado:** nada disto foi visto num navegador nem contra o servidor publicado; as fontes reais só foram lidas para conhecer o formato (cinco leituras do BestEverAlbums). Quantos álbuns da conta do MJRP estão trocados: a contagem existe, falta rodá-la com o login dele.
+
+## Leitura das playlists guardadas (F61) — construída no ramo
+
+> Escrita em 2026-11-19, junto com o código, no ramo `fix/f61-saved-playlists-fast`. Conserta a UAT-186 (20 s para a lista aparecer). O diagnóstico, com arquivo e linha, está em `docs/specs/features/F61-saved-playlists-fast/plan.md`. Não foi vista num navegador.
+
+**O problema, em uma frase.** A tela lia as séries e depois as playlists de cada série, uma leitura esperando a outra (1 + N idas ao banco em fila), e só desenhava depois da última.
+
+**O desenho.** O mesmo da carga dos álbuns (ADR-0016, ADR-0017, ADR-0019), no tamanho de uma leitura de documentos da própria pessoa:
+
+- **Um dono:** `public/js/services/playlists/SavedPlaylistsReader.js`. A tela pede; ninguém mais lê a lista.
+- **Estado explícito:** `public/js/stores/savedPlaylists.js` guarda o estado da lista (`idle`, `loading`, `ready`, `failed`) e uma entrada por série (`loading`, `ready`, `empty`, `failed`), trocada e nunca alterada. As regras (lotes, totais, ordem, capas) são funções puras em `public/js/models/savedPlaylists.js`.
+- **Portas e adaptadores:** o leitor recebe `source` (`listSeries`, `listPlaylists`, `deletePlaylists`) e `covers` (`find`). `adapters/RepositoryPlaylistsSource.js` serve a primeira com `SeriesRepository` e `PlaylistRepository`; `savedPlaylistsReading.js` é a composição. O Firestore continua só nos repositórios.
+- **Fila com limite e prazo:** `utils/TaskQueue.js`, 8 leituras juntas, 15 s cada (`READ_LIMITS`).
+- **Identidade:** uma geração por carga e uma senha por série; só o último pedido escreve. Cancelar é parar de esperar e descartar a resposta.
+- **O que já foi lido fica** na lista enquanto é relido (`refreshing`); uma resposta igual não troca nada, e a tela não redesenha.
+- **Os dois apagamentos da tela passam pelo dono:** uma leitura, uma gravação atômica (`deleteMany`), e só aquela série muda.
+
+```mermaid
+sequenceDiagram
+    participant V as SavedPlaylistsView
+    participant C as SavedPlaylistsController
+    participant R as SavedPlaylistsReader
+    participant S as SavedPlaylistsStore
+    participant P as source (repositórios)
+
+    V->>V: render (a página aparece)
+    V->>C: mount: subscribe + open()
+    C->>R: load()
+    R->>S: begin(geração)
+    R->>P: listSeries (1 ida)
+    P-->>R: N séries
+    R->>S: setSeries (cada série «loading», em ordem)
+    S-->>V: aviso: linha «Reading playlists: 0 of N»
+    par até 8 juntas
+        R->>P: listPlaylists(série A)
+        R->>P: listPlaylists(série B)
+    end
+    P-->>R: playlists de B
+    R->>S: patchEntry(B: ready | empty)
+    S-->>V: aviso: só o grupo de B é desenhado
+    P--xR: falha em A
+    R->>S: patchEntry(A: failed)
+    S-->>V: aviso: A com «Try again»
+```
+
+**A conta.** Para N séries: 1 + N idas ao banco, como antes (as playlists moram debaixo de cada série, e a série não diz se tem alguma). O que muda é a espera: a página desenha sem esperar nenhuma; a lista de séries chega depois de 1; as primeiras séries, depois de 2; a lista inteira, depois de 1 + teto(N / 8). Para 47 séries, com o banco falso: 48 leituras, 8 no ar, 7 esperas (antes: 48 leituras, 1 no ar, 48 esperas, e nada na tela até a última).
+
+**Funções de aptidão.** `test/services/playlists/SavedPlaylistsReader.reads.test.js` conta as leituras, as simultâneas e as esperas para 47 séries e falha se o limite for passado. `test/architecture/savedPlaylistsBoundaries.test.js` falha se a tela importar um repositório, se o leitor importar algo além da fila e das regras, ou se outro arquivo passar a conhecer o leitor.
+
+**Alternativas.**
+1. *Uma consulta por grupo de coleção* (`collectionGroup('playlists')`): uma ida para todas as playlists. Não cabe hoje: as regras em vigor só liberam o caminho debaixo de `artifacts/{appId}/users/{userId}/curator/`, e a consulta por grupo pede uma regra `match /{path=**}/playlists/{id}` e um índice de grupo; esta feature não publica regras nem índices.
+2. *Um resumo das playlists gravado na série* (proposta, não feita): a tela desenharia com uma leitura só e leria as faixas ao abrir o lote. Pede migração. Está no plano da F61.
+3. *Só trocar o `for` por `Promise.all`*: tiraria a fila, e deixaria o estado único, a tela esperando tudo, a releitura inteira a cada apagamento e a falha que derruba a tela.
+
+**O que não faz.** Não muda o modelo de dados; não mexe na edição do lote, no blend nem no inventário; não cancela a leitura quando a pessoa sai da tela (ela termina por trás, com prazo, e a volta encontra a lista pronta).
+
+**Não verificado.** O tempo no navegador, com a conta do MJRP; o limite de 8 leituras juntas contra o Firestore de produção.
 
 - *O segundo degrau aceita um álbum que não é o pedido (fatia 2).* «Greatest Hits» pedido, e a fonte só com «Greatest Hits: Vol 2», carrega o volume 2, com a linha no cartão. A lista da Apple tem 5 resultados: «o único» é o único entre eles.
 - *Notas e popularidade do álbum do segundo degrau (fatia 2).* As fontes são perguntadas com o título do álbum carregado, o comprido; se a fonte só tiver o curto, não casa (o degrau é num sentido só) e o álbum fica sem esse dado.

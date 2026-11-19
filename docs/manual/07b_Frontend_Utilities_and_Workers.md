@@ -25,10 +25,17 @@ This document analyzes the "Plumbing" of the frontend: The utilities, transforme
 *   **Role**: The one way text from outside the code goes into an HTML string (a template given to `innerHTML`, `outerHTML`, `insertAdjacentHTML` or `SafeDOM.fromHTML`). Outside text: names of albums, tracks, artists, series, playlists and batches, inventory notes, the message of an error, a provider's addresses and ids, anything read from the URL.
 *   **What it does**: A pure function, no DOM. `null` and `undefined` give `''`; any other value is turned into its text; then `&`, `<`, `>`, `"` and `'` become `&amp;`, `&lt;`, `&gt;`, `&quot;` and `&#39;`.
 *   **Where it is safe**: Element content and a **quoted** attribute value: `<h3 title="${escapeHtml(name)}">${escapeHtml(name)}</h3>`.
-*   **Where it is not enough**: An attribute with no quotes, a URL scheme (`href="javascript:..."`), text inside `<script>` or inside an inline handler (`onclick="f('${x}')"`).
+*   **Where it is not enough**: An attribute with no quotes, text inside `<script>` or inside an inline handler (`onclick="f('${x}')"`), and a URL scheme (`href="javascript:..."`): an address from outside goes through `safeUrl`, below.
 *   **Where it must not be used**: A text node, `textContent`, `setAttribute`, a `SafeDOM` child or prop. They take plain text; escaping there shows `&amp;` on screen. Stored names are plain too (`models/text.js` undoes old stored entities), so a name with `&` is escaped once, when drawn, and shows as `&`.
 *   **No second helper**: `FilterToolbar.escapeHtml` and `RegeneratePanel.escapeHtml` call this one.
 *   **Tests**: `test/utils/escapeHtml.test.js` (the function), `test/security/outsideTextIsText.test.js` (17 renderers drawn with a name such as `<img src=x onerror=...>`), `test/architecture/outsideTextEscaped.test.js` (fitness: an HTML template that interpolates a field named `title`, `name`, `artist`, `message`... without `escapeHtml` fails; text written in the code is listed there).
+
+### safeUrl (`public/js/utils/safeUrl.js`) - v5.0 (F59)
+*   **Role**: The one check an address from outside the code passes before it becomes a link (`href`, `window.open`, a change of `location`). Outside addresses: the Spotify address stored with an album, the source address of a ranked track, the address of a playlist Spotify has just created.
+*   **What it does**: A pure function, no DOM. It gives back the address, trimmed, when it is absolute and its scheme is `http:` or `https:`; otherwise `null` (not text, empty, relative, `//host/...`, `javascript:`, `data:`, `blob:`, `spotify:`...). The scheme is read by `URL`, the parser the browser follows a link with, so capitals, tabs and line breaks inside the scheme are judged as the browser would.
+*   **Where it is used**: `components/ui/Card.js` (the Spotify badge: a refused address falls back to the one made from the Spotify id), `views/ConsolidatedRankingView.js` (the source link of a track: a refused address shows a dash), `components/SpotifyExportModal.js` (the "open in Spotify" button: a refused address opens nothing).
+*   **Where it is not needed**: An address written in the code (`/albums`, a template that starts with `https://host/`). An image address (`img src`) does not run as code and is held by the page's `img-src` policy.
+*   **Tests**: `test/utils/safeUrl.test.js` (the function), `test/security/outsideUrlIsChecked.test.js` (the card and the ranking row drawn with `javascript:...`), `test/architecture/outsideUrlChecked.test.js` (fitness: every `href`, `window.open` and `location.assign/replace` of `public/js` is text written in the code or goes through `safeUrl`; the six that come from the code by another road are listed there).
 
 ---
 

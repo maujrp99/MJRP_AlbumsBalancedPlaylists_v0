@@ -4,7 +4,7 @@ updated: 2026-10-28
 ---
 # Tech stack — MJRP_AlbumsBalancedPlaylists_v0
 
-> Com o que o produto é construído, lido do que o código usa (2026-10-28): `package.json` e `package-lock.json` (raiz), `server/package.json` e `server/package-lock.json`, `server/Dockerfile`, `firebase.json`, `cloudbuild.yaml`, `.github/workflows/ci-firebase.yml` e os cabeçalhos de `public/index.html`. A versão é a que o lockfile fixa; onde nada a fixa, a célula traz `—` e o motivo vai em «Para quê». Decisão: nenhuma escolha da stack tem ADR (as quatro ADRs do v0 tratam de padrões de código, não de tecnologia), então toda a coluna é `—`. Escrito pelo agente, revisável pelo MJRP; corrigido no mesmo dia depois da crítica independente (`reports/audits/2026-10-28-mjrpalbumblender-v0-architecture-audit.md`). O `arch.md` aponta para cá.
+> Com o que o produto é construído, lido do que o código usa (2026-10-28): `package.json` e `package-lock.json` (raiz), `server/package.json` e `server/package-lock.json`, `server/Dockerfile`, `firebase.json`, `cloudbuild.yaml`, `.github/workflows/ci-firebase.yml` e os cabeçalhos de `public/index.html`. A versão é a que o lockfile fixa; onde nada a fixa, a célula traz `—` e o motivo vai em «Para quê». Decisão: nenhuma escolha da stack tem ADR (as quatro ADRs do v0 tratam de padrões de código, não de tecnologia), então toda a coluna é `—`. Desde 2026-11-19 duas linhas citam ADR: o Node do servidor (ADR-0020) e o Tailwind (ADR-0021, proposta). Escrito pelo agente, revisável pelo MJRP; corrigido no mesmo dia depois da crítica independente (`reports/audits/2026-10-28-mjrpalbumblender-v0-architecture-audit.md`). O `arch.md` aponta para cá.
 
 ## Stack
 | Camada | Tecnologia | Versão | Para quê | Decisão |
@@ -13,7 +13,7 @@ updated: 2026-10-28
 | Runtime | Node.js | 24 | roda o servidor (`FROM node:24-slim`, `server/Dockerfile`); a CI e a máquina do dono rodam os testes em Node 26 (`.github/workflows/ci.yml`); era 18, fora de suporte, até 2026-11-19 | [[ADR-0020]] |
 | Front | Vanilla JS em SPA (MVC com Stores), sem framework | — | interface; a decisão de não usar framework é do Art. II da constituição | — |
 | Front | Vite | 5.4.21 | servidor de desenvolvimento (porta 5000, proxy de `/api` para a 3000) e build para `dist` (`vite.config.js`) | — |
-| Front | Tailwind CSS pelo CDN `cdn.tailwindcss.com` | — | classes utilitárias carregadas em tempo de execução por `<script>` (`public/index.html:12`), sem versão fixa; não há `tailwind.config.js` nem PostCSS, a configuração é o `tailwind.config` inline em `public/index.html:23` | — |
+| Front | Tailwind CSS, compilado junto com o site | 3.4.19 | classes utilitárias da interface. Dependência de desenvolvimento; o Vite o roda pelo PostCSS (`vite.config.js`, `css.postcss`) no servidor de desenvolvimento e no build, a partir de `public/css/tailwind.css` (importado por `public/js/app.js`). O tema e a lista dos arquivos onde há classes (`public/index.html`, `public/js/**/*.js`) ficam no `tailwind.config.js` da raiz; classe montada na hora entra na `safelist` de lá. Até 2026-11-19 vinha por `<script>` do CDN `cdn.tailwindcss.com`, sem versão fixa. A ADR está em «Proposed», à espera do aceite do MJRP | [[ADR-0021]] |
 | Front | SortableJS | 1.15.6 | arrastar e soltar (séries, área de montagem da Home, tabela de faixas) | — |
 | Front | uFuzzy | 1.0.14 | busca aproximada de álbuns, copiada para `public/js/vendor/uFuzzy.js` (não vem do npm) | — |
 | Front | Google Fonts, família Syne | — | tipografia, por `<link>` (`public/index.html:15-17`) | — |

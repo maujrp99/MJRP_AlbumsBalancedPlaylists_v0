@@ -58,10 +58,13 @@
 
 -   **`playlists/SavedSeriesGroup.js`**:
     -   **Role**: Container for a Series within the History view.
-    -   **Logic**: Renders the Series Header (with collapse toggle) and holds the `SavedPlaylistCard` grid.
+    -   **Logic**: Draws the entry it is given (`stores/savedPlaylists.js`): the Series Header with its actions and one `SavedPlaylistCard` per batch. When the playlists of the series could not be read it shows a notice with "Try again" (v5.0, F61); the trash button of the header is drawn only when there are playlists.
+-   **`playlists/SavedPlaylistsController.js`** (rewritten in v5.0, F61):
+    -   **Role**: What the Saved Playlists screen asks for and what it is told.
+    -   **Logic**: Asks `SavedPlaylistsReader` (`open`, `reload`, `retrySeries`, `deleteBatch`, `deleteAllPlaylists`) and hands the view what `SavedPlaylistsStore` holds (`getList`, `findPlaylist`, `subscribe`). It reads nothing itself and imports no repository (`test/architecture/savedPlaylistsBoundaries.test.js`).
 -   **`playlists/PlaylistDetailsModal.js`**:
     -   **Role**: Read-only view of a specific generated playlist.
     -   **Logic**: Uses `BaseModal` and `TrackRow` to render the list of tracks.
 -   **`playlists/SavedPlaylistCard.js`**:
     -   **Role**: Represents a "Batch" of playlists.
-    -   **Logic**: Displays a cascade of album art (`AlbumCascade`) and, when expanded, one `SavedPlaylistRow` per playlist plus the batch actions (`SavedPlaylistActions`).
+    -   **Logic**: Displays a cascade of album art (`AlbumCascade`), the totals of the batch (`batchTotals`) and the batch actions (`SavedPlaylistActions`). One `SavedPlaylistRow` per playlist is drawn the first time the card is opened, not before; a row draws its tracks the first time it is opened (v5.0, F61).

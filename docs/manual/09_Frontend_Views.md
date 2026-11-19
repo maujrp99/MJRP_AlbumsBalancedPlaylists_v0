@@ -119,13 +119,14 @@ sequenceDiagram
 ### 2.4 Playlists History: `views/SavedPlaylistsView.js`
 **Status**: `[ACTIVE]`
 **Pattern**: Component-Driven View
-**LOC**: ~270 (Refactored Sprint 19)
+**LOC**: ~325 (Refactored Sprint 19; the read moved out in v5.0, F61)
 
 *   **Purpose**: Display saved playlists grouped by Series and Batches.
-*   **Drawn once** (v4.0): `update()` draws the page the first time; after that it only updates the toolbar (`toolbar.update(toolbarProps())`) and redraws the list (`refreshContent`). Before, the whole page was rebuilt on every key and on every cover that arrived, which replaced the search field and took the cursor away (UAT-179). `destroy()` clears the pending cover update so a late one cannot draw this page over another.
+*   **Drawn once** (v4.0): `update()` draws the page the first time; after that it only updates the toolbar (`toolbar.update(toolbarProps())`) and brings the list up to date (`refreshContent`). Before, the whole page was rebuilt on every key and on every cover that arrived, which replaced the search field and took the cursor away (UAT-179).
+*   **Waits for no read** (v5.0, F61): `mount()` subscribes to `SavedPlaylistsStore` (through the controller) and asks for the list; it does not wait. Each change of the store calls `update()`, and `refreshContent` keeps the node of every series group that did not change (`syncGroups`, `groupNodeOf`), so a group on screen does not move or close while the others arrive. A line above the list says what is being read; a failed series and a failed list each have a notice with "Try again". `destroy()` stops listening, so a late change draws nothing.
 *   **Key Behavior**:
     1.  **Iterative Rendering**: Delegates rendering of complex data structures (Series -> Batches -> Playlists) to components.
-    2.  **Lazy Hydration**: Playlist tracks are rendered into hidden containers and toggled via safe DOM manipulation.
+    2.  **Lazy Drawing** (v5.0, F61): the playlists of a batch and the tracks of a playlist are built the first time the person opens them, not when the list is drawn.
 *   **Sub-Components**:
     *   `SavedSeriesGroup` [NEW]: Standalone component for rendering a Series header and its batch container.
     *   `PlaylistDetailsModal` [NEW]: Reusable modal logic for viewing playlist track details.

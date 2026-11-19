@@ -15,10 +15,10 @@ The test suite is structured into clear layers, mirroring the application archit
 | **Unit (Services)** | Vitest | `test/services/` | Business logic, API adapters, Auth logic. |
 | **Algorithms** | Vitest | `test/algorithms/` | Core logic verification (TopN, sorting, mixins). |
 | **Unit (Models)** | Vitest | `test/models/` | Pure rules: album load state, paging, series filter, own ranking, text. |
-| **Architecture** | Vitest | `test/architecture/` | Import boundaries of the album loading and of the own ranking. |
+| **Architecture** | Vitest | `test/architecture/` | Import boundaries of the album loading, of the own ranking and of the saved playlists read (`savedPlaylistsBoundaries.test.js`, v5.0, F61). |
 | **Other unit folders** | Vitest | `test/api/`, `test/cache/`, `test/components/`, `test/controllers/`, `test/ranking/`, `test/repositories/`, `test/transformers/`, `test/utils/` | One folder per layer of `public/js/`. |
 | **Server** | Node scripts | `server/test/` | Run by `npm test` inside `server/` (not by Vitest). |
-| **Helpers** | Vitest | `test/helpers/` | `fakeFirestore.js` (v5.0, F60): an in-memory double of `firebase/firestore` with atomic batches, a network turn per call, and `failNext` / `holdNext` to make a write fail or stay in the air. The save, series-delete and restore tests look at what is left in the database through it. |
+| **Helpers** | Vitest | `test/helpers/` | `fakeFirestore.js` (v5.0, F60): an in-memory double of `firebase/firestore` with atomic batches, a network turn per call, and `failNext` / `holdNext` to make a write fail or stay in the air. The save, series-delete and restore tests look at what is left in the database through it. Since F61 it also counts reads: `fake.reads()` lists every read in order, `fake.maxReadsAtOnce()` says how many were in the air together, and `failNext('read', error, { path })` fails the read of one path. `test/services/playlists/SavedPlaylistsReader.reads.test.js` uses them as the fitness test of the saved playlists read (1 + N reads, 8 at once, 7 waits for 47 series). |
 
 **How they run**: `npm test` runs Vitest (`vitest.config.js`: `jsdom`, `test/**/*.test.js`, `test/e2e/**` excluded). The E2E layer has its own runner, `npm run test:e2e` (`test/e2e/run-all.js`), against a running app; its `BASE_URL` defaults to `http://127.0.0.1:5010`.
 
