@@ -86,6 +86,26 @@ describe('CatalogAdapter', () => {
         expect(adapter.musicKit.searchAlbums).toHaveBeenCalledWith('Artist', 'Album - Deluxe', 5)
     })
 
+    it('loads the edition the person chose, by its id, without searching by name', async () => {
+        const adapter = build()
+        const album = await adapter.find({ artist: 'Artist', title: 'Album', appleMusicId: 'chosen-9' })
+
+        expect(adapter.musicKit.getAlbumDetails).toHaveBeenCalledWith('chosen-9')
+        expect(adapter.musicKit.searchAlbums).not.toHaveBeenCalled()
+        expect(album.title).toBe('Album')
+    })
+
+    it('searches by name, at once and without waiting, when the chosen edition is no longer there (404)', async () => {
+        const getAlbumDetails = vi.fn(async (id) => { if (id === 'gone-1') throw new Error('404'); return details })
+        const adapter = build({ musicKit: { getAlbumDetails }, retryWaitsMs: [5000] })
+
+        const album = await adapter.find({ artist: 'Artist', title: 'Album', appleMusicId: 'gone-1' })
+
+        expect(adapter.musicKit.searchAlbums).toHaveBeenCalledWith('Artist', 'Album', 5)
+        expect(getAlbumDetails).toHaveBeenLastCalledWith('apple-1')
+        expect(album.title).toBe('Album')
+    }, 1000)
+
     it('falls to the second source when Apple Music has nothing', async () => {
         const fromServer = makeAlbum({ title: 'From Server' })
         const adapter = build({ musicKit: { searchAlbums: vi.fn(async () => []) }, fetchFromServer: vi.fn(async () => fromServer) })

@@ -34,8 +34,9 @@ export class AlbumNotFoundError extends Error {
 
 /** How much runs at once and how long each step may take. One place, with names. */
 export const LOAD_LIMITS = Object.freeze({
-    findConcurrency: 3,       // catalog searches and the fast sources; Apple Music answers 429 above this (measured 2026-11-19 with 6)
+    findConcurrency: 3,       // catalog searches; Apple Music answers 429 above this (measured 2026-11-19 with 6)
     findTimeoutMs: 45000,     // the whole search of one album, its retries included
+    sourceConcurrency: 6,     // the quick sources (own ranking, stored popularity): they must not take search slots
     slowConcurrency: 2,       // the acclaim source scrapes a site on the server: start low, raise by measuring
     enrichTimeoutMs: 20000
 })
@@ -62,6 +63,7 @@ export class AlbumLoadService {
         this.limits = { ...LOAD_LIMITS, ...limits }
 
         this.fastQueue = new TaskQueue({ concurrency: this.limits.findConcurrency })
+        this.sourceQueue = new TaskQueue({ concurrency: this.limits.sourceConcurrency })
         this.slowQueue = new TaskQueue({ concurrency: this.limits.slowConcurrency })
 
         this.generation = 0
@@ -104,8 +106,7 @@ export class AlbumLoadService {
             })
 
             this.store.setSeriesEntries(item.id, entries)
-            this.fastQueue.prioritize(item.id, priority)
-            this.slowQueue.prioritize(item.id, priority)
+            this._queues().forEach(queue => queue.prioritize(item.id, priority))
             entries.forEach(entry => this._scheduleIfNeeded(entry, priority))
         })
     }
@@ -151,18 +152,19 @@ export class AlbumLoadService {
         this.scopeKey = null
         this.generation++
         this._scheduled = new Set()
-        this.fastQueue.cancelAll()
-        this.slowQueue.cancelAll()
+        this._queues().forEach(queue => queue.cancelAll())
     }
 
     /** Resolves when nothing is waiting, running or about to be queued. */
     async whenIdle() {
         do {
-            await this.fastQueue.onIdle()
-            await this.slowQueue.onIdle()
+            for (const queue of this._queues()) await queue.onIdle()
             await new Promise(resolve => setTimeout(resolve, 0))
-        } while (this._activeChains > 0 || this.fastQueue.running || this.fastQueue.pending ||
-            this.slowQueue.running || this.slowQueue.pending)
+        } while (this._activeChains > 0 || this._queues().some(queue => queue.running || queue.pending))
+    }
+
+    _queues() {
+        return [this.fastQueue, this.sourceQueue, this.slowQueue]
     }
 
     // =========================================
@@ -170,8 +172,7 @@ export class AlbumLoadService {
     // =========================================
 
     _startGeneration(scopeKey) {
-        this.fastQueue.cancelAll()
-        this.slowQueue.cancelAll()
+        this._queues().forEach(queue => queue.cancelAll())
         this.scopeKey = scopeKey
         this.generation++
         this._scheduled = new Set()
@@ -294,7 +295,7 @@ export class AlbumLoadService {
         }
 
         this._patch(generation, seriesId, key, { enrichment: { [source]: EnrichmentStatus.LOADING } })
-        const queue = SLOW_SOURCES.includes(source) ? this.slowQueue : this.fastQueue
+        const queue = SLOW_SOURCES.includes(source) ? this.slowQueue : this.sourceQueue
 
         try {
             const result = await queue.add(

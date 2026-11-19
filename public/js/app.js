@@ -180,6 +180,8 @@ if (typeof window !== 'undefined') {
     import('./stores/albumSeries.js').then(m => { window.albumSeriesStore = m.albumSeriesStore })
     import('./stores/albums.js').then(m => { window.albumsStore = m.albumsStore })
     import('./stores/playlists.js').then(m => { window.playlistsStore = m.playlistsStore })
+    import('./stores/albumLoad.js').then(m => { window.albumLoadStore = m.albumLoadStore })
+    import('./services/albums/albumLoading.js').then(m => { window.albumLoadService = m.albumLoadService })
     import('./services/SpotifyAuthService.js').then(m => { window.SpotifyAuthService = m.SpotifyAuthService })
     import('./services/SpotifyService.js').then(m => { window.SpotifyService = m.SpotifyService })
     window.router = router

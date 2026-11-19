@@ -25,6 +25,8 @@ const withJitter = (ms) => ms + Math.floor(Math.random() * ms * 0.3)
 
 const discPosition = (track) => track.position ?? track.trackNumber ?? 0
 
+const isNotFound = (error) => error?.status === 404 || /\b404\b/.test(String(error?.message ?? error))
+
 const withDeadline = (promise, ms, label) => new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error(`${label} passed ${ms} ms`)), ms)
     promise.then(
@@ -70,6 +72,37 @@ export class CatalogAdapter {
         return album
     }
 
+    /**
+     * The chosen edition, or null when Apple Music no longer has that id here (it answers 404 for an
+     * edition of another storefront, or one that was withdrawn): then the album is searched by name.
+     * Any other failure is a failed call and is thrown, to be retried.
+     */
+    async _detailsOfChosen(appleId) {
+        try {
+            return await this.musicKit.getAlbumDetails(appleId)
+        } catch (error) {
+            if (isNotFound(error)) return null
+            throw error
+        }
+    }
+
+    /** Search by name and keep the result only if it is the album asked for. */
+    async _searchInApple(query) {
+        const { artist, title } = parseAlbumQuery(query)
+        const candidates = await this.musicKit.searchAlbums(artist, title, 5)
+        if (!candidates || candidates.length === 0) return null
+
+        const selected = candidates[0] // already scored: standard editions first
+        const identity = new AlbumIdentity(query, {
+            title: selected.attributes?.name,
+            artist: selected.attributes?.artistName,
+            appleId: selected.id
+        })
+        if (!identity.isValid()) return null
+
+        return this.musicKit.getAlbumDetails(selected.id)
+    }
+
     _label(query) {
         const { artist, title } = parseAlbumQuery(query)
         return artist ? `${artist} - ${title}` : title
@@ -89,19 +122,10 @@ export class CatalogAdapter {
 
     /** @returns {Promise<Album|null>} null when Apple Music has nothing that matches the query */
     async _findInApple(query) {
-        const { artist, title } = parseAlbumQuery(query)
-        const candidates = await this.musicKit.searchAlbums(artist, title, 5)
-        if (!candidates || candidates.length === 0) return null
-
-        const selected = candidates[0] // already scored: standard editions first
-        const identity = new AlbumIdentity(query, {
-            title: selected.attributes?.name,
-            artist: selected.attributes?.artistName,
-            appleId: selected.id
-        })
-        if (!identity.isValid()) return null
-
-        const full = await this.musicKit.getAlbumDetails(selected.id)
+        // The series keeps the id of the edition the person chose: load exactly that one, in one call.
+        // Only a query without it (typed or pasted as text) is searched by name.
+        const chosenId = (typeof query === 'object' && query !== null) ? query.appleMusicId : null
+        const full = (chosenId && await this._detailsOfChosen(chosenId)) || await this._searchInApple(query)
         if (!full) return null
 
         const id = this.generateAlbumId({ title: full.title, artist: full.artist })
