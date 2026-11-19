@@ -18,6 +18,8 @@ import { applyBEAData } from '../../helpers/BEAEnrichmentHelper.js'
 import { applyEnrichmentToAlbum } from '../../helpers/SpotifyEnrichmentHelper.js'
 import { userRankingRepository } from '../../repositories/UserRankingRepository.js'
 import { AlbumLoadService } from './AlbumLoadService.js'
+import { SeriesFactsService } from '../series/SeriesFactsService.js'
+import { getSeriesService } from '../SeriesService.js'
 import { CatalogAdapter } from './adapters/CatalogAdapter.js'
 import { AcclaimEnricher, PopularityEnricher, UserRankingEnricher } from './adapters/enrichers.js'
 import { AlbumCacheAdapter } from './adapters/AlbumCacheAdapter.js'
@@ -71,3 +73,26 @@ export function projectLoadedAlbums(store = albumLoadStore, shelf = albumsStore,
 }
 
 albumLoadStore.subscribe(() => projectLoadedAlbums())
+
+/**
+ * What the load learns about each album (its year, which sources have data) is written into the
+ * series, so the filters answer without loading anything. Only the difference is written, once
+ * the series has finished, a little after the last change.
+ */
+export const seriesFactsService = new SeriesFactsService({
+    loadStore: albumLoadStore,
+    seriesStore: albumSeriesStore,
+    saveAlbumFacts: (seriesId, albumQueries) =>
+        getSeriesService(albumSeriesStore.getDb(), null, albumSeriesStore.getUserId())
+            .repository.saveAlbumFacts(seriesId, albumQueries)
+})
+
+const FACTS_SETTLE_MS = 2000
+let factsTimer = null
+albumLoadStore.subscribe(() => {
+    clearTimeout(factsTimer)
+    factsTimer = setTimeout(() => {
+        seriesFactsService.syncFinishedSeries().catch(error =>
+            console.warn('[albumLoading] saving the album facts failed:', error?.message || error))
+    }, FACTS_SETTLE_MS)
+})

@@ -10,7 +10,7 @@ import { escapeHtml } from '../../utils/stringUtils.js';
 import { SeriesEmptyState } from '../../components/series/SeriesEmptyState.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 
-import { getUniqueArtists } from '../../services/SeriesFilterService.js';
+import { listArtists } from '../../models/seriesFilter.js';
 
 export class SeriesViewUpdater {
     constructor(components) {
@@ -65,6 +65,7 @@ export class SeriesViewUpdater {
             seriesList: seriesList,
             context: { searchQuery, filters },
             isLoading: isLoading, // FIX #152: Pass isLoading to GridRenderer
+            pageBounded: true, // the list is already cut to a page: draw every series, no lazy blocks
             seriesStates // the load state of each series, derived by the load store
         });
     }
@@ -95,10 +96,9 @@ export class SeriesViewUpdater {
         const { searchQuery, filters, viewMode, seriesSortMode } = state;
         const activeSeries = albumSeriesStore.getActiveSeries();
         const allSeries = albumSeriesStore.getSeries();
-        const albums = albumsStore.getAlbums();
-
-        // 1. Regenerate Options
-        const artists = getUniqueArtists(albums);
+        // 1. Regenerate Options - the artists come from the series themselves, so the list is the
+        //    same whatever page is on screen and whatever has loaded so far
+        const artists = listArtists(allSeries);
         const seriesOptions = allSeries.map(s => ({ value: s.id, label: s.name }));
         const artistOptions = artists.map(a => ({ value: a, label: a }));
 

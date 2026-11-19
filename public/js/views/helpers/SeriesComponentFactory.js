@@ -11,7 +11,7 @@ import SeriesGridRenderer from '../../components/series/SeriesGridRenderer.js';
 import { albumsStore } from '../../stores/albums.js';
 import { albumSeriesStore } from '../../stores/albumSeries.js';
 import { router } from '../../router.js';
-import { getUniqueArtists as getUniqueArtistsFn } from '../../services/SeriesFilterService.js';
+import { listArtists } from '../../models/seriesFilter.js';
 import { escapeHtml } from '../../utils/stringUtils.js';
 
 export class SeriesComponentFactory {
@@ -53,7 +53,7 @@ export class SeriesComponentFactory {
 
         // 1. Prepare Options
         const seriesOptions = allSeries.map(s => ({ value: s.id, label: s.name }));
-        const artistOptions = getUniqueArtistsFn(albums).map(a => ({ value: a, label: a }));
+        const artistOptions = listArtists(allSeries).map(a => ({ value: a, label: a }));
 
         const yearOptions = [
             { value: 'all', label: 'All Years' },

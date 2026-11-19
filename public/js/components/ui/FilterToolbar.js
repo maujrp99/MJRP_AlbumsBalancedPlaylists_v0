@@ -31,21 +31,16 @@ export default class FilterToolbar extends Component {
         super(props);
     }
 
+    /**
+     * The search field is drawn once and stays the same element for as long as the toolbar lives:
+     * redrawing it on every update took the cursor away after each letter (UAT-179).
+     * The other controls are redrawn only when what they show has changed.
+     */
     render() {
-        const {
-            searchQuery = '',
-            sortOptions = [],
-            currentSort = '',
-            filterGroups = [],
-            viewMode = null,
-            extraActions = [] // Extra buttons if needed
-        } = this.props;
-
-        this.container.innerHTML = `
+        if (!this.container.querySelector('#genericSearch')) {
+            this.container.innerHTML = `
             <div class="filters-section glass-panel p-4 mb-6 fade-in relative">
                 <div class="filters-row flex flex-wrap gap-3 items-center">
-                    
-                    <!-- Search -->
                     <div class="search-bar relative flex-1 min-w-[200px]">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                             ${getIcon('Search', 'w-5 h-5')}
@@ -55,10 +50,53 @@ export default class FilterToolbar extends Component {
                             id="genericSearch"
                             placeholder="Search..."
                             class="form-control pl-10 w-full"
-                            value="${this.escapeHtml(searchQuery)}"
                         />
                     </div>
+                    <div class="filters-controls contents"></div>
+                </div>
+            </div>`;
+            this._controlsSignature = null;
+            const search = this.container.querySelector('#genericSearch');
+            search.value = this.props.searchQuery || '';
+            search.addEventListener('input', (e) => this.props.onSearch?.(e.target.value));
+        }
 
+        this._syncSearch();
+        this._renderControls();
+    }
+
+    /** Bring the field in line with the state, unless the person is typing in it. */
+    _syncSearch() {
+        const search = this.container.querySelector('#genericSearch');
+        const wanted = this.props.searchQuery || '';
+        if (search && document.activeElement !== search && search.value !== wanted) search.value = wanted;
+    }
+
+    /** What the controls beside the search show; they are redrawn only when this changes. */
+    _controlsState() {
+        const { sortOptions = [], currentSort = '', filterGroups = [], viewMode = null } = this.props;
+        return JSON.stringify({
+            currentSort,
+            viewMode,
+            refresh: !!this.props.onRefresh,
+            sort: sortOptions.map(option => [option.value, option.label]),
+            groups: filterGroups.map(group => [group.id, group.label, String(group.value), group.options.map(option => [option.value, option.label])])
+        });
+    }
+
+    _renderControls() {
+        const signature = this._controlsState();
+        if (signature === this._controlsSignature) return;
+        this._controlsSignature = signature;
+
+        const {
+            sortOptions = [],
+            currentSort = '',
+            filterGroups = [],
+            viewMode = null
+        } = this.props;
+
+        this.container.querySelector('.filters-controls').innerHTML = `
                     <!-- Dynamic Filter Groups -->
                     ${filterGroups.map(group => this.renderFilterGroup(group)).join('')}
 
@@ -74,9 +112,6 @@ export default class FilterToolbar extends Component {
 
                     <!-- View Mode Toggles -->
                     ${viewMode ? this.renderViewToggles(viewMode) : ''}
-
-                </div>
-            </div>
         `;
 
         this.bindEvents();
@@ -137,30 +172,28 @@ export default class FilterToolbar extends Component {
     }
 
     bindEvents() {
-        // Search
-        const search = this.container.querySelector('#genericSearch');
-        if (search && this.props.onSearch) {
-            search.addEventListener('input', (e) => this.props.onSearch(e.target.value));
-        }
-
-        // Filters
+        // Filters: the handler is looked up when the person changes the control, so it is always the
+        // one of the latest props even though the control itself was not redrawn
         this.props.filterGroups?.forEach(group => {
             const select = this.container.querySelector(`#filter-${group.id}`);
-            if (select && group.onChange) {
-                select.addEventListener('change', (e) => group.onChange(e.target.value));
+            if (select) {
+                select.addEventListener('change', (e) => {
+                    const current = this.props.filterGroups?.find(item => item.id === group.id);
+                    current?.onChange?.(e.target.value);
+                });
             }
         });
 
         // Sort
         const sort = this.container.querySelector('#genericSort');
-        if (sort && this.props.onSort) {
-            sort.addEventListener('change', (e) => this.props.onSort(e.target.value));
+        if (sort) {
+            sort.addEventListener('change', (e) => this.props.onSort?.(e.target.value));
         }
 
         // Refresh
         const refresh = this.container.querySelector('#genericRefresh');
-        if (refresh && this.props.onRefresh) {
-            refresh.addEventListener('click', this.props.onRefresh);
+        if (refresh) {
+            refresh.addEventListener('click', () => this.props.onRefresh?.());
         }
 
         // View Toggles

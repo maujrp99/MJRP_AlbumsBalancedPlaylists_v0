@@ -16,7 +16,9 @@ import { albumSeriesStore } from '../stores/albumSeries.js';
 import { getSeriesService } from '../services/SeriesService.js';
 import { albumLoadStore } from '../stores/albumLoad.js';
 import { albumLoadService, ALL_SERIES_CONTEXT, ALL_SCOPE, singleScope } from '../services/albums/albumLoading.js';
-import { filterAlbums } from '../services/SeriesFilterService.js';
+import { filterSeries } from '../models/seriesFilter.js';
+import { paginate, takeFirst, normalizePageSize, PagingMode } from '../models/paging.js';
+import { AlbumStatus } from '../models/albumLoadState.js';
 import toast from '../components/Toast.js';
 
 export default class SeriesController {
@@ -32,7 +34,12 @@ export default class SeriesController {
             searchQuery: '',
             seriesSortMode: 'count_asc', // Default: Smallest (Performance)
             isLoading: false,
-            loadProgress: { current: 0, total: 0 }
+            loadProgress: { current: 0, total: 0 },
+            // Paging of the series on screen: numbered pages or a list that grows on scroll
+            pagingMode: localStorage.getItem('albumsPagingMode') === PagingMode.SCROLL ? PagingMode.SCROLL : PagingMode.PAGES,
+            pageSize: normalizePageSize(localStorage.getItem('albumsPageSize')),
+            page: 1,
+            shownCount: normalizePageSize(localStorage.getItem('albumsPageSize'))
         };
 
         // Subscriptions of the current visit (ended on the next init, so they never pile up)
@@ -109,6 +116,7 @@ export default class SeriesController {
         // Reset filters when switching scope to prevent context contamination
         this.state.filters = { artist: '', year: '', source: '' };
         this.state.searchQuery = '';
+        this.resetPaging();
         this.notifyView('header', this.getHeaderData());
 
         try {
@@ -139,16 +147,99 @@ export default class SeriesController {
      * @param {boolean} fresh - search everything again, ignoring the cache
      */
     requestLoad(fresh = false) {
-        const sorted = this.getSortedSeries(albumSeriesStore.getSeries());
         const isAll = this.state.currentScope === 'ALL';
-        const series = isAll ? sorted : sorted.filter(s => s.id === this.state.targetSeriesId);
+        const { groups } = this.getPageView();
 
         albumLoadService.load({
             scopeKey: isAll ? ALL_SCOPE : singleScope(this.state.targetSeriesId),
-            series: series.map(s => ({ id: s.id, albumQueries: s.albumQueries || [] })),
+            series: groups.map(group => ({ id: group.series.id, albumQueries: group.series.albumQueries || [] })),
             fresh
         });
         this.renderFromStore();
+    }
+
+    /**
+     * What the screen shows now: the series that pass the filters, cut to the current page.
+     * The filter reads the series themselves, so it answers the same on any page.
+     * @returns {{ groups: Array<{ series, queries, keys }>, paging: Object }}
+     */
+    getPageView() {
+        const sorted = this.getSortedSeries(albumSeriesStore.getSeries());
+        const isAll = this.state.currentScope === 'ALL';
+        const matching = filterSeries(sorted, {
+            seriesId: isAll ? null : this.state.targetSeriesId,
+            artist: this.state.filters?.artist,
+            year: this.state.filters?.year,
+            source: this.state.filters?.source,
+            search: this.state.searchQuery
+        }, { ownRankedKeys: this.getOwnRankedKeys() });
+
+        const { pagingMode, pageSize } = this.state;
+        const cut = pagingMode === PagingMode.SCROLL
+            ? { ...takeFirst(matching, this.state.shownCount), page: 1, pages: 1 }
+            : { ...paginate(matching, { page: this.state.page, size: pageSize }), hasMore: false };
+        this.state.page = cut.page;
+
+        return {
+            groups: cut.items,
+            paging: {
+                mode: pagingMode, size: pageSize, page: cut.page, pages: cut.pages,
+                total: cut.total, from: cut.from, to: cut.to, hasMore: cut.hasMore,
+                totalSeries: sorted.length
+            }
+        };
+    }
+
+    /** Keys of the loaded albums the person has ranked (the 'My Ranking' filter). */
+    getOwnRankedKeys() {
+        const keys = new Set();
+        albumLoadStore.getSeriesIds().forEach(id => albumLoadStore.getEntries(id).forEach(entry => {
+            if (entry.album?.hasUserRanking) keys.add(entry.key);
+        }));
+        return keys;
+    }
+
+    /** The series on screen, in order (what the grid groups the albums by). */
+    getVisibleSeriesList() {
+        return this.getPageView().groups.map(group => group.series);
+    }
+
+    // =========================================
+    // PAGING
+    // =========================================
+
+    /** Go to a numbered page. */
+    handlePage(page) {
+        this.state.page = Number(page) || 1;
+        this.requestLoad(false);
+    }
+
+    /** Change how many series a page has (10 to 100). */
+    handlePageSize(size) {
+        this.state.pageSize = normalizePageSize(size);
+        localStorage.setItem('albumsPageSize', String(this.state.pageSize));
+        this.resetPaging();
+        this.requestLoad(false);
+    }
+
+    /** Switch between numbered pages and the list that grows on scroll. */
+    handlePagingMode(mode) {
+        this.state.pagingMode = mode === PagingMode.SCROLL ? PagingMode.SCROLL : PagingMode.PAGES;
+        localStorage.setItem('albumsPagingMode', this.state.pagingMode);
+        this.resetPaging();
+        this.requestLoad(false);
+    }
+
+    /** Show one more batch of series (the growing list). */
+    handleShowMore() {
+        this.state.shownCount += this.state.pageSize;
+        this.requestLoad(false);
+    }
+
+    /** Back to the first page: called whenever the filters, the order or the size change. */
+    resetPaging() {
+        this.state.page = 1;
+        this.state.shownCount = this.state.pageSize;
     }
 
     /** Try again the albums of a series that did not load. */
@@ -227,7 +318,8 @@ export default class SeriesController {
      */
     handleSearch(query) {
         this.state.searchQuery = query;
-        this.applyFilters();
+        this.resetPaging();
+        this.requestLoad(false);
     }
 
     /**
@@ -246,7 +338,8 @@ export default class SeriesController {
     handleFilterChange(type, value) {
         if (!this.state.filters) this.state.filters = {};
         this.state.filters[type] = value;
-        this.applyFilters();
+        this.resetPaging();
+        this.requestLoad(false);
     }
 
     /**
@@ -272,7 +365,9 @@ export default class SeriesController {
     handleSort(sortKey) {
 
         this.state.seriesSortMode = sortKey;
+        this.resetPaging();
         this.notifyView('header', this.getHeaderData());
+        this.requestLoad(false);
     }
 
     /**
@@ -306,32 +401,17 @@ export default class SeriesController {
     }
 
     /**
-     * Apply current filters to albums and notify view
+     * Notify the view with the albums of the series on screen that pass the filters.
+     * A loaded album is shown when the query it came from passed the filter.
      */
     applyFilters() {
-        // ARCH-FIX: Select data source based on scope to prevent ghosting
-        let allAlbums;
-        if (this.state.currentScope === 'SINGLE' && this.state.targetSeriesId) {
-            // Explicitly fetch only this series' albums from store map
-            allAlbums = albumsStore.getAlbumsForSeries(this.state.targetSeriesId);
-        } else {
-            // Use default behavior (relies on ActiveAlbumSeriesId being set in Store)
-            allAlbums = albumsStore.getAlbums();
-        }
+        const { groups } = this.getPageView();
+        const albums = groups.flatMap(group =>
+            albumLoadStore.getEntries(group.series.id)
+                .filter(entry => entry.status === AlbumStatus.FOUND && entry.album && group.keys.has(entry.key))
+                .map(entry => entry.album));
 
-        // Sprint 17: Use pure service for filtering (T17-202)
-        const filtered = filterAlbums(allAlbums, {
-            searchQuery: this.state.searchQuery,
-            filters: this.state.filters || {},
-            // Wait, this.state.filters was not explicit in constructor but SeriesView had it.
-            // I need to ensure SeriesController tracks 'filters'.
-            // In Constructor, only 'filterMode' was there.
-            // SeriesToolbar props passed `filters: this.filters` from View.
-            // I need to add filters to Controller state!
-            filterMode: this.state.filterMode
-        });
-
-        this.notifyView('albums', filtered);
+        this.notifyView('albums', albums);
     }
 
     // =========================================
@@ -394,7 +474,7 @@ export default class SeriesController {
         return {
             title: activeSeries?.name || 'All Albums Series',
             description: activeSeries?.description || `${allSeries.length} series available`,
-            seriesList: this.getSortedSeries(allSeries),
+            seriesList: this.getVisibleSeriesList(),
             activeSeriesId: activeSeries?.id || null
         };
     }
