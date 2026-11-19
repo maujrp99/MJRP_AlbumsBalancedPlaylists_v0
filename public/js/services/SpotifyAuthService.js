@@ -40,10 +40,17 @@ export const SpotifyAuthService = {
      * @param {number} length 
      */
     generateRandomString(length) {
-        let text = ''
+        // From the browser's cryptographic generator: this text is the secret of the handshake (F59).
+        // Bytes that would favour some characters are thrown away, so every character is as likely.
         const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-        for (let i = 0; i < length; i++) {
-            text += possible.charAt(Math.floor(Math.random() * possible.length))
+        const limit = 256 - (256 % possible.length)
+        let text = ''
+        while (text.length < length) {
+            const bytes = new Uint8Array(length)
+            globalThis.crypto.getRandomValues(bytes)
+            for (const byte of bytes) {
+                if (byte < limit && text.length < length) text += possible[byte % possible.length]
+            }
         }
         return text
     },
@@ -117,8 +124,12 @@ export const SpotifyAuthService = {
         // Verify State
         const storedState = localStorage.getItem('spotify_auth_state')
         if (state === null || state !== storedState) {
-            console.error('[SpotifyAuth] State mismatch error')
-            // return false // Strict security check (currently disabled for dev ease if state logic varies)
+            // A return that does not carry the state this browser sent did not start here: refuse it
+            // before asking Spotify for anything, and leave no secret of the handshake behind (F59).
+            console.error('[SpotifyAuth] State mismatch: the return from Spotify was refused')
+            localStorage.removeItem('spotify_code_verifier')
+            localStorage.removeItem('spotify_auth_state')
+            return false
         }
 
         if (!code) return false

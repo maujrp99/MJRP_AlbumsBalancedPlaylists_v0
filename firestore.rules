@@ -28,11 +28,13 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Sprint 20: User Rankings
+    // =========================================================================
+    // USER RANKINGS (Sprint 20)
+    // =========================================================================
+    // The ranking of a person is read and written by that person only. This is the rule in force
+    // in production since 2026-01-11; the repository's copy had been left open with a DEBUG note (F59).
     match /users/{userId}/albumRankings/{albumId} {
-      // DEBUG: Allow 'anonymous-user' or Authenticated User
-      // Production Requirement: Change to `request.auth != null` before launch
-      allow read, write: if true; 
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
     
     // =========================================================================

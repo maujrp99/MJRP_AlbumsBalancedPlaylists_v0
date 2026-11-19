@@ -3,6 +3,20 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:35] session — correção anotada nos dois relatórios: as regras abertas eram as do arquivo, não as de produção
+
+O mapa da v5.0 e o cruzamento ganharam, no topo, a nota da conferência de produção (UAT-15). A UAT-15 cita o commit `90cd34f`.
+
+## [2026-11-19 15:34] session — F59, fatia A (só o site): regras do repositório fechadas, volta do Spotify conferida, sem mapas de código
+
+- **Decisão do MJRP:** «Siga a sua prioridade». A ordem do agente: F59, F60, F64, F52, F55, F56, F61, F57, F58, F62, F63, F65; a F49 entra quando ele disser (o `docs/specs/priority.md` do Control Center ainda mostra a ordem que ele marcou antes; o arquivo é dele).
+- **Correção de um achado:** as regras do banco **em produção não estavam abertas**. Lidas pela API de regras do Firebase: a versão em vigor é de 2026-01-11 e fecha o ranking de cada pessoa no dono. Aberto estava o arquivo `firestore.rules` do repositório («if true», nota DEBUG); publicá-lo teria aberto produção. O implementador tinha dito ao MJRP que os rankings estavam abertos a qualquer pessoa, repetindo o relatório sem conferir produção.
+- **Feito:** `firestore.rules` igual às regras em vigor, com teste que recusa regra sem condição e dado pessoal sem dono; `firebase.json` aponta o arquivo; `SpotifyAuthService` recusa a volta cujo `state` não é o enviado e tira os segredos do gerador criptográfico; sair da conta encerra a sessão do Spotify; `vite.config.js` sem mapas de código.
+- **Confirmado aberto em produção, ainda não consertado:** `/api/debug/files`, `/api/list-models` e `/api/debug/import` respondem 200; `POST /api/generate` responde 200 sem login. São as fatias B e C, de servidor.
+- **Testes:** 12 novos, vistos falhar antes; a suíte tem 455 passando. O build compila, sem `.map`.
+- **No navegador:** a volta do Spotify que não bate é recusada, sem pedido ao Spotify. A volta certa parou na tela de autorização do Spotify, que é do MJRP aceitar. `reports/evidence/F59-close-what-is-open-security/F59-probe-2026-11-19.json`.
+- **Não publicado ainda:** espera a volta certa do Spotify ser vista no navegador, para não arriscar a conexão em produção.
+
 ## [2026-11-19 15:20] session — manual: diagramas da evolução da arquitetura (v3, v4.0, alvo v5.0), padrões e componentes
 
 Pedido do MJRP: «produza novos diagramas de arquitetura para os manuais da documentacao, mostrando a evolucao do antes pra depois, nao esqueça de manter o mapeamento dos design patterns utlizados e dos componentes que temos». `docs/manual/01_System_Architecture.md` ganhou a seção 6: três diagramas do mesmo sistema (antes, hoje, alvo), a comparação lado a lado, o mapa de padrões com o identificador do catálogo do harness, o lugar e a versão em que cada um chegou (mais os seis padrões da casa sem identificador e os quatro planejados para a v5.0), e o mapa de componentes do cliente, do servidor e de fora. O índice do manual aponta para ela. A trava de estrutura recusou um arquivo novo em `docs/manual/`; o conteúdo entrou no arquivo de arquitetura que já existia. Os diagramas de «antes» e «hoje» saíram do código; o de «alvo» é plano. Não foram renderizados para conferir a sintaxe.

@@ -7,6 +7,8 @@ who_wrote: o agente implementador, a partir do cruzamento feito por um agente se
 asked_by: MJRP
 ---
 
+> **Correção de 2026-11-19, depois de conferir produção:** o item «regras do banco abertas» (UAT-15) vale para o **arquivo do repositório**, não para produção. As regras em vigor, lidas pela API do Firebase, fecham o ranking de cada pessoa no dono desde 2026-01-11. O arquivo foi igualado a elas na F59 (commit `90cd34f`). As rotas de depuração e a IA paga, essas sim, estão abertas em produção (conferido pelo código de resposta).
+
 # Mapa da v5.0: cada achado, a feature que o resolve
 
 ## Como ler
