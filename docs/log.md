@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 13:01] decision — F52 aberta: a busca de álbum por IA do servidor responde 402 em produção (UAT-181)
+
+- O MJRP, sobre o achado do 402 em `POST /api/generate`: «abra uma feature pra arrumarmos isso via google cloud e firebase cli e eu posso entrar no console tb». Issue UAT-181 na Rodada 2 e feature F52 (`lane: fast`, `solution_type: fix`), na v4.0. O diagnóstico começa pelos registros do Cloud Run, só leitura; mudança de chave, de cota ou de cobrança é dele.
+- Ele também perguntou «vamos mover para prod o que já foi corrigido?». Conferido: o site publica por `scripts/deploy-prod.sh` (Firebase Hosting; o `firebase` da máquina está logado na conta dele); a `main` compila; a versão no ar é de 2026-01-19. Risco apontado a ele: a chave do app no Spotify (`VITE_SPOTIFY_CLIENT_ID`) vem de um `.env` que não existe nesta máquina, e um build feito aqui sairia sem ela (o bundle no ar a tem). Publicação à espera da resposta dele sobre a chave.
+- Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
+
 ## [2026-11-19 12:43] session — F45, F47 e F51 integradas na main local; UAT-172, UAT-24 e UAT-179 em «fixed», à espera do OK do MJRP
 
 - Trem de merge do harness (`merge_train.py`): preflight limpo depois de commitar o rastro do doctor (`daily-checks/`, como a ferramenta pede); três merges, na ordem das features: `f295316` (F45), `d893d75` (F47), `5268f45` (F51). A trava visual não se aplica ao v0 (não há `info-arch.md` com referência visual aprovada). Nada foi enviado ao remoto: o push é do MJRP, e é ele que publica em produção.
