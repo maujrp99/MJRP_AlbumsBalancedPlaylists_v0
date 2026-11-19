@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 20:51] review — F58 provada pelo integrador; UAT-194 e UAT-14 em fixed
+
+Carga de álbuns com zero funções acima do limite; o app caiu de 97 para 80 com a F57 e a F62 juntas. No navegador nada mudou (álbuns, blend, inventário, tela de migração, console limpo). Prova em `reports/evidence/F58/2026-11-19-load-service-within-the-limit-proof.md`. UAT-18 e UAT-19 ficam abertas: diminuíram, e o resto está em listas que só encolhem. Pergunta para o MJRP: o limite de 10 vira artigo da constituição?
+
 ## [2026-11-19 20:50] session — F58 junto com a `main`: a lista das funções acima do limite encolhe de 94 para 80
 
 A F57 e a F62, que entraram na `main` enquanto a F58 era feita, trouxeram 14 funções para dentro do limite de complexidade (ou as retiraram). O teste de limite pediu, e as 14 linhas saíram da lista.
