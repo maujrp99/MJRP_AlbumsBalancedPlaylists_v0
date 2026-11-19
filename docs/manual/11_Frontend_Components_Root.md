@@ -14,6 +14,8 @@
     2.  **Mobile Drawer**: Manages a hidden sliding drawer (`translate-x-full`) for mobile viewports (< 768px).
     3.  **Data Sync**: Checks `MigrationUtility.needsMigration()` to optionally show the "Data Sync" button.
     4.  **Routing**: Uses `data-link` delegation for client-side navigation via `Router.js`.
+    5.  **Account menu** (F63, `navigation/AuthNav.js`): the avatar is a button (`#userMenuBtn`, `aria-haspopup`, `aria-expanded`) that opens and closes the menu (`#userMenu`) on a click or a tap; a click outside and Escape close it (Escape gives the focus back to the avatar), and Arrow Down on the avatar opens it on the first item. It no longer opens by the mouse being over it. The listeners on the page are attached once per `AuthNav`, however many times the nav is drawn.
+    6.  **"Soon" items** (F63, `navigation/SeriesDropdown.js`): By Artist, By Genre and By Track are shown in the "Music Series" menu and are not links.
 
 ### 1.2 `Footer.js`
 **Role**: Static Footer & Debug Tools.

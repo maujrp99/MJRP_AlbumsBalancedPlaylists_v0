@@ -22,6 +22,7 @@ import { SeriesModalsManager } from './helpers/SeriesModalsManager.js';
 
 import { SafeDOM } from '../utils/SafeDOM.js';
 import Pager from '../components/ui/Pager.js';
+import { SeriesExpansion, SERIES_ALBUM_LIMIT } from '../models/seriesExpansion.js';
 
 export default class SeriesView extends BaseView {
     constructor(controller) {
@@ -34,6 +35,9 @@ export default class SeriesView extends BaseView {
         this.isLoading = false;
         this.currentScope = 'ALL';
         this.targetSeriesId = null;
+        // The series the person opened whole (past the first 12 albums). It lives with this screen:
+        // a new visit starts empty, and a change of scope empties it (updateAlbums).
+        this.expansion = new SeriesExpansion();
     }
 
     /**
@@ -106,7 +110,7 @@ export default class SeriesView extends BaseView {
 
         // 4. Initial Load
         if (this.controller) {
-            await this.controller.loadScope(this.currentScope, this.targetSeriesId);
+            await this.controller.loadScope(this.currentScope, this.targetSeriesId, false, { entering: true });
         }
         console.log('[SeriesView] Mounted ✅');
     }
@@ -132,6 +136,7 @@ export default class SeriesView extends BaseView {
                 onAlbumRemoved: () => this.controller.refresh(),
                 onRefetchMetadata: (album) => this.controller.handleRefetchMetadata(album),
                 onRetrySeries: (sid) => this.controller.retrySeries(sid),
+                onShowAllAlbums: (sid) => this.showAllAlbums(sid),
                 onSaveRanking: (album, rankings) => this.controller.saveRanking(album, rankings)
             }
         });
@@ -144,6 +149,22 @@ export default class SeriesView extends BaseView {
             this.modalsManager = new SeriesModalsManager(this);
             this.modalsManager.mount(mount);
         }
+    }
+
+    /**
+     * The person asked for the albums a series holds back («Load N more albums»).
+     * The albums are already in the load store (the load asks for every album of a series on
+     * screen), so nothing is loaded: the choice is kept and the screen is drawn again from the store.
+     */
+    showAllAlbums(seriesId) {
+        this.expansion.expand(seriesId);
+        this.controller.refresh();
+        this.components.grid?.focusAlbum(seriesId, SERIES_ALBUM_LIMIT);
+    }
+
+    /** Say which scope is on screen: with another scope, the series opened whole are forgotten. */
+    syncExpansionScope(scope, seriesId) {
+        this.expansion.syncScope(scope === 'ALL' ? 'ALL' : `SINGLE:${seriesId}`);
     }
 
     // =========================================
@@ -177,6 +198,7 @@ export default class SeriesView extends BaseView {
 
         const currentState = this.controller ? this.controller.getState() : {};
         const currentScope = currentState.currentScope || this.currentScope; // Fallback to local if no controller (unlikely)
+        this.syncExpansionScope(currentScope, currentState.targetSeriesId);
 
         this.updater?.updateGrid(
             albums,
@@ -186,7 +208,8 @@ export default class SeriesView extends BaseView {
             currentState.searchQuery || '',
             sortedSeriesList,
             isLoading,
-            this.controller ? this.controller.getSeriesStates() : null
+            this.controller ? this.controller.getSeriesStates() : null,
+            this.expansion.list()
         );
         const pageView = this.controller ? this.controller.getPageView() : null;
         this.components.pager?.update({ paging: pageView?.paging || null });

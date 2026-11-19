@@ -43,7 +43,7 @@ export class SDraftBalancedAlgorithm extends BaseAlgorithm {
         this.defaultRankingSource = this.registerRankingSource(opts.defaultRankingSource || {
             name: 'MJRP S-Draft Balanced',
             type: 'internal',
-            description: 'Curadoria MJRP Balanced revisada',
+            description: 'Revised MJRP Balanced curation',
             secure: true
         })
     }
@@ -139,7 +139,7 @@ export class SDraftBalancedAlgorithm extends BaseAlgorithm {
             playlists.push({
                 id: 'p1',
                 title: 'Greatest Hits',
-                subtitle: 'Rank #1 e #2 de cada álbum',
+                subtitle: 'Rank #1 and #2 from each album',
                 tracks: [...rank1Tracks, ...rank2Tracks]
             })
         } else {
@@ -259,13 +259,13 @@ export class SDraftBalancedAlgorithm extends BaseAlgorithm {
             {
                 id: 'p1',
                 title: 'Greatest Hits Vol. 1',
-                subtitle: 'Rank #1 de cada álbum',
+                subtitle: 'Rank #1 from each album',
                 tracks: p1Tracks
             },
             {
                 id: 'p2',
                 title: 'Greatest Hits Vol. 2',
-                subtitle: 'Rank #2 de cada álbum',
+                subtitle: 'Rank #2 from each album',
                 tracks: p2Tracks
             }
         ]

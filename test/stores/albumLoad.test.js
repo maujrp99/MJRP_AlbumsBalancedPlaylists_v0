@@ -99,6 +99,58 @@ describe('AlbumLoadStore', () => {
         expect(listener).not.toHaveBeenCalled()
     })
 
+    describe('series asked for by another screen (F56)', () => {
+        it('a guest series is kept when the screen changes its own list, and is not part of that list', () => {
+            store.addGuest('g1')
+            store.setSeriesEntries('g1', [createEntry('g1', 'A - Guest')])
+
+            store.setSeriesOrder(['s2'])
+
+            expect(store.getSeriesIds()).toEqual(['s2'])
+            expect(store.getEntries('s1')).toEqual([])
+            expect(store.getEntries('g1').map(e => e.key)).toEqual(['a - guest'])
+            expect(store.getAllSeriesIds()).toEqual(['s2', 'g1'])
+        })
+
+        it('a guest does not count as the screen loading, nor in the albums of the screen', () => {
+            store.patchEntry('s1', 'a - one', { status: AlbumStatus.FOUND, album: { title: 'One' }, enrichment: allDone })
+            store.patchEntry('s1', 'a - two', { status: AlbumStatus.FAILED })
+            store.addGuest('g1')
+            store.setSeriesEntries('g1', [createEntry('g1', 'A - Guest')])
+
+            expect(store.isLoading()).toBe(false)
+            expect(store.getAllAlbums().map(a => a.title)).toEqual(['One'])
+            expect(Object.keys(store.getSeriesStates())).toEqual(['s1', 's2'])
+        })
+
+        it('removing a guest that the screen does not show drops its entries and says so', () => {
+            store.addGuest('g1')
+            store.setSeriesEntries('g1', [createEntry('g1', 'A - Guest')])
+
+            expect(store.removeGuest('g1')).toBe(true)
+            expect(store.getEntries('g1')).toEqual([])
+            expect(store.getAllSeriesIds()).toEqual(['s1', 's2'])
+        })
+
+        it('removing a guest that the screen also shows keeps its entries', () => {
+            store.addGuest('s1')
+
+            expect(store.removeGuest('s1')).toBe(false)
+            expect(store.getEntries('s1')).toHaveLength(2)
+        })
+
+        it('a new generation drops the entries of a guest and remembers that it is asked for', () => {
+            store.addGuest('g1')
+            store.setSeriesEntries('g1', [createEntry('g1', 'A - Guest')])
+
+            store.startGeneration(2)
+            store.setSeriesOrder([])
+
+            expect(store.getEntries('g1')).toEqual([])
+            expect(store.isGuest('g1')).toBe(true)
+        })
+    })
+
     it('a listener that throws does not stop the others', () => {
         const second = vi.fn()
         const quiet = vi.spyOn(console, 'error').mockImplementation(() => { })

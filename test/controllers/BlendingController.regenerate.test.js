@@ -5,13 +5,16 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-vi.mock('../../public/js/api/client.js', () => ({ apiClient: {} }))
-vi.mock('../../public/js/repositories/UserRankingRepository.js', () => ({ userRankingRepository: {} }))
+// The albums come from the album load (F56); here it answers at once with one album
+vi.mock('../../public/js/services/albums/albumLoading.js', () => ({
+    albumAsks: {
+        albumsOf: vi.fn(async () => ({
+            albums: [{ id: 'a1', title: 'Animals' }], bySeries: {}, failed: [], missingSources: [], total: 1, aborted: false
+        }))
+    }
+}))
 vi.mock('../../public/js/services/PlaylistGenerationService.js', () => ({
     playlistGenerationService: { generate: vi.fn(() => ({ playlists: [{ name: 'Again 1', tracks: [] }], stats: {} })) }
-}))
-vi.mock('../../public/js/stores/albums.js', () => ({
-    albumsStore: { getAlbums: () => [{ id: 'a1', title: 'Animals' }] }
 }))
 
 import { blendingController } from '../../public/js/controllers/BlendingController.js'

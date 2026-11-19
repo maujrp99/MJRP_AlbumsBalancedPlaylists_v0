@@ -31,7 +31,7 @@
 
 | View | Purpose | Size | Status |
 |------|---------|------|--------|
-| [SeriesView.js](file:///public/js/views/SeriesView.js) | Albums screen (`/albums`, `/albums/:seriesId`): series and album grid | 215 lines | ✅ |
+| [SeriesView.js](file:///public/js/views/SeriesView.js) | Albums screen (`/albums`, `/albums/:seriesId`): series and album grid | 238 lines | ✅ |
 | [HomeView.js](file:///public/js/views/HomeView.js) | Artist scan, bulk paste, staging area, new series | 271 lines | ✅ |
 | [BlendingMenuView.js](file:///public/js/views/BlendingMenuView.js) | Blend wizard (`/blend`) | 449 lines | ✅ |
 | [PlaylistsView.js](file:///public/js/views/PlaylistsView.js) | Generated playlists; also the edit mode (`/playlists/edit`) | 353 lines | ✅ |
@@ -89,7 +89,7 @@
 |---|---|---|
 | [SeriesController.js](file:///public/js/controllers/SeriesController.js) | Albums screen: says what the screen wants; the load belongs to `AlbumLoadService` | ✅ |
 | [HomeController.js](file:///public/js/controllers/HomeController.js) | Home: scan, staging, bulk paste, new series | ✅ |
-| [BlendingController.js](file:///public/js/controllers/BlendingController.js) | Blend: loads the albums of the series (own loop, `apiClient.fetchAlbum`) and generates | ✅ |
+| [BlendingController.js](file:///public/js/controllers/BlendingController.js) | Blend: asks the album load for the albums of the series (`albumAsks.albumsOf`, F56) and generates from the ones that are ready | ✅ |
 | [PlaylistsController.js](file:///public/js/controllers/PlaylistsController.js) | Playlist Generation, Editing, Saving | ✅ |
 | [InventoryController.js](file:///public/js/controllers/InventoryController.js) | Inventory Management | ✅ |
 
@@ -161,7 +161,8 @@ The operations live in `services/PlaylistsService.js` (`getPlaylistsService(db, 
 - `handleSave(batchName)`: Asks `PlaylistsService.saveCurrentBatch` and tells the person the result; the rule is in the service (v5.0, F60)
 - `deletePlaylist(index)`: Proxies to `PlaylistsService.removePlaylist`
 - `loadPlaylistsForEdit(batchName, seriesId)`: Hydrates store from backend
-- `loadAlbumsForSeries(seriesId)`: In edit mode, loads the albums of the series with `apiClient.fetchMultipleAlbums` (its own loop, not `AlbumLoadService`)
+- `loadAlbumsForSeries(seriesId)`: In edit mode, asks the album load for the albums of the series (`albumAsks.albumsOf`, F56) and says which could not be loaded
+- `handleGenerate(config)`: `BlendingController.regenerate`, which asks for the albums again with the sources of the recipe; shows what was left out
 
 ---
 
@@ -227,7 +228,7 @@ Usage: `createAlgorithm('id').generate(...)` (or `getAlgorithm('id')` for the cl
 | [Track.js](file:///public/js/models/Track.js) | Track entity with ranking data | ✅ |
 | [Playlist.js](file:///public/js/models/Playlist.js) | Playlist entity | ✅ |
 | [Series.js](file:///public/js/models/Series.js) | Album series entity | ✅ |
-| `askedAlbum.js` (in place of `AlbumIdentity.js`, F55), `albumFacts.js`, `albumLoadState.js`, `albumQuery.js`, `cloneAlbum.js`, `ownRanking.js`, `paging.js`, `seriesFilter.js`, `text.js` | Pure rules of the album loading, paging, filters and own ranking; see `08_Frontend_Models.md` | ✅ |
+| `askedAlbum.js` (in place of `AlbumIdentity.js`, F55), `albumFacts.js`, `albumLoadState.js`, `albumQuery.js`, `bulkPaste.js` (F63), `cloneAlbum.js`, `ownRanking.js`, `paging.js`, `seriesFilter.js`, `text.js` | Pure rules of the album loading, paging, filters and own ranking; see `08_Frontend_Models.md` | ✅ |
 
 **Album Model**:
 - `getTracks(order)`: Returns `tracks` (acclaim order) or `tracksOriginalOrder` (disc order)

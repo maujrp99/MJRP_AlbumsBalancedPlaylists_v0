@@ -3,8 +3,8 @@
  * 
  * Service layer for ALL album series operations:
  * - CRUD (create, update, delete series)
- * - Album management (add, remove albums)
- * - Enrichment orchestration
+ * - Album management (add, remove albums of a series; the albums themselves are loaded by the
+ *   album load, services/albums/, never here)
  * - LocalStorage persistence
  * - User context management
  * 
@@ -12,14 +12,11 @@
  */
 
 import { SeriesRepository } from '../repositories/SeriesRepository.js'
-import { SharedAlbumRepository } from '../repositories/SharedAlbumRepository.js'
 import { globalProgress } from '../components/GlobalProgress.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
-import { albumsStore } from '../stores/albums.js' // FIX #156: For cache invalidation
 import { cacheManager } from '../cache/CacheManager.js'
 import { StorageService } from './infra/StorageService.js'
 import { UserSyncService } from './auth/UserSyncService.js'
-import { apiClient } from '../api/client.js' // Fix #156: Needed for enrichment
 import { alreadyAskedFor, indexOfQueryFor } from '../models/askedAlbum.js'
 
 const STORAGE_KEY = 'series' // prefix will be added
@@ -29,7 +26,6 @@ export class SeriesService {
         this.db = db
         this.userId = userId || 'anonymous-user'
         this.repository = new SeriesRepository(db, cacheManager, this.userId)
-        this.albumRepository = new SharedAlbumRepository(db, cacheManager)
 
         // Dependencies
         this.storage = storageService || new StorageService()
@@ -96,9 +92,6 @@ export class SeriesService {
             albumSeriesStore.setActiveSeries(id)
             this.saveToLocalStorage()
 
-            // FIX #156/161: No more aggressive cache clearing.
-            // If albums were created separately, they should be injected manually by caller.
-
             return series
         } finally {
             globalProgress.finish()
@@ -112,8 +105,8 @@ export class SeriesService {
             albumSeriesStore.updateSeriesById(id, updates)
             this.saveToLocalStorage()
 
-            // FIX #156/161: No more aggressive cache clearing.
-            // Callers (SeriesEditModal) responsible for injecting new albums via injectAlbumsIntoViewCache.
+            // The albums on screen are not touched here: whoever shows the series asks the album
+            // load again, and it reconciles (an album added loads, an album removed leaves).
         } finally {
             globalProgress.finish()
         }
@@ -140,9 +133,7 @@ export class SeriesService {
             albumSeriesStore.removeSeriesById(id)
             this.saveToLocalStorage()
 
-            // FIX #158: Granular removal prevents "No albums" flash
-            albumsStore.clearAlbumSeries(id)
-            albumsStore.removeAlbumsBySeriesIdFromContext(id, 'ALL_SERIES_VIEW')
+            // The albums of the series leave the screen when the album load is asked again without it
         } finally {
             globalProgress.finish()
         }
@@ -193,11 +184,8 @@ export class SeriesService {
 
         if (!exists) {
             albumQueries.push({ id: album.id || null, title: album.title, artist: album.artist })
-            // Note: updateSeries is cleaner now (no cache wipe)
+            // The album load reconciles the series: the new album is found and enriched through the queue
             await this.updateSeries(seriesId, { albumQueries })
-
-            // FIX #156: Surgically inject into view
-            await this.injectAlbumsIntoViewCache([album], seriesId)
         }
     }
 
@@ -225,257 +213,6 @@ export class SeriesService {
     }
 
 
-
-    // ========== SURGICAL CACHE UPDATES (FIX #156) ==========
-
-    /**
-     * Surgically inject albums into the active view cache.
-     * Handles enrichment and store hydration logic.
-     * @param {Array<Object>} albums - List of album objects
-     * @param {string} seriesId - Context series ID (optional)
-     */
-    async injectAlbumsIntoViewCache(albums, seriesId = null) {
-        if (!albums || albums.length === 0) return
-
-        console.log(`[SeriesService] 💉 Surgically injecting ${albums.length} albums into view cache...`)
-
-        // 1. Enrich (BestEver Ratings) if missing
-        const enriched = await Promise.all(albums.map(async (album) => {
-            // Clone to avoid mutation side effects on original reference locally
-            const clone = { ...album, tracks: album.tracks ? [...album.tracks] : [] }
-
-            // Basic check if enrichment is needed (e.g. no ratings data)
-            const needsEnrichment = !clone.bestEverUrl && (!clone.acclaim || !clone.acclaim.hasRatings)
-
-            if (needsEnrichment && clone.artist && clone.title) {
-                // Use Helper for encapsulated logic
-                const { enrichAlbum } = await import('../helpers/BEAEnrichmentHelper.js')
-                await enrichAlbum(clone, { silent: true })
-            }
-            return clone
-        }))
-
-        // Rename variable for clarity in loop below
-        const enrichedAlbums = enriched
-
-        // 2. Hydrate & Inject
-        // We can reuse the Controller logic style manual injection
-        // But we need to be careful about hydration dependencies (OptimizedLoader etc)
-        // Ideally, we persist them as proper Album Models.
-
-        // Dynamic import to avoid circular dependency
-        const { Album } = await import('../models/Album.js')
-        const { optimizedAlbumLoader } = await import('../services/OptimizedAlbumLoader.js')
-        const { userRankingRepository } = await import('../repositories/UserRankingRepository.js')
-
-        for (const albumData of enrichedAlbums) {
-            // Hydrate logic copied/adapted from SeriesController.hydrateAndAddAlbum
-            // Ideally should be a shared utility, but for now we keep it here to avoid refactoring Controller.
-
-            const album = albumData instanceof Album ? albumData : new Album(albumData)
-
-            if (!album.coverUrl && !album.artworkTemplate) {
-                const localMatch = await optimizedAlbumLoader.findAlbum(album.artist, album.title)
-                if (localMatch) {
-                    album.coverUrl = optimizedAlbumLoader.getArtworkUrl(localMatch, 500)
-                }
-            }
-
-            // Inject into ALL_SERIES_VIEW context
-            albumsStore.addAlbumToSeries('ALL_SERIES_VIEW', album)
-
-            // Inject into Specific Series Context if active
-            if (seriesId && albumsStore.getActiveAlbumSeriesId() === seriesId) {
-                albumsStore.addAlbumToSeries(seriesId, album)
-            }
-        }
-
-        console.log(`[SeriesService] ✅ Injection complete.`)
-    }
-
-    // ========== ENRICHMENT (FIX #156) ==========
-
-    /**
-     * Force-refetch metadata for a specific album from backend APIs (BEA + Spotify).
-     * Bypasses local cache to ensure fresh data.
-     * @param {Object} album - The album object to enrich
-     * @param {string} seriesId - Context series ID (optional)
-     * @returns {Promise<Object>} The enriched album
-     */
-    async refetchAlbumMetadata(album, seriesId = null) {
-        if (!album || !album.title || !album.artist) {
-            throw new Error('Invalid album data for refetch')
-        }
-
-        console.log(`[SeriesService] 🔄 Refetching metadata for "${album.title}"...`)
-
-        // PARALLEL ENRICHMENT STRATEGY
-        // We run both enrichment services in parallel to speed up the process.
-        // Each service handles its own errors internally or we catch them here.
-
-        const services = [
-            // 1. BestEverAlbums (Backend via Helper)
-            (async () => {
-                try {
-                    const { enrichAlbum } = await import('../helpers/BEAEnrichmentHelper.js');
-                    // We pass a clone or the album itself? 
-                    // refetchAlbumMetadata implementation below creates 'enriched' clone later.
-                    // But here we need to return DATA to be merged.
-                    // Actually, the Helper maps data onto the object.
-                    // Strategy: Let the helper work on a temp object, then extract the data?
-                    // OR: Let's create a temp object just for this call.
-                    const tempAlbum = { ...album, tracks: album.tracks ? [...album.tracks] : [] };
-                    await enrichAlbum(tempAlbum, { force: true });
-
-                    // Return the data we care about (BEA fields)
-                    return {
-                        type: 'bea',
-                        data: {
-                            bestEverInfo: { url: tempAlbum.bestEverUrl, albumId: tempAlbum.bestEverAlbumId },
-                            // Helper applies ratings to tracks directly.
-                            // We need to extract them back if we want to follow the "Parallel Merge" pattern below.
-                            // OR we trust the helper done its job on tempAlbum.
-                            tracks: tempAlbum.tracks // Pass back enriched tracks
-                        }
-                    };
-                } catch (err) {
-                    console.warn('[SeriesService] BEA enrichment failed:', err);
-                    return { type: 'bea', error: err };
-                }
-            })(),
-
-            // 2. Spotify (Frontend Service)
-            (async () => {
-                try {
-                    // Dynamic import to avoid circular dependency
-                    const { SpotifyService } = await import('./SpotifyService.js');
-                    const data = await SpotifyService.enrichAlbumData(album.artist, album.title);
-                    console.log(`[SeriesService] 🟢 Spotify Response for "${album.title}":`, data ? 'Found Data' : 'No Data');
-                    return { type: 'spotify', data };
-                } catch (err) {
-                    console.warn('[SeriesService] Spotify enrichment failed:', err);
-                    return { type: 'spotify', error: err };
-                }
-            })()
-        ];
-
-        const results = await Promise.allSettled(services);
-
-        // Process Results
-        let beaData = null;
-        let spotifyData = null;
-
-        results.forEach(result => {
-            if (result.status === 'fulfilled') {
-                const val = result.value;
-                if (val.type === 'bea' && !val.error) beaData = val.data;
-                if (val.type === 'spotify' && !val.error) spotifyData = val.data;
-            }
-        });
-
-        // 3. Merge Results
-        // Clone original album to start fresh, ensuring we preserve both track lists
-        const enriched = {
-            ...album,
-            tracks: album.tracks ? [...album.tracks] : [],
-            tracksOriginalOrder: album.tracksOriginalOrder ? [...album.tracksOriginalOrder] : undefined
-        }
-        console.log(`[SeriesService] Merging results. Enriched has tracksOriginalOrder? ${!!enriched.tracksOriginalOrder}`)
-
-        // Apply Spotify Data
-        if (spotifyData) {
-            enriched.spotifyId = spotifyData.spotifyId
-            enriched.spotifyUrl = spotifyData.spotifyUrl
-            enriched.spotifyPopularity = spotifyData.spotifyPopularity
-            if (spotifyData.spotifyArtwork) enriched.coverUrl = spotifyData.spotifyArtwork
-
-            // Map Spotify popularity to tracks
-            if (spotifyData.spotifyTracks && enriched.tracks) {
-                const popMap = new Map()
-                spotifyData.spotifyTracks.forEach(t => popMap.set(t.name.toLowerCase().trim(), t.popularity))
-
-                const applySpotifyData = (track) => {
-                    const key = track.title.toLowerCase().trim()
-                    if (popMap.has(key)) {
-                        track.spotifyPopularity = popMap.get(key)
-                    }
-                }
-
-                enriched.tracks.forEach(applySpotifyData)
-
-                if (enriched.tracksOriginalOrder) {
-                    enriched.tracksOriginalOrder.forEach(applySpotifyData)
-                }
-            }
-        }
-
-        // Apply BEA Data (Adapted from Helper Result)
-        if (beaData) {
-            enriched.bestEverUrl = beaData.bestEverInfo?.url
-            if (beaData.bestEverInfo?.albumId) enriched.bestEverAlbumId = beaData.bestEverInfo.albumId
-
-            // If the Helper ran, it applied ratings to 'beaData.tracks'.
-            // We need to merge those rating changes into 'enriched.tracks' if they differ.
-            // Since we ran parallel, 'enriched' is a fresh clone of 'album'.
-            // We need to map the results from the tempAlbum tracks back to 'enriched'
-            if (beaData.tracks && enriched.tracks) {
-                const rateMap = new Map()
-                const evidenceMap = new Map() // Sprint 23
-
-                beaData.tracks.forEach(t => {
-                    const key = t.title.toLowerCase().trim()
-                    if (t.rating !== undefined && t.rating !== null) rateMap.set(key, t.rating)
-                    if (t.ranking) evidenceMap.set(key, t.ranking) // Capture ranking object
-                })
-
-                enriched.tracks.forEach(track => {
-                    const key = track.title.toLowerCase().trim()
-                    if (rateMap.has(key)) {
-                        track.rating = rateMap.get(key)
-                    }
-                    if (evidenceMap.has(key)) {
-                        track.ranking = evidenceMap.get(key) // Apply ranking (evidence)
-                    }
-                })
-                // Also update original order to be safe
-                if (enriched.tracksOriginalOrder) {
-                    enriched.tracksOriginalOrder.forEach(track => {
-                        const key = track.title.toLowerCase().trim()
-                        if (rateMap.has(key)) {
-                            track.rating = rateMap.get(key)
-                        }
-                        if (evidenceMap.has(key)) {
-                            track.ranking = evidenceMap.get(key) // Apply ranking (evidence)
-                        }
-                    })
-                }
-                enriched.acclaim = { hasRatings: true, source: 'surgical-enrichment' }
-            }
-        }
-
-        // 4. Update the View Cache (Surgical)
-        this.injectAlbumsIntoViewCache([enriched], seriesId)
-
-        // 5. Persist to Firestore (Sprint 23 Fix)
-        try {
-            // Determine format if possible, default to 'digital'
-            if (!enriched.format) enriched.format = 'digital'
-
-            // The shared document of the album; the personal ranking is left out by the repository
-            await this.albumRepository.saveAlbum(enriched)
-
-            // Sprint 23 Fix: Update API Cache to ensure Blending Menu sees the new data
-            // APIClient uses "Artist - Title" as key
-            const { albumCache } = await import('../cache/albumCache.js')
-            await albumCache.set(`${enriched.artist} - ${enriched.title}`, enriched)
-
-            console.log(`[SeriesService] Persisted enriched metadata for "${enriched.title}" to Firestore and Cache`)
-        } catch (persistErr) {
-            console.warn('[SeriesService] Failed to persist enriched metadata:', persistErr)
-        }
-
-        return enriched
-    }
 
     async enrichAllAlbums(seriesId, onProgress) {
         // Stub - actual enrichment via dedicated enrichment services

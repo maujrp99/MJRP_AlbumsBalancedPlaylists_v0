@@ -261,7 +261,7 @@ What this cost, measured on 2026-11-19 with 20 series and 80 albums: the first a
 
 #### Today: v4.0 — one owner for the albums screen
 
-The albums screen asks one service. The service owns the queue, the state and the cache, and reaches the outside only through ports. The other three screens are **unchanged**: that is the gap v5.0 closes.
+The albums screen asks one service. The service owns the queue, the state and the cache, and reaches the outside only through ports. In v4.0 the other three screens were **unchanged**: that is the gap v5.0 closes. **Since F56 (2026-11-19, on the branch `fix/f56-screens-load-through-the-service`, not yet published) the blend and the playlist edit ask the same service through `albumAsks.albumsOf` and `api/client.js` has no `fetchAlbum` any more; the picture below is v4.0 as it was published.**
 
 ```mermaid
 flowchart TB
@@ -316,11 +316,11 @@ Known gaps of this picture, kept honest here (they are the work of v5.0):
 
 | Gap | Where | Feature |
 | :--- | :--- | :--- |
-| Blend and playlist edit load with their own loop | `controllers/BlendingController.js`, `controllers/PlaylistsController.js` | F56 |
+| Blend and playlist edit load with their own loop. **Since F56 (2026-11-19, on the branch `fix/f56-screens-load-through-the-service`, not yet published) both ask the load service through `albumAsks.albumsOf`; the old loops and `apiClient.fetchAlbum` / `fetchMultipleAlbums` are gone** | `controllers/BlendingController.js`, `controllers/PlaylistsController.js`, `services/albums/AlbumAsks.js` | F56 |
 | Saved playlists reads the playlists of each series one after the other (20 s). **Since F61 (2026-11-19, on the branch `fix/f61-saved-playlists-fast`, not yet published), `SavedPlaylistsReader` owns the read: the series once, then the playlists of each series up to 8 at a time, each series drawn as its answer arrives** | `components/playlists/SavedPlaylistsController.js`; `services/playlists/SavedPlaylistsReader.js` | F61 |
 | "Is this the album asked for?" was decided in five places, each its own way; with the right artist any album passed. **Since F55, slice 1 (published 2026-11-19), one rule decides it in all of them** (`shared/albumIdentity.js`). Slice 2 (2026-11-19, on the branch `fix/f55-identity-slice-2`, not yet published): a second tier for a title the catalog only has with a subtitle; the corrected Apple id written back to the series by one writer; a kept album that is not the album asked for dropped when it is read; adding and removing an album of a series by the rule | `shared/albumIdentity.js`, `models/askedAlbum.js`; the call sites are listed in `test/architecture/albumIdentityRule.test.js` | F55 |
 | A failure can still end as "the source has nothing" | `adapters/enrichers.js`, server ratings route | F52 |
-| `stores/albums.js` still has other writers besides the projection | `services/SeriesService.js`, Refetch | F56 |
+| `stores/albums.js` still has other writers besides the projection. **Since F56 (on its branch) the projection is the only writer of albums: the shelf has no method to add or remove one album, "Refetch" is `AlbumLoadService.reloadAlbum`, and the surgical injection is gone** | `stores/albums.js`, `services/SeriesService.js` | F56 |
 | Two functions above the complexity limit of 10 | `AlbumLoadService._enrichOne` (21), `CatalogAdapter.find` (12) | F58 |
 
 #### Target: v5.0 — the same owner for every screen, and one rule of identity
@@ -344,7 +344,7 @@ flowchart TB
     HM --> PK["Album picker (new, F57)<br>one component, one classifier"]
 
     subgraph Load["services/albums/ - the load"]
-        ALS["AlbumLoadService<br>the only loader of albums (F56)"]
+        ALS["AlbumLoadService<br>the only loader of albums (F56, built on its branch)<br>blend and edit ask through AlbumAsks"]
         ID["Album identity rule (new, F55)<br>one rule: the title must match"]
         ALS --> ID
     end
@@ -381,10 +381,10 @@ The order inside v5.0 is the one the MJRP sets in `docs/specs/priority.md`. Each
 
 | Question | Before (v3.x) | Today (v4.0) | Target (v5.0) |
 | :--- | :--- | :--- | :--- |
-| Who loads albums? | each controller, in a loop | `AlbumLoadService` for the albums screen; two controllers still loop | `AlbumLoadService` for every screen |
+| Who loads albums? | each controller, in a loop | `AlbumLoadService` for the albums screen; two controllers still loop | `AlbumLoadService` for every screen (built in F56, on its branch: `load()` for the albums screen, `albumAsks.albumsOf()` for the others) |
 | How many at once, how long to wait? | one at a time, no deadline | 3 catalog searches, 6 quick and 4 slow sources, 45 s to find, 20 s per source | the same limits, measured against the server |
 | What is "loading"? | one flag for the whole screen | a state per album and per source; the series' state is derived | the same, read by every screen |
-| What happens when an album fails? | nothing shown | a notice on the series and "Try again" | the same, on blend and edit too |
+| What happens when an album fails? | nothing shown | a notice on the series and "Try again" | the same, on blend and edit too (F56, on its branch: a warning says which albums were left out and how many; the blend goes on with the ones that are ready) |
 | Is it the album that was asked for? | first result of the search | the chosen id; by name, a weighted score that any album of the artist passes | one rule: the title must match, or a notice (built in F55, slice 1: the chosen id is checked against the rule too) |
 | Where is an album kept? | several keys per album | one record per album asked for, with the status of each source | the same, plus ratings kept on the server |
 | Who talks to Firestore? | stores, controllers and repositories | repositories, with a short list of known exceptions that can only shrink | repositories only |
@@ -423,7 +423,7 @@ Patterns of this codebase that have no id in the catalog:
 | **Answer applied over the newest value** | `apply` returned by each enricher | v4.0 | two sources can finish in any order without undoing each other |
 | **Projection** | `stores/albums.js` fed by `projectLoadedAlbums` | v4.0 | the screens not yet migrated keep reading the old shelf |
 | **Derived state** | `deriveSeriesState` in `models/albumLoadState.js` | v4.0 | the state of a series is computed from its albums, never stored apart |
-| **Fitness function** | `test/architecture/albumLoadBoundaries.test.js`, `ownRankingBoundaries.test.js` | v4.0 | an architecture rule that fails the test run when broken |
+| **Fitness function** | `test/architecture/albumLoadBoundaries.test.js`, `ownRankingBoundaries.test.js`; since F56 `screensLoadThroughTheService.test.js` (no controller, view or component imports the API client, calls a source or loops over album queries; the shelf has one writer) | v4.0; F56 | an architecture rule that fails the test run when broken |
 
 Planned for v5.0, not in the code yet:
 
@@ -449,10 +449,12 @@ One line per component of the album path. "State" says whether it is in producti
 | Screen | Album picker (Home) | `components/home/SearchController.js`, `views/renderers/DiscographyRenderer.js` | search an artist, group by type, choose | v3; replaced by one picker in F57 |
 | Screen | Album picker (Edit Series) | `components/series/ArtistScanner.js` | the same task, drawn again | v3; replaced by one picker in F57 |
 | Controller | `SeriesController` | `controllers/SeriesController.js` | asks for a load; filters and pages over what the series ask for | v4.0 |
-| Controller | `BlendingController` | `controllers/BlendingController.js` | generates playlists; **own load loop** | v3; F56 |
-| Controller | `PlaylistsController` | `controllers/PlaylistsController.js` | edit, save, export; **own load loop**; the save rule left it for `PlaylistsService.saveCurrentBatch` (F60) | v3; F56, F58 |
+| Controller | `BlendingController` | `controllers/BlendingController.js` | generates playlists from the albums the load service gives it (`albumAsks.albumsOf`, with the sources the recipe reads); goes on with the albums that are ready and returns what was left out | v3; no loop of its own since F56 (on its branch) |
+| Controller | `PlaylistsController` | `controllers/PlaylistsController.js` | edit, save, export; asks `albumAsks.albumsOf` for the albums of the edit and says which failed; the save rule left it for `PlaylistsService.saveCurrentBatch` (F60) | v3; no loop of its own since F56 (on its branch); F58 |
 | Controller | `InventoryController` | `controllers/InventoryController.js` | inventory actions | v4.0 (delete fixed) |
-| Service | `AlbumLoadService` | `services/albums/AlbumLoadService.js` | the load: generations, queues, find then enrich | v4.0 |
+| Service | `AlbumLoadService` | `services/albums/AlbumLoadService.js` | the load: generations, queues, find then enrich. Since F56: `join` / `leave` (a series of another screen beside the ones of the albums screen, with no new generation), `reloadAlbum` (the "Refetch" of one album), and the work of one album can end alone | v4.0; F56 (on its branch) |
+| Service | `AlbumAsks` | `services/albums/AlbumAsks.js` | "the albums of these series, ready": the one door of every screen that is not the albums screen; waits, shares one load between two asks, joins a new generation, lets the series go when served or dropped | v5.0 (F56, on its branch) |
+| Model | ask rules | `models/albumAsk.js`, `models/recipeSources.js` | when an ask is settled, its typed result, what the person is told; which sources a recipe reads | v5.0 (F56, on its branch) |
 | Service | `SeriesFactsService` | `services/series/SeriesFactsService.js` | writes year and sources of each album into the series; since F55 slice 2, also the corrected Apple Music id, in the same write (the one writer) | v4.0; F55 |
 | Service | `OwnRankingService` | `services/ranking/OwnRankingService.js` | saves a ranking; keeps the list of ranked albums | v4.0 |
 | Service | `SeriesService` | `services/SeriesService.js` | create, read, update, delete series | v3; list without the cut in v4.0 |
@@ -475,7 +477,7 @@ One line per component of the album path. "State" says whether it is in producti
 | Repository | series, playlists, inventory, rankings, shared albums | `repositories/*` | the only door to Firestore | v2; `SharedAlbumRepository` in v4.0 |
 | Cache | `CacheManager` | `cache/CacheManager.js` | memory + IndexedDB | v3 |
 | Edge | `serverFetch` | `api/serverFetch.js` | every call to the app's own server carries the person's login | **v5.0 (F59)** |
-| Legacy | `api/client.js` (`fetchAlbum`) | `api/client.js` | the old find-and-rate call, still used by blend and edit | v3; retired by F56 |
+| Legacy | `api/client.js` (`fetchAlbum`) | `api/client.js` | the old find-and-rate call, used by blend and edit until F56 | v3; removed by F56 (on its branch) with `fetchMultipleAlbums` and `BEAenrichAlbum`; the client is imported only by `albumLoading.js` |
 
 #### Server
 

@@ -31,6 +31,54 @@ export function parseAlbumQuery(query) {
     return { artist: text.slice(0, at).trim(), title: text.slice(at + SEPARATOR.length).trim() }
 }
 
+/** Why a pasted line is not an album. */
+export const PastedLineProblem = Object.freeze({
+    BLANK: 'blank',
+    NO_SEPARATOR: 'no-separator',
+    NO_ALBUM: 'no-album'
+})
+
+// What people paste around "Artist - Album": a list number or a bullet in front, another dash or a
+// tab (a sheet) in the middle.
+const LIST_MARKER = /^(?:\d+[.)]|[•*·–—-])\s+/
+const OTHER_SEPARATORS = /\s+[–—]\s+|\t+/g
+const DANGLING_SEPARATOR = /\s[-–—]$/
+const ONE_SIDED_HYPHEN = /\s-(?=\S)|(?<=\S)-\s/
+
+/** The line as parseAlbumQuery reads it: no list marker, " - " as the separator. */
+function tidyPastedLine(line) {
+    return String(line ?? '').trim().replace(LIST_MARKER, '').replace(OTHER_SEPARATORS, SEPARATOR).trim()
+}
+
+/** "Artist- Album" or "Artist -Album": the space is missing on one side of the separator. */
+function splitAtOneSidedHyphen(text) {
+    const found = ONE_SIDED_HYPHEN.exec(text)
+    if (!found) return null
+    return { artist: text.slice(0, found.index).trim(), title: text.slice(found.index + found[0].length).trim() }
+}
+
+/**
+ * One line of a pasted list (Home, "Bulk Paste"): "Artist - Album".
+ *
+ * It is parseAlbumQuery (the first " - " separates, so "Jay-Z - The Blueprint" and
+ * "Artist - Album - Deluxe" are read right) plus what only a pasted line has: a list marker, an en
+ * or em dash or a tab as the separator, a space missing on one side of the hyphen. A hyphen with no
+ * space on either side never separates: "Jay-Z-The Blueprint" is refused, not guessed.
+ *
+ * @param {string} line
+ * @returns {{ ok: true, artist: string, title: string } | { ok: false, problem: string }}
+ */
+export function parsePastedAlbumLine(line) {
+    const text = tidyPastedLine(line)
+    if (!text) return { ok: false, problem: PastedLineProblem.BLANK }
+    if (DANGLING_SEPARATOR.test(text)) return { ok: false, problem: PastedLineProblem.NO_ALBUM }
+
+    const read = parseAlbumQuery(text)
+    const { artist, title } = read.artist ? read : (splitAtOneSidedHyphen(read.title) || read)
+    if (!artist || !title) return { ok: false, problem: PastedLineProblem.NO_SEPARATOR }
+    return { ok: true, artist, title }
+}
+
 /**
  * The same query with its text plain: what is handed to a catalog, which must never be asked for
  * "Page &amp; Plant". Everything else the query carries (the chosen edition, the facts) is kept.

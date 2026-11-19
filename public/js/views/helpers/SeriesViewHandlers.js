@@ -20,9 +20,6 @@ export function handleSeriesChange(view, value) {
         view.controller.loadScope(scopeType, seriesId);
     }
 
-    const url = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
-    window.history.replaceState({}, '', url);
-
     view.currentScope = scopeType;
     view.targetSeriesId = seriesId;
 }

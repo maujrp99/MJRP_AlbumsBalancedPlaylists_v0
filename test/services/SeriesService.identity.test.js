@@ -6,11 +6,6 @@
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
-vi.mock('../../public/js/api/client.js', () => ({ apiClient: {} }))
-vi.mock('../../public/js/stores/albums.js', () => ({
-    albumsStore: { addAlbumToSeries: vi.fn(), getActiveAlbumSeriesId: vi.fn(), clearAlbumSeries: vi.fn(), removeAlbumsBySeriesIdFromContext: vi.fn() }
-}))
-vi.mock('../../public/js/repositories/SharedAlbumRepository.js', () => ({ SharedAlbumRepository: vi.fn().mockImplementation(() => ({})) }))
 const repository = vi.hoisted(() => ({ update: vi.fn(async () => { }) }))
 vi.mock('../../public/js/repositories/SeriesRepository.js', () => ({ SeriesRepository: vi.fn().mockImplementation(() => repository) }))
 
@@ -29,7 +24,6 @@ describe('SeriesService: which query of the series is this album (the one identi
         vi.clearAllMocks()
         albumSeriesStore.reset()
         service = new SeriesService({}, 'user-1', storage, { handleUserChange: vi.fn() })
-        vi.spyOn(service, 'injectAlbumsIntoViewCache').mockResolvedValue()
         vi.spyOn(console, 'log').mockImplementation(() => { })
     })
 

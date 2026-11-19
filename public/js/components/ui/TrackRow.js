@@ -25,6 +25,13 @@ import { getIcon } from '../Icons.js'
  * @property {number} [trackIndex] - For DragDrop contexts
  */
 
+/**
+ * The actions of a row (F63, UAT-13): hidden until the mouse is over the row ONLY where the device
+ * has a mouse to hover with; on a touch screen they are always there, and the keyboard focus shows
+ * them anywhere.
+ */
+const ACTIONS_VISIBILITY = '[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100'
+
 export class TrackRow {
     /**
      * Render the TrackRow as a DOM Node
@@ -104,7 +111,9 @@ export class TrackRow {
         const actionButtons = actions.map(btn => {
             const buttonEl = SafeDOM.button({
                 className: `p-1 text-gray-400 hover:text-white hover:bg-white/10 rounded transition-colors ${btn.class || ''}`,
+                type: 'button',
                 title: btn.label,
+                'aria-label': btn.label,
                 dataset: {
                     action: btn.action,
                     id: track.id,
@@ -117,7 +126,7 @@ export class TrackRow {
         })
 
         const actionsContainer = SafeDOM.div({
-            className: 'absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 rounded px-1'
+            className: `absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 ${ACTIONS_VISIBILITY} transition-opacity bg-black/50 rounded px-1`
         }, actionButtons)
 
 

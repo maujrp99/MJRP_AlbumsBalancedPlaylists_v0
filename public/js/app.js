@@ -103,7 +103,7 @@ async function bootstrap() {
     console.log('✅ Auth ready, handling route...')
 
     if (!window.location.pathname || window.location.pathname === '/' || window.location.pathname === '/index-v2.html') {
-        router.navigate('/home')
+        router.redirect('/home')
     } else {
         router.handleRouteChange()
     }
@@ -143,7 +143,7 @@ router.register('/callback', async () => {
         }
     })
 
-    router.navigate('/home')
+    router.redirect('/home')
     return null
 })
 
@@ -153,7 +153,7 @@ router.register('/playlists/edit', () => new PlaylistsView())
 
 // Redirect routes
 router.register('/album-series', () => {
-    router.navigate('/albums')
+    router.redirect('/albums')
     return null
 })
 router.register('/playlist-series', async () => {
@@ -165,7 +165,7 @@ router.register('/saved-playlists', async () => {
     return new SavedPlaylistsView()
 })
 router.register('/series', () => {
-    router.navigate('/albums')
+    router.redirect('/albums')
     return null
 })
 

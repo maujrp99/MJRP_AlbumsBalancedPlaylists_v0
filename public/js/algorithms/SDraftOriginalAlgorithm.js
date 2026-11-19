@@ -29,7 +29,7 @@ export class SDraftOriginalAlgorithm extends BaseWithMixins {
         id: 's-draft-original',
         name: 'S-Draft Serpentine',
         badge: 'CLASSIC',
-        description: 'Algoritmo clássico: distribui faixas em zigue-zague entre as playlists para máxima variedade.',
+        description: 'Classic algorithm: deals the tracks out in a zigzag across the playlists for maximum variety.',
         isRecommended: false
     }
 
@@ -45,7 +45,7 @@ export class SDraftOriginalAlgorithm extends BaseWithMixins {
         this.defaultRankingSource = this.registerRankingSource(opts.defaultRankingSource || {
             name: 'MJRP S-Draft Original',
             type: 'internal',
-            description: 'Curadoria S-Draft com Serpentine completo',
+            description: 'S-Draft curation with full Serpentine',
             secure: true
         })
     }
@@ -66,8 +66,8 @@ export class SDraftOriginalAlgorithm extends BaseWithMixins {
 
         // Initialize Greatest Hits playlists
         const playlists = [
-            { id: 'p1', title: 'Greatest Hits Vol. 1', subtitle: 'Rank #1 de cada álbum', tracks: [] },
-            { id: 'p2', title: 'Greatest Hits Vol. 2', subtitle: 'Rank #2 de cada álbum', tracks: [] }
+            { id: 'p1', title: 'Greatest Hits Vol. 1', subtitle: 'Rank #1 from each album', tracks: [] },
+            { id: 'p2', title: 'Greatest Hits Vol. 2', subtitle: 'Rank #2 from each album', tracks: [] }
         ]
 
         // Collect remaining tracks per album with their album index

@@ -26,7 +26,7 @@ export class LegacyRoundRobinAlgorithm extends BaseWithBalancing {
         id: 'legacy-roundrobin',
         name: 'Legacy Round-Robin',
         badge: 'LEGACY',
-        description: 'Modo simples: distribui faixas em rodízio. Estável e testado, bom para comparação.',
+        description: 'Simple mode: deals the tracks out in rotation. Stable and tested, good for comparison.',
         isRecommended: false
     }
 
@@ -38,7 +38,7 @@ export class LegacyRoundRobinAlgorithm extends BaseWithBalancing {
         this.defaultRankingSource = this.registerRankingSource(opts.defaultRankingSource || {
             name: 'MJRP Hybrid Algorithm',
             type: 'internal',
-            description: 'Curadoria híbrida de faixas',
+            description: 'Hybrid track curation',
             secure: true
         })
     }
@@ -58,8 +58,8 @@ export class LegacyRoundRobinAlgorithm extends BaseWithBalancing {
 
         // Initialize Greatest Hits playlists
         const playlists = [
-            { id: 'p1', title: 'Greatest Hits Vol. 1', subtitle: 'Rank #1 de cada álbum', tracks: [] },
-            { id: 'p2', title: 'Greatest Hits Vol. 2', subtitle: 'Rank #2 de cada álbum', tracks: [] }
+            { id: 'p1', title: 'Greatest Hits Vol. 1', subtitle: 'Rank #1 from each album', tracks: [] },
+            { id: 'p2', title: 'Greatest Hits Vol. 2', subtitle: 'Rank #2 from each album', tracks: [] }
         ]
         const remaining = []
 
@@ -175,7 +175,7 @@ export class LegacyRoundRobinAlgorithm extends BaseWithBalancing {
             playlists.push({
                 id: `p${P_HITS + i + 1}`,
                 title: `Deep Cuts Vol. ${i + 1}`,
-                subtitle: 'S-Draft Balanceado',
+                subtitle: 'S-Draft Balanced',
                 tracks: []
             })
         }

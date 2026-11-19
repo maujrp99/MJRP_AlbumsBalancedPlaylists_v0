@@ -4,6 +4,10 @@
  * The one owner of "album asked for -> album and its load state", per series.
  * Pure state (ADR-0017): setters, getters and subscribe; it decides nothing and fetches nothing.
  * Only AlbumLoadService writes here (arch.md, "Carga da tela de álbuns").
+ *
+ * The series of the albums screen are `seriesOrder`. A series another screen asked for (F56: the
+ * blend, the playlist edit) is a guest: it has entries like any other, it is kept when the screen
+ * changes its own list, and it is not part of what the albums screen shows or counts.
  */
 
 import { AlbumStatus, deriveSeriesState, isEnriching } from '../models/albumLoadState.js'
@@ -13,13 +17,17 @@ export class AlbumLoadStore {
         this.generation = 0
         this.seriesOrder = []
         this.entriesBySeries = new Map() // Map<seriesId, Map<key, entry>>
+        this.guests = new Set() // series asked for by a screen that is not the albums screen
         this.listeners = new Set()
         this._notifyScheduled = false
     }
 
     // ========== SETTERS ==========
 
-    /** Start a new load generation: everything from the previous one is dropped. */
+    /**
+     * Start a new load generation: everything from the previous one is dropped. Which series are
+     * guests is remembered: whoever asked for them is still waiting and asks again.
+     */
     startGeneration(generation) {
         this.generation = generation
         this.seriesOrder = []
@@ -32,9 +40,27 @@ export class AlbumLoadStore {
         this.seriesOrder = [...seriesIds]
         const wanted = new Set(seriesIds)
         Array.from(this.entriesBySeries.keys()).forEach(id => {
-            if (!wanted.has(id)) this.entriesBySeries.delete(id)
+            if (!wanted.has(id) && !this.guests.has(id)) this.entriesBySeries.delete(id)
         })
         this._changed()
+    }
+
+    /** Another screen asked for this series: keep it whatever the albums screen shows. */
+    addGuest(seriesId) {
+        this.guests.add(seriesId)
+    }
+
+    /**
+     * Nobody else is asking for this series. If the albums screen does not show it either, its
+     * entries are dropped.
+     * @returns {boolean} true when the series left the store
+     */
+    removeGuest(seriesId) {
+        this.guests.delete(seriesId)
+        if (this.seriesOrder.includes(seriesId)) return false
+        this.entriesBySeries.delete(seriesId)
+        this._changed()
+        return true
     }
 
     /** Replace the entries of one series (in the order its albums were asked for). */
@@ -65,6 +91,16 @@ export class AlbumLoadStore {
 
     getSeriesIds() {
         return [...this.seriesOrder]
+    }
+
+    isGuest(seriesId) {
+        return this.guests.has(seriesId)
+    }
+
+    /** Every series that has entries: the ones of the albums screen, in its order, then the guests. */
+    getAllSeriesIds() {
+        const guestsOnly = Array.from(this.entriesBySeries.keys()).filter(id => !this.seriesOrder.includes(id))
+        return [...this.seriesOrder, ...guestsOnly]
     }
 
     getEntries(seriesId) {

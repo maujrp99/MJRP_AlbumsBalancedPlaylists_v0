@@ -5,7 +5,6 @@
  * Encapsulates the wiring between SeriesModals component and the View/Controller.
  */
 import SeriesModals from '../../components/series/SeriesModals.js';
-import { albumsStore } from '../../stores/albums.js';
 import { router } from '../../router.js';
 import { escapeHtml } from '../../utils/stringUtils.js';
 
@@ -32,25 +31,23 @@ export class SeriesModalsManager {
         this.modalsComponent.mount(container);
     }
 
+    /**
+     * A series was edited and saved. The load is asked for the same scope again, not from scratch:
+     * it reconciles, so an album added loads, an album removed leaves and every other album and
+     * every other series stays as it is (UAT-191). The new name is drawn by the same call.
+     */
     handleSeriesUpdated(seriesId) {
-        // FIX #158: Soft reload for Edit Series prevents flash
-        // remove clearAlbumSeries calls
         if (this.view.controller) {
-            this.view.controller.loadScope(this.view.currentScope, this.view.targetSeriesId, true);
+            this.view.controller.requestLoad(false);
         }
     }
 
     handleSeriesDeleted(seriesId) {
-        // ARCH-6: Invalidate cache (Granular update handled by Service/Store now)
-        // albumsStore.clearAlbumSeries(seriesId); // Service does this
-        // albumsStore.clearAlbumSeries('ALL_SERIES_VIEW'); // Service does this granularly
-
         if (this.view.targetSeriesId === seriesId) {
             router.navigate('/albums');
         }
-        // FIX #158: No need to reload scope manually anymore.
-        // The store update (removeAlbumsBySeriesIdFromContext) will trigger reactivity.
-        // Calling loadScope or refreshGrid caused the "No albums" flash because it cleared view before loading.
+        // Nothing to reload: the series left the list, the controller reconciles the load and the
+        // albums of that series leave the screen with it.
     }
 
     openEdit(seriesId) {

@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { SeriesService } from '../../public/js/services/SeriesService.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
-import { albumsStore } from '../../public/js/stores/albums.js' // Import the mocked store
 
 // Mock dependencies
 const mockDb = {}
@@ -17,42 +16,6 @@ const mockUserSync = {
     handleUserChange: vi.fn(),
     migrateSeries: vi.fn()
 }
-
-// 1. Mock API Client
-vi.mock('../../public/js/api/client.js', () => ({
-    apiClient: {
-        get: vi.fn().mockResolvedValue({}),
-        post: vi.fn().mockResolvedValue({})
-    }
-}))
-
-// 2. Mock External Services
-vi.mock('../../public/js/helpers/BEAEnrichmentHelper.js', () => ({
-    enrichAlbum: vi.fn().mockResolvedValue({})
-}))
-
-vi.mock('../../public/js/services/SpotifyService.js', () => ({
-    SpotifyService: {
-        enrichAlbumData: vi.fn().mockResolvedValue({ spotifyId: 'mock-spotify-id' })
-    }
-}))
-
-// 3. Mock Albums Store
-vi.mock('../../public/js/stores/albums.js', () => ({
-    albumsStore: {
-        addAlbumToSeries: vi.fn(),
-        getActiveAlbumSeriesId: vi.fn().mockReturnValue('ser-1'),
-        clearAlbumSeries: vi.fn(),
-        removeAlbumsBySeriesIdFromContext: vi.fn()
-    }
-}))
-
-
-// The shared album repository: where "Refetch Metadata" writes the album (F48)
-const savedAlbums = vi.hoisted(() => ({ saveAlbum: vi.fn() }))
-vi.mock('../../public/js/repositories/SharedAlbumRepository.js', () => ({
-    SharedAlbumRepository: vi.fn().mockImplementation(() => ({ saveAlbum: savedAlbums.saveAlbum }))
-}))
 
 // Mock Repository
 vi.mock('../../public/js/repositories/SeriesRepository.js', () => ({
@@ -71,10 +34,6 @@ describe('SeriesService (Refactored)', () => {
         vi.clearAllMocks()
         albumSeriesStore.reset()
         service = new SeriesService(mockDb, 'user-1', mockStorage, mockUserSync)
-
-        // Mock the expensive injection method to isolate "refetch -> persist" logic
-        // We use spyOn to overwrite the instance method for this test context
-        vi.spyOn(service, 'injectAlbumsIntoViewCache').mockResolvedValue()
     })
 
     describe('createSeries', () => {
@@ -138,36 +97,10 @@ describe('SeriesService (Refactored)', () => {
         })
     })
 
-    describe('refetchAlbumMetadata (Sprint 23 Persistence)', () => {
-        it('persists the refetched album through the shared album repository, not through the store', async () => {
-            savedAlbums.saveAlbum.mockResolvedValue('alb-1')
-            const mockAlbum = {
-                id: 'alb-1',
-                title: 'Test Album',
-                artist: 'Test Artist',
-                tracks: [{ title: 'Track 1' }],
-                tracksOriginalOrder: [{ title: 'Track 1' }]
-            }
-            const seriesId = 'ser-1'
-
-            await service.refetchAlbumMetadata(mockAlbum, seriesId)
-
-            expect(savedAlbums.saveAlbum).toHaveBeenCalledTimes(1)
-            expect(savedAlbums.saveAlbum).toHaveBeenCalledWith(expect.objectContaining({
-                id: 'alb-1',
-                title: 'Test Album',
-                tracksOriginalOrder: expect.any(Array)
-            }))
-            expect(albumsStore.updateAlbum).toBeUndefined()
-        })
-
-        it('still returns the refetched album when the write to the cloud fails', async () => {
-            vi.spyOn(console, 'warn').mockImplementation(() => {})
-            savedAlbums.saveAlbum.mockRejectedValue(new Error('offline'))
-
-            const enriched = await service.refetchAlbumMetadata({ id: 'alb-1', title: 'Test Album', artist: 'Test Artist', tracks: [] }, 'ser-1')
-
-            expect(enriched).toMatchObject({ id: 'alb-1', title: 'Test Album' })
+    describe('the albums themselves are not loaded here (F56)', () => {
+        it('has no way of its own to load, enrich or put an album on screen', () => {
+            expect(service.injectAlbumsIntoViewCache).toBeUndefined()
+            expect(service.refetchAlbumMetadata).toBeUndefined()
         })
     })
 })
