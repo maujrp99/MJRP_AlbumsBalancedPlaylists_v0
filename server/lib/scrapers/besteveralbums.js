@@ -280,11 +280,13 @@ async function findAlbumId (albumTitle, albumArtist) {
 async function findArtistPage (artistName) {
   const res = await getPage(suggestUrl(artistName))
   const { titles, urls } = parseSuggest(res.data)
-  const { sameArtist } = await loadAlbumIdentity()
+  const { sameArtist, artistNamesFromLabel } = await loadAlbumIdentity()
+  // The source writes "Nirvana (US)": the note at the end is its own, so the label is read both ways
+  const isTheArtist = (label) => artistNamesFromLabel(label).some(name => sameArtist(artistName, name))
 
   for (let i = 0; i < urls.length; i++) {
     const m = String(urls[i] || '').match(/thechart\.php\?b=(\d+)/i)
-    if (m && sameArtist(artistName, titles[i])) return m[1]
+    if (m && isTheArtist(titles[i])) return m[1]
   }
   return null
 }
