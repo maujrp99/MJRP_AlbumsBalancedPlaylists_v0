@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:14] session — UAT-187 consertada: a janela de ranking abre na ordem salva
+
+`UserRankModal` passou a montar a lista pelo ranking que o álbum já traz (faixas sem posição depois, na ordem do disco); «Reset» volta para a ordem do disco. Um teste novo, visto falhar antes. No navegador: a janela de «Brothers In Arms» abre com a faixa-título em 1º. Achado ao lado, não consertado: a janela mostra «0:00» em toda faixa (a duração é guardada em segundos e a janela lê como milissegundos); vai para a lista da regressão.
+
 ## [2026-11-19 14:13] session — UAT-187 aberta: a janela de ranking reabre na ordem do disco, não na ordem salva
 
 Relato do MJRP durante a regressão («epitaph como numero 2 … carregou em 3»). Causa lida no código: a janela ordena pela posição no disco e ignora o ranking que o álbum traz. Conserto como ponta da F46, no ramo `fix/f46-rank-modal-saved-order`.
