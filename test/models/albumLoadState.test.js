@@ -5,7 +5,7 @@ import { describe, it, expect } from 'vitest'
 import {
     AlbumStatus, EnrichmentStatus, SeriesStatus, FailureReason,
     queryKey, createEntry, isInFlight, isEnriching, deriveSeriesState
-} from '../../../public/js/services/albums/loadState.js'
+} from '../../public/js/models/albumLoadState.js'
 
 const entry = (status, enrichment = {}) => ({
     ...createEntry('s1', { artist: 'A', title: status + Math.random() }),
