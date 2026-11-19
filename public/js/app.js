@@ -14,6 +14,7 @@ import { canonicalLocalUrl } from './utils/localAddress.js'
 const localUrl = canonicalLocalUrl(window.location)
 if (localUrl) window.location.replace(localUrl)
 import { app, auth, db } from './firebase-init.js'
+import './services/auth/userSession.js' // the user store starts hearing who is signed in (F58)
 import { AuthService } from './services/AuthService.js'
 
 import { router } from './router.js'
@@ -37,9 +38,12 @@ export { app, auth, db }
 import { TopNav } from './components/TopNav.js'
 import { Footer } from './components/Footer.js'
 import { clearAppAlbumCaches } from './services/albums/albumLoading.js'
+import { CacheManager } from './cache/CacheManager.js'
+import { MigrationUtility } from './migration/MigrationUtility.js'
 
 const initUI = () => {
-    const topNav = new TopNav()
+    // The menu is given what reaches the database; it imports none of it (UAT-19)
+    const topNav = new TopNav({ migrationUtility: new MigrationUtility(db, new CacheManager()) })
     const headerEl = document.getElementById('header-container')
     if (headerEl) {
         headerEl.innerHTML = topNav.render()
@@ -171,8 +175,15 @@ router.register('/series', () => {
 
 // Data Migration route
 router.register('/save-all', async () => {
-    const { SaveAllView } = await import('./views/SaveAllView.js')
-    return new SaveAllView()
+    // The screen gets the app's one Firestore through the migration utility, never an SDK of its own (UAT-14)
+    const [{ SaveAllView }, { MigrationUtility }] = await Promise.all([
+        import('./views/SaveAllView.js'),
+        import('./migration/MigrationUtility.js')
+    ])
+    return new SaveAllView({
+        migrationUtility: new MigrationUtility(db, null),
+        getUserId: () => auth.currentUser?.uid || null
+    })
 })
 
 router.register('/ranking/:albumId', () => new RankingView())

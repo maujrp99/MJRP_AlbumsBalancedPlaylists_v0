@@ -14,6 +14,7 @@
  */
 
 import { inventoryStore } from '../stores/inventory.js'
+import { inventoryService } from '../services/inventory/inventoryWiring.js'
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
 import toast from '../components/Toast.js'
 
@@ -262,7 +263,7 @@ export class InventoryController {
         else if (status === 'wishlist') isOwned = false
         // 'not-owned' remains null
 
-        const success = await inventoryStore.updateAlbum(albumId, { owned: isOwned })
+        const success = await inventoryService.updateAlbum(albumId, { owned: isOwned })
         if (success) {
             let msg = 'Updated status'
             if (isOwned === true) msg = 'Moved to Collection'
@@ -278,8 +279,8 @@ export class InventoryController {
     }
 
     async handleUpdatePrice(albumId, newPrice) {
-        const success = await inventoryStore.updatePrice(albumId, newPrice) // Using specific store method if available, or generic update
-        // Legacy view used: await inventoryStore.updatePrice(albumId, newPrice, currency)
+        const success = await inventoryService.updatePrice(albumId, newPrice) // Using specific store method if available, or generic update
+        // Legacy view used: await inventoryService.updatePrice(albumId, newPrice, currency)
         // We should support currency too, or assume default.
         // Let's stick to simple update for now, or check store signature.
 
@@ -290,7 +291,7 @@ export class InventoryController {
         } else {
             // Check if store has explicit updatePrice, otherwise try updateAlbum
             try {
-                await inventoryStore.updateAlbum(albumId, { purchasePrice: newPrice })
+                await inventoryService.updateAlbum(albumId, { purchasePrice: newPrice })
                 toast.success('Price updated')
                 this.updateStateFromStore()
                 this.refresh()
@@ -301,7 +302,7 @@ export class InventoryController {
     }
 
     async handleUpdateAlbum(albumId, updates) {
-        const success = await inventoryStore.updateAlbum(albumId, updates)
+        const success = await inventoryService.updateAlbum(albumId, updates)
         if (success) {
             toast.success('Album updated')
             this.updateStateFromStore()
@@ -312,9 +313,9 @@ export class InventoryController {
     }
 
     async handleDelete(albumId) {
-        // The store removes from the cloud and from its own list; it throws when the cloud refuses (UAT-01)
+        // The service removes from the cloud and from the store's list; it throws when the cloud refuses (UAT-01)
         try {
-            await inventoryStore.removeAlbum(albumId)
+            await inventoryService.removeAlbum(albumId)
         } catch (error) {
             console.error('[InventoryController] Failed to remove album:', error)
             toast.error('Failed to delete album')

@@ -5,17 +5,19 @@ import { userStore } from '../stores/UserStore.js'
 import { authService } from '@shared/services/AuthService.js'
 import { showLoginModal } from './LoginModal.js'
 import toast from './Toast.js'
-import { db } from '../app.js'
-import { CacheManager } from '../cache/CacheManager.js'
-import { MigrationUtility } from '../migration/MigrationUtility.js'
 import { SeriesDropdown } from './navigation/SeriesDropdown.js'
 import { AuthNav } from './navigation/AuthNav.js'
 
 export class TopNav {
-  constructor() {
+  /**
+   * @param {Object} deps
+   * @param {Object} deps.migrationUtility - { isMigrationComplete, hasLocalStorageData, migrate }:
+   *        given by app.js, so the menu imports no database, cache or repository (UAT-19, F58)
+   */
+  constructor({ migrationUtility }) {
     this.isMenuOpen = false
     this.userState = userStore.getState()
-    this.migrationUtility = new MigrationUtility(db, new CacheManager())
+    this.migrationUtility = migrationUtility
     this.seriesDropdown = null
     this.authNav = new AuthNav(this.userState)
 

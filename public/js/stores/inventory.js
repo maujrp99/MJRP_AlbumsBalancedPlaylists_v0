@@ -1,12 +1,12 @@
 /**
  * Inventory Store
- * Manages inventory state (Observable pattern)
+ *
+ * The inventory on screen: the albums, whether they are being read, and the last error.
+ * Pure state (ADR-0017; F58, UAT-18): setters, getters and subscribe. It reads nothing and writes
+ * nowhere: InventoryService (services/inventory/) does, and is the only writer of this store.
  */
 
-import { InventoryRepository } from '../repositories/InventoryRepository.js'
-import { db as firestore } from '../app.js'
-import { cacheManager } from '../cache/CacheManager.js'
-import { userStore } from './UserStore.js'
+import { inventoryStatistics } from '../models/inventoryStats.js'
 
 export class InventoryStore {
     constructor() {
@@ -14,79 +14,47 @@ export class InventoryStore {
         this.loading = false
         this.error = null
         this.listeners = []
-        this.repository = null
-        this.userId = 'anonymous-user'
-
-        // Subscribe to user changes
-        userStore.subscribe(this.handleUserChange.bind(this))
     }
 
-    /**
-     * The person on the app changed (sign-in, sign-out, or the anonymous account the app opens by
-     * itself after a sign-out).
-     *
-     * The inventory in memory belongs to the person who was here: it is dropped at once, before
-     * anything else, and never written into another account. Then the inventory of the person
-     * who arrived is read; between a sign-out and the next account there is nobody to read for.
-     *
-     * Guest data is NOT carried into an account here: the copy this method used to make ran only
-     * when a signed-in person signed out, and put that person's inventory into the anonymous
-     * account that followed (UAT-198). Moving a guest's data on sign-in is UAT-12.
-     *
-     * @param {Object} state - UserStore state
-     */
-    async handleUserChange(state) {
-        const newUser = state.currentUser
-        const newUserId = newUser ? newUser.uid : 'anonymous-user'
-        if (this.userId === newUserId) return
+    // ========== SETTERS ==========
 
-        console.log(`[InventoryStore] Switching user context: ${this.userId} -> ${newUserId}`)
-
-        this.userId = newUserId
+    /** Drop everything: what is in memory belongs to whoever was here. */
+    reset() {
         this.albums = []
         this.loading = false
         this.error = null
-        this.repository = firestore ? new InventoryRepository(firestore, cacheManager, this.userId) : null
         this.notify()
-
-        if (!newUser || !this.repository) return
-
-        await this.loadAlbums().catch(err => console.error('Failed to reload inventory on user switch:', err))
     }
 
-    /**
-     * Initialize repository
-     */
-    init() {
-        if (!firestore) {
-            throw new Error('Firestore not initialized')
-        }
-
-        if (!this.repository) {
-            this.repository = new InventoryRepository(firestore, cacheManager, this.userId)
-        }
+    /** A read started. */
+    setLoading() {
+        this.loading = true
+        this.error = null
+        this.notify()
     }
 
-    /**
-     * Subscribe to state changes
-     */
-    subscribe(listener) {
-        this.listeners.push(listener)
-        return () => {
-            this.listeners = this.listeners.filter(l => l !== listener)
-        }
+    /** A read ended with these albums. */
+    setAlbums(albums) {
+        this.albums = albums
+        this.loading = false
+        this.notify()
     }
 
-    /**
-     * Notify all listeners
-     */
-    notify() {
-        this.listeners.forEach(listener => listener(this.getState()))
+    /** A read failed. */
+    setError(message) {
+        this.error = message
+        this.loading = false
+        this.notify()
     }
 
-    /**
-     * Get current state
-     */
+    /** The list changed without a read (an album updated or removed). */
+    replaceAlbums(albums) {
+        this.albums = albums
+        this.notify()
+    }
+
+    // ========== GETTERS ==========
+
     getState() {
         return {
             albums: this.albums,
@@ -95,234 +63,30 @@ export class InventoryStore {
         }
     }
 
-    /**
-     * Get all albums
-     */
     getAlbums() {
         return this.albums
     }
 
-    /**
-     * Load all albums from repository
-     */
-    async loadAlbums() {
-        this.init()
-        this.loading = true
-        this.error = null
-        this.notify()
-
-        // The answer belongs to whoever asked: if the person changes while it is on its way, it is dropped
-        const repository = this.repository
-        const askedBy = () => repository === this.repository
-
-        try {
-            const albums = await repository.findAll()
-            if (!askedBy()) return this.albums
-
-            this.albums = albums
-            this.loading = false
-            this.notify()
-            return this.albums
-        } catch (error) {
-            if (!askedBy()) return this.albums
-            console.error('Failed to load inventory:', error)
-            this.error = error.message
-            this.loading = false
-            this.notify()
-            throw error
-        }
-    }
-
-    /**
-     * Add album to inventory
-     */
-    async addAlbum(album, format, options = {}) {
-        this.init()
-
-        try {
-            const id = await this.repository.addAlbum(album, format, options)
-
-            // Reload to get fresh data
-            await this.loadAlbums()
-
-            return id
-        } catch (error) {
-            console.error('Failed to add album to inventory:', error)
-            throw error
-        }
-    }
-
-    /**
-     * Update album in inventory
-     */
-    async updateAlbum(albumId, updates) {
-        console.log('[InventoryStore.updateAlbum] Starting update for:', albumId, updates)
-        this.init()
-
-        try {
-            console.log('[InventoryStore.updateAlbum] Calling repository.updateAlbum')
-            await this.repository.updateAlbum(albumId, updates)
-            console.log('[InventoryStore.updateAlbum] Repository update successful')
-
-            // Update local state
-            this.albums = this.albums.map(album =>
-                album.id === albumId ? { ...album, ...updates } : album
-            )
-
-            this.notify()
-            console.log('[InventoryStore.updateAlbum] Local state updated')
-            return albumId
-        } catch (error) {
-            console.error('[InventoryStore.updateAlbum] Failed to update inventory album:', error)
-            throw error
-        }
-    }
-
-    /**
-     * Update price inline (optimistic update)
-     */
-    async updatePrice(albumId, newPrice, currency) {
-        this.init()
-
-        // Optimistic update
-        const oldAlbum = this.albums.find(a => a.id === albumId)
-        if (oldAlbum) {
-            this.albums = this.albums.map(album =>
-                album.id === albumId
-                    ? { ...album, purchasePrice: newPrice, currency }
-                    : album
-            )
-            this.notify()
-        }
-
-        try {
-            await this.repository.updatePrice(albumId, newPrice, currency)
-            return albumId
-        } catch (error) {
-            console.error('Failed to update price:', error)
-
-            // Rollback on error
-            if (oldAlbum) {
-                this.albums = this.albums.map(album =>
-                    album.id === albumId ? oldAlbum : album
-                )
-                this.notify()
-            }
-
-            throw error
-        }
-    }
-
-    /**
-     * Remove album from inventory
-     */
-    async removeAlbum(albumId) {
-        console.log('[InventoryStore.removeAlbum] Starting delete for:', albumId)
-        this.init()
-
-        try {
-            console.log('[InventoryStore.removeAlbum] Calling repository.removeAlbum')
-            await this.repository.removeAlbum(albumId)
-            console.log('[InventoryStore.removeAlbum] Repository delete successful')
-
-            // Remove from local state
-            this.albums = this.albums.filter(album => album.id !== albumId)
-            this.notify()
-
-            console.log('[InventoryStore.removeAlbum] Removed from local state, albums remaining:', this.albums.length)
-            return albumId
-        } catch (error) {
-            console.error('[InventoryStore.removeAlbum] Failed to remove from inventory:', error)
-            throw error
-        }
-    }
-
-    /**
-     * Check if album is in inventory
-     */
-    async isInInventory(albumId) {
-        this.init()
-
-        try {
-            const album = await this.repository.findByAlbumId(albumId)
-            return album !== null
-        } catch (error) {
-            console.error('Failed to check inventory:', error)
-            return false
-        }
-    }
-
-    /**
-     * Get inventory statistics
-     */
+    /** Derived, never stored (models/inventoryStats.js). */
     getStatistics() {
-        const stats = {
-            totalAlbums: this.albums.length,
-            ownedCount: 0,
-            wishlistCount: 0,
-            byFormat: {
-                cd: 0,
-                vinyl: 0,
-                dvd: 0,
-                bluray: 0,
-                digital: 0
-            },
-            totalValueUSD: 0,
-            totalValueBRL: 0,
-            ownedValueUSD: 0,
-            ownedValueBRL: 0,
-            averagePriceUSD: 0,
-            averagePriceBRL: 0
+        return inventoryStatistics(this.albums)
+    }
+
+    // ========== SUBSCRIPTIONS ==========
+
+    /**
+     * @param {Function} listener - (state) => void
+     * @returns {Function} unsubscribe
+     */
+    subscribe(listener) {
+        this.listeners.push(listener)
+        return () => {
+            this.listeners = this.listeners.filter(l => l !== listener)
         }
+    }
 
-        let totalPriceUSD = 0
-        let totalPriceBRL = 0
-        let ownedPriceUSD = 0
-        let ownedPriceBRL = 0
-        let countUSD = 0
-        let countBRL = 0
-
-        this.albums.forEach(album => {
-            // Count by ownership
-            // Strict check: only true counts as owned. null/undefined (Not Owned) and false (Wishlist) do not.
-            const isOwned = album.owned === true
-            if (isOwned) {
-                stats.ownedCount++
-            } else if (album.owned === false) {
-                stats.wishlistCount++
-            }
-            // null/undefined counts as stored but neither owned nor wishlist (Not Owned)
-
-            // Count by format
-            if (album.format) {
-                stats.byFormat[album.format] = (stats.byFormat[album.format] || 0) + 1
-            }
-
-            // Total value by currency
-            if (album.purchasePrice && !isNaN(album.purchasePrice)) {
-                const price = Number(album.purchasePrice)
-                const currency = album.currency || 'USD'
-
-                if (currency === 'USD') {
-                    totalPriceUSD += price
-                    if (isOwned) ownedPriceUSD += price
-                    countUSD++
-                } else if (currency === 'BRL') {
-                    totalPriceBRL += price
-                    if (isOwned) ownedPriceBRL += price
-                    countBRL++
-                }
-            }
-        })
-
-        stats.totalValueUSD = totalPriceUSD
-        stats.totalValueBRL = totalPriceBRL
-        stats.ownedValueUSD = ownedPriceUSD
-        stats.ownedValueBRL = ownedPriceBRL
-        stats.averagePriceUSD = countUSD > 0 ? totalPriceUSD / countUSD : 0
-        stats.averagePriceBRL = countBRL > 0 ? totalPriceBRL / countBRL : 0
-
-        return stats
+    notify() {
+        this.listeners.forEach(listener => listener(this.getState()))
     }
 }
 
