@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:13] session — UAT-187 aberta: a janela de ranking reabre na ordem do disco, não na ordem salva
+
+Relato do MJRP durante a regressão («epitaph como numero 2 … carregou em 3»). Causa lida no código: a janela ordena pela posição no disco e ignora o ranking que o álbum traz. Conserto como ponta da F46, no ramo `fix/f46-rank-modal-saved-order`.
+
 ## [2026-11-19 14:08] session — UAT-184, UAT-185 e UAT-186 abertas; o MJRP pediu uma regressão completa do site
 
 - **Relatos do MJRP:** um álbum que ele nunca adicionou aparece numa série (UAT-184: pedido «Stone Temple Pilots - Core», carregado «Shangri-La Dee Da»); álbuns de estúdio do Kendrick Lamar caem na aba «?» da busca da Home (UAT-185); playlists e inventário lentos (UAT-186).
