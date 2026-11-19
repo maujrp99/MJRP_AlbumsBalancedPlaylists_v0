@@ -123,6 +123,40 @@ describe('the second tier of the rule is granted only by pickAlbum, over the lis
 })
 
 /**
+ * The corrected Apple Music id goes back to the series by ONE writer (F55, slice 2): the catalog
+ * adapter says which stored id the album did not come from, the query model turns that into the
+ * corrected query, and SeriesFactsService writes it with the facts, through the repository.
+ */
+describe('one writer for the corrected Apple Music id', () => {
+    const appFiles = (dir = 'public/js') => fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true }).flatMap(entry => {
+        const relative = `${dir}/${entry.name}`
+        if (entry.isDirectory()) return appFiles(relative)
+        return entry.name.endsWith('.js') ? [relative] : []
+    })
+    const filesWith = (pattern) => appFiles().filter(file => pattern.test(read(file))).sort()
+
+    it('only the catalog adapter says an id was replaced, and only the query model reads it', () => {
+        expect(filesWith(/replacedSourceId/)).toEqual([
+            'public/js/models/albumQuery.js',
+            'public/js/services/albums/adapters/CatalogAdapter.js'
+        ])
+    })
+
+    it('the corrected query is made in one place and written by one service, through one repository method', () => {
+        expect(filesWith(/withCorrectedSources?\(/)).toEqual([
+            'public/js/models/albumFacts.js',
+            'public/js/models/albumQuery.js',
+            'public/js/services/series/SeriesFactsService.js'
+        ])
+        expect(filesWith(/saveAlbumFacts\(/)).toEqual([
+            'public/js/repositories/SeriesRepository.js',
+            'public/js/services/albums/albumLoading.js',
+            'public/js/services/series/SeriesFactsService.js'
+        ])
+    })
+})
+
+/**
  * Text checks that are not a comparison of album names, by file. Each entry is the exact text.
  * - the scraper reads the header of a page: the header ends with the name of the artist it links.
  */
