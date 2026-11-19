@@ -12,7 +12,11 @@
         "test:coverage": "vitest --coverage",
         "test:e2e": "node test/e2e/run-all.js",
         "test:e2e:headful": "HEADLESS=false node test/e2e/run-all.js",
-        "lint": "eslint ."
+        "lint": "eslint .",
+        "deploy:site": "./scripts/deploy-site.sh",
+        "deploy:site:dry-run": "./scripts/deploy-site.sh --dry-run",
+        "deploy:server": "./scripts/deploy-server.sh",
+        "deploy:server:dry-run": "./scripts/deploy-server.sh --dry-run"
     },
     "keywords": [
         "playlist",

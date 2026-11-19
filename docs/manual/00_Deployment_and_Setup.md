@@ -1,55 +1,125 @@
 # Deployment & Setup Guide
 
-**Source**: Extracted from `PROJECT_SUMMARY.md` (v2.12.0)
-**Last Updated**: 2026-01-08
+**Source**: `scripts/deploy-site.sh`, `scripts/deploy-server.sh`, `scripts/lib/deploy-common.sh`, `server/Dockerfile`, `.github/workflows/ci.yml` (F64)
+**Last Updated**: 2026-11-19
 
 ---
 
-## 1. Deployment Architecture
+## 1. Onde o produto roda
 
-| Component | Platform | URL |
+| Parte | Plataforma | Endereço |
 |-----------|----------|-----|
-| **Frontend** | Firebase Hosting | `https://mjrp-playlist-generator.web.app` |
-| **Backend** | Cloud Run (southamerica-east1) | `https://mjrp-proxy-540062660076.southamerica-east1.run.app` |
-| **Database** | Firestore | `mjrp-playlist-generator` project |
+| **Site** | Firebase Hosting (projeto `mjrp-playlist-generator`) | `https://mjrp-playlist-generator.web.app` |
+| **Servidor** | Cloud Run, serviço `mjrp-proxy`, região `southamerica-east1` | `https://mjrp-proxy-540062660076.southamerica-east1.run.app` (o site chega nele por `/api/**`, `firebase.json`) |
+| **Banco** | Firestore | projeto `mjrp-playlist-generator` |
 
-### Deployment Scripts
+---
+
+## 2. Publicar: um caminho só
+
+Há um comando para o site e um para o servidor. Não existe outro caminho: os scripts antigos
+(`scripts/deploy-prod.sh`, `scripts/deploy-backend.sh`) e o `cloudbuild.yaml` foram removidos, e a
+automação do GitHub não publica nada.
 
 ```bash
-# Frontend
-./scripts/deploy-prod.sh    # Deploys to Firebase Hosting
+npm run deploy:site              # publica o site
+npm run deploy:server            # publica o servidor
 
-# Backend
-./scripts/deploy-backend.sh # Builds + deploys to Cloud Run
+npm run deploy:site:dry-run      # faz tudo, menos publicar e conferir a produção
+npm run deploy:server:dry-run
 ```
 
-**Backend Deployment Flow**:
-1. Copy `shared/` → `server/_shared_temp/` (with ESM config)
-2. Copy `config/` → `server/config/`
-3. Build Docker image from `server/Dockerfile`
-4. Deploy to Cloud Run with `gcloud run deploy`
-5. Cleanup temporary directories
+Os dois publicam **a `main` local, como está commitada**: exportam uma cópia limpa dela
+(`git archive`) para uma pasta temporária do sistema e trabalham lá. A pasta de trabalho nunca é
+usada para o build, e nada é escrito nem apagado dentro do repositório. Podem ser chamados de
+qualquer cópia do repositório (a pasta principal ou um worktree). A pasta temporária é removida no
+fim; `--keep` (por exemplo `./scripts/deploy-site.sh --dry-run --keep`) a preserva para inspeção.
 
----
+### 2.1 O que precisa existir na máquina
 
-## 2. CI/CD Pipeline
+| O quê | Para quê | Como conferir |
+|---|---|---|
+| `.env` na pasta onde a `main` está aberta, com `VITE_SPOTIFY_CLIENT_ID` | O Vite lê o valor na hora do build; sem ele o Spotify quebra em produção. Só o site precisa. Outro arquivo pode ser indicado com `DEPLOY_ENV_FILE=<caminho>`. | o script recusa se o arquivo ou a variável faltar |
+| Firebase CLI com login (`firebase login`) | publicar o site | `firebase login:list` |
+| gcloud com login (`gcloud auth login`), com permissão de publicar no projeto | publicar o servidor | `gcloud auth list` |
+| Node.js e npm; `git`; `curl` | exportar, instalar, testar, construir e conferir | — |
 
-**Workflow**: `.github/workflows/ci-firebase.yml`
+Não é preciso chave de conta de serviço. Se houver uma, ela é aceita no lugar do login:
+`GOOGLE_APPLICATION_CREDENTIALS=<arquivo da chave>` (site e servidor; no servidor vale só para
+aquela execução, o login guardado na máquina não muda) ou `FIREBASE_TOKEN` (site).
 
-**Triggers**:
-- Push to `main` → Deploy production
-- Pull requests → Deploy preview
+### 2.2 O que cada script faz, em ordem
 
-**Steps**:
-1. Install dependencies (root + server)
-2. Run linter + tests
-3. Build frontend
-4. Deploy via `firebase-tools`
+Qualquer passo que falha interrompe tudo; nada é publicado.
 
-**Secrets Required** (GitHub Actions):
-- `FIREBASE_PROJECT`
-- `FIREBASE_TOKEN` (or `FIREBASE_SERVICE_ACCOUNT`)
-- `AI_API_KEY` (for E2E tests)
+| # | Site (`scripts/deploy-site.sh`) | Servidor (`scripts/deploy-server.sh`) |
+|---|---|---|
+| 1 | Recusa se a `main` tem mudança não commitada em arquivo versionado | o mesmo |
+| 2 | Confere o `.env` e o login do Firebase | Confere o login do gcloud; lê e mostra a revisão que serve agora (o ponto de volta) |
+| 3 | Exporta a `main` para a pasta temporária; `npm ci` | o mesmo |
+| 4 | `npx vitest run`; um teste falhando interrompe | o mesmo |
+| 5 | Copia o `.env` para a cópia limpa; `npx vite build` | Monta o contexto da imagem: `shared/` vira `server/_shared_temp` (com um `package.json` `{"type": "module"}`) e `config/` vira `server/config` |
+| 6 | Copia o que o Vite não empacota: `public/js/firebase-config.js`, `public/css/`, `public/assets/`, `public/favicon.ico` | — |
+| 7 | Confere o que construiu: o script principal que o `index.html` nomeia existe; o Client ID do Spotify está nos scripts; nenhum arquivo `.map`; todo arquivo local que o `index.html` aponta está em `dist/`; `css/` e `assets/` chegaram inteiros | Confere o contexto (`Dockerfile`, `index.js`, lockfile, `config/prompts.json`, sem `.env`) e **sobe o servidor localmente**, numa cópia arrumada como a imagem arruma, com as dependências do lockfile e sem segredo nenhum: `/_health` e `/api/musickit-status` respondem 200, `/api/debug/files` responde 404, os prompts e os módulos de `shared/` carregam. Nenhuma rota paga é chamada. |
+| 8 | `firebase deploy --only hosting --project mjrp-playlist-generator` | `gcloud run deploy mjrp-proxy --source server --region southamerica-east1 --project mjrp-playlist-generator --allow-unauthenticated` |
+| 9 | Confere a produção: o `index.html` no ar nomeia o script recém-construído, e esse endereço devolve um script (o Hosting responde 200 com a página do app para arquivo que não existe) | Confere a produção: a revisão nova recebe 100% do tráfego; `/api/musickit-status` responde 200 e `/api/debug/files` responde 404 |
+| 10 | Mostra como voltar atrás | Mostra o comando para voltar à revisão anterior, com o nome dela |
+
+Com `--dry-run`, os passos 8 e 9 não rodam; todo o resto roda de verdade.
+
+### 2.3 Voltar atrás
+
+**Site.** No console do Firebase, em Hosting, o histórico de versões guarda cada publicação:
+escolher a anterior e «Rollback» (`https://console.firebase.google.com/project/mjrp-playlist-generator/hosting/sites`).
+É imediato e não precisa de build.
+
+**Servidor.** O script mostra, antes de publicar, a revisão que estava servindo, e ao fim o comando pronto:
+
+```bash
+gcloud run services update-traffic mjrp-proxy --to-revisions=<revisão anterior>=100 \
+  --region southamerica-east1 --project mjrp-playlist-generator
+```
+
+Depois de voltar atrás o serviço fica preso àquela revisão: uma publicação nova cria a revisão mas
+não recebe tráfego (o script acusa isso na conferência). Antes da próxima publicação, soltar:
+
+```bash
+gcloud run services update-traffic mjrp-proxy --to-latest \
+  --region southamerica-east1 --project mjrp-playlist-generator
+```
+
+Se a revisão nova não sobe, o Cloud Run mantém a anterior servindo.
+
+### 2.4 A imagem do servidor: uma receita
+
+A imagem é construída pelo Cloud Build a partir de `server/Dockerfile`, por
+`gcloud run deploy --source server`; é assim que a produção foi publicada (a imagem em uso vem do
+repositório `cloud-run-source-deploy`). O `scripts/deploy-server.sh` é o único lugar que monta o
+contexto que o `Dockerfile` espera. O `cloudbuild.yaml`, uma segunda receita que não copiava os
+prompts nem marcava `shared/` como módulo ES, foi removido (UAT-22).
+
+- **Node:** o `Dockerfile` parte de `node:26-slim`, a mesma versão maior usada para desenvolver e
+  na automação de testes. O script avisa quando o Node da máquina e o da imagem diferem.
+- **Variáveis e segredos:** o script não define nenhum; o serviço mantém os seus de uma revisão
+  para a outra. Em 2026-11-19 o serviço tinha quatro, todos vindos do Secret Manager:
+
+  | Variável no servidor | Segredo |
+  |---|---|
+  | `AI_API_KEY` | `AI_API_KEY` |
+  | `APPLE_TEAM_ID` | `musickit-team-id` |
+  | `APPLE_KEY_ID` | `musickit-key-id` |
+  | `APPLE_MUSIC_PRIVATE_KEY` | `musickit-private-key` |
+
+  Mudar uma variável ou um segredo é feito no serviço (`gcloud run services update`), não por este script.
+- **Regras do Firestore:** nenhum dos dois scripts publica `firestore.rules`.
+
+### 2.5 Automação do GitHub
+
+`.github/workflows/ci.yml` roda `npx vitest run` em todo push e pull request, e mais nada: não
+publica. O repositório não tem segredo de publicação, e um build feito lá sairia sem o Client ID do
+Spotify. O lint não entra: tem erros hoje, e um passo que nunca reprova não protege nada (UAT-20).
+
+**Não testado:** o arquivo foi reescrito na F64 e ainda não rodou no GitHub.
 
 ---
 
