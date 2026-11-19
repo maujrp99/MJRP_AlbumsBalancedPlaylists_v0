@@ -81,11 +81,18 @@ function respond (res, result) {
  * client's callers), so "it failed" can never be read as "there is nothing".
  */
 class UpstreamError extends Error {
-  /** @param {string} code - upstream_failed | upstream_timeout | upstream_busy */
-  constructor (code, message, { cause } = {}) {
+  /**
+   * @param {string} code - upstream_failed | upstream_timeout | upstream_busy
+   * @param {string} message - for the log
+   * @param {Object} [options]
+   * @param {Error} [options.cause]
+   * @param {number} [options.retryAfterMs] - with upstream_busy: how long the source is to be left alone
+   */
+  constructor (code, message, { cause, retryAfterMs = null } = {}) {
     super(message)
     this.name = 'UpstreamError'
     this.code = code
+    this.retryAfterMs = retryAfterMs
     if (cause) this.cause = cause
   }
 }

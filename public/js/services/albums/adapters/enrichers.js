@@ -1,6 +1,6 @@
 /**
  * The enrichment sources of an album, each behind the same small port (DP-07, DP-14):
- *   enrich(album) -> Promise<{ status: 'done' | 'empty', album, apply }>
+ *   enrich(album) -> Promise<{ status: 'done' | 'empty', album, apply, reason? }>
  * Every one works on a copy and returns it: the album it received is never changed.
  * `apply(other)` puts the same answer on another album (a copy again). The load uses it when a
  * newer album was published while the source was working, so no source undoes another.
@@ -9,6 +9,9 @@
  * The ratings come from the app's server, whose answer says which of the two it is (F52):
  * 'not_found' and 'no_ratings' are 'empty'; a failure is thrown as it came, with its code and its
  * hold, so the load marks the source as failed (or holds) and never stores it as "has none".
+ * An 'empty' that comes from the server's own word carries it as `reason` ('not_found' or
+ * 'no_ratings'): the record the browser keeps is believed for a time that depends on it. An
+ * 'empty' with no reason (the server before F52) is believed for a short time only.
  */
 
 import { cloneAlbum } from '../../../models/cloneAlbum.js'
@@ -46,7 +49,7 @@ export class AcclaimEnricher {
         // The source answered and has no ratings for this album: nothing is written into it. A page
         // with zero ratings is not "done" (it was, before F52), and its address is not kept, because
         // an album with that address reads as "already has its ratings".
-        if (SOURCE_HAS_NONE.has(answer.kind)) return { status: EMPTY, album, apply: unchanged }
+        if (SOURCE_HAS_NONE.has(answer.kind)) return { status: EMPTY, reason: answer.kind, album, apply: unchanged }
         const data = answer.data || {}
 
         const apply = (target) => {

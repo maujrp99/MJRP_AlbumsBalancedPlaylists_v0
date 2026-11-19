@@ -454,6 +454,8 @@ Com isso `refreshSource` roda numa fila própria por álbum e fonte e aparece na
 >
 > **Fatia 1 construída em 2026-11-19 17:33**, no ramo `fix/f52-server-tells-the-truth` (falta entrar na `main` e ser publicada); as fatias 2 a 4 não. O contrato como ficou está em `docs/manual/03_Backend_API_Layer.md` («The contract of an answer», «The table of the AI provider») e em `docs/manual/07_Frontend_Data_Infra.md`; as decisões tomadas na construção, em `docs/specs/features/F52-server-album-generation-back/plan.md`. Dos três pontos «ainda não verificados» da seção 11, dois foram vistos: uma aba antiga que recebe 502 na lista por IA lê lista vazia e classifica sem ela, como já fazia em qualquer falha; e o caminho de `SeriesService` que aplica as notas por conta própria passa pelo leitor novo (por `apiClient.BEAenrichAlbum`), com o significado antigo (o dado, ou `null` na falha). O prazo e o número de instâncias do Cloud Run seguem sem conferir.
 >
+> **Fatias 3 e 4 construídas em 2026-11-19 19:32**, no ramo `fix/f52-slices-3-4` (falta entrar na `main` e ser publicado); a fatia 2 foi entregue pela F55. O que foi construído, onde a seção 11 mudou o pedido e o que fica aberto estão na seção 12.
+>
 > **Estado:** proposta, escrita em 2026-11-19 16:12 pelo implementador. Antes da fatia 1, nada daqui estava construído. Antes do código ela passa por uma crítica separada e pelo MJRP. Origem: issues UAT-181 e UAT-23; o cruzamento em `reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md` (respostas 1.4 e 1.5, seção F).
 
 ### 1. O problema, em uma frase
@@ -584,6 +586,31 @@ A crítica conferiu a proposta contra o código e achou dez pontos. A direção 
 | 4 | Medir a primeira carga e contar quantos álbuns estavam errados; decidir o guardado persistente com o número | — |
 
 **Ainda não verificado:** o que uma aba antiga faz com um 502 na lista de álbuns por IA; o prazo e o número de instâncias configurados no Cloud Run; se o caminho de `SeriesService` que aplica as notas por conta própria passa pelo leitor novo.
+
+### 12. O que as fatias 3 e 4 construíram, e o que fica aberto (2026-11-19 19:32)
+
+**Construído** (ramo `fix/f52-slices-3-4`; os detalhes em `docs/manual/03_Backend_API_Layer.md`, «Time and pace of the ratings route», e no `plan.md` da feature):
+
+| Peça | Onde | O que faz |
+|---|---|---|
+| Fila educada (DP-23) | `server/lib/politeQueue.js`, usada pelo `getPage` único do raspador | 2 requisições por vez à fonte, 250 ms entre inícios; no 429 e no 503 ninguém começa até a espera acabar (o `Retry-After` da fonte, ou 1 s dobrando até 30 s); o mesmo pedido é repetido até 3 vezes; nunca espera além do prazo do pedido |
+| Orçamento de tempo (DP-22) | `server/lib/timeBudget.js`, `EnrichmentService` | 15 s por álbum (o app espera 20 s), 8 s por requisição à fonte; a espera na fila conta; no fim do prazo a resposta é `upstream_timeout` |
+| Um pedido por álbum de cada vez | `server/lib/inFlight.js`, `EnrichmentService` | pedidos iguais simultâneos dividem uma busca; cada um casa as suas faixas; nada fica guardado depois |
+| «Não tem» com motivo | `adapters/enrichers.js`, `AlbumCacheAdapter` (`EMPTY_TRUST`) | `not_found` vale 24 horas, `no_ratings` vale 7 dias, «vazio» sem motivo (servidor antigo) vale 1 hora; falha nunca é guardada |
+| Fonte ocupada segura a carga | `api/serverResult.js`, `AlbumLoadService` | 503 `upstream_busy` com `Retry-After` pausa a fila das notas até a hora dita, com um aviso; sem `Retry-After` é falha com «tentar de novo» |
+| Medição | `server/routes/handlers/albums.js` | uma linha de log por pedido de notas: `how` (`source`, `joined`, `none`), `answer`, `ms`, `sourceRequests`; sem dado de pessoa nem de álbum |
+
+**Onde a seção 11 valeu sobre o pedido da sessão:** confiança de 24 horas para «sem página» (o pedido dizia 7 dias para os dois casos); a memória curta por instância e a popularidade do Spotify não foram construídas (item 10).
+
+**Tudo isso é por instância.** A fila, as esperas e a divisão de pedidos vivem na memória de um processo. A pré-condição da seção 11 (item 9), uma instância fixa no Cloud Run, é configuração do serviço: quem publica a aplica; o script de publicação não define instâncias. O limite de 4 do app segue como segundo freio.
+
+**Fica aberto:**
+1. O número da primeira carga em produção (soma de `sourceRequests`, quantos `upstream_timeout`) e, com ele, a decisão do MJRP sobre o guardado persistente no servidor.
+2. Os números escolhidos sem medir a fonte (ritmo, esperas, orçamento, prazos de confiança): decididos pelo agente, revisáveis.
+3. A popularidade do Spotify com falha como falha: item próprio, ainda sem feature. Hoje falha, «não conectado» e «o Spotify não tem» terminam os três em `empty`, e o «sem dado» vai para os fatos da série.
+4. Os fatos antigos da série não viraram «desconhecido» (item 8): são reescritos a cada carga. Sobra o registro `done` com página e zero notas, de antes da fatia 1, que não se refaz sozinho.
+5. `/api/generate` passa pela mesma fila e pelo prazo de 8 s por requisição à fonte, mas não tem orçamento total.
+6. O prazo e o número de instâncias configurados no Cloud Run seguem sem conferir.
 
 ## Uma regra só para dizer que é o mesmo álbum (F55) — fatia 1 em produção, fatia 2 construída
 

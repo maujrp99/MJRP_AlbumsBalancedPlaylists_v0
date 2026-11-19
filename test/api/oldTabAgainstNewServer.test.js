@@ -89,6 +89,35 @@ describe('an old tab against the new server', () => {
         })
     })
 
+    describe('POST /api/enrich-album, slice 3: the server now answers in time and may say "the source asked to wait"', () => {
+        /**
+         * The tab of slice 1 (the site in production on 2026-11-19), frozen: its reader held the
+         * load only for its own door and its own limit (public/js/api/serverResult.js at `dd16b01`).
+         */
+        const slice1HoldOf = (code, status) => {
+            if (code === 'unauthorized' && status === 401) return { reason: 'unauthorized' }
+            if (code === 'rate_limited') return { reason: 'rate_limited' }
+            return null
+        }
+
+        it('503 upstream_busy with Retry-After: the tab of slice 1 reads a failure it may ask again, and holds nothing', () => {
+            const result = failure('upstream_busy', { retryAfterSeconds: 42 })
+            expect(bodyOf(result)).toEqual({ error: { code: 'upstream_busy', retryable: true } })
+            expect(slice1HoldOf(result.code, result.status)).toBeNull()
+        })
+
+        it('504 upstream_timeout at the budget: the oldest tab reads null ("failed"), the tab of slice 1 a failure it may ask again', async () => {
+            const result = failure('upstream_timeout')
+            expect(await oldTabRatings(async () => wire(result))).toBeNull()
+            expect(bodyOf(result).error.retryable).toBe(true)
+        })
+
+        it('the body of a success has the same two fields as before: nothing of the log goes on the wire', () => {
+            const result = { ...success({ trackRatings: [] }, 'not_found'), trace: { how: 'joined', sourceRequests: 0 } }
+            expect(Object.keys(bodyOf(result)).sort()).toEqual(['data', 'outcome'])
+        })
+    })
+
     describe('POST /api/ai/studio-albums', () => {
         it('a failure is an empty list for the old tab (its fallback to heuristics), as it was', async () => {
             expect(await oldTabAiList(async () => wire(providerFailure('5xx')))).toEqual([])

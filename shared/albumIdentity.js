@@ -354,16 +354,33 @@ export function pickAlbum(asked, candidates, read = (candidate) => candidate) {
 }
 
 /**
+ * The names an artist's label of a source can stand for. BestEverAlbums tells artists of the same
+ * name apart with a note at the end, in parentheses: "Nirvana (US)", "Nirvana (UK)". The note is
+ * the source's, not part of the name, so the label is read both ways: as it is, and without the
+ * note. (An artist whose own name ends in parentheses still matches by the first reading.)
+ * @param {string} label
+ * @returns {string[]}
+ */
+export function artistNamesFromLabel(label) {
+    const text = String(label ?? '').trim()
+    if (!text) return []
+    const withoutNote = text.replace(/\s*\([^()]*\)$/, '').trim()
+    return withoutNote && withoutNote !== text ? [text, withoutNote] : [text]
+}
+
+/**
  * Every way a label "Title by Artist" can be read (BestEverAlbums writes its results so). A title
  * can have " by " inside ("Stand by Me by Ben E. King"), so each " by " is tried as the separator;
- * a label with none (an artist's page, a forum post) has no reading.
+ * the artist can carry the source's note ("Nevermind by Nirvana (US)"), so it is read with and
+ * without it; a label with none (an artist's page, a forum post) has no reading.
  * @param {string} label
  * @returns {Array<{ title: string, artist: string }>}
  */
 export function albumFromLabel(label) {
     const text = String(label ?? '').trim()
-    return [...text.matchAll(/\s+by\s+/gi)].map(separator => ({
-        title: text.slice(0, separator.index).trim(),
-        artist: text.slice(separator.index + separator[0].length).trim()
-    })).filter(reading => reading.title && reading.artist)
+    return [...text.matchAll(/\s+by\s+/gi)].flatMap(separator => {
+        const title = text.slice(0, separator.index).trim()
+        const artists = artistNamesFromLabel(text.slice(separator.index + separator[0].length))
+        return title ? artists.map(artist => ({ title, artist })) : []
+    })
 }
