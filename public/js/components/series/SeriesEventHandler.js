@@ -147,9 +147,12 @@ export default class SeriesEventHandler extends Component {
      * Handle series-level actions (edit, delete)
      */
     async handleSeriesAction(action, seriesId) {
-        const { onEditSeries, onDeleteSeries } = this.props;
+        const { onEditSeries, onDeleteSeries, onRetrySeries } = this.props;
 
         switch (action) {
+            case 'retry-series':
+                if (onRetrySeries) onRetrySeries(seriesId);
+                break;
             case 'edit-series':
                 if (onEditSeries) onEditSeries(seriesId);
                 break;

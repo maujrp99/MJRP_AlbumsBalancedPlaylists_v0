@@ -52,7 +52,7 @@ export class SeriesViewUpdater {
         }
     }
 
-    updateGrid(albums, viewMode, currentScope, filters, searchQuery, sortedSeriesList = null, isLoading = false) {
+    updateGrid(albums, viewMode, currentScope, filters, searchQuery, sortedSeriesList = null, isLoading = false, seriesStates = null) {
         if (!this.components.grid) return;
 
         // ARCH-FIX: Use sorted list if provided (from Controller), otherwise fallback to store (unsorted)
@@ -64,7 +64,8 @@ export class SeriesViewUpdater {
             scope: currentScope,
             seriesList: seriesList,
             context: { searchQuery, filters },
-            isLoading: isLoading // FIX #152: Pass isLoading to GridRenderer
+            isLoading: isLoading, // FIX #152: Pass isLoading to GridRenderer
+            seriesStates // the load state of each series, derived by the load store
         });
     }
 

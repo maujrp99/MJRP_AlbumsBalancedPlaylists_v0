@@ -69,7 +69,7 @@ export async function enrichAlbum(album, options = {}) {
  * @param {Album} album
  * @param {Object} enrichmentData - From API response
  */
-function applyBEAData(album, enrichmentData) {
+export function applyBEAData(album, enrichmentData) {
     // 1. Apply Album-Level Metadata
     if (enrichmentData.bestEverInfo?.url) {
         album.bestEverUrl = enrichmentData.bestEverInfo.url

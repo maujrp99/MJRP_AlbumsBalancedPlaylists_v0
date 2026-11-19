@@ -69,6 +69,18 @@ export class AlbumsStore {
     }
 
     /**
+     * Replace the albums of several series at once, with one notice.
+     * Written by the album load (services/albums/albumLoading.js), which owns what a series has.
+     * @param {Object<string, Array>} albumsBySeries - seriesId -> albums
+     */
+    setAlbumsBySeries(albumsBySeries) {
+        Object.entries(albumsBySeries).forEach(([seriesId, albums]) => {
+            this.albumsByAlbumSeriesId.set(seriesId, [...albums])
+        })
+        this.notify()
+    }
+
+    /**
      * Add album to store - MUST specify seriesId
      * Rejects albums for inactive series (prevents ghost albums)
      * @param {string} albumSeriesId - Series ID this album belongs to

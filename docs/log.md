@@ -11,10 +11,45 @@
 - Issues novas na Rodada 2: UAT-179 (campo de busca perde o foco a cada tecla; relatado pelo MJRP) e UAT-180 (pedido gravado com `&amp;` não é achado no catálogo). Feature F51 registrada.
 - Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
 
+## [2026-11-19 11:41] session — F45 ligada ao app e medida no navegador: os 80 álbuns em 8,5 s (antes, 1 álbum aos 8,5 s e 46 de 80 aos 4 min 40 s)
+
+- Ligação: adaptadores em `public/js/services/albums/adapters/` (catálogo sobre a Apple Music com o servidor como segunda fonte; notas, popularidade e ranking pessoal, cada um devolvendo um álbum novo; guardado por pedido, base + estado por fonte, «vazio» confiável por 1 hora, ranking pessoal nunca guardado), a composição em `services/albums/albumLoading.js` (que também projeta a store de carga na prateleira `stores/albums.js`, com o setter novo `setAlbumsBySeries`), `models/albumQuery.js` (a leitura única de «Artista - Título»: só o primeiro separador divide). `SeriesController` perdeu o laço de carga (647 → 405 linhas): pede ao serviço, reconcilia quando a lista de séries muda, desfaz as inscrições da visita anterior. `SeriesGridRenderer` desenha a série vazia pelo estado derivado (carregando, falhou, oculta) e mostra o aviso «N albums did not load · Try again».
+- Saiu da carga, por decisão do agente e revisável pelo MJRP (decisão 1 da proposta, sem resposta dele ainda): a regravação de cada álbum na coleção `albums` do Firestore.
+- Medido (guardado apagado, mesma conta, 20 séries, 80 álbuns): 33 álbuns aos 3 s, 50 aos 5 s, os 80 aos 8,5 s; nenhum erro no console; sair para a Home e voltar mantém 20 blocos e 80 álbuns (antes caía de 20 para 15). Evidência: `reports/evidence/F45-albums-load-in-parallel/F45-probe-after-2026-11-19.json` e `F45-desktop-after-2026-11-19.jpg`.
+- Achado da primeira tentativa: com 6 buscas simultâneas a Apple Music respondeu 429 e 5 séries mostraram o aviso de falha (o aviso funcionou; captura `F45-desktop-failure-notice-2026-11-19.jpg`). Corrigido no adaptador: 3 por vez, nova tentativa com espera crescente e variação (`DP-23`), e falha da Apple não cai mais na segunda fonte, que usa IA paga (antes caía).
+- Testes: 78 novos passam (fila 12, estado 15, store 10, serviço 18, adaptadores 23). Suíte inteira: 189 passam, 28 falham nos mesmos 9 arquivos da linha de base (mais os 8 E2E sem suíte); nenhuma regressão nova.
+- Aberto: as notas chegam a 2 buscas por vez (17 de 80 aos 40 s), sem travar a tela; as séries abaixo das 3 primeiras seguem em bloco cinza até entrarem na janela (F46); o «Refetch» ainda corre fora da fila e é adotado pelo serviço depois (F48); `/blend` e o modo edição ainda usam `apiClient.fetchAlbum`.
+- Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
+
+## [2026-11-19 11:35] session — F45: a store única da carga e o serviço dono da carga, com dublês das fontes (55 testes novos no total)
+
+- `public/js/stores/albumLoad.js`: store pura, única dona de «pedido → álbum e estado», com aviso agrupado por tique e `subscribe` que devolve o `unsubscribe` (10 testes). `public/js/models/albumLoadState.js`: as regras de estado mudaram de `services/albums/` para `models/`, porque a store não pode importar `services/` (função de aptidão da proposta). `public/js/models/cloneAlbum.js`: cópia do álbum e das faixas, para o enriquecimento não mutar o publicado.
+- `public/js/services/albums/AlbumLoadService.js`: gerações (só a carga atual escreve), reconciliação a cada abertura, achar separado de enriquecer, fontes em cadeia por álbum (as rápidas primeiro, a de notas por último, na fila lenta de limite 2), `retryFailed`, `stop`, `whenIdle`. Não importa rede, Firestore nem tela: recebe o catálogo, as fontes e o guardado por injeção. 18 testes, entre eles: resultado de carga antiga é descartado; reabrir o mesmo escopo não busca de novo; reconciliar quando a série mudou; «vazio» distinto de «falhou»; falha nunca vai para o guardado; segunda visita sem busca; álbum do catálogo congelado e não mutado; teto da fonte lenta.
+- Ainda não ligado ao app: faltam os adaptadores (catálogo, notas, popularidade, ranking, guardado), a projeção para `stores/albums.js`, o controlador e a grade.
+- Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
+
 ## [2026-11-19 11:31] decision — a proposta da carga de álbuns emendada depois das duas críticas (seção 15 do arch.md)
 
 - Segunda crítica (Fable, cortada pelo limite de tempo): `2026-11-19-v0-albums-load-architecture-critique.md`, na pasta de notas. Veredito igual ao da primeira: pode seguir depois dos P0. O que só ela viu: o servidor não distingue «sem nota» de «a busca falhou» (o raspador engole o erro); o teto de 4 buscas simultâneas não foi medido; a chave do guardado tem de ser a do pedido; `clearAll` apaga séries e rankings junto.
 - Emendas, decididas pelo agente e revisáveis pelo MJRP: store única dona de «pedido → álbum», com `stores/albums.js` como leitura projetada; guardado por pedido, base ao achar e um registro por fonte; geração em vez de sessão, com reconciliação a cada abertura; fatias revistas (a F45 leva a grade pelo estado derivado; o observador de visibilidade vai para a F46); álbum publicado não é mutado; filtro, busca ou mistura carregam o escopo inteiro; cancelar é descartar; começa em 2 buscas de nota por vez; a distinção «sem nota» × «falhou» pede mudança no servidor, em fatia própria. A tabela «comportamento de hoje → novo dono → fatia» tem 15 linhas.
+- Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
+
+## [2026-11-19 11:29] review — crítica independente da proposta da carga de álbuns (Opus, 5 min): pode seguir depois de quatro P0; aceitos
+
+- Relatório: `2026-11-19-v0-albums-load-architecture-critique-opus.md`, na pasta de notas das sessões. Veredito: a direção está certa; faltam quatro pontos. Aceitos pelo agente, revisáveis pelo MJRP:
+- P0-1, duas fontes da verdade: a store nova passa a ser a única dona de «pedido → álbum»; `stores/albums.js` vira leitura derivada dela, sem a chave `ALL_SERIES_VIEW` e sem a recusa de série inativa.
+- P0-2, o guardado: uma chave única; guarda a base do álbum ao achar e cada enriquecimento com o seu estado; ao ler, enfileira só o que falta. Entra já na F45.
+- P0-3, nove comportamentos de hoje sem dono no desenho (capa de reserva, reordenação por nota, `seriesIds`, ranking ao reabrir, série nova com a memória cheia, Refetch e injeção fora da fila, adicionar/remover/editar, o corte em 20, quem lê a lista de séries): a proposta ganha a tabela «comportamento de hoje → novo dono → fatia».
+- P0-4, a F45 não se sustenta sem parte da F46: a F45 leva o estado derivado da série na grade e um observador por série em todos os layouts; a F46 fica com o aviso de falha, o «tentar de novo» e o fim das inscrições acumuladas.
+- P1: o enriquecimento cria um álbum novo e troca a referência (não muta o publicado); com filtro, busca ou Blend ativos a carga é do escopo inteiro; a sessão é a mesma só se a lista de pedidos da série não mudou; a tabela de prazos corrige a segunda fonte (`/api/generate`); três funções de aptidão a mais (mutação, chave única, dono único).
+- Regra do MJRP para as críticas: «vamos colocar um limite de tempo para as criticas ... eu sugiro 5 min no max» e «nao quero bloqueios, quero agir mais rápido». Padrão: 5 minutos com escopo fechado; passou, entrega o que conferiu. A primeira crítica (Fable, escopo de dez perguntas) passou do tempo e foi mandada encerrar.
+- Código nesta entrada: `public/js/services/albums/loadState.js` (as regras de estado, puras) com 15 testes (`test/services/albums/loadState.test.js`).
+- Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
+
+## [2026-11-19 11:25] session — F45: a fila da carga (`TaskQueue`) nasce com 12 testes
+
+- Ramo `fix/f45-albums-load-in-parallel`. `public/js/utils/TaskQueue.js`: limite de tarefas ao mesmo tempo, prioridade (por tarefa e por grupo), prazo por tarefa com `AbortSignal`, cancelamento, `onIdle`. Não importa nada do projeto (o teste confere). Erros com nome: `TaskTimeoutError`, `TaskCancelledError`.
+- Teste antes do código: `test/utils/TaskQueue.test.js` falhou por falta do módulo e passou depois, 12 de 12. É a primeira peça do desenho da seção «Carga da tela de álbuns — proposta» do `arch.md`; o serviço e o estado esperam a crítica independente, que está rodando.
 - Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
 
 ## [2026-11-19 11:23] decision — proposta de arquitetura da carga da tela de álbuns escrita no arch.md; a crítica roda em paralelo ao código

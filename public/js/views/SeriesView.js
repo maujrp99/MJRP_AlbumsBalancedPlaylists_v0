@@ -117,7 +117,8 @@ export default class SeriesView extends BaseView {
                 onEditSeries: (sid) => this.modalsManager?.openEdit(sid),
                 onDeleteSeries: (sid) => this.modalsManager?.openDelete(sid),
                 onAlbumRemoved: () => this.controller.refresh(),
-                onRefetchMetadata: (album) => this.controller.handleRefetchMetadata(album)
+                onRefetchMetadata: (album) => this.controller.handleRefetchMetadata(album),
+                onRetrySeries: (sid) => this.controller.retrySeries(sid)
             }
         });
         this.components.eventHandler.mount();
@@ -171,7 +172,8 @@ export default class SeriesView extends BaseView {
             currentState.filters || {},
             currentState.searchQuery || '',
             sortedSeriesList,
-            isLoading
+            isLoading,
+            this.controller ? this.controller.getSeriesStates() : null
         );
         this.updater?.updateEmptyState('emptyStateContainer', albums.length, isLoading);
     }
