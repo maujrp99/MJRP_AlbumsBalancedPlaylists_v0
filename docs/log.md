@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:04] session — segundo deploy do site em produção: F46, F48 e F50 (main `40ca80d`)
+
+- **Autorização do MJRP:** «sim, prossiga», à proposta de juntar na `main` e fazer o segundo deploy.
+- **Deploy:** `firebase deploy --only hosting`, de uma cópia limpa da `main` em `40ca80d`, com o `.env`. Antes do envio: 389 testes passam, as mesmas 28 falhas da linha de base; o build compila.
+- **Conferido por fora:** `https://mjrp-playlist-generator.web.app` serve `assets/main-J6imsDjR.js` e o arquivo do botão do Spotify com o diálogo novo.
+- **Não conferido:** o uso em produção no navegador depois deste deploy. O servidor (Cloud Run) não foi tocado.
+- **Como voltar:** Firebase Console, Hosting, histórico de versões, «Rollback» para a versão anterior (a de hoje, `80e6028`).
+- **Em produção o Spotify** precisa ser conectado de novo pelo MJRP: a conexão é guardada por endereço.
+
 ## [2026-11-19 14:03] session — F46, F48 e F50 na `main`; UAT-173 a UAT-177, UAT-180 e UAT-183 em `fixed`
 
 O ramo `fix/f50-one-local-address` (com `fix/f46-albums-load-state` e `fix/f48-album-cache-and-retry` dentro) entrou na `main` pelo `merge_train.py merge`. O conflito do `docs/specs/uat.md` foi resolvido pelo `uat-merge`. Cada issue em `fixed` diz o que foi visto no navegador e o que não foi; o aceite é do MJRP. A UAT-181 (segunda fonte, 402) segue aberta: o sintoma sumiu com o acerto da cobrança, mas o código do servidor da F52 não foi feito.
