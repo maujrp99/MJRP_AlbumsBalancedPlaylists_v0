@@ -3,32 +3,33 @@
 # Plan — Feature F53: A suíte de testes volta a ficar verde · Spec: [[spec]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
+> Escrito depois do trabalho (passo retroativo da via rápida), a partir do `docs/log.md` de 2026-11-19 e do commit `0d402f9`.
+
 ## Architecture Approach
-<!-- How it fits arch.md; components affected; what this plan refines in arch.md and data-model.md. -->
-«a escrever: como encaixa no arch.md; componentes afetados; o que refina no arch.md e no data-model.md»
+Nenhuma mudança de arquitetura e nenhum código do app tocado. O que muda é o ambiente de teste (um ponto só, `test/setup.js`) e os testes que tinham ficado para trás de três decisões já registradas: a loja de séries pura (ADR 0017), a extração da camada de serviço (ADR 0016) e a barra de filtros genérica (F51).
 
 ## Technical Design
-<!-- Data flow first · components/modules (what each receives, renders or returns, emits) · API/interface
-     changes · explicit file paths. Each component names the REQ-xx it addresses. -->
-«a escrever: fluxo de dados, componentes/módulos (o que cada um recebe e devolve), interfaces, caminhos de arquivo — cada componente nomeia o REQ-xx»
+- `test/setup.js`: entrega o `localStorage` e o `sessionStorage` do jsdom, ou um em memória quando o Node esconde o do jsdom, e os esvazia antes de cada teste (REQ-02).
+- `vitest.config.js`: `test/e2e/` fora da suíte de unidade (REQ-04).
+- `test/stores/series.test.js`: reescrito para a loja pura `AlbumSeriesStore` (REQ-03).
+- `test/router.test.js`, `test/services/AuthService.test.js`, `test/components/blend/BlendIngredientsPanel.test.js`: esperam a tela assíncrona, o `auth` tardio e um contêiner limpo por teste (REQ-01).
+- `test/views/helpers/SeriesComponentFactory.test.js`, `test/views/ConsolidatedRankingView.test.js`, `test/services/auth/UserSyncService.test.js`: dublês e importações do que existe hoje (REQ-03).
+- `test/components/playlists/PlaylistGrid.duration.test.js`: o teste da duração foi para junto do componente que faz a conta (REQ-03).
+
+## UI/UX Design (if the feature touches a screen)
+Não toca tela.
 
 ## Dependencies
-<!-- New dependencies with their justification — aligned with constitution.md and PRINCIPLES.md (Constitution
-     Check); contradicting either needs a recorded decision first (mjrp-recording-decisions). -->
-«a escrever: dependências novas com a justificativa, ou "Nenhuma."»
+Nenhuma nova. Vitest e jsdom nas versões do projeto; Node 26 na máquina do MJRP.
 
 ## Documents Consulted
-<!-- arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, the NFR nodes. -->
-«a escrever: arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, os NFR»
+- `docs/decisions/0016-service-layer-extraction.md`, `docs/decisions/0017-pure-state-stores.md`
+- `docs/specs/uat.md` (UAT-149, UAT-20, UAT-21)
+- `docs/manual/24_Test_Suite.md`
 
 ## Risks & Considerations
-«a escrever: riscos e o que mais pesa, ou "Nenhum conhecido."»
+- Consertar um teste mudando o que ele confere pode esconder um defeito real. Em cada caso o comportamento do código foi lido antes; onde o teste descrevia comportamento que não existe mais por decisão registrada, foi reescrito, não afrouxado.
+- A suíte verde não bloqueia nada sozinha: commit e deploy seguem sem verificação automática (UAT-20).
 
 ## Test plan
-> Derivado dos REQ do `spec.md` e dos critérios dos requisitos importados · «a escrever: data e hora de Brasília»
-
-| REQ | Caso de teste | Critério / estado | Camada | Automatizado? |
-|---|---|---|---|---|
-| REQ-01 | «a escrever: o caso de teste que prova o REQ» | «a escrever: critério do nó ou estado observável» | «a escrever: camada» | «a escrever: sim ou não» |
-
-Bordas fora dos critérios (achados para a `mjrp-writing-reqs` se mudam o comportamento): «a escrever: ou "Nenhuma."»
+`npx vitest run`, a suíte inteira, código de saída 0 (REQ-01 a REQ-04).

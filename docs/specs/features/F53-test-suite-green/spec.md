@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: fast
 solution_type: fix
 imports: []
@@ -28,23 +28,32 @@ planned_for: "[[ROADMAP#^REL-39]]"
 O MJRP, em 2026-11-19: «conserte os 28 testes falhando». As falhas vêm de testes que descrevem código que mudou (a loja de séries virou loja pura), de um ambiente de teste sem o guardado do navegador e de roteiros que dirigem um navegador de verdade contados como teste de unidade.
 
 ## Requirements
-<!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here.
-     Functional and non-functional (performance, security, accessibility) alike are REQ-xx. -->
-- [REQ-01] «a escrever: o que o sistema faz — O QUÊ, nunca COMO» · fixes UAT-149
-  verified_by:: «a escrever: teste ou [[uat#^UAT-01]] — obrigatório antes do Done»
+- [REQ-01] Rodar os testes de unidade do projeto termina sem nenhuma falha e com código de saída 0. · fixes UAT-149
+  verified_by:: `npx vitest run` (431 passam, 0 falham, em 2026-11-19)
+- [REQ-02] O ambiente de teste entrega o guardado do navegador (`localStorage`, `sessionStorage`), vazio no começo de cada teste, em qualquer versão do Node. · fixes UAT-149
+  verified_by:: `test/services/infra/StorageService.test.js`, `test/services/spotify/SpotifyAuthSignal.test.js`
+- [REQ-03] Cada teste descreve o código que existe: nenhum importa arquivo que não existe nem confere comportamento que saiu do código. · fixes UAT-149
+  verified_by:: `test/stores/series.test.js`, `test/views/ConsolidatedRankingView.test.js`, `test/components/playlists/PlaylistGrid.duration.test.js`, `test/views/helpers/SeriesComponentFactory.test.js`
+- [REQ-04] Os roteiros que dirigem um navegador de verdade não contam como teste de unidade; têm executor próprio. · fixes UAT-149
+  verified_by:: `vitest.config.js` (exclui `test/e2e/`), `package.json` (`test:e2e`)
 
 ## Observable States
-<!-- What the imported nodes point_to: the screen state in info-arch.md (the prototype the human judged —
-     PRINCIPLES.md §I.13) or the behavior state in behavior.md. N/A only if the nodes point to none. -->
-«a escrever: o estado de tela do info-arch.md ou de comportamento do behavior.md que os nós apontam — ou N/A se não apontam nenhum»
+N/A: a feature não importa nenhum requisito (conserto da issue UAT-149), então nenhum estado é apontado. Nada muda para quem usa o app.
+
+## Prototype Parity (if the feature touches a screen)
+- Prototype: none. A feature não toca tela: só arquivos de teste e a configuração do Vitest.
+- Transversal layer touched: nenhuma.
+- Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
 ## Success Criteria
-<!-- One measurable item per acceptance criterion of the imported nodes. -->
-- «a escrever: um item mensurável e testável por critério de aceite dos nós importados»
+- `npx vitest run` termina com 0 falhas e código de saída 0. Medido em 2026-11-19: 431 passam; antes eram 28 falhas.
+- Nenhum arquivo de `public/js/` nem de `server/` mudou para os testes passarem.
 
 ## Out of Scope
-- «a escrever: o que esta feature não faz»
+- Rodar e consertar os roteiros de navegador (`npm run test:e2e`): não foram rodados.
+- O teste do servidor que importa `public/js/curation.js`, arquivo que não existe (UAT-21).
+- Ligar a suíte a uma verificação que bloqueie commit ou deploy (UAT-20).
+- A mensagem «Maximum call stack size exceeded» que aparece na saída de erro durante a suíte, sem derrubar teste.
 
 ## Open Questions
-<!-- ALL resolved before Plan. -->
-- «a escrever: pergunta — resposta, quem, quando; ou "Nenhuma." se todas estão resolvidas»
+- De onde vem «Maximum call stack size exceeded» na saída de erro? — não investigado; fica como tarefa aberta.
