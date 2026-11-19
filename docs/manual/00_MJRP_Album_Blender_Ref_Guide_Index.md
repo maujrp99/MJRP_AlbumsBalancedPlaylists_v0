@@ -4,7 +4,7 @@
 
 ## 00. Provisioning & System
 *   [**00_Deployment_and_Setup.md**](00_Deployment_and_Setup.md) - Installation & Env.
-*   [**01_System_Architecture.md**](01_System_Architecture.md) - High-level conceptual map.
+*   [**01_System_Architecture.md**](01_System_Architecture.md) - High-level conceptual map. Section 6: the architecture before (v3), today (v4.0) and the target (v5.0), in three diagrams, with the map of design patterns and of components.
 
 ## 00. Project Directory Structure and Files Map
 *   [**00_Dir_File_Structure_Map.md**](00_Dir_File_Structure_Map.md) - Complete File & Directory Map.

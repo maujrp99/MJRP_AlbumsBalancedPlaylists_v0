@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:20] session — manual: diagramas da evolução da arquitetura (v3, v4.0, alvo v5.0), padrões e componentes
+
+Pedido do MJRP: «produza novos diagramas de arquitetura para os manuais da documentacao, mostrando a evolucao do antes pra depois, nao esqueça de manter o mapeamento dos design patterns utlizados e dos componentes que temos». `docs/manual/01_System_Architecture.md` ganhou a seção 6: três diagramas do mesmo sistema (antes, hoje, alvo), a comparação lado a lado, o mapa de padrões com o identificador do catálogo do harness, o lugar e a versão em que cada um chegou (mais os seis padrões da casa sem identificador e os quatro planejados para a v5.0), e o mapa de componentes do cliente, do servidor e de fora. O índice do manual aponta para ela. A trava de estrutura recusou um arquivo novo em `docs/manual/`; o conteúdo entrou no arquivo de arquitetura que já existia. Os diagramas de «antes» e «hoje» saíram do código; o de «alvo» é plano. Não foram renderizados para conferir a sintaxe.
+
+- **Prioridade do MJRP, pelo Control Center:** F49, F59, F52, F55, F56, F57, F58, F61 (`docs/specs/priority.md`). As features aparecem no board. F60, F62, F63, F64 e F65 ainda sem posição.
+- **O MJRP:** «vou dar aceite com o tempo … pode começar a v5.0».
+
 ## [2026-11-19 15:16] session — dez issues de hoje ganham a parte «Evidência», que o board exige
 
 O MJRP perguntou se as features da v5.0 aparecem no Control Center. O leitor do board (`product_structure_check.py`) conta 13 features na v5.0 (`^REL-40`) e 8 na v4.0 (`^REL-39`), mas estava vermelho: dez issues abertas hoje (UAT-182, UAT-183, UAT-187 a UAT-193, UAT-195) não tinham a parte **Evidência:** da gramática. Acrescentada em cada uma, apontando o relato do MJRP, o relatório da regressão ou a evidência da feature. A tela do Control Center em si não foi vista: ela pede login (401).
