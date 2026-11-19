@@ -3,7 +3,7 @@ status: Draft
 lane: fast
 solution_type: fix
 imports: []
-fixes: ["UAT-181"]
+fixes: ["UAT-181", "UAT-23"]
 planned_for: "[[ROADMAP#^REL-40]]"
 ---
 <!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
@@ -18,14 +18,14 @@ planned_for: "[[ROADMAP#^REL-40]]"
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Summary
-**A feature:** O servidor volta a devolver o álbum quando a Apple Music não o tem, em vez de responder com um erro de pagamento.
+**A feature:** O servidor passa a dizer a verdade ao app, em três passos nesta ordem: um contrato de erros (não existe, falhou, demorou), para uma falha não virar «sem dado»; o raspador de notas aceitando só o álbum certo; e só então um cache das notas no servidor, com o limite de chamadas medido.
 
-**Por quê:** Em produção a busca de álbum por IA responde 402 (pagamento exigido); os álbuns que só ela acharia ficam com o aviso de que não carregaram.
+**Por quê:** Hoje o servidor responde 200 e vazio quando o raspador falha, o app grava isso como «sem nota», e cada nota é buscada de novo a cada visita. Um cache posto antes de acertar o raspador congelaria respostas erradas.
 
-**Como saber que funcionou:** Um pedido de álbum ao servidor de produção responde com o álbum, e os quatro álbuns hoje com aviso de falha carregam ou ficam com um motivo claro.
+**Como saber que funcionou:** Uma falha do servidor aparece no app como falha, com «tentar de novo»; a segunda visita a uma série não espera pelas notas.
 
 ## Problem Statement
-Quatro álbuns das séries do MJRP não carregam: a Apple Music não os acha pelo pedido gravado, e a segunda fonte, que é a busca por IA do servidor, responde com um erro de pagamento. O MJRP pediu para arrumar pela conta do Google Cloud e do Firebase («abra uma feature pra arrumarmos isso via google cloud e firebase cli e eu posso entrar no console tb»).
+A busca por IA respondia 402 em produção (UAT-181, sintoma resolvido pela cobrança em 2026-11-19). Decisão do MJRP de 2026-11-19: tudo entra na v5.0, e cada feature pronta e testada vai para produção sozinha. Origem: o cruzamento dos relatórios anteriores (`reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md`).
 
 ## Requirements
 <!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here.

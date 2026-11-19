@@ -1,6 +1,6 @@
 <!-- docs/specs/features/Fxx-slug/tasks.md — WHEN. Every TASK implements at least one REQ of the spec beside
      it; every REQ is implemented by at least one TASK. -->
-# Tasks — Feature F56: Blend, edição e playlists guardadas pelo serviço de carga · Plan: [[plan]]
+# Tasks — Feature F56: Blend e edição de playlists pelo serviço de carga · Plan: [[plan]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Pre-Implementation

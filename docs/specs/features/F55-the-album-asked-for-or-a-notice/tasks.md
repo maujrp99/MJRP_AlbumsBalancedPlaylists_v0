@@ -1,6 +1,6 @@
 <!-- docs/specs/features/Fxx-slug/tasks.md — WHEN. Every TASK implements at least one REQ of the spec beside
      it; every REQ is implemented by at least one TASK. -->
-# Tasks — Feature F55: O álbum pedido, ou um aviso · Plan: [[plan]]
+# Tasks — Feature F55: Os álbuns pedidos, ou um aviso: uma regra só para dizer que é o mesmo álbum · Plan: [[plan]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Pre-Implementation

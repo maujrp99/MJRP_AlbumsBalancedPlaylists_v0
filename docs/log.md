@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:03] decision — tudo entra na v5.0, e cada feature pronta e testada vai para produção sozinha
+
+- **O MJRP:** «pra mim tudo tem que entrar na v5.0, mas ir pra prod nao precisa ser um big bang, cada Feature feita deveria ser testar e ir pra prod».
+- **O que muda:** não há v4.1. Os oito grupos em aberto do cruzamento entram na v5.0. A entrega é feature por feature: testada (testes e navegador), publicada, conferida em produção. O agente trata essa frase como a autorização para publicar o **site** ao fim de cada feature testada; publicar o **servidor** ou as **regras do banco** ele confirma com o MJRP na primeira vez de cada um.
+- **Plano da v5.0 revisado no board:** F55 renomeada e alargada (regra única de identidade nos cinco lugares; o MJRP perguntou por que «o álbum» e não «os»); F52 reordenada (contrato de erros, raspador certo, cache); F56 só com blend e edição; F58 alargada ao controlador de playlists; novas F59 (segurança), F60 (perda de dado), F61 (playlists guardadas rápidas), F62 (blend e exportação), F63 (Home e navegação), F64 (um caminho testado para produção), F65 (limpeza). Todas em esboço, via rápida.
+- **Issues novas:** UAT-196 a UAT-203, uma por grupo de achados sem issue. Três delas (UAT-197, UAT-198, UAT-200 a UAT-202) vêm dos relatórios e não foram reproduzidas pelo implementador; cada uma diz isso.
+- **Ordem proposta dentro da v5.0, à espera do MJRP:** F59, F60, F64, F52, F55, F56, F61, F57, F58, F62, F63, F65.
+- **v4.0:** a F54 fica com apagar do inventário (UAT-01), a duração (UAT-188) e o botão «Close» (UAT-195); a UAT-190 foi para a F62 e a UAT-192 para a F63.
+
 ## [2026-11-19 14:56] session — relatório do cruzamento com o estado de cada linha
 
 Pedido do MJRP: marcar no relatório o que foi consertado na v4.0, o que vai para a v5.0 e o que não vale mais, com o motivo; o restante será discutido com ele no chat. `reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md`: 33 linhas consertadas na v4.0, 10 a consertar na v5.0, 3 que não valem mais (cada uma com o motivo), 103 em aberto e 4 que contradizem a análise de hoje.

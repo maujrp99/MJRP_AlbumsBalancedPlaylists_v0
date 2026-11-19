@@ -14,18 +14,18 @@ planned_for: "[[ROADMAP#^REL-40]]"
      debt issues (required: the card takes its release from them), and `imports:` only the NFR it serves, named by a
      `violates:: [[NFR-xx-<slug>]]` in the Problem Statement — no story invented for it. A debt against a constitution
      article imports nothing and says `violates:: [[constitution#N]]` of an article that exists. -->
-# Feature F55: O álbum pedido, ou um aviso
+# Feature F55: Os álbuns pedidos, ou um aviso: uma regra só para dizer que é o mesmo álbum
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Summary
-**A feature:** Uma série só mostra um álbum achado pela busca por nome quando o título dele bate com o pedido; se nenhum bate, a série avisa que o álbum não carregou, em vez de mostrar outro. Quando o identificador guardado não vale mais e o álbum certo é achado, o identificador novo é gravado na série.
+**A feature:** Uma regra só decide «este é o álbum pedido», e ela vale nos cinco lugares que hoje decidem cada um do seu jeito: o catálogo da Apple Music, o Spotify, o BestEverAlbums no servidor, a capa local e a busca por IA. O título tem de bater por conta própria; sem resultado que bata, a série avisa em vez de mostrar outro álbum. Quando o identificador guardado não vale mais e o álbum certo é achado, o identificador novo é gravado na série, por um único escritor. A feature começa contando quantos álbuns da conta estão trocados hoje.
 
-**Por quê:** Hoje uma série pode mostrar um álbum que a pessoa nunca escolheu, sem aviso: com o artista certo, a conferência aceita qualquer álbum.
+**Por quê:** Hoje, com o artista certo, qualquer álbum passa na conferência; e a mesma falha existe em cinco lugares.
 
-**Como saber que funcionou:** A série «Grunge Rock - Classics» mostra «Core» ou o aviso de que ele não carregou, nunca «Shangri-La Dee Da».
+**Como saber que funcionou:** Nenhuma série mostra um álbum diferente do pedido; a contagem de álbuns trocados na conta do MJRP vai a zero ou vira aviso.
 
 ## Problem Statement
-O MJRP, em 2026-11-19: «eu nuca adicionei esse album do stone temple pilots, provavelmente era o core».
+O MJRP, em 2026-11-19: «eu nuca adicionei esse album do stone temple pilots, provavelmente era o core»; e «pq "o album pedido" e nao "os"». Decisão do MJRP de 2026-11-19: tudo entra na v5.0, e cada feature pronta e testada vai para produção sozinha. Origem: o cruzamento dos relatórios anteriores (`reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md`).
 
 ## Requirements
 <!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here.

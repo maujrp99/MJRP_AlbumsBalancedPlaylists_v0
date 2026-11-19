@@ -1,6 +1,6 @@
 <!-- docs/specs/features/Fxx-slug/plan.md — HOW. No edge of its own in the graph: the trace to the REQs is the
      cross-check before approval. -->
-# Plan — Feature F58: O serviço de carga dentro do limite de complexidade · Spec: [[spec]]
+# Plan — Feature F58: Carga e gravação de playlists dentro do limite de complexidade · Spec: [[spec]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Architecture Approach

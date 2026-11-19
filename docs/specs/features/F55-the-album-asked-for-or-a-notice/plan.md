@@ -1,6 +1,6 @@
 <!-- docs/specs/features/Fxx-slug/plan.md — HOW. No edge of its own in the graph: the trace to the REQs is the
      cross-check before approval. -->
-# Plan — Feature F55: O álbum pedido, ou um aviso · Spec: [[spec]]
+# Plan — Feature F55: Os álbuns pedidos, ou um aviso: uma regra só para dizer que é o mesmo álbum · Spec: [[spec]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Architecture Approach

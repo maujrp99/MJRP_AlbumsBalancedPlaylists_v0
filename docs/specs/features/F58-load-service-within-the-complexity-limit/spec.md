@@ -3,7 +3,7 @@ status: Draft
 lane: fast
 solution_type: fix
 imports: []
-fixes: ["UAT-194"]
+fixes: ["UAT-194", "UAT-14", "UAT-18", "UAT-19"]
 planned_for: "[[ROADMAP#^REL-40]]"
 ---
 <!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
@@ -14,18 +14,18 @@ planned_for: "[[ROADMAP#^REL-40]]"
      debt issues (required: the card takes its release from them), and `imports:` only the NFR it serves, named by a
      `violates:: [[NFR-xx-<slug>]]` in the Problem Statement — no story invented for it. A debt against a constitution
      article imports nothing and says `violates:: [[constitution#N]]` of an article that exists. -->
-# Feature F58: O serviço de carga dentro do limite de complexidade
+# Feature F58: Carga e gravação de playlists dentro do limite de complexidade
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Summary
-**A feature:** As funções do serviço de carga e dos adaptadores ficam com complexidade de no máximo 10, e um teste recusa a que passar disso.
+**A feature:** As funções do serviço de carga, dos adaptadores e do controlador de playlists ficam com complexidade de no máximo 10, e um teste recusa a que passar disso.
 
-**Por quê:** A medição de 2026-11-19 achou `_enrichOne` em 21 e a busca do adaptador do catálogo em 12; sem a regra como teste, a próxima mudança empurra de novo.
+**Por quê:** A medição de 2026-11-19 achou `_enrichOne` em 21, a busca do adaptador do catálogo em 12 e o salvar do controlador de playlists em 27, onde estão três dos defeitos de perda de dado.
 
-**Como saber que funcionou:** O teste de arquitetura do limite de complexidade passa, e reprova uma função acima de 10 nessa pasta.
+**Como saber que funcionou:** O teste do limite de complexidade passa nessas pastas e reprova uma função acima de 10.
 
 ## Problem Statement
-Pergunta do MJRP em 2026-11-19: «como fica a complexidade ciclomatica de um e de outro?»; a medição está em `reports/audits/2026-11-19-mjrpalbumblender-v0-load-architecture-analysis.md`.
+Pergunta do MJRP em 2026-11-19: «como fica a complexidade ciclomatica de um e de outro?». Decisão do MJRP de 2026-11-19: tudo entra na v5.0, e cada feature pronta e testada vai para produção sozinha. Origem: o cruzamento dos relatórios anteriores (`reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md`).
 
 ## Requirements
 <!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here.

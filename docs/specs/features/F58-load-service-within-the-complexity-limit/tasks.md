@@ -1,6 +1,6 @@
 <!-- docs/specs/features/Fxx-slug/tasks.md — WHEN. Every TASK implements at least one REQ of the spec beside
      it; every REQ is implemented by at least one TASK. -->
-# Tasks — Feature F58: O serviço de carga dentro do limite de complexidade · Plan: [[plan]]
+# Tasks — Feature F58: Carga e gravação de playlists dentro do limite de complexidade · Plan: [[plan]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Pre-Implementation

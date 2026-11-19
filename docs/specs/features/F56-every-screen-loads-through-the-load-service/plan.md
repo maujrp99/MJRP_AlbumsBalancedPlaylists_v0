@@ -1,6 +1,6 @@
 <!-- docs/specs/features/Fxx-slug/plan.md — HOW. No edge of its own in the graph: the trace to the REQs is the
      cross-check before approval. -->
-# Plan — Feature F56: Blend, edição e playlists guardadas pelo serviço de carga · Spec: [[spec]]
+# Plan — Feature F56: Blend e edição de playlists pelo serviço de carga · Spec: [[spec]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Architecture Approach

@@ -3,7 +3,7 @@ status: Draft
 lane: fast
 solution_type: fix
 imports: []
-fixes: ["UAT-186", "UAT-189", "UAT-191"]
+fixes: ["UAT-189", "UAT-191"]
 planned_for: "[[ROADMAP#^REL-40]]"
 ---
 <!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
@@ -14,18 +14,18 @@ planned_for: "[[ROADMAP#^REL-40]]"
      debt issues (required: the card takes its release from them), and `imports:` only the NFR it serves, named by a
      `violates:: [[NFR-xx-<slug>]]` in the Problem Statement — no story invented for it. A debt against a constitution
      article imports nothing and says `violates:: [[constitution#N]]` of an article that exists. -->
-# Feature F56: Blend, edição e playlists guardadas pelo serviço de carga
+# Feature F56: Blend e edição de playlists pelo serviço de carga
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Summary
-**A feature:** O blend e a edição de playlists pedem os álbuns ao serviço de carga, que já tem os da tela anterior; salvar a edição de uma série recarrega só o que mudou; a tela de playlists guardadas aparece em poucos segundos.
+**A feature:** O blend e a edição de playlists pedem os álbuns ao serviço de carga, que já tem os da tela anterior, usam a edição escolhida do álbum e avisam quando um álbum falha; salvar a edição de uma série recarrega só o que mudou; o recarregar de um álbum e a injeção de álbuns passam pela fila.
 
-**Por quê:** Hoje três telas carregam cada uma do seu jeito: o blend leva de 8 a 18 segundos para álbuns já carregados, as playlists guardadas levam 20 segundos e editar uma série recarrega todas.
+**Por quê:** Hoje o blend e a edição têm cada um o seu laço: buscam de novo o que já está carregado, procuram por texto ignorando a edição escolhida e descartam um álbum que falhou só com um aviso no console.
 
-**Como saber que funcionou:** Medido no navegador, com a conta do MJRP: o blend de álbuns já carregados começa na hora; as playlists guardadas aparecem em poucos segundos; editar uma série não faz as outras recarregarem.
+**Como saber que funcionou:** Medido no navegador: o blend de álbuns já carregados começa na hora; um álbum que falha aparece como aviso; editar uma série não faz as outras recarregarem.
 
 ## Problem Statement
-O MJRP, em 2026-11-19: «temos problemas de carregamento lento nas playlists no inventory»; e a decisão de adotar a arquitetura proposta.
+Regressão de 2026-11-19: blend de 2 álbuns já carregados levou de 8 a 18 segundos. Depende do contrato de erros da F52. Decisão do MJRP de 2026-11-19: tudo entra na v5.0, e cada feature pronta e testada vai para produção sozinha. Origem: o cruzamento dos relatórios anteriores (`reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md`).
 
 ## Requirements
 <!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here.
