@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 20:11] review — F49 revisada pelo integrador; UAT-06 em fixed, sem prova do clique no navegador
+
+Nenhuma série do MJRP passa de 12 álbuns (a maior tem 9), então o botão não aparece na conta dele; não criei série de teste. A prova é por teste com a tela de verdade (`reports/evidence/F49/2026-11-19-load-more-albums-proof.md`). Decidido pelo agente — revisável: publicar assim, com a ressalva escrita.
+
 ## [2026-11-19 20:08] session — F49: spec, plano, tarefas, comportamento e manual escritos no ramo
 
 A pasta da F49 preenchida para o que foi construído (`status: In Progress`; 5 REQ, todos com `verified_by`; 7 tarefas, 5 fechadas; abertas a prova no navegador, do integrador, e o julgamento do MJRP). A spec traz a causa com arquivo e linha da `main` em `4dc353a` e o que ficou de fora. `docs/specs/behavior.md`: estado novo `^library-series-more-albums`. Manual: `09` (a grade e a série aberta inteira), `12` (o botão, que o `13` dizia estar lá e não estava), `15` e `29` (a ação `load-more-series` e `onShowAllAlbums`), `99` (linhas da `SeriesView`). Para o MJRP julgar: o texto «Load N more albums» ficou, embora o clique não carregue nada; a escolha vale só para a visita. `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md` não tocados: são do integrador.
