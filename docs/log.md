@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 20:08] session — F56 em produção (site)
+
+Site publicado da `main` (`042da86`, pacote `main-BZG7nsE3.js`). A F56 não muda o servidor. Auxiliares trabalhando: F68 e F49; a F62 começa agora.
+
 ## [2026-11-19 20:07] review — F56 provada pelo integrador; UAT-189 e UAT-191 em fixed
 
 Blend de uma série já carregada: de 19,2 s para 0,05 s; avisos dizendo qual álbum ficou sem qual fonte; edição de lote e regeneração com a série certa. Prova em `reports/evidence/F56/2026-11-19-screens-through-the-load-service-proof.md`, com o que não foi visto. Mudanças de comportamento para o MJRP julgar: some a pergunta «No ratings detected… Continue?» (os avisos a substituem); o «Refetch» faz o cartão voltar a carregar e não mostra mais «Metadata updated»; a coleção compartilhada `albums` do banco deixa de ser escrita (só o «Refetch» antigo escrevia, nada lia).
