@@ -12,11 +12,12 @@
  *
  * Ports:
  *   catalog.find(query, { signal })            -> Promise<Album>          (throws AlbumNotFoundError)
- *   enrichers[source].enrich(album, { signal }) -> Promise<{ status: 'done'|'empty', album }>
- *                                                 must return a NEW album, never mutate the one given
+ *   enrichers[source].enrich(album, { signal }) -> Promise<{ status: 'done'|'empty', album, reason? }>
+ *                                                 must return a NEW album, never mutate the one given;
+ *                                                 `reason` says why it is 'empty', when the source said
  *   cache.get(query)                           -> Promise<{ album, enrichment } | null>
  *   cache.saveBase(query, album)               -> Promise<void>
- *   cache.saveEnrichment(query, album, source, status) -> Promise<void>
+ *   cache.saveEnrichment(query, album, source, status, { reason }) -> Promise<void>
  *
  * Hold (F52): a port may throw an error with `hold: { reason, retryAfterMs? }` when the app's own
  * server said "sign in" (reason 'unauthorized', HTTP 401) or "wait" ('rate_limited', HTTP 429).
@@ -177,16 +178,24 @@ export class AlbumLoadService {
 
     /**
      * Put an album that was refetched outside the queue in the place of the loaded one, in every
-     * series that has it, and remember it. (The refetch itself joins the queue in F48.)
+     * series that has it. (The refetch itself joins the queue in F48.)
+     * The refetch asks the source whatever the record says, so it goes through the time an "empty"
+     * is believed for. Its ratings are remembered as "done" only when it brought ratings: a refetch
+     * that found none, or that failed (it does not tell the two apart), changes nothing of what is
+     * kept about the source.
      * @param {Album} album
      */
     async adoptAlbum(album) {
+        const hasRatings = Boolean(album.acclaim?.hasRatings || album.bestEverUrl)
         for (const seriesId of this.store.getSeriesIds()) {
             for (const entry of this.store.getEntries(seriesId)) {
-                if (entry.album && entry.album.id === album.id) {
+                if (!entry.album || entry.album.id !== album.id) continue
+                if (!hasRatings) {
                     this.store.patchEntry(seriesId, entry.key, { album })
-                    await this.cache.saveEnrichment(entry.query, album, 'acclaim', EnrichmentStatus.DONE)
+                    continue
                 }
+                this.store.patchEntry(seriesId, entry.key, { album, enrichment: { acclaim: EnrichmentStatus.DONE } })
+                await this.cache.saveEnrichment(entry.query, album, 'acclaim', EnrichmentStatus.DONE, { reason: null })
             }
         }
     }
@@ -446,7 +455,7 @@ export class AlbumLoadService {
             if (!isLatest()) return
             const album = await this._overNewestAlbum(answer, seriesId, key)
             if (!isLatest()) return
-            await this._publishSource(generation, entry, source, album, answer.result.status)
+            await this._publishSource(generation, entry, source, album, answer.result)
         } catch (error) {
             if (error instanceof TaskCancelledError || !isLatest()) return
             console.warn(`[AlbumLoadService] ${source} failed for "${key}":`, error?.message || error)
@@ -500,10 +509,15 @@ export class AlbumLoadService {
         return album
     }
 
-    /** Put the answer of a source on the screen and, if it got there, in the cache. */
-    async _publishSource(generation, entry, source, album, answered) {
-        const status = answered === EnrichmentStatus.DONE ? EnrichmentStatus.DONE : EnrichmentStatus.EMPTY
+    /**
+     * Put the answer of a source on the screen and, if it got there, in the cache, with the reason
+     * the source gave for having nothing (the cache believes an "empty" for a time that depends on it).
+     */
+    async _publishSource(generation, entry, source, album, result) {
+        const done = result.status === EnrichmentStatus.DONE
+        const status = done ? EnrichmentStatus.DONE : EnrichmentStatus.EMPTY
+        const reason = done ? null : (result.reason || null)
         const published = this._patch(generation, entry.seriesId, entry.key, { album, enrichment: { [source]: status } })
-        if (published) await this.cache.saveEnrichment(entry.query, album, source, status)
+        if (published) await this.cache.saveEnrichment(entry.query, album, source, status, { reason })
     }
 }

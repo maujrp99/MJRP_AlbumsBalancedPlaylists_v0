@@ -67,6 +67,28 @@ describe('readServerResult: the new server', () => {
         const silent = await readServerResult(response(429, body))
         expect(silent.hold.retryAfterMs).toBe(DEFAULT_RATE_LIMIT_WAIT_MS)
     })
+
+    describe('503 upstream_busy: the scraped source asked the server to wait (F52, slice 3)', () => {
+        const body = { error: { code: 'upstream_busy', retryable: true } }
+
+        it('with Retry-After, the load holds for that long instead of failing every album', async () => {
+            const result = await readServerResult(response(503, body, { 'Retry-After': '42' }))
+            expect(result).toMatchObject({ kind: 'failed', code: 'upstream_busy', retryable: true, status: 503 })
+            expect(result.hold).toEqual({ reason: 'source_busy', retryAfterMs: 42000 })
+        })
+
+        it('without Retry-After it is a plain failure, with "try again": nobody said for how long to hold', async () => {
+            expect((await readServerResult(response(503, body))).hold).toBeNull()
+            expect((await readServerResult(response(503, body, { 'Retry-After': 'soon' }))).hold).toBeNull()
+        })
+
+        it('the other failures of the source never hold, even with Retry-After', async () => {
+            for (const [status, code] of [[502, 'upstream_failed'], [504, 'upstream_timeout']]) {
+                const result = await readServerResult(response(status, { error: { code, retryable: true } }, { 'Retry-After': '42' }))
+                expect(result.hold).toBeNull()
+            }
+        })
+    })
 })
 
 describe('readServerResult: the server before F52', () => {

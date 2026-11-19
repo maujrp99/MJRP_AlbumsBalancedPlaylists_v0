@@ -127,6 +127,14 @@ describe('holdNotice (F52): what the person reads when the server said "sign in"
         expect(notice.message).toContain('T1000')
     })
 
+    it('"the ratings source asked to wait" names the source, not the server, and says when it resumes', () => {
+        const notice = holdNotice({ reason: HoldReason.SOURCE_BUSY, until: 1000 }, (ms) => 'T' + ms)
+        expect(notice.type).toBe('info')
+        expect(notice.message).toMatch(/ratings source/i)
+        expect(notice.message).toContain('paused')
+        expect(notice.message).toContain('T1000')
+    })
+
     it('never says an album failed: a hold is not a failure', () => {
         for (const reason of Object.values(HoldReason)) {
             expect(holdNotice({ reason, until: null }).message).not.toMatch(/fail/i)

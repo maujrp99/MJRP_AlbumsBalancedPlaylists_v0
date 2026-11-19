@@ -15,9 +15,10 @@
  * field the server sent, never the status alone. With the old server (errors as `{ error: 'text' }`,
  * or the AI provider's own error passed on raw) it is the rule of before: only a 5xx.
  *
- * `hold` is set when OUR server said "sign in" (401) or "you asked too much, wait" (429): the album
- * load holds its queue instead of failing every album. An error of the AI provider that the old
- * server passes on with the same status is not ours and never holds.
+ * `hold` is set when OUR server said "sign in" (401) or "you asked too much, wait" (429), or when
+ * it said that the ratings source asked it to wait and until when (503 `upstream_busy` WITH
+ * Retry-After): the album load holds its queue instead of failing every album. An error of the AI
+ * provider that the old server passes on with the same status is not ours and never holds.
  *
  * Pure: no network, no store, no screen. It receives a Response-like object ({ ok, status, headers, json }).
  */
@@ -50,19 +51,25 @@ const legacyCodeOf = (status) => {
 
 const failed = (code, retryable, status, hold = null) => ({ kind: ResultKind.FAILED, code, retryable, status, hold })
 
+/** What Retry-After says, in ms (it comes in seconds or as a date); null when absent or unreadable. */
 function retryAfterMsOf(response, now) {
     const header = response.headers && typeof response.headers.get === 'function' ? response.headers.get('Retry-After') : null
-    if (header === null || header === undefined || header === '') return DEFAULT_RATE_LIMIT_WAIT_MS
+    if (header === null || header === undefined || header === '') return null
     const seconds = Number(header)
     if (Number.isFinite(seconds)) return Math.max(0, seconds * 1000)
     const date = Date.parse(header)
-    return Number.isNaN(date) ? DEFAULT_RATE_LIMIT_WAIT_MS : Math.max(0, date - now())
+    return Number.isNaN(date) ? null : Math.max(0, date - now())
 }
 
-/** Only our own door (401) and our own limit (429) hold the load. */
+/**
+ * Only our own door (401), our own limit (429) and "the source asked to wait until..." hold the load.
+ * A 429 with no time holds for a default; "the source is busy" with no time is a plain failure.
+ */
 function holdOf(code, response, now) {
     if (code === 'unauthorized' && response.status === 401) return { reason: HoldReason.UNAUTHORIZED }
-    if (code === 'rate_limited') return { reason: HoldReason.RATE_LIMITED, retryAfterMs: retryAfterMsOf(response, now) }
+    const retryAfterMs = retryAfterMsOf(response, now)
+    if (code === 'rate_limited') return { reason: HoldReason.RATE_LIMITED, retryAfterMs: retryAfterMs ?? DEFAULT_RATE_LIMIT_WAIT_MS }
+    if (code === 'upstream_busy' && retryAfterMs !== null) return { reason: HoldReason.SOURCE_BUSY, retryAfterMs }
     return null
 }
 

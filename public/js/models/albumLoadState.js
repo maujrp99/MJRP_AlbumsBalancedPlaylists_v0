@@ -32,8 +32,14 @@ export const EnrichmentStatus = Object.freeze({
     FAILED: 'failed'    // the source did not answer
 })
 
-/** Why the load is on hold: the app's own server said "sign in" (401) or "wait" (429). Nothing failed. */
-export const HoldReason = Object.freeze({ UNAUTHORIZED: 'unauthorized', RATE_LIMITED: 'rate_limited' })
+/**
+ * Why the load is on hold. Nothing failed:
+ *   unauthorized  the app's own server said "sign in" (401)
+ *   rate_limited  the app's own server said "you asked too much, wait" (429)
+ *   source_busy   the ratings source asked the server to wait, and the server said until when
+ *                 (503 upstream_busy with Retry-After)
+ */
+export const HoldReason = Object.freeze({ UNAUTHORIZED: 'unauthorized', RATE_LIMITED: 'rate_limited', SOURCE_BUSY: 'source_busy' })
 
 /**
  * What to tell the person when the load goes on hold.
@@ -46,6 +52,9 @@ export function holdNotice(hold, formatTime = (ms) => new Date(ms).toLocaleTimeS
         return { message: 'Your sign-in could not be confirmed. Sign in again to keep loading ratings.', type: 'warning', durationMs: 10000 }
     }
     const when = hold.until ? ` It resumes by itself at ${formatTime(hold.until)}.` : ''
+    if (hold.reason === HoldReason.SOURCE_BUSY) {
+        return { message: `The ratings source asked to slow down. Loading ratings is paused.${when}`, type: 'info', durationMs: 10000 }
+    }
     return { message: `The server asked to slow down. Loading is paused.${when}`, type: 'info', durationMs: 10000 }
 }
 
