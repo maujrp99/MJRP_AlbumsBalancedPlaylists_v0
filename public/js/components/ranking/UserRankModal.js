@@ -39,8 +39,14 @@ export class UserRankModal {
             (a.position || 0) - (b.position || 0)
         )
 
-        // Track the user's ranking order (will be modified by drag-and-drop)
-        this.rankedOrder = [...this.tracks]
+        // The order on screen (changed by drag-and-drop). It starts from the ranking the album
+        // already has, so reopening shows what was saved (UAT-187); tracks without a rank come
+        // after, in the order of the record. Reset is what goes back to the order of the record.
+        const isRanked = (track) => track.userRank !== null && track.userRank !== undefined
+        this.rankedOrder = [
+            ...this.tracks.filter(isRanked).sort((a, b) => a.userRank - b.userRank),
+            ...this.tracks.filter(track => !isRanked(track))
+        ]
 
         this.modalElement = null
         this.sortableInstance = null

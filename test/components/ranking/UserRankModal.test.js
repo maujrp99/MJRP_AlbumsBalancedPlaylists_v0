@@ -61,4 +61,32 @@ describe('UserRankModal', () => {
         expect(document.body.textContent).not.toContain('&amp;')
         modal.close()
     })
+
+    it('opens in the order of the ranking the album already has; Reset goes back to the order of the record (UAT-187)', async () => {
+        const ranked = {
+            id: 'kc', title: 'In the Court', artist: 'King Crimson',
+            tracks: [
+                { title: 'Schizoid', position: 1, userRank: 1 },
+                { title: 'I Talk', position: 2, userRank: 3 },
+                { title: 'Epitaph', position: 3, userRank: 2 },
+                { title: 'Bonus', position: 4 } // not in the saved ranking: after the ranked ones
+            ]
+        }
+        const onSubmit = vi.fn(async () => true)
+        const modal = new UserRankModal({ album: ranked, onSubmit })
+        modal.show()
+
+        expect(modal.rankedOrder.map(t => t.title)).toEqual(['Schizoid', 'Epitaph', 'I Talk', 'Bonus'])
+        const shown = [...document.querySelectorAll('[data-track-id]')].map(e => e.getAttribute('data-track-id'))
+        expect(shown).toEqual(['Schizoid', 'Epitaph', 'I Talk', 'Bonus'])
+
+        await modal.save()
+        expect(onSubmit.mock.calls[0][0].slice(0, 3)).toEqual([
+            { trackTitle: 'Schizoid', userRank: 1 }, { trackTitle: 'Epitaph', userRank: 2 }, { trackTitle: 'I Talk', userRank: 3 }
+        ])
+
+        modal.reset()
+        expect(modal.rankedOrder.map(t => t.title)).toEqual(['Schizoid', 'I Talk', 'Epitaph', 'Bonus'])
+        modal.close()
+    })
 })
