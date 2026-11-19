@@ -135,3 +135,14 @@ sequenceDiagram
 
 ### Errors of a route
 `server/lib/asyncRoute.js`: `asyncRoute(handler)` hands a rejected async handler to Express, and `errorResponder` (the last middleware in `server/index.js`) answers 500 `{ error: 'Internal server error' }`, or the 4xx of a request the server could not read, with no detail of the error. The detail goes to the log. `POST /generate` is wrapped by it.
+
+### Who may call what (F59)
+Wired in `server/index.js` before the routers, from `server/lib/auth/guards.js`:
+
+| Routes | Who | Limit per person |
+| :--- | :--- | :--- |
+| `POST /api/generate`, `POST /api/ai/*` (paid AI) | a signed-in person with an account; a guest (anonymous login) gets 403 | 60 calls per hour (`PAID_CALLS_PER_HOUR`) |
+| `POST /api/enrich-album`, `POST /api/playlists` | any signed-in person, guests included | 900 calls per hour (`COSTLY_CALLS_PER_HOUR`) |
+| `GET /api/musickit-token`, `GET /api/musickit-status`, `GET /_health` | anyone | none |
+
+The login is the Firebase ID token in `Authorization: Bearer <token>`. `server/lib/auth/verifyIdToken.js` checks it without the Admin SDK: signature against Google's keys for Firebase logins (fetched by `guards.js`, kept while Google says they are valid), project, issuer, expiry and subject. `requireUser.js` answers 401 (no login or one that does not check), 403 (guest on a paid route) or 503 (the keys could not be fetched: nobody goes through); `rateLimit.js` answers 429 with `Retry-After`. The count lives in the memory of each server instance. Switches: `REQUIRE_SIGN_IN=false` turns the door off (local experiments only), `PAID_ROUTES_ALLOW_ANONYMOUS=true` lets guests use the paid routes, `FIREBASE_PROJECT_ID` names the project. With no switch set the routes are closed to who is not signed in.

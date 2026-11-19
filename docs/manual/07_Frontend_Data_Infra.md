@@ -113,3 +113,6 @@ classDiagram
 *   **`Album.js`**: Enriched entity with `tracks`, `rankingSources`, and `stats`.
 *   **`Track.js`**: The atomic unit, carrying the `rankingInfo` provenance chain.
 *   **`Series.js`**: Container for albums.
+
+### `api/serverFetch.js` — the one way to call the app's own server
+`serverFetch(url, init)` is `fetch` plus the person's login: it asks Firebase for the ID token on every call (Firebase renews it) and sends it as `Authorization: Bearer <token>`. With nobody signed in the call goes without it and the server answers 401. `createServerFetch({ getIdToken, fetchImpl })` is the pure version, used by the tests. Every call to `/api/*` that the server guards goes through it: `api/client.js` (`/enrich-album`, `/generate`, `/playlists`) and `services/album-search/AlbumSearchService.js` (`/ai/studio-albums`). `/api/musickit-token` is open and is still called with plain `fetch`.

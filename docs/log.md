@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:05] session — F59, fatia C: as rotas pagas do servidor só respondem a quem está logado, com limite por pessoa
+
+- **O MJRP:** «Go for it pls», à proposta de seguir pela fatia C; e a F60 e a F64 rodam em paralelo com agentes auxiliares, cada um em cópia isolada (ainda sem resultado).
+- **Mudança de arquitetura (o MJRP pediu para ser avisado):** o servidor ganhou uma porta. `verifyIdToken.js` confere o login do Firebase sem o Admin SDK; `requireUser.js` responde 401, 403 ou 503; `rateLimit.js` conta por pessoa; `guards.js` é o único arquivo que conhece o Google e as variáveis. No app, `api/serverFetch.js` passa a ser o único jeito de chamar o próprio servidor, levando o login. Fechado por padrão. O desenho e as alternativas estão no `plan.md` da F59.
+- **Decisão do agente, revisável:** visitante (login anônimo) não usa as rotas pagas de IA; usa as de notas. `PAID_ROUTES_ALLOW_ANONYMOUS=true` reabre.
+- **Limites:** 60 chamadas pagas e 900 de notas por pessoa por hora, contadas na memória de cada instância.
+- **Testes:** 36 novos (31 do servidor, 5 do app), vistos falhar antes; a suíte tem 493 passando. O build compila.
+- **Prova:** numa cópia local do servidor, com o login real do MJRP e as chaves reais do Google: sem login 401; com login 200; a terceira chamada paga com o limite em 2 recebe 429; a tela de álbuns do app carrega as notas. Evidência na pasta da F59.
+- **A publicar, nesta ordem:** o site primeiro (passa a mandar o login), o servidor depois (passa a exigir).
+
 ## [2026-11-19 15:53] decision — o token do Discogs sai da F59 e vira a F66, para a F59 poder fechar
 
 - **O MJRP:** «Fatia D deixe pra depois, pode até abrir uma feat nova qqr coisa pra não impedir a issue de fechar, até pq nem me lembro o que seria essa feature com discogs».

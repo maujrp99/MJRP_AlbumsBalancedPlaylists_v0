@@ -74,5 +74,38 @@
     "still_open": [
       "POST /api/generate e /api/ai/studio-albums respondem sem login (fatia C)"
     ]
+  },
+  "slice_C_local": {
+    "date": "2026-11-19 16:05",
+    "where": "o app local (http://127.0.0.1:5010, login do MJRP por Google e Apple) falando com o servidor desta branch numa cópia local; as chaves de conferência vêm do Google de verdade",
+    "checks": [
+      {
+        "what": "sem login: POST /api/generate, /api/ai/studio-albums, /api/enrich-album, /api/playlists",
+        "result": "401 nas quatro, com a resposta «Sign in to use this.»"
+      },
+      {
+        "what": "login inventado em /api/generate",
+        "result": "401"
+      },
+      {
+        "what": "login real do MJRP em /api/enrich-album",
+        "result": "200, com as notas"
+      },
+      {
+        "what": "login real em /api/ai/studio-albums, com o limite posto em 2 por hora",
+        "result": "a primeira e a segunda passam pela porta (a rota responde 400 porque o teste não mandou artista); a terceira recebe 429"
+      },
+      {
+        "what": "a tela de álbuns do app, com o servidor protegido",
+        "result": "170 álbuns com a nota resolvida, 1 com falha; nenhuma chamada do app recusada por falta de login no log do servidor"
+      },
+      {
+        "what": "rotas abertas de propósito",
+        "result": "/api/musickit-status 200, /_health 200"
+      }
+    ],
+    "not_checked": [
+      "um login de visitante (anônimo) numa rota paga, no navegador (coberto por teste automático: 403)"
+    ]
   }
 }
