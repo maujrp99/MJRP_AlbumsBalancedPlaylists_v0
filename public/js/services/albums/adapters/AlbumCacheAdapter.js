@@ -7,6 +7,10 @@
  * - "the source has nothing" ('empty') is believed for a time that depends on WHY (EMPTY_TRUST):
  *   the source said so itself, with the reason, or nobody said why (then a short time only, so a
  *   missing rating does not stick);
+ * - "the source has no page" ('empty' with the reason 'not_found') is decided by the identity rule
+ *   of the server, so its record keeps the version of the rule that decided it (`rule`) and is
+ *   believed only while that is the version of the app (IDENTITY_RULE_VERSION): a rule that learns
+ *   to find more albums makes every older "no page" be asked again, once (F68);
  * - a failure is never saved; the person's own ranking is never saved with the album;
  * - get() always hands out a new Album, never the object it keeps;
  * - get() asks the one identity rule (F55) whether the record is still the album the query asks
@@ -17,7 +21,7 @@
  */
 
 import { queryKey } from '../../../models/albumLoadState.js'
-import { askedAlbum, compareKeptAlbum, keptAlbum } from '../../../models/askedAlbum.js'
+import { askedAlbum, compareKeptAlbum, keptAlbum, IDENTITY_RULE_VERSION } from '../../../models/askedAlbum.js'
 
 export const ALBUM_RECORD_PREFIX = 'albumload:v1:'
 const RECORD_TTL_MS = 7 * 24 * 60 * 60 * 1000
@@ -35,6 +39,18 @@ export const EMPTY_TRUST = Object.freeze({
     unknown: HOUR_MS
 })
 const emptyTrustOf = (reason) => (Object.hasOwn(EMPTY_TRUST, reason) ? EMPTY_TRUST[reason] : EMPTY_TRUST.unknown)
+/** The one "empty" the identity rule decides: the source has no page that is the album asked for. */
+const DECIDED_BY_THE_RULE = 'not_found'
+/** A "no page" decided with another version of the rule, or with none on record, says nothing today. */
+const decidedByTheRuleOfToday = (saved) => saved.reason !== DECIDED_BY_THE_RULE || saved.rule === IDENTITY_RULE_VERSION
+/** What the record keeps of one source: the status and when; for an 'empty', why, and by which rule. */
+const savedAnswer = (status, at, { reason, rule }) => {
+    const saved = { status, at }
+    if (status !== 'empty' || !reason) return saved
+    saved.reason = reason
+    if (reason === DECIDED_BY_THE_RULE && rule !== null) saved.rule = rule
+    return saved
+}
 const NEVER_SAVED = new Set(['userRanking'])
 
 const toPlain = (album) => {
@@ -74,7 +90,8 @@ export class AlbumCacheAdapter {
 
         const enrichment = {}
         Object.entries(record.enrichment || {}).forEach(([source, saved]) => {
-            const stillTrusted = saved.status !== 'empty' || (this.now() - saved.at) < emptyTrustOf(saved.reason)
+            const stillTrusted = saved.status !== 'empty' ||
+                ((this.now() - saved.at) < emptyTrustOf(saved.reason) && decidedByTheRuleOfToday(saved))
             if (stillTrusted) enrichment[source] = saved.status
         })
 
@@ -104,16 +121,15 @@ export class AlbumCacheAdapter {
      * @param {string} status - 'done' | 'empty' (a failure is never saved: nobody calls this for one)
      * @param {Object} [options]
      * @param {string|null} [options.reason] - why it is 'empty', when the source said (see EMPTY_TRUST)
+     * @param {number|null} [options.rule] - the version of the identity rule a 'not_found' was decided with
      */
-    async saveEnrichment(query, album, source, status, { reason = null } = {}) {
+    async saveEnrichment(query, album, source, status, { reason = null, rule = null } = {}) {
         if (NEVER_SAVED.has(source)) return
         const key = this._key(query)
         const record = (await this.cache.get(key)) || { enrichment: {} }
-        const saved = { status, at: this.now() }
-        if (status === 'empty' && reason) saved.reason = reason
         await this.cache.set(key, {
             album: toPlain(album),
-            enrichment: { ...record.enrichment, [source]: saved }
+            enrichment: { ...record.enrichment, [source]: savedAnswer(status, this.now(), { reason, rule }) }
         }, RECORD_TTL_MS)
     }
 

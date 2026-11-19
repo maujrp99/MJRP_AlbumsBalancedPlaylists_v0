@@ -1,9 +1,11 @@
 /**
  * NormalizationUtils.js
  * 
- * Title cleaning for the TEXT sent to a search, and the core of a track title for matching tracks.
- * It does not decide whether an album is the album asked for: that is the one identity rule,
- * shared/albumIdentity.js (F55). The album and artist normalizers that lived here were removed.
+ * The core of a track title, for matching tracks.
+ * It does not decide whether an album is the album asked for, nor clean an album title for a
+ * search: both are the one identity rule's (shared/albumIdentity.js: compareAlbumIdentity,
+ * titleWithoutEditionNotes). The album and artist normalizers and the title cleaner that lived
+ * here were removed (F55, F68).
  */
 export const NormalizationUtils = {
     /**
@@ -12,22 +14,6 @@ export const NormalizationUtils = {
     removeDiacritics(str) {
         if (!str) return ''
         return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    },
-
-    /**
-     * Standard title cleaning used for search/display.
-     */
-    cleanTitle(title) {
-        if (!title || typeof title !== 'string') return ''
-
-        return this.removeDiacritics(title)
-            // Common edition/remaster suffixes in parentheses or brackets
-            .replace(/\s*[\(\[][^()]*?(?:Remaster|Edition|Version|Anniversary|Expanded|Special|Bonus|Disc|Digital|Live)[^()]*?[\)\]]/gi, ' ')
-            .replace(/\s*-\s*.*?EP\s*$/gi, '')
-            .replace(/\s*-\s*.*?Single\s*$/gi, '')
-            .replace(/\s*-\s*.*?(?:Remaster|Edition|Version|Mix).*?$/gi, ' ')
-            .trim()
-            .replace(/\s+/g, ' ')
     },
 
     /**

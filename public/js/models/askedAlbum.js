@@ -15,7 +15,9 @@ import { parseAlbumQuery } from './albumQuery.js'
 
 import { Reason, compareKeptAlbum } from '@shared/albumIdentity.js'
 
-export { compareAlbumIdentity, compareKeptAlbum, compareOnlyAnswer, pickAlbum, Verdict, Reason } from '@shared/albumIdentity.js'
+export {
+    compareAlbumIdentity, compareKeptAlbum, compareOnlyAnswer, pickAlbum, titleWithoutEditionNotes, Verdict, Reason, IDENTITY_RULE_VERSION
+} from '@shared/albumIdentity.js'
 
 /**
  * What a query asks for.
@@ -89,11 +91,24 @@ export function alreadyAskedFor(albumQueries, album) {
 }
 
 /**
- * The one line an album shows when it is not, to the letter, the title that was asked for.
+ * What the card says for each rule of the second tier (shared/albumIdentity.js, SECOND_TIER_RULES).
+ * A rule added there needs its line here: test/components/ui/AlbumCardIdentityNote.test.js fails without it.
+ */
+const IDENTITY_NOTICES = Object.freeze({
+    [Reason.TITLE_BEFORE_SUBTITLE]: 'Asked for by its short title: the catalog only has this one, with a subtitle.',
+    [Reason.TITLE_WITHOUT_PARENTHESES]: 'Asked for by its short title: the catalog only has this one, with more in parentheses.',
+    [Reason.TITLE_IN_PARENTHESES]: 'Asked for by the name the catalog writes in parentheses.',
+    [Reason.TITLE_WITH_ARTIST_NAME]: 'Asked for by its title: the catalog writes the artist\'s name in front of it.',
+    [Reason.TITLE_WRITTEN_OTHERWISE]: 'Asked for in another spelling: the catalog writes the title this way.'
+})
+
+/**
+ * The one line an album shows when it is not, to the letter, the title that was asked for: the
+ * album was accepted by a rule of the second tier, and the line says which.
  * @param {Object} album - a loaded album
  * @returns {string|null} null when there is nothing to say
  */
 export function identityNotice(album) {
-    if (album?.metadata?.identityReason !== Reason.TITLE_BEFORE_SUBTITLE) return null
-    return 'Asked for by its short title: the catalog only has this one, with a subtitle.'
+    const reason = album?.metadata?.identityReason
+    return Object.hasOwn(IDENTITY_NOTICES, reason ?? '') ? IDENTITY_NOTICES[reason] : null
 }

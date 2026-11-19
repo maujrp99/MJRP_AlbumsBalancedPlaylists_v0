@@ -1,7 +1,6 @@
 
 import { SpotifyAuthService } from './SpotifyAuthService.js'
-import { NormalizationUtils } from '../utils/NormalizationUtils.js'
-import { pickAlbum, spotifyCandidate } from '../models/askedAlbum.js'
+import { pickAlbum, spotifyCandidate, titleWithoutEditionNotes } from '../models/askedAlbum.js'
 import { SpotifyReconnectError, SpotifyRateLimitError } from './spotify/spotifyErrors.js'
 
 /** The longest wait a rate limit may ask of a patient caller before it is reported instead. */
@@ -111,8 +110,8 @@ export const SpotifyService = {
     /**
      * The Spotify album that is the album asked for, or null.
      *
-     * Three searches, from the narrowest to the widest: artist and clean title, artist and the
-     * title as written, the albums of the artist. The searches only LIST candidates; which one is
+     * Three searches, from the narrowest to the widest: artist and the title without its edition
+     * notes (the rule's own `titleWithoutEditionNotes`), artist and the title as written, the albums of the artist. The searches only LIST candidates; which one is
      * accepted is decided by the one identity rule (shared/albumIdentity.js, F55). No candidate
      * passes: null. There is no "first result" and no "closest album of the artist".
      *
@@ -125,7 +124,7 @@ export const SpotifyService = {
         if (!artist || !albumName) return null
 
         const asked = { artist, title: albumName, year }
-        const cleanAlbumName = NormalizationUtils.cleanTitle(albumName)
+        const cleanAlbumName = titleWithoutEditionNotes(albumName)
         const searches = [
             () => this._searchAlbumQuery(artist, cleanAlbumName),
             ...(cleanAlbumName !== albumName ? [() => this._searchAlbumQuery(artist, albumName)] : []),
