@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 20:12] session — F49 em produção (site); F57 começa
+
+Site publicado da `main` (`1d5ed9b`, pacote `main-DPC1GW_g.js`). UAT-06 em `fixed` com a ressalva de que o clique não foi visto no navegador (nenhuma série do MJRP passa de 12 álbuns). Auxiliares trabalhando: F68, F62 e, agora, F57.
+
 ## [2026-11-19 20:11] review — F49 revisada pelo integrador; UAT-06 em fixed, sem prova do clique no navegador
 
 Nenhuma série do MJRP passa de 12 álbuns (a maior tem 9), então o botão não aparece na conta dele; não criei série de teste. A prova é por teste com a tela de verdade (`reports/evidence/F49/2026-11-19-load-more-albums-proof.md`). Decidido pelo agente — revisável: publicar assim, com a ressalva escrita.
