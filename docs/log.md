@@ -3,6 +3,17 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 17:31] session — F52 fatia 1, servidor: um contrato de resposta, o raspador lança a falha, tabela do provedor de IA (UAT-23, UAT-181)
+
+Ramo `fix/f52-server-tells-the-truth`, de um agente auxiliar, da ponta da `main` (`be346b8`). Primeira metade da fatia 1 da F52 (seção 11 da proposta em `docs/specs/arch.md`): o lado do servidor.
+
+- **Um módulo monta toda resposta** (`server/lib/outcome.js`): sucesso é `{ data, outcome }`, com `outcome` sempre presente (`found`, `not_found`, `no_ratings`); falha é `{ error: { code, retryable } }`, com `code` de uma lista fechada de sete. O respondedor de erros, a porta de login e o limite por pessoa passaram por ele, com os status de antes.
+- **O raspador de notas lança a falha** (`server/lib/scrapers/besteveralbums.js`): sete `catch` engoliam erro de rede, prazo e 429 e viravam «não achei» (um deles aceitava a página sem vê-la). Agora toda requisição passa por uma função que lança; `null` só quando a fonte respondeu a tudo e nada bateu. Como um álbum é aceito não mudou.
+- **Notas** (`POST /api/enrich-album`): responde 200 com o desfecho ou 502, 503, 504; deixou de pedir a chave de IA.
+- **IA** (`POST /api/generate`, `POST /api/ai/studio-albums`): uma tabela fechada (`server/lib/aiProviderOutcome.js`) diz o que sai para cada resposta do provedor. Cobrança, cota, pedido recusado e resposta inaproveitável saem como 424 com `retryable: false` (a aba antiga não repete 4xx); só falha passageira sai como 5xx. O texto do provedor não sai mais; a lista por IA não responde 200 vazio na falha.
+- **Conferido:** 135 testes do servidor na suíte da raiz; e o servidor de verdade numa cópia local (`curl`): 401, 400, 503 sem a chave, `found` e `not_found` contra o BestEverAlbums, 502 com a fonte inalcançável. Nenhuma rota paga foi chamada.
+- **Não feito aqui:** `musickit`, `playlists` e as rotas de depuração seguem montando o próprio erro. Nada foi publicado.
+
 ## [2026-11-19 17:04] decision — quatro decisões do MJRP: visitante não leva dados, sair recarrega, F52 pode ir ao código, Node 24
 
 Respostas do MJRP às quatro perguntas do agente, nas palavras dele:

@@ -53,7 +53,7 @@ describe('asyncRoute (F59): a route that breaks answers, it does not take the se
         const logger = { error: vi.fn() }
         errorResponder(logger)(new Error('secret detail at /usr/src/app'), { method: 'POST', path: '/api/generate' }, res, vi.fn())
         expect(res.status).toHaveBeenCalledWith(500)
-        expect(res.json).toHaveBeenCalledWith({ error: 'Internal server error' })
+        expect(res.json).toHaveBeenCalledWith({ error: { code: 'internal', retryable: false } })
         expect(JSON.stringify(res.json.mock.calls)).not.toContain('secret detail')
         expect(logger.error).toHaveBeenCalled()
     })
@@ -63,7 +63,7 @@ describe('asyncRoute (F59): a route that breaks answers, it does not take the se
         const bad = Object.assign(new Error('Unexpected token o in JSON at position 1'), { status: 400 })
         errorResponder({ error: vi.fn() })(bad, {}, res, vi.fn())
         expect(res.status).toHaveBeenCalledWith(400)
-        expect(res.json).toHaveBeenCalledWith({ error: 'Bad request' })
+        expect(res.json).toHaveBeenCalledWith({ error: { code: 'invalid_request', retryable: false } })
     })
 
     it('leaves an answer that already started alone', () => {
