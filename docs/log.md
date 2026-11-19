@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:44] session — F52 fatias 3 e 4 em produção; F68 em andamento
+
+Site e servidor publicados da `main` (`b7bb0cc`; revisão `mjrp-proxy-00202-ktd`, volta `mjrp-proxy-00201-kcq`). A varredura de 199 álbuns rodou contra essa revisão sem falhas. Auxiliares trabalhando: F68 (revisão das regras de identidade, com os 16 casos da varredura), F56 e F63. Pendente do MJRP: fixar uma instância no Cloud Run e aceitar a ADR-0021.
+
 ## [2026-11-19 19:43] review — varredura da fonte de notas: 16 de 199 álbuns sem página pela regra exata
 
 Relatório em `reports/audits/2026-11-19-mjrpalbumblender-v0-ratings-source-sweep.md`. 183 achados, 16 `not_found`, nenhuma falha (a fila educada segurou 199 pedidos). Os 16 são, na leitura do agente, quase todos custo da regra exata na fonte (artista em outra ordem, qualificador entre parênteses, título escrito de outro jeito). Decidido pelo agente — revisável: a F68 (revisão das regras de identidade) passa na frente e começa agora, com esses 16 casos reais como base.
