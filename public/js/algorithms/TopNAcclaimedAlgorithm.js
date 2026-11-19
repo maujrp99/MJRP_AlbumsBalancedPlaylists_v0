@@ -7,7 +7,7 @@ export class TopNAcclaimedAlgorithm extends TopNAlgorithm {
         id: 'top-n-acclaimed',
         name: 'Top Acclaimed Tracks on BestEverAlbums',
         badge: 'BEA',
-        description: 'Selecione as faixas aclamadas pela crítica baseadas no BestEverAlbums.',
+        description: 'Pick the critically acclaimed tracks, based on BestEverAlbums.',
         isRecommended: false
     }
 

@@ -15,7 +15,7 @@ export class Top3PopularAlgorithm extends TopNAlgorithm {
         id: 'top-3-popular',
         name: 'Top 3 Tracks by Spotify Popularity',
         badge: 'TOP 3',
-        description: 'As 3 faixas mais populares de cada álbum - o que as pessoas realmente ouvem.',
+        description: 'The 3 most popular tracks of each album - what people actually listen to.',
         isRecommended: false
     }
 

@@ -105,7 +105,7 @@ export class TopNAlgorithm extends BaseAlgorithm {
             playlists.push({
                 id: 'p1',
                 title: this.getPlaylistTitle(),
-                subtitle: `Top ${trackCount} de cada álbum`,
+                subtitle: `Top ${trackCount} from each album`,
                 tracks: allSelectedTracks
             })
         } else {
@@ -116,7 +116,7 @@ export class TopNAlgorithm extends BaseAlgorithm {
                 playlists.push({
                     id: `p${i + 1}`,
                     title: `${this.getPlaylistTitle()} Vol. ${i + 1}`,
-                    subtitle: `Top ${trackCount} de cada álbum`,
+                    subtitle: `Top ${trackCount} from each album`,
                     tracks: []
                 })
             }

@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:45] session — F63: as receitas do blend em inglês; teste que recusa texto em português no app (UAT-192)
+
+Confirmado na `main`: 28 textos em português em `public/js/algorithms/*.js` (descrições das receitas, subtítulos das playlists geradas, descrições de curadoria), numa interface em inglês. Passados para o inglês mantendo o sentido (a lista antes → depois está no `spec.md` da F63, para o MJRP rever as palavras). Teste de arquitetura novo, `test/architecture/interfaceInEnglish.test.js`: lê toda string e template de `public/js` (pelo `espree`, sem comentários) e falha em letra acentuada do português ou palavra só do português; exceções nomeadas (`eletrônica`, `electrónica`, `Zé's`). O título da aba (a outra metade da UAT-192) já estava consertado pela F54: um título só, igual ao do `index.html`. Fora de `public/js` e não tocados: `shared/curation.js` (três subtítulos em português, código do servidor) e as páginas `public/debug-*.html`. Playlists já guardadas mantêm o subtítulo antigo: é dado gravado.
+
 ## [2026-11-19 19:44] session — F63: o menu de mistura abre com a série de origem escolhida (UAT-07, UAT-192)
 
 Confirmado na `main`: `BlendingMenuView.mount` não lia o `seriesId` que o botão «Blend your Albums» põe no endereço (`/blend?seriesId=<id>`). Agora `BlendSeriesSelector.selectById` escolhe a série depois da carga e a tela já abre com o passo da receita liberado; série que não existe não escolhe nenhuma. Os cartões de série viraram botões para o teclado (`role`, `tabindex`, `aria-pressed`, Enter e espaço). `BlendingController.js` não foi tocado. Sem navegador nesta sessão.
