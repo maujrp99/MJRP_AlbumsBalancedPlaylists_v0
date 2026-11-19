@@ -2,9 +2,11 @@
  * AlbumCacheAdapter - AlbumCachePort over the app's two-layer cache (memory + IndexedDB).
  *
  * One record per album QUERY (the resolved name does not exist before the search):
- *   { album: <plain data>, enrichment: { <source>: { status, at } } }
+ *   { album: <plain data>, enrichment: { <source>: { status, at, reason? } } }
  * - the base album is saved as soon as it is found; each source adds its own status;
- * - "the source has nothing" is trusted for a short time only, so a missing rating does not stick;
+ * - "the source has nothing" ('empty') is believed for a time that depends on WHY (EMPTY_TRUST):
+ *   the source said so itself, with the reason, or nobody said why (then a short time only, so a
+ *   missing rating does not stick);
  * - a failure is never saved; the person's own ranking is never saved with the album;
  * - get() always hands out a new Album, never the object it keeps;
  * - get() asks the one identity rule (F55) whether the record is still the album the query asks
@@ -19,7 +21,20 @@ import { askedAlbum, compareKeptAlbum, keptAlbum } from '../../../models/askedAl
 
 export const ALBUM_RECORD_PREFIX = 'albumload:v1:'
 const RECORD_TTL_MS = 7 * 24 * 60 * 60 * 1000
-const EMPTY_TRUSTED_FOR_MS = 60 * 60 * 1000
+const HOUR_MS = 60 * 60 * 1000
+/**
+ * For how long an 'empty' is believed before the source is asked again, by its reason (F52, slice 3).
+ * The reasons are the server's outcomes; `unknown` is every 'empty' that carries none: an answer
+ * of the server before F52 (which could be a failure in disguise), a record written before this
+ * slice, a source that gives no reason (popularity).
+ * Decided by the agent on 2026-11-19 from arch.md, F52, seção 11, item 4 - to be revised.
+ */
+export const EMPTY_TRUST = Object.freeze({
+    not_found: 24 * HOUR_MS, // the source has no page for the album: the page may be created any day
+    no_ratings: 7 * 24 * HOUR_MS, // the page was read and has no rating: as long as the record itself lives
+    unknown: HOUR_MS
+})
+const emptyTrustOf = (reason) => (Object.hasOwn(EMPTY_TRUST, reason) ? EMPTY_TRUST[reason] : EMPTY_TRUST.unknown)
 const NEVER_SAVED = new Set(['userRanking'])
 
 const toPlain = (album) => {
@@ -59,7 +74,7 @@ export class AlbumCacheAdapter {
 
         const enrichment = {}
         Object.entries(record.enrichment || {}).forEach(([source, saved]) => {
-            const stillTrusted = saved.status !== 'empty' || (this.now() - saved.at) < EMPTY_TRUSTED_FOR_MS
+            const stillTrusted = saved.status !== 'empty' || (this.now() - saved.at) < emptyTrustOf(saved.reason)
             if (stillTrusted) enrichment[source] = saved.status
         })
 
@@ -82,13 +97,23 @@ export class AlbumCacheAdapter {
         await this.cache.set(this._key(query), { album: toPlain(album), enrichment: {} }, RECORD_TTL_MS)
     }
 
-    async saveEnrichment(query, album, source, status) {
+    /**
+     * @param {string|Object} query
+     * @param {Album} album
+     * @param {string} source
+     * @param {string} status - 'done' | 'empty' (a failure is never saved: nobody calls this for one)
+     * @param {Object} [options]
+     * @param {string|null} [options.reason] - why it is 'empty', when the source said (see EMPTY_TRUST)
+     */
+    async saveEnrichment(query, album, source, status, { reason = null } = {}) {
         if (NEVER_SAVED.has(source)) return
         const key = this._key(query)
         const record = (await this.cache.get(key)) || { enrichment: {} }
+        const saved = { status, at: this.now() }
+        if (status === 'empty' && reason) saved.reason = reason
         await this.cache.set(key, {
             album: toPlain(album),
-            enrichment: { ...record.enrichment, [source]: { status, at: this.now() } }
+            enrichment: { ...record.enrichment, [source]: saved }
         }, RECORD_TTL_MS)
     }
 

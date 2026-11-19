@@ -11,11 +11,29 @@ const { debugRoutesEnabled } = require('../../lib/debugGate')
  * @param {Object} deps.enrichmentService - { enrichAlbum(albumData) -> result }
  * @param {Object} deps.generationService - { generateAlbum(body, config) -> result }
  * @param {Object} [deps.env] - the environment (read on each request)
+ * @param {Object} [deps.logger] - { info(msg, meta) }
+ * @param {Function} [deps.now] - () => ms
  */
-function createAlbumHandlers ({ enrichmentService, generationService, env = process.env }) {
-  /** POST /api/enrich-album - track ratings from BestEverAlbums. It uses no AI and asks for no AI key. */
+function createAlbumHandlers ({ enrichmentService, generationService, env = process.env, logger = console, now = () => Date.now() }) {
+  /**
+   * POST /api/enrich-album - track ratings from BestEverAlbums. It uses no AI and asks for no AI key.
+   *
+   * One line of log per request (F52, measuring): how it was answered ('source': this request
+   * searched the source; 'joined': it waited for an identical request already searching; 'none':
+   * the source was not needed), with what answer, in how long, and how many requests went to the
+   * source. Nothing of the person and nothing of the album is in it.
+   */
   async function enrichAlbum (req, res) {
+    const startedAt = now()
     const result = await enrichmentService.enrichAlbum(req.body && req.body.albumData)
+    const trace = result.trace || { how: 'none', sourceRequests: 0 }
+    logger.info('enrich', {
+      event: 'enrich',
+      how: trace.how,
+      answer: result.ok ? result.outcome : result.code,
+      ms: now() - startedAt,
+      sourceRequests: trace.sourceRequests
+    })
     return respond(res, result)
   }
 

@@ -111,7 +111,8 @@ export class PlaylistGrid {
           icon: 'X',
           label: 'Remove Track',
           action: 'remove-track',
-          class: 'text-muted hover:text-red-400 p-1 opacity-0 group-hover:opacity-100 transition-opacity'
+          // Whether it shows is the row's business (TrackRow: always on touch, on hover with a mouse)
+          class: 'text-muted hover:text-red-400 p-1'
         }] : []
       })
     ).join('')

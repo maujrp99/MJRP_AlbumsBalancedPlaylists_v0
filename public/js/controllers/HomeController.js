@@ -9,6 +9,7 @@ import { router } from '../router.js';
 import toast from '../components/Toast.js';
 import { toAlbumQuery } from '../models/albumQuery.js';
 import { decodeEntities } from '../models/text.js';
+import { readPastedList, bulkInputState, bulkOutcome, toStagedAlbum, SkipReason } from '../models/bulkPaste.js';
 
 export class HomeController {
     constructor(view) {
@@ -80,26 +81,9 @@ export class HomeController {
         this.view.$delegate('#btnProcessBulk', 'click', () => this.handleBulkProcess());
     }
 
+    /** The box shows, as the person types, whether every line is an album. */
     validateBulkInput(text) {
-        if (!text) return;
-        const lines = text.split('\n').filter(l => l.trim() !== '');
-        let validCount = 0;
-
-        lines.forEach(line => {
-            if (line.includes('-')) validCount++;
-        });
-
-        const input = this.view.$('#bulkPasteInput');
-        if (validCount === lines.length && lines.length > 0) {
-            input.classList.add('border-green-500', 'bg-green-900/10');
-            input.classList.remove('border-white/10', 'border-red-500');
-        } else if (lines.length > 0) {
-            input.classList.add('border-orange-500'); // Partial or invalid
-            input.classList.remove('border-green-500', 'border-white/10');
-        } else {
-            input.classList.remove('border-green-500', 'border-orange-500', 'bg-green-900/10');
-            input.classList.add('border-white/10');
-        }
+        this.view.setBulkInputState(bulkInputState(text));
     }
 
     handleGridClick(e) {
@@ -131,96 +115,75 @@ export class HomeController {
         this.view.updateModeUI(mode);
     }
 
+    /**
+     * "Process List": every line that is an album is searched and selected; a line that cannot go
+     * in is skipped and listed in the screen with the reason, and the other lines go on (F63).
+     */
     async handleBulkProcess() {
         const input = this.view.$('#bulkPasteInput');
-        const text = input ? input.value : '';
+        const pasted = readPastedList(input ? input.value : '');
 
-        if (!text || !text.trim()) {
+        if (pasted.entries.length === 0 && pasted.skipped.length === 0) {
             toast.warning('Please paste some "Artist - Album" lines first.');
             return;
         }
 
-        const lines = text.split('\n').filter(l => l.trim().length > 0);
-        if (lines.length === 0) return;
-
-        // UI Loading state
-        const btn = this.view.$('#btnProcessBulk');
-        const originalContent = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = '<span class="animate-pulse">Processing...</span>';
-
-        // Show scanning cursor
-        document.body.style.cursor = 'wait';
-
-        let addedCount = 0;
-        let failedCount = 0;
-
+        this.view.setBulkBusy(true);
         try {
-            for (const line of lines) {
-                // Parse "Artist - Album" (heuristic)
-                // If only one part, assume it's Artist? Or Album? 
-                // Placeholder says "Artist - Album", so let's stick to that.
-                const parts = line.split('-').map(s => s.trim());
-                if (parts.length < 2) {
-                    // Try to be smart? No, just skip for now or treat as Artist?
-                    // Let's assume input needs to be reasonably formatted.
-                    console.warn(`[Bulk] Skipping invalid line: ${line}`);
-                    failedCount++;
-                    continue;
-                }
-
-                const artist = parts[0];
-                const album = parts.slice(1).join(' - '); // Rejoin if album title has hyphens
-
-                // Search
-                const results = await this.albumSearchService.search(artist, album, { limit: 1 });
-                if (results && results.length > 0) {
-                    const match = results[0];
-
-                    // Add to Staging
-                    this.stagingController.addAlbum({
-                        id: match.id,
-                        title: match.title,
-                        artist: match.artist,
-                        coverUrl: match.coverUrl ? match.coverUrl.replace('{w}', '300').replace('{h}', '300') : null,
-                        artworkTemplate: match.coverUrl, // Keep template for potential high-res need
-                        year: match.year,
-                        appleMusicId: match.id
-                    });
-                    addedCount++;
-                } else {
-                    console.warn(`[Bulk] No match for: ${artist} - ${album}`);
-                    failedCount++;
-                }
-            }
-
-            if (addedCount > 0) {
-                toast.success(`Processed ${addedCount} albums.`);
-                if (input) input.value = ''; // Clear on success
-                // Reset validation styles
-                this.validateBulkInput('');
-
-                // Switch back to visual mode? Optional.
-                // this.setMode('visual'); 
-            } else {
-                toast.error('No albums found. Check formatting.');
-            }
-
-            if (failedCount > 0) {
-                console.warn(`[Bulk] Failed to find ${failedCount} items.`);
-            }
-
-        } catch (error) {
-            console.error('[Bulk] Process error:', error);
-            toast.error('Processing failed: ' + error.message);
+            const searched = await this.stageBulkEntries(pasted.entries);
+            this.showBulkOutcome(bulkOutcome({
+                added: searched.added,
+                skipped: [...pasted.skipped, ...searched.skipped]
+            }));
         } finally {
-            // Restore UI
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = originalContent;
-            }
-            document.body.style.cursor = 'default';
+            this.view.setBulkBusy(false);
         }
+    }
+
+    /**
+     * Search each line in the catalog and select what is found. One line never stops the others.
+     * @param {Array<{ line: number, text: string, artist: string, title: string }>} entries
+     * @returns {Promise<{ added: number, skipped: Array<{ line: number, text: string, reason: string }> }>}
+     */
+    async stageBulkEntries(entries) {
+        let added = 0;
+        const skipped = [];
+        for (const entry of entries) {
+            const reason = await this.stageBulkEntry(entry);
+            if (reason) skipped.push({ line: entry.line, text: entry.text, reason });
+            else added++;
+        }
+        return { added, skipped };
+    }
+
+    /**
+     * @returns {Promise<string|null>} null when the album was selected, or why it was not (SkipReason)
+     */
+    async stageBulkEntry({ artist, title }) {
+        let results;
+        try {
+            results = await this.albumSearchService.search(artist, title, { limit: 1 });
+        } catch (error) {
+            console.error(`[Bulk] Search failed for: ${artist} - ${title}`, error);
+            return SkipReason.SEARCH_FAILED;
+        }
+
+        const match = results?.[0];
+        if (!match) return SkipReason.NOT_FOUND;
+        if (this.stagingController.getSelectedAlbums().some(album => album.id === match.id)) return SkipReason.ALREADY_SELECTED;
+
+        this.stagingController.addAlbum(toStagedAlbum(match));
+        return null;
+    }
+
+    /** Say what happened: a toast, the skipped lines under the box, and the box left with what can be fixed. */
+    showBulkOutcome(outcome) {
+        toast[outcome.tone](outcome.message);
+        this.view.renderBulkReport(outcome.report);
+
+        const input = this.view.$('#bulkPasteInput');
+        if (input) input.value = outcome.leftInBox;
+        this.validateBulkInput(outcome.leftInBox);
     }
 
     async handleInitializeLoad() {

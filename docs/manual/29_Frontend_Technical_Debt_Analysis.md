@@ -40,7 +40,7 @@ sequenceDiagram
 ```
 -   **`navigation/SeriesDropdown.js`**:
     -   **Role**: Top navigation dropdown for switching entity modes (Albums, Playlists, etc.).
-    -   **Logic**: Checks `window.location.pathname` to highlight active route.
+    -   **Logic**: Checks `window.location.pathname` to highlight active route. An entity that is not there yet (By Artist, By Genre, By Track) is drawn with "Soon", `aria-disabled` and no address: it is not a link, so a click goes nowhere (F63).
 
 ## Playlists System (`playlists/`)
 **Status**: `[ACTIVE]`

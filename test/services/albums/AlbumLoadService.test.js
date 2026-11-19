@@ -485,6 +485,26 @@ describe('AlbumLoadService', () => {
             expect(onHold.mock.calls[0][0].until).toBeGreaterThan(Date.now() - 1000)
         })
 
+        it('"the ratings source asked to wait" (503 upstream_busy with Retry-After) holds the same way: the ratings wait, nothing fails, one notice', async () => {
+            let refusals = 1
+            enrichers.acclaim.enrich = vi.fn(async (album) => {
+                if (refusals-- > 0) throw held({ reason: 'source_busy', retryAfterMs: 40 })
+                return { status: 'done', album: { ...album, rated: true } }
+            })
+            service = buildHeld({ slowConcurrency: 1 })
+
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One', 'Two')] })
+            await wait(20)
+            expect(service.getHold()).toMatchObject({ reason: 'source_busy' })
+            expect(acclaimOf('s1')).not.toContain(EnrichmentStatus.FAILED)
+            expect(store.getAlbums('s1')).toHaveLength(2) // the albums themselves are on screen
+
+            await service.whenIdle()
+            expect(acclaimOf('s1')).toEqual(Array(2).fill(EnrichmentStatus.DONE))
+            expect(onHold).toHaveBeenCalledTimes(1)
+            expect(cache.saveEnrichment.mock.calls.filter(call => call[2] === 'acclaim' && call[3] !== 'done')).toEqual([])
+        })
+
         it('a 401 stops the asking until resume(), with one notice, and nothing is marked failed', async () => {
             let signedIn = false
             enrichers.acclaim.enrich = vi.fn(async (album) => {

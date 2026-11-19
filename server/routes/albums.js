@@ -23,7 +23,8 @@ let handlers
 function initAlbumRoutes(deps) {
     handlers = createAlbumHandlers({
         enrichmentService: new EnrichmentService(deps),
-        generationService: new GenerationService(deps)
+        generationService: new GenerationService(deps),
+        logger: deps.logger
     })
 }
 

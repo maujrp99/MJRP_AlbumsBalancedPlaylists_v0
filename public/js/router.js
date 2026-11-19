@@ -81,6 +81,35 @@ export class Router {
     }
 
     /**
+     * Go to a path IN PLACE of the address being left (F63): an old address, the return from
+     * Spotify, an address with no screen. The entry is replaced, so the back button never lands on
+     * an address that sends the person forward again.
+     * @param {string} path - Destination path
+     * @param {Object} state - Optional state to pass
+     */
+    redirect(path, state = {}) {
+        if (!this.canNavigate(path, state)) return
+
+        history.replaceState(state, '', path)
+        this.handleRouteChange()
+    }
+
+    /**
+     * The screen being shown changes its own address (a scope, a filter) and is not drawn again.
+     * The history of the browser is written here and nowhere else, so the router always knows
+     * where the person is (the address a refused back/forward is put back to).
+     * @param {string} path - path + query of the same screen
+     * @param {{ replace?: boolean }} [options] - replace: the same place written another way, no new entry
+     */
+    setAddress(path, { replace = false } = {}) {
+        if (window.location.pathname + window.location.search !== path) {
+            if (replace) history.replaceState({}, '', path)
+            else history.pushState({}, '', path)
+        }
+        this.currentUrl = path
+    }
+
+    /**
      * Ask the before hooks whether the screen may be left
      * @private
      */
@@ -131,7 +160,7 @@ export class Router {
         }
 
         // No route matched - redirect to home (once: without a home route there is nowhere to go)
-        if (path !== '/home') this.navigate('/home')
+        if (path !== '/home') this.redirect('/home')
     }
 
     /**

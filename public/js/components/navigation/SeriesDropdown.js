@@ -82,28 +82,43 @@ export class SeriesDropdown {
                 return `<div class="border-t border-white/10 my-2"></div>`;
             }
 
-            const isActive = this.currentPath.startsWith(entity.route);
-            const isDisabled = !entity.available;
-
-            return `
-                <a 
-                    href="${entity.route}"
-                    class="flex items-center gap-3 px-4 py-2 text-sm transition-all duration-200 ${isActive
-                    ? 'text-accent-primary bg-white/10'
-                    : isDisabled
-                        ? 'text-muted/50 cursor-not-allowed'
-                        : 'text-muted hover:text-white hover:bg-white/5'
-                }"
-                    data-link
-                    ${isDisabled ? '' : ''}
-                >
-                    ${getIcon(entity.icon, 'w-4 h-4')}
-                    <span class="flex-1">${entity.label}</span>
-                    ${isActive ? getIcon('Check', 'w-4 h-4 text-accent-primary') : ''}
-                    ${isDisabled ? '<span class="text-xs text-muted/50">Soon</span>' : ''}
-                </a>
-            `;
+            return entity.available ? this.renderLink(entity) : this.renderSoon(entity);
         }).join('');
+    }
+
+    /** An entity that exists: a link of the app. */
+    renderLink(entity) {
+        const isActive = this.currentPath.startsWith(entity.route);
+        const tone = isActive ? 'text-accent-primary bg-white/10' : 'text-muted hover:text-white hover:bg-white/5';
+        return `
+            <a
+                href="${entity.route}"
+                class="flex items-center gap-3 px-4 py-2 text-sm transition-all duration-200 ${tone}"
+                data-link
+            >
+                ${getIcon(entity.icon, 'w-4 h-4')}
+                <span class="flex-1">${entity.label}</span>
+                ${isActive ? getIcon('Check', 'w-4 h-4 text-accent-primary') : ''}
+            </a>
+        `;
+    }
+
+    /**
+     * An entity that is not there yet ("Soon"): shown, and not a link, so a click goes nowhere
+     * (F63; before, it had an address and the router followed it).
+     */
+    renderSoon(entity) {
+        return `
+            <span
+                role="link"
+                aria-disabled="true"
+                class="flex items-center gap-3 px-4 py-2 text-sm text-muted/50 cursor-not-allowed"
+            >
+                ${getIcon(entity.icon, 'w-4 h-4')}
+                <span class="flex-1">${entity.label}</span>
+                <span class="text-xs text-muted/50">Soon</span>
+            </span>
+        `;
     }
 
     /**
@@ -124,15 +139,7 @@ export class SeriesDropdown {
         // Close on link click
         if (menu) {
             menu.querySelectorAll('a[data-link]').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    // Don't navigate for disabled items
-                    const entity = this.entityTypes.find(et => et.route === link.getAttribute('href'));
-                    if (entity && !entity.available) {
-                        e.preventDefault();
-                        return;
-                    }
-                    this.close();
-                });
+                link.addEventListener('click', () => this.close());
             });
         }
 

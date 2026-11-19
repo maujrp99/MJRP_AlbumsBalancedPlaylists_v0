@@ -7,17 +7,93 @@
 
 Ramo `fix/f56-screens-load-through-the-service`. A pasta da F56 preenchida para o que foi construído (9 REQ com `verified_by`, 15 tarefas; abertas a prova no navegador com os tempos, do integrador, e o julgamento do MJRP); o diagnóstico com arquivo e linha e a escolha entre «um contexto por tela» e «juntar-se à geração em vigor» estão no plano. `docs/specs/arch.md` ganhou a seção «Toda tela pede os álbuns ao serviço de carga (F56)»; a lista «Not done yet» da ADR-0019 diz o que a F56 fechou (decisões 1 e 7) e o que ficou (o botão «Enrich Data» e a fila do Spotify em segundo plano ainda pedem por fora da fila); `docs/specs/behavior.md` tem os estados do blend, das playlists e da tela de álbuns (cinco novos); manual 01, 06, 07, 08, 15, 17, 18, 19, 21 e 99 corrigidos. O status da ADR e o `docs/specs/uat.md` não foram tocados.
 
+## [2026-11-19 19:58] session — F63 em produção (site)
+
+Site publicado da `main` (`5c3abda`, pacote `main-Bb_Tr-dD.js`). A F63 não muda o servidor. Auxiliares trabalhando: F68 e F56.
+
+## [2026-11-19 19:57] review — F63 provada pelo integrador; seis issues em fixed
+
+Prova em `reports/evidence/F63/2026-11-19-home-and-navigation-proof.md`. Em `fixed`: UAT-201, UAT-26 (consertada pela F67, agora com teste), UAT-13, UAT-27, UAT-07, UAT-192. Decidido pelo agente — revisável: UAT-10 (telas de ranking só por endereço) e UAT-11 (tela de migração) ficam abertas e vão para a F65 com a recomendação de aposentar as telas; tirar tela é decisão do MJRP. Mudanças de comportamento para ele julgar: o menu da conta não abre mais só com o mouse por cima; a caixa de colar mantém as linhas a consertar; entrar numa série não cria entrada nova no histórico.
+
 ## [2026-11-19 19:56] session — F56: blend, edição de playlists, «Refetch» e salvar série passam pelo serviço de carga (código, no ramo)
 
 Ramo `fix/f56-screens-load-through-the-service`, a partir da `main` em `d210f35`. Uma porta só para qualquer tela pedir os álbuns de uma série: `albumAsks.albumsOf({ series, sources, signal })` (`services/albums/AlbumAsks.js`), que entra na carga em vigor (`AlbumLoadService.join`/`leave`) sem começar geração, reaproveita o que a tela de álbuns ou o navegador já têm, espera as fontes que a receita lê e devolve um resultado tipado (prontos, falhos com motivo, fontes em falta). O blend e a edição de playlists deixaram os laços próprios; o «Refetch» virou `reloadAlbum` (pela fila); salvar a edição de uma série reconcilia em vez de recarregar tudo, inclusive quando a edição escolhida muda; a injeção de álbuns e os escritores avulsos da prateleira saíram. Os métodos antigos do cliente (`fetchAlbum`, `fetchMultipleAlbums`, `BEAenrichAlbum`) foram removidos: nada mais os chamava. Teste de aptidão novo: `test/architecture/screensLoadThroughTheService.test.js`. Suíte: 1232 passando (1143 antes); `vite build` compila. Decisões do agente, revisáveis: o blend segue com os álbuns prontos e avisa quais ficaram de fora (para só quando nenhum está pronto); a pergunta «No ratings detected… Continue?» saiu, no lugar vêm os avisos de fonte em falta; o documento compartilhado `albums` deixou de ser gravado pelo «Refetch» (ninguém o lia). Não foi visto num navegador.
+
+## [2026-11-19 19:56] session — F63: as duas sobras das playlists guardadas (UAT-27 e o olho da UAT-13), pelo integrador
+
+O auxiliar da F63 não podia tocar nas playlists guardadas (a F61 estava em outro ramo). Com a F61 na `main`: o botão «Create Series» do estado vazio navega pelo roteador (era `location.hash`, que não ia a lugar nenhum), e os botões da linha de playlist aparecem sem mouse (mesma regra das faixas).
+
+## [2026-11-19 19:54] session — F63: spec, plano, tarefas, comportamento e manual escritos no ramo
+
+A pasta da F63 preenchida para o que foi construído (13 REQ: 10 com `verified_by`, dois deles «já consertado» pela F67, F50 e F54 com a prova; 3 não entregues e ditos assim: UAT-10 e UAT-11 pedem decisão do MJRP, UAT-27 ficou fora do escopo dado). A spec traz a tabela «ainda existia?» de cada issue com arquivo e linha, e a lista antes → depois dos 28 textos traduzidos, para o MJRP rever as palavras. 19 tarefas; abertas a prova no navegador (do integrador), o julgamento do MJRP e as três não entregues. `docs/specs/behavior.md`: 12 estados reescritos e 4 novos (`^home-bulk-skipped`, `^home-bulk-empty`, `^blend-series-from-address`, `^app-back-goes-back`). Manual: 00 (mapa de arquivos), 08, 11, 13, 15, 17, 19, 21 (seção 1.2), 24, 29, 99. Suíte: 1233 passando (1143 antes); `vite build` compila; `doctor.py` com os mesmos 521 erros de antes do ramo.
+
+## [2026-11-19 19:48] session — F63: os itens «Soon» do menu não navegam mais
+
+Confirmado na `main` por teste (UAT-201): By Artist, By Genre e By Track, marcados «Soon» no menu «Music Series», eram links com endereço; o ouvinte do próprio item recusava o clique, mas o roteador, que ouve todo link do app, navegava do mesmo jeito. Agora o item «Soon» não é link (`aria-disabled`, sem endereço), como o `docs/specs/behavior.md` já dizia (`^app-main`). A gaveta do celular continua com os três links, que abrem a tela «Coming Soon»: não mexido.
+
+## [2026-11-19 19:47] session — F63: Esc num diálogo responde «cancelar»; teste do título único da aba
+
+Confirmado na `main` (UAT-201, «um diálogo fechado com Esc deixa a ação pendurada»): `DialogService` tirava o diálogo da tela no Esc e a promessa de `confirm`/`prompt` nunca era resolvida. Agora o Esc, e um diálogo que toma o lugar de outro, respondem como «Cancel» (`false` / `null`). O título único da aba (metade da UAT-192, consertada pela F54 em `791da82`) ganhou o teste que não tinha: `test/architecture/oneTabTitle.test.js`.
+
+## [2026-11-19 19:45] session — F63: as receitas do blend em inglês; teste que recusa texto em português no app (UAT-192)
+
+Confirmado na `main`: 28 textos em português em `public/js/algorithms/*.js` (descrições das receitas, subtítulos das playlists geradas, descrições de curadoria), numa interface em inglês. Passados para o inglês mantendo o sentido (a lista antes → depois está no `spec.md` da F63, para o MJRP rever as palavras). Teste de arquitetura novo, `test/architecture/interfaceInEnglish.test.js`: lê toda string e template de `public/js` (pelo `espree`, sem comentários) e falha em letra acentuada do português ou palavra só do português; exceções nomeadas (`eletrônica`, `electrónica`, `Zé's`). O título da aba (a outra metade da UAT-192) já estava consertado pela F54: um título só, igual ao do `index.html`. Fora de `public/js` e não tocados: `shared/curation.js` (três subtítulos em português, código do servidor) e as páginas `public/debug-*.html`. Playlists já guardadas mantêm o subtítulo antigo: é dado gravado.
+
+## [2026-11-19 19:44] session — F63: o menu de mistura abre com a série de origem escolhida (UAT-07, UAT-192)
+
+Confirmado na `main`: `BlendingMenuView.mount` não lia o `seriesId` que o botão «Blend your Albums» põe no endereço (`/blend?seriesId=<id>`). Agora `BlendSeriesSelector.selectById` escolhe a série depois da carga e a tela já abre com o passo da receita liberado; série que não existe não escolhe nenhuma. Os cartões de série viraram botões para o teclado (`role`, `tabindex`, `aria-pressed`, Enter e espaço). `BlendingController.js` não foi tocado. Sem navegador nesta sessão.
+
+## [2026-11-19 19:44] session — F52 fatias 3 e 4 em produção; F68 em andamento
+
+Site e servidor publicados da `main` (`b7bb0cc`; revisão `mjrp-proxy-00202-ktd`, volta `mjrp-proxy-00201-kcq`). A varredura de 199 álbuns rodou contra essa revisão sem falhas. Auxiliares trabalhando: F68 (revisão das regras de identidade, com os 16 casos da varredura), F56 e F63. Pendente do MJRP: fixar uma instância no Cloud Run e aceitar a ADR-0021.
+
+## [2026-11-19 19:43] session — F63: o menu da conta abre no toque; o ✕ da faixa aparece sem mouse (UAT-13)
+
+Confirmado na `main`: o menu da conta só abria com o mouse em cima (`group-hover`), e as ações da faixa ficavam com `opacity-0` até o mouse passar. `AuthNav`: o avatar é um botão com `aria-expanded`/`aria-haspopup`; abre e fecha no toque ou clique, fecha com clique fora e Esc (o foco volta ao avatar), seta para baixo abre no primeiro item; não abre mais só por passar o mouse. `TrackRow`: as ações só ficam escondidas onde o aparelho tem mouse (`@media (hover:hover)`), e aparecem com o foco do teclado; o botão ganhou `aria-label`. Não feito, por estar fora do escopo dado (código das playlists guardadas): o olho de detalhes em `SavedPlaylistRow.js:51` e `SavedPlaylistActions.js:86`, que têm o mesmo `opacity-0 group-hover`. Sem navegador nesta sessão: como fica na tela é do integrador.
+
+## [2026-11-19 19:43] review — varredura da fonte de notas: 16 de 199 álbuns sem página pela regra exata
+
+Relatório em `reports/audits/2026-11-19-mjrpalbumblender-v0-ratings-source-sweep.md`. 183 achados, 16 `not_found`, nenhuma falha (a fila educada segurou 199 pedidos). Os 16 são, na leitura do agente, quase todos custo da regra exata na fonte (artista em outra ordem, qualificador entre parênteses, título escrito de outro jeito). Decidido pelo agente — revisável: a F68 (revisão das regras de identidade) passa na frente e começa agora, com esses 16 casos reais como base.
+
+## [2026-11-19 19:41] session — F63: colar uma lista aceita hífen no nome e pula a linha ruim avisando
+
+Confirmado na `main`: «Jay-Z - The Blueprint» virava artista «Jay» e álbum «Z - The Blueprint» (`line.split('-')`), e uma busca que quebrava numa linha abortava as outras. Um parser só para a linha colada, `parsePastedAlbumLine` em `models/albumQuery.js` (é o `parseAlbumQuery` mais o que só uma linha colada tem: marcador de lista, travessão ou tab como separador, espaço faltando de um lado do hífen), com tabela de 31 casos em `test/models/bulkPaste.test.js`. `models/bulkPaste.js` (puro) lê a lista e diz o que a tela mostra; `HomeController.handleBulkProcess` saiu de complexidade 15 para 4. A linha que não entra é pulada e listada sob a caixa (número, texto, motivo) e fica na caixa para ser corrigida; as outras seguem. Sem `alert`. A UAT-26 (`toast.warn`) já estava consertada pela F67 (`4b6aa73`) e ganhou o teste que faltava. Sem navegador nesta sessão.
+
+## [2026-11-19 19:41] session — F63: o botão voltar volta (o roteador é o dono do histórico)
+
+Ramo `fix/f63-home-and-navigation-answer`. Três armadilhas do botão voltar confirmadas na `main` e consertadas no dono: (1) a tela de álbuns acrescentava uma entrada ao entrar em `/albums/<id>` (`SeriesController.loadScope` chamava `history.pushState` por conta própria), e voltar caía de novo em `/albums/<id>`: é o «preso depois de criar uma série» da UAT-201; (2) as rotas que só mandam adiante (`/callback` do Spotify, `/album-series`, `/series`, endereço sem tela, `/`) empilhavam o destino por cima de si mesmas. O roteador ganhou `redirect` (troca a entrada) e `setAddress` (a tela muda o próprio endereço por ele); teste de arquitetura `test/architecture/historyOwnedByRouter.test.js` recusa escrita do histórico fora do roteador (três exceções conhecidas, com o motivo). A Home «morta» depois do Spotify já estava consertada pela F67 (`test/router.overlap.test.js`) e o botão «Connected» pela F50 (`test/services/spotify/SpotifyAuthSignal.test.js`). Sem navegador nesta sessão: a prova na tela fica com o integrador.
+
+## [2026-11-19 19:38] decision — F69 criada: popularidade do Spotify, falha é falha (decidido pelo agente — revisável)
+
+A proposta emendada da F52 deixou este ponto de fora. Feature de via rápida, `^REL-40`, conserta a UAT-206 (aberta agora). Criada na `main` antes de qualquer ramo, sob a dispensa do MJRP de 19:03. Servidor publicado com as fatias 3 e 4 da F52 e o conserto do artista com nota: revisão `mjrp-proxy-00202-ktd` (volta: `mjrp-proxy-00201-kcq`).
+
+## [2026-11-19 19:36] review — F52 fatias 3 e 4 provadas; defeito da F55 achado e consertado («Nirvana (US)»)
+
+Prova em `reports/evidence/F52/2026-11-19-slices-3-4-proof.md`. Achado: em produção desde a F55 fatia 1, a fonte de notas respondia «não tem» para álbuns cujo artista a fonte escreve com uma nota no fim («Nevermind by Nirvana (US)»). Consertado na regra (`artistNamesFromLabel`) e na busca da página do artista, com testes tirados da resposta real. Decidido pelo agente — revisável: o serviço do Cloud Run permite até 20 instâncias e a fila educada vale por instância; não mudei a configuração do serviço (fica para o MJRP). Depois de publicar, varrer os álbuns do MJRP atrás de outros «não tem» falsos.
 
 ## [2026-11-19 19:31] session — F59 fatia E e F61 em produção (site)
 
 Duas publicações do site da `main`: `a6092a7` (F59 fatia E: Tailwind compilado com o site, sem script de terceiro; endereços de fora conferidos) e `4e4555b` (F61: playlists guardadas rápidas; pacote `main-CVU46dC0.js`). Em produção depois da F59: nenhum pedido ao CDN do Tailwind, nenhum aviso no console, estilos aplicados. UAT-25 e UAT-186 em `fixed`. A UAT-199 já estava em `fixed`; o resto dela (endereços) foi entregue. A ADR-0021 segue `Proposed`, à espera do MJRP. Nenhuma das duas muda o servidor.
 
+## [2026-11-19 19:31] session — F52 fatias 3 e 4: documentos da feature, arquitetura, comportamento e manual
+
+No ramo `fix/f52-slices-3-4`: `spec.md` com a fatia 2 marcada como entregue pela F55, as fatias 3 e 4 como ficaram, os REQ-06 a REQ-10 com `verified_by`, a mudança de comportamento declarada e duas perguntas abertas (os números escolhidos sem medir; os fatos antigos da série); `plan.md` com a seção «Fatia 3 e medição» (onde a seção 11 valeu sobre o pedido da sessão, os módulos, a tabela de números, as alternativas, os riscos e o plano de testes); `tasks.md` com as tarefas fechadas e uma aberta para o integrador (TASK-25), além da TASK-18, que é decisão do MJRP. `docs/specs/arch.md`: a seção 12 da proposta, com o que foi construído e os seis pontos que ficam abertos. `behavior.md`: os prazos do guardado e a carga das notas em espera. Manual: `02_Server_Structure.md`, `03_Backend_API_Layer.md` (ritmo, orçamento, a linha de log e como ler no Cloud Run), `07_Frontend_Data_Infra.md`, `08_Frontend_Models.md`, `18_Frontend_Logic_Core.md`. Fora da feature, por decisão da seção 11: a popularidade do Spotify (o que a leitura do código mostrou está no plano) e a memória curta por instância.
+
+## [2026-11-19 19:31] session — F52 fatia 3, app: o «não tem» da fonte de notas leva o motivo e vale 24 horas ou 7 dias; a fonte ocupada segura a carga
+
+Ramo `fix/f52-slices-3-4`. O `AcclaimEnricher` devolve, junto do `empty`, o motivo que o servidor deu (`not_found` ou `no_ratings`; nenhum quando a resposta é do servidor de antes da F52). O motivo vai com o estado até o registro guardado no navegador (`AlbumCacheAdapter`, tabela `EMPTY_TRUST`), que passa a valer conforme ele; um «vazio» sem motivo, inclusive os registros já guardados e a popularidade, segue valendo 1 hora. Uma falha continua sem ser guardada. O «Refetch» do álbum pergunta à fonte em qualquer momento, e o `adoptAlbum` só marca as notas como `done` quando o álbum voltou com notas (antes marcava sempre, mesmo quando o pedido tinha falhado). Um 503 `upstream_busy` com `Retry-After` segura a fila das notas até a hora dita, com aviso próprio (`HoldReason.SOURCE_BUSY`); sem `Retry-After` é falha com «tentar de novo». Compatibilidade: o site novo com o servidor de hoje lê o mesmo contrato; a aba de hoje com o servidor novo lê 503 e 504 como falha que pode repetir. Sem navegador nesta sessão: conferido só por testes.
+
+## [2026-11-19 19:31] decision — por quanto tempo o app confia no «não tem» da fonte de notas: 24 horas e 7 dias (decidido pelo agente — revisável)
+
+A proposta da F52 (seção 9) deixava o número com o MJRP e propunha 7 dias para os dois casos; a seção 11 (item 4), que vale sobre ela, manda começar em 24 horas para «álbum sem página» e 7 dias só para «página conferida, sem notas». Decisão: `not_found` vale 24 horas, `no_ratings` vale 7 dias, e um «vazio» sem motivo (servidor de antes da F52, registro antigo, popularidade) segue valendo 1 hora. O «Refetch» do álbum fura o prazo. Os números moram num lugar só, `EMPTY_TRUST` em `public/js/services/albums/adapters/AlbumCacheAdapter.js`. Sobe-se o prazo do «sem página» depois de ver, no log do servidor, quantos pedidos uma segunda visita ainda faz.
+
 ## [2026-11-19 19:30] review — F61 provada pelo integrador; UAT-186 em fixed
 
 Playlists guardadas, conta do MJRP: primeira série em 0,26 s e lista inteira em 0,79 s (antes, hoje, 4,6 s; 20 s na regressão). Prova em `reports/evidence/F61/2026-11-19-saved-playlists-timing.md`. Proposta de modelo de dados do auxiliar (resumo dos lotes no documento da série) fica anotada no `plan.md` da F61, não feita.
+
+## [2026-11-19 19:30] session — F52 fatia 3, servidor: orçamento de tempo, fila educada com a fonte de notas, um pedido por álbum de cada vez, e a linha de log da medição
+
+Ramo `fix/f52-slices-3-4`. Três módulos novos, cada um com um trabalho e com o relógio injetado: `server/lib/politeQueue.js` (o dono do ritmo com a fonte raspada), `server/lib/timeBudget.js` (o tempo total de um pedido) e `server/lib/inFlight.js` (pedidos iguais simultâneos dividem um trabalho; nada fica guardado). O raspador (`besteveralbums.js`) entrega cada requisição à fila pelo `getPage` único, com prazo de 8 s (era 30 s), para de perguntar quando o tempo do pedido acaba e não pede o mesmo endereço duas vezes no mesmo pedido. O `EnrichmentService` dá 15 s a cada pedido de notas (o app espera 20 s) e responde `upstream_timeout` no fim; quando a fonte pede uma espera que não cabe, responde 503 `upstream_busy` com `Retry-After`. A rota escreve uma linha de log por pedido (`how`, `answer`, `ms`, `sourceRequests`), sem dado de pessoa nem de álbum. Números decididos pelo agente, revisáveis, sem medição da fonte: 2 requisições por vez, 250 ms entre inícios, espera de 1 s dobrando até 30 s no 429 e no 503, 3 tentativas, `Retry-After` cortado em 5 minutos. Tudo por instância do servidor. Pela seção 11 da proposta (item 10), a memória curta por instância não foi construída. Conferido num servidor de verdade, em cópia local: dois pedidos iguais deram `source` (3 requisições, 2,0 s) e `joined`; um álbum inventado deu `not_found` com 4 requisições. Foram 7 requisições ao BestEverAlbums no total.
 
 ## [2026-11-19 19:28] review — F59 fatia E provada pelo integrador (Tailwind compilado; endereços conferidos)
 

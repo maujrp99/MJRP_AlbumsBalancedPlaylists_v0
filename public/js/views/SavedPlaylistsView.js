@@ -9,6 +9,7 @@
  */
 
 import { BaseView } from './BaseView.js'
+import { router } from '../router.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import { SavedPlaylistsController } from '../components/playlists/SavedPlaylistsController.js'
@@ -289,7 +290,7 @@ export class SavedPlaylistsView extends BaseView {
             SafeDOM.p({}, 'Generate and save playlists in your series to see them here.'),
             SafeDOM.button({
                 className: 'btn btn-primary mt-4',
-                onClick: () => window.location.hash = '/home'
+                onClick: () => router.navigate('/home')
             }, 'Create Series')
         ])
     }

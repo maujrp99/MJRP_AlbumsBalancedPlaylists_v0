@@ -106,7 +106,7 @@ export default class SeriesView extends BaseView {
 
         // 4. Initial Load
         if (this.controller) {
-            await this.controller.loadScope(this.currentScope, this.targetSeriesId);
+            await this.controller.loadScope(this.currentScope, this.targetSeriesId, false, { entering: true });
         }
         console.log('[SeriesView] Mounted ✅');
     }

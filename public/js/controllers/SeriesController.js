@@ -24,6 +24,10 @@ import { decodeEntities } from '../models/text.js';
 import { paginate, takeFirst, normalizePageSize, PagingMode } from '../models/paging.js';
 import { AlbumStatus } from '../models/albumLoadState.js';
 import toast from '../components/Toast.js';
+import { router } from '../router.js';
+
+/** The address of the albums screen at a scope: one series, or all of them. */
+const scopeAddress = (seriesId) => (seriesId ? `/albums?seriesId=${seriesId}` : '/albums');
 
 export default class SeriesController {
     constructor() {
@@ -115,18 +119,17 @@ export default class SeriesController {
      * @param {'ALL'|'SINGLE'} scopeType
      * @param {string|null} seriesId
      * @param {boolean} skipCache - search everything again (the Refresh button)
+     * @param {{ entering?: boolean }} [options] - entering: the screen has just been opened at this
+     *        scope, so its address is only rewritten the canonical way (no history entry: F63)
      */
-    async loadScope(scopeType, seriesId = null, skipCache = false) {
+    async loadScope(scopeType, seriesId = null, skipCache = false, { entering = false } = {}) {
         console.log(`[SeriesController] loadScope: ${scopeType}, seriesId=${seriesId}`);
 
         this.state.currentScope = scopeType;
         this.state.targetSeriesId = seriesId;
 
-        // Update URL without reload
-        const newUrl = seriesId ? `/albums?seriesId=${seriesId}` : '/albums';
-        if (window.location.pathname + window.location.search !== newUrl) {
-            window.history.pushState({}, '', newUrl);
-        }
+        // The address follows the scope, through the router (the one owner of the history)
+        router.setAddress(scopeAddress(seriesId), { replace: entering });
 
         albumSeriesStore.setActiveSeries(scopeType === 'ALL' ? null : seriesId);
         albumsStore.setActiveAlbumSeriesId(scopeType === 'ALL' ? ALL_SERIES_CONTEXT : seriesId);

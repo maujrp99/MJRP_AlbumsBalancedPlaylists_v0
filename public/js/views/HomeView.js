@@ -83,9 +83,12 @@ export class HomeView extends BaseView {
             SafeDOM.textarea({
                 id: 'bulkPasteInput',
                 className: 'w-full h-32 bg-black/50 border border-white/10 rounded-lg p-3 text-xs text-mono text-white focus:border-orange-500 focus:outline-none custom-scrollbar resize-none',
-                placeholder: 'Paste: Artist - Album\nOne per line...'
+                placeholder: 'Paste: Artist - Album\nOne per line...',
+                'aria-describedby': 'bulkPasteReport'
             }),
-            parseBtn
+            parseBtn,
+            // The lines that did not go in, each with its number and the reason (F63)
+            SafeDOM.div({ id: 'bulkPasteReport', className: 'hidden mt-3 rounded-lg border border-orange-500/40 bg-orange-500/10 p-3 text-xs text-orange-100', role: 'status', 'aria-live': 'polite' })
         ]);
 
         const techPanel = SafeDOM.div({ id: 'home-tech-panel', className: 'tech-panel rounded-xl p-0 border border-white/10 bg-black/40 relative overflow-hidden' }, [
@@ -227,6 +230,53 @@ export class HomeView extends BaseView {
             visualInputs.classList.add('hidden');
         }
 
+    }
+
+    /**
+     * "Process List" while the list is searched: busy, and not to be clicked again.
+     * @param {boolean} busy
+     */
+    setBulkBusy(busy) {
+        const btn = this.$('#btnProcessBulk');
+        if (!btn) return;
+        btn.disabled = busy;
+        if (busy) btn.setAttribute('aria-busy', 'true');
+        else btn.removeAttribute('aria-busy');
+        const label = btn.querySelector('span');
+        if (label) {
+            label.textContent = busy ? 'Processing…' : 'Process List';
+            label.classList.toggle('animate-pulse', busy);
+        }
+    }
+
+    /**
+     * The border of the box says whether every pasted line is an album.
+     * @param {'empty'|'valid'|'invalid'} state - models/bulkPaste.js, bulkInputState
+     */
+    setBulkInputState(state) {
+        const input = this.$('#bulkPasteInput');
+        if (!input) return;
+        input.classList.toggle('border-white/10', state === 'empty');
+        input.classList.toggle('border-green-500', state === 'valid');
+        input.classList.toggle('bg-green-900/10', state === 'valid');
+        input.classList.toggle('border-orange-500', state === 'invalid');
+    }
+
+    /**
+     * The lines of the pasted list that did not go in, under the box. An empty list hides it.
+     * @param {Array<{ line: number, text: string, why: string }>} report - models/bulkPaste.js, bulkOutcome
+     */
+    renderBulkReport(report) {
+        const box = this.$('#bulkPasteReport');
+        if (!box) return;
+        SafeDOM.clear(box);
+        box.classList.toggle('hidden', report.length === 0);
+        if (report.length === 0) return;
+
+        box.appendChild(SafeDOM.p({ className: 'font-bold mb-1' }, `Skipped lines (${report.length})`));
+        box.appendChild(SafeDOM.ul({ className: 'space-y-1 list-disc pl-4' },
+            report.map(item => SafeDOM.li({}, `Line ${item.line}: «${item.text}» — ${item.why}`))
+        ));
     }
 
     /**

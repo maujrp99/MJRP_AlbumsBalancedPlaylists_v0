@@ -22,7 +22,7 @@ The application uses a mix of **Singleton Classes**, **Functional Modules**, and
 | **`PlaylistHistoryService`** [NEW] | **Feature Service** | Manages the Undo/Redo stack and snapshot versioning for playlists. Pure logic, injected into `PlaylistsService`. |
 | **`UserSyncService`** [NEW] | **Feature Service** | Handles complexity of migrating Guest data to User account upon authentication. Injected into `SeriesService`. |
 | **`BEAEnrichmentHelper`** [NEW] | **Helper Module** | Encapsulates BestEverAlbums enrichment logic (fetching, parsing scores) to keep `SeriesService` clean. |
-| **`DialogService`** | **Singleton** | Manages global modal state. Provides a simple imperative API (`.alert()`, `.confirm()`, `.prompt()`) over the declarative `BaseModal` system. |
+| **`DialogService`** | **Singleton** | Manages global modal state. Provides a simple imperative API (`.alert()`, `.confirm()`, `.prompt()`) over the declarative `BaseModal` system. One dialog at a time; Escape, or another dialog taking its place, answers the pending one as cancelled (`false` for `confirm`, `null` for `prompt`: F63; before, the caller waited for ever). |
 
 ---
 
