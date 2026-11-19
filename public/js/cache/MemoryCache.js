@@ -32,6 +32,19 @@ export class MemoryCache {
     }
 
     /**
+     * Read a value and change nothing: an expired entry answers null and stays where it is.
+     * For a read-only pass over the cache (the album identity count, F55).
+     * @param {string} key - Cache key
+     * @returns {Promise<any|null>}
+     */
+    async peek(key) {
+        if (!this.store.has(key)) return null
+        const meta = this.metadata.get(key)
+        if (meta && meta.expiresAt && Date.now() > meta.expiresAt) return null
+        return this.store.get(key)
+    }
+
+    /**
      * Set value in cache
      * @param {string} key - Cache key
      * @param {any} value - Value to cache

@@ -68,6 +68,20 @@ export class CacheManager {
     }
 
     /**
+     * Read a value and change nothing: memory first, then IndexedDB, with no copy from one to the
+     * other and no removal of what has expired. For a read-only pass (the album identity count, F55).
+     * @param {string} key - Cache key
+     * @returns {Promise<any|null>}
+     */
+    async peek(key) {
+        await this.init()
+
+        const inMemory = await this.l1.peek(key)
+        if (inMemory !== null) return inMemory
+        return this.l2Available ? this.l2.peek(key) : null
+    }
+
+    /**
      * Set value in cache (both L1 and L2)
      * @param {string} key - Cache key
      * @param {any} value - Value to cache

@@ -3,6 +3,21 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 18:08] session — F55 fatia 1, app: cada lugar que aceita um álbum pergunta à regra única; contagem só-leitura do que está trocado (UAT-184)
+
+Segunda parte da fatia 1 da F55, no ramo `fix/f55-one-album-identity-rule`: os lugares do app que aceitam um álbum passam a perguntar à regra única (`shared/albumIdentity.js`).
+
+- **`public/js/models/askedAlbum.js`** (novo): lê a consulta guardada (o pedido) e o que cada fonte devolve (o candidato) nos mesmos três campos. Entrou no lugar de `models/AlbumIdentity.js`, a nota de semelhança em que o artista certo bastava, que foi removida.
+- **Catálogo da Apple Music** (`CatalogAdapter.js`, e o caminho antigo em `api/client.js`): a regra escolhe entre os resultados da busca, em vez de valer o primeiro. O teste novo reproduziu a UAT-184 no código antigo: com «Shangri-La Dee Da» primeiro nos resultados, «Core» pedido carregava «Shangri-La Dee Da».
+- **Identificador guardado:** o álbum a que ele leva é conferido pela regra. Se for outro álbum, o álbum é buscado pelo nome, e o resultado traz `metadata.replacedSourceId`. Nada é gravado na série (é a fatia 2).
+- **Spotify** (`SpotifyService.js`): três buscas só listam candidatos; a regra aceita um ou nenhum. Saíram «um título contém o outro», o primeiro resultado como reserva e a nota por distância de edição.
+- **Dados locais de capa** (`OptimizedAlbumLoader.js`): a linha do álbum pedido, ou nada; a primeira linha da busca não serve mais de reserva.
+- **Resposta da busca por IA** (`api/client.js`): conferida pela regra; outro álbum vira «o servidor não tem», sem nova chamada paga.
+- **Contagem só-leitura** (`services/albums/albumIdentityAudit.js`): para cada álbum pedido nas séries, o álbum que o app tem e o veredito. Pelo console, com a conta do dono: `await albumIdentityAudit()`. Lê por `peek` (novo nos guardados): não promove nem apaga nada.
+- **Função de aptidão** (`test/architecture/albumIdentityRule.test.js`): falha se um desses lugares deixar de perguntar à regra ou voltar a comparar texto.
+- Saíram também, por não terem mais quem use: as funções de semelhança e de chave de `utils/stringUtils.js`, os normalizadores de álbum e artista de `utils/NormalizationUtils.js`, e `extractArtist`/`extractAlbum` de `api/client.js`.
+- `npx vitest run`: 919 testes; `npx vite build` compila. **Não visto num navegador** (o auxiliar não tem um). Mudança de comportamento: um álbum cujo título guardado difere do título do catálogo por um qualificador que não é edição passa a «não encontrado».
+
 ## [2026-11-19 18:07] session — F55 fatia 1, regra e servidor: uma regra só diz «este é o álbum pedido», e o raspador pergunta a ela (UAT-184)
 
 Ramo `fix/f55-one-album-identity-rule`, da ponta da `main` local. Primeira parte da fatia 1 da F55 (UAT-184: a série pedia «Stone Temple Pilots - Core» e mostrava «Shangri-La Dee Da»).

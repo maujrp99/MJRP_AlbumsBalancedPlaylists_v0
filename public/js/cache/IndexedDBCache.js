@@ -86,6 +86,28 @@ export class IndexedDBCache {
     }
 
     /**
+     * Read a value and change nothing: an expired record answers null and is NOT deleted.
+     * For a read-only pass over the cache (the album identity count, F55).
+     * @param {string} key - Cache key
+     * @returns {Promise<any|null>}
+     */
+    async peek(key) {
+        await this.ensureInit()
+
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([this.storeName], 'readonly')
+            const request = transaction.objectStore(this.storeName).get(key)
+
+            request.onsuccess = () => {
+                const record = request.result
+                const expired = record?.expiresAt && Date.now() > record.expiresAt
+                resolve(record && !expired ? record.value : null)
+            }
+            request.onerror = () => reject(request.error)
+        })
+    }
+
+    /**
      * Set value in cache
      * @param {string} key - Cache key
      * @param {any} value - Value to cache

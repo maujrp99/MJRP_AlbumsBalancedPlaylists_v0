@@ -6,7 +6,7 @@
  */
 
 import { Album } from '../../../models/Album.js'
-import { AlbumIdentity } from '../../../models/AlbumIdentity.js'
+import { askedAlbum, appleCandidate, compareAlbumIdentity, pickAlbum } from '../../../models/askedAlbum.js'
 import { parseAlbumQuery, plainAlbumQuery } from '../../../models/albumQuery.js'
 import { TrackTransformer } from '../../../transformers/TrackTransformer.js'
 import { AlbumNotFoundError } from '../AlbumLoadService.js'
@@ -86,34 +86,36 @@ export class CatalogAdapter {
     }
 
     /**
-     * The chosen edition, or null when Apple Music no longer has that id here (it answers 404 for an
-     * edition of another storefront, or one that was withdrawn): then the album is searched by name.
+     * The chosen edition, or null when the stored id does not lead to the album asked for: Apple
+     * Music no longer has that id here (it answers 404 for an edition of another storefront, or one
+     * that was withdrawn), or the id leads to ANOTHER album (F55: the stored id does not win over
+     * what was asked). Then the album is searched by name.
      * Any other failure is a failed call and is thrown, to be retried.
      */
-    async _detailsOfChosen(appleId) {
+    async _detailsOfChosen(appleId, query) {
+        let details
         try {
-            return await this.musicKit.getAlbumDetails(appleId)
+            details = await this.musicKit.getAlbumDetails(appleId)
         } catch (error) {
             if (isNotFound(error)) return null
             throw error
         }
+        if (!details) return null
+        if (compareAlbumIdentity(askedAlbum(query), details).same) return details
+
+        console.warn(`[CatalogAdapter] the stored id ${appleId} leads to "${details.artist} - ${details.title}", not to "${this._label(query)}": searching by name`)
+        return null
     }
 
-    /** Search by name and keep the result only if it is the album asked for. */
+    /**
+     * Search by name and keep a result only if it is the album asked for, by the one identity rule
+     * (the results come scored, standard editions first; the rule picks among those that pass).
+     */
     async _searchInApple(query) {
-        const { artist, title } = parseAlbumQuery(query)
-        const candidates = await this.musicKit.searchAlbums(artist, title, 5)
-        if (!candidates || candidates.length === 0) return null
-
-        const selected = candidates[0] // already scored: standard editions first
-        const identity = new AlbumIdentity(query, {
-            title: selected.attributes?.name,
-            artist: selected.attributes?.artistName,
-            appleId: selected.id
-        })
-        if (!identity.isValid()) return null
-
-        return this.musicKit.getAlbumDetails(selected.id)
+        const asked = askedAlbum(query)
+        const candidates = await this.musicKit.searchAlbums(asked.artist, asked.title, 5)
+        const picked = pickAlbum(asked, candidates, appleCandidate)
+        return picked.found ? this.musicKit.getAlbumDetails(picked.candidate.id) : null
     }
 
     _label(query) {
@@ -135,11 +137,17 @@ export class CatalogAdapter {
 
     /** @returns {Promise<Album|null>} null when Apple Music has nothing that matches the query */
     async _findInApple(query) {
-        // The series keeps the id of the edition the person chose: load exactly that one, in one call.
-        // Only a query without it (typed or pasted as text) is searched by name.
+        // The series keeps the id of the edition the person chose: load exactly that one, in one call,
+        // and check that it is the album asked for. A query without an id (typed or pasted as text),
+        // or whose id leads elsewhere, is searched by name.
         const chosenId = (typeof query === 'object' && query !== null) ? query.appleMusicId : null
-        const full = (chosenId && await this._detailsOfChosen(chosenId)) || await this._searchInApple(query)
+        const chosen = chosenId ? await this._detailsOfChosen(chosenId, query) : null
+        const full = chosen || await this._searchInApple(query)
         if (!full) return null
+
+        // The seam for writing the corrected id back to the series (F55, slice 2): the album says
+        // which stored id it did NOT come from. Nothing is written to the series here.
+        const replaced = (chosenId && !chosen) ? { replacedSourceId: chosenId } : {}
 
         const id = this.generateAlbumId({ title: full.title, artist: full.artist })
         const context = { artist: full.artist, album: full.title, albumId: id }
@@ -164,7 +172,7 @@ export class CatalogAdapter {
             coverUrl: this.musicKit.getArtworkUrl(full.artworkTemplate, 600),
             tracks: [...tracks],
             tracksOriginalOrder: [...tracks].sort((a, b) => discPosition(a) - discPosition(b)),
-            metadata: { source: 'Apple Music', sourceId: full.id }
+            metadata: { source: 'Apple Music', sourceId: full.id, ...replaced }
         })
     }
 }

@@ -1,12 +1,12 @@
 import axios from 'axios'
 import { serverFetch } from './serverFetch.js'
 import { Album } from '../models/Album.js'
-import { AlbumIdentity } from '../models/AlbumIdentity.js'
+import { askedAlbum, appleCandidate, compareAlbumIdentity, pickAlbum } from '../models/askedAlbum.js'
+import { plainAlbumQuery } from '../models/albumQuery.js'
 import { albumCache } from '../cache/albumCache.js'
 import { albumLoader } from '../services/AlbumLoader.js'
 import { musicKitService } from '../services/MusicKitService.js'
 import { TrackTransformer } from '../transformers/TrackTransformer.js'
-import { SIMILARITY_THRESHOLD } from '../utils/stringUtils.js'
 import { retryWithBackoff } from '../utils/retry.js'
 import { readServerResult, failedWithoutAnswer, ApiError, ResultKind } from './serverResult.js'
 
@@ -14,7 +14,8 @@ import { readServerResult, failedWithoutAnswer, ApiError, ResultKind } from './s
  * API Client
  * Wrapper for backend API calls with retry logic and caching
  * 
- * CRIT-5: Added AlbumIdentity validation to prevent wrong albums from being cached
+ * An album is accepted only when it is the album asked for, by the one identity rule
+ * (shared/albumIdentity.js, F55): the Apple Music search result and the answer of the AI search.
  */
 
 const API_BASE = window.__api_base || '/api'
@@ -54,39 +55,16 @@ export class APIClient {
         // 2. Sprint 7.5: Try Apple Music + Enrichment First
         try {
 
-            // Extract Artist/Album from query for better search
-            const artist = this.extractArtist(query)
-            const albumName = this.extractAlbum(query)
+            // The catalog is asked with plain text; what is accepted is decided by the one identity rule
+            const asked = askedAlbum(plainAlbumQuery(query))
 
-            // Search (limit 5 to allow scoring/filtering for best edition)
-            const appleAlbums = await musicKitService.searchAlbums(artist, albumName, 5)
+            // Search (limit 5: the results come scored, standard editions first)
+            const appleAlbums = await musicKitService.searchAlbums(asked.artist, asked.title, 5)
+            const picked = pickAlbum(asked, appleAlbums, appleCandidate)
 
-            if (appleAlbums && appleAlbums.length > 0) {
-                // First result is already scored/sorted by searchAlbums (standard editions prioritized)
-                const selected = appleAlbums[0]
-                const appleId = selected.id
-
-                // CRIT-5a: Validate album match before processing
-                const identity = new AlbumIdentity(query, {
-                    title: selected.attributes?.name,
-                    artist: selected.attributes?.artistName,
-                    appleId: appleId
-                })
-
-                if (!identity.isValid()) {
-                    console.warn(
-                        `Album "${selected.attributes?.name}" by "${selected.attributes?.artistName}" (Apple ID: ${appleId}) did not match query "${query}". ` +
-                        `(${(identity.matchConfidence * 100).toFixed(0)}% match to "${albumName}")`
-                    )
-
-                    // Fallback to legacy API
-                    return this._fetchAlbumFromAPI(query)
-                }
-
-                //console.log( `Album "${selected.attributes?.name}" by "${selected.attributes?.artistName}" (Apple ID: ${appleId}) matched query "${query}". ` +`(${(identity.matchConfidence * 100).toFixed(0)}% confidence)`)
-
+            if (picked.found) {
                 // Get Full Details (Tracks)
-                const fullAlbum = await musicKitService.getAlbumDetails(appleId)
+                const fullAlbum = await musicKitService.getAlbumDetails(picked.candidate.id)
 
                 if (fullAlbum) {
                     // 3. Enrich with Rankings (Backend)
@@ -271,7 +249,23 @@ export class APIClient {
         if (result.kind === ResultKind.NOT_FOUND) return null
         // The server before F52 answered the album itself, or { data: album }
         const data = result.kind === ResultKind.LEGACY ? (result.body?.data || result.body) : result.data
+        if (!this._isTheAlbumAskedFor(query, data)) return null
         return this.normalizeAlbumData(data)
+    }
+
+    /**
+     * The AI search answers with whatever album it believes in. It is accepted only when it is the
+     * album asked for, by the one identity rule (F55); another album of the artist is "the server
+     * has no such album", and the paid call is not made again.
+     * @private
+     */
+    _isTheAlbumAskedFor(query, data) {
+        const answered = { artist: data?.artist, title: data?.title || data?.album, year: data?.year }
+        const verdict = compareAlbumIdentity(askedAlbum(plainAlbumQuery(query)), answered)
+        if (!verdict.same) {
+            console.warn(`[APIClient] the AI search answered "${answered.artist} - ${answered.title}", which is not the album asked for (${verdict.reason}): not accepted`)
+        }
+        return verdict.same
     }
 
     /**
@@ -409,53 +403,6 @@ export class APIClient {
                 metadata: track.metadata || {}
             }))
         }))
-    }
-
-    /**
-     * Extract artist from query string
-     * @param {string} query - Album query
-     * @returns {string} Artist name
-     * @private
-     */
-    extractArtist(query) {
-        if (typeof query === 'object' && query !== null) {
-            // FIX: If artist is missing but title has " - ", try to extract from title
-            if (query.artist) return query.artist;
-            const titleField = query.title || query.album;
-            if (titleField && titleField.includes(' - ')) {
-                return titleField.split(' - ')[0].trim();
-            }
-            return '';
-        }
-        if (query && query.includes(' - ')) {
-            return query.split(' - ')[0].trim()
-        }
-        return ''
-    }
-
-    /**
-     * Extract album from query string
-     * @param {string} query - Album query
-     * @returns {string} Album name
-     * @private
-     */
-    extractAlbum(query) {
-        if (typeof query === 'object' && query !== null) {
-            const val = query.title || query.album || ''
-            // FIX: If value has " - " and artist was inferred from it, we should take the second part
-            // But we must be careful. Usually title is just title. 
-            // However, if the query object was constructed from a string "Artist - Album", 
-            // it might be put into 'title' field by SeriesController?
-            // Yes: SeriesController line 154: return { title: q, ... } where q is "Artist - Album"
-            if (val.includes(' - ') && !query.artist) {
-                return val.split(' - ')[1].trim()
-            }
-            return val;
-        }
-        if (query && query.includes(' - ')) {
-            return query.split(' - ')[1].trim()
-        }
-        return query ? query.trim() : ''
     }
 
     /**

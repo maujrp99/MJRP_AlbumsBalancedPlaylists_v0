@@ -18,7 +18,8 @@ import { applyBEAData } from '../../helpers/BEAEnrichmentHelper.js'
 import { applyEnrichmentToAlbum } from '../../helpers/SpotifyEnrichmentHelper.js'
 import { userRankingRepository } from '../../repositories/UserRankingRepository.js'
 import { AlbumLoadService } from './AlbumLoadService.js'
-import { holdNotice } from '../../models/albumLoadState.js'
+import { holdNotice, queryKey } from '../../models/albumLoadState.js'
+import { auditAlbumIdentity } from './albumIdentityAudit.js'
 import { SeriesFactsService } from '../series/SeriesFactsService.js'
 import { getSeriesService } from '../SeriesService.js'
 import { CatalogAdapter } from './adapters/CatalogAdapter.js'
@@ -78,6 +79,25 @@ export const albumLoadService = new AlbumLoadService({
     cache: albumCachePort,
     onHold: showHoldNotice
 })
+
+/**
+ * F55: how many albums of the signed-in person's series are not the album asked for, today.
+ * READ-ONLY: it reads the series already in memory, the album of each query from the load of this
+ * session or, failing that, from what the browser keeps (peek: nothing is promoted or removed),
+ * and compares the two by the one identity rule. It writes nothing and asks no source.
+ * From the browser console, signed in and with the series on screen: `await albumIdentityAudit()`.
+ * @returns {Promise<{ rows: Array, summary: Object }>} also printed as a table
+ */
+export const countWrongAlbums = async () => {
+    const report = await auditAlbumIdentity({
+        series: albumSeriesStore.getSeries(),
+        shownFor: async (query, series) =>
+            albumLoadStore.getEntry(series.id, queryKey(query))?.album || albumCachePort.peek(query)
+    })
+    console.table(report.rows)
+    console.log('[album identity] asked, same, different, with nothing kept to compare:', report.summary)
+    return report
+}
 
 /** What the "Clear Cache" button does: stop the load and forget what the browser keeps about albums. */
 export const clearAppAlbumCaches = () => clearAlbumCaches({
