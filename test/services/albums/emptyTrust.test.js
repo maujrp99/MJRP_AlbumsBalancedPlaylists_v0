@@ -7,6 +7,11 @@
  *   no_ratings  the page was read and has no rating       7 days
  *   (no reason) an answer of the server before F52, or a source that gives no reason: 1 hour, as before
  * A failure is never kept. "Refetch" asks the source whatever the record says.
+ *
+ * F68: "no page" is decided by the identity rule of the server, and the rule changes. The server
+ * stamps its "not_found" with the version of its rule; the stamp travels with the reason to the
+ * record, and a "no page" decided with another version (or with none: a record of before F68) is
+ * not believed: the source is asked again.
  */
 import { describe, it, expect, vi } from 'vitest'
 import { Album } from '../../../public/js/models/Album.js'
@@ -15,6 +20,7 @@ import { AlbumCacheAdapter, EMPTY_TRUST } from '../../../public/js/services/albu
 import { AlbumLoadService } from '../../../public/js/services/albums/AlbumLoadService.js'
 import { AlbumLoadStore } from '../../../public/js/stores/albumLoad.js'
 import { queryKey } from '../../../public/js/models/albumLoadState.js'
+import { IDENTITY_RULE_VERSION } from '../../../shared/albumIdentity.js'
 
 const HOUR = 60 * 60 * 1000
 const DAY = 24 * HOUR
@@ -40,6 +46,14 @@ describe('AcclaimEnricher: "the source has none" says why', () => {
     it.each(['not_found', 'no_ratings'])('%s is empty with that reason', async (kind) => {
         const result = await enricherFor({ kind, data: { bestEverInfo: null, trackRatings: [] } }).enrich(makeAlbum())
         expect(result).toMatchObject({ status: 'empty', reason: kind })
+    })
+
+    it('"not_found" carries the version of the rule the server decided it with; the server before F68 sends none', async () => {
+        const stamped = await enricherFor({ kind: 'not_found', data: { bestEverInfo: null, trackRatings: [], identityRule: 7 } }).enrich(makeAlbum())
+        const unstamped = await enricherFor({ kind: 'not_found', data: { bestEverInfo: null, trackRatings: [] } }).enrich(makeAlbum())
+
+        expect(stamped).toMatchObject({ status: 'empty', reason: 'not_found', rule: 7 })
+        expect(unstamped).toMatchObject({ status: 'empty', reason: 'not_found', rule: null })
     })
 
     it('an empty answer of the server before F52 gives no reason: it may have been a failure', async () => {
@@ -71,7 +85,7 @@ describe('AlbumCacheAdapter: "empty" is believed for a time that depends on the 
         const built = build()
         const album = makeAlbum()
         await built.adapter.saveBase('Artist - Album', album)
-        await built.adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'empty', reason ? { reason } : undefined)
+        await built.adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'empty', reason ? { reason, rule: IDENTITY_RULE_VERSION } : undefined)
         return built
     }
     const acclaimAfter = async ({ adapter, clock }, ms) => {
@@ -111,6 +125,53 @@ describe('AlbumCacheAdapter: "empty" is believed for a time that depends on the 
 
         expect(await acclaimAfter(built, 30 * 60 * 1000)).toBe('empty')
         expect(await acclaimAfter(built, 31 * 60 * 1000)).toBeUndefined()
+    })
+
+    describe('"no page" is believed only when it was decided with the identity rule of today (F68)', () => {
+        const notFoundSavedWith = async (options) => {
+            const built = build()
+            const album = makeAlbum()
+            await built.adapter.saveBase('Artist - Album', album)
+            await built.adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'empty', { reason: 'not_found', ...options })
+            return built
+        }
+        const savedAcclaim = ({ backing }) => [...backing.values()][0].enrichment.acclaim
+
+        it('the record keeps the version next to the reason', async () => {
+            const built = await notFoundSavedWith({ rule: IDENTITY_RULE_VERSION })
+
+            expect(savedAcclaim(built)).toEqual({ status: 'empty', at: 1000, reason: 'not_found', rule: IDENTITY_RULE_VERSION })
+            expect(await acclaimAfter(built, HOUR)).toBe('empty')
+        })
+
+        it('decided with an older rule: not believed, the source is asked again at once', async () => {
+            const built = await notFoundSavedWith({ rule: IDENTITY_RULE_VERSION - 1 })
+
+            expect(await acclaimAfter(built, 1)).toBeUndefined()
+        })
+
+        it('with no version (a record of before F68, or the server before F68): not believed', async () => {
+            const built = await notFoundSavedWith({})
+
+            expect(savedAcclaim(built)).toEqual({ status: 'empty', at: 1000, reason: 'not_found' })
+            expect(await acclaimAfter(built, 1)).toBeUndefined()
+        })
+
+        it('the album itself stays: only the ratings are asked again', async () => {
+            const built = await notFoundSavedWith({})
+
+            expect((await built.adapter.get('Artist - Album')).album.title).toBe('Album')
+        })
+
+        it('"page without ratings" does not depend on the rule: it keeps its 7 days, with no version', async () => {
+            const built = build()
+            const album = makeAlbum()
+            await built.adapter.saveBase('Artist - Album', album)
+            await built.adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'empty', { reason: 'no_ratings', rule: IDENTITY_RULE_VERSION - 1 })
+
+            expect(savedAcclaim(built)).toEqual({ status: 'empty', at: 1000, reason: 'no_ratings' })
+            expect(await acclaimAfter(built, 6 * DAY)).toBe('empty')
+        })
     })
 
     it('"done" does not expire with these times, and its record carries no reason', async () => {
@@ -164,6 +225,12 @@ describe('AlbumLoadService: the reason reaches the record, and a failure never d
         await load(service)
         expect(acclaimSaves(cache)).toHaveLength(1)
         expect(acclaimSaves(cache)[0].slice(3)).toEqual(['empty', { reason }])
+    })
+
+    it('the version of the rule the server decided "not_found" with reaches the record', async () => {
+        const { service, cache } = build({ enrich: async (album) => ({ status: 'empty', reason: 'not_found', rule: 7, album }) })
+        await load(service)
+        expect(acclaimSaves(cache)[0].slice(3)).toEqual(['empty', { reason: 'not_found', rule: 7 }])
     })
 
     it('an empty answer with no reason is saved with none', async () => {

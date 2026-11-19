@@ -98,35 +98,36 @@ Wraps Firebase Auth for the browser: `signInWithGoogle()`, `signInWithApple()`, 
 
 ---
 
-## 3. The album identity rule: `shared/albumIdentity.js` - v5.0 (F55, slices 1 and 2)
-**Status**: `[ACTIVE]`. Slice 1 is published (2026-11-19). Slice 2 (the second tier) is on the branch `fix/f55-identity-slice-2` (2026-11-19); not yet published.
+## 3. The album identity rule: `shared/albumIdentity.js` - v5.0 (F55; reviewed in F68)
+**Status**: `[ACTIVE]`. F55 (slices 1 and 2) is published (2026-11-19). The review of F68 is on the branch `fix/f68-album-identity-rules-reviewed` (2026-11-19); not yet published.
 **Type**: Domain rule, pure (it imports nothing).
 
-**Purpose**: the ONE answer to "is this the album that was asked for?" (issue UAT-184). The app imports it through `public/js/models/askedAlbum.js`; the server loads it through `server/lib/albumIdentity.js` (dynamic `import()`, as it does for `normalize.js`).
+**Purpose**: the ONE answer to "is this the album that was asked for?" (issues UAT-184, UAT-205). The app imports it through `public/js/models/askedAlbum.js`; the server loads it through `server/lib/albumIdentity.js` (dynamic `import()`, as it does for `normalize.js`). The file reads top to bottom, in the order a comparison runs: normalization, the artist, the title (edition notes, first tier, second tier), one comparison, the choice among candidates, the readers of source labels, the search texts. Its header has the table of every reason with a real example, "How to add a rule" and where a rule for one genre would plug in.
 
 *   **What it exports**:
-    *   `compareAlbumIdentity(asked, candidate)` -> `{ verdict: 'same' | 'same-if-alone' | 'different', same, reason }`. Both sides are `{ artist, title, year? }`. `same` is true only for the verdict `same`. `reason` is one of `exact-title`, `edition-of-title`, `artist-and-title-in-one-text`, `title-before-subtitle` (the second tier), `title-missing`, `title-mismatch`, `artist-mismatch`.
+    *   `compareAlbumIdentity(asked, candidate)` -> `{ verdict: 'same' | 'same-if-alone' | 'different', same, reason }`. Both sides are `{ artist, title, year? }`. `same` is true only for the verdict `same`. `reason` is one of `Reason`: `exact-title`, `edition-of-title`, `artist-and-title-in-one-text` (first tier); `title-before-subtitle`, `title-without-parentheses`, `title-in-parentheses`, `title-with-artist-name`, `title-written-otherwise` (second tier); `title-missing`, `title-mismatch`, `artist-mismatch`.
     *   `pickAlbum(asked, candidates, read)` -> `{ found, candidate, index, verdict }`. `read` turns a candidate of the source into `{ artist, title, year? }` (or a list of readings). No candidate passes: `found: false`. There is no "closest album". The verdict of a found album is always `same`; its reason says how it was accepted.
-    *   `compareKeptAlbum(asked, kept)` (slice 2): the same question for an album that is KEPT (a cache record, the album on screen), which has no candidates beside it. `kept` is `{ artist, title, identityReason? }`; the second tier is believed only when `identityReason` is the reason a pick left on the album.
-    *   `sameArtist(a, b)`, for a source that lists artists; `albumFromLabel(label)`, for a label written "Title by Artist".
-*   **The rule**:
-    1.  The **title** must match on its own, whole. One title containing the other is not a match ("Core" is not "Core Memories").
-    2.  The **artist** must match. A query with no artist is decided by the title alone.
-    3.  The **year** never rejects (a reissue carries another year); it only orders the candidates that passed.
-    4.  Order among those that pass: the first tier before the second, the exact title, then an edition of it, then the year nearest to the year asked for, then the order the source gave.
-*   **The second tier (slice 2; the owner's decision of 2026-11-19 for "No Quarter")**. It never competes with the first.
-    1.  The title ASKED FOR is the candidate's title before a subtitle separator (":" or " - "), and the artist matches: "No Quarter" asked for, "No Quarter: Jimmy Page & Robert Plant Unledded" in the catalog. One direction only (the title asked for is the short one) and never for a query with no artist.
-    2.  `compareAlbumIdentity` alone answers `same-if-alone` (`same: false`): one comparison cannot know what else the source has.
-    3.  Only `pickAlbum` turns it into `same`: when no candidate passed the first tier and every second-tier candidate is ONE album (the same title once the edition notes are dropped). Two different albums is "not found".
+    *   `compareKeptAlbum(asked, kept)`: the same question for an album that is KEPT (a cache record, the album on screen), which has no candidates beside it. `kept` is `{ artist, title, identityReason? }`; the second tier is believed only when `identityReason` is the reason a pick left on the album.
+    *   `compareOnlyAnswer(asked, answered)`: for a source that answers ONE album to a direct question (the AI search); the second tier applies.
+    *   `sameArtist(a, b)`, for a source that lists artists; `albumFromLabel(label)` and `artistNamesFromLabel(label)`, for a label written "Title by Artist" or "Artist (US)".
+    *   `titleWithoutEditionNotes(title)` and `titlesToSearch(asked)`: the title to SEND to a search. There is no other title cleaner in the app or in the server.
+    *   The lists the rule is made of, as data: `ARTIST_EQUIVALENCES`, `SECOND_TIER_RULES`, `KNOWN_WRITINGS`, and `REASONS_EXPLAINED` (every reason with what it says and one real example; the tests run each row).
+    *   `IDENTITY_RULE_VERSION` (2): bumped whenever a change can turn a "not found" into a found album. The server stamps its `not_found` with it and the browser's record is believed only while it is the app's version (see `AlbumCacheAdapter`).
+*   **The artist** (`ARTIST_EQUIVALENCES`): two names are the same artist when they are the same words once normalized (what joins the names, "&", "and", "+", ",", and a leading "The" do not count: "Robert Plant & The Strange Sensation" is "Robert Plant And The Strange Sensation"), or the same names in another order ("Robert Plant & Jimmy Page" is "Jimmy Page & Robert Plant"). A longer or shorter name is another artist ("Page & Plant", "James Brown And His Famous Flames").
+*   **The first tier** ("it is the album", `same`): the titles match WHOLE, as written or once the edition notes are dropped, and the artist is the same. One title containing the other is not a match ("Core" is not "Core Memories"). The year never rejects; it only orders the candidates that passed.
+*   **The second tier** ("it is the album only if the source has nothing better", `same-if-alone`): a list of named rules (`SECOND_TIER_RULES`), each one way a source writes the album asked for with another title, each with a real example. One direction only: the title asked for is the short one. Never for a query with no artist.
 
-    | Asked for | Candidates | Answer |
+    | Reason | Asked for | The source has |
     |---|---|---|
-    | "The Wall" | "The Wall", "The Wall: Live in Berlin" | "The Wall" (`exact-title`), in any order |
-    | "The Wall" | "The Wall: Live in Berlin" | it, with `title-before-subtitle` |
-    | "The Wall: Live in Berlin" | "The Wall" | not found |
-    | "Greatest Hits" | "Greatest Hits: 1970-2002", "Greatest Hits: Vol 2" | not found |
-*   **Normalization**: accents out, lower case, apostrophes out, "&" read as "and", other punctuation as a word break, a leading "The" dropped, "Volume" as "Vol" and "Part" as "Pt"; the words are joined, so "AC/DC" is "ACDC". In an artist, "+" is "and" and the "and" between names is dropped. Roman and arabic numbers are not made equal ("IV" is not "4").
-*   **Edition notes** are dropped before comparing: a group in `()`, `[]` or `{}` that is one year alone, one platform tag alone ("Live", "EP", "Single", "Explicit", "Clean") or has an edition word (deluxe, edition, remaster, expanded, anniversary, version, reissue, bonus, mono, stereo, mix, collector, legacy; "Ed." as the last word); and a subtitle after ":" or " - " under the same test.
-*   **The subtitle decision**: a subtitle that is not an edition note is part of the title. "Brighten the Corners: Nicene Creedence Ed." is "Brighten the Corners"; "The Wall: Live in Berlin" is not "The Wall" in the first tier, and reaches it only through the second.
-*   **Known cost**: an album whose catalog title carries a qualifier in parentheses that is not an edition ("Weezer (Blue Album)", "(Original Motion Picture Soundtrack)") is not found from the bare title, in either tier.
-*   **Tests**: `test/shared/albumIdentity.test.js` (the rule), `test/architecture/albumIdentityRule.test.js` (every call site asks it).
+    | `title-before-subtitle` | "No Quarter" | "No Quarter: Jimmy Page And Robert Plant Unledded" |
+    | `title-without-parentheses` | "In the Court of the Crimson King" | "In The Court Of The Crimson King (An Observation By King Crimson)" |
+    | `title-in-parentheses` | "Led Zeppelin IV" | "Untitled (Led Zeppelin IV)" |
+    | `title-with-artist-name` | James Brown, "Live At The Apollo" | "James Brown Live At The Apollo" |
+    | `title-written-otherwise` | Frank Ocean, "Blonde" | "Blond" (a fact listed in `KNOWN_WRITINGS`, per artist) |
+
+    Only `pickAlbum` turns it into `same`: when no candidate passed the first tier and every second-tier candidate is ONE album (the same title once the edition notes are dropped). Two different albums ("Greatest Hits: 1970-2002" and "Greatest Hits: Vol 2"; the three "Weezer (… Album)") is "not found". In the file there is one door (`acceptedAlone`), called by `pickAlbum` and `compareKeptAlbum`.
+*   **Order among the candidates that pass**: the first tier before the second, the exact title, then an edition of it, then the year nearest to the year asked for, then the order the source gave.
+*   **Normalization**: accents out, lower case, apostrophes out, "&" read as "and", other punctuation as a word break, a leading "The" dropped, "Volume" as "Vol" and "Part" as "Pt"; the words are joined, so "AC/DC" is "ACDC". Letters are not swapped ("Blonde" is not "Blond") and roman and arabic numbers are not made equal ("IV" is not "4").
+*   **Edition notes** are dropped before comparing: a group in `()`, `[]` or `{}` that is one year alone, one platform tag alone ("Live", "EP", "Single", "Explicit", "Clean") or has an edition word (deluxe, edition, remaster, expanded, anniversary, version, reissue, bonus, mono, stereo, mix, collector, legacy; "Ed." as the last word); and a subtitle after ":" or " - " under the same test. "Brighten the Corners: Nicene Creedence Ed." is "Brighten the Corners".
+*   **Known costs**: a long title asked for never accepts the short album, so a reissue with another name is "not found" where the source only has the original ("More Balls to Picasso", "Unreal Unearth: Unheard"); a title that differs by a letter needs an entry in `KNOWN_WRITINGS`; a second-tier album that is alone in what a source listed is accepted, flagged, even when it is a neighbour ("Hotel California" asked for, only "Hotel California (Live at the Forum '76)" listed).
+*   **Tests**: `test/shared/albumIdentity.test.js` (the behaviours of F55), `test/shared/albumIdentityRules.test.js` (every reason, equivalence and second-tier rule with its example and the nearest album it refuses), `test/server/ratingsSourceSweep.test.js` (the 16 albums of the sweep of 2026-11-19 against the saved answers of the source), `test/models/askedAlbumOtherSources.test.js`, `test/architecture/albumIdentityRule.test.js` (every call site asks it; the tiers cannot be bypassed; the lists and the version move together).

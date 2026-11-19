@@ -18,6 +18,9 @@
  *   - identical requests at the same time (same artist and title) share ONE search of the source
  *     (lib/inFlight.js); each still gets the ratings of its own tracks. Nothing is remembered
  *     after the search ends: there is no cache here.
+ * A `not_found` is decided by the identity rule (shared/albumIdentity.js), and the rule changes: its
+ * data carries `identityRule`, the version of the rule that decided it, so the app does not keep
+ * believing a "no page" of an older rule (F68).
  * Every result carries `trace` ({ how: 'source' | 'joined', sourceRequests }) for the log of the
  * route; it does not go on the wire.
  */
@@ -25,6 +28,7 @@ const { OUTCOMES, success, failure, UpstreamError } = require('../outcome')
 const { toFuzzyCore } = require('../normalize')
 const { createInFlight } = require('../inFlight')
 const { createBudget } = require('../timeBudget')
+const { loadAlbumIdentity } = require('../albumIdentity')
 
 /** The whole time of one album request. The app gives up at 20 s; the answer has to leave before. */
 const ALBUM_BUDGET_MS = 15000
@@ -100,7 +104,9 @@ class EnrichmentService {
     async _resultOf(page, title, artist, tracks) {
         if (!page) {
             this.logger.info(`[Enrichment] no page for [${title}] by [${artist}].`)
-            return success(this._data(null, tracks.map(track => this._unrated(track))), OUTCOMES.NOT_FOUND)
+            const { IDENTITY_RULE_VERSION } = await loadAlbumIdentity()
+            const data = this._data(null, tracks.map(track => this._unrated(track)))
+            return success({ ...data, identityRule: IDENTITY_RULE_VERSION }, OUTCOMES.NOT_FOUND)
         }
 
         const matched = await this._matchRatings(page, tracks)

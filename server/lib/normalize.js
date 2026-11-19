@@ -5,18 +5,8 @@ const removeDiacritics = (str) => {
   return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }
 
-function cleanTitle(title) {
-  if (!title || typeof title !== 'string') return ''
-
-  return removeDiacritics(title)
-    // Common edition/remaster suffixes in parentheses or brackets
-    .replace(/\s*[\(\[][^()]*?(?:Remaster|Edition|Version|Anniversary|Expanded|Special|Bonus|Disc|Digital|Live)[^()]*?[\)\]]/gi, ' ')
-    .replace(/\s*-\s*.*?EP\s*$/gi, '')
-    .replace(/\s*-\s*.*?Single\s*$/gi, '')
-    .replace(/\s*-\s*.*?(?:Remaster|Edition|Version|Mix).*?$/gi, ' ') // " - 2022 Remaster"
-    .trim()
-    .replace(/\s+/g, ' ') // Collapse multiple spaces
-}
+// The title of an album without its edition notes is the identity rule's: titleWithoutEditionNotes
+// (shared/albumIdentity.js, F68). The cleaner that lived here was removed.
 
 function normalizeArtist(name) {
   if (!name || typeof name !== 'string') return ''
@@ -361,7 +351,6 @@ module.exports = {
   extractRankingEntries,
   extractAndValidateRankingEntries,
   rankingEntriesToSources,
-  cleanTitle,
   normalizeArtist,
   toCore,
   toFuzzyCore,

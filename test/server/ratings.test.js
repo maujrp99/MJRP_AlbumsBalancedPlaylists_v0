@@ -122,6 +122,19 @@ describe('EnrichmentService: a typed result, never a swallowed failure', () => {
         expect(result.data.trackRatings).toEqual([{ title: 'One', rating: null }, { title: 'Two', rating: null }])
     })
 
+    it('"not_found" says which version of the identity rule decided it (F68); the other outcomes do not', async () => {
+        const { IDENTITY_RULE_VERSION } = await import('../../shared/albumIdentity.js')
+
+        const notFound = await serviceWith(async () => null).enrichAlbum(albumData)
+        const found = await serviceWith(async () => page([{ trackTitle: 'One', rating: 90 }])).enrichAlbum(albumData)
+        const noRatings = await serviceWith(async () => page([])).enrichAlbum(albumData)
+
+        expect(notFound.data.identityRule).toBe(IDENTITY_RULE_VERSION)
+        expect(found.outcome).toBe('found')
+        expect(found.data).not.toHaveProperty('identityRule')
+        expect(noRatings.data).not.toHaveProperty('identityRule')
+    })
+
     it('a page with no rating, or with ratings of no track of this album: no_ratings, and the page is told', async () => {
         const cases = [[], [{ trackTitle: 'One', rating: null }], [{ trackTitle: 'Another song', rating: 70 }]]
         for (const evidence of cases) {

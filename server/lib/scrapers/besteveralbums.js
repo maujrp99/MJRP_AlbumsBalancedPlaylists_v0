@@ -1,5 +1,4 @@
 const axios = require('axios')
-const { cleanTitle } = require('../normalize')
 const { loadAlbumIdentity } = require('../albumIdentity')
 const { UpstreamError, upstreamErrorFrom } = require('../outcome')
 const { createPoliteQueue, PaceError, noPace } = require('../politeQueue')
@@ -17,6 +16,11 @@ const { createPoliteQueue, PaceError, noPace } = require('../politeQueue')
  * (REQUEST_TIMEOUT_MS). `getRankingForAlbum(title, artist, { deadlineAt })` also stops asking when
  * the time of the album request is over (`upstream_timeout`), and never asks the same address
  * twice within one album request.
+ *
+ * The rule of the search (F68): the source lists nothing when the text has a word its own title does
+ * not have ("(2007 Stereo Mix)", "1977-1980"), so an album is looked for by an explicit, ordered
+ * list of attempts (`locateAlbum`, `searchAttempts`), each judged by the one identity rule; the
+ * titles asked for are the rule's own (`titlesToSearch`). There is no title cleaner here.
  *
  * `createBestEverScraper({ http, loadHtml, pace })` receives the HTTP client, the HTML reader and
  * the queue, so the tests run with no network and no waiting; the module also exports one scraper
@@ -145,11 +149,11 @@ function albumSuggestions ({ titles, urls }) {
     .filter(suggestion => suggestion.id)
 }
 
-/** The suggestion whose label says it is the album asked for, or null. */
+/** The suggestion whose label says it is the album asked for, with the reason of the rule, or null. */
 async function pickSuggested (asked, suggestions) {
   const { pickAlbum, albumFromLabel } = await loadAlbumIdentity()
   const picked = pickAlbum(asked, suggestions, suggestion => albumFromLabel(suggestion.label))
-  return picked.found ? picked.candidate : null
+  return picked.found ? { ...picked.candidate, reason: picked.verdict.reason } : null
 }
 
 /**
@@ -174,24 +178,35 @@ async function albumsNamedByPage ($) {
 /**
  * Reads the page and says whether it is the page of the album asked for.
  * One page, with no other candidate in sight: only the first tier of the rule is accepted here
- * (`same`). The second tier (the title asked for before a subtitle) needs the whole list of a
- * search, and pickAlbum gives it where the scraper has one: pickSuggested, rankingFromArtistPage.
+ * (`same`). The second tier needs the whole list of a search, and pickAlbum gives it where the
+ * scraper has one: pickSuggested, albumFromArtistPage.
+ * @returns {Promise<string|null>} the reason of the rule, or null when it is another album
  */
 async function pageIsTheAlbum (url, asked) {
   const res = await getPage(absoluteUrl(url))
   const { compareAlbumIdentity } = await loadAlbumIdentity()
   const readings = await albumsNamedByPage(loadHtml(res.data))
-  return readings.some(reading => compareAlbumIdentity(asked, reading).same)
+  const accepted = readings.map(reading => compareAlbumIdentity(asked, reading)).find(verdict => verdict.same)
+  return accepted ? accepted.reason : null
+}
+
+/** The text as it is sent to the source: without accents (as it always was) and with single spaces. */
+const forSearch = (text) => String(text || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim()
+const suggestUrl = (text) => `https://www.besteveralbums.com/suggest.php?q=${encodeURIComponent(forSearch(text))}`
+
+/** The first title the rule asks a source for: the title without its edition notes. */
+async function plainTitleOf (asked) {
+  const { titlesToSearch } = await loadAlbumIdentity()
+  return titlesToSearch(asked)[0] || ''
 }
 
 /**
  * The HTML search of the source. Each album link it lists is opened and accepted only when the
  * page is the album asked for: the first link, or a link that shares a word, is not enough.
- * @returns {Promise<string|null>} the address of the album page
+ * @returns {Promise<{ url: string, reason: string }|null>} the album page and the reason of the rule
  */
-async function fetchAlbumPage (albumTitle, albumArtist) {
-  // BestEverAlbums search works better with cleaner titles
-  const q = encodeURIComponent(`${albumArtist} ${cleanTitle(albumTitle)}`)
+async function albumFromHtmlSearch (asked) {
+  const q = encodeURIComponent(forSearch(`${asked.artist || ''} ${await plainTitleOf(asked)}`))
   const searchRes = await getPage(`https://www.besteveralbums.com/search.php?search=${q}`)
   const $search = loadHtml(searchRes.data)
 
@@ -201,76 +216,91 @@ async function fetchAlbumPage (albumTitle, albumArtist) {
     if (href && albumIdOf(href)) links.add(href)
   })
 
-  const asked = { title: albumTitle, artist: albumArtist }
   for (const href of [...links].slice(0, HTML_SEARCH_PAGES_CHECKED)) {
     // A page that could not be read is a failure (it used to be accepted unseen)
-    if (await pageIsTheAlbum(href, asked)) return absoluteUrl(href)
+    const reason = await pageIsTheAlbum(href, asked)
+    if (reason) return { url: absoluteUrl(href), reason }
   }
   return null
 }
 
-const suggestUrl = (text) => `https://www.besteveralbums.com/suggest.php?q=${encodeURIComponent(text)}`
+/** @returns {Promise<string|null>} the address of the album page found by the HTML search */
+async function fetchAlbumPage (albumTitle, albumArtist) {
+  const found = await albumFromHtmlSearch({ title: albumTitle, artist: albumArtist })
+  return found ? found.url : null
+}
 
 /**
- * Stage 1: the album search of the source, asked for "artist title".
+ * The texts the album search (suggest.php) is asked with, in order. The source matches word by
+ * word, so the narrowest text comes first and each next one drops something the source may write
+ * in another way:
+ *   artist-and-title  "Genesis Foxtrot"      once per title of the rule's `titlesToSearch`
+ *   title-alone       "Mighty ReArranger"    the source writes the artist otherwise ("And" for "&")
+ *   artist-alone      "Stone Temple Pilots"  what the source suggests for the artist's name
+ * A text is asked once. What a search lists is only a list of candidates: pickSuggested decides.
+ * @returns {Promise<Array<{ name: string, text: string }>>}
  */
-async function _standardFindAlbumId (albumTitle, albumArtist) {
-  const asked = { title: albumTitle, artist: albumArtist }
-  const res = await getPage(suggestUrl(`${albumArtist || ''} ${cleanTitle(albumTitle) || ''}`))
-  const suggestions = albumSuggestions(parseSuggest(res.data))
+async function searchAttempts (asked) {
+  const { titlesToSearch } = await loadAlbumIdentity()
+  const titles = titlesToSearch(asked)
+  const artist = forSearch(asked.artist)
+  const attempts = [
+    ...titles.map(title => ({ name: 'artist-and-title', text: forSearch(`${artist} ${title}`) })),
+    ...titles.map(title => ({ name: 'title-alone', text: forSearch(title) })),
+    { name: 'artist-alone', text: artist }
+  ]
+  const seen = new Set()
+  return attempts.filter(({ text }) => text && !seen.has(text) && seen.add(text))
+}
 
-  const byLabel = await pickSuggested(asked, suggestions)
-  if (byLabel) {
-    logger.log(`[BEA Search] match in the album search: "${byLabel.label}" -> ${byLabel.url}`)
-    return byLabel.id
-  }
-
-  // A label that cannot be read as "Title by Artist" says nothing: the page itself is asked.
-  // A label that can be read and is another album is not opened.
+/** A result with no readable label says nothing: its page is asked. A readable label of another album is not opened. */
+async function albumFromUnlabelled (suggestions, asked) {
   const { albumFromLabel } = await loadAlbumIdentity()
   for (const suggestion of suggestions) {
     if (albumFromLabel(suggestion.label).length > 0) continue
-    if (await pageIsTheAlbum(suggestion.url, asked)) return suggestion.id
-  }
-
-  const alt = await fetchAlbumPage(albumTitle, albumArtist)
-  return alt ? albumIdOf(alt) : null
-}
-
-/**
- * Stage 2: the same search asked in other words (the artist alone, the title alone, the title
- * without its subtitle). Other words widen what the source lists; what is accepted is still only
- * the album asked for, whole title and artist.
- */
-async function _fuzzyFindAlbumId (albumTitle, albumArtist) {
-  const asked = { title: albumTitle, artist: albumArtist }
-  const prunedTitle = (albumTitle || '').split(':')[0].split(' - ')[0].trim()
-  const variations = [...new Set([
-    albumArtist || '',
-    albumTitle || '',
-    `${albumArtist || ''} ${albumTitle || ''}`,
-    prunedTitle,
-    `${albumArtist || ''} ${prunedTitle}`
-  ].map(text => text.trim()).filter(Boolean))]
-
-  for (const qText of variations) {
-    logger.log(`[BEA Search] asking again as: "${qText}"`)
-    const res = await getPage(suggestUrl(qText))
-    const picked = await pickSuggested(asked, albumSuggestions(parseSuggest(res.data)))
-    if (picked) {
-      logger.log(`[BEA Search] match asking again: "${picked.label}" -> ${picked.url}`)
-      return picked.id
-    }
+    const reason = await pageIsTheAlbum(suggestion.url, asked)
+    if (reason) return { ...suggestion, reason }
   }
   return null
 }
 
-async function findAlbumId (albumTitle, albumArtist) {
-  const id = await _standardFindAlbumId(albumTitle, albumArtist)
-  if (id) return id
+/**
+ * One attempt of the album search: what the source lists for the text, judged by the rule.
+ * @param {Object} options
+ * @param {boolean} options.openUnlabelled - also open the results whose label cannot be read
+ */
+async function albumFromSuggest ({ name, text }, asked, { openUnlabelled }) {
+  const res = await getPage(suggestUrl(text))
+  const suggestions = albumSuggestions(parseSuggest(res.data))
+  const found = (await pickSuggested(asked, suggestions)) ||
+    (openUnlabelled ? await albumFromUnlabelled(suggestions, asked) : null)
+  if (!found) return null
+  logger.log(`[BEA Search] ${name} "${text}": "${found.label}" -> ${found.url} (${found.reason})`)
+  return { id: found.id, url: found.url, label: found.label, reason: found.reason, attempt: name }
+}
 
-  logger.log(`[BEA Search] the album search has no "${albumTitle}". Asking again in other words.`)
-  return await _fuzzyFindAlbumId(albumTitle, albumArtist)
+/**
+ * The album asked for, by the searches of the source: each text of `searchAttempts` in order, then
+ * the HTML search. The results with no readable label are opened in the first attempt only.
+ * @returns {Promise<{ id: string, url: string, reason: string, attempt: string }|null>} `reason` is
+ *          the reason of the identity rule; null when every search answered and none is the album
+ */
+async function findAlbum (albumTitle, albumArtist) {
+  const asked = { title: albumTitle, artist: albumArtist }
+  const attempts = await searchAttempts(asked)
+  for (const attempt of attempts) {
+    const found = await albumFromSuggest(attempt, asked, { openUnlabelled: attempt === attempts[0] })
+    if (found) return found
+  }
+
+  logger.log(`[BEA Search] the album search has no "${albumTitle}". Asking the HTML search.`)
+  const page = await albumFromHtmlSearch(asked)
+  return page ? { id: albumIdOf(page.url), url: page.url, reason: page.reason, attempt: 'html-search' } : null
+}
+
+async function findAlbumId (albumTitle, albumArtist) {
+  const found = await findAlbum(albumTitle, albumArtist)
+  return found ? found.id : null
 }
 
 /**
@@ -508,15 +538,14 @@ async function parseAlbumRanking(albumUrl) {
   return { albumUrl, evidence: normalized }
 }
 
-/**
- * @returns {Promise<Object|null>} the page and its track ratings, or null when the source answered
- *          every search and has no such album
- * @throws {UpstreamError} when any request to the source failed: it could not be known
- */
+/** What the scraper answers for an album page that was read. */
 const rankingOf = (parsed, albumId) => ({ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId, evidence: parsed.evidence })
 
-/** The album asked for among the albums the artist's own page lists, or null. */
-async function rankingFromArtistPage (albumTitle, albumArtist) {
+/**
+ * The album asked for among the albums the artist's own page lists, or null.
+ * @returns {Promise<{ id: string, url: string, reason: string, attempt: string }|null>}
+ */
+async function albumFromArtistPage (albumTitle, albumArtist) {
   const artistId = albumArtist ? await findArtistPage(albumArtist) : null
   if (!artistId) return null
 
@@ -525,11 +554,27 @@ async function rankingFromArtistPage (albumTitle, albumArtist) {
   // The page is the artist's own, so each link is an album of that artist: its text is the title
   const picked = pickAlbum({ title: albumTitle, artist: albumArtist }, albums, a => ({ title: a.title, artist: albumArtist }))
   if (!picked.found) return null
+  return { id: picked.candidate.id, url: picked.candidate.url, reason: picked.verdict.reason, attempt: 'artist-page' }
+}
 
-  const chartMatch = picked.candidate.url.match(/thechart\.php\?a=(\d+)/i)
-  if (!chartMatch) return rankingOf(await parseAlbumRanking(picked.candidate.url), undefined)
-  const parsed = await parseChartRankingById(chartMatch[1])
+/** The ratings of the album found: the chart page when its address is one, the album page otherwise. */
+async function rankingOfFound (found) {
+  const chartMatch = found.url.match(/thechart\.php\?a=(\d+)/i)
+  if (found.attempt === 'artist-page' && !chartMatch) return rankingOf(await parseAlbumRanking(found.url), undefined)
+  const parsed = await parseChartRankingById(chartMatch ? chartMatch[1] : found.id)
   return rankingOf(parsed, parsed.albumId)
+}
+
+/**
+ * Where the album asked for is, by the ordered attempts of the source:
+ *   1. artist-page       the albums the artist's own page lists (two requests, the whole discography)
+ *   2. searchAttempts    artist-and-title, title-alone, artist-alone (the album search)
+ *   3. html-search       the HTML search, each page opened and checked
+ * Every attempt is judged by the one identity rule; the first that has the album ends the search.
+ * @returns {Promise<{ id: string, url: string, reason: string, attempt: string }|null>}
+ */
+async function locateAlbum (albumTitle, albumArtist) {
+  return (await albumFromArtistPage(albumTitle, albumArtist)) || findAlbum(albumTitle, albumArtist)
 }
 
 /**
@@ -539,13 +584,8 @@ async function rankingFromArtistPage (albumTitle, albumArtist) {
  * @throws {UpstreamError} when a request to the source failed
  */
 async function getRankingForAlbum (albumTitle, albumArtist) {
-  const fromArtistPage = await rankingFromArtistPage(albumTitle, albumArtist)
-  if (fromArtistPage) return fromArtistPage
-
-  const id = await findAlbumId(albumTitle, albumArtist)
-  if (!id) return null
-  const parsed = await parseChartRankingById(id)
-  return rankingOf(parsed, parsed.albumId)
+  const found = await locateAlbum(albumTitle, albumArtist)
+  return found ? rankingOfFound(found) : null
 }
 
 /** @throws {UpstreamError} when the page could not be read */
@@ -559,7 +599,7 @@ async function getRankingFromUrl(albumUrl) {
   return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, evidence: parsed.evidence }
 }
 
-return { getRankingForAlbum, getRankingFromUrl, findArtistPage, parseArtistDiscography, findAlbumId, fetchAlbumPage, parseChartHtml }
+return { getRankingForAlbum, getRankingFromUrl, findArtistPage, parseArtistDiscography, findAlbumId, fetchAlbumPage, parseChartHtml, locateAlbum, searchAttempts }
 }
 
 /** A direct call (a script, a debug route) is a piece of work of its own: its own door. */
@@ -576,6 +616,9 @@ return {
   findArtistPage: direct('findArtistPage'),
   parseArtistDiscography: direct('parseArtistDiscography'),
   findAlbumId: direct('findAlbumId'),
+  /** Where the album is and how it was accepted: { id, url, reason, attempt } | null (see locateAlbum). */
+  locateAlbum: direct('locateAlbum'),
+  searchAttempts: direct('searchAttempts'),
   fetchAlbumPage: direct('fetchAlbumPage'),
   parseChartHtml: (html, chartUrl) => searchesWith(pageGetter()).parseChartHtml(html, chartUrl)
 }
