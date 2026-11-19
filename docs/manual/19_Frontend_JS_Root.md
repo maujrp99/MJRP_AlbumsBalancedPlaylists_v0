@@ -46,7 +46,8 @@ sequenceDiagram
 ### Logic
 -   **Mechanism**: History API (`pushState`, `popstate` event).
 -   **Features**:
-    -   **Navigation Hooks**: `beforeNavigate` and `afterNavigate`.
+    -   **Navigation Hooks**: `beforeNavigate` and `afterNavigate`. `beforeNavigate(hook)` returns a function that removes the hook; the hooks are asked on `navigate()` and, since v5.0 (F60), on the browser's back and forward too (`handleHistoryMove`): when a hook refuses, the address of the screen the person stays on is put back. `views/playlists/unsavedChangesGuard.js` uses them to ask before leaving the playlists screen with unsaved changes (and listens to `beforeunload` for closing or reloading the tab).
+    -   **Unknown address**: goes to `/home` once; with no `/home` route it stops (it used to call itself until the stack overflowed).
     -   **SafeDOM Support**: Renders Views that return DOM Nodes (recommended) or HTML strings (legacy).
     -   **Phantom Click Prevention**: Logic to avoid duplicate navigation or accidental clicks during renders.
     -   **Error Handling**: Catches render errors and displays a fallback UI in `#app`.

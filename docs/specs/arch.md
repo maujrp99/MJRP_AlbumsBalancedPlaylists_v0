@@ -84,7 +84,7 @@ O desenho acima é a **direção-alvo**; o que o código faz hoje está logo aba
 
 | Caminho | Quem lê e escreve (regra) | Quem escreve no código |
 |---|---|---|
-| `artifacts/{appId}/users/{uid}/curator/**` e `.../inventory/**` (`:8-13`) | só o dono (`uid`) | repositórios e `PlaylistsService.saveBatch` |
+| `artifacts/{appId}/users/{uid}/curator/**` e `.../inventory/**` (`:8-13`) | só o dono (`uid`) | repositórios (o `PlaylistsService` grava pelo `PlaylistRepository` desde a F60) |
 | `users/{uid}/series/**` (`:19-28`) | só o dono | ninguém além da migração legada |
 | `users/{uid}/albumRankings/{albumId}` (`:32-35`) | **qualquer pessoa, até sem login** (`allow read, write: if true`; o comentário das linhas 33-34 diz "DEBUG ... mudar para `request.auth != null` antes do lançamento") | `UserRankingRepository` |
 | `albums/{albumId}` (`:42-43`) | **qualquer autenticado**, inclusive anônimo, em qualquer documento; sem dono | `stores/albums.js` |
