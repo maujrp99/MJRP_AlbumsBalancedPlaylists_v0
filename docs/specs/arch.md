@@ -781,3 +781,39 @@ sequenceDiagram
 **Funções de aptidão** (`test/architecture/screensLoadThroughTheService.test.js`): nenhum controlador, tela ou componente importa o cliente da API, chama uma fonte de álbum ou de nota, nem faz laço sobre `albumQueries`; o blend e a edição pedem por `albumAsks.albumsOf`; só `AlbumAsks` usa `join` e `leave`; só a projeção escreve álbuns na prateleira; só o serviço escreve no store de carga.
 
 **O que este desenho não resolve.** O pedido olha de novo a cada segundo, além de a cada mudança do store, porque a espera do servidor começa dentro de uma tarefa e não muda nenhuma entrada; um aviso de espera no store tiraria esse relógio (cabe na F58). `_holdFor` e `_enrichOne` seguem acima de 10 de complexidade (F58); nenhuma função nova passa de 10. `cache/albumCache.js` e `repositories/SharedAlbumRepository.js` ficaram sem quem os chame.
+
+## Uma peça só para escolher álbuns e um classificador só (F57) — construída no ramo
+
+> Escrita em 2026-11-19, junto com o código, no ramo `fix/f57-one-album-picker-and-one-classifier`. Conserta a UAT-185 e a parte de séries da UAT-193. O mapa dos dois fluxos antigos, com arquivo e linha, e a tabela de diferenças estão em `docs/specs/features/F57-one-album-picker-and-one-classifier/plan.md`. Não foi vista num navegador por quem implementou.
+
+**O problema, em uma frase.** A Home e a janela de edição de série faziam a mesma tarefa (buscar um artista, ver os álbuns por tipo, escolher) com duas telas, dois caminhos de busca e duas listas de filtros, e o classificador tinha duas definições de «eletrônico» que deixavam um buraco: o álbum que só a lista larga chamava de eletrônico («Hardcore Rap» contém «hardcore») saía do funil sem resposta e caía em «?».
+
+**As peças, de dentro para fora.**
+
+| Peça | Arquivo | O que é | Quem pode usar |
+|---|---|---|---|
+| Classificador | `models/albumType.js` | Função pura `classifyAlbum(album, { aiList })` → `{ type, reason }`; seis tipos e uma lista fechada de motivos; `wantsAiList(album)` | só o serviço de busca |
+| Regras da peça | `models/albumPicker.js` | Os seis filtros (nome, ordem, ícone), o estado dos filtros, a contagem, a ordem «mais novo primeiro», os selos do cartão | a peça e os dois quadros |
+| Estado da busca | `models/scanState.js` (F67) | parada, buscando, resultados, vazio, falhou; geração por busca | só a peça muda |
+| Busca do artista | `services/album-search/AlbumSearchService.js` `scanArtist` | O único caminho até `getArtistAlbums`: catálogo com prazo de 15 s, primeira classificação, lista da IA depois (uma instância para o app: a lista paga é pedida uma vez por artista) | só a peça |
+| A peça | `components/album-picker/AlbumPickerController.js` | Dona do estado da busca e dos filtros; desenha por uma porta de três métodos (`drawScan`, `drawFilters`, `drawAlbums`) | os dois quadros |
+| Partes desenhadas | `components/album-picker/pickerParts.js`, `views/renderers/DiscographyRenderer.js` | Botão Scan, botão de filtro, mensagem do painel com «Try again», cartão de álbum | os dois quadros |
+| Quadro da Home | `controllers/HomeController.js` + `views/HomeView.js` | Põe as partes no layout da Home | — |
+| Quadro da edição | `components/album-picker/AlbumPickerPanel.js`, dentro de `components/series/SeriesEditModal.js` | Põe as mesmas partes num bloco dentro da janela | — |
+
+**A costura.** As duas telas diferem numa coisa só, e ela entra como `onPick(album)`: na Home, `stagingController.addAlbum` (o álbum vai para o conjunto da série nova); na edição, `SeriesEditModal.addAlbum` (o álbum entra na lista da série em edição). As duas viram a escolha na consulta que a série guarda pelo mesmo `toAlbumQuery` (`models/albumQuery.js`).
+
+**A ordem das regras do classificador** (a primeira que responde vale): (1) o que o catálogo diz — campo de tipo, marca de ao vivo, `isSingle`, `isCompilation`; (2) o que o título diz — ao vivo, DJ mix, «- Single», «- EP», remixes, coletânea, trilha sonora, e as palavras soltas «EP» e «Single»; (3) só para gênero eletrônico, a quantidade de faixas (até 3, single; até 6, EP); (4) só para gênero eletrônico e com a lista da IA em mãos, a lista: o álbum que está nela é de estúdio (e é resgatado de um «compilação» ou «single» do catálogo, menos quando o título tem palavra de outro produto), o de duração cheia que não está é o único «não classificado»; (5) senão, álbum de estúdio. O gênero deixou de ser portão: só diz se a lista da IA é evidência. «Eletrônico» tem uma definição, por nome inteiro de gênero.
+
+**Salvar a edição** tem um estado (`models/seriesDraft.js`: parado, salvando, falhou) e o rodapé e a mensagem da janela são desenhados dele.
+
+**Funções de aptidão** (`test/architecture/oneAlbumPicker.test.js`): o classificador não importa nada e só o serviço de busca o chama; nenhum outro módulo lê `isSingle`, `isCompilation`, `contentTraits` ou `genreNames`, nem nomeia um tipo de álbum; só o serviço de busca chama `getArtistAlbums`; só a peça chama `scanArtist` e muda o estado da busca; a peça só é criada nos dois quadros e não importa tela nenhuma; só o `DiscographyRenderer` desenha o cartão; os arquivos antigos não existem.
+
+**Alternativas.**
+1. *Só consertar a lista de gêneros* (tirar «hardcore» ou igualar as duas listas): fecharia o caso do Kendrick Lamar e deixaria o buraco para o próximo gênero que só uma lista conhecesse, os dois caminhos de busca e as duas telas.
+2. *Um componente de tela único, dono também do quadro* (campo, filtros e grade num bloco só, montado nas duas telas): é o passo que falta. Não foi feito porque a Home separa o campo (painel da esquerda) dos filtros e da grade (painel da direita) e trocar o layout dela sem navegador é arriscado; o que resta nos quadros é só posição.
+3. *Manter as estratégias em classes e só reordená-las*: manteria o estado escondido (a lista da IA buscada de dentro da regra) e o resultado sem motivo.
+
+**O que não faz.** Não mexe na busca de um álbum só (`AlbumSearchService.search`, a do «Bulk Paste»), que depende da regra de identidade (F68). Não escolhe entre edições do mesmo álbum (o agrupamento continua mostrando a primeira que o catálogo devolve). Não separa «participação em álbum de outro artista». Não toca em gerar e editar playlists (a outra metade da UAT-193, que é da F62).
+
+**Não verificado.** Nada num navegador. Os campos `albumType` e `contentTraits`, que o classificador lê se vierem, não foram vistos numa resposta do catálogo. O comportamento com artistas eletrônicos reais e a lista da IA de verdade.
