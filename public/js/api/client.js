@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { serverFetch } from './serverFetch.js'
 import { Album } from '../models/Album.js'
 import { AlbumIdentity } from '../models/AlbumIdentity.js'
 import { albumCache } from '../cache/albumCache.js'
@@ -194,7 +195,7 @@ export class APIClient {
      */
     async BEAenrichAlbum(albumData) {
         try {
-            const response = await fetch(`${this.baseUrl}/enrich-album`, {
+            const response = await serverFetch(`${this.baseUrl}/enrich-album`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -261,7 +262,7 @@ export class APIClient {
         try {
             let response
             try {
-                response = await fetch(`${this.baseUrl}/generate`, {
+                response = await serverFetch(`${this.baseUrl}/generate`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -352,7 +353,7 @@ export class APIClient {
      */
     async generatePlaylists(albums, options = {}) {
         try {
-            const response = await fetch(`${this.baseUrl}/playlists`, {
+            const response = await serverFetch(`${this.baseUrl}/playlists`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

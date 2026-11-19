@@ -6,6 +6,7 @@
  */
 
 import { musicKitService } from '../MusicKitService.js'; // Legacy service for raw API calls for now
+import { serverFetch } from '../../api/serverFetch.js'
 import { ArtistNormalizer } from './ArtistNormalizer.js';
 import { ScoreCalculator } from './ScoreCalculator.js';
 import { EditionFilter } from './EditionFilter.js';
@@ -123,7 +124,7 @@ export class AlbumSearchService {
 
     async _fetchAIStudioAlbums(artistName) {
         try {
-            const res = await fetch('/api/ai/studio-albums', {
+            const res = await serverFetch('/api/ai/studio-albums', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ artistName })
