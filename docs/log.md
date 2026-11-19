@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 12:43] session — F45, F47 e F51 integradas na main local; UAT-172, UAT-24 e UAT-179 em «fixed», à espera do OK do MJRP
+
+- Trem de merge do harness (`merge_train.py`): preflight limpo depois de commitar o rastro do doctor (`daily-checks/`, como a ferramenta pede); três merges, na ordem das features: `f295316` (F45), `d893d75` (F47), `5268f45` (F51). A trava visual não se aplica ao v0 (não há `info-arch.md` com referência visual aprovada). Nada foi enviado ao remoto: o push é do MJRP, e é ele que publica em produção.
+- `docs/specs/uat.md`: UAT-172, UAT-24 e UAT-179 passam a `fixed`, cada uma com o commit, o teste e a medição no navegador. As duas do MJRP (172 e 179) só fecham com o OK dele; a UAT-24 foi aberta por agente com prioridade humana e também espera por ele.
+- `MEMORY.md` `## Now` em dia.
+- Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
+
 ## [2026-11-19 12:42] session — spec, plan e tasks das F45, F47 e F51 preenchidos; funções de aptidão em npm test; o arch.md diz o que foi construído
 
 - Passo retroativo das três features, por um agente à parte a partir do log, do código e da evidência: F45 com 10 REQ e 16 tasks fechadas, F47 com 3 e 3, F51 com 10 REQ (o REQ-10, a UAT-180, marcado «não entregue») e 10 tasks fechadas. `sdd_shape_check`, `evidence_folder_check` e `requirements_graph_check` verdes. As três ficam `In Progress`: faltam o julgamento do MJRP, o merge e os pontos abertos listados em cada `tasks.md`.
