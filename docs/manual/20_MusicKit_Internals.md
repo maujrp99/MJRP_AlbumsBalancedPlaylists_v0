@@ -58,7 +58,7 @@ sequenceDiagram
 ### Data Sync Service (`public/js/services/DataSyncService.js`)
 *   **Role**: Handles data migration between contexts.
 *   **Use Case**: When a user starts as a "Guest" (local data) and then logs in, this service migrates their temporary Inventory and Series to their persistent Firestore account.
-*   **Logic**: `migrateInventory` and `migrateSeries` iterate through arrays and call Repository methods (`targetRepository.addAlbum`, `targetRepository.create`). Imported by `stores/inventory.js` and `services/auth/UserSyncService.js`.
+*   **Logic**: `migrateInventory` and `migrateSeries` iterate through arrays and call Repository methods (`targetRepository.addAlbum`, `targetRepository.create`). Imported by `services/auth/UserSyncService.js`. `stores/inventory.js` stopped calling `migrateInventory` in v5.0 (F60): the copy it made only ran after a sign-out and put the inventory of the person who left into the anonymous account that followed (UAT-198). In production the guest migration does not run (UAT-12).
 
 ### Playlist Persistence Service (`public/js/services/PlaylistPersistenceService.js`)
 *   **Role**: The bridge between the **Generation Engine** and the **Database**.

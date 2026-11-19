@@ -176,9 +176,10 @@ class BlendingController {
 
         const result = playlistGenerationService.generate(albums, config)
 
-        // Update playlists store (keep same series)
-        const activeSeries = albumSeriesStore.getActiveSeries()
-        playlistsStore.setPlaylists(result.playlists, activeSeries?.id)
+        // The playlists stay in the series they belong to: the one of the set on screen. The series
+        // active elsewhere only answers when nothing on screen says which series it is.
+        const seriesId = playlistsStore.getSeriesId() || albumSeriesStore.getActiveSeries()?.id
+        playlistsStore.setPlaylists(result.playlists, seriesId)
 
         // Sprint 16: Set default batch name if creating
         // If we are editing, we preserve the original name (handled by store logic via editContext)

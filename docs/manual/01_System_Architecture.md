@@ -450,7 +450,7 @@ One line per component of the album path. "State" says whether it is in producti
 | Screen | Album picker (Edit Series) | `components/series/ArtistScanner.js` | the same task, drawn again | v3; replaced by one picker in F57 |
 | Controller | `SeriesController` | `controllers/SeriesController.js` | asks for a load; filters and pages over what the series ask for | v4.0 |
 | Controller | `BlendingController` | `controllers/BlendingController.js` | generates playlists; **own load loop** | v3; F56 |
-| Controller | `PlaylistsController` | `controllers/PlaylistsController.js` | edit, save, export; **own load loop**; `handleSave` at complexity 27 | v3; F56, F58, F60 |
+| Controller | `PlaylistsController` | `controllers/PlaylistsController.js` | edit, save, export; **own load loop**; the save rule left it for `PlaylistsService.saveCurrentBatch` (F60) | v3; F56, F58 |
 | Controller | `InventoryController` | `controllers/InventoryController.js` | inventory actions | v4.0 (delete fixed) |
 | Service | `AlbumLoadService` | `services/albums/AlbumLoadService.js` | the load: generations, queues, find then enrich | v4.0 |
 | Service | `SeriesFactsService` | `services/series/SeriesFactsService.js` | writes year and sources of each album into the series | v4.0 |

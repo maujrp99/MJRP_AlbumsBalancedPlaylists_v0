@@ -118,10 +118,24 @@ export class SeriesService {
         }
     }
 
+    /**
+     * What a series has saved under it, to tell the person before the series is deleted
+     * @param {string} id
+     * @returns {Promise<{playlists: number, batches: number}>}
+     */
+    async countSavedPlaylists(id) {
+        const playlists = await this.repository.findPlaylists(id)
+        const batches = new Set(playlists.map(playlist => playlist.batchName || 'Saved Playlists'))
+        return { playlists: playlists.length, batches: batches.size }
+    }
+
+    /**
+     * Delete a series and the playlists saved under it (one write: all of it or none of it)
+     */
     async deleteSeries(id) {
         globalProgress.start()
         try {
-            await this.repository.delete(id)
+            await this.repository.deleteWithPlaylists(id)
             albumSeriesStore.removeSeriesById(id)
             this.saveToLocalStorage()
 

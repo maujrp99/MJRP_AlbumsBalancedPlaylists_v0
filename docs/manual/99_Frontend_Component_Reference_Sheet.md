@@ -34,7 +34,7 @@
 | [SeriesView.js](file:///public/js/views/SeriesView.js) | Albums screen (`/albums`, `/albums/:seriesId`): series and album grid | 215 lines | ✅ |
 | [HomeView.js](file:///public/js/views/HomeView.js) | Artist scan, bulk paste, staging area, new series | 271 lines | ✅ |
 | [BlendingMenuView.js](file:///public/js/views/BlendingMenuView.js) | Blend wizard (`/blend`) | 449 lines | ✅ |
-| [PlaylistsView.js](file:///public/js/views/PlaylistsView.js) | Generated playlists; also the edit mode (`/playlists/edit`) | 342 lines | ✅ |
+| [PlaylistsView.js](file:///public/js/views/PlaylistsView.js) | Generated playlists; also the edit mode (`/playlists/edit`) | 353 lines | ✅ |
 | [SavedPlaylistsView.js](file:///public/js/views/SavedPlaylistsView.js) | View saved batches | 339 lines | ✅ |
 | [InventoryView.js](file:///public/js/views/InventoryView.js) | Personal collection | 270 lines | ✅ |
 | [ConsolidatedRankingView.js](file:///public/js/views/ConsolidatedRankingView.js) | Cross-album ranking | 319 lines | ✅ |
@@ -106,7 +106,7 @@
 | [inventory.js](file:///public/js/stores/inventory.js) | Personal collection | ✅ |
 | [UserStore.js](file:///public/js/stores/UserStore.js) | Auth state | ✅ |
 
-#### InventoryStore (332 lines)
+#### InventoryStore (329 lines)
 **Purpose**: Manage personal album collection
 **State**: `{ albums, loading, error }`
 
@@ -117,6 +117,7 @@
 - `updatePrice(albumId, price, currency)`: Optimistic price update
 - `removeAlbum(albumId)`: Remove from inventory (there is no `deleteAlbum`)
 - `getStatistics()`: Stats: count, total value by format
+- `handleUserChange(state)`: the person changed: the albums in memory are dropped at once and nothing is copied between accounts (v5.0, F60)
 
 #### UserStore (105 lines)
 **Purpose**: Authentication state management
@@ -128,7 +129,7 @@
 - `logout()`: Sign out
 - `handleAuthChange(user)`: Called by AuthService on state change
 
-#### PlaylistsStore (161 lines)
+#### PlaylistsStore (169 lines)
 **Purpose**: Holds the generated playlists and the editing state. It is pure state: setters, getters and `subscribe`.
 **State**: `{ playlists, seriesId, config, mode, editContext, batchName, isDirty, isSynchronized, loading, canUndo, canRedo }`
 
@@ -142,16 +143,21 @@ The operations live in `services/PlaylistsService.js` (`getPlaylistsService(db, 
 - `moveTrack(fromPlaylist, toPlaylist, trackIndex, newIndex)`, `reorderTrack(...)`: Drag and drop support
 - `removeTrack(playlistIndex, trackIndex)`: Delete track logic
 - `undo()` / `redo()`: Version history (`services/playlists/PlaylistHistoryService.js`)
-- `saveBatch(userId, seriesId, playlists)`, `loadBatch(...)`, `deleteBatch(...)`: Persistence
+- `removePlaylist(playlistIndex)`: Takes a whole playlist out of the working set
+- `saveCurrentBatch({ userId, batchName })`: The save rule (v5.0, F60): one save at a time, the series of the playlists on screen, an edited batch replaced by one atomic write (`PlaylistRepository.replaceBatch`)
+- `resolveBatchName(typed)`, `hasUnsavedChanges()`: What the screen asks before saving and before leaving
+- `watchStore()`, `saveToLocalStorage()`, `restoreDraft({ seriesId })`: The browser draft of the playlists not saved yet
+- `loadBatch(...)`, `deleteBatch(...)`: Persistence
 
-#### PlaylistsController (395 lines, 8 methods)
+#### PlaylistsController (306 lines, 8 methods)
 **Purpose**: Business logic for PlaylistsView (Generation, Editing, Persistence)
 
 **Key Methods**:
 - `initialize(params)`: Route handler (detects Create vs Edit mode)
 - `handleGenerate(config)`: Orchestrates blending algorithm
 - `deleteTrack(playlistIndex, trackIndex)`: Proxies delete to `PlaylistsService.removeTrack`
-- `handleSave(batchName)`: Saves the batch; in edit mode deletes the playlists of the original batch name first
+- `handleSave(batchName)`: Asks `PlaylistsService.saveCurrentBatch` and tells the person the result; the rule is in the service (v5.0, F60)
+- `deletePlaylist(index)`: Proxies to `PlaylistsService.removePlaylist`
 - `loadPlaylistsForEdit(batchName, seriesId)`: Hydrates store from backend
 - `loadAlbumsForSeries(seriesId)`: In edit mode, loads the albums of the series with `apiClient.fetchMultipleAlbums` (its own loop, not `AlbumLoadService`)
 

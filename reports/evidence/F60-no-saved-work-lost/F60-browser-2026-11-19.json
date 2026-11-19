@@ -1,0 +1,38 @@
+{
+  "feature": "F60",
+  "date": "2026-11-19 16:29",
+  "where": "http://127.0.0.1:5010, conta do MJRP, código do ramo fix/f60-no-saved-work-lost com a main; série de teste «Claude F60 Test» (GNX e DAMN., de Kendrick Lamar), criada e apagada pelo integrador",
+  "checks": [
+    {
+      "issue": "UAT-05",
+      "what": "gerar playlists pelo blend, não salvar, recarregar a página",
+      "result": "as 3 playlists voltam"
+    },
+    {
+      "issue": "UAT-197",
+      "what": "dois cliques seguidos em «Save to Series History»",
+      "result": "um lote só em Playlists: 3 playlists, 26 faixas"
+    },
+    {
+      "issue": "UAT-196",
+      "what": "abrir o lote por «Edit Batch», remover uma faixa e salvar",
+      "result": "«Saved \\\"Claude F60 Batch\\\" successfully!»; em Playlists continua um lote só, agora com 25 faixas, sem sobra do anterior"
+    },
+    {
+      "issue": "UAT-197",
+      "what": "com a faixa removida e sem salvar, clicar em Inventory no menu",
+      "result": "o app pergunta «You have changes to these playlists that are not saved. Leave without saving?»; recusando, a tela e o endereço ficam; depois de salvar, sai sem perguntar"
+    },
+    {
+      "issue": "UAT-197",
+      "what": "apagar a série de teste, que tinha um lote salvo",
+      "result": "a janela diz «Its 3 saved playlists (1 batch) will be deleted too.»; confirmando, «Series deleted successfully» e a série some da lista"
+    }
+  ],
+  "not_checked": [
+    "UAT-196, a gravação que falha no meio: a provocação pelo console não alcançou o serviço em uso; coberto só por teste automático com um banco de mentira",
+    "UAT-198, sair da conta e ver o inventário sumir: sair deslogaria o painel, e o MJRP estava no celular; coberto só por teste automático",
+    "UAT-197, o salvamento na série errada: coberto só por teste automático",
+    "que as playlists da série apagada sumiram do banco: a tela não mostra órfãos; não foi olhado no console do Firebase"
+  ]
+}

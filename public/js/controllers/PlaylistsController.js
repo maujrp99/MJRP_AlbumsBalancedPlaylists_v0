@@ -6,7 +6,6 @@ import { getSeriesService } from '../services/SeriesService.js'
 import { blendingController } from './BlendingController.js'
 import { createAlgorithm } from '../algorithms/index.js'
 import toast from '../components/Toast.js'
-import { getIcon } from '../components/Icons.js'
 
 /**
  * PlaylistsController
@@ -55,6 +54,12 @@ export class PlaylistsController {
             const { cacheManager } = await import('../cache/CacheManager.js')
             const service = getPlaylistsService(db, cacheManager)
             service.setCreateMode()
+
+            // Playlists generated and not saved before a reload of the page come back (UAT-05)
+            if (existingPlaylists.length === 0 && !isAutoGenerate && service.restoreDraft({ seriesId: seriesIdParam })) {
+                toast.info('Your unsaved playlists were restored')
+                this.loadAlbumsForSeries(playlistsStore.getSeriesId()) // for generating again; not awaited
+            }
         }
 
         // Auto-generate if requested
@@ -100,6 +105,8 @@ export class PlaylistsController {
                 .sort((a, b) => (a.order || 0) - (b.order || 0))
 
             if (batchPlaylists.length === 0) {
+                // Nothing of another batch stays on screen under this batch's name, where a save would store it
+                playlistsStore.setPlaylists([], seriesId)
                 toast.warning(`No playlists found for batch "${batchName}"`)
                 return
             }
@@ -192,16 +199,13 @@ export class PlaylistsController {
     /**
      * Deletes a single playlist from the current working set
      */
-    deletePlaylist(index) {
-        const playlists = playlistsStore.getPlaylists()
-        if (!playlists[index]) return
+    async deletePlaylist(index) {
+        if (!playlistsStore.getPlaylists()[index]) return
 
-        const name = playlists[index].name
-        const newPlaylists = playlists.filter((_, i) => i !== index)
-
-        // Update store
-        playlistsStore.setPlaylists(newPlaylists, playlistsStore.seriesId)
-        toast.success(`Playlist "${name}" removed`)
+        const { db } = await import('../app.js')
+        const { cacheManager } = await import('../cache/CacheManager.js')
+        const removed = getPlaylistsService(db, cacheManager).removePlaylist(index)
+        if (removed) toast.success(`Playlist "${removed.name}" removed`)
     }
 
     /**
@@ -268,121 +272,28 @@ export class PlaylistsController {
     }
 
     /**
-     * Save the current playlists (Create or Overwrite based on mode)
+     * Save the playlists on screen. The rule of a save (which series, what is replaced, one save
+     * at a time) lives in PlaylistsService.saveCurrentBatch; here the person is told the result.
+     * The button shows the save in progress from the store (`isSaving`), not from here.
      */
-    async handleSave(customBatchName = null) {
-        const isEditMode = playlistsStore.isEditingExistingBatch()
-        let batchName = customBatchName
+    async handleSave(typedBatchName = null) {
+        const { db, auth } = await import('../app.js')
+        const { cacheManager } = await import('../cache/CacheManager.js')
+        const service = getPlaylistsService(db, cacheManager)
 
-        // If Edit Mode, use existing name if not provided (or updated name from input)
-        // Sprint 16: Use defaultBatchName if available (for new unsaved batches)
-        if (isEditMode && !batchName) {
-            batchName = playlistsStore.getEditContext()?.batchName
-        } else if (!batchName && playlistsStore.defaultBatchName) {
-            batchName = playlistsStore.defaultBatchName
-        }
-
+        const batchName = service.resolveBatchName(typedBatchName)
         if (!batchName) {
-            // Should be handled by UI modal, but safeguard
             toast.error('Batch name required')
             return
         }
 
-        const btn = document.querySelector('#saveToHistoryBtn') // Access DOM only for button state if needed, or pass callback
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = `${getIcon('Loader', 'w-4 h-4 animate-spin')} Saving...`
-        }
-
         try {
-            // Logic mostly copied from _savePlaylistsToFirestore but cleaner
-            const { db, cacheManager, auth } = await import('../app.js')
             const userId = auth.currentUser?.uid || 'anonymous-user'
-
-            // Fix: Ensure we have a Series ID. 
-            // activeSeries might be null if we reloaded the page in Edit Mode without visiting Albums view first.
-            // But we should have it in playlistsStore.seriesId from initialize()
-            let seriesId = albumSeriesStore.getActiveSeries()?.id
-
-            if (!seriesId) {
-                // Fallback to store context
-                seriesId = playlistsStore.seriesId
-                if (seriesId) {
-                    // Try to restore active series in store if missing (optional but good for consistency)
-                    const { SeriesRepository } = await import('../repositories/SeriesRepository.js')
-                    const seriesRepo = new SeriesRepository(db, cacheManager, userId)
-                    const series = await seriesRepo.findById(seriesId)
-                    if (series) albumSeriesStore.setActiveSeries(series.id)
-                }
-            }
-
-            if (!seriesId) throw new Error('No Series Context found for saving.')
-
-            const activeSeries = albumSeriesStore.getActiveSeries()
-
-            // 1. Save Series Parent (Upsert)
-            if (activeSeries) {
-                const { SeriesRepository } = await import('../repositories/SeriesRepository.js')
-                const seriesRepo = new SeriesRepository(db, cacheManager, userId)
-                await seriesRepo.save(activeSeries.id, {
-                    ...activeSeries,
-                    updatedAt: new Date().toISOString()
-                })
-            }
-
-            // 2. Handle Overwrite (Delete Old)
-            const { PlaylistRepository } = await import('../repositories/PlaylistRepository.js')
-            const repo = new PlaylistRepository(db, cacheManager, userId, seriesId)
-
-            // If overwriting (Edit Mode OR explicit overwrite confirmed in Create Mode)
-            // Note: Create Mode overwrite check happens in View before calling this with isOverwrite=true usually.
-            // But here let's rely on simple logic:
-            // If Edit Mode -> Always delete original batch name first (handles rename case too if we track original)
-
-            if (isEditMode) {
-                // Sprint 16 Fix: Use originalBatchName to find the target to delete.
-                // This handles the "Rename" scenario: If I rename "Beatles" to "Beatles v2",
-                // I need to find "Beatles" to delete it, otherwise I get a ghost.
-                const originalName = playlistsStore.editContext?.originalBatchName || playlistsStore.editContext?.batchName
-
-                if (originalName) {
-                    console.log('[PlaylistsController] Overwriting/Renaming batch - Deleting old:', originalName)
-                    const all = await repo.findAll()
-                    const old = all.filter(p => p.batchName === originalName)
-                    for (const p of old) await repo.delete(p.id)
-                }
-            } else {
-                // Create Mode: Check existence handled by UI Modal usually. 
-                // We assume if we are here, we are good to write.
-            }
-
-            // 3. Set Batch Name and Save
-            const service = getPlaylistsService(db, cacheManager)
-            service.applyBatchName(batchName)
-            await service.saveBatch(userId, seriesId, playlistsStore.getPlaylists())
-
-            toast.success(`Saved "${batchName}" successfully!`)
-
-            if (btn) {
-                btn.innerHTML = `${getIcon('Check', 'w-4 h-4')} Saved!`
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = `${getIcon('Cloud', 'w-5 h-5')} ${isEditMode ? 'Save Changes' : 'Save to History'}`
-                }, 2000)
-            }
-
-            // Sprint 16 Fix: After saving in Create Mode, switch to Edit Mode
-            // This prevents "Save" from creating duplicates if clicked again, 
-            // and ensures the UI reflects that we are now working with a saved batch.
-            if (!isEditMode) {
-                console.log('[PlaylistsController] Switching to Edit Mode after save')
-                service.setEditMode(batchName, seriesId, new Date().toISOString())
-            }
-
+            const result = await service.saveCurrentBatch({ userId, batchName })
+            if (result.status === 'saved') toast.success(`Saved "${batchName}" successfully!`)
         } catch (err) {
             console.error('[PlaylistsController] Save failed:', err)
-            toast.error('Save failed: ' + err.message)
-            if (btn) btn.disabled = false
+            toast.error(`Save failed: ${err.message}. Nothing was changed: what was saved before is still there.`)
         }
     }
 

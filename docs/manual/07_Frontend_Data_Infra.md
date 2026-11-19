@@ -66,7 +66,7 @@ classDiagram
 *   **Path**: `artifacts/{appId}/users/{userId}/curator/data/series`
 *   **Features**:
     *   Subcollection Loading: Fetches `albums` subcollection manually in `findWithAlbums`.
-    *   Cascade Awareness: Designed to support cascade deletes (though logic is often distributed).
+    *   `deleteWithPlaylists(seriesId)` (v5.0, F60): deletes the series and the playlists saved under it in one atomic write (Firestore does not remove a subcollection with its parent). With more playlists than one write carries, the playlists go first and the series document last, so a failure never leaves playlists with no series. `findPlaylists(seriesId)` lists them. The `albums` subcollection read by `findWithAlbums` is not deleted.
     *   `saveAlbumFacts(seriesId, albumQueries)` (v4.0): saves what the app learned about the albums of a series (see [32_Data_Schema_Reference.md](32_Data_Schema_Reference.md)). It leaves `updatedAt` alone: it is not the person editing the series.
 *   **The whole list is read** (v4.0): `SeriesService.loadFromFirestore` asks for every series, with no limit and no `orderBy` (Firestore leaves out a document that lacks the ordered field). The order by update date is applied in the browser.
 
@@ -98,14 +98,18 @@ classDiagram
 *   **Key Features**:
     *   **Modes**: Explicit `CREATING` vs `EDITING` modes to handle "Edit Batch" logic.
     *   **Undo/Redo**: Implements a Memento Pattern with `versions` array (Snapshotting state on every mutation like drag/drop).
-    *   **Dual-Sync**:
-        *   `saveToLocalStorage()`: Auto-saves on every change (Session recovery).
-        *   `saveToFirestore()`: Explicit user action (Permanent save).
-*   **Batching**: Uses `writeBatch` for atomic saves of multiple playlists.
+    *   **Pure state** (ADR-0017): the store only holds the working set and its flags (`isDirty`, `isSynchronized`, `isSaving`). The operations are in `PlaylistsService`.
+    *   **Draft in the browser** (v5.0, F60): `PlaylistsService.watchStore()` follows the store and keeps the playlists that are not saved yet in `mjrp_current_playlists`, with the `uid` of the person; `restoreDraft({ seriesId })` puts them back after a reload, for the same person and series only.
+    *   **Permanent save** (v5.0, F60): `PlaylistsService.saveCurrentBatch` (explicit user action), one at a time.
+*   **Batching**: the save is one atomic `writeBatch`, inside `PlaylistRepository.replaceBatch` (see below).
+
+### PlaylistRepository (`public/js/repositories/PlaylistRepository.js`)
+*   **Path**: `artifacts/{appId}/users/{userId}/curator/data/series/{seriesId}/playlists`
+*   **`replaceBatch(playlists, replacedIds)`** (v5.0, F60): writes the playlists (update with `id`, create without) and deletes the replaced ones that are not among them, in one atomic write. The same write touches `updatedAt` of the series document, so a series that no longer exists refuses the whole write (`not-found`): no playlist is stored without its series. More than 500 operations is refused before writing.
 
 ### Other Stores
 *   **UserStore**: Manages Auth state and User Profile.
-*   **InventoryStore**: Manages the "Pool" of available albums.
+*   **InventoryStore**: Manages the "Pool" of available albums. When the person changes (`handleUserChange`, v5.0, F60) the albums in memory are dropped at once, nothing is read while there is no user, a late answer for the previous person is discarded, and nothing is copied between accounts.
 
 ---
 

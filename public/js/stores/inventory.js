@@ -7,7 +7,6 @@ import { InventoryRepository } from '../repositories/InventoryRepository.js'
 import { db as firestore } from '../app.js'
 import { cacheManager } from '../cache/CacheManager.js'
 import { userStore } from './UserStore.js'
-import { dataSyncService } from '../services/DataSyncService.js'
 
 export class InventoryStore {
     constructor() {
@@ -23,46 +22,36 @@ export class InventoryStore {
     }
 
     /**
-     * Handle user state change
+     * The person on the app changed (sign-in, sign-out, or the anonymous account the app opens by
+     * itself after a sign-out).
+     *
+     * The inventory in memory belongs to the person who was here: it is dropped at once, before
+     * anything else, and never written into another account. Then the inventory of the person
+     * who arrived is read; between a sign-out and the next account there is nobody to read for.
+     *
+     * Guest data is NOT carried into an account here: the copy this method used to make ran only
+     * when a signed-in person signed out, and put that person's inventory into the anonymous
+     * account that followed (UAT-198). Moving a guest's data on sign-in is UAT-12.
+     *
      * @param {Object} state - UserStore state
      */
     async handleUserChange(state) {
         const newUser = state.currentUser
         const newUserId = newUser ? newUser.uid : 'anonymous-user'
+        if (this.userId === newUserId) return
 
-        // Only update if changed
-        if (this.userId !== newUserId) {
-            console.log(`[InventoryStore] Switching user context: ${this.userId} -> ${newUserId}`)
+        console.log(`[InventoryStore] Switching user context: ${this.userId} -> ${newUserId}`)
 
-            // Capture data relative to previous user context (if it was anonymous)
-            // This is the "Guest Data" we want to migrate
-            let albumsToMigrate = []
-            if (this.userId === 'anonymous-user' && this.albums.length > 0 && newUserId !== 'anonymous-user') {
-                albumsToMigrate = [...this.albums]
-                console.log(`[InventoryStore] Found ${albumsToMigrate.length} guest albums to migrate.`)
-            }
+        this.userId = newUserId
+        this.albums = []
+        this.loading = false
+        this.error = null
+        this.repository = firestore ? new InventoryRepository(firestore, cacheManager, this.userId) : null
+        this.notify()
 
-            this.userId = newUserId
+        if (!newUser || !this.repository) return
 
-            // Re-init repository with new user
-            if (firestore) {
-                this.repository = new InventoryRepository(firestore, cacheManager, this.userId)
-
-                // Perform migration if needed
-                if (albumsToMigrate.length > 0) {
-                    try {
-                        const count = await dataSyncService.migrateInventory(this.repository, albumsToMigrate)
-                        if (count > 0) console.log(`[InventoryStore] Migrated ${count} albums.`)
-                        await this.loadAlbums()
-                    } catch (err) {
-                        console.error('[InventoryStore] Migration failed', err)
-                    }
-                } else {
-                    // No migration needed, just load
-                    await this.loadAlbums().catch(err => console.error('Failed to reload inventory on user switch:', err))
-                }
-            }
-        }
+        await this.loadAlbums().catch(err => console.error('Failed to reload inventory on user switch:', err))
     }
 
     /**
@@ -122,12 +111,20 @@ export class InventoryStore {
         this.error = null
         this.notify()
 
+        // The answer belongs to whoever asked: if the person changes while it is on its way, it is dropped
+        const repository = this.repository
+        const askedBy = () => repository === this.repository
+
         try {
-            this.albums = await this.repository.findAll()
+            const albums = await repository.findAll()
+            if (!askedBy()) return this.albums
+
+            this.albums = albums
             this.loading = false
             this.notify()
             return this.albums
         } catch (error) {
+            if (!askedBy()) return this.albums
             console.error('Failed to load inventory:', error)
             this.error = error.message
             this.loading = false

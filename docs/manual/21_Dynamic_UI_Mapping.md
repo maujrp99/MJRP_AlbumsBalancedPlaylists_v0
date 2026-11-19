@@ -58,7 +58,8 @@
     2.  **[FN]** `SeriesService.updateSeries(id, ...)`.
 *   **Delete Series**:
     1.  **[UI]** Click Trash Icon -> `SeriesModals.openDelete(id)`.
-    2.  **[FN]** `SeriesService.deleteSeries(id)` -> Redirects to `/albums`.
+    2.  **[FN]** `SeriesService.countSavedPlaylists(id)` -> the confirmation says how many saved playlists and batches go with the series (v5.0, F60).
+    3.  **[FN]** `SeriesService.deleteSeries(id)` -> `SeriesRepository.deleteWithPlaylists(id)` (series and playlists in one write) -> Redirects to `/albums`.
 
 ---
 
@@ -91,8 +92,8 @@
 ### 4.1 Playlist CRUD (In-Memory)
 *   **Delete Playlist**:
     1.  **[UI]** Click "X" on Playlist Card (`[data-action="delete-playlist"]`).
-    2.  **[FN]** `PlaylistsController.deletePlaylist(index)`.
-    3.  **[STORE]** `playlistsStore.setPlaylists(newPlaylists, seriesId)`.
+    2.  **[FN]** `PlaylistsController.deletePlaylist(index)` -> `PlaylistsService.removePlaylist(index)` (history snapshot; counts as an unsaved change, v5.0, F60).
+    3.  **[STORE]** `playlistsStore.setPlaylists(remaining, seriesId)`, `setDirty(true)`.
 *   **Remove Track**:
     1.  **[UI]** Click "X" on Track Row.
     2.  **[FN]** `PlaylistsController.deleteTrack(pIndex, tIndex)` -> `PlaylistsService.removeTrack`.
@@ -106,7 +107,12 @@
 ### 4.2 Export & Save
 *   **Save Batch**:
     1.  **[UI]** Enter Name -> Click "Save to Series History".
-    2.  **[FN]** `PlaylistsController.handleSave()` -> `PlaylistsService.applyBatchName(name)` -> `PlaylistsService.saveBatch(userId, seriesId, playlists)`. In edit mode the playlists of the original batch name are deleted first.
+    2.  **[FN]** `PlaylistsController.handleSave()` -> `PlaylistsService.saveCurrentBatch({ userId, batchName })` -> `PlaylistRepository.replaceBatch(playlists, replacedIds)` (v5.0, F60). One atomic write: in edit mode the playlists of the original batch name that are not in the new set are removed in the same write, so a failure leaves the saved batch as it was. The button is drawn disabled from `playlistsStore.isSaving` while the write is on its way.
+*   **Leave with unsaved changes** (v5.0, F60):
+    1.  **[UI]** A link or button of the app, the browser's back button, closing or reloading the tab.
+    2.  **[FN]** `unsavedChangesGuard` (installed by `PlaylistsView.mount`) asks `PlaylistsService.hasUnsavedChanges()`; the router's `beforeNavigate` hook shows a confirm, `beforeunload` shows the browser's own.
+*   **Reload with playlists not saved yet** (v5.0, F60):
+    1.  **[FN]** `PlaylistsController.initialize()` (create mode, nothing in memory) -> `PlaylistsService.restoreDraft({ seriesId })` -> toast "Your unsaved playlists were restored" -> `loadAlbumsForSeries(seriesId)`.
 *   **Spotify Export**:
     1.  **[UI]** Click "Export to Spotify".
     2.  **[FN]** `SpotifyExportModal.handleExport()` -> `SpotifyExportService.exportPlaylists()`.

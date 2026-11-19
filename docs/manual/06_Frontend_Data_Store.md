@@ -36,8 +36,9 @@ The Service Layer orchestrates complex operations and state transitions, isolati
 ### 2.1 `services/PlaylistsService.js` [NEW]
 **Purpose**: Orchestrates playlist lifecycle, history, and persistence.
 *   **History Management**: Manages undo/redo stacks.
-*   **Persistence**: Handles `localStorage` backups and Firestore CRUD orchestration.
-*   **Track Ops**: Business logic for moving/removing/reordering tracks.
+*   **Persistence**: keeps the browser draft of the playlists not saved yet (`saveToLocalStorage`, `watchStore`, `restoreDraft`) and saves through `PlaylistRepository`; it does not import Firestore (v5.0, F60).
+*   **The save rule** (`saveCurrentBatch`, v5.0, F60): one save at a time; the series is the one of the playlists on screen (`playlistsStore.seriesId`); an edited batch is replaced by one atomic write; the screen changes only after the write is confirmed. `resolveBatchName` and `hasUnsavedChanges` answer the screen.
+*   **Track Ops**: Business logic for moving/removing/reordering tracks, and `removePlaylist` for a whole playlist.
 
 ### 2.2 `services/SeriesService.js` [NEW]
 **Purpose**: Manages Music Series lifecycle and album mapping.

@@ -16,6 +16,7 @@ export class PlaylistsStore {
         this.isDirty = false
         this.isSynchronized = true
         this.loading = false
+        this.isSaving = false // a save is on its way to the database
 
         // Mode state
         this.mode = 'CREATING'
@@ -56,6 +57,11 @@ export class PlaylistsStore {
 
     setDirty(isDirty) {
         this.isDirty = isDirty
+        this.notify()
+    }
+
+    setSaving(isSaving) {
+        this.isSaving = isSaving
         this.notify()
     }
 
@@ -131,6 +137,7 @@ export class PlaylistsStore {
             loading: this.loading,
             isDirty: this.isDirty,
             isSynchronized: this.isSynchronized,
+            isSaving: this.isSaving,
             mode: this.mode,
             editContext: this.editContext,
             batchName: this.batchName,
@@ -147,6 +154,7 @@ export class PlaylistsStore {
         this.isDirty = false
         this.isSynchronized = true
         this.loading = false
+        this.isSaving = false
         this.mode = 'CREATING'
         this.editContext = null
         this.batchName = ''
