@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:31] session — F59 fatia E e F61 em produção (site)
+
+Duas publicações do site da `main`: `a6092a7` (F59 fatia E: Tailwind compilado com o site, sem script de terceiro; endereços de fora conferidos) e `4e4555b` (F61: playlists guardadas rápidas; pacote `main-CVU46dC0.js`). Em produção depois da F59: nenhum pedido ao CDN do Tailwind, nenhum aviso no console, estilos aplicados. UAT-25 e UAT-186 em `fixed`. A UAT-199 já estava em `fixed`; o resto dela (endereços) foi entregue. A ADR-0021 segue `Proposed`, à espera do MJRP. Nenhuma das duas muda o servidor.
+
 ## [2026-11-19 19:30] review — F61 provada pelo integrador; UAT-186 em fixed
 
 Playlists guardadas, conta do MJRP: primeira série em 0,26 s e lista inteira em 0,79 s (antes, hoje, 4,6 s; 20 s na regressão). Prova em `reports/evidence/F61/2026-11-19-saved-playlists-timing.md`. Proposta de modelo de dados do auxiliar (resumo dos lotes no documento da série) fica anotada no `plan.md` da F61, não feita.
