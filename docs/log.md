@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 20:46] review — F62 provada pelo integrador no que não exporta; sete issues em fixed
+
+Prova em `reports/evidence/F62/2026-11-19-blend-and-export-proof.md`: desfazer e refazer, apagar playlist, título editado que fica, caminho da tela, sem «Discovery Mode». As duas exportações (Spotify e Apple Music) só passaram em teste de unidade: prová-las cria playlists de verdade nas contas do MJRP, e isso fica para ele. Em `fixed`: UAT-200, 02, 03, 04, 08, 09, 190. Mudanças de comportamento para o MJRP julgar estão nas Open Questions do `spec.md` da F62 (dez itens).
+
 ## [2026-11-19 20:44] review — F57 provada pelo integrador; UAT-185 em fixed
 
 Home e edição de série mostram os mesmos seis filtros, as mesmas contagens e os mesmos cartões para «Kendrick Lamar»; os dois álbuns que caíam em «?» estão em Studio. Prova em `reports/evidence/F57/2026-11-19-one-picker-one-classifier-proof.md`. A UAT-193 fica aberta: a metade das playlists (gerar e editar) é da F62. Mudanças de comportamento para o MJRP julgar estão nas Open Questions do `spec.md` da F57 (álbum eletrônico sem lista da IA aparece em Studio; «gold», «definitive» e «complete» não marcam mais coletânea; a busca da edição de série ficou igual à da Home).
