@@ -5,7 +5,7 @@
  */
 import { describe, it, expect } from 'vitest'
 import {
-    compareAlbumIdentity, pickAlbum, albumFromLabel, sameArtist, Verdict, Reason
+    compareAlbumIdentity, compareKeptAlbum, compareOnlyAnswer, pickAlbum, albumFromLabel, sameArtist, Verdict, Reason
 } from '../../shared/albumIdentity.js'
 
 const STP = 'Stone Temple Pilots'
@@ -127,22 +127,139 @@ describe('a subtitle after ":" or " - "', () => {
         expect(reasonOf(nicene, corners)).toBe(Reason.EDITION_OF_TITLE)
     })
 
-    it('that names anything else is part of the title, both ways', () => {
-        const pairs = [
-            ['The Wall', 'The Wall: Live in Berlin'],
-            ['Unreal Unearth', 'Unreal Unearth: Unheard'],
-            ['folklore', 'folklore: the long pond studio sessions'],
-            ['Alchemy', 'Alchemy - Dire Straits Live'],
-            ['Greatest Hits', 'Greatest Hits: 1970-2002']
-        ]
-        pairs.forEach(([short, long]) => {
-            expect(verdictOf({ artist: 'X', title: short }, { artist: 'X', title: long })).toBe(Verdict.DIFFERENT)
-            expect(verdictOf({ artist: 'X', title: long }, { artist: 'X', title: short })).toBe(Verdict.DIFFERENT)
+    const SUBTITLED = [
+        ['The Wall', 'The Wall: Live in Berlin'],
+        ['Unreal Unearth', 'Unreal Unearth: Unheard'],
+        ['folklore', 'folklore: the long pond studio sessions'],
+        ['Alchemy', 'Alchemy - Dire Straits Live'],
+        ['Greatest Hits', 'Greatest Hits: 1970-2002']
+    ]
+
+    it('that names anything else is part of the title: the short title asked for is never "the same" by itself', () => {
+        SUBTITLED.forEach(([short, long]) => {
+            expect(compareAlbumIdentity({ artist: 'X', title: short }, { artist: 'X', title: long }))
+                .toEqual({ verdict: Verdict.SAME_IF_ALONE, same: false, reason: Reason.TITLE_BEFORE_SUBTITLE })
+        })
+    })
+
+    it('and the other way there is nothing to wait for: the long title asked for is not the short album', () => {
+        SUBTITLED.forEach(([short, long]) => {
+            expect(compareAlbumIdentity({ artist: 'X', title: long }, { artist: 'X', title: short }))
+                .toEqual({ verdict: Verdict.DIFFERENT, same: false, reason: Reason.TITLE_MISMATCH })
         })
     })
 
     it('the same subtitle on both sides is the same album', () => {
         expect(reasonOf({ artist: 'X', title: 'The Wall: Live in Berlin' }, { artist: 'X', title: 'The Wall - Live in Berlin' })).toBe(Reason.EXACT_TITLE)
+    })
+})
+
+describe('the second tier: the catalog only has the title with a subtitle (MJRP, 2026-11-19)', () => {
+    const PAGE_PLANT = 'Jimmy Page & Robert Plant'
+    const noQuarter = { artist: PAGE_PLANT, title: 'No Quarter' }
+    const unledded = { artist: PAGE_PLANT, title: 'No Quarter: Jimmy Page & Robert Plant Unledded' }
+    const floyd = (title, more = {}) => ({ artist: 'Pink Floyd', title, ...more })
+    const elton = (title, more = {}) => ({ artist: 'Elton John', title, ...more })
+    const ACCEPTED_ALONE = { verdict: Verdict.SAME, same: true, reason: Reason.TITLE_BEFORE_SUBTITLE }
+
+    it('«No Quarter» asked for, only «No Quarter: Jimmy Page & Robert Plant Unledded» in the catalog: it is picked, and the verdict says how', () => {
+        const picked = pickAlbum(noQuarter, [{ artist: PAGE_PLANT, title: 'Walking Into Clarksdale' }, unledded])
+
+        expect(picked).toEqual({ found: true, candidate: unledded, index: 1, verdict: ACCEPTED_ALONE })
+    })
+
+    it('never competes with the first tier: «The Wall» asked for picks «The Wall», wherever «The Wall: Live in Berlin» comes', () => {
+        const live = floyd('The Wall: Live in Berlin', { year: 1990 })
+        const wall = floyd('The Wall', { year: 1979 })
+        const deluxe = floyd('The Wall (Deluxe Edition)', { year: 2012 })
+
+        expect(pickAlbum(floyd('The Wall'), [live, wall])).toMatchObject({ index: 1, verdict: { reason: Reason.EXACT_TITLE } })
+        expect(pickAlbum(floyd('The Wall'), [wall, live])).toMatchObject({ index: 0, verdict: { reason: Reason.EXACT_TITLE } })
+        // an edition is still the first tier; and the year asked for does not bring the second tier forward
+        expect(pickAlbum(floyd('The Wall', { year: 1990 }), [live, deluxe])).toMatchObject({ index: 1, verdict: { reason: Reason.EDITION_OF_TITLE } })
+    })
+
+    it('«The Wall» asked for with only «The Wall: Live in Berlin» picks it, flagged', () => {
+        expect(pickAlbum(floyd('The Wall'), [floyd('The Wall: Live in Berlin'), floyd('Animals')]))
+            .toMatchObject({ found: true, index: 0, verdict: ACCEPTED_ALONE })
+    })
+
+    it('one direction only: «The Wall: Live in Berlin» asked for never accepts «The Wall»', () => {
+        expect(pickAlbum(floyd('The Wall: Live in Berlin'), [floyd('The Wall')]).found).toBe(false)
+    })
+
+    it('two albums qualify: not found (choosing between them is the person\'s, F57)', () => {
+        const picked = pickAlbum(elton('Greatest Hits'), [elton('Greatest Hits: 1970-2002'), elton('Greatest Hits: Vol 2')])
+
+        expect(picked).toEqual({ found: false, candidate: null, index: -1, verdict: null })
+    })
+
+    it('two listings of the one album that qualifies are one album: the plain one, then the nearest year', () => {
+        const candidates = [
+            { ...unledded, id: 'deluxe', title: `${unledded.title} (Deluxe Edition)`, year: 2004 },
+            { ...unledded, id: 'plain-04', year: 2004 },
+            { ...unledded, id: 'plain-94', year: 1994 }
+        ]
+
+        expect(pickAlbum(noQuarter, candidates)).toMatchObject({ candidate: { id: 'plain-04' }, verdict: ACCEPTED_ALONE })
+        expect(pickAlbum({ ...noQuarter, year: 1994 }, candidates).candidate.id).toBe('plain-94')
+        expect(pickAlbum(noQuarter, [candidates[0]])).toMatchObject({ candidate: { id: 'deluxe' }, verdict: ACCEPTED_ALONE })
+    })
+
+    it('the title asked for is the candidate\'s title before ANY of its subtitle separators, ":" or " - "', () => {
+        const reasonFor = (title, candidate) => compareAlbumIdentity({ artist: 'X', title }, { artist: 'X', title: candidate }).verdict
+
+        expect(reasonFor('Alchemy', 'Alchemy - Dire Straits Live')).toBe(Verdict.SAME_IF_ALONE)
+        expect(reasonFor('Live: Volume One', 'Live: Volume One - The Encores')).toBe(Verdict.SAME_IF_ALONE)
+        expect(reasonFor('Live', 'Live: Volume One - The Encores')).toBe(Verdict.SAME_IF_ALONE)
+        expect(reasonFor('No Quarter', 'No Quarter: Unledded (Remastered)')).toBe(Verdict.SAME_IF_ALONE)
+        expect(reasonFor('No Quarter (Remastered)', 'No Quarter: Unledded')).toBe(Verdict.SAME_IF_ALONE)
+    })
+
+    it('is not "one title contains the other": only a subtitle separator opens it', () => {
+        const verdictFor = (title, candidate) => compareAlbumIdentity({ artist: 'X', title }, { artist: 'X', title: candidate }).verdict
+
+        expect(verdictFor('Core', 'Core Memories')).toBe(Verdict.DIFFERENT)
+        expect(verdictFor('Weezer', 'Weezer (Blue Album)')).toBe(Verdict.DIFFERENT)
+        expect(verdictFor('Quarter', 'No Quarter: Unledded')).toBe(Verdict.DIFFERENT)
+        expect(verdictFor('Unledded', 'No Quarter: Unledded')).toBe(Verdict.DIFFERENT)
+        expect(verdictFor('Self-Titled', 'Self-Titled-Ish')).toBe(Verdict.DIFFERENT)
+    })
+
+    it('the artist has to match, and a query with no artist has no second tier', () => {
+        expect(compareAlbumIdentity(noQuarter, { ...unledded, artist: 'Tina Turner' }))
+            .toEqual({ verdict: Verdict.DIFFERENT, same: false, reason: Reason.ARTIST_MISMATCH })
+        expect(compareAlbumIdentity({ title: 'No Quarter' }, unledded).verdict).toBe(Verdict.DIFFERENT)
+        expect(pickAlbum({ title: 'No Quarter' }, [unledded]).found).toBe(false)
+    })
+
+    it('a label that can be read in two ways is taken by its best reading', () => {
+        const picked = pickAlbum({ artist: 'Ben E. King', title: 'Stand by Me' }, ['Stand by Me: The Collection by Ben E. King'], albumFromLabel)
+
+        expect(picked).toMatchObject({ found: true, index: 0, verdict: ACCEPTED_ALONE })
+    })
+})
+
+describe('an album that is KEPT for a query (a cache, the screen): is it still the album asked for?', () => {
+    const asked = { artist: 'Pink Floyd', title: 'The Wall' }
+    const live = { artist: 'Pink Floyd', title: 'The Wall: Live in Berlin' }
+
+    it('the first tier needs nothing else', () => {
+        expect(compareKeptAlbum(asked, { artist: 'Pink Floyd', title: 'The Wall (Remastered)' }))
+            .toEqual({ verdict: Verdict.SAME, same: true, reason: Reason.EDITION_OF_TITLE })
+        expect(compareKeptAlbum(asked, { artist: 'Pink Floyd', title: 'Animals' }).verdict).toBe(Verdict.DIFFERENT)
+    })
+
+    it('the second tier is believed only when the album says pickAlbum accepted it that way', () => {
+        expect(compareKeptAlbum(asked, { ...live, identityReason: Reason.TITLE_BEFORE_SUBTITLE }))
+            .toEqual({ verdict: Verdict.SAME, same: true, reason: Reason.TITLE_BEFORE_SUBTITLE })
+        expect(compareKeptAlbum(asked, live))
+            .toEqual({ verdict: Verdict.SAME_IF_ALONE, same: false, reason: Reason.TITLE_BEFORE_SUBTITLE })
+        expect(compareKeptAlbum(asked, { ...live, identityReason: Reason.EXACT_TITLE }).same).toBe(false)
+    })
+
+    it('a reason written on another album opens nothing', () => {
+        expect(compareKeptAlbum(asked, { artist: 'Pink Floyd', title: 'Animals', identityReason: Reason.TITLE_BEFORE_SUBTITLE }).same).toBe(false)
     })
 })
 
@@ -267,5 +384,31 @@ describe('a label "Title by Artist" (BestEverAlbums)', () => {
         ])
         expect(albumFromLabel('Stone Temple Pilots')).toEqual([])
         expect(albumFromLabel(null)).toEqual([])
+    })
+})
+
+describe('compareOnlyAnswer: a source that answers one album to a direct question', () => {
+    const PAGE_PLANT = 'Jimmy Page & Robert Plant'
+
+    it('the exact album is the same', () => {
+        expect(compareOnlyAnswer({ artist: STP, title: 'Core' }, { artist: STP, title: 'Core' }))
+            .toMatchObject({ same: true, reason: Reason.EXACT_TITLE })
+    })
+
+    it('the title asked for before a subtitle is accepted, and the reason says so', () => {
+        expect(compareOnlyAnswer(
+            { artist: PAGE_PLANT, title: 'No Quarter' },
+            { artist: PAGE_PLANT, title: 'No Quarter: Jimmy Page & Robert Plant Unledded' }
+        )).toMatchObject({ same: true, reason: Reason.TITLE_BEFORE_SUBTITLE })
+    })
+
+    it('the short title does not answer for the long one', () => {
+        expect(compareOnlyAnswer({ artist: 'Pink Floyd', title: 'The Wall: Live in Berlin' }, { artist: 'Pink Floyd', title: 'The Wall' }).same).toBe(false)
+    })
+
+    it('another album, another artist or no answer is different', () => {
+        expect(compareOnlyAnswer({ artist: STP, title: 'Core' }, { artist: STP, title: 'Shangri-La Dee Da' }).same).toBe(false)
+        expect(compareOnlyAnswer({ artist: STP, title: 'Core' }, { artist: 'Persefone', title: 'Core' }).same).toBe(false)
+        expect(compareOnlyAnswer({ artist: STP, title: 'Core' }, null).same).toBe(false)
     })
 })

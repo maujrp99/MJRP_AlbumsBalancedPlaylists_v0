@@ -4,9 +4,12 @@
  * What the filters need to know about an album, kept inside the album query of the series
  * (arch.md, seção 16): its year and which sources have data for it. Pure functions.
  * The loaded album is the authority; the facts are a copy, rewritten when the album is loaded.
+ *
+ * The same pass over the queries also corrects the Apple Music id a query stores, when the album
+ * asked for was found under another id (F55): withCorrectedSources.
  */
 
-import { parseAlbumQuery } from './albumQuery.js'
+import { parseAlbumQuery, withCorrectedSource } from './albumQuery.js'
 import { AlbumStatus, EnrichmentStatus } from './albumLoadState.js'
 
 const FINISHED = new Set([EnrichmentStatus.DONE, EnrichmentStatus.EMPTY])
@@ -54,6 +57,29 @@ export function withSettledFacts(albumQueries = [], entriesByKey, keyOf, now = D
         changed = true
         const base = (typeof query === 'object' && query !== null) ? query : parseAlbumQuery(query)
         return { ...base, facts }
+    })
+    return { albumQueries: updated, changed }
+}
+
+/**
+ * The album queries of a series with the Apple Music id each album was really loaded by, where the
+ * stored id was not the one (see withCorrectedSource). It does not wait for the facts: an album
+ * that is on screen is enough.
+ *
+ * @param {Array} albumQueries
+ * @param {Map<string, Object>} entriesByKey - the load entries of that series, by query key
+ * @param {Function} keyOf - (query) => key
+ * @returns {{ albumQueries: Array, changed: boolean }}
+ */
+export function withCorrectedSources(albumQueries = [], entriesByKey, keyOf) {
+    let changed = false
+    const updated = albumQueries.map(query => {
+        const entry = entriesByKey.get(keyOf(query))
+        if (entry?.status !== AlbumStatus.FOUND || !entry.album) return query
+
+        const corrected = withCorrectedSource(query, entry.album)
+        if (corrected !== query) changed = true
+        return corrected
     })
     return { albumQueries: updated, changed }
 }

@@ -202,3 +202,65 @@ describe('getRankingForAlbum', () => {
         expect(requested(http).some(url => url.includes('thechart.php?b=55'))).toBe(false)
     })
 })
+
+describe('the second tier of the rule: the source only has the title with a subtitle (F55, slice 2)', () => {
+    const PAGE_PLANT = 'Jimmy Page & Robert Plant'
+    const FLOYD = 'Pink Floyd'
+    const UNLEDDED = 'No Quarter: Jimmy Page & Robert Plant Unledded'
+
+    it('«No Quarter» asked for, the search lists only «No Quarter: … Unledded»: that page is the album', async () => {
+        const { scraper } = scraperWith([
+            ['suggest.php', suggest(album('Walking Into Clarksdale', PAGE_PLANT, 500), album(UNLEDDED, PAGE_PLANT, 501))]
+        ])
+
+        await expect(scraper.findAlbumId('No Quarter', PAGE_PLANT)).resolves.toBe('501')
+    })
+
+    it('never before the album asked for: «The Wall» is taken, wherever «The Wall: Live in Berlin» comes in the list', async () => {
+        const { scraper } = scraperWith([
+            ['suggest.php', suggest(album('The Wall: Live in Berlin', FLOYD, 601), album('The Wall', FLOYD, 600))]
+        ])
+
+        await expect(scraper.findAlbumId('The Wall', FLOYD)).resolves.toBe('600')
+    })
+
+    it('two albums with the title before a subtitle: not found', async () => {
+        const { scraper } = scraperWith([
+            ['suggest.php', suggest(album('Greatest Hits: 1970-2002', 'Elton John', 701), album('Greatest Hits: Vol 2', 'Elton John', 702))],
+            ['search.php', EMPTY_PAGE]
+        ])
+
+        await expect(scraper.findAlbumId('Greatest Hits', 'Elton John')).resolves.toBeNull()
+    })
+
+    it('the page of the artist lists only the subtitled album: it is taken from there', async () => {
+        const { scraper } = scraperWith([
+            ['suggest.php', suggest(artistRow(PAGE_PLANT, 77))],
+            ['thechart.php?b=77', artistPage(PAGE_PLANT, [['Walking Into Clarksdale', 500], [UNLEDDED, 501]])],
+            ['thechart.php?a=501', albumPage(UNLEDDED, PAGE_PLANT)],
+            ['search.php', EMPTY_PAGE]
+        ])
+
+        await expect(scraper.getRankingForAlbum('No Quarter', PAGE_PLANT)).resolves.toMatchObject({ albumId: '501' })
+    })
+
+    it('a page checked ALONE does not loosen: with nothing else in sight, «The Wall: Live in Berlin» is not «The Wall»', async () => {
+        // The HTML search opens one page at a time and stops at the first it accepts: the second
+        // tier there would let the subtitled album win over the album asked for, listed after it.
+        const results = '<html><body><a href="/thechart.php?a=601">The Wall: Live in Berlin</a><a href="/thechart.php?a=600">The Wall</a></body></html>'
+        const both = scraperWith([
+            ['suggest.php', NOTHING],
+            ['search.php', results],
+            ['thechart.php?a=601', albumPage('The Wall: Live in Berlin', FLOYD)],
+            ['thechart.php?a=600', albumPage('The Wall', FLOYD)]
+        ])
+        const onlySubtitled = scraperWith([
+            ['suggest.php', NOTHING],
+            ['search.php', '<html><body><a href="/thechart.php?a=601">The Wall: Live in Berlin</a></body></html>'],
+            ['thechart.php?a=601', albumPage('The Wall: Live in Berlin', FLOYD)]
+        ])
+
+        await expect(both.scraper.fetchAlbumPage('The Wall', FLOYD)).resolves.toBe('https://www.besteveralbums.com/thechart.php?a=600')
+        await expect(onlySubtitled.scraper.fetchAlbumPage('The Wall', FLOYD)).resolves.toBeNull()
+    })
+})

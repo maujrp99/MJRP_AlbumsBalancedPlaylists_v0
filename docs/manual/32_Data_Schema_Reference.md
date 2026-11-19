@@ -87,7 +87,7 @@ A series is a named list of album queries. Path: `artifacts/mjrp-albums/users/{u
       "title": "string",              // some older entries use "album"
       "year": "string",
       "coverUrl": "string",
-      "appleMusicId": "string",       // the chosen edition; the load uses it first
+      "appleMusicId": "string",       // the chosen edition; the load uses it first, and corrects it (F55)
       "facts": {                      // v4.0, written by the app after the album loads
         "year": "number | null",
         "sources": { "acclaim": "boolean", "popularity": "boolean" },
@@ -103,6 +103,7 @@ A series is a named list of album queries. Path: `artifacts/mjrp-albums/users/{u
 ```
 
 *   `facts` is a copy for the filters; the loaded album is the authority. A query without `facts` has not been checked yet.
+*   `appleMusicId` is checked on every load: the album it leads to has to be the album asked for (`artist`, `title`), by the identity rule. When it is not (or the id is gone) and the album asked for is found by name, the app writes the new id here, with `coverUrl` and `year` of the loaded album when the query stores them (F55, slice 2; `SeriesFactsService`, in the same write as `facts`). The app never changes `artist` or `title`.
 *   The person's own track ranking is not in the series: it lives in `users/{uid}/albumRankings/{albumId}`.
 *   The album id is the slug `artist_title` (`api/client.js`, `generateAlbumId`), not a UUID or a Spotify id.
 

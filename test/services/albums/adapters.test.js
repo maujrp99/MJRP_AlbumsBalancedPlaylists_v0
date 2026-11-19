@@ -382,3 +382,83 @@ describe('AlbumCacheAdapter', () => {
         expect(await build().adapter.get('Nobody - Nothing')).toBeNull()
     })
 })
+
+/**
+ * F55, slice 2 - a record is kept by QUERY, and records loaded before the one identity rule may
+ * hold another album (the series asked for «Core» and the browser kept «Shangri-La Dee Da» for 7
+ * days). Every read asks the rule; a record that is not the album asked for is dropped.
+ */
+describe('AlbumCacheAdapter: a kept album that is not the album asked for does not survive', () => {
+    const STP = 'Stone Temple Pilots'
+    const build = () => {
+        const backing = new Map()
+        const cache = {
+            get: vi.fn(async (key) => backing.get(key) ?? null),
+            peek: vi.fn(async (key) => backing.get(key) ?? null),
+            set: vi.fn(async (key, value) => { backing.set(key, value) }),
+            invalidate: vi.fn(async (key) => { backing.delete(key) })
+        }
+        return { backing, cache, adapter: new AlbumCacheAdapter({ cache, createAlbum: (plain) => new Album(plain) }) }
+    }
+    const keep = (backing, query, album, enrichment = {}) =>
+        backing.set(`${ALBUM_RECORD_PREFIX}${query.toLowerCase()}`, { album: JSON.parse(JSON.stringify(album)), enrichment })
+    const album = (title, extra = {}) => makeAlbum({ id: `stp_${title}`, title, artist: STP, ...extra })
+
+    it('«Core» asked for, «Shangri-La Dee Da» kept: the record is dropped and the album is searched again', async () => {
+        const { adapter, backing, cache } = build()
+        keep(backing, 'Stone Temple Pilots - Core', album('Shangri-La Dee Da'), { acclaim: { status: 'done', at: 1 } })
+
+        expect(await adapter.get('Stone Temple Pilots - Core')).toBeNull()
+        expect(cache.invalidate).toHaveBeenCalledWith(`${ALBUM_RECORD_PREFIX}stone temple pilots - core`)
+        expect(backing.size).toBe(0)
+    })
+
+    it('the album asked for, or an edition of it, stays: nothing is searched again', async () => {
+        const { adapter, backing, cache } = build()
+        keep(backing, 'Stone Temple Pilots - Core', album('Core (Remastered)'), { acclaim: { status: 'done', at: 1 } })
+
+        const kept = await adapter.get({ artist: STP, title: 'Core', appleMusicId: 'any' })
+
+        expect(kept.album.title).toBe('Core (Remastered)')
+        expect(kept.enrichment).toEqual({ acclaim: 'done' })
+        expect(cache.invalidate).not.toHaveBeenCalled()
+    })
+
+    it('a record written before albums carried `identityReason` is judged the same way', async () => {
+        const { adapter, backing } = build()
+        const old = JSON.parse(JSON.stringify(album('Core')))
+        delete old.metadata
+        backing.set(`${ALBUM_RECORD_PREFIX}stone temple pilots - core`, { album: old, enrichment: {} })
+
+        expect((await adapter.get('Stone Temple Pilots - Core')).album.title).toBe('Core')
+    })
+
+    it('the title with a subtitle stays only when a load accepted it by the second tier of the rule', async () => {
+        const accepted = build()
+        keep(accepted.backing, 'Pink Floyd - The Wall', makeAlbum({ title: 'The Wall: Live in Berlin', artist: 'Pink Floyd', metadata: { identityReason: 'title-before-subtitle' } }))
+        const fromTheOldScoring = build()
+        keep(fromTheOldScoring.backing, 'Pink Floyd - The Wall', makeAlbum({ title: 'The Wall: Live in Berlin', artist: 'Pink Floyd' }))
+
+        expect((await accepted.adapter.get('Pink Floyd - The Wall')).album.title).toBe('The Wall: Live in Berlin')
+        expect(await fromTheOldScoring.adapter.get('Pink Floyd - The Wall')).toBeNull()
+    })
+
+    it('peek stays read-only: it shows the wrong album to the count and drops nothing', async () => {
+        const { adapter, backing, cache } = build()
+        keep(backing, 'Stone Temple Pilots - Core', album('Shangri-La Dee Da'))
+
+        expect((await adapter.peek('Stone Temple Pilots - Core')).title).toBe('Shangri-La Dee Da')
+        expect(cache.invalidate).not.toHaveBeenCalled()
+        expect(backing.size).toBe(1)
+    })
+
+    it('what is saved after the new search is the album asked for, and it is read back', async () => {
+        const { adapter, backing } = build()
+        keep(backing, 'Stone Temple Pilots - Core', album('Shangri-La Dee Da'))
+        await adapter.get('Stone Temple Pilots - Core')
+
+        await adapter.saveBase('Stone Temple Pilots - Core', album('Core'))
+
+        expect((await adapter.get('Stone Temple Pilots - Core')).album.title).toBe('Core')
+    })
+})

@@ -31,6 +31,25 @@ const SHOWN = {
 const labelOf = (query) => (typeof query === 'string' ? query : `${query.artist} - ${query.title}`)
 const shownFor = async (query) => SHOWN[labelOf(query)] || null
 
+describe('auditAlbumIdentity: an album accepted by the second tier of the rule (slice 2)', () => {
+    const list = [{ id: 's1', name: 'Robert Plant 00-10s', albumQueries: ['Jimmy Page & Robert Plant - No Quarter'] }]
+    const unledded = { artist: 'Jimmy Page & Robert Plant', title: 'No Quarter: Jimmy Page & Robert Plant Unledded', year: 1994 }
+
+    it('is the same album, and the row says by which reason', async () => {
+        const { rows, summary } = await auditAlbumIdentity({ series: list, shownFor: async () => ({ ...unledded, identityReason: 'title-before-subtitle' }) })
+
+        expect(rows[0]).toMatchObject({ verdict: AuditVerdict.SAME, reason: 'title-before-subtitle', shown: `${unledded.artist} - ${unledded.title}` })
+        expect(summary).toMatchObject({ same: 1, different: 0 })
+    })
+
+    it('kept from before the rule accepted it (nothing says a load chose it): different, with the reason a new load would use', async () => {
+        const { rows, summary } = await auditAlbumIdentity({ series: list, shownFor: async () => unledded })
+
+        expect(rows[0]).toMatchObject({ verdict: AuditVerdict.DIFFERENT, reason: 'title-before-subtitle' })
+        expect(summary).toMatchObject({ same: 0, different: 1 })
+    })
+})
+
 describe('auditAlbumIdentity', () => {
     it('gives one row per album asked for: series, asked, shown, verdict', async () => {
         const { rows } = await auditAlbumIdentity({ series: series(), shownFor })
@@ -82,7 +101,7 @@ describe('reading the kept album without touching it', () => {
         const cache = { peek: vi.fn(async () => record), get: vi.fn(), set: vi.fn(), invalidate: vi.fn() }
         const adapter = new AlbumCacheAdapter({ cache, createAlbum: vi.fn() })
 
-        expect(await adapter.peek({ artist: STP, title: 'Core' })).toEqual({ artist: STP, title: 'Shangri-La Dee Da', year: 2001 })
+        expect(await adapter.peek({ artist: STP, title: 'Core' })).toEqual({ artist: STP, title: 'Shangri-La Dee Da', year: 2001, identityReason: null })
         expect(cache.peek).toHaveBeenCalledWith(`${ALBUM_RECORD_PREFIX}stone temple pilots - core`)
         expect(cache.get).not.toHaveBeenCalled()
         expect(cache.set).not.toHaveBeenCalled()

@@ -67,7 +67,7 @@ classDiagram
 *   **Features**:
     *   Subcollection Loading: Fetches `albums` subcollection manually in `findWithAlbums`.
     *   `deleteWithPlaylists(seriesId)` (v5.0, F60): deletes the series and the playlists saved under it in one atomic write (Firestore does not remove a subcollection with its parent). With more playlists than one write carries, the playlists go first and the series document last, so a failure never leaves playlists with no series. `findPlaylists(seriesId)` lists them. The `albums` subcollection read by `findWithAlbums` is not deleted.
-    *   `saveAlbumFacts(seriesId, albumQueries)` (v4.0): saves what the app learned about the albums of a series (see [32_Data_Schema_Reference.md](32_Data_Schema_Reference.md)). It leaves `updatedAt` alone: it is not the person editing the series.
+    *   `saveAlbumFacts(seriesId, albumQueries)` (v4.0): saves what the app learned about the albums of a series (see [32_Data_Schema_Reference.md](32_Data_Schema_Reference.md)): the `facts` and, since F55 slice 2, the corrected Apple Music id of an album found under another id than the stored one. `SeriesFactsService` is its only caller. It leaves `updatedAt` alone: it is not the person editing the series.
 *   **The whole list is read** (v4.0): `SeriesService.loadFromFirestore` asks for every series, with no limit and no `orderBy` (Firestore leaves out a document that lacks the ordered field). The order by update date is applied in the browser.
 
 ---

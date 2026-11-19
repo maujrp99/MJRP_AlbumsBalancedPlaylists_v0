@@ -61,3 +61,30 @@ export function toAlbumQuery(album = {}) {
         coverUrl: album.coverUrl || album.artworkTemplate || null
     }
 }
+
+/** True when the query stores the Apple Music id that the loaded album says it did NOT come from. */
+function storedIdWasReplaced(query, album) {
+    if (typeof query !== 'object' || query === null) return false
+    const { replacedSourceId, sourceId } = album?.metadata || {}
+    if (!replacedSourceId || !sourceId) return false
+    return String(query.appleMusicId) === String(replacedSourceId)
+}
+
+/**
+ * The stored query of an album that was found under ANOTHER Apple Music id than the stored one
+ * (F55): the catalog no longer has the stored id, or it leads to another album, and the album asked
+ * for was found by name. The id the album was loaded by takes the place of the stored one; the
+ * cover and the year stored beside it were copied from the album of the old id (toAlbumQuery), so
+ * they are replaced too, when the query has them. What was asked for (artist, title) is never changed.
+ *
+ * @param {string|Object} query - as the series stores it
+ * @param {Object} album - the loaded album: { year, coverUrl, metadata: { sourceId, replacedSourceId? } }
+ * @returns {string|Object} a new query, or the same one when there is nothing to correct
+ */
+export function withCorrectedSource(query, album) {
+    if (!storedIdWasReplaced(query, album)) return query
+    const corrected = { ...query, appleMusicId: album.metadata.sourceId }
+    if ('coverUrl' in query) corrected.coverUrl = album.coverUrl || null
+    if ('year' in query) corrected.year = album.year ?? null
+    return corrected
+}

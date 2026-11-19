@@ -20,6 +20,7 @@ import { userRankingRepository } from '../../repositories/UserRankingRepository.
 import { AlbumLoadService } from './AlbumLoadService.js'
 import { holdNotice, queryKey } from '../../models/albumLoadState.js'
 import { auditAlbumIdentity } from './albumIdentityAudit.js'
+import { keptAlbum } from '../../models/askedAlbum.js'
 import { SeriesFactsService } from '../series/SeriesFactsService.js'
 import { getSeriesService } from '../SeriesService.js'
 import { CatalogAdapter } from './adapters/CatalogAdapter.js'
@@ -92,7 +93,7 @@ export const countWrongAlbums = async () => {
     const report = await auditAlbumIdentity({
         series: albumSeriesStore.getSeries(),
         shownFor: async (query, series) =>
-            albumLoadStore.getEntry(series.id, queryKey(query))?.album || albumCachePort.peek(query)
+            keptAlbum(albumLoadStore.getEntry(series.id, queryKey(query))?.album) || albumCachePort.peek(query)
     })
     console.table(report.rows)
     console.log('[album identity] asked, same, different, with nothing kept to compare:', report.summary)
