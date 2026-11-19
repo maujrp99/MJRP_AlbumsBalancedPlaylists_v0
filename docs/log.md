@@ -15,9 +15,41 @@ Ramo `fix/f59-tailwind-local-and-url-schemes`. O Tailwind deixou de ser um scrip
 
 Ramo `fix/f59-tailwind-local-and-url-schemes`. Um endereço que vem de um provedor ou de um registro guardado só vira link quando é um endereço da web (http ou https): uma função só, `safeUrl` (`public/js/utils/safeUrl.js`), usada nos três lugares onde isso acontecia sem conferência — o selo do Spotify no cartão do álbum (`Card.js`), o link da fonte na tabela do ranking consolidado (`ConsolidatedRankingView.js`) e o botão que abre no Spotify a playlist recém-criada (`SpotifyExportModal.js`, achado nesta passada). Um endereço como `javascript:...` deixa de chegar ao `href`: o cartão cai no endereço montado com o identificador do Spotify, a tabela mostra um traço e o botão não abre nada. Regra de arquitetura como teste: `test/architecture/outsideUrlChecked.test.js` lê todo `href`, `window.open` e troca de endereço em `public/js` e recusa o que não está escrito no código nem passou pela função. 994 testes. Sem navegador nesta sessão.
 
+## [2026-11-19 19:14] session — F55 fatia 2 em produção (site e servidor)
+
+Site e servidor publicados da `main` (`dd16b01`; revisão `mjrp-proxy-00201-kcq`, volta `mjrp-proxy-00200-2nh`). Em produção, com login: notas de «Core» (página 2906) e de «No Quarter» pelo título curto e pelo longo (a mesma página 11402). UAT-184 em `fixed`. Em andamento com auxiliares: F59 (resto), F61, F52 fatias 3 a 5.
+
+## [2026-11-19 19:12] review — F55 fatia 2 provada pelo integrador; UAT-184 em fixed
+
+Contagem na conta do MJRP depois da fatia 2: 227 álbuns pedidos, 227 iguais. «No Quarter» carrega pelo segundo nível, com o aviso no cartão; o identificador corrigido do «Core» foi gravado na série. Prova em `reports/evidence/F55/2026-11-19-slice-2-browser-proof.md`, com o que não foi visto.
+
+## [2026-11-19 19:10] decision — a resposta única da busca por IA entra no afrouxamento do subtítulo (decidido pelo agente — revisável)
+
+Na prova no navegador, «No Quarter» seguiu falhando: o catálogo da Apple (loja dos EUA) não tem o álbum em nenhuma busca, e ele sempre veio da busca por IA do servidor, que responde «No Quarter: Jimmy Page & Robert Plant Unledded». A fatia 2 tinha deixado a resposta da IA fora do segundo nível da regra. Decisão: uma fonte que é perguntada por um álbum e responde um álbum é julgada como resposta única (`compareOnlyAnswer`, dentro da regra): o título pedido antes de um subtítulo é aceito, com o motivo gravado no álbum e o aviso no cartão. O título longo pedido e o curto respondido continua recusado. Também visto: o identificador corrigido do «Core» foi gravado na série (300973540 → 1285806791).
+
+## [2026-11-19 19:05] session — F55 fatia 2: documentos da feature, arquitetura, comportamento e manual
+
+No ramo `fix/f55-identity-slice-2`: `spec.md` com os REQ-10 a REQ-16 e os seus `verified_by`, a mudança de comportamento declarada e as perguntas respondidas; `plan.md` com o desenho, as decisões, as alternativas recusadas, os riscos e o plano de testes da fatia 2; `tasks.md` com as tarefas fechadas e uma aberta, a prova no navegador pelo integrador (TASK-15). `docs/specs/arch.md`: a seção da regra reescrita para os dois degraus, o escritor único e o guardado conferido na leitura. `behavior.md`: a linha no cartão, o identificador corrigido, o guardado conferido, a remoção de álbum. `data-model.md`: o `appleMusicId` é corrigido pelo app. Manual 01, 02, 04, 06, 07, 08, 10, 17, 23, 24 e 32. A UAT-184 não foi mexida. 1053 testes, build ok; o doctor segue vermelho com os mesmos 521 erros de antes do ramo.
+
 ## [2026-11-19 19:03] decision — MJRP: dispensa de bloqueio pelo processo até as issues acabarem
 
 Palavras do MJRP: «ok, eu vou ter que sair nao se bloqueia, decida e registre, principalmente nao se bloqueie pelo processo, sou dono do harness e te dou um waiver aqui pra vc continuar trabalhando nas issues até finalizar todas». Leitura do agente: enquanto ele está fora, o agente decide, registra cada decisão como «decidido pelo agente — revisável», e segue pelas issues abertas sem parar por recusa de processo (a recusa é registrada e o trabalho continua). Não muda: push, aceite e carimbos são dele; nenhuma senha é digitada; nada de `--no-verify`; cada feature só vai a produção testada e provada, com a volta anotada.
+
+## [2026-11-19 18:59] session — F55 fatia 2: adicionar e remover álbum de uma série perguntam à regra única
+
+O `SeriesService` casava a consulta em texto por «a consulta contém o título (e o artista)»: remover «Core» podia remover «Core Memories», e «Core Memories» na série impedia adicionar «Core». Agora, ao remover, a consulta que guarda o id do álbum é a dele (dado antigo); senão a regra diz qual consulta pediu o álbum da tela (a consulta é o pedido, o álbum é o candidato), o título próprio antes da consulta de que ele é só uma edição. Ao adicionar, só o título próprio é repetição; uma edição é outra coisa a pedir. O teste de arquitetura passou a cobrir os leitores do guardado e o `SeriesService`. Achado: o caminho de remoção manual do `SeriesEventHandler` espera a mensagem «Could not find album query in series», que o serviço nunca emite (emite «Could not find album "…" in series»); é código morto, não mexido. 1049 testes.
+
+## [2026-11-19 18:56] session — F55 fatia 2: o álbum trocado já guardado no navegador é descartado quando é lido
+
+Em vez de trocar a versão do registro (que jogaria fora todos os álbuns e todas as notas guardadas), cada leitura do guardado pergunta à regra única se o registro ainda é o álbum pedido pela consulta: `AlbumCacheAdapter.get` (a carga; memória e IndexedDB) e `APIClient.fetchAlbum` (o caminho antigo do blend e das playlists; memória, IndexedDB e o localStorage antigo). O que não é o álbum pedido é esquecido e buscado de novo; o título com subtítulo só fica se o registro diz que uma carga o aceitou pelo segundo degrau. O `peek` da contagem continua só-leitura. Na primeira carga depois de publicar, só os álbuns trocados são buscados de novo (8 em 227 na conta do MJRP, contados em 2026-11-19). 1038 testes.
+
+## [2026-11-19 18:54] session — F55 fatia 2: o identificador corrigido da Apple gravado na série, por um escritor só
+
+Quando o álbum pedido é achado sob outro identificador da Apple (o guardado sumiu ou leva a outro álbum), o `SeriesFactsService`, que já era o único escritor do que a carga aprende sobre a série, grava na mesma escrita, uma vez por série terminada: `appleMusicId` novo e, só se a consulta os guarda, `coverUrl` e `year` do álbum carregado. Artista e título pedidos nunca mudam. Não espera os fatos; a falha da escrita é avisada, tentada de novo na próxima passada e nunca derruba a carga. O álbum aceito pelo segundo degrau também tem o identificador gravado. Teste de arquitetura: só o `CatalogAdapter` diz que um identificador foi trocado, só o `albumQuery.js` lê, só o `SeriesFactsService` escreve. 1029 testes.
+
+## [2026-11-19 18:52] session — F55 fatia 2: o segundo degrau da regra de identidade («No Quarter»)
+
+Ramo `fix/f55-identity-slice-2`. A regra única (`shared/albumIdentity.js`) ganhou um segundo degrau, que nunca disputa com o primeiro: o título pedido é o título do candidato antes de um subtítulo («:» ou « - »), com o mesmo artista, e só num sentido (o pedido é o curto). `compareAlbumIdentity` responde `same-if-alone` (não é `same`); só o `pickAlbum`, que vê todos os candidatos, aceita, e só quando nenhum passou no primeiro degrau e os do segundo são um álbum só. O álbum carregado leva o motivo em `metadata.identityReason`; o cartão do álbum diz em uma linha quando foi aceito pelo segundo degrau; a contagem só-leitura o conta como igual, com o motivo. Não afrouxam, por olharem um candidato só: o identificador guardado, a resposta da IA e a página conferida sozinha no raspador. 1020 testes, build ok. Sem navegador nesta sessão.
 
 ## [2026-11-19 18:40] decision — MJRP: «No Quarter» tratado com afrouxamento; F68 criada para rever as regras de identidade de álbum
 

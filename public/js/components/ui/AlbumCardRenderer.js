@@ -10,8 +10,23 @@ import { escapeHtml } from '../../utils/stringUtils.js';
 import { Card } from './Card.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 import { TracksTable } from '../ranking/TracksTable.js';
+import { identityNotice } from '../../models/askedAlbum.js';
 
 export class AlbumCardRenderer {
+    /**
+     * What goes in the badges row of a card: the ranking badge, and one line when the album is not,
+     * to the letter, the title that was asked for (F55: the catalog only has it with a subtitle).
+     * @param {Object} album
+     * @returns {Array<HTMLElement>}
+     */
+    static renderBadges(album) {
+        const notice = identityNotice(album);
+        return [
+            Card.renderRankingBadge(album),
+            notice ? SafeDOM.span({ className: 'basis-full text-[10px] leading-snug text-amber-400', dataset: { identityNote: 'true' } }, notice) : null
+        ].filter(Boolean);
+    }
+
     /**
      * Render a Compact Album Card (Grid view)
      * Redesigned Sprint 22: Bordered Card, Vertical Actions, Refetch Button
@@ -96,7 +111,7 @@ export class AlbumCardRenderer {
 
         // Badges Row (Smaller font size requested: text-[10px] or text-xs)
         const badgesRow = SafeDOM.div({ className: 'flex flex-wrap gap-1 mt-auto pb-2 text-xs opacity-90' },
-            Card.renderRankingBadge(album) ? [Card.renderRankingBadge(album)] : []
+            this.renderBadges(album)
         );
 
         const detailsSection = SafeDOM.div({ className: 'px-3 flex flex-col flex-1 bg-gray-800' }, [
@@ -142,7 +157,7 @@ export class AlbumCardRenderer {
         ]);
 
         const badgesRow = SafeDOM.div({ className: 'flex flex-wrap gap-1 mt-auto' },
-            Card.renderRankingBadge(album) ? [Card.renderRankingBadge(album)] : []
+            this.renderBadges(album)
         );
 
         const infoCol = SafeDOM.div({ className: 'flex-1 min-w-0' }, [

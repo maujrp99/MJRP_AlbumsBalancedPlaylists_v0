@@ -5,6 +5,7 @@
 
 ## Pre-Implementation
 - [x] create the branch `fix/f55-one-album-identity-rule` (da ponta da `main` local, `680e726`)
+- [x] create the branch `fix/f55-identity-slice-2` para a fatia 2 (da ponta da `main` local, `4e4cc1b`)
 - [x] verify the spec and the plan of F55 passed their cross-checks (and were approved, where gated): via rápida, sem portão; o `spec.md` e o `plan.md` da fatia 1 foram escritos depois do código, e o MJRP julga
 
 ## Implementation
@@ -30,17 +31,23 @@
 - [x] TASK-10 tirar o que a regra substituiu: `public/js/models/AlbumIdentity.js`, `test/repro_identity.js`, e as funções de semelhança e de normalização de álbum e artista de `utils/stringUtils.js` e `utils/NormalizationUtils.js` · implements:: REQ-01 · model:: sonnet · rounds:: 1
 - [x] TASK-11 `test/architecture/albumIdentityRule.test.js`: a função de aptidão · implements:: REQ-09 · model:: opus · rounds:: 1
 
-### Fatia 2 — o identificador corrigido gravado, e o guardado antigo descartado (não feita)
-- [ ] TASK-12 gravar na série, por um único escritor, o identificador novo quando o álbum carregado traz `metadata.replacedSourceId` · implements:: REQ-10 · model:: opus
-- [ ] TASK-13 nova versão do registro guardado no navegador, para o álbum trocado já guardado ser refeito (junto com a fatia 2 da F52) · implements:: REQ-10 · model:: opus
-- [ ] TASK-14 adicionar e remover álbum de uma série (`SeriesService`) pela regra · implements:: REQ-10 · model:: opus
-- [ ] TASK-15 rodar a contagem na conta do MJRP depois de publicado, e levar o número a zero ou a aviso · implements:: REQ-10 · model:: opus · waiting:: human — a contagem roda com o login do MJRP · action:: o MJRP (ou o integrador, com o login dele) roda `await albumIdentityAudit()` no console e decide o que fazer com cada linha `different`
+### Fatia 2 — o segundo degrau, o identificador corrigido gravado, e o guardado antigo descartado (construída; falta a prova no navegador)
+- [x] TASK-18 `shared/albumIdentity.js`: o segundo degrau da regra (`same-if-alone`, `title-before-subtitle`), aceito só pelo `pickAlbum` e só quando é o único álbum; `compareKeptAlbum` para o álbum guardado; o cabeçalho do arquivo reescrito em dois degraus, com exemplos — os testes de «No Quarter», «The Wall» e «Greatest Hits» escritos primeiro, `test/shared/albumIdentity.test.js` passa · implements:: REQ-13 · model:: opus · rounds:: 1
+- [x] TASK-19 os lugares: `CatalogAdapter` e `api/client.js` guardam `metadata.identityReason`; o identificador guardado, a resposta da IA e a página conferida sozinha no raspador (`pageIsTheAlbum`) aceitam só o primeiro degrau; Spotify (app e servidor), sugestões e página do artista ganham o degrau pela escolha — `test/services/albums/catalogIdentity.test.js`, `test/api/clientIdentity.test.js`, `test/services/spotify/SpotifyAlbumMatch.test.js`, `test/server/spotifyAlbumIdentity.test.js` e `test/server/scraperIdentity.test.js` passam · implements:: REQ-14, REQ-15 · model:: opus · rounds:: 2
+- [x] TASK-20 `models/askedAlbum.js` (`keptAlbum`, `identityNotice`), `components/ui/AlbumCardRenderer.js` (a linha no cartão), `albumIdentityAudit.js` e `albumLoading.js` (a contagem conta o segundo degrau como igual, com o motivo) — `test/components/ui/AlbumCardIdentityNote.test.js` e `test/services/albums/albumIdentityAudit.test.js` passam · implements:: REQ-15 · model:: opus · rounds:: 1
+- [x] TASK-12 gravar na série, por um único escritor (`SeriesFactsService`, na escrita dos fatos), o identificador novo quando o álbum carregado traz `metadata.replacedSourceId`: `withCorrectedSource` em `models/albumQuery.js`, `withCorrectedSources` em `models/albumFacts.js` — `test/services/series/SeriesFactsService.test.js` passa · implements:: REQ-10 · model:: opus · rounds:: 1
+- [x] TASK-13 o álbum trocado já guardado no navegador é descartado quando é lido, pela regra, em vez de uma nova versão do registro: `AlbumCacheAdapter.get` e `APIClient._keptAlbumAskedFor` — `test/services/albums/adapters.test.js` e `test/api/clientIdentity.test.js` passam · implements:: REQ-11 · model:: opus · rounds:: 1
+- [x] TASK-14 adicionar e remover álbum de uma série (`SeriesService`) pela regra: `indexOfQueryFor` e `alreadyAskedFor` em `models/askedAlbum.js` — `test/services/SeriesService.identity.test.js` passa · implements:: REQ-12 · model:: opus · rounds:: 1
+- [x] TASK-21 `test/architecture/albumIdentityRule.test.js`: nenhum lugar nomeia ou concede o segundo degrau; os leitores do guardado e o `SeriesService` entram na lista de lugares; um escritor só para o identificador corrigido · implements:: REQ-16 · model:: opus · rounds:: 1
+- [ ] TASK-15 provar a fatia 2 num navegador com a conta do MJRP, antes de publicar: a contagem antes; as séries «Robert Plant 00-10s» («No Quarter» carrega, com a linha no cartão) e «Grunge Rock - Classics» («Core» no lugar de «Shangri-La Dee Da», sem «Clear Cache»); o identificador novo gravado na série; a contagem depois, em zero ou com cada linha virando aviso · implements:: REQ-10, REQ-11, REQ-13, REQ-15 · model:: opus · waiting:: human — o auxiliar que construiu não tem navegador, e a prova roda com o login do MJRP · action:: o integrador segue os passos do relatório do auxiliar, grava a prova em `reports/evidence/F55/` e só então muda o estado da UAT-184
 
 ## Verification
 - [x] TASK-16 suíte (`npx vitest run`: 919 testes, 86 arquivos; eram 789) e `npx vite build` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09 · model:: sonnet · rounds:: 1
+- [x] TASK-22 suíte da fatia 2 (`npx vitest run`: 1053 testes, 94 arquivos; eram 982) e `npx vite build` · implements:: REQ-10, REQ-11, REQ-12, REQ-13, REQ-14, REQ-15, REQ-16 · model:: sonnet · rounds:: 1
 - [ ] TASK-17 conferir a fatia 1 num navegador (a série «Grunge Rock - Classics» mostra «Core» ou o aviso; a contagem roda e não grava) e o raspador publicado · implements:: REQ-02, REQ-03, REQ-05, REQ-08 · model:: opus · waiting:: human — o auxiliar que construiu não tem navegador; a prova roda no endereço local com o login do MJRP, e o conserto no servidor só se prova publicando · action:: o integrador roda a carga e a contagem (await albumIdentityAudit() no console) no navegador, e publica o servidor depois do ok do MJRP
 
 ## Documentation
 - [x] update the specs affected (`docs/specs/arch.md`, e no manual: `23_Shared_Code.md`, `08_Frontend_Models.md`, `06_Frontend_Data_Store.md`, `17_Frontend_Services.md`, `02_Server_Structure.md`, `04_Backend_Logic_Services.md`, `24_Test_Suite.md`, e as frases que ficaram falsas em `00_Dir_File_Structure_Map.md`, `01`, `07b` e `99`)
-- [ ] mark F55 Done in spec.md · commit: feat: implement the-album-asked-for-or-a-notice (só depois da fatia 2)
+- [x] fatia 2: update the specs affected (`docs/specs/arch.md`, `docs/specs/behavior.md`, `docs/specs/data-model.md`, e no manual: `23_Shared_Code.md`, `08_Frontend_Models.md`, `06_Frontend_Data_Store.md`, `07_Frontend_Data_Infra.md`, `10_Frontend_Renderers.md`, `17_Frontend_Services.md`, `02_Server_Structure.md`, `04_Backend_Logic_Services.md`, `24_Test_Suite.md`, `01_System_Architecture.md`, `32_Data_Schema_Reference.md`)
+- [ ] mark F55 Done in spec.md · commit: feat: implement the-album-asked-for-or-a-notice (só depois da prova da fatia 2 no navegador, TASK-15)
 - [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde

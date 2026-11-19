@@ -101,11 +101,13 @@ export class SeriesRepository extends BaseRepository {
     }
 
     /**
-     * Save what the app learned about the albums a series asks for (the `facts` of each query).
+     * Save what the app learned about the albums a series asks for: the `facts` of each query and,
+     * when the album was found under another Apple Music id than the stored one, that id with the
+     * cover and the year stored beside it (F55). SeriesFactsService is its only caller.
      * A write the app makes on its own: it does not count as the person updating the series, so
      * `updatedAt` is left as it is.
      * @param {string} seriesId
-     * @param {Array} albumQueries - the whole list, with the facts in place
+     * @param {Array} albumQueries - the whole list, with what was learned in place
      * @returns {Promise<string>} Series ID
      */
     async saveAlbumFacts(seriesId, albumQueries) {

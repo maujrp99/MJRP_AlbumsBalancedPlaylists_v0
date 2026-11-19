@@ -585,9 +585,9 @@ A crítica conferiu a proposta contra o código e achou dez pontos. A direção 
 
 **Ainda não verificado:** o que uma aba antiga faz com um 502 na lista de álbuns por IA; o prazo e o número de instâncias configurados no Cloud Run; se o caminho de `SeriesService` que aplica as notas por conta própria passa pelo leitor novo.
 
-## Uma regra só para dizer que é o mesmo álbum (F55) — fatia 1 construída
+## Uma regra só para dizer que é o mesmo álbum (F55) — fatia 1 em produção, fatia 2 construída
 
-> **Estado:** construída em 2026-11-19 no ramo `fix/f55-one-album-identity-rule`; ainda não entrou na `main` nem foi publicada. Pela via rápida, sem proposta separada: o desenho estava dado pela issue UAT-184, pelo item 5.2 e pela emenda 5 da seção 11 de «O servidor diz a verdade», e pelo tema 3 do mapa `reports/audits/2026-11-19-mjrpalbumblender-v0-v5-map.md`. Os documentos da feature estão em `docs/specs/features/F55-the-album-asked-for-or-a-notice/`.
+> **Estado:** a fatia 1 está em produção desde 2026-11-19 18:18 (site e servidor). A fatia 2 foi construída em 2026-11-19 no ramo `fix/f55-identity-slice-2`; ainda não entrou na `main` nem foi publicada, e falta a prova no navegador. Pela via rápida, sem proposta separada: o desenho estava dado pela issue UAT-184, pelo item 5.2 e pela emenda 5 da seção 11 de «O servidor diz a verdade», e pelo tema 3 do mapa `reports/audits/2026-11-19-mjrpalbumblender-v0-v5-map.md`. Os documentos da feature estão em `docs/specs/features/F55-the-album-asked-for-or-a-notice/`.
 
 **O problema.** A série pedia «Stone Temple Pilots - Core» e a tela mostrava «Shangri-La Dee Da». A pergunta «este é o álbum pedido?» era respondida em cinco lugares, cada um do seu jeito, quase todos por «um texto contém o outro» ou por uma nota de semelhança em que o artista certo bastava.
 
@@ -595,7 +595,7 @@ A crítica conferiu a proposta contra o código e achou dez pontos. A direção 
 
 - **A regra:** `shared/albumIdentity.js`. `compareAlbumIdentity(pedido, candidato)` devolve um veredito tipado (`same` ou `different`, com o motivo); `pickAlbum(pedido, candidatos, leitor)` devolve o candidato que passa, ou nenhum. O título tem de bater por conta própria, inteiro; o artista tem de bater; o ano nunca reprova, só ordena os que passaram. Sem candidato que passe, o resultado é «não achei»: não existe «o mais parecido do artista».
 - **O que sai antes de comparar:** acento, caixa, pontuação, «&» e «and», o «The» do começo, e as notas de edição (entre parênteses ou colchetes, ou depois de «:» ou « - »), reconhecidas por um vocabulário fechado.
-- **A decisão do subtítulo:** o que vem depois de «:» ou « - » só sai se for nota de edição. «Brighten the Corners: Nicene Creedence Ed.» é «Brighten the Corners»; «The Wall: Live in Berlin» não é «The Wall». Vale nos dois sentidos.
+- **A decisão do subtítulo:** o que vem depois de «:» ou « - » só sai se for nota de edição. «Brighten the Corners: Nicene Creedence Ed.» é «Brighten the Corners»; «The Wall: Live in Berlin» não é «The Wall» no primeiro degrau, e só chega a ele pelo segundo (abaixo).
 - **Do lado do app:** `public/js/models/askedAlbum.js` lê a consulta guardada (o pedido) e o que cada fonte devolve (o candidato) nos mesmos três campos. Cada lugar adapta e pergunta; nenhum compara texto.
 - **Do lado do servidor:** `server/lib/albumIdentity.js` carrega a regra (o servidor é CommonJS e a regra é módulo ES, como já acontece com `shared/normalize.js`).
 
@@ -614,11 +614,53 @@ A crítica conferiu a proposta contra o código e achou dez pontos. A direção 
 
 **Contar o que está errado hoje:** `services/albums/albumIdentityAudit.js`, só leitura, rodável pelo console (`await albumIdentityAudit()`).
 
-**O que esta fatia não faz (fica para a fatia 2):** gravar na série o identificador corrigido, por um único escritor; descartar o que o navegador já guarda de álbum trocado (o registro guardado é por consulta, e continua valendo por 7 dias); tratar adicionar e remover álbum de uma série pela mesma regra (itens 3.15 e 3.16 do mapa); a loja da Apple (3.17, 3.23).
+### Fatia 2: o segundo degrau, o identificador gravado, o guardado conferido
+
+**O segundo degrau (decisão do MJRP, 2026-11-19: «o no quarter é um edge case, vamos tratá-lo com afrouxamento»).** A série pede «Jimmy Page & Robert Plant - No Quarter» e o catálogo só tem «No Quarter: Jimmy Page & Robert Plant Unledded». A regra tem dois degraus, e o segundo nunca disputa com o primeiro:
+
+- **Primeiro degrau, «é o álbum»:** o que a fatia 1 fez. `compareAlbumIdentity` responde `same`.
+- **Segundo degrau, «é o álbum, se a fonte não tiver nada melhor»:** o título PEDIDO é o título do candidato antes de um separador de subtítulo («:» ou « - »), com o mesmo artista. `compareAlbumIdentity` responde `same-if-alone`, com `same: false` e o motivo `title-before-subtitle`: uma comparação sozinha não sabe o que mais a fonte tem. Só num sentido (o pedido é o curto) e nunca para uma consulta sem artista.
+- **Quem transforma o segundo degrau em «igual»:** só o `pickAlbum`, que vê todos os candidatos. Se algum passou no primeiro degrau, a escolha é entre esses. Senão, se os do segundo degrau são um álbum só (o mesmo título sem as notas de edição), ele é escolhido, com o motivo `title-before-subtitle`. Dois álbuns diferentes é «não achei»: escolher entre eles é da pessoa (F57).
+- **Um álbum guardado não tem candidatos ao lado:** `compareKeptAlbum` acredita no segundo degrau só quando o álbum traz o motivo que a escolha deixou nele.
+
+| Pedido | Candidatos | Resultado |
+|---|---|---|
+| «The Wall» | «The Wall», «The Wall: Live in Berlin» | «The Wall» (`exact-title`), em qualquer ordem |
+| «The Wall» | «The Wall: Live in Berlin» | ele, com `title-before-subtitle` |
+| «The Wall: Live in Berlin» | «The Wall» | não achei |
+| «Greatest Hits» | «Greatest Hits: 1970-2002», «Greatest Hits: Vol 2» | não achei |
+| «No Quarter» | «Walking Into Clarksdale», «No Quarter: Jimmy Page & Robert Plant Unledded» | o segundo, com `title-before-subtitle` |
+| «Core» | «Core Memories», «Shangri-La Dee Da» | não achei |
+
+**Onde o segundo degrau vale, e onde não.** Vale onde a regra recebe a lista inteira de uma fonte: a busca da Apple (`CatalogAdapter`, `api/client.js`), o Spotify (app e servidor), as sugestões e a página do artista no raspador, os dados locais. Não vale onde só há um candidato à vista, porque um candidato sozinho é sempre «o único»: o identificador guardado (`CatalogAdapter._detailsOfChosen`: se leva ao título com subtítulo, a busca por nome decide), a resposta da IA (`api/client.js`) e a página que o raspador confere sozinha (`pageIsTheAlbum`; a busca em HTML abre uma página por vez e para na primeira que aceita). No raspador e no Spotify cada resposta de busca é uma lista, julgada na ordem das buscas que já existia.
+
+**O que o álbum carregado diz.** `metadata.identityReason` (o motivo da regra pelo qual foi aceito) e, quando o identificador guardado não foi o usado, `metadata.replacedSourceId`. O cartão do álbum aceito pelo segundo degrau mostra uma linha (`identityNotice`, em `models/askedAlbum.js`); a contagem só-leitura o conta como igual, com o motivo.
+
+**Um escritor para o identificador corrigido.** O `SeriesFactsService` já era o único escritor do que a carga aprende sobre a série (os `facts`, seção 16). Na mesma passada e na mesma escrita, uma vez por série terminada, ele grava o `appleMusicId` sob o qual o álbum foi achado e, só se a consulta os guarda, a capa e o ano do álbum carregado (`withCorrectedSource` em `models/albumQuery.js`; `withCorrectedSources` em `models/albumFacts.js`; `SeriesRepository.saveAlbumFacts`). O artista e o título pedidos nunca mudam. A escrita não espera os fatos, e a falha dela é avisada e tentada de novo na passada seguinte: a carga não depende dela. O álbum do segundo degrau também tem o identificador gravado; como esse identificador não é obedecido sozinho, a busca por nome continua decidindo a cada carga sem guardado.
+
+```mermaid
+flowchart LR
+    CA["CatalogAdapter<br>acha o álbum pedido"] -->|"metadata.identityReason<br>metadata.replacedSourceId"| LS["AlbumLoadStore"]
+    LS --> SF["SeriesFactsService<br>o único escritor"]
+    SF -->|"withSettledFacts<br>withCorrectedSources"| Q["albumQueries da série"]
+    Q -->|"saveAlbumFacts<br>uma escrita por série"| FS[("Firestore")]
+    LS --> CARD["cartão do álbum<br>a linha do segundo degrau"]
+```
+
+**O guardado conferido na leitura.** O registro de álbum no navegador é por consulta e vale 7 dias, então os álbuns trocados da época em que «o artista certo bastava» continuavam na tela. Em vez de uma nova versão do registro (que descartaria todos os álbuns e todas as notas guardadas), cada leitura pergunta à regra se o registro ainda é o álbum pedido: `AlbumCacheAdapter.get` (a carga; memória e IndexedDB) e `APIClient._keptAlbumAskedFor` (o caminho antigo do blend e das playlists; memória, IndexedDB e o localStorage antigo). O que não passa é esquecido e buscado de novo. Na primeira carga depois de publicar, só os álbuns trocados são refeitos.
+
+**Adicionar e remover álbum de uma série.** O `SeriesService` casava a consulta em texto por «contém». Agora pergunta à regra (`indexOfQueryFor`, `alreadyAskedFor`): a consulta é o pedido, o álbum da tela é o candidato.
+
+**Função de aptidão (fatia 2):** o mesmo arquivo falha quando um lugar nomeia o segundo degrau, compara o tipo do veredito ou entrega ao `pickAlbum` uma lista de um candidato só; quando um leitor do guardado ou o `SeriesService` deixam de perguntar à regra; e quando aparece outro arquivo que lê `replacedSourceId` ou chama `saveAlbumFacts`.
+
+**O que fica fora:** escolher entre dois álbuns do segundo degrau (F57); o qualificador entre parênteses que não é edição («Weezer (Blue Album)»); a loja da Apple (3.17, 3.23); a revisão de todas as regras de identidade, para que continuem fáceis de entender e manter (F68).
 
 **Riscos conhecidos:**
 - *Álbum certo que deixa de ser achado.* Um título de catálogo com um qualificador que não é edição («Weezer (Blue Album)», «(Original Motion Picture Soundtrack)») não bate com o título sem ele. Atinge a consulta digitada à mão e a série antiga cujo título guardado difere do título do catálogo; a contagem só-leitura mostra quantos são antes de publicar.
 - *Formato da fonte raspada.* O rótulo «Título by Artista» e o cabeçalho da página foram lidos da fonte em 2026-11-19; se a fonte mudar o formato, o raspador passa a responder «não achei» (nunca o vizinho).
 - *A busca em HTML da fonte não devolveu nenhum link de álbum em 2026-11-19:* o caminho continua, conferido pela regra, mas na prática quem acha é a busca por sugestões.
 
-**Não verificado:** nada disto foi visto num navegador nem contra o servidor publicado; as fontes reais só foram lidas para conhecer o formato (cinco leituras do BestEverAlbums). Quantos álbuns da conta do MJRP estão trocados: a contagem existe, falta rodá-la com o login dele.
+- *O segundo degrau aceita um álbum que não é o pedido (fatia 2).* «Greatest Hits» pedido, e a fonte só com «Greatest Hits: Vol 2», carrega o volume 2, com a linha no cartão. A lista da Apple tem 5 resultados: «o único» é o único entre eles.
+- *Notas e popularidade do álbum do segundo degrau (fatia 2).* As fontes são perguntadas com o título do álbum carregado, o comprido; se a fonte só tiver o curto, não casa (o degrau é num sentido só) e o álbum fica sem esse dado.
+
+**Verificado e não verificado:** a fatia 1 foi provada no navegador com a conta do MJRP e em produção (`reports/evidence/F55/2026-11-19-slice-1-browser-proof.md`: 8 álbuns trocados em 227). A fatia 2 só foi provada em teste de unidade (1053 testes): nada dela foi visto num navegador, nem contra o catálogo, o Spotify ou a fonte de notas reais.

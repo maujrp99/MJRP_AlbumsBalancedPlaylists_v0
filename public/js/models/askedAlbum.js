@@ -5,11 +5,17 @@
  * the app turns its own shapes into those three fields: the query a series stores (what was
  * ASKED), and what each source gives back (a CANDIDATE). A call site imports from here, adapts
  * and asks the rule; it compares no text itself (test/architecture/albumIdentityRule.test.js).
+ *
+ * An album the app loaded carries, in `metadata.identityReason`, the reason of the rule it was
+ * accepted by. `keptAlbum` reads it back, so the rule can say whether an album that is kept (a
+ * cache record, the album on screen) is still the album asked for (`compareKeptAlbum`).
  */
 
 import { parseAlbumQuery } from './albumQuery.js'
 
-export { compareAlbumIdentity, pickAlbum, Verdict, Reason } from '@shared/albumIdentity.js'
+import { Reason, compareKeptAlbum } from '@shared/albumIdentity.js'
+
+export { compareAlbumIdentity, compareKeptAlbum, compareOnlyAnswer, pickAlbum, Verdict, Reason } from '@shared/albumIdentity.js'
 
 /**
  * What a query asks for.
@@ -42,3 +48,52 @@ export const localCandidate = (item) => ({
     title: item?.album ?? item?.title,
     year: item?.year
 })
+
+/**
+ * An album the app keeps (an Album, or the plain data of a cache record), as the rule reads it.
+ * @param {Object|null} album - { artist, title, year, metadata?: { identityReason? } }
+ * @returns {{ artist: string, title: string, year: *, identityReason: string|null } | null}
+ */
+export const keptAlbum = (album) => (album ? {
+    artist: album.artist,
+    title: album.title,
+    year: album.year,
+    identityReason: album.metadata?.identityReason ?? null
+} : null)
+
+/**
+ * Which of the queries of a series asked for this album (the album on screen)? Each query is what
+ * was ASKED and the album is the candidate. A query with the album's own title comes before a
+ * query the album is only an edition of.
+ * @param {Array<string|Object>} albumQueries
+ * @param {Object} album - a loaded album
+ * @returns {number} the position of the query, or -1 when no query asked for this album
+ */
+export function indexOfQueryFor(albumQueries, album) {
+    const kept = keptAlbum(album)
+    const verdicts = (albumQueries || []).map(query => compareKeptAlbum(askedAlbum(query), kept))
+    const exact = verdicts.findIndex(verdict => verdict.reason === Reason.EXACT_TITLE)
+    return exact !== -1 ? exact : verdicts.findIndex(verdict => verdict.same)
+}
+
+/**
+ * Does a series already ask for this very album? An edition of an album the series asks for is
+ * something else to ask for, so only the album's own title counts.
+ * @param {Array<string|Object>} albumQueries
+ * @param {Object} album - { artist, title }
+ * @returns {boolean}
+ */
+export function alreadyAskedFor(albumQueries, album) {
+    const kept = keptAlbum(album)
+    return (albumQueries || []).some(query => compareKeptAlbum(askedAlbum(query), kept).reason === Reason.EXACT_TITLE)
+}
+
+/**
+ * The one line an album shows when it is not, to the letter, the title that was asked for.
+ * @param {Object} album - a loaded album
+ * @returns {string|null} null when there is nothing to say
+ */
+export function identityNotice(album) {
+    if (album?.metadata?.identityReason !== Reason.TITLE_BEFORE_SUBTITLE) return null
+    return 'Asked for by its short title: the catalog only has this one, with a subtitle.'
+}

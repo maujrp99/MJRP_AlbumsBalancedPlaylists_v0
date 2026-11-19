@@ -99,11 +99,17 @@ async function albumsNamedByPage ($) {
   return readings
 }
 
-/** Reads the page and says whether it is the page of the album asked for. */
+/**
+ * Reads the page and says whether it is the page of the album asked for.
+ * One page, with no other candidate in sight: only the first tier of the rule is accepted here
+ * (`same`). The second tier (the title asked for before a subtitle) needs the whole list of a
+ * search, and pickAlbum gives it where the scraper has one: pickSuggested, rankingFromArtistPage.
+ */
 async function pageIsTheAlbum (url, asked) {
   const res = await getPage(absoluteUrl(url))
-  const { pickAlbum } = await loadAlbumIdentity()
-  return pickAlbum(asked, [await albumsNamedByPage(loadHtml(res.data))]).found
+  const { compareAlbumIdentity } = await loadAlbumIdentity()
+  const readings = await albumsNamedByPage(loadHtml(res.data))
+  return readings.some(reading => compareAlbumIdentity(asked, reading).same)
 }
 
 /**
