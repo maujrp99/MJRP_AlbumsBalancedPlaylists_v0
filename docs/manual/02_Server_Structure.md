@@ -266,10 +266,13 @@ flowchart TD
 **Purpose**: Extracts track-level ratings from besteveralbums.com.
 
 *   **Logic Trace**:
-    0.  **Entry (`getRankingForAlbum`)**: with an artist, first looks for the artist page (`findArtistPage`: the result of `suggest.php` whose label is the artist's own name) and the album among the links of that page (`parseArtistDiscography`); otherwise, or if not found, goes to discovery.
-    1.  **Discovery (`findAlbumId`)**:
-        *   First pass: queries `suggest.php` with "artist title". Each result comes with a label "Title by Artist"; a result whose label cannot be read that way has its page opened and read (`<title>`, `h1`). Then the HTML search `search.php`, whose album links are opened and read, up to five.
-        *   Second pass (if the first finds nothing): queries `suggest.php` again in other words (artist only, title only, title without subtitle). Other words widen what the source lists, not what is accepted.
+    0.  **Entry (`getRankingForAlbum`, through `locateAlbum`)**: an explicit, ordered list of attempts (F68); the first that has the album ends the search. With an artist, the first attempt (`artist-page`) looks for the artist page (`findArtistPage`: the result of `suggest.php` whose label is the artist's name by the rule's `sameArtist`, so "Robert Plant & Jimmy Page" reaches "Jimmy Page & Robert Plant") and the album among the links of that page (`parseArtistDiscography`); otherwise, or if not found, goes to discovery.
+    1.  **Discovery (`findAlbumId` / `findAlbum`, the texts of `searchAttempts`)**:
+        *   `artist-and-title`: queries `suggest.php` with "artist title", once per title of the rule's `titlesToSearch` (the title WITHOUT edition notes, then the other known writings: "AC/DC PWR/UP"). Each result comes with a label "Title by Artist"; in the first attempt a result whose label cannot be read that way has its page opened and read (`<title>`, `h1`).
+        *   `title-alone`: the title with no artist, for an artist the source writes another way ("And" for "&").
+        *   `artist-alone`: what the source suggests for the artist's name (the request of the artist page, asked once).
+        *   `html-search`: the HTML search `search.php`, whose album links are opened and read, up to five.
+        *   The source matches word by word: a text with a word its title does not have lists nothing. Other words widen what the source lists, not what is accepted. There is no title cleaner in the scraper: the texts come from the rule.
         *   **Acceptance (F55, slice 1)**: at every one of these points the scraper turns what the source gave into `{ title, artist }` and asks the one identity rule (`shared/albumIdentity.js`, loaded through `server/lib/albumIdentity.js`). It compares no text itself. An album absent from the source, with its artist present, is `null` ("not found"): another album of the artist is never returned. Before F55 each point accepted when one text contained the other (title or artist), and the HTML search took the first link. Since slice 2, where the scraper has a list (the suggestions, the artist's page) the rule's second tier applies: the title asked for before a subtitle is accepted when it is the only such album and the album asked for itself is not listed. A page opened and checked alone accepts the first tier only.
     2.  **Parsing (`parseChartRankingById`)**:
         *   Uses `cheerio` to find specific Table rows.

@@ -63,7 +63,7 @@ The Service Layer orchestrates complex operations and state transitions, isolati
     2.  **Search 1**: `q=artist:Pink Floyd album:<clean title>` (5 results).
     3.  **Search 2**: the title as written, when cleaning changed it.
     4.  **Search 3**: `artist:Pink Floyd` (20 results).
-    5.  **Acceptance**: the searches only list candidates. After each one, the one identity rule (`shared/albumIdentity.js`, through `models/askedAlbum.js`) picks the album asked for among them: the title must match on its own, the artist must match, the plain album comes before an edition. When a search lists no such album and exactly one album has the title asked for before a subtitle, that one is taken (the rule's second tier, F55 slice 2). No candidate passes all three searches: `null`.
+    5.  **Acceptance**: the searches only list candidates. After each one, the one identity rule (`shared/albumIdentity.js`, through `models/askedAlbum.js`) picks the album asked for among them: the title must match on its own, the artist must match, the plain album comes before an edition. When a search lists no such album and exactly one album is accepted by a rule of the second tier (the title asked for before a subtitle, without what the candidate has in parentheses, and the others of `SECOND_TIER_RULES`), that one is taken (F55 slice 2, F68). The title without edition notes sent to the search is the rule's own (`titleWithoutEditionNotes`). No candidate passes all three searches: `null`.
 *   **What it no longer does**: take the first result when nothing matched, accept a title that contains the other, or score by Levenshtein distance. Those three let another album of the same artist stand in for the album asked for (UAT-184).
 
 #### B. Enrichment Flow (`enrichAlbumData`)
