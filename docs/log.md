@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 18:18] session — F55 fatia 1 em produção (site e servidor)
+
+Site e servidor publicados da `main` (`72c0a70`; revisão `mjrp-proxy-00200-2nh`, volta `mjrp-proxy-00199-hsv`). Em produção, com login, a fonte de notas respondeu `found` para «Core» e «Core (Remastered)» (mesma página) e `not_found` para «Core Memories». A UAT-184 fica aberta até a fatia 2: os álbuns trocados já guardados no navegador seguem na tela até vencer ou até «Clear Cache», e o identificador corrigido ainda não é gravado na série. Efeito conhecido: «No Quarter» (série Robert Plant 00-10s) passa a falhar com aviso, porque o catálogo só o tem com subtítulo. A regra do raspador que a F52 listava como tarefa 12 foi entregue aqui. O auxiliar da F67 (Scan) está trabalhando.
+
 ## [2026-11-19 18:18] decision — F67 criada: o Scan da Home responde ao clique (UAT-204)
 
 Feature de via rápida, `^REL-40`, conserta a UAT-204. Criada na `main` antes do ramo. Achado novo: quando o Scan roda, o botão vira um círculo girando; na captura do MJRP o botão estava com o rótulo normal, então o clique não chegou a iniciar a busca ou ela terminou sem mostrar nada. A causa é investigada antes do conserto.

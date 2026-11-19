@@ -47,4 +47,15 @@ Também trocaram de identificador, para o mesmo álbum: «Making Movies» e «Br
 ## Não visto
 
 - Spotify (app e servidor) com respostas reais; o caminho antigo do blend e da edição de playlist; a busca por IA aceitando ou recusando um álbum.
-- Em produção: nada ainda neste arquivo.
+
+## Em produção (2026-11-19 18:18)
+
+Site `72c0a70` (pacote `main-CSKkktsd.js`), depois servidor `72c0a70` (revisão `mjrp-proxy-00200-2nh`; a volta é `mjrp-proxy-00199-hsv`).
+
+| Pedido à fonte de notas, com login | Resposta |
+|---|---|
+| STP - Core | `found`, página 2906, Plush 89 |
+| STP - Core (Remastered) | `found`, a mesma página |
+| STP - Core Memories | `not_found` |
+
+A recarga das oito séries (tabela acima) foi feita com o app local na mesma versão publicada; o que ela buscou de novo ficou guardado só naquele navegador. No navegador do MJRP os álbuns trocados continuam até o guardado vencer (7 dias) ou até «Clear Cache».
