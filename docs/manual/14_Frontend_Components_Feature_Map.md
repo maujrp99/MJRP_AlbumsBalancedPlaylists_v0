@@ -1,34 +1,32 @@
 # Frontend Components Analysis (Features)
 
-## Home & Search (`home/`, `search/`)
+## Home & Search (`home/`, `album-picker/`)
 **Status**: `[ACTIVE]`
 
--   **`home/SearchController.js`**:
-    -   **Role**: Owner of the Home scan's state (F67).
-    -   **Logic**: Holds one state (`this.scan`, rules in `models/scanState.js`: idle, scanning, results, empty, failed) and changes it only through `_setScan`, which asks `HomeView.renderScan` to draw. Calls `AlbumSearchService.scanArtist` (the instance held by `HomeController`), sorts the albums by date and applies the type filters (Albums/EPs/Singles/Live/Compilations/Uncategorized, kept in `filterState`). The scan runs on Enter, on the Scan button or on "Try again"; there is no debounce, and while a scan runs another ask does nothing. Every answer carries the generation of its scan: a late answer of an older scan changes nothing. The handlers are delegated from `#app` and read `#artistScanInput` at the time of the event. No `alert()`: no results and failure are messages in the panel.
+-   **`album-picker/AlbumPickerController.js`** (F57; it took the place of `home/SearchController.js` and of `series/ArtistScanner.js`):
+    -   **Role**: The one album picker - "search an artist, see the albums by type, pick some" - of the Home and of the series edit modal. Owner of the scan's state (F67) and of the type filters.
+    -   **Logic**: Holds one scan state (`this.scan`, rules in `models/scanState.js`: idle, scanning, results, empty, failed) and one filter state (`this.filters`, rules in `models/albumPicker.js`), and draws every change through the view port it was given: `drawScan(scan)`, `drawFilters(filters, counts)`, `drawAlbums(albums)`. `searchArtist(query)` calls `albumSearchService.scanArtist` (one instance for the whole app, so the paid AI list of an artist is asked once) and sorts the albums newest first; `retry()` scans the same text; `toggleFilter(key)`; `pick(albumId)` hands the album to `onPick`. While a scan runs another ask does nothing; every answer carries the generation of its scan, so a late answer changes nothing; after `dispose()` nothing is drawn. No `alert()`.
+    -   **The seam**: the two screens differ only in `onPick`. Home: `stagingController.addAlbum` (the album goes to the stack of the new series). Series edit: `SeriesEditModal.addAlbum` (the album joins the list of the series being edited).
+    -   **Frames**: the Home (`controllers/HomeController.js` wires the delegated handlers of `#artistScanInput`, `#btnScanArtist`, `#btnScanRetry` and `#home-toolbar [data-filter]`; `views/HomeView.js` `renderScan` and `renderFilters` draw) and `album-picker/AlbumPickerPanel.js` (the picker as one block inside the edit modal: field, Scan button, status line, filter buttons, cards). Both use the same drawn parts: `album-picker/pickerParts.js` (Scan button, filter button with its count, panel message with "Try again") and `views/renderers/DiscographyRenderer.js` (the album card, `data-action="pick-album"`).
 
     ```mermaid
     flowchart LR
-        Input[Enter / Scan / Try again] --> Start[startScan: scanning]
-        Start --> Service[AlbumSearchService.scanArtist]
-        Service -->|albums, first classification| Found[scanFound: results or empty]
+        Home[Home frame] --> Picker[AlbumPickerController]
+        Edit[AlbumPickerPanel in Edit Series] --> Picker
+        Picker --> Start[startScan: scanning]
+        Start --> Service[albumSearchService.scanArtist]
+        Service -->|albums, classified by models/albumType.js| Found[scanFound: results or empty]
         Service -->|deadline or failure| Failed[scanFailed: failed + Try again]
         Found -->|AI list arrives after| Again[scanReclassified]
-        Found --> Draw[HomeView.renderScan + filters]
+        Found --> Draw[view port: drawScan, drawFilters, drawAlbums]
         Again --> Draw
         Failed --> Draw
+        Picker -->|pick| OnPick[onPick: stage it / add it to the series]
     ```
 -   **`home/StagingAreaController.js`**:
     -   **Role**: Manages the "Staging Stack" (drag-and-drop area).
     -   **Logic**: Uses `SortableJS` for reordering. Syncs state with the `StagingAreaRenderer`.
--   **`search/DiscographyToolbar.js`**:
-    -   **Role**: UI for filtering search results.
-    -   **Logic**: Toggles between types (Album, EP, Single, etc.) and Editions (Standard, Deluxe). Updates button styles dynamically.
-    -   **Usage today**: no module imports it; the filter buttons of Home are handled by `home/SearchController.js`.
--   **`search/VariantPickerModal.js`**:
-    -   **Role**: A specialized modal for resolving "Album Groups" (e.g., when search returns multiple versions of "Thriller").
-    -   **Pattern**: Functional Component (exports `showVariantPickerModal` function) rather than a Class.
-    -   **Usage today**: no module imports it.
+-   **`search/`**: the folder is gone. `DiscographyToolbar.js` and `VariantPickerModal.js`, which no module imported, were removed in F57.
 
 ## Blend Wizard (`blend/`)
 **Status**: `[ACTIVE]`

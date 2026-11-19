@@ -17,12 +17,12 @@
 ### 1.1 Artist Search & Staging
 *   **Logic Trace**:
     1.  **[UI]** User types in `#artistScanInput` (visual mode) and presses Enter or clicks the Scan button (`#btnScanArtist`). There is no debounce.
-    2.  **[FN]** `SearchController.searchArtist(query)` -> the scan state goes to `scanning` (`models/scanState.js`) and `HomeView.renderScan` draws it at once: the button busy and disabled ("Scanning…"), the status line, the wait in the panel. While a scan runs, another ask does nothing; an empty field gets the notice "Type an artist name first.". Then it calls `AlbumSearchService.scanArtist(query)`.
+    2.  **[FN]** `AlbumPickerController.searchArtist(query)` (the one album picker, F57; the Home is one of its two frames) -> the scan state goes to `scanning` (`models/scanState.js`) and `HomeView.renderScan` draws it at once: the button busy and disabled ("Scanning…"), the status line, the wait in the panel. While a scan runs, another ask does nothing; an empty field gets the notice "Type an artist name first.". Then it calls `AlbumSearchService.scanArtist(query)`.
     3.  **[API]** Apple Music catalog through MusicKit (`musicKitService.getArtistAlbums`), in the browser, straight to Apple: the app's server sees nothing of it except `GET /api/musickit-token`, once per page load. The catalog step has a deadline of 15 s (`CATALOG_DEADLINE_MS`) and the start of MusicKit one of 10 s (`MUSICKIT_INIT_DEADLINE_MS`).
-    4.  **[UI]** As soon as the catalog answers, `DiscographyRenderer` draws the albums, classified without the AI list, and the filter counts are updated. No album: the panel says "No albums found for «text».". Deadline or failure: the panel says so, with the button "Try again" (`#btnScanRetry`), which scans the same text.
-    4b. **[API]** Only when some album needs it (electronic genres), `POST /api/ai/studio-albums` is asked after that first render (deadline of 60 s, `AI_LIST_DEADLINE_MS`); the status line shows "confirming album types…" meanwhile. When the list arrives the albums are classified again and the grid and the counts are redrawn; when it does not, the albums shown stay.
-    5.  **[UI]** User clicks Album Card (`[data-action="toggle-staging"]`).
-    6.  **[FN]** `HomeController.handleGridClick` -> `StagingAreaController.addAlbum(album)`.
+    4.  **[UI]** As soon as the catalog answers, `DiscographyRenderer` draws the albums, classified by the one classifier (`models/albumType.js`) without the AI list (or with the list remembered from an earlier scan of the same artist), and the filter counts are updated. No album: the panel says "No albums found for «text».". Deadline or failure: the panel says so, with the button "Try again" (`#btnScanRetry`), which scans the same text.
+    4b. **[API]** Only when some album is of an electronic genre (`wantsAiList`), `POST /api/ai/studio-albums` is asked after that first render (deadline of 60 s, `AI_LIST_DEADLINE_MS`); the status line shows "confirming album types…" meanwhile. Until then a full-length electronic album shows under "Studio". When the list arrives the albums are classified again (in the list: "Studio"; not in it: "?") and the grid and the counts are redrawn; when it does not arrive, or is empty, the albums shown stay.
+    5.  **[UI]** User clicks Album Card (`[data-action="pick-album"]`).
+    6.  **[FN]** `HomeController.handleGridClick` -> `AlbumPickerController.pick(id)` -> `onPick` -> `StagingAreaController.addAlbum(album)`.
     7.  **[UI]** `StagingAreaRenderer` adds item to the visual stack.
 
 ### 1.2 Bulk Processing
@@ -58,7 +58,9 @@
 ### 2.2 CRUD Operations
 *   **Edit Name and Albums**:
     1.  **[UI]** Click Pencil Icon -> `SeriesModals.openEdit(id)` -> `SeriesEditModal`.
-    2.  **[FN]** `SeriesService.updateSeries(id, ...)` saves the name and the album queries.
+    1b. **[UI]** Inside the modal, adding albums is the one album picker (`AlbumPickerPanel` -> `AlbumPickerController`, F57): the same trace as 1.1 steps 1 to 5 (same states, deadlines, filters, card and classification). The only difference is the last step: `onPick` -> `SeriesEditModal.addAlbum(album)` -> `toAlbumQuery(album)` joins the list of the series being edited ("Added: …", or "Album already in list"). Nothing is written yet.
+    2.  **[UI]** "Save Changes" -> `SeriesEditModal.saveChanges()`: the button shows "Saving…", busy and disabled, until the write answers; a second click asks nothing (`models/seriesDraft.js`).
+    2b. **[FN]** `SeriesService.updateSeries(id, ...)` saves the name and the album queries. When it fails the modal stays open with the name and the list as the person left them and says "The series could not be saved. Your changes are still here: you can try again.".
     3.  **[FN]** `SeriesModalsManager.handleSeriesUpdated()` -> `SeriesController.requestLoad(false)` -> `albumLoadService.load(...)` reconciles (F56): an album added is found and enriched through the queue, an album removed leaves, another edition of the same title is found again in the catalog, and every other album and every other series stays as it is. Nothing is injected into the screen by hand.
 *   **Remove one album**:
     1.  **[FN]** `SeriesEventHandler` -> `SeriesService.removeAlbumFromSeries(seriesId, album)`; the series changed, the load reconciles and the album leaves the screen.

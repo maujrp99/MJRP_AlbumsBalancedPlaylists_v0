@@ -4,16 +4,16 @@ This document audits the components responsible for the core "Discovery" loop: S
 
 ## 1. Search & Discovery System
 
-Located in `components/search/` and `components/home/`, these components manage the user's initial interaction with the application.
+Located in `components/album-picker/` and `components/home/`, these components manage the user's initial interaction with the application.
 
-> **v4.0 notes.** The artist field of the Home (`#artistScanInput`) is drawn once by `HomeView` and `SearchController` only listens for Enter and for the Scan button: nothing redraws it while the person types. The album queries of a new series are built by `toAlbumQuery` (`models/albumQuery.js`), the same function the series edit modal uses, so the stored text is always plain (UAT-180).
+> **v4.0 notes.** The artist field of the Home (`#artistScanInput`) is drawn once by `HomeView` and `HomeController` only listens for Enter and for the Scan button, and asks the album picker: nothing redraws it while the person types. The album queries of a new series are built by `toAlbumQuery` (`models/albumQuery.js`), the same function the series edit modal uses, so the stored text is always plain (UAT-180).
 
 | Component | Role | Architecture & Patterns |
 | :--- | :--- | :--- |
-| **`SearchController.js`** | **Orchestrator**. Manages the flow: Input -> API -> Sort -> Filter -> Render. | • **State Management**: Owns the scan state (`this.scan`, rules in `models/scanState.js`) and `filterState`; the screen is drawn from the state by `HomeView.renderScan` (F67).<br>• **Logic**: Enforces "Newest -> Oldest" sorting by default.<br>• **Integration**: directly couples with `AlbumSearchService` and `HomeView`. |
-| **`DiscographyToolbar.js`** | **Filter UI**. The control bar for toggling Album Types (EP, Single, etc.) and Editions. | • **Global Events**: Uses `window.handleDiscographyType` for simplicity (Legacy/V3 Hybrid pattern).<br>• **Counts**: reactive UI that updates badges based on filtered results.<br>• **Visuals**: Matches the "Flame Gradient" active state of the main nav.<br>• **Usage today**: no module imports it; the Home filter buttons are handled by `SearchController`. |
+| **`album-picker/AlbumPickerController.js`** | **The one album picker** (F57): search an artist, see the albums by type, pick some. Used by the Home and by the series edit modal. | • **State Management**: Owns the scan state (`this.scan`, rules in `models/scanState.js`) and the filters (`this.filters`, rules in `models/albumPicker.js`); the screen is drawn from the state through a view port (`drawScan`, `drawFilters`, `drawAlbums`).<br>• **Logic**: "Newest -> Oldest" by default; one scan at a time; late answers change nothing.<br>• **Integration**: asks `albumSearchService.scanArtist` and nothing else; knows no screen: what a screen does with a pick comes in as `onPick`. |
+| **`album-picker/AlbumPickerPanel.js`** | **The picker as one block**, inside the series edit modal. | • A frame only: field, Scan button, status line, filter buttons, cards; every click asks the controller. |
+| **`album-picker/pickerParts.js`** | **Drawn parts** shared by the two frames. | • `createFilterButton` / `drawFilterButton` (active state with the "Flame Gradient", count), `drawScanButton`, `createScanPanel` (idle, scanning, empty, failed with "Try again"). |
 | **`StagingAreaController.js`** | **Selection Manager**. Manages the "Stack" of albums waiting to be turned into a playlist. | • **SortableJS**: Integrates 3rd-party lib for drag-and-drop reordering.<br>• **State Sync**: Manually synchronizes the internal `selectedAlbums` array with DOM changes on drag end. |
-| **`VariantPickerModal.js`** | **Decision UI**. A functional component invoked when adding an album group with multiple versions. | • **Functional Style**: Exported as a standalone function `showVariantPickerModal`.<br>• **Pattern**: "Check-the-box" UI with "Select All" capability.<br>• **Security**: Uses `escapeHtml` to prevent XSS in dynamic titles.<br>• **Usage today**: no module imports it. |
 
 ---
 

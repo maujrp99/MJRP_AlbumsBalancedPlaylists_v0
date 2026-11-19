@@ -4,7 +4,7 @@
 import { describe, it, expect } from 'vitest'
 import {
     ScanStatus, ScanFailure, idleScan, startScan, scanFound, scanEmpty, scanFailed, scanReclassified,
-    canStartScan, countAlbumTypes, describeScan, CATALOG_DEADLINE_SECONDS
+    canStartScan, describeScan, CATALOG_DEADLINE_SECONDS
 } from '../../public/js/models/scanState.js'
 
 const album = (title, type = 'Album') => ({ id: title, title, artist: 'Pavement', type })
@@ -88,13 +88,6 @@ describe('scanState: transitions (F67)', () => {
     it('reclassified is ignored when no AI list was awaited', () => {
         const found = scanFound(startScan(idleScan(), 'x'), 1, { albums: [album('A')] })
         expect(scanReclassified(found, 1, [album('B')])).toBe(found)
-    })
-})
-
-describe('scanState: counts by type (F67)', () => {
-    it('counts each type; an unknown type counts as Uncategorized', () => {
-        const counts = countAlbumTypes([album('A'), album('B'), album('C', 'EP'), album('D', 'Weird'), { title: 'E' }])
-        expect(counts).toEqual({ Album: 2, EP: 1, Single: 0, Compilation: 0, Live: 0, Uncategorized: 2 })
     })
 })
 

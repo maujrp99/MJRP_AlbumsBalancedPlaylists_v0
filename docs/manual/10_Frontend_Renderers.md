@@ -25,10 +25,10 @@ To keep the main View classes (like `SeriesView` and `InventoryView`) maintainab
 *   **Format Badges**: Has specific logic to display `Vinyl`, `CD`, or `Digital` badges based on the `format` field.
 
 ### Discography Renderer (`public/js/views/renderers/DiscographyRenderer.js`)
-*   **Role**: Used by `HomeController` to render the artist's discography (the search results) in Home.
+*   **Role**: The album card of the one album picker (F57): used by `HomeController` in Home and by `AlbumPickerPanel` in the series edit modal to render the artist's discography.
 *   **Key Features**:
-    *   **Visual Flair**: Adds subtle gradients and badges: "Deluxe" and "Remaster" derived from title keywords; "Live", "Single", "EP" and "Comp" from `album.type`.
-    *   **Interactivity**: Cards are clickable for "Toggle Staging" (`data-action="toggle-staging"`).
+    *   **Visual Flair**: Adds subtle gradients and badges: "Deluxe" and "Remaster" derived from title keywords; "Live", "Single", "EP" and "Comp" from `album.type` (the rule is `badgesOf` in `models/albumPicker.js`).
+    *   **Interactivity**: Cards are clickable to pick the album (`data-action="pick-album"`); the frame of the screen hears the click and asks `AlbumPickerController.pick`.
 
 ### Scoped Renderer (`public/js/views/albums/AlbumsScopedRenderer.js`)
 *   **Role**: Manages the "All Series" vs "Single Series" grouping logic.

@@ -1,7 +1,11 @@
-import { escapeHtml } from '../../utils/stringUtils.js';
+import { badgesOf } from '../../models/albumPicker.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 import { getIcon } from '../../components/Icons.js';
 
+/**
+ * The album cards of the album picker (F57): the same card on the Home and in the series edit.
+ * A card carries `data-action="pick-album"` and the id of its album; the screen's frame hears the click.
+ */
 export class DiscographyRenderer {
     constructor(container) {
         this.container = container; // The grid container element
@@ -13,7 +17,7 @@ export class DiscographyRenderer {
         SafeDOM.clear(this.container);
 
         if (!albums || albums.length === 0) {
-            this.container.appendChild(SafeDOM.div({ className: 'col-span-full text-center text-gray-500 py-10' }, 'No albums found.'));
+            this.container.appendChild(SafeDOM.div({ className: 'col-span-full text-center text-gray-500 py-10' }, 'No albums of the selected types.'));
             return;
         }
 
@@ -29,19 +33,8 @@ export class DiscographyRenderer {
         const year = album.year || 'Unknown';
         const coverUrl = album.coverUrl ? album.coverUrl.replace('{w}', '300').replace('{h}', '300') : '/assets/images/cover_placeholder.png';
 
-        // Badge Logic - ARCH-18: Use album.type for type badges
-        const badges = [];
-        const lowerTitle = title.toLowerCase();
-
-        // Edition badges (title-based)
-        if (lowerTitle.includes('deluxe')) badges.push('Deluxe');
-        if (lowerTitle.includes('remaster')) badges.push('Remaster');
-
-        // Type badges (from ARCH-18 classification)
-        if (album.type === 'Live') badges.push('Live');
-        if (album.type === 'Single') badges.push('Single');
-        if (album.type === 'EP') badges.push('EP');
-        if (album.type === 'Compilation') badges.push('Comp');
+        // Edition and type badges: one rule for every screen (models/albumPicker.js)
+        const badges = badgesOf(album);
 
         const badgeElements = badges.map(b =>
             SafeDOM.span({ className: 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-black/60 backdrop-blur-md text-white border border-white/10 uppercase tracking-wider' }, b)
@@ -74,7 +67,7 @@ export class DiscographyRenderer {
         // Main Card Container (Flex Column)
         return SafeDOM.div({
             className: 'group cursor-pointer flex flex-col',
-            dataset: { action: 'toggle-staging', id: album.id }
+            dataset: { action: 'pick-album', id: album.id }
         }, [
             imageWrapper,
             textContent

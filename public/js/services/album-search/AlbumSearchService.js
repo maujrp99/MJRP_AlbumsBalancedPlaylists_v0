@@ -1,8 +1,8 @@
 /**
  * AlbumSearchService
  * 
- * Orchestrator for the Album Search Pipeline (ARCH-4).
- * Coordinates Normalization, Apple Music API (via MusicKit), Scoring, and Filtering.
+ * The search of the catalog for the Home and the series edit: the lookup of one album (bulk paste)
+ * and the one scan of an artist's albums, classified by the one classifier (models/albumType.js).
  */
 
 import { musicKitService } from '../MusicKitService.js'; // Legacy service for raw API calls for now
@@ -10,8 +10,7 @@ import { serverFetch } from '../../api/serverFetch.js'
 import { readServerResult, ResultKind } from '../../api/serverResult.js'
 import { ArtistNormalizer } from './ArtistNormalizer.js';
 import { ScoreCalculator } from './ScoreCalculator.js';
-import { EditionFilter } from './EditionFilter.js';
-import { albumTypeClassifier } from './AlbumTypeClassifier.js'; // ARCH-18: Modular classification
+import { classifyAlbum, wantsAiList } from '../../models/albumType.js';
 import { withDeadline } from '../../utils/deadline.js';
 import { CATALOG_DEADLINE_MS } from '../../models/scanState.js';
 
@@ -22,7 +21,6 @@ export class AlbumSearchService {
     constructor() {
         this.normalizer = new ArtistNormalizer();
         this.scorer = new ScoreCalculator();
-        this.filter = new EditionFilter();
         this.cache = new Map(); // Album search cache
         this.aiCache = new Map(); // Sprint 17.75-B: Cache for AI studio album responses
     }
@@ -83,27 +81,14 @@ export class AlbumSearchService {
     }
 
     /**
-     * Get full discography for an artist with AI-enhanced filtering.
-     * Waits for the AI list when an album needs it; the Home scan uses `scanArtist` instead.
-     * @param {string} artistName
-     * @returns {Promise<Array>} Grouped albums
-     */
-    async getArtistDiscography(artistName) {
-        const normalizedArtist = this.normalizer.normalize(artistName);
-        console.log(`[AlbumSearch] Fetching discography for "${normalizedArtist}"`);
-
-        const rawAlbums = await this._catalogAlbums(artistName, normalizedArtist);
-        if (rawAlbums.length === 0) return [];
-        return await this._processDiscography(rawAlbums, normalizedArtist);
-    }
-
-    /**
-     * The scan of the Home (F67): the albums as soon as the catalog answers, classified without
-     * the AI list; the list is asked after, and `reclassified` gives the albums classified again.
+     * The one scan of an artist's albums (F67, F57): every screen that lists an artist's albums
+     * asks here. The albums come as soon as the catalog answers, classified with the AI list
+     * already remembered, or with none; when an album wants the list and it is not remembered, it
+     * is asked after, and `reclassified` gives the albums classified again.
      * The catalog has a deadline (CATALOG_DEADLINE_MS): past it, the scan fails with DeadlineError.
      * @param {string} artistName
      * @returns {Promise<{ albums: Array, reclassified: Promise<Array|null>|null }>} `reclassified`
-     *          is null when no album needs the AI list (or the list is already remembered); it
+     *          is null when no album wants the AI list (or the list is already remembered); it
      *          resolves to null when the list did not come or is empty: the first albums stay.
      */
     async scanArtist(artistName) {
@@ -112,15 +97,10 @@ export class AlbumSearchService {
         if (rawAlbums.length === 0) return { albums: [], reclassified: null };
 
         // First pass: with the list already remembered, or with none. It never waits for the server.
-        const remembered = this.aiCache.has(normalizedArtist);
-        let listWanted = false;
-        const albums = await this._classifyAll(rawAlbums, {
-            getAiList: async () => {
-                listWanted = !remembered;
-                return remembered ? this.aiCache.get(normalizedArtist) : [];
-            }
-        });
+        const remembered = this.aiCache.get(normalizedArtist) ?? null;
+        const albums = this._classifyAll(rawAlbums, remembered);
 
+        const listWanted = remembered === null && rawAlbums.some(wantsAiList);
         const reclassified = listWanted ? this._reclassifyWithAiList(rawAlbums, normalizedArtist) : null;
         return { albums, reclassified };
     }
@@ -137,7 +117,7 @@ export class AlbumSearchService {
             console.warn(`[AlbumSearch] AI list not available (${error?.message || error}), keeping the first classification`);
         }
         if (list.length === 0) return null;
-        return this._classifyAll(rawAlbums, { getAiList: async () => list });
+        return this._classifyAll(rawAlbums, list);
     }
 
     /**
@@ -201,66 +181,31 @@ export class AlbumSearchService {
     }
 
     /**
-     * Process discography with async classification
-     * Sprint 17.75-B: Uses lazy AI fetching via context.getAiList()
-     */
-    async _processDiscography(albums, artistName) {
-        console.log(`[AlbumSearch] Classifying ${albums.length} albums for "${artistName}"`);
-
-        // One ask per search, even when it fails: each ask of the list may be paid
-        let aiList = null;
-        return this._classifyAll(albums, {
-            getAiList: () => (aiList ??= this._fetchAIWithCache(artistName))
-        });
-    }
-
-    /**
-     * Classify the catalog albums and group their variants.
+     * Classify the catalog albums (models/albumType.js, the one classifier) and group their variants.
      * @param {Array} albums - raw catalog albums
-     * @param {{ getAiList: Function }} context - how the classifier gets the AI list when it needs it
-     * @returns {Promise<Array>} grouped albums
+     * @param {string[]|null} aiList - the AI list of the artist's studio albums, or null when not known
+     * @returns {Array} grouped albums, each with its `type` and the `typeReason` that said it
      */
-    async _classifyAll(albums, context) {
-        const mapped = [];
-        for (const a of albums) {
-            const classification = await albumTypeClassifier.classify(a, context);
-
-            mapped.push({
+    _classifyAll(albums, aiList) {
+        const mapped = albums.map(a => {
+            const { type, reason } = classifyAlbum(a, { aiList });
+            return {
                 id: a.appleMusicId,
                 title: a.title,
                 artist: a.artist,
                 year: a.year,
                 coverUrl: musicKitService.getArtworkUrl(a.artworkTemplate, 300),
                 artworkTemplate: a.artworkTemplate,
-                type: classification,
-                albumType: classification,
-                isSingle: classification === 'Single',
-                isCompilation: classification === 'Compilation',
-                isLive: classification === 'Live',
-                isEP: classification === 'EP',
+                type,
+                typeReason: reason,
                 releaseDate: a.releaseDate,
                 trackCount: a.trackCount,
                 confidence: 1.0,
                 raw: a.raw
-            });
-        }
+            };
+        });
 
-        // Group Variants
         return this.groupVariants(mapped);
-    }
-
-    // NOTE: Classification logic has been moved to AlbumTypeClassifier (ARCH-18)
-    // See: public/js/services/album-search/classification/
-    // Pipeline: AppleMetadataStrategy → TitleKeywordStrategy → RemixTracksStrategy → 
-    //           TrackCountStrategy → AIWhitelistStrategy
-
-    /**
-     * Filter a list of albums based on active filters
-     * @param {Array} albums - List of albums (ungrouped or grouped)
-     * @param {Object} filters - { types: [], editions: [] }
-     */
-    applyFilters(albums, filters) {
-        return this.filter.apply(albums, filters);
     }
 
     /**
@@ -359,7 +304,7 @@ export class AlbumSearchService {
             .replace(/\(.*\)/g, '') // Remove parentheticals
             .replace(/\[.*\]/g, '') // Remove brackets
             .replace(/deluxe|remaster|edition|expanded|version/g, '')
-            .replace(/[^a-z0-9]/g, '') // Remove formatting chars
+            .replace(/[^\p{L}\p{N}]/gu, '') // Remove formatting chars; letters of any alphabet stay
             .trim();
     }
 }
