@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 17:41] session — F52 fatia 1 em produção (site e servidor)
+
+Site publicado da `main` (`de14155`, pacote `main-DQ1jxjKx.js`) e, depois, o servidor (revisão `mjrp-proxy-00199-hsv`; a volta é `mjrp-proxy-00198-5df`). Conferido em produção: 401 no formato novo sem login; com login, notas `found` e `not_found`, lista da IA `found` e a Home classificando com ela. Não visto: `/api/generate` com a chave, a carga segurando a fila, falha real da fonte. Prova: `reports/evidence/F52/2026-11-19-slice-1-browser-proof.md`. Também hoje: o MJRP disse que o Scan voltou a funcionar; o registro do servidor mostra que o clique que falhou não chegou ao servidor (UAT-204 segue aberta: sem prazo nem aviso na consulta ao catálogo).
+
 ## [2026-11-19 17:38] review — F52 fatia 1 revisada e provada pelo integrador
 
 Ramo do auxiliar com a `main` junto: 789 testes, build ok. Prova em `reports/evidence/F52/2026-11-19-slice-1-browser-proof.md` (oito cenários; três coisas vistas só em teste de unidade, ditas lá). Escolhas do auxiliar que ficam, revisáveis: erro do provedor de IA sai como 424; página com zero notas casadas passa a `empty`; aba antiga lê a lista da IA só depois de recarregar. UAT-181 e UAT-23 seguem abertas (fatias 2 a 4).

@@ -20,3 +20,17 @@ Código: ramo `fix/f52-server-tells-the-truth` com a `main` junto (`fab788d`). T
 - A carga segurando a fila num 401 ou 429 (só nos testes de unidade).
 - A tela de álbuns com «falhou» e «tentar de novo» vindo do servidor novo (só nos testes de unidade).
 - As rotas pagas com a chave de verdade (só em produção, depois da publicação).
+
+## Em produção (2026-11-19 17:41)
+
+Site `de14155` (pacote `main-DQ1jxjKx.js`), depois servidor `de14155` (revisão `mjrp-proxy-00199-hsv`, Node 24).
+
+| # | Cenário | Resultado |
+|---|---|---|
+| 9 | Site novo, servidor antigo (entre as duas publicações), com login | notas lidas como `legacy`; busca «pavement» com 12 álbuns de estúdio |
+| 10 | Sem login, as três rotas | 401 `{"error":{"code":"unauthorized","retryable":false}}` |
+| 11 | Com login, notas de «Animals» | 200 `found` |
+| 12 | Com login, álbum inventado | 200 `not_found` |
+| 13 | Com login, lista da IA de «Pavement» (rota paga, chave de verdade) | 200 `found`, lista em `data.albums`; Home com 12 de estúdio, 2 EPs, 1 single, 4 coletâneas |
+
+Não visto em produção: `/api/generate` com a chave (não houve álbum que faltasse no catálogo), a carga segurando a fila, e uma falha real da fonte de notas.
