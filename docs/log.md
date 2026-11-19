@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 17:04] decision — quatro decisões do MJRP: visitante não leva dados, sair recarrega, F52 pode ir ao código, Node 24
+
+Respostas do MJRP às quatro perguntas do agente, nas palavras dele:
+1. Dados de visitante ao entrar com conta (UAT-12): «não levar e avisar».
+2. Sair da conta deve recarregar o app: «sim».
+3. F52, ir para o código com a proposta emendada (`docs/specs/arch.md`, «O servidor diz a verdade», seção 11): «sim».
+4. Node do servidor: «24».
+
+O que cada uma destrava: a UAT-12 fecha com um aviso na janela de entrada, sem cópia de dados; o sair da conta passa a recarregar a página, o que limpa séries e playlists da tela junto com o inventário; a F52 começa pela fatia 1 (contrato de resultado, um formato de erro, tabela do provedor de IA, raspador que propaga a falha); a imagem do servidor passa de `node:18-slim` para `node:24-slim`, publicada sozinha para isolar o risco.
+
 ## [2026-11-19 16:57] session — nono deploy do site: F59 fatia E em produção
 
 `npm run deploy:site`, da `main` em `474f8cf`: 590 testes, pacote conferido, Hosting publicado, e o `index.html` no ar aponta o pacote recém-construído (`/assets/main-D7HiVm63.js`). Em produção agora: o texto de fora tratado antes de entrar no HTML (UAT-199). Não visto em produção num navegador. A F59 está com as fatias A, B, C e E em produção; restam o Tailwind servido do próprio site (UAT-25) e a conferência de esquema de dois endereços vindos de provedores.
