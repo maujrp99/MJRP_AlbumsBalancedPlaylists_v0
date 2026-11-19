@@ -19,7 +19,7 @@
 - [x] TASK-06 testes da troca de pessoa no inventário (falhavam) e o conserto em `stores/inventory.js` — commit `70753e2` · implements:: REQ-07 · model:: opus · rounds:: 1
 - [x] TASK-07 rascunho das playlists não guardadas no navegador, com dono, e a volta dele ao abrir a tela (`restoreDraft`) — commit `704a705` · implements:: REQ-08 · model:: opus · rounds:: 1
 - [x] TASK-08 `BlendingController.regenerate` mantém a série do conjunto da tela — commit `704a705` · implements:: REQ-03 · model:: opus · rounds:: 1
-- [ ] TASK-09 levar os dados do visitante para a conta ao entrar · implements:: REQ-09 · model:: opus · waiting:: human — pede uma decisão de desenho (vincular a conta anônima, copiar, ou não levar) · action:: o MJRP escolhe um dos três caminhos das Open Questions do spec
+- [x] TASK-09 aviso na janela de entrada de que os dados de visitante não vão para a conta (decisão do MJRP: não levar e avisar); sair da conta recarrega o app · implements:: REQ-09 · model:: sonnet · rounds:: 1
 
 ## Verification
 - [x] TASK-10 suíte (`npx vitest run`: 530 passando, 462 antes) e `npx vite build` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08 · model:: sonnet · rounds:: 1

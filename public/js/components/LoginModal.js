@@ -47,6 +47,11 @@ export function showLoginModal() {
 
       </div>
       
+      <div class="px-6 pb-2 text-center text-xs text-white/50" data-guest-notice>
+        Series, playlists and inventory made as a guest stay with the guest session.
+        They are not copied to your account when you sign in.
+      </div>
+
       <div class="p-4 text-center text-xs text-white/30">
         By signing in, you agree to our Terms and Privacy Policy.
       </div>
