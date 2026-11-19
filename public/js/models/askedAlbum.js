@@ -15,7 +15,7 @@ import { parseAlbumQuery } from './albumQuery.js'
 
 import { Reason, compareKeptAlbum } from '@shared/albumIdentity.js'
 
-export { compareAlbumIdentity, compareKeptAlbum, pickAlbum, Verdict, Reason } from '@shared/albumIdentity.js'
+export { compareAlbumIdentity, compareKeptAlbum, compareOnlyAnswer, pickAlbum, Verdict, Reason } from '@shared/albumIdentity.js'
 
 /**
  * What a query asks for.

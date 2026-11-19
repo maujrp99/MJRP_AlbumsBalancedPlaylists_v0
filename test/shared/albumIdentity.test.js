@@ -5,7 +5,7 @@
  */
 import { describe, it, expect } from 'vitest'
 import {
-    compareAlbumIdentity, compareKeptAlbum, pickAlbum, albumFromLabel, sameArtist, Verdict, Reason
+    compareAlbumIdentity, compareKeptAlbum, compareOnlyAnswer, pickAlbum, albumFromLabel, sameArtist, Verdict, Reason
 } from '../../shared/albumIdentity.js'
 
 const STP = 'Stone Temple Pilots'
@@ -384,5 +384,31 @@ describe('a label "Title by Artist" (BestEverAlbums)', () => {
         ])
         expect(albumFromLabel('Stone Temple Pilots')).toEqual([])
         expect(albumFromLabel(null)).toEqual([])
+    })
+})
+
+describe('compareOnlyAnswer: a source that answers one album to a direct question', () => {
+    const PAGE_PLANT = 'Jimmy Page & Robert Plant'
+
+    it('the exact album is the same', () => {
+        expect(compareOnlyAnswer({ artist: STP, title: 'Core' }, { artist: STP, title: 'Core' }))
+            .toMatchObject({ same: true, reason: Reason.EXACT_TITLE })
+    })
+
+    it('the title asked for before a subtitle is accepted, and the reason says so', () => {
+        expect(compareOnlyAnswer(
+            { artist: PAGE_PLANT, title: 'No Quarter' },
+            { artist: PAGE_PLANT, title: 'No Quarter: Jimmy Page & Robert Plant Unledded' }
+        )).toMatchObject({ same: true, reason: Reason.TITLE_BEFORE_SUBTITLE })
+    })
+
+    it('the short title does not answer for the long one', () => {
+        expect(compareOnlyAnswer({ artist: 'Pink Floyd', title: 'The Wall: Live in Berlin' }, { artist: 'Pink Floyd', title: 'The Wall' }).same).toBe(false)
+    })
+
+    it('another album, another artist or no answer is different', () => {
+        expect(compareOnlyAnswer({ artist: STP, title: 'Core' }, { artist: STP, title: 'Shangri-La Dee Da' }).same).toBe(false)
+        expect(compareOnlyAnswer({ artist: STP, title: 'Core' }, { artist: 'Persefone', title: 'Core' }).same).toBe(false)
+        expect(compareOnlyAnswer({ artist: STP, title: 'Core' }, null).same).toBe(false)
     })
 })

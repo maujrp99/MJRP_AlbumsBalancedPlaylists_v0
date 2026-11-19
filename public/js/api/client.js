@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { serverFetch } from './serverFetch.js'
 import { Album } from '../models/Album.js'
-import { askedAlbum, appleCandidate, compareAlbumIdentity, compareKeptAlbum, keptAlbum, pickAlbum } from '../models/askedAlbum.js'
+import { askedAlbum, appleCandidate, compareKeptAlbum, compareOnlyAnswer, keptAlbum, pickAlbum } from '../models/askedAlbum.js'
 import { plainAlbumQuery } from '../models/albumQuery.js'
 import { albumCache } from '../cache/albumCache.js'
 import { albumLoader } from '../services/AlbumLoader.js'
@@ -263,25 +263,29 @@ export class APIClient {
         if (result.kind === ResultKind.NOT_FOUND) return null
         // The server before F52 answered the album itself, or { data: album }
         const data = result.kind === ResultKind.LEGACY ? (result.body?.data || result.body) : result.data
-        if (!this._isTheAlbumAskedFor(query, data)) return null
-        return this.normalizeAlbumData(data)
+        const accepted = this._acceptedAnswer(query, data)
+        if (!accepted) return null
+        const album = this.normalizeAlbumData(data)
+        // How the rule accepted it stays on the album: the caches and the card read it (F55)
+        album.metadata = { ...(album.metadata || {}), identityReason: accepted.reason }
+        return album
     }
 
     /**
      * The AI search answers with whatever album it believes in. It is accepted only when it is the
      * album asked for, by the one identity rule (F55); another album of the artist is "the server
      * has no such album", and the paid call is not made again.
-     * One answer, with no other candidate in sight: only the first tier of the rule (`same`). The
-     * second tier (the title asked for before a subtitle) is given by pickAlbum over a catalog's list.
+     * The AI is asked for this album and answers one album, so the rule judges it as the only
+     * answer (`compareOnlyAnswer`): the full catalog title with a subtitle is accepted, with its reason.
+     * @returns {{ same: true, reason: string } | null} the verdict when accepted
      * @private
      */
-    _isTheAlbumAskedFor(query, data) {
+    _acceptedAnswer(query, data) {
         const answered = { artist: data?.artist, title: data?.title || data?.album, year: data?.year }
-        const verdict = compareAlbumIdentity(askedAlbum(plainAlbumQuery(query)), answered)
-        if (!verdict.same) {
-            console.warn(`[APIClient] the AI search answered "${answered.artist} - ${answered.title}", which is not the album asked for (${verdict.reason}): not accepted`)
-        }
-        return verdict.same
+        const verdict = compareOnlyAnswer(askedAlbum(plainAlbumQuery(query)), answered)
+        if (verdict.same) return verdict
+        console.warn(`[APIClient] the AI search answered "${answered.artist} - ${answered.title}", which is not the album asked for (${verdict.reason}): not accepted`)
+        return null
     }
 
     /**

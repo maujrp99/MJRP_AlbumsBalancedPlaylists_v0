@@ -254,6 +254,22 @@ export function compareKeptAlbum(asked, kept) {
 }
 
 /**
+ * Is the ONE album a source answered the album asked for? For a source that is asked for this
+ * album and answers with one album, not with a list (the AI search of the app's server). Its
+ * answer is, by construction, the only candidate, so the second tier applies: the catalog's full
+ * title with a subtitle is accepted, and the verdict's reason says so («No Quarter» answered as
+ * «No Quarter: Jimmy Page & Robert Plant Unledded»). Never use it for one item taken out of a
+ * list: a list is judged whole, by pickAlbum.
+ * @param {{ artist?: string, title: string, year?: number|string }} asked
+ * @param {{ artist?: string, title: string, year?: number|string }} answered
+ * @returns {{ verdict: string, same: boolean, reason: string }} as compareAlbumIdentity
+ */
+export function compareOnlyAnswer(asked, answered) {
+    const picked = pickAlbum(asked, answered ? [answered] : [])
+    return picked.found ? picked.verdict : compareAlbumIdentity(asked, answered)
+}
+
+/**
  * Are the two names the same artist, by the artist part of the rule? For a source that lists
  * artists (the artist's page of BestEverAlbums). An empty name is never the same as anything.
  * @param {string} asked

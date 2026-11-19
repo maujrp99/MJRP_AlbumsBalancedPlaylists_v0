@@ -72,11 +72,28 @@ describe('APIClient: only the album asked for', () => {
     })
 
     describe('the answer of the AI search, one answer with nothing beside it', () => {
-        it('is the title asked for with a subtitle: not accepted (the second tier of the rule needs the whole list of a catalog)', async () => {
-            fetchMock.mockResolvedValue(answer(aiAlbum('The Wall: Live in Berlin', 'Pink Floyd')))
+        it('is the title asked for with a subtitle: accepted as the only answer, and the album says how', async () => {
+            fetchMock.mockResolvedValue(answer(aiAlbum('No Quarter: Jimmy Page & Robert Plant Unledded', 'Jimmy Page & Robert Plant')))
 
-            expect(await client._fetchAlbumFromAPI('Pink Floyd - The Wall')).toBeNull()
+            const album = await client._fetchAlbumFromAPI('Jimmy Page & Robert Plant - No Quarter')
+
+            expect(album.title).toBe('No Quarter: Jimmy Page & Robert Plant Unledded')
+            expect(album.metadata.identityReason).toBe('title-before-subtitle')
             expect(fetchMock).toHaveBeenCalledTimes(1)
+        })
+
+        it('is a longer title asked for, answered by the short one: not accepted', async () => {
+            fetchMock.mockResolvedValue(answer(aiAlbum('The Wall', 'Pink Floyd')))
+
+            expect(await client._fetchAlbumFromAPI('Pink Floyd - The Wall: Live in Berlin')).toBeNull()
+        })
+
+        it('is the album asked for: the album says it was the exact title', async () => {
+            fetchMock.mockResolvedValue(answer(aiAlbum('The Wall', 'Pink Floyd')))
+
+            const album = await client._fetchAlbumFromAPI('Pink Floyd - The Wall')
+
+            expect(album.metadata.identityReason).toBe('exact-title')
         })
     })
 
