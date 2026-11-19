@@ -1,21 +1,24 @@
 import axios from 'axios'
 import { serverFetch } from './serverFetch.js'
 import { Album } from '../models/Album.js'
-import { askedAlbum, appleCandidate, compareKeptAlbum, compareOnlyAnswer, keptAlbum, pickAlbum } from '../models/askedAlbum.js'
+import { askedAlbum, compareOnlyAnswer } from '../models/askedAlbum.js'
 import { plainAlbumQuery } from '../models/albumQuery.js'
-import { albumCache } from '../cache/albumCache.js'
 import { albumLoader } from '../services/AlbumLoader.js'
-import { musicKitService } from '../services/MusicKitService.js'
 import { TrackTransformer } from '../transformers/TrackTransformer.js'
 import { retryWithBackoff } from '../utils/retry.js'
 import { readServerResult, failedWithoutAnswer, ApiError, ResultKind } from './serverResult.js'
 
 /**
  * API Client
- * Wrapper for backend API calls with retry logic and caching
- * 
- * An album is accepted only when it is the album asked for, by the one identity rule
- * (shared/albumIdentity.js, F55): the Apple Music search result and the answer of the AI search.
+ * Wrapper for the calls to the app's own server, with retry logic.
+ *
+ * It does not load albums for a screen. Since F56 the album load (services/albums/) is the only
+ * loader: it reaches this client through its ports (the second source of the catalog, POST
+ * /generate; the ratings, POST /enrich-album). The old find-and-rate calls (fetchAlbum,
+ * fetchMultipleAlbums, BEAenrichAlbum) were removed when their last callers left.
+ *
+ * The answer of the AI search is accepted only when it is the album asked for, by the one
+ * identity rule (shared/albumIdentity.js, F55).
  */
 
 const API_BASE = window.__api_base || '/api'
@@ -32,138 +35,6 @@ export class APIClient {
         this.retryDelayCap = 8000
         this.serverTimeoutMs = 90000 // POST /generate runs an AI model: slow, but not endless
         this.random = Math.random
-        this.cache = albumCache // Initialize this.cache with albumCache
-    }
-
-    /**
-     * Fetch album data (with caching)
-     * @param {string} query - Album query (Artist - Album)
-     * @param {boolean} skipCache - Force fresh fetch
-     * @returns {Promise<Album>} Album data
-     */
-    async fetchAlbum(query, skipCache = false) {
-        // 1. Check cache (if not skipped) - ARCH-5: Now async for IndexedDB
-        if (!skipCache) {
-            const cached = await this._keptAlbumAskedFor(query)
-            if (cached) return cached
-        }
-
-        // 2. Sprint 7.5: Try Apple Music + Enrichment First
-        try {
-
-            // The catalog is asked with plain text; what is accepted is decided by the one identity rule
-            const asked = askedAlbum(plainAlbumQuery(query))
-
-            // Search (limit 5: the results come scored, standard editions first)
-            const appleAlbums = await musicKitService.searchAlbums(asked.artist, asked.title, 5)
-            const picked = pickAlbum(asked, appleAlbums, appleCandidate)
-
-            if (picked.found) {
-                // Get Full Details (Tracks)
-                const fullAlbum = await musicKitService.getAlbumDetails(picked.candidate.id)
-
-                if (fullAlbum) {
-                    // 3. Enrich with Rankings (Backend)
-
-                    // 3. Construct Base Album Model (Clean, no ratings yet)
-                    const stableId = this.generateAlbumId({ title: fullAlbum.title, artist: fullAlbum.artist })
-
-                    const albumContext = {
-                        artist: fullAlbum.artist,
-                        album: fullAlbum.title,
-                        albumId: stableId
-                    }
-
-                    // Map Apple Music tracks to canonical format (no ratings initially)
-                    const allTracks = fullAlbum.tracks.map(t => TrackTransformer.toCanonical({
-                        id: t.id || `track_${stableId}_${t.trackNumber}`,
-                        title: t.title,
-                        artist: t.artist || fullAlbum.artist,
-                        duration: t.duration,
-                        position: t.trackNumber,
-                        trackNumber: t.trackNumber,
-                        isrc: t.isrc,
-                        previewUrl: t.previewUrl,
-                        appleMusicId: t.id,
-                        rating: null // Will be enriched by Helper
-                    }, albumContext))
-
-                    const tracksOriginalOrder = [...allTracks].sort((a, b) => a.trackNumber - b.trackNumber)
-                    const tracksByAcclaim = [...allTracks] // Initial order, will be sorted by Helper if needed, or we might need to re-sort after enrichment?
-                    // Actually, enrichment updates properties. We might need to re-sort 'tracks' if we want them rating-sorted.
-                    // But initially Apple Music returns disk order usually. 
-                    // Let's create the Album.
-
-                    const albumData = {
-                        id: stableId,
-                        title: fullAlbum.title,
-                        artist: fullAlbum.artist,
-                        year: fullAlbum.year,
-                        coverUrl: musicKitService.getArtworkUrl(fullAlbum.artworkTemplate, 600),
-                        tracks: tracksByAcclaim,
-                        tracksOriginalOrder: tracksOriginalOrder,
-                        metadata: { source: 'Apple Music', sourceId: fullAlbum.id, identityReason: picked.verdict.reason }
-                    }
-
-                    const album = new Album(albumData)
-
-                    // 4. Enrich with BEA (Encapsulated)
-                    // This handles API call, mapping, and updates album.bestEverUrl, album.acclaim, and track.rating
-                    try {
-                        const { enrichAlbum } = await import('../helpers/BEAEnrichmentHelper.js')
-                        await enrichAlbum(album, { silent: true })
-
-                        // Re-sort tracks by rating if enrichment happened
-                        if (album.acclaim && album.acclaim.hasRatings) {
-                            album.tracks.sort((a, b) => {
-                                const rA = a.rating !== null ? a.rating : -1
-                                const rB = b.rating !== null ? b.rating : -1
-                                if (rA !== rB) return rB - rA
-                                return a.trackNumber - b.trackNumber
-                            })
-                            // Re-assign ranks
-                            album.tracks.forEach((t, idx) => t.rank = idx + 1)
-                        }
-                    } catch (beaError) {
-                        console.warn(`BEA enrichment failed for ${album.title}:`, beaError)
-                    }
-
-                    // 5. Enrich with Spotify (Encapsulated)
-                    try {
-                        const { applyEnrichmentToAlbum } = await import('../helpers/SpotifyEnrichmentHelper.js')
-                        await applyEnrichmentToAlbum(album, { fetchIfMissing: true })
-                    } catch (spotifyError) {
-                        console.warn(`Spotify enrichment failed for ${album.artist} - ${album.title}:`, spotifyError.message)
-                    }
-
-                    await this.cache.set(query, album)
-                    return album
-                }
-            }
-        } catch (e) {
-            console.error(`Error fetching from Apple Music for "${query}":`, e)
-        }
-
-        // 5. Fallback: Legacy Generate API
-        return this._fetchAlbumFromAPI(query)
-    }
-
-    /**
-     * The album the old cache keeps for the query, only while it is the album asked for (F55): the
-     * key is the query, so an entry written when "the right artist was enough" may hold another
-     * album. Such an entry is dropped, and the caller searches again.
-     * @returns {Promise<Album|null>}
-     * @private
-     */
-    async _keptAlbumAskedFor(query) {
-        const cached = await this.cache.get(query)
-        if (!cached) return null
-        if (!compareKeptAlbum(askedAlbum(plainAlbumQuery(query)), keptAlbum(cached)).same) {
-            await this.cache.invalidate(query)
-            return null
-        }
-        // HYDRATION: Convert cached JSON back to Album instance
-        return cached instanceof Album ? cached : new Album(cached)
     }
 
     /**
@@ -213,20 +84,6 @@ export class APIClient {
         const result = await this._post('/enrich-album', { albumData })
         if (result.kind === ResultKind.LEGACY) return { kind: ResultKind.LEGACY, data: result.body?.data || {} }
         return { kind: result.kind, data: result.data || {} }
-    }
-
-    /**
-     * The ratings of an album, for the callers of before the album load (BEAEnrichmentHelper).
-     * @param {Object} albumData - { title, artist, tracks }
-     * @returns {Promise<Object|null>} { bestEverInfo, trackRatings, trackEvidence }, or null when the request failed
-     */
-    async BEAenrichAlbum(albumData) {
-        try {
-            return (await this.requestRatings(albumData)).data
-        } catch (error) {
-            console.warn('[APIClient] Enrichment failed:', error?.message || error)
-            return null
-        }
     }
 
     /**
@@ -296,63 +153,6 @@ export class APIClient {
      */
     _postGenerate(queryStr) {
         return this._post('/generate', { albumQuery: queryStr }, { timeoutMs: this.serverTimeoutMs })
-    }
-
-    /**
-     * Fetch multiple albums with progress callback
-     * @param {Array<string>} queries - Album queries
-     * @param {Function} onProgress - Progress callback (current, total, result)
-     * @param {boolean} skipCache - Skip cache for all albums
-     * @param {AbortSignal} signal - Abort signal to cancel operation
-     * @returns {Promise<Object>} { results, errors }
-     */
-    async fetchMultipleAlbums(queries, onProgress = null, skipCache = false, signal = null) {
-        const results = []
-        const errors = []
-
-        for (let i = 0; i < queries.length; i++) {
-            // Check cancellation
-            if (signal && signal.aborted) {
-                console.log('[APIClient] Fetch multiple albums aborted.')
-                break
-            }
-
-            const query = queries[i]
-
-            try {
-                const album = await this.fetchAlbum(query, skipCache)
-
-                // Check cancellation again after await
-                if (signal && signal.aborted) {
-                    console.log('[APIClient] Fetch multiple albums aborted after fetch.')
-                    break
-                }
-
-                const result = { query, album, status: 'success' }
-                results.push(result)
-
-                if (onProgress) {
-                    onProgress(i + 1, queries.length, result)
-                }
-            } catch (error) {
-                // Check cancellation
-                if (signal && signal.aborted) break
-
-                const errorResult = {
-                    query,
-                    error: error.message,
-                    status: 'error'
-                }
-                errors.push(errorResult)
-                results.push(errorResult)
-
-                if (onProgress) {
-                    onProgress(i + 1, queries.length, errorResult)
-                }
-            }
-        }
-
-        return { results, errors }
     }
 
     /**

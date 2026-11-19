@@ -9,7 +9,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
-    load: { load: vi.fn(), refreshSource: vi.fn(), retryFailed: vi.fn(), adoptAlbum: vi.fn() },
+    load: { load: vi.fn(), refreshSource: vi.fn(), retryFailed: vi.fn(), reloadAlbum: vi.fn() },
     ranking: { ensureLoaded: vi.fn(async () => true), save: vi.fn(async () => true) },
     seriesService: { loadFromFirestore: vi.fn(async () => []) }
 }))

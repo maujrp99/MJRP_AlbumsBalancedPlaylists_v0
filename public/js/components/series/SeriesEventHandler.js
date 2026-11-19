@@ -237,8 +237,7 @@ export default class SeriesEventHandler extends Component {
             const seriesService = getSeriesService(db, null, auth.currentUser?.uid);
             await seriesService.removeAlbumFromSeries(seriesId, album);
 
-            // 2. Remove from local view store (Immediate UI Feedback)
-            albumsStore.removeAlbum(album.id);
+            // 2. The series changed: the album load reconciles and the album leaves the screen
 
             // 3. Success Toast
             toast.success('Album removed from series');
@@ -295,7 +294,6 @@ export default class SeriesEventHandler extends Component {
                             // FIX #154: Use SeriesService for consistent method access
                             const seriesService = getSeriesService(db, null, auth.currentUser?.uid);
                             await seriesService.removeAlbumFromSeries(seriesId, { title: manualQuery, artist: '' });
-                            albumsStore.removeAlbum(album.id);
                             toast.success('Album removed manually');
                             const { onAlbumRemoved } = this.props;
                             if (onAlbumRemoved) onAlbumRemoved(album);

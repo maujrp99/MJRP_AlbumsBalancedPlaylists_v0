@@ -230,14 +230,5 @@ describe('APIClient against the new server (F52)', () => {
             await client.requestRatings(albumData).catch(() => {})
             expect(fetchMock).toHaveBeenCalledTimes(1)
         })
-
-        it('BEAenrichAlbum (the callers of before): the data, or null when the request failed', async () => {
-            fetchMock.mockResolvedValue(newOk(ratings))
-            expect(await client.BEAenrichAlbum(albumData)).toEqual(ratings)
-            fetchMock.mockResolvedValue(newFail(502, 'upstream_failed', true))
-            expect(await client.BEAenrichAlbum(albumData)).toBeNull()
-            fetchMock.mockRejectedValue(new TypeError('Failed to fetch'))
-            expect(await client.BEAenrichAlbum(albumData)).toBeNull()
-        })
     })
 })

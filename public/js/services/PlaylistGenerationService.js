@@ -11,6 +11,7 @@
 import { createAlgorithm } from '../algorithms/index.js'
 import { createRankingStrategy } from '../ranking/index.js'
 import { TrackTransformer } from '../transformers/TrackTransformer.js'
+import { resolveRankingId } from '../models/recipeSources.js'
 
 /**
  * @typedef {Object} GenerationConfig
@@ -49,16 +50,9 @@ export class PlaylistGenerationService {
             throw new Error(`Unknown algorithm: ${config.algorithmId}`)
         }
 
-        // Determine ranking strategy
-        // TopN algorithms have fixed ranking (popular=spotify, acclaimed=bea)
-        let rankingId = config.rankingId || 'balanced'
-        if (config.algorithmId.includes('popular')) {
-            rankingId = 'spotify' // Locked for TopN Popular
-        } else if (config.algorithmId.includes('acclaimed')) {
-            rankingId = 'bea' // Locked for TopN Acclaimed
-        } else if (config.algorithmId.includes('user')) {
-            rankingId = 'user' // Locked for TopN User
-        }
+        // The ranking of the recipe: a Top N recipe has it locked by its name. The same rule tells
+        // the album load which sources the recipe reads (models/recipeSources.js).
+        const rankingId = resolveRankingId(config)
 
         const rankingStrategy = createRankingStrategy(rankingId)
 

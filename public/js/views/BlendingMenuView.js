@@ -22,6 +22,9 @@ import { BlendIngredientsPanel } from '../components/blend/BlendIngredientsPanel
 import { blendingController } from '../controllers/BlendingController.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 
+/** How long a notice about what the load left out stays: it is read on the next screen. */
+const NOTICE_MS = 10000
+
 export class BlendingMenuView extends BaseView {
     constructor() {
         super()
@@ -348,6 +351,7 @@ export class BlendingMenuView extends BaseView {
 
         this.isGenerating = true
         this.updateGenerateButton()
+        this._leaving = new AbortController() // aborted if the person leaves while the albums load
 
         try {
             const { router } = await import('../router.js')
@@ -366,21 +370,31 @@ export class BlendingMenuView extends BaseView {
                 config,
                 {
                     onProgress: (msg) => this.showProgress(msg),
-                    useExistingAlbums: false
+                    signal: this._leaving.signal
                 }
             )
+
+            // What the load left out (albums that failed, sources missing) is said before the result
+            result.notices.forEach(notice => toast.warning(notice, NOTICE_MS))
 
             // Navigate to playlists view
             toast.success(`Generated ${result.playlists.length} playlist(s)!`)
             router.navigate(`/playlists?seriesId=${this.selectedSeries.id}`)
 
         } catch (err) {
+            if (err?.name === 'BlendCancelledError') return // the person left: nothing to show
             console.error('[BlendingMenuView] Generation error:', err)
             this.showError(err.message || 'Generation failed')
         } finally {
             this.isGenerating = false
             this.updateGenerateButton()
         }
+    }
+
+    /** Leaving the screen drops the albums it was waiting for: no load is left that nobody reads. */
+    destroy() {
+        this._leaving?.abort()
+        super.destroy()
     }
 
     /**

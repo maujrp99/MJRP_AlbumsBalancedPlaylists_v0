@@ -392,7 +392,7 @@ Construído nos ramos `fix/f45-albums-load-in-parallel`, `fix/f47-series-list-wi
 | Nova tentativa da segunda fonte (`POST /api/generate`) | nova tentativa com recuo | feito na F48: `utils/retry.js` (`DP-23`) e prazo de 90 s (`DP-22`) em `api/client.js`; só falha de rede ou 5xx; nunca 4xx nem prazo estourado; o erro traz o status (`ApiError`) | rota de IA paga, que hoje responde 402 |
 | «Clear Cache» | limpa o guardado de álbuns | feito na F48: `services/albums/clearAlbumCaches.js` para a carga, limpa o `CacheManager` e as chaves `album_cache_v…`; o resto do `localStorage` fica | apagar tudo derrubava o login do Spotify |
 | Cache do ranking pessoal | o ranking já lido não é pedido de novo | feito na F48: a instância do cache, validade de 1 hora, «sem ranking» também guardado, esquecido ao salvar e ao apagar | o ranking pode mudar noutro aparelho |
-| «Refetch Metadata» pela fila da carga | pela fila | não construído: o «Refetch» ainda roda em `SeriesService.refetchAlbumMetadata`, fora da fila, e depois entrega o álbum à carga (`adoptAlbum`) | task aberta na F48 |
+| «Refetch Metadata» pela fila da carga | pela fila | feito na F56 (no ramo): `AlbumLoadService.reloadAlbum`; `SeriesService.refetchAlbumMetadata` e `adoptAlbum` não existem mais | ver a seção «Toda tela pede os álbuns ao serviço de carga (F56)» |
 | ADR | depois da aprovação | não escrita | pendente |
 
 **Funções de aptidão em `npm test`** (`test/architecture/albumLoadBoundaries.test.js`, 9 testes): a fila não importa nada do projeto; as regras de estado, filtro, paginação e fatos importam só outros modelos; a store de carga não importa serviço, API, repositório, cache nem Firestore; o serviço de carga e o de fatos só alcançam o exterior pelo que recebem; os adaptadores não importam Firestore, store nem tela; só o arquivo de composição liga a carga às fontes reais; a tela não importa o serviço de carga nem o cliente de API; o controlador não carrega álbum; e o Firestore fora de `repositories/` está numa lista de exceções conhecidas que só pode encolher: eram três, são duas desde a F48 (`services/PlaylistsService.js`, `views/SaveAllView.js`, issue UAT-14).
@@ -750,3 +750,34 @@ sequenceDiagram
 - *Notas e popularidade do álbum do segundo degrau (fatia 2).* As fontes são perguntadas com o título do álbum carregado, o comprido; se a fonte só tiver o curto, não casa (o degrau é num sentido só) e o álbum fica sem esse dado.
 
 **Verificado e não verificado:** a fatia 1 foi provada no navegador com a conta do MJRP e em produção (`reports/evidence/F55/2026-11-19-slice-1-browser-proof.md`: 8 álbuns trocados em 227). A fatia 2 só foi provada em teste de unidade (1053 testes): nada dela foi visto num navegador, nem contra o catálogo, o Spotify ou a fonte de notas reais.
+
+## Toda tela pede os álbuns ao serviço de carga (F56) — construída no ramo
+
+> Escrita em 2026-11-19, junto com o código, no ramo `fix/f56-screens-load-through-the-service`. Conserta a UAT-189 e a UAT-191 e fecha a decisão 1 da ADR-0019. Os caminhos antigos, com arquivo e linha, estão em `docs/specs/features/F56-every-screen-loads-through-the-load-service/plan.md`. Não foi vista num navegador.
+
+**O problema, em uma frase.** A tela de álbuns tinha um dono para a carga; o blend, a edição de playlists, o «Refetch» e o salvar da edição de uma série buscavam por conta própria, fora da fila, do estado e do guardado.
+
+**A porta.** Uma só, para qualquer tela que não é a de álbuns: `albumAsks.albumsOf({ series, sources, signal, onProgress })` (`services/albums/AlbumAsks.js`, composto em `albumLoading.js`). Devolve sempre um resultado tipado (`models/albumAsk.js`): `albums` (os prontos, na ordem pedida), `bySeries`, `failed` (cada um com `reason`: `not-found`, `timeout`, `network`, `on-hold`), `missingSources` (a fonte pedida que não tem dado para um álbum pronto: `failed`, `empty` ou `waiting`), `total` e `aborted`. Nunca rejeita.
+
+**Como entra na carga: junta-se à geração em vigor, não abre outra.** Decisão do agente, revisável. `AlbumLoadService.join(series)` põe a série como **convidada** no mesmo store e na mesma geração da tela de álbuns; `leave(seriesIds)` a solta.
+
+| Pergunta | Resposta |
+|---|---|
+| Por que não um contexto separado por tela (outra instância, outro store)? | Duas instâncias dividindo as filas se cancelariam (`cancelAll` de uma geração derruba as tarefas da outra) e dividiriam a espera do servidor; sem dividir as filas, o limite de 3 buscas na Apple dobraria. E a mesma série carregando na tela e no blend seria buscada duas vezes. Juntando-se à geração, a série que a tela já tem **é** a resposta, e a que está a caminho é esperada, não repetida. |
+| A tela de álbuns é cancelada ou zerada? | Não. `join` não chama `_startGeneration`; só reconcilia a série pedida. |
+| E quando a tela de álbuns troca a sua lista (página, filtro)? | `setSeriesOrder` solta as séries que saíram da tela, menos as convidadas. |
+| E quando começa outra geração (troca de escopo, «Refresh», «Clear Cache»)? | As entradas somem; o pedido percebe (`service.generation` mudou) e entra na geração nova. Depois de `stop()`, `join` começa uma geração limpa. |
+| Quem espera passa na frente? | Sim: a fila tem `boost(grupo)`; as tarefas da série pedida, as que esperam e as que entrarem depois, correm antes do que a tela de álbuns ainda tem a carregar. |
+| Fica carga que ninguém lê? | Não. Servido ou largado (`signal`), o pedido solta a série; se a tela de álbuns não a mostra, as entradas saem, o que esperava na fila nunca é pedido (`cancelGroup`) e o que estava no ar não é escrito nem guardado. Dois pedidos da mesma série dividem uma carga; o último a acabar a solta. |
+| Como o trabalho largado não escreve por cima de um pedido novo? | Cada trabalho carrega um carimbo: a geração **e** quantas vezes o trabalho daquele álbum foi encerrado sozinho (`_stampOf`, `_endChain`). É a regra das gerações, um nível abaixo. Serve também ao «Refetch» e à troca de edição. |
+| O que o blend espera? | As fontes que a receita lê (`models/recipeSources.js`), cada uma dentro do prazo de 20 s que o serviço já dá a uma fonte; as outras não. Com o servidor pedindo login ou espera, a fonte não é esperada, e um álbum ainda não achado depois do prazo de uma busca (45 s) sai como falha `on-hold`. |
+
+**O que mais mudou.**
+- **Salvar a edição de uma série** chama `requestLoad(false)`: `load()` reconcilia (o que entrou carrega, o que saiu sai, o resto fica). Antes pedia `fresh`, que abre geração e ignora o guardado para todas as séries. Uma outra edição do mesmo título (`appleMusicId` diferente) agora recomeça aquele álbum, buscando no catálogo e não no guardado (`reconcileEntry`, marca `fresh` na entrada); o identificador que a própria carga corrigiu (F55) não conta como troca.
+- **«Refetch»** é `reloadAlbum(albumId)`: pela fila, com estado e falha própria. `adoptAlbum`, `SeriesService.refetchAlbumMetadata` e `injectAlbumsIntoViewCache` saíram.
+- **A prateleira (`stores/albums.js`) tem um escritor de álbuns só**, a projeção; os métodos de pôr e tirar um álbum foram removidos. Ela guarda também as séries convidadas.
+- **`api/client.js`** perdeu `fetchAlbum`, `fetchMultipleAlbums` e `BEAenrichAlbum`; só `albumLoading.js` o importa.
+
+**Funções de aptidão** (`test/architecture/screensLoadThroughTheService.test.js`): nenhum controlador, tela ou componente importa o cliente da API, chama uma fonte de álbum ou de nota, nem faz laço sobre `albumQueries`; o blend e a edição pedem por `albumAsks.albumsOf`; só `AlbumAsks` usa `join` e `leave`; só a projeção escreve álbuns na prateleira; só o serviço escreve no store de carga.
+
+**O que este desenho não resolve.** O pedido olha de novo a cada segundo, além de a cada mudança do store, porque a espera do servidor começa dentro de uma tarefa e não muda nenhuma entrada; um aviso de espera no store tiraria esse relógio (cabe na F58). `_holdFor` e `_enrichOne` seguem acima de 10 de complexidade (F58); nenhuma função nova passa de 10. `cache/albumCache.js` e `repositories/SharedAlbumRepository.js` ficaram sem quem os chame.

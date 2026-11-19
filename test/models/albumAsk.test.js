@@ -1,0 +1,188 @@
+/**
+ * F56 (UAT-189) - what an asker of albums gets back, as pure rules: when the ask is settled, which
+ * albums are ready, which failed and why, which sources are missing, and what to tell the person.
+ */
+import { describe, it, expect } from 'vitest'
+import { readAsk, askNotices, noAlbumsMessage, askProgressText, AskFailure, SourceGap } from '../../public/js/models/albumAsk.js'
+import { createEntry, reconcileEntry, AlbumStatus, EnrichmentStatus, FailureReason } from '../../public/js/models/albumLoadState.js'
+
+const found = (title, enrichment = {}) => ({
+    ...createEntry('s1', `Artist - ${title}`),
+    status: AlbumStatus.FOUND,
+    album: { id: title, artist: 'Artist', title },
+    enrichment: { acclaim: 'done', popularity: 'done', userRanking: 'empty', ...enrichment }
+})
+const failed = (title, reason = FailureReason.NOT_FOUND) => ({
+    ...createEntry('s1', `Artist - ${title}`),
+    status: AlbumStatus.FAILED,
+    error: { reason, message: `no ${title}` }
+})
+const pending = (title) => createEntry('s1', `Artist - ${title}`)
+const ask = (entries, sources = [], flags = {}) => readAsk([{ seriesId: 's1', entries }], sources, flags)
+
+describe('readAsk', () => {
+    it('is settled when every album was found or failed, and gives the found ones in the order asked', () => {
+        const reading = ask([found('One'), failed('Two'), found('Three')])
+
+        expect(reading.settled).toBe(true)
+        expect(reading.result.albums.map(a => a.title)).toEqual(['One', 'Three'])
+        expect(reading.result.bySeries).toEqual({ s1: reading.result.albums })
+        expect(reading.result.total).toBe(3)
+        expect(reading.result.aborted).toBe(false)
+        expect(reading.result.failed).toEqual([
+            { seriesId: 's1', key: 'artist - two', label: 'Artist - Two', reason: FailureReason.NOT_FOUND, message: 'no Two' }
+        ])
+    })
+
+    it('waits while an album is pending or being found', () => {
+        const finding = { ...pending('Two'), status: AlbumStatus.FINDING }
+
+        expect(ask([found('One'), pending('Two')]).settled).toBe(false)
+        expect(ask([found('One'), finding]).settled).toBe(false)
+        expect(ask([found('One'), finding]).progress).toEqual({ total: 2, found: 1, failed: 0, waitingSources: 0 })
+    })
+
+    it('does not wait for a source the asker did not name', () => {
+        const reading = ask([found('One', { acclaim: EnrichmentStatus.LOADING })], ['popularity'])
+
+        expect(reading.settled).toBe(true)
+        expect(reading.result.missingSources).toEqual([])
+    })
+
+    it('waits for the sources the asker named', () => {
+        const reading = ask([found('One', { acclaim: EnrichmentStatus.LOADING }), found('Two', { acclaim: EnrichmentStatus.PENDING })], ['acclaim'])
+
+        expect(reading.settled).toBe(false)
+        expect(reading.progress.waitingSources).toBe(2)
+    })
+
+    it('a named source that failed or has nothing does not hold the ask: the album is ready and the gap is told', () => {
+        const reading = ask([
+            found('One', { acclaim: EnrichmentStatus.FAILED }),
+            found('Two', { acclaim: EnrichmentStatus.EMPTY }),
+            found('Three')
+        ], ['acclaim'])
+
+        expect(reading.settled).toBe(true)
+        expect(reading.result.albums).toHaveLength(3)
+        expect(reading.result.missingSources).toEqual([
+            { source: 'acclaim', seriesId: 's1', key: 'artist - one', label: 'Artist - One', gap: SourceGap.FAILED },
+            { source: 'acclaim', seriesId: 's1', key: 'artist - two', label: 'Artist - Two', gap: SourceGap.EMPTY }
+        ])
+    })
+
+    it('while the server holds the load, a named source that has not answered is not waited for', () => {
+        const reading = ask([found('One', { acclaim: EnrichmentStatus.LOADING })], ['acclaim'], { onHold: true })
+
+        expect(reading.settled).toBe(true)
+        expect(reading.result.missingSources[0].gap).toBe(SourceGap.WAITING)
+    })
+
+    it('an album still not found when the hold has lasted too long is a failure with its own reason', () => {
+        expect(ask([pending('One')], [], { onHold: true }).settled).toBe(false)
+
+        const reading = ask([pending('One')], [], { onHold: true, heldTooLong: true })
+        expect(reading.settled).toBe(true)
+        expect(reading.result.failed[0].reason).toBe(AskFailure.ON_HOLD)
+    })
+
+    it('a cancelled album is waited for (it is asked again), and a series with no album is settled and empty', () => {
+        expect(ask([{ ...pending('One'), status: AlbumStatus.CANCELLED }]).settled).toBe(false)
+
+        const empty = ask([])
+        expect(empty.settled).toBe(true)
+        expect(empty.result.albums).toEqual([])
+    })
+
+    it('keeps the series apart and in the order asked', () => {
+        const reading = readAsk([
+            { seriesId: 's2', entries: [found('Two')] },
+            { seriesId: 's1', entries: [found('One')] }
+        ], [])
+
+        expect(reading.result.albums.map(a => a.title)).toEqual(['Two', 'One'])
+        expect(Object.keys(reading.result.bySeries)).toEqual(['s2', 's1'])
+    })
+
+    it('an ask that was dropped says so in its result', () => {
+        expect(ask([found('One'), pending('Two')], [], { aborted: true }).result.aborted).toBe(true)
+    })
+})
+
+describe('what the person is told', () => {
+    it('says nothing when every album is ready with its sources', () => {
+        expect(askNotices(ask([found('One')], ['acclaim']).result)).toEqual([])
+    })
+
+    it('says how many albums failed, which and why', () => {
+        const result = ask([found('One'), failed('Two'), failed('Three', FailureReason.TIMEOUT)]).result
+
+        expect(askNotices(result)).toEqual([
+            '2 of 3 albums could not be loaded and were left out: Artist - Two (not found), Artist - Three (took too long).'
+        ])
+    })
+
+    it('names at most three albums and counts the rest', () => {
+        const result = ask([failed('A'), failed('B'), failed('C'), failed('D'), failed('E')]).result
+
+        expect(askNotices(result)[0]).toContain('Artist - C (not found) and 2 more.')
+    })
+
+    it('says which source is missing, for how many albums, and whether it failed or has nothing', () => {
+        const result = ask([
+            found('One', { acclaim: EnrichmentStatus.FAILED, popularity: EnrichmentStatus.EMPTY }),
+            found('Two', { acclaim: EnrichmentStatus.EMPTY }),
+            found('Three')
+        ], ['acclaim', 'popularity']).result
+
+        expect(askNotices(result)).toEqual([
+            'Acclaim ratings are missing for 2 of 3 albums (1 did not answer, 1 has none at the source): Artist - One, Artist - Two.',
+            'Spotify popularity is missing for 1 of 3 albums (1 has none at the source): Artist - One.'
+        ])
+    })
+
+    it('the message for "nothing could be loaded" carries the reasons', () => {
+        const result = ask([failed('One'), failed('Two', FailureReason.NETWORK)]).result
+
+        expect(noAlbumsMessage(result)).toBe('None of the 2 albums could be loaded: Artist - One (not found), Artist - Two (network error).')
+        expect(noAlbumsMessage(ask([]).result)).toBe('This series has no albums.')
+    })
+
+    it('the progress line counts what is ready and what it still waits for', () => {
+        expect(askProgressText({ total: 4, found: 1, failed: 1, waitingSources: 0 })).toBe('Loading albums: 2 of 4...')
+        expect(askProgressText({ total: 4, found: 4, failed: 0, waitingSources: 3 })).toBe('Waiting for the ratings of 3 of 4 albums...')
+    })
+})
+
+describe('reconcileEntry: what stays when a series is asked for again', () => {
+    const loaded = {
+        ...createEntry('s1', { artist: 'A', title: 'One', appleMusicId: '111' }),
+        status: AlbumStatus.FOUND,
+        album: { title: 'One', metadata: { sourceId: '111' } }
+    }
+
+    it('a new query gets a new entry', () => {
+        expect(reconcileEntry(undefined, 's1', 'A - One').status).toBe(AlbumStatus.PENDING)
+        expect(reconcileEntry(undefined, 's1', 'A - One').fresh).toBeUndefined()
+    })
+
+    it('the same query keeps its entry, whatever else the series wrote into the query', () => {
+        expect(reconcileEntry(loaded, 's1', { artist: 'A', title: 'One', appleMusicId: '111', year: 1999 })).toBe(loaded)
+        expect(reconcileEntry(loaded, 's1', 'A - One')).toBe(loaded)
+    })
+
+    it('another edition of the same title is a new entry that does not read what is kept', () => {
+        const next = reconcileEntry(loaded, 's1', { artist: 'A', title: 'One', appleMusicId: '222' })
+
+        expect(next).not.toBe(loaded)
+        expect(next.status).toBe(AlbumStatus.PENDING)
+        expect(next.fresh).toBe(true)
+        expect(next.query.appleMusicId).toBe('222')
+    })
+
+    it('the id the load itself corrected in the series (F55) is the same edition: nothing is loaded again', () => {
+        const corrected = { ...loaded, album: { title: 'One', metadata: { sourceId: '999' } } }
+
+        expect(reconcileEntry(corrected, 's1', { artist: 'A', title: 'One', appleMusicId: '999' })).toBe(corrected)
+    })
+})

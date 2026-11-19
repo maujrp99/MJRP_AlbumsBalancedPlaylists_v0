@@ -16,7 +16,7 @@ The Blend system is the core "Wizard" for creating playlists. It uses a stepwise
 *   **Wizard State**: Each component handles a specific stage of the `BlendingMenuView`.
 *   **Dynamic Configuration**: `BlendIngredientsPanel` uses a static `ALGORITHM_RECIPES` map to toggle UI controls based on the selected algorithm, ensuring users only see relevant options.
 *   **Thumbnail Caching**: `BlendSeriesSelector` implements an aggressive preload strategy (`preloadAllThumbnails`) to fetch album art for series visualization without blocking the UI.
-*   **Album loading (known gap)**: when the person generates, `controllers/BlendingController.js` loads the albums of the series in its own loop (`apiClient.fetchAlbum`, one query at a time). It does not go through `AlbumLoadService`, so the blend screen does not share the load, the progress or the failure handling of the albums screen.
+*   **Album loading** (F56, on the branch `fix/f56-screens-load-through-the-service`, not yet published): when the person generates, `controllers/BlendingController.js` asks the album load (`albumAsks.albumsOf`) for the albums of the series, naming the sources the recipe reads. Albums the albums screen already loaded, or that the browser keeps, are not asked again; the rest goes through the same queue. The progress reads "Loading albums: i of n..." and then "Waiting for the ratings of i of n albums...". The blend goes on with the albums that are ready and a warning says which were left out and which source is missing; it stops only when no album is ready. Leaving the screen drops the ask.
 
 ---
 
