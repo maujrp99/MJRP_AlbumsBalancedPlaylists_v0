@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:08] session — F59 fatia C em produção: as rotas pagas respondem 401 sem login e funcionam com login
+
+- **Sétimo deploy do site** (main `e54c80e`): o app manda o login em toda chamada ao servidor. 493 testes antes; build sem mapas de código.
+- **Segundo deploy do servidor:** revisão `mjrp-proxy-00197-mps`, de uma cópia limpa da `main`. Ponto de volta: `mjrp-proxy-00196-sj7`.
+- **Conferido em produção:** sem login, as quatro rotas guardadas respondem 401 (antes 200). Com o login real do MJRP (app local falando com o servidor de produção): notas 200, lista de álbuns por IA 200 com 6 álbuns, busca de álbum por IA 200 com «1999». As rotas do Apple Music seguem abertas, de propósito.
+- **Não conferido:** o app publicado num navegador com login depois deste deploy; uma aba aberta desde antes precisa ser recarregada para mandar o login.
+- **F59:** fatias A, B e C em produção; a D virou a F66; falta a E (texto inserido como HTML sem tratamento; Tailwind servido do site).
+
 ## [2026-11-19 16:05] session — UAT-16 cita os dois commits da F59
 
 A issue passa a citar `c48689d` (rotas de depuração) e `e253edd` (porta das rotas pagas).
