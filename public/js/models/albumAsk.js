@@ -93,6 +93,24 @@ function readNotFound(entry, heldTooLong) {
 }
 
 /**
+ * How long an ask has been under a hold of the server, and when to look at it again. A hold
+ * changes no album, so nothing else tells the ask that an album held for as long as a search may
+ * take is to be given as failed: this says in how many ms that will be.
+ *
+ * @param {number|null} heldSince - when this ask first saw the hold in force, or null
+ * @param {Object|null} hold - the hold of the load (AlbumLoadStore.getHold())
+ * @param {number} now - ms
+ * @param {number} limitMs - as long as the search of one album may take
+ * @returns {{ heldSince: number|null, heldTooLong: boolean, lookAgainInMs: number|null }}
+ */
+export function holdWait(heldSince, hold, now, limitMs) {
+    if (!hold) return { heldSince: null, heldTooLong: false, lookAgainInMs: null }
+    const since = heldSince === null ? now : heldSince
+    const left = limitMs - (now - since)
+    return { heldSince: since, heldTooLong: left <= 0, lookAgainInMs: left > 0 ? left : null }
+}
+
+/**
  * Read where an ask is, from the entries of the series it asked for.
  *
  * @param {Array<{ seriesId: string, entries: Array<Object> }>} asked - in the order asked
