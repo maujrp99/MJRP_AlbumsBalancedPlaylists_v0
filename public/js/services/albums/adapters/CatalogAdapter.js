@@ -59,7 +59,9 @@ export class CatalogAdapter {
         if (!album) {
             try {
                 album = await this.fetchFromServer(query)
-            } catch {
+            } catch (error) {
+                // The album ends as "not found", but the reason is not hidden: the status is in the message
+                console.warn(`[CatalogAdapter] second source failed for "${this._label(query)}":`, error?.message || error)
                 album = null
             }
         }
