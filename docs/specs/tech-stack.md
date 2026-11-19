@@ -10,7 +10,7 @@ updated: 2026-10-28
 | Camada | Tecnologia | Versão | Para quê | Decisão |
 |---|---|---|---|---|
 | Linguagem | JavaScript, ES Modules no navegador e na raiz (`"type": "module"`, `package.json`) | — | todo o código do produto; sem TypeScript. O servidor é CommonJS (`require`, `server/index.js`) | — |
-| Runtime | Node.js | 18 | roda o servidor (`FROM node:18-slim`, `server/Dockerfile:1`), a CI (`.github/workflows/ci.yml`, que roda os testes em Node 26 desde a F64; a imagem do servidor segue em 18) e as ferramentas do repositório; fora de suporte desde abril de 2025 | — |
+| Runtime | Node.js | 24 | roda o servidor (`FROM node:24-slim`, `server/Dockerfile`); a CI e a máquina do dono rodam os testes em Node 26 (`.github/workflows/ci.yml`); era 18, fora de suporte, até 2026-11-19 | [[ADR-0020]] |
 | Front | Vanilla JS em SPA (MVC com Stores), sem framework | — | interface; a decisão de não usar framework é do Art. II da constituição | — |
 | Front | Vite | 5.4.21 | servidor de desenvolvimento (porta 5000, proxy de `/api` para a 3000) e build para `dist` (`vite.config.js`) | — |
 | Front | Tailwind CSS pelo CDN `cdn.tailwindcss.com` | — | classes utilitárias carregadas em tempo de execução por `<script>` (`public/index.html:12`), sem versão fixa; não há `tailwind.config.js` nem PostCSS, a configuração é o `tailwind.config` inline em `public/index.html:23` | — |
@@ -36,7 +36,7 @@ updated: 2026-10-28
 | Testes | Puppeteer | 24.31.0 | testes de ponta a ponta (`test/e2e/`) | — |
 | Testes | Jest, standard e prettier | 29.7.0 / 17.1.2 / 3.6.2 | declarados em `server/package.json`; o `npm test` do servidor chama scripts `node`, não o Jest | — |
 | Testes | ESLint | 9.39.2 | lint da raiz (`eslint.config.mjs`); o do servidor é 9.39.1 | — |
-| Build | Docker, imagem base `node:18-slim` | 18 | empacota o servidor (`server/Dockerfile`) | — |
+| Build | Docker, imagem base `node:24-slim` | 24 | empacota o servidor (`server/Dockerfile`) | [[ADR-0020]] |
 | Build | `gcloud run deploy --source` (Cloud Build por baixo) | — | constrói a imagem pelo `server/Dockerfile` e implanta o servidor no Cloud Run (`scripts/deploy-server.sh`); o `cloudbuild.yaml` foi removido na F64 | — |
 | Build | GitHub Actions (`actions/checkout@v4`, `actions/setup-node@v4`) e `firebase-tools` por `npx` | — | CI e implantação do frontend; `firebase-tools` sem versão fixa (`.github/workflows/ci-firebase.yml`) | — |
 | Observabilidade | `server/lib/logger.js`, com `console` de reserva | — | log do servidor; sem coletor de erros nem de métricas no repositório | — |
