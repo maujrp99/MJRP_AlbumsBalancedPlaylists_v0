@@ -48,25 +48,18 @@ export class PlaylistGrid {
       const rankingId = playlist._meta?.rankingId
       const playlistSpecificRanking = rankingId ? ((rankingId === 'spotify') ? 'spotify' : 'acclaim') : primaryRanking
 
-      // Sprint 15.5: Build display title with batch name and index
-      // Note: Algorithm-generated title (e.g., "Greatest Hits Vol. 1") doesn't have index prefix
+      // The title of the playlist is its own (the person can type over it); the position and the
+      // batch name are shown beside it and are not part of it: "1. Batch 555 - " + "Greatest Hits Vol. 1"
       const playlistTitle = playlist.title || playlist.name || `Playlist ${index + 1}`
-
-      let displayTitle
-      if (batchName) {
-        // Format: "1. BatchName - Title" (e.g., "1. Batch 555 - Greatest Hits Vol. 1")
-        displayTitle = `${index + 1}. ${batchName} - ${playlistTitle}`
-      } else {
-        // Without batch name, show index + original title for visual clarity
-        displayTitle = `${index + 1}. ${playlistTitle}`
-      }
+      const titlePrefix = batchName ? `${index + 1}. ${batchName} - ` : `${index + 1}. `
 
       return this.renderCard({
         playlist,
         index,
         editable,
         primaryRanking: playlistSpecificRanking,
-        displayTitle // Sprint 15.5: Pass formatted title
+        playlistTitle,
+        titlePrefix
       })
     }).join('')
 
@@ -88,14 +81,13 @@ export class PlaylistGrid {
       index,
       editable = true,
       primaryRanking = 'spotify',
-      displayTitle = null
+      playlistTitle = playlist.title || playlist.name || '',
+      titlePrefix = ''
     } = options
 
     const tracks = playlist.tracks || []
     const totalDuration = this.calculateDuration(tracks)
     const trackCount = tracks.length
-
-    const titleToShow = displayTitle || playlist.name
 
     const tracksHtml = tracks.map((track, trackIndex) =>
       TrackRow.renderHTML({
@@ -119,16 +111,9 @@ export class PlaylistGrid {
 
     return `
       <div class="playlist-card bg-surface rounded-xl border border-white/10 overflow-hidden" data-playlist-index="${index}">
-        <div class="playlist-header p-4 bg-white/5 border-b border-white/10 flex items-center justify-between">
-          <div class="flex-1">
-            ${editable ? `
-              <h3 class="playlist-name text-lg font-bold cursor-text hover:bg-white/5 rounded px-2 py-1 -ml-2"
-                  contenteditable="true" 
-                  data-playlist-index="${index}" 
-                  spellcheck="false">${escapeHtml(titleToShow)}</h3>
-            ` : `
-              <h3 class="text-lg font-bold">${escapeHtml(titleToShow)}</h3>
-            `}
+        <div class="playlist-header p-4 bg-white/5 border-b border-white/10 flex items-center justify-between gap-3">
+          <div class="flex-1 min-w-0">
+            ${this.renderTitle({ editable, index, playlistTitle, titlePrefix })}
           </div>
           <div class="flex items-center gap-3 text-sm text-muted">
             <span class="flex items-center gap-1">
@@ -136,9 +121,16 @@ export class PlaylistGrid {
               ${trackCount}
             </span>
             <span class="font-mono">${totalDuration}</span>
+            ${editable ? `
+              <button type="button" class="text-muted hover:text-red-400 p-1 rounded"
+                      data-action="delete-playlist" data-playlist-index="${index}"
+                      aria-label="Delete playlist ${escapeHtml(playlistTitle)}" title="Delete this playlist">
+                ${getIcon('Trash2', 'w-4 h-4')}
+              </button>
+            ` : ''}
           </div>
         </div>
-        
+
         <style>
           .custom-scrollbar-${index}::-webkit-scrollbar {
             width: 6px;
@@ -161,6 +153,24 @@ export class PlaylistGrid {
           ${tracksHtml || '<div class="text-center text-muted py-8">No tracks</div>'}
         </div>
       </div>
+    `
+  }
+
+  /**
+   * The title of a card: the position and the batch name, then the title of the playlist. When
+   * the grid is editable the title (and only it) can be typed over; what is typed is taken by the
+   * screen when the field loses the focus (views/playlists/playlistEditActions.js).
+   * @private
+   */
+  static renderTitle({ editable, index, playlistTitle, titlePrefix }) {
+    const prefix = `<span class="playlist-title-prefix text-muted">${escapeHtml(titlePrefix)}</span>`
+    if (!editable) {
+      return `<h3 class="text-lg font-bold">${prefix}${escapeHtml(playlistTitle)}</h3>`
+    }
+    return `
+      <h3 class="text-lg font-bold">${prefix}<span class="playlist-name cursor-text hover:bg-white/5 focus:bg-white/10 rounded px-1 outline-none"
+            contenteditable="true" role="textbox" aria-label="Title of playlist ${index + 1}"
+            data-playlist-index="${index}" spellcheck="false">${escapeHtml(playlistTitle)}</span></h3>
     `
   }
 

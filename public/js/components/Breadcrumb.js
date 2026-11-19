@@ -44,9 +44,12 @@ export class Breadcrumb {
             crumbs.push({ label: 'Ranking', path: currentPath })
         }
 
+        // The playlists screen: a set that comes from the blend, or a saved batch being edited
         if (currentPath.startsWith('/playlists')) {
-            crumbs.push({ label: 'Albums', path: '/albums' })
-            crumbs.push({ label: 'Playlists', path: '/playlists' })
+            crumbs.push(params.editing
+                ? { label: 'Saved Playlists', path: '/saved-playlists' }
+                : { label: 'Blend', path: '/blend' })
+            crumbs.push({ label: params.editing ? 'Edit Batch' : 'Playlists', path: '/playlists' })
         }
 
         return crumbs
