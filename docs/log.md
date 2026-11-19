@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:12] review — F55 fatia 2 provada pelo integrador; UAT-184 em fixed
+
+Contagem na conta do MJRP depois da fatia 2: 227 álbuns pedidos, 227 iguais. «No Quarter» carrega pelo segundo nível, com o aviso no cartão; o identificador corrigido do «Core» foi gravado na série. Prova em `reports/evidence/F55/2026-11-19-slice-2-browser-proof.md`, com o que não foi visto.
+
 ## [2026-11-19 19:10] decision — a resposta única da busca por IA entra no afrouxamento do subtítulo (decidido pelo agente — revisável)
 
 Na prova no navegador, «No Quarter» seguiu falhando: o catálogo da Apple (loja dos EUA) não tem o álbum em nenhuma busca, e ele sempre veio da busca por IA do servidor, que responde «No Quarter: Jimmy Page & Robert Plant Unledded». A fatia 2 tinha deixado a resposta da IA fora do segundo nível da regra. Decisão: uma fonte que é perguntada por um álbum e responde um álbum é julgada como resposta única (`compareOnlyAnswer`, dentro da regra): o título pedido antes de um subtítulo é aceito, com o motivo gravado no álbum e o aviso no cartão. O título longo pedido e o curto respondido continua recusado. Também visto: o identificador corrigido do «Core» foi gravado na série (300973540 → 1285806791).
