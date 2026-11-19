@@ -276,7 +276,7 @@ Use consistent colors to visually distinguish data sources:
 ### PlaylistsView
 - Track item: `rounded-lg p-3`
 - Export section: TBD
-- Undo/Redo: `btn btn-secondary btn-sm`
+- Undo/Redo: `btn btn-secondary`, with `disabled:opacity-40` when there is no step (in "Actions & Export", F62)
 
 ### SavedPlaylistsView
 - Series card: `glass-panel p-6 rounded-xl`
