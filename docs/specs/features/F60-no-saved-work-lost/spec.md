@@ -24,7 +24,7 @@ planned_for: "[[ROADMAP#^REL-40]]"
 
 **Como saber que funcionou:** Cada caminho tem um teste que falhava antes e passa agora; no navegador, uma falha de gravação provocada deixa o lote como estava.
 
-**O que ficou de fora e por quê:** os dados de visitante passarem para a conta ao entrar (UAT-12). Não cabe num conserto: pede uma decisão de desenho, escrita em Open Questions.
+**Decidido pelo MJRP em 2026-11-19:** os dados de visitante **não** passam para a conta ao entrar; a janela de entrada avisa disso antes (UAT-12). E sair da conta recarrega o app.
 
 ## Problem Statement
 Decisão do MJRP de 2026-11-19: tudo entra na v5.0, e cada feature pronta e testada vai para produção sozinha. Origem: o cruzamento dos relatórios anteriores (`reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md`, seção B) e o mapa da v5.0 (`reports/audits/2026-11-19-mjrpalbumblender-v0-v5-map.md`, tema 2).
@@ -53,8 +53,8 @@ O que o código fazia, confirmado em teste antes de cada conserto:
   verified_by:: `test/stores/inventory.userChange.test.js`, `test/stores/inventory.test.js`
 - [REQ-08] As playlists geradas e ainda não guardadas voltam à tela depois de recarregar a página, só para a mesma pessoa e a mesma série. · fixes UAT-05
   verified_by:: `test/services/PlaylistsService.draft.test.js`, `test/controllers/PlaylistsController.restore.test.js`
-- [REQ-09] Os dados criados como visitante passam para a conta ao entrar. · fixes UAT-12 · **não entregue: espera a decisão de desenho das Open Questions**
-  verified_by:: pendente (sem implementação)
+- [REQ-09] A janela de entrada diz, antes de a pessoa escolher, que o que foi feito como visitante não é copiado para a conta; nada é copiado. · fixes UAT-12
+  verified_by:: `test/components/LoginModal.guestNotice.test.js`
 
 ## Observable States
 N/A: a feature não importa nenhum requisito (conserto de issues). Estados do `docs/specs/behavior.md` reescritos para o que o código faz agora: `^series-delete-confirm`, `^series-delete-failed`, `^playlists-save-saved`, `^playlists-save-failed`, `^playlists-edit-mode`, `^playlists-edit-not-found`. Estados novos: `^playlists-leave-unsaved`, `^playlists-draft-restored`, `^inventory-person-changed`.
@@ -73,7 +73,7 @@ N/A: a feature não importa nenhum requisito (conserto de issues). Estados do `d
 - Suíte: 530 testes passando (462 antes da feature); `vite build` compila.
 
 ## Out of Scope
-- UAT-12 (dados de visitante ao entrar): ver Open Questions.
+- Copiar os dados do visitante para a conta: decidido que não (MJRP, 2026-11-19).
 - Achado 2.8 do mapa (lotes de mesmo nome se fundem, `%` no nome, lote sem nome, apagar lote sem confirmação): sem issue própria; não tocado.
 - Edições não salvas de um lote **já guardado** não voltam depois de recarregar (só o conjunto ainda não guardado volta); para esse caso há o aviso ao sair.
 - As séries e as playlists em memória não são esvaziadas ao sair da conta (só o inventário tinha issue): ver Open Questions.
@@ -81,6 +81,6 @@ N/A: a feature não importa nenhum requisito (conserto de issues). Estados do `d
 - A subcoleção `albums` de uma série (lida por `SeriesRepository.findWithAlbums`) não é apagada com a série.
 
 ## Open Questions
-- **UAT-12, como levar os dados do visitante para a conta — aberta, do MJRP.** O visitante é uma conta anônima do Firebase; entrar com Google ou Apple (`signInWithPopup`) troca de `uid`, e as regras do banco só deixam cada `uid` ler o que é seu, então depois de entrar o app não alcança mais o que o visitante gravou. Três caminhos: **(A)** vincular a conta anônima ao Google ou à Apple (`linkWithPopup`): o `uid` continua o mesmo e nada precisa ser copiado; quando a conta do Google já existe (o caso do próprio MJRP), o vínculo é recusado e sobra escolher entre descartar o que o visitante fez ou copiar; **(B)** copiar: ler séries, playlists, inventário e rankings do visitante antes de abrir a janela de login e gravar na conta depois, com regra para o que já existe lá; **(C)** não levar nada e dizer isso na janela de entrada. A cadeia atual não funciona em nenhum ponto (quatro defeitos nas séries; a cópia do inventário só rodava no caso do defeito da UAT-198 e foi retirada).
+- **UAT-12, como levar os dados do visitante para a conta — respondida pelo MJRP em 2026-11-19: «não levar e avisar».** Feito: o aviso na janela de entrada. **Sair da conta deve recarregar o app? — «sim».** Feito: `utils/reloadApp.js`.
 - **Sair da conta deve recarregar o app? — aberta, do MJRP.** Hoje, ao sair, o inventário é esvaziado (esta feature), mas as séries e as playlists em memória continuam na tela até a próxima carga. Recarregar a página ao sair garante que nada de uma pessoa fique em memória para a seguinte, de uma vez só; muda o que se vê ao sair (a tela pisca e volta à entrada).
 - **A pergunta ao sair com alteração não salva usa o `confirm` do navegador — aberta, do MJRP.** O roteador decide na hora se navega; a janela do app (`DialogService`) responde depois. Usar a janela do app pede que a navegação do roteador passe a esperar a resposta: mudança de desenho pequena, mas no caminho de toda navegação.

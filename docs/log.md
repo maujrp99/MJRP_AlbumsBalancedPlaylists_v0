@@ -38,6 +38,26 @@ Ramo `fix/f52-server-tells-the-truth`, de um agente auxiliar, da ponta da `main`
 - **Conferido:** 135 testes do servidor na suíte da raiz; e o servidor de verdade numa cópia local (`curl`): 401, 400, 503 sem a chave, `found` e `not_found` contra o BestEverAlbums, 502 com a fonte inalcançável. Nenhuma rota paga foi chamada.
 - **Não feito aqui:** `musickit`, `playlists` e as rotas de depuração seguem montando o próprio erro. Nada foi publicado.
 
+## [2026-11-19 17:24] session — UAT-204 aberta: Scan parece não fazer nada (relato do MJRP)
+
+O MJRP relatou, em produção, que clicar em Scan não faz nada. Não reproduzido pelo agente (visitante em produção: 12 álbuns; com login pelo app local: 0,8 s e 4,8 s). Hipótese: a busca espera a IA (até 60 s) sem resposta visível ao clique; o relato veio minutos depois da publicação do servidor em Node 24 (partida a frio).
+
+## [2026-11-19 17:12] session — décimo deploy do site e servidor em Node 24 em produção
+
+Site publicado da `main` (`bcdd114`, pacote `main-CYRWnKB2.js`): o aviso ao visitante na janela de entrada está no ar; sair da conta recarrega o app (visto só nos testes). Servidor publicado por `npm run deploy:server` (primeiro uso real do script) da `main` (`3a5c859`): revisão `mjrp-proxy-00198-5df`, imagem `node:24-slim`. Conferido em produção: `/api/debug/files` 404, `/api/musickit-status` 200, `/api/generate`, `/api/enrich-album` e `/api/ai/studio-albums` 401 sem login; `/api/enrich-album` 200 com login (pelo app local, notas de «Brothers in Arms»). A volta é a revisão `mjrp-proxy-00197-mps`. A trava de fim de turno passou a exigir o critério do conform aberto em 2026-10-28 (`.mjrp/conform.json`), que fecha vermelho (12 lacunas, 61 notas, catálogo defasado em 7); não é desta sessão, fica para o MJRP decidir.
+
+## [2026-11-19 17:09] decision — servidor em Node 24 (ADR-0020)
+
+O MJRP decidiu «24». `server/Dockerfile` passa de `node:18-slim` para `node:24-slim`; ADR-0020, `tech-stack.md`, `arch.md` e a pergunta aberta da F64 atualizados. Publica sozinho por `npm run deploy:server`; a volta é a revisão `mjrp-proxy-00197-mps`.
+
+## [2026-11-19 17:06] session — UAT-12 cita o commit certo
+
+A issue passa a citar `2a39683`.
+
+## [2026-11-19 17:05] session — F60: visitante não leva dados e a janela de entrada avisa (UAT-12); sair da conta recarrega o app
+
+Duas decisões do MJRP de hoje, feitas: a janela de entrada mostra «Series, playlists and inventory made as a guest stay with the guest session. They are not copied to your account when you sign in.»; e sair da conta recomeça o app da Home numa página nova (`utils/reloadApp.js`), o que tira da tela séries e playlists de quem saiu, além do inventário. Três testes novos, vistos falhar antes; a suíte tem 593 passando. No navegador: a janela de entrada mostra o aviso e os três botões. O recarregar ao sair não foi visto no navegador (sairia da conta no painel de teste).
+
 ## [2026-11-19 17:04] decision — quatro decisões do MJRP: visitante não leva dados, sair recarrega, F52 pode ir ao código, Node 24
 
 Respostas do MJRP às quatro perguntas do agente, nas palavras dele:

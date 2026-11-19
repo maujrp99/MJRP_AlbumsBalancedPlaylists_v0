@@ -62,4 +62,4 @@ N/A: a feature não importa nenhum requisito e não tem tela (conserto das issue
 - Os testes próprios do servidor (`cd server && npm test`) não entram no portão: parte deles consulta um site externo de verdade.
 
 ## Open Questions
-- O Node do servidor continua em 18, que está fora de suporte. Passar para uma linha em suporte (26, a que roda os testes, ou 24)? — a responder pelo MJRP; o integrador reverteu a troca feita pelo executor, porque ela mudaria o que produção roda sem o sim dele.
+- ~~O Node do servidor continua em 18, que está fora de suporte. Passar para uma linha em suporte (26, a que roda os testes, ou 24)?~~ Respondida pelo MJRP em 2026-11-19: **24** (ADR-0020). Antes: o integrador reverteu a troca feita pelo executor, porque ela mudaria o que produção roda sem o sim dele.
