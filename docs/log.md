@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:44] session — F63: o menu de mistura abre com a série de origem escolhida (UAT-07, UAT-192)
+
+Confirmado na `main`: `BlendingMenuView.mount` não lia o `seriesId` que o botão «Blend your Albums» põe no endereço (`/blend?seriesId=<id>`). Agora `BlendSeriesSelector.selectById` escolhe a série depois da carga e a tela já abre com o passo da receita liberado; série que não existe não escolhe nenhuma. Os cartões de série viraram botões para o teclado (`role`, `tabindex`, `aria-pressed`, Enter e espaço). `BlendingController.js` não foi tocado. Sem navegador nesta sessão.
+
 ## [2026-11-19 19:43] session — F63: o menu da conta abre no toque; o ✕ da faixa aparece sem mouse (UAT-13)
 
 Confirmado na `main`: o menu da conta só abria com o mouse em cima (`group-hover`), e as ações da faixa ficavam com `opacity-0` até o mouse passar. `AuthNav`: o avatar é um botão com `aria-expanded`/`aria-haspopup`; abre e fecha no toque ou clique, fecha com clique fora e Esc (o foco volta ao avatar), seta para baixo abre no primeiro item; não abre mais só por passar o mouse. `TrackRow`: as ações só ficam escondidas onde o aparelho tem mouse (`@media (hover:hover)`), e aparecem com o foco do teclado; o botão ganhou `aria-label`. Não feito, por estar fora do escopo dado (código das playlists guardadas): o olho de detalhes em `SavedPlaylistRow.js:51` e `SavedPlaylistActions.js:86`, que têm o mesmo `opacity-0 group-hover`. Sem navegador nesta sessão: como fica na tela é do integrador.
