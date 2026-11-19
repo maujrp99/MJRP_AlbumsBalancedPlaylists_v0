@@ -1,8 +1,29 @@
 const axios = require('axios')
-const cheerio = require('cheerio')
-const { cleanTitle, toCore, toFuzzyCore, normalizeArtist, normalizeFuzzy } = require('../normalize')
+const { cleanTitle, toCore, toFuzzyCore, normalizeArtist } = require('../normalize')
+const { upstreamErrorFrom } = require('../outcome')
 
-// Simple scraper for BestEverAlbums album pages.
+/**
+ * Scraper for BestEverAlbums.
+ *
+ * The rule of failure (F52): a request to the source that fails (no answer, a deadline, any HTTP
+ * status that is not a success) is THROWN as an UpstreamError, from every search path. Nothing here
+ * turns a failure into "not found": `null` means the source answered every question and nothing matched.
+ *
+ * `createBestEverScraper({ http, loadHtml })` receives the HTTP client and the HTML reader, so the
+ * tests run with no network; the module also exports one scraper wired to axios and cheerio.
+ */
+
+const SOURCE = 'BestEverAlbums'
+
+// cheerio is asked for only when a page is read: the module loads without it (the root test suite has no cheerio)
+const cheerioLoad = (html) => require('cheerio').load(html)
+
+/** What suggest.php answered, as two lists; an answer in another shape is "nothing". */
+function parseSuggest (data) {
+  const list = (value) => (Array.isArray(value) ? value : [])
+  if (!Array.isArray(data)) return { titles: [], urls: [] }
+  return { titles: list(data[1]), urls: list(data.length > 2 ? (data[3] || data[2]) : []) }
+}
 
 // Helper to get axios config with headers
 const getAxiosConfig = (timeout = 30000) => ({
@@ -14,13 +35,25 @@ const getAxiosConfig = (timeout = 30000) => ({
   }
 })
 
+function createBestEverScraper ({ http = axios, loadHtml = cheerioLoad, logger = console } = {}) {
+// One request to the source. A failure leaves here as an UpstreamError and is caught nowhere below.
+async function getPage (url) {
+  try {
+    return await http.get(url, getAxiosConfig(30000))
+  } catch (err) {
+    const failure = upstreamErrorFrom(err, SOURCE)
+    logger.warn(`[BEA] request failed: ${failure.message}`)
+    throw failure
+  }
+}
+
 async function fetchAlbumPage(albumTitle, albumArtist) {
   // BestEverAlbums search works better with cleaner titles
   const cleanT = cleanTitle(albumTitle)
   const q = encodeURIComponent(`${albumArtist} ${cleanT}`)
   const searchUrl = `https://www.besteveralbums.com/search.php?search=${q}`
-  const searchRes = await axios.get(searchUrl, getAxiosConfig(30000))
-  const $search = cheerio.load(searchRes.data)
+  const searchRes = await getPage(searchUrl)
+  const $search = loadHtml(searchRes.data)
 
   let albumPath = null
   const qTitle = (albumTitle || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
@@ -50,55 +83,48 @@ async function fetchAlbumPage(albumTitle, albumArtist) {
   if (!albumPath) return null
 
   const albumUrl = albumPath.startsWith('http') ? albumPath : `https://www.besteveralbums.com${albumPath}`
-  try {
-    const res = await axios.get(albumUrl, getAxiosConfig(30000))
-    const $ = cheerio.load(res.data)
-    const pageText = ($('title').text() + ' ' + $('h1').text() + ' ' + $('h2').text() + ' ' + $('body').text()).toLowerCase()
+  // A page that could not be read is a failure (it used to be accepted unseen)
+  const res = await getPage(albumUrl)
+  const $ = loadHtml(res.data)
+  const pageText = ($('title').text() + ' ' + $('h1').text() + ' ' + $('h2').text() + ' ' + $('body').text()).toLowerCase()
 
-    const targetTitleRaw = toCore(albumTitle)
-    const targetTitleClean = toCore(cleanTitle(albumTitle))
-    const targetArtist = normalizeArtist(albumArtist)
+  const targetTitleRaw = toCore(albumTitle)
+  const targetTitleClean = toCore(cleanTitle(albumTitle))
+  const targetArtist = normalizeArtist(albumArtist)
 
-    const hasTitle = (targetTitleRaw && pageText.includes(targetTitleRaw)) ||
-      (targetTitleClean && pageText.includes(targetTitleClean))
+  const hasTitle = (targetTitleRaw && pageText.includes(targetTitleRaw)) ||
+    (targetTitleClean && pageText.includes(targetTitleClean))
 
-    const hasArtist = targetArtist && pageText.includes(targetArtist)
+  const hasArtist = targetArtist && pageText.includes(targetArtist)
 
-    if (hasArtist || hasTitle) return albumUrl
-    return null
-  } catch (e) {
-    return albumUrl
-  }
+  if (hasArtist || hasTitle) return albumUrl
+  return null
 }
 
 async function pageContainsArtistOrTitle(url, albumTitle, albumArtist) {
-  try {
-    const candidateUrl = url.startsWith('http') ? url : `https://www.besteveralbums.com${url}`
-    const res = await axios.get(candidateUrl, getAxiosConfig(30000))
-    const $ = cheerio.load(res.data)
-    const titleText = ($('title').text() || '').toLowerCase()
-    const headerText = (($('h1').text() || '') + ' ' + ($('h2').text() || '')).toLowerCase()
-    const bodyText = ($('body').text() || '').toLowerCase()
-    const targetTitleRaw = toCore(albumTitle)
-    const targetArtist = normalizeArtist(albumArtist)
+  const candidateUrl = url.startsWith('http') ? url : `https://www.besteveralbums.com${url}`
+  const res = await getPage(candidateUrl)
+  const $ = loadHtml(res.data)
+  const titleText = ($('title').text() || '').toLowerCase()
+  const headerText = (($('h1').text() || '') + ' ' + ($('h2').text() || '')).toLowerCase()
+  const bodyText = ($('body').text() || '').toLowerCase()
+  const targetTitleRaw = toCore(albumTitle)
+  const targetArtist = normalizeArtist(albumArtist)
 
-    const h1 = $('h1').first()
-    if (h1 && h1.length) {
-      const artistLink = h1.find('a').first()
-      if (artistLink && artistLink.length) {
-        const artistText = normalizeArtist(artistLink.text())
-        if (artistText && targetArtist && artistText === targetArtist) return true
-      }
-      const h1Text = (h1.text() || '').toLowerCase()
-      if (targetArtist && h1Text.includes(`by ${targetArtist}`)) return true
+  const h1 = $('h1').first()
+  if (h1 && h1.length) {
+    const artistLink = h1.find('a').first()
+    if (artistLink && artistLink.length) {
+      const artistText = normalizeArtist(artistLink.text())
+      if (artistText && targetArtist && artistText === targetArtist) return true
     }
-
-    if (targetArtist && bodyText.includes(targetArtist) && bodyText.includes(targetTitleRaw)) return true
-
-    return titleText.includes(targetTitleRaw) || headerText.includes(targetTitleRaw)
-  } catch (err) {
-    return false
+    const h1Text = (h1.text() || '').toLowerCase()
+    if (targetArtist && h1Text.includes(`by ${targetArtist}`)) return true
   }
+
+  if (targetArtist && bodyText.includes(targetArtist) && bodyText.includes(targetTitleRaw)) return true
+
+  return titleText.includes(targetTitleRaw) || headerText.includes(targetTitleRaw)
 }
 
 /**
@@ -109,44 +135,39 @@ async function _standardFindAlbumId(albumTitle, albumArtist) {
   const q = encodeURIComponent(`${albumArtist || ''} ${cleanT || ''}`)
   const suggestUrl = `https://www.besteveralbums.com/suggest.php?q=${q}`
 
-  try {
-    const res = await axios.get(suggestUrl, getAxiosConfig(30000))
-    const parsed = res.data
-    const urls = Array.isArray(parsed) && parsed.length > 2 ? parsed[3] || parsed[2] || [] : []
-    const titles = Array.isArray(parsed) && parsed.length > 1 ? parsed[1] || [] : []
+  const res = await getPage(suggestUrl)
+  const { titles, urls } = parseSuggest(res.data)
 
-    const targetTitle = toCore(albumTitle)
-    const targetArtist = normalizeArtist(albumArtist)
+  const targetArtist = normalizeArtist(albumArtist)
 
-    for (let i = 0; i < titles.length; i++) {
-      const t = String(titles[i] || '').toLowerCase()
-      const normalizedT = toCore(t)
+  for (let i = 0; i < titles.length; i++) {
+    const t = String(titles[i] || '').toLowerCase()
+    const normalizedT = toCore(t)
 
-      // FAST-ACCEPT Logic (Standard Flow)
-      // Robustness: Use toFuzzyCore to handle common suffixes/labels in suggest results
-      const fuzzyT = toFuzzyCore(t)
-      const fuzzyTitle = toFuzzyCore(albumTitle)
+    // FAST-ACCEPT Logic (Standard Flow)
+    // Robustness: Use toFuzzyCore to handle common suffixes/labels in suggest results
+    const fuzzyT = toFuzzyCore(t)
+    const fuzzyTitle = toFuzzyCore(albumTitle)
 
-      if (targetArtist && (normalizedT.includes(targetArtist) || targetArtist.includes(normalizedT)) && (fuzzyT.includes(fuzzyTitle) || fuzzyTitle.includes(fuzzyT))) {
-        const u = urls[i]
-        console.log(`[BEA Search] ✅ MATCH found in Standard Search: "${t}" (Fuzzy: ${fuzzyT}) -> ${u}`)
-        const mChart = String(u).match(/thechart\.php\?a=(\d+)/i)
-        if (mChart) return mChart[1]
-        const mAlbum = String(u).match(/album\.php\?id=(\d+)/i)
-        if (mAlbum) return mAlbum[1]
-      }
+    if (targetArtist && (normalizedT.includes(targetArtist) || targetArtist.includes(normalizedT)) && (fuzzyT.includes(fuzzyTitle) || fuzzyTitle.includes(fuzzyT))) {
+      const u = urls[i]
+      logger.log(`[BEA Search] ✅ MATCH found in Standard Search: "${t}" (Fuzzy: ${fuzzyT}) -> ${u}`)
+      const mChart = String(u).match(/thechart\.php\?a=(\d+)/i)
+      if (mChart) return mChart[1]
+      const mAlbum = String(u).match(/album\.php\?id=(\d+)/i)
+      if (mAlbum) return mAlbum[1]
     }
+  }
 
-    // Try verifying candidates (Standard Flow)
-    for (const u of urls) {
-      if (await pageContainsArtistOrTitle(u, albumTitle, albumArtist)) {
-        const mChart = String(u).match(/thechart\.php\?a=(\d+)/i)
-        if (mChart) return mChart[1]
-        const mAlbum = String(u).match(/album\.php\?id=(\d+)/i)
-        if (mAlbum) return mAlbum[1]
-      }
+  // Try verifying candidates (Standard Flow)
+  for (const u of urls) {
+    if (await pageContainsArtistOrTitle(String(u), albumTitle, albumArtist)) {
+      const mChart = String(u).match(/thechart\.php\?a=(\d+)/i)
+      if (mChart) return mChart[1]
+      const mAlbum = String(u).match(/album\.php\?id=(\d+)/i)
+      if (mAlbum) return mAlbum[1]
     }
-  } catch (e) { }
+  }
 
   // Fallback to HTML Search (Standard Flow)
   const alt = await fetchAlbumPage(albumTitle, albumArtist)
@@ -176,34 +197,30 @@ async function _fuzzyFindAlbumId(albumTitle, albumArtist) {
   for (const qText of variations) {
     const q = encodeURIComponent(qText)
     const suggestUrl = `https://www.besteveralbums.com/suggest.php?q=${q}`
-    try {
-      console.log(`[BEA Fuzzy Fallback] Trying suggest for: "${qText}"`)
-      const res = await axios.get(suggestUrl, getAxiosConfig(30000))
-      const parsed = res.data
-      const urls = Array.isArray(parsed) && parsed.length > 2 ? parsed[3] || parsed[2] || [] : []
-      const titles = Array.isArray(parsed) && parsed.length > 1 ? parsed[1] || [] : []
+    logger.log(`[BEA Fuzzy Fallback] Trying suggest for: "${qText}"`)
+    const res = await getPage(suggestUrl)
+    const { titles, urls } = parseSuggest(res.data)
 
-      const targetTitle = toFuzzyCore(albumTitle)
-      const targetArtist = normalizeArtist(albumArtist)
+    const targetTitle = toFuzzyCore(albumTitle)
+    const targetArtist = normalizeArtist(albumArtist)
 
-      for (let i = 0; i < titles.length; i++) {
-        const t = String(titles[i] || '').toLowerCase()
-        const normalizedCandidate = toFuzzyCore(t)
-        const candidateArtist = normalizeArtist(t)
+    for (let i = 0; i < titles.length; i++) {
+      const t = String(titles[i] || '').toLowerCase()
+      const normalizedCandidate = toFuzzyCore(t)
+      const candidateArtist = normalizeArtist(t)
 
-        const artistMatch = !targetArtist || candidateArtist.includes(targetArtist) || targetArtist.includes(candidateArtist) || normalizedCandidate.includes(targetArtist)
-        const titleMatch = normalizedCandidate.includes(targetTitle) || targetTitle.includes(normalizedCandidate)
+      const artistMatch = !targetArtist || candidateArtist.includes(targetArtist) || targetArtist.includes(candidateArtist) || normalizedCandidate.includes(targetArtist)
+      const titleMatch = normalizedCandidate.includes(targetTitle) || targetTitle.includes(normalizedCandidate)
 
-        if (artistMatch && titleMatch) {
-          const u = urls[i]
-          console.log(`[BEA Search] ✅ MATCH found in Fuzzy Fallback: "${t}" (Fuzzy: ${normalizedCandidate}) -> ${u}`)
-          const mChart = String(u).match(/thechart\.php\?a=(\d+)/i)
-          if (mChart) return mChart[1]
-          const mAlbum = String(u).match(/album\.php\?id=(\d+)/i)
-          if (mAlbum) return mAlbum[1]
-        }
+      if (artistMatch && titleMatch) {
+        const u = urls[i]
+        logger.log(`[BEA Search] ✅ MATCH found in Fuzzy Fallback: "${t}" (Fuzzy: ${normalizedCandidate}) -> ${u}`)
+        const mChart = String(u).match(/thechart\.php\?a=(\d+)/i)
+        if (mChart) return mChart[1]
+        const mAlbum = String(u).match(/album\.php\?id=(\d+)/i)
+        if (mAlbum) return mAlbum[1]
       }
-    } catch (e) { }
+    }
   }
   return null
 }
@@ -214,42 +231,37 @@ async function findAlbumId(albumTitle, albumArtist) {
   if (id) return id
 
   // 2. Fuzzy Fallback (Robust/Edge case logic)
-  console.log(`[BEA Search] Standard search failed for "${albumTitle}". Trying fuzzy fallback.`)
+  logger.log(`[BEA Search] Standard search failed for "${albumTitle}". Trying fuzzy fallback.`)
   return await _fuzzyFindAlbumId(albumTitle, albumArtist)
 }
 
 async function findArtistPage(artistName) {
   const q = encodeURIComponent(artistName)
   const suggestUrl = `https://www.besteveralbums.com/suggest.php?q=${q}`
-  const res = await axios.get(suggestUrl, getAxiosConfig(30000))
-  try {
-    const parsed = res.data
-    const urls = Array.isArray(parsed) && parsed.length > 2 ? parsed[3] || parsed[2] || [] : []
-    const candidates = []
-    for (const u of urls) {
-      if (!u) continue
-      const m = u.match(/thechart\.php\?b=(\d+)/i)
-      if (m) candidates.push({ id: m[1], url: u })
-    }
-    const target = normalizeArtist(artistName)
-    for (const c of candidates) {
-      try {
-        const artistUrl = c.url.startsWith('http') ? c.url : `https://www.besteveralbums.com${c.url}`
-        const r = await axios.get(artistUrl, getAxiosConfig(30000))
-        const $ = cheerio.load(r.data)
-        const header = (($('h1').text() || '') + ' ' + ($('title').text() || '')).toLowerCase()
-        const normalizedHeader = normalizeArtist(header)
-        if (normalizedHeader.includes(target)) return c.id
-      } catch (err) { }
-    }
-  } catch (err) { }
+  const res = await getPage(suggestUrl)
+  const { urls } = parseSuggest(res.data)
+  const candidates = []
+  for (const u of urls) {
+    if (!u) continue
+    const m = String(u).match(/thechart\.php\?b=(\d+)/i)
+    if (m) candidates.push({ id: m[1], url: String(u) })
+  }
+  const target = normalizeArtist(artistName)
+  for (const c of candidates) {
+    const artistUrl = c.url.startsWith('http') ? c.url : `https://www.besteveralbums.com${c.url}`
+    const r = await getPage(artistUrl)
+    const $ = loadHtml(r.data)
+    const header = (($('h1').text() || '') + ' ' + ($('title').text() || '')).toLowerCase()
+    const normalizedHeader = normalizeArtist(header)
+    if (normalizedHeader.includes(target)) return c.id
+  }
   return null
 }
 
 async function parseArtistDiscography(artistId) {
   const url = `https://www.besteveralbums.com/thechart.php?b=${artistId}`
-  const res = await axios.get(url, getAxiosConfig(30000))
-  const $ = cheerio.load(res.data)
+  const res = await getPage(url)
+  const $ = loadHtml(res.data)
 
   const albums = []
   $('a').each((i, el) => {
@@ -275,8 +287,8 @@ async function parseArtistDiscography(artistId) {
 
 async function parseChartRankingById(id) {
   const chartUrl = `https://www.besteveralbums.com/thechart.php?a=${id}#tracks`
-  const res = await axios.get(chartUrl, getAxiosConfig(30000))
-  const $ = cheerio.load(res.data)
+  const res = await getPage(chartUrl)
+  const $ = loadHtml(res.data)
 
   const rows = []
   $('table').each((i, table) => {
@@ -329,7 +341,7 @@ async function parseChartRankingById(id) {
     // BEA sometimes uses .track-list-track inside a grid or .item-row
     const items = $('.track-list-track')
     if (items.length > 0) {
-      console.log(`[BEA Scraper] Grid fallback: Found ${items.length} track items.`)
+      logger.log(`[BEA Scraper] Grid fallback: Found ${items.length} track items.`)
       items.each((i, el) => {
         const $el = $(el)
         // Title: Use specific nav2emph or fallback to first link
@@ -361,11 +373,11 @@ async function parseChartRankingById(id) {
           const m = aveText.match(/(\d{1,3})(?=\s*\()/) || aveText.match(/(\d{1,3})/)
           if (m) rating = parseInt(m[1], 10)
         }
-        console.log(`[BEA Scraper]   Track ${i + 1}: "${title}" (Rating: ${rating}, Raw: "${aveText.substring(0, 30)}...")`)
+        logger.log(`[BEA Scraper]   Track ${i + 1}: "${title}" (Rating: ${rating}, Raw: "${aveText.substring(0, 30)}...")`)
         if (title && title.length > 1) rows.push({ trackTitle: title, rating })
       })
     } else {
-      console.log('[BEA Scraper] Grid fallback: No track items found.')
+      logger.log('[BEA Scraper] Grid fallback: No track items found.')
     }
   }
 
@@ -389,7 +401,7 @@ async function parseChartRankingById(id) {
 }
 
 function parseChartHtml(html, chartUrl = 'https://example/') {
-  const $ = cheerio.load(html)
+  const $ = loadHtml(html)
   const rows = []
   $('table').each((i, table) => {
     const $table = $(table)
@@ -437,8 +449,8 @@ function parseChartHtml(html, chartUrl = 'https://example/') {
 }
 
 async function parseAlbumRanking(albumUrl) {
-  const res = await axios.get(albumUrl, getAxiosConfig(30000))
-  const $ = cheerio.load(res.data)
+  const res = await getPage(albumUrl)
+  const $ = loadHtml(res.data)
   const evidence = []
   $('table').each((i, table) => {
     const $table = $(table)
@@ -470,56 +482,57 @@ async function parseAlbumRanking(albumUrl) {
   return { albumUrl, evidence: normalized }
 }
 
+/**
+ * @returns {Promise<Object|null>} the page and its track ratings, or null when the source answered
+ *          every search and has no such album
+ * @throws {UpstreamError} when any request to the source failed: it could not be known
+ */
 async function getRankingForAlbum(albumTitle, albumArtist) {
-  try {
-    if (albumArtist) {
-      const artistId = await findArtistPage(albumArtist)
-      if (artistId) {
-        const disc = await parseArtistDiscography(artistId)
-        const normalize = s => (s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, '').trim()
-        const target = normalize(albumTitle)
-        for (const a of disc.albums) {
-          if (normalize(a.title) === target) {
-            const chartMatch = a.url.match(/thechart\.php\?a=(\d+)/i)
-            if (chartMatch) {
-              const parsed = await parseChartRankingById(chartMatch[1])
-              return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId, evidence: parsed.evidence }
-            }
-            const albumMatch = a.url.match(/album\.php\?id=(\d+)/i)
-            if (albumMatch) {
-              const parsed = await parseAlbumRanking(a.url)
-              return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, evidence: parsed.evidence }
-            }
+  if (albumArtist) {
+    const artistId = await findArtistPage(albumArtist)
+    if (artistId) {
+      const disc = await parseArtistDiscography(artistId)
+      const normalize = s => (s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, '').trim()
+      const target = normalize(albumTitle)
+      for (const a of disc.albums) {
+        if (normalize(a.title) === target) {
+          const chartMatch = a.url.match(/thechart\.php\?a=(\d+)/i)
+          if (chartMatch) {
+            const parsed = await parseChartRankingById(chartMatch[1])
+            return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId, evidence: parsed.evidence }
+          }
+          const albumMatch = a.url.match(/album\.php\?id=(\d+)/i)
+          if (albumMatch) {
+            const parsed = await parseAlbumRanking(a.url)
+            return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, evidence: parsed.evidence }
           }
         }
       }
     }
-    const id = await findAlbumId(albumTitle, albumArtist)
-    if (id) {
-      const parsed = await parseChartRankingById(id)
-      return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId, evidence: parsed.evidence }
-    }
-    const albumUrl = await fetchAlbumPage(albumTitle, albumArtist)
-    if (!albumUrl) return null
-    const parsed = await parseAlbumRanking(albumUrl)
-    return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId || null, evidence: parsed.evidence }
-  } catch (err) {
-    return { error: err.message }
   }
+  const id = await findAlbumId(albumTitle, albumArtist)
+  if (id) {
+    const parsed = await parseChartRankingById(id)
+    return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId, evidence: parsed.evidence }
+  }
+  const albumUrl = await fetchAlbumPage(albumTitle, albumArtist)
+  if (!albumUrl) return null
+  const parsed = await parseAlbumRanking(albumUrl)
+  return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId || null, evidence: parsed.evidence }
 }
 
+/** @throws {UpstreamError} when the page could not be read */
 async function getRankingFromUrl(albumUrl) {
-  try {
-    const m = albumUrl.match(/thechart\.php\?a=(\d+)/i)
-    if (m) {
-      const parsed = await parseChartRankingById(m[1])
-      return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, evidence: parsed.evidence }
-    }
-    const parsed = await parseAlbumRanking(albumUrl)
+  const m = albumUrl.match(/thechart\.php\?a=(\d+)/i)
+  if (m) {
+    const parsed = await parseChartRankingById(m[1])
     return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, evidence: parsed.evidence }
-  } catch (err) {
-    return { error: err.message }
   }
+  const parsed = await parseAlbumRanking(albumUrl)
+  return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, evidence: parsed.evidence }
 }
 
-module.exports = { getRankingForAlbum, getRankingFromUrl, findArtistPage, parseArtistDiscography, findAlbumId, fetchAlbumPage, parseChartHtml }
+return { getRankingForAlbum, getRankingFromUrl, findArtistPage, parseArtistDiscography, findAlbumId, fetchAlbumPage, parseChartHtml }
+}
+
+module.exports = { ...createBestEverScraper(), createBestEverScraper }

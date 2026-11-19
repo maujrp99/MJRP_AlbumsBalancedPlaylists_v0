@@ -18,6 +18,7 @@ import { applyBEAData } from '../../helpers/BEAEnrichmentHelper.js'
 import { applyEnrichmentToAlbum } from '../../helpers/SpotifyEnrichmentHelper.js'
 import { userRankingRepository } from '../../repositories/UserRankingRepository.js'
 import { AlbumLoadService } from './AlbumLoadService.js'
+import { holdNotice } from '../../models/albumLoadState.js'
 import { SeriesFactsService } from '../series/SeriesFactsService.js'
 import { getSeriesService } from '../SeriesService.js'
 import { CatalogAdapter } from './adapters/CatalogAdapter.js'
@@ -42,7 +43,7 @@ const catalog = new CatalogAdapter({
 
 const enrichers = {
     acclaim: new AcclaimEnricher({
-        requestRatings: (albumData) => apiClient.BEAenrichAlbum(albumData),
+        requestRatings: (albumData) => apiClient.requestRatings(albumData),
         applyRatings: applyBEAData
     }),
     popularity: new PopularityEnricher({
@@ -59,11 +60,23 @@ export const albumCachePort = new AlbumCacheAdapter({
     createAlbum: (plain) => new Album(plain)
 })
 
+/**
+ * The server said "sign in" or "wait" and the load is on hold (F52): one notice says so. The toast
+ * is asked for only then, so the load does not bring the screen's code with it.
+ */
+const showHoldNotice = (hold) => {
+    const notice = holdNotice(hold)
+    import('../../components/Toast.js')
+        .then(({ showToast }) => showToast(notice.message, notice.type, notice.durationMs))
+        .catch(error => console.warn(`[albumLoading] ${notice.message}`, error?.message || error))
+}
+
 export const albumLoadService = new AlbumLoadService({
     store: albumLoadStore,
     catalog,
     enrichers,
-    cache: albumCachePort
+    cache: albumCachePort,
+    onHold: showHoldNotice
 })
 
 /** What the "Clear Cache" button does: stop the load and forget what the browser keeps about albums. */

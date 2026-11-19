@@ -8,6 +8,7 @@ import { musicKitService } from '../services/MusicKitService.js'
 import { TrackTransformer } from '../transformers/TrackTransformer.js'
 import { SIMILARITY_THRESHOLD } from '../utils/stringUtils.js'
 import { retryWithBackoff } from '../utils/retry.js'
+import { readServerResult, failedWithoutAnswer, ApiError, ResultKind } from './serverResult.js'
 
 /**
  * API Client
@@ -18,24 +19,9 @@ import { retryWithBackoff } from '../utils/retry.js'
 
 const API_BASE = window.__api_base || '/api'
 
-/**
- * A failed call to the server, with what is needed to decide whether to ask again.
- * kind: 'http' (the server answered, `status` says what), 'network' (no answer), 'timeout' (too slow).
- */
-export class ApiError extends Error {
-    constructor(message, { kind, status = null, cause = null } = {}) {
-        super(message)
-        this.name = 'ApiError'
-        this.kind = kind
-        this.status = status
-        if (cause) this.cause = cause
-    }
-
-    /** Only a failure that may pass: no answer, or a 5xx. Never a 4xx (402, 404, 429...), never a timeout. */
-    get isTransient() {
-        return this.kind === 'network' || (this.kind === 'http' && this.status >= 500)
-    }
-}
+// The failure of a call to the server (its code, whether to ask again, the hold) is read in one
+// place, api/serverResult.js. Exported from here too, for the callers that already import it.
+export { ApiError }
 
 export class APIClient {
     constructor() {
@@ -189,29 +175,64 @@ export class APIClient {
     }
 
     /**
-     * Enrich an existing album object with ratings from besteveralbums.com
+     * One call to the app's own server, read by the one reader (api/serverResult.js).
+     * @param {string} path - e.g. '/generate'
+     * @param {Object} body - sent as JSON
+     * @param {Object} [options]
+     * @param {number} [options.timeoutMs=0] - deadline of the call; 0 means none
+     * @returns {Promise<Object>} a result that is not a failure: { kind, data } or { kind: 'legacy', body }
+     * @throws {ApiError} when the server failed, did not answer, or passed the deadline
+     * @private
+     */
+    async _post(path, body, { timeoutMs = 0 } = {}) {
+        const route = `POST ${path}`
+        const controller = new AbortController()
+        const timer = timeoutMs > 0 ? setTimeout(() => controller.abort(), timeoutMs) : null
+
+        try {
+            let result
+            try {
+                const response = await serverFetch(`${this.baseUrl}${path}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                    signal: controller.signal
+                })
+                result = await readServerResult(response)
+            } catch (cause) {
+                result = failedWithoutAnswer(cause, { timedOut: controller.signal.aborted })
+            }
+            if (result.kind === ResultKind.FAILED) throw ApiError.from(result, route)
+            return result
+        } finally {
+            if (timer) clearTimeout(timer)
+        }
+    }
+
+    /**
+     * Ask the server for the track ratings of an album (POST /enrich-album, BestEverAlbums).
      * @param {Object} albumData - { title, artist, tracks }
-     * @returns {Promise<Object>} Enrichment result { bestEverInfo, trackRatings }
+     * @returns {Promise<{ kind: string, data: Object }>} kind is 'found', 'not_found' or 'no_ratings'
+     *          with the new server, and 'legacy' with the server before F52 (then the data says
+     *          nothing about "the source has none": the caller follows the rule it had)
+     * @throws {ApiError} when it could not be known (the source or the server failed)
+     */
+    async requestRatings(albumData) {
+        const result = await this._post('/enrich-album', { albumData })
+        if (result.kind === ResultKind.LEGACY) return { kind: ResultKind.LEGACY, data: result.body?.data || {} }
+        return { kind: result.kind, data: result.data || {} }
+    }
+
+    /**
+     * The ratings of an album, for the callers of before the album load (BEAEnrichmentHelper).
+     * @param {Object} albumData - { title, artist, tracks }
+     * @returns {Promise<Object|null>} { bestEverInfo, trackRatings, trackEvidence }, or null when the request failed
      */
     async BEAenrichAlbum(albumData) {
         try {
-            const response = await serverFetch(`${this.baseUrl}/enrich-album`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ albumData })
-            })
-
-            if (!response.ok) {
-                console.warn(`Enrichment failed: HTTP ${response.status}`)
-                return null
-            }
-
-            const json = await response.json()
-            return json.data || {}
+            return (await this.requestRatings(albumData)).data
         } catch (error) {
-            console.error('[APIClient] Enrichment error:', error)
+            console.warn('[APIClient] Enrichment failed:', error?.message || error)
             return null
         }
     }
@@ -219,12 +240,14 @@ export class APIClient {
     /**
      * Fetch an album from the server (POST /generate, the second source: paid AI).
      *
-     * Asked again only after a failure that may pass (no answer, or a 5xx), up to `retries` times,
-     * with growing waits and jitter (DP-23). A 4xx is an answer: it is never asked again. A call that
-     * passed the deadline is not asked again either, because the paid work may still be running.
+     * Asked again only when the failure says so (`retryable`), up to `retries` times, with growing
+     * waits and jitter (DP-23). The new server sends that field; with the server before F52 it is
+     * "no answer, or a 5xx". It is never decided by the status alone: billing, quota and a refused
+     * request are not asked again whatever status they come with. A call that passed the deadline
+     * is not asked again either, because the paid work may still be running.
      * @param {string|Object} query - "Artist - Album" or { artist, title }
      * @param {number} [retries] - new attempts after the first call
-     * @returns {Promise<Album>}
+     * @returns {Promise<Album|null>} null when the server answered that it has no such album
      * @throws {ApiError} the real failure, with `status` when the server answered
      * @private
      */
@@ -234,58 +257,31 @@ export class APIClient {
             ? `${query.artist || ''} - ${query.title || query.album || ''}`
             : query
 
-        const data = await retryWithBackoff(() => this._postGenerate(queryStr), {
+        const result = await retryWithBackoff(() => this._postGenerate(queryStr), {
             retries,
             baseMs: this.retryDelay,
             capMs: this.retryDelayCap,
-            shouldRetry: (error) => error instanceof ApiError && error.isTransient,
+            shouldRetry: (error) => error instanceof ApiError && error.retryable,
             pause: (ms) => this.delay(ms),
             random: () => this.random(),
             onRetry: ({ attempt, waitMs, error }) =>
                 console.warn(`[APIClient] "${queryStr}": ${error.message}. New attempt ${attempt} of ${retries} in ${waitMs} ms`)
         })
 
-        return this.normalizeAlbumData(data.data || data)
+        if (result.kind === ResultKind.NOT_FOUND) return null
+        // The server before F52 answered the album itself, or { data: album }
+        const data = result.kind === ResultKind.LEGACY ? (result.body?.data || result.body) : result.data
+        return this.normalizeAlbumData(data)
     }
 
     /**
      * One call to POST /generate, with a deadline (DP-22).
-     * @returns {Promise<Object>} the body of the answer
+     * @returns {Promise<Object>} the result of the answer (never a failure)
      * @throws {ApiError}
      * @private
      */
-    async _postGenerate(queryStr) {
-        const controller = new AbortController()
-        const timer = setTimeout(() => controller.abort(), this.serverTimeoutMs)
-        const route = 'POST /generate'
-
-        try {
-            let response
-            try {
-                response = await serverFetch(`${this.baseUrl}/generate`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ albumQuery: queryStr }),
-                    signal: controller.signal
-                })
-            } catch (cause) {
-                if (controller.signal.aborted) {
-                    throw new ApiError(`${route} passed ${this.serverTimeoutMs} ms`, { kind: 'timeout', cause })
-                }
-                throw new ApiError(`${route} got no answer: ${cause?.message || cause}`, { kind: 'network', cause })
-            }
-
-            if (!response.ok) {
-                throw new ApiError(`${route} answered HTTP ${response.status}${response.statusText ? ` ${response.statusText}` : ''}`,
-                    { kind: 'http', status: response.status })
-            }
-
-            return await response.json()
-        } finally {
-            clearTimeout(timer)
-        }
+    _postGenerate(queryStr) {
+        return this._post('/generate', { albumQuery: queryStr }, { timeoutMs: this.serverTimeoutMs })
     }
 
     /**

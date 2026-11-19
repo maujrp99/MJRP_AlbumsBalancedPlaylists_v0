@@ -7,6 +7,8 @@
  * counts on its own, so the real ceiling is `limit` times the number of instances. That is
  * enough to stop one login from spending without end; it is not a billing guarantee.
  */
+const { failure, respond } = require('./outcome')
+
 function createRateLimiter ({ limit, windowMs, now = () => Date.now() }) {
   const seen = new Map() // uid -> { count, startedAt }
 
@@ -18,7 +20,7 @@ function createRateLimiter ({ limit, windowMs, now = () => Date.now() }) {
 
   function limiter (req, res, next) {
     const uid = req.user && req.user.uid
-    if (!uid) return res.status(401).json({ error: 'Sign in to use this.' })
+    if (!uid) return respond(res, failure('unauthorized'))
 
     const moment = now()
     forget(moment)
@@ -26,8 +28,7 @@ function createRateLimiter ({ limit, windowMs, now = () => Date.now() }) {
     const entry = seen.get(uid) || { count: 0, startedAt: moment }
     if (entry.count >= limit) {
       const waitSeconds = Math.max(1, Math.ceil((entry.startedAt + windowMs - moment) / 1000))
-      res.set('Retry-After', String(waitSeconds))
-      return res.status(429).json({ error: 'Too many requests. Try again later.' })
+      return respond(res, failure('rate_limited', { retryAfterSeconds: waitSeconds }))
     }
     entry.count += 1
     seen.set(uid, entry)

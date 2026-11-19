@@ -140,6 +140,64 @@ describe('TaskQueue', () => {
         await Promise.all(all)
     })
 
+    describe('pause and resume (F52: the load holds when the server says "wait")', () => {
+        it('a paused queue starts no new task; what was running finishes; resume starts the rest', async () => {
+            const queue = new TaskQueue({ concurrency: 1 })
+            const started = []
+            const task = (name) => async () => { started.push(name); await wait(10); return name }
+
+            const first = queue.add(task('first'))
+            const second = queue.add(task('second'))
+            await wait(0)
+            queue.pause()
+
+            await expect(first).resolves.toBe('first')
+            await wait(20)
+            expect(started).toEqual(['first'])
+            expect(queue.paused).toBe(true)
+            expect(queue.pending).toBe(1)
+
+            queue.resume()
+            await expect(second).resolves.toBe('second')
+            expect(queue.paused).toBe(false)
+        })
+
+        it('a task added while paused waits for resume', async () => {
+            const queue = new TaskQueue({ concurrency: 2 })
+            queue.pause()
+            const run = vi.fn(async () => 'ok')
+            const added = queue.add(run)
+
+            await wait(10)
+            expect(run).not.toHaveBeenCalled()
+
+            queue.resume()
+            await expect(added).resolves.toBe('ok')
+        })
+
+        it('is not idle while paused with tasks waiting; cancelAll still rejects them', async () => {
+            const queue = new TaskQueue({ concurrency: 1 })
+            queue.pause()
+            const added = queue.add(async () => 'never')
+            let idle = false
+            queue.onIdle().then(() => { idle = true })
+
+            await wait(10)
+            expect(idle).toBe(false)
+
+            queue.cancelAll()
+            await expect(added).rejects.toBeInstanceOf(TaskCancelledError)
+            await wait(0)
+            expect(idle).toBe(true)
+        })
+
+        it('resume on a queue that is not paused does nothing', async () => {
+            const queue = new TaskQueue({ concurrency: 1 })
+            queue.resume()
+            await expect(queue.add(async () => 1)).resolves.toBe(1)
+        })
+    })
+
     it('imports nothing from the project (it does not know the domain)', async () => {
         const fs = await import('node:fs')
         const path = await import('node:path')

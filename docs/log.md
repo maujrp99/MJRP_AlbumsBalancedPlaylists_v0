@@ -3,6 +3,45 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 17:38] review — F52 fatia 1 revisada e provada pelo integrador
+
+Ramo do auxiliar com a `main` junto: 789 testes, build ok. Prova em `reports/evidence/F52/2026-11-19-slice-1-browser-proof.md` (oito cenários; três coisas vistas só em teste de unidade, ditas lá). Escolhas do auxiliar que ficam, revisáveis: erro do provedor de IA sai como 424; página com zero notas casadas passa a `empty`; aba antiga lê a lista da IA só depois de recarregar. UAT-181 e UAT-23 seguem abertas (fatias 2 a 4).
+
+## [2026-11-19 17:33] session — F52 fatia 1: documentos da feature e manual do contrato de resposta
+
+Documentos da fatia 1 da F52, no ramo `fix/f52-server-tells-the-truth`.
+
+- **Feature** (`docs/specs/features/F52-server-album-generation-back/`): `spec.md` em `In Progress`, com as quatro fatias (a 1 feita, as 2 a 4 não), oito requisitos e a mudança de comportamento declarada (página com zero notas deixa de contar como «tem notas»); `plan.md` com o desenho como foi construído e as decisões tomadas na construção; `tasks.md` com 20 tarefas (12 fechadas, duas à espera do MJRP).
+- **Manual:** `03_Backend_API_Layer.md` ganhou o contrato da resposta, a lista fechada de códigos e a tabela do provedor de IA, linha por linha; `07_Frontend_Data_Infra.md` ganhou o leitor único, a carga segurada e o quadro das duas direções da publicação separada. Frases que ficaram falsas foram acertadas em `01`, `02` e `07b`.
+- **`docs/specs/arch.md`:** a proposta diz agora que a fatia 1 está construída e quais dos pontos «ainda não verificados» foram vistos.
+- O título da feature nos três documentos passou a «O servidor diz a verdade», o nome da proposta aprovada (era «A busca de álbum por IA do servidor volta a responder»).
+- **Para o MJRP decidir** (em `spec.md`, Open Questions): aceitar que uma aba antiga fique sem a lista por IA até recarregar, ou o servidor manter `albums` no topo da resposta por um tempo.
+
+## [2026-11-19 17:33] session — F52 fatia 1, app: um leitor da resposta do servidor, falha como falha, 401 e 429 seguram a carga (UAT-23)
+
+Segunda metade da fatia 1 da F52, no mesmo ramo (`fix/f52-server-tells-the-truth`): o lado do app.
+
+- **Um módulo lê a resposta do servidor** (`public/js/api/serverResult.js`, puro): `found`, `not_found`, `no_ratings`, ou `failed` com `code`, `retryable`, `status` e `hold`. Um 200 sem `outcome` é o servidor antigo (`legacy`) e segue a regra de antes; o erro antigo `{ error: 'texto' }` é lido pelo status.
+- **Repetir é decidido pelo campo `retryable`**, nunca só pelo status (`api/client.js`, `_fetchAlbumFromAPI`): um 500 que diz «não repita» é uma chamada paga só.
+- **Notas** (`adapters/enrichers.js`): falha é lançada como veio, e a carga marca a fonte como `failed`; `not_found` e `no_ratings` viram `empty`. **Mudança de comportamento:** página com zero notas casadas deixa de contar como `done` com o servidor novo, o que muda o filtro «por fonte» para esses álbuns.
+- **Lista de álbuns por IA** (`AlbumSearchService`): a falha não fica mais guardada como «a IA não conhece álbuns» pela sessão; uma busca pergunta a lista uma vez só.
+- **401 e 429 do próprio servidor seguram a carga** (`AlbumLoadService._addHeld`, `TaskQueue.pause/resume`): nenhum álbum é marcado como falha; no 429 a carga volta no prazo do `Retry-After`; no 401 ela para de perguntar até `resume()`, uma nova carga ou «tentar de novo», com um aviso só. A fila das notas pausa; a da busca de álbuns não (ela também fala com a Apple Music).
+- **`_enrichOne` foi dividido** (tinha complexidade 21): `_newAsk`, `_askSource`, `_overNewestAlbum`, `_publishSource`.
+- **Conferido:** `npx vitest run` com 786 testes (eram 590), `npx vite build` compila. As duas direções da publicação separada têm teste: site novo contra servidor antigo (`serverResult.test.js`, `client.test.js`, `AlbumSearchService.aiList.test.js`) e aba antiga contra servidor novo (`oldTabAgainstNewServer.test.js`).
+- **Não visto:** nada foi conferido num navegador nem publicado. **Limite conhecido:** uma aba antiga deixa de ler a lista por IA do servidor novo até ser recarregada (a lista foi para `data.albums`) e classifica sem ela.
+- **Não mexido:** `EMPTY_TRUSTED_FOR_MS` (1 hora) e a versão do registro guardado.
+
+## [2026-11-19 17:31] session — F52 fatia 1, servidor: um contrato de resposta, o raspador lança a falha, tabela do provedor de IA (UAT-23, UAT-181)
+
+Ramo `fix/f52-server-tells-the-truth`, de um agente auxiliar, da ponta da `main` (`be346b8`). Primeira metade da fatia 1 da F52 (seção 11 da proposta em `docs/specs/arch.md`): o lado do servidor.
+
+- **Um módulo monta toda resposta** (`server/lib/outcome.js`): sucesso é `{ data, outcome }`, com `outcome` sempre presente (`found`, `not_found`, `no_ratings`); falha é `{ error: { code, retryable } }`, com `code` de uma lista fechada de sete. O respondedor de erros, a porta de login e o limite por pessoa passaram por ele, com os status de antes.
+- **O raspador de notas lança a falha** (`server/lib/scrapers/besteveralbums.js`): sete `catch` engoliam erro de rede, prazo e 429 e viravam «não achei» (um deles aceitava a página sem vê-la). Agora toda requisição passa por uma função que lança; `null` só quando a fonte respondeu a tudo e nada bateu. Como um álbum é aceito não mudou.
+- **Notas** (`POST /api/enrich-album`): responde 200 com o desfecho ou 502, 503, 504; deixou de pedir a chave de IA.
+- **IA** (`POST /api/generate`, `POST /api/ai/studio-albums`): uma tabela fechada (`server/lib/aiProviderOutcome.js`) diz o que sai para cada resposta do provedor. Cobrança, cota, pedido recusado e resposta inaproveitável saem como 424 com `retryable: false` (a aba antiga não repete 4xx); só falha passageira sai como 5xx. O texto do provedor não sai mais; a lista por IA não responde 200 vazio na falha.
+- **Conferido:** 135 testes do servidor na suíte da raiz; e o servidor de verdade numa cópia local (`curl`): 401, 400, 503 sem a chave, `found` e `not_found` contra o BestEverAlbums, 502 com a fonte inalcançável. Nenhuma rota paga foi chamada.
+- **Não feito aqui:** `musickit`, `playlists` e as rotas de depuração seguem montando o próprio erro. Nada foi publicado.
+
 ## [2026-11-19 17:24] session — UAT-204 aberta: Scan parece não fazer nada (relato do MJRP)
 
 O MJRP relatou, em produção, que clicar em Scan não faz nada. Não reproduzido pelo agente (visitante em produção: 12 álbuns; com login pelo app local: 0,8 s e 4,8 s). Hipótese: a busca espera a IA (até 60 s) sem resposta visível ao clique; o relato veio minutos depois da publicação do servidor em Node 24 (partida a frio).

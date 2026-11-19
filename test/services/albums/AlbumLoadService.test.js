@@ -445,4 +445,166 @@ describe('AlbumLoadService', () => {
             quiet.mockRestore()
         })
     })
+
+    describe('hold (F52): our own server said "wait" (429) or "sign in" (401)', () => {
+        const held = (hold) => Object.assign(new Error('the server asked to hold'), { hold })
+        const limited = (retryAfterMs) => held({ reason: 'rate_limited', retryAfterMs })
+        const refused = () => held({ reason: 'unauthorized' })
+        const acclaimOf = (seriesId) => store.getEntries(seriesId).map(entry => entry.enrichment.acclaim)
+        let onHold
+        const buildHeld = (limits = {}) => new AlbumLoadService({ store, catalog, enrichers, cache, limits, onHold })
+
+        beforeEach(() => {
+            onHold = vi.fn()
+        })
+
+        it('a 429 from the ratings holds the slow queue for Retry-After and asks again: no album is marked failed', async () => {
+            let refusals = 2
+            enrichers.acclaim.enrich = vi.fn(async (album) => {
+                if (refusals-- > 0) throw limited(40)
+                return { status: 'done', album: { ...album, rated: true } }
+            })
+            service = buildHeld({ slowConcurrency: 2 })
+
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One', 'Two', 'Three', 'Four')] })
+            await wait(20)
+
+            // in the hold: the two that asked heard "wait"; nobody else asked, nobody failed
+            expect(enrichers.acclaim.enrich).toHaveBeenCalledTimes(2)
+            expect(acclaimOf('s1')).not.toContain(EnrichmentStatus.FAILED)
+            expect(service.getHold()).toMatchObject({ reason: 'rate_limited' })
+            expect(store.getAlbums('s1')).toHaveLength(4)
+
+            await service.whenIdle()
+
+            expect(acclaimOf('s1')).toEqual(Array(4).fill(EnrichmentStatus.DONE))
+            expect(enrichers.acclaim.enrich).toHaveBeenCalledTimes(6)
+            expect(service.getHold()).toBeNull()
+            expect(onHold).toHaveBeenCalledTimes(1)
+            expect(onHold.mock.calls[0][0]).toMatchObject({ reason: 'rate_limited' })
+            expect(onHold.mock.calls[0][0].until).toBeGreaterThan(Date.now() - 1000)
+        })
+
+        it('a 401 stops the asking until resume(), with one notice, and nothing is marked failed', async () => {
+            let signedIn = false
+            enrichers.acclaim.enrich = vi.fn(async (album) => {
+                if (!signedIn) throw refused()
+                return { status: 'done', album: { ...album, rated: true } }
+            })
+            service = buildHeld({ slowConcurrency: 1 })
+
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One', 'Two', 'Three')] })
+            await wait(30)
+
+            expect(enrichers.acclaim.enrich).toHaveBeenCalledTimes(1)
+            expect(acclaimOf('s1')).not.toContain(EnrichmentStatus.FAILED)
+            expect(service.getHold()).toEqual({ reason: 'unauthorized', until: null })
+            expect(onHold).toHaveBeenCalledTimes(1)
+            expect(cache.saveEnrichment.mock.calls.filter(call => call[2] === 'acclaim')).toEqual([])
+
+            signedIn = true
+            service.resume()
+            await service.whenIdle()
+
+            expect(acclaimOf('s1')).toEqual(Array(3).fill(EnrichmentStatus.DONE))
+            expect(onHold).toHaveBeenCalledTimes(1)
+        })
+
+        it('asking for the load again ends a "sign in" hold: the screen was opened again, so it is tried again', async () => {
+            let signedIn = false
+            enrichers.acclaim.enrich = vi.fn(async (album) => {
+                if (!signedIn) throw refused()
+                return { status: 'done', album }
+            })
+            service = buildHeld()
+            const request = { scopeKey: 'ALL', series: [series('s1', 'One')] }
+
+            service.load(request)
+            await wait(20)
+            expect(service.getHold()).not.toBeNull()
+
+            signedIn = true
+            service.load(request)
+            await service.whenIdle()
+
+            expect(acclaimOf('s1')).toEqual([EnrichmentStatus.DONE])
+            expect(catalog.find).toHaveBeenCalledTimes(1)
+        })
+
+        it('"sign in" is said once per load: asking again while the login is still refused holds again, with no new notice', async () => {
+            enrichers.acclaim.enrich = vi.fn(async () => { throw refused() })
+            service = buildHeld({ slowConcurrency: 1 })
+            const request = { scopeKey: 'ALL', series: [series('s1', 'One', 'Two')] }
+
+            service.load(request)
+            await wait(15)
+            service.load(request) // the person turned a page, changed a filter...
+            await wait(15)
+            service.load(request)
+            await wait(15)
+
+            expect(enrichers.acclaim.enrich).toHaveBeenCalledTimes(3) // one ask per time the screen asked
+            expect(service.getHold()).toEqual({ reason: 'unauthorized', until: null })
+            expect(onHold).toHaveBeenCalledTimes(1)
+            expect(acclaimOf('s1')).not.toContain(EnrichmentStatus.FAILED)
+
+            service.load({ ...request, fresh: true }) // a new load says it again
+            await wait(15)
+            expect(onHold).toHaveBeenCalledTimes(2)
+            service.stop()
+        })
+
+        it('a 429 from the second source of albums holds only the album that heard it: the others are found and rated meanwhile', async () => {
+            let refusals = 1
+            catalog.find = vi.fn(async (query) => {
+                if (titleOf(query) === 'Missing' && refusals-- > 0) throw limited(60)
+                return { title: titleOf(query), tracks: [] }
+            })
+            service = buildHeld()
+
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'Missing', 'Here')] })
+            await wait(25)
+
+            const [missing, here] = store.getEntries('s1')
+            expect(missing.status).toBe(AlbumStatus.FINDING)
+            expect(here.status).toBe(AlbumStatus.FOUND)
+            expect(here.enrichment.acclaim).toBe(EnrichmentStatus.DONE)
+
+            await service.whenIdle()
+
+            expect(store.getEntries('s1').map(entry => entry.status)).toEqual([AlbumStatus.FOUND, AlbumStatus.FOUND])
+            expect(onHold).toHaveBeenCalledTimes(1)
+        })
+
+        it('stop during a hold drops what was waiting, and the next load starts clean', async () => {
+            enrichers.acclaim.enrich = vi.fn(async () => { throw refused() })
+            service = buildHeld()
+
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One', 'Two')] })
+            await wait(20)
+            service.stop()
+            await service.whenIdle()
+
+            expect(service.getHold()).toBeNull()
+            expect(acclaimOf('s1')).not.toContain(EnrichmentStatus.FAILED)
+
+            enrichers.acclaim.enrich = vi.fn(async (album) => ({ status: 'done', album }))
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One', 'Two')] })
+            await service.whenIdle()
+            expect(acclaimOf('s1')).toEqual([EnrichmentStatus.DONE, EnrichmentStatus.DONE])
+        })
+
+        it('a failure with no hold is still a failure, at once', async () => {
+            enrichers.acclaim.enrich = vi.fn(async () => { throw Object.assign(new Error('502'), { hold: null }) })
+            const quiet = vi.spyOn(console, 'warn').mockImplementation(() => { })
+            service = buildHeld()
+
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One')] })
+            await service.whenIdle()
+
+            expect(acclaimOf('s1')).toEqual([EnrichmentStatus.FAILED])
+            expect(onHold).not.toHaveBeenCalled()
+            quiet.mockRestore()
+        })
+    })
 })
