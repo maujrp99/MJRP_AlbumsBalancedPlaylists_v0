@@ -33,7 +33,7 @@ The load of albums has **one owner**, `AlbumLoadService` (`public/js/services/al
 
 ## Consequences
 **Positive**:
-- Measured on 2026-11-19: 80 albums in 8.5 s (before: 46 of 80 in 4 min 40 s); 45 series and 217 albums in 31 s, 213 found and 4 with a failure notice.
+- Measured on 2026-11-19: 80 albums **found and on screen** in 8.5 s; 45 series and 217 albums in 31 s, 213 found and 4 with a failure notice. The «before» number (46 of 80 in 4 min 40 s) counted albums found **and rated**, so the two are not the same measure: ratings still take minutes for 217 albums, and Spotify was not connected in these measurements.
 - A failed album has a notice and a "try again"; a series never disappears while loading.
 - The load is tested without network (56 tests of the load on 2026-11-19).
 - Filters, search and paging became pure functions over what the series ask for.
@@ -43,14 +43,18 @@ The load of albums has **one owner**, `AlbumLoadService` (`public/js/services/al
 - A single point of failure: a defect in the service reaches every screen that uses it.
 - Two ways of loading live side by side until the migration ends (see below).
 
-**Not done yet**:
+**Not done yet** (corrected on 2026-11-19 after the cross-check with the earlier reports, `reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md`; decisions 1, 3 and 7 above describe the target, and the code is not there yet):
+- Decision 1: two controllers still loop over albums (blend and playlist edit), and Refetch and `injectAlbumsIntoViewCache` in `services/SeriesService.js` call the ratings route outside the queue.
+- Decision 3: for popularity and ratings a failure can still end as "the source has nothing" (an expired Spotify token, a 401 or a 429; the server answering 200 and empty when the scraper fails), and that answer is now written into the series as a fact.
+- Decision 7: `stores/albums.js` still has other writers besides the projection.
+- The limit of 4 slow sources at once is not the ceiling on the server: the browser's deadline does not stop the scrape, and the callers above skip the queue. The critiques asked to start at 2 and measure.
 - The blend (`BlendingController`) and the playlist edit mode (`PlaylistsController`) still load albums through their own loop (`apiClient.fetchAlbum`); the saved playlists screen scans the series on its own (UAT-186, UAT-189, UAT-191).
 - "Is this the album that was asked for?" still accepts any album of the right artist (UAT-184).
 - The server has no cache for ratings and passes the provider's raw error on (F52, UAT-181).
 
 ## Alternatives Considered
 1. **Parallelize the existing loop and add a deadline.** Rejected by MJRP on 2026-11-19 («não quero patches»): it would have made the screen faster and left the single boolean, the late writes and the mixed layers in place.
-2. **Move the load to the server** (one request per series). Rejected for now: the catalog (Apple Music) is called from the browser with the person's storefront, and the server is the slowest part today.
+2. **Move the load to the server** (one request per series). Rejected for now because the server is the slowest part today. (An earlier version of this record also said the catalog is called «with the person's storefront»; that was wrong: the code uses the storefront of the browser's language, `services/musickit/MusicKitAuth.js`, never the account's. So that is not a reason against the server, and this alternative deserves a second look in v5.0.)
 3. **A third-party data library** (query cache with built-in states). Rejected: the app is vanilla JS with no framework, and the states needed here (per album, per source, per series) are specific.
 
 ## Notes
