@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ConsolidatedRankingView } from '../../public/js/views/ConsolidatedRankingView.js'
 import { albumsStore } from '../../public/js/stores/albums.js'
-import { seriesStore } from '../../public/js/stores/series.js'
+import { albumSeriesStore as seriesStore } from '../../public/js/stores/albumSeries.js'
 
 // Mock stores
 vi.mock('../../public/js/stores/albums.js', () => ({
@@ -11,8 +11,8 @@ vi.mock('../../public/js/stores/albums.js', () => ({
     }
 }))
 
-vi.mock('../../public/js/stores/series.js', () => ({
-    seriesStore: {
+vi.mock('../../public/js/stores/albumSeries.js', () => ({
+    albumSeriesStore: {
         getById: vi.fn(),
         subscribe: vi.fn(() => vi.fn())
     }
@@ -90,18 +90,19 @@ describe('ConsolidatedRankingView', () => {
     })
 
     it('should render correct number of rows', () => {
-        view.activeSeriesId = 'series_1'
-        view.render()
+        // render() hands back the element; the router is who puts it on the page
+        view.activeAlbumSeriesId = 'series_1'
+        const rendered = view.render()
 
-        const rows = view.$el.querySelectorAll('.track-row')
+        const rows = rendered.querySelectorAll('.track-row')
         expect(rows.length).toBe(3)
     })
 
     it('should render "Create your Balanced Playlists" button', () => {
-        view.activeSeriesId = 'series_1'
-        view.render()
+        view.activeAlbumSeriesId = 'series_1'
+        const rendered = view.render()
 
-        const btn = view.$el.querySelector('.btn-primary')
+        const btn = rendered.querySelector('.btn-primary')
         expect(btn.textContent).toContain('Create your Balanced Playlists')
     })
 })

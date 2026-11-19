@@ -89,7 +89,7 @@ describe('Router', () => {
             expect(viewFactory).toHaveBeenCalled()
         })
 
-        it('should extract route params', () => {
+        it('should extract route params', async () => {
             let capturedParams
             const viewFactory = () => ({
                 render: (params) => {
@@ -102,10 +102,12 @@ describe('Router', () => {
             router.register('/albums/:id', viewFactory)
             router.navigate('/albums/123')
 
+            // The view is created and rendered asynchronously
+            await vi.waitFor(() => expect(capturedParams).toBeDefined())
             expect(capturedParams.id).toBe('123')
         })
 
-        it('should parse query strings', () => {
+        it('should parse query strings', async () => {
             let capturedParams
             const viewFactory = () => ({
                 render: (params) => {
@@ -118,6 +120,7 @@ describe('Router', () => {
             router.register('/test', viewFactory)
             router.navigate('/test?foo=bar&baz=qux')
 
+            await vi.waitFor(() => expect(capturedParams).toBeDefined())
             expect(capturedParams.query.foo).toBe('bar')
             expect(capturedParams.query.baz).toBe('qux')
         })

@@ -12,6 +12,8 @@ describe('BlendIngredientsPanel', () => {
     let mockCallback
 
     beforeEach(() => {
+        // The panel finds its container by id: a container left by the test before would be found first
+        document.body.innerHTML = ''
         container = document.createElement('div')
         container.id = 'test-panel'
         document.body.appendChild(container)

@@ -3,6 +3,22 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:33] session — F53: a suíte de testes está verde (431 passam, 0 falham; antes 28 falhas)
+
+`npx vitest run` sai com código 0. Nenhum código do app mudou: os 28 eram testes fora de dia ou ambiente de teste quebrado.
+
+- **Ambiente (3 falhas + as que vinham de arrasto):** as versões novas do Node definem um `localStorage` próprio, vazio, que escondia o do jsdom. O `test/setup.js` passa a entregar o guardado do jsdom (ou um em memória) e a esvaziá-lo antes de cada teste.
+- **Loja de séries (19):** o teste descrevia a loja antiga, que criava e lia séries. A loja virou loja pura (ADR 0017). Teste reescrito para a loja que existe; criar e ler séries já é coberto em `test/services/SeriesService.test.js`.
+- **Roteador (2):** a tela é criada de forma assíncrona; os testes passaram a esperar.
+- **Login (1):** o serviço pega o `auth` só quando precisa; o teste esperava na criação.
+- **Barra de filtros (1):** o teste simulava uma barra que não existe mais; agora simula a `FilterToolbar` e confere os artistas tirados das séries.
+- **Painel do blend (2):** um teste herdava o contêiner do teste anterior.
+- **Duração da playlist (4, que nem rodavam):** a conta saiu da tela e foi para `PlaylistGrid`; o teste foi junto (`test/components/playlists/PlaylistGrid.duration.test.js`).
+- **Tela de ranking consolidado (arquivo que não carregava; 2 falhas ao carregar):** importava uma loja que não existe; e `render()` devolve o elemento em vez de escrever na tela.
+- **Sincronização de usuário (arquivo que não carregava):** dublê declarado depois do `vi.mock`, que sobe para o topo.
+- **Roteiros de navegador (8 arquivos «sem suíte»):** `test/e2e/` saiu da contagem do Vitest; tem executor próprio (`npm run test:e2e`), que não foi rodado.
+- **Achado, não consertado:** durante a suíte aparece «Maximum call stack size exceeded» na saída de erro, sem derrubar teste; origem não investigada.
+
 ## [2026-11-19 14:30] session — análise da arquitetura de carga escrita em relatório, a pedido do MJRP
 
 `reports/audits/2026-11-19-mjrpalbumblender-v0-load-architecture-analysis.md`: o desenho de hoje e o proposto (em diagrama), por que um é pior, os padrões de cada um, o risco de gargalo e a complexidade ciclomática medida com o ESLint. Achado da medição: `_enrichOne` está em 21, acima do limite de 10, depois da mudança da seção 19 do `arch.md`. Quem escreveu é quem desenhou; não houve crítica separada.

@@ -2,9 +2,10 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { UserSyncService } from '../../../public/js/services/auth/UserSyncService.js'
 
 // Mock DataSyncService default export
-const mockDataSync = {
+// vi.mock is hoisted above the imports, so what it uses has to be hoisted too
+const mockDataSync = vi.hoisted(() => ({
     saveSeries: vi.fn()
-}
+}))
 
 vi.mock('../../../public/js/services/DataSyncService.js', () => ({
     dataSyncService: mockDataSync
