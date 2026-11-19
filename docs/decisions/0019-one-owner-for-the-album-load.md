@@ -1,0 +1,59 @@
+# ADR-0019: One Owner for the Album Load
+
+**Date**: 2026-11-19
+**Status**: Proposed
+**Deciders**: MJRP (approved the design in conversation on 2026-11-19, «go for it»), Claude agent (drafter). Formal acceptance of this record is pending.
+**Related work**: release v4.0, features F45, F46, F47, F48, F51
+
+## Context
+The albums screen took minutes to show 80 albums (one album every 5 to 6 seconds, 46 of 80 after 4 min 40 s, measured on 2026-11-19). Series stayed as grey blocks, disappeared when the person left and came back mid-load, and a failed album gave no notice (issues UAT-172 to UAT-177).
+
+The cause was structural, not a slow call:
+- the load was a loop inside `SeriesController`, one album after the other, with no deadline;
+- one boolean said "loading" for the whole screen, and anything could reset it;
+- an older load kept writing to the screen after a newer one had started;
+- the controller, the stores and the API client all talked to Firestore and to the catalog;
+- the album cache had more than one key for the same album.
+
+The analysis and the measurements are in `docs/specs/arch.md`, section «Carga da tela de álbuns — proposta» (sections 1 to 19), judged by two separate critiques before the code (`side-session-notes`, 2026-11-19).
+
+## Decision
+The load of albums has **one owner**, `AlbumLoadService` (`public/js/services/albums/`), and the rest of the app asks it.
+
+1. **One service owns the load.** Screens and controllers do not loop over albums; they call `load({ scopeKey, series, fresh })` and read the result from a store.
+2. **Generations.** Every load has an identity; only the current generation writes. Cancelling means "stop waiting and drop the result", because the catalog and the cloud do not really abort.
+3. **Explicit state per album.** Each album asked for is `pending`, `finding`, `found`, `failed` or `cancelled`, and each enrichment source has its own status. The state of a series is derived from its albums, never stored apart.
+4. **Find is separate from enrich.** The album shows as soon as the catalog answers; ratings, popularity and the person's ranking arrive after, each on its own.
+5. **A queue with a limit and a deadline** (`public/js/utils/TaskQueue.js`): three queues (catalog, quick sources, slow sources), each with its own limit, so a slow source does not hold the others.
+6. **Ports and adapters.** The service knows a catalog port, an enricher port and a cache port. Apple Music, the server, Spotify and Firestore sit behind adapters (`services/albums/adapters/`).
+7. **One store owns the state** (`public/js/stores/albumLoad.js`); `stores/albums.js` is a projection of it for the screens that still read the old shelf.
+8. **A published album is never changed.** A source returns a new album. Since 2026-11-19 (arch.md, section 19) each source also returns `apply`, which puts its answer on the newest album, so no source undoes another; and only the latest ask of a source for an album writes.
+9. **One cache record per album asked for**, with the status of each source; a failure is never saved, "the source has nothing" is trusted for one hour, and the person's ranking is never saved with the album.
+10. **The rules are tests.** `test/architecture/albumLoadBoundaries.test.js` fails the build when a file outside the repositories imports Firestore (with a short list of known exceptions) or when the service imports a screen.
+
+## Consequences
+**Positive**:
+- Measured on 2026-11-19: 80 albums in 8.5 s (before: 46 of 80 in 4 min 40 s); 45 series and 217 albums in 31 s, 213 found and 4 with a failure notice.
+- A failed album has a notice and a "try again"; a series never disappears while loading.
+- The load is tested without network (56 tests of the load on 2026-11-19).
+- Filters, search and paging became pure functions over what the series ask for.
+
+**Negative**:
+- More code and more files: the sum of cyclomatic complexity went up, not down (measured on 2026-11-19, `reports/audits/2026-11-19-mjrpalbumblender-v0-load-architecture-analysis.md`). `_enrichOne` reached 21 and has to be split.
+- A single point of failure: a defect in the service reaches every screen that uses it.
+- Two ways of loading live side by side until the migration ends (see below).
+
+**Not done yet**:
+- The blend (`BlendingController`) and the playlist edit mode (`PlaylistsController`) still load albums through their own loop (`apiClient.fetchAlbum`); the saved playlists screen scans the series on its own (UAT-186, UAT-189, UAT-191).
+- "Is this the album that was asked for?" still accepts any album of the right artist (UAT-184).
+- The server has no cache for ratings and passes the provider's raw error on (F52, UAT-181).
+
+## Alternatives Considered
+1. **Parallelize the existing loop and add a deadline.** Rejected by MJRP on 2026-11-19 («não quero patches»): it would have made the screen faster and left the single boolean, the late writes and the mixed layers in place.
+2. **Move the load to the server** (one request per series). Rejected for now: the catalog (Apple Music) is called from the browser with the person's storefront, and the server is the slowest part today.
+3. **A third-party data library** (query cache with built-in states). Rejected: the app is vanilla JS with no framework, and the states needed here (per album, per source, per series) are specific.
+
+## Notes
+- Limits in force (`LOAD_LIMITS`): 3 catalog searches at once (Apple Music answered 429 with 6), 45 s to find, 6 quick sources and 4 slow sources at once, 20 s per source.
+- The local address is `http://127.0.0.1:5010` (F50); logins and caches are kept per origin.
+- This record was written after the code. The design was judged before the code by two separate critiques; this text itself has not been judged.

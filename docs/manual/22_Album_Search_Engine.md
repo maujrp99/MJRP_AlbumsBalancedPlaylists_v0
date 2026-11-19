@@ -6,7 +6,8 @@ This document covers the **Search Pipeline** and the sophisticated **Classificat
 *   **Role**: The orchestrator for finding albums via the Apple Music API.
 *   **Architecture**: Implements a Multi-Strategy Search.
     *   **Strategy 1**: Direct Search using Normalized Artist Name.
-    *   **Fallback**: If confidence is low, tries "Alternative Artist Names" (e.g. `Anjunabeats` vs `Anjunabeats Worldwide`).
+    *   **Fallback**: If the best match has confidence <= 0.8, tries "Alternative Artist Names" (e.g. `Anjunabeats` vs `Anjunabeats Worldwide`).
+    *   **Two entry points**: `search(artist, albumTitle, options)` for one album (used by the bulk paste of Home) and `getArtistDiscography(artistName)` for the artist scan.
     *   **Scoring**: Uses `ScoreCalculator` to sort results.
 *   **Integration**: Connects `MusicKitService` (Raw API) with `AlbumTypeClassifier` (Logic).
 
@@ -25,8 +26,8 @@ This document covers the **Search Pipeline** and the sophisticated **Classificat
     3.  **GenreGateStrategy (Bifurcation Point)**:
         *   If **Non-Electronic** (Rock, Jazz, Pop): Trust the metadata immediately (Exit).
         *   If **Electronic**: Continue down the funnel (Entrance to Heuristics).
-    4.  **RemixTracksStrategy**: Analyzes the tracklist. If >50% of tracks are remixes, it's a Single/EP.
-    5.  **TrackCountStrategy**: Heuristic based on track count (< 4 = Single, 4-6 = EP).
+    4.  **RemixTracksStrategy**: Analyzes the tracklist. If >=50% of tracks are remixes, it's a Single/EP.
+    5.  **TrackCountStrategy**: Heuristic based on track count and duration (1-3 tracks under 20 min = Single, 4-6 tracks under 30 min = EP).
     6.  **AIWhitelistStrategy ("Judgment Day")**
         *   **Role**: The final arbiter for Electronic Music. Due to Apple Music's tendency to split electronic albums into "Singles" or "EPs" based on track count or duration (erroneously), this strategy consults a **Curated/AI-Generated Whitelist** of known Studio Albums for the artist.
         *   **Lazy Loading Architecture**:
@@ -60,7 +61,7 @@ flowchart TD
     Title -- Safe --> Genre{Is Electronic?}
     
     Genre -- No --> EndAlbum([Album])
-    Genre -- Yes --> Remix{>50% Remixes?}
+    Genre -- Yes --> Remix{>=50% Remixes?}
     
     Remix -- Yes --> SingleCalc
     Remix -- No --> Count{Track Count?}
@@ -84,7 +85,7 @@ flowchart TD
 ### Score Calculator (`ScoreCalculator.js`)
 *   **Algorithm**: Weighted Average of Levenshtein Distance.
 *   **Weights**: Title (60%), Artist (40%).
-*   **Penalties**: Applies penalties for "Deluxe", "Live", or "Compilation" unless explicitly requested by the user.
+*   **Penalties**: Applies penalties for "Deluxe" (0.15) and "Live" (0.4) unless the query itself asks for them. A "Compilation" penalty (0.3) is declared in the weights but the scoring does not apply it.
 
 ### Electronic Genre Detector (`ElectronicGenreDetector.js`)
 *   **Role**: The source of truth for what constitutes "Electronic Music".

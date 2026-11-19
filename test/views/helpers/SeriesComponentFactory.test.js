@@ -16,7 +16,8 @@ vi.mock('../../../public/js/components/series/SeriesHeader.js', () => ({
     }
 }))
 
-vi.mock('../../../public/js/components/series/SeriesToolbar.js', () => ({
+// The toolbar of the albums screen is the generic FilterToolbar
+vi.mock('../../../public/js/components/ui/FilterToolbar.js', () => ({
     default: class MockToolbar {
         constructor(opts) { this.props = opts.props }
         mount() { mockToolbarMount() }
@@ -55,10 +56,6 @@ vi.mock('../../../public/js/router.js', () => ({
     router: { navigate: vi.fn() }
 }))
 
-// Mock Service
-vi.mock('../../../public/js/services/SeriesFilterService.js', () => ({
-    getUniqueArtists: vi.fn().mockReturnValue(['Artist A'])
-}))
 
 describe('SeriesComponentFactory', () => {
     let mockContainer
@@ -105,10 +102,15 @@ describe('SeriesComponentFactory', () => {
 
     describe('createToolbar', () => {
         it('should create and mount toolbar with props', () => {
+            // The artists offered come from what the series ask for, not from the albums loaded
+            albumSeriesStore.getSeries.mockReturnValue([{ id: 's1', name: 'My Series', albumQueries: ['Artist A - Album One'] }])
+
             const toolbar = SeriesComponentFactory.createToolbar(mockContainer, { view: mockView, controller: mockController })
 
             expect(mockToolbarMount).toHaveBeenCalled()
-            expect(toolbar.props.artists).toEqual(['Artist A'])
+            const artistGroup = toolbar.props.filterGroups.find(group => group.id === 'artist')
+            expect(artistGroup.options).toEqual([{ value: 'Artist A', label: 'Artist A' }])
+            expect(toolbar.props.filterGroups.find(group => group.id === 'series').options).toEqual([{ value: 's1', label: 'My Series' }])
             expect(toolbar.props.onSearch).toBeInstanceOf(Function)
         })
     })

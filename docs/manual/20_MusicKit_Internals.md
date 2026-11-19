@@ -3,7 +3,7 @@
 This document covers the Apple Music integration layer (`MusicKit`) and the specialized services for data synchronization and persistence.
 
 ## 1. MusicKit Integration Layer (`public/js/services/musickit/`)
-This folder contains the core logic for interacting with the Apple Music API on the client side.
+This folder contains the core logic for interacting with the Apple Music API on the client side. The rest of the app reaches it through the facade `public/js/services/MusicKitService.js` (`musicKitService`).
 
 ### MusicKit Auth (`MusicKitAuth.js`)
 *   **Role**: Handles the initialization lifecycle and user authorization.
@@ -32,10 +32,10 @@ sequenceDiagram
     
     Service->>Service: Detect Storefront (Browser Locale)
     
-    Note over Service, Apple: User authorizes via Pop-up
+    Note over Service, Apple: Later, on demand: user authorizes via Pop-up (init opens no pop-up)
     Service->>Apple: authorize()
     Apple-->>Service: User Token
-    Service->>Apple: stop() -> wait -> authorize() (Refresh Hack)
+    Service->>Service: authorizeAndValidate(): compare browser and account storefront
 ```
 
 ### MusicKit Catalog (`MusicKitCatalog.js`)
@@ -43,14 +43,14 @@ sequenceDiagram
 *   **Capabilities**:
     *   `searchAlbums`: Performs catalog searches with ranking logic.
     *   `getAlbumDetails`: Fetches full metadata + tracks.
-    *   `getArtistAlbums`: Handles pagination (looping until 404/empty) to fetch full discographies (up to 500 cap).
+    *   `getArtistAlbums`: Handles pagination (pages of 100, looping until 404/short page) to fetch full discographies (safety cap at offset 2000).
     *   `findTrackFromAlbum`: Fuzzy logic to find a specific track on a specific album (critical for "Replacement" logic during playlist generation).
 
 ### MusicKit Library (`MusicKitLibrary.js`)
 *   **Role**: The "Write" interface for Apple Music.
 *   **Capabilities**:
     *   `createPlaylist`: Creates standard playlists.
-    *   `createOrGetFolder`: Manages folder structures (e.g., creating a "VibeCoding" folder).
+    *   `createOrGetFolder`: Finds a library playlist folder by name or creates it. The Apple Music export (`views/playlists/PlaylistsExport.js`) uses the series name as the folder name.
     *   `createPlaylistInFolder`: Places generated playlists inside a specific folder to keep the user's library clean.
 
 ## 2. Infrastructure Services
@@ -58,12 +58,12 @@ sequenceDiagram
 ### Data Sync Service (`public/js/services/DataSyncService.js`)
 *   **Role**: Handles data migration between contexts.
 *   **Use Case**: When a user starts as a "Guest" (local data) and then logs in, this service migrates their temporary Inventory and Series to their persistent Firestore account.
-*   **Logic**: Iterates through arrays and calls Repository methods (`targetRepository.addAlbum`, `targetRepository.create`).
+*   **Logic**: `migrateInventory` and `migrateSeries` iterate through arrays and call Repository methods (`targetRepository.addAlbum`, `targetRepository.create`). Imported by `stores/inventory.js` and `services/auth/UserSyncService.js`.
 
 ### Playlist Persistence Service (`public/js/services/PlaylistPersistenceService.js`)
 *   **Role**: The bridge between the **Generation Engine** and the **Database**.
 *   **Pattern**: **Service Facade** over Repositories.
 *   **Key Logic**:
-    *   **Batch Management**: Can overwrite previous batches (delete old -> save new) or append to them based on `preserveIds` flag.
+    *   **Batch Management**: By default overwrites the batch of the same name (delete old -> save new); with `preserveIds: true` it keeps the existing documents and updates them (used by regenerate).
     *   **Series Upsert**: Ensures the parent Series exists before saving children playlists.
     *   **Repository Usage**: Instantiates `PlaylistRepository` and `SeriesRepository` on the fly with the current user context.

@@ -3,18 +3,20 @@
 This document covers the **View Layer internals**, specifically the specialized renderers, strategies, and utility views that power the main application interface.
 
 ## 1. Renderer Pattern
-To keep the main View classes (like `AlbumsView` and `InventoryView`) maintainable, rendering logic has been extracted into pure function modules or static classes.
+To keep the main View classes (like `SeriesView` and `InventoryView`) maintainable, rendering logic has been extracted into pure function modules or static classes.
 
 ### Albums Grid Renderer (`public/js/views/albums/AlbumsGridRenderer.js`)
-*   **Role**: Handles the HTML generation for album cards in the main browsing view.
+*   **Role**: Handles the HTML generation for album cards in the main browsing view. Imported by `components/series/SeriesGridRenderer.js`. The card markup itself lives in `components/ui/AlbumCardRenderer.js`; this module delegates to it.
 *   **Key Exported Functions**:
-    *   `renderCompactAlbumCard(album)`: Generates the standard grid card (Mode 1).
-    *   `renderExpandedAlbumCard(album)`: Generates the detailed row (Mode 3) with ranking comparison.
-    *   `renderVisualHeader(album)`: Reusable component for the album cover and action bar (Refetch Button + Year).
-    *   `renderRankingBadge(album)`: Logic for displaying badges. **New (Sprint 22)**: Uses a "Split Row" layout:
-        *   **Top**: BestEverAlbums (Orange)
-        *   **Bottom**: Spotify (Green) | User Rank (Blue)
+    *   `renderCompactAlbumCard(album)`: Generates the standard grid card (Mode 1) via `AlbumCardRenderer.renderCompact`.
+    *   `renderExpandedAlbumCard(album, idx)`: Generates the detailed row (Mode 3) with ranking comparison via `AlbumCardRenderer.renderExpanded`.
+    *   `renderAlbumsGrid`, `renderExpandedList`, `wrapInGrid`, `renderEmptyState`, `renderNoMatchState`: list wrappers and empty states.
     *   `renderLoadingProgress(progress)`: Centralized visual for the loading spinner and progress bar.
+*   **Not in this file**:
+    *   `AlbumCardRenderer.renderVisualHeader(album)`: Reusable component for the album cover and action bar.
+    *   `Card.renderRankingBadge(album)` (`components/ui/Card.js`): Logic for displaying badges. Uses a "Split Row" layout:
+        *   **Top**: BestEverAlbums
+        *   **Bottom**: Spotify (Green) | User Rank (Blue)
 
 ### Inventory Grid Renderer (`public/js/views/renderers/InventoryGridRenderer.js`)
 *   **Role**: Specialized renderer for the User Inventory.
@@ -22,10 +24,10 @@ To keep the main View classes (like `AlbumsView` and `InventoryView`) maintainab
 *   **Format Badges**: Has specific logic to display `Vinyl`, `CD`, or `Digital` badges based on the `format` field.
 
 ### Discography Renderer (`public/js/views/renderers/DiscographyRenderer.js`)
-*   **Role**: Used by the `DiscographyToolbar` to show "Missing Albums" in the staging area.
+*   **Role**: Used by `HomeController` to render the artist's discography (the search results) in Home.
 *   **Key Features**:
-    *   **Visual Flair**: Adds subtle gradients and "Edition" badges (Deluxe, Remaster, Live) derived from title keywords.
-    *   **Interactivity**: Cards are clickable for "Toggle Staging" (Action: `add-to-inventory` vs `remove-album`).
+    *   **Visual Flair**: Adds subtle gradients and badges: "Deluxe" and "Remaster" derived from title keywords; "Live", "Single", "EP" and "Comp" from `album.type`.
+    *   **Interactivity**: Cards are clickable for "Toggle Staging" (`data-action="toggle-staging"`).
 
 ### Scoped Renderer (`public/js/views/albums/AlbumsScopedRenderer.js`)
 *   **Role**: Manages the "All Series" vs "Single Series" grouping logic.
@@ -38,6 +40,7 @@ To keep the main View classes (like `AlbumsView` and `InventoryView`) maintainab
 
 ### View Mode Strategy (`public/js/views/strategies/ViewModeStrategy.js`)
 *   **Pattern**: **Strategy Pattern**.
+*   **Usage today**: no module imports this file; `SeriesView` does not use it.
 *   **Problem**: Switching between "Grid View" and "List View" created complex `if/else` logic in the main controller.
 *   **Solution**:
     *   `ViewModeStrategy` (Abstract Base) defines the interface (`render`, `getButtonLabel`, `getButtonIcon`).
@@ -57,27 +60,30 @@ To keep the main View classes (like `AlbumsView` and `InventoryView`) maintainab
 ### Playlists Export (`public/js/views/playlists/PlaylistsExport.js`)
 *   **Role**: Handles the "Export" button actions.
 *   **Capabilities**:
-    *   **JSON Export**: Dumps the playlist structure to a downloadable JSON file.
-    *   **Apple Music Export**: Connects to `MusicKitService`, searches for tracks in the Apple Catalog, and creates playlists in the user's library.
-    *   **Spotify Export**: Connects to `SpotifyService`, resolves URIs, and pushes playlists to Spotify.
+    *   **JSON Export** (`handleExportJson`): Dumps the playlist structure to a downloadable JSON file.
+    *   **Apple Music Export** (`handleExportToAppleMusic`): Connects to `MusicKitService`, searches for tracks in the Apple Catalog, and creates playlists in the user's library.
+    *   **Spotify Export** (`handleExportToSpotify`): Connects to `SpotifyService`, resolves URIs, and pushes playlists to Spotify. `PlaylistsView` does not call this function: its Spotify button opens `components/SpotifyExportModal.js`, which uses `SpotifyExportService`.
 *   **Matching Logic**: Uses a "Fast Path" (Existing ID) vs "Slow Path" (Search API) fallback mechanism.
 
 ### Configurable Placeholders (`public/js/views/ComingSoonView.js`)
-*   **Role**: A generic placeholder for routes like `/artists` or `/genres` that are not yet implemented.
+*   **Role**: A generic placeholder for the routes `/artists`, `/genres` and `/tracks`, which are not yet implemented.
 *   **Features**: Dynamically adjusts title/icon based on the route (e.g., shows "Artist Series" icon for `/artists`).
 
 ## 4. UI Utilities
 
 ### Albums Filters (`public/js/views/albums/AlbumsFilters.js`)
 *   **Role**: Pure logic for filtering album arrays.
+*   **Usage today**: only re-exported by `views/albums/index.js`, which no module imports. The filters of the albums screen are in `services/SeriesFilterService.js` and `models/seriesFilter.js`.
 *   **Filters Supported**:
-    *   `Search`: Fuzzy matching on Title/Artist.
+    *   `Search`: Case-insensitive substring match on Title/Artist.
+    *   `Artist`: Exact artist name.
     *   `Year`: Decade-based buckets (1960s, 1970s...).
-    *   `Source`: Filter by Data Provider (BestEverAlbums, Spotify, AI, Pending).
+    *   `Source`: Filter by Data Provider (`acclaim`, `popularity`, `ai`, `pending`).
     *   `Expansion Safety`: Explicitly excludes "Expansion" (Staging) albums from main views unless specifically searched.
 
 ### Playlists Drag & Drop (`public/js/views/playlists/PlaylistsDragDrop.js`)
 *   **Library**: `SortableJS`.
-*   **Logic**: Configures the drag-and-drop zones for playlist creation.
+*   **Logic**: Configures the drag-and-drop zones for playlist creation (`setupDragAndDrop(view)`).
+*   **Usage today**: `PlaylistsView` uses `components/playlists/PlaylistsDragHandler.js` instead; nothing calls `setupDragAndDrop`.
 *   **Haptics**: Triggers `navigator.vibrate` on mobile drag start/end for tactile feedback.
-*   **Store Integration**: Dispatches `playlistsStore.reorderTrack` or `moveTrack` actions on drop.
+*   **Store Integration**: Calls `reorderTrack` or `moveTrack` of the playlists service (`getPlaylistsService`) on drop.

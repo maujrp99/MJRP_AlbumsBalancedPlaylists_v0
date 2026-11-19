@@ -8,14 +8,15 @@ The Blend system is the core "Wizard" for creating playlists. It uses a stepwise
 
 | Component | Responsibility | Dependencies | State Management |
 | :--- | :--- | :--- | :--- |
-| **`BlendSeriesSelector.js`** | Step 1: Selection of entity type (Albums/Artists) and specific Series to blend. Features a sophisticated cascade thumbnail display. | `AlbumCascade`, `OptimizedAlbumLoader`, `AlbumSeriesStore` | Manages `selectedEntity` and `selectedSeries`. Implements `preloadAllThumbnails()` for non-blocking UI updates. |
-| **`BlendRecipeCard.js`** | Step 2: Recipe (Algorithm) selection. Renders visual cards for strategies like 'Balanced Cascade', 'Round Robin', etc. | `Icons`, `AlgorithmRegistry` | Pure rendering of provided algorithms. Handles selection events. |
+| **`BlendSeriesSelector.js`** | Step 1: Selection of entity type (only Albums is available; Artists, Genres and Tracks are disabled) and specific Series to blend. Features a sophisticated cascade thumbnail display. | `AlbumCascade`, `OptimizedAlbumLoader`, `AlbumSeriesStore` | Manages `selectedEntity` and `selectedSeries`. Implements `preloadAllThumbnails()` for non-blocking UI updates. |
+| **`BlendRecipeCard.js`** | Step 2: Recipe (Algorithm) selection. Renders visual cards for strategies like 'Balanced Cascade', 'Round Robin', etc. | `Icons`, `algorithms/index.js` (`getAllAlgorithms`) | Pure rendering of provided algorithms. Handles selection events. |
 | **`BlendIngredientsPanel.js`** | Step 3: Configuration. Dynamic form that shows/hides fields (Duration, Output Mode, Ranking Source) based on the selected Recipe's capabilities. | `Icons` | Complex configuration object `{ duration, outputMode, groupingStrategy, rankingType, discoveryMode }`. Normalizes config for service layer via `getConfig()`. |
 
 ### Key Patterns
 *   **Wizard State**: Each component handles a specific stage of the `BlendingMenuView`.
 *   **Dynamic Configuration**: `BlendIngredientsPanel` uses a static `ALGORITHM_RECIPES` map to toggle UI controls based on the selected algorithm, ensuring users only see relevant options.
 *   **Thumbnail Caching**: `BlendSeriesSelector` implements an aggressive preload strategy (`preloadAllThumbnails`) to fetch album art for series visualization without blocking the UI.
+*   **Album loading (known gap)**: when the person generates, `controllers/BlendingController.js` loads the albums of the series in its own loop (`apiClient.fetchAlbum`, one query at a time). It does not go through `AlbumLoadService`, so the blend screen does not share the load, the progress or the failure handling of the albums screen.
 
 ---
 
@@ -28,11 +29,11 @@ These components handle the visualization, management, and export of generated p
 | **`PlaylistGrid.js`** | High-level container for rendering a grid of `PlaylistCard`s. | `TrackRow`, `Icons` | Responsive grid layout (1/2/3 cols). Handles "Batch Name" formatting logic (e.g., "1. Batch Name - Playlist Title"). |
 | **`PlaylistsGridRenderer.js`** | Stateless rendering logic for the entire Playlists View. Decouples structure from state. | `PlaylistGrid`, `RegeneratePanel` | Renders Empty States, Initial Settings Form, Export Toolbar, and the main Grid. Pure functional rendering. |
 | **`RegeneratePanel.js`** | Collapsible panel allowing users to "Re-roll" specific playlists or the entire batch with new settings. | `BlendRecipeCard`, `BlendIngredientsPanel` | reuses the Blend wizard components in a condensed, collapsible inline inspector pane. |
-| **`PlaylistExportToolbar.js`** | Floating/Fixed toolbar for high-level actions (Save, Export to Spotify/Apple). | `Component` | Visual status indicator ("Ready to Export") and action buttons. |
-| **`SavedPlaylistsController.js`** | Business logic for the "Saved Playlists" view (History). | `SeriesRepository`, `PlaylistRepository` | Groups playlists by "Batch", handles lazy loading of series thumbnails, and manages Delete/Edit workflows. |
-| **`TrackItem.js`** | Visual row for a single track. | `Icons` | **Smart Badging**: Left badge = Primary Ranking (used for sort), Right badge = Secondary. Supports drag handles. |
-| **`PlaylistsDragBoard.js`** | Kanban-style board for dragging tracks *between* playlists. | `SortableJS` | Renders playlists as columns. Warning: Contains some legacy logic (might be superseded by Grid view). |
-*   **PlaylistsDragHandler.js**: Headless logic controller for Drag & Drop operations. Manages `Sortable` instances, auto-scroll, and commits changes to `PlaylistsStore`.
+| **`PlaylistExportToolbar.js`** | Floating/Fixed toolbar for high-level actions (Save, Export to Spotify/Apple). | `Component` | Visual status indicator ("Ready to Export") and action buttons. No module imports it today; the export section of the playlists screen is drawn by `PlaylistsGridRenderer`. |
+| **`SavedPlaylistsController.js`** | Business logic for the "Saved Playlists" view (History). | `SeriesRepository`, `PlaylistRepository`, `OptimizedAlbumLoader`, `PlaylistsService`, stores | Groups playlists by "Batch", handles lazy loading of series thumbnails, and manages Delete/Edit workflows. |
+| **`TrackItem.js`** | Visual row for a single track. | `Icons` | **Smart Badging**: Left badge = Primary Ranking (used for sort), Right badge = Secondary. Supports drag handles. Only re-exported by `playlists/index.js`; `PlaylistGrid` draws its rows with `ui/TrackRow.js`. |
+| **`PlaylistsDragBoard.js`** | Kanban-style board for dragging tracks *between* playlists. | `Component`, `SeriesDragDrop` | Renders playlists as columns. No module imports it today; the playlists screen uses `PlaylistGrid` + `PlaylistsDragHandler`. |
+*   **PlaylistsDragHandler.js**: Headless logic controller for Drag & Drop operations, used by `PlaylistsView`. Manages `Sortable` instances and commits the move through `PlaylistsService.moveTrack`, which takes a history snapshot and updates `PlaylistsStore`.
 
 ### Drag & Drop Sequence
 ```mermaid
@@ -40,24 +41,25 @@ sequenceDiagram
     participant User
     participant DOM as SortableJS
     participant Handler as DragHandler
+    participant Service as PlaylistsService
     participant Store as PlaylistsStore
 
     User->>DOM: Drag Start (Track)
-    DOM->>Handler: onStart() (Haptic Feedback)
+    DOM->>Handler: onStart() (isDragging = true)
     
     User->>DOM: Drop into Target Playlist
     DOM->>Handler: onEnd(evt)
     
-    Handler->>Handler: Calculate New Order
-    Handler->>Store: moveTrack(fromId, toId, newIndex)
-    Store->>Store: saveState() (Undo Snapshot)
-    Store-->>Handler: State Updated
+    Handler->>Handler: Read playlist indexes and positions
+    Handler->>Service: moveTrack(fromIndex, toIndex, oldIndex, newIndex)
+    Service->>Service: history.createSnapshot() (Undo Snapshot)
+    Service->>Store: Update playlists
 ```
 
 ### Key Patterns
 *   **Renderer Pattern**: `PlaylistsGridRenderer` separates markup generation from the View's life-cycle, making the large `PlaylistsView.js` more manageable.
 *   **Component Reuse**: `RegeneratePanel` directly imports `BlendRecipeCard` and `BlendIngredientsPanel`, ensuring that the "Reconfigure" UI matches the "Create" UI exactly.
-*   **Dual Ranking Visualization**: `TrackItem.js` dynamically swaps the position of "Spotify" and "Acclaim" badges based on which metric was used to generate the playlist.
+*   **Dual Ranking Visualization**: `TrackItem.js` (and `ui/TrackRow.js`, the one in use) dynamically swaps the position of "Spotify" and "Acclaim" badges based on which metric was used to generate the playlist.
 
 ---
 
@@ -67,7 +69,7 @@ Components for managing the user's collection of albums.
 
 | Component | Responsibility | Dependencies | Notes |
 | :--- | :--- | :--- | :--- |
-| **`InventoryGrid.js`** | Main container for the Inventory View. | `SeriesGridRenderer` | Effectively a wrapper around `SeriesGridRenderer`, adapting it for Inventory data. Handles event delegation for item clicks. |
+| **`InventoryGrid.js`** | Grid component for inventory data. | `SeriesGridRenderer` | Effectively a wrapper around `SeriesGridRenderer`, adapting it for Inventory data. Handles event delegation for item clicks. No module imports it today: `InventoryView` draws with `views/renderers/InventoryGridRenderer.js`. |
 
 > **Note**: Several inventory-specific components (`InventoryItemCard`, `InventoryStats`) appear to have been deprecated or merged into generic components like `Card` and `SeriesStats` to reduce duplication.
 
@@ -81,12 +83,14 @@ Components for managing Album Series (the core organizational unit).
 | :--- | :--- | :--- | :--- |
 | **`SeriesGridRenderer.js`** | Universal renderer for Album lists/grids. | `AlbumsGridRenderer`, `AlbumsScopedRenderer` | **Hybrid Pattern**: Delegates to legacy production renderers (`AlbumsGridRenderer`) while providing a modern Class-based Component API. Supports both `GRID` and `LIST` layouts. |
 | **`SeriesHeader.js`** | Standardized page header. | `Breadcrumb`, `Icons` | Renders Title, Breadcrumbs, and the primary "Blend" action button (if albums exist). |
-| **`SeriesToolbar.js`** | Control bar with Search, Filters (Artist/Year/Source), and View Toggles. | `AlbumSeriesStore` | Complex composite component. Binds multiple filter inputs to callback props. |
-| **`SeriesFilterBar.js`** | Simplified version of the toolbar (potentially specialized or legacy). | - | Basic search and sort inputs. |
-| **`SeriesEditModal.js`** | Modal for editing a Series (Name, adding/removing albums). | `ArtistScanner`, `BaseModal` | **Heavy Component**. Contains substantial logic for managing a local list of "Album Queries" before saving. Integrates `ArtistScanner`. |
-| **`SeriesEventHandler.js`** | Headless behavior controller. | `DialogService`, `AlbumsStore` | Implements the **Command Pattern** via Event Delegation. Intercepts clicks on `[data-action]` elements (Edit, Delete, Remove Album) and triggers store actions/modals. |
+| **`ui/FilterToolbar.js`** (not in `series/`) | Control bar with Search, Filters (Artist/Year/Source), and View Toggles. `series/SeriesToolbar.js` no longer exists. | - | Created by `views/helpers/SeriesComponentFactory.js`; see `12_Frontend_Components_Core.md`. |
+| **`SeriesFilterBar.js`** | Simplified version of the toolbar (legacy). | `Component` | Basic search and sort inputs. No module imports it today. |
+| **`SeriesEditModal.js`** | Modal for editing a Series (Name, adding/removing albums). | `ArtistScanner`, `BaseModal`, `SeriesService`, `models/albumQuery.js` | **Heavy Component**. Contains substantial logic for managing a local list of "Album Queries" before saving. Integrates `ArtistScanner`. |
+| **`SeriesEventHandler.js`** | Headless behavior controller. | `DialogService`, `AlbumsStore`, `SeriesService`, `UserRankModal`, `InventoryAddModal`, `ViewAlbumModal` | Implements the **Command Pattern** via Event Delegation. Intercepts clicks on `[data-action]` elements (`edit-series`, `delete-series`, `retry-series`, `view-modal`, `add-to-inventory`, `remove-album`, `rank-album`, `refetch-metadata`) and triggers store actions/modals. For `rank-album` it opens `UserRankModal` and passes the result to the `onSaveRanking` it was given; the saving is done by `SeriesController.saveRanking`. |
 | **`ArtistScanner.js`** | Apple Music search integration within the Edit Modal. | `MusicKitService`, `AlbumSearchService` | Allows searching for albums and adding them to the Series definition. Implements type filtering (Album vs Single vs Live). |
-| **`SeriesDragDrop.js`** | SortableJS wrapper for Series grids. | `SortableJS` | Enables reordering of albums within a series. |
+| **`SeriesDragDrop.js`** | SortableJS wrapper for Series grids. | `Component`, `window.Sortable` | Enables reordering of albums within a series. Only imported by `PlaylistsDragBoard.js`, which itself is not in use. |
+| **`SeriesModals.js`** | Edit and delete dialogs of a series. | `DialogService`, `SeriesEditModal`, `SeriesService` | Used through `views/helpers/SeriesModalsManager.js`. |
+| **`SeriesEmptyState.js`** | Empty state of the albums screen. | `SafeDOM`, `Icons` | Used by `views/helpers/SeriesViewUpdater.js`. |
 
 ### Key Patterns
 *   **Event Delegation**: `SeriesEventHandler` allows unrelated components (like a grid card rendered by a functional renderer) to trigger complex actions (deletions, modals) without passing callbacks down the entire tree.
@@ -98,3 +102,4 @@ The following components were in the original plan but found to be missing or su
 *   `InventoryItemCard.js` / `SeriesCard.js` -> Replaced by generic `Card.js` or functional renderers.
 *   `series/AlbumCard.js` -> Replaced by `Card.js` (Universal Card).
 *   `series/SeriesStats.js` -> Likely integrated into `SeriesHeader` or Dashboard.
+*   `series/SeriesToolbar.js` -> Replaced by `ui/FilterToolbar.js`.

@@ -11,9 +11,9 @@ Located in `components/search/` and `components/home/`, these components manage 
 | Component | Role | Architecture & Patterns |
 | :--- | :--- | :--- |
 | **`SearchController.js`** | **Orchestrator**. Manages the flow: Input -> API -> Sort -> Filter -> Render. | • **State Management**: Tracks `isScanning` and `filterState`.<br>• **Logic**: Enforces "Newest -> Oldest" sorting by default.<br>• **Integration**: directly couples with `AlbumSearchService` and `HomeView`. |
-| **`DiscographyToolbar.js`** | **Filter UI**. The control bar for toggling Album Types (EP, Single, etc.) and Editions. | • **Global Events**: Uses `window.handleDiscographyType` for simplicity (Legacy/V3 Hybrid pattern).<br>• **Counts**: reactive UI that updates badges based on filtered results.<br>• **Visuals**: Matches the "Flame Gradient" active state of the main nav. |
+| **`DiscographyToolbar.js`** | **Filter UI**. The control bar for toggling Album Types (EP, Single, etc.) and Editions. | • **Global Events**: Uses `window.handleDiscographyType` for simplicity (Legacy/V3 Hybrid pattern).<br>• **Counts**: reactive UI that updates badges based on filtered results.<br>• **Visuals**: Matches the "Flame Gradient" active state of the main nav.<br>• **Usage today**: no module imports it; the Home filter buttons are handled by `SearchController`. |
 | **`StagingAreaController.js`** | **Selection Manager**. Manages the "Stack" of albums waiting to be turned into a playlist. | • **SortableJS**: Integrates 3rd-party lib for drag-and-drop reordering.<br>• **State Sync**: Manually synchronizes the internal `selectedAlbums` array with DOM changes on drag end. |
-| **`VariantPickerModal.js`** | **Decision UI**. A functional component invoked when adding an album group with multiple versions. | • **Functional Style**: Exported as a standalone function `showVariantPickerModal`.<br>• **Pattern**: "Check-the-box" UI with "Select All" capability.<br>• **Security**: Uses `escapeHtml` to prevent XSS in dynamic titles. |
+| **`VariantPickerModal.js`** | **Decision UI**. A functional component invoked when adding an album group with multiple versions. | • **Functional Style**: Exported as a standalone function `showVariantPickerModal`.<br>• **Pattern**: "Check-the-box" UI with "Select All" capability.<br>• **Security**: Uses `escapeHtml` to prevent XSS in dynamic titles.<br>• **Usage today**: no module imports it. |
 
 ---
 
@@ -30,7 +30,7 @@ The ranking system strictly follows the Container/Presenter pattern.
 *   **Key Logic**:
     *   **Enrichment**: Merges sparse local track data with rich metadata (Spotify Popularity, BEA Rankings) on the fly.
     *   **Normalization**: Maps tracks by name/fuzzy-match to handle slight spelling differences between services.
-    *   **Responsive Switching**: Decides whether to mount `TracksTable` (Desktop) or `TracksTabs` (Mobile).
+    *   **Responsive Switching**: Mounts both `TracksTable` (Desktop) and `TracksTabs` (Mobile); CSS classes (`hidden md:block` / `md:hidden`) decide which one is visible.
 
 #### The Presenters
 

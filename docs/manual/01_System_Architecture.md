@@ -206,10 +206,11 @@ The physical layout of the codebase, annotated with purpose.
 │   ├── schema/             # JSON Schemas (Validation)
 │   ├── services/           # Backend Auth Services (Tokens)
 │   └── index.js            # Server Entry Point
-├── shared/                 # ISOMORPHIC CODE (Runs on Client & Server)
-│   ├── curation.js         # Playlist Generation Logic
-│   └── normalize.js        # Data Sanitization
+├── shared/                 # SHARED CODE (public/js/shared is a symlink to it)
+│   ├── curation.js         # Playlist curation used by the server (POST /api/playlists)
+│   ├── normalize.js        # Key normalization used by the server and by curation.js
+│   └── services/           # AuthService.js (Firebase Auth, used by the browser)
 └── test/                   # VERIFICATION
-    ├── e2e/                # End-to-End Tests (Puppeteer)
-    └── unit/               # Unit Tests (Jest/Vitest)
+    ├── e2e/                # End-to-End Tests (Puppeteer, own runner)
+    └── <layer>/            # Unit Tests (Vitest), one folder per layer: stores/, services/, models/, views/, ...
 ```

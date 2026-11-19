@@ -29,9 +29,11 @@ describe('AuthService', () => {
     })
 
     describe('initialization', () => {
-        it('should get auth instance on creation', () => {
-            expect(getAuth).toHaveBeenCalled()
+        it('should get the auth instance when it is first needed, not on creation', () => {
+            // Lazy on purpose: the Firebase app may not be ready when the service is created
+            expect(getAuth).not.toHaveBeenCalled()
             expect(authService.auth).toBe(mockAuthInstance)
+            expect(getAuth).toHaveBeenCalled()
         })
     })
 

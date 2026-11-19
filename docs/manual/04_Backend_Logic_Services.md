@@ -1,6 +1,6 @@
 # Deep Dive: Server Logic & Utilities
 
-This document audits the backend logic layer located in `server/lib/` and `server/services/`. This layer handles data acquisition, normalization, and intelligence (AI/Ranking).
+This document audits the backend logic layer located in `server/lib/` (including `server/lib/services/`) and `server/services/`. This layer handles data acquisition, normalization, and intelligence (AI/Ranking).
 
 ## 1. Intelligence Orchestration
 
@@ -15,7 +15,8 @@ The `fetchRankingForAlbum` function implements a specific priority chain (The "S
 2.  **Spotify Popularity (Fallback 1)**: If community data is sparse/missing, it fetches track popularity from Spotify.
     *   *Logic*: Sorts tracks by popularity index (0-100).
     *   *Condition*: This fallback **exclusively wins** if it finds data for >= 50% of the tracks. It does not merge with sparse BestEver data to avoid polluting the ranking.
-3.  **AI (Fallback 2)**: Last resort. Uses LLM (Gemini) to retrieve a critical ranking based on its training data.
+    *   It is also tried when BestEverAlbums returns nothing at all.
+3.  **AI (Fallback 2)**: Last resort when neither source returned data; also used to fill the tracks BestEverAlbums did not cover when its list is shorter than the album. Uses LLM (Gemini, with the `google_search` grounding tool) to retrieve a critical ranking.
     *   *Method*: Injects the `rankingPrompt` into the AI Provider.
     *   *Anti-Hallucination*: Strictly instructed to set `referenceUrl` to `null` if it cannot verify a source.
 
@@ -24,7 +25,9 @@ The `fetchRankingForAlbum` function implements a specific priority chain (The "S
 | Service | Location | Responsibility |
 | :--- | :--- | :--- |
 | **`scrapers/besteveralbums.js`** | `server/lib/` | **Primary Source**. Scrapes HTML from besteveralbums.com to extract user-generated track content/ratings. |
-| **`spotifyPopularity.js`** | `server/lib/services/` | **Secondary Source**. Queries Spotify API for track popularity. Implements caching and rate-limiting. |
+| **`spotifyPopularity.js`** | `server/lib/services/` | **Secondary Source**. Queries Spotify API for track popularity. Caches the access token in memory; there is no rate limiting. |
+| **`EnrichmentService.js`** | `server/lib/services/` | Logic of `POST /api/enrich-album`: maps BestEverAlbums ratings to the given tracklist. |
+| **`GenerationService.js`** | `server/lib/services/` | Logic of `POST /api/generate`: AI album generation, validation, ranking fetch and consolidation. |
 | **`aiClient.js`** | `server/lib/` | **Tertiary Source**. Wrapper around the AI Provider (Gemini). Handles prompt injection (`prompts.js`) and response parsing. |
 
 ---
@@ -37,7 +40,7 @@ These files provide the foundational logic for data processing and safety.
 | :--- | :--- | :--- |
 | **`normalize.js`** | **Data Cleaning** | **Heavy Logic**. Contains regex and parsing logic to clean "dirty" JSON/Markdown from AI responses. Handles specific edge cases like "Thriller Bug" (forcing tracks array) and numbered list parsing. |
 | **`schema.js`** | **Validation** | Uses **Ajv** to validate album objects against `album.schema.json`. Ensures database integrity. |
-| **`validateSource.js`** | **Security** | Verifies metadata URLs. Performs HEAD/GET requests to ensure reference links provided by AI/Scrapers are valid (status < 400). |
+| **`validateSource.js`** | **Security** | Verifies metadata URLs. Performs a GET request to ensure reference links provided by AI/Scrapers are valid (status < 400). Used by `normalize.js` when it validates ranking entries. |
 | **`logger.js`** | **Observability** | A lightweight structured logger (JSON format) replacing standard `console.log` for better ingestion in production. |
 
 ---
@@ -49,8 +52,9 @@ These files provide the foundational logic for data processing and safety.
 graph TD
     Req[Request Ranking] --> Orch[fetchRanking.js]
     Orch -->|1. Try| BEA[BestEverAlbums Scraper]
-    BEA -->|Success?| Ret[Return Ranking]
+    BEA -->|Complete| Ret[Return Ranking]
     BEA -->|Fail/Sparse| SP[Spotify Popularity]
+    BEA -->|Fewer entries than tracks| AI
     SP -->|Success?| Ret
     SP -->|Fail| AI[AI Client]
     AI -->|Raw Text| Norm[normalize.js]
@@ -60,7 +64,7 @@ graph TD
 ### Folder Structure Anomalies
 > [!NOTE]
 > *   `MusicKitTokenService.js` is in `server/services/`.
-> *   `spotifyPopularity.js` is in `server/lib/services/`.
+> *   `spotifyPopularity.js`, `EnrichmentService.js` and `GenerationService.js` are in `server/lib/services/`.
 > *   Recommendation: Consolidate all third-party integration services into `server/services/` in a future refactor.
 
 ### Consolidation Logic (Borda Count)
@@ -72,7 +76,7 @@ flowchart TD
     Norm --> Match{Match Official Tracks?}
     
     Match -- Exact Match --> Score[Assign Score (N - Rank)]
-    Match -- Fuzzy > 40% --> Score
+    Match -- Fuzzy >= 40% --> Score
     Match -- No Match --> Div[Add to Divergence List]
     
     Score --> Accum[Accumulate Scores per Track]
@@ -97,7 +101,8 @@ flowchart TD
 -   Wraps calls to Google Gemini API (`generativelanguage.googleapis.com`).
 -   **Features**:
     -   Supports `google_search` grounding tool.
-    -   Configurable `temperature` (0.1) and `maxTokens`.
+    -   Fixed `temperature` (0.1) and configurable `maxTokens` (default 16384).
+    -   Default model `models/gemini-2.5-flash` (`AI_MODEL` overrides it); request timeout 60 s.
     -   Legacy fallback for proxied endpoints.
 
 ---
@@ -113,17 +118,17 @@ flowchart TD
     -   If BestEver has insufficient data (few rated tracks), triggers **Spotify Popularity** fallback.
     -   If Spotify Popularity has good coverage (>=50% tracks), it **replaces** the weak BestEver data entirely.
 4.  **Enrichment**:
-    -   Consolidates AI results with scraper results.
-5.  **Consolidation (Sprint 23)**:
-    -   Merges all evidence (Community + Popularity + AI) into a single `evidence: []` array per track.
-    -   Provides full provenance: `evidence: [{ source: 'BestEverAlbums', score: 90, votes: 25 }, { source: 'Spotify', score: 85 }]`.
+    -   When BestEver lists fewer tracks than the album, fills the missing ones with AI results. When BestEver covers the whole album, no AI call is made.
+5.  **Evidence per track (Sprint 23)**:
+    -   The per-track `evidence: []` array is produced by `EnrichmentService.enrichAlbum` (`trackEvidence` in the response of `/api/enrich-album`), with BestEverAlbums as the only source: `evidence: [{ source: 'BestEverAlbums', score: 90, votes: null, url }]`.
+    -   `fetchRanking.js` still contains `mergeRankingEvidence` (BestEverAlbums + Musicboard), but nothing calls it.
 
 ### Architecture Diagram
 ```mermaid
 flowchart TD
     Start([Fetch Ranking]) --> BEA[BestEverAlbums Scraper]
     BEA --> Check{Suffient Data?}
-    Check -- Yes --> AI_Check{Enrichment Needed?}
+    Check -- Yes --> AI_Check{Fewer entries than album tracks?}
     Check -- No --> Spotify[Spotify Popularity Fallback]
     Spotify --> SpotCheck{Spotify Coverage >= 50%?}
     SpotCheck -- Yes --> UseSpotify[Use Spotify Data exclusively]
@@ -144,7 +149,7 @@ flowchart TD
 ### Logic
 -   Simple structured logging (JSON output).
 -   `info`, `warn`, `error` levels.
--   Designed for ingestion by cloud logging agents (Cloud Run).
+-   Prints one JSON line per event (`{ ts, level, msg, meta }`) through `console`.
 
 ---
 
@@ -165,7 +170,7 @@ flowchart TD
 **Type**: Config Loader
 
 ### Logic
--   Loads `prompts.json` from either parent directory or container config path.
+-   Loads `prompts.json` from the container path (`server/config/prompts.json`) if it exists, otherwise from the repository's `config/prompts.json`. The result is cached in memory.
 -   **Template Rendering**: `renderPrompt` handles `{{variable}}` substitution.
 
 ---
@@ -216,11 +221,8 @@ flowchart TD
     -   **Verification**: Checks page HTML (`h1`, `title`) to ensure the album matches the requested Artist/Title (prevents tribute/cover album mix-ups).
 -   **Parsers**:
     -   `parseChartRankingById`: Extracts ratings from chart tables (looking for "Rating: 84 (398 votes)").
-    -   `parseChartRankingById`: Extracts ratings from chart tables (looking for "Rating: 84 (398 votes)").
     -   `parseAlbumRanking`: HTML fallback if no chart table found.
     -   **Regex Robustness (Sprint 23)**: Improved matching regex to handle track titles starting with numbers (e.g., "72 Seasons") by requiring explicit separators (dot, paren, dash).
-
-    -   `parseAlbumRanking`: HTML fallback if no chart table found.
 
 ### Scraper Discovery Sequence
 ```mermaid
@@ -239,8 +241,8 @@ sequenceDiagram
         Scraper->>Scraper: Parse & Verify Title Match
     end
     
-    Scraper->>BEA: GET /album/{id}
-    BEA-->>Scraper: Album HTML
+    Scraper->>BEA: GET thechart.php?a={id}
+    BEA-->>Scraper: Chart HTML
     Scraper->>Scraper: parseChartRankingById()
 ```
 
@@ -253,8 +255,8 @@ sequenceDiagram
 ### Logic
 -   **Auth**: Client Credentials Flow (`grant_type: client_credentials`) to get a server-side Access Token.
 -   **Workflow**:
-    1.  Search `album:{title} artist:{name}` to get Album ID.
-    2.  Get Album Tracks (IDs only).
+    1.  Search `album:{title} artist:{name}` to get Album ID; if nothing is found, retries with the cleaned title, then searches by artist only and matches the title.
+    2.  Get Album (`/v1/albums/{id}`) to read the track IDs.
     3.  **Batch Request**: Query `/v1/tracks` with up to 50 IDs to get the full track objects (which contain the `popularity` field).
     4.  **Output**: Maps `popularity` (0-100) directly to `rating`.
 
@@ -277,7 +279,7 @@ Used by `fetchRanking.js` (Fallback 2).
     2.  Numbered plain-text list (for human readability/debugging).
 
 ### `defaultRankingProviders`
-A curated list of 11 reliable music journalism sources injected into the prompt context to guide the AI's search/hallucination:
+A curated list of 11 music sources. `fetchRanking.js` passes the first 10 to `renderPrompt` as `rankingProviders`, but the current `rankingPrompt` template has no `{{rankingProviders}}` placeholder, so the list does not reach the AI:
 *   Ultimate Classic Rock
 *   Tenho Mais Discos Que Amigos (TMDQA!)
 *   Reddit (Fan Subreddits)

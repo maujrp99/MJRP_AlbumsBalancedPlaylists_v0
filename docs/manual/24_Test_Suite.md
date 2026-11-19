@@ -13,7 +13,13 @@ The test suite is structured into clear layers, mirroring the application archit
 | **Unit (Stores)** | Vitest | `test/stores/` | State management logic, subscriptions, mutations. |
 | **Unit (Views)** | Vitest | `test/views/` | Component rendering, event handling, store interaction (mocked). |
 | **Unit (Services)** | Vitest | `test/services/` | Business logic, API adapters, Auth logic. |
-| **Algorithms** | Vitest | `test/algorithms/` | Core logic verification (TopN, sorting). |
+| **Algorithms** | Vitest | `test/algorithms/` | Core logic verification (TopN, sorting, mixins). |
+| **Unit (Models)** | Vitest | `test/models/` | Pure rules: album load state, paging, series filter, own ranking, text. |
+| **Architecture** | Vitest | `test/architecture/` | Import boundaries of the album loading and of the own ranking. |
+| **Other unit folders** | Vitest | `test/api/`, `test/cache/`, `test/components/`, `test/controllers/`, `test/ranking/`, `test/repositories/`, `test/transformers/`, `test/utils/` | One folder per layer of `public/js/`. |
+| **Server** | Node scripts | `server/test/` | Run by `npm test` inside `server/` (not by Vitest). |
+
+**How they run**: `npm test` runs Vitest (`vitest.config.js`: `jsdom`, `test/**/*.test.js`, `test/e2e/**` excluded). The E2E layer has its own runner, `npm run test:e2e` (`test/e2e/run-all.js`), against a running app; its `BASE_URL` defaults to `http://127.0.0.1:5010`.
 
 ---
 
@@ -29,7 +35,7 @@ The test suite is structured into clear layers, mirroring the application archit
     *   **Golden Path**: Automates the V3 Blending flow: Select Series -> Configure Ingredients -> Generate Playlist.
     *   Verifies the full "Creation Pipeline".
 *   **Legacy Regressions (`issue-*.test.js`)**:
-    *   Cover historical bugs (#15 Ghost Albums, #16 View Toggle, #19 Series Switching).
+    *   Cover historical bugs (#15 Ghost Albums, #16 View Toggle, #19 Series Switching, #21 Sticky Playlists).
 *   **Coverage**: High coverage of critical paths. `helpers.js` now supports the V3 "Initialize Load" workflow.
 
 ### Store Layer (`test/stores/`)
@@ -53,7 +59,7 @@ The test suite is structured into clear layers, mirroring the application archit
 ### Ghost Test Sequence
 ```mermaid
 sequenceDiagram
-    participant Test as Playwright/Jest
+    participant Test as Puppeteer
     participant Page as Browser Page
     participant DOM
 
@@ -78,7 +84,7 @@ sequenceDiagram
 *   **Technique**: Mocking External Dependencies (Firebase).
 *   **Example (`AuthService.test.js`)**:
     *   Mocks `firebase/auth` methods (`signInWithPopup`, `signOut`).
-    *   Verifies that the service correctly calls the underlying SDK and returns normalized user objects.
+    *   Verifies that the service correctly calls the underlying SDK (Google and Apple providers, `signOut`, `onAuthStateChanged`) and that the auth instance is read lazily.
 
 ---
 

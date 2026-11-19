@@ -3,9 +3,9 @@
 ## Series & Navigation (`series/`, `navigation/`)
 **Status**: `[ACTIVE]`
 
--   **`series/SeriesToolbar.js` & `SeriesFilterBar.js`**:
+-   **`ui/FilterToolbar.js` & `series/SeriesFilterBar.js`**:
     -   **Role**: UI components for filtering albums/series.
-    -   **Logic**: `SeriesToolbar` is a high-level container combining Search, Filter Dropdowns, and View Toggles. `SeriesFilterBar` appears to be a smaller, alternative implementation (possibly for the Inventory view?).
+    -   **Logic**: `FilterToolbar` (which replaced `series/SeriesToolbar.js`, a file that no longer exists) is the high-level container combining Search, Filter Dropdowns, and View Toggles. `SeriesFilterBar` is a smaller, older implementation that no module imports.
 -   **`series/ArtistScanner.js`**:
     -   **Role**: Scans Apple Music for albums to add to a series.
     -   **Logic**: Interactive form with immediate Apple Music API feedback.
@@ -13,8 +13,8 @@
     -   **Role**: Adapter that delegates rendering to `AlbumsGridRenderer` and `AlbumsScopedRenderer`.
     -   **Pattern**: Supports both 'ALL' setup (grouped by series) and 'SINGLE' setup (flat grid).
 -   **`series/SeriesEventHandler.js`**:
-    -   **Role**: centralized event delegation for Series actions (Edit, Delete, Remove Album).
-    -   **Logic**: Intercepts clicks, identifies actions via `data-action`, and delegates to `DialogService` or Stores.
+    -   **Role**: centralized event delegation for Series and album actions (`edit-series`, `delete-series`, `retry-series`, `view-modal`, `add-to-inventory`, `remove-album`, `rank-album`, `refetch-metadata`).
+    -   **Logic**: Intercepts clicks, identifies actions via `data-action`, and delegates: series actions go to the callbacks it was given (`onEditSeries`, `onDeleteSeries`, `onRetrySeries`); album actions go to modals, `DialogService` or the callbacks (`onRefetchMetadata`, `onSaveRanking`).
 
 ### Command Delegation Flow
 ```mermaid
@@ -22,19 +22,20 @@ sequenceDiagram
     participant User
     participant Grid as SeriesGrid
     participant Handler as SeriesEventHandler
-    participant Service as DialogService
+    participant Modals as SeriesModals
+    participant Service as SeriesService
 
-    User->>Grid: Click [data-action="delete"]
+    User->>Grid: Click [data-action="delete-series"]
     Grid->>Handler: Bubble Event (Click)
     
     Handler->>Handler: extract Action & ID
     
-    alt Action == delete
-        Handler->>Service: confirm("Are you sure?")
-        Service-->>Handler: Yes
-        Handler->>Store: deleteSeries(id)
-    else Action == edit
-        Handler->>Modal: openEditModal(id)
+    alt Action == delete-series
+        Handler->>Modals: onDeleteSeries(id) -> openDelete(id)
+        Modals->>Modals: DialogService confirm
+        Modals->>Service: deleteSeries(id)
+    else Action == edit-series
+        Handler->>Modals: onEditSeries(id) -> openEdit(id)
     end
 ```
 -   **`navigation/SeriesDropdown.js`**:
@@ -47,8 +48,8 @@ sequenceDiagram
 Detailed controller-view logic for the Playlists feature.
 
 -   **`playlists/SavedPlaylistsController.js`**:
-    -   **Role**: The brain of the Playlists View.
-    -   **Logic**: Loads Series & Playlists from `SeriesRepository`/`PlaylistRepository`. Groups playlists into "Batches" based on creation time/name. Handles batch deletion and preloads thumbnails.
+    -   **Role**: The brain of the Saved Playlists view (`SavedPlaylistsView`, routes `/playlist-series` and `/saved-playlists`).
+    -   **Logic**: Loads Series & Playlists from `SeriesRepository`/`PlaylistRepository`. Groups playlists into "Batches" by `batchName` (newest `savedAt` first). Handles batch deletion and preloads thumbnails.
 -   **`playlists/PlaylistsGridRenderer.js`**:
     -   **Role**: Static HTML generator for the playlist grid.
     -   **Logic**: Renders the `RegeneratePanel`, Empty States, and delegates the actual Grid rendering to `PlaylistGrid`.
@@ -56,7 +57,7 @@ Detailed controller-view logic for the Playlists feature.
     -   **Role**: Renders the responsive grid of `PlaylistCard`s containing `TrackRow`s.
 -   **`playlists/PlaylistsDragBoard.js` & `PlaylistsDragHandler.js`**:
     -   **Role**: Drag-and-drop management.
-    -   **Logic**: `DragBoard` provides a Kanban-style layout (horizontal columns). `DragHandler` wraps `SortableJS` to manage track movement between playlists (drag-and-drop across lists).
+    -   **Logic**: `DragBoard` provides a Kanban-style layout (horizontal columns), but no module imports it. `DragHandler`, used by `PlaylistsView`, wraps `SortableJS` to manage track movement between playlists (drag-and-drop across lists).
 -   **`playlists/RegeneratePanel.js`**:
     -   **Role**: "Reconfigure" UI letting users change algorithms on an existing batch.
     -   **Reuse**: Reuses `BlendRecipeCard` and `BlendIngredientsPanel` from the Blend Wizard.

@@ -4,15 +4,17 @@
 > **Version**: 3.17.0 (Sprint 19 Track F Complete)
 > **Status**: **Stable**
 > **Focus**: Test Suite Revamp, V3 Home Workflow, Stores Refactoring.
+>
+> **Historical document.** It summarizes the manual as it was on that date and is not kept up to date; the numbered files of `docs/manual/` are the reference. The statements below that the code contradicted were corrected on 2026-11-19.
 
 ---
 
 ## 📚 01. System Architecture (`01_System_Architecture.md`)
 
-*Summary*: The Album Blender is a hybrid application with a Node.js/Express backend (proxying 3rd party APIs) and a Vanilla JS frontend using a specialized "Service-Worker-Store" architecture (Sprint 19).
+*Summary*: The Album Blender is a hybrid application with a Node.js/Express backend (proxying 3rd party APIs) and a Vanilla JS frontend organized in views, controllers, services, repositories and stores (Sprint 19).
 
 ### Key Patterns
-1.  **Pure Stores**: Frontend state is managed by `PlaylistsStore.js` and `SeriesStore.js` (Pure State, no logic).
+1.  **Pure Stores**: Frontend state is managed by the stores in `public/js/stores/` (`playlists.js`, `albumSeries.js`, `albums.js`, `inventory.js` and others).
 2.  **Services**: Logic is encapsulated in `PlaylistsService.js` and `SeriesService.js`.
 3.  **Views**: UI components (`HomeView.js`, `SeriesView.js`) follow a strict Render/Mount lifecycle.
 4.  **SafeDOM**: All DOM manipulation uses the `SafeDOM` utility to prevent XSS.
@@ -42,7 +44,7 @@
 
 ## 🎨 03. Frontend UI (`09_Frontend_Views.md`)
 
-*Summary*: The UI is split into distinct "Views" managed by `Router.js`.
+*Summary*: The UI is split into distinct "Views" managed by `router.js`.
 
 ### Core Views
 -   **Home View (V3)**: The entry point. Features a "Series Configuration" panel, "Discography Scan" (Visual/Bulk), and a Staging Area.
@@ -50,19 +52,19 @@
 -   **Blend View**: A Wizard-style interface for generating balanced playlists.
     -   *Ingredients*: Users select recipes (e.g., "Deep Cuts", "Top N").
     -   *Mixing*: Users adjust parameters.
--   **Inventory View**: Management of generated playlists.
+-   **Inventory View**: The person's album collection (owned / wishlist, format, price). Generated playlists are managed in the Playlists and Saved Playlists views.
 
 ---
 
 ## 📡 04. Data Layer (`06_Frontend_Data_Store.md`)
 
-*Summary*: Data is managed via a text-file based backend (`json` files) and an in-memory frontend store.
+*Summary*: Data is stored in Firestore (through the repositories in `public/js/repositories/`), with browser caches and in-memory frontend stores. The Node server has no database of its own: it serves the AI, ranking, playlist-curation and MusicKit-token endpoints.
 
 ### Stores
 -   **PlaylistsStore**: Manages the list of generated playlists.
     -   *Pattern*: Pub/Sub. Immutable state updates.
--   **SeriesStore**: Manages the currently loaded Album Series.
--   **ConfigStore**: Manages user preferences (e.g., View Mode).
+-   **AlbumSeriesStore** (`stores/albumSeries.js`): Manages the Album Series.
+-   There is no `ConfigStore`: preferences such as the view mode are kept in `localStorage` by the controllers.
 
 ---
 
@@ -72,7 +74,7 @@
 
 ### Algorithms
 -   **MJRP Balanced Cascade**: The flagship algorithm. Balances ratings, popularity, and variety.
--   **Top N**: Generic algorithms for "Top 5 Popular" or "Top 5 Acclaimed".
+-   **Top N**: Generic algorithms (`top-n-popular`, `top-n-acclaimed`, `top-n-user`) with a variable N.
 -   **Registry**: `algorithms/index.js` acts as the central plugin system for adding new generators.
 
 ---

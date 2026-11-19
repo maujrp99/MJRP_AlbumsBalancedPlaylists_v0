@@ -107,25 +107,24 @@ A series is a named list of album queries. Path: `artifacts/mjrp-albums/users/{u
 *   The album id is the slug `artist_title` (`api/client.js`, `generateAlbumId`), not a UUID or a Spotify id.
 
 ## 4. Ranking Object (`rankingConsolidated`)
-The source-of-truth for track acclaim, merged from multiple sources.
+The track acclaim merged from multiple sources, as returned by `consolidateRanking` (`server/lib/ranking.js`) in the response of `POST /api/generate`.
 
 ```javascript
 [
   {
-    "trackTitle": "string (Normalized)",
-    "finalScore": "number (0-100)",
-    "position": "number (1-N)",
-    "sources": [
+    "trackTitle": "string (title as in the album tracklist)",
+    "finalPosition": "number (1-N)",
+    "rating": "number | null (BestEverAlbums rating preferred)",
+    "rawScore": "number (Borda points)",
+    "normalizedScore": "number (rawScore / (N * providers))",
+    "supporting": [
       {
-        "provider": "string ('besteveralbums' | 'spotify' | 'ai')",
-        "rawScore": "number",
-        "weight": "number (float)"
+        "provider": "string (e.g. 'BestEverAlbums', 'Spotify')",
+        "position": "number | null",
+        "referenceUrl": "string",
+        "rating": "number | null"
       }
-    ],
-    "meta": {
-      "isInstrumental": "boolean",
-      "isLive": "boolean"
-    }
+    ]
   }
 ]
 ```

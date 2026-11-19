@@ -13,10 +13,11 @@
     2.  **Transformations**:
         *   Lowercase.
         *   Remove parentheticals `(...)`, `[...]`, `{...}`.
-        *   Remove specific suffixes: `- 20xx Remaster`, `- 20xx Mix`.
+        *   Remove trailing dash suffixes that contain `remaster` or `mix` (e.g., `- 2011 Remaster`, `- 2023 Mix`).
         *   Remove all non-alphanumeric characters (punctuation).
         *   Collapse whitespace.
     3.  **Output**: Clean token string (e.g., "money").
+*   **Consumers**: imported (dynamic `import()`) by `server/lib/ranking.js`, `server/lib/fetchRanking.js` and `server/routes/debug.js`, and by `shared/curation.js`.
 
 ---
 
@@ -25,7 +26,9 @@
 **Type**: Domain Logic / Algorithm
 **Dependencies**: `normalize.js`
 
-**Purpose**: The "Brain" of the playlist generation. Takes enriched albums and distributes tracks into balanced playlists (Greatest Hits, Deep Cuts).
+**Purpose**: The curation engine behind the server endpoint `POST /api/playlists`. Takes enriched albums and distributes tracks into balanced playlists (Greatest Hits, Deep Cuts). Entry point: `curateAlbums(albums, opts)`, which creates a `CurationEngine` and calls `curate`.
+
+> The only importer is `server/routes/playlists.js`. The blend screen in the browser does not use this file; it uses the algorithms in `public/js/algorithms/` (see `18_Frontend_Logic_Core.md`).
 
 ### 2.1 Class `CurationEngine`
 
@@ -35,8 +38,8 @@
     1.  **Index Creation**: Builds maps for `Consolidated`, `BestEver`, and `Acclaim` data using `normalizeKey`.
     2.  **Resolution (Per Track)**:
         *   **Rating**: Checks `rating` > `Consolidated.rating` > `BestEver.rating` > `Acclaim.rating`.
-        *   **Score**: Checks `acclaimScore` > `normalizedScore`.
-        *   **Rank**: Checks `acclaimRank` > `Consolidated.position` > index (1-based).
+        *   **Score**: Checks `acclaimScore` > `normalizedScore` > `Consolidated.normalizedScore` > the rating.
+        *   **Rank**: Checks `acclaimRank` > `rank` > `Consolidated.finalPosition` > index (1-based).
     3.  **Sorting**:
         *   Sorts tracks by `Rating (desc)` -> `Score (desc)` -> `Rank (asc)`.
     4.  **Assignment**: Assigns a new `acclaimRank` (1..N) based on this final sort order to ensure "Rank #1" is truly the highest valued track.
@@ -44,23 +47,23 @@
 #### B. Playlist Distribution (`curate`)
 *   **Goal**: Distribute tracks into buckets.
 *   **Logic Trace**:
-    1.  **P1 (Hits Vol 1)**: Takes the track with `acclaimRank === 1` from EVERY album.
-    2.  **P2 (Hits Vol 2)**: Takes the track with `acclaimRank === 2` from EVERY album.
+    1.  **P1 (Greatest Hits Vol. 1)**: Takes the first track in acclaim order from EVERY album.
+    2.  **P2 (Greatest Hits Vol. 2)**: Takes the second track in acclaim order from EVERY album.
     3.  **Deep Cuts**:
         *   Collects all remaining tracks.
         *   Calculates `TotalDuration`.
-        *   Determines `N` playlists needed (`Total / TargetDuration`).
-        *   **Round Robin Distribution**: Distributes tracks into `N` buckets to ensure even spread of albums across volumes.
-    4.  **Fill Heuristic**: If P1/P2 are too short, "steals" best remaining tracks from Deep Cuts to fill them up.
+        *   Determines `N` playlists needed (`ceil(Total / TargetDuration)`, at least 1).
+        *   **Round Robin Distribution**: Groups the remaining tracks by album and deals them, one album at a time, into the `N` playlists to ensure even spread of albums across volumes.
+    4.  **Fill Heuristic** (runs before the Deep Cuts are built): If P1/P2 are shorter than the target, takes the best remaining tracks to fill them up, preferring albums not yet in that playlist.
 
 #### C. Balancing Algorithm (`runFase4SwapBalancing`)
-*   **Goal**: Ensure all Deep Cuts playlists are close to `TargetDuration` (e.g., 45m).
+*   **Goal**: Ensure all playlists (P1 and P2 included) are close to `TargetDuration` (e.g., 45m).
 *   **Logic Trace**:
     1.  **Detection**: Identifies `pOver` (Longest) and `pUnder` (Shortest).
     2.  **Check**: If both are within tolerance (`FLEXIBILITY = 7m`), stop.
     3.  **Swap Search**:
         *   Iterates every track in `pOver` vs every track in `pUnder`.
-        *   **Constraint**: Cannot swap if it breaks "Album Continuity" (last track of an album must stay with its peers if possible) - *Note: This logic is strict.*
+        *   **Constraint** (`isSwapValid`): the rank #1 track never leaves P1 and the rank #2 track never leaves P2; the last track of an album in a playlist can only be swapped for a track of the same album.
         *   **Optimization**: Finds the pair `(tOver, tUnder)` that minimizes the duration gap.
     4.  **Execute**: Performs swap and repeats (Max 100 iterations).
 
@@ -82,5 +85,13 @@ flowchart TD
     
     P1 --> Finalize
     P2 --> Finalize
-    Finalize --> Output[Playlists + DebugInfo]
+    Finalize --> Output[playlists + rankingSummary + rankingSources]
 ```
+
+---
+
+## 3. Service: `shared/services/AuthService.js`
+**Status**: `[ACTIVE]`
+**Type**: Service / Singleton (`authService`)
+
+Wraps Firebase Auth for the browser: `signInWithGoogle()`, `signInWithApple()`, `logout()`, `onAuthStateChange(callback)`. The auth instance is read lazily (`getAuth()` on first use). Imported by `public/js/stores/UserStore.js`, `public/js/components/LoginModal.js`, `public/js/components/TopNav.js` and `public/js/components/navigation/AuthNav.js`.

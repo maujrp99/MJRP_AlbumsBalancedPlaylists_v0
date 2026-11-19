@@ -1,260 +1,159 @@
+/**
+ * AlbumSeriesStore - a pure state store (ADR 0017): it keeps the list of series, the active one and
+ * the sync flags, and tells its listeners. Creating, reading and saving series is SeriesService's
+ * job (test/services/SeriesService.test.js); nothing here touches the cloud.
+ */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { AlbumSeriesStore } from '../../public/js/stores/albumSeries.js'
+import { AlbumSeriesStore, albumSeriesStore } from '../../public/js/stores/albumSeries.js'
 
-// Mock dependencies
-vi.mock('../../public/js/repositories/SeriesRepository.js', () => ({
-    SeriesRepository: vi.fn().mockImplementation((db, cache, userId) => ({
-        userId,
-        create: vi.fn().mockResolvedValue('new-series-id'),
-        findAll: vi.fn().mockResolvedValue(userId === 'user-123' ? [{
-            id: '1',
-            name: 'User Series',
-            createdAt: { toDate: () => new Date('2024-01-01') },
-            updatedAt: { toDate: () => new Date('2024-01-01') }
-        }] : []),
-        update: vi.fn().mockResolvedValue(),
-        delete: vi.fn().mockResolvedValue()
-    }))
-}))
+const one = () => ({ id: '1', name: 'One', albumQueries: ['A - B'] })
+const two = () => ({ id: '2', name: 'Two', albumQueries: [] })
 
-vi.mock('../../public/js/cache/CacheManager.js', () => ({
-    cacheManager: {}
-}))
-
-vi.mock('../../public/js/app.js', () => ({
-    db: {}
-}))
-
-vi.mock('../../public/js/stores/UserStore.js', () => ({
-    userStore: {
-        subscribe: vi.fn(),
-        getState: vi.fn().mockReturnValue({ currentUser: null })
-    }
-}))
-
-// Mock DataSyncService
-vi.mock('../../public/js/services/DataSyncService.js', () => ({
-    dataSyncService: {
-        migrateSeries: vi.fn().mockResolvedValue(0)
-    }
-}))
-import { dataSyncService } from '../../public/js/services/DataSyncService.js'
-
-import { userStore } from '../../public/js/stores/UserStore.js'
-
-describe('SeriesStore', () => {
+describe('AlbumSeriesStore', () => {
     let store
-    const mockDb = {}
 
     beforeEach(() => {
-        vi.clearAllMocks()
-        // Reset localStorage
-        global.localStorage = {
-            getItem: vi.fn(),
-            setItem: vi.fn(),
-            removeItem: vi.fn()
-        }
         store = new AlbumSeriesStore()
-        store.init(mockDb) // Initialize repository for tests
     })
 
-    describe('constructor', () => {
-        it('should initialize and subscribe to userStore', () => {
-            expect(userStore.subscribe).toHaveBeenCalled()
-            expect(store.getSeries()).toEqual([])
-        })
+    it('starts empty, for an anonymous person, with no database', () => {
+        expect(store.getState()).toEqual({ series: [], activeSeries: null, loading: false, error: null })
+        expect(store.getUserId()).toBe('anonymous-user')
+        expect(store.getDb()).toBeNull()
     })
 
-    describe('onUserChange', () => {
-        it('should update userId and reload repository when user logs in', async () => {
-            const mockUser = { uid: 'user-123' }
-            const mockSeries = [{
-                id: '1',
-                name: 'User Series',
-                createdAt: new Date('2024-01-01'),
-                updatedAt: new Date('2024-01-01')
-            }]
-
-            store.init(mockDb) // Ensure basic init
-
-            // Create a guest series first so there is something to migrate
-            await store.createSeries({ name: 'Guest Series' })
-
-            store.repository.findAll.mockResolvedValue(mockSeries)
-
-            // Trigger auth change
-            await store.handleUserChange({ currentUser: mockUser })
-
-            expect(store.userId).toBe('user-123')
-            expect(store.repository.userId).toBe('user-123')
-            expect(dataSyncService.migrateSeries).toHaveBeenCalled()
-            expect(store.getSeries()).toEqual(mockSeries)
-        })
-
-        it('should revert to anonymous when user logs out', async () => {
-            store.userId = 'user-123'
-            store.init(mockDb, 'user-123')
-
-            await store.handleUserChange({ currentUser: null })
-
-            expect(store.userId).toBe('anonymous-user')
-        })
+    it('exports one shared instance', () => {
+        expect(albumSeriesStore).toBeInstanceOf(AlbumSeriesStore)
     })
 
-    describe('createSeries', () => {
-        it('should create new series with provided data', async () => {
-            const seriesData = {
-                name: 'Classic Rock Collection',
-                albumQueries: ['Pink Floyd - The Wall', 'Led Zeppelin - IV'],
-                notes: 'Test notes'
-            }
-
-            const series = await store.createSeries(seriesData)
-
-            expect(series.name).toBe('Classic Rock Collection')
-            expect(series.albumQueries).toEqual(seriesData.albumQueries)
-            expect(series.notes).toBe('Test notes')
-            expect(series.status).toBe('pending')
-            expect(series.id).toBeDefined()
+    describe('the list of series', () => {
+        it('setSeries replaces the list', () => {
+            store.setSeries([one(), two()])
+            expect(store.getSeries().map(s => s.id)).toEqual(['1', '2'])
         })
 
-        it('should set created series as active', async () => {
-            const series = await store.createSeries({ name: 'Test Series' })
-
-            expect(store.getActiveSeries()).toEqual(series)
+        it('addSeries puts the new series first', () => {
+            store.setSeries([one()])
+            store.addSeries(two())
+            expect(store.getSeries().map(s => s.id)).toEqual(['2', '1'])
         })
 
-        it('should add series to beginning of list', async () => {
-            await store.createSeries({ name: 'Series 1' })
-            await store.createSeries({ name: 'Series 2' })
-
-            expect(store.getSeries()[0].name).toBe('Series 2')
-            expect(store.getSeries()[1].name).toBe('Series 1')
+        it('getById finds a series, or answers undefined', () => {
+            store.setSeries([one(), two()])
+            expect(store.getById('2').name).toBe('Two')
+            expect(store.getById('nope')).toBeUndefined()
         })
 
-        it('should handle series without optional fields', async () => {
-            const series = await store.createSeries({ name: 'Minimal Series' })
-
-            expect(series.albumQueries).toEqual([])
-            expect(series.notes).toBe('')
+        it('updateSeriesById merges the changes and marks the series as updated now', () => {
+            store.setSeries([one()])
+            store.updateSeriesById('1', { name: 'Renamed' })
+            expect(store.getById('1').name).toBe('Renamed')
+            expect(store.getById('1').albumQueries).toEqual(['A - B'])
+            expect(store.getById('1').updatedAt).toBeInstanceOf(Date)
         })
 
-        it('should notify listeners when series created', async () => {
-            const listener = vi.fn()
-            store.subscribe(listener)
+        it('updateSeriesById leaves the list alone for an unknown id', () => {
+            store.setSeries([one()])
+            store.updateSeriesById('nope', { name: 'X' })
+            expect(store.getSeries()).toEqual([one()])
+        })
 
-            await store.createSeries({ name: 'Test' })
+        it('setAlbumQueries changes only the queries, without marking the series as updated', () => {
+            store.setSeries([one()])
+            store.setAlbumQueries('1', [{ artist: 'A', title: 'B', facts: { year: 1970 } }])
+            expect(store.getById('1').albumQueries[0].facts.year).toBe(1970)
+            expect(store.getById('1').updatedAt).toBeUndefined()
+        })
 
-            expect(listener).toHaveBeenCalled()
+        it('removeSeriesById takes the series out', () => {
+            store.setSeries([one(), two()])
+            store.removeSeriesById('1')
+            expect(store.getSeries().map(s => s.id)).toEqual(['2'])
         })
     })
 
-    describe('setActiveSeries', () => {
-        it('should set active series by ID', async () => {
-            const series1 = await store.createSeries({ name: 'Series 1' })
-            const series1Id = series1.id
-            await store.createSeries({ name: 'Series 2' }) // This becomes active automatically
+    describe('the active series', () => {
+        beforeEach(() => store.setSeries([one(), two()]))
 
-            // Now set series1 as active by its ID
-            store.setActiveSeries(series1Id)
-
-            expect(store.getActiveSeries().id).toBe(series1Id)
-        })
-        it('should set active series to null if ID not found', async () => {
-            await store.createSeries({ name: 'Series 1' })
-
-            store.setActiveSeries('non-existent-id')
-
-            expect(store.getActiveSeries()).toBeNull()
+        it('setActiveSeries chooses by id and returns the series', () => {
+            expect(store.setActiveSeries('2').name).toBe('Two')
+            expect(store.getActiveSeries().id).toBe('2')
         })
 
-        it('should notify listeners when active series changes', async () => {
-            const series = await store.createSeries({ name: 'Test' })
-            const listener = vi.fn()
-            store.subscribe(listener)
-
-            store.setActiveSeries(series.id)
-
-            expect(listener).toHaveBeenCalled()
-        })
-    })
-
-    describe('getSeries', () => {
-        it('should return all series', async () => {
-            await store.createSeries({ name: 'Series 1' })
-            await store.createSeries({ name: 'Series 2' })
-
-            expect(store.getSeries()).toHaveLength(2)
-        })
-    })
-
-    describe('getActiveSeries', () => {
-        it('should return active series', async () => {
-            const series = await store.createSeries({ name: 'Test' })
-
-            expect(store.getActiveSeries()).toEqual(series)
+        it('an unknown id, or none, leaves no active series', () => {
+            store.setActiveSeries('2')
+            expect(store.setActiveSeries('nope')).toBeNull()
+            store.setActiveSeries('2')
+            expect(store.setActiveSeries(null)).toBeNull()
         })
 
-        it('should return null if no active series', () => {
+        it('the active series follows an update and a change of queries', () => {
+            store.setActiveSeries('1')
+            store.updateSeriesById('1', { name: 'Renamed' })
+            expect(store.getActiveSeries().name).toBe('Renamed')
+            store.setAlbumQueries('1', [])
+            expect(store.getActiveSeries().albumQueries).toEqual([])
+        })
+
+        it('removing the active series leaves none active', () => {
+            store.setActiveSeries('1')
+            store.removeSeriesById('1')
             expect(store.getActiveSeries()).toBeNull()
         })
     })
 
-    describe('subscribe', () => {
-        it('should add listener', async () => {
-            const listener = vi.fn()
-
-            store.subscribe(listener)
-            await store.createSeries({ name: 'Test' })
-
-            expect(listener).toHaveBeenCalled()
+    describe('flags and context', () => {
+        it('keeps loading and error', () => {
+            store.setLoading(true)
+            store.setError('boom')
+            expect(store.getState()).toMatchObject({ loading: true, error: 'boom' })
         })
 
-        it('should return unsubscribe function', async () => {
+        it('setUserId falls back to the anonymous person', () => {
+            store.setUserId('user-123')
+            expect(store.getUserId()).toBe('user-123')
+            store.setUserId(null)
+            expect(store.getUserId()).toBe('anonymous-user')
+        })
+
+        it('setDb keeps the database handle without telling the listeners', () => {
             const listener = vi.fn()
-
-            const unsubscribe = store.subscribe(listener)
-            unsubscribe()
-            await store.createSeries({ name: 'Test' })
-
+            store.subscribe(listener)
+            const db = {}
+            store.setDb(db)
+            expect(store.getDb()).toBe(db)
             expect(listener).not.toHaveBeenCalled()
         })
     })
 
-    describe('getState', () => {
-        it('should return complete state snapshot', async () => {
-            const series = await store.createSeries({ name: 'Test' })
+    describe('listeners', () => {
+        it('are told the state on every change', () => {
+            const listener = vi.fn()
+            store.subscribe(listener)
+            store.setSeries([one()])
+            expect(listener).toHaveBeenCalledWith(expect.objectContaining({ series: [one()] }))
+        })
 
-            const state = store.getState()
-
-            expect(state).toEqual({
-                series: [series],
-                activeSeries: series,
-                loading: false,
-                error: null
-            })
+        it('subscribe returns the way to stop listening', () => {
+            const listener = vi.fn()
+            const stop = store.subscribe(listener)
+            stop()
+            store.setSeries([one()])
+            expect(listener).not.toHaveBeenCalled()
         })
     })
 
-    describe('reset', () => {
-        it('should reset store to initial state', async () => {
-            await store.createSeries({ name: 'Test' })
+    it('reset empties the state, tells the listeners, and keeps the person', () => {
+        const listener = vi.fn()
+        store.setSeries([one()])
+        store.setActiveSeries('1')
+        store.setUserId('user-123')
+        store.subscribe(listener)
 
-            store.reset()
+        store.reset()
 
-            expect(store.getSeries()).toEqual([])
-            expect(store.getActiveSeries()).toBeNull()
-            expect(store.getState().loading).toBe(false)
-            expect(store.getState().error).toBeNull()
-        })
-
-        it('should notify listeners on reset', () => {
-            const listener = vi.fn()
-            store.subscribe(listener)
-
-            store.reset()
-
-            expect(listener).toHaveBeenCalled()
-        })
+        expect(store.getState()).toEqual({ series: [], activeSeries: null, loading: false, error: null })
+        expect(store.getUserId()).toBe('user-123')
+        expect(listener).toHaveBeenCalledTimes(1)
     })
 })
