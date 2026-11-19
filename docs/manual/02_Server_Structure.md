@@ -263,11 +263,11 @@ flowchart TD
 **Purpose**: Extracts track-level ratings from besteveralbums.com.
 
 *   **Logic Trace**:
-    0.  **Entry (`getRankingForAlbum`)**: with an artist, first looks for the artist page (`findArtistPage`) and the album in its discography (`parseArtistDiscography`); otherwise, or if not found, goes to discovery.
+    0.  **Entry (`getRankingForAlbum`)**: with an artist, first looks for the artist page (`findArtistPage`: the result of `suggest.php` whose label is the artist's own name) and the album among the links of that page (`parseArtistDiscography`); otherwise, or if not found, goes to discovery.
     1.  **Discovery (`findAlbumId`)**:
-        *   Standard pass: queries `suggest.php`, then falls back to the HTML search `search.php`.
-        *   Fuzzy pass (if the standard pass finds nothing): queries `suggest.php` with variations (artist only, title only, title without subtitle).
-        *   **Heuristics**: Checks URL patterns (`thechart.php`, `album.php`) and verifies Title/Artist match in HTML.
+        *   First pass: queries `suggest.php` with "artist title". Each result comes with a label "Title by Artist"; a result whose label cannot be read that way has its page opened and read (`<title>`, `h1`). Then the HTML search `search.php`, whose album links are opened and read, up to five.
+        *   Second pass (if the first finds nothing): queries `suggest.php` again in other words (artist only, title only, title without subtitle). Other words widen what the source lists, not what is accepted.
+        *   **Acceptance (F55, slice 1)**: at every one of these points the scraper turns what the source gave into `{ title, artist }` and asks the one identity rule (`shared/albumIdentity.js`, loaded through `server/lib/albumIdentity.js`). It compares no text itself. An album absent from the source, with its artist present, is `null` ("not found"): another album of the artist is never returned. Before F55 each point accepted when one text contained the other (title or artist), and the HTML search took the first link.
     2.  **Parsing (`parseChartRankingById`)**:
         *   Uses `cheerio` to find specific Table rows.
         *   Extracts the track title and the rating from the rating cell.

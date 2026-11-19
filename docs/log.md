@@ -3,6 +3,44 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 18:16] review — F55 fatia 1 revisada e provada pelo integrador
+
+Ramo do auxiliar com a `main` junto: 919 testes, build ok. Contagem na conta do MJRP: 8 álbuns trocados em 227 (9 linhas). Com a regra nova, 7 carregam o álbum certo e 1 («No Quarter») passa a falhar com aviso, porque o catálogo só o tem com subtítulo. A fonte de notas respondeu certo no servidor local. Prova em `reports/evidence/F55/2026-11-19-slice-1-browser-proof.md`.
+
+## [2026-11-19 18:08] session — F55 fatia 1: documentos da feature, arquitetura e manual da regra de identidade
+
+Documentos da fatia 1 da F55, no ramo `fix/f55-one-album-identity-rule`.
+
+- **Feature** (`docs/specs/features/F55-the-album-asked-for-or-a-notice/`): `spec.md` em `In Progress`, com as duas fatias (a 1 feita, a 2 não), dez requisitos (nove com o teste que os prova) e a mudança de comportamento declarada; `plan.md` com o desenho como foi construído, as decisões do agente (dois degraus de acerto, nota de edição por vocabulário fechado, o subtítulo) e os riscos; `tasks.md` com 17 tarefas (12 fechadas; a prova no navegador e a fatia 2 abertas).
+- **`docs/specs/arch.md`:** seção nova no fim, «Uma regra só para dizer que é o mesmo álbum (F55)», com os lugares antes e depois, e a linha da regra em «Compartilhado».
+- **Manual:** `23_Shared_Code.md` ganhou a regra; `08_Frontend_Models.md`, o lado do app (`askedAlbum.js`, no lugar de `AlbumIdentity.js`); `06_Frontend_Data_Store.md`, a busca do Spotify como ficou; `17_Frontend_Services.md`, a contagem só-leitura e como rodá-la; `02_Server_Structure.md` e `04_Backend_Logic_Services.md`, o raspador e o Spotify do servidor; `24_Test_Suite.md`, os testes novos. Frases que ficaram falsas acertadas em `00_Dir_File_Structure_Map.md`, `01`, `07b` e `99`.
+- **Para o MJRP decidir** (em `spec.md`, Open Questions): o subtítulo que não é nota de edição conta como parte do título; «(Live)» sozinho é nota de edição; «IV» não é «4». E falta rodar a contagem com o login dele antes de publicar.
+- **Não tocado, e fica para o integrador:** o `tasks.md` da F52 ainda diz que a regra de identidade no raspador (TASK-12 de lá) não está feita; ela foi construída aqui.
+
+## [2026-11-19 18:08] session — F55 fatia 1, app: cada lugar que aceita um álbum pergunta à regra única; contagem só-leitura do que está trocado (UAT-184)
+
+Segunda parte da fatia 1 da F55, no ramo `fix/f55-one-album-identity-rule`: os lugares do app que aceitam um álbum passam a perguntar à regra única (`shared/albumIdentity.js`).
+
+- **`public/js/models/askedAlbum.js`** (novo): lê a consulta guardada (o pedido) e o que cada fonte devolve (o candidato) nos mesmos três campos. Entrou no lugar de `models/AlbumIdentity.js`, a nota de semelhança em que o artista certo bastava, que foi removida.
+- **Catálogo da Apple Music** (`CatalogAdapter.js`, e o caminho antigo em `api/client.js`): a regra escolhe entre os resultados da busca, em vez de valer o primeiro. O teste novo reproduziu a UAT-184 no código antigo: com «Shangri-La Dee Da» primeiro nos resultados, «Core» pedido carregava «Shangri-La Dee Da».
+- **Identificador guardado:** o álbum a que ele leva é conferido pela regra. Se for outro álbum, o álbum é buscado pelo nome, e o resultado traz `metadata.replacedSourceId`. Nada é gravado na série (é a fatia 2).
+- **Spotify** (`SpotifyService.js`): três buscas só listam candidatos; a regra aceita um ou nenhum. Saíram «um título contém o outro», o primeiro resultado como reserva e a nota por distância de edição.
+- **Dados locais de capa** (`OptimizedAlbumLoader.js`): a linha do álbum pedido, ou nada; a primeira linha da busca não serve mais de reserva.
+- **Resposta da busca por IA** (`api/client.js`): conferida pela regra; outro álbum vira «o servidor não tem», sem nova chamada paga.
+- **Contagem só-leitura** (`services/albums/albumIdentityAudit.js`): para cada álbum pedido nas séries, o álbum que o app tem e o veredito. Pelo console, com a conta do dono: `await albumIdentityAudit()`. Lê por `peek` (novo nos guardados): não promove nem apaga nada.
+- **Função de aptidão** (`test/architecture/albumIdentityRule.test.js`): falha se um desses lugares deixar de perguntar à regra ou voltar a comparar texto.
+- Saíram também, por não terem mais quem use: as funções de semelhança e de chave de `utils/stringUtils.js`, os normalizadores de álbum e artista de `utils/NormalizationUtils.js`, e `extractArtist`/`extractAlbum` de `api/client.js`.
+- `npx vitest run`: 919 testes; `npx vite build` compila. **Não visto num navegador** (o auxiliar não tem um). Mudança de comportamento: um álbum cujo título guardado difere do título do catálogo por um qualificador que não é edição passa a «não encontrado».
+
+## [2026-11-19 18:07] session — F55 fatia 1, regra e servidor: uma regra só diz «este é o álbum pedido», e o raspador pergunta a ela (UAT-184)
+
+Ramo `fix/f55-one-album-identity-rule`, da ponta da `main` local. Primeira parte da fatia 1 da F55 (UAT-184: a série pedia «Stone Temple Pilots - Core» e mostrava «Shangri-La Dee Da»).
+
+- **A regra:** `shared/albumIdentity.js`, pura, usada pelo app e pelo servidor. `compareAlbumIdentity(pedido, candidato)` devolve um veredito tipado (igual ou diferente, com o motivo); `pickAlbum` escolhe o candidato que passa, ou nenhum. O título tem de bater por conta própria, inteiro; o artista tem de bater; o ano só ordena. Um subtítulo depois de «:» ou « - » só sai se for nota de edição. O teste de «Core» contra «Shangri-La Dee Da» e «Core Memories» foi escrito primeiro (`test/shared/albumIdentity.test.js`).
+- **O servidor:** `server/lib/albumIdentity.js` carrega a regra. O raspador (`server/lib/scrapers/besteveralbums.js`) pergunta a ela em todos os pontos em que aceitava por «um texto contém o outro»; a busca em HTML não pega mais o primeiro link; a página de um resultado cujo rótulo já diz que é outro álbum não é aberta. O Spotify do servidor (`spotifyPopularity.js`) pegava o primeiro resultado da busca; agora escolhe pela regra, e a busca só pelo artista, que quebrava num nome nunca importado, voltou a funcionar.
+- **Lido da fonte, para conhecer o formato** (cinco leituras do BestEverAlbums, sem login e sem custo): os resultados da busca vêm rotulados «Título by Artista»; a página do álbum diz o mesmo no `<title>` e no cabeçalho; a busca em HTML não devolveu nenhum link de álbum.
+- Testes: 919 no fim da fatia (eram 789). Nada publicado; conserto em `server/` só se prova publicando.
+
 ## [2026-11-19 17:47] decision — MJRP: o conserto do Scan (UAT-204) passa na frente depois da F55; a conformidade de 28/10 fica de lado
 
 Palavras do MJRP: «1. Sim pode 2.deixa de lado por enqto». (1) O conserto da UAT-204 (resposta imediata ao clique, prazo na consulta ao catálogo, «tentar de novo») é feito assim que a fatia 1 da F55 entrar na `main`. (2) A conformidade aberta em 2026-10-28 (`.mjrp/conform.json`) não é retomada nem largada agora; a trava de fim de turno segue registrando o vermelho dela.

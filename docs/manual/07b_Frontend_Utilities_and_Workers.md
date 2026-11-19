@@ -82,7 +82,8 @@ classDiagram
 ---
 
 ## 5. Other Utilities
-*   **`stringUtils.js`**: String similarity and album keys, and `escapeHtml` (section 2).
+*   **`stringUtils.js`**: `escapeHtml` (section 2) and `safeText`. The string similarity and the album key that lived here were removed in F55: whether an album is the album asked for is decided by `shared/albumIdentity.js`.
+*   **`NormalizationUtils.js`**: `cleanTitle` (the text sent to a search) and `toCore` (matching track titles). Its album and artist normalizers were removed in F55 for the same reason.
 *   **`dom-helpers.js`**: Low-level DOM traversal/manipulation helpers.
 *   **`SvgGenerator.js`**: Dynamic SVG generation (likely for placeholders or dynamic icons).
 

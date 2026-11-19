@@ -318,7 +318,7 @@ Known gaps of this picture, kept honest here (they are the work of v5.0):
 | :--- | :--- | :--- |
 | Blend and playlist edit load with their own loop | `controllers/BlendingController.js`, `controllers/PlaylistsController.js` | F56 |
 | Saved playlists reads the playlists of each series one after the other (20 s) | `components/playlists/SavedPlaylistsController.js` | F61 |
-| "Is this the album asked for?" is decided in five places, each its own way; with the right artist any album passes | `models/AlbumIdentity.js`, Spotify match, server scraper, local cover, AI second source | F55 |
+| "Is this the album asked for?" was decided in five places, each its own way; with the right artist any album passed. **Since F55, slice 1 (2026-11-19, on the branch `fix/f55-one-album-identity-rule`, not yet published), one rule decides it in all of them** (`shared/albumIdentity.js`). Still open: writing a corrected Apple id back to the series, and discarding what the browser keeps from before | `shared/albumIdentity.js`, `models/askedAlbum.js`; the call sites are listed in `test/architecture/albumIdentityRule.test.js` | F55 |
 | A failure can still end as "the source has nothing" | `adapters/enrichers.js`, server ratings route | F52 |
 | `stores/albums.js` still has other writers besides the projection | `services/SeriesService.js`, Refetch | F56 |
 | Two functions above the complexity limit of 10 | `AlbumLoadService._enrichOne` (21), `CatalogAdapter.find` (12) | F58 |
@@ -385,7 +385,7 @@ The order inside v5.0 is the one the MJRP sets in `docs/specs/priority.md`. Each
 | How many at once, how long to wait? | one at a time, no deadline | 3 catalog searches, 6 quick and 4 slow sources, 45 s to find, 20 s per source | the same limits, measured against the server |
 | What is "loading"? | one flag for the whole screen | a state per album and per source; the series' state is derived | the same, read by every screen |
 | What happens when an album fails? | nothing shown | a notice on the series and "Try again" | the same, on blend and edit too |
-| Is it the album that was asked for? | first result of the search | the chosen id; by name, a weighted score that any album of the artist passes | one rule: the title must match, or a notice |
+| Is it the album that was asked for? | first result of the search | the chosen id; by name, a weighted score that any album of the artist passes | one rule: the title must match, or a notice (built in F55, slice 1: the chosen id is checked against the rule too) |
 | Where is an album kept? | several keys per album | one record per album asked for, with the status of each source | the same, plus ratings kept on the server |
 | Who talks to Firestore? | stores, controllers and repositories | repositories, with a short list of known exceptions that can only shrink | repositories only |
 | How is a rule enforced? | by convention | by tests in `test/architecture/` | the same, plus a complexity limit |
@@ -457,14 +457,14 @@ One line per component of the album path. "State" says whether it is in producti
 | Service | `OwnRankingService` | `services/ranking/OwnRankingService.js` | saves a ranking; keeps the list of ranked albums | v4.0 |
 | Service | `SeriesService` | `services/SeriesService.js` | create, read, update, delete series | v3; list without the cut in v4.0 |
 | Composition | `albumLoading.js` | `services/albums/albumLoading.js` | wires the load to the real sources | v4.0 |
-| Adapter | `CatalogAdapter` | `services/albums/adapters/CatalogAdapter.js` | Apple Music by id, else by name; server second source | v4.0 |
+| Adapter | `CatalogAdapter` | `services/albums/adapters/CatalogAdapter.js` | Apple Music by id, else by name; server second source. Since F55, slice 1: the album of the stored id is checked against the identity rule (an id that leads to another album is not obeyed, and the result says so in `metadata.replacedSourceId`), and the search by name picks among its results by the rule | v4.0; F55 |
 | Adapter | enrichers | `services/albums/adapters/enrichers.js` | acclaim, popularity, own ranking | v4.0 |
 | Adapter | `AlbumCacheAdapter` | `services/albums/adapters/AlbumCacheAdapter.js` | one record per album asked for | v4.0 |
 | Store | `AlbumLoadStore` | `stores/albumLoad.js` | the state of the load | v4.0 |
 | Store | `albumsStore` | `stores/albums.js` | projection of the load for other screens; no Firestore | v4.0 |
 | Store | `albumSeriesStore`, `ownRankingsStore`, `playlistsStore`, `inventoryStore`, `userStore` | `stores/*` | pure state per kind of data | v3 (ADR 0017) |
 | Model | load state, query, filter, paging, facts, text, own ranking | `models/albumLoadState.js`, `albumQuery.js`, `seriesFilter.js`, `paging.js`, `albumFacts.js`, `text.js`, `ownRanking.js` | pure rules | v4.0 |
-| Model | `AlbumIdentity` | `models/AlbumIdentity.js` | "is this the album asked for?" - today any album of the right artist passes | v3; F55 |
+| Shared rule | album identity | `shared/albumIdentity.js` (the rule), `models/askedAlbum.js` (the app's shapes read into `{ artist, title, year }`), `server/lib/albumIdentity.js` (the server's loader) | "is this the album asked for?": the title must match on its own, the artist must match, the year only orders; no candidate passes means "not found". It replaced `models/AlbumIdentity.js` (a confidence score any album of the right artist passed), removed in F55 | v5.0 (F55, slice 1) |
 | Utility | `TaskQueue`, `retry`, `duration`, `localAddress`, `SafeDOM` | `utils/*` | queue with limit and deadline; retry; one duration formatter; one local address; DOM without `innerHTML` | v4.0 (`SafeDOM` v3, fixed in v4.0) |
 | Repository | series, playlists, inventory, rankings, shared albums | `repositories/*` | the only door to Firestore | v2; `SharedAlbumRepository` in v4.0 |
 | Cache | `CacheManager` | `cache/CacheManager.js` | memory + IndexedDB | v3 |

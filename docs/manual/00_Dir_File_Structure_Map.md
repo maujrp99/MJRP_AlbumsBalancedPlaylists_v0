@@ -29,7 +29,7 @@
 20. `public/js/services/SpotifyService.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
 21. `public/js/services/AuthService.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
 22. `public/js/models/Album.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
-23. `public/js/models/AlbumIdentity.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
+23. `public/js/models/askedAlbum.js` (Analysis: `manual/06_Frontend_Data_Store.md`; it replaced `AlbumIdentity.js` in F55)
 24. `public/js/api/client.js` (Analysis: `manual/19_Frontend_JS_Root.md`)
 25. `docs/manual/01_System_Architecture.md` (System Map)
 26. `docs/manual/00_Dir_File_Structure_Map.md` (File Map)
@@ -190,7 +190,7 @@
 ### Batch 10: State, Models & Controllers 
 153. `public/js/controllers/SeriesController.js` (Analysis: `manual/08_Frontend_Models.md`)
 154. `public/js/models/Album.js` (Analysis: `manual/08_Frontend_Models.md`)
-155. `public/js/models/AlbumIdentity.js` (Analysis: `manual/08_Frontend_Models.md`)
+155. `public/js/models/askedAlbum.js` (Analysis: `manual/08_Frontend_Models.md`; it replaced `AlbumIdentity.js` in F55). With it: `shared/albumIdentity.js` (`manual/23_Shared_Code.md`), `server/lib/albumIdentity.js` (`manual/02_Server_Structure.md`), `public/js/services/albums/albumIdentityAudit.js` (`manual/17_Frontend_Services.md`)
 156. `public/js/models/Playlist.js` (Analysis: `manual/08_Frontend_Models.md`)
 157. `public/js/stores/albums.js` (Analysis: `manual/08_Frontend_Models.md`)
 158. `public/js/cache/albumCache.js` (Analysis: `manual/08_Frontend_Models.md`)

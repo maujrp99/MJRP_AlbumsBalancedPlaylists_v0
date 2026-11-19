@@ -267,11 +267,6 @@ export class TracksRankingComparison {
             throw new Error(`Album not found on Spotify: "${this.album.artist} - ${this.album.title}"`)
         }
 
-        // Validate artist match
-        if (!SpotifyService._validateMatch(spotifyAlbum, this.album.artist)) {
-            console.warn('[TracksRankingComparison] Artist mismatch, but proceeding with found album')
-        }
-
         // Fetch tracks with popularity
         const spotifyTracks = await SpotifyService.getAlbumTracksWithPopularity(spotifyAlbum.id)
 

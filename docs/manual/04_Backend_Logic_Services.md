@@ -216,9 +216,9 @@ flowchart TD
 ### Logic
 -   **Target**: `besteveralbums.com`
 -   **Heuristics**:
-    -   **Smart Search**: Uses the site's `suggest.php` endpoint first for "fast accept" (avoiding full page loads if a "By [Artist]" match is found).
-    -   **Fallback**: Standard HTML search via `search.php`.
-    -   **Verification**: Checks page HTML (`h1`, `title`) to ensure the album matches the requested Artist/Title (prevents tribute/cover album mix-ups).
+    -   **Search**: Uses the site's `suggest.php` endpoint first; its results are labelled "Title by Artist", so most albums are accepted with no page load.
+    -   **Fallback**: Standard HTML search via `search.php`; each album link it lists is opened and read.
+    -   **Acceptance (F55, slice 1)**: one rule, `shared/albumIdentity.js`, at every point: the label, the page (`<title>` and `h1`) or the link on the artist's page is read into `{ title, artist }` and the rule answers. The title must match on its own (an edition note such as "(Deluxe Edition)" is dropped; "Core" is not "Core Memories"), and the artist must match. No result passes: "not found", never another album of the artist.
 -   **Parsers**:
     -   `parseChartRankingById`: Extracts ratings from chart tables (looking for "Rating: 84 (398 votes)").
     -   `parseAlbumRanking`: HTML fallback if no chart table found.
@@ -233,12 +233,12 @@ sequenceDiagram
     Scraper->>BEA: suggest.php?q=Artist
     BEA-->>Scraper: JSON { suggestions }
     
-    alt Match Found (Fast Accept)
+    alt A label is the album asked for (identity rule)
         Scraper->>Scraper: Use Suggested Album ID
     else No Match
         Scraper->>BEA: search.php?q=Album+Artist
         BEA-->>Scraper: HTML Search Results
-        Scraper->>Scraper: Parse & Verify Title Match
+        Scraper->>Scraper: Open each album link, ask the identity rule
     end
     
     Scraper->>BEA: GET thechart.php?a={id}
@@ -255,7 +255,7 @@ sequenceDiagram
 ### Logic
 -   **Auth**: Client Credentials Flow (`grant_type: client_credentials`) to get a server-side Access Token.
 -   **Workflow**:
-    1.  Search `album:{title} artist:{name}` to get Album ID; if nothing is found, retries with the cleaned title, then searches by artist only and matches the title.
+    1.  `findSpotifyAlbum`: searches `album:{title} artist:{name}` (5 results), then the cleaned title, then the albums of the artist (20). The searches only list candidates; the one identity rule (`shared/albumIdentity.js`) accepts the album asked for or none (F55, slice 1). Before F55 the first result of the search was taken as it came, and the artist-only search broke on a name that was never imported.
     2.  Get Album (`/v1/albums/{id}`) to read the track IDs.
     3.  **Batch Request**: Query `/v1/tracks` with up to 50 IDs to get the full track objects (which contain the `popularity` field).
     4.  **Output**: Maps `popularity` (0-100) directly to `rating`.

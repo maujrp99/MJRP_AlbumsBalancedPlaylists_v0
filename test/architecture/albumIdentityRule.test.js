@@ -1,0 +1,99 @@
+/**
+ * Fitness functions of the one album identity rule (F55, UAT-184; arch.md, "Uma regra só para
+ * dizer que é o mesmo álbum").
+ *
+ * "Is this the album that was asked for?" used to be decided in five places, each in its own way,
+ * most of them by "one text contains the other". These tests read the source files and fail when
+ * a place that accepts an album stops asking the rule, or starts comparing texts by itself again.
+ */
+import { describe, it, expect } from 'vitest'
+import fs from 'node:fs'
+import path from 'node:path'
+
+const ROOT = process.cwd()
+const read = (relative) => fs.readFileSync(path.join(ROOT, relative), 'utf8')
+
+/** The module specifiers a file imports: `import ... from`, `export ... from`, `import()`, `require()`. */
+const importsOf = (relative) => {
+    const pattern = /(?:\b(?:import|export)\s+(?:[^'"]*?\sfrom\s+)?|\bimport\s*\(\s*|\brequire\s*\(\s*)['"]([^'"]+)['"]/g
+    return [...read(relative).matchAll(pattern)].map(match => match[1])
+}
+
+/** The part of a file between two markers (the whole file when none is given). */
+const region = (relative, from, to) => {
+    const source = read(relative)
+    if (!from) return source
+    const start = source.indexOf(from)
+    const end = source.indexOf(to, start)
+    if (start === -1 || end === -1) throw new Error(`${relative}: the region "${from}" .. "${to}" was not found; update this test with the new names`)
+    return source.slice(start, end)
+}
+
+const RULE = 'shared/albumIdentity.js'
+const APP_SIDE = 'public/js/models/askedAlbum.js'
+const SERVER_SIDE = 'server/lib/albumIdentity.js'
+
+/**
+ * Every place that receives candidates from a source and accepts one as "the album asked for".
+ * `asks` is the module it must import; `from`/`to` bound the part of the file that decides.
+ */
+const CALL_SITES = [
+    { name: 'Apple Music catalog (the album load)', file: 'public/js/services/albums/adapters/CatalogAdapter.js', asks: /models\/askedAlbum\.js$/ },
+    { name: 'Apple Music catalog (the old path) and the AI answer', file: 'public/js/api/client.js', asks: /models\/askedAlbum\.js$/ },
+    { name: 'Spotify', file: 'public/js/services/SpotifyService.js', asks: /models\/askedAlbum\.js$/, from: 'async searchAlbum(', to: 'async getAlbumDetails(' },
+    { name: 'the local dataset', file: 'public/js/services/OptimizedAlbumLoader.js', asks: /models\/askedAlbum\.js$/ },
+    { name: 'BestEverAlbums (server)', file: 'server/lib/scrapers/besteveralbums.js', asks: /^\.\.\/albumIdentity$/ },
+    { name: 'Spotify (server)', file: 'server/lib/services/spotifyPopularity.js', asks: /^\.\.\/albumIdentity$/ },
+    { name: 'the read-only count', file: 'public/js/services/albums/albumIdentityAudit.js', asks: /models\/askedAlbum\.js$/ }
+]
+
+describe('one rule says "this is the album asked for"', () => {
+    it('the rule is pure: it imports nothing', () => {
+        expect(importsOf(RULE)).toEqual([])
+    })
+
+    it('the app and the server reach the same file', () => {
+        expect(importsOf(APP_SIDE)).toContain('@shared/albumIdentity.js')
+        expect(importsOf(SERVER_SIDE)).toEqual(['../../shared/albumIdentity.js'])
+    })
+
+    CALL_SITES.forEach(({ name, file, asks }) => {
+        it(`${name} asks the rule (${file})`, () => {
+            expect(importsOf(file).some(specifier => asks.test(specifier))).toBe(true)
+        })
+    })
+
+    CALL_SITES.forEach(({ name, file, from, to }) => {
+        it(`${name} compares no text by itself (${file})`, () => {
+            const source = region(file, from, to)
+            // "contains" with a value that is not a fixed text: title.includes(target), text.includes(qArtist)
+            const contains = source.match(/\.(?:includes|indexOf|startsWith|endsWith)\(\s*[A-Za-z_$][\w$.]*\s*[,)]/g) || []
+            // the normalizers and scores each place used to bring: they are not the rule
+            const ownWays = source.match(/\b(?:toCore|toFuzzyCore|normalizeFuzzy|normalizeArtist|calculateSimilarity|_similarityScore|_levenshteinDistance|_validateMatch|isValid)\s*\(/g) || []
+
+            expect({ contains: contains.filter(found => !ALLOWED[file]?.includes(found)), ownWays }).toEqual({ contains: [], ownWays: [] })
+        })
+    })
+
+    it('the confidence score that let any album of the right artist pass is gone, and nothing imports it', () => {
+        expect(fs.existsSync(path.join(ROOT, 'public/js/models/AlbumIdentity.js'))).toBe(false)
+
+        const stringUtils = read('public/js/utils/stringUtils.js')
+        expect(/SIMILARITY_THRESHOLD|calculateSimilarity/.test(stringUtils)).toBe(false)
+    })
+
+    it('no candidate that passes means "not found": no call site keeps a "first result" to fall back on', () => {
+        const fallbacks = CALL_SITES.flatMap(({ file, from, to }) =>
+            (region(file, from, to).match(/\|\|\s*\w+\[0\]|items\[0\]|results\[0\]|candidates\[0\]/g) || []).map(found => `${file}: ${found}`))
+
+        expect(fallbacks).toEqual([])
+    })
+})
+
+/**
+ * Text checks that are not a comparison of album names, by file. Each entry is the exact text.
+ * - the scraper reads the header of a page: the header ends with the name of the artist it links.
+ */
+const ALLOWED = {
+    'server/lib/scrapers/besteveralbums.js': ['.endsWith(artist)']
+}

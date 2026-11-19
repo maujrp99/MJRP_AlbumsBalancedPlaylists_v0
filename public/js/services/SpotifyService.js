@@ -1,6 +1,7 @@
 
 import { SpotifyAuthService } from './SpotifyAuthService.js'
 import { NormalizationUtils } from '../utils/NormalizationUtils.js'
+import { pickAlbum, spotifyCandidate } from '../models/askedAlbum.js'
 
 /**
  * SpotifyService
@@ -70,189 +71,69 @@ export const SpotifyService = {
     },
 
     /**
-     * Search for an album by artist and album name
-     * @param {string} artist 
-     * @param {string} albumName 
+     * The Spotify album that is the album asked for, or null.
+     *
+     * Three searches, from the narrowest to the widest: artist and clean title, artist and the
+     * title as written, the albums of the artist. The searches only LIST candidates; which one is
+     * accepted is decided by the one identity rule (shared/albumIdentity.js, F55). No candidate
+     * passes: null. There is no "first result" and no "closest album of the artist".
+     *
+     * @param {string} artist
+     * @param {string} albumName
+     * @param {number|string|null} [year] - only orders the candidates that pass
      * @returns {Promise<object|null>} Spotify Album Object or null
      */
-    async searchAlbum(artist, albumName) {
+    async searchAlbum(artist, albumName, year = null) {
         if (!artist || !albumName) return null
 
-        // Clean album name using central utility
-        let cleanAlbumName = NormalizationUtils.cleanTitle(albumName)
+        const asked = { artist, title: albumName, year }
+        const cleanAlbumName = NormalizationUtils.cleanTitle(albumName)
+        const searches = [
+            () => this._searchAlbumQuery(artist, cleanAlbumName),
+            ...(cleanAlbumName !== albumName ? [() => this._searchAlbumQuery(artist, albumName)] : []),
+            () => this._searchByArtist(artist)
+        ]
 
-        // Try with structured query first
-        let result = await this._searchAlbumQuery(artist, cleanAlbumName)
-
-        // If not found, try simpler search
-        if (!result && cleanAlbumName !== albumName) {
-            console.log(`[SpotifyService] Retrying with original name: "${albumName}"`)
-            result = await this._searchAlbumQuery(artist, albumName)
+        for (const search of searches) {
+            const picked = pickAlbum(asked, await search(), spotifyCandidate)
+            if (picked.found) return picked.candidate
         }
-
-        // Final fallback: search by ARTIST ONLY and fuzzy match
-        if (!result) {
-            console.log(`[SpotifyService] Trying artist-only search for: "${artist}"`)
-            result = await this._searchByArtistFuzzy(artist, cleanAlbumName)
-        }
-
-        return result
+        console.log(`[SpotifyService] No album of Spotify is "${artist} - ${albumName}".`)
+        return null
     },
 
     /**
-     * Simple Levenshtein distance calculation for fuzzy matching
+     * The albums Spotify lists for the artist (up to 20). A failure of this last, widest search
+     * is "no candidates", as it was before.
      * @private
-     */
-    _levenshteinDistance(str1, str2) {
-        const m = str1.length
-        const n = str2.length
-        const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0))
-
-        for (let i = 0; i <= m; i++) dp[i][0] = i
-        for (let j = 0; j <= n; j++) dp[0][j] = j
-
-        for (let i = 1; i <= m; i++) {
-            for (let j = 1; j <= n; j++) {
-                if (str1[i - 1] === str2[j - 1]) {
-                    dp[i][j] = dp[i - 1][j - 1]
-                } else {
-                    dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
-                }
-            }
-        }
-        return dp[m][n]
-    },
-
-    /**
-     * Calculate similarity score (0-1) between two strings
-     * @private
-     */
-    _similarityScore(str1, str2) {
-        const s1 = NormalizationUtils.toCore(str1)
-        const s2 = NormalizationUtils.toCore(str2)
-        if (s1 === s2) return 1
-        // Containment bonus for things like Blonde vs Blond
-        if (s1.includes(s2) || s2.includes(s1)) return 0.9
-
-        const maxLen = Math.max(s1.length, s2.length)
-        if (maxLen === 0) return 1
-        const distance = this._levenshteinDistance(s1, s2)
-        return 1 - (distance / maxLen)
-    },
-
-    /**
-     * Search by artist only and fuzzy match album name
-     * @private
+     * @returns {Promise<Array>}
      */
     async _searchByArtist(artistName) {
-        // Cleaning: Preserve diacritics for Spotify but remove other noise
-        // or just use NormalizationUtils.toCore to be safe if search fails
+        // Diacritics are kept: Spotify handles them well
         const q = `artist:${artistName}`.replace(/['"()]/g, '')
-        const params = new URLSearchParams({
-            q,
-            type: 'album',
-            limit: 20
-        })
-        return await this._fetch(`/search?${params.toString()}`)
-    },
-
-    /**
-     * Search by artist only and fuzzy match album name
-     * @private
-     */
-    async _searchByArtistFuzzy(artist, targetAlbumName) {
+        const params = new URLSearchParams({ q, type: 'album', limit: 20 })
         try {
-            console.log(`[SpotifyService] Trying artist-only search for: "${artist}"`)
-            const data = await this._searchByArtist(artist)
-            const albums = data?.albums?.items || []
-            if (albums.length === 0) return null
-
-            const targetCore = NormalizationUtils.toFuzzyCore(targetAlbumName)
-            const targetArtistCore = NormalizationUtils.normalizeArtist(artist)
-
-            // Score all albums by similarity to target name
-            const scored = albums.map(album => {
-                const candidateTitleCore = NormalizationUtils.toFuzzyCore(album.name)
-                const candidateArtistCore = NormalizationUtils.normalizeArtist(album.artists?.[0]?.name || '')
-
-                // Score based on whether title matches (exact or containment)
-                let score = (candidateTitleCore.includes(targetCore) || targetCore.includes(candidateTitleCore)) ? 1 : 0
-
-                // Boost if artist also matches
-                const artistSim = this._similarityScore(album.artists?.[0]?.name || '', artist)
-                if (artistSim > 0.8) score += 0.5
-
-                return { album, score }
-            }).filter(c => c.score >= 0.8) // Lowered from 1 to 0.8 to catch close matches
-
-            // Sort by score descending
-            scored.sort((a, b) => b.score - a.score)
-
-            if (scored.length > 0) {
-                console.log(`[SpotifyService] Fuzzy match found: "${scored[0].album.name}" (score: ${scored[0].score})`)
-                return scored[0].album
-            }
-
-            console.log(`[SpotifyService] No good fuzzy match for artist "${artist}".`)
-            return null
+            const data = await this._fetch(`/search?${params.toString()}`)
+            return data?.albums?.items || []
         } catch (error) {
             console.warn('[SpotifyService] Artist-only search failed:', error.message)
-            return null
+            return []
         }
     },
 
     /**
-     * Internal album search helper
+     * The albums Spotify lists for "artist + album" (up to 5).
      * @private
+     * @returns {Promise<Array>}
      */
     async _searchAlbumQuery(artist, albumName) {
         // Clean query but preserve diacritics. Spotify handles them well.
         const cleanArtist = artist.replace(/['"()]/g, '')
         const cleanAlbum = albumName.replace(/['"()]/g, '')
-        const query = `artist:${cleanArtist} album:${cleanAlbum}`
-
-        const params = new URLSearchParams({
-            q: query,
-            type: 'album',
-            limit: 5
-        })
+        const params = new URLSearchParams({ q: `artist:${cleanArtist} album:${cleanAlbum}`, type: 'album', limit: 5 })
 
         const data = await this._fetch(`/search?${params.toString()}`)
-
-        if (data.albums && data.albums.items.length > 0) {
-            // Score results to find best match
-            const normalize = str => str?.toLowerCase().replace(/[^a-z0-9]/g, '') || ''
-            const targetArtist = normalize(artist)
-            const targetAlbum = normalize(albumName)
-
-            for (const album of data.albums.items) {
-                const albumArtist = normalize(album.artists[0]?.name)
-                const albumTitle = normalize(album.name)
-
-                // Check for reasonable match
-                if ((albumArtist.includes(targetArtist) || targetArtist.includes(albumArtist)) &&
-                    (albumTitle.includes(targetAlbum) || targetAlbum.includes(albumTitle))) {
-                    return album
-                }
-            }
-
-            // Fallback to first result if no exact match
-            return data.albums.items[0]
-        }
-        return null
-    },
-
-    /**
-     * Validates if the found album matches the artist strictly
-     * (Search can be fuzzy)
-     * @param {object} spotifyAlbum 
-     * @param {string} targetArtist 
-     */
-    _validateMatch(spotifyAlbum, targetArtist) {
-        if (!spotifyAlbum) return false
-        // Simple check: is one of the artists similar?
-        const artistName = spotifyAlbum.artists[0].name.toLowerCase()
-        return artistName.includes(targetArtist.toLowerCase()) || targetArtist.toLowerCase().includes(artistName)
+        return data?.albums?.items || []
     },
 
     /**
@@ -474,11 +355,7 @@ export const SpotifyService = {
                 return null
             }
 
-            // 2. Validate match
-            if (!this._validateMatch(spotifyAlbum, artist)) {
-                console.log(`[SpotifyService] Artist mismatch for: "${artist} - ${albumTitle}"`)
-                return null
-            }
+            // 2. The album is the one asked for: searchAlbum accepts nothing else (title and artist)
 
             // 3. Get tracks with popularity
             const spotifyTracks = await this.getAlbumTracksWithPopularity(spotifyAlbum.id)

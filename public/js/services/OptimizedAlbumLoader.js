@@ -4,6 +4,10 @@
  */
 
 import SearchWorker from '../workers/search.worker.js?worker';
+import { pickAlbum, localCandidate } from '../models/askedAlbum.js';
+
+/** How many rows of the dataset are read when one album is looked up. */
+const LOOKUP_ROWS = 20;
 
 class OptimizedAlbumLoader {
     constructor() {
@@ -107,26 +111,17 @@ class OptimizedAlbumLoader {
     }
 
     /**
-     * Find a specific album (Optimized for cover lookup)
-     * Wraps search but filters for exact-ish match
-     * @param {string} artist 
-     * @param {string} album 
+     * The row of the dataset that is the album asked for, or null (used for the cover of an album
+     * that came without one). The search only lists rows; which one is accepted is decided by the
+     * one identity rule (shared/albumIdentity.js, F55). No row passes: null, never the first row.
+     * @param {string} artist
+     * @param {string} album
      * @returns {Promise<object|null>}
      */
     async findAlbum(artist, album) {
-        if (!artist || !album) return null;
-        const query = `${artist} ${album}`;
-        const results = await this.search(query, 5);
-
-        // Simple normalization
-        const norm = str => str?.toLowerCase().trim();
-        const targetArtist = norm(artist);
-        const targetAlbum = norm(album);
-
-        return results.find(item => {
-            return norm(item.artist) === targetArtist &&
-                norm(item.album).includes(targetAlbum); // Looser match for album
-        }) || results[0] || null; // Fallback to first result if high confidence?
+        if (!artist || !album) return null
+        const rows = await this.search(`${artist} ${album}`, LOOKUP_ROWS)
+        return pickAlbum({ artist, title: album }, rows, localCandidate).candidate
     }
 }
 

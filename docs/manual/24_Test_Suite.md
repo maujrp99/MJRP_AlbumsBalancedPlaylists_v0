@@ -81,6 +81,12 @@ sequenceDiagram
         *   DOM updates (checking `querySelectorAll`).
 *   **Value**: Critical for ensuring UI logic is decoupled from actual data sources.
 
+### The album identity rule (F55, slice 1)
+*   `test/shared/albumIdentity.test.js`: the rule itself, pair by pair ("Core" is not "Shangri-La Dee Da" nor "Core Memories"; editions; subtitles in both directions; self-titled and numbered titles; the year only orders).
+*   One file per place that accepts an album, each with doubles and no network: `test/services/albums/catalogIdentity.test.js` (Apple Music, the stored id), `test/api/clientIdentity.test.js` (the AI answer, the old Apple path), `test/services/spotify/SpotifyAlbumMatch.test.js`, `test/services/OptimizedAlbumLoader.identity.test.js`, `test/server/scraperIdentity.test.js` (BestEverAlbums, with answers in the shape the source gives), `test/server/spotifyAlbumIdentity.test.js`.
+*   `test/services/albums/albumIdentityAudit.test.js`: the read-only count.
+*   `test/architecture/albumIdentityRule.test.js`: a fitness function; it fails when a call site stops asking the rule or compares texts by itself.
+
 ### Service Layer (`test/services/`)
 *   **Technique**: Mocking External Dependencies (Firebase).
 *   **Example (`AuthService.test.js`)**:

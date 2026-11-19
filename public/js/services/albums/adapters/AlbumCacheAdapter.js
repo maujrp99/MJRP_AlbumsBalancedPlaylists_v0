@@ -6,7 +6,8 @@
  * - the base album is saved as soon as it is found; each source adds its own status;
  * - "the source has nothing" is trusted for a short time only, so a missing rating does not stick;
  * - a failure is never saved; the person's own ranking is never saved with the album;
- * - get() always hands out a new Album, never the object it keeps.
+ * - get() always hands out a new Album, never the object it keeps;
+ * - peek() only reads: it is what a read-only pass over the cache uses.
  */
 
 import { queryKey } from '../../../models/albumLoadState.js'
@@ -28,7 +29,7 @@ const toPlain = (album) => {
 export class AlbumCacheAdapter {
     /**
      * @param {Object} deps
-     * @param {Object} deps.cache - { get(key), set(key, value, ttl), invalidate(key) }
+     * @param {Object} deps.cache - { get(key), peek(key), set(key, value, ttl), invalidate(key) }
      * @param {Function} deps.createAlbum - (plain) => Album
      * @param {Function} [deps.now]
      */
@@ -56,6 +57,18 @@ export class AlbumCacheAdapter {
         const album = this.createAlbum(JSON.parse(JSON.stringify(record.album)))
         if (seriesId) album.seriesIds = [seriesId]
         return { album, enrichment }
+    }
+
+    /**
+     * What is kept for the query, as { artist, title, year }, read without changing anything: no
+     * Album is built, nothing is promoted, removed or saved. For the album identity count (F55).
+     * @returns {Promise<{ artist: string, title: string, year: * } | null>}
+     */
+    async peek(query) {
+        const record = await this.cache.peek(this._key(query))
+        if (!record?.album) return null
+        const { artist, title, year } = record.album
+        return { artist, title, year }
     }
 
     async saveBase(query, album) {

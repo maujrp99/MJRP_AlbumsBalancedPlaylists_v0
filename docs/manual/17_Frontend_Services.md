@@ -45,7 +45,7 @@ The integration follows a **Facade Pattern** to hide the complexity of the Apple
 
 | Component | Strategy | Details |
 | :--- | :--- | :--- |
-| **`OptimizedAlbumLoader.js`** | **Web Worker** | Offloads large dataset search (30k+ albums) to a background thread (`search.worker.js`). Uses **uFuzzy** for high-performance fuzzy matching during autocomplete. |
+| **`OptimizedAlbumLoader.js`** | **Web Worker** | Offloads large dataset search (30k+ albums) to a background thread (`search.worker.js`). Uses **uFuzzy** for high-performance fuzzy matching during autocomplete. `findAlbum(artist, album)` (the cover of an album that came without one) reads up to 20 rows and returns only the row that is the album asked for, by the one identity rule (`shared/albumIdentity.js`); no row passes: `null`. Before F55 it fell back to the first row. |
 | **`DataSyncService.js`** | **Migration** | A utility service for migrating data between contexts (e.g., Guest -> Authenticated user), ensuring inventory integrity during transition. |
 
 ### Legacy Notes
@@ -75,3 +75,14 @@ graph TD
     SES -->|3. Update| DB[SpotifyEnrichmentStore]
     SES -->|4. Notify| UI[GlobalProgress]
 ```
+
+## Counting the albums that are not the album asked for (`services/albums/albumIdentityAudit.js`) - v5.0 (F55, slice 1)
+
+**Purpose**: a READ-ONLY count of how many albums of the signed-in person's series are wrong today (issue UAT-184), to be run before and after the identity rule is published.
+
+*   **`auditAlbumIdentity({ series, shownFor })`**: pure. For each query of each series it asks `shownFor(query, series)` for the album the app has for it and compares the two by the one identity rule. It returns `{ rows, summary }`; each row is `{ series, asked, shown, verdict, reason, storedAppleId }`, with `verdict` one of `same`, `different`, `not-loaded` (the app keeps no album for that query).
+*   **`countWrongAlbums()`** (in `albumLoading.js`, the composition file) gives it the real sources: the series in `albumSeriesStore`, the album of each query from the load of this session (`albumLoadStore`) or, failing that, from what the browser keeps (`AlbumCacheAdapter.peek`).
+*   **It writes nothing and asks no source**: `peek` (new in `CacheManager`, `MemoryCache`, `IndexedDBCache` and `AlbumCacheAdapter`) reads without promoting a record to memory and without removing an expired one.
+*   **How to run it**: in the browser console, signed in and with the series loaded (Home or the albums screen): `await albumIdentityAudit()`. It prints the table and the totals and returns both. An album never loaded on this browser shows as `not-loaded`: open "All Series" first for a full count.
+*   **Tests**: `test/services/albums/albumIdentityAudit.test.js`.
+
