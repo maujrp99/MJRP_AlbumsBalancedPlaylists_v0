@@ -11,10 +11,10 @@
     -   **Logic**: Interactive form with immediate Apple Music API feedback.
 -   **`series/SeriesGridRenderer.js`**:
     -   **Role**: Adapter that delegates rendering to `AlbumsGridRenderer` and `AlbumsScopedRenderer`.
-    -   **Pattern**: Supports both 'ALL' setup (grouped by series) and 'SINGLE' setup (flat grid).
+    -   **Pattern**: Supports both 'ALL' setup (grouped by series) and 'SINGLE' setup (flat grid). In the 'ALL' grid each series is cut at 12 albums, with the "Load N more albums" button, unless the view lists it in `expandedSeriesIds` (v5.0, F49).
 -   **`series/SeriesEventHandler.js`**:
-    -   **Role**: centralized event delegation for Series and album actions (`edit-series`, `delete-series`, `retry-series`, `view-modal`, `add-to-inventory`, `remove-album`, `rank-album`, `refetch-metadata`).
-    -   **Logic**: Intercepts clicks, identifies actions via `data-action`, and delegates: series actions go to the callbacks it was given (`onEditSeries`, `onDeleteSeries`, `onRetrySeries`); album actions go to modals, `DialogService` or the callbacks (`onRefetchMetadata`, `onSaveRanking`).
+    -   **Role**: centralized event delegation for Series and album actions (`edit-series`, `delete-series`, `retry-series`, `load-more-series`, `view-modal`, `add-to-inventory`, `remove-album`, `rank-album`, `refetch-metadata`).
+    -   **Logic**: Intercepts clicks, identifies actions via `data-action`, and delegates: series actions go to the callbacks it was given (`onEditSeries`, `onDeleteSeries`, `onRetrySeries`, `onShowAllAlbums`); album actions go to modals, `DialogService` or the callbacks (`onRefetchMetadata`, `onSaveRanking`).
 
 ### Command Delegation Flow
 ```mermaid

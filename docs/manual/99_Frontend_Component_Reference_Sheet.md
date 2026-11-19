@@ -31,7 +31,7 @@
 
 | View | Purpose | Size | Status |
 |------|---------|------|--------|
-| [SeriesView.js](file:///public/js/views/SeriesView.js) | Albums screen (`/albums`, `/albums/:seriesId`): series and album grid | 215 lines | ✅ |
+| [SeriesView.js](file:///public/js/views/SeriesView.js) | Albums screen (`/albums`, `/albums/:seriesId`): series and album grid | 238 lines | ✅ |
 | [HomeView.js](file:///public/js/views/HomeView.js) | Artist scan, bulk paste, staging area, new series | 271 lines | ✅ |
 | [BlendingMenuView.js](file:///public/js/views/BlendingMenuView.js) | Blend wizard (`/blend`) | 449 lines | ✅ |
 | [PlaylistsView.js](file:///public/js/views/PlaylistsView.js) | Generated playlists; also the edit mode (`/playlists/edit`) | 353 lines | ✅ |
