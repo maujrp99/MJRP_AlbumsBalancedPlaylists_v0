@@ -47,7 +47,7 @@ sequenceDiagram
 | :--- | :--- |
 | `services/albums/AlbumLoadService.js` | The one owner of the load: generations, reconciliation, find then enrich, retry. Imports no network, Firestore or screen. |
 | `services/albums/albumLoading.js` | Puts the service together with its real sources, and projects the load store into `stores/albums.js`. |
-| `services/albums/adapters/CatalogAdapter.js` | Apple Music (by the chosen edition id, else by name), with the server `/api/generate` only when Apple has no such album. Retries Apple with growing waits. |
+| `services/albums/adapters/CatalogAdapter.js` | Apple Music (by the chosen edition id, else by name), with the server `/api/generate` only when Apple has no such album. Since F55, slice 1, both are checked by the one identity rule: an id that leads to another album is not obeyed (the album is searched by name, and `metadata.replacedSourceId` says which id was not used; nothing is written to the series yet), and the search by name takes only the album asked for among its results. Retries Apple with growing waits. |
 | `services/albums/adapters/enrichers.js` | Ratings, popularity and the person's own ranking; each returns a new album. |
 | `services/albums/adapters/AlbumCacheAdapter.js` | One record per album query: the base album and one status per source. |
 | `utils/TaskQueue.js` | Concurrency limit, priority, deadline per task, cancellation. Knows nothing about albums. |
@@ -75,13 +75,14 @@ No DOM, no store, no service: each imports only other models (checked by `test/a
 *   **User Ranking (Sprint 20)**: Implements `setUserRankings(rankings)` to inject personal track order across both tracklists simultaneously, ensuring UI consistency.
 *   **Integrity**: `ensureRankingIntegrity()` ensures that if external ranking data is missing, the model falls back to using the Original Order as the "Ranking" to prevent crashes in the Algorithm layer.
 
-### Album Identity (`AlbumIdentity.js`)
-*   **Role**: Solves the "Fuzzy Match Problem".
-*   **Problem**: User saves "Pink Floyd - Dark Side". API returns "Pink Floyd - The Dark Side of the Moon (2011 Remaster)". Are these the same?
-*   **Solution**:
-    *   Calculates a **Confidence Score** (0.0 - 1.0) using string similarity algorithms.
-    *   Stores `originalQuery` (User Intent) vs `resolvedTitle` (API Reality).
-    *   Used by `CatalogAdapter` to check that what Apple Music found by name is the album asked for. The cache does not use it: the cache key is the album query.
+### The album asked for (`askedAlbum.js`) - v5.0 (F55, slice 1)
+*   **Role**: the app's side of the one rule that says "this is the album that was asked for" (`shared/albumIdentity.js`, described in `23_Shared_Code.md`).
+*   **Problem it closes (UAT-184)**: a series asked for "Stone Temple Pilots - Core" and the screen showed "Shangri-La Dee Da". The model it replaced, `AlbumIdentity.js`, gave a confidence score from 0 to 1 in which the right artist alone was enough to pass.
+*   **What it has**:
+    *   `askedAlbum(query)`: what a stored query asks for, `{ artist, title, year }` (read through `albumQuery.js`, so HTML entities are already undone).
+    *   `appleCandidate`, `spotifyCandidate`, `localCandidate`: what each source gives back, read into the same three fields.
+    *   The rule itself, re-exported: `compareAlbumIdentity`, `pickAlbum`, `Verdict`, `Reason`.
+*   **Who uses it**: `CatalogAdapter` and `api/client.js` (Apple Music, the AI answer), `SpotifyService`, `OptimizedAlbumLoader`, and the read-only count (`services/albums/albumIdentityAudit.js`). A fitness test (`test/architecture/albumIdentityRule.test.js`) fails when one of them stops asking the rule or compares texts by itself. The cache does not use it: the cache key is the album query.
 
 ### Playlist Model (`Playlist.js`)
 *   **Role**: Lightweight DTO for generated playlists.

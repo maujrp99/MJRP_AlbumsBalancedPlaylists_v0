@@ -53,25 +53,21 @@ The Service Layer orchestrates complex operations and state transitions, isolati
 
 **Purpose**: Handles all interactions with Spotify Web API, including complex search heuristics and data normalization.
 
-#### A. Smart Search (`searchAlbum`)
-*   **Goal**: reliably find a specific album given potentially dirty metadata (e.g., "The Dark Side (2011 Remaster)").
-*   **Logic Trace**:
-    1.  **Cleaning**: Removes common suffixes like `(Remastered)`, `(Deluxe Edition)`, `(Anniversary)`.
-    2.  **Attempt 1: Structured Query**:
-        *   `q=artist:Pink Floyd album:Dark Side`
-        *   *Validation*: Checks if returned Artist & Album title contain target keywords.
-    3.  **Attempt 2: Direct Search**:
-        *   Tries original string if cleaning failed.
-    4.  **Attempt 3: Fuzzy Artist Fallback** (Last Resort):
-        *   Searches `artist:Pink Floyd` (limit 20).
-        *   **Fuzzy Match**: Calculates Levenshtein Distance / Similarity Score (0-1) between target album name and results.
-        *   *Threshold*: Accepts match if Score > 0.5.
+#### A. Album Search (`searchAlbum`)
+*   **Goal**: find the Spotify album that IS the album asked for, or none.
+*   **Logic Trace** (F55, slice 1):
+    1.  **Cleaning** of the search text only: removes common suffixes like `(Remastered)`, `(Deluxe Edition)`, `(Anniversary)`.
+    2.  **Search 1**: `q=artist:Pink Floyd album:<clean title>` (5 results).
+    3.  **Search 2**: the title as written, when cleaning changed it.
+    4.  **Search 3**: `artist:Pink Floyd` (20 results).
+    5.  **Acceptance**: the searches only list candidates. After each one, the one identity rule (`shared/albumIdentity.js`, through `models/askedAlbum.js`) picks the album asked for among them: the title must match on its own, the artist must match, the plain album comes before an edition. No candidate passes all three searches: `null`.
+*   **What it no longer does**: take the first result when nothing matched, accept a title that contains the other, or score by Levenshtein distance. Those three let another album of the same artist stand in for the album asked for (UAT-184).
 
 #### B. Enrichment Flow (`enrichAlbumData`)
 *   **Goal**: Add Metadata, Artwork, and Track Popularity to an existing Album.
 *   **Logic Trace**:
     1.  **Find**: Calls `searchAlbum()`.
-    2.  **Validate**: Double checks Artist name match to prevent false positives.
+    2.  **Validate**: nothing more to check: `searchAlbum` accepts only the album asked for, title and artist.
     3.  **Details**:
         *   Fetches Album Tracks (Simplified Objects).
         *   **Batch Fetch**: Calls `/tracks?ids=...` to get Full Objects (needed for `popularity` field).
@@ -114,4 +110,4 @@ sequenceDiagram
 **Type**: Domain Entities
 
 -   **`Album.js`**: Core entity. Aggregates tracks, manages `original` vs `acclaim` order.
--   **`AlbumIdentity.js`**: Scores how well an album found by name matches the album asked for. It is not a hash and the cache does not use it.
+-   **`askedAlbum.js`**: The app's side of the one identity rule (`shared/albumIdentity.js`): reads a stored query into what was asked, and an Apple Music, Spotify or local-dataset album into a candidate, each as `{ artist, title, year }`. It replaced `AlbumIdentity.js` (a confidence score), removed in F55.

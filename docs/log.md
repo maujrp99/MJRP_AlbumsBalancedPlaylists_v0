@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 18:08] session — F55 fatia 1: documentos da feature, arquitetura e manual da regra de identidade
+
+Documentos da fatia 1 da F55, no ramo `fix/f55-one-album-identity-rule`.
+
+- **Feature** (`docs/specs/features/F55-the-album-asked-for-or-a-notice/`): `spec.md` em `In Progress`, com as duas fatias (a 1 feita, a 2 não), dez requisitos (nove com o teste que os prova) e a mudança de comportamento declarada; `plan.md` com o desenho como foi construído, as decisões do agente (dois degraus de acerto, nota de edição por vocabulário fechado, o subtítulo) e os riscos; `tasks.md` com 17 tarefas (12 fechadas; a prova no navegador e a fatia 2 abertas).
+- **`docs/specs/arch.md`:** seção nova no fim, «Uma regra só para dizer que é o mesmo álbum (F55)», com os lugares antes e depois, e a linha da regra em «Compartilhado».
+- **Manual:** `23_Shared_Code.md` ganhou a regra; `08_Frontend_Models.md`, o lado do app (`askedAlbum.js`, no lugar de `AlbumIdentity.js`); `06_Frontend_Data_Store.md`, a busca do Spotify como ficou; `17_Frontend_Services.md`, a contagem só-leitura e como rodá-la; `02_Server_Structure.md` e `04_Backend_Logic_Services.md`, o raspador e o Spotify do servidor; `24_Test_Suite.md`, os testes novos. Frases que ficaram falsas acertadas em `00_Dir_File_Structure_Map.md`, `01`, `07b` e `99`.
+- **Para o MJRP decidir** (em `spec.md`, Open Questions): o subtítulo que não é nota de edição conta como parte do título; «(Live)» sozinho é nota de edição; «IV» não é «4». E falta rodar a contagem com o login dele antes de publicar.
+- **Não tocado, e fica para o integrador:** o `tasks.md` da F52 ainda diz que a regra de identidade no raspador (TASK-12 de lá) não está feita; ela foi construída aqui.
+
 ## [2026-11-19 18:08] session — F55 fatia 1, app: cada lugar que aceita um álbum pergunta à regra única; contagem só-leitura do que está trocado (UAT-184)
 
 Segunda parte da fatia 1 da F55, no ramo `fix/f55-one-album-identity-rule`: os lugares do app que aceitam um álbum passam a perguntar à regra única (`shared/albumIdentity.js`).

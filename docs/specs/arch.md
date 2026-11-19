@@ -32,6 +32,7 @@ Os nomes da coluna *Stack layer* são as camadas de `docs/specs/tech-stack.md`.
 |-----------|---------------|-------------|
 | Curadoria (`shared/curation.js`) | as regras de curadoria de playlist, executáveis nos dois lados | Linguagem |
 | Normalização (`shared/normalize.js`) | limpeza de texto de título/artista | Linguagem |
+| Identidade do álbum (`shared/albumIdentity.js`) | a regra única de «este é o álbum pedido» (F55), pura; o app a usa por `public/js/models/askedAlbum.js` e o servidor por `server/lib/albumIdentity.js`. Ver «Uma regra só para dizer que é o mesmo álbum», no fim deste arquivo | Linguagem |
 | Autenticação de usuário (`shared/services/AuthService.js`) | login Google/Apple e saída, sobre `firebase/auth`; **só o navegador o usa** (`stores/UserStore.js` o importa por `@shared/`); o servidor não. Existe também outro `AuthService` em `public/js/services/AuthService.js` (login anônimo) | Dados |
 
 ### Servidor (`server/`, Cloud Run)
@@ -583,3 +584,41 @@ A crítica conferiu a proposta contra o código e achou dez pontos. A direção 
 | 4 | Medir a primeira carga e contar quantos álbuns estavam errados; decidir o guardado persistente com o número | — |
 
 **Ainda não verificado:** o que uma aba antiga faz com um 502 na lista de álbuns por IA; o prazo e o número de instâncias configurados no Cloud Run; se o caminho de `SeriesService` que aplica as notas por conta própria passa pelo leitor novo.
+
+## Uma regra só para dizer que é o mesmo álbum (F55) — fatia 1 construída
+
+> **Estado:** construída em 2026-11-19 no ramo `fix/f55-one-album-identity-rule`; ainda não entrou na `main` nem foi publicada. Pela via rápida, sem proposta separada: o desenho estava dado pela issue UAT-184, pelo item 5.2 e pela emenda 5 da seção 11 de «O servidor diz a verdade», e pelo tema 3 do mapa `reports/audits/2026-11-19-mjrpalbumblender-v0-v5-map.md`. Os documentos da feature estão em `docs/specs/features/F55-the-album-asked-for-or-a-notice/`.
+
+**O problema.** A série pedia «Stone Temple Pilots - Core» e a tela mostrava «Shangri-La Dee Da». A pergunta «este é o álbum pedido?» era respondida em cinco lugares, cada um do seu jeito, quase todos por «um texto contém o outro» ou por uma nota de semelhança em que o artista certo bastava.
+
+**O desenho.** Uma regra, num módulo puro, usado pelo app e pelo servidor:
+
+- **A regra:** `shared/albumIdentity.js`. `compareAlbumIdentity(pedido, candidato)` devolve um veredito tipado (`same` ou `different`, com o motivo); `pickAlbum(pedido, candidatos, leitor)` devolve o candidato que passa, ou nenhum. O título tem de bater por conta própria, inteiro; o artista tem de bater; o ano nunca reprova, só ordena os que passaram. Sem candidato que passe, o resultado é «não achei»: não existe «o mais parecido do artista».
+- **O que sai antes de comparar:** acento, caixa, pontuação, «&» e «and», o «The» do começo, e as notas de edição (entre parênteses ou colchetes, ou depois de «:» ou « - »), reconhecidas por um vocabulário fechado.
+- **A decisão do subtítulo:** o que vem depois de «:» ou « - » só sai se for nota de edição. «Brighten the Corners: Nicene Creedence Ed.» é «Brighten the Corners»; «The Wall: Live in Berlin» não é «The Wall». Vale nos dois sentidos.
+- **Do lado do app:** `public/js/models/askedAlbum.js` lê a consulta guardada (o pedido) e o que cada fonte devolve (o candidato) nos mesmos três campos. Cada lugar adapta e pergunta; nenhum compara texto.
+- **Do lado do servidor:** `server/lib/albumIdentity.js` carrega a regra (o servidor é CommonJS e a regra é módulo ES, como já acontece com `shared/normalize.js`).
+
+**Os lugares, antes e depois:**
+
+| Lugar | Antes | Depois |
+|---|---|---|
+| Catálogo da Apple Music (`adapters/CatalogAdapter.js`, e o caminho antigo em `api/client.js`) | o primeiro resultado, com uma nota de 0 a 1 em que o artista certo bastava; o identificador guardado valia sem conferência | a regra escolhe entre os resultados; o álbum do identificador guardado é conferido, e se for outro o álbum é buscado pelo nome (o resultado diz qual identificador não foi usado) |
+| Spotify no app (`services/SpotifyService.js`) | um título contém o outro; sem acerto, o primeiro resultado | três buscas só listam candidatos; a regra aceita um ou nenhum |
+| Spotify no servidor (`server/lib/services/spotifyPopularity.js`) | o primeiro resultado da busca, sem conferir | idem |
+| BestEverAlbums (`server/lib/scrapers/besteveralbums.js`) | cinco pontos de aceite por «contém», por título **ou** artista; a busca em HTML pegava o primeiro link | os cinco pontos leem o rótulo, a página ou o link em `{ title, artist }` e perguntam à regra |
+| Dados locais de capa (`services/OptimizedAlbumLoader.js`) | o título contém o pedido; sem acerto, a primeira linha | a regra, ou nada |
+| Resposta da busca por IA (`api/client.js`) | aceita como vinha | conferida pela regra; outro álbum vira «o servidor não tem» |
+
+**Função de aptidão:** `test/architecture/albumIdentityRule.test.js` falha se um desses lugares deixar de perguntar à regra, voltar a comparar texto por conta própria ou guardar um «primeiro resultado» para o caso de nada bater.
+
+**Contar o que está errado hoje:** `services/albums/albumIdentityAudit.js`, só leitura, rodável pelo console (`await albumIdentityAudit()`).
+
+**O que esta fatia não faz (fica para a fatia 2):** gravar na série o identificador corrigido, por um único escritor; descartar o que o navegador já guarda de álbum trocado (o registro guardado é por consulta, e continua valendo por 7 dias); tratar adicionar e remover álbum de uma série pela mesma regra (itens 3.15 e 3.16 do mapa); a loja da Apple (3.17, 3.23).
+
+**Riscos conhecidos:**
+- *Álbum certo que deixa de ser achado.* Um título de catálogo com um qualificador que não é edição («Weezer (Blue Album)», «(Original Motion Picture Soundtrack)») não bate com o título sem ele. Atinge a consulta digitada à mão e a série antiga cujo título guardado difere do título do catálogo; a contagem só-leitura mostra quantos são antes de publicar.
+- *Formato da fonte raspada.* O rótulo «Título by Artista» e o cabeçalho da página foram lidos da fonte em 2026-11-19; se a fonte mudar o formato, o raspador passa a responder «não achei» (nunca o vizinho).
+- *A busca em HTML da fonte não devolveu nenhum link de álbum em 2026-11-19:* o caminho continua, conferido pela regra, mas na prática quem acha é a busca por sugestões.
+
+**Não verificado:** nada disto foi visto num navegador nem contra o servidor publicado; as fontes reais só foram lidas para conhecer o formato (cinco leituras do BestEverAlbums). Quantos álbuns da conta do MJRP estão trocados: a contagem existe, falta rodá-la com o login dele.
