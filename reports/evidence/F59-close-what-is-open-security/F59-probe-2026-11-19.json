@@ -31,5 +31,23 @@
   "not_checked": [
     "a volta do Spotify com o `state` certo no navegador (parou na tela de autorização do Spotify, que é do MJRP aceitar); coberta por teste automático",
     "sair da conta e ver a sessão do Spotify sumir, no navegador (coberto por teste automático)"
-  ]
+  ],
+  "slice_B_local": {
+    "date": "2026-11-19 15:44",
+    "where": "o servidor desta branch rodando numa cópia local, com NODE_ENV=production",
+    "checks": [
+      {
+        "what": "sem a chave ENABLE_DEBUG_ROUTES",
+        "result": "/api/debug/files 404, /api/list-models 404, /api/debug/import 404, POST /api/debug/raw-ranking 404; /api/musickit-status 200"
+      },
+      {
+        "what": "com ENABLE_DEBUG_ROUTES=true",
+        "result": "/api/debug/files 200, e o aviso «Debug routes are ON» no log"
+      },
+      {
+        "what": "corpo que não é JSON em POST /api/generate",
+        "result": "resposta sem detalhe do erro, e o servidor continua de pé"
+      }
+    ]
+  }
 }

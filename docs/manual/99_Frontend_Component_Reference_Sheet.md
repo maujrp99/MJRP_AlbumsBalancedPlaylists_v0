@@ -311,7 +311,7 @@ All mounted under `/api` (`ai.js` under `/api/ai`). See `03_Backend_API_Layer.md
 | [playlists.js](file:///server/routes/playlists.js) | `POST /playlists` | ✅ |
 | [musickit.js](file:///server/routes/musickit.js) | `GET /musickit-token` (Apple Music JWT), `GET /musickit-status` | ✅ |
 | [ai.js](file:///server/routes/ai.js) | `POST /ai/studio-albums` | ✅ |
-| [debug.js](file:///server/routes/debug.js) | `GET /list-models`, `POST /debug/raw-ranking`, `GET /debug/files`, `GET /debug/import` | ✅ |
+| [debug.js](file:///server/routes/debug.js) | `GET /list-models`, `POST /debug/raw-ranking`, `GET /debug/files`, `GET /debug/import` (only with `ENABLE_DEBUG_ROUTES=true`) | ✅ |
 
 ### Libraries
 

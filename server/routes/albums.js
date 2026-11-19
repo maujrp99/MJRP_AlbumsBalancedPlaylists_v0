@@ -5,6 +5,8 @@
  */
 
 const express = require('express')
+const { asyncRoute } = require('../lib/asyncRoute')
+const { debugRoutesEnabled } = require('../lib/debugGate')
 const router = express.Router()
 
 // Service Classes
@@ -46,17 +48,19 @@ router.post('/enrich-album', async (req, res) => {
  * POST /api/generate
  * Main album generation endpoint
  */
-router.post('/generate', async (req, res) => {
+router.post('/generate', asyncRoute(async (req, res) => {
     const AI_API_KEY = process.env.AI_API_KEY
     if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured on server' })
 
     const serverConfig = {
         processEnv: process.env,
-        startTime: req._startTime
+        startTime: req._startTime,
+        // The raw stage shows the provider's answer as it came: a debug feature (F59)
+        allowRawStage: debugRoutesEnabled(process.env)
     }
 
-    const result = await generationService.generateAlbum(req.body, serverConfig)
+    const result = await generationService.generateAlbum(req.body || {}, serverConfig)
     return res.status(result.status).json(result.data)
-})
+}))
 
 module.exports = { router, initAlbumRoutes }

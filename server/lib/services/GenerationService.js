@@ -21,7 +21,7 @@ class GenerationService {
 
     async generateAlbum(reqBody, serverConfig) {
         const { albumQuery, model, maxTokens, rawStage } = reqBody;
-        const { processEnv } = serverConfig;
+        const { processEnv, allowRawStage } = serverConfig;
 
         const AI_API_KEY = processEnv.AI_API_KEY;
 
@@ -68,7 +68,7 @@ class GenerationService {
                     let fetchDebug = null
 
                     try {
-                        if (rawStage === 'ranking') {
+                        if (rawStage === 'ranking' && allowRawStage) {
                             const rankingResult = await this.fetchRankingForAlbum(album, albumQuery, { raw: true })
                             return { status: 200, data: { rawRankingResponse: rankingResult.raw } }
                         }

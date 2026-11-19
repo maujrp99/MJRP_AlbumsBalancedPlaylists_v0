@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:44] session — tag `v4.0`; F59 fatia A publicada; F59 fatia B (servidor) pronta e provada numa cópia local
+
+- **O MJRP:** «1.sim 2. Pode, só antes gere uma tag no git pra fechar a v4.0».
+- **Tag `v4.0`** (anotada, local) no commit `cd96ad3`, o que está em produção como v4.0 desde o quinto deploy. Não enviada: o push é do MJRP.
+- **Sexto deploy do site (F59, fatia A):** `firebase deploy --only hosting` de uma cópia limpa da `main`; 455 testes antes. Conferido por fora: o site serve o pacote novo, e o endereço do mapa de código devolve a página do app, não o mapa. A conexão do Spotify em produção, com a conferência nova, não foi vista num navegador.
+- **Prioridade:** o MJRP salvou pelo Control Center as doze que não começaram (F60, F64, F52, F55, F56, F61, F57, F58, F49, F62, F63, F65); o agente mestre confirmou que a F59, em andamento, fica à frente e abriu a UAT-628 no harness para a mensagem que não nomeava o item.
+- **Fatia B (servidor):** `server/lib/debugGate.js` (as rotas de depuração e o `rawStage` só com `ENABLE_DEBUG_ROUTES=true`; `NODE_ENV` não liga) e `server/lib/asyncRoute.js` (rota que quebra responde 500, ou o 4xx de um pedido ilegível, sem detalhe). Sete testes, escritos junto com o código; a suíte tem 462 passando. Numa cópia local do servidor: as quatro rotas de depuração respondem 404 por padrão e 200 com a chave ligada.
+- **Achado na leitura de produção:** o serviço do Cloud Run foi publicado por `gcloud run deploy --source`, com quatro segredos (IA e os três da Apple) e nenhuma variável do Spotify; o `Dockerfile` fixa `NODE_ENV=production`.
+
 ## [2026-11-19 15:40] decision — a ordem da v5.0 é a do agente: F59, F60, F64, F52, F55, F56, F61, F57, F58, F49, F62, F63, F65
 
 - **O MJRP, do iPhone:** pediu a ordem do agente para arrumar no harness remoto e, depois de tentar, disse «de qqr forma a prioridade é essa acima».
