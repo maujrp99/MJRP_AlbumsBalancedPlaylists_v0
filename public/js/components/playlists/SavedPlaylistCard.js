@@ -1,14 +1,17 @@
 /**
  * SavedPlaylistCard.js
- * 
+ *
  * Extracted from SavedPlaylistsView.js (Sprint 19 Track A)
- * Renders a single batch card with collapse/expand functionality.
+ * One batch on the saved playlists list. Closed, it shows the totals of the batch; its playlists
+ * are drawn the first time the card is opened, not before (F61: nothing the list does not show
+ * is built up front).
  */
 import { SafeDOM } from '../../utils/SafeDOM.js';
 import { getIcon } from '../Icons.js';
 import { AlbumCascade } from '../common/AlbumCascade.js';
 import { SavedPlaylistRow } from './SavedPlaylistRow.js';
 import { SavedPlaylistActions } from './SavedPlaylistActions.js';
+import { batchTotals, formatMinutes, toMillis } from '../../models/savedPlaylists.js';
 
 export class SavedPlaylistCard {
     constructor(options) {
@@ -18,47 +21,21 @@ export class SavedPlaylistCard {
         this.onEdit = options.onEdit;
         this.onDelete = options.onDelete;
         this.onOpenPlaylistModal = options.onOpenPlaylistModal;
-        this.formatDuration = options.formatDuration || (() => '0m');
-        this.countUniqueAlbums = options.countUniqueAlbums || (() => 0);
     }
 
     render() {
-        const { playlists, name: batchName, savedAt: createdAt } = this.batch;
+        const { name: batchName, savedAt: createdAt } = this.batch;
+        const totals = batchTotals(this.batch);
 
-        const playlistCount = playlists.length;
-        const totalTracks = playlists.reduce((sum, p) => sum + (p.tracks?.length || 0), 0);
-        const albumCount = this.countUniqueAlbums(playlists);
-        const dateStr = new Date(createdAt).toLocaleDateString();
-
-        const allTracks = playlists.map(p => p.tracks || []).flat();
-        const totalDuration = this.formatDuration(allTracks);
-
-        // Cascade
-        const cascadeNode = AlbumCascade.renderNode(this.thumbnails);
-
-        // Info Block
-        const infoBlock = SafeDOM.div({}, [
-            SafeDOM.h3({ className: 'font-bold text-xl text-white tracking-tight' }, batchName),
-            SafeDOM.div({ className: 'flex items-center gap-3 text-sm text-muted mt-1' }, [
-                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('List', 'w-3 h-3')), ` ${playlistCount} playlists`]),
-                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('Music', 'w-3 h-3')), ` ${totalTracks} tracks`]),
-                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('Disc', 'w-3 h-3')), ` ${albumCount} albums`]),
-                SafeDOM.span({ className: 'flex items-center gap-1 font-mono' }, [SafeDOM.fromHTML(getIcon('Clock', 'w-3 h-3')), ` ${totalDuration}`]),
-                SafeDOM.span({ className: 'flex items-center gap-1' }, [SafeDOM.fromHTML(getIcon('Calendar', 'w-3 h-3')), ` ${dateStr}`])
-            ])
-        ]);
-
-        // Buttons - delegated to SavedPlaylistActions
         const buttons = SavedPlaylistActions.renderBatchActions({
             seriesId: this.seriesId,
             batchName,
             createdAt,
-            playlistCount,
+            playlistCount: totals.playlists,
             onEdit: this.onEdit,
             onDelete: this.onDelete
         });
 
-        // Collapse logic
         const playlistsContainer = SafeDOM.div({ className: 'batch-playlists divide-y divide-white/5 bg-black/20 hidden' });
         const iconSpan = SafeDOM.span({ className: 'collapse-icon text-muted transition-transform duration-200' });
         iconSpan.appendChild(SafeDOM.fromHTML(getIcon('ChevronRight', 'w-5 h-5')));
@@ -69,16 +46,11 @@ export class SavedPlaylistCard {
         });
 
         const toggleCollapse = () => {
-            const isHidden = playlistsContainer.classList.contains('hidden');
-            if (isHidden) {
-                playlistsContainer.classList.remove('hidden');
-                iconSpan.style.transform = 'rotate(90deg)';
-                card.dataset.collapsed = 'false';
-            } else {
-                playlistsContainer.classList.add('hidden');
-                iconSpan.style.transform = 'rotate(0deg)';
-                card.dataset.collapsed = 'true';
-            }
+            const opening = playlistsContainer.classList.contains('hidden');
+            if (opening) this.fillPlaylists(playlistsContainer);
+            playlistsContainer.classList.toggle('hidden', !opening);
+            iconSpan.style.transform = opening ? 'rotate(90deg)' : 'rotate(0deg)';
+            card.dataset.collapsed = opening ? 'false' : 'true';
         };
 
         const batchHeader = SafeDOM.div({
@@ -88,34 +60,54 @@ export class SavedPlaylistCard {
             SafeDOM.div({ className: 'flex items-center justify-between' }, [
                 SafeDOM.div({ className: 'flex items-center gap-4' }, [
                     iconSpan,
-                    cascadeNode,
-                    infoBlock
+                    AlbumCascade.renderNode(this.thumbnails),
+                    this.renderInfo(batchName, totals, createdAt)
                 ]),
                 buttons
             ])
         ]);
 
-        // Playlists Rows
-        if (playlists.length > 0) {
-            playlists.forEach((p, idx) => {
-                const row = new SavedPlaylistRow({
-                    playlist: p,
-                    seriesId: this.seriesId,
-                    index: idx,
-                    formatDuration: this.formatDuration,
-                    onOpenModal: this.onOpenPlaylistModal
-                });
-                playlistsContainer.appendChild(row.render());
-            });
-        } else {
-            playlistsContainer.appendChild(SafeDOM.div({
-                className: 'p-6 text-center text-muted italic'
-            }, 'No playlists in this batch'));
-        }
-
         card.appendChild(batchHeader);
         card.appendChild(playlistsContainer);
 
         return card;
+    }
+
+    renderInfo(batchName, totals, createdAt) {
+        const dateStr = createdAt ? new Date(toMillis(createdAt)).toLocaleDateString() : '';
+        const fact = (icon, text, className = 'flex items-center gap-1') =>
+            SafeDOM.span({ className }, [SafeDOM.fromHTML(getIcon(icon, 'w-3 h-3')), ` ${text}`]);
+
+        return SafeDOM.div({}, [
+            SafeDOM.h3({ className: 'font-bold text-xl text-white tracking-tight' }, batchName),
+            SafeDOM.div({ className: 'flex items-center gap-3 text-sm text-muted mt-1' }, [
+                fact('List', `${totals.playlists} playlists`),
+                fact('Music', `${totals.tracks} tracks`),
+                fact('Disc', `${totals.albums} albums`),
+                fact('Clock', formatMinutes(totals.durationSeconds), 'flex items-center gap-1 font-mono'),
+                fact('Calendar', dateStr)
+            ])
+        ]);
+    }
+
+    /** Draw the playlists of the batch, once: the first time the card is opened. */
+    fillPlaylists(container) {
+        if (container.dataset.filled === 'true') return;
+        container.dataset.filled = 'true';
+
+        const { playlists } = this.batch;
+        if (playlists.length === 0) {
+            container.appendChild(SafeDOM.div({ className: 'p-6 text-center text-muted italic' }, 'No playlists in this batch'));
+            return;
+        }
+        playlists.forEach((playlist, index) => {
+            const row = new SavedPlaylistRow({
+                playlist,
+                seriesId: this.seriesId,
+                index,
+                onOpenModal: this.onOpenPlaylistModal
+            });
+            container.appendChild(row.render());
+        });
     }
 }

@@ -1,188 +1,97 @@
 /**
  * SavedPlaylistsController
- * 
- * Handles business logic for SavedPlaylistsView.
- * - Fetches Series and Playlists.
- * - Manages thumbnails via OptimizedAlbumLoader.
- * - Handles Delete/Edit actions.
- * 
+ *
+ * What the saved playlists screen asks for and what it is told. The list is read by
+ * SavedPlaylistsReader and kept in SavedPlaylistsStore (arch.md, "Leitura das playlists
+ * guardadas", F61): this controller asks the reader, hands the screen what the store holds and
+ * turns the person's actions (edit, delete, try again) into calls. It reads nothing itself and
+ * knows no repository.
+ *
  * @module components/playlists/SavedPlaylistsController
- * @since Sprint 15 (ARCH-12)
+ * @since Sprint 15 (ARCH-12); the read moved to the reader in F61
  */
 
-import { SeriesRepository } from '../../repositories/SeriesRepository.js'
-import { PlaylistRepository } from '../../repositories/PlaylistRepository.js'
-import { optimizedAlbumLoader } from '../../services/OptimizedAlbumLoader.js'
+import { savedPlaylistsReader, savedPlaylistsStore } from '../../services/playlists/savedPlaylistsReading.js'
 import { getPlaylistsService } from '../../services/PlaylistsService.js'
-import { playlistsStore } from '../../stores/playlists.js'
-import { albumSeriesStore } from '../../stores/albumSeries.js'
-import { albumsStore } from '../../stores/albums.js'
+import { ListStatus, SeriesPlaylistsStatus as Status } from '../../models/savedPlaylists.js'
 import { router } from '../../router.js'
 import toast from '../Toast.js'
 
+/** A series is on the list when it has playlists to show or a failure to tell. */
+const isListed = (entry) => entry.status === Status.READY || entry.status === Status.FAILED
+
 export class SavedPlaylistsController {
-    constructor(view) {
+    /**
+     * @param {Object} view
+     * @param {Object} [deps]
+     * @param {Object} [deps.reader] - SavedPlaylistsReader
+     * @param {Object} [deps.store] - SavedPlaylistsStore
+     */
+    constructor(view, { reader = savedPlaylistsReader, store = savedPlaylistsStore } = {}) {
         this.view = view
-        this.data = [] // Cached data
-        // Repositories will be initialized in loadData to ensure App dependencies (db, auth) are ready
+        this.reader = reader
+        this.store = store
+    }
+
+    // ========== THE LIST ==========
+
+    /** Ask for the list. A load already on its way is joined; what was read before stays on screen. */
+    open() {
+        return this.reader.load()
+    }
+
+    /** Read everything again (the Refresh button, "try again" on a list that failed). */
+    reload() {
+        return this.reader.load({ fresh: true })
+    }
+
+    /** Read the playlists of one series again. */
+    retrySeries(seriesId) {
+        return this.reader.refreshSeries(seriesId)
     }
 
     /**
-     * Load all series and their playlists
-     * @returns {Promise<Array>} Array of { series, playlists, batchMap }
+     * Be told when the list changes.
+     * @param {Function} listener
+     * @returns {Function} unsubscribe
      */
-    async loadData({ db, cacheManager, auth } = {}) {
-        try {
-            // Lazy load dependencies (App context)
-            if (!db || !cacheManager || !auth) {
-                const app = await import('../../app.js')
-                db = db || app.db
-                cacheManager = cacheManager || app.cacheManager
-                auth = auth || app.auth
-            }
+    subscribe(listener) {
+        return this.store.subscribe(listener)
+    }
 
-            const userId = auth.currentUser?.uid || 'anonymous-user'
-
-            // Initialize Series Repo
-            const seriesRepo = new SeriesRepository(db, cacheManager, userId)
-
-            // 1. Fetch all series
-            const allSeries = await seriesRepo.findAll()
-
-            // 2. Build groups
-            const groups = []
-
-            if (allSeries) {
-                for (const series of allSeries) {
-                    // Initialize Playlist Repo for THIS series
-                    // Note: PlaylistRepository is scoped to a seriesId
-                    const playlistRepo = new PlaylistRepository(db, cacheManager, userId, series.id)
-
-                    // Find playlists for this series (Using base findAll because repo is scoped)
-                    const playlists = await playlistRepo.findAll()
-
-                    if (playlists && playlists.length > 0) {
-                        groups.push({
-                            series,
-                            playlists,
-                            batches: this.processBatches(playlists)
-                        })
-                    }
-                }
-            }
-
-            // 3. Store data
-            this.data = groups
-
-            // 4. Trigger thumbnail preload (non-blocking)
-            this.preloadAllThumbnails()
-
-            return groups
-        } catch (error) {
-            console.error('[Controller] Failed to load playlists:', error)
-            toast.error('Failed to load playlists')
-            throw error
+    /**
+     * What the screen draws now.
+     * @returns {{ status: string, error: string|null, busy: boolean, summary: Object, groups: Array<Object> }}
+     *   `groups` are the store's entries of the series that have playlists or a failure, in the
+     *   order of the list; an entry that is the same object has not changed.
+     */
+    getList() {
+        return {
+            status: this.store.getListStatus(),
+            error: this.store.getListError(),
+            busy: this.store.isBusy(),
+            summary: this.store.getSummary(),
+            groups: this.store.getEntries().filter(isListed)
         }
     }
 
-    /**
-     * Process playlists into Batches (Grouping Logic)
-     * @private
-     */
-    processBatches(playlists) {
-        const batchMap = new Map()
-
-        playlists.forEach(pl => {
-            const batchKey = pl.batchName || 'Saved Playlists'
-            if (!batchMap.has(batchKey)) {
-                batchMap.set(batchKey, {
-                    name: batchKey,
-                    savedAt: pl.savedAt,
-                    playlists: []
-                })
-            }
-            batchMap.get(batchKey).playlists.push(pl)
-        })
-
-        // Sort playlists inside batches
-        batchMap.forEach(batch => {
-            batch.playlists.sort((a, b) => {
-                if (a.order !== undefined && b.order !== undefined) {
-                    return a.order - b.order
-                }
-                return (a.name || '').localeCompare(b.name || '', undefined, { numeric: true })
-            })
-        })
-
-        // Sort batches by date (newest first)
-        return Array.from(batchMap.values()).sort((a, b) => {
-            const dateA = a.savedAt ? new Date(a.savedAt) : new Date(0)
-            const dateB = b.savedAt ? new Date(b.savedAt) : new Date(0)
-            return dateB - dateA
-        })
+    /** True until the first answer about the list of series arrives. */
+    isFirstLoad() {
+        const status = this.store.getListStatus()
+        const waiting = status === ListStatus.IDLE || status === ListStatus.LOADING
+        return waiting && this.store.getEntries().length === 0
     }
 
-    /**
-     * Preload thumbnails for all loaded groups
-     * @private
-     */
-    async preloadAllThumbnails() {
-        for (const group of this.data) {
-            // Don't await inside loop to allow parallel fetching if supported
-            // or just let it run in background
-            this.preloadSeriesThumbnails(group.series).then(() => {
-                if (this.view && this.view.onThumbnailLoaded) {
-                    this.view.onThumbnailLoaded(group.series.id)
-                }
-            })
-        }
+    /** A playlist on the list, by series and id; null when it is not there. */
+    findPlaylist(seriesId, playlistId) {
+        const playlists = this.store.getEntry(seriesId)?.playlists || []
+        return playlists.find(playlist => playlist.id === playlistId) || null
     }
 
-    async preloadSeriesThumbnails(series, max = 3) {
-        // I need to ensure this.thumbnailCache exists
-        if (!this.thumbnailCache) this.thumbnailCache = new Map()
-        if (this.thumbnailCache.has(series.id)) return // Already cached
+    // ========== NAVIGATION ==========
 
-        const queries = series.albumQueries || series.albums || []
-        const thumbs = []
-        const count = Math.min(queries.length, max)
-
-        for (let i = 0; i < count; i++) {
-            const query = queries[i]
-            let coverUrl = null
-
-            // Logic ported from SavedPlaylistsView
-            if (typeof query === 'object') {
-                if (query.imageUrl) coverUrl = query.imageUrl;
-                else if (query.coverUrl) coverUrl = query.coverUrl;
-                else if (query.artwork?.url) coverUrl = query.artwork.url;
-            } else if (typeof query === 'string' && query.includes(' - ')) {
-                const [artist, ...albumParts] = query.split(' - ');
-                const albumName = albumParts.join(' - ');
-                try {
-                    const found = await optimizedAlbumLoader.findAlbum(artist, albumName);
-                    if (found) {
-                        coverUrl = optimizedAlbumLoader.getArtworkUrl(found, 100);
-                    }
-                } catch (e) { /* ignore */ }
-            }
-            thumbs.push(coverUrl)
-        }
-
-        this.thumbnailCache.set(series.id, thumbs)
-        return thumbs
-    }
-
-    getThumbnails(seriesId) {
-        return (this.thumbnailCache && this.thumbnailCache.get(seriesId)) || []
-    }
-
-    /**
-     * Actions
-     */
     async editBatch(seriesId, batchName, savedAt) {
         // Set context in store so PlaylistsView knows we are editing
-        // Use service to set edit mode
         const { db } = await import('../../app.js')
         const { cacheManager } = await import('../../cache/CacheManager.js')
         const service = getPlaylistsService(db, cacheManager)
@@ -193,61 +102,38 @@ export class SavedPlaylistsController {
         router.navigate(`/playlists/edit?seriesId=${seriesId}&edit=${encodedName}`)
     }
 
-    // Keep legacy support or redirect
-    async editSeries(seriesId) {
-        await this.editBatch(seriesId, 'Saved Playlists', null)
-    }
-
     navigateBlend() {
         router.navigate('/blend')
     }
 
-    async openSeriesManager(seriesId) {
-        // Sprint 17.5: Navigate to Albums Series view
+    openSeriesManager(seriesId) {
         router.navigate(`/albums?seriesId=${seriesId}`)
     }
 
+    // ========== DELETES ==========
+
+    /** Delete one batch; only its series is read again. */
     async deleteBatch(seriesId, batchName) {
         try {
-            const { db, cacheManager, auth } = await import('../../app.js') // Lazy load for action
-            const userId = auth.currentUser?.uid || 'anonymous-user'
-
-            const playlistRepo = new PlaylistRepository(db, cacheManager, userId, seriesId)
-
-            const playlists = await playlistRepo.findAll()
-            const batchPlaylists = playlists.filter(p => (p.batchName || 'Saved Playlists') === batchName)
-
-            if (batchPlaylists.length === 0) return true
-
-            await Promise.all(batchPlaylists.map(p => playlistRepo.delete(p.id)))
-
+            await this.reader.removeBatch(seriesId, batchName)
             toast.success(`Deleted batch: ${batchName}`)
-
-            await this.loadData()
             return true
-        } catch (e) {
+        } catch (error) {
             toast.error('Failed to delete batch')
-            console.error(e)
+            console.error('[SavedPlaylistsController] deleteBatch failed:', error)
             return false
         }
     }
 
+    /** Delete every saved playlist of a series; the series and its albums stay. */
     async deleteAllPlaylists(seriesId, seriesName) {
         try {
-            const { db, cacheManager, auth } = await import('../../app.js')
-            const userId = auth.currentUser?.uid || 'anonymous-user'
-            const playlistRepo = new PlaylistRepository(db, cacheManager, userId, seriesId)
-
-            const playlists = await playlistRepo.findAll()
-            await Promise.all(playlists.map(p => playlistRepo.delete(p.id)))
-
+            await this.reader.removeAll(seriesId)
             toast.success(`Deleted playlists for ${seriesName}`)
-
-            this.data = this.data.filter(g => g.series.id !== seriesId)
             return true
-        } catch (e) {
+        } catch (error) {
             toast.error('Failed to delete playlists')
-            console.error(e)
+            console.error('[SavedPlaylistsController] deleteAllPlaylists failed:', error)
             return false
         }
     }
