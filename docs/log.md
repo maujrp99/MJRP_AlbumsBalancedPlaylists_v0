@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:18] review — crítica separada da proposta da F52: «não pode ir ainda»; proposta emendada
+
+Relatório: `reports/audits/2026-11-19-mjrpalbumblender-v0-f52-proposal-critique.md`. Agente separado, só de leitura, 5 minutos. Dois achados que bloqueiam, conferidos pelo implementador no código: a falha das notas é engolida dentro do raspador, não no serviço (mudar só o serviço carimbaria «não achei» em falhas); e virar o erro do provedor de IA em 5xx faria o app repetir chamadas pagas. Mais seis correções antes do código e dois cortes. A proposta ganhou a seção 11, que vale sobre as anteriores, com as fatias refeitas. A direção (contrato de três desfechos, sem guardado em banco no servidor por enquanto) foi mantida. Falta o ok do MJRP para ir ao código.
+
 ## [2026-11-19 16:14] session — F64 na `main`: um caminho só para publicar (`npm run deploy:site`, `npm run deploy:server`)
 
 O ramo `fix/f64-one-tested-way-to-production`, feito por um agente auxiliar em cópia isolada e conferido pelo integrador, entrou na `main`. O integrador leu os scripts (o que apagam, como tratam o `.env`, onde publicam) e rodou `npm run deploy:site:dry-run` até o fim: exporta a `main` para uma pasta temporária fora do repositório, roda os 493 testes, constrói, confere o pacote (o mesmo `main-DTBLM2CE.js` que está em produção) e para antes de publicar.
