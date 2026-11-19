@@ -7,11 +7,15 @@
  * - "the source has nothing" is trusted for a short time only, so a missing rating does not stick;
  * - a failure is never saved; the person's own ranking is never saved with the album;
  * - get() always hands out a new Album, never the object it keeps;
- * - peek() only reads: it is what a read-only pass over the cache uses.
+ * - get() asks the one identity rule (F55) whether the record is still the album the query asks
+ *   for, and drops it when it is not: the key is the query, so a record written when "the right
+ *   artist was enough" may hold another album. The check covers both layers (memory, IndexedDB)
+ *   and costs no network; only a record that is dropped is searched again;
+ * - peek() only reads: it is what a read-only pass over the cache uses, and it drops nothing.
  */
 
 import { queryKey } from '../../../models/albumLoadState.js'
-import { keptAlbum } from '../../../models/askedAlbum.js'
+import { askedAlbum, compareKeptAlbum, keptAlbum } from '../../../models/askedAlbum.js'
 
 export const ALBUM_RECORD_PREFIX = 'albumload:v1:'
 const RECORD_TTL_MS = 7 * 24 * 60 * 60 * 1000
@@ -48,6 +52,10 @@ export class AlbumCacheAdapter {
     async get(query, { seriesId = null } = {}) {
         const record = await this.cache.get(this._key(query))
         if (!record?.album) return null
+        if (!compareKeptAlbum(askedAlbum(query), keptAlbum(record.album)).same) {
+            await this.forget(query)
+            return null
+        }
 
         const enrichment = {}
         Object.entries(record.enrichment || {}).forEach(([source, saved]) => {

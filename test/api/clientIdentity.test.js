@@ -8,7 +8,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 const musicKit = vi.hoisted(() => ({ searchAlbums: vi.fn(), getAlbumDetails: vi.fn(), getArtworkUrl: vi.fn(() => 'https://cover/600') }))
 vi.mock('../../public/js/services/MusicKitService.js', () => ({ musicKitService: musicKit }))
 vi.mock('../../public/js/services/AlbumLoader.js', () => ({ albumLoader: {} }))
-vi.mock('../../public/js/cache/albumCache.js', () => ({ albumCache: { get: vi.fn(async () => null), set: vi.fn() } }))
+const oldCache = vi.hoisted(() => ({ get: vi.fn(async () => null), set: vi.fn(), invalidate: vi.fn() }))
+vi.mock('../../public/js/cache/albumCache.js', () => ({ albumCache: oldCache }))
 vi.mock('../../public/js/helpers/BEAEnrichmentHelper.js', () => ({ enrichAlbum: vi.fn() }))
 vi.mock('../../public/js/helpers/SpotifyEnrichmentHelper.js', () => ({ applyEnrichmentToAlbum: vi.fn() }))
 
@@ -33,6 +34,9 @@ describe('APIClient: only the album asked for', () => {
         vi.spyOn(console, 'error').mockImplementation(() => {})
         musicKit.searchAlbums.mockReset()
         musicKit.getAlbumDetails.mockReset()
+        oldCache.get.mockReset().mockResolvedValue(null)
+        oldCache.set.mockReset()
+        oldCache.invalidate.mockReset()
     })
 
     afterEach(() => {
@@ -73,6 +77,45 @@ describe('APIClient: only the album asked for', () => {
 
             expect(await client._fetchAlbumFromAPI('Pink Floyd - The Wall')).toBeNull()
             expect(fetchMock).toHaveBeenCalledTimes(1)
+        })
+    })
+
+    describe('what the old cache keeps for a query (fetchAlbum: the blend, the playlists)', () => {
+        const details = { id: 'apple-core', title: 'Core', artist: STP, year: '1992', artworkTemplate: 'tpl', tracks: [{ id: 't1', title: 'One', trackNumber: 1 }] }
+        const kept = (title, metadata) => ({ id: 'kept', title, artist: STP, tracks: [{ id: 'k1', title: 'Kept' }], ...(metadata ? { metadata } : {}) })
+
+        it('is the album asked for: it is used, and no catalog is asked', async () => {
+            oldCache.get.mockResolvedValue(kept('Core (Remastered)'))
+
+            const album = await client.fetchAlbum('Stone Temple Pilots - Core')
+
+            expect(album.title).toBe('Core (Remastered)')
+            expect(musicKit.searchAlbums).not.toHaveBeenCalled()
+            expect(oldCache.invalidate).not.toHaveBeenCalled()
+        })
+
+        it('is ANOTHER album (kept by the old scoring): it is dropped and the album is searched again', async () => {
+            oldCache.get.mockResolvedValue(kept('Shangri-La Dee Da'))
+            musicKit.searchAlbums.mockResolvedValue([hit('apple-core', 'Core')])
+            musicKit.getAlbumDetails.mockResolvedValue(details)
+
+            const album = await client.fetchAlbum('Stone Temple Pilots - Core')
+
+            expect(oldCache.invalidate).toHaveBeenCalledWith('Stone Temple Pilots - Core')
+            expect(album.title).toBe('Core')
+            expect(oldCache.set).toHaveBeenCalledWith('Stone Temple Pilots - Core', album)
+        })
+
+        it('is the title with a subtitle: kept only when a load accepted it by the second tier of the rule', async () => {
+            const live = { id: 'kept', title: 'The Wall: Live in Berlin', artist: 'Pink Floyd', tracks: [] }
+            oldCache.get.mockResolvedValueOnce({ ...live, metadata: { identityReason: 'title-before-subtitle' } })
+            expect((await client.fetchAlbum('Pink Floyd - The Wall')).title).toBe('The Wall: Live in Berlin')
+
+            oldCache.get.mockResolvedValueOnce(live)
+            musicKit.searchAlbums.mockResolvedValue([])
+            fetchMock.mockResolvedValue(answer(null, 'not_found'))
+            await client.fetchAlbum('Pink Floyd - The Wall')
+            expect(oldCache.invalidate).toHaveBeenCalledWith('Pink Floyd - The Wall')
         })
     })
 

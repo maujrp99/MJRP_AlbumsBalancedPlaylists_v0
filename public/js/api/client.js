@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { serverFetch } from './serverFetch.js'
 import { Album } from '../models/Album.js'
-import { askedAlbum, appleCandidate, compareAlbumIdentity, pickAlbum } from '../models/askedAlbum.js'
+import { askedAlbum, appleCandidate, compareAlbumIdentity, compareKeptAlbum, keptAlbum, pickAlbum } from '../models/askedAlbum.js'
 import { plainAlbumQuery } from '../models/albumQuery.js'
 import { albumCache } from '../cache/albumCache.js'
 import { albumLoader } from '../services/AlbumLoader.js'
@@ -44,12 +44,8 @@ export class APIClient {
     async fetchAlbum(query, skipCache = false) {
         // 1. Check cache (if not skipped) - ARCH-5: Now async for IndexedDB
         if (!skipCache) {
-            const cached = await this.cache.get(query)
-            if (cached) {
-                // console.log('[APIClient] Returning cached album:', query)
-                // HYDRATION: Convert cached JSON back to Album instance
-                return cached instanceof Album ? cached : new Album(cached)
-            }
+            const cached = await this._keptAlbumAskedFor(query)
+            if (cached) return cached
         }
 
         // 2. Sprint 7.5: Try Apple Music + Enrichment First
@@ -150,6 +146,24 @@ export class APIClient {
 
         // 5. Fallback: Legacy Generate API
         return this._fetchAlbumFromAPI(query)
+    }
+
+    /**
+     * The album the old cache keeps for the query, only while it is the album asked for (F55): the
+     * key is the query, so an entry written when "the right artist was enough" may hold another
+     * album. Such an entry is dropped, and the caller searches again.
+     * @returns {Promise<Album|null>}
+     * @private
+     */
+    async _keptAlbumAskedFor(query) {
+        const cached = await this.cache.get(query)
+        if (!cached) return null
+        if (!compareKeptAlbum(askedAlbum(plainAlbumQuery(query)), keptAlbum(cached)).same) {
+            await this.cache.invalidate(query)
+            return null
+        }
+        // HYDRATION: Convert cached JSON back to Album instance
+        return cached instanceof Album ? cached : new Album(cached)
     }
 
     /**
