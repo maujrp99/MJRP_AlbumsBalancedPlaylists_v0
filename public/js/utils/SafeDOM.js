@@ -67,6 +67,10 @@ export const SafeDOM = {
                     }
                 } else if (key === 'style' && typeof val === 'object') {
                     Object.assign(el.style, val);
+                } else if (key === 'textContent') {
+                    // Text given as a property is text, never an attribute: written as an attribute it
+                    // left the element empty (the «Close» button with no label, UAT-195)
+                    el.textContent = String(val);
                 } else if (key === 'dataset' && typeof val === 'object') {
                     Object.entries(val).forEach(([dataKey, dataVal]) => {
                         if (dataVal !== null && dataVal !== undefined) {
