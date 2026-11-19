@@ -1,8 +1,9 @@
 /**
  * TaskQueue
  *
- * Runs async tasks with a limit of tasks at once, a priority, a deadline per task, cancellation,
- * and a pause (no new task starts until it is resumed).
+ * Runs async tasks with a limit of tasks at once, a priority, a deadline per task, cancellation
+ * (of everything or of one group), a pause (no new task starts until it is resumed) and a boost
+ * (the tasks of a group someone is waiting for now run before every other).
  * It knows nothing about albums, the network or the screen: it receives functions and returns promises.
  * (arch.md, "Carga da tela de álbuns": the queue behind the album load; patterns DP-20 pure core, DP-22 Timeout.)
  *
@@ -41,6 +42,7 @@ export class TaskQueue {
         this._sequence = 0
         this._idleResolvers = []
         this._paused = false
+        this._boosted = new Set()
     }
 
     /** True while the queue starts no new task. */
@@ -103,6 +105,33 @@ export class TaskQueue {
     }
 
     /**
+     * Someone is waiting for this group now: its tasks, the waiting ones and the ones added later,
+     * run before the tasks of every group that is not boosted, whatever their priority.
+     * @param {string} group
+     */
+    boost(group) {
+        this._boosted.add(group)
+    }
+
+    /** Nobody is waiting for this group any more: its tasks go back to their priority. */
+    unboost(group) {
+        this._boosted.delete(group)
+    }
+
+    /**
+     * Drop the waiting tasks of one group and abort its running ones; they reject with
+     * TaskCancelledError. The tasks of the other groups are not touched.
+     * @param {string} group
+     */
+    cancelGroup(group) {
+        const dropped = this._waiting.filter(entry => entry.group === group)
+        this._waiting = this._waiting.filter(entry => entry.group !== group)
+        dropped.forEach(entry => entry.reject(new TaskCancelledError()))
+        Array.from(this._running).filter(run => run.group === group).forEach(run => run.cancel())
+        this._settleIdle()
+    }
+
+    /**
      * Drop every waiting task and abort every running one. All of them reject with TaskCancelledError.
      * The queue stays usable: a task added afterwards runs normally.
      */
@@ -129,13 +158,17 @@ export class TaskQueue {
     _takeNext() {
         let best = 0
         for (let i = 1; i < this._waiting.length; i++) {
-            const candidate = this._waiting[i]
-            const current = this._waiting[best]
-            const higher = candidate.priority > current.priority
-            const sameButOlder = candidate.priority === current.priority && candidate.order < current.order
-            if (higher || sameButOlder) best = i
+            if (this._goesBefore(this._waiting[i], this._waiting[best])) best = i
         }
         return this._waiting.splice(best, 1)[0]
+    }
+
+    /** A boosted group first, then the higher priority, then the task added first. */
+    _goesBefore(candidate, current) {
+        const boost = Number(this._boosted.has(candidate.group)) - Number(this._boosted.has(current.group))
+        if (boost !== 0) return boost > 0
+        if (candidate.priority !== current.priority) return candidate.priority > current.priority
+        return candidate.order < current.order
     }
 
     _run(entry) {
@@ -154,6 +187,7 @@ export class TaskQueue {
         }
 
         const run = {
+            group: entry.group,
             cancel: () => {
                 controller.abort()
                 finish(entry.reject, new TaskCancelledError())

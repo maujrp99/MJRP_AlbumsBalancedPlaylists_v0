@@ -3,6 +3,18 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 20:07] review — F56 provada pelo integrador; UAT-189 e UAT-191 em fixed
+
+Blend de uma série já carregada: de 19,2 s para 0,05 s; avisos dizendo qual álbum ficou sem qual fonte; edição de lote e regeneração com a série certa. Prova em `reports/evidence/F56/2026-11-19-screens-through-the-load-service-proof.md`, com o que não foi visto. Mudanças de comportamento para o MJRP julgar: some a pergunta «No ratings detected… Continue?» (os avisos a substituem); o «Refetch» faz o cartão voltar a carregar e não mostra mais «Metadata updated»; a coleção compartilhada `albums` do banco deixa de ser escrita (só o «Refetch» antigo escrevia, nada lia).
+
+## [2026-11-19 20:05] session — F56 junto com a `main`: dois testes do método retirado saem
+
+A F52 fatia 3 tinha consertado `adoptAlbum`; a F56 retirou o método (o «Refetch» agora é `reloadAlbum`, pela fila). No encontro dos dois ramos ficou a versão da F56, e os dois testes do método retirado saíram.
+
+## [2026-11-19 20:02] session — F56: spec, plano, tarefas, arquitetura, ADR-0019, comportamento e manual escritos no ramo
+
+Ramo `fix/f56-screens-load-through-the-service`. A pasta da F56 preenchida para o que foi construído (9 REQ com `verified_by`, 15 tarefas; abertas a prova no navegador com os tempos, do integrador, e o julgamento do MJRP); o diagnóstico com arquivo e linha e a escolha entre «um contexto por tela» e «juntar-se à geração em vigor» estão no plano. `docs/specs/arch.md` ganhou a seção «Toda tela pede os álbuns ao serviço de carga (F56)»; a lista «Not done yet» da ADR-0019 diz o que a F56 fechou (decisões 1 e 7) e o que ficou (o botão «Enrich Data» e a fila do Spotify em segundo plano ainda pedem por fora da fila); `docs/specs/behavior.md` tem os estados do blend, das playlists e da tela de álbuns (cinco novos); manual 01, 06, 07, 08, 15, 17, 18, 19, 21 e 99 corrigidos. O status da ADR e o `docs/specs/uat.md` não foram tocados.
+
 ## [2026-11-19 19:58] session — F63 em produção (site)
 
 Site publicado da `main` (`5c3abda`, pacote `main-Bb_Tr-dD.js`). A F63 não muda o servidor. Auxiliares trabalhando: F68 e F56.
@@ -10,6 +22,10 @@ Site publicado da `main` (`5c3abda`, pacote `main-Bb_Tr-dD.js`). A F63 não muda
 ## [2026-11-19 19:57] review — F63 provada pelo integrador; seis issues em fixed
 
 Prova em `reports/evidence/F63/2026-11-19-home-and-navigation-proof.md`. Em `fixed`: UAT-201, UAT-26 (consertada pela F67, agora com teste), UAT-13, UAT-27, UAT-07, UAT-192. Decidido pelo agente — revisável: UAT-10 (telas de ranking só por endereço) e UAT-11 (tela de migração) ficam abertas e vão para a F65 com a recomendação de aposentar as telas; tirar tela é decisão do MJRP. Mudanças de comportamento para ele julgar: o menu da conta não abre mais só com o mouse por cima; a caixa de colar mantém as linhas a consertar; entrar numa série não cria entrada nova no histórico.
+
+## [2026-11-19 19:56] session — F56: blend, edição de playlists, «Refetch» e salvar série passam pelo serviço de carga (código, no ramo)
+
+Ramo `fix/f56-screens-load-through-the-service`, a partir da `main` em `d210f35`. Uma porta só para qualquer tela pedir os álbuns de uma série: `albumAsks.albumsOf({ series, sources, signal })` (`services/albums/AlbumAsks.js`), que entra na carga em vigor (`AlbumLoadService.join`/`leave`) sem começar geração, reaproveita o que a tela de álbuns ou o navegador já têm, espera as fontes que a receita lê e devolve um resultado tipado (prontos, falhos com motivo, fontes em falta). O blend e a edição de playlists deixaram os laços próprios; o «Refetch» virou `reloadAlbum` (pela fila); salvar a edição de uma série reconcilia em vez de recarregar tudo, inclusive quando a edição escolhida muda; a injeção de álbuns e os escritores avulsos da prateleira saíram. Os métodos antigos do cliente (`fetchAlbum`, `fetchMultipleAlbums`, `BEAenrichAlbum`) foram removidos: nada mais os chamava. Teste de aptidão novo: `test/architecture/screensLoadThroughTheService.test.js`. Suíte: 1232 passando (1143 antes); `vite build` compila. Decisões do agente, revisáveis: o blend segue com os álbuns prontos e avisa quais ficaram de fora (para só quando nenhum está pronto); a pergunta «No ratings detected… Continue?» saiu, no lugar vêm os avisos de fonte em falta; o documento compartilhado `albums` deixou de ser gravado pelo «Refetch» (ninguém o lia). Não foi visto num navegador.
 
 ## [2026-11-19 19:56] session — F63: as duas sobras das playlists guardadas (UAT-27 e o olho da UAT-13), pelo integrador
 

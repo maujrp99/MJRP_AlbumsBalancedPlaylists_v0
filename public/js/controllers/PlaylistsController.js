@@ -4,7 +4,9 @@ import { albumSeriesStore } from '../stores/albumSeries.js'
 import { getPlaylistsService } from '../services/PlaylistsService.js'
 import { getSeriesService } from '../services/SeriesService.js'
 import { blendingController } from './BlendingController.js'
-import { createAlgorithm } from '../algorithms/index.js'
+import { albumAsks } from '../services/albums/albumLoading.js'
+import { askNotices, noAlbumsMessage } from '../models/albumAsk.js'
+import { ENRICHMENT_SOURCES } from '../models/albumLoadState.js'
 import toast from '../components/Toast.js'
 
 /**
@@ -16,6 +18,7 @@ import toast from '../components/Toast.js'
 export class PlaylistsController {
     constructor(viewContext) {
         this.view = viewContext // Reference to view for triggering updates if absolutely necessary, mainly for toast context
+        this._leaving = new AbortController() // aborted when the screen closes: what it asked for is dropped
     }
 
     /**
@@ -123,77 +126,55 @@ export class PlaylistsController {
         }
     }
 
+    /**
+     * Have the albums of the series ready for generating again. They are asked for through the
+     * album load (F56): what the albums screen loaded or the browser keeps comes at once, and the
+     * person is told which albums could not be loaded.
+     * @returns {Promise<Object|null>} the answer of the load (AlbumsResult), or null when nothing was asked
+     */
     async loadAlbumsForSeries(seriesId) {
-        // Check if albums are already cached FOR THIS SERIES
-        const currentSeriesId = albumsStore.activeAlbumSeriesId
-        const albumsInMemory = albumsStore.getAlbums().length > 0
-
-        if (albumsInMemory && currentSeriesId === seriesId) {
-            console.log('[PlaylistsController] Albums already in memory for this series, skipping load')
-            return
-        }
-
-        // Albums in memory are for a different series - need to reload
-        if (albumsInMemory && currentSeriesId !== seriesId) {
-            console.log(`[PlaylistsController] Albums in memory are for different series (${currentSeriesId}), reloading for ${seriesId}`)
-        }
-
-        console.log('[PlaylistsController] Albums not in memory. Loading via API pipeline for series:', seriesId)
-
         try {
-            // V3 Architecture: Load albums via API pipeline (same as SeriesController)
-            // 1. Get album queries from the active series
-            let activeSeries = albumSeriesStore.getActiveSeries()
-
-            if (!activeSeries || activeSeries.id !== seriesId) {
-                // Ensure series is set
-                const db = albumSeriesStore.getDb()
-                if (db) {
-                    const seriesService = getSeriesService(db, null, albumSeriesStore.getUserId())
-                    await seriesService.loadFromFirestore()
-                }
-                albumSeriesStore.setActiveSeries(seriesId)
-                activeSeries = albumSeriesStore.getActiveSeries()
+            const series = await this._seriesOf(seriesId)
+            if (!series?.albumQueries?.length) {
+                toast.warning('This series has no albums to generate playlists from.')
+                return null
             }
 
-            if (!activeSeries || !activeSeries.albumQueries || activeSeries.albumQueries.length === 0) {
-                console.warn('[PlaylistsController] No album queries found for series. Regeneration will be disabled.')
-                toast.warning('No album data available. Visit Music Series to load albums first.')
-                return
-            }
+            const signal = this._leaving.signal
+            // While the screen is open every source keeps coming, so generating again with another
+            // recipe does not start from nothing. Nobody waits for this one.
+            albumAsks.albumsOf({ series: [series], sources: [...ENRICHMENT_SOURCES], signal })
 
-            // 2. Set context for ghost prevention
+            const result = await albumAsks.albumsOf({ series: [series], sources: [], signal })
+            if (result.aborted) return result
+
             albumsStore.setActiveAlbumSeriesId(seriesId)
-            albumsStore.reset(true)
-
-            // 3. Load via API (fetchMultipleAlbums)
-            const { apiClient } = await import('../api/client.js')
-
-            const { results, errors } = await apiClient.fetchMultipleAlbums(
-                activeSeries.albumQueries,
-                (current, total, result) => {
-                    if (result.status === 'success' && result.album) {
-                        // Add album to store (same pattern as SeriesController.hydrateAndAddAlbum)
-                        albumsStore.addAlbumToSeries(seriesId, result.album)
-                    }
-                },
-                false // skipCache
-            )
-
-            if (errors.length > 0) {
-                console.warn(`[PlaylistsController] ${errors.length} albums failed to load`)
-            }
-
-            const loadedCount = albumsStore.getAlbums().length
-            console.log(`[PlaylistsController] Albums loaded via API for edit context: ${loadedCount} albums`)
-
-            if (loadedCount === 0) {
-                toast.warning('Could not load albums. Visit Music Series first to ensure data is available.')
-            }
+            this._tellLoad(result)
+            return result
         } catch (err) {
             console.error('[PlaylistsController] Failed to load albums:', err)
             toast.error('Could not load albums for reconfiguration')
+            return null
         }
+    }
+
+    /** The series, read from the database first when it is not in memory (a reload of the page). */
+    async _seriesOf(seriesId) {
+        if (!albumSeriesStore.getById(seriesId)) {
+            const db = albumSeriesStore.getDb()
+            if (db) await getSeriesService(db, null, albumSeriesStore.getUserId()).loadFromFirestore()
+        }
+        if (albumSeriesStore.getActiveSeries()?.id !== seriesId) albumSeriesStore.setActiveSeries(seriesId)
+        return albumSeriesStore.getById(seriesId) || null
+    }
+
+    /** Tell the person what the load left out: which albums and how many. */
+    _tellLoad(result) {
+        if (result.albums.length === 0) {
+            toast.warning(noAlbumsMessage(result))
+            return
+        }
+        askNotices(result).forEach(notice => toast.warning(notice))
     }
 
     /**
@@ -227,48 +208,32 @@ export class PlaylistsController {
 
     /**
      * Generate playlists using selected config
-     * Uses BlendingController for centralized generation logic
+     * Uses BlendingController, which asks the album load for the albums with the sources the
+     * recipe reads; what the load left out (albums, sources) is told to the person.
      */
     async handleGenerate(config) {
         // config = { algorithmId, rankingId, targetDuration, outputMode, discoveryMode } from UI
         if (!config) config = { algorithmId: 'mjrp-balanced-cascade', rankingId: 'balanced' }
 
-        // Issue #93 Debug: Log received config
-        console.log('[PlaylistsController] handleGenerate config:', config)
-
-        const albums = albumsStore.getAlbums()
-        if (albums.length === 0) {
-            toast.warning('No albums loaded. Please load albums first.')
-            return
-        }
-
-        // Validation - Check Ratings
-        if (config.rankingId === 'balanced') {
-            const ratedAlbums = albums.filter(a => a.acclaim?.hasRatings || a.tracks?.some(t => t.rating))
-            if (ratedAlbums.length === 0) {
-                if (!confirm('No ratings detected. Playlists may be unbalanced. Continue?')) return
-            }
-        }
-
         try {
-            this.view.isGenerating = true;
-            if (this.view.update) this.view.update(); // Trigger loading state
+            this._showGenerating(true)
+            const result = await blendingController.regenerate(config, { signal: this._leaving.signal })
 
-            // Use BlendingController for centralized generation
-            const result = await blendingController.regenerate(config)
-
-            // Sprint 16: Default name logic now centralized in BlendingController - REMOVED redundant internal logic
-            // The BlendingController already called playlistsStore.setDefaultBatchName() if needed.
-
+            ;(result.notices || []).forEach(notice => toast.warning(notice))
             toast.success(`Generated ${result.playlists.length} playlists`)
-
         } catch (err) {
+            if (err?.name === 'BlendCancelledError') return // the person left the screen
             console.error('[PlaylistsController] Generation failed:', err)
             toast.error(err.message)
         } finally {
-            this.view.isGenerating = false
-            if (this.view.update) this.view.update()
+            this._showGenerating(false)
         }
+    }
+
+    _showGenerating(isGenerating) {
+        if (!this.view) return
+        this.view.isGenerating = isGenerating
+        if (this.view.update) this.view.update()
     }
 
     /**
@@ -301,6 +266,7 @@ export class PlaylistsController {
      * Clean up
      */
     destroy() {
+        this._leaving.abort()
         this.view = null
     }
 }
