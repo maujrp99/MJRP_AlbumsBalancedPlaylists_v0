@@ -49,5 +49,30 @@
         "result": "resposta sem detalhe do erro, e o servidor continua de pé"
       }
     ]
+  },
+  "slice_B_production": {
+    "date": "2026-11-19 15:47",
+    "revision": "mjrp-proxy-00196-sj7 (100% do tráfego); a anterior, mjrp-proxy-00195-9fg, fica como ponto de volta",
+    "checks": [
+      {
+        "what": "rotas de depuração, direto no Cloud Run e pelo endereço do site",
+        "result": "/api/debug/files 404, /api/list-models 404, /api/debug/import 404, POST /api/debug/raw-ranking 404 (antes: 200)"
+      },
+      {
+        "what": "rotas que o app usa",
+        "result": "/api/musickit-status 200, /api/musickit-token 200, POST /api/enrich-album 200 em 6,7 s com notas do BestEverAlbums, POST /api/generate «Prince - 1999» 200 em 15,4 s com o álbum «1999»"
+      },
+      {
+        "what": "POST /api/generate com rawStage=ranking",
+        "result": "200 com o álbum normal; a resposta crua do provedor não é mais devolvida"
+      },
+      {
+        "what": "variáveis e segredos do serviço depois do deploy",
+        "result": "os mesmos cinco nomes de antes (FORCE_RESTART, AI_API_KEY e os três da Apple)"
+      }
+    ],
+    "still_open": [
+      "POST /api/generate e /api/ai/studio-albums respondem sem login (fatia C)"
+    ]
   }
 }

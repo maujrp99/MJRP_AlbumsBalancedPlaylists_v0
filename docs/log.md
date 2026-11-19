@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:47] session — primeiro deploy do servidor: rotas de depuração fechadas em produção (F59, fatia B)
+
+- **Autorização do MJRP:** «2. Pode, só antes gere uma tag no git pra fechar a v4.0» (a tag `v4.0` foi criada antes).
+- **Deploy:** `gcloud run deploy mjrp-proxy --source server`, de uma cópia limpa da `main` em `93a7dc4`, com os mesmos passos do `scripts/deploy-backend.sh` (pasta `shared` e `config` copiadas para o contexto). Revisão nova `mjrp-proxy-00196-sj7`, com 100% do tráfego. Ponto de volta: `mjrp-proxy-00195-9fg`.
+- **Conferido em produção:** as quatro rotas de depuração respondem 404, direto e pelo endereço do site (antes 200); `/api/musickit-status` e `/api/musickit-token` 200; `/api/enrich-album` 200 com notas; `/api/generate` de «Prince - 1999» 200 com o álbum; o `rawStage` não devolve mais a resposta crua; variáveis e segredos do serviço mantidos.
+- **Segue aberto:** as rotas pagas respondem sem login (fatia C).
+- **Prioridade gravada pelo MJRP no Control Center** («Foi!»): as doze que não começaram, na ordem combinada.
+- Evidência: `reports/evidence/F59-close-what-is-open-security/F59-probe-2026-11-19.json`.
+
 ## [2026-11-19 15:44] session — tag `v4.0`; F59 fatia A publicada; F59 fatia B (servidor) pronta e provada numa cópia local
 
 - **O MJRP:** «1.sim 2. Pode, só antes gere uma tag no git pra fechar a v4.0».
