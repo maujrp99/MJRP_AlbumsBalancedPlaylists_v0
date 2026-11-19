@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:14] session — quinto deploy do site: F54 (apagar do inventário, duração das faixas, botão «Close»), main `cd96ad3`
+
+Publicado pela regra do MJRP de 2026-11-19 («cada Feature feita deveria ser testar e ir pra prod»): a F54 passou nos testes (443, 0 falhas) e no navegador local antes. `firebase deploy --only hosting` de uma cópia limpa da `main`. Conferido por fora: o site serve `assets/main-DfWvVVfh.js`, o mesmo arquivo do build. Não visto em produção no navegador. O servidor não foi tocado. Como voltar: «Rollback» no histórico do Firebase Hosting.
+
+**v4.0, o que falta para fechar:** o aceite do MJRP nas issues em `fixed` e o push. Nenhum conserto da v4.0 está pendente de código.
+
 ## [2026-11-19 15:13] session — F54: o commit do conserto anotado nas issues e nas tarefas
 
 UAT-01 e UAT-188 passam a citar o commit `82336c2`; as tarefas 3 e 4 da F54 também.
