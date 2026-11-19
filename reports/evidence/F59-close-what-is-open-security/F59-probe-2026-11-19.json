@@ -1,0 +1,35 @@
+{
+  "feature": "F59",
+  "date": "2026-11-19 15:34",
+  "slice": "A: o que é só do site",
+  "checks": [
+    {
+      "what": "regras do banco em vigor em produção (lidas pela API de regras do Firebase, só leitura)",
+      "result": "release cloud.firestore de 2026-01-11; o ranking de cada pessoa já é fechado no dono (`request.auth.uid == userId`). O arquivo do repositório é que estava aberto («allow read, write: if true», com a nota DEBUG)."
+    },
+    {
+      "what": "arquivo `firestore.rules` depois do conserto contra as regras em vigor",
+      "result": "iguais, fora os comentários"
+    },
+    {
+      "what": "rotas de depuração em produção (só o código de resposta)",
+      "result": "`/api/debug/files` 200, `/api/list-models` 200, `/api/debug/import` 200, direto no Cloud Run e pelo endereço do site: estão abertas (fatia B, servidor, ainda não feita)"
+    },
+    {
+      "what": "`POST /api/generate` sem login e sem origem",
+      "result": "200: qualquer um chama (fatia C, ainda não feita)"
+    },
+    {
+      "what": "volta do Spotify com `state` que não é o enviado, em http://127.0.0.1:5010/callback",
+      "result": "recusada: aviso «Failed to connect to Spotify», nenhum pedido a accounts.spotify.com, nenhum segredo do aperto de mão deixado no navegador"
+    },
+    {
+      "what": "build de produção",
+      "result": "nenhum arquivo `.map` em dist/assets"
+    }
+  ],
+  "not_checked": [
+    "a volta do Spotify com o `state` certo no navegador (parou na tela de autorização do Spotify, que é do MJRP aceitar); coberta por teste automático",
+    "sair da conta e ver a sessão do Spotify sumir, no navegador (coberto por teste automático)"
+  ]
+}

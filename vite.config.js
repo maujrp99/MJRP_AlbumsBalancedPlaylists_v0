@@ -9,7 +9,7 @@ export default defineConfig({
     build: {
         outDir: '../dist',
         emptyOutDir: true,
-        sourcemap: true,
+        sourcemap: false, // the published site does not hand out its source (F59)
         rollupOptions: {
             input: {
                 main: path.resolve(__dirname, 'public/index.html')
