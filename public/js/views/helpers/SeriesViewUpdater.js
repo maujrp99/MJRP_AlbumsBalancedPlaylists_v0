@@ -52,7 +52,7 @@ export class SeriesViewUpdater {
         }
     }
 
-    updateGrid(albums, viewMode, currentScope, filters, searchQuery, sortedSeriesList = null, isLoading = false, seriesStates = null) {
+    updateGrid(albums, viewMode, currentScope, filters, searchQuery, sortedSeriesList = null, isLoading = false, seriesStates = null, expandedSeriesIds = []) {
         if (!this.components.grid) return;
 
         // ARCH-FIX: Use sorted list if provided (from Controller), otherwise fallback to store (unsorted)
@@ -66,7 +66,8 @@ export class SeriesViewUpdater {
             context: { searchQuery, filters },
             isLoading: isLoading, // FIX #152: Pass isLoading to GridRenderer
             pageBounded: true, // the list is already cut to a page: draw every series, no lazy blocks
-            seriesStates // the load state of each series, derived by the load store
+            seriesStates, // the load state of each series, derived by the load store
+            expandedSeriesIds // the series the person opened whole (past the first 12 albums)
         });
     }
 

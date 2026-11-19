@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 20:08] session — F49: o botão de carregar mais álbuns mostra o resto da série (UAT-06)
+
+Ramo `fix/f49-load-more-albums`, por um auxiliar sem navegador. Confirmado na `main` (`4dc353a`) por teste da tela inteira: o clique chegava ao ouvinte da raiz (`SeriesEventHandler`) e era jogado fora, porque `load-more-series` não estava entre as ações de série; o ouvinte próprio da grade (`_attachEventListeners`) não tinha chamador e, mesmo ligado, colava cartões no DOM que o redesenho seguinte apagaria. Os álbuns depois do décimo segundo já estavam carregados: a carga pede todos os álbuns das séries da página, e o corte em 12 é só de desenho, só na grade compacta do painel de todas as séries. Conserto: a escolha é estado explícito da tela (`SeriesExpansion`, em `models/seriesExpansion.js`, criado pela `SeriesView` a cada visita), a grade desenha por ele a cada redesenho, o clique passa pelo ouvinte que a tela já tinha, e o foco vai para o primeiro álbum que apareceu. Botão com `type="button"` e singular («Load 1 more album»). Decidido pelo agente — revisável: a escolha mora na tela e não no controlador (que a F56 está mexendo); o texto «Load» ficou. `SeriesController.js` e `AlbumLoadService.js` não tocados. Suíte: 1330 passando (1307 antes); `vite build` compila. Nada visto num navegador.
+
 ## [2026-11-19 19:58] session — F63 em produção (site)
 
 Site publicado da `main` (`5c3abda`, pacote `main-Bb_Tr-dD.js`). A F63 não muda o servidor. Auxiliares trabalhando: F68 e F56.

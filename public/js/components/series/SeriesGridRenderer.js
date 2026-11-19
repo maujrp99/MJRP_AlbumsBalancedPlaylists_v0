@@ -31,6 +31,7 @@ import { SafeDOM } from '../../utils/SafeDOM.js';
 import { VirtualScrollObserver } from '../../utils/VirtualScrollObserver.js';
 import { SeriesSkeleton } from '../ui/skeletons/SeriesSkeleton.js';
 import { LoadMoreButton } from '../ui/LoadMoreButton.js';
+import { cutAlbums } from '../../models/seriesExpansion.js';
 
 export default class SeriesGridRenderer extends Component {
     /**
@@ -40,6 +41,7 @@ export default class SeriesGridRenderer extends Component {
      * @param {string} props.scope - 'SINGLE' | 'ALL'
      * @param {Array} props.seriesList - All series for scoped rendering
      * @param {Object} props.context - Filter context { searchQuery, filters }
+     * @param {Array<string>} [props.expandedSeriesIds] - series of the ALL grid drawn whole (past the first 12 albums)
      */
     constructor(config) {
         super(config);
@@ -195,22 +197,38 @@ export default class SeriesGridRenderer extends Component {
         </div>`;
     }
 
+    /**
+     * A series with albums. In this grid it draws its first 12; the rest wait for the person to ask
+     * (props.expandedSeriesIds, the state the screen keeps). The header counts every album.
+     */
     _renderRealSeriesGroup(series, albums, context) {
-        const INITIAL_LIMIT = 12;
-        const total = albums.length;
-        const shouldCap = total > INITIAL_LIMIT;
+        const expanded = (this.props.expandedSeriesIds || []).includes(series.id);
+        const { shown, hidden } = cutAlbums(albums, expanded);
 
-        const shownAlbums = shouldCap ? albums.slice(0, INITIAL_LIMIT) : albums;
-
-        let html = `
+        return `
         <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${escapeHtml(series.id)}">
-            ${renderSeriesHeader(series, total)}
+            ${renderSeriesHeader(series, albums.length)}
             ${this._renderFailureNotice(series)}
-            ${wrapInGrid(renderAlbumsGrid(shownAlbums, context))}
-            ${shouldCap ? LoadMoreButton.render(series.id, total, shownAlbums.length) : ''}
+            ${wrapInGrid(renderAlbumsGrid(shown, context))}
+            ${LoadMoreButton.render(series.id, hidden)}
         </div>`;
+    }
 
-        return html;
+    /**
+     * Put the focus on one album of a series (the first one a click on "load more" brought), so the
+     * keyboard goes on from there and not from the top of the page.
+     * @param {string} seriesId
+     * @param {number} index - position of the album in the series, from 0
+     * @returns {boolean} true when the album is on screen
+     */
+    focusAlbum(seriesId, index) {
+        const group = Array.from(this.container.querySelectorAll('.series-group'))
+            .find(element => element.dataset.seriesId === seriesId);
+        const card = group?.querySelector('.albums-grid')?.children[index];
+        if (!card) return false;
+        card.setAttribute('tabindex', '-1');
+        card.focus();
+        return true;
     }
 
     _attachObservers() {
@@ -222,55 +240,6 @@ export default class SeriesGridRenderer extends Component {
                 this._hydrateSkeleton(entry.target);
             });
         });
-    }
-
-    _attachEventListeners() {
-        if (!this.gridElement) return;
-
-        // Use Event Delegation on the main container
-        // This handles both initial buttons and lazy-loaded ones
-        this.gridElement.addEventListener('click', (e) => {
-            const btn = e.target.closest('[data-action="load-more-series"]');
-            if (btn) {
-                this._handleLoadMore(e, btn);
-            }
-        });
-    }
-
-    _handleLoadMore(e, btn) {
-        const seriesId = btn.dataset.seriesId;
-        const groupEl = btn.closest('.series-group');
-        const gridEl = groupEl.querySelector('.albums-grid');
-
-        // Find data
-        const { items = [], seriesList = [] } = this.props;
-        // Optimization: Use cached map if available, or just filtering
-        // Since we don't have the Group Map cached easily without re-running grouping...
-        // We can just find the albums for this series.
-        // Or re-run grouping (it's consistent).
-        const { seriesGroups } = groupAlbumsBySeries(items, seriesList);
-        const group = seriesGroups.get(seriesId);
-
-        if (!group) return;
-
-        // Render *all* albums (or just the remaining ones?)
-        // Easiest: Render all remaining and append.
-
-        const INITIAL_LIMIT = 12;
-        const remainingAlbums = group.albums.slice(INITIAL_LIMIT);
-
-        // Render new cards
-        // Context needed? Yes.
-        const { context = {} } = this.props;
-        const newCardsHtml = renderAlbumsGrid(remainingAlbums, context);
-
-        // Append to grid
-        const fragment = SafeDOM.fromHTML(newCardsHtml);
-        gridEl.appendChild(fragment);
-
-        // Remove button
-        // Maybe animate removal?
-        btn.parentElement.remove(); // Remove the wrapper div
     }
 
     _hydrateSkeleton(element) {
