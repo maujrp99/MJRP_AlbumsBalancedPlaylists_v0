@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:35] session — release v5.0 criada; a v4.0 entra em fecho; features F54 a F58 no board
+
+- **Decisão do MJRP:** «vamos com sua nova arquitetura proposta, mas vamos criar um versao v5.0 pq a v4.0, apesar de ainda com varios defeitos, corrigiu o mais grave e está mais estável em prod. na v4.0, eu fecharia os que nao impactam e dependem da arquitetura mais o fix do ranking que reportei, aí vai todo o restante para a v5.0 via fast lane».
+- **`ROADMAP.md`:** `^REL-40`, «v5.0 · Uma arquitetura só para carregar e escolher álbuns»; a `^REL-39` (v4.0) passa a «em fecho».
+- **Story S-53** (Prioritized, v5.0), embutida no `prd.md` sob o épico EP-01.
+- **v4.0, o que falta para fechar:** F54 (apagar do inventário e acabamento: UAT-01, UAT-188, UAT-190, UAT-192), F53 (suíte de testes verde, já feita no ramo) e o deploy do conserto da janela de ranking (UAT-187).
+- **v5.0, via rápida:** F55 (o álbum pedido, ou um aviso: UAT-184), F56 (blend, edição e playlists guardadas pelo serviço de carga: UAT-186, UAT-189, UAT-191), F57 (uma peça só para escolher álbuns: UAT-185, UAT-193), F58 (limite de complexidade no serviço de carga: UAT-194, aberta agora), F52 (servidor, UAT-181) e F49 (carregar mais, UAT-06), as duas últimas movidas da v4.0.
+- Todas com spec, plano e tarefas em esboço, `lane: fast`, `solution_type: fix`. A ordem dentro da v5.0 é do MJRP.
+
 ## [2026-11-19 14:31] session — F53 criada: a suíte de testes volta a ficar verde (UAT-149)
 
 Pedido do MJRP: «conserte os 28 testes falhando». Feature na via rápida, `solution_type: fix`, consertando a UAT-149 (falhas de regressão antigas). Spec, plano e tarefas em esboço; o trabalho corre no ramo `fix/f53-test-suite-green`.

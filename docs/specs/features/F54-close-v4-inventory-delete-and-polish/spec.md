@@ -1,0 +1,50 @@
+---
+status: Draft
+lane: fast
+solution_type: fix
+imports: []
+fixes: ["UAT-01", "UAT-188", "UAT-190", "UAT-192"]
+planned_for: "[[ROADMAP#^REL-39]]"
+---
+<!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
+     status: In progress while the cycle runs; Done when every task is closed and every REQ has verified_by.
+     imports: the requirement nodes this feature delivers (1..n), each Ready, each in no other open feature.
+     A transversal NFR node constrains every feature (review it with constitution.md), so a product feature does not import
+     it. The exception is an engineering feature (a refactor planned by an ADR, infrastructure): `solution_type: fix`, `fixes: [UAT-xx]` of the
+     debt issues (required: the card takes its release from them), and `imports:` only the NFR it serves, named by a
+     `violates:: [[NFR-xx-<slug>]]` in the Problem Statement — no story invented for it. A debt against a constitution
+     article imports nothing and says `violates:: [[constitution#N]]` of an article that exists. -->
+# Feature F54: Fecho da v4.0: apagar do inventário e acabamento
+**Approved**: not a gate (via rápida; o MJRP julga)
+
+## Summary
+**A feature:** Apagar um álbum do inventário passa a apagar de verdade; a janela de ranking mostra a duração das faixas; a tela de edição de playlists mostra o nome do lote, um rótulo só e o caminho certo; o título da aba acompanha a tela.
+
+**Por quê:** São os defeitos que a regressão de 2026-11-19 achou e que não dependem de mudar a arquitetura; fecham a v4.0.
+
+**Como saber que funcionou:** No inventário, confirmar a exclusão remove o item e ele não volta ao recarregar; nas outras telas, cada texto aparece como descrito.
+
+## Problem Statement
+O MJRP, em 2026-11-19: «na v4.0, eu fecharia os que nao impactam e dependem da arquitetura mais o fix do ranking que reportei».
+
+## Requirements
+<!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here.
+     Functional and non-functional (performance, security, accessibility) alike are REQ-xx. -->
+- [REQ-01] «a escrever: o que o sistema faz — O QUÊ, nunca COMO» · fixes UAT-01
+  verified_by:: «a escrever: teste ou [[uat#^UAT-01]] — obrigatório antes do Done»
+
+## Observable States
+<!-- What the imported nodes point_to: the screen state in info-arch.md (the prototype the human judged —
+     PRINCIPLES.md §I.13) or the behavior state in behavior.md. N/A only if the nodes point to none. -->
+«a escrever: o estado de tela do info-arch.md ou de comportamento do behavior.md que os nós apontam — ou N/A se não apontam nenhum»
+
+## Success Criteria
+<!-- One measurable item per acceptance criterion of the imported nodes. -->
+- «a escrever: um item mensurável e testável por critério de aceite dos nós importados»
+
+## Out of Scope
+- «a escrever: o que esta feature não faz»
+
+## Open Questions
+<!-- ALL resolved before Plan. -->
+- «a escrever: pergunta — resposta, quem, quando; ou "Nenhuma." se todas estão resolvidas»
