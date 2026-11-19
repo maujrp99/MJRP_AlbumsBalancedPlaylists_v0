@@ -1,0 +1,52 @@
+DRY RUN: nothing will be deployed.
+Server deploy from /Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/agent-a36028aadec71b954, branch main
+
+==> Checking that local 'main' has no uncommitted changes
+    ok: clean (/Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0)
+
+==> Checking gcloud
+    ok: gcloud is logged in
+
+==> Reading the revision in production now (the way back)
+    serving now: mjrp-proxy-00196-sj7 (100%)
+    ok: way back: mjrp-proxy-00196-sj7
+
+==> Exporting a clean copy of 'main'
+    commit: e54c80e merge: F59, fatia C — rotas pagas só para quem está logado, com limite por pessoa
+    ok: exported to <TMP>/mjrp-deploy-server.UV6tVxX7/src
+
+==> Installing dependencies in the clean copy (npm ci)
+
+added 425 packages in 2s
+    ok: dependencies installed
+
+==> Running the unit tests (npx vitest run)
+    Test Files  58 passed (58)
+    Tests  493 passed (493)
+    Duration  1.98s (transform 401ms, setup 471ms, collect 1.31s, tests 3.20s, environment 11.90s, prepare 1.85s)
+    ok: all tests passed
+
+==> Staging the build context (server/ plus shared/ and config/)
+    ok: shared/ -> server/_shared_temp (marked as ES modules), config/ -> server/config
+
+==> Verifying the build context
+    ok: Dockerfile, index.js, the lockfile, config/prompts.json and the shared modules are in place; no .env
+
+==> Starting the staged server locally (as the image lays it out)
+    WARNING: this machine runs Node 26 and the image runs Node 18: the local start proves the code and its dependencies, not the image's Node version
+    ok: the server started and answers /_health
+    ok: /api/musickit-status answers 200
+    ok: /api/debug/files answers 404 (debug routes closed)
+    ok: no missing file or module in the start log
+    ok: loaded from the image layout: 3 prompt group(s), 2 shared modules
+
+==> Deploy skipped (dry run)
+    would run, in the clean copy: gcloud run deploy mjrp-proxy --source server --region southamerica-east1 --project mjrp-playlist-generator --allow-unauthenticated
+    would then check that /api/musickit-status answers 200 and /api/debug/files answers 404 in production
+
+How to roll back the server (sends all traffic back to the revision that served before this deploy):
+  gcloud run services update-traffic mjrp-proxy --to-revisions=mjrp-proxy-00196-sj7=100 --region southamerica-east1 --project mjrp-playlist-generator
+After a rollback the service stays pinned to that revision. Before the next deploy, release it:
+  gcloud run services update-traffic mjrp-proxy --to-latest --region southamerica-east1 --project mjrp-playlist-generator
+
+DRY RUN finished: every step before the deploy passed. Nothing was sent; production was not touched.
