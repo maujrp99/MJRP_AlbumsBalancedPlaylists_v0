@@ -37,8 +37,21 @@ export class PlaylistsGridRenderer {
         return ''
     }
 
-    static renderExportSection(playlists) {
+    /**
+     * @param {Array} playlists
+     * @param {Object} [state]
+     * @param {boolean} [state.isSaving] - a save is on its way: the button is drawn disabled
+     */
+    static renderExportSection(playlists, { isSaving = false } = {}) {
         if (playlists.length === 0) return ''
+
+        const saveButton = isSaving
+            ? `<button class="btn btn-success flex items-center gap-2" id="saveToHistoryBtn" disabled aria-busy="true">
+                        ${getIcon('Loader', 'w-4 h-4 animate-spin')} Saving...
+                    </button>`
+            : `<button class="btn btn-success flex items-center gap-2" id="saveToHistoryBtn">
+                        ${getIcon('Cloud', 'w-5 h-5')} Save to Series History
+                    </button>`
 
         return `
             <div class="export-section glass-panel p-6">
@@ -46,9 +59,7 @@ export class PlaylistsGridRenderer {
                     ${getIcon('Save', 'w-5 h-5')} Actions & Export
                 </h3>
                 <div class="export-actions flex flex-wrap gap-4">
-                    <button class="btn btn-success flex items-center gap-2" id="saveToHistoryBtn">
-                        ${getIcon('Cloud', 'w-5 h-5')} Save to Series History
-                    </button>
+                    ${saveButton}
                     <div class="h-auto w-px bg-white/10 mx-2"></div>
                     <button class="btn flex items-center gap-2 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all duration-300" 
                             style="background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);" 

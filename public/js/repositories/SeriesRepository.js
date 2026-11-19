@@ -4,7 +4,10 @@
  */
 
 import { BaseRepository } from './BaseRepository.js'
-import { collection, getDocs, updateDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, updateDoc, writeBatch } from 'firebase/firestore'
+
+// Firestore refuses a batch with more operations than this
+const MAX_BATCH_OPERATIONS = 500
 
 export class SeriesRepository extends BaseRepository {
     /**
@@ -45,6 +48,56 @@ export class SeriesRepository extends BaseRepository {
         }))
 
         return series
+    }
+
+    /**
+     * The saved playlists of a series (the `playlists` collection under it)
+     * @param {string} seriesId
+     * @returns {Promise<Array<Object>>}
+     */
+    async findPlaylists(seriesId) {
+        const snapshot = await getDocs(collection(this.db, this.playlistsPath(seriesId)))
+        return snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }))
+    }
+
+    /**
+     * Delete a series together with its saved playlists. Firestore does not remove what is under
+     * a document when the document goes, so the playlists are deleted here, in the same atomic
+     * write as the series: either all of it goes or all of it stays.
+     *
+     * A series with more playlists than one write can carry loses playlists first and the series
+     * document in the last write, so a failure in the middle never leaves playlists with no series.
+     *
+     * @param {string} seriesId
+     * @returns {Promise<number>} how many playlists were deleted
+     */
+    async deleteWithPlaylists(seriesId) {
+        const playlists = await this.findPlaylists(seriesId)
+        const playlistsPath = this.playlistsPath(seriesId)
+        const refs = playlists.map(playlist => doc(this.db, playlistsPath, playlist.id))
+        refs.push(this.getDocRef(seriesId)) // the series goes last
+
+        for (let start = 0; start < refs.length; start += MAX_BATCH_OPERATIONS) {
+            const batch = writeBatch(this.db)
+            refs.slice(start, start + MAX_BATCH_OPERATIONS).forEach(ref => batch.delete(ref))
+            await batch.commit()
+        }
+
+        if (this.cache) {
+            await Promise.all([
+                this.cache.invalidate(this.getCacheKey(seriesId)),
+                this.cache.invalidate(this.getCacheKey('all')),
+                this.cache.invalidate(`${playlistsPath}:all`),
+                ...playlists.map(playlist => this.cache.invalidate(`${playlistsPath}:${playlist.id}`))
+            ])
+        }
+
+        return playlists.length
+    }
+
+    /** @private */
+    playlistsPath(seriesId) {
+        return `${this.collectionPath}/${seriesId}/playlists`
     }
 
     /**

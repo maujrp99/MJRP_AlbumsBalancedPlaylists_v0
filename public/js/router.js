@@ -10,9 +10,11 @@ export class Router {
         this.currentView = null
         this.beforeNavigateHooks = []
         this.afterNavigateHooks = []
+        // Address (path + query) of the screen being shown: where the person stays when a hook refuses a move
+        this.currentUrl = null
 
         // Listen to browser back/forward
-        window.addEventListener('popstate', () => this.handleRouteChange())
+        window.addEventListener('popstate', () => this.handleHistoryMove())
 
         // Intercept link clicks for SPA navigation
         document.addEventListener('click', (e) => {
@@ -68,13 +70,35 @@ export class Router {
      */
     navigate(path, state = {}) {
         console.log('[Router] navigate called:', path, 'from:', new Error().stack?.split('\n')[2])
-        // Call before hooks
-        for (const hook of this.beforeNavigateHooks) {
-            const canNavigate = hook(path, state)
-            if (canNavigate === false) return // Hook prevented navigation
-        }
+        if (!this.canNavigate(path, state)) return // Hook prevented navigation
 
         history.pushState(state, '', path)
+        this.handleRouteChange()
+    }
+
+    /**
+     * Ask the before hooks whether the screen may be left
+     * @private
+     */
+    canNavigate(path, state = {}) {
+        for (const hook of [...this.beforeNavigateHooks]) {
+            if (hook(path, state) === false) return false
+        }
+        return true
+    }
+
+    /**
+     * Back and forward of the browser: the address has already changed when this runs. The before
+     * hooks are asked as in navigate(); when one refuses, the address of the screen the person
+     * stays on is put back.
+     * @private
+     */
+    handleHistoryMove() {
+        const target = window.location.pathname + window.location.search
+        if (this.currentUrl && target !== this.currentUrl && !this.canNavigate(target, history.state || {})) {
+            history.pushState({}, '', this.currentUrl)
+            return
+        }
         this.handleRouteChange()
     }
 
@@ -88,6 +112,7 @@ export class Router {
         for (const [routePath, route] of this.routes) {
             const match = path.match(route.pattern)
             if (match) {
+                this.currentUrl = path + window.location.search
                 const params = this.extractParams(route.params, match)
                 const queryParams = this.parseQueryString()
 
@@ -101,8 +126,8 @@ export class Router {
             }
         }
 
-        // No route matched - redirect to home
-        this.navigate('/home')
+        // No route matched - redirect to home (once: without a home route there is nowhere to go)
+        if (path !== '/home') this.navigate('/home')
     }
 
     /**
@@ -218,9 +243,13 @@ export class Router {
     /**
      * Add before navigate hook
      * @param {Function} hook - Hook function (path, state) => boolean
+     * @returns {Function} removes the hook
      */
     beforeNavigate(hook) {
         this.beforeNavigateHooks.push(hook)
+        return () => {
+            this.beforeNavigateHooks = this.beforeNavigateHooks.filter(h => h !== hook)
+        }
     }
 
     /**

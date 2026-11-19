@@ -13,6 +13,9 @@ import { SafeDOM } from '../utils/SafeDOM.js'
 import { PlaylistsController } from '../controllers/PlaylistsController.js'
 import { PlaylistsGridRenderer } from '../components/playlists/PlaylistsGridRenderer.js'
 import { PlaylistsDragHandler } from '../components/playlists/PlaylistsDragHandler.js'
+import { getPlaylistsService } from '../services/PlaylistsService.js'
+import { router } from '../router.js'
+import { installUnsavedChangesGuard } from './playlists/unsavedChangesGuard.js'
 
 export class PlaylistsView extends BaseView {
   constructor() {
@@ -42,6 +45,12 @@ export class PlaylistsView extends BaseView {
 
     // 3. Subscribe to Stores
     this.subscribeStores()
+
+    // Leaving with work that is not saved asks first (F60)
+    this.removeUnsavedChangesGuard = installUnsavedChangesGuard({
+      router,
+      hasUnsavedChanges: () => getPlaylistsService()?.hasUnsavedChanges() === true
+    })
 
     // 4. Attach Listeners & Setup Drag
     this.attachDelegatedListeners() // Call ONCE
@@ -233,7 +242,7 @@ export class PlaylistsView extends BaseView {
 
     // Export
     const exportSec = SafeDOM.div({ id: 'exportSection', className: 'mb-6 fade-in', style: { animationDelay: '0.08s' } })
-    exportSec.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderExportSection(playlists)))
+    exportSec.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderExportSection(playlists, { isSaving: state.isSaving })))
     container.appendChild(exportSec)
 
     // Grid
@@ -336,6 +345,8 @@ export class PlaylistsView extends BaseView {
 
   destroy() {
     super.destroy()
+    this.removeUnsavedChangesGuard?.()
+    this.removeUnsavedChangesGuard = null
     this.controller.destroy()
     this.dragHandler.destroy()
   }

@@ -2,7 +2,8 @@
  * PlaylistsService.js
  * 
  * Service layer for ALL playlist operations:
- * - CRUD orchestration (Firestore)
+ * - Saving the playlists on screen as a batch (the save rule: saveCurrentBatch)
+ * - CRUD orchestration (through PlaylistRepository; no Firestore call here)
  * - Computation (stats, duration)
  * - Track operations (move, reorder, remove)
  * - Undo/Redo history
@@ -14,7 +15,6 @@
  */
 
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
-import { writeBatch } from 'firebase/firestore'
 import { playlistsStore } from '../stores/playlists.js'
 import { StorageService } from './infra/StorageService.js'
 import { PlaylistHistoryService } from './playlists/PlaylistHistoryService.js'
@@ -22,9 +22,18 @@ import { PlaylistHistoryService } from './playlists/PlaylistHistoryService.js'
 const STORAGE_KEY = 'current_playlists' // prefix will be added by service
 
 export class PlaylistsService {
-    constructor(db, cacheManager, storageService, historyService) {
+    /**
+     * @param {Object} db - Firestore instance
+     * @param {Object} cacheManager
+     * @param {StorageService} [storageService]
+     * @param {PlaylistHistoryService} [historyService]
+     * @param {Function} [playlistRepositoryFor] - (userId, seriesId) => the repository of the playlists of that series
+     */
+    constructor(db, cacheManager, storageService, historyService, playlistRepositoryFor) {
         this.db = db
         this.cacheManager = cacheManager
+        this.playlistRepositoryFor = playlistRepositoryFor ||
+            ((userId, seriesId) => new PlaylistRepository(this.db, this.cacheManager, userId || 'anonymous-user', seriesId))
 
         // Dependencies
         this.storage = storageService || new StorageService()
@@ -75,6 +84,22 @@ export class PlaylistsService {
             `Removed "${removedTrack.title}" from ${playlist.name}`)
 
         this._updateState(playlists, seriesId)
+    }
+
+    /**
+     * Take a whole playlist out of the working set (the saved batch changes only on save).
+     * @returns {Object|null} the playlist removed
+     */
+    removePlaylist(playlistIndex) {
+        const playlists = playlistsStore.getPlaylists()
+        const removed = playlists[playlistIndex]
+        if (!removed) return null
+
+        const seriesId = playlistsStore.getSeriesId()
+        const remaining = playlists.filter((_, index) => index !== playlistIndex)
+        this.history.createSnapshot(remaining, seriesId, `Removed playlist ${removed.name}`)
+        this._updateState(remaining, seriesId)
+        return removed
     }
 
     _updateState(playlists, seriesId) {
@@ -232,45 +257,114 @@ export class PlaylistsService {
         this.storage.remove(STORAGE_KEY)
     }
 
-    // ========== FIRESTORE CRUD ==========
+    // ========== SAVE ==========
 
-    async saveBatch(userId, seriesId, playlists) {
+    /**
+     * The name a save will use: what the person typed, or, for playlists not saved yet, the
+     * name suggested when they were generated.
+     * @returns {string|null} null when there is no name to save under
+     */
+    resolveBatchName(typedName) {
+        const typed = (typedName || '').trim()
+        if (typed) return typed
+        if (playlistsStore.isEditingExistingBatch()) return null
+        return playlistsStore.defaultBatchName || null
+    }
+
+    /**
+     * Is there work on screen that the database does not have? Tracks moved or removed, a
+     * playlist removed, or a saved batch given another name.
+     */
+    hasUnsavedChanges() {
+        const state = playlistsStore.getState()
+        if (state.playlists.length === 0) return false
+        if (state.isDirty) return true
+        const original = state.editContext?.originalBatchName
+        return playlistsStore.isEditingExistingBatch() && !!state.batchName && !!original &&
+            state.batchName.trim() !== original
+    }
+
+    /**
+     * Save the playlists on screen as one batch. The whole rule of a save lives here:
+     *
+     * - one save at a time: a call made while a save is on its way does nothing;
+     * - the series is the one the playlists on screen belong to (`playlistsStore.seriesId`),
+     *   never the series that happens to be active elsewhere;
+     * - when an already saved batch is being edited, the new playlists and the removal of the
+     *   ones they replace go in ONE atomic write: a failure leaves the saved batch as it was;
+     * - the state on screen changes only after the write is confirmed.
+     *
+     * @param {Object} params
+     * @param {string} params.userId
+     * @param {string} params.batchName - see resolveBatchName
+     * @returns {Promise<{status: 'saved'|'already-saving', batchName?: string, seriesId?: string, playlists?: Array}>}
+     * @throws when there is no name to save under, or the write fails (nothing was changed)
+     */
+    async saveCurrentBatch({ userId, batchName } = {}) {
+        if (playlistsStore.getState().isSaving) return { status: 'already-saving' }
+
+        const name = this.resolveBatchName(batchName)
+        if (!name) throw new Error('Batch name required')
+        // An empty save of a batch being edited would only delete it: deleting is another action
+        if (playlistsStore.getPlaylists().length === 0) throw new Error('There are no playlists to save')
+
+        playlistsStore.setSaving(true)
+        try {
+            return await this._writeCurrentBatch(userId, name)
+        } finally {
+            playlistsStore.setSaving(false)
+        }
+    }
+
+    async _writeCurrentBatch(userId, batchName) {
+        const seriesId = playlistsStore.getSeriesId()
         if (!seriesId || !this.db) {
             throw new Error('Cannot save: Missing database or Series ID')
         }
 
-        const repo = new PlaylistRepository(this.db, this.cacheManager, userId || 'anonymous-user', seriesId)
-        const batch = writeBatch(this.db)
-        const sanitized = JSON.parse(JSON.stringify(playlists))
+        const editContext = playlistsStore.isEditingExistingBatch() ? playlistsStore.getEditContext() : null
+        if (editContext?.seriesId && editContext.seriesId !== seriesId) {
+            throw new Error('Cannot save: the playlists on screen are not from the series of the batch being edited')
+        }
 
-        const saved = await Promise.all(
-            sanitized.map(async (playlist, index) => {
-                const data = { ...playlist, order: index, updatedAt: new Date().toISOString() }
-                if (playlist.id) {
-                    await repo.save(playlist.id, data, batch)
-                    return { ...data, id: playlist.id }
-                } else {
-                    const newId = await repo.create(data, batch)
-                    return { ...data, id: newId }
-                }
-            })
-        )
+        const savedAt = new Date().toISOString()
+        // A copy: the playlists on screen stay as they are until the write is confirmed
+        const playlists = JSON.parse(JSON.stringify(playlistsStore.getPlaylists()))
+            .map(playlist => ({ ...playlist, batchName, savedAt, updatedAt: savedAt }))
 
-        await batch.commit()
-        console.log('[PlaylistsService] Batch save successful')
+        const repository = this.playlistRepositoryFor(userId, seriesId)
+        const replacedName = editContext?.originalBatchName || null
+        const replacedIds = replacedName
+            ? (await repository.findAll()).filter(p => p.batchName === replacedName).map(p => p.id)
+            : []
 
-        playlistsStore.setPlaylists(saved, seriesId)
+        let stored
+        try {
+            stored = await repository.replaceBatch(playlists, replacedIds)
+        } catch (err) {
+            if (err?.code === 'not-found') {
+                throw new Error('the series of these playlists no longer exists')
+            }
+            throw err
+        }
+        console.log(`[PlaylistsService] Saved batch "${batchName}": ${stored.length} playlists`)
+
+        // The saved batch is now the one being edited (also after a rename: the next save replaces the new name)
+        playlistsStore.setPlaylists(stored.map(playlist => ({ ...playlist, updatedAt: savedAt })), seriesId)
+        this.setEditMode(batchName, seriesId, savedAt)
         playlistsStore.setDirty(false)
         playlistsStore.setSynchronized(true)
         this.saveToLocalStorage()
 
-        return saved
+        return { status: 'saved', batchName, seriesId, playlists: stored }
     }
+
+    // ========== FIRESTORE CRUD ==========
 
     async loadBatch(userId, seriesId) {
         if (!seriesId || !this.db) return []
 
-        const repo = new PlaylistRepository(this.db, this.cacheManager, userId || 'anonymous-user', seriesId)
+        const repo = this.playlistRepositoryFor(userId, seriesId)
         const playlists = await repo.findAll()
 
         if (playlists?.length > 0) {
@@ -288,16 +382,12 @@ export class PlaylistsService {
             throw new Error('Cannot delete: Missing database or Series ID')
         }
 
-        const repo = new PlaylistRepository(this.db, this.cacheManager, userId || 'anonymous-user', seriesId)
+        const repo = this.playlistRepositoryFor(userId, seriesId)
         const all = await repo.findAll()
         const toDelete = all.filter(p => p.batchName === batchName)
-        const batch = writeBatch(this.db)
 
-        for (const playlist of toDelete) {
-            await repo.delete(playlist.id, batch)
-        }
-
-        await batch.commit()
+        // one atomic write: the batch goes whole or stays whole
+        await repo.deleteMany(toDelete.map(p => p.id))
         console.log(`[PlaylistsService] Deleted ${toDelete.length} playlists`)
     }
 

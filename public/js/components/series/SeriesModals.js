@@ -59,21 +59,32 @@ export default class SeriesModals {
             return
         }
 
+        const db = albumSeriesStore.getDb()
+        if (!db) {
+            toast.error('Database not initialized')
+            return
+        }
+        const service = getSeriesService(db, null, albumSeriesStore.getUserId())
+
+        // The saved playlists of the series go with it: the person is told how many before confirming
+        let saved
+        try {
+            saved = await service.countSavedPlaylists(seriesId)
+        } catch (err) {
+            console.error('Could not count the saved playlists of the series:', err)
+            toast.error('Could not check the saved playlists of this series. Nothing was deleted.')
+            return
+        }
+
         const confirmed = await dialogService.confirm({
             title: 'Delete Series?',
-            message: `Are you sure you want to delete "${series.name}"? Albums will NOT be deleted from inventory.`,
+            message: `Are you sure you want to delete "${series.name}"? ${SeriesModals.savedPlaylistsWarning(saved)}Albums will NOT be deleted from inventory.`,
             confirmText: 'Delete Series',
             variant: 'danger'
         })
 
         if (confirmed) {
             try {
-                const db = albumSeriesStore.getDb()
-                if (!db) {
-                    toast.error('Database not initialized')
-                    return
-                }
-                const service = getSeriesService(db, null, albumSeriesStore.getUserId())
                 await service.deleteSeries(seriesId)
                 toast.success('Series deleted successfully')
                 this.onSeriesDeleted(seriesId)
@@ -82,6 +93,17 @@ export default class SeriesModals {
                 toast.error('Failed to delete series')
             }
         }
+    }
+
+    /**
+     * The sentence of the delete dialog about what is saved under the series ('' when nothing is)
+     * @param {{playlists: number, batches: number}} saved
+     */
+    static savedPlaylistsWarning({ playlists, batches }) {
+        if (!playlists) return ''
+        const playlistsText = playlists === 1 ? '1 saved playlist' : `${playlists} saved playlists`
+        const batchesText = batches === 1 ? '1 batch' : `${batches} batches`
+        return `Its ${playlistsText} (${batchesText}) will be deleted too. `
     }
 
     /**

@@ -76,6 +76,28 @@ describe('Router', () => {
         })
     })
 
+    describe('unknown address', () => {
+        it('goes to home once and stops when there is no home route either', async () => {
+            window.history.pushState({}, '', '/nowhere')
+
+            // it used to call itself until the stack overflowed
+            await expect(router.handleRouteChange()).resolves.toBeUndefined()
+            expect(window.location.pathname).toBe('/home')
+        })
+
+        it('lets a before hook be removed', () => {
+            router.register('/test', () => ({ render: () => '<div>Test</div>' }))
+            const hook = vi.fn(() => false)
+            const remove = router.beforeNavigate(hook)
+            remove()
+
+            router.navigate('/test')
+
+            expect(hook).not.toHaveBeenCalled()
+            expect(window.location.pathname).toBe('/test')
+        })
+    })
+
     describe('route matching', () => {
         it('should match simple routes', () => {
             const viewFactory = vi.fn(() => ({
