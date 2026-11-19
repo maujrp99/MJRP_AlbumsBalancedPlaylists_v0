@@ -386,7 +386,7 @@ export class BlendingMenuView extends BaseView {
         container.appendChild(SafeDOM.fromHTML(`
             <div class="glass-panel rounded-2xl p-6 text-center">
                 <div class="animate-spin rounded-full h-10 w-10 border-3 border-orange-400 border-t-transparent mx-auto mb-4"></div>
-                <p class="text-muted">${message}</p>
+                <p class="text-muted">${escapeHtml(message)}</p>
             </div>
         `))
     }
@@ -439,7 +439,7 @@ export class BlendingMenuView extends BaseView {
             <div class="glass-panel rounded-2xl p-6 border-2 border-red-400/30">
                 <div class="flex items-center gap-3 text-red-400">
                     ${getIcon('AlertCircle', 'w-6 h-6')}
-                    <span class="font-semibold">${message}</span>
+                    <span class="font-semibold">${escapeHtml(message)}</span>
                 </div>
             </div>
         `))

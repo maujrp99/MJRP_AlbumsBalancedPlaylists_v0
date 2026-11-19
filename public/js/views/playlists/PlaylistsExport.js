@@ -8,6 +8,7 @@ import toast from '../../components/Toast.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { playlistsStore } from '../../stores/playlists.js'
 import { getIcon } from '../../components/Icons.js'
+import { escapeHtml } from '../../utils/stringUtils.js'
 
 /**
  * Export playlists as JSON file
@@ -120,7 +121,7 @@ export async function handleExportToAppleMusic(options = {}) {
 
             // DEBUG: Log the exact playlist name being sent
             console.log('[AppleMusic Export] Playlist name:', playlistName)
-            if (btn) btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} Exporting ${playlistTitle}...`
+            if (btn) btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} Exporting ${escapeHtml(playlistTitle)}...`
 
             // Find tracks in Apple Music catalog with improved matching
             const trackIds = []
@@ -281,7 +282,7 @@ export async function handleExportToSpotify(options = {}) {
                 // Original format that worked (series name prefix)
                 playlistName = `${seriesName} - ${playlistTitle}`
             }
-            if (btn) btn.innerHTML = `${getIcon('Spotify', 'w-5 h-5')} Exporting ${playlistTitle}...`
+            if (btn) btn.innerHTML = `${getIcon('Spotify', 'w-5 h-5')} Exporting ${escapeHtml(playlistTitle)}...`
 
             // Find tracks in Spotify catalog
             const trackUris = []

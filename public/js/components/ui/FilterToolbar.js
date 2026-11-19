@@ -25,6 +25,7 @@
 
 import Component from '../base/Component.js';
 import { getIcon } from '../Icons.js';
+import { escapeHtml } from '../../utils/stringUtils.js';
 
 export default class FilterToolbar extends Component {
     constructor(props) {
@@ -214,8 +215,6 @@ export default class FilterToolbar extends Component {
 
     escapeHtml(text) {
         if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+        return escapeHtml(text);
     }
 }

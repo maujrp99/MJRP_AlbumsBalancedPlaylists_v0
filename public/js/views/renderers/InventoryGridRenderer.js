@@ -87,7 +87,7 @@ export class InventoryGridRenderer {
           <div class="relative group/dropdown">
             <select 
               class="status-select w-full appearance-none pl-3 pr-8 py-1 rounded-full text-xs font-medium border cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors bg-gray-900 ${borderColor}"
-              data-album-id="${album.id}"
+              data-album-id="${escapeHtml(album.id)}"
               style="background-color: #1f2937;"
             >
               <option value="not-owned" ${!isOwned && !isWishlist ? 'selected' : ''} class="bg-gray-900 text-white">Not Owned</option>
@@ -106,7 +106,7 @@ export class InventoryGridRenderer {
         // And we ensure data-album-id is on the wrapper for delegation.
         // Updated Layout: Use flex-col to stack Card and Footer properly.
         return `
-            <div class="inventory-card-wrapper relative group h-full flex flex-col" data-album-id="${album.id}">
+            <div class="inventory-card-wrapper relative group h-full flex flex-col" data-album-id="${escapeHtml(album.id)}">
                 ${statusDropdown}
                 <div class="flex-1 min-h-0 w-full">
                     ${cardHTML}
@@ -142,7 +142,7 @@ export class InventoryGridRenderer {
             ]
         }
         return `
-            <div class="inventory-row-wrapper relative cursor-pointer hover:bg-white/5 transition-colors rounded-xl overflow-hidden" data-album-id="${album.id}">
+            <div class="inventory-row-wrapper relative cursor-pointer hover:bg-white/5 transition-colors rounded-xl overflow-hidden" data-album-id="${escapeHtml(album.id)}">
                 ${Card.renderHTML(cardProps)}
             </div>
         `
@@ -179,6 +179,6 @@ export class InventoryGridRenderer {
         else if (f.includes('cd')) { color = 'bg-blue-900/50 text-blue-400 border border-blue-500/30'; text = 'CD' }
         else if (f.includes('digital')) { color = 'bg-purple-900/50 text-purple-400'; text = 'Digital' }
 
-        return `<span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${color}">${text}</span>`
+        return `<span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${color}">${escapeHtml(text)}</span>`
     }
 }

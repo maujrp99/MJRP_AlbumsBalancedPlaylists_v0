@@ -112,10 +112,10 @@ export function renderSeriesHeader(series, albumCount) {
             </span>
         </div>
         <div class="series-actions flex gap-2">
-            <button class="btn btn-secondary btn-sm btn-icon" data-action="edit-series" data-series-id="${series.id}" title="Edit Series">
+            <button class="btn btn-secondary btn-sm btn-icon" data-action="edit-series" data-series-id="${escapeHtml(series.id)}" title="Edit Series">
                 ${getIcon('Edit', 'w-4 h-4')}
             </button>
-            <button class="btn btn-danger btn-sm btn-icon" data-action="delete-series" data-series-id="${series.id}" title="Delete Series">
+            <button class="btn btn-danger btn-sm btn-icon" data-action="delete-series" data-series-id="${escapeHtml(series.id)}" title="Delete Series">
                 ${getIcon('Trash', 'w-4 h-4')}
             </button>
         </div>
@@ -163,7 +163,7 @@ export function renderScopedGrid(context) {
         if (group.albums.length === 0) return
 
         html += `
-        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${group.series.id}">
+        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${escapeHtml(group.series.id)}">
             ${renderSeriesHeader(group.series, group.albums.length)}
             ${wrapInGrid(renderAlbumsGrid(group.albums))}
         </div>`
@@ -208,7 +208,7 @@ export function renderScopedList(context) {
         if (group.albums.length === 0) return
 
         html += `
-        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${group.series.id}">
+        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${escapeHtml(group.series.id)}">
             ${renderSeriesHeader(group.series, group.albums.length)}
             ${renderExpandedList(group.albums)}
         </div>`

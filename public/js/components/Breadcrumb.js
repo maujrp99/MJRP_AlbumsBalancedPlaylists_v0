@@ -1,4 +1,5 @@
 import { router } from '../router.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 
 /**
  * Breadcrumb Component
@@ -21,7 +22,7 @@ export class Breadcrumb {
             }
 
             return `
-            <a href="${crumb.path}" class="breadcrumb-link" data-path="${crumb.path}">
+            <a href="${escapeHtml(crumb.path)}" class="breadcrumb-link" data-path="${escapeHtml(crumb.path)}">
               ${crumb.label}
             </a>
             <span class="breadcrumb-separator">›</span>

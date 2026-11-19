@@ -5,6 +5,7 @@
  * Singleton-ish behavior: Only one should be open at a time.
  */
 import Component from '../base/Component.js';
+import { escapeHtml } from '../../utils/stringUtils.js';
 
 export default class ContextMenu extends Component {
     /**
@@ -42,10 +43,10 @@ export default class ContextMenu extends Component {
         const itemsHTML = actions.map(item => `
             <button 
                 class="w-full text-left px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-700 transition-colors ${item.danger ? 'text-red-400 hover:text-red-300' : 'text-gray-200'}"
-                data-action="${item.id}"
+                data-action="${escapeHtml(item.id)}"
             >
-                <i class="${item.icon || 'fas fa-circle'} w-4 text-center"></i>
-                ${item.label}
+                <i class="${escapeHtml(item.icon || 'fas fa-circle')} w-4 text-center"></i>
+                ${escapeHtml(item.label)}
             </button>
         `).join('');
 

@@ -21,6 +21,15 @@ This document analyzes the "Plumbing" of the frontend: The utilities, transforme
 *   **API**: Fluent interface (`SafeDOM.div({ className: 'foo' }, [children])`).
 *   **SVG Support**: Dedicated namespace handling for SVG creation (`SafeDOM.svg`, `SafeDOM.path`).
 
+### escapeHtml (`public/js/utils/stringUtils.js`) - v5.0 (F59)
+*   **Role**: The one way text from outside the code goes into an HTML string (a template given to `innerHTML`, `outerHTML`, `insertAdjacentHTML` or `SafeDOM.fromHTML`). Outside text: names of albums, tracks, artists, series, playlists and batches, inventory notes, the message of an error, a provider's addresses and ids, anything read from the URL.
+*   **What it does**: A pure function, no DOM. `null` and `undefined` give `''`; any other value is turned into its text; then `&`, `<`, `>`, `"` and `'` become `&amp;`, `&lt;`, `&gt;`, `&quot;` and `&#39;`.
+*   **Where it is safe**: Element content and a **quoted** attribute value: `<h3 title="${escapeHtml(name)}">${escapeHtml(name)}</h3>`.
+*   **Where it is not enough**: An attribute with no quotes, a URL scheme (`href="javascript:..."`), text inside `<script>` or inside an inline handler (`onclick="f('${x}')"`).
+*   **Where it must not be used**: A text node, `textContent`, `setAttribute`, a `SafeDOM` child or prop. They take plain text; escaping there shows `&amp;` on screen. Stored names are plain too (`models/text.js` undoes old stored entities), so a name with `&` is escaped once, when drawn, and shows as `&`.
+*   **No second helper**: `FilterToolbar.escapeHtml` and `RegeneratePanel.escapeHtml` call this one.
+*   **Tests**: `test/utils/escapeHtml.test.js` (the function), `test/security/outsideTextIsText.test.js` (17 renderers drawn with a name such as `<img src=x onerror=...>`), `test/architecture/outsideTextEscaped.test.js` (fitness: an HTML template that interpolates a field named `title`, `name`, `artist`, `message`... without `escapeHtml` fails; text written in the code is listed there).
+
 ---
 
 ## 3. Data Normalization
@@ -73,7 +82,7 @@ classDiagram
 ---
 
 ## 5. Other Utilities
-*   **`stringUtils.js`**: Standard string manipulation (slugify, escapeHtml).
+*   **`stringUtils.js`**: String similarity and album keys, and `escapeHtml` (section 2).
 *   **`dom-helpers.js`**: Low-level DOM traversal/manipulation helpers.
 *   **`SvgGenerator.js`**: Dynamic SVG generation (likely for placeholders or dynamic icons).
 
