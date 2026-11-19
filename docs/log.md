@@ -3,12 +3,32 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:13] session — F64 conferida pelo integrador: o Node do servidor fica em 18 até o MJRP decidir; `arch.md` e `tech-stack.md` em dia
+
+O agente auxiliar entregou a F64 com a imagem do servidor em Node 26. Mudar o Node muda o que produção roda, e isso é decisão do MJRP: o `server/Dockerfile` volta a `node:18-slim` (o que está no ar), com a pendência escrita. `docs/specs/arch.md` (segredos, implantação do site e do servidor) e `docs/specs/tech-stack.md` deixam de citar os scripts antigos e o `cloudbuild.yaml`.
+
 ## [2026-11-19 16:12] session — proposta de arquitetura da F52 escrita: «O servidor diz a verdade»
 
 `docs/specs/arch.md`, seção nova no fim. O MJRP pôs como condição da v5.0 que a arquitetura esteja documentada antes do código; esta é a proposta da F52, escrita enquanto a F60 e a F64 rodavam em paralelo. Pontos: um contrato de resultado só para as rotas do servidor (tem o dado; a fonte não tem; não deu para saber), com a falha nunca lida como «sem dado»; o raspador só aceita o álbum certo, pela regra de identidade da F55; **não** começar por um guardado no servidor (o app já guarda por 7 dias; falta poder confiar no «não tem»), e medir antes de pôr banco; uma fila educada para a fonte raspada. Sete riscos, cinco alternativas, cinco fatias e três decisões que são do MJRP. Ainda **sem crítica separada**: é o passo seguinte, antes de qualquer código.
 
 - **F64:** o agente auxiliar entregou o ramo `fix/f64-one-tested-way-to-production`; ainda não conferido nem integrado.
 - **Fatia E da F59** (texto inserido como HTML) adiada para depois da F60: o levantamento achou 71 pontos candidatos em 25 arquivos de tela, vários deles os mesmos em que a F60 está mexendo.
+
+## [2026-11-19 16:11] session — F64: spec, plano e tarefas escritos do que foi feito; evidência dos dois ensaios
+
+- **Documentos da feature** (`docs/specs/features/F64-one-tested-way-to-production/`): `spec.md` em `In Progress` com seis requisitos, `plan.md` com o desenho, a decisão sobre as duas receitas da imagem e o risco do Node 26, `tasks.md` com sete tarefas fechadas (commit `fca0108`) e três à espera do MJRP: a primeira publicação real, a automação rodar no GitHub e o aceite.
+- **Evidência:** a saída dos dois ensaios em `reports/evidence/F64-one-tested-way-to-production/` (os caminhos da pasta temporária trocados por `<TMP>`).
+- **Pergunta aberta para o MJRP:** o Node do servidor passa de 18 para 26 na próxima publicação do servidor.
+
+## [2026-11-19 16:08] session — F64: um script para publicar o site e um para o servidor; receitas antigas removidas
+
+- **Scripts novos:** `scripts/deploy-site.sh` e `scripts/deploy-server.sh` (parte comum em `scripts/lib/deploy-common.sh`), chamados por `npm run deploy:site` e `npm run deploy:server`. Fazem os passos que vinham sendo feitos à mão: recusam se a `main` tem mudança não commitada, exportam a `main` para uma pasta temporária do sistema, `npm ci`, `npx vitest run`, constroem ou montam, conferem o que vai ser enviado, publicam, conferem a produção e mostram como voltar atrás. Usam o login do Firebase CLI e do gcloud; chave de conta de serviço é aceita se existir.
+- **`--dry-run`:** faz tudo menos publicar e conferir a produção. Os dois rodaram até o fim na `main` em `e54c80e` (493 testes): o site com o Client ID do Spotify nos scripts, sem `.map`, 40 arquivos em `dist/`; o servidor subiu localmente na arrumação da imagem (`/api/musickit-status` 200, `/api/debug/files` 404, prompts e `shared/` carregados). **Nada foi publicado.**
+- **Removidos:** `scripts/deploy-prod.sh`, `scripts/deploy-backend.sh` e `cloudbuild.yaml`. A produção usa `gcloud run deploy --source` (a imagem em uso vem de `cloud-run-source-deploy`); o `cloudbuild.yaml` era a receita que não copiava os prompts (UAT-22).
+- **Node do servidor:** `server/Dockerfile` passa de `node:18-slim` para `node:26-slim` e de `npm ci --only=production || npm install` para `npm ci --omit=dev`. O servidor sobe no Node 26 com as dependências do lockfile; a assinatura ES256 do token da Apple foi exercitada com uma chave descartável. **Só vale na próxima publicação do servidor, que depende do sim do MJRP.**
+- **Automação do GitHub:** `.github/workflows/ci-firebase.yml` vira `ci.yml`: roda `npx vitest run` em push e pull request e não publica nada. **Não testada: não rodou no GitHub.** O lint ficou de fora (81 erros hoje), então a UAT-20 segue aberta nessa parte.
+- **Manual:** `docs/manual/00_Deployment_and_Setup.md`, seções 1 e 2, reescritas para o caminho único, com o que precisa existir na máquina e como voltar atrás.
+- **Fica de fora (caminhos de outro agente ou fora do combinado):** `docs/specs/arch.md` e `docs/specs/tech-stack.md` ainda citam os scripts antigos e o `cloudbuild.yaml`; os itens 6.1, 6.5, 6.6 e 6.7 do mapa da v5.0.
 
 ## [2026-11-19 16:08] session — F59 fatia C em produção: as rotas pagas respondem 401 sem login e funcionam com login
 

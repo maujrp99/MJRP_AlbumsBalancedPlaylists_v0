@@ -1,0 +1,45 @@
+# Runs the unit tests on every push and pull request. It deploys nothing.
+#
+# Production is published from the owner's machine, by scripts/deploy-site.sh and
+# scripts/deploy-server.sh (docs/manual/00_Deployment_and_Setup.md). This repository
+# holds no deploy secret, so a deploying job here could only fail or ship a broken
+# site (the build needs VITE_SPOTIFY_CLIENT_ID, which is not in the repository).
+#
+# The suite needs no secret and no network: it is the same `npx vitest run` the
+# deploy scripts run before sending anything.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          # The Node the tests are run with on the owner's machine. The server image is still on 18
+          # (server/Dockerfile) until the owner decides the upgrade.
+          node-version: 26.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+        env:
+          # The browser is only for test/e2e, which this workflow does not run.
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
+
+      - name: Unit tests
+        run: npx vitest run
