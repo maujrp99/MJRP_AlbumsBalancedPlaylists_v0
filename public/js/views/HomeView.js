@@ -10,7 +10,8 @@ export class HomeView extends BaseView {
     }
 
     async render(params) {
-        this.setTitle('Home - Album Blender V3');
+        // One title for the whole app (UAT-192): the same text as in index.html
+        this.setTitle('MJRP The Album Blender - Playlist Generator');
 
         // Background
         const background = SafeDOM.div({ className: 'absolute inset-0 z-0 pointer-events-none' }, [
