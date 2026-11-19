@@ -14,10 +14,10 @@
 # Terminal 1: Backend API (Default: 3000)
 cd server && npm ci && node index.js
 
-# Terminal 2: Frontend (Default: 5000)
+# Terminal 2: Frontend (http://127.0.0.1:5010)
 npm install && npm run dev
 ```
-*   **Frontend**: http://localhost:5000
+*   **Frontend**: http://127.0.0.1:5010 (the one local address; `localhost` is sent there. See `PORT_INFO.txt`)
 *   **Backend**: http://localhost:3000
 
 ### 2. Testing

@@ -13,8 +13,8 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         console.log(`[BROWSER ${msg.type()}]:`, msg.text());
     });
 
-    console.log('Navigating to localhost:5000...');
-    await page.goto('http://localhost:5000');
+    console.log('Navigating to 127.0.0.1:5010...');
+    await page.goto('http://127.0.0.1:5010');
     await sleep(2000);
 
     console.log('\n=== Creating Series A ===');
@@ -31,7 +31,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     await sleep(10000);
 
     console.log('\n=== Creating Series B ===');
-    await page.goto('http://localhost:5000');
+    await page.goto('http://127.0.0.1:5010');
     await sleep(1500);
 
     await page.type('#seriesName', 'Series B');

@@ -5,7 +5,7 @@
 
 import puppeteer from 'puppeteer';
 
-const BASE_URL = 'http://localhost:5000';  // Dev server
+const BASE_URL = 'http://127.0.0.1:5010';  // Dev server
 
 async function generateEvidence() {
     console.log('\n📸 Generating Test Evidence...\n');

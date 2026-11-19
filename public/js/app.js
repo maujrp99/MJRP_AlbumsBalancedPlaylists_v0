@@ -6,6 +6,12 @@
  */
 
 import '../css/index.css'
+import { canonicalLocalUrl } from './utils/localAddress.js'
+
+// One local address (F50): a page opened at `localhost` goes to the same place at 127.0.0.1,
+// where the logins, the Spotify redirect and the caches live.
+const localUrl = canonicalLocalUrl(window.location)
+if (localUrl) window.location.replace(localUrl)
 import { app, auth, db } from './firebase-init.js'
 import { AuthService } from './services/AuthService.js'
 

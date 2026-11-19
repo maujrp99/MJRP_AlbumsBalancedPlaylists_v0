@@ -23,6 +23,7 @@ export class SpotifyConnectButton {
             this.isConnected = SpotifyAuthService.isAuthenticated()
             if (!this.isConnected) this.userProfile = null
             this.render()
+            if (this.isConnected && !this.userProfile) this.fetchProfile()
         })
 
         // Initial Render
@@ -30,7 +31,14 @@ export class SpotifyConnectButton {
     }
 
     async fetchProfile() {
-        this.userProfile = await SpotifyAuthService.getUserProfile()
+        // One request at a time: a token refresh in the middle announces the session again.
+        if (this._fetchingProfile) return
+        this._fetchingProfile = true
+        try {
+            this.userProfile = await SpotifyAuthService.getUserProfile()
+        } finally {
+            this._fetchingProfile = false
+        }
         this.render()
     }
 
