@@ -1,20 +1,25 @@
 import { BaseView } from './BaseView.js'
-import { MigrationUtility } from '../migration/MigrationUtility.js'
 import { getIcon } from '../components/Icons.js'
 import toast from '../components/Toast.js'
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
-import { getAuth } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 
 /**
  * SaveAllView
  * Data Migration utility page - moved from HomeView
+ *
+ * The screen brings no Firebase of its own (UAT-14, F58): the route that opens it (app.js) gives
+ * it the migration utility, built on the app's one Firestore, and the way to know who is signed in.
  */
 export class SaveAllView extends BaseView {
-  constructor() {
+  /**
+   * @param {Object} deps
+   * @param {Object} deps.migrationUtility - { isMigrationComplete, hasLocalStorageData, migrate }
+   * @param {Function} deps.getUserId - () => the id of whoever is signed in, or null
+   */
+  constructor({ migrationUtility, getUserId }) {
     super()
-    const db = getFirestore()
-    this.migrationUtil = new MigrationUtility(db, null)
+    this.migrationUtil = migrationUtility
+    this.getUserId = getUserId
     this.migrationState = 'idle' // idle, running, complete, error
   }
 
@@ -135,8 +140,7 @@ export class SaveAllView extends BaseView {
     if (statusText) statusText.textContent = 'Migration in progress...'
 
     try {
-      const auth = getAuth()
-      const userId = auth.currentUser?.uid || 'anonymous-user'
+      const userId = this.getUserId() || 'anonymous-user'
 
       await this.migrationUtil.migrate(userId, (current, total, message) => {
         this.updateProgress({ current, total, currentItem: message })

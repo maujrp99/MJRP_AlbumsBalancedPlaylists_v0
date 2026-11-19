@@ -38,7 +38,7 @@ describe('AlbumAsks.albumsOf', () => {
     let store, catalog, enrichers, cache, service, asks, quiet
     const build = (limits = {}) => {
         service = new AlbumLoadService({ store, catalog, enrichers, cache, limits })
-        asks = new AlbumAsks({ service, store, checkEveryMs: 5 })
+        asks = new AlbumAsks({ service, store })
     }
     const titles = (result) => result.albums.map(album => album.title)
 
@@ -352,6 +352,69 @@ describe('AlbumAsks.albumsOf', () => {
 
             expect(titles(result)).toEqual(['Nine'])
             expect(result.failed[0]).toMatchObject({ label: 'Artist - Ten', reason: AskFailure.ON_HOLD })
+            service.stop()
+        })
+    })
+
+    describe('no clock (F58): the ask looks again only when the store says something changed', () => {
+        it('an ask that waits starts no interval, and no timer while no hold is in force', async () => {
+            const slow = deferred()
+            catalog.find = vi.fn(async (query) => { await slow.promise; return albumOf(query) })
+            const intervals = vi.spyOn(globalThis, 'setInterval')
+            const looks = vi.spyOn(asks, '_read')
+
+            const asked = asks.albumsOf({ series: [series('s9', 'Nine')] })
+            await wait(40)
+            const looksWhileNothingChanged = looks.mock.calls.length
+            await wait(40)
+
+            expect(intervals).not.toHaveBeenCalled()
+            expect(looks.mock.calls.length).toBe(looksWhileNothingChanged)
+
+            slow.resolve()
+            expect(titles(await asked)).toEqual(['Nine'])
+            intervals.mockRestore()
+        })
+
+        it('learns of a hold from the store, at once: the ratings held by "sign in" are not waited for', async () => {
+            enrichers.acclaim.enrich = vi.fn(async () => { throw Object.assign(new Error('401'), { hold: { reason: 'unauthorized' } }) })
+            const started = Date.now()
+
+            const result = await asks.albumsOf({ series: [series('s9', 'Nine')], sources: ['acclaim'] })
+
+            expect(result.missingSources[0]).toMatchObject({ source: 'acclaim', gap: SourceGap.WAITING })
+            expect(Date.now() - started).toBeLessThan(500) // the clock it had looked once a second
+            service.stop()
+        })
+
+        it('a hold that ends before a search would have: the album held is waited for and given', async () => {
+            let refusals = 1
+            catalog.find = vi.fn(async (query) => {
+                if (refusals-- > 0) throw Object.assign(new Error('429'), { hold: { reason: 'rate_limited', retryAfterMs: 30 } })
+                return albumOf(query)
+            })
+            build({ findTimeoutMs: 2000 })
+
+            const result = await asks.albumsOf({ series: [series('s9', 'Nine')] })
+
+            expect(titles(result)).toEqual(['Nine'])
+            expect(result.failed).toEqual([])
+        })
+
+        it('an ask that was dropped leaves no deadline behind', async () => {
+            catalog.find = vi.fn(async () => { throw Object.assign(new Error('401'), { hold: { reason: 'unauthorized' } }) })
+            build({ findTimeoutMs: 60 })
+            const controller = new AbortController()
+            const asked = asks.albumsOf({ series: [series('s9', 'Nine')], signal: controller.signal })
+            await wait(15)
+            const looks = vi.spyOn(asks, '_read')
+
+            controller.abort()
+            expect((await asked).aborted).toBe(true)
+            const looksAtTheEnd = looks.mock.calls.length
+            await wait(80)
+
+            expect(looks.mock.calls.length).toBe(looksAtTheEnd)
             service.stop()
         })
     })

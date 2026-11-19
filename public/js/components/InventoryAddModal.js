@@ -1,7 +1,7 @@
 import { BaseModal } from './ui/BaseModal.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { toast } from './Toast.js'
-import { inventoryStore } from '../stores/inventory.js'
+import { inventoryService } from '../services/inventory/inventoryWiring.js'
 import { getIcon } from './Icons.js'
 
 export class InventoryAddModal {
@@ -143,7 +143,7 @@ export class InventoryAddModal {
                 // We will rely on toast for main feedback, but legacy modal had detailed inline feedback.
                 // Let's implement basics.
 
-                await inventoryStore.addAlbum(album, format, options)
+                await inventoryService.addAlbum(album, format, options)
 
                 toast.success('Album added to inventory!')
                 if (onSuccess) onSuccess()

@@ -94,7 +94,7 @@ flowchart TD
 **Status**: `[ACTIVE]`
 **Type**: Service / Singleton (`authService`)
 
-Wraps Firebase Auth for the browser: `signInWithGoogle()`, `signInWithApple()`, `logout()`, `onAuthStateChange(callback)`. The auth instance is read lazily (`getAuth()` on first use). Imported by `public/js/stores/UserStore.js`, `public/js/components/LoginModal.js`, `public/js/components/TopNav.js` and `public/js/components/navigation/AuthNav.js`.
+Wraps Firebase Auth for the browser: `signInWithGoogle()`, `signInWithApple()`, `logout()`, `onAuthStateChange(callback)`. The auth instance is read lazily (`getAuth()` on first use). Imported by `public/js/services/auth/userSession.js` (which hands it to `UserSessionService`; until F58 the user store imported it), `public/js/components/LoginModal.js`, `public/js/components/TopNav.js` and `public/js/components/navigation/AuthNav.js`.
 
 ---
 

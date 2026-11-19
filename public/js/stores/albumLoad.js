@@ -18,6 +18,8 @@ export class AlbumLoadStore {
         this.seriesOrder = []
         this.entriesBySeries = new Map() // Map<seriesId, Map<key, entry>>
         this.guests = new Set() // series asked for by a screen that is not the albums screen
+        this.hold = null // { reason, until } while the server asked the load to wait
+        this.stopped = false // the load of this generation was stopped: no more results will come
         this.listeners = new Set()
         this._notifyScheduled = false
     }
@@ -30,8 +32,18 @@ export class AlbumLoadStore {
      */
     startGeneration(generation) {
         this.generation = generation
+        this.stopped = false
         this.seriesOrder = []
         this.entriesBySeries = new Map()
+        this._changed()
+    }
+
+    /**
+     * The load of this generation was stopped ("Clear Cache"): the entries stay as it left them
+     * and no result will change them any more. Whoever waits for one learns it here (F58).
+     */
+    stopGeneration() {
+        this.stopped = true
         this._changed()
     }
 
@@ -83,10 +95,31 @@ export class AlbumLoadStore {
         return true
     }
 
+    /**
+     * The hold of the load (F58): the app's server said "sign in" or "wait", so the load waits.
+     * It is state like the entries, so whoever subscribed learns when it starts and when it ends.
+     * @param {{ reason: string, until: number|null }|null} hold - null when the load is not held
+     */
+    setHold(hold) {
+        if (hold === this.hold) return
+        this.hold = hold
+        this._changed()
+    }
+
     // ========== GETTERS ==========
+
+    /** The hold in force, `{ reason, until }`, or null (models/albumLoadHold.js). */
+    getHold() {
+        return this.hold
+    }
 
     getGeneration() {
         return this.generation
+    }
+
+    /** True from stopGeneration() until the next generation starts. */
+    isStopped() {
+        return this.stopped
     }
 
     getSeriesIds() {

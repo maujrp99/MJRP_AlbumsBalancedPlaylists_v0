@@ -39,7 +39,7 @@ The load of albums has **one owner**, `AlbumLoadService` (`public/js/services/al
 - Filters, search and paging became pure functions over what the series ask for.
 
 **Negative**:
-- More code and more files: the sum of cyclomatic complexity went up, not down (measured on 2026-11-19, `reports/audits/2026-11-19-mjrpalbumblender-v0-load-architecture-analysis.md`). `_enrichOne` reached 21 and has to be split.
+- More code and more files: the sum of cyclomatic complexity went up, not down (measured on 2026-11-19, `reports/audits/2026-11-19-mjrpalbumblender-v0-load-architecture-analysis.md`). `_enrichOne` reached 21 and had to be split: **done in F58** (2026-11-19, on the branch `fix/f58-load-service-within-the-limit`): no function of the load is above 10, and a test keeps it so (`test/architecture/complexityLimit.test.js`). The service is now the owner with two named collaborators: `LoadHold` (the hold in force) and the pure rules of `models/albumLoadHold.js` and `models/albumSourceAsk.js`.
 - A single point of failure: a defect in the service reaches every screen that uses it.
 - Two ways of loading live side by side until the migration ends (see below).
 
@@ -48,7 +48,7 @@ The load of albums has **one owner**, `AlbumLoadService` (`public/js/services/al
 - Decision 3: for popularity and ratings a failure can still end as "the source has nothing" (an expired Spotify token, a 401 or a 429; the server answering 200 and empty when the scraper fails), and that answer is now written into the series as a fact.
 - Decision 7: **done in F56** (same branch). The projection is the only writer of albums in `stores/albums.js`; the methods that added or removed one album were removed from the shelf.
 - The limit of 4 slow sources at once is not the ceiling on the server: the browser's deadline does not stop the scrape. Since F56 no caller of the ratings route skips the queue. The critiques asked to start at 2 and measure.
-- The blend and the playlist edit mode loaded albums through their own loop: **done in F56** (UAT-189), as was "saving the edit of a series reloads every series" (UAT-191: the save now reconciles). The saved playlists screen was done in F61 (UAT-186). What F56 left: it was not seen in a browser by its implementer, and an ask looks at the load again every second because a hold changes no entry of the store (a job for F58).
+- The blend and the playlist edit mode loaded albums through their own loop: **done in F56** (UAT-189), as was "saving the edit of a series reloads every series" (UAT-191: the save now reconciles). The saved playlists screen was done in F61 (UAT-186). What F56 left: it was not seen in a browser by its implementer, and an ask looked at the load again every second because a hold changed no entry of the store: **done in F58**, the hold and a stopped load are state of the store (`setHold`, `stopGeneration`), `AlbumAsks` learns of both from its subscription and has no clock.
 - "Is this the album that was asked for?" still accepts any album of the right artist (UAT-184).
 - The server has no cache for ratings and passes the provider's raw error on (F52, UAT-181).
 

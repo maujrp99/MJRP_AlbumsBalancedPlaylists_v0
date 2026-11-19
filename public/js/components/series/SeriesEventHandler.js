@@ -7,7 +7,6 @@
 
 import Component from '../base/Component.js';
 import { albumsStore } from '../../stores/albums.js';
-import { app, auth, db } from '../../firebase-init.js';
 import { albumSeriesStore } from '../../stores/albumSeries.js';
 import { showViewAlbumModal } from '../ViewAlbumModal.js';
 import { toast } from '../Toast.js';
@@ -234,7 +233,7 @@ export default class SeriesEventHandler extends Component {
             }
 
             // 1. Remove from series (Persistence) - FIX #154: Use SeriesService, not store
-            const seriesService = getSeriesService(db, null, auth.currentUser?.uid);
+            const seriesService = getSeriesService(albumSeriesStore.getDb(), null, albumSeriesStore.getUserId());
             await seriesService.removeAlbumFromSeries(seriesId, album);
 
             // 2. The series changed: the album load reconciles and the album leaves the screen
@@ -292,7 +291,7 @@ export default class SeriesEventHandler extends Component {
                             // If I pass an ID-less album object with title = manualQuery, it might match exact string.
 
                             // FIX #154: Use SeriesService for consistent method access
-                            const seriesService = getSeriesService(db, null, auth.currentUser?.uid);
+                            const seriesService = getSeriesService(albumSeriesStore.getDb(), null, albumSeriesStore.getUserId());
                             await seriesService.removeAlbumFromSeries(seriesId, { title: manualQuery, artist: '' });
                             toast.success('Album removed manually');
                             const { onAlbumRemoved } = this.props;

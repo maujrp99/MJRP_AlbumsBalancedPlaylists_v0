@@ -54,6 +54,7 @@ To keep the main View classes (like `SeriesView` and `InventoryView`) maintainab
 ### Save All / Migration View (`public/js/views/SaveAllView.js`)
 *   **Role**: A dedicated utility view for migrating data from `localStorage` (Legacy) to `Firestore` (V3).
 *   **Logic**:
+    *   Receives the `MigrationUtility` and `getUserId` from the route (`app.js`, `/save-all`): since F58 (UAT-14) the view imports no Firebase (it used to load a second SDK, 11.6.1, from the `gstatic` CDN).
     *   Checks `MigrationUtility.hasLocalStorageData()`.
     *   Provides a UI to trigger the migration.
     *   Visualizes progress with a real-time progress bar.

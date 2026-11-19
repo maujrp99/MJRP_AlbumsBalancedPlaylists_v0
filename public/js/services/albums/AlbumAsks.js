@@ -21,30 +21,25 @@
  *   entries the ask was reading: the ask joins the new generation and goes on waiting.
  * - While the server holds the load ("sign in" or "wait") the ask does not wait for a source,
  *   and an album still not found after as long as a search may take is given as failed.
+ * - The ask has no clock (F58). It looks again when the store says something changed: an entry,
+ *   the hold (which is state of the store), or the load being stopped. The one thing time alone
+ *   changes, an album held for too long, has its own deadline, set only while a hold is in force.
  *
  * It imports no network, no Firestore and no screen: the service and the store are given.
  */
 
-import { readAsk } from '../../models/albumAsk.js'
-
-/**
- * How often an ask looks again without a change in the store. A hold starts inside a task and
- * changes no entry, so the store has nothing to tell; this is what sees it.
- */
-const CHECK_EVERY_MS = 1000
+import { readAsk, holdWait } from '../../models/albumAsk.js'
 
 export class AlbumAsks {
     /**
      * @param {Object} deps
-     * @param {AlbumLoadService} deps.service - join, leave, getHold, generation, limits
-     * @param {AlbumLoadStore} deps.store - getEntries, subscribe
-     * @param {number} [deps.checkEveryMs]
+     * @param {AlbumLoadService} deps.service - join, leave, generation, limits
+     * @param {AlbumLoadStore} deps.store - getEntries, getHold, subscribe
      * @param {Function} [deps.now]
      */
-    constructor({ service, store, checkEveryMs = CHECK_EVERY_MS, now = () => Date.now() }) {
+    constructor({ service, store, now = () => Date.now() }) {
         this.service = service
         this.store = store
-        this.checkEveryMs = checkEveryMs
         this.now = now
         this._waiting = new Map() // Map<seriesId, number>: how many asks are waiting for each series
     }
@@ -72,14 +67,15 @@ export class AlbumAsks {
         return new Promise(resolve => this._wait(ask, signal, resolve))
     }
 
-    /** Look at the ask on every change of the store, and now and then, until it is served or dropped. */
+    /** Look at the ask on every change of the store until it is served or dropped. */
     _wait(ask, signal, resolve) {
         let closed = false
+        let heldDeadline = null
         const close = (aborted) => {
             if (closed) return
             closed = true
             unsubscribe()
-            clearInterval(timer)
+            clearTimeout(heldDeadline)
             signal?.removeEventListener('abort', drop)
             const { result } = this._read(ask, { aborted }) // read before the series are let go
             this._close(ask)
@@ -88,14 +84,15 @@ export class AlbumAsks {
         const drop = () => close(true)
         const check = () => {
             if (closed) return
+            clearTimeout(heldDeadline)
             this._joinAgainIfRestarted(ask)
             const reading = this._read(ask)
             this._tell(ask, reading.progress)
             if (reading.settled) close(false)
+            else if (reading.lookAgainInMs !== null) heldDeadline = setTimeout(check, reading.lookAgainInMs)
         }
 
         const unsubscribe = this.store.subscribe(check)
-        const timer = setInterval(check, this.checkEveryMs)
         signal?.addEventListener('abort', drop, { once: true })
         check()
     }
@@ -129,12 +126,11 @@ export class AlbumAsks {
 
     _read(ask, { aborted = false } = {}) {
         const asked = ask.series.map(item => ({ seriesId: item.id, entries: this.store.getEntries(item.id) }))
-        const onHold = Boolean(this.service.getHold())
-        if (!onHold) ask.heldSince = null
-        else if (ask.heldSince === null) ask.heldSince = this.now()
-        const heldTooLong = onHold && (this.now() - ask.heldSince) >= this.service.limits.findTimeoutMs
+        const hold = this.store.getHold()
+        const { heldSince, heldTooLong, lookAgainInMs } = holdWait(ask.heldSince, hold, this.now(), this.service.limits.findTimeoutMs)
+        ask.heldSince = heldSince
 
-        return readAsk(asked, ask.sources, { onHold, heldTooLong, aborted })
+        return { ...readAsk(asked, ask.sources, { onHold: Boolean(hold), heldTooLong, aborted }), lookAgainInMs }
     }
 
     /** Tell the progress only when it changed. */

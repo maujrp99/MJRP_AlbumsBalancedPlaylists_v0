@@ -60,7 +60,7 @@
 - `render(input)`, `renderFilters(state)`: Drawn with `views/renderers/InventoryGridRenderer.js`
 - `attachEventListeners()`: Delegates the actions to the controller (`handleStatusChange`, `handleCurrencyChange`, ...)
 - `handleEditWithModal(albumId)`, `handleViewWithModal(albumId)`: Open the modals
-- `handleDeleteWithModal(albumId)`: Confirms and calls `InventoryController.handleDelete`, which calls `inventoryStore.removeAlbum`.
+- `handleDeleteWithModal(albumId)`: Confirms and calls `InventoryController.handleDelete`, which calls `inventoryService.removeAlbum`.
 
 #### SavedPlaylistsView (325 lines)
 **Purpose**: View all saved playlist batches grouped by series. Since v5.0 (F61) it draws what `SavedPlaylistsStore` holds and waits for no read.
@@ -108,8 +108,8 @@
 | [inventory.js](file:///public/js/stores/inventory.js) | Personal collection | ✅ |
 | [UserStore.js](file:///public/js/stores/UserStore.js) | Auth state | ✅ |
 
-#### InventoryStore (329 lines)
-**Purpose**: Manage personal album collection
+#### InventoryStore (93 lines) and InventoryService
+**Purpose**: Manage personal album collection. Since F58 the store (`stores/inventory.js`) only holds state (`reset`, `setLoading`, `setAlbums`, `setError`, `replaceAlbums`, `getAlbums`, `getState`, `getStatistics`, `subscribe`); the API below, but for `getStatistics`, is `inventoryService` (`services/inventory/InventoryService.js`, wired in `inventoryWiring.js`)
 **State**: `{ albums, loading, error }`
 
 **API**:
@@ -121,8 +121,8 @@
 - `getStatistics()`: Stats: count, total value by format
 - `handleUserChange(state)`: the person changed: the albums in memory are dropped at once and nothing is copied between accounts (v5.0, F60)
 
-#### UserStore (105 lines)
-**Purpose**: Authentication state management
+#### UserStore (70 lines) and UserSessionService
+**Purpose**: Authentication state management. Since F58 the store only holds state (`setUser`, `setLoading`, `setError`, `getState`, `subscribe`); the API below is `userSessionService` (`services/auth/UserSessionService.js`, wired and started in `services/auth/userSession.js`). No screen calls it: the login buttons call `authService` directly
 **State**: `{ currentUser, isAuthenticated, loading, error }`
 
 **API**:

@@ -1,190 +1,99 @@
+/**
+ * The inventory store holds the inventory on screen and tells whoever subscribed. Since F58
+ * (UAT-18) it only holds state: reading and writing are InventoryService's
+ * (test/services/inventory/).
+ */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { InventoryStore } from '../../public/js/stores/inventory.js'
 
-// Mock dependencies
-vi.mock('../../public/js/repositories/InventoryRepository.js', () => {
-    return {
-        InventoryRepository: vi.fn().mockImplementation((db, cache, userId) => ({
-            userId,
-            // Mock method return based on user context if needed, or default
-            findAll: vi.fn().mockResolvedValue(userId === 'user-123' ? [
-                { id: '1', title: 'User Album', artist: 'User Artist' }
-            ] : []),
-            addAlbum: vi.fn().mockResolvedValue('new-id'),
-            updateAlbum: vi.fn().mockResolvedValue(),
-            updatePrice: vi.fn().mockResolvedValue(),
-            getStatistics: vi.fn().mockReturnValue({ total: 0, value: 0 }),
-            removeAlbum: vi.fn().mockResolvedValue(),
-            findByAlbumId: vi.fn().mockResolvedValue(null)
-        }))
-    }
-})
-
-vi.mock('../../public/js/firebase-config.js', () => ({
-    firestore: {}
-}))
-
-vi.mock('../../public/js/cache/CacheManager.js', () => ({
-    cacheManager: {}
-}))
-
-vi.mock('../../public/js/app.js', () => ({
-    db: {},
-    auth: { currentUser: null }
-}))
-
-// Mock DataSyncService
-vi.mock('../../public/js/services/DataSyncService.js', () => ({
-    dataSyncService: {
-        migrateInventory: vi.fn().mockResolvedValue(0)
-    }
-}))
-import { dataSyncService } from '../../public/js/services/DataSyncService.js'
-
-// Mock UserStore
-vi.mock('../../public/js/stores/UserStore.js', () => ({
-    userStore: {
-        subscribe: vi.fn(),
-        getState: vi.fn().mockReturnValue({ currentUser: null })
-    }
-}))
-
-import { userStore } from '../../public/js/stores/UserStore.js'
-
 describe('InventoryStore', () => {
-    let store
+    let store, seen
 
     beforeEach(() => {
-        vi.clearAllMocks()
         store = new InventoryStore()
+        seen = []
+        store.subscribe(state => seen.push(state))
     })
 
-    describe('constructor', () => {
-        it('should initialize and subscribe to userStore', () => {
-            expect(userStore.subscribe).toHaveBeenCalled()
-            expect(store.getAlbums()).toEqual([])
-        })
+    it('starts empty, not loading, with no error', () => {
+        expect(store.getState()).toEqual({ albums: [], loading: false, error: null })
+        expect(store.getAlbums()).toEqual([])
     })
 
-    describe('onUserChange', () => {
-        it('should update userId and reload repository when user logs in', async () => {
-            const mockUser = { uid: 'user-123' }
-            const expectedAlbumsAfterLogin = [{ id: '1', title: 'User Album', artist: 'User Artist' }]
+    it('setLoading says a read started and clears the last error', () => {
+        store.setError('Load failed')
 
-            store.init()
+        store.setLoading()
 
-            // Whatever is in memory belongs to whoever was here before
-            store.albums = [{ id: 'guest-1', title: 'Guest Album', artist: 'Guest Artist' }]
-
-            // Trigger auth change
-            await store.handleUserChange({ currentUser: mockUser })
-
-            expect(store.userId).toBe('user-123')
-            expect(store.repository.userId).toBe('user-123')
-            // F60 (UAT-198): nothing in memory is copied into the account that arrives
-            expect(dataSyncService.migrateInventory).not.toHaveBeenCalled()
-            expect(store.getAlbums()).toEqual(expectedAlbumsAfterLogin)
-        })
-
-        it('should revert to anonymous when user logs out', async () => {
-            // Start logged in
-            store.userId = 'user-123'
-            store.init()
-
-            // Trigger logout
-            await store.handleUserChange({ currentUser: null })
-
-            expect(store.userId).toBe('anonymous-user')
-            expect(store.repository.userId).toBe('anonymous-user')
-        })
+        expect(store.getState()).toMatchObject({ loading: true, error: null })
+        expect(seen).toHaveLength(2)
     })
 
-    describe('loadAlbums', () => {
-        it('should load albums from repository', async () => {
-            const mockAlbums = [{ id: '1', title: 'Test Album' }]
+    it('setAlbums holds what was read and ends the loading', () => {
+        store.setLoading()
 
-            // Access the mock instance
-            store.init() // Initialize repo
-            store.repository.findAll.mockResolvedValue(mockAlbums)
+        store.setAlbums([{ id: '1' }])
 
-            await store.loadAlbums()
-
-            expect(store.getAlbums()).toEqual(mockAlbums)
-            expect(store.getState().loading).toBe(false)
-            expect(store.getState().error).toBeNull()
-        })
-
-        it('should handle load errors', async () => {
-            store.init()
-            store.repository.findAll.mockRejectedValue(new Error('Load failed'))
-
-            await expect(store.loadAlbums()).rejects.toThrow('Load failed')
-
-            expect(store.getState().error).toBe('Load failed')
-            expect(store.getState().loading).toBe(false)
-        })
+        expect(store.getState()).toEqual({ albums: [{ id: '1' }], loading: false, error: null })
     })
 
-    describe('addAlbum', () => {
-        it('should add album and reload', async () => {
-            store.init()
-            store.repository.addAlbum.mockResolvedValue('new-id')
-            store.repository.findAll.mockResolvedValue([{ id: 'new-id' }])
+    it('setError holds the message, ends the loading and keeps the albums it had', () => {
+        store.setAlbums([{ id: '1' }])
+        store.setLoading()
 
-            const id = await store.addAlbum({ title: 'New Album' }, 'cd')
+        store.setError('Load failed')
 
-            expect(id).toBe('new-id')
-            expect(store.repository.addAlbum).toHaveBeenCalledWith({ title: 'New Album' }, 'cd', {})
-            expect(store.repository.findAll).toHaveBeenCalled()
-        })
+        expect(store.getState()).toEqual({ albums: [{ id: '1' }], loading: false, error: 'Load failed' })
     })
 
-    describe('updatePrice', () => {
-        it('should optimistically update price', async () => {
-            // Setup initial state
-            store.albums = [{ id: '1', purchasePrice: 10, currency: 'USD' }]
-            store.init()
+    it('replaceAlbums changes the list and nothing else', () => {
+        store.setLoading()
 
-            const promise = store.updatePrice('1', 20, 'USD')
+        store.replaceAlbums([{ id: '2' }])
 
-            // Check optimistic update immediately
-            expect(store.getAlbums()[0].purchasePrice).toBe(20)
-
-            await promise
-
-            expect(store.repository.updatePrice).toHaveBeenCalledWith('1', 20, 'USD')
-        })
-
-        it('should rollback on error', async () => {
-            store.albums = [{ id: '1', purchasePrice: 10, currency: 'USD' }]
-            store.init()
-            store.repository.updatePrice.mockRejectedValue(new Error('Update failed'))
-
-            await expect(store.updatePrice('1', 20, 'USD')).rejects.toThrow('Update failed')
-
-            // Should be back to 10
-            expect(store.getAlbums()[0].purchasePrice).toBe(10)
-        })
+        expect(store.getState()).toEqual({ albums: [{ id: '2' }], loading: true, error: null })
     })
 
-    describe('getStatistics', () => {
-        it('should calculate statistics correctly', () => {
-            store.albums = [
-                { format: 'cd', purchasePrice: 10, currency: 'USD' },
-                { format: 'vinyl', purchasePrice: 20, currency: 'USD' },
-                { format: 'cd', purchasePrice: 50, currency: 'BRL' }
-            ]
+    it('reset drops everything: the inventory in memory belongs to whoever was here', () => {
+        store.setAlbums([{ id: '1' }])
+        store.setError('x')
 
-            const stats = store.getStatistics()
+        store.reset()
 
-            expect(stats.totalAlbums).toBe(3)
-            expect(stats.byFormat.cd).toBe(2)
-            expect(stats.byFormat.vinyl).toBe(1)
-            expect(stats.totalValueUSD).toBe(30)
-            expect(stats.totalValueBRL).toBe(50)
-            expect(stats.averagePriceUSD).toBe(15)
-            expect(stats.averagePriceBRL).toBe(50)
-        })
+        expect(store.getState()).toEqual({ albums: [], loading: false, error: null })
+    })
+
+    it('every setter tells whoever subscribed, once; an unsubscribed listener hears nothing', () => {
+        const listener = vi.fn()
+        const unsubscribe = store.subscribe(listener)
+
+        store.setLoading()
+        store.setAlbums([])
+        store.setError('x')
+        store.replaceAlbums([])
+        store.reset()
+        expect(listener).toHaveBeenCalledTimes(5)
+
+        unsubscribe()
+        store.reset()
+        expect(listener).toHaveBeenCalledTimes(5)
+    })
+
+    it('getStatistics is derived from the albums it holds', () => {
+        store.setAlbums([
+            { format: 'cd', purchasePrice: 10, currency: 'USD' },
+            { format: 'vinyl', purchasePrice: 20, currency: 'USD' },
+            { format: 'cd', purchasePrice: 50, currency: 'BRL' }
+        ])
+
+        const stats = store.getStatistics()
+
+        expect(stats.totalAlbums).toBe(3)
+        expect(stats.byFormat.cd).toBe(2)
+        expect(stats.byFormat.vinyl).toBe(1)
+        expect(stats.totalValueUSD).toBe(30)
+        expect(stats.totalValueBRL).toBe(50)
+        expect(stats.averagePriceUSD).toBe(15)
+        expect(stats.averagePriceBRL).toBe(50)
     })
 })
-

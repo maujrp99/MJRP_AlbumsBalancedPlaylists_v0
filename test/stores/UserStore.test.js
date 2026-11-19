@@ -1,88 +1,69 @@
+/**
+ * The user store holds who is on the app. Since F58 (UAT-18) it only holds state: listening to
+ * the login and asking it to sign in or out are UserSessionService's
+ * (test/services/auth/UserSessionService.test.js).
+ */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { UserStore } from '../../public/js/stores/UserStore.js'
-import { authService } from '../../shared/services/AuthService.js'
-
-// Mock AuthService
-vi.mock('../../shared/services/AuthService.js', () => ({
-    authService: {
-        signInWithGoogle: vi.fn(),
-        signInWithApple: vi.fn(),
-        logout: vi.fn(),
-        onAuthStateChange: vi.fn()
-    }
-}))
 
 describe('UserStore', () => {
     let store
-    let mockUser
+    const user = { uid: '123', email: 'test@example.com', displayName: 'Test User' }
 
     beforeEach(() => {
-        vi.clearAllMocks()
         store = new UserStore()
-        mockUser = { uid: '123', email: 'test@example.com', displayName: 'Test User' }
     })
 
-    describe('initialization', () => {
-        it('should have initial state', () => {
-            const state = store.getState()
-            expect(state.currentUser).toBeNull()
-            expect(state.isAuthenticated).toBe(false)
-            expect(state.loading).toBe(true) // Should start loading until auth check completes
-            expect(state.error).toBeNull()
-        })
-
-        it('should subscribe to AuthService on init', () => {
-            expect(authService.onAuthStateChange).toHaveBeenCalled()
-        })
+    it('starts with nobody, loading until the login says who is there', () => {
+        expect(store.getState()).toEqual({ currentUser: null, isAuthenticated: false, loading: true, error: null })
     })
 
-    describe('auth state changes', () => {
-        it('should update state when user logs in', () => {
-            // Get the callback passed to onAuthStateChange
-            const callback = authService.onAuthStateChange.mock.calls[0][0]
+    it('setUser holds the person who signed in and ends the loading', () => {
+        store.setError('Login failed')
 
-            // Simulate login
-            callback(mockUser)
+        store.setUser(user)
 
-            const state = store.getState()
-            expect(state.currentUser).toEqual(mockUser)
-            expect(state.isAuthenticated).toBe(true)
-            expect(state.loading).toBe(false)
-        })
-
-        it('should update state when user logs out', () => {
-            const callback = authService.onAuthStateChange.mock.calls[0][0]
-
-            // Simulate logout
-            callback(null)
-
-            const state = store.getState()
-            expect(state.currentUser).toBeNull()
-            expect(state.isAuthenticated).toBe(false)
-            expect(state.loading).toBe(false)
-        })
+        expect(store.getState()).toEqual({ currentUser: user, isAuthenticated: true, loading: false, error: null })
     })
 
-    describe('login actions', () => {
-        it('should call signInWithGoogle', async () => {
-            await store.loginWithGoogle()
-            expect(authService.signInWithGoogle).toHaveBeenCalled()
-        })
+    it('setUser(null) is a sign-out', () => {
+        store.setUser(user)
 
-        it('should handle login errors', async () => {
-            const error = new Error('Login failed')
-            authService.signInWithGoogle.mockRejectedValue(error)
+        store.setUser(null)
 
-            await store.loginWithGoogle() // Should not throw, but set error
-
-            expect(store.getState().error).toBe('Login failed')
-        })
+        expect(store.getState()).toEqual({ currentUser: null, isAuthenticated: false, loading: false, error: null })
     })
 
-    describe('logout action', () => {
-        it('should call logout', async () => {
-            await store.logout()
-            expect(authService.logout).toHaveBeenCalled()
-        })
+    it('setLoading says an ask to the login started; clearing the error is asked for', () => {
+        store.setError('Login failed')
+
+        store.setLoading()
+        expect(store.getState()).toMatchObject({ loading: true, error: 'Login failed' })
+
+        store.setLoading({ clearError: true })
+        expect(store.getState()).toMatchObject({ loading: true, error: null })
+    })
+
+    it('setError holds the message and ends the loading', () => {
+        store.setLoading()
+
+        store.setError('Login failed')
+
+        expect(store.getState()).toMatchObject({ loading: false, error: 'Login failed' })
+    })
+
+    it('every setter tells whoever subscribed with the new state; an unsubscribed listener hears nothing', () => {
+        const listener = vi.fn()
+        const unsubscribe = store.subscribe(listener)
+
+        store.setUser(user)
+        expect(listener).toHaveBeenLastCalledWith(store.getState())
+        store.setLoading()
+        store.setError('x')
+        expect(listener).toHaveBeenCalledTimes(3)
+
+        unsubscribe()
+        store.setUser(null)
+        expect(listener).toHaveBeenCalledTimes(3)
     })
 })
