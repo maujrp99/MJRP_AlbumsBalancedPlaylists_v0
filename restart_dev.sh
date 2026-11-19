@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Clear ports 3000 (Server) and 5000 (Client/Vite default)
-echo "🧹 Clearing ports 3000 and 5000..."
-lsof -ti:5000,3000 | xargs kill -9 2>/dev/null
+# Clear ports 3000 (Server) and 5010 (Client)
+echo "🧹 Clearing ports 3000 and 5010..."
+lsof -ti:5010,3000 | xargs kill -9 2>/dev/null
 echo "✅ Ports cleared."
 
 # Start Backend Server (Background)

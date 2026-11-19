@@ -59,7 +59,7 @@ Os demais campos vêm do objeto que o gerador produz e dependem do módulo gerad
 | _schemaVersion | número `1` | ✅ | versão do esquema |
 
 ### Album (álbum hidratado) - `albums/{albumId}` (coleção na raiz) e `models/Album.js` (memória)
-O app grava o álbum na coleção raiz `albums` (`stores/albums.js:312-315`, `setDoc(..., { merge: true })` ou `addDoc`, com `JSON.parse(JSON.stringify(album))`); o carregamento passa pela API e pelo cache, não por essa coleção. **Ciclo de vida:** a coleção é **global e sem dono**: quem escreve é qualquer visitante autenticado (inclusive anônimo, `firestore.rules:42-43`); não há regra de conflito (o último a gravar vence, com `merge`); não há retenção nem purga (cresce sem limite); e a serialização cega grava também campos de execução. O `id` é o "slug" `artista_album` (`api/client.js:534-538`); duplicata é o mesmo título e artista exatos (`stores/albums.js:78-100`).
+O app grava o álbum na coleção raiz `albums` só no «Refetch Metadata», por `repositories/SharedAlbumRepository.js` (`saveAlbum`, `setDoc(..., { merge: true })` sob o `id` do álbum; álbum sem `id` é recusado); a carga da tela não grava nessa coleção, e nenhum ponto do app a lê de volta. **Ciclo de vida:** a coleção é **global e sem dono**: quem escreve é qualquer visitante autenticado (inclusive anônimo, `firestore.rules:42-43`); não há regra de conflito (o último a gravar vence, com `merge`); não há retenção nem purga (cresce sem limite); e a serialização grava também o campo de execução `seriesIds`; o que é de uma pessoa só (o ranking pessoal) fica fora desde a F48. O `id` é o "slug" `artista_album` (`api/client.js:534-538`); duplicata é o mesmo título e artista exatos (`stores/albums.js:78-100`).
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | id | string | ✅ | slug `artista_album` ou id do provedor |
@@ -75,7 +75,9 @@ O app grava o álbum na coleção raiz `albums` (`stores/albums.js:312-315`, `se
 | spotifyPopularity | número 0-100 ou `null` | ❌ | popularidade |
 | spotifyImages | lista de `{url, height, width}` | ❌ | imagens do Spotify |
 | metadata | objeto (p. ex. `{source, sourceId, fetchedAt}`) | ❌ | saco de metadados |
-| seriesIds, userRanking, hasUserRanking | lista, objeto, boolean | ❌ | campos de execução que o controller acrescenta e que acabam gravados (serialização cega) |
+| seriesIds | lista | ❌ | campo de execução que a carga acrescenta e que acaba gravado |
+| updatedAt, _schemaVersion | Timestamp, número | ❌ | gravados pelo `BaseRepository.save` a cada «Refetch» (desde a F48) |
+| userRanking, hasUserRanking; `userRank` em cada faixa | objeto, boolean; número | — | **não são mais gravados** (F48): são da pessoa logada e a coleção é compartilhada. Documentos gravados antes de 2026-11-19 podem ainda trazê-los, porque a gravação é `merge` e não os apaga |
 
 ### Track (faixa) - dentro de `Album.tracks` e de `Playlist.tracks` (`models/Track.js:30-78`)
 | Field | Type | Required | Description |

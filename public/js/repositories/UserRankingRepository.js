@@ -3,6 +3,10 @@
  * 
  * Repository for user-generated track rankings per album.
  * Stores rankings in Firestore under users/{userId}/albumRankings/{albumId}
+ *
+ * What was read is kept in the app cache (memory + IndexedDB) for one hour, including "this album
+ * has no ranking", so the album load does not ask the cloud again for each album on every visit.
+ * Saving or deleting a ranking here forgets the cached entry.
  * 
  * @module repositories/UserRankingRepository
  * @since Sprint 20
@@ -19,7 +23,13 @@ import {
 } from 'firebase/firestore'
 
 import { db } from '../firebase-init.js'
-import { CacheManager } from '../cache/CacheManager.js'
+import { cacheManager } from '../cache/CacheManager.js'
+
+/**
+ * How long a ranking that was read stays valid in the cache. Short on purpose: the ranking changes,
+ * and it may be edited on another device, where this browser cannot forget it.
+ */
+export const USER_RANKING_TTL_MS = 60 * 60 * 1000
 
 /**
  * @typedef {Object} TrackRanking
@@ -38,8 +48,11 @@ import { CacheManager } from '../cache/CacheManager.js'
  */
 
 export class UserRankingRepository {
-    constructor() {
-        this.cache = CacheManager
+    /**
+     * @param {Object} [cache] - { get, set, invalidate }: the app cache instance by default
+     */
+    constructor(cache = cacheManager) {
+        this.cache = cache
     }
 
     /**
@@ -67,6 +80,33 @@ export class UserRankingRepository {
     }
 
     /**
+     * The cached answer for a key, or null when there is none (or the cache cannot be read).
+     * @returns {Promise<{ ranking: AlbumRanking|null }|null>}
+     * @private
+     */
+    async _readCached(cacheKey) {
+        try {
+            const entry = await this.cache.get(cacheKey)
+            return entry && 'ranking' in entry ? entry : null
+        } catch (error) {
+            console.warn('[UserRankingRepository] cache read failed:', error?.message || error)
+            return null
+        }
+    }
+
+    /**
+     * Keep an answer of the cloud. A cache that cannot be written only costs the next read.
+     * @private
+     */
+    async _writeCached(cacheKey, ranking) {
+        try {
+            await this.cache.set(cacheKey, { ranking }, USER_RANKING_TTL_MS)
+        } catch (error) {
+            console.warn('[UserRankingRepository] cache write failed:', error?.message || error)
+        }
+    }
+
+    /**
      * Get user's ranking for a specific album
      * @param {string} userId - User ID
      * @param {string} albumId - Album ID
@@ -75,26 +115,20 @@ export class UserRankingRepository {
     async getRanking(userId, albumId) {
         if (!userId || !albumId) return null
 
-        // Try cache first
+        // Try cache first: the entry says whether there is a ranking, and which
         const cacheKey = this._getCacheKey(userId, albumId)
-        const cached = await this.cache?.get?.(cacheKey)
+        const cached = await this._readCached(cacheKey)
         if (cached) {
-            return cached
+            return cached.ranking
         }
 
         // Fetch from Firestore
         try {
             const docSnap = await getDoc(this._getDocRef(userId, albumId))
-            if (!docSnap.exists()) {
-                return null
-            }
+            const data = docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null
 
-            const data = { id: docSnap.id, ...docSnap.data() }
-
-            // Cache result
-            if (this.cache?.set) {
-                await this.cache.set(cacheKey, data)
-            }
+            // Cache the answer, "no ranking" included. A failed read is not cached.
+            await this._writeCached(cacheKey, data)
 
             return data
         } catch (error) {
@@ -138,10 +172,7 @@ export class UserRankingRepository {
             await setDoc(docRef, docData, { merge: true })
 
             // Invalidate cache
-            const cacheKey = this._getCacheKey(userId, albumId)
-            if (this.cache?.invalidate) {
-                await this.cache.invalidate(cacheKey)
-            }
+            await this.cache.invalidate(this._getCacheKey(userId, albumId))
 
             console.log('[UserRankingRepository] Saved ranking for:', albumId)
             return true
@@ -164,10 +195,7 @@ export class UserRankingRepository {
             await deleteDoc(this._getDocRef(userId, albumId))
 
             // Invalidate cache
-            const cacheKey = this._getCacheKey(userId, albumId)
-            if (this.cache?.invalidate) {
-                await this.cache.invalidate(cacheKey)
-            }
+            await this.cache.invalidate(this._getCacheKey(userId, albumId))
 
             console.log('[UserRankingRepository] Deleted ranking for:', albumId)
             return true
@@ -187,9 +215,8 @@ export class UserRankingRepository {
         if (!userId || !albumId) return false
 
         // Check cache first
-        const cacheKey = this._getCacheKey(userId, albumId)
-        const cached = await this.cache?.get?.(cacheKey)
-        if (cached) return true
+        const cached = await this._readCached(this._getCacheKey(userId, albumId))
+        if (cached) return cached.ranking !== null
 
         try {
             const docSnap = await getDoc(this._getDocRef(userId, albumId))

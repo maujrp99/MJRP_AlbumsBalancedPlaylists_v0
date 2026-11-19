@@ -12,6 +12,7 @@
  */
 
 import { SeriesRepository } from '../repositories/SeriesRepository.js'
+import { SharedAlbumRepository } from '../repositories/SharedAlbumRepository.js'
 import { globalProgress } from '../components/GlobalProgress.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { albumsStore } from '../stores/albums.js' // FIX #156: For cache invalidation
@@ -27,6 +28,7 @@ export class SeriesService {
         this.db = db
         this.userId = userId || 'anonymous-user'
         this.repository = new SeriesRepository(db, cacheManager, this.userId)
+        this.albumRepository = new SharedAlbumRepository(db, cacheManager)
 
         // Dependencies
         this.storage = storageService || new StorageService()
@@ -461,7 +463,8 @@ export class SeriesService {
             // Determine format if possible, default to 'digital'
             if (!enriched.format) enriched.format = 'digital'
 
-            await albumsStore.updateAlbum(this.db, enriched)
+            // The shared document of the album; the personal ranking is left out by the repository
+            await this.albumRepository.saveAlbum(enriched)
 
             // Sprint 23 Fix: Update API Cache to ensure Blending Menu sees the new data
             // APIClient uses "Artist - Title" as key

@@ -331,4 +331,118 @@ describe('AlbumLoadService', () => {
         await service.whenIdle()
         expect(store.getAlbums('s1')).toHaveLength(1)
     })
+
+    describe('refreshSource (F46: the ranking saved by the modal shows on screen)', () => {
+        const withIds = () => {
+            catalog.find = vi.fn(async (query) => deepFreeze({ id: `id-${titleOf(query)}`, title: titleOf(query), tracks: [] }))
+        }
+
+        it('asks only that source again, for that album only, and publishes a new album', async () => {
+            withIds()
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One', 'Two')] })
+            await service.whenIdle()
+            const before = store.getEntries('s1')[0].album
+            Object.values(enrichers).forEach(enricher => enricher.enrich.mockClear())
+            enrichers.userRanking.enrich = vi.fn(async (album) => ({ status: 'done', album: { ...album, hasUserRanking: true } }))
+
+            expect(service.refreshSource('id-One', 'userRanking')).toBe(1)
+            expect(store.getEntries('s1')[0].album).toBe(before) // the album stays on screen meanwhile
+            await service.whenIdle()
+
+            const [one, two] = store.getEntries('s1')
+            expect(enrichers.userRanking.enrich).toHaveBeenCalledTimes(1)
+            expect(enrichers.acclaim.enrich).not.toHaveBeenCalled()
+            expect(enrichers.popularity.enrich).not.toHaveBeenCalled()
+            expect(catalog.find).toHaveBeenCalledTimes(2) // nothing was searched again
+            expect(one.album).not.toBe(before)
+            expect(one.album.hasUserRanking).toBe(true)
+            expect(one.album.rated).toBe(true) // what the other sources gave is kept
+            expect(one.enrichment).toMatchObject({ userRanking: EnrichmentStatus.DONE, acclaim: EnrichmentStatus.DONE })
+            expect(two.album.hasUserRanking).toBeUndefined()
+            expect(before.hasUserRanking).toBeUndefined() // the published album was not changed
+        })
+
+        it('refreshes the album in every series that has it', async () => {
+            withIds()
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One'), series('s2', 'One', 'Two')] })
+            await service.whenIdle()
+            enrichers.userRanking.enrich = vi.fn(async (album) => ({ status: 'done', album: { ...album, hasUserRanking: true } }))
+
+            expect(service.refreshSource('id-One', 'userRanking')).toBe(2)
+            await service.whenIdle()
+
+            expect(store.getEntries('s1')[0].album.hasUserRanking).toBe(true)
+            expect(store.getEntries('s2')[0].album.hasUserRanking).toBe(true)
+            expect(store.getEntries('s2')[1].album.hasUserRanking).toBeUndefined()
+        })
+
+        it('does not wait for a source still running: the refresh shows at once, and the older answer does not undo it', async () => {
+            withIds()
+            const slow = deferred()
+            const rate = (album) => ({ ...album, rated: true })
+            const rank = (album) => ({ ...album, hasUserRanking: true })
+            enrichers.acclaim.enrich = vi.fn(async (album) => { await slow.promise; return { status: 'done', album: rate(album), apply: rate } })
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One')] })
+            await wait(20) // found; the slow source is running with the album it was given
+            enrichers.userRanking.enrich = vi.fn(async (album) => ({ status: 'done', album: rank(album), apply: rank }))
+
+            service.refreshSource('id-One', 'userRanking')
+            await wait(20)
+            expect(enrichers.userRanking.enrich).toHaveBeenCalledTimes(1)
+            expect(store.getEntries('s1')[0].album.hasUserRanking).toBe(true) // on screen while the rating is still coming
+            expect(store.getEntries('s1')[0].album.rated).toBeUndefined()
+
+            slow.resolve()
+            await service.whenIdle()
+            expect(store.getEntries('s1')[0].album).toMatchObject({ rated: true, hasUserRanking: true })
+        })
+
+        it('only the latest ask of a source writes: an older answer that arrives later is dropped', async () => {
+            withIds()
+            const first = deferred()
+            enrichers.userRanking.enrich = vi.fn(async (album) => { await first.promise; return { status: 'done', album: { ...album, ranking: 'old' } } })
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One')] })
+            await wait(20) // found; the first read of the ranking is still running
+            enrichers.userRanking.enrich = vi.fn(async (album) => ({ status: 'done', album: { ...album, ranking: 'new' } }))
+
+            service.refreshSource('id-One', 'userRanking')
+            await wait(20)
+            expect(store.getEntries('s1')[0].album.ranking).toBe('new')
+
+            first.resolve()
+            await service.whenIdle()
+            expect(store.getEntries('s1')[0].album.ranking).toBe('new')
+            expect(store.getEntries('s1')[0].enrichment.userRanking).toBe(EnrichmentStatus.DONE)
+        })
+
+        it('does nothing for an album that is not loaded or for a source that does not exist', async () => {
+            withIds()
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One')] })
+            await service.whenIdle()
+            Object.values(enrichers).forEach(enricher => enricher.enrich.mockClear())
+
+            expect(service.refreshSource('id-Nope', 'userRanking')).toBe(0)
+            expect(service.refreshSource('id-One', 'nonsense')).toBe(0)
+            await service.whenIdle()
+
+            expect(enrichers.userRanking.enrich).not.toHaveBeenCalled()
+        })
+
+        it('a refresh that fails leaves the album on screen and marks only that source as failed', async () => {
+            withIds()
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One')] })
+            await service.whenIdle()
+            enrichers.userRanking.enrich = vi.fn(async () => { throw new Error('offline') })
+            const quiet = vi.spyOn(console, 'warn').mockImplementation(() => { })
+
+            service.refreshSource('id-One', 'userRanking')
+            await service.whenIdle()
+
+            const entry = store.getEntries('s1')[0]
+            expect(entry.status).toBe(AlbumStatus.FOUND)
+            expect(entry.enrichment.userRanking).toBe(EnrichmentStatus.FAILED)
+            expect(entry.enrichment.acclaim).toBe(EnrichmentStatus.DONE)
+            quiet.mockRestore()
+        })
+    })
 })

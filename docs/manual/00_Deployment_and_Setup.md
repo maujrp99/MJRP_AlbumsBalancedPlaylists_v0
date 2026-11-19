@@ -65,6 +65,25 @@ ALLOWED_ORIGIN=http://localhost:8000  # CORS
 NODE_ENV=development|production
 ```
 
+### Frontend (`.env` na raiz, lido pelo Vite na hora do build)
+```bash
+VITE_SPOTIFY_CLIENT_ID=...         # Client ID do app no painel do Spotify (valor público)
+```
+Sem essa variável a conexão com o Spotify quebra, no ambiente local e no build que vai para produção.
+
+### Endereço local: um só
+O app roda em **`http://127.0.0.1:5010`** e só nele (`vite.config.js`: porta fixa, `strictPort`).
+O navegador guarda login, tokens e cache por origem, e o Spotify só aceita o IP de loopback como
+retorno local; por isso `localhost` e `127.0.0.1` não se misturam. Uma página aberta em
+`http://localhost:5010` é mandada pelo próprio app para `127.0.0.1` (`public/js/utils/localAddress.js`).
+
+Cadastros que valem para esse endereço:
+
+| Onde | O quê |
+|---|---|
+| Painel do Spotify, Redirect URIs | `http://127.0.0.1:5010/callback` |
+| Firebase Authentication, Authorized domains | `127.0.0.1` |
+
 ### Frontend (`public/config.js`)
 ```javascript
 const firebaseConfig = {

@@ -16,7 +16,11 @@ import { albumSeriesStore } from '../stores/albumSeries.js';
 import { getSeriesService } from '../services/SeriesService.js';
 import { albumLoadStore } from '../stores/albumLoad.js';
 import { albumLoadService, ALL_SERIES_CONTEXT, ALL_SCOPE, singleScope } from '../services/albums/albumLoading.js';
-import { filterSeries } from '../models/seriesFilter.js';
+import { ownRankingsStore } from '../stores/ownRankings.js';
+import { ownRankingService } from '../services/ranking/ownRanking.js';
+import { filterSeries, countUnchecked, readsFacts } from '../models/seriesFilter.js';
+import { rankedQueryKeys } from '../models/ownRanking.js';
+import { decodeEntities } from '../models/text.js';
 import { paginate, takeFirst, normalizePageSize, PagingMode } from '../models/paging.js';
 import { AlbumStatus } from '../models/albumLoadState.js';
 import toast from '../components/Toast.js';
@@ -74,7 +78,8 @@ export default class SeriesController {
         this._unsubscribers = [
             albumLoadStore.subscribe(() => this.renderFromStore()),
             albumsStore.subscribe(() => this.onAlbumsChange()),
-            albumSeriesStore.subscribe(() => this.onSeriesChange())
+            albumSeriesStore.subscribe(() => this.onSeriesChange()),
+            ownRankingsStore.subscribe(() => this.onOwnRankingsChange())
         ];
 
         console.log('🧠 [V2] SeriesController Initialized');
@@ -85,6 +90,19 @@ export default class SeriesController {
      */
     setView(view) {
         this.view = view;
+    }
+
+    /**
+     * The screen was closed. The controller lives for the whole session, so it lets go of the view
+     * and of its subscriptions: nothing is drawn into a screen that is gone. The load itself goes
+     * on in the service, and the next visit shows the progress it has made.
+     * @param {SeriesView} view - only the view that is attached may detach
+     */
+    detachView(view) {
+        if (this.view !== view) return;
+        this._unsubscribers.forEach(unsubscribe => unsubscribe());
+        this._unsubscribers = [];
+        this.view = null;
     }
 
     // =========================================
@@ -164,15 +182,21 @@ export default class SeriesController {
      * @returns {{ groups: Array<{ series, queries, keys }>, paging: Object }}
      */
     getPageView() {
-        const sorted = this.getSortedSeries(albumSeriesStore.getSeries());
+        const sorted = this.getSortedSeries(this.getScreenSeries());
         const isAll = this.state.currentScope === 'ALL';
+        const source = this.state.filters?.source;
         const matching = filterSeries(sorted, {
             seriesId: isAll ? null : this.state.targetSeriesId,
             artist: this.state.filters?.artist,
             year: this.state.filters?.year,
-            source: this.state.filters?.source,
+            source,
             search: this.state.searchQuery
         }, { ownRankedKeys: this.getOwnRankedKeys() });
+
+        // A filter that reads the facts of the series cannot answer for a query never checked
+        // against the sources: the screen says how many there are, in the scope it is showing.
+        const scoped = isAll ? sorted : sorted.filter(series => series.id === this.state.targetSeriesId);
+        const unchecked = readsFacts(source) ? countUnchecked(scoped) : 0;
 
         const { pagingMode, pageSize } = this.state;
         const cut = pagingMode === PagingMode.SCROLL
@@ -185,18 +209,47 @@ export default class SeriesController {
             paging: {
                 mode: pagingMode, size: pageSize, page: cut.page, pages: cut.pages,
                 total: cut.total, from: cut.from, to: cut.to, hasMore: cut.hasMore,
-                totalSeries: sorted.length
+                totalSeries: sorted.length,
+                single: !isAll, // one series on screen: nothing to page, only the notice may show
+                unchecked
             }
         };
     }
 
-    /** Keys of the loaded albums the person has ranked (the 'My Ranking' filter). */
+    /**
+     * The series as the screen shows them: a name stored with HTML entities (UAT-180) is shown plain.
+     */
+    getScreenSeries() {
+        return albumSeriesStore.getSeries().map(series =>
+            (typeof series.name === 'string' && series.name.includes('&'))
+                ? { ...series, name: decodeEntities(series.name) }
+                : series);
+    }
+
+    /**
+     * Keys of the queries the person has ranked (the 'My Ranking' filter), over every series:
+     * the list of ranked albums, read once by OwnRankingService, matched to the queries by name,
+     * plus the loaded albums that carry a ranking (exact, whatever their name).
+     */
     getOwnRankedKeys() {
-        const keys = new Set();
+        if (this.state.filters?.source !== 'user') return new Set();
+
+        const loadedKeys = [];
         albumLoadStore.getSeriesIds().forEach(id => albumLoadStore.getEntries(id).forEach(entry => {
-            if (entry.album?.hasUserRanking) keys.add(entry.key);
+            if (entry.album?.hasUserRanking) loadedKeys.push(entry.key);
         }));
-        return keys;
+        return rankedQueryKeys(albumSeriesStore.getSeries(), ownRankingsStore.getIndex(), loadedKeys);
+    }
+
+    /**
+     * Save the person's ranking of an album (the ranking modal reports here) and ask the load to
+     * read that source again for that album, so the screen shows it without loading anything else.
+     * @returns {Promise<boolean>} true when it was saved
+     */
+    async saveRanking(album, rankings) {
+        const saved = await ownRankingService.save(album, rankings);
+        if (saved) albumLoadService.refreshSource(album.id, 'userRanking');
+        return saved;
     }
 
     /** The series on screen, in order (what the grid groups the albums by). */
@@ -338,6 +391,8 @@ export default class SeriesController {
     handleFilterChange(type, value) {
         if (!this.state.filters) this.state.filters = {};
         this.state.filters[type] = value;
+        // 'My Ranking' answers from the list of ranked albums: one read, the first time it is asked
+        if (type === 'source' && value === 'user') ownRankingService.ensureLoaded();
         this.resetPaging();
         this.requestLoad(false);
     }
@@ -453,6 +508,11 @@ export default class SeriesController {
         this.renderFromStore();
     }
 
+    /** The list of ranked albums arrived or changed: only the 'My Ranking' filter depends on it. */
+    onOwnRankingsChange() {
+        if (this.state.filters?.source === 'user' && this.view) this.requestLoad(false);
+    }
+
     /** The series changed (created, renamed, an album added or removed): reconcile the load. */
     onSeriesChange() {
         this.notifyView('header', this.getHeaderData());
@@ -472,7 +532,7 @@ export default class SeriesController {
         const allSeries = albumSeriesStore.getSeries();
 
         return {
-            title: activeSeries?.name || 'All Albums Series',
+            title: decodeEntities(activeSeries?.name) || 'All Albums Series',
             description: activeSeries?.description || `${allSeries.length} series available`,
             seriesList: this.getVisibleSeriesList(),
             activeSeriesId: activeSeries?.id || null

@@ -28,8 +28,9 @@ export default defineConfig({
     },
 
     server: {
-        host: true, // Accept localhost and 127.0.0.1 (needed for Spotify OAuth)
-        port: 5000,
+        host: true, // Answers at localhost too; the app sends it to 127.0.0.1 (utils/localAddress.js)
+        port: 5010, // The one local address is http://127.0.0.1:5010 (F50); the Spotify redirect is registered for it
+        strictPort: true, // Never drift to another port: the logins are tied to this one
         proxy: {
             '/api': {
                 target: 'http://localhost:3000',

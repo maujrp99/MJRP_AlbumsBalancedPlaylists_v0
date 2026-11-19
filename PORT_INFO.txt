@@ -1,9 +1,13 @@
-# Port Configuration Quick Reference
+# Local addresses — quick reference
 
-**Dev Server**: http://localhost:5000 ← USE THIS  
-**Preview/E2E**: http://localhost:5005  
-**Backend API**: http://localhost:3000  
+**App (dev server)**: http://127.0.0.1:5010  <- the one address; use this
+**Backend API**:      http://localhost:3000  (the dev server forwards /api to it)
 
-⚠️ **NOT 5173** - That's Vite default, we use 5000!
+Why one address: the browser keeps logins, tokens and caches per origin, and Spotify only accepts
+the loopback IP as a local redirect. A page opened at http://localhost:5010 is sent to 127.0.0.1
+by the app itself (public/js/utils/localAddress.js). The port never drifts (strictPort).
 
-See docs/devops/PORT_CONFIGURATION.md for full details.
+Registered for this address:
+- Spotify dashboard -> Redirect URIs: http://127.0.0.1:5010/callback
+- Firebase Authentication -> Authorized domains: 127.0.0.1
+- .env: VITE_SPOTIFY_CLIENT_ID (see .env.example)

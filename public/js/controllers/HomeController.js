@@ -7,6 +7,8 @@ import { albumSeriesStore } from '../stores/albumSeries.js';
 import { getSeriesService } from '../services/SeriesService.js';
 import { router } from '../router.js';
 import toast from '../components/Toast.js';
+import { toAlbumQuery } from '../models/albumQuery.js';
+import { decodeEntities } from '../models/text.js';
 
 export class HomeController {
     constructor(view) {
@@ -219,7 +221,7 @@ export class HomeController {
     async handleInitializeLoad() {
         const albums = this.stagingController.getSelectedAlbums();
         const seriesNameInput = this.view.$('#seriesNameInput');
-        const seriesName = seriesNameInput?.value?.trim() || 'New Album Series';
+        const seriesName = decodeEntities(seriesNameInput?.value || '').trim() || 'New Album Series';
 
         if (albums.length === 0) {
             toast.error('Please select at least one album to initialize.');
@@ -235,13 +237,8 @@ export class HomeController {
             }
 
             // Create album queries from selected albums
-            const albumQueries = albums.map(album => ({
-                artist: album.artist,
-                title: album.title, // FIX #154: Changed from 'album:' to 'title:' to match SeriesService expectation
-                appleMusicId: album.id || album.appleMusicId,
-                coverUrl: album.coverUrl || album.artworkTemplate,
-                year: album.year
-            }));
+            // One shape, written in one place, with plain text (models/albumQuery.js)
+            const albumQueries = albums.map(toAlbumQuery);
 
             // Create the series via Service
             const db = albumSeriesStore.getDb()

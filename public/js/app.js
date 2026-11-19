@@ -6,6 +6,12 @@
  */
 
 import '../css/index.css'
+import { canonicalLocalUrl } from './utils/localAddress.js'
+
+// One local address (F50): a page opened at `localhost` goes to the same place at 127.0.0.1,
+// where the logins, the Spotify redirect and the caches live.
+const localUrl = canonicalLocalUrl(window.location)
+if (localUrl) window.location.replace(localUrl)
 import { app, auth, db } from './firebase-init.js'
 import { AuthService } from './services/AuthService.js'
 
@@ -29,6 +35,7 @@ export { app, auth, db }
 // Initialize UI Components
 import { TopNav } from './components/TopNav.js'
 import { Footer } from './components/Footer.js'
+import { clearAppAlbumCaches } from './services/albums/albumLoading.js'
 
 const initUI = () => {
     const topNav = new TopNav()
@@ -38,7 +45,7 @@ const initUI = () => {
         topNav.attachListeners()
     }
 
-    const footer = new Footer()
+    const footer = new Footer({ clearCaches: clearAppAlbumCaches })
     const footerEl = document.getElementById('footer-container')
     if (footerEl) {
         footerEl.innerHTML = footer.render()

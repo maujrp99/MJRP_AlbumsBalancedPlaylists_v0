@@ -3,7 +3,7 @@
  * Common selectors, navigation helpers, and test utilities specific to the MJRP app
  */
 
-export const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
+export const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:5010';
 
 // Common Selectors
 export const SELECTORS = {

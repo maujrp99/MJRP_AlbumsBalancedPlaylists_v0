@@ -3,7 +3,7 @@
 This document audits the `public/legacy/` directory to ensure no critical business logic is lost before these files are eventually deleted.
 
 ## 1. `AlbumsView_DEPRECATED.js`
-*   **Status**: **Redundant / Safe to Delete**
+*   **Status**: **Deleted** in v4.0 (F48, 2026-11-19), together with `public/js/views/controllers/AlbumsStateController.js`, which only this file imported.
 *   **Replacement**: `public/js/views/SeriesView.js` (V3 Architecture)
 *   **Analysis**:
     *   This was the monolithic V2 view for the Albums route.
@@ -39,5 +39,5 @@ This document audits the `public/legacy/` directory to ensure no critical busine
 The contents of `public/legacy/` are confirmed to be **technically debt**. They contain no active unique logic that hasn't been ported to the V3 architecture.
 
 > [!RECOMMENDATION]
-> **Delete**: `AlbumsView_DEPRECATED.js`, `EditPlaylistView_DEPRECATED.js`, `hybrid-curator.html`.
+> **Delete**: `EditPlaylistView_DEPRECATED.js`, `hybrid-curator.html` (`AlbumsView_DEPRECATED.js` is already gone).
 > **Keep**: `index_redirect.html` (as a safety measure).

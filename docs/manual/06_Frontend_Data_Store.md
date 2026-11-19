@@ -9,12 +9,15 @@
 ### 1.1 `stores/albumLoad.js` (AlbumLoadStore) - v4.0
 **Purpose**: the one owner of which albums each series has and of the load state of each album. Pure state; only `AlbumLoadService` writes to it. Details in [08_Frontend_Models.md](08_Frontend_Models.md).
 
+### 1.1a `stores/ownRankings.js` (OwnRankingsStore) - v4.0
+**Purpose**: the albums the person has ranked (which, not how): the list, the person it belongs to and its state (`idle`, `loading`, `ready`, `failed`). Pure state; only `OwnRankingService` writes to it. `getIndex()` is derived and answers "is this album query ranked?" for the 'My Ranking' filter.
+
 ### 1.1b `stores/albums.js` (AlbumsStore)
 **Purpose**: the shelf of loaded albums the other screens read.
 *   Since v4.0 it is filled by projection from `AlbumLoadStore` (`setAlbumsBySeries`).
 *   `ALL_SERIES_VIEW` holds the albums of every series on screen; each series id holds its own.
 *   `removeAlbumsBySeriesIdFromContext` and the "surgical injection" of Sprint 21.5 still exist for the edit and delete flows; the next load reconciles them.
-*   It is **not** a pure state container yet: it still carries Firestore code used by "Refetch Metadata" (issue UAT-14).
+*   It is a pure state container (v4.0, F48): it imports no Firestore. The write of "Refetch Metadata" into the shared `albums` collection moved to `repositories/SharedAlbumRepository.js`; `saveToFirestore`, `loadFromFirestore` and `updateAlbum(db, album)` no longer exist.
 
 ### 1.2 Pure State Containers (Sprint 19)
 **Status**: `[REFACTORED]`

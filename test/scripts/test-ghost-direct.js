@@ -16,7 +16,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         }
     });
 
-    await page.goto('http://localhost:5000');
+    await page.goto('http://127.0.0.1:5010');
     await sleep(3000);
 
     console.log('\n=== Direct Store Test (No API dependency) ===\n');

@@ -1,0 +1,35 @@
+{
+  "feature": "F50",
+  "date": "2026-11-19 13:53",
+  "address": "http://127.0.0.1:5010",
+  "checks": [
+    {
+      "what": "abrir http://localhost:5010/albums",
+      "result": "a página foi parar em http://127.0.0.1:5010/albums",
+      "by": "agente, painel embutido"
+    },
+    {
+      "what": "clicar no «x» do botão Connected do Spotify",
+      "result": "abre o diálogo do app «Disconnect from Spotify?»; com o sim, o botão volta a «Connect» e aparece «Disconnected from Spotify»",
+      "by": "agente, painel embutido"
+    },
+    {
+      "what": "conectar e desconectar o Spotify",
+      "result": "«connect e disconnect do spotify ok agora no 5010»",
+      "by": "MJRP"
+    },
+    {
+      "what": "entrar na conta pelo Google em 127.0.0.1:5010",
+      "result": "entrou (conta autenticada vista pelo agente antes do conserto)",
+      "by": "MJRP"
+    },
+    {
+      "what": "entrar na conta pela Apple em 127.0.0.1:5010",
+      "result": "403 Forbidden da Apple, no painel embutido e no Chrome; em produção o mesmo login funciona. Causa não provada.",
+      "by": "MJRP"
+    }
+  ],
+  "not_checked": [
+    "autorização do Apple Music para exportar playlist no endereço local"
+  ]
+}

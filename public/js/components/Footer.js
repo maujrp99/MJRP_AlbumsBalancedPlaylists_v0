@@ -1,6 +1,21 @@
 import { getIcon } from './Icons.js'
 
+const CLEARED_TEXT = 'Cache Cleared!'
+const FAILED_TEXT = 'Could not clear the cache'
+
 export class Footer {
+    /**
+     * @param {Object} deps
+     * @param {Function} deps.clearCaches - () => Promise: forgets what the browser keeps about albums
+     * @param {Function} [deps.reload] - reloads the page, so the albums in memory go too
+     * @param {number} [deps.reloadDelayMs] - how long the "cleared" notice stays before the reload
+     */
+    constructor({ clearCaches, reload = () => location.reload(), reloadDelayMs = 1000 } = {}) {
+        this.clearCaches = clearCaches
+        this.reload = reload
+        this.reloadDelayMs = reloadDelayMs
+    }
+
     render() {
         const year = new Date().getFullYear()
         const lastUpdate = new Date().toLocaleString()
@@ -16,7 +31,7 @@ export class Footer {
             <a href="/playlists" class="hover:text-white transition-colors" data-link>Playlists</a>
             <div class="flex items-center gap-3">
                 <button id="footerClearCache" class="hover:text-red-400 transition-colors text-left">Clear Cache</button>
-                <span id="cacheClearedMsg" class="text-red-500 font-bold hidden animate-pulse">Cache Cleared!</span>
+                <span id="cacheClearedMsg" class="text-red-500 font-bold hidden animate-pulse" role="status">${CLEARED_TEXT}</span>
             </div>
           </div>
 
@@ -44,16 +59,26 @@ export class Footer {
         const msg = document.getElementById('cacheClearedMsg')
 
         if (clearCacheBtn) {
-            clearCacheBtn.addEventListener('click', () => {
-                localStorage.clear()
-
-                if (msg) {
+            clearCacheBtn.addEventListener('click', async () => {
+                clearCacheBtn.disabled = true
+                const say = (text) => {
+                    if (!msg) return
+                    msg.textContent = text
                     msg.classList.remove('hidden')
                 }
 
-                setTimeout(() => {
-                    location.reload()
-                }, 1000)
+                try {
+                    // Only the album caches: localStorage as a whole stays (Spotify login, screen choices)
+                    await this.clearCaches()
+                } catch (error) {
+                    console.error('[Footer] Clear Cache failed:', error)
+                    say(FAILED_TEXT)
+                    clearCacheBtn.disabled = false
+                    return
+                }
+
+                say(CLEARED_TEXT)
+                setTimeout(() => this.reload(), this.reloadDelayMs)
             })
         }
     }

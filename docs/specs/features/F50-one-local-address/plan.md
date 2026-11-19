@@ -3,32 +3,37 @@
 # Plan — Feature F50: Um endereço local só para o login e para o Spotify · Spec: [[spec]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
+> Escrito depois do código (passo retroativo da via rápida), a partir do `docs/log.md` de 2026-11-19 e do código do ramo `fix/f50-one-local-address`.
+
 ## Architecture Approach
-<!-- How it fits arch.md; components affected; what this plan refines in arch.md and data-model.md. -->
-«a escrever: como encaixa no arch.md; componentes afetados; o que refina no arch.md e no data-model.md»
+Nenhuma peça nova de arquitetura. Duas regras passam a ter um dono só:
+- **O endereço local** é decidido por uma função pura, `canonicalLocalUrl` (`public/js/utils/localAddress.js`), chamada na entrada do app. Ela não conhece tela nem rede (DP-20, núcleo puro).
+- **«A sessão do Spotify mudou»** é um sinal só, `spotify-auth-change`, disparado por `SpotifyAuthService` em toda escrita da sessão (`setSession`) e na saída (`logout`). Quem desenha a sessão escuta esse sinal e mais nenhum. `spotify-auth-success` continua existindo só como gatilho do enriquecimento em segundo plano.
 
 ## Technical Design
-<!-- Data flow first · components/modules (what each receives, renders or returns, emits) · API/interface
-     changes · explicit file paths. Each component names the REQ-xx it addresses. -->
-«a escrever: fluxo de dados, componentes/módulos (o que cada um recebe e devolve), interfaces, caminhos de arquivo — cada componente nomeia o REQ-xx»
+- `public/js/utils/localAddress.js`: `LOCAL_HOST`, `canonicalLocalUrl(location)` devolve o endereço certo ou `null` (REQ-01).
+- `public/js/app.js`: na entrada, se `canonicalLocalUrl` devolve um endereço, `window.location.replace` (REQ-01).
+- `vite.config.js`: porta 5010, `strictPort` (REQ-02).
+- `public/js/services/SpotifyAuthService.js`: `setSession` dispara `spotify-auth-change` (REQ-03).
+- `public/js/components/SpotifyConnectButton.js`: ao ouvir o sinal, redesenha e busca o nome da conta, um pedido por vez (REQ-03); o «x» pergunta por `dialogService.confirm` (REQ-04).
+
+## UI/UX Design (if the feature touches a screen)
+A pergunta de desconectar usa o `ConfirmModal` que o app já tem. Nenhum desenho novo.
 
 ## Dependencies
-<!-- New dependencies with their justification — aligned with constitution.md and PRINCIPLES.md (Constitution
-     Check); contradicting either needs a recorded decision first (mjrp-recording-decisions). -->
-«a escrever: dependências novas com a justificativa, ou "Nenhuma."»
+Cadastros fora do código, feitos pelo MJRP em 2026-11-19: `http://127.0.0.1:5010/callback` nos Redirect URIs do painel do Spotify; `127.0.0.1` nos domínios autorizados do Firebase Authentication. `VITE_SPOTIFY_CLIENT_ID` no `.env`.
 
 ## Documents Consulted
-<!-- arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, the NFR nodes. -->
-«a escrever: arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, os NFR»
+- `docs/specs/uat.md` (UAT-178, UAT-182, UAT-183)
+- `docs/manual/00_Deployment_and_Setup.md`, `PORT_INFO.txt`, `README.md`
+- `public/js/services/SpotifyAuthService.js` (o comentário sobre o Spotify exigir `127.0.0.1`)
 
 ## Risks & Considerations
-«a escrever: riscos e o que mais pesa, ou "Nenhum conhecido."»
+- O sinal agora dispara também na renovação do token. Quem escuta precisa ser barato: o botão só redesenha e, sem nome da conta, busca uma vez.
+- Guardados do navegador em `localhost:5010` (login, tokens, cache) ficam para trás: valem os de `127.0.0.1:5010`.
+- O login pela Apple no endereço local segue sem resposta (ver Open Questions da spec).
 
 ## Test plan
-> Derivado dos REQ do `spec.md` e dos critérios dos requisitos importados · «a escrever: data e hora de Brasília»
-
-| REQ | Caso de teste | Critério / estado | Camada | Automatizado? |
-|---|---|---|---|---|
-| REQ-01 | «a escrever: o caso de teste que prova o REQ» | «a escrever: critério do nó ou estado observável» | «a escrever: camada» | «a escrever: sim ou não» |
-
-Bordas fora dos critérios (achados para a `mjrp-writing-reqs` se mudam o comportamento): «a escrever: ou "Nenhuma."»
+- `test/utils/localAddress.test.js`: seis casos da função pura (REQ-01).
+- `test/services/spotify/SpotifyAuthSignal.test.js`: o sinal ao gravar e ao sair, o botão que muda sozinho, o «x» pelo diálogo do app (REQ-03, REQ-04).
+- No navegador: `reports/evidence/F50-one-local-address/F50-probe-2026-11-19.json` (REQ-01 a REQ-04).

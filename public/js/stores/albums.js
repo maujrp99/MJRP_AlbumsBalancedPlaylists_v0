@@ -1,12 +1,11 @@
 /**
  * Albums Store
- * Manages album data per series, loading, and Firestore sync
- * 
+ * The albums shelf: the albums each series has, in memory, for the screens to read.
+ * It holds state only. It is written by the album load (services/albums/albumLoading.js projects
+ * the load store into it); it never talks to Firestore (repositories do).
+ *
  * ARCHITECTURE: Albums are keyed by AlbumSeriesId to prevent ghost albums
  */
-
-import { Album } from '../models/Album.js'
-import { collection, doc, addDoc, updateDoc, setDoc, getDocs } from 'firebase/firestore'
 
 export class AlbumsStore {
     constructor() {
@@ -203,21 +202,6 @@ export class AlbumsStore {
         }
     }
 
-    /**
-     * Update album in store and persist to Firestore
-     * @param {Object} db - Firestore instance
-     * @param {Object} album - Updated album instance
-     */
-    async updateAlbum(db, album) {
-        if (!album.id) throw new Error('Cannot update album without ID')
-
-        // Optimistic Update
-        this.addAlbumToSeries(this.activeAlbumSeriesId, album)
-
-        // Persist
-        await this.saveToFirestore(db, album)
-    }
-
     // ========== SERIES MANAGEMENT ==========
 
     /**
@@ -267,73 +251,6 @@ export class AlbumsStore {
     hasAlbumsForSeries(seriesId) {
         return this.albumsByAlbumSeriesId.has(seriesId) &&
             this.albumsByAlbumSeriesId.get(seriesId).length > 0
-    }
-
-    // ========== FIRESTORE OPERATIONS ==========
-
-    /**
-     * Load albums from Firestore
-     * @param {Object} db - Firestore database instance
-     * @returns {Promise<Array>} Loaded albums
-     */
-    async loadFromFirestore(db) {
-        this.loading = true
-        this.error = null
-        this.notify()
-
-        try {
-            const snapshot = await getDocs(collection(db, 'albums'))
-            const albums = snapshot.docs.map(docSnap => new Album({
-                id: docSnap.id,
-                ...docSnap.data()
-            }))
-
-            // Store in active series if set
-            if (this.activeAlbumSeriesId) {
-                this.albumsByAlbumSeriesId.set(this.activeAlbumSeriesId, albums)
-            }
-
-            this.notify()
-            return albums
-        } catch (error) {
-            this.error = error.message
-            this.notify()
-            throw error
-        } finally {
-            this.loading = false
-            this.notify()
-        }
-    }
-
-    /**
-     * Save album to Firestore
-     * @param {Object} db - Firestore database instance
-     * @param {Object} album - Album to save
-     * @returns {Promise<string>} Document ID
-     */
-    async saveToFirestore(db, album) {
-        try {
-            // Deep serialize: removes undefined and converts ES6 classes like Track to POJOs
-            // Required per Issue #26 in DEBUG_LOG.md
-            const serialized = JSON.parse(JSON.stringify(album))
-
-            if (album.id) {
-                // Fix: Use setDoc with merge instead of updateDoc to handle cases where 
-                // the document might not exist yet (e.g. hydrated from API with ID but not saved)
-                // This resolves "FirebaseError: No document to update"
-                await setDoc(doc(db, 'albums', album.id), serialized, { merge: true })
-                return album.id
-            } else {
-                const docRef = await addDoc(collection(db, 'albums'), serialized)
-                album.id = docRef.id
-                this.addAlbum(album)
-                return docRef.id
-            }
-        } catch (error) {
-            this.error = error.message
-            this.notify()
-            throw error
-        }
     }
 
     // ========== SUBSCRIPTIONS ==========

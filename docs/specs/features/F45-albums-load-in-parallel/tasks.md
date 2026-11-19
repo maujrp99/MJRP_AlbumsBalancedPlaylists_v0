@@ -1,4 +1,4 @@
-# Tasks — Feature F45: A tela de álbuns carrega vários álbuns ao mesmo tempo, com prazo, e só as séries à vista · Plan: [[plan]]
+# Tasks — Feature F45: A tela de álbuns carrega vários álbuns ao mesmo tempo, com prazo, e as séries do topo primeiro · Plan: [[plan]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 > As tarefas como foram feitas em 2026-11-19, escritas depois (passo retroativo da via rápida). A marca `model::` diz a classe do trabalho (opus: desenho de código; sonnet: mecânico), como o molde pede.

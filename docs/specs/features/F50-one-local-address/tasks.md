@@ -3,25 +3,25 @@
 # Tasks — Feature F50: Um endereço local só para o login e para o Spotify · Plan: [[plan]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
+> As tarefas como foram feitas em 2026-11-19, escritas depois (passo retroativo da via rápida). A marca `model::` diz a classe do trabalho (opus: desenho de código; sonnet: mecânico), como o molde pede.
+
 ## Pre-Implementation
-- [ ] create the branch feat/one-local-address-<timestamp>
-- [ ] verify the spec and the plan of F50 passed their cross-checks (and were approved, where gated)
+- [x] causa da UAT-182 lida no código antes de mexer: a conexão avisava por `spotify-auth-success`, o botão só escutava `spotify-auth-change`
+- [x] ramo criado: `fix/f50-one-local-address`, sobre a integração da F46 e da F48
+- [ ] conferência cruzada da spec e do plano: fica para o fecho, porque os dois foram escritos depois do código
 
 ## Implementation
-<!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
-     components → composition → polish. -->
-<!-- Marks, after `implements::`, separated by ` · `:
-     model:: sonnet|opus — MANDATORY on every task; the author of this file decides, the implementer never does.
-                        sonnet = MECHANICAL: texts and registry keys, summaries, format samples and tests, derived
-                        files, renames. opus = code design, architecture, critique, visual recheck. There is no
-                        default: a task without the mark fails the cross-check.
-     rounds:: N       — written when the task CLOSES ([x]): how many Execute ⇄ Verify rounds it took (ceiling 3).
-                        `python3 mjrp-scripts/loop.py --check-tasks tasks.md` fails a closed task without it. -->
-- [ ] TASK-01 «a escrever: ação sobre um arquivo ou componente nomeado — o sinal de pronto» · implements:: REQ-01 · model:: «a escrever: sonnet|opus»
+- [x] TASK-01 `test/utils/localAddress.test.js` e `public/js/utils/localAddress.js`; chamada na entrada do `public/js/app.js` — os testes falhavam antes · implements:: REQ-01 · model:: opus · rounds:: 1
+- [x] TASK-02 `vite.config.js` na porta 5010 com `strictPort`; `PORT_INFO.txt`, `README.md`, `.env.example`, `restart_dev.sh` e os scripts de `test/` no endereço novo · implements:: REQ-02 · model:: sonnet · rounds:: 1
+- [x] TASK-03 `test/services/spotify/SpotifyAuthSignal.test.js`; `SpotifyAuthService.setSession` dispara `spotify-auth-change`; o botão busca o nome da conta ao ouvir — commit `5debc7b` · implements:: REQ-03 · model:: opus · rounds:: 1
+- [x] TASK-04 o «x» pergunta por `dialogService.confirm` — commit `feae54d` · implements:: REQ-04 · model:: opus · rounds:: 1
 
 ## Verification
-- [ ] TASK-02 «a escrever: a verificação: suíte, build, caminho feliz, regressão» · implements:: REQ-01 · model:: «a escrever: sonnet|opus»
+- [x] TASK-05 no navegador: `localhost:5010` cai em `127.0.0.1:5010`; o «x» abre o diálogo e desconecta; o MJRP conectou e desconectou («ok agora no 5010»); `reports/evidence/F50-one-local-address/F50-probe-2026-11-19.json` · implements:: REQ-01, REQ-03, REQ-04 · model:: opus · rounds:: 1
+- [ ] TASK-06 julgamento do MJRP (tarefa do humano); UAT-178, UAT-182 e UAT-183 seguem sem o aceite até lá · implements:: REQ-01, REQ-02, REQ-03, REQ-04 · model:: opus
 
 ## Documentation
-- [ ] update the specs affected · mark F50 Done in spec.md · commit: feat: implement one-local-address
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] `docs/manual/00_Deployment_and_Setup.md`: o endereço local único, os cadastros e a variável do Spotify
+- [x] spec, plano e tarefas escritos do registro (passo retroativo, 2026-11-19)
+- [ ] levar o ramo à `main` (push e aceite são do MJRP)
+- [ ] fechar chamando a `mjrp-ensuring-sdd` antes do Done; só então `status: Done`

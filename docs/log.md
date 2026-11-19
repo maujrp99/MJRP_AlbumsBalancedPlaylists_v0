@@ -3,6 +3,31 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:03] session — F46, F48 e F50 na `main`; UAT-173 a UAT-177, UAT-180 e UAT-183 em `fixed`
+
+O ramo `fix/f50-one-local-address` (com `fix/f46-albums-load-state` e `fix/f48-album-cache-and-retry` dentro) entrou na `main` pelo `merge_train.py merge`. O conflito do `docs/specs/uat.md` foi resolvido pelo `uat-merge`. Cada issue em `fixed` diz o que foi visto no navegador e o que não foi; o aceite é do MJRP. A UAT-181 (segunda fonte, 402) segue aberta: o sintoma sumiu com o acerto da cobrança, mas o código do servidor da F52 não foi feito.
+
+## [2026-11-19 14:03] session — F46: o ranking salvo aparece na hora, sem esperar a nota; cada fonte aplica a resposta sobre o álbum mais novo
+
+- **Autorização do MJRP:** «pode testar um ranking, escolha 2 albums de colecoes diferentes, me diga qual … depois eu arrumo com meu ranking». Álbuns usados: «Brothers In Arms» (Dire Straits) e «Rapture of the Deep» (Deep Purple). Os rankings de teste ficaram gravados na conta dele.
+- **Defeito achado no teste:** o ranking salvo não refletia na série cuja nota ainda estava na fila; o pedido de reler esperava atrás dela.
+- **Mudança de arquitetura (o MJRP pediu para ser avisado):** a porta das fontes ganhou `apply`; o serviço aplica a resposta sobre o álbum mais novo e só o último pedido de uma fonte escreve. `docs/specs/arch.md`, seção 19.
+- **Testes:** 3 novos e 1 reescrito; a suíte tem 388 passando e as mesmas 28 falhas da linha de base. `vite build` compila.
+- **No navegador:** `reports/evidence/F46-albums-load-state/F46-ranking-2026-11-19.json`.
+
+## [2026-11-19 13:57] session — F46 e F48 conferidas no navegador (parte); o MJRP entrou no painel embutido
+
+- **F48:** «Clear Cache» zera só o cache de álbuns (IndexedDB `mjrp-cache`) e a carga recomeça; login, Spotify e escolhas de tela ficam. `reports/evidence/F48-album-cache-and-retry/F48-browser-2026-11-19.json`.
+- **F46:** o filtro «My Ranking» responde sobre as 46 séries (9 séries), não só sobre a página. `reports/evidence/F46-albums-load-state/F46-browser-2026-11-19.json`.
+- **Carga:** 171 álbuns na página de 40 séries, nenhum aviso de falha (a segunda fonte voltou depois do acerto da cobrança).
+- **Não conferido:** salvar um ranking pelo modal (grava nos dados do MJRP), a nova tentativa ao servidor, a validade do cache de ranking, a busca das playlists guardadas.
+
+## [2026-11-19 13:53] session — F50 provada no navegador; spec, plano e tarefas escritos; UAT-178, UAT-182 e UAT-183 em `fixed`
+
+- **No navegador:** `http://localhost:5010/albums` cai em `http://127.0.0.1:5010/albums`; o «x» do Spotify abre o diálogo do app e desconecta. O MJRP: «connect e disconnect do spotify ok agora no 5010». Evidência: `reports/evidence/F50-one-local-address/F50-probe-2026-11-19.json`.
+- **Documentos:** spec, plano e tarefas da F50 preenchidos (passo retroativo), `status: In Progress`; as três issues em `fixed`, à espera do aceite do MJRP.
+- **Aberto:** o login pela Apple em `127.0.0.1:5010` (403; em produção funciona). A F46 e a F48 seguem sem prova no navegador: o painel embutido está sem login da conta e a extensão do Chrome não respondeu.
+
 ## [2026-11-19 13:50] session — produção vista pelo MJRP depois do deploy; login pela Apple funciona em produção
 
 - O MJRP abriu a tela de álbuns em produção depois do deploy: «top!, acabei de ver em prod, muito mais rapido». É a visão dele do deploy, não o OK das issues (UAT-172, UAT-24, UAT-179 seguem `fixed`, à espera do aceite).
@@ -16,9 +41,79 @@
 - **Desvio declarado:** o `scripts/deploy-prod.sh` exige chave de conta de serviço, que não existe nesta máquina; os mesmos passos dele foram feitos à mão com o login do Firebase CLI do MJRP, numa cópia limpa da `main`.
 - **UAT-183:** relato do MJRP, o «x» do botão «Connected» do Spotify não faz nada. Conserto no ramo `fix/f50-one-local-address`.
 
+## [2026-11-19 13:46] session — F50: o «x» do Spotify pergunta pelo diálogo do app (UAT-183)
+
+`SpotifyConnectButton` trocou o `confirm()` nativo pelo `dialogService.confirm`, o mesmo diálogo das outras confirmações do app. Um teste novo cobre o clique no «x», a pergunta no diálogo do app e a desconexão com o sim. A causa (o navegador silenciando o `confirm()`) é provável, não provada; a prova é o MJRP clicar no «x» depois do conserto.
+
+## [2026-11-19 13:43] session — F50: um endereço local só (`http://127.0.0.1:5010`) e o botão do Spotify que reflete a conexão (UAT-182)
+
+- **UAT-182, causa e conserto:** a conexão avisava por `spotify-auth-success` e o botão só escutava `spotify-auth-change`, disparado só ao desconectar. Agora `SpotifyAuthService.setSession` dispara `spotify-auth-change` (conectar, renovar o token e desconectar usam o mesmo sinal) e o botão busca o nome da conta quando a sessão chega. `spotify-auth-success` fica só como gatilho do enriquecimento.
+- **Um endereço:** `public/js/utils/localAddress.js` (função pura `canonicalLocalUrl`); o `app.js` manda `localhost` para `127.0.0.1`. `vite.config.js` na porta 5010 com `strictPort`.
+- **Documentação:** `PORT_INFO.txt` reescrito, `README.md`, `.env.example` (com `VITE_SPOTIFY_CLIENT_ID`), manual `00_Deployment_and_Setup.md`, scripts de teste e `restart_dev.sh` na porta nova.
+- **Testes:** 10 novos (`test/utils/localAddress.test.js`, `test/services/spotify/SpotifyAuthSignal.test.js`), vistos falhar antes do conserto. Suíte: 386 passam, as mesmas 28 falhas da linha de base. `vite build` compila.
+- **Não conferido:** a prova no navegador (conectar o Spotify e ver o botão mudar; abrir `localhost:5010` e cair em `127.0.0.1`) ficou para o MJRP, porque o painel embutido estava com uma janela de login aberta. Spec, plano e tarefas da F50 ainda em esboço.
+- **Login pela Apple:** 403 também no Chrome do MJRP. O retorno do login vai para `mjrp-playlist-generator.firebaseapp.com/__/auth/handler`, então o endereço local não é a causa. Em investigação.
+
 ## [2026-11-19 13:41] session — UAT-182 aberta: o botão do Spotify continua «Connect» depois de conectar
 
 Relato do MJRP ao conectar o Spotify em `http://127.0.0.1:5010`. Causa lida no código: a conexão avisa por `spotify-auth-success`, o botão só escuta `spotify-auth-change`, disparado só ao desconectar. Conserto na F50 (ramo `fix/f50-one-local-address`).
+
+## [2026-11-19 13:27] session — documentação da F46 e das pontas da F51: spec, plano e tarefas, `arch.md` seção 18, manual e título da F45
+
+- Commit de documentação à parte do de código (`510a840`), no ramo `fix/f46-albums-load-state`. F46: `spec.md`, `plan.md` e `tasks.md` preenchidos, com o que a F45 e a F51 já tinham entregue dela; `status: In Progress` (faltam o navegador, o merge e o julgamento do MJRP). F51: TASK-09 e TASK-12 fechadas, TASK-15 a 17 acrescentadas, REQ-10 entregue e REQ-11 novo. F45: o título deixa de prometer «só as séries à vista». `arch.md`: seção 18 e três linhas da seção 17 corrigidas. Manual: 06, 08, 09, 12, 16, 17, mapa de arquivos e `regression_checklist`.
+- Recusa de trava, por processo e não por defeito, registrada e não contornada: o primeiro commit de documentação foi recusado pelo `commit-msg` porque o `docs/log.md` não ia no commit (a entrada das 13:24 já tinha entrado no commit de código). Esta entrada é a do commit de documentação.
+- O `doctor.py` segue vermelho no projeto por causas antigas (links partidos em arquivos de `docs/archive/` e do manual antigo, o sensor de lint e as 28 falhas da linha de base dos testes); o único erro que esta sessão criou, o `## Now` atrasado, foi corrigido.
+- Session: claude-code:f46-albums-load-state (aberta pela sessão de consertos do v0)
+
+## [2026-11-19 13:24] session — F46 fechada no código e pontas da F51: ranking salvo reflete na tela, «My Ranking» sobre todas as séries, aviso de álbuns não conferidos, «&amp;» lido limpo, busca das playlists guardadas
+
+- Ramo `fix/f46-albums-load-state`, cortado da `main` local (`23d81d7`). O worktree veio num commit antigo (`c9cf80f`); o ramo foi renomeado e levado à ponta da `main` antes de qualquer mudança.
+- **O que da F46 já estava pronto**, conferido no código: o estado por série e a grade desenhada por ele, o aviso «N albums did not load · Try again» e `retryFailed` (F45); a página desenhada inteira e as inscrições desfeitas no começo de cada visita (F51). O observador de visibilidade por série não foi construído e deixou de ser necessário com a paginação.
+- **Ranking salvo pelo modal (F46).** `AlbumLoadService.refreshSource(albumId, source)` refaz uma fonte de um álbum; o trabalho de cada álbum passou a ser encadeado, para a fonte lenta em curso não apagar o ranking recém-lido. O modal salva por `onSubmit` e não importa mais o repositório; quem salva é `SeriesController.saveRanking`, por `OwnRankingService`. A tela deixou de mutar o álbum publicado.
+- **«My Ranking» sobre todas as séries (F46).** `OwnRankingService` lê a lista de álbuns ranqueados uma vez por pessoa e a guarda em `stores/ownRankings.js`; `models/ownRanking.js` casa ranking e pedido por nome (caixa, acento, pontuação, «&», entidade HTML e nota de edição não contam) e pelo id quando o ranking não tem os nomes; o álbum carregado com ranking casa de forma exata. Limite conhecido: o álbum a que o catálogo deu outro título só casa depois de carregar. Saída exata, não feita porque muda dado gravado: guardar o id do álbum achado em `facts`.
+- **O controlador larga a tela que fechou (F46).** `SeriesController` continuava inscrito nas stores entre uma visita e outra e redesenhava a grade de uma tela fechada enquanto a carga seguia. `SeriesView.destroy` chama `detachView`.
+- **Aviso de álbuns não conferidos (F51).** Com o filtro por fonte ativo, o paginador diz quantos álbuns ainda não têm `facts`.
+- **UAT-180 (F51).** A origem do «&amp;» não foi achada: nenhum caminho do código de hoje escapa texto antes de gravar, e as versões antigas lidas no histórico (a Home de texto, os modais, a edição de série) também não. Consertado pelo que se controla: `models/text.js` desfaz as entidades, `parseAlbumQuery` e `queryKey` passam por ela (o pedido com «&amp;» e o limpo têm a mesma chave; a chave de quem nunca teve entidade não muda), o catálogo é consultado com o texto limpo, e a Home e a edição de série gravam o pedido por uma função só (`toAlbumQuery`). O banco não foi reescrito. Achado junto: três lugares escapavam texto e depois o desenhavam como nó de texto (o título da série no cabeçalho, o modal de ranking), o que mostrava «&amp;» para um «&» gravado certo.
+- **UAT-179.** Na tela de playlists guardadas o conserto da barra de filtros não bastava: `SavedPlaylistsView.update` refazia a página inteira a cada letra. A página passa a ser desenhada uma vez. Na Home, por leitura, o campo é desenhado uma vez e só escuta o Enter: não foi achado redesenho a cada tecla; o que havia era o controlador da tela de álbuns desenhando em segundo plano durante a carga, consertado acima. Falta repetir no navegador.
+- Testes: 105 novos (serviço de carga 5, casamento de ranking 22, serviço de ranking 10, texto e pedido 12, paginador 19, barra de filtros 9, controlador 15, modal 3, playlists guardadas 3, aptidão 7). Suíte inteira: 337 passam, as mesmas 28 falhas da linha de base; `npx vite build` compila. Um arquivo antigo de `test/e2e/` (`ghost-albums-render`) chama `process.exit` quando não acha navegador e às vezes aparece como «1 error» na suíte; não é desta mudança.
+- Ambiente, registrado e não contornado no repositório: `npm install` falhou no worktree ao baixar o Chrome do Puppeteer (pasta de cache partida em `~/.cache/puppeteer`); instalado com `PUPPETEER_SKIP_DOWNLOAD=1`, como a própria mensagem indica. O `package-lock.json` que a instalação alterou foi restaurado.
+- Pedidos a quem é dono dos arquivos (F48, outra sessão): `SeriesService.loadFromFirestore` desfazer as entidades do nome da série, para todas as telas; `api/client.js` `generateAlbumId` usar `stableAlbumId` de `models/ownRanking.js` (a regra está escrita duas vezes); `UserRankingRepository.getAllRankings` devolve lista vazia quando a leitura falha, e o filtro não tem como avisar.
+- Documentação: `spec.md`, `plan.md` e `tasks.md` da F46 preenchidos; tasks 09 e 12 da F51 fechadas e 15 a 17 acrescentadas; título da F45 corrigido («as séries do topo primeiro»); `arch.md` seção 18; manual 06, 08, 09, 12, 16, 17, mapa de arquivos e `regression_checklist`.
+- Falta: a conferência no navegador (sessão de integração), o merge e o julgamento do MJRP. `uat.md` e o `## Now` do `MEMORY.md` ficam para a integração.
+- Session: claude-code:f46-albums-load-state (aberta pela sessão de consertos do v0)
+
+## [2026-11-19 13:19] session — F48, commit da documentação
+
+- Commit à parte da documentação descrita na entrada da F48 abaixo: spec, plano e tarefas; `docs/manual/`; `data-model.md`; `arch.md`. Recusa de trava registrada: o gancho `commit-msg` recusou os commits seguintes ao primeiro por faltar entrada de log em cada um; não foi contornado, cada commit ganhou a sua entrada. O `doctor.py` está vermelho (497 erros) por links quebrados antigos em `docs/archive/`, `docs/technical/` e pastas `legacy/` das features, nenhum em arquivo desta entrega; não foi mexido.
+- Session: claude-code:f48-album-cache-and-retry (sessão lateral, aberta pela sessão de integração dos consertos do v0)
+
+## [2026-11-19 13:19] session — F48, commit da prateleira sem Firestore (UAT-14, parte)
+
+- Commit à parte do conserto descrito na entrada da F48 abaixo: `SharedAlbumRepository.js`, `SeriesService` gravando por ele, `stores/albums.js` sem Firestore, os dois arquivos mortos removidos, o comentário das regras do Firestore corrigido (só o comentário), e os testes.
+- Session: claude-code:f48-album-cache-and-retry (sessão lateral, aberta pela sessão de integração dos consertos do v0)
+
+## [2026-11-19 13:19] session — F48, commit do «Clear Cache» (UAT-177)
+
+- Commit à parte do conserto descrito na entrada da F48 abaixo: `clearAlbumCaches.js`, a ligação em `albumLoading.js` e `app.js`, o rodapé, `CacheManager.clear()` que falha quando o IndexedDB não limpa, e os três arquivos de teste.
+- Session: claude-code:f48-album-cache-and-retry (sessão lateral, aberta pela sessão de integração dos consertos do v0)
+
+## [2026-11-19 13:19] session — F48, commit do cache do ranking pessoal (UAT-176)
+
+- Commit à parte do conserto descrito na entrada da F48 logo abaixo: `UserRankingRepository` com a instância do cache, validade de 1 hora e o teste `test/repositories/UserRankingRepository.test.js`.
+- Session: claude-code:f48-album-cache-and-retry (sessão lateral, aberta pela sessão de integração dos consertos do v0)
+
+## [2026-11-19 13:17] session — F48: nova tentativa que roda, cache do ranking que age, «Clear Cache» que limpa e a prateleira sem Firestore
+
+- Ramo `fix/f48-album-cache-and-retry`, cortado da `main` local (`23d81d7`), num worktree à parte. Cada conserto teve o teste escrito antes e visto falhar no código antigo (a UAT-175 falhou com o próprio `ReferenceError: queryStr is not defined`).
+- UAT-175: `public/js/utils/retry.js` (nova tentativa com recuo exponencial, variação e teto, padrão `DP-23`) e `public/js/api/client.js` (`ApiError` com o status; prazo de 90 s por chamada; `POST /api/generate` só é pedido de novo em falha de rede ou 5xx, nunca em 4xx nem em prazo estourado, porque a rota usa IA paga). `CatalogAdapter` passa a registrar no console o motivo da falha da segunda fonte.
+- UAT-176: `UserRankingRepository` usa a instância `cacheManager` (guardava a classe), com validade de 1 hora, guarda também «este álbum não tem ranking» e esquece a entrada ao salvar e ao apagar. A outra metade da issue (regravar cada álbum a cada carga) já tinha saído com a F45.
+- UAT-177: `services/albums/clearAlbumCaches.js` (para a carga, limpa o `cacheManager`, remove as chaves `album_cache_v…`), ligada em `albumLoading.js` e entregue ao rodapé por `app.js`. O botão não faz mais `localStorage.clear()`. `CacheManager.clear()` passa a falhar quando o IndexedDB não limpa, e o rodapé diz que não limpou.
+- UAT-14 (parte): `repositories/SharedAlbumRepository.js` grava o álbum do «Refetch Metadata» na coleção `albums` sem o ranking pessoal; `stores/albums.js` ficou sem `import` do Firestore (saíram `saveToFirestore`, `loadFromFirestore`, `updateAlbum`); a lista de exceções da função de aptidão caiu de três para dois arquivos. Removidos `views/controllers/AlbumsStateController.js` (morto) e `public/legacy/AlbumsView_DEPRECATED.js` (o único que o importava, sem quem o importe).
+- Testes: 39 novos ou refeitos em 8 arquivos; suíte inteira 271 passam, as mesmas 28 falhas da linha de base; `npx vite build` compila. Nada conferido no navegador: é da sessão de integração.
+- Documentação: spec, plano e tarefas da F48 preenchidos (`status: In Progress`, `sdd_shape_check` verde); `docs/manual/` (00, 06, 07, 07b, 08, 11, 19, 98, `regression_checklist`); `docs/specs/data-model.md` (o que se grava em `albums`); `docs/specs/arch.md` (seção 17).
+- Não feito: o «Refetch Metadata» pela fila da carga (TASK-12 da F48, aberta). Perguntas para o MJRP na spec: se o «Clear Cache» devia apagar também o resto do `localStorage`, e se o prazo de 90 s sem nova tentativa serve.
+- Ambiente: `npm install` falhou ao baixar o navegador do Puppeteer; instalado com `PUPPETEER_SKIP_DOWNLOAD=1`. O `package-lock.json` que o `npm` reescreveu foi devolvido ao texto commitado com `_safe.py restore`.
+- Session: claude-code:f48-album-cache-and-retry (sessão lateral, aberta pela sessão de integração dos consertos do v0)
 
 ## [2026-11-19 13:01] decision — F52 aberta: a busca de álbum por IA do servidor responde 402 em produção (UAT-181)
 

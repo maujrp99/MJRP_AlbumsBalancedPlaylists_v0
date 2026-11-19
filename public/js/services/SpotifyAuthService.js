@@ -181,6 +181,10 @@ export const SpotifyAuthService = {
         if (data.refresh_token) {
             localStorage.setItem('spotify_refresh_token', data.refresh_token)
         }
+
+        // One signal for "the Spotify session changed", on connect, on token refresh and on logout,
+        // so whoever draws the session never depends on a page reload (UAT-182).
+        window.dispatchEvent(new Event('spotify-auth-change'))
     },
 
     /**

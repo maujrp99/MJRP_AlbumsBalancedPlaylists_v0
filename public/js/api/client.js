@@ -6,6 +6,7 @@ import { albumLoader } from '../services/AlbumLoader.js'
 import { musicKitService } from '../services/MusicKitService.js'
 import { TrackTransformer } from '../transformers/TrackTransformer.js'
 import { SIMILARITY_THRESHOLD } from '../utils/stringUtils.js'
+import { retryWithBackoff } from '../utils/retry.js'
 
 /**
  * API Client
@@ -16,11 +17,33 @@ import { SIMILARITY_THRESHOLD } from '../utils/stringUtils.js'
 
 const API_BASE = window.__api_base || '/api'
 
+/**
+ * A failed call to the server, with what is needed to decide whether to ask again.
+ * kind: 'http' (the server answered, `status` says what), 'network' (no answer), 'timeout' (too slow).
+ */
+export class ApiError extends Error {
+    constructor(message, { kind, status = null, cause = null } = {}) {
+        super(message)
+        this.name = 'ApiError'
+        this.kind = kind
+        this.status = status
+        if (cause) this.cause = cause
+    }
+
+    /** Only a failure that may pass: no answer, or a 5xx. Never a 4xx (402, 404, 429...), never a timeout. */
+    get isTransient() {
+        return this.kind === 'network' || (this.kind === 'http' && this.status >= 500)
+    }
+}
+
 export class APIClient {
     constructor() {
         this.baseUrl = API_BASE
         this.defaultRetries = 2
-        this.retryDelay = 1000
+        this.retryDelay = 1000 // the first wait; it doubles on each new attempt, up to retryDelayCap
+        this.retryDelayCap = 8000
+        this.serverTimeoutMs = 90000 // POST /generate runs an AI model: slow, but not endless
+        this.random = Math.random
         this.cache = albumCache // Initialize this.cache with albumCache
     }
 
@@ -193,40 +216,74 @@ export class APIClient {
     }
 
     /**
-     * Fetch album from API with retry logic
+     * Fetch an album from the server (POST /generate, the second source: paid AI).
+     *
+     * Asked again only after a failure that may pass (no answer, or a 5xx), up to `retries` times,
+     * with growing waits and jitter (DP-23). A 4xx is an answer: it is never asked again. A call that
+     * passed the deadline is not asked again either, because the paid work may still be running.
+     * @param {string|Object} query - "Artist - Album" or { artist, title }
+     * @param {number} [retries] - new attempts after the first call
+     * @returns {Promise<Album>}
+     * @throws {ApiError} the real failure, with `status` when the server answered
      * @private
      */
     async _fetchAlbumFromAPI(query, retries = this.defaultRetries) {
-        try {
-            // Fix: Ensure query is a string for legacy backend
-            let queryStr = query
-            if (typeof query === 'object' && query !== null) {
-                queryStr = `${query.artist || ''} - ${query.title || query.album || ''}`
-            }
+        // The legacy backend takes the query as text
+        const queryStr = (typeof query === 'object' && query !== null)
+            ? `${query.artist || ''} - ${query.title || query.album || ''}`
+            : query
 
-            const response = await fetch(`${this.baseUrl}/generate`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ albumQuery: queryStr })
-            })
+        const data = await retryWithBackoff(() => this._postGenerate(queryStr), {
+            retries,
+            baseMs: this.retryDelay,
+            capMs: this.retryDelayCap,
+            shouldRetry: (error) => error instanceof ApiError && error.isTransient,
+            pause: (ms) => this.delay(ms),
+            random: () => this.random(),
+            onRetry: ({ attempt, waitMs, error }) =>
+                console.warn(`[APIClient] "${queryStr}": ${error.message}. New attempt ${attempt} of ${retries} in ${waitMs} ms`)
+        })
+
+        return this.normalizeAlbumData(data.data || data)
+    }
+
+    /**
+     * One call to POST /generate, with a deadline (DP-22).
+     * @returns {Promise<Object>} the body of the answer
+     * @throws {ApiError}
+     * @private
+     */
+    async _postGenerate(queryStr) {
+        const controller = new AbortController()
+        const timer = setTimeout(() => controller.abort(), this.serverTimeoutMs)
+        const route = 'POST /generate'
+
+        try {
+            let response
+            try {
+                response = await fetch(`${this.baseUrl}/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ albumQuery: queryStr }),
+                    signal: controller.signal
+                })
+            } catch (cause) {
+                if (controller.signal.aborted) {
+                    throw new ApiError(`${route} passed ${this.serverTimeoutMs} ms`, { kind: 'timeout', cause })
+                }
+                throw new ApiError(`${route} got no answer: ${cause?.message || cause}`, { kind: 'network', cause })
+            }
 
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+                throw new ApiError(`${route} answered HTTP ${response.status}${response.statusText ? ` ${response.statusText}` : ''}`,
+                    { kind: 'http', status: response.status })
             }
 
-            const data = await response.json()
-
-            // Normalize response
-            return this.normalizeAlbumData(data.data || data)
-        } catch (error) {
-            if (retries > 0) {
-                console.warn(`Retrying fetch for "${queryStr}" (${retries} attempts left)`)
-                await this.delay(this.retryDelay)
-                return this._fetchAlbumFromAPI(queryStr, retries - 1)
-            }
-            throw error
+            return await response.json()
+        } finally {
+            clearTimeout(timer)
         }
     }
 

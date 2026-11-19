@@ -9,8 +9,12 @@
 ## 🔴 [CORE] Core Loop (The Must Pass)
 - [ ] **Load App**: App loads on the local dev address without console crash (port 5000 is taken by AirPlay Receiver on macOS; see issue UAT-178).
 - [ ] **Series Isolation**: Switching Series A -> B shows only B's albums.
+- [ ] **Clear Cache (v4.0, F48)**: with `/albums` fully loaded, click "Clear Cache" in the footer -> "Cache Cleared!" -> the page reloads and the albums are searched again (grey blocks first, requests to Apple Music in the network tab). The Spotify connection and the view mode are still there.
+- [ ] **Personal ranking read once (v4.0, F48)**: reload `/albums` within the hour -> no new read of `albumRankings` per album; save a ranking -> the card shows it after the next load.
 - [ ] **Albums load (v4.0)**: with the site data cleared, `/albums` shows the first page of series within seconds; every series ends as albums, or with the notice "N albums did not load · Try again"; none disappears.
 - [ ] **Leave and return (v4.0)**: going to Home mid-load and back shows the same number of series.
+- [ ] **Search fields (v4.0)**: typing a whole word without clicking again works in the search of `/albums`, of `/saved-playlists` and in the artist field of the Home.
+- [ ] **"&" in a name (v4.0)**: an album whose artist has "&" loads (series "Robert Plant 00-10s": "Jimmy Page & Robert Plant - No Quarter"), and no screen shows `&amp;`.
 - [ ] **All series (v4.0)**: the count under the grid says the total of series of the account (no cut at 20).
 - [ ] **Paging (v4.0)**: series per page 10 to 100; numbered pages and the growing list both work.
 - [ ] **Search (v4.0)**: typing a whole word in the search field needs no second click; it finds series of other pages.
@@ -26,6 +30,10 @@
 - [ ] **Bulk Paste**: Validates "Artist - Album" format correctly.
 
 ### [SERIES] Albums & Ranking
+- [ ] **Save a ranking (v4.0)**: rank the tracks of an album and save -> the modal closes, "Rankings saved" shows, and that album shows the ranking; no other album reloads.
+- [ ] **My Ranking filter (v4.0)**: with only the first page loaded, Source = "My Ranking" brings the series of other pages that have a ranked album.
+- [ ] **Source filter notice (v4.0)**: Source = "BestEverAlbums" on an account with series never opened shows "N albums have not been checked against the sources yet…" under the count.
+- [ ] **Try again (v4.0)**: on a series with "N albums did not load", "Try again" searches only those albums.
 - [ ] **View Toggle**: Switch Grid ↔ List. Layout updates instantly.
 - [ ] **View Modes**: Toggle Compact ↔ Expanded. Data persists and layout shifts correctly (No data loss).
     - *Verify*: Tracks load with Index, Title, Duration, and Badges (Spotify/BEA).

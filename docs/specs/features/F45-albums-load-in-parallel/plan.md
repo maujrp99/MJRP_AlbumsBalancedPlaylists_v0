@@ -1,4 +1,4 @@
-# Plan — Feature F45: A tela de álbuns carrega vários álbuns ao mesmo tempo, com prazo, e só as séries à vista · Spec: [[spec]]
+# Plan — Feature F45: A tela de álbuns carrega vários álbuns ao mesmo tempo, com prazo, e as séries do topo primeiro · Spec: [[spec]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 > Escrito depois do código (passo retroativo da via rápida), a partir do `docs/log.md` de 2026-11-19, do código do ramo e das medições em `reports/evidence/F45-albums-load-in-parallel/`.

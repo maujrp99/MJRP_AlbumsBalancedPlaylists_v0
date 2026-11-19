@@ -7,7 +7,7 @@
 
 import { Album } from '../../../models/Album.js'
 import { AlbumIdentity } from '../../../models/AlbumIdentity.js'
-import { parseAlbumQuery } from '../../../models/albumQuery.js'
+import { parseAlbumQuery, plainAlbumQuery } from '../../../models/albumQuery.js'
 import { TrackTransformer } from '../../../transformers/TrackTransformer.js'
 import { AlbumNotFoundError } from '../AlbumLoadService.js'
 
@@ -51,7 +51,9 @@ export class CatalogAdapter {
         this.findLocalCover = findLocalCover
     }
 
-    async find(query, { seriesId = null, signal = null } = {}) {
+    async find(storedQuery, { seriesId = null, signal = null } = {}) {
+        // The catalogs are asked with plain text, whatever the series has stored (UAT-180).
+        const query = plainAlbumQuery(storedQuery)
         // A failure of Apple Music (network, 429) is a failed search: it is retried and then reported.
         // Only "Apple Music has no such album" goes to the second source, which uses paid AI.
         let album = await this._findInAppleWithRetry(query, signal)
@@ -59,7 +61,9 @@ export class CatalogAdapter {
         if (!album) {
             try {
                 album = await this.fetchFromServer(query)
-            } catch {
+            } catch (error) {
+                // The album ends as "not found", but the reason is not hidden: the status is in the message
+                console.warn(`[CatalogAdapter] second source failed for "${this._label(query)}":`, error?.message || error)
                 album = null
             }
         }

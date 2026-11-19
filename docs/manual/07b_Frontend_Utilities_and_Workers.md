@@ -64,6 +64,14 @@ classDiagram
 
 ---
 
+## 4b. Retry (`public/js/utils/retry.js`) - v4.0 (F48)
+*   **Role**: calls again after a failure that may pass, with growing waits and jitter (pattern `DP-23`).
+*   **`retryWithBackoff(attempt, { retries, baseMs, capMs, shouldRetry, pause, random, onRetry })`**: up to `retries` new attempts; the caller says which failures may pass (`shouldRetry`); when it gives up it throws the last real error.
+*   **`backoffWaitMs(n, …)`**: the wait before new attempt `n` is `min(capMs, baseMs × 2^n)`, of which the upper half is drawn, so it stays between half the step and the whole step.
+*   **Boundary**: it imports nothing from the project. Used by `api/client.js` for `POST /api/generate`. `CatalogAdapter` keeps its own fixed list of waits for Apple Music.
+
+---
+
 ## 5. Other Utilities
 *   **`stringUtils.js`**: Standard string manipulation (slugify, escapeHtml).
 *   **`dom-helpers.js`**: Low-level DOM traversal/manipulation helpers.

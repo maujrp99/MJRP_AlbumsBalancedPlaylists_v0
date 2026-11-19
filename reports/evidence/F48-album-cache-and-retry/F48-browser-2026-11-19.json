@@ -1,0 +1,19 @@
+{
+  "feature": "F48",
+  "date": "2026-11-19 13:57",
+  "where": "http://127.0.0.1:5010/albums, conta do MJRP, ramo fix/f50-one-local-address (com F46 e F48)",
+  "checks": [
+    {
+      "what": "carga da página de 40 séries (46 na conta)",
+      "result": "171 álbuns na tela, nenhum aviso de falha; 155 registros albumload:v1 no IndexedDB mjrp-cache (378 chaves no total)"
+    },
+    {
+      "what": "clicar em Clear Cache",
+      "result": "aviso «Cache Cleared!»; o IndexedDB zerou e a carga recomeçou (13 registros 3 s depois); a sessão do Spotify, o login e as séries por página (40) ficaram"
+    }
+  ],
+  "not_checked": [
+    "nova tentativa do pedido ao servidor (precisa de uma falha real)",
+    "validade de 1 hora do cache de ranking"
+  ]
+}

@@ -68,8 +68,9 @@ export class AlbumLoadService {
 
         this.generation = 0
         this.scopeKey = null
-        this._scheduled = new Set()
+        this._scheduled = new Map() // Map<chainId, Promise>: the work in flight of each album, one after the other
         this._activeChains = 0
+        this._asks = new Map() // Map<series|key|source, number>: the latest ask of each source for each album
         this._ignoreCache = false
     }
 
@@ -132,6 +133,35 @@ export class AlbumLoadService {
     }
 
     /**
+     * Ask one enrichment source again for one album, and only that: the album stays on screen, the
+     * other sources keep what they have, and a new album is published when the source answers.
+     * Used when the person changes what the source reads (their own ranking, saved by the modal).
+     * It does not wait for the other sources of that album (a rating may take minutes to come): each
+     * source applies its answer over the newest album, and only the latest ask of a source writes.
+     *
+     * @param {string} albumId - the id of the loaded album
+     * @param {string} source - one of ENRICHMENT_SOURCES
+     * @returns {number} how many entries (the album may be in several series) were asked again
+     */
+    refreshSource(albumId, source) {
+        if (!albumId || !ENRICHMENT_SOURCES.includes(source)) return 0
+        const generation = this.generation
+        let asked = 0
+
+        this.store.getSeriesIds().forEach(seriesId => {
+            this.store.getEntries(seriesId).forEach(entry => {
+                if (entry.status !== AlbumStatus.FOUND || entry.album?.id !== albumId) return
+                asked++
+                this._runChain(`${this._chainId(entry)}|${source}`, async () => {
+                    if (!this._patch(generation, seriesId, entry.key, { enrichment: { [source]: EnrichmentStatus.PENDING } })) return
+                    await this._enrichOne(generation, seriesId, entry.key, source, 0)
+                })
+            })
+        })
+        return asked
+    }
+
+    /**
      * Put an album that was refetched outside the queue in the place of the loaded one, in every
      * series that has it, and remember it. (The refetch itself joins the queue in F48.)
      * @param {Album} album
@@ -151,7 +181,7 @@ export class AlbumLoadService {
     stop() {
         this.scopeKey = null
         this.generation++
-        this._scheduled = new Set()
+        this._scheduled = new Map()
         this._queues().forEach(queue => queue.cancelAll())
     }
 
@@ -175,7 +205,8 @@ export class AlbumLoadService {
         this._queues().forEach(queue => queue.cancelAll())
         this.scopeKey = scopeKey
         this.generation++
-        this._scheduled = new Set()
+        this._scheduled = new Map()
+        this._asks = new Map()
         this.store.startGeneration(this.generation)
     }
 
@@ -218,16 +249,18 @@ export class AlbumLoadService {
         })
     }
 
+    /** Run a piece of work for one album after whatever is already running for it. */
     _runChain(chainId, chain) {
-        this._scheduled.add(chainId)
-        this._activeChains++
         const scheduledIn = this._scheduled
-        chain()
+        this._activeChains++
+        const tail = (scheduledIn.get(chainId) || Promise.resolve())
+            .then(chain)
             .catch(error => console.error('[AlbumLoadService] load chain failed:', error))
             .finally(() => {
                 this._activeChains--
-                scheduledIn.delete(chainId)
+                if (scheduledIn.get(chainId) === tail) scheduledIn.delete(chainId)
             })
+        scheduledIn.set(chainId, tail)
     }
 
     async _find(generation, seriesId, key, signal) {
@@ -294,24 +327,47 @@ export class AlbumLoadService {
             return
         }
 
+        // Only the latest ask of a source for an album writes its answer (the same rule the
+        // generations follow, one level down): an older ask that answers later is dropped.
+        const askId = `${seriesId}|${key}|${source}`
+        const ask = (this._asks.get(askId) || 0) + 1
+        this._asks.set(askId, ask)
+        const isLatest = () => this._asks.get(askId) === ask
+
         this._patch(generation, seriesId, key, { enrichment: { [source]: EnrichmentStatus.LOADING } })
         const queue = SLOW_SOURCES.includes(source) ? this.slowQueue : this.sourceQueue
 
         try {
+            let given = null
             const result = await queue.add(
-                ({ signal }) => enricher.enrich(this.store.getEntry(seriesId, key).album, { signal }),
+                ({ signal }) => {
+                    given = this.store.getEntry(seriesId, key).album
+                    return enricher.enrich(given, { signal })
+                },
                 { group: seriesId, priority, timeoutMs: this.limits.enrichTimeoutMs }
             )
+            if (!isLatest()) return
+
+            // The source worked on the album it was given. If another source published a newer
+            // album meanwhile, the answer is applied over that one, so no source undoes another.
+            let album = result.album || given
+            let base = given
+            while (typeof result.apply === 'function') {
+                const current = this.store.getEntry(seriesId, key)?.album
+                if (!current || current === base) break
+                base = current
+                album = await result.apply(current)
+            }
+            if (!isLatest()) return
+
             const status = result.status === EnrichmentStatus.DONE ? EnrichmentStatus.DONE : EnrichmentStatus.EMPTY
-            const published = this._patch(generation, seriesId, key, {
-                album: result.album || entry.album,
-                enrichment: { [source]: status }
-            })
+            const published = this._patch(generation, seriesId, key, { album, enrichment: { [source]: status } })
             if (published) {
-                await this.cache.saveEnrichment(entry.query, result.album || entry.album, source, status)
+                await this.cache.saveEnrichment(entry.query, album, source, status)
             }
         } catch (error) {
             if (error instanceof TaskCancelledError) return
+            if (!isLatest()) return
             console.warn(`[AlbumLoadService] ${source} failed for "${key}":`, error?.message || error)
             this._patch(generation, seriesId, key, { enrichment: { [source]: EnrichmentStatus.FAILED } })
         }
