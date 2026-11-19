@@ -47,7 +47,6 @@ const PUT_TOGETHER_AT_RUN_TIME = {
     'components/blend/BlendRecipeCard.js': ['${recipe.color.from}/10', '${recipe.color.to}/10'],
     // ids of elements, not classes
     'components/ui/FilterToolbar.js': ['filter-${group.id}', 'this.container.querySelector(`#filter-${group.id}`);'],
-    'components/search/VariantPickerModal.js': ['chk-${escapeHtml(v.id)}'],
     'api/client.js': ['`playlist-${index'],
     // a class of the app's own, with its rules written in a <style> beside it
     'components/playlists/PlaylistGrid.js': ['.custom-scrollbar-${index}::-webkit-scrollbar', '.custom-scrollbar-${index}::-webkit-scrollbar-track', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb:hover', 'custom-scrollbar-${index}']

@@ -1,10 +1,11 @@
 /**
  * scanState
  *
- * The rules of the Home scan's state, as pure functions (F67). The scan has exactly one state at
- * any time, held by one owner (`components/home/SearchController.js`) and drawn by one place
- * (`HomeView.renderScan`). Every answer carries the generation of the scan that asked: an answer
- * of an older scan, or one that comes after its scan already ended, changes nothing.
+ * The rules of the state of an artist scan, as pure functions (F67). A scan has exactly one state
+ * at any time, held by one owner (`components/album-picker/AlbumPickerController.js`, the one
+ * album picker of the Home and of the series edit - F57) and drawn through the picker's view port.
+ * Every answer carries the generation of the scan that asked: an answer of an older scan, or one
+ * that comes after its scan already ended, changes nothing.
  */
 
 /** How long the catalog may take to answer a scan (artist lookup and all the pages of albums). */
@@ -25,8 +26,6 @@ export const ScanFailure = Object.freeze({
     TIMEOUT: 'timeout',
     ERROR: 'error'
 })
-
-const ALBUM_TYPES = Object.freeze(['Album', 'EP', 'Single', 'Compilation', 'Live', 'Uncategorized'])
 
 /** @returns {Object} the state before any scan */
 export function idleScan() {
@@ -81,19 +80,6 @@ export function scanReclassified(state, generation, albums) {
     const awaited = state.generation === generation && state.status === ScanStatus.RESULTS && state.classifying
     if (!awaited) return state
     return { ...state, classifying: false, albums: albums && albums.length > 0 ? albums : state.albums }
-}
-
-/**
- * How many albums of each type.
- * @returns {{ Album: number, EP: number, Single: number, Compilation: number, Live: number, Uncategorized: number }}
- */
-export function countAlbumTypes(albums = []) {
-    const counts = Object.fromEntries(ALBUM_TYPES.map(type => [type, 0]))
-    albums.forEach(album => {
-        const type = ALBUM_TYPES.includes(album.type) ? album.type : 'Uncategorized'
-        counts[type]++
-    })
-    return counts
 }
 
 const FAILURE_TITLES = Object.freeze({

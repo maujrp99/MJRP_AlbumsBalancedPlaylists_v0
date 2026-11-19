@@ -21,7 +21,7 @@ import { BlendSeriesSelector } from '../../public/js/components/blend/BlendSerie
 import { SpotifyExportModal } from '../../public/js/components/SpotifyExportModal.js'
 import { AuthNav } from '../../public/js/components/navigation/AuthNav.js'
 import { PlaylistGrid } from '../../public/js/components/playlists/PlaylistGrid.js'
-import { showVariantPickerModal } from '../../public/js/components/search/VariantPickerModal.js'
+import { DiscographyRenderer } from '../../public/js/views/renderers/DiscographyRenderer.js'
 import FilterToolbar from '../../public/js/components/ui/FilterToolbar.js'
 
 /** Text that would run as HTML if written into the page as it is. */
@@ -215,14 +215,13 @@ describe('text from outside is shown as text', () => {
         expect(host.querySelector('img').getAttribute('src')).toBe(QUOTED)
     })
 
-    it('edition picker: titles, ids, year and cover address', () => {
-        showVariantPickerModal({ title: TEXT, variants: [{ id: QUOTED, title: TEXT, year: TEXT, trackCount: 10, coverUrl: QUOTED }] }, () => { })
-        const modal = document.body.querySelector('.modal-overlay')
+    it('album picker card (Home and series edit): title, id, year and cover address', () => {
+        new DiscographyRenderer(host).render([{ id: QUOTED, title: TEXT, artist: TEXT, year: TEXT, type: 'Album', coverUrl: QUOTED }])
 
-        expectOnlyText(modal, TEXT)
-        expect(modal.querySelector('.variant-row').dataset.id).toBe(QUOTED)
-        expect(modal.querySelector('input[type="checkbox"]').value).toBe(QUOTED)
-        expect(modal.querySelectorAll('img').length).toBe(1)
+        expectOnlyText(host, TEXT)
+        expect(host.querySelector('[data-action="pick-album"]').dataset.id).toBe(QUOTED)
+        expect(host.querySelectorAll('img').length).toBe(1)
+        expect(host.querySelector('img').getAttribute('src')).toBe(QUOTED)
     })
 
     it('filter list: an artist name with quotes is the value of its option', () => {

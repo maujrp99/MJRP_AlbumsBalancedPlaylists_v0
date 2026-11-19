@@ -1,5 +1,5 @@
-import { AlbumSearchService } from '../services/album-search/AlbumSearchService.js';
-import { SearchController } from '../components/home/SearchController.js';
+import { albumSearchService } from '../services/album-search/AlbumSearchService.js';
+import { AlbumPickerController } from '../components/album-picker/AlbumPickerController.js';
 import { StagingAreaController } from '../components/home/StagingAreaController.js';
 import { StagingAreaRenderer } from '../views/renderers/StagingAreaRenderer.js';
 import { DiscographyRenderer } from '../views/renderers/DiscographyRenderer.js';
@@ -14,35 +14,44 @@ import { readPastedList, bulkInputState, bulkOutcome, toStagedAlbum, SkipReason 
 export class HomeController {
     constructor(view) {
         this.view = view; // The HomeView instance (provides DOM elements)
-        this.albumSearchService = new AlbumSearchService();
+        // One search service for the whole app: the AI list of an artist is asked (and paid) once
+        this.albumSearchService = albumSearchService;
 
         // State
         this.state = {
             viewMode: 'visual', // 'visual' | 'bulk'
-            seriesName: 'Start Your Series',
-            isScanning: false,
-            artist: null
+            seriesName: 'Start Your Series'
         };
-
-        // Initialize Sub-Controllers
-        this.searchController = new SearchController(this);
-        this.stagingController = new StagingAreaController(this);
 
         // Initialize Renderers
         this.discographyRenderer = new DiscographyRenderer(this.view.$('#discographyGrid'));
         this.stagingRenderer = new StagingAreaRenderer(this.view.$('#stagingStackContainer'));
+
+        // Initialize Sub-Controllers
+        this.stagingController = new StagingAreaController(this);
+        // The one album picker (F57). The Home is its frame, and what the Home does with a pick is
+        // the seam: the album goes to the staging stack of the new series.
+        this.picker = new AlbumPickerController({
+            service: this.albumSearchService,
+            view: {
+                drawScan: (scan) => this.view.renderScan(scan),
+                drawFilters: (filters, counts) => this.view.renderFilters(filters, counts),
+                drawAlbums: (albums) => this.discographyRenderer.render(albums)
+            },
+            onPick: (album) => this.stagingController.addAlbum(album)
+        });
     }
 
     initialize() {
         console.log('HomeController V3: Initializing...');
         this.bindEvents();
-        this.searchController.initialize();
+        this.picker.start();
         this.stagingController.initialize();
     }
 
     /** The screen was left: what is still on its way draws nothing. */
     dispose() {
-        this.searchController.dispose();
+        this.picker.dispose();
     }
 
     bindEvents() {
@@ -65,13 +74,15 @@ export class HomeController {
             stack.addEventListener('click', (e) => this.handleStackClick(e));
         }
 
-        // Filter Delegation - ARCH-18: Added EP and Uncategorized handlers
-        this.view.$delegate('#btnFilterAlbums', 'click', () => this.searchController.toggleFilter('albums'));
-        this.view.$delegate('#btnFilterEPs', 'click', () => this.searchController.toggleFilter('eps'));
-        this.view.$delegate('#btnFilterSingles', 'click', () => this.searchController.toggleFilter('singles'));
-        this.view.$delegate('#btnFilterLive', 'click', () => this.searchController.toggleFilter('live'));
-        this.view.$delegate('#btnFilterCompilations', 'click', () => this.searchController.toggleFilter('compilations'));
-        this.view.$delegate('#btnFilterUncategorized', 'click', () => this.searchController.toggleFilter('uncategorized'));
+        // The album picker: every handler is delegated from #app and reads the field at the time
+        // of the event, so a Home drawn again still answers (F67)
+        const typed = () => this.view.$('#artistScanInput')?.value || '';
+        this.view.$delegate('#artistScanInput', 'keydown', (e) => {
+            if (e.key === 'Enter') this.picker.searchArtist(typed());
+        });
+        this.view.$delegate('#btnScanArtist', 'click', () => this.picker.searchArtist(typed()));
+        this.view.$delegate('#btnScanRetry', 'click', () => this.picker.retry());
+        this.view.$delegate('#home-toolbar [data-filter]', 'click', (e, button) => this.picker.toggleFilter(button.dataset.filter));
 
         // Bulk Validation & Action
         const bulkInput = this.view.$('#bulkPasteInput');
@@ -87,18 +98,9 @@ export class HomeController {
     }
 
     handleGridClick(e) {
-        // Toggle Staging (Add)
-        const addBtn = e.target.closest('[data-action="toggle-staging"]');
-        if (addBtn) {
-            const albumId = addBtn.dataset.id;
-            const album = this.searchController.results?.find(a => a.id === albumId || a.appleMusicId === albumId);
-            if (album) {
-                this.stagingController.addAlbum(album);
-            } else {
-                console.warn(`Album not found in cache: ${albumId}`);
-            }
-            return;
-        }
+        const card = e.target.closest('[data-action="pick-album"]');
+        if (!card) return;
+        if (!this.picker.pick(card.dataset.id)) console.warn(`Album not found in the scan: ${card.dataset.id}`);
     }
 
     handleStackClick(e) {
