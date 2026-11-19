@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 18:16] review — F55 fatia 1 revisada e provada pelo integrador
+
+Ramo do auxiliar com a `main` junto: 919 testes, build ok. Contagem na conta do MJRP: 8 álbuns trocados em 227 (9 linhas). Com a regra nova, 7 carregam o álbum certo e 1 («No Quarter») passa a falhar com aviso, porque o catálogo só o tem com subtítulo. A fonte de notas respondeu certo no servidor local. Prova em `reports/evidence/F55/2026-11-19-slice-1-browser-proof.md`.
+
 ## [2026-11-19 18:08] session — F55 fatia 1: documentos da feature, arquitetura e manual da regra de identidade
 
 Documentos da fatia 1 da F55, no ramo `fix/f55-one-album-identity-rule`.
