@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:58] session — F63 em produção (site)
+
+Site publicado da `main` (`5c3abda`, pacote `main-Bb_Tr-dD.js`). A F63 não muda o servidor. Auxiliares trabalhando: F68 e F56.
+
 ## [2026-11-19 19:57] review — F63 provada pelo integrador; seis issues em fixed
 
 Prova em `reports/evidence/F63/2026-11-19-home-and-navigation-proof.md`. Em `fixed`: UAT-201, UAT-26 (consertada pela F67, agora com teste), UAT-13, UAT-27, UAT-07, UAT-192. Decidido pelo agente — revisável: UAT-10 (telas de ranking só por endereço) e UAT-11 (tela de migração) ficam abertas e vão para a F65 com a recomendação de aposentar as telas; tirar tela é decisão do MJRP. Mudanças de comportamento para ele julgar: o menu da conta não abre mais só com o mouse por cima; a caixa de colar mantém as linhas a consertar; entrar numa série não cria entrada nova no histórico.
