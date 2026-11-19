@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:30] review — F61 provada pelo integrador; UAT-186 em fixed
+
+Playlists guardadas, conta do MJRP: primeira série em 0,26 s e lista inteira em 0,79 s (antes, hoje, 4,6 s; 20 s na regressão). Prova em `reports/evidence/F61/2026-11-19-saved-playlists-timing.md`. Proposta de modelo de dados do auxiliar (resumo dos lotes no documento da série) fica anotada no `plan.md` da F61, não feita.
+
 ## [2026-11-19 19:28] review — F59 fatia E provada pelo integrador (Tailwind compilado; endereços conferidos)
 
 Oito telas comparadas com produção por estilo calculado, elemento a elemento, como visitante: iguais (diferenças só de escrita, listadas na prova). Receita selecionada no blend com o gradiente certo, com login. A ADR-0021 fica em `Proposed`: publicado sob a dispensa do MJRP de 2026-11-19 19:03 (decidido pelo agente — revisável); o aceite da ADR é dele. UAT-25 e UAT-199 em `fixed`; UAT-28 segue aberta.
