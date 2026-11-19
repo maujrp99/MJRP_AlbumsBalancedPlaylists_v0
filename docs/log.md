@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:56] session — relatório do cruzamento com o estado de cada linha
+
+Pedido do MJRP: marcar no relatório o que foi consertado na v4.0, o que vai para a v5.0 e o que não vale mais, com o motivo; o restante será discutido com ele no chat. `reports/audits/2026-11-19-mjrpalbumblender-v0-earlier-reports-vs-v5-plan.md`: 33 linhas consertadas na v4.0, 10 a consertar na v5.0, 3 que não valem mais (cada uma com o motivo), 103 em aberto e 4 que contradizem a análise de hoje.
+
 ## [2026-11-19 14:53] session — F54: o texto passado como propriedade vira texto (UAT-195)
 
 `SafeDOM` passa a tratar `textContent` como o texto do elemento. Conserto no ajudante, não nos dois botões, para valer para qualquer uso futuro. Três testes novos em `test/utils/SafeDOM.test.js`; escritos junto com o conserto, não vistos falhar antes (a causa foi lida no código). No navegador local: a janela de detalhe mostra «Close». A suíte tem 434 passando. Ainda fora de produção: o deploy espera o sim do MJRP.
