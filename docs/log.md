@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:52] session — UAT-195 aberta: o botão de fechar da janela de detalhe do álbum aparece sem texto
+
+Relato do MJRP em produção, junto de «ranking album em prod working!» (a janela de ranking reabre na ordem salva, UAT-187, vista por ele em produção). O botão vazio é o «Close». Causa lida no código: `SafeDOM` gravava `textContent` como atributo. A mesma captura mostra «--:--» na coluna de duração: anotado na UAT-188. Conserto pela F54.
+
 ## [2026-11-19 14:51] session — quarto deploy do site: ícone da aba e título (main `1ca7b39`)
 
 Pedido do MJRP, com «em prod pls». `firebase deploy --only hosting` de uma cópia limpa da `main`; antes: 431 testes passam, o build compila. Conferido por fora: `https://mjrp-playlist-generator.web.app` responde com o título «MJRP The Album Blender - Playlist Generator», o ícone em PNG (7 kB) e o `favicon.ico` com a mesma imagem. Não visto no navegador: a aba em si (o navegador pode guardar o ícone antigo por um tempo). Como voltar: «Rollback» no histórico de versões do Firebase Hosting.
