@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:31] session — oitavo deploy do site, o primeiro pelo script da F64: F60 em produção
+
+`npm run deploy:site`, da `main` em `c370dcd`. O script exportou a `main`, rodou os testes, construiu, conferiu o pacote, publicou só o Hosting e conferiu produção sozinho: o `index.html` no ar aponta o pacote recém-construído (`/assets/main-BEULvoEC.js`), servido como script. É a primeira prova da F64 com um deploy de verdade (o do servidor ainda não foi usado). Em produção agora: a F60 (salvar playlists sem perder o lote, um salvamento por vez, playlists que voltam ao recarregar, aviso de alteração não salva, apagar série com as playlists, inventário que sai com a pessoa). Não visto em produção num navegador. Como voltar: histórico de versões do Hosting.
+
 ## [2026-11-19 16:30] session — F60 na `main`; UAT-196, UAT-197, UAT-198 e UAT-05 em `fixed`
 
 O ramo `fix/f60-no-saved-work-lost` (agente auxiliar, conferido pelo integrador) entrou na `main` em `fa141c0`. A suíte tem 561 testes passando.
