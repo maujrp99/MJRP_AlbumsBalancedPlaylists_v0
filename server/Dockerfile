@@ -7,10 +7,9 @@
 #   config/        the repository's config/ (prompts.json)
 # Building this folder without that staging fails at the COPY of _shared_temp.
 #
-# Node version: production runs on 18, as it did before F64. 18 is past its end of life; moving
-# to a supported line changes what production runs, so it waits for the owner's yes (F64, spec.md,
-# open question). The tests run on the developer's Node (26 on 2026-11-19).
-FROM node:18-slim
+# Node version: 24, a supported line, chosen by the owner on 2026-11-19 (ADR-0020). It was 18
+# (past its end of life) until then. The tests run on the developer's Node (26 on 2026-11-19).
+FROM node:24-slim
 
 # set working directory
 WORKDIR /usr/src/app
