@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:05] session — UAT-16 cita os dois commits da F59
+
+A issue passa a citar `c48689d` (rotas de depuração) e `e253edd` (porta das rotas pagas).
+
 ## [2026-11-19 16:05] session — F59, fatia C: as rotas pagas do servidor só respondem a quem está logado, com limite por pessoa
 
 - **O MJRP:** «Go for it pls», à proposta de seguir pela fatia C; e a F60 e a F64 rodam em paralelo com agentes auxiliares, cada um em cópia isolada (ainda sem resultado).
