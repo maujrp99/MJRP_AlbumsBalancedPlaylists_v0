@@ -82,19 +82,15 @@ describe('PlaylistsService (Refactored)', () => {
             expect(mockStorage.save).toHaveBeenCalled()
         })
 
-        it('should delegate load to storage service', () => {
-            const loadedData = {
-                playlists: [{ name: 'Loaded' }],
-                seriesId: 's1',
-                mode: 'EDITING'
-            }
-            mockStorage.load.mockReturnValue(loadedData)
+        it('should not keep a saved batch as a draft', () => {
+            playlistsStore.setPlaylists([{ id: 'p1', name: 'Saved' }], 's1')
+            service.setEditMode('Rock', 's1', null)
+            mockStorage.save.mockClear()
 
-            const result = service.loadFromLocalStorage()
+            service.saveToLocalStorage()
 
-            expect(result).toBe(true)
-            expect(playlistsStore.getPlaylists()[0].name).toBe('Loaded')
-            expect(playlistsStore.getState().mode).toBe('EDITING')
+            expect(mockStorage.save).not.toHaveBeenCalled()
+            expect(mockStorage.remove).toHaveBeenCalled()
         })
     })
 })

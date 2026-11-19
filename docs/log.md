@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:19] session — F60: playlists geradas e não guardadas voltam depois de recarregar a página (UAT-05); gerar de novo não troca a série
+
+- **UAT-05, investigada e consertada (coube sem mudar o desenho):** a issue dizia que o conjunto era gravado no navegador e nunca lido de volta. O código mostrou mais: a geração escreve direto na loja, sem passar pelo serviço, então o conjunto recém-gerado nem chegava a ser gravado; só as edições de faixa gravavam. Agora o `PlaylistsService` acompanha a loja e mantém no navegador um rascunho do conjunto que ainda não está no banco, com o `uid` de quem o fez; `PlaylistsController.initialize` devolve o rascunho à tela quando ela abre vazia, para a mesma série e a mesma pessoa, e avisa «Your unsaved playlists were restored».
+- **Regras do rascunho:** um só por vez; conjunto salvo não é rascunho (salvou, o rascunho some; abrir um lote salvo para editar toma o lugar dele); tela vazia não apaga o rascunho; rascunho de outra pessoa, de outra série ou gravado por versão antiga do app (sem dono) não volta.
+- **Fora do alcance, dito para não parecer feito:** edições não salvas de um lote já salvo (endereço `/playlists/edit`) continuam se perdendo ao recarregar; para esse caso existe agora o aviso do navegador antes de sair.
+- **Gerar de novo (`BlendingController.regenerate`):** gravava no conjunto da tela a série ativa em outro lugar, e o salvamento seguinte ia para ela (segunda origem do «salvar na série errada» da UAT-197, reproduzida em `test/controllers/BlendingController.regenerate.test.js`). Agora mantém a série do conjunto.
+- **Testes:** 530 passando; `vite build` compila.
+
 ## [2026-11-19 16:18] session — F60: ao sair da conta o inventário some da tela e não é copiado para a conta seguinte (UAT-198)
 
 - **Confirmado no código e em teste, antes do conserto** (`test/stores/inventory.userChange.test.js`, seis casos, todos falhavam): ao sair, o Firebase avisa primeiro «sem usuário» e logo depois a conta anônima que o app abre sozinho. No primeiro aviso a loja tentava ler o inventário de `anonymous-user`, as regras do banco recusavam, e os álbuns da pessoa anterior ficavam na memória e na tela. No segundo aviso a loja via «era anônimo, tem álbuns, chegou uma conta» e copiava o inventário inteiro da pessoa anterior para a conta anônima nova.

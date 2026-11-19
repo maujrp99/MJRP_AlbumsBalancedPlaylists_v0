@@ -54,6 +54,12 @@ export class PlaylistsController {
             const { cacheManager } = await import('../cache/CacheManager.js')
             const service = getPlaylistsService(db, cacheManager)
             service.setCreateMode()
+
+            // Playlists generated and not saved before a reload of the page come back (UAT-05)
+            if (existingPlaylists.length === 0 && !isAutoGenerate && service.restoreDraft({ seriesId: seriesIdParam })) {
+                toast.info('Your unsaved playlists were restored')
+                this.loadAlbumsForSeries(playlistsStore.getSeriesId()) // for generating again; not awaited
+            }
         }
 
         // Auto-generate if requested

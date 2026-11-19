@@ -23,7 +23,7 @@ describe('PlaylistsService.saveCurrentBatch (F60)', () => {
             replaceBatch: vi.fn(async (playlists) => playlists.map((p, order) => ({ ...p, order, id: p.id || `new-${++nextId}` })))
         }
         repositoryFor = vi.fn(() => repository)
-        service = new PlaylistsService({}, {}, storage, history, repositoryFor)
+        service = new PlaylistsService({}, {}, storage, history, { playlistRepositoryFor: repositoryFor })
     })
 
     const generated = () => playlistsStore.setPlaylists([{ name: 'Mix 1', tracks: [{ title: 'T1' }] }], 'sA')

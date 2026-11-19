@@ -7,7 +7,7 @@
  * - Computation (stats, duration)
  * - Track operations (move, reorder, remove)
  * - Undo/Redo history
- * - LocalStorage persistence
+ * - The draft kept in the browser: playlists not saved yet survive a reload (saveToLocalStorage, restoreDraft)
  * - Export helpers
  * 
  * Extracted from PlaylistsStore (Sprint 19).
@@ -16,6 +16,7 @@
 
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { playlistsStore } from '../stores/playlists.js'
+import { albumSeriesStore } from '../stores/albumSeries.js'
 import { StorageService } from './infra/StorageService.js'
 import { PlaylistHistoryService } from './playlists/PlaylistHistoryService.js'
 
@@ -27,13 +28,16 @@ export class PlaylistsService {
      * @param {Object} cacheManager
      * @param {StorageService} [storageService]
      * @param {PlaylistHistoryService} [historyService]
-     * @param {Function} [playlistRepositoryFor] - (userId, seriesId) => the repository of the playlists of that series
+     * @param {Object} [options]
+     * @param {Function} [options.playlistRepositoryFor] - (userId, seriesId) => the repository of the playlists of that series
+     * @param {Function} [options.currentUserId] - () => the id of the person on the app now
      */
-    constructor(db, cacheManager, storageService, historyService, playlistRepositoryFor) {
+    constructor(db, cacheManager, storageService, historyService, options = {}) {
         this.db = db
         this.cacheManager = cacheManager
-        this.playlistRepositoryFor = playlistRepositoryFor ||
+        this.playlistRepositoryFor = options.playlistRepositoryFor ||
             ((userId, seriesId) => new PlaylistRepository(this.db, this.cacheManager, userId || 'anonymous-user', seriesId))
+        this.currentUserId = options.currentUserId || (() => albumSeriesStore.getUserId())
 
         // Dependencies
         this.storage = storageService || new StorageService()
@@ -218,37 +222,86 @@ export class PlaylistsService {
         playlistsStore.setUndoState(stats.canUndo, stats.canRedo)
     }
 
-    // ========== LOCALSTORAGE (Delegated) ==========
+    // ========== DRAFT IN THE BROWSER ==========
+    //
+    // The set of playlists on screen that is not in the database yet (generated, maybe edited,
+    // never saved) is kept in the browser as a draft, so a reload of the page does not lose it.
+    // One draft at a time, written with the id of the person it belongs to and read back only
+    // for that person. A set that is saved is not a draft: the database has it.
 
+    /**
+     * Keep the browser's draft in step with what is on screen. Called on every change of the
+     * store (see watchStore) and after the operations of this service.
+     *
+     * - playlists not saved yet on screen: they are the draft;
+     * - a saved batch on screen: there is no draft (it took the draft's place);
+     * - nothing on screen: the draft is left alone (a page starts empty before the draft is read).
+     */
     saveToLocalStorage() {
         const state = playlistsStore.getState()
-        if (!state.seriesId) return
+        if (!state.seriesId || state.playlists.length === 0) return
 
-        const data = {
+        if (state.mode !== 'CREATING') {
+            this.storage.remove(STORAGE_KEY)
+            return
+        }
+
+        this.storage.save(STORAGE_KEY, {
+            userId: this.currentUserId(),
             playlists: state.playlists, // Store is pure, safe to save directly
             seriesId: state.seriesId,
             config: state.config,
-            mode: state.mode,
-            editContext: state.editContext,
             batchName: state.batchName,
             defaultBatchName: state.defaultBatchName,
+            isDirty: state.isDirty,
             timestamp: Date.now()
-        }
-
-        this.storage.save(STORAGE_KEY, data)
+        })
     }
 
-    loadFromLocalStorage() {
-        const data = this.storage.load(STORAGE_KEY)
-        if (!data) return false
+    /**
+     * Keep the draft in step with the store, whoever changes it (the blend screen writes the
+     * generated playlists straight into the store). Changes made in the same turn are written once.
+     * @returns {Function} stops watching
+     */
+    watchStore() {
+        let scheduled = false
+        return playlistsStore.subscribe(() => {
+            if (scheduled) return
+            scheduled = true
+            queueMicrotask(() => {
+                scheduled = false
+                this.saveToLocalStorage()
+            })
+        })
+    }
 
-        playlistsStore.setPlaylists(data.playlists || [], data.seriesId)
-        playlistsStore.setConfig(data.config || {})
-        playlistsStore.setMode(data.mode || 'CREATING')
-        playlistsStore.setEditContext(data.editContext || null)
-        playlistsStore.setBatchName(data.batchName || '')
-        playlistsStore.setDefaultBatchName(data.defaultBatchName || null)
-        playlistsStore.setDirty(false)
+    /**
+     * Put the draft back on screen: the playlists this person generated for this series and did
+     * not save. Does nothing when there is something on screen already.
+     *
+     * @param {Object} params
+     * @param {string|null} params.seriesId - the series of the screen being opened; null when the address does not say
+     * @returns {boolean} whether a draft was restored
+     */
+    restoreDraft({ seriesId = null } = {}) {
+        if (playlistsStore.getPlaylists().length > 0) return false
+
+        const draft = this.storage.load(STORAGE_KEY)
+        if (!draft || !Array.isArray(draft.playlists) || draft.playlists.length === 0 || !draft.seriesId) return false
+        if (!draft.userId || draft.userId !== this.currentUserId()) return false // someone else's, or from an older version
+        if (seriesId && draft.seriesId !== seriesId) return false
+
+        this.history.clear()
+        this.createSnapshot(draft.playlists, draft.seriesId, 'Restored after reload')
+        playlistsStore.setMode('CREATING')
+        playlistsStore.setEditContext(null)
+        playlistsStore.setConfig(draft.config || {})
+        playlistsStore.setBatchName(draft.batchName || '')
+        playlistsStore.setDefaultBatchName(draft.defaultBatchName || null)
+        playlistsStore.setPlaylists(draft.playlists, draft.seriesId)
+        playlistsStore.setDirty(draft.isDirty === true)
+        playlistsStore.setSynchronized(false)
+        console.log(`[PlaylistsService] Restored ${draft.playlists.length} unsaved playlists of series ${draft.seriesId}`)
 
         return true
     }
@@ -417,6 +470,7 @@ export function getPlaylistsService(db, cacheManager) {
         const storage = new StorageService()
         const history = new PlaylistHistoryService()
         _instance = new PlaylistsService(db, cacheManager, storage, history)
+        _instance.watchStore()
     }
     return _instance
 }
