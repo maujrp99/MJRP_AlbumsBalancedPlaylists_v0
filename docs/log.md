@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 17:06] session — UAT-12 cita o commit certo
+
+A issue passa a citar `2a39683`.
+
 ## [2026-11-19 17:05] session — F60: visitante não leva dados e a janela de entrada avisa (UAT-12); sair da conta recarrega o app
 
 Duas decisões do MJRP de hoje, feitas: a janela de entrada mostra «Series, playlists and inventory made as a guest stay with the guest session. They are not copied to your account when you sign in.»; e sair da conta recomeça o app da Home numa página nova (`utils/reloadApp.js`), o que tira da tela séries e playlists de quem saiu, além do inventário. Três testes novos, vistos falhar antes; a suíte tem 593 passando. No navegador: a janela de entrada mostra o aviso e os três botões. O recarregar ao sair não foi visto no navegador (sairia da conta no painel de teste).
