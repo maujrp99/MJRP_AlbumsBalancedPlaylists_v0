@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 18:33] review — F67 revisada e provada pelo integrador; UAT-204 em fixed
+
+Ramo do auxiliar com a `main` junto: 982 testes, build ok. Sete cenários no navegador em `reports/evidence/F67/2026-11-19-home-scan-browser-proof.md`. A causa do caso do MJRP não pôde ser determinada; dois defeitos reais que o explicam foram consertados (consulta ao catálogo sem prazo; navegação sobreposta deixava a tela sem ligar os botões, no roteador). O doctor segue vermelho com os erros antigos, nenhum da F67.
+
 ## [2026-11-19 18:30] session — F67: spec, plano, tarefas, comportamento e manual escritos no ramo
 
 A pasta da F67 preenchida para o que foi construído (7 REQ com `verified_by`, 10 tarefas, a prova no navegador aberta para o integrador); `docs/specs/behavior.md` com os estados da busca da Home e a tela sempre montada; manual 14, 16, 19, 20, 21 e 22 corrigidos. O doctor segue vermelho com os mesmos 521 erros de antes do ramo, nenhum da F67.
