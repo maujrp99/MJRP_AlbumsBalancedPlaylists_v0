@@ -86,7 +86,7 @@ describe('album load boundaries', () => {
     it('Firestore stays behind repositories in the files of this design; the known exceptions can only shrink', () => {
         // Files outside repositories/ that still import the Firestore SDK (issue UAT-14).
         // Removing one from the code must remove it from this list; adding one fails the test.
-        const KNOWN_EXCEPTIONS = ['services/PlaylistsService.js', 'stores/albums.js', 'views/SaveAllView.js']
+        const KNOWN_EXCEPTIONS = ['services/PlaylistsService.js', 'views/SaveAllView.js']
         const all = listJs('').filter(file => !file.startsWith('repositories/') && !file.startsWith('vendor/') && file !== 'firebase-init.js')
         const importing = all.filter(file => importsOf(file).some(specifier => /firebase\/firestore|firebase-firestore/.test(specifier)))
 

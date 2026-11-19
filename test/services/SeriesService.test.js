@@ -40,7 +40,6 @@ vi.mock('../../public/js/services/SpotifyService.js', () => ({
 // 3. Mock Albums Store
 vi.mock('../../public/js/stores/albums.js', () => ({
     albumsStore: {
-        updateAlbum: vi.fn().mockResolvedValue(),
         addAlbumToSeries: vi.fn(),
         getActiveAlbumSeriesId: vi.fn().mockReturnValue('ser-1'),
         clearAlbumSeries: vi.fn(),
@@ -48,6 +47,12 @@ vi.mock('../../public/js/stores/albums.js', () => ({
     }
 }))
 
+
+// The shared album repository: where "Refetch Metadata" writes the album (F48)
+const savedAlbums = vi.hoisted(() => ({ saveAlbum: vi.fn() }))
+vi.mock('../../public/js/repositories/SharedAlbumRepository.js', () => ({
+    SharedAlbumRepository: vi.fn().mockImplementation(() => ({ saveAlbum: savedAlbums.saveAlbum }))
+}))
 
 // Mock Repository
 vi.mock('../../public/js/repositories/SeriesRepository.js', () => ({
@@ -134,8 +139,8 @@ describe('SeriesService (Refactored)', () => {
     })
 
     describe('refetchAlbumMetadata (Sprint 23 Persistence)', () => {
-        it('should call albumsStore.updateAlbum to persist changes after enrichment', async () => {
-            // Setup
+        it('persists the refetched album through the shared album repository, not through the store', async () => {
+            savedAlbums.saveAlbum.mockResolvedValue('alb-1')
             const mockAlbum = {
                 id: 'alb-1',
                 title: 'Test Album',
@@ -145,19 +150,24 @@ describe('SeriesService (Refactored)', () => {
             }
             const seriesId = 'ser-1'
 
-            // Mock enrichment results (none found, to keep it simple, or mock internals)
-            // But refetchAlbumMetadata constructs Promise.allSettled logic.
-            // Since we mocked apiClient, the BEA/Spotify calls inside will use the mock.
-            // We just want to ensure it reaches the persistence step.
-
             await service.refetchAlbumMetadata(mockAlbum, seriesId)
 
-            // 2. CRITICAL: Should persist to DB
-            expect(albumsStore.updateAlbum).toHaveBeenCalledWith(mockDb, expect.objectContaining({
+            expect(savedAlbums.saveAlbum).toHaveBeenCalledTimes(1)
+            expect(savedAlbums.saveAlbum).toHaveBeenCalledWith(expect.objectContaining({
                 id: 'alb-1',
                 title: 'Test Album',
                 tracksOriginalOrder: expect.any(Array)
             }))
+            expect(albumsStore.updateAlbum).toBeUndefined()
+        })
+
+        it('still returns the refetched album when the write to the cloud fails', async () => {
+            vi.spyOn(console, 'warn').mockImplementation(() => {})
+            savedAlbums.saveAlbum.mockRejectedValue(new Error('offline'))
+
+            const enriched = await service.refetchAlbumMetadata({ id: 'alb-1', title: 'Test Album', artist: 'Test Artist', tracks: [] }, 'ser-1')
+
+            expect(enriched).toMatchObject({ id: 'alb-1', title: 'Test Album' })
         })
     })
 })
