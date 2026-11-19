@@ -134,5 +134,32 @@
       "o app publicado (mjrp-playlist-generator.web.app) num navegador com login, depois deste deploy",
       "um visitante numa rota paga em produção (403 pelo teste automático)"
     ]
+  },
+  "slice_E_browser": {
+    "date": "2026-11-19 16:57",
+    "where": "http://127.0.0.1:5010, conta do MJRP, código do ramo fix/f59-escape-outside-text com a main",
+    "checks": [
+      {
+        "what": "criar uma série chamada «<img src=x onerror=\"window.__xss=1\"> & Co» e abrir a série",
+        "result": "o título mostra o texto como está escrito; nenhuma imagem injetada; `window.__xss` indefinido"
+      },
+      {
+        "what": "abrir o Blending Menu",
+        "result": "o cartão da série mostra o texto literal; nenhuma imagem injetada"
+      },
+      {
+        "what": "abrir o painel de todas as séries",
+        "result": "o cabeçalho da série mostra o texto literal, com «&» como «&»"
+      },
+      {
+        "what": "apagar a série de teste",
+        "result": "a janela de confirmação mostra o nome literal; a série foi apagada"
+      }
+    ],
+    "not_checked": [
+      "o nome da série na lista do filtro de séries (a opção não bateu letra por letra com o nome; pode ser espaço em branco ou escape em dobro: não investigado)",
+      "as sugestões da busca da Home, o selo de formato do inventário e o nome no diálogo de exportar para o Spotify (cobertos por teste automático)",
+      "os dois endereços vindos de fora postos em `href` (`components/ui/Card.js`, `views/ConsolidatedRankingView.js`): sem conferência de esquema, ficam para um conserto à parte"
+    ]
   }
 }
