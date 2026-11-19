@@ -75,6 +75,8 @@ classDiagram
 **Mount Path**: `/api`
 
 ### Endpoints
+> **Off unless turned on by name.** These four routes are mounted only when the server starts with `ENABLE_DEBUG_ROUTES=true` (`server/lib/debugGate.js`). Without it they answer 404, in production and locally. `NODE_ENV` does not turn them on. The `rawStage` option of `POST /generate` follows the same switch.
+
 -   `GET /list-models`: Proxies call to Google Gemini API to list available models.
 -   `POST /debug/raw-ranking`: Returns the raw AI and Scraper responses without normalization, for debugging pipeline issues.
 -   `GET /debug/files`: Lists one directory of the server file system (the server folder, or the one given in the `path` query parameter) to verify container structure in Cloud Run. There is no allow-list; like the other debug routes it only answers when `AI_API_KEY` is set.
@@ -130,3 +132,6 @@ sequenceDiagram
     Route->>Route: Format for API Response
     Route-->>Client: JSON { playlists, summary }
 ```
+
+### Errors of a route
+`server/lib/asyncRoute.js`: `asyncRoute(handler)` hands a rejected async handler to Express, and `errorResponder` (the last middleware in `server/index.js`) answers 500 `{ error: 'Internal server error' }`, or the 4xx of a request the server could not read, with no detail of the error. The detail goes to the log. `POST /generate` is wrapped by it.

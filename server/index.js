@@ -130,14 +130,22 @@ app.use('/api', albumRoutes)
 const playlistRoutes = require('./routes/playlists')
 app.use('/api', playlistRoutes)
 
-// Debug routes (list-models, raw-ranking, files, import)
-const { router: debugRoutes, initDebugRoutes } = require('./routes/debug')
-initDebugRoutes(routeDeps)
-app.use('/api', debugRoutes)
+// Debug routes (list-models, raw-ranking, files, import): off unless turned on by name (F59)
+const { debugRoutesEnabled } = require('./lib/debugGate')
+if (debugRoutesEnabled(process.env)) {
+  const { router: debugRoutes, initDebugRoutes } = require('./routes/debug')
+  initDebugRoutes(routeDeps)
+  app.use('/api', debugRoutes)
+  console.warn('Debug routes are ON (ENABLE_DEBUG_ROUTES=true). Never in production.')
+}
 
 // AI Assistant Routes
 const aiRoutes = require('./routes/ai')
 app.use('/api/ai', aiRoutes)
+
+// Last of all: a route that broke answers 500, with no detail, and the server stays up (F59)
+const { errorResponder } = require('./lib/asyncRoute')
+app.use(errorResponder(console))
 
 // ============================================================================
 // Export for tests
