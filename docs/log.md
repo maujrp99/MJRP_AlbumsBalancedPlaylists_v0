@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:12] session — proposta de arquitetura da F52 escrita: «O servidor diz a verdade»
+
+`docs/specs/arch.md`, seção nova no fim. O MJRP pôs como condição da v5.0 que a arquitetura esteja documentada antes do código; esta é a proposta da F52, escrita enquanto a F60 e a F64 rodavam em paralelo. Pontos: um contrato de resultado só para as rotas do servidor (tem o dado; a fonte não tem; não deu para saber), com a falha nunca lida como «sem dado»; o raspador só aceita o álbum certo, pela regra de identidade da F55; **não** começar por um guardado no servidor (o app já guarda por 7 dias; falta poder confiar no «não tem»), e medir antes de pôr banco; uma fila educada para a fonte raspada. Sete riscos, cinco alternativas, cinco fatias e três decisões que são do MJRP. Ainda **sem crítica separada**: é o passo seguinte, antes de qualquer código.
+
+- **F64:** o agente auxiliar entregou o ramo `fix/f64-one-tested-way-to-production`; ainda não conferido nem integrado.
+- **Fatia E da F59** (texto inserido como HTML) adiada para depois da F60: o levantamento achou 71 pontos candidatos em 25 arquivos de tela, vários deles os mesmos em que a F60 está mexendo.
+
 ## [2026-11-19 16:11] session — F64: spec, plano e tarefas escritos do que foi feito; evidência dos dois ensaios
 
 - **Documentos da feature** (`docs/specs/features/F64-one-tested-way-to-production/`): `spec.md` em `In Progress` com seis requisitos, `plan.md` com o desenho, a decisão sobre as duas receitas da imagem e o risco do Node 26, `tasks.md` com sete tarefas fechadas (commit `fca0108`) e três à espera do MJRP: a primeira publicação real, a automação rodar no GitHub e o aceite.
@@ -18,6 +25,14 @@
 - **Automação do GitHub:** `.github/workflows/ci-firebase.yml` vira `ci.yml`: roda `npx vitest run` em push e pull request e não publica nada. **Não testada: não rodou no GitHub.** O lint ficou de fora (81 erros hoje), então a UAT-20 segue aberta nessa parte.
 - **Manual:** `docs/manual/00_Deployment_and_Setup.md`, seções 1 e 2, reescritas para o caminho único, com o que precisa existir na máquina e como voltar atrás.
 - **Fica de fora (caminhos de outro agente ou fora do combinado):** `docs/specs/arch.md` e `docs/specs/tech-stack.md` ainda citam os scripts antigos e o `cloudbuild.yaml`; os itens 6.1, 6.5, 6.6 e 6.7 do mapa da v5.0.
+
+## [2026-11-19 16:08] session — F59 fatia C em produção: as rotas pagas respondem 401 sem login e funcionam com login
+
+- **Sétimo deploy do site** (main `e54c80e`): o app manda o login em toda chamada ao servidor. 493 testes antes; build sem mapas de código.
+- **Segundo deploy do servidor:** revisão `mjrp-proxy-00197-mps`, de uma cópia limpa da `main`. Ponto de volta: `mjrp-proxy-00196-sj7`.
+- **Conferido em produção:** sem login, as quatro rotas guardadas respondem 401 (antes 200). Com o login real do MJRP (app local falando com o servidor de produção): notas 200, lista de álbuns por IA 200 com 6 álbuns, busca de álbum por IA 200 com «1999». As rotas do Apple Music seguem abertas, de propósito.
+- **Não conferido:** o app publicado num navegador com login depois deste deploy; uma aba aberta desde antes precisa ser recarregada para mandar o login.
+- **F59:** fatias A, B e C em produção; a D virou a F66; falta a E (texto inserido como HTML sem tratamento; Tailwind servido do site).
 
 ## [2026-11-19 16:05] session — UAT-16 cita os dois commits da F59
 
