@@ -3,6 +3,18 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:18] session — regressão completa no navegador, a pedido do MJRP; UAT-188 a UAT-192 abertas
+
+Feita em `http://127.0.0.1:5010`, na conta do MJRP, com dados de teste do agente (série «Claude Regression Test», depois «… v2»).
+
+- **Funcionou:** busca por artista na Home e criação da série; carga da série; adicionar ao inventário e editar o item; remover um álbum da série (persistiu); blend com a receita recomendada; renomear o lote, remover uma faixa e salvar; busca das playlists guardadas (texto digitado de uma vez, foco mantido, UAT-179); «Edit Batch» traz o que foi salvo; apagar o lote; editar a série (renomear e acrescentar álbum pela busca); apagar a série.
+- **Não funcionou:** apagar do inventário (UAT-01, confirmada: `inventoryStore.deleteAlbum is not a function`). O item de teste «GNX» ficou no inventário do MJRP.
+- **Medido:** playlists guardadas, 20 s para aparecer (UAT-186); blend de 2 álbuns já carregados, 8 a 18 s (UAT-189); inventário, 1,2 s.
+- **Causa achada:** UAT-184 (álbum trocado): com o artista certo, a conferência de nome aceita qualquer álbum (0,38 contra corte de 0,35), e vários identificadores guardados respondem 404.
+- **Novas:** UAT-188 (duração 0:00 na janela de ranking), UAT-189 (blend lento), UAT-190 (tela de edição de playlists), UAT-191 (editar uma série recarrega todas), UAT-192 (título da aba, idioma, série de origem no blend).
+- **Não testado:** exportar para o Spotify e para a Apple Music (criaria playlists nas contas dele), «Download JSON», «Refetch», colar em lote na Home, a janela de detalhe do álbum, a migração de visitante. Erros 500 do servidor apareceram no console durante a carga e não foram investigados.
+- **Dados de teste que ficaram:** «GNX» no inventário; os rankings de «Brothers In Arms» e «Rapture of the Deep».
+
 ## [2026-11-19 14:13] session — UAT-187 aberta: a janela de ranking reabre na ordem do disco, não na ordem salva
 
 Relato do MJRP durante a regressão («epitaph como numero 2 … carregou em 3»). Causa lida no código: a janela ordena pela posição no disco e ignora o ranking que o álbum traz. Conserto como ponta da F46, no ramo `fix/f46-rank-modal-saved-order`.
