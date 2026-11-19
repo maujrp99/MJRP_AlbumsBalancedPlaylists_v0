@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:35] session — correção anotada nos dois relatórios: as regras abertas eram as do arquivo, não as de produção
+
+O mapa da v5.0 e o cruzamento ganharam, no topo, a nota da conferência de produção (UAT-15). A UAT-15 cita o commit `90cd34f`.
+
 ## [2026-11-19 15:34] session — F59, fatia A (só o site): regras do repositório fechadas, volta do Spotify conferida, sem mapas de código
 
 - **Decisão do MJRP:** «Siga a sua prioridade». A ordem do agente: F59, F60, F64, F52, F55, F56, F61, F57, F58, F62, F63, F65; a F49 entra quando ele disser (o `docs/specs/priority.md` do Control Center ainda mostra a ordem que ele marcou antes; o arquivo é dele).

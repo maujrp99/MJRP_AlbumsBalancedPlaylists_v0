@@ -7,6 +7,8 @@ who_wrote: agente separado, só de leitura, a pedido do implementador (o MJRP pe
 spot_checked: "o implementador conferiu no código seis das afirmações mais graves (regras do Firestore, leitura em série das playlists guardadas, apagar-antes-de-gravar no lote, loja da Apple pelo idioma do navegador, rotas de depuração montadas, conferência de state do Spotify desligada): as seis conferem. O resto não foi reconferido por ele."
 ---
 
+> **Correção de 2026-11-19, depois de conferir produção:** o item «regras do banco abertas» (UAT-15) vale para o **arquivo do repositório**, não para produção. As regras em vigor, lidas pela API do Firebase, fecham o ranking de cada pessoa no dono desde 2026-01-11. O arquivo foi igualado a elas na F59 (commit `90cd34f`). As rotas de depuração e a IA paga, essas sim, estão abertas em produção (conferido pelo código de resposta).
+
 > **Estado das linhas, atualizado em 2026-11-19 14:56 a pedido do MJRP.** A coluna «Class» de cada tabela diz: ✅ consertado na v4.0 (com a issue e a feature); 🔧 a consertar na v5.0 (com a feature); 🚫 não vale mais (com o motivo na última coluna); ⏳ em aberto, a discutir com o MJRP no chat; ⚠️ contradiz a análise de 2026-11-19 (a ADR-0019 já foi corrigida nesses pontos; o resto, a discutir). O texto do relatório, em inglês, é do agente que fez o cruzamento e não foi reescrito. Depois dele: a UAT-149 passou a `fixed` (F53); a janela de ranking (UAT-187), o ícone e o título da aba estão em produção; o botão «Close» sem rótulo (UAT-195) está consertado na `main`.
 
 
