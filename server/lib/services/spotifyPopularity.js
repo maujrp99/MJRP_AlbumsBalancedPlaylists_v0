@@ -49,7 +49,45 @@ async function getAccessToken() {
     }
 }
 
-const { cleanTitle, toCore } = require('../normalize');
+const { cleanTitle } = require('../normalize');
+const { loadAlbumIdentity } = require('../albumIdentity');
+
+/** A Spotify album as the identity rule reads it. */
+const spotifyCandidate = (item) => ({
+    artist: (item?.artists || []).map(a => a?.name).filter(Boolean).join(' & '),
+    title: item?.name,
+    year: item?.release_date
+});
+
+/**
+ * The Spotify album that is the album asked for, or null.
+ * Three searches, from the narrowest to the widest (title and artist, clean title and artist, the
+ * albums of the artist). The searches only LIST candidates; which one is accepted is decided by
+ * the one identity rule (shared/albumIdentity.js, F55). There is no "first result".
+ * @param {{ title: string, artist: string }} asked
+ * @param {string} token
+ * @param {Object} [http] - { get(url, config) }, axios by default
+ */
+async function findSpotifyAlbum(asked, token, http = axios) {
+    const { pickAlbum } = await loadAlbumIdentity();
+    const cleanT = cleanTitle(asked.title);
+    const searches = [
+        { q: `album:${asked.title} artist:${asked.artist}`, limit: 5 },
+        ...(cleanT !== asked.title ? [{ q: `album:${cleanT} artist:${asked.artist}`, limit: 5 }] : []),
+        { q: `artist:${asked.artist}`, limit: 20 }
+    ];
+
+    for (const { q, limit } of searches) {
+        console.log(`[Spotify] Searching: ${q}`);
+        const res = await http.get(SPOTIFY_SEARCH_URL, {
+            params: { q, type: 'album', limit },
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const picked = pickAlbum(asked, res.data?.albums?.items || [], spotifyCandidate);
+        if (picked.found) return picked.candidate;
+    }
+    return null;
+}
 
 /**
  * Get track popularity for an album
@@ -60,64 +98,11 @@ async function getSpotifyPopularityRanking(albumTitle, artistName) {
         const token = await getAccessToken();
         if (!token) return { error: 'Spotify credentials missing or invalid' };
 
-        // 1. Search for the album - Multi-stage strategy
-        let album = null;
-
-        // Stage A: Structured Query (Exact-ish)
-        const q1 = `album:${albumTitle} artist:${artistName}`;
-        console.log(`[Spotify] Searching Stage A: ${q1}`);
-        const res1 = await axios.get(SPOTIFY_SEARCH_URL, {
-            params: { q: q1, type: 'album', limit: 1 },
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        album = res1.data.albums.items[0];
-
-        // Stage B: Clean Title Query (Remove "(Remastered)", etc.)
-        if (!album) {
-            const cleanT = cleanTitle(albumTitle);
-            if (cleanT !== albumTitle) {
-                const q2 = `album:${cleanT} artist:${artistName}`;
-                console.log(`[Spotify] Searching Stage B: ${q2}`);
-                const res2 = await axios.get(SPOTIFY_SEARCH_URL, {
-                    params: { q: q2, type: 'album', limit: 1 },
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                album = res2.data.albums.items[0];
-            }
-        }
-
-        // Stage C: Artist-only Search + Fuzzy Match
-        if (!album) {
-            console.log(`[Spotify] Searching Stage C: artist:${artistName}`);
-            const res3 = await axios.get(SPOTIFY_SEARCH_URL, {
-                params: { q: `artist:${artistName}`, type: 'album', limit: 20 },
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
-            if (res3.data.albums.items.length > 0) {
-                const targetCore = toCore(albumTitle);
-                const targetArtist = normalizeArtist(artistName);
-
-                const candidates = res3.data.albums.items.map(a => {
-                    const candidateTitleCore = toCore(a.name);
-                    const candidateArtistCore = normalizeArtist(a.artists?.[0]?.name || '');
-
-                    // Score based on whether title matches (exact or containment)
-                    let score = (candidateTitleCore.includes(targetCore) || targetCore.includes(candidateTitleCore)) ? 1 : 0;
-
-                    // Boost if artist also matches
-                    if (candidateArtistCore === targetArtist) score += 0.5;
-
-                    return { album: a, score };
-                }).filter(c => c.score >= 1); // Require at least title match
-
-                candidates.sort((a, b) => b.score - a.score);
-                if (candidates[0]) album = candidates[0].album;
-            }
-        }
+        // 1. The album asked for, or nothing
+        const album = await findSpotifyAlbum({ title: albumTitle, artist: artistName }, token);
 
         if (!album) {
-            console.log('[Spotify] Album not found after all stages.');
+            console.log('[Spotify] No album of Spotify is the album asked for.');
             return { error: 'Album not found on Spotify' };
         }
 
@@ -181,4 +166,4 @@ async function getSpotifyPopularityRanking(albumTitle, artistName) {
     }
 }
 
-module.exports = { getSpotifyPopularityRanking };
+module.exports = { getSpotifyPopularityRanking, findSpotifyAlbum };

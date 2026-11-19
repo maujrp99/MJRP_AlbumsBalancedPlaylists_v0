@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 18:07] session — F55 fatia 1, regra e servidor: uma regra só diz «este é o álbum pedido», e o raspador pergunta a ela (UAT-184)
+
+Ramo `fix/f55-one-album-identity-rule`, da ponta da `main` local. Primeira parte da fatia 1 da F55 (UAT-184: a série pedia «Stone Temple Pilots - Core» e mostrava «Shangri-La Dee Da»).
+
+- **A regra:** `shared/albumIdentity.js`, pura, usada pelo app e pelo servidor. `compareAlbumIdentity(pedido, candidato)` devolve um veredito tipado (igual ou diferente, com o motivo); `pickAlbum` escolhe o candidato que passa, ou nenhum. O título tem de bater por conta própria, inteiro; o artista tem de bater; o ano só ordena. Um subtítulo depois de «:» ou « - » só sai se for nota de edição. O teste de «Core» contra «Shangri-La Dee Da» e «Core Memories» foi escrito primeiro (`test/shared/albumIdentity.test.js`).
+- **O servidor:** `server/lib/albumIdentity.js` carrega a regra. O raspador (`server/lib/scrapers/besteveralbums.js`) pergunta a ela em todos os pontos em que aceitava por «um texto contém o outro»; a busca em HTML não pega mais o primeiro link; a página de um resultado cujo rótulo já diz que é outro álbum não é aberta. O Spotify do servidor (`spotifyPopularity.js`) pegava o primeiro resultado da busca; agora escolhe pela regra, e a busca só pelo artista, que quebrava num nome nunca importado, voltou a funcionar.
+- **Lido da fonte, para conhecer o formato** (cinco leituras do BestEverAlbums, sem login e sem custo): os resultados da busca vêm rotulados «Título by Artista»; a página do álbum diz o mesmo no `<title>` e no cabeçalho; a busca em HTML não devolveu nenhum link de álbum.
+- Testes: 919 no fim da fatia (eram 789). Nada publicado; conserto em `server/` só se prova publicando.
+
 ## [2026-11-19 17:41] session — F52 fatia 1 em produção (site e servidor)
 
 Site publicado da `main` (`de14155`, pacote `main-DQ1jxjKx.js`) e, depois, o servidor (revisão `mjrp-proxy-00199-hsv`; a volta é `mjrp-proxy-00198-5df`). Conferido em produção: 401 no formato novo sem login; com login, notas `found` e `not_found`, lista da IA `found` e a Home classificando com ela. Não visto: `/api/generate` com a chave, a carga segurando a fila, falha real da fonte. Prova: `reports/evidence/F52/2026-11-19-slice-1-browser-proof.md`. Também hoje: o MJRP disse que o Scan voltou a funcionar; o registro do servidor mostra que o clique que falhou não chegou ao servidor (UAT-204 segue aberta: sem prazo nem aviso na consulta ao catálogo).

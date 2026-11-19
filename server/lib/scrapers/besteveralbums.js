@@ -1,5 +1,6 @@
 const axios = require('axios')
-const { cleanTitle, toCore, toFuzzyCore, normalizeArtist } = require('../normalize')
+const { cleanTitle } = require('../normalize')
+const { loadAlbumIdentity } = require('../albumIdentity')
 const { upstreamErrorFrom } = require('../outcome')
 
 /**
@@ -25,6 +26,20 @@ function parseSuggest (data) {
   return { titles: list(data[1]), urls: list(data.length > 2 ? (data[3] || data[2]) : []) }
 }
 
+/** How many album links of the HTML search are opened to be checked. */
+const HTML_SEARCH_PAGES_CHECKED = 5
+
+const ALBUM_ADDRESSES = [/thechart\.php\?a=(\d+)/i, /album\.php\?id=(\d+)/i]
+/** The id in the address of an album page, or null when the address is not one. */
+function albumIdOf (url) {
+  for (const pattern of ALBUM_ADDRESSES) {
+    const found = String(url || '').match(pattern)
+    if (found) return found[1]
+  }
+  return null
+}
+const absoluteUrl = (url) => (String(url).startsWith('http') ? String(url) : `https://www.besteveralbums.com${url}`)
+
 // Helper to get axios config with headers
 const getAxiosConfig = (timeout = 30000) => ({
   timeout,
@@ -47,213 +62,151 @@ async function getPage (url) {
   }
 }
 
-async function fetchAlbumPage(albumTitle, albumArtist) {
-  // BestEverAlbums search works better with cleaner titles
-  const cleanT = cleanTitle(albumTitle)
-  const q = encodeURIComponent(`${albumArtist} ${cleanT}`)
-  const searchUrl = `https://www.besteveralbums.com/search.php?search=${q}`
-  const searchRes = await getPage(searchUrl)
-  const $search = loadHtml(searchRes.data)
+// ---- "Is this the album asked for?" is decided by ONE rule, shared/albumIdentity.js (F55) ----
+// Every search path below turns what the source gave (a label "Title by Artist", a page, a link
+// on the artist's page) into { title, artist } and asks the rule. Nothing here compares texts.
 
-  let albumPath = null
-  const qTitle = (albumTitle || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
-  const qArtist = (albumArtist || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
-  $search('a').each((i, el) => {
-    const href = $search(el).attr('href')
-    const text = ($search(el).text() || '').toLowerCase()
-    if (!href) return
-    if (href.match(/thechart\.php\?a=\d+/i) || href.match(/album\.php\?id=\d+/i)) {
-      if ((qTitle && text.includes(qTitle)) || (qArtist && text.includes(qArtist))) {
-        albumPath = href
-        return false
-      }
-      if (!albumPath) albumPath = href
-    }
-    if (!albumPath && qTitle) {
-      const tokens = qTitle.split(' ')
-      for (const t of tokens) {
-        if (t && text.includes(t)) {
-          albumPath = href
-          return false
-        }
-      }
-    }
-  })
-
-  if (!albumPath) return null
-
-  const albumUrl = albumPath.startsWith('http') ? albumPath : `https://www.besteveralbums.com${albumPath}`
-  // A page that could not be read is a failure (it used to be accepted unseen)
-  const res = await getPage(albumUrl)
-  const $ = loadHtml(res.data)
-  const pageText = ($('title').text() + ' ' + $('h1').text() + ' ' + $('h2').text() + ' ' + $('body').text()).toLowerCase()
-
-  const targetTitleRaw = toCore(albumTitle)
-  const targetTitleClean = toCore(cleanTitle(albumTitle))
-  const targetArtist = normalizeArtist(albumArtist)
-
-  const hasTitle = (targetTitleRaw && pageText.includes(targetTitleRaw)) ||
-    (targetTitleClean && pageText.includes(targetTitleClean))
-
-  const hasArtist = targetArtist && pageText.includes(targetArtist)
-
-  if (hasArtist || hasTitle) return albumUrl
-  return null
+/** The album links of a suggest answer, each with the label the source gave it. */
+function albumSuggestions ({ titles, urls }) {
+  return urls
+    .map((url, i) => ({ url: String(url || ''), label: String(titles[i] || ''), id: albumIdOf(url) }))
+    .filter(suggestion => suggestion.id)
 }
 
-async function pageContainsArtistOrTitle(url, albumTitle, albumArtist) {
-  const candidateUrl = url.startsWith('http') ? url : `https://www.besteveralbums.com${url}`
-  const res = await getPage(candidateUrl)
-  const $ = loadHtml(res.data)
-  const titleText = ($('title').text() || '').toLowerCase()
-  const headerText = (($('h1').text() || '') + ' ' + ($('h2').text() || '')).toLowerCase()
-  const bodyText = ($('body').text() || '').toLowerCase()
-  const targetTitleRaw = toCore(albumTitle)
-  const targetArtist = normalizeArtist(albumArtist)
+/** The suggestion whose label says it is the album asked for, or null. */
+async function pickSuggested (asked, suggestions) {
+  const { pickAlbum, albumFromLabel } = await loadAlbumIdentity()
+  const picked = pickAlbum(asked, suggestions, suggestion => albumFromLabel(suggestion.label))
+  return picked.found ? picked.candidate : null
+}
+
+/**
+ * What an album page says it is: its <title> ("Core by Stone Temple Pilots | Album Rankings ...")
+ * and its header (the album title, then "by" and a link to the artist).
+ * @returns {Promise<Array<{ title: string, artist: string }>>} every reading; none when the page says neither
+ */
+async function albumsNamedByPage ($) {
+  const { albumFromLabel } = await loadAlbumIdentity()
+  const readings = albumFromLabel(($('title').first().text() || '').split('|')[0])
 
   const h1 = $('h1').first()
-  if (h1 && h1.length) {
-    const artistLink = h1.find('a').first()
-    if (artistLink && artistLink.length) {
-      const artistText = normalizeArtist(artistLink.text())
-      if (artistText && targetArtist && artistText === targetArtist) return true
-    }
-    const h1Text = (h1.text() || '').toLowerCase()
-    if (targetArtist && h1Text.includes(`by ${targetArtist}`)) return true
+  const artist = (h1.find('a').first().text() || '').trim()
+  const header = (h1.text() || '').trim()
+  if (artist && header.endsWith(artist)) {
+    const title = header.slice(0, header.length - artist.length).replace(/\s*by\s*$/i, '').trim()
+    if (title) readings.push({ title, artist })
   }
+  return readings
+}
 
-  if (targetArtist && bodyText.includes(targetArtist) && bodyText.includes(targetTitleRaw)) return true
-
-  return titleText.includes(targetTitleRaw) || headerText.includes(targetTitleRaw)
+/** Reads the page and says whether it is the page of the album asked for. */
+async function pageIsTheAlbum (url, asked) {
+  const res = await getPage(absoluteUrl(url))
+  const { pickAlbum } = await loadAlbumIdentity()
+  return pickAlbum(asked, [await albumsNamedByPage(loadHtml(res.data))]).found
 }
 
 /**
- * Stage 1: Standard Search logic.
+ * The HTML search of the source. Each album link it lists is opened and accepted only when the
+ * page is the album asked for: the first link, or a link that shares a word, is not enough.
+ * @returns {Promise<string|null>} the address of the album page
  */
-async function _standardFindAlbumId(albumTitle, albumArtist) {
-  const cleanT = cleanTitle(albumTitle)
-  const q = encodeURIComponent(`${albumArtist || ''} ${cleanT || ''}`)
-  const suggestUrl = `https://www.besteveralbums.com/suggest.php?q=${q}`
+async function fetchAlbumPage (albumTitle, albumArtist) {
+  // BestEverAlbums search works better with cleaner titles
+  const q = encodeURIComponent(`${albumArtist} ${cleanTitle(albumTitle)}`)
+  const searchRes = await getPage(`https://www.besteveralbums.com/search.php?search=${q}`)
+  const $search = loadHtml(searchRes.data)
 
-  const res = await getPage(suggestUrl)
-  const { titles, urls } = parseSuggest(res.data)
+  const links = new Set()
+  $search('a').each((i, el) => {
+    const href = $search(el).attr('href')
+    if (href && albumIdOf(href)) links.add(href)
+  })
 
-  const targetArtist = normalizeArtist(albumArtist)
-
-  for (let i = 0; i < titles.length; i++) {
-    const t = String(titles[i] || '').toLowerCase()
-    const normalizedT = toCore(t)
-
-    // FAST-ACCEPT Logic (Standard Flow)
-    // Robustness: Use toFuzzyCore to handle common suffixes/labels in suggest results
-    const fuzzyT = toFuzzyCore(t)
-    const fuzzyTitle = toFuzzyCore(albumTitle)
-
-    if (targetArtist && (normalizedT.includes(targetArtist) || targetArtist.includes(normalizedT)) && (fuzzyT.includes(fuzzyTitle) || fuzzyTitle.includes(fuzzyT))) {
-      const u = urls[i]
-      logger.log(`[BEA Search] ✅ MATCH found in Standard Search: "${t}" (Fuzzy: ${fuzzyT}) -> ${u}`)
-      const mChart = String(u).match(/thechart\.php\?a=(\d+)/i)
-      if (mChart) return mChart[1]
-      const mAlbum = String(u).match(/album\.php\?id=(\d+)/i)
-      if (mAlbum) return mAlbum[1]
-    }
+  const asked = { title: albumTitle, artist: albumArtist }
+  for (const href of [...links].slice(0, HTML_SEARCH_PAGES_CHECKED)) {
+    // A page that could not be read is a failure (it used to be accepted unseen)
+    if (await pageIsTheAlbum(href, asked)) return absoluteUrl(href)
   }
-
-  // Try verifying candidates (Standard Flow)
-  for (const u of urls) {
-    if (await pageContainsArtistOrTitle(String(u), albumTitle, albumArtist)) {
-      const mChart = String(u).match(/thechart\.php\?a=(\d+)/i)
-      if (mChart) return mChart[1]
-      const mAlbum = String(u).match(/album\.php\?id=(\d+)/i)
-      if (mAlbum) return mAlbum[1]
-    }
-  }
-
-  // Fallback to HTML Search (Standard Flow)
-  const alt = await fetchAlbumPage(albumTitle, albumArtist)
-  if (alt) {
-    const mChart = String(alt).match(/thechart\.php\?a=(\d+)/i)
-    if (mChart) return mChart[1]
-    const mAlbum = String(alt).match(/album\.php\?id=(\d+)/i)
-    if (mAlbum) return mAlbum[1]
-  }
-
   return null
 }
 
+const suggestUrl = (text) => `https://www.besteveralbums.com/suggest.php?q=${encodeURIComponent(text)}`
+
 /**
- * Stage 2: Fuzzy/Robust Search fallbacks (Edge Case logic).
+ * Stage 1: the album search of the source, asked for "artist title".
  */
-async function _fuzzyFindAlbumId(albumTitle, albumArtist) {
+async function _standardFindAlbumId (albumTitle, albumArtist) {
+  const asked = { title: albumTitle, artist: albumArtist }
+  const res = await getPage(suggestUrl(`${albumArtist || ''} ${cleanTitle(albumTitle) || ''}`))
+  const suggestions = albumSuggestions(parseSuggest(res.data))
+
+  const byLabel = await pickSuggested(asked, suggestions)
+  if (byLabel) {
+    logger.log(`[BEA Search] match in the album search: "${byLabel.label}" -> ${byLabel.url}`)
+    return byLabel.id
+  }
+
+  // A label that cannot be read as "Title by Artist" says nothing: the page itself is asked.
+  // A label that can be read and is another album is not opened.
+  const { albumFromLabel } = await loadAlbumIdentity()
+  for (const suggestion of suggestions) {
+    if (albumFromLabel(suggestion.label).length > 0) continue
+    if (await pageIsTheAlbum(suggestion.url, asked)) return suggestion.id
+  }
+
+  const alt = await fetchAlbumPage(albumTitle, albumArtist)
+  return alt ? albumIdOf(alt) : null
+}
+
+/**
+ * Stage 2: the same search asked in other words (the artist alone, the title alone, the title
+ * without its subtitle). Other words widen what the source lists; what is accepted is still only
+ * the album asked for, whole title and artist.
+ */
+async function _fuzzyFindAlbumId (albumTitle, albumArtist) {
+  const asked = { title: albumTitle, artist: albumArtist }
   const prunedTitle = (albumTitle || '').split(':')[0].split(' - ')[0].trim()
-  const variations = [
-    albumArtist || '',                                     // Artist only
-    albumTitle || '',                                      // Original Title only
-    `${albumArtist || ''} ${albumTitle || ''}`,            // Full original string
-    prunedTitle,                                           // Pruned title (no subtitles)
-    `${albumArtist || ''} ${prunedTitle}`                  // Artist + Pruned title
-  ].filter(v => v.trim().length > 0)
+  const variations = [...new Set([
+    albumArtist || '',
+    albumTitle || '',
+    `${albumArtist || ''} ${albumTitle || ''}`,
+    prunedTitle,
+    `${albumArtist || ''} ${prunedTitle}`
+  ].map(text => text.trim()).filter(Boolean))]
 
   for (const qText of variations) {
-    const q = encodeURIComponent(qText)
-    const suggestUrl = `https://www.besteveralbums.com/suggest.php?q=${q}`
-    logger.log(`[BEA Fuzzy Fallback] Trying suggest for: "${qText}"`)
-    const res = await getPage(suggestUrl)
-    const { titles, urls } = parseSuggest(res.data)
-
-    const targetTitle = toFuzzyCore(albumTitle)
-    const targetArtist = normalizeArtist(albumArtist)
-
-    for (let i = 0; i < titles.length; i++) {
-      const t = String(titles[i] || '').toLowerCase()
-      const normalizedCandidate = toFuzzyCore(t)
-      const candidateArtist = normalizeArtist(t)
-
-      const artistMatch = !targetArtist || candidateArtist.includes(targetArtist) || targetArtist.includes(candidateArtist) || normalizedCandidate.includes(targetArtist)
-      const titleMatch = normalizedCandidate.includes(targetTitle) || targetTitle.includes(normalizedCandidate)
-
-      if (artistMatch && titleMatch) {
-        const u = urls[i]
-        logger.log(`[BEA Search] ✅ MATCH found in Fuzzy Fallback: "${t}" (Fuzzy: ${normalizedCandidate}) -> ${u}`)
-        const mChart = String(u).match(/thechart\.php\?a=(\d+)/i)
-        if (mChart) return mChart[1]
-        const mAlbum = String(u).match(/album\.php\?id=(\d+)/i)
-        if (mAlbum) return mAlbum[1]
-      }
+    logger.log(`[BEA Search] asking again as: "${qText}"`)
+    const res = await getPage(suggestUrl(qText))
+    const picked = await pickSuggested(asked, albumSuggestions(parseSuggest(res.data)))
+    if (picked) {
+      logger.log(`[BEA Search] match asking again: "${picked.label}" -> ${picked.url}`)
+      return picked.id
     }
   }
   return null
 }
 
-async function findAlbumId(albumTitle, albumArtist) {
-  // 1. Standard Pass (Original logic)
-  let id = await _standardFindAlbumId(albumTitle, albumArtist)
+async function findAlbumId (albumTitle, albumArtist) {
+  const id = await _standardFindAlbumId(albumTitle, albumArtist)
   if (id) return id
 
-  // 2. Fuzzy Fallback (Robust/Edge case logic)
-  logger.log(`[BEA Search] Standard search failed for "${albumTitle}". Trying fuzzy fallback.`)
+  logger.log(`[BEA Search] the album search has no "${albumTitle}". Asking again in other words.`)
   return await _fuzzyFindAlbumId(albumTitle, albumArtist)
 }
 
-async function findArtistPage(artistName) {
-  const q = encodeURIComponent(artistName)
-  const suggestUrl = `https://www.besteveralbums.com/suggest.php?q=${q}`
-  const res = await getPage(suggestUrl)
-  const { urls } = parseSuggest(res.data)
-  const candidates = []
-  for (const u of urls) {
-    if (!u) continue
-    const m = String(u).match(/thechart\.php\?b=(\d+)/i)
-    if (m) candidates.push({ id: m[1], url: String(u) })
-  }
-  const target = normalizeArtist(artistName)
-  for (const c of candidates) {
-    const artistUrl = c.url.startsWith('http') ? c.url : `https://www.besteveralbums.com${c.url}`
-    const r = await getPage(artistUrl)
-    const $ = loadHtml(r.data)
-    const header = (($('h1').text() || '') + ' ' + ($('title').text() || '')).toLowerCase()
-    const normalizedHeader = normalizeArtist(header)
-    if (normalizedHeader.includes(target)) return c.id
+/**
+ * The id of the artist's page: the result the source labels with the artist's own name. A longer
+ * name that contains it ("Page & Plant" for "Page") is another artist.
+ */
+async function findArtistPage (artistName) {
+  const res = await getPage(suggestUrl(artistName))
+  const { titles, urls } = parseSuggest(res.data)
+  const { sameArtist } = await loadAlbumIdentity()
+
+  for (let i = 0; i < urls.length; i++) {
+    const m = String(urls[i] || '').match(/thechart\.php\?b=(\d+)/i)
+    if (m && sameArtist(artistName, titles[i])) return m[1]
   }
   return null
 }
@@ -263,26 +216,19 @@ async function parseArtistDiscography(artistId) {
   const res = await getPage(url)
   const $ = loadHtml(res.data)
 
+  const seen = new Set()
   const albums = []
   $('a').each((i, el) => {
     const href = $(el).attr('href')
     const text = ($(el).text() || '').trim()
-    if (!href || !text) return
-    const mChart = href.match(/thechart\.php\?a=(\d+)/i)
-    const mAlbum = href.match(/album\.php\?id=(\d+)/i)
-    if (mChart) albums.push({ id: mChart[1], title: text, url: href.startsWith('http') ? href : `https://www.besteveralbums.com${href}` })
-    else if (mAlbum) albums.push({ id: mAlbum[1], title: text, url: href.startsWith('http') ? href : `https://www.besteveralbums.com${href}` })
+    // A link to a section of the album page ("#ratings": "76 (498 votes)") does not carry the title
+    if (!href || !text || href.includes('#')) return
+    const id = albumIdOf(href)
+    if (!id || seen.has(id)) return
+    seen.add(id)
+    albums.push({ id, title: text, url: absoluteUrl(href) })
   })
-
-  const seen = new Set()
-  const unique = []
-  for (const a of albums) {
-    if (!seen.has(a.id)) {
-      seen.add(a.id)
-      unique.push(a)
-    }
-  }
-  return { artistUrl: url, albums: unique }
+  return { artistUrl: url, albums }
 }
 
 async function parseChartRankingById(id) {
@@ -487,38 +433,39 @@ async function parseAlbumRanking(albumUrl) {
  *          every search and has no such album
  * @throws {UpstreamError} when any request to the source failed: it could not be known
  */
-async function getRankingForAlbum(albumTitle, albumArtist) {
-  if (albumArtist) {
-    const artistId = await findArtistPage(albumArtist)
-    if (artistId) {
-      const disc = await parseArtistDiscography(artistId)
-      const normalize = s => (s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, '').trim()
-      const target = normalize(albumTitle)
-      for (const a of disc.albums) {
-        if (normalize(a.title) === target) {
-          const chartMatch = a.url.match(/thechart\.php\?a=(\d+)/i)
-          if (chartMatch) {
-            const parsed = await parseChartRankingById(chartMatch[1])
-            return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId, evidence: parsed.evidence }
-          }
-          const albumMatch = a.url.match(/album\.php\?id=(\d+)/i)
-          if (albumMatch) {
-            const parsed = await parseAlbumRanking(a.url)
-            return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, evidence: parsed.evidence }
-          }
-        }
-      }
-    }
-  }
+const rankingOf = (parsed, albumId) => ({ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId, evidence: parsed.evidence })
+
+/** The album asked for among the albums the artist's own page lists, or null. */
+async function rankingFromArtistPage (albumTitle, albumArtist) {
+  const artistId = albumArtist ? await findArtistPage(albumArtist) : null
+  if (!artistId) return null
+
+  const { albums } = await parseArtistDiscography(artistId)
+  const { pickAlbum } = await loadAlbumIdentity()
+  // The page is the artist's own, so each link is an album of that artist: its text is the title
+  const picked = pickAlbum({ title: albumTitle, artist: albumArtist }, albums, a => ({ title: a.title, artist: albumArtist }))
+  if (!picked.found) return null
+
+  const chartMatch = picked.candidate.url.match(/thechart\.php\?a=(\d+)/i)
+  if (!chartMatch) return rankingOf(await parseAlbumRanking(picked.candidate.url), undefined)
+  const parsed = await parseChartRankingById(chartMatch[1])
+  return rankingOf(parsed, parsed.albumId)
+}
+
+/**
+ * The track ratings of the album asked for.
+ * @returns {Promise<Object|null>} null when the source answered every search and has no page that
+ *          is the album asked for; another album of the artist is never returned in its place (F55)
+ * @throws {UpstreamError} when a request to the source failed
+ */
+async function getRankingForAlbum (albumTitle, albumArtist) {
+  const fromArtistPage = await rankingFromArtistPage(albumTitle, albumArtist)
+  if (fromArtistPage) return fromArtistPage
+
   const id = await findAlbumId(albumTitle, albumArtist)
-  if (id) {
-    const parsed = await parseChartRankingById(id)
-    return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId, evidence: parsed.evidence }
-  }
-  const albumUrl = await fetchAlbumPage(albumTitle, albumArtist)
-  if (!albumUrl) return null
-  const parsed = await parseAlbumRanking(albumUrl)
-  return { provider: 'BestEverAlbums', providerType: 'community', referenceUrl: parsed.albumUrl, albumId: parsed.albumId || null, evidence: parsed.evidence }
+  if (!id) return null
+  const parsed = await parseChartRankingById(id)
+  return rankingOf(parsed, parsed.albumId)
 }
 
 /** @throws {UpstreamError} when the page could not be read */
