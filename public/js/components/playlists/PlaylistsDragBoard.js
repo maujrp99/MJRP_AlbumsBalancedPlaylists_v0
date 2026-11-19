@@ -6,6 +6,7 @@
  * Allows dragging tracks between playlists.
  */
 import Component from '../base/Component.js';
+import { escapeHtml } from '../../utils/stringUtils.js';
 import SeriesDragDrop from '../series/SeriesDragDrop.js';
 
 export default class PlaylistsDragBoard extends Component {
@@ -46,13 +47,13 @@ export default class PlaylistsDragBoard extends Component {
     renderPlaylistColumn(playlist) {
         const tracksHTML = playlist.tracks.map((track, index) => `
             <div class="track-card bg-gray-800 p-3 rounded mb-2 cursor-grab active:cursor-grabbing hover:bg-gray-750 transition-colors border border-gray-700 shadow-sm group" 
-                 data-id="${track.id}"
+                 data-id="${escapeHtml(track.id)}"
                  data-index="${index}">
                 
                 <div class="flex justify-between items-start">
                     <div>
-                        <div class="font-medium text-sm text-white line-clamp-1 group-hover:text-green-400 transition-colors">${track.title}</div>
-                        <div class="text-xs text-gray-400 line-clamp-1">${track.artist}</div>
+                        <div class="font-medium text-sm text-white line-clamp-1 group-hover:text-green-400 transition-colors">${escapeHtml(track.title)}</div>
+                        <div class="text-xs text-gray-400 line-clamp-1">${escapeHtml(track.artist)}</div>
                     </div>
                     <div class="text-xs font-mono text-gray-500">${this.formatDuration(track.durationMs)}</div>
                 </div>
@@ -60,17 +61,17 @@ export default class PlaylistsDragBoard extends Component {
                 <!-- Meta Badges -->
                 <div class="flex gap-1 mt-2">
                      ${track.isDeepCut ? '<span class="px-1.5 py-0.5 bg-blue-900/50 text-blue-300 text-[10px] rounded uppercase tracking-wider">Deep Cut</span>' : ''}
-                     ${track.rating ? `<span class="px-1.5 py-0.5 bg-gray-700 text-gray-300 text-[10px] rounded"><i class="fas fa-star text-yellow-500/50 mr-1"></i>${track.rating}</span>` : ''}
+                     ${track.rating ? `<span class="px-1.5 py-0.5 bg-gray-700 text-gray-300 text-[10px] rounded"><i class="fas fa-star text-yellow-500/50 mr-1"></i>${escapeHtml(track.rating)}</span>` : ''}
                 </div>
             </div>
         `).join('');
 
         return `
-            <div class="playlist-column min-w-[320px] w-[320px] bg-gray-900 rounded-xl flex flex-col max-h-full border border-gray-800 shadow-xl snap-center" data-playlist-id="${playlist.id}">
+            <div class="playlist-column min-w-[320px] w-[320px] bg-gray-900 rounded-xl flex flex-col max-h-full border border-gray-800 shadow-xl snap-center" data-playlist-id="${escapeHtml(playlist.id)}">
                 <!-- Header -->
                 <div class="p-4 border-b border-gray-800 bg-gray-900/50 sticky top-0 z-10 backdrop-blur rounded-t-xl">
                     <div class="flex justify-between items-center mb-1">
-                        <h3 class="font-bold text-white truncate" title="${playlist.name}">${playlist.name}</h3>
+                        <h3 class="font-bold text-white truncate" title="${escapeHtml(playlist.name)}">${escapeHtml(playlist.name)}</h3>
                         <span class="text-xs text-gray-400 font-mono">${this.formatDuration(playlist.totalDurationMs)}</span>
                     </div>
                     <div class="text-xs text-gray-500 flex justify-between">
@@ -80,7 +81,7 @@ export default class PlaylistsDragBoard extends Component {
                 </div>
 
                 <!-- Tracks Container -->
-                <div class="playlist-tracks p-3 overflow-y-auto flex-1 custom-scrollbar min-h-[100px]" data-playlist-id="${playlist.id}">
+                <div class="playlist-tracks p-3 overflow-y-auto flex-1 custom-scrollbar min-h-[100px]" data-playlist-id="${escapeHtml(playlist.id)}">
                     ${tracksHTML}
                 </div>
             </div>

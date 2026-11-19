@@ -89,18 +89,25 @@ export function generateAlbumKey(artist, album) {
  */
 export const SIMILARITY_THRESHOLD = 0.35
 
+const HTML_ESCAPES = Object.freeze({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })
+
 /**
- * Escapes HTML special characters to prevent XSS
- * @param {string} str - The string to escape
- * @returns {string} The escaped string
+ * The one way text from outside the code goes into an HTML string (F59, UAT-199): names of albums,
+ * tracks, artists, series and playlists, notes, messages of a provider, anything read from the URL.
+ *
+ * Pure, no DOM. Escapes & < > " and ', so the result is safe as element content and inside a QUOTED
+ * attribute value (title="${escapeHtml(name)}"). It is not enough for an attribute with no quotes,
+ * for a URL scheme (href="javascript:...") or for text placed inside a <script> or an inline handler.
+ *
+ * Use it only at the moment of writing HTML. A text node, textContent, setAttribute and SafeDOM
+ * children take the plain text: escaping there shows "&amp;" on screen (UAT-180).
+ *
+ * @param {*} value - null and undefined give ''; anything else is turned into its text first
+ * @returns {string}
  */
-export function escapeHtml(str) {
-    if (typeof str !== 'string') {
-        return str
-    }
-    const div = document.createElement('div')
-    div.textContent = str
-    return div.innerHTML
+export function escapeHtml(value) {
+    if (value === null || value === undefined) return ''
+    return String(value).replace(/[&<>"']/g, character => HTML_ESCAPES[character])
 }
 
 /**

@@ -8,6 +8,7 @@
  */
 
 import { getIcon } from '../Icons.js'
+import { escapeHtml } from '../../utils/stringUtils.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { getSeriesService } from '../../services/SeriesService.js'
 import { AlbumCascade } from '../common/AlbumCascade.js'
@@ -189,11 +190,11 @@ export class BlendSeriesSelector {
                 ${isSelected
                 ? 'border-orange-400 bg-orange-400/10 ring-1 ring-orange-400'
                 : 'border-white/10 bg-white/5 hover:border-orange-400/50 hover:bg-white/10'}"
-                data-series-id="${series.id}">
+                data-series-id="${escapeHtml(series.id)}">
                 <div class="flex items-center gap-3">
                     ${this.renderThumbnailsCascade(thumbnails)}
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-medium truncate ${isSelected ? 'text-orange-400' : ''}">${series.name}</h4>
+                        <h4 class="font-medium truncate ${isSelected ? 'text-orange-400' : ''}">${escapeHtml(series.name)}</h4>
                         <p class="text-xs text-muted">${albumCount} album${albumCount !== 1 ? 's' : ''}</p>
                     </div>
                     ${isSelected ? `<div class="text-orange-400">${getIcon('Check', 'w-5 h-5')}</div>` : ''}

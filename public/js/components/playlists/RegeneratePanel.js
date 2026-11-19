@@ -9,6 +9,7 @@
  */
 
 import { getIcon } from '../Icons.js'
+import { escapeHtml } from '../../utils/stringUtils.js'
 import { BlendRecipeCard } from '../blend/BlendRecipeCard.js'
 import { BlendIngredientsPanel } from '../blend/BlendIngredientsPanel.js'
 
@@ -49,7 +50,7 @@ export class RegeneratePanel {
 
     return `
       <div class="regenerate-panel bg-surface rounded-xl border border-white/10 mb-6" 
-           data-series-id="${seriesId}" 
+           data-series-id="${escapeHtml(seriesId)}" 
            data-batch-name="${this.escapeHtml(batchName)}">
         
         <!-- Collapsible Header -->
@@ -174,8 +175,6 @@ export class RegeneratePanel {
    */
   static escapeHtml(text) {
     if (!text) return ''
-    const div = document.createElement('div')
-    div.textContent = text
-    return div.innerHTML
+    return escapeHtml(text)
   }
 }

@@ -1,6 +1,7 @@
 
 import { SpotifyAuthService } from '../services/SpotifyAuthService.js'
 import { getIcon } from './Icons.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 import toast from './Toast.js'
 import { dialogService } from '../services/DialogService.js'
 
@@ -65,7 +66,7 @@ export class SpotifyConnectButton {
         </div>
         <div class="flex flex-col leading-none">
            <span class="text-[10px] uppercase tracking-wider text-[#1DB954]/70 font-bold">Connected</span>
-           <span class="text-xs font-bold text-[#1DB954] truncate max-w-[80px]">${userName}</span>
+           <span class="text-xs font-bold text-[#1DB954] truncate max-w-[80px]">${escapeHtml(userName)}</span>
         </div>
         <button id="spotifyLogoutBtn" class="ml-1 text-xs text-[#1DB954]/50 hover:text-white transition-colors" title="Disconnect">
           ${getIcon('X', 'w-3 h-3')}

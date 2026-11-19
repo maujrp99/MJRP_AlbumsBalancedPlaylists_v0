@@ -13,12 +13,12 @@ export function showVariantPickerModal(albumGroup, onConfirm) {
 
     const variantsHtml = albumGroup.variants.map((v, idx) => `
     <div class="variant-row flex items-center p-3 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/10 transition-all cursor-pointer group"
-         data-id="${v.id}"
+         data-id="${escapeHtml(v.id)}"
     >
         <div class="chk-container mr-4">
              <input type="checkbox" 
-                    id="chk-${v.id}" 
-                    value="${v.id}" 
+                    id="chk-${escapeHtml(v.id)}" 
+                    value="${escapeHtml(v.id)}" 
                     class="form-checkbox w-5 h-5 text-accent-primary rounded border-gray-600 bg-black/40 focus:ring-accent-primary focus:ring-offset-0 transition duration-150 ease-in-out"
                     ${idx === 0 ? 'checked' : ''} 
              />
@@ -29,14 +29,14 @@ export function showVariantPickerModal(albumGroup, onConfirm) {
                 ${escapeHtml(v.title)}
             </h4>
             <div class="flex items-center gap-2 mt-1">
-                <span class="text-xs text-gray-400 font-mono">${v.year}</span>
-                ${v.trackCount ? `<span class="text-xs bg-surface-light px-1.5 rounded text-gray-300">${v.trackCount} trk</span>` : ''}
+                <span class="text-xs text-gray-400 font-mono">${escapeHtml(v.year)}</span>
+                ${v.trackCount ? `<span class="text-xs bg-surface-light px-1.5 rounded text-gray-300">${escapeHtml(v.trackCount)} trk</span>` : ''}
             </div>
             ${getBadges(v.title)}
         </div>
 
         <div class="w-12 h-12 rounded bg-surface-dark overflow-hidden flex-shrink-0 border border-white/10 group-hover:border-accent-primary/50 transition-colors">
-            ${v.coverUrl ? `<img src="${v.coverUrl}" class="w-full h-full object-cover">` : ''}
+            ${v.coverUrl ? `<img src="${escapeHtml(v.coverUrl)}" class="w-full h-full object-cover">` : ''}
         </div>
     </div>
   `).join('');

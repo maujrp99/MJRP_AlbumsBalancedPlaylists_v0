@@ -1,4 +1,5 @@
 import { getIcon } from './Icons.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 
 /**
  * Autocomplete Component
@@ -105,13 +106,13 @@ export class Autocomplete {
         <div class="result-item p-3 hover:bg-white/10 cursor-pointer flex items-center gap-3 border-b border-white/5 last:border-0 transition-colors" data-index="${index}">
           <div class="w-10 h-10 flex-shrink-0 bg-gray-800 rounded overflow-hidden">
             ${coverUrl
-                        ? `<img src="${coverUrl}" alt="" class="w-full h-full object-cover" loading="lazy" />`
+                        ? `<img src="${escapeHtml(coverUrl)}" alt="" class="w-full h-full object-cover" loading="lazy" />`
                         : `<div class="w-full h-full flex items-center justify-center text-gray-600">${getIcon('Music', 'w-5 h-5')}</div>`
                     }
           </div>
           <div class="flex flex-col flex-1 min-w-0">
-            <span class="text-white font-medium truncate">${item.album}</span>
-            <span class="text-xs text-accent-primary truncate">${item.artist} <span class="text-gray-500">• ${item.year}</span></span>
+            <span class="text-white font-medium truncate">${escapeHtml(item.album)}</span>
+            <span class="text-xs text-accent-primary truncate">${escapeHtml(item.artist)} <span class="text-gray-500">• ${escapeHtml(item.year)}</span></span>
           </div>
           <div class="text-white/20 flex-shrink-0">
             ${getIcon('Plus', 'w-4 h-4')}

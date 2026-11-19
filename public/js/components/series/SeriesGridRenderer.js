@@ -13,6 +13,7 @@
  * - Lazy loading via appendItems()
  */
 import Component from '../base/Component.js';
+import { escapeHtml } from '../../utils/stringUtils.js';
 import {
     renderAlbumsGrid,
     renderExpandedList,
@@ -115,7 +116,7 @@ export default class SeriesGridRenderer extends Component {
                 const display = this._emptySeriesDisplay(group.series.id);
                 if (display === 'loading') {
                     html += `
-                    <div class="series-group-skeleton" data-series-id="${group.series.id}" data-series-index="${index}">
+                    <div class="series-group-skeleton" data-series-id="${escapeHtml(group.series.id)}" data-series-index="${index}">
                         ${SeriesSkeleton.render()}
                     </div>`;
                 } else if (display === 'failed') {
@@ -134,7 +135,7 @@ export default class SeriesGridRenderer extends Component {
             } else {
                 // Render Skeleton Placeholder for lazy loading
                 html += `
-                <div class="series-group-skeleton" data-series-id="${group.series.id}" data-series-index="${index}">
+                <div class="series-group-skeleton" data-series-id="${escapeHtml(group.series.id)}" data-series-index="${index}">
                     ${SeriesSkeleton.render()}
                 </div>`;
             }
@@ -181,14 +182,14 @@ export default class SeriesGridRenderer extends Component {
         return `
             <div class="series-load-failure flex items-center gap-3 mb-4 px-4 py-3 rounded-lg border border-red-500/30 bg-red-500/10 text-sm text-red-200" role="status">
                 <span>${count}.</span>
-                <button type="button" class="underline font-semibold hover:text-white" data-action="retry-series" data-series-id="${series.id}">Try again</button>
+                <button type="button" class="underline font-semibold hover:text-white" data-action="retry-series" data-series-id="${escapeHtml(series.id)}">Try again</button>
             </div>`;
     }
 
     /** A series whose albums all failed stays on screen, saying so. */
     _renderFailedSeriesGroup(series) {
         return `
-        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${series.id}">
+        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${escapeHtml(series.id)}">
             ${renderSeriesHeader(series, 0)}
             ${this._renderFailureNotice(series)}
         </div>`;
@@ -202,7 +203,7 @@ export default class SeriesGridRenderer extends Component {
         const shownAlbums = shouldCap ? albums.slice(0, INITIAL_LIMIT) : albums;
 
         let html = `
-        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${series.id}">
+        <div class="series-group rounded-xl border border-white/5 p-6 mb-8 bg-white/5" data-series-id="${escapeHtml(series.id)}">
             ${renderSeriesHeader(series, total)}
             ${this._renderFailureNotice(series)}
             ${wrapInGrid(renderAlbumsGrid(shownAlbums, context))}

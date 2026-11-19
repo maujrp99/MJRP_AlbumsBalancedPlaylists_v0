@@ -5,6 +5,7 @@
  */
 
 import { getIcon } from './Icons.js'
+import { escapeHtml } from '../utils/stringUtils.js'
 import toast from './Toast.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
@@ -224,7 +225,7 @@ export class SpotifyExportModal {
                     <input 
                         type="text" 
                         id="playlistNameInput"
-                        value="${this.playlistName}"
+                        value="${escapeHtml(this.playlistName)}"
                         class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-[#1DB954] transition-colors"
                         placeholder="Enter playlist name..."
                     />
@@ -289,7 +290,7 @@ export class SpotifyExportModal {
                         ${getIcon('Spotify', 'w-8 h-8 text-white')}
                     </div>
                     <h3 class="text-lg font-semibold text-white mb-1">${stateLabels[this.state]}</h3>
-                    <p class="text-sm text-white/60 truncate max-w-[280px] mx-auto">${this.progress.message}</p>
+                    <p class="text-sm text-white/60 truncate max-w-[280px] mx-auto">${escapeHtml(this.progress.message)}</p>
                 </div>
 
                 ${this.state === STATES.MATCHING ? `
@@ -323,7 +324,7 @@ export class SpotifyExportModal {
                         ${getIcon('Check', 'w-8 h-8 text-white')}
                     </div>
                     <h3 class="text-xl font-bold text-white mb-2">Export Complete! 🎉</h3>
-                    <p class="text-white/60">"${this.playlistName}" created successfully</p>
+                    <p class="text-white/60">"${escapeHtml(this.playlistName)}" created successfully</p>
                 </div>
 
                 <div class="bg-white/5 rounded-xl p-4 space-y-2">
@@ -345,7 +346,7 @@ export class SpotifyExportModal {
                         </summary>
                         <ul class="mt-2 space-y-1 text-white/60 max-h-32 overflow-y-auto pl-6">
                             ${this.notFoundTracks.slice(0, 10).map(t => `
-                                <li class="truncate">• ${t.artist} - ${t.title}</li>
+                                <li class="truncate">• ${escapeHtml(t.artist)} - ${escapeHtml(t.title)}</li>
                             `).join('')}
                             ${this.notFoundTracks.length > 10 ? `<li class="text-white/40">...and ${this.notFoundTracks.length - 10} more</li>` : ''}
                         </ul>
@@ -372,7 +373,7 @@ export class SpotifyExportModal {
                         ${getIcon('AlertTriangle', 'w-8 h-8 text-red-400')}
                     </div>
                     <h3 class="text-xl font-bold text-white mb-2">Export Failed</h3>
-                    <p class="text-white/60">${this.progress.message}</p>
+                    <p class="text-white/60">${escapeHtml(this.progress.message)}</p>
                 </div>
 
                 ${this.notFoundTracks.length > 0 ? `
@@ -380,7 +381,7 @@ export class SpotifyExportModal {
                         <p class="text-sm text-white/60 mb-2">${this.notFoundTracks.length} tracks not found:</p>
                         <ul class="space-y-1 text-sm text-white/60 max-h-32 overflow-y-auto">
                             ${this.notFoundTracks.slice(0, 5).map(t => `
-                                <li class="truncate">• ${t.artist} - ${t.title}</li>
+                                <li class="truncate">• ${escapeHtml(t.artist)} - ${escapeHtml(t.title)}</li>
                             `).join('')}
                         </ul>
                     </div>

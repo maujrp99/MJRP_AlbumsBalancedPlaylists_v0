@@ -5,6 +5,7 @@
  * Handles "Save All", "Export to Spotify", "Regenerate".
  */
 import Component from '../base/Component.js';
+import { escapeHtml } from '../../utils/stringUtils.js';
 
 export default class PlaylistExportToolbar extends Component {
     /**
@@ -30,7 +31,7 @@ export default class PlaylistExportToolbar extends Component {
                         <i class="fas fa-layer-group"></i>
                     </div>
                     <div>
-                        <h2 class="text-lg font-bold text-white leading-tight">${seriesName}</h2>
+                        <h2 class="text-lg font-bold text-white leading-tight">${escapeHtml(seriesName)}</h2>
                         <p class="text-xs text-green-400">Ready to Export</p>
                     </div>
                 </div>
