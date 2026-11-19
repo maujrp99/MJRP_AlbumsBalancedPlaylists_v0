@@ -21,6 +21,7 @@ import SeriesEventHandler from '../components/series/SeriesEventHandler.js';
 import { SeriesModalsManager } from './helpers/SeriesModalsManager.js';
 
 import { SafeDOM } from '../utils/SafeDOM.js';
+import Pager from '../components/ui/Pager.js';
 
 export default class SeriesView extends BaseView {
     constructor(controller) {
@@ -45,6 +46,7 @@ export default class SeriesView extends BaseView {
                 SafeDOM.div({ id: 'series-toolbar-mount' })
             ]),
             SafeDOM.div({ id: 'series-grid-mount' }),
+            SafeDOM.div({ id: 'series-pager-mount' }),
             SafeDOM.div({ id: 'emptyStateContainer' }),
             SafeDOM.footer({ className: 'view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6' }, [
                 SafeDOM.p({ className: 'last-update' }, `Last updated: ${new Date().toLocaleTimeString()}`)
@@ -82,6 +84,17 @@ export default class SeriesView extends BaseView {
             { view: this, controller: this.controller }
         );
         // FIX #152B: Progress bar removed - skeletons provide loading feedback
+        this.components.pager = new Pager({
+            container: document.getElementById('series-pager-mount'),
+            props: {
+                paging: null,
+                onPage: (page) => { this.controller.handlePage(page); window.scrollTo({ top: 0 }); },
+                onSize: (size) => this.controller.handlePageSize(size),
+                onMode: (mode) => this.controller.handlePagingMode(mode),
+                onMore: () => this.controller.handleShowMore()
+            }
+        });
+        this.components.pager.mount();
 
         // 2. Updater: Initialize
         this.updater = new SeriesViewUpdater(this.components);
@@ -157,9 +170,8 @@ export default class SeriesView extends BaseView {
             // ARCH-FIX: Ensure Toolbar is synced with Controller state (Filters, Active Series)
             this.updater?.updateToolbar(state, state.currentScope, this.controller);
 
-            // ARCH-FIX: Retrieve SORTED series list from controller state/helper
-            const allSeries = this.controller.getHeaderData().seriesList;
-            sortedSeriesList = allSeries;
+            // The series on screen: the ones that pass the filters, cut to the current page
+            sortedSeriesList = this.controller.getVisibleSeriesList();
         }
 
         const currentState = this.controller ? this.controller.getState() : {};
@@ -175,7 +187,11 @@ export default class SeriesView extends BaseView {
             isLoading,
             this.controller ? this.controller.getSeriesStates() : null
         );
-        this.updater?.updateEmptyState('emptyStateContainer', albums.length, isLoading);
+        const pageView = this.controller ? this.controller.getPageView() : null;
+        const isAllScope = currentScope === 'ALL';
+        this.components.pager?.update({ paging: isAllScope ? pageView?.paging : null });
+        const hasSeriesToShow = (pageView?.paging.totalSeries || 0) > 0;
+        this.updater?.updateEmptyState('emptyStateContainer', hasSeriesToShow ? 1 : albums.length, isLoading);
     }
 
     // New Method called by Controller

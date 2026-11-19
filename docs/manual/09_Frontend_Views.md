@@ -98,13 +98,16 @@ sequenceDiagram
         *   **Responsive**: Uses `flex-col md:flex-row` to stack on mobile.
         *   **Blend Button**: Direct link to `/blend`. Checks for album count on click (Toast feedback), no longer strictly disabled.
     *   `FilterToolbar` [NEW]: Generic, state-driven toolbar handling Filters (Artist, Year, Source), Search, and Sort.
+        *   **Filters read the series, not what is loaded** (v4.0): series, artist, year, source and search run over the album queries of every series (`models/seriesFilter.js`), so they answer the same on any page. The artist list comes from the series too.
+        *   **The search field is drawn once** (v4.0): the other controls are redrawn only when what they show changes. Before, the whole toolbar was redrawn on each key and the field lost the cursor.
         *   **Reusability**: Replaces the legacy `SeriesToolbar`, now shared with `SavedPlaylistsView`.
         *   **Sorting**: Supports "**Name (A-Z)**", "**Name (Z-A)**", "**# of Albums (↑)**", "**# of Albums (↓)**", "**Newest**", and "**Oldest**". Sorting logic is handled by `SeriesController.js`.
         *   **Labels**: Uses standardized labels like "**All Albums Series**" and "**All Playlist Series**" for consistency across views (Sprint 22).
     *   ~~`SeriesToolbar`~~: Removed (Sprint 22) - Replaced by `FilterToolbar`.
     *   ~~`SeriesProgressBar`~~: Removed (Sprint 21.5) - Skeletons provide visual feedback.
-    *   `SeriesEmptyState`: Renders when no albums match the current scope.
-    *   `SeriesGridRenderer`: Responsible for the main content layout (Grid/List).
+    *   `SeriesEmptyState`: Renders when the account has no series.
+    *   `SeriesGridRenderer`: Responsible for the main content layout (Grid/List). It draws each series by its load state: a grey block while it is loading, the albums when they are found, and the notice "N albums did not load · Try again" when some failed. A series whose albums all failed stays on screen with the notice.
+    *   `Pager` (v4.0): how many series are shown out of how many, the series per page (10 to 100), and the two ways to move on: numbered pages, or a list that grows at its end.
 *   **Helpers**:
     *   `SeriesViewUpdater` [NEW]: Handles DOM updates (Header, Grid, Toolbar) based on Controller state.
     *   `SeriesComponentFactory` [NEW]: Abstract Factory for instantiating Header, Toolbar, and Grid components with correct props.

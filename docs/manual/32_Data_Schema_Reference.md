@@ -7,7 +7,7 @@ The core domain entity representing a music album. The frontend model bifurcates
 
 ```javascript
 {
-  "id": "string (UUID or SpotifyID)",
+  "id": "string (slug: artist_title)",
   "title": "string",
   "artist": "string",
   "year": "string | number", 
@@ -73,22 +73,38 @@ Individual song entity.
 }
 ```
 
-## 3. Series Object (`Series.js`)
-A collection of albums (Discography) with curation scope.
+## 3. Series document
+A series is a named list of album queries. Path: `artifacts/mjrp-albums/users/{uid}/curator/data/series/{seriesId}`. The albums themselves are not stored: they are resolved from the queries when the screen loads.
 
 ```javascript
 {
-  "id": "string (UUID)",
-  "name": "string (e.g., 'Pink Floyd Studio')",
-  "type": "string ('artist' | 'curated')",
-  "albumIds": ["string"],
+  "name": "string (e.g., 'Robert Plant 80-90s')",
+  "albumQueries": [
+    // either plain text: "Artist - Title"
+    // or the album the person chose in Home:
+    {
+      "artist": "string",
+      "title": "string",              // some older entries use "album"
+      "year": "string",
+      "coverUrl": "string",
+      "appleMusicId": "string",       // the chosen edition; the load uses it first
+      "facts": {                      // v4.0, written by the app after the album loads
+        "year": "number | null",
+        "sources": { "acclaim": "boolean", "popularity": "boolean" },
+        "checkedAt": "number (ms)"
+      }
+    }
+  ],
+  "status": "string",
+  "notes": "string",
   "createdAt": "timestamp",
-  "settings": {
-    "excludeLive": "boolean",
-    "excludeCompilations": "boolean"
-  }
+  "updatedAt": "timestamp"
 }
 ```
+
+*   `facts` is a copy for the filters; the loaded album is the authority. A query without `facts` has not been checked yet.
+*   The person's own track ranking is not in the series: it lives in `users/{uid}/albumRankings/{albumId}`.
+*   The album id is the slug `artist_title` (`api/client.js`, `generateAlbumId`), not a UUID or a Spotify id.
 
 ## 4. Ranking Object (`rankingConsolidated`)
 The source-of-truth for track acclaim, merged from multiple sources.

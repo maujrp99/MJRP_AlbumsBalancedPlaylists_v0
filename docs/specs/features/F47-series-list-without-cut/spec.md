@@ -1,19 +1,11 @@
 ---
-status: Draft
+status: In Progress
 lane: fast
 solution_type: fix
 imports: []
 fixes: ["UAT-24"]
 planned_for: "[[ROADMAP#^REL-39]]"
 ---
-<!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
-     status: In progress while the cycle runs; Done when every task is closed and every REQ has verified_by.
-     imports: the requirement nodes this feature delivers (1..n), each Ready, each in no other open feature.
-     A transversal NFR node constrains every feature (review it with constitution.md), so a product feature does not import
-     it. The exception is an engineering feature (a refactor planned by an ADR, infrastructure): `solution_type: fix`, `fixes: [UAT-xx]` of the
-     debt issues (required: the card takes its release from them), and `imports:` only the NFR it serves, named by a
-     `violates:: [[NFR-xx-<slug>]]` in the Problem Statement — no story invented for it. A debt against a constitution
-     article imports nothing and says `violates:: [[constitution#N]]` of an article that exists. -->
 # Feature F47: A lista de séries mostra todas as séries, sem o corte em 20
 **Approved**: not a gate (via rápida; o MJRP julga)
 
@@ -28,32 +20,32 @@ planned_for: "[[ROADMAP#^REL-39]]"
 Quem tem mais de 20 séries só vê as 20 atualizadas mais recentemente; a 21ª em diante some de todas as listas, sem aviso. Parece perda de dados.
 
 ## Requirements
-<!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here.
-     Functional and non-functional (performance, security, accessibility) alike are REQ-xx. -->
-- [REQ-01] «a escrever: o que o sistema faz — O QUÊ, nunca COMO» · fixes UAT-24
-  verified_by:: «a escrever: teste ou [[uat#^UAT-01]] — obrigatório antes do Done»
+- [REQ-01] A lista de séries traz todas as séries da conta, sem limite de quantidade. · fixes UAT-24
+  verified_by:: `test/services/SeriesService.test.js`, `reports/evidence/F47-series-list-without-cut/F47-probe-2026-11-19.json`
+- [REQ-02] Uma série sem data de atualização também aparece na lista, por último. · fixes UAT-24
+  verified_by:: `test/services/SeriesService.test.js`
+- [REQ-03] A ordem da lista continua a mesma: a série atualizada mais recentemente vem primeiro. · fixes UAT-24
+  verified_by:: `test/services/SeriesService.test.js`
 
 ## Observable States
-<!-- What the imported nodes point_to: the screen state in info-arch.md (the prototype the human judged —
-     PRINCIPLES.md §I.13) or the behavior state in behavior.md. N/A only if the nodes point to none. -->
-«a escrever: o estado de tela do info-arch.md ou de comportamento do behavior.md que os nós apontam — ou N/A se não apontam nenhum»
+N/A: a feature não importa nenhum requisito (conserto da issue UAT-24), então nenhum estado é apontado. Nenhum estado novo de tela: a lista só deixou de ser cortada.
 
 ## Prototype Parity (if the feature touches a screen)
-<!-- What the approved visual reference holds across every screen and no node carries: the design system's tokens and fonts,
-     the shared components, the shell (brand, menu order, context bar, the behaviour every card has), the
-     responsiveness (widths, tables, drawers). The product's FIRST screen feature ports the design system's CSS, fonts
-     and components. A cut or swap of anything of the design system points to its recorded decision. -->
-- Prototype: «a escrever: design/inception/<nome>-vN.html aprovado»
-- Transversal layer touched: «a escrever: tokens e fontes · componentes compartilhados · shell · responsividade»
-- Design-system cuts or swaps: «a escrever: none, ou a decisão que registra»
+- Prototype: none. A tela passou a mostrar mais séries (45 em vez de 20, na conta do MJRP), sem protótipo. Decidido pelo agente, sob a ordem do MJRP de consertar rápido e documentar depois («go for it, faz a F47 agora», 2026-11-19).
+- Transversal layer touched: nenhuma. Nenhum componente, token ou fonte mudou.
+- Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
 ## Success Criteria
-<!-- One measurable item per acceptance criterion of the imported nodes. -->
-- «a escrever: um item mensurável e testável por critério de aceite dos nós importados»
+- Na conta do MJRP, com 45 séries gravadas: a tela de álbuns mostra as 45. Antes mostrava 20 e escondia 25. Medido em 2026-11-19.
+- As quatro séries com Robert Plant, que estavam entre as escondidas, aparecem.
+- Nada foi perdido nem regravado: o conserto só muda a leitura.
+- Com as 45 séries, os 217 álbuns pedidos se resolvem em 31 segundos, com os dados do navegador apagados: 213 achados e 4 com aviso de falha.
 
 ## Out of Scope
-- «a escrever: o que esta feature não faz»
+- Mostrar as séries em páginas. Com 45 séries numa tela só, a paginação virou outra feature (F51), feita em seguida: hoje a tela de álbuns mostra 10 séries por página, de 45.
+- Os 4 álbuns que não carregaram na medição. Um deles é o pedido gravado com «&amp;» no lugar de «&» (UAT-180, aberta). Os outros três a loja de música não tem, e a segunda fonte está fora do ar em produção.
+- Avisar quando há mais séries do que a tela mostra. Deixou de ser preciso: a lista vem inteira.
 
 ## Open Questions
-<!-- ALL resolved before Plan. -->
-- «a escrever: pergunta — resposta, quem, quando; ou "Nenhuma." se todas estão resolvidas»
+- O seletor de séries mostra as 45? — não conferido no navegador. Ele lê a mesma lista que a tela de álbuns, mas a medição só contou as séries da tela. Fica como tarefa aberta.
+- Uma conta com centenas de séries lê todas de uma vez. Precisa de teto? — não decidido; para a conta de hoje (45 séries) a leitura é uma só e rápida. Decide o MJRP se a conta crescer.

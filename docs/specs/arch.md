@@ -370,6 +370,30 @@ Decisão do MJRP (2026-11-19): paginação por série na tela de álbuns, e os f
 
 **Fatia:** F51, depois da F46 (que entrega o observador de visibilidade de que a rolagem precisa). A mudança de dado (o bloco `facts` em `albumQueries`) vai para o `data-model.md` junto com o código.
 
+### 17. O que foi construído, e onde difere do proposto (2026-11-19 12:42)
+
+Construído nos ramos `fix/f45-albums-load-in-parallel`, `fix/f47-series-list-without-cut` e `fix/f51-album-filters-search-and-paging` (empilhados; ainda fora da `main`). Onde esta seção contradiz as anteriores, vale esta, porque descreve o código.
+
+| Ponto | Proposto | Construído | Por quê |
+|---|---|---|---|
+| Buscas simultâneas no catálogo | 6 | 3 | com 6 a Apple Music respondeu 429 (medido) |
+| Fontes rápidas (ranking pessoal, popularidade guardada) | na fila do catálogo | fila própria, 6 por vez | disputavam as vagas da busca e a carga de 217 álbuns ficou lenta (medido) |
+| Notas simultâneas | 4, depois 2 | 4 | com 2, 217 álbuns levavam cerca de 10 minutos; com 4 o servidor responde em 7 s por busca em vez de 5 (medido) |
+| Como achar o álbum | busca por nome | pela edição escolhida (`appleMusicId` do pedido), e por nome só quando ela não existe mais (404) ou o pedido é texto | 196 de 217 pedidos trazem a edição escolhida, que a carga antiga ignorava |
+| Falha da Apple Music | cai na segunda fonte | nova tentativa com espera crescente; a segunda fonte (IA paga) só quando a Apple não tem o álbum | a segunda fonte custa, e em produção responde 402 |
+| Aviso de álbum que não carregou | F46 | F45 | a grade desenhada pelo estado já o pedia |
+| Observador de visibilidade por série | F46 | não construído | a paginação por série (F51) limita o que está na tela; a lista que cresce usa um sentinela no paginador |
+| Ordem das fatias | F45, F46, F48, F51 | F45, F47, F51; F46 e F48 em parte | a F47 passou à frente quando o MJRP notou que via 20 de 45 séries |
+| Escopo «uma série» × «todas» | gerações distintas | igual; trocar de página dentro de «todas» **reconcilia** na mesma geração e solta as séries que saíram da tela (voltam do guardado) | simples e suficiente para um usuário |
+| Filtro «My Ranking» | uma leitura da coleção de rankings | só os álbuns carregados | não construído ainda |
+| Aviso «N pedidos ainda não conferidos» no filtro por fonte | na tela | não construído (`countUnchecked` existe e não é usado) | fica para o fecho da F51 |
+| `stores/albums.js` como estado puro | sai o Firestore da store | a store é preenchida por projeção, mas ainda guarda `saveToFirestore` e `loadFromFirestore`, usados pelo «Refetch» | F48 |
+| ADR | depois da aprovação | não escrita | pendente |
+
+**Funções de aptidão em `npm test`** (`test/architecture/albumLoadBoundaries.test.js`, 9 testes): a fila não importa nada do projeto; as regras de estado, filtro, paginação e fatos importam só outros modelos; a store de carga não importa serviço, API, repositório, cache nem Firestore; o serviço de carga e o de fatos só alcançam o exterior pelo que recebem; os adaptadores não importam Firestore, store nem tela; só o arquivo de composição liga a carga às fontes reais; a tela não importa o serviço de carga nem o cliente de API; o controlador não carrega álbum; e o Firestore fora de `repositories/` está numa lista de três exceções conhecidas (`services/PlaylistsService.js`, `stores/albums.js`, `views/SaveAllView.js`, issue UAT-14) que só pode encolher.
+
+**Sem teste automático ainda:** `SeriesController`, `SeriesGridRenderer`, `Pager` e `FilterToolbar`; a prova deles é a conferência no navegador registrada em `reports/evidence/`.
+
 ### 14. O que vai para o ADR
 
 A preencher depois da crítica e da aprovação.

@@ -14,16 +14,16 @@ Guarda a **lista de pedidos** de álbuns, não os álbuns (Apêndice B §2). O s
 |-------|------|----------|-------------|
 | id | string (id automático; também gravado como campo no upsert) | ✅ | identificador da série |
 | name | string | ✅ | nome da série |
-| albumQueries | lista de texto ou de objetos `{artist, title, ...}` | ✅ | os pedidos de álbum que o carregamento resolve (quatro formatos aceitos; TBD o detalhe de cada um). **O array inteiro é regravado a cada inclusão** (`SeriesService.js:176-180`, `updateSeries(seriesId, { albumQueries })`): duas abas ou aparelhos editando a mesma série, o último a gravar vence |
+| albumQueries | lista de texto («Artista - Título») ou de objetos `{artist, title ou album, year, coverUrl, appleMusicId, facts}` | ✅ | os pedidos de álbum que o carregamento resolve. `appleMusicId` é a edição que a pessoa escolheu na Home, e a carga a usa primeiro. `facts` (desde a v4.0) é `{year, sources: {acclaim, popularity}, checkedAt}`: o que os filtros leem sem carregar o álbum; é gravado pelo app quando a série termina de carregar, só quando mudou (`services/series/SeriesFactsService.js`, `SeriesRepository.saveAlbumFacts`, que não mexe em `updatedAt`). **O array inteiro é regravado a cada inclusão e a cada gravação de `facts`**: duas abas ou aparelhos editando a mesma série, o último a gravar vence |
 | status | string (padrão `'pending'`) | ✅ | estado de carga da série |
 | notes | string | ❌ | notas livres |
 | sourceType | string (`'manual'`, `'inventory'`) | ❌ | só nos caminhos de migração e em `createFromInventory` |
 | createdAt | Timestamp (servidor) | ✅ | a data enviada pelo cliente é sobrescrita (`BaseRepository.js:161`) |
-| updatedAt | Timestamp | ❌ | ordena a lista de séries; documento sem ele não aparece na consulta `orderBy('updatedAt', 'desc')` com `limit 20` (`SeriesService.js:140-143`); `createSeries` o grava, os caminhos de migração e `createFromInventory` não |
+| updatedAt | Timestamp | ❌ | a data da última edição feita pela pessoa; a lista de séries é ordenada por ele no navegador, com a série sem data por último (`SeriesService.js`, `loadFromFirestore`); `createSeries` o grava, os caminhos de migração e `createFromInventory` não |
 | _schemaVersion | número `1` | ✅ | versão do esquema; o `update` direto não a grava |
 | _migratedFrom, _migrationDate | string, data | ❌ | só em série vinda de migração |
 
-**Corte de 20 séries.** A lista de séries do usuário é lida com `limit 20` e sem paginação (`SeriesService.js:140-143`): quem tem 21 séries deixa de ver a 21ª, e nada na tela avisa; a série sem `updatedAt` também não aparece. É o comportamento do código; se o teto de 20 é limite de produto ou acidente, é decisão do MJRP.
+**Lista de séries inteira (desde a v4.0).** A lista é lida sem limite e sem `orderBy` na consulta (o Firestore deixa de fora o documento que não tem o campo ordenado). Até a v3.x era lida com `limit 20`: quem tinha 21 séries ou mais deixava de ver o resto, sem aviso (issue UAT-24; uma conta real tinha 45 séries e via 20).
 
 ### Playlist (playlist gerada) - `.../series/{seriesId}/playlists/{playlistId}`
 Não existe documento de "lote": o lote é o campo `batchName` repetido em cada playlist (Apêndice D §2).

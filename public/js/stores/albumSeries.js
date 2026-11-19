@@ -46,6 +46,15 @@ export class AlbumSeriesStore {
         this.notify()
     }
 
+    /** Replace the album queries of a series, leaving its dates as they are (facts the app learned). */
+    setAlbumQueries(id, albumQueries) {
+        const index = this.series.findIndex(s => s.id === id)
+        if (index === -1) return
+        this.series[index] = { ...this.series[index], albumQueries }
+        if (this.activeSeries?.id === id) this.activeSeries = this.series[index]
+        this.notify()
+    }
+
     removeSeriesById(id) {
         this.series = this.series.filter(s => s.id !== id)
         if (this.activeSeries?.id === id) {

@@ -19,7 +19,7 @@
 **Role**: Static Footer & Debug Tools.
 **Logic**:
 *   Displays dynamic Year and Last Updated timestamp.
-*   **Clear Cache**: Hidden functionality to purge `localStorage` for debugging.
+*   **Clear Cache**: runs `localStorage.clear()` and reloads. It does **not** clear the album cache, which lives in IndexedDB (`mjrp-cache`) and in memory (issue UAT-177).
 
 ### 1.3 `Breadcrumb.js`
 **Role**: Dynamic Path Visualizer.
@@ -73,7 +73,7 @@
 ### 3.2 `GlobalProgress.js`
 **Role**: "YouTube-style" Top Loading Bar.
 **Logic**:
-*   **Reference Counting**: Tracks `activeLoaders` count. Only hides when count reaches 0.
+*   **Reference Counting**: Tracks `activeLoaders` count. Only hides when count reaches 0. Used by `SeriesService`; the album load does not use it.
 *   **Z-Index**: `z-[9999]` ensures visibility over all modals and overlays.
 
 ### 3.3 `InlineProgress.js`

@@ -24,13 +24,13 @@
 15. `public/js/views/BlendingMenuView.js` (Analysis: `manual/09_Frontend_Views.md`)
 16. `public/js/views/SeriesView.js` (Analysis: `manual/09_Frontend_Views.md`)
 17. `public/js/views/renderers/InventoryGridRenderer.js` (Analysis: `manual/09_Frontend_Views.md`)
-18. `public/js/strategies/ViewModeStrategy.js` (Analysis: `manual/09_Frontend_Views.md`)
+18. `public/js/views/strategies/ViewModeStrategy.js` (Analysis: `manual/09_Frontend_Views.md`)
 19. `public/js/stores/albums.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
 20. `public/js/services/SpotifyService.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
 21. `public/js/services/AuthService.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
 22. `public/js/models/Album.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
 23. `public/js/models/AlbumIdentity.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
-24. `public/js/api.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
+24. `public/js/api/client.js` (Analysis: `manual/19_Frontend_JS_Root.md`)
 25. `docs/manual/01_System_Architecture.md` (System Map)
 26. `docs/manual/00_Dir_File_Structure_Map.md` (File Map)
 
@@ -54,28 +54,28 @@
 41. `public/js/components/ViewAlbumModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
 
 ### Batch 2: Feature Components (Subdirectories)
-42. `public/js/components/blend/BlendFlavorCard.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-43. `public/js/components/blend/BlendIngredientsPanel.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-44. `public/js/components/blend/BlendSeriesSelector.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-45. `public/js/components/inventory/InventoryGrid.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
+42. `public/js/components/blend/BlendRecipeCard.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+43. `public/js/components/blend/BlendIngredientsPanel.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+44. `public/js/components/blend/BlendSeriesSelector.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+45. `public/js/components/inventory/InventoryGrid.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
 46. `public/js/components/inventory/InventoryItemCard.js` (Missing / Superseded)
 47. `public/js/components/inventory/InventoryStats.js` (Missing / Superseded)
-48. `public/js/components/playlists/PlaylistExportToolbar.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-49. `public/js/components/playlists/PlaylistGrid.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-50. `public/js/components/playlists/PlaylistsDragBoard.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-51. `public/js/components/playlists/PlaylistsDragHandler.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-52. `public/js/components/playlists/PlaylistsGridRenderer.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-53. `public/js/components/playlists/RegeneratePanel.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-54. `public/js/components/playlists/SavedPlaylistsController.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-55. `public/js/components/playlists/TrackItem.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-56. `public/js/components/series/ArtistScanner.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-57. `public/js/components/series/SeriesDragDrop.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-58. `public/js/components/series/SeriesEditModal.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-59. `public/js/components/series/SeriesEventHandler.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-60. `public/js/components/series/SeriesFilterBar.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-61. `public/js/components/series/SeriesGridRenderer.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-62. `public/js/components/series/SeriesHeader.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-63. `public/js/components/series/SeriesModals.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
+48. `public/js/components/playlists/PlaylistExportToolbar.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+49. `public/js/components/playlists/PlaylistGrid.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+50. `public/js/components/playlists/PlaylistsDragBoard.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+51. `public/js/components/playlists/PlaylistsDragHandler.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+52. `public/js/components/playlists/PlaylistsGridRenderer.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+53. `public/js/components/playlists/RegeneratePanel.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+54. `public/js/components/playlists/SavedPlaylistsController.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+55. `public/js/components/playlists/TrackItem.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+56. `public/js/components/series/ArtistScanner.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+57. `public/js/components/series/SeriesDragDrop.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+58. `public/js/components/series/SeriesEditModal.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+59. `public/js/components/series/SeriesEventHandler.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+60. `public/js/components/series/SeriesFilterBar.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+61. `public/js/components/series/SeriesGridRenderer.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+62. `public/js/components/series/SeriesHeader.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+63. `public/js/components/series/SeriesModals.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
 64. `public/js/components/ui/FilterToolbar.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
 
 ### Navigation & UI & Common
@@ -90,16 +90,16 @@
 73. `public/js/components/navigation/SeriesDropdown.js` (Missing / Superseded)
 74. `public/js/components/shared/ContextMenu.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
 75. `public/js/components/shared/SkeletonLoader.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
-76. `public/js/components/search/DiscographyToolbar.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
-77. `public/js/components/search/VariantPickerModal.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
+76. `public/js/components/search/DiscographyToolbar.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+77. `public/js/components/search/VariantPickerModal.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
 
 ### Search & Ranking & Home
-78. `public/js/components/ranking/TracksRankingComparison.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
-79. `public/js/components/ranking/TracksTable.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
-80. `public/js/components/ranking/TracksTabs.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
-81. `public/js/components/ranking/UserRankModal.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
-82. `public/js/components/home/SearchController.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
-83. `public/js/components/home/StagingAreaController.js` (Analysis: `manual/16_Frontend_Search_Ranking.md`)
+78. `public/js/components/ranking/TracksRankingComparison.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+79. `public/js/components/ranking/TracksTable.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+80. `public/js/components/ranking/TracksTabs.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+81. `public/js/components/ranking/UserRankModal.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+82. `public/js/components/home/SearchController.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+83. `public/js/components/home/StagingAreaController.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
 
 ## 5. Service & Logic Audit 
 
@@ -114,24 +114,24 @@
 91. `public/js/services/PlaylistPersistenceService.js` (Analysis: `manual/17_Frontend_Services.md`)
 92. `public/js/services/SavedPlaylistsFilterService.js` (Analysis: `manual/17_Frontend_Services.md`)
 93. `public/js/services/SeriesFilterService.js` (Analysis: `manual/17_Frontend_Services.md`)
-94. `public/js/utils/FilterUtils.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
+94. `public/js/utils/FilterUtils.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
 95. `public/js/helpers/BEAEnrichmentHelper.js` (Analysis: `manual/17_Frontend_Services.md`)
 96. `public/js/services/SpotifyAuthService.js` (Analysis: `manual/17_Frontend_Services.md`)
 97. `public/js/services/SpotifyEnrichmentService.js` (Analysis: `manual/17_Frontend_Services.md`)
 
 ### Batch 4: Server Logic & Utils
-98. `server/lib/aiClient.js` (Analysis: `manual/04_Server_Logic.md`)
-99. `server/lib/fetchRanking.js` (Analysis: `manual/04_Server_Logic.md`)
-100. `server/lib/logger.js` (Analysis: `manual/04_Server_Logic.md`)
-101. `server/lib/normalize.js` (Analysis: `manual/04_Server_Logic.md`)
-102. `server/lib/prompts.js` (Analysis: `manual/04_Server_Logic.md`)
-103. `server/lib/schema.js` (Analysis: `manual/04_Server_Logic.md`)
-104. `server/lib/validateSource.js` (Analysis: `manual/04_Server_Logic.md`)
-105. `server/lib/services/spotifyPopularity.js` (Analysis: `manual/04_Server_Logic.md`)
+98. `server/lib/aiClient.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+99. `server/lib/fetchRanking.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+100. `server/lib/logger.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+101. `server/lib/normalize.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+102. `server/lib/prompts.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+103. `server/lib/schema.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+104. `server/lib/validateSource.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+105. `server/lib/services/spotifyPopularity.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
 
 ### Batch 5: Legacy & Deprecated
-106. `public/legacy/AlbumsView_DEPRECATED.js` (Analysis: `manual/25_Legacy_Analysis.md`)
-107. `public/legacy/hybrid-curator.html` (Analysis: `manual/25_Legacy_Analysis.md`)
+106. `public/legacy/AlbumsView_DEPRECATED.js` (Analysis: `manual/98_Archived_Legacy_Analysis.md`)
+107. `public/legacy/hybrid-curator.html` (Analysis: `manual/98_Archived_Legacy_Analysis.md`)
 
 ### Batch 6: Algorithms & Strategies
 108. `public/js/algorithms/BaseAlgorithm.js` (Analysis: `manual/18_Frontend_Logic_Core.md`)
@@ -165,14 +165,14 @@
 133. `public/js/stores/UserStore.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
 
 ### Batch 8: Infrastructure
-134. `public/js/workers/search.worker.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
-135. `public/js/utils/SafeDOM.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
-136. `public/js/utils/stringUtils.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
-137. `public/js/utils/SvgGenerator.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
-138. `public/js/helpers/dom-helpers.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
-139. `public/js/transformers/SpotifyTransformer.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
-140. `public/js/transformers/PlaylistTransformer.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
-141. `public/js/utils/VirtualScrollObserver.js` (Analysis: `manual/28_Frontend_Infra_Utilities.md`)
+134. `public/js/workers/search.worker.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
+135. `public/js/utils/SafeDOM.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
+136. `public/js/utils/stringUtils.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
+137. `public/js/utils/SvgGenerator.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
+138. `public/js/helpers/dom-helpers.js` (does not exist in the code)
+139. `public/js/transformers/SpotifyTransformer.js` (does not exist in the code)
+140. `public/js/transformers/PlaylistTransformer.js` (does not exist in the code)
+141. `public/js/utils/VirtualScrollObserver.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
 
 ### Batch 9: Frontend Views & Renderers 
 142. `public/js/views/SaveAllView.js` (Analysis: `manual/10_Frontend_Renderers.md`)
@@ -248,10 +248,10 @@
 ## 7. Sprint 19 Refactoring 
 201. `public/js/services/PlaylistsService.js` (Analysis: `manual/17_Frontend_Services.md`)
 202. `public/js/services/SeriesService.js` (Analysis: `manual/17_Frontend_Services.md`)
-203. `public/js/components/playlists/SavedPlaylistActions.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-204. `public/js/components/playlists/SavedPlaylistCard.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-205. `public/js/components/playlists/SavedPlaylistRow.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-206. `public/js/components/series/SeriesEmptyState.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
+203. `public/js/components/playlists/SavedPlaylistActions.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+204. `public/js/components/playlists/SavedPlaylistCard.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+205. `public/js/components/playlists/SavedPlaylistRow.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+206. `public/js/components/series/SeriesEmptyState.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
 207. `public/js/views/helpers/SeriesGridHelper.js` (Analysis: `manual/09_Frontend_Views.md`)
 208. `public/js/views/helpers/SeriesViewHandlers.js` (Analysis: `manual/09_Frontend_Views.md`)
 209. `docs/decisions/0017-pure-state-stores.md` (Analysis: `manual/01_System_Architecture.md`)
@@ -259,10 +259,28 @@
 211. `public/js/services/infra/StorageService.js` (Analysis: `manual/17_Frontend_Services.md`)
 212. `public/js/services/playlists/PlaylistHistoryService.js` (Analysis: `manual/17_Frontend_Services.md`)
 213. `public/js/services/auth/UserSyncService.js` (Analysis: `manual/17_Frontend_Services.md`)
-214. `public/js/components/playlists/PlaylistDetailsModal.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
-215. `public/js/components/playlists/SavedSeriesGroup.js` (Analysis: `manual/14_Frontend_Components_Features.md`)
+214. `public/js/components/playlists/PlaylistDetailsModal.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+215. `public/js/components/playlists/SavedSeriesGroup.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
 216. `public/js/views/helpers/SeriesModalsManager.js` (Analysis: `manual/09_Frontend_Views.md`)
-217. `public/js/views/helpers/SeriesViewMounter.js` (Analysis: `manual/09_Frontend_Views.md`)
+217. `public/js/views/helpers/SeriesViewMounter.js` (does not exist in the code)
+
+## 8. v4.0 - Album load, filters and paging (2026-11)
+1. `public/js/utils/TaskQueue.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
+2. `public/js/models/albumLoadState.js` (Analysis: `manual/08_Frontend_Models.md`)
+3. `public/js/models/albumQuery.js` (Analysis: `manual/08_Frontend_Models.md`)
+4. `public/js/models/cloneAlbum.js` (Analysis: `manual/08_Frontend_Models.md`)
+5. `public/js/models/seriesFilter.js` (Analysis: `manual/09_Frontend_Views.md`)
+6. `public/js/models/paging.js` (Analysis: `manual/09_Frontend_Views.md`)
+7. `public/js/models/albumFacts.js` (Analysis: `manual/32_Data_Schema_Reference.md`)
+8. `public/js/stores/albumLoad.js` (Analysis: `manual/08_Frontend_Models.md`)
+9. `public/js/services/albums/AlbumLoadService.js` (Analysis: `manual/08_Frontend_Models.md`)
+10. `public/js/services/albums/albumLoading.js` (Analysis: `manual/08_Frontend_Models.md`)
+11. `public/js/services/albums/adapters/CatalogAdapter.js` (Analysis: `manual/08_Frontend_Models.md`)
+12. `public/js/services/albums/adapters/enrichers.js` (Analysis: `manual/08_Frontend_Models.md`)
+13. `public/js/services/albums/adapters/AlbumCacheAdapter.js` (Analysis: `manual/08_Frontend_Models.md`)
+14. `public/js/services/series/SeriesFactsService.js` (Analysis: `manual/17_Frontend_Services.md`)
+15. `public/js/components/ui/Pager.js` (Analysis: `manual/12_Frontend_Components_Core.md`)
+16. `public/js/api/client.js` (Analysis: `manual/19_Frontend_JS_Root.md`)
 
 ## 10. Project Documentation & Archives
 ### Root Documentation
@@ -284,10 +302,10 @@
 12. `docs/manual/00_Dir_File_Structure_Map.md` (This File)
 13. `docs/manual/00_MJRP_Album_Blender_Ref_Guide_Index.md`
 14. `docs/manual/01_System_Architecture.md`
-15. `docs/manual/02_Server_Core.md`
-16. `docs/manual/03_Server_Libraries.md`
-17. `docs/manual/04_Server_Logic.md`
-18. `docs/manual/05_Server_Routes.md`
+15. `docs/manual/02_Server_Structure.md`
+16. `docs/manual/04_Backend_Logic_Services.md`
+17. `docs/manual/04_Backend_Logic_Services.md`
+18. `docs/manual/03_Backend_API_Layer.md`
 19. `docs/manual/06_Frontend_Data_Store.md`
 20. `docs/manual/07_Frontend_Data_Infra.md`
 21. `docs/manual/07b_Frontend_Utilities_and_Workers.md`
@@ -310,7 +328,6 @@
 37. `docs/manual/22_Album_Search_Engine.md`
 38. `docs/manual/23_Shared_Code.md`
 39. `docs/manual/24_Test_Suite.md`
-40. `docs/manual/26_Gap_Analysis.md` (From Phase X)
 41. `docs/manual/29_Frontend_Technical_Debt_Analysis.md`
 42. `docs/manual/31_UI_Style_Guide.md`
 43. `docs/manual/32_Data_Schema_Reference.md`
@@ -318,7 +335,7 @@
 45. `docs/manual/99_Frontend_Component_Reference_Sheet.md`
 
 ### Important Snapshots
-46. `docs/manual/MasterManualSnapshot_20260108.md`
+46. `docs/manual/MasterManualSnapshot_20260110.md`
 47. `docs/manual/regression_checklist.md`
 
 ---

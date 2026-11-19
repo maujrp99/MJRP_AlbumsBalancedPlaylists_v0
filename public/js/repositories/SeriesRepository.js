@@ -4,7 +4,7 @@
  */
 
 import { BaseRepository } from './BaseRepository.js'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, updateDoc } from 'firebase/firestore'
 
 export class SeriesRepository extends BaseRepository {
     /**
@@ -45,6 +45,22 @@ export class SeriesRepository extends BaseRepository {
         }))
 
         return series
+    }
+
+    /**
+     * Save what the app learned about the albums a series asks for (the `facts` of each query).
+     * A write the app makes on its own: it does not count as the person updating the series, so
+     * `updatedAt` is left as it is.
+     * @param {string} seriesId
+     * @param {Array} albumQueries - the whole list, with the facts in place
+     * @returns {Promise<string>} Series ID
+     */
+    async saveAlbumFacts(seriesId, albumQueries) {
+        await updateDoc(this.getDocRef(seriesId), { albumQueries })
+        if (this.cache) {
+            await this.cache.invalidate(this.getCacheKey(seriesId))
+        }
+        return seriesId
     }
 
     /**

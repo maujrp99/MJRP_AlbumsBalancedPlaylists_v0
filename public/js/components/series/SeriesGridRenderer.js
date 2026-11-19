@@ -125,7 +125,8 @@ export default class SeriesGridRenderer extends Component {
                 return;
             }
 
-            const isVisibleInitially = index < 3; // Render first 3 immediately
+            // A list already cut to a page is drawn whole; an unbounded one draws 3 and the rest on scroll
+            const isVisibleInitially = this.props.pageBounded ? true : index < 3;
 
             if (isVisibleInitially) {
                 html += this._renderRealSeriesGroup(group.series, group.albums, context);

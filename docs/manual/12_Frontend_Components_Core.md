@@ -40,6 +40,7 @@ classDiagram
 -   **`ui/TrackRow.js`**: Universal Track List Item.
     -   **Variants**: `Compact`, `Detailed`, `Ranking`.
     -   **Logic**: Handles Drag & Drop handles, ranking medals (🥇, 🥈, 🥉), rating stars, and duration formatting.
+-   **`ui/Pager.js`** (v4.0): paging controls of a list of series: the count, the series per page (10 to 100), numbered pages or a growing list. It only shows and reports; the controller owns the page.
 -   **`ui/modals/ConfirmModal.js`**: Generic Confirmation Dialog (Yes/No).
 -   **`ui/modals/InputModal.js`**: Generic Single-Input Dialog.
 

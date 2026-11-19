@@ -53,16 +53,16 @@ sequenceDiagram
 
 ---
 
-## 3. Client API: `public/js/api.js`
+## 3. Client API: `public/js/api/client.js`
 **Status**: `[ACTIVE]`
 **Type**: API Client
 
 ### Logic
--   **Endpoints**: Proxies calls to `/api/generate` (Node.js backend).
--   **Features**:
-    -   `fetchAlbumMetadata(query)`: Single album fetch.
-    -   `fetchMultipleAlbumMetadata(queries)`: Concurrent batch fetching with retry mechanism (exponential backoff) and progress callbacks.
--   **Config**: logic to detect `window.__api_base` or fallback to same-origin.
+-   **Server calls**: `BEAenrichAlbum` (`POST /api/enrich-album`, track ratings) and `_fetchAlbumFromAPI` (`POST /api/generate`, the second source of an album, which uses paid AI).
+-   **`fetchAlbum(query)`**: the older, all-in-one load (cache, Apple Music, ratings, Spotify). Still used by the Blending Menu and the playlist edit mode. The Albums screen loads through `AlbumLoadService` instead.
+-   **`fetchMultipleAlbums`**: one album at a time, in sequence. Used only by the playlist edit mode.
+-   **`generatePlaylists`** (`POST /api/playlists`): has no caller.
+-   **Config**: `window.__api_base` or same-origin `/api`.
 
 ---
 
