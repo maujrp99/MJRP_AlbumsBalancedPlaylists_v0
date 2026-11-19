@@ -12,6 +12,9 @@
 ### 1.1a `stores/ownRankings.js` (OwnRankingsStore) - v4.0
 **Purpose**: the albums the person has ranked (which, not how): the list, the person it belongs to and its state (`idle`, `loading`, `ready`, `failed`). Pure state; only `OwnRankingService` writes to it. `getIndex()` is derived and answers "is this album query ranked?" for the 'My Ranking' filter.
 
+### 1.1c `stores/savedPlaylists.js` (SavedPlaylistsStore) - v5.0 (F61)
+The state of the saved playlists list: the status of the list (`idle`, `loading`, `ready`, `failed`), the order of the series and one entry per series, `{ seriesId, series, status, playlists, batches, thumbnails, error, refreshing }`, with `status` one of `loading`, `ready`, `empty`, `failed`. Pure state: `begin`, `setSeries`, `setListFailed`, `patchEntry`, getters and `subscribe`; several changes in the same tick give one notice. An entry is replaced, never mutated, so the screen knows a series changed by comparing objects. Only `SavedPlaylistsReader` writes here; `begin` with another user id empties the list.
+
 ### 1.1b `stores/albums.js` (AlbumsStore)
 **Purpose**: the shelf of loaded albums the other screens read.
 *   Since v4.0 it is filled by projection from `AlbumLoadStore` (`setAlbumsBySeries`).

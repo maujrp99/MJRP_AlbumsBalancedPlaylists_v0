@@ -317,7 +317,7 @@ Known gaps of this picture, kept honest here (they are the work of v5.0):
 | Gap | Where | Feature |
 | :--- | :--- | :--- |
 | Blend and playlist edit load with their own loop | `controllers/BlendingController.js`, `controllers/PlaylistsController.js` | F56 |
-| Saved playlists reads the playlists of each series one after the other (20 s) | `components/playlists/SavedPlaylistsController.js` | F61 |
+| Saved playlists reads the playlists of each series one after the other (20 s). **Since F61 (2026-11-19, on the branch `fix/f61-saved-playlists-fast`, not yet published), `SavedPlaylistsReader` owns the read: the series once, then the playlists of each series up to 8 at a time, each series drawn as its answer arrives** | `components/playlists/SavedPlaylistsController.js`; `services/playlists/SavedPlaylistsReader.js` | F61 |
 | "Is this the album asked for?" was decided in five places, each its own way; with the right artist any album passed. **Since F55, slice 1 (2026-11-19, on the branch `fix/f55-one-album-identity-rule`, not yet published), one rule decides it in all of them** (`shared/albumIdentity.js`). Still open: writing a corrected Apple id back to the series, and discarding what the browser keeps from before | `shared/albumIdentity.js`, `models/askedAlbum.js`; the call sites are listed in `test/architecture/albumIdentityRule.test.js` | F55 |
 | A failure can still end as "the source has nothing" | `adapters/enrichers.js`, server ratings route | F52 |
 | `stores/albums.js` still has other writers besides the projection | `services/SeriesService.js`, Refetch | F56 |
@@ -340,7 +340,7 @@ flowchart TB
     A --> ALS
     B --> ALS
     E --> ALS
-    H --> SPR["Saved playlists reader (new, F61)<br>one read for all series"]
+    H --> SPR["Saved playlists reader (F61, built on its branch)<br>series once, then each series' playlists, 8 at a time"]
     HM --> PK["Album picker (new, F57)<br>one component, one classifier"]
 
     subgraph Load["services/albums/ - the load"]
@@ -462,6 +462,12 @@ One line per component of the album path. "State" says whether it is in producti
 | Adapter | `AlbumCacheAdapter` | `services/albums/adapters/AlbumCacheAdapter.js` | one record per album asked for | v4.0 |
 | Store | `AlbumLoadStore` | `stores/albumLoad.js` | the state of the load | v4.0 |
 | Store | `albumsStore` | `stores/albums.js` | projection of the load for other screens; no Firestore | v4.0 |
+| Service | `SavedPlaylistsReader` | `services/playlists/SavedPlaylistsReader.js` | the read of the saved playlists: one generation per load, a state per series, 8 reads at a time with a deadline; the two deletes of the screen | v5.0 (F61, on its branch) |
+| Composition | `savedPlaylistsReading.js` | `services/playlists/savedPlaylistsReading.js` | wires the reader to the repositories, the sign-in and the local covers | v5.0 (F61, on its branch) |
+| Adapter | `RepositoryPlaylistsSource` | `services/playlists/adapters/RepositoryPlaylistsSource.js` | series and playlists through the repositories | v5.0 (F61, on its branch) |
+| Store | `SavedPlaylistsStore` | `stores/savedPlaylists.js` | the state of the saved playlists list, one entry per series | v5.0 (F61, on its branch) |
+| Model | saved playlists rules | `models/savedPlaylists.js` | states, batches, totals of a card, read order, covers | v5.0 (F61, on its branch) |
+| Controller | `SavedPlaylistsController` | `components/playlists/SavedPlaylistsController.js` | asks the reader, hands the screen what the store holds; no repository | v3; rewritten in F61 |
 | Store | `albumSeriesStore`, `ownRankingsStore`, `playlistsStore`, `inventoryStore`, `userStore` | `stores/*` | pure state per kind of data | v3 (ADR 0017) |
 | Model | load state, query, filter, paging, facts, text, own ranking | `models/albumLoadState.js`, `albumQuery.js`, `seriesFilter.js`, `paging.js`, `albumFacts.js`, `text.js`, `ownRanking.js` | pure rules | v4.0 |
 | Shared rule | album identity | `shared/albumIdentity.js` (the rule), `models/askedAlbum.js` (the app's shapes read into `{ artist, title, year }`), `server/lib/albumIdentity.js` (the server's loader) | "is this the album asked for?": the title must match on its own, the artist must match, the year only orders; no candidate passes means "not found". It replaced `models/AlbumIdentity.js` (a confidence score any album of the right artist passed), removed in F55 | v5.0 (F55, slice 1) |
