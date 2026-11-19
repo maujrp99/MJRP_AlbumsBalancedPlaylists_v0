@@ -91,6 +91,38 @@ describe('one rule says "this is the album asked for"', () => {
 })
 
 /**
+ * The second tier (F55, slice 2): "the title asked for is the candidate's title before a subtitle"
+ * is the same album only when pickAlbum, seeing every candidate of a source, finds no first-tier
+ * candidate and no other album like it. A call site cannot grant it by itself.
+ */
+describe('the second tier of the rule is granted only by pickAlbum, over the list a source gave', () => {
+    const sources = CALL_SITES.map(({ file, from, to }) => ({ file, source: region(file, from, to) }))
+    const found = (pattern) => sources.flatMap(({ file, source }) => (source.match(pattern) || []).map(text => `${file}: ${text}`))
+
+    it('no call site names the second-tier verdict or its reason: it reads `same` and `found`, and stores the reason it was given', () => {
+        expect(found(/SAME_IF_ALONE|same-if-alone|TITLE_BEFORE_SUBTITLE|title-before-subtitle/g)).toEqual([])
+    })
+
+    it('no call site decides from the kind of verdict: `.verdict` is never compared', () => {
+        // the count compares the verdict of its OWN rows (same, different, not loaded) to add them up
+        const ownRows = 'public/js/services/albums/albumIdentityAudit.js: row.verdict ==='
+
+        expect(found(/\b\w+\.verdict\s*[!=]==?/g).filter(text => text !== ownRows)).toEqual([])
+    })
+
+    it('no call site hands pickAlbum a list it made of one candidate: one candidate is always "alone"', () => {
+        expect(found(/pickAlbum\([^()]*,\s*\[/g)).toEqual([])
+    })
+
+    it('only the rule turns the second tier into "same": pickAlbum (candidates in sight) and compareKeptAlbum (the reason a pick left on the album)', () => {
+        const rule = read(RULE)
+        const granted = rule.match(/SAME\([^)]*\)/g).filter(call => !/Reason\.(EXACT_TITLE|EDITION_OF_TITLE|ARTIST_AND_TITLE_IN_ONE_TEXT)|askedTitle\.whole/.test(call))
+
+        expect(granted).toEqual(['SAME(verdict.reason)', 'SAME(best.verdict.reason)'])
+    })
+})
+
+/**
  * Text checks that are not a comparison of album names, by file. Each entry is the exact text.
  * - the scraper reads the header of a page: the header ends with the name of the artist it links.
  */

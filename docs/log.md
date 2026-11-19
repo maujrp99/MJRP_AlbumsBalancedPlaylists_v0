@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 18:52] session — F55 fatia 2: o segundo degrau da regra de identidade («No Quarter»)
+
+Ramo `fix/f55-identity-slice-2`. A regra única (`shared/albumIdentity.js`) ganhou um segundo degrau, que nunca disputa com o primeiro: o título pedido é o título do candidato antes de um subtítulo («:» ou « - »), com o mesmo artista, e só num sentido (o pedido é o curto). `compareAlbumIdentity` responde `same-if-alone` (não é `same`); só o `pickAlbum`, que vê todos os candidatos, aceita, e só quando nenhum passou no primeiro degrau e os do segundo são um álbum só. O álbum carregado leva o motivo em `metadata.identityReason`; o cartão do álbum diz em uma linha quando foi aceito pelo segundo degrau; a contagem só-leitura o conta como igual, com o motivo. Não afrouxam, por olharem um candidato só: o identificador guardado, a resposta da IA e a página conferida sozinha no raspador. 1020 testes, build ok. Sem navegador nesta sessão.
+
 ## [2026-11-19 18:40] decision — MJRP: «No Quarter» tratado com afrouxamento; F68 criada para rever as regras de identidade de álbum
 
 Palavras do MJRP: «o no quarter é um edge case, vamos tratá-lo com afrouxamento mas coloca no Do not forget do memory e abre uma feature pra revisao das regras todas pra encontrar a identidade de album, até pq depois com as futuras seções de genero, prevejo termos um algoritmo ficando mais complexo e precisamos revisar pra que a manutencao e o entendimento do mesmo seja fácil de entender.» Feito: (1) o afrouxamento entra na F55 fatia 2; (2) `MEMORY.md`, bloco Do Not Forget; (3) F68 criada na `main` (via rápida, `^REL-40`, UAT-205), citada na story S-53.

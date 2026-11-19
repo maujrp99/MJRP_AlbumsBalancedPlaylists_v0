@@ -106,7 +106,7 @@ export class APIClient {
                         coverUrl: musicKitService.getArtworkUrl(fullAlbum.artworkTemplate, 600),
                         tracks: tracksByAcclaim,
                         tracksOriginalOrder: tracksOriginalOrder,
-                        metadata: { source: 'Apple Music', sourceId: fullAlbum.id }
+                        metadata: { source: 'Apple Music', sourceId: fullAlbum.id, identityReason: picked.verdict.reason }
                     }
 
                     const album = new Album(albumData)
@@ -257,6 +257,8 @@ export class APIClient {
      * The AI search answers with whatever album it believes in. It is accepted only when it is the
      * album asked for, by the one identity rule (F55); another album of the artist is "the server
      * has no such album", and the paid call is not made again.
+     * One answer, with no other candidate in sight: only the first tier of the rule (`same`). The
+     * second tier (the title asked for before a subtitle) is given by pickAlbum over a catalog's list.
      * @private
      */
     _isTheAlbumAskedFor(query, data) {

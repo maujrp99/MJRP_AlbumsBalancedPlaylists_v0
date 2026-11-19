@@ -49,3 +49,22 @@ describe('findSpotifyAlbum (server)', () => {
         expect(http.get.mock.calls[0][1].headers).toEqual({ Authorization: 'Bearer token-1' })
     })
 })
+
+describe('findSpotifyAlbum (server): the second tier of the rule (F55, slice 2)', () => {
+    const PAGE_PLANT = ['Jimmy Page', 'Robert Plant']
+    const noQuarter = { title: 'No Quarter', artist: 'Jimmy Page & Robert Plant' }
+
+    it('«No Quarter» asked for and Spotify only has «No Quarter: … Unledded»: that album', async () => {
+        const http = httpWith(() => [item('s-clarksdale', 'Walking Into Clarksdale', PAGE_PLANT), item('s-unledded', 'No Quarter: Jimmy Page & Robert Plant Unledded', PAGE_PLANT)])
+
+        expect((await findSpotifyAlbum(noQuarter, 'token', http)).id).toBe('s-unledded')
+    })
+
+    it('never before the album asked for, and never between two albums', async () => {
+        const wall = httpWith(() => [item('s-berlin', 'The Wall: Live in Berlin', ['Pink Floyd']), item('s-wall', 'The Wall', ['Pink Floyd'])])
+        const hits = httpWith(() => [item('s-70', 'Greatest Hits: 1970-2002', ['Elton John']), item('s-v2', 'Greatest Hits: Vol 2', ['Elton John'])])
+
+        expect((await findSpotifyAlbum({ title: 'The Wall', artist: 'Pink Floyd' }, 'token', wall)).id).toBe('s-wall')
+        expect(await findSpotifyAlbum({ title: 'Greatest Hits', artist: 'Elton John' }, 'token', hits)).toBeNull()
+    })
+})

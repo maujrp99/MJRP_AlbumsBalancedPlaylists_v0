@@ -2,13 +2,15 @@
  * albumIdentityAudit - counts, READ-ONLY, how many albums are wrong today (F55, UAT-184).
  *
  * For each album a series asks for, it reads the album the app has for that query and asks the one
- * identity rule (shared/albumIdentity.js) whether it is the album asked for. It writes nothing:
+ * identity rule (shared/albumIdentity.js) whether it is the album asked for. An album a load
+ * accepted by the rule's second tier (the catalog only has the title with a subtitle) is the same
+ * album, and its row says so in `reason`; one that nothing says a load accepted is different. It writes nothing:
  * not to the series, not to the cache, not to the load store. It receives what it reads, so it
  * runs in a test with plain data; `countWrongAlbums` in albumLoading.js gives it the real sources
  * and `window.albumIdentityAudit()` runs it from the browser console.
  */
 
-import { askedAlbum, compareAlbumIdentity } from '../../models/askedAlbum.js'
+import { askedAlbum, compareKeptAlbum } from '../../models/askedAlbum.js'
 
 export const AuditVerdict = Object.freeze({
     SAME: 'same',
@@ -40,8 +42,8 @@ async function auditOne(series, query, shownFor) {
     }
     if (!shown) return row
 
-    const { verdict, reason } = compareAlbumIdentity(asked, shown)
-    return { ...row, shown: labelOf(shown), verdict, reason }
+    const { same, reason } = compareKeptAlbum(asked, shown)
+    return { ...row, shown: labelOf(shown), verdict: same ? AuditVerdict.SAME : AuditVerdict.DIFFERENT, reason }
 }
 
 function summarize(seriesCount, rows) {
@@ -58,8 +60,8 @@ function summarize(seriesCount, rows) {
 /**
  * @param {Object} sources
  * @param {Array<{ name: string, albumQueries?: Array }>} sources.series - the person's series
- * @param {Function} sources.shownFor - async (query, series) => { artist, title, year? } | null:
- *        the album the app has for that query, read without changing anything
+ * @param {Function} sources.shownFor - async (query, series) => { artist, title, year?, identityReason? } | null:
+ *        the album the app has for that query (see keptAlbum), read without changing anything
  * @returns {Promise<{ rows: Array<{ series, asked, shown, verdict, reason, storedAppleId }>, summary: Object }>}
  */
 export async function auditAlbumIdentity({ series, shownFor }) {

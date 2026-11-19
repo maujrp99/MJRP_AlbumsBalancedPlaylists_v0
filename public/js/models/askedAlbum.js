@@ -5,11 +5,17 @@
  * the app turns its own shapes into those three fields: the query a series stores (what was
  * ASKED), and what each source gives back (a CANDIDATE). A call site imports from here, adapts
  * and asks the rule; it compares no text itself (test/architecture/albumIdentityRule.test.js).
+ *
+ * An album the app loaded carries, in `metadata.identityReason`, the reason of the rule it was
+ * accepted by. `keptAlbum` reads it back, so the rule can say whether an album that is kept (a
+ * cache record, the album on screen) is still the album asked for (`compareKeptAlbum`).
  */
 
 import { parseAlbumQuery } from './albumQuery.js'
 
-export { compareAlbumIdentity, pickAlbum, Verdict, Reason } from '@shared/albumIdentity.js'
+import { Reason } from '@shared/albumIdentity.js'
+
+export { compareAlbumIdentity, compareKeptAlbum, pickAlbum, Verdict, Reason } from '@shared/albumIdentity.js'
 
 /**
  * What a query asks for.
@@ -42,3 +48,25 @@ export const localCandidate = (item) => ({
     title: item?.album ?? item?.title,
     year: item?.year
 })
+
+/**
+ * An album the app keeps (an Album, or the plain data of a cache record), as the rule reads it.
+ * @param {Object|null} album - { artist, title, year, metadata?: { identityReason? } }
+ * @returns {{ artist: string, title: string, year: *, identityReason: string|null } | null}
+ */
+export const keptAlbum = (album) => (album ? {
+    artist: album.artist,
+    title: album.title,
+    year: album.year,
+    identityReason: album.metadata?.identityReason ?? null
+} : null)
+
+/**
+ * The one line an album shows when it is not, to the letter, the title that was asked for.
+ * @param {Object} album - a loaded album
+ * @returns {string|null} null when there is nothing to say
+ */
+export function identityNotice(album) {
+    if (album?.metadata?.identityReason !== Reason.TITLE_BEFORE_SUBTITLE) return null
+    return 'Asked for by its short title: the catalog only has this one, with a subtitle.'
+}

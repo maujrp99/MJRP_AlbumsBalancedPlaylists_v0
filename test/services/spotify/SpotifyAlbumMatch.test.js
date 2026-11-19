@@ -67,6 +67,18 @@ describe('SpotifyService.searchAlbum', () => {
         expect(await SpotifyService.searchAlbum(STP, 'Core')).toBeNull()
     })
 
+    it('the second tier of the rule: «No Quarter» finds the only «No Quarter: … Unledded»; never before «The Wall» itself, never between two', async () => {
+        const pair = ['Jimmy Page', 'Robert Plant']
+        fetchSpy.mockResolvedValueOnce(found(item('s-unledded', 'No Quarter: Jimmy Page & Robert Plant Unledded', pair)))
+        expect((await SpotifyService.searchAlbum('Jimmy Page & Robert Plant', 'No Quarter')).id).toBe('s-unledded')
+
+        fetchSpy.mockResolvedValueOnce(found(item('s-berlin', 'The Wall: Live in Berlin', ['Pink Floyd']), item('s-wall', 'The Wall', ['Pink Floyd'])))
+        expect((await SpotifyService.searchAlbum('Pink Floyd', 'The Wall')).id).toBe('s-wall')
+
+        fetchSpy.mockResolvedValue(found(item('s-70', 'Greatest Hits: 1970-2002', ['Elton John']), item('s-v2', 'Greatest Hits: Vol 2', ['Elton John'])))
+        expect(await SpotifyService.searchAlbum('Elton John', 'Greatest Hits')).toBeNull()
+    })
+
     it('enrichAlbumData gives nothing for an album Spotify does not have, and does not read tracks of another', async () => {
         fetchSpy.mockResolvedValue(found(item('s-shangri', 'Shangri-La Dee Da')))
         const tracks = vi.spyOn(SpotifyService, 'getAlbumTracksWithPopularity')

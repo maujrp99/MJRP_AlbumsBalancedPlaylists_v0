@@ -67,6 +67,15 @@ describe('APIClient: only the album asked for', () => {
         })
     })
 
+    describe('the answer of the AI search, one answer with nothing beside it', () => {
+        it('is the title asked for with a subtitle: not accepted (the second tier of the rule needs the whole list of a catalog)', async () => {
+            fetchMock.mockResolvedValue(answer(aiAlbum('The Wall: Live in Berlin', 'Pink Floyd')))
+
+            expect(await client._fetchAlbumFromAPI('Pink Floyd - The Wall')).toBeNull()
+            expect(fetchMock).toHaveBeenCalledTimes(1)
+        })
+    })
+
     describe('the Apple Music search of fetchAlbum', () => {
         const details = { id: 'apple-core', title: 'Core', artist: STP, year: '1992', artworkTemplate: 'tpl', tracks: [{ id: 't1', title: 'One', trackNumber: 1 }] }
 
@@ -79,6 +88,17 @@ describe('APIClient: only the album asked for', () => {
             expect(musicKit.searchAlbums).toHaveBeenCalledWith(STP, 'Core', 5)
             expect(musicKit.getAlbumDetails).toHaveBeenCalledWith('apple-core')
             expect(album.title).toBe('Core')
+        })
+
+        it('the album says by which reason of the rule it was accepted; the catalog with only the subtitled title is the second tier', async () => {
+            const unledded = { ...details, id: 'apple-unledded', title: 'No Quarter: Jimmy Page & Robert Plant Unledded', artist: 'Jimmy Page & Robert Plant' }
+            musicKit.searchAlbums.mockResolvedValue([{ id: 'apple-unledded', attributes: { name: unledded.title, artistName: unledded.artist } }])
+            musicKit.getAlbumDetails.mockResolvedValue(unledded)
+
+            const album = await client.fetchAlbum('Jimmy Page & Robert Plant - No Quarter')
+
+            expect(album.title).toBe(unledded.title)
+            expect(album.metadata).toEqual({ source: 'Apple Music', sourceId: 'apple-unledded', identityReason: 'title-before-subtitle' })
         })
 
         it('only another album in the results: it is not loaded; the second source is asked, and its wrong album is refused too', async () => {
