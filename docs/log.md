@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:31] session — F53 criada: a suíte de testes volta a ficar verde (UAT-149)
+
+Pedido do MJRP: «conserte os 28 testes falhando». Feature na via rápida, `solution_type: fix`, consertando a UAT-149 (falhas de regressão antigas). Spec, plano e tarefas em esboço; o trabalho corre no ramo `fix/f53-test-suite-green`.
+
 ## [2026-11-19 14:21] session — relatório da regressão do navegador escrito, a pedido do MJRP
 
 `reports/audits/2026-11-19-mjrpalbumblender-v0-browser-regression.md`: os 20 cenários com o resultado de cada um, o diagnóstico por achado, o que não foi testado, os dados de teste que ficaram na conta e o backlog proposto. Quem rodou foi o próprio implementador, não um juiz separado; o relatório diz isso no cabeçalho.
