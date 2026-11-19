@@ -137,16 +137,19 @@ export class SeriesService {
         globalProgress.start()
 
         try {
-            const firestoreSeries = await this.repository.findAll({
-                orderBy: ['updatedAt', 'desc'],
-                limit: 20
-            })
+            // Every series of the account. No limit: a cut at 20 hid the rest with no notice (UAT-24).
+            // No orderBy in the query either: Firestore leaves out a document that lacks the ordered
+            // field, so the order is applied here, where a series without a date still shows, last.
+            const firestoreSeries = await this.repository.findAll({})
 
-            const series = firestoreSeries.map(s => ({
-                ...s,
-                createdAt: s.createdAt?.toDate ? s.createdAt.toDate() : new Date(s.createdAt),
-                updatedAt: s.updatedAt?.toDate ? s.updatedAt.toDate() : new Date(s.updatedAt)
-            }))
+            const toDate = (value) => {
+                if (!value) return null
+                const date = value.toDate ? value.toDate() : new Date(value)
+                return Number.isNaN(date.getTime()) ? null : date
+            }
+            const series = firestoreSeries
+                .map(s => ({ ...s, createdAt: toDate(s.createdAt), updatedAt: toDate(s.updatedAt) }))
+                .sort((a, b) => (b.updatedAt?.getTime() ?? -Infinity) - (a.updatedAt?.getTime() ?? -Infinity))
 
             albumSeriesStore.setSeries(series)
             this.saveToLocalStorage()

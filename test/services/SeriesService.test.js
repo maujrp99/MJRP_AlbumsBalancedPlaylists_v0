@@ -83,6 +83,40 @@ describe('SeriesService (Refactored)', () => {
         })
     })
 
+    describe('loadFromFirestore (F47, UAT-24: the list was cut at 20 series)', () => {
+        const stored = (n, extra = {}) => ({ id: `s${n}`, name: `Series ${n}`, albumQueries: [], updatedAt: new Date(2026, 0, n), ...extra })
+
+        it('brings every series of the account, not only the 20 most recent', async () => {
+            const all = Array.from({ length: 45 }, (_, i) => stored(i + 1))
+            service.repository.findAll = vi.fn().mockResolvedValue(all)
+
+            const loaded = await service.loadFromFirestore()
+
+            expect(loaded).toHaveLength(45)
+            expect(albumSeriesStore.getSeries()).toHaveLength(45)
+        })
+
+        it('asks the database with no limit and no ordering, so a series without an update date is not left out', async () => {
+            service.repository.findAll = vi.fn().mockResolvedValue([])
+
+            await service.loadFromFirestore()
+
+            const filters = service.repository.findAll.mock.calls[0][0] || {}
+            expect(filters.limit).toBeUndefined()
+            expect(filters.orderBy).toBeUndefined()
+        })
+
+        it('keeps the most recently updated first, and a series with no update date last', async () => {
+            service.repository.findAll = vi.fn().mockResolvedValue([
+                stored(1), stored(3), { id: 'undated', name: 'No date', albumQueries: [] }, stored(2)
+            ])
+
+            const loaded = await service.loadFromFirestore()
+
+            expect(loaded.map(s => s.id)).toEqual(['s3', 's2', 's1', 'undated'])
+        })
+    })
+
     describe('handleUserChange', () => {
         it('should delegate to UserSyncService', async () => {
             const newUser = { uid: 'user-2' }

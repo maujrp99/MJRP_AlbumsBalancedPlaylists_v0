@@ -275,6 +275,19 @@ describe('AlbumLoadService', () => {
         expect(store.getReadyAlbums('s1')).toHaveLength(6)
     })
 
+    it('a quick source that hangs does not take the slots of the album searches', async () => {
+        enrichers.userRanking.enrich = vi.fn(() => new Promise(() => { }))
+        service = build({ findConcurrency: 1, enrichTimeoutMs: 80 })
+        const quiet = vi.spyOn(console, 'warn').mockImplementation(() => { })
+
+        service.load({ scopeKey: 'ALL', series: [series('s1', 'A', 'B', 'C')] })
+        await wait(40)
+
+        expect(store.getEntries('s1').every(entry => entry.status === AlbumStatus.FOUND)).toBe(true)
+        await service.whenIdle()
+        quiet.mockRestore()
+    })
+
     it('starts the series at the top of the screen first', async () => {
         const started = []
         catalog.find = vi.fn(async (query) => { started.push(titleOf(query)); await wait(5); return { title: titleOf(query), tracks: [] } })

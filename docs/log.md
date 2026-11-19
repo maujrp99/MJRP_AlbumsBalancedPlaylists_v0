@@ -3,12 +3,29 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 12:01] decision — paginação da tela de álbuns: as duas formas, por série, de 10 a 100 por página; notas a 4 buscas por vez
+
+- O MJRP viu o protótipo (`design/inception/albums-paging-v1.html`) e decidiu: «ok, o ideal seria poder escolher multiplos de 10 por pagina, 10, 20, 30, 40, 50, ...100» e «opção A e b, séries por página, go for it». Ficam as duas formas (páginas numeradas e rolagem que carrega mais), a unidade é a série, e o tamanho da página vai de 10 a 100, de 10 em 10.
+- Notas: o teto da fonte lenta sobe de 2 para 4 buscas simultâneas (`LOAD_LIMITS.slowConcurrency`). Medido com 45 séries: 31 notas em 60 s, contra cerca de 20 com 2; o servidor passa de 5 s para 7 s por busca quando recebe mais de uma. O gargalo é o raspador, sem cache: fica para a fatia do servidor.
+- Ramo novo `fix/f51-album-filters-search-and-paging`, empilhado sobre o da F47.
+- Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
+
 ## [2026-11-19 11:57] decision — filtros, busca e paginação da tela de álbuns: os fatos que os filtros leem passam a morar no pedido da série (F51)
 
 - O MJRP perguntou «como ficaria a questao de filtros se a gente utilizasse paginacao nas telas?». Três caminhos apresentados (filtrar só o carregado; carregar tudo ao filtrar por ano ou fonte; guardar ano e fonte junto do pedido). Escolha dele: «vamos fazer a opcao C». E: «a opcao C imagino que tb necessite a revisao de arquitetura para nao virar patch...vamos melhorando a arquitetura do site, refatorando conforme necessario». Sobre séries antigas: «go for it, preenche sozinho na primeira carga». Sobre haver paginação: «vamos er paginacao entao certo?» — sim, por série; a forma (páginas numeradas ou rolagem que carrega mais) ele escolhe sobre um protótipo.
 - Desenho na seção 16 da proposta no `docs/specs/arch.md`: o bloco `facts` em cada item de `albumQueries` (ano, fontes, data da conferência), gravado só pelo `SeriesRepository`; um `SeriesFactsService` grava a diferença em lote quando a série termina de carregar; o filtro vira função pura sobre os pedidos; a tela pagina o resultado do filtro; a barra de filtros atualiza em vez de se refazer.
 - Regra de trabalho adotada: cada área tocada por um conserto sai com o dono certo, com teste e com checagem automática; refatoração maior é avisada antes; o que muda dado gravado ou tela vai ao MJRP primeiro.
 - Issues novas na Rodada 2: UAT-179 (campo de busca perde o foco a cada tecla; relatado pelo MJRP) e UAT-180 (pedido gravado com `&amp;` não é achado no catálogo). Feature F51 registrada.
+- Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
+
+## [2026-11-19 11:54] session — F47: a lista de séries sem o corte em 20; o MJRP tinha 45 séries e via 20
+
+- O MJRP, olhando a tela: «engraçaod eu nao tenho albuns do robert plant?». Conferido no banco dele, pelo próprio app: 45 séries na conta, 20 na tela, 25 escondidas pelo `limit: 20` de `SeriesService.loadFromFirestore`; quatro delas com Robert Plant. Nada foi perdido, era só leitura. Ele mandou: «go for it, faz a F47 agora».
+- Ramo `fix/f47-series-list-without-cut`, empilhado sobre o da F45 (sem a carga nova, 217 álbuns levariam uns 20 minutos). Conserto: `findAll` sem `limit` e sem `orderBy` (o Firestore deixa de fora o documento que não tem o campo ordenado); a ordem por data de atualização é aplicada no cliente, com a série sem data por último. Três testes em `test/services/SeriesService.test.js`, dois falhavam antes.
+- A carga de 217 álbuns mostrou três coisas, corrigidas no desenho da F45: (1) as fontes rápidas (ranking pessoal, popularidade guardada) disputavam as vagas da busca no catálogo: ganharam fila própria (`sourceConcurrency: 6`); (2) 196 dos 217 pedidos trazem o `appleMusicId` da edição escolhida, que a carga antiga ignorava: o adaptador agora carrega por ele, numa chamada só, e é a edição que o MJRP escolheu; (3) 32 desses identificadores respondem 404 (edição de outra loja ou retirada): cai na busca por nome na hora, sem esperar.
+- Medido, guardado apagado: 45 séries na tela; 57 álbuns aos 5 s, 118 aos 10 s, 207 aos 30 s; tudo resolvido aos 31 s, 213 achados e 4 com aviso de falha. As quatro séries de Robert Plant aparecem. Evidência: `reports/evidence/F47-series-list-without-cut/`.
+- Achados a registrar: um pedido gravado com `&amp;` no lugar de `&` («Jimmy Page &amp; Robert Plant - No Quarter») não é achado; o MJRP relatou que o campo de busca não deixa digitar de uma vez («o campo de bucas tem problemas ... acho que ocorre o mesmo na home»); e escolheu a opção C para os filtros com paginação («vamos fazer a opcao C»): guardar ano e fonte junto do pedido, na série.
+- `window.albumLoadStore` e `window.albumLoadService` expostos em `app.js`, como as outras stores, para inspeção e teste.
 - Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
 
 ## [2026-11-19 11:41] session — F45 ligada ao app e medida no navegador: os 80 álbuns em 8,5 s (antes, 1 álbum aos 8,5 s e 46 de 80 aos 4 min 40 s)
