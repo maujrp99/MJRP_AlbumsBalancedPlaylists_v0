@@ -14,13 +14,12 @@
 import Sortable from 'sortablejs'
 import { SafeDOM } from '../../utils/SafeDOM.js'
 import { getIcon } from '../Icons.js'
-import { userRankingRepository } from '../../repositories/UserRankingRepository.js'
-import { escapeHtml } from '../../utils/stringUtils.js'
 
 /**
  * @typedef {Object} UserRankModalOptions
  * @property {Object} album - Album object with tracks
- * @property {string} userId - Current user ID
+ * @property {Function} onSubmit - (rankings) => Promise<boolean>: saves the ranking. The modal only
+ *   shows and reports; who saves and what the screen does next belongs to whoever opened it.
  * @property {Function} onSave - Callback after successful save
  * @property {Function} onClose - Callback when modal closes
  */
@@ -29,9 +28,9 @@ export class UserRankModal {
     /**
      * @param {UserRankModalOptions} options
      */
-    constructor({ album, userId, onSave, onClose }) {
+    constructor({ album, onSubmit, onSave, onClose }) {
         this.album = album
-        this.userId = userId
+        this.onSubmit = onSubmit
         this.onSave = onSave
         this.onClose = onClose
 
@@ -104,15 +103,12 @@ export class UserRankModal {
             userRank: index + 1  // 1-based ranking
         }))
 
-        const success = await userRankingRepository.saveRanking(
-            this.userId,
-            this.album.id,
-            {
-                albumTitle: this.album.title,
-                artistName: this.album.artist,
-                rankings
-            }
-        )
+        let success = false
+        try {
+            success = this.onSubmit ? await this.onSubmit(rankings) : false
+        } catch (error) {
+            console.error('[UserRankModal] saving the ranking failed:', error)
+        }
 
         if (success) {
             console.log('[UserRankModal] Ranking saved successfully')
@@ -197,7 +193,7 @@ export class UserRankModal {
                 SafeDOM.span({ className: 'text-lg font-bold' }, 'Rank Your Album')
             ]),
             SafeDOM.div({ className: 'text-white/60 text-sm mt-1' },
-                `${escapeHtml(this.album.title)} - ${escapeHtml(this.album.artist)}`)
+                `${this.album.title} - ${this.album.artist}`) // a text node: nothing to escape
         ])
 
         // Instructions
@@ -265,9 +261,9 @@ export class UserRankModal {
         // Track info
         const trackInfo = SafeDOM.div({ className: 'flex-1 min-w-0' }, [
             SafeDOM.div({ className: 'font-medium text-white truncate text-sm' },
-                escapeHtml(track.title)),
+                track.title),
             SafeDOM.div({ className: 'text-xs text-white/40 truncate' },
-                escapeHtml(track.artist || this.album.artist))
+                track.artist || this.album.artist)
         ])
 
         // Reference badges (BEA and Spotify)

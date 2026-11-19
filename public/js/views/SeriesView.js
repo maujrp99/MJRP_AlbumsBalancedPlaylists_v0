@@ -131,7 +131,8 @@ export default class SeriesView extends BaseView {
                 onDeleteSeries: (sid) => this.modalsManager?.openDelete(sid),
                 onAlbumRemoved: () => this.controller.refresh(),
                 onRefetchMetadata: (album) => this.controller.handleRefetchMetadata(album),
-                onRetrySeries: (sid) => this.controller.retrySeries(sid)
+                onRetrySeries: (sid) => this.controller.retrySeries(sid),
+                onSaveRanking: (album, rankings) => this.controller.saveRanking(album, rankings)
             }
         });
         this.components.eventHandler.mount();
@@ -188,8 +189,7 @@ export default class SeriesView extends BaseView {
             this.controller ? this.controller.getSeriesStates() : null
         );
         const pageView = this.controller ? this.controller.getPageView() : null;
-        const isAllScope = currentScope === 'ALL';
-        this.components.pager?.update({ paging: isAllScope ? pageView?.paging : null });
+        this.components.pager?.update({ paging: pageView?.paging || null });
         const hasSeriesToShow = (pageView?.paging.totalSeries || 0) > 0;
         this.updater?.updateEmptyState('emptyStateContainer', hasSeriesToShow ? 1 : albums.length, isLoading);
     }
@@ -205,6 +205,8 @@ export default class SeriesView extends BaseView {
     // =========================================
 
     destroy() {
+        // The controller outlives the view: it must stop drawing into a screen that is gone
+        this.controller?.detachView(this);
         Object.values(this.components).forEach(c => c && c.unmount && c.unmount());
         this.components = {};
         this.modalsManager?.unmount();

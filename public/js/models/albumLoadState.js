@@ -5,6 +5,8 @@
  * One entry per album asked for; the state of a series is always derived from its entries, never stored.
  */
 
+import { decodeEntities } from './text.js'
+
 /** Where one album is in the load. */
 export const AlbumStatus = Object.freeze({
     PENDING: 'pending',     // asked for, not started
@@ -50,7 +52,8 @@ export function queryKey(query) {
     const text = (typeof query === 'object' && query !== null)
         ? `${query.artist || ''} - ${query.title || query.album || ''}`
         : String(query || '')
-    return text.toLowerCase().trim().replace(/\s+/g, ' ')
+    // A query stored with HTML entities ("Page &amp; Plant", UAT-180) is the same query as its plain form.
+    return decodeEntities(text).toLowerCase().trim().replace(/\s+/g, ' ')
 }
 
 /**

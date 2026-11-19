@@ -284,6 +284,11 @@
 17. `public/js/utils/retry.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
 18. `public/js/repositories/SharedAlbumRepository.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
 19. `public/js/services/albums/clearAlbumCaches.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
+20. `public/js/models/text.js` (Analysis: `manual/08_Frontend_Models.md`)
+21. `public/js/models/ownRanking.js` (Analysis: `manual/08_Frontend_Models.md`)
+22. `public/js/stores/ownRankings.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
+23. `public/js/services/ranking/OwnRankingService.js` (Analysis: `manual/17_Frontend_Services.md`)
+24. `public/js/services/ranking/ownRanking.js` (Analysis: `manual/17_Frontend_Services.md`)
 
 ## 10. Project Documentation & Archives
 ### Root Documentation

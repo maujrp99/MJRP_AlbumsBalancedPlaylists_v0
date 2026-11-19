@@ -100,6 +100,7 @@ sequenceDiagram
     *   `FilterToolbar` [NEW]: Generic, state-driven toolbar handling Filters (Artist, Year, Source), Search, and Sort.
         *   **Filters read the series, not what is loaded** (v4.0): series, artist, year, source and search run over the album queries of every series (`models/seriesFilter.js`), so they answer the same on any page. The artist list comes from the series too.
         *   **The search field is drawn once** (v4.0): the other controls are redrawn only when what they show changes. Before, the whole toolbar was redrawn on each key and the field lost the cursor.
+        *   **'My Ranking' reads every series** (v4.0): the list of ranked albums is read once and matched to the album queries by name; before, the filter only saw loaded albums.
         *   **Reusability**: Replaces the legacy `SeriesToolbar`, now shared with `SavedPlaylistsView`.
         *   **Sorting**: Supports "**Name (A-Z)**", "**Name (Z-A)**", "**# of Albums (↑)**", "**# of Albums (↓)**", "**Newest**", and "**Oldest**". Sorting logic is handled by `SeriesController.js`.
         *   **Labels**: Uses standardized labels like "**All Albums Series**" and "**All Playlist Series**" for consistency across views (Sprint 22).
@@ -107,7 +108,9 @@ sequenceDiagram
     *   ~~`SeriesProgressBar`~~: Removed (Sprint 21.5) - Skeletons provide visual feedback.
     *   `SeriesEmptyState`: Renders when the account has no series.
     *   `SeriesGridRenderer`: Responsible for the main content layout (Grid/List). It draws each series by its load state: a grey block while it is loading, the albums when they are found, and the notice "N albums did not load · Try again" when some failed. A series whose albums all failed stays on screen with the notice.
-    *   `Pager` (v4.0): how many series are shown out of how many, the series per page (10 to 100), and the two ways to move on: numbered pages, or a list that grows at its end.
+    *   `Pager` (v4.0): how many series are shown out of how many, the series per page (10 to 100), and the two ways to move on: numbered pages, or a list that grows at its end. With a source filter on, it also says how many albums were never checked against the sources ("N albums have not been checked against the sources yet…"); with one series on screen it shows only that notice.
+    *   **Ranking an album**: the card opens `UserRankModal`; the modal reports the save to the view (`onSaveRanking`), the controller saves and asks the load to read that album's ranking again. The view never touches the ranking repository, and the album on screen is replaced, not changed.
+*   **Leaving the screen**: `destroy()` tells the controller to let go of the view (`detachView`). The album load goes on in `AlbumLoadService`; coming back shows the progress made.
 *   **Helpers**:
     *   `SeriesViewUpdater` [NEW]: Handles DOM updates (Header, Grid, Toolbar) based on Controller state.
     *   `SeriesComponentFactory` [NEW]: Abstract Factory for instantiating Header, Toolbar, and Grid components with correct props.
@@ -119,6 +122,7 @@ sequenceDiagram
 **LOC**: ~270 (Refactored Sprint 19)
 
 *   **Purpose**: Display saved playlists grouped by Series and Batches.
+*   **Drawn once** (v4.0): `update()` draws the page the first time; after that it only updates the toolbar (`toolbar.update(toolbarProps())`) and redraws the list (`refreshContent`). Before, the whole page was rebuilt on every key and on every cover that arrived, which replaced the search field and took the cursor away (UAT-179). `destroy()` clears the pending cover update so a late one cannot draw this page over another.
 *   **Key Behavior**:
     1.  **Iterative Rendering**: Delegates rendering of complex data structures (Series -> Batches -> Playlists) to components.
     2.  **Lazy Hydration**: Playlist tracks are rendered into hidden containers and toggled via safe DOM manipulation.

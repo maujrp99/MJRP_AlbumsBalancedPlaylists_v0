@@ -40,7 +40,8 @@ classDiagram
 -   **`ui/TrackRow.js`**: Universal Track List Item.
     -   **Variants**: `Compact`, `Detailed`, `Ranking`.
     -   **Logic**: Handles Drag & Drop handles, ranking medals (🥇, 🥈, 🥉), rating stars, and duration formatting.
--   **`ui/Pager.js`** (v4.0): paging controls of a list of series: the count, the series per page (10 to 100), numbered pages or a growing list. It only shows and reports; the controller owns the page.
+-   **`ui/Pager.js`** (v4.0): paging controls of a list of series: the count, the series per page (10 to 100), numbered pages or a growing list. It only shows and reports; the controller owns the page. It redraws only when the paging it is given changed. With `paging.unchecked` above zero it shows how many albums a source filter cannot answer for yet; with `paging.single` it shows only that notice. Tested in `test/components/ui/Pager.test.js`.
+-   **`ui/FilterToolbar.js`**: search, filters, sort and view toggles. The search field is drawn once and is the same element for as long as the toolbar lives; what the person is typing is never written over while the field has the focus; the other controls are redrawn only when what they show changed, and a control that was not redrawn still calls the handler of the latest props. A view that uses it must keep the toolbar and call `update`, not build a new one on each change. Tested in `test/components/ui/FilterToolbar.test.js`.
 -   **`ui/modals/ConfirmModal.js`**: Generic Confirmation Dialog (Yes/No).
 -   **`ui/modals/InputModal.js`**: Generic Single-Input Dialog.
 

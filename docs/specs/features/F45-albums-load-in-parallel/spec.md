@@ -5,7 +5,7 @@ solution_type: fix
 imports: []
 fixes: ["UAT-172"]
 ---
-# Feature F45: A tela de álbuns carrega vários álbuns ao mesmo tempo, com prazo, e só as séries à vista
+# Feature F45: A tela de álbuns carrega vários álbuns ao mesmo tempo, com prazo, e as séries do topo primeiro
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Summary
@@ -61,7 +61,7 @@ O `behavior.md` ainda descreve a carga antiga (`^library-loading-skeleton`); a c
 - Quando um álbum falha, a série mostra o aviso com a contagem e o «Try again». Visto na primeira tentativa de medição, em 5 séries.
 
 ## Out of Scope
-- Buscar só as séries à vista, ao rolar a tela. Ficou para a feature do estado da carga (F46). A paginação (F51) já faz a tela buscar só as séries da página.
+- Buscar só as séries à vista, ao rolar a tela. Não foi construído, nem aqui nem na F46: a paginação (F51) faz a tela buscar só as séries da página, e o observador de visibilidade por série deixou de ser necessário.
 - As notas rápidas. Elas chegam em segundo plano, ao longo de minutos: 17 de 80 aos 40 s com 2 buscas por vez; com 4 por vez, 31 notas em 60 s numa conta de 45 séries. O servidor leva de 5 a 7 segundos por busca e não guarda o que já buscou. Fica para a fatia do servidor.
 - Distinguir «o álbum não tem nota» de «a busca da nota falhou». O servidor responde igual nos dois casos; a tela trata a resposta vazia como «sem nota», por 1 hora. Pede mudança no servidor.
 - A tela de mistura e o modo de edição de playlist. Continuam no caminho antigo de carga.
@@ -73,4 +73,4 @@ O `behavior.md` ainda descreve a carga antiga (`^library-loading-skeleton`); a c
 - A carga parou de regravar cada álbum na nuvem a cada visita. Vale? — decidido pelo agente em 2026-11-19, porque nada no app lê essa gravação; ainda sem resposta do MJRP (decisão 1 da proposta de arquitetura).
 - O aviso de falha com «Try again» estava previsto para a F46 e saiu aqui. A F46 ainda cobre as issues UAT-173 e UAT-174, que seguem abertas; quem fecha é o MJRP, ao julgar.
 - O teto de 4 buscas de nota por vez é o definitivo? — em medição desde 2026-11-19 12:01; o agente decide medindo, o gargalo é o servidor.
-- O título da feature ainda diz «só as séries à vista», que não foi feito aqui. Trocar o título é decisão de quem cuida do quadro.
+- O título da feature dizia «só as séries à vista», que não foi construído. Corrigido em 2026-11-19 para «as séries do topo primeiro», que é o que a carga faz (a prioridade segue a ordem da tela); a carga é por página, pela F51.

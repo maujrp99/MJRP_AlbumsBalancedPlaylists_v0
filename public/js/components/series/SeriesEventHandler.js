@@ -26,6 +26,7 @@ export default class SeriesEventHandler extends Component {
      * @param {Function} config.props.onDeleteSeries - Callback for delete series
      * @param {Function} config.props.onAlbumRemoved - Callback after album removal
      * @param {Function} config.props.onRefetchMetadata - Callback for refetch
+     * @param {Function} config.props.onSaveRanking - (album, rankings) => Promise<boolean>, saves the person's ranking
      */
     constructor(config) {
         super(config);
@@ -313,30 +314,13 @@ export default class SeriesEventHandler extends Component {
      * @param {Object} album - Album to rank
      */
     handleRankAlbum(album) {
-        // Get current user ID (from actual auth state)
-        const userId = auth.currentUser?.uid || 'anonymous-user';
+        const { onSaveRanking } = this.props;
 
         const modal = new UserRankModal({
             album,
-            userId,
-            onSave: (rankings) => {
-                // 1. Update local album object state immediately for UI consistency
-                // Use the new Model method to ensure all track lists are updated
-                album.setUserRankings(rankings);
-
-                toast.success(`Rankings saved for "${album.title}"`);
-                console.log('[V2] [SeriesEventHandler] Rankings saved and local state updated:', rankings);
-
-                // 2. Trigger re-render
-                const { onAlbumRemoved } = this.props;
-                if (onAlbumRemoved) {
-                    console.log('[V2] [SeriesEventHandler] Triggering onAlbumRemoved (refresh)');
-                    onAlbumRemoved();
-                }
-            },
-            onClose: () => {
-                console.log('[SeriesEventHandler] Rank modal closed');
-            }
+            // The screen only reports: the controller saves and asks the load to show the new ranking
+            onSubmit: (rankings) => (onSaveRanking ? onSaveRanking(album, rankings) : Promise.resolve(false)),
+            onSave: () => toast.success(`Rankings saved for "${album.title}"`)
         });
 
         modal.show();

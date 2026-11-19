@@ -5,7 +5,10 @@
  * (10 to 100), and the two ways to move on - numbered pages, or a list that grows when the person
  * reaches its end. It only shows and reports; the controller owns the page (arch.md, seção 16).
  *
- * Props: { paging: { mode, size, page, pages, total, from, to, hasMore, totalSeries },
+ * When a filter reads facts that some album queries do not have yet, it also says how many
+ * (`paging.unchecked`). With one series on screen (`paging.single`) only that notice is shown.
+ *
+ * Props: { paging: { mode, size, page, pages, total, from, to, hasMore, totalSeries, unchecked, single },
  *          onPage(page), onSize(size), onMode(mode), onMore() }
  */
 import Component from '../base/Component.js';
@@ -38,6 +41,12 @@ export default class Pager extends Component {
             return;
         }
 
+        const notice = this._renderUnchecked(paging);
+        if (paging.single) {
+            this.container.innerHTML = notice ? `<div class="series-pager glass-panel p-4 mt-6">${notice}</div>` : '';
+            return;
+        }
+
         const scroll = paging.mode === PagingMode.SCROLL;
         const filtered = paging.total < paging.totalSeries ? ` (of ${paging.totalSeries} in all)` : '';
         const count = paging.total === 0
@@ -62,10 +71,19 @@ export default class Pager extends Component {
                         </div>
                     </div>
                 </div>
+                ${notice}
                 ${scroll ? this._renderMore(paging) : this._renderPages(paging)}
             </div>`;
 
         this._bind(paging);
+    }
+
+    /** The filter in use reads facts some albums do not have yet: say how many, and when they will. */
+    _renderUnchecked(paging) {
+        const count = Number(paging.unchecked) || 0;
+        if (count <= 0) return '';
+        const albums = count === 1 ? '1 album has' : `${count} albums have`;
+        return `<p class="series-pager-unchecked text-xs text-amber-400" role="status">${albums} not been checked against the sources yet, so this filter may miss ${count === 1 ? 'it' : 'them'}. An album is checked the first time its series loads.</p>`;
     }
 
     _renderPages(paging) {

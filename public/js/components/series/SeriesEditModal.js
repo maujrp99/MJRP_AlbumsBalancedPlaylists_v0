@@ -5,6 +5,8 @@ import { getIcon } from '../Icons.js'
 import { toast } from '../Toast.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { getSeriesService } from '../../services/SeriesService.js'
+import { parseAlbumQuery, toAlbumQuery } from '../../models/albumQuery.js'
+import { decodeEntities } from '../../models/text.js'
 
 export class SeriesEditModal {
     static async open(seriesId, onUpdated) {
@@ -16,7 +18,8 @@ export class SeriesEditModal {
         }
 
         let editingAlbumQueries = [...(series.albumQueries || [])]
-        let currentName = series.name
+        // A name stored with HTML entities (UAT-180) is shown plain, and saved plain on the next edit
+        let currentName = decodeEntities(series.name || '')
 
         // DOM References
         let albumsListContainer = null
@@ -38,10 +41,8 @@ export class SeriesEditModal {
             }
 
             editingAlbumQueries.forEach((query, index) => {
-                let text = query
-                if (typeof query === 'object' && query !== null) {
-                    text = `${query.artist} - ${query.title || query.album}`
-                }
+                const { artist, title } = parseAlbumQuery(query)
+                const text = artist ? `${artist} - ${title}` : title
 
                 const removeBtn = SafeDOM.button({
                     className: 'btn btn-ghost btn-sm text-red-400 hover:text-red-300',
@@ -62,14 +63,7 @@ export class SeriesEditModal {
         }
 
         const handleAddAlbum = (album) => {
-            const entry = {
-                artist: album.artist,
-                title: album.title,
-                album: album.title,
-                appleMusicId: album.id || album.appleMusicId,
-                year: album.year || null,
-                coverUrl: album.coverUrl || null
-            }
+            const entry = toAlbumQuery(album)
 
             // Check duplicates
             const isDuplicate = editingAlbumQueries.some(q => {
@@ -184,7 +178,7 @@ export class SeriesEditModal {
                 })
 
                 await service.updateSeries(seriesId, {
-                    name: currentName,
+                    name: decodeEntities(currentName).trim(),
                     albumQueries: editingAlbumQueries
                 })
 
