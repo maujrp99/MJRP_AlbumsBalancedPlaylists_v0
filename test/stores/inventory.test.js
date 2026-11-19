@@ -73,7 +73,7 @@ describe('InventoryStore', () => {
 
             store.init()
 
-            // Add a guest album so migration triggers
+            // Whatever is in memory belongs to whoever was here before
             store.albums = [{ id: 'guest-1', title: 'Guest Album', artist: 'Guest Artist' }]
 
             // Trigger auth change
@@ -81,7 +81,8 @@ describe('InventoryStore', () => {
 
             expect(store.userId).toBe('user-123')
             expect(store.repository.userId).toBe('user-123')
-            expect(dataSyncService.migrateInventory).toHaveBeenCalled()
+            // F60 (UAT-198): nothing in memory is copied into the account that arrives
+            expect(dataSyncService.migrateInventory).not.toHaveBeenCalled()
             expect(store.getAlbums()).toEqual(expectedAlbumsAfterLogin)
         })
 

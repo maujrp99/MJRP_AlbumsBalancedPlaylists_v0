@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:18] session — F60: ao sair da conta o inventário some da tela e não é copiado para a conta seguinte (UAT-198)
+
+- **Confirmado no código e em teste, antes do conserto** (`test/stores/inventory.userChange.test.js`, seis casos, todos falhavam): ao sair, o Firebase avisa primeiro «sem usuário» e logo depois a conta anônima que o app abre sozinho. No primeiro aviso a loja tentava ler o inventário de `anonymous-user`, as regras do banco recusavam, e os álbuns da pessoa anterior ficavam na memória e na tela. No segundo aviso a loja via «era anônimo, tem álbuns, chegou uma conta» e copiava o inventário inteiro da pessoa anterior para a conta anônima nova.
+- **Conserto (`public/js/stores/inventory.js`):** na troca de pessoa o inventário em memória é esvaziado na hora, antes de qualquer leitura, e a tela é avisada; entre a saída e a conta seguinte não se lê nada; uma resposta de leitura que chega depois da troca é descartada.
+- **A cópia de visitante para conta saiu deste caminho, e o MJRP precisa saber:** ela só rodava no caso do defeito. Um visitante de verdade tem um `uid` anônimo do Firebase, nunca o texto `anonymous-user`, então a condição nunca valia para ele; o inventário de visitante nunca migrou em produção. Levar os dados do visitante para a conta é a UAT-12, que fica como pergunta de desenho.
+- **Visto e não mexido:** as séries e as playlists em memória também não são esvaziadas ao sair (só o inventário tinha issue). Recarregar o app ao sair resolveria tudo de uma vez; é decisão de desenho.
+- **Testes:** 515 passando.
+
 ## [2026-11-19 16:13] session — F60: salvar playlists não perde o lote, grava uma vez, na série certa; apagar a série leva as playlists (UAT-196, UAT-197)
 
 - **Ramo:** `fix/f60-no-saved-work-lost`, a partir da `main` em `2adcdef`. Nada publicado, nada mesclado.
