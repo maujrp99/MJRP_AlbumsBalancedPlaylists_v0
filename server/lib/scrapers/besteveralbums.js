@@ -1,7 +1,8 @@
 const axios = require('axios')
 const { cleanTitle } = require('../normalize')
 const { loadAlbumIdentity } = require('../albumIdentity')
-const { upstreamErrorFrom } = require('../outcome')
+const { UpstreamError, upstreamErrorFrom } = require('../outcome')
+const { createPoliteQueue, PaceError, noPace } = require('../politeQueue')
 
 /**
  * Scraper for BestEverAlbums.
@@ -10,8 +11,16 @@ const { upstreamErrorFrom } = require('../outcome')
  * status that is not a success) is THROWN as an UpstreamError, from every search path. Nothing here
  * turns a failure into "not found": `null` means the source answered every question and nothing matched.
  *
- * `createBestEverScraper({ http, loadHtml })` receives the HTTP client and the HTML reader, so the
- * tests run with no network; the module also exports one scraper wired to axios and cheerio.
+ * The rule of pace and time (F52, slice 3): every request to the source goes through ONE function
+ * (`getPage`), which hands it to the polite queue (lib/politeQueue.js: how many at once, how far
+ * apart, what to do when the source says "busy") and gives it a deadline of its own
+ * (REQUEST_TIMEOUT_MS). `getRankingForAlbum(title, artist, { deadlineAt })` also stops asking when
+ * the time of the album request is over (`upstream_timeout`), and never asks the same address
+ * twice within one album request.
+ *
+ * `createBestEverScraper({ http, loadHtml, pace })` receives the HTTP client, the HTML reader and
+ * the queue, so the tests run with no network and no waiting; the module also exports one scraper
+ * wired to axios, cheerio and the real queue (BEA_PACE). That queue is PER INSTANCE of the server.
  */
 
 const SOURCE = 'BestEverAlbums'
@@ -40,8 +49,48 @@ function albumIdOf (url) {
 }
 const absoluteUrl = (url) => (String(url).startsWith('http') ? String(url) : `https://www.besteveralbums.com${url}`)
 
+/** How long one request to the source may take. The whole album request has 15 s (EnrichmentService). */
+const REQUEST_TIMEOUT_MS = 8000
+
+/**
+ * The pace with BestEverAlbums, per instance of the server. Decided by the agent on 2026-11-19,
+ * with no measurement of how the source answers a burst; to be revised with the numbers of the log.
+ */
+const BEA_PACE = Object.freeze({
+  concurrency: 2, // requests to the source at once
+  minIntervalMs: 250, // between two starts: at most 4 requests per second
+  backoff: Object.freeze({ baseMs: 1000, factor: 2, maxMs: 30000 }), // the wait after 429/503 with no Retry-After
+  maxAttempts: 3, // one request is asked at most 3 times while the source says "busy"
+  maxRetryAfterMs: 5 * 60 * 1000 // a Retry-After longer than this is cut to this
+})
+
+/** Retry-After as the source may send it: seconds, or a date. null when absent or unreadable. */
+function retryAfterMsOf (headers, now) {
+  const value = headers && (headers['retry-after'] ?? headers['Retry-After'])
+  if (value === undefined || value === null || value === '') return null
+  const seconds = Number(value)
+  if (Number.isFinite(seconds)) return Math.max(0, seconds * 1000)
+  const date = Date.parse(value)
+  return Number.isNaN(date) ? null : Math.max(0, date - now())
+}
+
+/** What the polite queue asks: is this failure the source saying "busy" (429, 503), and for how long? */
+const busyOfSource = (now = () => Date.now()) => (err) => {
+  const response = err && err.response
+  if (!response || (response.status !== 429 && response.status !== 503)) return null
+  return { retryAfterMs: retryAfterMsOf(response.headers, now) }
+}
+
+/** The queue said the turn would come too late: that is a failure of the source, with its code. */
+function upstreamErrorOfPace (err) {
+  if (err.reason === 'busy') {
+    return new UpstreamError('upstream_busy', `${SOURCE}: asked to wait`, { cause: err.cause, retryAfterMs: err.retryAfterMs })
+  }
+  return new UpstreamError('upstream_timeout', `${SOURCE}: no turn in the queue within the time of the request`)
+}
+
 // Helper to get axios config with headers
-const getAxiosConfig = (timeout = 30000) => ({
+const getAxiosConfig = (timeout = REQUEST_TIMEOUT_MS) => ({
   timeout,
   headers: {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -50,18 +99,41 @@ const getAxiosConfig = (timeout = 30000) => ({
   }
 })
 
-function createBestEverScraper ({ http = axios, loadHtml = cheerioLoad, logger = console } = {}) {
-// One request to the source. A failure leaves here as an UpstreamError and is caught nowhere below.
-async function getPage (url) {
-  try {
-    return await http.get(url, getAxiosConfig(30000))
-  } catch (err) {
-    const failure = upstreamErrorFrom(err, SOURCE)
-    logger.warn(`[BEA] request failed: ${failure.message}`)
-    throw failure
+function createBestEverScraper ({ http = axios, loadHtml = cheerioLoad, logger = console, pace = noPace, now = () => Date.now() } = {}) {
+/**
+ * The one door to the source, for one piece of work (one album request, or one direct call).
+ * @param {Object} [options]
+ * @param {number} [options.deadlineAt] - the time (ms) when the album request is over
+ * @param {{ requests: number }} [options.stats] - counts the requests that really went to the source
+ * @returns {Function} getPage(url) -> Promise<response>; a failure leaves it as an UpstreamError
+ *          and is caught nowhere below
+ */
+function pageGetter ({ deadlineAt = Infinity, stats = { requests: 0 } } = {}) {
+  const asked = new Map() // Map<url, Promise>: an address is asked once per piece of work
+
+  async function request (url) {
+    const left = deadlineAt - now()
+    if (left <= 0) throw new UpstreamError('upstream_timeout', `${SOURCE}: the time of the request is over`)
+    try {
+      return await pace.run(() => {
+        stats.requests++
+        return http.get(url, getAxiosConfig(Math.min(REQUEST_TIMEOUT_MS, Math.max(1, deadlineAt - now()))))
+      }, { deadlineAt })
+    } catch (err) {
+      const failure = err instanceof PaceError ? upstreamErrorOfPace(err) : upstreamErrorFrom(err, SOURCE)
+      logger.warn(`[BEA] request failed: ${failure.message}`)
+      throw failure
+    }
+  }
+
+  return function getPage (url) {
+    if (!asked.has(url)) asked.set(url, request(url))
+    return asked.get(url)
   }
 }
 
+/** Every search of the source, asking through the door given. */
+function searchesWith (getPage) {
 // ---- "Is this the album asked for?" is decided by ONE rule, shared/albumIdentity.js (F55) ----
 // Every search path below turns what the source gave (a label "Title by Artist", a page, a link
 // on the artist's page) into { title, artist } and asks the rule. Nothing here compares texts.
@@ -488,4 +560,31 @@ async function getRankingFromUrl(albumUrl) {
 return { getRankingForAlbum, getRankingFromUrl, findArtistPage, parseArtistDiscography, findAlbumId, fetchAlbumPage, parseChartHtml }
 }
 
-module.exports = { ...createBestEverScraper(), createBestEverScraper }
+/** A direct call (a script, a debug route) is a piece of work of its own: its own door. */
+const direct = (name) => (...args) => searchesWith(pageGetter())[name](...args)
+
+return {
+  /**
+   * @param {string} albumTitle
+   * @param {string} albumArtist
+   * @param {Object} [options] - { deadlineAt, stats }: see pageGetter
+   */
+  getRankingForAlbum: (albumTitle, albumArtist, options) => searchesWith(pageGetter(options)).getRankingForAlbum(albumTitle, albumArtist),
+  getRankingFromUrl: direct('getRankingFromUrl'),
+  findArtistPage: direct('findArtistPage'),
+  parseArtistDiscography: direct('parseArtistDiscography'),
+  findAlbumId: direct('findAlbumId'),
+  fetchAlbumPage: direct('fetchAlbumPage'),
+  parseChartHtml: (html, chartUrl) => searchesWith(pageGetter()).parseChartHtml(html, chartUrl)
+}
+}
+
+const bestEverPace = createPoliteQueue({ ...BEA_PACE, busyOf: busyOfSource() })
+
+module.exports = {
+  ...createBestEverScraper({ pace: bestEverPace }),
+  createBestEverScraper,
+  busyOfSource,
+  BEA_PACE,
+  REQUEST_TIMEOUT_MS
+}

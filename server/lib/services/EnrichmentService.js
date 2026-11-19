@@ -10,17 +10,47 @@
  *   failure     the request was unusable (invalid_request) or the source could not answer
  *               (upstream_failed, upstream_timeout, upstream_busy)
  * Anything else that breaks here is thrown: the route's error path answers `internal`.
+ *
+ * Time and pace (F52, slice 3):
+ *   - one album request has ALBUM_BUDGET_MS in all, less than the time the app waits for the
+ *     ratings (20 s, LOAD_LIMITS.enrichTimeoutMs in the app). At the deadline the answer is
+ *     `upstream_timeout`, whatever the source is doing;
+ *   - identical requests at the same time (same artist and title) share ONE search of the source
+ *     (lib/inFlight.js); each still gets the ratings of its own tracks. Nothing is remembered
+ *     after the search ends: there is no cache here.
+ * Every result carries `trace` ({ how: 'source' | 'joined', sourceRequests }) for the log of the
+ * route; it does not go on the wire.
  */
 const { OUTCOMES, success, failure, UpstreamError } = require('../outcome')
 const { toFuzzyCore } = require('../normalize')
+const { createInFlight } = require('../inFlight')
+const { createBudget } = require('../timeBudget')
+
+/** The whole time of one album request. The app gives up at 20 s; the answer has to leave before. */
+const ALBUM_BUDGET_MS = 15000
+const SOURCE = 'BestEverAlbums'
 
 const titleOf = (track) => (track && (track.title || track.name)) || ''
 
+/** Two requests are for the same album when artist and title are the same text, case and spacing apart. */
+const sameText = (text) => String(text || '').toLowerCase().replace(/\s+/g, ' ').trim()
+const albumKey = (artist, title) => `${sameText(artist)}|${sameText(title)}`
+
 class EnrichmentService {
+    /**
+     * @param {Object} deps
+     * @param {Function} deps.getBestEverRanking - (title, artist, { deadlineAt, stats }) => Promise<page|null>
+     * @param {Function} deps.normalizeRankingKey
+     * @param {Object} [deps.logger]
+     * @param {Object} [deps.inFlight] - lib/inFlight.js
+     * @param {Function} [deps.newBudget] - () => a budget of lib/timeBudget.js, for one request
+     */
     constructor(deps) {
         this.getBestEverRanking = deps.getBestEverRanking;
         this.normalizeRankingKey = deps.normalizeRankingKey;
         this.logger = deps.logger || console;
+        this.inFlight = deps.inFlight || createInFlight();
+        this.newBudget = deps.newBudget || (() => createBudget({ ms: ALBUM_BUDGET_MS }));
     }
 
     /**
@@ -35,15 +65,39 @@ class EnrichmentService {
         const artist = albumData.artist || ''
         const { title, tracks } = albumData
 
+        const search = this._searchOnce(title, artist, this.newBudget())
         let page
         try {
-            page = await this.getBestEverRanking(title, artist)
+            page = await search.page
         } catch (err) {
             if (!(err instanceof UpstreamError)) throw err
             this.logger.warn(`[Enrichment] the source failed for ${artist} - ${title}: ${err.message}`)
-            return failure(err.code)
+            return { ...this._failureOf(err), trace: search.trace() }
         }
+        return { ...(await this._resultOf(page, title, artist, tracks)), trace: search.trace() }
+    }
 
+    /**
+     * The page of the album, from the search already running for it or from a new one, never past
+     * the budget of this request.
+     * @returns {{ page: Promise<Object|null>, trace: Function }}
+     */
+    _searchOnce(title, artist, budget) {
+        const stats = { requests: 0 }
+        const shared = this.inFlight.share(albumKey(artist, title), () =>
+            this.getBestEverRanking(title, artist, { deadlineAt: budget.deadlineAt, stats }))
+        return {
+            page: budget.race(shared.promise, SOURCE),
+            trace: () => ({ how: shared.joined ? 'joined' : 'source', sourceRequests: stats.requests })
+        }
+    }
+
+    _failureOf(err) {
+        const retryAfterSeconds = err.retryAfterMs > 0 ? Math.ceil(err.retryAfterMs / 1000) : null
+        return failure(err.code, { retryAfterSeconds })
+    }
+
+    async _resultOf(page, title, artist, tracks) {
         if (!page) {
             this.logger.info(`[Enrichment] no page for [${title}] by [${artist}].`)
             return success(this._data(null, tracks.map(track => this._unrated(track))), OUTCOMES.NOT_FOUND)
@@ -103,3 +157,4 @@ class EnrichmentService {
 }
 
 module.exports = EnrichmentService;
+module.exports.ALBUM_BUDGET_MS = ALBUM_BUDGET_MS;
