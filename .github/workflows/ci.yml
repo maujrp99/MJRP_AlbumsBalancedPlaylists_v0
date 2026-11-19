@@ -30,7 +30,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          # Keep equal to the Node of the server image (server/Dockerfile).
+          # The Node the tests are run with on the owner's machine. The server image is still on 18
+          # (server/Dockerfile) until the owner decides the upgrade.
           node-version: 26.x
           cache: npm
 

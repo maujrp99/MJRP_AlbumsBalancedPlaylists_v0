@@ -38,8 +38,8 @@ violates:: [[constitution#V]]
   verified_by:: `reports/evidence/F64-one-tested-way-to-production/F64-server-dry-run-2026-11-19.txt` (tudo menos publicar); a publicação real espera o sim do MJRP (TASK-08)
 - [REQ-03] Os dois comandos têm um modo de ensaio que faz tudo menos publicar e conferir a produção, e não deixam nada dentro do repositório: trabalham numa pasta temporária do sistema, removida no fim. · fixes UAT-202
   verified_by:: as duas evidências acima (saída 0, pasta temporária removida ao fim)
-- [REQ-04] Existe uma receita só para a imagem do servidor, a que a produção usa, e ela parte de um Node em suporte. · fixes UAT-22
-  verified_by:: o servidor sobe no Node 26 com as dependências do lockfile (TASK-07; a evidência do servidor mostra a subida, feita com o `Dockerfile` da `main`, ainda no Node 18); a imagem com Node 26 só é construída na publicação real (TASK-08)
+- [REQ-04] Existe uma receita só para a imagem do servidor, a que a produção usa; a troca do Node 18 (fora de suporte) por uma linha em suporte espera o sim do MJRP. · fixes UAT-22
+  verified_by:: o servidor sobe no Node 26 com as dependências do lockfile (TASK-07; a evidência do servidor mostra a subida, feita com o `Dockerfile` da `main`, ainda no Node 18); a imagem com Node 26 só é construída na publicação real (TASK-08) A imagem publicada segue em Node 18 até a decisão.
 - [REQ-05] A automação do GitHub roda os testes unitários em todo push e pull request e não publica nada. · fixes UAT-202, UAT-20
   verified_by:: não verificado: o arquivo `.github/workflows/ci.yml` não rodou no GitHub (TASK-09)
 - [REQ-06] O repositório descreve um caminho só de publicação: os scripts antigos e a segunda receita saíram, os comandos estão no `package.json`, e o manual diz o que precisa existir na máquina e como voltar atrás. · fixes UAT-202
@@ -58,8 +58,8 @@ N/A: a feature não importa nenhum requisito e não tem tela (conserto das issue
 - UAT-20, a parte que não é da automação: o lint não reprova nada porque hoje tem 81 erros, em `public/js/**` e `server/**`; não há regra de importação nem busca de segredos. A automação deixou de fingir (o passo com `|| true` saiu); fazer o lint reprovar pede consertar o código primeiro. A issue segue aberta nessa parte.
 - Itens do tema 6 do mapa que pedem mexer em `server/**` ou `public/js/**`: 6.1 (segredos do Spotify do servidor ausentes da publicação: o serviço não tem nenhuma variável do Spotify, e o script não define variáveis), 6.5 (CORS), 6.6 (queda calada para uma configuração de Firebase de mentira) e 6.7 (`firebase-config.js` ignorado e versionado ao mesmo tempo; o script do site exige que ele exista na `main`).
 - Publicar `firestore.rules`: nenhum dos dois scripts o faz.
-- `docs/specs/arch.md` (linhas da implantação) e `docs/specs/tech-stack.md` ainda citam os scripts antigos, o `cloudbuild.yaml` e o Node 18: a corrigir na integração.
+- `docs/specs/arch.md` e `docs/specs/tech-stack.md` foram atualizados pelo integrador em 2026-11-19 (commit `17f9b5e`).
 - Os testes próprios do servidor (`cd server && npm test`) não entram no portão: parte deles consulta um site externo de verdade.
 
 ## Open Questions
-- O Node do servidor passa de 18 para 26 na próxima publicação do servidor. Aceito? — a responder pelo MJRP antes da TASK-08; o risco está no plano.
+- O Node do servidor continua em 18, que está fora de suporte. Passar para uma linha em suporte (26, a que roda os testes, ou 24)? — a responder pelo MJRP; o integrador reverteu a troca feita pelo executor, porque ela mudaria o que produção roda sem o sim dele.
