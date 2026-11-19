@@ -9,6 +9,9 @@
 ### 1.1 `stores/albumLoad.js` (AlbumLoadStore) - v4.0
 **Purpose**: the one owner of which albums each series has and of the load state of each album. Pure state; only `AlbumLoadService` writes to it. Details in [08_Frontend_Models.md](08_Frontend_Models.md).
 
+### 1.1a `stores/ownRankings.js` (OwnRankingsStore) - v4.0
+**Purpose**: the albums the person has ranked (which, not how): the list, the person it belongs to and its state (`idle`, `loading`, `ready`, `failed`). Pure state; only `OwnRankingService` writes to it. `getIndex()` is derived and answers "is this album query ranked?" for the 'My Ranking' filter.
+
 ### 1.1b `stores/albums.js` (AlbumsStore)
 **Purpose**: the shelf of loaded albums the other screens read.
 *   Since v4.0 it is filled by projection from `AlbumLoadStore` (`setAlbumsBySeries`).

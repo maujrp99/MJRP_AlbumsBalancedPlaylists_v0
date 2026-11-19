@@ -281,6 +281,11 @@
 14. `public/js/services/series/SeriesFactsService.js` (Analysis: `manual/17_Frontend_Services.md`)
 15. `public/js/components/ui/Pager.js` (Analysis: `manual/12_Frontend_Components_Core.md`)
 16. `public/js/api/client.js` (Analysis: `manual/19_Frontend_JS_Root.md`)
+17. `public/js/models/text.js` (Analysis: `manual/08_Frontend_Models.md`)
+18. `public/js/models/ownRanking.js` (Analysis: `manual/08_Frontend_Models.md`)
+19. `public/js/stores/ownRankings.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
+20. `public/js/services/ranking/OwnRankingService.js` (Analysis: `manual/17_Frontend_Services.md`)
+21. `public/js/services/ranking/ownRanking.js` (Analysis: `manual/17_Frontend_Services.md`)
 
 ## 10. Project Documentation & Archives
 ### Root Documentation

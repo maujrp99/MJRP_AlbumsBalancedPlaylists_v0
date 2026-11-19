@@ -385,14 +385,45 @@ Construído nos ramos `fix/f45-albums-load-in-parallel`, `fix/f47-series-list-wi
 | Observador de visibilidade por série | F46 | não construído | a paginação por série (F51) limita o que está na tela; a lista que cresce usa um sentinela no paginador |
 | Ordem das fatias | F45, F46, F48, F51 | F45, F47, F51; F46 e F48 em parte | a F47 passou à frente quando o MJRP notou que via 20 de 45 séries |
 | Escopo «uma série» × «todas» | gerações distintas | igual; trocar de página dentro de «todas» **reconcilia** na mesma geração e solta as séries que saíram da tela (voltam do guardado) | simples e suficiente para um usuário |
-| Filtro «My Ranking» | uma leitura da coleção de rankings | só os álbuns carregados | não construído ainda |
-| Aviso «N pedidos ainda não conferidos» no filtro por fonte | na tela | não construído (`countUnchecked` existe e não é usado) | fica para o fecho da F51 |
+| Filtro «My Ranking» | uma leitura da coleção de rankings | igual, pela F46: ver a seção 18 | o ranking casa com o pedido por nome, e de forma exata depois de carregar |
+| Aviso «N pedidos ainda não conferidos» no filtro por fonte | na tela | no paginador, pela F51: ver a seção 18 | fica junto da contagem de séries |
 | `stores/albums.js` como estado puro | sai o Firestore da store | a store é preenchida por projeção, mas ainda guarda `saveToFirestore` e `loadFromFirestore`, usados pelo «Refetch» | F48 |
 | ADR | depois da aprovação | não escrita | pendente |
 
 **Funções de aptidão em `npm test`** (`test/architecture/albumLoadBoundaries.test.js`, 9 testes): a fila não importa nada do projeto; as regras de estado, filtro, paginação e fatos importam só outros modelos; a store de carga não importa serviço, API, repositório, cache nem Firestore; o serviço de carga e o de fatos só alcançam o exterior pelo que recebem; os adaptadores não importam Firestore, store nem tela; só o arquivo de composição liga a carga às fontes reais; a tela não importa o serviço de carga nem o cliente de API; o controlador não carrega álbum; e o Firestore fora de `repositories/` está numa lista de três exceções conhecidas (`services/PlaylistsService.js`, `stores/albums.js`, `views/SaveAllView.js`, issue UAT-14) que só pode encolher.
 
-**Sem teste automático ainda:** `SeriesController`, `SeriesGridRenderer`, `Pager` e `FilterToolbar`; a prova deles é a conferência no navegador registrada em `reports/evidence/`.
+**Sem teste automático ainda:** `SeriesGridRenderer`; a prova dele é a conferência no navegador registrada em `reports/evidence/`. `SeriesController`, `Pager` e `FilterToolbar` ganharam teste (seção 18).
+
+### 18. Fecho da F46 e pontas da F51 (2026-11-19 13:21)
+
+Construído no ramo `fix/f46-albums-load-state`. Onde esta seção contradiz as anteriores, vale esta.
+
+**O ranking pessoal ganhou dono no cliente.** `services/ranking/OwnRankingService.js` salva o ranking e mantém a lista de álbuns ranqueados, lida uma vez por pessoa (`ensureLoaded`), com as portas injetadas; `stores/ownRankings.js` guarda a lista e o seu estado, e o índice de busca é derivado. `services/ranking/ownRanking.js` é o único lugar novo que conhece o repositório. A tela e o controlador não falam com `UserRankingRepository`.
+
+**O ranking salvo pelo modal reflete na tela.** `UserRankModal` só mostra e avisa (`onSubmit`); quem salva é `SeriesController.saveRanking`, que depois chama `AlbumLoadService.refreshSource(albumId, 'userRanking')`. O serviço marca a fonte como pendente, roda só ela e publica um álbum novo, em todas as séries que têm o álbum. O trabalho de cada álbum passou a ser encadeado (`_runChain`): o pedido espera a fonte que ainda estiver rodando para aquele álbum, senão a resposta mais antiga apagaria o ranking recém-lido. A tela deixou de mutar o álbum publicado (seção 15, ponto 5).
+
+**«My Ranking» sobre todas as séries.** O ranking é guardado sob o id do álbum carregado (`artista_título` em slug), com `artistName` e `albumTitle`; a série guarda o que foi pedido. `models/ownRanking.js` casa os dois por nome, escritos do mesmo jeito dos dois lados (sem caixa, sem acento, «&» como «and», sem pontuação, entidades HTML desfeitas, sem a nota de edição), e pelo id quando o ranking não tem os nomes. O que o nome não casa (o catálogo deu outro título ao álbum) casa de forma exata depois de o álbum carregar. O filtro puro (`filterSeries`) continua recebendo o conjunto de chaves; quem o monta é o controlador, só quando o filtro está ativo.
+
+| Risco | Tipo | Como o desenho o reduz |
+|---|---|---|
+| O nome pedido e o nome carregado divergem além do que a regra cobre | dados | o álbum carregado com ranking entra no conjunto de forma exata; saída definitiva: gravar o id do álbum achado em `facts` (muda dado gravado: decisão do MJRP) |
+| A lista de rankings envelhece depois de um ranking salvo | dados | o serviço que salva é o mesmo que mantém a lista: acrescenta o álbum sem ler de novo |
+| A lista de outra pessoa fica na tela depois de trocar de conta | segurança | a lista é guardada com o id da pessoa; outra pessoa provoca nova leitura, e uma resposta que chega depois da troca é descartada |
+| A fonte lenta em curso apaga o ranking recém-lido | concorrência | o trabalho por álbum é encadeado; teste do serviço com a fonte lenta presa |
+
+**O controlador larga a tela que fechou.** `SeriesController` vive a sessão inteira e só desfazia as inscrições no começo da visita seguinte: entre uma visita e outra, com a carga em andamento, redesenhava a grade de uma tela que não existia mais. `SeriesView.destroy` chama `detachView`, que termina as inscrições; a carga segue no serviço, e a visita seguinte mostra o progresso.
+
+**Pedidos ainda não conferidos.** Com o filtro por fonte ativo (`pending`, `acclaim`, `popularity`), `getPageView` conta os pedidos sem `facts` do escopo na tela (`countUnchecked`, `readsFacts`) e o paginador diz quantos são. Com uma série só na tela, o paginador mostra apenas esse aviso.
+
+**Texto gravado com entidade HTML (UAT-180).** A regra: o texto é guardado e comparado limpo; escapar é do momento de desenhar um gabarito HTML, nunca do dado, e nunca de um nó de texto. `models/text.js` (`decodeEntities`) é a função pura; `parseAlbumQuery` e `queryKey` passam por ela, então o pedido gravado com «&amp;» e o pedido limpo têm a mesma chave; `CatalogAdapter.find` consulta os catálogos com `plainAlbumQuery`; a Home e a edição de série gravam o pedido por `toAlbumQuery`. A origem do «&amp;» não está no código de hoje. O banco não é reescrito: o dado é regravado limpo quando a série é editada. O nome da série é mostrado limpo na tela de álbuns (`SeriesController.getScreenSeries`) e na edição; o ponto único certo é a leitura da lista em `SeriesService.loadFromFirestore`, que fica para a F48, dona do arquivo.
+
+**A busca das playlists guardadas (UAT-179).** `SavedPlaylistsView.update` refazia a página inteira a cada letra, com uma barra de filtros nova: o conserto da barra não bastava. A página passa a ser desenhada uma vez; depois só a lista muda e a barra é atualizada.
+
+**Funções de aptidão a mais** (`test/architecture/ownRankingBoundaries.test.js`, 7 testes): as regras de texto e de ranking importam só outros modelos; o modal de ranking não importa repositório, serviço, store nem Firestore; o serviço de ranking não importa nada; a store de ranking só guarda estado; a tela das séries não alcança o repositório nem o serviço de ranking; o repositório de ranking só é importado onde os serviços são montados, com duas exceções conhecidas que só podem encolher (`controllers/BlendingController.js`, `services/SeriesService.js`); os arquivos que desenham com nó de texto ou repassam dado não chamam `escapeHtml`.
+
+**Com teste automático agora:** `SeriesController` (15), `Pager` (19), `FilterToolbar` (9), `UserRankModal` (3), `SavedPlaylistsView` (3, a busca). `SeriesGridRenderer` segue sem teste.
+
+**Não construído:** `facts.albumId`; a leitura limpa do nome da série para todas as telas; a opção «AI Enriched» do filtro por fonte, que nunca traz nada porque nenhum fato é gravado para ela; a ADR.
 
 ### 14. O que vai para o ADR
 
