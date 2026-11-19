@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:05] session — mapa da v5.0: cada achado, por tema, com a feature que o resolve
+
+Pedido do MJRP: «a partir do report, vc gerar um novo como um grande mapa … com cada item mapeado para cada feature e agrupado pelos temas que vc sugeriu». `reports/audits/2026-11-19-mjrpalbumblender-v0-v5-map.md`: os 153 itens do cruzamento em oito temas (segurança 11, perda de dado 10, carga e identidade 33, blend e exportação 16, Home e navegação 20, publicação 9, inventário 5, limpeza 13), mais 33 consertados na v4.0 e 3 que não valem mais; cada item em aberto com a feature (F49, F52, F54 a F65), o estado e o código de origem nos relatórios antigos. Onze issues legadas de 2025-11 a 2026-01 ficaram **sem feature**: não foram relidas e pedem triagem. A tradução e a atribuição são do implementador, sem julgamento separado.
+
 ## [2026-11-19 15:03] decision — tudo entra na v5.0, e cada feature pronta e testada vai para produção sozinha
 
 - **O MJRP:** «pra mim tudo tem que entrar na v5.0, mas ir pra prod nao precisa ser um big bang, cada Feature feita deveria ser testar e ir pra prod».
