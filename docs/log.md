@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 14:21] session — relatório da regressão do navegador escrito, a pedido do MJRP
+
+`reports/audits/2026-11-19-mjrpalbumblender-v0-browser-regression.md`: os 20 cenários com o resultado de cada um, o diagnóstico por achado, o que não foi testado, os dados de teste que ficaram na conta e o backlog proposto. Quem rodou foi o próprio implementador, não um juiz separado; o relatório diz isso no cabeçalho.
+
 ## [2026-11-19 14:20] session — UAT-193 aberta: o MJRP pede para investigar criar × editar com lógicas separadas (séries e playlists)
 
 Nota dele para o backlog: ver se as lógicas de edição precisam mesmo ser diferentes das de criação, na série e na playlist, e como melhorar a arquitetura e os padrões para facilitar manutenção e evolução. Primeira passada no código: a busca e a classificação já são compartilhadas; a duplicação está na parte de tela (duas listas de discografia). Entra no backlog como investigação com proposta de arquitetura antes de qualquer código.
