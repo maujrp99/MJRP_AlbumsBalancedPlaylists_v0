@@ -5,7 +5,7 @@ This document fills the remaining gaps in the "Brain" and "Data" layers, specifi
 ## 1. The Controller Layer
 
 ### Series Controller (`public/js/controllers/SeriesController.js`)
-*   **Role**: translates what the Albums screen wants into requests. It replaced the legacy `AlbumsStateController`.
+*   **Role**: translates what the Albums screen wants into requests. It replaced the legacy `AlbumsStateController`, whose file was removed in v4.0 (F48).
 *   **What it does**:
     1.  **Scope**: ALL series (the hub) or a SINGLE series.
     2.  **Page view** (`getPageView`): sorts the series, filters them with `models/seriesFilter.js`, and cuts the result to the current page with `models/paging.js`. The filter runs over every series, then the page is cut; never the other way round.
@@ -88,7 +88,7 @@ sequenceDiagram
 ### Albums Store (`public/js/stores/albums.js`)
 *   **Role**: the shelf the other screens read (`getAlbums`, `getAlbumsForSeries`). Since v4.0 it is a projection of the load store, written through `setAlbumsBySeries` by `services/albums/albumLoading.js`.
 *   **Still true**: `albumsByAlbumSeriesId` keeps the albums per series, and `ALL_SERIES_VIEW` holds the albums of every series on screen.
-*   **Known debt**: the store still holds Firestore code (`saveToFirestore`, `loadFromFirestore`) that the album load no longer calls; only "Refetch Metadata" still writes through it (issue UAT-14).
+*   **State only** (F48): the store imports no Firestore. `saveToFirestore`, `loadFromFirestore` and `updateAlbum(db, album)` were removed; "Refetch Metadata" writes the shared album document through `repositories/SharedAlbumRepository.js` (see [07_Frontend_Data_Infra.md](07_Frontend_Data_Infra.md)). The fitness function in `test/architecture/albumLoadBoundaries.test.js` fails if the store imports Firestore again.
 
 ### Album Load Cache (`public/js/services/albums/adapters/AlbumCacheAdapter.js`) - v4.0
 *   **Storage**: `CacheManager` (memory + IndexedDB `mjrp-cache`), keys `albumload:v1:<album query>`, 7 days.

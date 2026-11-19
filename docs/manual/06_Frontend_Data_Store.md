@@ -14,7 +14,7 @@
 *   Since v4.0 it is filled by projection from `AlbumLoadStore` (`setAlbumsBySeries`).
 *   `ALL_SERIES_VIEW` holds the albums of every series on screen; each series id holds its own.
 *   `removeAlbumsBySeriesIdFromContext` and the "surgical injection" of Sprint 21.5 still exist for the edit and delete flows; the next load reconciles them.
-*   It is **not** a pure state container yet: it still carries Firestore code used by "Refetch Metadata" (issue UAT-14).
+*   It is a pure state container (v4.0, F48): it imports no Firestore. The write of "Refetch Metadata" into the shared `albums` collection moved to `repositories/SharedAlbumRepository.js`; `saveToFirestore`, `loadFromFirestore` and `updateAlbum(db, album)` no longer exist.
 
 ### 1.2 Pure State Containers (Sprint 19)
 **Status**: `[REFACTORED]`

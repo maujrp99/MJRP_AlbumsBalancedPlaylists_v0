@@ -59,6 +59,8 @@ sequenceDiagram
 
 ### Logic
 -   **Server calls**: `BEAenrichAlbum` (`POST /api/enrich-album`, track ratings) and `_fetchAlbumFromAPI` (`POST /api/generate`, the second source of an album, which uses paid AI).
+-   **When `POST /api/generate` is asked again** (v4.0, F48): only after a failure that may pass, which is no answer from the network or a 5xx. Up to 2 new attempts, with a wait that doubles (1 s, 2 s, ceiling 8 s) and a draw that shortens it by up to half (`utils/retry.js`, `retryWithBackoff`). A 4xx (400, 402, 404, 429) is an answer and is never asked again. Each call has a deadline of 90 s; a call that passed it is not asked again either, because the paid work may still be running on the server.
+-   **The error that comes up is the real one**: an `ApiError` with `kind` (`http`, `network`, `timeout`) and, when the server answered, `status`. The album load (`CatalogAdapter`) still ends such an album as "not found", and now logs the reason.
 -   **`fetchAlbum(query)`**: the older, all-in-one load (cache, Apple Music, ratings, Spotify). Still used by the Blending Menu and the playlist edit mode. The Albums screen loads through `AlbumLoadService` instead.
 -   **`fetchMultipleAlbums`**: one album at a time, in sequence. Used only by the playlist edit mode.
 -   **`generatePlaylists`** (`POST /api/playlists`): has no caller.

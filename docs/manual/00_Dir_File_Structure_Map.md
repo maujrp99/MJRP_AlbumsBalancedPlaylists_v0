@@ -130,7 +130,7 @@
 105. `server/lib/services/spotifyPopularity.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
 
 ### Batch 5: Legacy & Deprecated
-106. `public/legacy/AlbumsView_DEPRECATED.js` (Analysis: `manual/98_Archived_Legacy_Analysis.md`)
+106. `public/legacy/AlbumsView_DEPRECATED.js` - removed in v4.0 (F48), with `public/js/views/controllers/AlbumsStateController.js`, the dead controller it imported (Analysis: `manual/98_Archived_Legacy_Analysis.md`)
 107. `public/legacy/hybrid-curator.html` (Analysis: `manual/98_Archived_Legacy_Analysis.md`)
 
 ### Batch 6: Algorithms & Strategies
@@ -281,6 +281,9 @@
 14. `public/js/services/series/SeriesFactsService.js` (Analysis: `manual/17_Frontend_Services.md`)
 15. `public/js/components/ui/Pager.js` (Analysis: `manual/12_Frontend_Components_Core.md`)
 16. `public/js/api/client.js` (Analysis: `manual/19_Frontend_JS_Root.md`)
+17. `public/js/utils/retry.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
+18. `public/js/repositories/SharedAlbumRepository.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
+19. `public/js/services/albums/clearAlbumCaches.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
 
 ## 10. Project Documentation & Archives
 ### Root Documentation

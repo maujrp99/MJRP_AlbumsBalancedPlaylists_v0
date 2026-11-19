@@ -18,8 +18,11 @@
 ### 1.2 `Footer.js`
 **Role**: Static Footer & Debug Tools.
 **Logic**:
-*   Displays dynamic Year and Last Updated timestamp.
-*   **Clear Cache**: runs `localStorage.clear()` and reloads. It does **not** clear the album cache, which lives in IndexedDB (`mjrp-cache`) and in memory (issue UAT-177).
+*   Displays the Last Updated timestamp.
+*   **Clear Cache** (v4.0, F48): calls the `clearCaches` function it receives in the constructor (`app.js` passes `clearAppAlbumCaches` from `services/albums/albumLoading.js`), shows "Cache Cleared!" and reloads the page after one second. That function stops the album load, clears the app cache (memory and the IndexedDB `mjrp-cache`: albums, ratings, the personal rankings that were read) and removes the old `album_cache_v…` entries of localStorage.
+*   It no longer runs `localStorage.clear()`: the Spotify login, the saved series and the screen choices stay.
+*   If the clearing fails, the footer says "Could not clear the cache" and does not reload.
+*   The footer imports no service: what the button does is injected (`new Footer({ clearCaches, reload, reloadDelayMs })`).
 
 ### 1.3 `Breadcrumb.js`
 **Role**: Dynamic Path Visualizer.
