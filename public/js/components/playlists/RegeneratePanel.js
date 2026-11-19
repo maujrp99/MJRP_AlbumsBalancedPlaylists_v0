@@ -41,6 +41,11 @@ export class RegeneratePanel {
   static currentConfig = {}
   static pending = null
 
+  /** What the person changed and did not generate yet, else the recipe of the playlists, else the recommended one. */
+  static _recipeToShow(generatedWith) {
+    return { ...(this.pending || generatedWith || DEFAULT_RECIPE) }
+  }
+
   /** Forget what was changed in the panel: after a generation, and when the screen opens. */
   static reset() {
     this.pending = null
@@ -61,7 +66,7 @@ export class RegeneratePanel {
       expanded = false
     } = options
 
-    this.currentConfig = { ...(this.pending || generatedWith || DEFAULT_RECIPE) }
+    this.currentConfig = this._recipeToShow(generatedWith)
 
     const playlistCount = count || existingPlaylistIds.length
 

@@ -19,6 +19,12 @@ import { router } from '../router.js'
 import { installUnsavedChangesGuard } from './playlists/unsavedChangesGuard.js'
 import { attachPlaylistEditActions } from './playlists/playlistEditActions.js'
 
+/** The batch name on screen: what was typed, or the name of the batch being edited. */
+const shownBatchNameOf = (state) => state.batchName || state.editContext?.currentBatchName || ''
+
+/** The name the batch being edited is saved under. */
+const savedBatchNameOf = (state) => state.editContext?.originalBatchName || state.batchName || ''
+
 export class PlaylistsView extends BaseView {
   constructor() {
     super()
@@ -237,12 +243,12 @@ export class PlaylistsView extends BaseView {
     // Header
     container.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderHeader({
       isEditMode,
-      editedBatchName: state.editContext?.originalBatchName || state.batchName || ''
+      editedBatchName: savedBatchNameOf(state)
     })))
 
     // Batch Name Input
     container.appendChild(SafeDOM.fromHTML(
-      PlaylistsGridRenderer.renderBatchNameInput(state.batchName || state.editContext?.currentBatchName, isEditMode, state.defaultBatchName)
+      PlaylistsGridRenderer.renderBatchNameInput(shownBatchNameOf(state), isEditMode, state.defaultBatchName)
     ))
 
     // Generation / Reconfig
@@ -266,7 +272,7 @@ export class PlaylistsView extends BaseView {
 
     const grid = SafeDOM.div({ id: 'playlistsGrid' })
     grid.appendChild(SafeDOM.fromHTML(
-      PlaylistsGridRenderer.renderGrid(playlists, state.batchName || state.editContext?.currentBatchName || state.defaultBatchName || '')
+      PlaylistsGridRenderer.renderGrid(playlists, shownBatchNameOf(state) || state.defaultBatchName || '')
     ))
     mainContent.appendChild(grid)
     container.appendChild(mainContent)

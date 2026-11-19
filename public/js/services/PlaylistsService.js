@@ -344,10 +344,8 @@ export class PlaylistsService {
     restoreDraft({ seriesId = null } = {}) {
         if (playlistsStore.getPlaylists().length > 0) return false
 
-        const draft = this.storage.load(STORAGE_KEY)
-        if (!draft || !Array.isArray(draft.playlists) || draft.playlists.length === 0 || !draft.seriesId) return false
-        if (!draft.userId || draft.userId !== this.currentUserId()) return false // someone else's, or from an older version
-        if (seriesId && draft.seriesId !== seriesId) return false
+        const draft = this._draftFor(seriesId)
+        if (!draft) return false
 
         playlistsStore.setMode('CREATING')
         playlistsStore.setEditContext(null)
@@ -362,6 +360,16 @@ export class PlaylistsService {
         console.log(`[PlaylistsService] Restored ${draft.playlists.length} unsaved playlists of series ${draft.seriesId}`)
 
         return true
+    }
+
+    /** The draft kept in the browser, when it is whole, of this person and of this series; else null. */
+    _draftFor(seriesId) {
+        const draft = this.storage.load(STORAGE_KEY)
+        const whole = !!draft && Array.isArray(draft.playlists) && draft.playlists.length > 0 && !!draft.seriesId
+        if (!whole) return null
+        if (!draft.userId || draft.userId !== this.currentUserId()) return null // someone else's, or from an older version
+        if (seriesId && draft.seriesId !== seriesId) return null
+        return draft
     }
 
     clearLocalStorage() {
@@ -460,18 +468,23 @@ export class PlaylistsService {
         }
         console.log(`[PlaylistsService] Saved batch "${batchName}": ${stored.length} playlists`)
 
-        // The saved batch is now the one being edited (also after a rename: the next save replaces the new name)
+        this._showSaved(stored, batchName, seriesId, savedAt)
+        return { status: 'saved', batchName, seriesId, playlists: stored }
+    }
+
+    /**
+     * The saved batch is now the one being edited (also after a rename: the next save replaces
+     * the new name), with nothing left to save, and it is the new starting point of the history.
+     */
+    _showSaved(stored, batchName, seriesId, savedAt) {
         const onScreen = stored.map(playlist => ({ ...playlist, updatedAt: savedAt }))
         playlistsStore.setPlaylists(onScreen, seriesId)
         this.setEditMode(batchName, seriesId, savedAt)
         playlistsStore.setDirty(false)
         playlistsStore.setSynchronized(true)
-        // What was saved is the new starting point of the history
         this._startHistory(onScreen, seriesId, 'Saved')
         this.updateUndoState()
         this.saveToLocalStorage()
-
-        return { status: 'saved', batchName, seriesId, playlists: stored }
     }
 
     // ========== FIRESTORE CRUD ==========
