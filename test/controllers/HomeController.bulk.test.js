@@ -9,7 +9,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 const catalog = vi.hoisted(() => ({ search: vi.fn() }))
 
 vi.mock('../../public/js/services/album-search/AlbumSearchService.js', () => ({
-    AlbumSearchService: class { search(...args) { return catalog.search(...args) } }
+    albumSearchService: { search: (...args) => catalog.search(...args), scanArtist: vi.fn() }
 }))
 vi.mock('../../public/js/components/Toast.js', () => ({
     default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() }

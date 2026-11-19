@@ -3,8 +3,15 @@ import { getIcon } from '../components/Icons.js';
 import { HomeController } from '../controllers/HomeController.js';
 import { SafeDOM } from '../utils/SafeDOM.js';
 import { describeScan, idleScan } from '../models/scanState.js';
+import { PICKER_FILTERS, defaultFilters } from '../models/albumPicker.js';
+import { createFilterButton, drawFilterButton, drawScanButton, createScanPanel } from '../components/album-picker/pickerParts.js';
 
-const PANEL_ICONS = Object.freeze({ idle: 'Search', empty: 'Search', failed: 'AlertTriangle' });
+/** The ids of the Home's filter buttons, by the key of the filter (models/albumPicker.js). */
+const FILTER_BUTTON_IDS = Object.freeze({
+    albums: 'btnFilterAlbums', eps: 'btnFilterEPs', singles: 'btnFilterSingles',
+    live: 'btnFilterLive', compilations: 'btnFilterCompilations', uncategorized: 'btnFilterUncategorized'
+});
+const RETRY_BUTTON_ID = 'btnScanRetry';
 
 export class HomeView extends BaseView {
     constructor() {
@@ -141,33 +148,9 @@ export class HomeView extends BaseView {
 
         // --- RIGHT PANEL ---
 
-        // ARCH-18: Updated to include EP and Uncategorized filters with counter support
-        const createFilterBtn = (id, icon, text, filter) => {
-            const btn = SafeDOM.button({
-                id,
-                className: 'filter-btn px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 text-xs font-bold border border-white/5 flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0',
-                dataset: { filter }
-            });
-            btn.appendChild(SafeDOM.fromHTML(getIcon(icon, 'w-3 h-3')));
-            const textSpan = SafeDOM.span({ className: 'filter-btn-text' }, text);
-            // Span for count display, initially hidden
-            const countSpan = SafeDOM.span({ className: 'filter-btn-count text-[10px] opacity-70', id: `${id}Count` });
-            btn.appendChild(textSpan);
-            btn.appendChild(countSpan);
-            return btn;
-        }
-
-        const filterBtns = [
-            createFilterBtn('btnFilterAlbums', 'Disc', 'Studio', 'albums'),
-            createFilterBtn('btnFilterEPs', 'Disc3', 'EPs', 'eps'),
-            createFilterBtn('btnFilterSingles', 'Music2', 'Singles', 'singles'),
-            createFilterBtn('btnFilterLive', 'Mic2', 'Live', 'live'),
-            createFilterBtn('btnFilterCompilations', 'Library', 'Compendiums', 'compilations'),
-            createFilterBtn('btnFilterUncategorized', 'HelpCircle', '?', 'uncategorized')
-        ];
-
-        // Fix first button style (Studio is active by default)
-        filterBtns[0].className = 'filter-btn px-3 py-1.5 rounded-lg bg-flame-gradient text-white text-xs font-bold shadow-lg shadow-orange-500/20 flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0';
+        // The filter buttons of the album picker: one definition for every screen (F57)
+        const filterBtns = PICKER_FILTERS.map(filter =>
+            createFilterButton(filter, { id: FILTER_BUTTON_IDS[filter.key], active: defaultFilters()[filter.key] }));
 
         const toolbar = SafeDOM.div({ id: 'home-toolbar', className: 'min-h-14 border-b border-white/5 bg-black/40 backdrop-blur-md flex flex-col md:flex-row md:items-center md:justify-between px-4 py-3 md:px-6 shrink-0 z-20 gap-2' }, [
             SafeDOM.div({ className: 'flex items-center gap-3 shrink-0' }, [
@@ -179,7 +162,7 @@ export class HomeView extends BaseView {
 
         // Grid
         const grid = SafeDOM.div({ id: 'discographyGrid', className: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-20' }, [
-            this.createScanPanel(describeScan(idleScan()).panel)
+            createScanPanel(describeScan(idleScan()).panel, { retryId: RETRY_BUTTON_ID })
         ]);
 
         const rightPanel = SafeDOM.main({ id: 'home-right-panel', className: 'flex-1 relative min-h-[50vh] md:h-full overflow-hidden flex flex-col bg-black/20' }, [
@@ -280,27 +263,14 @@ export class HomeView extends BaseView {
     }
 
     /**
-     * ARCH-18: Update filter button counts from search results
-     * @param {Object} counts - { Album: n, EP: n, Single: n, Compilation: n, Live: n, Uncategorized: n }
+     * Draw the filter buttons from the picker's state: which are on, how many albums each has.
+     * @param {Object} filters - { albums: boolean, eps: boolean, ... } (models/albumPicker.js)
+     * @param {Object} counts - { albums: n, eps: n, ... }
      */
-    updateFilterCounts(counts) {
-        const updateCount = (btnId, count) => {
-            const countSpan = this.$(`#${btnId}Count`);
-            if (countSpan) {
-                countSpan.textContent = count > 0 ? ` (${count})` : '';
-            }
-        };
-
-        updateCount('btnFilterAlbums', counts.Album || 0);
-        updateCount('btnFilterEPs', counts.EP || 0);
-        updateCount('btnFilterSingles', counts.Single || 0);
-        updateCount('btnFilterLive', counts.Live || 0);
-        updateCount('btnFilterCompilations', counts.Compilation || 0);
-        updateCount('btnFilterUncategorized', counts.Uncategorized || 0);
-
-        // Update total count in status area
-        const totalCount = Object.values(counts).reduce((sum, n) => sum + n, 0);
-        console.log(`[HomeView] Updated filter counts, total: ${totalCount}`);
+    renderFilters(filters, counts) {
+        PICKER_FILTERS.forEach(({ key }) => {
+            drawFilterButton(this.$(`#${FILTER_BUTTON_IDS[key]}`), filters[key], counts[key]);
+        });
     }
 
     /**
@@ -311,7 +281,7 @@ export class HomeView extends BaseView {
      */
     renderScan(scan) {
         const shown = describeScan(scan);
-        this.drawScanButton(shown);
+        drawScanButton(this.$('#btnScanArtist'), shown);
 
         const status = this.$('#statusArtistName');
         if (status) status.textContent = shown.statusLine;
@@ -319,49 +289,7 @@ export class HomeView extends BaseView {
         const grid = this.$('#discographyGrid');
         if (grid && shown.panel) {
             SafeDOM.clear(grid);
-            grid.appendChild(this.createScanPanel(shown.panel));
+            grid.appendChild(createScanPanel(shown.panel, { retryId: RETRY_BUTTON_ID }));
         }
-    }
-
-    drawScanButton({ busy, buttonLabel }) {
-        const btn = this.$('#btnScanArtist');
-        if (!btn) return;
-
-        SafeDOM.clear(btn);
-        btn.appendChild(busy
-            ? SafeDOM.div({ className: 'w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin' })
-            : SafeDOM.fromHTML(getIcon('ScanLine', 'w-4 h-4')));
-        btn.appendChild(SafeDOM.span({}, buttonLabel));
-
-        btn.disabled = busy;
-        btn.classList.toggle('opacity-60', busy);
-        btn.classList.toggle('cursor-wait', busy);
-        if (busy) btn.setAttribute('aria-busy', 'true');
-        else btn.removeAttribute('aria-busy');
-    }
-
-    /**
-     * The message of the panel for a state without albums.
-     * @param {{ kind: string, title: string, detail: string, retry: boolean }} panel
-     */
-    createScanPanel(panel) {
-        const mark = panel.kind === 'scanning'
-            ? SafeDOM.div({ className: 'w-10 h-10 border-4 border-white/10 border-t-orange-500 rounded-full animate-spin' })
-            : SafeDOM.fromHTML(getIcon(PANEL_ICONS[panel.kind] || 'Search', 'w-12 h-12 opacity-20'));
-
-        const children = [mark, SafeDOM.p({ className: panel.kind === 'failed' ? 'text-gray-300' : '' }, panel.title)];
-        if (panel.detail) children.push(SafeDOM.p({ className: 'text-xs text-gray-500' }, panel.detail));
-        if (panel.retry) {
-            children.push(SafeDOM.button({
-                id: 'btnScanRetry',
-                type: 'button',
-                className: 'px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/10 transition-colors'
-            }, 'Try again'));
-        }
-
-        return SafeDOM.div({
-            className: 'col-span-full flex flex-col items-center justify-center text-center text-gray-600 space-y-4 py-20',
-            dataset: { scanPanel: panel.kind }
-        }, children);
     }
 }

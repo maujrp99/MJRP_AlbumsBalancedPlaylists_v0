@@ -5,13 +5,11 @@
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
-vi.mock('../../../public/js/services/MusicKitService.js', () => ({ musicKitService: { getArtworkUrl: () => null } }))
+vi.mock('../../../public/js/services/MusicKitService.js', () => ({ musicKitService: { getArtistAlbums: vi.fn(), getArtworkUrl: () => null } }))
 vi.mock('../../../public/js/api/serverFetch.js', () => ({ serverFetch: vi.fn() }))
-vi.mock('../../../public/js/services/album-search/AlbumTypeClassifier.js', () => ({
-    albumTypeClassifier: { classify: vi.fn(async (album, context) => { await context.getAiList(); return 'Album' }) }
-}))
 
 import { serverFetch } from '../../../public/js/api/serverFetch.js'
+import { musicKitService } from '../../../public/js/services/MusicKitService.js'
 import { AlbumSearchService } from '../../../public/js/services/album-search/AlbumSearchService.js'
 
 const answer = (status, body) => ({ ok: status < 300, status, headers: { get: () => null }, json: async () => body })
@@ -93,11 +91,13 @@ describe('AlbumSearchService: the AI list of studio albums (F52)', () => {
         expect(service.aiCache.has('Artist')).toBe(false)
     })
 
-    it('one search asks the list once, even when the ask fails and many albums need it', async () => {
+    it('one scan asks the list once, even when the ask fails and many albums want it', async () => {
         serverFetch.mockResolvedValue(answer(502, { error: { code: 'upstream_failed', retryable: true } }))
-        const albums = ['A', 'B', 'C', 'D'].map((title, i) => ({ appleMusicId: String(i), title, artist: 'Artist' }))
+        musicKitService.getArtistAlbums.mockResolvedValue(['A', 'B', 'C', 'D'].map((title, i) => ({
+            appleMusicId: String(i), title, artist: 'Artist', trackCount: 10, raw: { attributes: { genreNames: ['Electronic'] } }
+        })))
 
-        await service._processDiscography(albums, 'Artist')
+        await (await service.scanArtist('Artist')).reclassified
 
         expect(serverFetch).toHaveBeenCalledTimes(1)
     })
