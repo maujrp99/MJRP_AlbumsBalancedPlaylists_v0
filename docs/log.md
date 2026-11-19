@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 15:40] decision — a ordem da v5.0 é a do agente: F59, F60, F64, F52, F55, F56, F61, F57, F58, F49, F62, F63, F65
+
+- **O MJRP, do iPhone:** pediu a ordem do agente para arrumar no harness remoto e, depois de tentar, disse «de qqr forma a prioridade é essa acima».
+- **O Control Center recusou o salvamento** da ordem com 13 itens: «feature que já começou … sai da ordem, a lista é das que ainda não começaram». A F59, primeira da lista, está `In Progress`. O `docs/specs/priority.md` continua com a ordem antiga (F49, F59, F52, F55, F56, F57, F58, F61); o arquivo é a válvula do MJRP e o agente não o editou.
+- **Avisado ao agente mestre do harness** (pedido do MJRP), com as duas perguntas: o caminho certo para gravar a ordem quando a primeira já começou, e se a mensagem que não nomeia o item vira achado do harness.
+- **Enviado ao MJRP no iPhone:** o mapa da v5.0 (`reports/audits/2026-11-19-mjrpalbumblender-v0-v5-map.md`).
+- **À espera dele:** publicar a fatia A da F59 sem o clique no Spotify; e o primeiro deploy do servidor, para a fatia B.
+
 ## [2026-11-19 15:35] session — correção anotada nos dois relatórios: as regras abertas eram as do arquivo, não as de produção
 
 O mapa da v5.0 e o cruzamento ganharam, no topo, a nota da conferência de produção (UAT-15). A UAT-15 cita o commit `90cd34f`.
