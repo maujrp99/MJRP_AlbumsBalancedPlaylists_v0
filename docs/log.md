@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 18:34] session — F67 em produção (site)
+
+Site publicado da `main` (`cdef6d5`, pacote `main-CkVMM5CM.js`). Em produção, como visitante: clique em Scan mostra «Scanning…» com o botão desabilitado na hora e, depois, 12 álbuns de «pavement». A F67 não muda o servidor. UAT-204 em `fixed`, à espera do aceite do MJRP.
+
 ## [2026-11-19 18:33] review — F67 revisada e provada pelo integrador; UAT-204 em fixed
 
 Ramo do auxiliar com a `main` junto: 982 testes, build ok. Sete cenários no navegador em `reports/evidence/F67/2026-11-19-home-scan-browser-proof.md`. A causa do caso do MJRP não pôde ser determinada; dois defeitos reais que o explicam foram consertados (consulta ao catálogo sem prazo; navegação sobreposta deixava a tela sem ligar os botões, no roteador). O doctor segue vermelho com os erros antigos, nenhum da F67.
