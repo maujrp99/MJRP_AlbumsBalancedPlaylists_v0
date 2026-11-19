@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 13:46] session — site publicado em produção (F45, F47, F51) e UAT-183 aberta
+
+- **Deploy:** a pedido do MJRP («vamos mover pra prod»), o site foi publicado no Firebase Hosting a partir da `main` no commit `80e6028` (`firebase deploy --only hosting`, com o `.env` que traz `VITE_SPOTIFY_CLIENT_ID`). Conferido por fora: `https://mjrp-playlist-generator.web.app` serve o pacote novo (`assets/main-CO4b4agM.js`, com o código da carga nova). Antes do envio: 232 testes passam na `main`, as mesmas 28 falhas da linha de base; o build compila.
+- **Não conferido:** o uso em produção no navegador (login, tela de álbuns, filtros, paginação) ainda não foi visto depois do deploy. O servidor (Cloud Run) não foi tocado.
+- **Como voltar:** Firebase Console, Hosting, histórico de versões, «Rollback» para a versão de 2026-01-19.
+- **Desvio declarado:** o `scripts/deploy-prod.sh` exige chave de conta de serviço, que não existe nesta máquina; os mesmos passos dele foram feitos à mão com o login do Firebase CLI do MJRP, numa cópia limpa da `main`.
+- **UAT-183:** relato do MJRP, o «x» do botão «Connected» do Spotify não faz nada. Conserto no ramo `fix/f50-one-local-address`.
+
 ## [2026-11-19 13:41] session — UAT-182 aberta: o botão do Spotify continua «Connect» depois de conectar
 
 Relato do MJRP ao conectar o Spotify em `http://127.0.0.1:5010`. Causa lida no código: a conexão avisa por `spotify-auth-success`, o botão só escuta `spotify-auth-change`, disparado só ao desconectar. Conserto na F50 (ramo `fix/f50-one-local-address`).
