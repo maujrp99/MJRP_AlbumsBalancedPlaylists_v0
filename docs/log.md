@@ -3,6 +3,18 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 11:29] review — crítica independente da proposta da carga de álbuns (Opus, 5 min): pode seguir depois de quatro P0; aceitos
+
+- Relatório: `2026-11-19-v0-albums-load-architecture-critique-opus.md`, na pasta de notas das sessões. Veredito: a direção está certa; faltam quatro pontos. Aceitos pelo agente, revisáveis pelo MJRP:
+- P0-1, duas fontes da verdade: a store nova passa a ser a única dona de «pedido → álbum»; `stores/albums.js` vira leitura derivada dela, sem a chave `ALL_SERIES_VIEW` e sem a recusa de série inativa.
+- P0-2, o guardado: uma chave única; guarda a base do álbum ao achar e cada enriquecimento com o seu estado; ao ler, enfileira só o que falta. Entra já na F45.
+- P0-3, nove comportamentos de hoje sem dono no desenho (capa de reserva, reordenação por nota, `seriesIds`, ranking ao reabrir, série nova com a memória cheia, Refetch e injeção fora da fila, adicionar/remover/editar, o corte em 20, quem lê a lista de séries): a proposta ganha a tabela «comportamento de hoje → novo dono → fatia».
+- P0-4, a F45 não se sustenta sem parte da F46: a F45 leva o estado derivado da série na grade e um observador por série em todos os layouts; a F46 fica com o aviso de falha, o «tentar de novo» e o fim das inscrições acumuladas.
+- P1: o enriquecimento cria um álbum novo e troca a referência (não muta o publicado); com filtro, busca ou Blend ativos a carga é do escopo inteiro; a sessão é a mesma só se a lista de pedidos da série não mudou; a tabela de prazos corrige a segunda fonte (`/api/generate`); três funções de aptidão a mais (mutação, chave única, dono único).
+- Regra do MJRP para as críticas: «vamos colocar um limite de tempo para as criticas ... eu sugiro 5 min no max» e «nao quero bloqueios, quero agir mais rápido». Padrão: 5 minutos com escopo fechado; passou, entrega o que conferiu. A primeira crítica (Fable, escopo de dez perguntas) passou do tempo e foi mandada encerrar.
+- Código nesta entrada: `public/js/services/albums/loadState.js` (as regras de estado, puras) com 15 testes (`test/services/albums/loadState.test.js`).
+- Session: claude-code:fix-albums-loading-and-cache-d92daf (sessão de consertos do v0, aberta pela orquestradora do harness)
+
 ## [2026-11-19 11:25] session — F45: a fila da carga (`TaskQueue`) nasce com 12 testes
 
 - Ramo `fix/f45-albums-load-in-parallel`. `public/js/utils/TaskQueue.js`: limite de tarefas ao mesmo tempo, prioridade (por tarefa e por grupo), prazo por tarefa com `AbortSignal`, cancelamento, `onIdle`. Não importa nada do projeto (o teste confere). Erros com nome: `TaskTimeoutError`, `TaskCancelledError`.
