@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 16:57] session — nono deploy do site: F59 fatia E em produção
+
+`npm run deploy:site`, da `main` em `474f8cf`: 590 testes, pacote conferido, Hosting publicado, e o `index.html` no ar aponta o pacote recém-construído (`/assets/main-D7HiVm63.js`). Em produção agora: o texto de fora tratado antes de entrar no HTML (UAT-199). Não visto em produção num navegador. A F59 está com as fatias A, B, C e E em produção; restam o Tailwind servido do próprio site (UAT-25) e a conferência de esquema de dois endereços vindos de provedores.
+
 ## [2026-11-19 16:57] session — F59 fatia E na `main`: texto de fora entra no HTML como texto (UAT-199)
 
 Ramo `fix/f59-escape-outside-text`, de um agente auxiliar, conferido pelo integrador: 590 testes passando, build compilando. `escapeHtml` (`public/js/utils/stringUtils.js`) virou função pura e trata também as aspas, de modo que vale dentro de atributo; 61 pontos em 20 arquivos de tela passaram a usá-la; um teste de arquitetura (`test/architecture/outsideTextEscaped.test.js`) lê os modelos de HTML e reprova um campo de texto de fora sem tratamento.
