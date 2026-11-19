@@ -4,15 +4,19 @@
 **Status**: `[ACTIVE]`
 
 -   **`home/SearchController.js`**:
-    -   **Role**: Orchestrates the Artist Search flow.
-    -   **Logic**: Calls `AlbumSearchService.getArtistDiscography` (the instance held by `HomeController`), sorts results by date, and handles filtering (Albums/EPs/Singles/Live/Compilations/Uncategorized). Maintains `filterState`. The search runs on Enter or on the scan button; there is no debounce.
+    -   **Role**: Owner of the Home scan's state (F67).
+    -   **Logic**: Holds one state (`this.scan`, rules in `models/scanState.js`: idle, scanning, results, empty, failed) and changes it only through `_setScan`, which asks `HomeView.renderScan` to draw. Calls `AlbumSearchService.scanArtist` (the instance held by `HomeController`), sorts the albums by date and applies the type filters (Albums/EPs/Singles/Live/Compilations/Uncategorized, kept in `filterState`). The scan runs on Enter, on the Scan button or on "Try again"; there is no debounce, and while a scan runs another ask does nothing. Every answer carries the generation of its scan: a late answer of an older scan changes nothing. The handlers are delegated from `#app` and read `#artistScanInput` at the time of the event. No `alert()`: no results and failure are messages in the panel.
 
     ```mermaid
     flowchart LR
-        Input[Enter / Scan button] --> Service[AlbumSearchService]
-        Service -->|Raw Results| Sort[Sort By Date Desc]
-        Sort --> Filter{Apply Filters}
-        Filter -->|EP/Single/Album| Final[Render Grid]
+        Input[Enter / Scan / Try again] --> Start[startScan: scanning]
+        Start --> Service[AlbumSearchService.scanArtist]
+        Service -->|albums, first classification| Found[scanFound: results or empty]
+        Service -->|deadline or failure| Failed[scanFailed: failed + Try again]
+        Found -->|AI list arrives after| Again[scanReclassified]
+        Found --> Draw[HomeView.renderScan + filters]
+        Again --> Draw
+        Failed --> Draw
     ```
 -   **`home/StagingAreaController.js`**:
     -   **Role**: Manages the "Staging Stack" (drag-and-drop area).

@@ -50,7 +50,8 @@ sequenceDiagram
     -   **Unknown address**: goes to `/home` once; with no `/home` route it stops (it used to call itself until the stack overflowed).
     -   **SafeDOM Support**: Renders Views that return DOM Nodes (recommended) or HTML strings (legacy).
     -   **Phantom Click Prevention**: Logic to avoid duplicate navigation or accidental clicks during renders.
-    -   **Error Handling**: Catches render errors and displays a fallback UI in `#app`.
+    -   **One owner of the screen at a time** (F67): each `renderView` call has an identity (`renderRun`). When two route changes run at the same time (a route whose factory navigates and returns `null`, as `/callback`, `/album-series` and `/series`; two navigations in the same turn; a slow view that the person leaves), only the newest draws in `#app`, mounts and shows a failure, and the view that is mounted is the one that call created. Before, such a redirect left the destination drawn and never mounted: no button answered until the page was loaded again.
+    -   **Error Handling**: Catches render errors and displays a fallback UI in `#app` (only for the route change that still owns the screen).
 
 ---
 
