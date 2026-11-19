@@ -53,12 +53,36 @@ export class SavedPlaylistsView extends BaseView {
         }
     }
 
+    /**
+     * The page is drawn once; after that only the list changes and the toolbar is brought up to
+     * date. Redrawing the whole page on every change replaced the search field at each letter and
+     * took the cursor away (UAT-179).
+     */
     update() {
-        if (this.container) {
+        if (!this.container) return
+
+        const drawn = this.mainContent && this.container.contains(this.mainContent)
+        if (!drawn) {
             SafeDOM.clear(this.container)
             this.container.appendChild(this.render())
-            // No strict bindEvents needed as we use direct event handlers in SafeDOM
+            return
         }
+        this.toolbar.update(this.toolbarProps())
+        this.refreshContent()
+    }
+
+    /** Draw the list (or the loading state) inside the page that is already on screen. */
+    refreshContent() {
+        SafeDOM.clear(this.mainContent)
+        this.mainContent.appendChild(this.isLoading ? this.renderLoading() : this.renderContent())
+    }
+
+    destroy() {
+        if (this._thumbTimeout) clearTimeout(this._thumbTimeout)
+        this.container = null // a late update must not draw this page over another one
+        this.mainContent = null
+        this.toolbar = null
+        super.destroy()
     }
 
     render() {
@@ -84,11 +108,8 @@ export class SavedPlaylistsView extends BaseView {
             style: { animationDelay: '0.1s' }
         })
 
-        if (this.isLoading) {
-            mainContent.appendChild(this.renderLoading())
-        } else {
-            mainContent.appendChild(this.renderContent())
-        }
+        this.mainContent = mainContent
+        this.refreshContent()
 
         const modalsContainer = SafeDOM.div({ id: 'modalsContainer' })
 
@@ -168,7 +189,8 @@ export class SavedPlaylistsView extends BaseView {
         return Math.floor(seconds / 60) + 'm'
     }
 
-    renderToolbar() {
+    /** What the toolbar shows now: built again on each update, the toolbar itself is kept. */
+    toolbarProps() {
         const flatData = this.controller.data.map(g => ({
             ...g.series,
             batches: g.batches
@@ -176,54 +198,52 @@ export class SavedPlaylistsView extends BaseView {
 
         const { seriesOptions, batchOptions } = SavedPlaylistsFilterService.getDropdownOptions(flatData)
 
-        const container = document.createElement('div')
+        return {
+            searchQuery: this.filterState.search,
+            onSearch: (val) => this.handleFilterChange('search', val),
 
-        const toolbar = new FilterToolbar({
-            container,
-            props: {
-                searchQuery: this.filterState.search,
-                onSearch: (val) => this.handleFilterChange('search', val),
+            sortOptions: [
+                { value: 'updated_desc', label: 'Recently Updated' },
+                { value: 'name_asc', label: 'Name (A-Z)' },
+                { value: 'name_desc', label: 'Name (Z-A)' }
+            ],
+            currentSort: this.filterState.sort,
+            onSort: (val) => this.handleFilterChange('sort', val),
 
-                sortOptions: [
-                    { value: 'updated_desc', label: 'Recently Updated' },
-                    { value: 'name_asc', label: 'Name (A-Z)' },
-                    { value: 'name_desc', label: 'Name (Z-A)' }
-                ],
-                currentSort: this.filterState.sort,
-                onSort: (val) => this.handleFilterChange('sort', val),
-
-                filterGroups: [
-                    {
-                        id: 'series',
-                        label: 'All Albums Series',
-                        value: this.filterState.seriesId,
-                        options: seriesOptions,
-                        onChange: (val) => this.handleFilterChange('seriesId', val),
-                        icon: 'Layers'
-                    },
-                    {
-                        id: 'batch',
-                        label: 'All Playlist Series',
-                        value: this.filterState.batchName,
-                        options: batchOptions,
-                        onChange: (val) => this.handleFilterChange('batchName', val),
-                        icon: 'Grid'
-                    }
-                ],
-
-                onRefresh: async () => {
-                    this.isLoading = true
-                    this.update()
-                    const { db, cacheManager, auth } = await import('../app.js')
-                    await this.controller.loadData({ db, cacheManager, auth })
-                    this.isLoading = false
-                    this.update()
+            filterGroups: [
+                {
+                    id: 'series',
+                    label: 'All Albums Series',
+                    value: this.filterState.seriesId,
+                    options: seriesOptions,
+                    onChange: (val) => this.handleFilterChange('seriesId', val),
+                    icon: 'Layers'
+                },
+                {
+                    id: 'batch',
+                    label: 'All Playlist Series',
+                    value: this.filterState.batchName,
+                    options: batchOptions,
+                    onChange: (val) => this.handleFilterChange('batchName', val),
+                    icon: 'Grid'
                 }
+            ],
+
+            onRefresh: async () => {
+                this.isLoading = true
+                this.update()
+                const { db, cacheManager, auth } = await import('../app.js')
+                await this.controller.loadData({ db, cacheManager, auth })
+                this.isLoading = false
+                this.update()
             }
-        })
+        }
+    }
 
-        toolbar.render()
-
+    renderToolbar() {
+        const container = document.createElement('div')
+        this.toolbar = new FilterToolbar({ container, props: this.toolbarProps() })
+        this.toolbar.render()
         return container
     }
 

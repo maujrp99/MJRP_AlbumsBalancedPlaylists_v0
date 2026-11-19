@@ -12,7 +12,7 @@ import { albumsStore } from '../../stores/albums.js';
 import { albumSeriesStore } from '../../stores/albumSeries.js';
 import { router } from '../../router.js';
 import { listArtists } from '../../models/seriesFilter.js';
-import { escapeHtml } from '../../utils/stringUtils.js';
+import { decodeEntities } from '../../models/text.js';
 
 export class SeriesComponentFactory {
     static createHeader(container, { view }) {
@@ -22,7 +22,7 @@ export class SeriesComponentFactory {
         const albums = albumsStore.getAlbums();
         const pageTitle = view.currentScope === 'ALL'
             ? 'All Albums Series'
-            : (activeSeries ? escapeHtml(activeSeries.name) : 'Albums');
+            : (activeSeries ? decodeEntities(activeSeries.name) : 'Albums');
 
         const header = new SeriesHeader({
             container,
@@ -52,7 +52,7 @@ export class SeriesComponentFactory {
         const { searchQuery, filters, viewMode, seriesSortMode } = controller.getState();
 
         // 1. Prepare Options
-        const seriesOptions = allSeries.map(s => ({ value: s.id, label: s.name }));
+        const seriesOptions = allSeries.map(s => ({ value: s.id, label: decodeEntities(s.name) }));
         const artistOptions = listArtists(allSeries).map(a => ({ value: a, label: a }));
 
         const yearOptions = [

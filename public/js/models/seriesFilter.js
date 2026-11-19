@@ -105,6 +105,14 @@ export function listArtists(seriesList = []) {
     return [...artists].sort((a, b) => a.localeCompare(b))
 }
 
+/** The source filters that read `facts`: the others (all, 'My Ranking') do not depend on a first load. */
+const FACT_FILTERS = Object.freeze(['pending', 'acclaim', 'popularity'])
+
+/** True when this value of the source filter is answered from the facts written in the series. */
+export function readsFacts(source) {
+    return FACT_FILTERS.includes(source)
+}
+
 /** How many queries of the series given were never checked against the sources. */
 export function countUnchecked(seriesList = []) {
     let count = 0

@@ -6,7 +6,7 @@
  */
 import { albumSeriesStore } from '../../stores/albumSeries.js';
 import { albumsStore } from '../../stores/albums.js';
-import { escapeHtml } from '../../utils/stringUtils.js';
+import { decodeEntities } from '../../models/text.js';
 import { SeriesEmptyState } from '../../components/series/SeriesEmptyState.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 
@@ -24,7 +24,7 @@ export class SeriesViewUpdater {
         const albums = albumsStore.getAlbums();
         const pageTitle = currentScope === 'ALL'
             ? 'All Albums Series'
-            : (activeSeries ? escapeHtml(activeSeries.name) : 'Albums');
+            : (activeSeries ? decodeEntities(activeSeries.name) : 'Albums');
 
         this.components.header.update({
             pageTitle,
@@ -99,7 +99,7 @@ export class SeriesViewUpdater {
         // 1. Regenerate Options - the artists come from the series themselves, so the list is the
         //    same whatever page is on screen and whatever has loaded so far
         const artists = listArtists(allSeries);
-        const seriesOptions = allSeries.map(s => ({ value: s.id, label: s.name }));
+        const seriesOptions = allSeries.map(s => ({ value: s.id, label: decodeEntities(s.name) }));
         const artistOptions = artists.map(a => ({ value: a, label: a }));
 
         const yearOptions = [
