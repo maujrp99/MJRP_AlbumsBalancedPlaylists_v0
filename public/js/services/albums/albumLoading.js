@@ -23,6 +23,7 @@ import { getSeriesService } from '../SeriesService.js'
 import { CatalogAdapter } from './adapters/CatalogAdapter.js'
 import { AcclaimEnricher, PopularityEnricher, UserRankingEnricher } from './adapters/enrichers.js'
 import { AlbumCacheAdapter } from './adapters/AlbumCacheAdapter.js'
+import { clearAlbumCaches } from './clearAlbumCaches.js'
 
 /** The shelf context that holds the albums of every series. */
 export const ALL_SERIES_CONTEXT = 'ALL_SERIES_VIEW'
@@ -63,6 +64,13 @@ export const albumLoadService = new AlbumLoadService({
     catalog,
     enrichers,
     cache: albumCachePort
+})
+
+/** What the "Clear Cache" button does: stop the load and forget what the browser keeps about albums. */
+export const clearAppAlbumCaches = () => clearAlbumCaches({
+    loadService: albumLoadService,
+    cache: cacheManager,
+    storage: localStorage
 })
 
 /** Copy what the load store has into the shelf the other screens read. */

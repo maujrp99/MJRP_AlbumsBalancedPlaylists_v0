@@ -121,6 +121,7 @@ export class CacheManager {
     /**
      * Clear all cache (both L1 and L2)
      * @returns {Promise<void>}
+     * @throws when IndexedDB could not be cleared: a caller that says "cleared" must know it was not
      */
     async clear() {
         await this.init()
@@ -132,6 +133,7 @@ export class CacheManager {
                 await this.l2.clear()
             } catch (error) {
                 console.error('❌ CacheManager: Failed to clear L2 (IndexedDB)', error)
+                throw error
             }
         }
     }
