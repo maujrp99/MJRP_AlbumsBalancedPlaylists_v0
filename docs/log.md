@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:03] decision — MJRP: dispensa de bloqueio pelo processo até as issues acabarem
+
+Palavras do MJRP: «ok, eu vou ter que sair nao se bloqueia, decida e registre, principalmente nao se bloqueie pelo processo, sou dono do harness e te dou um waiver aqui pra vc continuar trabalhando nas issues até finalizar todas». Leitura do agente: enquanto ele está fora, o agente decide, registra cada decisão como «decidido pelo agente — revisável», e segue pelas issues abertas sem parar por recusa de processo (a recusa é registrada e o trabalho continua). Não muda: push, aceite e carimbos são dele; nenhuma senha é digitada; nada de `--no-verify`; cada feature só vai a produção testada e provada, com a volta anotada.
+
 ## [2026-11-19 18:40] decision — MJRP: «No Quarter» tratado com afrouxamento; F68 criada para rever as regras de identidade de álbum
 
 Palavras do MJRP: «o no quarter é um edge case, vamos tratá-lo com afrouxamento mas coloca no Do not forget do memory e abre uma feature pra revisao das regras todas pra encontrar a identidade de album, até pq depois com as futuras seções de genero, prevejo termos um algoritmo ficando mais complexo e precisamos revisar pra que a manutencao e o entendimento do mesmo seja fácil de entender.» Feito: (1) o afrouxamento entra na F55 fatia 2; (2) `MEMORY.md`, bloco Do Not Forget; (3) F68 criada na `main` (via rápida, `^REL-40`, UAT-205), citada na story S-53.
