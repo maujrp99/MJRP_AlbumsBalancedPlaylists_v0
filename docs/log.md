@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 13:57] session — F46 e F48 conferidas no navegador (parte); o MJRP entrou no painel embutido
+
+- **F48:** «Clear Cache» zera só o cache de álbuns (IndexedDB `mjrp-cache`) e a carga recomeça; login, Spotify e escolhas de tela ficam. `reports/evidence/F48-album-cache-and-retry/F48-browser-2026-11-19.json`.
+- **F46:** o filtro «My Ranking» responde sobre as 46 séries (9 séries), não só sobre a página. `reports/evidence/F46-albums-load-state/F46-browser-2026-11-19.json`.
+- **Carga:** 171 álbuns na página de 40 séries, nenhum aviso de falha (a segunda fonte voltou depois do acerto da cobrança).
+- **Não conferido:** salvar um ranking pelo modal (grava nos dados do MJRP), a nova tentativa ao servidor, a validade do cache de ranking, a busca das playlists guardadas.
+
 ## [2026-11-19 13:53] session — F50 provada no navegador; spec, plano e tarefas escritos; UAT-178, UAT-182 e UAT-183 em `fixed`
 
 - **No navegador:** `http://localhost:5010/albums` cai em `http://127.0.0.1:5010/albums`; o «x» do Spotify abre o diálogo do app e desconecta. O MJRP: «connect e disconnect do spotify ok agora no 5010». Evidência: `reports/evidence/F50-one-local-address/F50-probe-2026-11-19.json`.

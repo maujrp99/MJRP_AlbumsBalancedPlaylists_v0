@@ -1,0 +1,19 @@
+{
+  "feature": "F46",
+  "date": "2026-11-19 13:57",
+  "where": "http://127.0.0.1:5010/albums, conta do MJRP",
+  "checks": [
+    {
+      "what": "filtro de fonte «My Ranking»",
+      "result": "o paginador passou de «1–40 of 46 series» para «1–9 of 9 series (of 46 in all)»: a resposta cobre todas as séries, não só a página"
+    },
+    {
+      "what": "voltar para «All Sources»",
+      "result": "«1–40 of 46 series» de novo"
+    }
+  ],
+  "not_checked": [
+    "salvar um ranking pelo modal e ver refletir na tela (grava nos dados do MJRP; fica para ele)",
+    "busca das playlists guardadas"
+  ]
+}
