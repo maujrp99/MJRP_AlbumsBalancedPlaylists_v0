@@ -70,8 +70,11 @@ flowchart TD
 
 *   **Logic Trace**:
     1.  **Validation**: the service checks the `albumData` structure (`title` and a `tracks` array), and an invalid body becomes a 400 `invalid_request`. The route no longer asks for `AI_API_KEY` (F52).
-    2.  **Scraping**: Calls `getBestEverRanking(title, artist)`.
-        *   *Failure Handling* (F52): the scraper throws an `UpstreamError`; the service returns a failure with its code (502, 504 or 503). `null` from the scraper means the source has no page: outcome `not_found`.
+    2.  **Scraping**: Calls `getBestEverRanking(title, artist, { deadlineAt, stats })` through `inFlight.share(key, ...)`, raced against the request's budget (F52, slice 3):
+        *   *One search per album at a time*: a request for an album whose search is already running joins it (`server/lib/inFlight.js`; the key is artist and title, case and spacing apart). Nothing is kept once the search ends.
+        *   *Budget*: `ALBUM_BUDGET_MS` = 15 s per request (`server/lib/timeBudget.js`); at the deadline the result is `upstream_timeout`, whatever the scraper is doing. The scraper reads `deadlineAt` and stops asking the source.
+        *   *Failure Handling* (F52): the scraper throws an `UpstreamError`; the service returns a failure with its code (502, 504 or 503, the last with `Retry-After` when the source asked to wait). `null` from the scraper means the source has no page: outcome `not_found`.
+        *   Every result carries `trace` (`{ how, sourceRequests }`) for the route's log line; it does not go on the wire.
     3.  **Indexing**:
         *   If evidence found: Normalizes all track titles in evidence using `normalizeRankingKey`.
         *   Creates `evidenceIndex` Map: `NormalizedKey -> evidence entry`.
@@ -83,7 +86,7 @@ flowchart TD
     5.  **Fallback**: If no ratings, fills `ratingsMap` with `null` and `evidenceMap` with empty lists (outcome `no_ratings` when the page exists, `not_found` when it does not).
     6.  **Response**: Returns a typed result of `server/lib/outcome.js`; on the wire, `{ data: { bestEverInfo, trackRatings, trackEvidence }, outcome }`. See `03_Backend_API_Layer.md`.
 
-*   **Side Effects**: External HTTP request to BestEverAlbums. Console logs for debugging match rates.
+*   **Side Effects**: External HTTP requests to BestEverAlbums, at the pace of `server/lib/politeQueue.js`. One log line per request (`msg: "enrich"`, see `03_Backend_API_Layer.md`), and the service's own lines about match rates.
 
 ### 2.2 `POST /api/generate` -> `GenerationService.generateAlbum(reqBody, serverConfig)`
 **Purpose**: Core endpoint. Generates album structure via AI, then enriches with rankings.
@@ -274,10 +277,12 @@ flowchart TD
         *   Check columns for 'Track' and 'Rating' headers to adapt to different layouts.
     3.  **Resilience**:
         *   `parseAlbumRanking` is the fallback for an album page with no chart table (table rows, then `<li>` items).
+    4.  **One door, with pace and time (F52, slice 3)**: every request to the source goes through `getPage`, built per piece of work by `pageGetter({ deadlineAt, stats })`. It hands the request to the polite queue (`pace`, injected; the exported scraper uses the real one, `BEA_PACE`: 2 at once, 250 ms apart, growing waits on 429/503), gives it `min(REQUEST_TIMEOUT_MS = 8 s, what is left of the album request)`, asks each address once per piece of work, and throws `UpstreamError` (`upstream_timeout` when the album request's time is over or the queue is too long, `upstream_busy` with `retryAfterMs` when the source asked to wait). The queue is per instance of the server.
 
 *   **Key Dependencies**:
     *   `axios` (HTTP Client)
     *   `cheerio` (DOM Parser)
+    *   `server/lib/politeQueue.js` (the pace), `server/lib/outcome.js` (`UpstreamError`)
 
 ---
 

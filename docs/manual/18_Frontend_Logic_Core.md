@@ -148,7 +148,7 @@ How `04_Backend_Logic_Services.md` connects to this document.
 *   **Method**: `SeriesService.refetchAlbumMetadata(album, seriesId)`
 *   **Parallel Execution**: Calls `BEAEnrichmentHelper` and `SpotifyService` concurrently (`Promise.allSettled`).
 *   **Merge Logic**: Carefully merges enriched data back into the album object. **Crucial**: Explicitly preserves `tracksOriginalOrder` to ensure UI stability.
-*   **Store Update**: `SeriesController` hands the enriched album to `albumLoadService.adoptAlbum`, with no full reload.
+*   **Store Update**: `SeriesController` hands the enriched album to `albumLoadService.adoptAlbum`, with no full reload. The ratings are marked `done` only when the album came back with ratings (F52, slice 3); a refetch with none leaves what the browser keeps about the source as it was.
 | **CLIENT** | `TrackTransformer` | **Normalization**. Maps raw server arrays to canonical properties on the `Track` object. | `track.acclaimRank`, `track.spotifyPopularity` (Unified Properties) |
 | **CLIENT** | `RankingStrategy` | **Sorting**. Uses the normalized properties to decide `track._rank`. | `track._rank = 1` |
 | **CLIENT** | `BaseAlgorithm` | **Distribution**. Uses `_rank` to move tracks into Playlists. | `playlist.tracks.push(track)` |
