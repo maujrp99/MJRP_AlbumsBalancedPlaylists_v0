@@ -15,6 +15,10 @@ Ramo `fix/f67-home-scan-answers`. Causa examinada antes do conserto: achado um d
 
 Feature de via rápida, `^REL-40`, conserta a UAT-204. Criada na `main` antes do ramo. Achado novo: quando o Scan roda, o botão vira um círculo girando; na captura do MJRP o botão estava com o rótulo normal, então o clique não chegou a iniciar a busca ou ela terminou sem mostrar nada. A causa é investigada antes do conserto.
 
+## [2026-11-19 18:18] session — F55 fatia 1 em produção (site e servidor)
+
+Site e servidor publicados da `main` (`72c0a70`; revisão `mjrp-proxy-00200-2nh`, volta `mjrp-proxy-00199-hsv`). Em produção, com login, a fonte de notas respondeu `found` para «Core» e «Core (Remastered)» (mesma página) e `not_found` para «Core Memories». A UAT-184 fica aberta até a fatia 2: os álbuns trocados já guardados no navegador seguem na tela até vencer ou até «Clear Cache», e o identificador corrigido ainda não é gravado na série. Efeito conhecido: «No Quarter» (série Robert Plant 00-10s) passa a falhar com aviso, porque o catálogo só o tem com subtítulo. A regra do raspador que a F52 listava como tarefa 12 foi entregue aqui. O auxiliar da F67 (Scan) está trabalhando.
+
 ## [2026-11-19 18:16] review — F55 fatia 1 revisada e provada pelo integrador
 
 Ramo do auxiliar com a `main` junto: 919 testes, build ok. Contagem na conta do MJRP: 8 álbuns trocados em 227 (9 linhas). Com a regra nova, 7 carregam o álbum certo e 1 («No Quarter») passa a falhar com aviso, porque o catálogo só o tem com subtítulo. A fonte de notas respondeu certo no servidor local. Prova em `reports/evidence/F55/2026-11-19-slice-1-browser-proof.md`.
