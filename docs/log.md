@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 18:26] session — F67: o Scan da Home tem um estado só, prazo no catálogo e a IA depois (UAT-204)
+
+Ramo `fix/f67-home-scan-answers`. Causa examinada antes do conserto: achado um defeito real do roteador (uma rota que redireciona deixava a tela seguinte desenhada e nunca montada, sem nenhum botão respondendo) e a falta de prazo no catálogo, no início do MusicKit e na lista da IA; a causa do caso do MJRP não se determina pelo código. Construído: `models/scanState.js` (estados parado, buscando, resultados, sem resultados, falhou), o `SearchController` como dono e a `HomeView.renderScan` como único desenho; prazo de 15 s no catálogo e de 10 s no início do MusicKit; os álbuns aparecem quando o catálogo responde e a lista da IA reclassifica depois; nenhum `alert` no fluxo. 982 testes, build ok. Sem navegador nesta sessão: a prova na tela fica com o integrador.
+
 ## [2026-11-19 18:18] decision — F67 criada: o Scan da Home responde ao clique (UAT-204)
 
 Feature de via rápida, `^REL-40`, conserta a UAT-204. Criada na `main` antes do ramo. Achado novo: quando o Scan roda, o botão vira um círculo girando; na captura do MJRP o botão estava com o rótulo normal, então o clique não chegou a iniciar a busca ou ela terminou sem mostrar nada. A causa é investigada antes do conserto.

@@ -39,6 +39,11 @@ export class HomeController {
         this.stagingController.initialize();
     }
 
+    /** The screen was left: what is still on its way draws nothing. */
+    dispose() {
+        this.searchController.dispose();
+    }
+
     bindEvents() {
         // Mode Toggles
         this.view.$delegate('#btnModeVisual', 'click', () => this.setMode('visual'));
@@ -131,7 +136,7 @@ export class HomeController {
         const text = input ? input.value : '';
 
         if (!text || !text.trim()) {
-            toast.warn('Please paste some "Artist - Album" lines first.');
+            toast.warning('Please paste some "Artist - Album" lines first.');
             return;
         }
 

@@ -1,7 +1,33 @@
+import toast from '../Toast.js';
+import { isDeadlineError } from '../../utils/deadline.js';
+import {
+    ScanStatus, ScanFailure, idleScan, canStartScan, startScan, scanFound, scanFailed, scanReclassified, countAlbumTypes
+} from '../../models/scanState.js';
+
+/** The filter button that shows each album type. */
+const FILTER_OF_TYPE = Object.freeze({
+    Album: 'albums', EP: 'eps', Single: 'singles', Live: 'live', Compilation: 'compilations', Uncategorized: 'uncategorized'
+});
+
+/** Newest first, by release date. A new list: the one given is not changed. */
+function newestFirst(albums) {
+    const released = (album) => new Date(album.releaseDate || album.raw?.attributes?.releaseDate || 0);
+    return [...albums].sort((a, b) => released(b) - released(a));
+}
+
+/**
+ * The scan of the Home (F67).
+ *
+ * Owner of the scan's state (`this.scan`, rules in models/scanState.js). Every change goes
+ * through `_setScan`, which draws the screen from the state: there is no other place that says
+ * what the Scan button, the status line or the panel show.
+ */
 export class SearchController {
     constructor(homeController) {
         this.home = homeController; // Parent Controller
         this.service = homeController.albumSearchService;
+        this.scan = idleScan();
+        this.disposed = false;
         // ARCH-18: Updated filter state to include EP and Uncategorized
         this.filterState = {
             albums: true,
@@ -13,72 +39,80 @@ export class SearchController {
         };
     }
 
-    initialize() {
-        // Bind Input Events
-        const input = this.home.view.$('#artistScanInput');
-        if (input) {
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') this.searchArtist(input.value);
-            });
-        }
-
-        this.home.view.$delegate('#btnScanArtist', 'click', () => {
-            if (input) this.searchArtist(input.value);
-        });
+    /** The albums of the scan on screen (what the grid click looks up). */
+    get results() {
+        return this.scan.albums;
     }
 
-    async searchArtist(query) {
-        if (!query.trim()) return;
+    initialize() {
+        // Every handler is delegated from #app and reads the field at the time of the event:
+        // nothing here holds a DOM node, so a Home drawn again still answers.
+        const typed = () => this.home.view.$('#artistScanInput')?.value || '';
 
-        console.log(`Searching logic for: ${query}`);
-        this.home.state.isScanning = true;
-        this.home.view.setLoading(true);
+        this.home.view.$delegate('#artistScanInput', 'keydown', (e) => {
+            if (e.key === 'Enter') this.searchArtist(typed());
+        });
+        this.home.view.$delegate('#btnScanArtist', 'click', () => this.searchArtist(typed()));
+        this.home.view.$delegate('#btnScanRetry', 'click', () => this.searchArtist(this.scan.query));
+
+        this._draw();
+    }
+
+    /** The screen was left: what is still on its way draws nothing. */
+    dispose() {
+        this.disposed = true;
+    }
+
+    /**
+     * Scan the catalog for an artist. One scan at a time: while one runs, another ask does nothing.
+     * Ends when the catalog answered (or failed, or missed its deadline); the AI list, when it is
+     * needed, arrives after and classifies the albums on screen again.
+     */
+    async searchArtist(query) {
+        if (this.scan.status === ScanStatus.SCANNING) return;
+        if (!canStartScan(this.scan, query)) {
+            toast.warning('Type an artist name first.');
+            return;
+        }
+
+        const { generation, query: text } = this._setScan(startScan(this.scan, query));
 
         try {
-            // 1. Get Artist Data
-            const results = await this.service.getArtistDiscography(query);
-            this.results = results; // Cache for lookup
-
-            // 2. Sort by Date Newest -> Oldest (Requirement)
-            // 2. Sort by Date Newest -> Oldest (Requirement)
-            if (results && Array.isArray(results)) {
-                console.log(`[SearchController] Sorting ${results.length} albums...`);
-                results.sort((a, b) => {
-                    // Use exposed releaseDate or fallback to raw attributes
-                    const dateA = new Date(a.releaseDate || (a.raw && a.raw.attributes && a.raw.attributes.releaseDate) || 0);
-                    const dateB = new Date(b.releaseDate || (b.raw && b.raw.attributes && b.raw.attributes.releaseDate) || 0);
-                    return dateB - dateA; // Descending
-                });
-            }
-
-            // 3. Render
-            console.log(`[SearchController] Rendering ${results.length} albums.`);
-            // this.home.discographyRenderer.render(results);
-            this.applyFilters(); // Apply initial filters (Albums Only by default)
-
-            // 4. Update Status UI
-            if (results && results.length > 0) {
-                this.home.state.artist = { name: results[0].artist };
-                const statusEl = this.home.view.$('#statusArtistName');
-                if (statusEl) statusEl.textContent = `→ ${results[0].artist}`;
-
-                // ARCH-18: Calculate and update filter counts
-                const counts = this.calculateTypeCounts();
-                this.home.view.updateFilterCounts(counts);
-            } else {
-                console.warn('[SearchController] No results found.');
-                const statusEl = this.home.view.$('#statusArtistName');
-                if (statusEl) statusEl.textContent = '→ Not Found';
-                alert('No albums found for this artist.');
-            }
-
+            const { albums, reclassified } = await this.service.scanArtist(text);
+            this._setScan(scanFound(this.scan, generation, { albums: newestFirst(albums), classifying: Boolean(reclassified) }));
+            if (reclassified) this._applyAiList(generation, reclassified);
         } catch (error) {
-            console.error('Search failed', error);
-            alert('Artist not found or API error.');
-        } finally {
-            this.home.state.isScanning = false;
-            this.home.view.setLoading(false);
+            console.error('[SearchController] Scan failed', error);
+            this._setScan(scanFailed(this.scan, generation, isDeadlineError(error) ? ScanFailure.TIMEOUT : ScanFailure.ERROR));
         }
+    }
+
+    /** The AI list arrives after the first render: the albums shown are classified again. */
+    async _applyAiList(generation, reclassified) {
+        let albums = null;
+        try {
+            albums = await reclassified;
+        } catch (error) {
+            console.warn('[SearchController] AI list failed, keeping the first classification', error);
+        }
+        this._setScan(scanReclassified(this.scan, generation, albums ? newestFirst(albums) : null));
+    }
+
+    /** The one way the scan's state changes: keep it, then draw from it. */
+    _setScan(next) {
+        if (next === this.scan) return next;
+        this.scan = next;
+        this.home.state.isScanning = next.status === ScanStatus.SCANNING;
+        this.home.state.artist = next.artist ? { name: next.artist } : null;
+        this._draw();
+        return next;
+    }
+
+    _draw() {
+        if (this.disposed) return;
+        this.home.view.renderScan(this.scan);
+        this.home.view.updateFilterCounts(countAlbumTypes(this.scan.albums));
+        this.applyFilters();
     }
 
     // Filter Logic
@@ -116,55 +150,12 @@ export class SearchController {
     }
 
     applyFilters() {
-        if (!this.results) return;
+        // Only the results state has albums in the grid: in the others the panel shows a message
+        if (this.scan.status !== ScanStatus.RESULTS) return;
 
-        console.log('[SearchController] Applying filters:', this.filterState);
+        // ARCH-18: album.type comes from the classification pipeline; a type with no filter is not shown
+        const filtered = this.results.filter(album => Boolean(this.filterState[FILTER_OF_TYPE[album.type || 'Uncategorized']]));
 
-        const filtered = this.results.filter(album => {
-            // ARCH-18: Use album.type directly from classification pipeline
-            const type = album.type || 'Uncategorized';
-
-            // Map filter state to album types
-            if (type === 'Album' && this.filterState.albums) return true;
-            if (type === 'EP' && this.filterState.eps) return true;
-            if (type === 'Single' && this.filterState.singles) return true;
-            if (type === 'Live' && this.filterState.live) return true;
-            if (type === 'Compilation' && this.filterState.compilations) return true;
-            if (type === 'Uncategorized' && this.filterState.uncategorized) return true;
-
-            return false;
-        });
-
-        console.log(`[SearchController] Filtered ${this.results.length} -> ${filtered.length}`);
         this.home.discographyRenderer.render(filtered);
-    }
-
-    /**
-     * ARCH-18: Calculate counts for each type from results
-     * @returns {Object} - { Album: n, EP: n, Single: n, Compilation: n, Live: n, Uncategorized: n }
-     */
-    calculateTypeCounts() {
-        if (!this.results) return {};
-
-        const counts = {
-            Album: 0,
-            EP: 0,
-            Single: 0,
-            Compilation: 0,
-            Live: 0,
-            Uncategorized: 0
-        };
-
-        this.results.forEach(album => {
-            const type = album.type || 'Uncategorized';
-            if (counts.hasOwnProperty(type)) {
-                counts[type]++;
-            } else {
-                counts.Uncategorized++;
-            }
-        });
-
-        console.log('[SearchController] Type counts:', counts);
-        return counts;
     }
 }
