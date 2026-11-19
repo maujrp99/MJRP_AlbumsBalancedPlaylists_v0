@@ -17,9 +17,10 @@
 ### 1.1 Artist Search & Staging
 *   **Logic Trace**:
     1.  **[UI]** User types in `#artistScanInput` (visual mode) and presses Enter or clicks the Scan button (`#btnScanArtist`). There is no debounce.
-    2.  **[FN]** `SearchController.searchArtist(query)` -> calls `AlbumSearchService.getArtistDiscography(query)`.
-    3.  **[API]** Apple Music catalog through MusicKit (`musicKitService.getArtistAlbums`), in the browser. The server has no search route; the only server call of this flow is `POST /api/ai/studio-albums`, used by the album type classification.
-    4.  **[UI]** `DiscographyRenderer` updates grid with search results.
+    2.  **[FN]** `SearchController.searchArtist(query)` -> the scan state goes to `scanning` (`models/scanState.js`) and `HomeView.renderScan` draws it at once: the button busy and disabled ("Scanning…"), the status line, the wait in the panel. While a scan runs, another ask does nothing; an empty field gets the notice "Type an artist name first.". Then it calls `AlbumSearchService.scanArtist(query)`.
+    3.  **[API]** Apple Music catalog through MusicKit (`musicKitService.getArtistAlbums`), in the browser, straight to Apple: the app's server sees nothing of it except `GET /api/musickit-token`, once per page load. The catalog step has a deadline of 15 s (`CATALOG_DEADLINE_MS`) and the start of MusicKit one of 10 s (`MUSICKIT_INIT_DEADLINE_MS`).
+    4.  **[UI]** As soon as the catalog answers, `DiscographyRenderer` draws the albums, classified without the AI list, and the filter counts are updated. No album: the panel says "No albums found for «text».". Deadline or failure: the panel says so, with the button "Try again" (`#btnScanRetry`), which scans the same text.
+    4b. **[API]** Only when some album needs it (electronic genres), `POST /api/ai/studio-albums` is asked after that first render (deadline of 60 s, `AI_LIST_DEADLINE_MS`); the status line shows "confirming album types…" meanwhile. When the list arrives the albums are classified again and the grid and the counts are redrawn; when it does not, the albums shown stay.
     5.  **[UI]** User clicks Album Card (`[data-action="toggle-staging"]`).
     6.  **[FN]** `HomeController.handleGridClick` -> `StagingAreaController.addAlbum(album)`.
     7.  **[UI]** `StagingAreaRenderer` adds item to the visual stack.

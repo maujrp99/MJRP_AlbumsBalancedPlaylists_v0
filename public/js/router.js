@@ -14,6 +14,8 @@ export class Router {
         this.afterNavigateHooks = []
         // Address (path + query) of the screen being shown: where the person stays when a hook refuses a move
         this.currentUrl = null
+        // Identity of the route change that owns the screen: a newer change leaves the older one behind (F67)
+        this.renderRun = 0
 
         // Listen to browser back/forward
         window.addEventListener('popstate', () => this.handleHistoryMove())
@@ -145,7 +147,12 @@ export class Router {
     }
 
     /**
-     * Render a view
+     * Render a view.
+     *
+     * Each call has an identity (`renderRun`). Two calls can run at the same time (a route whose
+     * factory navigates and returns null, two navigations in the same turn, a slow view that the
+     * person leaves): only the newest draws, mounts and shows a failure. The view that is mounted
+     * is the one this call created, never "whatever `currentView` is by now".
      * @private
      */
     async renderView(viewFactory, params) {
@@ -155,38 +162,31 @@ export class Router {
             return
         }
 
+        const run = ++this.renderRun
+        const leftBehind = () => run !== this.renderRun
+
         try {
             // Cleanup current view
             if (this.currentView && this.currentView.destroy) {
                 this.currentView.destroy()
             }
+            this.currentView = null
 
             // Create new view instance
-            this.currentView = await viewFactory()
+            const view = await viewFactory()
+            if (leftBehind()) return
+            this.currentView = view
+            if (!view) return
 
-            // Render view HTML
-            if (this.currentView && this.currentView.render) {
-                const result = await this.currentView.render(params)
-
-                // SafeDOM Support (DOM Node)
-                if (result instanceof Node) {
-                    while (container.firstChild) {
-                        container.removeChild(container.firstChild)
-                    }
-                    container.appendChild(result)
-                }
-                // Legacy Support (HTML String)
-                else if (typeof result === 'string') {
-                    container.innerHTML = result
-                }
-            }
+            const drawn = await this.drawView(view, container, params, leftBehind)
 
             // Call view's mount lifecycle
-            if (this.currentView && this.currentView.mount) {
-                await this.currentView.mount(params)
+            if (drawn && view.mount) {
+                await view.mount(params)
             }
         } catch (error) {
             console.error('[Router] Render failed:', error)
+            if (leftBehind()) return
             container.innerHTML = `
                 <div class="p-8 text-center">
                     <div class="text-red-500 text-xl font-bold mb-2">View Error</div>
@@ -195,6 +195,30 @@ export class Router {
                 </div>
             `
         }
+    }
+
+    /**
+     * Put what the view renders in the container.
+     * @returns {Promise<boolean>} false when a newer route change took the screen meanwhile
+     * @private
+     */
+    async drawView(view, container, params, leftBehind) {
+        if (!view.render) return true
+        const result = await view.render(params)
+        if (leftBehind()) return false
+
+        // SafeDOM Support (DOM Node)
+        if (result instanceof Node) {
+            while (container.firstChild) {
+                container.removeChild(container.firstChild)
+            }
+            container.appendChild(result)
+        }
+        // Legacy Support (HTML String)
+        else if (typeof result === 'string') {
+            container.innerHTML = result
+        }
+        return true
     }
 
     /**

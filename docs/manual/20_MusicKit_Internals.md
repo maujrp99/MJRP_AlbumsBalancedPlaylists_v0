@@ -9,7 +9,8 @@ This folder contains the core logic for interacting with the Apple Music API on 
 *   **Role**: Handles the initialization lifecycle and user authorization.
 *   **Key Features**:
     *   **Developer Token**: Fetches the signed JWT from `/api/musickit-token` (Server).
-    *   **Lazy Loading**: Dynamically injects the `musickit.js` script tag only when needed.
+    *   **Lazy Loading**: Dynamically injects the `musickit.js` script tag only when needed. When the script finishes loading with `window.MusicKit` already there, it is ready at once; only otherwise it waits for the `musickitloaded` event.
+    *   **Deadline** (F67): the whole start (token route, script and `configure`) has 10 s (`MUSICKIT_INIT_DEADLINE_MS`). Past it, `init()` rejects with a `DeadlineError` (`utils/deadline.js`) and the next call starts again from zero; a start that was left behind marks nothing as ready when it ends late.
     *   **Storefront Detection**:
         *   Primary: Uses the authenticated user's account storefront.
         *   Fallback: Uses browser locale (e.g., `navigator.language` "pt-BR" -> "br") for guests.

@@ -2,6 +2,9 @@ import { BaseView } from './BaseView.js';
 import { getIcon } from '../components/Icons.js';
 import { HomeController } from '../controllers/HomeController.js';
 import { SafeDOM } from '../utils/SafeDOM.js';
+import { describeScan, idleScan } from '../models/scanState.js';
+
+const PANEL_ICONS = Object.freeze({ idle: 'Search', empty: 'Search', failed: 'AlertTriangle' });
 
 export class HomeView extends BaseView {
     constructor() {
@@ -166,17 +169,14 @@ export class HomeView extends BaseView {
         const toolbar = SafeDOM.div({ id: 'home-toolbar', className: 'min-h-14 border-b border-white/5 bg-black/40 backdrop-blur-md flex flex-col md:flex-row md:items-center md:justify-between px-4 py-3 md:px-6 shrink-0 z-20 gap-2' }, [
             SafeDOM.div({ className: 'flex items-center gap-3 shrink-0' }, [
                 SafeDOM.span({ className: 'text-xs font-bold text-orange-500 uppercase tracking-widest' }, '02b // Discography Scan'),
-                SafeDOM.span({ id: 'statusArtistName', className: 'text-sm text-white font-bold truncate max-w-[200px]' })
+                SafeDOM.span({ id: 'statusArtistName', className: 'text-sm text-white font-bold truncate max-w-[320px]', role: 'status', 'aria-live': 'polite' })
             ]),
             SafeDOM.div({ className: 'flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1 -mb-1' }, filterBtns)
         ]);
 
         // Grid
         const grid = SafeDOM.div({ id: 'discographyGrid', className: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-20' }, [
-            SafeDOM.div({ className: 'col-span-full flex flex-col items-center justify-center text-gray-600 space-y-4 py-20' }, [
-                SafeDOM.fromHTML(getIcon('Search', 'w-12 h-12 opacity-20')),
-                SafeDOM.p({}, 'Search for an artist to begin scanning.')
-            ])
+            this.createScanPanel(describeScan(idleScan()).panel)
         ]);
 
         const rightPanel = SafeDOM.main({ id: 'home-right-panel', className: 'flex-1 relative min-h-[50vh] md:h-full overflow-hidden flex flex-col bg-black/20' }, [
@@ -199,6 +199,12 @@ export class HomeView extends BaseView {
         window.controller = this.controller;
 
         this.controller.initialize();
+    }
+
+    destroy() {
+        // What is still on its way (a scan, the AI list) must not draw on the next screen
+        if (this.controller?.dispose) this.controller.dispose();
+        super.destroy();
     }
 
     // DOM Helpers for Controller
@@ -247,26 +253,65 @@ export class HomeView extends BaseView {
         console.log(`[HomeView] Updated filter counts, total: ${totalCount}`);
     }
 
-    setLoading(isLoading) {
-        const btn = this.$('#btnScanArtist');
-        const grid = this.$('#discographyGridContainer');
-        const status = this.$('#statusArtistName');
+    /**
+     * Draw the scan from its state (F67): the one place that says what the Scan button, the
+     * status line and the panel show. The albums of the results state are drawn by the
+     * discography renderer; every other state has its message here.
+     * @param {Object} scan - a state of models/scanState.js
+     */
+    renderScan(scan) {
+        const shown = describeScan(scan);
+        this.drawScanButton(shown);
 
-        if (isLoading) {
-            // Use SafeDOM for button content
-            if (btn) {
-                SafeDOM.clear(btn);
-                btn.appendChild(SafeDOM.div({ className: 'w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin' }));
-            }
-            if (grid) grid.classList.add('opacity-50', 'pointer-events-none');
-            if (status) status.textContent = "Scanning...";
-        } else {
-            if (btn) {
-                SafeDOM.clear(btn);
-                btn.appendChild(SafeDOM.fromHTML(getIcon('ScanLine', 'w-4 h-4')));
-                btn.appendChild(SafeDOM.span({}, 'Scan'));
-            }
-            if (grid) grid.classList.remove('opacity-50', 'pointer-events-none');
+        const status = this.$('#statusArtistName');
+        if (status) status.textContent = shown.statusLine;
+
+        const grid = this.$('#discographyGrid');
+        if (grid && shown.panel) {
+            SafeDOM.clear(grid);
+            grid.appendChild(this.createScanPanel(shown.panel));
         }
+    }
+
+    drawScanButton({ busy, buttonLabel }) {
+        const btn = this.$('#btnScanArtist');
+        if (!btn) return;
+
+        SafeDOM.clear(btn);
+        btn.appendChild(busy
+            ? SafeDOM.div({ className: 'w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin' })
+            : SafeDOM.fromHTML(getIcon('ScanLine', 'w-4 h-4')));
+        btn.appendChild(SafeDOM.span({}, buttonLabel));
+
+        btn.disabled = busy;
+        btn.classList.toggle('opacity-60', busy);
+        btn.classList.toggle('cursor-wait', busy);
+        if (busy) btn.setAttribute('aria-busy', 'true');
+        else btn.removeAttribute('aria-busy');
+    }
+
+    /**
+     * The message of the panel for a state without albums.
+     * @param {{ kind: string, title: string, detail: string, retry: boolean }} panel
+     */
+    createScanPanel(panel) {
+        const mark = panel.kind === 'scanning'
+            ? SafeDOM.div({ className: 'w-10 h-10 border-4 border-white/10 border-t-orange-500 rounded-full animate-spin' })
+            : SafeDOM.fromHTML(getIcon(PANEL_ICONS[panel.kind] || 'Search', 'w-12 h-12 opacity-20'));
+
+        const children = [mark, SafeDOM.p({ className: panel.kind === 'failed' ? 'text-gray-300' : '' }, panel.title)];
+        if (panel.detail) children.push(SafeDOM.p({ className: 'text-xs text-gray-500' }, panel.detail));
+        if (panel.retry) {
+            children.push(SafeDOM.button({
+                id: 'btnScanRetry',
+                type: 'button',
+                className: 'px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/10 transition-colors'
+            }, 'Try again'));
+        }
+
+        return SafeDOM.div({
+            className: 'col-span-full flex flex-col items-center justify-center text-center text-gray-600 space-y-4 py-20',
+            dataset: { scanPanel: panel.kind }
+        }, children);
     }
 }

@@ -3,13 +3,25 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
-## [2026-11-19 18:18] session — F55 fatia 1 em produção (site e servidor)
+## [2026-11-19 18:33] review — F67 revisada e provada pelo integrador; UAT-204 em fixed
 
-Site e servidor publicados da `main` (`72c0a70`; revisão `mjrp-proxy-00200-2nh`, volta `mjrp-proxy-00199-hsv`). Em produção, com login, a fonte de notas respondeu `found` para «Core» e «Core (Remastered)» (mesma página) e `not_found` para «Core Memories». A UAT-184 fica aberta até a fatia 2: os álbuns trocados já guardados no navegador seguem na tela até vencer ou até «Clear Cache», e o identificador corrigido ainda não é gravado na série. Efeito conhecido: «No Quarter» (série Robert Plant 00-10s) passa a falhar com aviso, porque o catálogo só o tem com subtítulo. A regra do raspador que a F52 listava como tarefa 12 foi entregue aqui. O auxiliar da F67 (Scan) está trabalhando.
+Ramo do auxiliar com a `main` junto: 982 testes, build ok. Sete cenários no navegador em `reports/evidence/F67/2026-11-19-home-scan-browser-proof.md`. A causa do caso do MJRP não pôde ser determinada; dois defeitos reais que o explicam foram consertados (consulta ao catálogo sem prazo; navegação sobreposta deixava a tela sem ligar os botões, no roteador). O doctor segue vermelho com os erros antigos, nenhum da F67.
+
+## [2026-11-19 18:30] session — F67: spec, plano, tarefas, comportamento e manual escritos no ramo
+
+A pasta da F67 preenchida para o que foi construído (7 REQ com `verified_by`, 10 tarefas, a prova no navegador aberta para o integrador); `docs/specs/behavior.md` com os estados da busca da Home e a tela sempre montada; manual 14, 16, 19, 20, 21 e 22 corrigidos. O doctor segue vermelho com os mesmos 521 erros de antes do ramo, nenhum da F67.
+
+## [2026-11-19 18:26] session — F67: o Scan da Home tem um estado só, prazo no catálogo e a IA depois (UAT-204)
+
+Ramo `fix/f67-home-scan-answers`. Causa examinada antes do conserto: achado um defeito real do roteador (uma rota que redireciona deixava a tela seguinte desenhada e nunca montada, sem nenhum botão respondendo) e a falta de prazo no catálogo, no início do MusicKit e na lista da IA; a causa do caso do MJRP não se determina pelo código. Construído: `models/scanState.js` (estados parado, buscando, resultados, sem resultados, falhou), o `SearchController` como dono e a `HomeView.renderScan` como único desenho; prazo de 15 s no catálogo e de 10 s no início do MusicKit; os álbuns aparecem quando o catálogo responde e a lista da IA reclassifica depois; nenhum `alert` no fluxo. 982 testes, build ok. Sem navegador nesta sessão: a prova na tela fica com o integrador.
 
 ## [2026-11-19 18:18] decision — F67 criada: o Scan da Home responde ao clique (UAT-204)
 
 Feature de via rápida, `^REL-40`, conserta a UAT-204. Criada na `main` antes do ramo. Achado novo: quando o Scan roda, o botão vira um círculo girando; na captura do MJRP o botão estava com o rótulo normal, então o clique não chegou a iniciar a busca ou ela terminou sem mostrar nada. A causa é investigada antes do conserto.
+
+## [2026-11-19 18:18] session — F55 fatia 1 em produção (site e servidor)
+
+Site e servidor publicados da `main` (`72c0a70`; revisão `mjrp-proxy-00200-2nh`, volta `mjrp-proxy-00199-hsv`). Em produção, com login, a fonte de notas respondeu `found` para «Core» e «Core (Remastered)» (mesma página) e `not_found` para «Core Memories». A UAT-184 fica aberta até a fatia 2: os álbuns trocados já guardados no navegador seguem na tela até vencer ou até «Clear Cache», e o identificador corrigido ainda não é gravado na série. Efeito conhecido: «No Quarter» (série Robert Plant 00-10s) passa a falhar com aviso, porque o catálogo só o tem com subtítulo. A regra do raspador que a F52 listava como tarefa 12 foi entregue aqui. O auxiliar da F67 (Scan) está trabalhando.
 
 ## [2026-11-19 18:16] review — F55 fatia 1 revisada e provada pelo integrador
 

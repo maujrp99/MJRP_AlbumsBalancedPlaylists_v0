@@ -7,7 +7,7 @@ This document covers the **Search Pipeline** and the sophisticated **Classificat
 *   **Architecture**: Implements a Multi-Strategy Search.
     *   **Strategy 1**: Direct Search using Normalized Artist Name.
     *   **Fallback**: If the best match has confidence <= 0.8, tries "Alternative Artist Names" (e.g. `Anjunabeats` vs `Anjunabeats Worldwide`).
-    *   **Two entry points**: `search(artist, albumTitle, options)` for one album (used by the bulk paste of Home) and `getArtistDiscography(artistName)` for the artist scan.
+    *   **Two entry points**: `search(artist, albumTitle, options)` for one album (used by the bulk paste of Home) and `scanArtist(artistName)` for the artist scan of Home (F67: the catalog with a deadline of 15 s; the albums classified first without the AI list, and `reclassified`, a promise of the albums classified again when the list arrives). `getArtistDiscography(artistName)`, which waits for the AI list, stays for `components/series/ArtistScanner.js`.
     *   **Scoring**: Uses `ScoreCalculator` to sort results.
 *   **Integration**: Connects `MusicKitService` (Raw API) with `AlbumTypeClassifier` (Logic).
 
