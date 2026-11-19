@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:14] session — F55 fatia 2 em produção (site e servidor)
+
+Site e servidor publicados da `main` (`dd16b01`; revisão `mjrp-proxy-00201-kcq`, volta `mjrp-proxy-00200-2nh`). Em produção, com login: notas de «Core» (página 2906) e de «No Quarter» pelo título curto e pelo longo (a mesma página 11402). UAT-184 em `fixed`. Em andamento com auxiliares: F59 (resto), F61, F52 fatias 3 a 5.
+
 ## [2026-11-19 19:12] review — F55 fatia 2 provada pelo integrador; UAT-184 em fixed
 
 Contagem na conta do MJRP depois da fatia 2: 227 álbuns pedidos, 227 iguais. «No Quarter» carrega pelo segundo nível, com o aviso no cartão; o identificador corrigido do «Core» foi gravado na série. Prova em `reports/evidence/F55/2026-11-19-slice-2-browser-proof.md`, com o que não foi visto.

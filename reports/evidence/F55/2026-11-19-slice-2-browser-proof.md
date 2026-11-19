@@ -16,3 +16,15 @@ Código: ramo `fix/f55-identity-slice-2` com a `main` junto e o ajuste do integr
 - Blend e edição de playlist numa série que tinha álbum trocado.
 - Notas e popularidade do «No Quarter» com o título longo.
 - No navegador do MJRP: o descarte dos álbuns trocados guardados (o navegador de teste já os tinha recarregado na fatia 1; o descarte foi visto só no registro antigo do «No Quarter» e nos testes).
+
+## Em produção (2026-11-19 19:14)
+
+Site `dd16b01` (pacote `main-P636MPJB.js`), depois servidor `dd16b01` (revisão `mjrp-proxy-00201-kcq`; a volta é `mjrp-proxy-00200-2nh`).
+
+| Pedido à fonte de notas, com login | Resposta |
+|---|---|
+| STP - Core | `found`, página 2906, Plush 89 |
+| Page & Plant - No Quarter | `found`, página 11402, Kashmir 81 |
+| Page & Plant - No Quarter: Jimmy Page and Robert Plant Unledded | `found`, a mesma página 11402 |
+
+Com isso as notas do «No Quarter» com o título longo, que faltavam ver, foram vistas.
