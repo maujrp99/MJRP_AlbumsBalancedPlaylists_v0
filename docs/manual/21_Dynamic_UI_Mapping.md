@@ -182,7 +182,7 @@
 *   **Status Change**:
     1.  **[UI]** Change Dropdown (Owned/Wishlist).
     2.  **[FN]** `handleStatusChange(id, status)`.
-    3.  **[STORE]** `inventoryStore.updateAlbum(id, { owned: bool })`.
+    3.  **[SERVICE]** `inventoryService.updateAlbum(id, { owned: bool })` (since F58; it writes through the repository and then changes the store).
 *   **Delete**:
     1.  **[UI]** Click Delete Button -> Confirm.
-    2.  **[FN]** `InventoryController.handleDelete(id)` calls `inventoryStore.removeAlbum(id)`, which removes the item through `InventoryRepository.removeAlbum` and from the store's own list; the toast is "Album removed from inventory" or, on failure, "Failed to delete album".
+    2.  **[FN]** `InventoryController.handleDelete(id)` calls `inventoryService.removeAlbum(id)` (since F58), which removes the item through `InventoryRepository.removeAlbum` and then from the store's list; the toast is "Album removed from inventory" or, on failure, "Failed to delete album".

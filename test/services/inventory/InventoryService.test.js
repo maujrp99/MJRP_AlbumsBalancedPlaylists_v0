@@ -2,7 +2,7 @@
  * F58 (UAT-18) - reading and writing the inventory is the work of a service; the store only
  * holds the state the service gives it. These cases were the store's own before the split.
  */
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { InventoryService } from '../../../public/js/services/inventory/InventoryService.js'
 import { InventoryStore } from '../../../public/js/stores/inventory.js'
 
