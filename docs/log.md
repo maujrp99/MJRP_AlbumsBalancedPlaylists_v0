@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 19:54] session — F63: spec, plano, tarefas, comportamento e manual escritos no ramo
+
+A pasta da F63 preenchida para o que foi construído (13 REQ: 10 com `verified_by`, dois deles «já consertado» pela F67, F50 e F54 com a prova; 3 não entregues e ditos assim: UAT-10 e UAT-11 pedem decisão do MJRP, UAT-27 ficou fora do escopo dado). A spec traz a tabela «ainda existia?» de cada issue com arquivo e linha, e a lista antes → depois dos 28 textos traduzidos, para o MJRP rever as palavras. 19 tarefas; abertas a prova no navegador (do integrador), o julgamento do MJRP e as três não entregues. `docs/specs/behavior.md`: 12 estados reescritos e 4 novos (`^home-bulk-skipped`, `^home-bulk-empty`, `^blend-series-from-address`, `^app-back-goes-back`). Manual: 00 (mapa de arquivos), 08, 11, 13, 15, 17, 19, 21 (seção 1.2), 24, 29, 99. Suíte: 1233 passando (1143 antes); `vite build` compila; `doctor.py` com os mesmos 521 erros de antes do ramo.
+
 ## [2026-11-19 19:48] session — F63: os itens «Soon» do menu não navegam mais
 
 Confirmado na `main` por teste (UAT-201): By Artist, By Genre e By Track, marcados «Soon» no menu «Music Series», eram links com endereço; o ouvinte do próprio item recusava o clique, mas o roteador, que ouve todo link do app, navegava do mesmo jeito. Agora o item «Soon» não é link (`aria-disabled`, sem endereço), como o `docs/specs/behavior.md` já dizia (`^app-main`). A gaveta do celular continua com os três links, que abrem a tela «Coming Soon»: não mexido.
