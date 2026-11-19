@@ -188,15 +188,20 @@ describe('text from outside is shown as text', () => {
         expectOnlyText(host)
         expect(host.querySelector('#playlistNameInput').value).toBe(QUOTED)
 
-        modal.state = 'SUCCESS'
-        draw(modal.render())
-        expectOnlyText(host, QUOTED, TEXT)
-
-        modal.state = 'ERROR'
-        modal.progress = { current: 0, total: 0, message: TEXT }
+        // the end of an export: the names it created or not, the reason it stopped, the tracks not found
+        modal.state = 'DONE'
+        modal.report = {
+            mode: 'separate', totalTracks: 2, matchCount: 1,
+            created: [{ name: TEXT, url: QUOTED, tracks: 1, total: 1, alreadyThere: true }],
+            incomplete: [{ name: TEXT, url: QUOTED, tracks: 1, total: 2 }],
+            empty: [TEXT], notCreated: [TEXT],
+            failure: { kind: 'reconnect', message: TEXT }
+        }
         draw(modal.render())
         expectOnlyText(host, TEXT)
+        expect(host.querySelector('a.created-playlist-link')).toBeNull() // an address that is not a web address is no link
 
+        modal.progress = { current: 0, total: 0, message: TEXT }
         modal.state = 'MATCHING'
         draw(modal.render())
         expectOnlyText(host, TEXT)

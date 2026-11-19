@@ -2,6 +2,16 @@
 import { SpotifyAuthService } from './SpotifyAuthService.js'
 import { NormalizationUtils } from '../utils/NormalizationUtils.js'
 import { pickAlbum, spotifyCandidate } from '../models/askedAlbum.js'
+import { SpotifyReconnectError, SpotifyRateLimitError } from './spotify/spotifyErrors.js'
+
+/** The longest wait a rate limit may ask of a patient caller before it is reported instead. */
+const MAX_RATE_LIMIT_WAIT_SECONDS = 30
+
+/** The export waits a short rate limit; see _fetch. */
+const PATIENT = Object.freeze({ patient: true })
+
+/** The seconds a 429 asked to wait, or null when it did not say. */
+const retryAfterOf = (response) => Number(response.headers?.get?.('Retry-After')) || null
 
 /**
  * SpotifyService
@@ -13,51 +23,79 @@ export const SpotifyService = {
     baseUrl: 'https://api.spotify.com/v1',
 
     /**
-     * Helper to get headers with valid token
+     * Helper to get headers with valid token (an access past its time is renewed here)
      * @private
+     * @throws {SpotifyReconnectError} when there is no access and none can be had without the person
      */
     async _getHeaders() {
         const token = await SpotifyAuthService.getAccessToken()
-        if (!token) {
-            throw new Error('No access token available')
-        }
+        if (!token) throw new SpotifyReconnectError()
         return {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         }
     },
 
+    /** Replaceable in tests. @private */
+    _sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
+    },
+
+    /** One request to the Web API, with the access of now. @private */
+    async _send(endpoint, options) {
+        const headers = await this._getHeaders()
+        return fetch(`${this.baseUrl}${endpoint}`, { ...options, headers: { ...headers, ...options.headers } })
+    },
+
     /**
-     * Generic fetch wrapper with 401 retry logic
+     * Spotify refused the access (401) although its time had not passed: renew it ONCE with the
+     * refresh token and make the request again. Refused again, or not renewable: the person must
+     * connect again.
      * @private
      */
-    async _fetch(endpoint, options = {}) {
+    async _sendWithRenewedAccess(endpoint, options) {
+        console.warn('[SpotifyService] Access refused (401): renewing it once')
+        if (!(await SpotifyAuthService.renewAccess())) throw new SpotifyReconnectError()
+
+        const response = await this._send(endpoint, options)
+        if (response.status === 401) throw new SpotifyReconnectError()
+        return response
+    },
+
+    /**
+     * Spotify asked to wait (429). A caller that said it is patient waits what `Retry-After` asks,
+     * once, when that is at most MAX_RATE_LIMIT_WAIT_SECONDS; otherwise the limit is reported with
+     * the time Spotify asked for.
+     * @private
+     */
+    async _sendAfterTheWait(limited, endpoint, options, patient) {
+        const seconds = retryAfterOf(limited)
+        if (!patient || !seconds || seconds > MAX_RATE_LIMIT_WAIT_SECONDS) throw new SpotifyRateLimitError(seconds)
+
+        console.warn(`[SpotifyService] Rate limited: waiting ${seconds} s`)
+        await this._sleep(seconds * 1000)
+        const response = await this._send(endpoint, options)
+        if (response.status === 429) throw new SpotifyRateLimitError(retryAfterOf(response))
+        return response
+    },
+
+    /**
+     * Generic fetch wrapper.
+     * @private
+     * @param {string} endpoint
+     * @param {Object} [options] - fetch options
+     * @param {Object} [policy]
+     * @param {boolean} [policy.patient] - wait a short rate limit and try again (the export does;
+     *        the album load does not: it has its own deadline)
+     * @throws {SpotifyReconnectError|SpotifyRateLimitError|Error}
+     */
+    async _fetch(endpoint, options = {}, { patient = false } = {}) {
         try {
-            let headers = await this._getHeaders()
-
-            let response = await fetch(`${this.baseUrl}${endpoint}`, {
-                ...options,
-                headers: { ...headers, ...options.headers }
-            })
-
-            // Handle Token Expiry (401)
-            if (response.status === 401) {
-                console.warn('[SpotifyService] Token expired, refreshing...')
-                // Force refresh via AuthService (getAccessToken logic handles refresh if we signal it? 
-                // Actually SpotifyAuthService.getAccessToken checks expiry time, but 401 means it's invalid anyway)
-                // Let's force a refresh if possible, or just rely on getAccessToken to have done it.
-                // If we are here, it means the token WAS 'valid' by time, but rejected.
-                // In simple PKCE, we might need to re-login if refresh fails, but let's try calling getAccessToken again 
-                // implies we might need a force-refresh flag in AuthService. 
-                // For now, let's assume getAccessToken handles it or throw.
-                throw new Error('Spotify Token Invalid (401)')
-            }
+            let response = await this._send(endpoint, options)
+            if (response.status === 401) response = await this._sendWithRenewedAccess(endpoint, options)
+            if (response.status === 429) response = await this._sendAfterTheWait(response, endpoint, options, patient)
 
             if (!response.ok) {
-                if (response.status === 429) {
-                    console.warn('[SpotifyService] Rate Limited')
-                    throw new Error('Rate Limited')
-                }
                 const errorData = await response.json().catch(() => ({}))
                 throw new Error(errorData.error?.message || `Spotify API Error: ${response.status}`)
             }
@@ -193,15 +231,17 @@ export const SpotifyService = {
      * @returns {Promise<object>} User profile with id, display_name, etc.
      */
     async getCurrentUser() {
-        return await this._fetch('/me')
+        return await this._fetch('/me', {}, PATIENT)
     },
 
     /**
-     * Search for a track by name and artist
-     * @param {string} trackName 
-     * @param {string} artistName 
+     * Search for a track by name and artist (used by the export).
+     * @param {string} trackName
+     * @param {string} artistName
      * @param {string} albumName - Optional album name for better matching
-     * @returns {Promise<object|null>} Spotify track object or null
+     * @returns {Promise<object|null>} Spotify track object, or null when Spotify has no such track
+     * @throws when Spotify could not be asked (the caller decides what a failure means: "not found"
+     *         is an answer, a failure is not one)
      */
     async searchTrack(trackName, artistName, albumName = '') {
         if (!trackName || !artistName) return null
@@ -221,35 +261,22 @@ export const SpotifyService = {
             limit: 5
         })
 
-        try {
-            const data = await this._fetch(`/search?${params.toString()}`)
+        const data = await this._fetch(`/search?${params.toString()}`, {}, PATIENT)
+        const items = data.tracks?.items || []
+        if (items.length === 0) return null
 
-            if (data.tracks && data.tracks.items.length > 0) {
-                // Try to find exact artist match first
-                const normalizeStr = str => str?.toLowerCase().replace(/[^a-z0-9]/g, '') || ''
-                const targetArtist = normalizeStr(artistName)
-                const targetTrack = normalizeStr(trackName)
+        // Try to find exact artist match first
+        const normalizeStr = str => str?.toLowerCase().replace(/[^a-z0-9]/g, '') || ''
+        const targetArtist = normalizeStr(artistName)
+        const targetTrack = normalizeStr(trackName)
+        const includesEither = (a, b) => a.includes(b) || b.includes(a)
 
-                for (const track of data.tracks.items) {
-                    const trackArtist = normalizeStr(track.artists[0]?.name)
-                    const trackTitle = normalizeStr(track.name)
+        const match = items.find(track =>
+            includesEither(normalizeStr(track.name), targetTrack) &&
+            includesEither(normalizeStr(track.artists[0]?.name), targetArtist))
 
-                    // Check for reasonable match
-                    if (trackTitle.includes(targetTrack) || targetTrack.includes(trackTitle)) {
-                        if (trackArtist.includes(targetArtist) || targetArtist.includes(trackArtist)) {
-                            return track
-                        }
-                    }
-                }
-
-                // Fallback to first result if no exact match
-                return data.tracks.items[0]
-            }
-            return null
-        } catch (error) {
-            console.warn('[SpotifyService] Track search failed:', trackName, error.message)
-            return null
-        }
+        // Fallback to first result if no exact match
+        return match || items[0]
     },
 
     /**
@@ -262,75 +289,37 @@ export const SpotifyService = {
         const user = await this.getCurrentUser()
         if (!user) throw new Error('Could not get user profile')
 
-        const response = await this._fetch(`/users/${user.id}/playlists`, {
+        return await this._fetch(`/users/${user.id}/playlists`, {
             method: 'POST',
             body: JSON.stringify({
                 name,
                 description: description || 'Created by MJRP Album Blender',
                 public: false
             })
-        })
-
-        return response
-    },
-
-    /**
-     * Create multiple playlists for a series (e.g. "Series - S Tier", "Series - A Tier")
-     * @param {Array<{name: string, tracks: Array<{spotifyUri: string}>}>} playlistsData 
-     * @param {string} seriesNamePrefix 
-     * @param {Function} onProgress (current, total, message) => void
-     */
-    async createSeriesPlaylists(playlistsData, seriesNamePrefix, onProgress) {
-        const totalPlaylists = playlistsData.length
-        let createdCount = 0
-
-        for (const playlistData of playlistsData) {
-            const playlistName = `${seriesNamePrefix} - ${playlistData.name}`
-            createdCount++
-
-            if (onProgress) {
-                onProgress(createdCount, totalPlaylists, `Creating "${playlistName}"...`)
-            }
-
-            // 1. Create Playlist
-            const playlist = await this.createPlaylist(playlistName, `Part of ${seriesNamePrefix} series`)
-
-            // 2. Add Tracks
-            const uris = playlistData.tracks.map(t => t.spotifyUri).filter(Boolean)
-            if (uris.length > 0) {
-                if (onProgress) {
-                    onProgress(createdCount, totalPlaylists, `Adding ${uris.length} tracks to "${playlistName}"...`)
-                }
-                await this.addTracksToPlaylist(playlist.id, uris)
-            }
-        }
+        }, PATIENT)
     },
 
     /**
      * Add tracks to a playlist
-     * @param {string} playlistId 
+     * @param {string} playlistId
      * @param {Array<string>} trackUris - Array of Spotify track URIs
+     * @param {Function} [onAdded] - (count) => void, after each request: how many of `trackUris`
+     *        are in the playlist so far (a failure in the middle leaves the count of what went)
      * @returns {Promise<object>} Snapshot response
      */
-    async addTracksToPlaylist(playlistId, trackUris) {
+    async addTracksToPlaylist(playlistId, trackUris, onAdded = () => { }) {
         if (!trackUris || trackUris.length === 0) return null
 
-        // Spotify allows max 100 tracks per request
-        const chunks = []
-        for (let i = 0; i < trackUris.length; i += 100) {
-            chunks.push(trackUris.slice(i, i + 100))
-        }
-
         let lastSnapshot = null
-        for (const chunk of chunks) {
+        // Spotify allows max 100 tracks per request
+        for (let start = 0; start < trackUris.length; start += 100) {
+            if (start > 0) await this._sleep(300) // small delay between requests
+            const chunk = trackUris.slice(start, start + 100)
             lastSnapshot = await this._fetch(`/playlists/${playlistId}/tracks`, {
                 method: 'POST',
                 body: JSON.stringify({ uris: chunk })
-            })
-            // Small delay between chunks
-            if (chunks.length > 1) {
-                await new Promise(r => setTimeout(r, 300))
-            }
+            }, PATIENT)
+            onAdded(start + chunk.length)
         }
 
         return lastSnapshot
