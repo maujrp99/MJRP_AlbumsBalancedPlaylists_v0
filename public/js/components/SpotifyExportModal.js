@@ -6,6 +6,7 @@
 
 import { getIcon } from './Icons.js'
 import { escapeHtml } from '../utils/stringUtils.js'
+import { safeUrl } from '../utils/safeUrl.js'
 import toast from './Toast.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
@@ -105,9 +106,11 @@ export class SpotifyExportModal {
             })
         }
 
-        if (openSpotifyBtn && this.createdPlaylistUrl) {
+        // The address of the created playlist comes from Spotify: opened only when it is a web address (F59)
+        const createdUrl = safeUrl(this.createdPlaylistUrl)
+        if (openSpotifyBtn && createdUrl) {
             openSpotifyBtn.addEventListener('click', () => {
-                window.open(this.createdPlaylistUrl, '_blank')
+                window.open(createdUrl, '_blank', 'noopener')
             })
         }
     }

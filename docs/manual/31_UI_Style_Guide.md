@@ -189,7 +189,7 @@ Use consistent colors to visually distinguish data sources:
 
 | Source | Color Name | Hex | Tailwind Class | Usage |
 |--------|------------|-----|----------------|-------|
-| **Acclaim** (BEA) | Brand Orange | `#f97316` (`brand.orange` in the Tailwind config of `index.html`) | `text-brand-orange`, `bg-brand-orange` | Rankings, ratings, acclaim badges, ★ stars |
+| **Acclaim** (BEA) | Brand Orange | `#f97316` (`brand.orange` in `tailwind.config.js`) | `text-brand-orange`, `bg-brand-orange` | Rankings, ratings, acclaim badges, ★ stars |
 | **Popularity** (Spotify) | Spotify Green | `#1DB954` | `text-[#1DB954]`, `bg-[#1DB954]` | Popularity scores, rank badges, progress bars |
 | **User Ranking** (NEW) | Incandescent Blue | `#0EA5E9` | `text-sky-500`, `bg-sky-500` | User rank badges, "Rank It" button, My Rank column |
 
