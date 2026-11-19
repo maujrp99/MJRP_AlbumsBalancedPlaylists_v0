@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 17:12] session — décimo deploy do site e servidor em Node 24 em produção
+
+Site publicado da `main` (`bcdd114`, pacote `main-CYRWnKB2.js`): o aviso ao visitante na janela de entrada está no ar; sair da conta recarrega o app (visto só nos testes). Servidor publicado por `npm run deploy:server` (primeiro uso real do script) da `main` (`3a5c859`): revisão `mjrp-proxy-00198-5df`, imagem `node:24-slim`. Conferido em produção: `/api/debug/files` 404, `/api/musickit-status` 200, `/api/generate`, `/api/enrich-album` e `/api/ai/studio-albums` 401 sem login; `/api/enrich-album` 200 com login (pelo app local, notas de «Brothers in Arms»). A volta é a revisão `mjrp-proxy-00197-mps`. A trava de fim de turno passou a exigir o critério do conform aberto em 2026-10-28 (`.mjrp/conform.json`), que fecha vermelho (12 lacunas, 61 notas, catálogo defasado em 7); não é desta sessão, fica para o MJRP decidir.
+
 ## [2026-11-19 17:09] decision — servidor em Node 24 (ADR-0020)
 
 O MJRP decidiu «24». `server/Dockerfile` passa de `node:18-slim` para `node:24-slim`; ADR-0020, `tech-stack.md`, `arch.md` e a pergunta aberta da F64 atualizados. Publica sozinho por `npm run deploy:server`; a volta é a revisão `mjrp-proxy-00197-mps`.
