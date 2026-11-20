@@ -245,6 +245,7 @@
   }
 
   .phone-pl-chip__name {
+    font-family: 'Syne', var(--pl-sans);
     max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
@@ -409,10 +410,13 @@
     padding-right: 8px;
   }
 
+  /* Recheck N4 (decided): on the phone the title of a row is set in Syne, the rest in the text
+     face. Syne is wide: 15 px and 600, as the ranking window's rows, two lines at most */
   .phone-track__title {
-    font-size: 16px;
-    line-height: 21px;
-    font-weight: 500;
+    font-family: 'Syne', var(--pl-sans);
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 600;
     color: var(--pl-text);
     overflow: hidden;
     display: -webkit-box;

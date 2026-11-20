@@ -67,7 +67,7 @@ describe('the phone shows one playlist at a time', () => {
         expect(row.querySelector('.phone-track__sub').textContent).toBe('King Crimson · In the Court of the Crimson King')
         expect(row.querySelector('.phone-track__time').textContent).toBe('3:20')
         const more = row.querySelector('[data-phone-action="track-options"]')
-        expect(more.getAttribute('aria-label')).toBe('Options for I Talk to the Wind')
+        expect(more.getAttribute('aria-label')).toBe('Actions for I Talk to the Wind')
         expect(more.dataset).toMatchObject({ playlistIndex: '0', trackIndex: '1' })
         // the drag and drop still finds its list and its rows
         expect(row.closest('.playlist-tracks').dataset.playlistIndex).toBe('0')

@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:36] session — F76 polimento: títulos de linha em Syne em Playlists e na folha da Home (N4, N15 em parte)
+**Branch:** feat/f76-mobile-polish-home-playlists
+No celular, o título da faixa (15 px, 600, até 2 linhas, como as linhas da janela de ranking) e o nome nas fichas de New Playlists em Syne; na folha de escolhidos da Home, artista, campo, aviso e dica na fonte de texto. Os «⋯» de New Playlists passam de «Options for…» para «Actions for…», o verbo de Albums e Inventário.
+A 393x660 continuam 4 faixas inteiras; computador intocado (só regras dentro da media query).
+
 ## [2026-11-20 03:35] session — F76 polimento: o nome da série na folha de escolhidos da Home (N10)
 **Branch:** feat/f76-mobile-polish-home-playlists
 No celular, a folha «n albums chosen» abre com o campo «Series name» (16 px, o mesmo valor do campo da página, escrito nos dois sentidos); sem nome, «Create series» abre a folha, diz «Give the series a name first.» e põe o cursor no campo, em vez de criar «New Album Series» calado. O computador segue com o nome padrão.

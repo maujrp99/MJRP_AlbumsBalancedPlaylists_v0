@@ -412,6 +412,17 @@
   }
 
   /* ── 7. The sheet with the chosen set: remove, move up and down, no dragging ─────────────── */
+  /* Recheck N4 (decided): the title of a row in Syne (the album's, inherited), the rest in the
+     text face */
+  .home-chosen-row__artist,
+  .home-chosen-name,
+  .home-chosen-name__field,
+  .home-chosen-undo,
+  .home-chosen-empty,
+  .home-chosen-count__hint {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Inter", sans-serif;
+  }
+
   /* The name of the series, on top (recheck N10): the page's field, mirrored; 16 px, no zoom */
   .home-chosen-name {
     margin-bottom: 12px;

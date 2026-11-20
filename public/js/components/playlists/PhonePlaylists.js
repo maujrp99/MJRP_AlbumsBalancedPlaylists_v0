@@ -113,7 +113,7 @@ export class PhonePlaylists {
                         <p class="phone-pl__meta">Playlist ${index + 1} of the set · ${escapeHtml(playlistSummary(playlist))}</p>
                     </div>
                     <button type="button" class="phone-more" data-phone-action="playlist-options" data-playlist-index="${index}"
-                            aria-label="Options for playlist ${escapeHtml(name)}">${DOTS}</button>
+                            aria-label="Actions for playlist ${escapeHtml(name)}">${DOTS}</button>
                 </header>
                 <ol class="playlist-tracks phone-tracks" data-playlist-index="${index}">
                     ${rows || '<li class="phone-tracks__empty">No tracks in this playlist</li>'}
@@ -136,7 +136,7 @@ export class PhonePlaylists {
                 <span class="phone-track__time">${clock(track?.duration)}</span>
                 <button type="button" class="phone-more" data-phone-action="track-options"
                         data-playlist-index="${playlistIndex}" data-track-index="${trackIndex}"
-                        aria-label="Options for ${escapeHtml(title)}">${DOTS}</button>
+                        aria-label="Actions for ${escapeHtml(title)}">${DOTS}</button>
             </li>
         `
     }
