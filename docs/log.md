@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:34] session — F75, app: o menor preço à venda como valor do Discogs, um aviso só sobre as configurações de vendedor, e as leituras erradas descartadas
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- O modelo ganhou a base do valor (`ValueBasis`): a leitura de menor preço é um valor de origem «discogs», nunca chamado de sugestão nem de média. No cartão: «CD · Discogs · lowest for sale»; sem nada à venda: «None for sale on Discogs now». Na janela: «Lowest price for sale on Discogs: $12.93 (37 for sale)», a edição, quando foi lido, «Data provided by Discogs.» e a frase que explica por que não há os três estados.
+- Um aviso só na tela: «Discogs suggests prices only to accounts with seller settings filled in. Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at discogs.com/settings/seller: the suggestions are tried again the next time values are read.», com o link. Na faixa dos totais, enquanto for o caso: «Discogs values are lowest asking prices for now.».
+- A rodada não pergunta mais a página de preço a cada álbum: o serviço lembra a recusa na memória da página por seis horas e manda `prices: 'lowest'`. Decidido pelo agente — revisável: cada rodada nova tenta a sugestão uma vez, no primeiro álbum; se vier, os três estados voltam sem mudar código.
+- A chave das leituras no navegador foi para `inventoryvalue:v2:`: as leituras erradas da primeira rodada em produção não são lidas de volta.
+- Testes escritos antes e vistos falhar (14 de 15). Suíte: 2879 testes; lint e build verdes. Um teste de tempo (`inventoryFromSeries`, 200 álbuns em menos de 1 s) falhou uma vez sob carga e passou sozinho.
+
 ## [2026-11-20 02:31] session — F75, servidor: a sugestão recusada por falta de «seller settings» tem nome, e o menor preço à venda entra no lugar
 
 **Branch:** feat/f75-cd-prices-and-where-to-buy

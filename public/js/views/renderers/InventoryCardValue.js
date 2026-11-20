@@ -17,7 +17,7 @@ import { safeUrl } from '../../utils/safeUrl.js'
 import { getIcon } from '../../components/Icons.js'
 import { InventoryStatus, statusOf } from '../../models/inventoryStatus.js'
 import { popularityValue, ratingValue, tracksMadeOf } from '../../models/albumAverages.js'
-import { DISCOGS_CREDIT, DISCOGS_MEAN_TITLE, ValueOrigin, moneyOf, noValueText, valueLabel } from '../../models/inventoryValue.js'
+import { DISCOGS_CREDIT, DISCOGS_LOWEST_TITLE, DISCOGS_MEAN_TITLE, ValueBasis, ValueOrigin, moneyOf, noValueText, valueLabel } from '../../models/inventoryValue.js'
 import { SELL_TRADE_SOON, buyLinksOf } from '../../models/buyLinks.js'
 
 const LABEL = 'text-[11px] text-gray-400 uppercase tracking-widest whitespace-nowrap truncate'
@@ -42,6 +42,8 @@ function discogsOrigin(value) {
     const name = url
         ? `<a href="${escapeHtml(safeUrl(value.release?.url))}" target="_blank" rel="noopener" class="underline hover:text-white" title="${DISCOGS_CREDIT} Open this edition on Discogs">Discogs</a>`
         : 'Discogs'
+    // the lowest price for sale is a Discogs value too, and says what it is: never a mean
+    if (value.basis === ValueBasis.LOWEST_FOR_SALE) return { html: `CD · ${name} · lowest for sale`, hint: DISCOGS_LOWEST_TITLE }
     return { html: `CD · ${name}`, hint: DISCOGS_MEAN_TITLE }
 }
 

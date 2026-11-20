@@ -14,7 +14,7 @@
  */
 
 import {
-    BASE_CURRENCY, CURRENCIES, DISCOGS_CREDIT, RATES_MISSING_TEXT, SourceState, formatMoney, convert, ownedNote,
+    BASE_CURRENCY, CURRENCIES, DISCOGS_CREDIT, LOWEST_PRICES_NOTE, RATES_MISSING_TEXT, SourceState, formatMoney, convert, ownedNote,
     rateNote, toBuyNote
 } from '../../models/inventoryValue.js'
 import { readingNotice, waitingNotice } from '../../models/inventoryValueRun.js'
@@ -51,7 +51,7 @@ function notesOf(known) {
     if (money.currency !== BASE_CURRENCY) notes.push(`<div class="${NOTE}" data-role="rate">${rateNote(money.currency, money.rates)}</div>`)
     if (money.ratesMissing) notes.push(`<div class="${NOTE}" data-role="rates-missing" role="status">${RATES_MISSING_TEXT}</div>`)
     if (known.discogsShown) {
-        notes.push(`<div class="${NOTE}" data-role="discogs-credit"><a class="underline hover:text-white" href="https://www.discogs.com/" target="_blank" rel="noopener">${DISCOGS_CREDIT}</a> Each value links to its edition on Discogs.</div>`)
+        notes.push(`<div class="${NOTE}" data-role="discogs-credit"><a class="underline hover:text-white" href="https://www.discogs.com/" target="_blank" rel="noopener">${DISCOGS_CREDIT}</a> Each value links to its edition on Discogs.${known.lowestShown ? ` ${LOWEST_PRICES_NOTE}` : ''}</div>`)
     }
     return notes.join('')
 }
@@ -80,6 +80,17 @@ const notice = (id, { strong, rest, action }, actionName) => `<div id="${id}" cl
  */
 export function renderNotices(known) {
     if (known.source !== SourceState.ON) return ''
+    return runNotice(known) + (known.sellerSettingsMissing ? SELLER_SETTINGS_NOTICE : '')
+}
+
+function runNotice(known) {
     if (known.run.busy) return notice('valuesReadingNotice', readingNotice(known.run.count), 'stop-values')
     return known.waiting > 0 ? notice('valuesWaitingNotice', waitingNotice(known.waiting), 'read-values') : ''
 }
+
+/**
+ * Discogs refuses price suggestions to an account with no seller settings: said once, with what
+ * the values are meanwhile and where the person fills the settings in.
+ */
+const SELLER_SETTINGS_NOTICE = `<div id="valuesSellerSettingsNotice" class="glass-panel p-4 mb-6" role="status">
+    <span class="text-sm text-white"><strong>Discogs suggests prices only to accounts with seller settings filled in.</strong> Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at <a class="text-accent-primary underline" href="https://www.discogs.com/settings/seller" target="_blank" rel="noopener">discogs.com/settings/seller</a>: the suggestions are tried again the next time values are read.</span></div>`
