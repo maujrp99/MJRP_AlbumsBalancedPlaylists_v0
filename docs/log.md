@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 14:15] session — F78: a proposta da constituição v2 corrigida pela reconferência independente
+**Branch:** feat/f78-constitution-v2-fixes
+Os sete achados aplicados em `design/proposals/f78-app-architecture/constitution-v2.md`: os artigos numerados para que toda citação `violates:: [[constitution#N]]` (F52, F64, F65 e as UAT-15, 16, 17, 21, 22, 23, 24, 25) fique no seu assunto, com o mapa v1→v2 (a segurança e os segredos voltam ao artigo V, como no v1.0.0; a UAT-25 é a única que muda de sentido, e fica como história); `albums/` e `spotify_enrichment/` marcados «vale antes de qualquer conta de fora», sem teste ainda; hooks separados do procedimento (nenhum hook roda o doctor); a Factory por injeção (`DP-02`) de volta; o TypeScript do app como decisão do MJRP e a condição do resto como recomendação do agente.
+Na lista do que muda no aceite entraram `data-model.md:151`, `arch.md:107` (ainda diz «sem autenticação»), e os arquivos de `.agent/` e `docs/onboarding/DEVELOPER.md` que mandam ler `docs/CONSTITUTION.md`. Continua proposta: nada mais mudou.
+
 ## [2026-11-20 14:09] session — F78: a constituição v2.0.0 proposta, para substituir a de 2025
 **Branch:** feat/f78-constitution-v2
 `design/proposals/f78-app-architecture/constitution-v2.md`, pelo modelo da `mjrp-designing-architecture`: nove artigos escritos do que o código é hoje (cada regra com a fonte: ADR, teste de arquitetura ou de segurança, decisão do MJRP com a data) mais o app do ADR-0022, em TypeScript; as regras do app marcadas «vale quando `app/` existir», com o teste que as vai conferir; o que saiu da v1.0.0 e por quê; a lista do que muda no dia do aceite (arquivos e linhas, onde guardar a v1.0.0, os sensores que leem a constituição).
