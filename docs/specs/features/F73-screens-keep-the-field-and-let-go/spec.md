@@ -35,6 +35,8 @@ A feature não importa nenhum requisito (conserto de quatro issues). Os estados 
 
 **Prototype**: none — conserto de comportamento; a única tela nova é o quadro «No playlists here yet», que usa o painel e o botão que o app já tem (decidido pelo agente — revisável).
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Digitar no «Batch Name» com a tela sendo redesenhada mantém o foco, o texto e o cursor.
 - Uma falha de arquivo pedido sob demanda recarrega o app uma vez, e não outra vez em menos de um minuto.

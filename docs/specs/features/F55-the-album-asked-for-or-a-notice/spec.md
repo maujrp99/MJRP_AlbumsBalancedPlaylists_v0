@@ -78,6 +78,8 @@ N/A para a fatia 1: a feature não importa nó de requisito com estado de tela, 
 
 **Mudança de comportamento declarada (fatia 2):** (1) «No Quarter» e os casos iguais voltam a carregar, com a linha no cartão. (2) O álbum trocado já guardado no navegador deixa de aparecer na primeira carga depois de publicar, sem esperar os 7 dias: é buscado de novo e vira o álbum pedido, ou o aviso de «não encontrado». (3) A série passa a guardar o identificador da Apple do álbum que foi de fato carregado; a capa e o ano guardados na consulta acompanham. (4) Remover um álbum de uma série deixa de casar por «contém»: uma consulta em texto que só contém o título e o artista do álbum não é mais removida no lugar da certa.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 <!-- One measurable item per acceptance criterion of the imported nodes. -->
 - Pedido «Stone Temple Pilots - Core»: nenhum lugar aceita «Shangri-La Dee Da» nem «Core Memories»; todos aceitam «Core» e as suas edições («Core (Deluxe Edition)», «Core - 2011 Remaster»).

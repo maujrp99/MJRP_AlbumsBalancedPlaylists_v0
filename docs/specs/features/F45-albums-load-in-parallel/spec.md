@@ -53,6 +53,8 @@ O `behavior.md` ainda descreve a carga antiga (`^library-loading-skeleton`); a c
 - Transversal layer touched: componentes compartilhados (a grade de séries ganhou o aviso de falha). Nenhum token ou fonte nova: o aviso usa as classes de cor que o app já tinha.
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Com os dados do navegador apagados, 20 séries e 80 álbuns: os 80 álbuns estão na tela em 8,5 segundos. Antes: 1 álbum aos 8,5 segundos e 46 de 80 aos 4 minutos e 40 segundos. Medido em 2026-11-19: 33 álbuns aos 3 s, 50 aos 5 s, 80 aos 8,5 s.
 - Nessa medição: nenhum erro no console, nenhuma recusa da loja por excesso de pedidos, nenhum álbum com falha.

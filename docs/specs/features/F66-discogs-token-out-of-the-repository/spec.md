@@ -38,6 +38,8 @@ O MJRP, em 2026-11-19: «Fatia D deixe pra depois, pode até abrir uma feat nova
      PRINCIPLES.md §I.13) or the behavior state in behavior.md. N/A only if the nodes point to none. -->
 «a escrever: o estado de tela do info-arch.md ou de comportamento do behavior.md que os nós apontam — ou N/A se não apontam nenhum»
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 <!-- One measurable item per acceptance criterion of the imported nodes. -->
 - «a escrever: um item mensurável e testável por critério de aceite dos nós importados»

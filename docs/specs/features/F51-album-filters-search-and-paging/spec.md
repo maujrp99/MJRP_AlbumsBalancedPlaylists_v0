@@ -58,6 +58,8 @@ O `behavior.md` ainda não tem esses estados (`^library-search-and-filters` desc
 - Transversal layer touched: componentes compartilhados (a barra de filtros, que a tela de playlists guardadas também usa, e o paginador novo). Nenhum token ou fonte nova.
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Ao abrir a tela na conta do MJRP (45 séries): 10 séries desenhadas, «Showing 1–10 of 45 series», páginas de 1 a 5. Conferido em 2026-11-19.
 - A lista de artistas do filtro tem 93 artistas com só a primeira página carregada. Antes trazia só os dos álbuns já carregados.

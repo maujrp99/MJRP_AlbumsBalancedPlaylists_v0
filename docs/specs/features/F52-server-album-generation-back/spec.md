@@ -81,6 +81,8 @@ N/A: a feature não importa nó de requisito com estado de tela. O que se vê: a
 
 **Mudança de comportamento declarada (fatia 5), só no servidor:** (1) a resposta de `/api/generate` ganha `data.ratings`, e `rankingConsolidatedMeta.fetchRankingDebug` passa a ser uma linha por fonte (desfecho e código), sem mensagem de fonte; (2) uma consolidação que quebra respondia 200 com ranking vazio e o erro no corpo; agora responde 500 `internal`; (3) no caminho em que o Spotify ganha de uma página com poucas notas, o raspador era perguntado duas vezes e `bestEverUrl` saía vazio; agora é perguntado uma vez e o endereço vem; (4) um servidor sem o arquivo de prompts, ou sem o validador do álbum, não sobe mais; (5) um pedido que passa de 75 s no servidor responde antes do app desistir.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Com a fonte de notas fora do ar, `POST /api/enrich-album` responde 502, 503 ou 504 com `{ error: { code, retryable: true } }`, nunca `not_found`.
 - Um álbum sem página na fonte responde 200 com `outcome: 'not_found'`; uma página sem notas para as faixas pedidas, `no_ratings`.

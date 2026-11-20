@@ -57,6 +57,8 @@ A feature não importa nenhum requisito (conserto, via rápida). Os estados de c
 ## Prototype Parity (if the feature touches a screen)
 - Prototype: none. Nenhuma tela foi redesenhada. O que a pessoa vê de diferente é texto: a linha da popularidade na comparação de faixas da vista expandida (quatro textos, um botão que já existia com outro rótulo), um motivo novo no aviso do blend e um aviso de espera novo. Não foi visto num navegador (TASK-12).
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 <!-- One measurable item per acceptance criterion of the imported nodes. -->
 - Com o Spotify desconectado, carregar uma série não grava `popularity: false` nos fatos de nenhum álbum nem `empty` no registro do navegador; o estado da fonte é `not-connected`.

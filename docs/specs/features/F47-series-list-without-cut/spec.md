@@ -35,6 +35,8 @@ N/A: a feature não importa nenhum requisito (conserto da issue UAT-24), então 
 - Transversal layer touched: nenhuma. Nenhum componente, token ou fonte mudou.
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Na conta do MJRP, com 45 séries gravadas: a tela de álbuns mostra as 45. Antes mostrava 20 e escondia 25. Medido em 2026-11-19.
 - As quatro séries com Robert Plant, que estavam entre as escondidas, aparecem.

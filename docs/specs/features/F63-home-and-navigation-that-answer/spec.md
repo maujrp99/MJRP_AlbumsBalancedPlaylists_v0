@@ -92,6 +92,8 @@ N/A: a feature não importa nenhum requisito (conserto de issues). Estados do `d
 - Transversal layer touched: `router.js` (`redirect`, `setAddress`: o histórico tem um dono), `services/DialogService.js` (o Esc responde), `components/ui/TrackRow.js` (as ações da linha de faixa, usada em playlists geradas, playlists guardadas e ranking), `models/albumQuery.js` (função nova; as que existiam não mudaram).
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`; a lista das linhas puladas usa as cores laranja que a borda da caixa já usava.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Criar uma série na Home e apertar voltar uma vez leva à Home (antes: a tela de álbuns voltava para si mesma). Teste: `SeriesController.address.test.js`.
 - Na volta do Spotify, o histórico ganha uma entrada (`/home`), não duas; voltar não cai em `/` nem em `/callback`.

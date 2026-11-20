@@ -64,6 +64,8 @@ N/A: a feature não importa nenhum requisito (conserto de issue). Estado novo no
 - Transversal layer touched: none. `components/ui/LoadMoreButton.js` só é usado pela grade da tela de álbuns.
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 <!-- One measurable item per acceptance criterion of the imported nodes. -->
 - Numa série com 15 álbuns achados, o painel de todas as séries desenha 12 cartões e «Load 3 more albums»; depois do clique, 15 cartões na ordem da série e nenhum botão naquela série.

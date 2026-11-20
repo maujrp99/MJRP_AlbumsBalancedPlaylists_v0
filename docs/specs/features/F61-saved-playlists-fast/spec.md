@@ -69,6 +69,8 @@ N/A: a feature não importa nenhum requisito (conserto de issue). Estados do `do
 - Transversal layer touched: none. `test/helpers/fakeFirestore.js` ganhou a contagem de leituras, usada só por testes.
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`; os avisos usam as classes que a tela já usava.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Com o banco falso e 47 séries: 48 leituras, nenhum caminho lido duas vezes, 8 no ar ao mesmo tempo; a lista de séries está no store depois de 1 espera, as primeiras séries depois de 2, a lista inteira depois de 7 (antes: 48, 48 e 48).
 - «Try again» numa série: 1 leitura. Apagar um lote: 1 leitura e 1 gravação (antes: 1 + P apagamentos soltos + 48 leituras).

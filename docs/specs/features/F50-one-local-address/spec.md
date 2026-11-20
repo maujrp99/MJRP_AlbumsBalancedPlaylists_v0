@@ -44,6 +44,8 @@ N/A: a feature não importa nenhum requisito (conserto das issues UAT-178, UAT-1
 - Transversal layer touched: nenhuma. O diálogo é o `ConfirmModal` existente.
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Abrir `http://localhost:5010/albums` leva a `http://127.0.0.1:5010/albums`. Visto no navegador em 2026-11-19.
 - No mesmo endereço, o MJRP entra na conta pelo Google e conecta o Spotify. Visto em 2026-11-19.

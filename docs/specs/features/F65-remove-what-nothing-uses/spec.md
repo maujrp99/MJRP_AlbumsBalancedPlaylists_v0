@@ -59,6 +59,8 @@ O que a feature conserta, e o que só diminui:
      PRINCIPLES.md §I.13) or the behavior state in behavior.md. N/A only if the nodes point to none. -->
 N/A: a feature não importa nó de requisito. Nenhum estado do `docs/specs/behavior.md` descrevia as três telas retiradas, e o arquivo não mudou. O `docs/specs/info-arch.md` não existe neste projeto.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 <!-- One measurable item per acceptance criterion of the imported nodes. -->
 - O grafo de importações não acha módulo morto em `public/js`, `shared` e `server` (medido: 254 arquivos alcançados, 0 mortos; na `main` eram 49 mortos, 4.998 linhas).

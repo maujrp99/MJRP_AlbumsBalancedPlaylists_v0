@@ -63,6 +63,8 @@ N/A: a feature não importa nenhum requisito (conserto de dívidas de engenharia
 ## Prototype Parity (if the feature touches a screen)
 - Prototype: none. Nenhuma tela foi redesenhada e nenhum texto mudou. O que a pessoa pode notar: nada. O que muda por dentro e pode ser visto com as ferramentas do navegador: a tela de álbuns é redesenhada uma vez a mais quando uma espera começa e quando acaba (o desenho é o mesmo); um blend pedido durante uma espera é servido assim que a espera começa, sem aguardar até um segundo.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 <!-- One measurable item per acceptance criterion of the imported nodes. -->
 - `npx vitest run test/architecture/complexityLimit.test.js` passa; pôr uma função com complexidade 11 em `public/js/services/albums/` faz o teste falhar com o arquivo, a linha e o número.

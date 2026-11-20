@@ -68,6 +68,8 @@ N/A: a feature não importa nenhum requisito (conserto de issue). Estados do `do
 - Transversal layer touched: `services/album-search/AlbumSearchService.js` (uma instância para o app) e `views/renderers/DiscographyRenderer.js` (o cartão, agora nas duas telas).
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`; a janela usa as classes que a Home já usava.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Com as formas que o catálogo dá a «To Pimp a Butterfly» e «good kid, m.A.A.d city (Deluxe Version)» (gênero «Hardcore Rap»), o classificador responde «Album» com o motivo `default-studio`, com ou sem lista da IA, e a lista da IA não é pedida.
 - Um álbum de cada tipo, em forma real, cai no tipo certo: edição deluxe, EP, single, ao vivo, compilação, trilha sonora, artista eletrônico com e sem a lista da IA.

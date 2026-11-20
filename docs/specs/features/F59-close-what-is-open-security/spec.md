@@ -72,6 +72,8 @@ N/A: a feature não importa nenhum requisito (conserto de issues). Nenhum estado
 - Transversal layer touched: `public/index.html` (a casca: sai o script do Tailwind e a configuração embutida), `public/css/tailwind.css` e `tailwind.config.js` (os estilos utilitários de todas as telas), `public/js/utils/safeUrl.js` e `public/js/utils/stringUtils.js` (usados por várias telas).
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`; o tema do Tailwind foi levado do `index.html` para o `tailwind.config.js` sem mudança.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 <!-- One measurable item per acceptance criterion of the imported nodes. -->
 - Um pedido sem login ao ranking de outra pessoa é recusado pelas regras do banco.

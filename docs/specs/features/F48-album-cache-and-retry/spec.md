@@ -54,6 +54,8 @@ N/A: a feature não importa nenhum requisito (conserto das issues UAT-175, UAT-1
 - Transversal layer touched: shell (o rodapé). Nenhum token, fonte ou componente compartilhado novo.
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Servidor respondendo 503 e depois 200: dois pedidos e o álbum na mão (teste).
 - Rede fora: três pedidos, esperas de até 1 s e 2 s, e um erro que diz «got no answer» (teste).

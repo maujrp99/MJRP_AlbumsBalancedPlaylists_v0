@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:10] decision — o MJRP dispensou o protótipo dos consertos e das melhorias pequenas (F45 a F73)
+
+- Dito por ele: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+- A frase foi gravada no `spec.md` de cada feature da via rápida da F45 à F73, com a data e a hora, como a linha de protótipo do passo retroativo pede. Fecha só essa linha: a reconferência visual e o fecho com o Touch ID seguem como estavam.
+- F72 juntada na `main` (`b467468`) e publicada (pacote `main-D6RgK065.js`): contagem de séries e álbuns no cabeçalho e a caixa da paginação também no topo.
+
 ## [2026-11-20 00:09] session — F72: a caixa da paginação também no topo da lista de séries
 
 **Branch:** feat/f72-albums-screen-says-how-many

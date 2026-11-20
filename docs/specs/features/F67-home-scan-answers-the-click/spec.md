@@ -68,6 +68,8 @@ N/A: a feature não importa nenhum requisito (conserto de issue). Estados do `do
 - Transversal layer touched: `router.js` (`renderView`: uma mudança de endereço mais nova deixa a mais antiga para trás) e `services/musickit/MusicKitAuth.js` (`init` com prazo, usado por toda tela que fala com o catálogo).
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`; as mensagens do painel usam as classes do estado vazio que já existia.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Com o catálogo sem responder, aos 15 segundos a tela mostra «The catalog did not answer in 15 seconds.» e «Try again», e o botão Scan volta a ficar livre (teste com relógio falso; no navegador, pelo roteiro do relatório de entrega).
 - Com o catálogo respondendo e a lista da IA ainda no ar, os álbuns já estão na grade e o botão já está livre; quando a lista chega, as quantidades dos filtros mudam.

@@ -45,6 +45,8 @@ N/A: a feature não importa nenhum requisito (conserto da issue UAT-149), então
 - Transversal layer touched: nenhuma.
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - `npx vitest run` termina com 0 falhas e código de saída 0. Medido em 2026-11-19: 431 passam; antes eram 28 falhas.
 - Nenhum arquivo de `public/js/` nem de `server/` mudou para os testes passarem.

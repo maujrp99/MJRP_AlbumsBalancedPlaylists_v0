@@ -59,6 +59,8 @@ A feature não importa nenhum requisito (conserto de quatro issues). Os estados 
 
 Nenhum estado de tela novo no `info-arch.md`: nenhuma tela ganha bloco.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 <!-- One measurable item per acceptance criterion of the imported nodes. -->
 - Como visitante, buscar um artista de música eletrônica na Home e abrir uma série com um álbum que o Apple Music não tem: a aba de rede não mostra nenhum pedido a `/api/ai/*` nem a `/api/generate`, e o console não mostra o 403. A ver no navegador (TASK-06).

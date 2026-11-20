@@ -103,6 +103,8 @@ Segunda fatia (S-56), em `docs/specs/behavior.md`:
 
 Nenhum estado de tela novo num `info-arch.md`: a ação é um botão na barra de filtros que já existe, e não houve protótipo (via rápida; o MJRP julga na tela).
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 <!-- One measurable item per acceptance criterion of the imported nodes. -->
 O nó S-54 ainda não tem critérios de aceite escritos (nível do problema); os itens abaixo vêm das palavras do MJRP e do «Como saber que funcionou».

@@ -84,6 +84,8 @@ N/A: a feature não importa nenhum requisito (conserto de issues). Estados do `d
 - Transversal layer touched: `services/SpotifyService.js` (`_fetch`: usado também pela carga de popularidade; para ela muda só a renovação do acesso num 401, a espera do 429 é só da exportação), `services/SpotifyAuthService.js` (uma renovação por vez), `components/Breadcrumb.js` (o caminho de `/playlists`; os outros caminhos não mudam), `components/Icons.js` (dois ícones novos), `models/albumAsk.js` (`askNotices` ganhou um segundo parâmetro opcional).
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`; os botões novos usam `btn btn-secondary`, e a janela do Spotify as cores que já usava.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - As quatro receitas do menu passam pelos 22 casos de `test/algorithms/recipes.promise.test.js`, pelo `PlaylistGenerationService`, o caminho da tela (6 falhavam na `main`).
 - «By Artist then By Rank» com três álbuns de dois artistas entrega as faixas de um artista juntas (antes: intercaladas).

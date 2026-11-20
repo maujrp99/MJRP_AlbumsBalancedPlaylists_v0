@@ -68,6 +68,8 @@ A feature não importa nó de requisito com estado de tela e não cria tela. Um 
 
 **Mudança de comportamento declarada:** (1) álbuns que hoje ficam sem notas voltam a tê-las (10 dos 16 da varredura). (2) No catálogo, um pedido curto cujo único candidato tem algo mais entre parênteses passa a carregar esse álbum, com a linha no cartão, onde antes dava «não encontrado»: «Weezer» com só «Weezer (Green Album)» na lista; «Hotel California» com só «Hotel California (Live at the Forum '76)». Com o álbum pedido na lista, é ele que vem; com dois candidatos assim, segue «não encontrado». (3) Na primeira carga depois de publicar, cada álbum com «não tem» guardado pergunta as notas de novo, uma vez.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 <!-- One measurable item per acceptance criterion of the imported nodes. -->
 - Cada linha de `REASONS_EXPLAINED` (11 motivos) devolve, no teste, o veredito e o motivo que a tabela diz.

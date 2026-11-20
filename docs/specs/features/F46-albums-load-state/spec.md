@@ -45,6 +45,8 @@ N/A: a feature não importa nenhum requisito (conserto das issues UAT-173 e UAT-
 - Transversal layer touched: nenhuma. O modal deixou de escapar texto que já desenha como nó de texto (um nome com «&» aparecia como «&amp;»).
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Com a carga em andamento, ir à Home e voltar: o mesmo número de séries, e o console sem desenho em tela fechada. A conferir no navegador pela sessão de integração.
 - Uma série com um pedido que o catálogo não tem mostra «1 album did not load · Try again»; o clique busca de novo só esse álbum. Conferido na F47 (4 álbuns com aviso em 217); o clique a conferir no navegador.

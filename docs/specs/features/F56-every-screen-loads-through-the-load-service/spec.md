@@ -61,6 +61,8 @@ N/A: a feature não importa nenhum requisito (conserto de issue). Estados do `do
 - Transversal layer touched: none.
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`; os avisos usam o `components/Toast.js` que as telas já usavam.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Sem rede, com dublês do catálogo, das fontes e do guardado: uma série que a tela de álbuns já carregou é entregue a outra tela com zero chamadas ao catálogo; uma série carregada antes e já fora da tela, idem (vem do guardado); a mesma série pedida duas vezes ao mesmo tempo custa uma busca por álbum.
 - Com a tela de álbuns ainda carregando, um pedido de outra tela não muda a geração nem o estado das entradas da tela de álbuns.

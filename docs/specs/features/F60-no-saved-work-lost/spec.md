@@ -64,6 +64,8 @@ N/A: a feature não importa nenhum requisito (conserto de issues). Estados do `d
 - Transversal layer touched: `router.js` (os ganchos de antes de navegar valem para o voltar do navegador e podem ser removidos).
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`. A pergunta ao sair usa o `confirm` do navegador, não a janela do app: ver Open Questions.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Com a gravação falhando, o lote editado continua no banco igual ao que era (comparação exata nos testes).
 - Dois pedidos de salvar com a primeira gravação no ar deixam no banco uma cópia de cada playlist, não duas.

@@ -47,6 +47,8 @@ N/A: a feature não importa nenhum requisito (conserto das issues UAT-01, UAT-18
 - Transversal layer touched: `utils/SafeDOM.js` (o ajudante que monta elementos) e a nova `utils/duration.js`.
 - Design-system cuts or swaps: none. O projeto não tem `design-system.md`.
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - Remover «GNX» do inventário: de 24 para 23 itens, com aviso, e 23 depois de recarregar. Visto em 2026-11-19.
 - A janela de ranking de «Brothers In Arms» mostra 6:59, 5:12, 8:26; antes, «0:00».

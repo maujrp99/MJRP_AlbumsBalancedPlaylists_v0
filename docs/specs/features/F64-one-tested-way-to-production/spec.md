@@ -54,6 +54,8 @@ violates:: [[constitution#V]]
 ## Observable States
 N/A: a feature não importa nenhum requisito e não tem tela (conserto das issues UAT-202, UAT-20 e UAT-22).
 
+**Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
 ## Success Criteria
 - `npm run deploy:site:dry-run` e `npm run deploy:server:dry-run` terminam com saída 0 a partir de qualquer cópia do repositório. Visto em 2026-11-19, na `main` em `e54c80e`, 493 testes.
 - Com mudança não commitada num arquivo versionado da `main`, os dois recusam antes de qualquer outro passo. Visto num repositório descartável.
