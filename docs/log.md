@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 13:14] session — proposta de medição de uso, com a adoção de cada opção
+**Branch:** main
+A pedido do MJRP: `design/proposals/f77-usage-measurement/proposal.md`. Proposta do agente, a decidir por ele: PostHog no site e no app; Firebase Analytics e Crashlytics só no app; um monitor de erros no site (Sentry ou a captura do PostHog). Adoção medida hoje (instalações por semana no npm, estrelas no GitHub, parcela de sites no W3Techs, parcela de apps no 42matters): as três escolhas estão entre as mais adotadas da sua categoria. Ele já está criando a conta do PostHog; região recomendada: União Europeia (não há região no Brasil).
+
 ## [2026-11-20 12:47] decision — o MJRP abriu a v6.0: o app (React Native) e a medição do uso com o PostHog
 **Branch:** main
 Palavras dele: «Vamos criar a V6.0 para implementação da app e para implementar o posthog no site e na app em reactive native (pq não flutter?)». Criados na `main`: a versão v6.0 no ROADMAP (`^REL-41`), o épico EP-10 no PRD, as stories S-59 (saber como o app é usado) e S-60 (o app pelas lojas), e as features F77 (medição, PostHog; via padrão) e F78 (o app; via padrão), em esboço, sem ramo: esperam a priorização. Por que não Flutter, na resposta do agente: o app de hoje é JavaScript com mais de 3000 testes; em React Native as regras (receitas, ranking, identidade de álbum e de faixa) são reaproveitadas num núcleo compartilhado com o site; em Flutter (Dart) seriam reescritas ou iriam todas para o servidor. Sem o site, as duas pilhas empatariam. A decisão formal fica para o ADR, depois da proposta de arquitetura.
