@@ -3,9 +3,19 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 19:54] session — F79, rodada 2 da Home: Transformar v2 com todos os estados, a prévia de cor e a crítica
+**Branch:** wip/f79-home-design-round-2
+`design/inception/home-transformar-v2.html` (18 estados, 1280 e 393; a v1 intacta), a prévia A/B da cor `#fdba74` em `design/proposals/f79-home/previews/`, o comparador republicado no mesmo Artifact (abre em v2 ao lado da v1; Consolidar e Elevar dobrados como decididos; a Referência num botão); `proposal.md` § Rodada 2 (as perguntas respondidas pelo código: a ordem dos álbuns pesa no Blend, `MJRPBalancedCascadeAlgorithm.js` linhas 77, 134, 141; os defaults D1–D9 marcados na tela), `info-arch.md` § Home com os 18 estados e onze IDs novos, `design-system.md` com os padrões pendentes, wireframes v2.
+A crítica separada passou (0 P0, 6 P1, 13 P2): os seis P1 foram consertados e recapturados; o que fica e as decisões do MJRP (a cor, os defaults, o texto sobre o fogo) estão na proposta. Nada de código do produto; nada enviado ao remoto.
+
 ## [2026-11-20 19:49] decision — F80: capas reais do Apple Music na página de entrada; a direção é o Caixote com o fio do Lado A, lado B e a brasa
 **Branch:** main
 Palavras do MJRP: «ok sigamos sua sugestao para as capas e vamos fazer um prototipo da transformar mas adicionando o slider da elevar e a brasa de consolidar, como vc faria pra harmonizar e utilizar todos esses elementos visuais?». Decidido por ele: (1) capas reais, pela sugestão do agente: as do Apple Music, que o app já usa, com crédito e link, e os termos da Apple conferidos antes de a página ser pública; (2) a direção da página de entrada é o **Caixote** (o 3D de capas), somando o elemento de rolagem do **Lado A, lado B** (a página que anda de faixa em faixa, com o fio de equalizador) e o fogo da **Brasa**. Lido pelo agente: «transformar», «elevar» e «consolidar» são os níveis das três direções da F80 (Caixote, Lado A lado B, Brasa); «slider» é a progressão por rolagem do Lado A, lado B. Segue a rodada 2 da F80, em versão nova.
+
+## [2026-11-20 19:47] review — mjrp-critiquing-ux-ui: F79 Home, Transformar v2 · passa (0 P0), 6 P1 no próximo corte
+**Branch:** wip/f79-home-design-round-2
+- Relatório: reports/audits/2026-11-20-F79-home-r2-ux-audit.md · P0 0 · P1 6 · P2 13 · quem julgou: agente separado.
+- Os seis P1 foram consertados na mesma rodada (proposta § Rodada 2, «A crítica da rodada 2»); o relatório fica `open` até o MJRP aprovar a v2.
 
 ## [2026-11-20 19:19] decision — F79: o MJRP escolhe o nível Transformar para a Home
 **Branch:** main

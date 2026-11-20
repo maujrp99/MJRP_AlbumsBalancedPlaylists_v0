@@ -1,6 +1,6 @@
 # Info-arch — Album Blender V0
 
-> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.1.html · a Home (F79, rodada 1, três níveis, nenhum escolhido): design/inception/home-consolidar-v1.html, design/inception/home-elevar-v1.html, design/inception/home-transformar-v1.html
+> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.1.html · a Home (F79): rodada 1, três níveis (design/inception/home-consolidar-v1.html, design/inception/home-elevar-v1.html, design/inception/home-transformar-v1.html); o MJRP escolheu a direção Transformar; rodada 2: design/inception/home-transformar-v2.html (não aprovada)
 > Página de entrada (F80), rodada 1 de exploração, 2026-11-20: três direções, design/inception/splash-ember-v1.html, design/inception/splash-sides-v1.html e design/inception/splash-crate-v1.html (nenhuma aprovada; comparador em design/proposals/f80-splash/comparator.html)
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
@@ -334,6 +334,8 @@ Fonte: `design/inception/inventory-value-v5.1.html`, escolhida pelo MJRP em 2026
 
 Rodada de desenho pedida pelo MJRP em 2026-11-20 (estória S-61): três níveis de ambição para a mesma tela, num eixo só, **a ambição** — Consolidar (a mesma estrutura, limpa), Elevar (o sistema evoluído) e Transformar (uma abordagem nova, ainda deste produto) —, ao lado da tela de hoje, «Referência». **Nenhum foi escolhido**: esta seção descreve os três e o que eles têm em comum; o que é de um nível só diz qual. O texto da tela é proposta do agente (`design/proposals/2026-11-20-home-copy-proposal.md`), não do copy deck.
 
+> **Rodada 2 (2026-11-20), a direção escolhida: Transformar.** O MJRP escolheu em 2026-11-20 19:19 («home 3 niveis transformar»): escolha de direção, não a aprovação. A rodada 2 desenha só o Transformar, numa versão nova: `design/inception/home-transformar-v2.html` (a v1 fica intacta) · prévias da cor `#fdba74`: `design/proposals/f79-home/previews/home-transformar-v2-flame-2stops.html` (A, sem) e `-flame-3stops.html` (B, com) · comparador no mesmo endereço · wireframes: `design/wireframes/home-transformar-v2-desktop.png` e `-phone.png` · a proposta: `design/proposals/f79-home/proposal.md` § Rodada 2. **Daqui para baixo, os estados, o inventário e o Content Map descrevem o Transformar v2**; o que é só da rodada 1 diz «rodada 1». Consolidar e Elevar ficam como registro (o template acima e o inventário).
+
 Protótipos: `design/inception/home-consolidar-v1.html`, `design/inception/home-elevar-v1.html`, `design/inception/home-transformar-v1.html` · Referência: `design/proposals/f79-home/reference.html` · comparador: https://claude.ai/artifact/AsiVV2i3595LqpLEadm61h (Artifact do Claude, privado; a cópia local é `design/proposals/f79-home/comparator.html`) · a proposta: `design/proposals/f79-home/proposal.md` · wireframes: `design/wireframes/home-<nível>-v1-desktop.png` e `-phone.png`. Os três são a tela real da Home capturada no site local (o HTML e os estilos do app, a busca «Pink Floyd» com as capas de verdade), com o que cada nível muda.
 
 ### Template da Home (proposto)
@@ -348,15 +350,26 @@ Protótipos: `design/inception/home-consolidar-v1.html`, `design/inception/home-
 
 ### Estados da Home (F79)
 
-Os mesmos sete estados nos três níveis e na Referência, no computador (1280 px) e no celular (393 px); o texto de cada um, por nível, está no Content Map abaixo e na proposta de copy.
+Desde a rodada 2, os estados do **Transformar v2**, no computador (1280 px) e no celular (393 px); cada um está no seletor do protótipo e do comparador. Os IDs da rodada 1 ficam (nenhum requisito aponta para eles ainda); o texto de cada linha mudou para a direção escolhida. No celular, a base da série **é** a barra de ação da F76 (`.phone-action-bar`), e a série abre na folha `full`: valem também os estados `^home-phone-*` da seção «Home e Blend» acima, com o texto novo.
 
-- **Primeira visita, nada buscado.** A tela diz o que é uma série e para que serve, e aponta a busca; a série está vazia e «Create series» apagado, com o porquê ao lado. ^home-empty
-- **Buscando um artista.** O botão diz «Scanning…» (Transformar: «Searching…»), ocupado; a área das capas diz o que está acontecendo; Elevar e Transformar mostram capas vazias piscando e o equalizador em movimento (parado para quem pediu menos movimento). ^home-searching
-- **Discografia na tela.** O artista, quantos álbuns e em que ordem, os filtros por tipo com a contagem, a grade de capas. ^home-discography
-- **Álbuns escolhidos.** Cada capa escolhida tem o anel laranja e o número da ordem; a série mostra a contagem, o nome e «Create series» ativo com o próximo passo («Next: open it in the Blend to make playlists.»). ^home-albums-chosen
-- **Colando uma lista.** O modo «Paste a list»: a caixa, a regra «Artist - Album» e a linha que não vai entrar marcada antes do clique (Elevar e Transformar: cada linha «ready» ou «needs « - »»). ^home-paste-list
-- **O catálogo não respondeu.** «The catalog did not answer in 15 seconds.», o que continua valendo (a série não mudou) e «Try again». ^home-catalog-error
-- **Artista não encontrado.** «No albums found for «nome».» e a saída: conferir a grafia ou colar a lista. ^home-artist-not-found
+- **Primeira visita, nada buscado.** O título «Pick the albums. We blend the playlists.» (a segunda linha com o fogo), a frase do que é uma série e para que serve, o campo único com «Search» (o único botão com o fogo), os três passos; a base vazia embaixo: «Your series is empty», «Search an artist, then click a cover to add it. You name the series at the end.» (no celular, uma linha: «No albums yet · Search, then tap a cover») e «Create series» apagado com «Add one album to create the series». O equalizador parado. ^home-empty
+- **Buscando um artista.** «Searching…» no botão, ocupado; «Looking for «Pink Floyd» in the catalog… the covers appear as soon as it answers.»; capas vazias piscando; o equalizador em movimento (esperando a resposta); com menos movimento, parado e as palavras dizem. ^home-searching
+- **Discografia na tela.** O artista grande, «17 studio albums · newest first», as fichas de tipo com a contagem (Studio, EPs, Singles, Live, **Compendiums**, Other), «Add all 17 studio albums» e a grade de seis colunas (duas no celular); cada capa com «+». ^home-discography
+- **Vários álbuns escolhidos.** Cada capa escolhida com o anel e o número da ordem; a base com as capas numeradas, o nome sugerido «Pink Floyd selection» (texto de verdade, com «suggested · edit it»), «4 albums from 1 artist · the order counts», «Edit order» e «Create series» com o fogo; embaixo, «Next: the Blend turns the series into playlists.». No celular, a barra: a capa com a contagem, o nome com reticências, «Tap to edit or reorder» e «Create series». ^home-albums-chosen
+- **Colando uma lista.** O campo vira a lista: cada linha numerada, «ready» em verde ou «add « - » between artist and album» na linha marcada; «4 lines: 3 ready, 1 to fix. Lines to fix are skipped; the rest go in.» e «Add 3 albums». ^home-paste-list
+- **O catálogo não respondeu.** «The catalog did not answer in 15 seconds.», «Your series still has its 4 albums. Try again in a moment.» e «Try again»; o equalizador cai (barras baixas): a resposta não veio. A base continua com a série. ^home-catalog-error
+- **Artista não encontrado.** «No albums found for «nome».», «Check the spelling, or paste the albums as a list: one per line, Artist - Album.» e «Paste a list». ^home-artist-not-found
+- **Digitando um artista.** O campo com o foco (borda laranja) e o texto pela metade; a ajuda muda para «Press Enter or Search to see their albums. A list with one album per line works too.». Sem sugestões automáticas (o app não tem). ^home-typing
+- **Um álbum escolhido.** A primeira capa numerada «1»; a base com uma capa, o nome sugerido e «1 album from 1 artist · the order counts»; «Create series» já ativo: um álbum basta. ^home-dock-one
+- **Muitos álbuns (13).** A base mostra as sete primeiras capas e «+6» (no celular, uma capa e a contagem), o nome editado com reticências; depois de «Add all», a faixa «Added 13 albums. Undo». ^home-dock-many
+- **Mudando a ordem.** «Edit order» abre o painel acima da base (no celular, a folha `full` com o nome no topo e «Create series» no pé): «Your series · 4 albums», «The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists. Use ↑ ↓ to change it.» e uma linha por álbum com o número, a capa, o título e o ano, e ↑ ↓ ✕ de 44 px; a linha movida fica marcada («moved up»); ↑ do primeiro e ↓ do último apagados. ^home-dock-reorder
+- **Removido, com Undo.** Depois de ✕ (ou de tocar de novo numa capa escolhida), a linha sai, os números se refazem e a faixa «Removed «Pink Floyd at Pompeii…». Undo» fica 8 segundos acima da base (no celular, no pé da folha). ^home-dock-removed-undo
+- **Lista adicionada, uma linha pulada.** «Added 2 albums. 1 line was skipped and is still here to fix.»; a linha que ficou diz o motivo («not found in the catalog: fix the spelling here») e vira um campo para corrigir ali mesmo; «Add this line» manda o que estiver nele; os dois álbuns da lista estão na base, com o nome sugerido «Joni Mitchell and Yes» e «2 albums from 2 artists». ^home-paste-report
+- **Nome faltando ao criar.** Com o nome apagado, «Create series» não cria: o campo fica com o filete vermelho, «Give the series a name first.» e «Use «Pink Floyd selection»»; no celular abre a folha com o cursor no nome (como `^home-phone-name-required`). Nunca «New Album Series» em silêncio. ^home-name-missing
+- **Criando.** «Creating…» apagado e ocupado; na base, o equalizador pequeno em movimento e «Saving your series…». ^home-creating
+- **Criada: o que vem depois.** A base diz «✓ «Pink Floyd selection» is saved» e «4 albums · find it any time in Music Series.», com «Blend it now» (o fogo, abre o Blend com a série escolhida, `/blend?seriesId=`) e «Open the series» (o que acontece hoje, `/albums/<id>`); «Start another series» limpa a base (no celular, só o nome, «Open the series» e «Blend it now», numa linha). As capas perdem os números, e uma faixa verde acima delas diz ««Pink Floyd selection» is saved and won't change here. Click a cover to start another series.»: um clique começa outra série, a gravada não muda. ^home-created
+- **Não deu para gravar.** «The series was not saved: the connection dropped. Your albums are still here.» e o botão vira «Try again». ^home-create-failed
+- **Visitante (sem conta).** A mesma tela, com uma linha na base: «You're not signed in: the series is saved to this browser only. Sign in to keep it on every device.» (o app entra como visitante anônimo, `services/AuthService.js` linha 58); a barra do topo mostra «Sign In»; no celular o aviso fica sob o campo, fora da barra de ação. ^home-guest
 
 ### Inventário do protótipo · Home (F79)
 
@@ -381,27 +394,34 @@ Fonte: os três protótipos acima; cada item tem a mesma etiqueta nos wireframes
 | HOME-15 | Os três passos, acesos como um equalizador | — | sim | — | informar | S-61 |
 | HOME-16 | O equalizador vivo sob a busca | — | — | sim | informar (identidade) | S-61 |
 | HOME-17 | A barra de ação do celular | a da F76, com o nome | com nome e capas | a base | agir | S-58 (F76) e S-61 |
-| HOME-18 | «Add all 17»: pôr na série todos os álbuns mostrados | — | sim | — | agir | pendente: função nova, o MJRP decide |
-| HOME-19 | Mudar a ordem sem arrastar (↑ ↓) | arrastar, como hoje | ↑ ↓ ✕ | «change the order» | agir | S-61 |
+| HOME-18 | «Add all 17»: pôr na série todos os álbuns mostrados | — | sim | sim na v2 (só o que o filtro mostra, com Undo) | agir | pendente: função nova, o MJRP decide (decidido pelo agente na v2 — revisável) |
+| HOME-19 | Mudar a ordem sem arrastar (↑ ↓) | arrastar, como hoje | ↑ ↓ ✕ | v2: «Edit order» abre o painel com ↑ ↓ ✕ (v1: «change the order», sem destino) | agir | S-61 |
+| HOME-20 | O painel da série (computador) ou a folha da série (celular), com as linhas ↑ ↓ ✕ | — | — | v2 | agir | S-61 |
+| HOME-21 | A faixa «Undo» depois de tirar um álbum ou de «Add all» | — | — | v2 | agir | S-61 |
+| HOME-22 | Depois de criar: «Blend it now» e «Open the series» | — | — | v2 | agir | S-61 |
+| HOME-23 | O aviso de visitante na base | — | — | v2 | informar | S-61 |
 
 #### Lacunas
 
-- Criar a série, «Creating…» e a falha ao gravar não foram desenhados nesta rodada: valem os de hoje (`docs/specs/behavior.md`) até o nível ser escolhido.
-- O nome vazio: hoje o computador cria «New Album Series» sem avisar e o celular pede o nome. Elevar e Transformar sugerem o nome a partir do artista; a regra entra quando o nível for escolhido.
-- Depois de criar, o site abre a série na tela de séries; o texto «Next: open it in the Blend» pede a decisão do MJRP (pergunta na proposta).
+- Rodada 1: criar, «Creating…», a falha ao gravar e o depois de criar não estavam desenhados. **Rodada 2 (Transformar v2): desenhados** (`^home-creating`, `^home-created`, `^home-create-failed`, `^home-name-missing`).
+- O nome vazio: hoje o computador cria «New Album Series» sem avisar. Na v2 o nome é sugerido pelo artista como texto de verdade, e o nome apagado pede o nome (decidido pelo agente — revisável).
+- Depois de criar: hoje o site abre a série na tela de séries (`controllers/HomeController.js` linha 235). Na v2 a Home fica e oferece «Blend it now» primeiro e «Open the series» (decidido pelo agente — revisável; a rota `/blend?seriesId=` já existe, `views/BlendingMenuView.js` linha 306).
+- Arrastar para mudar a ordem: fora da v2 (↑ ↓ basta e funciona igual no toque).
+- As capas dos álbuns que vêm de uma lista colada são marcadores no protótipo (só as capas de Pink Floyd foram capturadas).
 
 ### Content Map · Home (F79)
 
-O texto do nível recomendado na proposta (Elevar); as três versões de cada linha, com o porquê, estão em `design/proposals/2026-11-20-home-copy-proposal.md`.
+Desde a rodada 2, o texto do **Transformar v2** (proposta do agente, em inglês; a tabela completa, linha a linha com o porquê, está em `design/proposals/f79-home/proposal.md` § Rodada 2). O texto da rodada 1 dos três níveis segue em `design/proposals/2026-11-20-home-copy-proposal.md`.
 
 | Elemento | O que diz | Como ler | Referência ao lado |
 |---|---|---|---|
-| a frase da série (HOME-01) | «A series is the set of albums you want to hear together. The Blend turns it into balanced playlists.» | — | — |
-| a contagem (HOME-10) | «N albums · N artists» | quanto já entrou | o equalizador acende uma barra por álbum, até cinco |
-| o próximo passo (HOME-12) | «Next: open it in the Blend to make playlists.» / «Pick at least one album to create the series.» | por que o botão está apagado | — |
-| a discografia (HOME-08) | «Pink Floyd · 17 studio albums, newest first.» | clicar põe, clicar de novo tira | o número de cada tipo nos filtros |
-| o vazio da série (HOME-13) | «Your albums will line up here, numbered in the order the Blend reads them.» e os três passos | — | — |
-| o erro (HOME-14) | «The catalog did not answer in 15 seconds.» «Nothing was changed: your series still has its albums.» | o que ainda vale | «Try again» |
+| o título e a frase da série (HOME-01) | «Pick the albums. We blend the playlists.» «A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.» | — | — |
+| o campo único (HOME-04, HOME-05) | «An artist, or paste a list of albums»; na lista, «ready» ou o motivo por linha | uma linha com « - » é um álbum | «N lines: N ready, N to fix» |
+| a contagem e a ordem (HOME-10, HOME-19) | «4 albums from 1 artist · the order counts»; no painel, «The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists.» | a posição pesa na mistura (`algorithms/MJRPBalancedCascadeAlgorithm.js` linhas 77, 134, 141) | o número de cada capa |
+| o próximo passo (HOME-12) | «Next: the Blend turns the series into playlists.» / «Add one album to create the series» | por que o botão está apagado | — |
+| o nome (HOME-02) | «Pink Floyd selection» + «suggested · edit it»; vazio: «Give the series a name first.» | sugerido, não definitivo | «Use «Pink Floyd selection»» |
+| o depois de criar (HOME-22) | ««Pink Floyd selection» is saved» «4 albums · find it any time in Music Series.» | onde a série fica | «Blend it now», «Open the series» |
+| o erro (HOME-14) | «The catalog did not answer in 15 seconds.» «Your series still has its 4 albums. Try again in a moment.» | o que ainda vale | «Try again» |
 
 ### Rótulos propostos (F79, pendentes)
 
@@ -411,7 +431,7 @@ O texto do nível recomendado na proposta (Elevar); as três versões de cada li
 | achar por artista / colar | «Visual» / «Bulk Paste» | «By artist» / «Paste a list» | modo de busca |
 | a série sendo montada | «Selected Albums», «Stack» | «Your series» | lista, bandeja ou base |
 | tipo não classificado | «?» (computador), «Other» (celular) | «Other» nos dois | filtros da Home e da edição de série |
-| coletânea | «Compendiums» | «Compilations» (pergunta ao MJRP) | filtros da Home e da edição de série |
+| coletânea | «Compendiums» | rodada 1 (Elevar, Transformar v1): «Compilations». **Rodada 2: fica «Compendiums»**, a palavra de hoje do produto (`models/albumPicker.js` linha 18), até o MJRP dizer outra | filtros da Home e da edição de série |
 
 ### Página de entrada (F80, rodada 1 de exploração)
 

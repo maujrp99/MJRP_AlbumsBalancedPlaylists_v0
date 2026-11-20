@@ -1,0 +1,3 @@
+/* Preview B of the colour pair (round 2): the flame text and the equalizer with v1's third stop, #fdba74 (orange 300),
+   which design-system.md does not declare. Preview A is v2 as it is: the declared flame, #f97316 → #dc2626. */
+:root { --flame-text: linear-gradient(90deg, #fdba74, #f97316 40%, #dc2626); --eq-grad: linear-gradient(to top, #dc2626, #f97316 55%, #fdba74); }

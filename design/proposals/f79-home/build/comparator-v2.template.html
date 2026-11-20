@@ -1,0 +1,118 @@
+<title>Home · Transformar v2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap">
+<style>
+  /* One dark look on purpose: the comparator sits beside the app's own black screens. Tokens from the app's design system. */
+  :root { --bg:#0a0a0c; --panel:#141418; --line:#2a2a30; --fg:#f2f2f3; --muted:#a0a0a8; --orange:#f97316; --mark:#fbbf24; color-scheme: dark;
+          --ui: system-ui, -apple-system, "Segoe UI", sans-serif; --title: "Syne", system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font: 14px/1.45 var(--ui); margin: 0; }
+  .wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  header { padding-block: 18px 10px; border-bottom: 1px solid var(--line); }
+  h1 { font: 800 20px/1.2 var(--title); margin: 0 0 4px; text-wrap: balance; }
+  h1 span { background: linear-gradient(90deg, var(--orange), #dc2626); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  header p { margin: 0; color: var(--muted); max-width: 980px; }
+  .bar { display: flex; gap: 12px 16px; flex-wrap: wrap; align-items: center; padding-block: 12px; border-bottom: 1px solid var(--line); position: sticky; top: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 5; }
+  .grp { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .grp button { background: transparent; color: var(--muted); border: 0; min-height: 44px; padding: 0 14px; cursor: pointer; font: 600 13px var(--ui); }
+  .grp button[aria-pressed="true"] { background: #2a2a30; color: var(--fg); box-shadow: inset 0 -2px 0 var(--orange); }
+  .grp button:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+  label.sel { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 13px; }
+  select { background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 10px; min-height: 44px; padding: 0 10px; font: 600 13px var(--ui); }
+  h3.row { font: 800 15px/1.3 var(--title); margin: 18px 0 0; }
+  h3.row + p { margin: 2px 0 0; color: var(--muted); max-width: 980px; font-size: 13px; }
+  .cols { display: flex; gap: 20px; padding-block: 14px; overflow-x: auto; align-items: flex-start; }
+  .col { flex: none; display: flex; flex-direction: column; gap: 6px; }
+  .col h2 { font: 800 16px/1.2 var(--title); margin: 0; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .col h2 small { font: 600 12px var(--ui); color: var(--mark); }
+  .col .axis { color: var(--muted); font-size: 12.5px; margin: 0; min-height: 3.2em; }
+  .col .miss { color: var(--mark); font-size: 12px; margin: 0; }
+  .frame { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #000; }
+  .frame iframe { border: 0; display: block; transform-origin: 0 0; }
+  .col a { color: var(--fg); font-size: 12px; text-decoration-color: var(--orange); }
+  details { border-top: 1px solid var(--line); margin-top: 8px; padding-block: 10px; }
+  summary { cursor: pointer; font: 800 15px var(--title); min-height: 44px; display: flex; align-items: center; }
+  summary small { font: 400 13px var(--ui); color: var(--muted); margin-left: 8px; }
+  .note { color: var(--muted); font-size: 12px; padding-block: 0 24px; max-width: 980px; }
+</style>
+<header class="wrap">
+  <h1>A Home: <span>Transformar · rodada 2</span></h1>
+  <p>Você escolheu o nível <b>Transformar</b> («home 3 niveis transformar»). A v2 fecha o que a crítica deixou aberto (mudar a ordem e tirar álbuns da base, com Undo), responde às perguntas da rodada 1 e mostra <b>todos os estados</b>. Ao lado, a v1 que você viu, intacta. Ligue «marcar decisões» para ver, em amarelo, cada padrão que o agente escolheu sozinho («decidido pelo agente — revisável»). O texto da tela é proposta do agente.</p>
+</header>
+<div class="bar wrap">
+  <div class="grp" id="device" role="group" aria-label="Aparelho"></div>
+  <label class="sel" for="scenario">Estado <select id="scenario"></select></label>
+  <div class="grp" id="ref" role="group" aria-label="Referência"></div>
+  <div class="grp" id="marks" role="group" aria-label="Decisões do agente"></div>
+</div>
+<div class="wrap">
+  <div class="cols" id="cols"></div>
+  <h3 class="row">A cor <code>#fdba74</code>: prévia A ou prévia B? <small style="color:var(--mark);font:600 12px var(--ui)">decisão sua</small></h3>
+  <p>A v1 começava o degradê do título e do equalizador em <code>#fdba74</code> (laranja claro), que o design system não declara (o fogo declarado é <code>#f97316 → #dc2626</code>). A: sem ele (é o que a v2 usa). B: com ele, como na v1. Só a cor muda; veja em «Vazio» e «Buscando». <b>Recomendo A</b>: fica dentro da identidade declarada e o título ainda passa de 3:1 em toda a extensão (7,5:1 no laranja, 4,35:1 no vermelho; é texto grande, o piso é 3:1). Se você preferir B, a terceira parada entra no design system e vale também para a página de entrada (F80), que hoje usa outra, <code>#fbbf24</code>.</p>
+  <div class="cols" id="previews"></div>
+  <details id="decided"><summary>Decididos na rodada 1 <small>Consolidar e Elevar, os níveis que você não escolheu, como registro</small></summary><div class="cols" id="decidedCols"></div></details>
+</div>
+<p class="note wrap">Cada versão funciona sozinha: «abrir sozinha» abre o protótipo inteiro, com todos os estados num seletor e cliques que funcionam (escolher capas, «Add all», ↑ ↓ ✕, Undo, colar, criar). A versão que você viu nunca é sobrescrita: a v2 é um arquivo novo.</p>
+<script>
+const FILES = /*FILES*/;
+// The screen of today.
+const CURRENT = { id: 'reference', name: 'Referência · a Home de hoje', axis: 'Como está no site: dois painéis, rótulos de console, «Initialize Load Sequence».' };
+// Newest first. The chosen direction, v2 beside the v1 he saw; the refused levels folded as a record (old: true).
+const VERSIONS = [
+  { id: 'transformar-v2', name: 'Transformar · v2 · Nova', axis: 'A base abre para mudar a ordem e tirar álbuns (↑ ↓ ✕ de 44 px, Undo); o nome sugerido pelo artista; «Add all»; depois de criar, «Blend it now»; um fogo por vez; todos os estados.', states: 'all' },
+  { id: 'transformar', name: 'Transformar · v1 · a que você escolheu', axis: 'A versão da rodada 1, como você a viu. Tem 7 estados: os outros mostram o mais próximo.' }
+];
+const PREVIEWS = [
+  { id: 'flame-2stops', name: 'Prévia A · sem #fdba74 · recomendada', axis: 'O fogo declarado, #f97316 → #dc2626, no título e no equalizador. É o da v2.', states: 'all' },
+  { id: 'flame-3stops', name: 'Prévia B · com #fdba74', axis: 'A terceira parada da v1, #fdba74, no começo do título e no topo das barras.', states: 'all' }
+];
+const DECIDED = [
+  { id: 'consolidar', name: 'Consolidar · v1 · Decidido · registro', axis: 'Mesma estrutura, texto limpo. Não escolhido.', old: true },
+  { id: 'elevar', name: 'Elevar · v1 · Decidido · registro', axis: 'Bandeja à esquerda, voz equilibrada (era a recomendação do agente). Não escolhido.', old: true }
+];
+const SCENARIOS = [['empty', 'Vazio: primeira visita'], ['typing', 'Digitando um artista'], ['scanning', 'Buscando'], ['results', 'Discografia, filtros por tipo'],
+  ['chosen1', 'Um álbum escolhido'], ['chosen', 'Vários álbuns'], ['many', 'Muitos álbuns (13)'], ['reorder', 'Mudando a ordem'], ['removed', 'Removido, com Undo'],
+  ['paste', 'Colando uma lista'], ['pastereport', 'Lista adicionada, uma linha pulada'], ['notfound', 'Artista não encontrado'], ['error', 'O catálogo não respondeu'],
+  ['noname', 'Nome faltando ao criar'], ['creating', 'Criando'], ['created', 'Criada: o que vem depois'], ['createfail', 'Não deu para gravar'], ['guest', 'Visitante (sem conta)']];
+// Round 1 pages have 7 states: the nearest one, said under the frame
+const V1_STATE = { empty: 'empty', typing: 'empty', scanning: 'scanning', results: 'results', chosen1: 'chosen', chosen: 'chosen', many: 'chosen', reorder: 'chosen', removed: 'chosen',
+  paste: 'paste', pastereport: 'paste', notfound: 'notfound', error: 'error', noname: 'chosen', creating: 'chosen', created: 'chosen', createfail: 'chosen', guest: 'empty' };
+const DEVICES = [['desk', 'Computador · 1280'], ['phone', 'Celular · 393']];
+let device = 'desk', scenario = 'reorder', showRef = false, marks = false;
+try { const s = JSON.parse(localStorage.getItem('f79cmp2') || '{}'); device = s.device || device; scenario = s.scenario || scenario; showRef = !!s.showRef; marks = !!s.marks; } catch (e) {}
+const group = (id, items, current) => { document.getElementById(id).innerHTML = items.map(([v, l]) => `<button type="button" data-v="${v}" aria-pressed="${v === current}">${l}</button>`).join(''); };
+const label = (id) => (SCENARIOS.find((s) => s[0] === id) || [id, id])[1];
+function draw() {
+  try { localStorage.setItem('f79cmp2', JSON.stringify({ device, scenario, showRef, marks })); } catch (e) {}
+  group('device', DEVICES, device);
+  group('ref', [['off', 'Sem a Referência'], ['on', 'Com a Referência']], showRef ? 'on' : 'off');
+  group('marks', [['off', 'Sem marcas'], ['on', 'Marcar decisões do agente']], marks ? 'on' : 'off');
+  document.getElementById('scenario').innerHTML = SCENARIOS.map(([id, l]) => `<option value="${id}" ${id === scenario ? 'selected' : ''}>${l}</option>`).join('');
+  const [w, h] = device === 'desk' ? [1280, 900] : [393, 852];
+  const avail = Math.max(320, document.documentElement.clientWidth - 40);
+  const scaleFor = (n) => (device === 'desk' ? Math.max(0.3, Math.min(0.55, (avail - 20 * (n - 1)) / n / w)) : Math.min(0.8, avail / w));
+  const col = (item, scale) => {
+    const s = item.states === 'all' ? scenario : V1_STATE[scenario];
+    const src = `${FILES[item.id]}#s=${s}${marks && item.states === 'all' ? '&marks' : ''}`;
+    const [title, ...rest] = item.name.split(' · ');
+    const miss = s !== scenario ? `<p class="miss">Este estado não existe nesta versão: mostra «${label(s)}».</p>` : '';
+    return `<section class="col" style="width:${Math.round(w * scale) + 2}px"><h2>${title}${rest.length ? ` <small>${rest.join(' · ')}</small>` : ''}</h2><p class="axis">${item.axis}</p>${miss}
+      <div class="frame" style="width:${Math.round(w * scale) + 2}px;height:${Math.round(h * scale) + 2}px"><iframe title="${item.name}" src="${src}" loading="lazy" style="width:${w}px;height:${h}px;transform:scale(${scale})"></iframe></div>
+      <a href="${src}" target="_blank" rel="noopener">abrir sozinha ↗</a></section>`;
+  };
+  const main = (showRef ? [CURRENT] : []).concat(VERSIONS);
+  const sc = scaleFor(main.length);
+  document.getElementById('cols').innerHTML = main.map((i) => col(i, sc)).join('');
+  const sp = scaleFor(2);
+  document.getElementById('previews').innerHTML = PREVIEWS.map((i) => col(i, Math.min(sp, device === 'desk' ? 0.45 : sp))).join('');
+  const dec = document.getElementById('decided');
+  document.getElementById('decidedCols').innerHTML = dec.open ? DECIDED.map((i) => col(i, scaleFor(2))).join('') : '';
+}
+document.getElementById('device').addEventListener('click', (e) => { if (e.target.dataset.v) { device = e.target.dataset.v; draw(); } });
+document.getElementById('ref').addEventListener('click', (e) => { if (e.target.dataset.v) { showRef = e.target.dataset.v === 'on'; draw(); } });
+document.getElementById('marks').addEventListener('click', (e) => { if (e.target.dataset.v) { marks = e.target.dataset.v === 'on'; draw(); } });
+document.getElementById('scenario').addEventListener('change', (e) => { scenario = e.target.value; draw(); });
+document.getElementById('decided').addEventListener('toggle', draw);
+let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(draw, 200); });
+draw();
+</script>
