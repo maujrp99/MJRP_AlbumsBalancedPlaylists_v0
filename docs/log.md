@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 21:53] decision — F70 criada: defeitos pequenos achados no caminho (decidido pelo agente — revisável)
+
+Feature de via rápida, `^REL-40`, conserta as UAT-208 (visitante pede rota paga), UAT-209 (preço do inventário sem moeda), UAT-210 (o app ignora o desfecho das notas na busca por IA), abertas agora, e a UAT-63 (capa sem substituto). Criada na `main` antes de qualquer ramo. O resto das UAT-18, 19 e 20 segue nas features donas (F58, F64), numa segunda fatia.
+
 ## [2026-11-19 21:52] review — F52 fatia 5 provada pelo integrador no servidor local; UAT-23 em fixed
 
 Prova em `reports/evidence/F52/2026-11-19-slice-5-generate-path-proof.md`: a resposta de `/api/generate` passa a dizer, fonte por fonte, o que aconteceu com as notas; falha da fonte não sai mais igual a «não tem»; o servidor não sobe sem o arquivo de instruções da IA. `fetchRankingForAlbum` foi de complexidade 139 para menos de 8. Mudanças do auxiliar que ficam, revisáveis: uma consolidação que quebra responde 500 (antes, 200 com ranking vazio); o servidor não sobe sem o validador de álbum.
