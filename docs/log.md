@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:35] session — F75, documentos: a sugestão recusada e o menor preço à venda
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- `plan.md`: a decisão («decidido pelo agente — revisável»), como os três estados voltam, a leitura dos termos para as estatísticas do marketplace (conteúdo do Discogs: atribuição e seis horas; dado do marketplace, tratado como «Restricted Data») e o que não foi verificado.
+- `behavior.md` (`^inventory-value-lowest-for-sale`), `info-arch.md` (três estados novos com ID de bloco), `data-model.md` (a base `lowest_for_sale` da leitura; a chave `v2`), `arch.md` (emenda) e `docs/manual/21_Dynamic_UI_Mapping.md`.
+- Não verificado: `/marketplace/stats` com o token; quantas das 211 edições têm algo à venda (a de «The Dark Side of the Moon» tinha zero).
+
 ## [2026-11-20 02:34] session — F75, app: o menor preço à venda como valor do Discogs, um aviso só sobre as configurações de vendedor, e as leituras erradas descartadas
 
 **Branch:** feat/f75-cd-prices-and-where-to-buy
