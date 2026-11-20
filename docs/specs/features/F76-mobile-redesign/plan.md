@@ -33,6 +33,13 @@ Decisões de desenho, todas **decididas pelo agente — revisáveis** (o MJRP de
 - `public/js/components/navigation/AuthNav.js` — `signOut()` e `isSignedIn(user)` exportados (o mesmo código de antes, num lugar só, para o menu do celular usar). (REQ-03)
 - `public/js/components/ui/BaseModal.js` — classes `app-modal*` e a opção `sheet: 'full' | 'bottom'`; `role="dialog"`, `aria-modal` e nome no botão de fechar. `ui/modals/ConfirmModal.js` pede `bottom`. `ViewAlbumModal.js`, `LoginModal.js` e `ranking/UserRankModal.js` ganham uma classe de fora cada (`album-window`, `login-window`, `rank-window`). (REQ-04)
 - `public/css/mobile.css` — dez seções: medidas, a página (margens, áreas seguras, sem rolagem lateral), texto/campos/alvos, barra do topo, barra de baixo, barra de ação e voltar ao topo, folha, as janelas antigas como folha, avisos, menu. (REQ-01, REQ-02, REQ-03, REQ-04)
+- **Módulos de cada tela** (as notas de cada uma estão em `screens/`; o que cada módulo faz, em `info-arch.md` § O celular e `behavior.md` § No celular):
+  - **Albums** (TASK-02; REQ-01, REQ-05): `components/ui/AlbumPhoneCard.js` (ladrilho e linha), `components/ui/FilterSheet.js` (folha de filtros; `FilterToolbar` ganha `filtersInSheet`), `components/series/SeriesPhoneSheets.js` (folhas do álbum e da série), `Pager` com o desenho do celular, `AlbumsGridRenderer`, `SeriesView` (`nameThisScreen`), `public/css/mobile/albums.css`.
+  - **Janela do álbum e ranking** (TASK-03; REQ-06, REQ-07): `ViewAlbumModal.js` (barra, capa desfocada, título que vem para a barra), `components/ranking/TracksTabs.js` (o controle das três fontes e as linhas), `components/ranking/rankWindowPhone.js` (o ranking do celular: escolher, «Up», «Down», «Move to…», «Reset» com «Undo», «Discard changes?»), `UserRankModal.js` (`moveTrack`, alça), `public/css/mobile/album-window.css` e `ranking.css`.
+  - **Playlists e gravadas** (TASK-04; REQ-01, REQ-08): `components/playlists/PhonePlaylists.js` (fichas, faixas, barra de ação, folhas da faixa, da playlist e de exportar), `PlaylistsDragHandler.js` (arrastar pela posição), `SavedPlaylistsPhone.js` e `SavedSeriesGroup.js` (séries, lotes, folhas), `components/playlists/batchNames.js` (nome legível de lote), `public/css/mobile/playlists.css`.
+  - **Home e edição da série** (TASK-05; REQ-09): `components/home/HomePhoneChosen.js` (barra dos escolhidos e a folha, com o nome da série), `HomeView.js` e `HomeController.js` (o nome exigido antes de criar no celular), `SeriesEditModal.js`, `public/css/mobile/home.css`.
+  - **Blend** (TASK-06; REQ-10): `components/blend/BlendSeriesPhonePicker.js` (a folha «Choose a series» com busca), `BlendingMenuView.js` (barra de ação com o motivo), `public/css/mobile/blend.css`.
+  - **Inventário** (TASK-07; REQ-11): `views/InventoryView.js` (`renderPhone` e `renderComputer`), `views/renderers/InventoryPhoneRow.js`, `views/InventoryPhoneSheets.js` (status, «⋯», filtros e ordem, ações, salto, valores), `models/inventoryJump.js` (`PHONE_CHUNK` = 50, o salto), `public/css/mobile/inventory.css`.
 - `public/css/mobile/screens.css` e sete arquivos de tela vazios, já carregados (TASK-02 a TASK-07). `public/css/safe-area.css` — o celular deitado. (REQ-12, REQ-13)
 - `public/index.html` — `viewport-fit=cover`, `theme-color`, `apple-mobile-web-app-*`, o manifesto (`public/assets/manifest.webmanifest`) e o ícone (`public/assets/images/app-icon-*.png`). Sem service worker. (REQ-13)
 - `public/js/app.js` — carrega as folhas de estilo do celular depois das outras e liga a moldura. `components/Icons.js` — cinco ícones novos (`Home`, `Blend`, `ArrowUp`, `ChevronRight`, `SignOut`), com nomes que nenhuma tela de computador pedia.
@@ -50,11 +57,11 @@ Decisões de desenho, todas **decididas pelo agente — revisáveis** (o MJRP de
 
 Declarações:
 - `docs/specs/constitution.md` — sem mudança nesta fatia: nenhuma dependência nova; a regra «o CSS do celular fica dentro da consulta de mídia» está no teste e no `design-system.md` (a levar à constituição no fecho da feature, se o MJRP quiser)
-- `docs/specs/arch.md` — a atualizar no fecho da feature (a moldura do celular e a folha são componentes novos); item aberto em `tasks.md` § Documentation
+- `docs/specs/arch.md` — atualizado no fecho: § A camada do celular (F76)
 - `docs/specs/data-model.md` — sem mudança: nenhuma entidade, campo ou esquema mudou
 - `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
 - `docs/specs/design-system.md` — criado (§ Celular)
-- `docs/specs/behavior.md` e `docs/specs/info-arch.md` — a atualizar no fecho da feature, com as telas; item aberto em `tasks.md` § Documentation
+- `docs/specs/behavior.md` e `docs/specs/info-arch.md` — atualizados no fecho: § No celular (F76) e §§ O celular (F76) e Estados no celular
 - `docs/wiki/` — sem mudança: nenhuma página descreve uma regra do app que esta fatia mudou
 
 ## Risks & Considerations
@@ -65,4 +72,11 @@ Declarações:
 - **A regra de 16 px nos seletores** usa `:root select` para ganhar das classes `text-sm` e `text-xs`; um seletor com `!important` próprio escaparia (nenhum foi achado).
 - **Ícone do app e manifesto ficam em cache no iPhone**: quem já pôs o app na tela de início precisa remover e pôr de novo para ver o ícone novo.
 - **Entre 768 e 1023 px** (iPad em pé, iPhone deitado) continua a gaveta antiga, sem mudança. Se o celular deitado merecer o desenho de celular, a linha passa a ser outra consulta (por exemplo, altura até 500 px em tela de toque) e isso é decisão do MJRP: muda o REQ-12.
+- **Nunca verificado (lista do fecho, 2026-11-20).** Cada tela foi provada no Chrome sem cabeça e no arnês, com dados de exemplo; a re-conferência de UX (`reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-recheck.md`) foi no navegador do painel, com a conta do dono, sem gravar nada. Ficaram sem prova:
+  - **Um iPhone de verdade.** Safari, a barra que encolhe, a ilha e as áreas seguras, o teclado sobre os campos (a busca do Inventário, o nome do lote, o nome da série na folha), o arrastar da folha e da alça com o dedo, o desfoque da capa na janela do álbum, `-webkit-line-clamp` e a rolagem depois do salto A–Z, o ícone da tela de início.
+  - **Gravar pelo celular.** Gravar o ranking, o lote de playlists, uma série nova, a edição de um item do inventário, o status de uma linha e a troca de moeda, e criar a série de fato (sem login no arnês); só se provou que as folhas chamam as mesmas funções de antes. Exportar de verdade para o Spotify e para a Apple Music também não.
+  - **VoiceOver.** As folhas, o botão invisível que cobre a linha do Inventário, a região que diz a posição nova no ranking e os nomes dos botões só de ícone foram escritos com `aria-label`, `role` e `aria-live`, mas nenhum leitor de tela os leu.
+  - **A trava de rolagem presa (N22 da re-conferência).** Aconteceu uma vez, na primeira passada, e não se repetiu; a hipótese é um contador global de travas com uma folha de outra sessão. Não foi provada nem descartada.
+  - **Dados reais em algumas telas:** nomes de lote de outro formato que os dois da crítica, a lista de artistas com centenas de nomes na folha de filtros, a «Edit Batch» de um lote gravado, e «Blend your Albums» com a série (UAT-217, só em teste de unidade).
+  - **A tela de computador, em tudo:** a comparação de capturas a 1280x800 deu 0 pixels diferentes em cada tela, mas a TASK-08 (a conferência feita de uma vez, em cada tela) segue aberta.
 - **Sem login, só as telas vazias foram medidas.** O que aparece com dados (cabeçalhos de série, cartões, playlists, inventário) é das telas e da prova do integrador.
