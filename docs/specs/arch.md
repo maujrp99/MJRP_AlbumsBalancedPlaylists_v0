@@ -1096,6 +1096,11 @@ Quando o app já sabe a edição (`releaseId`, guardado no item), só o passo 4 
 
 **O que esta camada não prova.** O teste só segura o CSS; que a tela de computador desenha igual, só a comparação de capturas mostra (`reports/evidence/F76/`, a TASK-08). O que nunca foi visto num iPhone de verdade está em `plan.md` § Risks & Considerations.
 
+<<<<<<< HEAD
+## Propostas em avaliação
+
+**O Album Blender como app para iPhone e Android (F78).** Proposta de arquitetura guiada por risco, escrita em 2026-11-20, ainda sem crítica, sem aprovação e sem ADR: `design/proposals/f78-app-architecture/architecture-proposal.md`. Recomenda React Native com Expo, com as regras do produto num núcleo em `shared/` usado pelo site, pelo app e pelo servidor, e pedaços nativos só onde a plataforma exige (o token do Apple Music). Revista no mesmo dia depois da crítica independente (`reports/audits/2026-11-20-mjrpalbumblender-v0-f78-architecture-critique.md`). Traz o inventário medido (116 de 257 arquivos de `public/js` não tocam o navegador; **quanto roda no app não está provado**: cerca de 34% das linhas depois de um conserto pequeno, cerca de 28% sem tocar em nada, 0% executado num aparelho), a refatoração do site que o núcleo pede (`SeriesService`, `PlaylistsService`, os repositórios), os riscos, as opções comparadas (Flutter, Swift e Kotlin, o site embrulhado), as funções de aptidão, as fatias e os spikes. Nada neste arquivo muda até a proposta ser aprovada pelo MJRP.
+=======
 ## A medição do uso: a porta e o adaptador (F77) — construída no ramo
 
 > 2026-11-20, ramo `feat/f77-measure-how-the-app-is-used`. O porquê, as decisões do agente e o que não foi verificado estão em `docs/specs/features/F77-measure-how-the-app-is-used/plan.md`. **Nenhum evento foi mandado ao PostHog:** falta a chave do projeto, que é do MJRP.
@@ -1122,3 +1127,4 @@ serviço / controlador (depois da ação dar certo)
 **Testes que seguram isso.** `test/architecture/usageBehindThePort.test.js`: só o adaptador importa a biblioteca ou nomeia o global dela; o adaptador só é carregado por `import()` da fiação; fora de `services/usage/` só se importa `track.js`; a lista só é lida pela porta; o CSP aceita as duas nuvens e nenhum script do PostHog. `test/shared/usageEvents.test.js` cobra que nenhuma propriedade aceita texto e que o módulo não usa API de navegador nem de servidor.
 
 **O que este desenho não resolve.** O identificador anônimo vive o tempo da página: um funil que atravessa uma recarga se parte. Um host próprio do PostHog exige mudar o CSP. Medir para outras pessoas pede consentimento e política de privacidade antes (ver os riscos do `plan.md`).
+>>>>>>> main

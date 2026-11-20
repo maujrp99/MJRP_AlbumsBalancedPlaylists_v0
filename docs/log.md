@@ -3,9 +3,18 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 13:39] review — reconferência da proposta de arquitetura do app (F78): pode ir ao MJRP, com notas
+**Branch:** feat/f78-app-architecture-proposal
+Um segundo agente conferiu a revisão contra a crítica: os dois P0 e os P1 1, 3, 5 e 7 fechados; P0-2 e os P1 2, 4 e 6 em parte. As notas abertas estão no § 17 da proposta (a versão do documento rebaixada por um app antigo; `saveAlbumFacts` sem classificação; o S1 com gerador de identificadores fixo; a cota da IA; os desfechos do BestEverAlbums). Nenhum ADR ainda: a decisão é do MJRP.
+
 ## [2026-11-20 13:38] session — F77 em produção, desligada: falta a chave do projeto do PostHog
 **Branch:** main
 Site publicado da `385ff60` (`main-CqYQz48c.js`); a publicação diz «measurement of use: OFF (no VITE_POSTHOG_KEY)». Provado no app local com a conta do MJRP e a marca de depuração: `screen_viewed` por nome de tela, `filter_used` para o filtro de status e para a busca, sem o texto buscado; nenhum pedido ao PostHog. Suíte 3192. Para ligar: o MJRP põe `VITE_POSTHOG_KEY` no `.env` da raiz (projeto na nuvem da União Europeia, captura de IP desligada) e o site é publicado de novo. Não verificado: evento chegando ao PostHog; `sign_out` sobrevivendo à recarga.
+
+## [2026-11-20 13:36] session — F78: a proposta de arquitetura do app revista depois da crítica independente (2 P0 e 7 P1 respondidos)
+**Branch:** feat/f78-app-architecture-proposal
+A crítica (`reports/audits/2026-11-20-mjrpalbumblender-v0-f78-architecture-critique.md`) bloqueou a proposta; a pilha recomendada ficou, o desenho em volta mudou: toda gravação tem prazo e estado na tela, inventário e ranking próprio gravam sem rede e série e playlists por transação com conferência; regra de convivência entre versões do app e o site, com versão mínima; a costura do núcleo desenhada (`shared/data/` e cinco fatias de refatoração do site); Firebase nativo no app em vez do Firebase JS; App Check, limite fora da instância e teto global de gasto; dois marcos (o app do MJRP, depois o público).
+A parte portável passou a ser dita como é: cerca de 34% depois de um conserto de `crypto.randomUUID`, cerca de 28% sem tocar em nada, 0% provado num aparelho; o spike S1 agora compara byte a byte receitas e rankings reais. Uma discordância, de meio: os 954 casos do Vitest não rodam no motor do app. A resposta por achado está na seção 16 da proposta; a página do MJRP foi republicada no mesmo endereço; nenhum ADR.
 
 ## [2026-11-20 13:34] session — F77: plano, spec, tarefas e os documentos da medição
 **Branch:** feat/f77-measure-how-the-app-is-used
@@ -25,6 +34,11 @@ Provado num navegador (Vite em 127.0.0.1:5123, sem conta, adaptador de depuraç�
 **Branch:** feat/f77-measure-how-the-app-is-used
 Os eventos saem onde a ação deu certo, nos serviços e controladores (série, ranking, gerar, gravar, exportar, inventário, filtros, entrar e sair); os links de compra levam a loja e o lugar, e um ouvinte só mede o clique sem segurar a navegação.
 Acrescentados pelo agente: `inventory_value_removed` e `inventory_albums_added`. As peças do celular chamam os mesmos controladores e serviços, então mandam os mesmos eventos. Suíte: 3191 testes verdes.
+
+## [2026-11-20 13:19] session — F78: proposta de arquitetura guiada por risco do app para iPhone e Android (sem ADR)
+**Branch:** feat/f78-app-architecture-proposal
+Escrita pela `mjrp-designing-architecture` em `design/proposals/f78-app-architecture/architecture-proposal.md` (o guarda de caminhos recusou a pasta da feature: proposta mora em `design/proposals/`); ponteiro em `docs/specs/arch.md` § Propostas em avaliação; o `plan.md` da F78 aponta para ela; página para o MJRP ler: https://claude.ai/artifact/35vmLkhuGQhYrBkpzTJzJc. Medido no código: 66 arquivos e 7.392 linhas de regras não tocam o navegador, 24 de 51 serviços também não, 954 dos 2.640 casos de teste exercitam só esse código, e 46% do site é tela a reescrever.
+Recomenda React Native com Expo com o núcleo de regras em `shared/` e pedaços nativos só para o token do Apple Music; fica à espera da crítica independente e do MJRP (onze decisões dele, seis spikes, a emenda do Art. II da constituição). O doctor está vermelho por erros que já estavam na `main` (links antigos, sensores sem `node_modules` neste worktree, `## Now` do MEMORY parado); nenhum vem destes arquivos.
 
 ## [2026-11-20 13:19] session — F77: a porta de eventos, o adaptador do PostHog e o interruptor
 **Branch:** feat/f77-measure-how-the-app-is-used
