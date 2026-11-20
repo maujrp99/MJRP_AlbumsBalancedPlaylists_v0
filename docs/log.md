@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 18:38] session — F79 a Home: rodada 1 de desenho, três níveis (Consolidar, Elevar, Transformar) ao lado da tela de hoje
+**Branch:** wip/f79-home-design-round
+Protótipos feitos da Home real capturada no site local (busca «Pink Floyd»), sete estados, 1280 e 393 px: `design/inception/home-consolidar-v1.html`, `-elevar-v1.html`, `-transformar-v1.html`; a Referência, o comparador (Artifact privado https://claude.ai/artifact/AsiVV2i3595LqpLEadm61h), a proposta com o diagnóstico medido e as sete perguntas, e o gerador em `design/proposals/f79-home/`; o texto da tela em `design/proposals/2026-11-20-home-copy-proposal.md` (juiz verde). Recomendado: Elevar. Descrição na mesma rodada: `info-arch.md` § A Home (F79) com sete estados e o inventário HOME-01 a HOME-19, wireframes dos três níveis, padrões novos pendentes em `design-system.md`.
+O ramo pedido era `feat/f79-home-design-round`; ficou `wip/` para o board não dar a F79 como começada antes de o MJRP priorizá-la. Nenhum código do produto tocado; nada enviado ao remoto.
+
 ## [2026-11-20 17:12] decision — identidade visual: o fogo e os equalizadores são do site, e o design system é o piso
 **Branch:** main
 Palavras do MJRP, ao pedir as propostas da Home (F79) e da página de entrada (F80): «veja que o elemento do fogo, de equalizadores, fazem parte da identidade do site, busquem respeitar o design system num minimo pelo menos». Vale para as duas rodadas de desenho: o fogo (o logotipo `public/assets/TheAlbumBlender.png`, o degradê «flame» `#f97316 → #dc2626`) e os equalizadores são elementos da identidade, a manter e a usar; nenhuma proposta, nem a mais ousada, sai do `docs/specs/design-system.md` sem dizer o que muda e por quê.
