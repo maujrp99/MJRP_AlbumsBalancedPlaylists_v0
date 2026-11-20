@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:11] session — F74 começada depois de priorizada; `## Now` em dia
+
+- O MJRP priorizou a F72 e a F74. A F72 está em produção. A F74 foi passada a um auxiliar com o desenho definido: uma regra de identidade de faixa em `shared/`, no molde da de álbum, e a investigação do leitor da página do BestEverAlbums. A integração, a publicação do servidor e a prova ficam com o integrador.
+
 ## [2026-11-20 00:10] decision — o MJRP dispensou o protótipo dos consertos e das melhorias pequenas (F45 a F73)
 
 - Dito por ele: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
