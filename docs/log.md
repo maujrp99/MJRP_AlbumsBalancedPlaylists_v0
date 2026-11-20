@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 21:49] session — UAT-207 aberta e consertada: aba aberta antes de uma publicação (F64)
+
+Na conferência de produção da F65, uma aba com a versão anterior mostrou «View Error» ao abrir as playlists guardadas: os arquivos das telas carregadas sob demanda mudam de nome a cada publicação, e a página era guardada pelo navegador por uma hora. Conserto em dois lugares: o roteador reconhece o arquivo que sumiu e carrega a versão nova uma vez (`utils/staleBuild.js`, com guarda contra repetição); o `firebase.json` passa a mandar `Cache-Control: no-cache` para a página. Testes primeiro: `test/utils/staleBuild.test.js`, `test/router.staleBuild.test.js`, `test/architecture/hostingServesFreshPage.test.js`. Entra na F64 (um caminho só para publicar).
+
 ## [2026-11-19 21:47] review — F65 provada pelo integrador; cinco issues em fixed
 
 Dezessete endereços abertos no navegador sem erro nem arquivo faltando; as três telas aposentadas caem na Home. 143 arquivos removidos. Prova em `reports/evidence/F65/2026-11-19-remove-what-nothing-uses-proof.md`. Em `fixed`: UAT-203, 21, 10, 11, 30. UAT-17, UAT-20 e UAT-19 diminuíram e seguem abertas. Decisão do auxiliar que fica, revisável: os roteiros de navegador (`test/e2e`) saíram inteiros, com a dependência `puppeteer` (um commit reversível, `fd1cbea`).

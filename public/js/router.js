@@ -5,9 +5,16 @@
  */
 
 import { escapeHtml } from './utils/stringUtils.js'
+import { isMissingBuildFile, reloadOnceForNewBuild } from './utils/staleBuild.js'
 
 export class Router {
-    constructor() {
+    /**
+     * @param {Object} [options]
+     * @param {Function} [options.reloadForNewBuild] - () => boolean: loads the app again when the tab
+     *        runs a version that is no longer published; false when that was just tried (F64)
+     */
+    constructor({ reloadForNewBuild = reloadOnceForNewBuild } = {}) {
+        this.reloadForNewBuild = reloadForNewBuild
         this.routes = new Map()
         this.currentView = null
         this.beforeNavigateHooks = []
@@ -216,7 +223,18 @@ export class Router {
         } catch (error) {
             console.error('[Router] Render failed:', error)
             if (leftBehind()) return
-            container.innerHTML = `
+            container.innerHTML = this._failurePanel(error)
+        }
+    }
+
+    /**
+     * What the screen shows when a view could not be drawn. A file of an older publication is not
+     * a failure of the view: the app is loaded again, once, to get the published version (F64).
+     * @private
+     */
+    _failurePanel(error) {
+        if (!isMissingBuildFile(error)) {
+            return `
                 <div class="p-8 text-center">
                     <div class="text-red-500 text-xl font-bold mb-2">View Error</div>
                     <pre class="bg-black/30 p-4 rounded text-left text-sm overflow-auto text-red-300 max-w-2xl mx-auto">${escapeHtml(error.message)}\n${escapeHtml(error.stack)}</pre>
@@ -224,6 +242,16 @@ export class Router {
                 </div>
             `
         }
+        if (this.reloadForNewBuild()) {
+            return '<div class="p-8 text-center text-white/70" role="status">A new version of the app was published. Loading it…</div>'
+        }
+        return `
+            <div class="p-8 text-center" role="alert">
+                <div class="text-white text-xl font-bold mb-2">This screen could not be loaded</div>
+                <p class="text-white/60 mb-4">The app was updated and this tab still has the previous version.</p>
+                <button class="btn btn-primary" data-action="reload-app" onclick="window.location.reload()">Load the new version</button>
+            </div>
+        `
     }
 
     /**

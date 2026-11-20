@@ -3,7 +3,7 @@ status: In Progress
 lane: fast
 solution_type: fix
 imports: []
-fixes: ["UAT-202", "UAT-20", "UAT-22"]
+fixes: ["UAT-202", "UAT-20", "UAT-22", "UAT-207"]
 planned_for: "[[ROADMAP#^REL-40]]"
 ---
 <!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
@@ -44,6 +44,8 @@ violates:: [[constitution#V]]
   verified_by:: não verificado: o arquivo `.github/workflows/ci.yml` não rodou no GitHub (TASK-09)
 - [REQ-06] O repositório descreve um caminho só de publicação: os scripts antigos e a segunda receita saíram, os comandos estão no `package.json`, e o manual diz o que precisa existir na máquina e como voltar atrás. · fixes UAT-202
   verified_by:: `docs/manual/00_Deployment_and_Setup.md` (seções 1 e 2); `scripts/deploy-prod.sh`, `scripts/deploy-backend.sh` e `cloudbuild.yaml` não existem mais no ramo
+- [REQ-07] Uma aba aberta antes de uma publicação carrega a versão nova sozinha, uma vez, em vez de mostrar erro; a página nunca é guardada pelo navegador sem perguntar ao site. · fixes UAT-207
+  verified_by:: `test/utils/staleBuild.test.js`, `test/router.staleBuild.test.js`, `test/architecture/hostingServesFreshPage.test.js`
 
 ## Observable States
 N/A: a feature não importa nenhum requisito e não tem tela (conserto das issues UAT-202, UAT-20 e UAT-22).
