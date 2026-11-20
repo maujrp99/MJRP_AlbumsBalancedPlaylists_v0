@@ -181,6 +181,8 @@ export async function showViewAlbumModal(albumInput, { loadAlbum = null } = {}) 
     .then(given => {
       if (closing.signal.aborted) return
       const loaded = given ? asAlbum(given) : null
+      // An item with no cover of its own shows the cover of the album that came (UAT-222)
+      if (loaded?.coverUrl && !album.coverUrl) coverEl.replaceWith(createCoverElement(loaded))
       if (loaded && hasTracks(loaded)) showTracks(loaded, TRACKS_TEXT.none)
       else if (!hasTracks(album)) showTracks(album, TRACKS_TEXT.notLoaded)
     })

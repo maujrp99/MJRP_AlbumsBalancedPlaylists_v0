@@ -106,7 +106,7 @@ describe('InventoryService.updateAverages', () => {
         expect(notified).toHaveBeenCalledTimes(1)
         expect(store.getAlbums()[0]).toMatchObject({ id: 'inv-1', notes: 'mine', owned: true, averages: { rating: 90 } })
         expect(result).toEqual({
-            aborted: false, total: 2, planned: 2, saved: 2, notFound: 0, withoutRatings: 0, popularityNotConnected: 0, unanswered: 0, error: null
+            aborted: false, total: 2, planned: 2, saved: 2, covers: 0, notFound: 0, withoutRatings: 0, popularityNotConnected: 0, unanswered: 0, error: null
         })
     })
 
@@ -204,5 +204,29 @@ describe('InventoryService.updateAverages', () => {
 
         expect(result).toMatchObject({ planned: 0, saved: 0, notFound: 1 })
         expect(cloud.setAverages).not.toHaveBeenCalled()
+    })
+
+    it('an item with no cover gets the cover of the album; one that has a cover keeps it (UAT-222)', async () => {
+        const items = [itemOf(1), itemOf(2, { albumData: { id: 'artist-2_album-2', appleMusicId: '1002', coverUrl: 'https://example.com/mine.jpg' } })]
+        build(items, readyAsk([{ ...albumOf(1), coverUrl: 'https://example.com/one.jpg' }, { ...albumOf(2), coverUrl: 'https://example.com/other.jpg' }]))
+
+        const result = await run()
+
+        expect(cloud.writes[0][0]).toMatchObject({ id: 'inv-1', coverUrl: 'https://example.com/one.jpg' })
+        expect(cloud.writes[0][1].coverUrl).toBeUndefined()
+        expect(store.getAlbums()[0].albumData).toEqual({ id: 'artist-1_album-1', appleMusicId: '1001', coverUrl: 'https://example.com/one.jpg' })
+        expect(store.getAlbums()[1].albumData.coverUrl).toBe('https://example.com/mine.jpg')
+        expect(result).toMatchObject({ saved: 2, covers: 1 })
+    })
+
+    it('an album with no ratings still gives its cover, and is not counted as rated', async () => {
+        const bare = { ...albumOf(1), coverUrl: 'https://example.com/one.jpg', getTracks: () => [{ title: 'One' }] }
+        build([itemOf(1)], readyAsk([bare]))
+
+        const result = await run()
+
+        expect(cloud.writes[0]).toEqual([{ id: 'inv-1', coverUrl: 'https://example.com/one.jpg' }])
+        expect(store.getAlbums()[0].averages).toBeUndefined()
+        expect(result).toMatchObject({ planned: 0, saved: 0, covers: 1, withoutRatings: 1 })
     })
 })

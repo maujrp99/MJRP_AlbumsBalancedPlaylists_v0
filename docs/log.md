@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:36] session — F71: o item do inventário sem capa ganha a capa do álbum (UAT-222)
+
+**Branch:** fix/f71-inventory-item-gets-its-cover
+
+- «Update ratings» grava a capa do álbum carregado no item que não tinha nenhuma (`albumData.coverUrl`), e diz quantos ganharam («14 albums got their cover.»). A janela do álbum mostra a capa que chega. Uma capa que o item já tem não é trocada.
+- Na conta do MJRP: 15 sem capa antes, 1 depois («No Quarter», que a carga não acha). UAT-222 em `fixed`.
+
 ## [2026-11-20 00:34] session — UAT-222 registrada na F71: álbuns do inventário sem capa
 
 - O MJRP viu, em produção, capas faltando no inventário que aparecem na lista de séries. Contado: 15 de 211 itens sem capa, todos vindos de séries cuja entrada não guarda o endereço da capa. UAT-222 aberta; REQ-22 na F71.

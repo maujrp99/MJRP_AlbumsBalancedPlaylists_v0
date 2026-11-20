@@ -73,33 +73,48 @@ export function mergeAverages(previous, fresh, at) {
 const countGaps = (missing, matches) => missing.filter(matches).length
 
 /**
+ * The cover the album has and the item lacks (UAT-222): an album that came from a series whose
+ * entry kept no cover address shows the stand-in until the album is loaded. A cover the item
+ * already has is never replaced.
+ * @returns {string|null}
+ */
+export function missingCoverOf(item, album) {
+    const has = item?.albumData?.coverUrl
+    const offered = album?.coverUrl
+    return !has && typeof offered === 'string' && offered ? offered : null
+}
+
+/**
  * What the answer of the ask is worth.
  * @param {Object[]} items - the inventory the ask was made from
  * @param {Object} result - AlbumsResult (models/albumAsk.js)
  * @param {string} at - ISO time of the read
- * @returns {{ updates: Array<{ id: string, averages: Object }>, notFound: number, withoutRatings: number,
+ * @returns {{ updates: Array<{ id: string, averages?: Object, coverUrl?: string }>, notFound: number, withoutRatings: number,
  *   popularityNotConnected: number, unanswered: number }}
  *   `notFound`: items no ready album answers for; `withoutRatings`: items whose album came but with
  *   nothing new to write; the last two count the albums a source could not give.
  */
 export function planAverages(items, result, at) {
-    const fresh = new Map()
+    const found = new Map()
     result.albums.forEach(album => {
         const item = findInInventory(album, items)
-        if (item && !fresh.has(item)) fresh.set(item, averagesOfAlbum(album))
+        if (item && !found.has(item)) found.set(item, album)
     })
 
     const updates = []
-    fresh.forEach((averages, item) => {
-        const merged = mergeAverages(item.averages, averages, at)
-        if (merged) updates.push({ id: item.id, averages: merged })
+    let rated = 0
+    found.forEach((album, item) => {
+        const averages = mergeAverages(item.averages, averagesOfAlbum(album), at)
+        const coverUrl = missingCoverOf(item, album)
+        if (averages) rated += 1
+        if (averages || coverUrl) updates.push({ id: item.id, ...(averages && { averages }), ...(coverUrl && { coverUrl }) })
     })
 
     const missing = result.missingSources || []
     return {
         updates,
-        notFound: items.length - fresh.size,
-        withoutRatings: fresh.size - updates.length,
+        notFound: items.length - found.size,
+        withoutRatings: found.size - rated,
         popularityNotConnected: countGaps(missing, one => one.source === 'popularity' && one.gap === SourceGap.NOT_CONNECTED),
         unanswered: countGaps(missing, one => one.gap === SourceGap.FAILED || one.gap === SourceGap.WAITING)
     }
@@ -138,7 +153,8 @@ function aboutTheRest({ notFound, withoutRatings, popularityNotConnected, unansw
  */
 export function ratingsOutcome(result) {
     const { total, planned, saved, error } = result
-    if (!error) return { ok: true, text: [`Ratings updated for ${saved} of ${albums(total)}.`, ...aboutTheRest(result)].join(' ') }
+    const covers = result.covers > 0 ? [`${albums(result.covers)} got ${result.covers === 1 ? 'its' : 'their'} cover.`] : []
+    if (!error) return { ok: true, text: [`Ratings updated for ${saved} of ${albums(total)}.`, ...aboutTheRest(result), ...covers].join(' ') }
     if (saved === 0) return { ok: false, text: 'No ratings were saved: the write failed and your inventory is as it was. Try again.' }
     return { ok: false, text: `Saved ratings for ${saved} of ${albums(planned)}, then a write failed. Run Update ratings again to save the rest.` }
 }
