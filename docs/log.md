@@ -3,6 +3,19 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:05] session — F71: o comportamento e o manual dizem a ordenação nas duas direções
+
+**Branch:** feat/f71-inventory-sort-both-ways
+
+- `docs/specs/behavior.md` e três páginas do manual atualizados com as oito escolhas do «Sort by».
+
+## [2026-11-20 00:05] session — F71: a ordenação do inventário nas duas direções, com setas (REQ-21)
+
+**Branch:** feat/f71-inventory-sort-both-ways
+
+- O seletor «Sort by» passa a oferecer cada critério nas duas direções, no molde da lista de séries: «Artist (A-Z)», «Artist (Z-A)», «Avg Rating (↓)», «Avg Rating (↑)», «Avg Pop (↓)», «Avg Pop (↑)», «Newest», «Oldest». Um item sem valor fica no fim nas duas direções.
+- Decidido pelo agente — revisável: os nomes ficaram «Avg Rating» e «Avg Pop», os mesmos do cartão; o MJRP falou em «Ranking».
+
 ## [2026-11-20 00:04] session — F71: REQ-21 registrada (ordenação do inventário nas duas direções, com setas)
 
 - Pedido do MJRP: «o filtro/ordernacao do inventory pode ser Ranking e poderáimos ter como no albums series a opcao ascendente e descendente do ranking com as setinhas, mesmo padrao da ordenacao no albums series list».

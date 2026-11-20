@@ -44,14 +44,15 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
     })
 
     describe('the order', () => {
-        it('a select in the filters row offers Artist, Avg Rating, Avg Pop and Recently added, by artist at first', () => {
+        it('a select in the filters row offers each criterion in its two directions, with the arrow, by artist at first', () => {
             const select = document.getElementById('inventorySort')
 
             expect(select.tagName).toBe('SELECT')
             expect(select.closest('.filters-row')).not.toBe(null)
             expect(select.getAttribute('aria-label')).toBe('Sort by')
             expect([...select.options].map(option => [option.value, option.textContent])).toEqual([
-                ['artist', 'Artist'], ['averageRating', 'Avg Rating'], ['averagePopularity', 'Avg Pop'], ['addedToInventory', 'Recently added']
+                ['artist', 'Artist (A-Z)'], ['artist_desc', 'Artist (Z-A)'], ['averageRating', 'Avg Rating (↓)'], ['averageRating_asc', 'Avg Rating (↑)'],
+                ['averagePopularity', 'Avg Pop (↓)'], ['averagePopularity_asc', 'Avg Pop (↑)'], ['addedToInventory', 'Newest'], ['addedToInventory_asc', 'Oldest']
             ])
             expect(select.value).toBe('artist')
             expect(cards()).toEqual(['inv-never', 'inv-ten', 'inv-wall', 'inv-fragile'])
@@ -60,7 +61,10 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
         it.each([
             ['averageRating', ['inv-ten', 'inv-wall', 'inv-fragile', 'inv-never']],
             ['averagePopularity', ['inv-wall', 'inv-fragile', 'inv-never', 'inv-ten']],
-            ['addedToInventory', ['inv-fragile', 'inv-ten', 'inv-wall', 'inv-never']]
+            ['addedToInventory', ['inv-fragile', 'inv-ten', 'inv-wall', 'inv-never']],
+            ['averageRating_asc', ['inv-fragile', 'inv-wall', 'inv-ten', 'inv-never']],
+            ['addedToInventory_asc', ['inv-wall', 'inv-ten', 'inv-fragile', 'inv-never']],
+            ['artist_desc', ['inv-fragile', 'inv-wall', 'inv-ten', 'inv-never']]
         ])('choosing %s orders the cards, keeps the choice, and puts an item with no value last', (value, expected) => {
             const select = document.getElementById('inventorySort')
             select.value = value

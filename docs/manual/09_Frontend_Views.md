@@ -29,7 +29,7 @@
         *   Calls `controller.initialize()` to fetch initial data.
     2.  **Rendering (`render`)**:
         *   Shows the Header Stats the controller computed (`renderTitleRow`): "N albums", the three counts "✓ n Owned", "n Not Owned", "♡ n Wishlist" (F71) and the owned value in USD or BRL.
-        *   Renders Filters (Search, Format, Status: "All", "Owned", "Not Owned", "Wishlist") the order select `#inventorySort` ("Artist", "Avg Rating", "Avg Pop", "Recently added"; F71, S-56), the button "Add the albums of my series" (F71; `renderAddSeriesAlbums`, `showSeriesAdd` for its busy state) and the button "Update ratings" (S-56; `renderUpdateRatings`, `showRatings`; the two buttons lock each other while one runs). `destroy()` (called by the router when the person leaves) drops the ask for the ratings (`controller.dispose()`).
+        *   Renders Filters (Search, Format, Status: "All", "Owned", "Not Owned", "Wishlist") the order select `#inventorySort` (each criterion in both directions: "Artist (A-Z)", "Artist (Z-A)", "Avg Rating (↓)", "Avg Rating (↑)", "Avg Pop (↓)", "Avg Pop (↑)", "Newest", "Oldest"; F71, S-56), the button "Add the albums of my series" (F71; `renderAddSeriesAlbums`, `showSeriesAdd` for its busy state) and the button "Update ratings" (S-56; `renderUpdateRatings`, `showRatings`; the two buttons lock each other while one runs). `destroy()` (called by the router when the person leaves) drops the ask for the ratings (`controller.dispose()`).
         *   Delegates Grid rendering to `InventoryGridRenderer` (Pure HTML String generation for performance).
     3.  **Event Handling**:
         *   Uses **Event Delegation** on `#inventory-grid-container`.

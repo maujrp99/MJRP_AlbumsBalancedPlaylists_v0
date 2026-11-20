@@ -1,4 +1,4 @@
-import { sortInventory, sortingFor, SORT_OPTIONS } from '../../public/js/models/inventorySort.js'
+import { sortInventory, sortingFor, choiceOf, SORT_OPTIONS } from '../../public/js/models/inventorySort.js'
 
 const titles = (items) => items.map(item => item.title)
 
@@ -47,13 +47,31 @@ describe('the order of the inventory by the averages and by the date (F71, S-56)
 
     it('the choices, in order, with the direction each one starts with', () => {
         expect(SORT_OPTIONS.map(({ value, label }) => [value, label])).toEqual([
-            ['artist', 'Artist'], ['averageRating', 'Avg Rating'], ['averagePopularity', 'Avg Pop'], ['addedToInventory', 'Recently added']
+            ['artist', 'Artist (A-Z)'], ['artist_desc', 'Artist (Z-A)'], ['averageRating', 'Avg Rating (↓)'], ['averageRating_asc', 'Avg Rating (↑)'],
+            ['averagePopularity', 'Avg Pop (↓)'], ['averagePopularity_asc', 'Avg Pop (↑)'], ['addedToInventory', 'Newest'], ['addedToInventory_asc', 'Oldest']
         ])
         expect(sortingFor('artist')).toEqual({ field: 'artist', direction: 'asc' })
         expect(sortingFor('averageRating')).toEqual({ field: 'averageRating', direction: 'desc' })
         expect(sortingFor('averagePopularity')).toEqual({ field: 'averagePopularity', direction: 'desc' })
         expect(sortingFor('addedToInventory')).toEqual({ field: 'addedToInventory', direction: 'desc' })
         expect(sortingFor('nonsense')).toEqual({ field: 'artist', direction: 'asc' })
+    })
+
+    it('each criterion is offered in its two directions, and a sorting knows which choice it is (REQ-21)', () => {
+        expect(sortingFor('artist_desc')).toEqual({ field: 'artist', direction: 'desc' })
+        expect(sortingFor('averageRating_asc')).toEqual({ field: 'averageRating', direction: 'asc' })
+        expect(sortingFor('averagePopularity_asc')).toEqual({ field: 'averagePopularity', direction: 'asc' })
+        expect(sortingFor('addedToInventory_asc')).toEqual({ field: 'addedToInventory', direction: 'asc' })
+        SORT_OPTIONS.forEach(option => expect(choiceOf(sortingFor(option.value))).toBe(option.value))
+        expect(choiceOf(undefined)).toBe('artist')
+        expect(choiceOf({ field: 'purchasePrice', direction: 'asc' })).toBe('artist')
+    })
+
+    it('lowest first puts the lowest average first, and still the item with none last', () => {
+        const items = [withAverages('high', 90, 10, 'A'), withAverages('low', 60, 80, 'B'), { artist: 'C', title: 'none' }]
+        expect(order(items, 'averageRating_asc')).toEqual(['low', 'high', 'none'])
+        expect(order(items, 'averagePopularity_asc')).toEqual(['high', 'low', 'none'])
+        expect(order(items, 'artist_desc')).toEqual(['none', 'low', 'high'])
     })
 
     it('Avg Rating: the highest first; an item with no rating comes last', () => {

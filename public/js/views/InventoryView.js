@@ -7,7 +7,7 @@ import { getIcon } from '../components/Icons.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { redrawKeepingField } from '../utils/keepField.js'
 import { InventoryStatus, STATUS_FILTER_OPTIONS, statusCountLabel } from '../models/inventoryStatus.js'
-import { SORT_OPTIONS } from '../models/inventorySort.js'
+import { SORT_OPTIONS, choiceOf } from '../models/inventorySort.js'
 
 /** The action that puts every album of the person's series in the inventory (F71). */
 const ADD_SERIES_ALBUMS_ID = 'addSeriesAlbumsBtn'
@@ -250,7 +250,7 @@ export class InventoryView extends BaseView {
     // Order (F71, S-56)
     const sortDiv = SafeDOM.div({ className: 'filter-dropdown relative' })
     const sortSelect = SafeDOM.select({ id: 'inventorySort', className: 'form-control appearance-none cursor-pointer pr-8', 'aria-label': 'Sort by' },
-      SORT_OPTIONS.map(({ value, label }) => SafeDOM.option({ value, selected: state.sorting?.field === value }, label)))
+      SORT_OPTIONS.map(({ value, label }) => SafeDOM.option({ value, selected: choiceOf(state.sorting) === value }, label)))
     sortDiv.appendChild(sortSelect)
     sortDiv.appendChild(SafeDOM.span({ className: 'absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400' }, [SafeDOM.fromHTML(getIcon('ChevronDown', 'w-4 h-4'))]))
     row.appendChild(sortDiv)
