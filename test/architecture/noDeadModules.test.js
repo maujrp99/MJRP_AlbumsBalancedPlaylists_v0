@@ -74,7 +74,7 @@ describe('the graph follows every way a file is loaded', () => {
 
     it('a dynamic import() of the app and of the server, and require()', () => {
         expect(graph.reachable.has('public/js/views/SavedPlaylistsView.js')).toBe(true) // import() in a route of app.js
-        expect(graph.reachable.has('shared/normalize.js')).toBe(true) // import() from the CommonJS server
+        expect(graph.reachable.has('shared/trackIdentity.js')).toBe(true) // import() from the CommonJS server
         expect(graph.reachable.has('server/routes/debug.js')).toBe(true) // require() inside an if
     })
 

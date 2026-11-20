@@ -185,14 +185,6 @@ describe('TrackEnrichmentMixin', () => {
         instance = new TestClass()
     })
 
-    describe('normalizeKey', () => {
-        it('should normalize strings for matching', () => {
-            expect(instance.normalizeKey('Hello World!')).toBe('hello world')
-            expect(instance.normalizeKey('  Test  ')).toBe('test')
-            expect(instance.normalizeKey("It's a Test")).toBe('its a test')
-        })
-    })
-
     describe('enrichTracks', () => {
         it('should return empty array for null album', () => {
             expect(instance.enrichTracks(null)).toEqual([])

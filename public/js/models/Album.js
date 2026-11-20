@@ -1,3 +1,4 @@
+import { entryOfEachTrack } from './sameTrack.js'
 import { Track } from './Track.js'
 
 /**
@@ -80,14 +81,11 @@ export class Album {
 
         this.hasUserRanking = true
         this.userRanking = rankings // Always store the array for strategies to use
-        const rankMap = new Map(rankings.map(r => [r.trackTitle.toLowerCase().trim(), r.userRank]))
 
+        // Which row of the ranking is of which track is the one track rule's to say (sameTrack.js, F74)
         const updateList = (list) => {
-            list.forEach(t => {
-                const key = t.title.toLowerCase().trim()
-                if (rankMap.has(key)) {
-                    t.userRank = rankMap.get(key)
-                }
+            entryOfEachTrack(list, rankings).forEach((row, index) => {
+                if (row) list[index].userRank = row.userRank
             })
         }
 

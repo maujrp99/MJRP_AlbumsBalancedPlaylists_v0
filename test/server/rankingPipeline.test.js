@@ -320,7 +320,7 @@ describe('the ranking fetch: the time of the request (F52, slice 5)', () => {
         const fetch = rankingFetchWith({ bestEver: beaPage(ALL_RATED) })
         await fetch.fetchRankingForAlbum(album(), QUERY, { budget })
 
-        expect(fetch.bestEver.mock.calls[0][2]).toEqual({ deadlineAt: budget.deadlineAt })
+        expect(fetch.bestEver.mock.calls[0][2]).toMatchObject({ deadlineAt: budget.deadlineAt })
     })
 
     it('a source still running when the time ends is a failure (upstream_timeout), and the next ones are not asked', async () => {

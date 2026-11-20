@@ -593,6 +593,24 @@ export function pickAlbum(asked, candidates, read = (candidate) => candidate) {
 }
 
 /**
+ * Every candidate of a source that carries the name of the album asked for, by any tier of the
+ * rule (F74). A source can have two pages under one name, one for each edition of the album
+ * (BestEverAlbums: AC/DC «High Voltage», the Australian record, and «High Voltage
+ * (International)»): the name cannot tell which was asked for, only what is IN them can (their
+ * tracks, shared/trackIdentity.js). This ACCEPTS NOTHING: pickAlbum still says which candidate is
+ * the album; the caller reads the others to compare what they hold.
+ * @param {{ artist?: string, title: string, year?: number|string }} asked
+ * @param {Array} candidates - as the source gave them
+ * @param {Function} [read] - as in pickAlbum
+ * @returns {Array} the candidates that pass a tier, in the order of the source
+ */
+export function candidatesOfTheSameName(asked, candidates, read = (candidate) => candidate) {
+    const askedYear = yearOf(asked?.year)
+    const passes = (candidate) => [].concat(read(candidate) ?? []).some(reading => readingOf(asked, askedYear, reading))
+    return (candidates || []).filter(passes)
+}
+
+/**
  * Is the album that is KEPT for a query (a cache record, the album on screen) still the album
  * asked for? A kept album has no candidates beside it, so the second tier cannot be decided again
  * here: it is believed only when the album carries the reason pickAlbum accepted it by.

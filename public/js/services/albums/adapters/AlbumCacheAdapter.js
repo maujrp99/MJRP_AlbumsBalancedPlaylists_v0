@@ -11,6 +11,11 @@
  *   of the server, so its record keeps the version of the rule that decided it (`rule`) and is
  *   believed only while that is the version of the app (IDENTITY_RULE_VERSION): a rule that learns
  *   to find more albums makes every older "no page" be asked again, once (F68);
+ * - which track each rating is of is decided by the track rule of the server, so the ratings
+ *   ('done' of the acclaim) and "the page has no rating for these tracks" ('no_ratings') keep the
+ *   version of the rule that decided (`trackRule`) and are believed only while that is the version
+ *   of the app (TRACK_IDENTITY_RULE_VERSION): the album is handed out WITHOUT those ratings and the
+ *   source is asked again, once, with nobody clearing anything (F74);
  * - a failure is never saved, and "not connected to the source" is not saved either (F69); the
  *   person's own ranking is never saved with the album;
  * - get() always hands out a new Album, never the object it keeps;
@@ -23,6 +28,7 @@
 
 import { queryKey } from '../../../models/albumLoadState.js'
 import { askedAlbum, compareKeptAlbum, keptAlbum, IDENTITY_RULE_VERSION } from '../../../models/askedAlbum.js'
+import { TRACK_IDENTITY_RULE_VERSION } from '../../../models/sameTrack.js'
 
 export const ALBUM_RECORD_PREFIX = 'albumload:v1:'
 const RECORD_TTL_MS = 7 * 24 * 60 * 60 * 1000
@@ -48,6 +54,36 @@ const emptyTrustOf = (reason) => (Object.hasOwn(EMPTY_TRUST, reason) ? EMPTY_TRU
 const DECIDED_BY_THE_RULE = 'not_found'
 /** A "no page" decided with another version of the rule, or with none on record, says nothing today. */
 const decidedByTheRuleOfToday = (saved) => saved.reason !== DECIDED_BY_THE_RULE || saved.rule === IDENTITY_RULE_VERSION
+/** The source of the track ratings, and the answers of it the track rule decides. */
+const RATINGS = 'acclaim'
+const NO_RATING_FOR_THE_TRACKS = 'no_ratings'
+const decidedByTheTrackRule = (source, saved) => source === RATINGS && (saved.status === 'done' || saved.reason === NO_RATING_FOR_THE_TRACKS)
+/** An answer the track rule decided with another version, or with none on record, says nothing today. */
+const byTheTrackRuleOfToday = (source, saved) => !decidedByTheTrackRule(source, saved) || saved.trackRule === TRACK_IDENTITY_RULE_VERSION
+/** Is what is kept of a source still to be believed? */
+const stillTrusted = (source, saved, now) => byTheTrackRuleOfToday(source, saved) && (saved.status !== 'empty' || emptyStillTrusted(source, saved, now))
+
+/** The ratings of the record were put on its tracks by another version of the track rule. */
+const ratingsOfAnotherRule = (enrichment) => enrichment?.[RATINGS]?.status === 'done' && !byTheTrackRuleOfToday(RATINGS, enrichment[RATINGS])
+
+/** The track with no rating and no evidence of one. */
+function unratedTrack(track) {
+    track.rating = null
+    if (track.ranking?.evidence) track.ranking.evidence = []
+}
+
+/**
+ * The album (plain data) without what the ratings source wrote in it: the ratings, their evidence
+ * and the address of the page (an album with that address reads as "already has its ratings").
+ */
+function withoutRatings(plain) {
+    delete plain.bestEverUrl
+    delete plain.bestEverAlbumId
+    if (plain.acclaim) plain.acclaim = { ...plain.acclaim, hasRatings: false }
+    ;[...(plain.tracks || []), ...(plain.tracksOriginalOrder || [])].forEach(unratedTrack)
+    return plain
+}
+
 /**
  * The sources that always say why they have nothing. An 'empty' of one of them with no reason was
  * written before it did, when "not connected" and "the call failed" were also kept as 'empty'
@@ -59,9 +95,13 @@ const emptyStillTrusted = (source, saved, now) => {
     if (!saved.reason && ALWAYS_SAYS_WHY.has(source)) return false
     return (now - saved.at) < emptyTrustOf(saved.reason) && decidedByTheRuleOfToday(saved)
 }
-/** What the record keeps of one source: the status and when; for an 'empty', why, and by which rule. */
-const savedAnswer = (status, at, { reason, rule }) => {
+/**
+ * What the record keeps of one source: the status and when; by which version of the track rule,
+ * when the source said; for an 'empty', why, and by which identity rule.
+ */
+const savedAnswer = (status, at, { reason, rule, trackRule }) => {
     const saved = { status, at }
+    if (trackRule !== null && trackRule !== undefined) saved.trackRule = trackRule
     if (status !== 'empty' || !reason) return saved
     saved.reason = reason
     if (reason === DECIDED_BY_THE_RULE && rule !== null) saved.rule = rule
@@ -106,11 +146,11 @@ export class AlbumCacheAdapter {
 
         const enrichment = {}
         Object.entries(record.enrichment || {}).forEach(([source, saved]) => {
-            const stillTrusted = saved.status !== 'empty' || emptyStillTrusted(source, saved, this.now())
-            if (stillTrusted) enrichment[source] = saved.status
+            if (stillTrusted(source, saved, this.now())) enrichment[source] = saved.status
         })
 
-        const album = this.createAlbum(JSON.parse(JSON.stringify(record.album)))
+        const plain = JSON.parse(JSON.stringify(record.album))
+        const album = this.createAlbum(ratingsOfAnotherRule(record.enrichment) ? withoutRatings(plain) : plain)
         if (seriesId) album.seriesIds = [seriesId]
         return { album, enrichment }
     }
@@ -137,14 +177,15 @@ export class AlbumCacheAdapter {
      * @param {Object} [options]
      * @param {string|null} [options.reason] - why it is 'empty', when the source said (see EMPTY_TRUST)
      * @param {number|null} [options.rule] - the version of the identity rule a 'not_found' was decided with
+     * @param {number|null} [options.trackRule] - the version of the track rule the ratings were decided with
      */
-    async saveEnrichment(query, album, source, status, { reason = null, rule = null } = {}) {
+    async saveEnrichment(query, album, source, status, { reason = null, rule = null, trackRule = null } = {}) {
         if (NEVER_SAVED.has(source)) return
         const key = this._key(query)
         const record = (await this.cache.get(key)) || { enrichment: {} }
         await this.cache.set(key, {
             album: toPlain(album),
-            enrichment: { ...record.enrichment, [source]: savedAnswer(status, this.now(), { reason, rule }) }
+            enrichment: { ...record.enrichment, [source]: savedAnswer(status, this.now(), { reason, rule, trackRule }) }
         }, RECORD_TTL_MS)
     }
 

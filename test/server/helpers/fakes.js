@@ -43,7 +43,7 @@ export const fakeHttp = (routes) => {
     return { get }
 }
 
-/** loadHtml(html) -> $ with: $(selector | element), .each, .first, .find, .text, .attr, .length */
+/** loadHtml(html) -> $ with: $(selector | element), .each, .first, .find, .siblings, .text, .attr, .length */
 export const loadHtml = (html) => {
     const { document } = new JSDOM(String(html)).window
     const wrap = (elements) => ({
@@ -51,6 +51,8 @@ export const loadHtml = (html) => {
         each (fn) { elements.every((el, i) => fn(i, el) !== false); return this },
         first: () => wrap(elements.slice(0, 1)),
         find: (selector) => wrap(elements.flatMap(el => Array.from(el.querySelectorAll(selector)))),
+        siblings: (selector) => wrap(elements.flatMap(el => Array.from(el.parentElement?.children || [])
+            .filter(other => other !== el && (!selector || other.matches(selector))))),
         text: () => elements.map(el => el.textContent).join(''),
         attr: (name) => (elements[0] ? elements[0].getAttribute(name) ?? undefined : undefined)
     })

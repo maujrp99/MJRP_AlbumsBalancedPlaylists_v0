@@ -133,21 +133,10 @@ export class TrackTransformer {
             (b.spotifyPopularity || 0) - (a.spotifyPopularity || 0)
         )
 
-        // Create a map of title -> rank for unique tracks
-        const rankMap = new Map()
+        // Each track that has a popularity gets its place in that order. The tracks are told apart
+        // by what they are, not by their title: two tracks of one title are two tracks (F74).
         sorted.forEach((track, idx) => {
-            const key = track.title?.toLowerCase().trim()
-            if (key && !rankMap.has(key)) {
-                rankMap.set(key, idx + 1)
-            }
-        })
-
-        // Apply ranks to ALL tracks with matching titles
-        tracks.forEach(track => {
-            const key = track.title?.toLowerCase().trim()
-            if (key && rankMap.has(key)) {
-                track.spotifyRank = rankMap.get(key)
-            }
+            track.spotifyRank = idx + 1
         })
 
         return tracks

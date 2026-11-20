@@ -103,8 +103,7 @@ describe('BestEverAlbums scraper: a failure of the source is thrown, from every 
 describe('EnrichmentService: a typed result, never a swallowed failure', () => {
     const tracks = [{ title: 'One' }, { title: 'Two' }]
     const albumData = { title: 'Album', artist: 'Artist', tracks }
-    const normalizeRankingKey = async () => (text) => String(text || '').toLowerCase().trim()
-    const serviceWith = (getBestEverRanking) => new EnrichmentService({ getBestEverRanking, normalizeRankingKey, logger: serviceLogger })
+    const serviceWith = (getBestEverRanking) => new EnrichmentService({ getBestEverRanking, logger: serviceLogger })
     const page = (evidence) => ({ provider: 'BestEverAlbums', referenceUrl: 'https://bea/thechart.php?a=1', albumId: '1', evidence })
 
     it('ratings that match the tracks: found', async () => {
@@ -162,12 +161,9 @@ describe('EnrichmentService: a typed result, never a swallowed failure', () => {
     })
 
     it('something that breaks inside is thrown, not answered as "no ratings"', async () => {
-        const broken = new EnrichmentService({
-            getBestEverRanking: async () => page([{ trackTitle: 'One', rating: 90 }]),
-            normalizeRankingKey: async () => { throw new Error('ranking module missing') },
-            logger: serviceLogger
-        })
-        await expect(broken.enrichAlbum(albumData)).rejects.toThrow('ranking module missing')
+        const brokenLogger = { ...serviceLogger, info: () => { throw new Error('logger missing') } }
+        const broken = new EnrichmentService({ getBestEverRanking: async () => page([{ trackTitle: 'One', rating: 90 }]), logger: brokenLogger })
+        await expect(broken.enrichAlbum(albumData)).rejects.toThrow('logger missing')
         await expect(serviceWith(async () => { throw new TypeError('bug') }).enrichAlbum(albumData)).rejects.toThrow('bug')
     })
 })
@@ -192,7 +188,7 @@ describe('POST /api/enrich-album', () => {
     it('with the source down, the whole path answers an error, never not_found', async () => {
         const scraper = createBestEverScraper({ http: fakeHttp([[/./, networkError()]]), loadHtml, logger: quiet })
         const service = new EnrichmentService({
-            getBestEverRanking: scraper.getRankingForAlbum, normalizeRankingKey: async () => (t) => t, logger: serviceLogger
+            getBestEverRanking: scraper.getRankingForAlbum, logger: serviceLogger
         })
         const res = fakeResponse()
         await createAlbumHandlers({ enrichmentService: service, generationService: {}, env: {} }).enrichAlbum({ body }, res)
@@ -202,7 +198,7 @@ describe('POST /api/enrich-album', () => {
     it('with the source answering and nothing matching, the whole path answers not_found', async () => {
         const scraper = createBestEverScraper({ http: fakeHttp([['suggest.php', NOTHING], ['search.php', EMPTY_PAGE]]), loadHtml, logger: quiet })
         const service = new EnrichmentService({
-            getBestEverRanking: scraper.getRankingForAlbum, normalizeRankingKey: async () => (t) => t, logger: serviceLogger
+            getBestEverRanking: scraper.getRankingForAlbum, logger: serviceLogger
         })
         const res = fakeResponse()
         await createAlbumHandlers({ enrichmentService: service, generationService: {}, env: {} }).enrichAlbum({ body }, res)

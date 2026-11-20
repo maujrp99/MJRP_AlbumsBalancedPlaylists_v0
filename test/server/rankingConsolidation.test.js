@@ -86,10 +86,10 @@ describe('consolidateRanking: the result covers every track of the album', () =>
 })
 
 describe('consolidateRanking: which track a mention is of', () => {
-    it('the same title apart from notes in brackets; a title that contains the other; a track with no title is "track_N"', async () => {
+    it('by the track rule: a title without the note of the track, a note that only describes; a track with no title is "track_N"', async () => {
         const consolidated = await consolidateRanking([{ title: 'Voodoo Child (Slight Return)' }, { name: 'Little Wing' }, {}], [
             { provider: 'A', trackTitle: 'Voodoo Child', position: 1 },
-            { provider: 'A', trackTitle: 'Little Wing Live Version', position: 2 },
+            { provider: 'A', trackTitle: 'Little Wing (2010 Remaster)', position: 2 },
             { provider: 'A', trackTitle: 'Completely Different', position: 3, rating: 5 },
             null,
             { provider: 'A', trackTitle: '' }
@@ -102,18 +102,26 @@ describe('consolidateRanking: which track a mention is of', () => {
         })
     })
 
-    it('enough words in common (40%) is the same track; fewer is a mention of no track of the album', async () => {
+    it('words in common are not enough, and neither is a title that contains the other (F74): a mention of no track of the album', async () => {
         const consolidated = await consolidateRanking([{ title: 'Since I Have Been Loving You' }, { title: 'Black Dog' }], [
             { provider: 'A', trackTitle: 'Since I Have Been Loving', position: 1 },
-            { provider: 'A', trackTitle: 'Dog Black Night', position: 2 },
-            { provider: 'A', trackTitle: 'Black Night Moon Sun Star', position: 2 }
+            { provider: 'A', trackTitle: 'Black Dog Live Version', position: 2 },
+            { provider: 'A', trackTitle: 'Black Dog', position: 2 }
         ])
 
-        expect(rows(consolidated)).toEqual([['Since I Have Been Loving You', 2, null, 1], ['Black Dog', 1, null, 2]])
-        expect(consolidated.divergence.unmatchedMentions.map(m => m.trackTitle)).toEqual(['Black Night Moon Sun Star'])
+        expect(rows(consolidated)).toEqual([['Black Dog', 1, null, 1], ['Since I Have Been Loving You', 0, null, 2]])
+        expect(consolidated.divergence.unmatchedMentions.map(m => m.trackTitle)).toEqual(['Since I Have Been Loving', 'Black Dog Live Version'])
     })
 
-    it('two tracks with the same title: each mention goes to the one with fewer mentions so far', async () => {
+    it('one source, one mention per track: the extra with a note does not take the mention of the original', async () => {
+        const consolidated = await consolidateRanking([{ title: 'I Talk to the Wind' }, { title: 'I Talk to the Wind (Duo Version)' }], [
+            { provider: 'BestEverAlbums', trackTitle: 'I Talk To The Wind', position: 1, rating: 90 }
+        ])
+
+        expect(rows(consolidated)).toEqual([['I Talk to the Wind', 2, 90, 1], ['I Talk to the Wind (Duo Version)', 0, null, 2]])
+    })
+
+    it('two tracks with the same title: a source that names it twice names each once', async () => {
         const consolidated = await consolidateRanking([{ title: 'Intro' }, { title: 'Intro' }, { title: 'Song' }], [
             { provider: 'A', trackTitle: 'Intro', position: 1 },
             { provider: 'A', trackTitle: 'Intro', position: 2 },
@@ -124,10 +132,10 @@ describe('consolidateRanking: which track a mention is of', () => {
         expect(consolidated.divergence.tracksWithoutSupport).toEqual(['Song'])
     })
 
-    it('a mention of no track is kept apart, and a later mention that contains its title joins it', async () => {
+    it('a mention of no track is kept apart, and a later mention of the same title joins it', async () => {
         const consolidated = await consolidateRanking(TRACKS, [
             { provider: 'A', trackTitle: 'Completely Different', position: 1 },
-            { provider: 'B', trackTitle: 'Completely Different Thing', position: 2 }
+            { provider: 'B', trackTitle: 'completely different!', position: 2 }
         ])
 
         expect(rows(consolidated)).toEqual([['One', 0, null, 1], ['Two', 0, null, 2], ['Three', 0, null, 3]])

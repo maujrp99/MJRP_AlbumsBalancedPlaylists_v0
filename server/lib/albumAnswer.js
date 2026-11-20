@@ -68,22 +68,12 @@ function withConsolidation (answer, consolidated, ranking) {
 const titleOfTrack = (track) => (track && (track.title || track.trackTitle || track.name)) || ''
 const isSet = (value) => value !== undefined && value !== null
 
-/** Map<title key, value of `field`> of the consolidated rows that have one. */
-function byTitle (consolidated, field, normalizeKey) {
-  const values = new Map()
-  consolidated.forEach(row => {
-    if (row && row.trackTitle && isSet(row[field])) values.set(normalizeKey(row.trackTitle), Number(row[field]))
-  })
-  return values
-}
-
-/** The track with its rank (its place in the album when the ranking has none) and its rating. */
-function rankedTrack (track, index, ranks, ratings, normalizeKey) {
+/** The track with the rank and the rating of its row (its place in the album when the row has no rank). */
+function rankedTrack (track, index, row) {
   if (!track || typeof track !== 'object') return track
-  const key = normalizeKey(titleOfTrack(track))
   const ranked = { ...track }
-  if (ranks.has(key)) ranked.rank = ranks.get(key)
-  if (ratings.has(key)) ranked.rating = ratings.get(key)
+  if (row && isSet(row.finalPosition)) ranked.rank = Number(row.finalPosition)
+  if (row && isSet(row.rating)) ranked.rating = Number(row.rating)
   if (!isSet(ranked.rank)) ranked.rank = index + 1
   return ranked
 }
@@ -92,14 +82,14 @@ const rankOf = (track) => (track && track.rank) || Number.POSITIVE_INFINITY
 
 /**
  * @param {Object} answer - the album with its consolidated ranking
- * @param {Function} normalizeKey - shared/normalize.js
+ * @param {Function} matchTracks - the one track rule (shared/trackIdentity.js, F74): which row of
+ *        the ranking is of which track, one row to one track (two tracks of one title keep each its own)
  * @returns {Object} the answer; an album with no list of tracks is left as it is
  */
-function withRanksOnTracks (answer, normalizeKey) {
+function withRanksOnTracks (answer, matchTracks) {
   if (!Array.isArray(answer.tracks)) return answer
-  const ranks = byTitle(answer.rankingConsolidated, 'finalPosition', normalizeKey)
-  const ratings = byTitle(answer.rankingConsolidated, 'rating', normalizeKey)
-  const tracks = answer.tracks.map((track, index) => rankedTrack(track, index, ranks, ratings, normalizeKey))
+  const rows = matchTracks(answer.tracks.map(titleOfTrack), answer.rankingConsolidated)
+  const tracks = answer.tracks.map((track, index) => rankedTrack(track, index, rows[index] && rows[index].entry))
   return { ...answer, tracks, tracksByAcclaim: [...tracks].sort((a, b) => rankOf(a) - rankOf(b)) }
 }
 

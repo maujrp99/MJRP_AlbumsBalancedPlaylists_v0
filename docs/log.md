@@ -9,6 +9,21 @@
 - Dito por ele: a versão no celular é ruim e pede redesenho, com crítica de UX antes. Registrado: UAT-223, S-58 (EP-06) e F76, via padrão.
 - Dito por ele: o app pode virar uma rede de apaixonados por álbuns e colecionadores, com vender e trocar. Não havia registro neste repositório; entrou como candidato no PRD.
 
+## [2026-11-20 00:48] session — F74: uma regra só diz qual faixa recebe cada nota
+
+**Branch:** fix/f74-track-ratings-reach-the-right-tracks
+
+- Pedido do MJRP ([[uat#^UAT-221]]): «o que quero são o ratings das originais mesmo»; e o alcance, dito depois: «não só das edicoes ampliadas, mas dos albuns que nao tiverem todas as faixas com ratings».
+- Investigado antes do desenho: as páginas do BestEverAlbums dos 12 piores álbuns do inventário, lidas pelo leitor do próprio servidor (28 pedidos, um a cada 4 segundos). Das 103 faixas sem nota: 83 não têm nota na fonte, 12 são a mesma faixa escrita de outro jeito, 7 são do «High Voltage» (a busca pegava a página do disco australiano), 1 tem outro nome na fonte, nenhuma por falha do leitor. E 12 notas estavam em duas faixas ao mesmo tempo.
+- Construído: `shared/trackIdentity.js`, a regra de identidade de faixa, com cinco degraus com nome e a distribuição de uma nota para uma faixa (`matchTracks`). Os lugares do servidor e do app que comparavam títulos de faixas passaram a perguntar a ela; `shared/normalize.js`, `utils/NormalizationUtils.js` e quatro limpadores de `server/lib/normalize.js` saíram.
+- O degrau «nunca é a mesma» do esboço não entrou como estava: com ele «Live At The Apollo (1962)» cairia de 7 faixas com nota para nenhuma. A faixa com marca de outra versão fica no degrau mais fraco; a original pega a nota antes.
+- O raspador escolhe, pelas faixas, entre duas páginas com o nome do álbum (`pageOfTheEdition`).
+- As notas guardadas no navegador de antes da regra são pedidas de novo, uma vez (`trackRule` na resposta do servidor e no registro).
+- Medida nos 12 álbuns: 96 notas antes (82 na faixa certa), 102 depois, de 105 que as páginas têm. `reports/evidence/F74/2026-11-20-track-identity-measure.md`.
+- Suíte de 2623 testes, lint e build verdes. Não visto num navegador; o servidor não foi publicado.
+- Aberto: «Lost Someone (Live 1962)» fica sem nota (a fonte dá nota a duas metades); «Before the Frost... Until the Freeze» segue sem página, pela regra do álbum (F68).
+
+
 ## [2026-11-20 00:41] session — F75: o comparador publicado como Artifact do Claude
 
 - A pedido do MJRP, o comparador do inventário é um Artifact privado: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck. Tela de hoje, v2 e v1 autocontidas, com as capas embutidas.

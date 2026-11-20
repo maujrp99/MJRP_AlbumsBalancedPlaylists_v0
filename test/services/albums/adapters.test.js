@@ -417,12 +417,12 @@ describe('AlbumCacheAdapter: a kept album that is not the album asked for does n
 
     it('the album asked for, or an edition of it, stays: nothing is searched again', async () => {
         const { adapter, backing, cache } = build()
-        keep(backing, 'Stone Temple Pilots - Core', album('Core (Remastered)'), { acclaim: { status: 'done', at: 1 } })
+        keep(backing, 'Stone Temple Pilots - Core', album('Core (Remastered)'), { popularity: { status: 'done', at: 1 } })
 
         const kept = await adapter.get({ artist: STP, title: 'Core', appleMusicId: 'any' })
 
         expect(kept.album.title).toBe('Core (Remastered)')
-        expect(kept.enrichment).toEqual({ acclaim: 'done' })
+        expect(kept.enrichment).toEqual({ popularity: 'done' })
         expect(cache.invalidate).not.toHaveBeenCalled()
     })
 

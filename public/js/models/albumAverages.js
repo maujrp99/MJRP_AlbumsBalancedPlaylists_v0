@@ -12,6 +12,8 @@
  * measured how many tracks an album has (the owner, 2026-11-19).
  */
 
+import { entryOfEachTrack } from './sameTrack.js'
+
 const NONE = '—'
 
 const isNumber = (value) => typeof value === 'number' && Number.isFinite(value)
@@ -35,14 +37,12 @@ export function averagesOf(tracks) {
     return { rating: mean(ratings), popularity: mean(popularities), ratedTracks: ratings.length, popTracks: popularities.length, tracks: list.length }
 }
 
-const normalized = (text) => text?.toLowerCase().trim().replace(/[^a-z0-9]/g, '') || ''
-
 const popularityOf = (value) => (value !== undefined && value !== null ? Number(value) : null)
 
 /** The first value that is truthy, or the fallback: what `a || b || fallback` says. */
 const firstOr = (fallback, ...values) => values.find(Boolean) ?? fallback
 
-/** One track of the original order with what the acclaim order knows of the same title. */
+/** One track of the original order with what the acclaim order knows of the same track. */
 function mergeTrack(track, enriched, index) {
     const known = enriched || {}
     return {
@@ -58,14 +58,17 @@ function mergeTrack(track, enriched, index) {
 
 /**
  * The tracks of an album as the track comparison shows them: every track of the original order,
- * with what the acclaim order knows of the same title (rank, rating, popularity, Spotify id,
- * duration) merged in, and a default for what is missing (rank 999, popularity -1).
+ * with what the acclaim order knows of the same track (rank, rating, popularity, Spotify id,
+ * duration) merged in, and a default for what is missing (rank 999, popularity -1). "The same
+ * track" is the one track rule's to say (models/sameTrack.js, F74): two tracks of one title keep
+ * each its own, and a track with a note is not the plain one.
  * @param {{ getTracks: Function }} album
  * @returns {Array<Object>}
  */
 export function mergedTracksOf(album) {
-    const enrichedByTitle = new Map(album.getTracks('acclaim').map(track => [normalized(track.title), track]))
-    return album.getTracks('original').map((track, index) => mergeTrack(track, enrichedByTitle.get(normalized(track.title)), index))
+    const original = album.getTracks('original')
+    const known = entryOfEachTrack(original, album.getTracks('acclaim'))
+    return original.map((track, index) => mergeTrack(track, known[index], index))
 }
 
 /** The averages of a loaded album: its tracks merged as the comparison shows them, then averaged. */

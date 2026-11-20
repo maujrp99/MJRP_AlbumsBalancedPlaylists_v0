@@ -14,7 +14,7 @@ import { createRequire } from 'node:module'
 
 const require = createRequire(import.meta.url)
 const { cleanFencedMarkdown, tryParseJson, extractAlbum } = require('../../server/lib/normalize.js')
-const { consolidateRanking, normalizeKey } = require('../../server/lib/ranking.js')
+const { consolidateRanking } = require('../../server/lib/ranking.js')
 
 describe('the text of the AI answer', () => {
     it('loses its Markdown fence', () => {
@@ -44,8 +44,8 @@ describe('the text of the AI answer', () => {
 
 describe('the positions several sources give to the tracks of an album', () => {
     it('a title is compared without case, punctuation or extra spaces', async () => {
-        const normalize = await normalizeKey()
-        expect(normalize('  Foo  Bar! ')).toBe('foo bar')
+        const consolidated = await consolidateRanking([{ title: 'Foo Bar' }], [{ provider: 'A', trackTitle: '  foo  BAR! ', position: 1 }])
+        expect(consolidated.results[0].supporting).toHaveLength(1)
     })
 
     it('the track more sources place higher comes first', async () => {

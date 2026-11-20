@@ -34,7 +34,7 @@
     *   `lib/schema`: `validateAlbum`, `ajvAvailable` (AJV; since F52, slice 5, a validator that cannot be loaded is thrown at start, so `ajvAvailable` is always true)
     *   `lib/scrapers/besteveralbums`: `getRankingForAlbum`, injected as `getBestEverRanking`
     *   `lib/fetchRanking`: `fetchRankingForAlbum`
-    *   `lib/ranking`: `consolidateRanking`, and `normalizeKey` injected as `normalizeRankingKey`
+    *   `lib/ranking`: `consolidateRanking` (the title rule is no longer injected: since F74 the services load the one track rule themselves, `lib/trackIdentity.js`)
     *   `lib/logger`: `logger` (falls back to `console`)
 *   **Injection Object**: `routeDeps` bundle passed to route configurators. This facilitates testing by allowing mock injections.
 
@@ -75,14 +75,8 @@ flowchart TD
         *   *Budget*: `ALBUM_BUDGET_MS` = 15 s per request (`server/lib/timeBudget.js`); at the deadline the result is `upstream_timeout`, whatever the scraper is doing. The scraper reads `deadlineAt` and stops asking the source.
         *   *Failure Handling* (F52): the scraper throws an `UpstreamError`; the service returns a failure with its code (502, 504 or 503, the last with `Retry-After` when the source asked to wait). `null` from the scraper means the source has no page: outcome `not_found`.
         *   Every result carries `trace` (`{ how, sourceRequests }`) for the route's log line; it does not go on the wire.
-    3.  **Indexing**:
-        *   If evidence found: Normalizes all track titles in evidence using `normalizeRankingKey`.
-        *   Creates `evidenceIndex` Map: `NormalizedKey -> evidence entry`.
-    4.  **Mapping** (two passes):
-        *   Iterates input `tracks`.
-        *   Pass 1: normalizes each track title and looks it up in `evidenceIndex`.
-        *   Pass 2: if not found, compares `toFuzzyCore` of both titles (`server/lib/normalize.js`).
-        *   Constructs `ratingsMap`: `[{ title, rating }]` and `evidenceMap`: `[{ title, evidence: [{ source: 'BestEverAlbums', score, votes: null, url }] }]`.
+    3.  **Matching (F74)**: `matchTracks(tracks, page.evidence)` of the one track rule (`shared/trackIdentity.js`, loaded by `lib/trackIdentity.js`) says which entry of the page is of which track asked for, ONE entry to ONE track. The two passes this service made (`normalizeKey`, which deleted the brackets, then `toFuzzyCore`) are gone.
+    4.  **Mapping**: `trackRatings`: `[{ title, rating }]` and `trackEvidence`: `[{ title, evidence: [{ source: 'BestEverAlbums', score, votes: null, url }] }]`, one row per track asked for, in the order asked. `found` and `no_ratings` also carry `trackRule` (`TRACK_IDENTITY_RULE_VERSION`). The tracks asked for go to the scraper with the search (`{ tracks }`): they choose the page when the source has two editions under one name.
     5.  **Fallback**: If no ratings, fills `ratingsMap` with `null` and `evidenceMap` with empty lists (outcome `no_ratings` when the page exists, `not_found` when it does not).
     6.  **Response**: Returns a typed result of `server/lib/outcome.js`; on the wire, `{ data: { bestEverInfo, trackRatings, trackEvidence }, outcome }`. See `03_Backend_API_Layer.md`.
 
@@ -189,7 +183,7 @@ flowchart LR
     | `rankingSources/spotifySource.js` | `popularity`: the popularity of the tracks as a rating, highest first |
     | `rankingSources/modelSource.js` | `aiRanking`: the paid provider asked with the `rankingPrompt` (positions, no ratings) |
     | `rankingSources/rankingPlan.js` | pure decisions: `needsPopularity`, `needsModel`, `chooseRanking` |
-    | `rankingSources/completeRanking.js` | pure: a page that lists fewer tracks than the album, completed with the AI's entries, matched by `normalizeKey` |
+    | `rankingSources/completeRanking.js` | pure: a page that lists fewer tracks than the album, completed with the AI's entries; which entry is of which track is the one track rule's to say (`matchTracks`, handed in; F74) |
 
 *   **Logic Trace (`fetchRankingForAlbum(album, albumQuery, { budget })`)**:
     1.  **Preparation**: the `rankingPrompt` must be in the prompts file (`requirePrompt`), or a `PromptsError` is thrown before any source is asked.
@@ -220,16 +214,13 @@ flowchart TD
 
 ### 4.2 `server/lib/ranking.js` (Consolidation Logic)
 **Status**: `[ACTIVE]`
-**Type**: Domain Logic (Pure Function; since F52, slice 5, small steps: `boardOf`, `placeMentions`, `ordered`, with `consolidate(tracks, mentions, normalizeKey)` as the pure core and `consolidateRanking` as the async door that loads the title rule)
+**Type**: Domain Logic (Pure Function; since F52, slice 5, small steps: `boardOf`, `placeMentions`, `ordered`, with `consolidate(tracks, mentions, rule)` as the pure core and `consolidateRanking` as the async door that loads the track rule, `shared/trackIdentity.js`, F74)
 
 **Purpose**: Merges an unordered set of "Acclaim" ratings onto the official tracklist.
 
 *   **Algorithm (Borda Count Variant)**:
-    1.  **Normalization**: Creates a map of official tracks using `normalizeKey`.
-    2.  **Matching**:
-        *   Iterates through external `acclaim` entries.
-        *   First pass: Exact normalized key match.
-        *   Second pass: containment of one normalized key in the other, then fuzzy token overlap (requires >= 0.4).
+    1.  **Board**: one row per track of the album, in album order (two tracks of one title are two rows).
+    2.  **Matching (F74)**: the mentions of each source are matched to the tracks by the one track rule (`matchTracks`), one mention to one track; a mention of no track is kept apart, by its title. The containment and the 40% word overlap this step used are gone. With no track known, each title mentioned is a row (`trackTextOf`).
     3.  **Scoring**:
         *   `Score = N - Position + 1`.
         *   Accumulates scores if multiple sources cite the same track.

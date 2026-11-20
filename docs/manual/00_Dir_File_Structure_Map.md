@@ -14,7 +14,7 @@
 
 ## 2. Shared Code Enrichment
 9. `shared/curation.js` (Analysis: `manual/23_Shared_Code.md`) *(removed in F65: `curation.js`)*
-10. `shared/normalize.js` (Analysis: `manual/23_Shared_Code.md`)
+10. `shared/trackIdentity.js` (Analysis: `manual/23_Shared_Code.md`; F74: it replaced `shared/normalize.js`). With it: `server/lib/trackIdentity.js` (`manual/02_Server_Structure.md`), `public/js/models/sameTrack.js` (`manual/08_Frontend_Models.md`)
 
 ## 3. Frontend Enrichment (Core)
 11. `public/js/app.js` (Analysis: `manual/19_Frontend_JS_Root.md`)

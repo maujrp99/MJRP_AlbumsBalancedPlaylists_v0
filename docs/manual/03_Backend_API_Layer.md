@@ -56,7 +56,7 @@ classDiagram
 -   `POST /enrich-album`:
     -   **Input**: `{ albumData: { title, artist, tracks } }`
     -   **Logic**: Scrapes BestEverAlbums for the album to get community ratings/rankings. Maps these ratings to the provided tracklist using fuzzy string normalization. The whole request has 15 s and goes to the source at the server's pace (see "Time and pace of the ratings route").
-    -   **Response** (F52): `{ data: { bestEverInfo, trackRatings, trackEvidence }, outcome }`:
+    -   **Response** (F52): `{ data: { bestEverInfo, trackRatings, trackEvidence }, outcome }`; since F74, `data.trackRule` on `found` and `no_ratings`: the version of the track rule (`shared/trackIdentity.js`) that put each rating on its track, one rating to one track:
         -   `found`: the source has the album and at least one rating matched a track asked for;
         -   `not_found`: the source answered every search and has no page for the album (`bestEverInfo: null`);
         -   `no_ratings`: the source has the page, with no rating for the tracks asked for (`bestEverInfo.url` is told).
@@ -219,7 +219,7 @@ Two fitness tests hold it (`test/architecture/noSwallowedFailure.test.js`): no e
 -   `GET /list-models`: Proxies call to Google Gemini API to list available models.
 -   `POST /debug/raw-ranking`: Returns the raw AI and Scraper responses without normalization, for debugging pipeline issues.
 -   `GET /debug/files`: Lists one directory of the server file system (the server folder, or the one given in the `path` query parameter) to verify container structure in Cloud Run. There is no allow-list; like the other debug routes it only answers when `AI_API_KEY` is set.
--   `GET /debug/import`: Tests dynamic import of ES modules (specifically `shared/normalize.js`).
+-   `GET /debug/import`: Tests dynamic import of ES modules (specifically `shared/trackIdentity.js`; `?input=` answers the text the track rule compares, `trackTextOf`).
 
 ---
 

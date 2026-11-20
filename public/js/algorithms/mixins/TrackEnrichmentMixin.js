@@ -10,6 +10,7 @@
  * @module algorithms/mixins/TrackEnrichmentMixin
  */
 import { TrackTransformer } from '../../transformers/TrackTransformer.js'
+import { entryOfEachTrack } from '../../models/sameTrack.js'
 
 /**
  * Mixin that adds track enrichment capabilities
@@ -19,54 +20,18 @@ import { TrackTransformer } from '../../transformers/TrackTransformer.js'
 export function TrackEnrichmentMixin(Base) {
     return class extends Base {
         /**
-         * Normalize string for matching
-         * @param {string} str 
-         * @returns {string}
-         */
-        normalizeKey(str) {
-            return str ? str.toLowerCase().trim().replace(/[^\w\s]/g, '') : ''
-        }
-
-        /**
-         * Enrich tracks with ranking data from album metadata
-         * @param {Object} album 
+         * Enrich tracks with ranking data from album metadata.
+         * Which entry of a list of the album (the consolidated ranking, the page of
+         * BestEverAlbums, the acclaim entries) is of which track is the one track rule's to say
+         * (models/sameTrack.js, F74): nothing here compares titles.
+         * @param {Object} album
          * @returns {Array} Enriched tracks
          */
         enrichTracks(album) {
             if (!album) return []
 
-            // Build indexes from album metadata
-            const consolidatedIndex = new Map()
-            if (Array.isArray(album.rankingConsolidated)) {
-                album.rankingConsolidated.forEach(entry => {
-                    const key = this.normalizeKey(entry?.trackTitle || entry?.title || '')
-                    if (key) consolidatedIndex.set(key, entry)
-                })
-            }
-
-            const bestEverIndex = new Map()
-            if (Array.isArray(album.bestEverEvidence)) {
-                album.bestEverEvidence.forEach(entry => {
-                    const key = this.normalizeKey(entry?.trackTitle || entry?.title || '')
-                    if (key) bestEverIndex.set(key, entry)
-                })
-            }
-
-            const acclaimIndex = new Map()
-            if (Array.isArray(album.rankingAcclaim)) {
-                album.rankingAcclaim.forEach(entry => {
-                    const key = this.normalizeKey(entry?.trackTitle || entry?.title || '')
-                    if (key) acclaimIndex.set(key, entry)
-                })
-            }
-
-            const durationIndex = new Map()
-            if (Array.isArray(album.tracks)) {
-                album.tracks.forEach(track => {
-                    const key = this.normalizeKey(track?.title || track?.trackTitle || track?.name || '')
-                    if (key && track) durationIndex.set(key, track.duration || null)
-                })
-            }
+            /** For each of `tracks`, the entry of `list` that is the same track, or null. */
+            const entriesFor = (tracks, list) => entryOfEachTrack(tracks, Array.isArray(list) ? list : [])
 
             // Determine base tracks source
             const baseTracks = (() => {
@@ -74,13 +39,14 @@ export function TrackEnrichmentMixin(Base) {
                     return album.tracksByAcclaim.map(track => ({ ...track }))
                 }
                 if (Array.isArray(album.rankingConsolidated) && album.rankingConsolidated.length > 0) {
-                    return album.rankingConsolidated
+                    const rows = album.rankingConsolidated
                         .slice()
                         .sort((a, b) => Number(a.finalPosition || a.position || 0) - Number(b.finalPosition || b.position || 0))
+                    const trackOfRow = entriesFor(rows, album.tracks)
+                    return rows
                         .map((entry, idx) => {
                             const title = entry.trackTitle || entry.title || `Track ${idx + 1}`
-                            const key = this.normalizeKey(title)
-                            const duration = key && durationIndex.has(key) ? durationIndex.get(key) : null
+                            const duration = trackOfRow[idx]?.duration || null
                             return {
                                 id: entry.id || `consolidated_${album.id || 'album'}_${idx + 1}`,
                                 title,
@@ -97,17 +63,21 @@ export function TrackEnrichmentMixin(Base) {
                 return Array.isArray(album.tracks) ? album.tracks.map(track => ({ ...track })) : []
             })()
 
+            const consolidatedOf = entriesFor(baseTracks, album.rankingConsolidated)
+            const bestEverOf = entriesFor(baseTracks, album.bestEverEvidence)
+            const acclaimOf = entriesFor(baseTracks, album.rankingAcclaim)
+            const albumTrackOf = entriesFor(baseTracks, album.tracks)
+
             // Enrich each track
             const enrichedTracks = baseTracks.map((track, idx) => {
                 const title = track.title || track.trackTitle || track.name || `Track ${idx + 1}`
-                const key = this.normalizeKey(title)
 
-                const consolidatedEntry = key ? consolidatedIndex.get(key) : null
-                const bestEverEntry = key ? bestEverIndex.get(key) : null
-                const acclaimEntry = key ? acclaimIndex.get(key) : null
+                const consolidatedEntry = consolidatedOf[idx]
+                const bestEverEntry = bestEverOf[idx]
+                const acclaimEntry = acclaimOf[idx]
 
                 // Determine duration
-                const durationFromIndex = key && durationIndex.has(key) ? durationIndex.get(key) : null
+                const durationFromIndex = albumTrackOf[idx]?.duration || null
                 const finalDuration = track.duration !== undefined && track.duration !== null ? track.duration : durationFromIndex
 
                 // Prepare Raw for Transformer
