@@ -248,3 +248,29 @@ describe('Pager above the list (F72)', () => {
         expect(container.querySelector('.series-pager-count').hasAttribute('aria-live')).toBe(false)
     })
 })
+
+describe('Pager: how many albums the series on screen hold (F72)', () => {
+    let container
+    const count = (value, place) => {
+        container = document.createElement('div')
+        document.body.appendChild(container)
+        new Pager({ container, props: { paging: value, place } }).mount()
+        return container.querySelector('.series-pager-count').textContent.replace(/\s+/g, ' ').trim()
+    }
+
+    it('says it beside the series, in the pager below and in the one above', () => {
+        expect(count(paging({ from: 1, to: 20, total: 48, totalSeries: 48, size: 20, albums: 97 }))).toBe('Showing 1–20 of 48 series · 97 albums')
+        expect(count(paging({ albums: 97 }), 'top')).toBe('Showing 1–10 of 45 series · 97 albums')
+    })
+
+    it('follows what is on screen: more albums after the scroll loads more series', () => {
+        const scroll = paging({ mode: PagingMode.SCROLL, hasMore: true, to: 10, albums: 51 })
+        expect(count(scroll)).toBe('Showing 1–10 of 45 series · 51 albums')
+        expect(count({ ...scroll, to: 20, albums: 104 })).toBe('Showing 1–20 of 45 series · 104 albums')
+    })
+
+    it('writes one album in the singular, keeps the filtered note, and says nothing with no count', () => {
+        expect(count(paging({ from: 1, to: 1, total: 1, totalSeries: 45, albums: 1 }))).toBe('Showing 1–1 of 1 series (of 45 in all) · 1 album')
+        expect(count(paging())).toBe('Showing 1–10 of 45 series')
+    })
+})

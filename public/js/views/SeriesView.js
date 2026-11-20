@@ -22,7 +22,6 @@ import { SeriesModalsManager } from './helpers/SeriesModalsManager.js';
 import { SafeDOM } from '../utils/SafeDOM.js';
 import Pager from '../components/ui/Pager.js';
 import { SeriesExpansion, SERIES_ALBUM_LIMIT } from '../models/seriesExpansion.js';
-import { describeCounts } from '../models/seriesCounts.js';
 
 export default class SeriesView extends BaseView {
     constructor(controller) {
@@ -220,22 +219,10 @@ export default class SeriesView extends BaseView {
         this.updater?.updateEmptyState('emptyStateContainer', hasSeriesToShow ? 1 : albums.length, isLoading);
     }
 
-    /** What the page holds, said in three places: the pager above the list, the one below, and the header (F72). */
+    /** What the page holds, said by the two pagers: the one above the list and the one below (F72). */
     showPaging(pageView) {
         const paging = pageView ? pageView.paging : null;
         [this.components.pagerTop, this.components.pager].filter(Boolean).forEach(pager => pager.update({ paging }));
-        this.showCounts(pageView);
-    }
-
-    /** The header says how many series and albums the screen holds; redrawn only when it changes (F72). */
-    showCounts(pageView) {
-        const paging = pageView ? pageView.paging : null;
-        const counts = describeCounts(paging && {
-            single: paging.single, series: paging.total, totalSeries: paging.totalSeries, albums: paging.albums
-        });
-        if (counts === this.shownCounts) return;
-        this.shownCounts = counts;
-        this.components.header?.update({ counts });
     }
 
     // New Method called by Controller
