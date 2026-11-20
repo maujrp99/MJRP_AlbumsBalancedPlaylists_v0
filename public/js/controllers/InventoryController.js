@@ -157,8 +157,9 @@ export class InventoryController {
         this.state.albums = allAlbums
         this.applyFiltersAndSort()
         this.calculateStats()
-        // items that arrived after the screen opened: what the browser keeps of their values
-        this.values.syncReadings().catch(error => console.warn('[InventoryController] The readings kept in the browser could not be read:', error))
+        // items that arrived after the screen opened, or the inventory of another person: what the
+        // browser keeps of their values, and the switch again when the person is another one
+        this.values.inventoryChanged().catch(error => console.warn('[InventoryController] The values could not follow the inventory:', error))
     }
 
     /**

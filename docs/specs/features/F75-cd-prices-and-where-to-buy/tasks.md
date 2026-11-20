@@ -15,7 +15,7 @@
 - [x] TASK-06 as quatro moedas com o câmbio do dia (`server/lib/services/exchangeRates.js`, `models/inventoryValue.js`); sem a taxa, a tela mostra em dólar e diz por quê · implements:: REQ-08, REQ-13 · model:: opus · rounds:: 1
 
 ## Verification
-- [x] TASK-07 suíte (2851 testes), lint e build verdes; o desenho do cartão e da janela conferido num navegador com o CSS do build, sem conta e sem servidor, a 1440 e a 390 px · implements:: REQ-01, REQ-02, REQ-03, REQ-07, REQ-08, REQ-11, REQ-12 · model:: opus · rounds:: 1
+- [x] TASK-07 suíte (2852 testes), lint e build verdes; o desenho do cartão e da janela conferido num navegador com o CSS do build, sem conta e sem servidor, a 1440 e a 390 px · implements:: REQ-01, REQ-02, REQ-03, REQ-07, REQ-08, REQ-11, REQ-12 · model:: opus · rounds:: 1
 - [ ] TASK-08 ligar a fonte e provar em produção · implements:: REQ-04, REQ-05, REQ-06, REQ-09, REQ-10, REQ-13 · model:: opus · waiting:: human — a chamada de preço do Discogs exige o token, que só o integrador mapeia, e a prova pede a conta do MJRP · action:: mapear `discogs-token` em `DISCOGS_TOKEN`, publicar o servidor e depois o site, e provar no navegador com a conta do MJRP
 
 ## Documentation

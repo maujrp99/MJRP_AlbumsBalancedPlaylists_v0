@@ -12,6 +12,7 @@ export const RATES = Object.freeze({ rates: { USD: 1, EUR: 0.91, GBP: 0.76, BRL:
 
 export function valuesWith({ source = 'on', rates = RATES, readings = new Map() } = {}) {
     return {
+        userId: 'user-1',
         sourceState: vi.fn(async () => source),
         rates: vi.fn(async () => rates),
         readingsOf: vi.fn(async (items) => new Map(items.filter(item => readings.has(item.id)).map(item => [item.id, readings.get(item.id)]))),

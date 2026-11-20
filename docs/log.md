@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:17] session — F75: o interruptor é perguntado de novo quando a pessoa do inventário muda
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- Defeito achado na releitura, antes de publicar: ao recarregar a página direto em `/inventory`, a tela abre antes de o login ser conhecido; o interruptor era perguntado sem login, o servidor recusava e a fonte ficava «desligada» até a tela ser aberta de novo.
+- Conserto: `controllers/InventoryValues.js` guarda para quem perguntou; quando o inventário passa a ser de outra pessoa (o login chegou, ou a pessoa entrou ou saiu), o que se sabia é esquecido e o interruptor é perguntado de novo, uma vez. A resposta que chega para quem já não está é descartada. Nenhuma leitura do Discogs começa sozinha.
+- Teste, escrito junto com o conserto: `test/controllers/InventoryController.values.test.js` («the person became known after the screen opened»). Suíte: 2852 testes; lint e build verdes.
+- O `status_sync` não promoveu a S-57 (segue «Backlog»): o nó do requisito não tem `points_to`. Os estados com ID de bloco existem agora no `info-arch.md`; apontar o nó para eles é do processo de requisitos, não foi feito aqui.
+
 ## [2026-11-20 02:15] session — F75, documentos: plano, tarefas, spec, comportamento, modelo de dados, arquitetura, estados e manual
 
 **Branch:** feat/f75-cd-prices-and-where-to-buy

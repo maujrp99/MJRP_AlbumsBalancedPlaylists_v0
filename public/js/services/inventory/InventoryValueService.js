@@ -96,8 +96,13 @@ export class InventoryValueService {
         return data
     }
 
+    /** The person whose inventory this is, as the InventoryService knows it now. */
+    get userId() {
+        return this.inventory.userId
+    }
+
     _key(item) {
-        return `${READING_PREFIX}${this.inventory.userId}:${item.id}`
+        return `${READING_PREFIX}${this.userId}:${item.id}`
     }
 
     /**

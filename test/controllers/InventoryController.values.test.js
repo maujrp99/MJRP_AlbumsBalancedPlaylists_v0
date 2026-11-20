@@ -80,6 +80,24 @@ describe('InventoryController: the values (F75)', () => {
             expect(values.sourceState).toHaveBeenCalledTimes(1)
         })
 
+        it('the person became known after the screen opened: the switch is asked again, once, for who is here', async () => {
+            const values = valuesWith({ source: 'off' })
+            values.userId = 'anonymous-user'
+            const { controller } = await open(values)
+            expect(controller.state.value.source).toBe('off')
+
+            values.userId = 'user-1'
+            values.sourceState.mockResolvedValue('on')
+            inventoryStore.setAlbums([...ITEMS])
+            controller.updateStateFromStore()
+            await vi.waitFor(() => expect(controller.state.value.source).toBe('on'))
+            controller.updateStateFromStore()
+            await Promise.resolve()
+
+            expect(values.sourceState).toHaveBeenCalledTimes(2)
+            expect(values.readMany).not.toHaveBeenCalled()
+        })
+
         it('the totals: what is owned on one side, the rest on the other, each with how many have a value', async () => {
             const { controller } = await open(valuesWith({ readings: new Map([['owned', reading()], ['wanted', reading({ mint: 6, nearMint: 6, veryGoodPlus: 6 })]]) }))
 

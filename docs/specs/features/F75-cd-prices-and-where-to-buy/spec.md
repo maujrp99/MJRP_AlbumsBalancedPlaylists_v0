@@ -81,7 +81,7 @@ Os estados estão no `docs/specs/info-arch.md`, seção «Estados», cada um com
 - **A rodada.** «Update values» nos 211 álbuns termina, pode ser parado, não trava a tela e diz no fim quantos foram lidos, quantos não têm edição em CD e quantos falharam, com o motivo.
 - **O interruptor.** `DISCOGS_VALUES=off` no serviço, sem publicar código: ao reabrir o inventário não há botão, valor nem aviso do Discogs; o valor à mão, os totais, a moeda, a ordem e os links seguem.
 - **As moedas.** Trocar para BRL converte cartões e totais e diz a taxa; sem câmbio, a tela fica em dólar e diz por quê.
-- **Os portões.** Suíte (2851 testes), lint e build verdes; os testes de arquitetura (complexidade 10, fronteiras, módulos mortos, texto de fora escapado, endereços conferidos, a regra de identidade) passam sem exceção nova.
+- **Os portões.** Suíte (2852 testes), lint e build verdes; os testes de arquitetura (complexidade 10, fronteiras, módulos mortos, texto de fora escapado, endereços conferidos, a regra de identidade) passam sem exceção nova.
 
 ## Out of Scope
 - Ler preço da página da Amazon ou da iMusic por conta própria (fere os termos delas).

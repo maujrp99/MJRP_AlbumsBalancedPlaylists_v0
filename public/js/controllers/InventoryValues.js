@@ -45,6 +45,7 @@ export class InventoryValues {
         this.ratesAsked = false
         this.readings = new Map() // item id -> the reading the browser keeps
         this._lookedUp = new Set() // the ids of the items whose reading was already asked to the browser
+        this._openedFor = undefined // the person the switch was asked for
         this.progress = new Map() // item id -> { state: 'reading' | 'failed', failure }
         this.run = VALUES_IDLE
         this.chosenCurrency = BASE_CURRENCY
@@ -63,13 +64,32 @@ export class InventoryValues {
      */
     async open() {
         const signal = this.leaving
+        const person = this.service.userId
+        this._openedFor = person
         const [source, rates] = await Promise.all([this.service.sourceState({ signal }), this.service.rates({ signal })])
-        if (signal.aborted) return
+        // the answer belongs to who asked: if the person changed while it was on its way, it is dropped
+        if (signal.aborted || person !== this._openedFor) return
         this.source = source
         this.rates = rates
         this.ratesAsked = true
         this.host.changed()
         await this.syncReadings()
+    }
+
+    /**
+     * The inventory on the screen changed. When it is now of another person than the one the
+     * switch was asked for (the screen opened before the sign-in was known, or the person signed
+     * in or out), what was known is of nobody: it is forgotten and the switch is asked again,
+     * once, for who is here. Otherwise the readings of the items that just arrived are looked up.
+     */
+    async inventoryChanged() {
+        if (this._openedFor === undefined || this.service.userId === this._openedFor) return this.syncReadings()
+        this.stop()
+        this.source = null
+        this.readings = new Map()
+        this.progress = new Map()
+        this._lookedUp = new Set()
+        return this.open()
     }
 
     /**
