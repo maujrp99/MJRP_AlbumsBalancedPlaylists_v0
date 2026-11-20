@@ -7,7 +7,7 @@
 
 ### 1.1 `TopNav.js`
 **Role**: Main Application Controller & App Shell.
-**Dependencies**: `UserStore`, `AlbumSeriesStore`, `AuthService`, `MigrationUtility`.
+**Dependencies**: `UserStore`, `AlbumSeriesStore`, `AuthService`; the `MigrationUtility` is given by `app.js` (`new TopNav({ migrationUtility })`, since F58: the menu imports no database, cache or repository).
 
 *   **Logic Trace**:
     1.  **Auth Subscription**: Subscribes to `UserStore` to toggle between "Guest", "User", and "Admin" views.

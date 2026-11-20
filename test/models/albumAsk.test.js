@@ -3,7 +3,7 @@
  * albums are ready, which failed and why, which sources are missing, and what to tell the person.
  */
 import { describe, it, expect } from 'vitest'
-import { readAsk, askNotices, noAlbumsMessage, askProgressText, AskFailure, SourceGap } from '../../public/js/models/albumAsk.js'
+import { readAsk, holdWait, askNotices, noAlbumsMessage, askProgressText, AskFailure, SourceGap } from '../../public/js/models/albumAsk.js'
 import { createEntry, reconcileEntry, AlbumStatus, EnrichmentStatus, FailureReason } from '../../public/js/models/albumLoadState.js'
 
 const found = (title, enrichment = {}) => ({
@@ -19,6 +19,37 @@ const failed = (title, reason = FailureReason.NOT_FOUND) => ({
 })
 const pending = (title) => createEntry('s1', `Artist - ${title}`)
 const ask = (entries, sources = [], flags = {}) => readAsk([{ seriesId: 's1', entries }], sources, flags)
+
+describe('holdWait: how long an ask has been under a hold of the server (F58)', () => {
+    const LIMIT = 45000
+
+    it('with no hold there is nothing to count, and no reason to look again', () => {
+        expect(holdWait(null, null, 1000, LIMIT)).toEqual({ heldSince: null, heldTooLong: false, lookAgainInMs: null })
+    })
+
+    it('the hold that ended is forgotten: the next one counts from its own start', () => {
+        expect(holdWait(500, null, 1000, LIMIT).heldSince).toBeNull()
+    })
+
+    it('the first time the ask sees a hold it starts counting, and looks again when a search would have ended', () => {
+        const hold = { reason: 'unauthorized', until: null }
+
+        expect(holdWait(null, hold, 1000, LIMIT)).toEqual({ heldSince: 1000, heldTooLong: false, lookAgainInMs: 45000 })
+    })
+
+    it('while the hold goes on it keeps counting from the first time, whatever the hold became', () => {
+        const stretched = { reason: 'rate_limited', until: 99000 }
+
+        expect(holdWait(1000, stretched, 31000, LIMIT)).toEqual({ heldSince: 1000, heldTooLong: false, lookAgainInMs: 15000 })
+    })
+
+    it('held for as long as a search may take is too long, and there is nothing more to wait for', () => {
+        const hold = { reason: 'unauthorized', until: null }
+
+        expect(holdWait(1000, hold, 46000, LIMIT)).toEqual({ heldSince: 1000, heldTooLong: true, lookAgainInMs: null })
+        expect(holdWait(1000, hold, 90000, LIMIT).heldTooLong).toBe(true)
+    })
+})
 
 describe('readAsk', () => {
     it('is settled when every album was found or failed, and gives the found ones in the order asked', () => {

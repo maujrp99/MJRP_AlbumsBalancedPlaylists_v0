@@ -1,26 +1,26 @@
-import { authService } from '@shared/services/AuthService.js'
-
 /**
  * User Store
- * Manages authentication state and current user profile
+ *
+ * Who is on the app: the signed-in person, whether the login is still being asked, and its last
+ * error. Pure state (ADR-0017; F58, UAT-18): setters, getters and subscribe. It listens to no
+ * login and asks for none: UserSessionService (services/auth/) does, and is its only writer.
  */
 export class UserStore {
     constructor() {
         this.currentUser = null
         this.isAuthenticated = false
-        this.loading = true
+        this.loading = true // until the login says who is there
         this.error = null
         this.listeners = new Set()
-
-        // Subscribe to AuthService changes immediately
-        this.unsubscribeAuth = authService.onAuthStateChange(this.handleAuthChange.bind(this))
     }
 
+    // ========== SETTERS ==========
+
     /**
-     * Handle auth state change from service
-     * @param {Object|null} user - Firebase user object
+     * The login said who is on the app.
+     * @param {Object|null} user - Firebase user object, or null when nobody is signed in
      */
-    handleAuthChange(user) {
+    setUser(user) {
         this.currentUser = user
         this.isAuthenticated = !!user
         this.loading = false
@@ -28,54 +28,28 @@ export class UserStore {
         this.notify()
     }
 
-    /**
-     * Login with Google
-     */
-    async loginWithGoogle() {
+    /** The login was asked something (sign in, sign out) and has not answered yet. */
+    setLoading({ clearError = false } = {}) {
         this.loading = true
-        this.error = null
+        if (clearError) this.error = null
         this.notify()
-
-        try {
-            await authService.signInWithGoogle()
-            // State update happens in handleAuthChange callback
-        } catch (error) {
-            this.error = error.message
-            this.loading = false
-            this.notify()
-        }
     }
 
-    /**
-     * Login with Apple
-     */
-    async loginWithApple() {
-        this.loading = true
-        this.error = null
+    /** What was asked of the login failed. */
+    setError(message) {
+        this.error = message
+        this.loading = false
         this.notify()
-
-        try {
-            await authService.signInWithApple()
-        } catch (error) {
-            this.error = error.message
-            this.loading = false
-            this.notify()
-        }
     }
 
-    /**
-     * Logout
-     */
-    async logout() {
-        this.loading = true
-        this.notify()
+    // ========== GETTERS ==========
 
-        try {
-            await authService.logout()
-        } catch (error) {
-            this.error = error.message
-            this.loading = false
-            this.notify()
+    getState() {
+        return {
+            currentUser: this.currentUser,
+            isAuthenticated: this.isAuthenticated,
+            loading: this.loading,
+            error: this.error
         }
     }
 
@@ -89,15 +63,6 @@ export class UserStore {
     notify() {
         const state = this.getState()
         this.listeners.forEach(listener => listener(state))
-    }
-
-    getState() {
-        return {
-            currentUser: this.currentUser,
-            isAuthenticated: this.isAuthenticated,
-            loading: this.loading,
-            error: this.error
-        }
     }
 }
 

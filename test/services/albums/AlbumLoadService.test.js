@@ -614,6 +614,49 @@ describe('AlbumLoadService', () => {
             expect(acclaimOf('s1')).toEqual([EnrichmentStatus.DONE, EnrichmentStatus.DONE])
         })
 
+        it('the hold is state of the store (F58): whoever subscribed is told when it starts and when it ends, and no entry changes for it', async () => {
+            let signedIn = false
+            enrichers.acclaim.enrich = vi.fn(async (album) => {
+                if (!signedIn) throw refused()
+                return { status: 'done', album }
+            })
+            service = buildHeld({ slowConcurrency: 1 })
+            service.load({ scopeKey: 'ALL', series: [series('s1', 'One')] })
+            await wait(20)
+
+            expect(store.getHold()).toEqual({ reason: 'unauthorized', until: null })
+            expect(store.getHold()).toBe(service.getHold())
+
+            const heard = vi.fn(() => store.getHold())
+            store.subscribe(heard)
+            signedIn = true
+            service.resume()
+            store.flush()
+
+            expect(heard).toHaveBeenCalled()
+            expect(heard.mock.results[0].value).toBeNull()
+            await service.whenIdle()
+            expect(store.getHold()).toBeNull()
+        })
+
+        it('a new load and a stop leave no hold in the store', async () => {
+            enrichers.acclaim.enrich = vi.fn(async () => { throw refused() })
+            service = buildHeld()
+            const request = { scopeKey: 'ALL', series: [series('s1', 'One')] }
+
+            service.load(request)
+            await wait(20)
+            expect(store.getHold()).not.toBeNull()
+            service.load({ ...request, fresh: true })
+            expect(store.getHold()).toBeNull()
+
+            await wait(20)
+            expect(store.getHold()).not.toBeNull()
+            service.stop()
+            expect(store.getHold()).toBeNull()
+            expect(store.isStopped()).toBe(true)
+        })
+
         it('a failure with no hold is still a failure, at once', async () => {
             enrichers.acclaim.enrich = vi.fn(async () => { throw Object.assign(new Error('502'), { hold: null }) })
             const quiet = vi.spyOn(console, 'warn').mockImplementation(() => { })

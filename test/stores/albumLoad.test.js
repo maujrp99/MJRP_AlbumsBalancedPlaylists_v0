@@ -151,6 +151,76 @@ describe('AlbumLoadStore', () => {
         })
     })
 
+    describe('the hold (F58): the server said "sign in" or "wait"', () => {
+        it('has no hold until one is set', () => {
+            expect(store.getHold()).toBeNull()
+        })
+
+        it('keeps the hold it is given and tells whoever subscribed, when it starts and when it ends', () => {
+            const listener = vi.fn()
+            store.subscribe(listener)
+
+            store.setHold({ reason: 'rate_limited', until: 5000 })
+            store.flush()
+            expect(store.getHold()).toEqual({ reason: 'rate_limited', until: 5000 })
+            expect(listener).toHaveBeenCalledTimes(1)
+
+            store.setHold(null)
+            store.flush()
+            expect(store.getHold()).toBeNull()
+            expect(listener).toHaveBeenCalledTimes(2)
+        })
+
+        it('the same hold set again is not a change', () => {
+            const hold = { reason: 'unauthorized', until: null }
+            store.setHold(hold)
+            store.flush()
+            const listener = vi.fn()
+            store.subscribe(listener)
+
+            store.setHold(hold)
+            store.flush()
+
+            expect(listener).not.toHaveBeenCalled()
+        })
+
+        it('touches no entry: nothing of an album is marked by a hold', () => {
+            const before = store.getEntries('s1')
+
+            store.setHold({ reason: 'unauthorized', until: null })
+
+            expect(store.getEntries('s1')).toEqual(before)
+            expect(store.getSeriesState('s1').failed).toBe(0)
+        })
+    })
+
+    describe('a load that was stopped (F58)', () => {
+        it('is not stopped while it runs', () => {
+            expect(store.isStopped()).toBe(false)
+        })
+
+        it('keeps what the load left and tells whoever subscribed that nothing more will come', () => {
+            const listener = vi.fn()
+            store.subscribe(listener)
+
+            store.stopGeneration()
+            store.flush()
+
+            expect(store.isStopped()).toBe(true)
+            expect(store.getEntries('s1')).toHaveLength(2)
+            expect(store.getGeneration()).toBe(1)
+            expect(listener).toHaveBeenCalledTimes(1)
+        })
+
+        it('a new generation is not stopped', () => {
+            store.stopGeneration()
+
+            store.startGeneration(2)
+
+            expect(store.isStopped()).toBe(false)
+        })
+    })
+
     it('a listener that throws does not stop the others', () => {
         const second = vi.fn()
         const quiet = vi.spyOn(console, 'error').mockImplementation(() => { })

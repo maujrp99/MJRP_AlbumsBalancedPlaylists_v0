@@ -13,7 +13,6 @@
  */
 
 import { BaseView } from './BaseView.js';
-import { db } from '../firebase-init.js';
 import { Breadcrumb } from '../components/Breadcrumb.js';
 import { SeriesComponentFactory } from './helpers/SeriesComponentFactory.js';
 import { SeriesViewUpdater } from './helpers/SeriesViewUpdater.js';
@@ -71,7 +70,8 @@ export default class SeriesView extends BaseView {
         // Link controller
         if (this.controller) {
             this.controller.setView(this);
-            await this.controller.init(db, this);
+            // The controller's first parameter was the database: it kept it and never read it (UAT-19)
+            await this.controller.init(null, this);
         }
 
         // 1. Factory: Instance Components

@@ -75,8 +75,8 @@ O desenho acima é a **direção-alvo**; o que o código faz hoje está logo aba
 
 **O que o código faz hoje:**
 - O núcleo está limpo: `algorithms/`, `models/`, `ranking/`, `transformers/` e `shared/curation.js` não importam Firebase, DOM nem `localStorage`.
-- O SDK do Firestore é importado **fora de `repositories/`**: `public/js/services/PlaylistsService.js:17` (`writeBatch`, usado em `:243`), `public/js/stores/albums.js` (até a F48, de 2026-11-19, que levou a gravação para `repositories/SharedAlbumRepository.js` e tirou o Firestore da store) e `public/js/views/SaveAllView.js:5-6` (que carrega o SDK Firestore e Auth **11.6.1 pelo CDN `gstatic`**, enquanto o app usa o pacote npm 10.14.1: duas versões do SDK no mesmo app). Trocar a fonte de dados mexe em `BaseRepository`, nos 7 repositórios, nos 2 arquivos que restam, em `MigrationUtility` e em `firebase-init.js`, não em um. Viola `PRINCIPLES.md` §I.3 e a ADR-0017. Conserto: achado 1 da auditoria.
-- O caminho "View -> Controller -> Service -> Repository" não vale sem exceção: `PlaylistsController` e `SeriesController` falam com `Repository` sem passar por Service; `views/SeriesView.js:16, 68` importa o `db` e o passa ao controller; `components/TopNav.js:8` e `stores/inventory.js:7` importam o `db` de `app.js` (que importa todas as Views, o que cria um ciclo `app.js <-> stores/inventory.js`). Viola `PRINCIPLES.md` §I.3 e a ADR-0016. Conserto: achado 4.
+- O SDK do Firestore **não é mais importado fora de `repositories/`** e de `firebase-init.js` (desde a F58, 2026-11-19; UAT-14). O caminho até aqui: `services/PlaylistsService.js` saiu na F60 (o `writeBatch` foi para `PlaylistRepository`), `stores/albums.js` na F48 (`repositories/SharedAlbumRepository.js`) e `views/SaveAllView.js` na F58: ela carregava o SDK Firestore e Auth **11.6.1 pelo CDN `gstatic`** (um segundo Firebase, sem app iniciado), e passou a receber da rota (`app.js`) o `MigrationUtility` feito com o Firestore único do app. O app tem um Firebase só, o do pacote npm. Trocar a fonte de dados ainda mexe em `BaseRepository`, nos repositórios, em `MigrationUtility` e em `firebase-init.js`, não em um arquivo. Teste: `test/architecture/firestoreBehindRepositories.test.js` (nenhum `import` de endereço em `public/js`; o Firestore só nos repositórios e em `firebase-init.js`; nenhuma chamada à API do Firestore fora dos repositórios).
+- O caminho "View -> Controller -> Service -> Repository" **ainda não vale sem exceção, e as exceções estão numa lista que só pode diminuir** (`test/architecture/layerBoundaries.test.js`, F58; UAT-18 e UAT-19). Consertado na F58: `views/SeriesView.js` e `components/series/SeriesEventHandler.js` não importam mais `firebase-init.js`; `components/TopNav.js` recebe o `MigrationUtility` do `app.js` em vez de importar o `db`; `stores/inventory.js` e `stores/UserStore.js` viraram estado puro (ler e gravar o inventário é do `services/inventory/InventoryService.js`, montado em `inventoryWiring.js`; ouvir o login é do `services/auth/UserSessionService.js`, montado em `userSession.js`), e o ciclo `app.js <-> stores/inventory.js` acabou. O que resta, todo no código do blend e das playlists: `controllers/PlaylistsController.js` cria o seu `PlaylistRepository`; seis arquivos importam o `app.js` para pegar o `db` (`PlaylistsController`, `BlendingController`, `PlaylistsDragHandler`, `SavedPlaylistsController`, `PlaylistsDragDrop`, `PlaylistPersistenceService`); `stores/SpotifyEnrichmentStore.js` importa o banco, um repositório e o cache. Viola `PRINCIPLES.md` §I.3, a ADR-0016 e a ADR-0017.
 
 ## Infrastructure
 - Hosting: o **frontend** em Firebase Hosting, servindo `dist` (build do Vite); `firebase.json` reescreve `/api/**` para o serviço Cloud Run `mjrp-proxy` (região `southamerica-east1`) e o resto para `/index.html` (`firebase.json:3-20`). O **backend** em Cloud Run (`mjrp-proxy`, contêiner `node:24-slim`, `server/Dockerfile`, publicado por `npm run deploy:server`), acesso público.
@@ -293,6 +293,8 @@ sequenceDiagram
 | A fila não conhece o domínio | a fila virar um segundo serviço | `utils/TaskQueue.js` sem nenhum `import` do projeto | 0 | `npm test` |
 
 Cobertura que nasce junto: testes unitários da fila, das funções puras de estado e do serviço com dublês das portas; hoje esse fluxo não tem nenhum.
+
+**Desde a F58 (2026-11-19):** a lista dos que violavam a fronteira do Firestore zerou e o teste dela mora em `test/architecture/firestoreBehindRepositories.test.js`; o limite de complexidade de 10 virou teste (`test/architecture/complexityLimit.test.js`), sem exceção na carga. Ver a seção «O serviço de carga dentro do limite de complexidade (F58)», no fim deste arquivo.
 
 ### 12. As opções
 
@@ -834,3 +836,40 @@ sequenceDiagram
 **O que não faz.** Não mexe na busca de um álbum só (`AlbumSearchService.search`, a do «Bulk Paste»), que depende da regra de identidade (F68). Não escolhe entre edições do mesmo álbum (o agrupamento continua mostrando a primeira que o catálogo devolve). Não separa «participação em álbum de outro artista». Não toca em gerar e editar playlists (a outra metade da UAT-193, que é da F62).
 
 **Não verificado.** Nada num navegador. Os campos `albumType` e `contentTraits`, que o classificador lê se vierem, não foram vistos numa resposta do catálogo. O comportamento com artistas eletrônicos reais e a lista da IA de verdade.
+
+**O que este desenho não resolvia, e a F58 resolveu.** O pedido olhava de novo a cada segundo, além de a cada mudança do store, porque a espera do servidor começava dentro de uma tarefa e não mudava nenhuma entrada; `_holdFor` e `_enrichOne` estavam acima de 10 de complexidade. Desde a F58 a espera é estado do store e o relógio saiu (seção «O serviço de carga dentro do limite de complexidade (F58)»). `cache/albumCache.js` e `repositories/SharedAlbumRepository.js` ficaram sem quem os chame.
+
+## O serviço de carga dentro do limite de complexidade (F58) — construída no ramo
+
+> Ramo `fix/f58-load-service-within-the-limit`, 2026-11-19. Conserta a UAT-194 e, das dívidas de arquitetura de 2026-10-28, a UAT-14 inteira e o que da UAT-18 e da UAT-19 não está no código do blend e das playlists. Nenhum comportamento muda; o que muda é onde cada decisão mora.
+
+**O limite.** Complexidade ciclomática de no máximo 10 por função, medida pela regra `complexity` do ESLint. Medido em 2026-11-19, antes: 136 funções acima de 10 em `public/js`, `shared` e `server`; na carga de álbuns, duas, as duas em `AlbumLoadService.js`: `_holdFor` (12) e `_enrichOne` (12). Depois: nenhuma na carga; 133 no total (a tabela está no `plan.md` da F58).
+
+**Onde a espera mora agora.** A espera é o servidor do app dizendo «entre na conta» (401), «aguarde» (429) ou «a fonte de notas está ocupada» (503 com `Retry-After`): nada falhou, a carga espera.
+
+| Peça | Arquivo | O que faz |
+|---|---|---|
+| As regras | `models/albumLoadHold.js` | funções puras: `holdAfter(espera, ouvido, agora)` diz o que a espera vira («entre na conta» ganha de «aguarde» e não tem fim próprio; «aguarde» estica até a hora mais tarde pedida e nunca encurta); `isNewsToThePerson`, `stopsServerQueue`, `resumesIn` dizem o que decorre da mudança |
+| A espera em vigor | `services/albums/LoadHold.js` | colaborador do serviço: aplica as regras, publica cada mudança, pausa e retoma a fila que só fala com o servidor do app, encerra o «aguarde» na hora dada, avisa a pessoa uma vez por espera («entre na conta», uma vez por carga) e acrescenta tarefas às filas de modo que quem ouviu uma espera aguarda e pede de novo (`add`) |
+| O estado | `stores/albumLoad.js` | `setHold({ reason, until } ou null)` / `getHold()`: a espera é estado do store, como as entradas; quem assinou o store é avisado quando ela começa e quando acaba |
+| O dono | `services/albums/AlbumLoadService.js` | continua o único que escreve no store: entrega ao `LoadHold` a porta `publish`, que chama `store.setHold` |
+
+**Como o `AlbumAsks` fica sabendo.** Pela assinatura do store, na hora. O relógio de 1 segundo saiu. A única coisa que só o tempo muda, um álbum retido por tanto tempo quanto uma busca pode levar ser dado como falho, tem um prazo próprio, armado só enquanto há espera (`holdWait` em `models/albumAsk.js` diz daqui a quanto olhar de novo).
+
+**A parada também virou estado.** Ao tirar o relógio apareceu a segunda coisa que ele via: `stop()` («Clear Cache») aumentava a geração do serviço e não mudava nada no store, então um pedido em espera só percebia a parada no segundo seguinte. Agora `stop()` chama `store.stopGeneration()` (`isStopped()`), o store avisa e o pedido entra na carga limpa.
+
+**O pedido por fonte.** `_enrichOne` decide se a fonte ainda precisa ser perguntada; `_askAndPublish` pergunta, aplica e publica; `_failSource` marca a falha. As regras saíram para funções puras em `models/albumSourceAsk.js`: `awaitsSource` (o álbum está na tela e a fonte ainda não respondeu), `overNewestAlbum` (a resposta é aplicada sobre o álbum mais novo: seção 19) e `sourceOutcome` (o que a resposta significa para a tela e para o guardado: `done`, ou `empty` com o motivo e a versão da regra de identidade). «Só o último pedido de uma fonte escreve» é `utils/LatestOnly.js`, que não conhece o projeto.
+
+**As lojas de inventário e de usuário (UAT-18).** `stores/inventory.js` guarda os álbuns, o carregando e o erro, com setters (`reset`, `setLoading`, `setAlbums`, `setError`, `replaceAlbums`); `services/inventory/InventoryService.js` lê e grava pelo repositório que recebe (`createRepository`), segue a troca de pessoa e é o único que escreve nessa loja; `services/inventory/inventoryWiring.js` monta com o `InventoryRepository` de verdade. As estatísticas são regra pura (`models/inventoryStats.js`). `stores/UserStore.js` guarda quem está no app; `services/auth/UserSessionService.js` ouve o login e escreve na loja; `services/auth/userSession.js` monta e começa a ouvir, importado pelo `app.js` logo depois do Firebase.
+
+**Funções de aptidão.**
+
+| Característica que mantém | Checagem | Limite |
+|---|---|---|
+| Nenhuma função da carga passa de 10 | `test/architecture/complexityLimit.test.js`: a regra `complexity` do ESLint em `services/albums/`, `stores/albumLoad.js`, `utils/TaskQueue.js`, `utils/LatestOnly.js` e nos modelos da carga | 0 acima de 10 |
+| O resto do app não piora | o mesmo teste, em `public/js` sem `vendor/`, contra `test/architecture/complexityAllowlist.js` (`{ 'arquivo:função': número }`) | a lista só diminui: função nova acima de 10, função que piorou e função consertada que ficou na lista reprovam |
+| Um Firebase só, atrás dos repositórios | `test/architecture/firestoreBehindRepositories.test.js` | 0 |
+| Loja só guarda estado; a tela não importa o banco nem o `app.js` | `test/architecture/layerBoundaries.test.js` | a lista do que resta (blend e playlists) só diminui |
+| A espera e o pedido por fonte não saem para fora | `test/architecture/albumLoadBoundaries.test.js`: `LoadHold` e `AlbumAsks` só alcançam o que recebem; os modelos novos são puros; `LatestOnly` não importa nada | 0 |
+
+**O que este desenho não resolve.** As 94 funções de `public/js` ainda acima de 10 (43 no código do blend, das playlists e da exportação, 10 na busca e classificação de álbuns, 3 na migração, 38 sem feature) e as 35 de `shared/` (9) e `server/` (26), que o teste não cobre; e as 4 de `public/js/vendor/`, código de terceiros. A tela de álbuns é redesenhada uma vez a mais quando uma espera começa e quando acaba, porque o store avisa: o desenho é o mesmo. O `SeriesController.init(db, view)` guarda um `db` que nunca lê; a `SeriesView` passa `null`.

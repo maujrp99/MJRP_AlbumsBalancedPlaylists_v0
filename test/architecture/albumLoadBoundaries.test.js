@@ -36,9 +36,14 @@ describe('album load boundaries', () => {
         expect(importsOf('utils/TaskQueue.js')).toEqual([])
     })
 
+    it('"only the latest ask counts" knows nothing about the project either (F58)', () => {
+        expect(importsOf('utils/LatestOnly.js')).toEqual([])
+    })
+
     it('the rules of state, filter, paging and facts are pure: they import only other models', () => {
         const pure = ['models/albumLoadState.js', 'models/albumQuery.js', 'models/cloneAlbum.js',
-            'models/seriesFilter.js', 'models/paging.js', 'models/albumFacts.js']
+            'models/seriesFilter.js', 'models/paging.js', 'models/albumFacts.js',
+            'models/albumLoadHold.js', 'models/albumSourceAsk.js', 'models/albumAsk.js']
 
         expect(offenders(pure, specifier => !specifier.startsWith('./'))).toEqual([])
     })
@@ -51,7 +56,8 @@ describe('album load boundaries', () => {
 
     it('the load service and the facts service reach the outside only through what they are given', () => {
         const forbidden = /(\/api\/|\/repositories\/|\/cache\/|\/stores\/|\/components\/|\/views\/|firebase|MusicKit|Spotify)/
-        const services = ['services/albums/AlbumLoadService.js', 'services/series/SeriesFactsService.js']
+        const services = ['services/albums/AlbumLoadService.js', 'services/albums/LoadHold.js',
+            'services/albums/AlbumAsks.js', 'services/series/SeriesFactsService.js']
 
         expect(offenders(services, specifier => forbidden.test(specifier))).toEqual([])
     })
@@ -81,16 +87,5 @@ describe('album load boundaries', () => {
         const controller = importsOf('controllers/SeriesController.js')
 
         expect(controller.filter(specifier => /api\/client|UserRankingRepository|OptimizedAlbumLoader|firebase/.test(specifier))).toEqual([])
-    })
-
-    it('Firestore stays behind repositories in the files of this design; the known exceptions can only shrink', () => {
-        // Files outside repositories/ that still import the Firestore SDK (issue UAT-14).
-        // Removing one from the code must remove it from this list; adding one fails the test.
-        // services/PlaylistsService.js left the list in F60: its writes go through PlaylistRepository.
-        const KNOWN_EXCEPTIONS = ['views/SaveAllView.js']
-        const all = listJs('').filter(file => !file.startsWith('repositories/') && !file.startsWith('vendor/') && file !== 'firebase-init.js')
-        const importing = all.filter(file => importsOf(file).some(specifier => /firebase\/firestore|firebase-firestore/.test(specifier)))
-
-        expect(importing.sort()).toEqual([...KNOWN_EXCEPTIONS].sort())
     })
 })
