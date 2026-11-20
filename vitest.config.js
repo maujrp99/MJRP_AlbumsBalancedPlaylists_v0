@@ -6,7 +6,7 @@ export default defineConfig({
         environment: 'jsdom',
         globals: true,
         setupFiles: ['./test/setup.js'],
-        include: ['test/**/*.test.js'], // Only test/ directory, not server/test
+        include: ['test/**/*.test.js'], // the server's tests are in test/server
         // test/e2e drives a real browser against a running app: it has its own runner (`npm run test:e2e`)
         exclude: ['test/e2e/**', 'node_modules/**'],
         coverage: {
