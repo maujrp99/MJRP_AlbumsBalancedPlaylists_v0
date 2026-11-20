@@ -4,7 +4,7 @@ subject: "F75: valor estimado dos CDs do inventário e onde comprar"
 project: mjrpalbumblender-v0
 feature: F75
 requirement: S-57
-prototype: design/inception/inventory-value-v4.html
+prototype: design/inception/inventory-value-v5.html
 status: para o MJRP julgar
 written: "2026-11-20"
 ---
@@ -22,7 +22,8 @@ written: "2026-11-20"
 - **As contagens do topo** viram o filtro por status, e o seletor de status sai da barra. Ficam o seletor de formato e o de ordem.
 - **Uma borda em volta do cartão inteiro** liga a capa, o título e o valor; o bloco de valor não tem caixa própria.
 - **«Where to buy» também no que é seu**, ao lado de «Sell» e «Trade»: abre a janela do álbum, onde estão os links.
-- **A v4 do protótipo** (`design/inception/inventory-value-v4.html`) tem as quatro decisões.
+- **Um padrão único para as seções do cartão**, com as mesmas linhas em todo cartão, para os vizinhos ficarem alinhados.
+- **A v5 do protótipo** (`design/inception/inventory-value-v5.html`) tem as cinco decisões.
 
 ## A ideia em uma frase
 

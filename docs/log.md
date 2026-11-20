@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:13] decision — F75: um padrão único para as seções do cartão do inventário (v5)
+
+- Dito pelo MJRP: «deveríamos ter um padrao e alinhamento entre seções». A v5 do protótipo dá a cada seção o mesmo número de linhas em todo cartão; medido a 1440 px, as seções ficam alinhadas entre vizinhos. O padrão está escrito em `docs/specs/info-arch.md`, § Decisões de IA.
+
 ## [2026-11-20 01:10] decision — F75: uma borda no cartão inteiro liga a capa às informações (v4)
 
 - Dito pelo MJRP: «e a borda conectando a capa com as infos?». A v4 do protótipo (`design/inception/inventory-value-v4.html`) tem a borda em volta do cartão inteiro, o bloco de valor sem caixa própria e «Where to buy» ao lado de «Sell» e «Trade». O comparador (Artifact) mostra a v4 como a nova.

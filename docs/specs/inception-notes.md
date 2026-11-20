@@ -63,3 +63,11 @@
 - **A saber:** a 1440 px, com quatro cartões por fileira, «Where to buy» cai para uma segunda linha, abaixo de «Sell» e «Trade».
 - **Não feito:** a v4 em 390 px não foi conferida.
 
+## [2026-11-20 01:13] F75 · rodada 5: um padrão para as seções do cartão
+
+- **Dito pelo MJRP,** com uma captura de dois cartões vizinhos da v4: «acho que visualmente os desalinhamentos das seções dos cards estao estranhas» e «deveríamos ter um padrao e alinhamento entre seções».
+- **Diagnóstico:** as três seções tinham alturas diferentes de um cartão para o outro: o rótulo «In my collection · worth about» quebrava em duas linhas e o outro não; a origem «CD · Discogs, mean of 3 conditions» quebrava e «No CD edition found» não; as ações eram duas linhas de botões e uma nota num cartão, e um rótulo e uma linha de links no outro.
+- **v5:** `design/inception/inventory-value-v5.html`. Cada seção tem o mesmo número de linhas em todo cartão. Para caber em uma linha: o rótulo perdeu o «about» e o valor ganhou «≈»; a origem ficou «CD · Discogs», com a explicação inteira no `title` e na janela; «Sell», «Trade» e «Where to buy» viraram links numa linha, sob o rótulo «Sell, trade or buy»; a frase «not in the app yet» foi para o `title` de «Sell» e «Trade».
+- **Medido a 1440 px:** nas três fileiras da amostra, as seções começam na mesma altura em todos os cartões (322, 387 e 423 px do topo do cartão), todos os cartões têm 521 px, e nenhum texto foi cortado.
+- **Não feito:** a v5 em 390 px não foi conferida.
+
