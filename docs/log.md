@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 18:43] session — F80, rodada 1 de desenho da página de entrada: três direções no comparador
+**Branch:** feat/f80-splash-design-round
+Três protótipos no eixo «quanto 3D, e de onde vem a profundidade» (`design/inception/splash-ember-v1.html`, `splash-sides-v1.html`, `splash-crate-v1.html`), com a pesquisa (`design/references/f80-splash/references.md`), a proposta de copy, a proposta (`design/proposals/f80-splash/proposal.md`, recomenda o Lado A, lado B), o comparador como Artifact (https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e), wireframes, `info-arch.md` (estados `^splash-*`, inventário SPL-01 a SPL-14) e padrões novos no `design-system.md`, pendentes de aprovação do MJRP.
+A medição final em lote não rodou (a fila da máquina não andou em uma hora); o peso foi medido no painel do navegador. Nada enviado ao remoto.
+
+## [2026-11-20 18:43] review — crítica de UX independente da F80, rodada 1: sem P0, 8 P1, 17 P2
+**Branch:** feat/f80-splash-design-round
+Relatório: `reports/audits/2026-11-20-f80-splash-round1-ux-audit.md` (agente separado, só a skill, os protótipos e os documentos do produto). Os 8 P1 e 7 P2 baratos foram corrigidos na mesma versão, anotados no fim do relatório.
+Fica para o MJRP: S2 (fogo em movimento no Lado A, lado B?) e nove P2.
+
 ## [2026-11-20 17:12] decision — identidade visual: o fogo e os equalizadores são do site, e o design system é o piso
 **Branch:** main
 Palavras do MJRP, ao pedir as propostas da Home (F79) e da página de entrada (F80): «veja que o elemento do fogo, de equalizadores, fazem parte da identidade do site, busquem respeitar o design system num minimo pelo menos». Vale para as duas rodadas de desenho: o fogo (o logotipo `public/assets/TheAlbumBlender.png`, o degradê «flame» `#f97316 → #dc2626`) e os equalizadores são elementos da identidade, a manter e a usar; nenhuma proposta, nem a mais ousada, sai do `docs/specs/design-system.md` sem dizer o que muda e por quê.

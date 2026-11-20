@@ -1,6 +1,7 @@
 # Info-arch — Album Blender V0
 
 > Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.1.html
+> Página de entrada (F80), rodada 1 de exploração, 2026-11-20: três direções, design/inception/splash-ember-v1.html, design/inception/splash-sides-v1.html e design/inception/splash-crate-v1.html (nenhuma aprovada; comparador em design/proposals/f80-splash/comparator.html)
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -17,6 +18,7 @@ Desde a F76 o arquivo descreve também **o celular** (até 767 px), em duas seç
 - **Playlists** (`/playlists`, `/saved-playlists`): as playlists geradas e os lotes guardados
 - **Inventory** (`/inventory`): a coleção da pessoa, com status, notas e (F75) valor estimado
   - a janela de um álbum do inventário
+- **Página de entrada** (proposta, F80; o endereço é pergunta ao MJRP: a raiz `/` antes de entrar, ou um endereço próprio): o que o produto é, os três momentos, por que álbuns inteiros, «Open the app» e «Sign in». Pública, legível sem JavaScript.
 
 ### O esquema de cada nó
 
@@ -25,6 +27,7 @@ Desde a F76 o arquivo descreve também **o celular** (até 767 px), em duas seç
 | Inventory | por artista e título, no padrão; trocável por nota média, popularidade, data de entrada e (F75) valor |
 | Janela do álbum | por tarefa: quanto vale, onde comprar, as faixas |
 | Os outros nós | a descrever quando a tela for desenhada |
+| Página de entrada (F80) | narrativa, de cima para baixo: o que é → os três momentos na ordem do uso (série, ranking e mistura, coleção) → por que álbuns inteiros → o convite; na direção «Lado A, lado B» a mesma ordem vira faixas de um disco (A1 a B2) |
 
 ## Rótulos
 
@@ -42,6 +45,9 @@ Desde a F76 o arquivo descreve também **o celular** (até 767 px), em duas seç
 | ver o resto da lista no celular | «Show 50 more» | fim da lista do Inventário |
 | criar a série no celular | «Create series» | barra de ação da Home |
 | misturar no celular | «Blend it!» | barra de ação do Blend |
+| entrar no app sem conta (página de entrada) | «Open the app» (proposta) | topo, primeira tela e fecho da página de entrada |
+| entrar com a conta (página de entrada) | «Sign in» (a mesma palavra do menu do app) | topo, primeira tela e fecho da página de entrada |
+| um álbum com as faixas ordenadas, de exemplo | «Illustrative · fictional album» | bloco de prova da página de entrada |
 
 ## Busca
 
@@ -61,6 +67,14 @@ Cabeçalho com o título, as contagens por status e a caixa do total; avisos; ba
 
 Cabeçalho do álbum (capa, título, artista, status, formato); «Estimated value»; «Where to buy»; as faixas.
 
+### Página de entrada (F80, exploração)
+
+Uma página pública, de uma coluna de leitura, na ordem: faixa do protótipo (só no protótipo) → topo (logotipo, «Sign in», «Open the app») → primeira tela (sobretítulo, título, a frase que diz o que o produto é, as duas chamadas, e a imagem da direção) → os três momentos → por que álbuns inteiros, com um exemplo ilustrativo → o fecho com as chamadas → rodapé com o aviso das capas. Todo o texto está no HTML: a página diz a mesma coisa sem JavaScript (buscadores e assistentes de IA). As três direções da rodada 1 mudam a imagem e o movimento (o eixo «quanto 3D, e de onde vem a profundidade»); a ordem, os três momentos, a prova e as chamadas são os mesmos. O título, o subtítulo e o fecho acompanham a imagem de cada direção: é um segundo eixo, declarado (a proposta de copy dá opções por direção, e qualquer título serve em qualquer direção):
+
+- **Brasa** (`splash-ember-v1.html`, Consolidar): o tipo grande é a imagem; um leito de fogo em canvas 2D e um equalizador em CSS embaixo do texto são o único movimento.
+- **Lado A, lado B** (`splash-sides-v1.html`, Elevar): a página é um disco ouvido inteiro; capa e vinil em CSS 3D, o vinil gira com a rolagem; um fio de equalizador preso no topo mostra a faixa em que a pessoa está.
+- **Caixote** (`splash-crate-v1.html`, Transformar): um caixote de nove capas fictícias em 3D real (WebGL, three.js), que se gira arrastando, pelos botões ou pelas setas; luz de fogo que tremula, vinil saindo da capa da frente, equalizador 3D.
+
 ## Fluxos
 
 1. **Primeira leitura:** ligar o Discogs → «Update values» → acompanhar «Reading values… N of M» → ver o total e os cartões.
@@ -68,12 +82,15 @@ Cabeçalho do álbum (capa, título, artista, status, formato); «Estimated valu
 3. **Corrigir um valor:** abrir a janela → escrever o valor → «Save» → a etiqueta vira «Yours».
 4. **Comprar:** abrir a janela → «Where to buy» → Discogs, Amazon ou iMusic.
 
+5. **Página de entrada (F80, proposta):** chegar pela busca ou por um link → ler o que é na primeira tela → (rolar pelos três momentos e pela prova) → «Open the app» leva ao app; «Sign in» abre a entrada com a conta.
+
 ## Template → Épico
 
 | Template | Épico |
 |---|---|
 | Inventário · Janela do álbum do inventário | EP-07 (inventário de álbuns) |
 | O celular: moldura, Albums, janela do álbum, ranking, Playlists, Home, Blend, Inventário | EP-06 (usar o app no celular), estória S-58 |
+| Página de entrada (F80, proposta) | EP-10 (levar o Album Blender às lojas e ao público), estória S-62 |
 
 ## Matriz de operações
 
@@ -111,6 +128,19 @@ Cabeçalho do álbum (capa, título, artista, status, formato); «Estimated valu
 - **Filtrado por status.** Clicar numa contagem do topo («✓ 22 Owned», «182 Not Owned», «♡ 7 Wishlist») mostra só os álbuns daquele status e marca o botão; clicar de novo mostra todos. ^inventory-filtered-by-status-count
 
 Estados que o protótipo não mostrava e que o texto acima passou a descrever (escritos pelo agente em 2026-11-20, à espera do julgamento do MJRP): a fonte desligada, o câmbio que não chega, a rodada que termina com falhas ou para, a edição sem sugestão de preço, a leitura que falha (o Discogs não respondeu, o limite foi atingido, o token foi recusado) e o valor escrito que não vale. No rodapé do app, com a fonte ligada: «This application uses Discogs' API but is not affiliated with, sponsored or endorsed by Discogs. 'Discogs' is a trademark of Zink Media, LLC.». ^inventory-value-states-added
+
+### Página de entrada (F80, exploração)
+
+Estados que as três direções da rodada 1 mostram (escritos pelo agente em 2026-11-20, à espera da escolha do MJRP; nenhum requisito aponta para eles ainda):
+
+- **Página no ar, com movimento.** Título, a frase que diz o que o produto é, «Open the app» e «Sign in» na primeira tela; a imagem da direção se move (Brasa: o fogo e o equalizador; Lado A, lado B: o vinil gira e o fio acende com a rolagem; Caixote: as capas giram sozinhas três vezes, uma a cada 5 s, e param; a luz tremula, o equalizador respira). Um botão «Pause motion» (preso no canto no computador; sob as chamadas no celular) para todo movimento que não vem da rolagem. ^splash-default
+- **Antes do script pesado.** O texto, as chamadas e uma imagem parada já aparecem; no Caixote é o leque de cinco capas em CSS, que some quando o 3D desenha o primeiro quadro. Nada do texto espera o script. ^splash-before-script
+- **Sem WebGL, ou o three.js não carregou** (aparelho sem WebGL, contexto lento recusado, rede sem acesso ao CDN). O Caixote fica com o leque de capas em CSS, parado, sem os botões ‹ ›; as outras duas direções não usam WebGL e não mudam. ^splash-no-webgl
+- **Movimento reduzido** (o sistema pede menos movimento). Brasa: o fogo desenha um quadro parado e o equalizador fica em alturas fixas; Lado A, lado B: o disco não gira, as seções não sobem, o fio mostra a faixa sem pulsar; Caixote: o 3D nem é baixado, fica o leque em CSS. A página continua inteira e acabada. ^splash-reduced-motion
+- **Sem JavaScript.** Todo o texto, as chamadas e as imagens em CSS aparecem; somem o fogo e os equalizadores (Brasa; o cartão do momento 2 no Caixote), o fio do equalizador inteiro (Lado A, lado B: ele só aparece com JavaScript) e o 3D (Caixote); o botão «Pause motion» não aparece. ^splash-no-js
+- **Movimento pausado.** Depois de «Pause motion», o botão diz «Play motion»; o fogo, os equalizadores, a luz e o giro automático param no quadro em que estavam; arrastar e os botões ‹ › do Caixote seguem funcionando. ^splash-motion-paused
+- **No celular (até 767 px).** Uma coluna; as duas chamadas ocupam a largura, uma sobre a outra; no topo fica só «Open the app». Lado A, lado B e Caixote põem a imagem acima do título; a Brasa, o título primeiro. ^splash-phone
+- **Caixote, um álbum na frente.** Sob o caixote, «‹ · nome do álbum · artista · ›»; um leitor de tela ouve o álbum («Lantern Hymnal by The Hollow Lanterns, fictional album, 3 of 9») só quando a pessoa gira; os giros automáticos não são anunciados. No canto do caixote, «Fictional albums · original art». ^splash-crate-album-in-front
 
 ## O celular (F76)
 
@@ -251,6 +281,15 @@ Estados que o protótipo não mostrava e que o texto acima passou a descrever (e
 | etiqueta «Discogs» / «Yours» | de onde o valor veio | «Yours» nunca é trocado por uma leitura | — |
 | «Where to buy» | três links de busca | abrem a loja no álbum, em CD | «The app earns nothing from these links today.» |
 
+### Página de entrada (F80, exploração)
+
+| Elemento | O que diz | Como ler | Referência ao lado |
+|---|---|---|---|
+| título e subtítulo | o que o produto é, para quem, e os três gestos (série, ranking, mistura) | o subtítulo começa pelo nome do produto: é a definição que buscador e assistente leem | — (sem número) |
+| os três momentos | o que a pessoa faz em cada etapa | na ordem do uso | — |
+| exemplo de faixas ordenadas | um álbum fictício, quatro faixas, uma barra por faixa | «Bar length = the track's place in the ranking you choose.» | «Illustrative · fictional album» e «Example data, not real scores.» |
+| aviso das capas | as capas e os discos da página são inventados | — | «original artwork made for this page» |
+
 ## Decisões de IA
 
 - Dois números por item, não um: o que a pessoa pagou e o que o álbum vale (proposta da rodada 1, à espera do MJRP).
@@ -260,6 +299,10 @@ Estados que o protótipo não mostrava e que o texto acima passou a descrever (e
 - Antes da v5.1, a v4 e a v5 usaram uma borda em volta do cartão inteiro para ligar a capa, o título e o bloco de valor (pedido do MJRP em 2026-11-20: «a borda conectando a capa com as infos»; era a opção B de `design/proposals/inventory-card-border-proposal.html`).
 - **O padrão das seções do cartão** (pedido do MJRP em 2026-11-20: «deveríamos ter um padrao e alinhamento entre seções»): todo cartão tem as mesmas seções, cada uma com o mesmo número de linhas, na mesma ordem: (1) o rótulo do valor, uma linha; (2) a origem à esquerda e o valor à direita, uma linha; (3) as duas médias, uma linha; (4) o rótulo das ações, uma linha; (5) as ações como links, uma linha. Nenhum texto dessas seções quebra de linha: o que não cabe é cortado com reticências e fica inteiro no `title`. Assim os cartões de uma fileira têm a mesma altura e as seções ficam alinhadas entre vizinhos.
 - As contagens por status viram o filtro, e o seletor de status sai da barra; os seletores que ficam são o de formato e o de ordem (decisão do MJRP em 2026-11-20).
+
+- **Página de entrada (F80), rodada 1:** as três direções têm a mesma ordem, os mesmos três momentos, a mesma prova e as mesmas chamadas, e diferem no eixo «quanto 3D, e de onde vem a profundidade»; o título, o subtítulo e o fecho acompanham a imagem (segundo eixo, declarado depois da crítica de UX; decidido pelo agente). O texto é proposta (`design/proposals/2026-11-20-splash-copy-proposal.md`).
+- **Página de entrada:** o texto inteiro fica no HTML e a primeira tela diz o que o produto é antes de qualquer imagem (candidato de GEO e AEO do PRD; NN/g, rolagem e atenção).
+- **Página de entrada:** capas fictícias, desenhadas na página (gradientes e tipo nas cores da marca), nenhuma capa real; os direitos das capas para uma página pública são pergunta ao MJRP.
 
 ## Protótipos aprovados
 
@@ -285,3 +328,25 @@ Fonte: `design/inception/inventory-value-v5.1.html`, escolhida pelo MJRP em 2026
 | INV-V12 | As contagens por status como botões que filtram; o seletor de status sai da barra | agir | S-57 (decisão do MJRP na rodada 3) |
 | INV-V14 | No cartão do que é dele: «Where to buy», que abre a janela do álbum, onde estão os links | agir | S-57 (pedido do MJRP na rodada 4) |
 | INV-V13 | No cartão do que é dele: «Sell» e «Trade», apagados, com «not in the app yet» | informar | candidato «rede de colecionadores» do PRD; sem requisito ainda |
+
+### Página de entrada (F80, rodada 1 de exploração)
+
+Fonte: `design/inception/splash-ember-v1.html`, `design/inception/splash-sides-v1.html`, `design/inception/splash-crate-v1.html` (2026-11-20; nenhuma escolhida) · wireframes: `design/wireframes/splash-<direção>-v1-desktop.png` e `-phone.png`.
+
+| ID | O que a tela mostra | Função do produto | Destino |
+|---|---|---|---|
+| SPL-01 | Topo: logotipo, «Sign in», «Open the app» | agir | S-62 |
+| SPL-02 | Sobretítulo e título principal | informar | S-62 |
+| SPL-03 | Subtítulo que diz o que o produto é, com o nome | informar | S-62 (e o candidato de GEO e AEO) |
+| SPL-04 | As duas chamadas da primeira tela | agir | S-62 |
+| SPL-05 | A imagem da direção: leito de fogo e equalizador (Brasa); capa e vinil em CSS 3D (Lado A, lado B); caixote 3D em WebGL (Caixote) | informar (a identidade) | S-62 |
+| SPL-06 | Momento 1, série | informar | S-62 |
+| SPL-07 | Momento 2, ranking e mistura | informar | S-62 |
+| SPL-08 | Momento 3, coleção | informar | S-62 |
+| SPL-09 | Por que álbuns inteiros: a frase e o exemplo ilustrativo de faixas ordenadas | ajudar a decidir | S-62 |
+| SPL-10 | Fecho com as chamadas | agir | S-62 |
+| SPL-11 | Rodapé: links e o aviso das capas originais | informar | S-62 |
+| SPL-12 | Faixa e notas do protótipo | — | cortado do site: só existe no protótipo, para o MJRP |
+| SPL-13 | Fio do equalizador preso no topo, com a faixa atual (só Lado A, lado B) | informar (onde a pessoa está) | S-62 |
+| SPL-14 | Botões ‹ › e o nome do álbum da frente (só Caixote) | agir | S-62 |
+
