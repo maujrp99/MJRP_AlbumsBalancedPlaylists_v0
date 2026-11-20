@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:26] session — o MJRP criou o secret `discogs-token` no Secret Manager
+
+- Ele rodou o comando que lê o token da área de transferência; o secret `discogs-token` existe no projeto `mjrp-playlist-generator`, versão 1. O agente não leu o valor. O secret ainda não está ligado ao serviço `mjrp-proxy`: isso se faz quando o código que o usa existir.
+- A confirmar com ele: se o token copiado foi o novo (depois de «Generate new token») e não o antigo, que está no histórico do git (UAT-17).
+
 ## [2026-11-20 01:24] session — F74 segunda fatia provada; termos da API do Discogs lidos (mudam a F75); o token do Discogs na tela é o do histórico
 
 - F74: «Update ratings» na conta do MJRP depois da segunda fatia: 130 álbuns com nota em todas as faixas (eram 109), 66 em parte (eram 87), 13 sem nenhuma; 2148 de 2612 faixas. UAT-221 em `fixed`.
