@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 19:16] session — na `main`: o primeiro build do app no simulador e as duas rodadas de desenho (F79, F80); `## Now` atualizado
+**Branch:** main
+Juntados, um por vez, pela fila da máquina: `feat/f78-first-simulator-run` (conferido antes: 3601 testes na raiz, 48 no app, lint, build, empacotamento iOS e Android), `wip/f79-home-design-round` e `wip/f80-splash-design-round`. O terceiro teve conflito no `info-arch.md` (as duas rodadas acrescentaram seções): resolvido ficando com as duas, a página de leitura gerada de novo (90 estados), conferido sem marcas de conflito antes do commit. Decisões do dia registradas acima neste log: uma tarefa pesada por vez no V0 (pedido do orquestrador do harness; a carga chegou a 200); as sessões da F46 e da F48 arquivadas; a análise da leitura lenta do harness entregue ao orquestrador (UAT-630 de lá). Pendente de dono: a F66 não está em `priority.md`, e o fecho dela ficou num stash.
+
 ## [2026-11-20 18:43] session — F80, rodada 1 de desenho da página de entrada: três direções no comparador
 **Branch:** feat/f80-splash-design-round
 Três protótipos no eixo «quanto 3D, e de onde vem a profundidade» (`design/inception/splash-ember-v1.html`, `splash-sides-v1.html`, `splash-crate-v1.html`), com a pesquisa (`design/references/f80-splash/references.md`), a proposta de copy, a proposta (`design/proposals/f80-splash/proposal.md`, recomenda o Lado A, lado B), o comparador como Artifact (https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e), wireframes, `info-arch.md` (estados `^splash-*`, inventário SPL-01 a SPL-14) e padrões novos no `design-system.md`, pendentes de aprovação do MJRP.
