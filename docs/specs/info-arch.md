@@ -115,7 +115,7 @@ Nenhum ainda. A rodada 1 da F75 é de exploração.
 
 ## Inventário do protótipo
 
-Fonte: `design/inception/inventory-value-v2.html` (a tela real do inventário, capturada como o app a desenha, com o que a F75 propõe; a v1, um esboço, fica para comparar) · wireframes: `design/wireframes/inventory-value-v2-inventory.png`, `design/wireframes/inventory-value-v2-album-window.png` · comparador: `design/proposals/inventory/comparator.html`.
+Fonte: `design/inception/inventory-value-v2.html` (a tela real do inventário, capturada como o app a desenha, com o que a F75 propõe; a v1, um esboço, fica para comparar) · wireframes: `design/wireframes/inventory-value-v2-inventory.png`, `design/wireframes/inventory-value-v2-album-window.png` · comparador: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck (Artifact do Claude, privado; a cópia local é `design/proposals/inventory/comparator.html`).
 
 | ID | O que a tela mostra | Função do produto | Destino |
 |---|---|---|---|

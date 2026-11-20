@@ -21,3 +21,10 @@
 - **Não feito:** a v2 em 390 px não foi conferida por mim; o benchmark de apps de coleção; a crítica de UX.
 - **Perguntas abertas:** as seis do fim da proposta.
 
+## [2026-11-20 00:41] F75 · o comparador como Artifact do Claude
+
+- **Pedido do MJRP:** «o comparador deve ser um artifact do claude».
+- **Feito:** https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck (privado). A tela de hoje, a v2 e a v1 vão como arquivos do próprio artifact, autocontidos: um Artifact não abre o servidor local nem imagens de fora, então as capas e os logotipos foram embutidos. A troca de cenário fala com as telas sem recarregá-las.
+- **Limite:** a «Referência» do artifact é a tela capturada em 2026-11-20, não o inventário ao vivo; nela só a janela de «The Dark Side of the Moon» abre.
+- **Como é montado:** `design/.snapshots/` no worktree da sessão (fora do git) guarda a captura e o montador; o pacote publicado fica na pasta temporária da sessão.
+

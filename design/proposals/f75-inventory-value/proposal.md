@@ -14,7 +14,7 @@ written: "2026-11-20"
 
 **O protótipo:** `design/inception/inventory-value-v2.html` (modo explorar). É a **tela real do inventário**, capturada como o app a desenha (o HTML e os estilos do app, com doze dos seus álbuns e as capas de verdade), com o que a F75 propõe acrescentado. Os valores são ilustrativos: nada foi lido do Discogs. A v1 (`inventory-value-v1.html`) era um esboço e fica para comparar.
 
-**O comparador:** `design/proposals/inventory/comparator.html` mostra a tela de hoje («Referência») ao lado das versões. Com o servidor local ligado: `http://127.0.0.1:5010/_compare-inventory.html`.
+**O comparador:** um Artifact do Claude, privado: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck. Mostra a tela de hoje («Referência») ao lado da v2 e da v1, em 1440 e 390 px, por cenário. As três telas vão dentro do artifact, com as capas embutidas. A cópia local (`design/proposals/inventory/comparator.html`) continua valendo para ver a «Referência» ao vivo, pelo servidor local.
 
 ## A ideia em uma frase
 
