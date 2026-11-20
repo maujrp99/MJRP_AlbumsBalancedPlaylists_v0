@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 18:38] review — mjrp-critiquing-ux-ui: F79 a Home, três níveis · passa para a escolha (0 P0)
+**Branch:** wip/f79-home-design-round
+Relatório: `reports/audits/2026-11-20-F79-home-ux-audit.md` · P0 0 · P1 8 · P2 9 · quem julgou: agente separado.
+Consertados na rodada: o contraste do painel da grade (Consolidar), as capas da barra do celular (Elevar), «Tap» no celular, os wireframes; o que fica está em `design/proposals/f79-home/proposal.md` § 6.
+
 ## [2026-11-20 18:38] session — F79 a Home: rodada 1 de desenho, três níveis (Consolidar, Elevar, Transformar) ao lado da tela de hoje
 **Branch:** wip/f79-home-design-round
 Protótipos feitos da Home real capturada no site local (busca «Pink Floyd»), sete estados, 1280 e 393 px: `design/inception/home-consolidar-v1.html`, `-elevar-v1.html`, `-transformar-v1.html`; a Referência, o comparador (Artifact privado https://claude.ai/artifact/AsiVV2i3595LqpLEadm61h), a proposta com o diagnóstico medido e as sete perguntas, e o gerador em `design/proposals/f79-home/`; o texto da tela em `design/proposals/2026-11-20-home-copy-proposal.md` (juiz verde). Recomendado: Elevar. Descrição na mesma rodada: `info-arch.md` § A Home (F79) com sete estados e o inventário HOME-01 a HOME-19, wireframes dos três níveis, padrões novos pendentes em `design-system.md`.
