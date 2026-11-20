@@ -204,10 +204,6 @@
   color: #f97316;
 }
 
-.text-accent-secondary {
-  color: #fb923c;
-}
-
 /* Responsive */
 @media (max-width: 640px) {
   .modal-container {
