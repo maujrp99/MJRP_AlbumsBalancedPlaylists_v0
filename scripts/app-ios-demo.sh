@@ -35,12 +35,14 @@ unset EXPO_PUBLIC_DATA_MODE
 
 cd "$APP_DIR"
 
-# 1. the native project; one generated for the other build (Firebase) is regenerated from scratch
+# 1. the native project. Expo SDK 58's prebuild deletes ios/ by default (and with it the pods and
+#    the build cache): kept with --no-clean while the project is a demo one; one generated for the
+#    other build (Firebase), or none, is generated from scratch.
 MARKER=ios/.album-blender-build
-if [ -d ios ] && [ "$(cat "$MARKER" 2>/dev/null || true)" != "demo" ]; then
-    CI=1 npx expo prebuild --platform ios --clean
+if [ -d ios ] && [ "$(cat "$MARKER" 2>/dev/null || true)" = "demo" ]; then
+    CI=1 npx expo prebuild --platform ios --no-clean
 else
-    CI=1 npx expo prebuild --platform ios
+    CI=1 npx expo prebuild --platform ios --clean
 fi
 echo demo > "$MARKER"
 
@@ -57,8 +59,10 @@ xcrun simctl boot "$UDID" 2>/dev/null || true
 xcrun simctl bootstatus "$UDID" -b >/dev/null
 open -a Simulator 2>/dev/null || true # the window; the build and the app do not need it
 
-# 3. the Debug build for the simulator (no signing: the simulator does not need it)
-xcodebuild -workspace ios/AlbumBlender.xcworkspace -scheme AlbumBlender -configuration Debug \
+# 3. the Debug build for the simulator (no signing: the simulator does not need it). Low priority and
+#    4 compile jobs by default (APP_IOS_BUILD_JOBS): a full build otherwise takes every core, and this
+#    Mac is shared with other work (2026-11-20: load 190 on 15 cores during the first build).
+nice -n 10 xcodebuild -jobs "${APP_IOS_BUILD_JOBS:-4}" -workspace ios/AlbumBlender.xcworkspace -scheme AlbumBlender -configuration Debug \
     -sdk iphonesimulator -destination "platform=iOS Simulator,id=$UDID" -derivedDataPath ios/build \
     CODE_SIGNING_ALLOWED=NO -quiet
 APP_PATH=ios/build/Build/Products/Debug-iphonesimulator/AlbumBlender.app
@@ -71,5 +75,6 @@ until curl -s http://localhost:8081/status | grep -q packager-status:running; do
 
 xcrun simctl install "$UDID" "$APP_PATH"
 xcrun simctl launch "$UDID" "$BUNDLE_ID"
-echo "Album Blender (demo) is open on «$DEVICE». The self-test: xcrun simctl openurl booted 'albumblender://diagnostics?run=1'"
+echo "Album Blender (demo) is open on «${DEVICE}». The self-test, with no tap:"
+echo "  xcrun simctl terminate booted $BUNDLE_ID; xcrun simctl launch booted $BUNDLE_ID -demoSignIn apple -demoRoute '/diagnostics?run=1'"
 wait $METRO

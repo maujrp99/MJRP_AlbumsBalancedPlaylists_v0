@@ -1,0 +1,23 @@
+# The golden self-test on the iOS Simulator «iPhone 17 Pro» (iOS 26.5), 2026-11-20.
+# App: Debug build of app/ (demo mode), engine Hermes, JavaScript bundled by Metro.
+# Copied as they came, from the two places the app's console.info lines reach.
+#
+# Line 3 (16:57:19, «v4: false») is NOT a failure of the id generator: it came from a hot reload
+# of the same process while the v4 pattern of the new `engineLine()` had a typo (the fourth group
+# had 5 characters, not 4); the id itself (5575d595-cea2-452d-8182-1373b909470e) is a valid v4.
+# The pattern was fixed and the app relaunched: process 17166, lines 4 and 5.
+
+## 1. The simulator's own log
+## xcrun simctl spawn booted log stream --level debug --style compact --predicate 'process == "AlbumBlender"'
+2026-11-20 16:55:03.134 I  AlbumBlender[91596:6fbe651] [com.facebook.react.log:javascript] [golden-self-test] 3343 of 3343 match; passed: true; different: 0; missing: 0; extra: 0; ids made: 24943; not v4: 0; repeated: 0; 81641 ms
+2026-11-20 16:57:19.558 I  AlbumBlender[91596:6fbe651] [com.facebook.react.log:javascript] [golden-self-test] 3343 of 3343 match; passed: true; different: 0; missing: 0; extra: 0; ids made: 24943; not v4: 0; repeated: 0; 84041 ms
+2026-11-20 16:57:19.559 I  AlbumBlender[91596:6fbe651] [com.facebook.react.log:javascript] [golden-self-test] engine: Hermes; crypto global: undefined; id sample: 5575d595-cea2-452d-8182-1373b909470e; v4: false
+2026-11-20 16:59:34.309 I  AlbumBlender[17166:6fe524c] [com.facebook.react.log:javascript] [golden-self-test] 3343 of 3343 match; passed: true; different: 0; missing: 0; extra: 0; ids made: 24943; not v4: 0; repeated: 0; 81138 ms
+2026-11-20 16:59:34.310 I  AlbumBlender[17166:6fe524c] [com.facebook.react.log:javascript] [golden-self-test] engine: Hermes; crypto global: undefined; id sample: 2a887498-42c9-445f-9451-38b63ae73ac3; v4: true
+
+## 2. Metro's terminal (npx expo start in app/), the same lines forwarded by the app
+ INFO  [golden-self-test] 3343 of 3343 match; passed: true; different: 0; missing: 0; extra: 0; ids made: 24943; not v4: 0; repeated: 0; 81641 ms
+ INFO  [golden-self-test] 3343 of 3343 match; passed: true; different: 0; missing: 0; extra: 0; ids made: 24943; not v4: 0; repeated: 0; 84041 ms
+ INFO  [golden-self-test] engine: Hermes; crypto global: undefined; id sample: 5575d595-cea2-452d-8182-1373b909470e; v4: false
+ INFO  [golden-self-test] 3343 of 3343 match; passed: true; different: 0; missing: 0; extra: 0; ids made: 24943; not v4: 0; repeated: 0; 81138 ms
+ INFO  [golden-self-test] engine: Hermes; crypto global: undefined; id sample: 2a887498-42c9-445f-9451-38b63ae73ac3; v4: true
