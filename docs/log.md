@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 13:54] decision — F78: o ADR-0022 da pilha do app, em «Proposed», e a emenda da constituição proposta
+**Branch:** feat/f78-app-first-milestone-specs
+ADR-0022 (React Native com Expo; as regras num núcleo de JavaScript em `shared/`, usado pelo site, pelo app e pelo servidor; Firebase pelo pacote nativo; Swift e Kotlin só onde a plataforma exige, a começar pelo token do Apple Music), uma linha por alternativa; a análise fica na proposta e na crítica. Aceite: MJRP, porque mexe na constituição; o agente não o aceita.
+A emenda (`design/proposals/f78-app-architecture/constitution-amendment.md`) cita os Art. II, IV e V como estão e oferece duas redações: (a) exceção só para `app/`, sem TypeScript (a proposta não o exige), escolhida em princípio na decisão 6; (b) TypeScript e framework de interface permitidos em todo o produto por ADR. `constitution.md` não foi tocado.
+
 ## [2026-11-20 13:53] session — F78: requisitos, plano e tarefas do primeiro marco do app
 **Branch:** feat/f78-app-first-milestone-specs
 O primeiro marco da F78 escrito pela ordem do § 15 da proposta: 18 REQs (os spikes S1 a S7 como perguntas de sim ou não, com prazo; Ref-0, a casa e os sensores do núcleo, Ref-A partida em mudança de casa e regras de convivência, Ref-B; o esqueleto que entra e lista as séries, inclusive sem rede; versão mínima; medição pela porta da F77; autoteste do corpo dourado; nada secreto no pacote; `--max-instances`), 29 tarefas, as decisões do MJRP das 13:45 e as cinco que continuam dele. As notas do § 17 fecham nos REQs: `_schemaVersion` nunca desce, `saveAlbumFacts` classificado, o S1 com todas as receitas e estratégias e o gerador real, o corpo dourado com as entradas dos testes do núcleo.
