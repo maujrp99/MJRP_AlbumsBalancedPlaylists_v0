@@ -28,6 +28,16 @@ As telas nativas: a barra de baixo com os cinco destinos (os quatro não feitos 
 A ordem padrão das séries (UAT-227, «Newest») sai do `SeriesController` do site para `shared/seriesOrder.js` (`DEFAULT_SERIES_ORDER`, `compareByCreation`, `newestFirst`), que lê a data de criação como Date, número ou Timestamp do Firestore: uma regra para o site e o app.
 O site usa a mesma comparação nos modos «recent»; a função do controller caiu de 20 para 16 de complexidade e a lista baixou junto; `test/shared/seriesOrder.test.js` roda com jsdom e em Node puro.
 
+## [2026-11-20 15:26] session — ADR-0022 apoiado na constituição v2.0.0; o Accepted fica para o commit do MJRP
+**Branch:** feat/f78-constitution-v2-in-force
+O ADR-0022 diz que o app é TypeScript e que se apoia na constituição v2.0.0; os Deciders registram o aceite dele, «1.aceito pra essa iteração», para esta iteração. O `Status` segue `Proposed`: o ADR nasceu na via do MJRP (`**Acceptance**: MJRP`), e pela CC-ADR-0028 vira `Accepted` só no commit dele com `Human-accepted: adr:ADR-0022`, sem assinatura de agente; o agente não carimba.
+Não há índice de ADRs em `docs/decisions/`. Pendente do MJRP: o commit que vira o status, pelo comando da tela dele.
+
+## [2026-11-20 15:24] session — a constituição v2.0.0 em vigor, para esta iteração
+**Branch:** feat/f78-constitution-v2-in-force
+`docs/specs/constitution.md` passa à v2.0.0 (texto da proposta, sem as partes só de proposta), com o aceite do MJRP «1.aceito pra essa iteração» no cabeçalho e no rodapé; a v1.0.0 inteira em `_archive/2026-11-20-constitution-v1/docs/specs/constitution.md` (o `_safe.py retire` recusa arquivo versionado: sai por commit); `docs/CONSTITUTION.md` marcada substituída só no título; o espelho `.specify/memory/` regenerado da fonte (não há script: feito à mão, igual à fonte, como o doctor I5 confere).
+Citações vivas trocadas pela v2 (`tech-stack.md` com as linhas do app, `arch.md` com o acesso ao servidor como o código é desde a F59, `data-model.md`, `.agent/`, `DEVELOPER.md`); F78: a tarefa do aceite marcada, a decisão (6) e o Constitution Check do plano; a pergunta do núcleo em TypeScript segue aberta. Grafo de requisitos igual ao de antes (1 achado, o do ADR-0020).
+
 ## [2026-11-20 15:16] decision — o MJRP aceita a constituição v2.0.0 e o ADR-0022, para esta iteração
 **Branch:** main
 Em resposta ao item «1. Ler e aceitar a constituição v2.0.0 e o ADR-0022», ele escreveu: «1.aceito pra essa iteração». O aceite vale para os dois textos como estão em `design/proposals/f78-app-architecture/constitution-v2.md` e `docs/decisions/0022-app-in-react-native-over-a-shared-core.md`, com a ressalva dele: para esta iteração, isto é, revisável na próxima. A seguir, o que a proposta lista em «O que muda no dia em que for aceita»: a v2.0.0 entra em `docs/specs/constitution.md`, a v1.0.0 vai para o arquivo, as citações vivas são atualizadas e o ADR-0022 passa a aceito.

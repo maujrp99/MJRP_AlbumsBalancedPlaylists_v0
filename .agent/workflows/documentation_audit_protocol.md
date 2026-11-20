@@ -58,9 +58,9 @@ Consult this map to find the relevant Manual Chapters (`docs/manual/`).
 -   **Vision**: `docs/MJRP_Product_Vision.md`
 
 ### ⚖️ Governance (Agent Context)
--   **Rules**: `.agent/rules/` (Verify align with `CONSTITUTION.md`)
+-   **Rules**: `.agent/rules/` (Verify align with `docs/specs/constitution.md`)
 -   **Workflows**: `.agent/workflows/` (Verify align with actual agent behavior)
--   **Constitution**: `docs/CONSTITUTION.md`
+-   **Constitution**: `docs/specs/constitution.md` (v2.0.0; `docs/CONSTITUTION.md` is the superseded v1.0.0)
 
 ## 3. Update Documentation
 1.  **Read** the relevant manual file.

@@ -1,17 +1,18 @@
 ---
 status: Draft
-updated: 2026-10-28
+updated: 2026-11-20
 ---
 # Tech stack — MJRP_AlbumsBalancedPlaylists_v0
 
-> Com o que o produto é construído, lido do que o código usa (2026-10-28): `package.json` e `package-lock.json` (raiz), `server/package.json` e `server/package-lock.json`, `server/Dockerfile`, `firebase.json`, `cloudbuild.yaml`, `.github/workflows/ci-firebase.yml` e os cabeçalhos de `public/index.html`. A versão é a que o lockfile fixa; onde nada a fixa, a célula traz `—` e o motivo vai em «Para quê». Decisão: nenhuma escolha da stack tem ADR (as quatro ADRs do v0 tratam de padrões de código, não de tecnologia), então toda a coluna é `—`. Desde 2026-11-19 duas linhas citam ADR: o Node do servidor (ADR-0020) e o Tailwind (ADR-0021, proposta). Escrito pelo agente, revisável pelo MJRP; corrigido no mesmo dia depois da crítica independente (`reports/audits/2026-10-28-mjrpalbumblender-v0-architecture-audit.md`). O `arch.md` aponta para cá.
+> Com o que o produto é construído, lido do que o código usa (2026-10-28): `package.json` e `package-lock.json` (raiz), `server/package.json` e `server/package-lock.json`, `server/Dockerfile`, `firebase.json`, `cloudbuild.yaml`, `.github/workflows/ci-firebase.yml` e os cabeçalhos de `public/index.html`. A versão é a que o lockfile fixa; onde nada a fixa, a célula traz `—` e o motivo vai em «Para quê». Decisão: nenhuma escolha da stack tem ADR (as quatro ADRs do v0 tratam de padrões de código, não de tecnologia), então toda a coluna é `—`. Desde 2026-11-19 duas linhas citam ADR: o Node do servidor (ADR-0020) e o Tailwind (ADR-0021, proposta); desde 2026-11-20, as do app (ADR-0022), sobre a constituição v2.0.0. Escrito pelo agente, revisável pelo MJRP; corrigido no mesmo dia depois da crítica independente (`reports/audits/2026-10-28-mjrpalbumblender-v0-architecture-audit.md`). O `arch.md` aponta para cá.
 
 ## Stack
 | Camada | Tecnologia | Versão | Para quê | Decisão |
 |---|---|---|---|---|
-| Linguagem | JavaScript, ES Modules no navegador e na raiz (`"type": "module"`, `package.json`) | — | todo o código do produto; sem TypeScript. O servidor é CommonJS (`require`, `server/index.js`) | — |
+| Linguagem | JavaScript, ES Modules no navegador e na raiz (`"type": "module"`, `package.json`) | — | o código do site, do núcleo (`shared/`) e do servidor, com JSDoc; o servidor é CommonJS (`require`, `server/index.js`). TypeScript é permitido no produto (constituição v2.0.0, *Tipagem*); passar uma dessas partes a TypeScript é um ADR por passo | — |
+| Linguagem | TypeScript, no app (`app/`) | — | o código do app; a pasta `app/` ainda não existe, a versão entra com ela | [[ADR-0022]] |
 | Runtime | Node.js | 24 | roda o servidor (`FROM node:24-slim`, `server/Dockerfile`); a CI e a máquina do dono rodam os testes em Node 26 (`.github/workflows/ci.yml`); era 18, fora de suporte, até 2026-11-19 | [[ADR-0020]] |
-| Front | Vanilla JS em SPA (MVC com Stores), sem framework | — | interface; a decisão de não usar framework é do Art. II da constituição | — |
+| Front | Vanilla JS em SPA (MVC com Stores), sem framework | — | interface do site; framework de interface no site só por ADR (constituição v2.0.0, artigo II e *Proibições*; «Decidido não usar», abaixo) | — |
 | Front | Vite | 5.4.21 | servidor de desenvolvimento (porta 5000, proxy de `/api` para a 3000) e build para `dist` (`vite.config.js`) | — |
 | Front | Tailwind CSS, compilado junto com o site | 3.4.19 | classes utilitárias da interface. Dependência de desenvolvimento; o Vite o roda pelo PostCSS (`vite.config.js`, `css.postcss`) no servidor de desenvolvimento e no build, a partir de `public/css/tailwind.css` (importado por `public/js/app.js`). O tema e a lista dos arquivos onde há classes (`public/index.html`, `public/js/**/*.js`) ficam no `tailwind.config.js` da raiz; classe montada na hora entra na `safelist` de lá. Até 2026-11-19 vinha por `<script>` do CDN `cdn.tailwindcss.com`, sem versão fixa. A ADR está em «Proposed», à espera do aceite do MJRP | [[ADR-0021]] |
 | Front | SortableJS | 1.15.6 | arrastar e soltar (séries, área de montagem da Home, tabela de faixas) | — |
@@ -50,17 +51,19 @@ updated: 2026-10-28
 | Testes do app | Jest com jest-expo, React Native Testing Library | 30.5 / 58.0.15 / 14.1 | testes de unidade e de componente do app (`app/jest.config.js`; docs.expo.dev/develop/unit-testing) | [[ADR-0022]] |
 | Testes do app | ESLint com `eslint-config-expo` | 9.39.2 / 58.0.4 | lint do app (`app/eslint.config.js`), à parte do da raiz | [[ADR-0022]] |
 | Build do app | `expo export` (Metro e Babel, bytecode Hermes) | — | empacota o JavaScript do app para iOS e Android sem build nativo; o `check` do app o roda e procura segredos nos pacotes (`scripts/app-bundle-scan.mjs`); o build nativo (Xcode, Android Studio ou o serviço do Expo) ainda não roda nesta máquina | [[ADR-0022]] |
+| App | Swift e Kotlin, só onde a plataforma exige | — | módulo nativo pequeno, a começar pelo token do usuário do Apple Music | [[ADR-0022]] |
+| Testes | Maestro | — | ponta a ponta do app, no simulador do iPhone e no emulador do Android; entra com `app/` | [[ADR-0022]] |
 
 ## Decidido não usar
 | Tecnologia | Por que não | Decisão |
 |---|---|---|
-| Framework de UI (React, Vue e semelhantes) | a constituição prefere a simplicidade e as tecnologias web padrão ao aprisionamento num framework complexo, "where possible" (Art. II); é preferência, não proibição, e o v1 do produto adota outra stack | — |
+| Framework de UI (React, Vue e semelhantes) no site | o site segue sem framework de interface; adotar um é ADR primeiro (constituição v2.0.0, *Proibições* e artigo II, item 2). O app usa React Native, decisão do [[ADR-0022]], e não leva a sua pilha de interface para o site | [[ADR-0022]] |
 
 ## Restrições
-- JavaScript puro em ES Modules, Vite e variáveis CSS; Tailwind só se pedido — Constituição, Art. II.
+- O site em JavaScript com ES Modules e JSDoc, Vite, variáveis CSS e Tailwind compilado com o site; TypeScript permitido no produto e obrigatório no app — constituição v2.0.0, *Tipagem* e artigo II.
 - A lógica de negócio nova entra como Service e a rota ou o componente só orquestra — [[ADR-0016]].
 - A Store guarda apenas estado; a lógica, o Firestore e a persistência ficam no Service — [[ADR-0017]].
-- Backend em Node.js, contêiner sem estado no Cloud Run, lógica compartilhada com o frontend pelo diretório `/shared` e validação (AJV) de todo dado externo — Constituição, *Technology Standards*.
-- Frontend em SPA com roteamento pela History API, hospedado no Firebase Hosting, mobile-first — Constituição, *Technology Standards*.
-- Segredos por variável de ambiente ou Secret Manager, nunca no código — Constituição, Art. V; `PRINCIPLES.md` §I.14.
+- Backend em Node.js, contêiner sem estado no Cloud Run, lógica compartilhada com o frontend pelo diretório `/shared` e validação (AJV) de todo dado externo — constituição v2.0.0, artigo II.
+- Frontend em SPA com roteamento pela History API, hospedado no Firebase Hosting; o celular pela camada da F76 — constituição v2.0.0, artigo II e artigo I, item 4.
+- Segredos por variável de ambiente ou Secret Manager, nunca no código — constituição v2.0.0, artigo V, item 7; `PRINCIPLES.md` §I.14.
 - A stack só muda por ADR, e a coluna Decisão a cita — harness, nota CM-0071.

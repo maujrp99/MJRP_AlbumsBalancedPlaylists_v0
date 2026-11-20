@@ -2,7 +2,7 @@
 
 **Date**: 2026-11-20
 **Status**: Proposed
-**Deciders**: Claude agent (drafter); the owner's acceptance pending, because it needs the constitution amended
+**Deciders**: Claude agent (drafter). The MJRP accepted it in conversation on 2026-11-20, for this iteration: to «1. Ler e aceitar a constituição v2.0.0 e o ADR-0022» he answered «1.aceito pra essa iteração» (`docs/log.md`, 2026-11-20 15:16); revisable in the next iteration. The status turns Accepted in his stamped commit (CC-ADR-0028), not the agent's
 **Acceptance**: MJRP
 **Related work**: release v6.0, feature F78, story S-60
 
@@ -27,10 +27,9 @@ The analysis, the options measured side by side, the risks and the spikes are in
 - **The site wrapped with Capacitor** — lost on App Store rule 4.2 and on Apple Music sign-in failing inside a web frame; comes back only as a personal, internal-only step, never as the store product.
 
 ## Consequences
-- On 2026-11-20 the MJRP chose to supersede the constitution instead of amending it («Sobre a constitution pode ser superseded já envelheceu»): this record now depends on constitution v2.0.0 being accepted, proposed in `design/proposals/f78-app-architecture/constitution-v2.md`; the amendment below stays as the record of why.
-- The constitution (Art. II, IV and V) does not allow this as written. This record is accepted only together with an amendment for `app/`, proposed in `design/proposals/f78-app-architecture/constitution-amendment.md`; the MJRP decides both.
+- This record rests on constitution v2.0.0 (`docs/specs/constitution.md`), accepted together with it on 2026-11-20, for this iteration: its article II lists the app (React Native with Expo, TypeScript), and its rules marked «vale quando `app/` existir» hold from the commit that creates `app/`. The MJRP chose to supersede v1.0.0 instead of amending it («Sobre a constitution pode ser superseded já envelheceu»); v1.0.0 (Art. II, IV and V) did not allow the app, and `design/proposals/f78-app-architecture/constitution-amendment.md` stays as the record of why.
 - The site is refactored in slices (Ref-0, Ref-A, Ref-B, then Ref-C and Ref-D), each published alone with the suite green. It is worth doing even without the app (ADR-0016, ADR-0017).
 - Three targets to maintain instead of one: estimated 6 to 11 hours a month (proposal § 10, an estimate, not measured).
 - A released app version cannot be undone: `/api` responses and Firestore documents become backward compatible, and the server states the minimum app version.
 - Builds need Xcode and Android Studio on the MJRP's Mac, or the Expo build service; the core depends on neither.
-- `docs/specs/tech-stack.md` gains the app rows when this record is accepted; its line «Framework de UI — decidido não usar» becomes «no site».
+- `docs/specs/tech-stack.md` has the app rows, and its line «Framework de UI — decidido não usar» reads «no site» (2026-11-20).

@@ -10,7 +10,7 @@ description: ### 2. Planning Phase (`plan.md`) for SDD
 
 2. Agent includes logic flows and **UI Mockups** (Critical for frontend).
 
-3. Agent researches documentation on `docs/manual/´ for Backend, Frontend and overall information starting by checking ´/docs/manual/00_MJRP_Album_Blender_Ref_Guide_Index.md´ and ´/docs/manual/01_System_Architecture.md´ and follow our CONSTITUTION.md gudelines.
+3. Agent researches documentation on `docs/manual/´ for Backend, Frontend and overall information starting by checking ´/docs/manual/00_MJRP_Album_Blender_Ref_Guide_Index.md´ and ´/docs/manual/01_System_Architecture.md´ and follow our constitution (`docs/specs/constitution.md`) gudelines.
 
 4. Agent informs the user which manuals were consulted and what information were considered in the plan from the manuals.
 
