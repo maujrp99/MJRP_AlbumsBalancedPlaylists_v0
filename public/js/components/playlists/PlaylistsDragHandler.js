@@ -1,5 +1,4 @@
 import Sortable from 'sortablejs'
-import { playlistsStore } from '../../stores/playlists.js'
 import { getPlaylistsService } from '../../services/playlists/playlistsWiring.js'
 
 /**

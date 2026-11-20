@@ -5,7 +5,7 @@ function format (level, msg, meta) {
   const out = { ts: ts(), level, msg }
   if (meta && typeof meta === 'object') out.meta = meta
   // print JSON for easier ingestion in CI/forwarding
-  try { return JSON.stringify(out) } catch (e) { return `${out.ts} ${level} ${msg}` }
+  try { return JSON.stringify(out) } catch { return `${out.ts} ${level} ${msg}` }
 }
 
 function info (msg, meta) { console.log(format('info', msg, meta)) }

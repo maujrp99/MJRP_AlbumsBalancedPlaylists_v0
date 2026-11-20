@@ -50,22 +50,8 @@ export class InputModal {
             autoFocus: true // Helper prop for SafeDOM or simple attribute
         })
 
-        // Standard Footer
-        // We'll capture the confirm button reference to toggle disabled state
-        const footerFragment = BaseModal.createFooterButtons({
-            cancelText,
-            confirmText,
-            onCancel,
-            onConfirm: () => onConfirm(currentValue),
-            confirmAction: 'confirm'
-        })
-
-        // Find confirm button in fragment (assumes BaseModal structure: [cancel, confirm])
-        // Since fragment doesn't support querySelector, we iterate children if mounted, otherwise we assume order
-        // Actually BaseModal returns a DocumentFragment.
-        // Let's rely on event bubbling/updating or custom logic.
-        // Better: create buttons manually here to have direct reference.
-
+        // The footer buttons are made here, not by BaseModal.createFooterButtons: the confirm
+        // button is needed by reference, to disable it while the text is not valid.
         const cancelBtn = SafeDOM.button({
             className: 'btn btn-ghost',
             onClick: onCancel

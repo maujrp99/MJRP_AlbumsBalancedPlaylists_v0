@@ -7,7 +7,7 @@ const logger = console
 export function emptyCatch(work) {
     try {
         return work()
-    } catch (e) { /* a comment is not a statement: this block is empty */ }
+    } catch { /* a comment is not a statement: this block is empty */ }
 }
 
 export function onlyLogs(work) {

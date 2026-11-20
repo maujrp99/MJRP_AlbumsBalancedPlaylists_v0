@@ -46,7 +46,6 @@ export class SeriesComponentFactory {
     static createToolbar(container, { view, controller }) {
         if (!container) return null;
 
-        const albums = albumsStore.getAlbums();
         const activeSeries = albumSeriesStore.getActiveSeries();
         const allSeries = albumSeriesStore.getSeries();
         const { searchQuery, filters, viewMode, seriesSortMode } = controller.getState();

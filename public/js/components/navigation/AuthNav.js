@@ -95,7 +95,7 @@ export class AuthNav {
                 toast.success('Signed out successfully');
                 // A fresh page: nothing of the person who left stays in memory or on screen
                 reloadApp();
-            } catch (err) {
+            } catch {
                 toast.error('Sign out failed');
             }
         };

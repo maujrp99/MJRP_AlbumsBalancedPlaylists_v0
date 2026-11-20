@@ -11,8 +11,10 @@
  *
  * Not linted: what is built or installed, the code of others, the copies of the harness, and
  * the folders that hold no code of the app. The rules are ESLint's recommended set;
- * `no-unused-vars` and `no-undef` warn. Lint is not yet a gate (CI and the deploy scripts do not
- * run it): see docs/specs/features/F65-remove-what-nothing-uses/plan.md for what is left.
+ * `no-unused-vars` and `no-undef` warn; an error is meant to block and a warning is not.
+ * Lint is not yet a gate (CI and the deploy scripts do not run it): on 2026-11-19 one error is
+ * left, in a file another branch holds. docs/specs/features/F64-one-tested-way-to-production/tasks.md
+ * (TASK-13) says what is left and how the gate is wired once `npx eslint .` ends with no error.
  *
  * The complexity limit is a fitness test of its own (test/architecture/complexityLimit.test.js),
  * which runs ESLint without this file.

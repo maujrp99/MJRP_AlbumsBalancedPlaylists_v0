@@ -25,7 +25,7 @@ function albumTitlesIn (response) {
   try {
     const parsed = JSON.parse(text)
     return Array.isArray(parsed) ? parsed : null
-  } catch (parseErr) {
+  } catch {
     // Broken JSON (a cut answer, a missing comma): read the quoted titles one by one
     const matches = text.match(/"([^"]+)"/g)
     return matches ? matches.map(m => m.replace(/^"|"$/g, '').trim()) : null

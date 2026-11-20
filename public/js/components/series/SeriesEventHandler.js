@@ -199,10 +199,11 @@ export default class SeriesEventHandler extends Component {
                 break;
 
             // Sprint 22: Refetch Metadata
-            case 'refetch-metadata':
+            case 'refetch-metadata': {
                 const { onRefetchMetadata } = this.props;
                 if (onRefetchMetadata) onRefetchMetadata(album);
                 break;
+            }
         }
     }
 

@@ -70,7 +70,6 @@ export function showLoginModal() {
 
             // Show loading state on clicked button
             const btn = provider === 'google' ? googleBtn : appleBtn
-            const originalContent = btn.innerHTML
             btn.innerHTML = `<span class="animate-spin mr-2">⟳</span> Signing in...`
 
             if (provider === 'google') {

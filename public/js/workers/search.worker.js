@@ -68,7 +68,7 @@ self.onmessage = function (e) {
         // Perform search
         // uFuzzy returns [idxs, info, order]
         // search(haystack, needle, outOfOrder)
-        const [idxs, info, order] = uf.search(haystack, query);
+        const [idxs] = uf.search(haystack, query);
 
         // Sort/limit results
         const gathered = [];

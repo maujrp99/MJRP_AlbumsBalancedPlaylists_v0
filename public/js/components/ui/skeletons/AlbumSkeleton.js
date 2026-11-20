@@ -1,5 +1,3 @@
-import { SafeDOM } from '../../../utils/SafeDOM.js';
-
 export class AlbumSkeleton {
     /**
      * Renders a single Album Card skeleton

@@ -127,7 +127,6 @@ export class SeriesDropdown {
     attachListeners() {
         const btn = document.getElementById('seriesDropdownBtn');
         const menu = document.getElementById('seriesDropdownMenu');
-        const container = document.getElementById('seriesDropdownContainer');
 
         if (btn) {
             btn.addEventListener('click', (e) => {

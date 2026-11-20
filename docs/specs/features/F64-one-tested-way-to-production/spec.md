@@ -46,6 +46,10 @@ violates:: [[constitution#V]]
   verified_by:: `docs/manual/00_Deployment_and_Setup.md` (seções 1 e 2); `scripts/deploy-prod.sh`, `scripts/deploy-backend.sh` e `cloudbuild.yaml` não existem mais no ramo
 - [REQ-07] Uma aba aberta antes de uma publicação carrega a versão nova sozinha, uma vez, em vez de mostrar erro; a página nunca é guardada pelo navegador sem perguntar ao site. · fixes UAT-207
   verified_by:: `test/utils/staleBuild.test.js`, `test/router.staleBuild.test.js`, `test/architecture/hostingServesFreshPage.test.js`
+- [REQ-08] (fatia do lint, ramo `fix/f58-layers-and-lint-gate`) O código não tem erro de lint fora dos arquivos que outro ramo segura: de 22 erros para 1. Cada conserto que podia mudar o comportamento tem teste escrito e rodado antes da mudança: as expressões regulares de que saíram barras sem efeito casam o mesmo de antes; o ícone `Plus` é o que o app sempre desenhou; a carga do catálogo local de álbuns responde igual. · fixes UAT-20
+  verified_by:: `test/server/textCleaningPatterns.test.js`, `test/utils/NormalizationUtils.test.js`, `test/components/Icons.test.js`, `test/services/AlbumLoader.test.js`; `npx eslint .` em 2026-11-19: 1 erro (`public/js/controllers/InventoryController.js:44`, chave `sorting` duplicada), 24 avisos
+- [REQ-09] (fatia do lint) A automação do GitHub e os dois comandos de publicação rodam `npx eslint .` e recusam quando há um erro; avisos não recusam. `npm run lint` roda a mesma conferência. · fixes UAT-20
+  verified_by:: não verificado: o portão **não está ligado**. Falta o erro acima, num arquivo do ramo `fix/f70-small-defects`. O passo proposto para os scripts foi rodado fora da publicação e recusou com esse erro (TASK-13 diz o que ligar)
 
 ## Observable States
 N/A: a feature não importa nenhum requisito e não tem tela (conserto das issues UAT-202, UAT-20 e UAT-22).
@@ -57,7 +61,8 @@ N/A: a feature não importa nenhum requisito e não tem tela (conserto das issue
 - Não existe segundo caminho: nenhum outro script, arquivo de build ou job publica.
 
 ## Out of Scope
-- UAT-20, a parte que não é da automação: o lint não reprova nada porque hoje tem 81 erros, em `public/js/**` e `server/**`; não há regra de importação nem busca de segredos. A automação deixou de fingir (o passo com `|| true` saiu); fazer o lint reprovar pede consertar o código primeiro. A issue segue aberta nessa parte.
+- UAT-20, a parte que não é da automação, como estava na primeira entrega: o lint não reprovava nada porque tinha 81 erros, em `public/js/**` e `server/**`. A F65 consertou a configuração (25 erros de verdade), outras entregas baixaram para 22, e a fatia do lint (REQ-08) para 1. As outras duas partes da issue já têm sensor que reprova, dentro da suíte que a automação e os scripts rodam: as importações proibidas (`test/architecture/layerBoundaries.test.js`, `firestoreBehindRepositories.test.js` e os outros testes de `test/architecture/`) e os segredos escritos no código (o teste da F65). Nenhuma regra de importação foi posta no ESLint: os testes de arquitetura já fazem esse papel.
+- Fatia do lint: os avisos. Ficam 24, todos `no-unused-vars`: 17 são parâmetros de função que documentam uma interface (`params` das telas, `album` de `RankingStrategy.rank`, e outros) e 7 estão em arquivos de outro ramo. Avisos não barram.
 - Itens do tema 6 do mapa que pedem mexer em `server/**` ou `public/js/**`: 6.1 (segredos do Spotify do servidor ausentes da publicação: o serviço não tem nenhuma variável do Spotify, e o script não define variáveis), 6.5 (CORS), 6.6 (queda calada para uma configuração de Firebase de mentira) e 6.7 (`firebase-config.js` ignorado e versionado ao mesmo tempo; o script do site exige que ele exista na `main`).
 - Publicar `firestore.rules`: nenhum dos dois scripts o faz.
 - `docs/specs/arch.md` e `docs/specs/tech-stack.md` foram atualizados pelo integrador em 2026-11-19 (commit `17f9b5e`).

@@ -239,7 +239,7 @@ export class BlendingMenuView extends BaseView {
     async mount(params) {
         // Initialize components
         this.seriesSelector = new BlendSeriesSelector({
-            onEntityChange: (entity) => this.fullUpdate(),
+            onEntityChange: () => this.fullUpdate(),
             onSeriesSelect: (series) => {
                 this.selectedSeries = series
                 this.fullUpdate()

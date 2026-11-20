@@ -69,7 +69,7 @@ router.post('/debug/raw-ranking', async (req, res) => {
         })
 
         let album = null
-        try { album = extractAlbum(albumResp) } catch (e) { /* ignore */ }
+        try { album = extractAlbum(albumResp) } catch { /* ignore */ }
         const rankingResult = await fetchRankingForAlbum(album || { title: albumQuery, artist: '', year: '' }, albumQuery, { raw: true })
 
         let bestEver = null

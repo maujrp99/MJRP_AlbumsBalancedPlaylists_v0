@@ -18,38 +18,39 @@ export class AlbumLoader {
         if (this.isLoaded) return Promise.resolve(this.albums)
         if (this.loadPromise) return this.loadPromise
 
-        this.loadPromise = new Promise(async (resolve, reject) => {
-            try {
-                // Try to load expanded JSON first (Enriched Data)
-                const jsonResponse = await fetch('/assets/data/albums-expanded.json')
-                if (jsonResponse.ok) {
-                    const data = await jsonResponse.json()
-                    this.albums = data
-                    this.isLoaded = true
-                    console.log(`[AlbumLoader] Loaded ${this.albums.length} albums from Expanded JSON (Enriched)`)
-                    resolve(this.albums)
-                    return
-                }
-
-                // Fallback to CSV (Legacy)
-                console.warn('[AlbumLoader] Expanded dataset not found, falling back to CSV')
-                const csvResponse = await fetch('/assets/data/albums.csv')
-                if (!csvResponse.ok) throw new Error('Failed to load albums data')
-
-                const csvText = await csvResponse.text()
-                this.albums = this.parseCSV(csvText)
-                this.isLoaded = true
-                console.log(`[AlbumLoader] Loaded ${this.albums.length} albums from CSV`)
-                resolve(this.albums)
-
-            } catch (err) {
-                console.error('[AlbumLoader] Error loading albums:', err)
-                this.loadPromise = null
-                resolve([]) // Fail gracefully
-            }
-        })
-
+        this.loadPromise = this._read()
         return this.loadPromise
+    }
+
+    /**
+     * Read the dataset: the expanded JSON first, the CSV when it is not there. Never rejects:
+     * when neither can be read the answer is an empty list, and the next load() tries again.
+     */
+    async _read() {
+        try {
+            // Try to load expanded JSON first (Enriched Data)
+            const jsonResponse = await fetch('/assets/data/albums-expanded.json')
+            if (jsonResponse.ok) {
+                this.albums = await jsonResponse.json()
+                this.isLoaded = true
+                console.log(`[AlbumLoader] Loaded ${this.albums.length} albums from Expanded JSON (Enriched)`)
+                return this.albums
+            }
+
+            // Fallback to CSV (Legacy)
+            console.warn('[AlbumLoader] Expanded dataset not found, falling back to CSV')
+            const csvResponse = await fetch('/assets/data/albums.csv')
+            if (!csvResponse.ok) throw new Error('Failed to load albums data')
+
+            this.albums = this.parseCSV(await csvResponse.text())
+            this.isLoaded = true
+            console.log(`[AlbumLoader] Loaded ${this.albums.length} albums from CSV`)
+            return this.albums
+        } catch (err) {
+            console.error('[AlbumLoader] Error loading albums:', err)
+            this.loadPromise = null
+            return [] // Fail gracefully
+        }
     }
 
     /**
@@ -65,16 +66,7 @@ export class AlbumLoader {
             const line = lines[i].trim()
             if (!line) continue
 
-            // Basic split by comma, respecting potential quotes could be added but 
-            // for now simple split is likely sufficient given the data preview.
-            // If data gets complex, a regex parser would be safer.
-            // Using a regex to handle commas inside quotes just in case.
-            const matches = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g)
-
-            // Fallback to simple split if regex fails or matches length is unexpected
-            // actually simple split is safer for the specific format we saw unless there are commas in names
-            // Let's use a robust "split by comma unless in quotes" regex
-
+            // Split by comma, unless the comma is inside quotes
             const parts = this.splitCSVLine(line)
 
             if (parts.length >= 5) {

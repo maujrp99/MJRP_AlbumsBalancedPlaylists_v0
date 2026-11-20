@@ -20,10 +20,8 @@ export default class SeriesHeader extends Component {
     }
 
     render() {
-        const { metadata, pageTitle: propTitle, albumCount: propCount, onGeneratePlaylists } = this.props;
+        const { metadata, pageTitle: propTitle, onGeneratePlaylists } = this.props;
         const title = propTitle || metadata?.title || 'All Albums Series';
-        const albumCount = propCount ?? metadata?.albumCount ?? 0;
-        const canGenerate = albumCount > 0;
 
         // Clear container
         SafeDOM.clear(this.container);

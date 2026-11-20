@@ -108,7 +108,9 @@ export class BlendSeriesSelector {
                     try {
                         const found = await optimizedAlbumLoader.findAlbum(artist, albumParts.join(' - '))
                         if (found) coverUrl = optimizedAlbumLoader.getArtworkUrl(found, 100)
-                    } catch (e) { }
+                    } catch {
+                        console.debug(`[BlendSeriesSelector] Could not find cover for: ${name}`)
+                    }
                 }
             }
             else if (typeof query === 'string' && query.includes(' - ')) {
@@ -121,7 +123,7 @@ export class BlendSeriesSelector {
                     if (found) {
                         coverUrl = optimizedAlbumLoader.getArtworkUrl(found, 100)
                     }
-                } catch (e) {
+                } catch {
                     console.debug(`[BlendSeriesSelector] Could not find cover for: ${query}`)
                 }
             }

@@ -149,7 +149,7 @@ export class Router {
     async handleRouteChange() {
         const path = window.location.pathname
 
-        for (const [routePath, route] of this.routes) {
+        for (const [, route] of this.routes) {
             const match = path.match(route.pattern)
             if (match) {
                 this.currentUrl = path + window.location.search

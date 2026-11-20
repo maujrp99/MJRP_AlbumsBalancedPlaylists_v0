@@ -6,7 +6,7 @@ import { albumSeriesStore } from '../stores/albumSeries.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { RegeneratePanel } from '../components/playlists/RegeneratePanel.js'
 import { getIcon } from '../components/Icons.js'
-import { getAllAlgorithms, getRecommendedAlgorithm } from '../algorithms/index.js'
+import { getAllAlgorithms } from '../algorithms/index.js'
 import { BalancedRankingStrategy, SpotifyRankingStrategy, BEARankingStrategy } from '../ranking/index.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 

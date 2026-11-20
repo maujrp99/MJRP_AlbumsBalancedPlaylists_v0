@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { SeriesComponentFactory } from '../../../public/js/views/helpers/SeriesComponentFactory.js'
 import { albumSeriesStore } from '../../../public/js/stores/albumSeries.js'
-import { albumsStore } from '../../../public/js/stores/albums.js'
 
 // Mocks for components
 const mockHeaderMount = vi.fn()

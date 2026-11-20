@@ -4,7 +4,6 @@ import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
 
 // Mock dependencies
 const mockDb = {}
-const mockCache = {}
 
 const mockStorage = {
     save: vi.fn(),
