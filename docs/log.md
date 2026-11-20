@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 13:19] session — F77: a porta de eventos, o adaptador do PostHog e o interruptor
+**Branch:** feat/f77-measure-how-the-app-is-used
+A lista fechada de eventos em `shared/usageEvents.js` (só contagens e valores de conjunto fechado: texto da pessoa não cabe), a porta `services/usage/track.js`, o adaptador do PostHog carregado só quando ligado (`posthog-js` 1.447.0, build sem código de fora), o adaptador de depuração (`window.__usageEvents`) e o teste de arquitetura que deixa só o adaptador falar com a biblioteca.
+O roteador passa a dizer às funções de depois da troca qual rota casou; a tela é medida pelo nome, nunca pelo endereço. Decisões do agente, revisáveis, no `plan.md` da F77.
+
 ## [2026-11-20 12:47] decision — o MJRP abriu a v6.0: o app (React Native) e a medição do uso com o PostHog
 **Branch:** main
 Palavras dele: «Vamos criar a V6.0 para implementação da app e para implementar o posthog no site e na app em reactive native (pq não flutter?)». Criados na `main`: a versão v6.0 no ROADMAP (`^REL-41`), o épico EP-10 no PRD, as stories S-59 (saber como o app é usado) e S-60 (o app pelas lojas), e as features F77 (medição, PostHog; via padrão) e F78 (o app; via padrão), em esboço, sem ramo: esperam a priorização. Por que não Flutter, na resposta do agente: o app de hoje é JavaScript com mais de 3000 testes; em React Native as regras (receitas, ranking, identidade de álbum e de faixa) são reaproveitadas num núcleo compartilhado com o site; em Flutter (Dart) seriam reescritas ou iriam todas para o servidor. Sem o site, as duas pilhas empatariam. A decisão formal fica para o ADR, depois da proposta de arquitetura.

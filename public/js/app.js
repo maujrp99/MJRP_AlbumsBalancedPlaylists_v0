@@ -45,6 +45,7 @@ import { Footer } from './components/Footer.js'
 import { clearAppAlbumCaches } from './services/albums/albumLoading.js'
 import { startPhoneShell } from './components/navigation/PhoneShell.js'
 import { userStore } from './stores/UserStore.js'
+import { startUsageMeasurement } from './services/usage/usageWiring.js'
 
 const initUI = () => {
     const topNav = new TopNav()
@@ -100,6 +101,10 @@ async function bootstrap() {
 
 // Start app when DOM is ready
 document.addEventListener('DOMContentLoaded', bootstrap)
+
+// The measurement of use (F77): off unless the build has a project key and nobody turned it off.
+// Started before the first route, so the first screen is measured; it never holds the app.
+startUsageMeasurement({ router })
 
 // Register Routes
 // V3: SeriesController is instantiated once and passed to view
