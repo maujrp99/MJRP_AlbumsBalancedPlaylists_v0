@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 21:55] session — F52 fatia 5 em produção (servidor); UAT-181 em fixed
+
+Servidor publicado da `main` (`b9e94d6`, revisão `mjrp-proxy-00206-47c`; volta `mjrp-proxy-00205-mg4`). Em produção: `/api/generate` 401 sem login; com login, uma busca paga de verdade respondeu 200 em 37,8 s, e a linha `generate` do registro traz o desfecho das notas por fonte (`acclaim: found`). A busca de álbum por IA foi vista funcionando: UAT-181 em `fixed`, junto com a UAT-23. Com isso a F52 fica sem fatia pendente. Auxiliares trabalhando: F70 (defeitos pequenos) e a segunda fatia das camadas com a trava de lint (`fix/f58-layers-and-lint-gate`).
+
 ## [2026-11-19 21:53] decision — F70 criada: defeitos pequenos achados no caminho (decidido pelo agente — revisável)
 
 Feature de via rápida, `^REL-40`, conserta as UAT-208 (visitante pede rota paga), UAT-209 (preço do inventário sem moeda), UAT-210 (o app ignora o desfecho das notas na busca por IA), abertas agora, e a UAT-63 (capa sem substituto). Criada na `main` antes de qualquer ramo. O resto das UAT-18, 19 e 20 segue nas features donas (F58, F64), numa segunda fatia.

@@ -25,3 +25,15 @@ Funções do servidor acima do limite: de 26 para 14 (a lista só pode encolher)
 
 - Em produção: uma busca paga de verdade (um álbum que o catálogo da Apple não tem) e a popularidade do Spotify com as credenciais reais do servidor.
 - O app ainda não usa o campo novo `ratings`; quando uma fonte vier `failed`, ele não deveria gravar «este álbum não tem notas». Fica como continuação.
+
+## Em produção (2026-11-19 21:55)
+
+Servidor publicado da `main` (`b9e94d6`), revisão `mjrp-proxy-00206-47c` (volta: `mjrp-proxy-00205-mg4`).
+
+| Pedido | Resultado |
+|---|---|
+| `/api/generate` sem login | 401 `unauthorized` |
+| `/api/enrich-album` com login («Core») | `found`; no registro: `how: source`, 3 pedidos à fonte, 4,1 s |
+| `/api/generate` com login e a chave de verdade («Jimmy Page & Robert Plant - No Quarter», uma chamada paga) | no registro do servidor: `answer: found`, status 200, 37,8 s, `ratings: acclaim found, aiRanking not_found, popularity not_asked` |
+
+Com isso a busca de álbum por IA foi vista funcionando em produção (UAT-181).
