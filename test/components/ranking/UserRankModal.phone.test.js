@@ -245,16 +245,18 @@ describe('UserRankModal on the phone: Back with an order not saved (F76, recheck
     })
 })
 
-describe('UserRankModal on the computer: Back is unchanged (F76, recheck N6)', () => {
-    it('closes at once on Escape even with the order changed', () => {
+describe('UserRankModal on the computer: no phone sheet (F76, recheck N6; UAT-224)', () => {
+    it('with the order changed, Escape asks with the app window, never the phone sheet', () => {
         asScreen(false)
         const onClose = vi.fn()
         const modal = new UserRankModal({ album: album(), onClose })
         modal.show()
         modal.moveTrack(0, 2)
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
-        expect(document.querySelector('.rank-window')).toBe(null)
-        expect(onClose).toHaveBeenCalledTimes(1)
+        expect(document.getElementById('rankDiscardSheet')).toBe(null)
+        expect(document.body.textContent).toContain('Discard changes?')
+        expect(document.querySelector('.rank-window')).not.toBe(null)
+        expect(onClose).not.toHaveBeenCalled()
         delete window.matchMedia
         document.body.innerHTML = ''
     })

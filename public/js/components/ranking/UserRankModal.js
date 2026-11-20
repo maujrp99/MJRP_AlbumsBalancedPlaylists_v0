@@ -16,7 +16,9 @@ import { formatDuration } from '../../utils/duration.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
 import { getIcon } from '../Icons.js'
 import { isPhone, onPhoneChange } from '../../utils/isPhone.js'
-import { confirmDiscard, renderPhoneRow, renderPhoneWindow } from './rankWindowPhone.js'
+import { confirmDiscard, renderPhoneRow, renderPhoneWindow, RANK_PHONE_TEXT } from './rankWindowPhone.js'
+import { ConfirmModal } from '../ui/modals/ConfirmModal.js'
+import { BaseModal } from '../ui/BaseModal.js'
 
 /** How long the window's own notice stays: a plain one, and one that offers a way back. */
 const TOAST_MS = 2000
@@ -87,7 +89,7 @@ export class UserRankModal {
 
         // Add escape key listener
         this._escapeHandler = (e) => {
-            if (e.key === 'Escape' && !this._sheet) this.requestClose()
+            if (e.key === 'Escape' && !this._sheet && !this._asking) this.requestClose()
         }
         document.addEventListener('keydown', this._escapeHandler)
         // The window is drawn for the phone or for the computer: drawn again when that changes
@@ -136,11 +138,38 @@ export class UserRankModal {
      * a sheet asks first (F76, recheck N6). On the computer, and with nothing changed, it closes.
      */
     requestClose() {
-        if (this.phone && this.hasUnsavedChanges()) {
-            confirmDiscard(this)
-            return
+        if (this._asking) return
+        if (!this.hasUnsavedChanges()) return this.close()
+        if (this.phone) return confirmDiscard(this)
+        this._askDiscard()
+    }
+
+    /**
+     * The computer's question (UAT-224): the app's confirmation window (the component, not the
+     * dialog service: this window only shows and reports), with the phone's words.
+     * One question at a time; «Keep editing» leaves the window and its order as they were.
+     */
+    _askDiscard() {
+        this._asking = true
+        const answer = (discard) => {
+            BaseModal.unmount(question)
+            document.removeEventListener('keydown', onKey)
+            this._asking = false
+            if (discard) this.close()
         }
-        this.close()
+        // Escape is «Keep editing», as in every confirmation window of the app
+        const onKey = (e) => { if (e.key === 'Escape') answer(false) }
+        const question = ConfirmModal.render({
+            title: RANK_PHONE_TEXT.discardTitle,
+            message: RANK_PHONE_TEXT.discardNote,
+            confirmText: RANK_PHONE_TEXT.discard,
+            cancelText: RANK_PHONE_TEXT.keepEditing,
+            variant: 'danger',
+            onConfirm: () => answer(true),
+            onCancel: () => answer(false)
+        })
+        BaseModal.mount(question)
+        document.addEventListener('keydown', onKey)
     }
 
     /**
@@ -222,7 +251,7 @@ export class UserRankModal {
             // rank-window: the name the phone's stylesheet and scroll hold know this window by (F76)
             className: 'rank-window fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm',
             onClick: (e) => {
-                if (e.target === overlay) this.close()
+                if (e.target === overlay) this.requestClose()
             }
         })
 
@@ -240,7 +269,7 @@ export class UserRankModal {
         }, [
             SafeDOM.button({
                 className: 'flex items-center gap-2 text-white/60 hover:text-white transition-colors',
-                onClick: () => this.close()
+                onClick: () => this.requestClose()
             }, [
                 SafeDOM.fromHTML(getIcon('ChevronLeft', 'w-5 h-5')),
                 SafeDOM.span({}, 'Back')

@@ -154,9 +154,11 @@ class BlendingController {
      * @private
      */
     _generateDefaultBatchName() {
+        // The day and the hour of the same clock, the person's (UAT-225: the day came from UTC)
         const date = new Date()
-        const dateStr = date.toISOString().split('T')[0]
-        const timeStr = date.toTimeString().split(' ')[0].substring(0, 5)
+        const two = (n) => String(n).padStart(2, '0')
+        const dateStr = `${date.getFullYear()}-${two(date.getMonth() + 1)}-${two(date.getDate())}`
+        const timeStr = `${two(date.getHours())}:${two(date.getMinutes())}`
         return `TheAlbumBlender Playlist ${dateStr} ${timeStr}`
     }
 }
