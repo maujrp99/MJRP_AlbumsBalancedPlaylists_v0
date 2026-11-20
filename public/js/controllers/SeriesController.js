@@ -27,6 +27,9 @@ import { AlbumStatus } from '../models/albumLoadState.js';
 import toast from '../components/Toast.js';
 import { router } from '../router.js';
 
+/** The order the albums screen opens in: «Newest», the series created last first (UAT-227). */
+const DEFAULT_SERIES_ORDER = 'recent_desc'
+
 /** The address of the albums screen at a scope: one series, or all of them. */
 const scopeAddress = (seriesId) => (seriesId ? `/albums?seriesId=${seriesId}` : '/albums');
 
@@ -41,7 +44,7 @@ export default class SeriesController {
             filterMode: 'all',         // 'all' | 'ranked' | 'unranked'
             filters: { artist: '', year: '', source: '' }, // Detailed filters
             searchQuery: '',
-            seriesSortMode: 'count_asc', // Default: Smallest (Performance)
+            seriesSortMode: DEFAULT_SERIES_ORDER, // the series created last first (UAT-227)
             isLoading: false,
             loadProgress: { current: 0, total: 0 },
             // Paging of the series on screen: numbered pages or a list that grows on scroll
@@ -429,7 +432,7 @@ export default class SeriesController {
      */
     getSortedSeries(seriesList) {
         if (!seriesList) return [];
-        const mode = this.state.seriesSortMode || 'count_asc'; // Default: Smallest first (Performance)
+        const mode = this.state.seriesSortMode || DEFAULT_SERIES_ORDER
 
         return [...seriesList].sort((a, b) => {
             switch (mode) {

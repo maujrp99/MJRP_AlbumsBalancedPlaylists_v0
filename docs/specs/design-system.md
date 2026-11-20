@@ -56,6 +56,10 @@ Um só desenho para toda escolha «um destes» (Grid/List, Pages/Scroll, Origina
 - 44 px de altura; as opções lado a lado, de largura igual, texto 14 px peso 600 na fonte de texto.
 - **O escolhido é a superfície clara elevada** (`#2a2a30`, texto branco, contorno de 1 px a 14 % de branco); as outras, texto `#a0a0a8` sobre o trilho `#0a0a0c`. **Nunca laranja** (decidido pelo agente — revisável): o laranja é a ação principal da tela, a aba atual da barra de baixo e o item escolhido; um segmentado é um ajuste de vista, e em Albums e na janela do álbum ele aparece junto de uma ação laranja. Assim a regra é uma só, sem exceção por tela.
 
+### Cores das fontes no celular (UAT-228, 2026-11-20)
+
+As referências de uma faixa usam a cor da sua fonte, as mesmas da tabela do computador: **BestEverAlbums em laranja** (`#fb923c`, um tom acima do laranja da marca para ler bem em texto de 12 px: 8,0:1 sobre o fundo da janela; 5,3:1 apagada) e **Spotify em verde** (`#1ed760`: 9,4:1; 6,1:1 apagada). É a exceção pedida pelo MJRP à regra «laranja só na ação principal e no estado ligado»: aqui o laranja nomeia uma fonte, não uma ação. Usada só nas referências das faixas (janela do álbum); não vale para botões.
+
 ### Áreas seguras e altura
 
 - `viewport-fit=cover` no `index.html`: a página vai até as bordas; as barras se afastam da ilha e da barra de início com `env(safe-area-inset-*)`, e a margem lateral é `max(16px, env(safe-area-inset-left))`. Fonte: WebKit, «Designing Websites for iPhone X» (`viewport-fit=cover`, `env()`, `max()` para somar margem e área segura); MDN, `env()`.

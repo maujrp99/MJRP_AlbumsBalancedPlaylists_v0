@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 09:05] session — UAT-227 e UAT-228: Albums abre em «Newest»; a janela do álbum no celular diz a nota do BEA, cada fonte na sua cor
+**Branch:** feat/f76-owner-adjustments
+Testes primeiro (vistos falhando): `SeriesController.defaultOrder.test.js` e o teste novo de `TracksTabs.phone.test.js`. A ordem de abertura é uma constante, `DEFAULT_SERIES_ORDER = 'recent_desc'`. Na faixa, «BEA ★ 87» no lugar de «BEA #4», com `aria-label` falado sem a estrela; BEA laranja `#fb923c`, Spotify verde `#1ed760`, contraste medido. Suíte 3068, lint limpo. `behavior.md` e `design-system.md` dizem as duas regras.
+
 ## [2026-11-20 09:03] decision — o MJRP usou o app no iPhone: «Ficou muito top!»; dois ajustes registrados
 **Branch:** main
 UAT-227: Albums abre em «Newest» (vale também no computador: a ordem de abertura é uma só). UAT-228: na janela do álbum no celular, o BEA mostra a nota da faixa e cada fonte tem a sua cor (BEA laranja, Spotify verde, as do computador). Decidido pelo agente — revisável: «color code» lido como a cor de cada fonte, não como uma escala de cores pelo valor; a regra «laranja só na ação principal e no estado ligado» do celular ganha a exceção da cor do BEA, pedida por ele.
