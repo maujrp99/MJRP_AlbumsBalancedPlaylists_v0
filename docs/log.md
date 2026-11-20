@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 14:03] decision — o MJRP prefere substituir a constituição de 2025 a emendá-la
+**Branch:** main
+Palavras dele, ao receber a proposta de emenda: «Sobre a constitution pode ser superseded já envelheceu». Um agente escreve a nova como proposta (`design/proposals/f78-app-architecture/constitution-v2.md`), a partir do que o código e os registros de decisão são hoje, mais o app. Nada entra em vigor ainda: a constituição v1.0.0 continua no lugar e o ADR-0022 continua «Proposed» até ele ler e aceitar os dois textos. O agente integrador chegou a instruir o contrário (marcar o aceite pelas palavras acima) e corrigiu antes de qualquer arquivo mudar: aceite não se infere.
+
 ## [2026-11-20 13:54] decision — F78: o ADR-0022 da pilha do app, em «Proposed», e a emenda da constituição proposta
 **Branch:** feat/f78-app-first-milestone-specs
 ADR-0022 (React Native com Expo; as regras num núcleo de JavaScript em `shared/`, usado pelo site, pelo app e pelo servidor; Firebase pelo pacote nativo; Swift e Kotlin só onde a plataforma exige, a começar pelo token do Apple Music), uma linha por alternativa; a análise fica na proposta e na crítica. Aceite: MJRP, porque mexe na constituição; o agente não o aceita.
