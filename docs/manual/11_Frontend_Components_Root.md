@@ -128,7 +128,8 @@ stateDiagram-v2
 ### 4.3 `ViewAlbumModal.js`
 **Purpose**: Detailed Read-Only View.
 **Features**:
-*   **Badges**: Shows Year, Format, Owned/Wishlist status.
+*   **Badges**: Shows Year. Opened from an inventory item (the item holds the album in `albumData`), it also shows what belongs to the item: its status ("OWNED", "NOT OWNED" or "WISHLIST", from `models/inventoryStatus.js`), format, price, condition and notes. Opened for an album that is not an inventory item, it shows no status (F71).
+*   **No tracks**: an album with no tracks kept (an inventory item added from a series) shows one line in the place of the comparison (`noTracksText`).
 *   **Comparison**: Embeds `TracksRankingComparison` component to show discrepancies between "Original Album Order" and "Acclaim Order".
 
 ### 4.4 `EditAlbumModal.js`
@@ -140,7 +141,7 @@ stateDiagram-v2
 ### 4.5 `InventoryAddModal.js` & `InventoryEditModal.js`
 **Purpose**: CRUD operations for User Collection.
 **Fields**:
-*   `Format`: CD, Vinyl, Cassette, Digital, etc.
+*   `Format`: CD, Vinyl, Cassette, Digital, etc. In the edit modal, an item with no format (added from a series, F71) opens with "Not set", and saving without choosing one writes no format.
 *   `Currency`: USD vs BRL (Dynamic symbol switching).
 *   `Price`: Decimal input.
 *   `Notes`: Textarea for condition/edition details.

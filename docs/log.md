@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:13] session — F71: o manual diz o inventário como ficou
+
+Branch: `feat/f71-inventory-holds-every-album-of-my-series`, depois do commit `c1f2821`.
+
+As frases do manual que deixaram de ser verdade com a F71, corrigidas onde estavam, sem arquivo novo: `21_Dynamic_UI_Mapping.md` (seção 6: a situação por `models/inventoryStatus.js`, o filtro, as três contagens, a ação «Add the albums of my series» passo a passo), `14_Frontend_Components_Feature_Map.md` (inventário), `09_Frontend_Views.md` e `10_Frontend_Renderers.md` (cabeçalho, filtros, botão, cartão sem formato e sem preço), `11_Frontend_Components_Root.md` (a janela do álbum mostra o que é do item; «Not set» na janela de editar), `07_Frontend_Data_Infra.md` (`planSeriesAlbums`, `addAlbumsAsNotOwned`, `addBatch`, `createMany`) e `08_Frontend_Models.md` (os três modelos novos; `inventoryFromSeries.js` entre os que perguntam à regra de identidade). O commit do código também registrou, pelo gancho de status, o nó S-54 em «In progress».
+
 ## [2026-11-19 23:12] session — F71 no ramo: uma regra para a situação do item, o filtro Owned / Not Owned / Wishlist e a ação «Add the albums of my series»
 
 Branch: `feat/f71-inventory-holds-every-album-of-my-series` (da `main` em `2722d1d`). Auxiliar sem navegador e sem conta: nada rodou contra dados reais; a prova na tela e a execução na conta do MJRP são a TASK-10, do integrador.
