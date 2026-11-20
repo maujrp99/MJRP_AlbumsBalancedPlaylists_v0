@@ -46,11 +46,11 @@ describe('SeriesFactsService', () => {
         const [, queries] = saveAlbumFacts.mock.calls[0]
         expect(queries[0]).toEqual({
             artist: 'Yes', title: 'Fragile', year: '1971',
-            facts: { year: 1971, sources: { acclaim: true, popularity: false }, checkedAt: NOW }
+            facts: { year: 1971, sources: { acclaim: true, popularity: false }, checkedAt: NOW, v: 2 }
         })
         expect(queries[1]).toEqual({
             artist: 'Genesis', title: 'Foxtrot',
-            facts: { year: 1972, sources: { acclaim: true, popularity: true }, checkedAt: NOW }
+            facts: { year: 1972, sources: { acclaim: true, popularity: true }, checkedAt: NOW, v: 2 }
         })
         expect(seriesStore.setAlbumQueries).toHaveBeenCalledWith('s1', queries)
     })
@@ -73,7 +73,7 @@ describe('SeriesFactsService', () => {
         expect(saveAlbumFacts).not.toHaveBeenCalled()
     })
 
-    it('leaves alone the query whose album failed, or whose source did not answer', async () => {
+    it('leaves alone the query whose album failed; a source that did not answer has no fact, and the other keeps its own (F69)', async () => {
         setup(
             [{ id: 's1', name: 'One', albumQueries: ['A - Failed', 'B - Source Down', 'C - Fine'] }],
             { s1: [
@@ -87,7 +87,7 @@ describe('SeriesFactsService', () => {
 
         const [, queries] = saveAlbumFacts.mock.calls[0]
         expect(queries[0]).toBe('A - Failed')
-        expect(queries[1]).toBe('B - Source Down')
+        expect(queries[1].facts.sources).toEqual({ popularity: false })
         expect(queries[2].facts.sources).toEqual({ acclaim: true, popularity: false })
     })
 
@@ -151,7 +151,7 @@ describe('SeriesFactsService: the corrected Apple Music id', () => {
         saveAlbumFacts = vi.fn(async () => { })
         service = new SeriesFactsService({ loadStore, seriesStore, saveAlbumFacts, now: () => NOW })
     }
-    const settled = { year: 1992, sources: { acclaim: true, popularity: false }, checkedAt: 1 }
+    const settled = { year: 1992, sources: { acclaim: true, popularity: false }, checkedAt: 1, v: 2 }
 
     it('writes the id the album was found under, with the cover and the year that were stored beside the old one', async () => {
         const stored = { artist: STP, title: 'Core', appleMusicId: 'apple-shangri', year: 2001, coverUrl: 'https://cover/shangri', facts: settled }
@@ -187,13 +187,13 @@ describe('SeriesFactsService: the corrected Apple Music id', () => {
         expect(saveAlbumFacts).toHaveBeenCalledTimes(1)
         expect(saveAlbumFacts.mock.calls[0][1]).toEqual([{
             artist: STP, title: 'Core', appleMusicId: 'apple-core',
-            facts: { year: 1992, sources: { acclaim: true, popularity: false }, checkedAt: NOW }
+            facts: { year: 1992, sources: { acclaim: true, popularity: false }, checkedAt: NOW, v: 2 }
         }])
     })
 
-    it('does not wait for the facts: a source that failed does not hold the id back', async () => {
+    it('does not wait for the facts: sources that said nothing do not hold the id back', async () => {
         const stored = { artist: STP, title: 'Core', appleMusicId: 'apple-shangri' }
-        setup([stored], [entry('s1', stored, coreLoaded({ replacedSourceId: 'apple-shangri' }), { acclaim: EnrichmentStatus.FAILED })])
+        setup([stored], [entry('s1', stored, coreLoaded({ replacedSourceId: 'apple-shangri' }), { acclaim: EnrichmentStatus.FAILED, popularity: EnrichmentStatus.NOT_CONNECTED })])
 
         await service.syncFinishedSeries()
 
@@ -218,7 +218,7 @@ describe('SeriesFactsService: the corrected Apple Music id', () => {
         const changedMeanwhile = { artist: 'Pearl Jam', title: 'Ten', appleMusicId: 'picked-by-the-person', facts: settled }
         setup([obeyed, 'Nirvana - Nevermind', changedMeanwhile], [
             entry('s1', obeyed, coreLoaded()),
-            { ...entry('s1', 'Nirvana - Nevermind', { title: 'Nevermind', year: 1992, metadata: { sourceId: 'apple-nevermind' } }), enrichment: { acclaim: 'failed', popularity: 'empty', userRanking: 'empty' } },
+            { ...entry('s1', 'Nirvana - Nevermind', { title: 'Nevermind', year: 1992, metadata: { sourceId: 'apple-nevermind' } }), enrichment: { acclaim: 'failed', popularity: 'not-connected', userRanking: 'empty' } },
             entry('s1', changedMeanwhile, { title: 'Ten', year: 1992, metadata: { sourceId: 'apple-ten', replacedSourceId: 'an-older-id' } })
         ])
 

@@ -213,6 +213,15 @@ export const SpotifyAuthService = {
     },
 
     /**
+     * True when Spotify can be asked without the person: the access is in its time, or it has
+     * passed and can still be renewed. False is "not connected" (F69): nobody is asked.
+     * @returns {boolean}
+     */
+    hasSession() {
+        return this.isAuthenticated() || Boolean(localStorage.getItem('spotify_refresh_token'))
+    },
+
+    /**
      * Get the valid access token. Tries to refresh if expired.
      * @returns {Promise<string|null>}
      */

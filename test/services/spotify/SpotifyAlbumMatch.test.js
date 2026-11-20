@@ -79,11 +79,11 @@ describe('SpotifyService.searchAlbum', () => {
         expect(await SpotifyService.searchAlbum('Elton John', 'Greatest Hits')).toBeNull()
     })
 
-    it('enrichAlbumData gives nothing for an album Spotify does not have, and does not read tracks of another', async () => {
+    it('albumPopularity says «not found» for an album Spotify does not have, and does not read tracks of another', async () => {
         fetchSpy.mockResolvedValue(found(item('s-shangri', 'Shangri-La Dee Da')))
         const tracks = vi.spyOn(SpotifyService, 'getAlbumTracksWithPopularity')
 
-        expect(await SpotifyService.enrichAlbumData(STP, 'Core')).toBeNull()
+        expect(await SpotifyService.albumPopularity(STP, 'Core')).toEqual({ found: false, reason: 'not_found' })
         expect(tracks).not.toHaveBeenCalled()
     })
 })

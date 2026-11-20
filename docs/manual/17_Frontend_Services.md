@@ -38,10 +38,9 @@ The integration follows a **Facade Pattern** to hide the complexity of the Apple
 *   **`MusicKitSearchAdapter.js`**: An **Adapter** that makes the Apple Music Catalog search compatible with the generic `Autocomplete` component interface. It normalizes Apple's JSON response into the app's standard `{ id, title, artist, coverUrl }` format.
 
 ### Spotify
-*   **`SpotifyAuthService.js`**: Implements **PKCE** (Proof Key for Code Exchange) flow for secure client-side authentication. Manages token lifecycle (storage, refresh). `renewAccess()` renews now when Spotify refused the access; renewals asked at the same time share one request (F62). `SpotifyService._fetch` uses it: a 401 renews once and repeats the call, then throws `SpotifyReconnectError`; a 429 throws `SpotifyRateLimitError`, or is waited for (`Retry-After` up to 30 s) by the export calls (`services/spotify/spotifyErrors.js`).
-*   **`SpotifyEnrichmentService.js`**: A **Background Worker**. It manages a queue of albums to enrich with Spotify data (Popularity, Spotify ID).
-    *   **Rate Limiting**: Enforces a strict delay (100ms) between requests to respect API limits.
-    *   **Reactivity**: Uses a subscription model (`subscribe()`, `notify()`) to broadcast progress to the UI without coupling.
+*   **`SpotifyAuthService.js`**: Implements **PKCE** (Proof Key for Code Exchange) flow for secure client-side authentication. Manages token lifecycle (storage, refresh). `renewAccess()` renews now when Spotify refused the access; renewals asked at the same time share one request (F62). `SpotifyService._fetch` uses it: a 401 renews once and repeats the call, then throws `SpotifyReconnectError`; a 429 throws `SpotifyRateLimitError`, or is waited for (`Retry-After` up to 30 s) by the export calls (`services/spotify/spotifyErrors.js`). `hasSession()` (F69) says whether Spotify can be asked without the person: the access is in its time, or it can still be renewed; false is "not connected".
+*   **`albums/adapters/spotifyPopularitySource.js`** (v5.0, F69): the **one path** that asks for the Spotify popularity of an album, behind `PopularityEnricher`. `read(album)` answers `found` (from what `SpotifyEnrichmentStore` already has, or from `SpotifyService.albumPopularity`), `not_found` (with the reason and the version of the identity rule) or `not_connected` (no session, or a session that ended: `SpotifyReconnectError`), and throws on a failure. A 429 with `Retry-After` up to 30 s is thrown with `hold` (`HoldReason.SPOTIFY_BUSY`), so the load holds the popularity and asks again; Spotify is not asked again before the time it gave. Its dependencies are given (store, client, session, clock).
+*   **`albums/popularityOnConnect.js`** (v5.0, F69): on `spotify-auth-change`, when there is a session, asks `albumLoadService.refreshSource(albumId, 'popularity')` for the albums on screen whose popularity is `not-connected`. It replaces the background worker `SpotifyEnrichmentService.js`, which looped over the album queries of every series outside the load queue, and was removed.
 
 ---
 
@@ -69,15 +68,16 @@ graph TD
     PPS -->|Format| Firestore
 ```
 
-### Background Enrichment
+### Popularity when Spotify connects (v5.0, F69)
 ```mermaid
 graph TD
-    Auth[SpotifyAuthService] -->|Success Event| SES[SpotifyEnrichmentService]
-    SES -->|1. Build Queue| Store[AlbumSeriesStore]
-    SES -->|2. Process Item| API[Spotify API]
-    API -->|Data| SES
-    SES -->|3. Update| DB[SpotifyEnrichmentStore]
-    SES -->|4. Notify| UI[GlobalProgress]
+    Auth[SpotifyAuthService] -->|spotify-auth-change| OC[popularityOnConnect]
+    OC -->|albums whose popularity is not-connected| LS[AlbumLoadService.refreshSource]
+    LS -->|source queue| PE[PopularityEnricher]
+    PE --> SRC[SpotifyPopularitySource]
+    SRC -->|stored answer| DB[SpotifyEnrichmentStore]
+    SRC -->|albumPopularity| API[Spotify API]
+    LS -->|done / empty / failed / not-connected| Store[AlbumLoadStore]
 ```
 
 ## Counting the albums that are not the album asked for (`services/albums/albumIdentityAudit.js`) - v5.0 (F55, slices 1 and 2)

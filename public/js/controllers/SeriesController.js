@@ -199,7 +199,7 @@ export default class SeriesController {
         // A filter that reads the facts of the series cannot answer for a query never checked
         // against the sources: the screen says how many there are, in the scope it is showing.
         const scoped = isAll ? sorted : sorted.filter(series => series.id === this.state.targetSeriesId);
-        const unchecked = readsFacts(source) ? countUnchecked(scoped) : 0;
+        const unchecked = readsFacts(source) ? countUnchecked(scoped, source) : 0;
 
         const { pagingMode, pageSize } = this.state;
         const cut = pagingMode === PagingMode.SCROLL
@@ -253,6 +253,23 @@ export default class SeriesController {
         const saved = await ownRankingService.save(album, rankings);
         if (saved) albumLoadService.refreshSource(album.id, 'userRanking');
         return saved;
+    }
+
+    /**
+     * Where the Spotify popularity of a loaded album is (EnrichmentStatus), for the line the album
+     * shows about it (F69). Null when the load does not have that album.
+     */
+    getPopularityStatus(albumId) {
+        for (const seriesId of albumLoadStore.getSeriesIds()) {
+            const entry = albumLoadStore.getEntries(seriesId).find(item => item.album?.id === albumId);
+            if (entry) return entry.enrichment.popularity;
+        }
+        return null;
+    }
+
+    /** Ask Spotify again for the popularity of one album, through the album load (F69). */
+    askPopularity(albumId) {
+        return albumLoadService.refreshSource(albumId, 'popularity');
     }
 
     /** The series on screen, in order (what the grid groups the albums by). */

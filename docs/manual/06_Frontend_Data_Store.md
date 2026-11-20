@@ -66,36 +66,41 @@ The Service Layer orchestrates complex operations and state transitions, isolati
     5.  **Acceptance**: the searches only list candidates. After each one, the one identity rule (`shared/albumIdentity.js`, through `models/askedAlbum.js`) picks the album asked for among them: the title must match on its own, the artist must match, the plain album comes before an edition. When a search lists no such album and exactly one album is accepted by a rule of the second tier (the title asked for before a subtitle, without what the candidate has in parentheses, and the others of `SECOND_TIER_RULES`), that one is taken (F55 slice 2, F68). The title without edition notes sent to the search is the rule's own (`titleWithoutEditionNotes`). No candidate passes all three searches: `null`.
 *   **What it no longer does**: take the first result when nothing matched, accept a title that contains the other, or score by Levenshtein distance. Those three let another album of the same artist stand in for the album asked for (UAT-184).
 
-#### B. Enrichment Flow (`enrichAlbumData`)
-*   **Goal**: Add Metadata, Artwork, and Track Popularity to an existing Album.
+#### B. Popularity of an album (`albumPopularity`) - v5.0 (F69)
+*   **Goal**: the Spotify id, address, average popularity and per-track popularity of an album.
 *   **Logic Trace**:
-    1.  **Find**: Calls `searchAlbum()`.
-    2.  **Validate**: nothing more to check: `searchAlbum` accepts only the album asked for, title and artist.
-    3.  **Details**:
-        *   Fetches Album Tracks (Simplified Objects).
-        *   **Batch Fetch**: Calls `/tracks?ids=...` to get Full Objects (needed for `popularity` field).
-    4.  **Aggregate**: Calculates `Average Popularity` (0-100).
-    5.  **Map**: Returns normalized artifact with `trackPopularityMap`.
+    1.  **Find**: calls `searchAlbum()`. `null` means only "Spotify answered and has no such album": a search that could not be made is thrown, the last (artist-only) search included.
+    2.  **Details**: the album's tracks (simplified objects), then `/tracks?ids=...` for the full objects (needed for `popularity`), 50 ids per request.
+    3.  **Aggregate**: the average popularity (0-100).
+    4.  **Answer**: `{ found: true, data }`, or `{ found: false, reason }` with `not_found` (no album of Spotify is the album asked for) or `no_tracks` (the album lists no track). It never answers on a failure: `SpotifyReconnectError`, `SpotifyRateLimitError` or the error of the network or of the API goes up as it came.
+*   **Who calls it**: one caller, the popularity source of the album load (`services/albums/adapters/spotifyPopularitySource.js`), behind `PopularityEnricher`. No screen and no other service asks Spotify for the popularity of an album (`test/architecture/spotifyPopularityOnePath.test.js`).
 
-*   **Architecture Diagram (Enrichment Loop)**:
+*   **Architecture Diagram (one path)**:
 ```mermaid
 sequenceDiagram
-    participant Store as AlbumsStore
-    participant Service as SpotifyEnrichmentService
+    participant Load as AlbumLoadService (source queue)
+    participant Enricher as PopularityEnricher
+    participant Source as SpotifyPopularitySource
+    participant Stored as SpotifyEnrichmentStore
     participant API as SpotifyService
     participant External as SpotifyAPI
 
-    Store->>Service: Trigger Enrichment (Background)
-    loop Every Album
-        Service->>API: enrichAlbumData(Artist, Title)
-        API->>External: GET /search (Heuristics)
-        External-->>API: Album Object
-        API->>External: GET /tracks (Details)
-        External-->>API: Tracks + Popularity
-        API-->>Service: Enrichment Payload
-        Service->>Store: updateAlbum(data)
-        Store-->>View: Notify Updates
+    Load->>Enricher: enrich(album)
+    Enricher->>Source: read(album)
+    Source->>Stored: get(artist, title)
+    alt stored
+        Stored-->>Source: data
+    else no Spotify session
+        Source-->>Enricher: not_connected (nobody asked)
+    else connected
+        Source->>API: albumPopularity(artist, title)
+        API->>External: GET /search, /albums/{id}, /tracks
+        External-->>API: answer, or a failure (thrown)
+        API-->>Source: found / not found
+        Source->>Stored: save(data) when found
     end
+    Source-->>Enricher: found | not_found | not_connected (or throws)
+    Enricher-->>Load: done | empty + reason | not-connected (or throws: failed, or hold)
 ```
 
 ### 2.2 Other Services

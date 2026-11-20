@@ -11,7 +11,8 @@
  *   of the server, so its record keeps the version of the rule that decided it (`rule`) and is
  *   believed only while that is the version of the app (IDENTITY_RULE_VERSION): a rule that learns
  *   to find more albums makes every older "no page" be asked again, once (F68);
- * - a failure is never saved; the person's own ranking is never saved with the album;
+ * - a failure is never saved, and "not connected to the source" is not saved either (F69); the
+ *   person's own ranking is never saved with the album;
  * - get() always hands out a new Album, never the object it keeps;
  * - get() asks the one identity rule (F55) whether the record is still the album the query asks
  *   for, and drops it when it is not: the key is the query, so a record written when "the right
@@ -30,11 +31,15 @@ const HOUR_MS = 60 * 60 * 1000
  * For how long an 'empty' is believed before the source is asked again, by its reason (F52, slice 3).
  * The reasons are the server's outcomes; `unknown` is every 'empty' that carries none: an answer
  * of the server before F52 (which could be a failure in disguise), a record written before this
- * slice, a source that gives no reason (popularity).
+ * slice, a reason with no time of its own here (the popularity's 'no_tracks'). An 'empty' of the
+ * popularity with no reason at all is not believed for any time: see ALWAYS_SAYS_WHY.
  * Decided by the agent on 2026-11-19 from arch.md, F52, seção 11, item 4 - to be revised.
  */
 export const EMPTY_TRUST = Object.freeze({
-    not_found: 24 * HOUR_MS, // the source has no page for the album: the page may be created any day
+    // the source has no page for the album: the page may be created any day. The same reason and the
+    // same time for "Spotify has no such album" (the popularity, F69): decided by the agent on
+    // 2026-11-19, to be revised; it is also believed only under the identity rule that decided it.
+    not_found: 24 * HOUR_MS,
     no_ratings: 7 * 24 * HOUR_MS, // the page was read and has no rating: as long as the record itself lives
     unknown: HOUR_MS
 })
@@ -43,6 +48,17 @@ const emptyTrustOf = (reason) => (Object.hasOwn(EMPTY_TRUST, reason) ? EMPTY_TRU
 const DECIDED_BY_THE_RULE = 'not_found'
 /** A "no page" decided with another version of the rule, or with none on record, says nothing today. */
 const decidedByTheRuleOfToday = (saved) => saved.reason !== DECIDED_BY_THE_RULE || saved.rule === IDENTITY_RULE_VERSION
+/**
+ * The sources that always say why they have nothing. An 'empty' of one of them with no reason was
+ * written before it did, when "not connected" and "the call failed" were also kept as 'empty'
+ * (the popularity before F69, UAT-206): it says nothing, and the source is asked again.
+ */
+const ALWAYS_SAYS_WHY = new Set(['popularity'])
+/** Is this kept "the source has none" still to be believed? */
+const emptyStillTrusted = (source, saved, now) => {
+    if (!saved.reason && ALWAYS_SAYS_WHY.has(source)) return false
+    return (now - saved.at) < emptyTrustOf(saved.reason) && decidedByTheRuleOfToday(saved)
+}
 /** What the record keeps of one source: the status and when; for an 'empty', why, and by which rule. */
 const savedAnswer = (status, at, { reason, rule }) => {
     const saved = { status, at }
@@ -90,8 +106,7 @@ export class AlbumCacheAdapter {
 
         const enrichment = {}
         Object.entries(record.enrichment || {}).forEach(([source, saved]) => {
-            const stillTrusted = saved.status !== 'empty' ||
-                ((this.now() - saved.at) < emptyTrustOf(saved.reason) && decidedByTheRuleOfToday(saved))
+            const stillTrusted = saved.status !== 'empty' || emptyStillTrusted(source, saved, this.now())
             if (stillTrusted) enrichment[source] = saved.status
         })
 

@@ -9,7 +9,7 @@
 -   **Auth Gate**: Waits for `AuthService.waitForAuth()` before handling routes (critical for protected views).
 -   **UI Setup**: Initializes `TopNav` and `Footer` immediately (independent of auth).
 -   **Event Listeners**:
-    -   `spotify-auth-success`: Triggers background enrichment via `SpotifyEnrichmentService`.
+    -   none for Spotify since F69: `app.js` no longer listens for `spotify-auth-success`. What follows a connection is the album load's own (`services/albums/popularityOnConnect.js`, on `spotify-auth-change`).
 -   **Router**: Registers all application routes (`/home`, `/albums`, `/playlists`, etc.).
 
 ### Boot Sequence Diagram

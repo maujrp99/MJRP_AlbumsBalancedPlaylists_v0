@@ -29,7 +29,8 @@ export const EnrichmentStatus = Object.freeze({
     LOADING: 'loading',
     DONE: 'done',       // the source answered with data
     EMPTY: 'empty',     // the source answered: it has nothing for this album
-    FAILED: 'failed'    // the source did not answer
+    FAILED: 'failed',   // the source did not answer
+    NOT_CONNECTED: 'not-connected' // the person is not connected to the source: nobody was asked (F69)
 })
 
 /**
@@ -38,8 +39,9 @@ export const EnrichmentStatus = Object.freeze({
  *   rate_limited  the app's own server said "you asked too much, wait" (429)
  *   source_busy   the ratings source asked the server to wait, and the server said until when
  *                 (503 upstream_busy with Retry-After)
+ *   spotify_busy  Spotify asked the app to wait a little (429 with Retry-After, F69)
  */
-export const HoldReason = Object.freeze({ UNAUTHORIZED: 'unauthorized', RATE_LIMITED: 'rate_limited', SOURCE_BUSY: 'source_busy' })
+export const HoldReason = Object.freeze({ UNAUTHORIZED: 'unauthorized', RATE_LIMITED: 'rate_limited', SOURCE_BUSY: 'source_busy', SPOTIFY_BUSY: 'spotify_busy' })
 
 /**
  * What to tell the person when the load goes on hold.
@@ -54,6 +56,9 @@ export function holdNotice(hold, formatTime = (ms) => new Date(ms).toLocaleTimeS
     const when = hold.until ? ` It resumes by itself at ${formatTime(hold.until)}.` : ''
     if (hold.reason === HoldReason.SOURCE_BUSY) {
         return { message: `The ratings source asked to slow down. Loading ratings is paused.${when}`, type: 'info', durationMs: 10000 }
+    }
+    if (hold.reason === HoldReason.SPOTIFY_BUSY) {
+        return { message: `Spotify asked to slow down. Loading popularity is paused.${when}`, type: 'info', durationMs: 10000 }
     }
     return { message: `The server asked to slow down. Loading is paused.${when}`, type: 'info', durationMs: 10000 }
 }

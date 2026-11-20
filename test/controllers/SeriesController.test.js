@@ -34,7 +34,7 @@ import { albumLoadStore } from '../../public/js/stores/albumLoad.js'
 import { ownRankingsStore } from '../../public/js/stores/ownRankings.js'
 import { createEntry, AlbumStatus, queryKey } from '../../public/js/models/albumLoadState.js'
 
-const facts = (acclaim, popularity = false) => ({ year: 1977, sources: { acclaim, popularity }, checkedAt: 1 })
+const facts = (acclaim, popularity = false) => ({ year: 1977, sources: { acclaim, popularity }, checkedAt: 1, v: 2 })
 const settle = () => new Promise(resolve => setTimeout(resolve, 0))
 
 const SERIES = [

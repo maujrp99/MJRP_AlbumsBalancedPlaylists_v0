@@ -53,11 +53,14 @@ export async function overNewestAlbum({ result, given }, newestAlbum) {
  * What the answer of a source means: the state of the source on screen, and what is noted beside
  * it in what is kept. A source that has nothing says why (the cache believes an "empty" for a time
  * that depends on the reason) and, when it decided by the identity rule, with which version (F68).
+ * "Not connected" is the source's own word (F69): it is shown as it is and nothing is kept for it
+ * (`note` is null), so the source is asked again the next time.
  * @param {{ status: string, reason?: string, rule?: number }} result
- * @returns {{ status: string, note: { reason: string|null, rule?: number } }}
+ * @returns {{ status: string, note: { reason: string|null, rule?: number } | null }}
  */
 export function sourceOutcome(result) {
     if (result.status === EnrichmentStatus.DONE) return { status: EnrichmentStatus.DONE, note: { reason: null } }
+    if (result.status === EnrichmentStatus.NOT_CONNECTED) return { status: EnrichmentStatus.NOT_CONNECTED, note: null }
     const decidedBy = result.rule ? { rule: result.rule } : {}
     return { status: EnrichmentStatus.EMPTY, note: { reason: result.reason || null, ...decidedBy } }
 }

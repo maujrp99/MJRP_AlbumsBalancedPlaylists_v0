@@ -46,11 +46,8 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'controllers/InventoryController.js:arrow function': 13, // no feature yet
     'controllers/SeriesController.js:arrow function': 20, // no feature yet
     'helpers/BEAEnrichmentHelper.js:applyBEAData': 15, // no feature yet
-    'helpers/SpotifyEnrichmentHelper.js:applyEnrichmentToAlbum': 15, // F62 holds this code (blend, playlists, export, Spotify)
-    'helpers/SpotifyEnrichmentHelper.js:applySpotifyData': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'models/Album.js:constructor': 16, // no feature yet: the constructor normalizes every shape an album or a track ever had
     'models/Track.js:constructor': 39, // no feature yet: the constructor normalizes every shape an album or a track ever had
-    'models/seriesFilter.js:describeQuery': 12, // no feature yet: three filters of albums that should be one rule
     'models/seriesFilter.js:matches': 14, // no feature yet: three filters of albums that should be one rule
     'ranking/BalancedRankingStrategy.js:arrow function': 14, // F62 holds this code (blend, playlists, export, Spotify)
     'ranking/BalancedRankingStrategy.js:arrow function#2': 30, // F62 holds this code (blend, playlists, export, Spotify)

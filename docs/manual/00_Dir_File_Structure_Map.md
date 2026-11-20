@@ -117,7 +117,7 @@
 94. `public/js/utils/FilterUtils.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
 95. `public/js/helpers/BEAEnrichmentHelper.js` (Analysis: `manual/17_Frontend_Services.md`)
 96. `public/js/services/SpotifyAuthService.js` (Analysis: `manual/17_Frontend_Services.md`)
-97. `public/js/services/SpotifyEnrichmentService.js` (Analysis: `manual/17_Frontend_Services.md`)
+97. `public/js/services/albums/adapters/spotifyPopularitySource.js` and `public/js/services/albums/popularityOnConnect.js` (Analysis: `manual/17_Frontend_Services.md`; they replace `SpotifyEnrichmentService.js`, removed in F69)
 
 ### Batch 4: Server Logic & Utils
 98. `server/lib/aiClient.js` (Analysis: `manual/04_Backend_Logic_Services.md`)

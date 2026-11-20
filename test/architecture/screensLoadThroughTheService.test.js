@@ -53,7 +53,7 @@ describe('every screen loads albums through the load service (F56)', () => {
     it('no controller, view or component calls a source of albums or of ratings by itself', () => {
         // The calls that find an album or bring its ratings and popularity. They belong behind the
         // ports of the album load (services/albums/adapters), which gives them a queue and a state.
-        const sourceCall = /\b(fetchAlbum|fetchMultipleAlbums|_fetchAlbumFromAPI|requestRatings|BEAenrichAlbum|enrichAlbumData|getAlbumDetails|applyEnrichmentToAlbum)\s*\(/g
+        const sourceCall = /\b(fetchAlbum|fetchMultipleAlbums|_fetchAlbumFromAPI|requestRatings|BEAenrichAlbum|enrichAlbumData|albumPopularity|getAlbumDetails|applyEnrichmentToAlbums?|applySpotifyData)\s*\(/g
 
         expect(writing(SCREENS, sourceCall)).toEqual([])
     })

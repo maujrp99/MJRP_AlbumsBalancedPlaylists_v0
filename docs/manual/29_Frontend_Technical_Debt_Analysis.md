@@ -68,7 +68,7 @@ Detailed controller-view logic for the Playlists feature.
     -   **Logic**: 
         -   Normalizes track data from multiple sources.
         -   Calculates averages (Avg Rank, Avg Popularity).
-        -   Handles "Enrich Data" flow (connecting to Spotify API).
+        -   Shows one line about the album's Spotify popularity from the state the album load gives (`models/popularityState.js`) and asks for it again through `popularity.onAsk`; it no longer talks to Spotify (F69).
 -   **`ranking/TracksTable.js`**:
     -   **Role**: Desktop component for the comparison table.
     -   **Visuals**: Renders composite badges (Rank # + Stars) and Popularity Bars (Green progress bar).
