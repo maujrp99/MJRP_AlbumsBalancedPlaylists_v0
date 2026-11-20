@@ -7,7 +7,7 @@
 - [x] protótipo julgado antes da construção: dispensado pelo MJRP para esta feature (as palavras dele estão no `spec.md`)
 
 ## Implementation
-- [ ] TASK-01 a base do celular: medidas mínimas, áreas seguras, a barra de baixo, a barra do topo, a folha (de tela cheia e de baixo), o app pelo ícone da tela de início · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-13 · model:: opus
+- [x] TASK-01 a base do celular: medidas mínimas, áreas seguras, a barra de baixo, a barra do topo, a folha (de tela cheia e de baixo), o app pelo ícone da tela de início · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-13 · model:: opus
 - [ ] TASK-02 Albums: filtros em folha, cabeçalho de série, cartão com ações nomeadas, visão em lista, paginação · implements:: REQ-01, REQ-05 · model:: opus
 - [ ] TASK-03 a janela do álbum e a janela de ranking · implements:: REQ-06, REQ-07 · model:: opus
 - [ ] TASK-04 Playlists e playlists gravadas · implements:: REQ-01, REQ-08 · model:: opus

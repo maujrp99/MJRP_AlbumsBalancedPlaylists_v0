@@ -1,0 +1,2020 @@
+{
+ "home-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 1312,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 18,
+  "targetsBelow44": 8,
+  "targetsBelow44Sample": [
+   "#btnModeVisual «Visual» 47x24",
+   "#btnModeBulk «Bulk Paste» 71x24",
+   "#btnFilterAlbums «Studio» 90x28",
+   "#btnFilterEPs «EPs» 57x30",
+   "#btnFilterSingles «Singles» 78x30",
+   "#btnFilterLive «Live» 59x30",
+   "#btnFilterCompilations «Compendiums» 131x30",
+   "#btnFilterUncategorized «?» 40x30"
+  ],
+  "fixed": [
+   "#phone-topbar «Home»",
+   "#phone-tabbar «Home Albums Blend Playli»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «Album Blender V3Balanced",
+    0,
+    48,
+    393,
+    1208
+   ],
+   [
+    "div.min-h-[calc(100vh-64px)].o",
+    0,
+    60,
+    393,
+    1196
+   ],
+   [
+    "div.absolute.inset-0 «»",
+    0,
+    60,
+    393,
+    1196
+   ],
+   [
+    "#home-left-panel «Album Blende",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#home-right-panel «02b // Disc",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    0,
+    0,
+    0
+   ]
+  ]
+ },
+ "albums-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 1477,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 18,
+  "targetsBelow44": 2,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38"
+  ],
+  "fixed": [
+   "#phone-topbar «Albums»",
+   "#phone-tabbar «Home Albums Blend Playli»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home By Alb",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «Home › Albums All Albums",
+    0,
+    48,
+    393,
+    1373
+   ],
+   [
+    "div.albums-view.container «Hom",
+    0,
+    60,
+    393,
+    1361
+   ],
+   [
+    "header.view-header.mb-8 «Home ",
+    16,
+    60,
+    361,
+    637
+   ],
+   [
+    "#series-pager-top-mount «»",
+    16,
+    729,
+    361,
+    0
+   ],
+   [
+    "#series-grid-mount «No albums ",
+    16,
+    729,
+    361,
+    184
+   ],
+   [
+    "#series-pager-mount «»",
+    16,
+    913,
+    361,
+    0
+   ],
+   [
+    "#emptyStateContainer «No album",
+    16,
+    913,
+    361,
+    415
+   ],
+   [
+    "footer.view-footer.mt-12 «Last",
+    16,
+    1376,
+    361,
+    45
+   ],
+   [
+    "#series-modals-mount «»",
+    16,
+    1421,
+    361,
+    0
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    0,
+    0,
+    0
+   ]
+  ]
+ },
+ "blend-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 869,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 7,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "fixed": [
+   "#phone-topbar «Blend»",
+   "#phone-tabbar «Home Albums Blend Playli»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «🍹The Blending Menu\"Your",
+    0,
+    48,
+    393,
+    765
+   ],
+   [
+    "div.container.mx-auto «🍹The B",
+    0,
+    60,
+    393,
+    753
+   ],
+   [
+    "div.text-center.mb-8 «🍹The Bl",
+    16,
+    92,
+    361,
+    214
+   ],
+   [
+    "section.glass-panel.rounded-2x",
+    16,
+    338,
+    361,
+    285
+   ],
+   [
+    "section.glass-panel.rounded-2x",
+    16,
+    647,
+    361,
+    110
+   ],
+   [
+    "#blend-results «»",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    0,
+    0,
+    0
+   ]
+  ]
+ },
+ "playlists-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 9,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "fixed": [
+   "#phone-topbar «New Playlists»",
+   "#phone-tabbar «Home Albums Blend Playli»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «Home › Blend › Playlists",
+    0,
+    48,
+    393,
+    748
+   ],
+   [
+    "div.playlists-view.container «",
+    0,
+    60,
+    393,
+    484
+   ],
+   [
+    "header.view-header.mb-8 «Home ",
+    16,
+    60,
+    361,
+    116
+   ],
+   [
+    "#mainContent «No playlists her",
+    16,
+    208,
+    361,
+    243
+   ],
+   [
+    "footer.view-footer.mt-12 «Last",
+    16,
+    499,
+    361,
+    45
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    0,
+    0,
+    0
+   ]
+  ]
+ },
+ "saved-playlists-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 12,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "fixed": [
+   "#phone-topbar «Playlists»",
+   "#phone-tabbar «Home Albums Blend Playli»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «Your Playlists Series Al",
+    0,
+    48,
+    393,
+    748
+   ],
+   [
+    "div.saved-playlists-view.conta",
+    0,
+    84,
+    393,
+    666
+   ],
+   [
+    "header.view-header.mb-8 «Your ",
+    16,
+    84,
+    361,
+    32
+   ],
+   [
+    "div. «All Albums Series All Pl",
+    16,
+    148,
+    361,
+    257
+   ],
+   [
+    "#mainContent «No Playlists Fou",
+    16,
+    429,
+    361,
+    321
+   ],
+   [
+    "#modalsContainer «»",
+    16,
+    750,
+    361,
+    0
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    0,
+    0,
+    0
+   ]
+  ]
+ },
+ "inventory-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 929,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 14,
+  "targetsBelow44": 1,
+  "targetsBelow44Sample": [
+   "#currencySelector «USD» 41x26"
+  ],
+  "fixed": [
+   "#phone-topbar «Inventory»",
+   "#phone-tabbar «Home Albums Blend Playli»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «My Collection0 albums✓ 0",
+    0,
+    48,
+    393,
+    825
+   ],
+   [
+    "div.inventory-view.container «",
+    0,
+    60,
+    393,
+    813
+   ],
+   [
+    "header.view-header.mb-8 «My Co",
+    16,
+    60,
+    361,
+    555
+   ],
+   [
+    "#inventory-grid-container «No ",
+    16,
+    647,
+    361,
+    146
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    0,
+    0,
+    0
+   ]
+  ]
+ },
+ "artists-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 7,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "fixed": [
+   "#phone-topbar «Series by Artist»",
+   "#phone-tabbar «Home Albums Blend Playli»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home By Art",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «Artist Series Organize y",
+    0,
+    48,
+    393,
+    748
+   ],
+   [
+    "div.container.mx-auto «Artist ",
+    0,
+    60,
+    393,
+    567
+   ],
+   [
+    "div.text-center.max-w-md «Arti",
+    16,
+    124,
+    361,
+    439
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    0,
+    0,
+    0
+   ]
+  ]
+ },
+ "home-852x393": {
+  "innerWidth": 852,
+  "innerHeight": 393,
+  "clientWidth": 852,
+  "scrollWidth": 852,
+  "scrollHeight": 1127,
+  "phone": false,
+  "textBelow12": 3,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «Your Albums Series Name»",
+   "#btnModeVisual «Visual»",
+   "#btnModeBulk «Bulk Paste»"
+  ],
+  "fieldsBelow16": [],
+  "targets": 27,
+  "targetsBelow44": 17,
+  "targetsBelow44Sample": [
+   "#mobileMenuBtn «» 40x40",
+   "#loginBtn «Sign In» 82x36",
+   "#closeMenuBtn «» 36x36",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#mobileLoginBtn «Sign In to Sync» 247x36",
+   "#btnModeVisual «Visual» 42x23",
+   "#btnModeBulk «Bulk Paste» 62x23",
+   "#btnFilterAlbums «Studio» 90x28",
+   "#btnFilterEPs «EPs» 57x30",
+   "#btnFilterSingles «Singles» 78x30",
+   "#btnFilterLive «Live» 59x30",
+   "#btnFilterCompilations «Compendiums» 131x30",
+   "#btnFilterUncategorized «?» 40x30",
+   "a.hover:text-white.transition-colors «Home» 38x20"
+  ],
+  "fixed": [
+   "#mobileMenuOverlay «»",
+   "#mobileMenu «Menu Home Music Series B»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    -279,
+    98,
+    279,
+    338
+   ],
+   [
+    "#app «Album Blender V3Balanced",
+    0,
+    122,
+    852,
+    852
+   ],
+   [
+    "div.min-h-[calc(100vh-64px)].o",
+    0,
+    122,
+    852,
+    852
+   ],
+   [
+    "div.absolute.inset-0 «»",
+    0,
+    122,
+    852,
+    852
+   ],
+   [
+    "#home-left-panel «Album Blende",
+    0,
+    122,
+    400,
+    852
+   ],
+   [
+    "#home-right-panel «02b // Disc",
+    400,
+    122,
+    452,
+    432
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    974,
+    852,
+    153
+   ]
+  ]
+ },
+ "albums-852x393": {
+  "innerWidth": 852,
+  "innerHeight": 393,
+  "clientWidth": 852,
+  "scrollWidth": 852,
+  "scrollHeight": 1220,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series»",
+   "#filter-artist «All Artists»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»"
+  ],
+  "targets": 27,
+  "targetsBelow44": 13,
+  "targetsBelow44Sample": [
+   "#mobileMenuBtn «» 40x40",
+   "#loginBtn «Sign In» 82x36",
+   "#closeMenuBtn «» 36x36",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#mobileLoginBtn «Sign In to Sync» 247x36",
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 132x26",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "fixed": [
+   "#mobileMenuOverlay «»",
+   "#mobileMenu «Menu Home Music Series B»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home By Alb",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    -279,
+    98,
+    279,
+    338
+   ],
+   [
+    "#app «Home › Albums All Albums",
+    0,
+    122,
+    852,
+    945
+   ],
+   [
+    "div.albums-view.container «Hom",
+    0,
+    122,
+    852,
+    945
+   ],
+   [
+    "header.view-header.mb-8 «Home ",
+    24,
+    122,
+    804,
+    245
+   ],
+   [
+    "#series-pager-top-mount «»",
+    24,
+    399,
+    804,
+    0
+   ],
+   [
+    "#series-grid-mount «No albums ",
+    24,
+    399,
+    804,
+    184
+   ],
+   [
+    "#series-pager-mount «»",
+    24,
+    583,
+    804,
+    0
+   ],
+   [
+    "#emptyStateContainer «No album",
+    24,
+    583,
+    804,
+    391
+   ],
+   [
+    "footer.view-footer.mt-12 «Last",
+    24,
+    1022,
+    804,
+    45
+   ],
+   [
+    "#series-modals-mount «»",
+    24,
+    1067,
+    804,
+    0
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    1067,
+    852,
+    153
+   ]
+  ]
+ },
+ "blend-852x393": {
+  "innerWidth": 852,
+  "innerHeight": 393,
+  "clientWidth": 852,
+  "scrollWidth": 852,
+  "scrollHeight": 1004,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 16,
+  "targetsBelow44": 9,
+  "targetsBelow44Sample": [
+   "#mobileMenuBtn «» 40x40",
+   "#loginBtn «Sign In» 82x36",
+   "#closeMenuBtn «» 36x36",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#mobileLoginBtn «Sign In to Sync» 247x36",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "fixed": [
+   "#mobileMenuOverlay «»",
+   "#mobileMenu «Menu Home Music Series B»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    -279,
+    98,
+    279,
+    338
+   ],
+   [
+    "#app «🍹The Blending Menu\"Your",
+    0,
+    122,
+    852,
+    729
+   ],
+   [
+    "div.container.mx-auto «🍹The B",
+    0,
+    122,
+    852,
+    729
+   ],
+   [
+    "div.text-center.mb-8 «🍹The Bl",
+    16,
+    154,
+    820,
+    190
+   ],
+   [
+    "section.glass-panel.rounded-2x",
+    16,
+    376,
+    820,
+    285
+   ],
+   [
+    "section.glass-panel.rounded-2x",
+    16,
+    685,
+    820,
+    110
+   ],
+   [
+    "#blend-results «»",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    851,
+    852,
+    153
+   ]
+  ]
+ },
+ "playlists-852x393": {
+  "innerWidth": 852,
+  "innerHeight": 393,
+  "clientWidth": 852,
+  "scrollWidth": 852,
+  "scrollHeight": 707,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 18,
+  "targetsBelow44": 11,
+  "targetsBelow44Sample": [
+   "#mobileMenuBtn «» 40x40",
+   "#loginBtn «Sign In» 82x36",
+   "#closeMenuBtn «» 36x36",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#mobileLoginBtn «Sign In to Sync» 247x36",
+   "a.breadcrumb-link «Home» 47x19",
+   "a.breadcrumb-link «Blend» 44x19",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "fixed": [
+   "#mobileMenuOverlay «»",
+   "#mobileMenu «Menu Home Music Series B»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    -279,
+    98,
+    279,
+    338
+   ],
+   [
+    "#app «Home › Blend › Playlists",
+    0,
+    122,
+    852,
+    432
+   ],
+   [
+    "div.playlists-view.container «",
+    0,
+    122,
+    852,
+    432
+   ],
+   [
+    "header.view-header.mb-8 «Home ",
+    24,
+    122,
+    804,
+    88
+   ],
+   [
+    "#mainContent «No playlists her",
+    24,
+    242,
+    804,
+    219
+   ],
+   [
+    "footer.view-footer.mt-12 «Last",
+    24,
+    509,
+    804,
+    45
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    554,
+    852,
+    153
+   ]
+  ]
+ },
+ "saved-playlists-852x393": {
+  "innerWidth": 852,
+  "innerHeight": 393,
+  "clientWidth": 852,
+  "scrollWidth": 852,
+  "scrollHeight": 806,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Albums Series»",
+   "#filter-batch «All Playlist Series»",
+   "#genericSort «Recently Updated Name (A»"
+  ],
+  "targets": 21,
+  "targetsBelow44": 10,
+  "targetsBelow44Sample": [
+   "#mobileMenuBtn «» 40x40",
+   "#loginBtn «Sign In» 82x36",
+   "#closeMenuBtn «» 36x36",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#mobileLoginBtn «Sign In to Sync» 247x36",
+   "#genericSort «Recently Updated Name (A» 146x26",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "fixed": [
+   "#mobileMenuOverlay «»",
+   "#mobileMenu «Menu Home Music Series B»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    -279,
+    98,
+    279,
+    338
+   ],
+   [
+    "#app «Your Playlists Series Al",
+    0,
+    122,
+    852,
+    531
+   ],
+   [
+    "div.saved-playlists-view.conta",
+    0,
+    122,
+    852,
+    531
+   ],
+   [
+    "header.view-header.mb-8 «Your ",
+    24,
+    122,
+    804,
+    40
+   ],
+   [
+    "div. «All Albums Series All Pl",
+    24,
+    194,
+    804,
+    138
+   ],
+   [
+    "#mainContent «No Playlists Fou",
+    24,
+    356,
+    804,
+    297
+   ],
+   [
+    "#modalsContainer «»",
+    24,
+    653,
+    804,
+    0
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    653,
+    852,
+    153
+   ]
+  ]
+ },
+ "inventory-852x393": {
+  "innerWidth": 852,
+  "innerHeight": 393,
+  "clientWidth": 852,
+  "scrollWidth": 852,
+  "scrollHeight": 753,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#inventorySearch «»",
+   "#formatFilter «All FormatsCDVinylDigita»",
+   "#ownershipFilter «Status»",
+   "#inventorySort «Sort by»"
+  ],
+  "targets": 23,
+  "targetsBelow44": 10,
+  "targetsBelow44Sample": [
+   "#mobileMenuBtn «» 40x40",
+   "#loginBtn «Sign In» 82x36",
+   "#closeMenuBtn «» 36x36",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#mobileLoginBtn «Sign In to Sync» 247x36",
+   "#currencySelector «USD» 41x26",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "fixed": [
+   "#mobileMenuOverlay «»",
+   "#mobileMenu «Menu Home Music Series B»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    -279,
+    98,
+    279,
+    338
+   ],
+   [
+    "#app «My Collection0 albums✓ 0",
+    0,
+    122,
+    852,
+    478
+   ],
+   [
+    "div.inventory-view.container «",
+    0,
+    122,
+    852,
+    478
+   ],
+   [
+    "header.view-header.mb-8 «My Co",
+    24,
+    122,
+    804,
+    244
+   ],
+   [
+    "#inventory-grid-container «No ",
+    24,
+    398,
+    804,
+    122
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    600,
+    852,
+    153
+   ]
+  ]
+ },
+ "artists-852x393": {
+  "innerWidth": 852,
+  "innerHeight": 393,
+  "clientWidth": 852,
+  "scrollWidth": 852,
+  "scrollHeight": 822,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 16,
+  "targetsBelow44": 9,
+  "targetsBelow44Sample": [
+   "#mobileMenuBtn «» 40x40",
+   "#loginBtn «Sign In» 82x36",
+   "#closeMenuBtn «» 36x36",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#mobileLoginBtn «Sign In to Sync» 247x36",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "fixed": [
+   "#mobileMenuOverlay «»",
+   "#mobileMenu «Menu Home Music Series B»"
+  ],
+  "layout": [
+   [
+    "#header-container «Home By Art",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    852,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    -279,
+    98,
+    279,
+    338
+   ],
+   [
+    "#app «Artist Series Organize y",
+    0,
+    122,
+    852,
+    547
+   ],
+   [
+    "div.container.mx-auto «Artist ",
+    0,
+    122,
+    852,
+    547
+   ],
+   [
+    "div.text-center.max-w-md «Arti",
+    229,
+    186,
+    394,
+    419
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    669,
+    852,
+    153
+   ]
+  ]
+ },
+ "home-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1127,
+  "phone": false,
+  "textBelow12": 3,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «Your Albums Series Name»",
+   "#btnModeVisual «Visual»",
+   "#btnModeBulk «Bulk Paste»"
+  ],
+  "fieldsBelow16": [],
+  "targets": 24,
+  "targetsBelow44": 19,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "#btnModeVisual «Visual» 42x23",
+   "#btnModeBulk «Bulk Paste» 62x23",
+   "#btnFilterAlbums «Studio» 90x28",
+   "#btnFilterEPs «EPs» 57x30",
+   "#btnFilterSingles «Singles» 78x30",
+   "#btnFilterLive «Live» 59x30",
+   "#btnFilterCompilations «Compendiums» 131x30"
+  ],
+  "fixed": [],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «Album Blender V3Balanced",
+    0,
+    122,
+    1280,
+    852
+   ],
+   [
+    "div.min-h-[calc(100vh-64px)].o",
+    0,
+    122,
+    1280,
+    852
+   ],
+   [
+    "div.absolute.inset-0 «»",
+    0,
+    122,
+    1280,
+    852
+   ],
+   [
+    "#home-left-panel «Album Blende",
+    0,
+    122,
+    450,
+    852
+   ],
+   [
+    "#home-right-panel «02b // Disc",
+    450,
+    122,
+    830,
+    432
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    974,
+    1280,
+    153
+   ]
+  ]
+ },
+ "albums-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1219,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series»",
+   "#filter-artist «All Artists»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»"
+  ],
+  "targets": 24,
+  "targetsBelow44": 15,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «By Album» 114x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 132x26",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20"
+  ],
+  "fixed": [],
+  "layout": [
+   [
+    "#header-container «Home By Alb",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «Home › Albums All Albums",
+    0,
+    122,
+    1280,
+    944
+   ],
+   [
+    "div.albums-view.container «Hom",
+    40,
+    122,
+    1200,
+    944
+   ],
+   [
+    "header.view-header.mb-8 «Home ",
+    64,
+    122,
+    1152,
+    244
+   ],
+   [
+    "#series-pager-top-mount «»",
+    64,
+    398,
+    1152,
+    0
+   ],
+   [
+    "#series-grid-mount «No albums ",
+    64,
+    398,
+    1152,
+    184
+   ],
+   [
+    "#series-pager-mount «»",
+    64,
+    582,
+    1152,
+    0
+   ],
+   [
+    "#emptyStateContainer «No album",
+    64,
+    582,
+    1152,
+    391
+   ],
+   [
+    "footer.view-footer.mt-12 «Last",
+    64,
+    1021,
+    1152,
+    45
+   ],
+   [
+    "#series-modals-mount «»",
+    64,
+    1066,
+    1152,
+    0
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    1066,
+    1280,
+    153
+   ]
+  ]
+ },
+ "blend-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1075,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 13,
+  "targetsBelow44": 11,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "fixed": [],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «🍹The Blending Menu\"Your",
+    0,
+    122,
+    1280,
+    800
+   ],
+   [
+    "div.container.mx-auto «🍹The B",
+    128,
+    122,
+    1024,
+    729
+   ],
+   [
+    "div.text-center.mb-8 «🍹The Bl",
+    144,
+    154,
+    992,
+    190
+   ],
+   [
+    "section.glass-panel.rounded-2x",
+    144,
+    376,
+    992,
+    285
+   ],
+   [
+    "section.glass-panel.rounded-2x",
+    144,
+    685,
+    992,
+    110
+   ],
+   [
+    "#blend-results «»",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    922,
+    1280,
+    153
+   ]
+  ]
+ },
+ "playlists-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1075,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 15,
+  "targetsBelow44": 13,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "a.breadcrumb-link «Home» 47x19",
+   "a.breadcrumb-link «Blend» 44x19",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "fixed": [],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «Home › Blend › Playlists",
+    0,
+    122,
+    1280,
+    800
+   ],
+   [
+    "div.playlists-view.container «",
+    40,
+    122,
+    1200,
+    432
+   ],
+   [
+    "header.view-header.mb-8 «Home ",
+    64,
+    122,
+    1152,
+    88
+   ],
+   [
+    "#mainContent «No playlists her",
+    64,
+    242,
+    1152,
+    219
+   ],
+   [
+    "footer.view-footer.mt-12 «Last",
+    64,
+    509,
+    1152,
+    45
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    922,
+    1280,
+    153
+   ]
+  ]
+ },
+ "saved-playlists-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1075,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Albums Series»",
+   "#filter-batch «All Playlist Series»",
+   "#genericSort «Recently Updated Name (A»"
+  ],
+  "targets": 18,
+  "targetsBelow44": 12,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "#genericSort «Recently Updated Name (A» 146x26",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "fixed": [],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «Your Playlists Series Al",
+    0,
+    122,
+    1280,
+    800
+   ],
+   [
+    "div.saved-playlists-view.conta",
+    40,
+    122,
+    1200,
+    474
+   ],
+   [
+    "header.view-header.mb-8 «Your ",
+    64,
+    122,
+    1152,
+    40
+   ],
+   [
+    "div. «All Albums Series All Pl",
+    64,
+    194,
+    1152,
+    81
+   ],
+   [
+    "#mainContent «No Playlists Fou",
+    64,
+    299,
+    1152,
+    297
+   ],
+   [
+    "#modalsContainer «»",
+    64,
+    596,
+    1152,
+    0
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    922,
+    1280,
+    153
+   ]
+  ]
+ },
+ "inventory-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1075,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#inventorySearch «»",
+   "#formatFilter «All FormatsCDVinylDigita»",
+   "#ownershipFilter «Status»",
+   "#inventorySort «Sort by»"
+  ],
+  "targets": 20,
+  "targetsBelow44": 12,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "#currencySelector «USD» 41x26",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "fixed": [],
+  "layout": [
+   [
+    "#header-container «Home Music ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «My Collection0 albums✓ 0",
+    0,
+    122,
+    1280,
+    800
+   ],
+   [
+    "div.inventory-view.container «",
+    40,
+    122,
+    1200,
+    438
+   ],
+   [
+    "header.view-header.mb-8 «My Co",
+    64,
+    122,
+    1152,
+    204
+   ],
+   [
+    "#inventory-grid-container «No ",
+    64,
+    358,
+    1152,
+    122
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    922,
+    1280,
+    153
+   ]
+  ]
+ },
+ "artists-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1075,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 13,
+  "targetsBelow44": 11,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «By Artist» 113x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "fixed": [],
+  "layout": [
+   [
+    "#header-container «Home By Art",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.top-nav.glass-panel «Home ",
+    0,
+    16,
+    1280,
+    74
+   ],
+   [
+    "nav.flex.flex-col «Home Music ",
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    "#app «Artist Series Organize y",
+    0,
+    122,
+    1280,
+    800
+   ],
+   [
+    "div.container.mx-auto «Artist ",
+    40,
+    122,
+    1200,
+    547
+   ],
+   [
+    "div.text-center.max-w-md «Arti",
+    443,
+    186,
+    394,
+    419
+   ],
+   [
+    "#footer-container «Home Albums",
+    0,
+    922,
+    1280,
+    153
+   ]
+  ]
+ }
+}

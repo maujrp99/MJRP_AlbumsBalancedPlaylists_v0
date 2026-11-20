@@ -1,0 +1,310 @@
+{
+ "menu-393x852": {
+  "open": true,
+  "shell": "sheet sheet--bottom",
+  "panel": [
+   0,
+   364,
+   393,
+   488
+  ],
+  "title": [
+   "Menu",
+   16,
+   382,
+   321,
+   44
+  ],
+  "pageHeld": true,
+  "role": "dialog",
+  "targets": 8,
+  "targetsBelow44": [
+   [
+    "Connect",
+    109,
+    30
+   ]
+  ],
+  "fieldsBelow16": 0
+ },
+ "clear-cache-393x852": {
+  "open": true,
+  "shell": "sheet sheet--bottom",
+  "panel": [
+   0,
+   614,
+   393,
+   238
+  ],
+  "title": [
+   "Clear the album cache?",
+   16,
+   632,
+   321,
+   44
+  ],
+  "pageHeld": true,
+  "role": "dialog",
+  "targets": 3,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "sheet-full-393x852": {
+  "open": true,
+  "shell": "sheet sheet--full",
+  "panel": [
+   0,
+   0,
+   393,
+   852
+  ],
+  "title": [
+   "A long title that wraps instead of being",
+   16,
+   2,
+   321,
+   88
+  ],
+  "pageHeld": true,
+  "role": "dialog",
+  "targets": 2,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "login-393x852": {
+  "open": true,
+  "shell": "modal-overlay login-window",
+  "panel": [
+   0,
+   374,
+   393,
+   478
+  ],
+  "title": [
+   "Welcome Back",
+   17,
+   395,
+   359,
+   28
+  ],
+  "pageHeld": true,
+  "role": null,
+  "targets": 3,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "confirm-393x852": {
+  "open": true,
+  "shell": "app-modal app-modal--bottom fixed inset-0 z-50 flex items-ce",
+  "panel": [
+   0,
+   628,
+   393,
+   224
+  ],
+  "title": [
+   "Delete this series?",
+   16,
+   646,
+   321,
+   44
+  ],
+  "pageHeld": true,
+  "role": "dialog",
+  "targets": 3,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "edit-393x852": {
+  "open": true,
+  "shell": "app-modal app-modal--full fixed inset-0 z-50 flex items-cent",
+  "panel": [
+   0,
+   0,
+   393,
+   852
+  ],
+  "title": [
+   "Edit: Brothers In Arms (40th Anniversary",
+   16,
+   2,
+   321,
+   66
+  ],
+  "pageHeld": true,
+  "role": "dialog",
+  "targets": 5,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "album-393x852": {
+  "open": true,
+  "shell": "modal-overlay album-window",
+  "panel": [
+   0,
+   0,
+   393,
+   852
+  ],
+  "title": [
+   "Brothers In Arms (40th Anniversary Editi",
+   92,
+   10,
+   241,
+   72
+  ],
+  "pageHeld": true,
+  "role": null,
+  "targets": 5,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "ranking-393x852": {
+  "open": true,
+  "shell": "rank-window fixed inset-0 z-50 flex items-center justify-cen",
+  "panel": [
+   0,
+   0,
+   393,
+   852
+  ],
+  "title": null,
+  "pageHeld": true,
+  "role": null,
+  "targets": 3,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "login-1280x800": {
+  "open": true,
+  "shell": "modal-overlay login-window",
+  "panel": [
+   416,
+   119,
+   448,
+   562
+  ],
+  "title": [
+   "Welcome Back",
+   465,
+   168,
+   350,
+   36
+  ],
+  "pageHeld": false,
+  "role": null,
+  "targets": 3,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "confirm-1280x800": {
+  "open": true,
+  "shell": "app-modal app-modal--bottom fixed inset-0 z-50 flex items-ce",
+  "panel": [
+   416,
+   264,
+   448,
+   273
+  ],
+  "title": [
+   "Delete this series?",
+   465,
+   305,
+   197,
+   28
+  ],
+  "pageHeld": false,
+  "role": "dialog",
+  "targets": 3,
+  "targetsBelow44": [
+   [
+    "Close",
+    28,
+    28
+   ]
+  ],
+  "fieldsBelow16": 0
+ },
+ "edit-1280x800": {
+  "open": true,
+  "shell": "app-modal app-modal--full fixed inset-0 z-50 flex items-cent",
+  "panel": [
+   384,
+   162,
+   512,
+   477
+  ],
+  "title": [
+   "Edit: Brothers In Arms (40th Anniversary",
+   433,
+   203,
+   386,
+   56
+  ],
+  "pageHeld": false,
+  "role": "dialog",
+  "targets": 5,
+  "targetsBelow44": [
+   [
+    "Close",
+    28,
+    28
+   ]
+  ],
+  "fieldsBelow16": 2
+ },
+ "album-1280x800": {
+  "open": true,
+  "shell": "modal-overlay album-window",
+  "panel": [
+   128,
+   100,
+   1024,
+   600
+  ],
+  "title": [
+   "Brothers In Arms (40th Anniversary Editi",
+   329,
+   153,
+   670,
+   36
+  ],
+  "pageHeld": false,
+  "role": null,
+  "targets": 2,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "ranking-1280x800": {
+  "open": true,
+  "shell": "rank-window fixed inset-0 z-50 flex items-center justify-cen",
+  "panel": [
+   304,
+   60,
+   672,
+   680
+  ],
+  "title": null,
+  "pageHeld": false,
+  "role": null,
+  "targets": 3,
+  "targetsBelow44": [
+   [
+    "Back",
+    36,
+    24
+   ],
+   [
+    "Reset",
+    67,
+    36
+   ],
+   [
+    "Save",
+    82,
+    36
+   ]
+  ],
+  "fieldsBelow16": 0
+ }
+}
