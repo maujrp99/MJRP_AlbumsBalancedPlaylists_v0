@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:48] session — F76: o acabamento em produção; UAT-216, UAT-217 e UAT-223 resolvidas; três issues novas
+**Branch:** main
+Site da `0359e3d` (`main-D5xyTKX2.js`): os achados da crítica independente aplicados (inventário com a lista na primeira tela, «Discard changes?» no ranking, valor e compra recolhidos na janela do álbum, playlists gravadas com a anatomia de Albums, um só controle segmentado, títulos em Syne). Prova: `reports/evidence/F76/2026-11-20-production-proof.md`. Abertas: UAT-224 (o «Back» do ranking no computador), UAT-225 (data e hora do nome do lote em fusos diferentes), UAT-226 (edição sem cópia à venda).
+
 ## [2026-11-20 03:44] session — F76 polimento: notas das telas e prova (Home, Playlists)
 **Branch:** feat/f76-mobile-polish-home-playlists
 Seção «Polimento pós-crítica» acrescentada a screens/home-and-blend.md e screens/playlists.md; provas em reports/evidence/F76/playlists/ e home-blend/ (antes = main, depois = este ramo, 393x852, 393x660 e 1280x800).
