@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:53] session — F78 esqueleto do app: o autoteste do corpo dourado e os sensores do app
+**Branch:** feat/f78-app-skeleton
+O autoteste (REQ-16): `app/src/selftest/goldenSelfTest.ts` roda o corpo dourado no motor do app, com o id do expo-crypto, e compara cada caso com o índice de referência commitado (`reference/cases.tsv`, 0,2 MB, empacotado como texto) pelo sha256 de cada linha, em TypeScript puro; no Jest, 3343 de 3343 iguais. A tela escondida (toque longo no título de Albums, ou `albumblender://diagnostics`) mostra «N of N match»; o `expo export` empacota tudo para iOS e Android (3,47 e 3,46 MB de bytecode Hermes).
+Sensores: `appAndSiteApart` lê todo arquivo do app (nenhum é pulado), segue o que o app alcança fora de `app/` e só aceita chegar a `public/` pelo autoteste, pelo executor do corpo, nas pastas das regras; `noSecretsInTheApp` (novo) procura nomes e formas de chave no código e nos pacotes do `expo export` (`scripts/app-bundle-scan.mjs`, também no `check` do app); cada um com o caso que quebra de propósito. Testes das telas no app: 44 ao todo.
+
 ## [2026-11-20 15:52] session — F78 esqueleto do app: as três portas (dados, conta, uso) e as telas
 **Branch:** feat/f78-app-skeleton
 A costura dos dados: a interface da store em `app/src/data/store.ts` e duas ligações, a em memória (testes e modo de demonstração, semeada com álbuns públicos de catálogo) e a do React Native Firebase (`firebaseStore.ts`, não provada, o único arquivo que importa o pacote nativo); os mesmos repositórios de `shared/data/` leem as séries, e `shared/seriesSummary.js` diz nome, contagem e capas. A conta é uma porta com o falso e a ligação nativa (Apple, Google, Firebase Auth), não provada; o uso passa pela lista fechada de `shared/usageEvents.js`, com o desligado, o em memória e o PostHog (só com chave, não provado).
