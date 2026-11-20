@@ -9,6 +9,7 @@
 
 import { findInInventory, planSeriesAlbums } from '../../models/inventoryFromSeries.js'
 import { RATING_SOURCES, planAverages, queryOfItem, ratingsAskOf } from '../../models/inventoryRatings.js'
+import { ENRICHMENT_SOURCES } from '../../models/albumLoadState.js'
 
 const ANONYMOUS = 'anonymous-user'
 
@@ -214,8 +215,8 @@ export class InventoryService {
     }
 
     /**
-     * The album of an item as the album load has it now, with its ratings and popularity (F71,
-     * UAT-220): what the window of an item shows. Asked through the load's one door; what the
+     * The album of an item as the album load has it now, with its ratings, its popularity and the person's own
+     * ranking, the same ask the albums screen makes (F71, UAT-220): what the window of an item shows. Asked through the load's one door; what the
      * browser or the albums screen already has is not asked again.
      * @param {Object} item - an inventory item
      * @param {Object} [options]
@@ -225,7 +226,8 @@ export class InventoryService {
     async albumOfItem(item, { signal = null } = {}) {
         const result = await this.albumAsks.albumsOf({
             series: [{ id: `inventory-album:${item.id}`, albumQueries: [queryOfItem(item)] }],
-            sources: [...RATING_SOURCES],
+            // every source the albums screen shows: ratings, popularity and the person's own ranking
+            sources: [...ENRICHMENT_SOURCES],
             signal
         })
         return result.albums?.[0] || null

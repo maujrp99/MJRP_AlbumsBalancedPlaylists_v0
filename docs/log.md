@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:54] session — F71: a janela do item faz o mesmo pedido da tela de álbuns (as três fontes)
+
+**Branch:** fix/f71-item-window-same-ask
+
+- O MJRP perguntou: «pq a janela de faixas do inventory carrega algo diferente da tela do albums list? nao deveria ser a mesma chamada?». A janela pedia duas fontes; passa a pedir as três (`ENRICHMENT_SOURCES`), com o ranking da pessoa. Visto no navegador: «My Avg: 5.5» em «The Dark Side of the Moon».
+
 ## [2026-11-19 23:51] session — UAT-220 em produção
 
 - O conserto da janela do álbum no inventário foi juntado na `main` (`43d12b6`) e o site publicado (pacote `main-ASxeeVdk.js`).

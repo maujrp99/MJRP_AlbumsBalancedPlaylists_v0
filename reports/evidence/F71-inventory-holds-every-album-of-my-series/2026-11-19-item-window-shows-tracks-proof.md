@@ -21,3 +21,9 @@ O selo de status continua o do item («NOT OWNED»). Os álbuns já estavam guar
 
 - Um álbum que a carga não acha (a frase «The tracks of this album could not be loaded…»): só em teste de unidade.
 - Fechar a janela no meio do pedido: só em teste de unidade.
+
+## O mesmo pedido da tela de álbuns (2026-11-19 23:54)
+
+O MJRP perguntou por que a janela do inventário carrega algo diferente da tela de álbuns: «nao deveria ser a mesma chamada?». A janela pedia só as notas e a popularidade; agora pede as três fontes que a tela de álbuns mostra, incluindo o ranking da pessoa. Visto: «The Dark Side of the Moon» com «My Avg: 5.5 · Avg Rating: 89.9 · Avg Pop: 72.8%»; «Close to the Edge» com «My Avg: -» (ele não tem ranking desse álbum).
+
+**O que continua diferente, de propósito:** o pedido é feito com o artista e o título do item do inventário, não com a consulta guardada na série. O que o navegador guarda é achado pelo par artista e título, então para o mesmo par é o mesmo registro. Um item cujo título difere do da série (por exemplo «Led Zeppelin IV» no inventário e «Led Zeppelin IV (Remastered)» na série) é pedido como outro álbum.
