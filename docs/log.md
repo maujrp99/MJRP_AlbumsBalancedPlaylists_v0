@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 13:34] session — F77: plano, spec, tarefas e os documentos da medição
+**Branch:** feat/f77-measure-how-the-app-is-used
+O `plan.md` reescrito com as onze decisões do agente (revisáveis), a spec com estados, critérios e fora do escopo, as tarefas com uma aberta para o MJRP (o projeto e a chave do PostHog); `arch.md`, `behavior.md` (`^usage-*`), `data-model.md`, `tech-stack.md` e o manual de publicação dizem a porta, o adaptador, o que é medido e o que nunca é.
+O `## Now` do `MEMORY.md` ganha uma linha da F77, no ramo; o integrador junta com o da `main`.
+
 ## [2026-11-20 13:29] session — F77: as variáveis do build, o CSP e a conferência da publicação
 **Branch:** feat/f77-measure-how-the-app-is-used
 O CSP deixa os eventos chegarem às duas nuvens do PostHog (nenhum script dele); o `.env.example` traz `VITE_POSTHOG_KEY`, `VITE_POSTHOG_HOST` e `VITE_USAGE_MEASUREMENT`; o `deploy-site.sh` diz se a medição sai ligada ou desligada e recusa uma chave que não chegou ao build.

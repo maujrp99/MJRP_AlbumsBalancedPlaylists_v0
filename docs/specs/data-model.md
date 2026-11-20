@@ -131,9 +131,13 @@ Resultado da consolidação do servidor (`server/lib/ranking.js`, Borda Count) d
 | cache (`cache/CacheManager.js`), chave `inventoryvalue:v2:{uid}:{idDoItem}` (v2 desde 2026-11-20: as leituras erradas da primeira rodada em produção não são lidas de volta), TTL de 6 horas | a leitura do Discogs de um item (F75, REQ-05): `{ kind: 'found' \| 'not_found' \| 'no_value', release: { id, title, url }, conditions: { mint, nearMint, veryGoodPlus }, currency, readAt }`; quando o Discogs recusa a sugestão (conta sem configurações de vendedor), a leitura é de outra base: `{ kind, basis: 'lowest_for_sale', lowest: { value, currency } \| null, forSale, currency, release, readAt }` (`lowest` nulo: nenhum à venda). **É o único lugar onde um preço do Discogs fica guardado**, e por no máximo seis horas: os termos de uso da API não deixam mostrá-lo com mais de seis horas nem guardá-lo além do necessário. O modelo confere a idade de novo ao mostrar (`models/inventoryValue.js` `isFresh`) |
 | cache, chave `exchangerates:v1`, TTL de 24 horas | o câmbio do dia: `{ day, data: { rates: { USD, EUR, GBP, BRL }, date } }`; vale só no dia (UTC) em que foi lido (F75, REQ-08) |
 | `mjrp_migration_status`, `album_cache_migration_start` e as chaves legadas (`albumCache`, `seriesCache`, `album_*`, `series_*`, `playlist_*`) | de versões antigas; nenhum código as grava, e a migração que as lia saiu na F65. O «Clear cache» ainda apaga as de álbum |
+| `mjrp.usage` | escrita só à mão, no console: `off` desliga a medição do uso neste navegador; `debug` guarda os eventos em `window.__usageEvents` e não manda nada (F77). O app só a lê |
 | `spotify_code_verifier`, `spotify_auth_state`, `spotify_access_token`, `spotify_refresh_token`, `spotify_expires_at` | sessão do Spotify (PKCE); os valores não são documentados aqui |
 
 `sessionStorage` não é usado (Apêndice F §8).
+
+### Eventos de uso (não persistidos aqui) - `shared/usageEvents.js`
+O que o app pode mandar ao serviço de medição (F77): o nome de cada evento e, para cada propriedade, se é uma contagem ou um valor de um conjunto fechado. **A lista mora no código e não é repetida aqui**: `USAGE_EVENTS` em `shared/usageEvents.js`. Nenhuma propriedade aceita texto livre; nenhum evento leva id de série, nome, e-mail ou endereço. O app não guarda os eventos: eles vão ao PostHog (ou, em depuração, a `window.__usageEvents`, só na página). Quem guarda é o projeto do PostHog do MJRP.
 
 ## Relationships
 - User (`uid`) → has many → Series; User → has many → InventoryItem; User → has many → UserRanking.

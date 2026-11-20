@@ -28,6 +28,7 @@ updated: 2026-10-28
 | Dados | IndexedDB `mjrp-cache` e `localStorage` | — | cache em duas camadas no navegador (L1 memória, L2 IndexedDB) e preferências | — |
 | Integrações externas | Google Gemini, por REST (`generativelanguage.googleapis.com`), modelo padrão `gemini-2.5-flash` | — | enriquecimento de ranking e metadados pela IA (`server/lib/aiClient.js:7, 15`) | — |
 | Integrações externas | Apple MusicKit JS | v3 | busca no catálogo, biblioteca e exportação para o Apple Music; carregado de `js-cdn.music.apple.com` (`services/musickit/MusicKitAuth.js:124`) | — |
+| Integrações externas | posthog-js, build `module.no-external`, pelo npm | 1.447.0 | medição do uso (F77): carregado só com a medição ligada, num pedaço próprio do build (419,64 kB, 129,20 kB com gzip); só `services/usage/posthogAdapter.js` o importa | — |
 | Integrações externas | Spotify Web API, com OAuth PKCE | — | busca, popularidade e exportação; token guardado no navegador | — |
 | Integrações externas | BestEverAlbums (raspagem) | — | a fonte das notas de faixa; não tem API | — |
 | Testes | Vitest com jsdom | 1.6.1 / 23.2.0 | testes unitários da raiz (`test/**/*.test.js`, `vitest.config.js:9`) | — |
