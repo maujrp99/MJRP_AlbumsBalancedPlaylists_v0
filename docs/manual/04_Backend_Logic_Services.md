@@ -4,7 +4,7 @@ This document audits the backend logic layer located in `server/lib/` (including
 
 ## 1. Intelligence Orchestration
 
-The backend uses a **waterfall strategy** to determine the best ranking for an album. This is orchestrated by `fetchRanking.js`.
+The backend uses a **waterfall strategy** to determine the best ranking for an album. This is orchestrated by `fetchRanking.js`, since F52 (slice 5) as a small pipeline of sources (`server/lib/rankingSources/`), each with one typed outcome: a source that fails is `failed`, never read as "it has none" (`02_Server_Structure.md`, section 4.1; `03_Backend_API_Layer.md`, "The album search says what happened to its ratings").
 
 ### Ranking Strategy (`fetchRanking.js`)
 The `fetchRankingForAlbum` function implements a specific priority chain (The "Sprint 9 Pivot"):
@@ -27,7 +27,8 @@ The `fetchRankingForAlbum` function implements a specific priority chain (The "S
 | **`scrapers/besteveralbums.js`** | `server/lib/` | **Primary Source**. Scrapes HTML from besteveralbums.com to extract user-generated track content/ratings. |
 | **`spotifyPopularity.js`** | `server/lib/services/` | **Secondary Source**. Queries Spotify API for track popularity. Caches the access token in memory; there is no rate limiting. Typed outcomes and thrown failures since F69. |
 | **`EnrichmentService.js`** | `server/lib/services/` | Logic of `POST /api/enrich-album`: maps BestEverAlbums ratings to the given tracklist. |
-| **`GenerationService.js`** | `server/lib/services/` | Logic of `POST /api/generate`: AI album generation, validation, ranking fetch and consolidation. |
+| **`GenerationService.js`** | `server/lib/services/` | Logic of `POST /api/generate`: AI album generation, validation, ranking fetch and consolidation, within one time budget (75 s). The album it answers is built by `server/lib/albumAnswer.js` and says what happened to each source of ratings (`data.ratings`). |
+| **`rankingSources/`** | `server/lib/` | The three sources of the ranking (`bestEverSource.js`, `spotifySource.js`, `modelSource.js`), their typed outcome (`sourceOutcome.js`) and the pure decisions of the pipeline (`rankingPlan.js`, `completeRanking.js`). |
 | **`aiClient.js`** | `server/lib/` | **Tertiary Source**. Wrapper around the AI Provider (Gemini). Handles prompt injection (`prompts.js`) and response parsing. |
 
 ---
@@ -39,7 +40,7 @@ These files provide the foundational logic for data processing and safety.
 | File | Type | Details |
 | :--- | :--- | :--- |
 | **`normalize.js`** | **Data Cleaning** | **Heavy Logic**. Contains regex and parsing logic to clean "dirty" JSON/Markdown from AI responses. Handles specific edge cases like "Thriller Bug" (forcing tracks array) and numbered list parsing. |
-| **`schema.js`** | **Validation** | Uses **Ajv** to validate album objects against `album.schema.json`. Ensures database integrity. |
+| **`schema.js`** | **Validation** | Uses **Ajv** to validate album objects against `album.schema.json`. Loaded when the server starts; a failure to load is thrown (F52, slice 5). |
 | **`validateSource.js`** | **Security** | Verifies metadata URLs. Performs a GET request to ensure reference links provided by AI/Scrapers are valid (status < 400). Used by `normalize.js` when it validates ranking entries. |
 | **`logger.js`** | **Observability** | A lightweight structured logger (JSON format) replacing standard `console.log` for better ingestion in production. |
 
@@ -111,32 +112,33 @@ flowchart TD
 **Status**: `[ACTIVE]`
 **Type**: Domain Logic (Complex)
 
-### Core Workflow
-1.  **Preparation**: Loads normalization keys and ranking prompts.
-2.  **Primary Source**: Scrapes **BestEverAlbums** (Community ratings).
-3.  **Fallback Logic** (Critical):
-    -   If BestEver has insufficient data (few rated tracks), triggers **Spotify Popularity** fallback.
+### Core Workflow (F52, slice 5: a pipeline of sources; the full trace is in `02_Server_Structure.md`, section 4.1)
+1.  **Preparation**: the ranking prompt must be in the prompts file; without it a `PromptsError` is thrown.
+2.  **`acclaim`**: scrapes **BestEverAlbums** (Community ratings).
+3.  **`popularity`** (Critical):
+    -   If BestEver has insufficient data (few rated tracks, or no track listed), **Spotify Popularity** is asked.
     -   If Spotify Popularity has good coverage (>=50% tracks), it **replaces** the weak BestEver data entirely.
-4.  **Enrichment**:
-    -   When BestEver lists fewer tracks than the album, fills the missing ones with AI results. When BestEver covers the whole album, no AI call is made.
-5.  **Evidence per track (Sprint 23)**:
+4.  **`aiRanking`**:
+    -   When BestEver lists fewer tracks than the album, fills the missing ones with AI results. When BestEver covers the whole album, no AI call is made. When neither BestEver nor Spotify gave anything, the AI's ranking is the ranking.
+5.  **Outcome per source**: the result carries `ratings: { acclaim, popularity, aiRanking }`, each `found`, `not_found`, `no_ratings`, `not_configured`, `failed` or `not_asked`. A failure is never caught and read as "no data".
+6.  **Evidence per track (Sprint 23)**:
     -   The per-track `evidence: []` array is produced by `EnrichmentService.enrichAlbum` (`trackEvidence` in the response of `/api/enrich-album`), with BestEverAlbums as the only source: `evidence: [{ source: 'BestEverAlbums', score: 90, votes: null, url }]`.
-    -   `fetchRanking.js` still contains `mergeRankingEvidence` (BestEverAlbums + Musicboard), but nothing calls it.
+    -   `mergeRankingEvidence` (BestEverAlbums + Musicboard), which nothing called, was removed with the rewrite.
 
 ### Architecture Diagram
 ```mermaid
 flowchart TD
-    Start([Fetch Ranking]) --> BEA[BestEverAlbums Scraper]
-    BEA --> Check{Suffient Data?}
+    Start([Fetch Ranking]) --> BEA[acclaim: BestEverAlbums Scraper]
+    BEA --> Check{Sufficient Data?}
     Check -- Yes --> AI_Check{Fewer entries than album tracks?}
-    Check -- No --> Spotify[Spotify Popularity Fallback]
+    Check -- No --> Spotify[popularity: Spotify]
     Spotify --> SpotCheck{Spotify Coverage >= 50%?}
     SpotCheck -- Yes --> UseSpotify[Use Spotify Data exclusively]
-    SpotCheck -- No --> AI[AI Enrichment (Gemini)]
-    AI_Check -- Yes --> AI
+    SpotCheck -- No --> AI_Check
+    AI_Check -- Yes --> AI[aiRanking: AI Enrichment (Gemini)]
     AI_Check -- No --> Return
     AI --> Norm[Normalize & Merge]
-    Norm --> Return([Return Ranking])
+    Norm --> Return([Return Ranking and the outcome of each source])
     UseSpotify --> Return
 ```
 
@@ -171,6 +173,9 @@ flowchart TD
 
 ### Logic
 -   Loads `prompts.json` from the container path (`server/config/prompts.json`) if it exists, otherwise from the repository's `config/prompts.json`. The result is cached in memory.
+-   **It fails loudly** (F52, slice 5): a file that is missing, unreadable, not JSON, or without `albumSearchPrompt` or `rankingPrompt` makes `loadPrompts()` throw a `PromptsError`; a failure is not cached. `server/index.js` loads the prompts when it starts, so the server does not start without them. Before, all of that became `{}` with a warning.
+-   `requirePrompt(prompts, name)` is how a route reads one prompt: it throws when the prompt is not there (the route answers 500 `internal`).
+-   `createPromptsLoader({ fs, paths })` builds a loader with the file system injected, for the tests.
 -   **Template Rendering**: `renderPrompt` handles `{{variable}}` substitution.
 
 ---
@@ -195,7 +200,7 @@ flowchart TD
 
 ### Logic
 -   Wraps `ajv` to compile `server/schema/album.schema.json`.
--   Gracefully handles missing `ajv` (logs warning instead of crashing).
+-   Loaded when the server starts. A missing `ajv` or an unreadable schema is thrown: the server does not start, and the deploy's smoke test stops there (F52, slice 5; it used to log a warning and turn the validation off).
 
 ---
 
@@ -279,7 +284,7 @@ Used by `fetchRanking.js` (Fallback 2).
     2.  Numbered plain-text list (for human readability/debugging).
 
 ### `defaultRankingProviders`
-A curated list of 11 music sources. `fetchRanking.js` passes the first 10 to `renderPrompt` as `rankingProviders`, but the current `rankingPrompt` template has no `{{rankingProviders}}` placeholder, so the list does not reach the AI:
+A curated list of 11 music sources. `rankingSources/modelSource.js` passes the first 10 (only when the AI ranks alone, not when it completes a page) to `renderPrompt` as `rankingProviders`, but the current `rankingPrompt` template has no `{{rankingProviders}}` placeholder, so the list does not reach the AI:
 *   Ultimate Classic Rock
 *   Tenho Mais Discos Que Amigos (TMDQA!)
 *   Reddit (Fan Subreddits)

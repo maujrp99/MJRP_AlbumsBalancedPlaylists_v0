@@ -121,7 +121,7 @@
 
 ### Batch 4: Server Logic & Utils
 98. `server/lib/aiClient.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
-99. `server/lib/fetchRanking.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
+99. `server/lib/fetchRanking.js`, with `server/lib/rankingSources/` (`sourceOutcome.js`, `bestEverSource.js`, `spotifySource.js`, `modelSource.js`, `rankingPlan.js`, `completeRanking.js`) and `server/lib/albumAnswer.js` (Analysis: `manual/02_Server_Structure.md`, section 4.1, and `manual/04_Backend_Logic_Services.md`)
 100. `server/lib/logger.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
 101. `server/lib/normalize.js` (Analysis: `manual/04_Backend_Logic_Services.md`)
 102. `server/lib/prompts.js` (Analysis: `manual/04_Backend_Logic_Services.md`)

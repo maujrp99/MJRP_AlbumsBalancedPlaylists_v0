@@ -63,15 +63,16 @@ classDiagram
     -   **Failure**: when the source could not answer, the route answers 502 `upstream_failed`, 504 `upstream_timeout` or 503 `upstream_busy` (the source said 429 or 503), never a 200. An unusable body is 400 `invalid_request`.
     -   It uses no AI and no longer asks for `AI_API_KEY`.
 -   `POST /generate`:
-    -   **Input**: `{ albumQuery, model, maxTokens, rawStage }` (`rawStage: 'ranking'` returns the raw ranking response)
+    -   **Input**: `{ albumQuery, model, maxTokens, rawStage }` (`rawStage: 'ranking'` returns the raw ranking response, only with the debug routes on)
     -   **Logic**:
-        1.  Calls AI to search/generate album metadata.
+        1.  Calls AI to search/generate album metadata (the `albumSearchPrompt` of `config/prompts.json`).
         2.  Validates response against `album.schema.json`.
-        3.  Fetches external rankings (BestEverAlbums, Spotify popularity, AI) via `fetchRankingForAlbum`.
-        4.  Consolidates AI + External data to rank tracks (`consolidateRanking`).
-        5.  Sorts tracks by acclaim (`tracksByAcclaim`).
-    -   **Response** (F52): `{ data: albumPayload, outcome: 'found' }`. Every failure of the provider leaves by the table below; the provider's raw answer and its messages no longer leave (it used to pass them on, status and all). No `albumQuery` is 400 `invalid_request`, and the provider is not called.
-    -   It answers 503 (`internal`, not retryable) when `AI_API_KEY` is not set.
+        3.  Fetches the ranking through the pipeline of sources (`fetchRankingForAlbum`: BestEverAlbums, then Spotify popularity, then the AI; see "The album search says what happened to its ratings").
+        4.  Consolidates the entries of the sources to rank tracks (`consolidateRanking`, a pure step).
+        5.  Writes the rank and the rating on each track and lists the tracks by acclaim (`tracksByAcclaim`).
+    -   **Response** (F52): `{ data: albumPayload, outcome: 'found' }`. Since slice 5, `data.ratings` says what happened to each source of ratings. Every failure of the provider leaves by the table below; the provider's raw answer and its messages no longer leave (it used to pass them on, status and all). No `albumQuery` is 400 `invalid_request`, and the provider is not called.
+    -   **Time** (F52, slice 5): the whole request has 75 s (the app waits 90 s). See "Time of the album search".
+    -   It answers 503 (`internal`, not retryable) when `AI_API_KEY` is not set, and 500 `internal` when a prompt it needs is not in the prompts file (the provider is not called).
 
 ### The contract of an answer (F52): `server/lib/outcome.js`
 One module builds every answer of the album and AI routes, of the last error handler, of the door and of the limit. A service returns `success(data, outcome)` or `failure(code, options)`; a route calls `respond(res, result)`.
@@ -144,6 +145,66 @@ How `POST /enrich-album` uses them:
 *   `ms`: the time of the request inside the server; `sourceRequests`: how many requests went to BestEverAlbums for it.
 *   Nothing of the person and nothing of the album is in the line.
 *   **Reading it in Cloud Run** (Logs Explorer, or `gcloud logging read`): filter `resource.type="cloud_run_revision" AND resource.labels.service_name="mjrp-proxy" AND jsonPayload.msg="enrich"`. Add `jsonPayload.meta.answer="upstream_timeout"` for the requests that used the whole budget, `jsonPayload.meta.how="joined"` for the shared ones. The first load of the albums screen is the set of lines between opening the screen and the last line; its cost for the source is the sum of `sourceRequests`.
+
+### The album search says what happened to its ratings (F52, slice 5)
+The album and its ratings are two things. The **album** decides the answer of `POST /generate`: `found`, or the failure of the provider. The **ratings** come from a pipeline of sources and never fail the request: the album was found (and paid for), and the app asks the ratings again through `POST /enrich-album`. What the answer must not do is say "there are no ratings" when the ratings could not be fetched. So `data.ratings` carries the outcome of each source:
+
+| Key | Source | When it is asked |
+| :--- | :--- | :--- |
+| `acclaim` | BestEverAlbums (the scraper) | always, first |
+| `popularity` | Spotify popularity (`services/spotifyPopularity.js`) | when the page lists no track, or rates fewer than 3 tracks and fewer than 40% of the album |
+| `aiRanking` | the paid AI provider, with the `rankingPrompt` | when neither gave the ranking of the whole album: nothing from the two, or a page that lists fewer tracks than the album (the AI completes it) |
+
+| Value | Meaning |
+| :--- | :--- |
+| `found` | the source has ratings (or a ranking) for the album |
+| `not_found` | the source answered: it has no such album (for the AI: it answered with no ranking) |
+| `no_ratings` | BestEverAlbums has the page, with no rating on it |
+| `not_configured` | this server has no Spotify credentials: Spotify was not asked |
+| `failed` | the source could not answer (down, slow, busy, out of time, or it broke) |
+| `not_asked` | the pipeline did not need the source |
+
+Examples of `data.ratings` (the rest of `data` is the album):
+
+```json
+{ "acclaim": "found",     "popularity": "not_asked",      "aiRanking": "not_asked" }
+{ "acclaim": "not_found", "popularity": "not_found",      "aiRanking": "not_found" }
+{ "acclaim": "failed",    "popularity": "failed",         "aiRanking": "failed" }
+{ "acclaim": "not_found", "popularity": "not_configured", "aiRanking": "found" }
+```
+
+The first is "the ratings were found"; the second "no source has ratings for this album"; the third "the ratings could not be fetched" (the tracks leave ranked in album order in the second and in the third: only `ratings` tells them apart); the fourth "Spotify is not set up on this server, and the AI gave the ranking". `data.rankingConsolidatedMeta.fetchRankingDebug` has one row per source (`{ source, outcome, entries, code? }`, the `code` of a failure from the closed list of the contract); no message of a source is in the answer.
+
+*   **The pipeline**: `server/lib/fetchRanking.js` declares the order (`PIPELINE`) and asks each source through `askSource` (`server/lib/rankingSources/sourceOutcome.js`), which turns anything thrown into `failed`. The sources are `rankingSources/bestEverSource.js`, `spotifySource.js` and `modelSource.js`. Which source is still needed and which answer becomes the ranking are pure functions (`rankingSources/rankingPlan.js`); completing a short page with the AI's ranking is `rankingSources/completeRanking.js`; the album answer is built by `server/lib/albumAnswer.js`.
+*   **What is a failure of the whole request**: only what is about the album (the provider's table), and what breaks inside this server (a missing prompt, a bug in the consolidation), which is thrown to the route's error path and answers 500 `internal`. Before slice 5 a ranking that could not be fetched, and a consolidation that broke, both left as an album "with no ratings".
+*   **Today's site** ignores `data.ratings` (it reads the album field by field: `test/api/siteAgainstGenerateWithRatings.test.js`). What the app should do with it is a follow-up: when a source is `failed`, not record "this album has no ratings" for it.
+
+### Time of the album search (F52, slice 5)
+`GenerationService` gives each request `GENERATE_BUDGET_MS` = **75 s** (`server/lib/timeBudget.js`; the app waits 90 s, `serverTimeoutMs` in `public/js/api/client.js`).
+*   The provider does not answer the album within the budget: 504 `upstream_timeout` (the "timeout" row of the provider's table). The AI client's own deadline for one call is 60 s, so in practice that deadline comes first, with the same answer.
+*   A source of ratings still running when the time ends is `failed` in `data.ratings`, the sources after it are not asked, and the album leaves: it was paid for. The scraper receives the deadline of the request and stops asking BestEverAlbums at it; every request to that source still goes through the polite queue.
+*   A call to the provider that lost the race is not cancelled: it ends by its own deadline, and its answer is thrown away.
+
+### One line of log per album search (F52, slice 5)
+`routes/handlers/albums.js` logs, for every `POST /generate` that reached the service, through `lib/logger.js`:
+
+```json
+{"ts":"2026-11-20T00:37:44.284Z","level":"info","msg":"generate","meta":{"event":"generate","answer":"found","status":200,"ms":10,"ratings":{"acclaim":"failed","popularity":"not_configured","aiRanking":"found"}}}
+```
+
+*   `answer`: `found`, or the error code; `status`: the HTTP status (it tells a 424 of the provider's table from a 502); `ms`: the time of the request inside the server.
+*   `ratings`: the outcome of each source, as in `data.ratings`; `null` when the album itself was not answered.
+*   A source that failed also writes its own line, `msg: "ranking_source_failed"`, with the source, the code and the words of the failure (never the address of a request).
+*   Nothing of the person and nothing of the album is in the `generate` line. (The service's older lines about a provider failure still name the query.)
+*   **Reading it in Cloud Run**: filter `jsonPayload.msg="generate"`; add `jsonPayload.meta.ratings.acclaim="failed"` for the album searches whose ratings could not be fetched.
+
+### The prompts and the schema load when the server starts (F52, slice 5)
+*   `server/lib/prompts.js`: `loadPrompts()` throws a `PromptsError` ("Could not load config/prompts.json: ...") when the file is missing, cannot be read, is not JSON, or has no `albumSearchPrompt` or no `rankingPrompt`. `server/index.js` calls it when it starts, so a server without its prompts does not start; before, all of that became `{}` with a warning and the paid routes ran with no prompt. A route reads a prompt with `requirePrompt(prompts, name)`, which throws when it is not there: the answer is 500 `internal`.
+*   `server/lib/schema.js`: `ajv` and `schema/album.schema.json` are loaded at start; a failure is thrown (it used to become "validation disabled").
+*   **The deploy** (`scripts/deploy-server.sh`) starts the staged server before sending it and loads the prompts the way the server does: without a usable prompts file the staged server does not start (or the load check exits with an error), and the deploy stops there.
+
+### No swallowed failure (F52, slice 5)
+Two fitness tests hold it (`test/architecture/noSwallowedFailure.test.js`): no empty `catch` in `server/` outside a list with a reason per entry (`swallowedFailureAllowlist.js`, three entries), and no `catch` that only writes to the log on the path of `POST /generate` and `POST /enrich-album`. The table of every `catch` of the server, with what each does, is in the F52 plan ("Fatia 5").
 
 ---
 

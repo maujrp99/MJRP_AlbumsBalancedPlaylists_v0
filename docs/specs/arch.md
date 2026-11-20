@@ -611,8 +611,37 @@ A crítica conferiu a proposta contra o código e achou dez pontos. A direção 
 2. Os números escolhidos sem medir a fonte (ritmo, esperas, orçamento, prazos de confiança): decididos pelo agente, revisáveis.
 3. A popularidade do Spotify com falha como falha: feita na F69 (seção «A popularidade do Spotify tem três desfechos (F69)», no fim deste arquivo). Até ela, falha, «não conectado» e «o Spotify não tem» terminavam os três em `empty`, e o «sem dado» ia para os fatos da série.
 4. Os fatos antigos da série não viraram «desconhecido» (item 8): são reescritos a cada carga. Sobra o registro `done` com página e zero notas, de antes da fatia 1, que não se refaz sozinho.
-5. `/api/generate` passa pela mesma fila e pelo prazo de 8 s por requisição à fonte, mas não tem orçamento total.
+5. `/api/generate` passa pela mesma fila e pelo prazo de 8 s por requisição à fonte, mas não tem orçamento total. (Feito na fatia 5: seção 13.)
 6. O prazo e o número de instâncias configurados no Cloud Run seguem sem conferir.
+
+### 13. Fatia 5: o caminho de `/api/generate` diz a verdade (2026-11-19 21:50)
+
+O que sobrava da UAT-23 (ramo `fix/f52-slice-5-generate-path-tells-the-truth`; os detalhes em `docs/manual/02_Server_Structure.md`, seção 4.1, em `docs/manual/03_Backend_API_Layer.md`, «The album search says what happened to its ratings», e no `plan.md` da feature, «Fatia 5»).
+
+**A esteira do ranking.** `fetchRankingForAlbum` era uma função de complexidade 139 com cinco saídas e quatro `catch` que seguiam em frente. Agora é uma esteira de fontes (padrão DP-19, resultado tipado, uma camada abaixo da rota):
+
+```
+fetchRanking.js (PIPELINE: a ordem declarada)
+  acclaim     rankingSources/bestEverSource.js   sempre
+  popularity  rankingSources/spotifySource.js    se a página não lista faixa ou tem poucas notas
+  aiRanking   rankingSources/modelSource.js      se nenhuma das duas deu o ranking do álbum inteiro
+      cada fonte -> um desfecho: found | not_found | no_ratings | not_configured | failed | not_asked
+rankingSources/rankingPlan.js   decisões puras: que fonte ainda é precisa, que resposta vira o ranking
+ranking.js                      consolidação pura (Borda), em passos pequenos
+albumAnswer.js                  a resposta do álbum, em passos puros
+```
+
+Quem pergunta uma fonte é `askSource` (`rankingSources/sourceOutcome.js`): o que a fonte lança (falha de rede, prazo, 429, erro do provedor, defeito nosso dentro da fonte) vira `failed` com um código da lista fechada. Nenhuma fonte captura a própria falha, e a esteira não tem `catch`.
+
+**O álbum e as notas são duas coisas.** O álbum decide o resultado do pedido (`found`, ou a falha do provedor pela tabela). As notas nunca derrubam o pedido: `data.ratings = { acclaim, popularity, aiRanking }` diz o desfecho de cada fonte, e é isso que separa «não tem nota» de «não deu para buscar». O que quebra dentro do servidor (prompt que falta, consolidação com defeito) é lançado e responde `internal`.
+
+**Prompts e validador.** `loadPrompts` lança quando o arquivo falta ou não serve, e o servidor carrega os prompts ao subir: sem eles não sobe. O validador do álbum segue a mesma regra.
+
+**Prazo e medição.** 75 s no total para `/api/generate` (o app espera 90 s), com o mesmo `timeBudget.js` das notas; uma linha de log `generate` por pedido, com o desfecho de cada fonte.
+
+**Funções de aptidão novas.** `test/architecture/noSwallowedFailure.test.js` (nenhum `catch` vazio em `server/` fora de uma lista com motivo; nenhum `catch` que só escreve no log no caminho das duas rotas) e o limite de complexidade estendido a `server/` e `shared/` (`complexityLimit.test.js`: 18 e 9 funções nas listas que só encolhem; eram 26 e 9; o caminho reescrito sem exceção).
+
+**Fica aberto:** o app usar `data.ratings` (hoje ignora); os `catch` das rotas `musickit`, `playlists` e de depuração, que seguem com formato próprio de erro; as 18 funções do servidor ainda acima de 10 (a leitura da resposta da IA em `normalize.js` é a maior, 34).
 
 ## Uma regra só para dizer que é o mesmo álbum (F55, revista na F68)
 

@@ -328,12 +328,14 @@ All mounted under `/api` (`ai.js` under `/api/ai`). See `03_Backend_API_Layer.md
 
 | Library | Purpose | Status |
 |---------|---------|--------|
-| [fetchRanking.js](file:///server/lib/fetchRanking.js) | Ranking orchestrator (BestEverAlbums, Spotify popularity, AI) | ✅ |
+| [fetchRanking.js](file:///server/lib/fetchRanking.js) | Ranking orchestrator: the pipeline of sources (BestEverAlbums, Spotify popularity, AI) | ✅ |
+| `rankingSources/` (`server/lib/rankingSources/`) | The three sources of the ranking, their typed outcome, and the pure decisions of the pipeline (F52) | ✅ |
+| `albumAnswer.js` (`server/lib/albumAnswer.js`) | The album `POST /api/generate` answers, built in pure steps (F52) | ✅ |
 | [ranking.js](file:///server/lib/ranking.js) | Consolidate and normalize rankings | ✅ |
 | [normalize.js](file:///server/lib/normalize.js) | Data normalization utilities | ✅ |
 | [scrapers/besteveralbums.js](file:///server/lib/scrapers/besteveralbums.js) | Cheerio-based HTML scraper | ✅ |
 | [aiClient.js](file:///server/lib/aiClient.js) | Google Gemini API client | ✅ |
-| [prompts.js](file:///server/lib/prompts.js) | AI prompt templates | ✅ |
+| [prompts.js](file:///server/lib/prompts.js) | AI prompt templates; throws when the prompts file is missing or unusable (F52) | ✅ |
 | [schema.js](file:///server/lib/schema.js) | AJV validation schemas | ✅ |
 | [logger.js](file:///server/lib/logger.js) | Logging utilities | ✅ |
 | [validateSource.js](file:///server/lib/validateSource.js) | Source validation helper | ✅ |

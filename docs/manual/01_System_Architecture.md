@@ -121,7 +121,7 @@ Top-level architectural patterns chosen to solve specific problems.
 | **Singleton Pattern** | `js/services/*.js`, `js/stores/*.js` | **State Consistency**. Services like `AuthService`, `SpotifyExportService` and Stores must have only one instance. |
 | **Service Layer** | `server/lib/services/`, `public/js/services/` | **Logic Decoupling**. Extracts complex business logic (Scraping, AI, State Machines) from Routes and Components into testable, reusable classes. |
 | **Command Pattern** | `js/controllers/InventoryController.js` | **Action Encapsulation**. User actions (Delete, Update) are encapsulated as methods in controllers, allowing Views to simply "Delegate" commands without knowing internal logic. |
-| **Facade Pattern** | `server/lib/fetchRanking.js` | **Simplification**. Hides the complex complexity of Scraping + AI + Fallbacks behind a single simple function call (`fetchRankingForAlbum`). |
+| **Facade Pattern** | `server/lib/fetchRanking.js` | **Simplification**. Hides Scraping + AI + Fallbacks behind a single function call (`fetchRankingForAlbum`). Since F52 (slice 5) the function is a small pipeline over the sources of `server/lib/rankingSources/`, each with one typed outcome. |
 
 ---
 
@@ -202,7 +202,8 @@ The physical layout of the codebase, annotated with purpose.
 │   ├── lib/
 │   │   ├── scrapers/       # HTML Scrapers (BestEverAlbums)
 │   │   ├── services/       # Core Services (Enrichment, Generation)
-│   │   ├── fetchRanking.js # Orchestrator Facade
+│   │   ├── rankingSources/ # The sources of the ranking, one typed outcome each (F52)
+│   │   ├── fetchRanking.js # Orchestrator Facade: the pipeline of sources
 │   │   └── ranking.js      # Consolidation Math
 │   ├── routes/             # Express Route Definitions (Thin Routes)
 │   ├── schema/             # JSON Schemas (Validation)
@@ -403,7 +404,7 @@ This extends the registry of section 3 with the pattern ids of `docs/wiki/harnes
 | Strategy | DP-04 | `ranking/*Strategy.js`, `algorithms/*Algorithm.js` | v3; the album classification left this pattern in F57 (one pure function, `models/albumType.js`) | swap an algorithm without touching who calls it |
 | Observer | DP-05 | every store's `subscribe`; the window event `spotify-auth-change` | v2; one signal for the Spotify session in v4.0 | the screen follows the state |
 | Adapter | DP-07 | `services/albums/adapters/CatalogAdapter.js`, `enrichers.js`, `AlbumCacheAdapter.js` | **v4.0** | Apple Music, the server, Spotify and the cache behind the shape the load expects |
-| Facade | DP-11 | `server/lib/fetchRanking.js` | v3 | one call hides scraping, AI and fallbacks |
+| Facade | DP-11 | `server/lib/fetchRanking.js` | v3; a pipeline of typed sources in F52 | one call hides scraping, AI and fallbacks, and says what happened to each source |
 | Service | DP-12 | `services/albums/AlbumLoadService.js`, `services/series/SeriesFactsService.js`, `services/ranking/OwnRankingService.js`, `services/SeriesService.js`, `server/lib/services/` | v3; the load in **v4.0** | one owner for a piece of work |
 | Port | DP-14 | the catalog, enricher and cache ports of `AlbumLoadService`; the ports of `OwnRankingService` | **v4.0** | the service is tested without network |
 | Composition Root | DP-15 | `services/albums/albumLoading.js` | **v4.0** | the only file that wires the load to the real sources |
@@ -493,7 +494,7 @@ One line per component of the album path. "State" says whether it is in producti
 | `EnrichmentService` | `server/lib/services/EnrichmentService.js` | ratings per track from BestEverAlbums | v3; F52 |
 | `GenerationService` | `server/lib/services/GenerationService.js` | album by AI (second source) | v3; F52 |
 | Scraper | `server/lib/scrapers/` | reads BestEverAlbums; no cache, no handling of 429 | v3; F52 |
-| `fetchRanking` | `server/lib/fetchRanking.js` | facade over scraping and AI | v3 |
+| `fetchRanking` | `server/lib/fetchRanking.js`, `server/lib/rankingSources/` | facade over scraping and AI: a pipeline of sources with typed outcomes | v3; F52 |
 
 #### Outside
 
