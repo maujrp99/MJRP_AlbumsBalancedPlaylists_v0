@@ -4,32 +4,18 @@ import { albumSeriesStore } from '../stores/albumSeries.js'
 import { userStore } from '../stores/UserStore.js'
 import { authService } from '@shared/services/AuthService.js'
 import { showLoginModal } from './LoginModal.js'
-import toast from './Toast.js'
 import { SeriesDropdown } from './navigation/SeriesDropdown.js'
 import { AuthNav } from './navigation/AuthNav.js'
 
 export class TopNav {
-  /**
-   * @param {Object} deps
-   * @param {Object} deps.migrationUtility - { isMigrationComplete, hasLocalStorageData, migrate }:
-   *        given by app.js, so the menu imports no database, cache or repository (UAT-19, F58)
-   */
-  constructor({ migrationUtility }) {
+  constructor() {
     this.isMenuOpen = false
     this.userState = userStore.getState()
-    this.migrationUtility = migrationUtility
     this.seriesDropdown = null
     this.authNav = new AuthNav(this.userState)
 
     // Subscribe to auth changes
     userStore.subscribe(this.handleAuthChange.bind(this))
-  }
-
-  /**
-   * Check if migration is needed
-   */
-  needsMigration() {
-    return !this.migrationUtility.isMigrationComplete() && this.migrationUtility.hasLocalStorageData()
   }
 
   handleAuthChange(state) {
@@ -202,35 +188,6 @@ export class TopNav {
     return dropdown.render()
   }
 
-  /**
-   * Render Data Sync link for desktop nav
-   */
-  renderDataSyncLink() {
-    return `
-      <button id="dataSyncBtn" class="flex items-center gap-2 text-sm font-medium uppercase tracking-wider px-3 py-1.5 rounded-lg hover:backdrop-blur-md hover:bg-orange-500/10 text-orange-400 transition-all duration-200 border border-orange-500/30">
-        ${getIcon('Database', 'w-4 h-4')}
-        Data Sync
-      </button>
-    `
-  }
-
-  async handleDataSync() {
-    try {
-      toast.info('Starting data migration...')
-      await this.migrationUtility.migrate()
-      toast.success('Data migration complete!')
-      // Re-render to hide Data Sync button
-      const container = document.getElementById('header-container')
-      if (container) {
-        container.innerHTML = this.render()
-        this.attachListeners()
-      }
-    } catch (err) {
-      console.error('Migration failed:', err)
-      toast.error('Migration failed: ' + err.message)
-    }
-  }
-
   async attachListeners() {
     // TopNav v2: Initialize SeriesDropdown
     this.seriesDropdown = new SeriesDropdown({ currentPath: window.location.pathname })
@@ -246,16 +203,6 @@ export class TopNav {
     const links = mobileMenu?.querySelectorAll('a')
 
     // Auth handlers moved to AuthNav
-
-    // Data Sync handlers
-    const dataSyncBtn = document.getElementById('dataSyncBtn')
-    const mobileDataSyncBtn = document.getElementById('mobileDataSyncBtn')
-
-    dataSyncBtn?.addEventListener('click', () => this.handleDataSync())
-    mobileDataSyncBtn?.addEventListener('click', () => {
-      toggleMenu(false)
-      this.handleDataSync()
-    })
 
     // Mobile Series Section Toggle
     const mobileSeriesToggle = document.getElementById('mobileSeriesToggle')

@@ -33,7 +33,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'api/client.js:normalizeAlbumData': 13, // no feature yet: the API client still normalizes by hand what the server sends
     'api/serverResult.js:readServerResult': 11, // no feature yet: the API client still normalizes by hand what the server sends
     'components/InventoryEditModal.js:open': 14, // no feature yet
-    'components/TopNav.js:attachListeners': 12, // no feature yet
     'components/blend/BlendRecipeCard.js:renderRecipeCard': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'components/blend/BlendSeriesSelector.js:preloadSeriesThumbnails': 20, // F62 holds this code (blend, playlists, export, Spotify)
     'components/ranking/TracksRankingComparison.js:arrow function': 19, // no feature yet
@@ -50,9 +49,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'helpers/BEAEnrichmentHelper.js:applyBEAData': 15, // no feature yet
     'helpers/SpotifyEnrichmentHelper.js:applyEnrichmentToAlbum': 15, // F62 holds this code (blend, playlists, export, Spotify)
     'helpers/SpotifyEnrichmentHelper.js:applySpotifyData': 13, // F62 holds this code (blend, playlists, export, Spotify)
-    'migration/MigrationUtility.js:loadSeriesFromLocalStorage': 12, // F65 decides whether the migration screen stays (UAT-11)
-    'migration/MigrationUtility.js:loadAlbumsFromLocalStorage': 13, // F65 decides whether the migration screen stays (UAT-11)
-    'migration/MigrationUtility.js:migrate': 14, // F65 decides whether the migration screen stays (UAT-11)
     'models/Album.js:constructor': 16, // no feature yet: the constructor normalizes every shape an album or a track ever had
     'models/Track.js:constructor': 39, // no feature yet: the constructor normalizes every shape an album or a track ever had
     'models/seriesFilter.js:describeQuery': 12, // no feature yet: three filters of albums that should be one rule

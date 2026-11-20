@@ -152,11 +152,11 @@ describe('text from outside is shown as text', () => {
     })
 
     it('breadcrumb: an address read from the URL', () => {
-        const path = `/ranking/${QUOTED}`
+        const path = `/playlists/${QUOTED}`
         draw(Breadcrumb.render(path, {}))
         expect(host.querySelector('img')).toBeNull()
         expect(window.__xss).toBeUndefined()
-        expect(host.querySelector('.breadcrumb-current').textContent).toBe('Ranking')
+        expect(host.querySelector('.breadcrumb-current').textContent).toBe('Playlists')
     })
 
     it('Spotify export dialog: the playlist name, the message and the tracks not found', () => {
