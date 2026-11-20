@@ -345,6 +345,154 @@
     margin-top: 20px;
   }
 
+  /* Folded (recheck N7): one line for the value, one row for the stores; the tracks come next */
+  .album-window .value-fold {
+    margin: 12px 0 0;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .album-window .value-fold__line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px 0 0;
+  }
+
+  .album-window .value-fold__toggle {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 20px;
+    grid-template-rows: auto auto;
+    column-gap: 8px;
+    align-items: center;
+    min-height: 56px;
+    padding: 8px 0 8px 12px;
+    text-align: left;
+    color: #fff;
+  }
+
+  .album-window .value-fold__label {
+    grid-column: 1;
+    font-family: var(--phone-font-text);
+    font-size: 12px;
+    line-height: 16px;
+    color: #a0a0a8;
+  }
+
+  .album-window .value-fold__value {
+    grid-column: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .album-window .value-fold__amount {
+    font-family: var(--phone-font-text);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 22px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .album-window .value-fold__origin {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--phone-font-text);
+    font-size: 13px;
+    line-height: 18px;
+    color: #a0a0a8;
+  }
+
+  .album-window .value-fold__chevron {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: 20px;
+    height: 20px;
+    color: #a0a0a8;
+    transition: transform var(--phone-slide) ease;
+  }
+
+  .album-window .value-fold__toggle[aria-expanded="true"] .value-fold__chevron {
+    transform: rotate(180deg);
+  }
+
+  .album-window .value-fold__credit {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--phone-target);
+    font-family: var(--phone-font-text);
+    font-size: 12px;
+    line-height: 16px;
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .album-window .value-fold__panel [data-role="estimated-value"] {
+    margin: 0;
+    border-width: 1px 0 0;
+    border-radius: 0 0 12px 12px;
+    background: transparent;
+  }
+
+  .album-window .value-fold--buy {
+    padding: 8px 12px 10px;
+  }
+
+  .album-window .value-fold--buy .value-fold__label {
+    display: block;
+    margin: 0 0 6px;
+  }
+
+  .album-window .value-fold__stores {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .album-window .value-fold__store {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: var(--phone-target);
+    padding: 0 6px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    font-family: var(--phone-font-text);
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  .album-window .value-fold__note {
+    margin: 6px 0 0;
+    font-family: var(--phone-font-text);
+    font-size: 12px;
+    line-height: 16px;
+    color: #a0a0a8;
+  }
+
+  .album-window .value-fold + #modal-ranking-container {
+    margin-top: 20px;
+  }
+
+  /* The buttons of the value and the stores: no blur of their own inside the window. A
+     backdrop-filter nested in the blurred window drew them as empty boxes in captures (recheck N7b) */
+  .album-window .btn-secondary {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
   .album-window [data-role="conditions"] {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -400,7 +548,8 @@
   @media (prefers-reduced-motion: reduce) {
     .album-window__bar,
     .album-window__bar-title,
-    .tracks-tabs__segment {
+    .tracks-tabs__segment,
+    .album-window .value-fold__chevron {
       transition: none;
     }
   }

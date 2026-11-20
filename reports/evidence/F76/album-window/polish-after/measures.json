@@ -1,0 +1,248 @@
+{
+ "inventory-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "docScrollWidth": 393,
+  "phone": true,
+  "textBelow12": [],
+  "fieldsBelow16": [],
+  "targets": 9,
+  "targetsBelow44": [],
+  "tracksFullyVisible": 3,
+  "scrollingBoxes": [
+   "div.modal-container.glass-panel «The Dark Side of the Moo»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": 288,
+  "titlesCut": 0,
+  "albumTitle": {
+   "text": "The Dark Side of the Moon (50th Anniversary Remastered Deluxe Edition)",
+   "width": 233,
+   "height": 120,
+   "cut": false
+  },
+  "boxes": {
+   "bar": [
+    0,
+    0,
+    393,
+    48
+   ],
+   "header": [
+    0,
+    0,
+    393,
+    280
+   ],
+   "segmented": [
+    0,
+    574,
+    393,
+    56
+   ],
+   "save": null,
+   "toast": null,
+   "mover": null
+  }
+ },
+ "inventory-open-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "docScrollWidth": 393,
+  "phone": true,
+  "textBelow12": [],
+  "fieldsBelow16": [],
+  "targets": 7,
+  "targetsBelow44": [],
+  "tracksFullyVisible": 0,
+  "scrollingBoxes": [
+   "div.modal-container.glass-panel «The Dark Side of the Moo»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": null,
+  "titlesCut": 0,
+  "albumTitle": {
+   "text": "The Dark Side of the Moon (50th Anniversary Remastered Deluxe Edition)",
+   "width": 233,
+   "height": 120,
+   "cut": false
+  },
+  "boxes": {
+   "bar": [
+    0,
+    0,
+    393,
+    48
+   ],
+   "header": [
+    0,
+    0,
+    393,
+    280
+   ],
+   "segmented": null,
+   "save": null,
+   "toast": null,
+   "mover": null
+  }
+ },
+ "rank-discard-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "docScrollWidth": 393,
+  "phone": true,
+  "textBelow12": [],
+  "fieldsBelow16": [],
+  "targets": 17,
+  "targetsBelow44": [],
+  "tracksFullyVisible": 10,
+  "scrollingBoxes": [
+   "div.rank-phone__body «The Dark Side of the Moo»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": 267,
+  "titlesCut": 0,
+  "albumTitle": null,
+  "boxes": {
+   "bar": [
+    0,
+    0,
+    393,
+    48
+   ],
+   "header": null,
+   "segmented": null,
+   "save": [
+    16,
+    792,
+    361,
+    48
+   ],
+   "toast": null,
+   "mover": null
+  }
+ },
+ "inventory-393x660": {
+  "innerWidth": 393,
+  "innerHeight": 660,
+  "docScrollWidth": 393,
+  "phone": true,
+  "textBelow12": [],
+  "fieldsBelow16": [],
+  "targets": 9,
+  "targetsBelow44": [],
+  "tracksFullyVisible": 0,
+  "scrollingBoxes": [
+   "div.modal-container.glass-panel «The Dark Side of the Moo»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": 288,
+  "titlesCut": 0,
+  "albumTitle": {
+   "text": "The Dark Side of the Moon (50th Anniversary Remastered Deluxe Edition)",
+   "width": 233,
+   "height": 120,
+   "cut": false
+  },
+  "boxes": {
+   "bar": [
+    0,
+    0,
+    393,
+    48
+   ],
+   "header": [
+    0,
+    0,
+    393,
+    280
+   ],
+   "segmented": [
+    0,
+    574,
+    393,
+    56
+   ],
+   "save": null,
+   "toast": null,
+   "mover": null
+  }
+ },
+ "inventory-open-393x660": {
+  "innerWidth": 393,
+  "innerHeight": 660,
+  "docScrollWidth": 393,
+  "phone": true,
+  "textBelow12": [],
+  "fieldsBelow16": [],
+  "targets": 3,
+  "targetsBelow44": [],
+  "tracksFullyVisible": 0,
+  "scrollingBoxes": [
+   "div.modal-container.glass-panel «The Dark Side of the Moo»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": null,
+  "titlesCut": 0,
+  "albumTitle": {
+   "text": "The Dark Side of the Moon (50th Anniversary Remastered Deluxe Edition)",
+   "width": 233,
+   "height": 120,
+   "cut": false
+  },
+  "boxes": {
+   "bar": [
+    0,
+    0,
+    393,
+    48
+   ],
+   "header": [
+    0,
+    0,
+    393,
+    280
+   ],
+   "segmented": null,
+   "save": null,
+   "toast": null,
+   "mover": null
+  }
+ },
+ "rank-discard-393x660": {
+  "innerWidth": 393,
+  "innerHeight": 660,
+  "docScrollWidth": 393,
+  "phone": true,
+  "textBelow12": [],
+  "fieldsBelow16": [],
+  "targets": 14,
+  "targetsBelow44": [],
+  "tracksFullyVisible": 7,
+  "scrollingBoxes": [
+   "div.rank-phone__body «The Dark Side of the Moo»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": 267,
+  "titlesCut": 0,
+  "albumTitle": null,
+  "boxes": {
+   "bar": [
+    0,
+    0,
+    393,
+    48
+   ],
+   "header": null,
+   "segmented": null,
+   "save": [
+    16,
+    600,
+    361,
+    48
+   ],
+   "toast": null,
+   "mover": null
+  }
+ }
+}

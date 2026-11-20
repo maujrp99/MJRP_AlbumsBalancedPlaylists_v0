@@ -59,6 +59,8 @@ const rank = () => {
 const SCREENS = {
     album: () => showViewAlbumModal(album),
     inventory: () => showViewAlbumModal(item, { value }),
+    'inventory-open': async () => { await showViewAlbumModal(item, { value }); document.querySelector('.value-fold__toggle')?.click() },
+    'rank-discard': () => { const m = rank(); m.moveTrack(0, 2); m.requestClose() },
     rank,
     'rank-picked': async () => { const p = await phoneRanking(); const m = rank(); p.pickTrack(m, tracks[11].title); p.moveBy(m, -1) },
     'rank-moveto': async () => { const p = await phoneRanking(); const m = rank(); p.pickTrack(m, tracks[13].title); p.openMoveTo(m) },

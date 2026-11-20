@@ -65,3 +65,59 @@ describe('the album window (F76)', () => {
         expect(overlay.querySelector('.album-window__bar')).not.toBe(null)
     })
 })
+
+/** F76, recheck N7: an inventory item's window, on the phone, folds the value and the stores. */
+describe('the album window of an inventory item (F76, recheck N7)', () => {
+    const item = { id: 'inv-1', title: album.title, artist: album.artist, format: 'cd', owned: true, albumData: album }
+    let shown
+    const value = () => ({
+        view: () => shown,
+        onWrite: async () => true, onForget: () => { }, onRead: async () => { }
+    })
+    afterEach(() => {
+        document.querySelectorAll('.modal-overlay').forEach(node => node.remove())
+        delete window.matchMedia
+    })
+
+    it('on the phone: one line with the value, its origin and the Discogs credit; the section opens on a tap', async () => {
+        asScreen(true)
+        shown = {
+            value: { origin: 'discogs', currency: 'USD', readAt: '2026-11-19T12:00:00Z', conditions: { mint: 42.5, nearMint: 31, veryGoodPlus: 18.75 }, release: { url: 'https://www.discogs.com/release/1' } },
+            money: { currency: 'USD' }, source: 'on', busy: false
+        }
+        const overlay = await showViewAlbumModal(item, { value: value() })
+        const fold = overlay.querySelector('[data-role="value-fold"]')
+        const toggle = fold.querySelector('.value-fold__toggle')
+        expect(toggle.textContent).toBe('Estimated value≈ $30.75Discogs')
+        expect(toggle.getAttribute('aria-expanded')).toBe('false')
+        const credit = fold.querySelector('.value-fold__line [data-role="discogs-credit"]')
+        expect(credit.textContent).toBe('Data provided by Discogs.')
+        expect(credit.getAttribute('href')).toBe('https://www.discogs.com/release/1')
+        const panel = fold.querySelector('.value-fold__panel')
+        expect(panel.hidden).toBe(true)
+        expect(panel.querySelector('[data-role="estimated-value"]')).not.toBe(null) // the whole section, folded
+        toggle.click()
+        expect(panel.hidden).toBe(false)
+        expect(toggle.getAttribute('aria-expanded')).toBe('true')
+
+        // the stores, in one row, before the tracks
+        const buy = overlay.querySelector('[data-role="where-to-buy"]')
+        expect([...buy.querySelectorAll('.value-fold__store')].map(a => a.dataset.store)).toHaveLength(3)
+        expect(buy.nextElementSibling.id).toBe('modal-ranking-container')
+
+        // the line follows the section when it is drawn again (a value written, read again)
+        shown = { ...shown, value: { origin: 'yours', amount: 50, currency: 'USD' } }
+        overlay.redrawValue()
+        expect(fold.querySelector('.value-fold__toggle').textContent).toBe('Estimated value≈ $50.00Yours')
+        expect(fold.querySelector('.value-fold__line [data-role="discogs-credit"]')).toBe(null)
+    })
+
+    it('on the computer: the two sections of today, open, with no fold', async () => {
+        asScreen(false)
+        shown = { value: { origin: 'yours', amount: 50, currency: 'USD' }, money: { currency: 'USD' }, source: 'on', busy: false }
+        const overlay = await showViewAlbumModal(item, { value: value() })
+        expect(overlay.querySelector('[data-role="value-fold"]')).toBe(null)
+        expect(overlay.querySelector('[data-role="estimated-value"]').parentElement.className).toContain('overflow-y-auto')
+        expect(overlay.querySelector('[data-role="where-to-buy"] .btn-secondary')).not.toBe(null)
+    })
+})

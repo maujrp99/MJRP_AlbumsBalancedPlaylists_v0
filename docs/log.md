@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:31] session — F76 polimento: a janela do álbum do Inventário dobra o valor e as lojas (N7)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+No celular, «Estimated value» vira uma linha (valor, origem, chevron) com «Data provided by Discogs.» ao lado, que abre a seção inteira num toque; «Where to buy» vira uma linha de três lojas de 44 px. As faixas começam em ~y=520 a 393x852 (antes 965). Os .btn-secondary da janela perdem o backdrop-filter próprio no celular (N7b, defensivo: não reproduzido no Chrome).
+Testes: 2 novos em test/components/ViewAlbumModal.phone.test.js; 1280x800 idêntico pixel a pixel antes e depois.
+
 ## [2026-11-20 03:26] session — F76 polimento: o Inventário mostra a lista na primeira tela (N2, N8)
 **Branch:** feat/f76-mobile-polish-inventory-windows
 No celular, os totais viram duas linhas («Owned», «To buy») com a moeda ao lado no controle segmentado único (.phone-segmented, novo em mobile.css § 11), «Data provided by Discogs.» fica junto dos valores e o aviso das configurações de vendedor sai do fluxo para a folha «Lowest asking prices · Why?». Medido no harness: 1ª linha em y=365, 2 linhas a 393x660 e 4 a 393x852 (antes 721 e 0). A folha Status mostra uma marca só (N8).
