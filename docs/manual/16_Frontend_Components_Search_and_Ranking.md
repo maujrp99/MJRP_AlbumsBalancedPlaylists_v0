@@ -37,7 +37,7 @@ The ranking system strictly follows the Container/Presenter pattern.
 
 | Component | Viewport | Details |
 | :--- | :--- | :--- |
-| **`TracksRankingComparison.js`** | **Universal** | **Smart Container**. Handling logic, API enrichment (Spotify/BEA), and state management for the comparison view. |
+| **`TracksRankingComparison.js`** | **Universal** | **Smart Container**. Handling logic and state management for the comparison view. It calls no API: the state of the album's Spotify popularity comes in as a prop and asking again goes out through a callback, to the album load (F69). |
 | **`TracksTabs.js`** | **Mobile** | • **Adaptive UI**: Instead of squeezing columns, it uses Tabs to toggle the *context*.<br>• **Tab 1 (Original)**: Shows standard track numbers.<br>• **Tab 2 (Acclaim)**: Highlights critical ranking badges.<br>• **Tab 3 (Spotify)**: Visualizes popularity bars next to track names. |
 | **`UserRankModal.js`** | **Universal** | • **Interactive State**: Glass-morphism modal for drag-and-drop ranking.<br>• **SortableJS**: Powers the reordering logic.<br>• **Persistence** (v4.0): it does not save. It hands the ranking to `onSubmit(rankings) => Promise<boolean>`, given by whoever opened it, stays open when the save is refused, and calls `onSave` after closing. On the albums screen the chain is `SeriesEventHandler` → `SeriesView` → `SeriesController.saveRanking` → `OwnRankingService`.<br>• **Text**: names are drawn as text nodes, with no HTML escaping (an "&" used to show as `&amp;`). |
 

@@ -90,8 +90,9 @@ A series is a named list of album queries. Path: `artifacts/mjrp-albums/users/{u
       "appleMusicId": "string",       // the chosen edition; the load uses it first, and corrects it (F55)
       "facts": {                      // v4.0, written by the app after the album loads
         "year": "number | null",
-        "sources": { "acclaim": "boolean", "popularity": "boolean" },
-        "checkedAt": "number (ms)"
+        "sources": { "acclaim": "boolean?", "popularity": "boolean?" },  // a key only for a source that answered
+        "checkedAt": "number (ms)",
+        "v": 2                        // v5.0 (F69): the version of the facts
       }
     }
   ],
@@ -103,6 +104,7 @@ A series is a named list of album queries. Path: `artifacts/mjrp-albums/users/{u
 ```
 
 *   `facts` is a copy for the filters; the loaded album is the authority. A query without `facts` has not been checked yet.
+*   `facts.sources` (F69) has one key per source that **answered**: `true` (it has data) or `false` (it has none). A source that failed, or that the person was not connected to (the popularity, without Spotify), has no key, and keeps the value it had when that value is known. Facts without `v` are of before F69: their `popularity: false` may be "not connected" or a failure, so it is read as unknown and rewritten the next time the album loads (`models/albumFacts.js`, `knownSources`).
 *   `appleMusicId` is checked on every load: the album it leads to has to be the album asked for (`artist`, `title`), by the identity rule. When it is not (or the id is gone) and the album asked for is found by name, the app writes the new id here, with `coverUrl` and `year` of the loaded album when the query stores them (F55, slice 2; `SeriesFactsService`, in the same write as `facts`). The app never changes `artist` or `title`.
 *   The person's own track ranking is not in the series: it lives in `users/{uid}/albumRankings/{albumId}`.
 *   The album id is the slug `artist_title` (`api/client.js`, `generateAlbumId`), not a UUID or a Spotify id.

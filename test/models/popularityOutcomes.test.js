@@ -7,6 +7,7 @@ import { FACTS_VERSION, factsOfEntry, hasSettledFacts, withSettledFacts } from '
 import { countUnchecked, describeQuery, filterSeries } from '../../public/js/models/seriesFilter.js'
 import { SourceGap, askNotices, readAsk } from '../../public/js/models/albumAsk.js'
 import { AlbumStatus, createEntry, queryKey } from '../../public/js/models/albumLoadState.js'
+import { hasAnswered, sourceOutcome } from '../../public/js/models/albumSourceAsk.js'
 
 const NOW = 1700000000000
 const entryOf = (query, { acclaim = 'done', popularity = 'done', year = 1971 } = {}) => ({
@@ -20,6 +21,18 @@ const settle = (query, statuses) => {
     return withSettledFacts([query], new Map([[entry.key, entry]]), queryKey, NOW)
 }
 const QUERY = { artist: 'Yes', title: 'Fragile' }
+
+describe('what the answer of a source means for the load (sourceOutcome)', () => {
+    it('"not connected" is shown as it is and has no note: nothing is kept for it, and the source is asked again', () => {
+        expect(sourceOutcome({ status: 'not-connected' })).toEqual({ status: 'not-connected', note: null })
+        expect(hasAnswered('not-connected')).toBe(false)
+    })
+
+    it('"Spotify has no such album" is empty with its reason and the rule; data is done', () => {
+        expect(sourceOutcome({ status: 'empty', reason: 'not_found', rule: 2 })).toEqual({ status: 'empty', note: { reason: 'not_found', rule: 2 } })
+        expect(sourceOutcome({ status: 'done' })).toEqual({ status: 'done', note: { reason: null } })
+    })
+})
 
 describe('the facts of the series: one answer per source, and only what a source said', () => {
     it('done is "has data", empty is "has none"; the facts carry their version', () => {
