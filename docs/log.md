@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 09:31] session — UAT-230 em produção
+**Branch:** main
+Site publicado da `main`. Provado no app local, conta do MJRP, 393x852: «Track Listing» (153 px), «BEA» e «Spotify» (102 px) numa linha, sem reticências.
+
 ## [2026-11-20 09:30] session — UAT-230: na janela do álbum no celular, «Original» vira «Track Listing»
 **Branch:** feat/f76-track-listing-label
 Teste mudado primeiro e visto falhando. O segmento da ordem do álbum ganhou 1,5 da largura dos outros, para «Track Listing» caber numa linha a 393 px. No computador não há esse rótulo.
