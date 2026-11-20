@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:55] session — F76: as cinco telas do celular juntas no ramo de integração, provadas a 393 px na conta do MJRP
+**Branch:** feat/f76-mobile-redesign
+Juntados `feat/f76-mobile-inventory`, `-album-window`, `-playlists`, `-home-blend` e `-albums`, sem conflito; suíte 234 arquivos verdes, lint e build verdes. No navegador, conta do MJRP, 393x852: inventário (linhas, filtros, totais), janela do álbum (título, três fontes numa linha, faixas), ranking (títulos inteiros, Up/Down/Move to, Save fixo), Albums (primeiro álbum acima da dobra, folha de ações nomeadas), playlists gravadas, Home e Blend; nenhuma rola de lado. A 1280x800, Albums e inventário sem nenhum elemento do celular. As notas por tela estão em `screens/`; falta dobrá-las em `info-arch.md`, `behavior.md` e no manual (TASK de documentação aberta).
+
 ## [2026-11-20 02:52] session — F76 TASK-05/06: prova em navegador, ajustes do que se viu e a nota da tela
 **Branch:** feat/f76-mobile-home-blend
 Prova no app de verdade com dados postos pela página (`reports/evidence/F76/harness/home-blend.mjs`, `reports/evidence/F76/home-blend/`): a 393x852 nenhum texto < 12, campo < 16, alvo < 44 nem caixa com rolagem própria; a 1280x800, 0 % de pixels diferentes da base. Ajustes do que se viu: o fundo decorativo da Home escurecia as capas, o selo de ordem, a barra em uma linha, o «Recommended» repetido, a duração do Blend.
