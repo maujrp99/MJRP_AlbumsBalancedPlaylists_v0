@@ -13,6 +13,7 @@
  * - TrackEnrichmentMixin (algorithm enrichment)
  * - PlaylistGenerationService (output transformation)
  */
+import { newId } from '@shared/platform/newId.js'
 
 /**
  * @typedef {Object} CanonicalTrack
@@ -57,7 +58,7 @@ export class TrackTransformer {
 
         return {
             // Identity
-            id: raw.id || raw.trackId || crypto.randomUUID(),
+            id: raw.id || raw.trackId || newId(),
             title: (raw.title || raw.name || raw.trackTitle || 'Unknown').trim(),
             artist: raw.artist || context.artist || 'Unknown Artist',
             album: raw.album || context.album || context.title || 'Unknown Album',

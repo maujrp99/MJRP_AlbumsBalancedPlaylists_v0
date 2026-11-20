@@ -27,6 +27,8 @@
  * @property {number|null} position - Original disc track number (1..N)
  * @property {string|null} originAlbumId - Parent album ID
  */
+import { newId } from '@shared/platform/newId.js'
+
 export class Track {
     /**
      * Create a Track instance
@@ -35,7 +37,7 @@ export class Track {
      */
     constructor(data = {}, albumContext = {}) {
         // Identity
-        this.id = data.id || crypto.randomUUID()
+        this.id = data.id || newId()
         this.title = (data.title || data.name || 'Unknown Track').trim()
         this.artist = (data.artist || albumContext.artist || 'Unknown Artist').trim()
         this.album = (data.album || albumContext.title || 'Unknown Album').trim()

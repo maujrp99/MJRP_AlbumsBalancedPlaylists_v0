@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 14:21] session — F78, Ref-0: um gerador de id só, atrás de uma porta do núcleo
+**Branch:** feat/f78-core-foundations
+`shared/platform/newId.js` exporta `newId()` e `setIdSource(fn)`; sem fonte ligada, `newId()` dá erro dizendo o que ligar (o núcleo não procura global sozinho). O site liga a fonte uma vez, com o `crypto.randomUUID` do navegador, em `public/js/services/platform/platformWiring.js`, o primeiro módulo que o `app.js` carrega; os testes ligam a mesma em `test/setup.js`. `Track.js` e `TrackTransformer.js` chamam `newId()` e não citam mais `crypto`.
+Testes novos: `test/shared/platform/newId.test.js` (a porta, o erro sem fonte, os dois arquivos sem `crypto`, ninguém fora da ligação chama `randomUUID`) e `test/services/platform/platformWiring.test.js` (a ligação dá UUID v4 sem repetir; o `app.js` a carrega primeiro). O servidor não cria faixa: não precisa de ligação.
+
 ## [2026-11-20 14:09] session — F78: a constituição v2.0.0 proposta, para substituir a de 2025
 **Branch:** feat/f78-constitution-v2
 `design/proposals/f78-app-architecture/constitution-v2.md`, pelo modelo da `mjrp-designing-architecture`: nove artigos escritos do que o código é hoje (cada regra com a fonte: ADR, teste de arquitetura ou de segurança, decisão do MJRP com a data) mais o app do ADR-0022, em TypeScript; as regras do app marcadas «vale quando `app/` existir», com o teste que as vai conferir; o que saiu da v1.0.0 e por quê; a lista do que muda no dia do aceite (arquivos e linhas, onde guardar a v1.0.0, os sensores que leem a constituição).
