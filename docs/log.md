@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:34] review — reconferência visual de F56, F58, F60, F63, F65 e F70 por quem não implementou; três achados viram issues
+
+- Relatórios: `reports/audits/2026-11-19-F56-visual-parity-recheck.md` e os de F58, F60, F63, F65 e F70, na mesma pasta. Feitos por um auxiliar que não implementou nenhuma das seis.
+- Veredito: F56, F58, F65 e F70 passam. F60 e F63 reprovam sem P0; os três P1 viraram UAT-216 (playlists salvas no celular), UAT-217 («Blend your Albums» sem a série) e UAT-218 (barra do topo mais larga que a tela com o Spotify conectado).
+- O que não foi conferido está dito em cada relatório: tudo que exigia gravar, apagar, gerar, sair ou conectar.
+- F62: as exportações reais foram feitas pelo MJRP em produção («sem o problema do campo funcionam os exports apple e spotify»); a TASK-13 está marcada com essa prova.
+- F73 pronta e provada no ramo `fix/f73-screens-keep-the-field`, sem commit: a trava de prioridade recusou («a F73 não está na Priorizada»). Fica à espera do MJRP, como a F72.
+
 ## [2026-11-19 23:29] session — UAT-212 a UAT-215 e F73 registradas: campo que perde o foco, exportar numa aba antiga, tela antiga de geração, inventário que não se solta
 
 - O MJRP testou a exportação (F62) em produção e relatou: o «Batch Name» perde o foco ao digitar; depois os botões de exportar não respondem; recarregar sem salvar mostra uma tela antiga de geração.
