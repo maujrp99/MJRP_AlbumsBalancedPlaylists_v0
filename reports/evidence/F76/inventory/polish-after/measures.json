@@ -1,0 +1,25 @@
+{
+ "list-393x852": {
+  "phone": true,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 5925,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 171,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "rowsDrawn": 50,
+  "rowHeights": [
+   102,
+   116,
+   122
+  ],
+  "firstRowTop": 365,
+  "rowsAboveFold": 4,
+  "stickyBarTop": 300,
+  "openSheet": null,
+  "visibleText": 214
+ }
+}

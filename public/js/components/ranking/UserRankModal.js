@@ -16,7 +16,7 @@ import { formatDuration } from '../../utils/duration.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
 import { getIcon } from '../Icons.js'
 import { isPhone, onPhoneChange } from '../../utils/isPhone.js'
-import { renderPhoneRow, renderPhoneWindow } from './rankWindowPhone.js'
+import { confirmDiscard, renderPhoneRow, renderPhoneWindow } from './rankWindowPhone.js'
 
 /** How long the window's own notice stays: a plain one, and one that offers a way back. */
 const TOAST_MS = 2000
@@ -55,6 +55,9 @@ export class UserRankModal {
             ...this.tracks.filter(track => !isRanked(track))
         ]
 
+        // The order as it was when the window opened (or last saved): what «changed» is measured against
+        this.savedOrder = this._orderKey()
+
         this.modalElement = null
         this.sortableInstance = null
         // The phone (F76): the track picked to move without dragging, and the «Move to…» sheet
@@ -84,7 +87,7 @@ export class UserRankModal {
 
         // Add escape key listener
         this._escapeHandler = (e) => {
-            if (e.key === 'Escape' && !this._sheet) this.close()
+            if (e.key === 'Escape' && !this._sheet) this.requestClose()
         }
         document.addEventListener('keydown', this._escapeHandler)
         // The window is drawn for the phone or for the computer: drawn again when that changes
@@ -116,6 +119,28 @@ export class UserRankModal {
         this.rankedOrder.splice(target, 0, track)
         this._updateTrackList()
         return true
+    }
+
+    /** The order on screen, as one string of track ids (to compare with the order saved). */
+    _orderKey() {
+        return this.rankedOrder.map(track => track.id || track.title).join('\u0000')
+    }
+
+    /** Whether the order on screen differs from the one the window opened with (or last saved). */
+    hasUnsavedChanges() {
+        return this._orderKey() !== this.savedOrder
+    }
+
+    /**
+     * Back and Escape. On the phone, an order changed and not saved is not thrown away in silence:
+     * a sheet asks first (F76, recheck N6). On the computer, and with nothing changed, it closes.
+     */
+    requestClose() {
+        if (this.phone && this.hasUnsavedChanges()) {
+            confirmDiscard(this)
+            return
+        }
+        this.close()
     }
 
     /**
@@ -159,6 +184,7 @@ export class UserRankModal {
 
         if (success) {
             console.log('[UserRankModal] Ranking saved successfully')
+            this.savedOrder = this._orderKey()
 
             // Show success feedback
             this._showToast('Ranking saved!')

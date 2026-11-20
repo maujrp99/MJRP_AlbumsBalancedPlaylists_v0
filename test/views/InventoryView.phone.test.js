@@ -113,7 +113,9 @@ describe('the inventory on the phone (F76, TASK-07)', () => {
 
         rows()[1].querySelector('.inv-row__status').click()
         const choices = [...sheet().querySelectorAll('.inv-choice')]
-        expect(choices.map(text)).toEqual(['✓ Owned', 'Not Owned', '♡ Wishlist'])
+        // one mark only (recheck N8): plain labels; the check at the right marks the status now
+        expect(choices.map(text)).toEqual(['Owned', 'Not Owned', 'Wishlist'])
+        expect(choices.map(choice => Boolean(choice.querySelector('.inv-choice__check')))).toEqual([false, true, false])
         expect(choices.map(choice => choice.getAttribute('aria-pressed'))).toEqual(['false', 'true', 'false'])
         choices[0].click()
         await vi.waitFor(() => expect(service.updateAlbum).toHaveBeenCalledWith('inv-001', { owned: true }))

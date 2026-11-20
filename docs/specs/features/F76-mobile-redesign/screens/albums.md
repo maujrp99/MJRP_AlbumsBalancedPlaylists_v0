@@ -51,3 +51,9 @@ A 393x852: 1º álbum de 1126 px para **261 px** (a capa termina em 436), alvos 
 ## Não verificado
 
 iPhone de verdade (barras do Safari, ilha, áreas seguras no app da tela de início); a tela com login e dados reais; o efeito real dos filtros (no harness o controlador é um substituto); arrastar a folha com o dedo; o desempenho da lista de artistas com centenas de nomes dentro da folha.
+
+## Polimento depois da crítica (2026-11-20, ramo `feat/f76-mobile-polish-inventory-windows`, só CSS)
+
+- **N4 · fonte.** O título do álbum (grade e lista) e o nome da série passam a Syne 700 (`--phone-font-title`); o resto segue na fonte de texto (`--albums-font` agora aponta para `--phone-font-text`). O nome da série desce de 18 para 17 px: a Syne é mais larga e um nome longo cortava cedo na segunda linha. Na grade de duas colunas, títulos de duas linhas a 15/20 px leem bem (visto na captura).
+- **N9 · segmentados.** Grid/List (folha Filters) e Pages/Scroll (fim da lista) com o desenho do segmentado único: escolhido na superfície clara, nunca laranja (o laranja fica para «Show albums» e a aba atual). Cores pelas variáveis `--phone-seg-*` de `mobile.css` (o JS de Albums não foi tocado).
+- Prova: `reports/evidence/F76/albums/polish-after/`; 1280x800 idêntico pixel a pixel ao da passada de construção.

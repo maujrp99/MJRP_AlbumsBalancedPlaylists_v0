@@ -94,3 +94,82 @@ function runNotice(known) {
  */
 const SELLER_SETTINGS_NOTICE = `<div id="valuesSellerSettingsNotice" class="glass-panel p-4 mb-6" role="status">
     <span class="text-sm text-white"><strong>Discogs suggests prices only to accounts with seller settings filled in.</strong> Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at <a class="text-accent-primary underline" href="https://www.discogs.com/settings/seller" target="_blank" rel="noopener">discogs.com/settings/seller</a>: the suggestions are tried again the next time values are read.</span></div>`
+
+/* ── The phone (F76, recheck N2): the same facts in two short rows, so the list shows at once ── */
+
+/** The text of the phone's values, in one place. */
+export const PHONE_VALUES_TEXT = Object.freeze({
+    owned: 'Owned',
+    toBuy: 'To buy',
+    why: 'Lowest asking prices · Why?',
+    about: 'About the values'
+})
+
+/** The four currencies as the phone's segmented control (css/mobile.css `.phone-segmented`). */
+function phoneCurrency(money) {
+    const buttons = CURRENCIES.map(code => {
+        const usable = code === BASE_CURRENCY || Boolean(money.rates?.[code])
+        const chosen = code === money.currency
+        return `<button type="button" data-currency="${code}" class="phone-segmented__option${chosen ? ' is-on' : ''}" aria-pressed="${chosen}"${usable ? '' : ' disabled'}>${code}</button>`
+    }).join('')
+    return `<span id="currencySelector" class="phone-segmented inv-values__currency" role="group" aria-label="Currency">${buttons}</span>`
+}
+
+/**
+ * The totals on the phone: «Owned $1,948» and «To buy $611» one above the other, the currency at
+ * their right; under them «Data provided by Discogs.» (a term of use, always beside the values)
+ * and one button that opens the rest in a sheet (the counts, the rate, why the values are the
+ * lowest asking prices and where to fill the seller settings in).
+ * @param {Object} known - controllers/InventoryValues.js `view`
+ * @returns {string} HTML
+ */
+export function renderPhoneTotals(known) {
+    const { totals, money } = known
+    const line = (id, label, total) => `<div class="inv-values__total" data-total="${id}"><span class="inv-values__label">${label}</span> <span class="inv-values__sum" data-role="sum">${totalText(total, money)}</span></div>`
+    const missing = money.ratesMissing ? `<div class="inv-values__note" data-role="rates-missing" role="status">${RATES_MISSING_TEXT}</div>` : ''
+    const credit = known.discogsShown ? `<a class="inv-values__credit" data-role="discogs-credit" href="https://www.discogs.com/" target="_blank" rel="noopener">${DISCOGS_CREDIT}</a>` : ''
+    const about = `<button type="button" class="inv-values__about" data-values-about="true" aria-haspopup="dialog">${known.sellerSettingsMissing ? PHONE_VALUES_TEXT.why : PHONE_VALUES_TEXT.about}</button>`
+    return `<div class="inv-values__row"><div class="inv-values__totals">${line('owned', PHONE_VALUES_TEXT.owned, totals.owned)}${line('to-buy', PHONE_VALUES_TEXT.toBuy, totals.toBuy)}</div>${phoneCurrency(money)}</div>` +
+        `${missing}<div class="inv-values__foot">${credit}${about}</div>`
+}
+
+/**
+ * What the «Why?» / «About the values» sheet says, as plain text (the sheet writes it as text).
+ * @param {Object} known - controllers/InventoryValues.js `view`
+ */
+export function phoneValuesDetails(known) {
+    const { totals, money } = known
+    return {
+        totals: [
+            { label: 'Estimated value of what I own', sum: totalText(totals.owned, money), note: ownedNote(totals.owned) },
+            { label: 'To buy the rest', sum: totalText(totals.toBuy, money), note: toBuyNote(totals.toBuy) }
+        ],
+        rate: money.currency !== BASE_CURRENCY && money.rates?.[money.currency] ? rateNote(money.currency, money.rates) : null,
+        discogs: known.discogsShown ? ['Each value links to its edition on Discogs.', known.lowestShown ? LOWEST_PRICES_NOTE : null].filter(Boolean).join(' ') : null,
+        sellerSettingsMissing: Boolean(known.sellerSettingsMissing),
+        discogsShown: Boolean(known.discogsShown)
+    }
+}
+
+/** The seller-settings sentence, for the phone's sheet: the same words as the computer's notice. */
+export const SELLER_SETTINGS_TEXT = Object.freeze({
+    strong: 'Discogs suggests prices only to accounts with seller settings filled in.',
+    rest: 'Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at',
+    link: 'discogs.com/settings/seller',
+    after: ': the suggestions are tried again the next time values are read.'
+})
+
+/** One notice of the phone: one line and its button (the seller settings are in the sheet). */
+const phoneNotice = (id, { strong, action }, actionName) => `<div id="${id}" class="inv-notice" role="status"><span class="inv-notice__text">${strong}</span><button type="button" class="inv-notice__action" data-notice-action="${actionName}">${action}</button></div>`
+
+/**
+ * The notices on the phone: the run, or the albums waiting, each in one row; nothing with the
+ * source off. The seller-settings notice is not in the flow: «Why?» opens it.
+ * @param {Object} known - controllers/InventoryValues.js `view`
+ * @returns {string} HTML
+ */
+export function renderPhoneNotices(known) {
+    if (known.source !== SourceState.ON) return ''
+    if (known.run.busy) return phoneNotice('valuesReadingNotice', readingNotice(known.run.count), 'stop-values')
+    return known.waiting > 0 ? phoneNotice('valuesWaitingNotice', waitingNotice(known.waiting), 'read-values') : ''
+}

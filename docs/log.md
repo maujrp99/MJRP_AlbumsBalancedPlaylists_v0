@@ -3,6 +3,36 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:39] session — F76 polimento: notas de tela e provas do Inventário, da janela do álbum e de Albums
+**Branch:** feat/f76-mobile-polish-inventory-windows
+Seções «Polimento depois da crítica» em screens/inventory.md, album-window-and-ranking.md e albums.md (decisões, medidas, o que não foi feito: N11, N14, N15, N16).
+Provas em reports/evidence/F76/inventory/2026-11-20-polish-proof.md e album-window/2026-11-20-polish-proof.md.
+
+## [2026-11-20 03:37] session — F76 polimento: a página presa sem nada aberto é devolvida (N22)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+Lidos pageScrollLock.js e windowsHoldThePage.js: no código do app nenhum caminho deixa o contador alto (folhas e janelas sempre saem pelo close ou são tiradas do body, o que o observador vê). Os dois caminhos que deixam a página presa sem nada aberto — uma folha tirada do DOM sem close e o módulo recarregado (HMR do servidor de desenvolvimento, onde a crítica rodou) com o body preso — agora se soltam: giveBackAStrayHold roda a cada mudança dos filhos do body e a cada troca de tela (PhoneShell.screenChanged, uma linha).
+Testes: 4 novos em test/components/ui/windowsHoldThePage.test.js.
+
+## [2026-11-20 03:35] session — F76 polimento: um controle segmentado e duas famílias de fonte no celular (N9, N4)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+Um só segmentado (mobile.css § 11, variáveis --phone-seg-*): escolhido na superfície clara elevada, nunca laranja; aplicado em Grid/List e Pages/Scroll (Albums), Original/BEA/Spotify (janela do álbum) e a moeda (Inventário). Fonte: título de linha em Syne (--phone-font-title), o resto na fonte de texto (--phone-font-text) em Albums, Inventário, janela do álbum e ranking. As duas regras escritas em design-system.md § Celular.
+3045 testes verdes, eslint e build verdes; Albums 1280x800 idêntico ao da passada de construção.
+
+## [2026-11-20 03:31] session — F76 polimento: a janela do álbum do Inventário dobra o valor e as lojas (N7)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+No celular, «Estimated value» vira uma linha (valor, origem, chevron) com «Data provided by Discogs.» ao lado, que abre a seção inteira num toque; «Where to buy» vira uma linha de três lojas de 44 px. As faixas começam em ~y=520 a 393x852 (antes 965). Os .btn-secondary da janela perdem o backdrop-filter próprio no celular (N7b, defensivo: não reproduzido no Chrome).
+Testes: 2 novos em test/components/ViewAlbumModal.phone.test.js; 1280x800 idêntico pixel a pixel antes e depois.
+
+## [2026-11-20 03:26] session — F76 polimento: o Inventário mostra a lista na primeira tela (N2, N8)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+No celular, os totais viram duas linhas («Owned», «To buy») com a moeda ao lado no controle segmentado único (.phone-segmented, novo em mobile.css § 11), «Data provided by Discogs.» fica junto dos valores e o aviso das configurações de vendedor sai do fluxo para a folha «Lowest asking prices · Why?». Medido no harness: 1ª linha em y=365, 2 linhas a 393x660 e 4 a 393x852 (antes 721 e 0). A folha Status mostra uma marca só (N8).
+Testes: test/views/InventoryPhoneValues.test.js (5) e o de status atualizado; 1280x800 igual antes e depois.
+
+## [2026-11-20 03:19] session — F76 polimento: o ranking pergunta antes de descartar (N6)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+No celular, Back e Escape com a ordem mudada e não salva abrem a folha «Discard changes?» (Keep editing · Discard); sem mudança, saem direto. O computador não muda (tem o mesmo defeito, mas a correção lá pediria outra janela de confirmação, não duas linhas).
+Testes: 6 novos em test/components/ranking/UserRankModal.phone.test.js.
+
 ## [2026-11-20 03:16] review — crítica de UX independente da F76 no celular: sem P0, 11 P1, 11 P2
 **Branch:** main
 Um agente separado percorreu as telas novas na conta do MJRP, a 393x852, 393x660 e 667x375: dos 24 achados antigos, 19 fechados, 3 em parte, 2 não medidos; nenhuma tela rola de lado, nenhum alvo abaixo de 44 px. Melhor tela: Albums; mais fraca: playlists gravadas. Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-recheck.md`. Entram também no repositório a crítica de origem, o benchmark e a conferência dele. Decidido pelo agente — revisável: no celular, títulos de linha em Syne e o resto na fonte de texto do app; um só desenho de controle segmentado.

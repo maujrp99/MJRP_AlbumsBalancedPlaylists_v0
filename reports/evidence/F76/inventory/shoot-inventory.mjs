@@ -20,10 +20,11 @@ const which = process.argv[4] || 'both'
 const out = path.join(here, label)
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 const DEBUG_PORT = 9377
-const PHONE = { name: '393x852', width: 393, height: 852, mobile: true }
+const PHONE_H = Number(process.env.PHONE_H || 852)
+const PHONE = { name: `393x${PHONE_H}`, width: 393, height: PHONE_H, mobile: true }
 const COMPUTER = { name: '1280x800', width: 1280, height: 800, mobile: false }
-const PHONE_SCENARIOS = ['list', 'empty', 'filtered', 'loading', 'reading', 'pressed', 'brl', 'status', 'item', 'filters', 'actions', 'jump', 'edit']
-const COMPUTER_SCENARIOS = ['list', 'empty', 'filtered', 'reading', 'pressed', 'brl', 'edit']
+const PHONE_SCENARIOS = ['list', 'seller', 'why', 'empty', 'filtered', 'loading', 'reading', 'pressed', 'brl', 'status', 'item', 'filters', 'actions', 'jump', 'edit']
+const COMPUTER_SCENARIOS = ['list', 'seller', 'empty', 'filtered', 'reading', 'pressed', 'brl', 'edit']
 
 const MEASURE = `(() => {
     const visible = (el) => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' }

@@ -56,6 +56,8 @@ const readings = new Map(fixtures.filter((item, i) => i % 5 !== 2).map((item, i)
 const service = {
     userId: 'harness',
     sourceState: async () => 'on',
+    // the owner's account today: no seller settings on Discogs, so the values are lowest prices
+    sellerSettingsMissing: () => scenario === 'seller' || scenario === 'why',
     rates: async () => ({ rates: { USD: 1, EUR: 0.91, GBP: 0.76, BRL: 5.89 }, date: '2026-11-19' }),
     readingsOf: async (list) => new Map(list.filter(item => readings.has(item.id)).map(item => [item.id, readings.get(item.id)])),
     readItem: async () => ({ failure: 'other', waitMs: null, stops: false }),
@@ -97,6 +99,7 @@ const SCENARIOS = {
         view.controller.refresh()
     },
     status: () => click('.inv-row:nth-child(2) .inv-row__status'),
+    why: () => click('[data-values-about]'),
     item: () => click('.inv-row:nth-child(1) .inv-row__more'),
     filters: () => click('[data-phone-action="filters"]'),
     actions: () => click('[data-phone-action="actions"]'),

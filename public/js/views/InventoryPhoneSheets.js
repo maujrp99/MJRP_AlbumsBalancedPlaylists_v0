@@ -8,6 +8,7 @@
  *   filters     the format and the order, applied as they are chosen
  *   actions     the actions of the whole collection, each with what it does in words
  *   jump        a letter of the artists, or a stretch of positions
+ *   values      the totals in words, the rate, and why the values are the lowest asking prices
  *
  * Every choice closes its sheet first and then calls what the view gave it: a window that opens
  * after (the edit window, a confirmation) is never under the sheet.
@@ -17,10 +18,11 @@ import { getIcon } from '../components/Icons.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { safeUrl } from '../utils/safeUrl.js'
 import { BUY_LINKS_NOTE, SELL_TRADE_SOON, buyLinksOf } from '../models/buyLinks.js'
-import { InventoryStatus, statusOf } from '../models/inventoryStatus.js'
+import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatus.js'
 import { DISCOGS_CREDIT, DISCOGS_MEAN_TITLE, ValueOrigin, moneyOf, noValueText, valueLabel } from '../models/inventoryValue.js'
 import { SORT_OPTIONS } from '../models/inventorySort.js'
 import { statusText } from './renderers/InventoryPhoneRow.js'
+import { SELLER_SETTINGS_TEXT } from './renderers/InventoryValueHeader.js'
 
 const STATUS_ORDER = Object.freeze([InventoryStatus.OWNED, InventoryStatus.NOT_OWNED, InventoryStatus.WISHLIST])
 const FORMATS = Object.freeze([['all', 'All'], ['cd', 'CD'], ['vinyl', 'Vinyl'], ['digital', 'Digital']])
@@ -59,7 +61,7 @@ export function openStatusSheet(item, onChoose) {
     const now = statusOf(item)
     const list = SafeDOM.div({ className: 'inv-choices', role: 'group', 'aria-label': 'Status' })
     const sheet = openSheet({ variant: 'bottom', title: 'Status', content: [note(`${item.title || 'Unknown Title'} · ${item.artist || 'Unknown Artist'}`), list], id: 'inventoryStatusSheet' })
-    STATUS_ORDER.forEach(status => list.appendChild(choiceRow(statusText(status), status === now, closing(sheet, () => {
+    STATUS_ORDER.forEach(status => list.appendChild(choiceRow(statusLabel(status), status === now, closing(sheet, () => {
         if (status !== now) onChoose(status)
     }))))
     return sheet
@@ -193,4 +195,32 @@ export function openJumpSheet({ targets, byLetter, onJump }) {
         onClick: closing(sheet, () => onJump(index))
     }, label)))
     return sheet
+}
+
+/**
+ * «Lowest asking prices · Why?» / «About the values» (F76, recheck N2): what the computer shows
+ * around its totals, in a sheet: each total with how many albums have a value, the rate, where
+ * the values come from and, while the account has no seller settings, the sentence and its link.
+ * @param {ReturnType<import('./renderers/InventoryValueHeader.js').phoneValuesDetails>} details
+ */
+export function openValuesSheet(details) {
+    const totals = details.totals.map(({ label, sum, note: count }) => SafeDOM.div({ className: 'inv-values-sheet__total' }, [
+        SafeDOM.span({ className: 'inv-values-sheet__label' }, label),
+        SafeDOM.span({ className: 'inv-values-sheet__sum' }, sum),
+        SafeDOM.span({ className: 'inv-values-sheet__count' }, count)
+    ]))
+    const content = [group(totals)]
+    if (details.rate) content.push(note(details.rate))
+    if (details.sellerSettingsMissing) {
+        content.push(SafeDOM.p({ className: 'inv-values-sheet__seller', id: 'valuesSellerSettingsSheetText' }, [
+            SafeDOM.create('strong', {}, SELLER_SETTINGS_TEXT.strong),
+            ` ${SELLER_SETTINGS_TEXT.rest} `,
+            SafeDOM.a({ className: 'inv-values-sheet__link', href: 'https://www.discogs.com/settings/seller', target: '_blank', rel: 'noopener' }, SELLER_SETTINGS_TEXT.link),
+            SELLER_SETTINGS_TEXT.after
+        ]))
+    }
+    if (details.discogs) content.push(note(details.discogs))
+    if (details.discogsShown) content.push(discogsCredit())
+    const title = details.sellerSettingsMissing ? 'Why lowest asking prices?' : 'About the values'
+    return openSheet({ variant: 'bottom', title, content, id: 'inventoryValuesSheet' })
 }

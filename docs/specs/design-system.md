@@ -41,6 +41,21 @@ Tudo aqui foi **decidido pelo agente — revisável** (o MJRP deu liberdade de d
 
 As classes `text-[9px]`, `text-[10px]` e `text-[11px]` em uso sobem para 12/16 px no celular (`mobile.css` § 3.1). Tamanhos escritos em `style=""` ou em CSS de tela ficam com a tela.
 
+### Família de fonte no celular (recheck N4, 2026-11-20)
+
+Duas famílias, uma regra (decidido pelo agente — revisável; pedido do MJRP: «título de linha em Syne, o resto na fonte de texto»):
+
+- **Syne** (`--phone-font-title`, a fonte de exibição do app): o **título de uma linha** — nome de álbum, de faixa, de playlist, de série —, o nome da tela na barra do topo, o título de uma folha e o título dentro da tela (nome do álbum na janela). Peso 700 (o 600 não é carregado).
+- **Fonte de texto** (`--phone-font-text`: `-apple-system`, SF Pro no iPhone, Inter e `system-ui` de reserva): todo o resto — artista, contagens, valores, selos, botões, campos, segmentados, avisos, o corpo das folhas. A 12–16 px a Syne perde leitura (benchmark § 9.2).
+- As variáveis vivem em `mobile.css` § 1; cada tela aplica a regra no seu CSS (Albums, Inventário, janela do álbum e ranking já aplicam; Home e Playlists, o outro agente).
+
+### Controle segmentado no celular (recheck N9, 2026-11-20)
+
+Um só desenho para toda escolha «um destes» (Grid/List, Pages/Scroll, Original/BEA/Spotify, a moeda, Visual/Bulk): `.phone-segmented` com `.phone-segmented__option` e `.is-on` (ou `aria-pressed="true"`), em `mobile.css` § 11, com as cores em variáveis (`--phone-seg-*`) para as telas que ainda desenham o seu.
+
+- 44 px de altura; as opções lado a lado, de largura igual, texto 14 px peso 600 na fonte de texto.
+- **O escolhido é a superfície clara elevada** (`#2a2a30`, texto branco, contorno de 1 px a 14 % de branco); as outras, texto `#a0a0a8` sobre o trilho `#0a0a0c`. **Nunca laranja** (decidido pelo agente — revisável): o laranja é a ação principal da tela, a aba atual da barra de baixo e o item escolhido; um segmentado é um ajuste de vista, e em Albums e na janela do álbum ele aparece junto de uma ação laranja. Assim a regra é uma só, sem exceção por tela.
+
 ### Áreas seguras e altura
 
 - `viewport-fit=cover` no `index.html`: a página vai até as bordas; as barras se afastam da ilha e da barra de início com `env(safe-area-inset-*)`, e a margem lateral é `max(16px, env(safe-area-inset-left))`. Fonte: WebKit, «Designing Websites for iPhone X» (`viewport-fit=cover`, `env()`, `max()` para somar margem e área segura); MDN, `env()`.
