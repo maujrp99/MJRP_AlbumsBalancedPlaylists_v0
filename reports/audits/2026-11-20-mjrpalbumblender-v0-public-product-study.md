@@ -7,6 +7,8 @@ status: informativo, para o MJRP decidir
 ---
 # Album Blender como produto público · estudo para decisão
 
+**Atualizado em 2026-11-20 10:15:** entraram as considerações das conversas de 2026-11-20 (regras das lojas, o caminho só com iPhone, o caminho só para uso pessoal, a cláusula de tráfego do Discogs em detalhe).
+
 **Para quem:** MJRP. **Para quê:** decidir se o Album Blender evolui para um app público, nas lojas da Apple e do Google. Nada aqui foi construído nem priorizado.
 
 **Aviso:** a parte legal é um mapa do que considerar, não um parecer. Antes de lançar um produto público que use dados de terceiros, vale uma consulta com advogado de propriedade intelectual e de direito digital.
@@ -50,6 +52,23 @@ Consequência: um app público teria o **Apple Music como base** e o Spotify com
 
 **Custos fixos de entrada** (de memória, a confirmar): programa de desenvolvedor da Apple, cerca de US$ 99 por ano; conta de desenvolvedor do Google, taxa única de cerca de US$ 25; as lojas ficam com 15% a 30% de compras digitais feitas dentro do app.
 
+### Regras das lojas a cumprir (de memória, a conferir antes de começar)
+
+- **Mínimo de funcionalidade (regra 4.2 da Apple):** um app que é só o site dentro de uma moldura costuma ser recusado. O revisor procura valor nativo de verdade (uso sem rede, avisos, integração com o aparelho, interface nativa).
+- **Login com a Apple:** quem oferece login do Google no iPhone precisa oferecer também o da Apple.
+- **Apagar a conta:** tem de ser possível de dentro do app.
+- **Rótulo de privacidade** preenchido nas duas lojas, e política de privacidade publicada.
+
+### Se o iPhone fosse a única plataforma
+
+A minha primeira resposta, antes de o Android entrar: **Swift com SwiftUI e MusicKit nativo**. O desenho da F76 (barra de baixo, folhas, linhas compactas) é o vocabulário nativo do SwiftUI, a integração com o Apple Music é a melhor possível, e o caminho fica aberto para widget, Atalhos e Siri. Continua sendo a melhor escolha se o Android sair do plano ou ficar para muito depois. A parte que vale nos dois casos: as regras do app num lugar só (núcleo compartilhado ou servidor), para o site e o app não terem duas cópias.
+
+### Se o app fosse só para você
+
+O que já existe é quase o app:
+- **Hoje:** o site da F76 adicionado à tela de início do iPhone abre em tela cheia, com ícone e nome.
+- **Um degrau acima:** o site dentro de um Capacitor, distribuído pelo TestFlight interno, sem passar pela revisão pública da loja. Não exige resolver Spotify, Discogs nem BestEverAlbums, porque o uso continua pessoal.
+
 ## 3. Monetização do produto como ele é hoje
 
 | Forma | Como funcionaria | O que pede | Observação |
@@ -65,6 +84,25 @@ Consequência: um app público teria o **Apple Music como base** e o Spotify com
 O que eu **não** faria: anúncios (estragam um app de apaixonados e rendem pouco em nicho) e venda de dados de usuários (LGPD e confiança).
 
 ## 4. Independência do Discogs: um agregador de preços próprio
+
+### A cláusula de tráfego do Discogs, em detalhe
+
+Os termos da API proíbem, entre os usos comerciais, usar a API ou o conteúdo dela «com a intenção de levar tráfego a sites ou serviços que não são do Discogs».
+
+**Por que toca no desenho de hoje (F75):**
+- O app usa um dado do Discogs, o preço, para estimar o valor de um CD.
+- No mesmo cartão e na mesma janela, logo abaixo, ficam os links «Where to buy»: Discogs, Amazon e iMusic.
+- Quem vê o preço do Discogs e clica em Amazon ou iMusic está sendo levado a outra loja a partir de um dado do Discogs.
+- Com afiliação, o app passaria a ganhar com esse tráfego: aí o uso é comercial sem dúvida.
+
+**O que pesa a favor hoje:** só o MJRP usa o app, sem fim comercial e sem afiliação; o link do Discogs vem primeiro e o preço leva à página do Discogs; a cláusula fala em intenção.
+
+**Riscos práticos:** o pior caso é o Discogs revogar o token; o app segue funcionando com o interruptor desligado (`DISCOGS_VALUES=off`). Os termos também dão como exemplo de violação usar a API para contornar o marketplace deles, o que pesa sobre a ideia de venda e troca entre colecionadores com base nesses preços.
+
+**Opções:**
+1. Deixar como está enquanto o uso for pessoal e sem afiliação (recomendação de agora).
+2. Separar na tela: o preço do Discogs leva só ao Discogs; Amazon e iMusic ficam longe dele.
+3. Antes de ligar afiliação ou abrir ao público: pedir autorização por escrito ao Discogs, ou trocar a fonte de preço (o resto desta seção).
 
 **Separar duas coisas que o Discogs entrega junto:**
 

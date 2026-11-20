@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 10:15] session — estudo do produto público: entram as considerações das conversas
+**Branch:** main
+A pedido do MJRP, o estudo ganhou o que estava só na conversa: as regras das lojas, a opção SwiftUI se o iPhone for a única plataforma, o caminho de uso pessoal (tela de início, Capacitor no TestFlight) e a cláusula de tráfego do Discogs com as três opções.
+
 ## [2026-11-20 10:05] decision — candidato no PRD: Album Blender como produto público (iPhone e Android); estudo escrito
 **Branch:** main
 O MJRP quer considerar um app público nas duas lojas, «uma evolução do produto», e pediu material para decidir, não construção. Registrado como candidato no Intake do PRD; estudo em `reports/audits/2026-11-20-mjrpalbumblender-v0-public-product-study.md` (travas de dados, pilha com Android, monetização, agregador de preços, o lado legal, agregador de rankings). Recomendações do agente, revisáveis: React Native com Expo e núcleo de regras compartilhado; afiliação e plano do colecionador; catálogo por fontes abertas e preço por afiliados e usuários; a nota da comunidade como fonte de faixa.
