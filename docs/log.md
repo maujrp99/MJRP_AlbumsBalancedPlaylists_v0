@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 13:39] session — conserto: marcas de conflito no `arch.md`, deixadas pelo merge da proposta da F78
+**Branch:** main
+Ao juntar a `main` no ramo da proposta, o `arch.md` teve conflito (a seção da F77 e o ponteiro da proposta, no mesmo lugar) e o integrador fez o commit com as marcas dentro. Consertado: as duas seções ficam, a da F77 antes; o ponteiro da proposta diz o estado de agora (criticada, revisada, reconferida, sem aprovação e sem ADR). Erro do agente integrador; nenhum código tocado.
+
 ## [2026-11-20 13:39] review — reconferência da proposta de arquitetura do app (F78): pode ir ao MJRP, com notas
 **Branch:** feat/f78-app-architecture-proposal
 Um segundo agente conferiu a revisão contra a crítica: os dois P0 e os P1 1, 3, 5 e 7 fechados; P0-2 e os P1 2, 4 e 6 em parte. As notas abertas estão no § 17 da proposta (a versão do documento rebaixada por um app antigo; `saveAlbumFacts` sem classificação; o S1 com gerador de identificadores fixo; a cota da IA; os desfechos do BestEverAlbums). Nenhum ADR ainda: a decisão é do MJRP.
