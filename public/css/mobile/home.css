@@ -183,7 +183,12 @@
     background: none;
   }
 
+  /* N1 (recheck 2026-11-20): css/views/home.css keeps the toolbar sticky at top:0 below 769 px;
+     here it has no background, so the filters floated over the covers under the top bar. On the
+     phone it flows with the page: six filters in two columns are ~150 px, too tall to pin. */
   #home-toolbar {
+    position: static;
+    z-index: auto;
     padding: 0 0 12px;
     background: none;
     border: 0;
