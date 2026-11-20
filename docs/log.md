@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:16] review — crítica de UX independente da F76 no celular: sem P0, 11 P1, 11 P2
+**Branch:** main
+Um agente separado percorreu as telas novas na conta do MJRP, a 393x852, 393x660 e 667x375: dos 24 achados antigos, 19 fechados, 3 em parte, 2 não medidos; nenhuma tela rola de lado, nenhum alvo abaixo de 44 px. Melhor tela: Albums; mais fraca: playlists gravadas. Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-recheck.md`. Entram também no repositório a crítica de origem, o benchmark e a conferência dele. Decidido pelo agente — revisável: no celular, títulos de linha em Syne e o resto na fonte de texto do app; um só desenho de controle segmentado.
+
 ## [2026-11-20 02:57] session — F76 em produção: o app no celular, redesenhado
 **Branch:** main
 Site publicado da `993b317` (`main-CEiz0KA2.js`). No site publicado, a 393 px: barra do topo, barra de baixo com os cinco destinos, Home nova; `css/mobile.css` e as folhas por tela servidas. A prova das telas com dados foi no app local, conta do MJRP. Em curso: crítica de UX independente das telas novas. `## Now` atualizado.
