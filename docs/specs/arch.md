@@ -26,6 +26,7 @@ Os nomes da coluna *Stack layer* são as camadas de `docs/specs/tech-stack.md`.
 | Cache (`js/cache/`) | L1 memória + L2 IndexedDB `mjrp-cache` (`cache/CacheManager.js`) | Dados |
 | Clientes externos (`js/api/client.js`, `services/SpotifyAuthService.js`, `services/musickit/`) | falam com `/api/*` (por `fetch`), com o Spotify (OAuth PKCE) e com o Apple MusicKit | Integrações externas |
 | Worker de busca (`js/workers/search.worker.js`) | busca de autocompletar fora da thread principal, sobre `albums-autocomplete.json` | Front |
+| Medição do uso (`js/services/usage/`: `track.js`, `usageSwitch.js`, `usageWiring.js`, `memoryAdapter.js`, `posthogAdapter.js`) | a porta única de eventos de uso e o adaptador trocável atrás dela; o PostHog é carregado só com a medição ligada (F77). Ver «A medição do uso: a porta e o adaptador» | Integrações externas |
 
 ### Compartilhado (`shared/`)
 | Component | Responsibility | Stack layer |
@@ -33,6 +34,7 @@ Os nomes da coluna *Stack layer* são as camadas de `docs/specs/tech-stack.md`.
 | Curadoria (`shared/curation.js`) | retirada na F65 (2026-11-19): nenhum cliente chamava `POST /api/playlists`, a única rota que a usava; as playlists são geradas no navegador, pelos algoritmos de `js/algorithms/` | — |
 | Identidade da faixa (`shared/trackIdentity.js`) | a regra única de «esta faixa do álbum é a faixa que a fonte lista» (F74), pura, em degraus com nome, e a distribuição de uma nota para uma faixa (`matchTracks`); o app a usa por `public/js/models/sameTrack.js` e o servidor por `server/lib/trackIdentity.js`. Ver «Uma regra só para dizer que é a mesma faixa». `shared/normalize.js` (`normalizeKey`), que ocupava este lugar, saiu com ela | Linguagem |
 | Identidade do álbum (`shared/albumIdentity.js`) | a regra única de «este é o álbum pedido» (F55, revista na F68), pura, em listas de regras com nome; o app a usa por `public/js/models/askedAlbum.js` e o servidor por `server/lib/albumIdentity.js`. Ver «Uma regra só para dizer que é o mesmo álbum», no fim deste arquivo | Linguagem |
+| Eventos de uso (`shared/usageEvents.js`) | a lista fechada do que o app pode medir: nome de cada evento e, para cada propriedade, uma contagem ou um valor de conjunto fechado (F77); pura, sem import; o site a usa por `services/usage/track.js` e o app de celular (F78) é para usar a mesma | Linguagem |
 | Autenticação de usuário (`shared/services/AuthService.js`) | login Google/Apple e saída, sobre `firebase/auth`; **só o navegador o usa** (`stores/UserStore.js` o importa por `@shared/`); o servidor não. Existe também outro `AuthService` em `public/js/services/AuthService.js` (login anônimo) | Dados |
 
 ### Servidor (`server/`, Cloud Run)
@@ -1093,3 +1095,30 @@ Quando o app já sabe a edição (`releaseId`, guardado no item), só o passo 4 
 **Direção das dependências.** As peças do celular são componentes e renderizadores (camada Front, como os de computador): chamam os mesmos controllers e serviços (`PlaylistsService.moveTrack`, `controller.deleteTrack`, `handleInitializeLoad`), nunca o Firestore. Uma ação nova no celular é uma ação que o computador já tinha, com outra casca; o que o celular acrescenta de regra (o «Undo» do «Reset» do ranking, a pergunta «Discard changes?», o nome exigido antes de criar a série) está em `docs/specs/behavior.md` § No celular.
 
 **O que esta camada não prova.** O teste só segura o CSS; que a tela de computador desenha igual, só a comparação de capturas mostra (`reports/evidence/F76/`, a TASK-08). O que nunca foi visto num iPhone de verdade está em `plan.md` § Risks & Considerations.
+
+## A medição do uso: a porta e o adaptador (F77) — construída no ramo
+
+> 2026-11-20, ramo `feat/f77-measure-how-the-app-is-used`. O porquê, as decisões do agente e o que não foi verificado estão em `docs/specs/features/F77-measure-how-the-app-is-used/plan.md`. **Nenhum evento foi mandado ao PostHog:** falta a chave do projeto, que é do MJRP.
+
+**O que é.** Uma porta de eventos com nomes fixos e um adaptador trocável atrás dela, no molde das fontes do servidor (uma fonte por arquivo, um interruptor lido do ambiente) e da porta das rotas pagas do cliente (`api/paidRoutes.js`: uma regra num lugar só, e quem chama pergunta a ela).
+
+```
+serviço / controlador (depois da ação dar certo)
+  -> services/usage/track.js  track(nome, propriedades)
+       -> shared/usageEvents.js  describeEvent: nome conhecido? propriedades da lista, do tipo certo?
+       -> o adaptador em uso:  nenhum (desligado) | memoryAdapter (depuração) | posthogAdapter (ligado)
+```
+
+**A lista** (`shared/usageEvents.js`) é a mesma para o site e para o app de celular. Uma propriedade só pode ser uma contagem ou um valor de um conjunto fechado; não existe propriedade de texto livre, então o nome de uma série, de uma playlist ou uma busca não têm onde ir.
+
+**A porta** (`services/usage/track.js`) confere cada evento na lista e o entrega. Desligada, não faz nada; enquanto o adaptador carrega, até 100 eventos esperam; nunca lança erro e nunca espera nada. Fora de `services/usage/`, o app só importa `track.js`.
+
+**O adaptador** (`services/usage/posthogAdapter.js`) é o único arquivo que importa `posthog-js` (build `module.no-external`: nenhum código é carregado de fora). A fiação o carrega por `import()`, só com a medição ligada: o pacote principal só nomeia o arquivo do pedaço. Opções: nada capturado sozinho (sem captura automática, sem página vista, sem gravação de sessão, mapa de calor, cliques mortos ou erros), nada gravado no navegador (`persistence: 'memory'`, `disable_persistence`), sem perfil de pessoa, sem referenciador nem parâmetros de campanha, sem pedido de flags, pesquisas ou experimentos; o `before_send` tira de cada evento o endereço da página. Nunca chama `identify`. O IP é tratado na configuração do projeto do PostHog, não no código (a opção `ip` não tem mais efeito).
+
+**O interruptor** (`services/usage/usageSwitch.js`): ligado só com `VITE_POSTHOG_KEY` no build e nada desligando; desligam `VITE_USAGE_MEASUREMENT=off` (build) e `localStorage` `mjrp.usage` = `off` (um navegador, sem build). `mjrp.usage` = `debug` guarda os eventos em `window.__usageEvents` e não manda nada. O CSP (`public/index.html`, `connect-src`) aceita as duas nuvens do PostHog.
+
+**Onde os eventos saem.** No serviço ou no controlador, depois da ação dar certo: séries (`SeriesService`), ranking (`OwnRankingService`, pela porta `measure` dada em `ownRanking.js`), gerar (`PlaylistGenerationService`), gravar (`PlaylistsService`), exportar (`SpotifyExportService`, `AppleMusicExportService`, `PlaylistsExport.handleExportJson`), inventário (`InventoryController`, `InventoryValues`, `InventoryService`), filtros (`SeriesController`, `InventoryController`, `SavedPlaylistsView`), entrar e sair (`LoginModal`, `AuthNav.signOut`, que são os únicos lugares onde o login responde). As peças do celular chamam esses mesmos serviços, então mandam os mesmos eventos. Dois eventos têm um lugar só, na fiação (`usageWiring.js`): a tela, depois do roteador, pelo nome da rota que casou (o roteador passa a rota às funções de depois da troca); e o link de compra, por um ouvinte na fase de captura, que lê as marcas `data-buy-store` e `data-buy-place` postas por `models/buyLinks.js` e não segura a navegação.
+
+**Testes que seguram isso.** `test/architecture/usageBehindThePort.test.js`: só o adaptador importa a biblioteca ou nomeia o global dela; o adaptador só é carregado por `import()` da fiação; fora de `services/usage/` só se importa `track.js`; a lista só é lida pela porta; o CSP aceita as duas nuvens e nenhum script do PostHog. `test/shared/usageEvents.test.js` cobra que nenhuma propriedade aceita texto e que o módulo não usa API de navegador nem de servidor.
+
+**O que este desenho não resolve.** O identificador anônimo vive o tempo da página: um funil que atravessa uma recarga se parte. Um host próprio do PostHog exige mudar o CSP. Medir para outras pessoas pede consentimento e política de privacidade antes (ver os riscos do `plan.md`).

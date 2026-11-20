@@ -12,6 +12,7 @@ import toast from '../Toast.js';
 import { SpotifyAuthService } from '../../services/SpotifyAuthService.js';
 import { reloadApp } from '../../utils/reloadApp.js';
 import { NAME_IN_THE_BAR } from './barName.js'
+import { track } from '../../services/usage/track.js'
 
 /** Somebody signed in with an account of their own: a guest session is not one. */
 export const isSignedIn = (user) => Boolean(user && !user.isAnonymous)
@@ -25,6 +26,7 @@ export async function signOut() {
         await authService.logout();
         // The Spotify session belongs to the person who is leaving: it goes with them (F59, UAT-28)
         SpotifyAuthService.logout();
+        track('sign_out');
         toast.success('Signed out successfully');
         // A fresh page: nothing of the person who left stays in memory or on screen
         reloadApp();

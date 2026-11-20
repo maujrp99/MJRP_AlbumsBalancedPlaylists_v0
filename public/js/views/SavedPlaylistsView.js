@@ -21,6 +21,8 @@ import FilterToolbar from '../components/ui/FilterToolbar.js'
 import { SavedPlaylistsFilterService } from '../services/SavedPlaylistsFilterService.js'
 import { ListStatus } from '../models/savedPlaylists.js'
 import { isPhone, onPhoneChange } from '../utils/isPhone.js'
+import { filterUseOf } from '../models/filterUse.js'
+import { track } from '../services/usage/track.js'
 
 /** What a series group shows: when none of it changed, the group on screen is kept as it is. */
 const shownOf = (group) => ({
@@ -262,6 +264,9 @@ export class SavedPlaylistsView extends BaseView {
     }
 
     handleFilterChange(key, value) {
+        // F77: the filters of this screen live here, not in a controller: measured where they change
+        const use = filterUseOf('saved_playlists', key, value, this.filterState[key])
+        if (use) track('filter_used', use)
         this.filterState[key] = value
         this.update()
     }

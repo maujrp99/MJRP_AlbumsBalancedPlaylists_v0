@@ -49,6 +49,24 @@ export function buyLinksOf(album) {
     })
 }
 
+/**
+ * Where a link is on the screen, for the measurement of use (F77, `buy_link_opened`): the card of
+ * the inventory, the album window (computer and phone), the sheet of the album on the phone.
+ */
+export const BuyLinkPlace = Object.freeze({ CARD: 'card', ALBUM_WINDOW: 'album_window', PHONE_SHEET: 'phone_sheet' })
+
+/**
+ * The marks a buy link carries so that a click on it is measured (services/usage/usageWiring.js
+ * listens for them): the id of the store and the place. Never the album.
+ * @param {string} storeId - `id` of a link of buyLinksOf
+ * @param {string} place - one of BuyLinkPlace
+ * @returns {{ buyStore: string, buyPlace: string }} for a `dataset`
+ */
+export const buyLinkMarks = (storeId, place) => ({ buyStore: storeId, buyPlace: place })
+
+/** The same marks, as attributes of an HTML string (the values are ids, never text from outside). */
+export const buyLinkAttributes = (storeId, place) => `data-buy-store="${storeId}" data-buy-place="${place}"`
+
 /** What the album window says above the links. */
 export const BUY_LINKS_NOTE = 'Each link opens the store on this album, on CD. The app earns nothing from these links today.'
 /** Why "Sell" and "Trade" cannot be pressed. */

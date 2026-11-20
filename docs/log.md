@@ -3,9 +3,29 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 13:34] session — F77: plano, spec, tarefas e os documentos da medição
+**Branch:** feat/f77-measure-how-the-app-is-used
+O `plan.md` reescrito com as onze decisões do agente (revisáveis), a spec com estados, critérios e fora do escopo, as tarefas com uma aberta para o MJRP (o projeto e a chave do PostHog); `arch.md`, `behavior.md` (`^usage-*`), `data-model.md`, `tech-stack.md` e o manual de publicação dizem a porta, o adaptador, o que é medido e o que nunca é.
+O `## Now` do `MEMORY.md` ganha uma linha da F77, no ramo; o integrador junta com o da `main`.
+
 ## [2026-11-20 13:30] review — crítica independente da proposta de arquitetura do app (F78): não vai ao MJRP como está
 **Branch:** main
 Um agente separado julgou `design/proposals/f78-app-architecture/architecture-proposal.md` (ramo `feat/f78-app-architecture-proposal`): 2 P0, 7 P1, 2 P2. A pilha recomendada (React Native com núcleo JS) se sustenta; antes de ir ao MJRP a proposta precisa responder: gravar sem prazo e sem estado «pendente» (VT-02); formato dos documentos do Firestore entre versões do app (VT-05); onde fica a costura do núcleo, com `SeriesService` e `PlaylistsService` presos ao Firestore e à tela (IV-03); Firebase JS contra React Native Firebase (RS-04); limite por pessoa só na memória da instância, sem teto global nem App Check (MA-04, MA-05). Parte portável refeita pelo crítico: 116 arquivos, cerca de 34% com um polyfill, 0% provado em aparelho; `crypto.randomUUID` em `Track.js` quebra no motor do app e alcança todas as receitas. Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-f78-architecture-critique.md`. A proposta volta ao autor.
+
+## [2026-11-20 13:29] session — F77: as variáveis do build, o CSP e a conferência da publicação
+**Branch:** feat/f77-measure-how-the-app-is-used
+O CSP deixa os eventos chegarem às duas nuvens do PostHog (nenhum script dele); o `.env.example` traz `VITE_POSTHOG_KEY`, `VITE_POSTHOG_HOST` e `VITE_USAGE_MEASUREMENT`; o `deploy-site.sh` diz se a medição sai ligada ou desligada e recusa uma chave que não chegou ao build.
+Provado num navegador (Vite em 127.0.0.1:5123, sem conta, adaptador de depuração), no computador e a 375 px: as telas pelo nome, uma busca medida uma vez sem o texto, o clique em link de compra medido sem segurar a navegação, nenhum pedido a host do PostHog.
+
+## [2026-11-20 13:26] session — F77: os eventos das tarefas, no computador e no celular
+**Branch:** feat/f77-measure-how-the-app-is-used
+Os eventos saem onde a ação deu certo, nos serviços e controladores (série, ranking, gerar, gravar, exportar, inventário, filtros, entrar e sair); os links de compra levam a loja e o lugar, e um ouvinte só mede o clique sem segurar a navegação.
+Acrescentados pelo agente: `inventory_value_removed` e `inventory_albums_added`. As peças do celular chamam os mesmos controladores e serviços, então mandam os mesmos eventos. Suíte: 3191 testes verdes.
+
+## [2026-11-20 13:19] session — F77: a porta de eventos, o adaptador do PostHog e o interruptor
+**Branch:** feat/f77-measure-how-the-app-is-used
+A lista fechada de eventos em `shared/usageEvents.js` (só contagens e valores de conjunto fechado: texto da pessoa não cabe), a porta `services/usage/track.js`, o adaptador do PostHog carregado só quando ligado (`posthog-js` 1.447.0, build sem código de fora), o adaptador de depuração (`window.__usageEvents`) e o teste de arquitetura que deixa só o adaptador falar com a biblioteca.
+O roteador passa a dizer às funções de depois da troca qual rota casou; a tela é medida pelo nome, nunca pelo endereço. Decisões do agente, revisáveis, no `plan.md` da F77.
 
 ## [2026-11-20 13:14] session — proposta de medição de uso, com a adoção de cada opção
 **Branch:** main

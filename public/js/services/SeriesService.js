@@ -18,6 +18,7 @@ import { cacheManager } from '../cache/CacheManager.js'
 import { StorageService } from './infra/StorageService.js'
 import { UserSyncService } from './auth/UserSyncService.js'
 import { alreadyAskedFor, indexOfQueryFor } from '../models/askedAlbum.js'
+import { track } from './usage/track.js'
 
 const STORAGE_KEY = 'series' // prefix will be added
 
@@ -91,6 +92,7 @@ export class SeriesService {
             albumSeriesStore.addSeries(series)
             albumSeriesStore.setActiveSeries(id)
             this.saveToLocalStorage()
+            track('series_created', { album_count: series.albumQueries.length })
 
             return series
         } finally {
@@ -104,6 +106,7 @@ export class SeriesService {
             await this.repository.update(id, { ...updates, updatedAt: new Date() })
             albumSeriesStore.updateSeriesById(id, updates)
             this.saveToLocalStorage()
+            track('series_edited', { album_count: updates.albumQueries?.length })
 
             // The albums on screen are not touched here: whoever shows the series asks the album
             // load again, and it reconciles (an album added loads, an album removed leaves).
@@ -132,6 +135,7 @@ export class SeriesService {
             await this.repository.deleteWithPlaylists(id)
             albumSeriesStore.removeSeriesById(id)
             this.saveToLocalStorage()
+            track('series_deleted')
 
             // The albums of the series leave the screen when the album load is asked again without it
         } finally {

@@ -207,7 +207,18 @@ describe('Router', () => {
 
             await new Promise(resolve => setTimeout(resolve, 10))
 
-            expect(hook).toHaveBeenCalledWith('/test', {})
+            expect(hook).toHaveBeenCalledWith('/test', {}, '/test')
+        })
+
+        it('tells the hooks the route matched, not only the address (F77: a screen by its name)', async () => {
+            const hook = vi.fn()
+            router.afterNavigate(hook)
+            router.register('/albums/:seriesId', () => ({ render: () => '<div>Series</div>' }))
+
+            await router.navigate('/albums/abc123')
+            await new Promise(resolve => setTimeout(resolve, 10))
+
+            expect(hook).toHaveBeenCalledWith('/albums/abc123', { seriesId: 'abc123' }, '/albums/:seriesId')
         })
     })
 

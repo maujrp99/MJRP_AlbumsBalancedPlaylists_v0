@@ -167,6 +167,25 @@ gcloud run services update mjrp-proxy --update-env-vars DISCOGS_VALUES_FOR=<uid 
 
 **Trocar o token:** gravar uma versão nova do segredo `discogs-token` e rodar de novo o comando de «Ligar pela primeira vez» (`:latest` é resolvido quando a revisão sobe).
 
+### 2.4c A medição do uso (F77)
+
+O site mede o que as pessoas fazem (a lista está em `shared/usageEvents.js`; o que é e o que nunca é medido, no `docs/specs/behavior.md`, «Medição do uso»). A medição está **ligada** só quando o build recebe `VITE_POSTHOG_KEY` **e** nada a desliga. Sem a chave, o site funciona igual, não baixa a biblioteca do PostHog e não pede nada a nenhum host de medição.
+
+**Ligar pela primeira vez** (uma vez, pelo MJRP):
+1. Criar a conta e um projeto no PostHog, na nuvem da Europa (`https://eu.posthog.com`).
+2. Em Settings > Project > Privacy, conferir que «IP data capture configuration» está desligado (na Europa já nasce assim).
+3. Copiar a chave do projeto (Project API key, começa com `phc_`; é pública, só permite mandar eventos) para o `.env` da pasta onde a `main` está: `VITE_POSTHOG_KEY=<a chave>`. Para a nuvem dos EUA, também `VITE_POSTHOG_HOST=https://us.i.posthog.com`.
+4. `npm run deploy:site`. O script diz «measurement of use: ON (the PostHog project key is in the built scripts)», ou recusa publicar se a chave não chegou ao build.
+5. Abrir o site, usar algumas telas e ver em Activity, no PostHog, os eventos (`screen_viewed`, …) chegarem.
+
+**Desligar:**
+- **Num navegador, sem build:** no console do site, `localStorage.setItem('mjrp.usage', 'off')` e recarregar. Para voltar: `localStorage.removeItem('mjrp.usage')`.
+- **Para todos:** `VITE_USAGE_MEASUREMENT=off` no `.env` (ou apagar `VITE_POSTHOG_KEY`) e `npm run deploy:site`. O script diz «measurement of use: OFF».
+
+**Ver o que seria medido, sem mandar nada:** `localStorage.setItem('mjrp.usage', 'debug')`, recarregar, usar o site e ler `window.__usageEvents` no console. Funciona com ou sem chave, local ou em produção.
+
+**Um host próprio** (proxy reverso do PostHog) exige acrescentar o host ao `connect-src` do CSP em `public/index.html`; hoje só as duas nuvens estão liberadas.
+
 ### 2.5 Automação do GitHub
 
 `.github/workflows/ci.yml` roda a verificação de código (`npx eslint . --quiet`) e depois
@@ -200,8 +219,11 @@ DISCOGS_VALUES_FOR=uid1,uid2       # Optional: só essas pessoas têm os valores
 ### Frontend (`.env` na raiz, lido pelo Vite na hora do build)
 ```bash
 VITE_SPOTIFY_CLIENT_ID=...         # Client ID do app no painel do Spotify (valor público)
+VITE_POSTHOG_KEY=...               # Optional: a chave do projeto do PostHog (valor público); sem ela, nada é medido
+VITE_POSTHOG_HOST=...              # Optional: o host de ingestão; vazio = https://eu.i.posthog.com (EUA: https://us.i.posthog.com)
+VITE_USAGE_MEASUREMENT=off         # Optional: constrói um site que não mede nada, mesmo com a chave
 ```
-Sem essa variável a conexão com o Spotify quebra, no ambiente local e no build que vai para produção.
+Sem `VITE_SPOTIFY_CLIENT_ID` a conexão com o Spotify quebra, no ambiente local e no build que vai para produção. As três da medição estão na seção 2.4c.
 
 ### Endereço local: um só
 O app roda em **`http://127.0.0.1:5010`** e só nele (`vite.config.js`: porta fixa, `strictPort`).

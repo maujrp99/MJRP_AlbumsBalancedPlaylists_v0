@@ -11,6 +11,7 @@ import { playlistsStore } from '../../stores/playlists.js'
 import { getIcon } from '../../components/Icons.js'
 import { escapeHtml } from '../../utils/stringUtils.js'
 import { AppleMusicExportService, appleExportMessages } from '../../services/AppleMusicExportService.js'
+import { track } from '../../services/usage/track.js'
 
 /**
  * Helper: Resolve effective batch name with fallback
@@ -54,6 +55,8 @@ export function handleExportJson(playlists) {
     a.click()
 
     URL.revokeObjectURL(url)
+    // F77: the file was handed to the browser; how many playlists, never their names
+    track('playlists_exported', { target: 'json', outcome: 'complete', playlist_count: exportData.length })
 }
 
 /** How long the report of an export stays: it names playlists, it is not read at a glance. */

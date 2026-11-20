@@ -149,7 +149,7 @@ export class Router {
     async handleRouteChange() {
         const path = window.location.pathname
 
-        for (const [, route] of this.routes) {
+        for (const [routePath, route] of this.routes) {
             const match = path.match(route.pattern)
             if (match) {
                 this.currentUrl = path + window.location.search
@@ -158,9 +158,9 @@ export class Router {
 
                 await this.renderView(route.viewFactory, { ...params, query: queryParams })
 
-                // Call after hooks
+                // Call after hooks: the address, its params, and the route it matched ('/albums/:seriesId')
                 for (const hook of this.afterNavigateHooks) {
-                    hook(path, params)
+                    hook(path, params, routePath)
                 }
                 return
             }
@@ -337,7 +337,8 @@ export class Router {
 
     /**
      * Add after navigate hook
-     * @param {Function} hook - Hook function (path, params) => void
+     * @param {Function} hook - Hook function (path, params, route) => void; `route` is the
+     *        pattern that matched, as registered ('/albums/:seriesId'): a name with no ids (F77)
      */
     afterNavigate(hook) {
         this.afterNavigateHooks.push(hook)

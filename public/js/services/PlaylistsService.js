@@ -19,6 +19,7 @@ import { playlistsStore } from '../stores/playlists.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { StorageService } from './infra/StorageService.js'
 import { PlaylistHistoryService } from './playlists/PlaylistHistoryService.js'
+import { track } from './usage/track.js'
 
 const STORAGE_KEY = 'current_playlists' // prefix will be added by service
 
@@ -28,6 +29,9 @@ const withTracks = (playlists, playlistIndex, change) => playlists.map((playlist
 
 /** The tracks with one more at a position: a new list. */
 const insertedAt = (tracks, position, track) => [...tracks.slice(0, position), track, ...tracks.slice(position)]
+
+/** F77: what the measurement says of a save: how many, and whether a saved batch was edited. */
+const savedEvent = (stored, replacedName) => ({ playlist_count: stored.length, batch: replacedName ? 'edited' : 'new' })
 
 export class PlaylistsService {
     /**
@@ -472,6 +476,8 @@ export class PlaylistsService {
         console.log(`[PlaylistsService] Saved batch "${batchName}": ${stored.length} playlists`)
 
         this._showSaved(stored, batchName, seriesId, savedAt)
+        // F77: how many, and whether a saved batch was edited; never the name of the batch
+        track('playlists_saved', savedEvent(stored, replacedName))
         return { status: 'saved', batchName, seriesId, playlists: stored }
     }
 

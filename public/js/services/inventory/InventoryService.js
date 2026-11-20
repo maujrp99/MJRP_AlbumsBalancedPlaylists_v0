@@ -10,6 +10,7 @@
 import { findInInventory, planSeriesAlbums } from '../../models/inventoryFromSeries.js'
 import { RATING_SOURCES, planAverages, queryOfItem, ratingsAskOf } from '../../models/inventoryRatings.js'
 import { ENRICHMENT_SOURCES } from '../../models/albumLoadState.js'
+import { track } from '../usage/track.js'
 
 const ANONYMOUS = 'anonymous-user'
 
@@ -110,6 +111,7 @@ export class InventoryService {
             if (findInInventory(album, await this.repository.findAll())) throw new Error('Album already in inventory')
             const id = await this.repository.addAlbum(album, format, options)
             await this.loadAlbums()
+            track('inventory_albums_added', { from: 'one', count: 1 })
             return id
         } catch (error) {
             console.error('Failed to add album to inventory:', error)
@@ -162,6 +164,7 @@ export class InventoryService {
             onProgress({ added, total })
         }
 
+        if (added > 0) track('inventory_albums_added', { from: 'series', count: added })
         return { added, total, error, reloaded: added === 0 || await this._readAgain(repository) }
     }
 

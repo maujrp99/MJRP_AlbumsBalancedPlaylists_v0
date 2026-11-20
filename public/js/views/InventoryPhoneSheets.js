@@ -17,7 +17,7 @@ import { openSheet } from '../components/ui/Sheet.js'
 import { getIcon } from '../components/Icons.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { safeUrl } from '../utils/safeUrl.js'
-import { BUY_LINKS_NOTE, SELL_TRADE_SOON, buyLinksOf } from '../models/buyLinks.js'
+import { BUY_LINKS_NOTE, BuyLinkPlace, SELL_TRADE_SOON, buyLinkMarks, buyLinksOf } from '../models/buyLinks.js'
 import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatus.js'
 import { DISCOGS_CREDIT, DISCOGS_MEAN_TITLE, ValueOrigin, moneyOf, noValueText, valueLabel } from '../models/inventoryValue.js'
 import { SORT_OPTIONS } from '../models/inventorySort.js'
@@ -86,8 +86,8 @@ function valueGroup(item, value, money) {
 }
 
 function whereToBuy(item) {
-    const links = buyLinksOf(item).map(({ name, url }) =>
-        SafeDOM.a({ className: 'inv-link', href: safeUrl(url), target: '_blank', rel: 'noopener', dataset: { store: name } }, `${name} ↗`))
+    const links = buyLinksOf(item).map(({ id, name, url }) =>
+        SafeDOM.a({ className: 'inv-link', href: safeUrl(url), target: '_blank', rel: 'noopener', dataset: { store: name, ...buyLinkMarks(id, BuyLinkPlace.PHONE_SHEET) } }, `${name} ↗`))
     return group([heading('Where to buy'), ...links, note(BUY_LINKS_NOTE)])
 }
 

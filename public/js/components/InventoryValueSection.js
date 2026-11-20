@@ -25,7 +25,7 @@ import {
     DISCOGS_CREDIT, NoValue, SourceState, ValueBasis, ValueOrigin, dayText, failureText, formatMoney, meanOfConditions, momentText, moneyOf,
     noValueText
 } from '../models/inventoryValue.js'
-import { BUY_LINKS_NOTE, buyLinksOf } from '../models/buyLinks.js'
+import { BUY_LINKS_NOTE, BuyLinkPlace, buyLinkAttributes, buyLinkMarks, buyLinksOf } from '../models/buyLinks.js'
 
 const BOX = 'bg-black/20 rounded-xl border border-white/10 p-3'
 const TAG = 'text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5'
@@ -243,8 +243,8 @@ export function createValueSection({ view, onWrite, onForget, onRead, onDrawn })
 
 /** The «Where to buy» section: the three stores, on this album. */
 export function createBuyLinksSection(album) {
-    const links = buyLinksOf(album).map(({ name, url }) =>
-        `<a class="btn btn-secondary" href="${escapeHtml(safeUrl(url))}" target="_blank" rel="noopener" data-store="${escapeHtml(name)}">${escapeHtml(name)} ↗</a>`).join('')
+    const links = buyLinksOf(album).map(({ id, name, url }) =>
+        `<a class="btn btn-secondary" href="${escapeHtml(safeUrl(url))}" target="_blank" rel="noopener" data-store="${escapeHtml(name)}" ${buyLinkAttributes(id, BuyLinkPlace.ALBUM_WINDOW)}>${escapeHtml(name)} ↗</a>`).join('')
     const section = SafeDOM.div({ className: `${BOX} mb-6`, dataset: { role: 'where-to-buy' } })
     section.style.padding = '1rem'
     section.appendChild(SafeDOM.fromHTML(`${heading('Where to buy')}${lead(BUY_LINKS_NOTE)}<div class="flex flex-wrap gap-3">${links}</div>`))
@@ -305,8 +305,8 @@ export function phoneValueFold(section, view) {
 
 /** «Where to buy» on the phone: the three stores in one row, and what the links are. */
 export function createPhoneBuyLinks(album) {
-    const links = buyLinksOf(album).map(({ name, url }) => SafeDOM.a({
-        className: 'value-fold__store', href: safeUrl(url), target: '_blank', rel: 'noopener', dataset: { store: name }
+    const links = buyLinksOf(album).map(({ id, name, url }) => SafeDOM.a({
+        className: 'value-fold__store', href: safeUrl(url), target: '_blank', rel: 'noopener', dataset: { store: name, ...buyLinkMarks(id, BuyLinkPlace.ALBUM_WINDOW) }
     }, `${name} ↗`))
     return SafeDOM.div({ className: 'value-fold value-fold--buy', dataset: { role: 'where-to-buy' } }, [
         SafeDOM.p({ className: 'value-fold__label' }, 'Where to buy'),

@@ -15,9 +15,15 @@ import {
     BASE_CURRENCY, CURRENCIES, SourceState, itemsWithDiscogsValue, lowestValuesShown, shownCurrency, totalsOf, usdOf, valueOfItem,
     writtenValueFrom
 } from '../models/inventoryValue.js'
-import { itemsToRead, readFailedText, valuesOutcome, valuesProgressText } from '../models/inventoryValueRun.js'
+import { itemsToRead, readFailedText, valuesOutcome, valuesProgressText, valuesRunOutcome } from '../models/inventoryValueRun.js'
+import { track } from '../services/usage/track.js'
 
 export const CURRENCY_KEY = 'inventoryCurrency'
+
+/** F77: one album read from its window, as the measurement says it. */
+const oneReadEvent = (outcome) => (outcome.reading
+    ? { scope: 'one', count: 1, outcome: 'complete' }
+    : { scope: 'one', count: 0, outcome: 'failed' })
 
 /** The button "Update values" at rest. */
 const VALUES_IDLE = Object.freeze({ busy: false, text: null, count: null })
@@ -213,6 +219,7 @@ export class InventoryValues {
     }
 
     _endRun(count) {
+        track('inventory_values_read', { scope: 'all', count: count.read, outcome: valuesRunOutcome(count) })
         if (this.leaving.aborted) return
         if (count.stopped === 'off') this.source = SourceState.OFF
         const outcome = valuesOutcome(count)
@@ -231,12 +238,16 @@ export class InventoryValues {
             this.toast.error('Write the value as a number above zero, for example 12.50.')
             return false
         }
-        return this._save(item, value, 'Value saved')
+        const saved = await this._save(item, value, 'Value saved')
+        if (saved) track('inventory_value_written')
+        return saved
     }
 
     /** "Use the Discogs value instead": what the person wrote is taken away; the reading shows again. */
     async forget(item) {
-        return this._save(item, null, 'Your value was removed')
+        const saved = await this._save(item, null, 'Your value was removed')
+        if (saved) track('inventory_value_removed')
+        return saved
     }
 
     async _save(item, value, done) {
@@ -259,6 +270,7 @@ export class InventoryValues {
         if (this.source !== SourceState.ON || this.run.busy) return
         this._showItem(item, { state: 'reading' })
         const outcome = await this.service.readItem(item, { signal: this.leaving })
+        track('inventory_values_read', oneReadEvent(outcome))
         if (outcome.reading) await this.service.keepEditions([{ item, reading: outcome.reading }])
         if (outcome.off) this.source = SourceState.OFF
         this._showItem(item, outcome.failure ? { state: 'failed', failure: outcome.failure } : { reading: outcome.reading })

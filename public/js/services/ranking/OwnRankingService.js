@@ -9,6 +9,10 @@
  *   getUserId()                              -> string|null
  *   getAllRankings(userId)                   -> Promise<Array<{ albumId|id, artistName, albumTitle }>>
  *   saveRanking(userId, albumId, { albumTitle, artistName, rankings }) -> Promise<boolean>
+ *
+ *   measure(name, properties)              -> the measurement of use (F77); nothing when not given
+ *
+ * A ranking saved is measured (`ranking_saved`): how many tracks, never the album.
  */
 
 const READY = 'ready'
@@ -21,8 +25,10 @@ export class OwnRankingService {
      * @param {Function} deps.getUserId
      * @param {Function} deps.getAllRankings
      * @param {Function} deps.saveRanking
+     * @param {Function} [deps.measure] - services/usage/track.js `track`, given by the wiring
      */
-    constructor({ store, getUserId, getAllRankings, saveRanking }) {
+    constructor({ store, getUserId, getAllRankings, saveRanking, measure = () => { } }) {
+        this.measure = measure
         this.store = store
         this.getUserId = getUserId
         this.getAllRankings = getAllRankings
@@ -81,6 +87,7 @@ export class OwnRankingService {
         if (!saved) return false
 
         this.store.upsert(userId, { albumId: album.id, artistName: album.artist, albumTitle: album.title })
+        this.measure('ranking_saved', { track_count: rankings.length })
         return true
     }
 }
