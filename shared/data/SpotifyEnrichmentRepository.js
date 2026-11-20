@@ -8,17 +8,18 @@
  */
 
 import { BaseRepository } from './BaseRepository.js'
+import { normalizeText } from '../platform/text.js'
 
 const MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000 // 30 days TTL
 const CURRENT_SCHEMA_VERSION = 1
 
 export class SpotifyEnrichmentRepository extends BaseRepository {
     /**
-     * @param {Firestore} firestore - Firestore instance (modular)
+     * @param {import('./store.js').Store} store - the database and the Firestore functions of the side
      * @param {CacheManager} cache - Cache manager instance
      */
-    constructor(firestore, cache) {
-        super(firestore, cache)
+    constructor(store, cache) {
+        super(store, cache)
         // Global collection (not user-scoped)
         this.collectionPath = 'spotify_enrichment'
         this.schemaVersion = CURRENT_SCHEMA_VERSION
@@ -33,9 +34,7 @@ export class SpotifyEnrichmentRepository extends BaseRepository {
      * @returns {string} Normalized key (URL-safe, max 100 chars)
      */
     normalizeKey(artist, album) {
-        return `${artist}-${album}`
-            .toLowerCase()
-            .normalize('NFD')
+        return normalizeText(`${artist}-${album}`.toLowerCase(), 'NFD')
             .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
             .replace(/[^a-z0-9-]/g, '-')     // Replace non-alphanumeric
             .replace(/-+/g, '-')             // Collapse multiple dashes

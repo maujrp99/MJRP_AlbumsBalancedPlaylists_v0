@@ -4,20 +4,19 @@
  */
 
 import { BaseRepository } from './BaseRepository.js'
-import { doc, writeBatch } from 'firebase/firestore'
 
 // Firestore refuses a batch with more operations than this
 const MAX_BATCH_OPERATIONS = 500
 
 export class PlaylistRepository extends BaseRepository {
     /**
-     * @param {Firestore} firestore - Firestore instance (modular)
+     * @param {import('./store.js').Store} store - the database and the Firestore functions of the side
      * @param {Object} cache - Cache manager
      * @param {string} userId - User ID for scoping
      * @param {string} seriesId - Series ID for scoping
      */
-    constructor(firestore, cache, userId, seriesId) {
-        super(firestore, cache)
+    constructor(store, cache, userId, seriesId) {
+        super(store, cache)
 
         this.userId = userId || 'anonymous-user'
         this.seriesId = seriesId
@@ -53,8 +52,8 @@ export class PlaylistRepository extends BaseRepository {
             throw new Error(`Too many playlists for one save (${playlists.length} to write, ${idsToRemove.length} to remove)`)
         }
 
-        const batch = writeBatch(this.db)
-        batch.update(doc(this.db, this.seriesCollectionPath, this.seriesId), { updatedAt: this.getServerTimestamp() })
+        const batch = this.store.writeBatch(this.db)
+        batch.update(this.store.doc(this.db, this.seriesCollectionPath, this.seriesId), { updatedAt: this.getServerTimestamp() })
 
         const stored = []
         for (const [order, playlist] of playlists.entries()) {

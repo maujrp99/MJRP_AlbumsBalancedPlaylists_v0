@@ -11,7 +11,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 vi.mock('firebase/firestore', async () => (await import('../../helpers/fakeFirestore.js')).firestoreModule)
 
 import { fake } from '../../helpers/fakeFirestore.js'
-import { InventoryRepository } from '../../../public/js/repositories/InventoryRepository.js'
+import { InventoryRepository } from '../../../shared/data/InventoryRepository.js'
+import { firestoreStore } from '../../../public/js/repositories/firestoreStore.js'
 import { InventoryService } from '../../../public/js/services/inventory/InventoryService.js'
 import { InventoryStore } from '../../../public/js/stores/inventory.js'
 
@@ -32,7 +33,7 @@ describe('InventoryService.updatePrice keeps the currency of the item (UAT-209)'
         store = new InventoryStore()
         service = new InventoryService({
             store,
-            createRepository: (userId) => new InventoryRepository({}, null, userId)
+            createRepository: (userId) => new InventoryRepository(firestoreStore({}), null, userId)
         })
         vi.spyOn(console, 'log').mockImplementation(() => { })
         vi.spyOn(console, 'error').mockImplementation(() => { })

@@ -11,7 +11,8 @@
  * Extracted from AlbumSeriesStore (Sprint 19).
  */
 
-import { SeriesRepository } from '../repositories/SeriesRepository.js'
+import { SeriesRepository } from '@shared/data/SeriesRepository.js'
+import { firestoreStore } from '../repositories/firestoreStore.js'
 import { globalProgress } from '../components/GlobalProgress.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { cacheManager } from '../cache/CacheManager.js'
@@ -26,7 +27,7 @@ export class SeriesService {
     constructor(db, userId, storageService, userSyncService) {
         this.db = db
         this.userId = userId || 'anonymous-user'
-        this.repository = new SeriesRepository(db, cacheManager, this.userId)
+        this.repository = new SeriesRepository(firestoreStore(db), cacheManager, this.userId)
 
         // Dependencies
         this.storage = storageService || new StorageService()
@@ -41,7 +42,7 @@ export class SeriesService {
 
     setUserId(userId) {
         this.userId = userId || 'anonymous-user'
-        this.repository = new SeriesRepository(this.db, cacheManager, this.userId)
+        this.repository = new SeriesRepository(firestoreStore(this.db), cacheManager, this.userId)
         albumSeriesStore.setUserId(this.userId)
     }
 

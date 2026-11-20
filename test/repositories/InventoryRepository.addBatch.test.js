@@ -22,7 +22,8 @@ const firestore = vi.hoisted(() => {
 })
 vi.mock('firebase/firestore', () => firestore)
 
-import { InventoryRepository } from '../../public/js/repositories/InventoryRepository.js'
+import { InventoryRepository } from '../../shared/data/InventoryRepository.js'
+import { firestoreStore } from '../../public/js/repositories/firestoreStore.js'
 import { inventoryAlbumFromQuery } from '../../public/js/models/inventoryFromSeries.js'
 
 const build = () => {
@@ -32,7 +33,7 @@ const build = () => {
         set: vi.fn(async (key, value) => { kept.set(key, value) }),
         invalidate: vi.fn(async (key) => { kept.delete(key) })
     }
-    return { repository: new InventoryRepository({}, cache, 'user-1'), cache, kept }
+    return { repository: new InventoryRepository(firestoreStore({}), cache, 'user-1'), cache, kept }
 }
 
 const core = inventoryAlbumFromQuery({ artist: 'Stone Temple Pilots', title: 'Core', appleMusicId: '1440863531', year: 1992, coverUrl: 'https://example.com/core.jpg' })

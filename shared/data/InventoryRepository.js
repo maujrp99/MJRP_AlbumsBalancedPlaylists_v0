@@ -47,12 +47,12 @@ function readFacts(averages, coverUrl) {
 
 export class InventoryRepository extends BaseRepository {
     /**
-     * @param {Firestore} firestore - Firestore instance (modular)
+     * @param {import('./store.js').Store} store - the database and the Firestore functions of the side
      * @param {Object} cache - Cache manager
      * @param {string} userId - User ID for scoping
      */
-    constructor(firestore, cache, userId) {
-        super(firestore, cache)
+    constructor(store, cache, userId) {
+        super(store, cache)
 
         this.userId = userId || 'anonymous-user'
         // Path must match Firebase rules: artifacts/{appId}/users/{userId}/inventory

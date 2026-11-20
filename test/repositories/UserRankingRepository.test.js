@@ -16,7 +16,9 @@ vi.mock('firebase/firestore', () => ({
 vi.mock('../../public/js/firebase-init.js', () => ({ db: {} }))
 
 import { getDoc, setDoc, deleteDoc } from 'firebase/firestore'
-import { UserRankingRepository, userRankingRepository, USER_RANKING_TTL_MS } from '../../public/js/repositories/UserRankingRepository.js'
+import { UserRankingRepository, USER_RANKING_TTL_MS } from '../../shared/data/UserRankingRepository.js'
+import { userRankingRepository } from '../../public/js/repositories/userRankings.js'
+import { firestoreStore } from '../../public/js/repositories/firestoreStore.js'
 import { cacheManager } from '../../public/js/cache/CacheManager.js'
 
 /** A cache with the three methods of the real one, that remembers the validity it was given. */
@@ -40,7 +42,7 @@ describe('UserRankingRepository (F48, UAT-176)', () => {
     beforeEach(() => {
         vi.clearAllMocks()
         cache = makeCache()
-        repository = new UserRankingRepository(cache)
+        repository = new UserRankingRepository(firestoreStore({}), cache)
         vi.spyOn(console, 'log').mockImplementation(() => {})
     })
 

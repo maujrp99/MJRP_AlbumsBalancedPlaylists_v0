@@ -49,13 +49,13 @@ describe('album load boundaries', () => {
     })
 
     it('the load store only holds state: no service, API, repository, cache or Firestore', () => {
-        const forbidden = /(\/services\/|\/api\/|\/repositories\/|\/cache\/|firebase)/
+        const forbidden = /(\/services\/|\/api\/|\/repositories\/|shared\/data\/|\/cache\/|firebase)/
 
         expect(offenders(['stores/albumLoad.js'], specifier => forbidden.test(specifier))).toEqual([])
     })
 
     it('the load service and the facts service reach the outside only through what they are given', () => {
-        const forbidden = /(\/api\/|\/repositories\/|\/cache\/|\/stores\/|\/components\/|\/views\/|firebase|MusicKit|Spotify)/
+        const forbidden = /(\/api\/|\/repositories\/|shared\/data\/|\/cache\/|\/stores\/|\/components\/|\/views\/|firebase|MusicKit|Spotify)/
         const services = ['services/albums/AlbumLoadService.js', 'services/albums/LoadHold.js',
             'services/albums/AlbumAsks.js', 'services/series/SeriesFactsService.js']
 
@@ -63,7 +63,7 @@ describe('album load boundaries', () => {
     })
 
     it('the adapters do not import Firestore, a store or the screen: their sources are injected', () => {
-        const forbidden = /(firebase|\/stores\/|\/components\/|\/views\/|\/repositories\/)/
+        const forbidden = /(firebase|\/stores\/|\/components\/|\/views\/|\/repositories\/|shared\/data\/)/
 
         expect(offenders(listJs('services/albums/adapters'), specifier => forbidden.test(specifier))).toEqual([])
     })
@@ -73,7 +73,7 @@ describe('album load boundaries', () => {
 
         expect(wiring.some(specifier => specifier.includes('AlbumLoadService'))).toBe(true)
         const others = listJs('services/albums').filter(file => file !== 'services/albums/albumLoading.js')
-        expect(offenders(others, specifier => /MusicKitService|UserRankingRepository|CacheManager/.test(specifier))).toEqual([])
+        expect(offenders(others, specifier => /MusicKitService|UserRankingRepository|repositories\/userRankings|CacheManager/.test(specifier))).toEqual([])
     })
 
     it('the screen does not decide the load: components and views of the series never import the load service or the API client', () => {
@@ -86,6 +86,6 @@ describe('album load boundaries', () => {
     it('the series controller no longer loads albums itself', () => {
         const controller = importsOf('controllers/SeriesController.js')
 
-        expect(controller.filter(specifier => /api\/client|UserRankingRepository|OptimizedAlbumLoader|firebase/.test(specifier))).toEqual([])
+        expect(controller.filter(specifier => /api\/client|UserRankingRepository|repositories\/userRankings|OptimizedAlbumLoader|firebase/.test(specifier))).toEqual([])
     })
 })

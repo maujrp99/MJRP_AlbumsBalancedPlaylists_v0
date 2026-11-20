@@ -8,7 +8,8 @@
  */
 
 import { db } from '../../firebase-init.js'
-import { InventoryRepository } from '../../repositories/InventoryRepository.js'
+import { InventoryRepository } from '@shared/data/InventoryRepository.js'
+import { firestoreStore } from '../../repositories/firestoreStore.js'
 import { cacheManager } from '../../cache/CacheManager.js'
 import { inventoryStore } from '../../stores/inventory.js'
 import { userStore } from '../../stores/UserStore.js'
@@ -23,7 +24,7 @@ import { InventoryService } from './InventoryService.js'
  */
 export const inventoryService = new InventoryService({
     store: inventoryStore,
-    createRepository: (userId) => new InventoryRepository(db, cacheManager, userId),
+    createRepository: (userId) => new InventoryRepository(firestoreStore(db), cacheManager, userId),
     albumAsks
 })
 

@@ -11,11 +11,12 @@ vi.mock('firebase/firestore', () => ({
     serverTimestamp: vi.fn(), writeBatch: vi.fn(), runTransaction: vi.fn(), startAfter: vi.fn(), Timestamp: {}
 }))
 
-import { InventoryRepository } from '../../public/js/repositories/InventoryRepository.js'
+import { InventoryRepository } from '../../shared/data/InventoryRepository.js'
+import { firestoreStore } from '../../public/js/repositories/firestoreStore.js'
 
 const build = () => {
     const cache = { get: vi.fn(async () => null), set: vi.fn(async () => { }), invalidate: vi.fn(async () => { }) }
-    const repository = new InventoryRepository({}, cache, 'user-1')
+    const repository = new InventoryRepository(firestoreStore({}), cache, 'user-1')
     repository.delete = vi.fn(async () => { })
     return { repository, cache }
 }

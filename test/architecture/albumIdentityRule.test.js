@@ -224,7 +224,8 @@ describe('one writer for the corrected Apple Music id', () => {
         if (entry.isDirectory()) return appFiles(relative)
         return entry.name.endsWith('.js') ? [relative] : []
     })
-    const filesWith = (pattern) => appFiles().filter(file => pattern.test(read(file))).sort()
+    // the site and the shared core (the repositories live in shared/data/ since F78, Ref-A)
+    const filesWith = (pattern) => [...appFiles(), ...appFiles('shared')].filter(file => pattern.test(read(file))).sort()
 
     it('only the catalog adapter says an id was replaced, and only the query model reads it', () => {
         expect(filesWith(/replacedSourceId/)).toEqual([
@@ -240,9 +241,9 @@ describe('one writer for the corrected Apple Music id', () => {
             'public/js/services/series/SeriesFactsService.js'
         ])
         expect(filesWith(/saveAlbumFacts\(/)).toEqual([
-            'public/js/repositories/SeriesRepository.js',
             'public/js/services/albums/albumLoading.js',
-            'public/js/services/series/SeriesFactsService.js'
+            'public/js/services/series/SeriesFactsService.js',
+            'shared/data/SeriesRepository.js'
         ])
     })
 })

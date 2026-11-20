@@ -4,19 +4,18 @@
  */
 
 import { BaseRepository } from './BaseRepository.js'
-import { collection, doc, getDocs, updateDoc, writeBatch } from 'firebase/firestore'
 
 // Firestore refuses a batch with more operations than this
 const MAX_BATCH_OPERATIONS = 500
 
 export class SeriesRepository extends BaseRepository {
     /**
-     * @param {Firestore} firestore - Firestore instance (modular)
+     * @param {import('./store.js').Store} store - the database and the Firestore functions of the side
      * @param {Object} cache - Cache manager
      * @param {string} userId - User ID for scoping
      */
-    constructor(firestore, cache, userId) {
-        super(firestore, cache)
+    constructor(store, cache, userId) {
+        super(store, cache)
 
         this.userId = userId || 'anonymous-user' // Fallback until Sprint 7 auth
 
@@ -39,8 +38,8 @@ export class SeriesRepository extends BaseRepository {
         }
 
         // Load albums subcollection (modular SDK)
-        const albumsRef = collection(this.db, `${this.collectionPath}/${seriesId}/albums`)
-        const albumsSnapshot = await getDocs(albumsRef)
+        const albumsRef = this.store.collection(this.db, `${this.collectionPath}/${seriesId}/albums`)
+        const albumsSnapshot = await this.store.getDocs(albumsRef)
 
         series.albums = albumsSnapshot.docs.map(docSnap => ({
             id: docSnap.id,
@@ -56,7 +55,7 @@ export class SeriesRepository extends BaseRepository {
      * @returns {Promise<Array<Object>>}
      */
     async findPlaylists(seriesId) {
-        const snapshot = await getDocs(collection(this.db, this.playlistsPath(seriesId)))
+        const snapshot = await this.store.getDocs(this.store.collection(this.db, this.playlistsPath(seriesId)))
         return snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }))
     }
 
@@ -74,11 +73,11 @@ export class SeriesRepository extends BaseRepository {
     async deleteWithPlaylists(seriesId) {
         const playlists = await this.findPlaylists(seriesId)
         const playlistsPath = this.playlistsPath(seriesId)
-        const refs = playlists.map(playlist => doc(this.db, playlistsPath, playlist.id))
+        const refs = playlists.map(playlist => this.store.doc(this.db, playlistsPath, playlist.id))
         refs.push(this.getDocRef(seriesId)) // the series goes last
 
         for (let start = 0; start < refs.length; start += MAX_BATCH_OPERATIONS) {
-            const batch = writeBatch(this.db)
+            const batch = this.store.writeBatch(this.db)
             refs.slice(start, start + MAX_BATCH_OPERATIONS).forEach(ref => batch.delete(ref))
             await batch.commit()
         }
@@ -111,7 +110,7 @@ export class SeriesRepository extends BaseRepository {
      * @returns {Promise<string>} Series ID
      */
     async saveAlbumFacts(seriesId, albumQueries) {
-        await updateDoc(this.getDocRef(seriesId), { albumQueries })
+        await this.store.updateDoc(this.getDocRef(seriesId), { albumQueries })
         if (this.cache) {
             await this.cache.invalidate(this.getCacheKey(seriesId))
         }

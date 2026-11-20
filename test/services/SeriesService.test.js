@@ -17,7 +17,7 @@ const mockUserSync = {
 }
 
 // Mock Repository
-vi.mock('../../public/js/repositories/SeriesRepository.js', () => ({
+vi.mock('../../shared/data/SeriesRepository.js', () => ({
     SeriesRepository: vi.fn().mockImplementation(() => ({
         create: vi.fn().mockResolvedValue('new-id'),
         update: vi.fn().mockResolvedValue(),

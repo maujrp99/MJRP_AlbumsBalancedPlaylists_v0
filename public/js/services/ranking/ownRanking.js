@@ -5,7 +5,7 @@
 
 import { ownRankingsStore } from '../../stores/ownRankings.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
-import { userRankingRepository } from '../../repositories/UserRankingRepository.js'
+import { userRankingRepository } from '../../repositories/userRankings.js'
 import { OwnRankingService } from './OwnRankingService.js'
 import { track } from '../usage/track.js'
 

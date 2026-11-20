@@ -23,9 +23,10 @@ const firestore = vi.hoisted(() => {
 })
 vi.mock('firebase/firestore', () => firestore)
 
-import { InventoryRepository } from '../../public/js/repositories/InventoryRepository.js'
+import { InventoryRepository } from '../../shared/data/InventoryRepository.js'
+import { firestoreStore } from '../../public/js/repositories/firestoreStore.js'
 
-const build = () => new InventoryRepository({}, { get: vi.fn(async () => null), set: vi.fn(), invalidate: vi.fn(async () => { }) }, 'user-1')
+const build = () => new InventoryRepository(firestoreStore({}), { get: vi.fn(async () => null), set: vi.fn(), invalidate: vi.fn(async () => { }) }, 'user-1')
 const written = () => firestore.updateDoc.mock.calls.at(-1)[1]
 
 describe('the value the person wrote', () => {

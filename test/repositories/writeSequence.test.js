@@ -16,21 +16,26 @@ vi.mock('firebase/firestore', async () => (await import('../helpers/recordingFir
 vi.mock('../../public/js/firebase-init.js', () => ({ db: { fake: true } }))
 
 import { recorder } from '../helpers/recordingFirestore.js'
-import { SeriesRepository } from '../../public/js/repositories/SeriesRepository.js'
-import { PlaylistRepository } from '../../public/js/repositories/PlaylistRepository.js'
-import { InventoryRepository } from '../../public/js/repositories/InventoryRepository.js'
-import { UserRankingRepository } from '../../public/js/repositories/UserRankingRepository.js'
-import { SpotifyEnrichmentRepository } from '../../public/js/repositories/SpotifyEnrichmentRepository.js'
+import { SeriesRepository } from '../../shared/data/SeriesRepository.js'
+import { PlaylistRepository } from '../../shared/data/PlaylistRepository.js'
+import { InventoryRepository } from '../../shared/data/InventoryRepository.js'
+import { UserRankingRepository } from '../../shared/data/UserRankingRepository.js'
+import { SpotifyEnrichmentRepository } from '../../shared/data/SpotifyEnrichmentRepository.js'
+import { firestoreStore } from '../../public/js/repositories/firestoreStore.js'
 
 const DB = { fake: true }
 
-/** How each repository is built: the only lines that change when the repositories move. */
+/**
+ * How each repository is built: the only lines that changed when the repositories moved (before the
+ * move: `new SeriesRepository(DB, cache, userId)`, and `new UserRankingRepository(cache)` with the db
+ * of firebase-init.js). Now each is given the site's store over the same database.
+ */
 const build = {
-    series: (cache, userId) => new SeriesRepository(DB, cache, userId),
-    playlists: (cache, userId, seriesId) => new PlaylistRepository(DB, cache, userId, seriesId),
-    inventory: (cache, userId) => new InventoryRepository(DB, cache, userId),
-    rankings: (cache) => new UserRankingRepository(cache),
-    spotify: (cache) => new SpotifyEnrichmentRepository(DB, cache)
+    series: (cache, userId) => new SeriesRepository(firestoreStore(DB), cache, userId),
+    playlists: (cache, userId, seriesId) => new PlaylistRepository(firestoreStore(DB), cache, userId, seriesId),
+    inventory: (cache, userId) => new InventoryRepository(firestoreStore(DB), cache, userId),
+    rankings: (cache) => new UserRankingRepository(firestoreStore(DB), cache),
+    spotify: (cache) => new SpotifyEnrichmentRepository(firestoreStore(DB), cache)
 }
 
 const FIXTURE = path.resolve(__dirname, '../fixtures/repositories/write-sequence.json')

@@ -1,36 +1,28 @@
-import {
-    serverTimestamp,
-    collection,
-    doc,
-    getDoc,
-    getDocs,
-    setDoc,
-    updateDoc,
-    deleteDoc,
-    query,
-    where,
-    orderBy,
-    limit,
-    writeBatch
-} from 'firebase/firestore'
+import { requireStore } from './store.js'
 
 /** How many writes one Firestore batch holds. */
 export const MAX_BATCH_WRITES = 500
 
 /**
- * Base repository class for Firestore interactions (Modular SDK)
+ * Base repository class for Firestore interactions (Modular SDK).
+ *
+ * F78, REQ-09 (Ref-A): it lives in the shared core and imports no Firestore. It is given a store
+ * (shared/data/store.js): the database and the functions of the side's Firestore SDK, called with
+ * the same arguments the modular Firebase JS SDK takes. The site gives the Firebase JS SDK's
+ * (public/js/repositories/firestoreStore.js).
  */
 export class BaseRepository {
     /**
-     * @param {Firestore} firestore - Firestore instance (modular)
+     * @param {import('./store.js').Store} store - the database and the Firestore functions of the side
      * @param {Object} cache - Cache manager instance
      */
-    constructor(firestore, cache) {
+    constructor(store, cache) {
         if (this.constructor === BaseRepository) {
             throw new Error('BaseRepository is abstract and cannot be instantiated directly')
         }
 
-        this.db = firestore
+        this.store = requireStore(store)
+        this.db = store.db
         this.cache = cache
         this.collectionPath = null // Must be set by subclass as string path
         this.schemaVersion = 1 // Override in subclass if needed
@@ -45,7 +37,7 @@ export class BaseRepository {
         if (!this.collectionPath) {
             throw new Error('Collection path not set in repository')
         }
-        return collection(this.db, this.collectionPath)
+        return this.store.collection(this.db, this.collectionPath)
     }
 
     /**
@@ -55,7 +47,7 @@ export class BaseRepository {
      * @protected
      */
     getDocRef(id) {
-        return doc(this.db, this.collectionPath, id)
+        return this.store.doc(this.db, this.collectionPath, id)
     }
 
     /**
@@ -87,7 +79,7 @@ export class BaseRepository {
         }
 
         // Fetch from Firestore
-        const docSnap = await getDoc(this.getDocRef(id))
+        const docSnap = await this.store.getDoc(this.getDocRef(id))
         if (!docSnap.exists()) {
             return null
         }
@@ -113,23 +105,23 @@ export class BaseRepository {
         // Apply where filters
         if (filters.where) {
             filters.where.forEach(([field, op, value]) => {
-                constraints.push(where(field, op, value))
+                constraints.push(this.store.where(field, op, value))
             })
         }
 
         // Apply orderBy
         if (filters.orderBy) {
             const [field, direction = 'asc'] = filters.orderBy
-            constraints.push(orderBy(field, direction))
+            constraints.push(this.store.orderBy(field, direction))
         }
 
         // Apply limit
         if (filters.limit) {
-            constraints.push(limit(filters.limit))
+            constraints.push(this.store.limit(filters.limit))
         }
 
-        const q = query(this.getCollection(), ...constraints)
-        const snapshot = await getDocs(q)
+        const q = this.store.query(this.getCollection(), ...constraints)
+        const snapshot = await this.store.getDocs(q)
 
         return snapshot.docs.map(docSnap => ({
             id: docSnap.id,
@@ -165,12 +157,12 @@ export class BaseRepository {
         }
 
         // Generate a new reference (auto-ID)
-        const docRef = doc(this.getCollection())
+        const docRef = this.store.doc(this.getCollection())
 
         if (batch) {
             batch.set(docRef, docData)
         } else {
-            await setDoc(docRef, docData)
+            await this.store.setDoc(docRef, docData)
         }
 
         // Invalidate 'all' cache
@@ -193,9 +185,9 @@ export class BaseRepository {
             throw new Error(`Too many documents for one write: ${dataList.length} (a batch holds ${MAX_BATCH_WRITES})`)
         }
 
-        const batch = writeBatch(this.db)
+        const batch = this.store.writeBatch(this.db)
         const ids = dataList.map(data => {
-            const docRef = doc(this.getCollection())
+            const docRef = this.store.doc(this.getCollection())
             batch.set(docRef, { ...data, createdAt: this.getServerTimestamp(), _schemaVersion: this.schemaVersion })
             return docRef.id
         })
@@ -218,7 +210,7 @@ export class BaseRepository {
             throw new Error(`Too many documents for one write: ${updates.length} (a batch holds ${MAX_BATCH_WRITES})`)
         }
 
-        const batch = writeBatch(this.db)
+        const batch = this.store.writeBatch(this.db)
         updates.forEach(({ id, data }) => batch.update(this.getDocRef(id), { ...data, updatedAt: this.getServerTimestamp() }))
         await batch.commit()
 
@@ -252,7 +244,7 @@ export class BaseRepository {
         if (batch) {
             batch.set(docRef, docData, { merge: true })
         } else {
-            await setDoc(docRef, docData, { merge: true })
+            await this.store.setDoc(docRef, docData, { merge: true })
         }
 
         // Invalidate cache
@@ -291,7 +283,7 @@ export class BaseRepository {
             updatedAt: this.getServerTimestamp()
         }
 
-        await updateDoc(this.getDocRef(id), updateData)
+        await this.store.updateDoc(this.getDocRef(id), updateData)
 
         // Invalidate cache
         if (this.cache) {
@@ -318,7 +310,7 @@ export class BaseRepository {
         })
 
         try {
-            await deleteDoc(docRef)
+            await this.store.deleteDoc(docRef)
             console.log('[BaseRepository.delete] deleteDoc successful for:', docRef.path)
         } catch (error) {
             console.error('[BaseRepository.delete] deleteDoc FAILED:', error)
@@ -338,7 +330,7 @@ export class BaseRepository {
      * @returns {Promise<void>}
      */
     async deleteMany(ids) {
-        const batch = writeBatch(this.db)
+        const batch = this.store.writeBatch(this.db)
 
         ids.forEach(id => {
             batch.delete(this.getDocRef(id))
@@ -363,7 +355,7 @@ export class BaseRepository {
      * @protected
      */
     getServerTimestamp() {
-        return serverTimestamp()
+        return this.store.serverTimestamp()
     }
 
     /**
@@ -372,7 +364,7 @@ export class BaseRepository {
      * @returns {Promise<boolean>}
      */
     async exists(id) {
-        const docSnap = await getDoc(this.getDocRef(id))
+        const docSnap = await this.store.getDoc(this.getDocRef(id))
         return docSnap.exists()
     }
 

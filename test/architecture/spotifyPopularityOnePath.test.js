@@ -46,7 +46,7 @@ describe('one path asks Spotify for the popularity of an album (F69)', () => {
         const WIRING = 'services/spotify/spotifyPopularityWiring.js'
         expect(importing(/spotifyPopularityWiring(\.js)?$/)).toEqual([COMPOSITION])
         expect(importing(/StoredSpotifyPopularity(\.js)?$/)).toEqual([WIRING])
-        expect(importing(/repositories\/SpotifyEnrichmentRepository(\.js)?$/)).toEqual([WIRING])
+        expect(importing(/shared\/data\/SpotifyEnrichmentRepository(\.js)?$/)).toEqual([WIRING])
         expect(importsOf('services/spotify/StoredSpotifyPopularity.js')).toEqual([])
         expect(fs.existsSync(path.join(ROOT, 'stores/SpotifyEnrichmentStore.js'))).toBe(false)
     })

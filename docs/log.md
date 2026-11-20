@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:01] session — F78 Ref-A: os seis repositórios em `shared/data/`, recebendo o Firestore de fora (REQ-09)
+**Branch:** feat/f78-ref-a-repositories-in-the-core
+`BaseRepository` e os cinco (séries, playlists, inventário, ranking próprio, enriquecimento do Spotify) foram para `shared/data/` sem importar Firestore: recebem uma «store» (`shared/data/store.js`: o `db` e as 13 funções que chamam); o site a monta do Firebase JS em `public/js/repositories/firestoreStore.js`, e a instância única do ranking mora em `public/js/repositories/userRankings.js`. Os importadores (SeriesService, PlaylistsService, RepositoryPlaylistsSource, as ligações do inventário, do Spotify, do ranking e da carga de álbuns) apontam para a casa nova; o `normalize` da chave do Spotify passa por `shared/platform/text.js`.
+Provas: o `writeSequence` dá as mesmas chamadas, cargas e ordem gravadas na `main`; os testes dos repositórios rodam também em Node puro; os sensores de camada passam a enxergar `shared/data/`. Suíte 265 arquivos, 3.519 testes; lint e build verdes.
+
 ## [2026-11-20 14:55] session — F78 Ref-A: a sequência de chamadas do Firestore dos repositórios, gravada antes da mudança de casa
 **Branch:** feat/f78-ref-a-repositories-in-the-core
 Antes de mover os repositórios para `shared/data/`, cada método público dos cinco repositórios roda contra o Firestore falso com gravador (`test/helpers/recordingFirestore.js`) e o registro (chamadas, cargas, ordem, cache e documentos que sobram) fica em `test/fixtures/repositories/write-sequence.json`, gravado no código da `main` (`7a3237b`).

@@ -1,7 +1,7 @@
 /**
  * Two runs of the tests (F78, REQ-08):
  *   the site   every test, with jsdom (vitest.config.js), as always;
- *   core-node  the tests of the shared core (test/shared/) a second time, in plain Node with no
+ *   core-node  the tests of the shared core (test/shared/, and test/repositories/ for shared/data/) a second time, in plain Node with no
  *              jsdom: the core runs on engines with no browser (the server, the phone's Hermes),
  *              so its tests must pass where `window` and `document` do not exist.
  * `npx vitest run` runs both. The core-node project takes the aliases and the setup of the site's
@@ -18,7 +18,8 @@ export default [
             environment: 'node',
             globals: true,
             setupFiles: siteConfig.test.setupFiles,
-            include: ['test/shared/**/*.test.js']
+            // the repositories of the core (shared/data/, F78 Ref-A) run without a browser too
+            include: ['test/shared/**/*.test.js', 'test/repositories/**/*.test.js']
         }
     }
 ]

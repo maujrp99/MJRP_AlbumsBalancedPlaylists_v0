@@ -8,22 +8,14 @@
  * has no ranking", so the album load does not ask the cloud again for each album on every visit.
  * Saving or deleting a ranking here forgets the cached entry.
  * 
- * @module repositories/UserRankingRepository
+ * F78, REQ-09 (Ref-A): it lives in the shared core and imports no Firestore; it is given a store
+ * (shared/data/store.js). The site's one instance is in public/js/repositories/userRankings.js.
+ *
+ * @module shared/data/UserRankingRepository
  * @since Sprint 20
  */
 
-import {
-    serverTimestamp,
-    collection,
-    doc,
-    getDoc,
-    getDocs,
-    setDoc,
-    deleteDoc
-} from 'firebase/firestore'
-
-import { db } from '../firebase-init.js'
-import { cacheManager } from '../cache/CacheManager.js'
+import { requireStore } from './store.js'
 
 /**
  * How long a ranking that was read stays valid in the cache. Short on purpose: the ranking changes,
@@ -49,9 +41,13 @@ export const USER_RANKING_TTL_MS = 60 * 60 * 1000
 
 export class UserRankingRepository {
     /**
-     * @param {Object} [cache] - { get, set, invalidate }: the app cache instance by default
+     * @param {import('./store.js').Store} store - the database and the Firestore functions of the side
+     * @param {Object} cache - { get, set, invalidate }: the site gives its app cache instance
+     *   (public/js/repositories/userRankings.js)
      */
-    constructor(cache = cacheManager) {
+    constructor(store, cache) {
+        this.store = requireStore(store)
+        this.db = store.db
         this.cache = cache
     }
 
@@ -65,7 +61,7 @@ export class UserRankingRepository {
     _getDocRef(userId, albumId) {
         // Sanitize albumId for Firestore path (replace invalid characters)
         const safeAlbumId = albumId.replace(/[/\\]/g, '_')
-        return doc(db, 'users', userId, 'albumRankings', safeAlbumId)
+        return this.store.doc(this.db, 'users', userId, 'albumRankings', safeAlbumId)
     }
 
     /**
@@ -124,7 +120,7 @@ export class UserRankingRepository {
 
         // Fetch from Firestore
         try {
-            const docSnap = await getDoc(this._getDocRef(userId, albumId))
+            const docSnap = await this.store.getDoc(this._getDocRef(userId, albumId))
             const data = docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null
 
             // Cache the answer, "no ranking" included. A failed read is not cached.
@@ -159,17 +155,17 @@ export class UserRankingRepository {
             albumTitle: data.albumTitle || '',
             artistName: data.artistName || '',
             rankings: data.rankings,
-            updatedAt: serverTimestamp()
+            updatedAt: this.store.serverTimestamp()
         }
 
         // Check if document exists to set createdAt
         try {
-            const existing = await getDoc(docRef)
+            const existing = await this.store.getDoc(docRef)
             if (!existing.exists()) {
-                docData.createdAt = serverTimestamp()
+                docData.createdAt = this.store.serverTimestamp()
             }
 
-            await setDoc(docRef, docData, { merge: true })
+            await this.store.setDoc(docRef, docData, { merge: true })
 
             // Invalidate cache
             await this.cache.invalidate(this._getCacheKey(userId, albumId))
@@ -192,7 +188,7 @@ export class UserRankingRepository {
         if (!userId || !albumId) return false
 
         try {
-            await deleteDoc(this._getDocRef(userId, albumId))
+            await this.store.deleteDoc(this._getDocRef(userId, albumId))
 
             // Invalidate cache
             await this.cache.invalidate(this._getCacheKey(userId, albumId))
@@ -219,7 +215,7 @@ export class UserRankingRepository {
         if (cached) return cached.ranking !== null
 
         try {
-            const docSnap = await getDoc(this._getDocRef(userId, albumId))
+            const docSnap = await this.store.getDoc(this._getDocRef(userId, albumId))
             return docSnap.exists()
         } catch (error) {
             console.error('[UserRankingRepository] hasRanking error:', error)
@@ -236,8 +232,8 @@ export class UserRankingRepository {
         if (!userId) return []
 
         try {
-            const collRef = collection(db, 'users', userId, 'albumRankings')
-            const snapshot = await getDocs(collRef)
+            const collRef = this.store.collection(this.db, 'users', userId, 'albumRankings')
+            const snapshot = await this.store.getDocs(collRef)
 
             return snapshot.docs.map(docSnap => ({
                 id: docSnap.id,
@@ -249,6 +245,3 @@ export class UserRankingRepository {
         }
     }
 }
-
-// Singleton export for convenience
-export const userRankingRepository = new UserRankingRepository()

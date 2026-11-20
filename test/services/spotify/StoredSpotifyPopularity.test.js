@@ -13,7 +13,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 vi.mock('firebase/firestore', async () => (await import('../../helpers/fakeFirestore.js')).firestoreModule)
 
 import { fake } from '../../helpers/fakeFirestore.js'
-import { SpotifyEnrichmentRepository } from '../../../public/js/repositories/SpotifyEnrichmentRepository.js'
+import { SpotifyEnrichmentRepository } from '../../../shared/data/SpotifyEnrichmentRepository.js'
+import { firestoreStore } from '../../../public/js/repositories/firestoreStore.js'
 import { StoredSpotifyPopularity } from '../../../public/js/services/spotify/StoredSpotifyPopularity.js'
 
 const DAY = 24 * 60 * 60 * 1000
@@ -28,7 +29,7 @@ const PATH = 'spotify_enrichment/beyonce-lemonade-deluxe'
 const noCache = () => ({ get: async () => null, set: async () => {}, invalidate: async () => {} })
 
 const build = (cache = noCache()) =>
-    new StoredSpotifyPopularity({ repository: new SpotifyEnrichmentRepository({}, cache) })
+    new StoredSpotifyPopularity({ repository: new SpotifyEnrichmentRepository(firestoreStore({}), cache) })
 
 describe('StoredSpotifyPopularity: what is held of an earlier answer of Spotify', () => {
     beforeEach(() => {
