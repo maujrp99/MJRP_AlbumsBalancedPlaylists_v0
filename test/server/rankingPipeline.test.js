@@ -1,8 +1,10 @@
 /**
  * F52, slice 5 - the ranking fetch of POST /api/generate (`fetchRankingForAlbum`): which source is
- * asked, in which order, and what leaves. Written against the one function of complexity 139,
- * before it became a pipeline of sources: what is pinned here is what the album gets on each path.
- * No network and no paid call: every source is a double (helpers/rankingHarness.js).
+ * asked, in which order, and what leaves. The first five groups were written against the one
+ * function of complexity 139, before it became a pipeline of sources, and pass unchanged against
+ * the pipeline: what they pin is what the album gets on each path. The groups after them are what
+ * the slice changed: every source ends in a typed outcome, and a failure is never read as "there
+ * is none". No network and no paid call: every source is a double (helpers/rankingHarness.js).
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { createRequire } from 'node:module'
@@ -11,6 +13,7 @@ import { httpError } from './helpers/fakes.js'
 
 const require = createRequire(import.meta.url)
 const { UpstreamError } = require('../../server/lib/outcome.js')
+const { createBudget } = require('../../server/lib/timeBudget.js')
 
 const album = (titles = ['One', 'Two', 'Three', 'Four']) => ({ title: 'Album', artist: 'Artist', year: 1999, tracks: titles.map(title => ({ title })) })
 const QUERY = 'Artist - Album'
@@ -236,12 +239,107 @@ describe('the ranking fetch: the prompts', () => {
         expect(loadPrompts).toHaveBeenCalled()
     })
 
-    // TODAY (to change in this slice): a prompts file with no ranking prompt reads as "no ranking"
-    it('no ranking prompt in the file: no source is asked and no entry leaves', async () => {
+    it('no ranking prompt in the file is a broken server, said before any source is asked; never "no ranking"', async () => {
         const fetch = rankingFetchWith({ prompts: { albumSearchPrompt: 'find {{albumQuery}}' }, bestEver: beaPage(ALL_RATED) })
+
+        await expect(fetch.fetchRankingForAlbum(album(), QUERY)).rejects.toMatchObject({ name: 'PromptsError' })
+        expect(fetch.asked).toEqual([])
+    })
+})
+
+describe('the ranking fetch: what happened to each source is said (F52, slice 5)', () => {
+    const NOT_FOUND = { outcome: 'not_found' }
+    const NO_RATING_ON_THE_PAGE = { One: null, Two: null, Three: null, Four: null }
+    const PARTIAL = { Two: 90, One: 70, Three: 80 }
+
+    it.each([
+        ['the page has the ratings', { bestEver: beaPage(ALL_RATED) }, ['found', 'not_asked', 'not_asked']],
+        ['few ratings, Spotify has the album', { bestEver: beaPage(FEW_RATED), spotify: spotifyFound(POPULARITY) }, ['found', 'found', 'not_asked']],
+        ['few ratings, Spotify does not have the album', { bestEver: beaPage(FEW_RATED), spotify: NOT_FOUND }, ['found', 'not_found', 'not_asked']],
+        ['few ratings, Spotify is not set up', { bestEver: beaPage(FEW_RATED), spotify: { outcome: 'not_configured' } }, ['found', 'not_configured', 'not_asked']],
+        ['few ratings, Spotify FAILS', { bestEver: beaPage(FEW_RATED), spotify: sourceDown() }, ['found', 'failed', 'not_asked']],
+        ['the page lists the tracks with no rating', { bestEver: beaPage(NO_RATING_ON_THE_PAGE), spotify: NOT_FOUND }, ['no_ratings', 'not_found', 'not_asked']],
+        ['the page is there with no track on it', { bestEver: beaPage({}), spotify: NOT_FOUND, ai: aiRanking([['One', 'NME']]) }, ['no_ratings', 'not_found', 'found']],
+        ['no page, Spotify has the album', { bestEver: null, spotify: spotifyFound(POPULARITY) }, ['not_found', 'found', 'not_asked']],
+        ['no page, no album on Spotify, the AI ranks', { bestEver: null, spotify: NOT_FOUND, ai: aiRanking([['One', 'NME']]) }, ['not_found', 'not_found', 'found']],
+        ['no source has anything', { bestEver: null, spotify: NOT_FOUND, ai: aiRanking([]) }, ['not_found', 'not_found', 'not_found']],
+        ['BestEverAlbums FAILS, Spotify has the album', { bestEver: sourceDown(), spotify: spotifyFound(POPULARITY) }, ['failed', 'found', 'not_asked']],
+        ['the page is partial and the AI FAILS', { bestEver: beaPage(PARTIAL), ai: httpError(500) }, ['found', 'not_asked', 'failed']],
+        ['every source FAILS', { bestEver: sourceDown(), spotify: sourceDown(), ai: httpError(500) }, ['failed', 'failed', 'failed']]
+    ])('%s', async (name, doubles, [acclaim, popularity, aiRanking]) => {
+        const result = await rankingFetchWith(doubles).fetchRankingForAlbum(album(), QUERY)
+
+        expect(result.ratings).toEqual({ acclaim, popularity, aiRanking })
+    })
+
+    it('every source fails: no entry and no source leave, and nothing is thrown', async () => {
+        const fetch = rankingFetchWith({ bestEver: sourceDown(), spotify: sourceDown(), ai: httpError(500) })
         const result = await fetch.fetchRankingForAlbum(album(), QUERY)
 
-        expect(fetch.asked).toEqual([])
+        expect(fetch.asked).toEqual(['bestEver', 'spotify', 'ai'])
         expect(result).toMatchObject({ entries: [], sources: [] })
+    })
+
+    it('the trace says, source by source, the outcome and the code of a failure, and no message of a source', async () => {
+        const slow = new UpstreamError('upstream_timeout', 'BestEverAlbums: secret detail of the request')
+        const fetch = rankingFetchWith({ bestEver: slow, spotify: spotifyFound(POPULARITY) })
+        const result = await fetch.fetchRankingForAlbum(album(), QUERY)
+
+        expect(result.debugTrace).toEqual([
+            { source: 'acclaim', outcome: 'failed', entries: 0, code: 'upstream_timeout' },
+            { source: 'popularity', outcome: 'found', entries: 4 },
+            { source: 'aiRanking', outcome: 'not_asked', entries: 0 }
+        ])
+        expect(JSON.stringify(result)).not.toContain('secret detail')
+    })
+
+    it.each([
+        [402, 'upstream_failed'],
+        [429, 'upstream_busy'],
+        [500, 'upstream_failed']
+    ])('the AI provider answering %i is a failure with the code of its table: %s', async (status, code) => {
+        const fetch = rankingFetchWith({ bestEver: null, ai: httpError(status, { error: { message: 'Your prepayment credits are depleted' } }) })
+        const result = await fetch.fetchRankingForAlbum(album(), QUERY)
+
+        expect(result.debugTrace[2]).toEqual({ source: 'aiRanking', outcome: 'failed', entries: 0, code })
+        expect(JSON.stringify(result)).not.toContain('prepayment')
+    })
+
+    it('something of this server that breaks inside a source is a failure of that source (internal), not "it has none"', async () => {
+        const fetch = rankingFetchWith({ bestEver: new TypeError('x is not a function'), spotify: spotifyFound(POPULARITY) })
+        const result = await fetch.fetchRankingForAlbum(album(), QUERY)
+
+        expect(result.ratings.acclaim).toBe('failed')
+        expect(result.debugTrace[0]).toMatchObject({ outcome: 'failed', code: 'internal' })
+    })
+})
+
+describe('the ranking fetch: the time of the request (F52, slice 5)', () => {
+    it('the scraper is told when the time of the request ends', async () => {
+        const budget = createBudget({ ms: 60000 })
+        const fetch = rankingFetchWith({ bestEver: beaPage(ALL_RATED) })
+        await fetch.fetchRankingForAlbum(album(), QUERY, { budget })
+
+        expect(fetch.bestEver.mock.calls[0][2]).toEqual({ deadlineAt: budget.deadlineAt })
+    })
+
+    it('a source still running when the time ends is a failure (upstream_timeout), and the next ones are not asked', async () => {
+        const never = () => new Promise(() => {})
+        const fetch = rankingFetchWith({ bestEver: never, spotify: spotifyFound(POPULARITY) })
+        const result = await fetch.fetchRankingForAlbum(album(), QUERY, { budget: createBudget({ ms: 5 }) })
+
+        expect(fetch.asked).toEqual(['bestEver'])
+        expect(result.ratings).toEqual({ acclaim: 'failed', popularity: 'failed', aiRanking: 'failed' })
+        expect(result.debugTrace.map(row => row.code)).toEqual(['upstream_timeout', 'upstream_timeout', 'upstream_timeout'])
+        expect(result).toMatchObject({ entries: [], sources: [] })
+    })
+
+    it('with no time left, no source is asked: each is a failure, none is "not found"', async () => {
+        const over = { deadlineAt: 0, remainingMs: () => 0, race: (work) => work }
+        const fetch = rankingFetchWith({ bestEver: beaPage(ALL_RATED) })
+        const result = await fetch.fetchRankingForAlbum(album(), QUERY, { budget: over })
+
+        expect(fetch.asked).toEqual([])
+        expect(result.ratings).toEqual({ acclaim: 'failed', popularity: 'failed', aiRanking: 'failed' })
     })
 })

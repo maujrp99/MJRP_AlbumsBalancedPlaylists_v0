@@ -37,11 +37,19 @@ function createAlbumHandlers ({ enrichmentService, generationService, env = proc
     return respond(res, result)
   }
 
-  /** POST /api/generate - an album from the paid AI provider. */
+  /**
+   * POST /api/generate - an album from the paid AI provider, with the ranking of its tracks.
+   *
+   * One line of log per request that reached the service (F52, slice 5): with what answer
+   * ('found', or the code of the failure, and the HTTP status), in how long, and what happened to each source of
+   * ratings (`ratings`: found, not_found, no_ratings, not_configured, failed, not_asked; null
+   * when the album itself was not answered). Nothing of the person and nothing of the album is in it.
+   */
   async function generate (req, res) {
     // The server is not set up to call the provider: 503 as before, and nothing is spent
     if (!env.AI_API_KEY) return respond(res, failure('internal', { status: 503 }))
 
+    const startedAt = now()
     const serverConfig = {
       processEnv: env,
       startTime: req._startTime,
@@ -49,6 +57,13 @@ function createAlbumHandlers ({ enrichmentService, generationService, env = proc
       allowRawStage: debugRoutesEnabled(env)
     }
     const result = await generationService.generateAlbum(req.body || {}, serverConfig)
+    logger.info('generate', {
+      event: 'generate',
+      answer: result.ok ? result.outcome : result.code,
+      status: result.status,
+      ms: now() - startedAt,
+      ratings: (result.trace && result.trace.ratings) || null
+    })
     return respond(res, result)
   }
 

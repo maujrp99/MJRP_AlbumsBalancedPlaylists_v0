@@ -4,6 +4,8 @@
  * network, no paid call. Each double records that it was called, in `asked`, in order.
  *
  * `rankingFetchWith(doubles)` -> { fetchRankingForAlbum, asked, callProvider, bestEver, spotify }
+ * The pipeline is built by `createRankingFetch` with the doubles injected (F52, slice 5). The first
+ * version of this file put them in the place of the modules the old function required by itself.
  */
 import { vi } from 'vitest'
 import { createRequire } from 'node:module'
@@ -11,6 +13,11 @@ import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
 const LIB = '../../../server/lib/'
 const realPrompts = require(`${LIB}prompts.js`)
+const { createRankingFetch } = require(`${LIB}fetchRanking.js`)
+const { extractAndValidateRankingEntries, rankingEntriesToSources } = require(`${LIB}normalize.js`)
+const { normalizeKey: loadNormalizeKey } = require(`${LIB}ranking.js`)
+
+const quiet = { info: vi.fn(), warn: vi.fn(), error: vi.fn() }
 
 export const BEA_URL = 'https://www.besteveralbums.com/thechart.php?a=1'
 export const SPOTIFY_URL = 'https://open.spotify.com/album/s1'
@@ -52,13 +59,6 @@ const answering = (answer) => async () => {
     return value
 }
 
-/** Put a double in the place of a module of server/lib, for the next `require` of it. */
-const replaceModule = (file, exports) => {
-    const filename = require.resolve(`${LIB}${file}`)
-    require.cache[filename] = { id: filename, filename, loaded: true, exports }
-}
-const forget = (file) => { delete require.cache[require.resolve(`${LIB}${file}`)] }
-
 /**
  * @param {Object} doubles
  * @param {Object|Function} [doubles.prompts] - what loadPrompts gives (or a function that throws)
@@ -78,13 +78,19 @@ export function rankingFetchWith ({ prompts = PROMPTS, bestEver = null, spotify 
         spotify: recorded('spotify', spotify)
     }
 
-    replaceModule('prompts.js', { loadPrompts: typeof prompts === 'function' ? prompts : () => prompts, renderPrompt: realPrompts.renderPrompt })
-    replaceModule('aiClient.js', { callProvider: doubles.callProvider })
-    replaceModule('scrapers/besteveralbums.js', { getRankingForAlbum: doubles.bestEver })
-    replaceModule('services/spotifyPopularity.js', { getSpotifyPopularityRanking: doubles.spotify })
-    forget('fetchRanking.js')
-    const { fetchRankingForAlbum } = require(`${LIB}fetchRanking.js`)
-    ;['prompts.js', 'aiClient.js', 'scrapers/besteveralbums.js', 'services/spotifyPopularity.js', 'fetchRanking.js'].forEach(forget)
+    const fetchRankingForAlbum = createRankingFetch({
+        loadPrompts: typeof prompts === 'function' ? prompts : () => prompts,
+        renderPrompt: realPrompts.renderPrompt,
+        requirePrompt: realPrompts.requirePrompt,
+        callProvider: doubles.callProvider,
+        extractAndValidateRankingEntries,
+        rankingEntriesToSources,
+        getBestEverRanking: doubles.bestEver,
+        getSpotifyPopularityRanking: doubles.spotify,
+        loadNormalizeKey,
+        logger: quiet,
+        env: { AI_API_KEY: 'k' }
+    })
 
     return { fetchRankingForAlbum, asked, ...doubles }
 }
