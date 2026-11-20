@@ -76,7 +76,16 @@ const busyOfDiscogs = () => (err) => {
 }
 
 /** Discogs answered 404: there is no such page. Never leaves this file. */
-class NoSuchPage extends Error {}
+class NoSuchPage extends Error {
+  /** @param {string} said - what Discogs wrote in the answer (its `message`), cut short */
+  constructor (said) {
+    super('no such page')
+    this.said = said
+  }
+}
+
+/** The sentence Discogs sends with a refusal, as text and cut short: it goes to a log line. */
+const saidBy = (err) => String((err.response.data && err.response.data.message) || '').slice(0, 200)
 
 /** The queue said the turn would come too late. */
 function failureOfPace (err) {
@@ -88,7 +97,7 @@ function failureOfPace (err) {
 function failureOf (err) {
   if (err instanceof PaceError) return failureOfPace(err)
   const status = err && err.response && err.response.status
-  if (status === 404) return new NoSuchPage()
+  if (status === 404) return new NoSuchPage(saidBy(err))
   if (status === 401 || status === 403) return new UpstreamError('upstream_unauthorized', `${NAME}: HTTP ${status}, the token was refused`)
   return upstreamErrorFrom(err, NAME)
 }
@@ -156,10 +165,25 @@ function createDiscogsSource ({ http = axios, pace = discogsPace, env = process.
     return single ? release(single.id, single.edition) : null
   }
 
+  /**
+   * The price page of an edition. A 404 HERE is not "no CD edition" (the edition was just found):
+   * Discogs has no price page to give this account for it. It is told as "no value", and what
+   * Discogs said goes to the log, so the reason can be read.
+   */
+  async function priceOf (edition, deadlineAt) {
+    try {
+      return await get(`/marketplace/price_suggestions/${edition.id}`, {}, deadlineAt)
+    } catch (err) {
+      if (!(err instanceof NoSuchPage)) throw err
+      logger.warn(`[Discogs] HTTP 404 on the price page: ${err.said}`)
+      return null
+    }
+  }
+
   async function read ({ artist, title, year, releaseId }, deadlineAt) {
     const edition = releaseId ? release(releaseId) : await findRelease({ artist, title, year }, deadlineAt)
     if (!edition) return none(SOURCE_OUTCOMES.NOT_FOUND)
-    const suggestion = suggestionsOf(await get(`/marketplace/price_suggestions/${edition.id}`, {}, deadlineAt))
+    const suggestion = suggestionsOf(await priceOf(edition, deadlineAt))
     if (!suggestion) return none(NO_VALUE, { release: edition })
     return found({ release: edition, ...suggestion, readAt: new Date(now()).toISOString() })
   }
