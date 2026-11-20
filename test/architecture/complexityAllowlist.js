@@ -41,7 +41,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'components/ui/Pager.js:render': 12, // no feature yet
     'components/ui/TrackRow.js:render': 11, // no feature yet
     'components/ui/TrackRow.js:buildBadges': 14, // no feature yet
-    'controllers/InventoryController.js:arrow function': 13, // no feature yet
     'controllers/SeriesController.js:arrow function': 20, // no feature yet
     'helpers/BEAEnrichmentHelper.js:applyBEAData': 15, // no feature yet
     'models/Album.js:constructor': 16, // no feature yet: the constructor normalizes every shape an album or a track ever had

@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:21] session — F71: provada no navegador e executada na conta do MJRP; ordem do inventário por artista e título
+
+**Branch:** feat/f71-inventory-holds-every-album-of-my-series
+
+- A ação «Add the albums of my series» rodou na conta do MJRP, a pedido dele: 23 álbuns antes (6 Owned, 16 Not Owned, 1 Wishlist), 188 acrescentados como Not Owned, 211 depois (6 / 204 / 1). Os 23 de antes ficaram iguais; a segunda execução não gravou nada. Prova: `reports/evidence/F71-inventory-holds-every-album-of-my-series/2026-11-19-browser-proof-and-owner-account-run.md`.
+- Decidido pelo agente — revisável: a grade do inventário ordena por artista e depois por título (`public/js/models/inventorySort.js`); antes ordenava por um campo que os itens não têm. «1 album» no singular.
+- O MJRP escolheu a opção A para a S-56 (2026-11-19): «opção A e to achando que o AVG rank nao faz sentido pra mim, poderia trocar por AVG Rating tb». O «Avg Rank» sai também do cartão do álbum e dá lugar ao «Avg Rating». É a segunda fatia da F71.
+
 ## [2026-11-19 23:13] session — F71: o manual diz o inventário como ficou
 
 Branch: `feat/f71-inventory-holds-every-album-of-my-series`, depois do commit `c1f2821`.

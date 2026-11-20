@@ -3,7 +3,7 @@ id: S-56
 aliases: [S-56]
 type: requirement
 format: story
-status: Prioritized
+status: In progress
 epic: "[[prd#^EP-07]]"
 planned_for: "[[ROADMAP#^REL-40]]"
 ---

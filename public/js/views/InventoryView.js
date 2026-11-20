@@ -86,7 +86,7 @@ export class InventoryView extends BaseView {
     h1.appendChild(SafeDOM.text(' My Collection'))
 
     const statsRow = SafeDOM.div({ className: 'stats-row flex flex-wrap items-center gap-4 text-sm md:text-lg w-full md:w-auto' })
-    statsRow.appendChild(SafeDOM.span({ className: 'text-accent-primary font-semibold' }, `${stats.totalCount || 0} albums`))
+    statsRow.appendChild(SafeDOM.span({ className: 'text-accent-primary font-semibold' }, `${stats.totalCount || 0} ${stats.totalCount === 1 ? 'album' : 'albums'}`))
     statsRow.appendChild(this.renderStatusCounts(stats))
     statsRow.appendChild(this.renderOwnedValue(state, stats))
 

@@ -20,6 +20,7 @@ import toast from '../components/Toast.js'
 import { filterInventory, statusCountsFor } from '../models/inventoryFilter.js'
 import { InventoryStatus, ownedValueOf, statusChangeMessage, statusOf } from '../models/inventoryStatus.js'
 import { confirmationText, nothingToAddText, outcomeText, progressText } from '../models/inventoryFromSeries.js'
+import { sortInventory } from '../models/inventorySort.js'
 
 /** The button "Add the albums of my series" at rest. */
 const SERIES_ADD_IDLE = Object.freeze({ busy: false, text: null })
@@ -53,8 +54,8 @@ export class InventoryController {
             // "Add the albums of my series": busy while it reads and writes, with what it is doing
             seriesAdd: SERIES_ADD_IDLE,
             sorting: {
-                field: 'addedAt',
-                direction: 'desc'
+                field: 'artist',
+                direction: 'asc'
             },
             viewMode: 'grid', // grid, list
             viewCurrency: 'USD', // USD or BRL
@@ -125,32 +126,8 @@ export class InventoryController {
         // 1-3. Search, format and status (models/inventoryFilter.js)
         const result = filterInventory(this.state.albums, this.state.filters)
 
-        // 4. Sorting
-        const { field, direction } = this.state.sorting
-        result.sort((a, b) => {
-            let valA = a[field]
-            let valB = b[field]
-
-            // Handle dates
-            if (field === 'addedAt') {
-                valA = new Date(valA || 0).getTime()
-                valB = new Date(valB || 0).getTime()
-            }
-            // Handle numeric (purchasePrice)
-            else if (field === 'purchasePrice') {
-                valA = Number(valA) || 0
-                valB = Number(valB) || 0
-            }
-            // Strings
-            else {
-                valA = String(valA || '').toLowerCase()
-                valB = String(valB || '').toLowerCase()
-            }
-
-            if (valA < valB) return direction === 'asc' ? -1 : 1
-            if (valA > valB) return direction === 'asc' ? 1 : -1
-            return 0
-        })
+        // 4. Sorting (models/inventorySort.js)
+        sortInventory(result, this.state.sorting)
 
         this.state.filteredAlbums = result
     }
