@@ -3,6 +3,18 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:14] session — F74, segunda fatia: o título com as suas partes, e as faixas que seguiam sem nota
+
+**Branch:** fix/f74-track-titles-second-slice
+
+- Depois de publicada a primeira fatia, o «Update ratings» em produção mostrou uma regressão: Yes «Close to the Edge» caiu de 3 faixas com nota para 1 (o Apple Music numera as partes depois dos dois-pontos, a fonte não).
+- Lidas 16 páginas da fonte (29 pedidos). Cada faixa da lista do integrador foi conferida contra a página: `reports/evidence/F74/2026-11-20-track-identity-second-measure.md`.
+- A regra foi para a versão 2: quatro degraus com nome (`title-with-its-parts`, `first-of-titles-listed-together`, `letters-starred-out`, `title-in-its-brackets`), o que é só escrita (número por extenso, «A» no começo, «-in'», «a.k.a.») e duas escritas conhecidas. Nenhum aceita por «um contém o outro».
+- Três causas fora da regra: a regra lia o lugar na lista como número da faixa, e o app manda a lista na ordem das notas («My Sarah»); o leitor da página pulava títulos de uma letra («u», «i») e cortava «2:» de «2:45 AM».
+- Segunda medida, 16 álbuns: 127 faixas com nota na versão 1, 149 depois; as 14 que ficam sem não estão na página, ou são a segunda de duas faixas que a página lista juntas. A primeira medida não mudou (102).
+- Não lidos, pelo teto de pedidos: nove álbuns da lista. Não visto num navegador; não publicado.
+
+
 ## [2026-11-20 01:13] decision — F75: um padrão único para as seções do cartão do inventário (v5)
 
 - Dito pelo MJRP: «deveríamos ter um padrao e alinhamento entre seções». A v5 do protótipo dá a cada seção o mesmo número de linhas em todo cartão; medido a 1440 px, as seções ficam alinhadas entre vizinhos. O padrão está escrito em `docs/specs/info-arch.md`, § Decisões de IA.

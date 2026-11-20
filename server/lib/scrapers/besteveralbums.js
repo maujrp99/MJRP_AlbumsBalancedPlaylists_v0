@@ -376,6 +376,20 @@ function trackNumberOf ($el) {
   return found ? parseInt(found[1], 10) : null
 }
 
+/**
+ * The title of a row without the track number written in front of it ("3. Title", "Track 3 - Title").
+ * A row of the grid whose number the page gives in a cell of its own has no number in its title:
+ * the title is kept as the page writes it («2:45 AM» is the title, not track 2; F74).
+ */
+function titleWithoutItsNumber (row) {
+  if (row.trackNumber) return row.trackTitle.trim()
+  return row.trackTitle
+    // Only strip numbers if followed by separator (dot, paren, -) to preserve "72 Seasons"
+    .replace(/^\s*\d+(?:[.):]|\s-\s)\s*/, '')
+    .replace(/^Track \d+[\s.)-]*/i, '')
+    .trim()
+}
+
 async function parseChartRankingById(id) {
   const chartUrl = `https://www.besteveralbums.com/thechart.php?a=${id}#tracks`
   const res = await getPage(chartUrl)
@@ -465,7 +479,8 @@ async function parseChartRankingById(id) {
           if (m) rating = parseInt(m[1], 10)
         }
         logger.log(`[BEA Scraper]   Track ${i + 1}: "${title}" (Rating: ${rating}, Raw: "${aveText.substring(0, 30)}...")`)
-        if (title && title.length > 1) rows.push({ trackTitle: title, rating, trackNumber: trackNumberOf($el) })
+        // A title of one letter is a title (Kendrick Lamar: «u», «i»); it used to be passed over (F74)
+        if (title) rows.push({ trackTitle: title, rating, trackNumber: trackNumberOf($el) })
       })
     } else {
       logger.log('[BEA Scraper] Grid fallback: No track items found.')
@@ -473,11 +488,7 @@ async function parseChartRankingById(id) {
   }
 
   const normalized = rows.map(r => ({
-    trackTitle: r.trackTitle
-      // FIX: Only strip numbers if followed by separator (dot, paren, -) to preserve "72 Seasons"
-      .replace(/^\s*\d+(?:[.):]|\s-\s)\s*/, '')
-      .replace(/^Track \d+[\s.)-]*/i, '')
-      .trim(),
+    trackTitle: titleWithoutItsNumber(r),
     rating: typeof r.rating === 'number' ? r.rating : null,
     trackNumber: r.trackNumber ?? null
   }))

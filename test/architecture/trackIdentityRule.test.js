@@ -165,17 +165,20 @@ function require_(relative) {
  * browsers believe the ratings they keep only under the version that decided them.
  */
 describe('the rules of the track rule and its version move together', () => {
-    it('version 1 is exactly these tiers, these describing notes and these known writings', () => {
+    it('version 2 is exactly these tiers, these describing notes and these known writings', () => {
         expect({
             version: TRACK_IDENTITY_RULE_VERSION,
             tiers: TIERS.map(tier => tier.reason),
             describingNotes: DESCRIBING_NOTES.map(note => note.name),
             knownWritings: KNOWN_WRITINGS.map(one => one.writings.join(' = '))
         }).toEqual({
-            version: 1,
-            tiers: ['same-text', 'same-song-described', 'same-place-one-word-apart', 'medley-listed-shorter', 'title-without-its-note'],
+            version: 2,
+            tiers: [
+                'same-text', 'same-song-described', 'letters-starred-out', 'same-place-one-word-apart', 'medley-listed-shorter',
+                'title-with-its-parts', 'first-of-titles-listed-together', 'title-without-its-note', 'title-in-its-brackets'
+            ],
             describingNotes: ['mastering-or-placement', 'credit', 'parts-of-the-song'],
-            knownWritings: ['Foxey Lady = Foxy Lady']
+            knownWritings: ['Foxey Lady = Foxy Lady', 'Midnite Cruiser = Midnight Cruiser', 'Greatdayndamornin\' / Booty = Greatdayindamornin\' / Booty']
         })
     })
 
@@ -186,8 +189,8 @@ describe('the rules of the track rule and its version move together', () => {
         reasons.forEach(reason => expect(Object.values(TrackReason)).toContain(reason))
     })
 
-    it('the weakest tier is the one that drops a note: an extra never takes the entry before the plain track', () => {
-        expect(TIERS.at(-1).reason).toBe(TrackReason.TITLE_WITHOUT_ITS_NOTE)
+    it('the weakest tiers are the ones that drop a note: an extra never takes the entry before the plain track', () => {
+        expect(TIERS.slice(-2).map(tier => tier.reason)).toEqual([TrackReason.TITLE_WITHOUT_ITS_NOTE, TrackReason.TITLE_IN_ITS_BRACKETS])
         expect(TIERS[0].reason).toBe(TrackReason.SAME_TEXT)
     })
 

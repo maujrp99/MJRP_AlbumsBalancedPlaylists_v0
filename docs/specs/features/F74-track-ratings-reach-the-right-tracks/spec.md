@@ -42,8 +42,14 @@ E 12 notas estavam em duas faixas ao mesmo tempo: a extra com a nota da original
 - [REQ-05] Quando a fonte tem duas páginas com o nome do álbum, uma para cada edição, a página usada é a que lista as faixas do álbum. · fixes UAT-221
 - [REQ-06] As notas que o navegador guarda de antes desta regra são pedidas de novo, uma vez, sem a pessoa apagar nada. · fixes UAT-221
 - [REQ-07] A mesma regra casa as faixas com o Spotify (popularidade) e com o ranking da busca por IA. · fixes UAT-221
+- [REQ-08] Um título seguido da lista das suas partes depois de dois-pontos é a mesma faixa que o título sozinho, ou que o mesmo título com as mesmas partes numeradas de outro jeito. · fixes UAT-221
+- [REQ-09] Uma faixa recebe a nota quando a diferença é só de escrita que a regra conhece: número por extenso, letras trocadas por asteriscos, «A» no começo, «-in'» por «-ing», «a.k.a.», o outro nome da música entre parênteses, a primeira de duas faixas que a fonte lista juntas. · fixes UAT-221
+- [REQ-10] O número da faixa usado pela regra é o que a faixa do álbum traz, não o lugar dela na lista enviada. · fixes UAT-221
+- [REQ-11] O leitor da página lê o título como a página o escreve: um título de uma letra é uma faixa, e um título que começa por número fica inteiro. · fixes UAT-221
 
 **Sobre o REQ-02, mudado pela investigação.** O esboço dizia «nunca recebe». Os dados mostram álbuns em que a faixa com a marca é a única forma da música: todas as faixas de «Live At The Apollo (1962)» trazem «(Live 1962)» e a fonte as escreve sem; «Substance» (New Order) traz «The Perfect Kiss (Substance Edit)» e a fonte escreve «Perfect Kiss». Com «nunca», o primeiro cairia de 7 faixas com nota para nenhuma. A regra ficou: a faixa com a marca só recebe a nota quando o álbum não tem a faixa sem a marca.
+
+**A segunda fatia (2026-11-20, depois da publicação).** O MJRP rodou «Update ratings» em produção e Yes «Close to the Edge» caiu de 3 faixas com nota para 1: o Apple Music escreve «Close to the Edge: I. The Solid Time of Change, II. …», a fonte escreve as partes sem a numeração, e a regra antiga casava por «um contém o outro». Outras faixas seguiam sem nota. As páginas de 16 álbuns foram lidas (29 pedidos) e cada faixa conferida; `reports/evidence/F74/2026-11-20-track-identity-second-measure.md` diz o que é de cada uma. Três causas não eram da regra: o app manda as faixas na ordem das notas, e a regra lia o lugar na lista como número da faixa («My Sarah» nunca estava no 5); o leitor da página pulava títulos de uma letra («u», «i») e cortava «2:» de «2:45 AM».
 
 ## Observable States
 A feature não importa nenhum requisito (conserto de uma issue). Os estados de comportamento que mudam ou nascem, em `docs/specs/behavior.md`:
@@ -58,11 +64,15 @@ A feature não importa nenhum requisito (conserto de uma issue). Os estados de c
 - Um álbum com notas guardadas no navegador de antes da regra mostra as notas novas na próxima vez que é aberto, sem «Clear Cache».
 - Nenhum arquivo do app ou do servidor compara títulos de faixas por conta própria (`test/architecture/trackIdentityRule.test.js`).
 
+- Segunda fatia: «Close to the Edge» com as três faixas com nota; nos 16 álbuns da segunda medida, 149 faixas com nota (127 com a versão 1); o que fica sem nota não está na página, ou é a segunda de duas faixas que a página lista juntas.
+
 ## Out of Scope
 - A identidade do álbum (F55, F68). «Before the Frost... Until the Freeze» segue «não tem página» na fonte: a regra do álbum decidiu que «Before The Frost...» é outro lançamento.
 - «Lost Someone (Live 1962)»: a fonte dá nota a duas metades, «(Part 1)» e «(Part 2)», e o álbum tem a faixa inteira. Fica sem nota (tinha a nota da segunda metade).
 - As médias que o inventário guarda: mudam quando o MJRP usar «Update ratings».
 
 ## Open Questions
+- «Aisle of Plenty»: a fonte dá uma nota só a «The Cinema Show / Aisle Of Plenty». A nota vai para «The Cinema Show»; «Aisle of Plenty» fica sem. Dar a mesma nota às duas?
+- Asteriscos: «F**k» casa com qualquer palavra de quatro letras que comece por «f» e termine por «k». Num álbum com duas faixas assim, a primeira leva a nota.
 - «Lost Someone»: dar à faixa inteira a nota de uma das metades, a média das duas, ou nenhuma (como está)?
 - «(Single Version)»: sem exemplo nos dados, a regra a trata como outra versão. Um álbum cuja fonte chame a faixa do álbum de «(Single Version)» mostraria se está certo.

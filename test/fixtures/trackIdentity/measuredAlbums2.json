@@ -1,0 +1,1302 @@
+{
+ "readAt": "2026-11-20",
+ "note": "Second slice of F74. Track titles as Apple Music writes them (public iTunes lookup; for the albums marked `partial`, where that search gave another release, only the tracks named from the inventory) and the track list of the BestEverAlbums page (title, average rating, track number), read on 2026-11-20. `ratedByVersion1`: how many of these tracks version 1 of the rule rated. Titles and numbers only.",
+ "albums": [
+  {
+   "album": "Close to the Edge",
+   "artist": "Yes",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=1080",
+   "ratedByVersion1": 1,
+   "tracks": [
+    "Close to the Edge: I. The Solid Time of Change, II. Total Mass Retain, III. I Get Up I Get Down, IV. Seasons of Man",
+    "And You and I: I. Cord of Life, II. Eclipse, III. The Preacher the Teacher, IV. Apocalypse",
+    "Siberian Khatru"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Close To The Edge: The Solid Time Of Change / Total Mass Retain / I Get Up, I Get Down / Seasons Of Man",
+     "rating": 92
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "And You And I: Cord Of Life / Eclipse / The Preacher The Teacher / Apocalypse",
+     "rating": 89
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Siberian Khatru",
+     "rating": 88
+    }
+   ]
+  },
+  {
+   "album": "Foxtrot (2007 Stereo Mix)",
+   "artist": "Genesis",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=2006",
+   "ratedByVersion1": 5,
+   "tracks": [
+    "Watcher of the Skies (2007 Stereo Mix)",
+    "Time Table (2007 Stereo Mix)",
+    "Get 'Em Out By Friday (2007 Stereo Mix)",
+    "Can-Utility and the Coastliners (2007 Stereo Mix)",
+    "Horizons (2007 Stereo Mix)",
+    "Supper's Ready (2007 Stereo Mix)"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Watcher Of The Skies",
+     "rating": 89
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "Time Table",
+     "rating": 84
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Get 'Em Out By Friday",
+     "rating": 85
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "Can-Utility And The Coastliners",
+     "rating": 86
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "Horizons",
+     "rating": 83
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "Supper's Ready: I. Lover's Leap / II. The Guaranteed Eternal Sanctuary Man / III. Ikhnaton And Itsacon And Their Band Of Merry Men / IV. How Dare I Be So Beautiful? / V. Willow Farm / VI. Apocalypse In 9/8 (Co-Starring The Delicious Talents Of Gabble Ratchet) / VII. As Sure As Eggs Is Eggs (Aching Men's Feet)",
+     "rating": 92
+    }
+   ]
+  },
+  {
+   "album": "Selling England By the Pound (2007 Stereo Mix)",
+   "artist": "Genesis",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=935",
+   "ratedByVersion1": 6,
+   "tracks": [
+    "Dancing with the Moonlit Knight (2007 Stereo Mix)",
+    "I Know What I Like (In Your Wardrobe) [2007 Stereo Mix]",
+    "Firth of Fifth (2007 Stereo Mix)",
+    "More Fool Me (2007 Stereo Mix)",
+    "The Battle of Epping Forest (2007 Stereo Mix)",
+    "After the Ordeal (2007 Stereo Mix)",
+    "The Cinema Show (2007 Stereo Mix)",
+    "Aisle of Plenty (2007 Stereo Mix)"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Dancing With The Moonlit Knight",
+     "rating": 91
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "I Know What I Like (In Your Wardrobe)",
+     "rating": 86
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Firth Of Fifth",
+     "rating": 92
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "More Fool Me",
+     "rating": 78
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "The Battle Of Epping Forest",
+     "rating": 84
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "After The Ordeal",
+     "rating": 81
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "The Cinema Show / Aisle Of Plenty",
+     "rating": 89
+    }
+   ]
+  },
+  {
+   "album": "Déjà Vu",
+   "artist": "Crosby, Stills, Nash & Young",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=80",
+   "ratedByVersion1": 9,
+   "tracks": [
+    "Carry On",
+    "Teach Your Children",
+    "Almost Cut My Hair",
+    "Helpless",
+    "Woodstock",
+    "Déjà Vu",
+    "Our House",
+    "4 + 20",
+    "Country Girl: A. Whiskey Boot Hill / B. Down, Down, Down / C. \"Country Girl\" (I Think You're Pretty)",
+    "Everybody I Love You"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Carry On",
+     "rating": 87
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "Teach Your Children",
+     "rating": 84
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Almost Cut My Hair",
+     "rating": 84
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "Helpless",
+     "rating": 86
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "Woodstock",
+     "rating": 85
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "Deja Vu",
+     "rating": 83
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Our House",
+     "rating": 86
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "4 + 20",
+     "rating": 82
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Country Girl: Whiskey Boot Hill/Down, Down, Down/Country Girl (I Think You're Pretty)",
+     "rating": 82
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "Everybody I Love You",
+     "rating": 79
+    }
+   ]
+  },
+  {
+   "album": "Voodoo",
+   "artist": "D'Angelo",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=5749",
+   "ratedByVersion1": 12,
+   "tracks": [
+    "Playa Playa",
+    "Devil's Pie",
+    "Left and Right (feat. Redman & Method Man)",
+    "The Line",
+    "Send It On",
+    "Chicken Grease",
+    "One Mo'Gin",
+    "The Root",
+    "Spanish Joint",
+    "Feel Like Makin' Love",
+    "Greatdayndamornin' / Booty",
+    "Untitled (How Does It Feel)",
+    "Africa"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Playa Playa",
+     "rating": 83
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "Devil's Pie",
+     "rating": 85
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Left & Right (Feat. Redman & Method Man)",
+     "rating": 83
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "The Line",
+     "rating": 77
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "Send It On",
+     "rating": 83
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "Chicken Grease",
+     "rating": 79
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "One Mo' Gin",
+     "rating": 83
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "The Root",
+     "rating": 81
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Spanish Joint",
+     "rating": 83
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "Feel Like Makin' Love",
+     "rating": 87
+    },
+    {
+     "trackNumber": 11,
+     "trackTitle": "Greatdayindamornin' / Booty",
+     "rating": 80
+    },
+    {
+     "trackNumber": 12,
+     "trackTitle": "Untitled (How Does It Feel)",
+     "rating": 89
+    },
+    {
+     "trackNumber": 13,
+     "trackTitle": "Africa",
+     "rating": 80
+    }
+   ]
+  },
+  {
+   "album": "In the Aeroplane Over the Sea",
+   "artist": "Neutral Milk Hotel",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=970",
+   "ratedByVersion1": 10,
+   "tracks": [
+    "King of Carrot Flowers, Pt. 1",
+    "King of Carrot Flowers, Pts. 2 & 3",
+    "In the Aeroplane Over the Sea",
+    "Two-Headed Boy",
+    "The Fool",
+    "Holland, 1945",
+    "Communist Daughter",
+    "Oh Comely",
+    "Ghost",
+    "[untitled]",
+    "Two-Headed Boy, Pt. 2"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "The King Of Carrot Flowers Pt. One",
+     "rating": 91
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "The King Of Carrot Flowers Pt. Two & Three",
+     "rating": 88
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "In The Aeroplane Over The Sea",
+     "rating": 93
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "Two-Headed Boy",
+     "rating": 91
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "The Fool",
+     "rating": 85
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "Holland, 1945",
+     "rating": 91
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Communist Daughter",
+     "rating": 86
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "Oh Comely",
+     "rating": 90
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Ghost",
+     "rating": 88
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "[Untitled]",
+     "rating": 85
+    },
+    {
+     "trackNumber": 11,
+     "trackTitle": "Two-Headed Boy Pt. Two",
+     "rating": 90
+    }
+   ]
+  },
+  {
+   "album": "Electric Warrior (Expanded Edition) [2003 Remaster]",
+   "artist": "T. Rex",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=1171",
+   "ratedByVersion1": 10,
+   "tracks": [
+    "Mambo Sun",
+    "Cosmic Dancer",
+    "Jeepster",
+    "Monolith",
+    "Lean Woman Blues",
+    "Bang a Gong (Get It On)",
+    "Planet Queen",
+    "Girl",
+    "The Motivator",
+    "Life's a Gas",
+    "Rip Off",
+    "There Was a Time (Single Version)",
+    "Raw Ramp (Single Version)",
+    "Planet Queen (Acoustic Version)",
+    "Hot Love (Single Version)",
+    "Woodland Rock (Single Version)",
+    "King of the Mountain Cometh (Single Version)",
+    "The T. Rex Electric Warrior Interview"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Mambo Sun",
+     "rating": 87
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "Cosmic Dancer",
+     "rating": 86
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Jeepster",
+     "rating": 87
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "Monolith",
+     "rating": 83
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "Lean Woman Blues",
+     "rating": 80
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "Get It On",
+     "rating": 89
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Planet Queen",
+     "rating": 83
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "Girl",
+     "rating": 82
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "The Motivator",
+     "rating": 81
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "Life's A Gas",
+     "rating": 84
+    },
+    {
+     "trackNumber": 11,
+     "trackTitle": "Rip Off",
+     "rating": 84
+    }
+   ]
+  },
+  {
+   "album": "The Chronic",
+   "artist": "Dr. Dre",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=1409",
+   "partial": true,
+   "ratedByVersion1": 0,
+   "tracks": [
+    "F**k Wit Dre Day (And Everybody's Celebratin')",
+    "The Day The N****z Took Over (feat. Snoop Dogg, RBX, Dat Nigga Daz)",
+    "A N***a Witta Gun",
+    "Lyrical G******g"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "The Chronic (Intro)",
+     "rating": 78
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "Fuck Wit Dre Day (And Everybody's Celebratin')",
+     "rating": 86
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Let Me Ride",
+     "rating": 87
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "The Day The Niggaz Took Over",
+     "rating": 82
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "Nuthin' But A \"G\" Thang",
+     "rating": 91
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "Deeez Nuuuts",
+     "rating": 81
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Lil' Ghetto Boy",
+     "rating": 84
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "A Nigga Witta Gun",
+     "rating": 80
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Rat-Tat-Tat-Tat",
+     "rating": 80
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "The $20 Sack Pyramid",
+     "rating": 70
+    },
+    {
+     "trackNumber": 11,
+     "trackTitle": "Lyrical Gangbang",
+     "rating": 78
+    },
+    {
+     "trackNumber": 12,
+     "trackTitle": "High Powered",
+     "rating": 75
+    },
+    {
+     "trackNumber": 13,
+     "trackTitle": "The Doctor's Office",
+     "rating": 59
+    },
+    {
+     "trackNumber": 14,
+     "trackTitle": "Stranded On Death Row",
+     "rating": 81
+    },
+    {
+     "trackNumber": 15,
+     "trackTitle": "The Roach (The Chronic Outro)",
+     "rating": 77
+    },
+    {
+     "trackNumber": 16,
+     "trackTitle": "Bitches Ain't Shit",
+     "rating": 78
+    }
+   ]
+  },
+  {
+   "album": "To Pimp a Butterfly",
+   "artist": "Kendrick Lamar",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=77758",
+   "ratedByVersion1": 14,
+   "tracks": [
+    "Wesley's Theory (feat. George Clinton & Thundercat)",
+    "For Free? (Interlude)",
+    "King Kunta",
+    "Institutionalized (feat. Bilal, Anna Wise & Snoop Dogg)",
+    "These Walls (feat. Bilal, Anna Wise & Thundercat)",
+    "u",
+    "Alright",
+    "For Sale? (Interlude)",
+    "Momma",
+    "Hood Politics",
+    "How Much a Dollar Cost (feat. James Fauntleroy & Ronald Isley)",
+    "Complexion (A Zulu Love) [feat. Rapsody]",
+    "The Blacker the Berry",
+    "You Ain't Gotta Lie (Momma Said)",
+    "i",
+    "Mortal Man"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Wesley's Theory (Feat. George Clinton & Thundercat)",
+     "rating": 92
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "For Free? (Interlude)",
+     "rating": 87
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "King Kunta",
+     "rating": 92
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "Institutionalized (Feat. Bilal, Anna Wise & Snoop Dogg)",
+     "rating": 87
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "These Walls (Feat. Bilal, Anna Wise, Thundercat)",
+     "rating": 91
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "U",
+     "rating": 89
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Alright",
+     "rating": 91
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "For Sale? (Interlude)",
+     "rating": 84
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Momma",
+     "rating": 85
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "Hood Politics",
+     "rating": 87
+    },
+    {
+     "trackNumber": 11,
+     "trackTitle": "How Much A Dollar Cost (Feat. James Fauntleroy & Ronald Isley)",
+     "rating": 92
+    },
+    {
+     "trackNumber": 12,
+     "trackTitle": "Complexion (A Zulu Love) (Feat. Rapsody)",
+     "rating": 87
+    },
+    {
+     "trackNumber": 13,
+     "trackTitle": "The Blacker The Berry",
+     "rating": 93
+    },
+    {
+     "trackNumber": 14,
+     "trackTitle": "You Ain’t Gotta Lie (Momma Said)",
+     "rating": 85
+    },
+    {
+     "trackNumber": 15,
+     "trackTitle": "I",
+     "rating": 91
+    },
+    {
+     "trackNumber": 16,
+     "trackTitle": "Mortal Man",
+     "rating": 90
+    }
+   ]
+  },
+  {
+   "album": "Can't Buy A Thrill",
+   "artist": "Steely Dan",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=266",
+   "ratedByVersion1": 9,
+   "tracks": [
+    "Do It Again",
+    "Dirty Work",
+    "Kings",
+    "Midnite Cruiser",
+    "Only A Fool Would Say That",
+    "Reelin' In The Years",
+    "Fire In The Hole",
+    "Brooklyn (Owes The Charmer Under Me)",
+    "Change Of The Guard",
+    "Turn That Heartbeat Over Again"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Do It Again",
+     "rating": 90
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "Dirty Work",
+     "rating": 85
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Kings",
+     "rating": 82
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "Midnight Cruiser",
+     "rating": 81
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "Only A Fool Would Say That",
+     "rating": 84
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "Reelin' In The Years",
+     "rating": 89
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Fire In The Hole",
+     "rating": 81
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "Brooklyn (Owes The Charmer Under Me)",
+     "rating": 81
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Change Of The Guard",
+     "rating": 81
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "Turn That Heartbeat Over Again",
+     "rating": 80
+    }
+   ]
+  },
+  {
+   "album": "Either/Or",
+   "artist": "Elliott Smith",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=1067",
+   "ratedByVersion1": 11,
+   "tracks": [
+    "Speed Trials",
+    "Alameda",
+    "Ballad of Big Nothing",
+    "Between the Bars",
+    "Pictures of Me",
+    "No Name No. 5",
+    "Rose Parade",
+    "Punch and Judy",
+    "Angeles",
+    "Cupids Trick",
+    "2:45 Am",
+    "Say Yes"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Speed Trials",
+     "rating": 87
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "Alameda",
+     "rating": 87
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Ballad Of Big Nothing",
+     "rating": 87
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "Between The Bars",
+     "rating": 91
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "Pictures Of Me",
+     "rating": 85
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "No Name No. 5",
+     "rating": 83
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Rose Parade",
+     "rating": 85
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "Punch And Judy",
+     "rating": 81
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Angeles",
+     "rating": 89
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "Cupids Trick",
+     "rating": 84
+    },
+    {
+     "trackNumber": 11,
+     "trackTitle": "2:45 AM",
+     "rating": 85
+    },
+    {
+     "trackNumber": 12,
+     "trackTitle": "Say Yes",
+     "rating": 90
+    }
+   ]
+  },
+  {
+   "album": "Madvillainy",
+   "artist": "Madvillain",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=2546",
+   "partial": true,
+   "ratedByVersion1": 0,
+   "tracks": [
+    "Operation Lifesaver a.K.A. Mint Test"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "The Illest Villains",
+     "rating": 81
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "Accordion",
+     "rating": 91
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Meat Grinder",
+     "rating": 90
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "Bistro",
+     "rating": 84
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "Raid (Feat. MED)",
+     "rating": 89
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "America's Most Blunted",
+     "rating": 88
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Sickfit (Instrumental)",
+     "rating": 83
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "Rainbows",
+     "rating": 81
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Curls",
+     "rating": 87
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "Do Not Fire! (Instrumental)",
+     "rating": 79
+    },
+    {
+     "trackNumber": 11,
+     "trackTitle": "Money Folder",
+     "rating": 86
+    },
+    {
+     "trackNumber": 12,
+     "trackTitle": "Shadows Of Tomorrow",
+     "rating": 84
+    },
+    {
+     "trackNumber": 13,
+     "trackTitle": "Operation Lifesaver/Mint Test",
+     "rating": 82
+    },
+    {
+     "trackNumber": 14,
+     "trackTitle": "Figaro",
+     "rating": 89
+    },
+    {
+     "trackNumber": 15,
+     "trackTitle": "Hardcore Hustle",
+     "rating": 79
+    },
+    {
+     "trackNumber": 16,
+     "trackTitle": "Strange Ways",
+     "rating": 87
+    },
+    {
+     "trackNumber": 17,
+     "trackTitle": "Fancy Clown",
+     "rating": 87
+    },
+    {
+     "trackNumber": 18,
+     "trackTitle": "Eye",
+     "rating": 82
+    },
+    {
+     "trackNumber": 19,
+     "trackTitle": "Supervillain Theme (Instrumental)",
+     "rating": 85
+    },
+    {
+     "trackNumber": 20,
+     "trackTitle": "All Caps",
+     "rating": 92
+    },
+    {
+     "trackNumber": 21,
+     "trackTitle": "Great Day",
+     "rating": 86
+    },
+    {
+     "trackNumber": 22,
+     "trackTitle": "Rhinestone Cowboy",
+     "rating": 89
+    }
+   ]
+  },
+  {
+   "album": "Blonde On Blonde",
+   "artist": "Bob Dylan",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=44",
+   "ratedByVersion1": 12,
+   "tracks": [
+    "Rainy Day Women #12 & 35",
+    "Pledging My Time",
+    "Visions of Johanna",
+    "One of Us Must Know (Sooner or Later)",
+    "I Want You",
+    "Stuck Inside of Mobile with the Memphis Blues Again",
+    "Leopard-Skin Pill-Box Hat",
+    "Just Like a Woman",
+    "Most Likely You Go Your Way (And I'll Go Mine)",
+    "Temporary Like Achilles",
+    "Absolutely Sweet Marie",
+    "Fourth Time Around",
+    "Obviously Five Believers",
+    "Sad-Eyed Lady of the Lowlands"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Rainy Day Women #12 & 35",
+     "rating": 85
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "Pledging My Time",
+     "rating": 82
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Visions Of Johanna",
+     "rating": 91
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "One Of Us Must Know (Sooner Or Later)",
+     "rating": 89
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "I Want You",
+     "rating": 91
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "Stuck Inside Of Mobile With The Memphis Blues Again",
+     "rating": 91
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Leopard-Skin Pill-Box Hat",
+     "rating": 83
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "Just Like A Woman",
+     "rating": 90
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Most Likely You Go Your Way And I'll Go Mine",
+     "rating": 86
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "Temporary Like Achilles",
+     "rating": 81
+    },
+    {
+     "trackNumber": 11,
+     "trackTitle": "Absolutely Sweet Marie",
+     "rating": 84
+    },
+    {
+     "trackNumber": 12,
+     "trackTitle": "4th Time Around",
+     "rating": 85
+    },
+    {
+     "trackNumber": 13,
+     "trackTitle": "Obviously 5 Believers",
+     "rating": 83
+    },
+    {
+     "trackNumber": 14,
+     "trackTitle": "Sad Eyed Lady Of The Lowlands",
+     "rating": 90
+    }
+   ]
+  },
+  {
+   "album": "Nevermind",
+   "artist": "Nirvana",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=187",
+   "partial": true,
+   "ratedByVersion1": 0,
+   "tracks": [
+    "Endless, Nameless"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Smells Like Teen Spirit",
+     "rating": 92
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "In Bloom",
+     "rating": 89
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Come As You Are",
+     "rating": 91
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "Breed",
+     "rating": 86
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "Lithium",
+     "rating": 91
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "Polly",
+     "rating": 86
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Territorial Pissings",
+     "rating": 82
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "Drain You",
+     "rating": 86
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Lounge Act",
+     "rating": 84
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "Stay Away",
+     "rating": 82
+    },
+    {
+     "trackNumber": 11,
+     "trackTitle": "On A Plain",
+     "rating": 85
+    },
+    {
+     "trackNumber": 12,
+     "trackTitle": "Something In The Way",
+     "rating": 87
+    }
+   ]
+  },
+  {
+   "album": "Songs in the Key of Life",
+   "artist": "Stevie Wonder",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=270",
+   "ratedByVersion1": 17,
+   "tracks": [
+    "Love's In Need of Love Today",
+    "Have a Talk With God",
+    "Village Ghetto Land",
+    "Contusion",
+    "Sir Duke",
+    "I Wish",
+    "Knocks Me Off My Feet",
+    "Pastime Paradise",
+    "Summer Soft",
+    "Ordinary Pain",
+    "Isn't She Lovely",
+    "Joy Inside My Tears",
+    "Black Man",
+    "Ngiculela-Es Una Historia-I Am Singing",
+    "If It's Magic",
+    "As",
+    "Another Star",
+    "Saturn",
+    "Ebony Eyes",
+    "All Day Sucker",
+    "Easy Goin' Evening (My Mama's Call)"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "Love's In Need Of Love Today",
+     "rating": 86
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "Have A Talk With God",
+     "rating": 82
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "Village Ghetto Land",
+     "rating": 81
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "Contusion",
+     "rating": 81
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "Sir Duke",
+     "rating": 90
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "I Wish",
+     "rating": 90
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Knocks Me Off My Feet",
+     "rating": 84
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "Pastime Paradise",
+     "rating": 87
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Summer Soft",
+     "rating": 84
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "Ordinary Pain",
+     "rating": 83
+    },
+    {
+     "trackNumber": 11,
+     "trackTitle": "Isn't She Lovely",
+     "rating": 87
+    },
+    {
+     "trackNumber": 12,
+     "trackTitle": "Joy Inside My Tears",
+     "rating": 82
+    },
+    {
+     "trackNumber": 13,
+     "trackTitle": "Black Man",
+     "rating": 83
+    },
+    {
+     "trackNumber": 14,
+     "trackTitle": "Ngiculela - Es Una Historia - I Am Singing",
+     "rating": 78
+    },
+    {
+     "trackNumber": 15,
+     "trackTitle": "If It's Magic",
+     "rating": 79
+    },
+    {
+     "trackNumber": 16,
+     "trackTitle": "As",
+     "rating": 89
+    },
+    {
+     "trackNumber": 17,
+     "trackTitle": "Another Star",
+     "rating": 87
+    }
+   ]
+  },
+  {
+   "album": "Songs for the Deaf",
+   "artist": "Queens of the Stone Age",
+   "pageUrl": "https://www.besteveralbums.com/thechart.php?a=945",
+   "ratedByVersion1": 11,
+   "tracks": [
+    "The Real Song for the Deaf",
+    "You Think I Ain't Worth a Dollar, But I Feel Like a Millionaire",
+    "No One Knows",
+    "First It Giveth",
+    "Song for the Dead",
+    "The Sky Is Fallin'",
+    "Six Shooter",
+    "Hanging Tree",
+    "Go With the Flow",
+    "Gonna Leave You",
+    "Do It Again",
+    "God Is In The Radio",
+    "Another Love Song",
+    "Song for the Deaf",
+    "Mosquito Song (Hidden Track)"
+   ],
+   "page": [
+    {
+     "trackNumber": 1,
+     "trackTitle": "You Think I Ain't Worth A Dollar, But I Feel Like A Millionaire",
+     "rating": 88
+    },
+    {
+     "trackNumber": 2,
+     "trackTitle": "No One Knows",
+     "rating": 92
+    },
+    {
+     "trackNumber": 3,
+     "trackTitle": "First It Giveth",
+     "rating": 87
+    },
+    {
+     "trackNumber": 4,
+     "trackTitle": "A Song For The Dead",
+     "rating": 87
+    },
+    {
+     "trackNumber": 5,
+     "trackTitle": "The Sky Is Fallin'",
+     "rating": 85
+    },
+    {
+     "trackNumber": 6,
+     "trackTitle": "Six Shooter",
+     "rating": 71
+    },
+    {
+     "trackNumber": 7,
+     "trackTitle": "Hangin' Tree",
+     "rating": 82
+    },
+    {
+     "trackNumber": 8,
+     "trackTitle": "Go With The Flow",
+     "rating": 90
+    },
+    {
+     "trackNumber": 9,
+     "trackTitle": "Gonna Leave You",
+     "rating": 83
+    },
+    {
+     "trackNumber": 10,
+     "trackTitle": "Do It Again",
+     "rating": 82
+    },
+    {
+     "trackNumber": 11,
+     "trackTitle": "God Is In The Radio",
+     "rating": 83
+    },
+    {
+     "trackNumber": 12,
+     "trackTitle": "Another Love Song",
+     "rating": 82
+    },
+    {
+     "trackNumber": 13,
+     "trackTitle": "A Song For The Deaf",
+     "rating": 86
+    },
+    {
+     "trackNumber": 14,
+     "trackTitle": "Mosquito Song [Hidden Track]",
+     "rating": 86
+    }
+   ]
+  }
+ ]
+}

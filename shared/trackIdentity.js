@@ -25,17 +25,21 @@
  *
  *   same-text                  «21st Century Schizoid Man (Including "Mirrors")» -> «21st Century Schizoid Man Including Mirrors»
  *   same-song-described        «Larks' Tongues In Aspic, Pt. 1»                  -> «Larks' Tongues In Aspic, Part One»
+ *   letters-starred-out        «A N***a Witta Gun»                               -> «A Nigga Witta Gun»
  *   same-place-one-word-apart  track 5 «My Sarah»                                -> track 5 «Sarah»
  *   medley-listed-shorter      «Medley: Please Please Please/You've Got The Power/I Found Someone (Live 1962)»
  *                                                                                -> the same medley with every song listed
+ *   title-with-its-parts       «Supper's Ready (2007 Stereo Mix)»                -> «Supper's Ready: I. Lover's Leap / II. ...»
+ *   first-of-titles-listed-together  «The Cinema Show (2007 Stereo Mix)»         -> «The Cinema Show / Aisle Of Plenty»
  *   title-without-its-note     «I'll Go Crazy (Live 1962)»                       -> «I'll Go Crazy»
+ *   title-in-its-brackets      «Bang a Gong (Get It On)»                         -> «Get It On»
  *   refused
  *   another-recording          «Lost Someone (Live 1962)»                        -> «Lost Someone (Part 1)»
  *   title-mismatch             «Epitaph»                                         -> «Moonchild»
  *   title-missing              «»                                                -> anything
  *
- * THE EXTRA TRACK NEVER TAKES THE RATING OF THE ORIGINAL. `title-without-its-note` is the weakest
- * tier and the assignment is one to one: when the album has «I Talk to the Wind» and «I Talk to the
+ * THE EXTRA TRACK NEVER TAKES THE RATING OF THE ORIGINAL. The tiers that drop a note
+ * (`title-without-its-note`, `title-in-its-brackets`) are the weakest and the assignment is one to one: when the album has «I Talk to the Wind» and «I Talk to the
  * Wind (Duo Version)» and the source rates «I Talk To The Wind», the plain track takes the entry by
  * the first tier and nothing is left for the other. Only an album that has the song in no plain
  * form (a live album: every track of «Live At The Apollo (1962)» says «(Live 1962)») gives the
@@ -61,20 +65,31 @@
  * album that were decided with another version are not believed (the app's server stamps its
  * answer with it; AlbumCacheAdapter compares it on read).
  * 1: F74 (the first rule; before it, the brackets were deleted on both sides).
+ * 2: F74, second slice (the parts of a title after a colon, two tracks the source lists together,
+ *    letters starred out, the title in the brackets; numbers written as words, "A" at the start,
+ *    "-in'" for "-ing", "a.k.a."; the track number the album's track carries).
  */
-export const TRACK_IDENTITY_RULE_VERSION = 1
+export const TRACK_IDENTITY_RULE_VERSION = 2
 
 export const TrackReason = Object.freeze({
     /** The two titles are the same text: case, accents, punctuation, brackets and "&" apart. */
     SAME_TEXT: 'same-text',
     /** The same song, described or written differently (a remaster note, "Pt. 1" and "Part One"). */
     SAME_SONG_DESCRIBED: 'same-song-described',
+    /** A store writes some letters of a word as asterisks; the other writes the word. */
+    LETTERS_STARRED_OUT: 'letters-starred-out',
     /** The same place on the album, and one title is the other with one word more. */
     SAME_PLACE_ONE_WORD_APART: 'same-place-one-word-apart',
     /** Two medleys, one listing fewer of the songs. */
     MEDLEY_LISTED_SHORTER: 'medley-listed-shorter',
+    /** The same title before a colon; the parts listed after it are the same, or only one side lists them. */
+    TITLE_WITH_ITS_PARTS: 'title-with-its-parts',
+    /** One side lists two tracks in one title ("A / B"); the other is the first of them. */
+    FIRST_OF_TITLES_LISTED_TOGETHER: 'first-of-titles-listed-together',
     /** One title is the other without its note, and the album has the song in no plain form. */
     TITLE_WITHOUT_ITS_NOTE: 'title-without-its-note',
+    /** One title is what the other carries in brackets, and the album has the song in no plain form. */
+    TITLE_IN_ITS_BRACKETS: 'title-in-its-brackets',
     /** The two titles carry different notes: two recordings of one song. */
     ANOTHER_RECORDING: 'another-recording',
     TITLE_MISMATCH: 'title-mismatch',
@@ -106,21 +121,43 @@ function wordsOf(text) {
 }
 
 /** Words two sources write in two ways. */
-const SAME_WORD = Object.freeze({ part: 'pt', parts: 'pts', volume: 'vol' })
-/** After "Pt" or "Vol", a number is written as a word, in roman or in digits. */
-const NUMBERED = new Set(['pt', 'pts', 'vol'])
-const NUMBER_WRITTEN = Object.freeze({
+const SAME_WORD = Object.freeze({
+    part: 'pt', parts: 'pt', pts: 'pt', volume: 'vol',
+    // a number written as a word: «Fourth Time Around» is «4th Time Around», «Obviously Five Believers» is «Obviously 5 Believers»
     one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9', ten: '10',
-    i: '1', ii: '2', iii: '3', iv: '4', v: '5', vi: '6', vii: '7', viii: '8', ix: '9', x: '10'
+    first: '1st', second: '2nd', third: '3rd', fourth: '4th', fifth: '5th', sixth: '6th', seventh: '7th', eighth: '8th', ninth: '9th', tenth: '10th'
 })
+/** After "Pt" or "Vol", a number is also written in roman: «Parabol, Pt. II». The run goes on over "and": «Pts. II & III». */
+const NUMBERED = new Set(['pt', 'vol'])
+const ROMAN = Object.freeze({ i: '1', ii: '2', iii: '3', iv: '4', v: '5', vi: '6', vii: '7', viii: '8', ix: '9', x: '10' })
+const inANumbering = (word) => word === 'and' || /^\d+$/.test(word) || Object.hasOwn(ROMAN, word)
 
-const withoutLeadingThe = (words) => (words.length > 1 && words[0] === 'the' ? words.slice(1) : words)
+/** The roman numbers of a run that starts after "Pt" or "Vol", read as digits. */
+function romanAfterNumbered(words) {
+    let numbering = false
+    return words.map(word => {
+        const read = numbering && ROMAN[word] ? ROMAN[word] : word
+        numbering = NUMBERED.has(word) || (numbering && inANumbering(word))
+        return read
+    })
+}
 
-/** The words with what is only a way of WRITING made equal: "Part One" is "Pt 1", a leading "The" is dropped. */
+/** «Hangin' Tree» is «Hanging Tree»: the "g" a singer drops is not a letter of difference. */
+const LONG_ENOUGH_TO_DROP_A_G = 6
+const withTheGDropped = (word) => (word.length >= LONG_ENOUGH_TO_DROP_A_G && word.endsWith('ing') ? word.slice(0, -1) : word)
+
+/** "a.k.a." joins two names of one track: «Operation Lifesaver a.K.A. Mint Test» is «Operation Lifesaver/Mint Test». */
+const withoutAka = (words) => words.filter((word, at) => !(word === 'aka' || isAkaAt(words, at)))
+const isAkaAt = (words, at) => [0, 1, 2].some(back => at - back >= 0 && words.slice(at - back, at - back + 3).join(' ') === 'a k a')
+
+const ARTICLES = new Set(['the', 'a', 'an'])
+/** «A Song For The Dead» is «Song for the Dead», «The Perfect Kiss» is «Perfect Kiss». */
+const withoutLeadingArticle = (words) => (words.length > 1 && ARTICLES.has(words[0]) ? words.slice(1) : words)
+
+/** The words with what is only a way of WRITING made equal. */
 function writtenAlike(words) {
-    const sameWords = words.map(word => SAME_WORD[word] || word)
-    const numbered = sameWords.map((word, at) => (NUMBERED.has(sameWords[at - 1]) && NUMBER_WRITTEN[word]) || word)
-    return withoutLeadingThe(numbered)
+    const sameWords = withoutAka(words).map(word => SAME_WORD[word] || withTheGDropped(word))
+    return withoutLeadingArticle(romanAfterNumbered(sameWords))
 }
 
 /**
@@ -131,6 +168,14 @@ export const KNOWN_WRITINGS = Object.freeze([
     Object.freeze({
         writings: Object.freeze(['Foxey Lady', 'Foxy Lady']),
         example: 'The Jimi Hendrix Experience, «Are You Experienced»: Apple Music writes «Foxey Lady», BestEverAlbums «Foxy Lady»'
+    }),
+    Object.freeze({
+        writings: Object.freeze(['Midnite Cruiser', 'Midnight Cruiser']),
+        example: 'Steely Dan, «Can\'t Buy A Thrill»: Apple Music writes «Midnite Cruiser», BestEverAlbums «Midnight Cruiser»'
+    }),
+    Object.freeze({
+        writings: Object.freeze(['Greatdayndamornin\' / Booty', 'Greatdayindamornin\' / Booty']),
+        example: 'D\'Angelo, «Voodoo»: Apple Music writes «Greatdayndamornin\' / Booty», BestEverAlbums «Greatdayindamornin\' / Booty»'
     })
 ])
 
@@ -212,28 +257,64 @@ function splitNotes(title) {
     return wordsOf(outside).length > 0 ? { outside, notes } : { outside: String(title ?? ''), notes: [] }
 }
 
+// «Close to the Edge: I. The Solid Time of Change, II. Total Mass Retain» is the title «Close to
+// the Edge» and the list of its PARTS. A store numbers the parts ("I.", "II.", "A.", "B."); another
+// source does not: the marks are not part of what is compared.
+const COLON = ': '
+const PART_MARK = /(^|[/,]\s*)(?:[IVX]{1,4}|[A-Ha-h])\.\s+/g
+
+/** The title before ": " and the list of parts after it, or the whole text with no parts. */
+function splitParts(outside) {
+    const at = outside.indexOf(COLON)
+    if (at <= 0 || wordsOf(outside.slice(at)).length === 0) return { head: outside, parts: '' }
+    return { head: outside.slice(0, at), parts: outside.slice(at + COLON.length).replace(PART_MARK, '$1') }
+}
+
+/** The words of a text with the asterisks a store puts in the place of letters kept: "n***a". */
+const NOT_A_WORD_NOR_A_STAR = /[^\p{L}\p{N}*]+/gu
+function starredWordsOf(text) {
+    const words = String(text ?? '').normalize('NFD').replace(DIACRITICS, '').toLowerCase().replace(APOSTROPHES, '').replace(/&/g, ' and ')
+        .replace(NOT_A_WORD_NOR_A_STAR, ' ').trim().split(' ').filter(Boolean)
+    return writtenAlike(words)
+}
+
+/** The first of the titles a text lists together ("A / B"), or '' when it lists one. */
+function firstListed(outside) {
+    const listed = outside.split('/')
+    return listed.length > 1 && !outside.includes(COLON) ? keyOf(wordsOf(listed[0])) : ''
+}
+
 /**
  * A title as the tiers read it.
  * @param {string} title
  * @param {number|null} place - the track number on the album, when known
- * @returns {{ text: string, written: string, described: string, base: string, baseWords: string[], notes: string, place: number|null }}
+ * @returns {Object}
  *   text       every word of the title, brackets read as plain words (first tier)
  *   written    the same, with what is only a way of writing made equal
  *   described  the title and its notes that do not merely describe
+ *   starred    the words of `described`, with the asterisks of a starred-out word kept
  *   base       the title outside every note; `baseWords`, its words
- *   notes      the notes that do not merely describe, as one text ('' for none)
+ *   head       the title before ": "; `parts`, the list of parts after it ('' for none)
+ *   first      the first of the titles listed together with "/" ('' when it is one title)
+ *   notes      the notes that do not merely describe, as one text ('' for none); `noteKeys`, each one
  */
 function readTitle(title, place = null) {
     const { outside, notes } = splitNotes(title)
-    const said = notes.map(wordsOf).filter(words => !describes(words))
-    const baseWords = writtenAlike(wordsOf(outside))
+    const said = notes.filter(note => !describes(wordsOf(note)))
+    const saidWords = said.map(wordsOf)
+    const { head, parts } = splitParts(outside)
     return {
         text: wordsOf(title).join(''),
         written: keyOf(wordsOf(title)),
-        described: keyOf([...wordsOf(outside), ...said.flat()]),
+        described: keyOf([...wordsOf(outside), ...saidWords.flat()]),
+        starred: starredWordsOf([outside, ...said].join(' ')),
         base: keyOf(wordsOf(outside)),
-        baseWords,
-        notes: said.map(words => words.join('')).join('|'),
+        baseWords: writtenAlike(wordsOf(outside)),
+        head: keyOf(wordsOf(head)),
+        parts: keyOf(wordsOf(parts)),
+        first: firstListed(outside),
+        notes: saidWords.map(words => words.join('')).join('|'),
+        noteKeys: saidWords.filter(words => words.length > 1).map(keyOf),
         place
     }
 }
@@ -261,6 +342,27 @@ function startsWith(longer, shorter) {
 }
 const bothMedleys = (a, b) => a.baseWords[0] === MEDLEY && b.baseWords[0] === MEDLEY
 
+/** A word with asterisks is the other word when each asterisk stands for one letter of it. */
+const starredIs = (starred, word) => starred.length === word.length && [...starred].every((letter, at) => letter === '*' || letter === word[at])
+const isStarred = (word) => word.includes('*')
+const sameWordOrStarred = (one, other) => one === other || (isStarred(one) !== isStarred(other) && (isStarred(one) ? starredIs(one, other) : starredIs(other, one)))
+function starredOut(a, b) {
+    if (a.length !== b.length || ![...a, ...b].some(isStarred)) return false
+    return a.every((word, at) => sameWordOrStarred(word, b[at]))
+}
+
+/** The same title before the colon (a medley has a tier of its own); the parts are the same, or one side lists none. */
+const isTheHeadOf = (whole, withParts) => withParts.parts !== '' && whole.parts === '' && whole.base === withParts.head
+function sameTitleWithParts(a, b) {
+    if (a.head === '' || a.head === MEDLEY || a.head !== b.head) return false
+    return (a.parts !== '' && a.parts === b.parts) || isTheHeadOf(a, b) || isTheHeadOf(b, a)
+}
+
+const firstOfTheListed = (one, listing) => listing.first !== '' && one.first === '' && one.base === listing.first
+
+/** One title is the note the other carries in brackets (two words at least), and has no note of its own. */
+const isTheNoteOf = (plain, noted) => plain.notes === '' && noted.noteKeys.includes(plain.base)
+
 /**
  * The tiers, in the order they are tried. `test` receives the two readings (readTitle).
  * A stronger tier wins an entry of the source over a weaker one (matchTracks).
@@ -275,6 +377,10 @@ export const TIERS = Object.freeze([
         test: (a, b) => a.written === b.written || a.described === b.described
     }),
     Object.freeze({
+        reason: TrackReason.LETTERS_STARRED_OUT,
+        test: (a, b) => starredOut(a.starred, b.starred)
+    }),
+    Object.freeze({
         reason: TrackReason.SAME_PLACE_ONE_WORD_APART,
         test: (a, b) => a.place !== null && a.place === b.place && notesAgree(a, b) && oneWordApart(a.baseWords, b.baseWords)
     }),
@@ -283,8 +389,20 @@ export const TIERS = Object.freeze([
         test: (a, b) => bothMedleys(a, b) && notesAgree(a, b) && (startsWith(a.baseWords, b.baseWords) || startsWith(b.baseWords, a.baseWords))
     }),
     Object.freeze({
+        reason: TrackReason.TITLE_WITH_ITS_PARTS,
+        test: (a, b) => notesAgree(a, b) && sameTitleWithParts(a, b)
+    }),
+    Object.freeze({
+        reason: TrackReason.FIRST_OF_TITLES_LISTED_TOGETHER,
+        test: (a, b) => notesAgree(a, b) && (firstOfTheListed(a, b) || firstOfTheListed(b, a))
+    }),
+    Object.freeze({
         reason: TrackReason.TITLE_WITHOUT_ITS_NOTE,
         test: (a, b) => a.base === b.base && a.notes !== b.notes && notesAgree(a, b)
+    }),
+    Object.freeze({
+        reason: TrackReason.TITLE_IN_ITS_BRACKETS,
+        test: (a, b) => isTheNoteOf(a, b) || isTheNoteOf(b, a)
     })
 ])
 
@@ -334,6 +452,13 @@ export const REASONS_EXPLAINED = Object.freeze([
         refuses: { album: 'Larks\' Tongues In Aspic, Pt. 1', source: 'Larks\' Tongues In Aspic, Part Two', refusedAs: TrackReason.TITLE_MISMATCH }
     }),
     Object.freeze({
+        reason: TrackReason.LETTERS_STARRED_OUT,
+        same: true,
+        says: 'one side writes some letters of a word as asterisks, one asterisk for each letter; every other word is the same',
+        example: { album: 'A N***a Witta Gun', source: 'A Nigga Witta Gun' },
+        refuses: { album: 'Lyrical G******g', source: 'Lyrical Gangsta', refusedAs: TrackReason.TITLE_MISMATCH }
+    }),
+    Object.freeze({
         reason: TrackReason.SAME_PLACE_ONE_WORD_APART,
         same: true,
         says: 'the two are at the same track number, and one title is the other with one word more',
@@ -351,11 +476,35 @@ export const REASONS_EXPLAINED = Object.freeze([
         refuses: { album: 'Medley: Please Please Please/You\'ve Got The Power', source: 'Medley: Try Me/You\'ve Got The Power/I Found Someone', refusedAs: TrackReason.TITLE_MISMATCH }
     }),
     Object.freeze({
+        reason: TrackReason.TITLE_WITH_ITS_PARTS,
+        same: true,
+        says: 'the same title before a colon; the parts listed after it are the same once their numbering is dropped, or only one side lists them',
+        example: {
+            album: 'Close to the Edge: I. The Solid Time of Change, II. Total Mass Retain, III. I Get Up I Get Down, IV. Seasons of Man',
+            source: 'Close To The Edge: The Solid Time Of Change / Total Mass Retain / I Get Up, I Get Down / Seasons Of Man'
+        },
+        refuses: { album: 'Close to the Edge of the World', source: 'Close To The Edge: The Solid Time Of Change / Total Mass Retain', refusedAs: TrackReason.TITLE_MISMATCH }
+    }),
+    Object.freeze({
+        reason: TrackReason.FIRST_OF_TITLES_LISTED_TOGETHER,
+        same: true,
+        says: 'one side lists two tracks in one title, joined by "/"; the other is the first of them (the second gets nothing: one entry, one track)',
+        example: { album: 'The Cinema Show (2007 Stereo Mix)', source: 'The Cinema Show / Aisle Of Plenty' },
+        refuses: { album: 'Aisle of Plenty (2007 Stereo Mix)', source: 'The Cinema Show / Aisle Of Plenty', refusedAs: TrackReason.TITLE_MISMATCH }
+    }),
+    Object.freeze({
         reason: TrackReason.TITLE_WITHOUT_ITS_NOTE,
         same: true,
         says: 'one title is the other without its note (a live take, a version, a subtitle); the weakest tier: the plain title of the album always takes the entry first',
         example: { album: 'I\'ll Go Crazy (Live 1962)', source: 'I\'ll Go Crazy' },
         refuses: { album: 'Lost Someone (Live 1962)', source: 'Lost Someone (Part 1)', refusedAs: TrackReason.ANOTHER_RECORDING }
+    }),
+    Object.freeze({
+        reason: TrackReason.TITLE_IN_ITS_BRACKETS,
+        same: true,
+        says: 'one title is what the other carries in brackets, two words at least (the other name of the song); the weakest tier',
+        example: { album: 'Bang a Gong (Get It On)', source: 'Get It On' },
+        refuses: { album: 'Bang a Gong (Get It On)', source: 'Get It', refusedAs: TrackReason.TITLE_MISMATCH }
     }),
     Object.freeze({
         reason: TrackReason.ANOTHER_RECORDING,
@@ -387,8 +536,16 @@ function titleOf(item) {
     return (item && (item.title || item.trackTitle || item.name)) || ''
 }
 
+const aNumber = (value) => Number.isInteger(value) && value > 0
 /** The track number an entry of a source says it has (`trackNumber`), or null. */
-const placeOf = (entry) => (Number.isInteger(entry?.trackNumber) && entry.trackNumber > 0 ? entry.trackNumber : null)
+const placeOf = (entry) => (aNumber(entry?.trackNumber) ? entry.trackNumber : null)
+/**
+ * The track number of a track of the album: the one it carries (`position`), else its place in the
+ * list. The list is not always in album order: the app keeps the tracks of an album by acclaim too,
+ * and asks for the ratings with that list (the second slice of F74: «My Sarah», track 5, was sent
+ * in another place and the tier that reads the number never saw it at 5).
+ */
+const placeOfTrack = (track, index) => (aNumber(track?.position) ? track.position : index + 1)
 
 /**
  * For each track of the album, the entry of the source that is the same track, or null.
@@ -397,14 +554,15 @@ const placeOf = (entry) => (Number.isInteger(entry?.trackNumber) && entry.trackN
  * album, so when two tracks claim one entry the stronger tier wins, then the earlier track; the
  * loser stays with nothing. A source that lists a title twice gives one entry to each track of it.
  *
- * @param {Array<string|Object>} albumTracks - in album order; a text, or { title | trackTitle | name }
+ * @param {Array<string|Object>} albumTracks - a text, or { title | trackTitle | name, position? }; in album
+ *        order when they carry no `position`
  * @param {Array<string|Object>} sourceEntries - a text, or { trackTitle | title | name, trackNumber? }
  * @returns {Array<{ entry: *, index: number, reason: string }|null>} one item per track of the album:
  *          the entry as the source gave it, its index in `sourceEntries`, and the reason of the tier
  */
 export function matchTracks(albumTracks, sourceEntries) {
     const entries = Array.isArray(sourceEntries) ? sourceEntries : []
-    const tracks = (Array.isArray(albumTracks) ? albumTracks : []).map((track, index) => readTitle(titleOf(track), index + 1))
+    const tracks = (Array.isArray(albumTracks) ? albumTracks : []).map((track, index) => readTitle(titleOf(track), placeOfTrack(track, index)))
     const read = entries.map(entry => readTitle(titleOf(entry), placeOf(entry)))
     const matches = tracks.map(() => null)
     const taken = new Set()

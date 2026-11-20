@@ -83,7 +83,6 @@ export const SERVER_KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'server/lib/normalize.js:extractRankingPayload': 34, // no feature yet: reading the AI's answer (the ranking prompt)
     'server/lib/outcome.js:upstreamErrorFrom': 11, // no feature yet: one function at 11 in the answer contract
     'server/lib/scrapers/besteveralbums.js:arrow function': 13, // no feature yet: reading the chart page of BestEverAlbums
-    'server/lib/scrapers/besteveralbums.js:arrow function#2': 11, // no feature yet: reading the chart page of BestEverAlbums
     'server/routes/debug.js:async arrow function': 13, // no feature yet: a debug route, off in production (F59)
     'server/routes/debug.js:async arrow function#2': 24, // no feature yet: a debug route, off in production (F59)
     'server/routes/handlers/ai.js:albumTitlesIn': 13 // no feature yet: reading the AI's list of albums

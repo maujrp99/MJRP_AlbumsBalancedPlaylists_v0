@@ -56,6 +56,22 @@ Quem comparava títulos de faixas, e com quê, antes desta feature:
 
 **Testes.** `test/shared/trackIdentity.test.js` (83), `test/server/trackRatings.test.js`, `test/server/scraperEdition.test.js`, `test/services/albums/trackRatings.test.js`, `test/architecture/trackIdentityRule.test.js`. Dados reais em `test/fixtures/trackIdentity/measuredAlbums.json` e `test/fixtures/besteveralbums/tracks/`.
 
+**A segunda fatia** (`TRACK_IDENTITY_RULE_VERSION = 2`; `reports/evidence/F74/2026-11-20-track-identity-second-measure.md`). O que as páginas mostraram, e o que foi feito:
+
+| O que era | Faixas | O que foi feito |
+|---|---|---|
+| o título e a lista das suas partes depois de «: » (Yes, Crosby, Stills, Nash & Young, Genesis «Supper's Ready») | 4 | degrau `title-with-its-parts`: o mesmo título antes dos dois-pontos, e as partes iguais sem a numeração («I.», «A.»), ou as partes de um lado só (REQ-08) |
+| a fonte lista duas faixas num título («The Cinema Show / Aisle Of Plenty») | 1 | degrau `first-of-titles-listed-together`: a primeira leva a nota, a segunda não (REQ-09) |
+| letras trocadas por asteriscos (Dr. Dre) | 4 | degrau `letters-starred-out`: um asterisco por letra, as outras palavras iguais (REQ-09) |
+| o título é o que o outro traz entre parênteses («Bang a Gong (Get It On)» e «Get It On») | 1 | degrau `title-in-its-brackets`, o mais fraco; duas palavras no mínimo (REQ-09) |
+| só escrita: «Fourth» e «4th», «Five» e «5», «Pts. 2 & 3» e «Pt. Two & Three», «A Song…» e «Song…», «Hangin'» e «Hanging», «a.K.A.» e «/» | 7 | no segundo degrau, em `writtenAlike` (REQ-09) |
+| uma grafia («Midnite» / «Midnight», «Greatdayndamornin'» / «Greatdayindamornin'») | 2 | `KNOWN_WRITINGS` (REQ-09) |
+| o lugar na lista lido como número da faixa («My Sarah», «Do Anything You Want to Do», «Ride On Pony», em produção) | 3 | a regra lê `position` da faixa (`placeOfTrack`); sem ele, o lugar na lista (REQ-10) |
+| o leitor pulava títulos de uma letra («u», «i») e cortava o número de «2:45 AM» | 3 | o raspador: título de uma letra é faixa; a linha que tem o número numa célula própria fica com o título inteiro (`titleWithoutItsNumber`) (REQ-11) |
+| não está na página da fonte | 13 | nada |
+
+Nenhum degrau novo aceita por «um contém o outro»: o de partes exige o título inteiro antes dos dois-pontos; o das faixas listadas juntas exige a primeira inteira; o dos parênteses exige a nota inteira. O degrau do medley não mudou, e um medley não entra no degrau de partes. A versão subiu para 2: as notas guardadas com a versão 1 são pedidas de novo, uma vez.
+
 ## Dependencies
 - Publicação do servidor: o casamento das notas e a escolha da edição acontecem em `server/lib`. Publicar o servidor antes do app.
 - A publicação já leva `shared/` inteiro (`scripts/deploy-server.sh` copia a pasta para `server/_shared_temp`); o arquivo novo entra sem mudança no script.
@@ -80,4 +96,5 @@ Declarações do passo retroativo da via rápida:
 - **O caminho de `/api/generate`** deixou de casar menções por «um contém o outro» e por 40% das palavras: uma menção da IA com o título escrito de um jeito que nenhum degrau reconhece vai para as menções sem faixa.
 - **Até dois pedidos a mais à fonte** quando a primeira página é de outra edição, dentro do prazo do pedido e pela fila educada.
 - **As médias do inventário** só mudam com «Update ratings».
-- **Não visto num navegador nem contra o servidor publicado.**
+- **Segunda fatia:** «F**k» casa com qualquer palavra de mesmas letras à vista e mesmo tamanho; «X (Outro Nome)» casa com uma faixa «Outro Nome» da fonte quando nenhuma faixa do álbum tem esse título. Os dois são degraus fracos, numa distribuição de uma para uma.
+- **Segunda fatia: não vista num navegador nem contra o servidor publicado.** A primeira foi publicada e medida em produção pelo integrador em 2026-11-20.
