@@ -2,6 +2,19 @@ import { BaseModal } from './ui/BaseModal.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { toast } from './Toast.js'
 
+const FORMATS = Object.freeze([
+    ['cd', 'CD'], ['vinyl', 'Vinyl'], ['cassette', 'Cassette'], ['dvd', 'DVD'], ['bluray', 'Blu-ray'], ['digital', 'Digital']
+])
+
+/**
+ * The choices of the format selector. An item with no format (it came from a series, F71) shows
+ * "Not set" until the person chooses one: saving its notes or its price invents no format.
+ */
+function formatOptions(format) {
+    const known = FORMATS.map(([value, label]) => SafeDOM.option({ value, selected: format === value }, label))
+    return format ? known : [SafeDOM.option({ value: '', selected: true }, 'Not set'), ...known]
+}
+
 export class InventoryEditModal {
     /**
      * Open Edit Modal
@@ -14,7 +27,7 @@ export class InventoryEditModal {
         const inventoryId = item.id || album.id
 
         // Form Logic
-        let format = item.format || album.format || 'cd'
+        let format = item.format || album.format || ''
         let currency = item.currency || album.currency || 'BRL'
         let price = item.purchasePrice || album.purchasePrice || null
         let notes = item.notes || album.notes || ''
@@ -32,14 +45,7 @@ export class InventoryEditModal {
             className: 'form-control w-full',
             id: 'edit-format',
             onChange: (e) => format = e.target.value
-        }, [
-            SafeDOM.option({ value: 'cd', selected: format === 'cd' }, 'CD'),
-            SafeDOM.option({ value: 'vinyl', selected: format === 'vinyl' }, 'Vinyl'),
-            SafeDOM.option({ value: 'cassette', selected: format === 'cassette' }, 'Cassette'),
-            SafeDOM.option({ value: 'dvd', selected: format === 'dvd' }, 'DVD'),
-            SafeDOM.option({ value: 'bluray', selected: format === 'bluray' }, 'Blu-ray'),
-            SafeDOM.option({ value: 'digital', selected: format === 'digital' }, 'Digital')
-        ])
+        }, formatOptions(format))
 
         const formatGroup = SafeDOM.div({ className: 'mb-4' }, [
             SafeDOM.label({ className: 'block mb-2 text-sm font-medium text-gray-300', htmlFor: 'edit-format' }, 'Format:'),
@@ -114,7 +120,7 @@ export class InventoryEditModal {
         const handleSave = async () => {
             // Basic validation? None really required besides defaults.
             const updates = {
-                format,
+                format: format || null,
                 currency,
                 purchasePrice: price,
                 notes: notes ? notes.trim() : ''

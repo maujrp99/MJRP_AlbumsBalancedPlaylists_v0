@@ -50,6 +50,8 @@
     -   **Logic**: A wrapper around `SeriesGridRenderer`. Adds generic event delegation for Inventory actions (Click, Context Menu). Handles "Zero State" (Empty Inventory) display.
     -   **Usage today**: no module imports it. The inventory screen is `views/InventoryView.js` with `views/renderers/InventoryGridRenderer.js` and `controllers/InventoryController.js`.
     -   Deleting an album: `InventoryController.handleDelete` calls `inventoryService.removeAlbum` (`services/inventory/`, since F58; the store only holds state); a failure shows "Failed to delete album". The repository also forgets the "already in inventory" answer kept for that album, so it can be added again at once.
+    -   Status, filter and counts (F71): `models/inventoryStatus.js` says what the status of an item is (Owned, Not Owned, Wishlist, from the stored `owned`); `models/inventoryFilter.js` applies the search, the format and the status and gives the three counts of the header. The status filter offers "All", "Owned", "Not Owned", "Wishlist".
+    -   "Add the albums of my series" (F71): a button in the filters row of `InventoryView`. `InventoryController.handleAddSeriesAlbums` reads the series, asks `InventoryService.planSeriesAlbums` (the pure rule is `models/inventoryFromSeries.js`: one album once, by the one identity rule, the Apple Music id or the app's album id), asks the person with `dialogService.confirm`, and writes through `InventoryService.addAlbumsAsNotOwned` -> `InventoryRepository.addBatch`. Items made this way hold what the series query holds (no tracks, no format, no price) and the mark `albumData.metadata.addedFrom: 'series'`.
 
 ## Playlists & History (`playlists/`)
 **Status**: `[ACTIVE]`

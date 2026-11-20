@@ -181,25 +181,35 @@ Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set
 ---
 
 ## 6. Inventory Logic
-**File Context**: `views/InventoryView.js`, `controllers/InventoryController.js`
+**File Context**: `views/InventoryView.js`, `controllers/InventoryController.js`, `models/inventoryStatus.js`, `models/inventoryFilter.js`, `models/inventoryFromSeries.js`
 
 ### 6.1 Logic & Calculations
+*   **Status** (F71): an item is Owned, Not Owned or on the Wishlist. The stored field is `owned` (`true`, `null` or missing, `false`); `models/inventoryStatus.js` is the one place that reads and writes it (`statusOf`, `ownedValueOf`). The card, the filter, the counts, the album window and the toast of a change ask that module.
+*   **Filtering**:
+    1.  **[UI]** Search box, Format select, Status select (`All`, `Owned`, `Not Owned`, `Wishlist`).
+    2.  **[FN]** `handleFilterChange(type, value)` -> `applyFiltersAndSort()` -> `filterInventory(items, filters)` (`models/inventoryFilter.js`). The three filters apply together.
 *   **Stats Calculation**:
     1.  **[FN]** `calculateStats()` runs on every update.
     2.  **[LOGIC]**
-        -   `Total Count`: All items.
-        -   `Owned Value`: Sum of `purchasePrice` WHERE `owned === true`.
-        -   `Wishlist`: WHERE `owned === false`.
-        -   `Unknown`: Nulls ignored.
+        -   `Total Count` ("N albums"): the items in the grid (the three filters).
+        -   `Owned Value`: Sum of `purchasePrice` of the items in the grid whose status is Owned.
+        -   `✓ n Owned`, `n Not Owned`, `♡ n Wishlist`: `statusCountsFor(items, filters)`, the items that pass the search and the format, by status. The status filter is left out, so choosing one status does not turn the other two into zero.
 *   **Currency Toggle**:
     1.  **[UI]** Click Currency Button (USD/BRL).
     2.  **[FN]** `handleCurrencyChange` -> Toggles `viewCurrency` -> Re-runs `formatPrice`.
 
 ### 6.2 Inventory CRUD
 *   **Status Change**:
-    1.  **[UI]** Change Dropdown (Owned/Wishlist).
+    1.  **[UI]** Change Dropdown (Not Owned / ✓ Owned / ♡ Wishlist).
     2.  **[FN]** `handleStatusChange(id, status)`.
-    3.  **[SERVICE]** `inventoryService.updateAlbum(id, { owned: bool })` (since F58; it writes through the repository and then changes the store).
+    3.  **[SERVICE]** `inventoryService.updateAlbum(id, { owned: ownedValueOf(status) })` (since F58; it writes through the repository and then changes the store). The toast is "Moved to Collection", "Moved to Wishlist" or "Marked as Not Owned"; when the write fails, "Failed to update status" and the screen is drawn again from the store.
+*   **Add the albums of my series** (F71):
+    1.  **[UI]** Button `#addSeriesAlbumsBtn` ("Add the albums of my series") in the filters row.
+    2.  **[FN]** `InventoryView.handleAddSeriesAlbums()` -> `InventoryController.handleAddSeriesAlbums({ confirm })`. The button is disabled and says what is being done (`showSeriesAdd`), without a full redraw.
+    3.  **[SERVICE]** `readSeriesOfThePerson()` (`services/inventory/inventoryWiring.js`) reads the series from Firestore; `inventoryService.planSeriesAlbums(series)` reads the inventory and asks `planSeriesAlbums` (`models/inventoryFromSeries.js`) which albums go in. No album is loaded and nothing is asked of Apple Music: the item carries what the series query carries.
+    4.  **[UI]** `dialogService.confirm`: "N albums from your S series will be added as Not Owned. M albums already in your inventory stay as they are." With nothing to add, a toast says so and nothing is written.
+    5.  **[SERVICE]** `inventoryService.addAlbumsAsNotOwned(toAdd, { onProgress })` writes in parts of 100 through `InventoryRepository.addBatch` (one Firestore batch per part), then reads the inventory once.
+    6.  **[UI]** "Added N albums as Not Owned." or, when a part fails, how many went in and how many did not (running the action again adds only the rest).
 *   **Delete**:
     1.  **[UI]** Click Delete Button -> Confirm.
     2.  **[FN]** `InventoryController.handleDelete(id)` calls `inventoryService.removeAlbum(id)` (since F58), which removes the item through `InventoryRepository.removeAlbum` and then from the store's list; the toast is "Album removed from inventory" or, on failure, "Failed to delete album".

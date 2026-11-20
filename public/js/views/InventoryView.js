@@ -5,6 +5,18 @@ import { inventoryStore } from '../stores/inventory.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
+import { InventoryStatus, STATUS_FILTER_OPTIONS, statusCountLabel } from '../models/inventoryStatus.js'
+
+/** The action that puts every album of the person's series in the inventory (F71). */
+const ADD_SERIES_ALBUMS_ID = 'addSeriesAlbumsBtn'
+const ADD_SERIES_ALBUMS_LABEL = 'Add the albums of my series'
+
+/** The colour of each count of the header. */
+const COUNT_BADGE = Object.freeze({
+  [InventoryStatus.OWNED]: 'badge badge-success text-xs',
+  [InventoryStatus.NOT_OWNED]: 'badge badge-neutral text-xs',
+  [InventoryStatus.WISHLIST]: 'badge badge-neutral text-xs'
+})
 
 export class InventoryView extends BaseView {
   constructor() {
@@ -35,56 +47,11 @@ export class InventoryView extends BaseView {
     const isUpdate = input && Array.isArray(input.filteredAlbums)
     const state = isUpdate ? input : this.controller.state
 
-    // Guard: State might not be ready on initial load if Store is empty
-    if (!state.filteredAlbums) {
-      // Try to use Controller defaults
-    }
-
     const container = SafeDOM.div({ className: 'inventory-view container pb-20' })
-
-    // Header Structure
-    const stats = state.stats || {}
-
-    // Header Title Row
-    const titleRow = SafeDOM.div({ className: 'header-title-row mb-6 flex flex-col md:flex-row items-start md:items-center gap-4 justify-between' })
-
-    const h1 = SafeDOM.h1({ className: 'text-2xl md:text-4xl font-bold mb-0 flex items-center gap-3' }) // Removed mb-3, handled by gap
-    h1.appendChild(SafeDOM.fromHTML(getIcon('Archive', 'w-8 h-8 text-accent-primary')))
-    h1.appendChild(SafeDOM.text(' My Collection'))
-
-    const statsRow = SafeDOM.div({ className: 'stats-row flex flex-wrap items-center gap-4 text-sm md:text-lg w-full md:w-auto' })
-
-    statsRow.appendChild(SafeDOM.span({ className: 'text-accent-primary font-semibold' }, `${stats.totalCount || 0} albums`))
-
-    const badges = SafeDOM.div({ className: 'flex gap-2' }, [
-      SafeDOM.span({ className: 'badge badge-success text-xs' }, `✓ ${stats.ownedCount || 0} Owned`),
-      SafeDOM.span({ className: 'badge badge-neutral text-xs' }, `${stats.wishlistCount || 0} Wishlist`)
-    ])
-    statsRow.appendChild(badges)
-
-    const valueSection = SafeDOM.div({ className: 'flex items-center gap-3 ml-0 md:ml-auto mt-2 md:mt-0 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 border-white/10 pt-2 md:pt-0' })
-    valueSection.appendChild(SafeDOM.span({ className: 'text-sm text-gray-400' }, 'Total Owned:'))
-
-    const valueText = state.viewCurrency === 'USD'
-      ? InventoryGridRenderer.formatPrice(stats.ownedValueUSD, 'USD')
-      : InventoryGridRenderer.formatPrice(stats.ownedValueBRL, 'BRL')
-
-    valueSection.appendChild(SafeDOM.span({ className: 'text-lg font-bold text-accent-primary' }, valueText))
-
-    valueSection.appendChild(SafeDOM.button({
-      id: 'currencySelector',
-      className: 'text-xs px-2 py-1 rounded bg-surface-light hover:bg-surface-lighter border border-surface-light text-gray-300 hover:text-white transition-colors uppercase',
-      title: 'Toggle Currency',
-      onClick: () => this.controller.handleCurrencyChange() // Direct binding
-    }, state.viewCurrency))
-
-    statsRow.appendChild(valueSection)
-    titleRow.appendChild(h1)
-    titleRow.appendChild(statsRow)
 
     const header = SafeDOM.header({ className: 'view-header mb-8 fade-in' }, [
       SafeDOM.fromHTML(Breadcrumb.render('/inventory')),
-      titleRow,
+      this.renderTitleRow(state),
       this.renderFilters(state)
     ])
 
@@ -107,6 +74,90 @@ export class InventoryView extends BaseView {
     }
 
     return container
+  }
+
+  /** "My Collection", the counts of what the filters let through, and the value of what is owned. */
+  renderTitleRow(state) {
+    const stats = state.stats || {}
+    const titleRow = SafeDOM.div({ className: 'header-title-row mb-6 flex flex-col md:flex-row items-start md:items-center gap-4 justify-between' })
+
+    const h1 = SafeDOM.h1({ className: 'text-2xl md:text-4xl font-bold mb-0 flex items-center gap-3' })
+    h1.appendChild(SafeDOM.fromHTML(getIcon('Archive', 'w-8 h-8 text-accent-primary')))
+    h1.appendChild(SafeDOM.text(' My Collection'))
+
+    const statsRow = SafeDOM.div({ className: 'stats-row flex flex-wrap items-center gap-4 text-sm md:text-lg w-full md:w-auto' })
+    statsRow.appendChild(SafeDOM.span({ className: 'text-accent-primary font-semibold' }, `${stats.totalCount || 0} ${stats.totalCount === 1 ? 'album' : 'albums'}`))
+    statsRow.appendChild(this.renderStatusCounts(stats))
+    statsRow.appendChild(this.renderOwnedValue(state, stats))
+
+    titleRow.appendChild(h1)
+    titleRow.appendChild(statsRow)
+    return titleRow
+  }
+
+  /** "✓ n Owned", "n Not Owned", "♡ n Wishlist" (models/inventoryStatus.js). */
+  renderStatusCounts(stats) {
+    const counts = {
+      [InventoryStatus.OWNED]: stats.ownedCount,
+      [InventoryStatus.NOT_OWNED]: stats.notOwnedCount,
+      [InventoryStatus.WISHLIST]: stats.wishlistCount
+    }
+    return SafeDOM.div({ className: 'flex flex-wrap gap-2' }, Object.keys(counts).map(status =>
+      SafeDOM.span({ className: COUNT_BADGE[status], dataset: { statusCount: status } }, statusCountLabel(status, counts[status] || 0))))
+  }
+
+  renderOwnedValue(state, stats) {
+    const valueSection = SafeDOM.div({ className: 'flex items-center gap-3 ml-0 md:ml-auto mt-2 md:mt-0 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 border-white/10 pt-2 md:pt-0' })
+    valueSection.appendChild(SafeDOM.span({ className: 'text-sm text-gray-400' }, 'Total Owned:'))
+
+    const valueText = state.viewCurrency === 'USD'
+      ? InventoryGridRenderer.formatPrice(stats.ownedValueUSD, 'USD')
+      : InventoryGridRenderer.formatPrice(stats.ownedValueBRL, 'BRL')
+    valueSection.appendChild(SafeDOM.span({ className: 'text-lg font-bold text-accent-primary' }, valueText))
+
+    valueSection.appendChild(SafeDOM.button({
+      id: 'currencySelector',
+      className: 'text-xs px-2 py-1 rounded bg-surface-light hover:bg-surface-lighter border border-surface-light text-gray-300 hover:text-white transition-colors uppercase',
+      title: 'Toggle Currency',
+      onClick: () => this.controller.handleCurrencyChange() // Direct binding
+    }, state.viewCurrency))
+    return valueSection
+  }
+
+  /**
+   * The button of "Add the albums of my series": a real button, reached by the keyboard. While
+   * the action runs it is disabled and says what is being done.
+   */
+  renderAddSeriesAlbums(seriesAdd = {}) {
+    const button = SafeDOM.button({
+      type: 'button',
+      id: ADD_SERIES_ALBUMS_ID,
+      className: 'btn btn-secondary flex items-center gap-2 whitespace-nowrap',
+      title: 'Put every album of your series in the inventory, as Not Owned',
+      onClick: () => this.handleAddSeriesAlbums()
+    })
+    button.appendChild(SafeDOM.fromHTML(getIcon('Plus', 'w-4 h-4')))
+    button.appendChild(SafeDOM.span({ dataset: { role: 'label' } }, ADD_SERIES_ALBUMS_LABEL))
+    this.applySeriesAdd(button, seriesAdd)
+    return button
+  }
+
+  applySeriesAdd(button, { busy = false, text = null } = {}) {
+    button.disabled = busy
+    button.setAttribute('aria-busy', String(busy))
+    const label = button.querySelector('[data-role="label"]')
+    if (label) label.textContent = text || ADD_SERIES_ALBUMS_LABEL
+  }
+
+  /** The controller says what the action is doing: the button changes, the screen is not drawn again. */
+  showSeriesAdd(seriesAdd) {
+    const button = document.getElementById(ADD_SERIES_ALBUMS_ID)
+    if (button) this.applySeriesAdd(button, seriesAdd)
+  }
+
+  async handleAddSeriesAlbums() {
+    const { dialogService } = await import('../services/DialogService.js')
+    await this.controller.handleAddSeriesAlbums({ confirm: (options) => dialogService.confirm(options) })
   }
 
   renderFilters(state) {
@@ -141,11 +192,8 @@ export class InventoryView extends BaseView {
 
     // Ownership Filter
     const ownershipDiv = SafeDOM.div({ className: 'filter-dropdown relative' })
-    const ownershipSelect = SafeDOM.select({ id: 'ownershipFilter', className: 'form-control appearance-none cursor-pointer pr-8' }, [
-      SafeDOM.option({ value: 'all', selected: filters.ownership === 'all' }, 'All Status'),
-      SafeDOM.option({ value: 'owned', selected: filters.ownership === 'owned' }, '✓ Owned Only'),
-      SafeDOM.option({ value: 'wishlist', selected: filters.ownership === 'wishlist' }, 'Wishlist Only')
-    ])
+    const ownershipSelect = SafeDOM.select({ id: 'ownershipFilter', className: 'form-control appearance-none cursor-pointer pr-8', 'aria-label': 'Status' },
+      STATUS_FILTER_OPTIONS.map(({ value, label }) => SafeDOM.option({ value, selected: filters.ownership === value }, label)))
     ownershipDiv.appendChild(ownershipSelect)
     ownershipDiv.appendChild(SafeDOM.span({ className: 'absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400' }, [SafeDOM.fromHTML(getIcon('ChevronDown', 'w-4 h-4'))]))
     row.appendChild(ownershipDiv)
@@ -158,6 +206,9 @@ export class InventoryView extends BaseView {
     })
     viewBtn.appendChild(SafeDOM.fromHTML(getIcon(viewMode === 'grid' ? 'Grid' : 'List', 'w-5 h-5')))
     row.appendChild(viewBtn)
+
+    // Add the albums of my series (F71)
+    row.appendChild(this.renderAddSeriesAlbums(state.seriesAdd))
 
     container.appendChild(row)
     return container

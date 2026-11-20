@@ -3,9 +3,33 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:21] session — F71: provada no navegador e executada na conta do MJRP; ordem do inventário por artista e título
+
+**Branch:** feat/f71-inventory-holds-every-album-of-my-series
+
+- A ação «Add the albums of my series» rodou na conta do MJRP, a pedido dele: 23 álbuns antes (6 Owned, 16 Not Owned, 1 Wishlist), 188 acrescentados como Not Owned, 211 depois (6 / 204 / 1). Os 23 de antes ficaram iguais; a segunda execução não gravou nada. Prova: `reports/evidence/F71-inventory-holds-every-album-of-my-series/2026-11-19-browser-proof-and-owner-account-run.md`.
+- Decidido pelo agente — revisável: a grade do inventário ordena por artista e depois por título (`public/js/models/inventorySort.js`); antes ordenava por um campo que os itens não têm. «1 album» no singular.
+- O MJRP escolheu a opção A para a S-56 (2026-11-19): «opção A e to achando que o AVG rank nao faz sentido pra mim, poderia trocar por AVG Rating tb». O «Avg Rank» sai também do cartão do álbum e dá lugar ao «Avg Rating». É a segunda fatia da F71.
+
+## [2026-11-19 23:13] session — F71: o manual diz o inventário como ficou
+
+Branch: `feat/f71-inventory-holds-every-album-of-my-series`, depois do commit `c1f2821`.
+
+As frases do manual que deixaram de ser verdade com a F71, corrigidas onde estavam, sem arquivo novo: `21_Dynamic_UI_Mapping.md` (seção 6: a situação por `models/inventoryStatus.js`, o filtro, as três contagens, a ação «Add the albums of my series» passo a passo), `14_Frontend_Components_Feature_Map.md` (inventário), `09_Frontend_Views.md` e `10_Frontend_Renderers.md` (cabeçalho, filtros, botão, cartão sem formato e sem preço), `11_Frontend_Components_Root.md` (a janela do álbum mostra o que é do item; «Not set» na janela de editar), `07_Frontend_Data_Infra.md` (`planSeriesAlbums`, `addAlbumsAsNotOwned`, `addBatch`, `createMany`) e `08_Frontend_Models.md` (os três modelos novos; `inventoryFromSeries.js` entre os que perguntam à regra de identidade). O commit do código também registrou, pelo gancho de status, o nó S-54 em «In progress».
+
 ## [2026-11-19 23:13] session — F45 a F70: tarefas provadas marcadas e declarações do passo retroativo; nenhuma feature fechada ainda, salvo a F53
 
 Passada de limpeza dos `tasks.md` das F45 a F70 (menos a F66; F71 e F72 intocadas), sem tocar em código. Cada linha aberta foi decidida com prova: as provas do integrador com arquivo em `reports/evidence/` ou entrada do log foram marcadas (`rounds:: 1`, caminho da prova na linha; o que a prova diz «não visto» não foi mexido); as linhas de documentação foram marcadas quando conferidas no repositório; a conferência cruzada da spec e do plano foi feita por script. O que só diz «o MJRP julga ou aceita» saiu da lista de tarefas e foi para `## For the owner at UAT`, no fim de cada `tasks.md`. Nos `plan.md` das 19 features que fechariam, o `## Documents Consulted` ganhou a declaração de cada documento («atualizado» com o commit, ou «sem mudança» com o motivo), conferida no histórico de commits que citam a feature. Só a F53 passa no `retro_step_check` e fica `Done`. As outras 18 seguem `In Progress` com uma linha aberta (o passo retroativo): faltam «Prototype: none» dito pelo MJRP e o ok visual dele (ou o relatório de reconferência visual, nas features da trilha Agente). Também seguem abertas por falta real: F49 (clique do botão sem prova), F51 (protótipo fora do repositório), F52, F62, F64 e F69. Nenhum `Accepted`; `uat.md`, `MEMORY.md` e `ROADMAP.md` não foram tocados.
+
+## [2026-11-19 23:12] session — F71 no ramo: uma regra para a situação do item, o filtro Owned / Not Owned / Wishlist e a ação «Add the albums of my series»
+
+Branch: `feat/f71-inventory-holds-every-album-of-my-series` (da `main` em `2722d1d`). Auxiliar sem navegador e sem conta: nada rodou contra dados reais; a prova na tela e a execução na conta do MJRP são a TASK-10, do integrador.
+
+**O que entrou.** (1) `models/inventoryStatus.js`: a situação de um item (Owned, Not Owned, Wishlist) dita num lugar só, sobre o campo `owned` de sempre (`true`, `null`, `false`), sem migração; o cartão, o filtro, os totais, a janela do álbum e o aviso da troca perguntam a ele. (2) O filtro de situação com «All», «Owned», «Not Owned», «Wishlist» e o cabeçalho com as três contagens (`models/inventoryFilter.js`). (3) A ação «Add the albums of my series», um botão na barra de filtros: lê as séries do banco, planeja contra o inventário do banco (`models/inventoryFromSeries.js`, função pura), pergunta com `dialogService.confirm` e grava pelo `InventoryService` e pelo `InventoryRepository.addBatch`, em partes de 100 (uma gravação por parte, `BaseRepository.createMany`), com o botão ocupado, o progresso e o fim dito como foi.
+
+**Decisões do agente — revisáveis (2026-11-19), todas nas Open Questions do `spec.md` da F71.** A regra única da origem dos dados: o item feito pela ação leva o que a consulta da série leva (artista, título, ano, capa, id do Apple Music) e mais nada, tenha a tela de álbuns sido aberta ou não; nenhum álbum é carregado. «O mesmo álbum»: o mesmo id do Apple Music, o mesmo id de álbum do app, ou o primeiro nível da regra de identidade (`compareAlbumIdentity(...).same`); a mesma resposta passa a valer no «Add to Inventory» do cartão de um álbum. As três contagens do cabeçalho ignoram o filtro de situação. O cartão sem preço não mostra «$0.00» e o item sem formato não mostra «Unknown». A janela do álbum mostra a situação do item (dizia «OWNED» para todos) e nenhuma fora do inventário. Criar ou editar uma série **não** escreve no inventário: a ação é repetível, e o automático fica como pergunta para o MJRP.
+
+**Dados.** Suíte: 2326 testes em 191 arquivos (eram 2219), build e lint limpos. Saíram da lista de complexidade `InventoryRepository.addAlbum` e `InventoryView.render`. `shared/albumIdentity.js` não mudou (versão 2); `models/inventoryFromSeries.js` entrou nos `CALL_SITES` do teste da regra. O doctor segue vermelho pelos mesmos cerca de 520 links de documentos arquivados; nenhum erro novo.
 
 ## [2026-11-19 23:11] decision — MJRP pede, na F71: o inventário mostra e ordena por «Avg Rank» (BEA) e «Avg Pop» (Spotify) (S-56)
 
