@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:54] session — fechamento da madrugada: F75 e F76 em produção, documentos juntos, `## Now` atualizado
+**Branch:** main
+Decisões da madrugada, todas «decidido pelo agente — revisável»: (1) F76 sem protótipo julgado, pelas palavras de liberdade do MJRP; o juízo dele é no app em produção. (2) «Celular» é até 767 px; nada age acima disso. (3) Telas em Opus 5.5 esforço high, para poupar o Fable (82% às 02:30). (4) F75: sem as configurações de vendedor, o valor é o menor preço à venda, dito na tela; a conta do Discogs não foi tocada. (5) Laranja só na ação principal e no estado ligado; segmento escolhido em superfície clara; títulos de linha em Syne. (6) UAT-226 fica para o MJRP: trocar a edição mudaria o que o número significa.
+
 ## [2026-11-20 03:56] session — F76 documentação: plan, spec e tasks fechados
 **Branch:** feat/f76-mobile-docs
 O `plan.md` nomeia os módulos de cada tela com o REQ que servem e lista o que nunca foi verificado (iPhone de verdade, gravar pelo celular, VoiceOver, a trava de rolagem N22); o `spec.md` liga os estados aos block IDs do info-arch e escreve os critérios de sucesso com as medidas.
