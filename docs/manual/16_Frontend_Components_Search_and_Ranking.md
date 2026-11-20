@@ -48,6 +48,13 @@ The ranking system strictly follows the Container/Presenter pattern.
 *   **Evidence Tooltips (Sprint 23)**: Hovering the star rating reveals full provenance (e.g., `BestEverAlbums: 90 | Spotify: 80`).
 
 
+### No celular (meu ranking)
+Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
+
+*   **Janela própria.** `UserRankModal` desenha o celular por `components/ranking/rankWindowPhone.js`: barra com «‹ Back», «My ranking» e «↶ Reset»; faixas com o título inteiro; «Save ranking» sempre à vista no pé.
+*   **Para mover uma faixa:** tocar nela e usar «Up», «Down» ou «Move to…» (uma folha com os números), e «Done» para soltar; ou arrastar pela alça. Um leitor de tela ouve a posição nova.
+*   **Reset e sair.** «Reset» tem «Undo» por 5 segundos. «Back» com a ordem mudada e não salva abre a folha «Discard changes?» («Keep editing» ou «Discard»).
+
 ### Data Flow Diagram
 
 ```mermaid

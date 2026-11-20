@@ -20,4 +20,4 @@
 - [ ] TASK-09 o juízo do MJRP no iPhone dele, em produção · implements:: REQ-03 · waiting:: human — o desenho foi decidido pelo agente, sem protótipo julgado · action:: usar o app no iPhone e dizer o que fica e o que muda
 
 ## Documentation
-- [ ] `docs/specs/behavior.md`, `docs/specs/info-arch.md`, `docs/specs/arch.md` e o manual
+- [x] `docs/specs/behavior.md`, `docs/specs/info-arch.md`, `docs/specs/arch.md` e o manual

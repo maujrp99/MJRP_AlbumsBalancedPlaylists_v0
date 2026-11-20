@@ -7,6 +7,8 @@
 
 Este arquivo nasceu com a primeira tela desenhada pela skill de UI neste projeto (F75). **Ele descreve inteira só a tela do inventário com valor estimado.** As outras telas do app existem em produção e estão descritas, por comportamento, em `docs/specs/behavior.md`; aqui elas aparecem só no Sitemap, para situar. Cada tela ganha a sua seção quando for desenhada ou redesenhada.
 
+Desde a F76 o arquivo descreve também **o celular** (até 767 px), em duas seções: «O celular (F76)» e «Estados no celular». O que está escrito fora delas vale para o computador.
+
 ## Sitemap
 
 - **Home** (`/home`): criar uma série a partir de um artista ou de uma lista colada
@@ -36,6 +38,10 @@ Este arquivo nasceu com a primeira tela desenhada pela skill de UI neste projeto
 | ler os valores de novo | «Update values» | barra de filtros |
 | os links das lojas | «Where to buy» | janela do álbum |
 | o que a pessoa pagou | «Purchase price» (já existe na janela de edição) | janela de edição |
+| filtros e ordem no celular | «Filters» (com «· 2 on» quando há filtros ligados) | Albums e Playlists gravadas (folha) |
+| ver o resto da lista no celular | «Show 50 more» | fim da lista do Inventário |
+| criar a série no celular | «Create series» | barra de ação da Home |
+| misturar no celular | «Blend it!» | barra de ação do Blend |
 
 ## Busca
 
@@ -43,7 +49,7 @@ O inventário tem busca por texto no próprio inventário (`#inventorySearch`), 
 
 ## Hierarquia de navegação
 
-A barra do topo leva a cada nó do Sitemap. A janela do álbum abre sobre o inventário e fecha com «Close», com o ✕ ou com Esc, voltando ao mesmo ponto da lista.
+A barra do topo leva a cada nó do Sitemap. A janela do álbum abre sobre o inventário e fecha com «Close», com o ✕ ou com Esc, voltando ao mesmo ponto da lista. No celular a navegação é outra: ver «Navegação no celular».
 
 ## Page Templates
 
@@ -67,6 +73,7 @@ Cabeçalho do álbum (capa, título, artista, status, formato); «Estimated valu
 | Template | Épico |
 |---|---|
 | Inventário · Janela do álbum do inventário | EP-07 (inventário de álbuns) |
+| O celular: moldura, Albums, janela do álbum, ranking, Playlists, Home, Blend, Inventário | EP-06 (usar o app no celular), estória S-58 |
 
 ## Matriz de operações
 
@@ -104,6 +111,134 @@ Cabeçalho do álbum (capa, título, artista, status, formato); «Estimated valu
 - **Filtrado por status.** Clicar numa contagem do topo («✓ 22 Owned», «182 Not Owned», «♡ 7 Wishlist») mostra só os álbuns daquele status e marca o botão; clicar de novo mostra todos. ^inventory-filtered-by-status-count
 
 Estados que o protótipo não mostrava e que o texto acima passou a descrever (escritos pelo agente em 2026-11-20, à espera do julgamento do MJRP): a fonte desligada, o câmbio que não chega, a rodada que termina com falhas ou para, a edição sem sugestão de preço, a leitura que falha (o Discogs não respondeu, o limite foi atingido, o token foi recusado) e o valor escrito que não vale. No rodapé do app, com a fonte ligada: «This application uses Discogs' API but is not affiliated with, sponsored or endorsed by Discogs. 'Discogs' is a trademark of Zink Media, LLC.». ^inventory-value-states-added
+
+## O celular (F76)
+
+«Celular» é a tela de até 767 px de largura. O aparelho de referência é o iPhone 15 Pro (393x852 px). De 768 px para cima o app é o de sempre: nada abaixo muda o desenho do computador. Tudo o que o celular mostra foi decidido pelo agente e espera o juízo do MJRP no iPhone (TASK-09). Fonte: `docs/specs/features/F76-mobile-redesign/screens/` e `mobile-kit.md`; as medidas estão em `docs/specs/design-system.md` § Celular.
+
+### Navegação no celular
+
+- **Barra do topo** (48 px, fixa): o logotipo como enfeite, o nome da tela e um botão só: a inicial de quem está com conta, ou o ícone de menu («Menu and account»). O nome sai do endereço; uma série aberta dá o nome dela. A barra de computador e o rodapé ficam na página e são escondidos no celular.
+- **Barra de baixo** (56 px, fixa, com a área segura): cinco destinos, cada um com ícone e rótulo; o atual é marcado em laranja e com `aria-current="page"`. Tocar no atual leva ao topo da tela.
+
+| Destino | Endereço que abre | Fica marcado também em |
+|---|---|---|
+| Home | `/home` | `/home` |
+| Albums | `/albums` | `/albums`, `/album-series`, `/series` |
+| Blend | `/blend` | `/blend` |
+| Playlists | `/saved-playlists` | `/saved-playlists`, `/playlist-series`, `/playlists` |
+| Inventory | `/inventory` | `/inventory` |
+
+- **Nome na barra do topo:** Home, Albums, Blend, «New Playlists» (`/playlists`), «Edit Playlists» (`/playlists/edit`), Playlists (`/saved-playlists`), Inventory; as telas «em breve» dizem «Series by Artist», «Series by Genre» e «Series by Track».
+- **Menu** (folha de baixo, aberta pelo botão da barra do topo): a conta (ou «Sign In»); «New playlists» (as recém-geradas); «Series by artist», «Series by genre» e «Series by track», cada uma com «Soon»; a ligação com o Spotify; «Clear album cache», que pede confirmação («Clear the album cache?»); «Sign Out».
+- **Voltar ao topo** («Back to top»): botão redondo de 44 px que aparece depois de duas telas de rolagem e some enquanto há janela aberta.
+- **A gaveta ☰ e a barra do computador** só valem de 768 px para cima.
+
+### As janelas no celular
+
+- **Folha de baixo** (escolha curta, filtros, menu de ações, confirmação, entrar, exportar para o Spotify): alça, fecha por toque fora, arrastando para baixo, por Esc ou pelo botão de fechar de 44 px.
+- **Folha de tela cheia** (ler ou editar: o álbum, o ranking, a edição da série e a do item do inventário): título inteiro, fechar sempre à vista, o corpo é a única parte que rola.
+- **A página de trás fica presa** enquanto houver janela aberta, e volta ao mesmo lugar quando a última fecha.
+
+### O que cada tela mostra no celular
+
+**Albums** (`/albums`, `/albums?seriesId=…`), de cima para baixo: o cabeçalho da série (só numa série: nome inteiro, «⋯» e «Blend your Albums»); a busca com o botão «Filters» (com quantos filtros estão ligados) e as fichas dos filtros ligados, com «Clear all»; o pager de cima, uma linha; cada série com o cabeçalho preso sob a barra do topo; os álbuns em grade de duas colunas (capa, título, «artista · ano», selos, «⋯») ou em lista (uma linha por álbum); «Load N more albums»; o pager de baixo («Page n of m», «Series per page», Pages/Scroll).
+- Abre como folha: **Filters** (View: Grid ou List; Sort series by; Series; Artist; Year; Source; «Reload albums from the sources»; «Clear filters» e «Show albums»), a **folha do álbum** (View album and tracks, Rank the tracks ou Edit my ranking, Add to inventory, Fetch the details again, Open in Spotify, See on BestEverAlbums, «Remove from this series») e a **folha da série** («Edit series», «Delete series»). Tocar no álbum abre a janela do álbum.
+
+**Janela do álbum** (de Albums e do Inventário), tela cheia, uma rolagem só: a barra presa (o título aparece nela quando o do cabeçalho sai da vista; fechar à direita); o cabeçalho com a capa de 112 px, o título inteiro, o artista, o ano e o formato; as três fontes num controle de três rótulos curtos, «Original», «BEA» e «Spotify»; as faixas, cada uma com número, título, artista da faixa quando difere, as referências («BEA #4», «Spotify 61%») e a duração. Aberta pelo Inventário, antes das faixas vêm as notas, o valor e «Where to buy», cada um numa linha (o valor abre a seção inteira).
+
+**Meu ranking** (tela cheia): a barra («‹ Back», «My ranking», «↶ Reset»); o álbum, o artista e a dica «Tap a track to move it with the buttons below, or drag it by its handle.»; as faixas (posição, título inteiro, «BEA #4 · Spotify #3 · 5:12», alça de arrastar); no pé, «Save ranking» sempre à vista e, com uma faixa escolhida, «Up», «Down», «Move to…» e «Done».
+- Abre como folha: **«Move to…»** (os números de 1 a n) e **«Discard changes?»** (de baixo).
+
+**Playlists recém-geradas** (`/playlists`): o nome do lote com Undo e Redo; as fichas, uma por playlist («n · Nome», «14 tracks · 58 min»); o cabeçalho da playlist aberta com o «⋯»; as faixas (posição que arrasta, título, artista · álbum, duração, «⋯»); a barra de ação com «Export» e «Save»; o painel «Reconfigure your Music Playlist Blend», fora da página enquanto fechado.
+- Abre como folha: **faixa** (Move up, Move down, Move to the top, Move to the end, «Move to another playlist», «Remove from this playlist»), **playlist** (Rename, Reconfigure and regenerate, «Delete this playlist», que pede confirmação) e **Export** (Export to Spotify, Export to Apple Music, Download JSON).
+
+**Playlists gravadas** (`/saved-playlists`): a busca com «Filters»; as fichas dos filtros ligados; a lista de séries, cada uma com as capas em cascata, o nome, «n batches · n playlists» e o «⋯», fechada por padrão; abertas, os lotes (nome legível, fatos, «⋯»); aberto o lote, as playlists (nome, «n tracks · duração»).
+- Abre como folha: **Filters** (a mesma de Albums, com «Show series»), **série** (Add playlists, Open the album series, «Delete all playlists of this series»), **lote** (Edit batch, «Delete batch») e a **janela da playlist** com as faixas.
+
+**Home** (`/home`): o campo do nome da série; o artista (Visual ou Bulk Paste), a busca e «Scan»; os seis filtros de tipo em duas colunas; a grade de capas em duas colunas; a barra de ação com as capas escolhidas, «N albums chosen» e «Create series».
+- Abre como folha: **os escolhidos** (o nome da série, uma linha por álbum com ↑ ↓ ✕, «Create series») e, na edição de uma série, a janela de tela cheia com o nome, a lista dos álbuns e o seletor de álbuns, e «Cancel» e «Save Changes» no pé.
+
+**Blend** (`/blend`): o título e a faixa dos quatro passos; o passo 1 com «Blend your Music by» e uma linha da série escolhida; as receitas em uma coluna; a duração; a barra de ação com a nota e «Blend it!».
+- Abre como folha: **«Choose a series»** (tela cheia, com a busca «Search series»; um toque escolhe e fecha).
+
+**Inventory** (`/inventory`): «N albums» e as três contagens de status como botões; os totais em duas linhas, a moeda e «Data provided by Discogs.»; os avisos dos valores; a barra presa (busca, «A–Z», «Filters», «⋯»); as linhas de 50 em 50 (capa, título, artista, valor com a origem, status, as duas médias, «⋯»); no fim, «Showing 50 of 211» e «Show 50 more».
+- Abre como folha: **Status**, **«⋯» do álbum** (Open album, Edit, o valor, «Where to buy», «Remove from inventory»), **«Filters and order»**, **«Collection actions»**, **a folha do salto** («Jump to an artist» ou «Jump to a position») e **os valores** («About the values» ou «Why lowest asking prices?»); a edição do item é janela de tela cheia.
+
+## Estados no celular
+
+### Navegação
+
+- **Moldura do celular.** Barra do topo com o nome da tela, barra de baixo com os cinco destinos e o atual marcado; nenhuma delas existe de 768 px para cima. ^phone-shell-bars
+- **Menu aberto.** Folha de baixo «Menu» com a conta, «New playlists», os três «Soon», o Spotify, «Clear album cache» e «Sign Out» (este só com conta). «Clear album cache» abre a pergunta «Clear the album cache?» antes de limpar. ^phone-menu-open
+- **Voltar ao topo.** Depois de duas telas de rolagem aparece «Back to top»; fica escondido com janela aberta. ^phone-back-to-top
+
+### Albums
+
+- **Albums no celular.** Busca, «Filters» e a grade de duas colunas; o primeiro álbum aparece acima da dobra (a capa termina em 436 px a 393x852). ^albums-phone-default
+- **Folha de filtros aberta.** «Filters» (ou «Filters · 2 on»), com «Clear filters» e «Show albums» no pé; a folha segue as mudanças enquanto está aberta. ^albums-phone-filters-open
+- **Com filtros ligados.** O botão «Filters» mostra quantos estão ligados; cada filtro vira uma ficha («Artist: Rush ✕») e, com dois ou mais, aparece «Clear all». ^albums-phone-filters-on
+- **Em lista.** Uma linha por álbum: capa de 56 px, título, «artista · ano», selos e «⋯»; sem a tabela de faixas, que está na janela do álbum. ^albums-phone-list-view
+- **Folha do álbum aberta.** Título do álbum e as ações com nome; «Remove from this series» por último, em vermelho, separado, e pede confirmação. ^albums-phone-album-sheet-open
+- **Folha da série aberta.** «Edit series» e, em vermelho, «Delete series», que pede confirmação. ^albums-phone-series-sheet-open
+- **Carregando.** Esqueleto da série em duas colunas. ^albums-phone-loading
+- **Biblioteca vazia.** Ícone, uma frase e um botão, «Go to Home». ^albums-phone-empty
+- **Série que falhou.** Aviso com «Try again». ^albums-phone-series-failed
+- **Nenhum álbum nos filtros.** A frase do pager diz que nada combina; a lista fica vazia. ^albums-phone-no-match
+
+### Janela do álbum e ranking
+
+- **Janela do álbum no celular.** Tela cheia: capa de 112 px, título inteiro, as três fontes e as faixas; 8 faixas inteiras à vista a 393x852. ^album-window-phone-default
+- **Janela rolada.** A barra fica opaca com o título do álbum e o fio de baixo. ^album-window-phone-scrolled
+- **Janela aberta pelo Inventário.** O valor vira uma linha («Estimated value», «≈ $30.75 Discogs») que abre a seção inteira; «Where to buy» vira uma linha de três lojas. ^album-window-phone-inventory
+- **Ranking no celular.** Barra, faixas com o título em linha própria, «Save ranking» sempre à vista; nenhuma faixa escolhida. ^ranking-phone-default
+- **Faixa escolhida.** Anel laranja na faixa; no pé, «Up» (apagado na primeira), «Down» (apagado na última), «Move to…» e «Done». Um leitor de tela ouve «Money is now number 3». ^ranking-phone-track-chosen
+- **«Move to…» aberta.** Folha de baixo com os números de 1 a n; o lugar atual vem marcado e apagado. ^ranking-phone-move-to-open
+- **Depois de «Reset».** O aviso «Back to the order of the album.» com «Undo» por 5 s. ^ranking-phone-reset-undo
+- **«Discard changes?».** Com a ordem mudada e não salva, «Back» ou Esc abrem a folha «Your new order has not been saved.» com «Keep editing» e «Discard». Sem mudança, sai direto. ^ranking-phone-discard-open
+- **Ranking gravado.** O aviso «Ranking saved!» e a janela fecha em meio segundo. ^ranking-phone-saved
+
+### Playlists
+
+- **Playlists novas no celular.** Nome do lote com Undo e Redo, fichas, uma playlist aberta por vez, faixas e a barra de ação «Export» e «Save». ^playlists-phone-default
+- **Sem playlists.** O estado vazio de sempre, que leva ao Blend; sem fichas e sem barra de ação. ^playlists-phone-empty
+- **Folha da faixa aberta.** As quatro formas de mover, «Move to another playlist» e «Remove from this playlist» em vermelho. ^playlists-phone-track-sheet-open
+- **Faixa removida ou movida.** Aviso de baixo «Removed "…" · Undo» (ou «Moved "…" to number 2 · Undo»), por 6 s, acima da barra de ação; a linha onde a faixa caiu acende por 1,2 s. ^playlists-phone-track-removed
+- **Folha da playlist aberta.** «Rename», «Reconfigure and regenerate» e «Delete this playlist», que pede confirmação. ^playlists-phone-playlist-sheet-open
+- **Folha de exportar aberta.** «Export to Spotify», «Export to Apple Music» e «Download JSON». ^playlists-phone-export-open
+- **Gravadas no celular.** Busca com «Filters», séries fechadas por padrão, cada uma com o resumo na linha. ^saved-playlists-phone-default
+- **Folha de filtros das gravadas.** A mesma de Albums, com «Show series». ^saved-playlists-phone-filters-open
+- **Série aberta.** Os lotes aparecem com nome legível; a tela lembra quais séries estavam abertas depois de uma atualização da lista. ^saved-playlists-phone-series-open
+- **Folha da série gravada.** «Add playlists», «Open the album series» e, em vermelho, «Delete all playlists of this series» (pede confirmação). ^saved-playlists-phone-series-sheet-open
+- **Folha do lote.** «Edit batch» e, em vermelho, «Delete batch» (pede confirmação); um nome reescrito mostra o nome salvo inteiro. ^saved-playlists-phone-batch-sheet-open
+
+### Home e Blend
+
+- **Home no celular.** Campo do nome, filtros em duas colunas, grade de duas colunas e a barra de ação «No albums chosen · Pick albums to start» com «Create series» apagado. ^home-phone-default
+- **Álbum escolhido.** Anel laranja e o número de ordem na capa; um segundo toque o tira; a barra diz «N albums chosen · Tap to review». ^home-phone-album-chosen
+- **Folha dos escolhidos aberta.** «N albums chosen», o nome da série, uma linha por álbum com ↑ ↓ ✕ e «Create series»; ao remover, «Removed «X» · Undo». ^home-phone-chosen-sheet-open
+- **Nome faltando.** Com o campo do nome vazio, «Create series» não cria: abre a folha, diz «Give the series a name first.» e põe o cursor no campo. ^home-phone-name-required
+- **Criando.** O botão da barra diz «Creating…», apagado. ^home-phone-creating
+- **Edição da série.** Janela de tela cheia com «Cancel» e «Save Changes» no pé; a lista dos álbuns flui no corpo, com ↑ ↓ ✕ em cada linha; remover aqui não tem «Undo» (nada é gravado até «Save Changes»). ^series-edit-phone-default
+- **Blend sem série.** Passo 1 com «Choose a series» e a contagem de séries; «Blend it!» apagado, com «Step 1 of 4: choose a series». ^blend-phone-step1-empty
+- **Folha «Choose a series» aberta.** Tela cheia com a busca, «n of 49 series» e uma linha por série; um toque escolhe e fecha. ^blend-phone-series-sheet-open
+- **Pronto para misturar.** Série e receita escolhidas: a nota diz «receita · 60 min» e «Blend it!» está ativo; sem receita, «Step 2 of 4: choose a recipe». ^blend-phone-ready
+- **Misturando.** O botão da barra diz «Blending…», apagado. ^blend-phone-blending
+
+### Inventário
+
+- **Inventário no celular.** Contagem e fichas de status, os totais em duas linhas, a barra presa e as linhas de 102 px, 50 por vez. ^inventory-phone-default
+- **Carregando.** Seis linhas-fantasma do tamanho das de verdade. ^inventory-phone-loading
+- **Inventário vazio.** «Your collection is empty», a frase do que o enche e um botão, «Add the albums of my series». ^inventory-phone-empty
+- **Filtrado a nada.** «No albums match» e «Clear search and filters». ^inventory-phone-no-match
+- **Mais linhas.** No fim, «Showing 50 of 211» e «Show 50 more» (no último bloco, o número que falta); a página não se mexe e o foco vai à primeira linha nova. ^inventory-phone-show-more
+- **Folha Status aberta.** «Owned», «Not Owned» e «Wishlist» em linhas de 48 px; só o ✓ da direita marca o atual. ^inventory-phone-status-sheet-open
+- **Folha do «⋯» aberta.** Título do álbum, «Open album», «Edit», o valor, «Where to buy», «Sell» e «Trade» desligados e, em vermelho, «Remove from inventory», que abre a confirmação de sempre. ^inventory-phone-item-sheet-open
+- **Folha «Filters and order» aberta.** O formato (All, CD, Vinyl, Digital) e as dez ordens, aplicados na hora; o rodapé diz «Show N albums». ^inventory-phone-filters-open
+- **Folha «Collection actions» aberta.** «Add the albums of my series», «Update ratings» e, com a fonte do Discogs ligada, «Update values», cada um com o que faz. ^inventory-phone-actions-open
+- **Folha do salto aberta.** Na ordem por artista, as letras («S: 12 albums»); em outra ordem, trechos de 25 posições. Saltar desenha os blocos até lá. ^inventory-phone-jump-open
+- **Folha dos valores aberta.** «About the values» (ou «Why lowest asking prices?» quando a conta não tem as configurações de vendedor): cada total com «n of m albums have a value», a taxa de câmbio e o crédito do Discogs. ^inventory-phone-values-sheet-open
+- **Uma ação em andamento.** Sob a barra presa, uma linha diz o que roda («Reading ratings… 40 of 211»; nos valores, com «Stop»). ^inventory-phone-working
 
 ## Content Map
 

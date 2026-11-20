@@ -47,6 +47,14 @@ flowchart Trip
     API -- Success --> Store
 ```
 
+#### No celular
+Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
+
+*   **Lista em linhas.** `InventoryView` escolhe entre `renderComputer` (o cartão de cinco linhas, igual ao de antes) e `renderPhone`. No celular cada álbum é uma linha (`views/renderers/InventoryPhoneRow.js`): capa, título, artista, valor com a origem, status, as duas médias e «⋯». Tocar na linha abre a janela do álbum.
+*   **De 50 em 50.** A lista desenha 50 linhas (`PHONE_CHUNK` em `models/inventoryJump.js`) e termina com «Show 50 more». O botão «A–Z» da barra presa salta para uma letra de artista (ou, em outra ordem, para um trecho de 25 posições).
+*   **Folhas.** O status, o «⋯» do álbum, «Filters and order», «Collection actions», o salto e «About the values» abrem como folha de baixo (`views/InventoryPhoneSheets.js`). Os totais ficam em duas linhas; a moeda é um controle de quatro opções.
+*   **Para mudar o status:** tocar na pílula de status da linha, escolher na folha. Para editar ou remover: «⋯» da linha.
+
 ### 2.2 Playlist Generator: `views/PlaylistsView.js`
 **Status**: `[ACTIVE]`
 **Pattern**: Complex Interactive/Stateful View
@@ -86,6 +94,13 @@ sequenceDiagram
     View->>DOM: Render Grid & Graphs
 ```
 
+#### No celular
+Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
+
+*   **Uma playlist por vez.** `/playlists` mostra fichas no topo, uma por playlist («n · Nome», faixas e duração); a aberta rola com a página (`components/playlists/PhonePlaylists.js`). O nome do lote, com Undo e Redo, fica numa linha.
+*   **Faixas.** Cada faixa tem a posição (é a alça de arrastar) e um «⋯». Para mover ou remover: «⋯» abre a folha da faixa (Move up, Move down, Move to the top, Move to the end, «Move to another playlist», «Remove from this playlist»). Remover mostra «Undo» por 6 segundos; apagar a playlist inteira pergunta antes.
+*   **Gravar e exportar.** A barra de ação tem «Export» (folha com Spotify, Apple Music e JSON) e «Save». O painel «Reconfigure your Music Playlist Blend» abre pelo «⋯» da playlist.
+
 ### 2.3 Series Browser: `views/SeriesView.js` (V3)
 **Status**: `[ACTIVE]`
 **Pattern**: "Thin View" / Orchestrator
@@ -117,6 +132,14 @@ sequenceDiagram
     *   `SeriesComponentFactory` [NEW]: Abstract Factory for instantiating Header, Toolbar, and Grid components with correct props.
     *   `SeriesModalsManager` [NEW]: Encapsulates logic for opening Edit/Delete modals and handling "Soft Reloads".
 
+#### No celular
+Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
+
+*   **De cima para baixo.** Busca e «Filters» (a folha de `components/ui/FilterSheet.js`), fichas dos filtros ligados, depois as séries (`SeriesView`, `components/ui/AlbumPhoneCard.js`). O nome da série aberta vai para a barra do topo (`nameThisScreen`).
+*   **Álbum.** Grade de duas colunas, ou uma linha por álbum na visão em lista. As ações (ver, ranquear, pôr no inventário, buscar de novo, abrir no Spotify, tirar da série) ficam na folha do «⋯» do álbum (`components/series/SeriesPhoneSheets.js`); editar e apagar a série, na folha do «⋯» da série.
+*   **Filtros.** «Filters» mostra quantos estão ligados; a folha tem a visão (Grid ou List), a ordem, os filtros e «Reload albums from the sources».
+*   **Barras.** O cabeçalho da série fica preso sob a barra do topo. O pager de baixo tem «Page n of m», «Series per page» e Pages/Scroll.
+
 ### 2.4 Playlists History: `views/SavedPlaylistsView.js`
 **Status**: `[ACTIVE]`
 **Pattern**: Component-Driven View
@@ -135,6 +158,13 @@ sequenceDiagram
     *   `SavedPlaylistRow`: Renders individual playlists with track lists.
     *   `SavedPlaylistActions`: Centralizes action buttons for series, batches, and rows.
 
+
+#### No celular
+Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
+
+*   **Séries fechadas.** As séries abrem fechadas, cada uma com o resumo na linha («n batches · n playlists»); a tela lembra as abertas (`components/playlists/SavedPlaylistsPhone.js`, `SavedSeriesGroup.js`). O lote mostra o nome legível (`components/playlists/batchNames.js`); o nome real é o usado ao editar e apagar.
+*   **Folhas.** O «⋯» da série (Add playlists, Open the album series, apagar tudo) e o do lote (Edit batch, Delete batch) abrem folhas; apagar pergunta antes. Para ver as faixas de uma playlist: tocar nela, e abre a janela da playlist.
+*   **Para exportar** um lote gravado: abrir com «Edit batch» e usar «Export» na barra de ação (a tela não tem exportação própria).
 
 ---
 

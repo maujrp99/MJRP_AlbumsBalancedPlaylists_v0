@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:56] session — F76 documentação: plan, spec e tasks fechados
+**Branch:** feat/f76-mobile-docs
+O `plan.md` nomeia os módulos de cada tela com o REQ que servem e lista o que nunca foi verificado (iPhone de verdade, gravar pelo celular, VoiceOver, a trava de rolagem N22); o `spec.md` liga os estados aos block IDs do info-arch e escreve os critérios de sucesso com as medidas.
+A linha de Documentation do `tasks.md` foi marcada; TASK-08 e TASK-09 ficam abertas.
+
+## [2026-11-20 03:55] session — F76 documentação: o celular em info-arch, behavior, arch e manual
+**Branch:** feat/f76-mobile-docs
+As notas das telas da F76 foram dobradas em `info-arch.md` (navegação, inventário por tela e 55 estados com block ID), `behavior.md` (§ No celular), `arch.md` (a camada do celular) e nas páginas do manual (parte «No celular»); a página de leitura do info-arch foi gerada de novo.
+Cada afirmação vaga foi conferida no código; a linha da gaveta ☰ de `behavior.md` foi corrigida (a marcação usa `lg:`, abaixo de 1024 px, e não 768 px).
+
 ## [2026-11-20 03:48] session — F76: o acabamento em produção; UAT-216, UAT-217 e UAT-223 resolvidas; três issues novas
 **Branch:** main
 Site da `0359e3d` (`main-D5xyTKX2.js`): os achados da crítica independente aplicados (inventário com a lista na primeira tela, «Discard changes?» no ranking, valor e compra recolhidos na janela do álbum, playlists gravadas com a anatomia de Albums, um só controle segmentado, títulos em Syne). Prova: `reports/evidence/F76/2026-11-20-production-proof.md`. Abertas: UAT-224 (o «Back» do ranking no computador), UAT-225 (data e hora do nome do lote em fusos diferentes), UAT-226 (edição sem cópia à venda).

@@ -28,6 +28,13 @@
     -   **Logic**: Uses `SortableJS` for reordering. Syncs state with the `StagingAreaRenderer`.
 -   **`search/`**: the folder is gone. `DiscographyToolbar.js` and `VariantPickerModal.js`, which no module imported, were removed in F57.
 
+### No celular (Home e edição da série)
+Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
+
+*   **Escolher os álbuns.** A grade tem duas colunas; tocar num álbum o escolhe (anel laranja e o número de ordem), e tocar de novo o tira. A barra de ação (`components/home/HomePhoneChosen.js`) diz «N albums chosen» e tem «Create series»; tocar na contagem abre a folha dos escolhidos, onde cada álbum tem ↑, ↓ e ✕.
+*   **Nome da série.** O campo do nome existe também na folha dos escolhidos. Sem nome, «Create series» não cria e diz «Give the series a name first.»; no computador a série sai como «New Album Series».
+*   **Editar uma série** (aberta em Albums): janela de tela cheia, a lista dos álbuns sem caixa de rolagem própria, ↑ ↓ ✕ em cada linha, «Cancel» e «Save Changes» no pé.
+
 ## Blend Wizard (`blend/`)
 **Status**: `[ACTIVE]`
 **Overview**: These components form the 3-step "Blend" playlist generation wizard.
@@ -41,6 +48,11 @@
 -   **`blend/BlendIngredientsPanel.js` (Step 3)**:
     -   **Role**: Configuration panel for the selected algorithm.
     -   **Logic**: Shows only the inputs that change the result of the selected recipe (Top #, Grouping, Output Mode, Duration, Ranking Source; `ALGORITHM_RECIPES` mapping and `showsDuration`). "Discovery Mode" was removed in F62: no recipe read it.
+
+### No celular (Blend)
+Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
+
+*   **Fazer uma mistura.** O passo 1 é uma linha: toca-se nela e a folha «Choose a series» abre em tela cheia, com busca; um toque escolhe e fecha (`components/blend/BlendSeriesPhonePicker.js`). As receitas ficam numa coluna. A barra de ação tem «Blend it!», apagado com o motivo escrito («Step 1 of 4: choose a series») até haver série e receita.
 
 ## Inventory (`inventory/`)
 **Status**: `[ACTIVE]`
