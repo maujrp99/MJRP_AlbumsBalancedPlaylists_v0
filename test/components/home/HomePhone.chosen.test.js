@@ -146,10 +146,45 @@ describe('Home on the phone (F76, REQ-09)', () => {
     it('Create series takes the Home\'s own path', async () => {
         await open(true)
         const create = vi.spyOn(view.controller, 'handleInitializeLoad').mockResolvedValue()
+        $('#seriesNameInput').value = 'Pavement years'
         card('Slanted').click()
 
         createButton().click()
 
+        expect(create).toHaveBeenCalledTimes(1)
+    })
+
+    it('the sheet shows the name of the series, the same field value as the page, and typing there names it (recheck N10)', async () => {
+        await open(true)
+        $('#seriesNameInput').value = 'Pavement years'
+        card('Slanted').click()
+        $('.home-chosen-count').click()
+
+        const field = document.querySelector('.sheet #homeChosenName')
+        expect(document.querySelector('.sheet label[for="homeChosenName"]').textContent).toBe('Series name')
+        expect(field.value).toBe('Pavement years')
+        field.value = 'Pavement, the 90s'
+        field.dispatchEvent(new Event('input', { bubbles: true }))
+        expect($('#seriesNameInput').value).toBe('Pavement, the 90s')
+    })
+
+    it('with no name, Create series says so in the sheet instead of naming it silently (recheck N10)', async () => {
+        await open(true)
+        const create = vi.spyOn(view.controller, 'handleInitializeLoad').mockResolvedValue()
+        $('#seriesNameInput').value = '   '
+        card('Slanted').click()
+
+        createButton().click()
+
+        expect(create).not.toHaveBeenCalled()
+        expect(document.querySelector('.sheet [role="alert"]').textContent).toBe('Give the series a name first.')
+        const field = document.querySelector('.sheet #homeChosenName')
+        expect(document.activeElement).toBe(field)
+        expect(field.getAttribute('aria-invalid')).toBe('true')
+
+        field.value = 'Pavement'
+        field.dispatchEvent(new Event('input', { bubbles: true }))
+        document.querySelector('.sheet .home-chosen-create-sheet').click()
         expect(create).toHaveBeenCalledTimes(1)
     })
 

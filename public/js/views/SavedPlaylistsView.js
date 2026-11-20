@@ -224,9 +224,15 @@ export class SavedPlaylistsView extends BaseView {
             currentSort: this.filterState.sort,
             onSort: (val) => this.handleFilterChange('sort', val),
 
+            // The phone: the search and a «Filters (n)» button; the rest in a sheet, as on Albums
+            // (F76 polish, recheck N5). The computer's bar is not touched.
+            filtersInSheet: true,
+            sheetText: { reload: 'Read the saved playlists again', done: 'Show series' },
+
             filterGroups: [
                 {
                     id: 'series',
+                    title: 'Album series',
                     label: 'All Albums Series',
                     value: this.filterState.seriesId,
                     options: seriesOptions,
@@ -235,6 +241,7 @@ export class SavedPlaylistsView extends BaseView {
                 },
                 {
                     id: 'batch',
+                    title: 'Batch',
                     label: 'All Playlist Series',
                     value: this.filterState.batchName,
                     options: batchOptions,

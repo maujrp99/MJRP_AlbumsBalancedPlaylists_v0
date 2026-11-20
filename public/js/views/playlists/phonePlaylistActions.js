@@ -34,10 +34,20 @@ const list = (rows) => SafeDOM.div({ className: 'phone-sheet-actions' }, rows)
 /** Move a track as the drag does (the service records the step, so Undo takes it back). */
 const moveTrack = (from, to, oldIndex, newIndex) => getPlaylistsService().moveTrack(from, to, oldIndex, newIndex)
 
+/** The row a track landed on, lit for a moment (recheck N20); only the open playlist is drawn. */
+function lightUp(playlistIndex, trackIndex) {
+    setTimeout(() => {
+        const row = document.querySelector(`.phone-track[data-playlist-index="${playlistIndex}"][data-track-index="${trackIndex}"]`)
+        if (!row) return
+        row.classList.add('is-moved')
+        setTimeout(() => row.classList.remove('is-moved'), 1200)
+    }, 60)
+}
+
 /** The moves of a track inside its own playlist. */
-function moveRows(sheetRef, { playlistIndex, trackIndex, count }) {
+function moveRows(sheetRef, { playlistIndex, trackIndex, count, onMoved }) {
     const last = count - 1
-    const move = (to) => () => { sheetRef.close(); moveTrack(playlistIndex, playlistIndex, trackIndex, to) }
+    const move = (to) => () => { sheetRef.close(); moveTrack(playlistIndex, playlistIndex, trackIndex, to); onMoved(playlistIndex, to) }
     return [
         actionRow({ icon: 'ArrowUp', text: 'Move up', onTap: move(trackIndex - 1), disabled: trackIndex === 0 }),
         actionRow({ icon: 'ChevronDown', text: 'Move down', onTap: move(trackIndex + 1), disabled: trackIndex === last }),
@@ -47,13 +57,14 @@ function moveRows(sheetRef, { playlistIndex, trackIndex, count }) {
 }
 
 /** «Move to …» one row per other playlist: the track goes to its end. */
-function otherPlaylistRows(sheetRef, { playlists, playlistIndex, trackIndex }) {
+function otherPlaylistRows(sheetRef, { playlists, playlistIndex, trackIndex, onMoved }) {
     return playlists.map((playlist, index) => index === playlistIndex ? null : actionRow({
         icon: 'ListMusic',
         text: `${index + 1} · ${playlistNameOf(playlist, index)}`,
         onTap: () => {
             sheetRef.close()
             moveTrack(playlistIndex, index, trackIndex, (playlist.tracks || []).length)
+            onMoved(index, (playlist.tracks || []).length)
         }
     })).filter(Boolean)
 }
@@ -72,9 +83,15 @@ export function openTrackSheet({ controller, playlistIndex, trackIndex }) {
         controller.deleteTrack(playlistIndex, trackIndex)
         showUndoNotice({ text: `Removed "${track.title}"`, onUndo: () => controller.undo() })
     }
-    const others = otherPlaylistRows(sheetRef, { playlists, playlistIndex, trackIndex })
+    // A move by the sheet says where the track went, with Undo, and lights the row (recheck N20)
+    const onMoved = (toPlaylist, toIndex) => {
+        const where = toPlaylist === playlistIndex ? `number ${toIndex + 1}` : `playlist ${toPlaylist + 1}`
+        showUndoNotice({ text: `Moved "${track.title}" to ${where}`, onUndo: () => controller.undo() })
+        lightUp(toPlaylist, toIndex)
+    }
+    const others = otherPlaylistRows(sheetRef, { playlists, playlistIndex, trackIndex, onMoved })
     const content = [
-        list(moveRows(sheetRef, { playlistIndex, trackIndex, count: playlists[playlistIndex].tracks.length })),
+        list(moveRows(sheetRef, { playlistIndex, trackIndex, count: playlists[playlistIndex].tracks.length, onMoved })),
         others.length ? heading('Move to another playlist') : null,
         others.length ? list(others) : null,
         list([actionRow({ icon: 'Trash2', text: 'Remove from this playlist', onTap: remove, danger: true })])

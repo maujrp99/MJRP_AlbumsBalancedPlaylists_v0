@@ -255,20 +255,17 @@ export class PlaylistsView extends BaseView {
     // the screen says so and leads to where playlists are made (F73, UAT-214)
     const nothingHere = playlists.length === 0 && !isEditMode
     if (!nothingHere) {
-      // Batch Name Input
-      container.appendChild(SafeDOM.fromHTML(
-        PlaylistsGridRenderer.renderBatchNameInput(shownBatchNameOf(state), isEditMode, state.defaultBatchName)
+      // Batch Name Input (the phone: one line with undo and redo beside it; save and export in
+      // the action bar at the foot)
+      container.appendChild(SafeDOM.fromHTML(phone
+        ? PhonePlaylists.renderNameRow({ name: shownBatchNameOf(state), defaultName: state.defaultBatchName, canUndo: state.canUndo, canRedo: state.canRedo })
+        : PlaylistsGridRenderer.renderBatchNameInput(shownBatchNameOf(state), isEditMode, state.defaultBatchName)
       ))
 
       // Generation / Reconfig
       const genContainer = SafeDOM.div({ id: 'generationControlContainer' })
       genContainer.appendChild(SafeDOM.fromHTML(this.renderGenerationSection(playlists, activeSeries)))
       container.appendChild(genContainer)
-
-      // The phone: undo and redo in a row of their own; save and export in the action bar at the foot
-      if (phone) {
-        container.appendChild(SafeDOM.fromHTML(PhonePlaylists.renderHistoryRow({ canUndo: state.canUndo, canRedo: state.canRedo })))
-      }
 
       // Export
       const exportSec = SafeDOM.div({ id: 'exportSection', className: 'mb-6 fade-in', style: { animationDelay: '0.08s' } })

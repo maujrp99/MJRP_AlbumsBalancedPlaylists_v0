@@ -183,7 +183,12 @@
     background: none;
   }
 
+  /* N1 (recheck 2026-11-20): css/views/home.css keeps the toolbar sticky at top:0 below 769 px;
+     here it has no background, so the filters floated over the covers under the top bar. On the
+     phone it flows with the page: six filters in two columns are ~150 px, too tall to pin. */
   #home-toolbar {
+    position: static;
+    z-index: auto;
     padding: 0 0 12px;
     background: none;
     border: 0;
@@ -242,6 +247,11 @@
   #home-toolbar .filter-btn-count {
     font-size: 13px;
     opacity: 0.8;
+  }
+
+  /* «?» says nothing: on the phone the filter of albums of no known type reads «Other» (N15) */
+  #home-toolbar [data-filter="uncategorized"] .filter-btn-text {
+    display: none;
   }
 
   /* ── 5. The grid of covers, and the answer on the album tapped ───────────────────────────── */
@@ -407,6 +417,65 @@
   }
 
   /* ── 7. The sheet with the chosen set: remove, move up and down, no dragging ─────────────── */
+  /* Recheck N4 (decided): the title of a row in Syne (the album's, inherited), the rest in the
+     text face */
+  .home-chosen-row__artist,
+  .home-chosen-name,
+  .home-chosen-name__field,
+  .home-chosen-undo,
+  .home-chosen-empty,
+  .home-chosen-count__hint {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Inter", sans-serif;
+  }
+
+  /* The name of the series, on top (recheck N10): the page's field, mirrored; 16 px, no zoom */
+  .home-chosen-name {
+    margin-bottom: 12px;
+  }
+
+  .home-chosen-name__label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #a0a0a8;
+  }
+
+  .home-chosen-name__field {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+    font-size: 16px;
+    line-height: 22px;
+    color: #f2f2f4;
+    background: #17171a;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+  }
+
+  .home-chosen-name__field:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .home-chosen-name__field[aria-invalid="true"] {
+    border-color: #f87171;
+  }
+
+  .home-chosen-name__error:empty {
+    display: none;
+  }
+
+  .home-chosen-name__error {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 18px;
+    color: #f87171;
+  }
+
   .home-chosen-list {
     list-style: none;
     margin: 0;
@@ -632,6 +701,12 @@
     overflow: visible;
     padding-right: 0;
     gap: 16px 12px;
+  }
+
+  /* the waiting, empty and failed messages read on the dark: 2.43:1 before (recheck N16) */
+  #edit-series-modal [data-scan-panel],
+  #edit-series-modal [data-scan-panel] p {
+    color: #a0a0a8;
   }
 
   #edit-series-modal .app-modal__footer .btn {

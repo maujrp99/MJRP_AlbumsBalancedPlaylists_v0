@@ -6,6 +6,7 @@
  * are on; this sheet holds the rest: the view (grid or list), the order, each filter, and reload.
  * Every control reports through the same handlers the computer's controls call (FilterToolbar's
  * props); the sheet keeps no state of its own and follows the props while it is open (sync).
+ * A screen other than Albums names its own reload and close: props.sheetText = { reload, done }.
  */
 import { openSheet } from './Sheet.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
@@ -86,7 +87,7 @@ function buildContent(props, close) {
     if (props.onRefresh) {
         const reload = SafeDOM.button({ type: 'button', className: 'filter-sheet__reload' }, [
             SafeDOM.fromHTML(getIcon('RefreshCw', 'filter-sheet__reload-icon')),
-            SafeDOM.span({}, 'Reload albums from the sources')
+            SafeDOM.span({}, props.sheetText?.reload || 'Reload albums from the sources')
         ])
         reload.addEventListener('click', () => { close(); props.onRefresh() })
         parts.push(reload)
@@ -106,7 +107,7 @@ export function openFilterSheet(getProps, onClose) {
     let sheet = null
     const close = () => sheet?.close()
     const clear = SafeDOM.button({ type: 'button', className: 'btn btn-secondary filter-sheet__clear' }, 'Clear filters')
-    const done = SafeDOM.button({ type: 'button', className: 'btn btn-primary' }, 'Show albums')
+    const done = SafeDOM.button({ type: 'button', className: 'btn btn-primary' }, getProps().sheetText?.done || 'Show albums')
     clear.addEventListener('click', () => clearFilters(getProps().filterGroups))
     done.addEventListener('click', close)
 

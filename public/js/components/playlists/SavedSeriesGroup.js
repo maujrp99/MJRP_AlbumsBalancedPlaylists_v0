@@ -10,6 +10,7 @@ import { getIcon } from '../Icons.js';
 import { SavedPlaylistCard } from './SavedPlaylistCard.js';
 import { SeriesPlaylistsStatus, batchTotals } from '../../models/savedPlaylists.js';
 import { isPhone } from '../../utils/isPhone.js';
+import { renderBatchRow, renderSeriesHead } from './SavedPlaylistsPhone.js';
 
 /** «3 batches · 18 playlists»: what a closed series holds, said on the phone. */
 export function seriesSummary(batches = []) {
@@ -38,46 +39,51 @@ export class SavedSeriesGroup {
         const failed = this.group.status === SeriesPlaylistsStatus.FAILED;
         if (batches.length === 0 && !failed) return null;
 
+        if (isPhone()) return this.renderPhone(batches, failed);
+
         const seriesId = this.group.series.id;
-        // The batches, in a box of their own: a plain block on the computer; on the phone it is
-        // closed until the series is opened, so the page is a list of series, not of every batch
         const batchesBox = SafeDOM.div({
             className: 'saved-series-batches',
             id: `savedSeriesBatches_${seriesId}`
         }, batches.map(batch => this.renderBatch(batch, seriesId)));
-        const phone = isPhone();
-        if (phone && !this.open) batchesBox.hidden = true;
 
         return SafeDOM.div({
             className: 'series-group glass-panel p-6 rounded-xl animate-scale-in',
             dataset: { seriesId, status: this.group.status }
         }, [
-            this.renderHeader(batches.length > 0, phone ? this.renderToggle(batches, batchesBox) : null),
+            this.renderHeader(batches.length > 0),
             failed ? this.renderFailure(batches.length > 0) : null,
             batchesBox
         ]);
     }
 
-    /** The phone's «open the series» row: what it holds, and a chevron that turns when open. */
-    renderToggle(batches, batchesBox) {
-        const toggle = SafeDOM.button({
-            type: 'button',
-            className: 'saved-series-toggle md:hidden',
-            'aria-expanded': String(!batchesBox.hidden),
-            'aria-controls': batchesBox.id
-        }, [
-            SafeDOM.fromHTML(getIcon('ChevronRight', 'saved-series-toggle__chevron')),
-            SafeDOM.span({ className: 'saved-series-toggle__text' }, seriesSummary(batches))
-        ]);
-        toggle.addEventListener('click', () => {
-            batchesBox.hidden = !batchesBox.hidden;
-            toggle.setAttribute('aria-expanded', String(!batchesBox.hidden));
-            this.onToggle(this.group.series.id, !batchesBox.hidden);
+    /**
+     * The phone (F76; recheck N5): a header row that opens the batches, closed until opened, so
+     * the page is a list of series; the batches as rows; every action in a «⋯» sheet.
+     */
+    renderPhone(batches, failed) {
+        const seriesId = this.group.series.id;
+        const batchesBox = SafeDOM.div({
+            className: 'saved-series-batches',
+            id: `savedSeriesBatches_${seriesId}`
+        }, batches.map(batch => renderBatchRow({ batch, seriesId, handlers: this.handlers })));
+        batchesBox.hidden = !this.open;
+
+        const head = renderSeriesHead({
+            group: this.group,
+            summary: seriesSummary(batches),
+            batchesBox,
+            hasPlaylists: batches.length > 0,
+            handlers: this.handlers,
+            onToggle: (open) => this.onToggle(seriesId, open)
         });
-        return toggle;
+        return SafeDOM.div({
+            className: 'series-group saved-phone-series',
+            dataset: { seriesId, status: this.group.status }
+        }, [head, failed ? this.renderFailure(batches.length > 0) : null, batchesBox]);
     }
 
-    renderHeader(hasPlaylists, phoneToggle = null) {
+    renderHeader(hasPlaylists) {
         const seriesId = this.group.series.id;
         const seriesName = this.group.series.name;
 
@@ -88,8 +94,7 @@ export class SavedSeriesGroup {
             ]),
             SafeDOM.span({ className: 'saved-series-id text-xs text-muted font-mono bg-black/30 px-2 py-1 rounded ml-8' },
                 `ID: ${seriesId.slice(0, 8)}...`
-            ),
-            phoneToggle
+            )
         ]);
 
         const buttons = SafeDOM.div({ className: 'flex gap-2' }, [

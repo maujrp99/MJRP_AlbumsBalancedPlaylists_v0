@@ -89,3 +89,61 @@ Computador (1280x800): as capturas da janela e da página inteira das quatro sit
 - Exportar de fato ao Spotify e à Apple Music (sem conta no arnês): só que a folha chama as mesmas funções de antes.
 - Telas com login e dados reais (o arnês usa os componentes reais com dados de exemplo).
 - A barra de filtros das gravadas (`FilterToolbar`, compartilhada com Albums) continua empilhando quatro controles antes da primeira série (~ 600 px): não é desta tela mudá-la.
+
+
+## Polimento pós-crítica (2026-11-20, ramo `feat/f76-mobile-polish-home-playlists`)
+
+Fecha achados de `reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-recheck.md`. Tudo **decidido pelo agente — revisável**. Prova: `reports/evidence/F76/playlists/polish/` (depois) contra `before-polish/` (o mesmo arnês sobre `main`), agora também a **393x660** (o que o Safari deixa).
+
+### `/playlists` — N3 (a 393x660 só 53 px de faixas)
+
+| Antes | Agora |
+|---|---|
+| Trilha `Home › Blend › Playlists` | some no celular: a barra de baixo já leva a Home, Blend e Playlists |
+| Cartão «Batch Name» de ~120 px | uma linha: rótulo «BATCH NAME» (12 px), campo de 44 px e 16 px (o mesmo `#batchNameInput`: grava e guarda o cursor como antes) e, ao lado, **Undo e Redo como ícones de 44 px** com nome (`aria-label`) |
+| Linha fechada «Reconfigure your Music Playlist Blend» de 56 px | fora da página enquanto fechada; abre pelo «⋯» da playlist («Reconfigure and regenerate»), como já abria; aberta, aparece com seu cabeçalho (que fecha) e fica sob a barra do topo ao rolar até ela; as receitas dentro dela numa coluna, como no Blend |
+| «Playlist 1 of the set · 14 tracks · 1 h 31 min» sob o título | só para leitor de tela: a ficha aberta logo acima diz o mesmo |
+
+Medido: a primeira faixa sobe de y=496 para **y=270**; faixas inteiras acima da barra de ação: **0 → 4 a 393x660**, 3 → 6 a 393x852.
+
+### `/playlists` — N20 e N15
+
+- Mover pela folha («Move up/down/to the top/to the end», «Move to another playlist») mostra o aviso de baixo «Moved "…" to number 2 · Undo» (ou «to playlist 3»), o mesmo do remover, e acende a linha onde a faixa caiu por 1,2 s (sem transição com menos movimento). Desfazer chama `controller.undo()`, como antes.
+- Os «⋯» dizem «Actions for …», o verbo de Albums e Inventário (eram «Options for …»).
+
+### N4 — fonte (decidido)
+
+No celular, o **título** de uma linha em Syne; o resto na fonte de texto (SF no iPhone). Faixa: Syne 15 px, 600, até duas linhas (as linhas da janela de ranking usam Syne 16/600 com a linha inteira; aqui a linha divide espaço com posição, duração e «⋯», então 15). Fichas: nome em Syne 14. Saved: série 17/700, lote 16/600, playlist 15/500, todos Syne; contagens, datas e botões na fonte de texto.
+
+### `/saved-playlists` — N5 (a tela mais fraca)
+
+A anatomia de Albums (`SeriesPhoneSheets.js`, `AlbumPhoneCard.js`, `albums.css`):
+
+| Bloco | O que mostra | Toque |
+|---|---|---|
+| Busca + «Filters (n)» | uma linha; o resto (ordem, série de álbuns, lote, ler de novo) numa folha, a mesma de Albums (`FilterToolbar` com `filtersInSheet`, `FilterSheet.js`); fichas «Album series: X ✕» quando há filtro ligado | a folha fecha com «Show series» |
+| **Série** (linha, sem cartão; fio entre séries) | capas em cascata, nome em Syne (até 2 linhas), «n batches · n playlists», chevron, «⋯» de 44 px | a linha abre/fecha os lotes (fechada por padrão; lembra quem estava aberta); «⋯» abre a folha da série |
+| **Lote** (linha recuada sob a série) | nome **legível** (até 2 linhas), «n playlists · n tracks · 5 h 12 min · 20 Nov 2026», chevron, «⋯» | a linha abre as playlists; «⋯» abre a folha do lote |
+| **Playlist** (linha de 52 px, com fio à esquerda) | nome, «n tracks · duração», chevron | abre a janela da playlist com as faixas (`onOpenPlaylist`, a mesma do olho do computador) |
+
+Folhas (classe e linha das folhas de Albums: ícone 22, rótulo 16, 52 px, destrutivo por último, separado e em vermelho):
+- **Série**: Add playlists · Open the album series · *Delete all playlists of this series* (pergunta, `dialogService.confirm`, como antes).
+- **Lote**: o nome salvo inteiro quando o mostrado foi reescrito («Saved as "…"»), senão os fatos; Edit batch · *Delete batch* (pergunta, como antes).
+
+Nome legível (`components/playlists/batchNames.js`): um nome digitado aparece como foi digitado. Um nome da máquina perde o carimbo de data e hora do fim (a linha já diz a data) e tem os códigos escritos por extenso: «SPFY» → Spotify, «BEA» → BestEverAlbums, «Bal.Intv.» → balanced; o padrão do app «TheAlbumBlender Playlist 2026-11-20 23:21» vira «Saved 20 Nov 2026, 23:21». O nome real continua sendo o usado em Edit e Delete, e aparece inteiro na folha. Uma data só, «20 Nov 2026», sem quebrar de linha. Plural certo («1 playlist»).
+
+Medido a 393x660: a primeira série começa em ~y=120 (era 370 na conta real); sete séries na primeira tela; nada vermelho na tela, só nas folhas. 0 rolagem de lado, 0 texto < 12, 0 campo < 16, 0 alvo < 44 em `saved`, `saved-open`, `saved-filters`, `saved-series-sheet`, `saved-batch-sheet`, `saved-delete-confirm`, a 393x852 e 393x660.
+
+Mudança mínima fora da lista: `components/ui/FilterSheet.js` aceita `props.sheetText = { reload, done }` (aqui «Read the saved playlists again» e «Show series»; Albums segue com seus textos). O botão «Filters» e as fichas leem as variáveis `--albums-*`, que esta tela também define. O nome dos filtros na folha vem de `title` («Album series», «Batch»), que o computador não usa.
+
+Decisões: (1) a cascata de capas fica na série, não em cada lote — as capas são da série de álbuns, e repetidas em cada lote eram ruído; (2) a playlist de um lote abre a janela com as faixas em vez de um terceiro nível de abrir-e-fechar dentro da página; (3) «Export» não foi criado aqui (a tela não exporta hoje; exporta-se por Edit batch).
+
+### Computador
+
+1280x800, janela e página inteira, `generated`, `saved`, `saved-open`: **0 pixel diferente** antes e depois.
+
+### O que não verifiquei
+
+- iPhone e Safari de verdade (o teclado sobre o campo do nome do lote, a barra do Safari encolhendo).
+- Nomes de lote reais da conta do dono: as regras do nome legível vêm dos dois exemplos da crítica e do código que gera nomes; um nome de máquina de outro formato aparece como está.
+- Escolher um filtro dentro da folha: só a abri e a fechei no arnês (os controles chamam os mesmos `onChange` do computador, cobertos pelos testes do `FilterToolbar`).
