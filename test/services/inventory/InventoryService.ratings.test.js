@@ -100,8 +100,8 @@ describe('InventoryService.updateAverages', () => {
         const result = await run()
 
         expect(cloud.writes).toEqual([[
-            { id: 'inv-1', averages: { rating: 90, popularity: 60, ratedTracks: 1, popTracks: 1, at: NOW.toISOString() } },
-            { id: 'inv-2', averages: { rating: 70, popularity: 40, ratedTracks: 1, popTracks: 1, at: NOW.toISOString() } }
+            { id: 'inv-1', averages: { rating: 90, popularity: 60, ratedTracks: 1, popTracks: 1, tracks: 1, at: NOW.toISOString() } },
+            { id: 'inv-2', averages: { rating: 70, popularity: 40, ratedTracks: 1, popTracks: 1, tracks: 1, at: NOW.toISOString() } }
         ]])
         expect(notified).toHaveBeenCalledTimes(1)
         expect(store.getAlbums()[0]).toMatchObject({ id: 'inv-1', notes: 'mine', owned: true, averages: { rating: 90 } })
@@ -146,7 +146,7 @@ describe('InventoryService.updateAverages', () => {
 
         await run()
 
-        expect(cloud.writes[0][0].averages).toEqual({ rating: 70, popularity: 33, ratedTracks: 1, popTracks: 4, at: NOW.toISOString() })
+        expect(cloud.writes[0][0].averages).toEqual({ rating: 70, popularity: 33, ratedTracks: 1, popTracks: 4, tracks: 1, at: NOW.toISOString() })
     })
 
     it('counts the albums not found, and says which source was missing', async () => {

@@ -16,11 +16,11 @@ vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService }))
 import { InventoryView } from '../../public/js/views/InventoryView.js'
 import { inventoryStore } from '../../public/js/stores/inventory.js'
 
-const averages = (rating, popularity) => ({ rating, popularity, ratedTracks: 10, popTracks: 9, at: '2026-11-20T10:00:00.000Z' })
+const averages = (rating, popularity, extra = {}) => ({ rating, popularity, ratedTracks: 10, popTracks: 9, tracks: 12, at: '2026-11-20T10:00:00.000Z', ...extra })
 const item = (id, artist, title, extra = {}) => ({ id, artist, title, owned: null, format: null, albumData: { id }, ...extra })
 
 const wall = item('inv-wall', 'Pink Floyd', 'The Wall', { averages: averages(88.2, 71.4), addedToInventory: { seconds: 1000 } })
-const fragile = item('inv-fragile', 'Yes', 'Fragile', { averages: averages(76, 40.5), addedToInventory: { seconds: 3000 } })
+const fragile = item('inv-fragile', 'Yes', 'Fragile', { averages: averages(76, 40.5, { tracks: undefined }), addedToInventory: { seconds: 3000 } })
 const onlyRating = item('inv-ten', 'Pearl Jam', 'Ten', { averages: averages(90.1, null), addedToInventory: { seconds: 2000 } })
 const never = item('inv-never', 'Abba', 'Arrival <b>x</b>')
 
@@ -79,16 +79,16 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
     })
 
     describe('the card', () => {
-        it('shows the two averages in one small line when the item has them', () => {
+        it('shows the two averages in one small line, each with the tracks it was made of (REQ-20)', () => {
             const line = document.querySelector('[data-album-id="inv-wall"] [data-role="averages"]')
 
-            expect(text(line)).toBe('Avg Rating: 88.2 · Avg Pop: 71.4%')
+            expect(text(line)).toBe('Avg Rating: 88.2 (10 of 12) · Avg Pop: 71.4% (9 of 12)')
         })
 
         it('shows only the average the item has', () => {
             const line = document.querySelector('[data-album-id="inv-ten"] [data-role="averages"]')
 
-            expect(text(line)).toBe('Avg Rating: 90.1')
+            expect(text(line)).toBe('Avg Rating: 90.1 (10 of 12)')
         })
 
         it('shows nothing, not even a dash, when the item has none', () => {
@@ -102,7 +102,7 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
 
             const rows = [...document.querySelectorAll('.inventory-row-wrapper')]
             expect(rows).toHaveLength(4)
-            expect(text(rows.find(row => row.dataset.albumId === 'inv-fragile').querySelector('[data-role="averages"]'))).toBe('Avg Rating: 76 · Avg Pop: 40.5%')
+            expect(text(rows.find(row => row.dataset.albumId === 'inv-fragile').querySelector('[data-role="averages"]'))).toBe('Avg Rating: 76 (10) · Avg Pop: 40.5% (9)') // read before the size of the album was kept
             expect(rows.find(row => row.dataset.albumId === 'inv-never').querySelector('[data-role="averages"]')).toBe(null)
         })
 

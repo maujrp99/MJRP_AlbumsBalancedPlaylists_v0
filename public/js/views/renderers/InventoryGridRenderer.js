@@ -187,7 +187,7 @@ export class InventoryGridRenderer {
     static renderAverages(album) {
         const line = averagesLine(album.averages)
         if (!line) return ''
-        return `<span class="text-xs text-gray-400" data-role="averages" title="Mean of the BestEverAlbums rating and of the Spotify popularity of the tracks">${escapeHtml(line)}</span>`
+        return `<span class="text-xs text-gray-400" data-role="averages" title="Mean of the BestEverAlbums rating and of the Spotify popularity of the tracks; in brackets, how many tracks of the album each mean was made of">${escapeHtml(line)}</span>`
     }
 
     /** The name of a format; an item with no format (it came from a series) has no badge. */
