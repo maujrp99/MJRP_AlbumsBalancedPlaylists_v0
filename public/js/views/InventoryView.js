@@ -5,6 +5,7 @@ import { inventoryStore } from '../stores/inventory.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { getIcon } from '../components/Icons.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
+import { redrawKeepingField } from '../utils/keepField.js'
 import { InventoryStatus, STATUS_FILTER_OPTIONS, statusCountLabel } from '../models/inventoryStatus.js'
 
 /** The action that puts every album of the person's series in the inventory (F71). */
@@ -26,16 +27,18 @@ export class InventoryView extends BaseView {
 
   async mount() {
     // Subscribe to store updates
-    this.unsubscribe = inventoryStore.subscribe(() => {
+    this.subscriptions.push(inventoryStore.subscribe(() => {
       this.controller.updateStateFromStore()
       this.controller.refresh()
-    })
+    }))
 
     await this.controller.initialize()
   }
 
-  onUnmount() {
-    if (this.unsubscribe) this.unsubscribe()
+  /** The screen was left: it hears the store no more and draws nothing more (F73, UAT-215). */
+  destroy() {
+    this.left = true
+    super.destroy()
   }
 
   /**
@@ -66,9 +69,12 @@ export class InventoryView extends BaseView {
     // If called by Controller (Update), manually update DOM
     if (isUpdate) {
       const app = document.getElementById('app')
-      if (app) {
-        SafeDOM.clear(app)
-        app.appendChild(container)
+      if (app && !this.left) {
+        // the field in use (the search) is handed back with its text and cursor (utils/keepField.js)
+        redrawKeepingField(app, () => {
+          SafeDOM.clear(app)
+          app.appendChild(container)
+        })
         this.attachEventListeners() // Re-attach for delegated events inside grid
       }
     }
@@ -221,15 +227,6 @@ export class InventoryView extends BaseView {
       searchInput.addEventListener('input', (e) => {
         this.controller.handleFilterChange('search', e.target.value)
       })
-      // Maintain focus hack needed because we are replacing DOM on update
-      // In a real VDOM/fine-grained setup this wouldn't be needed.
-      // But since we are full-replacing, the focus is lost.
-      // Ideally update() shouldn't replace entire DOM if only grid changed.
-      // But keeping it simple for now.
-      searchInput.focus()
-      const val = searchInput.value
-      searchInput.value = ''
-      searchInput.value = val
     }
 
     // Filters

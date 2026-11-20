@@ -35,7 +35,6 @@ const OUTSIDE_NAMES = new Set([
  */
 const WRITTEN_IN_THE_CODE = {
     // the registry of algorithms and of ranking strategies (public/js/algorithms, public/js/ranking)
-    'components/playlists/PlaylistsGridRenderer.js': ['algo.name', 'strat.name'],
     // the recipes of the blending menu, a list in the same file
     'components/blend/BlendRecipeCard.js': ['recipe.name'],
     // the three "coming soon" features, an object in the same function

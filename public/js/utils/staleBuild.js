@@ -53,3 +53,30 @@ export function reloadOnceForNewBuild({
     reload()
     return true
 }
+
+/**
+ * Watch the whole app for a file of an older publication (F73, UAT-213).
+ *
+ * The screens are not the only files loaded on demand: a button may ask for its window at the
+ * click. In a tab opened before a publication that request fails, and with nobody listening the
+ * button does nothing. Vite says so with `vite:preloadError`; a failure it does not announce
+ * arrives as a promise nobody caught. Either way the app is loaded again, once.
+ *
+ * @param {EventTarget} [target] - the window
+ * @param {Object} [options] - handed to reloadOnceForNewBuild (storage, reload, now)
+ * @returns {Function} stops watching
+ */
+export function installStaleBuildGuard(target = window, options = {}) {
+    const onPreloadError = (event) => {
+        if (reloadOnceForNewBuild(options)) event.preventDefault()
+    }
+    const onUnhandled = (event) => {
+        if (isMissingBuildFile(event.reason) && reloadOnceForNewBuild(options)) event.preventDefault()
+    }
+    target.addEventListener('vite:preloadError', onPreloadError)
+    target.addEventListener('unhandledrejection', onUnhandled)
+    return () => {
+        target.removeEventListener('vite:preloadError', onPreloadError)
+        target.removeEventListener('unhandledrejection', onUnhandled)
+    }
+}

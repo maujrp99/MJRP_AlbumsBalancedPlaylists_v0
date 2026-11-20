@@ -44,7 +44,7 @@ describe('the inventory screen (F71)', () => {
         await view.mount()
     })
     afterEach(() => {
-        view.onUnmount()
+        view.destroy()
         inventoryStore.reset()
         document.body.innerHTML = ''
     })
@@ -81,6 +81,27 @@ describe('the inventory screen (F71)', () => {
 
         expect([...document.querySelectorAll('.inventory-card-wrapper')].map(card => card.dataset.albumId)).toEqual(['inv-purple'])
         expect([...document.querySelectorAll('[data-status-count]')].map(text)).toEqual(['✓ 1 Owned', '0 Not Owned', '♡ 1 Wishlist'])
+    })
+
+    describe('the screen that was left (F73, UAT-215)', () => {
+        it('draws nothing more when the inventory changes after it was left', () => {
+            view.destroy()
+            document.getElementById('app').innerHTML = '<p id="other">Your Playlists Series</p>'
+            inventoryStore.setAlbums([fromCard])
+            expect(text(document.getElementById('app'))).toBe('Your Playlists Series')
+        })
+
+        it('the search keeps the focus, the text and the cursor when the screen is drawn again (UAT-212)', () => {
+            const search = document.getElementById('inventorySearch')
+            search.focus()
+            search.value = 'pearl'
+            search.setSelectionRange(2, 2)
+            inventoryStore.setAlbums([fromCard, ten])
+            const after = document.getElementById('inventorySearch')
+            expect(document.activeElement).toBe(after)
+            expect(after.value).toBe('pearl')
+            expect(after.selectionStart).toBe(2)
+        })
     })
 
     describe('the button "Add the albums of my series"', () => {

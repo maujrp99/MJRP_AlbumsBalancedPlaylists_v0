@@ -6,9 +6,8 @@ import { albumSeriesStore } from '../stores/albumSeries.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { RegeneratePanel } from '../components/playlists/RegeneratePanel.js'
 import { getIcon } from '../components/Icons.js'
-import { getAllAlgorithms } from '../algorithms/index.js'
-import { BalancedRankingStrategy, SpotifyRankingStrategy, BEARankingStrategy } from '../ranking/index.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
+import { redrawKeepingField } from '../utils/keepField.js'
 
 // Refactored Components
 import { PlaylistsController } from '../controllers/PlaylistsController.js'
@@ -83,9 +82,11 @@ export class PlaylistsView extends BaseView {
     }
     this.updateDeferred = false
 
-    // Clear and Re-render
-    SafeDOM.clear(this.container)
-    this.container.appendChild(this.renderContent())
+    // Draw again; the field in use (the batch name) is handed back with its text and cursor (F73)
+    redrawKeepingField(this.container, () => {
+      SafeDOM.clear(this.container)
+      this.container.appendChild(this.renderContent())
+    })
 
     // Attach Element Listeners (Re-bind recreated elements)
     this.attachElementListeners()
@@ -127,20 +128,6 @@ export class PlaylistsView extends BaseView {
   }
 
   attachElementListeners() {
-    // Generation Listeners (Initial Generate Button)
-    const generateBtn = this.container.querySelector('#generateBtn')
-    if (generateBtn) {
-      generateBtn.addEventListener('click', () => {
-        const algoRadio = this.container.querySelector('input[name="algorithm"]:checked')
-        const rankSelect = this.container.querySelector('#rankingStrategySelect')
-        const config = {
-          algorithmId: algoRadio?.value,
-          rankingId: rankSelect?.value
-        }
-        this.controller.handleGenerate(config)
-      })
-    }
-
     // Toggle RegeneratePanel
     const toggleBtn = this.container.querySelector('[data-action="toggle-regenerate-panel"]')
     if (toggleBtn) {
@@ -246,27 +233,32 @@ export class PlaylistsView extends BaseView {
       editedBatchName: savedBatchNameOf(state)
     })))
 
-    // Batch Name Input
-    container.appendChild(SafeDOM.fromHTML(
-      PlaylistsGridRenderer.renderBatchNameInput(shownBatchNameOf(state), isEditMode, state.defaultBatchName)
-    ))
+    // With no playlists and nothing being edited there is nothing to name, reconfigure or export:
+    // the screen says so and leads to where playlists are made (F73, UAT-214)
+    const nothingHere = playlists.length === 0 && !isEditMode
+    if (!nothingHere) {
+      // Batch Name Input
+      container.appendChild(SafeDOM.fromHTML(
+        PlaylistsGridRenderer.renderBatchNameInput(shownBatchNameOf(state), isEditMode, state.defaultBatchName)
+      ))
 
-    // Generation / Reconfig
-    const genContainer = SafeDOM.div({ id: 'generationControlContainer' })
-    genContainer.appendChild(SafeDOM.fromHTML(this.renderGenerationSection(playlists, activeSeries)))
-    container.appendChild(genContainer)
+      // Generation / Reconfig
+      const genContainer = SafeDOM.div({ id: 'generationControlContainer' })
+      genContainer.appendChild(SafeDOM.fromHTML(this.renderGenerationSection(playlists, activeSeries)))
+      container.appendChild(genContainer)
 
-    // Export
-    const exportSec = SafeDOM.div({ id: 'exportSection', className: 'mb-6 fade-in', style: { animationDelay: '0.08s' } })
-    exportSec.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderExportSection(playlists, {
-      isSaving: state.isSaving, canUndo: state.canUndo, canRedo: state.canRedo
-    })))
-    container.appendChild(exportSec)
+      // Export
+      const exportSec = SafeDOM.div({ id: 'exportSection', className: 'mb-6 fade-in', style: { animationDelay: '0.08s' } })
+      exportSec.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderExportSection(playlists, {
+        isSaving: state.isSaving, canUndo: state.canUndo, canRedo: state.canRedo
+      })))
+      container.appendChild(exportSec)
+    }
 
     // Grid
     const mainContent = SafeDOM.div({ id: 'mainContent', className: 'fade-in', style: { animationDelay: '0.1s' } })
 
-    if (playlists.length === 0 && !isEditMode) {
+    if (nothingHere) {
       mainContent.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderEmptyState()))
     }
 
@@ -314,15 +306,9 @@ export class PlaylistsView extends BaseView {
             </div>
         </div>
       `
-    } else {
-      // Create Mode (Initial Settings)
-      const algorithms = getAllAlgorithms()
-      const rankingStrategies = [BalancedRankingStrategy.metadata, SpotifyRankingStrategy.metadata, BEARankingStrategy.metadata]
-      // Defaults
-      const currentAlgo = 'mjrp-balanced-cascade'
-      const currentRank = 'balanced'
-      return PlaylistsGridRenderer.renderInitialSettings(algorithms, currentAlgo, rankingStrategies, currentRank)
     }
+    // No playlists and nothing being edited: the empty state below says where playlists are made (F73)
+    return ''
   }
 
 
