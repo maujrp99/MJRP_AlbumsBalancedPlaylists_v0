@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:04] review — crítica de UX das telas no celular (F76)
+
+- Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-audit.md`, por um auxiliar que não construiu as telas, pela skill `mjrp-critiquing-ux-ui`; em emulação de celular, sem aparelho de verdade.
+- 3 P0, 12 P1, 9 P2. Os três P0: a lista de séries tem dezenas de milhares de pixels de altura; a tela de séries rola de lado e empurra «Edit» e «Delete Series» para fora; a janela do álbum mostra o título cortado («B.») e só uma ou duas faixas.
+- O relatório separa 11 consertos de layout que não dependem de redesenho, e propõe a ordem do redesenho.
+
 ## [2026-11-20 01:04] session — F74, primeira fatia, provada em produção; regressão achada e segunda fatia aberta
 
 - Servidor `mjrp-proxy-00208-kzm` e site `8efa91c` publicados. Na conta do MJRP: «In the Court of the Crimson King» com as cinco originais com nota e as extras sem; «High Voltage» 9 de 9, pela página da edição internacional.
