@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:15] review — F70 em produção (site) e provada; quatro issues em fixed
+
+Site publicado da `main` (`88adbc4`, pacote `main-DDeTiHbR.js`); a F70 não muda o servidor. Prova em `reports/evidence/F70/2026-11-19-small-defects-proof.md`: em produção, como visitante, a busca de um artista de eletrônica não pede mais a lista da IA; o substituto de capa entra uma vez só. UAT-209 e UAT-210 só por teste, com a razão escrita. Em `fixed`: UAT-208, 209, 210, 63. Restam 9 issues abertas; auxiliar trabalhando nas UAT-18, 19 e 20.
+
 ## [2026-11-19 22:12] session — F70: spec, plano e tarefas; comportamento e manual
 
 Passo de documentos da via rápida, no mesmo ramo (`fix/f70-small-defects`): `spec.md` (quatro REQ, um por issue, com `verified_by::`), `plan.md` e `tasks.md` da F70 preenchidos, `status: In Progress`; fica aberta a tarefa da prova no navegador, do integrador. `docs/specs/behavior.md`: o visitante na busca de álbuns e na carga, «Mudar só o preço do item», «Notas de um álbum achado pela busca por IA» e «Capa que não há ou não carrega». Manual: `03`, `07`, `08`, `13`, `19`, `21`, `99` e o mapa de arquivos, nas frases que ficaram falsas (o site ignorava `data.ratings`; `updatePrice` no lugar errado) e nas três peças novas.
