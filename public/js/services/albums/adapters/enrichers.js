@@ -1,10 +1,11 @@
 /**
  * The enrichment sources of an album, each behind the same small port (DP-07, DP-14):
- *   enrich(album) -> Promise<{ status: 'done' | 'empty', album, apply, reason? }>
+ *   enrich(album) -> Promise<{ status: 'done' | 'empty' | 'not-connected', album, apply, reason? }>
  * Every one works on a copy and returns it: the album it received is never changed.
  * `apply(other)` puts the same answer on another album (a copy again). The load uses it when a
  * newer album was published while the source was working, so no source undoes another.
- * A source that breaks throws; "the source has nothing" is 'empty'.
+ * A source that breaks throws; "the source has nothing" is 'empty'; "the person is not connected
+ * to the source" is 'not-connected' (the popularity, F69), which is neither.
  *
  * The ratings come from the app's server, whose answer says which of the two it is (F52):
  * 'not_found' and 'no_ratings' are 'empty'; a failure is thrown as it came, with its code and its
@@ -20,6 +21,7 @@ import { cloneAlbum } from '../../../models/cloneAlbum.js'
 
 const DONE = 'done'
 const EMPTY = 'empty'
+const NOT_CONNECTED = 'not-connected'
 
 /** What the server may answer about the ratings of an album (api/serverResult.js). */
 const SOURCE_HAS_NONE = new Set(['not_found', 'no_ratings'])
@@ -81,26 +83,45 @@ export class AcclaimEnricher {
     }
 }
 
-/** Spotify popularity. Skipped when Spotify is not connected and nothing is stored for the album. */
+/**
+ * Spotify popularity (F69). Three outcomes that never merge:
+ *   'done'           Spotify has the album (or its answer was already stored)
+ *   'empty'          Spotify answered: it has no such album; with the reason and, for 'not_found',
+ *                    the version of the identity rule that decided it (the rule of the app)
+ *   'not-connected'  there is no Spotify session: nobody was asked, nothing failed, and the load
+ *                    keeps and writes nothing for this source
+ * A call that failed is thrown as it came (with its `hold`, when Spotify said "wait a little").
+ */
 export class PopularityEnricher {
-    /** @param {Function} deps.applyPopularity - (album) => Promise<void>, writes into the album given */
-    constructor({ applyPopularity }) {
+    /**
+     * @param {Object} deps
+     * @param {Function} deps.readPopularity - (album) => Promise<{ kind: 'found', data } |
+     *        { kind: 'not_found', reason, rule } | { kind: 'not_connected' }>; it throws when Spotify
+     *        could not be asked (adapters/spotifyPopularitySource.js)
+     * @param {Function} deps.applyPopularity - (album, data) => void, writes the data into the album given
+     */
+    constructor({ readPopularity, applyPopularity }) {
+        this.readPopularity = readPopularity
         this.applyPopularity = applyPopularity
     }
 
     async enrich(album) {
-        // Asked again for another album, the popularity comes from what the first ask stored.
-        const apply = async (target) => {
-            if (target.spotifyId) return target
-            const copy = cloneAlbum(target)
-            await this.applyPopularity(copy)
-            return copy
+        if (album.spotifyId) return { status: DONE, album, apply: unchanged }
+
+        const answer = await this.readPopularity(album)
+        if (answer.kind === 'not_connected') return { status: NOT_CONNECTED, album, apply: unchanged }
+        if (answer.kind !== 'found') {
+            return { status: EMPTY, reason: answer.reason, rule: answer.rule ?? null, album, apply: unchanged }
         }
 
-        const copy = await apply(album)
-        return copy.spotifyId
-            ? { status: DONE, album: copy, apply }
-            : { status: EMPTY, album: copy, apply: unchanged }
+        // Asked again for a newer album, the same answer is written on a copy of that one.
+        const apply = (target) => {
+            if (target.spotifyId) return target
+            const copy = cloneAlbum(target)
+            this.applyPopularity(copy, answer.data)
+            return copy
+        }
+        return { status: DONE, album: apply(album), apply }
     }
 }
 

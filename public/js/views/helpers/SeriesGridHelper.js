@@ -5,7 +5,6 @@
  * Contains grid refresh and ranking hydration logic.
  */
 import { albumSeriesStore } from '../../stores/albumSeries.js';
-import { applyEnrichmentToAlbums } from '../../helpers/SpotifyEnrichmentHelper.js';
 import { TracksRankingComparison } from '../../components/ranking/TracksRankingComparison.js';
 
 /**
@@ -19,15 +18,8 @@ export async function refreshGrid(view, providedAlbums = null) {
     const filteredAlbums = providedAlbums || view.lastRenderedAlbums || [];
     const allSeries = albumSeriesStore.getSeries();
 
-    // Apply cached enrichment
-    try {
-        await applyEnrichmentToAlbums(filteredAlbums, {
-            fetchIfMissing: false,
-            silent: true
-        });
-    } catch (e) {
-        console.warn('[SeriesView] Enrichment application failed:', e.message);
-    }
+    // The albums come from the album load with their Spotify popularity already on them (F69):
+    // nothing is read or written here.
 
     const { searchQuery, filters } = view.controller
         ? view.controller.getState()
@@ -43,7 +35,7 @@ export async function refreshGrid(view, providedAlbums = null) {
 
     // Hydrate ranking components for expanded view
     if (view.viewMode === 'expanded') {
-        hydrateRankingContainers(filteredAlbums);
+        hydrateRankingContainers(filteredAlbums, view.controller);
     }
 
     view.updateEmptyState(filteredAlbums.length);
@@ -52,8 +44,9 @@ export async function refreshGrid(view, providedAlbums = null) {
 /**
  * Hydrate TracksRankingComparison components
  * @param {Array} albums - Filtered albums
+ * @param {Object} [controller] - gives the state of the popularity of an album and asks for it again
  */
-function hydrateRankingContainers(albums) {
+function hydrateRankingContainers(albums, controller = null) {
     const gridMount = document.getElementById('series-grid-mount');
     if (!gridMount) return;
 
@@ -64,7 +57,10 @@ function hydrateRankingContainers(albums) {
         const albumId = el.dataset.albumId;
         const album = albums.find(a => a.id === albumId);
         if (album) {
-            new TracksRankingComparison({ album }).mount(el);
+            const popularity = controller?.getPopularityStatus
+                ? { status: controller.getPopularityStatus(album.id), onAsk: (id) => controller.askPopularity(id) }
+                : null;
+            new TracksRankingComparison({ album, popularity }).mount(el);
         }
     });
 }

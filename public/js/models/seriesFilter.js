@@ -10,6 +10,7 @@
 
 import { parseAlbumQuery } from './albumQuery.js'
 import { queryKey } from './albumLoadState.js'
+import { knownSources } from './albumFacts.js'
 
 export const ALL = 'all'
 
@@ -25,6 +26,7 @@ export function decadeOf(year) {
 
 /**
  * What the filters know about one query, read from the query itself.
+ * `sources` has only what is known of each source (models/albumFacts.js, knownSources).
  * @returns {{ key: string, artist: string, title: string, year: number|null, sources: Object, checked: boolean }}
  */
 export function describeQuery(query) {
@@ -36,7 +38,7 @@ export function describeQuery(query) {
         artist,
         title,
         year: Number.isFinite(year) && year > 0 ? year : null,
-        sources: facts?.sources || {},
+        sources: knownSources(facts),
         checked: !!facts
     }
 }
@@ -113,11 +115,24 @@ export function readsFacts(source) {
     return FACT_FILTERS.includes(source)
 }
 
-/** How many queries of the series given were never checked against the sources. */
-export function countUnchecked(seriesList = []) {
+/** The source filters that are one source: for them, "checked" is "that source answered". */
+const ONE_SOURCE_FILTERS = Object.freeze(['acclaim', 'popularity'])
+
+/**
+ * How many queries of the series given the filter cannot answer for: never checked against the
+ * sources or, for the filter of one source, with nothing known of that source (it failed, or the
+ * person was not connected to it when the album loaded).
+ * @param {Array} seriesList
+ * @param {string} [source] - the value of the source filter in use
+ */
+export function countUnchecked(seriesList = [], source = null) {
+    const answered = ONE_SOURCE_FILTERS.includes(source)
+        ? (described) => typeof described.sources[source] === 'boolean'
+        : () => true
     let count = 0
     seriesList.forEach(series => (series.albumQueries || []).forEach(query => {
-        if (!describeQuery(query).checked) count++
+        const described = describeQuery(query)
+        if (!described.checked || !answered(described)) count++
     }))
     return count
 }

@@ -25,7 +25,7 @@ The `fetchRankingForAlbum` function implements a specific priority chain (The "S
 | Service | Location | Responsibility |
 | :--- | :--- | :--- |
 | **`scrapers/besteveralbums.js`** | `server/lib/` | **Primary Source**. Scrapes HTML from besteveralbums.com to extract user-generated track content/ratings. |
-| **`spotifyPopularity.js`** | `server/lib/services/` | **Secondary Source**. Queries Spotify API for track popularity. Caches the access token in memory; there is no rate limiting. |
+| **`spotifyPopularity.js`** | `server/lib/services/` | **Secondary Source**. Queries Spotify API for track popularity. Caches the access token in memory; there is no rate limiting. Typed outcomes and thrown failures since F69. |
 | **`EnrichmentService.js`** | `server/lib/services/` | Logic of `POST /api/enrich-album`: maps BestEverAlbums ratings to the given tracklist. |
 | **`GenerationService.js`** | `server/lib/services/` | Logic of `POST /api/generate`: AI album generation, validation, ranking fetch and consolidation. |
 | **`aiClient.js`** | `server/lib/` | **Tertiary Source**. Wrapper around the AI Provider (Gemini). Handles prompt injection (`prompts.js`) and response parsing. |
@@ -258,6 +258,7 @@ sequenceDiagram
     2.  Get Album (`/v1/albums/{id}`) to read the track IDs.
     3.  **Batch Request**: Query `/v1/tracks` with up to 50 IDs to get the full track objects (which contain the `popularity` field).
     4.  **Output**: Maps `popularity` (0-100) directly to `rating`.
+-   **Answer (v5.0, F69)**: `getSpotifyPopularityRanking` follows the answer contract of F52 (`lib/outcome.js`). It returns `{ outcome: 'found', provider, providerType, referenceUrl, evidence }`, `{ outcome: 'not_found' }` (Spotify answered: no such album, or the album lists no track) or `{ outcome: 'not_configured' }` (the server has no Spotify credentials: Spotify is not asked). A call that failed (network, 4xx/5xx, 429, too slow, the token request included) is thrown as an `UpstreamError`; before, all of these came back as `{ error }`. Its caller, `fetchRanking.js`, still goes on to the next source of the ranking when it throws.
 
 
 ---

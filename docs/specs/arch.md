@@ -609,7 +609,7 @@ A crítica conferiu a proposta contra o código e achou dez pontos. A direção 
 **Fica aberto:**
 1. O número da primeira carga em produção (soma de `sourceRequests`, quantos `upstream_timeout`) e, com ele, a decisão do MJRP sobre o guardado persistente no servidor.
 2. Os números escolhidos sem medir a fonte (ritmo, esperas, orçamento, prazos de confiança): decididos pelo agente, revisáveis.
-3. A popularidade do Spotify com falha como falha: item próprio, ainda sem feature. Hoje falha, «não conectado» e «o Spotify não tem» terminam os três em `empty`, e o «sem dado» vai para os fatos da série.
+3. A popularidade do Spotify com falha como falha: feita na F69 (seção «A popularidade do Spotify tem três desfechos (F69)», no fim deste arquivo). Até ela, falha, «não conectado» e «o Spotify não tem» terminavam os três em `empty`, e o «sem dado» ia para os fatos da série.
 4. Os fatos antigos da série não viraram «desconhecido» (item 8): são reescritos a cada carga. Sobra o registro `done` com página e zero notas, de antes da fatia 1, que não se refaz sozinho.
 5. `/api/generate` passa pela mesma fila e pelo prazo de 8 s por requisição à fonte, mas não tem orçamento total.
 6. O prazo e o número de instâncias configurados no Cloud Run seguem sem conferir.
@@ -873,3 +873,35 @@ sequenceDiagram
 | A espera e o pedido por fonte não saem para fora | `test/architecture/albumLoadBoundaries.test.js`: `LoadHold` e `AlbumAsks` só alcançam o que recebem; os modelos novos são puros; `LatestOnly` não importa nada | 0 |
 
 **O que este desenho não resolve.** As 94 funções de `public/js` ainda acima de 10 (43 no código do blend, das playlists e da exportação, 10 na busca e classificação de álbuns, 3 na migração, 38 sem feature) e as 35 de `shared/` (9) e `server/` (26), que o teste não cobre; e as 4 de `public/js/vendor/`, código de terceiros. A tela de álbuns é redesenhada uma vez a mais quando uma espera começa e quando acaba, porque o store avisa: o desenho é o mesmo. O `SeriesController.init(db, view)` guarda um `db` que nunca lê; a `SeriesView` passa `null`.
+
+## A popularidade do Spotify tem três desfechos (F69) — construída no ramo
+
+> Escrita em 2026-11-19, junto com o código, no ramo `fix/f69-spotify-popularity-failure`. Conserta a UAT-206 e fecha o ponto que a proposta da F52 deixou de fora (seção 11, item 10). O diagnóstico, com arquivo, e a análise da UAT-28 estão em `docs/specs/features/F69-spotify-popularity-failure-is-failure/plan.md`. Não foi vista num navegador; o servidor não foi publicado.
+
+**O problema, em uma frase.** A popularidade de um álbum terminava em `empty` sempre que o álbum voltava sem identificador do Spotify, e isso juntava «o Spotify não tem», «a consulta falhou» e «a pessoa não está conectada»; o `empty` era guardado por 1 hora e escrito na série como «não tem popularidade».
+
+**Os três desfechos, e onde cada um é decidido.**
+
+| Desfecho | Decidido em | Estado da fonte | Guardado no navegador | Fatos da série | O que a pessoa vê |
+|---|---|---|---|---|---|
+| O Spotify não tem o álbum | `SpotifyService.searchAlbum` (a regra única de identidade, `pickAlbum`), dito por `albumPopularity` como `{ found: false, reason: 'not_found' }` | `empty` | sim, com o motivo e a versão da regra: 24 horas (`EMPTY_TRUST.not_found`), e só enquanto a regra for a mesma | `popularity: false` | «Spotify has no popularity for this album.» com «Ask again»; no blend, «has none at the source» |
+| A consulta falhou (rede, 5xx, 429 longo ou sem tempo) | o erro sobe como veio, de `SpotifyService._fetch` até `AlbumLoadService` | `failed` | nunca | sem chave (ou o valor que já se sabia) | «Spotify did not answer.» com «Try again»; no blend, «did not answer» |
+| A pessoa não está conectada | `SpotifyPopularitySource.read`: sem sessão (`SpotifyAuthService.hasSession`), ou a sessão acabou durante o uso (`SpotifyReconnectError`) | `not-connected` (novo) | nunca | sem chave (ou o valor que já se sabia) | «Connect Spotify to see popularity.», em cinza e sem botão; no blend, «because Spotify is not connected» |
+
+O que o Spotify já respondeu e está em `SpotifyEnrichmentStore` responde antes de tudo, conectado ou não: `done`.
+
+**Um caminho só.** `PopularityEnricher` → `services/albums/adapters/spotifyPopularitySource.js` → `SpotifyService.albumPopularity`. O laço de fundo (`SpotifyEnrichmentService`, disparado por `spotify-auth-success`) saiu; o botão «Enrich Data» da comparação de faixas deixou de falar com o Spotify e pede pela carga (`refreshSource`); `refreshGrid` deixou de escrever dado do Spotify nos álbuns da carga. Função de aptidão: `test/architecture/spotifyPopularityOnePath.test.js`.
+
+**«Não conectado» é estado da fonte, não espera.** A espera (`LoadHold`) é do que volta sozinho ou do login do app, e faz toda tela parar de esperar por fontes. «Não conectado ao Spotify» dura até a pessoa agir e é de uma fonte só: como estado, o álbum fica pronto e as notas não são afetadas. `sourceOutcome` (`models/albumSourceAsk.js`) devolve `note: null` para ele, e `_publishSource` só guarda quando há `note`.
+
+**Ao conectar.** `services/albums/popularityOnConnect.js` ouve `spotify-auth-change` (o sinal da F50) e, havendo sessão, chama `refreshSource(albumId, 'popularity')` para os álbuns da tela em `not-connected`. Nenhum álbum é recarregado. As séries que não estão na tela são perguntadas quando carregam.
+
+**O Spotify pede para esperar (429).** A fonte guarda a hora até a qual não pergunta de novo. Espera de até 30 s (`MAX_SPOTIFY_HOLD_MS`) sobe com `hold: { reason: 'spotify_busy' }`: a carga segura a popularidade, avisa uma vez e a retoma sozinha (o mesmo mecanismo da F52; a fila das notas não para). Acima disso, ou sem tempo dito, é falha. Decidido pelo agente, revisável: enquanto há espera nenhuma tela espera fonte alguma, e o Spotify pode pedir horas.
+
+**Os fatos da série passam a ter uma resposta por fonte.** `facts.sources` só tem a chave da fonte que respondeu (`true` ou `false`); a que falhou ou não estava conectada mantém o valor que já se sabia, ou fica sem chave. Os fatos ganham `v: 2`. Antes, a falha de uma fonte segurava os fatos do álbum inteiro, e «não conectado» era escrito como `false`.
+
+**O que já estava gravado errado.** Um `empty` de popularidade sem motivo no registro do navegador não vale (`ALWAYS_SAYS_WHY`): a fonte é perguntada uma vez. Um `popularity: false` em fatos sem `v` é lido como «não se sabe» (`knownSources`) e reescrito na próxima carga do álbum. Custo: uma gravação por série na primeira carga depois da F69, e uma consulta ao Spotify por álbum que estava em «sem dado» (nenhuma, se a pessoa não está conectada).
+
+**O gêmeo do servidor.** `server/lib/services/spotifyPopularity.js` é alcançado por `POST /api/generate` (`GenerationService` → `fetchRankingForAlbum`, como fonte de reserva do ranking). Passou ao contrato da F52: `found`, `not_found` e `not_configured` são desfechos; a falha é `UpstreamError`. `fetchRanking.js` não mudou: segue para a fonte seguinte, e a falha agora é registrada como falha.
+
+**O que este desenho não resolve.** O estado de cada fonte não aparece no cartão da vista compacta (o cartão nunca mostrou estado de fonte). Durante uma espera do Spotify, o blend diz «the server paused the load». `SpotifyAuthService._requestNewAccess` encerra a sessão em qualquer falha da renovação, a de rede incluída, e a pessoa passa a «não conectado». O dado em `SpotifyEnrichmentStore` de antes da regra única de identidade (F55) não é conferido. As chaves do Spotify seguem no `localStorage` (UAT-28: análise e proposta no plano da F69).
