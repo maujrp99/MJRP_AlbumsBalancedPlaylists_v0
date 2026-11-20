@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:25] session — F75 em produção: o 404 da página de preço não é «sem edição em CD»
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+Na primeira leitura na conta do MJRP, 16 de 16 álbuns voltaram «No CD edition found», em cerca de 3 s cada (três pedidos ao Discogs): a busca e as versões funcionam (refeitas sem token: AC/DC «High Voltage» acha a edição 864947) e o terceiro pedido, o do preço, voltou 404, que o servidor lia como «não achado». Conserto: o 404 da página de preço vira «sem valor», com a edição dita, e o que o Discogs escreveu vai para o log; o 404 de uma página de master continua «não achado».
+
 ## [2026-11-20 02:17] session — F75: o interruptor é perguntado de novo quando a pessoa do inventário muda
 
 **Branch:** feat/f75-cd-prices-and-where-to-buy

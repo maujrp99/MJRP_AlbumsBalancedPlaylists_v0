@@ -203,9 +203,19 @@ describe('the value of an album (REQ-04)', () => {
         })
     })
 
-    it('an edition Discogs no longer has (404) is not_found', async () => {
-        const http = httpWith([['/marketplace/price_suggestions/77', httpError(404)]])
-        expect(await ask(sourceWith(http), { ...DARK_SIDE, releaseId: 77 })).toEqual({ outcome: 'not_found' })
+    it('a 404 on the price page is NOT "no CD edition": the edition is known, there is no price, and what Discogs said is logged', async () => {
+        const warn = vi.fn()
+        const http = httpWith([...happyRoutes().slice(0, 2), ['/marketplace/price_suggestions/5012948', httpError(404, { message: 'The requested resource was not found.' })]])
+        expect(await ask(sourceWith(http, { logger: { warn } }))).toEqual({
+            outcome: 'no_value',
+            release: { id: 5012948, title: 'Harvest 1984, Europe', url: 'https://www.discogs.com/release/5012948' }
+        })
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('HTTP 404 on the price page: The requested resource was not found.'))
+    })
+
+    it('a master page that is gone (404) is still not_found', async () => {
+        const http = httpWith([['/database/search', searchMaster, isMaster], ['/masters/10362/versions', httpError(404)]])
+        expect(await ask(sourceWith(http))).toEqual({ outcome: 'not_found' })
     })
 })
 
