@@ -28,3 +28,10 @@
 - **Limite:** a «Referência» do artifact é a tela capturada em 2026-11-20, não o inventário ao vivo; nela só a janela de «The Dark Side of the Moon» abre.
 - **Como é montado:** `design/.snapshots/` no worktree da sessão (fora do git) guarda a captura e o montador; o pacote publicado fica na pasta temporária da sessão.
 
+## [2026-11-20 00:52] F75 · a reação do MJRP à v2 e a prévia do cartão em três níveis
+
+- **Reação, nas palavras dele:** sobre as contagens do topo: «parecem botoes e nao sao»; sobre o cartão: «as informações ficam no ar, consegue me mostrar alternativas para a UI do card? na linha do consolidar, elevar, transformar … o valor aí parece que estou vendendo, falta a info do que é esse valor em dolar. e tb algo para incentivar o usuario a clicar se ele quiser comprar … os botoes de comprar estao escondidos na tela que vc tem que clicar pra descobrir que eles existem»; e o futuro: uma rede de apaixonados por álbuns e colecionadores, com vender e trocar.
+- **Prévia, fora do protótipo:** `design/proposals/inventory-card-proposal.html`, o cartão real do app em três níveis sobre um eixo só (quanto o cartão muda para dizer o que é o valor e onde comprar), ao lado do cartão da v2; e as contagens viradas em filtro. Está no comparador (Artifact), como «Prévia em aberto».
+- **O protótipo não mudou:** muda depois da escolha dele.
+- **Achado de desenho:** em «Transformar» o sentido do valor muda com o status: «worth about» no que ele tem, «costs about» no que falta. Responde ao «parece que estou vendendo».
+

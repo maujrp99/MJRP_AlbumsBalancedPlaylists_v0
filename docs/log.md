@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:52] session — F75: prévia do cartão em três níveis; S-58, F76 e UAT-223 (o app no celular); candidato «rede de colecionadores»
+
+- O MJRP reagiu à v2 da F75: as contagens parecem botões, as informações do cartão ficam soltas, o valor parece preço de venda, comprar está escondido. Prévia em três níveis (Consolidar, Elevar, Transformar) em `design/proposals/inventory-card-proposal.html` e no comparador; o protótipo só muda depois da escolha.
+- Dito por ele: a versão no celular é ruim e pede redesenho, com crítica de UX antes. Registrado: UAT-223, S-58 (EP-06) e F76, via padrão.
+- Dito por ele: o app pode virar uma rede de apaixonados por álbuns e colecionadores, com vender e trocar. Não havia registro neste repositório; entrou como candidato no PRD.
+
 ## [2026-11-20 00:41] session — F75: o comparador publicado como Artifact do Claude
 
 - A pedido do MJRP, o comparador do inventário é um Artifact privado: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck. Tela de hoje, v2 e v1 autocontidas, com as capas embutidas.
