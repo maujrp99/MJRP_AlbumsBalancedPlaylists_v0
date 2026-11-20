@@ -35,6 +35,7 @@ import trackIdentity from '../../../test/fixtures/golden-core/inputs/extracted/t
 import trackIdentitySecondSlice from '../../../test/fixtures/golden-core/inputs/extracted/test__shared__trackIdentitySecondSlice.test.js.json'
 import measured1 from '../../../test/fixtures/trackIdentity/measuredAlbums.json'
 import measured2 from '../../../test/fixtures/trackIdentity/measuredAlbums2.json'
+import { newId } from '@album-blender/shared/platform/newId.js'
 import { wirePlatform } from '../platform/wiring'
 import { sha256Hex } from './sha256'
 
@@ -116,6 +117,25 @@ export function runGoldenSelfTest(now: () => number = () => Date.now()): SelfTes
 /** «N of N match», the line the screen shows and the Maestro flow will read (tasks.md TASK-23). */
 export function matchLine(result: Pick<SelfTestResult, 'matching' | 'cases'>): string {
     return `${result.matching} of ${result.cases} match`
+}
+
+/** The whole result as one line of text, for the log a script reads (the diagnostics screen writes it). */
+export function reportLine(result: SelfTestResult): string {
+    const differing = [...result.different, ...result.missing, ...result.extra]
+    return `[golden-self-test] ${matchLine(result)}; passed: ${passed(result)}; different: ${result.different.length}; missing: ${result.missing.length}; extra: ${result.extra.length}; ids made: ${result.ids.generated}; not v4: ${result.ids.notV4}; repeated: ${result.ids.repeated}; ${result.millis} ms${differing.length ? `; cases: ${differing.slice(0, 50).join(', ')}` : ''}`
+}
+
+const V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+
+/**
+ * Which engine ran it and which id source the core has, as one line: Hermes is recognised by its
+ * `HermesInternal` global; Hermes has no `crypto` global, so a v4 id here comes from the source the
+ * app wired (expo-crypto's randomUUID, src/platform/wiring.ts), the only one there is.
+ */
+export function engineLine(scope: Record<string, unknown> = globalThis as unknown as Record<string, unknown>): string {
+    wirePlatform()
+    const sample = newId()
+    return `[golden-self-test] engine: ${'HermesInternal' in scope ? 'Hermes' : 'not Hermes'}; crypto global: ${typeof scope.crypto}; id sample: ${sample}; v4: ${V4.test(sample)}`
 }
 
 export const passed = (result: SelfTestResult) =>

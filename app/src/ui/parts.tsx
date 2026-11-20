@@ -8,10 +8,12 @@ import type { ReactNode } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { colors, size, type } from './theme'
 
-export function TopBar({ title, onLongPress }: { title: string; onLongPress?: () => void }) {
+/** `inSheet`: the bar of a screen shown as an iOS sheet, which starts below the status bar (no top inset). */
+export function TopBar({ title, onLongPress, inSheet = false }: { title: string; onLongPress?: () => void; inSheet?: boolean }) {
     const insets = useSafeAreaInsets()
+    const top = inSheet ? 0 : insets.top
     return (
-        <View style={[styles.topBar, { paddingTop: insets.top, height: size.topBar + insets.top }]}>
+        <View style={[styles.topBar, { paddingTop: top, height: size.topBar + top }]}>
             <Pressable onLongPress={onLongPress} delayLongPress={800} accessibilityRole="header" style={styles.topBarTitleArea}>
                 <Text style={styles.topBarTitle} numberOfLines={1}>{title}</Text>
             </Pressable>

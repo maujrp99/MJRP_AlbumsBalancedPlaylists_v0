@@ -3,8 +3,12 @@
  * offers), signing in (buttons off, «Signing in…»), failed («Couldn't sign in. Try again.», the
  * text of REQ-12), and cancelled (back to idle, nothing said). In demo mode the screen says that no
  * account is used.
+ *
+ * `autoSignIn`: signs in with that provider at once, as if its button were pressed. The route gives
+ * it only in demo mode, from the link albumblender://sign-in?as=apple (scripted runs on the
+ * simulator, where nobody taps).
  */
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { useServices } from '../ui/AppServicesContext'
 import { SignInCancelled } from '../auth/authPort'
@@ -16,7 +20,7 @@ const LABEL: Record<Provider, string> = { apple: 'Sign in with Apple', google: '
 
 type State = { kind: 'idle' } | { kind: 'signingIn'; provider: Provider } | { kind: 'failed' }
 
-export function SignInScreen() {
+export function SignInScreen({ autoSignIn }: { autoSignIn?: Provider } = {}) {
     const { auth, usage, mode } = useServices()
     const [state, setState] = useState<State>({ kind: 'idle' })
 
@@ -30,6 +34,13 @@ export function SignInScreen() {
             setState(error instanceof SignInCancelled ? { kind: 'idle' } : { kind: 'failed' })
         }
     }
+
+    const autoStarted = useRef(false)
+    useEffect(() => {
+        if (!autoSignIn || autoStarted.current) return
+        autoStarted.current = true
+        void signIn(autoSignIn)
+    })
 
     const busy = state.kind === 'signingIn'
     return (

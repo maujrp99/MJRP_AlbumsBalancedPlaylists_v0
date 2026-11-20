@@ -235,17 +235,64 @@ exemplo, em memória: nada sai do aparelho. O Firebase de verdade só com
 `EXPO_PUBLIC_POSTHOG_KEY`), e isso ainda não foi provado: precisa do build nativo e do registro do
 app no Firebase. Nenhum agente entra no projeto Firebase de produção nem grava nele.
 
-**Para o MJRP, no Mac, antes do primeiro simulador** (só ele pode; cada um uma vez):
+**O app no simulador do iPhone (modo de demonstração).** Provado em 2026-11-20 no «iPhone 17 Pro»
+com iOS 26.5 (relatório `reports/evidence/F78/2026-11-20-first-simulator-run.md`).
+
+O que precisa no Mac, uma vez:
+
+| O quê | Como | Nota |
+|---|---|---|
+| Xcode, licença aceita, um runtime de simulador do iOS | App Store; `sudo xcodebuild -license accept`; `xcodebuild -downloadPlatform iOS` | os dois comandos são do MJRP (`sudo`) |
+| CocoaPods | `brew install cocoapods` | sem `sudo`; 1.17.0 em 2026-11-20 |
+| As dependências do repositório | `npm ci` na raiz | o app é espaço de trabalho da raiz |
+
+Não precisa: Watchman, conta da Apple, `GoogleService-Info.plist`, Android Studio. O `xcode-select`
+pode continuar nas Command Line Tools: o script usa o Xcode só no próprio processo
+(`DEVELOPER_DIR`). Para as ferramentas que exigem o `xcode-select` no Xcode (a de controle do
+simulador do Claude Code), o MJRP roda `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`.
+
+O comando, na raiz:
 
 ```
-sudo xcodebuild -license accept
-xcodebuild -downloadPlatform iOS
+npm run app:ios:demo                          # no «iPhone 17 Pro»
+APP_IOS_DEVICE="iPhone 17" npm run app:ios:demo
 ```
 
-O primeiro aceita a licença do Xcode (sem isso o `xcodebuild` e o `simctl` recusam tudo); o segundo
-baixa o simulador do iOS. Depois disso o agente consegue o build de desenvolvimento
-(`npx expo run:ios` em `app/`) e a tela de autoteste no simulador. O iPhone de verdade e o login com
-a Apple pedem ainda a conta de desenvolvedor da Apple; o Android, o Android Studio com um emulador.
+`scripts/app-ios-demo.sh`: gera `app/ios` (`expo prebuild`, com `--no-clean` quando a pasta já é de demonstração: no SDK 58 o padrão é apagar e refazer tudo; a pasta não é commitada), instala os
+pods, constrói `Debug` para o simulador com o `xcodebuild` (o primeiro build leva uns 10 min de pods
+e 6 min de compilação; os seguintes, bem menos), liga o simulador, instala e abre o app, e deixa o
+Metro rodando no terminal (o app em `Debug` lê o JavaScript dele; Ctrl+C para). Não usa
+`npx expo run:ios` porque, nesta máquina, ele para em `xcrun devicectl` antes de construir.
+
+O build de demonstração deixa fora os pacotes nativos do Firebase, do Google Sign-In e do Sign in
+with Apple (`app/nativeBuild.js`, `app/app.config.js`, `app/react-native.config.js`); o build com
+Firebase é `EXPO_PUBLIC_DATA_MODE=firebase` e ainda não foi gerado nem provado.
+
+Abrir telas sem tocar (só no modo de demonstração), com o app já instalado:
+
+```
+xcrun simctl launch booted com.mjrp.albumblender -demoSignIn apple                                  # entra e abre Albums
+xcrun simctl launch booted com.mjrp.albumblender -demoSignIn apple -demoRoute /blend                # uma aba
+xcrun simctl launch booted com.mjrp.albumblender -demoSignIn apple -demoRoute "/diagnostics?run=1"  # o autoteste, rodando
+xcrun simctl io booted screenshot tela.png
+```
+
+(Fechar o app antes: `xcrun simctl terminate booted com.mjrp.albumblender`.) Os links
+`albumblender://diagnostics?run=1` e `albumblender://sign-in?as=apple` também existem, mas pelo
+`simctl openurl` o iOS pergunta «Abrir com…» e só um toque responde.
+
+**O autoteste.** Na tela: toque longo no título «Albums». Ou pelo argumento acima. Ele mostra
+«N of N match» e escreve duas linhas que começam por `[golden-self-test]` (a contagem; o motor e
+um id de amostra), lidas no terminal do Metro ou no log do simulador:
+
+```
+xcrun simctl spawn booted log stream --predicate 'process == "AlbumBlender"' | grep golden-self-test
+```
+
+Em 2026-11-20: `3343 of 3343 match`, `engine: Hermes`, ids v4, ~81 s no build `Debug`.
+
+O iPhone de verdade e o login com a Apple pedem ainda a conta de desenvolvedor da Apple e o app
+registrado no Firebase; o Android, o Android Studio com um emulador.
 
 ---
 

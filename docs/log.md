@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 17:29] session — F78: a primeira vez no simulador — evidência, manual, arch, plano e tarefas
+**Branch:** feat/f78-first-simulator-run
+O app roda no «iPhone 17 Pro» (iOS 26.5, Xcode 27.2) e o autoteste deu 3343 de 3343 no Hermes do app, com ids v4 do expo-crypto: relatório `reports/evidence/F78/2026-11-20-first-simulator-run.md`, com as capturas e o texto do log do simulador e do Metro; `arch.md` («Os dois builds nativos»), `plan.md` (metade da TASK-07: o simulador; falta o Android), um subitem feito na TASK-23, o manual § 2.6 (pré-requisitos, `npm run app:ios:demo`, o autoteste sem toque).
+O script ganhou `--no-clean` (o `expo prebuild` do SDK 58 apaga `ios/` por padrão), o conserto do `«$DEVICE»` e `nice -n 10 -jobs 4`; a terceira execução do script foi parada no meio da compilação pela regra de carga da máquina (um trabalho pesado por vez): o script inteiro, depois dos consertos, não foi conferido de ponta a ponta. Instalado: CocoaPods 1.17.0 por Homebrew.
+
 ## [2026-11-20 17:12] decision — identidade visual: o fogo e os equalizadores são do site, e o design system é o piso
 **Branch:** main
 Palavras do MJRP, ao pedir as propostas da Home (F79) e da página de entrada (F80): «veja que o elemento do fogo, de equalizadores, fazem parte da identidade do site, busquem respeitar o design system num minimo pelo menos». Vale para as duas rodadas de desenho: o fogo (o logotipo `public/assets/TheAlbumBlender.png`, o degradê «flame» `#f97316 → #dc2626`) e os equalizadores são elementos da identidade, a manter e a usar; nenhuma proposta, nem a mais ousada, sai do `docs/specs/design-system.md` sem dizer o que muda e por quê.
@@ -10,6 +15,11 @@ Palavras do MJRP, ao pedir as propostas da Home (F79) e da página de entrada (F
 ## [2026-11-20 17:10] decision — duas features de desenho pedidas pelo MJRP: a Home que se explica (F79) e a página de entrada (F80)
 **Branch:** main
 Palavras dele: «vamos utilizar as skills de UI e UX e de writing copy para melhorar essa seção inicial do site … Gostaria de ver uma proposta consolidar, elevar, transformar, considerando copy, elementos de UI e UX e usabilidade. Tb gostaria de prototipo de uma home splash page para o site, com design moderno imersivo com animações, 3d...tudo relacionado a paixao por ouvir e apreciar ALBUNS completos de musica.» Criadas na `main`, em esboço: S-61 e F79 (EP-01), S-62 e F80 (EP-10; colocação decidida pelo agente, revisável). As duas começam por rodada de desenho com protótipos; nenhum ramo de código antes da escolha dele e da priorização.
+
+## [2026-11-20 17:09] session — F78: o build de demonstração do app no simulador do iPhone
+**Branch:** feat/f78-first-simulator-run
+O app sai do Expo sem os pacotes nativos do Firebase, do Google e da Apple quando `EXPO_PUBLIC_DATA_MODE` não é `firebase` (`app/nativeBuild.js`, `app.config.js` com os config plugins e o `exclude` do Podfile, `react-native.config.js`), sem credencial falsa; `app/ios/` é gerado, não commitado; `npm run app:ios:demo` gera, constrói com o `xcodebuild`, instala e abre no simulador. Para rodar sem toque, só no modo de demonstração: `-demoSignIn`/`-demoRoute` na linha de lançamento, `albumblender://sign-in?as=apple`, `albumblender://diagnostics?run=1`; o autoteste escreve a linha `[golden-self-test]` com a contagem, o motor e um id de amostra.
+Consertos vistos no simulador: `anchor` no lugar de `initialRouteName` e `backBehavior="initialRoute"` nas abas (dois avisos do Expo Router 58), a barra do autoteste sem a área segura dentro da folha do iOS, o aviso de desenvolvimento do React Native sobre `onAnimatedValueUpdate` silenciado. App: 48 testes, `app:check` verde; raiz: 3601 testes (o de tempo da inventário passou sozinho), lint e build verdes.
 
 ## [2026-11-20 16:40] session — os termos de uso do BestEverAlbums, trazidos pelo MJRP, entram no estudo e no rascunho do e-mail
 **Branch:** main
