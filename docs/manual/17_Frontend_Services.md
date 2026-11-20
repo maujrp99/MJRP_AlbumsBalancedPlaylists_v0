@@ -14,8 +14,8 @@ The application uses a mix of **Singleton Classes**, **Functional Modules**, and
 | **`AlbumLoadService`** (v4.0) | **Owner of the album load** | `services/albums/`. Loads the albums of the series on screen: generations (only the current load writes), reconciliation on every open, find then enrich, retry of what failed, and `refreshSource(albumId, source)`: one enrichment source of one album asked again, after whatever is still running for that album, publishing a new album (used when the person saves a ranking). Receives its sources and the cache by injection. |
 | **`OwnRankingService`** (v4.0) | **Owner of the person's rankings on the client** | `services/ranking/`. `save(album, rankings)` writes through the ranking repository and adds the album to the list; `ensureLoaded()` reads the list of ranked albums once per person, shared by whoever asks while it runs, and tries again after a failure. Its ports are injected (`ownRanking.js` puts it together), so it imports nothing. |
 | **`SeriesFactsService`** (v4.0) | **Feature Service** | `services/series/`. Writes into each series what the load learned about its albums (year, which sources have data), only the difference, once the series has finished loading. Since F55 slice 2 it is also the one writer of the corrected Apple Music id: when the album asked for was found under another id than the stored one (`metadata.replacedSourceId`), the same write carries the new `appleMusicId` and, when the query stores them, the cover and the year of the loaded album. A failed write is reported and tried again on the next pass; it never fails the load. |
-| **`PlaylistPersistenceService`** | **Repository Wrapper** | Handles the **CRUD** lifecycle of generated playlists. Manages batch overwrites, Series synchronization, and interacts with `PlaylistRepository`/`Firestore`. |
-| **`SeriesFilterService`** | **Functional Module** | A collection of **pure functions** (`filterAlbums`, `getUniqueArtists`) used by `SeriesView` and wrapped by `FilterUtils.js`. Provides core logic for complex UI filtering. |
+| **`PlaylistPersistenceService`** | **Repository Wrapper** | Removed in F65: no module imported it. The playlists are saved by `PlaylistsService` through `PlaylistRepository` (F60). |
+| **`SeriesFilterService`** | **Functional Module** | Removed in F65: no module imported it. The filters of the albums screen are pure rules in `models/seriesFilter.js`. |
 | **`SavedPlaylistsFilterService`** [NEW] | **Functional Module** | Provides filtering logic for Saved Playlists (Series/Batch names) using `FilterUtils`. |
 | **`SavedPlaylistsReader`** (v5.0, F61) | **Owner of the saved playlists read** | `services/playlists/`. `load({ fresh })` reads the series once and then the playlists of each series, up to 8 at a time with a 15 s deadline (`TaskQueue`), and publishes each series to `SavedPlaylistsStore` as its answer arrives (`loading`, `ready`, `empty`, `failed`). A generation per load and a ticket per series: only the latest ask writes. `refreshSeries(id)` reads one series; `removeBatch` and `removeAll` cost one read and one atomic write. What was read stays on the list while it is read again. It imports only the queue and the rules of `models/savedPlaylists.js`; the database arrives through the `source` port (`adapters/RepositoryPlaylistsSource.js`) and the wiring is in `savedPlaylistsReading.js`. |
 | **`StorageService`** [NEW] | **Infrastructure** | Centralized `localStorage` wrapper with error handling and namespacing. Used by all services for local persistence. |
@@ -35,7 +35,7 @@ The application uses a mix of **Singleton Classes**, **Functional Modules**, and
 The integration follows a **Facade Pattern** to hide the complexity of the Apple SDK.
 
 *   **`MusicKitService.js`**: The main entry point. It delegates actual work to sub-modules (`musicKitAuth`, `musicKitCatalog`, `musicKitLibrary`) but exposes a unified API surface to the rest of the app.
-*   **`MusicKitSearchAdapter.js`**: An **Adapter** that makes the Apple Music Catalog search compatible with the generic `Autocomplete` component interface. It normalizes Apple's JSON response into the app's standard `{ id, title, artist, coverUrl }` format.
+*   **`MusicKitSearchAdapter.js`**: An **Adapter** that makes the Apple Music Catalog search compatible with the generic `Autocomplete` component interface. It normalizes Apple's JSON response into the app's standard `{ id, title, artist, coverUrl }` format. *(removed in F65: `MusicKitSearchAdapter.js`)*
 
 ### Spotify
 *   **`SpotifyAuthService.js`**: Implements **PKCE** (Proof Key for Code Exchange) flow for secure client-side authentication. Manages token lifecycle (storage, refresh). `renewAccess()` renews now when Spotify refused the access; renewals asked at the same time share one request (F62). `SpotifyService._fetch` uses it: a 401 renews once and repeats the call, then throws `SpotifyReconnectError`; a 429 throws `SpotifyRateLimitError`, or is waited for (`Retry-After` up to 30 s) by the export calls (`services/spotify/spotifyErrors.js`). `hasSession()` (F69) says whether Spotify can be asked without the person: the access is in its time, or it can still be renewed; false is "not connected".
@@ -64,8 +64,8 @@ graph TD
     PGS -->|Ranking ID| Rank[RankingStrategyFactory]
     Algo -->|Raw Playlists| PGS
     PGS -->|Transform| P[Normalized Playlists]
-    UI -->|Save| PPS[PlaylistPersistenceService]
-    PPS -->|Format| Firestore
+    UI -->|Save| PS[PlaylistsService]
+    PS -->|PlaylistRepository| Firestore
 ```
 
 ### Popularity when Spotify connects (v5.0, F69)

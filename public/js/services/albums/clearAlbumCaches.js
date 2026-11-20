@@ -9,7 +9,7 @@
  * The albums in memory (the load store and the shelf) are not emptied here: the caller reloads the page.
  */
 
-/** Entries of the old album cache in localStorage (cache/albumCache.js, legacy version). */
+/** Entries of the old album cache in localStorage (cache/albumCache.js, removed in F65: a browser may still hold them). */
 export const LEGACY_ALBUM_KEY_PREFIX = 'album_cache_v'
 
 /**

@@ -45,7 +45,7 @@
 ## Inventory (`inventory/`)
 **Status**: `[ACTIVE]`
 
--   **`inventory/InventoryGrid.js`**:
+-   **`inventory/InventoryGrid.js`**: *(removed in F65: `InventoryGrid.js`)*
     -   **Role**: A grid component for the User's Inventory.
     -   **Logic**: A wrapper around `SeriesGridRenderer`. Adds generic event delegation for Inventory actions (Click, Context Menu). Handles "Zero State" (Empty Inventory) display.
     -   **Usage today**: no module imports it. The inventory screen is `views/InventoryView.js` with `views/renderers/InventoryGridRenderer.js` and `controllers/InventoryController.js`.

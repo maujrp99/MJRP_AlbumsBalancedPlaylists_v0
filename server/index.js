@@ -125,7 +125,6 @@ const guards = buildGuards(process.env)
 app.use('/api/generate', guards.paid)
 app.use('/api/ai', guards.paid)
 app.use('/api/enrich-album', guards.costly)
-app.use('/api/playlists', guards.costly)
 
 // MusicKit routes (Apple Music integration)
 const musickitRoutes = require('./routes/musickit')
@@ -135,10 +134,6 @@ app.use('/api', musickitRoutes)
 const { router: albumRoutes, initAlbumRoutes } = require('./routes/albums')
 initAlbumRoutes(routeDeps)
 app.use('/api', albumRoutes)
-
-// Playlist routes
-const playlistRoutes = require('./routes/playlists')
-app.use('/api', playlistRoutes)
 
 // Debug routes (list-models, raw-ranking, files, import): off unless turned on by name (F59)
 const { debugRoutesEnabled } = require('./lib/debugGate')

@@ -34,9 +34,7 @@ const STILL_IMPORTING_THE_MOUNTING_FILE = [
     'components/playlists/PlaylistsDragHandler.js -> ../../app.js',
     'components/playlists/SavedPlaylistsController.js -> ../../app.js',
     'controllers/BlendingController.js -> ../app.js',
-    'controllers/PlaylistsController.js -> ../app.js',
-    'services/PlaylistPersistenceService.js -> ../app.js',
-    'views/playlists/PlaylistsDragDrop.js -> ../../app.js'
+    'controllers/PlaylistsController.js -> ../app.js'
 ]
 
 /**

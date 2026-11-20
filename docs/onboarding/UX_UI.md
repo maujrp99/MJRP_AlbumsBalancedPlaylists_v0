@@ -32,7 +32,7 @@ We are building a **premium, immersive music curation experience**.
   - **Expanded Mode**: Detailed list with dual tracklists (Ranked vs Original).
   - **Filters**: Sticky header with glassmorphism.
 - **PlaylistsView**: Drag-and-drop interface (SortableJS).
-- **RankingView**: Album details with track ranking.
+- **RankingView**: retired in F65 (it was reached only by typing its address). The track ranking of an album is shown in the album details window and in the expanded view of the albums screen.
 
 ### 2. Components to Validate (UAT)
 These components are implemented but need **Visual QA**:

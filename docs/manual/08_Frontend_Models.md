@@ -87,6 +87,8 @@ No DOM, no store, no service: each imports only other models (checked by `test/a
 *   **Who uses it**: `CatalogAdapter` and `api/client.js` (Apple Music, the AI answer), `SpotifyService`, `OptimizedAlbumLoader`, the read-only count (`services/albums/albumIdentityAudit.js`) and, since slice 2, `AlbumCacheAdapter` (a record is checked when it is read), `SeriesService` (adding and removing an album) and `AlbumCardRenderer` (the notice). A fitness test (`test/architecture/albumIdentityRule.test.js`) fails when one of them stops asking the rule, compares texts by itself, or grants the second tier by itself.
 
 ### Playlist Model (`Playlist.js`)
+
+> **F65 (2026-11-19):** `Playlist.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 *   **Role**: Lightweight DTO for generated playlists.
 *   **Features**:
     *   `getDuration()`: Calculates total seconds.
@@ -106,7 +108,7 @@ No DOM, no store, no service: each imports only other models (checked by `test/a
 ### Albums Store (`public/js/stores/albums.js`)
 *   **Role**: the shelf the other screens read (`getAlbums`, `getAlbumsForSeries`). Since v4.0 it is a projection of the load store, written through `setAlbumsBySeries` by `services/albums/albumLoading.js`.
 *   **Still true**: `albumsByAlbumSeriesId` keeps the albums per series, and `ALL_SERIES_VIEW` holds the albums of every series on screen.
-*   **State only** (F48): the store imports no Firestore. `saveToFirestore`, `loadFromFirestore` and `updateAlbum(db, album)` were removed; "Refetch Metadata" writes the shared album document through `repositories/SharedAlbumRepository.js` (see [07_Frontend_Data_Infra.md](07_Frontend_Data_Infra.md)). The fitness function in `test/architecture/albumLoadBoundaries.test.js` fails if the store imports Firestore again.
+*   **State only** (F48): the store imports no Firestore. `saveToFirestore`, `loadFromFirestore` and `updateAlbum(db, album)` were removed; "Refetch Metadata" writes the shared album document through `repositories/SharedAlbumRepository.js` (see [07_Frontend_Data_Infra.md](07_Frontend_Data_Infra.md)). The fitness function in `test/architecture/albumLoadBoundaries.test.js` fails if the store imports Firestore again. *(removed in F65: `SharedAlbumRepository.js`)*
 
 ### Album Load Cache (`public/js/services/albums/adapters/AlbumCacheAdapter.js`) - v4.0
 *   **Storage**: `CacheManager` (memory + IndexedDB `mjrp-cache`), keys `albumload:v1:<album query>`, 7 days.
@@ -115,6 +117,8 @@ No DOM, no store, no service: each imports only other models (checked by `test/a
 *   **A record is valid only while it is the album asked for** (F55, slice 2): the key is the query, so a record written when "the right artist was enough" may hold another album. `get` asks the identity rule (`compareKeptAlbum`) and forgets a record that does not pass, so the album is searched again; a record of the title with a subtitle stays only when it carries `metadata.identityReason = 'title-before-subtitle'`. No record version was changed: a record that passes keeps its ratings. `peek` reads without dropping anything.
 
 ### Legacy Album Cache (`public/js/cache/albumCache.js`)
+
+> **F65 (2026-11-19):** `albumCache.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 *   **Status**: no caller since F56 (on the branch `fix/f56-screens-load-through-the-service`, not yet published): `apiClient.fetchAlbum`, its last reader, was removed when the Blending Menu and the playlist edit mode started asking the album load. The file and its tests stay until a clean-up feature removes them; "Clear Cache" still clears its entries.
 *   **Keys**: `album:<artist - title>` in IndexedDB, plus a 7-day window that still reads old `localStorage` entries. An entry found in `localStorage` is copied to IndexedDB; it is **not** deleted from `localStorage`.
 *   **TTL**: 7 days.

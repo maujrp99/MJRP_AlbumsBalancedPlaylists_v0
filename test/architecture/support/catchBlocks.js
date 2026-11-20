@@ -67,7 +67,7 @@ function parse (code) {
     const options = { ecmaVersion: 'latest', loc: true }
     try {
         return espree.parse(code, { ...options, sourceType: 'module' })
-    } catch (asModuleError) {
+    } catch {
         // A CommonJS file may use what a module forbids (`await` as a name, a `return` at the top)
         return espree.parse(code, { ...options, sourceType: 'commonjs' })
     }

@@ -22,8 +22,7 @@ npm install && npm run dev
 
 ### 2. Testing
 ```bash
-npm test              # Unit tests (Vitest)
-npm run test:e2e      # E2E tests (Puppeteer)
+npm test              # Unit, architecture and security tests (Vitest); `npx vitest run` runs them once
 ```
 
 ---

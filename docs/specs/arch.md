@@ -15,7 +15,7 @@ Os nomes da coluna *Stack layer* são as camadas de `docs/specs/tech-stack.md`.
 ### Navegador (`public/`)
 | Component | Responsibility | Stack layer |
 |-----------|---------------|-------------|
-| Casca da SPA e roteador (`public/index.html`, `js/app.js`, `js/router.js`) | arranque, as **18** rotas registradas por History API (`app.js:113-171`, 18 chamadas `router.register`), CSP e folhas de estilo (as do app e a do Tailwind, compilada junto com o site: `css/tailwind.css`) | Front |
+| Casca da SPA e roteador (`public/index.html`, `js/app.js`, `js/router.js`) | arranque, as **15** rotas registradas por History API (15 chamadas `router.register` no `app.js`; eram 18 até a F65, que retirou `/ranking/:albumId`, `/consolidated-ranking` e `/save-all`), CSP e folhas de estilo (as do app e a do Tailwind, compilada junto com o site: `css/tailwind.css`) | Front |
 | Views (`js/views/`) | desenham uma tela; assinam stores e delegam a ação ao controller | Front |
 | Controllers (`js/controllers/`) | o "cérebro" de uma tela: recebe a entrada, chama Services, atualiza a store. Hoje `PlaylistsController.js:92-93, 312, 325, 334` instancia repositórios, e `SeriesController.js:22` e `BlendingController.js:22` usam `userRankingRepository` direto | Front |
 | Componentes e renderizadores (`js/components/`, `js/views/renderers/`) | blocos de UI reutilizáveis (cartões, modais, assistente de Blend, navegação) | Front |
@@ -30,7 +30,7 @@ Os nomes da coluna *Stack layer* são as camadas de `docs/specs/tech-stack.md`.
 ### Compartilhado (`shared/`)
 | Component | Responsibility | Stack layer |
 |-----------|---------------|-------------|
-| Curadoria (`shared/curation.js`) | as regras de curadoria de playlist, executáveis nos dois lados | Linguagem |
+| Curadoria (`shared/curation.js`) | retirada na F65 (2026-11-19): nenhum cliente chamava `POST /api/playlists`, a única rota que a usava; as playlists são geradas no navegador, pelos algoritmos de `js/algorithms/` | — |
 | Normalização (`shared/normalize.js`) | limpeza de texto de título/artista | Linguagem |
 | Identidade do álbum (`shared/albumIdentity.js`) | a regra única de «este é o álbum pedido» (F55, revista na F68), pura, em listas de regras com nome; o app a usa por `public/js/models/askedAlbum.js` e o servidor por `server/lib/albumIdentity.js`. Ver «Uma regra só para dizer que é o mesmo álbum», no fim deste arquivo | Linguagem |
 | Autenticação de usuário (`shared/services/AuthService.js`) | login Google/Apple e saída, sobre `firebase/auth`; **só o navegador o usa** (`stores/UserStore.js` o importa por `@shared/`); o servidor não. Existe também outro `AuthService` em `public/js/services/AuthService.js` (login anônimo) | Dados |
@@ -39,7 +39,7 @@ Os nomes da coluna *Stack layer* são as camadas de `docs/specs/tech-stack.md`.
 | Component | Responsibility | Stack layer |
 |-----------|---------------|-------------|
 | Entrada (`server/index.js`) | Express, CORS por `ALLOWED_ORIGIN`, saúde em `/_health` (`:87`), monta as rotas sob `/api` | Back |
-| Rotas finas (`server/routes/`: `albums`, `playlists`, `ai`, `musickit`, `debug`) | recebem a requisição e chamam Services (`POST /api/enrich-album`, `/generate`, `/playlists`, `/ai/studio-albums`, `GET /musickit-token`, rotas de depuração) | Back |
+| Rotas finas (`server/routes/`: `albums`, `ai`, `musickit`, `debug`) | recebem a requisição e chamam Services (`POST /api/enrich-album`, `/generate`, `/ai/studio-albums`, `GET /musickit-token`, rotas de depuração) | Back |
 | Services (`server/lib/services/`: `EnrichmentService`, `GenerationService`, `spotifyPopularity`) | a lógica de enriquecer e gerar | Back |
 | Fachada de ranking (`server/lib/fetchRanking.js`, `lib/ranking.js`) | esconde raspagem + IA + fallbacks; consolida por Borda Count | Back |
 | Raspador (`server/lib/scrapers/besteveralbums.js`) | lê as notas de faixa do BestEverAlbums | Back |
@@ -74,9 +74,9 @@ O desenho acima é a **direção-alvo**; o que o código faz hoje está logo aba
 **Regras:** as dependências apontam para dentro, e o adaptador do Firestore é o Repository (`PRINCIPLES.md` §I.3; constituição, *Padrões com endereço*); a regra de negócio nasce como Service (ADR-0016); a Store só guarda estado e o Service a atualiza pelos setters (ADR-0017); trocar a fonte de dados é mexer num arquivo.
 
 **O que o código faz hoje:**
-- O núcleo está limpo: `algorithms/`, `models/`, `ranking/`, `transformers/` e `shared/curation.js` não importam Firebase, DOM nem `localStorage`.
+- O núcleo está limpo: `algorithms/`, `models/`, `ranking/` e `transformers/` não importam Firebase, DOM nem `localStorage`.
 - O SDK do Firestore **não é mais importado fora de `repositories/`** e de `firebase-init.js` (desde a F58, 2026-11-19; UAT-14). O caminho até aqui: `services/PlaylistsService.js` saiu na F60 (o `writeBatch` foi para `PlaylistRepository`), `stores/albums.js` na F48 (`repositories/SharedAlbumRepository.js`) e `views/SaveAllView.js` na F58: ela carregava o SDK Firestore e Auth **11.6.1 pelo CDN `gstatic`** (um segundo Firebase, sem app iniciado), e passou a receber da rota (`app.js`) o `MigrationUtility` feito com o Firestore único do app. O app tem um Firebase só, o do pacote npm. Trocar a fonte de dados ainda mexe em `BaseRepository`, nos repositórios, em `MigrationUtility` e em `firebase-init.js`, não em um arquivo. Teste: `test/architecture/firestoreBehindRepositories.test.js` (nenhum `import` de endereço em `public/js`; o Firestore só nos repositórios e em `firebase-init.js`; nenhuma chamada à API do Firestore fora dos repositórios).
-- O caminho "View -> Controller -> Service -> Repository" **ainda não vale sem exceção, e as exceções estão numa lista que só pode diminuir** (`test/architecture/layerBoundaries.test.js`, F58; UAT-18 e UAT-19). Consertado na F58: `views/SeriesView.js` e `components/series/SeriesEventHandler.js` não importam mais `firebase-init.js`; `components/TopNav.js` recebe o `MigrationUtility` do `app.js` em vez de importar o `db`; `stores/inventory.js` e `stores/UserStore.js` viraram estado puro (ler e gravar o inventário é do `services/inventory/InventoryService.js`, montado em `inventoryWiring.js`; ouvir o login é do `services/auth/UserSessionService.js`, montado em `userSession.js`), e o ciclo `app.js <-> stores/inventory.js` acabou. O que resta, todo no código do blend e das playlists: `controllers/PlaylistsController.js` cria o seu `PlaylistRepository`; seis arquivos importam o `app.js` para pegar o `db` (`PlaylistsController`, `BlendingController`, `PlaylistsDragHandler`, `SavedPlaylistsController`, `PlaylistsDragDrop`, `PlaylistPersistenceService`); `stores/SpotifyEnrichmentStore.js` importa o banco, um repositório e o cache. Viola `PRINCIPLES.md` §I.3, a ADR-0016 e a ADR-0017.
+- O caminho "View -> Controller -> Service -> Repository" **ainda não vale sem exceção, e as exceções estão numa lista que só pode diminuir** (`test/architecture/layerBoundaries.test.js`, F58; UAT-18 e UAT-19). Consertado na F58: `views/SeriesView.js` e `components/series/SeriesEventHandler.js` não importam mais `firebase-init.js`; `components/TopNav.js` recebia o `MigrationUtility` do `app.js` em vez de importar o `db` (o `MigrationUtility` e o código «Data Sync» do menu saíram na F65); `stores/inventory.js` e `stores/UserStore.js` viraram estado puro (ler e gravar o inventário é do `services/inventory/InventoryService.js`, montado em `inventoryWiring.js`; ouvir o login é do `services/auth/UserSessionService.js`, montado em `userSession.js`), e o ciclo `app.js <-> stores/inventory.js` acabou. O que resta, todo no código do blend e das playlists: `controllers/PlaylistsController.js` cria o seu `PlaylistRepository`; quatro arquivos importam o `app.js` para pegar o `db` (`PlaylistsController`, `BlendingController`, `PlaylistsDragHandler`, `SavedPlaylistsController`; eram seis até a F65, que removeu `PlaylistsDragDrop` e `PlaylistPersistenceService`, sem uso); `stores/SpotifyEnrichmentStore.js` importa o banco, um repositório e o cache. Viola `PRINCIPLES.md` §I.3, a ADR-0016 e a ADR-0017.
 
 ## Infrastructure
 - Hosting: o **frontend** em Firebase Hosting, servindo `dist` (build do Vite); `firebase.json` reescreve `/api/**` para o serviço Cloud Run `mjrp-proxy` (região `southamerica-east1`) e o resto para `/index.html` (`firebase.json:3-20`). O **backend** em Cloud Run (`mjrp-proxy`, contêiner `node:24-slim`, `server/Dockerfile`, publicado por `npm run deploy:server`), acesso público.
@@ -86,9 +86,9 @@ O desenho acima é a **direção-alvo**; o que o código faz hoje está logo aba
 | Caminho | Quem lê e escreve (regra) | Quem escreve no código |
 |---|---|---|
 | `artifacts/{appId}/users/{uid}/curator/**` e `.../inventory/**` (`:8-13`) | só o dono (`uid`) | repositórios (o `PlaylistsService` grava pelo `PlaylistRepository` desde a F60) |
-| `users/{uid}/series/**` (`:19-28`) | só o dono | ninguém além da migração legada |
+| `users/{uid}/series/**` (`:19-28`) | só o dono | ninguém: a migração legada, único uso, saiu na F65. As três regras podem ser fechadas (o `firestore.rules` é do MJRP) |
 | `users/{uid}/albumRankings/{albumId}` (`:32-35`) | **qualquer pessoa, até sem login** (`allow read, write: if true`; o comentário das linhas 33-34 diz "DEBUG ... mudar para `request.auth != null` antes do lançamento") | `UserRankingRepository` |
-| `albums/{albumId}` (`:42-43`) | **qualquer autenticado**, inclusive anônimo, em qualquer documento; sem dono | `stores/albums.js` |
+| `albums/{albumId}` (`:42-43`) | **qualquer autenticado**, inclusive anônimo, em qualquer documento; sem dono | ninguém: o «Refetch» deixou de gravar aqui na F56 e o `SharedAlbumRepository` saiu na F65. A regra pode ser fechada (o `firestore.rules` é do MJRP) |
 | `spotify_enrichment/{albumKey}` (`:49-51`) | **qualquer autenticado**, inclusive anônimo; cache global sem dono | `SpotifyEnrichmentRepository` |
 
 Regra: a estabilidade da produção e os dados do usuário não ficam abertos a qualquer visitante (constituição, Art. V). Conserto: achado 2 da auditoria. **Nenhum pipeline do repositório publica `firestore.rules`**: `firebase.json` não tem bloco `firestore`, e `.github/workflows/ci-firebase.yml:73, 120` e `scripts/deploy-prod.sh` implantam só `--only hosting`; o que está em produção pode não ser este arquivo.
@@ -104,7 +104,7 @@ Regra: a estabilidade da produção e os dados do usuário não ficam abertos a 
   - O backend é público: sem autenticação e sem limite de taxa em nenhuma rota; em produção o CORS aceita as origens de `ALLOWED_ORIGIN` (padrão `https://mjrp-playlist-generator.web.app`, `server/index.js:58-70`) **e** qualquer requisição sem cabeçalho `Origin` (`:66`). As rotas de depuração (`/api/debug/*`, `/api/list-models`) são montadas em qualquer ambiente (`server/index.js:134-136`); `GET /api/debug/files` lista qualquer pasta do contêiner por `?path=` (`server/routes/debug.js:98-104`). `POST /api/ai/studio-albums` concatena o `artistName` livre no prompt e chama o Gemini pago com a busca do Google ligada (`server/routes/ai.js:7-27`, `server/lib/aiClient.js:32`). Regra: estabilidade da produção (Art. V). Conserto: achados 9 e 10 da auditoria.
   - Tokens do Spotify (acesso e renovação) ficam no `localStorage` (`services/SpotifyAuthService.js:179-182`), com um CSP que libera script inline (`public/index.html:9`).
 - **Dependências entre camadas.** A Dependency Rule e a fronteira do Firestore são as da seção *Direção das dependências*, com as exceções descritas ali. Rota e componente são orquestradores finos (ADR-0016).
-- **Compartilhamento.** A lógica que roda nos dois lados mora em `/shared` (Constituição, *Technology Standards*); o contêiner a recebe copiada, por isso o `Dockerfile` espera `_shared_temp`. Em `shared/`, só `curation.js` e `normalize.js` são usados também pelo servidor; `shared/services/AuthService.js` é do navegador.
+- **Compartilhamento.** A lógica que roda nos dois lados mora em `/shared` (Constituição, *Technology Standards*); o contêiner a recebe copiada, por isso o `Dockerfile` espera `_shared_temp`. Em `shared/`, `normalize.js` e `albumIdentity.js` são usados também pelo servidor (o `curation.js` saiu na F65); `shared/services/AuthService.js` é do navegador.
 - **Estado do servidor.** Contêiner sem estado e escalável (Constituição, *Backend*).
 - **Validação.** Regra: todo dado externo que entra no servidor é validado com AJV (Constituição, *Backend*).
 - **Tempo.** O raspador tem prazo de 30 s por requisição (`server/lib/scrapers/besteveralbums.js:8-9`), sem retentativa nem cache; o Gemini, 60 s (`server/lib/aiClient.js:10`). O cliente refaz a chamada 2 vezes, com espera fixa de 1 s (`public/js/api/client.js:21-23`), inclusive `/generate`, que chama o Gemini.
@@ -142,7 +142,7 @@ A causa não é uma linha: **ninguém é dono da carga**. O laço está em `api/
 
 | Risco (o que pode dar errado, por quê) | Tipo | Probabilidade | Impacto | Custo de desfazer | Seção que o reduz | Estado |
 |---|---|---|---|---|---|---|
-| Regressão num fluxo em produção sem nenhum teste (`SeriesController`, `api/client.js`, `albumCache`, `SeriesGridRenderer` não têm teste) | técnico | alta | alto | baixo (reverter o ramo) | 11, 4 (núcleo puro testável) | aberto |
+| Regressão num fluxo em produção sem nenhum teste (`SeriesController`, `api/client.js`, `albumCache`, `SeriesGridRenderer` não tinham teste quando o risco foi escrito; o `albumCache` saiu na F65) | técnico | alta | alto | baixo (reverter o ramo) | 11, 4 (núcleo puro testável) | aberto |
 | Duas cargas escrevem no mesmo estado (a antiga termina depois da nova) | técnico | alta (acontece hoje) | alto | baixo | 4 (sessão com identidade), 5 | aberto |
 | Paralelismo sem teto derruba ou faz bloquear o raspador do BestEverAlbums (sem cache nem limite no servidor) | operação | média | alto | baixo (é um número) | 7 | aberto |
 | O álbum aparece e as notas chegam depois: quem gera playlist antes do fim usa álbum sem nota | técnico | média | médio | médio | 4 (estado de enriquecimento visível), 5 | aberto |
@@ -390,7 +390,7 @@ Construído nos ramos `fix/f45-albums-load-in-parallel`, `fix/f47-series-list-wi
 | Escopo «uma série» × «todas» | gerações distintas | igual; trocar de página dentro de «todas» **reconcilia** na mesma geração e solta as séries que saíram da tela (voltam do guardado) | simples e suficiente para um usuário |
 | Filtro «My Ranking» | uma leitura da coleção de rankings | igual, pela F46: ver a seção 18 | o ranking casa com o pedido por nome, e de forma exata depois de carregar |
 | Aviso «N pedidos ainda não conferidos» no filtro por fonte | na tela | no paginador, pela F51: ver a seção 18 | fica junto da contagem de séries |
-| `stores/albums.js` como estado puro | sai o Firestore da store | feito na F48: a store não importa o Firestore; a gravação do «Refetch» passa por `repositories/SharedAlbumRepository.js`, que deixa o ranking pessoal fora do documento compartilhado | a F48 fechou a fatia |
+| `stores/albums.js` como estado puro | sai o Firestore da store | feito na F48: a store não importa o Firestore; a gravação do «Refetch» passava por `repositories/SharedAlbumRepository.js`, que deixava o ranking pessoal fora do documento compartilhado; desde a F56 o «Refetch» não grava na coleção compartilhada, e o repositório saiu na F65 | a F48 fechou a fatia |
 | Nova tentativa da segunda fonte (`POST /api/generate`) | nova tentativa com recuo | feito na F48: `utils/retry.js` (`DP-23`) e prazo de 90 s (`DP-22`) em `api/client.js`; só falha de rede ou 5xx; nunca 4xx nem prazo estourado; o erro traz o status (`ApiError`) | rota de IA paga, que hoje responde 402 |
 | «Clear Cache» | limpa o guardado de álbuns | feito na F48: `services/albums/clearAlbumCaches.js` para a carga, limpa o `CacheManager` e as chaves `album_cache_v…`; o resto do `localStorage` fica | apagar tudo derrubava o login do Spotify |
 | Cache do ranking pessoal | o ranking já lido não é pedido de novo | feito na F48: a instância do cache, validade de 1 hora, «sem ranking» também guardado, esquecido ao salvar e ao apagar | o ranking pode mudar noutro aparelho |
@@ -639,9 +639,9 @@ Quem pergunta uma fonte é `askSource` (`rankingSources/sourceOutcome.js`): o qu
 
 **Prazo e medição.** 75 s no total para `/api/generate` (o app espera 90 s), com o mesmo `timeBudget.js` das notas; uma linha de log `generate` por pedido, com o desfecho de cada fonte.
 
-**Funções de aptidão novas.** `test/architecture/noSwallowedFailure.test.js` (nenhum `catch` vazio em `server/` fora de uma lista com motivo; nenhum `catch` que só escreve no log no caminho das duas rotas) e o limite de complexidade estendido a `server/` e `shared/` (`complexityLimit.test.js`: 18 e 9 funções nas listas que só encolhem; eram 26 e 9; o caminho reescrito sem exceção).
+**Funções de aptidão novas.** `test/architecture/noSwallowedFailure.test.js` (nenhum `catch` vazio em `server/` fora de uma lista com motivo; nenhum `catch` que só escreve no log no caminho das duas rotas) e o limite de complexidade estendido a `server/` e `shared/` (`complexityLimit.test.js`: 14 funções do servidor na lista que só encolhe e nenhuma em `shared/`; eram 26 e 9, a fatia tirou 8 e a F65 removeu as outras 13 com os arquivos; o caminho reescrito sem exceção).
 
-**Fica aberto:** o app usar `data.ratings` (hoje ignora); os `catch` das rotas `musickit`, `playlists` e de depuração, que seguem com formato próprio de erro; as 18 funções do servidor ainda acima de 10 (a leitura da resposta da IA em `normalize.js` é a maior, 34).
+**Fica aberto:** o app usar `data.ratings` (hoje ignora); os `catch` das rotas `musickit` e de depuração, que seguem com formato próprio de erro; as 14 funções do servidor ainda acima de 10 (a leitura da resposta da IA em `normalize.js` é a maior, 34).
 
 ## Uma regra só para dizer que é o mesmo álbum (F55, revista na F68)
 
@@ -934,3 +934,20 @@ O que o Spotify já respondeu e está em `SpotifyEnrichmentStore` responde antes
 **O gêmeo do servidor.** `server/lib/services/spotifyPopularity.js` é alcançado por `POST /api/generate` (`GenerationService` → `fetchRankingForAlbum`, como fonte de reserva do ranking). Passou ao contrato da F52: `found`, `not_found` e `not_configured` são desfechos; a falha é `UpstreamError`. `fetchRanking.js` não mudou: segue para a fonte seguinte, e a falha agora é registrada como falha.
 
 **O que este desenho não resolve.** O estado de cada fonte não aparece no cartão da vista compacta (o cartão nunca mostrou estado de fonte). Durante uma espera do Spotify, o blend diz «the server paused the load». `SpotifyAuthService._requestNewAccess` encerra a sessão em qualquer falha da renovação, a de rede incluída, e a pessoa passa a «não conectado». O dado em `SpotifyEnrichmentStore` de antes da regra única de identidade (F55) não é conferido. As chaves do Spotify seguem no `localStorage` (UAT-28: análise e proposta no plano da F69).
+
+## O que nada usa saiu, e dois sensores que seguram isso (F65) — construída no ramo
+
+> 2026-11-19, ramo `fix/f65-remove-what-nothing-uses`. O porquê, os números e a lista das classes de estilo estão em `docs/specs/features/F65-remove-what-nothing-uses/plan.md`.
+
+**O que é código vivo.** Um arquivo de `public/js`, `shared` ou `server` é vivo quando uma entrada o alcança pelo grafo de importações. As entradas são duas: `public/index.html` (o site, a única página da build do Vite) e `server/index.js` (o servidor). Um arquivo que os scripts dos dois `package.json` ou os roteiros de `scripts/` passem a nomear vira entrada sozinho. Teste não conta como uso.
+
+**O grafo.** `test/architecture/support/importGraph.js` lê o código sem rodá-lo: `import`, `export … from`, `import()`, `require()`, `new URL(…, import.meta.url)`, `new Worker(…)`, os sufixos do Vite (`?worker`), os apelidos (`@`, `@shared`…), o `<script src>` e o `<link href>` da página e o `@import` do CSS. Uma importação com nome montado em tempo de execução não pode ser seguida, e por isso é recusada.
+
+**Os dois sensores, em `npx vitest run`:**
+- `test/architecture/noDeadModules.test.js`: todo módulo das três pastas e toda folha de `public/css` são alcançados; nenhum arquivo alcançado importa arquivo que não existe. Uma exceção escrita, com o motivo: `public/js/firebase-config.example.js`.
+- `test/security/noSecretsInRepo.test.js`: nenhum arquivo de texto acompanhado pelo git traz credencial escrita. Diz arquivo, linha e regra, nunca o valor. Um valor público por desenho, com o motivo: a configuração web do Firebase.
+
+**O que saiu.** Na casca: as rotas `/ranking/:albumId`, `/consolidated-ranking` e `/save-all`, com as telas `RankingView`, `ConsolidatedRankingView` e `SaveAllView`, a migração (`MigrationUtility`, `AlbumRepository`, o «Data Sync» do menu). No app: 38 módulos que nenhuma entrada alcançava (oito algoritmos antigos, `cache/albumCache.js`, `SharedAlbumRepository`, `Autocomplete`, `PlaylistPersistenceService`, geradores de SVG, componentes soltos). No servidor: `POST /api/playlists`, `shared/curation.js`, `server/scripts/`, `server/test/`. Fora do código do app: os geradores de dados de `scripts/`, as páginas de `public/` fora da build, `public/legacy/`, `test/e2e/`, `test/scripts/`, `tests/`.
+
+**O que este desenho não resolve.** O grafo é por arquivo: uma função exportada que ninguém chama, dentro de um arquivo vivo, passa (uma passada aproximada achou quatro). Um método de classe sem uso também. O ESLint (`npx eslint .`) lê cada pasta como o que ela é desde a F65, mas ainda não é portão: restam 25 erros.
+

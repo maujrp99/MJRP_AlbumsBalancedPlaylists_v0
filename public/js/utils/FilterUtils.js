@@ -2,7 +2,7 @@
  * FilterUtils.js
  * 
  * Generic utilities for filtering and sorting collections.
- * Used by SeriesFilterService (Albums) and SavedPlaylistsFilterService (Series).
+ * Used by SavedPlaylistsFilterService (Series).
  */
 
 export const FilterUtils = {

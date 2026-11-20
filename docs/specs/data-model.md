@@ -59,7 +59,7 @@ Os demais campos vêm do objeto que o gerador produz e dependem do módulo gerad
 | _schemaVersion | número `1` | ✅ | versão do esquema |
 
 ### Album (álbum hidratado) - `albums/{albumId}` (coleção na raiz) e `models/Album.js` (memória)
-O app grava o álbum na coleção raiz `albums` só no «Refetch Metadata», por `repositories/SharedAlbumRepository.js` (`saveAlbum`, `setDoc(..., { merge: true })` sob o `id` do álbum; álbum sem `id` é recusado); a carga da tela não grava nessa coleção, e nenhum ponto do app a lê de volta. **Ciclo de vida:** a coleção é **global e sem dono**: quem escreve é qualquer visitante autenticado (inclusive anônimo, `firestore.rules:42-43`); não há regra de conflito (o último a gravar vence, com `merge`); não há retenção nem purga (cresce sem limite); e a serialização grava também o campo de execução `seriesIds`; o que é de uma pessoa só (o ranking pessoal) fica fora desde a F48. O `id` é o "slug" `artista_album` (`api/client.js:534-538`); duplicata é o mesmo título e artista exatos (`stores/albums.js:78-100`).
+**Desde a F56 o app não grava nem lê a coleção raiz `albums`** (o «Refetch Metadata» recarrega o álbum pelo serviço de carga); o `repositories/SharedAlbumRepository.js`, que gravava nela, ficou sem uso e saiu na F65. O que segue descreve os documentos que já estão lá. **Ciclo de vida:** a coleção é **global e sem dono**: quem escreve é qualquer visitante autenticado (inclusive anônimo, `firestore.rules:42-43`); não há regra de conflito (o último a gravar vence, com `merge`); não há retenção nem purga (cresce sem limite); e a serialização grava também o campo de execução `seriesIds`; o que é de uma pessoa só (o ranking pessoal) fica fora desde a F48. O `id` é o "slug" `artista_album` (`api/client.js:534-538`); duplicata é o mesmo título e artista exatos (`stores/albums.js:78-100`).
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | id | string | ✅ | slug `artista_album` ou id do provedor |
@@ -124,7 +124,7 @@ Resultado da consolidação do servidor (`server/lib/ranking.js`, Borda Count) d
 | `mjrp_series` | cópia local da lista de séries |
 | `mjrp_current_playlists` | rascunho das playlists geradas e ainda não guardadas, com o `uid` de quem as fez (`userId`); volta à tela depois de recarregar a página, só para a mesma pessoa e a mesma série; some quando o lote é guardado (F60) |
 | `mjrp_inventory_view_mode`, `inventoryCurrency`, `albumsViewMode` | preferências de exibição |
-| `mjrp_migration_status`, `album_cache_migration_start` e as chaves legadas (`albumCache`, `seriesCache`, `album_*`, `series_*`, `playlist_*`) | migração de versões antigas |
+| `mjrp_migration_status`, `album_cache_migration_start` e as chaves legadas (`albumCache`, `seriesCache`, `album_*`, `series_*`, `playlist_*`) | de versões antigas; nenhum código as grava, e a migração que as lia saiu na F65. O «Clear cache» ainda apaga as de álbum |
 | `spotify_code_verifier`, `spotify_auth_state`, `spotify_access_token`, `spotify_refresh_token`, `spotify_expires_at` | sessão do Spotify (PKCE); os valores não são documentados aqui |
 
 `sessionStorage` não é usado (Apêndice F §8).
@@ -144,6 +144,6 @@ Resultado da consolidação do servidor (`server/lib/ranking.js`, Borda Count) d
 - Versão de esquema: `_schemaVersion` é gravado por `BaseRepository` em todos os documentos criados ou salvos por ele, mas **só `SpotifyEnrichmentRepository` o lê** (versão diferente de 1 invalida o registro); nenhum outro leitor confere versão.
 
 ## Migration Notes
-- `_schemaVersion` é `1` em todos os repositórios, exceto `AlbumRepository` (2, usado só pela migração).
-- O layout `users/{uid}/series/{seriesId}/albums` (`AlbumRepository.js`, `MigrationUtility.js:223`) e as regras `users/{uid}/series/*` e `.../playlists` existem, mas o app não lê nem grava as séries nesse layout; o layout em uso é o de `artifacts/mjrp-albums/...`.
-- Não há migração em andamento. `MigrationUtility` (local para Firestore) é legado e marca o fim em `mjrp_migration_status`.
+- `_schemaVersion` é `1` em todos os repositórios. O `AlbumRepository` (2, usado só pela migração) saiu na F65.
+- O layout `users/{uid}/series/{seriesId}/albums` não tem mais código que o leia ou grave (`AlbumRepository.js` e `MigrationUtility.js` saíram na F65); as regras `users/{uid}/series/*` e `.../playlists` continuam no `firestore.rules` e podem ser fechadas. O layout em uso é o de `artifacts/mjrp-albums/...`.
+- Não há migração em andamento, nem tela de migração: a tela `/save-all` e o `MigrationUtility` (do navegador para o Firestore) foram retirados na F65 (decisão de 2026-11-19, revisável; o código está no histórico do git).

@@ -41,7 +41,7 @@
 ### 1.4 Route Mounting (Lines 120-141)
 *   `api/` -> `routes/musickit.js` (Apple Music Token)
 *   `api/` -> `routes/albums.js` (Generation & Enrichment) -> *Initialized with `routeDeps`*
-*   `api/` -> `routes/playlists.js` (Curation)
+*   `api/` -> `routes/playlists.js` (Curation) *(removed in F65: `playlists.js`)*
 *   `api/` -> `routes/debug.js` (System Tools) -> *Initialized with `routeDeps`*
 *   `api/ai` -> `routes/ai.js` (Direct AI Proxy)
 
@@ -130,24 +130,12 @@ sequenceDiagram
 
 ---
 
-## 3. API Routes: `server/routes/playlists.js`
-**Status**: `[ACTIVE]`
-**Type**: Controller / Route Handler
+## 3. API Routes: `server/routes/playlists.js` (removed in F65)
 
-### 3.1 `POST /api/playlists` (Lines 14-71)
-**Purpose**: Splits an album into curated playlists (e.g., "Greatest Hits", "Deep Cuts").
+> **F65 (2026-11-19):** `playlists.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
+**Status**: `[REMOVED]` (F65, 2026-11-19)
 
-*   **Logic Trace**:
-    1.  **Validation**: Requires `albums` array.
-    2.  **Dynamic Import**: Imports `shared/curation.js` (ES Module).
-        *   *Note*: Used dynamic import because `shared/` is outside CommonJS scope or treated as ESM.
-    3.  **Option Parsing**:
-        *   Calculates `targetSeconds`. supports `min/max` (average) or explicit `targetDuration`. Default: 45 min.
-    4.  **Execution**: Calls `curateAlbums(albums, { targetSeconds })`.
-    5.  **Formatting**: Maps internal domain objects to API response structure (id, name, tracks).
-    6.  **Response**: Returns `{ playlists, summary, sources }`.
-
-*   **Dependencies**: `shared/curation.js` (Pure business logic).
+`POST /api/playlists` split albums into curated playlists with `shared/curation.js`. No client called it (the Cloud Run log of the 30 days before showed one request, a test); the playlists are generated in the browser by `public/js/algorithms/`. The route, its mount and its guard in `server/index.js`, and `shared/curation.js` were removed. A request to it now gets Express's 404.
 
 ---
 

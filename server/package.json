@@ -6,10 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node index.js",
-    "lint": "standard",
-    "lint:fix": "standard --fix",
-    "format": "prettier --write .",
-    "test": "node --experimental-modules test/unit-tests.js && node --experimental-modules test/run-tests.js && node --experimental-modules test/curation.test.mjs && node --experimental-modules test/curation-enrichment.test.mjs"
+    "test": "cd .. && npx vitest run test/server"
   },
   "dependencies": {
     "ajv": "^8.17.1",
@@ -19,18 +16,5 @@
     "dotenv": "^16.0.0",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.3"
-  },
-  "devDependencies": {
-    "eslint": "^9.39.1",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^5.5.4",
-    "jest": "^29.6.1",
-    "prettier": "^3.6.2",
-    "standard": "^17.0.0"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "testEnvironmentOptions": {}
   }
 }

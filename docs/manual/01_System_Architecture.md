@@ -209,13 +209,12 @@ The physical layout of the codebase, annotated with purpose.
 │   ├── schema/             # JSON Schemas (Validation)
 │   ├── services/           # Backend Auth Services (Tokens)
 │   └── index.js            # Server Entry Point
-├── shared/                 # SHARED CODE (public/js/shared is a symlink to it)
-│   ├── curation.js         # Playlist curation used by the server (POST /api/playlists)
-│   ├── normalize.js        # Key normalization used by the server and by curation.js
+├── shared/                 # SHARED CODE (the app imports it as @shared; curation.js left in F65)
+│   ├── albumIdentity.js    # The one rule of "is this the album asked for", used by the app and by the server
+│   ├── normalize.js        # Key normalization used by the server
 │   └── services/           # AuthService.js (Firebase Auth, used by the browser)
 └── test/                   # VERIFICATION
-    ├── e2e/                # End-to-End Tests (Puppeteer, own runner)
-    └── <layer>/            # Unit Tests (Vitest), one folder per layer: stores/, services/, models/, views/, ...
+    └── <layer>/            # Vitest, one folder per layer: stores/, services/, models/, views/, server/, architecture/, security/ (the Puppeteer scripts of test/e2e left in F65)
 ```
 
 ---
@@ -398,7 +397,7 @@ This extends the registry of section 3 with the pattern ids of `docs/wiki/harnes
 | Pattern | Id | Where it is used | Since | Why |
 | :--- | :--- | :--- | :--- | :--- |
 | Model-View-Controller | — | `views/`, `controllers/`, `stores/` | v2 | keeps drawing, deciding and state apart |
-| Repository | DP-01 | `repositories/*` (`SeriesRepository`, `PlaylistRepository`, `InventoryRepository`, `UserRankingRepository`, `SharedAlbumRepository`) | v2; the load stopped bypassing it in v4.0 | Firestore behind one door per kind of data |
+| Repository | DP-01 | `repositories/*` (`SeriesRepository`, `PlaylistRepository`, `InventoryRepository`, `UserRankingRepository`, `SpotifyEnrichmentRepository`; `SharedAlbumRepository` and `AlbumRepository` were removed in F65) | v2; the load stopped bypassing it in v4.0 | Firestore behind one door per kind of data |
 | Factory | DP-02 | `server/routes/albums.js` (`initAlbumRoutes`), `views/helpers/SeriesComponentFactory.js` | v3 | build with the dependencies given |
 | Singleton | DP-03 | the exported instance of each store and service | v2 | one state per kind of data |
 | Strategy | DP-04 | `ranking/*Strategy.js`, `algorithms/*Algorithm.js` | v3; the album classification left this pattern in F57 (one pure function, `models/albumType.js`) | swap an algorithm without touching who calls it |
@@ -476,7 +475,7 @@ One line per component of the album path. "State" says whether it is in producti
 | Model | load state, query, filter, paging, facts, text, own ranking | `models/albumLoadState.js`, `albumQuery.js`, `seriesFilter.js`, `paging.js`, `albumFacts.js`, `text.js`, `ownRanking.js` | pure rules | v4.0 |
 | Shared rule | album identity | `shared/albumIdentity.js` (the rule), `models/askedAlbum.js` (the app's shapes read into `{ artist, title, year }`), `server/lib/albumIdentity.js` (the server's loader) | "is this the album asked for?": the title must match on its own, the artist must match, the year only orders; no candidate passes means "not found". Second tier (slice 2): the title asked for before a subtitle, accepted only by `pickAlbum` and only when it is the one such album. It replaced `models/AlbumIdentity.js` (a confidence score any album of the right artist passed), removed in F55 | v5.0 (F55, slices 1 and 2) |
 | Utility | `TaskQueue`, `retry`, `duration`, `localAddress`, `SafeDOM` | `utils/*` | queue with limit and deadline; retry; one duration formatter; one local address; DOM without `innerHTML` | v4.0 (`SafeDOM` v3, fixed in v4.0) |
-| Repository | series, playlists, inventory, rankings, shared albums | `repositories/*` | the only door to Firestore | v2; `SharedAlbumRepository` in v4.0 |
+| Repository | series, playlists, inventory, rankings, Spotify popularity | `repositories/*` | the only door to Firestore | v2; `SharedAlbumRepository` came in v4.0 and left in F65 (nothing wrote the shared albums since F56) |
 | Cache | `CacheManager` | `cache/CacheManager.js` | memory + IndexedDB | v3 |
 | Edge | `serverFetch` | `api/serverFetch.js` | every call to the app's own server carries the person's login | **v5.0 (F59)** |
 | Legacy | `api/client.js` (`fetchAlbum`) | `api/client.js` | the old find-and-rate call, used by blend and edit until F56 | v3; removed by F56 (on its branch) with `fetchMultipleAlbums` and `BEAenrichAlbum`; the client is imported only by `albumLoading.js` |

@@ -128,7 +128,7 @@ Um contrato, um lugar que escreve, um lugar que lê (DP-19, resultado tipado, at
 - *Falhar o pedido inteiro quando uma fonte de notas falha:* joga fora um álbum pago, e o app repetiria a chamada paga. Recusada (o pedido da fatia já dizia).
 - *Um campo só (`ratings: 'failed'`):* não diz qual fonte; o app tem um enriquecedor por fonte. Recusada.
 - *Corrida com o prazo no manipulador da rota:* descartaria o álbum quando só as notas atrasam. Recusada; o prazo é lido dentro do serviço.
-- *Deixar a suíte de complexidade do servidor sem as pastas que a F65 vai remover:* a conta do dono (26 e 9) as inclui; ficam na lista, com a nota de que saem com o arquivo.
+- *Deixar a suíte de complexidade do servidor sem as pastas que a F65 ia remover:* a conta do dono (26 e 9) as incluía; entraram na lista e saíram dela quando a F65 chegou.
 
 **Todo `catch` de `server/lib`, `server/routes` e `server/index.js`** (linhas de 2026-11-19, depois da fatia; as linhas «antes» são as da `main` em `6ae9940`):
 
@@ -167,14 +167,14 @@ Um contrato, um lugar que escreve, um lugar que lê (DP-19, resultado tipado, at
 | `index.js:38` | vazio: o mesmo bloco de substitutos | deixado, na lista com motivo |
 | `index.js:100` | `require('./lib/logger')` com `console` de reserva | deixado (o arquivo existe sempre; mexer é do `index.js`) |
 | `routes/musickit.js:48` | 500 com a mensagem do erro no corpo, formato próprio | deixado: fora do caminho; a spec da F52 deixa a rota fora |
-| `routes/playlists.js:64` | idem | deixado: a F65 remove a rota |
+| `routes/playlists.js:64` | idem | saiu com a rota, removida pela F65 |
 | `routes/debug.js:41`, `:86`, `:110`, `:119`, `:136` | respondem a mensagem (e a pilha) do erro | deixado: rotas de depuração, desligadas em produção (F59) |
 | `routes/debug.js:72` | vazio: sem álbum legível, mostra a resposta crua | deixado, na lista com motivo |
 | `routes/debug.js:78` | só log: falha do raspador vira `bestEverEvidence: null` | deixado: rota de depuração; é o único «só log» fora de `scripts/` e `test/` |
-| `server/scripts/**`, `server/test/**` | dez `catch` que só escrevem no log | deixado: ferramentas; a F65 remove as pastas |
+| `server/scripts/**`, `server/test/**` | dez `catch` que só escreviam no log | saíram com as pastas, removidas pela F65 |
 
 **Riscos e bordas (fatia 5):**
-- **A F65 remove arquivos que estão nas listas de complexidade** (`server/scripts/**`, `shared/curation.js`): o teste pede que as linhas saiam junto. Quem juntar a F65 depois desta fatia (ou esta depois da F65) apaga as 4 linhas de `server/scripts` e as 9 de `shared/curation.js` em `test/architecture/complexityAllowlist.js`.
+- **A F65 entrou na `main` enquanto a fatia era feita** e removeu `server/scripts/**`, `server/test/**`, `routes/playlists.js` e `shared/curation.js`. A `main` foi trazida para o ramo: as 4 linhas de `server/scripts` e as 9 de `shared/curation.js` saíram das listas de complexidade (o teste pediu). As listas ficam com 14 funções no servidor e nenhuma em `shared/`.
 - **Um servidor que subia «meio quebrado» agora não sobe.** É o pedido; o teste de fumaça da publicação sobe o servidor preparado antes de enviar e para ali.
 - **A chamada ao provedor que perde a corrida com o prazo não é cancelada:** termina no prazo próprio (60 s) e a resposta é descartada. Na prática o prazo próprio vem antes dos 75 s.
 - **A conferência dos endereços de referência da IA** (`validateSource.verifyUrl`) faz uma requisição a cada endereço que o modelo devolve; corre dentro do prazo do pedido, mas o servidor busca endereços escolhidos pelo modelo. Anterior a esta fatia; anotado, sem dono.

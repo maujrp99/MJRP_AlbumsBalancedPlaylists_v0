@@ -169,6 +169,8 @@ stateDiagram-v2
 ```
 
 ### 3.1 `strategies/ViewModeStrategy.js`
+
+> **F65 (2026-11-19):** `ViewModeStrategy.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 **Purpose**: Toggles between specific rendering layouts (Compact Card vs Expanded Row) based on user preference, persisting to LocalStorage.
 
 ### 3.2 `views/renderers/InventoryGridRenderer.js`

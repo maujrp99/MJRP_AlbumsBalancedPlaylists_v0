@@ -22,10 +22,9 @@ updated: 2026-10-28
 | Back | dotenv | 16.6.1 | lê `server/.env` em desenvolvimento | — |
 | Back | Cheerio | 1.1.2 | raspa o HTML do BestEverAlbums (`server/lib/scrapers/besteveralbums.js`) | — |
 | Back | AJV | 8.17.1 | valida o álbum contra `server/schema/album.schema.json` | — |
-| Back | Axios | 1.13.2 | chamadas HTTP do servidor (Gemini, raspador). A raiz também o declara e `public/js/api/client.js:1` o importa, mas o cliente nunca o usa: as chamadas são `fetch` (`:174, 207, 298`) | — |
+| Back | Axios | 1.13.2 | chamadas HTTP do servidor (Gemini, raspador). A raiz também o declara, para os testes da raiz que carregam módulos do servidor; o cliente não o importa (a importação sem uso de `public/js/api/client.js` saiu na F65): as chamadas dele são `fetch` | — |
 | Back | jsonwebtoken | 9.0.3 | assina o token de desenvolvedor do Apple MusicKit (ES256) | — |
 | Dados | Firebase SDK (Firestore e Auth) pelo npm | 10.14.1 | persistência do usuário e login anônimo, direto do navegador; o servidor não acessa o Firestore | — |
-| Dados | Firebase SDK (Firestore e Auth) pelo CDN `gstatic` | 11.6.1 | só em `public/js/views/SaveAllView.js:5-6`; é uma segunda versão do SDK no mesmo app, ao lado da do npm | — |
 | Dados | IndexedDB `mjrp-cache` e `localStorage` | — | cache em duas camadas no navegador (L1 memória, L2 IndexedDB) e preferências | — |
 | Integrações externas | Google Gemini, por REST (`generativelanguage.googleapis.com`), modelo padrão `gemini-2.5-flash` | — | enriquecimento de ranking e metadados pela IA (`server/lib/aiClient.js:7, 15`) | — |
 | Integrações externas | Apple MusicKit JS | v3 | busca no catálogo, biblioteca e exportação para o Apple Music; carregado de `js-cdn.music.apple.com` (`services/musickit/MusicKitAuth.js:124`) | — |
@@ -33,9 +32,8 @@ updated: 2026-10-28
 | Integrações externas | BestEverAlbums (raspagem) | — | a fonte das notas de faixa; não tem API | — |
 | Testes | Vitest com jsdom | 1.6.1 / 23.2.0 | testes unitários da raiz (`test/**/*.test.js`, `vitest.config.js:9`) | — |
 | Testes | @vitest/coverage-v8 | 1.6.1 | cobertura | — |
-| Testes | Puppeteer | 24.31.0 | testes de ponta a ponta (`test/e2e/`) | — |
-| Testes | Jest, standard e prettier | 29.7.0 / 17.1.2 / 3.6.2 | declarados em `server/package.json`; o `npm test` do servidor chama scripts `node`, não o Jest | — |
-| Testes | ESLint | 9.39.2 | lint da raiz (`eslint.config.mjs`); o do servidor é 9.39.1 | — |
+| Testes | espree e postcss | 10.4.0 / 8.5.6 | leem o código e o CSS nos testes de arquitetura (`test/architecture/`); declarados na raiz desde a F65 | — |
+| Testes | ESLint | 9.39.2 | lint do repositório inteiro, pela raiz (`eslint.config.mjs`, um bloco por tipo de código desde a F65); ainda não é portão | — |
 | Build | Docker, imagem base `node:24-slim` | 24 | empacota o servidor (`server/Dockerfile`) | [[ADR-0020]] |
 | Build | `gcloud run deploy --source` (Cloud Build por baixo) | — | constrói a imagem pelo `server/Dockerfile` e implanta o servidor no Cloud Run (`scripts/deploy-server.sh`); o `cloudbuild.yaml` foi removido na F64 | — |
 | Build | GitHub Actions (`actions/checkout@v4`, `actions/setup-node@v4`) e `firebase-tools` por `npx` | — | CI e implantação do frontend; `firebase-tools` sem versão fixa (`.github/workflows/ci-firebase.yml`) | — |

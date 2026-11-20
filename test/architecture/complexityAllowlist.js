@@ -19,19 +19,8 @@
  */
 export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'algorithms/BaseAlgorithm.js:buildRankingSummary': 12, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/LegacyRoundRobinAlgorithm.js:generate': 21, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/LegacyRoundRobinAlgorithm.js:arrow function': 17, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/LegacyRoundRobinAlgorithm.js:arrow function#2': 14, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/LegacyRoundRobinAlgorithm.js:arrow function#3': 17, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/LegacyRoundRobinAlgorithm.js:arrow function#4': 20, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/LegacyRoundRobinAlgorithm.js:arrow function#5': 20, // F62 holds this code (blend, playlists, export, Spotify)
     'algorithms/MJRPBalancedCascadeAlgorithm.js:generate': 38, // F62 holds this code (blend, playlists, export, Spotify)
     'algorithms/MJRPBalancedCascadeAlgorithm.js:mergeSmallPlaylists': 14, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/MJRPBalancedCascadeV0Algorithm.js:generate': 32, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/SDraftBalancedAlgorithm.js:generate': 16, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/SDraftBalancedAlgorithm.js:handleUnderDurationPlaylists': 12, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/SDraftBalancedAlgorithm.js:enforceAlbumCoverage': 18, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/SDraftOriginalAlgorithm.js:generate': 15, // F62 holds this code (blend, playlists, export, Spotify)
     'algorithms/TopNAlgorithm.js:generate': 22, // F62 holds this code (blend, playlists, export, Spotify)
     'algorithms/mixins/DurationTrimmingMixin.js:trimOverDurationPlaylists': 11, // F62 holds this code (blend, playlists, export, Spotify)
     'algorithms/mixins/PlaylistBalancingMixin.js:runSwapBalancing': 20, // F62 holds this code (blend, playlists, export, Spotify)
@@ -40,14 +29,11 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'algorithms/mixins/TrackEnrichmentMixin.js:arrow function#2': 32, // F62 holds this code (blend, playlists, export, Spotify)
     'algorithms/mixins/TrackEnrichmentMixin.js:arrow function#3': 20, // F62 holds this code (blend, playlists, export, Spotify)
     'api/client.js:_fetchAlbumFromAPI': 13, // no feature yet: the API client still normalizes by hand what the server sends
-    'api/client.js:arrow function': 12, // no feature yet: the API client still normalizes by hand what the server sends
     'api/client.js:normalizeAlbumData': 13, // no feature yet: the API client still normalizes by hand what the server sends
     'api/serverResult.js:readServerResult': 11, // no feature yet: the API client still normalizes by hand what the server sends
     'components/InventoryEditModal.js:open': 14, // no feature yet
-    'components/TopNav.js:attachListeners': 12, // no feature yet
     'components/blend/BlendRecipeCard.js:renderRecipeCard': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'components/blend/BlendSeriesSelector.js:preloadSeriesThumbnails': 20, // F62 holds this code (blend, playlists, export, Spotify)
-    'components/playlists/TrackItem.js:render': 11, // F62 holds this code (blend, playlists, export, Spotify)
     'components/ranking/TracksRankingComparison.js:arrow function': 19, // no feature yet
     'components/ranking/TracksTable.js:renderRow': 16, // no feature yet
     'components/series/SeriesEventHandler.js:handleRemoveAlbum': 19, // no feature yet
@@ -60,9 +46,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'controllers/InventoryController.js:arrow function': 13, // no feature yet
     'controllers/SeriesController.js:arrow function': 20, // no feature yet
     'helpers/BEAEnrichmentHelper.js:applyBEAData': 15, // no feature yet
-    'migration/MigrationUtility.js:loadSeriesFromLocalStorage': 12, // F65 decides whether the migration screen stays (UAT-11)
-    'migration/MigrationUtility.js:loadAlbumsFromLocalStorage': 13, // F65 decides whether the migration screen stays (UAT-11)
-    'migration/MigrationUtility.js:migrate': 14, // F65 decides whether the migration screen stays (UAT-11)
     'models/Album.js:constructor': 16, // no feature yet: the constructor normalizes every shape an album or a track ever had
     'models/Track.js:constructor': 39, // no feature yet: the constructor normalizes every shape an album or a track ever had
     'models/seriesFilter.js:matches': 14, // no feature yet: three filters of albums that should be one rule
@@ -71,11 +54,8 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'ranking/BalancedRankingStrategy.js:arrow function#3': 12, // F62 holds this code (blend, playlists, export, Spotify)
     'ranking/SpotifyRankingStrategy.js:arrow function': 11, // F62 holds this code (blend, playlists, export, Spotify)
     'repositories/InventoryRepository.js:addAlbum': 16, // no feature yet
-    'services/MusicKitSearchAdapter.js:arrow function': 12, // F57 holds this code (album search, classification, series edit)
     'services/PlaylistsService.js:_writeCurrentBatch': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'services/SavedPlaylistsFilterService.js:filterSeries': 13, // F62 holds this code (blend, playlists, export, Spotify)
-    'services/SeriesFilterService.js:filterAlbums': 21, // no feature yet: three filters of albums that should be one rule
-    'services/SeriesFilterService.js:arrow function': 11, // no feature yet: three filters of albums that should be one rule
     'services/album-search/AlbumSearchService.js:search': 11, // F57 holds this code (album search, classification, series edit)
     'services/album-search/ScoreCalculator.js:calculate': 12, // F57 holds this code (album search, classification, series edit)
     'services/musickit/MusicKitCatalog.js:arrow function': 14, // no feature yet: the Apple Music catalog client
@@ -85,14 +65,11 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'transformers/TrackTransformer.js:toCanonical': 40, // F62 holds this code (blend, playlists, export, Spotify)
     'utils/FilterUtils.js:sortBy': 12, // no feature yet: three filters of albums that should be one rule
     'utils/SafeDOM.js:arrow function': 15, // no feature yet
-    'utils/SvgGenerator.js:generateEqualizer': 14, // no feature yet
     'utils/retry.js:retryWithBackoff': 14, // no feature yet
     'views/BlendingMenuView.js:render': 12, // F62 holds this code (blend, playlists, export, Spotify)
     'views/BlendingMenuView.js:renderGenerateButton': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'views/InventoryView.js:render': 11, // no feature yet
     'views/SeriesView.js:updateAlbums': 19, // no feature yet
-    'views/albums/AlbumsFilters.js:filterAlbums': 18, // no feature yet: three filters of albums that should be one rule
-    'views/albums/AlbumsFilters.js:arrow function': 11, // no feature yet: three filters of albums that should be one rule
     'views/albums/AlbumsScopedRenderer.js:arrow function': 12, // no feature yet
     'workers/search.worker.js:function': 11 // F57 holds this code (album search, classification, series edit)
 })
@@ -101,7 +78,7 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
  * The same list for the server (server/, measured 2026-11-19 in F52, slice 5). It can only shrink,
  * by the same three rules. The key is `file:function` with the file relative to the repository
  * root. When the slice began there were 26; it brought 8 into the limit (the ranking fetch at 139,
- * the album answer at 65, the consolidation at 49 among them).
+ * the album answer at 65, the consolidation at 49 among them), and F65 removed the 4 of server/scripts.
  */
 export const SERVER_KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'server/lib/aiClient.js:callProvider': 14, // no feature yet: the two shapes of provider (Gemini, proxy) in one function
@@ -117,25 +94,15 @@ export const SERVER_KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'server/lib/scrapers/besteveralbums.js:arrow function#2': 11, // no feature yet: reading the chart page of BestEverAlbums
     'server/routes/debug.js:async arrow function': 13, // no feature yet: a debug route, off in production (F59)
     'server/routes/debug.js:async arrow function#2': 24, // no feature yet: a debug route, off in production (F59)
-    'server/routes/handlers/ai.js:albumTitlesIn': 13, // no feature yet: reading the AI's list of albums
-    'server/scripts/testMusicboardScraper.js:testScraper': 11, // F65 removes server/scripts (nothing uses it): the line leaves with the file
-    'server/scripts/testRankingCall.js:run': 21, // F65 removes server/scripts (nothing uses it): the line leaves with the file
-    'server/scripts/testRankingRetry.js:attempt': 17, // F65 removes server/scripts (nothing uses it): the line leaves with the file
-    'server/scripts/verifyRankingFlow.js:runTests': 13 // F65 removes server/scripts (nothing uses it): the line leaves with the file
+    'server/routes/handlers/ai.js:albumTitlesIn': 13 // no feature yet: reading the AI's list of albums
 })
 
-/** The same list for the modules the app and the server share (shared/, measured 2026-11-19 in F52, slice 5). */
-export const SHARED_KNOWN_ABOVE_THE_LIMIT = Object.freeze({
-    'shared/curation.js:arrow function': 26, // F65 removes shared/curation.js (nothing uses it): the line leaves with the file
-    'shared/curation.js:arrow function#2': 14, // F65 removes shared/curation.js
-    'shared/curation.js:arrow function#3': 14, // F65 removes shared/curation.js
-    'shared/curation.js:arrow function#4': 18, // F65 removes shared/curation.js
-    'shared/curation.js:curate': 23, // F65 removes shared/curation.js
-    'shared/curation.js:arrow function#5': 14, // F65 removes shared/curation.js
-    'shared/curation.js:isSwapValid': 13, // F65 removes shared/curation.js
-    'shared/curation.js:runFase4SwapBalancing': 16, // F65 removes shared/curation.js
-    'shared/curation.js:buildRankingSummary': 14 // F65 removes shared/curation.js
-})
+/**
+ * The same list for the modules the app and the server share (shared/). It is EMPTY: the nine
+ * functions measured on 2026-11-19 were all of shared/curation.js, which F65 removed. Keep it empty:
+ * a function of shared/ above the limit fails the test.
+ */
+export const SHARED_KNOWN_ABOVE_THE_LIMIT = Object.freeze({})
 
 const APP = 'public/js/'
 
