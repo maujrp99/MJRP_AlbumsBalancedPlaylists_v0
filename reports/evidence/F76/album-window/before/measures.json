@@ -1,0 +1,231 @@
+{
+ "album-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "docScrollWidth": 393,
+  "phone": true,
+  "textBelow12": [],
+  "fieldsBelow16": [],
+  "targets": 5,
+  "targetsBelow44": [],
+  "tracksFullyVisible": 0,
+  "scrollingBoxes": [
+   "div.absolute.inset-0 «My Avg: -Avg Rating: 83.»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": null,
+  "titlesCut": 0,
+  "albumTitle": {
+   "text": "The Dark Side of the Moon (50th Anniversary Remastered Deluxe Edition)",
+   "width": 241,
+   "height": 120,
+   "cut": false
+  },
+  "boxes": {
+   "bar": null,
+   "header": [
+    0,
+    0,
+    393,
+    217
+   ],
+   "segmented": null,
+   "save": null,
+   "toast": null,
+   "mover": null
+  }
+ },
+ "inventory-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "docScrollWidth": 393,
+  "phone": true,
+  "textBelow12": [],
+  "fieldsBelow16": [],
+  "targets": 7,
+  "targetsBelow44": [
+   "a.text-accent-primary.underline «See it on Discogs» 89x14",
+   "button.text-accent-primary.underline «Read again» 60x16",
+   "a.text-accent-primary.underline «Data provided by Discogs» 137x14"
+  ],
+  "tracksFullyVisible": 0,
+  "scrollingBoxes": [
+   "div.absolute.inset-0 «Estimated valueWhat this»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": null,
+  "titlesCut": 0,
+  "albumTitle": {
+   "text": "The Dark Side of the Moon (50th Anniversary Remastered Deluxe Edition)",
+   "width": 241,
+   "height": 120,
+   "cut": false
+  },
+  "boxes": {
+   "bar": null,
+   "header": [
+    0,
+    0,
+    393,
+    233
+   ],
+   "segmented": null,
+   "save": null,
+   "toast": null,
+   "mover": null
+  }
+ },
+ "rank-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "docScrollWidth": 393,
+  "phone": true,
+  "textBelow12": [],
+  "fieldsBelow16": [],
+  "targets": 3,
+  "targetsBelow44": [],
+  "tracksFullyVisible": 0,
+  "scrollingBoxes": [
+   "div.flex-1.overflow-y-auto «1Speak to MePink Floyd#1»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": null,
+  "titlesCut": 0,
+  "albumTitle": null,
+  "boxes": {
+   "bar": null,
+   "header": null,
+   "segmented": null,
+   "save": [
+    295,
+    16,
+    82,
+    44
+   ],
+   "toast": null,
+   "mover": null
+  }
+ },
+ "album-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "docScrollWidth": 1280,
+  "phone": false,
+  "textBelow12": [
+   "span. «Score»",
+   "span.text-white/60 «30%»",
+   "span. «Score»",
+   "span.text-white/60 «43%»",
+   "span. «Score»",
+   "span.text-white/60 «56%»",
+   "span. «Score»",
+   "span.text-white/60 «69%»"
+  ],
+  "fieldsBelow16": [],
+  "targets": 2,
+  "targetsBelow44": [],
+  "tracksFullyVisible": 0,
+  "scrollingBoxes": [
+   "div.absolute.inset-0 «My Avg: -Avg Rating: 83.»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": null,
+  "titlesCut": 0,
+  "albumTitle": {
+   "text": "The Dark Side of the Moon (50th Anniversary Remastered Deluxe Edition)",
+   "width": 670,
+   "height": 36,
+   "cut": true
+  },
+  "boxes": {
+   "bar": null,
+   "header": [
+    153,
+    125,
+    974,
+    177
+   ],
+   "segmented": null,
+   "save": null,
+   "toast": null,
+   "mover": null
+  }
+ },
+ "inventory-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "docScrollWidth": 1280,
+  "phone": false,
+  "textBelow12": [],
+  "fieldsBelow16": [
+   "input.form-control «»"
+  ],
+  "targets": 10,
+  "targetsBelow44": [
+   "a.text-accent-primary.underline «See it on Discogs» 89x14",
+   "button.text-accent-primary.underline «Read again» 60x16",
+   "a.text-accent-primary.underline «Data provided by Discogs» 137x14"
+  ],
+  "tracksFullyVisible": 0,
+  "scrollingBoxes": [
+   "div.absolute.inset-0 «Estimated valueWhat this»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": null,
+  "titlesCut": 0,
+  "albumTitle": {
+   "text": "The Dark Side of the Moon (50th Anniversary Remastered Deluxe Edition)",
+   "width": 670,
+   "height": 36,
+   "cut": true
+  },
+  "boxes": {
+   "bar": null,
+   "header": [
+    153,
+    125,
+    974,
+    187
+   ],
+   "segmented": null,
+   "save": null,
+   "toast": null,
+   "mover": null
+  }
+ },
+ "rank-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "docScrollWidth": 1280,
+  "phone": false,
+  "textBelow12": [],
+  "fieldsBelow16": [],
+  "targets": 3,
+  "targetsBelow44": [
+   "button.flex.items-center «Back» 36x24",
+   "button.px-4.py-2 «Reset» 67x36",
+   "button.px-4.py-2 «Save» 82x36"
+  ],
+  "tracksFullyVisible": 0,
+  "scrollingBoxes": [
+   "div.flex-1.overflow-y-auto «1Speak to MePink Floyd#1»"
+  ],
+  "sidewaysScroll": [],
+  "narrowestTitlePx": null,
+  "titlesCut": 0,
+  "albumTitle": null,
+  "boxes": {
+   "bar": null,
+   "header": null,
+   "segmented": null,
+   "save": [
+    853,
+    101,
+    82,
+    36
+   ],
+   "toast": null,
+   "mover": null
+  }
+ }
+}
