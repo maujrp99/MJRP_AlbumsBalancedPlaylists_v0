@@ -50,7 +50,7 @@ O que a feature conserta, e o que só diminui:
 - [REQ-05] Nenhum arquivo de texto acompanhado pelo git traz credencial escrita; um teste acusa arquivo, linha e regra, e nunca mostra o valor. Os valores públicos por desenho são uma lista escrita, com o motivo. · fixes UAT-203
   verified_by:: `test/security/noSecretsInRepo.test.js` (com `test/security/support/secretScan.js`)
 - [REQ-06] Os dois `package.json` declaram o que o código usa e só isso: entram `espree` e `postcss` na raiz; saem as dependências usadas só por código removido; os dois `package-lock.json` acompanham, sem mudar a versão de nenhum pacote que fica. · fixes UAT-203
-  verified_by:: `npm ci --dry-run` na raiz e `npm ci --omit=dev` numa cópia do servidor (registrados no `plan.md`), `npx vitest run` e `npx vite build`
+  verified_by:: `npm ci` numa cópia limpa do ramo, seguido de `npx vitest run` e `npx vite build`, e `npm ci --omit=dev` numa cópia do servidor (registrados no `plan.md`)
 - [REQ-07] `npx eslint .` lê cada parte do código como o que ela é (navegador, worker, compartilhado, CommonJS do servidor, Node, testes do Vitest) e não lê o que é construído, instalado ou de terceiros. · fixes UAT-203
   verified_by:: `eslint.config.mjs` e a medição do `plan.md` (377 avisos `no-undef` por falta de globais na `main`; 1 no ramo, que é um defeito de verdade)
 

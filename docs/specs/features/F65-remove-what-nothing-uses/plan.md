@@ -60,6 +60,7 @@ No total, contra a `main`: 143 arquivos removidos, 5 criados (a ferramenta do gr
 ### 5. Os `package.json` (REQ-06)
 - **Raiz:** `description` em dia; entram `espree` `^10.4.0` e `postcss` `^8.5.6` (usados por `test/architecture/` e não declarados), nas versões que o `package-lock.json` já resolvia; saem `puppeteer` (com `test/e2e`) e `jsonwebtoken` (só os scripts removidos o usavam; o do servidor fica no `server/package.json`); saem os scripts `test:e2e` e `test:e2e:headful`. **O `dotenv` fica**: `server/lib/services/spotifyPopularity.js`, que `test/server/spotifyAlbumIdentity.test.js` e `test/server/spotifyPopularityOutcome.test.js` carregam, faz `require('dotenv')` ao carregar.
 - **Os dois `package-lock.json` foram refeitos só no arquivo** (`npm install --package-lock-only --ignore-scripts`, a raiz numa cópia fora do repositório): na raiz saem 70 pacotes (as árvores do `puppeteer` e do `jsonwebtoken`), nenhum entra nem muda de versão ou de assinatura; no servidor ficam os 123 pacotes de produção, idênticos, e saem os 517 de desenvolvimento. `npm ci --dry-run` aceita o da raiz; `npm ci --omit=dev` instalou o do servidor.
+- **Prova numa cópia limpa do ramo** (`git archive` do commit, sem `.git` e sem `node_modules`, como os roteiros de publicação fazem): `npm ci` instala 395 pacotes, sem `puppeteer` nem `jsonwebtoken`; `npx vitest run` passa com 1945 testes em 162 arquivos (a busca de segredos lê a pasta quando não há git); `npx vite build` compila.
 
 ### 6. O ESLint (REQ-07; UAT-20, em parte)
 `eslint.config.mjs`: uma lista do que não é lido (`dist/`, `coverage/`, `node_modules/`, `_archive/`, `_backups/`, `public/js/vendor/`, as cópias do harness, as pastas sem código do app) e um bloco por tipo de código. As regras continuam as recomendadas, com `no-unused-vars` e `no-undef` em aviso.
@@ -217,7 +218,7 @@ Nenhuma nova. `espree` e `postcss` já estavam instalados (vinham com o `eslint`
 
 ## Risks & Considerations
 - **Uma tela pode depender de algo que só o navegador mostra.** A suíte e a build passam, o grafo não acha importação quebrada, mas nenhuma tela foi aberta nesta sessão. A prova é do integrador (roteiro abaixo).
-- **`public/package.json` saiu.** Sem ele, o Vite passa a guardar o cache de desenvolvimento em `node_modules/.vite` da raiz (o lugar padrão) em vez de `public/node_modules/.vite`. `npx vite build` compila; o servidor de desenvolvimento (`npx vite`) não foi iniciado aqui.
+- **`public/package.json` saiu.** Sem ele, o Vite passa a guardar o cache de desenvolvimento em `node_modules/.vite` da raiz (o lugar padrão) em vez de `public/node_modules/.vite`. `npx vite build` compila, e o servidor de desenvolvimento foi iniciado numa cópia limpa do ramo (`npx vite`, noutra porta): a página, `/js/app.js`, o worker da busca e um módulo importado por `@shared` responderam 200. Nenhuma tela foi aberta.
 - **Os roteiros de navegador saíram.** Se o MJRP quiser uma suíte de navegador, é escrevê-la de novo contra as telas de hoje; reverter o commit traz de volta roteiros que já não casavam com o app.
 - **Cada grupo é um commit**, para que uma remoção errada seja desfeita sozinha.
 
