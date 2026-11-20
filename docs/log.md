@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 14:55] session — F78 Ref-A: a sequência de chamadas do Firestore dos repositórios, gravada antes da mudança de casa
+**Branch:** feat/f78-ref-a-repositories-in-the-core
+Antes de mover os repositórios para `shared/data/`, cada método público dos cinco repositórios roda contra o Firestore falso com gravador (`test/helpers/recordingFirestore.js`) e o registro (chamadas, cargas, ordem, cache e documentos que sobram) fica em `test/fixtures/repositories/write-sequence.json`, gravado no código da `main` (`7a3237b`).
+O `writeSequence.test.js` compara o registro com o arquivo: a mudança de casa tem de dar o mesmo, chamada por chamada (REQ-09). Nenhuma escrita no Firestore de produção.
+
 ## [2026-11-20 14:48] session — F78: as fundações do núcleo em produção; `## Now` atualizado
 **Branch:** main
 Servidor `mjrp-proxy-00214-4z4` (teto de 3 instâncias; `DISCOGS_TOKEN` continua mapeado) e site da `3112b6d`. Provado no app local, conta do MJRP: os identificadores de faixa saem da porta (`newId`), o inventário abre com os totais em reais, e as três receitas geram playlists dos álbuns reais de «Trip Hop Vol.1» (chamando o serviço de geração direto, sem tocar no rascunho não salvo dele). Suíte 3512; o corpo dourado bate com o motor Hermes em 3.343 de 3.343 casos. Sobra a limpar: a série de visitante «F78 port check», criada por um agente no Firestore de produção.
