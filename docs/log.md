@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:20] decision — F75: o cartão do inventário é a superfície da v5.1 (escolha do MJRP)
+
+- Dito por ele: «yep, a v5.1 é minha preferida tb!». O cartão tem fundo próprio, borda bem fraca e a capa até as bordas; a v5, com borda em volta, fica como registro. Assunto: o cartão de álbum do inventário (identidade visual do app).
+- Consequência a decidir: a tela de séries usa um cartão sem fundo; as duas telas ficam diferentes até o das séries seguir este.
+- F74, segunda fatia, em produção (servidor `mjrp-proxy-00209-prz`, site de `4350564`): «Close to the Edge» 3 de 3, «Black Rose» 9 de 9, «To Pimp a Butterfly» 16 de 16, «The Chronic» 16 de 16, «Déjà Vu» 10 de 10, «Electric Warrior» 11 de 11, vistos na conta do MJRP.
+
 ## [2026-11-20 01:17] session — F75: v5.1 (o cartão como superfície) para o MJRP comparar com a v5 (a borda)
 
 - A pedido dele. `design/inception/inventory-value-v5.1.html`; no comparador as duas ficam lado a lado. A escolha é dele.

@@ -78,3 +78,9 @@
 - **No comparador:** a v5.1 e a v5 aparecem lado a lado, as duas «para comparar». O protótipo que segue é o que ele escolher.
 - **Não feito:** 390 px não foi conferido em nenhuma das duas.
 
+## [2026-11-20 01:20] F75 · o MJRP escolheu a v5.1
+
+- **Dito por ele:** «yep, a v5.1 é minha preferida tb!», depois de perguntar qual o agente escolheria e por quê.
+- **Como foi entendido:** o cartão do inventário é a superfície da v5.1; a v5 (borda) fica como registro. Não é a aprovação do protótipo inteiro: as seis perguntas da proposta, o formato em botões e a conferência em 390 px seguem abertos.
+- **Consequência anotada:** os cartões da tela de séries não têm fundo; levar este cartão para lá é trabalho à parte, a decidir.
+
