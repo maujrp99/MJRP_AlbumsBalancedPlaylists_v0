@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:37] session — F73 em produção; UAT-219 registrada (o inventário volta ao topo ao mudar o status)
+
+- A F73 foi juntada na `main` (`0db59f6`) depois de o MJRP priorizá-la, e o site foi publicado. Quem tinha a aba aberta precisa recarregar uma vez: a guarda contra versão antiga só existe a partir desta publicação.
+- O MJRP relatou: no inventário, mudar o status de um álbum leva a tela ao topo. UAT-219 aberta; entra na F73 como REQ-05 (é o mesmo redesenho inteiro da tela).
+
 ## [2026-11-19 23:34] session — F73: o campo em uso sobrevive ao redesenho; a aba antiga recarrega; a tela antiga de geração saiu; o inventário se solta
 
 **Branch:** fix/f73-screens-keep-the-field

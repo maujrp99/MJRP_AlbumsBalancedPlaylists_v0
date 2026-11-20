@@ -3,7 +3,7 @@ status: In Progress
 lane: fast
 solution_type: fix
 imports: []
-fixes: ["UAT-212", "UAT-213", "UAT-214", "UAT-215"]
+fixes: ["UAT-212", "UAT-213", "UAT-214", "UAT-215", "UAT-219"]
 planned_for: "[[ROADMAP#^REL-40]]"
 ---
 # Feature F73: As telas mantêm o campo em uso e largam o que deixaram
@@ -24,6 +24,7 @@ Relato do MJRP em produção, 2026-11-19: «bug de foco/keystroke no batch name 
 - [REQ-02] Um arquivo do app pedido na hora de um clique que não existe mais (a aba roda uma versão antiga) faz o app carregar de novo, uma vez. · fixes UAT-213
 - [REQ-03] `/playlists` sem playlists e fora da edição diz que não há playlists e leva ao Blending Menu; as configurações iniciais antigas não são desenhadas. · fixes UAT-214
 - [REQ-04] Uma tela deixada não escuta mais nenhuma loja; uma regra só diz como uma tela se inscreve e se solta. · fixes UAT-215
+- [REQ-05] Uma tela redesenhada fica onde a pessoa estava na página: a rolagem não volta ao topo. · fixes UAT-219
 
 ## Observable States
 A feature não importa nenhum requisito (conserto de quatro issues). Os estados de comportamento que mudam ou nascem, em `docs/specs/behavior.md`:

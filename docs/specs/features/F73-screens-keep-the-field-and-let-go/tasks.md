@@ -10,6 +10,7 @@
 - [x] TASK-02 `installStaleBuildGuard` ligada em `app.js`; teste antes (`test/utils/staleBuild.test.js`) · implements:: REQ-02 · model:: opus · rounds:: 1
 - [x] TASK-03 `/playlists` sem playlists mostra «No playlists here yet» e leva ao Blending Menu; `renderInitialSettings` apagado · implements:: REQ-03 · model:: opus · rounds:: 1
 - [x] TASK-04 a `InventoryView` se inscreve por `this.subscriptions` e não desenha depois de deixada; `test/architecture/viewLifecycle.test.js` · implements:: REQ-04 · model:: opus · rounds:: 1
+- [ ] TASK-07 o redesenho mantém a rolagem da página (inventário: mudar o status não volta ao topo) · implements:: REQ-05 · model:: opus
 
 ## Verification
 - [x] TASK-05 suíte (2351 testes), lint e build verdes; prova no navegador em `reports/evidence/F73/2026-11-19-screens-keep-the-field-proof.md` · implements:: REQ-01, REQ-02, REQ-03, REQ-04 · model:: opus · rounds:: 1
