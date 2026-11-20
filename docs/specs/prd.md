@@ -113,6 +113,8 @@ O mapa dos requisitos: cada requisito é um arquivo em `docs/specs/requirements/
 folder:: ep-01-album-series
 serves:: [[ROADMAP#^OUT-03]] ^EP-01
 
+![[S-61-build-a-series-on-a-home-that-explains-itself]]
+
 
 
 
@@ -210,6 +212,8 @@ serves:: [[ROADMAP#^OUT-04]] ^EP-10
 ![[S-59-know-how-the-app-is-used]]
 
 ![[S-60-use-the-album-blender-as-an-app-from-the-store]]
+
+![[S-62-meet-the-album-blender-on-an-entry-page]]
 
 ### Transversais
 

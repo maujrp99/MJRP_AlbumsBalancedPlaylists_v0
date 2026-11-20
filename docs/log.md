@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 17:10] decision — duas features de desenho pedidas pelo MJRP: a Home que se explica (F79) e a página de entrada (F80)
+**Branch:** main
+Palavras dele: «vamos utilizar as skills de UI e UX e de writing copy para melhorar essa seção inicial do site … Gostaria de ver uma proposta consolidar, elevar, transformar, considerando copy, elementos de UI e UX e usabilidade. Tb gostaria de prototipo de uma home splash page para o site, com design moderno imersivo com animações, 3d...tudo relacionado a paixao por ouvir e apreciar ALBUNS completos de musica.» Criadas na `main`, em esboço: S-61 e F79 (EP-01), S-62 e F80 (EP-10; colocação decidida pelo agente, revisável). As duas começam por rodada de desenho com protótipos; nenhum ramo de código antes da escolha dele e da priorização.
+
 ## [2026-11-20 16:40] session — os termos de uso do BestEverAlbums, trazidos pelo MJRP, entram no estudo e no rascunho do e-mail
 **Branch:** main
 A dona do site é a Amulet Solutions (Stamford, Reino Unido); os termos dizem «for your general information and use only», proíbem a reprodução sem permissão e são regidos pela lei do Reino Unido, que tem direito sobre bases de dados. Leitura do agente, não de advogado: o uso pessoal de hoje é zona cinzenta; mostrar as notas num app público pede autorização por escrito; a extração repetida por álbum é o risco legal mais concreto do estudo; eles são afiliados da Amazon, então o app disputaria a mesma receita. O estudo (§ 2.2) e o rascunho do e-mail foram atualizados: o destinatário passa a ser a página de contato, o texto cita os termos e oferece divisão de receita.
