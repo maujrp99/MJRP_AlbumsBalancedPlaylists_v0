@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:29] session — UAT-212 a UAT-215 e F73 registradas: campo que perde o foco, exportar numa aba antiga, tela antiga de geração, inventário que não se solta
+
+- O MJRP testou a exportação (F62) em produção e relatou: o «Batch Name» perde o foco ao digitar; depois os botões de exportar não respondem; recarregar sem salvar mostra uma tela antiga de geração.
+- Causas lidas no código e vistas no navegador: a tela de playlists é redesenhada inteira a cada aviso de três lojas (UAT-212); a recarga por versão antiga só protege a troca de tela, e o site foi publicado enquanto ele testava (UAT-213); `/playlists` sem playlists ainda desenha as configurações antigas (UAT-214).
+- Achado ao varrer os campos: a tela do inventário nunca se solta da loja e se desenha por cima de outra tela (UAT-215, aberta pelo agente).
+- F73 criada na `main`, via rápida, conserto.
+
 ## [2026-11-19 23:22] session — F71 em produção; a F49 provada pelo MJRP em produção
 
 - A F71 (primeira fatia) foi juntada na `main` (`63793a4`) e o site publicado: pacote `main-BfgCsm6G.js`. O servidor não mudou (`mjrp-proxy-00207-lhz`).
