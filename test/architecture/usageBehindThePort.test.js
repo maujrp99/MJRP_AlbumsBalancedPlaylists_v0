@@ -54,6 +54,15 @@ describe('the measurement service is behind one port (F77)', () => {
         expect(offenders(outside, (specifier, file) => usageFile(specifier) && !allowed(specifier, file))).toEqual([])
     })
 
+    it('the page lets the events reach the two PostHog clouds, and loads no script of PostHog', () => {
+        const page = fs.readFileSync(path.join(process.cwd(), 'public/index.html'), 'utf8')
+        const policy = page.match(/Content-Security-Policy"\s+content="([^"]+)"/)[1]
+        const directive = (name) => (policy.split(';').map(part => part.trim()).find(part => part.startsWith(`${name} `)) || '')
+        expect(directive('connect-src')).toContain('https://eu.i.posthog.com')
+        expect(directive('connect-src')).toContain('https://us.i.posthog.com')
+        expect(directive('script-src')).not.toMatch(/posthog/)
+    })
+
     it('the list of events is read by the port only', () => {
         const list = (specifier) => /usageEvents(\.js)?$/.test(specifier)
         expect(offenders(appFiles().filter(file => file !== 'services/usage/track.js'), list)).toEqual([])
