@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:13] session — F78, Ref-A em produção: os seis repositórios no núcleo compartilhado
+**Branch:** main
+Site publicado da `main`. Os repositórios (Base, Series, Playlist, Inventory, UserRanking, SpotifyEnrichment) vivem em `shared/data/` e recebem o Firestore por injeção; `BaseRepository.save` grava a maior entre a versão de quem escreve e a que leu. Prova de que nada mudou: a sequência de operações gravada na `main` antes da mudança é a mesma depois (`writeSequence.test.js`). Provado no app local, conta do MJRP: 40 séries, o selo «My ranking», 51 lotes, 219 álbuns; uma gravação reversível (o status de «Group Therapy» de Wishlist para Not Owned e de volta), conferida depois de recarregar: 160 / 35 / 24 como antes, `_schemaVersion` 1. Suíte 3575. **Não publicado:** `firestore.rules` com a regra que recusa baixar a versão; a publicação é do MJRP (`firebase deploy --only firestore:rules`), e a regra só foi conferida como texto (sem emulador nesta máquina). Não provado logado: criar, renomear e apagar série; gravar e editar lote; gravar ranking.
+
 ## [2026-11-20 15:09] session — F78 Ref-A: documentos — tarefas, plano, arch e data-model
 **Branch:** feat/f78-ref-a-repositories-in-the-core
 TASK-14 e TASK-15 marcadas; a TASK-16 tem a regra escrita e espera a publicação do MJRP; o que mexe na forma de gravar (só leitura acima da versão, transação, os casos abertos de convivência) foi para a TASK-17 (Ref-B). `plan.md` § Technical Design: o que a Ref-A construiu e os casos abertos; `arch.md`: «Os repositórios no núcleo: a store e a versão»; `data-model.md`: `_schemaVersion` nunca desce, e onde vale.
