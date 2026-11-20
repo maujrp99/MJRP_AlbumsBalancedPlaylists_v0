@@ -1,16 +1,61 @@
 # Tasks — Feature F78: O Album Blender como app para iPhone e Android · Plan: [[plan]]
-**Approved**: pendente
+**Approved**: pendente (o primeiro marco: os spikes, a refatoração do site, o esqueleto ambulante; espera o julgamento do MJRP)
 
 ## Pre-Implementation
-- [ ] a feature priorizada pelo MJRP; só então o ramo
-- [ ] proposta de arquitetura guiada por risco (`mjrp-designing-architecture`), criticada, aprovada pelo MJRP; depois o ADR da pilha
-- [ ] rodada de desenho das telas do app (`mjrp-designing-ui`), a partir do desenho da F76
+- [x] a feature priorizada pelo MJRP (2.ª em `priority.md`); em 2026-11-20 13:44 ele mandou construir, e às 13:45 seguir a recomendação nas decisões da proposta
+- [x] proposta de arquitetura guiada por risco (`mjrp-designing-architecture`), criticada, revista e reconferida (`design/proposals/f78-app-architecture/architecture-proposal.md`, § 16 e § 17)
+- [x] o ramo `feat/f78-app-first-milestone-specs` criado da `main` local (`4a1264a`, com a `5d1d0b2` juntada); spec, plano e tarefas do primeiro marco; o ADR-0022 em «Proposed»; a emenda da constituição proposta
+- [ ] o ADR-0022 aceito · waiting:: human — a pilha mexe na constituição: o aceite é dele, não do agente · action:: ler `docs/decisions/0022-app-in-react-native-over-a-shared-core.md` e aceitar, mudar ou recusar
+- [ ] a emenda da constituição aceita · waiting:: human — a constituição só muda com a aprovação dele (Governance) · action:: ler `design/proposals/f78-app-architecture/constitution-amendment.md` e escolher a redação (a), a (b) ou outra
+- [ ] Xcode e Android Studio instalados nesta máquina · waiting:: human — hoje só há as ferramentas de linha de comando: nenhum simulador do iPhone nem emulador do Android roda · action:: instalar o Xcode (App Store) e o Android Studio com um emulador, e abrir o Xcode uma vez para aceitar a licença
+- [ ] a conta de desenvolvedor da Apple · waiting:: human — só ele cria (US$ 99 por ano); sem ela não há login com a Apple nem build no iPhone de verdade · action:: entrar no Apple Developer Program e dizer o Team ID ao agente
+- [ ] a conta de desenvolvedor do Google · waiting:: human — só ele cria (US$ 25, uma vez); não bloqueia este marco, só o teste fechado do Google · action:: criar a conta no Google Play Console quando o iPhone estiver no TestFlight
+- [ ] a conta do Expo · waiting:: human — só ele cria; precisa só se o build for pelo serviço do Expo, não no Mac · action:: criar a conta em expo.dev, se ele quiser builds na nuvem, e entrar com `npx expo login`
+- [ ] a chave do PostHog · waiting:: human — o projeto e a chave são dele (a mesma pendência da TASK-06 da F77) · action:: criar o projeto (EU) e pôr a chave no `.env`; o app usa a mesma chave
 
 ## Implementation
-- [ ] TASK-01 a escrever depois da proposta de arquitetura · implements:: REQ-01 · model:: opus
+Na ordem do § 15 da proposta: primeiro o que custa minutos, depois os spikes, depois o site, depois o app. Nenhum código em `app/` antes do ADR-0022 e da emenda aceitos; os spikes rodam em projetos descartáveis, fora do repositório.
+- [ ] TASK-01 spike S6: ler o faturamento do Google Cloud do último mês (IA, Cloud Run, Firestore) e o custo de um álbum novo; relatório `reports/audits/…-f78-spike-s6.md`, em 2 horas · implements:: REQ-05 · model:: opus
+- [ ] TASK-02 Ref-0: `shared/platform/newId.js` (e a ligação do site com `crypto.randomUUID`); `models/Track.js` e `transformers/TrackTransformer.js` usam `newId()`; suíte verde · implements:: REQ-07 · model:: opus
+- [ ] TASK-03 `--max-instances` fixado em `scripts/deploy-server.sh`, com o teste que falha sem ele · implements:: REQ-18 · model:: opus
+- [ ] TASK-04 o corpo dourado: `test/fixtures/golden-core/` (álbuns reais da conta do MJRP com faixas sem `id`, mais as entradas dos testes do núcleo: vazios, empates, acentos) e `scripts/golden-core.mjs`, que roda todas as receitas, todas as estratégias de ranking e as identidades no Node e grava a saída · implements:: REQ-01, REQ-06, REQ-16 · model:: opus
+- [ ] TASK-05 spike S1, parte da linha de comando: o corpo dourado no motor Hermes (`hermes` do npm), sem aparelho; relatório parcial do S1 · implements:: REQ-01 · model:: opus
+- [ ] TASK-06 o núcleo ganha casa e sensor: `workspaces` na raiz e `shared/package.json`; `coreStaysPortable.test.js`, `appAndSiteApart.test.js`, as regras sem `shared/data/`; os testes do núcleo também em ambiente `node`; `shared/services/AuthService.js` sai do núcleo · implements:: REQ-08 · model:: opus
+- [ ] TASK-07 spike S1, no aparelho: app Expo vazio, descartável, no simulador do iPhone e no emulador do Android, com o gerador de id real; byte a byte contra o Node; uma store só · implements:: REQ-01 · model:: opus · waiting:: human — precisa do Xcode e do Android Studio, que esta máquina não tem · action:: instalar os dois (tarefa da Pré-implementação)
+- [ ] TASK-08 spike S7: app SwiftUI vazio rodando o corpo dourado pelo motor de JavaScript do iOS; mesma comparação do S1; meio dia · implements:: REQ-06 · model:: opus · waiting:: human — precisa do Xcode, que esta máquina não tem · action:: instalar o Xcode (tarefa da Pré-implementação)
+- [ ] TASK-09 spike S3: criar uma playlist no Apple Music de um app Expo com um módulo nativo que só entrega o token do usuário, no iPhone do MJRP · implements:: REQ-03 · model:: opus · waiting:: human — precisa do Xcode, da conta da Apple e do iPhone dele com Apple Music · action:: instalar o Xcode, criar a conta e emprestar o iPhone para o teste
+- [ ] TASK-10 spike S2: Firebase JS e pacote nativo lado a lado, as seis perguntas; a 4 (gravação sem rede sobrevive a fechar o app; transação sem rede falha) é obrigatória · implements:: REQ-02 · model:: opus · waiting:: human — o login com a Apple e o cofre do sistema pedem a conta da Apple e o Xcode · action:: criar a conta e instalar o Xcode
+- [ ] TASK-11 spike S4: o mesmo do S3 no Android, com o SDK de login da Apple, num aparelho com o app Apple Music · implements:: REQ-03 · model:: opus · waiting:: human — precisa do Android Studio e de um Android com o app Apple Music · action:: instalar o Android Studio e dizer qual Android usar
+- [ ] TASK-12 spike S5: 300 álbuns com capa a 55 quadros por segundo e arrastar 20 faixas, no iPhone 15 Pro e num Android de entrada · implements:: REQ-04 · model:: opus · waiting:: human — precisa do Xcode, do Android Studio e dos dois aparelhos · action:: instalar e dizer qual Android de entrada usar
+- [ ] TASK-13 a decisão depois dos spikes: lidos os sete relatórios, a pilha fica ou volta à proposta (§ 12, «O que mudaria a recomendação»); o ADR-0022 é revisto se um spike disser não · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06 · model:: opus
+- [ ] TASK-14 Ref-A, a mudança de casa: `BaseRepository` e os cinco repositórios em `shared/data/`, recebendo as funções do Firestore de fora; a ligação do site entrega as do Firebase JS; testes dos repositórios e `firestoreBehindRepositories` verdes · implements:: REQ-09 · model:: opus
+- [ ] TASK-15 Ref-A, as regras de convivência: gravar por campos (sai o `setDoc` sem fusão), preservar o desconhecido em `albumQueries`, só leitura acima da versão conhecida, `_schemaVersion` nunca menor; `oldWriterKeepsNewFields.test.js` · implements:: REQ-10 · model:: opus
+- [ ] TASK-16 `firestore.rules` recusa uma gravação que rebaixe `_schemaVersion`, com o teste das regras no emulador · implements:: REQ-10 · model:: opus · waiting:: human — o `firestore.rules` é dele e nenhum pipeline o publica · action:: ler a regra escrita pelo agente e publicá-la (`firebase deploy --only firestore:rules`)
+- [ ] TASK-17 Ref-B: `SeriesService` em `shared/services/`, recebendo repositório, guarda e aviso de fora; gravar série por transação com conferência, prazo de 10 s, quatro desfechos; `SeriesFactsService.saveAlbumFacts` pelo mesmo caminho; o texto «This series changed on another device. Reload to see it.» no site · implements:: REQ-11 · model:: opus
+- [ ] TASK-18 rodada de desenho das telas do esqueleto (`mjrp-designing-ui`), a partir do desenho de celular da F76: entrar, séries, «Saved earlier», «No connection», «Update to continue», autoteste; `info-arch.md` com os estados; o juízo é do MJRP · implements:: REQ-12, REQ-13, REQ-14, REQ-16 · model:: opus
+- [ ] TASK-19 `app/` nasce: Expo com `package.json` próprio, `shared/` pelo espaço de trabalho, Firebase nativo, entrar com a Apple e com o Google (sem visitante) · implements:: REQ-12 · model:: opus
+- [ ] TASK-20 a lista de séries pelo `SeriesService` do núcleo, com a ligação do Firestore do app e a guarda local: a cópia «Saved earlier», o prazo de 10 s, «No connection» com «Try again» · implements:: REQ-12, REQ-13 · model:: opus
+- [ ] TASK-21 `GET /api/app-config` no servidor (pública, sem segredo, com teste) e a tela «Update to continue» no app, que segue sem resposta em 5 s · implements:: REQ-14 · model:: opus
+- [ ] TASK-22 a medição do app: a ligação com `posthog-react-native` sobre `shared/usageEvents.js`, o interruptor sem chave, `usageBehindThePort.test.js` aceitando as duas ligações · implements:: REQ-15 · model:: opus
+- [ ] TASK-23 a tela de autoteste do corpo dourado, o roteiro `app/maestro/golden-core.yaml` e `scripts/app-selftest.sh`; o roteiro de publicar o app recusa sem 100% iguais · implements:: REQ-16 · model:: opus
+- [ ] TASK-24 `noSecretsInTheApp.test.js` e a busca de padrões de chave no pacote do build · implements:: REQ-17 · model:: opus
 
 ## Verification
-- [ ] TASK-02 a escrever · implements:: REQ-01 · model:: opus
+- [ ] TASK-25 depois de cada fatia do site (Ref-0, núcleo, Ref-A, convivência, Ref-B): suíte, lint e build verdes, e o site conferido num navegador de verdade (`@playwright/mcp`), a 1002 px e a 375 px: entrar, abrir e gravar uma série, ranking, inventário, playlists · implements:: REQ-07, REQ-08, REQ-09, REQ-10, REQ-11, REQ-18 · model:: opus
+- [ ] TASK-26 cada sensor com um caso que quebra de propósito: `coreStaysPortable`, `appAndSiteApart`, `oldWriterKeepsNewFields`, `usageBehindThePort`, `noSecretsInTheApp`, o do deploy · implements:: REQ-08, REQ-10, REQ-15, REQ-17, REQ-18 · model:: opus
+- [ ] TASK-27 contra o emulador do Firestore, cortar a rede no meio de gravar uma série dá «não gravada sem rede»; outro aparelho gravando antes dá «mudou em outro aparelho» · implements:: REQ-11 · model:: opus
+- [ ] TASK-28 o esqueleto no iPhone 15 Pro do MJRP e no emulador do Android: entrar com a Apple e com o Google, as mesmas séries do site, modo avião com e sem cópia, «Update to continue», «N of N match»; um evento chegando ao PostHog · implements:: REQ-12, REQ-13, REQ-14, REQ-15, REQ-16 · model:: opus · waiting:: human — precisa do Xcode, do Android Studio, da conta da Apple, do iPhone e da conta dele, e da chave do PostHog · action:: as tarefas da Pré-implementação, e entrar no app com a conta dele
+- [ ] TASK-29 paridade visual das telas do esqueleto: capturas do simulador e do emulador ao lado do protótipo julgado na TASK-18, nas medidas de `design-system.md` § Celular; a última tarefa · implements:: REQ-12, REQ-13, REQ-14, REQ-16 · model:: opus · waiting:: human — precisa do Xcode e do Android Studio · action:: instalar os dois (tarefa da Pré-implementação)
 
 ## Documentation
-- [ ] a escrever
+- [ ] `docs/specs/arch.md`: o núcleo com `platform/` e `data/`, as portas, `app/`, a rota `GET /api/app-config`
+- [ ] `docs/specs/data-model.md`: as regras de convivência e o `_schemaVersion`
+- [ ] `docs/specs/behavior.md`: os quatro desfechos de gravar uma série
+- [ ] `docs/specs/tech-stack.md`: as linhas do app, depois do ADR-0022 aceito
+- [ ] `docs/specs/constitution.md`: o texto da emenda que o MJRP aceitar, com o aceite dele
+- [ ] `docs/manual/00_Deployment_and_Setup.md`: como fazer o build do app no Mac e rodar o autoteste
+- [ ] o log de cada fatia, e o `## Now` do `MEMORY.md` no fecho do marco
+
+## For the owner at UAT
+- julgar este marco: os spikes, o site depois da refatoração, o esqueleto no iPhone dele
+- responder as decisões abertas (1), (2), (3) e (8) da spec antes do marco B
