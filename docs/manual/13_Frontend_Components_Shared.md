@@ -29,6 +29,7 @@ These components are the "Universals" - reliable, reusable, and secure implement
 
 | Component | Responsibility | Details |
 | :--- | :--- | :--- |
+| **`ui/coverImage.js`** | **The one way an album cover is drawn** (F70, UAT-63). `coverImage({ src, alt, className, ... })` gives the `<img>`, marked `data-cover`. | • with no address, or when the address fails to load, the image shows the same stand-in (an inline SVG, `COVER_STAND_IN`), once per image (`data-cover-stand-in`).<br>• the failure is heard by one listener on the document (`watchCovers`, capture phase), because most cards are written into the page as text; no inline `onerror`.<br>• used by `AlbumCardRenderer`, `Card`, `AlbumCascade`, `ViewAlbumModal`, `DiscographyRenderer` and `StagingAreaRenderer`; `test/components/ui/coverImage.test.js` fails when one of them stops using it or when a file writes an inline error handler. |
 | **`AlbumCascade.js`** | Visualization component that renders a stack of album thumbnails. | • used in `BlendSeriesSelector`, `SavedPlaylistCard` and `SavedPlaylistsView` to visually represent a collection of albums.<br>• handles empty states and efficient Z-indexing for the "Deck of Cards" effect. |
 
 ## Architectural Shift: The "Universal" Pattern

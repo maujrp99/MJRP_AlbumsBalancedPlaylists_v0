@@ -7,6 +7,7 @@
 
 import { musicKitService } from '../MusicKitService.js'; // Legacy service for raw API calls for now
 import { serverFetch } from '../../api/serverFetch.js'
+import { mayUsePaidRoutes as appMayUsePaidRoutes } from '../../api/paidRoutes.js'
 import { readServerResult, ResultKind } from '../../api/serverResult.js'
 import { ArtistNormalizer } from './ArtistNormalizer.js';
 import { ScoreCalculator } from './ScoreCalculator.js';
@@ -18,7 +19,13 @@ import { CATALOG_DEADLINE_MS } from '../../models/scanState.js';
 export const AI_LIST_DEADLINE_MS = 60000;
 
 export class AlbumSearchService {
-    constructor() {
+    /**
+     * @param {Object} [deps]
+     * @param {Function} [deps.mayUsePaidRoutes] - () => boolean: false for a visitor, who never
+     *        asks the AI list (a paid route; api/paidRoutes.js is the one place that says who may)
+     */
+    constructor({ mayUsePaidRoutes = appMayUsePaidRoutes } = {}) {
+        this.mayUsePaidRoutes = mayUsePaidRoutes;
         this.normalizer = new ArtistNormalizer();
         this.scorer = new ScoreCalculator();
         this.cache = new Map(); // Album search cache
@@ -88,8 +95,9 @@ export class AlbumSearchService {
      * The catalog has a deadline (CATALOG_DEADLINE_MS): past it, the scan fails with DeadlineError.
      * @param {string} artistName
      * @returns {Promise<{ albums: Array, reclassified: Promise<Array|null>|null }>} `reclassified`
-     *          is null when no album wants the AI list (or the list is already remembered); it
-     *          resolves to null when the list did not come or is empty: the first albums stay.
+     *          is null when no album wants the AI list, when the list is already remembered, or
+     *          when the person may not ask it (a visitor: F70); it resolves to null when the list
+     *          did not come or is empty: the first albums stay.
      */
     async scanArtist(artistName) {
         const normalizedArtist = this.normalizer.normalize(artistName);
@@ -100,7 +108,7 @@ export class AlbumSearchService {
         const remembered = this.aiCache.get(normalizedArtist) ?? null;
         const albums = this._classifyAll(rawAlbums, remembered);
 
-        const listWanted = remembered === null && rawAlbums.some(wantsAiList);
+        const listWanted = remembered === null && rawAlbums.some(wantsAiList) && this.mayUsePaidRoutes();
         const reclassified = listWanted ? this._reclassifyWithAiList(rawAlbums, normalizedArtist) : null;
         return { albums, reclassified };
     }
@@ -138,11 +146,13 @@ export class AlbumSearchService {
      * Sprint 17.75-B: Fetch AI studio albums with caching
      * Only what the AI answered is remembered (a list, or "there is none"). When it could not be
      * known (F52), the caller gets an empty list for this once and the next search asks again.
+     * A visitor may not use the paid route (F70): nothing is asked and nothing is remembered.
      * @param {string} artistName - Normalized artist name
      * @returns {Promise<string[]>} - Array of AI-verified studio album titles
      */
     async _fetchAIWithCache(artistName) {
         if (this.aiCache.has(artistName)) return this.aiCache.get(artistName);
+        if (!this.mayUsePaidRoutes()) return [];
 
         const { albums, known } = await this._fetchAIStudioAlbums(artistName);
         if (known) this.aiCache.set(artistName, albums);

@@ -119,6 +119,9 @@ classDiagram
 ### `api/serverFetch.js` — the one way to call the app's own server
 `serverFetch(url, init)` is `fetch` plus the person's login: it asks Firebase for the ID token on every call (Firebase renews it) and sends it as `Authorization: Bearer <token>`. With nobody signed in the call goes without it and the server answers 401. `createServerFetch({ getIdToken, fetchImpl })` is the pure version, used by the tests. Every call to `/api/*` that the server guards goes through it: `api/client.js` (`/enrich-album`, `/generate`, `/playlists`) and `services/album-search/AlbumSearchService.js` (`/ai/studio-albums`). `/api/musickit-token` is open and is still called with plain `fetch`.
 
+### `api/paidRoutes.js` — who may use the paid routes (F70)
+The paid routes (`POST /api/generate`, `POST /api/ai/*`) answer only to a person signed in with an account; the guest login gets 403. `mayUsePaidRoutes()` is the one place of the app that says so: it reads the same Firebase login `serverFetch` sends and answers `false` for a visitor (`isAnonymous`), `true` otherwise (with no login known the call goes and the server's 401 holds the load). The two callers of a paid route ask it before calling: `APIClient._fetchAlbumFromAPI` (a visitor gets `null`, so the album ends as not found in the catalog) and `AlbumSearchService` (a visitor's scan asks no AI list). `createPaidRoutesGate({ getUser })` is the pure version. `test/api/paidRoutes.test.js` fails when a file names a paid route without importing it, or when another file reads `isAnonymous` to decide.
+
 ### `api/serverResult.js` — the one place that reads an answer of the server (F52)
 The server answers `{ data, outcome }` or `{ error: { code, retryable } }` (see `03_Backend_API_Layer.md`, "The contract of an answer"). `readServerResult(response)` is pure and gives a typed result:
 
