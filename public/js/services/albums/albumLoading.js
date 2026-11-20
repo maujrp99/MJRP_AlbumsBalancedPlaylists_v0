@@ -22,7 +22,7 @@ import { musicKitService } from '../MusicKitService.js'
 import { optimizedAlbumLoader } from '../OptimizedAlbumLoader.js'
 import { applyBEAData } from '../../helpers/BEAEnrichmentHelper.js'
 import { applySpotifyData } from '../../helpers/SpotifyEnrichmentHelper.js'
-import { spotifyEnrichmentStore } from '../../stores/SpotifyEnrichmentStore.js'
+import { storedSpotifyPopularity } from '../spotify/spotifyPopularityWiring.js'
 import { SpotifyService } from '../SpotifyService.js'
 import { SpotifyAuthService } from '../SpotifyAuthService.js'
 import { userRankingRepository } from '../../repositories/UserRankingRepository.js'
@@ -60,7 +60,7 @@ const spotifyIsConnected = () => SpotifyAuthService.hasSession()
 
 /** The one path that asks Spotify for the popularity of an album (F69). */
 const popularitySource = new SpotifyPopularitySource({
-    store: spotifyEnrichmentStore,
+    store: storedSpotifyPopularity,
     spotify: SpotifyService,
     isConnected: spotifyIsConnected
 })

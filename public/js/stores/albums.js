@@ -40,15 +40,6 @@ export class AlbumsStore {
         return this.activeAlbumSeriesId
     }
 
-    // LEGACY: Keep for backward compatibility during migration
-    setLastLoadedAlbumSeriesId(seriesId) {
-        this.setActiveAlbumSeriesId(seriesId)
-    }
-
-    getLastLoadedAlbumSeriesId() {
-        return this.getActiveAlbumSeriesId()
-    }
-
     // ========== ALBUM OPERATIONS ==========
 
     /**
