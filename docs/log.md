@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:15] session — F75, documentos: plano, tarefas, spec, comportamento, modelo de dados, arquitetura, estados e manual
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- `plan.md` reescrito: os módulos e o requisito que cada um serve, as doze decisões tomadas sem o MJRP («decidido pelo agente — revisável»), a leitura dos termos de uso da API do Discogs e o que não foi verificado. `tasks.md`: seis tarefas de construção e a verificação feitas; uma aberta, do integrador (mapear o segredo, publicar o servidor e depois o site, provar com a conta do MJRP). `spec.md` em `In Progress`, com os estados, os critérios e o que ficou fora.
+- `behavior.md` (seção «Inventário»), `data-model.md` (`value` e `discogs` no item; a leitura do Discogs e o câmbio só no navegador), `arch.md` (a fonte de valor, o interruptor, os três nomes novos do contrato) e `info-arch.md` (os estados construídos e os que o protótipo não mostrava, cada um com o seu ID de bloco).
+- Manual: `00_Deployment_and_Setup.md` ganhou a seção «2.4b O interruptor dos valores do Discogs», com os comandos de ligar, desligar, ligar de novo e restringir a uma pessoa, e as variáveis `DISCOGS_TOKEN`, `DISCOGS_VALUES`, `DISCOGS_VALUES_FOR` e `VALUE_CALLS_PER_HOUR`; `21_Dynamic_UI_Mapping.md` e as linhas do inventário de três outras páginas.
+- Para o MJRP julgar: o valor do Discogs aparece acima dos links da Amazon e da iMusic, e os termos proíbem usar o conteúdo para levar tráfego a outras lojas; sem `DISCOGS_VALUES_FOR`, toda pessoa com conta no app vê preços lidos com o token dele.
+- Não verificado: a chamada de preço do Discogs nunca foi feita (exige o token); nada foi publicado. O `doctor.py` segue com os mesmos 522 erros de antes do ramo.
+
 ## [2026-11-20 02:08] session — F75, app: o valor do item, a fila de «Update values» e a tela do inventário no padrão da v5.1
 
 **Branch:** feat/f75-cd-prices-and-where-to-buy

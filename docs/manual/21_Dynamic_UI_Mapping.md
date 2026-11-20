@@ -181,26 +181,34 @@ Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set
 ---
 
 ## 6. Inventory Logic
-**File Context**: `views/InventoryView.js`, `controllers/InventoryController.js`, `models/inventoryStatus.js`, `models/inventoryFilter.js`, `models/inventoryFromSeries.js`, `models/inventorySort.js`, `models/inventoryRatings.js`, `models/albumAverages.js`
+**File Context**: `views/InventoryView.js`, `controllers/InventoryController.js`, `models/inventoryStatus.js`, `models/inventoryFilter.js`, `models/inventoryFromSeries.js`, `models/inventorySort.js`, `models/inventoryRatings.js`, `models/albumAverages.js`, `controllers/InventoryValues.js`, `models/inventoryValue.js`, `models/inventoryValueRun.js`, `models/buyLinks.js`, `services/inventory/InventoryValueService.js`, `views/renderers/InventoryCardValue.js`, `views/renderers/InventoryValueHeader.js`, `components/InventoryValueSection.js`
 
 ### 6.1 Logic & Calculations
 *   **Status** (F71): an item is Owned, Not Owned or on the Wishlist. The stored field is `owned` (`true`, `null` or missing, `false`); `models/inventoryStatus.js` is the one place that reads and writes it (`statusOf`, `ownedValueOf`). The card, the filter, the counts, the album window and the toast of a change ask that module.
 *   **Filtering**:
-    1.  **[UI]** Search box, Format select, Status select (`All`, `Owned`, `Not Owned`, `Wishlist`).
+    1.  **[UI]** Search box, Format select, and the three status counts of the header, which are buttons (F75, REQ-02): pressing one shows only that status (`aria-pressed`), pressing it again shows all. There is no status select.
     2.  **[FN]** `handleFilterChange(type, value)` -> `applyFiltersAndSort()` -> `filterInventory(items, filters)` (`models/inventoryFilter.js`). The three filters apply together.
 *   **Sorting** (F71, S-56):
-    1.  **[UI]** Select `#inventorySort`: `Artist (A-Z)` (default), `Artist (Z-A)`, `Avg Rating (↓)`, `Avg Rating (↑)`, `Avg Pop (↓)`, `Avg Pop (↑)`, `Newest`, `Oldest`.
+    1.  **[UI]** Select `#inventorySort`: `Artist (A-Z)` (default), `Artist (Z-A)`, `Avg Rating (↓)`, `Avg Rating (↑)`, `Avg Pop (↓)`, `Avg Pop (↑)`, `Value (↓)`, `Value (↑)` (F75: by the estimated value in USD, read from `state.value.usdOf`), `Newest`, `Oldest`.
     2.  **[FN]** `handleSortChoice(value)` -> `sortingFor(value)` -> `applyFiltersAndSort()` -> `sortInventory(items, sorting)` (`models/inventorySort.js`). The averages and the date start with the highest/newest first; an item with no value comes last whatever the direction; ties fall back to artist and title. `Recently added` reads `addedToInventory` (or `createdAt`), a Firestore timestamp (`{ seconds }`) or a date.
-*   **The card** shows, in one small line, `Avg Rating: 78.4 · Avg Pop: 42.6%` when the item has `averages`, only the one it has when it has one, and nothing when it has none (`InventoryGridRenderer.renderAverages`).
+*   **The card** (F75, REQ-01) is a surface (its own background, a faint edge, the cover reaching the edges) with the same five lines in every card (`views/renderers/InventoryCardValue.js` `cardValueBlock`): the label of the value by status, the origin and the value with `≈`, the two averages with their icons, the label of the actions, the actions. The price paid is no longer on the card. The list view keeps the one small line `Avg Rating: 78.4 · Avg Pop: 42.6%` (`InventoryGridRenderer.renderAverages`) and shows the value beside it (`rowValue`).
 *   **Stats Calculation**:
     1.  **[FN]** `calculateStats()` runs on every update.
     2.  **[LOGIC]**
         -   `Total Count` ("N albums"): the items in the grid (the three filters).
-        -   `Owned Value`: Sum of `purchasePrice` of the items in the grid whose status is Owned.
+        -   The two totals (F75, REQ-07): `totalsOf(items, valueFor, rates)` (`models/inventoryValue.js`), the estimated value of what is Owned and of what is not, each with how many items have a value; of the items that pass the search and the format. `purchasePrice` is no longer added up.
         -   `✓ n Owned`, `n Not Owned`, `♡ n Wishlist`: `statusCountsFor(items, filters)`, the items that pass the search and the format, by status. The status filter is left out, so choosing one status does not turn the other two into zero.
-*   **Currency Toggle**:
-    1.  **[UI]** Click Currency Button (USD/BRL).
-    2.  **[FN]** `handleCurrencyChange` -> Toggles `viewCurrency` -> Re-runs `formatPrice`.
+*   **Currency** (F75, REQ-08):
+    1.  **[UI]** Four buttons in the totals strip (`#currencySelector`): USD, EUR, GBP, BRL.
+    2.  **[FN]** `handleCurrencyChoice(code)` -> `InventoryValues.chooseCurrency` keeps the choice in `localStorage` (`inventoryCurrency`) and draws again; values are kept in USD and converted with the rates of the day (`convert`, `moneyOf`). With no rates the screen stays in USD and says so.
+*   **The value of an item** (F75, S-57): `valueOfItem(item, { reading, now, source, progress })` (`models/inventoryValue.js`) answers what the person wrote (`item.value`), else a Discogs reading less than six hours old (kept only in the browser cache), else none with the reason. `InventoryValues.view(items, counted)` gives the screen the value of every item, the totals, the currency, the switch and the run.
+*   **Update values** (F75, REQ-09):
+    1.  **[UI]** Button `#updateValuesBtn` ("Update values"), only while the Discogs values are on; the notice `#valuesWaitingNotice` ("N albums are waiting for a value." / "Read them now") and, while it runs, `#valuesReadingNotice` with "Stop".
+    2.  **[FN]** `InventoryController.handleUpdateValues()` -> `InventoryValues.updateAll()`: the items with no written value and no fresh reading (`itemsToRead`). Opening the screen never starts it.
+    3.  **[SERVICE]** `inventoryValues.readMany(items, { signal, onProgress, onItem })`: one album at a time through `POST /api/album-value`; each reading goes to the browser cache for six hours; the editions found are written to the items in parts of 25 (`InventoryService.setEditions`). "Wait" is waited; the token refused, no sign-in and the source turned off stop the run.
+    4.  **[UI]** `InventoryView.showValues(state, itemId)` draws the button, the notice, the totals and that one card in place; the end is a toast with the counts (`valuesOutcome`).
+*   **The album window** (F75): `components/InventoryValueSection.js` adds "Estimated value" (the three conditions and the mean, the edition with its link, "Read again", the field to write a value, "Use the Discogs value instead") and "Where to buy" (the three stores, `models/buyLinks.js`). The window asks the controller: `valueViewOf`, `handleWriteValue`, `handleForgetValue`, `handleReadValue`.
+*   **The switch** (F75, REQ-10): `inventoryValues.sourceState()` asks `GET /api/value-sources` once when the screen opens. Off: no button, no notice, no Discogs value; `showDiscogsNotice(false)` hides the API sentence of the footer.
 
 ### 6.2 Inventory CRUD
 *   **Status Change**:

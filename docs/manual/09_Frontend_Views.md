@@ -28,8 +28,8 @@
         *   Subscribes to `inventoryStore` updates -> triggers `render(state)`.
         *   Calls `controller.initialize()` to fetch initial data.
     2.  **Rendering (`render`)**:
-        *   Shows the Header Stats the controller computed (`renderTitleRow`): "N albums", the three counts "✓ n Owned", "n Not Owned", "♡ n Wishlist" (F71) and the owned value in USD or BRL.
-        *   Renders Filters (Search, Format, Status: "All", "Owned", "Not Owned", "Wishlist") the order select `#inventorySort` (each criterion in both directions: "Artist (A-Z)", "Artist (Z-A)", "Avg Rating (↓)", "Avg Rating (↑)", "Avg Pop (↓)", "Avg Pop (↑)", "Newest", "Oldest"; F71, S-56), the button "Add the albums of my series" (F71; `renderAddSeriesAlbums`, `showSeriesAdd` for its busy state) and the button "Update ratings" (S-56; `renderUpdateRatings`, `showRatings`; the two buttons lock each other while one runs). `destroy()` (called by the router when the person leaves) drops the ask for the ratings (`controller.dispose()`).
+        *   Shows the Header Stats the controller computed (`renderTitleRow`): "N albums", the three counts "✓ n Owned", "n Not Owned", "♡ n Wishlist" (F71), which are buttons that filter by status (F75, REQ-02). Under the title, the totals strip (`renderTotals`, `views/renderers/InventoryValueHeader.js`): "Estimated value of what I own", "To buy the rest" and the four currencies (F75); then the notices of the values (`renderNotices`).
+        *   Renders Filters (Search, Format; the status select left the row in F75), the button "Update values" while the Discogs values are on (F75; `renderUpdateValues`, `showValues` draws a run in place), the order select `#inventorySort` (each criterion in both directions: "Artist (A-Z)", "Artist (Z-A)", "Avg Rating (↓)", "Avg Rating (↑)", "Avg Pop (↓)", "Avg Pop (↑)", "Value (↓)", "Value (↑)", "Newest", "Oldest"; F71, S-56; F75), the button "Add the albums of my series" (F71; `renderAddSeriesAlbums`, `showSeriesAdd` for its busy state) and the button "Update ratings" (S-56; `renderUpdateRatings`, `showRatings`; the two buttons lock each other while one runs). `destroy()` (called by the router when the person leaves) drops the ask for the ratings (`controller.dispose()`).
         *   Delegates Grid rendering to `InventoryGridRenderer` (Pure HTML String generation for performance).
     3.  **Event Handling**:
         *   Uses **Event Delegation** on `#inventory-grid-container`.
@@ -177,5 +177,6 @@ stateDiagram-v2
 **Purpose**: Pure function that takes `state` and returns HTML strings.
 **Why**: Performance. Generating thousands of DOM nodes individually is slower than `innerHTML` for large grids.
 **Features**:
-*   `formatPrice(value, currency)`: Handles currency conversion display.
+*   Money is written by `models/inventoryValue.js` (`moneyOf`, `formatMoney`); `formatPrice` and `renderPrice` left in F75: the card shows the estimated value, not the price paid.
+*   `cardSurface(cardProps, valueBlock)` (F75): the Card of the app made into a surface, with the five lines of `views/renderers/InventoryCardValue.js` under the title.
 *   `renderCard(album)`: Generates the main card HTML with the Status selector (the status and its options come from `models/inventoryStatus.js`, F71). An item with no format shows no format badge and an item with no price shows no price (`renderPrice`). An item that has `averages` shows one small line, "Avg Rating: 78.4 · Avg Pop: 42.6%" (`renderAverages`, grid and list); an item that has none shows nothing, not a dash (F71, S-56).
