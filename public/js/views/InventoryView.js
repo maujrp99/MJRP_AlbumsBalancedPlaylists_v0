@@ -11,6 +11,11 @@ import { SORT_OPTIONS, choiceOf } from '../models/inventorySort.js'
 import { SourceState } from '../models/inventoryValue.js'
 import { showDiscogsNotice } from '../components/Footer.js'
 import { renderNotices, renderTotals } from './renderers/InventoryValueHeader.js'
+import { isPhone, onPhoneChange } from '../utils/isPhone.js'
+import { DISCOGS_NOTICE } from '../components/Footer.js'
+import { PHONE_CHUNK, jumpTargets, jumpsByLetter, shownFor } from '../models/inventoryJump.js'
+import { MORE_ICON, phoneEmpty, phoneList, phoneLoading, phoneProgress, phoneRow } from './renderers/InventoryPhoneRow.js'
+import { openActionsSheet, openFiltersSheet, openItemSheet, openJumpSheet, openStatusSheet } from './InventoryPhoneSheets.js'
 
 /** The action that puts every album of the person's series in the inventory (F71). */
 const ADD_SERIES_ALBUMS_ID = 'addSeriesAlbumsBtn'
@@ -25,6 +30,20 @@ const UPDATE_VALUES_ID = 'updateValuesBtn'
 const UPDATE_VALUES_LABEL = 'Update values'
 const TOTALS_ID = 'inventoryTotals'
 const NOTICES_ID = 'inventoryNotices'
+
+/** The phone (F76, TASK-07): the line under the search that says what an action of the collection is doing. */
+const PHONE_PROGRESS_ID = 'inventoryPhoneProgress'
+const GRID_ID = 'inventory-grid-container'
+/** The order the screen opens in: another one counts as a filter on, on the phone's «Filters» button. */
+const DEFAULT_SORT = 'artist'
+const SLIDERS_ICON = '<svg class="inv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>'
+
+/** What each action of the collection does, in words: on a phone there is no title to hover. */
+const ACTION_TEXT = Object.freeze({
+  [ADD_SERIES_ALBUMS_ID]: 'Puts every album of your series in the inventory, as Not Owned. You see how many and confirm first.',
+  [UPDATE_RATINGS_ID]: 'Reads the BestEverAlbums rating and the Spotify popularity of every album, to order the inventory by them.',
+  [UPDATE_VALUES_ID]: 'Reads the estimated value of every album from Discogs. You can stop it, and the inventory stays usable.'
+})
 
 /** The colour of each count of the header. */
 const COUNT_BADGE = Object.freeze({
@@ -45,6 +64,8 @@ export class InventoryView extends BaseView {
       this.controller.updateStateFromStore()
       this.controller.refresh()
     }))
+    // The phone and the computer draw the list differently: turning the phone draws it again
+    this.subscriptions.push(onPhoneChange(() => this.controller.refresh()))
 
     await this.controller.initialize()
   }
@@ -66,25 +87,10 @@ export class InventoryView extends BaseView {
     const isUpdate = input && Array.isArray(input.filteredAlbums)
     const state = isUpdate ? input : this.controller.state
 
-    const container = SafeDOM.div({ className: 'inventory-view container pb-20' })
-
-    const header = SafeDOM.header({ className: 'view-header mb-8 fade-in' }, [
-      SafeDOM.fromHTML(Breadcrumb.render('/inventory')),
-      this.renderTitleRow(state),
-      this.renderTotals(state),
-      this.renderNotices(state),
-      this.renderFilters(state)
-    ])
+    // The phone has its own top and list (F76, TASK-07); the computer's are as they were
+    const container = isPhone() ? this.renderPhone(state) : this.renderComputer(state)
     // The app says it uses the Discogs API while the Discogs values are on (components/Footer.js)
     showDiscogsNotice(state.value?.source === SourceState.ON)
-
-    container.appendChild(header)
-
-    // Grid Container
-    const gridContainer = SafeDOM.div({ id: 'inventory-grid-container' })
-    // Using fromHTML for the grid content as it comes from Renderer (string based)
-    gridContainer.appendChild(SafeDOM.fromHTML(InventoryGridRenderer.render(state)))
-    container.appendChild(gridContainer)
 
     // If called by Controller (Update), manually update DOM
     if (isUpdate) {
@@ -100,6 +106,204 @@ export class InventoryView extends BaseView {
     }
 
     return container
+  }
+
+  /** The screen of the computer: the header with the filters row, and the grid or the list of cards. */
+  renderComputer(state) {
+    const container = SafeDOM.div({ className: 'inventory-view container pb-20' })
+    container.appendChild(SafeDOM.header({ className: 'view-header mb-8 fade-in' }, [
+      SafeDOM.fromHTML(Breadcrumb.render('/inventory')),
+      this.renderTitleRow(state),
+      this.renderTotals(state),
+      this.renderNotices(state),
+      this.renderFilters(state)
+    ]))
+    const gridContainer = SafeDOM.div({ id: GRID_ID })
+    // Using fromHTML for the grid content as it comes from Renderer (string based)
+    gridContainer.appendChild(SafeDOM.fromHTML(InventoryGridRenderer.render(state)))
+    container.appendChild(gridContainer)
+    return container
+  }
+
+  /**
+   * The screen of the phone (F76, TASK-07, REQ-11): the title with the three status filters, the
+   * totals and their notices; a bar that stays under the top bar (the search, the jump, the filters
+   * and the actions of the collection, and what an action is doing); the rows, in chunks.
+   */
+  renderPhone(state) {
+    const container = SafeDOM.div({ className: 'inventory-view inventory-view--phone' })
+    container.append(
+      SafeDOM.header({ className: 'view-header inv-phone-header' }, [this.renderTitleRow(state), this.renderTotals(state), this.renderNotices(state)]),
+      this.renderPhoneBar(state),
+      SafeDOM.div({ id: GRID_ID }, [SafeDOM.fromHTML(this.renderPhoneGrid(state))])
+    )
+    // The footer that says it on the computer is not on the phone (F75, REQ-06)
+    if (state.value?.source === SourceState.ON) container.appendChild(SafeDOM.p({ className: 'inv-discogs-notice' }, DISCOGS_NOTICE))
+    return container
+  }
+
+  /** The bar of the phone: the search, «A–Z», «Filters» with how many are on, and «⋯». */
+  renderPhoneBar(state) {
+    const choice = choiceOf(state.sorting)
+    const on = (state.filters.format !== 'all' ? 1 : 0) + (choice !== DEFAULT_SORT ? 1 : 0)
+    const field = SafeDOM.div({ className: 'inv-bar__field' }, [
+      SafeDOM.span({ className: 'inv-bar__search-icon' }, [SafeDOM.fromHTML(getIcon('Search', 'inv-icon'))]),
+      SafeDOM.input({ type: 'search', id: 'inventorySearch', placeholder: 'Search collection', 'aria-label': 'Search collection', enterkeyhint: 'search', className: 'inv-bar__search', value: state.filters.search || '' })
+    ])
+    const byLetter = jumpsByLetter(choice)
+    const jump = SafeDOM.button({ className: 'inv-bar__button', dataset: { phoneAction: 'jump' }, 'aria-label': byLetter ? 'Jump to an artist' : 'Jump to a position', disabled: state.filteredAlbums.length === 0 }, byLetter ? 'A–Z' : '1–N')
+    const filters = SafeDOM.button({ className: 'inv-bar__button', dataset: { phoneAction: 'filters', on: String(on) }, 'aria-label': on ? `Filters and order, ${on} on` : 'Filters and order' }, [SafeDOM.fromHTML(SLIDERS_ICON)])
+    if (on) filters.appendChild(SafeDOM.span({ className: 'inv-bar__badge', 'aria-hidden': 'true' }, String(on)))
+    const actions = SafeDOM.button({ className: 'inv-bar__button', dataset: { phoneAction: 'actions' }, 'aria-label': 'Collection actions' }, [SafeDOM.fromHTML(MORE_ICON)])
+    const progress = SafeDOM.div({ id: PHONE_PROGRESS_ID, className: 'inv-bar__progress', role: 'status' })
+    this.fillPhoneProgress(progress, state)
+    return SafeDOM.div({ className: 'inv-bar', id: 'inventoryPhoneBar' }, [SafeDOM.div({ className: 'inv-bar__row' }, [field, jump, filters, actions]), progress])
+  }
+
+  /** What an action of the collection is doing, under the search; «Stop» for the values. Empty when nothing runs. */
+  fillPhoneProgress(node, state) {
+    SafeDOM.clear(node)
+    const now = phoneProgress(state)
+    node.hidden = !now
+    if (!now) return
+    node.appendChild(SafeDOM.span({ className: 'inv-bar__progress-text' }, now.text))
+    if (now.stop) node.appendChild(SafeDOM.button({ className: 'btn btn-secondary btn-sm', dataset: { phoneAction: 'stop-values' } }, 'Stop'))
+  }
+
+  drawPhoneProgress() {
+    const node = document.getElementById(PHONE_PROGRESS_ID)
+    if (node) this.fillPhoneProgress(node, this.controller.state)
+  }
+
+  /** The rows of the phone, or what stands in their place (loading, nothing in the inventory, nothing that passes). */
+  renderPhoneGrid(state) {
+    if (state.isLoading) return phoneLoading()
+    if (state.filteredAlbums.length === 0) return phoneEmpty(state.albums.length > 0)
+    this.keepPhoneShown(state)
+    return phoneList(state.filteredAlbums, state.value, this.phoneShown)
+  }
+
+  /**
+   * How many rows are drawn: the first chunk again when the search, a filter or the order changed;
+   * as many as before when the store changed (a status changed: the list stays where it was, F71).
+   */
+  keepPhoneShown(state) {
+    const key = JSON.stringify([state.filters, choiceOf(state.sorting)])
+    if (key === this.phoneKey && this.phoneShown) return
+    this.phoneKey = key
+    this.phoneShown = PHONE_CHUNK
+  }
+
+  /** Only the rows are drawn again; the place on the page is kept. */
+  redrawPhoneGrid() {
+    const grid = document.getElementById(GRID_ID)
+    if (!grid || this.left) return
+    redrawKeepingField(grid, () => {
+      SafeDOM.clear(grid)
+      grid.appendChild(SafeDOM.fromHTML(this.renderPhoneGrid(this.controller.state)))
+    })
+  }
+
+  /** The row at `index` of the list, once drawn. */
+  phoneRowAt(index) {
+    return document.querySelectorAll(`#${GRID_ID} .inv-row`)[index] || null
+  }
+
+  /** «Show 50 more»: the next chunk; the focus goes to its first row, the page does not move. */
+  showMorePhoneRows() {
+    const first = this.phoneShown
+    this.phoneShown += PHONE_CHUNK
+    this.redrawPhoneGrid()
+    this.phoneRowAt(first)?.querySelector('.inv-row__open')?.focus({ preventScroll: true })
+  }
+
+  /** A letter or a stretch of the jump: the chunks up to it are drawn and its first row comes under the bar. */
+  jumpToPhoneRow(index) {
+    const shown = shownFor(index, this.phoneShown)
+    if (shown !== this.phoneShown) {
+      this.phoneShown = shown
+      this.redrawPhoneGrid()
+    }
+    const row = this.phoneRowAt(index)
+    if (!row) return
+    row.scrollIntoView({ block: 'start' })
+    row.querySelector('.inv-row__open')?.focus({ preventScroll: true })
+  }
+
+  /** The actions of the phone, by the `data-phone-action` of the button pressed. */
+  phoneActions() {
+    return {
+      status: (button) => this.openPhoneStatus(button.dataset.albumId),
+      more: (button) => this.openPhoneItem(button.dataset.albumId),
+      'more-rows': () => this.showMorePhoneRows(),
+      jump: () => this.openPhoneJump(),
+      filters: () => this.openPhoneFilters(),
+      actions: () => this.openPhoneActions(),
+      'add-series': () => this.handleAddSeriesAlbums(),
+      'clear-filters': () => this.clearPhoneFilters(),
+      'stop-values': () => this.controller.handleStopValues()
+    }
+  }
+
+  onPhoneClick(event) {
+    const button = event.target.closest('[data-phone-action]')
+    if (!button || button.disabled) return
+    this.phoneActions()[button.dataset.phoneAction]?.(button)
+  }
+
+  findItem(albumId) {
+    return this.controller.state.albums.find(item => item.id === albumId) || null
+  }
+
+  /** The status of one album, from its row: a sheet with the three (two taps in all). */
+  openPhoneStatus(albumId) {
+    const item = this.findItem(albumId)
+    if (item) openStatusSheet(item, (status) => this.controller.handleStatusChange(albumId, status))
+  }
+
+  /** «⋯» of a row: the named actions of the album. */
+  openPhoneItem(albumId) {
+    const item = this.findItem(albumId)
+    if (!item) return
+    openItemSheet(item, this.controller.valueViewOf(albumId), {
+      view: () => this.handleViewWithModal(albumId),
+      edit: () => this.handleEditWithModal(albumId),
+      remove: () => this.handleDeleteWithModal(albumId)
+    })
+  }
+
+  openPhoneJump() {
+    const { filteredAlbums, sorting } = this.controller.state
+    const choice = choiceOf(sorting)
+    openJumpSheet({ targets: jumpTargets(filteredAlbums, choice), byLetter: jumpsByLetter(choice), onJump: (index) => this.jumpToPhoneRow(index) })
+  }
+
+  /** The format and the order; when they changed, the list is shown from its top after the sheet. */
+  openPhoneFilters() {
+    const { filters, sorting } = this.controller.state
+    const before = this.phoneKey
+    openFiltersSheet({
+      format: filters.format,
+      sort: choiceOf(sorting),
+      count: () => this.controller.state.filteredAlbums.length,
+      onFormat: (code) => this.controller.handleFilterChange('format', code),
+      onSort: (value) => this.controller.handleSortChoice(value),
+      onClose: () => { if (this.phoneKey !== before) window.scrollTo(0, 0) }
+    })
+  }
+
+  /** «⋯» of the screen: the actions of the whole collection, the same buttons as the computer's row. */
+  openPhoneActions() {
+    const state = this.controller.state
+    const buttons = [this.renderAddSeriesAlbums(state), this.renderUpdateRatings(state), this.renderUpdateValues(state)].filter(Boolean)
+    openActionsSheet(buttons.map(button => ({ button, text: ACTION_TEXT[button.id] })))
+  }
+
+  /** «Clear search and filters», when nothing passes them. */
+  clearPhoneFilters() {
+    this.controller.handleFilterChange('search', '')
+    this.controller.handleFilterChange('format', 'all')
+    this.controller.handleFilterChange('ownership', 'all')
   }
 
   /** "My Collection" and the counts of what the search and the format let through; each count filters by its status. */
@@ -233,6 +437,7 @@ export class InventoryView extends BaseView {
     this.redraw(TOTALS_ID, renderTotals(state.value))
     this.redraw(NOTICES_ID, renderNotices(state.value))
     if (itemId) this.redrawCard(state, itemId)
+    this.drawPhoneProgress()
     this.openWindow?.redrawValue()
   }
 
@@ -247,12 +452,17 @@ export class InventoryView extends BaseView {
   redrawCard(state, itemId) {
     const item = state.albums.find(one => one.id === itemId)
     const wrapper = [...document.querySelectorAll('#inventory-grid-container [data-album-id]')]
-      .find(node => node.dataset.albumId === itemId && node.matches('.inventory-card-wrapper, .inventory-row-wrapper'))
+      .find(node => node.dataset.albumId === itemId && node.matches('.inventory-card-wrapper, .inventory-row-wrapper, .inv-row'))
     if (!item || !wrapper) return
-    const html = wrapper.matches('.inventory-row-wrapper')
-      ? InventoryGridRenderer.renderRow(item, state.value)
-      : InventoryGridRenderer.renderCard(item, state.value)
-    wrapper.replaceWith(SafeDOM.fromHTML(html))
+    wrapper.replaceWith(SafeDOM.fromHTML(this.cardHtml(wrapper, item, state.value)))
+  }
+
+  /** The card, the row of the list, or the row of the phone, as the place that is drawn again is. */
+  cardHtml(wrapper, item, known) {
+    if (wrapper.matches('.inv-row')) return phoneRow(item, known.values.get(item.id), known.money)
+    return wrapper.matches('.inventory-row-wrapper')
+      ? InventoryGridRenderer.renderRow(item, known)
+      : InventoryGridRenderer.renderCard(item, known)
   }
 
   /** `own`: what this action is doing; `locked`: the other action is running. */
@@ -275,6 +485,7 @@ export class InventoryView extends BaseView {
     const read = document.getElementById(UPDATE_RATINGS_ID)
     if (add) this.applyAction(add, ADD_SERIES_ALBUMS_LABEL, seriesAdd, ratings.busy)
     if (read) this.applyAction(read, UPDATE_RATINGS_LABEL, ratings, seriesAdd.busy)
+    this.drawPhoneProgress()
   }
 
   async handleAddSeriesAlbums() {
@@ -383,6 +594,9 @@ export class InventoryView extends BaseView {
       const current = this.controller.state.viewMode
       this.controller.handleViewModeChange(current === 'grid' ? 'list' : 'grid')
     })
+
+    // The buttons of the phone (rows, bar, empty states), by their data-phone-action
+    document.querySelector('.inventory-view--phone')?.addEventListener('click', (e) => this.onPhoneClick(e))
 
     // Grid Delegation for Buttons
     const grid = document.getElementById('inventory-grid-container')

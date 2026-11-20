@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:44] session — F76 TASK-07: testes, nota da tela e prova do inventário no celular
+**Branch:** feat/f76-mobile-inventory
+15 testes do celular e do computador (`test/views/InventoryView.phone.test.js`), a nota `screens/inventory.md` e a harness com 211 itens (`reports/evidence/F76/harness/`); ajustes de CSS vistos nas capturas (fichas, título, aviso, moeda da edição em segmentos de 48 px).
+Prova a 393x852: sem rolagem lateral, 0 texto < 12, 0 campo < 16, 0 alvo < 44 em 13 estados; 150º álbum em 2 gestos. A 1280x800, antes e depois iguais em medidas (pixels: ruído de fonte em 18 px).
+
 ## [2026-11-20 02:35] session — F75, documentos: a sugestão recusada e o menor preço à venda
 
 **Branch:** feat/f75-cd-prices-and-where-to-buy
@@ -20,6 +25,11 @@
 - A rodada não pergunta mais a página de preço a cada álbum: o serviço lembra a recusa na memória da página por seis horas e manda `prices: 'lowest'`. Decidido pelo agente — revisável: cada rodada nova tenta a sugestão uma vez, no primeiro álbum; se vier, os três estados voltam sem mudar código.
 - A chave das leituras no navegador foi para `inventoryvalue:v2:`: as leituras erradas da primeira rodada em produção não são lidas de volta.
 - Testes escritos antes e vistos falhar (14 de 15). Suíte: 2879 testes; lint e build verdes. Um teste de tempo (`inventoryFromSeries`, 200 álbuns em menos de 1 s) falhou uma vez sob carga e passou sozinho.
+
+## [2026-11-20 02:33] session — F76 TASK-07: o inventário no celular em linhas compactas, em blocos, com folhas
+**Branch:** feat/f76-mobile-inventory
+No celular (`isPhone()`), o inventário vira uma linha por álbum (capa de 64, título em duas linhas, status de 44 px que abre uma folha com os três, valor com a origem, «⋯» com as ações nomeadas), desenhada em blocos de 50 com «Show 50 more» e um salto por letra (ou por posição); busca, A–Z, filtros e ações presas sob a barra do topo. `InventoryPhoneRow.js`, `InventoryPhoneSheets.js`, `models/inventoryJump.js`, `css/mobile/inventory.css`.
+O computador não muda: `renderComputer` é o desenho de antes.
 
 ## [2026-11-20 02:31] session — F75, servidor: a sugestão recusada por falta de «seller settings» tem nome, e o menor preço à venda entra no lugar
 
