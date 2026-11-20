@@ -2189,6 +2189,22 @@ build();
   document.body.classList.add('bind');
   const option = location.hash.slice(1);
   if (['a', 'b', 'c'].includes(option)) document.body.classList.add('opt-' + option);
+  // Asked by the owner: where «Sell» and «Trade» are, a «Where to buy» button that opens the album window, which has the links
+  function addBuyButton() {
+    document.querySelectorAll('.inventory-card-wrapper').forEach(card => {
+      const sell = [...card.querySelectorAll('[data-role="value"] button')].find(button => button.textContent.trim() === 'Sell');
+      if (!sell || card.querySelector('[data-role="buy-button"]')) return;
+      const buy = document.createElement('button');
+      buy.type = 'button';
+      buy.className = 'btn btn-secondary btn-sm';
+      buy.dataset.role = 'buy-button';
+      buy.dataset.action = 'view-modal';
+      buy.textContent = 'Where to buy';
+      sell.parentElement.appendChild(buy);
+    });
+  }
+  addBuyButton();
+  new MutationObserver(addBuyButton).observe(document.querySelector('.albums-grid'), { childList: true, subtree: true });
 </script>
 </body>
 </html>

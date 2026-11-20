@@ -50,3 +50,9 @@
 - **Prévia, fora do protótipo:** `design/proposals/inventory-card-border-proposal.html`, três opções num eixo só (o que segura o cartão): A, só distância; B, uma borda no cartão inteiro; C, o cartão como superfície. Está no comparador como «Prévia em aberto».
 - **Recomendação do agente:** B. Resolve o que ele apontou, tira a caixa de dentro e não muda a cara da grade.
 
+## [2026-11-20 01:08] F75 · «Where to buy» também no cartão do que é dele
+
+- **Pedido do MJRP:** «de onde tem sell trade, tb deveria ter um botao igual Where to buy que simplesmente abre a tela modal e lá teria os links caso a pessoa nao queira trocar e queira comprar».
+- **Como foi entendido:** no cartão do álbum que ele tem, ao lado de «Sell» e «Trade», um botão «Where to buy» que abre a janela do álbum; os três links das lojas estão lá.
+- **Onde está:** na prévia `design/proposals/inventory-card-border-proposal.html` (nas três opções) e no comparador. Entra no protótipo junto com a escolha de como o cartão se segura (A, B ou C).
+
