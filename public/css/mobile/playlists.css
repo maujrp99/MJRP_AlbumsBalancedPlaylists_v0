@@ -4,7 +4,810 @@
  * Every rule goes INSIDE the media query below and nowhere else (REQ-12;
  * test/architecture/phoneStylesStayOnThePhone.test.js). The base all screens share is
  * ../mobile.css; the guide is docs/specs/features/F76-mobile-redesign/mobile-kit.md.
+ *
+ * Sections: 1 Measures · 2 The top of /playlists · 3 The chips · 4 The open playlist and its tracks
+ *           5 Sheets of actions · 6 The undo notice and the notices · 7 The Spotify export window
+ *           8 Saved playlists · 9 Less motion
  */
 
 @media (max-width: 767px) {
+
+  /* ── 1. Measures ─────────────────────────────────────────────────────────────────────────── */
+  :root {
+    --pl-base: #0b0b0e;
+    --pl-raised: #17171a;
+    --pl-line: rgba(255, 255, 255, 0.08);
+    --pl-text: #f2f2f4;
+    --pl-text-2: #a8a8b0;          /* about 8:1 on the base: secondary text */
+    --pl-danger: #f87171;
+    --pl-chips-h: 64px;
+    --pl-sticky-top: calc(var(--phone-topbar-h) + var(--phone-safe-top));
+    /* Rows, counts and buttons in the phone's own face; Syne stays for the titles */
+    --pl-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Inter", "Segoe UI", Roboto, sans-serif;
+  }
+
+  .phone-playlists,
+  .phone-history,
+  .phone-pl-bar,
+  .phone-sheet-actions,
+  .phone-sheet-heading,
+  .phone-undo,
+  .playlists-view #batchNameSection,
+  .playlists-view .regenerate-header,
+  .saved-playlists-view .series-group {
+    font-family: var(--pl-sans);
+  }
+
+  .phone-pl-bar .btn,
+  .saved-playlists-view .series-group .btn {
+    font-family: var(--pl-sans);
+    font-weight: 600;
+  }
+
+  .phone-pl__title,
+  .saved-playlists-view .group-header h2 {
+    font-family: 'Syne', var(--pl-sans);
+  }
+
+  /* ── 2. The top of /playlists ────────────────────────────────────────────────────────────── */
+  .playlists-view .view-header {
+    margin-bottom: 12px;
+  }
+
+  .playlists-view .view-header .header-content {
+    margin-top: 4px;
+    margin-bottom: 0;
+    gap: 8px;
+  }
+
+  /* The top bar already names the screen: its big title stays for screen readers only */
+  .playlists-view .view-header h1,
+  .saved-playlists-view .view-header h1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .playlists-view .view-header .badge {
+    font-size: 14px;
+    line-height: 18px;
+    overflow-wrap: anywhere;
+  }
+
+  /* The batch name: a field of 16 px (no zoom on focus) across the width */
+  .playlists-view #batchNameSection {
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .playlists-view #batchNameSection label {
+    font-size: 14px;
+    line-height: 18px;
+    margin-bottom: 6px;
+    color: var(--pl-text-2);
+  }
+
+  .playlists-view #batchNameInput {
+    max-width: none;
+    min-height: 48px;
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  /* The reconfigure panel: closed, one row of 56 px that says what it opens */
+  .playlists-view #regeneratePanelMount {
+    margin-bottom: 12px;
+  }
+
+  .playlists-view .regenerate-panel {
+    margin-bottom: 0;
+  }
+
+  .playlists-view button.regenerate-header {
+    min-height: 56px;
+    padding: 8px 12px;
+  }
+
+  .playlists-view h3.regenerate-header {
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 600;
+  }
+
+  .playlists-view .regenerate-content {
+    padding: 12px;
+  }
+
+  /* Undo and redo: two named buttons in a row */
+  .phone-history {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .phone-history__btn {
+    flex: 1;
+    min-height: 44px;
+    padding: 0 12px;
+    justify-content: center;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 12px;
+    transform: none;
+  }
+
+  .phone-history__btn:disabled {
+    opacity: 0.4;
+  }
+
+  /* The computer's footer line of the screen says nothing on the phone */
+  .playlists-view .view-footer {
+    display: none;
+  }
+
+  /* ── 3. The chips: one per playlist, the strip sticks under the top bar ──────────────────── */
+  #playlistsGrid {
+    scroll-margin-top: var(--pl-sticky-top);
+  }
+
+  .phone-pl-chips {
+    position: sticky;
+    top: var(--pl-sticky-top);
+    z-index: 30;
+    margin: 0 calc(-1 * var(--phone-gutter-right)) 0 calc(-1 * var(--phone-gutter-left));
+    background: var(--pl-base);
+    border-bottom: 1px solid var(--pl-line);
+  }
+
+  .phone-pl-chips__row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    padding: 8px var(--phone-gutter-right) 8px var(--phone-gutter-left);
+    scroll-padding-inline: var(--phone-gutter-left);
+  }
+
+  .phone-pl-chips__row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .phone-pl-chip {
+    flex: none;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 48px;
+    max-width: 220px;
+    padding: 4px 14px;
+    border-radius: 14px;
+    background: var(--pl-raised);
+    border: 1px solid var(--pl-line);
+    color: var(--pl-text);
+    text-align: left;
+    touch-action: manipulation;
+    transition: background-color 140ms ease-out, color 140ms ease-out;
+  }
+
+  .phone-pl-chip:active {
+    transform: scale(0.98);
+  }
+
+  .phone-pl-chip__name {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+  }
+
+  .phone-pl-chip__meta {
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--pl-text-2);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* The open one: the «on» state, light on dark (orange is kept for Save, the main action) */
+  .phone-pl-chip.is-current {
+    background: var(--pl-text);
+    border-color: var(--pl-text);
+    color: #0a0a0c;
+  }
+
+  .phone-pl-chip.is-current .phone-pl-chip__meta {
+    color: #3a3a40;
+  }
+
+  /* ── 4. The open playlist and its tracks: they scroll with the page ──────────────────────── */
+  .phone-pl {
+    padding-top: 16px;
+  }
+
+  .phone-pl__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--pl-line);
+  }
+
+  .phone-pl__heading {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .phone-pl__title {
+    margin: 0;
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 700;
+    color: var(--pl-text);
+    overflow-wrap: anywhere;
+  }
+
+  .phone-pl__title .playlist-name {
+    display: inline-block;
+    min-width: 2ch;
+    min-height: 26px;
+    border-radius: 6px;
+    outline: none;
+  }
+
+  .phone-pl__title .playlist-name:focus {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.24);
+  }
+
+  .phone-pl__meta {
+    margin: 2px 0 0;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--pl-text-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* «⋯»: 44 px, always in view (no hover on a phone) */
+  .phone-more {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 22px;
+    color: var(--pl-text-2);
+    touch-action: manipulation;
+  }
+
+  .phone-more:active {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--pl-text);
+  }
+
+  .phone-dots {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  .phone-tracks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .phone-tracks__empty {
+    padding: 24px 0;
+    text-align: center;
+    color: var(--pl-text-2);
+  }
+
+  /* Row: [position / handle 44] [title · artist · album] [duration] [⋯ 44]; 64 px */
+  .phone-track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--pl-line);
+    background: var(--pl-base);
+  }
+
+  .phone-track__pos {
+    flex: none;
+    position: relative;
+    width: 44px;
+    min-height: 52px;
+    display: grid;
+    place-items: center;
+    margin-left: -8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--pl-text-2);
+    font-variant-numeric: tabular-nums;
+    touch-action: none;
+    cursor: grab;
+  }
+
+  .phone-track__grip {
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    transform: translateY(-50%);
+    opacity: 0.35;
+  }
+
+  .phone-track__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-right: 8px;
+  }
+
+  .phone-track__title {
+    font-size: 16px;
+    line-height: 21px;
+    font-weight: 500;
+    color: var(--pl-text);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow-wrap: anywhere;
+  }
+
+  .phone-track__sub {
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--pl-text-2);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .phone-track__time {
+    flex: none;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--pl-text-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .phone-track .phone-more {
+    margin-left: 4px;
+    margin-right: -10px;
+  }
+
+  /* The row being dragged */
+  .phone-track.sortable-chosen {
+    background: var(--pl-raised);
+  }
+
+  /* ── 5. Sheets of actions (track, playlist, export) ──────────────────────────────────────── */
+  .phone-sheet-actions {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 12px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .phone-sheet-action {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-height: 56px;
+    padding: 0 16px;
+    text-align: left;
+    font-size: 16px;
+    line-height: 22px;
+    color: var(--pl-text);
+    border-bottom: 1px solid var(--pl-line);
+    touch-action: manipulation;
+  }
+
+  .phone-sheet-action:last-child {
+    border-bottom: 0;
+  }
+
+  .phone-sheet-action:active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .phone-sheet-action:disabled {
+    opacity: 0.35;
+  }
+
+  .phone-sheet-action > span {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .phone-sheet-action__icon {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    color: var(--pl-text-2);
+  }
+
+  .phone-sheet-action--danger,
+  .phone-sheet-action--danger .phone-sheet-action__icon {
+    color: var(--pl-danger);
+  }
+
+  .phone-sheet-heading {
+    margin: 4px 4px 8px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--pl-text-2);
+  }
+
+  /* ── 6. The undo notice (above the action bar) and the notices (under the chips) ─────────── */
+  .phone-undo {
+    position: fixed;
+    left: var(--phone-gutter-left);
+    right: var(--phone-gutter-right);
+    bottom: calc(var(--phone-tabbar-h) + var(--phone-safe-bottom) + var(--phone-action-bar-h) + 8px);
+    z-index: 45;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 52px;
+    padding: 4px 4px 4px 16px;
+    border-radius: 14px;
+    background: #f2f2f4;
+    color: #0a0a0c;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    animation: pl-undo-in 160ms ease-out;
+  }
+
+  .phone-undo__text {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    line-height: 18px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .phone-undo__btn {
+    flex: none;
+    min-width: 72px;
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #b45309;
+  }
+
+  .phone-undo__btn:active {
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  @keyframes pl-undo-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* On this screen a notice shows under the strip of chips, never over it or over the top bar */
+  body:has([data-phone-playlists]) #toast-container {
+    top: calc(var(--pl-sticky-top) + var(--pl-chips-h) + 8px);
+  }
+
+  /* ── 7. The Spotify export window: inside (its shell is a bottom sheet, mobile.css § 8.6) ─── */
+  #spotify-export-modal .close-modal-btn {
+    min-width: 44px;
+    min-height: 44px;
+    display: grid;
+    place-items: center;
+  }
+
+  #spotify-export-modal #playlistNameInput {
+    font-size: 16px;
+    min-height: 48px;
+  }
+
+  #spotify-export-modal .text-xs {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  #spotify-export-modal label.cursor-pointer {
+    min-height: 44px;
+    flex: 1;
+  }
+
+  #spotify-export-modal input[type="radio"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  #spotify-export-modal #startExportBtn,
+  #spotify-export-modal #retryExportBtn,
+  #spotify-export-modal #reconnectSpotifyBtn {
+    min-height: 48px;
+  }
+
+  #spotify-export-modal #exportModeNote {
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  #spotify-export-modal a {
+    overflow-wrap: anywhere;
+  }
+
+  /* ── 8. Saved playlists (/saved-playlists) ───────────────────────────────────────────────── */
+  .saved-playlists-view .view-header {
+    margin-bottom: 12px;
+  }
+
+  .saved-playlists-view .view-header .header-content {
+    margin-top: 4px;
+    margin-bottom: 0;
+  }
+
+  .saved-playlists-view .series-groups.space-y-8 > * + * {
+    margin-top: 12px;
+  }
+
+  /* A series: a card whose header says its name (wrapped, never cut) and opens its batches */
+  .saved-playlists-view .series-group {
+    padding: 0;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .saved-playlists-view .group-header {
+    margin: 0;
+    padding: 12px;
+    gap: 10px;
+    border-bottom: 0;
+  }
+
+  .saved-playlists-view .group-header > :first-child {
+    margin: 0;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .saved-playlists-view .group-header h2 {
+    font-size: 20px;
+    line-height: 24px;
+    color: var(--pl-text);
+    align-items: flex-start;
+    overflow-wrap: anywhere;
+  }
+
+  .saved-playlists-view .group-header h2 svg {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    color: var(--pl-text-2);
+  }
+
+  .saved-playlists-view .series-group .font-mono {
+    font-family: var(--pl-sans);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The raw id of the series is not for the person */
+  .saved-series-id {
+    display: none;
+  }
+
+  .saved-series-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 6px;
+    padding: 0;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--pl-text-2);
+    text-align: left;
+    touch-action: manipulation;
+  }
+
+  .saved-series-toggle__chevron {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .saved-series-toggle[aria-expanded="true"] .saved-series-toggle__chevron {
+    transform: rotate(90deg);
+  }
+
+  .saved-series-toggle__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .saved-playlists-view .group-header > .flex {
+    width: 100%;
+    gap: 8px;
+  }
+
+  /* A closed series shows only its name and what it holds; its actions come with it when opened */
+  .saved-playlists-view .series-group:has(> .saved-series-batches[hidden]) .group-header > .flex {
+    display: none;
+  }
+
+  /* No main action on this list: the series' buttons are all quiet (orange is for Save elsewhere) */
+  .saved-playlists-view .group-header > .flex > .btn-primary {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: none;
+    color: var(--pl-text);
+  }
+
+  .saved-playlists-view .group-header > .flex > .btn {
+    min-height: 44px;
+    padding: 0 10px;
+    white-space: nowrap;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 12px;
+    transform: none;
+  }
+
+  .saved-playlists-view .group-header > .flex > .btn:first-child,
+  .saved-playlists-view .group-header > .flex > .btn:nth-child(2) {
+    flex: 1;
+    min-width: 0;
+    justify-content: center;
+  }
+
+  .saved-playlists-view .group-header > .flex > .btn:nth-child(3) {
+    flex: none;
+    min-width: 44px;
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .saved-series-batches {
+    padding: 0 12px 4px;
+  }
+
+  .saved-series-batches[hidden] {
+    display: none;
+  }
+
+  .saved-playlists-view .series-failed {
+    padding: 0 12px;
+    flex-wrap: wrap;
+  }
+
+  /* A batch: the cascade of covers, the whole name in up to two lines... then its facts, then its
+     named actions in a row of their own */
+  .saved-playlists-view .batch-group-card {
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  .saved-playlists-view .batch-header {
+    padding: 12px;
+  }
+
+  .saved-playlists-view .batch-header > div {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .saved-playlists-view .batch-header > div > :first-child {
+    gap: 12px;
+    min-width: 0;
+    align-items: flex-start;
+  }
+
+  .saved-playlists-view .batch-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .saved-playlists-view .batch-info h3 {
+    font-family: var(--pl-sans);
+    font-weight: 600;
+    letter-spacing: 0;
+    font-size: 17px;
+    line-height: 22px;
+    overflow-wrap: anywhere;
+  }
+
+  .saved-playlists-view .batch-info h3 + div {
+    flex-wrap: wrap;
+    gap: 2px 10px;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--pl-text-2);
+  }
+
+  .saved-playlists-view .batch-card-buttons {
+    gap: 8px;
+  }
+
+  .saved-playlists-view .batch-card-buttons > .btn {
+    flex: 1;
+    min-height: 44px;
+    padding: 0 12px;
+    justify-content: center;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 12px;
+    transform: none;
+  }
+
+  /* The playlists of an open batch: a row of 56 px each; the eye opens the playlist's window */
+  .saved-playlists-view .playlist-row {
+    min-height: 56px;
+    padding: 6px 4px 6px 12px;
+    gap: 8px;
+  }
+
+  .saved-playlists-view .playlist-row > :first-child {
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .saved-playlists-view .playlist-row > :first-child > :last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .saved-playlists-view .playlist-row-buttons .btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .saved-playlists-view .playlist-tracks-list {
+    padding: 4px 12px 8px;
+  }
+
+  /* ── 9. Less motion ──────────────────────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .phone-undo {
+      animation: none;
+    }
+
+    .phone-pl-chip,
+    .saved-series-toggle__chevron {
+      transition: none;
+    }
+  }
 }

@@ -808,6 +808,12 @@
     line-height: 18px;
   }
 
+  /* The «info» notice asks for a colour Tailwind does not have (bg-surface-dark): it was drawn
+     with no background, its text over the page. On the phone it gets a solid one (TASK-04) */
+  #toast-container .toast.bg-surface-dark\/95 {
+    background: rgba(28, 28, 32, 0.97);
+  }
+
   #toast-container .toast-close {
     flex: none;
     min-width: 32px;

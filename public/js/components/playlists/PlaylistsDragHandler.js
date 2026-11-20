@@ -1,5 +1,12 @@
 import Sortable from 'sortablejs'
 import { getPlaylistsService } from '../../services/playlists/playlistsWiring.js'
+import { isPhone } from '../../utils/isPhone.js'
+
+/**
+ * What a track is dragged by: the whole row on the computer; on the phone only its position
+ * (a 44 px handle at the left), so a finger that scrolls the page never picks a track up (F76).
+ */
+export const dragHandleSelector = () => (isPhone() ? '.phone-track__pos' : '.track-row')
 
 /**
  * PlaylistsDragHandler
@@ -32,7 +39,7 @@ export class PlaylistsDragHandler {
                 animation: 150,
                 ghostClass: 'bg-white/5',
                 dragClass: 'opacity-100',
-                handle: '.track-row', // Updated to match TrackRow component (Sprint 17.75)
+                handle: dragHandleSelector(),
                 delay: 100, // Slight delay to prevent accidental drags on touch
                 delayOnTouchOnly: true,
                 touchStartThreshold: 3,
