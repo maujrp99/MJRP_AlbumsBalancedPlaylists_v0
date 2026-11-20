@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:41] session — F63: a barra do topo cabe na tela em toda largura (UAT-218)
+
+**Branch:** fix/f63-top-bar-fits
+
+- Os nomes da conta e do Spotify encolhem antes de a barra passar da tela (`navigation/barName.js`: `min-w-0` da barra até o nome); a barra vai a 1400 px a partir de 1280; abaixo de 1280 o botão do Spotify mostra só o ícone; abaixo de 1024 os links vão para o menu lateral (era 768, e os links não cabiam).
+- Visto a 375, 800, 1024, 1280, 1440 e 1680 px: sem rolagem horizontal. UAT-218 em `fixed`.
+
 ## [2026-11-19 23:40] session — F71, segunda fatia: o inventário guarda, mostra e ordena pelas médias «Avg Rating» e «Avg Pop»
 
 **Branch:** feat/f71-inventory-averages-2
@@ -15,6 +22,46 @@ Auxiliar sem navegador e sem conta: nada rodou contra dados reais; a prova na te
 - **Achado:** o roteador chama `destroy()` ao sair da tela e `InventoryView` só tinha `onUnmount()`, que ninguém chamava (a assinatura da loja ficava ligada). `destroy()` agora chama `onUnmount()`, que também aborta o pedido.
 - **Não feito, por escolha:** um filtro por nota mínima («filtro/ranking»). Está nas Open Questions do `spec.md`, com o que ele pediria.
 - Documentos: `spec.md` (REQ-11 a REQ-18), `plan.md`, `tasks.md` (TASK-12 a TASK-16 feitas; TASK-17 aberta, do integrador), `behavior.md` (`^inventory-ratings-updated`, `^inventory-order`, `^inventory-item-card`, `^album-track-table`), `data-model.md`, o nó S-56 e as páginas do manual que citavam «Avg Rank» ou descrevem o inventário. Suíte: 200 arquivos, 2439 testes verdes; `eslint` e `vite build` limpos.
+
+## [2026-11-19 23:39] session — a rolagem mantida em produção; `## Now` reescrito
+
+- A correção da UAT-219 foi juntada na `main` (`0c0df5e`) e o site publicado (pacote `main-DLZf9BMM.js`).
+- `MEMORY.md ## Now` reescrito com o estado de hoje: F71 fatia 1 e F73 em produção; F71 fatia 2 com um auxiliar; F72 à espera de prioridade; UAT-216 a UAT-218 abertas.
+
+## [2026-11-19 23:38] session — F73: a tela redesenhada mantém a rolagem (UAT-219)
+
+**Branch:** fix/f73-redraw-keeps-the-place
+
+- `utils/keepField.js` guarda a rolagem da janela antes do redesenho e a repõe depois. No inventário, mudar o status não leva mais a lista ao topo. UAT-219 em `fixed`.
+
+## [2026-11-19 23:37] session — F73 em produção; UAT-219 registrada (o inventário volta ao topo ao mudar o status)
+
+- A F73 foi juntada na `main` (`0db59f6`) depois de o MJRP priorizá-la, e o site foi publicado. Quem tinha a aba aberta precisa recarregar uma vez: a guarda contra versão antiga só existe a partir desta publicação.
+- O MJRP relatou: no inventário, mudar o status de um álbum leva a tela ao topo. UAT-219 aberta; entra na F73 como REQ-05 (é o mesmo redesenho inteiro da tela).
+
+## [2026-11-19 23:34] session — F73: o campo em uso sobrevive ao redesenho; a aba antiga recarrega; a tela antiga de geração saiu; o inventário se solta
+
+**Branch:** fix/f73-screens-keep-the-field
+
+- Decisão de arquitetura (decidido pelo agente — revisável): três regras, cada uma num lugar só. `utils/keepField.js` devolve o campo em uso depois de um redesenho inteiro; `installStaleBuildGuard` protege todo arquivo pedido sob demanda, não só a troca de tela; a inscrição de uma tela numa loja vai em `this.subscriptions` da `BaseView`, com um teste de arquitetura que guarda isso.
+- UAT-212 a UAT-215 em `fixed`. Prova: `reports/evidence/F73/2026-11-19-screens-keep-the-field-proof.md`.
+- Fica de fora, anotado: a tela de playlists ainda se redesenha inteira a cada aviso das lojas; um clique no instante de um redesenho pode se perder.
+- O MJRP exportou de verdade em produção para o Spotify (30 de 30 faixas) e para o Apple Music (na pasta da série): «sem o problema do campo funcionam os exports apple e spotify».
+
+## [2026-11-19 23:34] review — reconferência visual de F56, F58, F60, F63, F65 e F70 por quem não implementou; três achados viram issues
+
+- Relatórios: `reports/audits/2026-11-19-F56-visual-parity-recheck.md` e os de F58, F60, F63, F65 e F70, na mesma pasta. Feitos por um auxiliar que não implementou nenhuma das seis.
+- Veredito: F56, F58, F65 e F70 passam. F60 e F63 reprovam sem P0; os três P1 viraram UAT-216 (playlists salvas no celular), UAT-217 («Blend your Albums» sem a série) e UAT-218 (barra do topo mais larga que a tela com o Spotify conectado).
+- O que não foi conferido está dito em cada relatório: tudo que exigia gravar, apagar, gerar, sair ou conectar.
+- F62: as exportações reais foram feitas pelo MJRP em produção («sem o problema do campo funcionam os exports apple e spotify»); a TASK-13 está marcada com essa prova.
+- F73 pronta e provada no ramo `fix/f73-screens-keep-the-field`, sem commit: a trava de prioridade recusou («a F73 não está na Priorizada»). Fica à espera do MJRP, como a F72.
+
+## [2026-11-19 23:29] session — UAT-212 a UAT-215 e F73 registradas: campo que perde o foco, exportar numa aba antiga, tela antiga de geração, inventário que não se solta
+
+- O MJRP testou a exportação (F62) em produção e relatou: o «Batch Name» perde o foco ao digitar; depois os botões de exportar não respondem; recarregar sem salvar mostra uma tela antiga de geração.
+- Causas lidas no código e vistas no navegador: a tela de playlists é redesenhada inteira a cada aviso de três lojas (UAT-212); a recarga por versão antiga só protege a troca de tela, e o site foi publicado enquanto ele testava (UAT-213); `/playlists` sem playlists ainda desenha as configurações antigas (UAT-214).
+- Achado ao varrer os campos: a tela do inventário nunca se solta da loja e se desenha por cima de outra tela (UAT-215, aberta pelo agente).
+- F73 criada na `main`, via rápida, conserto.
 
 ## [2026-11-19 23:22] session — F71 em produção; a F49 provada pelo MJRP em produção
 

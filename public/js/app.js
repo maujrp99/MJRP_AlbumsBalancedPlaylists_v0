@@ -8,11 +8,15 @@
 import '../css/index.css'
 import '../css/tailwind.css' // Tailwind, built with the site; after the app's own styles (F59)
 import { canonicalLocalUrl } from './utils/localAddress.js'
+import { installStaleBuildGuard } from './utils/staleBuild.js'
 
 // One local address (F50): a page opened at `localhost` goes to the same place at 127.0.0.1,
 // where the logins, the Spotify redirect and the caches live.
 const localUrl = canonicalLocalUrl(window.location)
 if (localUrl) window.location.replace(localUrl)
+
+// A tab opened before a publication asks for files that are gone: the app loads again, once (F73)
+installStaleBuildGuard(window)
 import './firebase-init.js' // Firebase starts before anything that uses it
 import './services/auth/userSession.js' // the user store starts hearing who is signed in (F58)
 import { AuthService } from './services/AuthService.js'

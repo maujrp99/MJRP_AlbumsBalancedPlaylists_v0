@@ -169,77 +169,15 @@ export class PlaylistsGridRenderer {
         `
     }
 
+    /** No playlists on the screen: where they are made (F73, UAT-214). */
     static renderEmptyState() {
         return `
-            <div class="no-albums-warning glass-panel max-w-2xl mx-auto text-center p-8 mb-6">
-                <div class="alert alert-warning bg-yellow-500/10 border border-yellow-500/20 text-yellow-200 p-4 rounded-xl">
-                    <strong class="flex items-center justify-center gap-2 mb-2">${getIcon('AlertTriangle', 'w-5 h-5')} No albums loaded</strong>
-                    <p>Please go back and load albums first before generating playlists.</p>
-                </div>
+            <div class="glass-panel max-w-2xl mx-auto text-center p-8 mb-6" data-playlists-empty>
+                <h3 class="text-lg font-bold mb-2 flex items-center justify-center gap-2">${getIcon('Music', 'w-5 h-5')} No playlists here yet</h3>
+                <p class="text-muted mb-6">Playlists are made in The Blending Menu: pick a series and a recipe, and they open here.</p>
+                <a href="/blend" data-link class="btn btn-primary">Go to The Blending Menu</a>
             </div>
         `
     }
 
-    static renderInitialSettings(algorithms, currentAlgoId, rankingStrategies, currentRankingId) {
-        // Logic to render the initial "Generate" form when no playlists exist
-        // Reuse logic from old PlaylistsView.renderSettingsSection
-        // ...
-        return `
-            <div class="settings-section glass-panel p-6">
-                <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
-                    ${getIcon('Settings', 'w-5 h-5')} Generation Settings
-                </h3>
-                  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
-                    <!-- ALGORITHMS -->
-                    <div class="lg:col-span-8">
-                        <label class="block text-sm font-medium text-muted mb-3">1. Distribution Algorithm (Output)</label>
-                        <div class="algorithm-options grid grid-cols-1 md:grid-cols-2 gap-3">
-                            ${algorithms.map(algo => `
-                                <label class="algorithm-option flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer h-full
-                                ${currentAlgoId === algo.id ? 'border-accent-primary bg-accent-primary/10' : 'border-white/10 bg-white/5 hover:border-white/20'}">
-                                <input type="radio" name="algorithm" value="${algo.id}" 
-                                    ${currentAlgoId === algo.id ? 'checked' : ''}
-                                    class="mt-1 accent-accent-primary" />
-                                <div class="flex-1 text-left">
-                                    <div class="flex items-center gap-2 mb-1">
-                                    <span class="font-semibold text-sm">${algo.name}</span>
-                                    <span class="badge ${algo.isRecommended ? 'badge-success' : algo.badge === 'LEGACY' ? 'badge-warning' : 'badge-neutral'} text-[10px] px-1.5 py-0.5">
-                                        ${algo.badge}
-                                    </span>
-                                    </div>
-                                    <p class="text-xs text-muted line-clamp-2">${algo.description}</p>
-                                </div>
-                                </label>
-                            `).join('')}
-                        </div>
-                    </div>
-                    
-                    <!-- RANKING -->
-                     <div class="lg:col-span-4">
-                        <label class="block text-sm font-medium text-muted mb-3">2. Ranking Source (Input)</label>
-                        <div class="bg-white/5 rounded-xl border border-white/10 p-4 h-full">
-                            <p class="text-xs text-muted mb-3">Choose the "Source of Truth" for how tracks are ranked.</p>
-                            <select id="rankingStrategySelect" class="w-full bg-black/40 border border-white/10 rounded-lg p-2.5 text-sm focus:border-accent-primary">
-                                ${rankingStrategies.map(strat => `
-                                    <option value="${strat.id}" ${currentRankingId === strat.id ? 'selected' : ''}>${strat.name}</option>
-                                `).join('')}
-                            </select>
-                            <div class="mt-4 p-3 bg-white/5 rounded-lg border border-white/5">
-                                <div class="flex items-start gap-2">
-                                     ${getIcon('Info', 'w-4 h-4 text-accent-primary mt-0.5')}
-                                     <p class="text-xs text-muted" id="rankingDescription">
-                                        ${rankingStrategies.find(s => s.id === currentRankingId)?.description || ''}
-                                     </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn btn-primary btn-large w-full justify-center" id="generateBtn">
-                    ${getIcon('Rocket', 'w-5 h-5')} Generate Playlists
-                </button>
-            </div>
-         `
-    }
 }
