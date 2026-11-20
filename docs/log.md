@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 14:26] session — F78: o dinheiro do inventário é arredondado a centavos antes de virar texto
+**Branch:** feat/f78-core-foundations
+`models/inventoryValue.js` ganha `roundToCents`: metade para longe do zero, sobre o texto decimal mais curto do número (fixado pela linguagem, igual em todo motor), o mesmo que os navegadores já mostravam; `formatMoney` (e por ele `moneyOf` e o total do cabeçalho) e o «Paid:» do `ViewAlbumModal.js` arredondam antes do `toLocaleString`. O spike S1 mediu 1166.505 como .50 no Hermes e .51 no Node: os motores arredondam a metade de jeitos diferentes ao formatar.
+O teste novo formata como o Hermes (metade para o par) e falhava no código de antes, com 1166.505 direto e convertido; nenhum número da tela do site muda.
+
 ## [2026-11-20 14:25] session — F78: o TrackEnrichmentMixin estava morto e saiu
 **Branch:** feat/f78-core-foundations
 O comparador inconsistente que o spike S1 achou (`TrackEnrichmentMixin.js:152` e `:155`, a ordem fica a cargo do motor) morava num mixin que nenhuma receita aplica: só o `mixins/index.js` o reexportava. Tirado o reexporte, o `noDeadModules` o acusou sem ninguém que o alcance; o arquivo saiu por `git rm` (o `_safe.py` recusa `retire` para arquivo versionado), com os quatro testes dele em `test/algorithms/mixins.test.js`, a linha do `trackIdentityRule.test.js` e as três da lista de complexidade (a lista só encolhe).

@@ -3,10 +3,10 @@
  * wins; else a Discogs reading less than six hours old; else none, with the reason. The totals,
  * the currencies and what is said.
  */
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, afterEach } from 'vitest'
 import {
     SIX_HOURS_MS, NoValue, ValueOrigin, valueOfItem, isFresh, needsReading, meanOfConditions, convert, toUsd, shownCurrency,
-    formatMoney, moneyOf, parseAmount, writtenValueFrom, totalsOf, usdOf, noValueText, valueLabel, ownedNote, toBuyNote, rateNote,
+    formatMoney, roundToCents, moneyOf, parseAmount, writtenValueFrom, totalsOf, usdOf, noValueText, valueLabel, ownedNote, toBuyNote, rateNote,
     itemsWithDiscogsValue, RATES_MISSING_TEXT, DISCOGS_CREDIT
 } from '../../public/js/models/inventoryValue.js'
 import { sortInventory, sortingFor } from '../../public/js/models/inventorySort.js'
@@ -140,6 +140,42 @@ describe('currencies (REQ-08)', () => {
         expect(formatMoney(1234.5, 'BRL')).toBe('R$ 1,234.50')
         expect(formatMoney(9, 'EUR')).toBe('€9.00')
         expect(formatMoney(9, 'GBP')).toBe('£9.00')
+    })
+
+    describe('money is rounded to cents before any formatter sees it (F78: engines round the half differently)', () => {
+        // The phone's engine (Hermes) rounds a half to even when it formats: 1166.505 gave «1,166.50»
+        // there and «1,166.51» on Node and in the browsers (spike S1). This stand-in formats as Hermes
+        // did, so the test fails on code that hands the formatter more than two decimals.
+        const original = Number.prototype.toLocaleString
+        const halfToEven = function (...args) {
+            const tie = /^(\d+)\.(\d\d)5$/.exec(String(this))
+            if (tie && Number(tie[2]) % 2 === 0) return original.call(Number(`${tie[1]}.${tie[2]}`), ...args)
+            return original.call(this, ...args)
+        }
+        afterEach(() => { Number.prototype.toLocaleString = original })
+
+        it('the rule: half away from zero, on the amount as its shortest decimal text', () => {
+            expect(roundToCents(1166.505)).toBe(1166.51)
+            expect(roundToCents(1.005)).toBe(1.01) // 1.005 * 100 is 100.49999…: rounding the product would give 1.00
+            expect(roundToCents(2.675)).toBe(2.68)
+            expect(roundToCents(12.3)).toBe(12.3)
+            expect(roundToCents(-1.005)).toBe(-1.01)
+            expect(roundToCents(0)).toBe(0)
+            expect(roundToCents(1e-7)).toBe(0)
+            expect(roundToCents(123456789.125)).toBe(123456789.13)
+        })
+
+        it('1166.505 is written «$1,166.51» on an engine that rounds the half to even, as on Node', () => {
+            expect(formatMoney(1166.505, 'USD')).toBe('$1,166.51')
+            Number.prototype.toLocaleString = halfToEven
+            expect(formatMoney(1166.505, 'USD')).toBe('$1,166.51')
+            expect(formatMoney(2.125, 'EUR')).toBe('€2.13')
+        })
+
+        it('a converted value too: the product of a rate is rounded before it is written', () => {
+            Number.prototype.toLocaleString = halfToEven
+            expect(moneyOf({ amount: 583.2525, currency: 'USD' }, { currency: 'BRL', rates: { USD: 1, BRL: 2 } })).toBe('R$ 1,166.51')
+        })
     })
 
     it('a value is written in the shown currency; in its own when it cannot be converted', () => {
