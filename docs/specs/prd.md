@@ -174,6 +174,7 @@ folder:: ep-07-album-inventory
 serves:: [[ROADMAP#^OUT-03]] ^EP-07
 
 ![[S-54-have-every-album-of-my-series-in-my-inventory]]
+![[S-56-rank-my-inventory-by-acclaim-and-popularity]]
 
 
 
