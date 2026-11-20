@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 20:15] session — F80 rodada 2: o Caixote v2, com o fio e o fogo, e capas reais
+**Branch:** wip/f80-splash-design-round-2
+Protótipo `design/inception/splash-crate-v2.html` (o caixote 3D é o palco, a rolagem é o disco tocando com o fio do Lado A, lado B, o fogo da Brasa é a luz; 14 capas reais do Apple Music, 211 KB), prévia do fogo brando × vivo, comparador republicado no mesmo Artifact (https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e), `proposal.md` § Rodada 2, `info-arch.md` (estados `^splash-v2-*`, SPL-15 a SPL-19), padrões pendentes no `design-system.md`, wireframes v2.
+Crítica separada: passa, 0 P0, 4 P1 corrigidos, 12 P2. Os termos da Apple (DPLA 3.3.6(D), App Review 4.5.2(ii)) só preveem a capa junto da reprodução e pedem autorização para marketing: a confirmar antes de publicar. Nada no remoto.
+
 ## [2026-11-20 19:49] decision — F80: capas reais do Apple Music na página de entrada; a direção é o Caixote com o fio do Lado A, lado B e a brasa
 **Branch:** main
 Palavras do MJRP: «ok sigamos sua sugestao para as capas e vamos fazer um prototipo da transformar mas adicionando o slider da elevar e a brasa de consolidar, como vc faria pra harmonizar e utilizar todos esses elementos visuais?». Decidido por ele: (1) capas reais, pela sugestão do agente: as do Apple Music, que o app já usa, com crédito e link, e os termos da Apple conferidos antes de a página ser pública; (2) a direção da página de entrada é o **Caixote** (o 3D de capas), somando o elemento de rolagem do **Lado A, lado B** (a página que anda de faixa em faixa, com o fio de equalizador) e o fogo da **Brasa**. Lido pelo agente: «transformar», «elevar» e «consolidar» são os níveis das três direções da F80 (Caixote, Lado A lado B, Brasa); «slider» é a progressão por rolagem do Lado A, lado B. Segue a rodada 2 da F80, em versão nova.

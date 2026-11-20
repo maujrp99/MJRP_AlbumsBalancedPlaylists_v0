@@ -1,0 +1,146 @@
+[
+ {
+  "k": "dsotm",
+  "artist": "Pink Floyd",
+  "title": "The Dark Side of the Moon",
+  "year": 1973,
+  "bytes": 5968,
+  "link": "https://music.apple.com/us/album/wish-you-were-here/1065973975",
+  "matched": "Wish You Were Here"
+ },
+ {
+  "k": "crimson",
+  "artist": "King Crimson",
+  "title": "In the Court of the Crimson King",
+  "year": 1969,
+  "bytes": 16120,
+  "link": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+  "matched": "In the Court of the Crimson King (Expanded Edition)"
+ },
+ {
+  "k": "low",
+  "artist": "David Bowie",
+  "title": "Low",
+  "year": 1977,
+  "bytes": 15854,
+  "link": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+  "matched": "Low (2017 Remaster)"
+ },
+ {
+  "k": "harvest",
+  "artist": "Neil Young",
+  "title": "Harvest",
+  "year": 1972,
+  "bytes": 11662,
+  "link": "https://music.apple.com/us/album/harvest/1015739190",
+  "matched": "Harvest"
+ },
+ {
+  "k": "edge",
+  "artist": "Yes",
+  "title": "Close to the Edge",
+  "year": 1972,
+  "bytes": 10118,
+  "link": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+  "matched": "Close to the Edge"
+ },
+ {
+  "k": "pcl",
+  "artist": "New Order",
+  "title": "Power, Corruption & Lies",
+  "year": 1983,
+  "bytes": 22512,
+  "link": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+  "matched": "Power, Corruption & Lies"
+ },
+ {
+  "k": "dummy",
+  "artist": "Portishead",
+  "title": "Dummy",
+  "year": 1994,
+  "bytes": 8944,
+  "link": "https://music.apple.com/us/album/dummy/1440653096",
+  "matched": "Dummy"
+ },
+ {
+  "k": "illmatic",
+  "artist": "Nas",
+  "title": "Illmatic",
+  "year": 1994,
+  "bytes": 12918,
+  "link": "https://music.apple.com/us/album/illmatic/856131729",
+  "matched": "Illmatic"
+ },
+ {
+  "k": "homogenic",
+  "artist": "Björk",
+  "title": "Homogenic",
+  "year": 1997,
+  "bytes": 19766,
+  "link": "https://music.apple.com/us/album/homogenic-live/1726654860",
+  "matched": "Homogenic (Live)"
+ },
+ {
+  "k": "mezzanine",
+  "artist": "Massive Attack",
+  "title": "Mezzanine",
+  "year": 1998,
+  "bytes": 13936,
+  "link": "https://music.apple.com/us/album/mezzanine/724466069",
+  "matched": "Mezzanine"
+ },
+ {
+  "k": "aeroplane",
+  "artist": "Neutral Milk Hotel",
+  "title": "In the Aeroplane Over the Sea",
+  "year": 1998,
+  "bytes": 23272,
+  "link": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+  "matched": "In the Aeroplane Over the Sea"
+ },
+ {
+  "k": "madvillainy",
+  "artist": "Madvillain",
+  "title": "Madvillainy",
+  "year": 2004,
+  "bytes": 11290,
+  "link": "https://music.apple.com/us/album/madvillainy-2-the-madlib-remix/290330536",
+  "matched": "Madvillainy 2: The Madlib Remix"
+ },
+ {
+  "k": "tpab",
+  "artist": "Kendrick Lamar",
+  "title": "To Pimp a Butterfly",
+  "year": 2015,
+  "bytes": 17198,
+  "link": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+  "matched": "To Pimp a Butterfly"
+ },
+ {
+  "k": "igor",
+  "artist": "Tyler, The Creator",
+  "title": "IGOR",
+  "year": 2019,
+  "bytes": 11458,
+  "link": "https://music.apple.com/us/album/music-inspired-by-illumination-dr-seuss-the-grinch-ep/1441586573",
+  "matched": "Music Inspired by Illumination & Dr. Seuss' The Grinch - EP"
+ },
+ {
+  "k": "pitty",
+  "artist": "Pitty",
+  "title": "Admirável Chip Novo",
+  "year": 2003,
+  "bytes": 13478,
+  "link": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+  "matched": "Admirável Chip Novo"
+ },
+ {
+  "k": "desire",
+  "artist": "Caroline Polachek",
+  "title": "Desire, I Want to Turn Into You",
+  "year": 2023,
+  "bytes": 18802,
+  "link": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+  "matched": "Desire, I Want to Turn Into You"
+ }
+]
