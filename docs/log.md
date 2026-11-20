@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:18] review — segunda fatia da F58 e trava de lint em produção (site); UAT-18, 19, 20 em fixed
+
+Site publicado da `main` (`fd9a0a1`, pacote `main-bsMs4i-z.js`), a primeira publicação que passou pela trava de lint. Prova em `reports/evidence/F58/2026-11-20-layers-and-lint-gate-proof.md`: arrastar uma faixa muda a ordem e o desfazer devolve; em produção as seis telas principais abrem sem erro. O servidor está sendo publicado (mudou só a escrita de expressões regulares, com teste antes e depois). Restam 6 issues abertas, todas dependentes do MJRP: UAT-17, 28, 202, 61, 143, 193.
+
 ## [2026-11-19 22:16] session — a trava de lint ligada (F64, UAT-20), pelo integrador
 
 Com o ramo das camadas e o da F70 juntos, `npx eslint .` termina com 0 erros e 23 avisos. O passo `npx eslint . --quiet` entrou na automação do GitHub e nos dois roteiros de publicação, antes dos testes; um erro recusa a publicação. Manual 00 e o cabeçalho do `eslint.config.mjs` atualizados; TASK-13 da F64 fechada.
