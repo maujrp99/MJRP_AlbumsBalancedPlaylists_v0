@@ -3,12 +3,34 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:44] session — F71, segunda fatia (S-56): notas no inventário provadas e executadas na conta do MJRP
+
+**Branch:** feat/f71-inventory-averages-2
+
+- Decisão de arquitetura (decidido pelo agente — revisável): as duas médias ficam gravadas no item do inventário (`averages`), porque o cache de álbuns do navegador vale 7 dias e é guardado pela consulta da série. «Update ratings» pede os álbuns pela única porta da carga (`albumAsks.albumsOf`) e casa cada álbum com o item pela regra de identidade.
+- «Avg Rank» saiu do cartão do álbum e deu lugar a «Avg Rating» (opção A, do MJRP).
+- Rodou na conta dele: 209 de 211 álbuns com médias, em cerca de 25 segundos. Prova: `reports/evidence/F71-inventory-holds-every-album-of-my-series/2026-11-19-ratings-in-the-inventory-proof.md`.
+- A saber: dois álbuns têm a nota tirada de menos de três faixas (edições ampliadas); o cartão não mostra de quantas faixas a média saiu.
+
 ## [2026-11-19 23:41] session — F63: a barra do topo cabe na tela em toda largura (UAT-218)
 
 **Branch:** fix/f63-top-bar-fits
 
 - Os nomes da conta e do Spotify encolhem antes de a barra passar da tela (`navigation/barName.js`: `min-w-0` da barra até o nome); a barra vai a 1400 px a partir de 1280; abaixo de 1280 o botão do Spotify mostra só o ícone; abaixo de 1024 os links vão para o menu lateral (era 768, e os links não cabiam).
 - Visto a 375, 800, 1024, 1280, 1440 e 1680 px: sem rolagem horizontal. UAT-218 em `fixed`.
+
+## [2026-11-19 23:40] session — F71, segunda fatia: o inventário guarda, mostra e ordena pelas médias «Avg Rating» e «Avg Pop»
+
+**Branch:** feat/f71-inventory-averages-2
+
+Auxiliar sem navegador e sem conta: nada rodou contra dados reais; a prova na tela e a execução na conta do MJRP são a TASK-17, do integrador. A decisão do MJRP (2026-11-19): «opção A e to achando que o AVG rank nao faz sentido pra mim, poderia trocar por AVG Rating tb».
+
+- **O modelo das médias** (`public/js/models/albumAverages.js`): «Avg Rating» (média da nota do BestEverAlbums das faixas, nota maior que zero) e «Avg Pop» (média da popularidade do Spotify, zero ou mais), uma casa decimal, `null` sem dados; a mescla das faixas é a que a comparação de faixas já fazia (`mergedTracksOf`). A comparação de faixas do álbum (`TracksTable`) troca «Avg Rank» por «Avg Rating»; `TracksRankingComparison.getAverages` não tinha chamador e saiu, e saiu também a exceção de complexidade da função de mescla.
+- **O item guarda** `averages: { rating, popularity, ratedTracks, popTracks, at }` (`data-model.md`). **«Update ratings»** (`#updateRatingsBtn`): um pedido a `albumAsks.albumsOf` (fontes `acclaim` e `popularity`) com uma consulta por item; cada álbum pronto volta ao item por `findInInventory`; as médias vão em partes de 100 por `BaseRepository.updateMany` / `InventoryRepository.setAverages`; uma média que a fonte não deu mantém o valor anterior; pergunta antes com mais de 30 álbuns; progresso no botão; o pedido é abortado ao sair da tela; o fim diz quantos ganharam notas, quantos não foram achados e, se for o caso, «Spotify is not connected: popularity was not read for N albums.»
+- **A ordem** (`#inventorySort`): Artist, Avg Rating, Avg Pop, Recently added; o item sem valor vem por último nas duas direções; «Recently added» lê `addedToInventory` (ou `createdAt`), carimbo do Firestore ou data. **O cartão** mostra a linha das médias, ou nada.
+- **Achado:** o roteador chama `destroy()` ao sair da tela e `InventoryView` só tinha `onUnmount()`, que ninguém chamava (a assinatura da loja ficava ligada). `destroy()` agora chama `onUnmount()`, que também aborta o pedido.
+- **Não feito, por escolha:** um filtro por nota mínima («filtro/ranking»). Está nas Open Questions do `spec.md`, com o que ele pediria.
+- Documentos: `spec.md` (REQ-11 a REQ-18), `plan.md`, `tasks.md` (TASK-12 a TASK-16 feitas; TASK-17 aberta, do integrador), `behavior.md` (`^inventory-ratings-updated`, `^inventory-order`, `^inventory-item-card`, `^album-track-table`), `data-model.md`, o nó S-56 e as páginas do manual que citavam «Avg Rank» ou descrevem o inventário. Suíte: 200 arquivos, 2439 testes verdes; `eslint` e `vite build` limpos.
 
 ## [2026-11-19 23:39] session — a rolagem mantida em produção; `## Now` reescrito
 

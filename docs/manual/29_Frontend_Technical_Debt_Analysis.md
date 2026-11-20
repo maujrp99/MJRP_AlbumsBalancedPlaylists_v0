@@ -66,8 +66,8 @@ Detailed controller-view logic for the Playlists feature.
 -   **`ranking/TracksRankingComparison.js`**:
     -   **Role**: Smart container for comparing "Original Order", "Critic Rank" (BEA), and "Popularity" (Spotify).
     -   **Logic**: 
-        -   Normalizes track data from multiple sources.
-        -   Calculates averages (Avg Rank, Avg Popularity).
+        -   Normalizes track data from multiple sources (`mergedTracksOf` in `models/albumAverages.js`: the same tracks the inventory averages).
+        -   The averages in the table header (My Avg, Avg Rating, Avg Pop) are computed by `TracksTable` with `models/albumAverages.js`; "Avg Rank" is gone (F71, S-56).
         -   Shows one line about the album's Spotify popularity from the state the album load gives (`models/popularityState.js`) and asks for it again through `popularity.onAsk`; it no longer talks to Spotify (F69).
 -   **`ranking/TracksTable.js`**:
     -   **Role**: Desktop component for the comparison table.

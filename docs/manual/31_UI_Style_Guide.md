@@ -201,7 +201,7 @@ Use consistent colors to visually distinguish data sources:
 | Score indicator | `★ 93` with orange star | `78%` with green text | N/A |
 | Progress bar | N/A | Green bar (`#1DB954`) | N/A |
 | Header icon | Award (orange) | SpotifyConfig (green) | Star (blue) |
-| Footer average | "Avg Rank" with orange | "Avg Pop" with green | "Avg User Rank" (blue) |
+| Footer average | "Avg Rating" with orange | "Avg Pop" with green | "My Avg" (blue) |
 
 ### Badge Layouts (Card)
 

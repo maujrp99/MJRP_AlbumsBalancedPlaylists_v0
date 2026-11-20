@@ -7,10 +7,15 @@ import { getIcon } from '../components/Icons.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { redrawKeepingField } from '../utils/keepField.js'
 import { InventoryStatus, STATUS_FILTER_OPTIONS, statusCountLabel } from '../models/inventoryStatus.js'
+import { SORT_OPTIONS } from '../models/inventorySort.js'
 
 /** The action that puts every album of the person's series in the inventory (F71). */
 const ADD_SERIES_ALBUMS_ID = 'addSeriesAlbumsBtn'
 const ADD_SERIES_ALBUMS_LABEL = 'Add the albums of my series'
+
+/** The action that reads the Avg Rating and the Avg Pop of every album of the inventory (F71, S-56). */
+const UPDATE_RATINGS_ID = 'updateRatingsBtn'
+const UPDATE_RATINGS_LABEL = 'Update ratings'
 
 /** The colour of each count of the header. */
 const COUNT_BADGE = Object.freeze({
@@ -38,6 +43,8 @@ export class InventoryView extends BaseView {
   /** The screen was left: it hears the store no more and draws nothing more (F73, UAT-215). */
   destroy() {
     this.left = true
+    // What the ask for the ratings still waits for is dropped
+    this.controller.dispose()
     super.destroy()
   }
 
@@ -131,39 +138,75 @@ export class InventoryView extends BaseView {
   }
 
   /**
-   * The button of "Add the albums of my series": a real button, reached by the keyboard. While
-   * the action runs it is disabled and says what is being done.
+   * The two actions of the toolbar are real buttons, reached by the keyboard. While one runs it is
+   * disabled and says what is being done, and the other one waits (the controller refuses both).
    */
-  renderAddSeriesAlbums(seriesAdd = {}) {
-    const button = SafeDOM.button({
-      type: 'button',
+  renderAddSeriesAlbums(state = {}) {
+    const button = this.renderActionButton({
       id: ADD_SERIES_ALBUMS_ID,
-      className: 'btn btn-secondary flex items-center gap-2 whitespace-nowrap',
+      icon: 'Plus',
       title: 'Put every album of your series in the inventory, as Not Owned',
       onClick: () => this.handleAddSeriesAlbums()
-    })
-    button.appendChild(SafeDOM.fromHTML(getIcon('Plus', 'w-4 h-4')))
-    button.appendChild(SafeDOM.span({ dataset: { role: 'label' } }, ADD_SERIES_ALBUMS_LABEL))
-    this.applySeriesAdd(button, seriesAdd)
+    }, ADD_SERIES_ALBUMS_LABEL)
+    this.applyAction(button, ADD_SERIES_ALBUMS_LABEL, state.seriesAdd, state.ratings?.busy)
     return button
   }
 
-  applySeriesAdd(button, { busy = false, text = null } = {}) {
-    button.disabled = busy
-    button.setAttribute('aria-busy', String(busy))
-    const label = button.querySelector('[data-role="label"]')
-    if (label) label.textContent = text || ADD_SERIES_ALBUMS_LABEL
+  /** "Update ratings": reads the Avg Rating and the Avg Pop of every album and keeps them in the items. */
+  renderUpdateRatings(state = {}) {
+    const button = this.renderActionButton({
+      id: UPDATE_RATINGS_ID,
+      icon: 'Star',
+      title: 'Read the BestEverAlbums rating and the Spotify popularity of every album, to order the inventory by them',
+      onClick: () => this.handleUpdateRatings()
+    }, UPDATE_RATINGS_LABEL)
+    this.applyAction(button, UPDATE_RATINGS_LABEL, state.ratings, state.seriesAdd?.busy)
+    return button
   }
 
-  /** The controller says what the action is doing: the button changes, the screen is not drawn again. */
-  showSeriesAdd(seriesAdd) {
-    const button = document.getElementById(ADD_SERIES_ALBUMS_ID)
-    if (button) this.applySeriesAdd(button, seriesAdd)
+  renderActionButton({ id, icon, title, onClick }, label) {
+    const button = SafeDOM.button({
+      type: 'button',
+      id,
+      className: 'btn btn-secondary flex items-center gap-2 whitespace-nowrap',
+      title,
+      onClick
+    })
+    button.appendChild(SafeDOM.fromHTML(getIcon(icon, 'w-4 h-4')))
+    button.appendChild(SafeDOM.span({ dataset: { role: 'label' } }, label))
+    return button
+  }
+
+  /** `own`: what this action is doing; `locked`: the other action is running. */
+  applyAction(button, idleLabel, { busy = false, text = null } = {}, locked = false) {
+    button.disabled = Boolean(busy || locked)
+    button.setAttribute('aria-busy', String(Boolean(busy)))
+    const label = button.querySelector('[data-role="label"]')
+    if (label) label.textContent = text || idleLabel
+  }
+
+  /** The controller says what an action is doing: the buttons change, the screen is not drawn again. */
+  showSeriesAdd(seriesAdd) { this.showActions({ seriesAdd }) }
+
+  showRatings(ratings) { this.showActions({ ratings }) }
+
+  /** `changes`: the state of the action that just changed; the other one is read from the controller. */
+  showActions(changes) {
+    const { seriesAdd, ratings } = { ...this.controller.state, ...changes }
+    const add = document.getElementById(ADD_SERIES_ALBUMS_ID)
+    const read = document.getElementById(UPDATE_RATINGS_ID)
+    if (add) this.applyAction(add, ADD_SERIES_ALBUMS_LABEL, seriesAdd, ratings.busy)
+    if (read) this.applyAction(read, UPDATE_RATINGS_LABEL, ratings, seriesAdd.busy)
   }
 
   async handleAddSeriesAlbums() {
     const { dialogService } = await import('../services/DialogService.js')
     await this.controller.handleAddSeriesAlbums({ confirm: (options) => dialogService.confirm(options) })
+  }
+
+  async handleUpdateRatings() {
+    const { dialogService } = await import('../services/DialogService.js')
+    await this.controller.handleUpdateRatings({ confirm: (options) => dialogService.confirm(options) })
   }
 
   renderFilters(state) {
@@ -204,6 +247,14 @@ export class InventoryView extends BaseView {
     ownershipDiv.appendChild(SafeDOM.span({ className: 'absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400' }, [SafeDOM.fromHTML(getIcon('ChevronDown', 'w-4 h-4'))]))
     row.appendChild(ownershipDiv)
 
+    // Order (F71, S-56)
+    const sortDiv = SafeDOM.div({ className: 'filter-dropdown relative' })
+    const sortSelect = SafeDOM.select({ id: 'inventorySort', className: 'form-control appearance-none cursor-pointer pr-8', 'aria-label': 'Sort by' },
+      SORT_OPTIONS.map(({ value, label }) => SafeDOM.option({ value, selected: state.sorting?.field === value }, label)))
+    sortDiv.appendChild(sortSelect)
+    sortDiv.appendChild(SafeDOM.span({ className: 'absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400' }, [SafeDOM.fromHTML(getIcon('ChevronDown', 'w-4 h-4'))]))
+    row.appendChild(sortDiv)
+
     // View Mode
     const viewBtn = SafeDOM.button({
       id: 'toggleViewMode',
@@ -214,7 +265,10 @@ export class InventoryView extends BaseView {
     row.appendChild(viewBtn)
 
     // Add the albums of my series (F71)
-    row.appendChild(this.renderAddSeriesAlbums(state.seriesAdd))
+    row.appendChild(this.renderAddSeriesAlbums(state))
+
+    // Update ratings (F71, S-56)
+    row.appendChild(this.renderUpdateRatings(state))
 
     container.appendChild(row)
     return container
@@ -236,6 +290,10 @@ export class InventoryView extends BaseView {
 
     document.getElementById('ownershipFilter')?.addEventListener('change', (e) => {
       this.controller.handleFilterChange('ownership', e.target.value)
+    })
+
+    document.getElementById('inventorySort')?.addEventListener('change', (e) => {
+      this.controller.handleSortChoice(e.target.value)
     })
 
     document.getElementById('toggleViewMode')?.addEventListener('click', () => {

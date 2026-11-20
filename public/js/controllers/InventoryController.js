@@ -20,10 +20,14 @@ import toast from '../components/Toast.js'
 import { filterInventory, statusCountsFor } from '../models/inventoryFilter.js'
 import { InventoryStatus, ownedValueOf, statusChangeMessage, statusOf } from '../models/inventoryStatus.js'
 import { confirmationText, nothingToAddText, outcomeText, progressText } from '../models/inventoryFromSeries.js'
-import { sortInventory } from '../models/inventorySort.js'
+import { sortInventory, sortingFor } from '../models/inventorySort.js'
+import { CONFIRM_FROM, ratingsOutcome, ratingsProgressText, ratingsQuestion } from '../models/inventoryRatings.js'
 
 /** The button "Add the albums of my series" at rest. */
 const SERIES_ADD_IDLE = Object.freeze({ busy: false, text: null })
+
+/** The button "Update ratings" at rest. */
+const RATINGS_IDLE = Object.freeze({ busy: false, text: null })
 
 /** What the person is asked before the albums of the series are written. */
 const seriesAddQuestion = (plan) => ({
@@ -53,14 +57,21 @@ export class InventoryController {
             },
             // "Add the albums of my series": busy while it reads and writes, with what it is doing
             seriesAdd: SERIES_ADD_IDLE,
-            sorting: {
-                field: 'artist',
-                direction: 'asc'
-            },
+            // "Update ratings": busy while it reads the albums and saves the averages
+            ratings: RATINGS_IDLE,
+            sorting: sortingFor('artist'),
             viewMode: 'grid', // grid, list
             viewCurrency: 'USD', // USD or BRL
             isLoading: false
         }
+
+        // Aborted when the screen closes: the ask for the ratings is dropped (F71, S-56)
+        this._leaving = new AbortController()
+    }
+
+    /** The screen closes: what the ask for the ratings still waits for is dropped. */
+    dispose() {
+        this._leaving.abort()
     }
 
     /**
@@ -196,6 +207,17 @@ export class InventoryController {
         this.refresh()
     }
 
+    /**
+     * The order the person chose (models/inventorySort.js SORT_OPTIONS): the controller only passes
+     * the choice, the model says how items compare.
+     * @param {string} value - the field of one of the choices
+     */
+    handleSortChoice(value) {
+        this.state.sorting = sortingFor(value)
+        this.applyFiltersAndSort()
+        this.refresh()
+    }
+
     handleViewModeChange(mode) {
         this.state.viewMode = mode
         localStorage.setItem('mjrp_inventory_view_mode', mode)
@@ -235,7 +257,7 @@ export class InventoryController {
      * @param {Function} options.confirm - (dialog options) => Promise<boolean>, the app's confirmation
      */
     async handleAddSeriesAlbums({ confirm }) {
-        if (this.state.seriesAdd.busy) return
+        if (this._isBusy()) return
         try {
             const plan = await this._planSeriesAlbums()
             if (!plan) return
@@ -278,6 +300,59 @@ export class InventoryController {
     _showSeriesAdd(seriesAdd) {
         this.state.seriesAdd = seriesAdd
         this.view.showSeriesAdd?.(seriesAdd)
+    }
+
+    /** One of the two actions of the toolbar is running: the other waits. */
+    _isBusy() {
+        return this.state.seriesAdd.busy || this.state.ratings.busy
+    }
+
+    /**
+     * "Update ratings" (F71, S-56): read the Avg Rating and the Avg Pop of every album of the
+     * inventory and keep them in the items. With more than CONFIRM_FROM albums the person is
+     * asked first (it takes minutes). Leaving the screen drops the ask (`dispose`).
+     * @param {Object} options
+     * @param {Function} options.confirm - (dialog options) => Promise<boolean>, the app's confirmation
+     */
+    async handleUpdateRatings({ confirm }) {
+        if (this._isBusy()) return
+        const total = this.state.albums.length
+        if (total === 0) {
+            toast.info('Your inventory has no albums yet. There are no ratings to read.')
+            return
+        }
+        // The button is busy from the question on: a second press while it is open does nothing
+        this._showRatings({ busy: true, text: 'Reading ratings…' })
+        try {
+            if (total > CONFIRM_FROM && !await confirm(ratingsQuestion(total))) return
+            if (this._leaving.signal.aborted) return
+            await this._updateRatings()
+        } finally {
+            this._showRatings(RATINGS_IDLE)
+        }
+    }
+
+    async _updateRatings() {
+        let result
+        try {
+            result = await inventoryService.updateAverages({
+                signal: this._leaving.signal,
+                onProgress: (step) => this._showRatings({ busy: true, text: ratingsProgressText(step) })
+            })
+        } catch (error) {
+            console.error('[InventoryController] Could not update the ratings:', error)
+            toast.error('Could not update the ratings. Your inventory was not changed.')
+            return
+        }
+        if (result.aborted) return
+        const outcome = ratingsOutcome(result)
+        if (outcome.ok) toast.success(outcome.text)
+        else toast.error(outcome.text)
+    }
+
+    _showRatings(ratings) {
+        this.state.ratings = ratings
+        this.view.showRatings?.(ratings)
     }
 
     /**

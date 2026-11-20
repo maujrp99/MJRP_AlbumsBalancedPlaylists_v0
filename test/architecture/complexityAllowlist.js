@@ -32,7 +32,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'components/InventoryEditModal.js:open': 14, // no feature yet
     'components/blend/BlendRecipeCard.js:renderRecipeCard': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'components/blend/BlendSeriesSelector.js:preloadSeriesThumbnails': 20, // F62 holds this code (blend, playlists, export, Spotify)
-    'components/ranking/TracksRankingComparison.js:arrow function': 19, // no feature yet
     'components/ranking/TracksTable.js:renderRow': 16, // no feature yet
     'components/series/SeriesEventHandler.js:handleRemoveAlbum': 19, // no feature yet
     'components/ui/AlbumCardRenderer.js:arrow function': 17, // no feature yet

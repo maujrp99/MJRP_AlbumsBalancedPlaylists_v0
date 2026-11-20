@@ -29,7 +29,7 @@
         *   Calls `controller.initialize()` to fetch initial data.
     2.  **Rendering (`render`)**:
         *   Shows the Header Stats the controller computed (`renderTitleRow`): "N albums", the three counts "✓ n Owned", "n Not Owned", "♡ n Wishlist" (F71) and the owned value in USD or BRL.
-        *   Renders Filters (Search, Format, Status: "All", "Owned", "Not Owned", "Wishlist") and the button "Add the albums of my series" (F71; `renderAddSeriesAlbums`, `showSeriesAdd` for its busy state).
+        *   Renders Filters (Search, Format, Status: "All", "Owned", "Not Owned", "Wishlist") the order select `#inventorySort` ("Artist", "Avg Rating", "Avg Pop", "Recently added"; F71, S-56), the button "Add the albums of my series" (F71; `renderAddSeriesAlbums`, `showSeriesAdd` for its busy state) and the button "Update ratings" (S-56; `renderUpdateRatings`, `showRatings`; the two buttons lock each other while one runs). `destroy()` (called by the router when the person leaves) drops the ask for the ratings (`controller.dispose()`).
         *   Delegates Grid rendering to `InventoryGridRenderer` (Pure HTML String generation for performance).
     3.  **Event Handling**:
         *   Uses **Event Delegation** on `#inventory-grid-container`.
@@ -178,4 +178,4 @@ stateDiagram-v2
 **Why**: Performance. Generating thousands of DOM nodes individually is slower than `innerHTML` for large grids.
 **Features**:
 *   `formatPrice(value, currency)`: Handles currency conversion display.
-*   `renderCard(album)`: Generates the main card HTML with the Status selector (the status and its options come from `models/inventoryStatus.js`, F71). An item with no format shows no format badge and an item with no price shows no price (`renderPrice`).
+*   `renderCard(album)`: Generates the main card HTML with the Status selector (the status and its options come from `models/inventoryStatus.js`, F71). An item with no format shows no format badge and an item with no price shows no price (`renderPrice`). An item that has `averages` shows one small line, "Avg Rating: 78.4 · Avg Pop: 42.6%" (`renderAverages`, grid and list); an item that has none shows nothing, not a dash (F71, S-56).

@@ -1,6 +1,7 @@
 import { getIcon } from '../../components/Icons.js'
 import { formatDuration } from '../../utils/duration.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
+import { averagesOf, popularityValue, ratingValue } from '../../models/albumAverages.js'
 
 /**
  * Desktop Presenter: Tracks Table
@@ -268,6 +269,7 @@ export class TracksTable {
     }
 
     renderStatsHeader() {
+        const averages = averagesOf(this.tracks)
         return SafeDOM.div({
             className: 'p-3 bg-white/5 border-b border-white/10 flex justify-end gap-6 text-xs'
         }, [
@@ -276,15 +278,15 @@ export class TracksTable {
                 SafeDOM.fromHTML(getIcon('Star', 'w-3 h-3 text-sky-500')),
                 SafeDOM.span({}, [
                     SafeDOM.text('My Avg: '),
-                    SafeDOM.strong({ className: 'text-white' }, this.calculateAvg('userRank', true))
+                    SafeDOM.strong({ className: 'text-white' }, this.calculateMyAvg())
                 ])
             ]),
             // Acclaim Stats
             SafeDOM.div({ className: 'flex items-center gap-2 text-white/50' }, [
                 SafeDOM.fromHTML(getIcon('Award', 'w-3 h-3 text-brand-orange')),
                 SafeDOM.span({}, [
-                    SafeDOM.text('Avg Rank: '),
-                    SafeDOM.strong({ className: 'text-white' }, this.calculateAvg('rank', true))
+                    SafeDOM.text('Avg Rating: '),
+                    SafeDOM.strong({ className: 'text-white' }, ratingValue(averages))
                 ])
             ]),
             // Popularity Stats
@@ -292,19 +294,17 @@ export class TracksTable {
                 SafeDOM.fromHTML(getIcon('SpotifyConfig', 'w-3 h-3 text-[#1DB954]')),
                 SafeDOM.span({}, [
                     SafeDOM.text('Avg Pop: '),
-                    SafeDOM.strong({ className: 'text-white' }, `${this.calculateAvg('spotifyPopularity', false)}%`)
+                    SafeDOM.strong({ className: 'text-white' }, popularityValue(averages))
                 ])
             ])
         ])
     }
 
-
-
-    calculateAvg(field, excludeUnranked) {
-        const valid = this.tracks.filter(t => excludeUnranked ? (t[field] && t[field] < 999) : (t[field] != null && t[field] > -1))
-        if (!valid.length) return '-'
-        const sum = valid.reduce((acc, t) => acc + t[field], 0)
-        return (sum / valid.length).toFixed(1)
+    /** The mean of the positions the person gave their own tracks; "-" when none is ranked. */
+    calculateMyAvg() {
+        const ranked = this.tracks.filter(t => t.userRank && t.userRank < 999)
+        if (!ranked.length) return '-'
+        return (ranked.reduce((sum, t) => sum + t.userRank, 0) / ranked.length).toFixed(1)
     }
 
     mount(container) {

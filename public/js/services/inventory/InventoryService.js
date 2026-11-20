@@ -8,6 +8,7 @@
  */
 
 import { findInInventory, planSeriesAlbums } from '../../models/inventoryFromSeries.js'
+import { RATING_SOURCES, planAverages, ratingsAskOf } from '../../models/inventoryRatings.js'
 
 const ANONYMOUS = 'anonymous-user'
 
@@ -27,10 +28,12 @@ export class InventoryService {
      * @param {Object} deps
      * @param {InventoryStore} deps.store
      * @param {Function} deps.createRepository - (userId) => the inventory repository of that person
+     * @param {{ albumsOf: Function }} [deps.albumAsks] - the album load's one door (services/albums/AlbumAsks.js); only "Update ratings" needs it
      */
-    constructor({ store, createRepository }) {
+    constructor({ store, createRepository, albumAsks = null }) {
         this.store = store
         this.createRepository = createRepository
+        this.albumAsks = albumAsks
         this.repository = null
         this.userId = ANONYMOUS
     }
@@ -171,6 +174,90 @@ export class InventoryService {
             console.error('[InventoryService] The albums were added, but the inventory could not be read again:', error)
             return false
         }
+    }
+
+    /**
+     * "Update ratings" (F71, S-56): read the Avg Rating and the Avg Pop of every album of the
+     * inventory and keep them in the items (`averages`).
+     *
+     * ONE ask goes to the album load for the albums of the items (the load's queue, holds and
+     * browser cache; nothing here calls the network). Each ready album is matched back to its item
+     * by the one identity rule, and the averages are written in parts of SERIES_WRITE_SIZE, each
+     * part one write. An average a source gave nothing for keeps the value the item had. A part
+     * that fails stops the run and does NOT take back the parts before it; the answer says how many
+     * were saved, and running it again writes the rest. It never throws for a failed part. The
+     * store is told once, at the end.
+     *
+     * @param {Object} [options]
+     * @param {AbortSignal} [options.signal] - aborted when the person leaves the screen
+     * @param {Function} [options.onProgress] - ({ phase: 'reading', done, total }) | ({ phase: 'saving', saved, total })
+     * @param {Function} [options.now] - () => Date, for the time written in `averages.at`
+     * @returns {Promise<{ aborted: boolean, total: number, planned: number, saved: number, notFound: number,
+     *   withoutRatings: number, popularityNotConnected: number, unanswered: number, error: string|null }>}
+     */
+    async updateAverages({ signal = null, onProgress = () => { }, now = () => new Date() } = {}) {
+        this.init()
+        const repository = this.repository
+        const items = this.store.getAlbums()
+        const nothing = { aborted: false, total: items.length, planned: 0, saved: 0, notFound: 0, withoutRatings: 0, popularityNotConnected: 0, unanswered: 0, error: null }
+        if (items.length === 0) return nothing
+
+        const result = await this._askForRatings(items, { signal, onProgress })
+        if (result.aborted || repository !== this.repository) return { ...nothing, aborted: true }
+
+        const plan = planAverages(items, result, now().toISOString())
+        const present = new Set(this.store.getAlbums().map(item => item.id))
+        const updates = plan.updates.filter(update => present.has(update.id))
+        const { saved, error } = await this._writeAverages(repository, updates, onProgress)
+        const { notFound, withoutRatings, popularityNotConnected, unanswered } = plan
+        return { ...nothing, planned: updates.length, saved, error, notFound, withoutRatings, popularityNotConnected, unanswered }
+    }
+
+    /** The one ask to the album load; progress is the albums done (found with their sources, or failed) of the total. */
+    _askForRatings(items, { signal, onProgress }) {
+        const total = items.length
+        let told = -1
+        const tell = (done) => {
+            if (done === told) return
+            told = done
+            onProgress({ phase: 'reading', done, total })
+        }
+        tell(0)
+        return this.albumAsks.albumsOf({
+            series: [ratingsAskOf(items)],
+            sources: [...RATING_SOURCES],
+            signal,
+            onProgress: ({ found, failed, waitingSources }) => tell(found + failed - waitingSources)
+        })
+    }
+
+    /** Write the averages in parts; the store shows what was saved, once, at the end. @returns {Promise<{ saved: number, error: string|null }>} */
+    async _writeAverages(repository, updates, onProgress) {
+        const total = updates.length
+        let saved = 0
+        let error = null
+        if (total > 0) onProgress({ phase: 'saving', saved, total })
+
+        for (const part of partsOf(updates, SERIES_WRITE_SIZE)) {
+            try {
+                await repository.setAverages(part)
+            } catch (failure) {
+                console.error(`[InventoryService] Saving the averages stopped after ${saved} of ${total}:`, failure)
+                error = failure?.message || String(failure)
+                break
+            }
+            saved += part.length
+            onProgress({ phase: 'saving', saved, total })
+        }
+
+        if (saved > 0 && repository === this.repository) this._showAverages(updates.slice(0, saved))
+        return { saved, error }
+    }
+
+    /** The items of the store get the averages that were saved; nothing else of them changes. */
+    _showAverages(saved) {
+        const byId = new Map(saved.map(({ id, averages }) => [id, averages]))
+        this.store.replaceAlbums(this.store.getAlbums().map(item => (byId.has(item.id) ? { ...item, averages: byId.get(item.id) } : item)))
     }
 
     /** Write the changes of one album; the store changes only after the write worked. */
