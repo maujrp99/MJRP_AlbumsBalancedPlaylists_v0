@@ -191,5 +191,16 @@ export function valuesOutcome(count) {
     return { ok: clean, text: sentences.join(' ') }
 }
 
+/**
+ * How a run ended, in one word, for the measurement of use (F77, `inventory_values_read`). An
+ * album with no CD edition or no suggestion is an answer, not a failure.
+ * @param {{ read: number, failed: Object, stopped: string|null, aborted: boolean }} count
+ * @returns {'complete'|'partial'|'stopped'|'failed'}
+ */
+export function valuesRunOutcome({ read, failed, stopped, aborted }) {
+    if (stopped || Object.keys(failed || {}).length > 0) return read > 0 ? 'partial' : 'failed'
+    return aborted ? 'stopped' : 'complete'
+}
+
 /** What the person is told when one album was read from its window and failed. */
 export const readFailedText = (failure) => `${failureText(failure)}. The value was not read.`

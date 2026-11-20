@@ -12,6 +12,7 @@ import { createAlgorithm, getAlgorithm } from '../algorithms/index.js'
 import { createRankingStrategy } from '../ranking/index.js'
 import { TrackTransformer } from '../transformers/TrackTransformer.js'
 import { resolveRankingId } from '../models/recipeSources.js'
+import { track } from './usage/track.js'
 
 /**
  * @typedef {Object} GenerationConfig
@@ -110,15 +111,19 @@ export class PlaylistGenerationService {
 
         console.log(`[PlaylistGenerationService] Generated ${playlists.length} playlist(s)`)
 
+        const stats = {
+            totalTracks: playlists.reduce((sum, p) => sum + p.tracks.length, 0),
+            totalDuration: playlists.reduce((sum, p) =>
+                sum + p.tracks.reduce((tSum, t) => tSum + (t.duration || 0), 0), 0
+            )
+        }
+        // F77: the recipe and how much it made; the blend and "generate again" both come through here
+        track('playlists_generated', { recipe: config.algorithmId, playlist_count: playlists.length, track_count: stats.totalTracks })
+
         return {
             playlists,
             rankingId, // Return the effective ranking used
-            stats: {
-                totalTracks: playlists.reduce((sum, p) => sum + p.tracks.length, 0),
-                totalDuration: playlists.reduce((sum, p) =>
-                    sum + p.tracks.reduce((tSum, t) => tSum + (t.duration || 0), 0), 0
-                )
-            }
+            stats
         }
     }
 

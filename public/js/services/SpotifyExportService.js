@@ -20,6 +20,8 @@ import { SpotifyAuthService } from './SpotifyAuthService.js'
 import { SpotifyService } from './SpotifyService.js'
 import { SpotifyReconnectError, SpotifyRateLimitError } from './spotify/spotifyErrors.js'
 import { exportLedger } from './export/exportLedger.js'
+import { exportOutcome } from '../models/exportOutcome.js'
+import { track } from './usage/track.js'
 
 /** Between two searches, so a long export does not run into the rate limit. */
 const SEARCH_PAUSE_MS = 80
@@ -38,6 +40,12 @@ function failureOf(error) {
 
 /** These two stop the export; any other failure of a search is one track that was not matched. */
 const stopsTheExport = (error) => error instanceof SpotifyReconnectError || error instanceof SpotifyRateLimitError
+
+/** F77: how the export ended, measured once, whatever way it ended. */
+function measured(report, playlists) {
+    track('playlists_exported', { target: 'spotify', outcome: exportOutcome(report), playlist_count: playlists.length })
+    return report
+}
 
 export class SpotifyExportService {
 
@@ -74,12 +82,12 @@ export class SpotifyExportService {
         } catch (error) {
             report.failure = failureOf(error)
             report.notCreated = targets.map(target => target.name)
-            return report
+            return measured(report, playlists)
         }
 
         await this._deliverAll(targets, report, callbacks)
         report.createdUrl = report.created[0]?.url || null
-        return report
+        return measured(report, playlists)
     }
 
     /** What will exist in Spotify: one playlist of everything, or one for each playlist. */

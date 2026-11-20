@@ -5,6 +5,7 @@
 import { authService } from '@shared/services/AuthService.js'
 import toast from './Toast.js'
 import { getIcon } from './Icons.js'
+import { track } from '../services/usage/track.js'
 
 export function showLoginModal() {
     const modal = document.createElement('div')
@@ -82,6 +83,8 @@ export function showLoginModal() {
             // AuthService triggers UserStore, which triggers UI updates.
             // But we should close the modal.
             toast.success('Successfully signed in!')
+            // F77: which provider, never who; the service is never told the person
+            track('sign_in', { provider })
             close()
 
         } catch (error) {

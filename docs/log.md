@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 13:26] session — F77: os eventos das tarefas, no computador e no celular
+**Branch:** feat/f77-measure-how-the-app-is-used
+Os eventos saem onde a ação deu certo, nos serviços e controladores (série, ranking, gerar, gravar, exportar, inventário, filtros, entrar e sair); os links de compra levam a loja e o lugar, e um ouvinte só mede o clique sem segurar a navegação.
+Acrescentados pelo agente: `inventory_value_removed` e `inventory_albums_added`. As peças do celular chamam os mesmos controladores e serviços, então mandam os mesmos eventos. Suíte: 3191 testes verdes.
+
 ## [2026-11-20 13:19] session — F77: a porta de eventos, o adaptador do PostHog e o interruptor
 **Branch:** feat/f77-measure-how-the-app-is-used
 A lista fechada de eventos em `shared/usageEvents.js` (só contagens e valores de conjunto fechado: texto da pessoa não cabe), a porta `services/usage/track.js`, o adaptador do PostHog carregado só quando ligado (`posthog-js` 1.447.0, build sem código de fora), o adaptador de depuração (`window.__usageEvents`) e o teste de arquitetura que deixa só o adaptador falar com a biblioteca.

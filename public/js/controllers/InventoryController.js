@@ -21,10 +21,21 @@ import { InventoryValues } from './InventoryValues.js'
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
 import toast from '../components/Toast.js'
 import { filterInventory, statusCountsFor } from '../models/inventoryFilter.js'
-import { ALL_STATUSES, InventoryStatus, ownedValueOf, statusChangeMessage } from '../models/inventoryStatus.js'
+import { ALL_STATUSES, InventoryStatus, ownedValueOf, statusChangeMessage, statusOf } from '../models/inventoryStatus.js'
+import { filterUseOf } from '../models/filterUse.js'
+import { track } from '../services/usage/track.js'
 import { confirmationText, nothingToAddText, outcomeText, progressText } from '../models/inventoryFromSeries.js'
 import { sortInventory, sortingFor } from '../models/inventorySort.js'
 import { CONFIRM_FROM, ratingsOutcome, ratingsProgressText, ratingsQuestion } from '../models/inventoryRatings.js'
+
+/** A status as the measurement of use writes it (F77): 'not-owned' -> 'not_owned'. */
+const usageStatus = (status) => String(status).replace('-', '_')
+
+/** F77: a filter, a search or an order chosen on this screen. */
+function measureFilter(screen, type, value, before) {
+    const use = filterUseOf(screen, type, value, before)
+    if (use) track('filter_used', use)
+}
 
 /** The button "Add the albums of my series" at rest. */
 const SERIES_ADD_IDLE = Object.freeze({ busy: false, text: null })
@@ -231,6 +242,7 @@ export class InventoryController {
 
     handleFilterChange(type, value) {
         if (type in this.state.filters) {
+            measureFilter('inventory', type, value, this.state.filters[type])
             this.state.filters[type] = value
             this.applyFiltersAndSort()
             this.calculateStats()
@@ -256,6 +268,7 @@ export class InventoryController {
      * @param {string} value - the field of one of the choices
      */
     handleSortChoice(value) {
+        measureFilter('inventory', 'sort', value, this.state.sorting?.field)
         this.state.sorting = sortingFor(value)
         this.applyFiltersAndSort()
         this.refresh()
@@ -328,9 +341,11 @@ export class InventoryController {
      * @param {string} status - one of InventoryStatus
      */
     async handleStatusChange(albumId, status) {
+        const from = statusOf(this._item(albumId))
         try {
             await inventoryService.updateAlbum(albumId, { owned: ownedValueOf(status) })
             toast.success(statusChangeMessage(status))
+            track('inventory_status_changed', { from: usageStatus(from), to: usageStatus(status) })
         } catch (error) {
             console.error('[InventoryController] Failed to update status:', error)
             toast.error('Failed to update status')

@@ -18,7 +18,7 @@ import { getIcon } from '../../components/Icons.js'
 import { InventoryStatus, statusOf } from '../../models/inventoryStatus.js'
 import { popularityValue, ratingValue, tracksMadeOf } from '../../models/albumAverages.js'
 import { DISCOGS_CREDIT, DISCOGS_LOWEST_TITLE, DISCOGS_MEAN_TITLE, ValueBasis, ValueOrigin, moneyOf, noValueText, valueLabel } from '../../models/inventoryValue.js'
-import { SELL_TRADE_SOON, buyLinksOf } from '../../models/buyLinks.js'
+import { BuyLinkPlace, SELL_TRADE_SOON, buyLinkAttributes, buyLinksOf } from '../../models/buyLinks.js'
 
 const LABEL = 'text-[11px] text-gray-400 uppercase tracking-widest whitespace-nowrap truncate'
 const DOT = '<span class="text-gray-400 text-xs">·</span>'
@@ -74,8 +74,8 @@ export function scoresOf(averages) {
     return parts.join('')
 }
 
-const storeLink = ({ name, url }) =>
-    `<a href="${escapeHtml(safeUrl(url))}" target="_blank" rel="noopener" class="text-xs text-accent-primary" data-store="${escapeHtml(name)}">${escapeHtml(name)} ↗</a>`
+const storeLink = ({ id, name, url }) =>
+    `<a href="${escapeHtml(safeUrl(url))}" target="_blank" rel="noopener" class="text-xs text-accent-primary" data-store="${escapeHtml(name)}" ${buyLinkAttributes(id, BuyLinkPlace.CARD)}>${escapeHtml(name)} ↗</a>`
 
 const notYet = (word) => `<span class="text-xs text-gray-400 opacity-50 cursor-not-allowed" aria-disabled="true" title="${SELL_TRADE_SOON}">${word}</span>`
 
