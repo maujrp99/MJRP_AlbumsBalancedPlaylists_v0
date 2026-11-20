@@ -63,3 +63,36 @@ describe('a screen drawn again keeps the field in use (F73, UAT-212)', () => {
         expect(after.value).toBe('12')
     })
 })
+
+describe('a screen drawn again stays where the person was on the page (F73, UAT-219)', () => {
+    let container
+    let scrollTo
+
+    beforeEach(() => {
+        document.body.innerHTML = '<div id="app"><p>long list</p></div>'
+        container = document.getElementById('app')
+        scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation((x, y) => { window.scrollX = x; window.scrollY = y })
+        window.scrollX = 0
+        window.scrollY = 1800
+    })
+    afterEach(() => {
+        scrollTo.mockRestore()
+        window.scrollX = 0
+        window.scrollY = 0
+    })
+
+    it('puts the scroll back when the redraw took it to the top', () => {
+        redrawKeepingField(container, () => {
+            container.innerHTML = '' // the page is short for a moment: the browser goes to the top
+            window.scrollY = 0
+            container.innerHTML = '<p>long list, drawn again</p>'
+        })
+        expect(scrollTo).toHaveBeenCalledWith(0, 1800)
+        expect(window.scrollY).toBe(1800)
+    })
+
+    it('does not touch the scroll when the redraw left it alone', () => {
+        redrawKeepingField(container, () => { container.innerHTML = '<p>same height</p>' })
+        expect(scrollTo).not.toHaveBeenCalled()
+    })
+})
