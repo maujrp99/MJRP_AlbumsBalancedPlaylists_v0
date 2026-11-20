@@ -1,4 +1,5 @@
 import { requireStore } from './store.js'
+import { keptSchemaVersion } from './schemaVersion.js'
 
 /** How many writes one Firestore batch holds. */
 export const MAX_BATCH_WRITES = 500
@@ -236,7 +237,8 @@ export class BaseRepository {
         const docData = {
             ...data,
             updatedAt: this.getServerTimestamp(),
-            _schemaVersion: this.schemaVersion
+            // never lower: the document may have been written by a newer version (shared/data/schemaVersion.js)
+            _schemaVersion: keptSchemaVersion(this.schemaVersion, data?._schemaVersion)
         }
 
         const docRef = this.getDocRef(id)

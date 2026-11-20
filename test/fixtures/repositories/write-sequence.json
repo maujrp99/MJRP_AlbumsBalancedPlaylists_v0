@@ -1287,12 +1287,12 @@
     "albumData": {
      "id": "alb-2",
      "title": "Vs.",
-     "artist": "Pearl Jam"
+     "artist": "Pearl Jam",
+     "coverUrl": "https://example.com/vs.jpg"
     },
     "addedToInventory": "server-time",
     "createdAt": "server-time",
     "_schemaVersion": 1,
-    "albumData.coverUrl": "https://example.com/vs.jpg",
     "updatedAt": "server-time"
    },
    {

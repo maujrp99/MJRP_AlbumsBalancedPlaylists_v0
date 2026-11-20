@@ -44,7 +44,7 @@ describe('one Firebase, and Firestore behind the repositories (UAT-14)', () => {
         const core = fs.readdirSync(DATA).filter(name => name.endsWith('.js')).sort()
 
         expect(core).toEqual(['BaseRepository.js', 'InventoryRepository.js', 'PlaylistRepository.js', 'SeriesRepository.js',
-            'SpotifyEnrichmentRepository.js', 'UserRankingRepository.js', 'store.js'])
+            'SpotifyEnrichmentRepository.js', 'UserRankingRepository.js', 'schemaVersion.js', 'store.js'])
         expect(listJs('repositories').sort()).toEqual(['repositories/firestoreStore.js', 'repositories/userRankings.js'])
         expect(offenders(listJs('repositories'), specifier => /firebase\/firestore/.test(specifier))).toEqual(['repositories/firestoreStore.js -> firebase/firestore'])
     })

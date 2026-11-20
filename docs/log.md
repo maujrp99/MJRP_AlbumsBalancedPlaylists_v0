@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:04] session — F78 convivência: `_schemaVersion` nunca desce no caminho de gravação, e `oldWriterKeepsNewFields` (REQ-10)
+**Branch:** feat/f78-ref-a-repositories-in-the-core
+`BaseRepository.save` (o único caminho que carimba a versão num documento que pode existir: playlists e o cache do Spotify) grava o maior entre a versão de quem escreve e a do documento como ele o leu (`shared/data/schemaVersion.js`); `update`, `updateMany`, `saveAlbumFacts` e o ranking não tocam nela. Visto falhar antes: o app «velho» renomeando uma playlist do «novo» baixava 2 para 1.
+`test/architecture/oldWriterKeepsNewFields.test.js`: séries, playlists, inventário, ranking e Spotify; o campo desconhecido sobrevive na raiz e dentro de `albumQueries`/`tracks`. O Firestore falso passou a ler segmentos e campos com ponto como o SDK (só os documentos do inventário mudaram no `write-sequence.json`; as chamadas, não). Casos abertos para a Ref-B no plano.
+
 ## [2026-11-20 15:01] session — F78 Ref-A: os seis repositórios em `shared/data/`, recebendo o Firestore de fora (REQ-09)
 **Branch:** feat/f78-ref-a-repositories-in-the-core
 `BaseRepository` e os cinco (séries, playlists, inventário, ranking próprio, enriquecimento do Spotify) foram para `shared/data/` sem importar Firestore: recebem uma «store» (`shared/data/store.js`: o `db` e as 13 funções que chamam); o site a monta do Firebase JS em `public/js/repositories/firestoreStore.js`, e a instância única do ranking mora em `public/js/repositories/userRankings.js`. Os importadores (SeriesService, PlaylistsService, RepositoryPlaylistsSource, as ligações do inventário, do Spotify, do ranking e da carga de álbuns) apontam para a casa nova; o `normalize` da chave do Spotify passa por `shared/platform/text.js`.
