@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:52] session — F78 esqueleto do app: as três portas (dados, conta, uso) e as telas
+**Branch:** feat/f78-app-skeleton
+A costura dos dados: a interface da store em `app/src/data/store.ts` e duas ligações, a em memória (testes e modo de demonstração, semeada com álbuns públicos de catálogo) e a do React Native Firebase (`firebaseStore.ts`, não provada, o único arquivo que importa o pacote nativo); os mesmos repositórios de `shared/data/` leem as séries, e `shared/seriesSummary.js` diz nome, contagem e capas. A conta é uma porta com o falso e a ligação nativa (Apple, Google, Firebase Auth), não provada; o uso passa pela lista fechada de `shared/usageEvents.js`, com o desligado, o em memória e o PostHog (só com chave, não provado).
+As telas nativas: a barra de baixo com os cinco destinos (os quatro não feitos dizem «Not in the app yet»), Albums com carregando, lista, vazio e falha com «Try again», e Entrar com os estados do REQ-12; testes da store em memória, da lista de séries e do uso (16 no app até aqui; os das telas entram com o autoteste).
+
 ## [2026-11-20 15:52] session — F78 esqueleto do app: app/ nasce (Expo SDK 58, React Native 0.88.1, TypeScript estrito) e a ligação da plataforma
 **Branch:** feat/f78-app-skeleton
 `app/` é espaço de trabalho da raiz ao lado de `shared/` (`@album-blender/app`), com Expo Router, Jest 30 com jest-expo e RNTL 14, ESLint do Expo e os scripts `typecheck`, `test`, `lint`, `bundle:ios`, `bundle:android`, `check`; a raiz ganha `npm run app:check`, um React só (`overrides`), e o ESLint da raiz deixa `app/` para o do app.
