@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 09:30] session — UAT-230: na janela do álbum no celular, «Original» vira «Track Listing»
+**Branch:** feat/f76-track-listing-label
+Teste mudado primeiro e visto falhando. O segmento da ordem do álbum ganhou 1,5 da largura dos outros, para «Track Listing» caber numa linha a 393 px. No computador não há esse rótulo.
+
 ## [2026-11-20 09:26] session — UAT-224 e UAT-225 em produção; UAT-229 registrada
 **Branch:** main
 Site publicado da `main`. Provado no app local, conta do MJRP, 1280x800, ranking de «Mezzanine» (nada gravado): com a ordem mudada, «Back» e Escape perguntam «Discard changes?»; «Keep editing» mantém a janela e a ordem; «Discard» fecha. UAT-229: o MJRP quer o nome da playlist no nome padrão do lote; o formato espera a resposta dele.
