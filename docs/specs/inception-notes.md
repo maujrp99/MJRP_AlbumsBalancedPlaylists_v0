@@ -43,3 +43,10 @@
 - **Reserva:** «Sell» e «Trade» aparecem apagados no cartão do que é dele, com «not in the app yet». Mostra algo que não existe; é o lugar reservado para a rede de colecionadores.
 - **Não feito:** a v3 em 390 px não foi conferida; a crítica de UX das telas no celular está em andamento (F76).
 
+## [2026-11-20 01:08] F75 · a v3 do cartão: o bloco de valor parece solto
+
+- **Reação do MJRP:** «vi a v3 do card e to achando que ainda falta uma borda conectando tudo pra nao confundir que o dado de info é da linha de baixo, o que o ux diz?».
+- **Diagnóstico:** na v3 o bloco de valor tem caixa própria dentro de um cartão sem caixa, e fica a 24 px da capa de baixo e a 12 px da capa de cima. O cânone (CP-04) pede que o agrupamento venha da proximidade e do alinhamento, e trata a caixa como recurso de quem não conseguiu compor; a v3 fez o contrário: pôs a caixa por dentro e deixou o conjunto sem amarra.
+- **Prévia, fora do protótipo:** `design/proposals/inventory-card-border-proposal.html`, três opções num eixo só (o que segura o cartão): A, só distância; B, uma borda no cartão inteiro; C, o cartão como superfície. Está no comparador como «Prévia em aberto».
+- **Recomendação do agente:** B. Resolve o que ele apontou, tira a caixa de dentro e não muda a cara da grade.
+

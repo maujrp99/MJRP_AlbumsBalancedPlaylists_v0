@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inventário · como o cartão se segura · proposta</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap">
+<style>
+  body { margin:0; background:#0a0a0c; color:#f3f2f0; font:14px/1.5 Inter,system-ui,sans-serif; }
+  .pp { max-width:1500px; margin:0 auto; padding:20px 16px 40px; }
+  h1 { font:800 22px/1.2 Syne,system-ui,sans-serif; margin:0 0 4px; }
+  .axis { color:#a3a1a8; margin:0 0 6px; max-width:95ch; } .axis b { color:#fbbf24; font-weight:600; }
+  .o { background:#111114; border:1px solid #2b2b33; border-radius:14px; padding:14px; margin-top:18px; }
+  .o h2 { font:700 16px/1.2 Syne,system-ui,sans-serif; margin:0 0 8px; color:#fbbf24; }
+  dl { display:grid; grid-template-columns:auto 1fr; gap:2px 10px; margin:0 0 12px; font-size:12px; }
+  dt { color:#a3a1a8; } dd { margin:0; }
+  .f { border:1px solid #2b2b33; border-radius:10px; overflow:hidden; background:#000; }
+  iframe { border:0; display:block; width:100%; height:820px; }
+</style></head><body><div class="pp">
+  <h1>Como o cartão se segura</h1>
+  <p class="axis"><b>O eixo:</b> o que diz ao olho que a capa, o título e o bloco de valor são um álbum só, e não a linha de baixo. Na v3 o bloco de valor tem a sua própria caixa dentro de um cartão que não tem caixa nenhuma, e fica à mesma distância da capa de cima e da capa de baixo. Abaixo, a v3 como está e três formas de resolver. Cada quadro mostra duas fileiras da grade real; os valores são ilustrativos.</p>
+  <section class="o"><h2>v3 · como está</h2><dl><dt>Problema</dt><dd>a caixa de dentro se solta do álbum: 24 px a separam da capa de baixo e 12 px da capa de cima</dd></dl>
+  <div class="f"><iframe title="v3 · como está" src="inventory-card-border-option.html#v3" loading="lazy"></iframe></div></section>
+  <section class="o"><h2>A · só distância</h2><dl><dt>Mexe em</dt><dd>tira a caixa de dentro e afasta as fileiras (64 px entre elas, 12 px dentro do cartão)</dd><dt>Preserva</dt><dd>a grade sem bordas, como o resto do app</dd><dt>Arrisca</dt><dd>depende só do espaço: num cartão alto, o olho ainda pode hesitar</dd></dl>
+  <div class="f"><iframe title="A · só distância" src="inventory-card-border-option.html#a" loading="lazy"></iframe></div></section>
+  <section class="o"><h2>B · uma borda no cartão inteiro</h2><dl><dt>Mexe em</dt><dd>uma borda fina em volta de capa, título e valor; o bloco de dentro perde a caixa e vira faixas</dd><dt>Preserva</dt><dd>o fundo e as proporções da grade</dd><dt>Arrisca</dt><dd>mais linhas na tela: doze cartões são doze caixas</dd></dl>
+  <div class="f"><iframe title="B · uma borda no cartão inteiro" src="inventory-card-border-option.html#b" loading="lazy"></iframe></div></section>
+  <section class="o"><h2>C · o cartão como superfície</h2><dl><dt>Mexe em</dt><dd>o cartão ganha fundo próprio e a capa vai até as bordas dele</dd><dt>Preserva</dt><dd>o conteúdo e a ordem</dd><dt>Arrisca</dt><dd>muda a cara da grade; os cartões das séries, que não têm fundo, passam a destoar</dd></dl>
+  <div class="f"><iframe title="C · o cartão como superfície" src="inventory-card-border-option.html#c" loading="lazy"></iframe></div></section>
+</div></body></html>

@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:08] session — F75: prévia de três formas de segurar o cartão (o bloco de valor parecia solto)
+
+- O MJRP achou que falta uma borda ligando o cartão da v3. Prévia em `design/proposals/inventory-card-border-proposal.html` e no comparador: A, só distância; B, borda no cartão inteiro; C, o cartão como superfície. Recomendação do agente: B. O protótipo espera a escolha dele.
+
 ## [2026-11-20 01:04] review — crítica de UX das telas no celular (F76)
 
 - Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-audit.md`, por um auxiliar que não construiu as telas, pela skill `mjrp-critiquing-ux-ui`; em emulação de celular, sem aparelho de verdade.
