@@ -6,7 +6,6 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 vi.mock('../../public/js/services/MusicKitService.js', () => ({ musicKitService: {} }))
 vi.mock('../../public/js/services/AlbumLoader.js', () => ({ albumLoader: {} }))
-vi.mock('../../public/js/cache/albumCache.js', () => ({ albumCache: { get: vi.fn(), set: vi.fn() } }))
 
 import { APIClient, ApiError } from '../../public/js/api/client.js'
 

@@ -9,8 +9,3 @@ export {
     handleExportJson,
     handleExportToAppleMusic
 } from './PlaylistsExport.js'
-
-// Drag-and-drop functionality
-export {
-    setupDragAndDrop
-} from './PlaylistsDragDrop.js'
