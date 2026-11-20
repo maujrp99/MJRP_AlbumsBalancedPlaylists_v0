@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 21:15] session — F69 em produção (site e servidor)
+
+Site publicado da `main` (`8425964`, pacote `main-DIgppRDb.js`), depois o servidor (revisão `mjrp-proxy-00204-pt4`; volta `mjrp-proxy-00203-lwg`). Conferido em produção: rotas de depuração 404, 401 sem login, notas de «Nevermind» com login (In Bloom 89). A parte do servidor da F69 (a popularidade do Spotify como fonte reserva do ranking em `/api/generate`) não foi exercitada. Auxiliares trabalhando: F65 e a fatia 5 da F52.
+
 ## [2026-11-19 21:13] review — F69 provada pelo integrador; UAT-206 em fixed
 
 Conectado, a sessão vencida do Spotify foi renovada sozinha e a popularidade veio para os cinco álbuns (o «Core» incluído). Sem as chaves, um álbum sem popularidade guardada ficou `not-connected`, sem nenhum pedido ao Spotify. Prova em `reports/evidence/F69/2026-11-19-spotify-popularity-outcomes-proof.md`. A UAT-28 (chaves no navegador) fica aberta com a análise no `plan.md` da F69: três caminhos, recomendação de aprovar o padrão na constituição agora.
