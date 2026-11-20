@@ -3,9 +3,57 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:15] review — F70 em produção (site) e provada; quatro issues em fixed
+
+Site publicado da `main` (`88adbc4`, pacote `main-DDeTiHbR.js`); a F70 não muda o servidor. Prova em `reports/evidence/F70/2026-11-19-small-defects-proof.md`: em produção, como visitante, a busca de um artista de eletrônica não pede mais a lista da IA; o substituto de capa entra uma vez só. UAT-209 e UAT-210 só por teste, com a razão escrita. Em `fixed`: UAT-208, 209, 210, 63. Restam 9 issues abertas; auxiliar trabalhando nas UAT-18, 19 e 20.
+
 ## [2026-11-19 22:14] session — F64, fatia do lint: de 22 erros para 1; o portão não foi ligado (UAT-20)
 
 Ramo `fix/f58-layers-and-lint-gate`. `npx eslint .` na `main` dava 22 erros e 78 avisos; agora dá 1 erro e 24 avisos. Consertados: 17 barras sem efeito em seis expressões regulares (com testes escritos e rodados antes da troca: `test/server/textCleaningPatterns.test.js`, `test/utils/NormalizationUtils.test.js`), a chave `Plus` duplicada dos ícones (ficou a que o app sempre desenhou), a `Promise` com função `async` do `AlbumLoader`, um `const` solto num `case` e um `catch` vazio; 54 avisos mecânicos (importações e variáveis sem uso, `catch (e)` sem leitura). O erro que resta é a chave `sorting` duplicada em `public/js/controllers/InventoryController.js:44`, arquivo do ramo `fix/f70-small-defects`: por isso o passo de lint **não** entrou na automação nem nos scripts de publicação. O que falta ligar está na TASK-13 da F64, com o texto do passo, que foi rodado fora da publicação e recusou com esse erro. Suíte: 2149 passando. Achados que não são mecânicos estão no plano da F64 (o botão de blend ligado sem álbuns, um `sort` que não ordena, títulos que perdem o número).
+
+## [2026-11-19 22:12] session — F70: spec, plano e tarefas; comportamento e manual
+
+Passo de documentos da via rápida, no mesmo ramo (`fix/f70-small-defects`): `spec.md` (quatro REQ, um por issue, com `verified_by::`), `plan.md` e `tasks.md` da F70 preenchidos, `status: In Progress`; fica aberta a tarefa da prova no navegador, do integrador. `docs/specs/behavior.md`: o visitante na busca de álbuns e na carga, «Mudar só o preço do item», «Notas de um álbum achado pela busca por IA» e «Capa que não há ou não carrega». Manual: `03`, `07`, `08`, `13`, `19`, `21`, `99` e o mapa de arquivos, nas frases que ficaram falsas (o site ignorava `data.ratings`; `updatePrice` no lugar errado) e nas três peças novas.
+
+Não feito: status das issues em `docs/specs/uat.md` (é do integrador); `MEMORY.md`; publicação. O `doctor.py` segue vermelho por causas anteriores a este ramo (links de documentos antigos, o `## Now` do `MEMORY.md`, o lint).
+
+## [2026-11-19 22:10] session — F70: a capa que falta ou falha tem um substituto, por uma peça só (UAT-63)
+
+Confirmado no código: `components/ui/AlbumCardRenderer.js` `renderVisualHeader` punha o `src` vindo de `albumLoader.getArtworkUrl`, que pode ser nulo, sem substituto no erro; `views/renderers/DiscographyRenderer.js` apontava para `/assets/images/cover_placeholder.png`, arquivo que não existe; `Card.js` (inventário), `StagingAreaRenderer.js` e `ViewAlbumModal.js` tinham substituto só para o endereço ausente, nenhum para a falha; `AlbumCascade.js` tinha um `onerror` escrito no HTML.
+
+Feito: `public/js/components/ui/coverImage.js` desenha toda capa de álbum. Sem endereço, ou com endereço que falha, a imagem mostra o mesmo substituto (SVG embutido), uma vez por imagem. A falha é ouvida por um ouvinte só, no documento (fase de captura), porque a maioria dos cartões é escrita na página como texto e um ouvinte na própria imagem se perderia; nenhum `onerror` no HTML. Usam a peça: cartão do álbum, cartão da busca, lista de escolhidos, cartão do inventário, cascata (blend e playlists guardadas) e janela do álbum.
+
+Muda na tela, para o MJRP julgar: os quatro substitutos diferentes de antes (nota musical no inventário, «?» na lista de escolhidos, disco na janela do álbum, degradê com disco na cascata) viram um só. Fora da minha lista de arquivos, com edição mínima: `components/ui/Card.js` e `components/ViewAlbumModal.js`.
+
+Testes: `test/components/ui/coverImage.test.js` (jsdom: sem endereço, evento `error`, uma vez só, cartão escrito como texto, cada lugar, e dois testes de arquitetura). Sem navegador nesta sessão: não visto na tela.
+
+## [2026-11-19 22:10] session — F70: o app lê o que o servidor diz das notas de um álbum achado pela IA (UAT-210)
+
+Confirmado no código. O enriquecedor de notas (`services/albums/adapters/enrichers.js`, `AcclaimEnricher`) confia no endereço da página que vem no álbum (`bestEverUrl`): com ele, responde «pronto» sem pedir; sem ele, pede `POST /api/enrich-album`. O servidor só manda esse endereço quando leu a página, então:
+- `failed`, `not_asked`, `not_configured`, `not_found`: o álbum vinha sem o endereço e o app já pedia as notas pelo caminho normal. Para a falha, o defeito era teórico: uma falha nunca era gravada como «sem notas». Provado por teste.
+- `no_ratings` (a página existe, sem nenhuma nota): o álbum vinha COM o endereço e o app o marcava como «pronto», com notas, sem ter nenhuma. Este era o defeito real, no sentido contrário ao descrito.
+
+Feito: `public/js/models/ratingsOutcome.js` lê `data.ratings`; `api/client.js` `normalizeAlbumData` guarda o desfecho no álbum (`metadata.ratingsOutcome`) e só mantém o endereço da página quando o servidor disse `found` (ou não disse nada: servidor de antes da fatia 5). Nos outros casos vale a resposta do próprio pedido do app, com o motivo e a versão da regra de identidade que os prazos de confiança já usam. O enriquecedor não mudou. `normalizeAlbumData` foi dividida (complexidade 13 para menos de 10; saiu da lista de exceções).
+
+Testes: `test/api/generateRatingsOutcome.test.js` (cliente, adaptador do catálogo, enriquecedor e carga reais, com a resposta montada pelo construtor do servidor); `test/api/siteAgainstGenerateWithRatings.test.js` reescrito (dizia que o app ignorava o campo). Nenhuma tela mostra o desfecho ainda. Decidido pelo agente — revisável: o `not_found` do `/api/generate` não é guardado, porque vem sem a versão da regra de identidade; o app pergunta de novo e guarda a resposta carimbada.
+
+## [2026-11-19 22:10] session — F70: o preço do inventário mantém a moeda (UAT-209)
+
+Confirmado no código: `controllers/InventoryController.js` `handleUpdatePrice` chamava `updatePrice(albumId, newPrice)` sem moeda. Efeito real, pior que o descrito: a tela ficava com `currency: undefined` e o repositório gravava o seu padrão, `USD`, qualquer que fosse a moeda do item (um item em BRL virava USD). O ramo `else` era inalcançável (o serviço lança na falha, nunca devolve falso), então a falha não mostrava aviso. A chave `sorting` estava escrita duas vezes no estado inicial.
+
+Nenhuma tela chama `handleUpdatePrice` hoje: a janela de editar o item passa por `handleUpdateAlbum`, que manda preço e moeda juntos. O defeito existia no código e não era alcançável pela tela.
+
+Feito no dono: `services/inventory/InventoryService.js` `updatePrice(albumId, newPrice, currency?)` usa a moeda do item quando nenhuma é dada, na tela e na gravação; item sem moeda não ganha uma inventada (só o preço é gravado); preço negativo é recusado antes de qualquer mudança; na falha, o item de antes volta. O controlador mostra «Price updated» ou «Failed to update price» e redesenha a partir da store nos dois casos.
+
+Testes: `test/services/inventory/InventoryService.price.test.js` (repositório real sobre o Firestore de teste), `test/controllers/InventoryController.price.test.js`.
+
+## [2026-11-19 22:09] session — F70: o visitante não pede rota paga (UAT-208)
+
+Confirmado no código: `services/album-search/AlbumSearchService.js` pedia `POST /api/ai/studio-albums` para qualquer pessoa quando havia álbum eletrônico (`scanArtist`), e `api/client.js` `_fetchAlbumFromAPI` pedia `POST /api/generate`; o servidor recusa o convidado com 403 (`server/lib/auth/requireUser.js`). Na carga de álbuns o 403 não segura a carga (só o 401 segura, `api/serverResult.js` `holdOf`): o álbum já terminava como «não achado», depois de um pedido recusado.
+
+Feito: `public/js/api/paidRoutes.js` é o lugar único que diz quem pode usar as rotas pagas (`mayUsePaidRoutes()`, lido do mesmo login que o `serverFetch` envia); os dois chamadores perguntam antes de chamar. Visitante: a busca não pede a lista da IA e devolve `reclassified: null` (o status mostra só «→ artista»); a segunda fonte não é pedida e o álbum termina como não achado no catálogo, com o aviso que já existe. Sem login conhecido, a chamada segue e o 401 do servidor segura a carga, como antes. `_fetchAlbumFromAPI` foi dividida (complexidade 13 para menos de 10; saiu da lista de exceções).
+
+Testes: `test/api/paidRoutes.test.js` (a regra, os dois chamadores sem nenhum pedido de rede, e dois testes de arquitetura: quem nomeia uma rota paga importa `paidRoutes.js`; ninguém mais lê `isAnonymous` para decidir). Decidido pelo agente — revisável: com `PAID_ROUTES_ALLOW_ANONYMOUS=true` no servidor (não é o caso da produção), o app continua sem pedir para o visitante.
 
 ## [2026-11-19 22:05] session — F58 fatia 2, parte 2: o serviço das playlists montado num lugar só; nada importa o `app.js` (UAT-19)
 
@@ -14,6 +62,14 @@ Ramo `fix/f58-layers-and-lint-gate`. `services/playlists/playlistsWiring.js` ent
 ## [2026-11-19 22:02] session — F58 fatia 2, parte 1: a última loja que alcançava o banco virou serviço (UAT-18)
 
 Ramo `fix/f58-layers-and-lint-gate`. `public/js/stores/SpotifyEnrichmentStore.js` deixou de existir: o que o app guarda das respostas do Spotify é o serviço `services/spotify/StoredSpotifyPopularity.js` («o que já temos deste álbum?» e «guarde isto»), montado em `spotifyPopularityWiring.js` sobre o `SpotifyEnrichmentRepository`. A coleção `spotify_enrichment`, o nome do documento e os campos são os de antes: os nove casos de `test/services/spotify/StoredSpotifyPopularity.test.js` passaram primeiro contra a loja antiga, depois contra o serviço. A lista de lojas que alcançam o banco em `test/architecture/layerBoundaries.test.js` ficou vazia. Saíram com o arquivo os métodos que ninguém chamava (a remoção de órfãos na leitura, `hasValidEnrichment`, `delete`, `getCount`). A regra de confiança não mudou: um registro gravado antes da regra de identidade segue aceito por 30 dias. As três lojas acima de 150 linhas foram julgadas uma a uma: são só estado e seletores; `albums.js` perdeu dois apelidos sem uso (171 para 162). O `arch.md`, os manuais e a spec da F58 entram com a parte 2.
+
+## [2026-11-19 21:56] review — UAT-101 e UAT-75 conferidas no navegador; em fixed
+
+A triagem dizia «não acontece mais, falta um olhar no navegador». Visto: a lista de séries tem as 48 opções 1,1 s depois da primeira carga; não existe mais selo «PENDING». A UAT-143 (filtro «Studio» com singles de eletrônica) fica aberta para o julgamento do MJRP com artistas reais. Restam 13 issues abertas.
+
+## [2026-11-19 21:55] session — F52 fatia 5 em produção (servidor); UAT-181 em fixed
+
+Servidor publicado da `main` (`b9e94d6`, revisão `mjrp-proxy-00206-47c`; volta `mjrp-proxy-00205-mg4`). Em produção: `/api/generate` 401 sem login; com login, uma busca paga de verdade respondeu 200 em 37,8 s, e a linha `generate` do registro traz o desfecho das notas por fonte (`acclaim: found`). A busca de álbum por IA foi vista funcionando: UAT-181 em `fixed`, junto com a UAT-23. Com isso a F52 fica sem fatia pendente. Auxiliares trabalhando: F70 (defeitos pequenos) e a segunda fatia das camadas com a trava de lint (`fix/f58-layers-and-lint-gate`).
 
 ## [2026-11-19 21:53] decision — F70 criada: defeitos pequenos achados no caminho (decidido pelo agente — revisável)
 

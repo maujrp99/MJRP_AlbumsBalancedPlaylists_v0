@@ -1,8 +1,12 @@
 /**
- * F52, slice 5 - today's site against the server of slice 5. POST /api/generate now carries
- * `data.ratings` (what happened to each source of ratings). The app was not changed in this slice:
- * it reads the album field by field, so the new field is ignored and the album it builds is the
- * same with and without it. The answer is built by the server's own builder (lib/outcome.js).
+ * F52, slice 5 - the site against the server of slice 5. POST /api/generate carries `data.ratings`
+ * (what happened to each source of ratings). The answer is built by the server's own builder
+ * (lib/outcome.js).
+ *
+ * In slice 5 the app ignored the field. Since F70 (UAT-210) it reads it: the album it builds is
+ * the same as without the field but for two things - what the server said stays on the album
+ * (`metadata.ratingsOutcome`), and the page of the ratings source stays only when the server said
+ * the ratings were found (test/api/generateRatingsOutcome.test.js has the cases one by one).
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { createRequire } from 'node:module'
@@ -48,17 +52,29 @@ describe('today\'s site reads an album of POST /api/generate that carries `ratin
         vi.restoreAllMocks()
     })
 
-    it.each([
-        ['every source failed', { acclaim: 'failed', popularity: 'failed', aiRanking: 'failed' }],
-        ['the ratings were found', { acclaim: 'found', popularity: 'not_asked', aiRanking: 'not_asked' }]
-    ])('%s: the album is the same as without the field', async (name, ratings) => {
+    const both = async (ratings) => {
         fetchMock.mockResolvedValueOnce(wire(answeredAlbum())).mockResolvedValueOnce(wire({ ...answeredAlbum(), ratings }))
+        const without = plain(await client._fetchAlbumFromAPI('Artist - Album'))
+        const withRatings = plain(await client._fetchAlbumFromAPI('Artist - Album'))
+        return { without, withRatings }
+    }
 
-        const without = await client._fetchAlbumFromAPI('Artist - Album')
-        const withRatings = await client._fetchAlbumFromAPI('Artist - Album')
+    it('the ratings were found: the same album, and what the server said stays on it', async () => {
+        const ratings = { acclaim: 'found', popularity: 'not_asked', aiRanking: 'not_asked' }
+        const { without, withRatings } = await both(ratings)
 
-        expect(plain(withRatings)).toEqual(plain(without))
-        expect(withRatings).toMatchObject({ title: 'Album', artist: 'Artist' })
+        expect(withRatings).toEqual({ ...without, metadata: { ...without.metadata, ratingsOutcome: ratings } })
+        expect(withRatings.bestEverUrl).toBe('https://www.besteveralbums.com/thechart.php?a=1')
+        expect(withRatings.tracks.map(t => t.title)).toEqual(['Two', 'One'])
+    })
+
+    it('every source failed: the same album without the page of the ratings source, and what the server said stays on it', async () => {
+        const ratings = { acclaim: 'failed', popularity: 'failed', aiRanking: 'failed' }
+        const { without, withRatings } = await both(ratings)
+        const { bestEverUrl, ...withoutThePage } = without
+
+        expect(bestEverUrl).toBe('https://www.besteveralbums.com/thechart.php?a=1')
+        expect(withRatings).toEqual({ ...withoutThePage, metadata: { ...without.metadata, ratingsOutcome: ratings } })
         expect(withRatings.tracks.map(t => t.title)).toEqual(['Two', 'One'])
     })
 })

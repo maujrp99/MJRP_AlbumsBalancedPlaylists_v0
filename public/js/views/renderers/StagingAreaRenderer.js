@@ -1,6 +1,7 @@
 import { escapeHtml } from '../../utils/stringUtils.js';
 import { getIcon } from '../../components/Icons.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
+import { coverImage } from '../../components/ui/coverImage.js';
 
 export class StagingAreaRenderer {
     constructor(container) {
@@ -24,14 +25,10 @@ export class StagingAreaRenderer {
     }
 
     createAlbumItem(album) {
-        // Image
-        let image;
-        if (album.artworkTemplate || album.coverUrl) {
-            const src = (album.artworkTemplate || album.coverUrl).replace('{w}', '100').replace('{h}', '100');
-            image = SafeDOM.img({ src, className: 'w-full h-full object-cover', alt: 'art' });
-        } else {
-            image = SafeDOM.div({ className: 'w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-[10px] text-gray-500' }, '?');
-        }
+        // Image; with no address, or one that fails, the stand-in (components/ui/coverImage.js)
+        const template = album.artworkTemplate || album.coverUrl;
+        const src = template ? template.replace('{w}', '100').replace('{h}', '100') : null;
+        const image = coverImage({ src, className: 'w-full h-full object-cover', alt: 'art' });
 
         const imgContainer = SafeDOM.div({ className: 'w-10 h-10 rounded overflow-hidden bg-gray-800 shrink-0 relative' }, [image]);
 

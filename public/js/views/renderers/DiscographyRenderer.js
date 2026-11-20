@@ -1,6 +1,7 @@
 import { badgesOf } from '../../models/albumPicker.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 import { getIcon } from '../../components/Icons.js';
+import { coverImage } from '../../components/ui/coverImage.js';
 
 /**
  * The album cards of the album picker (F57): the same card on the Home and in the series edit.
@@ -31,7 +32,8 @@ export class DiscographyRenderer {
         const title = album.title;
         const artist = album.artist;
         const year = album.year || 'Unknown';
-        const coverUrl = album.coverUrl ? album.coverUrl.replace('{w}', '300').replace('{h}', '300') : '/assets/images/cover_placeholder.png';
+        // An album the catalog gave no cover for shows the stand-in (components/ui/coverImage.js)
+        const coverUrl = album.coverUrl ? album.coverUrl.replace('{w}', '300').replace('{h}', '300') : null;
 
         // Edition and type badges: one rule for every screen (models/albumPicker.js)
         const badges = badgesOf(album);
@@ -41,7 +43,7 @@ export class DiscographyRenderer {
         );
 
         // Images & Overlays
-        const img = SafeDOM.img({ src: coverUrl, className: 'w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300', alt: title, loading: 'lazy' });
+        const img = coverImage({ src: coverUrl, className: 'w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300', alt: title, loading: 'lazy' });
 
         // Image Container (Relative parent for overlays)
         const imageWrapper = SafeDOM.div({ className: 'relative aspect-square rounded-xl overflow-hidden bg-white/5 border border-white/5 group-hover:border-orange-500/50 group-hover:shadow-lg group-hover:shadow-orange-500/20 transition-all' }, [

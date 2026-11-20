@@ -369,3 +369,5 @@
 > Added in v5.0 (F59, F60, F64), not yet placed in the tree above: `public/js/api/serverFetch.js`, `public/js/views/playlists/unsavedChangesGuard.js`, `public/js/utils/duration.js`, `server/lib/auth/` (`verifyIdToken.js`, `requireUser.js`, `guards.js`), `server/lib/rateLimit.js`, `server/lib/asyncRoute.js`, `server/lib/debugGate.js`, `scripts/deploy-site.sh`, `scripts/deploy-server.sh`, `scripts/lib/deploy-common.sh`.
 
 > Added in v5.0 (F62), not yet placed in the tree above: `public/js/services/AppleMusicExportService.js`, `public/js/services/export/exportLedger.js`, `public/js/services/spotify/spotifyErrors.js` (Analysis: `manual/17_Frontend_Services.md`), `public/js/views/playlists/playlistEditActions.js` (Analysis: `manual/21_Dynamic_UI_Mapping.md` section 4.1).
+
+> Added in v5.0 (F70), not yet placed in the tree above: `public/js/api/paidRoutes.js` (Analysis: `manual/07_Frontend_Data_Infra.md`), `public/js/models/ratingsOutcome.js` (Analysis: `manual/08_Frontend_Models.md`), `public/js/components/ui/coverImage.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)

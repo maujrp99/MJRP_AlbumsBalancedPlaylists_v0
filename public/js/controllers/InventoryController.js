@@ -41,10 +41,6 @@ export class InventoryController {
                 field: 'addedAt',
                 direction: 'desc'
             },
-            sorting: {
-                field: 'addedAt',
-                direction: 'desc'
-            },
             viewMode: 'grid', // grid, list
             viewCurrency: 'USD', // USD or BRL
             isLoading: false
@@ -278,27 +274,24 @@ export class InventoryController {
         }
     }
 
-    async handleUpdatePrice(albumId, newPrice) {
-        const success = await inventoryService.updatePrice(albumId, newPrice) // Using specific store method if available, or generic update
-        // Legacy view used: await inventoryService.updatePrice(albumId, newPrice, currency)
-        // We should support currency too, or assume default.
-        // Let's stick to simple update for now, or check store signature.
-
-        if (success) {
+    /**
+     * Change the price of an item. The service keeps the item's currency when none is given, shows
+     * the new price at once and puts the old one back when the write fails (it throws then).
+     * @param {string} albumId - the inventory item
+     * @param {number} newPrice
+     * @param {string} [currency] - only when the person chose another one
+     */
+    async handleUpdatePrice(albumId, newPrice, currency) {
+        try {
+            await inventoryService.updatePrice(albumId, newPrice, currency)
             toast.success('Price updated')
-            this.updateStateFromStore()
-            this.refresh()
-        } else {
-            // Check if store has explicit updatePrice, otherwise try updateAlbum
-            try {
-                await inventoryService.updateAlbum(albumId, { purchasePrice: newPrice })
-                toast.success('Price updated')
-                this.updateStateFromStore()
-                this.refresh()
-            } catch (e) {
-                toast.error('Failed to update price')
-            }
+        } catch (error) {
+            console.error('[InventoryController] Failed to update price:', error)
+            toast.error('Failed to update price')
         }
+        // Either way the store says what is true now: the new price, or the old one put back
+        this.updateStateFromStore()
+        this.refresh()
     }
 
     async handleUpdateAlbum(albumId, updates) {

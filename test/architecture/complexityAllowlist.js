@@ -28,8 +28,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'algorithms/mixins/TrackEnrichmentMixin.js:arrow function': 14, // F62 holds this code (blend, playlists, export, Spotify)
     'algorithms/mixins/TrackEnrichmentMixin.js:arrow function#2': 32, // F62 holds this code (blend, playlists, export, Spotify)
     'algorithms/mixins/TrackEnrichmentMixin.js:arrow function#3': 20, // F62 holds this code (blend, playlists, export, Spotify)
-    'api/client.js:_fetchAlbumFromAPI': 13, // no feature yet: the API client still normalizes by hand what the server sends
-    'api/client.js:normalizeAlbumData': 13, // no feature yet: the API client still normalizes by hand what the server sends
     'api/serverResult.js:readServerResult': 11, // no feature yet: the API client still normalizes by hand what the server sends
     'components/InventoryEditModal.js:open': 14, // no feature yet
     'components/blend/BlendRecipeCard.js:renderRecipeCard': 13, // F62 holds this code (blend, playlists, export, Spotify)
