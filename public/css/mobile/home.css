@@ -20,6 +20,9 @@
     padding-top: 4px;
   }
 
+  /* the hero picture and its veil lay over the grid on the phone and dimmed every cover: the
+     covers are the picture here */
+  #app > div:has(> #home-left-panel) > div:first-child,
   #home-header,
   #home-staging-area,
   #home-left-footer {
@@ -154,7 +157,7 @@
   }
 
   #bulkPasteInput {
-    height: 40dvh;
+    height: 30dvh;
     min-height: 180px;
     font-size: 16px;
     line-height: 22px;
@@ -252,6 +255,18 @@
     padding-bottom: 8px;
   }
 
+  /* the waiting, empty and failed messages read on the dark (4.5:1 or more) */
+  #discographyGrid [data-scan-panel] {
+    color: #a0a0a8;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  #discographyGrid [data-scan-panel] p {
+    font-size: 15px;
+    line-height: 22px;
+  }
+
   #discographyGrid [data-action="pick-album"] {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -309,6 +324,7 @@
     border-radius: 999px;
     background: var(--phone-accent, #ff8800);
     color: #0a0a0c;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
     font-size: 15px;
     line-height: 1;
     font-weight: 800;
@@ -328,6 +344,7 @@
     min-height: 48px;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 10px;
     padding: 0 4px 0 0;
     background: none;
@@ -354,7 +371,7 @@
   }
 
   .home-chosen-count__cover + .home-chosen-count__cover {
-    margin-left: -14px;
+    margin-left: -22px;
   }
 
   .home-chosen-count__text {
@@ -364,8 +381,9 @@
   }
 
   .home-chosen-count__n {
-    font-size: 15px;
-    line-height: 20px;
+    font-size: 14px;
+    line-height: 18px;
+    white-space: nowrap;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
   }
@@ -378,7 +396,7 @@
 
   .home-chosen-bar > .home-chosen-create {
     flex: 0 0 auto;
-    padding: 0 20px;
+    padding: 0 16px;
     border-radius: 12px;
     font-size: 16px;
     font-weight: 700;
@@ -601,6 +619,8 @@
 
   #edit-series-modal [data-album-picker] .filter-btn {
     min-height: 44px;
+    min-width: 44px;
+    justify-content: center;
     font-size: 14px;
     padding: 0 12px;
     border-radius: 999px;

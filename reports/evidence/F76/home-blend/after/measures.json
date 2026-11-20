@@ -1,0 +1,929 @@
+{
+ "home-empty-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 867,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 19,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "innerScrollers": [],
+  "stackAt": [
+   "div.flex.items-center «StudioEPsSinglesLiveComp» 1 rgba(0, 0, 0, 0)",
+   "#home-toolbar «02b // Discography ScanS» 1 rgba(0, 0, 0, 0)",
+   "div.min-h-[calc(100vh-64px)].overflow-y-auto «Album Blender V3Balanced» 1 rgba(0, 0, 0, 0)",
+   "#app «Album Blender V3Balanced» 1 rgba(0, 0, 0, 0)",
+   "body.bg-black.text-white «Home Music Series By Alb» 1 rgb(0, 0, 0)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": [
+    0,
+    731,
+    393,
+    65
+   ],
+   "firstCard": null,
+   "filters": [
+    16,
+    371,
+    361,
+    186
+   ],
+   "pick": null,
+   "stepper": null,
+   "sheetBody": null
+  }
+ },
+ "home-results-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 2679,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 19,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "innerScrollers": [],
+  "stackAt": [
+   "div.flex.items-center «Studio (15)EPsSinglesLiv» 1 rgba(0, 0, 0, 0)",
+   "#home-toolbar «02b // Discography Scan→» 1 rgba(0, 0, 0, 0)",
+   "div.min-h-[calc(100vh-64px)].overflow-y-auto «Album Blender V3Balanced» 1 rgba(0, 0, 0, 0)",
+   "#app «Album Blender V3Balanced» 1 rgba(0, 0, 0, 0)",
+   "body.bg-black.text-white «Home Music Series By Alb» 1 rgb(0, 0, 0)"
+  ],
+  "probe": {
+   "color": "rgb(242, 242, 244)",
+   "font": "Syne, sans-serif",
+   "opacity": 1,
+   "bodyFont": "Syne, sans-serif"
+  },
+  "boxes": {
+   "bar": [
+    0,
+    731,
+    393,
+    65
+   ],
+   "firstCard": [
+    16,
+    561,
+    175,
+    223
+   ],
+   "filters": [
+    16,
+    371,
+    361,
+    190
+   ],
+   "pick": null,
+   "stepper": null,
+   "sheetBody": null
+  }
+ },
+ "home-chosen-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 2679,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 19,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "innerScrollers": [],
+  "stackAt": [
+   "h3.text-white.font-bold «The Endless River» 1 rgba(0, 0, 0, 0)",
+   "div.mt-3.pl-1 «The Endless River1995» 1 rgba(0, 0, 0, 0)",
+   "div.group.cursor-pointer «The Endless River1995» 1 rgba(0, 0, 0, 0)",
+   "#discographyGrid «The Endless River19951Th» 1 rgba(0, 0, 0, 0)",
+   "#discographyGridContainer «The Endless River19951Th» 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": {
+   "color": "rgb(242, 242, 244)",
+   "font": "Syne, sans-serif",
+   "opacity": 1,
+   "bodyFont": "Syne, sans-serif"
+  },
+  "boxes": {
+   "bar": [
+    0,
+    731,
+    393,
+    65
+   ],
+   "firstCard": [
+    16,
+    250,
+    175,
+    223
+   ],
+   "filters": [
+    16,
+    60,
+    361,
+    190
+   ],
+   "pick": null,
+   "stepper": null,
+   "sheetBody": null
+  }
+ },
+ "home-sheet-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 36,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "innerScrollers": [],
+  "stackAt": [
+   "span.home-chosen-row__title «The Division Bell» 1 rgba(0, 0, 0, 0)",
+   "span.home-chosen-row__text «The Division BellPink Fl» 1 rgba(0, 0, 0, 0)",
+   "li.home-chosen-row «1The Division BellPink F» 1 rgba(0, 0, 0, 0)",
+   "ol.home-chosen-list «1The Division BellPink F» 1 rgba(0, 0, 0, 0)",
+   "div.home-chosen-sheet «1The Division BellPink F» 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": {
+   "color": "rgb(242, 242, 244)",
+   "font": "Syne, sans-serif",
+   "opacity": 1,
+   "bodyFont": "Syne, sans-serif"
+  },
+  "boxes": {
+   "bar": [
+    0,
+    731,
+    393,
+    65
+   ],
+   "firstCard": [
+    16,
+    561,
+    175,
+    223
+   ],
+   "filters": [
+    16,
+    371,
+    361,
+    190
+   ],
+   "pick": null,
+   "stepper": null,
+   "sheetBody": [
+    0,
+    427,
+    393,
+    352
+   ]
+  }
+ },
+ "home-bulk-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 1148,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 19,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "innerScrollers": [],
+  "stackAt": [
+   "#bulkPasteInput «» 1 rgba(0, 0, 0, 0.5)",
+   "#bulkInputs «Process List» 1 rgba(0, 0, 0, 0)",
+   "div.p-4.space-y-4 «ScanProcess ListFilterin» 1 rgba(0, 0, 0, 0)",
+   "#home-tech-panel «02a // Artist FilterVisu» 1 rgb(20, 20, 23)",
+   "div.min-h-[calc(100vh-64px)].overflow-y-auto «Album Blender V3Balanced» 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": [
+    0,
+    731,
+    393,
+    65
+   ],
+   "firstCard": null,
+   "filters": [
+    16,
+    652,
+    361,
+    186
+   ],
+   "pick": null,
+   "stepper": null,
+   "sheetBody": null
+  }
+ },
+ "edit-series-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 80,
+  "targetsBelow44": 2,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38"
+  ],
+  "innerScrollers": [],
+  "stackAt": [
+   "div.flex.items-center «Pink Floyd - Ummagummax» 1 rgb(23, 23, 26)",
+   "div.space-y-1.max-h-[200px] «Pink Floyd - The Piper a» 1 rgba(0, 0, 0, 0)",
+   "div. «Series NameAlbums in Ser» 1 rgba(0, 0, 0, 0)",
+   "div.app-modal__body.px-6 «Series NameAlbums in Ser» 1 rgba(0, 0, 0, 0)",
+   "div.app-modal__panel.glass-panel «Edit SeriesSeries NameAl» 1 rgb(16, 16, 20)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": null,
+   "firstCard": null,
+   "filters": null,
+   "pick": null,
+   "stepper": null,
+   "sheetBody": null
+  }
+ },
+ "blend-start-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 9,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "innerScrollers": [],
+  "stackAt": [
+   "#blend-series-pick «Choose a series50 series» 1 rgb(26, 26, 30)",
+   "#blend-series-selector «Blend your Music by Albu» 1 rgba(0, 0, 0, 0)",
+   "section.glass-panel.rounded-2xl «Choose Your MixStep 1 Bl» 1 rgba(0, 0, 0, 0.4)",
+   "div.container.mx-auto «🍹The Blending Menu\"Your» 1 rgba(0, 0, 0, 0)",
+   "#app «🍹The Blending Menu\"Your» 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": [
+    0,
+    731,
+    393,
+    65
+   ],
+   "firstCard": null,
+   "filters": null,
+   "pick": [
+    33,
+    393,
+    327,
+    74
+   ],
+   "stepper": [
+    16,
+    116,
+    361,
+    92
+   ],
+   "sheetBody": null
+  }
+ },
+ "blend-sheet-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 21,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "innerScrollers": [],
+  "stackAt": [
+   "button.blend-sheet__row «Series number 235 albums» 1 rgba(0, 0, 0, 0)",
+   "div.blend-sheet__list «Series number 204 albums» 1 rgba(0, 0, 0, 0)",
+   "div.sheet__body «10 of 50 seriesSeries nu» 1 rgba(0, 0, 0, 0)",
+   "div.sheet__panel «Choose a series10 of 50 » 1 rgb(16, 16, 20)",
+   "div.sheet__backdrop «» 1 rgba(0, 0, 0, 0.62)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": [
+    0,
+    731,
+    393,
+    65
+   ],
+   "firstCard": null,
+   "filters": null,
+   "pick": [
+    33,
+    393,
+    327,
+    74
+   ],
+   "stepper": [
+    16,
+    116,
+    361,
+    92
+   ],
+   "sheetBody": [
+    0,
+    51,
+    393,
+    801
+   ]
+  }
+ },
+ "blend-recipes-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 1526,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 9,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "innerScrollers": [],
+  "stackAt": [
+   "div.blend-recipe-card.group «Top Tracks by Spotify Po» 1 rgba(255, 255, 255, 0.05)",
+   "div.grid.grid-cols-2 «★ RECOMMENDED [MJRP] Zé'» 1 rgba(0, 0, 0, 0)",
+   "#blend-recipe-cards «★ RECOMMENDED [MJRP] Zé'» 1 rgba(0, 0, 0, 0)",
+   "section.glass-panel.rounded-2xl «Choose Your RecipeStep 2» 1 rgba(0, 0, 0, 0.4)",
+   "div.container.mx-auto «🍹The Blending Menu\"Your» 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": [
+    0,
+    731,
+    393,
+    65
+   ],
+   "firstCard": null,
+   "filters": null,
+   "pick": [
+    33,
+    -60,
+    327,
+    90
+   ],
+   "stepper": [
+    16,
+    -337,
+    361,
+    92
+   ],
+   "sheetBody": null
+  }
+ },
+ "blend-ready-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 2092,
+  "phone": true,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 13,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "innerScrollers": [],
+  "stackAt": [
+   "div.grid.grid-cols-1 «Spotify Popularity Based» 1 rgba(0, 0, 0, 0)",
+   "div. «Ranking Source Spotify P» 1 rgba(0, 0, 0, 0)",
+   "div.space-y-6 «Target Duration (minutes» 1 rgba(0, 0, 0, 0)",
+   "#blend-ingredients-panel «Target Duration (minutes» 1 rgba(0, 0, 0, 0)",
+   "section.glass-panel.rounded-2xl «Pick Your IngredientsSte» 1 rgba(0, 0, 0, 0.4)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": [
+    0,
+    731,
+    393,
+    65
+   ],
+   "firstCard": null,
+   "filters": null,
+   "pick": [
+    33,
+    -747,
+    327,
+    90
+   ],
+   "stepper": [
+    16,
+    -1024,
+    361,
+    92
+   ],
+   "sheetBody": null
+  }
+ },
+ "home-empty-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1127,
+  "phone": false,
+  "textBelow12": 3,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «Your Albums Series Name»",
+   "#btnModeVisual «Visual»",
+   "#btnModeBulk «Bulk Paste»"
+  ],
+  "fieldsBelow16": [],
+  "targets": 24,
+  "targetsBelow44": 19,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "#btnModeVisual «Visual» 42x23",
+   "#btnModeBulk «Bulk Paste» 62x23",
+   "#btnFilterAlbums «Studio» 90x28",
+   "#btnFilterEPs «EPs» 57x30",
+   "#btnFilterSingles «Singles» 78x30",
+   "#btnFilterLive «Live» 59x30",
+   "#btnFilterCompilations «Compendiums» 131x30"
+  ],
+  "innerScrollers": [],
+  "stackAt": [
+   "div.bg-black/40.p-3 «02a // Artist FilterVisu» 1 rgba(0, 0, 0, 0.4)",
+   "#home-tech-panel «02a // Artist FilterVisu» 1 rgba(0, 0, 0, 0.4)",
+   "#home-left-content «01 // Series Configurati» 1 rgba(0, 0, 0, 0)",
+   "#home-left-panel «Album Blender V3Balanced» 1 rgba(0, 0, 0, 0.6)",
+   "div.min-h-[calc(100vh-64px)].overflow-y-auto «Album Blender V3Balanced» 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": null,
+   "firstCard": null,
+   "filters": [
+    450,
+    122,
+    830,
+    56
+   ],
+   "pick": null,
+   "stepper": null,
+   "sheetBody": null
+  }
+ },
+ "home-results-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1127,
+  "phone": false,
+  "textBelow12": 6,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «Your Albums Series Name»",
+   "#btnModeVisual «Visual»",
+   "#btnModeBulk «Bulk Paste»",
+   "#btnFilterAlbumsCount «(15)»",
+   "#btnFilterLiveCount «(2)»",
+   "#btnFilterCompilationsCount «(1)»"
+  ],
+  "fieldsBelow16": [],
+  "targets": 24,
+  "targetsBelow44": 19,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "#btnModeVisual «Visual» 42x23",
+   "#btnModeBulk «Bulk Paste» 62x23",
+   "#btnFilterAlbums «Studio (15)» 108x28",
+   "#btnFilterEPs «EPs» 57x30",
+   "#btnFilterSingles «Singles» 78x30",
+   "#btnFilterLive «Live (2)» 72x30",
+   "#btnFilterCompilations «Compendiums (1)» 141x30"
+  ],
+  "innerScrollers": [],
+  "stackAt": [
+   "div.bg-black/40.p-3 «02a // Artist FilterVisu» 1 rgba(0, 0, 0, 0.4)",
+   "#home-tech-panel «02a // Artist FilterVisu» 1 rgba(0, 0, 0, 0.4)",
+   "#home-left-content «01 // Series Configurati» 1 rgba(0, 0, 0, 0)",
+   "#home-left-panel «Album Blender V3Balanced» 1 rgba(0, 0, 0, 0.6)",
+   "div.min-h-[calc(100vh-64px)].overflow-y-auto «Album Blender V3Balanced» 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": {
+   "color": "rgb(255, 255, 255)",
+   "font": "Syne, sans-serif",
+   "opacity": 1,
+   "bodyFont": "Syne, sans-serif"
+  },
+  "boxes": {
+   "bar": null,
+   "firstCard": [
+    474,
+    202,
+    137,
+    202
+   ],
+   "filters": [
+    450,
+    122,
+    830,
+    56
+   ],
+   "pick": null,
+   "stepper": null,
+   "sheetBody": null
+  }
+ },
+ "home-chosen-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1225,
+  "phone": false,
+  "textBelow12": 10,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «Your Albums Series Name»",
+   "#btnModeVisual «Visual»",
+   "#btnModeBulk «Bulk Paste»",
+   "p.text-[10px].text-gray-400 «Pink Floyd»",
+   "p.text-[10px].text-gray-400 «Pink Floyd»",
+   "p.text-[10px].text-gray-400 «Pink Floyd»"
+  ],
+  "fieldsBelow16": [],
+  "targets": 28,
+  "targetsBelow44": 23,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "#btnModeVisual «Visual» 42x23",
+   "#btnModeBulk «Bulk Paste» 62x23",
+   "button.text-white.bg-red-500/30 «» 36x36",
+   "button.text-white.bg-red-500/30 «» 36x36",
+   "button.text-white.bg-red-500/30 «» 36x36",
+   "button.text-white.bg-red-500/30 «» 36x36",
+   "#btnFilterAlbums «Studio (15)» 108x28"
+  ],
+  "innerScrollers": [],
+  "stackAt": [
+   "#artistScanInput «» 1 rgba(255, 255, 255, 0.05)",
+   "div.flex-1.relative «» 1 rgba(0, 0, 0, 0)",
+   "#visualInputs «Scan» 1 rgba(0, 0, 0, 0)",
+   "div.p-4.space-y-4 «ScanProcess ListFilterin» 1 rgba(0, 0, 0, 0)",
+   "#home-tech-panel «02a // Artist FilterVisu» 1 rgba(0, 0, 0, 0.4)"
+  ],
+  "probe": {
+   "color": "rgb(255, 255, 255)",
+   "font": "Syne, sans-serif",
+   "opacity": 1,
+   "bodyFont": "Syne, sans-serif"
+  },
+  "boxes": {
+   "bar": null,
+   "firstCard": [
+    474,
+    140,
+    137,
+    202
+   ],
+   "filters": [
+    450,
+    60,
+    830,
+    56
+   ],
+   "pick": null,
+   "stepper": null,
+   "sheetBody": null
+  }
+ },
+ "home-bulk-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1268,
+  "phone": false,
+  "textBelow12": 3,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «Your Albums Series Name»",
+   "#btnModeVisual «Visual»",
+   "#btnModeBulk «Bulk Paste»"
+  ],
+  "fieldsBelow16": [
+   "#bulkPasteInput «»"
+  ],
+  "targets": 24,
+  "targetsBelow44": 20,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "#btnModeVisual «Visual» 42x23",
+   "#btnModeBulk «Bulk Paste» 62x23",
+   "#btnProcessBulk «Process List» 318x32",
+   "#btnFilterAlbums «Studio» 90x28",
+   "#btnFilterEPs «EPs» 57x30",
+   "#btnFilterSingles «Singles» 78x30",
+   "#btnFilterLive «Live» 59x30"
+  ],
+  "innerScrollers": [],
+  "stackAt": [
+   "div.bg-black/40.p-3 «02a // Artist FilterVisu» 1 rgba(0, 0, 0, 0.4)",
+   "#home-tech-panel «02a // Artist FilterVisu» 1 rgba(0, 0, 0, 0.4)",
+   "#home-left-content «01 // Series Configurati» 1 rgba(0, 0, 0, 0)",
+   "#home-left-panel «Album Blender V3Balanced» 1 rgba(0, 0, 0, 0.6)",
+   "div.min-h-[calc(100vh-64px)].overflow-y-auto «Album Blender V3Balanced» 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": null,
+   "firstCard": null,
+   "filters": [
+    450,
+    122,
+    830,
+    56
+   ],
+   "pick": null,
+   "stepper": null,
+   "sheetBody": null
+  }
+ },
+ "edit-series-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1286,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Pink Floyd — »",
+   "#filter-artist «All Artists Pink Floyd»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»",
+   "select.series-pager-size.form-control «Series per page»",
+   "select.series-pager-size.form-control «Series per page»",
+   "input.form-control.w-full «Pink Floyd — studio year»",
+   "input.form-control.flex-1 «Artist name»"
+  ],
+  "targets": 56,
+  "targetsBelow44": 43,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «By Album» 114x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 132x26",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "select.series-pager-size.form-control «Series per page» 112x29",
+   "button.px-3.py-1 «Pages» 56x24",
+   "button.px-3.py-1 «Scroll» 53x24"
+  ],
+  "innerScrollers": [],
+  "stackAt": [
+   "#edit-series-modal «Edit SeriesSeries NameAl» 1 rgba(0, 0, 0, 0.8)",
+   "p.series-pager-count «Showing 1–1 of 1 series » 1 rgba(0, 0, 0, 0)",
+   "div.flex.flex-wrap «Showing 1–1 of 1 series » 1 rgba(0, 0, 0, 0)",
+   "div.series-pager.glass-panel «Showing 1–1 of 1 series » 1 rgba(0, 0, 0, 0.4)",
+   "#series-pager-top-mount «Showing 1–1 of 1 series » 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": null,
+   "firstCard": null,
+   "filters": null,
+   "pick": null,
+   "stepper": null,
+   "sheetBody": null
+  }
+ },
+ "blend-start-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1204,
+  "phone": false,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 63,
+  "targetsBelow44": 11,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "innerScrollers": [
+   "div.grid.grid-cols-1 «Prog Rock 70s 4 albums P»"
+  ],
+  "stackAt": [
+   "#app «🍹The Blending Menu\"Your» 1 rgba(0, 0, 0, 0)",
+   "body.bg-black.text-white «Home Music Series By Alb» 1 rgb(0, 0, 0)",
+   "html. «MJRP The Album Blender -» 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": null,
+   "firstCard": null,
+   "filters": null,
+   "pick": null,
+   "stepper": [
+    428,
+    258,
+    424,
+    86
+   ],
+   "sheetBody": null
+  }
+ },
+ "blend-recipes-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1542,
+  "phone": false,
+  "textBelow12": 9,
+  "textBelow12Sample": [
+   "div.absolute.-top-2 «★ RECOMMENDED»",
+   "span.inline-block.px-2 «RECOMMENDED»",
+   "p.text-[11px].text-muted «Builds balanced playlist»",
+   "span.inline-block.px-2 «SPOTIFY»",
+   "p.text-[11px].text-muted «Pick your favorite track»",
+   "span.inline-block.px-2 «BEA»"
+  ],
+  "fieldsBelow16": [],
+  "targets": 63,
+  "targetsBelow44": 11,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "innerScrollers": [
+   "div.grid.grid-cols-1 «Prog Rock 70s 4 albums P»"
+  ],
+  "stackAt": [
+   "#app «🍹The Blending Menu\"Your» 1 rgba(0, 0, 0, 0)",
+   "body.bg-black.text-white «Home Music Series By Alb» 1 rgb(0, 0, 0)",
+   "html. «MJRP The Album Blender -» 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": null,
+   "firstCard": null,
+   "filters": null,
+   "pick": null,
+   "stepper": [
+    425,
+    -364,
+    430,
+    86
+   ],
+   "sheetBody": null
+  }
+ },
+ "blend-ready-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 2010,
+  "phone": false,
+  "textBelow12": 9,
+  "textBelow12Sample": [
+   "div.absolute.-top-2 «★ RECOMMENDED»",
+   "span.inline-block.px-2 «RECOMMENDED»",
+   "p.text-[11px].text-muted «Builds balanced playlist»",
+   "span.inline-block.px-2 «SPOTIFY»",
+   "p.text-[11px].text-muted «Pick your favorite track»",
+   "span.inline-block.px-2 «BEA»"
+  ],
+  "fieldsBelow16": [],
+  "targets": 68,
+  "targetsBelow44": 12,
+  "targetsBelow44Sample": [
+   "a.nav-link-glow.text-xs «Home» 65x28",
+   "#seriesDropdownBtn «Music Series» 142x28",
+   "a.nav-link-glow.text-xs «The Blending Menu» 177x28",
+   "a.nav-link-glow.text-xs «Playlists» 95x28",
+   "a.nav-link-glow.text-xs «Inventory» 105x28",
+   "#spotifyLoginBtn «Connect» 109x30",
+   "#loginBtn «Sign In» 82x36",
+   "#blend-duration-slider «60» 878x8",
+   "a.hover:text-white.transition-colors «Home» 38x20",
+   "a.hover:text-white.transition-colors «Albums» 46x20",
+   "a.hover:text-white.transition-colors «Playlists» 50x20",
+   "#footerClearCache «Clear Cache» 77x20"
+  ],
+  "innerScrollers": [
+   "div.grid.grid-cols-1 «Prog Rock 70s 4 albums P»"
+  ],
+  "stackAt": [
+   "#app «🍹The Blending Menu\"Your» 1 rgba(0, 0, 0, 0)",
+   "body.bg-black.text-white «Home Music Series By Alb» 1 rgb(0, 0, 0)",
+   "html. «MJRP The Album Blender -» 1 rgba(0, 0, 0, 0)"
+  ],
+  "probe": null,
+  "boxes": {
+   "bar": null,
+   "firstCard": null,
+   "filters": null,
+   "pick": null,
+   "stepper": [
+    418,
+    -852,
+    444,
+    86
+   ],
+   "sheetBody": null
+  }
+ }
+}

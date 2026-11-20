@@ -88,7 +88,7 @@ export class HomePhoneChosen {
         if (covers.length) count.appendChild(SafeDOM.span({ className: 'home-chosen-count__covers', 'aria-hidden': 'true' }, covers))
         count.appendChild(SafeDOM.span({ className: 'home-chosen-count__text' }, [
             SafeDOM.span({ className: 'home-chosen-count__n' }, countText(n)),
-            SafeDOM.span({ className: 'home-chosen-count__hint' }, n === 0 ? 'Tap the albums below' : 'Review and reorder')
+            SafeDOM.span({ className: 'home-chosen-count__hint' }, n === 0 ? 'Pick albums to start' : 'Tap to review')
         ]))
         count.disabled = n === 0
         create.textContent = this.busy ? 'Creating…' : 'Create series'

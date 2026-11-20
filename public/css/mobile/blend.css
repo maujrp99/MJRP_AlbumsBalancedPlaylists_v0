@@ -363,10 +363,9 @@
     color: #c4c4cc;
   }
 
-  /* «Recommended» sits at the top left instead of over the middle */
+  /* the floating «★ Recommended» says what the card's own badge already says: one is enough */
   .blend-recipe-card > div.absolute {
-    left: 16px;
-    transform: none;
+    display: none;
   }
 
   /* the chosen recipe: the ring, and a mark, not colour alone */
@@ -394,6 +393,21 @@
 
   #blend-ingredients-panel button {
     min-height: 44px;
+  }
+
+  /* the duration slider answers on 44 px; the track keeps its 8 px look */
+  #blend-duration-slider {
+    height: 44px;
+    background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)) center / 100% 8px no-repeat;
+  }
+
+  #blend-duration-display {
+    width: auto;
+    min-width: 56px;
+    font-size: 20px;
+    line-height: 24px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
   }
 
   #blend-ingredients-panel label,

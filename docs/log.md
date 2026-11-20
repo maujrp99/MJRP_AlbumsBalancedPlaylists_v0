@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:52] session — F76 TASK-05/06: prova em navegador, ajustes do que se viu e a nota da tela
+**Branch:** feat/f76-mobile-home-blend
+Prova no app de verdade com dados postos pela página (`reports/evidence/F76/harness/home-blend.mjs`, `reports/evidence/F76/home-blend/`): a 393x852 nenhum texto < 12, campo < 16, alvo < 44 nem caixa com rolagem própria; a 1280x800, 0 % de pixels diferentes da base. Ajustes do que se viu: o fundo decorativo da Home escurecia as capas, o selo de ordem, a barra em uma linha, o «Recommended» repetido, a duração do Blend.
+Nota da tela: `docs/specs/features/F76-mobile-redesign/screens/home-and-blend.md`. Decidido pelo agente — revisável.
+
 ## [2026-11-20 02:36] session — F76 TASK-06: o Blend no celular, e o UAT-217
 **Branch:** feat/f76-mobile-home-blend
 Blend no celular (`public/css/mobile/blend.css`, `components/blend/BlendSeriesPhonePicker.js`): o passo 1 é uma linha que abre uma folha cheia com busca e as séries (sem caixa de 256 px com rolagem própria), passos com rótulo de 12 px e o atual marcado, receitas numa coluna com a descrição inteira, «Blend it!» na barra de ação, apagado com o motivo escrito. UAT-217: «Blend your Albums» leva a série da página (`SeriesComponentFactory.js`, mudança mínima fora da área).
