@@ -62,6 +62,8 @@ sequenceDiagram
 *   **Logic**: `migrateInventory` and `migrateSeries` iterate through arrays and call Repository methods (`targetRepository.addAlbum`, `targetRepository.create`). Imported by `services/auth/UserSyncService.js`. `stores/inventory.js` stopped calling `migrateInventory` in v5.0 (F60): the copy it made only ran after a sign-out and put the inventory of the person who left into the anonymous account that followed (UAT-198). In production the guest migration does not run (UAT-12).
 
 ### Playlist Persistence Service (`public/js/services/PlaylistPersistenceService.js`)
+
+> **F65 (2026-11-19):** `PlaylistPersistenceService.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 *   **Role**: The bridge between the **Generation Engine** and the **Database**.
 *   **Pattern**: **Service Facade** over Repositories.
 *   **Key Logic**:

@@ -82,7 +82,7 @@ The albums screen is `views/SeriesView.js` today (there is no `AlbumsView.js`); 
 | **InventoryView** | Page header | TBD |
 | **PlaylistsView** | Playlist title | TBD |
 | **SavedPlaylistsView** | Series name | TBD |
-| **RankingView** | Album title | `text-3xl font-bold` |
+| **RankingView** (retired in F65) | Album title | `text-3xl font-bold` |
 
 ---
 

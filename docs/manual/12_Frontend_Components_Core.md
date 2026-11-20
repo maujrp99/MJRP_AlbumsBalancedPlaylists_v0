@@ -49,6 +49,6 @@ classDiagram
 ## Shared & Common (`shared/`, `common/`)
 **Status**: `[ACTIVE]`
 
--   **`shared/ContextMenu.js`**: Floating "Three-dot" action menu.
--   **`shared/SkeletonLoader.js`**: Loading placeholders (`card`, `list` variants).
+-   **`shared/ContextMenu.js`**: Floating "Three-dot" action menu. *(removed in F65: `ContextMenu.js`)*
+-   **`shared/SkeletonLoader.js`**: Loading placeholders (`card`, `list` variants). *(removed in F65: `SkeletonLoader.js`)*
 -   **`common/AlbumCascade.js`**: Visual component rendering a diagonal stack of album thumbnails. Used in Blend and Playlist views.

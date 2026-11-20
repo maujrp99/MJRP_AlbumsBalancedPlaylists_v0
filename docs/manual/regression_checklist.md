@@ -80,7 +80,6 @@
 
 ## 🟢 Automated Suite
 ```bash
-npm test              # Unit Tests
-npm run test:e2e      # Browser Flows
+npx vitest run        # Unit, architecture and security tests (the Puppeteer scripts of `npm run test:e2e` were removed in F65)
 ```
 Use the agent browser for final confimation.

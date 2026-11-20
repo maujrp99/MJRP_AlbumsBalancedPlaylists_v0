@@ -17,18 +17,20 @@
         *   Remove all non-alphanumeric characters (punctuation).
         *   Collapse whitespace.
     3.  **Output**: Clean token string (e.g., "money").
-*   **Consumers**: imported (dynamic `import()`) by `server/lib/ranking.js`, `server/lib/fetchRanking.js` and `server/routes/debug.js`, and by `shared/curation.js`.
+*   **Consumers**: imported (dynamic `import()`) by `server/lib/ranking.js`, `server/lib/fetchRanking.js` and `server/routes/debug.js`, and by `shared/curation.js`. *(removed in F65: `curation.js`)*
 
 ---
 
 ## 2. Core Logic: `shared/curation.js` (The Curation Engine)
+
+> **F65 (2026-11-19):** `curation.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 **Status**: `[ACTIVE]`
 **Type**: Domain Logic / Algorithm
 **Dependencies**: `normalize.js`
 
 **Purpose**: The curation engine behind the server endpoint `POST /api/playlists`. Takes enriched albums and distributes tracks into balanced playlists (Greatest Hits, Deep Cuts). Entry point: `curateAlbums(albums, opts)`, which creates a `CurationEngine` and calls `curate`.
 
-> The only importer is `server/routes/playlists.js`. The blend screen in the browser does not use this file; it uses the algorithms in `public/js/algorithms/` (see `18_Frontend_Logic_Core.md`).
+> The only importer is `server/routes/playlists.js`. The blend screen in the browser does not use this file; it uses the algorithms in `public/js/algorithms/` (see `18_Frontend_Logic_Core.md`). *(removed in F65: `playlists.js`)*
 
 ### 2.1 Class `CurationEngine`
 

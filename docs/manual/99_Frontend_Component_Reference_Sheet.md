@@ -37,9 +37,9 @@
 | [PlaylistsView.js](file:///public/js/views/PlaylistsView.js) | Generated playlists; also the edit mode (`/playlists/edit`) | 353 lines | ✅ |
 | [SavedPlaylistsView.js](file:///public/js/views/SavedPlaylistsView.js) | View saved batches | 325 lines | ✅ |
 | [InventoryView.js](file:///public/js/views/InventoryView.js) | Personal collection | 270 lines | ✅ |
-| [ConsolidatedRankingView.js](file:///public/js/views/ConsolidatedRankingView.js) | Cross-album ranking | 319 lines | ✅ |
-| [RankingView.js](file:///public/js/views/RankingView.js) | Single album ranking | 217 lines | ✅ |
-| [SaveAllView.js](file:///public/js/views/SaveAllView.js) | Data migration | 183 lines | ✅ SafeDOM (Node) |
+| [ConsolidatedRankingView.js](file:///public/js/views/ConsolidatedRankingView.js) | Cross-album ranking | 319 lines | ✅ *(removed in F65: `ConsolidatedRankingView.js`)* |
+| [RankingView.js](file:///public/js/views/RankingView.js) | Single album ranking | 217 lines | ✅ *(removed in F65: `RankingView.js`)* |
+| [SaveAllView.js](file:///public/js/views/SaveAllView.js) | Data migration | 183 lines | ✅ SafeDOM (Node) *(removed in F65: `SaveAllView.js`)* |
 | [ComingSoonView.js](file:///public/js/views/ComingSoonView.js) | Placeholder for `/artists`, `/genres`, `/tracks` | 66 lines | ✅ |
 | [BaseView.js](file:///public/js/views/BaseView.js) | View base class | 144 lines | ✅ |
 
@@ -73,7 +73,9 @@
 - `handleDeleteAll(...)`: Delete all playlists of a series
 - Editing a batch goes through `SavedPlaylistsController.editBatch`, which navigates to `/playlists/edit` (`PlaylistsView`)
 
-#### ConsolidatedRankingView (319 lines)
+#### ConsolidatedRankingView (319 lines; retired in F65)
+
+> **F65 (2026-11-19):** the two ranking screens reached only by typing the address (`/ranking/:albumId`, `/consolidated-ranking`) were retired, with their views. What follows is kept as a record; the code is in the git history.
 **Purpose**: Cross-album ranking - compare tracks across all albums in series
 
 **Key Methods**:
@@ -176,7 +178,7 @@ The table lists the main services; the album loading services (`services/albums/
 | [MusicKitAuth.js](file:///public/js/services/musickit/MusicKitAuth.js) | **Module**: Auth & Tokens | ✅ Sprint 17 |
 | [MusicKitCatalog.js](file:///public/js/services/musickit/MusicKitCatalog.js) | **Module**: Search & Metadata | ✅ Sprint 17 |
 | [MusicKitLibrary.js](file:///public/js/services/musickit/MusicKitLibrary.js) | **Module**: Library & Playlists | ✅ Sprint 17 |
-| [SeriesFilterService.js](file:///public/js/services/SeriesFilterService.js) | Pure func filtering logic | ✅ Sprint 17 |
+| [SeriesFilterService.js](file:///public/js/services/SeriesFilterService.js) | Pure func filtering logic | ✅ Sprint 17 *(removed in F65: `SeriesFilterService.js`)* |
 | [PlaylistGenerationService.js](file:///public/js/services/PlaylistGenerationService.js) | **Strategy**: Curation Pipeline | ✅ Sprint 17 |
 | [SpotifyService.js](file:///public/js/services/SpotifyService.js) | Spotify API (search, tracks, export) | ✅ |
 | [SpotifyAuthService.js](file:///public/js/services/SpotifyAuthService.js) | OAuth PKCE flow | ✅ |
@@ -184,7 +186,7 @@ The table lists the main services; the album loading services (`services/albums/
 | [OptimizedAlbumLoader.js](file:///public/js/services/OptimizedAlbumLoader.js) | Worker-based fuzzy search | ✅ |
 | [DataSyncService.js](file:///public/js/services/DataSyncService.js) | Guest-to-account migration of inventory and series | ✅ |
 | [PlaylistsService.js](file:///public/js/services/PlaylistsService.js) | Playlist operations, undo/redo, batch persistence | ✅ |
-| [PlaylistPersistenceService.js](file:///public/js/services/PlaylistPersistenceService.js) | Facade over `PlaylistRepository` / `SeriesRepository` | ✅ |
+| [PlaylistPersistenceService.js](file:///public/js/services/PlaylistPersistenceService.js) | Facade over `PlaylistRepository` / `SeriesRepository` | ✅ *(removed in F65: `PlaylistPersistenceService.js`)* |
 | [SeriesService.js](file:///public/js/services/SeriesService.js) | Series CRUD, refetch of album metadata | ✅ |
 | [SpotifyExportService.js](file:///public/js/services/SpotifyExportService.js) | Export of playlists to Spotify; answers with a report (created, not created, why) | ✅ F62 |
 | `AppleMusicExportService.js` (`public/js/services/`) | Export of playlists to Apple Music; answers with a report | ✅ F62 |
@@ -205,10 +207,10 @@ The table lists the main services; the album loading services (`services/albums/
 | [TopNPopularAlgorithm.js](file:///public/js/algorithms/TopNPopularAlgorithm.js) | Top N by Spotify popularity | ✅ Registered (`top-n-popular`) |
 | [TopNAcclaimedAlgorithm.js](file:///public/js/algorithms/TopNAcclaimedAlgorithm.js) | Top N by BestEverAlbums | ✅ Registered (`top-n-acclaimed`) |
 | [TopNUserAlgorithm.js](file:///public/js/algorithms/TopNUserAlgorithm.js) | Top N by the person's own ranking | ✅ Registered (`top-n-user`) |
-| [MJRPBalancedCascadeV0Algorithm.js](file:///public/js/algorithms/MJRPBalancedCascadeV0Algorithm.js) | Legacy Hybrid | Not registered |
-| [SDraftBalancedAlgorithm.js](file:///public/js/algorithms/SDraftBalancedAlgorithm.js) | S-Draft Variant | Not registered |
-| [SDraftOriginalAlgorithm.js](file:///public/js/algorithms/SDraftOriginalAlgorithm.js) | Original S-Draft | Not registered |
-| [LegacyRoundRobinAlgorithm.js](file:///public/js/algorithms/LegacyRoundRobinAlgorithm.js) | Simple Round Robin | Not registered |
+| [MJRPBalancedCascadeV0Algorithm.js](file:///public/js/algorithms/MJRPBalancedCascadeV0Algorithm.js) | Legacy Hybrid | Not registered *(removed in F65: `MJRPBalancedCascadeV0Algorithm.js`)* |
+| [SDraftBalancedAlgorithm.js](file:///public/js/algorithms/SDraftBalancedAlgorithm.js) | S-Draft Variant | Not registered *(removed in F65: `SDraftBalancedAlgorithm.js`)* |
+| [SDraftOriginalAlgorithm.js](file:///public/js/algorithms/SDraftOriginalAlgorithm.js) | Original S-Draft | Not registered *(removed in F65: `SDraftOriginalAlgorithm.js`)* |
+| [LegacyRoundRobinAlgorithm.js](file:///public/js/algorithms/LegacyRoundRobinAlgorithm.js) | Simple Round Robin | Not registered *(removed in F65: `LegacyRoundRobinAlgorithm.js`)* |
 | `Top3*Algorithm.js`, `Top5*Algorithm.js` | Fixed-N predecessors of the Top N recipes | Not registered |
 
 #### Strategy Pattern
@@ -228,8 +230,8 @@ Usage: `createAlgorithm('id').generate(...)` (or `getAlgorithm('id')` for the cl
 |-------|---------|--------|
 | [Album.js](file:///public/js/models/Album.js) | Album entity with tracks | ✅ |
 | [Track.js](file:///public/js/models/Track.js) | Track entity with ranking data | ✅ |
-| [Playlist.js](file:///public/js/models/Playlist.js) | Playlist entity | ✅ |
-| [Series.js](file:///public/js/models/Series.js) | Album series entity | ✅ |
+| [Playlist.js](file:///public/js/models/Playlist.js) | Playlist entity | ✅ *(removed in F65: `Playlist.js`)* |
+| [Series.js](file:///public/js/models/Series.js) | Album series entity | ✅ *(removed in F65: `Series.js`)* |
 | `askedAlbum.js` (in place of `AlbumIdentity.js`, F55), `albumFacts.js`, `albumLoadState.js`, `albumQuery.js`, `bulkPaste.js` (F63), `cloneAlbum.js`, `ownRanking.js`, `paging.js`, `seriesFilter.js`, `text.js` | Pure rules of the album loading, paging, filters and own ranking; see `08_Frontend_Models.md` | ✅ |
 
 **Album Model**:
@@ -250,8 +252,8 @@ Usage: `createAlgorithm('id').generate(...)` (or `getAlgorithm('id')` for the cl
 | [InventoryRepository.js](file:///public/js/repositories/InventoryRepository.js) | Inventory Collection | ✅ |
 | [SeriesRepository.js](file:///public/js/repositories/SeriesRepository.js) | Series Collection | ✅ |
 | [PlaylistRepository.js](file:///public/js/repositories/PlaylistRepository.js) | Playlist Subcollection | ✅ |
-| [AlbumRepository.js](file:///public/js/repositories/AlbumRepository.js) | Album Subcollection | ✅ |
-| [SharedAlbumRepository.js](file:///public/js/repositories/SharedAlbumRepository.js) | Root collection `albums`: one document per album, shared by every account; written only by "Refetch Metadata" | ✅ |
+| [AlbumRepository.js](file:///public/js/repositories/AlbumRepository.js) | Album Subcollection | ✅ *(removed in F65: `AlbumRepository.js`)* |
+| [SharedAlbumRepository.js](file:///public/js/repositories/SharedAlbumRepository.js) | Root collection `albums`: one document per album, shared by every account; written only by "Refetch Metadata" | ✅ *(removed in F65: `SharedAlbumRepository.js`)* |
 | [UserRankingRepository.js](file:///public/js/repositories/UserRankingRepository.js) | The person's own rankings | ✅ |
 | [SpotifyEnrichmentRepository.js](file:///public/js/repositories/SpotifyEnrichmentRepository.js) | Spotify enrichment data | ✅ |
 

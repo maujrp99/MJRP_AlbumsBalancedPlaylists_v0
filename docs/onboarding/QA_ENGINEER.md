@@ -179,7 +179,7 @@ npm run test:coverage
 ### Domain Model Pattern
 - **Classes**: `Album`, `Track`, `Playlist`, `Series` (ES6 classes)
 - **Why**: Prevents data anemia, guarantees context (artist/album on tracks)
-- **Hydration**: Centralized in `client.js` and `MigrationUtility.js`
+- **Hydration**: Centralized in `client.js` (`MigrationUtility.js` was removed in F65, with the migration screen)
 
 ---
 

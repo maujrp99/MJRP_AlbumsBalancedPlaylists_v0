@@ -7,12 +7,12 @@
 
 ### 1.1 `TopNav.js`
 **Role**: Main Application Controller & App Shell.
-**Dependencies**: `UserStore`, `AlbumSeriesStore`, `AuthService`; the `MigrationUtility` is given by `app.js` (`new TopNav({ migrationUtility })`, since F58: the menu imports no database, cache or repository).
+**Dependencies**: `UserStore`, `navigation/SeriesDropdown.js`, `navigation/AuthNav.js`, `Icons.js`. It imports no database, cache or repository (F58) and is built with no argument (`new TopNav()`): the `MigrationUtility` it used to receive left in F65, with the migration screen.
 
 *   **Logic Trace**:
     1.  **Auth Subscription**: Subscribes to `UserStore` to toggle between "Guest", "User", and "Admin" views.
     2.  **Mobile Drawer**: Manages a hidden sliding drawer (`translate-x-full`) for mobile viewports (< 768px).
-    3.  **Data Sync**: Checks `MigrationUtility.needsMigration()` to optionally show the "Data Sync" button.
+    3.  **Data Sync**: removed in F65. The button was written and never drawn (UAT-11); `needsMigration`, `renderDataSyncLink` and `handleDataSync` are gone.
     4.  **Routing**: Uses `data-link` delegation for client-side navigation via `Router.js`.
     5.  **Account menu** (F63, `navigation/AuthNav.js`): the avatar is a button (`#userMenuBtn`, `aria-haspopup`, `aria-expanded`) that opens and closes the menu (`#userMenu`) on a click or a tap; a click outside and Escape close it (Escape gives the focus back to the avatar), and Arrow Down on the avatar opens it on the first item. It no longer opens by the mouse being over it. The listeners on the page are attached once per `AuthNav`, however many times the nav is drawn.
     6.  **"Soon" items** (F63, `navigation/SeriesDropdown.js`): By Artist, By Genre and By Track are shown in the "Music Series" menu and are not links.
@@ -37,6 +37,8 @@
 ## 2. Interactive Widgets
 
 ### 2.1 `Autocomplete.js`
+
+> **F65 (2026-11-19):** `Autocomplete.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 **Role**: Generic Typeahead Search.
 **Props**: `{ loader, onSelect, placeholder }`
 **Logic**:
@@ -82,6 +84,8 @@
 *   **Z-Index**: `z-[9999]` ensures visibility over all modals and overlays.
 
 ### 3.3 `InlineProgress.js`
+
+> **F65 (2026-11-19):** `InlineProgress.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 **Role**: In-flow Progress Bar for Batch Operations.
 **Usage**: Used by `PlaylistsView` during generation.
 **Logic**: Updateable `width` + `label`.
@@ -128,6 +132,8 @@ stateDiagram-v2
 *   **Comparison**: Embeds `TracksRankingComparison` component to show discrepancies between "Original Album Order" and "Acclaim Order".
 
 ### 4.4 `EditAlbumModal.js`
+
+> **F65 (2026-11-19):** `EditAlbumModal.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 **Purpose**: Metadata Editor.
 **Features**: Validates required fields (Title, Artist). Updates via callback.
 

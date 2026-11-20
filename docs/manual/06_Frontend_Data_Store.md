@@ -20,7 +20,7 @@ The state of the saved playlists list: the status of the list (`idle`, `loading`
 *   Since v4.0 it is filled by projection from `AlbumLoadStore` (`setAlbumsBySeries`).
 *   `ALL_SERIES_VIEW` holds the albums of every series on screen; each series id holds its own.
 *   Since F56 (on the branch `fix/f56-screens-load-through-the-service`, not yet published) the projection is its only writer of albums: `addAlbumToSeries`, `addAlbum`, `removeAlbum`, `clearAlbumSeries` and `removeAlbumsBySeriesIdFromContext` were removed, with the "surgical injection" of Sprint 21.5. Editing or deleting a series changes the series, and the load reconciles. It also holds the series another screen asked for (the blend, the playlist edit), under the series id.
-*   It is a pure state container (v4.0, F48): it imports no Firestore. The write of "Refetch Metadata" into the shared `albums` collection moved to `repositories/SharedAlbumRepository.js`; `saveToFirestore`, `loadFromFirestore` and `updateAlbum(db, album)` no longer exist.
+*   It is a pure state container (v4.0, F48): it imports no Firestore. The write of "Refetch Metadata" into the shared `albums` collection moved to `repositories/SharedAlbumRepository.js`; `saveToFirestore`, `loadFromFirestore` and `updateAlbum(db, album)` no longer exist. *(removed in F65: `SharedAlbumRepository.js`)*
 
 ### 1.2 Pure State Containers (Sprint 19)
 **Status**: `[REFACTORED]`
