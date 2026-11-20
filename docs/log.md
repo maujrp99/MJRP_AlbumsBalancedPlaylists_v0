@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:39] session — F76 polimento: P2 baratos de Home e Playlists (N20, N15, N16 em parte)
+**Branch:** feat/f76-mobile-polish-home-playlists
+No celular: mover uma faixa pela folha mostra «Moved … to number 2 · Undo» e acende a linha por 1,2 s (sem transição com menos movimento); o filtro «?» da Home lê «Other»; na janela Edit Series os avisos de espera/vazio/falha passam a #a0a0a8 (eram 2,43:1).
+Fora da lista estrita: views/playlists/phonePlaylistActions.js (as ações da tela de Playlists). Testes 3047 verdes, lint e build verdes.
+
 ## [2026-11-20 03:36] session — F76 polimento: títulos de linha em Syne em Playlists e na folha da Home (N4, N15 em parte)
 **Branch:** feat/f76-mobile-polish-home-playlists
 No celular, o título da faixa (15 px, 600, até 2 linhas, como as linhas da janela de ranking) e o nome nas fichas de New Playlists em Syne; na folha de escolhidos da Home, artista, campo, aviso e dica na fonte de texto. Os «⋯» de New Playlists passam de «Options for…» para «Actions for…», o verbo de Albums e Inventário.

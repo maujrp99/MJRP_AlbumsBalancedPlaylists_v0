@@ -148,6 +148,19 @@ describe('what a tap does on the phone', () => {
         expect(service.moveTrack).toHaveBeenLastCalledWith(0, 1, 1, 1) // to the end of the other playlist
     })
 
+    it('a move says where the track went, with Undo (recheck N20)', () => {
+        tap('[data-phone-action="track-options"][data-track-index="0"]')
+        sheetAction('Move down').click()
+        expect(document.querySelector('.phone-undo').textContent).toContain('Moved "21st Century Schizoid Man" to number 2')
+
+        tap('[data-phone-action="track-options"][data-track-index="1"]')
+        sheetAction('3 · Closers').click()
+        const notice = document.querySelector('.phone-undo')
+        expect(notice.textContent).toContain('Moved "I Talk to the Wind" to playlist 3')
+        notice.querySelector('button').click()
+        expect(controller.undo).toHaveBeenCalledTimes(1)
+    })
+
     it('removing happens at once and offers Undo, which takes it back', () => {
         tap('[data-phone-action="track-options"][data-track-index="2"]')
         sheetAction('Remove from this playlist').click()

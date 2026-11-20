@@ -249,6 +249,11 @@
     opacity: 0.8;
   }
 
+  /* «?» says nothing: on the phone the filter of albums of no known type reads «Other» (N15) */
+  #home-toolbar [data-filter="uncategorized"] .filter-btn-text {
+    display: none;
+  }
+
   /* ── 5. The grid of covers, and the answer on the album tapped ───────────────────────────── */
   #discographyGridContainer {
     padding: 0;
@@ -696,6 +701,12 @@
     overflow: visible;
     padding-right: 0;
     gap: 16px 12px;
+  }
+
+  /* the waiting, empty and failed messages read on the dark: 2.43:1 before (recheck N16) */
+  #edit-series-modal [data-scan-panel],
+  #edit-series-modal [data-scan-panel] p {
+    color: #a0a0a8;
   }
 
   #edit-series-modal .app-modal__footer .btn {

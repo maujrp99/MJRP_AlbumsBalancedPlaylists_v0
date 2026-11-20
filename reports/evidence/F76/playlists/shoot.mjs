@@ -34,6 +34,8 @@ const CASES = {
     'delete-confirm': { query: '?screen=generated', phoneOnly: true, run: [tap('[data-phone-action="playlist-options"]'), tapText('Delete this playlist')] },
     // F76 polish (recheck N3): the closed reconfigure row left the page; the «⋯» of the playlist opens it
     reconfigure: { query: '?screen=generated', phoneOnly: true, run: [tap('[data-phone-action="playlist-options"]'), tapText('Reconfigure and regenerate')] },
+    // F76 polish (recheck N20): a move by the sheet says where the track went and lights it
+    moved: { query: '?screen=generated', phoneOnly: true, run: [tap('.phone-track [data-phone-action="track-options"]'), "[...document.querySelectorAll('.sheet .phone-sheet-action')].find(b => b.textContent.trim() === 'Move down').click()"] },
     // F76 polish (recheck N5): the saved playlists' sheets
     'saved-filters': { query: '?screen=saved', phoneOnly: true, run: [tap('.filters-phone-button')] },
     'saved-series-sheet': { query: '?screen=saved', phoneOnly: true, run: [tap('.saved-phone-series .phone-more')] },

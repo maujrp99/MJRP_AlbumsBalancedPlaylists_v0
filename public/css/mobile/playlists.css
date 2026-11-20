@@ -373,6 +373,13 @@
     padding: 6px 0;
     border-bottom: 1px solid var(--pl-line);
     background: var(--pl-base);
+    transition: background-color 600ms ease-out;
+  }
+
+  /* where a track moved by the sheet landed, lit for a moment (recheck N20) */
+  .phone-track.is-moved {
+    background: #26262b;
+    transition: none;
   }
 
   .phone-track__pos {
@@ -842,6 +849,7 @@
     }
 
     .phone-pl-chip,
+    .phone-track,
     .saved-phone__chevron {
       transition: none;
     }

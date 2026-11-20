@@ -154,6 +154,9 @@ export class HomeView extends BaseView {
         // The filter buttons of the album picker: one definition for every screen (F57)
         const filterBtns = PICKER_FILTERS.map(filter =>
             createFilterButton(filter, { id: FILTER_BUTTON_IDS[filter.key], active: defaultFilters()[filter.key] }));
+        // The phone says «Other» where the computer shows «?» (F76 polish, recheck N15)
+        const unknownType = filterBtns.find(button => button.dataset.filter === 'uncategorized');
+        unknownType?.insertBefore(SafeDOM.span({ className: 'filter-btn-other md:hidden' }, 'Other'), unknownType.querySelector('.filter-btn-count'));
 
         const toolbar = SafeDOM.div({ id: 'home-toolbar', className: 'min-h-14 border-b border-white/5 bg-black/40 backdrop-blur-md flex flex-col md:flex-row md:items-center md:justify-between px-4 py-3 md:px-6 shrink-0 z-20 gap-2' }, [
             SafeDOM.div({ className: 'flex items-center gap-3 shrink-0' }, [
