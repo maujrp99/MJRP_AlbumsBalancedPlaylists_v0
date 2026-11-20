@@ -4,31 +4,26 @@
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Architecture Approach
-<!-- How it fits arch.md; components affected; what this plan refines in arch.md and data-model.md. -->
-«a escrever: como encaixa no arch.md; componentes afetados; o que refina no arch.md e no data-model.md»
+O filtro das séries (`models/seriesFilter.js`) já responde quais séries passam e com quais álbuns. A conta e a frase ficam num modelo puro novo, `models/seriesCounts.js`; nada mais decide esse número.
 
 ## Technical Design
-<!-- Data flow first · components/modules (what each receives, renders or returns, emits) · API/interface
-     changes · explicit file paths. Each component names the REQ-xx it addresses. -->
-«a escrever: fluxo de dados, componentes/módulos (o que cada um recebe e devolve), interfaces, caminhos de arquivo — cada componente nomeia o REQ-xx»
+- `models/seriesCounts.js`: `countAlbums(matching)` soma os álbuns das séries que passam; `describeCounts({ single, series, totalSeries, albums })` escreve a linha, com singular e plural.
+- `SeriesController.getPageView` devolve `paging.albums` ao lado dos números de página que já devolvia.
+- `SeriesView.showCounts` entrega a frase ao cabeçalho, que só é redesenhado quando a frase muda.
+- `SeriesHeader` mostra a linha sob o título (`data-series-counts`).
 
 ## Dependencies
-<!-- New dependencies with their justification — aligned with constitution.md and PRINCIPLES.md (Constitution
-     Check); contradicting either needs a recorded decision first (mjrp-recording-decisions). -->
-«a escrever: dependências novas com a justificativa, ou "Nenhuma."»
+Nenhuma nova.
 
 ## Documents Consulted
-<!-- arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, the NFR nodes. -->
-«a escrever: arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, os NFR»
+- `docs/specs/behavior.md` (estados `^library-paging` e vizinhos)
+- `public/js/models/seriesFilter.js`
 
 ## Risks & Considerations
-«a escrever: riscos e o que mais pesa, ou "Nenhum conhecido."»
+- O número é o dos álbuns pedidos nas séries que passam, em todas as páginas: o mesmo álbum em duas séries conta duas vezes. Está dito na spec como pergunta aberta para o MJRP.
+- `SeriesView.updateAlbums` está na lista das funções acima do limite de complexidade: a mudança não lhe acrescentou caminho (a conta foi para um método próprio).
 
 ## Test plan
-> Derivado dos REQ do `spec.md` e dos critérios dos requisitos importados · «a escrever: data e hora de Brasília»
-
-| REQ | Caso de teste | Critério / estado | Camada | Automatizado? |
-|---|---|---|---|---|
-| REQ-01 | «a escrever: o caso de teste que prova o REQ» | «a escrever: critério do nó ou estado observável» | «a escrever: camada» | «a escrever: sim ou não» |
-
-Bordas fora dos critérios (achados para a `mjrp-writing-reqs` se mudam o comportamento): «a escrever: ou "Nenhuma."»
+- `test/models/seriesCounts.test.js`: a soma e as formas da frase.
+- `test/components/series/SeriesHeader.counts.test.js`: a linha aparece, some quando não há o que dizer e acompanha um número novo.
+- Navegador, conta do MJRP: todas as séries, uma busca, uma série só (`reports/evidence/F72/2026-11-20-albums-count-proof.md`).

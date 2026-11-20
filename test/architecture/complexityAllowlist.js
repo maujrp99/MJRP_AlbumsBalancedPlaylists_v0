@@ -37,7 +37,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'components/ui/AlbumCardRenderer.js:arrow function': 17, // no feature yet
     'components/ui/AlbumCardRenderer.js:arrow function#2': 18, // no feature yet
     'components/ui/Card.js:renderRankingBadge': 17, // no feature yet
-    'components/ui/Pager.js:render': 12, // no feature yet
     'components/ui/TrackRow.js:render': 11, // no feature yet
     'components/ui/TrackRow.js:buildBadges': 14, // no feature yet
     'controllers/SeriesController.js:arrow function': 20, // no feature yet
@@ -63,7 +62,7 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'utils/retry.js:retryWithBackoff': 14, // no feature yet
     'views/BlendingMenuView.js:render': 12, // F62 holds this code (blend, playlists, export, Spotify)
     'views/BlendingMenuView.js:renderGenerateButton': 13, // F62 holds this code (blend, playlists, export, Spotify)
-    'views/SeriesView.js:updateAlbums': 19, // no feature yet
+    'views/SeriesView.js:updateAlbums': 16, // no feature yet
     'views/albums/AlbumsScopedRenderer.js:arrow function': 12, // no feature yet
     'workers/search.worker.js:function': 11 // F57 holds this code (album search, classification, series edit)
 })
