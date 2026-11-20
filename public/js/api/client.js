@@ -1,4 +1,5 @@
 import { serverFetch } from './serverFetch.js'
+import { mayUsePaidRoutes } from './paidRoutes.js'
 import { Album } from '../models/Album.js'
 import { askedAlbum, compareOnlyAnswer } from '../models/askedAlbum.js'
 import { plainAlbumQuery } from '../models/albumQuery.js'
@@ -26,6 +27,12 @@ const API_BASE = window.__api_base || '/api'
 // place, api/serverResult.js. Exported from here too, for the callers that already import it.
 export { ApiError }
 
+/** The server takes the query as text: "Artist - Album". */
+function queryText(query) {
+    if (typeof query !== 'object' || query === null) return query
+    return `${query.artist || ''} - ${query.title || query.album || ''}`
+}
+
 export class APIClient {
     constructor() {
         this.baseUrl = API_BASE
@@ -34,6 +41,7 @@ export class APIClient {
         this.retryDelayCap = 8000
         this.serverTimeoutMs = 90000 // POST /generate runs an AI model: slow, but not endless
         this.random = Math.random
+        this.mayUsePaidRoutes = mayUsePaidRoutes // false for a visitor: POST /generate is a paid route (F70)
     }
 
     /**
@@ -93,18 +101,20 @@ export class APIClient {
      * "no answer, or a 5xx". It is never decided by the status alone: billing, quota and a refused
      * request are not asked again whatever status they come with. A call that passed the deadline
      * is not asked again either, because the paid work may still be running.
+     *
+     * A visitor may not use the paid routes (api/paidRoutes.js): nothing is asked, and for the
+     * visitor this source has no album (F70).
      * @param {string|Object} query - "Artist - Album" or { artist, title }
      * @param {number} [retries] - new attempts after the first call
-     * @returns {Promise<Album|null>} null when the server answered that it has no such album
+     * @returns {Promise<Album|null>} null when the server answered that it has no such album, or
+     *          when it was not asked because the person is a visitor
      * @throws {ApiError} the real failure, with `status` when the server answered
      * @private
      */
     async _fetchAlbumFromAPI(query, retries = this.defaultRetries) {
-        // The legacy backend takes the query as text
-        const queryStr = (typeof query === 'object' && query !== null)
-            ? `${query.artist || ''} - ${query.title || query.album || ''}`
-            : query
+        if (!this.mayUsePaidRoutes()) return null
 
+        const queryStr = queryText(query)
         const result = await retryWithBackoff(() => this._postGenerate(queryStr), {
             retries,
             baseMs: this.retryDelay,
@@ -115,7 +125,17 @@ export class APIClient {
             onRetry: ({ attempt, waitMs, error }) =>
                 console.warn(`[APIClient] "${queryStr}": ${error.message}. New attempt ${attempt} of ${retries} in ${waitMs} ms`)
         })
+        return this._albumOfAnswer(query, result)
+    }
 
+    /**
+     * The album of an answer of POST /generate, or null when the answer is not the album asked for.
+     * @param {string|Object} query - what was asked
+     * @param {Object} result - a result that is not a failure (api/serverResult.js)
+     * @returns {Album|null}
+     * @private
+     */
+    _albumOfAnswer(query, result) {
         if (result.kind === ResultKind.NOT_FOUND) return null
         // The server before F52 answered the album itself, or { data: album }
         const data = result.kind === ResultKind.LEGACY ? (result.body?.data || result.body) : result.data

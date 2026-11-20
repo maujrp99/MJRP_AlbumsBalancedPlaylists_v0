@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:09] session — F70: o visitante não pede rota paga (UAT-208)
+
+Confirmado no código: `services/album-search/AlbumSearchService.js` pedia `POST /api/ai/studio-albums` para qualquer pessoa quando havia álbum eletrônico (`scanArtist`), e `api/client.js` `_fetchAlbumFromAPI` pedia `POST /api/generate`; o servidor recusa o convidado com 403 (`server/lib/auth/requireUser.js`). Na carga de álbuns o 403 não segura a carga (só o 401 segura, `api/serverResult.js` `holdOf`): o álbum já terminava como «não achado», depois de um pedido recusado.
+
+Feito: `public/js/api/paidRoutes.js` é o lugar único que diz quem pode usar as rotas pagas (`mayUsePaidRoutes()`, lido do mesmo login que o `serverFetch` envia); os dois chamadores perguntam antes de chamar. Visitante: a busca não pede a lista da IA e devolve `reclassified: null` (o status mostra só «→ artista»); a segunda fonte não é pedida e o álbum termina como não achado no catálogo, com o aviso que já existe. Sem login conhecido, a chamada segue e o 401 do servidor segura a carga, como antes. `_fetchAlbumFromAPI` foi dividida (complexidade 13 para menos de 10; saiu da lista de exceções).
+
+Testes: `test/api/paidRoutes.test.js` (a regra, os dois chamadores sem nenhum pedido de rede, e dois testes de arquitetura: quem nomeia uma rota paga importa `paidRoutes.js`; ninguém mais lê `isAnonymous` para decidir). Decidido pelo agente — revisável: com `PAID_ROUTES_ALLOW_ANONYMOUS=true` no servidor (não é o caso da produção), o app continua sem pedir para o visitante.
+
 ## [2026-11-19 21:53] decision — F70 criada: defeitos pequenos achados no caminho (decidido pelo agente — revisável)
 
 Feature de via rápida, `^REL-40`, conserta as UAT-208 (visitante pede rota paga), UAT-209 (preço do inventário sem moeda), UAT-210 (o app ignora o desfecho das notas na busca por IA), abertas agora, e a UAT-63 (capa sem substituto). Criada na `main` antes de qualquer ramo. O resto das UAT-18, 19 e 20 segue nas features donas (F58, F64), numa segunda fatia.
