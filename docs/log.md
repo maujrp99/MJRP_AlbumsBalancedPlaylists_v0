@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 21:51] session — F65 e o conserto da aba antiga (F64, UAT-207) em produção
+
+Site publicado duas vezes da `main`: `7be0701` (F65) e `9424320` (UAT-207; pacote `main-C1NCAuzH.js`). Servidor publicado com a F65 (revisão `mjrp-proxy-00205-mg4`; volta `mjrp-proxy-00204-pt4`): `POST /api/playlists` responde 404. Prova da UAT-207: no navegador local, um arquivo de tela inexistente fez a página recarregar uma vez; na segunda vez, dentro do minuto de guarda, apareceu «This screen could not be loaded» com o botão «Load the new version», sem laço. Em produção, `/`, `/home`, `/index.html` e `/saved-playlists` respondem `cache-control: no-cache`; os arquivos de `/assets` seguem com `max-age=3600`. UAT-207 em `fixed`.
+
 ## [2026-11-19 21:49] session — UAT-207 aberta e consertada: aba aberta antes de uma publicação (F64)
 
 Na conferência de produção da F65, uma aba com a versão anterior mostrou «View Error» ao abrir as playlists guardadas: os arquivos das telas carregadas sob demanda mudam de nome a cada publicação, e a página era guardada pelo navegador por uma hora. Conserto em dois lugares: o roteador reconhece o arquivo que sumiu e carrega a versão nova uma vez (`utils/staleBuild.js`, com guarda contra repetição); o `firebase.json` passa a mandar `Cache-Control: no-cache` para a página. Testes primeiro: `test/utils/staleBuild.test.js`, `test/router.staleBuild.test.js`, `test/architecture/hostingServesFreshPage.test.js`. Entra na F64 (um caminho só para publicar).
