@@ -229,20 +229,13 @@
     inset: 6px var(--phone-gutter-right) 6px var(--phone-gutter-left);
     z-index: -1;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--phone-seg-track);
+    box-shadow: inset 0 0 0 1px var(--phone-seg-line);
   }
 
+  /* The segments are the phone's segmented control (mobile.css § 11, recheck N9): the source on
+     is the raised light surface, as everywhere; orange stays for the main action */
   .tracks-tabs__segment {
-    min-width: 0;
-    min-height: var(--phone-target);
-    padding: 0 8px;
-    border-radius: 10px;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.78);
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 20px;
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     transition: background-color 160ms ease-out, color 160ms ease-out;
@@ -250,15 +243,6 @@
 
   .tracks-tabs__segment:active {
     background: rgba(255, 255, 255, 0.12);
-  }
-
-  /* The source on: the one orange of the window, drawn 3 px inside a target that stays 44 px */
-  .tracks-tabs__segment.is-on {
-    padding: 3px;
-    border-radius: 13px;
-    background: var(--phone-accent);
-    background-clip: content-box;
-    color: #0a0a0c;
   }
 
   /* ── 5. A track: the title alone on its line, the references and the duration below ─────── */
@@ -295,6 +279,17 @@
     flex-direction: column;
     gap: 2px;
     min-width: 0;
+  }
+
+  /* The two families (recheck N4): the text face in the body of the window, Syne for a track's title */
+  .album-window .modal-content,
+  .album-window .modal-content button,
+  .album-window .modal-content input {
+    font-family: var(--phone-font-text);
+  }
+
+  .album-window .modal-content .tracks-tabs__title {
+    font-family: var(--phone-font-title);
   }
 
   .tracks-tabs__title {

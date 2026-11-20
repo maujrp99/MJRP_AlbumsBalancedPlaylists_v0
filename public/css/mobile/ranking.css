@@ -102,6 +102,20 @@
     padding: 16px 0 12px;
   }
 
+  /* The two families (recheck N4): the text face, Syne for the album's and the tracks' titles */
+  .rank-phone,
+  .rank-phone button,
+  #rankDiscardSheet .sheet__body,
+  #rankDiscardSheet .sheet__body button {
+    font-family: var(--phone-font-text);
+  }
+
+  .rank-phone .rank-phone__album,
+  .rank-phone .rank-row__title,
+  .rank-phone .rank-phone__title {
+    font-family: var(--phone-font-title);
+  }
+
   .rank-phone__album {
     margin: 0;
     color: #fff;

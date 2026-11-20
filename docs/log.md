@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:35] session — F76 polimento: um controle segmentado e duas famílias de fonte no celular (N9, N4)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+Um só segmentado (mobile.css § 11, variáveis --phone-seg-*): escolhido na superfície clara elevada, nunca laranja; aplicado em Grid/List e Pages/Scroll (Albums), Original/BEA/Spotify (janela do álbum) e a moeda (Inventário). Fonte: título de linha em Syne (--phone-font-title), o resto na fonte de texto (--phone-font-text) em Albums, Inventário, janela do álbum e ranking. As duas regras escritas em design-system.md § Celular.
+3045 testes verdes, eslint e build verdes; Albums 1280x800 idêntico ao da passada de construção.
+
 ## [2026-11-20 03:31] session — F76 polimento: a janela do álbum do Inventário dobra o valor e as lojas (N7)
 **Branch:** feat/f76-mobile-polish-inventory-windows
 No celular, «Estimated value» vira uma linha (valor, origem, chevron) com «Data provided by Discogs.» ao lado, que abre a seção inteira num toque; «Where to buy» vira uma linha de três lojas de 44 px. As faixas começam em ~y=520 a 393x852 (antes 965). Os .btn-secondary da janela perdem o backdrop-filter próprio no celular (N7b, defensivo: não reproduzido no Chrome).

@@ -42,7 +42,7 @@ export class TracksTabs {
             const on = this.activeTab === order.id
             return SafeDOM.button({
                 type: 'button',
-                className: `tracks-tabs__segment tab-btn${on ? ' is-on' : ''}`,
+                className: `tracks-tabs__segment phone-segmented__option tab-btn${on ? ' is-on' : ''}`, // css/mobile.css § 11
                 dataset: { tab: order.id },
                 'aria-pressed': String(on),
                 'aria-label': order.name,
