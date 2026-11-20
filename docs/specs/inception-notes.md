@@ -71,3 +71,10 @@
 - **Medido a 1440 px:** nas três fileiras da amostra, as seções começam na mesma altura em todos os cartões (322, 387 e 423 px do topo do cartão), todos os cartões têm 521 px, e nenhum texto foi cortado.
 - **Não feito:** a v5 em 390 px não foi conferida.
 
+## [2026-11-20 01:17] F75 · v5.1: o cartão como superfície, para comparar com a v5
+
+- **Pedido do MJRP:** «gera uma v5.1, com a superficie de fundo (C) pra eu ver qual prefiro».
+- **v5.1:** `design/inception/inventory-value-v5.1.html`: a v5 com o cartão de fundo próprio, borda bem fraca e a capa indo até as bordas do cartão. O conteúdo, o padrão das seções e os textos são os da v5. Medido a 1440 px: seções alinhadas entre vizinhos, cartões de 533 px (12 px mais altos que na v5), nenhum texto cortado.
+- **No comparador:** a v5.1 e a v5 aparecem lado a lado, as duas «para comparar». O protótipo que segue é o que ele escolher.
+- **Não feito:** 390 px não foi conferido em nenhuma das duas.
+

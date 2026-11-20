@@ -1,6 +1,6 @@
 # Info-arch — Album Blender V0
 
-> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.html
+> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.1.html
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -121,7 +121,7 @@ Nenhum ainda. A rodada 1 da F75 é de exploração.
 
 ## Inventário do protótipo
 
-Fonte: `design/inception/inventory-value-v5.html` (a tela real do inventário, capturada como o app a desenha, com o que a F75 propõe; as versões anteriores ficam para comparar) · wireframes: `design/wireframes/inventory-value-v5-inventory.png`, `design/wireframes/inventory-value-v5-album-window.png` · prévia de como o cartão se segura: `design/proposals/inventory-card-border-proposal.html` · prévia do cartão em três níveis: `design/proposals/inventory-card-proposal.html` · comparador: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck (Artifact do Claude, privado; a cópia local é `design/proposals/inventory/comparator.html`).
+Fonte: `design/inception/inventory-value-v5.1.html` e `design/inception/inventory-value-v5.html`, as duas à espera da escolha do MJRP (a v5.1 é a v5 com o cartão como superfície; o conteúdo é o mesmo) (a tela real do inventário, capturada como o app a desenha, com o que a F75 propõe; as versões anteriores ficam para comparar) · wireframes: `design/wireframes/inventory-value-v5.1-inventory.png`, `design/wireframes/inventory-value-v5.1-album-window.png` · prévia de como o cartão se segura: `design/proposals/inventory-card-border-proposal.html` · prévia do cartão em três níveis: `design/proposals/inventory-card-proposal.html` · comparador: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck (Artifact do Claude, privado; a cópia local é `design/proposals/inventory/comparator.html`).
 
 | ID | O que a tela mostra | Função do produto | Destino |
 |---|---|---|---|

@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:17] session — F75: v5.1 (o cartão como superfície) para o MJRP comparar com a v5 (a borda)
+
+- A pedido dele. `design/inception/inventory-value-v5.1.html`; no comparador as duas ficam lado a lado. A escolha é dele.
+- F74, segunda fatia: juntada na `main` (`4350564`); o servidor e o site estão em publicação.
+
 ## [2026-11-20 01:14] session — F74, segunda fatia: o título com as suas partes, e as faixas que seguiam sem nota
 
 **Branch:** fix/f74-track-titles-second-slice
