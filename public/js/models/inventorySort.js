@@ -6,7 +6,11 @@
  * order never depends on the order the items came from the database.
  *
  * An item with no value for the chosen field (an average never read, a date the store does not
- * have) comes LAST, whatever the direction: a missing number is not a low one.
+ * have, an album with no estimated value) comes LAST, whatever the direction: a missing number is
+ * not a low one.
+ *
+ * The estimated value of an album (F75) is not a field of the item: part of it lives in the
+ * browser (a reading of Discogs). Who sorts gives `valueOf(item)`, the amount in USD or null.
  */
 
 const text = (value) => String(value || '').toLowerCase()
@@ -29,6 +33,10 @@ const averageOf = (name) => (item) => (isNumber(item.averages?.[name]) ? item.av
  * text. A reader answers `null` for "no value": that item goes last.
  */
 const READERS = {
+    value: (item, context) => {
+        const amount = context?.valueOf?.(item)
+        return isNumber(amount) ? amount : null
+    },
     averageRating: averageOf('rating'),
     averagePopularity: averageOf('popularity'),
     addedToInventory: (item) => momentOf(item.addedToInventory ?? item.createdAt),
@@ -47,6 +55,8 @@ export const SORT_OPTIONS = Object.freeze([
     { value: 'averageRating_asc', field: 'averageRating', direction: 'asc', label: 'Avg Rating (↑)' },
     { value: 'averagePopularity', field: 'averagePopularity', direction: 'desc', label: 'Avg Pop (↓)' },
     { value: 'averagePopularity_asc', field: 'averagePopularity', direction: 'asc', label: 'Avg Pop (↑)' },
+    { value: 'value', field: 'value', direction: 'desc', label: 'Value (↓)' },
+    { value: 'value_asc', field: 'value', direction: 'asc', label: 'Value (↑)' },
     { value: 'addedToInventory', field: 'addedToInventory', direction: 'desc', label: 'Newest' },
     { value: 'addedToInventory_asc', field: 'addedToInventory', direction: 'asc', label: 'Oldest' }
 ])
@@ -80,10 +90,11 @@ function byValue(one, other, sign) {
  * Sorts the items in place and returns them.
  * @param {Array<Object>} items
  * @param {{field: string, direction: 'asc'|'desc'}} sorting
+ * @param {{ valueOf?: Function }} [context] - (item) => the estimated value in USD, or null: only the order by value reads it
  */
-export function sortInventory(items, sorting) {
+export function sortInventory(items, sorting, context = null) {
     const { field, direction } = sorting || {}
     const read = READERS[field] || ((item) => text(item[field]))
     const sign = direction === 'desc' ? -1 : 1
-    return items.sort((a, b) => byValue(read(a), read(b), sign) || byArtistAndTitle(a, b))
+    return items.sort((a, b) => byValue(read(a, context), read(b, context), sign) || byArtistAndTitle(a, b))
 }

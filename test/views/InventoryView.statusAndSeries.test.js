@@ -11,6 +11,8 @@ const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn(), info: vi.fn(
 const dialogService = vi.hoisted(() => ({ confirm: vi.fn() }))
 
 vi.mock('../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson }))
+// The values of the inventory (F75) are off in these tests: no Discogs, no rates
+vi.mock('../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../helpers/inventoryValuesStub.js')).valuesOff() }))
 vi.mock('../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
 vi.mock('../../public/js/components/Toast.js', () => ({ default: toast, toast }))
 vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService }))
@@ -56,23 +58,28 @@ describe('the inventory screen (F71)', () => {
         expect([...stats.querySelectorAll('[data-status-count]')].map(text)).toEqual(['✓ 1 Owned', '2 Not Owned', '♡ 1 Wishlist'])
     })
 
-    it('the status filter offers All, Owned, Not Owned and Wishlist, in this order', () => {
-        const options = [...document.querySelectorAll('#ownershipFilter option')]
+    it('the counts are the status filter: real buttons, none pressed at first, and no status selector in the filters row (F75, REQ-02)', () => {
+        const counts = [...document.querySelectorAll('[data-status-count]')]
 
-        expect(options.map(option => [option.value, option.textContent])).toEqual([
-            ['all', 'All'], ['owned', 'Owned'], ['not-owned', 'Not Owned'], ['wishlist', 'Wishlist']
-        ])
+        expect(counts.map(count => count.tagName)).toEqual(['BUTTON', 'BUTTON', 'BUTTON'])
+        expect(counts.map(count => count.getAttribute('aria-pressed'))).toEqual(['false', 'false', 'false'])
+        expect(counts.every(count => count.getAttribute('type') === 'button' && count.title === 'Show only these albums; press again to show all')).toBe(true)
+        expect(document.getElementById('ownershipFilter')).toBe(null)
     })
 
-    it('choosing "Not Owned" shows those items, keeps the choice, and keeps the three counts', () => {
-        const select = document.getElementById('ownershipFilter')
-        select.value = 'not-owned'
-        select.dispatchEvent(new Event('change', { bubbles: true }))
+    it('pressing "Not Owned" shows those items, says it is pressed, and keeps the three counts; pressing it again shows all', () => {
+        const press = () => document.querySelector('[data-status-count="not-owned"]').click()
+        const shown = () => [...document.querySelectorAll('.inventory-card-wrapper')].map(card => card.dataset.albumId).sort()
+        press()
 
-        expect([...document.querySelectorAll('.inventory-card-wrapper')].map(card => card.dataset.albumId).sort()).toEqual(['inv-ten', 'inv-vs'])
-        expect(document.getElementById('ownershipFilter').value).toBe('not-owned')
+        expect(shown()).toEqual(['inv-ten', 'inv-vs'])
+        expect([...document.querySelectorAll('[data-status-count]')].map(count => count.getAttribute('aria-pressed'))).toEqual(['false', 'true', 'false'])
         expect(text(document.querySelector('.stats-row'))).toContain('2 albums')
         expect([...document.querySelectorAll('[data-status-count]')].map(text)).toEqual(['✓ 1 Owned', '2 Not Owned', '♡ 1 Wishlist'])
+
+        press()
+        expect(shown()).toEqual(['inv-core', 'inv-purple', 'inv-ten', 'inv-vs'])
+        expect(document.querySelector('[data-status-count="not-owned"]').getAttribute('aria-pressed')).toBe('false')
     })
 
     it('the filter works with the search: "stone" and Wishlist is one album', () => {
@@ -174,8 +181,9 @@ describe('the inventory screen (F71)', () => {
             expect(text(made)).toContain('Pearl Jam')
             expect(text(made)).not.toContain('Unknown')
             expect(text(made)).not.toContain('$')
-            expect(text(card('inv-core'))).toContain('R$ 50.00')
-            expect(text(card('inv-core'))).toContain('CD')
+            // F75: the card says what the album is worth, not what was paid for it (that is in its window)
+            expect(text(card('inv-core'))).not.toContain('R$ 50.00')
+            expect(text(card('inv-core'))).toContain('In my collection · worth')
         })
 
         it('an item with no cover shows the stand-in, and its text is text', () => {

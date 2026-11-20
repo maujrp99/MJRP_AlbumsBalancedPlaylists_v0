@@ -9,16 +9,19 @@
  * - Filtering and Sorting Logic
  * - Handling User Actions (Update Price, Status, Delete)
  * - Computing Stats
+ * - What the albums are worth (F75): held by controllers/InventoryValues.js, which this file hosts
  * 
  * @module controllers/InventoryController
  */
 
 import { inventoryStore } from '../stores/inventory.js'
 import { inventoryService, readSeriesOfThePerson } from '../services/inventory/inventoryWiring.js'
+import { inventoryValues } from '../services/inventory/inventoryValueWiring.js'
+import { InventoryValues } from './InventoryValues.js'
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
 import toast from '../components/Toast.js'
 import { filterInventory, statusCountsFor } from '../models/inventoryFilter.js'
-import { InventoryStatus, ownedValueOf, statusChangeMessage, statusOf } from '../models/inventoryStatus.js'
+import { ALL_STATUSES, InventoryStatus, ownedValueOf, statusChangeMessage } from '../models/inventoryStatus.js'
 import { confirmationText, nothingToAddText, outcomeText, progressText } from '../models/inventoryFromSeries.js'
 import { sortInventory, sortingFor } from '../models/inventorySort.js'
 import { CONFIRM_FROM, ratingsOutcome, ratingsProgressText, ratingsQuestion } from '../models/inventoryRatings.js'
@@ -61,12 +64,30 @@ export class InventoryController {
             ratings: RATINGS_IDLE,
             sorting: sortingFor('artist'),
             viewMode: 'grid', // grid, list
-            viewCurrency: 'USD', // USD or BRL
+            // What the screen draws of the values (F75): the value of each item, the totals, the
+            // currency, the switch, the run of "Update values". Made by `this.values.view(...)`.
+            value: null,
             isLoading: false
         }
 
-        // Aborted when the screen closes: the ask for the ratings is dropped (F71, S-56)
+        // Aborted when the screen closes: the ask for the ratings and the run of the values are dropped
         this._leaving = new AbortController()
+
+        // What the albums are worth (F75): this controller hosts it and draws what it says
+        this.values = new InventoryValues({
+            service: inventoryValues,
+            inventory: inventoryService,
+            toast,
+            leaving: this._leaving.signal,
+            host: {
+                items: () => this.state.albums,
+                changed: () => this._valuesChanged(),
+                drawRun: () => this._drawValues(),
+                drawItem: (id) => this._drawValues(id)
+            }
+        })
+        this.valuesOpened = Promise.resolve()
+        this.state.value = this.values.view([], [])
     }
 
     /** The album of an item as the album load has it now, for the window of the item. */
@@ -88,6 +109,9 @@ export class InventoryController {
         // Ideally we should re-render when covers load. 
         optimizedAlbumLoader.load().catch(console.warn)
         await this.loadData()
+        // The switch of the Discogs values and the rates of the day are asked once, here; the screen
+        // is already drawn and is drawn again when they come. Nothing is read from Discogs at open.
+        this.valuesOpened = this.values.open().catch(error => console.warn('[InventoryController] The values could not be opened:', error))
     }
 
     /**
@@ -97,8 +121,8 @@ export class InventoryController {
         const savedView = localStorage.getItem('mjrp_inventory_view_mode')
         if (savedView) this.state.viewMode = savedView
 
-        const savedCurrency = localStorage.getItem('inventoryCurrency')
-        if (savedCurrency) this.state.viewCurrency = savedCurrency
+        // The currency of the values is kept where the inventory always kept it ('inventoryCurrency')
+        this.values.loadSettings(localStorage)
     }
 
     /**
@@ -133,19 +157,44 @@ export class InventoryController {
         this.state.albums = allAlbums
         this.applyFiltersAndSort()
         this.calculateStats()
+        // items that arrived after the screen opened: what the browser keeps of their values
+        this.values.syncReadings().catch(error => console.warn('[InventoryController] The readings kept in the browser could not be read:', error))
     }
 
     /**
      * Apply current filters and sorting to generate filteredAlbums
      */
     applyFiltersAndSort() {
+        // 0. The values (F75): of every item, and the totals of what the search and the format let
+        // through (like the three counts: choosing a status does not empty the other total)
+        const { search, format } = this.state.filters
+        this.state.value = this.values.view(this.state.albums, filterInventory(this.state.albums, { search, format }))
+
         // 1-3. Search, format and status (models/inventoryFilter.js)
         const result = filterInventory(this.state.albums, this.state.filters)
 
-        // 4. Sorting (models/inventorySort.js)
-        sortInventory(result, this.state.sorting)
+        // 4. Sorting (models/inventorySort.js); the order by value reads the value in USD
+        sortInventory(result, this.state.sorting, { valueOf: this.state.value.usdOf })
 
         this.state.filteredAlbums = result
+    }
+
+    /** The values changed (the switch, the rates, a reading, the currency): compute and draw again. */
+    _valuesChanged() {
+        this.applyFiltersAndSort()
+        this.calculateStats()
+        this.refresh()
+    }
+
+    /**
+     * A run of "Update values" moved: the button, the notice, the totals and, when one album
+     * changed, its card are drawn in place. The screen is not drawn whole for each album.
+     * @param {string} [itemId]
+     */
+    _drawValues(itemId = null) {
+        const { search, format } = this.state.filters
+        this.state.value = this.values.view(this.state.albums, filterInventory(this.state.albums, { search, format }))
+        this.view.showValues?.(this.state, itemId)
     }
 
     /**
@@ -153,9 +202,6 @@ export class InventoryController {
      */
     calculateStats() {
         const albums = this.state.filteredAlbums
-
-        // Only what is OWNED adds to the value: Wishlist and Not Owned are left out of it.
-        const ownedItems = albums.filter(a => statusOf(a) === InventoryStatus.OWNED)
 
         // The three counts are of the items that pass the search and the format: choosing a
         // status does not turn the other two into zero (models/inventoryFilter.js)
@@ -165,15 +211,6 @@ export class InventoryController {
         this.state.stats.ownedCount = counts[InventoryStatus.OWNED]
         this.state.stats.notOwnedCount = counts[InventoryStatus.NOT_OWNED]
         this.state.stats.wishlistCount = counts[InventoryStatus.WISHLIST]
-
-        // Sum Value separated by currency (Default to USD if missing)
-        this.state.stats.ownedValueUSD = ownedItems
-            .filter(a => !a.currency || a.currency === 'USD')
-            .reduce((sum, a) => sum + (Number(a.purchasePrice) || 0), 0)
-
-        this.state.stats.ownedValueBRL = ownedItems
-            .filter(a => a.currency === 'BRL')
-            .reduce((sum, a) => sum + (Number(a.purchasePrice) || 0), 0)
 
         // Counts by Format
         this.state.stats.vinylCount = albums.filter(a => (a.format?.toLowerCase() || '').includes('vinyl')).length
@@ -229,11 +266,58 @@ export class InventoryController {
         this.refresh()
     }
 
-    handleCurrencyChange() {
-        this.state.viewCurrency = this.state.viewCurrency === 'USD' ? 'BRL' : 'USD'
-        // Persist if needed (legacy used 'inventoryCurrency')
-        localStorage.setItem('inventoryCurrency', this.state.viewCurrency)
-        this.refresh()
+    /** The currency the values are shown in: USD, EUR, GBP or BRL (F75, REQ-08). */
+    handleCurrencyChoice(code) {
+        this.values.chooseCurrency(code, localStorage)
+    }
+
+    /**
+     * A count of the header was pressed (F75, REQ-02): show only the items of that status; pressed
+     * again, show all.
+     * @param {string} status - one of InventoryStatus
+     */
+    handleStatusCount(status) {
+        const chosen = this.state.filters.ownership === status ? ALL_STATUSES : status
+        this.handleFilterChange('ownership', chosen)
+    }
+
+    /** "Update values" and "Read them now" (F75, REQ-09). */
+    handleUpdateValues() {
+        return this.values.updateAll()
+    }
+
+    /** "Stop". */
+    handleStopValues() {
+        this.values.stop()
+    }
+
+    _item(itemId) {
+        return this.state.albums.find(item => item.id === itemId) || null
+    }
+
+    /** What the album window shows of the value of an item, as of now. */
+    valueViewOf(itemId) {
+        const item = this._item(itemId)
+        const known = this.state.value
+        return { value: item ? this.values.valueOf(item) : known.values.get(itemId), money: known.money, source: known.source, busy: known.run.busy }
+    }
+
+    /** The person wrote the value of an album in its window (F75, REQ-03). */
+    async handleWriteValue(itemId, text) {
+        const item = this._item(itemId)
+        return item ? this.values.write(item, text) : false
+    }
+
+    /** "Use the Discogs value instead": what the person wrote is taken away. */
+    async handleForgetValue(itemId) {
+        const item = this._item(itemId)
+        return item ? this.values.forget(item) : false
+    }
+
+    /** "Read the value now", "Read again", "Look again". */
+    async handleReadValue(itemId) {
+        const item = this._item(itemId)
+        if (item) await this.values.readOne(item)
     }
 
     /**

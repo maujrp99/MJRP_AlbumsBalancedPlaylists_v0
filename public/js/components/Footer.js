@@ -1,6 +1,20 @@
 const CLEARED_TEXT = 'Cache Cleared!'
 const FAILED_TEXT = 'Could not clear the cache'
 
+/**
+ * What the app has to say while it shows data of Discogs (F75, REQ-06; Discogs API Terms of Use):
+ * that it uses the API and is not affiliated. It is in the footer of every screen, hidden until
+ * the server says the Discogs values are on, and hidden again when they are turned off.
+ */
+export const DISCOGS_NOTICE_ID = 'discogsApiNotice'
+export const DISCOGS_NOTICE = "This application uses Discogs' API but is not affiliated with, sponsored or endorsed by Discogs. 'Discogs' is a trademark of Zink Media, LLC."
+
+/** Show or hide the sentence about the Discogs API. With no footer on the page, it does nothing. */
+export function showDiscogsNotice(on, doc = document) {
+    const notice = doc.getElementById(DISCOGS_NOTICE_ID)
+    if (notice) notice.hidden = !on
+}
+
 export class Footer {
     /**
      * @param {Object} deps
@@ -47,6 +61,7 @@ export class Footer {
           </div>
           
         </div>
+        <p id="${DISCOGS_NOTICE_ID}" class="text-xs text-muted text-center mt-6" hidden>${DISCOGS_NOTICE}</p>
       </footer>
     `
     }

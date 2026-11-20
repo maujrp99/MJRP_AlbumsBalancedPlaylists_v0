@@ -3,6 +3,17 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:08] session — F75, app: o valor do item, a fila de «Update values» e a tela do inventário no padrão da v5.1
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- Modelos puros: `models/inventoryValue.js` (o valor de um item: o que a pessoa escreveu, senão uma leitura do Discogs com menos de seis horas, senão nenhum, com o motivo; totais; moedas), `models/inventoryValueRun.js` (o que uma rodada lê, o que cada resposta vale, o que se diz no fim) e `models/buyLinks.js` (o único lugar que monta o endereço de uma loja; nenhum parâmetro de afiliado).
+- Serviço `services/inventory/InventoryValueService.js`: pergunta o interruptor e o câmbio ao abrir, guarda cada leitura só no cache do navegador por seis horas (uma chave por pessoa e item) e lê um álbum por vez. No Firestore entram só `value` (o que a pessoa escreveu, em USD) e `discogs` (qual edição foi usada). Nenhum preço do Discogs é gravado.
+- Tela: o cartão é uma superfície com cinco linhas iguais em todo cartão; as contagens do cabeçalho são botões que filtram e o seletor de status saiu da barra; a faixa sob o título tem os dois totais e as quatro moedas no lugar de «Total Owned»; «Where to buy» no cartão e na janela; «Sort by» ganhou «Value (↓)» e «Value (↑)»; a janela do álbum ganhou «Estimated value» e «Where to buy».
+- Decidido pelo agente — revisável: (1) abrir o inventário não lê nada do Discogs, só conta quantos álbuns esperam e oferece «Read them now»; (2) o preço pago (`purchasePrice`) saiu do cartão e fica na janela do álbum como «Paid:», porque as cinco linhas são do valor estimado; (3) «Sell» e «Trade» aparecem desligados e «Where to buy» do cartão do que é seu é um botão com cara de link; (4) no cartão, a palavra «Discogs» da origem é o link para a página da edição, para cumprir o aviso exigido pelos termos; (5) «Pick an edition on Discogs», do protótipo, não foi construído e não aparece.
+- Conferido num navegador de verdade com o CSS do build, sem conta e sem servidor (página estática montada com o desenho da tela): seis cartões com 501 px de altura cada, as cinco linhas com as mesmas alturas em todos, nada transbordando, a 1440 e a 390 px. Falta a prova com a conta do MJRP.
+- Suíte: 2851 testes passando; lint e build verdes.
+
 ## [2026-11-20 01:45] session — F75, servidor: a fonte de valor do Discogs, o interruptor e o câmbio do dia
 
 **Branch:** feat/f75-cd-prices-and-where-to-buy

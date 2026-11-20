@@ -8,6 +8,25 @@ import { BaseRepository } from './BaseRepository.js'
 const VALID_FORMATS = ['cd', 'vinyl', 'cassette', 'dvd', 'bluray', 'digital']
 const VALID_CURRENCIES = ['USD', 'BRL']
 
+/**
+ * The value the person wrote for an album (F75), as it is kept: an amount above zero, in USD, and
+ * when it was written. `null` takes the written value away (the album goes back to its reading).
+ * A price read from Discogs is NEVER written here: it lives in the browser, for six hours.
+ */
+function writtenValue(value) {
+    if (value === null) return null
+    const amount = Number(value?.amount)
+    if (!Number.isFinite(amount) || amount <= 0) throw new Error('A written value needs an amount above zero')
+    if (value.currency !== 'USD') throw new Error('A written value is kept in USD')
+    return { amount, currency: 'USD', at: value.at || new Date().toISOString() }
+}
+
+/** Which Discogs edition the value of an album is read from (F75): catalogue data, no price. */
+function discogsEdition(edition) {
+    if (!Number.isInteger(edition?.releaseId) || edition.releaseId <= 0) throw new Error('An edition needs the id of its Discogs release')
+    return { releaseId: edition.releaseId, title: edition.title ?? null, url: edition.url ?? null }
+}
+
 /** An album can be kept only with its names and its id. */
 function requireAlbum(album) {
     if (!album || !album.title || !album.artist) throw new Error('Album must have title and artist')
@@ -123,6 +142,8 @@ export class InventoryRepository extends BaseRepository {
                 filtered[field] = updates[field]
             }
         })
+        // The value the person wrote (F75): checked here, the one door to the cloud
+        if (updates.value !== undefined) filtered.value = writtenValue(updates.value)
 
         if (Object.keys(filtered).length === 0) {
             throw new Error('No valid fields to update')
@@ -144,6 +165,21 @@ export class InventoryRepository extends BaseRepository {
             if (!id || (!hasAverages && !coverUrl)) throw new Error('Each update needs the id of an item and its averages or its cover')
         })
         return this.updateMany(entries.map(({ id, averages, coverUrl }) => ({ id, data: readFacts(averages, coverUrl) })))
+    }
+
+    /**
+     * Write which Discogs edition the value of each item is read from, in ONE write (F75): only
+     * the `discogs` field of each item changes. No price goes with it.
+     * @param {Array<{ id: string, discogs: { releaseId: number, title?: string, url?: string } }>} entries - at most what one batch holds
+     * @returns {Promise<string[]>} the ids of the items, in the order given
+     * @throws when an entry lacks its id or its edition (nothing is written), and when the write fails
+     */
+    async setEditions(entries) {
+        const data = entries.map(({ id, discogs }) => {
+            if (!id) throw new Error('Each edition needs the id of an item')
+            return { id, data: { discogs: discogsEdition(discogs) } }
+        })
+        return this.updateMany(data)
     }
 
     /**
