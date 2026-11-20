@@ -9,6 +9,9 @@ const MAX_RATE_LIMIT_WAIT_SECONDS = 30
 /** The export waits a short rate limit; see _fetch. */
 const PATIENT = Object.freeze({ patient: true })
 
+/** How many tracks Spotify gives in one request of full tracks. */
+const TRACKS_PER_REQUEST = 50
+
 /** The seconds a 429 asked to wait, or null when it did not say. */
 const retryAfterOf = (response) => Number(response.headers?.get?.('Retry-After')) || null
 
@@ -118,7 +121,8 @@ export const SpotifyService = {
      * @param {string} artist
      * @param {string} albumName
      * @param {number|string|null} [year] - only orders the candidates that pass
-     * @returns {Promise<object|null>} Spotify Album Object or null
+     * @returns {Promise<object|null>} Spotify Album Object, or null when Spotify answered and has none
+     * @throws when a search could not be made: null is only ever "Spotify has no such album"
      */
     async searchAlbum(artist, albumName, year = null) {
         if (!artist || !albumName) return null
@@ -141,7 +145,8 @@ export const SpotifyService = {
 
     /**
      * The albums Spotify lists for the artist (up to 20). A failure of this last, widest search
-     * is "no candidates", as it was before.
+     * is a failure like any other (F69): read as "no candidates", it made "Spotify could not be
+     * asked" look like "Spotify has no such album".
      * @private
      * @returns {Promise<Array>}
      */
@@ -149,13 +154,8 @@ export const SpotifyService = {
         // Diacritics are kept: Spotify handles them well
         const q = `artist:${artistName}`.replace(/['"()]/g, '')
         const params = new URLSearchParams({ q, type: 'album', limit: 20 })
-        try {
-            const data = await this._fetch(`/search?${params.toString()}`)
-            return data?.albums?.items || []
-        } catch (error) {
-            console.warn('[SpotifyService] Artist-only search failed:', error.message)
-            return []
-        }
+        const data = await this._fetch(`/search?${params.toString()}`)
+        return data?.albums?.items || []
     },
 
     /**
@@ -183,33 +183,24 @@ export const SpotifyService = {
     },
 
     /**
-     * Get tracks for an album with their popularity
-     * Note: /albums/{id} returns tracks, but track objects there strictly usually DO NOT contain popularity?
-     * WAIT: Spotify API docs say "SimplifiedTrackObject" in album details does NOT have popularity.
-     * We must fetch tracks via /albums/{id}/tracks (still simplified) -> THEN /tracks?ids=... to get FullTrackObject.
-     * OR check if /albums/{id} implementation changed.
-     * Documentation Check: "Get Album" -> returns AlbumObject. Tracks property is PagingObject<SimplifiedTrackObject>.
-     * SimplifiedTrackObject does NOT have popularity.
-     * We MUST batch fetch full tracks.
-     * 
-     * @param {string} albumId 
-     * @returns {Promise<Array>} List of tracks with popularity
+     * The tracks of an album with their popularity. The album itself lists its tracks without it
+     * (SimplifiedTrackObject), so the full tracks are read by id, at most
+     * TRACKS_PER_REQUEST in each request.
+     *
+     * @param {string} albumId
+     * @returns {Promise<Array>} FullTrackObjects, with popularity (0-100)
      */
     async getAlbumTracksWithPopularity(albumId) {
         const album = await this.getAlbumDetails(albumId)
-        if (!album) return []
+        const trackIds = (album?.tracks?.items || []).map(track => track.id).filter(Boolean)
 
-        // Tracks are paginated, but usually < 50 for single album.
-        // Let's assume < 50 for v1.
-        const simplifiedTracks = album.tracks.items
-        const trackIds = simplifiedTracks.map(t => t.id)
-
-        // Batch fetch full track details (max 50)
-        // If > 50, would need chunks.
-        const idsParam = trackIds.join(',')
-        const tracksData = await this._fetch(`/tracks?ids=${idsParam}`)
-
-        return tracksData.tracks // These are FullTrackObjects with popularity (0-100)
+        const tracks = []
+        for (let start = 0; start < trackIds.length; start += TRACKS_PER_REQUEST) {
+            const ids = trackIds.slice(start, start + TRACKS_PER_REQUEST).join(',')
+            const data = await this._fetch(`/tracks?ids=${ids}`)
+            tracks.push(...(data?.tracks || []).filter(Boolean))
+        }
+        return tracks
     },
 
     /**
@@ -324,77 +315,45 @@ export const SpotifyService = {
         return lastSnapshot
     },
 
-    // ========== AUTO-ENRICHMENT METHOD (Sprint 11) ==========
+    // ========== THE POPULARITY OF AN ALBUM (F69) ==========
 
     /**
-     * Enrich an album object with Spotify data (ID, popularity, track URIs)
-     * Used during album loading for auto-enrichment
-     * @param {string} artist - Artist name
-     * @param {string} albumTitle - Album title
-     * @returns {Promise<object|null>} Enrichment data or null if not found
+     * What Spotify has about the popularity of an album. The one caller is the popularity source
+     * of the album load (services/albums/adapters/spotifyPopularitySource.js).
+     *
+     * It answers only when Spotify answered: the album with its data, or "Spotify has none" with
+     * the reason ('not_found': no album of Spotify is the album asked for, by the one identity
+     * rule in searchAlbum; 'no_tracks': the album is there and lists no track). A call that could
+     * not be made is thrown as it came (SpotifyReconnectError, SpotifyRateLimitError, or the
+     * error of the network or of the API): it is never an answer.
+     *
+     * @param {string} artist
+     * @param {string} albumTitle
+     * @returns {Promise<{ found: true, data: Object } | { found: false, reason: string }>} `data` is
+     *          { spotifyId, spotifyUrl, spotifyPopularity, spotifyArtwork, trackPopularity: [{ name, popularity, spotifyId, spotifyUri }] }
      */
-    async enrichAlbumData(artist, albumTitle) {
-        try {
-            // 1. Search for the album
-            const spotifyAlbum = await this.searchAlbum(artist, albumTitle)
+    async albumPopularity(artist, albumTitle) {
+        const spotifyAlbum = await this.searchAlbum(artist, albumTitle)
+        if (!spotifyAlbum) return { found: false, reason: 'not_found' }
 
-            if (!spotifyAlbum) {
-                console.log(`[SpotifyService] Album not found: "${artist} - ${albumTitle}"`)
-                return null
-            }
+        const tracks = await this.getAlbumTracksWithPopularity(spotifyAlbum.id)
+        if (tracks.length === 0) return { found: false, reason: 'no_tracks' }
 
-            // 2. The album is the one asked for: searchAlbum accepts nothing else (title and artist)
-
-            // 3. Get tracks with popularity
-            const spotifyTracks = await this.getAlbumTracksWithPopularity(spotifyAlbum.id)
-
-            if (!spotifyTracks || spotifyTracks.length === 0) {
-                console.log(`[SpotifyService] No tracks found for: "${artist} - ${albumTitle}"`)
-                return null
-            }
-
-            // 4. Calculate average popularity
-            const avgPopularity = this.calculateAveragePopularity(spotifyTracks)
-
-            // 5. Build track popularity map (by normalized title)
-            const trackPopularityMap = new Map()
-            spotifyTracks.forEach(track => {
-                const normalizedTitle = track.name.toLowerCase().trim()
-                trackPopularityMap.set(normalizedTitle, {
-                    popularity: track.popularity,
-                    spotifyId: track.id,
-                    spotifyUri: track.uri,
-                    spotifyPreviewUrl: track.preview_url
-                })
-            })
-
-            console.log(`[SpotifyService] Enriched "${artist} - ${albumTitle}" - ${spotifyTracks.length} tracks, avg popularity: ${avgPopularity}`)
-
-            return {
+        return {
+            found: true,
+            data: {
                 spotifyId: spotifyAlbum.id,
                 spotifyUrl: spotifyAlbum.external_urls?.spotify,
-                spotifyPopularity: avgPopularity,
+                spotifyPopularity: this.calculateAveragePopularity(tracks),
                 spotifyArtwork: spotifyAlbum.images?.[0]?.url,
-                trackPopularityMap,
-                spotifyTracks: spotifyTracks.map(t => ({
-                    name: t.name,
-                    popularity: t.popularity,
-                    spotifyId: t.id,
-                    spotifyUri: t.uri
+                trackPopularity: tracks.map(track => ({
+                    name: track.name,
+                    popularity: track.popularity,
+                    spotifyId: track.id,
+                    spotifyUri: track.uri
                 }))
             }
-        } catch (error) {
-            console.warn(`[SpotifyService] Enrichment failed for "${artist} - ${albumTitle}":`, error.message)
-            return null
         }
-    },
-
-    /**
-     * Check if Spotify is available (user authenticated)
-     * @returns {boolean}
-     */
-    isAvailable() {
-        return SpotifyAuthService.isAuthenticated()
     }
 }
 

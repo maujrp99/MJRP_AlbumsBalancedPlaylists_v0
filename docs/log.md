@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 21:03] session — F69: a popularidade do Spotify com três desfechos (código e testes, no ramo)
+
+Ramo `fix/f69-spotify-popularity-failure` (UAT-206), teste antes do código. A popularidade de um álbum deixa de terminar sempre em «sem dado»: o Spotify não tem o álbum é `empty` com motivo (`not_found`, guardado 24 horas e só enquanto valer a versão da regra de identidade que o decidiu); a consulta que falhou é `failed`, nunca guardada; sem sessão do Spotify é `not-connected`, estado novo, que não é guardado nem escrito nos fatos da série. Um caminho só pergunta ao Spotify (`services/albums/adapters/spotifyPopularitySource.js`, atrás do `PopularityEnricher`); o laço de fundo `SpotifyEnrichmentService` saiu e o botão «Enrich Data» passou a pedir pela carga (`refreshSource`). Ao conectar, as fontes «não conectado» dos álbuns na tela são pedidas pela fila, sem recarregar álbum. O 429 do Spotify com espera de até 30 s segura a popularidade (`HoldReason.SPOTIFY_BUSY`); acima disso, ou sem tempo dito, é falha. O gêmeo do servidor (`server/lib/services/spotifyPopularity.js`, alcançado por `POST /api/generate`) passou ao contrato da F52: falha é `UpstreamError`.
+
+Números decididos pelo agente — revisáveis: 24 horas de confiança para «o Spotify não tem este álbum» (o mesmo `EMPTY_TRUST.not_found` das notas); 30 s como a maior espera do Spotify que a carga segura (`MAX_SPOTIFY_HOLD_MS`, o mesmo teto que a exportação espera). Não foi visto num navegador nem publicado; o servidor só se prova publicando.
+
 ## [2026-11-19 20:47] session — F57 e F62 em produção (site)
 
 Duas publicações do site da `main`: `b73b159` (F57: um seletor de álbum e um classificador; UAT-185 `fixed`) e `4f022d8` (F62: receitas, exportações, desfazer e refazer, título; sete issues `fixed`; pacote `main-CY7jC6wt.js`). Nenhuma muda o servidor. Auxiliar trabalhando: F58. A F69 começa agora.

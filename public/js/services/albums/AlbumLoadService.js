@@ -17,7 +17,7 @@
  *
  * Ports:
  *   catalog.find(query, { signal })            -> Promise<Album>          (throws AlbumNotFoundError)
- *   enrichers[source].enrich(album, { signal }) -> Promise<{ status: 'done'|'empty', album, reason? }>
+ *   enrichers[source].enrich(album, { signal }) -> Promise<{ status: 'done'|'empty'|'not-connected', album, reason? }>
  *                                                 must return a NEW album, never mutate the one given;
  *                                                 `reason` says why it is 'empty', when the source said
  *   cache.get(query)                           -> Promise<{ album, enrichment } | null>
@@ -608,6 +608,11 @@ export class AlbumLoadService {
      * the source gave for having nothing (the cache believes an "empty" for a time that depends on it).
      */
     async _publishSource(generation, entry, source, album, result) {
+        // "Not connected" is the source's own word (F69): shown as it is, with nothing kept for it
+        if (result.status === EnrichmentStatus.NOT_CONNECTED) {
+            this._patch(generation, entry.seriesId, entry.key, { enrichment: { [source]: EnrichmentStatus.NOT_CONNECTED } })
+            return
+        }
         const done = result.status === EnrichmentStatus.DONE
         const status = done ? EnrichmentStatus.DONE : EnrichmentStatus.EMPTY
         const reason = done ? null : (result.reason || null)

@@ -1,21 +1,26 @@
 import { TracksTable } from './TracksTable.js'
 import { TracksTabs } from './TracksTabs.js'
-import { SpotifyService } from '../../services/SpotifyService.js'
+import { describePopularity } from '../../models/popularityState.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
-import toast from '../Toast.js'
 
 /**
  * Smart Container for Multi-Source Ranking Comparison
  * Handles logic, state, and data processing.
+ * It never talks to Spotify (F69): where the popularity of the album is comes in `popularity`,
+ * and asking for it again goes out through `popularity.onAsk`, to the album load.
  * REFACTORED: SafeDOM implementation (Sprint 15 Phase 4.3)
  */
 export class TracksRankingComparison {
     /**
      * @param {Object} props
      * @param {Album} props.album - The album model
+     * @param {{ status: string, onAsk: Function }|null} [props.popularity] - the state of the
+     *        album's Spotify popularity in the album load (EnrichmentStatus) and how to ask for it
+     *        again: (albumId) => void. Without it (the album window) no line is shown.
      */
-    constructor({ album }) {
+    constructor({ album, popularity = null }) {
         this.album = album
+        this.popularity = popularity
         this.state = {
             sortField: 'position', // 'position' | 'rank' | 'spotifyPopularity'
             sortDirection: 'asc',  // 'asc' | 'desc'
@@ -174,58 +179,8 @@ export class TracksRankingComparison {
 
         const children = []
 
-        // Enrichment Controls
-        if (!this.album.spotifyId) {
-            const enrichBtn = SafeDOM.button({
-                className: 'enrich-btn px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition-colors',
-                textContent: 'Enrich Data'
-            })
-            // Attach event listener directly here, but we need to match original logic which reused the button.
-            // Actually, in `mount`, we can attach it. Or just attach it here and it will persist if re-rendered.
-            // But `mount` calls `render` so it creates a fresh button. 
-            // The original `mount` code attached the listener. We can keep that pattern or move it here.
-            // Let's keep the structure simple and let `mount` handle the specific "enrich" logic binding if we want specifically to control the button ref,
-            // OR we can bind it right here. Binding here is cleaner.
-
-            enrichBtn.onclick = async (e) => {
-                const btn = e.target
-                btn.disabled = true
-                btn.textContent = 'Loading...'
-
-                try {
-                    await this.enrichWithSpotifyData()
-                    toast.success('Spotify data loaded!')
-
-                    // Re-render with new data
-                    this.state.tracks = this.normalizeTracks(this.album)
-
-                    // We need to re-mount the whole thing because the "Enrichment Controls" section needs to disappear
-                    if (this.container) {
-                        this.mount(this.container)
-
-                        // User persisted logic
-                        const event = new CustomEvent('album-enriched', {
-                            detail: { album: this.album },
-                            bubbles: true
-                        })
-                        this.container.dispatchEvent(event)
-                    }
-
-                } catch (err) {
-                    console.error('[TracksRankingComparison] Enrichment failed:', err)
-                    toast.error(err.message || 'Spotify enrichment failed')
-                    btn.disabled = false
-                    btn.textContent = 'Enrich Data'
-                }
-            }
-
-            children.push(SafeDOM.div({
-                className: 'bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl flex justify-between items-center mb-4'
-            }, [
-                SafeDOM.span({ className: 'text-blue-400 text-sm' }, 'Spotify data not linked.'),
-                enrichBtn
-            ]))
-        }
+        const notice = this.renderPopularityNotice()
+        if (notice) children.push(notice)
 
         // Desktop View Container
         children.push(SafeDOM.div({
@@ -251,91 +206,33 @@ export class TracksRankingComparison {
     }
 
     /**
-     * Fetch Spotify data for this album and update the Album model
+     * The one line about the Spotify popularity of an album that has none on it: not connected
+     * (quiet, nothing to press), failed ("Try again"), Spotify has none, or being asked.
+     * @returns {HTMLElement|null}
      */
-    async enrichWithSpotifyData() {
-        const { SpotifyAuthService } = await import('../../services/SpotifyAuthService.js')
+    renderPopularityNotice() {
+        const line = this.album.spotifyId ? null : describePopularity(this.popularity?.status)
+        if (!line) return null
 
-        // Check if connected to Spotify
-        if (!SpotifyAuthService.isAuthenticated()) {
-            throw new Error('Connect to Spotify first (click the Spotify button in the header)')
-        }
+        const children = [SafeDOM.span({ className: line.quiet ? 'text-gray-400 text-sm' : 'text-blue-400 text-sm' }, line.text)]
+        if (line.action) children.push(this.renderAskButton(line.action))
 
-        const spotifyAlbum = await SpotifyService.searchAlbum(this.album.artist, this.album.title)
+        return SafeDOM.div({
+            className: `popularity-notice flex justify-between items-center mb-4 ${line.quiet ? 'px-1' : 'bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl'}`
+        }, children)
+    }
 
-        if (!spotifyAlbum) {
-            throw new Error(`Album not found on Spotify: "${this.album.artist} - ${this.album.title}"`)
-        }
-
-        // Fetch tracks with popularity
-        const spotifyTracks = await SpotifyService.getAlbumTracksWithPopularity(spotifyAlbum.id)
-
-        if (!spotifyTracks || spotifyTracks.length === 0) {
-            throw new Error('No tracks found for this album on Spotify')
-        }
-
-        // Update Album model with Spotify data
-        this.album.spotifyId = spotifyAlbum.id
-        this.album.spotifyUrl = spotifyAlbum.external_urls?.spotify || null
-        this.album.spotifyPopularity = SpotifyService.calculateAveragePopularity(spotifyTracks)
-
-        // Match tracks by name and update spotifyPopularity
-        const normalizeTitle = (str) => str?.toLowerCase().replace(/[^a-z0-9]/g, '') || ''
-
-        // Create lookup map from Spotify tracks
-        const spotifyTrackMap = new Map()
-        spotifyTracks.forEach((st, idx) => {
-            // FIX: Normalization was too strict?
-            const key = normalizeTitle(st.name)
-            spotifyTrackMap.set(key, {
-                popularity: st.popularity,
-                spotifyRank: idx + 1, // Rank by original Spotify order
-                spotifyId: st.id,
-                spotifyUri: st.uri,
-                duration: st.duration_ms // Capture Duration!
-            })
+    /** The button that asks the album load for the popularity again; the load redraws the album. */
+    renderAskButton(label) {
+        const button = SafeDOM.button({
+            className: 'enrich-btn px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition-colors',
+            textContent: label
         })
-
-        // Also create a ranked list by popularity
-        const sortedByPop = [...spotifyTracks].sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
-        const popRankMap = new Map()
-        sortedByPop.forEach((st, idx) => {
-            popRankMap.set(st.id, idx + 1)
-        })
-
-        // Update each track in album
-        const tracks = this.album.tracks || []
-        let matchCount = 0
-
-        tracks.forEach(track => {
-            const key = normalizeTitle(track.title || track.name)
-            const spotifyData = spotifyTrackMap.get(key)
-
-            if (spotifyData) {
-                track.spotifyPopularity = spotifyData.popularity
-                track.spotifyPopularityRank = popRankMap.get(spotifyData.spotifyId) || null
-                track.spotifyId = spotifyData.spotifyId
-                track.spotifyUri = spotifyData.spotifyUri
-                // Update duration if missing
-                if (!track.duration) track.duration = spotifyData.duration
-                matchCount++
-            } else {
-                // Try fuzzy match (first 10 chars)
-                const fuzzyKey = key.substring(0, 10)
-                for (const [spotifyKey, data] of spotifyTrackMap.entries()) {
-                    if (spotifyKey.startsWith(fuzzyKey) || fuzzyKey.startsWith(spotifyKey.substring(0, 10))) {
-                        track.spotifyPopularity = data.popularity
-                        track.spotifyPopularityRank = popRankMap.get(data.spotifyId) || null
-                        track.spotifyId = data.spotifyId
-                        track.spotifyUri = data.spotifyUri
-                        if (!track.duration) track.duration = data.duration
-                        matchCount++
-                        break
-                    }
-                }
-            }
-        })
-
-        console.log(`[TracksRankingComparison] Matched ${matchCount}/${tracks.length} tracks with Spotify data`)
+        button.onclick = () => {
+            button.disabled = true
+            button.textContent = 'Asking…'
+            this.popularity.onAsk(this.album.id)
+        }
+        return button
     }
 }

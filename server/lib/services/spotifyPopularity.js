@@ -1,19 +1,37 @@
 
 const axios = require('axios');
 const querystring = require('querystring');
+const { upstreamErrorFrom } = require('../outcome');
 require('dotenv').config();
 
 // Spotify API Config
 const SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token';
 const SPOTIFY_SEARCH_URL = 'https://api.spotify.com/v1/search';
+const SPOTIFY_API_URL = 'https://api.spotify.com/v1';
+/** How many tracks Spotify gives in one request of full tracks. */
+const TRACKS_PER_REQUEST = 50;
 
 let accessToken = null;
 let tokenExpiresAt = 0;
 
 /**
- * Get valid Spotify Access Token (Client Credentials Flow)
+ * What this module answers (F69, under the answer contract of F52, lib/outcome.js):
+ *   found           Spotify has the album asked for; with the popularity of its tracks
+ *   not_found       Spotify answered: it has no such album (or the album lists no track)
+ *   not_configured  this server has no Spotify credentials: Spotify was not asked
+ * A call that failed (network, 4xx/5xx, "wait", too slow) is THROWN as an UpstreamError. Before,
+ * the three and every failure came back as `{ error }`, and "it failed" read as "there is none".
  */
-async function getAccessToken() {
+const SPOTIFY_OUTCOMES = Object.freeze({ FOUND: 'found', NOT_FOUND: 'not_found', NOT_CONFIGURED: 'not_configured' });
+const SOURCE = 'Spotify';
+
+/**
+ * A valid Spotify access token (Client Credentials Flow), or null when this server has no
+ * credentials. Asking for one and being refused, or not being answered, is thrown.
+ * @param {Object} [http] - { post(url, body, config) }, axios by default
+ * @returns {Promise<string|null>}
+ */
+async function getAccessToken(http = axios) {
     const clientId = process.env.SPOTIFY_CLIENT_ID;
     const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
@@ -27,26 +45,20 @@ async function getAccessToken() {
         return accessToken;
     }
 
-    try {
-        console.log('[Spotify] Requesting new access token...');
-        const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-        const res = await axios.post(SPOTIFY_TOKEN_URL,
-            querystring.stringify({ grant_type: 'client_credentials' }), {
-            headers: {
-                'Authorization': `Basic ${auth}`,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        });
+    console.log('[Spotify] Requesting new access token...');
+    const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    const res = await http.post(SPOTIFY_TOKEN_URL,
+        querystring.stringify({ grant_type: 'client_credentials' }), {
+        headers: {
+            'Authorization': `Basic ${auth}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    });
 
-        accessToken = res.data.access_token;
-        tokenExpiresAt = Date.now() + (res.data.expires_in * 1000);
-        console.log('[Spotify] Token refreshed successfully.');
-        return accessToken;
-
-    } catch (error) {
-        console.error('[Spotify] Auth Failed:', error.message);
-        return null;
-    }
+    accessToken = res.data.access_token;
+    tokenExpiresAt = Date.now() + (res.data.expires_in * 1000);
+    console.log('[Spotify] Token refreshed successfully.');
+    return accessToken;
 }
 
 const { loadAlbumIdentity } = require('../albumIdentity');
@@ -89,80 +101,70 @@ async function findSpotifyAlbum(asked, token, http = axios) {
 }
 
 /**
- * Get track popularity for an album
- * Returns pseudo-ranking evidence based on popularity score (0-100)
+ * The full tracks of an album, which carry the popularity (the album itself lists them without it).
+ * @returns {Promise<Array>}
  */
-async function getSpotifyPopularityRanking(albumTitle, artistName) {
+async function readTracksWithPopularity(albumId, token, http) {
+    const headers = { Authorization: `Bearer ${token}` };
+    const details = await http.get(`${SPOTIFY_API_URL}/albums/${albumId}`, { headers });
+    const trackIds = (details.data?.tracks?.items || []).map(t => t.id).filter(Boolean);
+
+    const tracks = [];
+    for (let i = 0; i < trackIds.length; i += TRACKS_PER_REQUEST) {
+        const ids = trackIds.slice(i, i + TRACKS_PER_REQUEST).join(',');
+        const res = await http.get(`${SPOTIFY_API_URL}/tracks`, { params: { ids }, headers });
+        tracks.push(...(res.data?.tracks || []).filter(Boolean));
+    }
+    return tracks;
+}
+
+/** The popularity (0-100) of each track as ranking evidence, the most popular first. */
+const evidenceOf = (tracks) => tracks
+    .map(t => ({ trackTitle: t.name, rating: t.popularity, position: t.track_number, durationMs: t.duration_ms }))
+    .sort((a, b) => b.rating - a.rating);
+
+/** Ask Spotify. Everything here that fails is a failure of the source. */
+async function askSpotify(asked, { http, getToken }) {
+    const token = await getToken();
+    if (!token) return { outcome: SPOTIFY_OUTCOMES.NOT_CONFIGURED };
+
+    const album = await findSpotifyAlbum(asked, token, http);
+    if (!album) {
+        console.log('[Spotify] No album of Spotify is the album asked for.');
+        return { outcome: SPOTIFY_OUTCOMES.NOT_FOUND };
+    }
+
+    const tracks = await readTracksWithPopularity(album.id, token, http);
+    if (tracks.length === 0) return { outcome: SPOTIFY_OUTCOMES.NOT_FOUND };
+
+    console.log(`[Spotify] Retrieved popularity for ${tracks.length} tracks of ${album.id}.`);
+    return {
+        outcome: SPOTIFY_OUTCOMES.FOUND,
+        provider: SOURCE,
+        providerType: 'popularity', // Backend flag for frontend label
+        referenceUrl: album.external_urls?.spotify || null,
+        evidence: evidenceOf(tracks)
+    };
+}
+
+/**
+ * The popularity of the tracks of an album, as pseudo-ranking evidence (0-100).
+ * @param {string} albumTitle
+ * @param {string} artistName
+ * @param {Object} [deps] - { http, getToken }, axios and the client-credentials token by default
+ * @returns {Promise<{ outcome: 'found', provider, providerType, referenceUrl, evidence: Array }
+ *          | { outcome: 'not_found' } | { outcome: 'not_configured' }>}
+ * @throws {UpstreamError} when Spotify could not be asked; the caller decides what a failure
+ *         means, and never reads it as "Spotify has none"
+ */
+async function getSpotifyPopularityRanking(albumTitle, artistName, { http = axios, getToken = () => getAccessToken(http) } = {}) {
     try {
-        const token = await getAccessToken();
-        if (!token) return { error: 'Spotify credentials missing or invalid' };
-
-        // 1. The album asked for, or nothing
-        const album = await findSpotifyAlbum({ title: albumTitle, artist: artistName }, token);
-
-        if (!album) {
-            console.log('[Spotify] No album of Spotify is the album asked for.');
-            return { error: 'Album not found on Spotify' };
-        }
-
-        console.log(`[Spotify] Found Album: ${album.name} (ID: ${album.id})`);
-
-        // 2. Get tracks with popularity
-        // Note: The 'Get Album Tracks' endpoint acts weirdly with popularity (sometimes missing),
-        // so we might need to fetch tracks then get detailed track info, or just use the tracks from the album object if it's a 'simple' object.
-        // Actually, 'Get Album' endpoint returns tracks but distinct track objects often lack popularity.
-        // We need to fetch tracks IDs then batch request 'Get Several Tracks' to get popularity.
-
-        // First, get album details to get track list paging
-        const albumDetailsRes = await axios.get(`https://api.spotify.com/v1/albums/${album.id}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        const tracksSimple = albumDetailsRes.data.tracks.items;
-        const trackIds = tracksSimple.map(t => t.id).filter(id => id);
-
-        if (trackIds.length === 0) return { error: 'No tracks found' };
-
-        // 3. Get detailed track info (for popularity) - Max 50 IDs per call
-        const chunks = [];
-        for (let i = 0; i < trackIds.length; i += 50) {
-            chunks.push(trackIds.slice(i, i + 50));
-        }
-
-        let allTracksFull = [];
-        for (const chunk of chunks) {
-            const tracksRes = await axios.get(`https://api.spotify.com/v1/tracks`, {
-                params: { ids: chunk.join(',') },
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            allTracksFull = allTracksFull.concat(tracksRes.data.tracks);
-        }
-
-        // 4. Transform to Rankings
-        // Using Popularity (0-100) directly as "rating"
-        const evidence = allTracksFull.map((t, idx) => ({
-            trackTitle: t.name,
-            rating: t.popularity,
-            position: t.track_number,
-            durationMs: t.duration_ms
-        }));
-
-        // Sort by Popularity Descending
-        evidence.sort((a, b) => b.rating - a.rating);
-
-        console.log(`[Spotify] Retrieved popularity for ${evidence.length} tracks.`);
-
-        return {
-            provider: 'Spotify',
-            providerType: 'popularity', // Backend flag for frontend label
-            referenceUrl: album.external_urls.spotify,
-            evidence
-        };
-
+        return await askSpotify({ title: albumTitle, artist: artistName }, { http, getToken });
     } catch (error) {
-        console.error('[Spotify] Error:', error.response?.data || error.message);
-        return { error: error.message };
+        const failure = upstreamErrorFrom(error, SOURCE);
+        console.error(`[Spotify] could not be asked: ${failure.message} (${failure.code})`);
+        throw failure;
     }
 }
 
-module.exports = { getSpotifyPopularityRanking, findSpotifyAlbum };
+module.exports = { getSpotifyPopularityRanking, findSpotifyAlbum, SPOTIFY_OUTCOMES };

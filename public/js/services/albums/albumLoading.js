@@ -21,7 +21,10 @@ import { apiClient } from '../../api/client.js'
 import { musicKitService } from '../MusicKitService.js'
 import { optimizedAlbumLoader } from '../OptimizedAlbumLoader.js'
 import { applyBEAData } from '../../helpers/BEAEnrichmentHelper.js'
-import { applyEnrichmentToAlbum } from '../../helpers/SpotifyEnrichmentHelper.js'
+import { applySpotifyData } from '../../helpers/SpotifyEnrichmentHelper.js'
+import { spotifyEnrichmentStore } from '../../stores/SpotifyEnrichmentStore.js'
+import { SpotifyService } from '../SpotifyService.js'
+import { SpotifyAuthService } from '../SpotifyAuthService.js'
 import { userRankingRepository } from '../../repositories/UserRankingRepository.js'
 import { AlbumLoadService } from './AlbumLoadService.js'
 import { AlbumAsks } from './AlbumAsks.js'
@@ -33,6 +36,8 @@ import { getSeriesService } from '../SeriesService.js'
 import { CatalogAdapter } from './adapters/CatalogAdapter.js'
 import { AcclaimEnricher, PopularityEnricher, UserRankingEnricher } from './adapters/enrichers.js'
 import { AlbumCacheAdapter } from './adapters/AlbumCacheAdapter.js'
+import { SpotifyPopularitySource } from './adapters/spotifyPopularitySource.js'
+import { askPopularityOnConnect } from './popularityOnConnect.js'
 import { clearAlbumCaches } from './clearAlbumCaches.js'
 
 /** The shelf context that holds the albums of every series. */
@@ -50,13 +55,24 @@ const catalog = new CatalogAdapter({
     }
 })
 
+/** True when Spotify can be asked without the person. False is "not connected": nobody is asked. */
+const spotifyIsConnected = () => SpotifyAuthService.hasSession()
+
+/** The one path that asks Spotify for the popularity of an album (F69). */
+const popularitySource = new SpotifyPopularitySource({
+    store: spotifyEnrichmentStore,
+    spotify: SpotifyService,
+    isConnected: spotifyIsConnected
+})
+
 const enrichers = {
     acclaim: new AcclaimEnricher({
         requestRatings: (albumData) => apiClient.requestRatings(albumData),
         applyRatings: applyBEAData
     }),
     popularity: new PopularityEnricher({
-        applyPopularity: (album) => applyEnrichmentToAlbum(album, { fetchIfMissing: true, silent: true })
+        readPopularity: (album) => popularitySource.read(album),
+        applyPopularity: applySpotifyData
     }),
     userRanking: new UserRankingEnricher({
         getUserId: () => albumSeriesStore.getUserId(),
@@ -87,6 +103,12 @@ export const albumLoadService = new AlbumLoadService({
     cache: albumCachePort,
     onHold: showHoldNotice
 })
+
+/**
+ * The person connected to Spotify: the albums on screen whose popularity was "not connected" are
+ * asked, that source only, through the load (F69). Nothing else starts on connect.
+ */
+askPopularityOnConnect({ store: albumLoadStore, service: albumLoadService, isConnected: spotifyIsConnected })
 
 /** The one way a screen that is not the albums screen gets the albums of a series, ready (F56). */
 export const albumAsks = new AlbumAsks({ service: albumLoadService, store: albumLoadStore })

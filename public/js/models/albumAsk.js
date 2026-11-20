@@ -9,7 +9,8 @@
  *   bySeries        the same albums, by series id
  *   failed          [{ seriesId, key, label, reason, message }] - the albums left out, and why
  *   missingSources  [{ source, seriesId, key, label, gap }] - a source the asker named that has
- *                   nothing to give for an album that is ready
+ *                   nothing to give for an album that is ready; `gap` (SourceGap) says why: it
+ *                   failed, it has none, it was not waited for, or the person is not connected to it
  *   total           how many albums were asked for
  *   aborted         true when the asker dropped the ask before it was served
  */
@@ -27,7 +28,8 @@ export const AskFailure = Object.freeze({
 export const SourceGap = Object.freeze({
     FAILED: 'failed',   // the source did not answer
     EMPTY: 'empty',     // the source answered: it has nothing for this album
-    WAITING: 'waiting'  // the server holds the load; the ask did not wait for the source
+    WAITING: 'waiting', // the server holds the load; the ask did not wait for the source
+    NOT_CONNECTED: 'not-connected' // the person is not connected to the source: it was not asked (F69)
 })
 
 const REASON_TEXT = Object.freeze({
@@ -46,7 +48,8 @@ const SOURCE_TEXT = Object.freeze({
 const GAP_TEXT = Object.freeze({
     [SourceGap.FAILED]: 'did not answer',
     [SourceGap.EMPTY]: 'none at the source',
-    [SourceGap.WAITING]: 'not waited for: the server paused the load'
+    [SourceGap.WAITING]: 'not waited for: the server paused the load',
+    [SourceGap.NOT_CONNECTED]: 'because Spotify is not connected'
 })
 
 /** How many albums a notice names before it counts the rest. */
@@ -67,6 +70,7 @@ const SOURCE_STILL_ASKED = new Set([EnrichmentStatus.PENDING, EnrichmentStatus.L
 function gapOf(status, onHold) {
     if (status === EnrichmentStatus.DONE) return { gap: null, waiting: false }
     if (status === EnrichmentStatus.EMPTY) return { gap: SourceGap.EMPTY, waiting: false }
+    if (status === EnrichmentStatus.NOT_CONNECTED) return { gap: SourceGap.NOT_CONNECTED, waiting: false }
     if (!SOURCE_STILL_ASKED.has(status)) return { gap: SourceGap.FAILED, waiting: false }
     return onHold ? { gap: SourceGap.WAITING, waiting: false } : { gap: null, waiting: true }
 }

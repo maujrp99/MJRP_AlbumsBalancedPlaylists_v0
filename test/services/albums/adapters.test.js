@@ -259,14 +259,15 @@ describe('enrichers', () => {
         expect(requestRatings).not.toHaveBeenCalled()
     })
 
-    it('PopularityEnricher: done when Spotify data was applied, empty when not, never touching the album given', async () => {
+    it('PopularityEnricher: done when Spotify has the album, empty when it has none, never touching the album given (the three outcomes: spotifyPopularity.test.js)', async () => {
         const album = makeAlbum()
         const before = snapshot(album)
-        const connected = new PopularityEnricher({ applyPopularity: async (copy) => { copy.spotifyId = 'sp1'; copy.spotifyPopularity = 80 } })
-        const notConnected = new PopularityEnricher({ applyPopularity: async () => { } })
+        const applyPopularity = (copy, data) => { copy.spotifyId = data.spotifyId; copy.spotifyPopularity = 80 }
+        const has = new PopularityEnricher({ readPopularity: async () => ({ kind: 'found', data: { spotifyId: 'sp1' } }), applyPopularity })
+        const hasNone = new PopularityEnricher({ readPopularity: async () => ({ kind: 'not_found', reason: 'not_found', rule: 2 }), applyPopularity })
 
-        expect(await connected.enrich(album)).toMatchObject({ status: 'done', album: { spotifyId: 'sp1' } })
-        expect((await notConnected.enrich(album)).status).toBe('empty')
+        expect(await has.enrich(album)).toMatchObject({ status: 'done', album: { spotifyId: 'sp1' } })
+        expect(await hasNone.enrich(album)).toMatchObject({ status: 'empty', reason: 'not_found' })
         expect(snapshot(album)).toBe(before)
     })
 
@@ -309,7 +310,8 @@ describe('enrichers', () => {
         expect(withRating.hasUserRanking).toBe(true)
 
         const popular = await new PopularityEnricher({
-            applyPopularity: async (album) => { album.spotifyId = 'sp2' }
+            readPopularity: async () => ({ kind: 'found', data: {} }),
+            applyPopularity: (album) => { album.spotifyId = 'sp2' }
         }).enrich(makeAlbum())
         const withPopularity = await popular.apply(withRating)
         expect(withPopularity.spotifyId).toBe('sp1') // already there: left as it is
@@ -357,13 +359,13 @@ describe('AlbumCacheAdapter', () => {
         const { adapter, clock } = build()
         const album = makeAlbum()
         await adapter.saveBase('Artist - Album', album)
-        await adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'done')
-        await adapter.saveEnrichment('Artist - Album', album, 'popularity', 'empty')
+        await adapter.saveEnrichment('Artist - Album', album, 'popularity', 'done')
+        await adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'empty')
 
-        expect((await adapter.get('Artist - Album')).enrichment).toEqual({ acclaim: 'done', popularity: 'empty' })
+        expect((await adapter.get('Artist - Album')).enrichment).toEqual({ popularity: 'done', acclaim: 'empty' })
 
         clock.now += 61 * 60 * 1000
-        expect((await adapter.get('Artist - Album')).enrichment).toEqual({ acclaim: 'done' })
+        expect((await adapter.get('Artist - Album')).enrichment).toEqual({ popularity: 'done' })
     })
 
     it('never saves the person\'s own ranking with the album', async () => {
