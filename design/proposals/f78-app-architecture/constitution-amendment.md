@@ -7,6 +7,8 @@ decides: MJRP
 ---
 # Emenda à constituição para o app (F78) — proposta
 
+> **Substituída pela escolha do MJRP (2026-11-20 14:03):** em vez de emendar, substituir a constituição — «Sobre a constitution pode ser superseded já envelheceu». A nova está proposta em `constitution-v2.md`, nesta pasta; este documento fica como o registro de por quê.
+
 > **Para o MJRP ler e aceitar, mudar ou recusar.** A constituição só muda com a aprovação dele (Governance: «Changes to this constitution require User approval»). Este documento não muda nada: `docs/specs/constitution.md` fica como está até ele dizer qual texto entra.
 > **Em 2026-11-20 13:45** ele seguiu a recomendação da proposta na decisão 6: emendar só para `app/`. Isso escolhe, em princípio, a redação (a) abaixo. O texto ainda é dele para ler.
 > **Vai junto com:** o ADR-0022, em «Proposed» (`docs/decisions/0022-app-in-react-native-over-a-shared-core.md`). Um não se aceita sem o outro.
