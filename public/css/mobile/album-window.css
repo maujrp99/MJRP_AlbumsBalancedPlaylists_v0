@@ -321,8 +321,23 @@
     letter-spacing: 0.04em;
   }
 
+  /* Each source in its own colour, the ones of the computer's table (UAT-228): BEA orange, Spotify
+     green. The reference of the order on is full strength; the other is dimmed, never grey. */
+  .tracks-tabs__ref--bea {
+    color: #fb923c;
+  }
+
+  .tracks-tabs__ref--spotify {
+    color: #1ed760;
+  }
+
+  .tracks-tabs__ref {
+    opacity: 0.78;
+  }
+
   .tracks-tabs__ref.is-on {
-    color: #fff;
+    opacity: 1;
+    font-weight: 700;
   }
 
   /* ── 6. Estimated value and Where to buy (F75, an inventory item): the same, for a finger ── */

@@ -19,7 +19,7 @@ export const TRACK_ORDERS = Object.freeze([
 ])
 
 const NONE = '—'
-const hasRank = (track) => Boolean(track.rank) && track.rank < 999
+const hasRating = (track) => typeof track.rating === 'number' && Number.isFinite(track.rating)
 const hasPopularity = (track) => typeof track.spotifyPopularity === 'number' && track.spotifyPopularity > -1
 
 export class TracksTabs {
@@ -51,19 +51,28 @@ export class TracksTabs {
         })
     }
 
-    /** One reference of a track (its BEA rank, its Spotify popularity); the one of the order on is lit. */
-    renderReference(source, label, value) {
+    /**
+     * One reference of a track (its BEA rating, its Spotify popularity), in the colour of its source
+     * (`--bea`, `--spotify`: the colours of the computer's table, UAT-228); the one of the order on is lit.
+     */
+    renderReference({ source, kind, label, name, value, mark = '' }) {
         const lit = this.activeTab === source ? ' is-on' : ''
-        return SafeDOM.span({ className: `tracks-tabs__ref${lit}` }, [
-            SafeDOM.span({ className: 'tracks-tabs__ref-label' }, label),
-            SafeDOM.text(` ${value}`)
+        return SafeDOM.span({ className: `tracks-tabs__ref tracks-tabs__ref--${kind}${lit}`, 'aria-label': `${name} ${value}` }, [
+            SafeDOM.span({ className: 'tracks-tabs__ref-label', 'aria-hidden': 'true' }, label),
+            SafeDOM.span({ 'aria-hidden': 'true' }, ` ${mark}${value}`)
         ])
     }
 
     renderListItem(track) {
         const references = [
-            this.renderReference('acclaim', 'BEA', hasRank(track) ? `#${track.rank}` : NONE),
-            this.renderReference('spotify', 'Spotify', hasPopularity(track) ? `${track.spotifyPopularity}%` : NONE)
+            this.renderReference({
+                source: 'acclaim', kind: 'bea', label: 'BEA', name: 'BestEverAlbums rating',
+                ...(hasRating(track) ? { mark: '★ ', value: Number(track.rating).toFixed(0) } : { value: NONE })
+            }),
+            this.renderReference({
+                source: 'spotify', kind: 'spotify', label: 'Spotify', name: 'Spotify popularity',
+                value: hasPopularity(track) ? `${track.spotifyPopularity}%` : NONE
+            })
         ]
         const ownArtist = track.artist && track.artist !== this.albumArtist
             ? SafeDOM.span({ className: 'tracks-tabs__artist' }, track.artist)

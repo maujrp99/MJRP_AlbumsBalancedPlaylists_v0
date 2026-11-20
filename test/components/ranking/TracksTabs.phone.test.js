@@ -7,8 +7,8 @@ import { describe, it, expect, vi } from 'vitest'
 import { TracksTabs, TRACK_ORDERS } from '../../../public/js/components/ranking/TracksTabs.js'
 
 const tracks = [
-    { position: 1, title: 'So Far Away', rank: 4, spotifyPopularity: 61, duration: 312 },
-    { position: 2, title: 'Money for Nothing', rank: 1, spotifyPopularity: 80, duration: 506, artist: 'Dire Straits feat. Sting' },
+    { position: 1, title: 'So Far Away', rank: 4, rating: 87.4, spotifyPopularity: 61, duration: 312 },
+    { position: 2, title: 'Money for Nothing', rank: 1, rating: 92, spotifyPopularity: 80, duration: 506, artist: 'Dire Straits feat. Sting' },
     { position: 3, title: 'Walk of Life', rank: 999, spotifyPopularity: -1, duration: 0, artist: 'Dire Straits' }
 ]
 
@@ -42,7 +42,7 @@ describe('TracksTabs on the phone (F76)', () => {
         expect(rows).toHaveLength(3)
         const [first, , third] = rows
         expect(first.querySelector('.tracks-tabs__title').textContent).toBe('So Far Away')
-        expect(first.querySelector('.tracks-tabs__refs').textContent).toBe('BEA #4Spotify 61%')
+        expect(first.querySelector('.tracks-tabs__refs').textContent).toBe('BEA ★ 87Spotify 61%')
         expect(first.querySelector('.tracks-tabs__time').textContent).toBe('5:12')
         expect(first.querySelector('.tracks-tabs__number').textContent).toBe('1')
         // what is not known is said as such, never as a number
@@ -55,6 +55,20 @@ describe('TracksTabs on the phone (F76)', () => {
         const lit = [...host.querySelectorAll('.tracks-tabs__ref.is-on')].map(r => r.textContent)
         expect(lit).toEqual(['Spotify 61%', 'Spotify 80%', 'Spotify —'])
         expect([...host.querySelectorAll('.tracks-tabs__artist')].map(a => a.textContent)).toEqual(['Dire Straits feat. Sting'])
+    })
+
+    it('says the BEA rating of the track, not its position, and marks each source with its own colour (UAT-228)', () => {
+        const host = draw()
+        const first = host.querySelector('.tracks-tabs__row')
+        const bea = first.querySelector('.tracks-tabs__ref--bea')
+        const spotify = first.querySelector('.tracks-tabs__ref--spotify')
+        expect(bea.textContent).toBe('BEA ★ 87')
+        expect(bea.getAttribute('aria-label')).toBe('BestEverAlbums rating 87')
+        expect(spotify.textContent).toBe('Spotify 61%')
+        expect(spotify.getAttribute('aria-label')).toBe('Spotify popularity 61%')
+        // a track with a BEA position but no rating says it has no rating
+        const noRating = draw({ tracks: [{ position: 1, title: 'X', rank: 3, spotifyPopularity: 10, duration: 60 }] })
+        expect(noRating.querySelector('.tracks-tabs__ref--bea').textContent).toBe('BEA —')
     })
 
     it('writes a title as text, never as HTML', () => {
