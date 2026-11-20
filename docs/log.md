@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:34] session — F73: o campo em uso sobrevive ao redesenho; a aba antiga recarrega; a tela antiga de geração saiu; o inventário se solta
+
+**Branch:** fix/f73-screens-keep-the-field
+
+- Decisão de arquitetura (decidido pelo agente — revisável): três regras, cada uma num lugar só. `utils/keepField.js` devolve o campo em uso depois de um redesenho inteiro; `installStaleBuildGuard` protege todo arquivo pedido sob demanda, não só a troca de tela; a inscrição de uma tela numa loja vai em `this.subscriptions` da `BaseView`, com um teste de arquitetura que guarda isso.
+- UAT-212 a UAT-215 em `fixed`. Prova: `reports/evidence/F73/2026-11-19-screens-keep-the-field-proof.md`.
+- Fica de fora, anotado: a tela de playlists ainda se redesenha inteira a cada aviso das lojas; um clique no instante de um redesenho pode se perder.
+- O MJRP exportou de verdade em produção para o Spotify (30 de 30 faixas) e para o Apple Music (na pasta da série): «sem o problema do campo funcionam os exports apple e spotify».
+
 ## [2026-11-19 23:34] review — reconferência visual de F56, F58, F60, F63, F65 e F70 por quem não implementou; três achados viram issues
 
 - Relatórios: `reports/audits/2026-11-19-F56-visual-parity-recheck.md` e os de F58, F60, F63, F65 e F70, na mesma pasta. Feitos por um auxiliar que não implementou nenhuma das seis.

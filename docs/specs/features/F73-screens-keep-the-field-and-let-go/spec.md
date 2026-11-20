@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: fast
 solution_type: fix
 imports: []
@@ -26,13 +26,22 @@ Relato do MJRP em produção, 2026-11-19: «bug de foco/keystroke no batch name 
 - [REQ-04] Uma tela deixada não escuta mais nenhuma loja; uma regra só diz como uma tela se inscreve e se solta. · fixes UAT-215
 
 ## Observable States
-A escrever com o conserto.
+A feature não importa nenhum requisito (conserto de quatro issues). Os estados de comportamento que mudam ou nascem, em `docs/specs/behavior.md`:
+
+- `^playlists-batch-name-live` (muda): o campo em uso continua em uso quando a tela é redesenhada.
+- `^playlists-no-albums` (muda): sem playlists, a tela diz isso e leva ao Blending Menu; o formulário antigo saiu.
+- `^screens-left-and-stale-tab` (nasce): uma tela deixada não desenha mais; a aba de versão antiga recarrega uma vez.
+
+**Prototype**: none — conserto de comportamento; a única tela nova é o quadro «No playlists here yet», que usa o painel e o botão que o app já tem (decidido pelo agente — revisável).
 
 ## Success Criteria
-A escrever com o conserto.
+- Digitar no «Batch Name» com a tela sendo redesenhada mantém o foco, o texto e o cursor.
+- Uma falha de arquivo pedido sob demanda recarrega o app uma vez, e não outra vez em menos de um minuto.
+- `/playlists` vazio não mostra campo de nome, exportação nem o formulário antigo.
+- Depois de deixar o inventário, a loja do inventário não tem ouvinte da tela.
 
 ## Out of Scope
-Redesenhar as telas por partes em vez de inteiras.
+Redesenhar as telas por partes em vez de inteiras. É a correção de fundo: enquanto a tela de playlists se redesenha inteira a cada aviso, um clique dado no instante de um redesenho pode se perder.
 
 ## Open Questions
 - Por que o rascunho do MJRP não voltou ao recarregar (não reproduzido).
