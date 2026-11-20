@@ -217,11 +217,61 @@ Os estados da biblioteca de séries, da janela de ranking, do botão do Spotify,
 - **Tela sempre montada.** Quando duas mudanças de endereço correm ao mesmo tempo (um endereço que redireciona, como `/callback`, `/album-series` e `/series`; dois cliques seguidos; uma tela lenta que a pessoa abandona), só a mais nova desenha e é montada, uma vez: os botões da tela que fica respondem (F67 · `router.js` `renderView`). ^app-route-one-owner
 - **Erro ao desenhar uma tela.** Mostra "View Error" com a mensagem e o botão "Go Back" (RT2 · `router.js` `renderView`). ^app-view-error
 - **Menu principal.** O topo tem Home, "Music Series" (By Album, By Artist, By Genre, By Track e Playlists), The Blending Menu, Playlists e Inventory; By Artist, By Genre e By Track aparecem como "Soon", não são links e o clique não navega (até a F63 navegavam, apesar do que esta linha dizia) (T1, T2, F63 · `components/TopNav.js`, `components/navigation/SeriesDropdown.js`). ^app-main-menu
-- **Menu em gaveta.** Abaixo de 768 px o menu vira um botão ☰ que abre uma gaveta; ela fecha ao clicar num link, no fundo, no ✕ ou ao ampliar a janela, e trava a rolagem da página (T3 · `components/TopNav.js:92-147,258-308`). ^app-mobile-drawer
+- **Menu em gaveta.** Abaixo de 1024 px (a marcação usa `lg:`) o menu vira um botão ☰ que abre uma gaveta; no celular, até 767 px, a gaveta fica escondida e vale o menu da moldura do celular (ver ^phone-menu-asks-before-clearing); ela fecha ao clicar num link, no fundo, no ✕ ou ao ampliar a janela, e trava a rolagem da página (T3 · `components/TopNav.js:92-147,258-308`). ^app-mobile-drawer
 - **Tela "em breve".** `/artists`, `/genres` e `/tracks` mostram "Coming Soon / We're working hard…" e o botão "Back to Albums" (CS1 · `views/ComingSoonView.js:19-66`). ^app-coming-soon
 - **Rodapé.** Mostra Home, Albums e Playlists, "Powered by MJRP Software" e "Last updated:" com a hora em que a página foi carregada (T4 · `components/Footer.js:9-37`). ^app-footer
 - **Limpar o cache.** O botão "Clear Cache" do rodapé apaga o que o app guardou no navegador sobre álbuns (os álbuns, as notas e os rankings lidos) e só isso: a conexão com o Spotify, o login e as preferências ficam. Mostra "Cache Cleared!" e recarrega a página; a carga seguinte busca os álbuns de novo (T5; v4.0, F48 · `components/Footer.js`, `services/albums/clearAlbumCaches.js`). ^app-clear-cache
 - **Endereço local único.** Rodando o app na própria máquina, uma página aberta em `http://localhost:5010` é levada para o mesmo lugar em `http://127.0.0.1:5010`, onde o login, o Spotify e o guardado funcionam juntos (v4.0, F50 · `utils/localAddress.js`, `app.js`). ^app-local-address
+
+## No celular (F76)
+
+Regras do app no celular, a tela de até 767 px de largura (iPhone 15 Pro, 393x852 px, de referência). Cada linha diz o que o código faz hoje; o que se vê, tela a tela, está em `docs/specs/info-arch.md` (seções «O celular (F76)» e «Estados no celular»). O desenho do celular foi decidido pelo agente e espera o juízo do MJRP no iPhone (F76, TASK-09).
+
+### O que é só do celular
+
+- **O computador não muda.** Nenhuma regra, marcação ou comportamento da F76 age de 768 px para cima; ali o app é o de antes. Marcação compartilhada só ganha uma classe nova que não tem regra fora do celular; o que é só do celular é montado só no celular (`isPhone()`) ou leva `md:hidden` (F76, REQ-12 · `utils/isPhone.js`). ^phone-only-desktop-unchanged
+- **«Celular» tem uma definição só, escrita duas vezes.** No CSS é `@media (max-width: 767px)`, em `public/css/mobile.css` e em `public/css/mobile/<tela>.css`; no código é `isPhone()`. O teste `test/architecture/phoneStylesStayOnThePhone.test.js` falha se uma regra de celular ficar fora da consulta (F76 · `test/architecture/phoneStylesStayOnThePhone.test.js`). ^phone-one-line
+- **O que é do celular nasce e morre com o celular.** A moldura (barra do topo, barra de baixo, «Back to top»), as folhas e as peças só do celular são montadas quando a tela é celular e tiradas quando deixa de ser (a rotação, a janela redimensionada). Uma folha aberta fecha se a tela deixar de ser celular. O iPhone 15 Pro deitado tem 852 px e recebe o desenho de computador (F76 · `components/navigation/PhoneShell.js`, `components/ui/Sheet.js`). ^phone-parts-mount-only-on-phone
+- **Menu do celular.** No celular a barra de computador e a gaveta ☰ ficam escondidas e o menu é o da moldura: uma folha de baixo aberta pelo botão da barra do topo. «Clear album cache» pergunta antes de limpar: «Clear the album cache?» (F76 · `components/navigation/PhoneMenu.js`). ^phone-menu-asks-before-clearing
+- **Uma tela nova começa no topo.** Ao trocar de destino pela barra de baixo, a tela nova abre no topo; a mesma tela redesenhada mantém o lugar. Tocar no destino atual leva ao topo (F76 · `components/navigation/PhoneShell.js`). ^phone-new-screen-starts-at-top
+
+### Janelas como folhas, e a página de trás
+
+- **Toda janela do celular é folha.** De tela cheia quando há o que ler ou editar (o álbum, o ranking, a edição da série e a do item do inventário, a escolha de uma série no Blend); de baixo quando é uma escolha curta (filtros, ações, confirmações, entrar, exportar para o Spotify, o menu). A folha tem `role="dialog"` e `aria-modal`, prende o foco e o devolve a quem abriu, fecha por Esc, pelo botão de fechar de 44 px e, a de baixo, por toque fora e arrastando para baixo (F76, REQ-04 · `components/ui/Sheet.js`, `components/ui/BaseModal.js`). ^phone-windows-as-sheets
+- **A página de trás fica presa.** Enquanto houver uma janela aberta a página não rola, e ao fechar a última ela volta ao mesmo lugar. O corpo da folha é o único lugar que rola sozinho; não há rolagem dentro de rolagem (F76 · `utils/pageScrollLock.js`, `components/ui/windowsHoldThePage.js`). ^phone-page-held-behind-windows
+
+### Meu ranking
+
+- **O ranking se move por botões, além de arrastar.** Tocar numa faixa a escolhe; no pé, «Up», «Down», «Move to…» (uma folha com os números de 1 a n) e «Done». Arrastar só vale pela alça de cada faixa: um dedo no título rola a lista. Cada mudança de posição é dita a um leitor de tela («Money is now number 3»). No computador a linha inteira arrasta e não há botões (F76, REQ-07 · `components/ranking/rankWindowPhone.js`, `UserRankModal.js` `moveTrack`). ^phone-ranking-moved-by-buttons
+- **«Reset» tem volta.** Ele devolve a ordem do álbum e mostra «Back to the order of the album.» com «Undo» por 5 segundos; nenhuma pergunta antes. O computador continua sem «Undo» (F76 · `rankWindowPhone.js` `resetWithUndo`). ^phone-ranking-reset-undo-rule
+- **Sair com a ordem não salva pergunta.** «Back» e Esc, com a ordem mudada e não salva, abrem a folha «Discard changes?» («Your new order has not been saved.») com «Keep editing» (o foco começa nele) e «Discard» (vermelho, fecha sem salvar). Sem mudança, ou com a ordem devolvida ao que era, ou depois de «Save ranking», sai direto. Esc sobre a folha fecha só a folha. No computador, «Back» continua saindo sem perguntar (F76, re-conferência N6 · `rankWindowPhone.js`). ^phone-ranking-discard-changes
+
+### Playlists
+
+- **Remover uma faixa não pergunta, e tem Undo.** «Remove from this playlist» tira a faixa e mostra «Removed "…" · Undo» por 6 segundos, acima da barra de ação; mover pela folha mostra «Moved "…" to number 2 · Undo». Apagar a playlist inteira («Delete this playlist») e apagar uma série ou um lote gravado perguntam antes (F76, REQ-08 · `components/playlists/PhonePlaylists.js`, `SavedPlaylistsPhone.js`). ^phone-playlist-remove-undo
+- **Só uma playlist aberta por vez.** As fichas no topo trocam de playlist; a aberta rola com a página. Arrastar uma faixa entre playlists não existe no celular: «Move to another playlist» faz isso por nome (F76 · `PlaylistsDragHandler.js`). ^phone-playlist-one-open
+- **Gravadas: séries fechadas por padrão.** Cada série mostra o resumo na linha («n batches · n playlists»); a tela lembra quais estavam abertas depois de uma atualização da lista. Um nome de lote gerado pela máquina aparece legível, com o carimbo de data e hora tirado do nome e os códigos escritos por extenso; o nome real continua sendo o usado ao editar e apagar (F76, REQ-08 · `components/playlists/batchNames.js`). ^phone-saved-series-closed
+
+### Criar uma série
+
+- **A barra dos escolhidos.** Na Home, a barra de ação fica sempre à vista e diz quantos álbuns a pessoa escolheu («N albums chosen»); com nenhum, diz «No albums chosen · Pick albums to start» e «Create series» fica apagado. Tocar de novo num álbum escolhido o tira (no computador o segundo clique segue sem efeito). O número de ordem na capa diz o lugar na série (F76, REQ-09 · `components/home/HomePhoneChosen.js`). ^phone-series-chosen-bar
+- **O nome é pedido antes de criar.** No celular, com o campo do nome vazio, «Create series» não cria: abre a folha dos escolhidos, diz «Give the series a name first.», marca o campo e põe o cursor nele. O computador continua criando com «New Album Series» (ver ^home-series-default-name) (F76, re-conferência N10 · `HomePhoneChosen.js`). ^phone-series-name-required
+- **Remover um escolhido pela folha tem Undo; na edição de uma série não.** Na folha dos escolhidos, «Removed «X» · Undo» devolve o álbum ao mesmo lugar. Na janela de edição de uma série nada é gravado até «Save Changes», e «Cancel» descarta tudo: é o desfazer dela (F76). ^phone-series-remove-undo
+
+### Blend
+
+- **«Blend it!» diz por que está apagado.** A ação fica sempre à vista na barra de ação; apagada, a nota diz «Step 1 of 4: choose a series» ou «Step 2 of 4: choose a recipe»; pronta, «receita · 60 min»; gerando, o botão diz «Blending…». A série se escolhe numa folha de tela cheia com busca; um toque escolhe e fecha (F76, REQ-10 · `views/BlendingMenuView.js`, `components/blend/BlendSeriesPhonePicker.js`). ^phone-blend-button-reason
+
+### Albums
+
+- **Filtros numa folha.** A tela mostra a busca e o botão «Filters» com quantos filtros estão ligados; os filtros, a ordem, a grade ou lista e «Reload albums from the sources» ficam na folha. Cada controle chama o mesmo tratamento do computador. As ações do álbum e da série ficam em folhas, e apagar ou tirar da série pede confirmação como no computador (F76, REQ-05 · `components/ui/FilterSheet.js`, `components/series/SeriesPhoneSheets.js`). ^phone-albums-filters-in-sheet
+
+### Inventário
+
+- **As linhas vêm de 50 em 50.** A lista do celular desenha 50 linhas e termina com «Showing 50 of 211» e «Show 50 more» (no último bloco, o número que falta); a página não se mexe e o foco vai à primeira linha nova. No computador a passada única de todos os itens não muda (F76, REQ-11 · `models/inventoryJump.js` `PHONE_CHUNK`, `views/InventoryView.js`). ^phone-inventory-chunks
+- **O salto «A–Z».** Na ordem por artista, a barra presa tem o botão «A–Z» com as letras presentes; em outra ordem, trechos de 25 posições. Saltar além do que está desenhado desenha os blocos até lá e põe a primeira linha logo abaixo da barra presa (F76 · `InventoryPhoneSheets.js` `openJumpSheet`). ^phone-inventory-jump
+- **Mudar o status é uma folha.** A pílula de status da linha abre a folha «Status» (Owned, Not Owned, Wishlist); a folha fecha antes de gravar, e a lista não volta ao topo. A mensagem de gravar é a de sempre (ver ^inventory-status-changed) (F76 · `InventoryPhoneSheets.js` `openStatusSheet`). ^phone-inventory-status-sheet
+- **Os valores ficam à vista, o resto numa folha.** Os dois totais e a moeda ficam na página; «Data provided by Discogs.» fica sempre junto dos valores; o resto (a contagem de álbuns com valor, a taxa, a frase das configurações de vendedor) está na folha «About the values» (F75, F76 · `InventoryPhoneSheets.js`). ^phone-inventory-values-sheet
 
 ## Guardado no navegador
 

@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:55] session — F76 documentação: o celular em info-arch, behavior, arch e manual
+**Branch:** feat/f76-mobile-docs
+As notas das telas da F76 foram dobradas em `info-arch.md` (navegação, inventário por tela e 55 estados com block ID), `behavior.md` (§ No celular), `arch.md` (a camada do celular) e nas páginas do manual (parte «No celular»); a página de leitura do info-arch foi gerada de novo.
+Cada afirmação vaga foi conferida no código; a linha da gaveta ☰ de `behavior.md` foi corrigida (a marcação usa `lg:`, abaixo de 1024 px, e não 768 px).
+
 ## [2026-11-20 03:44] session — F76 polimento: notas das telas e prova (Home, Playlists)
 **Branch:** feat/f76-mobile-polish-home-playlists
 Seção «Polimento pós-crítica» acrescentada a screens/home-and-blend.md e screens/playlists.md; provas em reports/evidence/F76/playlists/ e home-blend/ (antes = main, depois = este ramo, 393x852, 393x660 e 1280x800).

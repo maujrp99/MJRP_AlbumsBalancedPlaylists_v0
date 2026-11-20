@@ -32,6 +32,13 @@
 *   Parses valid URL segments (`/albums`, `/ranking`, `/playlists`) to build a breadcrumb trail.
 *   **UX**: Clicking a previous crumb triggers `Router.navigate()` (Back navigation).
 
+#### No celular
+Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
+
+*   **Moldura.** `components/navigation/PhoneShell.js` põe na página, só no celular, a barra do topo (nome da tela e botão do menu), a barra de baixo com os cinco destinos (`phoneTabs.js`) e o «voltar ao topo». O `TopNav` e o `Footer` continuam na página e o CSS os esconde. O `app.js` liga a moldura com `startPhoneShell`.
+*   **Para ir a outra tela:** a barra de baixo (Home, Albums, Blend, Playlists, Inventory). Tocar no destino atual leva ao topo. Para o resto: o botão do topo abre o menu (`PhoneMenu.js`), uma folha com a conta, as playlists novas, a ligação com o Spotify, «Clear album cache» e «Sign Out».
+*   **Folha.** Toda janela do celular usa `components/ui/Sheet.js` (de tela cheia ou de baixo); as janelas antigas viram folha pela casca, e a página de trás é presa por `windowsHoldThePage.js`.
+
 ---
 
 ## 2. Interactive Widgets
@@ -131,6 +138,12 @@ stateDiagram-v2
 *   **Badges**: Shows Year. Opened from an inventory item (the item holds the album in `albumData`), it also shows what belongs to the item: its status ("OWNED", "NOT OWNED" or "WISHLIST", from `models/inventoryStatus.js`), format, price, condition and notes. Opened for an album that is not an inventory item, it shows no status (F71).
 *   **Tracks of an inventory item** (F71, UAT-220): opened from the inventory, the window is given `loadAlbum`. It shows what the item keeps at once (its tracks, or "Loading the tracks of this album…"), asks the album load for the album, and shows the tracks that come, with today's ratings and popularity. When none come it keeps the item's tracks, or says the tracks could not be loaded. Opened with no `loadAlbum` (the albums screen), an album with no tracks shows "No tracks are kept for this album."
 *   **Comparison**: Embeds `TracksRankingComparison` component to show discrepancies between "Original Album Order" and "Acclaim Order".
+
+#### No celular (janela do álbum)
+Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
+
+*   **Tela cheia, uma rolagem só.** Uma barra presa mostra o título quando o do cabeçalho sai da vista e tem o fechar à direita; o «Close» do rodapé não aparece. O cabeçalho tem a capa de 112 px e o título inteiro; as três fontes (`Original`, `BEA`, `Spotify`) são um controle de três opções, e as faixas vêm em linhas de duas linhas (`components/ranking/TracksTabs.js`).
+*   **Pelo inventário**, o valor e «Where to buy» viram uma linha cada, antes das faixas; tocar na linha do valor abre a seção inteira.
 
 ### 4.4 `EditAlbumModal.js`
 
