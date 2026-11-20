@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 09:39] session — UAT-229: o nome padrão do lote diz a série e a playlist (ou a receita)
+**Branch:** feat/f76-batch-name-default
+O MJRP aceitou o formato proposto: «Pra essa iteração serve». Um modelo puro, `models/batchNaming.js` (testes primeiro, vistos falhando), decide o nome; os códigos dos títulos (SPFY, BEA, Bal.Intv., Intv.) passam a viver ali e `components/playlists/batchNames.js` os usa, sem segunda cópia. O serviço de geração diz o nome da receita (`recipeName`). Decidido pelo agente — revisável: uma playlist só leva o título dela; várias levam o nome da receita, sem «[MJRP]». Suíte 3080, lint limpo.
+
 ## [2026-11-20 09:31] session — UAT-230 em produção
 **Branch:** main
 Site publicado da `main`. Provado no app local, conta do MJRP, 393x852: «Track Listing» (153 px), «BEA» e «Spotify» (102 px) numa linha, sem reticências.

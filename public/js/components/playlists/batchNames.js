@@ -10,14 +10,10 @@
  * Pure: strings in, strings out.
  */
 
+import { spellOutCodes } from '../../models/batchNaming.js'
+
 const STAMP = /\s*\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(:\d{2})?\s*$/
 const APP_PREFIX = /^TheAlbumBlender Playlist\b\s*/i
-const CODES = [
-    [/\bSPFY\b/g, 'Spotify'],
-    [/\bBEA\b/g, 'BestEverAlbums'],
-    [/\bBal\.\s*Intv\.?/gi, 'balanced'],
-    [/\bIntv\.?/gi, 'interleaved']
-]
 
 /** «20 Nov 2026, 23:21» from the stamp at the end of a name; '' when it has none. */
 function stampText(name) {
@@ -39,8 +35,7 @@ export function readableBatchName(name) {
     if (!stamped && !prefixed) return { text: raw, machine: false }
 
     let text = raw.replace(STAMP, '').replace(APP_PREFIX, '')
-    CODES.forEach(([code, word]) => { text = text.replace(code, word) })
-    text = text.replace(/\s{2,}/g, ' ').trim()
+    text = spellOutCodes(text)
     if (!text) text = stampText(raw) ? `Saved ${stampText(raw)}` : 'Untitled batch'
     return { text, machine: true }
 }

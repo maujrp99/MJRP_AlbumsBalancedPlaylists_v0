@@ -141,6 +141,8 @@ Os estados da biblioteca de séries, da janela de ranking, do botão do Spotify,
 - **Quadro de ações.** O painel "Actions & Export" só aparece com playlists e tem Undo, Redo, Save, Export to Spotify, Export to Apple Music e Download JSON (P19; v5.0, F62 · `components/playlists/PlaylistsGridRenderer.js` (`renderExportSection`)). ^playlists-actions-panel
 - **Baixar em JSON.** O botão "Download JSON" baixa o arquivo `playlists_<lote>_<AAAA-MM-DD>.json` com as playlists e o nome do lote (P15 · `views/playlists/PlaylistsExport.js:33-58`). ^playlists-download-json
 
+- **Nome padrão de um lote novo.** Ao gerar ou gerar de novo (fora da edição de um lote salvo), o campo «Batch name» vem com o nome da série e o que o lote é: o título da playlist quando é uma só, com os códigos por extenso («Trip Hop Vol.1 · Spotify Top 3 balanced»), ou o nome da receita quando são várias, sem a marca entre colchetes («Trip Hop Vol.1 · Zé's Balanced Playlists»). Sem série, o nome antigo com dia e hora do relógio local («TheAlbumBlender Playlist 2026-11-19 23:21»). O nome não leva data: o lote salvo já tem a sua (pedido do MJRP, 2026-11-20 · UAT-229, UAT-225 · `models/batchNaming.js`, `controllers/BlendingController.js` `_generateDefaultBatchName`). ^batch-default-name
+
 ## Exportar para Spotify e Apple Music
 
 - **Janela de envio ao Spotify.** Começa mostrando o nome (a série, de início), o modo e a contagem de playlists e faixas; depois passa por procurar as faixas (com barra de porcentagem), criar e acrescentar, e termina sempre no relato do envio. Um segundo clique em "Export to Spotify" com o envio em curso não começa outro (X1; v5.0, F62 · `components/SpotifyExportModal.js`). ^spotify-export-steps
