@@ -3,10 +3,18 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 13:30] review — crítica independente da proposta de arquitetura do app (F78): não vai ao MJRP como está
+**Branch:** main
+Um agente separado julgou `design/proposals/f78-app-architecture/architecture-proposal.md` (ramo `feat/f78-app-architecture-proposal`): 2 P0, 7 P1, 2 P2. A pilha recomendada (React Native com núcleo JS) se sustenta; antes de ir ao MJRP a proposta precisa responder: gravar sem prazo e sem estado «pendente» (VT-02); formato dos documentos do Firestore entre versões do app (VT-05); onde fica a costura do núcleo, com `SeriesService` e `PlaylistsService` presos ao Firestore e à tela (IV-03); Firebase JS contra React Native Firebase (RS-04); limite por pessoa só na memória da instância, sem teto global nem App Check (MA-04, MA-05). Parte portável refeita pelo crítico: 116 arquivos, cerca de 34% com um polyfill, 0% provado em aparelho; `crypto.randomUUID` em `Track.js` quebra no motor do app e alcança todas as receitas. Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-f78-architecture-critique.md`. A proposta volta ao autor.
+
 ## [2026-11-20 13:19] session — F78: proposta de arquitetura guiada por risco do app para iPhone e Android (sem ADR)
 **Branch:** feat/f78-app-architecture-proposal
 Escrita pela `mjrp-designing-architecture` em `design/proposals/f78-app-architecture/architecture-proposal.md` (o guarda de caminhos recusou a pasta da feature: proposta mora em `design/proposals/`); ponteiro em `docs/specs/arch.md` § Propostas em avaliação; o `plan.md` da F78 aponta para ela; página para o MJRP ler: https://claude.ai/artifact/35vmLkhuGQhYrBkpzTJzJc. Medido no código: 66 arquivos e 7.392 linhas de regras não tocam o navegador, 24 de 51 serviços também não, 954 dos 2.640 casos de teste exercitam só esse código, e 46% do site é tela a reescrever.
 Recomenda React Native com Expo com o núcleo de regras em `shared/` e pedaços nativos só para o token do Apple Music; fica à espera da crítica independente e do MJRP (onze decisões dele, seis spikes, a emenda do Art. II da constituição). O doctor está vermelho por erros que já estavam na `main` (links antigos, sensores sem `node_modules` neste worktree, `## Now` do MEMORY parado); nenhum vem destes arquivos.
+
+## [2026-11-20 13:14] session — proposta de medição de uso, com a adoção de cada opção
+**Branch:** main
+A pedido do MJRP: `design/proposals/f77-usage-measurement/proposal.md`. Proposta do agente, a decidir por ele: PostHog no site e no app; Firebase Analytics e Crashlytics só no app; um monitor de erros no site (Sentry ou a captura do PostHog). Adoção medida hoje (instalações por semana no npm, estrelas no GitHub, parcela de sites no W3Techs, parcela de apps no 42matters): as três escolhas estão entre as mais adotadas da sua categoria. Ele já está criando a conta do PostHog; região recomendada: União Europeia (não há região no Brasil).
 
 ## [2026-11-20 12:47] decision — o MJRP abriu a v6.0: o app (React Native) e a medição do uso com o PostHog
 **Branch:** main
