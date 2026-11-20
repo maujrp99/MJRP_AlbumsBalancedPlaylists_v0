@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:55] session — F72: a contagem de álbuns vai para a paginação e conta o que está na tela
+
+**Branch:** feat/f72-albums-count-in-the-pager
+
+- Julgamento do MJRP: «o # de albuns deveria ser o contador do que temos na pagina ou no scroll antes de carregar mais, carregou mais atualizar o numero de albuns … onde vc colocou creio que fica redundante, eu removeria». A linha do cabeçalho saiu; a paginação diz «Showing 1–20 of 48 series · 97 albums».
+
 ## [2026-11-20 00:52] session — F75: prévia do cartão em três níveis; S-58, F76 e UAT-223 (o app no celular); candidato «rede de colecionadores»
 
 - O MJRP reagiu à v2 da F75: as contagens parecem botões, as informações do cartão ficam soltas, o valor parece preço de venda, comprar está escondido. Prévia em três níveis (Consolidar, Elevar, Transformar) em `design/proposals/inventory-card-proposal.html` e no comparador; o protótipo só muda depois da escolha.

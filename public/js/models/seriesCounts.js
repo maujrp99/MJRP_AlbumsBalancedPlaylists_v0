@@ -1,37 +1,16 @@
 /**
- * seriesCounts - how many series and albums the albums screen holds (F72, S-55).
+ * seriesCounts - how many albums the series on screen hold (F72, S-55).
  *
- * Pure: it reads what the filter already answered (models/seriesFilter.js) and writes the line
- * the header shows. The count is of the albums asked for in the series that pass the filters, on
- * every page, not of the albums already loaded.
+ * Pure: it reads what the filter and the paging already answered. The count is of the albums
+ * asked for in the series on screen (this page, or what the scroll has loaded so far), not of
+ * the albums already loaded: the pager says it beside "Showing 1–20 of 48 series".
  */
 
 /**
- * @param {Array<{ queries: Array }>} matching - the series that pass the filters, each with the
- *        queries of it that pass
+ * @param {Array<{ queries: Array }>} groups - the series on screen, each with the queries of it
+ *        that pass the filters
  * @returns {number} the albums of all of them
  */
-export function countAlbums(matching) {
-    return (matching || []).reduce((sum, group) => sum + (group.queries || []).length, 0)
-}
-
-const plural = (count, one, many) => `${count} ${count === 1 ? one : many}`
-
-/**
- * The line of the header.
- * @param {Object} counts
- * @param {boolean} counts.single - one series on screen
- * @param {number} counts.series - series that pass the filters
- * @param {number} counts.totalSeries - series the person has
- * @param {number} counts.albums - albums of the series that pass
- * @returns {string} '' when there is nothing to say
- */
-export function describeCounts(counts) {
-    if (!counts || !counts.totalSeries) return ''
-    const albums = plural(counts.albums, 'album', 'albums')
-    if (counts.single) return albums
-    const series = counts.series === counts.totalSeries
-        ? `${counts.totalSeries} series`
-        : `${counts.series} of ${counts.totalSeries} series`
-    return `${series} · ${albums}`
+export function countAlbums(groups) {
+    return (groups || []).reduce((sum, group) => sum + (group.queries || []).length, 0)
 }

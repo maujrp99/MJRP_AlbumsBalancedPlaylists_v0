@@ -13,7 +13,7 @@
  * page to move on. It leaves to the one below what belongs to the end of the list: the notice
  * about unchecked albums, "Load N more" and the watch that asks for more when the end is reached.
  *
- * Props: { paging: { mode, size, page, pages, total, from, to, hasMore, totalSeries, unchecked, single },
+ * Props: { paging: { mode, size, page, pages, total, from, to, hasMore, totalSeries, albums, unchecked, single },
  *          place: 'bottom' (default) | 'top', onPage(page), onSize(size), onMode(mode), onMore() }
  */
 import Component from '../base/Component.js';
@@ -64,7 +64,7 @@ export default class Pager extends Component {
         const filtered = paging.total < paging.totalSeries ? ` (of ${paging.totalSeries} in all)` : '';
         const count = paging.total === 0
             ? 'No series matches these filters'
-            : `Showing <b class="text-white">${paging.from}–${paging.to}</b> of <b class="text-white">${paging.total}</b> series${filtered}`;
+            : `Showing <b class="text-white">${paging.from}–${paging.to}</b> of <b class="text-white">${paging.total}</b> series${filtered}${this._albumsOnScreen(paging)}`;
 
         return `
             <div class="series-pager glass-panel p-4 ${top ? 'mb-6' : 'mt-6'} flex flex-col gap-4" data-paging-mode="${paging.mode}" data-pager-place="${top ? 'top' : 'bottom'}">
@@ -87,6 +87,13 @@ export default class Pager extends Component {
                 ${notice}
                 ${scroll ? (top ? '' : this._renderMore(paging)) : this._renderPages(paging)}
             </div>`;
+    }
+
+    /** How many albums the series on screen hold: this page, or what the scroll has loaded so far (F72). */
+    _albumsOnScreen(paging) {
+        const count = Number(paging.albums);
+        if (!Number.isFinite(count) || paging.albums === undefined || paging.albums === null) return '';
+        return ` · <b class="text-white">${count}</b> ${count === 1 ? 'album' : 'albums'}`;
     }
 
     /** The filter in use reads facts some albums do not have yet: say how many, and when they will. */

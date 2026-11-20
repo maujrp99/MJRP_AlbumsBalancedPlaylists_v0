@@ -214,7 +214,7 @@ export default class SeriesController {
                 mode: pagingMode, size: pageSize, page: cut.page, pages: cut.pages,
                 total: cut.total, from: cut.from, to: cut.to, hasMore: cut.hasMore,
                 totalSeries: sorted.length,
-                albums: countAlbums(matching), // of the series that pass the filters, on every page (F72)
+                albums: countAlbums(cut.items), // of the series on screen: this page, or what the scroll has loaded so far (F72)
                 single: !isAll, // one series on screen: nothing to page, only the notice may show
                 unchecked
             }

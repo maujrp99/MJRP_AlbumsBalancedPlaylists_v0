@@ -30,6 +30,7 @@ O MJRP, em 2026-11-20: «outra melhoria conseguimos colocar quantos albums estao
 <!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here. -->
 - [REQ-01] O cabeçalho da tela de séries de álbuns diz quantas séries e quantos álbuns ela reúne; com filtro ou busca, quantas séries passam, de quantas, e os álbuns delas; com uma série só, os álbuns dela. · traces [[S-55-see-how-many-albums-the-albums-screen-holds]]
 - [REQ-02] A caixa da paginação aparece também acima da lista de séries, com a mesma contagem, o tamanho da página, a forma e os números de página; o que uma muda, as duas mostram. «Load N more» e o aviso de álbuns não conferidos ficam só na de baixo. · fixes S-55
+- [REQ-03] A contagem de álbuns é a das séries que estão na tela (a página, ou o que o scroll já carregou), fica na linha da paginação («Showing 1–20 of 48 series · 97 albums») e muda quando a página muda ou o scroll carrega mais. A linha sob o título, da primeira versão, sai. · fixes S-55
   verified_by:: `test/models/seriesCounts.test.js`, `test/components/series/SeriesHeader.counts.test.js`, `reports/evidence/F72/2026-11-20-albums-count-proof.md`
 
 ## Observable States
