@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 14:09] session — F78: a constituição v2.0.0 proposta, para substituir a de 2025
+**Branch:** feat/f78-constitution-v2
+`design/proposals/f78-app-architecture/constitution-v2.md`, pelo modelo da `mjrp-designing-architecture`: nove artigos escritos do que o código é hoje (cada regra com a fonte: ADR, teste de arquitetura ou de segurança, decisão do MJRP com a data) mais o app do ADR-0022, em TypeScript; as regras do app marcadas «vale quando `app/` existir», com o teste que as vai conferir; o que saiu da v1.0.0 e por quê; a lista do que muda no dia do aceite (arquivos e linhas, onde guardar a v1.0.0, os sensores que leem a constituição).
+Nada entra em vigor: `docs/specs/constitution.md` não foi tocado, o ADR-0022 segue «Proposed» (ganhou o TypeScript e a dependência da v2), a emenda ganhou a nota de que foi substituída, e a tarefa da F78 espera o MJRP ler e aceitar os dois textos.
+
 ## [2026-11-20 14:04] decision — TypeScript passa a ser permitido, e o MJRP acha que deve ser usado
 **Branch:** main
 Palavras dele, sobre a proposta que dizia «sem TypeScript»: «Ignora o sem typescript, podemos ter typescript, creio que devemos inclusive». A proposta da constituição v2 e o ADR-0022 (os dois ainda propostas) passam a dizer: o app em `app/` é escrito em TypeScript. Recomendação do agente para o resto, a decidir por ele: o núcleo `shared/` e o site continuam em JavaScript com JSDoc por ora, e migram por ADR quando o caminho do servidor estiver medido (o servidor é CommonJS e hoje recebe o `shared/` copiado, sem passo de compilação).

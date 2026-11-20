@@ -5,8 +5,7 @@
 - [x] a feature priorizada pelo MJRP (2.ª em `priority.md`); em 2026-11-20 13:44 ele mandou construir, e às 13:45 seguir a recomendação nas decisões da proposta
 - [x] proposta de arquitetura guiada por risco (`mjrp-designing-architecture`), criticada, revista e reconferida (`design/proposals/f78-app-architecture/architecture-proposal.md`, § 16 e § 17)
 - [x] o ramo `feat/f78-app-first-milestone-specs` criado da `main` local (`4a1264a`, com a `5d1d0b2` juntada); spec, plano e tarefas do primeiro marco; o ADR-0022 em «Proposed»; a emenda da constituição proposta
-- [ ] o ADR-0022 aceito · waiting:: human — a pilha mexe na constituição: o aceite é dele, não do agente · action:: ler `docs/decisions/0022-app-in-react-native-over-a-shared-core.md` e aceitar, mudar ou recusar
-- [ ] a emenda da constituição aceita · waiting:: human — a constituição só muda com a aprovação dele (Governance) · action:: ler `design/proposals/f78-app-architecture/constitution-amendment.md` e escolher a redação (a), a (b) ou outra
+- [ ] o MJRP lê e aceita a constituição v2 e o ADR-0022 · waiting:: human — ele escolheu substituir a constituição em vez de emendá-la (2026-11-20 14:03, «Sobre a constitution pode ser superseded já envelheceu») e quer o app em TypeScript (14:04); os dois textos são propostas, e o aceite é dele, não do agente · action:: ler `design/proposals/f78-app-architecture/constitution-v2.md` e `docs/decisions/0022-app-in-react-native-over-a-shared-core.md` e aceitar, mudar ou recusar cada um
 - [ ] Xcode e Android Studio instalados nesta máquina · waiting:: human — hoje só há as ferramentas de linha de comando: nenhum simulador do iPhone nem emulador do Android roda · action:: instalar o Xcode (App Store) e o Android Studio com um emulador, e abrir o Xcode uma vez para aceitar a licença
 - [ ] a conta de desenvolvedor da Apple · waiting:: human — só ele cria (US$ 99 por ano); sem ela não há login com a Apple nem build no iPhone de verdade · action:: entrar no Apple Developer Program e dizer o Team ID ao agente
 - [ ] a conta de desenvolvedor do Google · waiting:: human — só ele cria (US$ 25, uma vez); não bloqueia este marco, só o teste fechado do Google · action:: criar a conta no Google Play Console quando o iPhone estiver no TestFlight
@@ -14,7 +13,7 @@
 - [ ] a chave do PostHog · waiting:: human — o projeto e a chave são dele (a mesma pendência da TASK-06 da F77) · action:: criar o projeto (EU) e pôr a chave no `.env`; o app usa a mesma chave
 
 ## Implementation
-Na ordem do § 15 da proposta: primeiro o que custa minutos, depois os spikes, depois o site, depois o app. Nenhum código em `app/` antes do ADR-0022 e da emenda aceitos; os spikes rodam em projetos descartáveis, fora do repositório.
+Na ordem do § 15 da proposta: primeiro o que custa minutos, depois os spikes, depois o site, depois o app. Nenhum código em `app/` antes do ADR-0022 e da constituição v2 aceitos; os spikes rodam em projetos descartáveis, fora do repositório.
 - [ ] TASK-01 spike S6: ler o faturamento do Google Cloud do último mês (IA, Cloud Run, Firestore) e o custo de um álbum novo; relatório `reports/audits/…-f78-spike-s6.md`, em 2 horas · implements:: REQ-05 · model:: opus
 - [ ] TASK-02 Ref-0: `shared/platform/newId.js` (e a ligação do site com `crypto.randomUUID`); `models/Track.js` e `transformers/TrackTransformer.js` usam `newId()`; suíte verde · implements:: REQ-07 · model:: opus
 - [ ] TASK-03 `--max-instances` fixado em `scripts/deploy-server.sh`, com o teste que falha sem ele · implements:: REQ-18 · model:: opus
@@ -52,7 +51,7 @@ Na ordem do § 15 da proposta: primeiro o que custa minutos, depois os spikes, d
 - [ ] `docs/specs/data-model.md`: as regras de convivência e o `_schemaVersion`
 - [ ] `docs/specs/behavior.md`: os quatro desfechos de gravar uma série
 - [ ] `docs/specs/tech-stack.md`: as linhas do app, depois do ADR-0022 aceito
-- [ ] `docs/specs/constitution.md`: o texto da emenda que o MJRP aceitar, com o aceite dele
+- [ ] `docs/specs/constitution.md`: o texto da constituição v2 que o MJRP aceitar, com o aceite dele, e a v1.0.0 guardada (`constitution-v2.md`, «O que muda no dia em que for aceita»)
 - [ ] `docs/manual/00_Deployment_and_Setup.md`: como fazer o build do app no Mac e rodar o autoteste
 - [ ] o log de cada fatia, e o `## Now` do `MEMORY.md` no fecho do marco
 

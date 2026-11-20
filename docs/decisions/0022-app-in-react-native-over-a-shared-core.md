@@ -13,6 +13,7 @@ The analysis, the options measured side by side, the risks and the spikes are in
 
 ## Decision
 - **The app is React Native with Expo**, one code base for iPhone and Android, in `app/` with its own `package.json`. The screens are native components, drawn from the F76 mobile design; the site does not move.
+- **The app is written in TypeScript** (the MJRP, 2026-11-20 14:04: «Ignora o sem typescript, podemos ter typescript, creio que devemos inclusive»). The core in `shared/` stays JavaScript with JSDoc until an ADR moves it, with the server's build path measured (it is CommonJS and receives `shared/` copied, with no compile step).
 - **The rules live in one shared JavaScript core, `shared/`**, used by the site, the app and the server. The core imports no browser, React, Expo, Firebase, `fetch` nor PostHog: what it needs from outside it asks through a port, and each side wires its own. What depends on the engine (`newId`, text comparison and normalization) lives only in `shared/platform/`. The data paths and the document shape live in `shared/data/`, which receives the Firestore functions from outside. A sensor in the suite holds each of these lines.
 - **Firebase in the app is the native SDK package (React Native Firebase)**: disk persistence of Firestore, pending writes that survive closing the app, the sign-in kept in the system keychain. Spike S2 confirms it; if it fails, the app gets thin repositories of its own and the document shape stays one, in `shared/data/`.
 - **Native Swift and Kotlin only where the platform demands it**, starting with the Apple Music user token: a small module that asks permission and returns the token. The catalog and the playlist calls go to the Apple Music API by path, as the site already does.
@@ -26,6 +27,7 @@ The analysis, the options measured side by side, the risks and the spikes are in
 - **The site wrapped with Capacitor** — lost on App Store rule 4.2 and on Apple Music sign-in failing inside a web frame; comes back only as a personal, internal-only step, never as the store product.
 
 ## Consequences
+- On 2026-11-20 the MJRP chose to supersede the constitution instead of amending it («Sobre a constitution pode ser superseded já envelheceu»): this record now depends on constitution v2.0.0 being accepted, proposed in `design/proposals/f78-app-architecture/constitution-v2.md`; the amendment below stays as the record of why.
 - The constitution (Art. II, IV and V) does not allow this as written. This record is accepted only together with an amendment for `app/`, proposed in `design/proposals/f78-app-architecture/constitution-amendment.md`; the MJRP decides both.
 - The site is refactored in slices (Ref-0, Ref-A, Ref-B, then Ref-C and Ref-D), each published alone with the suite green. It is worth doing even without the app (ADR-0016, ADR-0017).
 - Three targets to maintain instead of one: estimated 6 to 11 hours a month (proposal § 10, an estimate, not measured).

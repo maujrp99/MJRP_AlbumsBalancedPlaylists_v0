@@ -86,7 +86,7 @@ Deste marco. Cada linha é uma fatia ou um marco seguinte, com a sua spec quando
 Palavras dele, às 13:45: «Recomendação sua da proposta». Onde a proposta (§ 13) recomenda, vale a recomendação:
 - (4) Android na mesma base desde o primeiro dia; a loja do Google depois do iPhone.
 - (5) Dois marcos: A, o app para ele (TestFlight interno); B, o app público.
-- (6) Emendar a constituição só para `app/`. O texto da emenda ainda passa por ele: `design/proposals/f78-app-architecture/constitution-amendment.md`.
+- (6) Emendar a constituição só para `app/`. O texto da emenda ainda passa por ele: `design/proposals/f78-app-architecture/constitution-amendment.md`. **Depois, às 14:03, ele escolheu substituir a constituição em vez de emendá-la:** «Sobre a constitution pode ser superseded já envelheceu»; e às 14:04, sobre a tipagem: «Ignora o sem typescript, podemos ter typescript, creio que devemos inclusive». A constituição v2.0.0 está proposta em `design/proposals/f78-app-architecture/constitution-v2.md`, com o app em TypeScript; espera a leitura e o aceite dele.
 - (7) App Check; visitante só no site, com limite menor e sem gravar em cache de todos; no app, conta obrigatória.
 - (9) Versão mínima do app, com atualização obrigatória.
 - (10) Sem rede: inventário e ranking próprio funcionam; série e playlists pedem rede.
@@ -97,9 +97,10 @@ Palavras dele, às 13:45: «Recomendação sua da proposta». Onde a proposta (�
 
 ## Open Questions
 As que a proposta não recomenda, e continuam dele:
+- O núcleo (`shared/`) passa a TypeScript agora, ou fica em JavaScript com JSDoc até o primeiro marco do app? Recomendação: ficar até os spikes S1 e S2 terminarem, e decidir por ADR com o caminho de build do servidor medido (`constitution-v2.md`, «Uma pergunta aberta ao MJRP»). **Não bloqueia este marco.**
 - (1) Quantas horas por mês ele aceita gastar só mantendo? (estimativa: 6 a 11.) **Não bloqueia este marco**; pode mudar a pilha (só iPhone, ou sem app de loja) e bloqueia o compromisso com o Android na loja.
 - (2) Quanto tempo o site continua? **Não bloqueia este marco**: a refatoração do site vale sozinha. Se o site for acabar, a vantagem do núcleo em JavaScript cai e a escolha da pilha volta à mesa antes da fatia 3.
 - (3) Se o BestEverAlbums disser não, o app público ainda vale, e de onde vem a nota por faixa? **Não bloqueia este marco**; bloqueia o marco B.
 - (8) O teto global de gasto por dia, e a partir de quanto avisar. **Não bloqueia este marco**; precisa do S6 (REQ-05); bloqueia o marco B.
 - (13) As contas de desenvolvedor. **Bloqueia este marco:** a da Apple é precisa para os spikes S2, S3 e S5 num iPhone de verdade e para o REQ-12 (entrar com a Apple, build no aparelho). A do Google (US$ 25) só bloqueia o teste fechado do Google, fora deste marco.
-- Fora do § 13, também bloqueiam este marco, e só ele resolve: o Xcode e o Android Studio nesta máquina (hoje só as ferramentas de linha de comando: nenhum simulador roda); o aceite do ADR-0022 e da emenda da constituição, antes de qualquer código em `app/`; a chave do PostHog, para o REQ-15 ser provado com um evento chegando.
+- Fora do § 13, também bloqueiam este marco, e só ele resolve: o Xcode e o Android Studio nesta máquina (hoje só as ferramentas de linha de comando: nenhum simulador roda); o aceite do ADR-0022 e da constituição v2 (que substitui a v1.0.0, por escolha dele; não é mais uma emenda), antes de qualquer código em `app/`; a chave do PostHog, para o REQ-15 ser provado com um evento chegando.
