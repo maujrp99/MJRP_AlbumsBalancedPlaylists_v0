@@ -23,6 +23,7 @@
 - [ ] TASK-08 primeira publicação real com os scripts, do site e do servidor (com o Node 26) · implements:: REQ-01, REQ-02, REQ-04 · model:: opus · waiting:: human — publicar em produção e trocar o Node do servidor dependem do sim do MJRP · action:: o MJRP dá o sim; o agente integrador roda `npm run deploy:site` e `npm run deploy:server` depois de integrar o ramo na `main`
 - [ ] TASK-09 a automação do GitHub roda uma vez e o job `unit-tests` passa · implements:: REQ-05 · model:: sonnet · waiting:: human — o push é do MJRP e a automação só roda no GitHub · action:: o MJRP faz o push; depois, abrir a aba de automação do repositório e conferir o resultado
 - [ ] TASK-10 julgamento do MJRP (tarefa do humano) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06 · model:: opus · waiting:: human — o aceite das issues é do MJRP · action:: o MJRP confere uma publicação feita pelos scripts e dá o OK na UAT-202 e na UAT-22; a UAT-20 só fecha quando o lint reprovar
+- [x] TASK-11 a aba aberta antes de uma publicação carrega a versão nova uma vez (`utils/staleBuild.js`, roteador) e a página sai com `Cache-Control: no-cache` (`firebase.json`) · implements:: REQ-07 · model:: opus · rounds:: 1
 
 ## Documentation
 - [x] `docs/manual/00_Deployment_and_Setup.md` (seções 1 e 2), `.env.example` e as instruções em `.github/` descrevem o caminho único
