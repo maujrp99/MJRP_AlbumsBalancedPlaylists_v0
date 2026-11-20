@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:37] session — F76 polimento: a página presa sem nada aberto é devolvida (N22)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+Lidos pageScrollLock.js e windowsHoldThePage.js: no código do app nenhum caminho deixa o contador alto (folhas e janelas sempre saem pelo close ou são tiradas do body, o que o observador vê). Os dois caminhos que deixam a página presa sem nada aberto — uma folha tirada do DOM sem close e o módulo recarregado (HMR do servidor de desenvolvimento, onde a crítica rodou) com o body preso — agora se soltam: giveBackAStrayHold roda a cada mudança dos filhos do body e a cada troca de tela (PhoneShell.screenChanged, uma linha).
+Testes: 4 novos em test/components/ui/windowsHoldThePage.test.js.
+
 ## [2026-11-20 03:35] session — F76 polimento: um controle segmentado e duas famílias de fonte no celular (N9, N4)
 **Branch:** feat/f76-mobile-polish-inventory-windows
 Um só segmentado (mobile.css § 11, variáveis --phone-seg-*): escolhido na superfície clara elevada, nunca laranja; aplicado em Grid/List e Pages/Scroll (Albums), Original/BEA/Spotify (janela do álbum) e a moeda (Inventário). Fonte: título de linha em Syne (--phone-font-title), o resto na fonte de texto (--phone-font-text) em Albums, Inventário, janela do álbum e ranking. As duas regras escritas em design-system.md § Celular.

@@ -4,8 +4,9 @@
  * where it was when the last one leaves.
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { holdPageBehindWindows } from '../../../public/js/components/ui/windowsHoldThePage.js'
-import { pageScrollLocks } from '../../../public/js/utils/pageScrollLock.js'
+import { giveBackAStrayHold, holdPageBehindWindows } from '../../../public/js/components/ui/windowsHoldThePage.js'
+import { lockPageScroll, pageScrollLocks } from '../../../public/js/utils/pageScrollLock.js'
+import { openSheet } from '../../../public/js/components/ui/Sheet.js'
 
 const settle = () => new Promise(resolve => setTimeout(resolve, 0))
 const windowOf = (className, id) => {
@@ -86,5 +87,74 @@ describe('windowsHoldThePage', () => {
         stop()
         stop = null
         expect(document.body.style.position).toBe('')
+    })
+
+    // recheck N22: the page once stayed frozen (body pinned, no sheet open) and could not be reproduced
+    describe('a hold left with nothing open is given back (F76, recheck N22)', () => {
+        beforeEach(() => {
+            window.matchMedia = (query) => ({ matches: query.includes('max-width'), addEventListener() { }, removeEventListener() { } })
+        })
+        afterEach(() => { delete window.matchMedia })
+
+        it('a sheet taken off the page without its close does not leave the page pinned', async () => {
+            stop = holdPageBehindWindows()
+            const sheet = openSheet({ variant: 'bottom', title: 'Jump to an artist' })
+            expect(document.body.style.position).toBe('fixed')
+            expect(pageScrollLocks()).toBe(1)
+
+            sheet.element.remove() // no close(): the count would stay at 1 for ever
+            await settle()
+
+            expect(document.body.style.position).toBe('')
+            expect(document.body.style.top).toBe('')
+            expect(pageScrollLocks()).toBe(0)
+            expect(scrolledTo.at(-1)).toEqual([0, 1200]) // back where the page was
+            sheet.close() // a late close changes nothing
+            expect(pageScrollLocks()).toBe(0)
+        })
+
+        it('a sheet open, or a window open, keeps the page held while other things come and go', async () => {
+            stop = holdPageBehindWindows()
+            const sheet = openSheet({ variant: 'bottom', title: 'Status' })
+            document.body.appendChild(windowOf('toast'))
+            await settle()
+            expect(document.body.style.position).toBe('fixed')
+            sheet.close()
+            expect(document.body.style.position).toBe('')
+
+            const album = windowOf('modal-overlay album-window')
+            document.body.appendChild(album)
+            await settle()
+            document.body.appendChild(windowOf('toast'))
+            await settle()
+            expect(document.body.style.position).toBe('fixed')
+            album.remove()
+            await settle()
+            expect(document.body.style.position).toBe('')
+        })
+
+        it('the body pinned with a count of 0 (the module loaded again) is freed when the screen changes', () => {
+            document.body.style.position = 'fixed'
+            document.body.style.top = '-4371px'
+            document.body.dataset.scrollLocked = 'true'
+
+            giveBackAStrayHold()
+
+            expect(document.body.style.position).toBe('')
+            expect(document.body.dataset.scrollLocked).toBe(undefined)
+            expect(scrolledTo.at(-1)).toEqual([0, 4371])
+        })
+
+        it('a lock with its sheet still open is left alone', () => {
+            const sheet = openSheet({ variant: 'bottom', title: 'Filters' })
+            lockPageScroll()
+            giveBackAStrayHold()
+            expect(document.body.style.position).toBe('fixed')
+            expect(pageScrollLocks()).toBe(2)
+            sheet.close()
+            giveBackAStrayHold() // the extra lock has nothing open behind it
+            expect(pageScrollLocks()).toBe(0)
+            expect(document.body.style.position).toBe('')
+        })
     })
 })

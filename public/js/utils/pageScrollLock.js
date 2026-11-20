@@ -37,3 +37,20 @@ export function unlockPageScroll(win = window) {
     delete body.dataset.scrollLocked
     win.scrollTo(0, place)
 }
+
+/**
+ * Frees the page whatever the count says (F76, recheck N22). Only for a hold left behind with
+ * nothing open on the page (see components/ui/windowsHoldThePage.js `giveBackAStrayHold`): a sheet
+ * taken off the page without its close, or this module loaded again while the page was held (the
+ * count starts at 0, the body stays pinned). The place comes from the body itself when it can.
+ * @param {Window} [win]
+ */
+export function releasePageScroll(win = window) {
+    locks = 0
+    const body = win.document.body
+    if (body.dataset.scrollLocked !== 'true') return
+    const at = Math.abs(parseFloat(body.style.top)) || place
+    for (const property of ['position', 'top', 'left', 'right', 'width']) body.style[property] = ''
+    delete body.dataset.scrollLocked
+    win.scrollTo(0, at)
+}
