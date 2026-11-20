@@ -35,16 +35,14 @@
     gap: 10px;
   }
 
+  /* «My Collection» stays for a screen reader: the top bar already says «Inventory» */
   .inv-phone-header h1 {
-    font-size: 20px;
-    line-height: 24px;
-    gap: 8px;
-  }
-
-  .inv-phone-header h1 svg {
-    width: 22px;
-    height: 22px;
-    color: var(--inv-grey);
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .inv-phone-header .stats-row {
@@ -55,7 +53,7 @@
   /* «211 albums»: the count, quiet */
   .inv-phone-header .stats-row > span:first-child {
     display: block;
-    margin: -6px 0 10px;
+    margin: 0 0 8px;
     font-size: 14px;
     line-height: 18px;
     font-weight: 400;
@@ -77,9 +75,11 @@
     border: 1px solid var(--inv-line);
     background: var(--inv-raised);
     color: #fff;
-    font-size: 14px;
-    line-height: 18px;
+    font-size: 13px;
+    line-height: 16px;
     font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
     white-space: nowrap;
     outline: none !important;
   }
@@ -178,6 +178,14 @@
   }
 
   /* «Data provided by Discogs.»: a term of use, a link that is read and touched */
+  .inventory-view--phone #inventoryTotals [data-role="discogs-credit"] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 4px;
+    margin: -4px 0 -8px;
+  }
+
   .inventory-view--phone #inventoryTotals [data-role="discogs-credit"] a {
     display: inline-flex;
     align-items: center;
@@ -185,12 +193,13 @@
     color: #fff;
   }
 
-  /* The notices of the values (a run, albums waiting): one calm panel, the button under the text */
+  /* The notices of the values (a run, albums waiting): one calm line, its button at the right */
   .inventory-view--phone #inventoryNotices > div {
+    flex-wrap: nowrap;
     margin-bottom: 12px;
-    padding: 12px 16px;
+    padding: 8px 8px 8px 16px;
     border-radius: 14px;
-    gap: 8px;
+    gap: 12px;
   }
 
   .inventory-view--phone #inventoryNotices > div > span {
@@ -199,8 +208,9 @@
   }
 
   .inventory-view--phone #inventoryNotices .btn {
-    width: 100%;
-    justify-content: center;
+    flex: none;
+    padding: 0 14px;
+    font-size: 14px;
   }
 
   /* ── The bar under the top bar: search, A–Z, filters, actions; what an action is doing ── */
@@ -887,7 +897,7 @@
   #inventory-edit-modal .app-modal__body .flex.gap-4 > label {
     position: relative;
     justify-content: center;
-    min-height: var(--phone-target);
+    min-height: 48px;
     margin: 0;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.14);
@@ -908,8 +918,14 @@
     outline-offset: 2px;
   }
 
-  #inventory-edit-modal .app-modal__body input[type="radio"] {
-    width: 20px;
-    height: 20px;
+  /* The circle is the whole segment: the label shows which one is chosen */
+  #inventory-edit-modal .app-modal__body .flex.gap-4 input[type="radio"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
   }
 }

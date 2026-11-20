@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:44] session — F76 TASK-07: testes, nota da tela e prova do inventário no celular
+**Branch:** feat/f76-mobile-inventory
+15 testes do celular e do computador (`test/views/InventoryView.phone.test.js`), a nota `screens/inventory.md` e a harness com 211 itens (`reports/evidence/F76/harness/`); ajustes de CSS vistos nas capturas (fichas, título, aviso, moeda da edição em segmentos de 48 px).
+Prova a 393x852: sem rolagem lateral, 0 texto < 12, 0 campo < 16, 0 alvo < 44 em 13 estados; 150º álbum em 2 gestos. A 1280x800, antes e depois iguais em medidas (pixels: ruído de fonte em 18 px).
+
 ## [2026-11-20 02:33] session — F76 TASK-07: o inventário no celular em linhas compactas, em blocos, com folhas
 **Branch:** feat/f76-mobile-inventory
 No celular (`isPhone()`), o inventário vira uma linha por álbum (capa de 64, título em duas linhas, status de 44 px que abre uma folha com os três, valor com a origem, «⋯» com as ações nomeadas), desenhada em blocos de 50 com «Show 50 more» e um salto por letra (ou por posição); busca, A–Z, filtros e ações presas sob a barra do topo. `InventoryPhoneRow.js`, `InventoryPhoneSheets.js`, `models/inventoryJump.js`, `css/mobile/inventory.css`.
