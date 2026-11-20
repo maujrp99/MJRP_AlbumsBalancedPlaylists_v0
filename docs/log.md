@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 21:52] review — F52 fatia 5 provada pelo integrador no servidor local; UAT-23 em fixed
+
+Prova em `reports/evidence/F52/2026-11-19-slice-5-generate-path-proof.md`: a resposta de `/api/generate` passa a dizer, fonte por fonte, o que aconteceu com as notas; falha da fonte não sai mais igual a «não tem»; o servidor não sobe sem o arquivo de instruções da IA. `fetchRankingForAlbum` foi de complexidade 139 para menos de 8. Mudanças do auxiliar que ficam, revisáveis: uma consolidação que quebra responde 500 (antes, 200 com ranking vazio); o servidor não sobe sem o validador de álbum.
+
 ## [2026-11-19 21:55] session — F52 fatia 5: a `main` (com a F65) trazida para o ramo
 
 A `main` andou enquanto a fatia 5 era feita: a F65 entrou (`7be0701`) e removeu `server/scripts/**`, `server/test/**`, `server/routes/playlists.js` e `shared/curation.js`. Trazida para `fix/f52-slice-5-generate-path-tells-the-truth` com um encontro só, numa frase de `docs/manual/23_Shared_Code.md` (ficaram as duas coisas: quem importa `shared/normalize.js` hoje e a nota da F65). O teste de complexidade pediu, e as 13 linhas dos arquivos removidos saíram das listas novas: ficam 14 funções do servidor acima de 10 (eram 26 no começo da fatia) e nenhuma em `shared/` (eram 9, todas do `curation.js`). O plano e a seção 13 do `arch.md` dizem os números de agora. Depois de juntar: `npx vitest run` com 2073 testes verdes, `npx vite build` compila, e os arquivos da fatia passam no ESLint da F65 sem erro.
