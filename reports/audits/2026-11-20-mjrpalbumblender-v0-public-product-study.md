@@ -51,7 +51,20 @@ status: informativo, para o MJRP decidir
 
 ### 2.2 BestEverAlbums (notas): depende da autorização
 
-- **O que se sabe:** o site não tem interface pública de dados. A busca não achou termos de uso sobre dados; a política de privacidade dá o contato do administrador (o endereço «webmaster» do domínio) e foi atualizada em abril de 2026. Hoje o servidor do Album Blender lê as páginas do site, para um usuário.
+- **O que se sabe:** o site não tem interface pública de dados. Hoje o servidor do Album Blender lê as páginas do site, para um usuário.
+- **Os termos de uso do site** (o MJRP os trouxe em 2026-11-20; página `besteveralbums.com/terms`):
+  - **Quem é o dono:** Amulet Solutions, com sede em Stamford, no Reino Unido. Os termos são regidos pelas leis do Reino Unido.
+  - **Para que serve o conteúdo:** «for your general information and use only».
+  - **Reprodução:** «Reproduction is prohibited other than in accordance with the copyright notice».
+  - **Uso não autorizado:** «Unauthorised use of this website may give rise to a claim for damages and/or be a criminal offence.»
+  - **Não há** cláusula que fale de leitura automática, nem de interface de dados, nem de uso comercial por terceiros: nada autoriza, e nada proíbe com essas palavras.
+  - **Eles são afiliados da Amazon** (os termos citam a marca): monetizam do mesmo jeito que o estudo propõe para o Album Blender.
+  - **Há uma página de contato** (`besteveralbums.com/contact`), melhor caminho que o endereço «webmaster».
+- **O que isso muda na análise:**
+  - **O uso pessoal de hoje** cabe com alguma folga em «general information and use», mas é leitura automática, que os termos não preveem. É zona cinzenta, não autorização.
+  - **Mostrar as notas num app público é reprodução,** que os termos proíbem sem permissão. A autorização deixa de ser «recomendável» e passa a ser condição.
+  - **O Reino Unido tem o direito sobre bases de dados** (manteve o da União Europeia depois da saída): protege quem investiu em montar a base contra a extração de parte substancial, e também contra a extração repetida e sistemática de partes pequenas. Ler as notas de cada álbum que cada usuário tem é exatamente extração repetida. É o risco legal mais concreto deste estudo. (Citado de memória; a conferir com advogado.)
+  - **Concorrência:** um app com links de afiliado da Amazon, apoiado nas notas deles, disputa a mesma receita de afiliação. Isso pesa contra o «sim», e pesa a favor de oferecer divisão de receita ou tráfego de volta.
 - **Por que eles diriam sim:** é um site de comunidade; o app leva atribuição e tráfego («ver no BestEverAlbums» em cada álbum, que já existe na folha de ações do celular); o uso é de leitura, com pouca carga se houver cópia guardada.
 - **Por que diriam não:** o dado é o ativo deles; um app comercial em cima dele pode parecer concorrência; a carga no site.
 - **O que pedir, nesta ordem de preferência:** (a) um arquivo ou interface com as notas por faixa e por álbum; (b) autorização por escrito para a leitura automática, com limite de pedidos combinado; (c) uma licença paga ou divisão de receita.
@@ -288,7 +301,7 @@ Quatro camadas diferentes, que costumam ser confundidas:
 
 ## O que não foi verificado
 
-- Se o BestEverAlbums tem termos de uso sobre dados (a busca não achou); quem responde pelo site.
+- A leitura dos termos do BestEverAlbums acima é do agente, não de advogado; o que o «copyright notice» deles diz não foi lido.
 - Os valores do apoio comercial ao MusicBrainz.
 - Taxas de música do eBay, do Mercado Livre e da Amazon no Brasil; a janela de atribuição atual da Amazon; o valor pago pela Apple por assinatura.
 - A regra de que a conta da Amazon precisa de vendas para ser mantida e para liberar preços está aqui de memória.
@@ -301,6 +314,7 @@ Quatro camadas diferentes, que costumam ser confundidas:
 
 - MusicBrainz, sobre e licença: https://musicbrainz.org/doc/About
 - MetaBrainz, apoiadores: https://metabrainz.org/supporters
+- BestEverAlbums, termos de uso (trazidos pelo MJRP): https://www.besteveralbums.com/terms
 - BestEverAlbums, política de privacidade: https://besteveralbums.com/privacy
 - Amazon Associates, tabela de comissões (EUA): https://affiliate-program.amazon.com/help/node/topic/GRXPHT8U84RAYDXZ
 - Amazon Associates, tabela do Reino Unido: https://affiliate-program.amazon.co.uk/help/node/topic/GRXPHT8U84RAYDXZ

@@ -17,7 +17,7 @@ related: reports/audits/2026-11-20-mjrpalbumblender-v0-public-product-study.md
 
 ## 1. BestEverAlbums — pedido de autorização
 
-**Para:** o administrador do site (a política de privacidade dá o contato «webmaster» no domínio do site; confirme o endereço na página `besteveralbums.com/privacy`).
+**Para:** a Amulet Solutions, dona do site (Stamford, Reino Unido), pela página de contato `besteveralbums.com/contact`. Os termos de uso (`besteveralbums.com/terms`) dizem que o conteúdo é «for your general information and use only» e que a reprodução é proibida sem permissão: por isso o pedido é de permissão por escrito, e o e-mail diz isso.
 
 **Assunto:** Permission request: using BestEverAlbums track ratings in a small music app (with attribution)
 
@@ -34,6 +34,10 @@ playlists from the best tracks of each album. Your track ratings are what
 makes the "most acclaimed tracks" playlists possible: I have not found track
 level ratings of this quality anywhere else.
 
+I have read your terms of use. I understand the content is for general
+information and use, and that reproduction needs your permission, so nothing
+below would go public without it.
+
 To be transparent about where things stand today: the app is used by one
 person, me. For the albums in my own series, my server reads the album's
 chart page on your site to get the track ratings. It asks slowly, one page at
@@ -43,7 +47,10 @@ first, and I am asking now.
 
 I am considering turning the app into a public product (iPhone and Android).
 Its income would come from affiliate links to stores that sell the CDs, not
-from selling data. I would not do that with your data without your written
+from selling data. I am aware BestEverAlbums also works with Amazon's
+affiliate programme, and I do not want to compete with you on the back of
+your own data: I would rather send people to your site and, if it makes
+sense to you, share that income. I would not do that with your data without your written
 permission, so I would like to ask:
 
 1. Would you allow The Album Blender to use BestEverAlbums track and album
@@ -61,8 +68,8 @@ What I can commit to:
 - No redistribution of your data to third parties, and no bulk copy of
   your charts: only the ratings of albums a user has in the app.
 - Removing your data from the app at any time if you ask.
-- [Optional, your decision: a share of the affiliate income, or a paid
-  licence, if that is how you prefer to work.]
+- A share of the affiliate income, or a paid licence, if that is how you
+  prefer to work. [confirm you want to offer this]
 
 If the answer is no, I will respect it and remove the automated reading
 before any public release. If you would rather discuss it on a call, I am
@@ -79,7 +86,7 @@ Best regards,
 
 **Notas para você:**
 - O ponto 1 pede o que o estudo chama de «autorização por escrito para uso comercial». Um «sim» por e-mail já serve de registro; guarde a resposta.
-- A oferta de parte da receita é opcional. Pela conta do estudo, a afiliação rende pouco no começo; oferecer atribuição e tráfego primeiro, e deixar o pagamento como possibilidade, é o mais realista.
+- A oferta de parte da receita passou a constar no texto, porque eles também são afiliados da Amazon e o app disputaria a mesma receita. Continua sendo decisão sua: tire a frase se não quiser oferecer.
 - Se não houver resposta em duas ou três semanas, um segundo e-mail curto; depois disso, tratar como «não» e seguir o plano B do estudo (Anexo E).
 
 ## 2. MusicBrainz (MetaBrainz Foundation) — apoio comercial
