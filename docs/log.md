@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:26] session — ADR-0022 apoiado na constituição v2.0.0; o Accepted fica para o commit do MJRP
+**Branch:** feat/f78-constitution-v2-in-force
+O ADR-0022 diz que o app é TypeScript e que se apoia na constituição v2.0.0; os Deciders registram o aceite dele, «1.aceito pra essa iteração», para esta iteração. O `Status` segue `Proposed`: o ADR nasceu na via do MJRP (`**Acceptance**: MJRP`), e pela CC-ADR-0028 vira `Accepted` só no commit dele com `Human-accepted: adr:ADR-0022`, sem assinatura de agente; o agente não carimba.
+Não há índice de ADRs em `docs/decisions/`. Pendente do MJRP: o commit que vira o status, pelo comando da tela dele.
+
 ## [2026-11-20 15:24] session — a constituição v2.0.0 em vigor, para esta iteração
 **Branch:** feat/f78-constitution-v2-in-force
 `docs/specs/constitution.md` passa à v2.0.0 (texto da proposta, sem as partes só de proposta), com o aceite do MJRP «1.aceito pra essa iteração» no cabeçalho e no rodapé; a v1.0.0 inteira em `_archive/2026-11-20-constitution-v1/docs/specs/constitution.md` (o `_safe.py retire` recusa arquivo versionado: sai por commit); `docs/CONSTITUTION.md` marcada substituída só no título; o espelho `.specify/memory/` regenerado da fonte (não há script: feito à mão, igual à fonte, como o doctor I5 confere).
