@@ -10,7 +10,6 @@
  * - client.js (initial album loading)
  * - SpotifyEnrichmentHelper (Spotify data merge)
  * - BalancedRankingStrategy (track enrichment)
- * - TrackEnrichmentMixin (algorithm enrichment)
  * - PlaylistGenerationService (output transformation)
  */
 import { newId } from '@shared/platform/newId.js'

@@ -8,7 +8,6 @@
 
 export { PlaylistBalancingMixin } from './PlaylistBalancingMixin.js'
 export { DurationTrimmingMixin } from './DurationTrimmingMixin.js'
-export { TrackEnrichmentMixin } from './TrackEnrichmentMixin.js'
 
 /**
  * Apply multiple mixins to a base class

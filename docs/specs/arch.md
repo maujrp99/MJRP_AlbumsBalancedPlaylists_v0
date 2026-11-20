@@ -804,7 +804,7 @@ No segundo degrau entrou o que é só escrita: número por extenso («Fourth» =
 | `public/js/helpers/SpotifyEnrichmentHelper.js` | a popularidade do Spotify (antes: «o mesmo título, ou um que contém o outro») |
 | `public/js/models/albumAverages.js` (`mergedTracksOf`) | as duas ordens do mesmo álbum |
 | `public/js/models/Album.js`, `public/js/ranking/UserRankingStrategy.js` | o ranking da própria pessoa |
-| `public/js/ranking/BalancedRankingStrategy.js`, `public/js/algorithms/mixins/TrackEnrichmentMixin.js` | as listas que o álbum da busca por IA traz |
+| `public/js/ranking/BalancedRankingStrategy.js` | as listas que o álbum da busca por IA traz (o `TrackEnrichmentMixin`, que também as lia, saiu em 2026-11-20: nenhuma receita o usava; F78) |
 
 Saíram, sem ninguém mais chamando: `shared/normalize.js` (`normalizeKey`), `public/js/utils/NormalizationUtils.js` (`toCore`), e de `server/lib/normalize.js` os quatro limpadores (`toCore`, `toFuzzyCore`, `normalizeFuzzy`, `normalizeArtist`). `TrackTransformer.calculateSpotifyRanks` deixou de usar o título para dar a posição: usa a própria faixa.
 

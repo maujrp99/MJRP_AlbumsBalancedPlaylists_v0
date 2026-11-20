@@ -60,7 +60,6 @@ const CALL_SITES = [
     { name: 'the person\'s own ranking on the album', file: 'public/js/models/Album.js', asks: APP },
     { name: 'the "my ranking" order', file: 'public/js/ranking/UserRankingStrategy.js', asks: APP },
     { name: 'the balanced order', file: 'public/js/ranking/BalancedRankingStrategy.js', asks: APP },
-    { name: 'the tracks of the blend', file: 'public/js/algorithms/mixins/TrackEnrichmentMixin.js', asks: APP },
     { name: 'the album cache (the version of the rule)', file: 'public/js/services/albums/adapters/AlbumCacheAdapter.js', asks: APP }
 ]
 
