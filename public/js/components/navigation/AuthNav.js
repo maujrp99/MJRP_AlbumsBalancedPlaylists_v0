@@ -6,7 +6,7 @@
  */
 import { getIcon } from '../Icons.js';
 import { escapeHtml } from '../../utils/stringUtils.js';
-import { authService } from '@shared/services/AuthService.js';
+import { authService } from '../../services/auth/signIn.js';
 import { showLoginModal } from '../LoginModal.js';
 import toast from '../Toast.js';
 import { SpotifyAuthService } from '../../services/SpotifyAuthService.js';

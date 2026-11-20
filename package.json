@@ -3,6 +3,9 @@
     "version": "3.19.0",
     "description": "The Album Blender (Album Blender V0): the site that blends ranked albums into balanced playlists - vanilla JS built with Vite; the server is in server/",
     "type": "module",
+    "workspaces": [
+        "shared"
+    ],
     "scripts": {
         "dev": "vite",
         "build": "vite build",

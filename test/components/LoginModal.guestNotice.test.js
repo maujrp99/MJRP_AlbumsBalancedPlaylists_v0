@@ -4,7 +4,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-vi.mock('@shared/services/AuthService.js', () => ({ authService: { signInWithGoogle: vi.fn(), signInWithApple: vi.fn() } }))
+vi.mock('@/services/auth/signIn.js', () => ({ authService: { signInWithGoogle: vi.fn(), signInWithApple: vi.fn() } }))
 vi.mock('../../public/js/components/Toast.js', () => ({ default: { success: vi.fn(), error: vi.fn() } }))
 vi.mock('../../public/js/components/Icons.js', () => ({ getIcon: () => '' }))
 

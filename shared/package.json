@@ -1,0 +1,7 @@
+{
+    "name": "@album-blender/shared",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "description": "The shared core of the Album Blender: rules and use cases that run on the site, the server and the app. No dependency, no browser, no Node, no Firebase (test/architecture/coreStaysPortable.test.js)."
+}

@@ -4,7 +4,7 @@
 
 ## 1. The track identity rule: `shared/trackIdentity.js` - v5.0 (F74)
 **Status**: `[ACTIVE]`, on the branch `fix/f74-track-ratings-reach-the-right-tracks` (2026-11-20); not yet published. It replaced `shared/normalize.js` (`normalizeKey`), which was removed: that key deleted everything in brackets on both sides, so an original track written with brackets got no rating and an extra version took the rating of the original (UAT-221).
-**Type**: Domain rule, pure (it imports nothing).
+**Type**: Domain rule, pure (it imports only `shared/platform/text.js`, since F78).
 
 **Purpose**: the ONE answer to "is this track of the album the track a source lists?". The app imports it through `public/js/models/sameTrack.js`; the server loads it through `server/lib/trackIdentity.js` (dynamic `import()`, the same bridge as `server/lib/albumIdentity.js`). The file reads top to bottom: the text, the notes, the tiers, the assignment.
 
@@ -106,17 +106,22 @@ flowchart TD
 
 ---
 
-## 3. Service: `shared/services/AuthService.js`
-**Status**: `[ACTIVE]`
-**Type**: Service / Singleton (`authService`)
+## 3. The platform port: `shared/platform/` (F78)
+**Status**: `[ACTIVE]` on the branch `feat/f78-core-foundations` (2026-11-20); not yet published.
+**Type**: Port, pure (no import, no global).
 
-Wraps Firebase Auth for the browser: `signInWithGoogle()`, `signInWithApple()`, `logout()`, `onAuthStateChange(callback)`. The auth instance is read lazily (`getAuth()` on first use). Imported by `public/js/services/auth/userSession.js` (which hands it to `UserSessionService`; until F58 the user store imported it), `public/js/components/LoginModal.js`, `public/js/components/TopNav.js` and `public/js/components/navigation/AuthNav.js`.
+The one place of the core that may depend on the engine (the browser, Node, the phone's Hermes):
+
+*   `newId.js`: `newId()` gives a new id from the source wired with `setIdSource(fn)` (which returns the source it replaced; `null` takes it away). With no source wired, `newId()` throws and names what to wire. The site wires the browser's `crypto.randomUUID` in `public/js/services/platform/platformWiring.js`, the first module `app.js` loads; the tests wire Node's in `test/setup.js`; the app will wire its own. `models/Track.js` and `transformers/TrackTransformer.js` ask it for the id of a track with none.
+*   `text.js`: `normalizeText(text, form)`, `String.prototype.normalize` in one place (each engine answers it with its own Unicode tables). The two identity rules use it.
+
+`test/architecture/coreStaysPortable.test.js` refuses, anywhere else in `shared/`, what depends on the engine, any browser global and any import that leaves `shared/`. The site's sign-in (`AuthService`, `signInWithPopup` over `firebase/auth`) left `shared/services/` for `public/js/services/auth/signIn.js` in the same change.
 
 ---
 
 ## 3. The album identity rule: `shared/albumIdentity.js` - v5.0 (F55; reviewed in F68)
 **Status**: `[ACTIVE]`. F55 (slices 1 and 2) is published (2026-11-19). The review of F68 is on the branch `fix/f68-album-identity-rules-reviewed` (2026-11-19); not yet published.
-**Type**: Domain rule, pure (it imports nothing).
+**Type**: Domain rule, pure (it imports only `shared/platform/text.js`, since F78).
 
 **Purpose**: the ONE answer to "is this the album that was asked for?" (issues UAT-184, UAT-205). The app imports it through `public/js/models/askedAlbum.js`; the server loads it through `server/lib/albumIdentity.js` (dynamic `import()`, as it does for `trackIdentity.js`). The file reads top to bottom, in the order a comparison runs: normalization, the artist, the title (edition notes, first tier, second tier), one comparison, the choice among candidates, the readers of source labels, the search texts. Its header has the table of every reason with a real example, "How to add a rule" and where a rule for one genre would plug in.
 

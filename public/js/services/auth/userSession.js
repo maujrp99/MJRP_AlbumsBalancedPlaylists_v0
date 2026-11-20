@@ -7,7 +7,7 @@
  * app. app.js imports it right after Firebase starts, before any screen.
  */
 
-import { authService } from '@shared/services/AuthService.js'
+import { authService } from './signIn.js'
 import { userStore } from '../../stores/UserStore.js'
 import { UserSessionService } from './UserSessionService.js'
 

@@ -70,8 +70,8 @@ const OWN_KEYS = /\b(?:normalizeKey|normalizeRankingKey|loadNormalizeKey|localNo
 const TITLE_KEYED_BY_HAND = /\b\w+\??\.(?:trackTitle|title)\)?\??\.(?:toLowerCase|normalize)\(/g
 
 describe('one rule says "this is the same track"', () => {
-    it('the rule is pure: it imports nothing', () => {
-        expect(importsOf(RULE)).toEqual([])
+    it('the rule is pure: it imports only the platform port of the core (the engine\'s Unicode tables, F78)', () => {
+        expect(importsOf(RULE)).toEqual(['./platform/text.js'])
     })
 
     it('the app and the server reach the same file', () => {

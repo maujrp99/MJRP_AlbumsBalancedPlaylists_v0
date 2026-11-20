@@ -8,7 +8,7 @@ const auth = vi.hoisted(() => ({ logout: vi.fn(async () => { }) }))
 const spotify = vi.hoisted(() => ({ logout: vi.fn() }))
 const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn() }))
 
-vi.mock('@shared/services/AuthService.js', () => ({ authService: auth }))
+vi.mock('@/services/auth/signIn.js', () => ({ authService: auth }))
 vi.mock('../../public/js/services/SpotifyAuthService.js', () => ({ SpotifyAuthService: spotify }))
 vi.mock('../../public/js/components/LoginModal.js', () => ({ showLoginModal: vi.fn() }))
 vi.mock('../../public/js/components/Toast.js', () => ({ default: toast }))
