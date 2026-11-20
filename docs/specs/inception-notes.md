@@ -56,3 +56,10 @@
 - **Como foi entendido:** no cartão do álbum que ele tem, ao lado de «Sell» e «Trade», um botão «Where to buy» que abre a janela do álbum; os três links das lojas estão lá.
 - **Onde está:** na prévia `design/proposals/inventory-card-border-proposal.html` (nas três opções) e no comparador. Entra no protótipo junto com a escolha de como o cartão se segura (A, B ou C).
 
+## [2026-11-20 01:10] F75 · rodada 4: a borda no cartão inteiro
+
+- **Dito pelo MJRP:** «e a borda conectando a capa com as infos?». Entendido como a escolha da opção B da prévia.
+- **v4:** `design/inception/inventory-value-v4.html`: uma borda em volta do cartão inteiro; o bloco de valor sem caixa própria; «Where to buy» ao lado de «Sell» e «Trade». A v3 fica intacta. No comparador (Artifact), a v4 é a «Nova» e a v3 a «Anterior».
+- **A saber:** a 1440 px, com quatro cartões por fileira, «Where to buy» cai para uma segunda linha, abaixo de «Sell» e «Trade».
+- **Não feito:** a v4 em 390 px não foi conferida.
+

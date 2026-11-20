@@ -1,6 +1,6 @@
 # Info-arch — Album Blender V0
 
-> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v3.html
+> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v4.html
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -111,6 +111,7 @@ Estados que o protótipo ainda não mostra: a leitura que falha (Discogs fora do
 - Dois números por item, não um: o que a pessoa pagou e o que o álbum vale (proposta da rodada 1, à espera do MJRP).
 - O total separa «o que tenho» de «o que falta comprar» (proposta da rodada 1, à espera do MJRP).
 - O cartão é o nível «Transformar», com «Where to buy» em links (escolha do MJRP em 2026-11-20; os outros dois níveis ficam em `design/proposals/inventory-card-proposal.html`).
+- Uma borda em volta do cartão inteiro liga a capa, o título e o bloco de valor; o bloco não tem caixa própria (pedido do MJRP em 2026-11-20: «a borda conectando a capa com as infos»; era a opção B de `design/proposals/inventory-card-border-proposal.html`).
 - As contagens por status viram o filtro, e o seletor de status sai da barra; os seletores que ficam são o de formato e o de ordem (decisão do MJRP em 2026-11-20).
 
 ## Protótipos aprovados
@@ -119,7 +120,7 @@ Nenhum ainda. A rodada 1 da F75 é de exploração.
 
 ## Inventário do protótipo
 
-Fonte: `design/inception/inventory-value-v3.html` (a tela real do inventário, capturada como o app a desenha, com o que a F75 propõe; a v2 e a v1 ficam para comparar) · wireframes: `design/wireframes/inventory-value-v3-inventory.png`, `design/wireframes/inventory-value-v3-album-window.png` · prévia do cartão em três níveis: `design/proposals/inventory-card-proposal.html` · comparador: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck (Artifact do Claude, privado; a cópia local é `design/proposals/inventory/comparator.html`).
+Fonte: `design/inception/inventory-value-v4.html` (a tela real do inventário, capturada como o app a desenha, com o que a F75 propõe; as versões anteriores ficam para comparar) · wireframes: `design/wireframes/inventory-value-v4-inventory.png`, `design/wireframes/inventory-value-v4-album-window.png` · prévia de como o cartão se segura: `design/proposals/inventory-card-border-proposal.html` · prévia do cartão em três níveis: `design/proposals/inventory-card-proposal.html` · comparador: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck (Artifact do Claude, privado; a cópia local é `design/proposals/inventory/comparator.html`).
 
 | ID | O que a tela mostra | Função do produto | Destino |
 |---|---|---|---|
@@ -135,4 +136,5 @@ Fonte: `design/inception/inventory-value-v3.html` (a tela real do inventário, c
 | INV-V10 | «Where to buy», três links: no cartão do que não é dele, e na janela | agir | S-57 |
 | INV-V11 | Aviso «Connect Discogs» | agir | S-57 |
 | INV-V12 | As contagens por status como botões que filtram; o seletor de status sai da barra | agir | S-57 (decisão do MJRP na rodada 3) |
+| INV-V14 | No cartão do que é dele: «Where to buy», que abre a janela do álbum, onde estão os links | agir | S-57 (pedido do MJRP na rodada 4) |
 | INV-V13 | No cartão do que é dele: «Sell» e «Trade», apagados, com «not in the app yet» | informar | candidato «rede de colecionadores» do PRD; sem requisito ainda |
