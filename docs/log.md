@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:51] decision — MJRP pede: a tela de séries diz quantos álbuns tem (S-55, F72); auxiliares de melhoria não precisam do modelo mais caro
+
+Palavras do MJRP: «outra melhoria conseguimos colocar quantos albums estao na página de albuns series?» e «agora pra implementar essas melhorias creio que vc nao precisa passar para agents com modelos fable». Registrado na `main` antes do ramo: o requisito S-55 no épico EP-01, embutido no `prd.md`, e a feature F72 (via rápida, tipo feature, `^REL-40`). A F72 é feita pelo próprio integrador. O auxiliar da F71 já estava rodando quando a segunda frase chegou e termina como começou; daqui em diante, melhorias pequenas são feitas na sessão principal ou por um auxiliar de modelo mais barato.
+
 ## [2026-11-19 22:49] decision — MJRP pede uma melhoria: todos os álbuns das séries no inventário, como «Not Owned»; filtro Owned / Not Owned / Wishlist (S-54, F71)
 
 Palavras do MJRP: «pode fazer um favor, registre uma melhoria, coloque todos os os albums que tenho na minha albums list como parte do meu inventory. tudo marcado como not owned, e melhore o filtro de status para Owned, Not Owned, Wishlist». Registrado na `main` antes de qualquer ramo: o requisito S-54 no épico EP-07, embutido no `prd.md`, e a feature F71 (via rápida, tipo feature, `^REL-40`).
