@@ -1,0 +1,107 @@
+{
+ "source": "test/ranking/UserRankingStrategy.test.js",
+ "records": [
+  {
+   "kind": "rank",
+   "name": "UserRankingStrategy",
+   "album": {
+    "id": "album-123",
+    "tracks": [
+     {
+      "id": "t1",
+      "title": "Song A",
+      "position": 1
+     },
+     {
+      "id": "t2",
+      "title": "Song B",
+      "position": 2
+     },
+     {
+      "id": "t3",
+      "title": "Song C",
+      "position": 3
+     }
+    ],
+    "userRanking": [
+     {
+      "trackTitle": "Song C",
+      "userRank": 1
+     },
+     {
+      "trackTitle": "Song A",
+      "userRank": 2
+     },
+     {
+      "trackTitle": "Song B",
+      "userRank": 3
+     }
+    ]
+   },
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "t1",
+      "title": "Song A",
+      "position": 1
+     },
+     {
+      "id": "t2",
+      "title": "Song B",
+      "position": 2
+     },
+     {
+      "id": "t3",
+      "title": "Song C",
+      "position": 3
+     }
+    ],
+    [
+     {
+      "trackTitle": "Song C",
+      "userRank": 1
+     },
+     {
+      "trackTitle": "Song A",
+      "userRank": 2
+     },
+     {
+      "trackTitle": "Song B",
+      "userRank": 3
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "rank",
+   "name": "UserRankingStrategy",
+   "album": {
+    "id": "album-123",
+    "tracks": [
+     {
+      "id": "t1",
+      "title": "Song A",
+      "position": 1
+     },
+     {
+      "id": "t2",
+      "title": "Song B",
+      "position": 2
+     },
+     {
+      "id": "t3",
+      "title": "Song C",
+      "position": 3
+     }
+    ]
+   },
+   "replayable": true
+  }
+ ]
+}

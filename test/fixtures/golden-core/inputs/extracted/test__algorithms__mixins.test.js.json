@@ -1,0 +1,389 @@
+{
+ "source": "test/algorithms/mixins.test.js",
+ "records": [
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "t1",
+      "title": "Track 1",
+      "duration": 180
+     },
+     {
+      "id": "t2",
+      "title": "Track 2",
+      "duration": 200
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "t1",
+      "title": "Track 1",
+      "duration": 180
+     },
+     {
+      "id": "t2",
+      "title": "Track 2",
+      "duration": 200
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "t1",
+      "title": "Track 1",
+      "duration": 180
+     },
+     {
+      "id": "t2",
+      "title": "Track 2",
+      "duration": 200
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "t1",
+      "title": "Track 1",
+      "duration": 180
+     },
+     {
+      "id": "t2",
+      "title": "Track 2",
+      "duration": 200
+     }
+    ],
+    [
+     {
+      "id": "t1",
+      "title": "Track 1",
+      "duration": 180
+     },
+     {
+      "id": "t2",
+      "title": "Track 2",
+      "duration": 200
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "t1",
+      "title": "Track 1",
+      "rating": 50
+     },
+     {
+      "id": "t2",
+      "title": "Track 2",
+      "rating": 90
+     },
+     {
+      "id": "t3",
+      "title": "Track 3",
+      "rating": 70
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "t1",
+      "title": "Track 1",
+      "rating": 50
+     },
+     {
+      "id": "t2",
+      "title": "Track 2",
+      "rating": 90
+     },
+     {
+      "id": "t3",
+      "title": "Track 3",
+      "rating": 70
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "t1",
+      "title": "Track 1",
+      "rating": 50
+     },
+     {
+      "id": "t2",
+      "title": "Track 2",
+      "rating": 90
+     },
+     {
+      "id": "t3",
+      "title": "Track 3",
+      "rating": 70
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "t1",
+      "title": "Track 1",
+      "rating": 50
+     },
+     {
+      "id": "t2",
+      "title": "Track 2",
+      "rating": 90
+     },
+     {
+      "id": "t3",
+      "title": "Track 3",
+      "rating": 70
+     }
+    ],
+    [
+     {
+      "id": "t1",
+      "title": "Track 1",
+      "rating": 50
+     },
+     {
+      "id": "t2",
+      "title": "Track 2",
+      "rating": 90
+     },
+     {
+      "id": "t3",
+      "title": "Track 3",
+      "rating": 70
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "trackTitle": "Track 2",
+      "finalPosition": 1,
+      "rating": 95
+     },
+     {
+      "trackTitle": "Track 1",
+      "finalPosition": 2,
+      "rating": 80
+     }
+    ],
+    [
+     {
+      "title": "Track 1",
+      "duration": 180
+     },
+     {
+      "title": "Track 2",
+      "duration": 200
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "consolidated_album1_1",
+      "title": "Track 2",
+      "artist": "",
+      "album": "",
+      "rank": 1,
+      "rating": 95,
+      "normalizedScore": null,
+      "duration": 200,
+      "originAlbumId": "album1"
+     },
+     {
+      "id": "consolidated_album1_2",
+      "title": "Track 1",
+      "artist": "",
+      "album": "",
+      "rank": 2,
+      "rating": 80,
+      "normalizedScore": null,
+      "duration": 180,
+      "originAlbumId": "album1"
+     }
+    ],
+    [
+     {
+      "trackTitle": "Track 1",
+      "finalPosition": 2,
+      "rating": 80
+     },
+     {
+      "trackTitle": "Track 2",
+      "finalPosition": 1,
+      "rating": 95
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "consolidated_album1_1",
+      "title": "Track 2",
+      "artist": "",
+      "album": "",
+      "rank": 1,
+      "rating": 95,
+      "normalizedScore": null,
+      "duration": 200,
+      "originAlbumId": "album1"
+     },
+     {
+      "id": "consolidated_album1_2",
+      "title": "Track 1",
+      "artist": "",
+      "album": "",
+      "rank": 2,
+      "rating": 80,
+      "normalizedScore": null,
+      "duration": 180,
+      "originAlbumId": "album1"
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "consolidated_album1_1",
+      "title": "Track 2",
+      "artist": "",
+      "album": "",
+      "rank": 1,
+      "rating": 95,
+      "normalizedScore": null,
+      "duration": 200,
+      "originAlbumId": "album1"
+     },
+     {
+      "id": "consolidated_album1_2",
+      "title": "Track 1",
+      "artist": "",
+      "album": "",
+      "rank": 2,
+      "rating": 80,
+      "normalizedScore": null,
+      "duration": 180,
+      "originAlbumId": "album1"
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "consolidated_album1_1",
+      "title": "Track 2",
+      "artist": "",
+      "album": "",
+      "rank": 1,
+      "rating": 95,
+      "normalizedScore": null,
+      "duration": 200,
+      "originAlbumId": "album1"
+     },
+     {
+      "id": "consolidated_album1_2",
+      "title": "Track 1",
+      "artist": "",
+      "album": "",
+      "rank": 2,
+      "rating": 80,
+      "normalizedScore": null,
+      "duration": 180,
+      "originAlbumId": "album1"
+     }
+    ],
+    [
+     {
+      "title": "Track 1",
+      "duration": 180
+     },
+     {
+      "title": "Track 2",
+      "duration": 200
+     }
+    ]
+   ],
+   "replayable": true
+  }
+ ]
+}

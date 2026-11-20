@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 14:33] session — F78: o corpo dourado do núcleo vira peça do repositório, e o Hermes dá 3.343 de 3.343
+**Branch:** feat/f78-core-foundations
+O corpo e a corrida do spike S1 foram para `test/fixtures/golden-core/` (entradas 744 KB; a corrida sem global, o id pela porta) com UMA referência, a saída das regras de hoje no Node: `reference/output.jsonl.gz` (1,3 MB) e `reference/cases.tsv` (230 KB, o diff que se revisa). `test/architecture/goldenCoreUnchanged.test.js` refaz a saída a cada suíte e falha em qualquer caso mudado; `node scripts/golden-core.mjs --write` grava a referência depois de uma mudança revisada. Sem dado pessoal: no lugar da conta do MJRP, os 28 álbuns de catálogo das fixtures.
+`node scripts/golden-core.mjs --hermes` (opcional, fora da suíte, precisa do motor do spike): 3.343 de 3.343 iguais no Hermes, do código-fonte e do bytecode, depois das duas mudanças; os 58 casos `mixin:enrichTracks` saíram com o mixin. O README do spike diz como rodar.
+
 ## [2026-11-20 14:28] session — F78: o deploy do servidor fixa no máximo 3 instâncias
 **Branch:** feat/f78-core-foundations
 `scripts/deploy-server.sh` passa `--max-instances "$MAX_INSTANCES"` (padrão 3, com o motivo ao lado) ao `gcloud run deploy` e o diz no passo e no ensaio. O limite por pessoa mora na memória de cada instância, então o pior caso é 60 chamadas pagas por hora vezes 3 = 180; o serviço tinha o padrão de 20 (lido com `gcloud run services describe`, só leitura), 1.200. Nenhuma publicação rodada: o número vale na próxima.

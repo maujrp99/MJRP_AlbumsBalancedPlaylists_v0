@@ -1,0 +1,480 @@
+{
+ "source": "test/services/albums/catalogIdentity.test.js",
+ "records": [
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": null
+    },
+    [
+     {
+      "id": "apple-shangri",
+      "attributes": {
+       "name": "Shangri-La Dee Da",
+       "artistName": "Stone Temple Pilots"
+      }
+     },
+     {
+      "id": "apple-core",
+      "attributes": {
+       "name": "Core",
+       "artistName": "Stone Temple Pilots"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": null
+    },
+    [
+     {
+      "id": "apple-shangri",
+      "attributes": {
+       "name": "Shangri-La Dee Da",
+       "artistName": "Stone Temple Pilots"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": null
+    },
+    [
+     {
+      "id": "apple-core-deluxe",
+      "attributes": {
+       "name": "Core (Super Deluxe Edition)",
+       "artistName": "Stone Temple Pilots"
+      }
+     },
+     {
+      "id": "apple-core",
+      "attributes": {
+       "name": "Core",
+       "artistName": "Stone Temple Pilots"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": null
+    },
+    [
+     {
+      "id": "apple-core-deluxe",
+      "attributes": {
+       "name": "Core (Super Deluxe Edition)",
+       "artistName": "Stone Temple Pilots"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    {
+     "id": "apple-core",
+     "title": "Core",
+     "artist": "Stone Temple Pilots",
+     "year": "1992",
+     "artworkTemplate": "tpl",
+     "tracks": [
+      {
+       "id": "apple-core-1",
+       "title": "One",
+       "trackNumber": 1,
+       "duration": 90
+      }
+     ]
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    {
+     "id": "apple-core-deluxe",
+     "title": "Core (Super Deluxe Edition)",
+     "artist": "Stone Temple Pilots",
+     "year": "2017",
+     "artworkTemplate": "tpl",
+     "tracks": [
+      {
+       "id": "apple-core-deluxe-1",
+       "title": "One",
+       "trackNumber": 1,
+       "duration": 90
+      }
+     ]
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    {
+     "id": "apple-shangri",
+     "title": "Shangri-La Dee Da",
+     "artist": "Stone Temple Pilots",
+     "year": "2001",
+     "artworkTemplate": "tpl",
+     "tracks": [
+      {
+       "id": "apple-shangri-1",
+       "title": "One",
+       "trackNumber": 1,
+       "duration": 90
+      }
+     ]
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    [
+     {
+      "id": "apple-shangri",
+      "attributes": {
+       "name": "Shangri-La Dee Da",
+       "artistName": "Stone Temple Pilots"
+      }
+     },
+     {
+      "id": "apple-core",
+      "attributes": {
+       "name": "Core",
+       "artistName": "Stone Temple Pilots"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    {
+     "id": "apple-shangri",
+     "title": "Shangri-La Dee Da",
+     "artist": "Stone Temple Pilots",
+     "year": "2001",
+     "artworkTemplate": "tpl",
+     "tracks": [
+      {
+       "id": "apple-shangri-1",
+       "title": "One",
+       "trackNumber": 1,
+       "duration": 90
+      }
+     ]
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    [
+     {
+      "id": "apple-shangri",
+      "attributes": {
+       "name": "Shangri-La Dee Da",
+       "artistName": "Stone Temple Pilots"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    [
+     {
+      "id": "apple-core",
+      "attributes": {
+       "name": "Core",
+       "artistName": "Stone Temple Pilots"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter",
+     "year": null
+    },
+    [
+     {
+      "id": "apple-clarksdale",
+      "attributes": {
+       "name": "Walking Into Clarksdale",
+       "artistName": "Jimmy Page & Robert Plant"
+      }
+     },
+     {
+      "id": "apple-unledded",
+      "attributes": {
+       "name": "No Quarter: Jimmy Page & Robert Plant Unledded",
+       "artistName": "Jimmy Page & Robert Plant"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall",
+     "year": null
+    },
+    [
+     {
+      "id": "apple-wall-berlin",
+      "attributes": {
+       "name": "The Wall: Live in Berlin",
+       "artistName": "Pink Floyd"
+      }
+     },
+     {
+      "id": "apple-wall",
+      "attributes": {
+       "name": "The Wall",
+       "artistName": "Pink Floyd"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall",
+     "year": null
+    },
+    [
+     {
+      "id": "apple-wall-berlin",
+      "attributes": {
+       "name": "The Wall: Live in Berlin",
+       "artistName": "Pink Floyd"
+      }
+     },
+     {
+      "id": "apple-wall-movie",
+      "attributes": {
+       "name": "The Wall: The Movie",
+       "artistName": "Pink Floyd"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter",
+     "year": null
+    },
+    {
+     "id": "apple-unledded",
+     "title": "No Quarter: Jimmy Page & Robert Plant Unledded",
+     "artist": "Jimmy Page & Robert Plant",
+     "year": "1994",
+     "artworkTemplate": "tpl",
+     "tracks": [
+      {
+       "id": "apple-unledded-1",
+       "title": "One",
+       "trackNumber": 1,
+       "duration": 90
+      }
+     ]
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter",
+     "year": null
+    },
+    [
+     {
+      "id": "apple-unledded",
+      "attributes": {
+       "name": "No Quarter: Jimmy Page & Robert Plant Unledded",
+       "artistName": "Jimmy Page & Robert Plant"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall",
+     "year": null
+    },
+    {
+     "id": "apple-wall-berlin",
+     "title": "The Wall: Live in Berlin",
+     "artist": "Pink Floyd",
+     "year": "1990",
+     "artworkTemplate": "tpl",
+     "tracks": [
+      {
+       "id": "apple-wall-berlin-1",
+       "title": "One",
+       "trackNumber": 1,
+       "duration": 90
+      }
+     ]
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall",
+     "year": null
+    },
+    [
+     {
+      "id": "apple-wall-berlin",
+      "attributes": {
+       "name": "The Wall: Live in Berlin",
+       "artistName": "Pink Floyd"
+      }
+     },
+     {
+      "id": "apple-wall",
+      "attributes": {
+       "name": "The Wall",
+       "artistName": "Pink Floyd"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  }
+ ]
+}
