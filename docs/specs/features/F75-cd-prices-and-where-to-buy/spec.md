@@ -25,6 +25,16 @@ O que isso decide no desenho (decidido pelo agente — revisável):
 - O total do inventário soma o valor de cada item e diz quantos itens entraram na soma e quantos ficaram sem valor.
 - Para estimar valor de coleção, a fonte certa no Discogs é a sugestão de preço por estado do disco (exige a conta dele); o menor preço anunciado é um piso, não uma estimativa.
 
+**Respostas do MJRP em 2026-11-20 00:22:**
+1. Conta do Discogs: «sim tenho conta lá e aceitaria» ligar um token.
+2. Estado do disco: «poderíamos guardar o valor de 3 estados e apresentar os 3 e a media».
+3. Edição: «vamos começar com a mais comum numa primeira iteracao e depois melhoramos».
+4. Moeda: «USD, Euro, Libra (os 3 mais comuns no discogs) e Real, creio que precisamos ter o cambio do dia pra calcular de USD pra real».
+5. Rumo: «dar um foco para colecionador vai impactar bastante nessa funcionalidade de inventory … precisamos depois pesquisar e fazer benchmark de apps que já fazem esse controle de inventário de coleção de CDs e Vinis e fitas cassete».
+
+Conferido em 2026-11-20: uma fonte pública de câmbio (`api.frankfurter.app`, taxas de referência do dia, sem chave) respondeu com USD para BRL, EUR e GBP.
+Não conferido: os termos de uso da API do Discogs (a página oficial recusa leitura automática; o MJRP precisa abri-la, ou eu leio no navegador dele).
+
 ## Requirements
 - [REQ-01] «a escrever depois das respostas do MJRP às perguntas da viabilidade e do protótipo» · fixes S-57
 
@@ -38,4 +48,5 @@ A escrever.
 Ler preço da página da Amazon ou da iMusic por conta própria (fere os termos delas).
 
 ## Open Questions
-As quatro perguntas do relatório de viabilidade.
+- Quais três estados guardar: os três mais altos (Mint, Near Mint, Very Good Plus)?
+- Os termos de uso da API do Discogs permitem guardar e mostrar a sugestão de preço?

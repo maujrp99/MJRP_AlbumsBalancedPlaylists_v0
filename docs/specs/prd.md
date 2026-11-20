@@ -82,6 +82,7 @@ A desenhar: ainda não há protótipo aprovado nem `docs/specs/info-arch.md`, e 
 
 - **Séries por artista, por gênero e de faixas soltas.** A documentação descreve os quatro fluxos de série (Prod_Vision:26-34); no código as rotas de artista, gênero e faixas mostram «em breve» (inventário do V1, seção 1.9). A triar: vira épico de OUT-03 quando o MJRP decidir.
 - **Achados do mapa do V1 sobre o v0.** Problemas e riscos já verificados no código, por exemplo regras do Firestore abertas para rankings, servidor sem autenticação nem limite de taxa, exclusão de item do inventário que não funciona, migração de usuário convidado quebrada, desfazer/refazer sem botão (mapa do V1, seções 2.D a 2.G). Triados em 2026-10-28: o que o código tenta e não cumpre virou as issues UAT-01 a UAT-13 e a dívida técnica virou UAT-14 a UAT-25, na trilha do agente (`docs/specs/uat.md`); o que vira risco aceito segue com o MJRP.
+- **Inventário com foco de colecionador.** O MJRP disse em 2026-11-20 que o inventário vai precisar de bastante evolução e pediu, para depois, uma pesquisa e um benchmark de apps que já fazem controle de coleção de CDs, vinis e fitas cassete. A primeira peça é a F75 (valor estimado e onde comprar). A triar: o benchmark decide os próximos requisitos do EP-07.
 
 ## Premissas e questões em aberto
 
