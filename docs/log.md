@@ -3,6 +3,186 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:05] session — F71: o comportamento e o manual dizem a ordenação nas duas direções
+
+**Branch:** feat/f71-inventory-sort-both-ways
+
+- `docs/specs/behavior.md` e três páginas do manual atualizados com as oito escolhas do «Sort by».
+
+## [2026-11-20 00:05] session — F71: a ordenação do inventário nas duas direções, com setas (REQ-21)
+
+**Branch:** feat/f71-inventory-sort-both-ways
+
+- O seletor «Sort by» passa a oferecer cada critério nas duas direções, no molde da lista de séries: «Artist (A-Z)», «Artist (Z-A)», «Avg Rating (↓)», «Avg Rating (↑)», «Avg Pop (↓)», «Avg Pop (↑)», «Newest», «Oldest». Um item sem valor fica no fim nas duas direções.
+- Decidido pelo agente — revisável: os nomes ficaram «Avg Rating» e «Avg Pop», os mesmos do cartão; o MJRP falou em «Ranking».
+
+## [2026-11-20 00:04] session — F71: REQ-21 registrada (ordenação do inventário nas duas direções, com setas)
+
+- Pedido do MJRP: «o filtro/ordernacao do inventory pode ser Ranking e poderáimos ter como no albums series a opcao ascendente e descendente do ranking com as setinhas, mesmo padrao da ordenacao no albums series list».
+- A lista de séries oferece cada critério em duas opções do mesmo seletor («# of Albums (↑)», «# of Albums (↓)»); o inventário segue o mesmo molde.
+
+## [2026-11-20 00:02] session — F71: o cartão diz de quantas faixas a média saiu; medida de partida da F74
+
+**Branch:** feat/f71-card-says-how-many-tracks
+
+- O cartão do inventário mostra «Avg Rating: 90 (2 of 8) · Avg Pop: 59.5% (6 of 8)». `averages.tracks` guarda o tamanho do álbum. «Update ratings» rodou de novo na conta do MJRP para preencher.
+- Medida de partida da F74, tirada do inventário: 84 de 209 álbuns com nota em só parte das faixas, 13 sem nenhuma. O MJRP alargou o alvo: todo álbum com faixas sem nota, não só as edições ampliadas.
+
+## [2026-11-20 00:00] session — UAT-221 e F74 registradas (a nota chega à faixa certa); REQ-20 na F71 (de quantas faixas saiu a média)
+
+- O MJRP respondeu à pergunta da média tirada de poucas faixas: «mostrar, mas precisamos melhorar o algoritmo do BEA pra que ele encontre a media das faixas». O cartão vai dizer de quantas faixas a média saiu (F71, REQ-20).
+- Causa do casamento parcial, lida no código e na página do BestEverAlbums que ele indicou: `normalizeKey` apaga todo parêntese. UAT-221 aberta; F74 criada na `main`, via rápida, conserto. Sem ramo até ele priorizar.
+
+## [2026-11-19 23:55] decision — F72: o ramo foi renomeado para fora da convenção, para o cartão voltar a ser arrastável
+
+- O MJRP não conseguia arrastar a F72: o cartão aparecia «em andamento». O agente mestre do harness explicou (`rules/delivery.py`; CC-ADR-0029 e CC-ADR-0056): um ramo aberto com o nome da convenção (`feat/f72-…`) conta como começo, e feature começada não se ordena.
+- O ramo `feat/f72-albums-screen-says-how-many` virou `wip-f72-albums-screen-says-how-many`; o commit `57667c2` e o trabalho em staging ficaram como estavam. Depois que o MJRP salvar a ordem, o ramo volta ao nome da convenção e o trabalho é commitado.
+- Regra daqui em diante: o ramo de uma feature só nasce depois que ela está na «Priorizada».
+
+## [2026-11-19 23:54] session — F71: a janela do item faz o mesmo pedido da tela de álbuns (as três fontes)
+
+**Branch:** fix/f71-item-window-same-ask
+
+- O MJRP perguntou: «pq a janela de faixas do inventory carrega algo diferente da tela do albums list? nao deveria ser a mesma chamada?». A janela pedia duas fontes; passa a pedir as três (`ENRICHMENT_SOURCES`), com o ranking da pessoa. Visto no navegador: «My Avg: 5.5» em «The Dark Side of the Moon».
+
+## [2026-11-19 23:51] session — UAT-220 em produção
+
+- O conserto da janela do álbum no inventário foi juntado na `main` (`43d12b6`) e o site publicado (pacote `main-ASxeeVdk.js`).
+
+## [2026-11-19 23:50] session — F71: a janela do álbum no inventário pede o álbum à carga e mostra as faixas (UAT-220)
+
+**Branch:** fix/f71-inventory-window-shows-tracks
+
+- Decidido pelo agente — revisável: o inventário não guarda faixas; a janela de um item pede o álbum pela porta única da carga (`albumAsks.albumsOf`, pelo `InventoryService.albumOfItem`) e mostra o que chega. O que o item guarda aparece na hora e dá lugar ao álbum de agora.
+- Visto no navegador com os três álbuns das capturas do MJRP. UAT-220 em `fixed`.
+
+## [2026-11-19 23:48] session — UAT-220 registrada na F71: a janela do álbum no inventário não mostra as faixas
+
+- O MJRP mostrou, em produção, a janela de dois álbuns que vieram das séries dizendo «No tracks are kept for this album…», e a de um item antigo com a popularidade «Not linked». UAT-220 aberta; entra na F71 como REQ-19.
+
+## [2026-11-19 23:45] session — F71 fatia 2 e a barra do topo em produção; `## Now` em dia
+
+- Juntadas na `main` e publicadas: a barra do topo (`cbd96fa`, UAT-218) e a segunda fatia da F71 (`61d4061`). Pacote no ar: `main-J7MPEtWh.js`.
+- Abertas: UAT-216 e UAT-217. A F72 segue pronta e à espera de prioridade.
+
+## [2026-11-19 23:44] session — F71, segunda fatia (S-56): notas no inventário provadas e executadas na conta do MJRP
+
+**Branch:** feat/f71-inventory-averages-2
+
+- Decisão de arquitetura (decidido pelo agente — revisável): as duas médias ficam gravadas no item do inventário (`averages`), porque o cache de álbuns do navegador vale 7 dias e é guardado pela consulta da série. «Update ratings» pede os álbuns pela única porta da carga (`albumAsks.albumsOf`) e casa cada álbum com o item pela regra de identidade.
+- «Avg Rank» saiu do cartão do álbum e deu lugar a «Avg Rating» (opção A, do MJRP).
+- Rodou na conta dele: 209 de 211 álbuns com médias, em cerca de 25 segundos. Prova: `reports/evidence/F71-inventory-holds-every-album-of-my-series/2026-11-19-ratings-in-the-inventory-proof.md`.
+- A saber: dois álbuns têm a nota tirada de menos de três faixas (edições ampliadas); o cartão não mostra de quantas faixas a média saiu.
+
+## [2026-11-19 23:41] session — F63: a barra do topo cabe na tela em toda largura (UAT-218)
+
+**Branch:** fix/f63-top-bar-fits
+
+- Os nomes da conta e do Spotify encolhem antes de a barra passar da tela (`navigation/barName.js`: `min-w-0` da barra até o nome); a barra vai a 1400 px a partir de 1280; abaixo de 1280 o botão do Spotify mostra só o ícone; abaixo de 1024 os links vão para o menu lateral (era 768, e os links não cabiam).
+- Visto a 375, 800, 1024, 1280, 1440 e 1680 px: sem rolagem horizontal. UAT-218 em `fixed`.
+
+## [2026-11-19 23:40] session — F71, segunda fatia: o inventário guarda, mostra e ordena pelas médias «Avg Rating» e «Avg Pop»
+
+**Branch:** feat/f71-inventory-averages-2
+
+Auxiliar sem navegador e sem conta: nada rodou contra dados reais; a prova na tela e a execução na conta do MJRP são a TASK-17, do integrador. A decisão do MJRP (2026-11-19): «opção A e to achando que o AVG rank nao faz sentido pra mim, poderia trocar por AVG Rating tb».
+
+- **O modelo das médias** (`public/js/models/albumAverages.js`): «Avg Rating» (média da nota do BestEverAlbums das faixas, nota maior que zero) e «Avg Pop» (média da popularidade do Spotify, zero ou mais), uma casa decimal, `null` sem dados; a mescla das faixas é a que a comparação de faixas já fazia (`mergedTracksOf`). A comparação de faixas do álbum (`TracksTable`) troca «Avg Rank» por «Avg Rating»; `TracksRankingComparison.getAverages` não tinha chamador e saiu, e saiu também a exceção de complexidade da função de mescla.
+- **O item guarda** `averages: { rating, popularity, ratedTracks, popTracks, at }` (`data-model.md`). **«Update ratings»** (`#updateRatingsBtn`): um pedido a `albumAsks.albumsOf` (fontes `acclaim` e `popularity`) com uma consulta por item; cada álbum pronto volta ao item por `findInInventory`; as médias vão em partes de 100 por `BaseRepository.updateMany` / `InventoryRepository.setAverages`; uma média que a fonte não deu mantém o valor anterior; pergunta antes com mais de 30 álbuns; progresso no botão; o pedido é abortado ao sair da tela; o fim diz quantos ganharam notas, quantos não foram achados e, se for o caso, «Spotify is not connected: popularity was not read for N albums.»
+- **A ordem** (`#inventorySort`): Artist, Avg Rating, Avg Pop, Recently added; o item sem valor vem por último nas duas direções; «Recently added» lê `addedToInventory` (ou `createdAt`), carimbo do Firestore ou data. **O cartão** mostra a linha das médias, ou nada.
+- **Achado:** o roteador chama `destroy()` ao sair da tela e `InventoryView` só tinha `onUnmount()`, que ninguém chamava (a assinatura da loja ficava ligada). `destroy()` agora chama `onUnmount()`, que também aborta o pedido.
+- **Não feito, por escolha:** um filtro por nota mínima («filtro/ranking»). Está nas Open Questions do `spec.md`, com o que ele pediria.
+- Documentos: `spec.md` (REQ-11 a REQ-18), `plan.md`, `tasks.md` (TASK-12 a TASK-16 feitas; TASK-17 aberta, do integrador), `behavior.md` (`^inventory-ratings-updated`, `^inventory-order`, `^inventory-item-card`, `^album-track-table`), `data-model.md`, o nó S-56 e as páginas do manual que citavam «Avg Rank» ou descrevem o inventário. Suíte: 200 arquivos, 2439 testes verdes; `eslint` e `vite build` limpos.
+
+## [2026-11-19 23:39] session — a rolagem mantida em produção; `## Now` reescrito
+
+- A correção da UAT-219 foi juntada na `main` (`0c0df5e`) e o site publicado (pacote `main-DLZf9BMM.js`).
+- `MEMORY.md ## Now` reescrito com o estado de hoje: F71 fatia 1 e F73 em produção; F71 fatia 2 com um auxiliar; F72 à espera de prioridade; UAT-216 a UAT-218 abertas.
+
+## [2026-11-19 23:38] session — F73: a tela redesenhada mantém a rolagem (UAT-219)
+
+**Branch:** fix/f73-redraw-keeps-the-place
+
+- `utils/keepField.js` guarda a rolagem da janela antes do redesenho e a repõe depois. No inventário, mudar o status não leva mais a lista ao topo. UAT-219 em `fixed`.
+
+## [2026-11-19 23:37] session — F73 em produção; UAT-219 registrada (o inventário volta ao topo ao mudar o status)
+
+- A F73 foi juntada na `main` (`0db59f6`) depois de o MJRP priorizá-la, e o site foi publicado. Quem tinha a aba aberta precisa recarregar uma vez: a guarda contra versão antiga só existe a partir desta publicação.
+- O MJRP relatou: no inventário, mudar o status de um álbum leva a tela ao topo. UAT-219 aberta; entra na F73 como REQ-05 (é o mesmo redesenho inteiro da tela).
+
+## [2026-11-19 23:34] session — F73: o campo em uso sobrevive ao redesenho; a aba antiga recarrega; a tela antiga de geração saiu; o inventário se solta
+
+**Branch:** fix/f73-screens-keep-the-field
+
+- Decisão de arquitetura (decidido pelo agente — revisável): três regras, cada uma num lugar só. `utils/keepField.js` devolve o campo em uso depois de um redesenho inteiro; `installStaleBuildGuard` protege todo arquivo pedido sob demanda, não só a troca de tela; a inscrição de uma tela numa loja vai em `this.subscriptions` da `BaseView`, com um teste de arquitetura que guarda isso.
+- UAT-212 a UAT-215 em `fixed`. Prova: `reports/evidence/F73/2026-11-19-screens-keep-the-field-proof.md`.
+- Fica de fora, anotado: a tela de playlists ainda se redesenha inteira a cada aviso das lojas; um clique no instante de um redesenho pode se perder.
+- O MJRP exportou de verdade em produção para o Spotify (30 de 30 faixas) e para o Apple Music (na pasta da série): «sem o problema do campo funcionam os exports apple e spotify».
+
+## [2026-11-19 23:34] review — reconferência visual de F56, F58, F60, F63, F65 e F70 por quem não implementou; três achados viram issues
+
+- Relatórios: `reports/audits/2026-11-19-F56-visual-parity-recheck.md` e os de F58, F60, F63, F65 e F70, na mesma pasta. Feitos por um auxiliar que não implementou nenhuma das seis.
+- Veredito: F56, F58, F65 e F70 passam. F60 e F63 reprovam sem P0; os três P1 viraram UAT-216 (playlists salvas no celular), UAT-217 («Blend your Albums» sem a série) e UAT-218 (barra do topo mais larga que a tela com o Spotify conectado).
+- O que não foi conferido está dito em cada relatório: tudo que exigia gravar, apagar, gerar, sair ou conectar.
+- F62: as exportações reais foram feitas pelo MJRP em produção («sem o problema do campo funcionam os exports apple e spotify»); a TASK-13 está marcada com essa prova.
+- F73 pronta e provada no ramo `fix/f73-screens-keep-the-field`, sem commit: a trava de prioridade recusou («a F73 não está na Priorizada»). Fica à espera do MJRP, como a F72.
+
+## [2026-11-19 23:29] session — UAT-212 a UAT-215 e F73 registradas: campo que perde o foco, exportar numa aba antiga, tela antiga de geração, inventário que não se solta
+
+- O MJRP testou a exportação (F62) em produção e relatou: o «Batch Name» perde o foco ao digitar; depois os botões de exportar não respondem; recarregar sem salvar mostra uma tela antiga de geração.
+- Causas lidas no código e vistas no navegador: a tela de playlists é redesenhada inteira a cada aviso de três lojas (UAT-212); a recarga por versão antiga só protege a troca de tela, e o site foi publicado enquanto ele testava (UAT-213); `/playlists` sem playlists ainda desenha as configurações antigas (UAT-214).
+- Achado ao varrer os campos: a tela do inventário nunca se solta da loja e se desenha por cima de outra tela (UAT-215, aberta pelo agente).
+- F73 criada na `main`, via rápida, conserto.
+
+## [2026-11-19 23:22] session — F71 em produção; a F49 provada pelo MJRP em produção
+
+- A F71 (primeira fatia) foi juntada na `main` (`63793a4`) e o site publicado: pacote `main-BfgCsm6G.js`. O servidor não mudou (`mjrp-proxy-00207-lhz`).
+- O MJRP testou a F49 em produção: «f49: testando em prod, all good». O clique em «Load 3 more albums» mostrou os três álbuns restantes de uma série de 15, e o botão sumiu. A TASK-06 da F49 está marcada com essa prova.
+
+## [2026-11-19 23:21] session — F71: provada no navegador e executada na conta do MJRP; ordem do inventário por artista e título
+
+**Branch:** feat/f71-inventory-holds-every-album-of-my-series
+
+- A ação «Add the albums of my series» rodou na conta do MJRP, a pedido dele: 23 álbuns antes (6 Owned, 16 Not Owned, 1 Wishlist), 188 acrescentados como Not Owned, 211 depois (6 / 204 / 1). Os 23 de antes ficaram iguais; a segunda execução não gravou nada. Prova: `reports/evidence/F71-inventory-holds-every-album-of-my-series/2026-11-19-browser-proof-and-owner-account-run.md`.
+- Decidido pelo agente — revisável: a grade do inventário ordena por artista e depois por título (`public/js/models/inventorySort.js`); antes ordenava por um campo que os itens não têm. «1 album» no singular.
+- O MJRP escolheu a opção A para a S-56 (2026-11-19): «opção A e to achando que o AVG rank nao faz sentido pra mim, poderia trocar por AVG Rating tb». O «Avg Rank» sai também do cartão do álbum e dá lugar ao «Avg Rating». É a segunda fatia da F71.
+
+## [2026-11-19 23:13] session — F71: o manual diz o inventário como ficou
+
+Branch: `feat/f71-inventory-holds-every-album-of-my-series`, depois do commit `c1f2821`.
+
+As frases do manual que deixaram de ser verdade com a F71, corrigidas onde estavam, sem arquivo novo: `21_Dynamic_UI_Mapping.md` (seção 6: a situação por `models/inventoryStatus.js`, o filtro, as três contagens, a ação «Add the albums of my series» passo a passo), `14_Frontend_Components_Feature_Map.md` (inventário), `09_Frontend_Views.md` e `10_Frontend_Renderers.md` (cabeçalho, filtros, botão, cartão sem formato e sem preço), `11_Frontend_Components_Root.md` (a janela do álbum mostra o que é do item; «Not set» na janela de editar), `07_Frontend_Data_Infra.md` (`planSeriesAlbums`, `addAlbumsAsNotOwned`, `addBatch`, `createMany`) e `08_Frontend_Models.md` (os três modelos novos; `inventoryFromSeries.js` entre os que perguntam à regra de identidade). O commit do código também registrou, pelo gancho de status, o nó S-54 em «In progress».
+
+## [2026-11-19 23:13] session — F45 a F70: tarefas provadas marcadas e declarações do passo retroativo; nenhuma feature fechada ainda, salvo a F53
+
+Passada de limpeza dos `tasks.md` das F45 a F70 (menos a F66; F71 e F72 intocadas), sem tocar em código. Cada linha aberta foi decidida com prova: as provas do integrador com arquivo em `reports/evidence/` ou entrada do log foram marcadas (`rounds:: 1`, caminho da prova na linha; o que a prova diz «não visto» não foi mexido); as linhas de documentação foram marcadas quando conferidas no repositório; a conferência cruzada da spec e do plano foi feita por script. O que só diz «o MJRP julga ou aceita» saiu da lista de tarefas e foi para `## For the owner at UAT`, no fim de cada `tasks.md`. Nos `plan.md` das 19 features que fechariam, o `## Documents Consulted` ganhou a declaração de cada documento («atualizado» com o commit, ou «sem mudança» com o motivo), conferida no histórico de commits que citam a feature. Só a F53 passa no `retro_step_check` e fica `Done`. As outras 18 seguem `In Progress` com uma linha aberta (o passo retroativo): faltam «Prototype: none» dito pelo MJRP e o ok visual dele (ou o relatório de reconferência visual, nas features da trilha Agente). Também seguem abertas por falta real: F49 (clique do botão sem prova), F51 (protótipo fora do repositório), F52, F62, F64 e F69. Nenhum `Accepted`; `uat.md`, `MEMORY.md` e `ROADMAP.md` não foram tocados.
+
+## [2026-11-19 23:12] session — F71 no ramo: uma regra para a situação do item, o filtro Owned / Not Owned / Wishlist e a ação «Add the albums of my series»
+
+Branch: `feat/f71-inventory-holds-every-album-of-my-series` (da `main` em `2722d1d`). Auxiliar sem navegador e sem conta: nada rodou contra dados reais; a prova na tela e a execução na conta do MJRP são a TASK-10, do integrador.
+
+**O que entrou.** (1) `models/inventoryStatus.js`: a situação de um item (Owned, Not Owned, Wishlist) dita num lugar só, sobre o campo `owned` de sempre (`true`, `null`, `false`), sem migração; o cartão, o filtro, os totais, a janela do álbum e o aviso da troca perguntam a ele. (2) O filtro de situação com «All», «Owned», «Not Owned», «Wishlist» e o cabeçalho com as três contagens (`models/inventoryFilter.js`). (3) A ação «Add the albums of my series», um botão na barra de filtros: lê as séries do banco, planeja contra o inventário do banco (`models/inventoryFromSeries.js`, função pura), pergunta com `dialogService.confirm` e grava pelo `InventoryService` e pelo `InventoryRepository.addBatch`, em partes de 100 (uma gravação por parte, `BaseRepository.createMany`), com o botão ocupado, o progresso e o fim dito como foi.
+
+**Decisões do agente — revisáveis (2026-11-19), todas nas Open Questions do `spec.md` da F71.** A regra única da origem dos dados: o item feito pela ação leva o que a consulta da série leva (artista, título, ano, capa, id do Apple Music) e mais nada, tenha a tela de álbuns sido aberta ou não; nenhum álbum é carregado. «O mesmo álbum»: o mesmo id do Apple Music, o mesmo id de álbum do app, ou o primeiro nível da regra de identidade (`compareAlbumIdentity(...).same`); a mesma resposta passa a valer no «Add to Inventory» do cartão de um álbum. As três contagens do cabeçalho ignoram o filtro de situação. O cartão sem preço não mostra «$0.00» e o item sem formato não mostra «Unknown». A janela do álbum mostra a situação do item (dizia «OWNED» para todos) e nenhuma fora do inventário. Criar ou editar uma série **não** escreve no inventário: a ação é repetível, e o automático fica como pergunta para o MJRP.
+
+**Dados.** Suíte: 2326 testes em 191 arquivos (eram 2219), build e lint limpos. Saíram da lista de complexidade `InventoryRepository.addAlbum` e `InventoryView.render`. `shared/albumIdentity.js` não mudou (versão 2); `models/inventoryFromSeries.js` entrou nos `CALL_SITES` do teste da regra. O doctor segue vermelho pelos mesmos cerca de 520 links de documentos arquivados; nenhum erro novo.
+
+## [2026-11-19 23:11] decision — MJRP pede, na F71: o inventário mostra e ordena por «Avg Rank» (BEA) e «Avg Pop» (Spotify) (S-56)
+
+Palavras do MJRP, com a captura das duas médias: «no inventory, na 71, pode usar as metricas do print e ter um filtro/ranking por BEA Avg rank e Spotify Avg Pop.?». Registrado na `main`: o requisito S-56 no épico EP-07, embutido no `prd.md`, e importado pela F71 como segunda fatia. A primeira fatia (álbuns das séries no inventário; filtro de situação) está em implementação; esta entra depois dela, feita na sessão principal ou por um auxiliar de modelo mais barato.
+
+## [2026-11-19 23:07] session — UAT-211 em produção (site); em fixed
+
+Site publicado da `main` (`946fc21`, pacote `main-DBBm8vch.js`). Em produção, a imagem do título servida tem o primeiro pixel transparente. Os nomes só aparecem com a conta do MJRP; não foram vistos pelo agente em produção (a regra e o `title` estão nos testes). UAT-211 em `fixed`, à espera do olhar do MJRP.
+
+## [2026-11-19 23:06] session — UAT-211 consertada: título sem caixa e nomes inteiros na barra do topo (F63)
+
+A imagem `TheAlbumBlender.png` tinha fundo preto opaco; o preto foi tirado de forma que, sobre preto, a imagem fique igual (diferença máxima de 10 em 255 por canal, o ruído do fundo). Os nomes da conta e do Spotify deixam o limite fixo de 80 px: 96 px em telas menores, 220 px em telas largas, e o nome inteiro em `title`. Teste primeiro: `test/components/TopBarNames.test.js`.
+
+## [2026-11-19 23:05] session — UAT-211 aberta: barra do topo com retângulo atrás do título e nomes cortados (relato do MJRP)
+
+O MJRP mandou uma captura da barra do topo: «um bug antigo pra arrumar, veja o print, qual o bug?». Leitura do agente: a imagem do título tem fundo preto opaco (aparece como caixa sobre a barra translúcida) e os dois nomes têm largura máxima de 80 px. Entra na F63 (Home e navegação), pela via rápida.
+
 ## [2026-11-19 22:53] session — F72: a tela de séries diz quantas séries e quantos álbuns tem (S-55)
 
 Uma linha sob o título: «47 series · 227 albums»; com busca, «2 of 47 series · 4 albums»; numa série, «5 albums». Modelo puro `models/seriesCounts.js`, testes primeiro, prova no navegador com a conta do MJRP. Decidido pelo agente, revisável: conta os álbuns pedidos nas séries que passam pelos filtros (o mesmo álbum em duas séries conta duas vezes), não os distintos.

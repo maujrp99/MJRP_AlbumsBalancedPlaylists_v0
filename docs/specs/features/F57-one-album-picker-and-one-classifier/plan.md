@@ -111,6 +111,14 @@ Nenhuma.
 - `docs/specs/behavior.md`, `docs/specs/constitution.md` (complexidade até 10)
 - `public/assets/data/albums-curated.json` (os gêneros que o catálogo dá)
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/arch.md` — atualizado (commit `7f152fc`)
+- `docs/specs/data-model.md` — sem mudança: nenhuma entidade, campo ou esquema mudou
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `7f152fc`)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - **O classificador mudou para todos os artistas, não só para o caso da issue.** As mudanças de resultado estão medidas acima e listadas nas Open Questions da spec. O conjunto medido não tem as marcas do catálogo (`isSingle`, `isCompilation`), que continuam valendo primeiro.
 - **Artistas eletrônicos não foram vistos com a lista da IA de verdade.** O caminho deles foi reescrito mantendo as regras (quantidade de faixas, resgate pela lista, palavras de outro produto), com três mudanças conscientes: sem lista o álbum é de estúdio; o casamento por palavras só vale num sentido (as palavras da lista dentro do título do álbum); número sobrando não casa.

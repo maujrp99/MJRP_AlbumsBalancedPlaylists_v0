@@ -3,7 +3,7 @@ status: In Progress
 lane: fast
 solution_type: fix
 imports: []
-fixes: ["UAT-201", "UAT-10", "UAT-11", "UAT-13", "UAT-26", "UAT-27", "UAT-192", "UAT-07"]
+fixes: ["UAT-201", "UAT-10", "UAT-11", "UAT-13", "UAT-26", "UAT-27", "UAT-192", "UAT-07", "UAT-211", "UAT-218"]
 planned_for: "[[ROADMAP#^REL-40]]"
 ---
 <!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
@@ -78,6 +78,9 @@ Cada issue foi conferida no código da `main` em `d210f35` (2026-11-19, depois d
   verified_by:: pendente — nada foi construído; a issue segue aberta
 - [REQ-13] O botão «Create Series» do estado vazio das playlists guardadas leva à Home. **Não entregue neste ramo** (fora do escopo dado ao implementador; ver Out of Scope). · fixes UAT-27
   verified_by:: pendente — nada foi construído; a issue segue aberta
+- [REQ-14] Na barra do topo, o título aparece sem caixa atrás e os nomes da conta e do Spotify aparecem inteiros quando há espaço; cortados, dizem o nome inteiro ao passar o mouse. · fixes UAT-211
+- [REQ-15] A barra do topo nunca passa da largura da tela: os nomes cedem espaço antes; abaixo de 1280 px o botão do Spotify mostra só o ícone; abaixo de 1024 px os links vão para o menu lateral. · fixes UAT-218
+  verified_by:: `test/components/TopBarNames.test.js`
 
 ## Observable States
 <!-- What the imported nodes point_to: the screen state in info-arch.md (the prototype the human judged —

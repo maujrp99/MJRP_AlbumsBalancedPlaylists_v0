@@ -14,6 +14,9 @@ import {
     writeBatch
 } from 'firebase/firestore'
 
+/** How many writes one Firestore batch holds. */
+export const MAX_BATCH_WRITES = 500
+
 /**
  * Base repository class for Firestore interactions (Modular SDK)
  */
@@ -176,6 +179,56 @@ export class BaseRepository {
         }
 
         return docRef.id
+    }
+
+    /**
+     * Create many documents in ONE write: all of them are stored, or none is (a Firestore batch).
+     * A batch holds MAX_BATCH_WRITES writes: a longer list is refused, the caller sends it in parts.
+     * @param {Object[]} dataList - the data of each document
+     * @returns {Promise<string[]>} the ids of the created documents, in the order given
+     */
+    async createMany(dataList) {
+        if (dataList.length === 0) return []
+        if (dataList.length > MAX_BATCH_WRITES) {
+            throw new Error(`Too many documents for one write: ${dataList.length} (a batch holds ${MAX_BATCH_WRITES})`)
+        }
+
+        const batch = writeBatch(this.db)
+        const ids = dataList.map(data => {
+            const docRef = doc(this.getCollection())
+            batch.set(docRef, { ...data, createdAt: this.getServerTimestamp(), _schemaVersion: this.schemaVersion })
+            return docRef.id
+        })
+        await batch.commit()
+
+        if (this.cache) await this.cache.invalidate(this.getCacheKey('all'))
+        return ids
+    }
+
+    /**
+     * Update many existing documents in ONE write: all of them change, or none does (a Firestore
+     * batch). A document that does not exist makes the write fail: this never creates. A batch
+     * holds MAX_BATCH_WRITES writes: a longer list is refused, the caller sends it in parts.
+     * @param {Array<{ id: string, data: Object }>} updates - the fields to change in each document
+     * @returns {Promise<string[]>} the ids of the updated documents, in the order given
+     */
+    async updateMany(updates) {
+        if (updates.length === 0) return []
+        if (updates.length > MAX_BATCH_WRITES) {
+            throw new Error(`Too many documents for one write: ${updates.length} (a batch holds ${MAX_BATCH_WRITES})`)
+        }
+
+        const batch = writeBatch(this.db)
+        updates.forEach(({ id, data }) => batch.update(this.getDocRef(id), { ...data, updatedAt: this.getServerTimestamp() }))
+        await batch.commit()
+
+        if (this.cache) {
+            await Promise.all([
+                ...updates.map(({ id }) => this.cache.invalidate(this.getCacheKey(id))),
+                this.cache.invalidate(this.getCacheKey('all'))
+            ])
+        }
+        return updates.map(({ id }) => id)
     }
 
     // ========== UPSERT OPERATION ==========

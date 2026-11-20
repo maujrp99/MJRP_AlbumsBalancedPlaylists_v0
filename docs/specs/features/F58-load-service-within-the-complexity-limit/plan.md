@@ -122,6 +122,14 @@ Nenhuma. O teste do limite usa o `eslint` que já está no `package.json` (`devD
 <!-- arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, the NFR nodes. -->
 `AGENTS.md`, `PRINCIPLES.md` §I.3, `docs/specs/constitution.md`, `docs/specs/arch.md` (as seções da carga, 11, 17, 19 e a da F56), `docs/decisions/0016-service-layer-extraction.md`, `0017-pure-state-stores.md`, `0019-one-owner-for-the-album-load.md`, `docs/specs/uat.md` (UAT-194, UAT-14, UAT-18, UAT-19, UAT-11), `reports/audits/2026-11-19-mjrpalbumblender-v0-load-architecture-analysis.md` (seção 6), `docs/manual/01_System_Architecture.md` (seção 6), `docs/manual/07_Frontend_Data_Infra.md`.
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/arch.md` — atualizado (commit `f657e95`)
+- `docs/specs/data-model.md` — atualizado (commit `9f1635d`)
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — sem mudança: refatoração sem mudança de comportamento
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - **Sem navegador.** O implementador não viu nenhuma tela. O que os testes não veem: a ordem de importação no `app.js` (o `userSession.js` precisa do Firebase iniciado; está logo depois do `firebase-init.js`), o menu e a tela de migração montados com o que recebem, e a tela de álbuns com uma espera de verdade. A prova é a TASK-13.
 - **O inventário guarda dado da pessoa.** A F60 consertou perda de dado ali (UAT-198). O código de troca de pessoa foi movido sem mudar a ordem das coisas, e os seis testes da UAT-198 passam contra o serviço.

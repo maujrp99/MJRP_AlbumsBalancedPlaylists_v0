@@ -181,25 +181,46 @@ Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set
 ---
 
 ## 6. Inventory Logic
-**File Context**: `views/InventoryView.js`, `controllers/InventoryController.js`
+**File Context**: `views/InventoryView.js`, `controllers/InventoryController.js`, `models/inventoryStatus.js`, `models/inventoryFilter.js`, `models/inventoryFromSeries.js`, `models/inventorySort.js`, `models/inventoryRatings.js`, `models/albumAverages.js`
 
 ### 6.1 Logic & Calculations
+*   **Status** (F71): an item is Owned, Not Owned or on the Wishlist. The stored field is `owned` (`true`, `null` or missing, `false`); `models/inventoryStatus.js` is the one place that reads and writes it (`statusOf`, `ownedValueOf`). The card, the filter, the counts, the album window and the toast of a change ask that module.
+*   **Filtering**:
+    1.  **[UI]** Search box, Format select, Status select (`All`, `Owned`, `Not Owned`, `Wishlist`).
+    2.  **[FN]** `handleFilterChange(type, value)` -> `applyFiltersAndSort()` -> `filterInventory(items, filters)` (`models/inventoryFilter.js`). The three filters apply together.
+*   **Sorting** (F71, S-56):
+    1.  **[UI]** Select `#inventorySort`: `Artist (A-Z)` (default), `Artist (Z-A)`, `Avg Rating (↓)`, `Avg Rating (↑)`, `Avg Pop (↓)`, `Avg Pop (↑)`, `Newest`, `Oldest`.
+    2.  **[FN]** `handleSortChoice(value)` -> `sortingFor(value)` -> `applyFiltersAndSort()` -> `sortInventory(items, sorting)` (`models/inventorySort.js`). The averages and the date start with the highest/newest first; an item with no value comes last whatever the direction; ties fall back to artist and title. `Recently added` reads `addedToInventory` (or `createdAt`), a Firestore timestamp (`{ seconds }`) or a date.
+*   **The card** shows, in one small line, `Avg Rating: 78.4 · Avg Pop: 42.6%` when the item has `averages`, only the one it has when it has one, and nothing when it has none (`InventoryGridRenderer.renderAverages`).
 *   **Stats Calculation**:
     1.  **[FN]** `calculateStats()` runs on every update.
     2.  **[LOGIC]**
-        -   `Total Count`: All items.
-        -   `Owned Value`: Sum of `purchasePrice` WHERE `owned === true`.
-        -   `Wishlist`: WHERE `owned === false`.
-        -   `Unknown`: Nulls ignored.
+        -   `Total Count` ("N albums"): the items in the grid (the three filters).
+        -   `Owned Value`: Sum of `purchasePrice` of the items in the grid whose status is Owned.
+        -   `✓ n Owned`, `n Not Owned`, `♡ n Wishlist`: `statusCountsFor(items, filters)`, the items that pass the search and the format, by status. The status filter is left out, so choosing one status does not turn the other two into zero.
 *   **Currency Toggle**:
     1.  **[UI]** Click Currency Button (USD/BRL).
     2.  **[FN]** `handleCurrencyChange` -> Toggles `viewCurrency` -> Re-runs `formatPrice`.
 
 ### 6.2 Inventory CRUD
 *   **Status Change**:
-    1.  **[UI]** Change Dropdown (Owned/Wishlist).
+    1.  **[UI]** Change Dropdown (Not Owned / ✓ Owned / ♡ Wishlist).
     2.  **[FN]** `handleStatusChange(id, status)`.
-    3.  **[SERVICE]** `inventoryService.updateAlbum(id, { owned: bool })` (since F58; it writes through the repository and then changes the store).
+    3.  **[SERVICE]** `inventoryService.updateAlbum(id, { owned: ownedValueOf(status) })` (since F58; it writes through the repository and then changes the store). The toast is "Moved to Collection", "Moved to Wishlist" or "Marked as Not Owned"; when the write fails, "Failed to update status" and the screen is drawn again from the store.
+*   **Add the albums of my series** (F71):
+    1.  **[UI]** Button `#addSeriesAlbumsBtn` ("Add the albums of my series") in the filters row.
+    2.  **[FN]** `InventoryView.handleAddSeriesAlbums()` -> `InventoryController.handleAddSeriesAlbums({ confirm })`. The button is disabled and says what is being done (`showSeriesAdd`), without a full redraw.
+    3.  **[SERVICE]** `readSeriesOfThePerson()` (`services/inventory/inventoryWiring.js`) reads the series from Firestore; `inventoryService.planSeriesAlbums(series)` reads the inventory and asks `planSeriesAlbums` (`models/inventoryFromSeries.js`) which albums go in. No album is loaded and nothing is asked of Apple Music: the item carries what the series query carries.
+    4.  **[UI]** `dialogService.confirm`: "N albums from your S series will be added as Not Owned. M albums already in your inventory stay as they are." With nothing to add, a toast says so and nothing is written.
+    5.  **[SERVICE]** `inventoryService.addAlbumsAsNotOwned(toAdd, { onProgress })` writes in parts of 100 through `InventoryRepository.addBatch` (one Firestore batch per part), then reads the inventory once.
+    6.  **[UI]** "Added N albums as Not Owned." or, when a part fails, how many went in and how many did not (running the action again adds only the rest).
+*   **Update ratings** (F71, S-56):
+    1.  **[UI]** Button `#updateRatingsBtn` ("Update ratings") in the filters row, next to the one that adds the albums of the series. While one of the two runs, both are disabled and the one that runs says what it is doing (`showRatings`, `showSeriesAdd`).
+    2.  **[FN]** `InventoryView.handleUpdateRatings()` -> `InventoryController.handleUpdateRatings({ confirm })`. With more than 30 albums `dialogService.confirm` asks "Read the ratings of N albums? This can take a few minutes." Leaving the screen (`InventoryView.destroy()` -> `controller.dispose()`) aborts the ask.
+    3.  **[SERVICE]** `inventoryService.updateAverages({ signal, onProgress })` makes ONE ask to the album load, `albumAsks.albumsOf({ series: [{ id: 'inventory-ratings', albumQueries }], sources: ['acclaim', 'popularity'], signal, onProgress })`, one query per item (`queryOfItem` in `models/inventoryRatings.js`). The service never calls the network or the cache by itself. The button says "Reading ratings… 40 of 211".
+    4.  **[LOGIC]** Each ready album goes back to its item with `findInInventory` (the one identity rule); `averagesOfAlbum(album)` (`models/albumAverages.js`) makes `{ rating, popularity, ratedTracks, popTracks }`; an average a source gave nothing for keeps the value the item had.
+    5.  **[SERVICE]** The `averages` of the items are written in parts of 100 through `InventoryRepository.setAverages` -> `BaseRepository.updateMany` (one Firestore batch per part; it never creates). The button says "Saving ratings…"; the store is told once, at the end.
+    6.  **[UI]** "Ratings updated for N of M albums." plus, only when true, how many were not found, how many had no ratings, that Spotify is not connected (popularity was not read for K albums), and that a source did not answer; when a part fails, how many were saved (running it again saves the rest).
 *   **Delete**:
     1.  **[UI]** Click Delete Button -> Confirm.
     2.  **[FN]** `InventoryController.handleDelete(id)` calls `inventoryService.removeAlbum(id)` (since F58), which removes the item through `InventoryRepository.removeAlbum` and then from the store's list; the toast is "Album removed from inventory" or, on failure, "Failed to delete album".

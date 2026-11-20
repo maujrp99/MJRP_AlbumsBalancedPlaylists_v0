@@ -27,6 +27,15 @@ Nenhuma nova. Vitest e jsdom nas versões do projeto; Node 26 na máquina do MJR
 - `docs/specs/uat.md` (UAT-149, UAT-20, UAT-21)
 - `docs/manual/24_Test_Suite.md`
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — sem mudança: a feature só mexeu nos testes; nenhum componente, fluxo técnico ou integração novos
+- `docs/specs/data-model.md` — sem mudança: nenhuma entidade, campo ou esquema mudou
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — sem mudança: a feature só mexeu nos testes
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - Consertar um teste mudando o que ele confere pode esconder um defeito real. Em cada caso o comportamento do código foi lido antes; onde o teste descrevia comportamento que não existe mais por decisão registrada, foi reescrito, não afrouxado.
 - A suíte verde não bloqueia nada sozinha: commit e deploy seguem sem verificação automática (UAT-20).

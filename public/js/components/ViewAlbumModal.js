@@ -10,15 +10,45 @@ import { TracksRankingComparison } from './ranking/TracksRankingComparison.js'
 import { Album } from '../models/Album.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { coverImage } from './ui/coverImage.js'
+import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatus.js'
 
-export async function showViewAlbumModal(albumInput) {
+/** The colour of the status badge of an inventory item. */
+const STATUS_BADGE = Object.freeze({
+  [InventoryStatus.OWNED]: 'badge badge-success',
+  [InventoryStatus.NOT_OWNED]: 'badge badge-neutral',
+  [InventoryStatus.WISHLIST]: 'badge badge-neutral'
+})
+
+/** What the window says in the place of the tracks, when it has none to show. */
+export const TRACKS_TEXT = Object.freeze({
+  loading: 'Loading the tracks of this album…',
+  notLoaded: 'The tracks of this album could not be loaded. Close this window and open it again to try once more.',
+  none: 'No tracks are kept for this album.'
+})
+
+const asAlbum = (data) => (data instanceof Album ? data : new Album(data))
+const hasTracks = (album) => album.getTracks('original').length > 0 || album.getTracks('acclaim').length > 0
+
+/**
+ * @param {Object} albumInput - a loaded album, or an inventory item (it holds its album in
+ *   `albumData`, and its own status, format, price and notes)
+ * @param {Object} [options]
+ * @param {Function} [options.loadAlbum] - (signal) => Promise<Album|null>: the album as the album
+ *   load has it now. The inventory gives it (F71, UAT-220): an item keeps no tracks, or the ones of
+ *   the day it was added, so the window shows what it has, asks, and shows the album that comes.
+ *   The ask is dropped when the window closes.
+ */
+export async function showViewAlbumModal(albumInput, { loadAlbum = null } = {}) {
   // Hydrate Album Model if needed
+  const item = albumInput.albumData ? albumInput : null
   const rawData = albumInput.albumData || albumInput
-  const album = rawData instanceof Album ? rawData : new Album(rawData)
+  const album = asAlbum(rawData)
+  // What the person wrote about the album is the item's; a loaded album has none of it
+  const kept = item || {}
 
   // -- 1. Header Section --
   const coverEl = createCoverElement(album)
-  const detailsEl = createDetailsElement(album)
+  const detailsEl = createDetailsElement(album, item)
   const closeBtn = createCloseButton()
 
   const headerEl = SafeDOM.div({
@@ -27,7 +57,7 @@ export async function showViewAlbumModal(albumInput) {
 
   // -- 2. Notes Section --
   let notesEl = null
-  if (album.notes) {
+  if (kept.notes) {
     notesEl = SafeDOM.div({
       className: 'px-6 py-4 bg-yellow-500/5 border-b border-white/5'
     }, [
@@ -39,7 +69,7 @@ export async function showViewAlbumModal(albumInput) {
       ]),
       SafeDOM.p({
         className: 'text-sm text-yellow-100/80 italic leading-relaxed'
-      }, `"${album.notes}"`)
+      }, `"${kept.notes}"`)
     ])
   }
 
@@ -99,7 +129,10 @@ export async function showViewAlbumModal(albumInput) {
 
   // -- 6. Logic & Mounting --
 
+  const closing = new AbortController()
+
   function handleClose() {
+    closing.abort()
     containerEl.classList.add('animate-fade-out-down')
     modalOverlay.classList.remove('animate-fade-in') // Optional: fade out overlay too
     modalOverlay.style.opacity = '0'
@@ -122,14 +155,39 @@ export async function showViewAlbumModal(albumInput) {
   // Close Button Action
   closeBtn.addEventListener('click', handleClose)
 
-  // Initialize Comparison Component
-  const comparison = new TracksRankingComparison({ album })
-
-  // Defer mount slightly to ensure DOM checks work inside sub-components
-  setTimeout(() => {
-    comparison.mount(rankingContainer)
+  /** The comparison of the tracks of an album, or one line when there is nothing to compare. */
+  const showTracks = (shown, emptyText) => {
+    SafeDOM.clear(rankingContainer)
+    if (!hasTracks(shown)) {
+      rankingContainer.appendChild(SafeDOM.p({ className: 'text-gray-400 text-center py-12', dataset: { role: 'no-tracks' } }, emptyText))
+      return
+    }
+    // A host of its own: a comparison that was replaced still draws, later, into the host it knew
+    const host = SafeDOM.div({})
+    rankingContainer.appendChild(host)
+    const comparison = new TracksRankingComparison({ album: shown })
+    comparison.mount(host)
     comparison.updateUI()
-  }, 0)
+  }
+
+  if (!loadAlbum) {
+    showTracks(album, TRACKS_TEXT.none)
+    return modalOverlay
+  }
+
+  // What the item keeps is shown at once; the album of now takes its place when it comes
+  showTracks(album, TRACKS_TEXT.loading)
+  loadAlbum(closing.signal)
+    .then(given => {
+      if (closing.signal.aborted) return
+      const loaded = given ? asAlbum(given) : null
+      if (loaded && hasTracks(loaded)) showTracks(loaded, TRACKS_TEXT.none)
+      else if (!hasTracks(album)) showTracks(album, TRACKS_TEXT.notLoaded)
+    })
+    .catch(error => {
+      console.error('[ViewAlbumModal] The album could not be loaded:', error)
+      if (!closing.signal.aborted && !hasTracks(album)) showTracks(album, TRACKS_TEXT.notLoaded)
+    })
 
   return modalOverlay
 }
@@ -153,7 +211,12 @@ function createCoverElement(album) {
   return wrapper
 }
 
-function createDetailsElement(album) {
+/**
+ * @param {Album} album
+ * @param {Object|null} item - the inventory item that holds the album, when the window was opened from the inventory
+ */
+function createDetailsElement(album, item) {
+  const kept = item || {}
   const title = SafeDOM.h2({
     className: 'text-2xl md:text-3xl font-bold truncate text-white leading-tight',
   }, album.title)
@@ -165,13 +228,13 @@ function createDetailsElement(album) {
   // Badges
   const badges = []
   if (album.year) badges.push(createBadge(album.year, 'px-2 py-0.5 bg-surface-light rounded-md border border-white/5'))
-  if (album.format) badges.push(createBadge(album.format, 'badge badge-neutral uppercase text-xs tracking-wider'))
+  if (kept.format) badges.push(createBadge(kept.format, 'badge badge-neutral uppercase text-xs tracking-wider'))
 
-  badges.push(
-    album.owned !== false
-      ? createBadge('OWNED', 'badge badge-success')
-      : createBadge('WISHLIST', 'badge badge-neutral')
-  )
+  // The status is the inventory's: an album that is not an inventory item has none to show
+  if (item) {
+    const status = statusOf(item)
+    badges.push(createBadge(statusLabel(status).toUpperCase(), STATUS_BADGE[status]))
+  }
 
   const badgeContainer = SafeDOM.div({
     className: 'flex flex-wrap items-center gap-3 mt-3 text-sm text-gray-400'
@@ -179,11 +242,11 @@ function createDetailsElement(album) {
 
   // Metadata Grid
   const metaItems = []
-  if (album.purchasePrice) {
-    metaItems.push(createMetaItem('Price:', formatCurrency(album.purchasePrice, album.currency)))
+  if (kept.purchasePrice) {
+    metaItems.push(createMetaItem('Price:', formatCurrency(kept.purchasePrice, kept.currency || 'USD')))
   }
-  if (album.condition) {
-    metaItems.push(createMetaItem('Cond:', album.condition))
+  if (kept.condition) {
+    metaItems.push(createMetaItem('Cond:', kept.condition))
   }
 
   const metaContainer = SafeDOM.div({

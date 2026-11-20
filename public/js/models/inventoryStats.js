@@ -5,17 +5,23 @@
  * counted from them is derived here).
  */
 
+import { InventoryStatus, countByStatus, statusOf } from './inventoryStatus.js'
+
 /** The formats always listed, even with no album. A format outside this list is counted too. */
 const KNOWN_FORMATS = Object.freeze(['cd', 'vinyl', 'dvd', 'bluray', 'digital'])
 
 /** The currencies the inventory adds up. A price in another currency adds nothing. */
 const CURRENCIES = Object.freeze(['USD', 'BRL'])
 
-/** Only `true` is owned and only `false` is wished for: null or missing is "not owned", neither. */
+const isOwned = (album) => statusOf(album) === InventoryStatus.OWNED
+
+/** Every album is in one of the three statuses (models/inventoryStatus.js). */
 function countByOwnership(albums) {
+    const counts = countByStatus(albums)
     return {
-        ownedCount: albums.filter(album => album.owned === true).length,
-        wishlistCount: albums.filter(album => album.owned === false).length
+        ownedCount: counts[InventoryStatus.OWNED],
+        notOwnedCount: counts[InventoryStatus.NOT_OWNED],
+        wishlistCount: counts[InventoryStatus.WISHLIST]
     }
 }
 
@@ -38,7 +44,7 @@ function valueIn(currency, albums) {
     const total = sum(priced)
     return {
         total,
-        owned: sum(priced.filter(album => album.owned === true)),
+        owned: sum(priced.filter(isOwned)),
         average: priced.length > 0 ? total / priced.length : 0
     }
 }

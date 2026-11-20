@@ -694,6 +694,7 @@ Quem pergunta uma fonte é `askSource` (`rankingSources/sourceOutcome.js`): o qu
 | O álbum guardado no navegador (`adapters/AlbumCacheAdapter.js`, `APIClient._keptAlbumAskedFor`) | cada leitura pergunta se o registro ainda é o álbum pedido; o que não passa é esquecido e buscado de novo |
 | Adicionar e remover álbum de uma série (`services/SeriesService.js`) | `indexOfQueryFor`, `alreadyAskedFor`: a consulta é o pedido, o álbum da tela é o candidato |
 | A contagem só-leitura (`services/albums/albumIdentityAudit.js`, `await albumIdentityAudit()` no console) | conta, sem gravar, quantos álbuns não são o álbum pedido |
+| O inventário (`models/inventoryFromSeries.js`, F71) | «este álbum já está no inventário?», para os álbuns das séries (`planSeriesAlbums`) e para o cartão de um álbum (`findInInventory`): o mesmo id do Apple Music, o mesmo id de álbum do app, ou `compareAlbumIdentity(...).same` (só o primeiro degrau; sem artista de um dos lados, os nomes não provam nada) |
 
 **O texto da busca faz parte de achar o álbum.** A busca da fonte de notas (`suggest.php`) casa palavra por palavra: com uma palavra que o título dela não tem («(2007 Stereo Mix)», «1977-1980», «&» onde ela escreve «And») não lista nada. O raspador procura por tentativas ordenadas e nomeadas (`locateAlbum`), cada uma julgada pela regra, todas pela fila educada e dentro do prazo do pedido (`lib/politeQueue.js`, `lib/timeBudget.js`, sem mudança):
 

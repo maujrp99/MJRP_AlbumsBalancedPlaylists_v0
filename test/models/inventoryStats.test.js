@@ -10,6 +10,7 @@ describe('inventoryStatistics', () => {
         expect(inventoryStatistics([])).toEqual({
             totalAlbums: 0,
             ownedCount: 0,
+            notOwnedCount: 0,
             wishlistCount: 0,
             byFormat: { cd: 0, vinyl: 0, dvd: 0, bluray: 0, digital: 0 },
             totalValueUSD: 0,
@@ -27,6 +28,7 @@ describe('inventoryStatistics', () => {
         expect(stats.totalAlbums).toBe(5)
         expect(stats.ownedCount).toBe(1)
         expect(stats.wishlistCount).toBe(1)
+        expect(stats.notOwnedCount).toBe(3)
     })
 
     it('counts by format, a format it does not know included; an album with no format is in none', () => {

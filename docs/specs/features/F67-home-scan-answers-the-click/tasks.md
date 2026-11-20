@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f67-home-scan-answers`, a partir da `main` em `a5fdf5a`
 - [x] causa lida no código antes de mexer: cada caminho em que o clique termina sem resposta visível, com arquivo e linha, na seção Problem Statement da spec; o defeito do roteador reproduzido em teste
-- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -30,11 +30,14 @@
 
 ## Verification
 - [x] TASK-08 suíte (`npx vitest run`: 982 passando, 919 antes), `npx vite build` e complexidade até 10 nas funções novas (`npx eslint --rule '{"complexity":["error",10]}'` nos arquivos tocados) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07 · model:: sonnet · rounds:: 1
-- [ ] TASK-09 prova no navegador pelo roteiro do relatório de entrega (clique com resposta na hora, dois cliques, catálogo travado pelo console até «Try again», sem resultados, artista eletrônico com a lista da IA chegando depois, volta do `/album-series` com a tela respondendo) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07 · model:: opus · waiting:: human — quem implementou não tem navegador; a prova roda com o login do MJRP, pelo agente integrador · action:: o agente integrador roda o roteiro em `http://127.0.0.1:5010` e grava a evidência em `reports/evidence/F67/`
-- [ ] TASK-10 julgamento do MJRP (tarefa do humano): os prazos e os textos novos · implements:: REQ-01, REQ-03, REQ-05 · model:: opus · waiting:: human — o aceite da issue é do MJRP · action:: o MJRP confere em produção e dá o OK na UAT-204
+- [x] TASK-09 prova no navegador pelo roteiro do relatório de entrega (clique com resposta na hora, dois cliques, catálogo travado pelo console até «Try again», sem resultados, artista eletrônico com a lista da IA chegando depois, volta do `/album-series` com a tela respondendo) — prova: `reports/evidence/F67/2026-11-19-home-scan-browser-proof.md` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07 · model:: opus · rounds:: 1
+- [ ] TASK-10 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
 
 ## Documentation
 - [x] `docs/specs/behavior.md` (os estados da busca da Home e a tela sempre montada) e `docs/manual/` (14, 16, 19, 20, 21, 22) dizem o que o código faz agora
 - [x] spec, plano e tarefas preenchidos no ramo
-- [ ] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador — conferido: as issues da feature em `fixed` no `uat.md`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
+
+## For the owner at UAT
+- O MJRP julga os prazos e os textos novos
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.

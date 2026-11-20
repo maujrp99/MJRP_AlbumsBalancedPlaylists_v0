@@ -4,6 +4,7 @@ import { getIcon } from './Icons.js'
 import { escapeHtml } from '../utils/stringUtils.js'
 import toast from './Toast.js'
 import { dialogService } from '../services/DialogService.js'
+import { NAME_IN_THE_BAR } from './navigation/barName.js'
 
 /**
  * SpotifyConnectButton Component
@@ -60,15 +61,15 @@ export class SpotifyConnectButton {
         const userName = this.userProfile ? this.userProfile.display_name : 'Spotify'
 
         this.container.innerHTML = `
-      <div class="flex items-center gap-2 bg-[#1DB954]/10 border border-[#1DB954]/30 rounded-full pl-1 pr-3 py-1 transition-all group hover:bg-[#1DB954]/20">
-        <div class="w-6 h-6 rounded-full bg-[#1DB954] flex items-center justify-center text-black shadow-lg shadow-[#1DB954]/20">
+      <div class="flex items-center gap-2 min-w-0 overflow-hidden bg-[#1DB954]/10 border border-[#1DB954]/30 rounded-full pl-1 pr-3 py-1 transition-all group hover:bg-[#1DB954]/20" title="Spotify connected: ${escapeHtml(userName)}">
+        <div class="w-6 h-6 shrink-0 rounded-full bg-[#1DB954] flex items-center justify-center text-black shadow-lg shadow-[#1DB954]/20">
            ${getIcon('SpotifyConfig', 'w-4 h-4')}
         </div>
-        <div class="flex flex-col leading-none">
+        <div class="hidden xl:flex flex-col leading-none min-w-0">
            <span class="text-[10px] uppercase tracking-wider text-[#1DB954]/70 font-bold">Connected</span>
-           <span class="text-xs font-bold text-[#1DB954] truncate max-w-[80px]">${escapeHtml(userName)}</span>
+           <span class="text-xs font-bold text-[#1DB954] ${NAME_IN_THE_BAR}" data-spotify-name title="${escapeHtml(userName)}">${escapeHtml(userName)}</span>
         </div>
-        <button id="spotifyLogoutBtn" class="ml-1 text-xs text-[#1DB954]/50 hover:text-white transition-colors" title="Disconnect">
+        <button id="spotifyLogoutBtn" class="ml-1 shrink-0 text-xs text-[#1DB954]/50 hover:text-white transition-colors" title="Disconnect">
           ${getIcon('X', 'w-3 h-3')}
         </button>
       </div>

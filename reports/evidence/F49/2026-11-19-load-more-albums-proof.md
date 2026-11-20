@@ -14,3 +14,9 @@ O clique no botão. Nenhuma série do MJRP tem mais de 12 álbuns (a maior tem 9
 ## A causa
 
 O botão era desenhado com `data-action="load-more-series"`, mas o único ouvinte de cliques da tela não conhecia essa ação e a deixava cair. Os álbuns além dos 12 já estavam carregados; só não eram desenhados.
+
+## Prova do MJRP em produção (2026-11-19 23:22)
+
+O MJRP testou em produção e escreveu: «f49: testando em prod, all good», com duas capturas da série «Bob Dylan, The Band & Joni Mitchell» (15 álbuns): antes, 12 álbuns e o botão «Load 3 more albums»; depois do clique, os 15 álbuns («Self Portrait (Remastered)», «New Morning», «Planet Waves» entraram) e o botão sumiu. As capturas ficaram na conversa, não em arquivo.
+
+**Não visto nesta prova:** a série continuar aberta depois de paginar e de buscar, e o caminho pelo teclado; os dois seguem cobertos pelos testes de unidade da F49.

@@ -49,7 +49,9 @@ const CALL_SITES = [
     { name: 'Spotify (server)', file: 'server/lib/services/spotifyPopularity.js', asks: /^\.\.\/albumIdentity$/ },
     { name: 'the read-only count', file: 'public/js/services/albums/albumIdentityAudit.js', asks: /models\/askedAlbum\.js$/ },
     { name: 'the album cache, when it is read', file: 'public/js/services/albums/adapters/AlbumCacheAdapter.js', asks: /models\/askedAlbum\.js$/ },
-    { name: 'adding and removing an album of a series', file: 'public/js/services/SeriesService.js', asks: /models\/askedAlbum\.js$/, from: 'async addAlbumToSeries(', to: 'async enrichAllAlbums(' }
+    { name: 'adding and removing an album of a series', file: 'public/js/services/SeriesService.js', asks: /models\/askedAlbum\.js$/, from: 'async addAlbumToSeries(', to: 'async enrichAllAlbums(' },
+    // F71: "is this album already in the inventory?", for the albums of the series and for an album card
+    { name: 'the albums of the series put in the inventory', file: 'public/js/models/inventoryFromSeries.js', asks: /(^|\/)askedAlbum\.js$/ }
 ]
 
 describe('one rule says "this is the album asked for"', () => {

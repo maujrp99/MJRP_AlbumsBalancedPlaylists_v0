@@ -177,3 +177,14 @@ describe('the «reconfigure» panel shows the recipe the playlists were generate
         expect(RegeneratePanel.getConfig().algorithmId).toBe('mjrp-balanced-cascade')
     })
 })
+
+describe('the screen with no playlists (F73, UAT-214)', () => {
+    it('says there are none and leads to The Blending Menu; the old generation form is gone', () => {
+        const host = draw(PlaylistsGridRenderer.renderEmptyState())
+
+        expect(host.textContent).toContain('No playlists here yet')
+        expect(host.querySelector('a[href="/blend"]').textContent.trim()).toBe('Go to The Blending Menu')
+        expect(host.querySelector('#generateBtn, input[name="algorithm"], #rankingStrategySelect')).toBeNull()
+        expect(PlaylistsGridRenderer.renderInitialSettings).toBeUndefined()
+    })
+})

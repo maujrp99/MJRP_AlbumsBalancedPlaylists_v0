@@ -67,6 +67,15 @@ Nenhuma.
 <!-- arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, the NFR nodes. -->
 `AGENTS.md`; `docs/decisions/0019-one-owner-for-the-album-load.md`; `docs/specs/arch.md` («Carga da tela de álbuns», seções 11, 16 a 19); `docs/manual/01_System_Architecture.md` seção 6; `docs/specs/behavior.md`; `reports/audits/2026-11-19-mjrpalbumblender-v0-v5-map.md` (tema 3, itens 3.24 a 3.31); `reports/audits/2026-11-19-mjrpalbumblender-v0-browser-regression.md` (cenários 6, 12 e 17); `docs/specs/uat.md` (UAT-189, UAT-191).
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — atualizado (commit `f3eaefa`)
+- `docs/specs/data-model.md` — sem mudança: nenhuma entidade, campo ou esquema mudou
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `f3eaefa`)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - **Não foi visto num navegador.** Quem escreveu não tem navegador; os tempos e os avisos na tela são do integrador (TASK-14).
 - **O relógio do pedido.** A espera do servidor começa dentro de uma tarefa e não muda nenhuma entrada do store, então o pedido olha de novo a cada 1 s. Funciona e é barato, mas é um relógio; um aviso de espera no store o dispensaria (F58).

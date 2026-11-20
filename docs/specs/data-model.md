@@ -46,15 +46,17 @@ Os demais campos vêm do objeto que o gerador produz e dependem do módulo gerad
 |-------|------|----------|-------------|
 | title, artist | string | ✅ | exigidos na criação (`InventoryRepository.js:33-39`) |
 | year | número ou texto | ❌ | cópia de `album.year` |
-| format | `cd`, `vinyl`, `cassette`, `dvd`, `bluray`, `digital` | ✅ | validado na criação |
-| owned | boolean ou `null` | ❌ | `true` possuído, `false` wishlist, `null` nem um nem outro (item novo entra `null`) |
+| format | `cd`, `vinyl`, `cassette`, `dvd`, `bluray`, `digital`, ou `null` | ❌ | validado na criação pelo cartão de um álbum (`addAlbum`); o item que veio de uma série entra `null` (F71, `addBatch`) até a pessoa escolher um |
+| owned | boolean ou `null` | ❌ | `true` Owned, `false` Wishlist, `null` ou ausente Not Owned (item novo entra `null`); lido e escrito por `models/inventoryStatus.js` (F71), o único lugar que diz a situação |
 | purchasePrice | número ou `null` | ❌ | digitado pelo usuário; `0` na criação vira `null` (`InventoryRepository.js:66`) |
-| currency | `'USD'` ou `'BRL'` | ✅ | não há conversão entre as duas moedas |
+| currency | `'USD'`, `'BRL'` ou `null` | ❌ | não há conversão entre as duas moedas; o item que veio de uma série entra `null` (F71): sem preço, nenhuma moeda é inventada |
 | purchaseDate | TBD | ❌ | a interface nunca o preenche |
 | condition | texto ou `null` | ❌ | a interface nunca o preenche |
 | notes | string (padrão `''`) | ❌ | notas livres |
-| albumData | objeto (cópia completa do Album) | ✅ | `JSON.parse(JSON.stringify(album))`; o id do álbum original fica em `albumData.id` |
+| albumData | objeto (cópia do álbum) | ✅ | `JSON.parse(JSON.stringify(album))`; o id do álbum original fica em `albumData.id`. Pelo cartão de um álbum: a cópia completa do Album carregado (faixas, notas, `metadata.source`/`sourceId`). Pela ação «Add the albums of my series» (F71, `models/inventoryFromSeries.js` `inventoryAlbumFromQuery`): só o que a consulta da série guarda — `id` (o mesmo `stableAlbumId` do álbum carregado), `title`, `artist`, `year` ou `null`, `coverUrl` ou `null`, `appleMusicId` ou `null` — e a marca `metadata.addedFrom: 'series'`; sem faixas |
 | addedToInventory | Timestamp (servidor) | ✅ | data de entrada |
+| averages | objeto `{ rating, popularity, ratedTracks, popTracks, at }` | ❌ | as médias do álbum do item, escritas só pela ação «Update ratings» (F71, S-56; `repositories/InventoryRepository.js` `setAverages`, `models/albumAverages.js`). `rating`: a média da nota do BestEverAlbums das faixas com nota maior que zero, ou `null`; `popularity`: a média da popularidade do Spotify das faixas, ou `null`; as duas com uma casa decimal; `ratedTracks` e `popTracks`: de quantas faixas vem cada uma; `at`: a hora em que foram calculadas, texto ISO. Existe porque o cache de álbuns do navegador é por consulta de série e expira em 7 dias. Uma média que a fonte não deu numa leitura mantém o valor da leitura anterior (e a sua contagem). O item sem o campo (nunca lido) não mostra média e, na ordem por média, vem por último |
+  - `averages.tracks` (F71, REQ-20): quantas faixas o álbum tinha quando as médias foram lidas; o cartão diz «(N of M)» com ele. Ausente nas médias lidas antes de 2026-11-20.
 | createdAt, updatedAt | Timestamp (servidor) | ✅ / ❌ | `updatedAt` só depois da 1ª atualização |
 | _schemaVersion | número `1` | ✅ | versão do esquema |
 

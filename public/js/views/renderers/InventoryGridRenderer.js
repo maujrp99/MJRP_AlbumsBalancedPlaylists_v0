@@ -11,6 +11,20 @@ import { escapeHtml } from '../../utils/stringUtils.js'
 import { getIcon } from '../../components/Icons.js'
 import { Card } from '../../components/ui/Card.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
+import { InventoryStatus, STATUS_SELECT_OPTIONS, statusOf } from '../../models/inventoryStatus.js'
+import { averagesLine } from '../../models/albumAverages.js'
+
+/** The colours of the status selector on a card, and of each of its options. */
+const STATUS_BORDER = Object.freeze({
+    [InventoryStatus.OWNED]: 'border-green-500/50 text-green-400',
+    [InventoryStatus.NOT_OWNED]: 'border-gray-600',
+    [InventoryStatus.WISHLIST]: 'border-pink-500/50 text-pink-400'
+})
+const STATUS_OPTION = Object.freeze({
+    [InventoryStatus.OWNED]: 'bg-gray-900 text-green-400',
+    [InventoryStatus.NOT_OWNED]: 'bg-gray-900 text-white',
+    [InventoryStatus.WISHLIST]: 'bg-gray-900 text-pink-400'
+})
 
 export class InventoryGridRenderer {
 
@@ -48,8 +62,7 @@ export class InventoryGridRenderer {
     }
 
     static renderCard(album) {
-        const isOwned = album.owned === true
-        const isWishlist = album.owned === false
+        const status = statusOf(album)
 
         // Normalize album data for Card
         const cardProps = {
@@ -78,21 +91,19 @@ export class InventoryGridRenderer {
         // To avoid parsing HTML, we can render the status dropdown and append it, 
         // BUT since we are returning a string, we concatenate.
 
-        let borderColor = 'border-gray-600'
-        if (isOwned) borderColor = 'border-green-500/50 text-green-400'
-        else if (isWishlist) borderColor = 'border-pink-500/50 text-pink-400'
+        const statusOptions = STATUS_SELECT_OPTIONS.map(({ value, label }) =>
+            `<option value="${value}" ${value === status ? 'selected' : ''} class="${STATUS_OPTION[value]}">${escapeHtml(label)}</option>`).join('')
 
         const statusDropdown = `
         <div class="absolute top-2 right-2 z-20 w-32 user-select-none">
           <div class="relative group/dropdown">
             <select 
-              class="status-select w-full appearance-none pl-3 pr-8 py-1 rounded-full text-xs font-medium border cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors bg-gray-900 ${borderColor}"
+              class="status-select w-full appearance-none pl-3 pr-8 py-1 rounded-full text-xs font-medium border cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors bg-gray-900 ${STATUS_BORDER[status]}"
               data-album-id="${escapeHtml(album.id)}"
               style="background-color: #1f2937;"
+              aria-label="Status"
             >
-              <option value="not-owned" ${!isOwned && !isWishlist ? 'selected' : ''} class="bg-gray-900 text-white">Not Owned</option>
-              <option value="owned" ${isOwned ? 'selected' : ''} class="bg-gray-900 text-green-400">✓ Owned</option>
-              <option value="wishlist" ${isWishlist ? 'selected' : ''} class="bg-gray-900 text-pink-400">♡ Wishlist</option>
+              ${statusOptions}
             </select>
             <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-current opacity-70">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,10 +123,9 @@ export class InventoryGridRenderer {
                     ${cardHTML}
                 </div>
                 
-                <div class="mt-2 flex justify-between items-center px-1 shrink-0">
-                     <span class="font-mono text-accent-primary font-bold">
-                        ${InventoryGridRenderer.formatPrice(album.purchasePrice, album.currency)}
-                    </span>
+                <div class="mt-2 flex justify-between items-center px-1 shrink-0 min-h-[1.5rem]">
+                     ${InventoryGridRenderer.renderPrice(album)}
+                     ${InventoryGridRenderer.renderAverages(album)}
                 </div>
             </div>
         `
@@ -131,9 +141,8 @@ export class InventoryGridRenderer {
             content: SafeDOM.fromHTML(`
                  <div class="flex items-center gap-4 mt-2">
                     ${InventoryGridRenderer.renderFormatBadge(album.format)}
-                    <span class="font-mono text-accent-primary font-bold">
-                        ${InventoryGridRenderer.formatPrice(album.purchasePrice, album.currency)}
-                    </span>
+                    ${InventoryGridRenderer.renderPrice(album)}
+                    ${InventoryGridRenderer.renderAverages(album)}
                  </div>
             `),
             actions: [
@@ -162,18 +171,40 @@ export class InventoryGridRenderer {
         return `$${val.toFixed(2)}`
     }
 
+    /**
+     * The price of an item on its card. An item with no price (every album that came from a
+     * series, until the person edits it) shows none: "$0.00" would say it cost nothing.
+     */
+    static renderPrice(album) {
+        if (!(Number(album.purchasePrice) > 0)) return ''
+        return `<span class="font-mono text-accent-primary font-bold">${InventoryGridRenderer.formatPrice(album.purchasePrice, album.currency)}</span>`
+    }
+
+    /**
+     * The averages of an item (F71, S-56): «Avg Rating: 78.4 · Avg Pop: 42.6%», in one small line.
+     * An item that was never read shows nothing, not a dash: 200 cards of dashes say nothing.
+     */
+    static renderAverages(album) {
+        const line = averagesLine(album.averages)
+        if (!line) return ''
+        return `<span class="text-xs text-gray-400" data-role="averages" title="Mean of the BestEverAlbums rating and of the Spotify popularity of the tracks; in brackets, how many tracks of the album each mean was made of">${escapeHtml(line)}</span>`
+    }
+
+    /** The name of a format; an item with no format (it came from a series) has no badge. */
     static getFormatLabel(format) {
+        if (!format) return ''
         const f = (format || '').toLowerCase()
         if (f.includes('vinyl') || f.includes('lp')) return 'Vinyl'
         if (f.includes('cd')) return 'CD'
         if (f.includes('digital')) return 'Digital'
-        return format || 'Unknown'
+        return format
     }
 
     static renderFormatBadge(format) {
-        const f = (format || '').toLowerCase()
+        if (!format) return ''
+        const f = format.toLowerCase()
         let color = 'bg-gray-700 text-gray-300'
-        let text = format || 'Unknown'
+        let text = format
 
         if (f.includes('vinyl') || f.includes('lp')) { color = 'bg-green-900/50 text-green-400 border border-green-500/30'; text = 'Vinyl' }
         else if (f.includes('cd')) { color = 'bg-blue-900/50 text-blue-400 border border-blue-500/30'; text = 'CD' }
