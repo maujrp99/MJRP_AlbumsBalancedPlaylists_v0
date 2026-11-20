@@ -172,6 +172,8 @@ serves:: [[ROADMAP#^OUT-04]] ^EP-06
 folder:: ep-07-album-inventory
 serves:: [[ROADMAP#^OUT-03]] ^EP-07
 
+![[S-54-have-every-album-of-my-series-in-my-inventory]]
+
 
 
 
