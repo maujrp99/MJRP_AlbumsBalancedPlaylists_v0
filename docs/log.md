@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:39] session — a rolagem mantida em produção; `## Now` reescrito
+
+- A correção da UAT-219 foi juntada na `main` (`0c0df5e`) e o site publicado (pacote `main-DLZf9BMM.js`).
+- `MEMORY.md ## Now` reescrito com o estado de hoje: F71 fatia 1 e F73 em produção; F71 fatia 2 com um auxiliar; F72 à espera de prioridade; UAT-216 a UAT-218 abertas.
+
 ## [2026-11-19 23:38] session — F73: a tela redesenhada mantém a rolagem (UAT-219)
 
 **Branch:** fix/f73-redraw-keeps-the-place
