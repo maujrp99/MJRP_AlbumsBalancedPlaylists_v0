@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 13:44] decision — o MJRP manda seguir a recomendação da proposta da F78 e construir o app, com tudo registrado pelo PDLC
+**Branch:** main
+Palavras dele: «Vc consegue seguir sua recomendação da f78 e construir a app registrando tudo conforme nosso pdlc?». Lido pelo agente como o sinal para seguir a recomendação (React Native com Expo, núcleo de regras compartilhado, Firebase pelo pacote nativo, Swift e Kotlin só para o Apple Music). Continuam sendo dele, e pedidos a ele: o aceite do ADR da pilha, a emenda à constituição (Art. II, IV e V), as quinze decisões do § 13 da proposta, as contas de desenvolvedor, a instalação do Xcode. Conferido na máquina: Node 26 e npm 11; **sem Xcode** (só as ferramentas de linha de comando) e **sem Android SDK**: o app não roda em simulador aqui hoje. Começa pelo que não depende disso: os registros do PDLC (requisitos e tasks do primeiro marco, ADR em «Proposed») e o teste rápido S1 (o núcleo no motor Hermes, pela linha de comando).
+
 ## [2026-11-20 13:39] session — conserto: marcas de conflito no `arch.md`, deixadas pelo merge da proposta da F78
 **Branch:** main
 Ao juntar a `main` no ramo da proposta, o `arch.md` teve conflito (a seção da F77 e o ponteiro da proposta, no mesmo lugar) e o integrador fez o commit com as marcas dentro. Consertado: as duas seções ficam, a da F77 antes; o ponteiro da proposta diz o estado de agora (criticada, revisada, reconferida, sem aprovação e sem ADR). Erro do agente integrador; nenhum código tocado.
