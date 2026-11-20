@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:33] session — F76 TASK-07: o inventário no celular em linhas compactas, em blocos, com folhas
+**Branch:** feat/f76-mobile-inventory
+No celular (`isPhone()`), o inventário vira uma linha por álbum (capa de 64, título em duas linhas, status de 44 px que abre uma folha com os três, valor com a origem, «⋯» com as ações nomeadas), desenhada em blocos de 50 com «Show 50 more» e um salto por letra (ou por posição); busca, A–Z, filtros e ações presas sob a barra do topo. `InventoryPhoneRow.js`, `InventoryPhoneSheets.js`, `models/inventoryJump.js`, `css/mobile/inventory.css`.
+O computador não muda: `renderComputer` é o desenho de antes.
+
 ## [2026-11-20 02:20] session — F76 TASK-01: design-system (§ Celular), o plano, o kit das telas e a prova em navegador
 **Branch:** feat/f76-mobile-redesign
 Criado `docs/specs/design-system.md` § Celular (44 / 12 / 16 px, escala de tipo, barras, folha, áreas seguras, com as fontes: WebKit, MDN, web.dev, WCAG, Apple; achado 24 da crítica). `plan.md` reescrito com cada módulo e seu REQ; `mobile-kit.md` para quem faz as telas (um CSS por tela em `public/css/mobile/`, a API da folha, a barra de ação, o que a base achou e é de cada tela); TASK-01 marcada. Prova: `reports/evidence/F76/2026-11-20-foundation-proof.md` (Chrome sem cabeça a 393x852, 852x393 e 1280x800, antes e depois; fora do celular as medidas de layout são iguais nas 14 telas e nas 5 janelas, e as capturas idênticas a menos de ruído de captura medido). Não visto: iPhone de verdade e telas com login.
