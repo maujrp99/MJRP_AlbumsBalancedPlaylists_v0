@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 12:05] session — rascunhos dos e-mails ao BestEverAlbums e ao MusicBrainz; dois candidatos no PRD (analytics; GEO e AEO)
+**Branch:** main
+A pedido do MJRP: os dois e-mails redigidos em `reports/audits/2026-11-20-mjrpalbumblender-v0-outreach-emails.md` (rascunhos; o envio é dele; o do BestEverAlbums diz o uso de hoje com transparência). Dois candidatos no Intake: medir o uso do site, e ser achado por buscadores e assistentes de IA. Conferido no código: o site não tem analytics, `robots.txt`, descrição nem dados estruturados.
+
 ## [2026-11-20 10:18] session — o estudo do produto público vira estudo de viabilidade: afiliação, BestEverAlbums e MusicBrainz autorizados
 **Branch:** main
 A pedido do MJRP, o documento foi reescrito como estudo de viabilidade de um cenário: produto público, receita por afiliação, notas do BestEverAlbums com autorização, catálogo do MusicBrainz com apoio comercial. Veredito do agente: viável como produto; a afiliação sozinha não se paga no começo (conta ilustrativa: cerca de US$ 135 por mês com 10 mil usuários ativos, premissas escritas). O item que decide é a resposta do BestEverAlbums. O material anterior ficou como anexos.
