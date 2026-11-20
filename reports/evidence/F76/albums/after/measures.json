@@ -1,0 +1,583 @@
+{
+ "grid-all-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 11031,
+  "firstAlbum": {
+   "top": 261,
+   "coverBottom": 436,
+   "height": 263
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 229,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "list-all-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 7431,
+  "firstAlbum": {
+   "top": 261,
+   "coverBottom": 317,
+   "height": 84
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 168,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "single-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 1005,
+  "firstAlbum": {
+   "top": 320,
+   "coverBottom": 495,
+   "height": 263
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 20,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "filters-on-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 11121,
+  "firstAlbum": {
+   "top": 351,
+   "coverBottom": 526,
+   "height": 263
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 232,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "scroll-mode-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 11033,
+  "firstAlbum": {
+   "top": 261,
+   "coverBottom": 436,
+   "height": 263
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 225,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "loading-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 6629,
+  "firstAlbum": null,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 16,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "empty-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "firstAlbum": null,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 9,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "pager-bottom-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 11031,
+  "firstAlbum": {
+   "top": 261,
+   "coverBottom": 436,
+   "height": 263
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 230,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "sheet-filters-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "firstAlbum": {
+   "top": 351,
+   "coverBottom": 526,
+   "height": 263
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 243,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": true,
+  "pastTheEdge": []
+ },
+ "sheet-album-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "firstAlbum": {
+   "top": 261,
+   "coverBottom": 436,
+   "height": 263
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 237,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": true,
+  "pastTheEdge": []
+ },
+ "sheet-series-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "firstAlbum": {
+   "top": 261,
+   "coverBottom": 436,
+   "height": 263
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 232,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": true,
+  "pastTheEdge": []
+ },
+ "sheet-single-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "firstAlbum": {
+   "top": 320,
+   "coverBottom": 495,
+   "height": 263
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 23,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "iconButtonsWithoutName": [],
+  "sheetOpen": true,
+  "pastTheEdge": []
+ },
+ "grid-all-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 9570,
+  "firstAlbum": {
+   "top": 537,
+   "coverBottom": 537,
+   "height": 393
+  },
+  "textBelow12": 67,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «1966»",
+   "span.text-[10px].text-gray-500 «1967»",
+   "span.text-[10px].text-gray-500 «1968»",
+   "span.text-[10px].text-gray-500 «1969»",
+   "span.text-[10px].text-gray-500 «1970»",
+   "span.text-[10px].text-gray-500 «1971»"
+  ],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»",
+   "select.series-pager-size.form-control «Series per page»",
+   "select.series-pager-size.form-control «Series per page»"
+  ],
+  "targets": 407,
+  "targetsBelow44": 399,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.px-3.py-1 «Pages» 56x24",
+   "button.px-3.py-1 «Scroll» 53x24",
+   "button.min-w-[2.25rem].px-3 «Previous» 78x34",
+   "button.min-w-[2.25rem].px-3 «1» 36x34",
+   "button.min-w-[2.25rem].px-3 «2» 36x34"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "list-all-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 21581,
+  "firstAlbum": {
+   "top": 537,
+   "coverBottom": 537,
+   "height": 255
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»",
+   "select.series-pager-size.form-control «Series per page»",
+   "select.series-pager-size.form-control «Series per page»"
+  ],
+  "targets": 425,
+  "targetsBelow44": 417,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 38x38",
+   "#viewModeList «» 40x40",
+   "button.px-3.py-1 «Pages» 56x24",
+   "button.px-3.py-1 «Scroll» 53x24",
+   "button.min-w-[2.25rem].px-3 «Previous» 78x34",
+   "button.min-w-[2.25rem].px-3 «1» 36x34",
+   "button.min-w-[2.25rem].px-3 «2» 36x34"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "single-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 835,
+  "firstAlbum": {
+   "top": 307,
+   "coverBottom": 307,
+   "height": 403
+  },
+  "textBelow12": 3,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «1966»",
+   "span.text-[10px].text-gray-500 «1967»",
+   "span.text-[10px].text-gray-500 «1968»"
+  ],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»"
+  ],
+  "targets": 28,
+  "targetsBelow44": 22,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.flex-1.flex «» 45x28",
+   "button.flex-1.flex «» 45x28",
+   "button.flex-1.flex «» 45x28",
+   "button.flex-1.flex «» 45x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "filters-on-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 9570,
+  "firstAlbum": {
+   "top": 537,
+   "coverBottom": 537,
+   "height": 393
+  },
+  "textBelow12": 67,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «1966»",
+   "span.text-[10px].text-gray-500 «1967»",
+   "span.text-[10px].text-gray-500 «1968»",
+   "span.text-[10px].text-gray-500 «1969»",
+   "span.text-[10px].text-gray-500 «1970»",
+   "span.text-[10px].text-gray-500 «1971»"
+  ],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»",
+   "select.series-pager-size.form-control «Series per page»",
+   "select.series-pager-size.form-control «Series per page»"
+  ],
+  "targets": 407,
+  "targetsBelow44": 399,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.px-3.py-1 «Pages» 56x24",
+   "button.px-3.py-1 «Scroll» 53x24",
+   "button.min-w-[2.25rem].px-3 «Previous» 78x34",
+   "button.min-w-[2.25rem].px-3 «1» 36x34",
+   "button.min-w-[2.25rem].px-3 «2» 36x34"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "scroll-mode-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 9524,
+  "firstAlbum": {
+   "top": 487,
+   "coverBottom": 487,
+   "height": 393
+  },
+  "textBelow12": 67,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «1966»",
+   "span.text-[10px].text-gray-500 «1967»",
+   "span.text-[10px].text-gray-500 «1968»",
+   "span.text-[10px].text-gray-500 «1969»",
+   "span.text-[10px].text-gray-500 «1970»",
+   "span.text-[10px].text-gray-500 «1971»"
+  ],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»",
+   "select.series-pager-size.form-control «Series per page»",
+   "select.series-pager-size.form-control «Series per page»"
+  ],
+  "targets": 394,
+  "targetsBelow44": 386,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.px-3.py-1 «Pages» 56x24",
+   "button.px-3.py-1 «Scroll» 53x24",
+   "button.btn.btn-secondary «» 46x34",
+   "button.btn.btn-danger «» 44x34",
+   "button.flex-1.flex «» 42x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "loading-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 4475,
+  "firstAlbum": null,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»",
+   "select.series-pager-size.form-control «Series per page»",
+   "select.series-pager-size.form-control «Series per page»"
+  ],
+  "targets": 31,
+  "targetsBelow44": 23,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.px-3.py-1 «Pages» 56x24",
+   "button.px-3.py-1 «Scroll» 53x24",
+   "button.min-w-[2.25rem].px-3 «Previous» 78x34",
+   "button.min-w-[2.25rem].px-3 «1» 36x34",
+   "button.min-w-[2.25rem].px-3 «2» 36x34"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "empty-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 936,
+  "firstAlbum": null,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series»",
+   "#filter-artist «All Artists»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»"
+  ],
+  "targets": 12,
+  "targetsBelow44": 6,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.btn.btn-primary «Go to Home» 165x41"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ }
+}

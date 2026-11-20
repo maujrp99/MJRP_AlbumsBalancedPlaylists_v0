@@ -103,14 +103,19 @@ export function groupAlbumsBySeries(albums, seriesList) {
  * @returns {string} HTML string
  */
 export function renderSeriesHeader(series, albumCount) {
+    // The phone (F76): the name wraps, the count goes under it, and Edit and Delete are named in a
+    // bottom sheet opened by the 44 px «⋯» (md:hidden: the computer never shows it)
     return `
     <div class="series-group-header flex items-center justify-between mb-6 pb-2 border-b border-white/10">
-        <div class="flex items-center gap-4">
-            <h2 class="text-2xl font-bold text-accent-primary">${escapeHtml(series.name)}</h2>
-            <span class="text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full border border-white/5">
+        <div class="series-group-header__title flex items-center gap-4">
+            <h2 class="series-group-header__name text-2xl font-bold text-accent-primary">${escapeHtml(series.name)}</h2>
+            <span class="series-group-header__count text-sm text-white/50 bg-white/5 px-2 py-1 rounded-full border border-white/5">
                 ${albumCount} albums
             </span>
         </div>
+        <button type="button" class="series-more md:hidden" data-action="series-more" data-series-id="${escapeHtml(series.id)}" aria-label="Actions for the series ${escapeHtml(series.name)}">
+            <svg class="series-more__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
+        </button>
         <div class="series-actions flex gap-2">
             <button class="btn btn-secondary btn-sm btn-icon" data-action="edit-series" data-series-id="${escapeHtml(series.id)}" title="Edit Series">
                 ${getIcon('Edit', 'w-4 h-4')}

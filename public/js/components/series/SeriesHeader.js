@@ -20,13 +20,16 @@ export default class SeriesHeader extends Component {
     }
 
     render() {
-        const { metadata, pageTitle: propTitle, onGeneratePlaylists } = this.props;
+        const { metadata, pageTitle: propTitle, onGeneratePlaylists, seriesId = null } = this.props;
         const title = propTitle || metadata?.title || 'All Albums Series';
 
         // Clear container
         SafeDOM.clear(this.container);
 
-        const headerContainer = SafeDOM.div({ className: 'view-header mb-8 fade-in' });
+        // The phone (F76) reads the scope from the class: all the series leave the name to the top bar
+        // and Blend to the tab bar; one series keeps its name, Blend, and the «⋯» of Edit and Delete
+        const scopeClass = seriesId ? 'series-page-header--single' : 'series-page-header--all';
+        const headerContainer = SafeDOM.div({ className: `series-page-header ${scopeClass} view-header mb-8 fade-in` });
 
         // Breadcrumb (Legacy String -> DOM)
         const breadcrumbNode = SafeDOM.fromHTML(Breadcrumb.render('/albums'));
@@ -41,6 +44,7 @@ export default class SeriesHeader extends Component {
             title // SafeDOM text content (auto-escaped)
         ]);
         titleRow.appendChild(h1);
+        if (seriesId) titleRow.appendChild(this.renderMoreButton(seriesId, title));
 
         // Generate Button
         const btn = SafeDOM.button({
@@ -60,5 +64,17 @@ export default class SeriesHeader extends Component {
 
         // Mount
         this.container.appendChild(headerContainer);
+    }
+
+    /** The phone's 44 px «⋯» of the series on screen (md:hidden: the computer never shows it). */
+    renderMoreButton(seriesId, title) {
+        const button = SafeDOM.button({
+            type: 'button',
+            className: 'series-more md:hidden',
+            'aria-label': `Actions for the series ${title}`,
+            dataset: { action: 'series-more', seriesId }
+        });
+        button.appendChild(SafeDOM.fromHTML('<svg class="series-more__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>'));
+        return button;
     }
 }

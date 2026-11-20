@@ -21,11 +21,17 @@
  * - viewMode: 'compact' | 'expanded' (optional)
  * - onToggleView: function (optional)
  * - onRefresh: function (optional)
+ * - filtersInSheet: boolean (optional) - on the phone, only the search stays on the screen and a
+ *   «Filters» button (with how many are on) opens a sheet with the rest (F76, components/ui/FilterSheet.js);
+ *   the filters that are on show as chips that remove themselves. The computer is not touched.
  */
 
 import Component from '../base/Component.js';
 import { getIcon } from '../Icons.js';
 import { escapeHtml } from '../../utils/stringUtils.js';
+import { isPhone, onPhoneChange } from '../../utils/isPhone.js';
+import { SafeDOM } from '../../utils/SafeDOM.js';
+import { activeFilters, clearFilters, openFilterSheet } from './FilterSheet.js';
 
 export default class FilterToolbar extends Component {
     constructor(props) {
@@ -64,6 +70,70 @@ export default class FilterToolbar extends Component {
 
         this._syncSearch();
         this._renderControls();
+        this._renderPhoneBar();
+    }
+
+    onMount() {
+        // Turning the phone, or a window resized across the line, mounts or takes off the phone's bar
+        this._stopHearingPhone = onPhoneChange(() => this._renderPhoneBar());
+    }
+
+    onUnmount() {
+        this._stopHearingPhone?.();
+        this._filterSheet?.sheet.close();
+        this._filterSheet = null;
+    }
+
+    /** The phone's bar: the «Filters» button beside the search, and the chips of the filters on. */
+    _renderPhoneBar() {
+        const row = this.container.querySelector('.filters-row');
+        const wanted = Boolean(this.props.filtersInSheet) && isPhone();
+        const section = this.container.querySelector('.filters-section');
+        section?.classList.toggle('filters-section--sheet', wanted);
+        if (!wanted) {
+            this.container.querySelectorAll('.filters-phone').forEach(element => element.remove());
+            return;
+        }
+        let button = this.container.querySelector('.filters-phone-button');
+        if (!button) {
+            button = SafeDOM.button({ type: 'button', className: 'filters-phone filters-phone-button', 'aria-haspopup': 'dialog' });
+            button.addEventListener('click', () => this._openSheet());
+            row.appendChild(button);
+        }
+        const on = activeFilters(this.props.filterGroups);
+        SafeDOM.replaceChildren(button, [
+            SafeDOM.fromHTML(getIcon('Layers', 'filters-phone-button__icon')),
+            SafeDOM.span({}, 'Filters'),
+            on.length > 0 ? SafeDOM.span({ className: 'filters-phone-button__count' }, String(on.length)) : null
+        ].filter(Boolean));
+        button.setAttribute('aria-label', on.length > 0 ? `Filters, ${on.length} on` : 'Filters');
+        button.classList.toggle('is-on', on.length > 0);
+        this._renderChips(on);
+    }
+
+    /** One chip per filter on, «Artist: Rush ✕», that turns it off; «Clear all» with two or more. */
+    _renderChips(on) {
+        this.container.querySelector('.filters-chips')?.remove();
+        if (on.length === 0) return;
+        const chips = on.map(({ group, name, value }) => {
+            const chip = SafeDOM.button({ type: 'button', className: 'filters-chip', 'aria-label': `Remove the filter ${name}: ${value}` }, [
+                SafeDOM.span({ className: 'filters-chip__text' }, `${name}: ${value}`),
+                SafeDOM.fromHTML(getIcon('X', 'filters-chip__x'))
+            ]);
+            chip.addEventListener('click', () => group.onChange?.('all'));
+            return chip;
+        });
+        if (on.length > 1) {
+            const clear = SafeDOM.button({ type: 'button', className: 'filters-chips__clear' }, 'Clear all');
+            clear.addEventListener('click', () => clearFilters(this.props.filterGroups));
+            chips.push(clear);
+        }
+        this.container.querySelector('.filters-section')?.appendChild(SafeDOM.div({ className: 'filters-phone filters-chips' }, chips));
+    }
+
+    _openSheet() {
+        if (this._filterSheet?.sheet.isOpen()) return;
+        this._filterSheet = openFilterSheet(() => this.props, () => { this._filterSheet = null; });
     }
 
     /** Bring the field in line with the state, unless the person is typing in it. */
@@ -89,6 +159,7 @@ export default class FilterToolbar extends Component {
         const signature = this._controlsState();
         if (signature === this._controlsSignature) return;
         this._controlsSignature = signature;
+        this._filterSheet?.sync(); // the open sheet of the phone shows what changed
 
         const {
             sortOptions = [],

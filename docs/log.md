@@ -8,6 +8,11 @@
 Prova no app de verdade com dados postos pela página (`reports/evidence/F76/harness/home-blend.mjs`, `reports/evidence/F76/home-blend/`): a 393x852 nenhum texto < 12, campo < 16, alvo < 44 nem caixa com rolagem própria; a 1280x800, 0 % de pixels diferentes da base. Ajustes do que se viu: o fundo decorativo da Home escurecia as capas, o selo de ordem, a barra em uma linha, o «Recommended» repetido, a duração do Blend.
 Nota da tela: `docs/specs/features/F76-mobile-redesign/screens/home-and-blend.md`. Decidido pelo agente — revisável.
 
+## [2026-11-20 02:52] session — F76 TASK-02: Albums no celular, ajuste visual e prova em navegador (harness)
+**Branch:** feat/f76-mobile-albums
+Ajustes vistos nas capturas: fonte do sistema no texto dos álbuns, lupa da busca, selos do ladrilho numa linha, vão entre séries, respiro sob o «voltar ao topo», o vazio sem o «no match» junto; alvos de 44 nas fichas, no segmentado e em Pages/Scroll. Harness `reports/evidence/F76/harness/albums.html` (a SeriesView real com 50 séries e 230 álbuns) e `shoot-albums.mjs`.
+Medido a 393x852: 1º álbum de 1126 para 261 px, alvos < 44 de 356 para 0, nada passa da borda; a 1280x800 sete cenários idênticos pixel a pixel. Nota da tela em `docs/specs/features/F76-mobile-redesign/screens/albums.md`.
+
 ## [2026-11-20 02:51] session — F75 em produção, com valores: 198 de 211 álbuns
 **Branch:** main
 Site e servidor da `70e63da`; revisão `mjrp-proxy-00213-qpq` com `DISCOGS_TOKEN` vindo do secret. A leitura na conta do MJRP deu valor a 198 de 211 álbuns ($1,166.51 no que ele tem; $339.27 no que falta). O Discogs recusa a sugestão em três estados enquanto a conta não tiver as configurações de vendedor: o valor é o menor preço à venda, e a tela diz isso. Prova: `reports/evidence/F75/2026-11-20-production-proof.md`.
@@ -68,6 +73,11 @@ Testes de celular e de computador (`test/components/home/HomePhone.chosen.test.j
 **Branch:** feat/f76-mobile-inventory
 No celular (`isPhone()`), o inventário vira uma linha por álbum (capa de 64, título em duas linhas, status de 44 px que abre uma folha com os três, valor com a origem, «⋯» com as ações nomeadas), desenhada em blocos de 50 com «Show 50 more» e um salto por letra (ou por posição); busca, A–Z, filtros e ações presas sob a barra do topo. `InventoryPhoneRow.js`, `InventoryPhoneSheets.js`, `models/inventoryJump.js`, `css/mobile/inventory.css`.
 O computador não muda: `renderComputer` é o desenho de antes.
+
+## [2026-11-20 02:33] session — F76 TASK-02: Albums no celular (filtros numa folha, cartão e linha do álbum com «⋯», cabeçalho da série, pager)
+**Branch:** feat/f76-mobile-albums
+No celular, a barra de Albums fica só com a busca e um botão «Filters» com quantos estão ligados (fichas que se removem; a vista, a ordem, os filtros e Reload numa folha de baixo); o álbum é um ladrilho (capa, título em duas linhas, artista · ano) ou uma linha compacta de 56 px, com as ações nomeadas numa folha aberta pelo «⋯» de 44 px; o cabeçalho da série quebra o nome e leva o «⋯» de Edit e Delete; o pager de cima é uma linha e o de baixo pula a qualquer página. Achados 1, 2, 7, 8, 19 e 22 da crítica.
+Tudo só no celular (`isPhone()` ou `md:hidden`, CSS em `public/css/mobile/albums.css`); o computador fica igual. Testes em `test/components/series/albumsOnThePhone.test.js` (celular e computador).
 
 ## [2026-11-20 02:32] session — F76 TASK-04: playlists no celular, uma por vez, e as gravadas fechadas por série
 **Branch:** feat/f76-mobile-playlists
