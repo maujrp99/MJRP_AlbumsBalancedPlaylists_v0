@@ -85,3 +85,18 @@ written: "2026-11-20"
 - https://all-affiliates.com/programs/gb/imusic/
 - https://linkpizza.com/app/affiliate-program/imusic.dk
 - https://imusic.br.com/page/about
+
+## Termos de uso da API do Discogs, lidos em 2026-11-20 01:24
+
+Lidos na página oficial (`support.discogs.com`, «API Terms of Use», atualizados em 27 de maio de 2025). Isto é a minha leitura do texto, não um parecer jurídico. Eles mudam a viabilidade em quatro pontos.
+
+1. **Preço é «dado restrito».** As sugestões de preço e os preços do marketplace estão na categoria «Marketplace Data». Para esse dado a licença é pessoal, e o texto proíbe usá-lo para qualquer finalidade comercial e passá-lo a terceiros.
+2. **Não pode servir para levar tráfego a outras lojas.** Entre os usos comerciais proibidos está usar a API ou o conteúdo «com a intenção de levar tráfego a sites ou serviços que não são do Discogs». Mostrar o preço do Discogs ao lado de links de compra da Amazon e da iMusic, e mais ainda com afiliação, esbarra nisso.
+3. **Validade de seis horas.** O texto proíbe mostrar conteúdo que esteja mais de seis horas atrás do que o Discogs mostra, e proíbe guardá-lo por mais tempo do que o necessário para servir quem usa o app. Ler o valor uma vez, guardar no item e reler em 30 dias, como a proposta dizia, não cabe nisso.
+4. **Aviso obrigatório.** Ao lado de todo dado vindo da API tem de aparecer «Data provided by Discogs.», com link para a página do Discogs que tem o dado; e o app tem de dizer, em algum lugar à vista, que usa a API do Discogs e não é afiliado a ele.
+
+Dois pontos menores: criar mais de uma chave para driblar o limite de pedidos é proibido; e um exemplo de violação que o texto dá é usar a API para contornar o marketplace deles, o que pesa sobre a ideia futura de vender e trocar entre colecionadores com base nesses preços.
+
+**O que continua possível, pela minha leitura:** o uso pessoal, só seu, para estimar a sua coleção, com o valor relido quando a tela abre (não guardado por semanas), com o aviso e o link. O valor que você escreve à mão é seu e não tem restrição.
+
+**O que não cabe sem autorização escrita do Discogs:** juntar o preço do Discogs com links de afiliado de outras lojas; abrir isso a outros usuários de forma comercial. Os próprios termos dizem para perguntar pela central de ajuda em caso de dúvida.

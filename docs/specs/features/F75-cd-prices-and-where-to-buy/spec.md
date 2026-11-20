@@ -33,7 +33,7 @@ O que isso decide no desenho (decidido pelo agente — revisável):
 5. Rumo: «dar um foco para colecionador vai impactar bastante nessa funcionalidade de inventory … precisamos depois pesquisar e fazer benchmark de apps que já fazem esse controle de inventário de coleção de CDs e Vinis e fitas cassete».
 
 Conferido em 2026-11-20: uma fonte pública de câmbio (`api.frankfurter.app`, taxas de referência do dia, sem chave) respondeu com USD para BRL, EUR e GBP.
-Não conferido: os termos de uso da API do Discogs (a página oficial recusa leitura automática; o MJRP precisa abri-la, ou eu leio no navegador dele).
+Termos de uso da API do Discogs lidos em 2026-11-20 01:24 (relatório de viabilidade, última seção): o preço é dado restrito, de uso pessoal e não comercial; não pode servir para levar tráfego a outras lojas; não pode ser mostrado com mais de seis horas de atraso nem guardado além do necessário; exige o aviso «Data provided by Discogs.» com link. A proposta precisa mudar: o valor do Discogs é relido, não guardado por semanas; e juntá-lo com links de afiliado de outras lojas depende de autorização escrita do Discogs.
 
 ## Requirements
 - [REQ-01] «a escrever depois das respostas do MJRP às perguntas da viabilidade e do protótipo» · fixes S-57

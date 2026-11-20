@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:24] session — F74 segunda fatia provada; termos da API do Discogs lidos (mudam a F75); o token do Discogs na tela é o do histórico
+
+- F74: «Update ratings» na conta do MJRP depois da segunda fatia: 130 álbuns com nota em todas as faixas (eram 109), 66 em parte (eram 87), 13 sem nenhuma; 2148 de 2612 faixas. UAT-221 em `fixed`.
+- Termos de uso da API do Discogs, lidos na página oficial: o preço é dado restrito (uso pessoal, não comercial, sem levar tráfego a outras lojas), vale seis horas para ser mostrado e pede o aviso «Data provided by Discogs.» com link. A F75 como proposta (guardar o valor por 30 dias; links de afiliado ao lado) não cabe nisso. Detalhe no relatório de viabilidade.
+- O MJRP mostrou a página de desenvolvedor do Discogs: o token pessoal de lá termina em «BzGd», e esse final aparece no histórico do git (contado sem imprimir). É o token da UAT-17. Nenhum código em uso o lê. Ele perguntou se pode apagar e gerar de novo: pode; «Generate new token» faz as duas coisas.
+
 ## [2026-11-20 01:20] decision — F75: o cartão do inventário é a superfície da v5.1 (escolha do MJRP)
 
 - Dito por ele: «yep, a v5.1 é minha preferida tb!». O cartão tem fundo próprio, borda bem fraca e a capa até as bordas; a v5, com borda em volta, fica como registro. Assunto: o cartão de álbum do inventário (identidade visual do app).

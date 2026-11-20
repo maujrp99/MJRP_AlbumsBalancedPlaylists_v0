@@ -33,3 +33,29 @@ Segunda fatia aberta com esses exemplos (ramo `fix/f74-track-titles-second-slice
 
 - Quantos álbuns perderam nota por causa da regressão: a leitura de antes foi sobrescrita pelo «Update ratings», então só «Close to the Edge» tem o antes e o depois vistos.
 - Os 13 álbuns sem nenhuma nota (quase todos de música eletrônica) não foram olhados um a um.
+
+## Segunda fatia em produção (2026-11-20 01:24)
+
+Servidor na revisão `mjrp-proxy-00209-prz` (a volta é `mjrp-proxy-00208-kzm`), site publicado de `4350564`. Vistos na conta do MJRP, pela janela do álbum:
+
+| Álbum | Depois da primeira fatia | Depois da segunda |
+|---|---|---|
+| Close to the Edge | 1 de 3 (a regressão) | 3 de 3 |
+| Black Rose: A Rock Legend | 7 de 9 | 9 de 9 |
+| To Pimp a Butterfly | 14 de 16 | 16 de 16 |
+| The Chronic | 12 de 16 | 16 de 16 |
+| Déjà Vu | 9 de 10 | 10 de 10 |
+| Electric Warrior | 10 de 11 | 11 de 11 |
+
+O inventário inteiro, depois de «Update ratings»:
+
+| | Antes da F74 | Primeira fatia | Segunda fatia |
+|---|---|---|---|
+| Álbuns com nota em todas as faixas | não medido | 109 | 130 |
+| Álbuns com nota em só parte das faixas | 84 | 87 | 66 |
+| Álbuns sem nota em nenhuma faixa | 13 | 13 | 13 |
+| Faixas com nota | não medido | 2106 de 2612 | 2148 de 2612 |
+
+Dos 66 álbuns em parte, 43 têm no título «Deluxe», «Expanded», «Bonus», «Edition», «Live», «Remaster», «Version» ou «Mix», onde a fonte dá nota só às faixas originais. Os outros 23 não foram olhados um a um.
+
+**Não conferido:** os 13 álbuns sem nenhuma nota; os nove álbuns que o auxiliar não chegou a comparar com a página da fonte.
