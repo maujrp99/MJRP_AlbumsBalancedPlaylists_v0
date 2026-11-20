@@ -129,7 +129,7 @@ stateDiagram-v2
 **Purpose**: Detailed Read-Only View.
 **Features**:
 *   **Badges**: Shows Year. Opened from an inventory item (the item holds the album in `albumData`), it also shows what belongs to the item: its status ("OWNED", "NOT OWNED" or "WISHLIST", from `models/inventoryStatus.js`), format, price, condition and notes. Opened for an album that is not an inventory item, it shows no status (F71).
-*   **No tracks**: an album with no tracks kept (an inventory item added from a series) shows one line in the place of the comparison (`noTracksText`).
+*   **Tracks of an inventory item** (F71, UAT-220): opened from the inventory, the window is given `loadAlbum`. It shows what the item keeps at once (its tracks, or "Loading the tracks of this album…"), asks the album load for the album, and shows the tracks that come, with today's ratings and popularity. When none come it keeps the item's tracks, or says the tracks could not be loaded. Opened with no `loadAlbum` (the albums screen), an album with no tracks shows "No tracks are kept for this album."
 *   **Comparison**: Embeds `TracksRankingComparison` component to show discrepancies between "Original Album Order" and "Acclaim Order".
 
 ### 4.4 `EditAlbumModal.js`

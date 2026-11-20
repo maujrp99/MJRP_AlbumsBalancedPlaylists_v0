@@ -200,14 +200,74 @@ describe('the inventory screen (F71)', () => {
     describe('the album window of an item', () => {
         afterEach(() => document.querySelectorAll('.modal-overlay').forEach(node => node.remove()))
 
-        it('of an item that came from a series: Not Owned, and a line in the place of the tracks', async () => {
+        it('of an item that came from a series, with nobody to ask: Not Owned, and a line in the place of the tracks', async () => {
             const modal = await showViewAlbumModal(ten)
 
             expect(text(modal)).toContain('Ten')
             expect(text(modal)).toContain('NOT OWNED')
             expect(text(modal)).not.toContain('OWNED OWNED')
-            expect(modal.querySelector('[data-role="no-tracks"]').textContent)
-                .toBe('No tracks are kept for this album: it was added from your series. Open it in its series to see its tracks.')
+            expect(modal.querySelector('[data-role="no-tracks"]').textContent).toBe('No tracks are kept for this album.')
+        })
+
+        describe('asks the album load for the album of now (UAT-220)', () => {
+            const loaded = { id: 'pearl-jam_ten', title: 'Ten', artist: 'Pearl Jam', tracks: [{ title: 'Once', position: 1, rating: 88, spotifyPopularity: 70 }, { title: 'Even Flow', position: 2, rating: 90, spotifyPopularity: 80 }] }
+            const settled = () => new Promise(resolve => setTimeout(resolve, 0))
+
+            it('says it is loading, then shows the tracks that came', async () => {
+                let give
+                const loadAlbum = vi.fn(() => new Promise(resolve => { give = resolve }))
+                const modal = await showViewAlbumModal(ten, { loadAlbum })
+
+                expect(modal.querySelector('[data-role="no-tracks"]').textContent).toBe('Loading the tracks of this album…')
+                give(loaded)
+                await settled()
+
+                expect(modal.querySelector('[data-role="no-tracks"]')).toBe(null)
+                expect(text(modal)).toContain('Once')
+                expect(text(modal)).toContain('Even Flow')
+                expect(text(modal)).toContain('NOT OWNED') // the status is still the item's
+            })
+
+            it('an item that keeps tracks shows them at once, and the album of now takes their place', async () => {
+                let give
+                const modal = await showViewAlbumModal(fromCard, { loadAlbum: () => new Promise(resolve => { give = resolve }) })
+
+                expect(text(modal)).toContain('Dead & Bloated')
+                give({ ...fromCard.albumData, tracks: [{ title: 'Dead & Bloated', position: 1 }, { title: 'Sex Type Thing', position: 2 }] })
+                await settled()
+                expect(text(modal)).toContain('Sex Type Thing')
+            })
+
+            it('when the album does not come: the kept tracks stay; with none kept, it says so', async () => {
+                const kept = await showViewAlbumModal(fromCard, { loadAlbum: async () => null })
+                await settled()
+                expect(text(kept)).toContain('Dead & Bloated')
+                kept.remove()
+
+                const none = await showViewAlbumModal(ten, { loadAlbum: async () => { throw new Error('offline') } })
+                await settled()
+                expect(none.querySelector('[data-role="no-tracks"]').textContent)
+                    .toBe('The tracks of this album could not be loaded. Close this window and open it again to try once more.')
+            })
+
+            it('drops the ask when the window is closed, and draws nothing after', async () => {
+                let give
+                let seen
+                const modal = await showViewAlbumModal(ten, { loadAlbum: (signal) => { seen = signal; return new Promise(resolve => { give = resolve }) } })
+                document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+                expect(seen.aborted).toBe(true)
+                give(loaded)
+                await settled()
+                expect(text(modal)).not.toContain('Even Flow')
+            })
+
+            it('the screen gives the window the album of the item, asked through the service', async () => {
+                service.albumOfItem = vi.fn(async () => loaded)
+                await view.handleViewWithModal('inv-ten')
+                await settled()
+                expect(service.albumOfItem).toHaveBeenCalledWith(ten, { signal: expect.any(AbortSignal) })
+                expect(text(document.querySelector('.modal-overlay'))).toContain('Even Flow')
+            })
         })
 
         it('of an item added from an album card: its own status, format, price and notes', async () => {

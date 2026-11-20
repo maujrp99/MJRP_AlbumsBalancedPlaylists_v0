@@ -371,6 +371,7 @@ export class InventoryView extends BaseView {
     const { showViewAlbumModal } = await import('../components/ViewAlbumModal.js')
     const album = this.controller.state.albums.find(a => a.id === albumId)
     if (!album) return
-    showViewAlbumModal(album)
+    // The window asks the album load for the album of now: an item keeps no tracks of its own (UAT-220)
+    showViewAlbumModal(album, { loadAlbum: (signal) => this.controller.albumOfItem(album, signal) })
   }
 }
