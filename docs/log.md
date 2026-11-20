@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:12] session — F70: spec, plano e tarefas; comportamento e manual
+
+Passo de documentos da via rápida, no mesmo ramo (`fix/f70-small-defects`): `spec.md` (quatro REQ, um por issue, com `verified_by::`), `plan.md` e `tasks.md` da F70 preenchidos, `status: In Progress`; fica aberta a tarefa da prova no navegador, do integrador. `docs/specs/behavior.md`: o visitante na busca de álbuns e na carga, «Mudar só o preço do item», «Notas de um álbum achado pela busca por IA» e «Capa que não há ou não carrega». Manual: `03`, `07`, `08`, `13`, `19`, `21`, `99` e o mapa de arquivos, nas frases que ficaram falsas (o site ignorava `data.ratings`; `updatePrice` no lugar errado) e nas três peças novas.
+
+Não feito: status das issues em `docs/specs/uat.md` (é do integrador); `MEMORY.md`; publicação. O `doctor.py` segue vermelho por causas anteriores a este ramo (links de documentos antigos, o `## Now` do `MEMORY.md`, o lint).
+
 ## [2026-11-19 22:10] session — F70: a capa que falta ou falha tem um substituto, por uma peça só (UAT-63)
 
 Confirmado no código: `components/ui/AlbumCardRenderer.js` `renderVisualHeader` punha o `src` vindo de `albumLoader.getArtworkUrl`, que pode ser nulo, sem substituto no erro; `views/renderers/DiscographyRenderer.js` apontava para `/assets/images/cover_placeholder.png`, arquivo que não existe; `Card.js` (inventário), `StagingAreaRenderer.js` e `ViewAlbumModal.js` tinham substituto só para o endereço ausente, nenhum para a falha; `AlbumCascade.js` tinha um `onerror` escrito no HTML.

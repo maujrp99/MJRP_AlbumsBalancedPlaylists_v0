@@ -118,7 +118,7 @@
 - `loadAlbums()`: Load from Firestore via InventoryRepository
 - `addAlbum(album, format, options)`: Add album with format (CD, Vinyl, etc.)
 - `updateAlbum(albumId, updates)`: Update album properties
-- `updatePrice(albumId, price, currency)`: Optimistic price update
+- `updatePrice(albumId, price, currency?)`: Optimistic price update (since F58 in `services/inventory/InventoryService.js`). With no `currency` the item keeps its own (F70, UAT-209); a failed write puts the old price and currency back and throws
 - `removeAlbum(albumId)`: Remove from inventory (there is no `deleteAlbum`)
 - `getStatistics()`: Stats: count, total value by format
 - `handleUserChange(state)`: the person changed: the albums in memory are dropped at once and nothing is copied between accounts (v5.0, F60)
