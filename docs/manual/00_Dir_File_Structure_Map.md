@@ -161,7 +161,7 @@
 129. `public/js/stores/albumSeries.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
 130. `public/js/stores/playlists.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
 131. `public/js/stores/inventory.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
-132. `public/js/stores/SpotifyEnrichmentStore.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
+132. `public/js/services/spotify/StoredSpotifyPopularity.js` and `public/js/services/spotify/spotifyPopularityWiring.js` (Analysis: `manual/17_Frontend_Services.md`; they replace `public/js/stores/SpotifyEnrichmentStore.js`, removed in the second slice of F58)
 133. `public/js/stores/UserStore.js` (Analysis: `manual/07_Frontend_Data_Infra.md`)
 
 ### Batch 8: Infrastructure
@@ -246,7 +246,7 @@
 201. `reproduce_match.js` (Root Utility) *(removed in F65: `reproduce_match.js`)*
 
 ## 7. Sprint 19 Refactoring 
-201. `public/js/services/PlaylistsService.js` (Analysis: `manual/17_Frontend_Services.md`)
+201. `public/js/services/PlaylistsService.js` and `public/js/services/playlists/playlistsWiring.js`, where it is put together (Analysis: `manual/17_Frontend_Services.md`)
 202. `public/js/services/SeriesService.js` (Analysis: `manual/17_Frontend_Services.md`)
 203. `public/js/components/playlists/SavedPlaylistActions.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
 204. `public/js/components/playlists/SavedPlaylistCard.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)

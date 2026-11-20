@@ -9,8 +9,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 vi.mock('firebase/firestore', async () => (await import('../helpers/fakeFirestore.js')).firestoreModule)
-// `cacheManager` is not an export of app.js in the real app either: the old save read it from there and got undefined
-vi.mock('../../public/js/app.js', () => ({ db: { fake: true }, auth: { currentUser: { uid: 'u1' } }, cacheManager: undefined }))
+// The database and the person signed in are handed to the service where it is put together (playlistsWiring.js)
+vi.mock('../../public/js/firebase-init.js', () => ({ db: { fake: true }, auth: { currentUser: { uid: 'u1' } } }))
 vi.mock('../../public/js/cache/CacheManager.js', () => {
     const cacheManager = { get: async () => null, set: async () => { }, invalidate: async () => { } }
     return { cacheManager, CacheManager: class { } }
@@ -25,7 +25,7 @@ vi.mock('../../public/js/components/Toast.js', () => {
 
 import { fake } from '../helpers/fakeFirestore.js'
 import { PlaylistsController } from '../../public/js/controllers/PlaylistsController.js'
-import { getPlaylistsService } from '../../public/js/services/PlaylistsService.js'
+import { getPlaylistsService } from '../../public/js/services/playlists/playlistsWiring.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
 import toast from '../../public/js/components/Toast.js'
@@ -42,7 +42,7 @@ const openRockForEditing = () => {
     seedPlaylist('sA', 'p1', { name: 'Rock 1', batchName: 'Rock', order: 0, tracks: [{ title: 'T1' }, { title: 'T2' }] })
     seedPlaylist('sA', 'p2', { name: 'Rock 2', batchName: 'Rock', order: 1, tracks: [{ title: 'T3' }] })
     seedPlaylist('sA', 'other', { name: 'Jazz 1', batchName: 'Jazz', order: 0, tracks: [{ title: 'J1' }] })
-    const service = getPlaylistsService({ fake: true }, null)
+    const service = getPlaylistsService()
     service.setEditMode('Rock', 'sA', null)
     playlistsStore.setPlaylists(saved('sA').filter(p => p.batchName === 'Rock'), 'sA')
     return service
@@ -53,7 +53,7 @@ describe('PlaylistsController.handleSave (F60)', () => {
 
     beforeEach(() => {
         fake.reset()
-        getPlaylistsService({ fake: true }, null).reset()
+        getPlaylistsService().reset()
         albumSeriesStore.setSeries([
             { id: 'sA', name: 'Series A', albumQueries: ['A - B'] },
             { id: 'sB', name: 'Series B', albumQueries: ['C - D'] }

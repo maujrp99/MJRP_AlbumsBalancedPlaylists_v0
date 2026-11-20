@@ -17,7 +17,7 @@ import { albumsStore } from '../stores/albums.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { playlistGenerationService } from '../services/PlaylistGenerationService.js'
-import { getPlaylistsService } from '../services/PlaylistsService.js'
+import { getPlaylistsService } from '../services/playlists/playlistsWiring.js'
 import { albumAsks } from '../services/albums/albumLoading.js'
 import { sourcesForRecipe, fallbacksForRecipe } from '../models/recipeSources.js'
 import { askNotices, askProgressText, noAlbumsMessage } from '../models/albumAsk.js'
@@ -110,9 +110,11 @@ class BlendingController {
 
     /** A new generation is a new set: no edit context or batch name of another set stays. */
     _enterCreateMode() {
-        Promise.all([import('../app.js'), import('../cache/CacheManager.js')])
-            .then(([{ db }, { cacheManager }]) => getPlaylistsService(db, cacheManager).setCreateMode())
-            .catch(error => console.warn('[BlendingController] could not reset the playlists mode:', error?.message || error))
+        try {
+            getPlaylistsService().setCreateMode()
+        } catch (error) {
+            console.warn('[BlendingController] could not reset the playlists mode:', error?.message || error)
+        }
     }
 
     /**

@@ -76,6 +76,43 @@ O desenho ficou em `docs/specs/arch.md`, seção «O serviço de carga dentro do
 
 **Interfaces que mudaram.** `new AlbumAsks({ service, store })` não aceita mais `checkEveryMs`. `new SaveAllView({ migrationUtility, getUserId })` e `new TopNav({ migrationUtility })` recebem o que antes importavam. `inventoryStore` não tem mais `loadAlbums`, `addAlbum`, `updateAlbum`, `updatePrice`, `removeAlbum`, `isInInventory`, `init`, `handleUserChange`: são do `inventoryService`. `userStore` não tem mais `loginWithGoogle`, `loginWithApple`, `logout`, `handleAuthChange`.
 
+## Segunda fatia (2026-11-19, ramo `fix/f58-layers-and-lint-gate`): o que restava da UAT-18 e da UAT-19
+
+**O que restava**, lido na lista de `test/architecture/layerBoundaries.test.js` na `main` em `44b5dd0`: uma loja (`stores/SpotifyEnrichmentStore.js`: Firestore, repositório e cache), um controlador que criava o seu repositório (`controllers/PlaylistsController.js:100`) e quatro arquivos que importavam o `app.js` para pegar `db` e `auth` (`PlaylistsController`, `BlendingController`, `PlaylistsDragHandler`, `SavedPlaylistsController`).
+
+**A loja do Spotify não tinha estado.** Era um leitor do Firestore com um cache, usado por um caminho só: a fonte de popularidade da carga (`services/albums/adapters/spotifyPopularitySource.js`, F69), que já a recebia como porta (`store: { get, save }`). Virou o que é.
+
+| Opção | O que resolve | O que custa |
+|---|---|---|
+| A. Mover o arquivo para `services/` como está | o teste | segue importando o banco e criando o repositório: o serviço não se testa sem Firebase |
+| **B. Serviço que recebe o repositório, e um arquivo de montagem — escolhida** | o teste, e o serviço se testa com o `fakeFirestore` | dois arquivos onde havia um |
+| C. A fonte de popularidade falar direto com o repositório | um arquivo a menos | a fonte passaria a conhecer a regra de validade e o tratamento de falha de leitura; e os arquivos de `adapters/` eram de outro ramo |
+
+| Peça | Arquivo | O que faz | REQ |
+|---|---|---|---|
+| `StoredSpotifyPopularity` (novo) | `public/js/services/spotify/StoredSpotifyPopularity.js` | `get(artist, title)`: o dado guardado quando ainda é aceito, senão `null` (também quando o banco não pôde ser lido); `save(artist, title, data)`: grava e lança se não pôde. Sem estado; não importa nada | REQ-07 |
+| Montagem (nova) | `public/js/services/spotify/spotifyPopularityWiring.js` | o serviço com o `SpotifyEnrichmentRepository`, o banco e um `CacheManager` próprio, como antes | REQ-07 |
+| Composição da carga | `public/js/services/albums/albumLoading.js` | entrega o serviço montado à fonte de popularidade | REQ-07 |
+| Removido | `public/js/stores/SpotifyEnrichmentStore.js` | com ele saíram os métodos que nada chamava: a remoção de órfãos na leitura (pedia uma função que ninguém passava), `hasValidEnrichment`, `delete`, `getCount`, `normalizeKey` | REQ-07 |
+
+**O dado não mudou.** A coleção `spotify_enrichment`, o nome do documento (`artista-álbum` normalizado), os campos e a regra de validade ficam no `SpotifyEnrichmentRepository`, que não foi tocado. Os nove casos de `StoredSpotifyPopularity.test.js` rodaram primeiro contra a loja antiga (todos verdes) e depois contra o serviço.
+
+**As playlists: um lugar monta o serviço.** O `PlaylistsService` já recebia o banco e o cache no construtor; quem os trazia era cada chamador, de dentro do `app.js` (por `import()` tardio, para o ciclo não quebrar a carga). Agora `services/playlists/playlistsWiring.js` os entrega, com quem está na conta, e `getPlaylistsService()` não recebe argumento.
+
+| Peça | Arquivo | O que muda | REQ |
+|---|---|---|---|
+| Montagem (nova) | `public/js/services/playlists/playlistsWiring.js` | `getPlaylistsService()`: o serviço único, feito na primeira vez que alguém pede (como antes), com `db`, `cacheManager` e `signedInUserId: () => auth.currentUser?.uid \|\| 'anonymous-user'`; liga o `watchStore()` | REQ-08 |
+| `PlaylistsService` | `public/js/services/PlaylistsService.js` | perde a fábrica `getPlaylistsService(db, cacheManager)`; ganha `findBatch(seriesId, batchName)` (o que o controlador fazia com o repositório) e `saveCurrentBatch` usa quem está na conta quando ninguém é nomeado | REQ-08 |
+| Controlador das playlists | `public/js/controllers/PlaylistsController.js` | sem `import()` do `app.js`, do cache e do `PlaylistRepository`; pede `findBatch` e `saveCurrentBatch({ batchName })` | REQ-08 |
+| Blend, arrasto, lista das guardadas, tela | `controllers/BlendingController.js`, `components/playlists/PlaylistsDragHandler.js`, `components/playlists/SavedPlaylistsController.js`, `views/PlaylistsView.js` | pedem o serviço à montagem | REQ-08 |
+| `app.js` | `public/js/app.js` | importa o `firebase-init.js` pelo efeito e não exporta nada | REQ-08 |
+
+**O que muda no tempo, e por que não muda o comportamento.** Três chamadas eram feitas depois de um `import()` e agora são diretas: (1) o blend entra em «modo criar» logo depois de pôr as playlists na loja, e não alguns instantes depois: o estado final é o mesmo, e o rascunho é escrito uma vez em vez de removido e escrito; (2) o arrasto pede `moveTrack` numa microtarefa (`queueMicrotask`), depois de o tratador do Sortable devolver, como acontecia; (3) o controlador das playlists pede o serviço sem esperar. Uma falha ao entrar em «modo criar» segue só avisada no console.
+
+**Regras novas no teste das camadas.** `app.js` não tem `export`; só a montagem faz `new PlaylistsService`, e a tela não importa a classe; o `PlaylistsService` não importa Firebase, cache nem tela; nenhuma tela, componente ou controlador lê `auth.currentUser`.
+
+**Riscos da segunda fatia.** Sem navegador: o arrasto (a ordem entre o Sortable e o redesenho) e a ordem de importação (a montagem das playlists importa o `firebase-init.js`, que o `app.js` importa antes de tudo) não foram vistos. Outro ramo (`fix/f70-small-defects`) mexe no inventário, na busca e nos adaptadores da carga: nenhum arquivo dele foi tocado; o comentário de `services/albums/adapters/spotifyPopularitySource.js:14` ainda diz `SpotifyEnrichmentStore` e fica para depois da junção.
+
 ## Dependencies
 <!-- New dependencies with their justification — aligned with constitution.md and PRINCIPLES.md (Constitution
      Check); contradicting either needs a recorded decision first (mjrp-recording-decisions). -->
@@ -248,5 +285,9 @@ Todas as funções acima de 10 em 2026-11-19, antes da feature, com o número de
 | REQ-05 | `layerBoundaries.test.js` (lojas); `inventory.test.js`, `UserStore.test.js` (só estado); `InventoryService.test.js`, `InventoryService.userChange.test.js` (os casos da UAT-198 contra o serviço), `UserSessionService.test.js`, `inventoryStats.test.js` | loja pura; o comportamento do inventário e do login como antes | aptidão, loja, serviço, modelo | sim |
 | REQ-06 | `layerBoundaries.test.js` (tela e `app.js`); `InventoryController.delete.test.js` | a tela não importa o banco; nada importa o `app.js` fora da lista | aptidão, controlador | sim |
 | todos | a tela de álbuns carrega, um blend gera, uma espera 401 de visitante avisa uma vez | nada mudou à vista | navegador | não (TASK-13, do integrador) |
+| REQ-07 | `layerBoundaries.test.js` (lojas: lista vazia); `StoredSpotifyPopularity.test.js` (9 casos com o `fakeFirestore`: o documento e os campos gravados; ler sem acento e sem caixa; nada guardado; registro antigo aceito por 30 dias; depois de 30 dias não responde e o documento fica; outro formato ou sem id; falha de leitura dá `null`; falha de escrita lança; o cache recebido evita a segunda leitura); `spotifyPopularityOnePath.test.js` (só a composição conhece a montagem; só a montagem conhece o serviço e o repositório) | loja nenhuma alcança o banco; o dado gravado segue lido | aptidão, serviço | sim |
+| REQ-08 | `layerBoundaries.test.js` (tela e `app.js`: listas vazias; `app.js` sem `export`; um lugar faz o serviço; a tela não lê o login); `playlistsWiring.test.js` (7 casos: o mesmo serviço para todos; guardar sem nomear a pessoa vai para quem está na conta, lido na hora; sem ninguém na conta vai para «anonymous-user»; `findBatch` lê o lote na ordem; lote inexistente; o serviço vigia a loja desde que é feito) | o serviço recebe o banco e a pessoa num lugar só | aptidão, serviço | sim |
+| REQ-08 | as suítes da F60 e da F62 (`PlaylistsController.save`, `.edit`, `.restore`, `.albums`, `BlendingController.load`, `PlaylistsService.*`) sem mudar expectativa (só a preparação: o que era simulado no `app.js` é simulado no `firebase-init.js`) | as playlists se comportam como antes | controlador, serviço | sim |
+| REQ-07, REQ-08 | gerar, editar, arrastar, guardar, abrir um lote guardado; a popularidade do Spotify de um álbum guardado e de um novo | nada mudou à vista | navegador | não (TASK-20, do integrador) |
 
 Bordas fora dos critérios (achados para a `mjrp-writing-reqs` se mudam o comportamento): Nenhuma muda o comportamento. Achados escritos no relatório de entrega: a tela de migração provavelmente não abria (o segundo Firebase não tinha app iniciado); `InventoryController.handleUpdatePrice` chama `updatePrice` sem a moeda.

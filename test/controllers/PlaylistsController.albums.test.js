@@ -13,7 +13,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock('../../public/js/services/albums/albumLoading.js', () => ({ albumAsks: { albumsOf: mocks.albumsOf } }))
 vi.mock('../../public/js/controllers/BlendingController.js', () => ({ blendingController: { regenerate: mocks.regenerate } }))
 vi.mock('../../public/js/services/SeriesService.js', () => ({ getSeriesService: () => ({ loadFromFirestore: mocks.loadFromFirestore }) }))
-vi.mock('../../public/js/services/PlaylistsService.js', () => ({ getPlaylistsService: vi.fn() }))
+vi.mock('../../public/js/services/playlists/playlistsWiring.js', () => ({ getPlaylistsService: vi.fn() }))
 vi.mock('../../public/js/components/Toast.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }

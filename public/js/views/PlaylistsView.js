@@ -14,7 +14,7 @@ import { SafeDOM } from '../utils/SafeDOM.js'
 import { PlaylistsController } from '../controllers/PlaylistsController.js'
 import { PlaylistsGridRenderer } from '../components/playlists/PlaylistsGridRenderer.js'
 import { PlaylistsDragHandler } from '../components/playlists/PlaylistsDragHandler.js'
-import { getPlaylistsService } from '../services/PlaylistsService.js'
+import { getPlaylistsService } from '../services/playlists/playlistsWiring.js'
 import { router } from '../router.js'
 import { installUnsavedChangesGuard } from './playlists/unsavedChangesGuard.js'
 import { attachPlaylistEditActions } from './playlists/playlistEditActions.js'
@@ -60,7 +60,7 @@ export class PlaylistsView extends BaseView {
     // Leaving with work that is not saved asks first (F60)
     this.removeUnsavedChangesGuard = installUnsavedChangesGuard({
       router,
-      hasUnsavedChanges: () => getPlaylistsService()?.hasUnsavedChanges() === true
+      hasUnsavedChanges: () => getPlaylistsService().hasUnsavedChanges() === true
     })
 
     // 4. Attach Listeners & Setup Drag

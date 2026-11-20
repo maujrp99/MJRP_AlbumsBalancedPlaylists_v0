@@ -12,7 +12,7 @@
  * test, and so does a line that is no longer true (remove it when you fix it).
  */
 import { describe, it, expect } from 'vitest'
-import { appFiles, listJs, offenders, lineCount } from './support/sourceImports.js'
+import { appFiles, listJs, offenders, lineCount, read } from './support/sourceImports.js'
 
 /**
  * Empty since the second slice of F58: the Spotify popularity "store" became a service given its
@@ -20,19 +20,18 @@ import { appFiles, listJs, offenders, lineCount } from './support/sourceImports.
  */
 const STORES_STILL_REACHING_OUT = []
 
-const SCREEN_STILL_REACHING_THE_DATABASE = [
-    // The playlists controller builds its own repository: it should ask PlaylistsService (F62).
-    'controllers/PlaylistsController.js -> ../repositories/PlaylistRepository.js'
-]
+/**
+ * Empty since the second slice of F58: the playlists controller asks PlaylistsService for the
+ * saved batch it edits (findBatch) and no longer builds a repository.
+ */
+const SCREEN_STILL_REACHING_THE_DATABASE = []
 
-const STILL_IMPORTING_THE_MOUNTING_FILE = [
-    // All of them take `db` (and the cache) from app.js to hand to a service: the service should
-    // be given its database where it is put together, as the album load and the inventory are (F62).
-    'components/playlists/PlaylistsDragHandler.js -> ../../app.js',
-    'components/playlists/SavedPlaylistsController.js -> ../../app.js',
-    'controllers/BlendingController.js -> ../app.js',
-    'controllers/PlaylistsController.js -> ../app.js'
-]
+/**
+ * Empty since the second slice of F58: the playlists service is handed the database and the login
+ * where it is put together (services/playlists/playlistsWiring.js), and the four files that took
+ * `db` and `auth` from app.js ask that service. app.js exports nothing.
+ */
+const STILL_IMPORTING_THE_MOUNTING_FILE = []
 
 /**
  * The stores above the 150 lines ADR-0017 aimed at, with the size they have today. A listed
@@ -101,6 +100,10 @@ describe('the screen reaches the data only through services (UAT-19, ADR-0016)',
         expect(unique(offenders(others, isMountingFile))).toEqual(unique(STILL_IMPORTING_THE_MOUNTING_FILE))
     })
 
+    it('the file that mounts the app exports nothing: there is nothing to import it for', () => {
+        expect(read('app.js')).not.toMatch(/^\s*export\s/m)
+    })
+
     it('the inventory and the session are put together in one place each', () => {
         const wiring = ['services/inventory/inventoryWiring.js', 'services/auth/userSession.js']
         const others = appFiles().filter(file => !wiring.includes(file) && file !== 'app.js')
@@ -108,5 +111,21 @@ describe('the screen reaches the data only through services (UAT-19, ADR-0016)',
         expect(offenders(others, specifier => /InventoryRepository/.test(specifier))).toEqual([])
         expect(offenders(['services/inventory/InventoryService.js', 'services/auth/UserSessionService.js'],
             specifier => /(firebase|\/repositories\/|\/cache\/|\/stores\/|\/components\/|\/views\/)/.test(specifier))).toEqual([])
+    })
+
+    it('the playlists service is put together in one place, and only that place makes one', () => {
+        const WIRING = 'services/playlists/playlistsWiring.js'
+        const others = appFiles().filter(file => file !== WIRING && file !== 'services/PlaylistsService.js')
+
+        expect(others.filter(file => /new\s+PlaylistsService\s*\(/.test(read(file)))).toEqual([])
+        // the screen reaches the service through the wiring, never the class
+        expect(offenders(screen, specifier => /services\/PlaylistsService(\.js)?$/.test(specifier))).toEqual([])
+        // the service itself knows neither Firebase nor the login nor the screen: it is given them
+        expect(offenders(['services/PlaylistsService.js'],
+            specifier => /(firebase|\/cache\/|\/components\/|\/views\/|\/controllers\/|(^|\/)app\.js$)/.test(specifier))).toEqual([])
+    })
+
+    it('no view, component or controller reads who is signed in from Firebase: a service is given it', () => {
+        expect(screen.filter(file => /\bauth\.currentUser\b/.test(read(file)))).toEqual([])
     })
 })

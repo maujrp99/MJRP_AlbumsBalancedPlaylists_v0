@@ -1,7 +1,7 @@
 import { playlistsStore } from '../stores/playlists.js'
 import { albumsStore } from '../stores/albums.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
-import { getPlaylistsService } from '../services/PlaylistsService.js'
+import { getPlaylistsService } from '../services/playlists/playlistsWiring.js'
 import { getSeriesService } from '../services/SeriesService.js'
 import { blendingController } from './BlendingController.js'
 import { albumAsks } from '../services/albums/albumLoading.js'
@@ -36,9 +36,7 @@ export class PlaylistsController {
             console.log('[PlaylistsController] Mode: EDIT', editBatchName)
 
             // Sprint 15 Fix (#99): ALWAYS reload on Edit Mode navigation.
-            const { db } = await import('../app.js')
-            const { cacheManager } = await import('../cache/CacheManager.js')
-            const service = getPlaylistsService(db, cacheManager)
+            const service = getPlaylistsService()
             service.setEditMode(decodeURIComponent(editBatchName), seriesIdParam, null)
             await this.loadPlaylistsForEdit(decodeURIComponent(editBatchName), seriesIdParam)
             return
@@ -53,9 +51,7 @@ export class PlaylistsController {
             console.log('[PlaylistsController] Mode: CREATE (Preserving existing generation)')
         } else {
             console.log('[PlaylistsController] Mode: CREATE (Resetting)')
-            const { db } = await import('../app.js')
-            const { cacheManager } = await import('../cache/CacheManager.js')
-            const service = getPlaylistsService(db, cacheManager)
+            const service = getPlaylistsService()
             service.setCreateMode()
 
             // Playlists generated and not saved before a reload of the page come back (UAT-05)
@@ -78,14 +74,10 @@ export class PlaylistsController {
     }
 
     /**
-     * Load playlists from Firestore for Edit Mode
+     * Load the playlists of a saved batch for Edit Mode (the service reads them)
      */
     async loadPlaylistsForEdit(batchName, seriesId) {
         try {
-            const { db, auth } = await import('../app.js')
-            const { cacheManager } = await import('../cache/CacheManager.js')
-            const userId = auth.currentUser?.uid || 'anonymous-user'
-
             // Ensure series ID
             if (!seriesId) {
                 const active = albumSeriesStore.getActiveSeries()
@@ -97,15 +89,7 @@ export class PlaylistsController {
                 return
             }
 
-            const { PlaylistRepository } = await import('../repositories/PlaylistRepository.js')
-            const repo = new PlaylistRepository(db, cacheManager, userId, seriesId)
-
-            const allPlaylists = await repo.findAll()
-
-            const batchPlaylists = allPlaylists
-                .filter(p => !p.batchName || p.batchName.trim() === batchName.trim())
-                .filter(p => p.batchName && p.batchName.trim() === batchName.trim())
-                .sort((a, b) => (a.order || 0) - (b.order || 0))
+            const batchPlaylists = await getPlaylistsService().findBatch(seriesId, batchName)
 
             if (batchPlaylists.length === 0) {
                 // Nothing of another batch stays on screen under this batch's name, where a save would store it
@@ -179,9 +163,7 @@ export class PlaylistsController {
 
     /** The service that owns the set on screen (its edits, its history, its save). */
     async _service() {
-        const { db } = await import('../app.js')
-        const { cacheManager } = await import('../cache/CacheManager.js')
-        return getPlaylistsService(db, cacheManager)
+        return getPlaylistsService()
     }
 
     /**
@@ -253,7 +235,6 @@ export class PlaylistsController {
      * The button shows the save in progress from the store (`isSaving`), not from here.
      */
     async handleSave(typedBatchName = null) {
-        const { auth } = await import('../app.js')
         const service = await this._service()
 
         const batchName = service.resolveBatchName(typedBatchName)
@@ -263,8 +244,7 @@ export class PlaylistsController {
         }
 
         try {
-            const userId = auth.currentUser?.uid || 'anonymous-user'
-            const result = await service.saveCurrentBatch({ userId, batchName })
+            const result = await service.saveCurrentBatch({ batchName }) // for the person signed in
             if (result.status === 'saved') toast.success(`Saved "${batchName}" successfully!`)
         } catch (err) {
             console.error('[PlaylistsController] Save failed:', err)

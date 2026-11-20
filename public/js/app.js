@@ -13,7 +13,7 @@ import { canonicalLocalUrl } from './utils/localAddress.js'
 // where the logins, the Spotify redirect and the caches live.
 const localUrl = canonicalLocalUrl(window.location)
 if (localUrl) window.location.replace(localUrl)
-import { app, auth, db } from './firebase-init.js'
+import './firebase-init.js' // Firebase starts before anything that uses it
 import './services/auth/userSession.js' // the user store starts hearing who is signed in (F58)
 import { AuthService } from './services/AuthService.js'
 
@@ -29,8 +29,8 @@ import { BlendingMenuView } from './views/BlendingMenuView.js'
 
 import toast from './components/Toast.js'
 
-// Export for other modules if needed
-export { app, auth, db }
+// app.js exports nothing: no module imports the file that mounts the app (UAT-19). Who needs the
+// database or the login is handed it where it is put together (the *Wiring.js files of services/).
 
 // Initialize UI Components
 import { TopNav } from './components/TopNav.js'

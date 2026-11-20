@@ -1,6 +1,6 @@
 import Sortable from 'sortablejs'
 import { playlistsStore } from '../../stores/playlists.js'
-import { getPlaylistsService } from '../../services/PlaylistsService.js'
+import { getPlaylistsService } from '../../services/playlists/playlistsWiring.js'
 
 /**
  * PlaylistsDragHandler
@@ -61,13 +61,9 @@ export class PlaylistsDragHandler {
                     }
 
                     // Perform move via service
-                    // Note: Service update will trigger store update, which re-renders
-                    import('../../app.js').then(({ db }) => {
-                        import('../../cache/CacheManager.js').then(({ cacheManager }) => {
-                            const service = getPlaylistsService(db, cacheManager)
-                            service.moveTrack(fromPlaylistIndex, toPlaylistIndex, oldIndex, newIndex)
-                        })
-                    })
+                    // Note: Service update will trigger store update, which re-renders. It is asked
+                    // after this handler returns, as it always was: Sortable finishes the drop first.
+                    queueMicrotask(() => getPlaylistsService().moveTrack(fromPlaylistIndex, toPlaylistIndex, oldIndex, newIndex))
                 }
             })
 

@@ -37,7 +37,9 @@ export class PlaylistsService {
      * @param {PlaylistHistoryService} [historyService]
      * @param {Object} [options]
      * @param {Function} [options.playlistRepositoryFor] - (userId, seriesId) => the repository of the playlists of that series
-     * @param {Function} [options.currentUserId] - () => the id of the person on the app now
+     * @param {Function} [options.currentUserId] - () => the id of the person on the app now (whose draft the browser keeps)
+     * @param {Function} [options.signedInUserId] - () => the id of the person signed in: whose series a save or a read
+     *   goes to when the caller names nobody. Given where the service is put together (playlists/playlistsWiring.js).
      */
     constructor(db, cacheManager, storageService, historyService, options = {}) {
         this.db = db
@@ -45,6 +47,7 @@ export class PlaylistsService {
         this.playlistRepositoryFor = options.playlistRepositoryFor ||
             ((userId, seriesId) => new PlaylistRepository(this.db, this.cacheManager, userId || 'anonymous-user', seriesId))
         this.currentUserId = options.currentUserId || (() => albumSeriesStore.getUserId())
+        this.signedInUserId = options.signedInUserId || (() => null)
 
         // Dependencies
         this.storage = storageService || new StorageService()
@@ -414,12 +417,12 @@ export class PlaylistsService {
      * - the state on screen changes only after the write is confirmed.
      *
      * @param {Object} params
-     * @param {string} params.userId
+     * @param {string} [params.userId] - whose series; the person signed in when not given
      * @param {string} params.batchName - see resolveBatchName
      * @returns {Promise<{status: 'saved'|'already-saving', batchName?: string, seriesId?: string, playlists?: Array}>}
      * @throws when there is no name to save under, or the write fails (nothing was changed)
      */
-    async saveCurrentBatch({ userId, batchName } = {}) {
+    async saveCurrentBatch({ userId = this.signedInUserId(), batchName } = {}) {
         if (playlistsStore.getState().isSaving) return { status: 'already-saving' }
 
         const name = this.resolveBatchName(batchName)
@@ -489,6 +492,21 @@ export class PlaylistsService {
 
     // ========== FIRESTORE CRUD ==========
 
+    /**
+     * The playlists of one saved batch of a series of the person signed in, in the order they
+     * were saved. It only reads: what goes on screen is decided by who asked.
+     * @param {string} seriesId
+     * @param {string} batchName
+     * @returns {Promise<Array>} empty when the series has no batch of that name
+     */
+    async findBatch(seriesId, batchName) {
+        const wanted = batchName.trim()
+        const all = await this.playlistRepositoryFor(this.signedInUserId(), seriesId).findAll()
+        return all
+            .filter(playlist => playlist.batchName && playlist.batchName.trim() === wanted)
+            .sort((a, b) => (a.order || 0) - (b.order || 0))
+    }
+
     async loadBatch(userId, seriesId) {
         if (!seriesId || !this.db) return []
 
@@ -537,17 +555,4 @@ export class PlaylistsService {
         this.clearLocalStorage()
         playlistsStore.reset()
     }
-}
-
-// Singleton factory
-let _instance = null
-
-export function getPlaylistsService(db, cacheManager) {
-    if (!_instance && db) {
-        const storage = new StorageService()
-        const history = new PlaylistHistoryService()
-        _instance = new PlaylistsService(db, cacheManager, storage, history)
-        _instance.watchStore()
-    }
-    return _instance
 }
