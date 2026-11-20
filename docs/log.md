@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:16] session — a trava de lint ligada (F64, UAT-20), pelo integrador
+
+Com o ramo das camadas e o da F70 juntos, `npx eslint .` termina com 0 erros e 23 avisos. O passo `npx eslint . --quiet` entrou na automação do GitHub e nos dois roteiros de publicação, antes dos testes; um erro recusa a publicação. Manual 00 e o cabeçalho do `eslint.config.mjs` atualizados; TASK-13 da F64 fechada.
+
 ## [2026-11-19 22:15] review — F70 em produção (site) e provada; quatro issues em fixed
 
 Site publicado da `main` (`88adbc4`, pacote `main-DDeTiHbR.js`); a F70 não muda o servidor. Prova em `reports/evidence/F70/2026-11-19-small-defects-proof.md`: em produção, como visitante, a busca de um artista de eletrônica não pede mais a lista da IA; o substituto de capa entra uma vez só. UAT-209 e UAT-210 só por teste, com a razão escrita. Em `fixed`: UAT-208, 209, 210, 63. Restam 9 issues abertas; auxiliar trabalhando nas UAT-18, 19 e 20.

@@ -203,6 +203,7 @@ check_firebase_login
 make_work_dir deploy-site
 export_main
 install_root_dependencies
+run_lint
 run_unit_tests
 build_site
 verify_build

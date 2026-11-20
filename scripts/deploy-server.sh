@@ -264,6 +264,7 @@ make_work_dir deploy-server
 trap 'stop_smoke_server; cleanup_work_dir' EXIT
 export_main
 install_root_dependencies
+run_lint
 run_unit_tests
 stage_server
 verify_context

@@ -115,15 +115,14 @@ prompts nem marcava `shared/` como módulo ES, foi removido (UAT-22).
 
 ### 2.5 Automação do GitHub
 
-`.github/workflows/ci.yml` roda `npx vitest run` em todo push e pull request, e mais nada: não
-publica. O repositório não tem segredo de publicação, e um build feito lá sairia sem o Client ID do
-Spotify. O lint (`npm run lint`, que é `npx eslint .`) **ainda não entra**, nem aqui nem nos dois
-comandos de publicação: em 2026-11-19 resta 1 erro (uma chave duplicada em
-`public/js/controllers/InventoryController.js`), e um passo que reprova sempre trava toda
-publicação. Eram 22 erros; os outros 21 foram consertados (F64, fatia do lint; UAT-20). Quando
-`npx eslint .` terminar sem erro, o passo entra na automação e nos scripts (antes dos testes) e
-passa a recusar a publicação com um erro; avisos (24, todos `no-unused-vars`) não recusam. O que
-falta ligar está na TASK-13 de `docs/specs/features/F64-one-tested-way-to-production/tasks.md`.
+`.github/workflows/ci.yml` roda a verificação de código (`npx eslint . --quiet`) e depois
+`npx vitest run` em todo push e pull request, e mais nada: não publica. O repositório não tem
+segredo de publicação, e um build feito lá sairia sem o Client ID do Spotify.
+
+O lint (`npm run lint`, que é `npx eslint .`) **é uma trava** desde 2026-11-19 (F64, UAT-20): os
+dois comandos de publicação rodam `npx eslint . --quiet` na cópia limpa, antes dos testes, e um
+erro recusa a publicação («the code check (lint) found errors: nothing was deployed»). Avisos (23,
+todos `no-unused-vars`) não recusam. Eram 22 erros; todos foram consertados.
 
 **Não testado:** o arquivo foi reescrito na F64 e ainda não rodou no GitHub.
 
