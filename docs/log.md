@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 14:48] session — F78: as fundações do núcleo em produção; `## Now` atualizado
+**Branch:** main
+Servidor `mjrp-proxy-00214-4z4` (teto de 3 instâncias; `DISCOGS_TOKEN` continua mapeado) e site da `3112b6d`. Provado no app local, conta do MJRP: os identificadores de faixa saem da porta (`newId`), o inventário abre com os totais em reais, e as três receitas geram playlists dos álbuns reais de «Trip Hop Vol.1» (chamando o serviço de geração direto, sem tocar no rascunho não salvo dele). Suíte 3512; o corpo dourado bate com o motor Hermes em 3.343 de 3.343 casos. Sobra a limpar: a série de visitante «F78 port check», criada por um agente no Firestore de produção.
+
 ## [2026-11-20 14:40] session — F78: o núcleo ganha casa e sensor (pacote do npm, coreStaysPortable, testes sem jsdom)
 **Branch:** feat/f78-core-foundations
 `shared/package.json` (`@album-blender/shared`, sem dependência) e `"workspaces": ["shared"]` na raiz; o lockfile ganhou só o elo (`npm ci` conferido numa cópia: liga `node_modules/@album-blender/shared`); o `vite build` passa e o arranjo do deploy do servidor (`_shared_temp`) carrega `shared/` como antes. `coreStaysPortable.test.js` (sem exceção: nenhum global do navegador, nada do motor fora de `shared/platform/`, nenhum import que saia de `shared/`, as regras sem `shared/data/`) e `appAndSiteApart.test.js` (as checagens de `app/` passam vazias até ele existir); `vitest.workspace.js` roda `test/shared/` também em Node puro.
