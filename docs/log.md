@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 18:38] review — mjrp-critiquing-ux-ui: F79 a Home, três níveis · passa para a escolha (0 P0)
+**Branch:** wip/f79-home-design-round
+Relatório: `reports/audits/2026-11-20-F79-home-ux-audit.md` · P0 0 · P1 8 · P2 9 · quem julgou: agente separado.
+Consertados na rodada: o contraste do painel da grade (Consolidar), as capas da barra do celular (Elevar), «Tap» no celular, os wireframes; o que fica está em `design/proposals/f79-home/proposal.md` § 6.
+
+## [2026-11-20 18:38] session — F79 a Home: rodada 1 de desenho, três níveis (Consolidar, Elevar, Transformar) ao lado da tela de hoje
+**Branch:** wip/f79-home-design-round
+Protótipos feitos da Home real capturada no site local (busca «Pink Floyd»), sete estados, 1280 e 393 px: `design/inception/home-consolidar-v1.html`, `-elevar-v1.html`, `-transformar-v1.html`; a Referência, o comparador (Artifact privado https://claude.ai/artifact/AsiVV2i3595LqpLEadm61h), a proposta com o diagnóstico medido e as sete perguntas, e o gerador em `design/proposals/f79-home/`; o texto da tela em `design/proposals/2026-11-20-home-copy-proposal.md` (juiz verde). Recomendado: Elevar. Descrição na mesma rodada: `info-arch.md` § A Home (F79) com sete estados e o inventário HOME-01 a HOME-19, wireframes dos três níveis, padrões novos pendentes em `design-system.md`.
+O ramo pedido era `feat/f79-home-design-round`; ficou `wip/` para o board não dar a F79 como começada antes de o MJRP priorizá-la. Nenhum código do produto tocado; nada enviado ao remoto.
+
 ## [2026-11-20 17:29] session — F78: a primeira vez no simulador — evidência, manual, arch, plano e tarefas
 **Branch:** feat/f78-first-simulator-run
 O app roda no «iPhone 17 Pro» (iOS 26.5, Xcode 27.2) e o autoteste deu 3343 de 3343 no Hermes do app, com ids v4 do expo-crypto: relatório `reports/evidence/F78/2026-11-20-first-simulator-run.md`, com as capturas e o texto do log do simulador e do Metro; `arch.md` («Os dois builds nativos»), `plan.md` (metade da TASK-07: o simulador; falta o Android), um subitem feito na TASK-23, o manual § 2.6 (pré-requisitos, `npm run app:ios:demo`, o autoteste sem toque).

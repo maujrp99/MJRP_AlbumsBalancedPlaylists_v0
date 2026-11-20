@@ -1,6 +1,6 @@
 # Info-arch — Album Blender V0
 
-> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.1.html
+> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.1.html · a Home (F79, rodada 1, três níveis, nenhum escolhido): design/inception/home-consolidar-v1.html, design/inception/home-elevar-v1.html, design/inception/home-transformar-v1.html
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -24,6 +24,7 @@ Desde a F76 o arquivo descreve também **o celular** (até 767 px), em duas seç
 |---|---|
 | Inventory | por artista e título, no padrão; trocável por nota média, popularidade, data de entrada e (F75) valor |
 | Janela do álbum | por tarefa: quanto vale, onde comprar, as faixas |
+| Home (F79, proposta) | por tarefa, em três passos: achar álbuns (por artista ou lista colada), escolher, criar a série; a discografia do mais novo ao mais antigo, filtrável por tipo |
 | Os outros nós | a descrever quando a tela for desenhada |
 
 ## Rótulos
@@ -285,3 +286,86 @@ Fonte: `design/inception/inventory-value-v5.1.html`, escolhida pelo MJRP em 2026
 | INV-V12 | As contagens por status como botões que filtram; o seletor de status sai da barra | agir | S-57 (decisão do MJRP na rodada 3) |
 | INV-V14 | No cartão do que é dele: «Where to buy», que abre a janela do álbum, onde estão os links | agir | S-57 (pedido do MJRP na rodada 4) |
 | INV-V13 | No cartão do que é dele: «Sell» e «Trade», apagados, com «not in the app yet» | informar | candidato «rede de colecionadores» do PRD; sem requisito ainda |
+
+## A Home (F79) · rodada 1 de desenho
+
+Rodada de desenho pedida pelo MJRP em 2026-11-20 (estória S-61): três níveis de ambição para a mesma tela, num eixo só, **a ambição** — Consolidar (a mesma estrutura, limpa), Elevar (o sistema evoluído) e Transformar (uma abordagem nova, ainda deste produto) —, ao lado da tela de hoje, «Referência». **Nenhum foi escolhido**: esta seção descreve os três e o que eles têm em comum; o que é de um nível só diz qual. O texto da tela é proposta do agente (`design/proposals/2026-11-20-home-copy-proposal.md`), não do copy deck.
+
+Protótipos: `design/inception/home-consolidar-v1.html`, `design/inception/home-elevar-v1.html`, `design/inception/home-transformar-v1.html` · Referência: `design/proposals/f79-home/reference.html` · comparador: https://claude.ai/artifact/AsiVV2i3595LqpLEadm61h (Artifact do Claude, privado; a cópia local é `design/proposals/f79-home/comparator.html`) · a proposta: `design/proposals/f79-home/proposal.md` · wireframes: `design/wireframes/home-<nível>-v1-desktop.png` e `-phone.png`. Os três são a tela real da Home capturada no site local (o HTML e os estilos do app, a busca «Pink Floyd» com as capas de verdade), com o que cada nível muda.
+
+### Template da Home (proposto)
+
+| Zona | Consolidar | Elevar | Transformar |
+|---|---|---|---|
+| O que é a tela | título «Build a series» e a frase da série no topo do painel da esquerda | a frase da série na bandeja (computador) ou no topo (celular) | título grande com o degradê «flame» e a frase da série, só antes da primeira busca |
+| Achar álbuns | painel «02 // Find albums», «By artist» / «Paste a list» | cartão de busca com seletor de dois botões, acima da discografia | um campo só, no centro, que aceita artista ou lista; o equalizador vivo embaixo |
+| A discografia | à direita, como hoje | à direita, com o nome do artista grande, os tipos em fichas e as capas numeradas ao escolher | o palco inteiro, seis colunas, capas numeradas |
+| A série | lista «03 // Your series» à esquerda, como hoje | bandeja à esquerda: nome, contagem com equalizador, linhas com ↑ ↓ ✕, «Create series» | a «base» presa embaixo: pilha de capas, nome escrito no lugar, «Create series» |
+| No celular | a tela da F76 com o texto novo, a faixa de filtros sem flutuar (N1) e o nome na barra (N10) | busca em cima, fichas em três colunas, a barra de ação com nome e capas que abre a bandeja como folha | o mesmo palco numa coluna; a base vira a barra acima das abas |
+
+### Estados da Home (F79)
+
+Os mesmos sete estados nos três níveis e na Referência, no computador (1280 px) e no celular (393 px); o texto de cada um, por nível, está no Content Map abaixo e na proposta de copy.
+
+- **Primeira visita, nada buscado.** A tela diz o que é uma série e para que serve, e aponta a busca; a série está vazia e «Create series» apagado, com o porquê ao lado. ^home-empty
+- **Buscando um artista.** O botão diz «Scanning…» (Transformar: «Searching…»), ocupado; a área das capas diz o que está acontecendo; Elevar e Transformar mostram capas vazias piscando e o equalizador em movimento (parado para quem pediu menos movimento). ^home-searching
+- **Discografia na tela.** O artista, quantos álbuns e em que ordem, os filtros por tipo com a contagem, a grade de capas. ^home-discography
+- **Álbuns escolhidos.** Cada capa escolhida tem o anel laranja e o número da ordem; a série mostra a contagem, o nome e «Create series» ativo com o próximo passo («Next: open it in the Blend to make playlists.»). ^home-albums-chosen
+- **Colando uma lista.** O modo «Paste a list»: a caixa, a regra «Artist - Album» e a linha que não vai entrar marcada antes do clique (Elevar e Transformar: cada linha «ready» ou «needs « - »»). ^home-paste-list
+- **O catálogo não respondeu.** «The catalog did not answer in 15 seconds.», o que continua valendo (a série não mudou) e «Try again». ^home-catalog-error
+- **Artista não encontrado.** «No albums found for «nome».» e a saída: conferir a grafia ou colar a lista. ^home-artist-not-found
+
+### Inventário do protótipo · Home (F79)
+
+Fonte: os três protótipos acima; cada item tem a mesma etiqueta nos wireframes dos três níveis (o nível que não tem o item diz «—»). O destino de cada item é proposta do agente; o MJRP decide.
+
+| ID | O que a tela mostra | Consolidar | Elevar | Transformar | Função do produto | Destino |
+|---|---|---|---|---|---|---|
+| HOME-01 | O que é uma série e para que serve, numa frase | sim | sim | sim | informar | S-61 |
+| HOME-02 | O nome da série | primeiro passo | na bandeja, sugerido pelo artista | na base, depois de escolher | agir | S-61 |
+| HOME-03 | Os dois jeitos de achar álbuns: por artista, lista colada | dois botões | seletor | um campo e um link | agir | S-61 |
+| HOME-04 | Campo do artista e «Scan» | sim | sim | «Search» | agir | S-61 |
+| HOME-05 | A lista colada, com a linha que não entra | aviso depois | cada linha marcada ao digitar | idem, no campo único | agir | S-61 |
+| HOME-06 | Filtros por tipo, com a contagem | sim | fichas | fichas | ajudar a decidir | S-61 |
+| HOME-07 | A grade de capas da discografia | sim | capas numeradas | capas numeradas | agir | S-61 |
+| HOME-08 | O artista achado, ou o que a busca está fazendo | linha de status | título do artista | título do artista | informar | S-61 |
+| HOME-09 | A série sendo montada | lista à esquerda | bandeja | base presa embaixo | informar | S-61 |
+| HOME-10 | Quantos álbuns a série tem | sim | com o equalizador | sim | informar | S-61 |
+| HOME-11 | «Create series» | sim | sim | sim | agir | S-61 |
+| HOME-12 | O próximo passo, ou por que o botão está apagado | sim | sim | sim | informar | S-61 |
+| HOME-13 | O vazio que aponta a ação | sim | sim | os três passos | informar | S-61 |
+| HOME-14 | Erro e «não encontrado», com o que ainda vale | sim | sim | sim | informar | S-61 |
+| HOME-15 | Os três passos, acesos como um equalizador | — | sim | — | informar | S-61 |
+| HOME-16 | O equalizador vivo sob a busca | — | — | sim | informar (identidade) | S-61 |
+| HOME-17 | A barra de ação do celular | a da F76, com o nome | com nome e capas | a base | agir | S-58 (F76) e S-61 |
+| HOME-18 | «Add all 17»: pôr na série todos os álbuns mostrados | — | sim | — | agir | pendente: função nova, o MJRP decide |
+| HOME-19 | Mudar a ordem sem arrastar (↑ ↓) | arrastar, como hoje | ↑ ↓ ✕ | «change the order» | agir | S-61 |
+
+#### Lacunas
+
+- Criar a série, «Creating…» e a falha ao gravar não foram desenhados nesta rodada: valem os de hoje (`docs/specs/behavior.md`) até o nível ser escolhido.
+- O nome vazio: hoje o computador cria «New Album Series» sem avisar e o celular pede o nome. Elevar e Transformar sugerem o nome a partir do artista; a regra entra quando o nível for escolhido.
+- Depois de criar, o site abre a série na tela de séries; o texto «Next: open it in the Blend» pede a decisão do MJRP (pergunta na proposta).
+
+### Content Map · Home (F79)
+
+O texto do nível recomendado na proposta (Elevar); as três versões de cada linha, com o porquê, estão em `design/proposals/2026-11-20-home-copy-proposal.md`.
+
+| Elemento | O que diz | Como ler | Referência ao lado |
+|---|---|---|---|
+| a frase da série (HOME-01) | «A series is the set of albums you want to hear together. The Blend turns it into balanced playlists.» | — | — |
+| a contagem (HOME-10) | «N albums · N artists» | quanto já entrou | o equalizador acende uma barra por álbum, até cinco |
+| o próximo passo (HOME-12) | «Next: open it in the Blend to make playlists.» / «Pick at least one album to create the series.» | por que o botão está apagado | — |
+| a discografia (HOME-08) | «Pink Floyd · 17 studio albums, newest first.» | clicar põe, clicar de novo tira | o número de cada tipo nos filtros |
+| o vazio da série (HOME-13) | «Your albums will line up here, numbered in the order the Blend reads them.» e os três passos | — | — |
+| o erro (HOME-14) | «The catalog did not answer in 15 seconds.» «Nothing was changed: your series still has its albums.» | o que ainda vale | «Try again» |
+
+### Rótulos propostos (F79, pendentes)
+
+| Conceito | Hoje | Proposto | Onde |
+|---|---|---|---|
+| criar a série | «Initialize Load Sequence» (computador), «Create series» (celular) | «Create series» nos dois | ação principal |
+| achar por artista / colar | «Visual» / «Bulk Paste» | «By artist» / «Paste a list» | modo de busca |
+| a série sendo montada | «Selected Albums», «Stack» | «Your series» | lista, bandeja ou base |
+| tipo não classificado | «?» (computador), «Other» (celular) | «Other» nos dois | filtros da Home e da edição de série |
+| coletânea | «Compendiums» | «Compilations» (pergunta ao MJRP) | filtros da Home e da edição de série |

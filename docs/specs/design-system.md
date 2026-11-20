@@ -117,3 +117,19 @@ As janelas que já existiam viram folha só pela casca (`mobile.css` § 8): tela
 - W3C, WCAG 2.2, Understanding 2.5.5 Target Size (Enhanced) — <https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html> (lida).
 - CSS-Tricks, «16px or Larger Text Prevents iOS Form Zoom» — <https://css-tricks.com/16px-or-larger-text-prevents-ios-form-zoom/> (resultado de busca; não aberta).
 - Spotify, Apple Music e Discogs no iPhone: o arranjo (barra de destinos embaixo, linhas compactas com capa de cerca de 56 px, folha de baixo para as ações de um item, ação principal presa acima da barra) é o conhecido desses apps; não foram abertos nesta passada.
+
+## Home · padrões propostos na F79 (pendente de aprovação do MJRP)
+
+Rodada 1 de desenho da Home (2026-11-20), três níveis lado a lado (`design/proposals/f79-home/`). **Nada daqui está em vigor**: cada linha é *pendente de aprovação do MJRP* e entra, ou sai, quando ele escolher o nível. O nível que ele não escolher fica aqui como registro. O piso é a identidade acima e a decisão dele de 2026-11-20 (`docs/log.md`): o fogo (o logotipo, o degradê «flame») e os equalizadores são do site.
+
+| Padrão | Nível | O que é | O que muda no sistema e por quê |
+|---|---|---|---|
+| Rótulo de passo legível | Consolidar | os rótulos «01 // …» a 12 px, branco a 85 %, o número do passo ativo em laranja; o texto de ajuda sem caixa alta | hoje 10–12 px em cinza e caixa alta; o rótulo é o título do passo, não nota de rodapé (CO-08, CP-03) |
+| Seletor «By artist / Paste a list» | Consolidar, Elevar | dois botões de 32 px (computador) e 44 px (celular); no Elevar, o segmentado do celular (`.phone-segmented`) também no computador | hoje 23 px com texto de 10 px e o escolhido em laranja; o segmentado não é laranja (regra já declarada para o celular, estendida) |
+| Bandeja da série | Elevar | painel de vidro à esquerda: rótulo «// Your series» em mono laranja, o nome (campo de 48 px, Syne 18 px), a frase da série, a contagem, as linhas (capa de 44 px, número de ordem em laranja, ↑ ↓ ✕ de 32 px) e «Create series» de 52 px no pé | substitui «03 // Selected Albums» e o cabeçalho que repetia a marca; a ação principal fica sempre à vista (IN-04, CP-03) |
+| Medidor equalizador | Elevar | cinco barras de 3 px com o degradê do fogo (`#dc2626 → #f97316 → #fdba74`); acesas conforme a contagem (até cinco) e nos passos «Find · Pick · Create» | o equalizador, hoje só no fundo (`hero_bg.svg`), vira um elemento que diz algo; a quantidade continua escrita ao lado (HI-04: a barra é cue, não o único canal) |
+| Capa escolhida numerada | Elevar, Transformar | anel laranja de 2 px e o número da ordem num círculo com o degradê do fogo; leva para o computador o que o celular já faz (F76) | hoje no computador clicar na capa não muda a capa; o retorno fica onde o olho está (IN-04) |
+| Fichas de tipo | Elevar, Transformar | fichas redondas de 36 px (44 px no celular) com a contagem; a ligada em superfície clara (Elevar) ou branca (Transformar) | hoje a ligada é laranja como a ação principal (HI-05: um destaque só) |
+| Base da série | Transformar | barra presa embaixo com a pilha de capas, o nome escrito no lugar e «Create series» de 56 px; no celular vira a barra de ação acima das abas | uma forma nova da série; desvia da bandeja (Elevar) e da lista (hoje) |
+| Equalizador vivo | Transformar | 48 barras com o degradê do fogo sob o campo de busca; paradas em 55 % de opacidade, em movimento enquanto o catálogo responde; sem movimento com `prefers-reduced-motion` | o equalizador como indicador de atividade (IN-04) |
+| Título com o degradê do fogo | Transformar | a segunda linha do título em texto com o degradê «flame» | hoje o degradê só pinta botões; aqui ele pinta texto grande uma vez por tela (HI-06) |

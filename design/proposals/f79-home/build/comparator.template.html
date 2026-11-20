@@ -1,0 +1,81 @@
+<title>Home · três níveis</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap">
+<style>
+  /* One dark look on purpose: the comparator sits beside the app's own black screens. Tokens from the app's design system. */
+  :root { --bg:#0a0a0c; --panel:#141418; --line:#2a2a30; --fg:#f2f2f3; --muted:#a0a0a8; --orange:#f97316; --amber:#fdba74; color-scheme: dark;
+          --ui: system-ui, -apple-system, "Segoe UI", sans-serif; --title: "Syne", system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font: 14px/1.45 var(--ui); margin: 0; }
+  .wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  header { padding-block: 18px 10px; border-bottom: 1px solid var(--line); }
+  h1 { font: 800 20px/1.2 var(--title); margin: 0 0 4px; text-wrap: balance; }
+  h1 span { background: linear-gradient(90deg, var(--orange), #dc2626); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  header p { margin: 0; color: var(--muted); max-width: 900px; }
+  .bar { display: flex; gap: 12px 16px; flex-wrap: wrap; align-items: center; padding-block: 12px; border-bottom: 1px solid var(--line); position: sticky; top: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 5; }
+  .grp { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .grp button { background: transparent; color: var(--muted); border: 0; min-height: 40px; padding: 0 14px; cursor: pointer; font: 600 13px var(--ui); }
+  .grp button[aria-pressed="true"] { background: #2a2a30; color: var(--fg); box-shadow: inset 0 -2px 0 var(--orange); }
+  .grp button:focus-visible, select:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+  label.sel { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 13px; }
+  select { background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 10px; min-height: 40px; padding: 0 10px; font: 600 13px var(--ui); }
+  .cols { display: flex; gap: 20px; padding-block: 18px; overflow-x: auto; align-items: flex-start; }
+  .col { flex: none; display: flex; flex-direction: column; gap: 6px; }
+  .col h2 { font: 800 16px/1.2 var(--title); margin: 0; display: flex; gap: 8px; align-items: baseline; }
+  .col h2 small { font: 600 12px var(--ui); color: var(--amber); }
+  .col .axis { color: var(--muted); font-size: 12.5px; margin: 0; min-height: 3.2em; }
+  .frame { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #000; }
+  .frame iframe { border: 0; display: block; transform-origin: 0 0; }
+  .col a { color: var(--amber); font-size: 12px; }
+  .note { color: var(--muted); font-size: 12px; padding-block: 0 24px; max-width: 900px; }
+</style>
+<header class="wrap">
+  <h1>A Home: <span>Consolidar, Elevar, Transformar</span></h1>
+  <p>Eixo único: <b>a ambição</b> da mudança na tela onde se monta uma série. Os três níveis são a tela real (capturada do site com a busca «Pink Floyd»), com o que cada um muda; o texto é proposta do agente. Mude o aparelho e o estado; ligue a «Referência» para ver a tela de hoje ao lado.</p>
+</header>
+<div class="bar wrap">
+  <div class="grp" id="device" role="group" aria-label="Aparelho"></div>
+  <label class="sel" for="scenario">Estado <select id="scenario"></select></label>
+  <div class="grp" id="ref" role="group" aria-label="Referência"></div>
+</div>
+<div class="cols wrap" id="cols"></div>
+<p class="note wrap">Cada versão funciona sozinha: «abrir sozinha» abre o protótipo inteiro, com os estados num seletor e cliques que funcionam (escolher capas, buscar, colar). Uma versão nova entra aqui com um nome que diz o que mudou; a versão que você viu nunca é sobrescrita.</p>
+<script>
+const FILES = /*FILES*/;
+// The screen of today.
+const CURRENT = { id: 'reference', name: 'Referência · a Home de hoje', axis: 'Como está no site: dois painéis, rótulos de console («01 // SERIES CONFIGURATION»), «Initialize Load Sequence».' };
+// The levels of round 1, on one axis (ambition). None chosen yet.
+const VERSIONS = [
+  { id: 'consolidar', name: 'Consolidar · v1 · Nova', axis: 'Mesma estrutura e componentes. Muda o texto (o console fica, claro), a hierarquia dos rótulos, os vazios e erros que falam; «Create series» sempre à vista.' },
+  { id: 'elevar', name: 'Elevar · v1 · Nova · recomendada', axis: 'O sistema evoluído: buscar primeiro, nomear no fim; a série vira uma bandeja com as capas numeradas; passos com equalizador; voz equilibrada.' },
+  { id: 'transformar', name: 'Transformar · v1 · Nova', axis: 'Abordagem nova: um palco só, um campo que entende artista ou lista, a série como uma base de capas presa embaixo; fogo e equalizador no centro; voz direta.' }
+];
+const SCENARIOS = [['empty', 'Vazio: primeira visita'], ['scanning', 'Buscando um artista'], ['results', 'Discografia na tela'], ['chosen', 'Álbuns escolhidos'], ['paste', 'Colando uma lista'], ['error', 'Erro: o catálogo não respondeu'], ['notfound', 'Artista não encontrado']];
+const DEVICES = [['desk', 'Computador · 1280'], ['phone', 'Celular · 393']];
+let device = 'desk', scenario = 'chosen', showRef = false;
+try { const s = JSON.parse(localStorage.getItem('f79cmp') || '{}'); device = s.device || device; scenario = s.scenario || scenario; showRef = !!s.showRef; } catch (e) {}
+const group = (id, items, current) => { document.getElementById(id).innerHTML = items.map(([v, l]) => `<button type="button" data-v="${v}" aria-pressed="${v === current}">${l}</button>`).join(''); };
+function draw() {
+  try { localStorage.setItem('f79cmp', JSON.stringify({ device, scenario, showRef })); } catch (e) {}
+  group('device', DEVICES, device);
+  group('ref', [['off', 'Só os níveis'], ['on', 'Com a Referência']], showRef ? 'on' : 'off');
+  document.getElementById('scenario').innerHTML = SCENARIOS.map(([id, l]) => `<option value="${id}" ${id === scenario ? 'selected' : ''}>${l}</option>`).join('');
+  const [w, h] = device === 'desk' ? [1280, 900] : [393, 852];
+  const avail = Math.max(320, document.documentElement.clientWidth - 40);
+  const n = (showRef ? 1 : 0) + VERSIONS.length;
+  const scale = device === 'desk' ? Math.max(0.3, Math.min(0.5, (avail - 20 * (n - 1)) / n / w)) : Math.min(0.8, avail / w);
+  const col = (item) => {
+    const src = `${FILES[item.id]}#s=${scenario}`;
+    const [title, ...marks] = item.name.split(' · ');
+    return `<section class="col" style="width:${Math.round(w * scale) + 2}px"><h2>${title}${marks.length ? ` <small>${marks.join(' · ')}</small>` : ''}</h2><p class="axis">${item.axis}</p>
+      <div class="frame" style="width:${Math.round(w * scale) + 2}px;height:${Math.round(h * scale) + 2}px"><iframe title="${item.name}" src="${src}" loading="lazy" style="width:${w}px;height:${h}px;transform:scale(${scale})"></iframe></div>
+      <a href="${src}" target="_blank" rel="noopener">abrir sozinha ↗</a></section>`;
+  };
+  document.getElementById('cols').innerHTML = (showRef ? col(CURRENT) : '') + VERSIONS.map(col).join('');
+}
+document.getElementById('device').addEventListener('click', (e) => { if (e.target.dataset.v) { device = e.target.dataset.v; draw(); } });
+document.getElementById('ref').addEventListener('click', (e) => { if (e.target.dataset.v) { showRef = e.target.dataset.v === 'on'; draw(); } });
+document.getElementById('scenario').addEventListener('change', (e) => { scenario = e.target.value; draw(); });
+let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(draw, 200); });
+draw();
+</script>

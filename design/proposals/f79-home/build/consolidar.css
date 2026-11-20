@@ -1,0 +1,29 @@
+/* Consolidar: only what changes on today's Home. Every rule is a proposal (design-system.md, «Home · Consolidar», pending). */
+/* The step labels read as titles of the step, not as footnotes: 12 px, white at 80 %, the number in orange */
+.f79-c #home-series-config > label, .f79-c #home-staging-area label, .f79-c #home-tech-panel .text-orange-500.uppercase,
+.f79-c #home-toolbar .uppercase.tracking-widest { font-size: 12px; letter-spacing: .12em; color: rgba(255,255,255,.85); }
+.f79-c #home-tech-panel .text-orange-500.uppercase { color: #fb923c; }
+.f79-c #home-series-config > span { text-transform: none; letter-spacing: 0; font-size: 12px; color: rgba(255,255,255,.55); }
+.f79-c .f79-c-intro { text-transform: none !important; letter-spacing: 0 !important; font-size: 13px !important; color: rgba(255,255,255,.7) !important; }
+/* «By artist» / «Paste a list»: a control you can hit, not a 23 px tag */
+.f79-c .f79-c-mode { font-size: 12px !important; padding: 6px 12px !important; border-radius: 8px !important; }
+.f79-c .f79-c-empty { color: rgba(255,255,255,.6); line-height: 1.6; font-size: 13px; }
+.f79-c .f79-c-next { font-size: 12px; color: rgba(255,255,255,.6); margin: 0 0 10px; text-align: center; }
+.f79-c .f79-c-off { opacity: .45; box-shadow: none !important; }
+/* The main action always in view at 1280 x 900: the panel fits the window under the top bar */
+@media (min-width: 768px) {
+  .f79-c > div:first-child { height: calc(100vh - 122px); min-height: 0; }
+  .f79-c #home-left-content { padding-top: 16px; padding-bottom: 16px; }
+  .f79-c #home-left-content.space-y-8 > * + * { margin-top: 22px; }
+  .f79-c #home-header { padding-top: 16px; padding-bottom: 16px; }
+  .f79-c #home-left-footer { padding-top: 14px; padding-bottom: 16px; }
+}
+@media (max-width: 767px) {
+  /* N1: the filter strip stops floating over the covers */
+  .f79-c #home-toolbar { position: static !important; }
+  .f79-c .f79-c-barname { display: block; font-size: 12px; color: rgba(255,255,255,.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+  .f79-c #home-header { display: flex; padding: 12px 16px 4px; border: 0; }
+  .f79-c #home-header > div:first-child { display: none; }
+}
+/* critique P1 #1 (AH-01): the grid panel texts at 4.5:1 or more on black */
+.f79-c #discographyGrid p, .f79-c #discographyGrid h3, .f79-c .f79-c-empty { color: rgba(255,255,255,.72) !important; }
