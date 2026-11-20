@@ -78,6 +78,8 @@ Cada issue foi conferida no código da `main` em `d210f35` (2026-11-19, depois d
   verified_by:: pendente — nada foi construído; a issue segue aberta
 - [REQ-13] O botão «Create Series» do estado vazio das playlists guardadas leva à Home. **Não entregue neste ramo** (fora do escopo dado ao implementador; ver Out of Scope). · fixes UAT-27
   verified_by:: pendente — nada foi construído; a issue segue aberta
+- [REQ-14] Na barra do topo, o título aparece sem caixa atrás e os nomes da conta e do Spotify aparecem inteiros quando há espaço; cortados, dizem o nome inteiro ao passar o mouse. · fixes UAT-211
+  verified_by:: `test/components/TopBarNames.test.js`
 
 ## Observable States
 <!-- What the imported nodes point_to: the screen state in info-arch.md (the prototype the human judged —

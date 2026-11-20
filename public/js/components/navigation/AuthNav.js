@@ -11,6 +11,7 @@ import { showLoginModal } from '../LoginModal.js';
 import toast from '../Toast.js';
 import { SpotifyAuthService } from '../../services/SpotifyAuthService.js';
 import { reloadApp } from '../../utils/reloadApp.js';
+import { NAME_IN_THE_BAR } from './barName.js'
 
 export class AuthNav {
     constructor(userState) {
@@ -41,7 +42,7 @@ export class AuthNav {
                 <div class="relative" id="userMenuDropdownTrigger">
                     <button id="userMenuBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="userMenu" aria-label="Account menu" class="flex items-center gap-2 p-1 rounded-full hover:bg-white/5 transition-colors">
                         ${avatarContent}
-                         <span class="hidden lg:block text-xs font-medium text-white/80 max-w-[80px] truncate">${escapeHtml(currentUser.displayName || 'User')}</span>
+                         <span class="hidden lg:block text-xs font-medium text-white/80 ${NAME_IN_THE_BAR}" data-account-name title="${escapeHtml(currentUser.displayName || 'User')}">${escapeHtml(currentUser.displayName || 'User')}</span>
                     </button>
                     
                     <div id="userMenu" role="menu" aria-labelledby="userMenuBtn" class="absolute right-0 mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl opacity-0 invisible transition-all duration-200 z-50">
