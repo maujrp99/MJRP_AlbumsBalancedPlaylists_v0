@@ -107,6 +107,21 @@ As janelas que já existiam viram folha só pela casca (`mobile.css` § 8): tela
 4. Ação só com ícone tem nome (`aria-label`) e alvo de 44 px; a dica ao pairar não existe no toque.
 5. Avisos aparecem abaixo da barra do topo e nunca cobrem as barras.
 
+## Página de entrada (F80) — padrões propostos, pendentes de aprovação do MJRP
+
+Nasceram na rodada 1 de exploração da página de entrada (2026-11-20, `design/inception/splash-*-v1.html`). **Tudo aqui está pendente de aprovação do MJRP**; nada vale para as telas do app enquanto ele não decidir. A identidade é o piso (decisão dele, 2026-11-20 17:12: «o elemento do fogo, de equalizadores, fazem parte da identidade do site»): as três direções usam o preto, o laranja `#f97316`, o degradê «flame», a Syne e o logotipo; o que muda está dito abaixo, com o porquê.
+
+| Padrão | Como é | Por quê | Muda o quê |
+|---|---|---|---|
+| Botão principal da página pública | degradê «flame», **texto preto** `#0b0b0b`, Syne 800 a 18 px, 48 px de altura, brilho laranja | branco sobre o degradê dá 2,8:1 na ponta laranja `#f97316` e 4,8:1 na vermelha; preto dá 7,5:1 e 4,35:1, e a 18 px peso 800 o texto conta como grande (3:1) | **diverge** do `.btn-primary` do app (texto branco); pendente de aprovação do MJRP. Se aprovado, vale rever o botão do app também |
+| Fonte do texto corrido no computador | Syne só nos títulos; o corpo na fonte de texto do sistema (`-apple-system`, Inter, `system-ui`) | a regra do celular («título em Syne, o resto na fonte de texto») estendida ao computador numa página de leitura longa | **diverge** do app no computador (tudo em Syne); pendente de aprovação do MJRP |
+| Equalizador | barras de 5 a 8 px, cantos de 3 px no topo, degradê de baixo para cima `#dc2626 → #f97316 → #fbbf24`, cada barra com altura, duração (0,6 a 1,5 s) e atraso próprios, nunca em uníssono; com movimento reduzido, alturas fixas e variadas | o equalizador é elemento da identidade (palavras do MJRP); é o primeiro desenho declarado dele | novo; pendente de aprovação do MJRP |
+| Fogo em movimento | leito de fogo em canvas 2D (partículas aditivas de três cores: âmbar, `#f97316`, `#dc2626`), sempre abaixo do texto, nunca atrás dele; no 3D, luz de fogo laranja e vermelha que tremula por senos sobrepostos | o fogo do logotipo e da imagem de herói (`public/assets/herobanne-for-reference.png`) como movimento; atrás do texto ele derruba o contraste | novo; pendente de aprovação do MJRP |
+| Capa fictícia | quadrado com gradientes, faixas, anéis ou leque nas cores da marca, título em Syne 800 e artista em caixa alta; selo «Fictional» | capas reais são de terceiros e a página é pública | novo; pendente de aprovação do MJRP |
+| Exemplo ilustrativo | caixa com o rótulo «Illustrative · fictional album» no topo e «Example data, not real scores.» embaixo | dado de exemplo nunca se apresenta como real | novo; pendente de aprovação do MJRP |
+| Pausar o movimento | botão «Pause motion» / «Play motion» (`aria-pressed`), 44 px, preso no canto de baixo à direita no computador e sob as chamadas no celular; para fogo, equalizadores, luz e giro automático; some com movimento reduzido | movimento sem fim ao lado do texto pede um jeito de parar (crítica de UX da rodada, WCAG 2.2.2) | novo; pendente de aprovação do MJRP |
+| Aviso de capas fictícias | junto de todo grupo de capas inventadas, «Fictional albums · original art» em 12 a 13 px, legível (não só dentro da arte) | quem vê a página não pode tomar a capa inventada por um disco real | novo; pendente de aprovação do MJRP |
+
 ## Fontes consultadas (2026-11-20)
 
 - Apple, Human Interface Guidelines: Tab bars, Sheets, Accessibility, Layout, Typography — <https://developer.apple.com/design/human-interface-guidelines/>. As páginas não abriram na ferramenta de leitura (são montadas por script); os valores acima (44 pt, cinco abas, alça e fechar da folha) são os conhecidos da HIG e ficam a conferir pelo MJRP se algum pesar numa decisão.
