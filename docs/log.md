@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:37] decision — F76 priorizada, com liberdade de desenho dada pelo MJRP; treze requisitos da crítica de UX
+**Branch:** main
+O MJRP pediu o redesenho do celular em paralelo com a F75, para ver em produção ao voltar: «total liberdade pra vc na versao mobile, na f76....quero a melhor usabilidade e design na app mobile (sem impactar a versao web)»; «só eu uso app por enqto, por isso te dou essa liberdade criativa … uso o iphone 15 pro». Decidido pelo agente — revisável: o protótipo julgado antes da construção fica dispensado por essas palavras e o juízo dele é no app em produção (TASK-09 aberta); «celular» é até 767 px; a tela de computador não muda (REQ-12); o inventário no celular entra depois da F75.
+
 ## [2026-11-20 01:32] decision — F75 priorizada: opção B, com interruptor; UAT-17 resolvida
 
 - Dito pelo MJRP: «sim, gerei o novo antes de copiar. opção B (pra fazer um full teste, depois eu abro outra feature pra desligar o discogs, poderiamos usar feature toggle aqui, o que acha?), priorizando a F75».
