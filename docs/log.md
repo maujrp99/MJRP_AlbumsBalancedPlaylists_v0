@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:52] session — F78 esqueleto do app: app/ nasce (Expo SDK 58, React Native 0.88.1, TypeScript estrito) e a ligação da plataforma
+**Branch:** feat/f78-app-skeleton
+`app/` é espaço de trabalho da raiz ao lado de `shared/` (`@album-blender/app`), com Expo Router, Jest 30 com jest-expo e RNTL 14, ESLint do Expo e os scripts `typecheck`, `test`, `lint`, `bundle:ios`, `bundle:android`, `check`; a raiz ganha `npm run app:check`, um React só (`overrides`), e o ESLint da raiz deixa `app/` para o do app.
+`app/src/platform/wiring.ts` entrega ao `newId()` do núcleo o `randomUUID` do expo-crypto, uma vez; o teste prova que o núcleo recusa antes e funciona depois, e que os dois nomes do núcleo (`@album-blender/shared`, `@shared`) são um módulo só. O grafo de módulos vivos passa a contar o que o app importa do núcleo.
+
 ## [2026-11-20 15:51] session — F78 esqueleto do app: a ordem «mais nova primeiro» passa ao núcleo
 **Branch:** feat/f78-app-skeleton
 A ordem padrão das séries (UAT-227, «Newest») sai do `SeriesController` do site para `shared/seriesOrder.js` (`DEFAULT_SERIES_ORDER`, `compareByCreation`, `newestFirst`), que lê a data de criação como Date, número ou Timestamp do Firestore: uma regra para o site e o app.

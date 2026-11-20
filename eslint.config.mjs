@@ -48,6 +48,8 @@ export default [
             ".agent/",
             ".specify/",
             ".claude/",
+            // the phone app (F78): TypeScript, linted by its own config (app/eslint.config.js, `npm run app:check`)
+            "app/",
             // no code of the app
             "docs/",
             "reports/",
