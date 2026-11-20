@@ -159,16 +159,28 @@ export class PhonePlaylists {
         `
     }
 
-    /** Undo and redo, as a row of two named buttons above the playlists. */
-    static renderHistoryRow({ canUndo = false, canRedo = false } = {}) {
-        const button = (action, icon, text, label, enabled) => `
-            <button type="button" class="btn btn-secondary phone-history__btn" data-action="${action}" aria-label="${label}" ${enabled ? '' : 'disabled'}>
-                ${getIcon(icon, 'w-5 h-5')} ${text}
+    /**
+     * The top of the screen in one line (recheck N3): the batch name - the same field as the
+     * computer's (#batchNameInput: saved from, kept while typing) - and undo and redo as two named
+     * icons of 44 px. The reconfigure panel stays reachable from the «⋯» of the playlist.
+     * @param {Object} state
+     * @param {string} [state.name] - the name on screen
+     * @param {string} [state.defaultName] - shown when nothing was typed, as the computer does
+     */
+    static renderNameRow({ name = '', defaultName = '', canUndo = false, canRedo = false } = {}) {
+        const button = (action, icon, label, enabled) => `
+            <button type="button" class="phone-history__btn" data-action="${action}" aria-label="${label}" ${enabled ? '' : 'disabled'}>
+                ${getIcon(icon, 'w-5 h-5')}
             </button>`
         return `
-            <div class="phone-history md:hidden">
-                ${button('undo-edit', 'Undo', 'Undo', 'Undo the last change', canUndo)}
-                ${button('redo-edit', 'Redo', 'Redo', 'Redo the change that was undone', canRedo)}
+            <div id="batchNameSection" class="phone-batch md:hidden">
+                <label for="batchNameInput" class="phone-batch__label">Batch name</label>
+                <div class="phone-batch__row">
+                    <input type="text" id="batchNameInput" class="phone-batch__input" autocomplete="off"
+                           value="${escapeHtml(name || defaultName || '')}" placeholder="Name this batch">
+                    ${button('undo-edit', 'Undo', 'Undo the last change', canUndo)}
+                    ${button('redo-edit', 'Redo', 'Redo the change that was undone', canRedo)}
+                </div>
             </div>
         `
     }

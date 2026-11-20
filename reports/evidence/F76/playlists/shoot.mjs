@@ -18,7 +18,7 @@ const label = process.argv[2] || 'after'
 const port = process.argv[3] || '5187'
 const out = path.join(here, label)
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-const DEBUG_PORT = 9341
+const DEBUG_PORT = Number(process.env.DEBUG_PORT || 9341)
 const tap = (selector) => `document.querySelector(${JSON.stringify(selector)}).click()`
 const tapText = (text) => `[...document.querySelectorAll('.sheet button')].find(b => b.textContent.trim() === ${JSON.stringify(text)}).click()`
 const CASES = {
@@ -32,13 +32,19 @@ const CASES = {
     'scrolled-notice': { query: '?screen=generated', phoneOnly: true, run: ['window.scrollTo(0, 900)', "window.__toast.info('Your unsaved playlists were restored', 60000)"] },
     'playlist-sheet': { query: '?screen=generated', phoneOnly: true, run: [tap('[data-phone-action="playlist-options"]')] },
     'delete-confirm': { query: '?screen=generated', phoneOnly: true, run: [tap('[data-phone-action="playlist-options"]'), tapText('Delete this playlist')] },
+    // F76 polish (recheck N3): the closed reconfigure row left the page; the «⋯» of the playlist opens it
+    reconfigure: { query: '?screen=generated', phoneOnly: true, run: [tap('[data-phone-action="playlist-options"]'), tapText('Reconfigure and regenerate')] },
     'export-sheet': { query: '?screen=generated', phoneOnly: true, run: [tap('[data-phone-action="export"]')] },
     'spotify-window': { query: '?screen=generated', phoneOnly: true, run: [tap('[data-phone-action="export"]'), tapText('Export to Spotify')] }
 }
 const SIZES = [
     { name: '393x852', width: 393, height: 852, mobile: true },
+    // what Safari leaves on an iPhone 15 Pro with its bars shown (F76 polish, recheck N3)
+    { name: '393x660', width: 393, height: 660, mobile: true },
     { name: '1280x800', width: 1280, height: 800, mobile: false }
 ]
+// ONLY=generated,saved shoots those cases only
+const ONLY = process.env.ONLY ? process.env.ONLY.split(',') : null
 
 const MEASURE = `(() => {
     const visible = (el) => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' }
@@ -122,7 +128,7 @@ async function main() {
         for (const size of SIZES) {
             await page.send('Emulation.setDeviceMetricsOverride', { width: size.width, height: size.height, deviceScaleFactor: size.mobile ? 2 : 1, mobile: size.mobile })
             await page.send('Emulation.setTouchEmulationEnabled', { enabled: size.mobile })
-            for (const [name, spec] of Object.entries(CASES)) await shoot(page, size, name, spec, measures)
+            for (const [name, spec] of Object.entries(CASES).filter(([name]) => !ONLY || ONLY.includes(name))) await shoot(page, size, name, spec, measures)
         }
         fs.writeFileSync(path.join(out, 'measures.json'), JSON.stringify(measures, null, 1))
         page.close()

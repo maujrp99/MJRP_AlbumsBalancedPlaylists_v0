@@ -188,6 +188,29 @@ describe('the drag', () => {
     })
 })
 
+describe('the top of /playlists on the phone is one line (recheck N3)', () => {
+    it('the batch name is the same field (same id), with undo and redo as named 44 px icons beside it', () => {
+        const host = draw(PhonePlaylists.renderNameRow({ name: 'Road <i>trip</i>', canUndo: true, canRedo: false }))
+        const input = host.querySelector('#batchNameInput')
+
+        expect(input.value).toBe('Road <i>trip</i>')
+        expect(host.querySelector('label[for="batchNameInput"]').textContent.trim()).toBe('Batch name')
+        expect(host.querySelector('i')).toBeNull()
+        const undo = host.querySelector('[data-action="undo-edit"]')
+        const redo = host.querySelector('[data-action="redo-edit"]')
+        expect(undo.getAttribute('aria-label')).toBe('Undo the last change')
+        expect(undo.disabled).toBe(false)
+        expect(redo.getAttribute('aria-label')).toBe('Redo the change that was undone')
+        expect(redo.disabled).toBe(true)
+        expect(host.firstElementChild.classList.contains('md:hidden')).toBe(true)
+    })
+
+    it('an empty name shows the name the save falls back to', () => {
+        const host = draw(PhonePlaylists.renderNameRow({ name: '', defaultName: 'Prog 70s · 20 Nov' }))
+        expect(host.querySelector('#batchNameInput').value).toBe('Prog 70s · 20 Nov')
+    })
+})
+
 describe('the computer keeps its grid', () => {
     it('PlaylistGrid draws every playlist side by side, as before', () => {
         asPhone(false)

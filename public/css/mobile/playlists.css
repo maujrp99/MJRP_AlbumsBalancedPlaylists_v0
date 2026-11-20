@@ -27,12 +27,11 @@
   }
 
   .phone-playlists,
-  .phone-history,
+  .phone-batch,
   .phone-pl-bar,
   .phone-sheet-actions,
   .phone-sheet-heading,
   .phone-undo,
-  .playlists-view #batchNameSection,
   .playlists-view .regenerate-header,
   .saved-playlists-view .series-group {
     font-family: var(--pl-sans);
@@ -50,13 +49,20 @@
   }
 
   /* ── 2. The top of /playlists ────────────────────────────────────────────────────────────── */
+  /* Recheck N3: at 393x660 the tracks began under ~450 px of headers. The bottom bar already
+     leads to Home, Blend and Playlists, so the breadcrumb goes; the batch name, undo and redo
+     share one line; the closed reconfigure row goes (the «⋯» of the playlist opens it, and once
+     open it shows here with its header, which closes it again). */
+  .playlists-view .view-header .breadcrumb {
+    display: none;
+  }
+
   .playlists-view .view-header {
-    margin-bottom: 12px;
+    margin-bottom: 0;
   }
 
   .playlists-view .view-header .header-content {
-    margin-top: 4px;
-    margin-bottom: 0;
+    margin: 0 0 8px;
     gap: 8px;
   }
 
@@ -77,34 +83,72 @@
     overflow-wrap: anywhere;
   }
 
-  /* The batch name: a field of 16 px (no zoom on focus) across the width */
-  .playlists-view #batchNameSection {
-    margin-bottom: 12px;
-    padding: 12px;
-    border-radius: 12px;
+  /* The batch name: a field of 16 px (no zoom on focus), undo and redo at its side */
+  .phone-batch {
+    margin-bottom: 8px;
   }
 
-  .playlists-view #batchNameSection label {
-    font-size: 14px;
-    line-height: 18px;
-    margin-bottom: 6px;
+  .phone-batch__label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: var(--pl-text-2);
   }
 
-  .playlists-view #batchNameInput {
-    max-width: none;
-    min-height: 48px;
-    font-size: 16px;
-    line-height: 22px;
+  .phone-batch__row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
-  /* The reconfigure panel: closed, one row of 56 px that says what it opens */
+  .phone-batch__input {
+    flex: 1;
+    min-width: 0;
+    height: 44px;
+    padding: 0 12px;
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 600;
+    color: var(--pl-text);
+    background: var(--pl-raised);
+    border: 1px solid var(--pl-line);
+    border-radius: 12px;
+    text-overflow: ellipsis;
+  }
+
+  .phone-batch__input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .phone-batch__input::placeholder {
+    color: var(--pl-text-2);
+    font-weight: 400;
+  }
+
+  /* The reconfigure panel: out of the page while closed; opened from the «⋯» of a playlist */
+  .playlists-view #regeneratePanelMount:has(.regenerate-content.hidden) {
+    display: none;
+  }
+
   .playlists-view #regeneratePanelMount {
     margin-bottom: 12px;
   }
 
   .playlists-view .regenerate-panel {
     margin-bottom: 0;
+    /* opened from the «⋯» it is scrolled into view: its header lands under the top bar, not behind it */
+    scroll-margin-top: calc(var(--pl-sticky-top) + 8px);
+  }
+
+  /* the recipes inside it in one column, as on the Blend (the cards' own rules are blend.css § 5) */
+  .playlists-view .regenerate-content .grid:has(> .blend-recipe-card) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
   }
 
   .playlists-view button.regenerate-header {
@@ -123,27 +167,24 @@
     padding: 12px;
   }
 
-  /* Undo and redo: two named buttons in a row */
-  .phone-history {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
+  /* Undo and redo: two icons of 44 px, named by aria-label */
+  .phone-history__btn {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 22px;
+    color: var(--pl-text);
+    touch-action: manipulation;
   }
 
-  .phone-history__btn {
-    flex: 1;
-    min-height: 44px;
-    padding: 0 12px;
-    justify-content: center;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 12px;
-    transform: none;
+  .phone-history__btn:active:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .phone-history__btn:disabled {
-    opacity: 0.4;
+    opacity: 0.35;
   }
 
   /* The computer's footer line of the screen says nothing on the phone */
@@ -234,14 +275,14 @@
 
   /* ── 4. The open playlist and its tracks: they scroll with the page ──────────────────────── */
   .phone-pl {
-    padding-top: 16px;
+    padding-top: 12px;
   }
 
   .phone-pl__head {
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    padding-bottom: 12px;
+    padding-bottom: 8px;
     border-bottom: 1px solid var(--pl-line);
   }
 
@@ -272,12 +313,19 @@
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.24);
   }
 
+  /* Recheck N3: the open chip right above says the same tracks and length, so the line stays for
+     screen readers only and the tracks come up 20 px */
   .phone-pl__meta {
-    margin: 2px 0 0;
-    font-size: 14px;
-    line-height: 18px;
-    color: var(--pl-text-2);
-    font-variant-numeric: tabular-nums;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .phone-pl__head {
+    align-items: center;
   }
 
   /* «⋯»: 44 px, always in view (no hover on a phone) */
