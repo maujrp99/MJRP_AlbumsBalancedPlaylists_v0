@@ -1,9 +1,5 @@
 import { getIcon } from './Icons.js'
-import { router } from '../router.js'
-import { albumSeriesStore } from '../stores/albumSeries.js'
 import { userStore } from '../stores/UserStore.js'
-import { authService } from '@shared/services/AuthService.js'
-import { showLoginModal } from './LoginModal.js'
 import { SeriesDropdown } from './navigation/SeriesDropdown.js'
 import { AuthNav } from './navigation/AuthNav.js'
 

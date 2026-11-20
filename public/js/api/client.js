@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { serverFetch } from './serverFetch.js'
 import { Album } from '../models/Album.js'
 import { askedAlbum, compareOnlyAnswer } from '../models/askedAlbum.js'
