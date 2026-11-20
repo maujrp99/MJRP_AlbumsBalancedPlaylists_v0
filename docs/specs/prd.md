@@ -65,6 +65,7 @@ A desenhar: ainda não há protótipo aprovado nem `docs/specs/info-arch.md`, e 
 | **EP-07 · Gerenciar o inventário de álbuns que a pessoa possui** | `^OUT-03` |
 | **EP-08 · Entrar com a conta e guardar tudo na nuvem** | `^OUT-01` |
 | **EP-09 · Achar o álbum certo no catálogo oficial (capas, discografia oficial, busca por artista, filtros por tipo, correspondência aproximada)** | `^OUT-03` |
+| **EP-10 · Levar o Album Blender às lojas de apps** | `^OUT-04` |
 
 <!-- Como os épicos foram derivados (decidido pelo agente, revisável pelo MJRP, 2026-10-28): um por grande área funcional do produto, na ordem do fluxo (série, mistura, playlist, exportação, ranking), uma para o celular e duas para áreas
      que a documentação não liga a nenhum resultado (inventário e conta/nuvem); cada um serve o objetivo permanente do ROADMAP.md que a documentação liga àquela área:
@@ -84,8 +85,8 @@ A desenhar: ainda não há protótipo aprovado nem `docs/specs/info-arch.md`, e 
 - **Achados do mapa do V1 sobre o v0.** Problemas e riscos já verificados no código, por exemplo regras do Firestore abertas para rankings, servidor sem autenticação nem limite de taxa, exclusão de item do inventário que não funciona, migração de usuário convidado quebrada, desfazer/refazer sem botão (mapa do V1, seções 2.D a 2.G). Triados em 2026-10-28: o que o código tenta e não cumpre virou as issues UAT-01 a UAT-13 e a dívida técnica virou UAT-14 a UAT-25, na trilha do agente (`docs/specs/uat.md`); o que vira risco aceito segue com o MJRP.
 - **Inventário com foco de colecionador.** O MJRP disse em 2026-11-20 que o inventário vai precisar de bastante evolução e pediu, para depois, uma pesquisa e um benchmark de apps que já fazem controle de coleção de CDs, vinis e fitas cassete. A primeira peça é a F75 (valor estimado e onde comprar). A triar: o benchmark decide os próximos requisitos do EP-07.
 - **Rede de apaixonados por álbuns e colecionadores.** O MJRP disse em 2026-11-20: «no futuro, eu penso em evoluir a app para uma rede social de apaixonados por musica (especificamente por albuns) e colecionadores, e aí aqui vc poderia ter algo pra vender ou trocar seu cd pra negociar entre colecionadores». Ele lembra de ter registrado a ideia em algum lugar; neste repositório não há registro anterior (procurado em `VISION.md`, `ROADMAP.md`, `prd.md` e `docs/wiki/`). A triar: é mudança de visão do produto, a decidir no `VISION.md`. Efeito já hoje: o cartão do inventário da F75 é desenhado com lugar para «vender» e «trocar».
-- **Album Blender como produto público, no iPhone e no Android.** O MJRP disse em 2026-11-20: «gostaria de considerar Android e ser pública, não deixaria de fora. Seria uma evolução do produto», e pediu, por ora, material para decidir. Perguntou também por formas de monetização, por um agregador de preços próprio (para não depender do Discogs), pelo lado legal, e por um agregador de rankings (para não ler mais as páginas do BestEverAlbums). O estudo de viabilidade (produto público monetizado por afiliação, com autorização do BestEverAlbums e do MusicBrainz) está em `reports/audits/2026-11-20-mjrpalbumblender-v0-public-product-study.md`. A triar: vira épico quando ele decidir; a primeira peça seria tirar a dependência de dados que não cabem num app público (Spotify, Discogs, BestEverAlbums).
-- **Medir o uso do site (analytics).** O MJRP perguntou em 2026-11-20: «como ficamos com o analytics do site que hj não existe? Qual solução vc propõe pra implementarmos». Hoje não há medição nenhuma (conferido: nenhum código de analytics no site). Proposta do agente, a decidir por ele: uma porta única de eventos no app, com um serviço de análise de produto atrás dela, medindo as tarefas (criar série, ranquear, gerar e salvar playlist, exportar, tocar em link de compra). É também o que mede a afiliação do estudo de viabilidade. A triar: vira feature quando ele escolher o serviço.
+- **Album Blender como produto público, no iPhone e no Android.** O MJRP disse em 2026-11-20: «gostaria de considerar Android e ser pública, não deixaria de fora. Seria uma evolução do produto», e pediu, por ora, material para decidir. Perguntou também por formas de monetização, por um agregador de preços próprio (para não depender do Discogs), pelo lado legal, e por um agregador de rankings (para não ler mais as páginas do BestEverAlbums). O estudo de viabilidade (produto público monetizado por afiliação, com autorização do BestEverAlbums e do MusicBrainz) está em `reports/audits/2026-11-20-mjrpalbumblender-v0-public-product-study.md`. Em 2026-11-20 ele abriu a v6.0 para o app: virou o épico EP-10, S-60 e a feature F78. Continuam por decidir: o lançamento público em si, a monetização e as autorizações (os e-mails estão redigidos).
+- **Medir o uso do site (analytics).** O MJRP perguntou em 2026-11-20: «como ficamos com o analytics do site que hj não existe? Qual solução vc propõe pra implementarmos». Hoje não há medição nenhuma (conferido: nenhum código de analytics no site). Proposta do agente, a decidir por ele: uma porta única de eventos no app, com um serviço de análise de produto atrás dela, medindo as tarefas (criar série, ranquear, gerar e salvar playlist, exportar, tocar em link de compra). É também o que mede a afiliação do estudo de viabilidade. Em 2026-11-20 ele escolheu o PostHog: virou S-59 e a feature F77 (v6.0).
 - **Ser achado e citado por buscadores e por assistentes de IA (GEO e AEO).** O MJRP perguntou em 2026-11-20 como considerar GEO e AEO. Hoje o site é um app atrás de login, sem página pública, sem `robots.txt`, sem descrição e sem dados estruturados: não há o que um buscador ou um assistente leia. Depende de existirem páginas públicas com conteúdo próprio (página de entrada; páginas de álbum, de série e de playlist compartilháveis) e, para mostrar notas do BestEverAlbums em página pública, da autorização dele. A triar: junto com o candidato do produto público.
 
 ## Premissas e questões em aberto
@@ -199,6 +200,16 @@ serves:: [[ROADMAP#^OUT-01]] ^EP-08
 ### EP-09 · Achar o álbum certo no catálogo oficial (capas, discografia oficial, busca por artista, filtros por tipo, correspondência aproximada)
 folder:: ep-09-achar-o-album-certo-no-catalog
 serves:: [[ROADMAP#^OUT-03]] ^EP-09
+
+### EP-10 · Levar o Album Blender às lojas de apps
+folder:: ep-10-app-nas-lojas
+serves:: [[ROADMAP#^OUT-04]] ^EP-10
+
+<!-- Criado em 2026-11-20 a pedido do MJRP (v6.0). Colocação em OUT-04 decidida pelo agente, revisável: é o resultado que fala do uso fora do computador. -->
+
+![[S-59-know-how-the-app-is-used]]
+
+![[S-60-use-the-album-blender-as-an-app-from-the-store]]
 
 ### Transversais
 
