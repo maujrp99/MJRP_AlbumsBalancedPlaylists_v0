@@ -8,7 +8,7 @@ const seriesService = vi.hoisted(() => ({ loadFromFirestore: vi.fn() }))
 const getSeriesService = vi.hoisted(() => vi.fn(() => seriesService))
 
 vi.mock('../../../public/js/firebase-init.js', () => ({ db: { name: 'db' } }))
-vi.mock('../../../public/js/repositories/InventoryRepository.js', () => ({ InventoryRepository: class { findAll() { return [] } } }))
+vi.mock('../../../shared/data/InventoryRepository.js', () => ({ InventoryRepository: class { findAll() { return [] } } }))
 vi.mock('../../../public/js/cache/CacheManager.js', () => ({ cacheManager: {} }))
 vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesService }))
 vi.mock('../../../public/js/services/albums/albumLoading.js', () => ({ albumAsks: { albumsOf: vi.fn() } }))

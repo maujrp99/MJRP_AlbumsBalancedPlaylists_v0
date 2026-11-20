@@ -7,7 +7,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
 const repository = vi.hoisted(() => ({ update: vi.fn(async () => { }) }))
-vi.mock('../../public/js/repositories/SeriesRepository.js', () => ({ SeriesRepository: vi.fn().mockImplementation(() => repository) }))
+vi.mock('../../shared/data/SeriesRepository.js', () => ({ SeriesRepository: vi.fn().mockImplementation(() => repository) }))
 
 import { SeriesService } from '../../public/js/services/SeriesService.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'

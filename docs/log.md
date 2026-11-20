@@ -3,6 +3,31 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:09] session — F78 Ref-A: documentos — tarefas, plano, arch e data-model
+**Branch:** feat/f78-ref-a-repositories-in-the-core
+TASK-14 e TASK-15 marcadas; a TASK-16 tem a regra escrita e espera a publicação do MJRP; o que mexe na forma de gravar (só leitura acima da versão, transação, os casos abertos de convivência) foi para a TASK-17 (Ref-B). `plan.md` § Technical Design: o que a Ref-A construiu e os casos abertos; `arch.md`: «Os repositórios no núcleo: a store e a versão»; `data-model.md`: `_schemaVersion` nunca desce, e onde vale.
+Conferido no navegador (porta 5199, sem entrar com conta): o site sobe sem erro no console e sem chamada ao Firestore na tela inicial; a sessão anônima que o próprio site abre ao carregar ficou no Firebase Auth. Suíte 274 arquivos, 3.575 testes; lint e build verdes; corpo dourado 3.343 de 3.343 no Node.
+
+## [2026-11-20 15:05] session — F78 convivência: `firestore.rules` recusa a atualização que rebaixe `_schemaVersion` (não publicado)
+**Branch:** feat/f78-ref-a-repositories-in-the-core
+Nos quatro caminhos que os repositórios gravam (curator: séries e playlists; inventory; albumRankings; spotify_enrichment), `update` passa a pedir `keepsSchemaVersion()` (a versão gravada ≥ a guardada; ausente conta 0); ler, criar e apagar ficam como estavam; os caminhos legados (`users/{uid}/series/…`, `/albums`), onde há documentos antigos com versão 2, não mudam. Nenhum escritor de hoje é recusado: todos gravam 1 ou não tocam no campo.
+Provado só pelo texto (`test/security/firestoreRules.test.js`, 9 casos): esta máquina não tem Java para o emulador. Publicar é do MJRP (`firebase deploy --only firestore:rules`); nada foi publicado.
+
+## [2026-11-20 15:04] session — F78 convivência: `_schemaVersion` nunca desce no caminho de gravação, e `oldWriterKeepsNewFields` (REQ-10)
+**Branch:** feat/f78-ref-a-repositories-in-the-core
+`BaseRepository.save` (o único caminho que carimba a versão num documento que pode existir: playlists e o cache do Spotify) grava o maior entre a versão de quem escreve e a do documento como ele o leu (`shared/data/schemaVersion.js`); `update`, `updateMany`, `saveAlbumFacts` e o ranking não tocam nela. Visto falhar antes: o app «velho» renomeando uma playlist do «novo» baixava 2 para 1.
+`test/architecture/oldWriterKeepsNewFields.test.js`: séries, playlists, inventário, ranking e Spotify; o campo desconhecido sobrevive na raiz e dentro de `albumQueries`/`tracks`. O Firestore falso passou a ler segmentos e campos com ponto como o SDK (só os documentos do inventário mudaram no `write-sequence.json`; as chamadas, não). Casos abertos para a Ref-B no plano.
+
+## [2026-11-20 15:01] session — F78 Ref-A: os seis repositórios em `shared/data/`, recebendo o Firestore de fora (REQ-09)
+**Branch:** feat/f78-ref-a-repositories-in-the-core
+`BaseRepository` e os cinco (séries, playlists, inventário, ranking próprio, enriquecimento do Spotify) foram para `shared/data/` sem importar Firestore: recebem uma «store» (`shared/data/store.js`: o `db` e as 13 funções que chamam); o site a monta do Firebase JS em `public/js/repositories/firestoreStore.js`, e a instância única do ranking mora em `public/js/repositories/userRankings.js`. Os importadores (SeriesService, PlaylistsService, RepositoryPlaylistsSource, as ligações do inventário, do Spotify, do ranking e da carga de álbuns) apontam para a casa nova; o `normalize` da chave do Spotify passa por `shared/platform/text.js`.
+Provas: o `writeSequence` dá as mesmas chamadas, cargas e ordem gravadas na `main`; os testes dos repositórios rodam também em Node puro; os sensores de camada passam a enxergar `shared/data/`. Suíte 265 arquivos, 3.519 testes; lint e build verdes.
+
+## [2026-11-20 14:55] session — F78 Ref-A: a sequência de chamadas do Firestore dos repositórios, gravada antes da mudança de casa
+**Branch:** feat/f78-ref-a-repositories-in-the-core
+Antes de mover os repositórios para `shared/data/`, cada método público dos cinco repositórios roda contra o Firestore falso com gravador (`test/helpers/recordingFirestore.js`) e o registro (chamadas, cargas, ordem, cache e documentos que sobram) fica em `test/fixtures/repositories/write-sequence.json`, gravado no código da `main` (`7a3237b`).
+O `writeSequence.test.js` compara o registro com o arquivo: a mudança de casa tem de dar o mesmo, chamada por chamada (REQ-09). Nenhuma escrita no Firestore de produção.
+
 ## [2026-11-20 14:48] session — F78: as fundações do núcleo em produção; `## Now` atualizado
 **Branch:** main
 Servidor `mjrp-proxy-00214-4z4` (teto de 3 instâncias; `DISCOGS_TOKEN` continua mapeado) e site da `3112b6d`. Provado no app local, conta do MJRP: os identificadores de faixa saem da porta (`newId`), o inventário abre com os totais em reais, e as três receitas geram playlists dos álbuns reais de «Trip Hop Vol.1» (chamando o serviço de geração direto, sem tocar no rascunho não salvo dele). Suíte 3512; o corpo dourado bate com o motor Hermes em 3.343 de 3.343 casos. Sobra a limpar: a série de visitante «F78 port check», criada por um agente no Firestore de produção.

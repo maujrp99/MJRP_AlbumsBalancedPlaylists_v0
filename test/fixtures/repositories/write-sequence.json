@@ -1,0 +1,1594 @@
+{
+ "series": {
+  "calls": [
+   [
+    "--",
+    "create"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "doc",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "setDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1",
+    {
+     "name": "Grunge",
+     "albumQueries": [
+      {
+       "artist": "Pearl Jam",
+       "title": "Ten",
+       "extra": "kept"
+      }
+     ],
+     "createdAt": "server-time",
+     "_schemaVersion": 1
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:all\"]"
+   ],
+   [
+    "--",
+    "findById twice (the second from the cache)"
+   ],
+   [
+    "--",
+    "cache.get [\"artifacts/mjrp-albums/users/user-1/curator/data/series:auto-1\"]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series",
+    "auto-1"
+   ],
+   [
+    "getDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1"
+   ],
+   [
+    "--",
+    "cache.set [\"artifacts/mjrp-albums/users/user-1/curator/data/series:auto-1\",null]"
+   ],
+   [
+    "--",
+    "cache.get [\"artifacts/mjrp-albums/users/user-1/curator/data/series:auto-1\"]"
+   ],
+   [
+    "--",
+    "findAll with where, orderBy, limit"
+   ],
+   [
+    "where",
+    "name",
+    "==",
+    "Grunge"
+   ],
+   [
+    "orderBy",
+    "name",
+    "desc"
+   ],
+   [
+    "limit",
+    5
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "query",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series",
+    {
+     "where": [
+      "name",
+      "==",
+      "Grunge"
+     ]
+    },
+    {
+     "orderBy": [
+      "name",
+      "desc"
+     ]
+    },
+    {
+     "limit": [
+      5
+     ]
+    }
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "--",
+    "update, rename"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series",
+    "auto-1"
+   ],
+   [
+    "updateDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1",
+    {
+     "name": "Grunge 2",
+     "status": "ready",
+     "updatedAt": "server-time"
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:auto-1\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:all\"]"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series",
+    "auto-1"
+   ],
+   [
+    "updateDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1",
+    {
+     "name": "Grunge 3",
+     "updatedAt": "server-time"
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:auto-1\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:all\"]"
+   ],
+   [
+    "--",
+    "saveAlbumFacts"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series",
+    "auto-1"
+   ],
+   [
+    "updateDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1",
+    {
+     "albumQueries": [
+      {
+       "artist": "Pearl Jam",
+       "title": "Ten",
+       "facts": {
+        "year": 1991
+       }
+      }
+     ]
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:auto-1\"]"
+   ],
+   [
+    "--",
+    "findWithAlbums, findPlaylists"
+   ],
+   [
+    "--",
+    "cache.get [\"artifacts/mjrp-albums/users/user-1/curator/data/series:auto-1\"]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series",
+    "auto-1"
+   ],
+   [
+    "getDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1"
+   ],
+   [
+    "--",
+    "cache.set [\"artifacts/mjrp-albums/users/user-1/curator/data/series:auto-1\",null]"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1/albums"
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1/albums"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1/playlists"
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1/playlists"
+   ],
+   [
+    "--",
+    "exists, count, findByField, getCount"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series",
+    "auto-1"
+   ],
+   [
+    "getDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "query",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "where",
+    "name",
+    "==",
+    "Grunge 3"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "query",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series",
+    {
+     "where": [
+      "name",
+      "==",
+      "Grunge 3"
+     ]
+    }
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "query",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "--",
+    "createFromInventory"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "doc",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "setDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-2",
+    {
+     "name": "From shelf",
+     "albumQueries": [],
+     "sourceType": "inventory",
+     "createdAt": "server-time",
+     "_schemaVersion": 1
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:all\"]"
+   ],
+   [
+    "--",
+    "deleteWithPlaylists, delete"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1/playlists"
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1/playlists"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1/playlists",
+    "p1"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series",
+    "auto-1"
+   ],
+   [
+    "writeBatch",
+    {
+     "fake": true
+    }
+   ],
+   [
+    "batch.delete",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1/playlists/p1"
+   ],
+   [
+    "batch.delete",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1"
+   ],
+   [
+    "batch.commit"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:auto-1\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:all\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1/playlists:all\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/auto-1/playlists:p1\"]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series",
+    "auto-2"
+   ],
+   [
+    "deleteDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-2"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:auto-2\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:all\"]"
+   ],
+   [
+    "--",
+    "deleteMany"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "doc",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series"
+   ],
+   [
+    "setDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-3",
+    {
+     "name": "Third",
+     "createdAt": "server-time",
+     "_schemaVersion": 1
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:all\"]"
+   ],
+   [
+    "writeBatch",
+    {
+     "fake": true
+    }
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series",
+    "auto-3"
+   ],
+   [
+    "batch.delete",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/auto-3"
+   ],
+   [
+    "batch.commit"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:auto-3\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series:all\"]"
+   ]
+  ],
+  "documents": []
+ },
+ "playlists": {
+  "calls": [
+   [
+    "--",
+    "replaceBatch: one kept, one new, one removed"
+   ],
+   [
+    "writeBatch",
+    {
+     "fake": true
+    }
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series",
+    "s1"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "batch.update",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/s1",
+    {
+     "updatedAt": "server-time"
+    }
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists",
+    "keep"
+   ],
+   [
+    "batch.set",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists/keep",
+    {
+     "id": "keep",
+     "name": "Keep renamed",
+     "tracks": [
+      {
+       "title": "A",
+       "duration": 100
+      }
+     ],
+     "order": 0,
+     "updatedAt": "server-time",
+     "_schemaVersion": 1
+    },
+    {
+     "merge": true
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:keep\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:all\"]"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists"
+   ],
+   [
+    "doc",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists"
+   ],
+   [
+    "batch.set",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists/auto-1",
+    {
+     "name": "Brand new",
+     "tracks": [
+      {
+       "title": "B",
+       "duration": 50
+      }
+     ],
+     "order": 1,
+     "createdAt": "server-time",
+     "_schemaVersion": 1
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:all\"]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists",
+    "old"
+   ],
+   [
+    "batch.delete",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists/old"
+   ],
+   [
+    "batch.commit"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:old\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:all\"]"
+   ],
+   [
+    "--",
+    "updateTracks, rename, getTotalDuration"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists",
+    "keep"
+   ],
+   [
+    "updateDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists/keep",
+    {
+     "tracks": [
+      {
+       "title": "A",
+       "duration": 120
+      },
+      {
+       "title": "C",
+       "duration": 30
+      }
+     ],
+     "updatedAt": "server-time"
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:keep\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:all\"]"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists",
+    "keep"
+   ],
+   [
+    "updateDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists/keep",
+    {
+     "name": "Kept",
+     "updatedAt": "server-time"
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:keep\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:all\"]"
+   ],
+   [
+    "--",
+    "cache.get [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:keep\"]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists",
+    "keep"
+   ],
+   [
+    "getDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists/keep"
+   ],
+   [
+    "--",
+    "cache.set [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:keep\",null]"
+   ],
+   [
+    "--",
+    "findAll, deleteMany"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists"
+   ],
+   [
+    "query",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists"
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists"
+   ],
+   [
+    "writeBatch",
+    {
+     "fake": true
+    }
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists",
+    "auto-1"
+   ],
+   [
+    "batch.delete",
+    "doc:artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists/auto-1"
+   ],
+   [
+    "batch.commit"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:auto-1\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/curator/data/series/s1/playlists:all\"]"
+   ]
+  ],
+  "documents": [
+   {
+    "id": "keep",
+    "name": "Kept",
+    "tracks": [
+     {
+      "title": "A",
+      "duration": 120
+     },
+     {
+      "title": "C",
+      "duration": 30
+     }
+    ],
+    "mood": "unknown field",
+    "_schemaVersion": 1,
+    "order": 0,
+    "updatedAt": "server-time"
+   }
+  ]
+ },
+ "inventory": {
+  "calls": [
+   [
+    "--",
+    "addAlbum"
+   ],
+   [
+    "--",
+    "cache.get [\"artifacts/mjrp-albums/users/user-1/inventory:album_alb-1\"]"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "query",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "doc",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "setDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/inventory/auto-1",
+    {
+     "title": "Ten",
+     "artist": "Pearl Jam",
+     "year": 1991,
+     "format": "vinyl",
+     "owned": null,
+     "purchasePrice": 30,
+     "currency": "BRL",
+     "purchaseDate": null,
+     "condition": null,
+     "notes": "first",
+     "albumData": {
+      "id": "alb-1",
+      "title": "Ten",
+      "artist": "Pearl Jam",
+      "year": 1991,
+      "coverUrl": "https://example.com/ten.jpg"
+     },
+     "addedToInventory": "server-time",
+     "createdAt": "server-time",
+     "_schemaVersion": 1
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:all\"]"
+   ],
+   [
+    "--",
+    "addBatch"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "writeBatch",
+    {
+     "fake": true
+    }
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "doc",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "batch.set",
+    "doc:artifacts/mjrp-albums/users/user-1/inventory/auto-2",
+    {
+     "title": "Vs.",
+     "artist": "Pearl Jam",
+     "year": null,
+     "format": null,
+     "owned": null,
+     "purchasePrice": null,
+     "currency": null,
+     "purchaseDate": null,
+     "condition": null,
+     "notes": "",
+     "albumData": {
+      "id": "alb-2",
+      "title": "Vs.",
+      "artist": "Pearl Jam"
+     },
+     "addedToInventory": "server-time",
+     "createdAt": "server-time",
+     "_schemaVersion": 1
+    }
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "doc",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "batch.set",
+    "doc:artifacts/mjrp-albums/users/user-1/inventory/auto-3",
+    {
+     "title": "Core",
+     "artist": "STP",
+     "year": null,
+     "format": null,
+     "owned": null,
+     "purchasePrice": null,
+     "currency": null,
+     "purchaseDate": null,
+     "condition": null,
+     "notes": "",
+     "albumData": {
+      "id": "alb-3",
+      "title": "Core",
+      "artist": "STP"
+     },
+     "addedToInventory": "server-time",
+     "createdAt": "server-time",
+     "_schemaVersion": 1
+    }
+   ],
+   [
+    "batch.commit"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:all\"]"
+   ],
+   [
+    "--",
+    "updateAlbum with a written value"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory",
+    "auto-1"
+   ],
+   [
+    "updateDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/inventory/auto-1",
+    {
+     "format": "cd",
+     "owned": true,
+     "value": {
+      "amount": 25.5,
+      "currency": "USD",
+      "at": "2026-11-20T12:00:00.000Z"
+     },
+     "updatedAt": "server-time"
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:auto-1\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:all\"]"
+   ],
+   [
+    "--",
+    "setAverages, setEditions, updatePrice"
+   ],
+   [
+    "writeBatch",
+    {
+     "fake": true
+    }
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory",
+    "auto-1"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "batch.update",
+    "doc:artifacts/mjrp-albums/users/user-1/inventory/auto-1",
+    {
+     "averages": {
+      "bea": 85
+     },
+     "updatedAt": "server-time"
+    }
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory",
+    "auto-2"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "batch.update",
+    "doc:artifacts/mjrp-albums/users/user-1/inventory/auto-2",
+    {
+     "albumData.coverUrl": "https://example.com/vs.jpg",
+     "updatedAt": "server-time"
+    }
+   ],
+   [
+    "batch.commit"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:auto-1\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:auto-2\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:all\"]"
+   ],
+   [
+    "writeBatch",
+    {
+     "fake": true
+    }
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory",
+    "auto-1"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "batch.update",
+    "doc:artifacts/mjrp-albums/users/user-1/inventory/auto-1",
+    {
+     "discogs": {
+      "releaseId": 123,
+      "title": "Ten (LP)",
+      "url": null
+     },
+     "updatedAt": "server-time"
+    }
+   ],
+   [
+    "batch.commit"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:auto-1\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:all\"]"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory",
+    "auto-1"
+   ],
+   [
+    "updateDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/inventory/auto-1",
+    {
+     "purchasePrice": 40,
+     "currency": "USD",
+     "updatedAt": "server-time"
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:auto-1\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:all\"]"
+   ],
+   [
+    "--",
+    "findByAlbumId twice, findByFormat, getStatistics, search"
+   ],
+   [
+    "--",
+    "cache.get [\"artifacts/mjrp-albums/users/user-1/inventory:album_alb-1\"]"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "query",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "--",
+    "cache.set [\"artifacts/mjrp-albums/users/user-1/inventory:album_alb-1\",null]"
+   ],
+   [
+    "--",
+    "cache.get [\"artifacts/mjrp-albums/users/user-1/inventory:album_alb-1\"]"
+   ],
+   [
+    "where",
+    "format",
+    "==",
+    "cd"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "query",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory",
+    {
+     "where": [
+      "format",
+      "==",
+      "cd"
+     ]
+    }
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "query",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "query",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "getDocs",
+    "collection:artifacts/mjrp-albums/users/user-1/inventory"
+   ],
+   [
+    "--",
+    "removeAlbum"
+   ],
+   [
+    "--",
+    "cache.get [\"artifacts/mjrp-albums/users/user-1/inventory:auto-1\"]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory",
+    "auto-1"
+   ],
+   [
+    "getDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/inventory/auto-1"
+   ],
+   [
+    "--",
+    "cache.set [\"artifacts/mjrp-albums/users/user-1/inventory:auto-1\",null]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "artifacts/mjrp-albums/users/user-1/inventory",
+    "auto-1"
+   ],
+   [
+    "deleteDoc",
+    "doc:artifacts/mjrp-albums/users/user-1/inventory/auto-1"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:auto-1\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:all\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"artifacts/mjrp-albums/users/user-1/inventory:album_alb-1\"]"
+   ]
+  ],
+  "documents": [
+   {
+    "id": "auto-2",
+    "title": "Vs.",
+    "artist": "Pearl Jam",
+    "year": null,
+    "format": null,
+    "owned": null,
+    "purchasePrice": null,
+    "currency": null,
+    "purchaseDate": null,
+    "condition": null,
+    "notes": "",
+    "albumData": {
+     "id": "alb-2",
+     "title": "Vs.",
+     "artist": "Pearl Jam",
+     "coverUrl": "https://example.com/vs.jpg"
+    },
+    "addedToInventory": "server-time",
+    "createdAt": "server-time",
+    "_schemaVersion": 1,
+    "updatedAt": "server-time"
+   },
+   {
+    "id": "auto-3",
+    "title": "Core",
+    "artist": "STP",
+    "year": null,
+    "format": null,
+    "owned": null,
+    "purchasePrice": null,
+    "currency": null,
+    "purchaseDate": null,
+    "condition": null,
+    "notes": "",
+    "albumData": {
+     "id": "alb-3",
+     "title": "Core",
+     "artist": "STP"
+    },
+    "addedToInventory": "server-time",
+    "createdAt": "server-time",
+    "_schemaVersion": 1
+   }
+  ]
+ },
+ "rankings": {
+  "calls": [
+   [
+    "--",
+    "saveRanking: new, then existing"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "users",
+    "user-1",
+    "albumRankings",
+    "alb_1"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "getDoc",
+    "doc:users/user-1/albumRankings/alb_1"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "setDoc",
+    "doc:users/user-1/albumRankings/alb_1",
+    {
+     "albumId": "alb/1",
+     "albumTitle": "Ten",
+     "artistName": "Pearl Jam",
+     "rankings": [
+      {
+       "trackTitle": "Once",
+       "userRank": 1
+      }
+     ],
+     "updatedAt": "server-time",
+     "createdAt": "server-time"
+    },
+    {
+     "merge": true
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"userRanking:user-1:alb/1\"]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "users",
+    "user-1",
+    "albumRankings",
+    "alb_1"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "getDoc",
+    "doc:users/user-1/albumRankings/alb_1"
+   ],
+   [
+    "setDoc",
+    "doc:users/user-1/albumRankings/alb_1",
+    {
+     "albumId": "alb/1",
+     "albumTitle": "",
+     "artistName": "",
+     "rankings": [
+      {
+       "trackTitle": "Once",
+       "userRank": 2
+      }
+     ],
+     "updatedAt": "server-time"
+    },
+    {
+     "merge": true
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"userRanking:user-1:alb/1\"]"
+   ],
+   [
+    "--",
+    "getRanking twice, hasRanking, getAllRankings"
+   ],
+   [
+    "--",
+    "cache.get [\"userRanking:user-1:alb/1\"]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "users",
+    "user-1",
+    "albumRankings",
+    "alb_1"
+   ],
+   [
+    "getDoc",
+    "doc:users/user-1/albumRankings/alb_1"
+   ],
+   [
+    "--",
+    "cache.set [\"userRanking:user-1:alb/1\",3600000]"
+   ],
+   [
+    "--",
+    "cache.get [\"userRanking:user-1:alb/1\"]"
+   ],
+   [
+    "--",
+    "cache.get [\"userRanking:user-1:alb-none\"]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "users",
+    "user-1",
+    "albumRankings",
+    "alb-none"
+   ],
+   [
+    "getDoc",
+    "doc:users/user-1/albumRankings/alb-none"
+   ],
+   [
+    "collection",
+    {
+     "fake": true
+    },
+    "users",
+    "user-1",
+    "albumRankings"
+   ],
+   [
+    "getDocs",
+    "collection:users/user-1/albumRankings"
+   ],
+   [
+    "--",
+    "deleteRanking"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "users",
+    "user-1",
+    "albumRankings",
+    "alb_1"
+   ],
+   [
+    "deleteDoc",
+    "doc:users/user-1/albumRankings/alb_1"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"userRanking:user-1:alb/1\"]"
+   ]
+  ],
+  "documents": []
+ },
+ "spotify": {
+  "calls": [
+   [
+    "--",
+    "saveEnrichment, getByArtistAlbum twice, findById of a missing key"
+   ],
+   [
+    "serverTimestamp"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "spotify_enrichment",
+    "sigur-ros-ag-tis-byrjun"
+   ],
+   [
+    "setDoc",
+    "doc:spotify_enrichment/sigur-ros-ag-tis-byrjun",
+    {
+     "spotifyId": "sp-1",
+     "popularity": 61,
+     "artist": "Sigur Rós",
+     "album": "Ágætis byrjun",
+     "enrichedAt": 1795186800000,
+     "schemaVersion": 1,
+     "updatedAt": "server-time",
+     "_schemaVersion": 1
+    },
+    {
+     "merge": true
+    }
+   ],
+   [
+    "--",
+    "cache.invalidate [\"spotify_enrichment:sigur-ros-ag-tis-byrjun\"]"
+   ],
+   [
+    "--",
+    "cache.invalidate [\"spotify_enrichment:all\"]"
+   ],
+   [
+    "--",
+    "cache.get [\"spotify_enrichment:sigur-ros-ag-tis-byrjun\"]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "spotify_enrichment",
+    "sigur-ros-ag-tis-byrjun"
+   ],
+   [
+    "getDoc",
+    "doc:spotify_enrichment/sigur-ros-ag-tis-byrjun"
+   ],
+   [
+    "--",
+    "cache.set [\"spotify_enrichment:sigur-ros-ag-tis-byrjun\",null]"
+   ],
+   [
+    "--",
+    "cache.get [\"spotify_enrichment:sigur-ros-ag-tis-byrjun\"]"
+   ],
+   [
+    "--",
+    "cache.get [\"spotify_enrichment:missing\"]"
+   ],
+   [
+    "doc",
+    {
+     "fake": true
+    },
+    "spotify_enrichment",
+    "missing"
+   ],
+   [
+    "getDoc",
+    "doc:spotify_enrichment/missing"
+   ]
+  ],
+  "documents": [
+   {
+    "id": "sigur-ros-ag-tis-byrjun",
+    "spotifyId": "sp-1",
+    "popularity": 61,
+    "artist": "Sigur Rós",
+    "album": "Ágætis byrjun",
+    "enrichedAt": 1795186800000,
+    "schemaVersion": 1,
+    "updatedAt": "server-time",
+    "_schemaVersion": 1
+   }
+  ]
+ }
+}

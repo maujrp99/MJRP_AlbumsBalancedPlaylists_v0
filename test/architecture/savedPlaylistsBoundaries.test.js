@@ -36,7 +36,7 @@ describe('saved playlists read boundaries', () => {
     })
 
     it('the store only holds state: no service, repository, cache or Firestore', () => {
-        const forbidden = /(\/services\/|\/api\/|\/repositories\/|\/cache\/|firebase)/
+        const forbidden = /(\/services\/|\/api\/|\/repositories\/|shared\/data\/|\/cache\/|firebase)/
 
         expect(offenders(['stores/savedPlaylists.js'], specifier => forbidden.test(specifier))).toEqual([])
     })
@@ -54,7 +54,7 @@ describe('saved playlists read boundaries', () => {
     })
 
     it('the screen asks and does not read: no repository, no Firestore, no album loader, no source adapter', () => {
-        const forbidden = /(\/repositories\/|firebase|OptimizedAlbumLoader|\/adapters\/|SavedPlaylistsReader\.js)/
+        const forbidden = /(\/repositories\/|shared\/data\/|firebase|OptimizedAlbumLoader|\/adapters\/|SavedPlaylistsReader\.js)/
 
         expect(offenders(SCREEN, specifier => forbidden.test(specifier))).toEqual([])
     })

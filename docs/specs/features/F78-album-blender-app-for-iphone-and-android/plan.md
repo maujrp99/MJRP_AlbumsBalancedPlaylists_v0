@@ -39,6 +39,24 @@ O fluxo do esqueleto: a tela de entrar → a conta (login nativo da Apple ou do 
 
 Dois consertos que o S1 achou, feitos na mesma fatia: o `TrackEnrichmentMixin` (comparador que deixava a ordem ao motor) estava morto e saiu; o dinheiro do inventário é arredondado a centavos antes de virar texto (`roundToCents` em `models/inventoryValue.js`).
 
+**Construído na fatia Ref-A (ramo `feat/f78-ref-a-repositories-in-the-core`, 2026-11-20):**
+
+| Módulo | Onde mora | O que faz | REQ |
+|---|---|---|---|
+| Repositórios | `shared/data/` (`BaseRepository` e os cinco), movidos com o histórico | os mesmos caminhos e formatos; nenhum `import` de Firestore, do site ou do navegador | REQ-09 |
+| A store (porta dos dados) | `shared/data/store.js` (`STORE_FUNCTIONS`, `requireStore`); a do site em `public/js/repositories/firestoreStore.js` (`firestoreStore(db)`, as 13 funções do Firebase JS repassadas na hora da chamada) | o repositório recebe o `db` e as funções; o app vai entregar as do React Native Firebase | REQ-09 |
+| Instância do ranking | `public/js/repositories/userRankings.js` | a instância única do site (antes no fim do arquivo do repositório, com o `db` de `firebase-init.js`) | REQ-09 |
+| Regra da versão | `shared/data/schemaVersion.js` (`keptSchemaVersion`), usada por `BaseRepository.save`; `firestore.rules` (`keepsSchemaVersion()` no `update` dos quatro caminhos dos repositórios) | `_schemaVersion` nunca desce, no código e no servidor | REQ-10 |
+| Provas | `test/repositories/writeSequence.test.js` e `test/fixtures/repositories/write-sequence.json` (o registro gravado na `main`, `7a3237b`, com `test/helpers/recordingFirestore.js`); `test/architecture/oldWriterKeepsNewFields.test.js`; `test/shared/data/schemaVersion.test.js`; `test/security/firestoreRules.test.js`; `firestoreBehindRepositories` estendido; `test/repositories/` também no projeto `core-node` | a mudança de casa não muda nenhuma chamada; o escritor velho não apaga campo novo | REQ-09, REQ-10 |
+
+**A contradição do § 17 (o § 4.7 diz «só `import` e construtor», o § 6.2 põe a troca do `setDoc` na Ref-A), resolvida pelo menor passo.** A Ref-A fez a mudança de casa e a regra da versão; **nenhuma gravação mudou de forma**. Lido no código: o «`setDoc` sem fusão» do `BaseRepository` (`create`) só cria documento novo, com id automático; nenhum caminho de hoje regrava um documento existente sem `merge`: séries e inventário mudam por `update` (campos), playlists e o cache do Spotify por `set` com `merge`, o ranking por `setDoc` com `merge`. Por isso o campo desconhecido na raiz sobrevive em todos, e a regra 1 do § 6.2 já vale nos repositórios. **Foi para a Ref-B (TASK-17):** abrir só para leitura um documento de versão maior que a conhecida (regra 3, com o texto da tela), a série por transação com conferência, e os casos abertos abaixo.
+
+**Convivência: casos abertos (para a Ref-B).** Não há teste pulado (o projeto não usa `it.skip`); os casos ficam escritos aqui e no cabeçalho de `oldWriterKeepsNewFields.test.js`:
+- `SpotifyEnrichmentRepository.saveEnrichment`, e qualquer `save` com uma carga que não veio da leitura do documento: quem escreve não sabe a versão guardada e carimba a sua; com a regra publicada, o servidor recusa essa gravação quando o documento é de versão maior (recusada, não rebaixada). Para o cache do Spotify, uma gravação recusada só custa a próxima leitura.
+- `PlaylistRepository.replaceBatch`: guarda a versão maior só se a playlist da tela trouxer o `_schemaVersion` que leu (o `PlaylistsService` copia a playlist da store; um lote gerado agora não traz). Com a regra publicada, salvar por cima de uma playlist de versão maior sem a versão lida é recusado.
+- `UserRankingRepository.saveRanking` grava a lista `rankings` inteira: um campo desconhecido dentro de uma entrada só sobrevive se quem chama a devolver como leu. O mesmo vale para `albumQueries` em `SeriesService.updateSeries` (o repositório grava a lista que recebe; preservar o objeto lido é do caso de uso).
+- Só leitura acima da versão conhecida (regra 3): nenhum leitor confere hoje; é do caso de uso, com a tela, na Ref-B.
+
 ## UI/UX Design
 As telas do esqueleto (entrar, lista de séries, cópia «Saved earlier», «No connection», «Update to continue», autoteste) vêm da rodada de desenho (`mjrp-designing-ui`), a partir do desenho de celular da F76, julgada pelo MJRP antes do código delas. As medidas são as de `design-system.md` § Celular. O sensor visual do projeto compara páginas do site; para o app, os pares são capturas do simulador e do emulador ao lado do protótipo julgado.
 
@@ -79,5 +97,5 @@ Este marco **não retira**, e diz por quê:
 Considerações:
 - **Nenhum simulador roda nesta máquina hoje** (sem Xcode, sem Android SDK). Rodam já: o S6, a parte do S1 na linha de comando do Hermes, e toda a refatoração do site. O resto espera a instalação.
 - **A ordem do § 15 da proposta vale:** primeiro o que custa minutos (S6), depois o S1 com o S3 e o S7, depois os outros spikes. Um «não» num spike volta à proposta e ao ADR antes de qualquer código em `app/`.
-- **A Ref-A pega também a gravação** (a troca do `setDoc` e as transações), não só os `import` e o construtor: a contradição entre o § 4.7 e o § 6.2 (nota do § 17) se resolve partindo a Ref-A em duas tarefas, a mudança de casa e as regras de convivência.
+- **A Ref-A não mudou a forma de nenhuma gravação** (resolvido na fatia, 2026-11-20): a contradição entre o § 4.7 e o § 6.2 (nota do § 17) se resolveu pelo menor passo; a mudança de casa (TASK-14) e a regra da versão (TASK-15) estão na Ref-A, e o que mexe na forma de gravar foi para a Ref-B (TASK-17). Ver § Technical Design, «Construído na fatia Ref-A».
 - **O tamanho:** 18 REQs e 29 tarefas passam do sinal de tamanho de uma feature. É um marco, e a proposta o ordena em fatias que valem sozinhas; cada fatia do site é publicada sozinha. Partir em features menores é escolha do MJRP.

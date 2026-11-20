@@ -34,7 +34,7 @@ describe('own ranking boundaries', () => {
     })
 
     it('the ranking modal only shows and reports: no repository, service, store or Firestore', () => {
-        const forbidden = /(\/repositories\/|\/services\/|\/stores\/|\/api\/|firebase)/
+        const forbidden = /(\/repositories\/|shared\/data\/|\/services\/|\/stores\/|\/api\/|firebase)/
         // Only the modal: TracksRankingComparison still talks to the Spotify services on its own.
         expect(offenders(['components/ranking/UserRankModal.js'], specifier => forbidden.test(specifier))).toEqual([])
     })
@@ -44,13 +44,13 @@ describe('own ranking boundaries', () => {
     })
 
     it('the store of ranked albums only holds state', () => {
-        const forbidden = /(\/services\/|\/api\/|\/repositories\/|\/cache\/|firebase)/
+        const forbidden = /(\/services\/|\/api\/|\/repositories\/|shared\/data\/|\/cache\/|firebase)/
         expect(offenders(['stores/ownRankings.js'], specifier => forbidden.test(specifier))).toEqual([])
     })
 
     it('the screen of the series does not reach the ranking repository or the ranking service', () => {
         const screen = [...listJs('components/series'), ...listJs('components/ui'), 'views/SeriesView.js', ...listJs('views/helpers')]
-        const forbidden = /(UserRankingRepository|services\/ranking\/)/
+        const forbidden = /(UserRankingRepository|repositories\/userRankings|services\/ranking\/)/
         expect(offenders(screen, specifier => forbidden.test(specifier))).toEqual([])
     })
 
@@ -58,8 +58,9 @@ describe('own ranking boundaries', () => {
         // BlendingController and SeriesService left the list in F56: the blend asks the album load,
         // and the surgical injection is gone.
         const KNOWN = ['services/albums/albumLoading.js', 'services/ranking/ownRanking.js']
+        // F78 (Ref-A): the class lives in shared/data/; the site's one instance in repositories/userRankings.js
         const importing = listJs('').filter(file => !file.startsWith('repositories/'))
-            .filter(file => importsOf(file).some(specifier => specifier.includes('UserRankingRepository')))
+            .filter(file => importsOf(file).some(specifier => /UserRankingRepository|repositories\/userRankings/.test(specifier)))
         expect(importing.sort()).toEqual([...KNOWN].sort())
     })
 

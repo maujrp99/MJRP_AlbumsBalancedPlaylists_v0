@@ -8,7 +8,8 @@
  */
 
 import { db } from '../../firebase-init.js'
-import { SpotifyEnrichmentRepository } from '../../repositories/SpotifyEnrichmentRepository.js'
+import { SpotifyEnrichmentRepository } from '@shared/data/SpotifyEnrichmentRepository.js'
+import { firestoreStore } from '../../repositories/firestoreStore.js'
 import { CacheManager } from '../../cache/CacheManager.js'
 import { StoredSpotifyPopularity } from './StoredSpotifyPopularity.js'
 
@@ -17,5 +18,5 @@ import { StoredSpotifyPopularity } from './StoredSpotifyPopularity.js'
  * load (the IndexedDB under both is the same one).
  */
 export const storedSpotifyPopularity = new StoredSpotifyPopularity({
-    repository: new SpotifyEnrichmentRepository(db, new CacheManager())
+    repository: new SpotifyEnrichmentRepository(firestoreStore(db), new CacheManager())
 })

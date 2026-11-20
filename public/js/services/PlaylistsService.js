@@ -14,7 +14,8 @@
  * Refactored for modularity (Track C).
  */
 
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
+import { PlaylistRepository } from '@shared/data/PlaylistRepository.js'
+import { firestoreStore } from '../repositories/firestoreStore.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { StorageService } from './infra/StorageService.js'
@@ -49,7 +50,7 @@ export class PlaylistsService {
         this.db = db
         this.cacheManager = cacheManager
         this.playlistRepositoryFor = options.playlistRepositoryFor ||
-            ((userId, seriesId) => new PlaylistRepository(this.db, this.cacheManager, userId || 'anonymous-user', seriesId))
+            ((userId, seriesId) => new PlaylistRepository(firestoreStore(this.db), this.cacheManager, userId || 'anonymous-user', seriesId))
         this.currentUserId = options.currentUserId || (() => albumSeriesStore.getUserId())
         this.signedInUserId = options.signedInUserId || (() => null)
 

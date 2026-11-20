@@ -1,16 +1,29 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
+    // =========================================================================
+    // DOCUMENT VERSION (F78, REQ-10)
+    // =========================================================================
+    // `_schemaVersion` is the version of the shape a document was written in, and it never goes
+    // down: an update that would lower it is refused, whatever app or site version sends it. A
+    // document or a write with no version counts as 0. Creating and deleting are not affected.
+    // Today every writer writes 1 or leaves the field as it is, so no write of today is refused.
+    function keepsSchemaVersion() {
+      return request.resource.data.get('_schemaVersion', 0) >= resource.data.get('_schemaVersion', 0);
+    }
+
     // =========================================================================
     // ARTIFACTS (User Data - Scoped)
     // =========================================================================
     match /artifacts/{appId}/users/{userId}/curator/{document=**} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, create, delete: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId && keepsSchemaVersion();
     }
-    
+
     match /artifacts/{appId}/users/{userId}/inventory/{document=**} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, create, delete: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId && keepsSchemaVersion();
     }
 
     // =========================================================================
@@ -34,7 +47,8 @@ service cloud.firestore {
     // The ranking of a person is read and written by that person only. This is the rule in force
     // in production since 2026-01-11; the repository's copy had been left open with a DEBUG note (F59).
     match /users/{userId}/albumRankings/{albumId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, create, delete: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId && keepsSchemaVersion();
     }
     
     // =========================================================================
@@ -49,8 +63,8 @@ service cloud.firestore {
     // SPOTIFY ENRICHMENT (Global Public Cache)
     // =========================================================================
     match /spotify_enrichment/{albumKey} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null; 
+      allow read, create, delete: if request.auth != null;
+      allow update: if request.auth != null && keepsSchemaVersion();
     }
     
   }

@@ -10,8 +10,9 @@
  * single read for the playlists of every series); `deletePlaylists` is one atomic write.
  */
 
-import { SeriesRepository } from '../../../repositories/SeriesRepository.js'
-import { PlaylistRepository } from '../../../repositories/PlaylistRepository.js'
+import { SeriesRepository } from '@shared/data/SeriesRepository.js'
+import { PlaylistRepository } from '@shared/data/PlaylistRepository.js'
+import { firestoreStore } from '../../../repositories/firestoreStore.js'
 
 export class RepositoryPlaylistsSource {
     /**
@@ -26,7 +27,7 @@ export class RepositoryPlaylistsSource {
 
     /** @returns {Promise<Array<Object>>} every series of that person */
     listSeries(userId) {
-        return new SeriesRepository(this.db, this.cache, userId).findAll()
+        return new SeriesRepository(firestoreStore(this.db), this.cache, userId).findAll()
     }
 
     /** @returns {Promise<Array<Object>>} the saved playlists of that series, tracks included */
@@ -40,6 +41,6 @@ export class RepositoryPlaylistsSource {
     }
 
     _playlists(userId, seriesId) {
-        return new PlaylistRepository(this.db, this.cache, userId, seriesId)
+        return new PlaylistRepository(firestoreStore(this.db), this.cache, userId, seriesId)
     }
 }

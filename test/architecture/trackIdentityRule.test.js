@@ -128,7 +128,7 @@ describe('no second rule grows back', () => {
     it('the keys of before F74 exist nowhere in the app, the server or the shared code', () => {
         const found = everywhere.flatMap(file => (read(file).match(OWN_KEYS) || []).map(name => `${file}: ${name}`))
             // the Spotify repository keys an ALBUM by artist and title under this name; it is not a track key
-            .filter(line => !/^public\/js\/(repositories\/SpotifyEnrichmentRepository|services\/spotify\/StoredSpotifyPopularity)\.js: normalizeKey$/.test(line))
+            .filter(line => !/^(shared\/data\/SpotifyEnrichmentRepository|public\/js\/services\/spotify\/StoredSpotifyPopularity)\.js: normalizeKey$/.test(line))
 
         expect(found).toEqual([])
     })

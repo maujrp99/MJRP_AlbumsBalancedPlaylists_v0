@@ -59,7 +59,7 @@ describe('a store only holds state (UAT-18, ADR-0017)', () => {
     const stores = listJs('stores')
 
     it('no store imports a service, a repository, the cache, the API, Firebase or the mounting file', () => {
-        const reachesOut = /(\/services\/|\/repositories\/|\/cache\/|\/api\/|firebase|(^|\/)app\.js$)/
+        const reachesOut = /(\/services\/|\/repositories\/|shared\/data\/|\/cache\/|\/api\/|firebase|(^|\/)app\.js$)/
 
         expect(unique(offenders(stores, specifier => reachesOut.test(specifier)))).toEqual(unique(STORES_STILL_REACHING_OUT))
     })
@@ -89,7 +89,7 @@ describe('the screen reaches the data only through services (UAT-19, ADR-0016)',
     const screen = [...listJs('views'), ...listJs('components'), ...listJs('controllers')]
 
     it('no view, component or controller imports a repository or Firebase', () => {
-        const database = /(\/repositories\/|firebase)/
+        const database = /(\/repositories\/|shared\/data\/|firebase)/
 
         expect(unique(offenders(screen, specifier => database.test(specifier)))).toEqual(unique(SCREEN_STILL_REACHING_THE_DATABASE))
     })
@@ -110,7 +110,7 @@ describe('the screen reaches the data only through services (UAT-19, ADR-0016)',
 
         expect(offenders(others, specifier => /InventoryRepository/.test(specifier))).toEqual([])
         expect(offenders(['services/inventory/InventoryService.js', 'services/auth/UserSessionService.js'],
-            specifier => /(firebase|\/repositories\/|\/cache\/|\/stores\/|\/components\/|\/views\/)/.test(specifier))).toEqual([])
+            specifier => /(firebase|\/repositories\/|shared\/data\/|\/cache\/|\/stores\/|\/components\/|\/views\/)/.test(specifier))).toEqual([])
     })
 
     it('the playlists service is put together in one place, and only that place makes one', () => {

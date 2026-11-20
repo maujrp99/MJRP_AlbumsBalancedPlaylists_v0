@@ -28,11 +28,12 @@ const firestore = vi.hoisted(() => {
 })
 vi.mock('firebase/firestore', () => firestore)
 
-import { InventoryRepository } from '../../public/js/repositories/InventoryRepository.js'
+import { InventoryRepository } from '../../shared/data/InventoryRepository.js'
+import { firestoreStore } from '../../public/js/repositories/firestoreStore.js'
 
 const build = () => {
     const cache = { get: vi.fn(async () => null), set: vi.fn(), invalidate: vi.fn(async () => { }) }
-    return { repository: new InventoryRepository({}, cache, 'user-1'), cache }
+    return { repository: new InventoryRepository(firestoreStore({}), cache, 'user-1'), cache }
 }
 
 const averages = (rating, popularity) => ({ rating, popularity, ratedTracks: 10, popTracks: 9, at: '2026-11-20T12:00:00.000Z' })

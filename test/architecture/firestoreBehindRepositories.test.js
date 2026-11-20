@@ -3,9 +3,15 @@
  * (`firebase-init.js`), and only the repositories talk to Firestore (ADR-0017; PRINCIPLES.md
  * I.3: changing the data source is one place). They read the source files and fail when either
  * comes back.
+ *
+ * F78, REQ-09 (Ref-A): the repositories live in the shared core (shared/data/) and import no
+ * Firestore: each is given a store (shared/data/store.js). The site's store, made of the Firebase JS
+ * SDK, is the one file of public/js/repositories/ that imports it (firestoreStore.js).
  */
 import { describe, it, expect } from 'vitest'
-import { appFiles, importsOf, offenders, read } from './support/sourceImports.js'
+import fs from 'node:fs'
+import path from 'node:path'
+import { appFiles, importsOf, listJs, offenders, read } from './support/sourceImports.js'
 
 const files = appFiles()
 
@@ -31,5 +37,25 @@ describe('one Firebase, and Firestore behind the repositories (UAT-14)', () => {
         const outside = files.filter(file => !file.startsWith('repositories/'))
 
         expect(outside.filter(file => calls.test(read(file)))).toEqual([])
+    })
+
+    it('the repositories live in shared/data/; the site keeps only its store and its ranking instance (F78, REQ-09)', () => {
+        const DATA = path.resolve(process.cwd(), 'shared/data')
+        const core = fs.readdirSync(DATA).filter(name => name.endsWith('.js')).sort()
+
+        expect(core).toEqual(['BaseRepository.js', 'InventoryRepository.js', 'PlaylistRepository.js', 'SeriesRepository.js',
+            'SpotifyEnrichmentRepository.js', 'UserRankingRepository.js', 'schemaVersion.js', 'store.js'])
+        expect(listJs('repositories').sort()).toEqual(['repositories/firestoreStore.js', 'repositories/userRankings.js'])
+        expect(offenders(listJs('repositories'), specifier => /firebase\/firestore/.test(specifier))).toEqual(['repositories/firestoreStore.js -> firebase/firestore'])
+    })
+
+    it('a repository of the core reaches Firestore only through the store it is given', () => {
+        const DATA = path.resolve(process.cwd(), 'shared/data')
+        const direct = /(?<![.\w])(collection|doc|getDocs?|setDoc|addDoc|updateDoc|deleteDoc|writeBatch|runTransaction|onSnapshot|serverTimestamp)\s*\(/
+        const offending = fs.readdirSync(DATA).filter(name => name.endsWith('Repository.js'))
+            .filter(name => fs.readFileSync(path.join(DATA, name), 'utf8').split('\n')
+                .some(line => !/^\s*(\*|\/\/)/.test(line) && direct.test(line)))
+
+        expect(offending).toEqual([])
     })
 })

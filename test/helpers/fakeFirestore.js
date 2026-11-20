@@ -12,6 +12,9 @@
  *   says how many were in the air together (to count round trips and prove a limit);
  * - `fake.holdNext('commit')` keeps the next batch in the air until the test releases it, to act
  *   while a write is on its way.
+ * - as the real SDK: `doc` and `collection` take the path as one text or as segments
+ *   (`doc(db, 'users', uid, 'albumRankings', id)`), and an update reads a dotted key
+ *   (`'albumData.coverUrl'`) as a field inside a map, leaving the rest of the map as it was.
  *
  * Use:
  *   vi.mock('firebase/firestore', async () => (await import('../helpers/fakeFirestore.js')).firestoreModule)
@@ -49,6 +52,22 @@ const passHold = async (kind) => {
 const applySet = (path, data, options) => {
     const merged = options?.merge && docs.has(path) ? { ...docs.get(path), ...clone(data) } : clone(data)
     docs.set(path, merged)
+}
+
+/** An update: a dotted key changes one field inside a map, as Firestore reads a field path. */
+const applyUpdate = (path, data) => {
+    const next = docs.get(path)
+    Object.entries(clone(data)).forEach(([key, value]) => {
+        const parts = key.split('.')
+        const last = parts.pop()
+        let at = next
+        parts.forEach(part => {
+            if (!at[part] || typeof at[part] !== 'object') at[part] = {}
+            at = at[part]
+        })
+        at[last] = value
+    })
+    docs.set(path, next)
 }
 
 export const fake = {
@@ -118,13 +137,14 @@ const snapshot = (path) => ({
 export const firestoreModule = {
     getFirestore: () => ({ fake: true }),
     serverTimestamp: () => 'server-time',
-    collection: (db, path) => ({ kind: 'collection', path }),
-    doc: (parent, path, id) => {
+    collection: (db, ...segments) => ({ kind: 'collection', path: segments.join('/') }),
+    doc: (parent, ...segments) => {
         if (parent?.kind === 'collection') {
-            const docId = path || `auto-${++autoId}`
+            const docId = segments[0] || `auto-${++autoId}`
             return { kind: 'doc', id: docId, path: `${parent.path}/${docId}` }
         }
-        return { kind: 'doc', id, path: `${path}/${id}` }
+        const path = segments.join('/')
+        return { kind: 'doc', id: path.split('/').pop(), path }
     },
     query: (collectionRef) => collectionRef,
     where: () => null,
@@ -156,7 +176,7 @@ export const firestoreModule = {
         const error = takeFailure('update')
         if (error) throw error
         if (!docs.has(ref.path)) throw notFound(ref.path)
-        applySet(ref.path, data, { merge: true })
+        applyUpdate(ref.path, data)
         log.push('update')
     },
     deleteDoc: async (ref) => {
@@ -182,7 +202,8 @@ export const firestoreModule = {
                 if (missing) throw notFound(missing.ref.path)
                 for (const op of operations) {
                     if (op.type === 'delete') docs.delete(op.ref.path)
-                    else applySet(op.ref.path, op.data, op.type === 'update' ? { merge: true } : op.options)
+                    else if (op.type === 'update') applyUpdate(op.ref.path, op.data)
+                    else applySet(op.ref.path, op.data, op.options)
                 }
                 log.push('commit')
             }
