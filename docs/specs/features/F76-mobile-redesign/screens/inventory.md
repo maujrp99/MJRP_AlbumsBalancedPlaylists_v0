@@ -65,3 +65,13 @@ A 1280x800, antes (a `InventoryView` de `feat/f76-mobile-redesign`) e depois, me
 - Um iPhone de verdade: o arrastar da folha, a barra presa sob a barra do Safari que encolhe, o teclado sobre a busca presa, o `-webkit-line-clamp` e a rolagem até a linha depois do salto no Safari.
 - Dados reais do MJRP (só a harness, com dados inventados); a janela do álbum aberta pela linha é da TASK-03.
 - Leitor de tela (VoiceOver) nas folhas e no botão que cobre a linha.
+
+## Polimento depois da crítica (2026-11-20, ramo `feat/f76-mobile-polish-inventory-windows`)
+
+Fonte: `reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-recheck.md`. Prova: `reports/evidence/F76/inventory/2026-11-20-polish-proof.md`.
+
+- **N2 (P1) · os valores em duas linhas.** Decidido pelo agente — revisável: sem painel; «Owned $1,948.36» e «To buy $611.32» um sobre o outro (rótulo 13 px cinza, soma 16 px branca), a moeda ao lado no segmentado do celular (184 px, quatro opções de 44 px); embaixo, «Data provided by Discogs.» (termo de uso, sempre junto dos valores) e um botão: «Lowest asking prices · Why?» quando a conta não tem as configurações de vendedor, senão «About the values». Ele abre a folha de baixo com o que saiu do fluxo: cada total com «n of m albums have a value», a taxa de câmbio, a frase inteira das configurações de vendedor com o link `discogs.com/settings/seller`, «Each value links to its edition on Discogs.» e o crédito. O aviso «n albums are waiting for a value» vira uma linha com o botão à direita. Medido no banco de prova: primeira linha em y=365 (antes 721); 2 linhas inteiras a 393x660 e 4 a 393x852 (antes 0 e 0, no cenário com o aviso do vendedor). «Exchange rates are not available…» continua à vista quando acontece. O texto curto pedido («Discogs values are lowest asking prices · Why?») ficou «Lowest asking prices · Why?» para caber na linha do crédito, que já nomeia o Discogs.
+- **N8 (P2) · uma marca só na folha Status.** Rótulos limpos («Owned», «Not Owned», «Wishlist»); só o ✓ da direita marca o status atual.
+- **N9 · a moeda** usa `.phone-segmented` (escolhida na superfície clara, nunca laranja).
+- **N4 · fonte.** A tela, as folhas e os botões na fonte de texto (`--phone-font-text`); só o título da linha em Syne.
+- **Não feito:** N11 (voltar ao topo sobre o «⋯» de uma linha: qualquer lugar fixo cobre algum alvo; pede mostrar o botão só ao rolar para cima); N14 (Sell e Trade desligados ficam: estão na spec da F75); N15 (nomes das fichas de status); N16 (moedas da janela de edição, fora dos meus arquivos).

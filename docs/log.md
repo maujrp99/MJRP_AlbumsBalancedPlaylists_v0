@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:39] session — F76 polimento: notas de tela e provas do Inventário, da janela do álbum e de Albums
+**Branch:** feat/f76-mobile-polish-inventory-windows
+Seções «Polimento depois da crítica» em screens/inventory.md, album-window-and-ranking.md e albums.md (decisões, medidas, o que não foi feito: N11, N14, N15, N16).
+Provas em reports/evidence/F76/inventory/2026-11-20-polish-proof.md e album-window/2026-11-20-polish-proof.md.
+
 ## [2026-11-20 03:37] session — F76 polimento: a página presa sem nada aberto é devolvida (N22)
 **Branch:** feat/f76-mobile-polish-inventory-windows
 Lidos pageScrollLock.js e windowsHoldThePage.js: no código do app nenhum caminho deixa o contador alto (folhas e janelas sempre saem pelo close ou são tiradas do body, o que o observador vê). Os dois caminhos que deixam a página presa sem nada aberto — uma folha tirada do DOM sem close e o módulo recarregado (HMR do servidor de desenvolvimento, onde a crítica rodou) com o body preso — agora se soltam: giveBackAStrayHold roda a cada mudança dos filhos do body e a cada troca de tela (PhoneShell.screenChanged, uma linha).
