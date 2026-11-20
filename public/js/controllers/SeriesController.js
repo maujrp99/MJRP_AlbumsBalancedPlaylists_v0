@@ -28,15 +28,14 @@ import toast from '../components/Toast.js';
 import { router } from '../router.js';
 import { filterUseOf } from '../models/filterUse.js';
 import { track } from '../services/usage/track.js';
+// the order the albums screen opens in, «Newest» (UAT-227): one rule with the phone app (F78)
+import { DEFAULT_SERIES_ORDER, compareByCreation } from '@shared/seriesOrder.js';
 
 /** F77: a filter, a search or an order chosen on the albums screen (never what was chosen). */
 function measureFilter(type, value, before) {
     const use = filterUseOf('albums', type, value, before);
     if (use) track('filter_used', use);
 }
-
-/** The order the albums screen opens in: «Newest», the series created last first (UAT-227). */
-const DEFAULT_SERIES_ORDER = 'recent_desc'
 
 /** The address of the albums screen at a scope: one series, or all of them. */
 const scopeAddress = (seriesId) => (seriesId ? `/albums?seriesId=${seriesId}` : '/albums');
@@ -458,10 +457,9 @@ export default class SeriesController {
                     return (b.albumQueries?.length || 0) - (a.albumQueries?.length || 0);
                 case 'recent_desc':
                 case 'recent': // legacy support
-                    // Fallback to ID or created date if available
-                    return (b.createdAt || 0) - (a.createdAt || 0);
+                    return compareByCreation(a, b, 'recent_desc');
                 case 'recent_asc':
-                    return (a.createdAt || 0) - (b.createdAt || 0);
+                    return compareByCreation(a, b, 'recent_asc');
                 default:
                     return 0;
             }

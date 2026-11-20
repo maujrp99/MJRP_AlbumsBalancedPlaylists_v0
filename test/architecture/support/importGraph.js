@@ -268,8 +268,25 @@ export function entryPointsOfScripts() {
     ])]
 }
 
-/** Every entry point: the fixed ones and the ones the scripts name. */
-export const allEntryPoints = () => [...new Set([...ENTRY_POINTS, ...entryPointsOfScripts()])]
+/**
+ * The modules of the core the phone app loads (F78): app/ is TypeScript, built by Metro, outside
+ * this graph; what it imports of shared/ by the package name (`@album-blender/shared/…`) is an entry
+ * point here, as the site's index.html is. Read as tokens, so a name inside a comment does not count.
+ */
+export function entryPointsOfApp() {
+    const files = listFiles('app/src', file => /\.(ts|tsx)$/.test(file) && !file.endsWith('.d.ts'))
+    const found = files.flatMap(file => {
+        const code = fs.readFileSync(path.join(ROOT, file), 'utf8')
+        const tokens = espree.tokenize(code, { ecmaVersion: 'latest', sourceType: 'module', ecmaFeatures: { jsx: file.endsWith('.tsx') } })
+        return tokens
+            .filter(token => token.type === 'String' && token.value.slice(1).startsWith('@album-blender/shared/'))
+            .map(token => `shared/${token.value.slice(1, -1).slice('@album-blender/shared/'.length)}`)
+    })
+    return [...new Set(found)].filter(exists)
+}
+
+/** Every entry point: the fixed ones, the ones the scripts name, and the core modules the app loads. */
+export const allEntryPoints = () => [...new Set([...ENTRY_POINTS, ...entryPointsOfScripts(), ...entryPointsOfApp()])]
 
 /**
  * The code modules the fitness test watches: every code file under public/js, shared and server.

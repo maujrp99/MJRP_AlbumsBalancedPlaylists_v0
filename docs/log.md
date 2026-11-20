@@ -3,6 +3,31 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:55] session — F78 esqueleto do app: documentos — tarefas, plano, arch, pilha e manual
+**Branch:** feat/f78-app-skeleton
+`tasks.md`: a TASK-24 feita; o que o esqueleto fez das TASK-19, 20, 22 e 23 como itens próprios, com o que falta (nenhuma tarefa de aparelho marcada); a linha do `tech-stack.md` feita. `plan.md` § Technical Design: os módulos do app e o que cada um prova aqui; `arch.md`: a seção de `app/` (estrutura, as três portas, o não provado); `tech-stack.md`: as linhas do app, cada uma citando o ADR-0022.
+`docs/manual/00_Deployment_and_Setup.md` § 2.6: as checagens do app (`npm run app:check`) e os dois comandos que só o MJRP roda no Mac (aceitar a licença do Xcode, baixar o simulador do iOS).
+
+## [2026-11-20 15:53] session — F78 esqueleto do app: o autoteste do corpo dourado e os sensores do app
+**Branch:** feat/f78-app-skeleton
+O autoteste (REQ-16): `app/src/selftest/goldenSelfTest.ts` roda o corpo dourado no motor do app, com o id do expo-crypto, e compara cada caso com o índice de referência commitado (`reference/cases.tsv`, 0,2 MB, empacotado como texto) pelo sha256 de cada linha, em TypeScript puro; no Jest, 3343 de 3343 iguais. A tela escondida (toque longo no título de Albums, ou `albumblender://diagnostics`) mostra «N of N match»; o `expo export` empacota tudo para iOS e Android (3,47 e 3,46 MB de bytecode Hermes).
+Sensores: `appAndSiteApart` lê todo arquivo do app (nenhum é pulado), segue o que o app alcança fora de `app/` e só aceita chegar a `public/` pelo autoteste, pelo executor do corpo, nas pastas das regras; `noSecretsInTheApp` (novo) procura nomes e formas de chave no código e nos pacotes do `expo export` (`scripts/app-bundle-scan.mjs`, também no `check` do app); cada um com o caso que quebra de propósito. Testes das telas no app: 44 ao todo.
+
+## [2026-11-20 15:52] session — F78 esqueleto do app: as três portas (dados, conta, uso) e as telas
+**Branch:** feat/f78-app-skeleton
+A costura dos dados: a interface da store em `app/src/data/store.ts` e duas ligações, a em memória (testes e modo de demonstração, semeada com álbuns públicos de catálogo) e a do React Native Firebase (`firebaseStore.ts`, não provada, o único arquivo que importa o pacote nativo); os mesmos repositórios de `shared/data/` leem as séries, e `shared/seriesSummary.js` diz nome, contagem e capas. A conta é uma porta com o falso e a ligação nativa (Apple, Google, Firebase Auth), não provada; o uso passa pela lista fechada de `shared/usageEvents.js`, com o desligado, o em memória e o PostHog (só com chave, não provado).
+As telas nativas: a barra de baixo com os cinco destinos (os quatro não feitos dizem «Not in the app yet»), Albums com carregando, lista, vazio e falha com «Try again», e Entrar com os estados do REQ-12; testes da store em memória, da lista de séries e do uso (16 no app até aqui; os das telas entram com o autoteste).
+
+## [2026-11-20 15:52] session — F78 esqueleto do app: app/ nasce (Expo SDK 58, React Native 0.88.1, TypeScript estrito) e a ligação da plataforma
+**Branch:** feat/f78-app-skeleton
+`app/` é espaço de trabalho da raiz ao lado de `shared/` (`@album-blender/app`), com Expo Router, Jest 30 com jest-expo e RNTL 14, ESLint do Expo e os scripts `typecheck`, `test`, `lint`, `bundle:ios`, `bundle:android`, `check`; a raiz ganha `npm run app:check`, um React só (`overrides`), e o ESLint da raiz deixa `app/` para o do app.
+`app/src/platform/wiring.ts` entrega ao `newId()` do núcleo o `randomUUID` do expo-crypto, uma vez; o teste prova que o núcleo recusa antes e funciona depois, e que os dois nomes do núcleo (`@album-blender/shared`, `@shared`) são um módulo só. O grafo de módulos vivos passa a contar o que o app importa do núcleo.
+
+## [2026-11-20 15:51] session — F78 esqueleto do app: a ordem «mais nova primeiro» passa ao núcleo
+**Branch:** feat/f78-app-skeleton
+A ordem padrão das séries (UAT-227, «Newest») sai do `SeriesController` do site para `shared/seriesOrder.js` (`DEFAULT_SERIES_ORDER`, `compareByCreation`, `newestFirst`), que lê a data de criação como Date, número ou Timestamp do Firestore: uma regra para o site e o app.
+O site usa a mesma comparação nos modos «recent»; a função do controller caiu de 20 para 16 de complexidade e a lista baixou junto; `test/shared/seriesOrder.test.js` roda com jsdom e em Node puro.
+
 ## [2026-11-20 15:26] session — ADR-0022 apoiado na constituição v2.0.0; o Accepted fica para o commit do MJRP
 **Branch:** feat/f78-constitution-v2-in-force
 O ADR-0022 diz que o app é TypeScript e que se apoia na constituição v2.0.0; os Deciders registram o aceite dele, «1.aceito pra essa iteração», para esta iteração. O `Status` segue `Proposed`: o ADR nasceu na via do MJRP (`**Acceptance**: MJRP`), e pela CC-ADR-0028 vira `Accepted` só no commit dele com `Human-accepted: adr:ADR-0022`, sem assinatura de agente; o agente não carimba.

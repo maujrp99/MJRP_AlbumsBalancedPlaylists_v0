@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Album Blender",
+    "slug": "album-blender",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "albumblender",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#000000",
+    "ios": {
+      "bundleIdentifier": "com.mjrp.albumblender",
+      "supportsTablet": false,
+      "usesAppleSignIn": true
+    },
+    "android": {
+      "package": "com.mjrp.albumblender",
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-google-signin/google-signin"
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}
