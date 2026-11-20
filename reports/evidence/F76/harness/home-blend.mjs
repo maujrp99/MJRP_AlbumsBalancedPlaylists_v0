@@ -23,6 +23,8 @@ const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 const DEBUG_PORT = Number(process.env.DEBUG_PORT || 9334)
 const SIZES = [
     { name: '393x852', width: 393, height: 852, mobile: true },
+    // what Safari leaves on an iPhone 15 Pro with its bars shown (F76 polish)
+    { name: '393x660', width: 393, height: 660, mobile: true },
     { name: '1280x800', width: 1280, height: 800, mobile: false }
 ]
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -80,6 +82,19 @@ const SCENES = [
     { name: 'home-sheet', route: 'home', phoneOnly: true, steps: [
         `window.controller.picker.service = { scanArtist: async () => ({ albums: window.__albums, reclassified: null }) }; window.controller.picker.searchArtist('Pink Floyd')`,
         `['pf13','pf10','pf8','pf7','pf5'].forEach(id => document.querySelector('[data-action="pick-album"][data-id="' + id + '"]').click()); document.querySelector('.home-chosen-count').click()`
+    ] },
+    // F76 polish (recheck N1, N10)
+    { name: 'home-scrolled', route: 'home', steps: [
+        `window.controller.picker.service = { scanArtist: async () => ({ albums: window.__albums, reclassified: null }) }; window.controller.picker.searchArtist('Pink Floyd')`,
+        `window.scrollTo(0, document.querySelector('#discographyGrid').getBoundingClientRect().top + window.scrollY + 200)`
+    ] },
+    { name: 'home-sheet-named', route: 'home', phoneOnly: true, steps: [
+        `window.controller.picker.service = { scanArtist: async () => ({ albums: window.__albums, reclassified: null }) }; document.querySelector('#seriesNameInput').value = 'Pink Floyd studio'; window.controller.picker.searchArtist('Pink Floyd')`,
+        `['pf13','pf10','pf8'].forEach(id => document.querySelector('[data-action="pick-album"][data-id="' + id + '"]').click()); document.querySelector('.home-chosen-count').click()`
+    ] },
+    { name: 'home-sheet-noname', route: 'home', phoneOnly: true, steps: [
+        `window.controller.picker.service = { scanArtist: async () => ({ albums: window.__albums, reclassified: null }) }; window.controller.picker.searchArtist('Pink Floyd')`,
+        `['pf13','pf10','pf8'].forEach(id => document.querySelector('[data-action="pick-album"][data-id="' + id + '"]').click()); document.querySelector('#btnCreateSeriesPhone').click()`
     ] },
     { name: 'home-bulk', route: 'home', steps: [`document.querySelector('#btnModeBulk').click()`] },
     { name: 'edit-series', route: 'albums', steps: [

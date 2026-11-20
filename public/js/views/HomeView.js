@@ -193,7 +193,8 @@ export class HomeView extends BaseView {
         this.phoneChosen = new HomePhoneChosen({
             staging: this.controller.stagingController,
             onCreate: () => this.controller.handleInitializeLoad(),
-            findCards: (selector) => this.$$('#discographyGrid ' + selector)
+            findCards: (selector) => this.$$('#discographyGrid ' + selector),
+            nameField: () => this.$('#seriesNameInput')
         });
         this.placePhoneParts(isPhone());
         this.subscriptions.push(onPhoneChange((phone) => this.placePhoneParts(phone)));

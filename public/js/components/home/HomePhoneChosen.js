@@ -12,7 +12,10 @@ import { coverImage } from '../ui/coverImage.js'
  *    always in view; with none chosen the button is off and the note says why;
  *  - the answer ON the album tapped: an orange ring and a round mark with its place (1, 2, 3…),
  *    so the choice is said by shape and number, not by colour alone;
- *  - a sheet with the chosen set: each album removed (with «Undo») and moved up or down, no dragging.
+ *  - a sheet with the chosen set: each album removed (with «Undo») and moved up or down, no dragging;
+ *    on top, the name of the series - the same value as the page's field, typed in either place -
+ *    and, with no name, «Create series» says so there instead of naming it silently (recheck N10;
+ *    the computer keeps its own default name).
  *
  * It decides nothing: every change goes through the Home's staging controller (the same methods
  * the computer uses), and it draws from the list it is given.
@@ -32,11 +35,13 @@ export class HomePhoneChosen {
      * @param {{ removeAlbum: Function, moveAlbum: Function, insertAlbum: Function }} options.staging
      * @param {() => void} options.onCreate - «Create series» (the Home's own action)
      * @param {(selector: string) => NodeList} options.findCards - the album cards on screen
+     * @param {() => HTMLInputElement|null} [options.nameField] - the page's field of the series name
      */
-    constructor({ staging, onCreate, findCards }) {
+    constructor({ staging, onCreate, findCards, nameField = () => null }) {
         this.staging = staging
         this.onCreate = onCreate
         this.findCards = findCards
+        this.nameField = nameField
         this.albums = []
         this.busy = false
         this.removed = null // { album, index } the last album removed in the sheet, for «Undo»
@@ -50,7 +55,7 @@ export class HomePhoneChosen {
         const count = SafeDOM.button({ type: 'button', className: 'phone-action-bar__note home-chosen-count', dataset: { action: 'open-chosen' } })
         const create = SafeDOM.button({ type: 'button', id: 'btnCreateSeriesPhone', className: 'btn btn-primary home-chosen-create' }, 'Create series')
         count.addEventListener('click', () => this.openSheet())
-        create.addEventListener('click', () => this.onCreate())
+        create.addEventListener('click', () => this.requestCreate())
         this.bar = SafeDOM.div({ className: 'phone-action-bar home-chosen-bar md:hidden' }, [count, create])
         this.elements = { count, create }
         host.appendChild(this.bar)
@@ -126,20 +131,70 @@ export class HomePhoneChosen {
         card.querySelector('.home-chosen-mark')?.remove()
     }
 
+    /** The name typed on the page (the sheet's field writes there too). */
+    seriesName() {
+        return (this.nameField()?.value || '').trim()
+    }
+
+    /** «Create series»: with a name, the Home's own action; with none, the sheet asks for one. */
+    requestCreate() {
+        if (this.seriesName()) {
+            this.sheet?.close()
+            this.onCreate()
+            return
+        }
+        this.openSheet()
+        this.sayNameMissing()
+    }
+
     openSheet() {
         if (this.albums.length === 0 || this.sheet?.isOpen()) return
-        const create = SafeDOM.button({ type: 'button', className: 'btn btn-primary' }, 'Create series')
-        create.addEventListener('click', () => { this.sheet.close(); this.onCreate() })
+        const create = SafeDOM.button({ type: 'button', className: 'btn btn-primary home-chosen-create-sheet' }, 'Create series')
+        create.addEventListener('click', () => this.requestCreate())
         this.removed = null
         this.sheet = openSheet({
             variant: 'bottom',
             title: countText(this.albums.length),
-            content: SafeDOM.div({ className: 'home-chosen-sheet' }),
+            content: [this.nameBlock(), SafeDOM.div({ className: 'home-chosen-sheet' })],
             footer: create,
             onClose: () => { this.sheet = null }
         })
         this.sheet.body.addEventListener('click', (event) => this.onSheetClick(event))
         this.drawSheet()
+    }
+
+    /** The name of the series in the sheet: the page's field, mirrored both ways while it is open. */
+    nameBlock() {
+        const field = SafeDOM.input({ type: 'text', id: 'homeChosenName', className: 'home-chosen-name__field', autocomplete: 'off', placeholder: 'e.g. Pavement, the 90s' })
+        field.value = this.nameField()?.value || ''
+        field.addEventListener('input', () => {
+            const page = this.nameField()
+            if (page) {
+                page.value = field.value
+                page.dispatchEvent(new Event('input', { bubbles: true }))
+            }
+            if (field.value.trim()) this.clearNameMissing()
+        })
+        return SafeDOM.div({ className: 'home-chosen-name' }, [
+            SafeDOM.label({ className: 'home-chosen-name__label', htmlFor: 'homeChosenName' }, 'Series name'),
+            field,
+            SafeDOM.p({ className: 'home-chosen-name__error', role: 'alert' })
+        ])
+    }
+
+    sayNameMissing() {
+        const field = this.sheet?.body.querySelector('#homeChosenName')
+        if (!field) return
+        field.setAttribute('aria-invalid', 'true')
+        this.sheet.body.querySelector('.home-chosen-name__error').textContent = 'Give the series a name first.'
+        field.focus()
+    }
+
+    clearNameMissing() {
+        const field = this.sheet?.body.querySelector('#homeChosenName')
+        field?.removeAttribute('aria-invalid')
+        const error = this.sheet?.body.querySelector('.home-chosen-name__error')
+        if (error) error.textContent = ''
     }
 
     drawSheet() {
