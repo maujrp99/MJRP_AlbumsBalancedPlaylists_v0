@@ -44,6 +44,10 @@
 - Nenhum preço é guardado no servidor depois do pedido (termos de uso da API do Discogs).
 - Testes do servidor: 447 passando.
 
+## [2026-11-20 01:37] decision — F76 priorizada, com liberdade de desenho dada pelo MJRP; treze requisitos da crítica de UX
+**Branch:** main
+O MJRP pediu o redesenho do celular em paralelo com a F75, para ver em produção ao voltar: «total liberdade pra vc na versao mobile, na f76....quero a melhor usabilidade e design na app mobile (sem impactar a versao web)»; «só eu uso app por enqto, por isso te dou essa liberdade criativa … uso o iphone 15 pro». Decidido pelo agente — revisável: o protótipo julgado antes da construção fica dispensado por essas palavras e o juízo dele é no app em produção (TASK-09 aberta); «celular» é até 767 px; a tela de computador não muda (REQ-12); o inventário no celular entra depois da F75.
+
 ## [2026-11-20 01:32] decision — F75 priorizada: opção B, com interruptor; UAT-17 resolvida
 
 - Dito pelo MJRP: «sim, gerei o novo antes de copiar. opção B (pra fazer um full teste, depois eu abro outra feature pra desligar o discogs, poderiamos usar feature toggle aqui, o que acha?), priorizando a F75».

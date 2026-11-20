@@ -2,7 +2,7 @@
 **Approved**: pendente
 
 ## Architecture Approach
-Esboço. Primeiro a crítica de UX das telas no celular (`mjrp-critiquing-ux-ui`), por quem não as construiu; depois o protótipo por tela (`mjrp-designing-ui`), com o comparador.
+Esboço, a completar no ramo. A crítica de UX está feita. Tudo o que é do celular age só abaixo de 768 px (regras em `@media (max-width: 767px)`, componentes que só montam no celular); a tela de computador não muda (REQ-12). Ordem: a base primeiro (TASK-01), depois as telas em paralelo, o inventário por último, depois da F75.
 
 ## Technical Design
 A escrever depois do protótipo.
