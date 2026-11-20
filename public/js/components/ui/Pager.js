@@ -13,11 +13,18 @@
  * page to move on. It leaves to the one below what belongs to the end of the list: the notice
  * about unchecked albums, "Load N more" and the watch that asks for more when the end is reached.
  *
+ * On the phone (F76, REQ-05) the same behaviour is drawn for the finger: the pager above is one
+ * line (the count, and Previous / Next of 44 px in the pages form), so the albums are not pushed
+ * down; the one below holds the page size, the form, and Previous · «Page n of m» (a field that
+ * jumps to any page) · Next. Drawn only when isPhone(); a turn of the phone draws it again.
+ *
  * Props: { paging: { mode, size, page, pages, total, from, to, hasMore, totalSeries, albums, unchecked, single },
  *          place: 'bottom' (default) | 'top', onPage(page), onSize(size), onMode(mode), onMore() }
  */
 import Component from '../base/Component.js';
 import { PAGE_SIZES, PagingMode } from '../../models/paging.js';
+import { isPhone, onPhoneChange } from '../../utils/isPhone.js';
+import { getIcon } from '../Icons.js';
 
 /** At most this many page buttons; the rest collapses into "…". */
 const MAX_PAGE_BUTTONS = 9;
@@ -53,18 +60,23 @@ export default class Pager extends Component {
             return;
         }
 
-        this.container.innerHTML = this._renderPager(paging, top, notice);
+        this.container.innerHTML = isPhone() ? this._renderPhonePager(paging, top, notice) : this._renderPager(paging, top, notice);
 
         this._bind(paging);
+    }
+
+    /** «Showing 1–20 of 48 series · 230 albums», or that no series matches. */
+    _count(paging, showing = 'Showing ') {
+        const filtered = paging.total < paging.totalSeries ? ` (of ${paging.totalSeries} in all)` : '';
+        return paging.total === 0
+            ? 'No series matches these filters'
+            : `${showing}<b class="text-white">${paging.from}–${paging.to}</b> of <b class="text-white">${paging.total}</b> series${filtered}${this._albumsOnScreen(paging)}`;
     }
 
     /** The box of the pager: the count, the page size, the form, and the way to move on. */
     _renderPager(paging, top, notice) {
         const scroll = paging.mode === PagingMode.SCROLL;
-        const filtered = paging.total < paging.totalSeries ? ` (of ${paging.totalSeries} in all)` : '';
-        const count = paging.total === 0
-            ? 'No series matches these filters'
-            : `Showing <b class="text-white">${paging.from}–${paging.to}</b> of <b class="text-white">${paging.total}</b> series${filtered}${this._albumsOnScreen(paging)}`;
+        const count = this._count(paging);
 
         return `
             <div class="series-pager glass-panel p-4 ${top ? 'mb-6' : 'mt-6'} flex flex-col gap-4" data-paging-mode="${paging.mode}" data-pager-place="${top ? 'top' : 'bottom'}">
@@ -87,6 +99,63 @@ export default class Pager extends Component {
                 ${notice}
                 ${scroll ? (top ? '' : this._renderMore(paging)) : this._renderPages(paging)}
             </div>`;
+    }
+
+    /** The phone's pager: one line above the list; below it, the settings and the way to move on. */
+    _renderPhonePager(paging, top, notice) {
+        const scroll = paging.mode === PagingMode.SCROLL;
+        const paged = !scroll && paging.pages > 1;
+        if (top) {
+            const arrows = paged ? `
+                <div class="series-pager-arrows">
+                    ${this._phoneStep(paging, -1)}
+                    ${this._phoneStep(paging, 1)}
+                </div>` : '';
+            return `
+            <div class="series-pager series-pager--phone series-pager--phone-top" data-paging-mode="${paging.mode}" data-pager-place="top">
+                <p class="series-pager-count">${this._count(paging, '')}</p>
+                ${arrows}
+            </div>`;
+        }
+        return `
+            <div class="series-pager series-pager--phone" data-paging-mode="${paging.mode}" data-pager-place="bottom">
+                <p class="series-pager-count" aria-live="polite">${this._count(paging)}</p>
+                ${notice}
+                ${scroll ? this._renderMore(paging) : (paged ? this._renderPhonePages(paging) : '')}
+                <div class="series-pager-settings">
+                    <label class="series-pager-size-label">Series per page
+                        <select class="series-pager-size form-control" aria-label="Series per page">
+                            ${PAGE_SIZES.map(size => `<option value="${size}" ${size === paging.size ? 'selected' : ''}>${size}</option>`).join('')}
+                        </select>
+                    </label>
+                    <div class="series-pager-form" role="group" aria-label="Paging form">
+                        <button type="button" data-pager-mode="${PagingMode.PAGES}" aria-pressed="${!scroll}">Pages</button>
+                        <button type="button" data-pager-mode="${PagingMode.SCROLL}" aria-pressed="${scroll}">Scroll</button>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    /** Previous (-1) or Next (+1), as a 44 px arrow with its name. */
+    _phoneStep(paging, step) {
+        const page = paging.page + step;
+        const off = step < 0 ? paging.page === 1 : paging.page === paging.pages;
+        const look = step < 0
+            ? 'class="series-pager-step series-pager-step--back" aria-label="Previous page"'
+            : 'class="series-pager-step" aria-label="Next page"';
+        return `<button type="button" ${look} data-pager-page="${page}" ${off ? 'disabled' : ''}>${getIcon('ChevronRight', 'series-pager-step__icon')}</button>`;
+    }
+
+    /** Previous · «Page n of m» (jumps to any page) · Next. */
+    _renderPhonePages(paging) {
+        const options = Array.from({ length: paging.pages }, (_, i) => i + 1)
+            .map(page => `<option value="${page}" ${page === paging.page ? 'selected' : ''}>Page ${page} of ${paging.pages}</option>`).join('');
+        return `
+            <nav class="series-pager-pages series-pager-pages--phone" aria-label="Pages">
+                ${this._phoneStep(paging, -1)}
+                <select class="series-pager-jump form-control" aria-label="Go to page">${options}</select>
+                ${this._phoneStep(paging, 1)}
+            </nav>`;
     }
 
     /** How many albums the series on screen hold: this page, or what the scroll has loaded so far (F72). */
@@ -153,6 +222,7 @@ export default class Pager extends Component {
         this.container.querySelectorAll('[data-pager-page]').forEach(button =>
             button.addEventListener('click', () => { if (!button.disabled) onPage?.(Number(button.dataset.pagerPage)); }));
         this.container.querySelector('[data-pager-more]')?.addEventListener('click', () => onMore?.());
+        this.container.querySelector('.series-pager-jump')?.addEventListener('change', (e) => onPage?.(Number(e.target.value)));
 
         // The growing list: reaching its end asks for the next batch, once per draw.
         const sentinel = this.container.querySelector('[data-pager-sentinel]');
@@ -167,7 +237,13 @@ export default class Pager extends Component {
         }
     }
 
+    onMount() {
+        // The phone and the computer draw the pager differently: a turn across the line draws it again
+        this._stopHearingPhone = onPhoneChange(() => this.render());
+    }
+
     onUnmount() {
+        this._stopHearingPhone?.();
         this._observer?.disconnect();
         this._observer = null;
     }

@@ -1,0 +1,451 @@
+/*
+ * The phone · Blend (TASK-06, REQ-10): the four steps of the blending menu.
+ *
+ * Every rule goes INSIDE the media query below and nowhere else (REQ-12;
+ * test/architecture/phoneStylesStayOnThePhone.test.js). The base all screens share is
+ * ../mobile.css; the guide is docs/specs/features/F76-mobile-redesign/mobile-kit.md.
+ *
+ * On the phone: the four steps in a row that reads (12 px labels, the current one clear); step 1
+ * is one row that opens a full sheet with every series and a search (components/blend/
+ * BlendSeriesPhonePicker.js), no box with its own scroll; the recipes in one column with the whole
+ * description; «Blend it!» in the action bar, off while a step is missing and the note says which.
+ */
+
+@media (max-width: 767px) {
+  /* ── 1. The page and its header ──────────────────────────────────────────────────────────── */
+  #app > .container:has(#blend-series-selector) {
+    padding-top: 4px;
+    padding-bottom: 8px;
+  }
+
+  .blend-head {
+    margin-bottom: 16px;
+  }
+
+  .blend-head > div:first-child {
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+
+  .blend-head > div:first-child > span {
+    font-size: 24px;
+  }
+
+  .blend-head h1 {
+    font-size: 22px;
+    line-height: 28px;
+  }
+
+  .blend-head__motto {
+    display: none;
+  }
+
+  /* ── 2. The four steps: readable, the current one clear ──────────────────────────────────── */
+  .blend-stepper {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0;
+    padding: 12px 8px 10px;
+    border-radius: 16px;
+    background: #141417;
+  }
+
+  .blend-stepper__step {
+    flex: 1 1 0;
+    min-width: 0;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .blend-stepper__step:last-child {
+    flex: 0 1 auto;
+  }
+
+  .blend-stepper__mark {
+    flex: none;
+    width: 64px;
+  }
+
+  .blend-stepper__mark > div {
+    width: 32px;
+    height: 32px;
+  }
+
+  #app .blend-stepper__label {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 15px;
+    text-align: center;
+    color: #a0a0a8;
+  }
+
+  /* the current step: its label in white and bold, its mark the orange of the «on» state */
+  #app .blend-stepper__step[aria-current="step"] .blend-stepper__label {
+    color: #f2f2f4;
+    font-weight: 700;
+  }
+
+  #app .blend-stepper__label.text-green-400 {
+    color: #86efac;
+  }
+
+  .blend-stepper__line {
+    flex: 1 1 auto;
+    min-width: 4px;
+    width: auto;
+    margin-top: 15px;
+  }
+
+  /* ── 3. The steps ────────────────────────────────────────────────────────────────────────── */
+  #app > .container:has(#blend-series-selector) > section {
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+  }
+
+  #app > .container:has(#blend-series-selector) > section > div:first-child {
+    margin-bottom: 12px;
+  }
+
+  #app > .container:has(#blend-series-selector) > section h2 {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  #app > .container:has(#blend-series-selector) > section .rounded-full.text-xs {
+    font-size: 12px;
+    color: #a0a0a8;
+    white-space: nowrap;
+  }
+
+  #app > .container:has(#blend-series-selector) > section p.text-sm {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  /* ── 4. Step 1: one row, and the sheet with search ───────────────────────────────────────── */
+  .blend-entity {
+    margin-bottom: 16px;
+  }
+
+  .blend-entity__label,
+  .blend-pick__label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #a0a0a8;
+  }
+
+  #blend-entity-select {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  .blend-pick {
+    width: 100%;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #1a1a1e;
+    color: #f2f2f4;
+    text-align: left;
+  }
+
+  .blend-pick:active {
+    background: #222226;
+  }
+
+  .blend-pick:disabled {
+    opacity: 0.7;
+  }
+
+  .blend-pick__icon {
+    width: 48px;
+    height: 48px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #d0d0d6;
+  }
+
+  .blend-pick__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .blend-pick__title {
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 600;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .blend-pick__meta {
+    font-size: 13px;
+    line-height: 18px;
+    color: #a0a0a8;
+  }
+
+  .blend-pick__action {
+    flex: none;
+    font-size: 15px;
+    font-weight: 700;
+    color: #f2f2f4;
+  }
+
+  .blend-pick__action::after {
+    content: " ›";
+    font-weight: 400;
+  }
+
+  .blend-sheet__search-wrap {
+    position: sticky;
+    top: -16px;
+    z-index: 1;
+    margin: -16px calc(-1 * var(--phone-gutter-right)) 0 calc(-1 * var(--phone-gutter-left));
+    padding: 16px var(--phone-gutter-right) 8px var(--phone-gutter-left);
+    background: var(--phone-sheet-bg, #121214);
+  }
+
+  .blend-sheet__search {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 48px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: #1f1f23;
+    color: #f2f2f4;
+    font-size: 16px;
+  }
+
+  .blend-sheet__search:focus {
+    outline: 2px solid var(--phone-accent, #ff8800);
+    outline-offset: 0;
+  }
+
+  .blend-sheet__status {
+    margin: 4px 0 4px;
+    font-size: 13px;
+    line-height: 18px;
+    color: #a0a0a8;
+  }
+
+  .blend-sheet__row {
+    width: 100%;
+    min-height: 68px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 4px;
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: none;
+    color: #f2f2f4;
+    text-align: left;
+  }
+
+  .blend-sheet__row:active {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .blend-sheet__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .blend-sheet__name {
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 600;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .blend-sheet__meta {
+    font-size: 13px;
+    line-height: 18px;
+    color: #a0a0a8;
+  }
+
+  .blend-sheet__check {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--phone-accent, #ff8800);
+    color: #0a0a0c;
+  }
+
+  .blend-sheet__empty {
+    padding: 24px 0;
+    font-size: 15px;
+    color: #a0a0a8;
+  }
+
+  /* ── 5. Step 2: the recipes, one column, the whole description ───────────────────────────── */
+  #blend-recipe-cards > .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .blend-recipe-card {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    column-gap: 14px;
+    align-items: start;
+    padding: 16px;
+    text-align: left;
+    transform: none !important;
+  }
+
+  .blend-recipe-card > div.flex.items-center.justify-center {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    margin: 0;
+  }
+
+  .blend-recipe-card > div.flex.items-center.justify-center > div {
+    margin: 0;
+    transform: none !important;
+  }
+
+  .blend-recipe-card > h4,
+  .blend-recipe-card > span,
+  .blend-recipe-card > p {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .blend-recipe-card > h4 {
+    margin: 0 36px 4px 0;
+    font-size: 17px;
+    line-height: 22px;
+    color: #f2f2f4;
+  }
+
+  .blend-recipe-card > span {
+    margin-bottom: 6px;
+  }
+
+  #app .blend-recipe-card > p {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    font-size: 14px;
+    line-height: 20px;
+    color: #c4c4cc;
+  }
+
+  /* the floating «★ Recommended» says what the card's own badge already says: one is enough */
+  .blend-recipe-card > div.absolute {
+    display: none;
+  }
+
+  /* the chosen recipe: the ring, and a mark, not colour alone */
+  .blend-recipe-card.ring-2::after {
+    content: "✓";
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--phone-accent, #ff8800);
+    color: #0a0a0c;
+    font-weight: 800;
+    font-size: 15px;
+  }
+
+  /* ── 6. Step 3: the ingredients ──────────────────────────────────────────────────────────── */
+  #blend-ingredients-panel select {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  #blend-ingredients-panel button {
+    min-height: 44px;
+  }
+
+  /* the duration slider answers on 44 px; the track keeps its 8 px look */
+  #blend-duration-slider {
+    height: 44px;
+    background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)) center / 100% 8px no-repeat;
+  }
+
+  #blend-duration-display {
+    width: auto;
+    min-width: 56px;
+    font-size: 20px;
+    line-height: 24px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  #blend-ingredients-panel label,
+  #blend-ingredients-panel p {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  /* ── 7. Step 4 and the action bar: «Blend it!» always in view ────────────────────────────── */
+  #blend-generate-btn {
+    display: none;
+  }
+
+  #blend-generate-section {
+    padding: 0;
+    text-align: left;
+  }
+
+  .blend-bar > .blend-bar__note {
+    flex: 1 1 auto;
+    font-size: 14px;
+    line-height: 18px;
+    color: #d0d0d6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .blend-bar > .blend-bar__btn {
+    flex: 0 0 auto;
+    padding: 0 22px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .blend-bar > .blend-bar__btn:disabled {
+    opacity: 0.45;
+  }
+}

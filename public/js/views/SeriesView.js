@@ -22,6 +22,8 @@ import { SeriesModalsManager } from './helpers/SeriesModalsManager.js';
 import { SafeDOM } from '../utils/SafeDOM.js';
 import Pager from '../components/ui/Pager.js';
 import { SeriesExpansion, SERIES_ALBUM_LIMIT } from '../models/seriesExpansion.js';
+import { onPhoneChange } from '../utils/isPhone.js';
+import { nameThisScreen } from '../components/navigation/PhoneShell.js';
 
 export default class SeriesView extends BaseView {
     constructor(controller) {
@@ -109,6 +111,9 @@ export default class SeriesView extends BaseView {
         this.mountSeriesModals();
         this.setupEventHandler();
         Breadcrumb.attachListeners(this.container);
+        // The phone and the computer draw the albums differently (F76): a turn across the line
+        // draws them again, from the store
+        this.subscriptions.push(onPhoneChange(() => this.controller?.refresh()));
 
         // 4. Initial Load
         if (this.controller) {
@@ -229,6 +234,8 @@ export default class SeriesView extends BaseView {
     updateHeader(data) {
         // data = { title, description, seriesList, activeSeriesId }
         this.updater?.updateHeaderPayload(data);
+        // The phone's top bar names the series on screen (audit finding 19); all of them: «Albums»
+        if (data) nameThisScreen(data.activeSeriesId ? data.title : null);
     }
 
     // =========================================

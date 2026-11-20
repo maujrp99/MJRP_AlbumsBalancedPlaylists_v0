@@ -1,0 +1,358 @@
+/*
+ * The phone · The ranking window (TASK-03, REQ-07): what is inside the ranking window; its shell is in mobile.css § 8.4.
+ *
+ * Every rule goes INSIDE the media query below and nowhere else (REQ-12;
+ * test/architecture/phoneStylesStayOnThePhone.test.js). The base all screens share is
+ * ../mobile.css; the guide is docs/specs/features/F76-mobile-redesign/mobile-kit.md.
+ *
+ * The markup is components/ranking/rankWindowPhone.js (drawn on the phone only): a bar with Back,
+ * the title and Reset; one body that scrolls (the album, the hint, the tracks, the note); a foot,
+ * always in view, with Save and, while a track is picked, Up, Down, «Move to…» and Done.
+ * Orange is Save and the track picked; nothing else (decided by the agent, revisable).
+ */
+
+@media (max-width: 767px) {
+  /* ── 1. The window ──────────────────────────────────────────────────────────────────────── */
+  .rank-window--phone {
+    align-items: stretch;
+    justify-content: stretch;
+    background: var(--phone-sheet-bg);
+  }
+
+  .rank-phone {
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  /* ── 2. The bar: Back · My ranking · Reset ─────────────────────────────────────────────── */
+  .rank-phone__bar {
+    flex: none;
+    display: grid;
+    grid-template-columns: minmax(88px, auto) minmax(0, 1fr) minmax(88px, auto);
+    align-items: center;
+    height: var(--phone-topbar-h);
+    padding: 0 4px;
+    border-bottom: 1px solid var(--phone-bar-line);
+    background: var(--phone-sheet-bg);
+  }
+
+  .rank-phone__back,
+  .rank-phone__reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: var(--phone-target);
+    min-height: var(--phone-target);
+    padding: 0 12px;
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .rank-phone__back {
+    padding-left: 6px;
+    justify-self: start;
+  }
+
+  .rank-phone__reset {
+    justify-self: end;
+  }
+
+  .rank-phone__back:active,
+  .rank-phone__reset:active {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .rank-phone__title {
+    margin: 0;
+    overflow: hidden;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 22px;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .rank-icon {
+    flex: none;
+    width: 20px;
+    height: 20px;
+  }
+
+  .rank-icon--back,
+  .rank-icon--down {
+    transform: rotate(180deg);
+  }
+
+  /* ── 3. The body: the one part that scrolls ────────────────────────────────────────────── */
+  .rank-phone__body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 var(--phone-gutter-right) 16px var(--phone-gutter-left);
+  }
+
+  .rank-phone__intro {
+    padding: 16px 0 12px;
+  }
+
+  .rank-phone__album {
+    margin: 0;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    overflow-wrap: anywhere;
+  }
+
+  .rank-phone__artist {
+    margin: 4px 0 0;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 15px;
+    line-height: 20px;
+  }
+
+  .rank-phone__hint {
+    margin: 12px 0 0;
+    color: rgba(255, 255, 255, 0.64);
+    font-size: 14px;
+    line-height: 18px;
+  }
+
+  .rank-phone__note {
+    margin: 16px 0 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  /* ── 4. A track: number, title (its own line), references; the handle at the end ───────── */
+  .rank-phone__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rank-row {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--phone-sheet-bg);
+  }
+
+  .rank-row__pick {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-height: 60px;
+    padding: 10px 0 10px 2px;
+    background: none;
+    color: inherit;
+    text-align: left;
+  }
+
+  .rank-row__pick:active {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .rank-row__number {
+    flex: none;
+    width: 36px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rank-row__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .rank-row__title {
+    color: #f2f2f4;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22px;
+    overflow-wrap: anywhere;
+  }
+
+  .rank-row__refs {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    line-height: 16px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Only the handle drags (SortableJS `handle`): a finger anywhere else scrolls the list */
+  .rank-row__handle {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: var(--phone-target);
+    min-height: var(--phone-target);
+    color: rgba(255, 255, 255, 0.55);
+    touch-action: none;
+    cursor: grab;
+  }
+
+  /* The track picked: the «on» state */
+  .rank-row.is-picked {
+    position: relative;
+    z-index: 1;
+    border-radius: 12px;
+    border-bottom-color: transparent;
+    background: #1c1c21;
+    box-shadow: inset 0 0 0 2px var(--phone-accent);
+  }
+
+  /* The track being dragged: lifted */
+  .rank-row.ring-2 {
+    --tw-ring-color: var(--phone-accent);
+  }
+
+  .rank-row.sortable-fallback,
+  .rank-row.sortable-drag {
+    border-radius: 12px;
+    background: #1f1f23;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+  }
+
+  /* ── 5. The foot: always in view ───────────────────────────────────────────────────────── */
+  .rank-phone__foot {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px var(--phone-gutter-right) 12px var(--phone-gutter-left);
+    border-top: 1px solid var(--phone-bar-line);
+    background: var(--phone-sheet-bg);
+  }
+
+  .rank-phone__mover:not([hidden]) {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1.4fr 1fr;
+    gap: 6px;
+  }
+
+  .rank-phone__move {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    min-height: var(--phone-target);
+    padding: 0 4px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f2f2f4;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    white-space: nowrap;
+  }
+
+  .rank-phone__move:active {
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .rank-phone__move:disabled {
+    opacity: 0.4;
+  }
+
+  .rank-phone__save {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 12px;
+    background: var(--phone-accent);
+    color: #0a0a0c;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  /* ── 6. «Move to…»: the numbers, in a sheet from the bottom ────────────────────────────── */
+  .rank-moveto {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .rank-moveto__number {
+    min-height: 48px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f2f2f4;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 22px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rank-moveto__number:active {
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .rank-moveto__number.is-here {
+    background: transparent;
+    box-shadow: inset 0 0 0 2px var(--phone-accent);
+  }
+
+  /* ── 7. The window's own notice: below the bar, never over Save ────────────────────────── */
+  .rank-toast {
+    top: calc(var(--phone-safe-top) + var(--phone-topbar-h) + 8px);
+    right: var(--phone-gutter-right);
+    bottom: auto;
+    left: var(--phone-gutter-left);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 4px 4px 4px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: #26262c;
+    color: #fff;
+    font-size: 14px;
+    line-height: 18px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  }
+
+  .rank-toast.bg-red-500 {
+    background: #b91c1c;
+  }
+
+  .rank-toast__action {
+    flex: none;
+    margin-left: auto;
+    min-width: var(--phone-target);
+    min-height: var(--phone-target);
+    padding: 0 12px;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rank-toast {
+      animation: none;
+    }
+  }
+}

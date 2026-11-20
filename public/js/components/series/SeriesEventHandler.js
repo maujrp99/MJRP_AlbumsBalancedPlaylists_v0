@@ -15,6 +15,8 @@ import { InventoryAddModal } from '../InventoryAddModal.js';
 import { UserRankModal } from '../ranking/UserRankModal.js';  // Sprint 20
 import { AlbumCardRenderer } from '../ui/AlbumCardRenderer.js';
 import { getSeriesService } from '../../services/SeriesService.js';  // FIX #154
+import { openAlbumActions, openSeriesActions } from './SeriesPhoneSheets.js';  // F76: the phone's «⋯»
+import { decodeEntities } from '../../models/text.js';
 
 export default class SeriesEventHandler extends Component {
     /**
@@ -82,7 +84,7 @@ export default class SeriesEventHandler extends Component {
         // Handle series actions first
         if (seriesId) {
             e.stopPropagation();
-            await this.handleSeriesAction(action, seriesId);
+            await this.handleSeriesAction(action, seriesId, target);
             return;
         }
 
@@ -145,25 +147,33 @@ export default class SeriesEventHandler extends Component {
     }
 
     /**
-     * Handle series-level actions (edit, delete, try again, show every album)
+     * Handle series-level actions (edit, delete, try again, show every album, and the phone's «⋯»)
      */
-    async handleSeriesAction(action, seriesId) {
+    async handleSeriesAction(action, seriesId, targetElement = null) {
         const { onEditSeries, onDeleteSeries, onRetrySeries, onShowAllAlbums } = this.props;
+        const handlers = {
+            'load-more-series': onShowAllAlbums,
+            'retry-series': onRetrySeries,
+            'edit-series': onEditSeries,
+            'delete-series': onDeleteSeries,
+            'series-more': () => this.openSeriesActions(seriesId, targetElement)
+        };
+        handlers[action]?.(seriesId);
+    }
 
-        switch (action) {
-            case 'load-more-series':
-                if (onShowAllAlbums) onShowAllAlbums(seriesId);
-                break;
-            case 'retry-series':
-                if (onRetrySeries) onRetrySeries(seriesId);
-                break;
-            case 'edit-series':
-                if (onEditSeries) onEditSeries(seriesId);
-                break;
-            case 'delete-series':
-                if (onDeleteSeries) onDeleteSeries(seriesId);
-                break;
-        }
+    /**
+     * The phone (F76): Edit and Delete of a series, named, in a bottom sheet.
+     * The count is the one its header shows (the albums of it on screen).
+     */
+    openSeriesActions(seriesId, targetElement = null) {
+        const { onEditSeries, onDeleteSeries } = this.props;
+        const series = albumSeriesStore.getById?.(seriesId);
+        const countText = targetElement?.closest('.series-group-header')?.querySelector('.series-group-header__count')?.textContent;
+        const albumCount = countText ? parseInt(countText, 10) : NaN;
+        return openSeriesActions(
+            { name: decodeEntities(series?.name) || 'Series', albumCount },
+            { onEdit: () => onEditSeries?.(seriesId), onDelete: () => onDeleteSeries?.(seriesId) }
+        );
     }
 
     /**
@@ -181,6 +191,12 @@ export default class SeriesEventHandler extends Component {
         switch (action) {
             case 'view-modal':
                 showViewAlbumModal(album); // Verified SafeDOM
+                break;
+
+            // F76: the phone's «⋯» names every action in a bottom sheet; each one comes back here,
+            // with the «⋯» as the place on the page (the series it is in, for Remove)
+            case 'album-more':
+                openAlbumActions(album, (picked) => this.handleAlbumAction(picked, albumId, targetElement));
                 break;
 
             case 'add-to-inventory':

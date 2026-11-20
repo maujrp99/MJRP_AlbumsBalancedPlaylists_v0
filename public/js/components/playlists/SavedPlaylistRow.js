@@ -42,6 +42,7 @@ export class SavedPlaylistRow {
         const viewBtn = SafeDOM.button({
             className: 'btn btn-ghost btn-sm text-muted hover:text-white',
             title: 'View Details',
+            'aria-label': `View the tracks of ${playlist.name}`,
             onClick: (e) => {
                 e.stopPropagation();
                 if (this.onOpenModal) this.onOpenModal(seriesId, playlist.id);

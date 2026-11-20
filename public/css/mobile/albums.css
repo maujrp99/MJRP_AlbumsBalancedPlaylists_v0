@@ -1,0 +1,901 @@
+/*
+ * The phone · Albums (TASK-02, REQ-05): the filters, the series header, the album card and the list view.
+ *
+ * Every rule goes INSIDE the media query below and nowhere else (REQ-12;
+ * test/architecture/phoneStylesStayOnThePhone.test.js). The base all screens share is
+ * ../mobile.css; the guide is docs/specs/features/F76-mobile-redesign/mobile-kit.md.
+ *
+ * Sections: 1 Tokens · 2 The page header · 3 Search and «Filters» · 4 The filter sheet
+ *           5 The pager · 6 The series · 7 The album tile (grid) · 8 The album row (list)
+ *           9 The sheets of actions · 10 Loading and empty · 11 Less motion
+ */
+
+@media (max-width: 767px) {
+
+  /* ── 1. Tokens (benchmark § 9: base, elevated, text that reaches 4.5:1) ─────────────────────── */
+  .albums-view,
+  .albums-sheet,
+  .filter-sheet-window {
+    --albums-raised: #17171a;
+    --albums-raised-2: #1f1f23;
+    --albums-line: rgba(255, 255, 255, 0.08);
+    --albums-text: #f2f2f4;
+    --albums-text-2: #a0a0a8;
+    --albums-danger: #f87171;
+    --albums-press: rgba(255, 255, 255, 0.06);
+    --albums-page: #000;
+    /* Syne stays on the screen's name (the top bar); the text of the albums is the system's: at 13
+       to 16 px Syne loses legibility (benchmark § 9.2), and on the iPhone this is SF Pro */
+    --albums-font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+  }
+
+  .albums-view .series-group-header,
+  .albums-view .filters-section,
+  .albums-view .album-tile,
+  .albums-view .album-row,
+  .albums-view .series-pager--phone,
+  .albums-view .load-more-btn,
+  .albums-view #emptyStateContainer,
+  .albums-view .series-page-header--single #generatePlaylistsBtn,
+  .albums-sheet,
+  .filter-sheet-window {
+    font-family: var(--albums-font);
+  }
+
+  .albums-view.container {
+    max-width: none;
+    /* the end of the list scrolls clear of the round «back to top» button */
+    padding-bottom: 72px;
+  }
+
+  .albums-view select,
+  .albums-view button,
+  .albums-view input,
+  .albums-sheet button,
+  .filter-sheet-window select,
+  .filter-sheet-window button {
+    font-family: inherit;
+  }
+
+  /* ── 2. The page header ─────────────────────────────────────────────────────────────────────── */
+  /* The top bar names the screen and the tab bar has Blend: the path of links and the big title leave */
+  .albums-view > .view-header,
+  .albums-view .series-page-header,
+  .albums-view .series-page-header .header-title-row {
+    margin-bottom: 0;
+  }
+
+  .albums-view .series-page-header .breadcrumb,
+  .albums-view .series-page-header--all {
+    display: none;
+  }
+
+  /* One series: its name (20/24, wraps), the «⋯» of Edit and Delete, and Blend of this series */
+  .albums-view .series-page-header--single .header-title-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--phone-target);
+    align-items: start;
+    gap: 12px 8px;
+    margin-bottom: 16px;
+  }
+
+  .albums-view .series-page-header--single h1 {
+    font-family: var(--albums-font);
+    font-size: 20px;
+    line-height: 24px;
+    overflow-wrap: anywhere;
+    padding-top: 10px;
+  }
+
+  /* the disc beside the name is decoration: the top bar already says where the person is */
+  .albums-view .series-page-header--single h1 svg {
+    display: none;
+  }
+
+  .albums-view .series-page-header--single #generatePlaylistsBtn {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    min-height: 48px;
+    padding: 0 16px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .albums-view .series-page-header--single #generatePlaylistsBtn:hover {
+    transform: none;
+  }
+
+  /* The «⋯» of a series: here and in each series header */
+  .series-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--phone-target);
+    height: var(--phone-target);
+    flex: none;
+    border-radius: 999px;
+    color: var(--albums-text-2);
+  }
+
+  .series-more:active {
+    background: var(--albums-press);
+    color: var(--albums-text);
+  }
+
+  .series-more__icon {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+  }
+
+  /* ── 3. Search and «Filters» ────────────────────────────────────────────────────────────────── */
+  .albums-view .filters-section {
+    padding: 0;
+    margin-bottom: 12px;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .albums-view .filters-section--sheet .filters-row {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .albums-view .filters-section--sheet .search-bar {
+    min-width: 0;
+  }
+
+  .albums-view .filters-section--sheet .filters-controls {
+    display: none;
+  }
+
+  .albums-view #genericSearch {
+    height: var(--phone-target);
+    padding-left: 42px;
+    border-radius: 12px;
+    background: var(--albums-raised);
+    border-color: var(--albums-line);
+  }
+
+  .filters-phone-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex: none;
+    min-height: var(--phone-target);
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: var(--albums-raised);
+    color: var(--albums-text);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .filters-phone-button:active {
+    background: var(--albums-raised-2);
+  }
+
+  .filters-phone-button__icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* The count is the «on» state: the one place this bar is orange */
+  .filters-phone-button__count {
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--phone-accent);
+    color: #0a0a0c;
+    font-size: 13px;
+    line-height: 22px;
+    font-weight: 700;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .filters-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .filters-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    height: 36px;
+    box-sizing: border-box;
+    padding: 0 10px 0 12px;
+    border-radius: 999px;
+    background: var(--albums-raised-2);
+    border: 1px solid var(--albums-line);
+    color: var(--albums-text);
+    font-size: 14px;
+    position: relative;
+  }
+
+  /* The chip is drawn at 36 px and answers in 44 (8 px between chips keeps the areas apart) */
+  .filters-chip::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: var(--phone-target);
+    transform: translateY(-50%);
+  }
+
+  .filters-chip__text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .filters-chip__x {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    color: var(--albums-text-2);
+  }
+
+  .filters-chips__clear {
+    min-height: var(--phone-target);
+    margin: -4px 0;
+    padding: 0 8px;
+    color: var(--albums-text-2);
+    font-size: 14px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ── 4. The filter sheet ────────────────────────────────────────────────────────────────────── */
+  .filter-sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-bottom: 8px;
+  }
+
+  .filter-sheet__heading {
+    margin: 0 0 6px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--albums-text-2);
+  }
+
+  .filter-sheet__select {
+    width: 100%;
+    border-radius: 12px;
+    background: var(--albums-raised);
+  }
+
+  .filter-sheet__segments {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 2px;
+    border-radius: 12px;
+    background: var(--albums-raised);
+    border: 1px solid var(--albums-line);
+  }
+
+  .filter-sheet__segment {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: var(--phone-target);
+    border-radius: 10px;
+    color: var(--albums-text-2);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .filter-sheet__segments {
+    min-height: var(--phone-target);
+  }
+
+  .filter-sheet__segment[aria-pressed="true"] {
+    background: var(--albums-raised-2);
+    color: var(--albums-text);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+
+  .filter-sheet__segment-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .filter-sheet__reload {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: var(--phone-target);
+    color: var(--albums-text-2);
+    font-size: 15px;
+  }
+
+  .filter-sheet__reload-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .filter-sheet-window .sheet__footer {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 12px;
+  }
+
+  /* ── 5. The pager ───────────────────────────────────────────────────────────────────────────── */
+  .series-pager--phone {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 16px 0 0;
+    border-top: 1px solid var(--albums-line);
+    color: var(--albums-text-2);
+    font-size: 14px;
+    line-height: 18px;
+  }
+
+  .series-pager--phone b {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Above the list: one line, so the first album stays high */
+  .series-pager--phone-top {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: var(--phone-target);
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 13px;
+  }
+
+  .series-pager--phone-top .series-pager-count {
+    min-width: 0;
+  }
+
+  .series-pager-arrows {
+    display: flex;
+    gap: 4px;
+    flex: none;
+  }
+
+  .series-pager-step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--phone-target);
+    height: var(--phone-target);
+    border-radius: 12px;
+    background: var(--albums-raised);
+    border: 1px solid var(--albums-line);
+    color: var(--albums-text);
+    flex: none;
+  }
+
+  .series-pager-step:disabled {
+    opacity: 0.35;
+  }
+
+  .series-pager-step__icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .series-pager-step--back .series-pager-step__icon {
+    transform: rotate(180deg);
+  }
+
+  .series-pager-pages--phone {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .series-pager-jump {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    text-align-last: center;
+    border-radius: 12px;
+    background: var(--albums-raised);
+  }
+
+  .series-pager-settings {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .series-pager-size-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .series-pager-size-label .series-pager-size {
+    width: auto;
+    border-radius: 10px;
+  }
+
+  .series-pager-form {
+    display: inline-flex;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--albums-raised);
+    border: 1px solid var(--albums-line);
+  }
+
+  .series-pager-form button {
+    min-height: var(--phone-target);
+    padding: 0 16px;
+    color: var(--albums-text-2);
+    font-weight: 600;
+  }
+
+  .series-pager-form button[aria-pressed="true"] {
+    background: var(--phone-accent);
+    color: #0a0a0c;
+  }
+
+  .series-pager--phone .series-pager-more .btn {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 12px;
+  }
+
+  /* ── 6. The series ──────────────────────────────────────────────────────────────────────────── */
+  .albums-view .all-series-container {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .albums-view .all-series-container > *,
+  .albums-view .all-series-container > :not([hidden]) ~ :not([hidden]) {
+    margin: 0;
+  }
+
+  .albums-view .series-group {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  /* The header of a series: the name wraps (never past the screen), the count under it, the «⋯»
+     at the right; it stays under the top bar while its albums scroll */
+  .albums-view .series-group-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    position: sticky;
+    top: calc(var(--phone-topbar-h) + var(--phone-safe-top));
+    z-index: 5;
+    margin: 0 0 12px;
+    padding: 8px 0;
+    background: var(--albums-page);
+    border-bottom: 1px solid var(--albums-line);
+  }
+
+  .albums-view .series-group-header__title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .albums-view .series-group-header h2 {
+    font-family: var(--albums-font);
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 700;
+    color: var(--albums-text);
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .albums-view .series-group-header__count,
+  .albums-view .series-group-header > span {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--albums-text-2);
+  }
+
+  .albums-view .series-group-header .series-actions {
+    display: none;
+  }
+
+  .albums-view .albums-grid {
+    column-gap: 12px;
+    row-gap: 20px;
+  }
+
+  .albums-view .load-more-btn {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 15px;
+  }
+
+  .albums-view .series-load-failure {
+    flex-wrap: wrap;
+  }
+
+  .albums-view .series-load-failure button {
+    min-height: var(--phone-target);
+  }
+
+  /* ── 7. The album tile (grid) ───────────────────────────────────────────────────────────────── */
+  .album-tile {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .album-tile__cover {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--albums-raised);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .album-cover__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .album-tile__cover:active,
+  .album-tile__text:active,
+  .album-row__main:active {
+    opacity: 0.7;
+  }
+
+  .album-tile__meta {
+    display: flex;
+    align-items: flex-start;
+    gap: 2px;
+    margin-top: 8px;
+  }
+
+  .album-tile__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+    min-height: var(--phone-target);
+  }
+
+  .album-tile__title,
+  .album-row__title {
+    color: var(--albums-text);
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .album-tile__artist,
+  .album-row__artist {
+    color: var(--albums-text-2);
+    font-size: 13px;
+    line-height: 18px;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .album-tile__badges,
+  .album-row__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  /* One quiet line, «My ranking · BestEverAlbums · Spotify», cut at the edge: the list view and
+     the album's sheet carry them whole */
+  .album-tile__badges {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .album-tile__badges-item {
+    color: var(--albums-text-2);
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .album-tile__badges-item + .album-tile__badges-item::before {
+    content: '·';
+    padding: 0 5px;
+  }
+
+  .album-row__badges-item {
+    padding: 0 6px;
+    border-radius: 6px;
+    background: var(--albums-raised-2);
+    color: var(--albums-text-2);
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 500;
+  }
+
+  .album-tile__notice,
+  .album-row__notice {
+    margin-top: 2px;
+    color: #fbbf24;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  /* The «⋯» of an album: 44 x 44, the dots in the middle */
+  .album-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: var(--phone-target);
+    height: var(--phone-target);
+    margin: -6px -10px 0 0;
+    border-radius: 999px;
+    color: var(--albums-text-2);
+  }
+
+  .album-more:active {
+    background: var(--albums-press);
+    color: var(--albums-text);
+  }
+
+  .album-more__icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  /* ── 8. The album row (list) ────────────────────────────────────────────────────────────────── */
+  .album-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px solid var(--albums-line);
+  }
+
+  .album-row__main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    text-align: left;
+  }
+
+  .album-row__cover {
+    flex: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--albums-raised);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .album-row__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .album-row__title {
+    font-size: 16px;
+    line-height: 21px;
+  }
+
+  .album-row__artist {
+    -webkit-line-clamp: 1;
+  }
+
+  .album-row .album-more {
+    margin: 0 -10px 0 0;
+  }
+
+  /* ── 9. The sheets of actions (album, series) ───────────────────────────────────────────────── */
+  .albums-sheet__about {
+    margin: -4px 0 8px;
+    color: var(--albums-text-2);
+    font-size: 14px;
+    line-height: 18px;
+  }
+
+  .albums-sheet__list {
+    display: flex;
+    flex-direction: column;
+    padding: 4px 0;
+  }
+
+  /* Remove and Delete stand apart from the rest, under a line */
+  .albums-sheet__list + .albums-sheet__list {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--albums-line);
+  }
+
+  .albums-sheet__row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-height: 52px;
+    padding: 4px 0;
+    color: var(--albums-text);
+    text-align: left;
+    text-decoration: none;
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .albums-sheet__row:active {
+    background: var(--albums-press);
+  }
+
+  .albums-sheet__row--danger {
+    color: var(--albums-danger);
+  }
+
+  .albums-sheet__icon {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    color: var(--albums-text-2);
+  }
+
+  .albums-sheet__row--danger .albums-sheet__icon {
+    color: currentColor;
+  }
+
+  .albums-sheet__label {
+    flex: 1;
+    min-width: 0;
+    font-weight: 600;
+  }
+
+  .albums-sheet__out {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    color: var(--albums-text-2);
+  }
+
+  /* ── 10. Loading and empty ──────────────────────────────────────────────────────────────────── */
+  .albums-view .series-group-skeleton > div {
+    margin-bottom: 28px;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  .albums-view .series-group-skeleton .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 12px;
+    row-gap: 20px;
+  }
+
+  /* Four tiles are enough to say «loading» on a phone; six made one skeleton three screens tall */
+  .albums-view .series-group-skeleton .grid > :nth-child(n + 5) {
+    display: none;
+  }
+
+  .albums-view #emptyStateContainer .empty-state {
+    padding: 40px 20px;
+    border-radius: 16px;
+  }
+
+  /* With nothing in the library, «no albums match your filters» above it said the wrong thing */
+  .albums-view:has(#emptyStateContainer .empty-state) #series-grid-mount {
+    display: none;
+  }
+
+  .albums-view #emptyStateContainer .empty-state > div:first-child svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .albums-view #emptyStateContainer .empty-state > div:first-child {
+    margin-bottom: 16px;
+    font-size: 48px;
+    line-height: 1;
+  }
+
+  .albums-view #emptyStateContainer h2 {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .albums-view #emptyStateContainer p {
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--albums-text-2);
+  }
+
+  .albums-view #emptyStateContainer .btn {
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: 12px;
+    font-weight: 700;
+  }
+
+  .albums-view #emptyStateContainer .btn svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+  }
+
+  .albums-view .view-footer {
+    display: none;
+  }
+
+  /* ── 11. Less motion ────────────────────────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .albums-view .series-group,
+    .albums-view .animate-in,
+    .albums-view .fade-in {
+      animation: none;
+    }
+  }
+}

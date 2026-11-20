@@ -7,6 +7,9 @@
 
 import '../css/index.css'
 import '../css/tailwind.css' // Tailwind, built with the site; after the app's own styles (F59)
+import '../css/mobile.css' // the phone (F76): after everything, every rule inside the phone's media query
+import '../css/mobile/screens.css' // one file per screen of the phone, each inside the same media query
+import '../css/safe-area.css' // a phone lying down: the page keeps clear of the island (F76)
 import { canonicalLocalUrl } from './utils/localAddress.js'
 import { installStaleBuildGuard } from './utils/staleBuild.js'
 
@@ -40,6 +43,8 @@ import toast from './components/Toast.js'
 import { TopNav } from './components/TopNav.js'
 import { Footer } from './components/Footer.js'
 import { clearAppAlbumCaches } from './services/albums/albumLoading.js'
+import { startPhoneShell } from './components/navigation/PhoneShell.js'
+import { userStore } from './stores/UserStore.js'
 
 const initUI = () => {
     const topNav = new TopNav()
@@ -55,6 +60,9 @@ const initUI = () => {
         footerEl.innerHTML = footer.render()
         footer.attachListeners()
     }
+
+    // The phone (F76): its top bar, its tab bar and its menu exist only on a screen up to 767 px
+    startPhoneShell({ router, userStore, clearCaches: clearAppAlbumCaches })
 }
 
 /**

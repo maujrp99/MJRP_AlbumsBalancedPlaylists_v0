@@ -1,0 +1,831 @@
+{
+ "grid-all-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 15915,
+  "firstAlbum": {
+   "top": 1126,
+   "coverBottom": 1126,
+   "height": 341
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 413,
+  "targetsBelow44": 356,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26",
+   "a.badge.flex «Spotify» 99x24",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": [
+   "div.flex.items-center «Alternative R&B/Psychede»",
+   "span.text-sm.text-white/50 «3 albums»",
+   "div.series-actions.flex «»",
+   "button.btn.btn-secondary «»",
+   "svg.[object.SVGAnimatedString] «»",
+   "path.[object.SVGAnimatedString] «»"
+  ]
+ },
+ "list-all-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 21991,
+  "firstAlbum": {
+   "top": 1126,
+   "coverBottom": 1126,
+   "height": 260
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 431,
+  "targetsBelow44": 376,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 38x38",
+   "#viewModeList «» 40x40",
+   "button.flex-1.flex «» 24x28",
+   "button.flex-1.flex «» 24x28",
+   "button.flex-1.flex «» 24x28",
+   "button.flex-1.flex «» 24x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26",
+   "a.badge.flex «Spotify» 99x24",
+   "button.flex-1.flex «» 24x28",
+   "button.flex-1.flex «» 24x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": [
+   "div.flex.items-center «Alternative R&B/Psychede»",
+   "span.text-sm.text-white/50 «3 albums»",
+   "div.series-actions.flex «»",
+   "button.btn.btn-secondary «»",
+   "svg.[object.SVGAnimatedString] «»",
+   "path.[object.SVGAnimatedString] «»"
+  ]
+ },
+ "single-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 1698,
+  "firstAlbum": {
+   "top": 774,
+   "coverBottom": 774,
+   "height": 366
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 34,
+  "targetsBelow44": 19,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.flex-1.flex «» 35x28",
+   "button.flex-1.flex «» 35x28",
+   "button.flex-1.flex «» 35x28",
+   "button.flex-1.flex «» 35x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26",
+   "a.badge.flex «Spotify» 99x24",
+   "button.flex-1.flex «» 35x28",
+   "button.flex-1.flex «» 35x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "filters-on-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 15915,
+  "firstAlbum": {
+   "top": 1126,
+   "coverBottom": 1126,
+   "height": 341
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 413,
+  "targetsBelow44": 356,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26",
+   "a.badge.flex «Spotify» 99x24",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": [
+   "div.flex.items-center «Alternative R&B/Psychede»",
+   "span.text-sm.text-white/50 «3 albums»",
+   "div.series-actions.flex «»",
+   "button.btn.btn-secondary «»",
+   "svg.[object.SVGAnimatedString] «»",
+   "path.[object.SVGAnimatedString] «»"
+  ]
+ },
+ "scroll-mode-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 15751,
+  "firstAlbum": {
+   "top": 1014,
+   "coverBottom": 1014,
+   "height": 341
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 400,
+  "targetsBelow44": 356,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26",
+   "a.badge.flex «Spotify» 99x24",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": [
+   "div.flex.items-center «Alternative R&B/Psychede»",
+   "span.text-sm.text-white/50 «3 albums»",
+   "div.series-actions.flex «»",
+   "button.btn.btn-secondary «»",
+   "svg.[object.SVGAnimatedString] «»",
+   "path.[object.SVGAnimatedString] «»"
+  ]
+ },
+ "loading-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 9508,
+  "firstAlbum": null,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 37,
+  "targetsBelow44": 2,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "empty-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 1425,
+  "firstAlbum": null,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 18,
+  "targetsBelow44": 2,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "pager-bottom-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 15915,
+  "firstAlbum": {
+   "top": 1126,
+   "coverBottom": 1126,
+   "height": 341
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 414,
+  "targetsBelow44": 356,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26",
+   "a.badge.flex «Spotify» 99x24",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": [
+   "div.flex.items-center «Alternative R&B/Psychede»",
+   "span.text-sm.text-white/50 «3 albums»",
+   "div.series-actions.flex «»",
+   "button.btn.btn-secondary «»",
+   "svg.[object.SVGAnimatedString] «»",
+   "path.[object.SVGAnimatedString] «»"
+  ]
+ },
+ "sheet-filters-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 15915,
+  "firstAlbum": {
+   "top": 1126,
+   "coverBottom": 1126,
+   "height": 341
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 413,
+  "targetsBelow44": 356,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26",
+   "a.badge.flex «Spotify» 99x24",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": [
+   "div.flex.items-center «Alternative R&B/Psychede»",
+   "span.text-sm.text-white/50 «3 albums»",
+   "div.series-actions.flex «»",
+   "button.btn.btn-secondary «»",
+   "svg.[object.SVGAnimatedString] «»",
+   "path.[object.SVGAnimatedString] «»"
+  ]
+ },
+ "sheet-album-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 15915,
+  "firstAlbum": {
+   "top": 1126,
+   "coverBottom": 1126,
+   "height": 341
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 413,
+  "targetsBelow44": 356,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26",
+   "a.badge.flex «Spotify» 99x24",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": [
+   "div.flex.items-center «Alternative R&B/Psychede»",
+   "span.text-sm.text-white/50 «3 albums»",
+   "div.series-actions.flex «»",
+   "button.btn.btn-secondary «»",
+   "svg.[object.SVGAnimatedString] «»",
+   "path.[object.SVGAnimatedString] «»"
+  ]
+ },
+ "sheet-series-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 15915,
+  "firstAlbum": {
+   "top": 1126,
+   "coverBottom": 1126,
+   "height": 341
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 413,
+  "targetsBelow44": 356,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26",
+   "a.badge.flex «Spotify» 99x24",
+   "button.flex-1.flex «» 29x28",
+   "button.flex-1.flex «» 29x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": [
+   "div.flex.items-center «Alternative R&B/Psychede»",
+   "span.text-sm.text-white/50 «3 albums»",
+   "div.series-actions.flex «»",
+   "button.btn.btn-secondary «»",
+   "svg.[object.SVGAnimatedString] «»",
+   "path.[object.SVGAnimatedString] «»"
+  ]
+ },
+ "sheet-single-393x852": {
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 1698,
+  "firstAlbum": {
+   "top": 774,
+   "coverBottom": 774,
+   "height": 366
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 34,
+  "targetsBelow44": 19,
+  "targetsBelow44Sample": [
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.flex-1.flex «» 35x28",
+   "button.flex-1.flex «» 35x28",
+   "button.flex-1.flex «» 35x28",
+   "button.flex-1.flex «» 35x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26",
+   "a.badge.flex «Spotify» 99x24",
+   "button.flex-1.flex «» 35x28",
+   "button.flex-1.flex «» 35x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "grid-all-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 9570,
+  "firstAlbum": {
+   "top": 537,
+   "coverBottom": 537,
+   "height": 393
+  },
+  "textBelow12": 67,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «1966»",
+   "span.text-[10px].text-gray-500 «1967»",
+   "span.text-[10px].text-gray-500 «1968»",
+   "span.text-[10px].text-gray-500 «1969»",
+   "span.text-[10px].text-gray-500 «1970»",
+   "span.text-[10px].text-gray-500 «1971»"
+  ],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»",
+   "select.series-pager-size.form-control «Series per page»",
+   "select.series-pager-size.form-control «Series per page»"
+  ],
+  "targets": 407,
+  "targetsBelow44": 399,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.px-3.py-1 «Pages» 56x24",
+   "button.px-3.py-1 «Scroll» 53x24",
+   "button.min-w-[2.25rem].px-3 «Previous» 78x34",
+   "button.min-w-[2.25rem].px-3 «1» 36x34",
+   "button.min-w-[2.25rem].px-3 «2» 36x34"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "list-all-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 21581,
+  "firstAlbum": {
+   "top": 537,
+   "coverBottom": 537,
+   "height": 255
+  },
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»",
+   "select.series-pager-size.form-control «Series per page»",
+   "select.series-pager-size.form-control «Series per page»"
+  ],
+  "targets": 425,
+  "targetsBelow44": 417,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 38x38",
+   "#viewModeList «» 40x40",
+   "button.px-3.py-1 «Pages» 56x24",
+   "button.px-3.py-1 «Scroll» 53x24",
+   "button.min-w-[2.25rem].px-3 «Previous» 78x34",
+   "button.min-w-[2.25rem].px-3 «1» 36x34",
+   "button.min-w-[2.25rem].px-3 «2» 36x34"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "single-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 835,
+  "firstAlbum": {
+   "top": 307,
+   "coverBottom": 307,
+   "height": 403
+  },
+  "textBelow12": 3,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «1966»",
+   "span.text-[10px].text-gray-500 «1967»",
+   "span.text-[10px].text-gray-500 «1968»"
+  ],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»"
+  ],
+  "targets": 28,
+  "targetsBelow44": 22,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.flex-1.flex «» 45x28",
+   "button.flex-1.flex «» 45x28",
+   "button.flex-1.flex «» 45x28",
+   "button.flex-1.flex «» 45x28",
+   "a.badge.badge-primary «BestEverAlbums» 179x26"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "filters-on-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 9570,
+  "firstAlbum": {
+   "top": 537,
+   "coverBottom": 537,
+   "height": 393
+  },
+  "textBelow12": 67,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «1966»",
+   "span.text-[10px].text-gray-500 «1967»",
+   "span.text-[10px].text-gray-500 «1968»",
+   "span.text-[10px].text-gray-500 «1969»",
+   "span.text-[10px].text-gray-500 «1970»",
+   "span.text-[10px].text-gray-500 «1971»"
+  ],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»",
+   "select.series-pager-size.form-control «Series per page»",
+   "select.series-pager-size.form-control «Series per page»"
+  ],
+  "targets": 407,
+  "targetsBelow44": 399,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.px-3.py-1 «Pages» 56x24",
+   "button.px-3.py-1 «Scroll» 53x24",
+   "button.min-w-[2.25rem].px-3 «Previous» 78x34",
+   "button.min-w-[2.25rem].px-3 «1» 36x34",
+   "button.min-w-[2.25rem].px-3 «2» 36x34"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "scroll-mode-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 9524,
+  "firstAlbum": {
+   "top": 487,
+   "coverBottom": 487,
+   "height": 393
+  },
+  "textBelow12": 67,
+  "textBelow12Sample": [
+   "span.text-[10px].text-gray-500 «1966»",
+   "span.text-[10px].text-gray-500 «1967»",
+   "span.text-[10px].text-gray-500 «1968»",
+   "span.text-[10px].text-gray-500 «1969»",
+   "span.text-[10px].text-gray-500 «1970»",
+   "span.text-[10px].text-gray-500 «1971»"
+  ],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»",
+   "select.series-pager-size.form-control «Series per page»",
+   "select.series-pager-size.form-control «Series per page»"
+  ],
+  "targets": 394,
+  "targetsBelow44": 386,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.px-3.py-1 «Pages» 56x24",
+   "button.px-3.py-1 «Scroll» 53x24",
+   "button.btn.btn-secondary «» 46x34",
+   "button.btn.btn-danger «» 44x34",
+   "button.flex-1.flex «» 42x28"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»",
+   "button.btn.btn-secondary «»",
+   "button.btn.btn-danger «»",
+   "button.flex-1.flex «»",
+   "button.flex-1.flex «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "loading-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 4475,
+  "firstAlbum": null,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series Alternative R»",
+   "#filter-artist «All Artists Brian Eno Ca»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»",
+   "select.series-pager-size.form-control «Series per page»",
+   "select.series-pager-size.form-control «Series per page»"
+  ],
+  "targets": 31,
+  "targetsBelow44": 23,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.px-3.py-1 «Pages» 56x24",
+   "button.px-3.py-1 «Scroll» 53x24",
+   "button.min-w-[2.25rem].px-3 «Previous» 78x34",
+   "button.min-w-[2.25rem].px-3 «1» 36x34",
+   "button.min-w-[2.25rem].px-3 «2» 36x34"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ },
+ "empty-1280x800": {
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "clientWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 936,
+  "firstAlbum": null,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [
+   "#genericSearch «»",
+   "#filter-series «All Series»",
+   "#filter-artist «All Artists»",
+   "#filter-year «All Years All Years 1960»",
+   "#filter-source «All Sources All Sources »",
+   "#genericSort «# of Albums (↑) # of Alb»"
+  ],
+  "targets": 12,
+  "targetsBelow44": 6,
+  "targetsBelow44Sample": [
+   "a.breadcrumb-link «Home» 47x19",
+   "#genericSort «# of Albums (↑) # of Alb» 130x42",
+   "#genericRefresh «Refresh» 124x41",
+   "#viewModeGrid «» 40x40",
+   "#viewModeList «» 38x38",
+   "button.btn.btn-primary «Go to Home» 165x41"
+  ],
+  "iconButtonsWithoutName": [
+   "#viewModeGrid «»",
+   "#viewModeList «»"
+  ],
+  "sheetOpen": false,
+  "pastTheEdge": []
+ }
+}

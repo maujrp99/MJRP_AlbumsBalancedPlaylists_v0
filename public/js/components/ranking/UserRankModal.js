@@ -15,6 +15,12 @@ import Sortable from 'sortablejs'
 import { formatDuration } from '../../utils/duration.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
 import { getIcon } from '../Icons.js'
+import { isPhone, onPhoneChange } from '../../utils/isPhone.js'
+import { renderPhoneRow, renderPhoneWindow } from './rankWindowPhone.js'
+
+/** How long the window's own notice stays: a plain one, and one that offers a way back. */
+const TOAST_MS = 2000
+const TOAST_WITH_ACTION_MS = 5000
 
 /**
  * @typedef {Object} UserRankModalOptions
@@ -51,6 +57,9 @@ export class UserRankModal {
 
         this.modalElement = null
         this.sortableInstance = null
+        // The phone (F76): the track picked to move without dragging, and the «Move to…» sheet
+        this.pickedId = null
+        this._sheet = null
     }
 
     /**
@@ -75,9 +84,38 @@ export class UserRankModal {
 
         // Add escape key listener
         this._escapeHandler = (e) => {
-            if (e.key === 'Escape') this.close()
+            if (e.key === 'Escape' && !this._sheet) this.close()
         }
         document.addEventListener('keydown', this._escapeHandler)
+        // The window is drawn for the phone or for the computer: drawn again when that changes
+        this._stopPhone = onPhoneChange(() => this._redraw())
+    }
+
+    /** Draws the window again, in the same order (the screen became, or stopped being, a phone). */
+    _redraw() {
+        if (!this.modalElement) return
+        this.sortableInstance?.destroy()
+        this.sortableInstance = null
+        this._sheet?.close()
+        const fresh = this._render()
+        this.modalElement.replaceWith(fresh)
+        this.modalElement = fresh
+        requestAnimationFrame(() => this._initDragDrop())
+    }
+
+    /**
+     * Moves a track of the order on screen from one place to another (0-based; a place past the
+     * ends is the end). The phone's buttons move tracks with it; dragging changes the order itself.
+     * @returns {boolean} whether the order changed
+     */
+    moveTrack(from, to) {
+        const last = this.rankedOrder.length - 1
+        const target = Math.max(0, Math.min(last, to))
+        if (from < 0 || from > last || target === from) return false
+        const [track] = this.rankedOrder.splice(from, 1)
+        this.rankedOrder.splice(target, 0, track)
+        this._updateTrackList()
+        return true
     }
 
     /**
@@ -95,6 +133,8 @@ export class UserRankModal {
         }
 
         document.removeEventListener('keydown', this._escapeHandler)
+        this._stopPhone?.()
+        this._sheet?.close()
 
         if (this.onClose) {
             this.onClose()
@@ -149,8 +189,12 @@ export class UserRankModal {
      * @private
      */
     _render() {
+        this.phone = isPhone()
+        if (this.phone) return renderPhoneWindow(this)
+
         const overlay = SafeDOM.div({
-            className: 'fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm',
+            // rank-window: the name the phone's stylesheet and scroll hold know this window by (F76)
+            className: 'rank-window fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm',
             onClick: (e) => {
                 if (e.target === overlay) this.close()
             }
@@ -245,6 +289,7 @@ export class UserRankModal {
      * @private
      */
     _renderTrackItem(track, index) {
+        if (this.phone) return renderPhoneRow(this, track, index)
         const hasRank = track.rank && track.rank < 999
         const hasSpotifyRank = track.spotifyRank && track.spotifyRank < 999
 
@@ -262,7 +307,8 @@ export class UserRankModal {
         // Rank number (user's order)
         const rankNum = SafeDOM.div({
             className: 'w-8 h-8 flex items-center justify-center rounded-full ' +
-                'bg-sky-500/10 text-sky-500 text-sm font-bold border border-sky-500/20'
+                'bg-sky-500/10 text-sky-500 text-sm font-bold border border-sky-500/20',
+            dataset: { role: 'rank-number' }
         }, String(index + 1))
 
         // Track info
@@ -319,7 +365,8 @@ export class UserRankModal {
             // Note: SortableJS class options can only have single class names
             // Using fallback style via onChoose/onUnchoose instead
             dragClass: 'cursor-grabbing',
-            handle: '.group', // Whole item is draggable
+            // The whole item on the computer; on the phone only the handle, so a finger elsewhere scrolls
+            handle: this.phone ? '.rank-row__handle' : '.group',
             onChoose: (evt) => {
                 // Add ring highlight manually (supports multiple classes)
                 evt.item.classList.add('ring-2', 'ring-sky-500')
@@ -355,7 +402,7 @@ export class UserRankModal {
 
         const items = listEl.querySelectorAll('[data-track-id]')
         items.forEach((item, index) => {
-            const rankEl = item.querySelector('.bg-sky-500\\/10')
+            const rankEl = item.querySelector('[data-role="rank-number"]')
             if (rankEl) {
                 rankEl.textContent = String(index + 1)
             }
@@ -382,14 +429,25 @@ export class UserRankModal {
      * @param {'success'|'error'} type
      * @private
      */
-    _showToast(message, type = 'success') {
+    _showToast(message, type = 'success', action = null) {
+        // rank-toast: the phone puts it below the top of the window (css/mobile/ranking.css)
         const toast = SafeDOM.div({
-            className: `fixed bottom-4 right-4 px-4 py-2 rounded-lg text-sm font-medium z-[60] 
+            className: `rank-toast fixed bottom-4 right-4 px-4 py-2 rounded-lg text-sm font-medium z-[60] 
                        ${type === 'error' ? 'bg-red-500 text-white' : 'bg-sky-500 text-white'}
-                       animate-in slide-in-from-bottom-4`
+                       animate-in slide-in-from-bottom-4`,
+            role: 'status'
         }, message)
+        if (action) {
+            toast.appendChild(SafeDOM.button({
+                className: 'rank-toast__action',
+                onClick: () => {
+                    toast.remove()
+                    action.run()
+                }
+            }, action.label))
+        }
 
         document.body.appendChild(toast)
-        setTimeout(() => toast.remove(), 2000)
+        setTimeout(() => toast.remove(), action ? TOAST_WITH_ACTION_MS : TOAST_MS)
     }
 }

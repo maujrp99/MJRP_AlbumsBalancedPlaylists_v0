@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  F76 TASK-02 harness: the REAL albums screen (SeriesView and its components) with fixture data
+  (50 series, ~230 albums, long names), because nobody can sign in from headless Chrome.
+  Served by Vite from the repo root:  npx vite --port 5183 --strictPort --host 127.0.0.1 .
+  Open  /reports/evidence/F76/harness/albums.html?scope=all|single&view=grid|list&filters=1&state=ready|loading|empty
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Albums harness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-black text-white font-syne">
+  <div id="header-container"></div>
+  <div id="app" class="min-h-screen">Loading...</div>
+  <div id="footer-container"></div>
+  <script type="module" src="./albums-harness.js"></script>
+</body>
+</html>

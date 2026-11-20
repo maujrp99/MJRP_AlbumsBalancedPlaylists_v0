@@ -6,6 +6,8 @@ import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { getSeriesService } from '../../services/SeriesService.js'
 import { parseAlbumQuery, toAlbumQuery } from '../../models/albumQuery.js'
 import { decodeEntities } from '../../models/text.js'
+import { isPhone } from '../../utils/isPhone.js'
+import { getIcon } from '../Icons.js'
 import {
     idleSave, canSave, saveStarted, saveFailed, describeSave, problemBeforeSave, hasAlbumQuery
 } from '../../models/seriesDraft.js'
@@ -111,6 +113,18 @@ export class SeriesEditModal {
         this.drawAlbums()
     }
 
+    /**
+     * Move an album of the series one place up (-1) or down (+1), without dragging (F76, the phone).
+     * Nothing is written until "Save Changes", like every other change of this modal.
+     */
+    moveAlbumAt(index, delta) {
+        const to = index + delta
+        if (to < 0 || to >= this.albumQueries.length) return
+        const [query] = this.albumQueries.splice(index, 1)
+        this.albumQueries.splice(to, 0, query)
+        this.drawAlbums()
+    }
+
     drawAlbums() {
         const { list, count } = this.elements
         SafeDOM.clear(list)
@@ -129,14 +143,34 @@ export class SeriesEditModal {
             type: 'button',
             className: 'btn btn-ghost btn-sm text-red-400 hover:text-red-300',
             title: 'Remove album',
+            'aria-label': `Remove ${title}`,
             dataset: { action: 'remove-album' },
             onClick: () => this.removeAlbumAt(index)
         }, 'x')
 
         return SafeDOM.div({ className: 'flex items-center justify-between p-2 bg-white/5 rounded-lg mb-1', dataset: { albumRow: 'true' } }, [
             SafeDOM.span({ className: 'text-sm truncate flex-1' }, artist ? `${artist} - ${title}` : title),
+            ...this.phoneMoveButtons(index, title),
             removeButton
         ])
+    }
+
+    /** On the phone each album moves up and down by a tap (F76): no drag. Nothing on the computer. */
+    phoneMoveButtons(index, title) {
+        if (!isPhone()) return []
+        const move = (delta, label, disabled) => {
+            const button = SafeDOM.button({
+                type: 'button',
+                className: `series-move-btn${delta > 0 ? ' series-move-btn--down' : ''}`,
+                'aria-label': `${label} ${title}`,
+                dataset: { action: delta > 0 ? 'move-down' : 'move-up' },
+                onClick: () => this.moveAlbumAt(index, delta)
+            })
+            button.appendChild(SafeDOM.fromHTML(getIcon('ArrowUp', 'w-5 h-5 pointer-events-none')))
+            button.disabled = disabled
+            return button
+        }
+        return [move(-1, 'Move up', index === 0), move(1, 'Move down', index === this.albumQueries.length - 1)]
     }
 
     /** The one way the save's state changes: keep it, then draw from it. */

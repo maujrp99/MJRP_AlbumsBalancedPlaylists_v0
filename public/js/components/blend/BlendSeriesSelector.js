@@ -13,6 +13,8 @@ import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { getSeriesService } from '../../services/SeriesService.js'
 import { AlbumCascade } from '../common/AlbumCascade.js'
 import { optimizedAlbumLoader } from '../../services/OptimizedAlbumLoader.js'
+import { BlendSeriesPhonePicker } from './BlendSeriesPhonePicker.js'
+import { isPhone } from '../../utils/isPhone.js'
 
 export class BlendSeriesSelector {
     constructor(opts = {}) {
@@ -24,6 +26,13 @@ export class BlendSeriesSelector {
         this.isLoading = false
         // Cache for album cover thumbnails (keyed by series ID)
         this.thumbnailCache = new Map()
+        // The phone (F76): one row in the page and a sheet with search, instead of the box that scrolls
+        this.phonePicker = new BlendSeriesPhonePicker({
+            getSeries: () => this.series,
+            getChosen: () => this.selectedSeries,
+            thumbnailsOf: (series) => this.getSeriesThumbnails(series, 3),
+            onChoose: (series) => this.choose(series)
+        })
     }
 
     /**
@@ -141,6 +150,7 @@ export class BlendSeriesSelector {
     render() {
         const container = document.getElementById('blend-series-selector')
         if (!container) return
+        if (isPhone()) return this.renderPhone(container)
 
         const entityOptions = BlendSeriesSelector.ENTITY_TYPES.map(t => `
             <option value="${t.id}" ${t.id === this.selectedEntity ? 'selected' : ''} ${!t.available ? 'disabled' : ''}>
@@ -174,6 +184,35 @@ export class BlendSeriesSelector {
 
         this.attachListeners()
         this.revealChosenCard(container)
+    }
+
+    /**
+     * The phone (F76, REQ-10): the same «Blend your Music by» select, then one row with the series
+     * chosen that opens the sheet with every series and a search. No list with its own scroll.
+     */
+    renderPhone(container) {
+        const entityOptions = BlendSeriesSelector.ENTITY_TYPES.map(t => `
+            <option value="${t.id}" ${t.id === this.selectedEntity ? 'selected' : ''} ${!t.available ? 'disabled' : ''}>
+                ${t.label}${!t.available ? ' (Coming Soon)' : ''}
+            </option>
+        `).join('')
+        container.innerHTML = `
+            <div class="blend-entity">
+                <label for="blend-entity-select" class="blend-entity__label">Blend your Music by</label>
+                <select id="blend-entity-select" class="w-full bg-surface/60 border border-white/10 rounded-lg px-4 py-3">${entityOptions}</select>
+            </div>
+            <p class="blend-pick__label">Series</p>
+        `
+        container.appendChild(this.phonePicker.renderRow({ loading: this.isLoading }))
+        this.phonePicker.refresh()
+        this.attachListeners()
+    }
+
+    /** A series was chosen (a card on the computer, a row of the sheet on the phone). */
+    choose(series) {
+        this.selectedSeries = series
+        this.onSeriesSelect(series)
+        this.render()
     }
 
     /**
@@ -275,10 +314,7 @@ export class BlendSeriesSelector {
         document.querySelectorAll('.blend-series-card').forEach(card => {
             const choose = () => {
                 const seriesId = card.dataset.seriesId
-                const series = this.series.find(s => s.id === seriesId)
-                this.selectedSeries = series
-                this.onSeriesSelect(series)
-                this.render()
+                this.choose(this.series.find(s => s.id === seriesId))
             }
             card.addEventListener('click', choose)
             // The card is a button for the keyboard too

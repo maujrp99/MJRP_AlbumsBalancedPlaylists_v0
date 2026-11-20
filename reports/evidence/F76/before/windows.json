@@ -1,0 +1,302 @@
+{
+ "menu-393x852-error": "TypeError: Cannot read properties of null (reading 'click')\n    at <anonymous>:1:40",
+ "menu-393x852": {
+  "open": false,
+  "shell": null,
+  "panel": null,
+  "title": null,
+  "pageHeld": false,
+  "role": null,
+  "targets": 0,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "clear-cache-393x852-error": "TypeError: Cannot read properties of null (reading 'click')\n    at <anonymous>:1:40",
+ "clear-cache-393x852": {
+  "open": false,
+  "shell": null,
+  "panel": null,
+  "title": null,
+  "pageHeld": false,
+  "role": null,
+  "targets": 0,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "sheet-full-393x852-error": "TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5184/js/components/ui/Sheet.js",
+ "sheet-full-393x852": {
+  "open": false,
+  "shell": null,
+  "panel": null,
+  "title": null,
+  "pageHeld": false,
+  "role": null,
+  "targets": 0,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "login-393x852": {
+  "open": true,
+  "shell": "modal-overlay",
+  "panel": [
+   16,
+   117,
+   361,
+   618
+  ],
+  "title": [
+   "Welcome Back",
+   65,
+   166,
+   263,
+   36
+  ],
+  "pageHeld": false,
+  "role": null,
+  "targets": 3,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "confirm-393x852": {
+  "open": true,
+  "shell": "fixed inset-0 z-50 flex items-center justify-center p-4 bg-b",
+  "panel": [
+   16,
+   277,
+   361,
+   299
+  ],
+  "title": [
+   "Delete this series?",
+   65,
+   318,
+   197,
+   28
+  ],
+  "pageHeld": false,
+  "role": null,
+  "targets": 3,
+  "targetsBelow44": [
+   [
+    "BUTTON",
+    28,
+    28
+   ]
+  ],
+  "fieldsBelow16": 0
+ },
+ "edit-393x852": {
+  "open": true,
+  "shell": "fixed inset-0 z-50 flex items-center justify-center p-4 bg-b",
+  "panel": [
+   16,
+   174,
+   361,
+   505
+  ],
+  "title": [
+   "Edit: Brothers In Arms (40th Anniversary",
+   65,
+   215,
+   235,
+   84
+  ],
+  "pageHeld": false,
+  "role": null,
+  "targets": 5,
+  "targetsBelow44": [
+   [
+    "BUTTON",
+    28,
+    28
+   ]
+  ],
+  "fieldsBelow16": 2
+ },
+ "album-393x852": {
+  "open": true,
+  "shell": "modal-overlay",
+  "panel": [
+   16,
+   107,
+   361,
+   639
+  ],
+  "title": [
+   "Brothers In Arms (40th Anniversary Editi",
+   185,
+   160,
+   39,
+   30
+  ],
+  "pageHeld": false,
+  "role": null,
+  "targets": 5,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "ranking-393x852": {
+  "open": true,
+  "shell": "fixed inset-0 z-50 flex items-center justify-center bg-black",
+  "panel": [
+   0,
+   0,
+   393,
+   852
+  ],
+  "title": null,
+  "pageHeld": false,
+  "role": null,
+  "targets": 3,
+  "targetsBelow44": [
+   [
+    "Back",
+    36,
+    24
+   ],
+   [
+    "Reset",
+    67,
+    36
+   ],
+   [
+    "Save",
+    82,
+    36
+   ]
+  ],
+  "fieldsBelow16": 0
+ },
+ "login-1280x800": {
+  "open": true,
+  "shell": "modal-overlay",
+  "panel": [
+   416,
+   119,
+   448,
+   562
+  ],
+  "title": [
+   "Welcome Back",
+   465,
+   168,
+   350,
+   36
+  ],
+  "pageHeld": false,
+  "role": null,
+  "targets": 3,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "confirm-1280x800": {
+  "open": true,
+  "shell": "fixed inset-0 z-50 flex items-center justify-center p-4 bg-b",
+  "panel": [
+   416,
+   264,
+   448,
+   273
+  ],
+  "title": [
+   "Delete this series?",
+   465,
+   305,
+   197,
+   28
+  ],
+  "pageHeld": false,
+  "role": null,
+  "targets": 3,
+  "targetsBelow44": [
+   [
+    "BUTTON",
+    28,
+    28
+   ]
+  ],
+  "fieldsBelow16": 0
+ },
+ "edit-1280x800": {
+  "open": true,
+  "shell": "fixed inset-0 z-50 flex items-center justify-center p-4 bg-b",
+  "panel": [
+   384,
+   162,
+   512,
+   477
+  ],
+  "title": [
+   "Edit: Brothers In Arms (40th Anniversary",
+   433,
+   203,
+   386,
+   56
+  ],
+  "pageHeld": false,
+  "role": null,
+  "targets": 5,
+  "targetsBelow44": [
+   [
+    "BUTTON",
+    28,
+    28
+   ]
+  ],
+  "fieldsBelow16": 2
+ },
+ "album-1280x800": {
+  "open": true,
+  "shell": "modal-overlay",
+  "panel": [
+   128,
+   100,
+   1024,
+   600
+  ],
+  "title": [
+   "Brothers In Arms (40th Anniversary Editi",
+   329,
+   153,
+   670,
+   36
+  ],
+  "pageHeld": false,
+  "role": null,
+  "targets": 2,
+  "targetsBelow44": [],
+  "fieldsBelow16": 0
+ },
+ "ranking-1280x800": {
+  "open": true,
+  "shell": "fixed inset-0 z-50 flex items-center justify-center bg-black",
+  "panel": [
+   304,
+   60,
+   672,
+   680
+  ],
+  "title": null,
+  "pageHeld": false,
+  "role": null,
+  "targets": 3,
+  "targetsBelow44": [
+   [
+    "Back",
+    36,
+    24
+   ],
+   [
+    "Reset",
+    67,
+    36
+   ],
+   [
+    "Save",
+    82,
+    36
+   ]
+  ],
+  "fieldsBelow16": 0
+ }
+}

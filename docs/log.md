@@ -3,9 +3,47 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:55] session — F76: as cinco telas do celular juntas no ramo de integração, provadas a 393 px na conta do MJRP
+**Branch:** feat/f76-mobile-redesign
+Juntados `feat/f76-mobile-inventory`, `-album-window`, `-playlists`, `-home-blend` e `-albums`, sem conflito; suíte 234 arquivos verdes, lint e build verdes. No navegador, conta do MJRP, 393x852: inventário (linhas, filtros, totais), janela do álbum (título, três fontes numa linha, faixas), ranking (títulos inteiros, Up/Down/Move to, Save fixo), Albums (primeiro álbum acima da dobra, folha de ações nomeadas), playlists gravadas, Home e Blend; nenhuma rola de lado. A 1280x800, Albums e inventário sem nenhum elemento do celular. As notas por tela estão em `screens/`; falta dobrá-las em `info-arch.md`, `behavior.md` e no manual (TASK de documentação aberta).
+
+## [2026-11-20 02:52] session — F76 TASK-05/06: prova em navegador, ajustes do que se viu e a nota da tela
+**Branch:** feat/f76-mobile-home-blend
+Prova no app de verdade com dados postos pela página (`reports/evidence/F76/harness/home-blend.mjs`, `reports/evidence/F76/home-blend/`): a 393x852 nenhum texto < 12, campo < 16, alvo < 44 nem caixa com rolagem própria; a 1280x800, 0 % de pixels diferentes da base. Ajustes do que se viu: o fundo decorativo da Home escurecia as capas, o selo de ordem, a barra em uma linha, o «Recommended» repetido, a duração do Blend.
+Nota da tela: `docs/specs/features/F76-mobile-redesign/screens/home-and-blend.md`. Decidido pelo agente — revisável.
+
+## [2026-11-20 02:52] session — F76 TASK-02: Albums no celular, ajuste visual e prova em navegador (harness)
+**Branch:** feat/f76-mobile-albums
+Ajustes vistos nas capturas: fonte do sistema no texto dos álbuns, lupa da busca, selos do ladrilho numa linha, vão entre séries, respiro sob o «voltar ao topo», o vazio sem o «no match» junto; alvos de 44 nas fichas, no segmentado e em Pages/Scroll. Harness `reports/evidence/F76/harness/albums.html` (a SeriesView real com 50 séries e 230 álbuns) e `shoot-albums.mjs`.
+Medido a 393x852: 1º álbum de 1126 para 261 px, alvos < 44 de 356 para 0, nada passa da borda; a 1280x800 sete cenários idênticos pixel a pixel. Nota da tela em `docs/specs/features/F76-mobile-redesign/screens/albums.md`.
+
 ## [2026-11-20 02:51] session — F75 em produção, com valores: 198 de 211 álbuns
 **Branch:** main
 Site e servidor da `70e63da`; revisão `mjrp-proxy-00213-qpq` com `DISCOGS_TOKEN` vindo do secret. A leitura na conta do MJRP deu valor a 198 de 211 álbuns ($1,166.51 no que ele tem; $339.27 no que falta). O Discogs recusa a sugestão em três estados enquanto a conta não tiver as configurações de vendedor: o valor é o menor preço à venda, e a tela diz isso. Prova: `reports/evidence/F75/2026-11-20-production-proof.md`.
+
+## [2026-11-20 02:49] session — F76 TASK-04: prova em navegador das playlists no celular, e acabamento
+**Branch:** feat/f76-mobile-playlists
+Arnês com os componentes reais (`reports/evidence/F76/harness/playlists/`) e capturas antes/depois a 393x852 e 1280x800 (`reports/evidence/F76/playlists/`): geradas 3.602 → 1.562 px, gravadas 10.756 → 1.793 px, 0 alvo < 44, sem rolagem interna; computador idêntico. Acabamento visto nas capturas: ficha aberta à vista, fonte do sistema nas linhas, ações da série só com ela aberta, nome do lote inteiro, aviso «info» com fundo (base, `mobile.css` § 9), redesenho só quando celular/computador muda de fato. Nota da tela: `screens/playlists.md`.
+
+## [2026-11-20 02:47] session — F76 TASK-03: a nota da tela e a prova em navegador da janela do álbum e do ranking
+**Branch:** feat/f76-mobile-album-window
+Nota `docs/specs/features/F76-mobile-redesign/screens/album-window-and-ranking.md` (inventário, estados, decisões e fontes). Prova `reports/evidence/F76/album-window/`: 1280x800 idêntico ao antes pixel a pixel; a 393x852 e 393x660 nada abaixo de 44/12/16 px, 8 e 5 faixas à vista na janela do álbum, 10 e 7 no ranking, nenhum título cortado.
+Arrastar por toque provado no Chrome (a alça move, o título rola). Não visto: iPhone de verdade e janelas com login.
+
+## [2026-11-20 02:44] session — F76 TASK-07: testes, nota da tela e prova do inventário no celular
+**Branch:** feat/f76-mobile-inventory
+15 testes do celular e do computador (`test/views/InventoryView.phone.test.js`), a nota `screens/inventory.md` e a harness com 211 itens (`reports/evidence/F76/harness/`); ajustes de CSS vistos nas capturas (fichas, título, aviso, moeda da edição em segmentos de 48 px).
+Prova a 393x852: sem rolagem lateral, 0 texto < 12, 0 campo < 16, 0 alvo < 44 em 13 estados; 150º álbum em 2 gestos. A 1280x800, antes e depois iguais em medidas (pixels: ruído de fonte em 18 px).
+
+## [2026-11-20 02:41] session — F76 TASK-03: ajustes vistos nas capturas e o banco de prova da janela do álbum e do ranking
+**Branch:** feat/f76-mobile-album-window
+O segmento ligado mantém o alvo de 44 px (a pílula desenhada por dentro), o cabeçalho alinha no topo, os botões de mover cabem, sai o vão herdado da tabela do computador.
+Banco de prova `reports/evidence/F76/harness/album-window.*` (as janelas de verdade com dados de exemplo: título longo, 16 faixas, valor do F75) e `reports/evidence/F76/album-window/shoot.mjs` (Chrome sem cabeça, porta própria; mede alvos, texto, campos, faixas à vista, rolagens).
+
+## [2026-11-20 02:36] session — F76 TASK-06: o Blend no celular, e o UAT-217
+**Branch:** feat/f76-mobile-home-blend
+Blend no celular (`public/css/mobile/blend.css`, `components/blend/BlendSeriesPhonePicker.js`): o passo 1 é uma linha que abre uma folha cheia com busca e as séries (sem caixa de 256 px com rolagem própria), passos com rótulo de 12 px e o atual marcado, receitas numa coluna com a descrição inteira, «Blend it!» na barra de ação, apagado com o motivo escrito. UAT-217: «Blend your Albums» leva a série da página (`SeriesComponentFactory.js`, mudança mínima fora da área).
+Testes de celular e de computador; no computador nada muda. Decidido pelo agente — revisável.
 
 ## [2026-11-20 02:35] session — F75, documentos: a sugestão recusada e o menor preço à venda
 
@@ -14,6 +52,11 @@ Site e servidor da `70e63da`; revisão `mjrp-proxy-00213-qpq` com `DISCOGS_TOKEN
 - `plan.md`: a decisão («decidido pelo agente — revisável»), como os três estados voltam, a leitura dos termos para as estatísticas do marketplace (conteúdo do Discogs: atribuição e seis horas; dado do marketplace, tratado como «Restricted Data») e o que não foi verificado.
 - `behavior.md` (`^inventory-value-lowest-for-sale`), `info-arch.md` (três estados novos com ID de bloco), `data-model.md` (a base `lowest_for_sale` da leitura; a chave `v2`), `arch.md` (emenda) e `docs/manual/21_Dynamic_UI_Mapping.md`.
 - Não verificado: `/marketplace/stats` com o token; quantas das 211 edições têm algo à venda (a de «The Dark Side of the Moon» tinha zero).
+
+## [2026-11-20 02:35] session — F76 TASK-03: a janela do álbum e o meu ranking no celular (código e testes)
+**Branch:** feat/f76-mobile-album-window
+Janela do álbum: uma rolagem só, barra com fechar sempre à vista, capa como herói com a própria capa desfocada atrás, as três fontes num controle segmentado preso sob a barra, faixa em duas linhas (título sozinho; BEA, Spotify e duração embaixo). Meu ranking: barra Back · My ranking · Reset (Reset desfazível por 5 s), linha com o título em linha própria, mover sem arrastar (tocar na faixa, Up/Down/«Move to…»), arrastar só pela alça, Save preso no pé, o aviso abaixo da barra.
+Testes novos: TracksTabs.phone, ViewAlbumModal.phone, UserRankModal.phone (celular e computador). No computador a marcação é a de hoje.
 
 ## [2026-11-20 02:34] session — F75, app: o menor preço à venda como valor do Discogs, um aviso só sobre as configurações de vendedor, e as leituras erradas descartadas
 
@@ -24,6 +67,25 @@ Site e servidor da `70e63da`; revisão `mjrp-proxy-00213-qpq` com `DISCOGS_TOKEN
 - A rodada não pergunta mais a página de preço a cada álbum: o serviço lembra a recusa na memória da página por seis horas e manda `prices: 'lowest'`. Decidido pelo agente — revisável: cada rodada nova tenta a sugestão uma vez, no primeiro álbum; se vier, os três estados voltam sem mudar código.
 - A chave das leituras no navegador foi para `inventoryvalue:v2:`: as leituras erradas da primeira rodada em produção não são lidas de volta.
 - Testes escritos antes e vistos falhar (14 de 15). Suíte: 2879 testes; lint e build verdes. Um teste de tempo (`inventoryFromSeries`, 200 álbuns em menos de 1 s) falhou uma vez sob carga e passou sozinho.
+
+## [2026-11-20 02:34] session — F76 TASK-05: a Home no celular (o escolhido anda com o dedo)
+**Branch:** feat/f76-mobile-home-blend
+Home no celular (`public/css/mobile/home.css`, `components/home/HomePhoneChosen.js`): uma coluna que rola com a página, filtros de tipo em duas colunas de 44 px, Visual/Bulk Paste em controle segmentado de 44 px, o álbum tocado ganha anel e número, barra de ação «N albums chosen · Create series» sempre à vista e folha com o conjunto escolhido (subir, descer, remover com «Undo», sem arrastar). Janela de edição da série: lista sem caixa própria, subir/descer no celular, alvos de 44 px.
+Testes de celular e de computador (`test/components/home/HomePhone.chosen.test.js`); no computador nada muda. Decidido pelo agente — revisável.
+
+## [2026-11-20 02:33] session — F76 TASK-07: o inventário no celular em linhas compactas, em blocos, com folhas
+**Branch:** feat/f76-mobile-inventory
+No celular (`isPhone()`), o inventário vira uma linha por álbum (capa de 64, título em duas linhas, status de 44 px que abre uma folha com os três, valor com a origem, «⋯» com as ações nomeadas), desenhada em blocos de 50 com «Show 50 more» e um salto por letra (ou por posição); busca, A–Z, filtros e ações presas sob a barra do topo. `InventoryPhoneRow.js`, `InventoryPhoneSheets.js`, `models/inventoryJump.js`, `css/mobile/inventory.css`.
+O computador não muda: `renderComputer` é o desenho de antes.
+
+## [2026-11-20 02:33] session — F76 TASK-02: Albums no celular (filtros numa folha, cartão e linha do álbum com «⋯», cabeçalho da série, pager)
+**Branch:** feat/f76-mobile-albums
+No celular, a barra de Albums fica só com a busca e um botão «Filters» com quantos estão ligados (fichas que se removem; a vista, a ordem, os filtros e Reload numa folha de baixo); o álbum é um ladrilho (capa, título em duas linhas, artista · ano) ou uma linha compacta de 56 px, com as ações nomeadas numa folha aberta pelo «⋯» de 44 px; o cabeçalho da série quebra o nome e leva o «⋯» de Edit e Delete; o pager de cima é uma linha e o de baixo pula a qualquer página. Achados 1, 2, 7, 8, 19 e 22 da crítica.
+Tudo só no celular (`isPhone()` ou `md:hidden`, CSS em `public/css/mobile/albums.css`); o computador fica igual. Testes em `test/components/series/albumsOnThePhone.test.js` (celular e computador).
+
+## [2026-11-20 02:32] session — F76 TASK-04: playlists no celular, uma por vez, e as gravadas fechadas por série
+**Branch:** feat/f76-mobile-playlists
+`/playlists` no celular: fichas no topo (nome, faixas, duração) abrem uma playlist por vez; as faixas rolam com a página; cada faixa tem «⋯» de 44 px com mover (cima, baixo, topo, fim, para outra playlist) e remover com Desfazer; apagar playlist pergunta antes; Salvar e Exportar (folha com Spotify, Apple Music, JSON) na barra de ação. `/saved-playlists`: série fechada com «n lotes · n playlists», sem ID cru, ações nomeadas de 44 px. Computador sem mudança (marcação só no celular). Testes: `test/components/playlists/PhonePlaylists.test.js`.
 
 ## [2026-11-20 02:31] session — F75, servidor: a sugestão recusada por falta de «seller settings» tem nome, e o menor preço à venda entra no lugar
 
@@ -37,6 +99,14 @@ Site e servidor da `70e63da`; revisão `mjrp-proxy-00213-qpq` com `DISCOGS_TOKEN
 ## [2026-11-20 02:25] session — F75 em produção: o 404 da página de preço não é «sem edição em CD»
 **Branch:** feat/f75-cd-prices-and-where-to-buy
 Na primeira leitura na conta do MJRP, 16 de 16 álbuns voltaram «No CD edition found», em cerca de 3 s cada (três pedidos ao Discogs): a busca e as versões funcionam (refeitas sem token: AC/DC «High Voltage» acha a edição 864947) e o terceiro pedido, o do preço, voltou 404, que o servidor lia como «não achado». Conserto: o 404 da página de preço vira «sem valor», com a edição dita, e o que o Discogs escreveu vai para o log; o 404 de uma página de master continua «não achado».
+
+## [2026-11-20 02:20] session — F76 TASK-01: design-system (§ Celular), o plano, o kit das telas e a prova em navegador
+**Branch:** feat/f76-mobile-redesign
+Criado `docs/specs/design-system.md` § Celular (44 / 12 / 16 px, escala de tipo, barras, folha, áreas seguras, com as fontes: WebKit, MDN, web.dev, WCAG, Apple; achado 24 da crítica). `plan.md` reescrito com cada módulo e seu REQ; `mobile-kit.md` para quem faz as telas (um CSS por tela em `public/css/mobile/`, a API da folha, a barra de ação, o que a base achou e é de cada tela); TASK-01 marcada. Prova: `reports/evidence/F76/2026-11-20-foundation-proof.md` (Chrome sem cabeça a 393x852, 852x393 e 1280x800, antes e depois; fora do celular as medidas de layout são iguais nas 14 telas e nas 5 janelas, e as capturas idênticas a menos de ruído de captura medido). Não visto: iPhone de verdade e telas com login.
+
+## [2026-11-20 02:19] session — F76 TASK-01: a base do celular (barras, folha, medidas mínimas, ícone da tela de início)
+**Branch:** feat/f76-mobile-redesign
+A base que as telas da F76 vão usar, toda dentro de `@media (max-width: 767px)` (`public/css/mobile.css`) e montada só no celular (`utils/isPhone.js`): barra do topo baixa com o nome da tela, barra de baixo com os cinco destinos, menu em folha (com «Clear album cache» pedindo confirmação), a folha `components/ui/Sheet.js` (tela cheia e de baixo), as janelas que existiam viradas folha pela casca, a página de trás presa, campos a 16 px, texto a 12 px, alvos de 44 px nos botões nomeados, margem de 16 px, `viewport-fit=cover` com áreas seguras, manifesto e ícone quadrado. Teste de arquitetura novo: `test/architecture/phoneStylesStayOnThePhone.test.js`. Decidido pelo agente — revisável: tudo o que é desenho (ver `plan.md`). Vitest 2733 de 2733, ESLint limpo, `vite build` verde.
 
 ## [2026-11-20 02:17] session — F75: o interruptor é perguntado de novo quando a pessoa do inventário muda
 

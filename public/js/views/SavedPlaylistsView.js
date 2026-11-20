@@ -20,6 +20,7 @@ import { SavedSeriesGroup } from '../components/playlists/SavedSeriesGroup.js'
 import FilterToolbar from '../components/ui/FilterToolbar.js'
 import { SavedPlaylistsFilterService } from '../services/SavedPlaylistsFilterService.js'
 import { ListStatus } from '../models/savedPlaylists.js'
+import { isPhone, onPhoneChange } from '../utils/isPhone.js'
 
 /** What a series group shows: when none of it changed, the group on screen is kept as it is. */
 const shownOf = (group) => ({
@@ -36,6 +37,7 @@ export class SavedPlaylistsView extends BaseView {
         super()
         this.controller = new SavedPlaylistsController(this)
         this.groupNodes = new Map() // seriesId -> { shown, node }
+        this.openSeries = new Set() // the phone: the series opened (closed by default, F76)
         this.filterState = {
             search: '',
             seriesId: 'all',
@@ -51,6 +53,9 @@ export class SavedPlaylistsView extends BaseView {
     async mount() {
         this.container = document.getElementById('app')
         this.subscriptions.push(this.controller.subscribe(() => this.update()))
+        // The phone draws a series closed with a row to open it; the computer draws it open
+        this.drawnForPhone = isPhone()
+        this.subscriptions.push(onPhoneChange((phone) => this.redrawGroups(phone)))
         this.controller.open()
         this.update()
     }
@@ -166,6 +171,15 @@ export class SavedPlaylistsView extends BaseView {
         return node
     }
 
+    /** Every series drawn again when the screen became a phone, or stopped being one. */
+    redrawGroups(phone) {
+        if (!this.groupsNode || phone === this.drawnForPhone) return
+        this.drawnForPhone = phone
+        this.groupNodes.forEach(({ node }) => node?.remove())
+        this.groupNodes.clear()
+        this.refreshContent()
+    }
+
     replaceChildren(parent, child) {
         SafeDOM.clear(parent)
         if (child) parent.appendChild(child)
@@ -174,6 +188,8 @@ export class SavedPlaylistsView extends BaseView {
     renderSeriesGroup(group) {
         const component = new SavedSeriesGroup({
             group,
+            open: this.openSeries.has(group.seriesId),
+            onToggle: (sid, open) => (open ? this.openSeries.add(sid) : this.openSeries.delete(sid)),
             handlers: {
                 onNavigate: () => this.controller.navigateBlend(),
                 onOpenSeries: (sid) => this.controller.openSeriesManager(sid),
