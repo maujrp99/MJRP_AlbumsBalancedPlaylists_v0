@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparador · Inventário</title>
+<style>
+  :root { --bg:#0b0b0d; --panel:#16161a; --line:#2a2a30; --text:#f2f2f3; --muted:#9a9aa3; --amber:#fbbf24; --orange:#f97316; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  header { padding:14px 18px; border-bottom:1px solid var(--line); }
+  h1 { font-size:18px; margin:0 0 2px; }
+  header p { margin:0; color:var(--muted); font-size:13px; }
+  .bar { display:flex; gap:14px; flex-wrap:wrap; align-items:center; padding:10px 18px; border-bottom:1px solid var(--line); }
+  .grp { display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .grp button { background:transparent; color:var(--muted); border:0; padding:6px 12px; cursor:pointer; font:inherit; font-weight:600; }
+  .grp button[aria-pressed="true"] { background:var(--orange); color:#fff; }
+  .bar label { color:var(--muted); font-size:12px; display:flex; gap:8px; align-items:center; }
+  .bar select { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:6px 8px; font:inherit; }
+  .cols { display:flex; gap:18px; padding:18px; overflow-x:auto; align-items:flex-start; }
+  .col { flex:none; }
+  .col h2 { font-size:15px; margin:0; }
+  .col h2 .mark { color:var(--amber); }
+  .col .say { color:var(--muted); font-size:12px; margin:2px 0 8px; max-width:560px; }
+  .col a { color:#60a5fa; font-size:12px; }
+  .frame { border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#000; }
+  .frame iframe { border:0; display:block; transform-origin:0 0; }
+  .hint { margin:0 18px 18px; color:var(--muted); font-size:12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Comparador · Inventário</h1>
+  <p>A tela de hoje ao lado de cada versão do protótipo. Abra pelo servidor local (<code>http://127.0.0.1:5010/_compare-inventory.html</code>), com a sua conta: a «Referência» é o inventário de verdade.</p>
+</header>
+<div class="bar">
+  <div class="grp" id="width" role="group" aria-label="Largura"></div>
+  <div class="grp" id="filter" role="group" aria-label="Versões"></div>
+  <label>Cenário do protótipo <select id="scenario"></select></label>
+</div>
+<div class="cols" id="cols"></div>
+<p class="hint">Uma versão nova entra aqui com um nome que diz o que mudou. A versão que você viu nunca é sobrescrita.</p>
+<script>
+// The screen of today.
+const CURRENT = { name: 'Referência · a tela de hoje', say: 'O inventário como está em produção: sem valor estimado; o total «Total Owned» soma só o que você pagou.', file: '/inventory' };
+// Newest first. `old: true` on every version that is not one of the last two.
+const VERSIONS = [
+  { id: 'v2', name: 'v2 · Nova', say: 'A mesma proposta da v1, agora sobre a tela real do inventário (o HTML e os estilos do app, com doze dos seus álbuns e as capas de verdade). O total virou uma faixa sob o título, no lugar do «Total Owned».', file: '/_prototype-inventory-value-v2.html' },
+  { id: 'v1', name: 'v1 · Esboço', say: 'Valor estimado lido do Discogs (três estados e a média), editável à mão; o total separado em «o que tenho» e «o que falta comprar»; quatro moedas; fila para álbuns novos; links de compra.', file: '/_prototype-inventory-value.html' }
+];
+const SCENARIOS = [['read', 'Valores lidos'], ['connect', 'Discogs não conectado'], ['reading', 'Lendo os valores'], ['new', 'Álbuns novos esperando valor'], ['window', 'Janela: três estados e a média'], ['hand', 'Janela: valor escrito à mão'], ['notfound', 'Janela: edição não achada']];
+const WIDTHS = [[1440, 0.5], [390, 1]];
+let width = 1440, all = false, scenario = 'read';
+
+const group = (id, items, current) => { document.getElementById(id).innerHTML = items.map(([value, label]) => `<button type="button" data-v="${value}" aria-pressed="${String(value) === String(current)}">${label}</button>`).join(''); };
+function draw() {
+  group('width', WIDTHS.map(([w]) => [w, `${w} px`]), width);
+  group('filter', [['last', 'Últimas duas'], ['all', 'Todas']], all ? 'all' : 'last');
+  document.getElementById('scenario').innerHTML = SCENARIOS.map(([id, label]) => `<option value="${id}" ${id === scenario ? 'selected' : ''}>${label}</option>`).join('');
+  const scale = WIDTHS.find(([w]) => w === width)[1];
+  const height = width === 390 ? 844 : 900;
+  const column = (item, isVersion) => {
+    const src = isVersion ? `${item.file}#s=${scenario}` : item.file;
+    const [title, mark] = item.name.split(' · ');
+    return `<section class="col"><h2>${title}${mark ? ` <span class="mark">· ${mark}</span>` : ''}</h2><p class="say">${item.say}</p>
+      <div class="frame" style="width:${width * scale}px;height:${height * scale}px"><iframe title="${item.name}" src="${src}" style="width:${width}px;height:${height}px;transform:scale(${scale})"></iframe></div>
+      <a href="${src}" target="_blank" rel="noopener">abrir sozinha ↗</a></section>`;
+  };
+  const versions = VERSIONS.filter(version => all || !version.old);
+  document.getElementById('cols').innerHTML = column(CURRENT, false) + versions.map(version => column(version, true)).join('');
+}
+document.getElementById('width').addEventListener('click', (e) => { if (e.target.dataset.v) { width = Number(e.target.dataset.v); draw(); } });
+document.getElementById('filter').addEventListener('click', (e) => { if (e.target.dataset.v) { all = e.target.dataset.v === 'all'; draw(); } });
+document.getElementById('scenario').addEventListener('change', (e) => { scenario = e.target.value; draw(); });
+draw();
+</script>
+</body>
+</html>

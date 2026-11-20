@@ -126,6 +126,16 @@ describe('InventoryRepository.setAverages', () => {
         expect(firestore.state.batches).toHaveLength(0)
     })
 
+    it('writes the cover as one field inside albumData, with or without averages (UAT-222)', async () => {
+        const { repository } = build()
+
+        await repository.setAverages([{ id: 'a', averages: averages(80, 50), coverUrl: 'https://example.com/a.jpg' }, { id: 'b', coverUrl: 'https://example.com/b.jpg' }])
+
+        const [batch] = firestore.state.batches
+        expect(batch.updates[0].data).toEqual({ averages: averages(80, 50), 'albumData.coverUrl': 'https://example.com/a.jpg', updatedAt: 'SERVER_TIME' })
+        expect(batch.updates[1].data).toEqual({ 'albumData.coverUrl': 'https://example.com/b.jpg', updatedAt: 'SERVER_TIME' })
+    })
+
     it('the old door still refuses a field it does not know: `averages` is not written by updateAlbum', async () => {
         const { repository } = build()
 

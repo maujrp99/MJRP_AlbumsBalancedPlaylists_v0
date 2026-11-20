@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inventário · valor estimado e onde comprar · protótipo v1</title>
+<style>
+  :root { --bg:#0b0b0d; --panel:#16161a; --panel2:#0f0f12; --line:#2a2a30; --text:#f2f2f3; --muted:#9a9aa3; --orange:#f97316; --green:#1db954; --amber:#fbbf24; --red:#ef4444; --blue:#60a5fa; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  button, select, input { font:inherit; }
+  .proto { background:#1d1408; border-bottom:1px solid #5b3a10; padding:10px 16px; }
+  .proto h1 { font-size:15px; margin:0 0 2px; color:var(--amber); }
+  .proto p { margin:0 0 8px; color:#d9c7a8; font-size:12px; }
+  .scen { display:flex; gap:6px; flex-wrap:wrap; }
+  .scen button { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:6px 10px; cursor:pointer; font-size:12px; font-weight:600; }
+  .scen button[aria-pressed="true"] { border-color:var(--amber); color:var(--amber); }
+  .wrap { max-width:1100px; margin:0 auto; padding:16px; }
+  .title-row { display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end; justify-content:space-between; margin-bottom:14px; }
+  .title-row h2 { font-size:26px; margin:0; letter-spacing:.01em; }
+  .counts { display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:12px; margin-top:6px; }
+  .counts b { color:var(--orange); font-size:13px; }
+  .pill { border:1px solid var(--line); border-radius:999px; padding:2px 10px; font-weight:700; letter-spacing:.04em; font-size:11px; }
+  .pill.ok { border-color:#1f6b3a; color:#6ee7a0; background:#0d2417; }
+  .value-box { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 14px; min-width:290px; }
+  .value-box .lab { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.08em; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .value-box .big { font-size:26px; font-weight:800; color:var(--orange); line-height:1.15; }
+  .value-box .sub { color:var(--muted); font-size:12px; }
+  .value-box .rest { margin-top:6px; padding-top:6px; border-top:1px solid var(--line); font-size:12px; color:var(--text); }
+  .value-box .rest span { color:var(--muted); }
+  .cur { display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .cur button { background:transparent; color:var(--muted); border:0; padding:3px 8px; cursor:pointer; font-size:11px; font-weight:700; }
+  .cur button[aria-pressed="true"] { background:var(--orange); color:#fff; }
+  .bar { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
+  .bar input, .bar select { background:var(--panel2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:8px 10px; min-width:0; }
+  .bar input { flex:1 1 180px; }
+  .btn { background:var(--panel2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:600; white-space:nowrap; }
+  .btn:hover { border-color:#4a4a55; }
+  .btn.primary { background:var(--orange); border-color:var(--orange); color:#fff; }
+  .btn[disabled] { opacity:.7; cursor:default; }
+  .notice { border:1px solid var(--line); border-left:3px solid var(--blue); background:#0e1622; border-radius:10px; padding:10px 12px; margin:0 0 12px; font-size:13px; display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+  .notice.warn { border-left-color:var(--amber); background:#1d1708; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; margin-top:12px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; cursor:pointer; text-align:left; color:inherit; padding:0; display:block; width:100%; }
+  .card:hover, .card:focus-visible { border-color:var(--orange); outline:none; }
+  .cover { aspect-ratio:1.6; display:grid; place-items:center; font-weight:800; font-size:20px; color:#000a; position:relative; }
+  .status { position:absolute; top:8px; right:8px; background:#000b; color:#fff; border-radius:999px; padding:2px 9px; font-size:10px; font-weight:700; }
+  .card .body { padding:10px 12px 12px; }
+  .card h3 { margin:0; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .card .artist { color:var(--muted); font-size:12px; margin:0 0 6px; }
+  .card .avg { color:var(--muted); font-size:11px; margin:0 0 6px; }
+  .val { display:flex; align-items:baseline; gap:6px; flex-wrap:wrap; }
+  .val strong { font-size:16px; }
+  .tag { font-size:10px; font-weight:700; border-radius:6px; padding:1px 6px; border:1px solid var(--line); color:var(--muted); }
+  .tag.discogs { color:#c7d2fe; border-color:#3b4a8a; background:#11162b; }
+  .tag.yours { color:#fde68a; border-color:#7a5c10; background:#211a06; }
+  .tag.new { color:#6ee7a0; border-color:#1f6b3a; background:#0d2417; }
+  .val .none { color:var(--muted); font-size:12px; }
+  .overlay { position:fixed; inset:0; background:#000c; display:none; align-items:flex-start; justify-content:center; padding:24px 12px; overflow:auto; z-index:5; }
+  .overlay.open { display:flex; }
+  .modal { background:var(--panel); border:1px solid var(--line); border-radius:14px; width:min(760px,100%); }
+  .modal header { display:flex; gap:14px; padding:16px; border-bottom:1px solid var(--line); align-items:flex-start; }
+  .modal header .c { width:84px; height:84px; border-radius:10px; flex:none; display:grid; place-items:center; font-weight:800; color:#000a; }
+  .modal header h3 { margin:0; font-size:20px; }
+  .modal header p { margin:0; color:var(--orange); }
+  .modal .x { margin-left:auto; }
+  .sec { padding:14px 16px; border-bottom:1px solid var(--line); }
+  .sec h4 { margin:0 0 4px; font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+  .sec .explain { color:var(--muted); font-size:12px; margin:0 0 10px; }
+  .cond { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .cond div { background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:8px 10px; }
+  .cond div.mean { border-color:var(--orange); }
+  .cond small { color:var(--muted); display:block; font-size:11px; }
+  .cond b { font-size:17px; }
+  .meta { color:var(--muted); font-size:12px; margin:10px 0 0; }
+  .meta a { color:var(--blue); }
+  .edit { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:10px; }
+  .edit input { width:120px; background:var(--panel2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:7px 9px; }
+  .buy { display:flex; gap:8px; flex-wrap:wrap; }
+  .buy a { text-decoration:none; }
+  .foot { padding:12px 16px; display:flex; justify-content:flex-end; }
+  .hide { display:none !important; }
+  /* Wireframe mode (?wire=1): no colour, each box named by its inventory ID (the proposal's table) */
+  body.wire { filter:grayscale(1); }
+  body.wire .proto { display:none; }
+  body.wire [data-inv] { outline:2px dashed #fff; outline-offset:2px; position:relative; }
+  body.wire [data-inv]::before { content:attr(data-inv); position:absolute; top:-10px; left:6px; z-index:9; background:#fff; color:#000; font:700 10px/1.4 ui-monospace,monospace; padding:0 5px; border-radius:4px; white-space:nowrap; }
+  body.wire .cover { background:#555 !important; }
+  @media (max-width:560px) { .cond { grid-template-columns:repeat(2,1fr); } .value-box { min-width:0; width:100%; } }
+</style>
+</head>
+<body>
+
+<div class="proto">
+  <h1>Protótipo v1 · Inventário · valor estimado e onde comprar (F75)</h1>
+  <p>Esboço para você reagir. <b>Os valores são ilustrativos</b>: nada aqui foi lido do Discogs. Os textos da tela estão em inglês, como no app. Escolha um cenário e clique num álbum para abrir a janela.</p>
+  <div class="scen" id="scen" role="group" aria-label="Cenários"></div>
+</div>
+
+<div class="wrap">
+  <div class="title-row">
+    <div>
+      <h2>My Collection</h2>
+      <div class="counts"><b>211 albums</b><span class="pill ok">✓ 14 OWNED</span><span class="pill">196 NOT OWNED</span><span class="pill">♡ 1 WISHLIST</span></div>
+    </div>
+    <div class="value-box" id="valueBox" data-inv="INV-V1 · V2 · V3"></div>
+  </div>
+
+  <div class="notice warn hide" id="noticeConnect" data-inv="INV-V11">
+    <span>Values come from Discogs. Connect your Discogs account once to read them.</span>
+    <button class="btn primary" type="button">Connect Discogs</button>
+  </div>
+  <div class="notice hide" id="noticeReading" data-inv="INV-V5">
+    <span><b>Reading values… 86 of 211.</b> You can keep using the inventory. This takes about 25 minutes for 211 albums.</span>
+    <button class="btn" type="button">Stop</button>
+  </div>
+  <div class="notice hide" id="noticeNew" data-inv="INV-V6">
+    <span><b>2 new albums are waiting for a value.</b> They are read on their own, a few at a time, while the app is open.</span>
+    <button class="btn" type="button">Read them now</button>
+  </div>
+
+  <div class="bar">
+    <input type="search" placeholder="Search collection..." aria-label="Search collection">
+    <select aria-label="Format"><option>All Formats</option><option>CD</option><option>Vinyl</option></select>
+    <select aria-label="Status"><option>All</option><option>Owned</option><option>Not Owned</option><option>Wishlist</option></select>
+    <select aria-label="Sort by" id="sort" data-inv-select="INV-V7">
+      <option>Artist (A-Z)</option><option>Avg Rating (↓)</option><option>Avg Pop (↓)</option>
+      <option>Value (↓)</option><option>Value (↑)</option><option>Newest</option>
+    </select>
+    <button class="btn" type="button">+ Add the albums of my series</button>
+    <button class="btn" type="button">☆ Update ratings</button>
+    <button class="btn" type="button" id="updateValues" data-inv="INV-V5">$ Update values</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="modal">
+    <header>
+      <div class="c" id="mCover"></div>
+      <div><h3 id="mTitle"></h3><p id="mArtist"></p><div class="counts"><span class="pill" id="mStatus"></span><span class="pill">CD</span></div></div>
+      <button class="btn x" type="button" id="mClose" aria-label="Close">✕</button>
+    </header>
+    <div class="sec" id="mValue" data-inv="INV-V8 · V9"></div>
+    <div class="sec">
+      <h4>Where to buy</h4>
+      <p class="explain">Each link opens the store on this album, on CD. The app earns nothing from these links today.</p>
+      <div class="buy" id="mBuy" data-inv="INV-V10"></div>
+    </div>
+    <div class="sec">
+      <h4>Tracks</h4>
+      <p class="explain">The tracks, the ratings and the popularity stay here, as they are today.</p>
+    </div>
+    <div class="foot"><button class="btn" type="button" id="mClose2">Close</button></div>
+  </div>
+</div>
+
+<script>
+// Illustrative data only: no value here was read from Discogs.
+const RATES = { USD:1, EUR:0.91, GBP:0.76, BRL:5.89 };       // illustrative rates of the day
+const SYMBOL = { USD:'$', EUR:'€', GBP:'£', BRL:'R$ ' };
+const ALBUMS = [
+  { t:'The Dark Side of the Moon', a:'Pink Floyd', s:'OWNED', c:'#c7d2fe', m:14.5, nm:11.2, vg:7.9, ed:'EMI 1994 remaster, UK (CD)', r:'89.9 (10 of 10)', p:'72.8%' },
+  { t:'Close to the Edge', a:'Yes', s:'NOT OWNED', c:'#86efac', m:12.0, nm:9.4, vg:6.1, ed:'Atlantic 1994 remaster, Europe (CD)', r:'89.7 (3 of 3)', p:'49%' },
+  { t:'In the Court of the Crimson King', a:'King Crimson', s:'NOT OWNED', c:'#fca5a5', m:18.9, nm:15.0, vg:10.4, ed:'DGM 2009 40th Anniversary (CD)', r:'90 (2 of 8)', p:'59.5%' },
+  { t:'OK Computer', a:'Radiohead', s:'OWNED', c:'#bae6fd', hand:25, ed:null, r:'88.1 (12 of 12)', p:'74%' },
+  { t:'High Voltage', a:'AC/DC', s:'OWNED', c:'#fde68a', m:9.8, nm:7.5, vg:5.0, ed:'Epic 2003 remaster, US (CD)', r:'78 (2 of 9)', p:'59.9%' },
+  { t:'No Quarter', a:'Jimmy Page & Robert Plant', s:'NOT OWNED', c:'#e5e7eb', none:'notfound', r:'—', p:'—' },
+  { t:'Blue', a:'Joni Mitchell', s:'WISHLIST', c:'#93c5fd', m:11.0, nm:8.6, vg:5.9, ed:'Reprise 1990, US (CD)', r:'87.2 (10 of 10)', p:'63%' },
+  { t:'Nyana', a:'Tiësto', s:'NOT OWNED', c:'#d8b4fe', none:'pending', r:'—', p:'15.3%' },
+  { t:'Hejira', a:'Joni Mitchell', s:'NOT OWNED', c:'#fbcfe8', none:'pending', fresh:true, r:'—', p:'—' }
+];
+const SCENARIOS = [
+  ['connect', '1 · Antes: Discogs não conectado'],
+  ['reading', '2 · Lendo os valores'],
+  ['read', '3 · Valores lidos'],
+  ['new', '4 · Álbuns novos esperando valor'],
+  ['window', '5 · Janela: três estados e a média'],
+  ['hand', '6 · Janela: valor escrito à mão'],
+  ['notfound', '7 · Janela: edição não achada']
+];
+let scenario = 'read', currency = 'USD';
+
+const money = (usd) => SYMBOL[currency] + (usd * RATES[currency]).toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+const mean = (x) => (x.m + x.nm + x.vg) / 3;
+const hasRead = (x, i) => !x.none && !x.hand && (scenario !== 'connect') && (scenario !== 'reading' || i < 3);
+const valueOf = (x, i) => (x.hand && scenario !== 'connect' ? x.hand : hasRead(x, i) ? mean(x) : null);
+const shown = () => ALBUMS.filter(x => !x.fresh || scenario === 'new');
+
+function drawScenarios() {
+  document.getElementById('scen').innerHTML = SCENARIOS.map(([id, label]) =>
+    `<button type="button" data-s="${id}" aria-pressed="${id === scenario}">${label}</button>`).join('');
+}
+function drawValueBox() {
+  const list = shown();
+  const valued = list.map(valueOf);
+  const sum = (owned) => list.reduce((total, x, i) => total + ((x.s === 'OWNED') === owned && valued[i] ? valued[i] : 0), 0);
+  const count = (owned, onlyValued) => list.filter((x, i) => (x.s === 'OWNED') === owned && (!onlyValued || valued[i])).length;
+  const cur = `<span class="cur" role="group" aria-label="Currency">${Object.keys(RATES).map(c =>
+      `<button type="button" data-c="${c}" aria-pressed="${c === currency}">${c}</button>`).join('')}</span>`;
+  const empty = scenario === 'connect';
+  document.getElementById('valueBox').innerHTML = `
+    <div class="lab"><span>Estimated value of what I own</span>${cur}</div>
+    <div class="big">${empty ? '—' : money(sum(true))}</div>
+    <div class="sub">${empty ? 'No value read yet' : `${count(true, true)} of ${count(true, false)} owned albums have a value`}</div>
+    <div class="rest">${empty ? '<span>Connect Discogs to estimate your collection.</span>'
+      : `To buy the rest: <b>${money(sum(false))}</b> <span>(${count(false, true)} of ${count(false, false)} albums have a value)</span>`}</div>
+    ${currency === 'USD' || empty ? '' : `<div class="sub">Converted from USD at today's rate (1 USD = ${RATES[currency]} ${currency}).</div>`}`;
+}
+function drawGrid() {
+  document.getElementById('grid').innerHTML = shown().map((x) => {
+    const i = ALBUMS.indexOf(x);
+    const value = valueOf(x, i);
+    const tag = x.hand && scenario !== 'connect' ? '<span class="tag yours">Yours</span>' : value ? '<span class="tag discogs">Discogs</span>' : '';
+    const waiting = scenario === 'new' && x.none === 'pending';
+    const text = value ? `<strong>${money(value)}</strong>${tag}`
+      : `<span class="none">${waiting ? 'Waiting for a value' : scenario === 'reading' && !x.none ? 'Reading…' : x.none === 'notfound' ? 'No CD edition found' : 'No value yet'}</span>${waiting && x.fresh ? '<span class="tag new">New</span>' : ''}`;
+    return `<button class="card" type="button" data-i="${i}">
+      <div class="cover" style="background:${x.c}">${x.a.split(' ').map(w => w[0]).join('').slice(0, 3)}<span class="status">${x.s}</span></div>
+      <div class="body"><h3>${x.t}</h3><p class="artist">${x.a}</p>
+        <p class="avg">Avg Rating: ${x.r} · Avg Pop: ${x.p}</p><div class="val" data-inv="INV-V4">${text}</div></div></button>`;
+  }).join('');
+}
+function drawWindow(i) {
+  const x = ALBUMS[i];
+  document.getElementById('mCover').style.background = x.c;
+  document.getElementById('mCover').textContent = x.a.split(' ').map(w => w[0]).join('').slice(0, 3);
+  document.getElementById('mTitle').textContent = x.t;
+  document.getElementById('mArtist').textContent = x.a;
+  document.getElementById('mStatus').textContent = x.s;
+  const edit = (label) => `<div class="edit"><label for="hand">${label}</label><input id="hand" inputmode="decimal" placeholder="${SYMBOL[currency].trim()} 0.00"><button class="btn" type="button">Save</button></div>`;
+  let html;
+  if (x.none === 'notfound') {
+    html = `<h4>Estimated value</h4><p class="explain">Discogs has no CD edition under this artist and title, so there is no value to read.</p>
+      <div class="val"><span class="none">No CD edition found on Discogs</span></div>
+      ${edit('Write the value yourself')}
+      <p class="meta">Looked for on 20 Nov 2026. <a href="#">Look again</a> · <a href="#">Pick an edition on Discogs</a></p>`;
+  } else if (x.hand) {
+    html = `<h4>Estimated value</h4><p class="explain">You wrote this value. Reading values from Discogs never changes it.</p>
+      <div class="val"><strong style="font-size:24px">${money(x.hand)}</strong><span class="tag yours">Yours</span></div>
+      ${edit('Change it')}
+      <p class="meta">Written by you on 12 Oct 2026. <a href="#">Use the Discogs value instead</a></p>`;
+  } else if (x.none === 'pending' || scenario === 'connect') {
+    html = `<h4>Estimated value</h4><p class="explain">No value was read for this album yet.</p>
+      <div class="val"><span class="none">No value yet</span></div>
+      <div class="edit"><button class="btn primary" type="button">Read the value now</button></div>
+      ${edit('Or write it yourself')}`;
+  } else {
+    html = `<h4>Estimated value</h4>
+      <p class="explain">What this CD sells for on Discogs, by the condition of the disc. The value of the album is the mean of the three.</p>
+      <div class="cond">
+        <div><small>Mint</small><b>${money(x.m)}</b></div>
+        <div><small>Near Mint</small><b>${money(x.nm)}</b></div>
+        <div><small>Very Good Plus</small><b>${money(x.vg)}</b></div>
+        <div class="mean"><small>Mean of the three</small><b>${money(mean(x))}</b></div>
+      </div>
+      <p class="meta">Edition: ${x.ed}, the most common CD edition on Discogs. <a href="#">See it on Discogs</a><br>
+        Read on 20 Nov 2026${currency === 'USD' ? '' : `, converted from USD at today's rate`}. <a href="#">Read again</a></p>
+      ${edit('Write your own value')}`;
+  }
+  document.getElementById('mValue').innerHTML = html;
+  const q = encodeURIComponent(`${x.a} ${x.t} CD`);
+  document.getElementById('mBuy').innerHTML =
+    `<a class="btn" href="https://www.discogs.com/search/?q=${encodeURIComponent(x.a + ' ' + x.t)}&format_exact=CD&type=release" target="_blank" rel="noopener">Discogs ↗</a>
+     <a class="btn" href="https://www.amazon.com/s?k=${q}" target="_blank" rel="noopener">Amazon ↗</a>
+     <a class="btn" href="https://imusic.br.com/search?query=${q}" target="_blank" rel="noopener">iMusic ↗</a>`;
+  document.getElementById('overlay').classList.add('open');
+}
+function draw() {
+  drawScenarios(); drawValueBox(); drawGrid();
+  document.getElementById('noticeConnect').classList.toggle('hide', scenario !== 'connect');
+  document.getElementById('noticeReading').classList.toggle('hide', scenario !== 'reading');
+  document.getElementById('noticeNew').classList.toggle('hide', scenario !== 'new');
+  const button = document.getElementById('updateValues');
+  button.disabled = scenario === 'reading';
+  button.textContent = scenario === 'reading' ? 'Reading values… 86 of 211' : '$ Update values';
+  const open = { window:0, hand:3, notfound:5 }[scenario];
+  if (open === undefined) document.getElementById('overlay').classList.remove('open'); else drawWindow(open);
+}
+document.getElementById('scen').addEventListener('click', (e) => { const s = e.target.dataset.s; if (s) { scenario = s; draw(); } });
+document.getElementById('valueBox').addEventListener('click', (e) => { const c = e.target.dataset.c; if (c) { currency = c; draw(); } });
+document.getElementById('grid').addEventListener('click', (e) => { const card = e.target.closest('.card'); if (card) drawWindow(Number(card.dataset.i)); });
+['mClose', 'mClose2'].forEach(id => document.getElementById(id).addEventListener('click', () => document.getElementById('overlay').classList.remove('open')));
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.getElementById('overlay').classList.remove('open'); });
+if (new URLSearchParams(location.search).has('wire')) document.body.classList.add('wire');
+const wanted = new URLSearchParams(location.hash.slice(1)).get('s');
+if (SCENARIOS.some(([id]) => id === wanted)) scenario = wanted;
+draw();
+</script>
+</body>
+</html>

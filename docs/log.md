@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:52] session — F75: prévia do cartão em três níveis; S-58, F76 e UAT-223 (o app no celular); candidato «rede de colecionadores»
+
+- O MJRP reagiu à v2 da F75: as contagens parecem botões, as informações do cartão ficam soltas, o valor parece preço de venda, comprar está escondido. Prévia em três níveis (Consolidar, Elevar, Transformar) em `design/proposals/inventory-card-proposal.html` e no comparador; o protótipo só muda depois da escolha.
+- Dito por ele: a versão no celular é ruim e pede redesenho, com crítica de UX antes. Registrado: UAT-223, S-58 (EP-06) e F76, via padrão.
+- Dito por ele: o app pode virar uma rede de apaixonados por álbuns e colecionadores, com vender e trocar. Não havia registro neste repositório; entrou como candidato no PRD.
+
 ## [2026-11-20 00:48] session — F74: uma regra só diz qual faixa recebe cada nota
 
 **Branch:** fix/f74-track-ratings-reach-the-right-tracks
@@ -17,6 +23,58 @@
 - Suíte de 2623 testes, lint e build verdes. Não visto num navegador; o servidor não foi publicado.
 - Aberto: «Lost Someone (Live 1962)» fica sem nota (a fonte dá nota a duas metades); «Before the Frost... Until the Freeze» segue sem página, pela regra do álbum (F68).
 
+
+## [2026-11-20 00:41] session — F75: o comparador publicado como Artifact do Claude
+
+- A pedido do MJRP, o comparador do inventário é um Artifact privado: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck. Tela de hoje, v2 e v1 autocontidas, com as capas embutidas.
+
+## [2026-11-20 00:37] session — UAT-222 em produção; `## Now` em dia
+
+- O conserto das capas foi juntado na `main` (`75e0176`) e o site publicado (pacote `main-DHmNr6iC.js`).
+- `## Now` atualizado com a F75 (proposta, protótipo v2, comparador) e o que ela espera do MJRP.
+
+## [2026-11-20 00:36] session — F71: o item do inventário sem capa ganha a capa do álbum (UAT-222)
+
+**Branch:** fix/f71-inventory-item-gets-its-cover
+
+- «Update ratings» grava a capa do álbum carregado no item que não tinha nenhuma (`albumData.coverUrl`), e diz quantos ganharam («14 albums got their cover.»). A janela do álbum mostra a capa que chega. Uma capa que o item já tem não é trocada.
+- Na conta do MJRP: 15 sem capa antes, 1 depois («No Quarter», que a carga não acha). UAT-222 em `fixed`.
+
+## [2026-11-20 00:34] session — UAT-222 registrada na F71: álbuns do inventário sem capa
+
+- O MJRP viu, em produção, capas faltando no inventário que aparecem na lista de séries. Contado: 15 de 211 itens sem capa, todos vindos de séries cuja entrada não guarda o endereço da capa. UAT-222 aberta; REQ-22 na F71.
+
+## [2026-11-20 00:34] session — F75: protótipo v2 fiel à tela real, comparador e `info-arch.md`
+
+- O MJRP pediu o protótipo fidedigno e o comparador da skill. A v2 é a tela real do inventário capturada como o app a desenha, com o que a F75 propõe; a v1 fica para comparar. O comparador (`design/proposals/inventory/comparator.html`) põe a tela de hoje ao lado das versões.
+- `docs/specs/info-arch.md` nasceu com esta feature, descrevendo só a tela do inventário com valor: a trava do protótipo exige o `info-arch` e os wireframes da versão no mesmo commit.
+- Proposta: `design/proposals/f75-inventory-value/proposal.md`. Notas: `docs/specs/inception-notes.md`.
+
+## [2026-11-20 00:26] session — F75: proposta e protótipo da rodada 1 (valor estimado do inventário e onde comprar)
+
+- A pedido do MJRP: `design/proposals/f75-inventory-value/proposal.md` e `design/inception/inventory-value-v1.html` (modo explorar, valores ilustrativos, sete cenários). A proposta cobre como um álbum entra no inventário e ganha valor, e o que acontece quando o status muda para «Owned».
+- Notas da rodada em `docs/specs/inception-notes.md`. Sem ramo: a F75 espera a reação dele, as respostas e a prioridade.
+
+## [2026-11-20 00:22] session — F75: respostas do MJRP (conta do Discogs, três estados e a média, a edição mais comum, quatro moedas)
+
+- O MJRP aceita ligar um token da conta dele do Discogs; quer o valor de três estados e a média; começa pela edição mais comum; moedas USD, EUR, GBP e BRL, com o câmbio do dia.
+- Rumo dito por ele: o inventário ganha foco de colecionador e pede um benchmark de apps de controle de coleção (CDs, vinis, fitas). Fica como candidato no PRD.
+- Conferido: `api.frankfurter.app` dá o câmbio do dia sem chave. Não conferido: os termos de uso da API do Discogs.
+
+## [2026-11-20 00:14] session — F75: o propósito é estimar o valor do inventário, com o preço automático e editável à mão
+
+- Dito pelo MJRP: «a ideia do preço médio é para colecionadores como eu, ter uma estimativa de valor do seu inventory, podendo alterar os valores na mao, como hj já é, a questao agora é automatiza a obtencao do preço e se quiser vc edita».
+- Gravado no nó S-57 e na spec da F75, com o que isso decide no desenho: o valor tem origem (loja ou pessoa), o que a pessoa escreveu não é trocado, e o total diz quantos itens entraram.
+
+## [2026-11-20 00:14] session — S-57 e F75 registradas (preço de CDs e onde comprar); viabilidade conferida antes
+
+- Pedido do MJRP: preço médio dos CDs do inventário na Amazon, no Discogs e na iMusic, com link de compra, pensando em afiliação; via padrão, com protótipo e a skill de UI; «verifique a viabilidade antes de mais nada».
+- Viabilidade: `reports/audits/2026-11-20-mjrpalbumblender-v0-cd-prices-feasibility.md`. Links de compra viáveis nos três. Preço: o Discogs dá o menor preço e a quantidade à venda sem login (conferido com pedidos à API); a Amazon só abre preços para afiliado com vendas; a iMusic recusou o pedido automático e não tem interface pública.
+- S-57 no PRD (EP-07) e F75 na `main`, `lane: standard`, em esboço. Sem ramo: espera as respostas dele, o protótipo e a prioridade.
+
+## [2026-11-20 00:11] session — F74 começada depois de priorizada; `## Now` em dia
+
+- O MJRP priorizou a F72 e a F74. A F72 está em produção. A F74 foi passada a um auxiliar com o desenho definido: uma regra de identidade de faixa em `shared/`, no molde da de álbum, e a investigação do leitor da página do BestEverAlbums. A integração, a publicação do servidor e a prova ficam com o integrador.
 
 ## [2026-11-20 00:10] decision — o MJRP dispensou o protótipo dos consertos e das melhorias pequenas (F45 a F73)
 
