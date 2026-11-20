@@ -271,6 +271,7 @@ Regras do app no celular, a tela de até 767 px de largura (iPhone 15 Pro, 393x8
 
 ### Janela do álbum
 
+- **As três ordens.** O controle no alto das faixas diz «Track Listing» (a ordem do álbum), «BEA» e «Spotify»; o primeiro segmento é mais largo, e os três cabem numa linha (pedido do MJRP, 2026-11-20 · UAT-230 · `components/ranking/TracksTabs.js` `TRACK_ORDERS`).
 - **A nota do BEA e a cor de cada fonte.** Cada faixa diz, embaixo do título, a nota da faixa no BestEverAlbums («BEA ★ 87», arredondada) e a popularidade no Spotify («Spotify 61%»); sem nota, «BEA —», mesmo quando a faixa tem posição. O BEA fica em laranja e o Spotify em verde, as cores dessas fontes na tabela do computador; a fonte da ordem escolhida fica cheia e em negrito, a outra um pouco apagada. A ordem «BEA» continua sendo a posição no BestEverAlbums (pedido do MJRP, 2026-11-20 · UAT-228 · `components/ranking/TracksTabs.js`, `css/mobile/album-window.css`). ^album-window-phone-sources
 
 ### Inventário

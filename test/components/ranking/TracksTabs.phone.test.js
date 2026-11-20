@@ -24,7 +24,7 @@ describe('TracksTabs on the phone (F76)', () => {
         const group = host.querySelector('.tracks-tabs__bar')
         expect(group.getAttribute('role')).toBe('group')
         const segments = [...group.querySelectorAll('button.tracks-tabs__segment')]
-        expect(segments.map(b => b.textContent)).toEqual(['Original', 'BEA', 'Spotify'])
+        expect(segments.map(b => b.textContent)).toEqual(['Track Listing', 'BEA', 'Spotify'])
         expect(segments.map(b => b.getAttribute('aria-label'))).toEqual(TRACK_ORDERS.map(o => o.name))
         expect(segments.map(b => b.getAttribute('aria-pressed'))).toEqual(['false', 'true', 'false'])
         expect(segments.map(b => b.dataset.tab)).toEqual(['original', 'acclaim', 'spotify'])

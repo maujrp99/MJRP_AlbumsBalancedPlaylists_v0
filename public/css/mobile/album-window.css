@@ -215,7 +215,8 @@
     top: calc(var(--phone-topbar-h) + var(--phone-safe-top));
     z-index: 2;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    /* «Track Listing» is the longest label: its segment is wider, so the three stay on one line (UAT-230) */
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
     gap: 2px;
     margin: 0 calc(-1 * var(--phone-gutter-right)) 4px calc(-1 * var(--phone-gutter-left));
     padding: 6px var(--phone-gutter-right) 6px var(--phone-gutter-left);

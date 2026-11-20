@@ -13,7 +13,7 @@ import { formatDuration } from '../../utils/duration.js'
 
 /** The three orders; the label is short so the three fit one line, the name says it whole. */
 export const TRACK_ORDERS = Object.freeze([
-    { id: 'original', label: 'Original', name: 'The order of the album' },
+    { id: 'original', label: 'Track Listing', name: 'The order of the album' }, // UAT-230
     { id: 'acclaim', label: 'BEA', name: 'The BestEverAlbums rank' },
     { id: 'spotify', label: 'Spotify', name: 'The Spotify popularity' }
 ])
