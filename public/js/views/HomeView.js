@@ -5,6 +5,8 @@ import { SafeDOM } from '../utils/SafeDOM.js';
 import { describeScan, idleScan } from '../models/scanState.js';
 import { PICKER_FILTERS, defaultFilters } from '../models/albumPicker.js';
 import { createFilterButton, drawFilterButton, drawScanButton, createScanPanel } from '../components/album-picker/pickerParts.js';
+import { HomePhoneChosen } from '../components/home/HomePhoneChosen.js';
+import { isPhone, onPhoneChange } from '../utils/isPhone.js';
 
 /** The ids of the Home's filter buttons, by the key of the filter (models/albumPicker.js). */
 const FILTER_BUTTON_IDS = Object.freeze({
@@ -17,6 +19,7 @@ export class HomeView extends BaseView {
     constructor() {
         super();
         this.controller = null;
+        this.phoneChosen = null; // the chosen set on the phone (F76): bar, marks, sheet
     }
 
     async render(params) {
@@ -59,8 +62,8 @@ export class HomeView extends BaseView {
         ]);
 
         // Tech Stripe & Panel
-        const visualBtn = SafeDOM.button({ id: 'btnModeVisual', className: 'text-[10px] bg-orange-500 text-white px-2 py-1 rounded hover:opacity-80 transition-opacity' }, 'Visual');
-        const bulkBtn = SafeDOM.button({ id: 'btnModeBulk', className: 'text-[10px] bg-white/5 text-gray-400 px-2 py-1 rounded hover:bg-white/10 transition-colors' }, 'Bulk Paste');
+        const visualBtn = SafeDOM.button({ id: 'btnModeVisual', 'aria-pressed': 'true', className: 'text-[10px] bg-orange-500 text-white px-2 py-1 rounded hover:opacity-80 transition-opacity' }, 'Visual');
+        const bulkBtn = SafeDOM.button({ id: 'btnModeBulk', 'aria-pressed': 'false', className: 'text-[10px] bg-white/5 text-gray-400 px-2 py-1 rounded hover:bg-white/10 transition-colors' }, 'Bulk Paste');
 
         const scanBtn = SafeDOM.button({ id: 'btnScanArtist', className: 'min-w-[100px] px-5 py-3 bg-flame-gradient rounded-lg text-white text-sm font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shrink-0' })
         scanBtn.appendChild(SafeDOM.fromHTML(getIcon('ScanLine', 'w-4 h-4')));
@@ -185,12 +188,47 @@ export class HomeView extends BaseView {
         window.controller = this.controller;
 
         this.controller.initialize();
+
+        // The phone: the chosen set travels with the finger (F76, REQ-09). Mounted only on the phone
+        this.phoneChosen = new HomePhoneChosen({
+            staging: this.controller.stagingController,
+            onCreate: () => this.controller.handleInitializeLoad(),
+            findCards: (selector) => this.$$('#discographyGrid ' + selector)
+        });
+        this.placePhoneParts(isPhone());
+        this.subscriptions.push(onPhoneChange((phone) => this.placePhoneParts(phone)));
+    }
+
+    /** Mount the phone's parts on the phone, take them away on a wider screen. */
+    placePhoneParts(phone) {
+        if (!this.phoneChosen) return;
+        if (!phone) {
+            this.phoneChosen.unmount();
+            return;
+        }
+        this.phoneChosen.mount(document.getElementById('app'));
+        this.phoneChosen.show(this.controller.stagingController.getSelectedAlbums());
     }
 
     destroy() {
         // What is still on its way (a scan, the AI list) must not draw on the next screen
         if (this.controller?.dispose) this.controller.dispose();
+        this.phoneChosen?.unmount();
         super.destroy();
+    }
+
+    /**
+     * The chosen albums changed, or the cards were drawn again: the phone answers on the album and
+     * in its action bar. Nothing is drawn on the computer (the phone's parts are not mounted there).
+     * @param {Array<Object>} albums - the chosen albums, in their order
+     */
+    showChosen(albums) {
+        this.phoneChosen?.show(albums);
+    }
+
+    /** «Create series» is busy on the phone while the series is written. */
+    setCreating(busy) {
+        this.phoneChosen?.setBusy(busy);
     }
 
     // DOM Helpers for Controller
@@ -205,11 +243,15 @@ export class HomeView extends BaseView {
             bulkBtn.className = "text-[10px] bg-white/5 text-gray-400 px-2 py-1 rounded hover:bg-white/10 transition-colors";
             visualInputs.classList.remove('hidden');
             bulkInputs.classList.add('hidden');
+            visualBtn.setAttribute('aria-pressed', 'true');
+            bulkBtn.setAttribute('aria-pressed', 'false');
         } else {
             bulkBtn.className = "text-[10px] bg-orange-500 text-white px-2 py-1 rounded hover:opacity-80 transition-opacity";
             visualBtn.className = "text-[10px] bg-white/5 text-gray-400 px-2 py-1 rounded hover:bg-white/10 transition-colors";
             bulkInputs.classList.remove('hidden');
             visualInputs.classList.add('hidden');
+            bulkBtn.setAttribute('aria-pressed', 'true');
+            visualBtn.setAttribute('aria-pressed', 'false');
         }
 
     }
