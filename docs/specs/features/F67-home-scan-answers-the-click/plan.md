@@ -41,6 +41,15 @@ Nenhuma.
 - `docs/specs/behavior.md` (estados da Home), `docs/manual/14`, `16`, `19`, `20`, `21`, `22`
 - `docs/specs/constitution.md` (complexidade até 10 nas funções novas)
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — atualizado (commit `7f152fc`, da F57, onde entrou o `scanState` da F67)
+- `docs/specs/data-model.md` — sem mudança: nenhuma entidade, campo ou esquema mudou
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `dda2de7`)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - **O prazo de 10 s do início do MusicKit vale para o app inteiro**, inclusive a carga dos álbuns e a exportação: onde antes só demorava, agora falha com nome e pode ser tentado de novo.
 - **A chamada ao catálogo que passou do prazo continua correndo** no navegador; a resposta dela é ignorada. Uma nova tentativa faz outra chamada.

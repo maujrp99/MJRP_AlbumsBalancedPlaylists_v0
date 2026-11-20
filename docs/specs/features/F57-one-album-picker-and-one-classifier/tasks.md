@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f57-one-album-picker-and-one-classifier`, a partir da `main` em `89ff06c`
 - [x] problema estabelecido antes de mexer: os dois fluxos de ponta a ponta com arquivo e linha, a tabela de diferenças e a causa do caso do Kendrick Lamar reproduzida em teste com o classificador antigo (seção «O problema, estabelecido antes do código» do plano)
-- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -32,12 +32,15 @@
 
 ## Verification
 - [x] TASK-10 suíte (`npx vitest run`: 1521 passando, 1417 antes), `npx vite build` e complexidade até 10 nas funções novas e editadas (`npx eslint --rule '{"complexity":["error",10]}'` nos arquivos tocados; a única acima é `AlbumSearchService.search`, 11, de antes e não tocada) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08 · model:: sonnet · rounds:: 1
-- [ ] TASK-11 prova no navegador pelo roteiro do relatório de entrega (o mesmo artista na Home e na janela «Edit Series»: filtros, quantidades e cartões iguais; os dois álbuns do Kendrick Lamar em «Studio»; um artista eletrônico com a lista da IA chegando depois; falha com «Try again»; «Saving…» ao salvar) · implements:: REQ-02, REQ-04, REQ-05, REQ-06, REQ-07 · model:: opus · waiting:: human — quem implementou não tem navegador; a prova roda com o login do MJRP, pelo agente integrador · action:: o agente integrador roda o roteiro em `http://127.0.0.1:5010` e grava a evidência em `reports/evidence/F57/`
-- [ ] TASK-12 julgamento do MJRP (tarefa do humano): as mudanças de comportamento do classificador e a aparência nova da busca na janela de edição · implements:: REQ-02, REQ-03, REQ-05, REQ-07 · model:: opus · waiting:: human — o aceite das issues é do MJRP · action:: o MJRP confere em produção e dá o OK na UAT-185 e na UAT-193
+- [x] TASK-11 prova no navegador pelo roteiro do relatório de entrega (o mesmo artista na Home e na janela «Edit Series»: filtros, quantidades e cartões iguais; os dois álbuns do Kendrick Lamar em «Studio»; um artista eletrônico com a lista da IA chegando depois; falha com «Try again»; «Saving…» ao salvar) — prova: `reports/evidence/F57/2026-11-19-one-picker-one-classifier-proof.md` · implements:: REQ-02, REQ-04, REQ-05, REQ-06, REQ-07 · model:: opus · rounds:: 1
+- [ ] TASK-12 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
 
 ## Documentation
 - [x] `docs/specs/arch.md` (seção nova), `docs/specs/behavior.md` (os estados da busca nas duas telas, o classificador, o salvamento) e `docs/manual/` (00, 01, 10, 14, 15, 16, 21, 22, 29) dizem o que o código faz agora
 - [x] spec, plano e tarefas preenchidos no ramo
-- [ ] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador
-- [ ] `docs/specs/constitution.md`, artigo dos padrões: a linha do Strategy (`DP-04`) ainda cita `public/js/services/album-search/classification/`, pasta que saiu; a constituição tem cópia gerada (`.specify/memory/constitution.md`) e a emenda é de quem a regenera (integrador, com o MJRP)
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador — conferido: as issues da feature em `fixed` no `uat.md`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
+
+## For the owner at UAT
+- O MJRP julga as mudanças de comportamento do classificador e a aparência nova da busca na janela de edição
+- `docs/specs/constitution.md`, artigo dos padrões: a linha do Strategy (`DP-04`) ainda cita `public/js/services/album-search/classification/`, pasta que saiu; a constituição tem cópia gerada (`.specify/memory/constitution.md`) e a emenda é de quem a regenera (integrador, com o MJRP)
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.

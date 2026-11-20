@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] ramo criado da `main` local (com o commit `44b5dd0`): `fix/f70-small-defects`
 - [x] lidos o `AGENTS.md`, a pasta da F70 e as issues UAT-208, 209, 210 e 63; cada defeito conferido no código de hoje antes do conserto
-- [ ] conferência cruzada da spec e do plano: fica para o fecho, porque os dois foram escritos depois do código
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -27,12 +27,15 @@
 
 ## Verification
 - [x] TASK-05 suíte inteira (`npx vitest run`) verde e `npx vite build` compilando no ramo, com os testes de arquitetura (complexidade até 10, nenhum módulo morto, camadas) · implements:: REQ-01, REQ-02, REQ-03, REQ-04 · model:: sonnet · rounds:: 1
-- [ ] TASK-06 prova no navegador, do integrador: como visitante numa segunda origem (nenhum pedido a `/api/ai/*` nem a `/api/generate`; status «→ artista») e com a conta do dono (os pedidos saem; uma capa com endereço quebrado mostra o substituto) · implements:: REQ-01, REQ-04 · model:: opus · waiting:: resource — a prova pede um navegador, que o auxiliar que implementou não tem · action:: o integrador segue os passos do relatório de entrega do ramo, depois de integrá-lo
-- [ ] TASK-07 julgamento do MJRP (tarefa do humano) · implements:: REQ-01, REQ-02, REQ-03, REQ-04 · model:: opus · waiting:: human — o aceite das issues é do MJRP · action:: o MJRP confere as quatro issues e julga o substituto único de capa
+- [x] TASK-06 prova no navegador, do integrador: como visitante numa segunda origem (nenhum pedido a `/api/ai/*` nem a `/api/generate`; status «→ artista») e com a conta do dono (os pedidos saem; uma capa com endereço quebrado mostra o substituto) — prova: `reports/evidence/F70/2026-11-19-small-defects-proof.md` · implements:: REQ-01, REQ-04 · model:: opus · rounds:: 1
+- [ ] TASK-07 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e a reconferência visual independente (relatório `visual-parity-recheck`) · implements:: REQ-01 · model:: opus · waiting:: human — a frase sobre o protótipo é do MJRP; a reconferência é de um agente que não implementou · action:: o MJRP diz «Prototype: none»; o integrador manda fazer a reconferência
 
 ## Documentation
 - [x] `docs/specs/behavior.md`: `^home-scan-classifying` e `^library-album-failed` (visitante), `^inventory-price-keeps-currency`, `^library-ai-album-ratings`, `^album-cover-stand-in`
 - [x] manual: `03_Backend_API_Layer.md`, `07_Frontend_Data_Infra.md`, `08_Frontend_Models.md`, `13_Frontend_Components_Shared.md`, `19_Frontend_JS_Root.md`, `21_Dynamic_UI_Mapping.md`, `99_Frontend_Component_Reference_Sheet.md`, `00_Dir_File_Structure_Map.md`
 - [x] spec, plano e tarefas escritos do que foi feito (2026-11-19)
-- [ ] status das issues em `docs/specs/uat.md` e o `MEMORY.md`: do integrador, depois da prova no navegador
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde; só então `status: Done` (depende do aceite do MJRP)
+- [x] status das issues em `docs/specs/uat.md` e o `MEMORY.md`: do integrador, depois da prova no navegador — as quatro issues estão em `fixed`; `MEMORY.md` em dia
+
+## For the owner at UAT
+- O MJRP confere as quatro issues (UAT-208, UAT-209, UAT-210 e UAT-63) e julga o substituto único de capa.
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.

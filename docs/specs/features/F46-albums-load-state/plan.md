@@ -44,6 +44,15 @@ Nenhuma.
 ## Documents Consulted
 `docs/specs/arch.md` (proposta «Carga da tela de álbuns», seções 15 a 17), `docs/specs/data-model.md` (`users/{uid}/albumRankings`), `docs/specs/constitution.md`, `docs/specs/uat.md` (UAT-173, UAT-174), `docs/manual/08`, `09`, `16`. O projeto não tem `info-arch.md` nem `design-system.md`.
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — atualizado (commit `876cb6d`)
+- `docs/specs/data-model.md` — sem mudança: nenhuma entidade, campo ou esquema mudou
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `d9e6103`, da v4.0, que não cita a F46 na mensagem)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - O casamento por nome pode deixar de fora um álbum ranqueado cujo título no catálogo difere do pedido e que ainda não carregou. Aparece quando a série carrega. Saída exata proposta e não feita: `facts.albumId` (muda dado gravado).
 - A leitura da lista de rankings é uma leitura da coleção inteira (`getAllRankings`), feita uma vez por pessoa e só quando o filtro é escolhido.

@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f63-home-and-navigation-answer`, a partir da `main` em `d210f35`
 - [x] cada issue conferida no código da `main` antes de mexer (a tabela «ainda existia?» no Problem Statement da spec, com arquivo e linha)
-- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -33,18 +33,22 @@
 - [x] TASK-11 `test/architecture/interfaceInEnglish.test.js`: falha em string de `public/js` em português (28 achados antes da TASK-10); `test/architecture/oneTabTitle.test.js`: o título único da F54 — commits `9fa70c8`, `d2c734e` · implements:: REQ-10 · model:: opus · rounds:: 1
 - [x] TASK-12 `DialogService`: o Esc e o diálogo que toma o lugar de outro respondem «cancelar»; `test/services/DialogService.dismiss.test.js` (3 de 4 falhavam antes) — commit `d2c734e` · implements:: REQ-06 · model:: opus · rounds:: 1
 - [x] TASK-13 `SeriesDropdown`: o item «Soon» não é link; `test/router.links.test.js` — commit `a4c996a` · implements:: REQ-05 · model:: opus · rounds:: 2
-- [ ] TASK-14 UAT-10: decidir entre ligar as telas de ranking ao serviço de carga e pôr os links, ou aposentá-las (Open Questions da spec) · implements:: REQ-11 · model:: opus · waiting:: human — decisão de produto do MJRP · action:: o MJRP escolhe (a) ou (b) nas Open Questions da spec
-- [ ] TASK-15 UAT-11: decidir entre remover a tela de migração (F65) e reescrevê-la (F58) antes de ligá-la ao menu (Open Questions da spec) · implements:: REQ-12 · model:: opus · waiting:: human — decisão de produto do MJRP · action:: o MJRP escolhe nas Open Questions da spec
-- [ ] TASK-16 UAT-27 e o olho de detalhes da UAT-13, no código das playlists guardadas: `router.navigate('/home')` em `views/SavedPlaylistsView.js:292` (e tirar a exceção de `test/architecture/historyOwnedByRouter.test.js`); as classes do `TrackRow` em `components/playlists/SavedPlaylistRow.js:51` e `SavedPlaylistActions.js:86` · implements:: REQ-13, REQ-08 · model:: sonnet
+- [x] TASK-14 UAT-10: decidir entre ligar as telas de ranking ao serviço de carga e pôr os links, ou aposentá-las (Open Questions da spec) — decidido pelo agente na F65: aposentadas (UAT-10 em `fixed`, `c9f15ec`; a decisão segue revisável pelo MJRP) · implements:: REQ-11 · model:: opus · rounds:: 1
+- [x] TASK-15 UAT-11: decidir entre remover a tela de migração (F65) e reescrevê-la (F58) antes de ligá-la ao menu (Open Questions da spec) — decidido pelo agente na F65: removida (UAT-11 em `fixed`, `c9f15ec`; a decisão segue revisável pelo MJRP) · implements:: REQ-12 · model:: opus · rounds:: 1
+- [x] TASK-16 UAT-27 e o olho de detalhes da UAT-13, no código das playlists guardadas: `router.navigate('/home')` em `views/SavedPlaylistsView.js:292` (e tirar a exceção de `test/architecture/historyOwnedByRouter.test.js`); as classes do `TrackRow` em `components/playlists/SavedPlaylistRow.js:51` e `SavedPlaylistActions.js:86` — feito pelo integrador (UAT-27 em `fixed`, `df05727`; UAT-13, `aa78dfa`) · implements:: REQ-13, REQ-08 · model:: sonnet · rounds:: 1
 
 ## Verification
 - [x] TASK-17 suíte (`npx vitest run`: 1233 passando, 1143 antes), `npx vite build` e complexidade até 10 nas funções novas e nas tocadas (`npx eslint --no-config-lookup --rule '{"complexity":["error",10]}'` em `router.js`, `HomeController.js`, `HomeView.js`, `models/albumQuery.js`, `models/bulkPaste.js`; `SeriesController.loadScope` fica em 10) · implements:: REQ-01, REQ-02, REQ-03, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10 · model:: sonnet · rounds:: 1
-- [ ] TASK-18 prova no navegador pelo roteiro do relatório de entrega (criar série e voltar; volta do Spotify e voltar; colar a lista com hífen e com linha ruim; menu da conta no clique, no Esc e em 390 px; ✕ da faixa em tela de toque; «Blend your Albums» com a série marcada; receitas em inglês; itens «Soon»; Esc numa confirmação) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10 · model:: opus · waiting:: human — quem implementou não tinha navegador; a prova é do integrador · action:: o integrador roda o roteiro do relatório de entrega em `http://127.0.0.1:5010` e anota o resultado de cada item
-- [ ] TASK-19 julgamento do MJRP (tarefa do humano): as palavras traduzidas e os textos novos, o menu da conta que não abre mais ao passar o mouse, a caixa de colagem que fica com as linhas a corrigir · implements:: REQ-03, REQ-08, REQ-10 · model:: opus · waiting:: human — o aceite das issues é do MJRP · action:: o MJRP confere em produção e dá o OK nas issues
+- [x] TASK-18 prova no navegador pelo roteiro do relatório de entrega (criar série e voltar; volta do Spotify e voltar; colar a lista com hífen e com linha ruim; menu da conta no clique, no Esc e em 390 px; ✕ da faixa em tela de toque; «Blend your Albums» com a série marcada; receitas em inglês; itens «Soon»; Esc numa confirmação) — prova: `reports/evidence/F63/2026-11-19-home-and-navigation-proof.md` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10 · model:: opus · rounds:: 1
+- [ ] TASK-19 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e a reconferência visual independente (relatório `visual-parity-recheck`) · implements:: REQ-01 · model:: opus · waiting:: human — a frase sobre o protótipo é do MJRP; a reconferência é de um agente que não implementou · action:: o MJRP diz «Prototype: none»; o integrador manda fazer a reconferência
 - [x] TASK-20 barra do topo: a imagem do título com fundo transparente; os nomes com a regra `navigation/barName.js` e o nome inteiro em `title` · implements:: REQ-14 · model:: opus · rounds:: 1
 
 ## Documentation
 - [x] `docs/specs/behavior.md` (12 estados reescritos e 4 novos) e `docs/manual/` (00 mapa de arquivos, 08, 11, 13, 15, 17, 19, 21 seção 1.2, 24, 29, 99) dizem o que o código faz agora
 - [x] spec, plano e tarefas preenchidos no ramo
-- [ ] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador — conferido: as issues da feature em `fixed` no `uat.md`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
+
+## For the owner at UAT
+- Decisões tomadas por agente na F65 e revisáveis: as telas de ranking (UAT-10) e a tela de migração (UAT-11) saíram em vez de serem ligadas ao menu (Open Questions da spec).
+- O MJRP julga as palavras traduzidas e os textos novos, o menu da conta que não abre mais ao passar o mouse, a caixa de colagem que fica com as linhas a corrigir
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.

@@ -27,9 +27,12 @@
 
 ## Verification
 - [x] TASK-08 suíte (`npx vitest run`: 1343 testes, 110 arquivos; eram 1217, 107), `npx vite build`, e `npx eslint --rule 'complexity: [2, 10]' shared/albumIdentity.js` sem nenhuma função acima de 10 · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09 · model:: sonnet · rounds:: 1
-- [ ] TASK-09 rodar de novo, em produção e com a conta do MJRP, a varredura da fonte de notas (o trecho de console está no `plan.md`, «A prova em produção»): `not_found` só para os álbuns 3, 9, 11, 12, 13 e 16 da tabela do plano; `await albumIdentityAudit()` com `different: 0`; a linha nova do cartão vista num álbum do segundo degrau · implements:: REQ-10, REQ-04, REQ-07 · model:: opus · waiting:: human — o auxiliar que construiu não tem navegador nem pode chamar o servidor de produção, e a varredura roda com o login do MJRP · action:: o integrador publica o servidor e depois o site, roda o trecho no console, grava a prova em `reports/evidence/F68/` e só então muda o estado da UAT-205
+- [x] TASK-09 rodar de novo, em produção e com a conta do MJRP, a varredura da fonte de notas (o trecho de console está no `plan.md`, «A prova em produção»): `not_found` só para os álbuns 3, 9, 11, 12, 13 e 16 da tabela do plano; `await albumIdentityAudit()` com `different: 0`; a linha nova do cartão vista num álbum do segundo degrau — prova: `reports/evidence/F68/2026-11-19-identity-rules-reviewed-proof.md` · implements:: REQ-10, REQ-04, REQ-07 · model:: opus · rounds:: 1
+- [ ] TASK-10 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
 
 ## Documentation
 - [x] update the specs affected (`docs/specs/arch.md`: a seção de identidade reescrita como uma descrição só; `docs/specs/behavior.md`: a linha do cartão e o prazo do «não tem»; no manual: `23_Shared_Code.md`, `02_Server_Structure.md`, `04_Backend_Logic_Services.md`, `06_Frontend_Data_Store.md`, `07_Frontend_Data_Infra.md`, `07b_Frontend_Utilities_and_Workers.md`, `08_Frontend_Models.md`, `10_Frontend_Renderers.md`, `24_Test_Suite.md`)
-- [ ] mark F68 Done in spec.md · commit: feat: implement album-identity-rules-reviewed (só depois da prova em produção, TASK-09)
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] mark F68 Done in spec.md · commit: feat: implement album-identity-rules-reviewed (só depois da prova em produção, TASK-09) — a prova em produção existe; `status: Done` posto
+
+## For the owner at UAT
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.

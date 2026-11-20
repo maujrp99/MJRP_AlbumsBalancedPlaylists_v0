@@ -6,7 +6,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f48-album-cache-and-retry`, cortado da `main` local (`23d81d7`)
 - [x] linha de base medida: `npx vitest run` com 232 passando e 28 falhando em 9 arquivos antigos, mais 8 arquivos de `test/e2e/` sem suíte
-- [ ] conferência cruzada da spec e do plano: fica para o fecho, porque os dois foram escritos depois do código
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 - [x] TASK-01 `public/js/utils/retry.js`: nova tentativa com recuo exponencial, variação e teto, sem conhecer o projeto — 6 testes em `test/utils/retry.test.js` · implements:: REQ-01 · model:: opus · rounds:: 1
@@ -20,16 +20,20 @@
 - [x] TASK-09 `public/js/services/SeriesService.js` e `public/js/stores/albums.js`: o «Refetch» grava pelo repositório; saem `saveToFirestore`, `loadFromFirestore`, `updateAlbum(db, album)` e o `import` do Firestore da store; `test/services/SeriesService.test.js` atualizado (2 casos) · implements:: REQ-10 · model:: opus · rounds:: 1
 - [x] TASK-10 `test/architecture/albumLoadBoundaries.test.js`: `stores/albums.js` fora de `KNOWN_EXCEPTIONS` (de três para dois arquivos) · implements:: REQ-10 · model:: sonnet · rounds:: 1
 - [x] TASK-11 removidos com `git rm`: `public/js/views/controllers/AlbumsStateController.js` (morto: só o importava `public/legacy/AlbumsView_DEPRECATED.js`) e esse arquivo legado (sem quem o importe) · implements:: REQ-10 · model:: sonnet · rounds:: 1
-- [ ] TASK-12 passar o «Refetch Metadata» pela fila da carga (`arch.md`, seção 15, linha «Refetch Metadata»): hoje ele roda em `SeriesService.refetchAlbumMetadata`, fora da fila, e só depois entrega o álbum à carga · implements:: REQ-10 · model:: opus
+- [x] TASK-12 passar o «Refetch Metadata» pela fila da carga (`arch.md`, seção 15, linha «Refetch Metadata»): hoje ele roda em `SeriesService.refetchAlbumMetadata`, fora da fila, e só depois entrega o álbum à carga — feito na F56: o «Refetch» passa pela fila e pelo estado do serviço (REQ-07 da F56; merge `042da86`) · implements:: REQ-10 · model:: opus · rounds:: 1
 
 ## Verification
 - [x] TASK-13 suíte inteira (`npx vitest run`): 271 passam, as mesmas 28 falhas da linha de base, nenhuma nova; `npx vite build` compila · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10 · model:: sonnet · rounds:: 1
-- [ ] TASK-14 conferência no navegador, conta do MJRP, pela sessão de integração: nova tentativa (servidor fora), segunda visita sem leitura de ranking por álbum, «Clear Cache» que refaz a busca e mantém o Spotify, «Refetch» que grava sem o ranking pessoal · implements:: REQ-01, REQ-04, REQ-06, REQ-07, REQ-09 · model:: opus
-- [ ] TASK-15 julgamento do MJRP no navegador (tarefa do humano), com as duas perguntas abertas da spec; as issues UAT-175, UAT-176 e UAT-177 seguem `open` até o merge · implements:: REQ-01, REQ-04, REQ-06 · model:: opus
+- [x] TASK-14 conferência no navegador, conta do MJRP, pela sessão de integração: nova tentativa (servidor fora), segunda visita sem leitura de ranking por álbum, «Clear Cache» que refaz a busca e mantém o Spotify, «Refetch» que grava sem o ranking pessoal — prova: `reports/evidence/F48-album-cache-and-retry/F48-browser-2026-11-19.json` · implements:: REQ-01, REQ-04, REQ-06, REQ-07, REQ-09 · model:: opus · rounds:: 1
+- [ ] TASK-15 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
 
 ## Documentation
 - [x] `docs/manual/` (00, 06, 07, 07b, 08, 11, 19, 98 e o `regression_checklist`), `docs/specs/data-model.md` (o que se grava em `albums`) e `docs/specs/arch.md` (seção 17 e o achado do Firestore fora dos repositórios)
 - [x] spec, plano e tarefas preenchidos (passo retroativo, 2026-11-19)
-- [ ] `docs/specs/uat.md`: passar UAT-175, UAT-176 e UAT-177 a `fixed` depois do merge (sessão de integração); a UAT-14 segue aberta, com dois arquivos na lista
-- [ ] levar o ramo à `main` (o merge é da sessão de integração; push e aceite são do MJRP)
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde; só então `status: Done`
+- [x] `docs/specs/uat.md`: passar UAT-175, UAT-176 e UAT-177 a `fixed` depois do merge (sessão de integração); a UAT-14 segue aberta, com dois arquivos na lista — UAT-175, UAT-176 e UAT-177 estão em `fixed`
+- [x] levar o ramo à `main` — feito: ramo mergeado na `main` local (`40ca80d`)
+
+## For the owner at UAT
+- O MJRP julga no navegador, com as duas perguntas abertas da spec, e dá o OK na UAT-175, na UAT-176 e na UAT-177.
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.
+- Push da `main` ao remoto (e, com ele, a primeira rodada da automação do GitHub): é do MJRP.

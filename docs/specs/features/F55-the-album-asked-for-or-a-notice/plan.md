@@ -105,6 +105,15 @@ Nenhuma.
 <!-- arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, the NFR nodes. -->
 `docs/specs/arch.md` (a proposta da carga e «O servidor diz a verdade», item 5.2 e seção 11), `docs/decisions/0019-one-owner-for-the-album-load.md`, `reports/audits/2026-11-19-mjrpalbumblender-v0-v5-map.md` (tema 3), `docs/manual/01_System_Architecture.md` (seção 6), `docs/specs/constitution.md`, `docs/specs/uat.md` (UAT-184). `info-arch.md`, `behavior.md` e `design-system.md` não se aplicam: a fatia não cria tela.
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — atualizado (commit `196e704`)
+- `docs/specs/data-model.md` — atualizado (commit `196e704`)
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `196e704`)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - **Álbum certo que deixa de aparecer.** A regra é estrita de propósito. Um título de catálogo com qualificador que não é edição («Weezer (Blue Album)», «(Original Motion Picture Soundtrack)») não bate com o título sem ele; uma série antiga cujo título guardado difere do título do catálogo perde o álbum mesmo com o identificador certo guardado. Mitigação: a contagem só-leitura, rodada antes de publicar, lista esses casos como `different`.
 - **O guardado antigo.** O registro do navegador é por consulta e vale 7 dias: um álbum trocado já guardado continua aparecendo depois da publicação, até vencer ou até o «Clear Cache». A troca de versão do registro é da fatia 2 (e da fatia 2 da F52).

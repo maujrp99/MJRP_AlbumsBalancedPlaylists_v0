@@ -28,6 +28,15 @@ Cadastros fora do código, feitos pelo MJRP em 2026-11-19: `http://127.0.0.1:501
 - `docs/manual/00_Deployment_and_Setup.md`, `PORT_INFO.txt`, `README.md`
 - `public/js/services/SpotifyAuthService.js` (o comentário sobre o Spotify exigir `127.0.0.1`)
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — sem mudança: só o endereço local e o botão do Spotify; nenhum componente, fluxo técnico ou integração novos
+- `docs/specs/data-model.md` — sem mudança: nenhuma entidade, campo ou esquema mudou
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — sem mudança: nenhum estado de comportamento mudou
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - O sinal agora dispara também na renovação do token. Quem escuta precisa ser barato: o botão só redesenha e, sem nome da conta, busca uma vez.
 - Guardados do navegador em `localhost:5010` (login, tokens, cache) ficam para trás: valem os de `127.0.0.1:5010`.

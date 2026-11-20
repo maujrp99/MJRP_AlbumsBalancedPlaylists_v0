@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f61-saved-playlists-fast`, a partir da `main` em `c72dcc2`
 - [x] causa lida no código antes de mexer: cada leitura da rota até o primeiro desenho, com arquivo e linha, na seção «Diagnóstico» do plano; a contagem de antes medida com o banco falso (48 leituras, 1 no ar)
-- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -32,11 +32,14 @@
 
 ## Verification
 - [x] TASK-10 suíte (`npx vitest run`: 1046 passando, 982 antes), `npx vite build` e complexidade até 10 nas funções novas (`npx eslint --rule 'complexity: ["error", 10]'` nos arquivos tocados) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08 · model:: sonnet · rounds:: 1
-- [ ] TASK-11 prova no navegador com a conta do MJRP, com o tempo medido pelo roteiro do relatório de entrega: tempo até a primeira série e até a lista inteira (antes: 20,1 s e 19,9 s), volta à tela, «Try again» numa série com a rede cortada, apagar um lote sem reler a lista, abrir um lote e uma playlist · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07 · model:: opus · waiting:: human — quem implementou não tem navegador; a prova roda com o login do MJRP, pelo agente integrador · action:: o integrador roda o roteiro em `http://127.0.0.1:5010` e anota os tempos em `reports/evidence/F61/`
-- [ ] TASK-12 julgamento do MJRP (tarefa do humano): os textos novos, o limite de 8 leituras juntas e a lista que aparece na hora ao voltar · implements:: REQ-02, REQ-03, REQ-07 · model:: opus · waiting:: human — o aceite da issue é do MJRP · action:: o MJRP confere em produção e dá o OK na UAT-186
+- [x] TASK-11 prova no navegador com a conta do MJRP, com o tempo medido pelo roteiro do relatório de entrega: tempo até a primeira série e até a lista inteira (antes: 20,1 s e 19,9 s), volta à tela, «Try again» numa série com a rede cortada, apagar um lote sem reler a lista, abrir um lote e uma playlist — prova: `reports/evidence/F61/2026-11-19-saved-playlists-timing.md` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07 · model:: opus · rounds:: 1
+- [ ] TASK-12 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
 
 ## Documentation
 - [x] `docs/specs/arch.md` (seção «Leitura das playlists guardadas»), `docs/specs/behavior.md` (os estados da tela) e `docs/manual/` (00, 01, 06, 09, 14, 17, 21, 24, 29, 99 e a lista de regressão) dizem o que o código faz agora
 - [x] spec, plano e tarefas preenchidos no ramo
-- [ ] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador — conferido: as issues da feature em `fixed` no `uat.md`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
+
+## For the owner at UAT
+- O MJRP julga os textos novos, o limite de 8 leituras juntas e a lista que aparece na hora ao voltar
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.
