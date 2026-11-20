@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 10:18] session — o estudo do produto público vira estudo de viabilidade: afiliação, BestEverAlbums e MusicBrainz autorizados
+**Branch:** main
+A pedido do MJRP, o documento foi reescrito como estudo de viabilidade de um cenário: produto público, receita por afiliação, notas do BestEverAlbums com autorização, catálogo do MusicBrainz com apoio comercial. Veredito do agente: viável como produto; a afiliação sozinha não se paga no começo (conta ilustrativa: cerca de US$ 135 por mês com 10 mil usuários ativos, premissas escritas). O item que decide é a resposta do BestEverAlbums. O material anterior ficou como anexos.
+
 ## [2026-11-20 10:15] session — estudo do produto público: entram as considerações das conversas
 **Branch:** main
 A pedido do MJRP, o estudo ganhou o que estava só na conversa: as regras das lojas, a opção SwiftUI se o iPhone for a única plataforma, o caminho de uso pessoal (tela de início, Capacitor no TestFlight) e a cláusula de tráfego do Discogs com as três opções.
