@@ -54,7 +54,7 @@
 ### **Step 2.1: Spec-Driven Development (SDD)**
 We follow a strict **Spec-First** approach. We do not write complex code without a plan.
 
-📄 **Read**: `docs/CONSTITUTION.md` (Section IV)
+📄 **Read**: `docs/specs/constitution.md` (artigo IV, Testes)
 - **Key Concept**: "Design before you build"
 
 ### **Step 2.2: Developer Standards**
