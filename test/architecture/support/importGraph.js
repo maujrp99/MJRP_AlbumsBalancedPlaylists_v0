@@ -271,12 +271,17 @@ export function entryPointsOfScripts() {
 /** Every entry point: the fixed ones and the ones the scripts name. */
 export const allEntryPoints = () => [...new Set([...ENTRY_POINTS, ...entryPointsOfScripts()])]
 
-const isTest = (file) => /\.test\.[cm]?js$/.test(file) || /(^|\/)tests?\//.test(file)
-
-/** The code modules the fitness test watches: public/js, shared and server, tests left out. */
+/**
+ * The code modules the fitness test watches: every code file under public/js, shared and server.
+ * The tests of the project live under test/, outside these folders: a test file put inside them
+ * is watched like any other module, so it cannot hide there.
+ */
 export const watchedModules = () => ['public/js', 'shared', 'server']
-    .flatMap(dir => listFiles(dir, file => isCode(file) && !isTest(file)))
+    .flatMap(dir => listFiles(dir, isCode))
     .sort()
+
+/** The stylesheets of the site: every .css under public/css. */
+export const watchedStylesheets = () => listFiles('public/css', file => file.endsWith('.css')).sort()
 
 /** The watched modules no entry point reaches. */
 export function deadModules(options) {
