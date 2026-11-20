@@ -122,7 +122,8 @@ export class TracksRankingComparison {
             new TracksTabs({
                 tracks: sortedTracks,
                 activeTab: this.state.activeTab,
-                onTabChange: this.handleTabChange
+                onTabChange: this.handleTabChange,
+                albumArtist: this.album.artist
             }).mount(tabsContainer)
         }
     }

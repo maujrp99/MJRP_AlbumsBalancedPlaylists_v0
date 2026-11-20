@@ -12,6 +12,7 @@ import { SafeDOM } from '../utils/SafeDOM.js'
 import { coverImage } from './ui/coverImage.js'
 import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatus.js'
 import { createBuyLinksSection, createValueSection } from './InventoryValueSection.js'
+import { isPhone } from '../utils/isPhone.js'
 
 /** The colour of the status badge of an inventory item. */
 const STATUS_BADGE = Object.freeze({
@@ -120,7 +121,10 @@ export async function showViewAlbumModal(albumInput, { loadAlbum = null, value }
   }
   // Let's reconstruct the children array explicitly to be safe
   SafeDOM.clear(containerEl)
-  const children = [headerEl]
+  // The phone (F76, REQ-06): a bar that stays on top with close, and the cover behind the header
+  const closing = new AbortController()
+  const phone = phonePartsOf({ album, headerEl, scroller: containerEl, title: detailsEl.firstChild, onClose: handleClose, closed: closing.signal })
+  const children = [phone.bar, headerEl].filter(Boolean)
   if (notesEl) children.push(notesEl)
   children.push(contentEl, footerEl)
   children.forEach(c => containerEl.appendChild(c))
@@ -134,8 +138,6 @@ export async function showViewAlbumModal(albumInput, { loadAlbum = null, value }
   }, containerEl)
 
   // -- 6. Logic & Mounting --
-
-  const closing = new AbortController()
 
   function handleClose() {
     closing.abort()
@@ -189,7 +191,10 @@ export async function showViewAlbumModal(albumInput, { loadAlbum = null, value }
       if (closing.signal.aborted) return
       const loaded = given ? asAlbum(given) : null
       // An item with no cover of its own shows the cover of the album that came (UAT-222)
-      if (loaded?.coverUrl && !album.coverUrl) coverEl.replaceWith(createCoverElement(loaded))
+      if (loaded?.coverUrl && !album.coverUrl) {
+        coverEl.replaceWith(createCoverElement(loaded))
+        phone.setCover(loaded.coverUrl)
+      }
       if (loaded && hasTracks(loaded)) showTracks(loaded, TRACKS_TEXT.none)
       else if (!hasTracks(album)) showTracks(album, TRACKS_TEXT.notLoaded)
     })
@@ -202,6 +207,49 @@ export async function showViewAlbumModal(albumInput, { loadAlbum = null, value }
 }
 
 // --- Helpers ---
+
+/**
+ * What the album window has only on the phone (F76): the bar, the blurred cover, the title that
+ * comes to the bar. On the computer: nothing (`bar` is null, `setCover` does nothing).
+ */
+function phonePartsOf({ album, headerEl, scroller, title, onClose, closed }) {
+  if (!isPhone()) return { bar: null, setCover: () => { } }
+  setGlow(headerEl, album.coverUrl)
+  watchTheTitle(scroller, title, closed)
+  return { bar: createPhoneBar(album, onClose), setCover: (url) => setGlow(headerEl, url) }
+}
+
+/**
+ * The bar of the album window on the phone (F76): close, always in view, and the title of the
+ * album, which shows once the header has scrolled away. `md:hidden`: never on the computer.
+ */
+function createPhoneBar(album, onClose) {
+  const close = SafeDOM.button({ className: 'album-window__close', 'aria-label': 'Close', onClick: onClose })
+  close.appendChild(SafeDOM.fromHTML(getIcon('X', 'w-6 h-6')))
+  return SafeDOM.div({ className: 'album-window__bar md:hidden' }, [
+    SafeDOM.span({ className: 'album-window__bar-title', 'aria-hidden': 'true' }, album.title),
+    close
+  ])
+}
+
+/** The cover, blurred, behind the header of the album window on the phone; none without a cover. */
+function setGlow(headerEl, coverUrl) {
+  headerEl.querySelector('.album-window__glow')?.remove()
+  if (!coverUrl) return
+  const glow = SafeDOM.div({ className: 'album-window__glow md:hidden', 'aria-hidden': 'true' },
+    SafeDOM.img({ src: coverUrl, alt: '', loading: 'lazy', decoding: 'async' }))
+  headerEl.appendChild(glow)
+}
+
+/** The bar shows the title of the album while the title of the header is out of view. */
+function watchTheTitle(scroller, title, closed) {
+  if (typeof IntersectionObserver !== 'function' || !title) return
+  const observer = new IntersectionObserver(([entry]) => {
+    scroller.parentElement?.classList.toggle('album-window--scrolled', !entry.isIntersecting)
+  }, { root: scroller, rootMargin: '-56px 0px 0px 0px' })
+  observer.observe(title)
+  closed.addEventListener('abort', () => observer.disconnect(), { once: true })
+}
 
 /** The sections an inventory item shows above its tracks (F75): its value, and where to buy it. */
 function sectionsOfAnItem(item, value) {

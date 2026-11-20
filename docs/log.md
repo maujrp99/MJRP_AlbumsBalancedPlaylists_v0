@@ -3,10 +3,20 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:47] session — F76 TASK-03: a nota da tela e a prova em navegador da janela do álbum e do ranking
+**Branch:** feat/f76-mobile-album-window
+Nota `docs/specs/features/F76-mobile-redesign/screens/album-window-and-ranking.md` (inventário, estados, decisões e fontes). Prova `reports/evidence/F76/album-window/`: 1280x800 idêntico ao antes pixel a pixel; a 393x852 e 393x660 nada abaixo de 44/12/16 px, 8 e 5 faixas à vista na janela do álbum, 10 e 7 no ranking, nenhum título cortado.
+Arrastar por toque provado no Chrome (a alça move, o título rola). Não visto: iPhone de verdade e janelas com login.
+
 ## [2026-11-20 02:44] session — F76 TASK-07: testes, nota da tela e prova do inventário no celular
 **Branch:** feat/f76-mobile-inventory
 15 testes do celular e do computador (`test/views/InventoryView.phone.test.js`), a nota `screens/inventory.md` e a harness com 211 itens (`reports/evidence/F76/harness/`); ajustes de CSS vistos nas capturas (fichas, título, aviso, moeda da edição em segmentos de 48 px).
 Prova a 393x852: sem rolagem lateral, 0 texto < 12, 0 campo < 16, 0 alvo < 44 em 13 estados; 150º álbum em 2 gestos. A 1280x800, antes e depois iguais em medidas (pixels: ruído de fonte em 18 px).
+
+## [2026-11-20 02:41] session — F76 TASK-03: ajustes vistos nas capturas e o banco de prova da janela do álbum e do ranking
+**Branch:** feat/f76-mobile-album-window
+O segmento ligado mantém o alvo de 44 px (a pílula desenhada por dentro), o cabeçalho alinha no topo, os botões de mover cabem, sai o vão herdado da tabela do computador.
+Banco de prova `reports/evidence/F76/harness/album-window.*` (as janelas de verdade com dados de exemplo: título longo, 16 faixas, valor do F75) e `reports/evidence/F76/album-window/shoot.mjs` (Chrome sem cabeça, porta própria; mede alvos, texto, campos, faixas à vista, rolagens).
 
 ## [2026-11-20 02:35] session — F75, documentos: a sugestão recusada e o menor preço à venda
 
@@ -15,6 +25,11 @@ Prova a 393x852: sem rolagem lateral, 0 texto < 12, 0 campo < 16, 0 alvo < 44 em
 - `plan.md`: a decisão («decidido pelo agente — revisável»), como os três estados voltam, a leitura dos termos para as estatísticas do marketplace (conteúdo do Discogs: atribuição e seis horas; dado do marketplace, tratado como «Restricted Data») e o que não foi verificado.
 - `behavior.md` (`^inventory-value-lowest-for-sale`), `info-arch.md` (três estados novos com ID de bloco), `data-model.md` (a base `lowest_for_sale` da leitura; a chave `v2`), `arch.md` (emenda) e `docs/manual/21_Dynamic_UI_Mapping.md`.
 - Não verificado: `/marketplace/stats` com o token; quantas das 211 edições têm algo à venda (a de «The Dark Side of the Moon» tinha zero).
+
+## [2026-11-20 02:35] session — F76 TASK-03: a janela do álbum e o meu ranking no celular (código e testes)
+**Branch:** feat/f76-mobile-album-window
+Janela do álbum: uma rolagem só, barra com fechar sempre à vista, capa como herói com a própria capa desfocada atrás, as três fontes num controle segmentado preso sob a barra, faixa em duas linhas (título sozinho; BEA, Spotify e duração embaixo). Meu ranking: barra Back · My ranking · Reset (Reset desfazível por 5 s), linha com o título em linha própria, mover sem arrastar (tocar na faixa, Up/Down/«Move to…»), arrastar só pela alça, Save preso no pé, o aviso abaixo da barra.
+Testes novos: TracksTabs.phone, ViewAlbumModal.phone, UserRankModal.phone (celular e computador). No computador a marcação é a de hoje.
 
 ## [2026-11-20 02:34] session — F75, app: o menor preço à venda como valor do Discogs, um aviso só sobre as configurações de vendedor, e as leituras erradas descartadas
 
