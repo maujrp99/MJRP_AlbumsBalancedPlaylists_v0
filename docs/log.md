@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:14] session — S-57 e F75 registradas (preço de CDs e onde comprar); viabilidade conferida antes
+
+- Pedido do MJRP: preço médio dos CDs do inventário na Amazon, no Discogs e na iMusic, com link de compra, pensando em afiliação; via padrão, com protótipo e a skill de UI; «verifique a viabilidade antes de mais nada».
+- Viabilidade: `reports/audits/2026-11-20-mjrpalbumblender-v0-cd-prices-feasibility.md`. Links de compra viáveis nos três. Preço: o Discogs dá o menor preço e a quantidade à venda sem login (conferido com pedidos à API); a Amazon só abre preços para afiliado com vendas; a iMusic recusou o pedido automático e não tem interface pública.
+- S-57 no PRD (EP-07) e F75 na `main`, `lane: standard`, em esboço. Sem ramo: espera as respostas dele, o protótipo e a prioridade.
+
 ## [2026-11-20 00:11] session — F74 começada depois de priorizada; `## Now` em dia
 
 - O MJRP priorizou a F72 e a F74. A F72 está em produção. A F74 foi passada a um auxiliar com o desenho definido: uma regra de identidade de faixa em `shared/`, no molde da de álbum, e a investigação do leitor da página do BestEverAlbums. A integração, a publicação do servidor e a prova ficam com o integrador.
