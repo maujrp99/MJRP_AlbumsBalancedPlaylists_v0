@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:10] session — F70: o app lê o que o servidor diz das notas de um álbum achado pela IA (UAT-210)
+
+Confirmado no código. O enriquecedor de notas (`services/albums/adapters/enrichers.js`, `AcclaimEnricher`) confia no endereço da página que vem no álbum (`bestEverUrl`): com ele, responde «pronto» sem pedir; sem ele, pede `POST /api/enrich-album`. O servidor só manda esse endereço quando leu a página, então:
+- `failed`, `not_asked`, `not_configured`, `not_found`: o álbum vinha sem o endereço e o app já pedia as notas pelo caminho normal. Para a falha, o defeito era teórico: uma falha nunca era gravada como «sem notas». Provado por teste.
+- `no_ratings` (a página existe, sem nenhuma nota): o álbum vinha COM o endereço e o app o marcava como «pronto», com notas, sem ter nenhuma. Este era o defeito real, no sentido contrário ao descrito.
+
+Feito: `public/js/models/ratingsOutcome.js` lê `data.ratings`; `api/client.js` `normalizeAlbumData` guarda o desfecho no álbum (`metadata.ratingsOutcome`) e só mantém o endereço da página quando o servidor disse `found` (ou não disse nada: servidor de antes da fatia 5). Nos outros casos vale a resposta do próprio pedido do app, com o motivo e a versão da regra de identidade que os prazos de confiança já usam. O enriquecedor não mudou. `normalizeAlbumData` foi dividida (complexidade 13 para menos de 10; saiu da lista de exceções).
+
+Testes: `test/api/generateRatingsOutcome.test.js` (cliente, adaptador do catálogo, enriquecedor e carga reais, com a resposta montada pelo construtor do servidor); `test/api/siteAgainstGenerateWithRatings.test.js` reescrito (dizia que o app ignorava o campo). Nenhuma tela mostra o desfecho ainda. Decidido pelo agente — revisável: o `not_found` do `/api/generate` não é guardado, porque vem sem a versão da regra de identidade; o app pergunta de novo e guarda a resposta carimbada.
+
 ## [2026-11-19 22:10] session — F70: o preço do inventário mantém a moeda (UAT-209)
 
 Confirmado no código: `controllers/InventoryController.js` `handleUpdatePrice` chamava `updatePrice(albumId, newPrice)` sem moeda. Efeito real, pior que o descrito: a tela ficava com `currency: undefined` e o repositório gravava o seu padrão, `USD`, qualquer que fosse a moeda do item (um item em BRL virava USD). O ramo `else` era inalcançável (o serviço lança na falha, nunca devolve falso), então a falha não mostrava aviso. A chave `sorting` estava escrita duas vezes no estado inicial.

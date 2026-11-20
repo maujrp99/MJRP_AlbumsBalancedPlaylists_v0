@@ -3,6 +3,7 @@ import { mayUsePaidRoutes } from './paidRoutes.js'
 import { Album } from '../models/Album.js'
 import { askedAlbum, compareOnlyAnswer } from '../models/askedAlbum.js'
 import { plainAlbumQuery } from '../models/albumQuery.js'
+import { readRatingsOutcome, cameWithTheAlbum } from '../models/ratingsOutcome.js'
 import { albumLoader } from '../services/AlbumLoader.js'
 import { TrackTransformer } from '../transformers/TrackTransformer.js'
 import { retryWithBackoff } from '../utils/retry.js'
@@ -26,6 +27,39 @@ const API_BASE = window.__api_base || '/api'
 // The failure of a call to the server (its code, whether to ask again, the hold) is read in one
 // place, api/serverResult.js. Exported from here too, for the callers that already import it.
 export { ApiError }
+
+const isSet = (value) => value !== null && value !== undefined
+
+/**
+ * A track of the server's answer as the app's canonical track (transformers/TrackTransformer.js).
+ * @param {string} orderField - 'acclaimRank' or 'position': the field the place in the list fills
+ *        when the track does not say it
+ */
+function canonicalTrack(track, index, context, orderField) {
+    const canonical = TrackTransformer.toCanonical({
+        ...track,
+        acclaimRank: track.rank || track.acclaimRank || track.finalPosition,
+        position: track.position || track.trackNumber,
+        acclaimScore: track.normalizedScore || track.acclaimScore
+    }, context)
+    if (!canonical[orderField]) canonical[orderField] = index + 1
+    return canonical
+}
+
+/** The acclaim summary of an album that came without one. */
+function acclaimOf(tracks, source) {
+    return {
+        hasRatings: tracks.some(track => isSet(track.rating) || isSet(track.rank)),
+        source: source || 'hybrid-curation',
+        trackCount: tracks.length
+    }
+}
+
+/** The page of BestEverAlbums, only when its ratings came with the album (see normalizeAlbumData). */
+function pageOfTheSource(data, outcomes) {
+    if (!cameWithTheAlbum(outcomes, 'acclaim')) return {}
+    return { bestEverAlbumId: data.bestEverAlbumId, bestEverUrl: data.bestEverUrl, bestEverEvidence: data.bestEverEvidence }
+}
 
 /** The server takes the query as text: "Artist - Album". */
 function queryText(query) {
@@ -175,124 +209,44 @@ export class APIClient {
     }
 
     /**
-     * Normalize album data from API
-     * @param {Object} data - Raw API response
-     * @returns {Object} Normalized album
-     * @private
-     */
-    /**
-     * Normalize album data from API
-     * @param {Object} data - Raw API response
-     * @returns {Album} Normalized album instance
+     * The album of an answer of POST /generate, as the app's Album.
+     *
+     * What the server said about each source of ratings (`data.ratings`, F52 slice 5) is read here
+     * (models/ratingsOutcome.js) and stays on the album, in `metadata.ratingsOutcome`. The page of
+     * BestEverAlbums stays on the album only when the server said the ratings were found (or said
+     * nothing: the server before slice 5). An album with that address reads as "already has its
+     * ratings" (adapters/enrichers.js), so an album whose source failed, was not asked, or has no
+     * ratings comes without it, and the app's own source is asked through its normal path (F70).
+     * @param {Object} data - the album as the server answered it
+     * @returns {Album}
      * @private
      */
     normalizeAlbumData(data) {
-        // Generate stable ID
         const id = this.generateAlbumId(data)
-
-        // DEBUG: Log raw API data
-        console.debug('[APIClient] Raw API data received:', {
-            hasTracks: !!data.tracks,
-            hasTracksByAcclaim: !!data.tracksByAcclaim,
-            tracksCount: data.tracks?.length,
-            tracksByAcclaimCount: data.tracksByAcclaim?.length
-        })
-
+        const title = data.title || data.album
+        const context = { artist: data.artist, album: title, albumId: id }
         const originalTracks = data.tracks || []
         const rankedTracks = data.tracksByAcclaim || data.rankingConsolidated || []
+        const byAcclaim = rankedTracks.length > 0 ? rankedTracks : originalTracks
+        const outcomes = readRatingsOutcome(data.ratings)
 
-        // DEBUG: Inspect track lists before processing
-        console.debug('[APIClient] Track lists before processing:', {
-            originalFirst: originalTracks[0]?.title,
-            originalLength: originalTracks.length,
-            rankedFirst: rankedTracks[0]?.title,
-            rankedLength: rankedTracks.length
-        })
-
-        // Sprint 12.5: Use TrackTransformer for canonical track creation
-        const albumContext = {
-            artist: data.artist,
-            album: data.title || data.album,
-            albumId: id
-        }
-
-        // Helper to prepare track data using TrackTransformer
-        const prepareTrackData = (track, idx, isRanked) => {
-            // Ensure strictly required fields for transformer if backend data is messy
-            const raw = {
-                ...track,
-                // Pass rank/position hints if they exist, otherwise mapped by index below
-                acclaimRank: track.rank || track.acclaimRank || track.finalPosition,
-                position: track.position || track.trackNumber,
-                acclaimScore: track.normalizedScore || track.acclaimScore
-            }
-
-            const canonical = TrackTransformer.toCanonical(raw, albumContext)
-
-            // Apply index-based fallbacks if strictly needed (though transformer handles most)
-            if (isRanked && !canonical.acclaimRank) canonical.acclaimRank = idx + 1
-            if (!isRanked && !canonical.position) canonical.position = idx + 1
-
-            return canonical
-        }
-
-        // Construct Album Data
-        const albumData = {
+        return new Album({
             id,
-            title: data.title || data.album,
+            title,
             artist: data.artist,
             year: data.year,
-
-            // Enrich coverUrl from albums-expanded.json if not present
-            coverUrl: data.coverUrl || null, // TODO: Implement async hydration for covers
-
-            // BestEver fields
-            bestEverAlbumId: data.bestEverAlbumId,
-            bestEverUrl: data.bestEverUrl,
-            bestEverEvidence: data.bestEverEvidence,
-
-            // Tracks Lists (Pre-processed)
-            // If rankedTracks exists, use it for 'tracks' (Acclaim order)
-            // Otherwise fallback to originalTracks
-            tracks: (rankedTracks.length > 0 ? rankedTracks : originalTracks).map((t, i) => prepareTrackData(t, i, true)),
-
-            // Original Order Tracks
-            tracksOriginalOrder: originalTracks.map((t, i) => prepareTrackData(t, i, false)),
-
+            coverUrl: data.coverUrl || null,
+            ...pageOfTheSource(data, outcomes),
+            // The tracks by acclaim when the server ranked them, else in the order they came
+            tracks: byAcclaim.map((track, index) => canonicalTrack(track, index, context, 'acclaimRank')),
+            tracksOriginalOrder: originalTracks.map((track, index) => canonicalTrack(track, index, context, 'position')),
             metadata: {
                 fetchedAt: new Date().toISOString(),
-                ...data.metadata
+                ...data.metadata,
+                ...(outcomes ? { ratingsOutcome: outcomes } : {})
             },
-
-            // Calculate acclaim metadata if missing
-            acclaim: data.acclaim || (() => {
-                const tracks = rankedTracks.length > 0 ? rankedTracks : originalTracks
-                const hasRatings = tracks.some(t =>
-                    (t.rating !== null && t.rating !== undefined) ||
-                    (t.rank !== null && t.rank !== undefined)
-                )
-                return {
-                    hasRatings,
-                    source: data.rankingConsolidatedMeta?.source || 'hybrid-curation',
-                    trackCount: tracks.length
-                }
-            })()
-        }
-
-        // Return Domain Model Instance
-        const album = new Album(albumData)
-
-        // DEBUG: Log normalized output
-        console.debug('[APIClient] Normalized album output:', {
-            id: album.id,
-            title: album.title,
-            tracksCount: album.tracks.length,
-            tracksOriginalOrderCount: album.tracksOriginalOrder.length,
-            firstTrack: album.tracks[0],
-            firstOriginalTrack: album.tracksOriginalOrder[0]
+            acclaim: data.acclaim || acclaimOf(byAcclaim, data.rankingConsolidatedMeta?.source)
         })
-
-        return album
     }
 
     /**
