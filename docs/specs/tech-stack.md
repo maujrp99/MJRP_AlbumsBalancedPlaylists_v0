@@ -39,6 +39,17 @@ updated: 2026-10-28
 | Build | `gcloud run deploy --source` (Cloud Build por baixo) | — | constrói a imagem pelo `server/Dockerfile` e implanta o servidor no Cloud Run (`scripts/deploy-server.sh`); o `cloudbuild.yaml` foi removido na F64 | — |
 | Build | GitHub Actions (`actions/checkout@v4`, `actions/setup-node@v4`) e `firebase-tools` por `npx` | — | CI e implantação do frontend; `firebase-tools` sem versão fixa (`.github/workflows/ci-firebase.yml`) | — |
 | Observabilidade | `server/lib/logger.js`, com `console` de reserva | — | log do servidor; sem coletor de erros nem de métricas no repositório | — |
+| App | TypeScript, estrito (`app/tsconfig.json` sobre `expo/tsconfig.base`) | 6.0 | a linguagem de `app/`; o núcleo (`shared/`) continua JavaScript com JSDoc | [[ADR-0022]] |
+| App | Expo | SDK 58 (`expo` 58.0.26) | o app para iPhone e Android, em `app/` (espaço de trabalho da raiz); o Metro configura o monorepo sozinho desde o SDK 52 (docs.expo.dev/guides/monorepos); pede Node 22.13+, Xcode 26.4+, iOS 16.4+, Android 7+ (docs.expo.dev/versions/latest) | [[ADR-0022]] |
+| App | React Native e React | 0.88.1 / 19.3.0 | a interface nativa; Nova Arquitetura, a única desde o 0.82; um React só no repositório (`overrides` na raiz) | [[ADR-0022]] |
+| App | Expo Router (abas em JavaScript, `Tabs`) | 58.0.32 | as rotas em `app/src/app/`, a barra de baixo com os cinco destinos | [[ADR-0022]] |
+| App | React Native Firebase (`app`, `auth`, `firestore`) | 27.1.1 | os dados e a conta no app, pelo SDK nativo; **não provado** até o spike S2 rodar num aparelho (`app/src/data/firebaseStore.ts`, `app/src/auth/nativeAuth.ts`) | [[ADR-0022]] |
+| App | `@invertase/react-native-apple-authentication`, `@react-native-google-signin/google-signin` | 2.5.1 / 17.0.0 | entrar com a Apple e com o Google (rnfirebase.io/auth/social-auth); **não provados** | [[ADR-0022]] |
+| App | expo-crypto | 58.0.8 | a fonte do `newId()` do núcleo no app (`app/src/platform/wiring.ts`) | [[ADR-0022]] |
+| App | posthog-react-native | 4.87.1 | a medição do app (F77), desligada sem chave; **não provada** (`app/src/usage/posthogAdapter.ts`) | [[ADR-0022]] |
+| Testes do app | Jest com jest-expo, React Native Testing Library | 30.5 / 58.0.15 / 14.1 | testes de unidade e de componente do app (`app/jest.config.js`; docs.expo.dev/develop/unit-testing) | [[ADR-0022]] |
+| Testes do app | ESLint com `eslint-config-expo` | 9.39.2 / 58.0.4 | lint do app (`app/eslint.config.js`), à parte do da raiz | [[ADR-0022]] |
+| Build do app | `expo export` (Metro e Babel, bytecode Hermes) | — | empacota o JavaScript do app para iOS e Android sem build nativo; o `check` do app o roda e procura segredos nos pacotes (`scripts/app-bundle-scan.mjs`); o build nativo (Xcode, Android Studio ou o serviço do Expo) ainda não roda nesta máquina | [[ADR-0022]] |
 
 ## Decidido não usar
 | Tecnologia | Por que não | Decisão |

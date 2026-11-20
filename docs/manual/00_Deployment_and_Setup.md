@@ -209,6 +209,44 @@ todos `no-unused-vars`) não recusam. Eram 22 erros; todos foram consertados.
 
 **Não testado:** o arquivo foi reescrito na F64 e ainda não rodou no GitHub.
 
+### 2.6 O app para iPhone e Android (F78, esqueleto)
+
+O app mora em `app/` (Expo SDK 58, React Native 0.88.1, TypeScript; ADR-0022) e é um espaço de
+trabalho da raiz: o `npm install` (ou `npm ci`) da raiz instala também o que o app usa, e nada vai
+para `app/node_modules` (um React só, pelo `overrides` da raiz). Nada do app é publicado ainda.
+
+**As checagens, sem simulador** (o que esta máquina prova hoje):
+
+| Comando | O que faz |
+|---|---|
+| `npm run app:check` (na raiz) | tudo abaixo, em ordem; para no primeiro erro |
+| `npm run typecheck --workspace app` | o compilador do TypeScript, estrito |
+| `npm run lint --workspace app` | o ESLint do Expo, com zero avisos; recusa importar `public/` ou `server/` e um pacote nativo fora da sua ligação |
+| `npm run test --workspace app` | os testes do app (Jest): portas, telas e o autoteste do corpo dourado («3343 of 3343 match»), uns 15 s |
+| `npm run bundle:ios --workspace app`, `bundle:android` | o `expo export`: o JavaScript do app empacotado pelo Metro em bytecode Hermes, em `app/dist/` (fora do git) |
+| `npm run app:scan-bundles` (na raiz) | procura nos pacotes os nomes dos segredos do servidor e formas de chave; falha se achar |
+
+A suíte da raiz (`npx vitest run`) roda os sensores do app: `appAndSiteApart` e
+`noSecretsInTheApp` (este também lê os pacotes de `app/dist/` quando existem).
+
+**O modo de demonstração.** Sem configuração, o app abre com uma conta falsa e três séries de
+exemplo, em memória: nada sai do aparelho. O Firebase de verdade só com
+`EXPO_PUBLIC_DATA_MODE=firebase` (e `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`; a medição, com
+`EXPO_PUBLIC_POSTHOG_KEY`), e isso ainda não foi provado: precisa do build nativo e do registro do
+app no Firebase. Nenhum agente entra no projeto Firebase de produção nem grava nele.
+
+**Para o MJRP, no Mac, antes do primeiro simulador** (só ele pode; cada um uma vez):
+
+```
+sudo xcodebuild -license accept
+xcodebuild -downloadPlatform iOS
+```
+
+O primeiro aceita a licença do Xcode (sem isso o `xcodebuild` e o `simctl` recusam tudo); o segundo
+baixa o simulador do iOS. Depois disso o agente consegue o build de desenvolvimento
+(`npx expo run:ios` em `app/`) e a tela de autoteste no simulador. O iPhone de verdade e o login com
+a Apple pedem ainda a conta de desenvolvedor da Apple; o Android, o Android Studio com um emulador.
+
 ---
 
 ## 3. Environment Configuration

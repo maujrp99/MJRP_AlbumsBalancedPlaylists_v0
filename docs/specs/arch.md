@@ -135,6 +135,40 @@ Segunda fatia de código da F78 (ramo `feat/f78-ref-a-repositories-in-the-core`,
 - **Sensores.** `coreStaysPortable` (nenhum `firebase/*` em `shared/`), `firestoreBehindRepositories` (os repositórios estão em `shared/data/`; em `public/js/repositories/` só `firestoreStore.js` importa o SDK; nenhum repositório chama o Firestore fora da store), `oldWriterKeepsNewFields` (um escritor velho não apaga campo novo nem rebaixa a versão, por entidade), `test/security/firestoreRules.test.js` (a regra da versão, lida como texto). Os sensores de camada (`layerBoundaries`, `albumLoadBoundaries`, `ownRankingBoundaries`, `savedPlaylistsBoundaries`) passam a enxergar `shared/data/` como repositório.
 - **O que fica para a Ref-B.** Abrir só para leitura um documento de versão maior (regra 3 do § 6.2 da proposta) e a gravação de séries por transação; os casos abertos estão no `plan.md` da F78, § Technical Design.
 
+### O app (`app/`): o esqueleto (F78, ADR-0022)
+
+Terceira fatia de código da F78 (ramo `feat/f78-app-skeleton`, 2026-11-20). React Native com Expo (SDK 58, React Native 0.88.1), em TypeScript estrito, num espaço de trabalho da raiz ao lado de `shared/`; as regras ficam em `shared/` e nunca em `app/`. **Construído e provado só até onde uma máquina sem simulador prova:** compilador, testes de unidade e de componente (Jest), lint e o empacotamento do JavaScript pelo Metro (`expo export` para iOS e Android). Nenhuma tela foi vista num aparelho.
+
+```
+app/
+  app.json  metro.config.js  jest.config.js  eslint.config.js  tsconfig.json
+  src/app/          as rotas (Expo Router): (tabs)/ com Home, Albums, Blend, Playlists, Inventory; sign-in; diagnostics
+  src/screens/      as telas: Albums, Entrar, «Not in the app yet», o autoteste
+  src/ui/           o tema e as peças de design-system.md § Celular
+  src/platform/     a ligação da plataforma: expo-crypto no newId() do núcleo
+  src/data/         a porta dos dados: a interface da store e as duas ligações; a lista de séries
+  src/auth/         a porta da conta: o falso e a ligação nativa
+  src/usage/        a porta do uso: desligado, em memória, PostHog
+  src/selftest/     o autoteste do corpo dourado (sha256 em TypeScript)
+  src/composition.ts  quem liga o quê: o modo de demonstração (padrão) ou EXPO_PUBLIC_DATA_MODE=firebase
+```
+
+**As três portas e as suas ligações:**
+
+| Porta | Interface | Ligação provada aqui | Ligação real, não provada |
+|---|---|---|---|
+| Dados (store) | `app/src/data/store.ts`: o `db` e as 13 funções de `shared/data/store.js`, com os nomes e argumentos do Firestore modular; os repositórios de `shared/data/` a recebem como recebem a do site | `memoryStore.ts`: documentos por caminho, `where`/`orderBy`/`limit`, lote checado antes de aplicar, `serverTimestamp` com relógio; serve aos testes e ao modo de demonstração (três séries de álbuns públicos de catálogo) | `firebaseStore.ts`: as funções modulares de `@react-native-firebase/firestore` (rnfirebase.io/firestore/usage); o único arquivo que importa o pacote. Prova: spike S2 |
+| Conta | `app/src/auth/authPort.ts`: `signIn('apple' \| 'google')`, `signOut`, `current`, `onChange`, `providers`; cancelar não é falha | `fakeAuth.ts` | `nativeAuth.ts`: Sign in with Apple e Google Sign-In dão a credencial, `signInWithCredential` do React Native Firebase Auth (rnfirebase.io/auth/social-auth). Precisa da conta da Apple, do registro do app no Firebase e do id de cliente web do Google. Prova: spike S2, TASK-19 |
+| Uso | `app/src/usage/usage.ts`: `track(nome, propriedades)` pelo `describeEvent` de `shared/usageEvents.js` (a mesma lista fechada do site); nunca lança | o desligado (padrão, e sem chave) e o em memória | `posthogAdapter.ts`: `posthog-react-native`, nuvem europeia, só com `EXPO_PUBLIC_POSTHOG_KEY`. Prova: um evento chegando (TASK-28) |
+
+**A plataforma.** `app/src/platform/wiring.ts` roda antes de qualquer tela (`app/src/app/_layout.tsx`) e entrega ao `newId()` o `randomUUID` do expo-crypto; nada mais global. O Metro resolve o núcleo pelo nome do pacote (`@album-blender/shared/…`) e pelo apelido do site (`@shared/…`, só porque as regras que o autoteste roda ainda moram em `public/js`), os dois para a mesma pasta: um módulo só, uma porta de id só (conferido no mapa de fontes de cada `expo export`).
+
+**O autoteste (REQ-16).** `app/src/selftest/goldenSelfTest.ts` roda o corpo dourado no motor do app, com o id do aparelho, e compara cada caso com `test/fixtures/golden-core/reference/cases.tsv` (0,2 MB, empacotado como texto) pelo sha256 da linha; a referência inteira (33 MB de texto) não vai no app. As entradas (nove arquivos, ~0,75 MB) vão no pacote. A tela é escondida: toque longo no título de Albums, ou o link `albumblender://diagnostics`.
+
+**Sensores.** `test/architecture/appAndSiteApart.test.js` (lê todo arquivo do app; segue o que ele alcança fora de `app/`; só o autoteste chega a `public/`, pelo executor do corpo, nas pastas das regras, até as regras irem para `shared/`); `test/architecture/noSecretsInTheApp.test.js` com `scripts/app-bundle-scan.mjs` (nomes dos segredos do servidor e formas de chave, no código e nos pacotes); `app/eslint.config.js` (os pacotes nativos só nas suas ligações; nada de `public/` nem `server/`); `test/architecture/support/importGraph.js` (o que o app importa do núcleo conta como vivo).
+
+**Não provado (precisa de aparelho, licença ou conta):** as ligações reais das três portas; o expo-crypto nativo; o autoteste no Hermes do aparelho; o build nativo das duas plataformas; as telas num aparelho (medidas, áreas seguras, rolagem). **Não feito:** a guarda local e «Saved earlier»/«No connection» (REQ-13), a versão mínima (REQ-14), o roteiro Maestro.
+
 ## Carga da tela de álbuns — proposta
 
 > **Profundidade:** leve — o risco mais alto é de complexidade e de regressão num fluxo que está em produção e sem nenhum teste; tudo roda no navegador, não cria infraestrutura nem muda o esquema do Firestore, e desfazer é reverter os ramos.

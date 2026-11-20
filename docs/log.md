@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:55] session — F78 esqueleto do app: documentos — tarefas, plano, arch, pilha e manual
+**Branch:** feat/f78-app-skeleton
+`tasks.md`: a TASK-24 feita; o que o esqueleto fez das TASK-19, 20, 22 e 23 como itens próprios, com o que falta (nenhuma tarefa de aparelho marcada); a linha do `tech-stack.md` feita. `plan.md` § Technical Design: os módulos do app e o que cada um prova aqui; `arch.md`: a seção de `app/` (estrutura, as três portas, o não provado); `tech-stack.md`: as linhas do app, cada uma citando o ADR-0022.
+`docs/manual/00_Deployment_and_Setup.md` § 2.6: as checagens do app (`npm run app:check`) e os dois comandos que só o MJRP roda no Mac (aceitar a licença do Xcode, baixar o simulador do iOS).
+
 ## [2026-11-20 15:53] session — F78 esqueleto do app: o autoteste do corpo dourado e os sensores do app
 **Branch:** feat/f78-app-skeleton
 O autoteste (REQ-16): `app/src/selftest/goldenSelfTest.ts` roda o corpo dourado no motor do app, com o id do expo-crypto, e compara cada caso com o índice de referência commitado (`reference/cases.tsv`, 0,2 MB, empacotado como texto) pelo sha256 de cada linha, em TypeScript puro; no Jest, 3343 de 3343 iguais. A tela escondida (toque longo no título de Albums, ou `albumblender://diagnostics`) mostra «N of N match»; o `expo export` empacota tudo para iOS e Android (3,47 e 3,46 MB de bytecode Hermes).
