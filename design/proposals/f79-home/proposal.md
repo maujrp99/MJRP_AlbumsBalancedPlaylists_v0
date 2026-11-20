@@ -1,5 +1,7 @@
 # F79 · a Home que se explica · rodada 1 de desenho
 
+> **Escolha do MJRP em 2026-11-20 19:19:** «home 3 niveis transformar». Entendido assim: dos três níveis da rodada 1, ele escolhe **Transformar** (um palco só, um campo que aceita artista ou lista, a série como base de capas presa embaixo, fogo e equalizador no centro, voz direta). É a escolha da direção, não a aprovação final do protótipo: a crítica deixou abertos, no Transformar, reordenar e remover álbuns (não desenhados) e a cor `#fdba74` fora das cores de fogo declaradas; e as perguntas do § 4 seguem sem resposta. A rodada 2 fecha esses pontos numa versão nova (a v1 que ele viu fica intacta).
+
 Pedido do MJRP em 2026-11-20 (estória S-61): «uma proposta consolidar, elevar, transformar, considerando copy, elementos de UI e UX e usabilidade», respeitando o fogo e os equalizadores como identidade do site. Esta é a rodada 1: três níveis, num eixo só, **a ambição**, ao lado da tela de hoje. Nada de código do produto foi tocado.
 
 **Onde ver:** o comparador, https://claude.ai/artifact/AsiVV2i3595LqpLEadm61h (Artifact do Claude, privado; cópia local `design/proposals/f79-home/comparator.html`), que abre nos três níveis e liga a «Referência» com um botão; computador (1280 px) e celular (393 px); sete estados. Cada protótipo abre sozinho e responde a cliques (escolher capas, buscar, colar). O texto de cada linha da tela, nos três níveis, com o porquê: `design/proposals/2026-11-20-home-copy-proposal.md`.
