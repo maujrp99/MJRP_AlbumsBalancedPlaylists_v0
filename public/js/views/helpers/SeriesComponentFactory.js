@@ -29,6 +29,7 @@ export class SeriesComponentFactory {
             props: {
                 pageTitle,
                 albumCount: albums.length,
+                seriesId: view.currentScope === 'ALL' ? null : (activeSeries?.id || view.targetSeriesId),
                 onGeneratePlaylists: () => {
                     const activeSeries = albumSeriesStore.getActiveSeries();
                     if (activeSeries) {
@@ -138,7 +139,10 @@ export class SeriesComponentFactory {
                     controller.handleViewModeChange(newMode);
                 },
 
-                onRefresh: () => controller.loadScope(view.currentScope, view.targetSeriesId, true)
+                onRefresh: () => controller.loadScope(view.currentScope, view.targetSeriesId, true),
+
+                // The phone: the filters, the order, the view and Refresh go into a sheet (F76)
+                filtersInSheet: true
             }
         });
 

@@ -17,6 +17,7 @@ import { escapeHtml } from '../../utils/stringUtils.js';
 import {
     renderAlbumsGrid,
     renderExpandedList,
+    renderCompactAlbumCard,
     wrapInGrid
 } from '../../views/albums/AlbumsGridRenderer.js';
 import {
@@ -24,7 +25,6 @@ import {
     groupAlbumsBySeries,
     renderSeriesHeader
 } from '../../views/albums/AlbumsScopedRenderer.js';
-import { AlbumCardRenderer } from '../ui/AlbumCardRenderer.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 import { VirtualScrollObserver } from '../../utils/VirtualScrollObserver.js';
 import { SeriesSkeleton } from '../ui/skeletons/SeriesSkeleton.js';
@@ -300,7 +300,7 @@ export default class SeriesGridRenderer extends Component {
 
         const gridContainer = this.gridElement.querySelector('.albums-grid') || this.gridElement;
         const ghostCard = gridContainer.querySelector('[data-ghost="true"]');
-        const newCardsHtml = newItems.map(album => AlbumCardRenderer.renderCompact(album)).join('');
+        const newCardsHtml = newItems.map(album => renderCompactAlbumCard(album)).join('');
         const fragment = SafeDOM.fromHTML(newCardsHtml);
 
         if (ghostCard) {

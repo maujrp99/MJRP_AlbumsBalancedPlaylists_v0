@@ -5,6 +5,8 @@
  */
 
 import { AlbumCardRenderer } from '../../components/ui/AlbumCardRenderer.js'
+import { renderPhoneTile, renderPhoneRow } from '../../components/ui/AlbumPhoneCard.js'
+import { isPhone } from '../../utils/isPhone.js'
 
 /**
  * Render loading progress overlay
@@ -64,6 +66,8 @@ export function renderNoMatchState() {
  * @returns {string} HTML string
  */
 export function renderExpandedAlbumCard(album, idx) {
+  // The phone draws one compact line per album; the tracks are in the album window (F76, REQ-05)
+  if (isPhone()) return renderPhoneRow(album)
   return AlbumCardRenderer.renderExpanded(album, idx)
 }
 
@@ -90,6 +94,7 @@ export function renderExpandedList(albums, context = {}) {
  * @returns {string} HTML string
  */
 export function renderCompactAlbumCard(album) {
+  if (isPhone()) return renderPhoneTile(album) // the phone's tile: actions named behind «⋯» (F76)
   return AlbumCardRenderer.renderCompact(album)
 }
 

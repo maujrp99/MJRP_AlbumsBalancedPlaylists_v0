@@ -41,7 +41,8 @@ export class SeriesViewUpdater {
 
         this.components.header.update({
             pageTitle: data.title,
-            albumCount: data.description // reuse or separate
+            albumCount: data.description, // reuse or separate
+            seriesId: data.activeSeriesId || null
         });
 
         // Critical: Update Grid with Sorted Series
