@@ -20,12 +20,10 @@ import {
     wrapInGrid
 } from '../../views/albums/AlbumsGridRenderer.js';
 import {
-    renderScopedGrid,
     renderScopedList,
     groupAlbumsBySeries,
     renderSeriesHeader
 } from '../../views/albums/AlbumsScopedRenderer.js';
-import { Card } from '../ui/Card.js';
 import { AlbumCardRenderer } from '../ui/AlbumCardRenderer.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 import { VirtualScrollObserver } from '../../utils/VirtualScrollObserver.js';
@@ -300,7 +298,6 @@ export default class SeriesGridRenderer extends Component {
     appendItems(newItems) {
         if (!this.gridElement || !newItems?.length) return;
 
-        const { context = {} } = this.props;
         const gridContainer = this.gridElement.querySelector('.albums-grid') || this.gridElement;
         const ghostCard = gridContainer.querySelector('[data-ghost="true"]');
         const newCardsHtml = newItems.map(album => AlbumCardRenderer.renderCompact(album)).join('');

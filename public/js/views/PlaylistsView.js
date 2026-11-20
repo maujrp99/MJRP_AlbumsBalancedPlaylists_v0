@@ -6,7 +6,7 @@ import { albumSeriesStore } from '../stores/albumSeries.js'
 import { Breadcrumb } from '../components/Breadcrumb.js'
 import { RegeneratePanel } from '../components/playlists/RegeneratePanel.js'
 import { getIcon } from '../components/Icons.js'
-import { getAllAlgorithms, getRecommendedAlgorithm } from '../algorithms/index.js'
+import { getAllAlgorithms } from '../algorithms/index.js'
 import { BalancedRankingStrategy, SpotifyRankingStrategy, BEARankingStrategy } from '../ranking/index.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 
@@ -14,7 +14,7 @@ import { SafeDOM } from '../utils/SafeDOM.js'
 import { PlaylistsController } from '../controllers/PlaylistsController.js'
 import { PlaylistsGridRenderer } from '../components/playlists/PlaylistsGridRenderer.js'
 import { PlaylistsDragHandler } from '../components/playlists/PlaylistsDragHandler.js'
-import { getPlaylistsService } from '../services/PlaylistsService.js'
+import { getPlaylistsService } from '../services/playlists/playlistsWiring.js'
 import { router } from '../router.js'
 import { installUnsavedChangesGuard } from './playlists/unsavedChangesGuard.js'
 import { attachPlaylistEditActions } from './playlists/playlistEditActions.js'
@@ -60,7 +60,7 @@ export class PlaylistsView extends BaseView {
     // Leaving with work that is not saved asks first (F60)
     this.removeUnsavedChangesGuard = installUnsavedChangesGuard({
       router,
-      hasUnsavedChanges: () => getPlaylistsService()?.hasUnsavedChanges() === true
+      hasUnsavedChanges: () => getPlaylistsService().hasUnsavedChanges() === true
     })
 
     // 4. Attach Listeners & Setup Drag

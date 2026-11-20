@@ -5,7 +5,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 vi.mock('firebase/firestore', async () => (await import('../helpers/fakeFirestore.js')).firestoreModule)
-vi.mock('../../public/js/app.js', () => ({ db: { fake: true }, auth: { currentUser: { uid: 'u1' } } }))
+vi.mock('../../public/js/firebase-init.js', () => ({ db: { fake: true }, auth: { currentUser: { uid: 'u1' } } }))
 vi.mock('../../public/js/cache/CacheManager.js', () => {
     const cacheManager = { get: async () => null, set: async () => { }, invalidate: async () => { } }
     return { cacheManager, CacheManager: class { } }
@@ -19,7 +19,7 @@ vi.mock('../../public/js/components/Toast.js', () => {
 })
 
 import { PlaylistsController } from '../../public/js/controllers/PlaylistsController.js'
-import { getPlaylistsService } from '../../public/js/services/PlaylistsService.js'
+import { getPlaylistsService } from '../../public/js/services/playlists/playlistsWiring.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
 import toast from '../../public/js/components/Toast.js'
@@ -39,7 +39,7 @@ describe('PlaylistsController.initialize after a reload (UAT-05)', () => {
 
     beforeEach(() => {
         albumSeriesStore.setUserId('u1')
-        getPlaylistsService({ fake: true }, null) // the app's service, watching the store
+        getPlaylistsService() // the app's service, watching the store
         playlistsStore.reset()
         controller = new PlaylistsController({})
         controller.loadAlbumsForSeries = vi.fn()

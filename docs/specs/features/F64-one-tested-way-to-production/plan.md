@@ -25,6 +25,45 @@ Fluxo, igual nos dois: recusar se a `main` está suja → conferir ferramentas e
 ### As duas receitas da imagem
 Lido do serviço em 2026-11-19: a imagem em uso vem de `southamerica-east1-docker.pkg.dev/.../cloud-run-source-deploy/mjrp-proxy`, com as anotações de build do `gcloud run deploy --source`; o `cloudbuild.yaml` empurraria para `gcr.io/.../mjrp-proxy`. A produção usa, portanto, a receita do `--source` com `server/Dockerfile`. O `cloudbuild.yaml` não copiava `config/` nem marcava `shared/` como módulo ES (UAT-22) e foi removido. A única coisa que só ele registrava, a ligação dos quatro segredos, foi para o manual (seção 2.4), conferida contra o serviço.
 
+## Fatia do lint (2026-11-19, ramo `fix/f58-layers-and-lint-gate`; UAT-20)
+
+`npx eslint .` na `main` em `44b5dd0`: **22 erros e 78 avisos** (a issue falava em 81 erros; a F65 consertou a configuração e ficaram 25; a fatia 5 da F52 e a F65 tiraram mais três, entre eles o `no-dupe-else-if` de `server/lib/normalize.js` e dois `no-empty`). Depois desta fatia: **1 erro e 24 avisos**.
+
+| Regra | Antes | Depois | O que foi feito |
+|---|---|---|---|
+| `no-useless-escape` | 17 | 0 | Barras sem efeito dentro de classes de caracteres, em seis expressões: `[\(\[]` e `[\)\]]` viraram `[([]` e `[)\]]` (`toCore` do app; `toCore`, `toFuzzyCore` e `normalizeFuzzy` do servidor); `[\.)\-:]` virou `[.)\-:]` (a lista numerada); `[\.\):]` e `[\s\.\)-]` viraram `[.):]` e `[\s.)-]` (o número na frente do título de uma faixa). Dentro de uma classe, `\(`, `\[`, `\)` e `\.` são o próprio caractere: o significado é o mesmo. Nenhuma tinha teste: os testes foram escritos e rodados antes da troca |
+| `no-dupe-keys` | 2 | 1 | `components/Icons.js` tinha `Plus` duas vezes. Num objeto vale a última: o app sempre desenhou a segunda (duas linhas). A primeira (dois traços `path`) saiu. A que resta é `sorting`, duas vezes iguais, em `controllers/InventoryController.js:44`, arquivo de outro ramo |
+| `no-async-promise-executor` | 1 | 0 | `AlbumLoader.load` criava uma `Promise` com uma função `async` (um erro lançado ali se perde). Virou o método `async _read()`, com o mesmo `try/catch`: nunca rejeita, responde lista vazia e a chamada seguinte tenta de novo |
+| `no-case-declarations` | 1 | 0 | um `const` dentro de um `case` ganhou o seu bloco (`SeriesEventHandler.js`) |
+| `no-empty` | 1 | 0 | um `catch` vazio na busca da capa de uma série (`BlendSeriesSelector.js`) passou a escrever no console o mesmo `console.debug` que o `catch` vizinho já escrevia |
+| `no-unused-vars` (aviso) | 77 | 24 | importações e variáveis sem uso, parâmetros de `catch` que ninguém lia (`catch (e)` virou `catch`), dois parâmetros de função de retorno. Ficam 17 parâmetros que documentam uma interface e 7 em arquivos de outro ramo |
+| diretiva sem efeito (aviso) | 1 | 0 | um `eslint-disable-next-line` que não calava nada (`server/lib/asyncRoute.js`) |
+| `no-undef` (aviso) | 0 | 0 | a issue citava um; já não existe na `main` |
+
+**O portão não foi ligado.** A regra desta entrega: sem zero erros, nenhum passo novo na automação nem nos scripts, porque um passo que reprova sempre trava toda publicação. O passo que falta está escrito na TASK-13. O texto proposto para `scripts/lib/deploy-common.sh` foi rodado fora da publicação, contra este ramo: recusou com o erro que resta e a mensagem «the code check (lint) found errors: nothing was deployed».
+
+```bash
+# Runs ESLint on the clean copy. One error stops the deploy; warnings do not.
+run_lint() {
+  step "Checking the code (npx eslint . --quiet)"
+  local log="$WORK_DIR/eslint.log"
+  if ( cd "$SRC_DIR" && npx eslint . --quiet ) >"$log" 2>&1; then
+    ok "no lint errors"
+  else
+    tail -40 "$log" >&2
+    die "the code check (lint) found errors: nothing was deployed"
+  fi
+}
+```
+
+O `eslint`, o `@eslint/js` e o `globals` já estão em `devDependencies` e no `package-lock.json`: o `npm ci` da cópia limpa os instala. Os ensaios (`deploy:*:dry-run`) exportam sempre a `main` commitada, não o ramo: só provam o portão depois da junção.
+
+**O que o lint apontou e não é mecânico** (não consertado aqui; cada um é uma decisão):
+- `components/series/SeriesHeader.js`: `canGenerate` (há álbuns?) era calculado e nunca usado: o botão «Blend your Albums» aparece ligado mesmo sem álbuns. A variável saiu; o botão ficou como estava.
+- `services/musickit/MusicKitCatalog.js:255`: um `sort((a, b) => 0)`, que não ordena nada.
+- `server/lib/normalize.js`, a lista numerada: «3 - Gamma» fica «- Gamma» e «12 Monkeys» fica «Monkeys»; `besteveralbums.js`: «10.000 Days» fica «000 Days». Fixados nos testes como estão hoje.
+- `components/ui/modals/InputModal.js`: criava dois botões de rodapé que jogava fora antes de criar os de verdade. A criação sem uso saiu.
+
 ## Dependencies
 Nenhuma dependência nova no projeto. Na máquina: Firebase CLI e gcloud logados, Node, npm, git, curl.
 
@@ -59,5 +98,8 @@ Nenhuma dependência nova no projeto. Na máquina: Firebase CLI e gcloud logados
 | REQ-04 | subida local no Node 26 | igual ao REQ-02 | script | sim |
 | REQ-05 | push ou pull request no GitHub | o job `unit-tests` passa | automação | não testado |
 | REQ-06 | leitura do manual e do `package.json` | um caminho só | documento | não |
+| REQ-08 | `textCleaningPatterns.test.js` (22 casos: parênteses e colchetes nos três normalizadores do servidor, a lista numerada, o número na frente de um título nas duas formas da página), `NormalizationUtils.test.js` (14), `Icons.test.js` (3: o desenho de `Plus`, nenhum ícone escrito duas vezes), `AlbumLoader.test.js` (6) | verdes antes e depois de cada troca | servidor, utilitário, componente, serviço | sim |
+| REQ-08 | `npx eslint .` | 1 erro, no arquivo de outro ramo; 24 avisos | lint | à mão (ainda não é portão) |
+| REQ-09 | `npx eslint .` na automação e nos dois ensaios | recusa com um erro; passa com avisos | automação, script | não ligado (TASK-13); o passo dos scripts foi rodado fora da publicação e recusou |
 
 Bordas fora dos critérios (achados para a `mjrp-writing-reqs` se mudam o comportamento): Nenhuma.

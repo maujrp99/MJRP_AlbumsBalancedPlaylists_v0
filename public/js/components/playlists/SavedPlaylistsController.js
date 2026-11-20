@@ -12,7 +12,7 @@
  */
 
 import { savedPlaylistsReader, savedPlaylistsStore } from '../../services/playlists/savedPlaylistsReading.js'
-import { getPlaylistsService } from '../../services/PlaylistsService.js'
+import { getPlaylistsService } from '../../services/playlists/playlistsWiring.js'
 import { ListStatus, SeriesPlaylistsStatus as Status } from '../../models/savedPlaylists.js'
 import { router } from '../../router.js'
 import toast from '../Toast.js'
@@ -92,10 +92,7 @@ export class SavedPlaylistsController {
 
     async editBatch(seriesId, batchName, savedAt) {
         // Set context in store so PlaylistsView knows we are editing
-        const { db } = await import('../../app.js')
-        const { cacheManager } = await import('../../cache/CacheManager.js')
-        const service = getPlaylistsService(db, cacheManager)
-        service.setEditMode(batchName, seriesId, savedAt)
+        getPlaylistsService().setEditMode(batchName, seriesId, savedAt)
 
         // Legacy PlaylistsController expects 'edit' param to trigger initialization
         const encodedName = encodeURIComponent(batchName)

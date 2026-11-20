@@ -7,7 +7,6 @@
  */
 
 import { SafeDOM } from '../utils/SafeDOM.js'
-import { getIcon } from './Icons.js' // Assuming getIcon is exported or we can replicate SVGs
 
 const TOAST_DURATION = 4000
 const TOAST_ANIMATION_DURATION = 300

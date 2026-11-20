@@ -6,7 +6,7 @@ async function verifyUrl (url, timeout = 5000) {
     // Some sites block HEAD requests; use GET but limit response size via maxContentLength
     const resp = await axios.get(url, { timeout, maxContentLength: 50 * 1024 })
     return resp && resp.status && resp.status < 400
-  } catch (err) {
+  } catch {
     return false
   }
 }

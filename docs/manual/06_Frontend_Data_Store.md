@@ -81,7 +81,7 @@ sequenceDiagram
     participant Load as AlbumLoadService (source queue)
     participant Enricher as PopularityEnricher
     participant Source as SpotifyPopularitySource
-    participant Stored as SpotifyEnrichmentStore
+    participant Stored as StoredSpotifyPopularity
     participant API as SpotifyService
     participant External as SpotifyAPI
 

@@ -2,7 +2,6 @@ import { BaseModal } from './ui/BaseModal.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { toast } from './Toast.js'
 import { inventoryService } from '../services/inventory/inventoryWiring.js'
-import { getIcon } from './Icons.js'
 
 export class InventoryAddModal {
     /**

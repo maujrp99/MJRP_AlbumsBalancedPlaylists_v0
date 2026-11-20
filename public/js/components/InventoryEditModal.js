@@ -1,7 +1,6 @@
 import { BaseModal } from './ui/BaseModal.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { toast } from './Toast.js'
-import { getIcon } from './Icons.js'
 
 export class InventoryEditModal {
     /**

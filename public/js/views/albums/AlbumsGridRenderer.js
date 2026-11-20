@@ -4,11 +4,6 @@
  * Part of Sprint 10 refactoring (AlbumsView modularization)
  */
 
-import { albumLoader } from '../../services/AlbumLoader.js'
-import { getIcon } from '../../components/Icons.js'
-import { escapeHtml } from '../../utils/stringUtils.js'
-import { Card } from '../../components/ui/Card.js'
-import { SafeDOM } from '../../utils/SafeDOM.js'
 import { AlbumCardRenderer } from '../../components/ui/AlbumCardRenderer.js'
 
 /**

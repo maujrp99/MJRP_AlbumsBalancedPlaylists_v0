@@ -129,6 +129,18 @@ install_root_dependencies() {
   ok "dependencies installed"
 }
 
+# Runs the code check (lint) of the clean copy. An error stops the deploy; a warning does not.
+run_lint() {
+  step "Checking the code (npx eslint . --quiet)"
+  local log="$WORK_DIR/eslint.log"
+  if ( cd "$SRC_DIR" && npx eslint . --quiet ) >"$log" 2>&1; then
+    ok "no lint errors"
+  else
+    tail -40 "$log" >&2
+    die "the code check (lint) found errors: nothing was deployed"
+  fi
+}
+
 # Runs the unit tests of the clean copy. One failure stops the deploy.
 run_unit_tests() {
   step "Running the unit tests (npx vitest run)"

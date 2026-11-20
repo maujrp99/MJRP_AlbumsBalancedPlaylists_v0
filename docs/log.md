@@ -3,9 +3,17 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:16] session — a trava de lint ligada (F64, UAT-20), pelo integrador
+
+Com o ramo das camadas e o da F70 juntos, `npx eslint .` termina com 0 erros e 23 avisos. O passo `npx eslint . --quiet` entrou na automação do GitHub e nos dois roteiros de publicação, antes dos testes; um erro recusa a publicação. Manual 00 e o cabeçalho do `eslint.config.mjs` atualizados; TASK-13 da F64 fechada.
+
 ## [2026-11-19 22:15] review — F70 em produção (site) e provada; quatro issues em fixed
 
 Site publicado da `main` (`88adbc4`, pacote `main-DDeTiHbR.js`); a F70 não muda o servidor. Prova em `reports/evidence/F70/2026-11-19-small-defects-proof.md`: em produção, como visitante, a busca de um artista de eletrônica não pede mais a lista da IA; o substituto de capa entra uma vez só. UAT-209 e UAT-210 só por teste, com a razão escrita. Em `fixed`: UAT-208, 209, 210, 63. Restam 9 issues abertas; auxiliar trabalhando nas UAT-18, 19 e 20.
+
+## [2026-11-19 22:14] session — F64, fatia do lint: de 22 erros para 1; o portão não foi ligado (UAT-20)
+
+Ramo `fix/f58-layers-and-lint-gate`. `npx eslint .` na `main` dava 22 erros e 78 avisos; agora dá 1 erro e 24 avisos. Consertados: 17 barras sem efeito em seis expressões regulares (com testes escritos e rodados antes da troca: `test/server/textCleaningPatterns.test.js`, `test/utils/NormalizationUtils.test.js`), a chave `Plus` duplicada dos ícones (ficou a que o app sempre desenhou), a `Promise` com função `async` do `AlbumLoader`, um `const` solto num `case` e um `catch` vazio; 54 avisos mecânicos (importações e variáveis sem uso, `catch (e)` sem leitura). O erro que resta é a chave `sorting` duplicada em `public/js/controllers/InventoryController.js:44`, arquivo do ramo `fix/f70-small-defects`: por isso o passo de lint **não** entrou na automação nem nos scripts de publicação. O que falta ligar está na TASK-13 da F64, com o texto do passo, que foi rodado fora da publicação e recusou com esse erro. Suíte: 2149 passando. Achados que não são mecânicos estão no plano da F64 (o botão de blend ligado sem álbuns, um `sort` que não ordena, títulos que perdem o número).
 
 ## [2026-11-19 22:12] session — F70: spec, plano e tarefas; comportamento e manual
 
@@ -50,6 +58,14 @@ Confirmado no código: `services/album-search/AlbumSearchService.js` pedia `POST
 Feito: `public/js/api/paidRoutes.js` é o lugar único que diz quem pode usar as rotas pagas (`mayUsePaidRoutes()`, lido do mesmo login que o `serverFetch` envia); os dois chamadores perguntam antes de chamar. Visitante: a busca não pede a lista da IA e devolve `reclassified: null` (o status mostra só «→ artista»); a segunda fonte não é pedida e o álbum termina como não achado no catálogo, com o aviso que já existe. Sem login conhecido, a chamada segue e o 401 do servidor segura a carga, como antes. `_fetchAlbumFromAPI` foi dividida (complexidade 13 para menos de 10; saiu da lista de exceções).
 
 Testes: `test/api/paidRoutes.test.js` (a regra, os dois chamadores sem nenhum pedido de rede, e dois testes de arquitetura: quem nomeia uma rota paga importa `paidRoutes.js`; ninguém mais lê `isAnonymous` para decidir). Decidido pelo agente — revisável: com `PAID_ROUTES_ALLOW_ANONYMOUS=true` no servidor (não é o caso da produção), o app continua sem pedir para o visitante.
+
+## [2026-11-19 22:05] session — F58 fatia 2, parte 2: o serviço das playlists montado num lugar só; nada importa o `app.js` (UAT-19)
+
+Ramo `fix/f58-layers-and-lint-gate`. `services/playlists/playlistsWiring.js` entrega ao `PlaylistsService` o banco, o cache e quem está na conta; `PlaylistsController`, `BlendingController`, `PlaylistsDragHandler`, `SavedPlaylistsController` e `PlaylistsView` pedem a ele. O controlador das playlists não cria mais o `PlaylistRepository` (pede `findBatch`) e o `app.js` não exporta nada. As três listas de `test/architecture/layerBoundaries.test.js` estão vazias, com três regras novas. As suítes da F60 e da F62 passam sem mudança de expectativa (só a preparação mudou: o que era simulado no `app.js` é simulado no `firebase-init.js`); `test/services/playlists/playlistsWiring.test.js` é novo. Suíte: 2104 passando (2085 antes). Sem navegador: o arrasto de faixa e a ordem de importação ficam para a prova do integrador (TASK-20 da F58). Com este commit entram o `arch.md`, os manuais e a spec, o plano e as tarefas da segunda fatia da F58 (REQ-07 e REQ-08).
+
+## [2026-11-19 22:02] session — F58 fatia 2, parte 1: a última loja que alcançava o banco virou serviço (UAT-18)
+
+Ramo `fix/f58-layers-and-lint-gate`. `public/js/stores/SpotifyEnrichmentStore.js` deixou de existir: o que o app guarda das respostas do Spotify é o serviço `services/spotify/StoredSpotifyPopularity.js` («o que já temos deste álbum?» e «guarde isto»), montado em `spotifyPopularityWiring.js` sobre o `SpotifyEnrichmentRepository`. A coleção `spotify_enrichment`, o nome do documento e os campos são os de antes: os nove casos de `test/services/spotify/StoredSpotifyPopularity.test.js` passaram primeiro contra a loja antiga, depois contra o serviço. A lista de lojas que alcançam o banco em `test/architecture/layerBoundaries.test.js` ficou vazia. Saíram com o arquivo os métodos que ninguém chamava (a remoção de órfãos na leitura, `hasValidEnrichment`, `delete`, `getCount`). A regra de confiança não mudou: um registro gravado antes da regra de identidade segue aceito por 30 dias. As três lojas acima de 150 linhas foram julgadas uma a uma: são só estado e seletores; `albums.js` perdeu dois apelidos sem uso (171 para 162). O `arch.md`, os manuais e a spec da F58 entram com a parte 2.
 
 ## [2026-11-19 21:56] review — UAT-101 e UAT-75 conferidas no navegador; em fixed
 

@@ -42,8 +42,13 @@ describe('one path asks Spotify for the popularity of an album (F69)', () => {
     })
 
     it('what Spotify answered is stored and read by that path only', () => {
-        expect(importing(/stores\/SpotifyEnrichmentStore(\.js)?$/)).toEqual([COMPOSITION])
-        expect(importing(/repositories\/SpotifyEnrichmentRepository(\.js)?$/)).toEqual(['stores/SpotifyEnrichmentStore.js'])
+        // F58, second slice: it is a service given its repository in one wiring module, no longer a "store"
+        const WIRING = 'services/spotify/spotifyPopularityWiring.js'
+        expect(importing(/spotifyPopularityWiring(\.js)?$/)).toEqual([COMPOSITION])
+        expect(importing(/StoredSpotifyPopularity(\.js)?$/)).toEqual([WIRING])
+        expect(importing(/repositories\/SpotifyEnrichmentRepository(\.js)?$/)).toEqual([WIRING])
+        expect(importsOf('services/spotify/StoredSpotifyPopularity.js')).toEqual([])
+        expect(fs.existsSync(path.join(ROOT, 'stores/SpotifyEnrichmentStore.js'))).toBe(false)
     })
 
     it('the background loop over the album queries is gone, and nothing listens for a signal to start one', () => {

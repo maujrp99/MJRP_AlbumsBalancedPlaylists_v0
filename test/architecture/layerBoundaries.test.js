@@ -7,45 +7,49 @@
  *                      controller imports no repository and no Firebase, and nothing but the page
  *                      imports the file that mounts the app (app.js), which made import cycles.
  *
- * They read the imports of the source files. What still breaks a rule today is listed below, one
- * line per import, with who should remove it. The lists can only shrink: a new offender fails
- * the test, and so does a line that is no longer true (remove it when you fix it).
+ * They read the imports of the source files. What still breaks a rule is listed below, one line
+ * per import, with who should remove it. The lists can only shrink: a new offender fails the
+ * test, and so does a line that is no longer true (remove it when you fix it).
  */
 import { describe, it, expect } from 'vitest'
-import { appFiles, listJs, offenders, lineCount } from './support/sourceImports.js'
+import { appFiles, listJs, offenders, lineCount, read } from './support/sourceImports.js'
 
-/** Everything left is in the blend and playlists code, held by the branch of F62 while F58 ran. */
-const STORES_STILL_REACHING_OUT = [
-    // The Spotify popularity "store" is a reader of Firestore with a cache: it becomes a service
-    // beside SpotifyEnrichmentService (Spotify services: F62, then F69 for the popularity itself).
-    'stores/SpotifyEnrichmentStore.js -> ../firebase-init.js',
-    'stores/SpotifyEnrichmentStore.js -> ../repositories/SpotifyEnrichmentRepository.js',
-    'stores/SpotifyEnrichmentStore.js -> ../cache/CacheManager.js'
-]
+/**
+ * Empty since the second slice of F58: the Spotify popularity "store" became a service given its
+ * repository (services/spotify/StoredSpotifyPopularity.js, wired in spotifyPopularityWiring.js).
+ */
+const STORES_STILL_REACHING_OUT = []
 
-const SCREEN_STILL_REACHING_THE_DATABASE = [
-    // The playlists controller builds its own repository: it should ask PlaylistsService (F62).
-    'controllers/PlaylistsController.js -> ../repositories/PlaylistRepository.js'
-]
+/**
+ * Empty since the second slice of F58: the playlists controller asks PlaylistsService for the
+ * saved batch it edits (findBatch) and no longer builds a repository.
+ */
+const SCREEN_STILL_REACHING_THE_DATABASE = []
 
-const STILL_IMPORTING_THE_MOUNTING_FILE = [
-    // All of them take `db` (and the cache) from app.js to hand to a service: the service should
-    // be given its database where it is put together, as the album load and the inventory are (F62).
-    'components/playlists/PlaylistsDragHandler.js -> ../../app.js',
-    'components/playlists/SavedPlaylistsController.js -> ../../app.js',
-    'controllers/BlendingController.js -> ../app.js',
-    'controllers/PlaylistsController.js -> ../app.js'
-]
+/**
+ * Empty since the second slice of F58: the playlists service is handed the database and the login
+ * where it is put together (services/playlists/playlistsWiring.js), and the four files that took
+ * `db` and `auth` from app.js ask that service. app.js exports nothing.
+ */
+const STILL_IMPORTING_THE_MOUNTING_FILE = []
 
 /**
  * The stores above the 150 lines ADR-0017 aimed at, with the size they have today. A listed
  * store may not grow; a store not listed may not pass 150.
+ *
+ * Judged one by one in the second slice of F58 (2026-11-19): the three are state, setters and
+ * pure selectors, with no logic that belongs elsewhere. None is split for the sake of the number.
  */
 const STORE_LINE_LIMIT = 150
 const STORES_ABOVE_THE_LINE_LIMIT = {
-    'stores/albumLoad.js': 214, // pure state, a third of it comments; the guests and the hold could be models
-    'stores/albums.js': 171, // the shelf other screens read: goes when they read the load store (ADR-0019, decision 3)
-    'stores/playlists.js': 169 // F62 (the blend and playlists code)
+    // State (entries, order, guests, hold, stopped) and selectors; what is derived is computed by
+    // models/albumLoadState.js. A third of the file is comments that say who writes what.
+    'stores/albumLoad.js': 214,
+    // The shelf other screens read: state, getters and one writer. Goes when they read the load
+    // store (ADR-0019, decision 3). Two dead aliases left in this slice (171 -> 162).
+    'stores/albums.js': 162,
+    // Thirteen fields, one setter each, getState and reset that name each field: no logic at all.
+    'stores/playlists.js': 169
 }
 
 const unique = (list) => [...new Set(list)].sort()
@@ -96,6 +100,10 @@ describe('the screen reaches the data only through services (UAT-19, ADR-0016)',
         expect(unique(offenders(others, isMountingFile))).toEqual(unique(STILL_IMPORTING_THE_MOUNTING_FILE))
     })
 
+    it('the file that mounts the app exports nothing: there is nothing to import it for', () => {
+        expect(read('app.js')).not.toMatch(/^\s*export\s/m)
+    })
+
     it('the inventory and the session are put together in one place each', () => {
         const wiring = ['services/inventory/inventoryWiring.js', 'services/auth/userSession.js']
         const others = appFiles().filter(file => !wiring.includes(file) && file !== 'app.js')
@@ -103,5 +111,21 @@ describe('the screen reaches the data only through services (UAT-19, ADR-0016)',
         expect(offenders(others, specifier => /InventoryRepository/.test(specifier))).toEqual([])
         expect(offenders(['services/inventory/InventoryService.js', 'services/auth/UserSessionService.js'],
             specifier => /(firebase|\/repositories\/|\/cache\/|\/stores\/|\/components\/|\/views\/)/.test(specifier))).toEqual([])
+    })
+
+    it('the playlists service is put together in one place, and only that place makes one', () => {
+        const WIRING = 'services/playlists/playlistsWiring.js'
+        const others = appFiles().filter(file => file !== WIRING && file !== 'services/PlaylistsService.js')
+
+        expect(others.filter(file => /new\s+PlaylistsService\s*\(/.test(read(file)))).toEqual([])
+        // the screen reaches the service through the wiring, never the class
+        expect(offenders(screen, specifier => /services\/PlaylistsService(\.js)?$/.test(specifier))).toEqual([])
+        // the service itself knows neither Firebase nor the login nor the screen: it is given them
+        expect(offenders(['services/PlaylistsService.js'],
+            specifier => /(firebase|\/cache\/|\/components\/|\/views\/|\/controllers\/|(^|\/)app\.js$)/.test(specifier))).toEqual([])
+    })
+
+    it('no view, component or controller reads who is signed in from Firebase: a service is given it', () => {
+        expect(screen.filter(file => /\bauth\.currentUser\b/.test(read(file)))).toEqual([])
     })
 })

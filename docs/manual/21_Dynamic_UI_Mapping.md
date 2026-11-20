@@ -134,7 +134,7 @@ Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set
 ### 4.2 Export & Save
 *   **Save Batch**:
     1.  **[UI]** Enter Name -> Click "Save to Series History".
-    2.  **[FN]** `PlaylistsController.handleSave()` -> `PlaylistsService.saveCurrentBatch({ userId, batchName })` -> `PlaylistRepository.replaceBatch(playlists, replacedIds)` (v5.0, F60). One atomic write: in edit mode the playlists of the original batch name that are not in the new set are removed in the same write, so a failure leaves the saved batch as it was. The button is drawn disabled from `playlistsStore.isSaving` while the write is on its way.
+    2.  **[FN]** `PlaylistsController.handleSave()` -> `PlaylistsService.saveCurrentBatch({ batchName })` (for the person signed in, known to the service since the second slice of F58) -> `PlaylistRepository.replaceBatch(playlists, replacedIds)` (v5.0, F60). One atomic write: in edit mode the playlists of the original batch name that are not in the new set are removed in the same write, so a failure leaves the saved batch as it was. The button is drawn disabled from `playlistsStore.isSaving` while the write is on its way.
 *   **Leave with unsaved changes** (v5.0, F60):
     1.  **[UI]** A link or button of the app, the browser's back button, closing or reloading the tab.
     2.  **[FN]** `unsavedChangesGuard` (installed by `PlaylistsView.mount`) asks `PlaylistsService.hasUnsavedChanges()`; the router's `beforeNavigate` hook shows a confirm, `beforeunload` shows the browser's own.

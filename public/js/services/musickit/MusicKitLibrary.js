@@ -10,7 +10,7 @@ class MusicKitLibrary {
      * Create a playlist in user's library
      */
     async createPlaylist(name, trackIds) {
-        const token = await musicKitAuth.authorize(); // ensure authorized
+        await musicKitAuth.authorize(); // ensure authorized
         const music = await musicKitAuth.init();
 
         try {

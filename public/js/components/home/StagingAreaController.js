@@ -36,14 +36,7 @@ export class StagingAreaController {
     }
 
     handleReorder(evt) {
-        // Sync state with DOM order
-        const reordered = [];
-        const items = this.home.view.$$('#stagingStackContainer > div'); // Assuming div items
-        // Or better, use evt.oldIndex/newIndex but simpler to read DOM data-ids if we added them?
-        // We didn't add data-id to the row wrapper in renderer, we added it to the button.
-        // Let's add data-id to the row wrapper in Renderer first to make this robust.
-
-        // Actually, let's rely on array splice for now which matches Sortable's index change
+        // The same move Sortable made on screen, made in the list
         const item = this.selectedAlbums.splice(evt.oldIndex, 1)[0];
         this.selectedAlbums.splice(evt.newIndex, 0, item);
 

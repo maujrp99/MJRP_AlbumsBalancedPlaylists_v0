@@ -78,4 +78,4 @@ sequenceDiagram
 ### Logic
 -   **SDK**: Uses Firebase v9 Modular SDK (`firebase/app`, `firebase/auth`, `firebase/firestore`).
 -   **Config**: Reads from `window.__firebase_config` (injected by build/env) or falls back to placeholders.
--   **Exports**: `app`, `auth`, `db` instances.
+-   **Exports**: `app`, `auth`, `db` instances. They are imported only where a service is put together (the `*Wiring.js` files of `services/`, `albums/albumLoading.js`, `playlists/savedPlaylistsReading.js`, `auth/userSession.js`) and by the repositories' callers there; `app.js` imports the file for its effect and exports nothing (F58, second slice).

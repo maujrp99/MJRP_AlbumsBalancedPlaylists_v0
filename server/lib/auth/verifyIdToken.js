@@ -29,7 +29,7 @@ class AuthError extends Error {
 function decodePart (text) {
   try {
     return JSON.parse(Buffer.from(text, 'base64url').toString('utf8'))
-  } catch (error) {
+  } catch {
     throw new AuthError('invalid', 'token part is not readable')
   }
 }
@@ -43,7 +43,7 @@ function createIdTokenVerifier ({ projectId, fetchKeys, now = () => Date.now() }
     let fetched
     try {
       fetched = await fetchKeys()
-    } catch (error) {
+    } catch {
       throw new AuthError('unavailable', 'the keys that check a login could not be fetched')
     }
     const maxAgeSeconds = Number(fetched && fetched.maxAgeSeconds) > 0 ? Number(fetched.maxAgeSeconds) : 300
@@ -77,7 +77,7 @@ function createIdTokenVerifier ({ projectId, fetchKeys, now = () => Date.now() }
         crypto.createPublicKey(pem),
         Buffer.from(signatureText, 'base64url')
       )
-    } catch (error) {
+    } catch {
       signed = false
     }
     if (!signed) throw new AuthError('invalid', 'bad signature')

@@ -21,7 +21,7 @@ function normalizeArtist(name) {
 function toCore(str) {
   if (!str) return ''
   return removeDiacritics(str).toLowerCase()
-    .replace(/\s*[\(\[][^()]*?[\)\]]/g, '') // Remove parentheses/brackets content entirely
+    .replace(/\s*[([][^()]*?[)\]]/g, '') // Remove parentheses/brackets content entirely
     .replace(/[^a-z0-9]/g, '')
     .trim()
 }
@@ -36,7 +36,7 @@ function toFuzzyCore(str) {
   let core = str.toLowerCase().split(' by ')[0].split(':')[0].split(' - ')[0]
 
   core = removeDiacritics(core)
-    .replace(/\s*[\(\[][^()]*?[\)\]]/g, '') // Remove parentheses/brackets content entirely
+    .replace(/\s*[([][^()]*?[)\]]/g, '') // Remove parentheses/brackets content entirely
     .replace(/[^a-z0-9]/g, '')
     .trim()
 
@@ -51,7 +51,7 @@ function toFuzzyCore(str) {
 function normalizeFuzzy(str) {
   if (!str) return ''
   let norm = removeDiacritics(str).toLowerCase()
-    .replace(/\s*[\(\[][^()]*?(?:Remaster|Edition|Version|Anniversary|Expanded|Special|Bonus|Disc|Digital|Live)[^()]*?[\)\]]/gi, ' ')
+    .replace(/\s*[([][^()]*?(?:Remaster|Edition|Version|Anniversary|Expanded|Special|Bonus|Disc|Digital|Live)[^()]*?[)\]]/gi, ' ')
     .replace(/[^a-z0-9\s]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
@@ -71,12 +71,12 @@ function tryParseJson(s) {
   if (!s || typeof s !== 'string') return null
   try {
     return JSON.parse(s)
-  } catch (e) {
+  } catch {
     const m = s.match(/\{[\s\S]*\}/)
     if (m) {
       try {
         return JSON.parse(m[0])
-      } catch (e2) {
+      } catch {
         return null
       }
     }
@@ -109,7 +109,7 @@ function tryRecoverRankingFromText(s) {
           try {
             const parsed = JSON.parse(candidate)
             objs.push(parsed)
-          } catch (e) {
+          } catch {
             // ignore malformed object
           }
           i = j + 1
@@ -129,7 +129,7 @@ function parseNumberedList(s) {
   const lines = s.split(/\r?\n/).map(l => l.trim()).filter(Boolean)
   const results = []
   // matches lines like "1. Title", "1) Title", "1 - Title", "#1 Title"
-  const re = /^\s*(?:#?\d+)(?:[\.)\-:]?)\s*(.*)$/
+  const re = /^\s*(?:#?\d+)(?:[.)\-:]?)\s*(.*)$/
   for (const line of lines) {
     const m = line.match(re)
     if (m && m[1]) {

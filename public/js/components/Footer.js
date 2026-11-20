@@ -1,5 +1,3 @@
-import { getIcon } from './Icons.js'
-
 const CLEARED_TEXT = 'Cache Cleared!'
 const FAILED_TEXT = 'Could not clear the cache'
 
@@ -17,7 +15,6 @@ export class Footer {
     }
 
     render() {
-        const year = new Date().getFullYear()
         const lastUpdate = new Date().toLocaleString()
 
         return `

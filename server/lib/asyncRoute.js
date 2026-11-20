@@ -17,7 +17,6 @@ function asyncRoute (handler) {
 }
 
 function errorResponder (logger = console) {
-  // eslint-disable-next-line no-unused-vars
   return function (err, req, res, next) {
     logger.error('route_failed', { method: req && req.method, path: req && req.path, err: (err && err.message) || String(err) })
     if (res.headersSent) return next(err)

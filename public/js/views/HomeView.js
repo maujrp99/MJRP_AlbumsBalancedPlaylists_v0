@@ -199,7 +199,6 @@ export class HomeView extends BaseView {
         const bulkBtn = this.$('#btnModeBulk');
         const visualInputs = this.$('#visualInputs');
         const bulkInputs = this.$('#bulkInputs');
-        const scanBtn = this.$('#btnScanArtist'); // Only enable scan in visual mode? No, handled by logic.
 
         if (mode === 'visual') {
             visualBtn.className = "text-[10px] bg-orange-500 text-white px-2 py-1 rounded hover:opacity-80 transition-opacity";

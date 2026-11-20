@@ -9,7 +9,7 @@ try {
         global.File = global.File || fb.File
         global.Blob = global.Blob || fb.Blob
       }
-    } catch (e) {
+    } catch {
       // Minimal stub implementations: enough to satisfy typeof checks and construction during import.
       // These stubs intentionally do not implement full behavior (they avoid increasing bundle size or adding deps).
       if (typeof Blob === 'undefined') {
@@ -35,7 +35,7 @@ try {
       }
     }
   }
-} catch (err) {
+} catch {
   // If something unexpected happens, let application start and fail later with clearer errors.
 }
 
@@ -97,7 +97,7 @@ const { validateAlbum, ajvAvailable } = require('./lib/schema')
 const { getRankingForAlbum: getBestEverRanking } = require('./lib/scrapers/besteveralbums')
 const { fetchRankingForAlbum } = require('./lib/fetchRanking')
 const { consolidateRanking, normalizeKey: normalizeRankingKey } = require('./lib/ranking')
-const logger = (() => { try { return require('./lib/logger') } catch (e) { return console } })()
+const logger = (() => { try { return require('./lib/logger') } catch { return console } })()
 
 // Dependencies object for route initialization
 const routeDeps = {

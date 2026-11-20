@@ -22,7 +22,7 @@ export const NormalizationUtils = {
     toCore(str) {
         if (!str) return ''
         return this.removeDiacritics(str).toLowerCase()
-            .replace(/\s*[\(\[][^()]*?[\)\]]/g, '')
+            .replace(/\s*[([][^()]*?[)\]]/g, '')
             .replace(/[^a-z0-9]/g, '')
             .trim()
     }

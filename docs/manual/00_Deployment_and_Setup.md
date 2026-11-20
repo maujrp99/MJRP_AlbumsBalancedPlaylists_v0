@@ -115,9 +115,14 @@ prompts nem marcava `shared/` como módulo ES, foi removido (UAT-22).
 
 ### 2.5 Automação do GitHub
 
-`.github/workflows/ci.yml` roda `npx vitest run` em todo push e pull request, e mais nada: não
-publica. O repositório não tem segredo de publicação, e um build feito lá sairia sem o Client ID do
-Spotify. O lint não entra: tem erros hoje, e um passo que nunca reprova não protege nada (UAT-20).
+`.github/workflows/ci.yml` roda a verificação de código (`npx eslint . --quiet`) e depois
+`npx vitest run` em todo push e pull request, e mais nada: não publica. O repositório não tem
+segredo de publicação, e um build feito lá sairia sem o Client ID do Spotify.
+
+O lint (`npm run lint`, que é `npx eslint .`) **é uma trava** desde 2026-11-19 (F64, UAT-20): os
+dois comandos de publicação rodam `npx eslint . --quiet` na cópia limpa, antes dos testes, e um
+erro recusa a publicação («the code check (lint) found errors: nothing was deployed»). Avisos (23,
+todos `no-unused-vars`) não recusam. Eram 22 erros; todos foram consertados.
 
 **Não testado:** o arquivo foi reescrito na F64 e ainda não rodou no GitHub.
 

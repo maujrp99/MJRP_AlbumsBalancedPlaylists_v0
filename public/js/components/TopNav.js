@@ -237,7 +237,7 @@ export class TopNav {
 
     // Close menu when clicking a link
     links?.forEach(link => {
-      link.addEventListener('click', (e) => {
+      link.addEventListener('click', () => {
         toggleMenu(false)
       }, true)
     })

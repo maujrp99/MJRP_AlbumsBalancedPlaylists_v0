@@ -11,7 +11,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 vi.mock('firebase/firestore', async () => (await import('../helpers/fakeFirestore.js')).firestoreModule)
-vi.mock('../../public/js/app.js', () => ({ db: { fake: true }, auth: { currentUser: { uid: 'u1' } }, cacheManager: undefined }))
+vi.mock('../../public/js/firebase-init.js', () => ({ db: { fake: true }, auth: { currentUser: { uid: 'u1' } } }))
 vi.mock('../../public/js/cache/CacheManager.js', () => {
     const cacheManager = { get: async () => null, set: async () => { }, invalidate: async () => { } }
     return { cacheManager, CacheManager: class { } }
@@ -28,7 +28,7 @@ vi.mock('../../public/js/components/Toast.js', () => {
 
 import { fake } from '../helpers/fakeFirestore.js'
 import { PlaylistsController } from '../../public/js/controllers/PlaylistsController.js'
-import { getPlaylistsService } from '../../public/js/services/PlaylistsService.js'
+import { getPlaylistsService } from '../../public/js/services/playlists/playlistsWiring.js'
 import { PlaylistGrid } from '../../public/js/components/playlists/PlaylistGrid.js'
 import { PlaylistsGridRenderer } from '../../public/js/components/playlists/PlaylistsGridRenderer.js'
 import { playlistGenerationService } from '../../public/js/services/PlaylistGenerationService.js'
@@ -47,7 +47,7 @@ const drawnTitles = () => {
 
 /** A new page: nothing in memory, the batch opened for editing from the database. */
 const reopenForEditing = async (controller, batchName) => {
-    const service = getPlaylistsService({ fake: true }, null)
+    const service = getPlaylistsService()
     service.reset()
     service.setEditMode(batchName, 'sA', null)
     await controller.loadPlaylistsForEdit(batchName, 'sA')
@@ -59,7 +59,7 @@ describe('PlaylistsController: the edits of the set on screen (F62)', () => {
     beforeEach(() => {
         vi.clearAllMocks()
         fake.reset()
-        getPlaylistsService({ fake: true }, null).reset()
+        getPlaylistsService().reset()
         albumSeriesStore.setSeries([{ id: 'sA', name: 'Series A', albumQueries: ['A - B'] }])
         albumSeriesStore.setActiveSeries('sA')
         fake.seed(`${SERIES_PATH}/sA`, { name: 'Series A', albumQueries: ['A - B'] })
@@ -112,7 +112,7 @@ describe('PlaylistsController: the edits of the set on screen (F62)', () => {
         it('is the name the exports read', async () => {
             await controller.renamePlaylist(0, 'Road trip')
 
-            const service = getPlaylistsService({ fake: true }, null)
+            const service = getPlaylistsService()
             expect(service.prepareForExport(onScreen()[0]).name).toBe('Road trip')
             expect(onScreen()[0].title).toBe('Road trip')
         })

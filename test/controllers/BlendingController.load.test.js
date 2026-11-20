@@ -13,9 +13,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('../../public/js/services/albums/albumLoading.js', () => ({ albumAsks: { albumsOf: mocks.albumsOf } }))
 vi.mock('../../public/js/services/PlaylistGenerationService.js', () => ({ playlistGenerationService: { generate: mocks.generate } }))
-vi.mock('../../public/js/services/PlaylistsService.js', () => ({ getPlaylistsService: () => ({ setCreateMode: mocks.setCreateMode }) }))
-vi.mock('../../public/js/app.js', () => ({ db: {} }))
-vi.mock('../../public/js/cache/CacheManager.js', () => ({ cacheManager: {} }))
+vi.mock('../../public/js/services/playlists/playlistsWiring.js', () => ({ getPlaylistsService: () => ({ setCreateMode: mocks.setCreateMode }) }))
 
 import { blendingController, BlendCancelledError } from '../../public/js/controllers/BlendingController.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'

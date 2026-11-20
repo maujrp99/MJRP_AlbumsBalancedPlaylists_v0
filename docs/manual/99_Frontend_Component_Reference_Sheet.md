@@ -106,7 +106,6 @@
 | [albums.js](file:///public/js/stores/albums.js) | Album data keyed by series | ✅ |
 | [albumLoad.js](file:///public/js/stores/albumLoad.js) | State of the album load (see `06_Frontend_Data_Store.md`) | ✅ |
 | [ownRankings.js](file:///public/js/stores/ownRankings.js) | The person's own rankings | ✅ |
-| [SpotifyEnrichmentStore.js](file:///public/js/stores/SpotifyEnrichmentStore.js) | Spotify enrichment data | ✅ |
 | [inventory.js](file:///public/js/stores/inventory.js) | Personal collection | ✅ |
 | [UserStore.js](file:///public/js/stores/UserStore.js) | Auth state | ✅ |
 
@@ -142,7 +141,7 @@
 - `setMode`, `setEditContext`, `setBatchName`, `setDefaultBatchName`, `setDirty`, `setUndoState`, ...: setters
 - `getPlaylists()`, `getSeriesId()`, `getEditContext()`, `isEditingExistingBatch()`, `getState()`: getters
 
-The operations live in `services/PlaylistsService.js` (`getPlaylistsService(db, cacheManager)`):
+The operations live in `services/PlaylistsService.js`; the app's one instance comes from `getPlaylistsService()` of `services/playlists/playlistsWiring.js`, which hands it the database, the cache and who is signed in:
 - `setEditMode(batchName, seriesId, savedAt)` / `setCreateMode()`: Enable editing of an existing batch
 - `moveTrack(fromPlaylist, toPlaylist, trackIndex, newIndex)`, `reorderTrack(...)`: Drag and drop support
 - `removeTrack(playlistIndex, trackIndex)`: Delete track logic
