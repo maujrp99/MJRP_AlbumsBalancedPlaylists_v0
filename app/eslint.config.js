@@ -15,7 +15,7 @@ const ADAPTERS = {
 
 module.exports = defineConfig([
     expoConfig,
-    { ignores: ['dist/*', '.expo/*', 'node_modules/*'] },
+    { ignores: ['dist/*', '.expo/*', 'node_modules/*', 'ios/*', 'android/*'] },
     {
         rules: {
             'no-restricted-imports': ['error', {

@@ -128,6 +128,14 @@ describe('Sign in (REQ-12)', () => {
         expect(screen.queryByText('Sign in with Apple')).toBeNull()
         expect(screen.getByText('Sign in with Google')).toBeTruthy()
     })
+
+    it('autoSignIn (the demo link ?as=apple) signs in once, with no tap', async () => {
+        const auth = createFakeAuth()
+        const { services, sent } = servicesWith({ auth })
+        await wrap(services, <SignInScreen autoSignIn="apple" />)
+        await waitFor(() => expect(auth.current()).toMatchObject({ provider: 'apple' }))
+        expect(sent.sent.filter(event => event.name === 'sign_in')).toHaveLength(1)
+    })
 })
 
 describe('the destinations not built yet say so', () => {
@@ -158,5 +166,20 @@ describe('the self-test screen (REQ-16)', () => {
         await fireEvent.press(screen.getByText('Run the self-test'))
         expect(await screen.findByText('2 of 3 match')).toBeTruthy()
         expect(screen.getByText('recipe:x')).toBeTruthy()
+    })
+
+    it('starts at once with autoRun (the link ?run=1) and writes the result as one log line', async () => {
+        const info = jest.spyOn(console, 'info').mockImplementation(() => {})
+        try {
+            const { services } = servicesWith()
+            await wrap(services, <SelfTestScreen run={() => result(2)} autoRun />)
+            expect(await screen.findByText('2 of 3 match')).toBeTruthy()
+            expect(info).toHaveBeenCalledTimes(2)
+            expect(info.mock.calls[0]![0]).toMatch(/^\[golden-self-test\] 2 of 3 match; passed: false; different: 1; .*; cases: recipe:x$/)
+            // Jest runs on Node, not Hermes; the id comes from the wired source and is a v4
+            expect(info.mock.calls[1]![0]).toMatch(/^\[golden-self-test\] engine: not Hermes; crypto global: \w+; id sample: [0-9a-f-]{36}; v4: true$/)
+        } finally {
+            info.mockRestore()
+        }
     })
 })

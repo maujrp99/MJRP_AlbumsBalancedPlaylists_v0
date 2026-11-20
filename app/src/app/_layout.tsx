@@ -4,6 +4,7 @@
  * adapters (src/composition.ts) and hands them to the screens.
  */
 import { useState } from 'react'
+import { LogBox } from 'react-native'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -11,8 +12,13 @@ import { wirePlatform } from '../platform/wiring'
 import { composeServices } from '../composition'
 import { AppServicesProvider } from '../ui/AppServicesContext'
 import { colors } from '../ui/theme'
+import { DemoLaunchRunner } from '../demo/demoLaunch'
 
 wirePlatform()
+
+// React Native's own development-only warning when an animated value updates with no JS listener
+// (seen on the simulator, 2026-11-20, on tab changes); not the app's. Development builds only.
+LogBox.ignoreLogs(['Sending `onAnimatedValueUpdate` with no listeners registered.'])
 
 export default function RootLayout() {
     const [services] = useState(composeServices)
@@ -25,6 +31,7 @@ export default function RootLayout() {
                     <Stack.Screen name="sign-in" />
                     <Stack.Screen name="diagnostics" options={{ presentation: 'modal' }} />
                 </Stack>
+                {services.mode === 'demo' ? <DemoLaunchRunner /> : null}
             </AppServicesProvider>
         </SafeAreaProvider>
     )

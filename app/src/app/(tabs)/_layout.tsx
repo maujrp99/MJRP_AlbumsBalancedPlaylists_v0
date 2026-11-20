@@ -21,7 +21,7 @@ function glyph(mark: string) {
 }
 
 /** The skeleton opens on Albums, the one destination it builds. */
-export const unstable_settings = { initialRouteName: 'albums' }
+export const unstable_settings = { anchor: 'albums' } // Expo Router 58: `anchor` (initialRouteName is deprecated)
 
 export const DESTINATIONS = [
     { name: 'index', title: 'Home', mark: '⌂' },
@@ -38,6 +38,7 @@ export default function TabsLayout() {
     if (account === null) return <Redirect href="/sign-in" />
     return (
         <Tabs
+            backBehavior="initialRoute" // Android's back goes to the anchor, Albums (Expo Router 58 asks it with an anchor)
             screenOptions={{
                 headerShown: false,
                 tabBarActiveTintColor: colors.accent,
