@@ -8,7 +8,7 @@
  * @since Sprint 12.5
  */
 
-import { createAlgorithm } from '../algorithms/index.js'
+import { createAlgorithm, getAlgorithm } from '../algorithms/index.js'
 import { createRankingStrategy } from '../ranking/index.js'
 import { TrackTransformer } from '../transformers/TrackTransformer.js'
 import { resolveRankingId } from '../models/recipeSources.js'
@@ -54,6 +54,17 @@ export class PlaylistGenerationService {
      * @param {GenerationConfig} config - Generation configuration
      * @returns {GenerationResult} - Generated playlists with normalized tracks
      */
+    /**
+     * The name a recipe shows in the Blending Menu («Top Tracks by Spotify Popularity»), for the
+     * default name of a batch (UAT-229). '' for an unknown recipe.
+     * @param {string} algorithmId
+     * @returns {string}
+     */
+    recipeName(algorithmId) {
+        const recipe = getAlgorithm(algorithmId)
+        return (recipe && recipe.getMetadata && recipe.getMetadata().name) || ''
+    }
+
     generate(albums, config) {
         // Validate config
         const validation = this.validateConfig(config)

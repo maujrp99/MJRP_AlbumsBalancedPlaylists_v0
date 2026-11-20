@@ -21,6 +21,7 @@ import { getPlaylistsService } from '../services/playlists/playlistsWiring.js'
 import { albumAsks } from '../services/albums/albumLoading.js'
 import { sourcesForRecipe, fallbacksForRecipe } from '../models/recipeSources.js'
 import { askNotices, askProgressText, noAlbumsMessage } from '../models/albumAsk.js'
+import { defaultBatchName } from '../models/batchNaming.js'
 
 /**
  * @typedef {Object} GenerationConfig
@@ -81,7 +82,7 @@ class BlendingController {
         albumSeriesStore.setActiveSeries(seriesId)
         playlistsStore.setPlaylists(result.playlists, seriesId)
         this._enterCreateMode()
-        playlistsStore.setDefaultBatchName(this._generateDefaultBatchName())
+        playlistsStore.setDefaultBatchName(this._generateDefaultBatchName(series, result.playlists, config))
 
         console.log(`[BlendingController] Generated ${result.playlists.length} playlist(s) from ${load.albums.length} of ${load.result.total} albums`)
 
@@ -142,24 +143,24 @@ class BlendingController {
 
         // A set being edited keeps its name; a new one gets the default name of now
         if (!playlistsStore.isEditingExistingBatch()) {
-            playlistsStore.setDefaultBatchName(this._generateDefaultBatchName())
+            playlistsStore.setDefaultBatchName(this._generateDefaultBatchName(series, result.playlists, config))
         }
 
         return { playlists: result.playlists, albums: load.albums, stats: result.stats, load: load.result, notices: load.notices }
     }
 
     /**
-     * Generate default batch name based on current timestamp
-     * Format: "TheAlbumBlender Playlist YYYY-MM-DD HH:mm"
+     * The default name of a new batch: the series, then the playlist (one) or the recipe (several),
+     * e.g. «Trip Hop Vol.1 · Spotify Top 3 balanced» (UAT-229). With no series, the stamped name of
+     * the local clock (UAT-225). models/batchNaming.js decides; this only gathers the parts.
      * @private
      */
-    _generateDefaultBatchName() {
-        // The day and the hour of the same clock, the person's (UAT-225: the day came from UTC)
-        const date = new Date()
-        const two = (n) => String(n).padStart(2, '0')
-        const dateStr = `${date.getFullYear()}-${two(date.getMonth() + 1)}-${two(date.getDate())}`
-        const timeStr = `${two(date.getHours())}:${two(date.getMinutes())}`
-        return `TheAlbumBlender Playlist ${dateStr} ${timeStr}`
+    _generateDefaultBatchName(series = null, playlists = [], config = {}) {
+        return defaultBatchName({
+            seriesName: series?.name,
+            playlists,
+            recipeName: playlistGenerationService.recipeName?.(config.algorithmId) || ''
+        })
     }
 }
 

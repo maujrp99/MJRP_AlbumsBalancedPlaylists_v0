@@ -12,7 +12,7 @@ vi.mock('../../public/js/services/PlaylistGenerationService.js', () => ({ playli
 
 import { BlendingController } from '../../public/js/controllers/BlendingController.js'
 
-describe('the default batch name (UAT-225)', () => {
+describe('the stamped batch name (UAT-225)', () => {
     afterEach(() => vi.useRealTimers())
 
     it('late at night, takes the day and the hour of the same local clock', () => {
