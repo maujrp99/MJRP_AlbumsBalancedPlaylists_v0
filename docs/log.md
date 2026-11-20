@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:35] session — F76 TASK-03: a janela do álbum e o meu ranking no celular (código e testes)
+**Branch:** feat/f76-mobile-album-window
+Janela do álbum: uma rolagem só, barra com fechar sempre à vista, capa como herói com a própria capa desfocada atrás, as três fontes num controle segmentado preso sob a barra, faixa em duas linhas (título sozinho; BEA, Spotify e duração embaixo). Meu ranking: barra Back · My ranking · Reset (Reset desfazível por 5 s), linha com o título em linha própria, mover sem arrastar (tocar na faixa, Up/Down/«Move to…»), arrastar só pela alça, Save preso no pé, o aviso abaixo da barra.
+Testes novos: TracksTabs.phone, ViewAlbumModal.phone, UserRankModal.phone (celular e computador). No computador a marcação é a de hoje.
+
 ## [2026-11-20 02:20] session — F76 TASK-01: design-system (§ Celular), o plano, o kit das telas e a prova em navegador
 **Branch:** feat/f76-mobile-redesign
 Criado `docs/specs/design-system.md` § Celular (44 / 12 / 16 px, escala de tipo, barras, folha, áreas seguras, com as fontes: WebKit, MDN, web.dev, WCAG, Apple; achado 24 da crítica). `plan.md` reescrito com cada módulo e seu REQ; `mobile-kit.md` para quem faz as telas (um CSS por tela em `public/css/mobile/`, a API da folha, a barra de ação, o que a base achou e é de cada tela); TASK-01 marcada. Prova: `reports/evidence/F76/2026-11-20-foundation-proof.md` (Chrome sem cabeça a 393x852, 852x393 e 1280x800, antes e depois; fora do celular as medidas de layout são iguais nas 14 telas e nas 5 janelas, e as capturas idênticas a menos de ruído de captura medido). Não visto: iPhone de verdade e telas com login.

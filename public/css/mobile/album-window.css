@@ -4,7 +4,402 @@
  * Every rule goes INSIDE the media query below and nowhere else (REQ-12;
  * test/architecture/phoneStylesStayOnThePhone.test.js). The base all screens share is
  * ../mobile.css; the guide is docs/specs/features/F76-mobile-redesign/mobile-kit.md.
+ *
+ * The window on the phone (decided by the agent, revisable; docs/specs/features/F76-mobile-redesign/
+ * screens/album-window-and-ranking.md):
+ *   - ONE scroll: the whole window scrolls (no box with its own scroll inside), so the header gives
+ *     way to the tracks and the list has the whole height of the screen;
+ *   - a bar on top (components/ViewAlbumModal.js, mounted on the phone only) with close, always in
+ *     view, over the header; it turns opaque and shows the title once the header has gone;
+ *   - the header: the cover (112 px) beside the whole title and the artist, the cover itself
+ *     blurred behind them;
+ *   - the three sources as one segmented control, held under the bar while the tracks scroll;
+ *   - a track row (components/ranking/TracksTabs.js) of two lines: the title alone on the first,
+ *     the two references and the duration below.
  */
 
 @media (max-width: 767px) {
+  /* ── 1. One scroll: the window itself ──────────────────────────────────────────────────── */
+  .album-window > .modal-container {
+    display: block;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .album-window .modal-content {
+    overflow: visible;
+    background: transparent;
+  }
+
+  .album-window .modal-content > .absolute {
+    position: static;
+    overflow: visible;
+    padding: 0 var(--phone-gutter-right) calc(32px + var(--phone-safe-bottom)) var(--phone-gutter-left);
+  }
+
+  /* Close lives in the bar: the header's own button and the footer with «Close» step aside */
+  .album-window:has(.album-window__bar) .modal-header > button,
+  .album-window:has(.album-window__bar) .modal-footer {
+    display: none;
+  }
+
+  /* ── 2. The bar: close, always in view ─────────────────────────────────────────────────── */
+  .album-window__bar {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: calc(var(--phone-topbar-h) + var(--phone-safe-top));
+    margin-bottom: calc(-1 * (var(--phone-topbar-h) + var(--phone-safe-top)));
+    padding: var(--phone-safe-top) max(4px, env(safe-area-inset-right, 0px)) 0 var(--phone-gutter-left);
+    border-bottom: 1px solid transparent;
+    background: transparent;
+    transition: background-color 200ms ease-out, border-color 200ms ease-out;
+  }
+
+  .album-window--scrolled .album-window__bar {
+    background: var(--phone-sheet-bg);
+    border-bottom-color: var(--phone-bar-line);
+  }
+
+  .album-window__bar-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 22px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    opacity: 0;
+    transition: opacity 200ms ease-out;
+  }
+
+  .album-window--scrolled .album-window__bar-title {
+    opacity: 1;
+  }
+
+  .album-window__close {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: var(--phone-target);
+    height: var(--phone-target);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+  }
+
+  .album-window--scrolled .album-window__close {
+    background: transparent;
+  }
+
+  .album-window__close:active {
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  /* ── 3. The header: the cover is the hero ──────────────────────────────────────────────── */
+  .album-window .modal-header {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    align-items: end;
+    gap: 16px;
+    padding: calc(var(--phone-topbar-h) + var(--phone-safe-top) + 8px) var(--phone-gutter-right) 20px var(--phone-gutter-left);
+    border-bottom: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .album-window .modal-header > :first-child {
+    width: 112px;
+    height: 112px;
+    border-radius: 10px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+  }
+
+  /* The cover's veil becomes a thin inner line: a dark cover does not sink into the dark */
+  .album-window .modal-header > :first-child > .absolute {
+    background: transparent;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .album-window .modal-header > :nth-child(2) {
+    padding-top: 0;
+  }
+
+  .album-window .modal-header h2 {
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 700;
+  }
+
+  .album-window .modal-header .text-xl {
+    margin: 4px 0 0;
+    font-size: 15px;
+    line-height: 20px;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .album-window .modal-header .flex-wrap {
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 16px;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .album-window .modal-header .flex-wrap > span {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .album-window .modal-header .font-mono {
+    gap: 12px;
+    margin-top: 8px;
+    opacity: 1;
+    font-size: 12px;
+  }
+
+  .album-window .modal-header .font-mono .text-gray-600 {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* The cover, blurred and darkened, behind the header; it fades into the window */
+  .album-window__glow {
+    position: absolute;
+    inset: -48px;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .album-window__glow img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(40px) saturate(1.4);
+    opacity: 0.6;
+  }
+
+  .album-window__glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(16, 16, 20, 0.35) 0%, rgba(16, 16, 20, 0.7) 55%, var(--phone-sheet-bg) 88%);
+  }
+
+  /* The notes the person wrote (inventory) */
+  .album-window .modal-header + .px-6 {
+    padding: 12px var(--phone-gutter-right) 12px var(--phone-gutter-left);
+  }
+
+  /* ── 4. The three sources: one segmented control, held under the bar ───────────────────── */
+  .album-window .tracks-ranking-comparison > * + * {
+    margin-top: 12px;
+  }
+
+  .tracks-tabs__bar {
+    position: sticky;
+    top: calc(var(--phone-topbar-h) + var(--phone-safe-top));
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2px;
+    margin: 0 calc(-1 * var(--phone-gutter-right)) 4px calc(-1 * var(--phone-gutter-left));
+    padding: 6px var(--phone-gutter-right) 6px var(--phone-gutter-left);
+    background: var(--phone-sheet-bg);
+  }
+
+  /* The track the segments sit in */
+  .tracks-tabs__bar::before {
+    content: '';
+    position: absolute;
+    inset: 6px var(--phone-gutter-right) 6px var(--phone-gutter-left);
+    z-index: -1;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .tracks-tabs__segment {
+    min-width: 0;
+    min-height: var(--phone-target);
+    padding: 0 8px;
+    border-radius: 10px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 160ms ease-out, color 160ms ease-out;
+  }
+
+  .tracks-tabs__segment:active {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  /* The source on: the one orange of the window */
+  .tracks-tabs__segment.is-on {
+    margin: 3px;
+    min-height: calc(var(--phone-target) - 6px);
+    background: var(--phone-accent);
+    color: #0a0a0c;
+  }
+
+  /* ── 5. A track: the title alone on its line, the references and the duration below ─────── */
+  .tracks-tabs__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tracks-tabs__row {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: 12px;
+    min-height: 60px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .tracks-tabs__number,
+  .tracks-tabs__time {
+    font-size: 13px;
+    line-height: 22px;
+    color: rgba(255, 255, 255, 0.6);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tracks-tabs__number {
+    text-align: right;
+  }
+
+  .tracks-tabs__main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .tracks-tabs__title {
+    color: #f2f2f4;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22px;
+    overflow-wrap: anywhere;
+  }
+
+  .tracks-tabs__artist {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  .tracks-tabs__refs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    line-height: 16px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tracks-tabs__ref-label {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .tracks-tabs__ref.is-on {
+    color: #fff;
+  }
+
+  /* ── 6. Estimated value and Where to buy (F75, an inventory item): the same, for a finger ── */
+  .album-window [data-role="estimated-value"],
+  .album-window [data-role="where-to-buy"] {
+    margin: 12px 0 0;
+    border-radius: 12px;
+  }
+
+  .album-window [data-role="estimated-value"] + [data-role="where-to-buy"] {
+    margin-top: 12px;
+  }
+
+  .album-window [data-role="where-to-buy"] + #modal-ranking-container {
+    margin-top: 20px;
+  }
+
+  .album-window [data-role="conditions"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .album-window #inventoryValueInput {
+    flex: 1 1 120px;
+    width: auto !important;
+    min-width: 0;
+  }
+
+  .album-window [data-role="estimated-value"] .btn {
+    min-height: var(--phone-target);
+  }
+
+  /* A link or a button written in a sentence answers in 44 px */
+  .album-window [data-role="estimated-value"] p button,
+  .album-window [data-role="estimated-value"] p a,
+  .album-window [data-role="discogs-credit"] a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--phone-target);
+    vertical-align: middle;
+  }
+
+  .album-window [data-role="where-to-buy"] .flex-wrap {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .album-window [data-role="where-to-buy"] .btn {
+    justify-content: center;
+    min-width: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  /* ── 7. A phone lying down (667 x 375 and the like): a smaller header ───────────────────── */
+  @media (max-height: 500px) {
+    .album-window .modal-header {
+      grid-template-columns: 72px minmax(0, 1fr);
+      padding-bottom: 12px;
+    }
+
+    .album-window .modal-header > :first-child {
+      width: 72px;
+      height: 72px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .album-window__bar,
+    .album-window__bar-title,
+    .tracks-tabs__segment {
+      transition: none;
+    }
+  }
 }
