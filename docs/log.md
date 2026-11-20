@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:49] session — F76 TASK-04: prova em navegador das playlists no celular, e acabamento
+**Branch:** feat/f76-mobile-playlists
+Arnês com os componentes reais (`reports/evidence/F76/harness/playlists/`) e capturas antes/depois a 393x852 e 1280x800 (`reports/evidence/F76/playlists/`): geradas 3.602 → 1.562 px, gravadas 10.756 → 1.793 px, 0 alvo < 44, sem rolagem interna; computador idêntico. Acabamento visto nas capturas: ficha aberta à vista, fonte do sistema nas linhas, ações da série só com ela aberta, nome do lote inteiro, aviso «info» com fundo (base, `mobile.css` § 9), redesenho só quando celular/computador muda de fato. Nota da tela: `screens/playlists.md`.
+
 ## [2026-11-20 02:32] session — F76 TASK-04: playlists no celular, uma por vez, e as gravadas fechadas por série
 **Branch:** feat/f76-mobile-playlists
 `/playlists` no celular: fichas no topo (nome, faixas, duração) abrem uma playlist por vez; as faixas rolam com a página; cada faixa tem «⋯» de 44 px com mover (cima, baixo, topo, fim, para outra playlist) e remover com Desfazer; apagar playlist pergunta antes; Salvar e Exportar (folha com Spotify, Apple Music, JSON) na barra de ação. `/saved-playlists`: série fechada com «n lotes · n playlists», sem ID cru, ações nomeadas de 44 px. Computador sem mudança (marcação só no celular). Testes: `test/components/playlists/PhonePlaylists.test.js`.

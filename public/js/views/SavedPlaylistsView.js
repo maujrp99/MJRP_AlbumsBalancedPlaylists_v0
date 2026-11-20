@@ -20,7 +20,7 @@ import { SavedSeriesGroup } from '../components/playlists/SavedSeriesGroup.js'
 import FilterToolbar from '../components/ui/FilterToolbar.js'
 import { SavedPlaylistsFilterService } from '../services/SavedPlaylistsFilterService.js'
 import { ListStatus } from '../models/savedPlaylists.js'
-import { onPhoneChange } from '../utils/isPhone.js'
+import { isPhone, onPhoneChange } from '../utils/isPhone.js'
 
 /** What a series group shows: when none of it changed, the group on screen is kept as it is. */
 const shownOf = (group) => ({
@@ -54,7 +54,8 @@ export class SavedPlaylistsView extends BaseView {
         this.container = document.getElementById('app')
         this.subscriptions.push(this.controller.subscribe(() => this.update()))
         // The phone draws a series closed with a row to open it; the computer draws it open
-        this.subscriptions.push(onPhoneChange(() => this.redrawGroups()))
+        this.drawnForPhone = isPhone()
+        this.subscriptions.push(onPhoneChange((phone) => this.redrawGroups(phone)))
         this.controller.open()
         this.update()
     }
@@ -170,9 +171,10 @@ export class SavedPlaylistsView extends BaseView {
         return node
     }
 
-    /** Every series drawn again (the screen became a phone, or stopped being one). */
-    redrawGroups() {
-        if (!this.groupsNode) return
+    /** Every series drawn again when the screen became a phone, or stopped being one. */
+    redrawGroups(phone) {
+        if (!this.groupsNode || phone === this.drawnForPhone) return
+        this.drawnForPhone = phone
         this.groupNodes.forEach(({ node }) => node?.remove())
         this.groupNodes.clear()
         this.refreshContent()

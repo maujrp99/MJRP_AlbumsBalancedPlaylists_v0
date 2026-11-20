@@ -18,7 +18,7 @@ import { router } from '../router.js'
 import { installUnsavedChangesGuard } from './playlists/unsavedChangesGuard.js'
 import { attachPlaylistEditActions } from './playlists/playlistEditActions.js'
 import { attachPhonePlaylistActions } from './playlists/phonePlaylistActions.js'
-import { PhonePlaylists } from '../components/playlists/PhonePlaylists.js'
+import { PhonePlaylists, revealCurrentChip } from '../components/playlists/PhonePlaylists.js'
 import { isPhone, onPhoneChange } from '../utils/isPhone.js'
 
 /** The batch name on screen: what was typed, or the name of the batch being edited. */
@@ -77,6 +77,7 @@ export class PlaylistsView extends BaseView {
       showPlaylist: (index) => this.showPhonePlaylist(index)
     })
     this.subscriptions.push(onPhoneChange(() => this.update()))
+    revealCurrentChip(this.container)
 
     const state = playlistsStore.getState()
     if (state.playlists.length > 0) {
@@ -101,8 +102,7 @@ export class PlaylistsView extends BaseView {
       SafeDOM.clear(this.container)
       this.container.appendChild(this.renderContent())
     })
-    const chips = this.container.querySelector('.phone-pl-chips__row')
-    if (chips) chips.scrollLeft = chipsLeft
+    revealCurrentChip(this.container, chipsLeft)
 
     // Attach Element Listeners (Re-bind recreated elements)
     this.attachElementListeners()
@@ -324,8 +324,7 @@ export class PlaylistsView extends BaseView {
     const chipsLeft = grid.querySelector('.phone-pl-chips__row')?.scrollLeft || 0
     const stuck = grid.getBoundingClientRect().top < 0
     grid.innerHTML = this.gridHtml(playlistsStore.getState(), true)
-    const chips = grid.querySelector('.phone-pl-chips__row')
-    if (chips) chips.scrollLeft = chipsLeft
+    revealCurrentChip(grid, chipsLeft)
     this.dragHandler.setup(this.container)
     if (stuck) grid.scrollIntoView({ block: 'start' })
   }

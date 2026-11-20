@@ -51,6 +51,23 @@ const subLineOf = (track) => [track?.artist, track?.album].filter(Boolean).join(
 /** The open playlist: the one asked for, kept inside the set. */
 export const activeIndexOf = (playlists, asked) => Math.min(Math.max(Number(asked) || 0, 0), Math.max(playlists.length - 1, 0))
 
+/**
+ * The strip of chips scrolled to where it was, and moved only as far as needed for the open chip
+ * to be in view (a playlist opened from elsewhere, a redraw).
+ * @param {HTMLElement} root - holds the strip
+ * @param {number} [left] - where the strip was scrolled to before it was drawn again
+ */
+export function revealCurrentChip(root, left = 0) {
+    const row = root?.querySelector('.phone-pl-chips__row')
+    if (!row) return
+    row.scrollLeft = left
+    const chip = row.querySelector('.phone-pl-chip.is-current')
+    if (!chip) return
+    const before = chip.offsetLeft < row.scrollLeft
+    const after = chip.offsetLeft + chip.offsetWidth > row.scrollLeft + row.clientWidth
+    if (before || after) row.scrollLeft = Math.max(chip.offsetLeft - 16, 0)
+}
+
 export class PhonePlaylists {
     /**
      * @param {Object} options
@@ -93,7 +110,7 @@ export class PhonePlaylists {
                         <h2 class="phone-pl__title"><span class="playlist-name" contenteditable="true" role="textbox"
                             aria-label="Title of playlist ${index + 1}" data-playlist-index="${index}"
                             spellcheck="false">${escapeHtml(name)}</span></h2>
-                        <p class="phone-pl__meta">Playlist ${index + 1} · ${escapeHtml(playlistSummary(playlist))} · ${clock(secondsOf(tracks))}</p>
+                        <p class="phone-pl__meta">Playlist ${index + 1} of the set · ${escapeHtml(playlistSummary(playlist))}</p>
                     </div>
                     <button type="button" class="phone-more" data-phone-action="playlist-options" data-playlist-index="${index}"
                             aria-label="Options for playlist ${escapeHtml(name)}">${DOTS}</button>

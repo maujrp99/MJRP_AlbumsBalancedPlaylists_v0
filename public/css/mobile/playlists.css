@@ -22,6 +22,31 @@
     --pl-danger: #f87171;
     --pl-chips-h: 64px;
     --pl-sticky-top: calc(var(--phone-topbar-h) + var(--phone-safe-top));
+    /* Rows, counts and buttons in the phone's own face; Syne stays for the titles */
+    --pl-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Inter", "Segoe UI", Roboto, sans-serif;
+  }
+
+  .phone-playlists,
+  .phone-history,
+  .phone-pl-bar,
+  .phone-sheet-actions,
+  .phone-sheet-heading,
+  .phone-undo,
+  .playlists-view #batchNameSection,
+  .playlists-view .regenerate-header,
+  .saved-playlists-view .series-group {
+    font-family: var(--pl-sans);
+  }
+
+  .phone-pl-bar .btn,
+  .saved-playlists-view .series-group .btn {
+    font-family: var(--pl-sans);
+    font-weight: 600;
+  }
+
+  .phone-pl__title,
+  .saved-playlists-view .group-header h2 {
+    font-family: 'Syne', var(--pl-sans);
   }
 
   /* ── 2. The top of /playlists ────────────────────────────────────────────────────────────── */
@@ -35,15 +60,15 @@
     gap: 8px;
   }
 
-  .playlists-view .view-header h1 {
-    font-size: 20px;
-    line-height: 24px;
-    gap: 8px;
-  }
-
-  .playlists-view .view-header h1 svg {
-    width: 20px;
-    height: 20px;
+  /* The top bar already names the screen: its big title stays for screen readers only */
+  .playlists-view .view-header h1,
+  .saved-playlists-view .view-header h1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   .playlists-view .view-header .badge {
@@ -529,6 +554,10 @@
     min-height: 48px;
   }
 
+  #spotify-export-modal #exportModeNote {
+    color: rgba(255, 255, 255, 0.72);
+  }
+
   #spotify-export-modal a {
     overflow-wrap: anywhere;
   }
@@ -543,18 +572,7 @@
     margin-bottom: 0;
   }
 
-  .saved-playlists-view .view-header h1 {
-    font-size: 20px;
-    line-height: 24px;
-    gap: 8px;
-  }
-
-  .saved-playlists-view .view-header h1 svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .saved-playlists-view .series-groups > * + * {
+  .saved-playlists-view .series-groups.space-y-8 > * + * {
     margin-top: 12px;
   }
 
@@ -592,6 +610,11 @@
     height: 20px;
     margin-top: 2px;
     color: var(--pl-text-2);
+  }
+
+  .saved-playlists-view .series-group .font-mono {
+    font-family: var(--pl-sans);
+    font-variant-numeric: tabular-nums;
   }
 
   /* The raw id of the series is not for the person */
@@ -632,13 +655,26 @@
 
   .saved-playlists-view .group-header > .flex {
     width: 100%;
-    flex-wrap: wrap;
     gap: 8px;
+  }
+
+  /* A closed series shows only its name and what it holds; its actions come with it when opened */
+  .saved-playlists-view .series-group:has(> .saved-series-batches[hidden]) .group-header > .flex {
+    display: none;
+  }
+
+  /* No main action on this list: the series' buttons are all quiet (orange is for Save elsewhere) */
+  .saved-playlists-view .group-header > .flex > .btn-primary {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: none;
+    color: var(--pl-text);
   }
 
   .saved-playlists-view .group-header > .flex > .btn {
     min-height: 44px;
-    padding: 0 14px;
+    padding: 0 10px;
+    white-space: nowrap;
     font-family: inherit;
     font-size: 14px;
     font-weight: 600;
@@ -649,10 +685,13 @@
   .saved-playlists-view .group-header > .flex > .btn:first-child,
   .saved-playlists-view .group-header > .flex > .btn:nth-child(2) {
     flex: 1;
+    min-width: 0;
     justify-content: center;
   }
 
-  .saved-playlists-view .group-header > .flex > .btn:last-child:not(:first-child):not(:nth-child(2)) {
+  .saved-playlists-view .group-header > .flex > .btn:nth-child(3) {
+    flex: none;
+    min-width: 44px;
     width: 44px;
     padding: 0;
     justify-content: center;
@@ -700,13 +739,12 @@
   }
 
   .saved-playlists-view .batch-info h3 {
+    font-family: var(--pl-sans);
+    font-weight: 600;
+    letter-spacing: 0;
     font-size: 17px;
     line-height: 22px;
     overflow-wrap: anywhere;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
   }
 
   .saved-playlists-view .batch-info h3 + div {
