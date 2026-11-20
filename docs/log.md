@@ -15,6 +15,34 @@
 - Não lidos, pelo teto de pedidos: nove álbuns da lista. Não visto num navegador; não publicado.
 
 
+## [2026-11-20 01:13] decision — F75: um padrão único para as seções do cartão do inventário (v5)
+
+- Dito pelo MJRP: «deveríamos ter um padrao e alinhamento entre seções». A v5 do protótipo dá a cada seção o mesmo número de linhas em todo cartão; medido a 1440 px, as seções ficam alinhadas entre vizinhos. O padrão está escrito em `docs/specs/info-arch.md`, § Decisões de IA.
+
+## [2026-11-20 01:10] decision — F75: uma borda no cartão inteiro liga a capa às informações (v4)
+
+- Dito pelo MJRP: «e a borda conectando a capa com as infos?». A v4 do protótipo (`design/inception/inventory-value-v4.html`) tem a borda em volta do cartão inteiro, o bloco de valor sem caixa própria e «Where to buy» ao lado de «Sell» e «Trade». O comparador (Artifact) mostra a v4 como a nova.
+
+## [2026-11-20 01:08] session — F75: «Where to buy» ao lado de «Sell» e «Trade», na prévia
+
+- Pedido do MJRP: no cartão do álbum que ele tem, um botão «Where to buy» que abre a janela do álbum, onde estão os links. Está na prévia das três formas de segurar o cartão; entra no protótipo com a escolha dele.
+
+## [2026-11-20 01:08] session — F75: prévia de três formas de segurar o cartão (o bloco de valor parecia solto)
+
+- O MJRP achou que falta uma borda ligando o cartão da v3. Prévia em `design/proposals/inventory-card-border-proposal.html` e no comparador: A, só distância; B, borda no cartão inteiro; C, o cartão como superfície. Recomendação do agente: B. O protótipo espera a escolha dele.
+
+## [2026-11-20 01:04] review — crítica de UX das telas no celular (F76)
+
+- Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-audit.md`, por um auxiliar que não construiu as telas, pela skill `mjrp-critiquing-ux-ui`; em emulação de celular, sem aparelho de verdade.
+- 3 P0, 12 P1, 9 P2. Os três P0: a lista de séries tem dezenas de milhares de pixels de altura; a tela de séries rola de lado e empurra «Edit» e «Delete Series» para fora; a janela do álbum mostra o título cortado («B.») e só uma ou duas faixas.
+- O relatório separa 11 consertos de layout que não dependem de redesenho, e propõe a ordem do redesenho.
+
+## [2026-11-20 01:04] session — F74, primeira fatia, provada em produção; regressão achada e segunda fatia aberta
+
+- Servidor `mjrp-proxy-00208-kzm` e site `8efa91c` publicados. Na conta do MJRP: «In the Court of the Crimson King» com as cinco originais com nota e as extras sem; «High Voltage» 9 de 9, pela página da edição internacional.
+- Medida do inventário depois de «Update ratings»: 109 álbuns com nota em tudo, 87 em parte, 13 sem nenhuma; 2106 de 2612 faixas.
+- Regressão: «Close to the Edge» de 3 de 3 para 1 de 3 (título seguido da lista das suas partes). Segunda fatia aberta com os exemplos reais; a UAT-221 segue `open`. Prova: `reports/evidence/F74/2026-11-20-production-proof.md`.
+
 ## [2026-11-20 01:02] decision — F75: o MJRP escolheu o cartão «Transformar» com «Where to buy» em links, e as contagens como filtro
 
 - Dito por ele: «A opcao é transformar mas na parte do where to buy, quero um merge do elevar (O label WHERE TO BUY) com os links em laranja do consolidar»; e «concordo com a proposta de torná-los filtros».

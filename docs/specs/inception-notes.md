@@ -43,3 +43,31 @@
 - **Reserva:** «Sell» e «Trade» aparecem apagados no cartão do que é dele, com «not in the app yet». Mostra algo que não existe; é o lugar reservado para a rede de colecionadores.
 - **Não feito:** a v3 em 390 px não foi conferida; a crítica de UX das telas no celular está em andamento (F76).
 
+## [2026-11-20 01:08] F75 · a v3 do cartão: o bloco de valor parece solto
+
+- **Reação do MJRP:** «vi a v3 do card e to achando que ainda falta uma borda conectando tudo pra nao confundir que o dado de info é da linha de baixo, o que o ux diz?».
+- **Diagnóstico:** na v3 o bloco de valor tem caixa própria dentro de um cartão sem caixa, e fica a 24 px da capa de baixo e a 12 px da capa de cima. O cânone (CP-04) pede que o agrupamento venha da proximidade e do alinhamento, e trata a caixa como recurso de quem não conseguiu compor; a v3 fez o contrário: pôs a caixa por dentro e deixou o conjunto sem amarra.
+- **Prévia, fora do protótipo:** `design/proposals/inventory-card-border-proposal.html`, três opções num eixo só (o que segura o cartão): A, só distância; B, uma borda no cartão inteiro; C, o cartão como superfície. Está no comparador como «Prévia em aberto».
+- **Recomendação do agente:** B. Resolve o que ele apontou, tira a caixa de dentro e não muda a cara da grade.
+
+## [2026-11-20 01:08] F75 · «Where to buy» também no cartão do que é dele
+
+- **Pedido do MJRP:** «de onde tem sell trade, tb deveria ter um botao igual Where to buy que simplesmente abre a tela modal e lá teria os links caso a pessoa nao queira trocar e queira comprar».
+- **Como foi entendido:** no cartão do álbum que ele tem, ao lado de «Sell» e «Trade», um botão «Where to buy» que abre a janela do álbum; os três links das lojas estão lá.
+- **Onde está:** na prévia `design/proposals/inventory-card-border-proposal.html` (nas três opções) e no comparador. Entra no protótipo junto com a escolha de como o cartão se segura (A, B ou C).
+
+## [2026-11-20 01:10] F75 · rodada 4: a borda no cartão inteiro
+
+- **Dito pelo MJRP:** «e a borda conectando a capa com as infos?». Entendido como a escolha da opção B da prévia.
+- **v4:** `design/inception/inventory-value-v4.html`: uma borda em volta do cartão inteiro; o bloco de valor sem caixa própria; «Where to buy» ao lado de «Sell» e «Trade». A v3 fica intacta. No comparador (Artifact), a v4 é a «Nova» e a v3 a «Anterior».
+- **A saber:** a 1440 px, com quatro cartões por fileira, «Where to buy» cai para uma segunda linha, abaixo de «Sell» e «Trade».
+- **Não feito:** a v4 em 390 px não foi conferida.
+
+## [2026-11-20 01:13] F75 · rodada 5: um padrão para as seções do cartão
+
+- **Dito pelo MJRP,** com uma captura de dois cartões vizinhos da v4: «acho que visualmente os desalinhamentos das seções dos cards estao estranhas» e «deveríamos ter um padrao e alinhamento entre seções».
+- **Diagnóstico:** as três seções tinham alturas diferentes de um cartão para o outro: o rótulo «In my collection · worth about» quebrava em duas linhas e o outro não; a origem «CD · Discogs, mean of 3 conditions» quebrava e «No CD edition found» não; as ações eram duas linhas de botões e uma nota num cartão, e um rótulo e uma linha de links no outro.
+- **v5:** `design/inception/inventory-value-v5.html`. Cada seção tem o mesmo número de linhas em todo cartão. Para caber em uma linha: o rótulo perdeu o «about» e o valor ganhou «≈»; a origem ficou «CD · Discogs», com a explicação inteira no `title` e na janela; «Sell», «Trade» e «Where to buy» viraram links numa linha, sob o rótulo «Sell, trade or buy»; a frase «not in the app yet» foi para o `title` de «Sell» e «Trade».
+- **Medido a 1440 px:** nas três fileiras da amostra, as seções começam na mesma altura em todos os cartões (322, 387 e 423 px do topo do cartão), todos os cartões têm 521 px, e nenhum texto foi cortado.
+- **Não feito:** a v5 em 390 px não foi conferida.
+
