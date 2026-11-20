@@ -224,6 +224,8 @@ Os estados da biblioteca de séries, da janela de ranking, do botão do Spotify,
 - **Limpar o cache.** O botão "Clear Cache" do rodapé apaga o que o app guardou no navegador sobre álbuns (os álbuns, as notas e os rankings lidos) e só isso: a conexão com o Spotify, o login e as preferências ficam. Mostra "Cache Cleared!" e recarrega a página; a carga seguinte busca os álbuns de novo (T5; v4.0, F48 · `components/Footer.js`, `services/albums/clearAlbumCaches.js`). ^app-clear-cache
 - **Endereço local único.** Rodando o app na própria máquina, uma página aberta em `http://localhost:5010` é levada para o mesmo lugar em `http://127.0.0.1:5010`, onde o login, o Spotify e o guardado funcionam juntos (v4.0, F50 · `utils/localAddress.js`, `app.js`). ^app-local-address
 
+- **Sair do ranking sem gravar, no computador.** Com a ordem mudada e não gravada, «Back», Escape e um clique fora da janela perguntam «Discard changes?» («Your new order has not been saved.»), com «Keep editing» e «Discard», na janela de confirmação do app; Escape na pergunta é «Keep editing». Sem mudança, a janela fecha na hora. É a mesma pergunta do celular (pedido do MJRP, 2026-11-20 · UAT-224 · `components/ranking/UserRankModal.js` `requestClose`, `_askDiscard`). ^rank-discard-computer
+
 ## No celular (F76)
 
 Regras do app no celular, a tela de até 767 px de largura (iPhone 15 Pro, 393x852 px, de referência). Cada linha diz o que o código faz hoje; o que se vê, tela a tela, está em `docs/specs/info-arch.md` (seções «O celular (F76)» e «Estados no celular»). O desenho do celular foi decidido pelo agente e espera o juízo do MJRP no iPhone (F76, TASK-09).
