@@ -20,9 +20,10 @@ import { NAME_IN_THE_BAR } from '../../public/js/components/navigation/barName.j
 const NAME = 'Maurício Pedroso da Silva'
 
 describe('top bar: names are not cut at 80 px (UAT-211)', () => {
-    it('the rule: narrow by default, wide on a wide screen, the tail cut with "…"', () => {
+    it('the rule: as wide as the name up to a limit, giving way when the bar has no room, the tail cut with "…"', () => {
         expect(NAME_IN_THE_BAR).toContain('truncate')
-        expect(NAME_IN_THE_BAR).toContain('xl:max-w-[220px]')
+        expect(NAME_IN_THE_BAR).toContain('min-w-0')
+        expect(NAME_IN_THE_BAR).toContain('max-w-[220px]')
         expect(NAME_IN_THE_BAR).not.toMatch(/(^| )max-w-\[80px\]( |$)/)
     })
 
@@ -56,5 +57,34 @@ describe('top bar: the title picture has no box behind it (UAT-211)', () => {
         }
         const firstRow = inflateSync(Buffer.concat(data))
         expect(firstRow[4]).toBe(0)
+    })
+})
+
+describe('top bar: it never passes the width of the screen (UAT-218)', () => {
+    const source = (file) => readFileSync(resolve(process.cwd(), file), 'utf8')
+
+    it('every box between a name and the bar lets the name shrink', () => {
+        const nav = new AuthNav({ currentUser: { isAnonymous: false, displayName: NAME, email: 'm@example.test', photoURL: '/a.png' }, loading: false })
+        document.body.innerHTML = `<div id="bar">${nav.renderDesktop()}</div>`
+        for (let box = document.querySelector('[data-account-name]'); box.id !== 'bar'; box = box.parentElement) {
+            const lets = box.classList.contains('min-w-0') || box.classList.contains('max-w-full')
+            expect(lets, box.outerHTML.slice(0, 80)).toBe(true)
+        }
+        expect(document.querySelector('#userMenuBtn img').classList.contains('shrink-0')).toBe(true)
+    })
+
+    it('the links never shrink, the two groups of the bar do, and the menu of links starts at 1024 px', () => {
+        const bar = source('public/js/components/TopNav.js')
+        expect(bar).toMatch(/whitespace-nowrap shrink-0/)
+        expect(bar).toMatch(/<div class="hidden lg:flex items-center [^"]*min-w-0">/)
+        expect(bar).toMatch(/<div id="spotify-connect-desktop" class="min-w-0">/)
+        expect(bar).toMatch(/id="mobileMenuBtn" class="lg:hidden/)
+        expect(bar).not.toMatch(/md:hidden|hidden md:flex/)
+    })
+
+    it('below the wide screen the Spotify button is the icon alone, with the name on hover', () => {
+        const button = source('public/js/components/SpotifyConnectButton.js')
+        expect(button).toMatch(/<div class="hidden xl:flex flex-col leading-none min-w-0">/)
+        expect(button).toMatch(/title="Spotify connected: \$\{escapeHtml\(userName\)\}"/)
     })
 })
