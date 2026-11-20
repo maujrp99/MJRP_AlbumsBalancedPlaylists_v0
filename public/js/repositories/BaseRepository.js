@@ -14,6 +14,9 @@ import {
     writeBatch
 } from 'firebase/firestore'
 
+/** How many writes one Firestore batch holds. */
+export const MAX_BATCH_WRITES = 500
+
 /**
  * Base repository class for Firestore interactions (Modular SDK)
  */
@@ -176,6 +179,30 @@ export class BaseRepository {
         }
 
         return docRef.id
+    }
+
+    /**
+     * Create many documents in ONE write: all of them are stored, or none is (a Firestore batch).
+     * A batch holds MAX_BATCH_WRITES writes: a longer list is refused, the caller sends it in parts.
+     * @param {Object[]} dataList - the data of each document
+     * @returns {Promise<string[]>} the ids of the created documents, in the order given
+     */
+    async createMany(dataList) {
+        if (dataList.length === 0) return []
+        if (dataList.length > MAX_BATCH_WRITES) {
+            throw new Error(`Too many documents for one write: ${dataList.length} (a batch holds ${MAX_BATCH_WRITES})`)
+        }
+
+        const batch = writeBatch(this.db)
+        const ids = dataList.map(data => {
+            const docRef = doc(this.getCollection())
+            batch.set(docRef, { ...data, createdAt: this.getServerTimestamp(), _schemaVersion: this.schemaVersion })
+            return docRef.id
+        })
+        await batch.commit()
+
+        if (this.cache) await this.cache.invalidate(this.getCacheKey('all'))
+        return ids
     }
 
     // ========== UPSERT OPERATION ==========

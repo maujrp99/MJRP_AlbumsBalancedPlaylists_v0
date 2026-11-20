@@ -14,9 +14,22 @@
  */
 
 import { inventoryStore } from '../stores/inventory.js'
-import { inventoryService } from '../services/inventory/inventoryWiring.js'
+import { inventoryService, readSeriesOfThePerson } from '../services/inventory/inventoryWiring.js'
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
 import toast from '../components/Toast.js'
+import { filterInventory, statusCountsFor } from '../models/inventoryFilter.js'
+import { InventoryStatus, ownedValueOf, statusChangeMessage, statusOf } from '../models/inventoryStatus.js'
+import { confirmationText, nothingToAddText, outcomeText, progressText } from '../models/inventoryFromSeries.js'
+
+/** The button "Add the albums of my series" at rest. */
+const SERIES_ADD_IDLE = Object.freeze({ busy: false, text: null })
+
+/** What the person is asked before the albums of the series are written. */
+const seriesAddQuestion = (plan) => ({
+    title: 'Add the albums of your series?',
+    message: confirmationText(plan),
+    confirmText: `Add ${plan.toAdd.length === 1 ? '1 album' : `${plan.toAdd.length} albums`}`
+})
 
 export class InventoryController {
     constructor(view) {
@@ -35,8 +48,10 @@ export class InventoryController {
             filters: {
                 search: '',
                 format: 'all', // all, vinyl, cd
-                ownership: 'all' // all, owned, wishlist
+                ownership: 'all' // all, owned, not-owned, wishlist (models/inventoryStatus.js)
             },
+            // "Add the albums of my series": busy while it reads and writes, with what it is doing
+            seriesAdd: SERIES_ADD_IDLE,
             sorting: {
                 field: 'addedAt',
                 direction: 'desc'
@@ -107,45 +122,8 @@ export class InventoryController {
      * Apply current filters and sorting to generate filteredAlbums
      */
     applyFiltersAndSort() {
-        let result = [...this.state.albums]
-
-        // 1. Search
-        const query = this.state.filters.search.toLowerCase().trim()
-        if (query) {
-            result = result.filter(album =>
-                (album.title?.toLowerCase().includes(query)) ||
-                (album.artist?.toLowerCase().includes(query)) ||
-                (album.notes?.toLowerCase().includes(query))
-            )
-        }
-
-        // 2. Format Filter
-        if (this.state.filters.format !== 'all') {
-            result = result.filter(album => {
-                const fmt = album.format?.toLowerCase() || ''
-                if (this.state.filters.format === 'vinyl') return fmt.includes('vinyl') || fmt.includes('lp')
-                if (this.state.filters.format === 'cd') return fmt.includes('cd')
-                if (this.state.filters.format === 'digital') return fmt.includes('digital')
-                if (this.state.filters.format === 'dvd') return fmt.includes('dvd')
-                if (this.state.filters.format === 'bluray') return fmt.includes('bluray')
-                if (this.state.filters.format === 'cassette') return fmt.includes('cassette')
-                return true
-            })
-        }
-
-        // 3. Ownership Filter
-        if (this.state.filters.ownership !== 'all') {
-            result = result.filter(album => {
-                const isOwned = album.owned === true
-                const isWishlist = album.owned === false
-                // If null/undefined, it's "Not Owned" (but not explicitly Wishlist)
-
-                if (this.state.filters.ownership === 'owned') return isOwned
-                if (this.state.filters.ownership === 'wishlist') return isWishlist
-                if (this.state.filters.ownership === 'not-owned') return (!isOwned && !isWishlist) // Explicitly "Others"
-                return true
-            })
-        }
+        // 1-3. Search, format and status (models/inventoryFilter.js)
+        const result = filterInventory(this.state.albums, this.state.filters)
 
         // 4. Sorting
         const { field, direction } = this.state.sorting
@@ -183,16 +161,17 @@ export class InventoryController {
     calculateStats() {
         const albums = this.state.filteredAlbums
 
-        // "Owned" for stats calculation context:
-        // User Policy: Only count value if strictly OWNED (album.owned === true).
-        // Wishlist (false) and Not-Yet-Market (null/undefined) are excluded from value.
-        const ownedItems = albums.filter(a => a.owned === true)
-        const wishlistItems = albums.filter(a => a.owned === false)
-        const ignoredItems = albums.filter(a => a.owned !== true && a.owned !== false) // Null/Undefined
+        // Only what is OWNED adds to the value: Wishlist and Not Owned are left out of it.
+        const ownedItems = albums.filter(a => statusOf(a) === InventoryStatus.OWNED)
+
+        // The three counts are of the items that pass the search and the format: choosing a
+        // status does not turn the other two into zero (models/inventoryFilter.js)
+        const counts = statusCountsFor(this.state.albums, this.state.filters)
 
         this.state.stats.totalCount = albums.length
-        this.state.stats.ownedCount = ownedItems.length
-        this.state.stats.wishlistCount = wishlistItems.length
+        this.state.stats.ownedCount = counts[InventoryStatus.OWNED]
+        this.state.stats.notOwnedCount = counts[InventoryStatus.NOT_OWNED]
+        this.state.stats.wishlistCount = counts[InventoryStatus.WISHLIST]
 
         // Sum Value separated by currency (Default to USD if missing)
         this.state.stats.ownedValueUSD = ownedItems
@@ -253,25 +232,75 @@ export class InventoryController {
         this.refresh()
     }
 
+    /**
+     * Change the status of an item (Owned, Not Owned, Wishlist). The service throws when the
+     * write fails; the screen then goes back to what the store holds.
+     * @param {string} albumId - the inventory item
+     * @param {string} status - one of InventoryStatus
+     */
     async handleStatusChange(albumId, status) {
-        let isOwned = null
-        if (status === 'owned') isOwned = true
-        else if (status === 'wishlist') isOwned = false
-        // 'not-owned' remains null
-
-        const success = await inventoryService.updateAlbum(albumId, { owned: isOwned })
-        if (success) {
-            let msg = 'Updated status'
-            if (isOwned === true) msg = 'Moved to Collection'
-            else if (isOwned === false) msg = 'Moved to Wishlist'
-            else msg = 'Marked as Not Owned'
-
-            toast.success(msg)
-            this.updateStateFromStore()
-            this.refresh()
-        } else {
+        try {
+            await inventoryService.updateAlbum(albumId, { owned: ownedValueOf(status) })
+            toast.success(statusChangeMessage(status))
+        } catch (error) {
+            console.error('[InventoryController] Failed to update status:', error)
             toast.error('Failed to update status')
         }
+        this.updateStateFromStore()
+        this.refresh()
+    }
+
+    /**
+     * "Add the albums of my series" (F71): every album of the person's series that is not in the
+     * inventory goes in as Not Owned. The person sees what will happen and confirms before
+     * anything is written; with nothing to add, a notice says so and nothing is written.
+     * @param {Object} options
+     * @param {Function} options.confirm - (dialog options) => Promise<boolean>, the app's confirmation
+     */
+    async handleAddSeriesAlbums({ confirm }) {
+        if (this.state.seriesAdd.busy) return
+        try {
+            const plan = await this._planSeriesAlbums()
+            if (!plan) return
+            if (!await confirm(seriesAddQuestion(plan))) return
+            await this._writeSeriesAlbums(plan.toAdd)
+        } finally {
+            this._showSeriesAdd(SERIES_ADD_IDLE)
+        }
+    }
+
+    /** @returns {Promise<Object|null>} the plan when there is something to add; null when not (the person was told why) */
+    async _planSeriesAlbums() {
+        this._showSeriesAdd({ busy: true, text: 'Reading your series…' })
+        let plan
+        try {
+            plan = await inventoryService.planSeriesAlbums(await readSeriesOfThePerson())
+        } catch (error) {
+            console.error('[InventoryController] Could not read the series or the inventory:', error)
+            toast.error('Could not read your series and your inventory. Nothing was added.')
+            return null
+        }
+        if (plan.skipped.length > 0) console.info('[InventoryController] Entries of the series that are not added:', plan.skipped)
+        if (plan.toAdd.length > 0) return plan
+        toast.info(nothingToAddText(plan))
+        return null
+    }
+
+    async _writeSeriesAlbums(albums) {
+        const total = albums.length
+        this._showSeriesAdd({ busy: true, text: progressText({ added: 0, total }) })
+        const result = await inventoryService.addAlbumsAsNotOwned(albums, {
+            onProgress: (step) => this._showSeriesAdd({ busy: true, text: progressText(step) })
+        })
+        const outcome = outcomeText(result)
+        if (outcome.ok) toast.success(outcome.text)
+        else toast.error(outcome.text)
+    }
+
+    /** The state of the button, kept for the next full draw and shown at once without one. */
+    _showSeriesAdd(seriesAdd) {
+        this.state.seriesAdd = seriesAdd
+        this.view.showSeriesAdd?.(seriesAdd)
     }
 
     /**

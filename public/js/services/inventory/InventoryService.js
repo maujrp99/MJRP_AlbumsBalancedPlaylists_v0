@@ -7,7 +7,17 @@
  * no screen; services/inventory/inventoryWiring.js puts it together with the real ones.
  */
 
+import { findInInventory, planSeriesAlbums } from '../../models/inventoryFromSeries.js'
+
 const ANONYMOUS = 'anonymous-user'
+
+/**
+ * How many albums go in one write of "add the albums of my series". A Firestore batch holds 500;
+ * a smaller part keeps the progress visible and, if a write fails, loses less.
+ */
+export const SERIES_WRITE_SIZE = 100
+
+const partsOf = (list, size) => Array.from({ length: Math.ceil(list.length / size) }, (_, part) => list.slice(part * size, (part + 1) * size))
 
 /** What a price change shows and writes: a currency only when there is one. */
 const priceChanges = (purchasePrice, currency) => (currency ? { purchasePrice, currency } : { purchasePrice })
@@ -81,17 +91,85 @@ export class InventoryService {
         }
     }
 
-    /** Add an album and read the inventory again. */
+    /**
+     * Add an album and read the inventory again.
+     * An album that is already there is refused, by the same answer "add the albums of my series"
+     * uses (models/inventoryFromSeries.js): the same id, the same Apple Music id, or the same
+     * album by the one identity rule. So an edition of an album that came from a series is not
+     * added beside it from an album card.
+     * @throws {Error} 'Album already in inventory'
+     */
     async addAlbum(album, format, options = {}) {
         this.init()
 
         try {
+            if (findInInventory(album, await this.repository.findAll())) throw new Error('Album already in inventory')
             const id = await this.repository.addAlbum(album, format, options)
             await this.loadAlbums()
             return id
         } catch (error) {
             console.error('Failed to add album to inventory:', error)
             throw error
+        }
+    }
+
+    /**
+     * What "add the albums of my series" would do now (F71): the inventory is read from the cloud,
+     * not from the screen, and nothing is written.
+     * @param {Array<{ name?: string, albumQueries?: Array }>} series - the person's series
+     * @returns {Promise<Object>} the plan of models/inventoryFromSeries.js `planSeriesAlbums`
+     * @throws when the inventory cannot be read
+     */
+    async planSeriesAlbums(series) {
+        this.init()
+        return planSeriesAlbums(series, await this.repository.findAll())
+    }
+
+    /**
+     * Write the planned albums as Not Owned items, in parts of SERIES_WRITE_SIZE, each part one
+     * write (all of it or none of it). Items that are already in the inventory are never touched:
+     * this only creates.
+     *
+     * A part that fails stops the run and does NOT take back the parts before it: the answer says
+     * how many albums went in. Planning again adds only the rest, so running the action again is
+     * the recovery. The store is told once, at the end, by reading the inventory again.
+     *
+     * @param {Object[]} albums - `toAdd` of the plan
+     * @param {Object} [options]
+     * @param {Function} [options.onProgress] - ({ added, total }) after each part that went in
+     * @returns {Promise<{ added: number, total: number, error: string|null, reloaded: boolean }>}
+     */
+    async addAlbumsAsNotOwned(albums, { onProgress = () => { } } = {}) {
+        this.init()
+        const repository = this.repository
+        const total = albums.length
+        let added = 0
+        let error = null
+
+        for (const part of partsOf(albums, SERIES_WRITE_SIZE)) {
+            try {
+                await repository.addBatch(part)
+            } catch (failure) {
+                console.error(`[InventoryService] Adding the albums of the series stopped after ${added} of ${total}:`, failure)
+                error = failure?.message || String(failure)
+                break
+            }
+            added += part.length
+            onProgress({ added, total })
+        }
+
+        return { added, total, error, reloaded: added === 0 || await this._readAgain(repository) }
+    }
+
+    /** Read the inventory again for the person the write was for. @returns {Promise<boolean>} whether the screen is up to date */
+    async _readAgain(repository) {
+        if (repository !== this.repository) return false
+        try {
+            await this.loadAlbums()
+            return true
+        } catch (error) {
+            console.error('[InventoryService] The albums were added, but the inventory could not be read again:', error)
+            return false
         }
     }
 

@@ -5,6 +5,15 @@
 
 import { BaseRepository } from './BaseRepository.js'
 
+const VALID_FORMATS = ['cd', 'vinyl', 'cassette', 'dvd', 'bluray', 'digital']
+const VALID_CURRENCIES = ['USD', 'BRL']
+
+/** An album can be kept only with its names and its id. */
+function requireAlbum(album) {
+    if (!album || !album.title || !album.artist) throw new Error('Album must have title and artist')
+    if (!album.id) throw new Error('Album must have an ID')
+}
+
 export class InventoryRepository extends BaseRepository {
     /**
      * @param {Firestore} firestore - Firestore instance (modular)
@@ -23,57 +32,68 @@ export class InventoryRepository extends BaseRepository {
     }
 
     /**
-   * Add album to inventory
-   * @param {Object} album - Album data (with full albumData)
-   * @param {string} format - Physical format: "cd" | "vinyl" | "dvd" | "bluray" | "digital"
-   * @param {Object} options - Optional metadata (purchasePrice, currency, notes, etc.)
-   * @returns {Promise<string>} Inventory album ID
-   */
+     * Add album to inventory
+     * @param {Object} album - Album data (with full albumData)
+     * @param {string} format - Physical format: "cd" | "vinyl" | "cassette" | "dvd" | "bluray" | "digital"
+     * @param {Object} options - Optional metadata (purchasePrice, currency, notes, etc.)
+     * @returns {Promise<string>} Inventory album ID
+     */
     async addAlbum(album, format = 'cd', options = {}) {
-        if (!album || !album.title || !album.artist) {
-            throw new Error('Album must have title and artist')
+        requireAlbum(album)
+        if (!VALID_FORMATS.includes(format)) {
+            throw new Error(`Format must be one of: ${VALID_FORMATS.join(', ')}`)
         }
-
-        if (!album.id) {
-            throw new Error('Album must have an ID')
-        }
-
-        const validFormats = ['cd', 'vinyl', 'cassette', 'dvd', 'bluray', 'digital']
-        if (!validFormats.includes(format)) {
-            throw new Error(`Format must be one of: ${validFormats.join(', ')}`)
-        }
-
-        const validCurrencies = ['USD', 'BRL']
         const currency = options.currency || 'USD'
-        if (!validCurrencies.includes(currency)) {
-            throw new Error(`Currency must be one of: ${validCurrencies.join(', ')}`)
+        if (!VALID_CURRENCIES.includes(currency)) {
+            throw new Error(`Currency must be one of: ${VALID_CURRENCIES.join(', ')}`)
         }
 
         // Check if album already in inventory
-        // FORCE REFRESH: Ensure we are checking against fresh data if possible, though findByAlbumId handles checks
         const existing = await this.findByAlbumId(album.id)
         if (existing) {
             console.warn(`[InventoryRepository] Prevented duplicate add for album: ${album.id}`)
             throw new Error('Album already in inventory')
         }
 
-        const inventoryAlbum = {
+        return this.create(this._itemFor(album, { ...options, format, currency }))
+    }
+
+    /**
+     * Add many albums in ONE write, each as a Not Owned item (F71): all of them go in, or none
+     * does. The item holds the album as given and nothing invented: no format, no price, no
+     * currency. Whether an album is already in the inventory is NOT asked here: the caller gives
+     * the albums that are not (models/inventoryFromSeries.js decides, InventoryService asks).
+     *
+     * The "already in inventory" answers kept in the cache (`album_<id>`) need nothing: only an
+     * item that was FOUND is kept there, never "not there", so a new item is found by the next
+     * question (findByAlbumId reads the inventory when it has no answer kept).
+     *
+     * @param {Object[]} albums - each { id, title, artist, ... }; at most what one batch holds
+     * @returns {Promise<string[]>} the ids of the new items, in the order given
+     * @throws when an album lacks its names or its id (nothing is written), and when the write fails
+     */
+    async addBatch(albums) {
+        albums.forEach(requireAlbum)
+        return this.createMany(albums.map(album => this._itemFor(album, { format: null, currency: null })))
+    }
+
+    /** The item the inventory keeps for an album. `owned` is null (Not Owned) unless given. */
+    _itemFor(album, { format, currency, owned = null, purchasePrice, purchaseDate, condition, notes }) {
+        return {
             title: album.title,
             artist: album.artist,
-            year: album.year,
+            year: album.year ?? null,
             format,
-            owned: options.owned !== undefined ? options.owned : null, // Default to null (Not Owned)
-            purchasePrice: options.purchasePrice || null,
+            owned,
+            purchasePrice: purchasePrice || null,
             currency,
-            purchaseDate: options.purchaseDate || null,
-            condition: options.condition || null,
-            notes: options.notes || '',
+            purchaseDate: purchaseDate || null,
+            condition: condition || null,
+            notes: notes || '',
             // Deep sanitize album data
             albumData: JSON.parse(JSON.stringify(album)),
             addedToInventory: this.getServerTimestamp()
         }
-
-        return this.create(inventoryAlbum)
     }
 
     /**
@@ -111,8 +131,7 @@ export class InventoryRepository extends BaseRepository {
             throw new Error('Price cannot be negative')
         }
 
-        const validCurrencies = ['USD', 'BRL']
-        if (!validCurrencies.includes(currency)) {
+        if (!VALID_CURRENCIES.includes(currency)) {
             throw new Error('Currency must be USD or BRL')
         }
 

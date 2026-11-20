@@ -51,7 +51,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'ranking/BalancedRankingStrategy.js:arrow function#2': 30, // F62 holds this code (blend, playlists, export, Spotify)
     'ranking/BalancedRankingStrategy.js:arrow function#3': 12, // F62 holds this code (blend, playlists, export, Spotify)
     'ranking/SpotifyRankingStrategy.js:arrow function': 11, // F62 holds this code (blend, playlists, export, Spotify)
-    'repositories/InventoryRepository.js:addAlbum': 16, // no feature yet
     'services/PlaylistsService.js:_writeCurrentBatch': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'services/SavedPlaylistsFilterService.js:filterSeries': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'services/album-search/AlbumSearchService.js:search': 11, // F57 holds this code (album search, classification, series edit)
@@ -66,7 +65,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'utils/retry.js:retryWithBackoff': 14, // no feature yet
     'views/BlendingMenuView.js:render': 12, // F62 holds this code (blend, playlists, export, Spotify)
     'views/BlendingMenuView.js:renderGenerateButton': 13, // F62 holds this code (blend, playlists, export, Spotify)
-    'views/InventoryView.js:render': 11, // no feature yet
     'views/SeriesView.js:updateAlbums': 19, // no feature yet
     'views/albums/AlbumsScopedRenderer.js:arrow function': 12, // no feature yet
     'workers/search.worker.js:function': 11 // F57 holds this code (album search, classification, series edit)

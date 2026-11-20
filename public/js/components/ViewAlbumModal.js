@@ -10,15 +10,38 @@ import { TracksRankingComparison } from './ranking/TracksRankingComparison.js'
 import { Album } from '../models/Album.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { coverImage } from './ui/coverImage.js'
+import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatus.js'
+import { ADDED_FROM_SERIES } from '../models/inventoryFromSeries.js'
 
+/** The colour of the status badge of an inventory item. */
+const STATUS_BADGE = Object.freeze({
+  [InventoryStatus.OWNED]: 'badge badge-success',
+  [InventoryStatus.NOT_OWNED]: 'badge badge-neutral',
+  [InventoryStatus.WISHLIST]: 'badge badge-neutral'
+})
+
+/** What the window says in the place of the tracks when the album has none. */
+export function noTracksText(album) {
+  return album.metadata?.addedFrom === ADDED_FROM_SERIES
+    ? 'No tracks are kept for this album: it was added from your series. Open it in its series to see its tracks.'
+    : 'No tracks are kept for this album.'
+}
+
+/**
+ * @param {Object} albumInput - a loaded album, or an inventory item (it holds its album in
+ *   `albumData`, and its own status, format, price and notes)
+ */
 export async function showViewAlbumModal(albumInput) {
   // Hydrate Album Model if needed
+  const item = albumInput.albumData ? albumInput : null
   const rawData = albumInput.albumData || albumInput
   const album = rawData instanceof Album ? rawData : new Album(rawData)
+  // What the person wrote about the album is the item's; a loaded album has none of it
+  const kept = item || {}
 
   // -- 1. Header Section --
   const coverEl = createCoverElement(album)
-  const detailsEl = createDetailsElement(album)
+  const detailsEl = createDetailsElement(album, item)
   const closeBtn = createCloseButton()
 
   const headerEl = SafeDOM.div({
@@ -27,7 +50,7 @@ export async function showViewAlbumModal(albumInput) {
 
   // -- 2. Notes Section --
   let notesEl = null
-  if (album.notes) {
+  if (kept.notes) {
     notesEl = SafeDOM.div({
       className: 'px-6 py-4 bg-yellow-500/5 border-b border-white/5'
     }, [
@@ -39,7 +62,7 @@ export async function showViewAlbumModal(albumInput) {
       ]),
       SafeDOM.p({
         className: 'text-sm text-yellow-100/80 italic leading-relaxed'
-      }, `"${album.notes}"`)
+      }, `"${kept.notes}"`)
     ])
   }
 
@@ -122,6 +145,12 @@ export async function showViewAlbumModal(albumInput) {
   // Close Button Action
   closeBtn.addEventListener('click', handleClose)
 
+  // An album with no tracks (one that came from a series) has nothing to compare: it says so
+  if (album.getTracks('original').length === 0 && album.getTracks('acclaim').length === 0) {
+    rankingContainer.appendChild(SafeDOM.p({ className: 'text-gray-400 text-center py-12', dataset: { role: 'no-tracks' } }, noTracksText(album)))
+    return modalOverlay
+  }
+
   // Initialize Comparison Component
   const comparison = new TracksRankingComparison({ album })
 
@@ -153,7 +182,12 @@ function createCoverElement(album) {
   return wrapper
 }
 
-function createDetailsElement(album) {
+/**
+ * @param {Album} album
+ * @param {Object|null} item - the inventory item that holds the album, when the window was opened from the inventory
+ */
+function createDetailsElement(album, item) {
+  const kept = item || {}
   const title = SafeDOM.h2({
     className: 'text-2xl md:text-3xl font-bold truncate text-white leading-tight',
   }, album.title)
@@ -165,13 +199,13 @@ function createDetailsElement(album) {
   // Badges
   const badges = []
   if (album.year) badges.push(createBadge(album.year, 'px-2 py-0.5 bg-surface-light rounded-md border border-white/5'))
-  if (album.format) badges.push(createBadge(album.format, 'badge badge-neutral uppercase text-xs tracking-wider'))
+  if (kept.format) badges.push(createBadge(kept.format, 'badge badge-neutral uppercase text-xs tracking-wider'))
 
-  badges.push(
-    album.owned !== false
-      ? createBadge('OWNED', 'badge badge-success')
-      : createBadge('WISHLIST', 'badge badge-neutral')
-  )
+  // The status is the inventory's: an album that is not an inventory item has none to show
+  if (item) {
+    const status = statusOf(item)
+    badges.push(createBadge(statusLabel(status).toUpperCase(), STATUS_BADGE[status]))
+  }
 
   const badgeContainer = SafeDOM.div({
     className: 'flex flex-wrap items-center gap-3 mt-3 text-sm text-gray-400'
@@ -179,11 +213,11 @@ function createDetailsElement(album) {
 
   // Metadata Grid
   const metaItems = []
-  if (album.purchasePrice) {
-    metaItems.push(createMetaItem('Price:', formatCurrency(album.purchasePrice, album.currency)))
+  if (kept.purchasePrice) {
+    metaItems.push(createMetaItem('Price:', formatCurrency(kept.purchasePrice, kept.currency || 'USD')))
   }
-  if (album.condition) {
-    metaItems.push(createMetaItem('Cond:', album.condition))
+  if (kept.condition) {
+    metaItems.push(createMetaItem('Cond:', kept.condition))
   }
 
   const metaContainer = SafeDOM.div({
