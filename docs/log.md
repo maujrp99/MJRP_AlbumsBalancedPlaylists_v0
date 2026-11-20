@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:22] session — F71 em produção; a F49 provada pelo MJRP em produção
+
+- A F71 (primeira fatia) foi juntada na `main` (`63793a4`) e o site publicado: pacote `main-BfgCsm6G.js`. O servidor não mudou (`mjrp-proxy-00207-lhz`).
+- O MJRP testou a F49 em produção: «f49: testando em prod, all good». O clique em «Load 3 more albums» mostrou os três álbuns restantes de uma série de 15, e o botão sumiu. A TASK-06 da F49 está marcada com essa prova.
+
 ## [2026-11-19 23:21] session — F71: provada no navegador e executada na conta do MJRP; ordem do inventário por artista e título
 
 **Branch:** feat/f71-inventory-holds-every-album-of-my-series

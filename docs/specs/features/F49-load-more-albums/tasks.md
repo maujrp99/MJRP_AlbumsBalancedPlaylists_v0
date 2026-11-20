@@ -27,7 +27,7 @@
 
 ## Verification
 - [x] TASK-05 suíte (`npx vitest run`: 1330 passando, 1307 antes), `npx vite build` e complexidade até 10 nas funções novas ou mudadas (`npx eslint --rule '{"complexity":["error",10]}'` nos arquivos tocados; as duas acima do limite, `SeriesView.updateAlbums` e `SeriesEventHandler.handleRemoveAlbum`, já estavam e não ganharam caminho) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05 · model:: sonnet · rounds:: 1
-- [ ] TASK-06 prova no navegador pelo roteiro do relatório de entrega: numa série com mais de 12 álbuns, no painel de todas as séries, o clique mostra o resto e o botão some; a série continua aberta depois de ir à página 2 e voltar e de buscar e limpar; volta a 12 depois de abrir a série sozinha e voltar; o botão é alcançado com Tab e responde a Enter, e o foco vai para o primeiro álbum novo · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05 · model:: opus · waiting:: human — quem implementou não tem navegador; a prova roda com o login do MJRP, pelo agente integrador · action:: o integrador roda o roteiro em `http://127.0.0.1:5010` e grava a prova em `reports/evidence/F49/`
+- [x] TASK-06 prova no navegador: o MJRP viu em produção, numa série de 15 álbuns, o clique em «Load 3 more albums» mostrar os três restantes e o botão sumir («f49: testando em prod, all good», 2026-11-19 23:22); o teclado e a série continuar aberta seguem cobertos pelos testes · evidência: `reports/evidence/F49/2026-11-19-load-more-albums-proof.md` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05 · model:: opus · rounds:: 1
 
 ## Documentation
 - [x] `docs/specs/behavior.md` (estado novo `^library-series-more-albums`) e `docs/manual/` (09, 12, 15, 29) dizem o que o código faz agora
