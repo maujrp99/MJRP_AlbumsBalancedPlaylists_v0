@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:29] session — F76 polimento: Playlists gravadas com a anatomia de Albums (N5)
+**Branch:** feat/f76-mobile-polish-home-playlists
+No celular: busca + «Filters (n)» numa folha (`filtersInSheet`), séries como linhas (capas, nome em Syne, «n batches · n playlists», «⋯»), lotes como linhas com nome legível (o nome da máquina inteiro na folha), data num formato só, playlists como linhas que abrem as faixas; toda ação numa folha «⋯», apagar por último, em vermelho, com a confirmação de sempre.
+Fora da lista: `components/ui/FilterSheet.js` aceita `props.sheetText` (rótulos de recarregar e fechar). Computador idêntico pixel a pixel (1280x800). Decidido pelo agente — revisável.
+
 ## [2026-11-20 03:23] session — F76 polimento: New Playlists mostra 4 faixas a 393x660 (N3)
 **Branch:** feat/f76-mobile-polish-home-playlists
 No celular, nome do lote, Undo e Redo numa linha só (ícones nomeados de 44 px), sem trilha (a barra de baixo orienta), linha fechada «Reconfigure» fora da página (abre pelo «⋯» da playlist, agora com as receitas em uma coluna), resumo repetido da playlist só para leitor de tela.

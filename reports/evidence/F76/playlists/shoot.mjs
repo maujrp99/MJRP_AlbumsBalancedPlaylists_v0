@@ -34,6 +34,11 @@ const CASES = {
     'delete-confirm': { query: '?screen=generated', phoneOnly: true, run: [tap('[data-phone-action="playlist-options"]'), tapText('Delete this playlist')] },
     // F76 polish (recheck N3): the closed reconfigure row left the page; the «⋯» of the playlist opens it
     reconfigure: { query: '?screen=generated', phoneOnly: true, run: [tap('[data-phone-action="playlist-options"]'), tapText('Reconfigure and regenerate')] },
+    // F76 polish (recheck N5): the saved playlists' sheets
+    'saved-filters': { query: '?screen=saved', phoneOnly: true, run: [tap('.filters-phone-button')] },
+    'saved-series-sheet': { query: '?screen=saved', phoneOnly: true, run: [tap('.saved-phone-series .phone-more')] },
+    'saved-batch-sheet': { query: '?screen=saved&open=1', phoneOnly: true, run: [tap('.saved-phone-batch .phone-more')] },
+    'saved-delete-confirm': { query: '?screen=saved&open=1', phoneOnly: true, run: [tap('.saved-phone-batch .phone-more'), "[...document.querySelectorAll('.sheet .albums-sheet__row')].find(b => b.textContent.trim() === 'Delete batch').click()"] },
     'export-sheet': { query: '?screen=generated', phoneOnly: true, run: [tap('[data-phone-action="export"]')] },
     'spotify-window': { query: '?screen=generated', phoneOnly: true, run: [tap('[data-phone-action="export"]'), tapText('Export to Spotify')] }
 }

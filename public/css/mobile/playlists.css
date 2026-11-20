@@ -620,231 +620,215 @@
     margin-bottom: 0;
   }
 
-  .saved-playlists-view .series-groups.space-y-8 > * + * {
-    margin-top: 12px;
+  /* Recheck N5: the anatomy of Albums (albums.css § 3, 6, 8, 9). The search and «Filters (n)» in
+     one line, the filters in a sheet (components/ui/FilterSheet.js); its button and chips read
+     the tokens of the Albums screen, given here too. */
+  .saved-playlists-view {
+    --albums-raised: #17171a;
+    --albums-raised-2: #1f1f23;
+    --albums-line: rgba(255, 255, 255, 0.08);
+    --albums-text: #f2f2f4;
+    --albums-text-2: #a0a0a8;
   }
 
-  /* A series: a card whose header says its name (wrapped, never cut) and opens its batches */
-  .saved-playlists-view .series-group {
-    padding: 0;
-    border-radius: 14px;
-    overflow: hidden;
-  }
-
-  .saved-playlists-view .group-header {
-    margin: 0;
-    padding: 12px;
-    gap: 10px;
-    border-bottom: 0;
-  }
-
-  .saved-playlists-view .group-header > :first-child {
-    margin: 0;
-    width: 100%;
-    min-width: 0;
-  }
-
-  .saved-playlists-view .group-header h2 {
-    font-size: 20px;
-    line-height: 24px;
-    color: var(--pl-text);
-    align-items: flex-start;
-    overflow-wrap: anywhere;
-  }
-
-  .saved-playlists-view .group-header h2 svg {
-    flex: none;
-    width: 20px;
-    height: 20px;
-    margin-top: 2px;
-    color: var(--pl-text-2);
-  }
-
-  .saved-playlists-view .series-group .font-mono {
-    font-family: var(--pl-sans);
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* The raw id of the series is not for the person */
-  .saved-series-id {
+  .saved-playlists-view .view-header .breadcrumb {
     display: none;
   }
 
-  .saved-series-toggle {
+  .saved-playlists-view .view-header {
+    margin-bottom: 0;
+  }
+
+  .saved-playlists-view .filters-section--sheet {
+    margin-bottom: 8px;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .saved-playlists-view .filters-section--sheet .filters-row {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .saved-playlists-view .filters-section--sheet .search-bar {
+    min-width: 0;
+  }
+
+  .saved-playlists-view .filters-section--sheet .filters-controls {
+    display: none;
+  }
+
+  .saved-playlists-view #genericSearch {
+    height: 44px;
+    padding-left: 42px;
+    font-size: 16px;
+    border-radius: 12px;
+    background: var(--albums-raised);
+    border-color: var(--albums-line);
+  }
+
+  .saved-playlists-view .series-groups.space-y-8 > * + * {
+    margin-top: 0;
+  }
+
+  /* A series: one header row - covers, name (Syne, the title of the row), what it holds, a
+     chevron - and its «⋯»; no card, a hairline between series */
+  .saved-phone-series {
+    border-bottom: 1px solid var(--pl-line);
+  }
+
+  .saved-phone__head {
     display: flex;
     align-items: center;
-    gap: 8px;
-    width: 100%;
-    min-height: 44px;
-    margin-top: 6px;
-    padding: 0;
-    font-size: 14px;
-    line-height: 18px;
-    color: var(--pl-text-2);
+    gap: 4px;
+  }
+
+  .saved-phone-series__main,
+  .saved-phone-batch__main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 64px;
+    padding: 10px 0;
+    color: var(--pl-text);
     text-align: left;
     touch-action: manipulation;
   }
 
-  .saved-series-toggle__chevron {
+  .saved-phone-series__main:active,
+  .saved-phone-batch__main:active,
+  .saved-phone-playlist:active {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .saved-phone-series__main .album-cascade,
+  .saved-phone-series__main > div:first-child {
     flex: none;
-    width: 20px;
-    height: 20px;
-    transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
-  .saved-series-toggle[aria-expanded="true"] .saved-series-toggle__chevron {
-    transform: rotate(90deg);
-  }
-
-  .saved-series-toggle__text {
+  .saved-phone__text {
     flex: 1;
     min-width: 0;
-  }
-
-  .saved-playlists-view .group-header > .flex {
-    width: 100%;
-    gap: 8px;
-  }
-
-  /* A closed series shows only its name and what it holds; its actions come with it when opened */
-  .saved-playlists-view .series-group:has(> .saved-series-batches[hidden]) .group-header > .flex {
-    display: none;
-  }
-
-  /* No main action on this list: the series' buttons are all quiet (orange is for Save elsewhere) */
-  .saved-playlists-view .group-header > .flex > .btn-primary {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: none;
-    color: var(--pl-text);
-  }
-
-  .saved-playlists-view .group-header > .flex > .btn {
-    min-height: 44px;
-    padding: 0 10px;
-    white-space: nowrap;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 12px;
-    transform: none;
-  }
-
-  .saved-playlists-view .group-header > .flex > .btn:first-child,
-  .saved-playlists-view .group-header > .flex > .btn:nth-child(2) {
-    flex: 1;
-    min-width: 0;
-    justify-content: center;
-  }
-
-  .saved-playlists-view .group-header > .flex > .btn:nth-child(3) {
-    flex: none;
-    min-width: 44px;
-    width: 44px;
-    padding: 0;
-    justify-content: center;
-  }
-
-  .saved-series-batches {
-    padding: 0 12px 4px;
-  }
-
-  .saved-series-batches[hidden] {
-    display: none;
-  }
-
-  .saved-playlists-view .series-failed {
-    padding: 0 12px;
-    flex-wrap: wrap;
-  }
-
-  /* A batch: the cascade of covers, the whole name in up to two lines... then its facts, then its
-     named actions in a row of their own */
-  .saved-playlists-view .batch-group-card {
-    margin-bottom: 12px;
-    border-radius: 12px;
-  }
-
-  .saved-playlists-view .batch-header {
-    padding: 12px;
-  }
-
-  .saved-playlists-view .batch-header > div {
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
+    gap: 2px;
   }
 
-  .saved-playlists-view .batch-header > div > :first-child {
-    gap: 12px;
-    min-width: 0;
-    align-items: flex-start;
+  .saved-phone-series__name,
+  .saved-phone-batch__name,
+  .saved-phone-playlist__name {
+    font-family: 'Syne', var(--pl-sans);
+    color: var(--pl-text);
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  .saved-playlists-view .batch-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .saved-playlists-view .batch-info h3 {
-    font-family: var(--pl-sans);
-    font-weight: 600;
-    letter-spacing: 0;
+  .saved-phone-series__name {
     font-size: 17px;
     line-height: 22px;
-    overflow-wrap: anywhere;
+    font-weight: 700;
   }
 
-  .saved-playlists-view .batch-info h3 + div {
-    flex-wrap: wrap;
-    gap: 2px 10px;
-    font-size: 14px;
-    line-height: 18px;
+  .saved-phone-batch__name {
+    font-size: 16px;
+    line-height: 21px;
+    font-weight: 600;
+  }
+
+  .saved-phone-playlist__name {
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 500;
+  }
+
+  /* A series with no covers yet: a quiet stand-in (orange is for the main action and «on») */
+  .saved-phone-series__main > .bg-gradient-to-br {
+    background: var(--pl-raised);
+    border-color: var(--pl-line);
+  }
+
+  .saved-phone-series__main > .bg-gradient-to-br svg {
     color: var(--pl-text-2);
   }
 
-  .saved-playlists-view .batch-card-buttons {
-    gap: 8px;
-  }
-
-  .saved-playlists-view .batch-card-buttons > .btn {
-    flex: 1;
-    min-height: 44px;
-    padding: 0 12px;
-    justify-content: center;
-    font-family: inherit;
+  .saved-phone__meta {
     font-size: 14px;
-    font-weight: 600;
-    border-radius: 12px;
-    transform: none;
+    line-height: 18px;
+    color: var(--pl-text-2);
+    font-variant-numeric: tabular-nums;
   }
 
-  /* The playlists of an open batch: a row of 56 px each; the eye opens the playlist's window */
-  .saved-playlists-view .playlist-row {
-    min-height: 56px;
-    padding: 6px 4px 6px 12px;
+  .saved-phone__chevron {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    color: var(--pl-text-2);
+    transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  [aria-expanded="true"] > .saved-phone__chevron {
+    transform: rotate(90deg);
+  }
+
+  .saved-series-batches[hidden],
+  .saved-phone-batch__playlists[hidden] {
+    display: none;
+  }
+
+  /* The batches of an open series: rows indented under the series name, a hairline between them */
+  .saved-playlists-view .saved-series-batches {
+    margin-left: 16px;
+    padding-bottom: 8px;
+  }
+
+  .saved-phone-batch + .saved-phone-batch {
+    border-top: 1px solid var(--pl-line);
+  }
+
+  .saved-phone-batch__main {
+    min-height: 60px;
+    padding: 8px 0;
+  }
+
+  /* The playlists of an open batch: plain rows of 52 px that open the playlist's tracks */
+  .saved-phone-batch__playlists {
+    margin-left: 12px;
+    padding: 0 0 8px 12px;
+    border-left: 2px solid var(--pl-line);
+  }
+
+  .saved-phone-playlist {
+    display: flex;
+    align-items: center;
     gap: 8px;
+    width: 100%;
+    min-height: 52px;
+    padding: 6px 12px 6px 0;
+    text-align: left;
+    touch-action: manipulation;
   }
 
-  .saved-playlists-view .playlist-row > :first-child {
-    gap: 10px;
-    min-width: 0;
+  .saved-phone__empty {
+    padding: 12px 0;
+    color: var(--pl-text-2);
   }
 
-  .saved-playlists-view .playlist-row > :first-child > :last-child {
-    min-width: 0;
-    overflow-wrap: anywhere;
+  .saved-playlists-view .series-failed {
+    padding: 0 0 12px;
+    flex-wrap: wrap;
   }
 
-  .saved-playlists-view .playlist-row-buttons .btn {
-    min-width: 44px;
+  .saved-playlists-view .series-failed .btn {
     min-height: 44px;
-    padding: 0;
-    justify-content: center;
-  }
-
-  .saved-playlists-view .playlist-tracks-list {
-    padding: 4px 12px 8px;
   }
 
   /* ── 9. Less motion ──────────────────────────────────────────────────────────────────────── */
@@ -854,7 +838,7 @@
     }
 
     .phone-pl-chip,
-    .saved-series-toggle__chevron {
+    .saved-phone__chevron {
       transition: none;
     }
   }
