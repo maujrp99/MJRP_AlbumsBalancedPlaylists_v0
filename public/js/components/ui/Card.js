@@ -13,6 +13,7 @@
 import { SafeDOM } from '../../utils/SafeDOM.js'
 import { safeUrl } from '../../utils/safeUrl.js'
 import { getIcon } from '../Icons.js'
+import { coverImage } from './coverImage.js'
 
 /**
  * @typedef {Object} CardProps
@@ -67,22 +68,13 @@ export class Card {
             { icon: 'Trash', label: 'Remove', action: 'remove-album', class: 'hover:text-red-400' }
         ]
 
-        // Image element or placeholder
-        let imageContent
-        if (image) {
-            imageContent = SafeDOM.img({
-                src: image,
-                alt: title || '',
-                className: 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-105',
-                loading: 'lazy'
-            })
-        } else {
-            const placeholder = SafeDOM.div({
-                className: 'flex items-center justify-center w-full h-full text-white/20'
-            })
-            placeholder.appendChild(SafeDOM.fromHTML(getIcon('Music', 'w-24 h-24')))
-            imageContent = placeholder
-        }
+        // The cover; with no address, or one that fails, the stand-in (coverImage.js, F70)
+        const imageContent = coverImage({
+            src: image,
+            alt: title || '',
+            className: 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-105',
+            loading: 'lazy'
+        })
 
         // Hover overlay
         const hoverOverlay = SafeDOM.div({
@@ -176,8 +168,8 @@ export class Card {
         const { entity, image, title, subtitle, content, actions = [] } = props
         const id = entity?.id || ''
 
-        // Cover image
-        const coverImg = SafeDOM.img({
+        // Cover image; with no address, or one that fails, the stand-in (coverImage.js, F70)
+        const coverImg = coverImage({
             src: image,
             alt: title || '',
             className: 'w-full h-full object-cover',

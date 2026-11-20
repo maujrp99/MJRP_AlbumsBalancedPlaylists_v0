@@ -9,6 +9,7 @@
 
 import { getIcon } from '../Icons.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
+import { coverImage } from '../ui/coverImage.js'
 
 export class AlbumCascade {
     /**
@@ -56,23 +57,13 @@ export class AlbumCascade {
             const left = i * xOffset
             const top = i * yOffset
 
-            if (url) {
-                container.appendChild(SafeDOM.img({
-                    src: url,
-                    alt: 'Album cover',
-                    className: 'w-10 h-10 rounded-md object-cover shadow-lg border border-white/20 absolute transition-transform hover:scale-105 hover:z-50',
-                    style: { left: `${left}px`, top: `${top}px`, zIndex: zIndex },
-                    onerror: "this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuNSkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiLz48L3N2Zz4n'"
-                }))
-            } else {
-                // Gradient placeholder
-                const placeholder = SafeDOM.div({
-                    className: 'w-10 h-10 rounded-md bg-gradient-to-br from-purple-500/40 to-orange-500/40 shadow-lg border border-white/20 absolute flex items-center justify-center',
-                    style: { left: `${left}px`, top: `${top}px`, zIndex: zIndex }
-                })
-                placeholder.appendChild(SafeDOM.fromHTML(getIcon('Disc', 'w-5 h-5 text-white/50')))
-                container.appendChild(placeholder)
-            }
+            // With no address, or one that fails to load, the stand-in (components/ui/coverImage.js)
+            container.appendChild(coverImage({
+                src: url,
+                alt: 'Album cover',
+                className: 'w-10 h-10 rounded-md object-cover shadow-lg border border-white/20 absolute transition-transform hover:scale-105 hover:z-50',
+                style: { left: `${left}px`, top: `${top}px`, zIndex: zIndex }
+            }))
         })
 
         return container

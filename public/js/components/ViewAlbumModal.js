@@ -9,6 +9,7 @@ import { getIcon } from './Icons.js'
 import { TracksRankingComparison } from './ranking/TracksRankingComparison.js'
 import { Album } from '../models/Album.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
+import { coverImage } from './ui/coverImage.js'
 
 export async function showViewAlbumModal(albumInput) {
   // Hydrate Album Model if needed
@@ -140,20 +141,15 @@ function createCoverElement(album) {
     className: 'w-24 h-24 md:w-32 md:h-32 bg-surface-dark rounded-xl shadow-lg flex items-center justify-center flex-shrink-0 overflow-hidden relative group'
   })
 
-  if (album.coverUrl) {
-    wrapper.appendChild(SafeDOM.img({
-      src: album.coverUrl,
-      alt: album.title,
-      className: 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
-    }))
-    wrapper.appendChild(SafeDOM.div({
-      className: 'absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors'
-    }))
-  } else {
-    const iconContainer = SafeDOM.div({ className: 'text-gray-600' })
-    iconContainer.appendChild(SafeDOM.fromHTML(getIcon('Disc', 'w-12 h-12')))
-    wrapper.appendChild(iconContainer)
-  }
+  // With no address, or one that fails to load, the stand-in (ui/coverImage.js, F70)
+  wrapper.appendChild(coverImage({
+    src: album.coverUrl,
+    alt: album.title,
+    className: 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
+  }))
+  wrapper.appendChild(SafeDOM.div({
+    className: 'absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors'
+  }))
   return wrapper
 }
 

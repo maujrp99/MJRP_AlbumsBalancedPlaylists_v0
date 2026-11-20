@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:10] session — F70: a capa que falta ou falha tem um substituto, por uma peça só (UAT-63)
+
+Confirmado no código: `components/ui/AlbumCardRenderer.js` `renderVisualHeader` punha o `src` vindo de `albumLoader.getArtworkUrl`, que pode ser nulo, sem substituto no erro; `views/renderers/DiscographyRenderer.js` apontava para `/assets/images/cover_placeholder.png`, arquivo que não existe; `Card.js` (inventário), `StagingAreaRenderer.js` e `ViewAlbumModal.js` tinham substituto só para o endereço ausente, nenhum para a falha; `AlbumCascade.js` tinha um `onerror` escrito no HTML.
+
+Feito: `public/js/components/ui/coverImage.js` desenha toda capa de álbum. Sem endereço, ou com endereço que falha, a imagem mostra o mesmo substituto (SVG embutido), uma vez por imagem. A falha é ouvida por um ouvinte só, no documento (fase de captura), porque a maioria dos cartões é escrita na página como texto e um ouvinte na própria imagem se perderia; nenhum `onerror` no HTML. Usam a peça: cartão do álbum, cartão da busca, lista de escolhidos, cartão do inventário, cascata (blend e playlists guardadas) e janela do álbum.
+
+Muda na tela, para o MJRP julgar: os quatro substitutos diferentes de antes (nota musical no inventário, «?» na lista de escolhidos, disco na janela do álbum, degradê com disco na cascata) viram um só. Fora da minha lista de arquivos, com edição mínima: `components/ui/Card.js` e `components/ViewAlbumModal.js`.
+
+Testes: `test/components/ui/coverImage.test.js` (jsdom: sem endereço, evento `error`, uma vez só, cartão escrito como texto, cada lugar, e dois testes de arquitetura). Sem navegador nesta sessão: não visto na tela.
+
 ## [2026-11-19 22:10] session — F70: o app lê o que o servidor diz das notas de um álbum achado pela IA (UAT-210)
 
 Confirmado no código. O enriquecedor de notas (`services/albums/adapters/enrichers.js`, `AcclaimEnricher`) confia no endereço da página que vem no álbum (`bestEverUrl`): com ele, responde «pronto» sem pedir; sem ele, pede `POST /api/enrich-album`. O servidor só manda esse endereço quando leu a página, então:

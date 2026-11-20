@@ -9,6 +9,7 @@ import { getIcon } from '../Icons.js';
 import { escapeHtml } from '../../utils/stringUtils.js';
 import { Card } from './Card.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
+import { coverImage } from './coverImage.js';
 import { TracksTable } from '../ranking/TracksTable.js';
 import { identityNotice } from '../../models/askedAlbum.js';
 
@@ -43,8 +44,8 @@ export class AlbumCardRenderer {
     static renderVisualHeader(album) {
         const coverUrl = albumLoader.getArtworkUrl(album, 300); // Consistent quality
 
-        // 1. Cover (Full Width / Aspect Square)
-        const coverImg = SafeDOM.img({
+        // 1. Cover (Full Width / Aspect Square); with no address, or one that fails, the stand-in
+        const coverImg = coverImage({
             src: coverUrl,
             alt: album.title,
             className: 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-105',
