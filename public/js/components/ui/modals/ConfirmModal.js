@@ -60,6 +60,7 @@ export class ConfirmModal {
             footer,
             size: 'sm',
             id: 'confirm-modal',
+            sheet: 'bottom', // a short choice: on the phone it comes from the bottom (F76)
             onClose: onCancel
         })
     }

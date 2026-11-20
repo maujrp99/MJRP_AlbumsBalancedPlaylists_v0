@@ -22,6 +22,9 @@ import { getIcon } from '../Icons.js'
  * @property {string} [id] - Modal ID for DOM lookup
  * @property {string} [closeAction='close-modal'] - Action string for close button
  * @property {Function} [onClose] - Close button handler
+ * @property {'full' | 'bottom'} [sheet='full'] - the form the window takes on the phone (F76): the
+ *   whole screen for something to read or edit, a sheet from the bottom for a short choice. The
+ *   `app-modal*` classes carry it; they have rules only inside the phone's media query (css/mobile.css)
  */
 
 export class BaseModal {
@@ -38,7 +41,8 @@ export class BaseModal {
             size = 'md',
             id = 'base-modal',
             closeAction = 'close-modal',
-            onClose
+            onClose,
+            sheet = 'full'
         } = props
 
         const widthClasses = {
@@ -52,7 +56,8 @@ export class BaseModal {
 
         // Close button
         const closeBtn = SafeDOM.button({
-            className: 'text-gray-400 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-lg',
+            className: 'app-modal__close text-gray-400 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-lg',
+            'aria-label': 'Close',
             dataset: { action: closeAction },
             onClick: onClose
         })
@@ -62,27 +67,29 @@ export class BaseModal {
 
         // Header
         const header = SafeDOM.div({
-            className: 'px-6 py-4 border-b border-white/5 flex items-center justify-between shrink-0 bg-white/5'
+            className: 'app-modal__header px-6 py-4 border-b border-white/5 flex items-center justify-between shrink-0 bg-white/5'
         }, [
             SafeDOM.h3({
-                className: 'text-xl font-bold flex items-center gap-2 text-white'
+                className: 'app-modal__title text-xl font-bold flex items-center gap-2 text-white'
             }, title),
             closeBtn
         ])
 
         // Body
         const body = SafeDOM.div({
-            className: 'px-6 py-4 overflow-y-auto flex-1 custom-scrollbar'
+            className: 'app-modal__body px-6 py-4 overflow-y-auto flex-1 custom-scrollbar'
         }, content)
 
         // Footer (optional)
         const footerEl = footer ? SafeDOM.div({
-            className: 'px-6 py-4 border-t border-white/5 bg-white/5 flex justify-end gap-3 shrink-0'
+            className: 'app-modal__footer px-6 py-4 border-t border-white/5 bg-white/5 flex justify-end gap-3 shrink-0'
         }, footer) : null
 
         // Panel
         const panel = SafeDOM.div({
-            className: `glass-panel w-full ${widthClass} rounded-2xl shadow-2xl scale-100 animate-in zoom-in-95 duration-200 border border-white/10 dark-glow relative overflow-hidden flex flex-col max-h-[90vh]`
+            role: 'dialog',
+            'aria-modal': 'true',
+            className: `app-modal__panel glass-panel w-full ${widthClass} rounded-2xl shadow-2xl scale-100 animate-in zoom-in-95 duration-200 border border-white/10 dark-glow relative overflow-hidden flex flex-col max-h-[90vh]`
         }, [
             header,
             body,
@@ -92,7 +99,7 @@ export class BaseModal {
         // Backdrop container
         const modal = SafeDOM.div({
             id,
-            className: 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200'
+            className: `app-modal app-modal--${sheet === 'bottom' ? 'bottom' : 'full'} fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200`
         }, panel)
 
         return modal

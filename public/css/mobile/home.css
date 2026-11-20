@@ -1,0 +1,10 @@
+/*
+ * The phone · Home: create and edit a series (TASK-05, REQ-09): the series form, the discography grid and the chosen albums.
+ *
+ * Every rule goes INSIDE the media query below and nowhere else (REQ-12;
+ * test/architecture/phoneStylesStayOnThePhone.test.js). The base all screens share is
+ * ../mobile.css; the guide is docs/specs/features/F76-mobile-redesign/mobile-kit.md.
+ */
+
+@media (max-width: 767px) {
+}

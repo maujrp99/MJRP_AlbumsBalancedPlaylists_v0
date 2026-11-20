@@ -8,7 +8,7 @@ import { getIcon } from './Icons.js'
 
 export function showLoginModal() {
     const modal = document.createElement('div')
-    modal.className = 'modal-overlay'
+    modal.className = 'modal-overlay login-window' // login-window: a sheet from the bottom on the phone (F76, css/mobile.css)
     modal.innerHTML = `
     <div class="modal-container glass-panel max-w-md w-full">
       <div class="modal-header p-6 border-b border-surface-light text-center">

@@ -121,7 +121,7 @@ export async function showViewAlbumModal(albumInput, { loadAlbum = null } = {}) 
 
 
   const modalOverlay = SafeDOM.div({
-    className: 'modal-overlay',
+    className: 'modal-overlay album-window', // album-window: the whole screen on the phone (F76, css/mobile.css)
     onClick: (e) => {
       if (e.target === modalOverlay) handleClose()
     }

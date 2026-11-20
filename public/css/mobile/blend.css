@@ -1,0 +1,10 @@
+/*
+ * The phone · Blend (TASK-06, REQ-10): the four steps of the blending menu.
+ *
+ * Every rule goes INSIDE the media query below and nowhere else (REQ-12;
+ * test/architecture/phoneStylesStayOnThePhone.test.js). The base all screens share is
+ * ../mobile.css; the guide is docs/specs/features/F76-mobile-redesign/mobile-kit.md.
+ */
+
+@media (max-width: 767px) {
+}

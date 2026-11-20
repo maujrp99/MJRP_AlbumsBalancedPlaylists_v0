@@ -150,7 +150,8 @@ export class UserRankModal {
      */
     _render() {
         const overlay = SafeDOM.div({
-            className: 'fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm',
+            // rank-window: the name the phone's stylesheet and scroll hold know this window by (F76)
+            className: 'rank-window fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm',
             onClick: (e) => {
                 if (e.target === overlay) this.close()
             }

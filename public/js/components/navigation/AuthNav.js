@@ -13,6 +13,26 @@ import { SpotifyAuthService } from '../../services/SpotifyAuthService.js';
 import { reloadApp } from '../../utils/reloadApp.js';
 import { NAME_IN_THE_BAR } from './barName.js'
 
+/** Somebody signed in with an account of their own: a guest session is not one. */
+export const isSignedIn = (user) => Boolean(user && !user.isAnonymous)
+
+/**
+ * Signs the person out of the app and of Spotify, says so, and loads a fresh page. One place for
+ * every control that signs out: the account menu, the drawer, and the menu sheet of the phone (F76).
+ */
+export async function signOut() {
+    try {
+        await authService.logout();
+        // The Spotify session belongs to the person who is leaving: it goes with them (F59, UAT-28)
+        SpotifyAuthService.logout();
+        toast.success('Signed out successfully');
+        // A fresh page: nothing of the person who left stays in memory or on screen
+        reloadApp();
+    } catch {
+        toast.error('Sign out failed');
+    }
+}
+
 export class AuthNav {
     constructor(userState) {
         this.userState = userState;
@@ -88,18 +108,7 @@ export class AuthNav {
         const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
 
         const openLogin = () => showLoginModal();
-        const doLogout = async () => {
-            try {
-                await authService.logout();
-                // The Spotify session belongs to the person who is leaving: it goes with them (F59, UAT-28)
-                SpotifyAuthService.logout();
-                toast.success('Signed out successfully');
-                // A fresh page: nothing of the person who left stays in memory or on screen
-                reloadApp();
-            } catch {
-                toast.error('Sign out failed');
-            }
-        };
+        const doLogout = signOut;
 
         this.attachMenuListeners();
 
