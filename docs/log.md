@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 14:04] decision — TypeScript passa a ser permitido, e o MJRP acha que deve ser usado
+**Branch:** main
+Palavras dele, sobre a proposta que dizia «sem TypeScript»: «Ignora o sem typescript, podemos ter typescript, creio que devemos inclusive». A proposta da constituição v2 e o ADR-0022 (os dois ainda propostas) passam a dizer: o app em `app/` é escrito em TypeScript. Recomendação do agente para o resto, a decidir por ele: o núcleo `shared/` e o site continuam em JavaScript com JSDoc por ora, e migram por ADR quando o caminho do servidor estiver medido (o servidor é CommonJS e hoje recebe o `shared/` copiado, sem passo de compilação).
+
 ## [2026-11-20 14:03] decision — o MJRP prefere substituir a constituição de 2025 a emendá-la
 **Branch:** main
 Palavras dele, ao receber a proposta de emenda: «Sobre a constitution pode ser superseded já envelheceu». Um agente escreve a nova como proposta (`design/proposals/f78-app-architecture/constitution-v2.md`), a partir do que o código e os registros de decisão são hoje, mais o app. Nada entra em vigor ainda: a constituição v1.0.0 continua no lugar e o ADR-0022 continua «Proposed» até ele ler e aceitar os dois textos. O agente integrador chegou a instruir o contrário (marcar o aceite pelas palavras acima) e corrigiu antes de qualquer arquivo mudar: aceite não se infere.
