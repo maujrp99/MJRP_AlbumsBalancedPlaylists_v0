@@ -28,7 +28,7 @@
 ## Verification
 - [x] TASK-05 suíte inteira (`npx vitest run`) verde e `npx vite build` compilando no ramo, com os testes de arquitetura (complexidade até 10, nenhum módulo morto, camadas) · implements:: REQ-01, REQ-02, REQ-03, REQ-04 · model:: sonnet · rounds:: 1
 - [x] TASK-06 prova no navegador, do integrador: como visitante numa segunda origem (nenhum pedido a `/api/ai/*` nem a `/api/generate`; status «→ artista») e com a conta do dono (os pedidos saem; uma capa com endereço quebrado mostra o substituto) — prova: `reports/evidence/F70/2026-11-19-small-defects-proof.md` · implements:: REQ-01, REQ-04 · model:: opus · rounds:: 1
-- [ ] TASK-07 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
+- [ ] TASK-07 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e a reconferência visual independente (relatório `visual-parity-recheck`) · implements:: REQ-01 · model:: opus · waiting:: human — a frase sobre o protótipo é do MJRP; a reconferência é de um agente que não implementou · action:: o MJRP diz «Prototype: none»; o integrador manda fazer a reconferência
 
 ## Documentation
 - [x] `docs/specs/behavior.md`: `^home-scan-classifying` e `^library-album-failed` (visitante), `^inventory-price-keeps-currency`, `^library-ai-album-ratings`, `^album-cover-stand-in`

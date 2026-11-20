@@ -24,7 +24,7 @@
 ## Verification
 - [x] TASK-10 suíte (`npx vitest run`: 530 passando, 462 antes) e `npx vite build` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08 · model:: sonnet · rounds:: 1
 - [x] TASK-11 prova no navegador, com o login do MJRP, pelo roteiro do relatório de entrega (falha de gravação provocada, dois cliques, série ativa diferente, apagar série com playlists, sair com alteração, sair da conta, recarregar com playlists geradas) — prova: `reports/evidence/F60-no-saved-work-lost/F60-browser-2026-11-19.json` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08 · model:: opus · rounds:: 1
-- [ ] TASK-12 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
+- [ ] TASK-12 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e a reconferência visual independente (relatório `visual-parity-recheck`) · implements:: REQ-01 · model:: opus · waiting:: human — a frase sobre o protótipo é do MJRP; a reconferência é de um agente que não implementou · action:: o MJRP diz «Prototype: none»; o integrador manda fazer a reconferência
 
 ## Documentation
 - [x] `docs/specs/behavior.md` (estados do salvar, do apagar série, do sair com alteração, do rascunho e do inventário na troca de pessoa), `docs/specs/data-model.md`, `docs/specs/arch.md` e `docs/manual/` (01, 06, 07, 17, 19, 20, 21, 24, 99) dizem o que o código faz agora

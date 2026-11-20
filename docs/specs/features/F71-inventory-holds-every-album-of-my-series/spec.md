@@ -2,7 +2,7 @@
 status: Draft
 lane: fast
 solution_type: feature
-imports: ["[[S-54-have-every-album-of-my-series-in-my-inventory]]"]
+imports: ["[[S-54-have-every-album-of-my-series-in-my-inventory]]", "[[S-56-rank-my-inventory-by-acclaim-and-popularity]]"]
 planned_for: "[[ROADMAP#^REL-40]]"
 ---
 <!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
@@ -24,6 +24,8 @@ planned_for: "[[ROADMAP#^REL-40]]"
 **Como saber que funcionou:** Depois da ação, todo álbum das séries aparece no inventário uma vez só; os que já estavam lá mantêm a situação, o preço e o formato; o filtro mostra cada um dos três grupos pelo nome.
 
 ## Problem Statement
+Segunda fatia (2026-11-20), o MJRP com a captura das duas médias do cartão: «no inventory, na 71, pode usar as metricas do print e ter um filtro/ranking por BEA Avg rank e Spotify Avg Pop.?» — o inventário mostra «Avg Rank» e «Avg Pop» de cada álbum e ordena por elas.
+
 O MJRP, em 2026-11-20: «registre uma melhoria, coloque todos os os albums que tenho na minha albums list como parte do meu inventory. tudo marcado como not owned, e melhore o filtro de status para Owned, Not Owned, Wishlist».
 
 ## Requirements
