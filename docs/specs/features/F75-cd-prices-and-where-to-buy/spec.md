@@ -35,8 +35,24 @@ O que isso decide no desenho (decidido pelo agente — revisável):
 Conferido em 2026-11-20: uma fonte pública de câmbio (`api.frankfurter.app`, taxas de referência do dia, sem chave) respondeu com USD para BRL, EUR e GBP.
 Termos de uso da API do Discogs lidos em 2026-11-20 01:24 (relatório de viabilidade, última seção): o preço é dado restrito, de uso pessoal e não comercial; não pode servir para levar tráfego a outras lojas; não pode ser mostrado com mais de seis horas de atraso nem guardado além do necessário; exige o aviso «Data provided by Discogs.» com link. A proposta precisa mudar: o valor do Discogs é relido, não guardado por semanas; e juntá-lo com links de afiliado de outras lojas depende de autorização escrita do Discogs.
 
+**Decisões do MJRP em 2026-11-20 01:32:** opção B («pra fazer um full teste, depois eu abro outra feature pra desligar o discogs, poderiamos usar feature toggle aqui»): o valor do Discogs entra já, em uso pessoal, atrás de um interruptor. O cartão é o da v5.1 (`design/inception/inventory-value-v5.1.html`). O token novo do Discogs está no Secret Manager (`discogs-token`).
+
+**Decidido pelo agente — revisável:** os três estados são «Mint», «Near Mint» e «Very Good Plus»; o valor do Discogs não é gravado no Firestore (os termos pedem que não seja guardado além do necessário nem mostrado com mais de seis horas): fica só no navegador, por até seis horas; o que se grava no item é o valor que a pessoa escreve e qual edição do Discogs foi usada; as perguntas ao virar «Owned» (quanto pagou, estado do disco) ficam fora desta feature.
+
 ## Requirements
-- [REQ-01] «a escrever depois das respostas do MJRP às perguntas da viabilidade e do protótipo» · fixes S-57
+- [REQ-01] O cartão do inventário segue o padrão da v5.1: uma superfície com a capa até as bordas e cinco linhas iguais em todo cartão: o rótulo do valor conforme o status («In my collection · worth» ou «Not mine yet · costs»), a origem e o valor, as duas médias, o rótulo das ações, as ações. · fixes S-57
+- [REQ-02] As contagens por status do cabeçalho são botões que filtram o inventário por aquele status; o seletor de status sai da barra. · fixes S-57
+- [REQ-03] A pessoa escreve o valor de um álbum na janela dele; esse valor aparece com a origem «written by you», é gravado no item e nunca é trocado por uma leitura. Ela pode voltar ao valor do Discogs. · fixes S-57
+- [REQ-04] O app lê do Discogs, pelo servidor, a sugestão de preço da edição em CD mais comum do álbum, nos estados «Mint», «Near Mint» e «Very Good Plus»; o valor do álbum é a média dos três; a janela mostra os três, a média, a edição usada e quando foi lido. · fixes S-57
+- [REQ-05] Um valor do Discogs só é mostrado se foi lido há menos de seis horas, e não é guardado além disso; passado esse tempo ele é lido de novo ou deixa de aparecer. · fixes S-57
+- [REQ-06] Ao lado de todo valor vindo do Discogs aparece «Data provided by Discogs.», com link para a página do Discogs daquela edição; o app diz, à vista, que usa a API do Discogs e não é afiliado a ele. · fixes S-57
+- [REQ-07] O cabeçalho mostra «Estimated value of what I own» e «To buy the rest», cada um com quantos álbuns entraram na soma («N of M»). · fixes S-57
+- [REQ-08] A pessoa escolhe a moeda (USD, EUR, GBP, BRL); os valores são convertidos pelo câmbio do dia, e fora do dólar a tela diz a taxa usada. Sem a taxa, a tela mostra em dólar e diz por quê. · fixes S-57
+- [REQ-09] «Update values» lê os valores de todo o inventário respeitando o limite de pedidos do Discogs, mostra o progresso, pode ser parado e não trava a tela; um álbum que entra no inventário sem valor é lido na vez seguinte, e a tela diz quantos esperam. · fixes S-57
+- [REQ-10] O valor do Discogs tem um interruptor no servidor: desligado, sem publicar código de novo, o app não mostra valor, botão nem aviso do Discogs, e o valor escrito à mão, o total e os links de compra seguem funcionando. · fixes S-57
+- [REQ-11] «Where to buy»: no cartão do álbum que a pessoa não tem, três links (Discogs, Amazon, iMusic) numa busca pronta por artista, título e CD; no cartão do que ela tem, um link que abre a janela do álbum; na janela, os três links. · fixes S-57
+- [REQ-12] O inventário ordena pelo valor, nas duas direções; o álbum sem valor fica no fim. · fixes S-57
+- [REQ-13] Cada falha diz o que houve e nada é inventado: o Discogs não tem edição em CD, o Discogs não respondeu, o limite de pedidos foi atingido, o token foi recusado, o câmbio não chegou. · fixes S-57
 
 ## Observable States
 A escrever com o protótipo.

@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:32] decision — F75 priorizada: opção B, com interruptor; UAT-17 resolvida
+
+- Dito pelo MJRP: «sim, gerei o novo antes de copiar. opção B (pra fazer um full teste, depois eu abro outra feature pra desligar o discogs, poderiamos usar feature toggle aqui, o que acha?), priorizando a F75».
+- UAT-17 em `fixed`: o token antigo do Discogs parou de funcionar; o novo está só no Secret Manager.
+- F75: os treze requisitos estão no `spec.md`. Decidido pelo agente — revisável: o interruptor é do servidor (a fonte de valor responde «não configurada» e o app esconde o que é do Discogs), para ligar e desligar sem publicar código; o valor do Discogs não vai para o Firestore, fica no navegador por até seis horas, por causa dos termos de uso; os três estados são Mint, Near Mint e Very Good Plus.
+
 ## [2026-11-20 01:26] session — o MJRP criou o secret `discogs-token` no Secret Manager
 
 - Ele rodou o comando que lê o token da área de transferência; o secret `discogs-token` existe no projeto `mjrp-playlist-generator`, versão 1. O agente não leu o valor. O secret ainda não está ligado ao serviço `mjrp-proxy`: isso se faz quando o código que o usa existir.
