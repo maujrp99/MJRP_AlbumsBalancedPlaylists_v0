@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:45] session — F71 fatia 2 e a barra do topo em produção; `## Now` em dia
+
+- Juntadas na `main` e publicadas: a barra do topo (`cbd96fa`, UAT-218) e a segunda fatia da F71 (`61d4061`). Pacote no ar: `main-J7MPEtWh.js`.
+- Abertas: UAT-216 e UAT-217. A F72 segue pronta e à espera de prioridade.
+
 ## [2026-11-19 23:44] session — F71, segunda fatia (S-56): notas no inventário provadas e executadas na conta do MJRP
 
 **Branch:** feat/f71-inventory-averages-2
