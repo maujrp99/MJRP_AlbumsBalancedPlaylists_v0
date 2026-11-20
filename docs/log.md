@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 10:05] decision — candidato no PRD: Album Blender como produto público (iPhone e Android); estudo escrito
+**Branch:** main
+O MJRP quer considerar um app público nas duas lojas, «uma evolução do produto», e pediu material para decidir, não construção. Registrado como candidato no Intake do PRD; estudo em `reports/audits/2026-11-20-mjrpalbumblender-v0-public-product-study.md` (travas de dados, pilha com Android, monetização, agregador de preços, o lado legal, agregador de rankings). Recomendações do agente, revisáveis: React Native com Expo e núcleo de regras compartilhado; afiliação e plano do colecionador; catálogo por fontes abertas e preço por afiliados e usuários; a nota da comunidade como fonte de faixa.
+
 ## [2026-11-20 09:40] session — UAT-229 em produção
 **Branch:** main
 Site publicado da `main`. Provado no app local com as séries reais da conta do MJRP, sem gerar playlists (o rascunho não salvo dele ficou intacto): uma playlist «Trip Hop Vol.1 · Spotify Top 3 balanced»; várias «Trip Hop Vol.1 · Zé's Balanced Playlists»; «New Order & Depeche Mode & Joy Division · BestEverAlbums Top 5»; sem série, «TheAlbumBlender Playlist 2026-11-20 09:39».
