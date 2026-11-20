@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:26] session — F75: proposta e protótipo da rodada 1 (valor estimado do inventário e onde comprar)
+
+- A pedido do MJRP: `design/proposals/f75-inventory-value/proposal.md` e `design/inception/inventory-value-v1.html` (modo explorar, valores ilustrativos, sete cenários). A proposta cobre como um álbum entra no inventário e ganha valor, e o que acontece quando o status muda para «Owned».
+- Notas da rodada em `docs/specs/inception-notes.md`. Sem ramo: a F75 espera a reação dele, as respostas e a prioridade.
+
 ## [2026-11-20 00:22] session — F75: respostas do MJRP (conta do Discogs, três estados e a média, a edição mais comum, quatro moedas)
 
 - O MJRP aceita ligar um token da conta dele do Discogs; quer o valor de três estados e a média; começa pela edição mais comum; moedas USD, EUR, GBP e BRL, com o câmbio do dia.
