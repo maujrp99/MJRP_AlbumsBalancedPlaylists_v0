@@ -21,7 +21,11 @@ import {
     WAITS_PER_ALBUM, askOfItem, countAfter, editionOf, editionToKeep, emptyCount, readOutcomeOf
 } from '../../models/inventoryValueRun.js'
 
-export const READING_PREFIX = 'inventoryvalue:v1:'
+/**
+ * v2 (2026-11-20): the readings of the first run in production were wrong («No CD edition found»
+ * for editions whose price page Discogs refused); under a new key they are never read back.
+ */
+export const READING_PREFIX = 'inventoryvalue:v2:'
 export const READING_TTL_MS = SIX_HOURS_MS
 export const RATES_KEY = 'exchangerates:v1'
 const DAY_MS = 24 * 60 * 60 * 1000
@@ -68,6 +72,14 @@ export class InventoryValueService {
         this.mayAsk = mayAsk
         this.now = now
         this.sleep = sleep
+        // Until when the suggestions are known to be refused for the seller settings (ms). In the
+        // memory of this page only: a reload, a new run or six hours make them be tried again.
+        this._lowestOnlyUntil = 0
+    }
+
+    /** Discogs refused the price suggestions to the account (no seller settings), as far as this page knows. */
+    sellerSettingsMissing() {
+        return this.now() < this._lowestOnlyUntil
     }
 
     /**
@@ -123,9 +135,10 @@ export class InventoryValueService {
      * @returns {Promise<Object>} { reading } | { off: true } | { dropped: true } | { failure, waitMs, stops }
      */
     async readItem(item, { signal = null } = {}) {
-        const result = await this.api.albumValue(askOfItem(item), { signal })
+        const result = await this.api.albumValue(askOfItem(item, { lowestOnly: this.sellerSettingsMissing() }), { signal })
         if (result.code === DROPPED) return { dropped: true }
         const outcome = readOutcomeOf(result, new Date(this.now()).toISOString())
+        if (outcome.sellerSettingsMissing) this._lowestOnlyUntil = this.now() + READING_TTL_MS
         if (!outcome.reading) return outcome
         const reading = { ...outcome.reading, release: editionOf(item, outcome.reading.release) }
         await this.cache.set(this._key(item), reading, READING_TTL_MS)
@@ -171,6 +184,10 @@ export class InventoryValueService {
     async readMany(items, options = {}) {
         const told = { signal: null, onProgress: nothing, onItem: nothing, ...options }
         const run = { count: emptyCount(items.length), read: [], halted: false }
+        // each run tries the suggestion once, on its first album: when the seller settings get
+        // filled in, the three conditions come back; when they are still refused, the rest of the
+        // run asks for the lowest price only
+        this._lowestOnlyUntil = 0
         told.onProgress(run.count)
 
         for (const item of items) {

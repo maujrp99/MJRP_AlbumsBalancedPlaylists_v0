@@ -83,6 +83,24 @@ Decidido pelo agente — revisável: o pedido falava em `source_busy` e `upstrea
 11. **O texto das contagens** («N of M albums have a value») é o do protótipo, sem variar no singular.
 12. **Um commit só para modelo, serviço e tela.** Separados, o modelo e o serviço seriam módulos que nada carrega, e o teste de módulos mortos recusa.
 
+### Depois da primeira rodada em produção (2026-11-20): a sugestão recusada e o menor preço à venda
+
+**O que a produção mostrou.** Com o token do MJRP, a busca e as versões funcionam; toda `GET /marketplace/price_suggestions/{id}` responde HTTP 404 com «You must fill out your seller settings first.». O Discogs só dá a sugestão por estado a conta com as configurações de vendedor preenchidas. O código lia esse 404 como «sem edição em CD», o que era falso.
+
+**O desenho (decidido pelo agente — revisável).**
+- **A recusa tem nome e vai do lado do sucesso.** A fonte reconhece a recusa (404, 401 ou 403 com a frase das «seller settings») e a diz dentro da resposta: `suggestions: 'seller_settings_missing'`. Não é um código de falha porque o álbum foi respondido, com um valor mais fraco; uma falha faria o app contar 211 falhas e não mostrar nada. Um 401 ou 403 com outra frase continua sendo `upstream_unauthorized`.
+- **O valor de reserva é o menor preço à venda.** `GET /marketplace/stats/{id}` responde sem as configurações de vendedor. A resposta é `found` com uma leitura de outro TIPO: `{ release, kind: 'lowest_for_sale', lowest: { value, currency }, forSale, suggestions, readAt }`. Sem nada à venda: `no_value` com `reason: 'none_for_sale'`. O app nunca o chama de sugestão nem de média.
+- **A página de preço não é pedida 211 vezes.** O servidor não guarda estado. O app, ao saber da recusa, lembra por seis horas na memória da página e manda `prices: 'lowest'`: um pedido por álbum, no lugar do de preço.
+- **Como os três estados voltam.** Cada rodada nova de «Update values» tenta a sugestão uma vez, no primeiro álbum; se vier, a rodada inteira lê sugestões; se for recusada, o resto lê o menor preço. Uma página recarregada também tenta de novo. Nenhuma mudança de código quando o MJRP preencher as configurações. Limite: um menor preço lido há menos de seis horas não é relido por «Update values»; «Read again», na janela, relê um álbum.
+- **A moeda.** A documentação, como o agente a lembra (não foi relida agora), lista `curr_abbr` em `/marketplace/stats`; o pedido sem token aceitou o parâmetro sem erro. O app não o manda: a moeda vem como o Discogs der e é convertida por USD.
+- **As leituras erradas da primeira rodada** não sobrevivem: a chave da leitura no navegador passou a `inventoryvalue:v2:`.
+
+**Termos de uso, para as estatísticas do marketplace (leitura do agente).** É conteúdo do Discogs como o resto: valem a atribuição («Data provided by Discogs.», com link para a página da edição) e as seis horas, e nada vai ao Firestore. O menor preço e a quantidade à venda são dados do marketplace, a mesma categoria das sugestões: pela leitura já feita, **«Restricted Data»**, de uso pessoal. A recomendação de `DISCOGS_VALUES_FOR` e a questão de levar tráfego a outras lojas ficam como estavam.
+
+**O formato real de `/marketplace/stats/{id}`** (6 pedidos sem token, 2026-11-20): `{"num_for_sale":124,"lowest_price":{"value":0.53,"currency":"USD"},"blocked_from_sale":false}`; sem nada à venda, `{"num_for_sale":0,"lowest_price":null,"blocked_from_sale":false}`; edição inexistente, 404 `{"message":"Release not found."}`.
+
+**O que não foi verificado.** A resposta de `/marketplace/stats` COM o token (a moeda pode ser a da conta). Quantas das 211 edições escolhidas têm algo à venda: a edição escolhida é a mais colecionada, não a mais vendida, e a de «The Dark Side of the Moon» (5012948) tinha zero à venda. Se forem muitas, o passo seguinte é procurar o menor preço entre as edições em CD do master, e não só na mais comum. O caminho dos três estados continua sem prova: nenhuma sugestão foi lida de verdade.
+
 ## Dependencies
 - O segredo `discogs-token` mapeado para `DISCOGS_TOKEN` no serviço `mjrp-proxy` (do integrador).
 - `api.frankfurter.app` (câmbio de referência, sem chave).

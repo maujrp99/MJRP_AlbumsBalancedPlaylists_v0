@@ -17,7 +17,7 @@ import { SafeDOM } from '../utils/SafeDOM.js'
 import { escapeHtml } from '../utils/stringUtils.js'
 import { safeUrl } from '../utils/safeUrl.js'
 import {
-    DISCOGS_CREDIT, NoValue, SourceState, ValueOrigin, dayText, failureText, formatMoney, meanOfConditions, momentText, moneyOf
+    DISCOGS_CREDIT, NoValue, SourceState, ValueBasis, ValueOrigin, dayText, failureText, formatMoney, meanOfConditions, momentText, moneyOf
 } from '../models/inventoryValue.js'
 import { BUY_LINKS_NOTE, buyLinksOf } from '../models/buyLinks.js'
 
@@ -89,6 +89,30 @@ function fromDiscogs({ value, money, ...shown }) {
       ${field('Write your own value', money)}`
 }
 
+/** The weaker Discogs value: the lowest price the edition is for sale at. Never called a suggestion or a mean. */
+function lowestForSale({ value, money, ...shown }) {
+    const converted = value.currency === money.currency ? '' : `, converted from ${escapeHtml(value.currency)} at today's rate`
+    const count = Number.isInteger(value.forSale) && value.forSale > 0 ? `<span class="text-xs text-gray-400">(${value.forSale} for sale)</span>` : ''
+    return `${lead('The lowest price this CD is for sale at on Discogs now. It is an asking price, not what the disc usually sells for.')}
+      <div class="flex flex-wrap items-center gap-2" data-role="lowest"><span class="text-sm text-gray-400">Lowest price for sale on Discogs:</span> <span class="text-2xl font-bold text-white" data-role="amount">${moneyOf(value, money)}</span> ${count}</div>
+      <p class="${SMALL}">${editionLine(value.release)}<br>
+        Read on ${momentText(value.readAt)}${converted}. ${readButton('Read again', shown)}</p>
+      ${credit(value.release)}
+      <p class="text-xs text-gray-400 mt-1">${SUGGESTION_NEEDS_SETTINGS}</p>
+      ${field('Write your own value', money)}`
+}
+
+const SUGGESTION_NEEDS_SETTINGS = 'Discogs gives a suggestion by the condition of the disc (Mint, Near Mint, Very Good Plus) only to accounts with seller settings filled in.'
+
+function noneForSale({ value, money, ...shown }) {
+    return `${lead('Nobody sells this CD edition on Discogs now, so there is no price to read.')}
+      <p class="text-sm text-white">None for sale on Discogs now</p>
+      <p class="text-xs text-gray-400 mt-1">${editionLine(value.release)}</p>
+      ${credit(value.release)}
+      ${field('Write the value yourself', money)}
+      ${lookedFor(value, shown)}`
+}
+
 const lookedFor = (value, shown) => `<p class="${SMALL}">Looked for on ${momentText(value.readAt)}. ${readButton('Look again', shown)}</p>`
 
 function noEdition({ value, money, ...shown }) {
@@ -136,6 +160,8 @@ const BODIES = Object.freeze({
     [ValueOrigin.DISCOGS]: fromDiscogs,
     [NoValue.NO_CD_EDITION]: noEdition,
     [NoValue.NO_SUGGESTION]: noSuggestion,
+    [NoValue.NONE_FOR_SALE]: noneForSale,
+    [ValueBasis.LOWEST_FOR_SALE]: lowestForSale,
     [NoValue.WAITING]: notReadYet,
     [NoValue.READING]: reading,
     [NoValue.FAILED]: failed,
@@ -145,7 +171,7 @@ const BODIES = Object.freeze({
 
 /** The HTML of the «Estimated value» section for what the screen knows now. */
 export function valueSectionHtml(shown) {
-    const body = BODIES[shown.value.origin || shown.value.reason] || nothingWritten
+    const body = BODIES[shown.value.basis || shown.value.origin || shown.value.reason] || nothingWritten
     return `${heading('Estimated value')}${body(shown)}`
 }
 
