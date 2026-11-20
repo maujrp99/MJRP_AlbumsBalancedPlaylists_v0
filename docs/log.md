@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:05] session — F78 convivência: `firestore.rules` recusa a atualização que rebaixe `_schemaVersion` (não publicado)
+**Branch:** feat/f78-ref-a-repositories-in-the-core
+Nos quatro caminhos que os repositórios gravam (curator: séries e playlists; inventory; albumRankings; spotify_enrichment), `update` passa a pedir `keepsSchemaVersion()` (a versão gravada ≥ a guardada; ausente conta 0); ler, criar e apagar ficam como estavam; os caminhos legados (`users/{uid}/series/…`, `/albums`), onde há documentos antigos com versão 2, não mudam. Nenhum escritor de hoje é recusado: todos gravam 1 ou não tocam no campo.
+Provado só pelo texto (`test/security/firestoreRules.test.js`, 9 casos): esta máquina não tem Java para o emulador. Publicar é do MJRP (`firebase deploy --only firestore:rules`); nada foi publicado.
+
 ## [2026-11-20 15:04] session — F78 convivência: `_schemaVersion` nunca desce no caminho de gravação, e `oldWriterKeepsNewFields` (REQ-10)
 **Branch:** feat/f78-ref-a-repositories-in-the-core
 `BaseRepository.save` (o único caminho que carimba a versão num documento que pode existir: playlists e o cache do Spotify) grava o maior entre a versão de quem escreve e a do documento como ele o leu (`shared/data/schemaVersion.js`); `update`, `updateMany`, `saveAlbumFacts` e o ranking não tocam nela. Visto falhar antes: o app «velho» renomeando uma playlist do «novo» baixava 2 para 1.
