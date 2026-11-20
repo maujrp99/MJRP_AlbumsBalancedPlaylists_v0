@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 14:28] session — F78: o deploy do servidor fixa no máximo 3 instâncias
+**Branch:** feat/f78-core-foundations
+`scripts/deploy-server.sh` passa `--max-instances "$MAX_INSTANCES"` (padrão 3, com o motivo ao lado) ao `gcloud run deploy` e o diz no passo e no ensaio. O limite por pessoa mora na memória de cada instância, então o pior caso é 60 chamadas pagas por hora vezes 3 = 180; o serviço tinha o padrão de 20 (lido com `gcloud run services describe`, só leitura), 1.200. Nenhuma publicação rodada: o número vale na próxima.
+`test/server/deployFixesMaxInstances.test.js` falha se o comando não fixar o número; o manual 00 diz o valor e como trocá-lo numa publicação.
+
 ## [2026-11-20 14:26] session — F78: o dinheiro do inventário é arredondado a centavos antes de virar texto
 **Branch:** feat/f78-core-foundations
 `models/inventoryValue.js` ganha `roundToCents`: metade para longe do zero, sobre o texto decimal mais curto do número (fixado pela linguagem, igual em todo motor), o mesmo que os navegadores já mostravam; `formatMoney` (e por ele `moneyOf` e o total do cabeçalho) e o «Paid:» do `ViewAlbumModal.js` arredondam antes do `toLocaleString`. O spike S1 mediu 1166.505 como .50 no Hermes e .51 no Node: os motores arredondam a metade de jeitos diferentes ao formatar.

@@ -25,6 +25,14 @@ set -euo pipefail
 
 SERVICE="${SERVICE:-mjrp-proxy}"
 REGION="${REGION:-southamerica-east1}"
+# The most instances Cloud Run may start (F78, REQ-18). The limit per person lives in the memory
+# of each instance (server/lib/rateLimit.js), so the real ceiling is that limit times the number
+# of instances: 60 paid AI calls per hour per person (PAID_CALLS_PER_HOUR) times 3 is 180 at
+# worst, where Cloud Run's default (20, read from the service on 2026-11-20) gave 1,200. One
+# instance carries today's load (one person, 80 requests at a time per instance); the other two
+# take a cold start or a burst of album loads. The count leaves the instance before the app is
+# public (architecture proposal of F78, sections 8 and 10).
+MAX_INSTANCES="${MAX_INSTANCES:-3}"
 PREVIOUS_REVISION=""
 SERVICE_URL=""
 SMOKE_PID=""
@@ -207,8 +215,8 @@ EOF
 }
 
 deploy_server() {
-  step "Deploying to Cloud Run ($SERVICE, $REGION, project $GCP_PROJECT)"
-  ( cd "$SRC_DIR" && gcloud run deploy "$SERVICE" --source server --region "$REGION" --project "$GCP_PROJECT" --allow-unauthenticated ) \
+  step "Deploying to Cloud Run ($SERVICE, $REGION, project $GCP_PROJECT, max instances $MAX_INSTANCES)"
+  ( cd "$SRC_DIR" && gcloud run deploy "$SERVICE" --source server --region "$REGION" --project "$GCP_PROJECT" --allow-unauthenticated --max-instances "$MAX_INSTANCES" ) \
     || { print_rollback; die "gcloud run deploy failed. When the new revision does not start, Cloud Run keeps the previous one serving; check with: gcloud run services describe $SERVICE --region $REGION --project $GCP_PROJECT"; }
 }
 
@@ -271,7 +279,7 @@ verify_context
 
 if [ "$DRY_RUN" -eq 1 ]; then
   step "Deploy skipped (dry run)"
-  info "would run, in the clean copy: gcloud run deploy $SERVICE --source server --region $REGION --project $GCP_PROJECT --allow-unauthenticated"
+  info "would run, in the clean copy: gcloud run deploy $SERVICE --source server --region $REGION --project $GCP_PROJECT --allow-unauthenticated --max-instances $MAX_INSTANCES (max instances $MAX_INSTANCES)"
   info "would then check that /api/musickit-status answers 200 and /api/debug/files answers 404 in production"
   print_rollback
   print_dry_run_end
