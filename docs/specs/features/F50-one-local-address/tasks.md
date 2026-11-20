@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] causa da UAT-182 lida no código antes de mexer: a conexão avisava por `spotify-auth-success`, o botão só escutava `spotify-auth-change`
 - [x] ramo criado: `fix/f50-one-local-address`, sobre a integração da F46 e da F48
-- [ ] conferência cruzada da spec e do plano: fica para o fecho, porque os dois foram escritos depois do código
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 - [x] TASK-01 `test/utils/localAddress.test.js` e `public/js/utils/localAddress.js`; chamada na entrada do `public/js/app.js` — os testes falhavam antes · implements:: REQ-01 · model:: opus · rounds:: 1
@@ -18,10 +18,14 @@
 
 ## Verification
 - [x] TASK-05 no navegador: `localhost:5010` cai em `127.0.0.1:5010`; o «x» abre o diálogo e desconecta; o MJRP conectou e desconectou («ok agora no 5010»); `reports/evidence/F50-one-local-address/F50-probe-2026-11-19.json` · implements:: REQ-01, REQ-03, REQ-04 · model:: opus · rounds:: 1
-- [ ] TASK-06 julgamento do MJRP (tarefa do humano); UAT-178, UAT-182 e UAT-183 seguem sem o aceite até lá · implements:: REQ-01, REQ-02, REQ-03, REQ-04 · model:: opus
+- [ ] TASK-06 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
 
 ## Documentation
 - [x] `docs/manual/00_Deployment_and_Setup.md`: o endereço local único, os cadastros e a variável do Spotify
 - [x] spec, plano e tarefas escritos do registro (passo retroativo, 2026-11-19)
-- [ ] levar o ramo à `main` (push e aceite são do MJRP)
-- [ ] fechar chamando a `mjrp-ensuring-sdd` antes do Done; só então `status: Done`
+- [x] levar o ramo à `main` — feito: ramo mergeado na `main` local (`40ca80d`)
+
+## For the owner at UAT
+- O MJRP confere e dá o OK na UAT-178, na UAT-182 e na UAT-183.
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.
+- Push da `main` ao remoto (e, com ele, a primeira rodada da automação do GitHub): é do MJRP.

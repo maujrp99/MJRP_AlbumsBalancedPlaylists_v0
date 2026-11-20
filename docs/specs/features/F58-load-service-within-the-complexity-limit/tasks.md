@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f58-load-service-within-the-limit`, a partir da `main` em `50e7b2e`
 - [x] medição feita antes de mexer (136 funções acima de 10; 2 na carga) e as quatro issues conferidas no código, com arquivo e linha, na seção «Diagnóstico» do plano; suíte da `main` verde antes de começar (1543 testes) e `vite build` compilando
-- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -39,14 +39,17 @@
 
 ## Verification
 - [x] TASK-13 suíte (`npx vitest run`: 1647 passando, 1543 antes) e `npx vite build` compilando; a medição de depois (133 funções acima de 10; 0 na carga) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06 · model:: sonnet · rounds:: 1
-- [ ] TASK-14 prova no navegador, pelo integrador (o implementador não tinha navegador): a tela de álbuns carrega as séries e as notas como antes; um blend de uma série gera playlists; como visitante, as notas respondem 401, aparece um aviso só («Your sign-in could not be confirmed...»), nenhuma nota fica como falha, e entrar na conta e reabrir a tela retoma; o inventário abre, muda um preço e remove um álbum; o menu e o login funcionam; `/save-all` abre · implements:: REQ-01, REQ-02, REQ-04, REQ-05, REQ-06 · model:: opus
+- [x] TASK-14 prova no navegador, pelo integrador (o implementador não tinha navegador): a tela de álbuns carrega as séries e as notas como antes; um blend de uma série gera playlists; como visitante, as notas respondem 401, aparece um aviso só («Your sign-in could not be confirmed...»), nenhuma nota fica como falha, e entrar na conta e reabrir a tela retoma; o inventário abre, muda um preço e remove um álbum; o menu e o login funcionam; `/save-all` abre — prova: `reports/evidence/F58/2026-11-19-load-service-within-the-limit-proof.md` · implements:: REQ-01, REQ-02, REQ-04, REQ-05, REQ-06 · model:: opus · rounds:: 1
 - [x] TASK-19 (segunda fatia) suíte (`npx vitest run`: 2104 passando, 2085 antes) e `npx vite build` compilando · implements:: REQ-07, REQ-08 · model:: sonnet · rounds:: 1
-- [ ] TASK-20 (segunda fatia) prova no navegador, pelo integrador (o implementador não tinha navegador): gerar um blend; na tela das playlists arrastar uma faixa dentro de uma playlist e de uma para outra, remover uma faixa, desfazer e refazer; guardar; abrir o lote pela lista das guardadas («Edit»), mudar e guardar de novo; recarregar a página com um conjunto não guardado e vê-lo voltar; na tela de álbuns, a popularidade do Spotify de um álbum já guardado aparece sem conexão com o Spotify, e a de um álbum novo aparece depois de conectar · implements:: REQ-07, REQ-08 · model:: opus
-- [ ] TASK-15 julgamento do MJRP (tarefa do humano): o que resta da UAT-18 e da UAT-19 ficar numa lista em vez de consertado nesta feature; o limite de 10 entrar ou não na `constitution.md` · implements:: REQ-03, REQ-05, REQ-06 · model:: opus · waiting:: human — o aceite das issues é do MJRP · action:: o MJRP lê a lista em `test/architecture/layerBoundaries.test.js` e em `test/architecture/complexityAllowlist.js` e diz se as issues fecham
+- [x] TASK-20 (segunda fatia) prova no navegador, pelo integrador (o implementador não tinha navegador): gerar um blend; na tela das playlists arrastar uma faixa dentro de uma playlist e de uma para outra, remover uma faixa, desfazer e refazer; guardar; abrir o lote pela lista das guardadas («Edit»), mudar e guardar de novo; recarregar a página com um conjunto não guardado e vê-lo voltar; na tela de álbuns, a popularidade do Spotify de um álbum já guardado aparece sem conexão com o Spotify, e a de um álbum novo aparece depois de conectar — prova: `reports/evidence/F58/2026-11-20-layers-and-lint-gate-proof.md` · implements:: REQ-07, REQ-08 · model:: opus · rounds:: 1
+- [ ] TASK-21 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e a reconferência visual independente (relatório `visual-parity-recheck`) · implements:: REQ-01 · model:: opus · waiting:: human — a frase sobre o protótipo é do MJRP; a reconferência é de um agente que não implementou · action:: o MJRP diz «Prototype: none»; o integrador manda fazer a reconferência
 
 ## Documentation
 - [x] `docs/specs/arch.md` (a seção «O serviço de carga dentro do limite de complexidade (F58)», a de direção das dependências e as duas frases que ficaram falsas), `docs/decisions/0019-one-owner-for-the-album-load.md` (o texto, não o estado) e `docs/manual/` (01, 07, 10, 11, 14, 21, 23, 99) dizem o que o código faz agora
 - [x] spec, plano e tarefas preenchidos no ramo
 - [x] segunda fatia: `docs/specs/arch.md` (a linha das lojas e o item da direção das dependências), `docs/specs/data-model.md` (`spotify_enrichment`), `docs/manual/` (00 mapa, 06, 17, 19, 21, 99) e este spec, plano e tarefas dizem o que o código faz agora
-- [ ] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador — conferido: as issues da feature em `fixed` no `uat.md`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
+
+## For the owner at UAT
+- O MJRP julga o que resta da UAT-18 e da UAT-19 ficar numa lista em vez de consertado nesta feature; o limite de 10 entrar ou não na `constitution.md`
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.

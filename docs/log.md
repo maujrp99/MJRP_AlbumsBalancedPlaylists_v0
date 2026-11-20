@@ -9,6 +9,10 @@ Branch: `feat/f71-inventory-holds-every-album-of-my-series`, depois do commit `c
 
 As frases do manual que deixaram de ser verdade com a F71, corrigidas onde estavam, sem arquivo novo: `21_Dynamic_UI_Mapping.md` (seção 6: a situação por `models/inventoryStatus.js`, o filtro, as três contagens, a ação «Add the albums of my series» passo a passo), `14_Frontend_Components_Feature_Map.md` (inventário), `09_Frontend_Views.md` e `10_Frontend_Renderers.md` (cabeçalho, filtros, botão, cartão sem formato e sem preço), `11_Frontend_Components_Root.md` (a janela do álbum mostra o que é do item; «Not set» na janela de editar), `07_Frontend_Data_Infra.md` (`planSeriesAlbums`, `addAlbumsAsNotOwned`, `addBatch`, `createMany`) e `08_Frontend_Models.md` (os três modelos novos; `inventoryFromSeries.js` entre os que perguntam à regra de identidade). O commit do código também registrou, pelo gancho de status, o nó S-54 em «In progress».
 
+## [2026-11-19 23:13] session — F45 a F70: tarefas provadas marcadas e declarações do passo retroativo; nenhuma feature fechada ainda, salvo a F53
+
+Passada de limpeza dos `tasks.md` das F45 a F70 (menos a F66; F71 e F72 intocadas), sem tocar em código. Cada linha aberta foi decidida com prova: as provas do integrador com arquivo em `reports/evidence/` ou entrada do log foram marcadas (`rounds:: 1`, caminho da prova na linha; o que a prova diz «não visto» não foi mexido); as linhas de documentação foram marcadas quando conferidas no repositório; a conferência cruzada da spec e do plano foi feita por script. O que só diz «o MJRP julga ou aceita» saiu da lista de tarefas e foi para `## For the owner at UAT`, no fim de cada `tasks.md`. Nos `plan.md` das 19 features que fechariam, o `## Documents Consulted` ganhou a declaração de cada documento («atualizado» com o commit, ou «sem mudança» com o motivo), conferida no histórico de commits que citam a feature. Só a F53 passa no `retro_step_check` e fica `Done`. As outras 18 seguem `In Progress` com uma linha aberta (o passo retroativo): faltam «Prototype: none» dito pelo MJRP e o ok visual dele (ou o relatório de reconferência visual, nas features da trilha Agente). Também seguem abertas por falta real: F49 (clique do botão sem prova), F51 (protótipo fora do repositório), F52, F62, F64 e F69. Nenhum `Accepted`; `uat.md`, `MEMORY.md` e `ROADMAP.md` não foram tocados.
+
 ## [2026-11-19 23:12] session — F71 no ramo: uma regra para a situação do item, o filtro Owned / Not Owned / Wishlist e a ação «Add the albums of my series»
 
 Branch: `feat/f71-inventory-holds-every-album-of-my-series` (da `main` em `2722d1d`). Auxiliar sem navegador e sem conta: nada rodou contra dados reais; a prova na tela e a execução na conta do MJRP são a TASK-10, do integrador.
@@ -18,6 +22,26 @@ Branch: `feat/f71-inventory-holds-every-album-of-my-series` (da `main` em `2722d
 **Decisões do agente — revisáveis (2026-11-19), todas nas Open Questions do `spec.md` da F71.** A regra única da origem dos dados: o item feito pela ação leva o que a consulta da série leva (artista, título, ano, capa, id do Apple Music) e mais nada, tenha a tela de álbuns sido aberta ou não; nenhum álbum é carregado. «O mesmo álbum»: o mesmo id do Apple Music, o mesmo id de álbum do app, ou o primeiro nível da regra de identidade (`compareAlbumIdentity(...).same`); a mesma resposta passa a valer no «Add to Inventory» do cartão de um álbum. As três contagens do cabeçalho ignoram o filtro de situação. O cartão sem preço não mostra «$0.00» e o item sem formato não mostra «Unknown». A janela do álbum mostra a situação do item (dizia «OWNED» para todos) e nenhuma fora do inventário. Criar ou editar uma série **não** escreve no inventário: a ação é repetível, e o automático fica como pergunta para o MJRP.
 
 **Dados.** Suíte: 2326 testes em 191 arquivos (eram 2219), build e lint limpos. Saíram da lista de complexidade `InventoryRepository.addAlbum` e `InventoryView.render`. `shared/albumIdentity.js` não mudou (versão 2); `models/inventoryFromSeries.js` entrou nos `CALL_SITES` do teste da regra. O doctor segue vermelho pelos mesmos cerca de 520 links de documentos arquivados; nenhum erro novo.
+
+## [2026-11-19 23:11] decision — MJRP pede, na F71: o inventário mostra e ordena por «Avg Rank» (BEA) e «Avg Pop» (Spotify) (S-56)
+
+Palavras do MJRP, com a captura das duas médias: «no inventory, na 71, pode usar as metricas do print e ter um filtro/ranking por BEA Avg rank e Spotify Avg Pop.?». Registrado na `main`: o requisito S-56 no épico EP-07, embutido no `prd.md`, e importado pela F71 como segunda fatia. A primeira fatia (álbuns das séries no inventário; filtro de situação) está em implementação; esta entra depois dela, feita na sessão principal ou por um auxiliar de modelo mais barato.
+
+## [2026-11-19 23:07] session — UAT-211 em produção (site); em fixed
+
+Site publicado da `main` (`946fc21`, pacote `main-DBBm8vch.js`). Em produção, a imagem do título servida tem o primeiro pixel transparente. Os nomes só aparecem com a conta do MJRP; não foram vistos pelo agente em produção (a regra e o `title` estão nos testes). UAT-211 em `fixed`, à espera do olhar do MJRP.
+
+## [2026-11-19 23:06] session — UAT-211 consertada: título sem caixa e nomes inteiros na barra do topo (F63)
+
+A imagem `TheAlbumBlender.png` tinha fundo preto opaco; o preto foi tirado de forma que, sobre preto, a imagem fique igual (diferença máxima de 10 em 255 por canal, o ruído do fundo). Os nomes da conta e do Spotify deixam o limite fixo de 80 px: 96 px em telas menores, 220 px em telas largas, e o nome inteiro em `title`. Teste primeiro: `test/components/TopBarNames.test.js`.
+
+## [2026-11-19 23:05] session — UAT-211 aberta: barra do topo com retângulo atrás do título e nomes cortados (relato do MJRP)
+
+O MJRP mandou uma captura da barra do topo: «um bug antigo pra arrumar, veja o print, qual o bug?». Leitura do agente: a imagem do título tem fundo preto opaco (aparece como caixa sobre a barra translúcida) e os dois nomes têm largura máxima de 80 px. Entra na F63 (Home e navegação), pela via rápida.
+
+## [2026-11-19 22:51] decision — MJRP pede: a tela de séries diz quantos álbuns tem (S-55, F72); auxiliares de melhoria não precisam do modelo mais caro
+
+Palavras do MJRP: «outra melhoria conseguimos colocar quantos albums estao na página de albuns series?» e «agora pra implementar essas melhorias creio que vc nao precisa passar para agents com modelos fable». Registrado na `main` antes do ramo: o requisito S-55 no épico EP-01, embutido no `prd.md`, e a feature F72 (via rápida, tipo feature, `^REL-40`). A F72 é feita pelo próprio integrador. O auxiliar da F71 já estava rodando quando a segunda frase chegou e termina como começou; daqui em diante, melhorias pequenas são feitas na sessão principal ou por um auxiliar de modelo mais barato.
 
 ## [2026-11-19 22:49] decision — MJRP pede uma melhoria: todos os álbuns das séries no inventário, como «Not Owned»; filtro Owned / Not Owned / Wishlist (S-54, F71)
 

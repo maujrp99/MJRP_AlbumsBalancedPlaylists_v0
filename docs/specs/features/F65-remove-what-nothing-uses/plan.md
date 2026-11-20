@@ -216,6 +216,14 @@ Nenhuma nova. `espree` e `postcss` já estavam instalados (vinham com o `eslint`
 ## Documents Consulted
 `AGENTS.md`, `docs/specs/arch.md`, `docs/specs/data-model.md`, `docs/specs/behavior.md`, `docs/specs/tech-stack.md`, `docs/specs/constitution.md`, as linhas UAT-203, 21, 10, 11, 17, 20, 30 e 19 do `docs/specs/uat.md`, `reports/audits/2026-11-19-mjrpalbumblender-v0-open-issues-triage.md`, as entradas de 2026-11-19 do `docs/log.md`, `firebase.json`, `firestore.rules`, `vite.config.js`, `vitest.config.js`, os roteiros de `scripts/`.
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/arch.md` — atualizado (commit `6f047d7`)
+- `docs/specs/data-model.md` — atualizado (commit `6f047d7`)
+- `docs/specs/tech-stack.md` — atualizado (commit `6f047d7`)
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — sem mudança: não descreve as telas nem a rota que saíram
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - **Uma tela pode depender de algo que só o navegador mostra.** A suíte e a build passam, o grafo não acha importação quebrada, mas nenhuma tela foi aberta nesta sessão. A prova é do integrador (roteiro abaixo).
 - **`public/package.json` saiu.** Sem ele, o Vite passa a guardar o cache de desenvolvimento em `node_modules/.vite` da raiz (o lugar padrão) em vez de `public/node_modules/.vite`. `npx vite build` compila, e o servidor de desenvolvimento foi iniciado numa cópia limpa do ramo (`npx vite`, noutra porta): a página, `/js/app.js`, o worker da busca e um módulo importado por `@shared` responderam 200. Nenhuma tela foi aberta.

@@ -123,6 +123,7 @@ serves:: [[ROADMAP#^OUT-03]] ^EP-01
 
 ![[S-52-see-every-series-finish-loading-on-albums-screen]]
 ![[S-53-every-screen-shows-the-album-i-asked-for]]
+![[S-55-see-how-many-albums-the-albums-screen-holds]]
 
 ### EP-02 · Misturar uma série escolhendo a receita
 folder:: ep-02-blend-recipes
@@ -173,6 +174,7 @@ folder:: ep-07-album-inventory
 serves:: [[ROADMAP#^OUT-03]] ^EP-07
 
 ![[S-54-have-every-album-of-my-series-in-my-inventory]]
+![[S-56-rank-my-inventory-by-acclaim-and-popularity]]
 
 
 

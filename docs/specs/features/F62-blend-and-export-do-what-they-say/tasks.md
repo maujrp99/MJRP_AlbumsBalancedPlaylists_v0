@@ -6,7 +6,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f62-blend-and-export-do-what-they-say`, a partir da `main` em `c9aaa7a` (contém `042da86`, o merge da F56)
 - [x] cada issue conferida no código da `main` antes de mexer (a tabela «ainda existia?» no Problem Statement da spec, com arquivo e linha)
-- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -33,10 +33,12 @@
 ## Verification
 - [x] TASK-12 suíte (`npx vitest run`: 1512 passando no ramo, 1394 antes; o número depois de juntar a `main` está no log), `npx vite build` e complexidade até 10 nas funções novas (`npx eslint --no-config-lookup --rule '{"complexity":["error",10]}'` nos 27 arquivos de `public/js` tocados); ficaram acima do limite, tocadas sem ramo novo, `TopNAlgorithm.generate` (22), o enriquecimento de faixa do `BalancedRankingStrategy` (30) e `PlaylistsService._writeCurrentBatch` (13) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10 · model:: opus · rounds:: 1
 - [ ] TASK-13 prova no navegador pelo roteiro do relatório de entrega, do integrador (o implementador não tem navegador). **Sem exportar nada:** gerar com cada uma das quatro receitas e conferir a ordem; «By Artist then By Rank» numa série com dois artistas; o aviso com a ordem usada numa série com álbum sem ranking próprio; o menu sem «Discovery Mode» e a duração em «Auto»; tirar e mover faixa, excluir playlist, trocar título, «Undo» e «Redo», guardar, recarregar e abrir o lote para edição (o título e a receita do painel de reconfigurar voltam); o topo da tela ao criar e ao editar; a janela do Spotify parada na primeira tela, trocando o modo. **Com uma conta real do Spotify** (cria playlists na conta): exportar nos dois modos e abrir cada link; exportar de novo na mesma visita; exportar com o acesso vencido (esperar uma hora ou adiantar `spotify_expires_at` no `localStorage`); exportar depois de apagar `spotify_refresh_token` e adulterar `spotify_access_token` (deve pedir para conectar de novo). **Com uma conta real da Apple Music** (cria playlists na biblioteca): exportar, conferir a pasta e as playlists; clicar duas vezes seguidas; exportar de novo na mesma visita · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10 · model:: opus · waiting:: human — pede um navegador e, nas exportações, as contas do MJRP no Spotify e na Apple Music · action:: o integrador segue o roteiro do relatório de entrega; as exportações reais só com o ok do MJRP
-- [ ] TASK-14 julgamento do MJRP (tarefa do humano): as nove mudanças de comportamento e os textos novos listados nas Open Questions da spec · implements:: REQ-01, REQ-02, REQ-03, REQ-05, REQ-07, REQ-08 · model:: opus · waiting:: human — o aceite das issues é do MJRP · action:: o MJRP julga cada mudança das Open Questions da spec
 
 ## Documentation
 - [x] `docs/specs/behavior.md` (14 estados reescritos e 8 novos) e `docs/manual/` (00 mapa de arquivos, 07, 10, 11 seção 4.2, 14, 15, 17, 18, 21 seções 3 e 4, 31, 99) dizem o que o código faz agora
 - [x] spec, plano e tarefas preenchidos no ramo
-- [ ] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador
+- [x] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador — conferido: as issues da feature em `fixed` no `uat.md`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
 - [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+
+## For the owner at UAT
+- O MJRP julga as nove mudanças de comportamento e os textos novos listados nas Open Questions da spec

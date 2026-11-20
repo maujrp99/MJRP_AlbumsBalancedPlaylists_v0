@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f69-spotify-popularity-failure`, a partir da `main` em `b6a21de`; a `main` com a F58 (`2f9215b`) foi trazida para o ramo depois (`822a794`)
 - [x] os dois caminhos de fora da fila, as três camadas que engoliam a falha e a rota que alcança o gêmeo do servidor conferidos no código, com arquivo, na seção «Diagnóstico» do plano; suíte verde antes de começar (1765 testes) e `vite build` compilando
-- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -33,12 +33,14 @@
 
 ## Verification
 - [x] TASK-11 suíte (`npx vitest run`: 1933 passando; 1765 antes) e `npx vite build` compilando; nenhuma função nova ou editada acima de complexidade 10 (`test/architecture/complexityLimit.test.js`) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08 · model:: sonnet · rounds:: 1
-- [ ] TASK-12 prova no navegador, pelo integrador (o implementador não tinha navegador), com a conta do MJRP em `http://127.0.0.1:5010`: desconectar o Spotify pelo «Connected ✕», recarregar a página e abrir uma série; conferir que a vista expandida mostra «Connect Spotify to see popularity.» nos álbuns sem popularidade guardada, que os fatos da série não ganham `popularity: false` (e que os antigos sem `v` perdem a chave) e que o registro do navegador não ganha `popularity` para esses álbuns; um blend com receita de popularidade diz «because Spotify is not connected». Reconectar pede o login do MJRP no Spotify: o que der para ver sem reconectar fica provado; o resto é dele · implements:: REQ-02, REQ-03, REQ-04, REQ-06 · model:: opus
-- [ ] TASK-13 publicar o servidor e conferir nos registros que uma falha do Spotify em `POST /api/generate` aparece como «could not be asked» e não como «Album not found» (conserto em `server/` só se prova publicando) · implements:: REQ-08 · model:: sonnet
-- [ ] TASK-14 julgamento do MJRP (tarefa do humano): as seis mudanças de comportamento e a questão da renovação que encerra a sessão, nas Open Questions do `spec.md`; a proposta da UAT-28 no `plan.md` · implements:: REQ-02, REQ-04, REQ-07 · model:: opus
+- [x] TASK-12 prova no navegador, pelo integrador (o implementador não tinha navegador), com a conta do MJRP em `http://127.0.0.1:5010`: desconectar o Spotify pelo «Connected ✕», recarregar a página e abrir uma série; conferir que a vista expandida mostra «Connect Spotify to see popularity.» nos álbuns sem popularidade guardada, que os fatos da série não ganham `popularity: false` (e que os antigos sem `v` perdem a chave) e que o registro do navegador não ganha `popularity` para esses álbuns; um blend com receita de popularidade diz «because Spotify is not connected». Reconectar pede o login do MJRP no Spotify: o que der para ver sem reconectar fica provado; o resto é dele — prova: `reports/evidence/F69/2026-11-19-spotify-popularity-outcomes-proof.md` · implements:: REQ-02, REQ-03, REQ-04, REQ-06 · model:: opus · rounds:: 1
+- [ ] TASK-13 publicar o servidor e conferir nos registros que uma falha do Spotify em `POST /api/generate` aparece como «could not be asked» e não como «Album not found» (conserto em `server/` só se prova publicando) · implements:: REQ-08 · model:: sonnet · waiting:: human — o conserto do servidor só se vê quando o Spotify falhar de verdade em produção · action:: quando o Spotify falhar, ler no registro do servidor que `/api/generate` diz «could not be asked»
 
 ## Documentation
 - [x] `docs/specs/arch.md` (a seção «A popularidade do Spotify tem três desfechos (F69)» e o item da F52 que ficou falso), `docs/specs/behavior.md` (cinco estados), `docs/manual/00`, `04`, `06`, `08`, `16`, `17`, `19`, `29` e `32` (as frases que ficaram falsas)
 - [x] spec, plano e tarefas preenchidos no ramo
-- [ ] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador
+- [x] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador — conferido: as issues da feature em `fixed` no `uat.md`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
 - [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+
+## For the owner at UAT
+- O MJRP julga as seis mudanças de comportamento e a questão da renovação que encerra a sessão, nas Open Questions do `spec.md`; a proposta da UAT-28 no `plan.md`

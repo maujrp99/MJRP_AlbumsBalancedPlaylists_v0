@@ -50,13 +50,22 @@ Capturas: `F45-desktop-before-2026-11-19.jpg`, `F45-desktop-after-2026-11-19.jpg
 Nenhuma.
 
 ## Documents Consulted
-- `docs/specs/arch.md` — «a atualizar»: a proposta foi escrita antes do código; os cinco pontos da seção «Architecture Approach» acima ainda não estão nela.
-- `docs/specs/data-model.md` — «sem mudança» por esta feature.
-- `docs/specs/behavior.md` — «a atualizar»: `^library-loading-skeleton` descreve a carga antiga e não há estado para o aviso de falha.
+- `docs/specs/arch.md` — (estava a atualizar; ver a declaração abaixo): a proposta foi escrita antes do código; os cinco pontos da seção «Architecture Approach» acima ainda não estão nela.
+- `docs/specs/data-model.md` — (declaração abaixo).
+- `docs/specs/behavior.md` — (estava a atualizar; ver a declaração abaixo): `^library-loading-skeleton` descreve a carga antiga e não há estado para o aviso de falha.
 - `docs/specs/constitution.md` — «sem mudança»; lido pelos padrões que o desenho cita (`DP-01`, `DP-05`, `DP-07`, `DP-12`, `DP-14`, `DP-20`, `DP-22`, `DP-23`).
 - `docs/specs/uat.md` — «sem mudança» por esta feature: a UAT-172 segue `open` até o MJRP julgar.
 - `docs/manual/` — «atualizado» no commit `12713e2` (2026-11-19 12:34): 06, 07, 07b, 08, 09, 11, 17, 19 e o mapa de arquivos. Não revistos: os documentos do servidor (02 a 05), mistura e playlists (15, 18, 21), integrações (20, 22), testes (24) e dívida técnica (29).
 - `info-arch.md` e `design-system.md` — o projeto não tem.
+
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — atualizado (commit `c6af8e0`)
+- `docs/specs/data-model.md` — atualizado (commit `12713e2`)
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `d9e6103`, da v4.0, que não cita a F45 na mensagem)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
 
 ## Risks & Considerations
 - As notas dependem de um raspador no servidor, sem cache: de 5 a 7 segundos por busca. Subir o teto do navegador rende pouco; o conserto é no servidor.

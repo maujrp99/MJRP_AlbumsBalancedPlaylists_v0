@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f49-load-more-albums`, a partir da `main` em `4dc353a`
 - [x] causa lida no código antes de mexer: quem desenha o botão, onde o clique morre, onde estão os álbuns depois do décimo segundo, com arquivo e linha, na seção Problem Statement da spec; o defeito reproduzido em teste da tela inteira (4 dos 8 casos de `test/views/SeriesView.loadMore.test.js` falhavam antes)
-- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -28,10 +28,12 @@
 ## Verification
 - [x] TASK-05 suíte (`npx vitest run`: 1330 passando, 1307 antes), `npx vite build` e complexidade até 10 nas funções novas ou mudadas (`npx eslint --rule '{"complexity":["error",10]}'` nos arquivos tocados; as duas acima do limite, `SeriesView.updateAlbums` e `SeriesEventHandler.handleRemoveAlbum`, já estavam e não ganharam caminho) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05 · model:: sonnet · rounds:: 1
 - [ ] TASK-06 prova no navegador pelo roteiro do relatório de entrega: numa série com mais de 12 álbuns, no painel de todas as séries, o clique mostra o resto e o botão some; a série continua aberta depois de ir à página 2 e voltar e de buscar e limpar; volta a 12 depois de abrir a série sozinha e voltar; o botão é alcançado com Tab e responde a Enter, e o foco vai para o primeiro álbum novo · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05 · model:: opus · waiting:: human — quem implementou não tem navegador; a prova roda com o login do MJRP, pelo agente integrador · action:: o integrador roda o roteiro em `http://127.0.0.1:5010` e grava a prova em `reports/evidence/F49/`
-- [ ] TASK-07 julgamento do MJRP (tarefa do humano): o texto do botão («Load N more albums» mantido; o clique não carrega nada) e a escolha valer só para a visita · implements:: REQ-02, REQ-03 · model:: opus · waiting:: human — o aceite da issue é do MJRP · action:: o MJRP confere em produção e dá o OK na UAT-06
 
 ## Documentation
 - [x] `docs/specs/behavior.md` (estado novo `^library-series-more-albums`) e `docs/manual/` (09, 12, 15, 29) dizem o que o código faz agora
 - [x] spec, plano e tarefas preenchidos no ramo
-- [ ] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador
+- [x] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador — conferido: as issues da feature em `fixed` no `uat.md`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
 - [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+
+## For the owner at UAT
+- O MJRP julga o texto do botão («Load N more albums» mantido; o clique não carrega nada) e a escolha valer só para a visita

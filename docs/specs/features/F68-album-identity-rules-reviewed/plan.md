@@ -146,6 +146,15 @@ Nenhuma.
 <!-- arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, the NFR nodes. -->
 `docs/specs/arch.md` (as seções da F55 e da F52), `docs/specs/behavior.md` (`^library-album-subtitle-note`, os álbuns guardados), `docs/specs/features/F55-the-album-asked-for-or-a-notice/` e `reports/evidence/F55/`, `reports/audits/2026-11-19-mjrpalbumblender-v0-ratings-source-sweep.md`, `docs/specs/constitution.md`. O `data-model.md` não descreve o registro do navegador e não mudou.
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — atualizado (commit `9c11290`)
+- `docs/specs/data-model.md` — sem mudança: nenhuma entidade, campo ou esquema mudou
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `9c11290`)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - **Álbum vizinho aceito sozinho.** Um candidato do segundo degrau que é o único na lista de uma fonte é aceito, marcado, mesmo quando é outro álbum («Hotel California» pedido, só «Hotel California (Live at the Forum '76)» listado). É a troca que o MJRP já decidiu para o subtítulo; aqui ela se estende aos parênteses.
 - **A lista de escritas conhecidas é mantida à mão.** A varredura mostra quais faltam; cada entrada nova sobe a versão.
