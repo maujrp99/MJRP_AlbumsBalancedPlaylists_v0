@@ -11,6 +11,47 @@ Criado `docs/specs/design-system.md` § Celular (44 / 12 / 16 px, escala de tipo
 **Branch:** feat/f76-mobile-redesign
 A base que as telas da F76 vão usar, toda dentro de `@media (max-width: 767px)` (`public/css/mobile.css`) e montada só no celular (`utils/isPhone.js`): barra do topo baixa com o nome da tela, barra de baixo com os cinco destinos, menu em folha (com «Clear album cache» pedindo confirmação), a folha `components/ui/Sheet.js` (tela cheia e de baixo), as janelas que existiam viradas folha pela casca, a página de trás presa, campos a 16 px, texto a 12 px, alvos de 44 px nos botões nomeados, margem de 16 px, `viewport-fit=cover` com áreas seguras, manifesto e ícone quadrado. Teste de arquitetura novo: `test/architecture/phoneStylesStayOnThePhone.test.js`. Decidido pelo agente — revisável: tudo o que é desenho (ver `plan.md`). Vitest 2733 de 2733, ESLint limpo, `vite build` verde.
 
+## [2026-11-20 02:17] session — F75: o interruptor é perguntado de novo quando a pessoa do inventário muda
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- Defeito achado na releitura, antes de publicar: ao recarregar a página direto em `/inventory`, a tela abre antes de o login ser conhecido; o interruptor era perguntado sem login, o servidor recusava e a fonte ficava «desligada» até a tela ser aberta de novo.
+- Conserto: `controllers/InventoryValues.js` guarda para quem perguntou; quando o inventário passa a ser de outra pessoa (o login chegou, ou a pessoa entrou ou saiu), o que se sabia é esquecido e o interruptor é perguntado de novo, uma vez. A resposta que chega para quem já não está é descartada. Nenhuma leitura do Discogs começa sozinha.
+- Teste, escrito junto com o conserto: `test/controllers/InventoryController.values.test.js` («the person became known after the screen opened»). Suíte: 2852 testes; lint e build verdes.
+- O `status_sync` não promoveu a S-57 (segue «Backlog»): o nó do requisito não tem `points_to`. Os estados com ID de bloco existem agora no `info-arch.md`; apontar o nó para eles é do processo de requisitos, não foi feito aqui.
+
+## [2026-11-20 02:15] session — F75, documentos: plano, tarefas, spec, comportamento, modelo de dados, arquitetura, estados e manual
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- `plan.md` reescrito: os módulos e o requisito que cada um serve, as doze decisões tomadas sem o MJRP («decidido pelo agente — revisável»), a leitura dos termos de uso da API do Discogs e o que não foi verificado. `tasks.md`: seis tarefas de construção e a verificação feitas; uma aberta, do integrador (mapear o segredo, publicar o servidor e depois o site, provar com a conta do MJRP). `spec.md` em `In Progress`, com os estados, os critérios e o que ficou fora.
+- `behavior.md` (seção «Inventário»), `data-model.md` (`value` e `discogs` no item; a leitura do Discogs e o câmbio só no navegador), `arch.md` (a fonte de valor, o interruptor, os três nomes novos do contrato) e `info-arch.md` (os estados construídos e os que o protótipo não mostrava, cada um com o seu ID de bloco).
+- Manual: `00_Deployment_and_Setup.md` ganhou a seção «2.4b O interruptor dos valores do Discogs», com os comandos de ligar, desligar, ligar de novo e restringir a uma pessoa, e as variáveis `DISCOGS_TOKEN`, `DISCOGS_VALUES`, `DISCOGS_VALUES_FOR` e `VALUE_CALLS_PER_HOUR`; `21_Dynamic_UI_Mapping.md` e as linhas do inventário de três outras páginas.
+- Para o MJRP julgar: o valor do Discogs aparece acima dos links da Amazon e da iMusic, e os termos proíbem usar o conteúdo para levar tráfego a outras lojas; sem `DISCOGS_VALUES_FOR`, toda pessoa com conta no app vê preços lidos com o token dele.
+- Não verificado: a chamada de preço do Discogs nunca foi feita (exige o token); nada foi publicado. O `doctor.py` segue com os mesmos 522 erros de antes do ramo.
+
+## [2026-11-20 02:08] session — F75, app: o valor do item, a fila de «Update values» e a tela do inventário no padrão da v5.1
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- Modelos puros: `models/inventoryValue.js` (o valor de um item: o que a pessoa escreveu, senão uma leitura do Discogs com menos de seis horas, senão nenhum, com o motivo; totais; moedas), `models/inventoryValueRun.js` (o que uma rodada lê, o que cada resposta vale, o que se diz no fim) e `models/buyLinks.js` (o único lugar que monta o endereço de uma loja; nenhum parâmetro de afiliado).
+- Serviço `services/inventory/InventoryValueService.js`: pergunta o interruptor e o câmbio ao abrir, guarda cada leitura só no cache do navegador por seis horas (uma chave por pessoa e item) e lê um álbum por vez. No Firestore entram só `value` (o que a pessoa escreveu, em USD) e `discogs` (qual edição foi usada). Nenhum preço do Discogs é gravado.
+- Tela: o cartão é uma superfície com cinco linhas iguais em todo cartão; as contagens do cabeçalho são botões que filtram e o seletor de status saiu da barra; a faixa sob o título tem os dois totais e as quatro moedas no lugar de «Total Owned»; «Where to buy» no cartão e na janela; «Sort by» ganhou «Value (↓)» e «Value (↑)»; a janela do álbum ganhou «Estimated value» e «Where to buy».
+- Decidido pelo agente — revisável: (1) abrir o inventário não lê nada do Discogs, só conta quantos álbuns esperam e oferece «Read them now»; (2) o preço pago (`purchasePrice`) saiu do cartão e fica na janela do álbum como «Paid:», porque as cinco linhas são do valor estimado; (3) «Sell» e «Trade» aparecem desligados e «Where to buy» do cartão do que é seu é um botão com cara de link; (4) no cartão, a palavra «Discogs» da origem é o link para a página da edição, para cumprir o aviso exigido pelos termos; (5) «Pick an edition on Discogs», do protótipo, não foi construído e não aparece.
+- Conferido num navegador de verdade com o CSS do build, sem conta e sem servidor (página estática montada com o desenho da tela): seis cartões com 501 px de altura cada, as cinco linhas com as mesmas alturas em todos, nada transbordando, a 1440 e a 390 px. Falta a prova com a conta do MJRP.
+- Suíte: 2851 testes passando; lint e build verdes.
+
+## [2026-11-20 01:45] session — F75, servidor: a fonte de valor do Discogs, o interruptor e o câmbio do dia
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- Fonte de valor tipada em `server/lib/valueSources/` (`discogsSource.js`, `discogsParse.js`, `valueSwitch.js`), ao lado das fontes de notas: acha a edição em CD mais comum (a regra de identidade de álbum escolhe o master ou o lançamento; nenhum segundo comparador) e pede a sugestão de preço em três estados. Um pedido por vez, no máximo um por segundo, pela fila educada, que ganhou `pause(ms)` para obedecer ao cabeçalho `X-Discogs-Ratelimit-Remaining`.
+- Três rotas: `POST /api/album-value` (pessoa com conta, limite próprio `VALUE_CALLS_PER_HOUR`), `GET /api/value-sources` (o interruptor: `DISCOGS_TOKEN` presente e `DISCOGS_VALUES` diferente de `off`; opcional `DISCOGS_VALUES_FOR`) e `GET /api/exchange-rates` (Frankfurter, guardado em memória pelo dia).
+- O contrato de resposta ganhou os desfechos `no_value` e `not_configured` e o código de erro `upstream_unauthorized` (o token foi recusado). Decidido pelo agente — revisável: os nomes que já existiam ficam (`upstream_busy`, `upstream_failed`), em vez de sinônimos novos.
+- Nomes de campo conferidos em respostas reais do Discogs (5 pedidos sem token, um a cada 2 a 3 segundos): busca (`results[].type`, `id`, `title` como «Artista - Título», `community.have`, `format[]`) e versões (`versions[].major_formats`, `stats.community.in_collection`, `label`, `country`, `released`). A sugestão de preço exige o token: o leitor foi escrito a partir do formato documentado e nunca chamou a API de verdade.
+- Nenhum preço é guardado no servidor depois do pedido (termos de uso da API do Discogs).
+- Testes do servidor: 447 passando.
+
 ## [2026-11-20 01:37] decision — F76 priorizada, com liberdade de desenho dada pelo MJRP; treze requisitos da crítica de UX
 **Branch:** main
 O MJRP pediu o redesenho do celular em paralelo com a F75, para ver em produção ao voltar: «total liberdade pra vc na versao mobile, na f76....quero a melhor usabilidade e design na app mobile (sem impactar a versao web)»; «só eu uso app por enqto, por isso te dou essa liberdade criativa … uso o iphone 15 pro». Decidido pelo agente — revisável: o protótipo julgado antes da construção fica dispensado por essas palavras e o juízo dele é no app em produção (TASK-09 aberta); «celular» é até 767 px; a tela de computador não muda (REQ-12); o inventário no celular entra depois da F75.

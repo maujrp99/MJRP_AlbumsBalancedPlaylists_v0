@@ -11,6 +11,7 @@ import { Album } from '../models/Album.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { coverImage } from './ui/coverImage.js'
 import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatus.js'
+import { createBuyLinksSection, createValueSection } from './InventoryValueSection.js'
 
 /** The colour of the status badge of an inventory item. */
 const STATUS_BADGE = Object.freeze({
@@ -37,8 +38,11 @@ const hasTracks = (album) => album.getTracks('original').length > 0 || album.get
  *   load has it now. The inventory gives it (F71, UAT-220): an item keeps no tracks, or the ones of
  *   the day it was added, so the window shows what it has, asks, and shows the album that comes.
  *   The ask is dropped when the window closes.
+ * @param {Object} [options.value] - the host of the «Estimated value» section (F75): { view, onWrite,
+ *   onForget, onRead } (components/InventoryValueSection.js). The inventory gives it; with it the
+ *   window also shows «Where to buy». The window returned has `redrawValue()` to draw it again.
  */
-export async function showViewAlbumModal(albumInput, { loadAlbum = null } = {}) {
+export async function showViewAlbumModal(albumInput, { loadAlbum = null, value } = {}) {
   // Hydrate Album Model if needed
   const item = albumInput.albumData ? albumInput : null
   const rawData = albumInput.albumData || albumInput
@@ -75,12 +79,14 @@ export async function showViewAlbumModal(albumInput, { loadAlbum = null } = {}) 
 
   // -- 3. Content Section (Ranking) --
   const rankingContainer = SafeDOM.div({ id: 'modal-ranking-container' })
+  // The value of the item and where to buy it come before the tracks (F75); only for an inventory item
+  const { valueSection, aboveTheTracks } = sectionsOfAnItem(item, value)
   const contentEl = SafeDOM.div({
     className: 'modal-content flex-1 overflow-hidden bg-surface-dark/30 relative'
   }, [
     SafeDOM.div({
       className: 'absolute inset-0 overflow-y-auto custom-scrollbar p-6'
-    }, rankingContainer)
+    }, [...aboveTheTracks, rankingContainer])
   ])
 
   // -- 4. Footer Section --
@@ -149,6 +155,7 @@ export async function showViewAlbumModal(albumInput, { loadAlbum = null } = {}) 
   }
 
   // Mount logic
+  modalOverlay.redrawValue = redrawOf(valueSection, closing.signal)
   document.body.appendChild(modalOverlay)
   document.addEventListener('keydown', handleEscape)
 
@@ -195,6 +202,18 @@ export async function showViewAlbumModal(albumInput, { loadAlbum = null } = {}) 
 }
 
 // --- Helpers ---
+
+/** The sections an inventory item shows above its tracks (F75): its value, and where to buy it. */
+function sectionsOfAnItem(item, value) {
+  if (!item || !value) return { valueSection: null, aboveTheTracks: [] }
+  const valueSection = createValueSection(value)
+  return { valueSection, aboveTheTracks: [valueSection, createBuyLinksSection(item)] }
+}
+
+/** Draws the value section again, while the window is open and has one. */
+const redrawOf = (valueSection, closed) => () => {
+  if (valueSection && !closed.aborted) valueSection.draw()
+}
 
 function createCoverElement(album) {
   const wrapper = SafeDOM.div({
@@ -245,7 +264,8 @@ function createDetailsElement(album, item) {
   // Metadata Grid
   const metaItems = []
   if (kept.purchasePrice) {
-    metaItems.push(createMetaItem('Price:', formatCurrency(kept.purchasePrice, kept.currency || 'USD')))
+    // what the person paid: another number than what the album is worth (the «Estimated value» section)
+    metaItems.push(createMetaItem('Paid:', formatCurrency(kept.purchasePrice, kept.currency || 'USD')))
   }
   if (kept.condition) {
     metaItems.push(createMetaItem('Cond:', kept.condition))

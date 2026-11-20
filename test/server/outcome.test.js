@@ -27,7 +27,7 @@ describe('outcome: the success answer', () => {
     })
 
     it('the outcomes are a closed list', () => {
-        expect(Object.values(OUTCOMES).sort()).toEqual(['found', 'no_ratings', 'not_found'])
+        expect(Object.values(OUTCOMES).sort()).toEqual(['found', 'no_ratings', 'no_value', 'not_configured', 'not_found'])
         expect(() => success({}, 'maybe')).toThrow()
     })
 })
@@ -35,7 +35,7 @@ describe('outcome: the success answer', () => {
 describe('outcome: the error answer', () => {
     it('the codes are the closed list of the design', () => {
         expect([...ERROR_CODES].sort()).toEqual(['internal', 'invalid_request', 'rate_limited', 'unauthorized',
-            'upstream_busy', 'upstream_failed', 'upstream_timeout'])
+            'upstream_busy', 'upstream_failed', 'upstream_timeout', 'upstream_unauthorized'])
         expect(() => failure('something_else')).toThrow()
     })
 
@@ -43,6 +43,7 @@ describe('outcome: the error answer', () => {
         ['upstream_failed', 502, true],
         ['upstream_timeout', 504, true],
         ['upstream_busy', 503, true],
+        ['upstream_unauthorized', 502, false],
         ['invalid_request', 400, false],
         ['unauthorized', 401, false],
         ['rate_limited', 429, false],

@@ -43,6 +43,7 @@ Os nomes da coluna *Stack layer* são as camadas de `docs/specs/tech-stack.md`.
 | Services (`server/lib/services/`: `EnrichmentService`, `GenerationService`, `spotifyPopularity`) | a lógica de enriquecer e gerar | Back |
 | Fachada de ranking (`server/lib/fetchRanking.js`, `lib/ranking.js`) | esconde raspagem + IA + fallbacks; consolida por Borda Count | Back |
 | Raspador (`server/lib/scrapers/besteveralbums.js`) | lê as notas de faixa do BestEverAlbums | Back |
+| Fonte de valor (`server/lib/valueSources/`: `discogsSource`, `discogsParse`, `valueSwitch`; `lib/services/valueService.js`, `exchangeRates.js`; `routes/values.js`) | o preço que o Discogs sugere para a edição em CD mais comum de um álbum, atrás de um interruptor, e o câmbio do dia (F75): `POST /api/album-value`, `GET /api/value-sources`, `GET /api/exchange-rates` | Integrações externas |
 | Cliente de IA (`server/lib/aiClient.js`, `lib/prompts.js`, `config/prompts.json`) | chama o Gemini com prompts externalizados | Integrações externas |
 | Validação (`server/lib/schema.js`, `server/schema/album.schema.json`) | valida o álbum com AJV | Back |
 | Token do MusicKit (`server/services/MusicKitTokenService.js`) | assina o token de desenvolvedor (JWT ES256) | Integrações externas |
@@ -1037,3 +1038,33 @@ O que o Spotify já respondeu e o app guarda (`services/spotify/StoredSpotifyPop
 
 **O que este desenho não resolve.** O grafo é por arquivo: uma função exportada que ninguém chama, dentro de um arquivo vivo, passa (uma passada aproximada achou quatro). Um método de classe sem uso também. O ESLint (`npx eslint .`) lê cada pasta como o que ela é desde a F65, mas ainda não é portão: restam 25 erros.
 
+## A fonte de valor do Discogs e o seu interruptor (F75) — construída no ramo
+
+> 2026-11-20, ramo `feat/f75-cd-prices-and-where-to-buy`. O porquê, as decisões do agente e o que não foi verificado estão em `docs/specs/features/F75-cd-prices-and-where-to-buy/plan.md`. **A chamada de preço nunca foi feita:** exige o token, que o agente não leu.
+
+**O que é.** Uma fonte de valor, ao lado das fontes de notas (`server/lib/rankingSources/`) e no mesmo molde: responde um desfecho tipado, e uma falha de fora é lançada como `UpstreamError`, para «falhou» nunca ser lido como «não tem». O app pede o valor de um álbum por vez; o servidor acha a edição, pede o preço e responde. O token do Discogs mora só no servidor.
+
+**Como a edição é escolhida.** A busca do Discogs só LISTA candidatos; quem diz qual é o álbum é a regra de identidade (`shared/albumIdentity.js`, `pickAlbum`), a mesma do resto do app. Não há segundo comparador, e `test/architecture/albumIdentityRule.test.js` cobra isso.
+
+1. `GET /database/search?type=master&artist=…&release_title=…`: os masters, ordenados pelo número de pessoas que os têm; o título procurado é o da regra (`titlesToSearch`), e o rótulo «Artista - Título» é lido em cada « - ».
+2. `GET /masters/{id}/versions?format=CD&per_page=100`: vale a versão com o maior `stats.community.in_collection`.
+3. Sem master, ou master sem CD: `GET /database/search?type=release&format=CD&…`, e a regra escolhe de novo.
+4. `GET /marketplace/price_suggestions/{release_id}`: os três estados («Mint (M)», «Near Mint (NM or M-)», «Very Good Plus (VG+)»), na moeda da conta. Com um dos três faltando, ou em moedas diferentes, o desfecho é `no_value`.
+
+Quando o app já sabe a edição (`releaseId`, guardado no item), só o passo 4 acontece.
+
+**O contrato de resposta ganhou três nomes** (`server/lib/outcome.js`, lidos no app por `api/serverResult.js`): os desfechos `no_value` (a fonte tem a edição, sem preço para ela) e `not_configured` (o servidor não está ligado a essa fonte, ou mandaram não perguntar: ela não foi consultada), e o código de erro `upstream_unauthorized` (502, não adianta pedir de novo: a fonte recusou a chave do próprio servidor). O limite de pedidos do Discogs (429) sai como `upstream_busy`, com `Retry-After`; a demora, como `upstream_timeout`; o resto, como `upstream_failed`.
+
+**O ritmo.** Um pedido por vez ao Discogs e no máximo um a cada 1,1 s (`DISCOGS_PACE`), pela fila educada (`lib/politeQueue.js`), com 20 s por pedido do app (`lib/timeBudget.js`). A fila ganhou `pause(ms)`: quando o cabeçalho `X-Discogs-Ratelimit-Remaining` diz que sobra um pedido ou nenhum, ninguém começa antes de um minuto. Um 429 não é pedido de novo no servidor: vai ao app com a espera. **Um token só:** o limite nunca é contornado com uma segunda chave. A fila é por instância do servidor; o que segura o ritmo de verdade é a rodada do app, que pede um álbum por vez.
+
+**O interruptor** (`lib/valueSources/valueSwitch.js`). A fonte está ligada só com `DISCOGS_TOKEN` presente E `DISCOGS_VALUES` diferente de `off`; as duas são lidas do ambiente a cada pedido, então desligar é mudar uma variável do serviço, sem publicar código. `DISCOGS_VALUES_FOR` (opcional) lista os ids das pessoas para quem a fonte fica ligada; um visitante nunca a tem ligada. `GET /api/value-sources` diz `{ discogs: 'on' | 'off' }` a quem pergunta, e `POST /api/album-value` responde `not_configured` com a fonte desligada, sem consultar o Discogs. O app pergunta uma vez, ao abrir o inventário; desligada, não mostra botão, valor nem aviso do Discogs.
+
+**Quem pode pedir.** `POST /api/album-value` tem a sua porta (`guards.value`): pessoa com conta, sem visitante, como as rotas pagas, e com limite próprio (`VALUE_CALLS_PER_HOUR`, 900 por hora por pessoa), para a leitura de um inventário não gastar as chamadas das rotas da IA. O interruptor e o câmbio respondem a qualquer pessoa conectada (`guards.costly`).
+
+**Onde o preço fica, e onde não fica.** Os termos de uso da API do Discogs não deixam mostrar um preço com mais de seis horas nem guardá-lo além do necessário. Por isso: o servidor não guarda preço depois do pedido; o navegador guarda a leitura no cache por seis horas, uma chave por pessoa e item (`services/inventory/InventoryValueService.js`), e o modelo confere a idade de novo ao mostrar (`models/inventoryValue.js`); o Firestore não recebe preço do Discogs, e o repositório não tem porta para ele (`test/repositories/InventoryRepository.value.test.js`). No item ficam `value`, o que a pessoa escreveu, e `discogs`, qual edição foi usada.
+
+**O câmbio** (`lib/services/exchangeRates.js`). `GET /api/exchange-rates` lê `https://api.frankfurter.app/latest?from=USD&to=BRL,EUR,GBP` (taxas de referência, sem chave), guarda em memória pelo dia (UTC) e responde `found` ou a falha da fonte; uma falha não é guardada. O app guarda a resposta pelo dia.
+
+**No navegador.** Uma regra pura diz o valor de um item (`models/inventoryValue.js`); outra, o que uma rodada faz com cada resposta (`models/inventoryValueRun.js`); o serviço (`InventoryValueService`) recebe a API, o cache e o serviço do inventário como portas; a parte do controlador que cuida dos valores (`controllers/InventoryValues.js`) é hospedada pelo `InventoryController`. Os links de compra saem de um módulo só (`models/buyLinks.js`).
+
+**O que este desenho não resolve.** A lista de versões é lida só na primeira página (100 edições em CD, em ordem de lançamento): num master com mais edições, a escolhida é a mais colecionada entre as 100 primeiras. A rodada mora na aba: fechá-la a derruba. Com mais de uma instância do Cloud Run há mais de uma fila. E os termos proíbem usar o conteúdo para levar tráfego a outras lojas: o valor do Discogs aparece acima dos links da Amazon e da iMusic, por escolha do MJRP para um teste em uso pessoal; a saída é o interruptor.

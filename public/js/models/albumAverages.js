@@ -87,10 +87,16 @@ export const popularityValue = (averages) => (isNumber(averages?.popularity) ? `
 export const ratingText = (averages) => `Avg Rating: ${ratingValue(averages)}`
 export const popularityText = (averages) => `Avg Pop: ${popularityValue(averages)}`
 
-/** Of how many tracks an average was made: «(2 of 8)»; «(2)» when the size of the album is not known. */
-function madeOf(count, total) {
+/** Of how many tracks an average was made: «2 of 8»; «2» when the size of the album is not known; nothing when not known at all. */
+export function tracksMadeOf(count, total) {
     if (!isNumber(count) || count <= 0) return ''
-    return isNumber(total) && total > 0 ? ` (${count} of ${total})` : ` (${count})`
+    return isNumber(total) && total > 0 ? `${count} of ${total}` : `${count}`
+}
+
+/** The same, as the end of a sentence: « (2 of 8)». */
+function madeOf(count, total) {
+    const made = tracksMadeOf(count, total)
+    return made ? ` (${made})` : ''
 }
 
 /**

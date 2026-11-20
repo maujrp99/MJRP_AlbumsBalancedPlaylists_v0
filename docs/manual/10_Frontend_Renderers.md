@@ -22,8 +22,9 @@ To keep the main View classes (like `SeriesView` and `InventoryView`) maintainab
 ### Inventory Grid Renderer (`public/js/views/renderers/InventoryGridRenderer.js`)
 *   **Role**: Specialized renderer for the User Inventory.
 *   **Key Distinction**: Unlike the global browser, it injects an **Inventory Status Dropdown** (Owned / Wishlist / Not Owned) directly into the card overlay.
-*   **Format Badges**: Has specific logic to display `Vinyl`, `CD`, or `Digital` badges based on the `format` field. An item with no format (one added by "Add the albums of my series", F71) shows no badge, and an item with no price shows no price.
+*   **Format Badges**: Has specific logic to display `Vinyl`, `CD`, or `Digital` badges based on the `format` field. Since F75 the badge is only in the list view: the card of the grid says the format in its value line. An item with no format shows no badge.
 *   **Averages** (F71, S-56): `renderAverages(album)` puts the line "Avg Rating: 78.4 · Avg Pop: 42.6%" (`models/albumAverages.js` `averagesLine`) in the footer of the card and in the row of the list; only the averages the item has, and nothing when it has none.
+*   **The card as a surface** (F75, REQ-01): `renderCard(album, known)` draws a card with its own background, the cover reaching its edges, and the five lines of `views/renderers/InventoryCardValue.js` (`cardValueBlock`): the label of the value by status, the origin and the value, the two averages with their icons, the label of the actions, the actions ("Where to buy" links, or "Sell", "Trade" and "Where to buy"). `known` is what the controller knows of the values (`controllers/InventoryValues.js` `view`). `views/renderers/InventoryValueHeader.js` draws the totals strip and the notices.
 *   **Status**: the selected status and the three options come from `models/inventoryStatus.js` (`statusOf`, `STATUS_SELECT_OPTIONS`); the renderer only holds the colours.
 
 ### Discography Renderer (`public/js/views/renderers/DiscographyRenderer.js`)

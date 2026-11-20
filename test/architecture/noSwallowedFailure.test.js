@@ -34,6 +34,8 @@ const ANSWER_PATH = [
     'server/lib/politeQueue.js',
     'server/lib/scrapers',
     'server/routes/handlers',
+    'server/lib/valueSources',
+    'server/routes/values.js',
     'server/routes/albums.js',
     'server/routes/ai.js'
 ]

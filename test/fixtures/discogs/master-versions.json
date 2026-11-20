@@ -1,0 +1,111 @@
+{
+  "_note": "Reduced from a real answer of GET https://api.discogs.com/masters/10362/versions?format=CD&per_page=5 (read on 2026-11-20, unauthenticated). Only the fields the source reads are kept.",
+  "pagination": {
+    "page": 1,
+    "pages": 70,
+    "per_page": 5,
+    "items": 349
+  },
+  "versions": [
+    {
+      "id": 34969832,
+      "label": "Harvest",
+      "country": "Japan",
+      "title": "The Dark Side Of The Moon = 狂気",
+      "major_formats": [
+        "CD"
+      ],
+      "format": "Album, Reissue, Stereo",
+      "catno": "CP35-3017, SHVL-804-A•B",
+      "released": "1983",
+      "status": "Accepted",
+      "resource_url": "https://api.discogs.com/releases/34969832",
+      "stats": {
+        "community": {
+          "in_wantlist": 167,
+          "in_collection": 14
+        }
+      }
+    },
+    {
+      "id": 2314765,
+      "label": "Harvest",
+      "country": "Japan",
+      "title": "The Dark Side Of The Moon = 狂気",
+      "major_formats": [
+        "CD"
+      ],
+      "format": "Album, Reissue, Stereo",
+      "catno": "CP35-3017, SHVL-804-A•B",
+      "released": "1983",
+      "status": "Accepted",
+      "resource_url": "https://api.discogs.com/releases/2314765",
+      "stats": {
+        "community": {
+          "in_wantlist": 1861,
+          "in_collection": 299
+        }
+      }
+    },
+    {
+      "id": 27090555,
+      "label": "Harvest",
+      "country": "Japan",
+      "title": "The Dark Side Of The Moon",
+      "major_formats": [
+        "CD"
+      ],
+      "format": "Album, Repress",
+      "catno": "CP35-3017",
+      "released": "1984",
+      "status": "Accepted",
+      "resource_url": "https://api.discogs.com/releases/27090555",
+      "stats": {
+        "community": {
+          "in_wantlist": 311,
+          "in_collection": 43
+        }
+      }
+    },
+    {
+      "id": 5012948,
+      "label": "Harvest",
+      "country": "Europe",
+      "title": "The Dark Side Of The Moon",
+      "major_formats": [
+        "CD"
+      ],
+      "format": "Album, Reissue",
+      "catno": "CDP 7 46001 2",
+      "released": "1984",
+      "status": "Accepted",
+      "resource_url": "https://api.discogs.com/releases/5012948",
+      "stats": {
+        "community": {
+          "in_wantlist": 1556,
+          "in_collection": 711
+        }
+      }
+    },
+    {
+      "id": 11565067,
+      "label": "Harvest",
+      "country": "US",
+      "title": "The Dark Side Of The Moon",
+      "major_formats": [
+        "CD"
+      ],
+      "format": "Album, Reissue, Stereo",
+      "catno": "CDP 7 46001 2",
+      "released": "1984",
+      "status": "Accepted",
+      "resource_url": "https://api.discogs.com/releases/11565067",
+      "stats": {
+        "community": {
+          "in_wantlist": 1126,
+          "in_collection": 481
+        }
+      }
+    }
+  ]
+}

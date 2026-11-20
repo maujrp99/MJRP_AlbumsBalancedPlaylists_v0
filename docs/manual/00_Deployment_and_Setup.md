@@ -110,8 +110,62 @@ prompts nem marcava `shared/` como módulo ES, foi removido (UAT-22).
   | `APPLE_KEY_ID` | `musickit-key-id` |
   | `APPLE_MUSIC_PRIVATE_KEY` | `musickit-private-key` |
 
+  A F75 (valor estimado do inventário) lê mais três, descritas em «2.4b O interruptor dos valores do Discogs»:
+
+  | Variável no servidor | De onde vem | Para quê |
+  |---|---|---|
+  | `DISCOGS_TOKEN` | segredo `discogs-token` | o token da conta do Discogs; sem ele a fonte de valor fica desligada |
+  | `DISCOGS_VALUES` | variável comum (opcional) | `off` desliga a fonte de valor; ausente, ou qualquer outro texto, não desliga |
+  | `DISCOGS_VALUES_FOR` | variável comum (opcional) | os ids (uid do Firebase) das pessoas para quem a fonte fica ligada, separados por vírgula; ausente, vale para toda pessoa com conta |
+  | `VALUE_CALLS_PER_HOUR` | variável comum (opcional) | quantas leituras de valor uma pessoa faz por hora (padrão 900) |
+
   Mudar uma variável ou um segredo é feito no serviço (`gcloud run services update`), não por este script.
 - **Regras do Firestore:** nenhum dos dois scripts publica `firestore.rules`.
+
+### 2.4b O interruptor dos valores do Discogs (F75)
+
+O valor estimado do inventário é lido do Discogs pelo servidor, com o token da conta do MJRP. A fonte está **ligada** só quando `DISCOGS_TOKEN` existe no serviço **e** `DISCOGS_VALUES` não é `off`. Ligar e desligar é mudar uma variável do serviço: cada comando abaixo cria uma revisão nova em cerca de um minuto, **sem publicar código**. O app pergunta ao servidor quando o inventário abre; quem está com o inventário aberto vê a mudança ao abri-lo de novo.
+
+**Ligar pela primeira vez** (o código tem de estar publicado antes: `npm run deploy:server`):
+
+```bash
+gcloud run services update mjrp-proxy \
+  --update-secrets DISCOGS_TOKEN=discogs-token:latest \
+  --region southamerica-east1 --project mjrp-playlist-generator
+```
+
+Se a revisão não subir por falta de permissão de leitura do segredo, dar à conta de serviço do `mjrp-proxy` o papel de leitura só desse segredo e repetir o comando acima:
+
+```bash
+gcloud secrets add-iam-policy-binding discogs-token \
+  --member "serviceAccount:<conta de serviço do mjrp-proxy>" \
+  --role roles/secretmanager.secretAccessor --project mjrp-playlist-generator
+```
+
+**Desligar** (o app deixa de mostrar botão, valor e aviso do Discogs; o valor escrito à mão, os totais, a moeda, a ordem e os links de compra seguem):
+
+```bash
+gcloud run services update mjrp-proxy --update-env-vars DISCOGS_VALUES=off \
+  --region southamerica-east1 --project mjrp-playlist-generator
+```
+
+**Ligar de novo:**
+
+```bash
+gcloud run services update mjrp-proxy --remove-env-vars DISCOGS_VALUES \
+  --region southamerica-east1 --project mjrp-playlist-generator
+```
+
+**Deixar ligada só para uma pessoa** (recomendado: os termos de uso da API do Discogs dão o preço para uso pessoal; sem isto, toda pessoa com conta no app vê preços lidos com o token do MJRP):
+
+```bash
+gcloud run services update mjrp-proxy --update-env-vars DISCOGS_VALUES_FOR=<uid do Firebase> \
+  --region southamerica-east1 --project mjrp-playlist-generator
+```
+
+**Conferir:** `GET https://<site>/api/value-sources`, com o login de uma pessoa com conta, responde `{ "data": { "discogs": "on" }, "outcome": "found" }` ou `"off"`. O token nunca aparece em resposta nem em linha de log; a linha de log de cada leitura é `album_value`, com a resposta e o tempo.
+
+**Trocar o token:** gravar uma versão nova do segredo `discogs-token` e rodar de novo o comando de «Ligar pela primeira vez» (`:latest` é resolvido quando a revisão sobe).
 
 ### 2.5 Automação do GitHub
 
@@ -138,6 +192,9 @@ AI_MODEL=...                       # Optional (defaults to gemini-1.5-flash)
 PORT=3000                          # Optional
 ALLOWED_ORIGIN=http://localhost:8000  # CORS
 NODE_ENV=development|production
+DISCOGS_TOKEN=...                  # Optional: o token da conta do Discogs; sem ele os valores do Discogs ficam desligados (F75)
+DISCOGS_VALUES=off                 # Optional: desliga os valores do Discogs mesmo com o token
+DISCOGS_VALUES_FOR=uid1,uid2       # Optional: só essas pessoas têm os valores do Discogs
 ```
 
 ### Frontend (`.env` na raiz, lido pelo Vite na hora do build)

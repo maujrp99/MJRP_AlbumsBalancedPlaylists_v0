@@ -8,7 +8,9 @@
  *   - when the source says "busy" (the caller's `busyOf(error)` tells), nobody starts until the
  *     wait ends. The wait is the one the source asked for (Retry-After), or one that grows:
  *     baseMs, baseMs x factor, ... up to maxMs. A success ends the growth. The same request is
- *     asked again after the wait, up to `maxAttempts` times.
+ *     asked again after the wait, up to `maxAttempts` times;
+ *   - a source that says on a GOOD answer how little is left of its limit is waited for too:
+ *     `pause(ms)` holds every start for that long, and fails nothing.
  *
  * It never sleeps past the deadline of a request: a wait that would end after `deadlineAt` fails
  * at once, without touching the source, as a PaceError:
@@ -126,10 +128,20 @@ function createPoliteQueue ({
     }
   }
 
-  return { run }
+  /**
+   * The source said, on an answer that worked, that its limit is about to be reached (a header
+   * with how many requests are left): nobody starts before `ms` from now. It fails no request
+   * and does not count as a "busy" answer (F75, the Discogs limit).
+   * @param {number} ms
+   */
+  function pause (ms) {
+    if (typeof ms === 'number' && ms > 0) pausedUntil = Math.max(pausedUntil, now() + Math.min(maxRetryAfterMs, ms))
+  }
+
+  return { run, pause }
 }
 
 /** A queue that paces nothing: each task runs at once. For the tests of who uses a queue. */
-const noPace = Object.freeze({ run: (task) => task() })
+const noPace = Object.freeze({ run: (task) => task(), pause: () => {} })
 
 module.exports = { createPoliteQueue, PaceError, noPace }

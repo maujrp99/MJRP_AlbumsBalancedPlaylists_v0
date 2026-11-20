@@ -1,0 +1,35 @@
+{
+  "_note": "NOT a real answer: written by hand from the shape the Discogs documentation gives for GET /marketplace/price_suggestions/{release_id}. The live call needs the owner's token and was never made while this was built.",
+  "Mint (M)": {
+    "currency": "USD",
+    "value": 14.5
+  },
+  "Near Mint (NM or M-)": {
+    "currency": "USD",
+    "value": 11.2
+  },
+  "Very Good Plus (VG+)": {
+    "currency": "USD",
+    "value": 7.9
+  },
+  "Very Good (VG)": {
+    "currency": "USD",
+    "value": 5.1
+  },
+  "Good Plus (G+)": {
+    "currency": "USD",
+    "value": 2.9
+  },
+  "Good (G)": {
+    "currency": "USD",
+    "value": 1.8
+  },
+  "Fair (F)": {
+    "currency": "USD",
+    "value": 1.1
+  },
+  "Poor (P)": {
+    "currency": "USD",
+    "value": 0.6
+  }
+}
