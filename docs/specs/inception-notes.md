@@ -35,3 +35,11 @@
 - **O protótipo não mudou:** muda depois da escolha dele.
 - **Achado de desenho:** em «Transformar» o sentido do valor muda com o status: «worth about» no que ele tem, «costs about» no que falta. Responde ao «parece que estou vendendo».
 
+## [2026-11-20 01:02] F75 · rodada 3: o cartão escolhido e as contagens como filtro
+
+- **Escolha do MJRP:** «A opcao é transformar mas na parte do where to buy, quero um merge do elevar (O label WHERE TO BUY) com os links em laranja do consolidar». E sobre as contagens: «concordo com a proposta de torná-los filtros, mas ai o drop down nao deveria ser apenas para ordenacao?».
+- **Como foi entendido:** o cartão é o «Transformar» com «Where to buy» em links; as contagens filtram por status e o seletor de status sai. O seletor de formato fica, além do de ordem: ele filtra outra coisa (CD, vinil). Se ele quiser a barra só com a ordem, o formato pode virar botões também.
+- **v3:** `design/inception/inventory-value-v3.html`, com as duas decisões. A v2 e a v1 ficam intactas. No comparador (Artifact), a v3 é a «Nova».
+- **Reserva:** «Sell» e «Trade» aparecem apagados no cartão do que é dele, com «not in the app yet». Mostra algo que não existe; é o lugar reservado para a rede de colecionadores.
+- **Não feito:** a v3 em 390 px não foi conferida; a crítica de UX das telas no celular está em andamento (F76).
+

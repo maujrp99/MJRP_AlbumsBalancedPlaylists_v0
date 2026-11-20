@@ -45,8 +45,9 @@
 const CURRENT = { name: 'Referência · a tela de hoje', say: 'O inventário como está em produção: sem valor estimado; o total «Total Owned» soma só o que você pagou.', file: '/inventory' };
 // Newest first. `old: true` on every version that is not one of the last two.
 const VERSIONS = [
-  { id: 'v2', name: 'v2 · Nova', say: 'A mesma proposta da v1, agora sobre a tela real do inventário (o HTML e os estilos do app, com doze dos seus álbuns e as capas de verdade). O total virou uma faixa sob o título, no lugar do «Total Owned».', file: '/_prototype-inventory-value-v2.html' },
-  { id: 'v1', name: 'v1 · Esboço', say: 'Valor estimado lido do Discogs (três estados e a média), editável à mão; o total separado em «o que tenho» e «o que falta comprar»; quatro moedas; fila para álbuns novos; links de compra.', file: '/_prototype-inventory-value.html' }
+  { id: 'v3', name: 'v3 · Nova', say: 'O cartão que você escolheu («Transformar», com «WHERE TO BUY» em links), o valor que diz o que é conforme o status, e as contagens do topo como filtro.', file: '/_prototype-inventory-value-v3.html' },
+  { id: 'v2', name: 'v2 · Anterior', say: 'A mesma proposta da v1, agora sobre a tela real do inventário (o HTML e os estilos do app, com doze dos seus álbuns e as capas de verdade). O total virou uma faixa sob o título, no lugar do «Total Owned».', file: '/_prototype-inventory-value-v2.html' },
+  { id: 'v1', old: true, name: 'v1 · Esboço', say: 'Valor estimado lido do Discogs (três estados e a média), editável à mão; o total separado em «o que tenho» e «o que falta comprar»; quatro moedas; fila para álbuns novos; links de compra.', file: '/_prototype-inventory-value.html' }
 ];
 const SCENARIOS = [['read', 'Valores lidos'], ['connect', 'Discogs não conectado'], ['reading', 'Lendo os valores'], ['new', 'Álbuns novos esperando valor'], ['window', 'Janela: três estados e a média'], ['hand', 'Janela: valor escrito à mão'], ['notfound', 'Janela: edição não achada']];
 const WIDTHS = [[1440, 0.5], [390, 1]];

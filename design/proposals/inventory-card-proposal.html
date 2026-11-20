@@ -969,6 +969,10 @@ img, video { max-width: 100%; height: auto; }
 <div class="pp">
   <h1>O cartão do inventário, em três níveis</h1>
   <p class="axis"><b>O eixo:</b> quanto o cartão muda para dizer o que é o valor e onde comprar. Da esquerda para a direita, da arrumação mínima ao cartão repensado para o colecionador. O cartão é o do app; os valores são ilustrativos. Em cada nível, um álbum que você tem e um que não tem.</p>
+  <div class="levels" style="margin-bottom:6px">
+    <section class="lvl"><h2>A sua escolha · Transformar, com «Where to buy» em links</h2><dl><dt>Você pediu</dt><dd>«Transformar», com o rótulo «WHERE TO BUY» do Elevar e os links em laranja do Consolidar</dd><dt>No que é seu</dt><dd>continua com «Sell» e «Trade» apagados, até a rede de colecionadores existir</dd></dl>
+  <div class="pair"><div class="slot" data-level="escolhida" data-card="owned"></div><div class="slot" data-level="escolhida" data-card="notowned"></div></div></section>
+  </div>
   <div class="levels">
     <section class="lvl"><h2>Referência · a v2 que você viu</h2><dl><dt>Problema</dt><dd>as linhas ficam soltas; «$7.43» não diz o que é; comprar só dentro da janela</dd></dl>
   <div class="pair"><div class="slot" data-level="reference" data-card="owned"></div><div class="slot" data-level="reference" data-card="notowned"></div></div></section>
@@ -1087,6 +1091,21 @@ const LEVELS = {
           ? `<div class="flex flex-wrap gap-2"><button type="button" class="btn btn-secondary btn-sm opacity-50 cursor-not-allowed" disabled>Sell</button><button type="button" class="btn btn-secondary btn-sm opacity-50 cursor-not-allowed" disabled>Trade</button></div>
              <span class="text-[11px] text-gray-400">Selling and trading between collectors: not in the app yet.</span>`
           : `<div class="flex flex-wrap gap-2">${stores(false)}</div>`}
+      </div>
+    </div>`,
+
+  escolhida: (x) => `<div class="bg-black/20 rounded-xl border border-white/10 mt-2 overflow-hidden">
+      <div class="p-3 flex items-center justify-between gap-3" style="border-left:3px solid ${x.owned ? '#22c55e' : '#f97316'}">
+        <div><div class="text-[11px] text-gray-400 uppercase tracking-widest">${x.owned ? 'In my collection · worth about' : 'Not mine yet · costs about'}</div>
+          <div class="text-xs text-gray-400">CD · Discogs, mean of 3 conditions</div></div>
+        <strong class="text-lg text-white tabular-nums">${money(x.value)}</strong>
+      </div>
+      <div class="px-3 py-2 flex items-center justify-between gap-2 border-t border-white/10">${scores(x)}</div>
+      <div class="p-3 border-t border-white/10 flex flex-col gap-2">
+        ${x.owned
+          ? `<div class="flex flex-wrap gap-2"><button type="button" class="btn btn-secondary btn-sm opacity-50 cursor-not-allowed" disabled>Sell</button><button type="button" class="btn btn-secondary btn-sm opacity-50 cursor-not-allowed" disabled>Trade</button></div>
+             <span class="text-[11px] text-gray-400">Selling and trading between collectors: not in the app yet.</span>`
+          : `<span class="text-[11px] text-gray-400 uppercase tracking-widest">Where to buy</span><div class="flex flex-wrap items-center gap-2">${stores(true)}</div>`}
       </div>
     </div>`
 };

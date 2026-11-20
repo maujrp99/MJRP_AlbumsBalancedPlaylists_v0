@@ -4,7 +4,7 @@ subject: "F75: valor estimado dos CDs do inventário e onde comprar"
 project: mjrpalbumblender-v0
 feature: F75
 requirement: S-57
-prototype: design/inception/inventory-value-v2.html
+prototype: design/inception/inventory-value-v3.html
 status: para o MJRP julgar
 written: "2026-11-20"
 ---
@@ -15,6 +15,12 @@ written: "2026-11-20"
 **O protótipo:** `design/inception/inventory-value-v2.html` (modo explorar). É a **tela real do inventário**, capturada como o app a desenha (o HTML e os estilos do app, com doze dos seus álbuns e as capas de verdade), com o que a F75 propõe acrescentado. Os valores são ilustrativos: nada foi lido do Discogs. A v1 (`inventory-value-v1.html`) era um esboço e fica para comparar.
 
 **O comparador:** um Artifact do Claude, privado: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck. Mostra a tela de hoje («Referência») ao lado da v2 e da v1, em 1440 e 390 px, por cenário. As três telas vão dentro do artifact, com as capas embutidas. A cópia local (`design/proposals/inventory/comparator.html`) continua valendo para ver a «Referência» ao vivo, pelo servidor local.
+
+## O que você já decidiu (2026-11-20)
+
+- **O cartão:** o nível «Transformar», com o rótulo «WHERE TO BUY» e os links em laranja. O valor diz o que é: «In my collection · worth about» no que é seu, «Not mine yet · costs about» no que falta. A prévia com os três níveis fica em `design/proposals/inventory-card-proposal.html`.
+- **As contagens do topo** viram o filtro por status, e o seletor de status sai da barra. Ficam o seletor de formato e o de ordem.
+- **A v3 do protótipo** (`design/inception/inventory-value-v3.html`) já tem as duas decisões.
 
 ## A ideia em uma frase
 

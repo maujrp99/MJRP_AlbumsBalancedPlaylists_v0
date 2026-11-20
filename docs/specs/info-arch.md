@@ -1,6 +1,6 @@
 # Info-arch — Album Blender V0
 
-> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v2.html
+> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v3.html
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -81,7 +81,7 @@ Cabeçalho do álbum (capa, título, artista, status, formato); «Estimated valu
 
 - **Discogs não ligado.** Aviso «Values come from Discogs. Connect your Discogs account once to read them.», com «Connect Discogs»; o total mostra «—» e «No value read yet». ^inventory-value-not-connected
 - **Lendo os valores.** Aviso «Reading values… 86 of 211. You can keep using the inventory. This takes about 25 minutes for 211 albums.», com «Stop»; o botão «Update values» fica desabilitado e conta o progresso; os cartões ainda sem valor dizem «Reading…». ^inventory-value-reading
-- **Valores lidos.** Uma faixa sob o título, no lugar do «Total Owned», mostra «Estimated value of what I own», «N of M owned albums have a value» e «To buy the rest»; cada cartão mostra o valor e a etiqueta «Discogs» ou «Yours». ^inventory-value-read
+- **Valores lidos.** Uma faixa sob o título, no lugar do «Total Owned», mostra «Estimated value of what I own», «N of M owned albums have a value» e «To buy the rest»; cada cartão tem um bloco que diz o que o valor é: «In my collection · worth about» no que é dele, «Not mine yet · costs about» no que falta, com a origem («CD · Discogs, mean of 3 conditions» ou «CD · written by you»), as duas médias e, no que falta, «Where to buy» com os três links. ^inventory-value-read
 - **Álbuns novos esperando valor.** Aviso «2 new albums are waiting for a value. They are read on their own, a few at a time, while the app is open.», com «Read them now»; o cartão diz «Waiting for a value». ^inventory-value-waiting
 
 ### Janela do álbum do inventário
@@ -90,6 +90,8 @@ Cabeçalho do álbum (capa, título, artista, status, formato); «Estimated valu
 - **Valor escrito à mão.** «You wrote this value. Reading values from Discogs never changes it.», o valor com a etiqueta «Yours», e «Use the Discogs value instead». ^inventory-item-value-yours
 - **Sem valor ainda.** «No value was read for this album yet.», com «Read the value now» e o campo para escrever. ^inventory-item-value-none
 - **Edição não achada.** «Discogs has no CD edition under this artist and title, so there is no value to read.», com «Look again» e «Pick an edition on Discogs». ^inventory-item-value-not-found
+
+- **Filtrado por status.** Clicar numa contagem do topo («✓ 22 Owned», «182 Not Owned», «♡ 7 Wishlist») mostra só os álbuns daquele status e marca o botão; clicar de novo mostra todos. ^inventory-filtered-by-status-count
 
 Estados que o protótipo ainda não mostra: a leitura que falha (Discogs fora do ar, limite atingido, token recusado) e o câmbio do dia que não chega.
 
@@ -108,6 +110,8 @@ Estados que o protótipo ainda não mostra: a leitura que falha (Discogs fora do
 
 - Dois números por item, não um: o que a pessoa pagou e o que o álbum vale (proposta da rodada 1, à espera do MJRP).
 - O total separa «o que tenho» de «o que falta comprar» (proposta da rodada 1, à espera do MJRP).
+- O cartão é o nível «Transformar», com «Where to buy» em links (escolha do MJRP em 2026-11-20; os outros dois níveis ficam em `design/proposals/inventory-card-proposal.html`).
+- As contagens por status viram o filtro, e o seletor de status sai da barra; os seletores que ficam são o de formato e o de ordem (decisão do MJRP em 2026-11-20).
 
 ## Protótipos aprovados
 
@@ -115,18 +119,20 @@ Nenhum ainda. A rodada 1 da F75 é de exploração.
 
 ## Inventário do protótipo
 
-Fonte: `design/inception/inventory-value-v2.html` (a tela real do inventário, capturada como o app a desenha, com o que a F75 propõe; a v1, um esboço, fica para comparar) · wireframes: `design/wireframes/inventory-value-v2-inventory.png`, `design/wireframes/inventory-value-v2-album-window.png` · comparador: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck (Artifact do Claude, privado; a cópia local é `design/proposals/inventory/comparator.html`).
+Fonte: `design/inception/inventory-value-v3.html` (a tela real do inventário, capturada como o app a desenha, com o que a F75 propõe; a v2 e a v1 ficam para comparar) · wireframes: `design/wireframes/inventory-value-v3-inventory.png`, `design/wireframes/inventory-value-v3-album-window.png` · prévia do cartão em três níveis: `design/proposals/inventory-card-proposal.html` · comparador: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck (Artifact do Claude, privado; a cópia local é `design/proposals/inventory/comparator.html`).
 
 | ID | O que a tela mostra | Função do produto | Destino |
 |---|---|---|---|
 | INV-V1 | Caixa «Estimated value of what I own», com a contagem | informar | S-57 |
 | INV-V2 | «To buy the rest», com a contagem | ajudar a decidir | S-57 |
 | INV-V3 | Seletor de moeda e a taxa usada | informar | S-57 |
-| INV-V4 | Linha de valor no cartão, com a origem | informar | S-57 |
+| INV-V4 | Bloco do cartão: o que o valor é conforme o status («In my collection · worth about» ou «Not mine yet · costs about»), o valor, a origem, as duas médias | informar | S-57 |
 | INV-V5 | Botão «Update values» e o aviso de leitura | agir | S-57 |
 | INV-V6 | Aviso «N new albums are waiting for a value» | informar, agir | S-57 |
 | INV-V7 | «Sort by»: «Value (↓)», «Value (↑)» | ajudar a decidir | S-57 |
 | INV-V8 | Janela: três estados e a média, a edição, a data | informar | S-57 |
 | INV-V9 | Janela: campo para escrever o valor | agir | S-57 |
-| INV-V10 | Janela: «Where to buy», três links | agir | S-57 |
+| INV-V10 | «Where to buy», três links: no cartão do que não é dele, e na janela | agir | S-57 |
 | INV-V11 | Aviso «Connect Discogs» | agir | S-57 |
+| INV-V12 | As contagens por status como botões que filtram; o seletor de status sai da barra | agir | S-57 (decisão do MJRP na rodada 3) |
+| INV-V13 | No cartão do que é dele: «Sell» e «Trade», apagados, com «not in the app yet» | informar | candidato «rede de colecionadores» do PRD; sem requisito ainda |

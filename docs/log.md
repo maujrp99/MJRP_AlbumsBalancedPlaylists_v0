@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:02] decision — F75: o MJRP escolheu o cartão «Transformar» com «Where to buy» em links, e as contagens como filtro
+
+- Dito por ele: «A opcao é transformar mas na parte do where to buy, quero um merge do elevar (O label WHERE TO BUY) com os links em laranja do consolidar»; e «concordo com a proposta de torná-los filtros».
+- A v3 do protótipo (`design/inception/inventory-value-v3.html`) tem as duas decisões; a prévia dos três níveis fica em `design/proposals/inventory-card-proposal.html`; o comparador (Artifact) mostra a v3 como a nova.
+- F74: servidor publicado (`mjrp-proxy-00208-kzm`) e site publicado (`8efa91c`); a prova na conta do MJRP está em andamento.
+
 ## [2026-11-20 00:55] session — F72: a contagem de álbuns vai para a paginação e conta o que está na tela
 
 **Branch:** feat/f72-albums-count-in-the-pager
