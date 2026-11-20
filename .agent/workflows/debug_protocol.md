@@ -36,7 +36,7 @@ description: Debugging Protocol
     -   *Check*: If fix requires changing a Core Pattern -> **STOP**. Write an ADR first (`docs/decisions/`).
 
 ## 3. Implementation
-0. Follow our CONSTITUTION.md and the ´/docs/manual/01_System_Architecture.md´
+0. Follow our constitution (`docs/specs/constitution.md`) and the ´/docs/manual/01_System_Architecture.md´
 1.  **Apply Fix**: Edit the code making analysis to implement a fix with componentization and modularity reuse whenever possible following our architecture patterns and If not possible try to modularize or componetize the fix.
 2.  **Legacy Code**: If the fix replace a code, clean it and add to the debug log the deleted/replaced code.
 2.  **Code Check**: Confirm no Layer Violations (`View` -> `Repository`).

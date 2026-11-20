@@ -12,7 +12,7 @@ description: Golden rules for development
    - [ ] Check for SDD files (`spec.md`, `plan.md`, `task.md`) OR `implementation_plan.md`.
    - [ ] **Missing Docs?**: Ask the user: "Do we need an SDD for this?"
    - [ ] Create/Update the plan if required.
-   - [ ] Check, read, analyze `docs/CONSTITUTION.md` for following it.
+   - [ ] Check, read, analyze `docs/specs/constitution.md` for following it.
    - [ ] Check, read, analyze `.agent/rules/developer_rules.md` for following it.
 
 2. **Execution (SDD)**

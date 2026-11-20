@@ -5,8 +5,8 @@ trigger: always_on
 ### PROJECT CONSTITUTION
 
 > [!IMPORTANT]
-> **ALWAYS** follow the Project Constitution defined in `docs/CONSTITUTION.md` and the System Architecture `docs/01_System_Architecture.md`.
-> It defines the Core Principles for User-Centric Quality, Clean Code, Documentation, and Testing.
+> **ALWAYS** follow the Project Constitution defined in `docs/specs/constitution.md` (v2.0.0; `docs/CONSTITUTION.md` is the superseded v1.0.0, do not follow it) and the System Architecture `docs/01_System_Architecture.md`.
+> It defines the stack rules and the articles: what the user sees, the parts and their stack, the dependency rule, tests, delivery and security, data and privacy, quality gates, and how it changes.
 
 ### GOLDEN RULES
 1. **Context First**: Always ask if you have full project context and what is the full context of the demand.

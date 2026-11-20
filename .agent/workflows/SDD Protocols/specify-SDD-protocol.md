@@ -7,7 +7,7 @@ description: ### 1. Specification Phase (`spec.md`) do SDD
 
 0. If Agent does not have requirements, ask the requirements or idea from the human user.
 
-1. Agent creates specification considering our CONSTITUTION.md and the ´/docs/manual/01_System_Architecture.md´. 
+1. Agent creates specification considering our constitution (`docs/specs/constitution.md`) and the ´/docs/manual/01_System_Architecture.md´. 
 
 2. Agent creates/updates `docs/technical/specs/<feature>/spec.md`.
 

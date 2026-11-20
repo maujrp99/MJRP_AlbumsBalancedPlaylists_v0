@@ -1,11 +1,13 @@
 ---
 type: constitution-proposal
 feature: F78
-status: proposta
+status: aceita para esta iteração (2026-11-20)
 written: "2026-11-20"
 decides: MJRP
 supersedes: docs/specs/constitution.md v1.0.0 (2025-12-10)
 ---
+> **Aceita em 2026-11-20, para esta iteração** (revisável na próxima): ao item «1. Ler e aceitar a constituição v2.0.0 e o ADR-0022», o MJRP respondeu «1.aceito pra essa iteração». O texto em vigor está em `docs/specs/constitution.md`; este arquivo fica como a proposta, com a pergunta aberta, a lista do aceite e o que ficou de fora do v1.0.0.
+
 # Constitution v2.0.0 — proposta
 
 > **Proposta — aguarda a leitura e o aceite do MJRP.** Nada aqui está em vigor. A constituição v1.0.0 (`docs/specs/constitution.md`) continua no lugar, sem mudança, até ele aceitar este texto, mudá-lo ou recusá-lo. A última seção diz o que muda no dia do aceite.

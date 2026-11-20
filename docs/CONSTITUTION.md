@@ -1,4 +1,4 @@
-# MJRP Project Constitution
+# MJRP Project Constitution — SUBSTITUÍDA em 2026-11-20 pela v2.0.0 (docs/specs/constitution.md); não seguir
 
 ## Core Principles
 
