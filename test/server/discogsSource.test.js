@@ -199,7 +199,8 @@ describe('the value of an album (REQ-04)', () => {
         const http = httpWith([...happyRoutes().slice(0, 2), ['/marketplace/price_suggestions/5012948', {}]])
         expect(await ask(sourceWith(http))).toEqual({
             outcome: 'no_value',
-            release: { id: 5012948, title: 'Harvest 1984, Europe', url: 'https://www.discogs.com/release/5012948' }
+            release: { id: 5012948, title: 'Harvest 1984, Europe', url: 'https://www.discogs.com/release/5012948' },
+            reason: 'no_suggestion'
         })
     })
 
@@ -208,7 +209,8 @@ describe('the value of an album (REQ-04)', () => {
         const http = httpWith([...happyRoutes().slice(0, 2), ['/marketplace/price_suggestions/5012948', httpError(404, { message: 'The requested resource was not found.' })]])
         expect(await ask(sourceWith(http, { logger: { warn } }))).toEqual({
             outcome: 'no_value',
-            release: { id: 5012948, title: 'Harvest 1984, Europe', url: 'https://www.discogs.com/release/5012948' }
+            release: { id: 5012948, title: 'Harvest 1984, Europe', url: 'https://www.discogs.com/release/5012948' },
+            reason: 'no_suggestion'
         })
         expect(warn).toHaveBeenCalledWith(expect.stringContaining('HTTP 404 on the price page: The requested resource was not found.'))
     })

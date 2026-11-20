@@ -6,7 +6,9 @@
  *
  *   found           with { release: { id, title, url }, conditions: { mint, nearMint, veryGoodPlus }, currency, readAt }
  *   not_found       Discogs has no CD edition the identity rule accepts as this album
- *   no_value        the edition exists and Discogs suggests no price for the three conditions; with { release }
+ *   no_value        the edition exists and there is no price to give; with { release, reason }:
+ *                   'no_suggestion' (Discogs suggests none for the three conditions) or
+ *                   'none_for_sale' (the weaker reading, below, and nobody sells it now)
  *   not_configured  the switch is off (lib/valueSources/valueSwitch.js): Discogs was not asked
  *
  * Which edition: the masters of a search by artist and title are LISTED, the one identity rule
@@ -14,6 +16,19 @@
  * most copies in collections is taken. With no master, or a master with no CD version, the CD
  * releases of a second search are listed and the rule picks again. A known edition (`releaseId`)
  * skips all of that: only the price is asked.
+ *
+ * The suggestion and its weaker stand-in. Discogs gives price suggestions only to an account
+ * whose seller settings are filled in; to any other it answers the price page with «You must
+ * fill out your seller settings first.» (seen in production as HTTP 404, 2026-11-20). That is not
+ * "no edition" and not "the token was refused": the source says it (`suggestions:
+ * 'seller_settings_missing'`) and reads, in its place, the lowest price the edition is for sale
+ * at (GET /marketplace/stats/{id}), answered as a reading of another KIND:
+ *   found  with { release, kind: 'lowest_for_sale', lowest: { value, currency }, forSale, suggestions, readAt }
+ * It is said INSIDE a good answer, not as a failure: the album was answered, with a weaker value.
+ * The server remembers nothing between requests: the app that already knows sends `prices:
+ * 'lowest'` and the price page is not asked (one request per album instead of two). An app that
+ * sends no hint makes the suggestion be tried again: when the seller settings get filled in, the
+ * three conditions come back with no change here.
  *
  * The pace (DISCOGS_PACE): one request at a time and never more than one a second, through the
  * polite queue; when the `X-Discogs-Ratelimit-Remaining` header says the minute is spent the queue
@@ -32,7 +47,7 @@ const { createPoliteQueue, PaceError } = require('../politeQueue')
 const { loadAlbumIdentity } = require('../albumIdentity')
 const { found, none, SOURCE_OUTCOMES } = require('../rankingSources/sourceOutcome')
 const { discogsSwitch, ON } = require('./valueSwitch')
-const { suggestionsOf, candidatesOf, readingsOfLabel, mostCollectedCd, releaseUrl } = require('./discogsParse')
+const { suggestionsOf, lowestForSaleOf, candidatesOf, readingsOfLabel, mostCollectedCd, releaseUrl } = require('./discogsParse')
 const { version: SERVER_VERSION } = require('../../package.json')
 
 const NAME = 'Discogs'
@@ -40,6 +55,12 @@ const API = 'https://api.discogs.com'
 /** Discogs asks for a User-Agent that says which application calls, with where to find it. */
 const USER_AGENT = `AlbumBlender/${SERVER_VERSION} +https://mjrp-playlist-generator.web.app`
 const NO_VALUE = 'no_value'
+/** What the answer says of the price suggestions, when the value is the lowest price for sale. */
+const SELLER_SETTINGS_MISSING = 'seller_settings_missing'
+const NOT_ASKED = 'not_asked'
+const LOWEST_FOR_SALE = 'lowest_for_sale'
+/** The hint of an app that already knows the suggestions are refused. */
+const LOWEST = 'lowest'
 
 /** How long one request to Discogs may take. The whole album request has 20 s (services/valueService.js). */
 const REQUEST_TIMEOUT_MS = 8000
@@ -87,6 +108,12 @@ class NoSuchPage extends Error {
 /** The sentence Discogs sends with a refusal, as text and cut short: it goes to a log line. */
 const saidBy = (err) => String((err.response.data && err.response.data.message) || '').slice(0, 200)
 
+/** Discogs refused the price suggestions because the account has no seller settings. Never leaves this file. */
+class SellerSettingsMissing extends Error {}
+
+const REFUSAL_STATUSES = new Set([401, 403, 404])
+const isSellerSettingsRefusal = (status, said) => REFUSAL_STATUSES.has(status) && /seller settings/i.test(said)
+
 /** The queue said the turn would come too late. */
 function failureOfPace (err) {
   if (err.reason === 'busy') return new UpstreamError('upstream_busy', `${NAME}: asked to wait`, { retryAfterMs: err.retryAfterMs })
@@ -97,7 +124,10 @@ function failureOfPace (err) {
 function failureOf (err) {
   if (err instanceof PaceError) return failureOfPace(err)
   const status = err && err.response && err.response.status
-  if (status === 404) return new NoSuchPage(saidBy(err))
+  if (!status) return upstreamErrorFrom(err, NAME)
+  const said = saidBy(err)
+  if (isSellerSettingsRefusal(status, said)) return new SellerSettingsMissing(said)
+  if (status === 404) return new NoSuchPage(said)
   if (status === 401 || status === 403) return new UpstreamError('upstream_unauthorized', `${NAME}: HTTP ${status}, the token was refused`)
   return upstreamErrorFrom(err, NAME)
 }
@@ -172,20 +202,37 @@ function createDiscogsSource ({ http = axios, pace = discogsPace, env = process.
    */
   async function priceOf (edition, deadlineAt) {
     try {
-      return await get(`/marketplace/price_suggestions/${edition.id}`, {}, deadlineAt)
+      return { body: await get(`/marketplace/price_suggestions/${edition.id}`, {}, deadlineAt) }
     } catch (err) {
+      if (err instanceof SellerSettingsMissing) return { refused: true }
       if (!(err instanceof NoSuchPage)) throw err
       logger.warn(`[Discogs] HTTP 404 on the price page: ${err.said}`)
-      return null
+      return { body: null }
     }
   }
 
-  async function read ({ artist, title, year, releaseId }, deadlineAt) {
+  /** The three conditions of an edition; `refused` when Discogs wants the seller settings first. */
+  async function suggested (edition, deadlineAt) {
+    const price = await priceOf(edition, deadlineAt)
+    if (price.refused) return { refused: true }
+    const suggestion = suggestionsOf(price.body)
+    if (!suggestion) return { answer: none(NO_VALUE, { release: edition, reason: 'no_suggestion' }) }
+    return { answer: found({ release: edition, ...suggestion, readAt: new Date(now()).toISOString() }) }
+  }
+
+  /** The weaker reading: the lowest price the edition is for sale at now. */
+  async function lowestForSale (edition, suggestions, deadlineAt) {
+    const lowest = lowestForSaleOf(await get(`/marketplace/stats/${edition.id}`, {}, deadlineAt))
+    if (!lowest) return none(NO_VALUE, { release: edition, reason: 'none_for_sale', suggestions })
+    return found({ release: edition, kind: LOWEST_FOR_SALE, ...lowest, suggestions, readAt: new Date(now()).toISOString() })
+  }
+
+  async function read ({ artist, title, year, releaseId, prices }, deadlineAt) {
     const edition = releaseId ? release(releaseId) : await findRelease({ artist, title, year }, deadlineAt)
     if (!edition) return none(SOURCE_OUTCOMES.NOT_FOUND)
-    const suggestion = suggestionsOf(await priceOf(edition, deadlineAt))
-    if (!suggestion) return none(NO_VALUE, { release: edition })
-    return found({ release: edition, ...suggestion, readAt: new Date(now()).toISOString() })
+    if (prices === LOWEST) return lowestForSale(edition, NOT_ASKED, deadlineAt)
+    const tried = await suggested(edition, deadlineAt)
+    return tried.refused ? lowestForSale(edition, SELLER_SETTINGS_MISSING, deadlineAt) : tried.answer
   }
 
   /**
@@ -210,4 +257,4 @@ function createDiscogsSource ({ http = axios, pace = discogsPace, env = process.
 /** The queue of the running server: one for every request to Discogs of this instance. */
 const discogsPace = createPoliteQueue({ ...DISCOGS_PACE, busyOf: busyOfDiscogs() })
 
-module.exports = { createDiscogsSource, DISCOGS_PACE, busyOfDiscogs, NO_VALUE }
+module.exports = { createDiscogsSource, DISCOGS_PACE, busyOfDiscogs, NO_VALUE, SELLER_SETTINGS_MISSING, LOWEST_FOR_SALE }

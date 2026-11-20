@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:31] session — F75, servidor: a sugestão recusada por falta de «seller settings» tem nome, e o menor preço à venda entra no lugar
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- Produção mostrou: a página de preço do Discogs responde HTTP 404 «You must fill out your seller settings first.» para todo álbum. A fonte passa a reconhecer essa recusa (404, 401 ou 403 com essa frase) e a dizê-la dentro da resposta (`suggestions: 'seller_settings_missing'`), e lê no lugar `GET /marketplace/stats/{id}`: `found` com `kind: 'lowest_for_sale'`, `lowest: { value, currency }` e `forSale`; sem nada à venda, `no_value` com `reason: 'none_for_sale'`.
+- Decidido pelo agente — revisável: a recusa vai do lado do sucesso do contrato, como um campo, porque o álbum foi respondido (com um valor mais fraco); não é um código de falha. O servidor não guarda estado: o app que já sabe manda `prices: 'lowest'` e a página de preço não é pedida de novo; sem a dica, a sugestão é tentada, de modo que os três estados voltam sozinhos quando a conta tiver as configurações de vendedor.
+- Formato real de `/marketplace/stats/{id}`, lido em 6 pedidos sem token: `{"num_for_sale":124,"lowest_price":{"value":0.53,"currency":"USD"},"blocked_from_sale":false}`; sem nada à venda, `{"num_for_sale":0,"lowest_price":null,…}`; edição que não existe, 404 «Release not found.». A edição de «The Dark Side of the Moon» que a fonte escolhe (5012948) tinha zero à venda nessa leitura.
+- Testes do servidor escritos antes e vistos falhar; 459 passando.
+
 ## [2026-11-20 02:25] session — F75 em produção: o 404 da página de preço não é «sem edição em CD»
 **Branch:** feat/f75-cd-prices-and-where-to-buy
 Na primeira leitura na conta do MJRP, 16 de 16 álbuns voltaram «No CD edition found», em cerca de 3 s cada (três pedidos ao Discogs): a busca e as versões funcionam (refeitas sem token: AC/DC «High Voltage» acha a edição 864947) e o terceiro pedido, o do preço, voltou 404, que o servidor lia como «não achado». Conserto: o 404 da página de preço vira «sem valor», com a edição dita, e o que o Discogs escreveu vai para o log; o 404 de uma página de master continua «não achado».
