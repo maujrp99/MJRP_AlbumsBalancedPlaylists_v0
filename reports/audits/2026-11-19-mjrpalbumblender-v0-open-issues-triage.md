@@ -54,3 +54,12 @@ Leitura do código da `main` em `1d29ca1` (F58 em produção), sem navegador e s
 ## Não feito nesta triagem
 
 ESLint não foi rodado (sem dependências instaladas nessa pasta); o doctor não foi rodado; nada foi visto num navegador.
+
+## Conferido no navegador pelo integrador (2026-11-19 21:56)
+
+App local com a conta do MJRP, tela de álbuns com todas as séries, carga a frio da página.
+
+| Issue | O que foi visto |
+|---|---|
+| UAT-101 lista de séries vazia na primeira carga | a lista tinha 48 opções («All Series» mais as 47 séries) 1,1 s depois de a página abrir |
+| UAT-75 selo «PENDING» com nota existente | nenhum «PENDING» na tela com 165 cartões; os selos são «BESTEVERALBUMS», «SPOTIFY» e «MY RANKING» |

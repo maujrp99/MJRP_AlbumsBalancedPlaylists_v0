@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 21:56] review — UAT-101 e UAT-75 conferidas no navegador; em fixed
+
+A triagem dizia «não acontece mais, falta um olhar no navegador». Visto: a lista de séries tem as 48 opções 1,1 s depois da primeira carga; não existe mais selo «PENDING». A UAT-143 (filtro «Studio» com singles de eletrônica) fica aberta para o julgamento do MJRP com artistas reais. Restam 13 issues abertas.
+
 ## [2026-11-19 21:55] session — F52 fatia 5 em produção (servidor); UAT-181 em fixed
 
 Servidor publicado da `main` (`b9e94d6`, revisão `mjrp-proxy-00206-47c`; volta `mjrp-proxy-00205-mg4`). Em produção: `/api/generate` 401 sem login; com login, uma busca paga de verdade respondeu 200 em 37,8 s, e a linha `generate` do registro traz o desfecho das notas por fonte (`acclaim: found`). A busca de álbum por IA foi vista funcionando: UAT-181 em `fixed`, junto com a UAT-23. Com isso a F52 fica sem fatia pendente. Auxiliares trabalhando: F70 (defeitos pequenos) e a segunda fatia das camadas com a trava de lint (`fix/f58-layers-and-lint-gate`).
