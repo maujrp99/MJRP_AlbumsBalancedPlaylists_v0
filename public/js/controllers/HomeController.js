@@ -9,6 +9,7 @@ import { router } from '../router.js';
 import toast from '../components/Toast.js';
 import { toAlbumQuery } from '../models/albumQuery.js';
 import { decodeEntities } from '../models/text.js';
+import { isPhone } from '../utils/isPhone.js';
 import { readPastedList, bulkInputState, bulkOutcome, toStagedAlbum, SkipReason } from '../models/bulkPaste.js';
 
 export class HomeController {
@@ -36,7 +37,11 @@ export class HomeController {
             view: {
                 drawScan: (scan) => this.view.renderScan(scan),
                 drawFilters: (filters, counts) => this.view.renderFilters(filters, counts),
-                drawAlbums: (albums) => this.discographyRenderer.render(albums)
+                drawAlbums: (albums) => {
+                    this.discographyRenderer.render(albums);
+                    // Cards drawn again keep the answer of the phone on the chosen ones (F76)
+                    this.view.showChosen?.(this.stagingController.getSelectedAlbums());
+                }
             },
             onPick: (album) => this.stagingController.addAlbum(album)
         });
@@ -100,6 +105,11 @@ export class HomeController {
     handleGridClick(e) {
         const card = e.target.closest('[data-action="pick-album"]');
         if (!card) return;
+        // On the phone a second tap on a chosen album takes it out again (F76): the card says it is chosen
+        if (isPhone() && this.stagingController.hasAlbum(card.dataset.id)) {
+            this.stagingController.removeAlbum(card.dataset.id);
+            return;
+        }
         if (!this.picker.pick(card.dataset.id)) console.warn(`Album not found in the scan: ${card.dataset.id}`);
     }
 
@@ -200,11 +210,7 @@ export class HomeController {
 
         try {
             // Show loading state
-            const btn = this.view.$('#btnInitializeLoad');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<span class="animate-pulse">Creating Series...</span>';
-            }
+            this.showCreating(true);
 
             // Create album queries from selected albums
             // One shape, written in one place, with plain text (models/albumQuery.js)
@@ -233,11 +239,21 @@ export class HomeController {
             toast.error('Failed to create series: ' + error.message);
 
             // Reset button
-            const btn = this.view.$('#btnInitializeLoad');
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = '<span>Initialize Load Sequence</span>';
-            }
+            this.showCreating(false);
         }
+    }
+
+    /**
+     * The create buttons while the series is written: the computer's «Initialize Load Sequence»
+     * and, on the phone, «Create series» in the action bar (F76).
+     */
+    showCreating(busy) {
+        this.view.setCreating?.(busy);
+        const btn = this.view.$('#btnInitializeLoad');
+        if (!btn) return;
+        btn.disabled = busy;
+        btn.innerHTML = busy
+            ? '<span class="animate-pulse">Creating Series...</span>'
+            : '<span>Initialize Load Sequence</span>';
     }
 }

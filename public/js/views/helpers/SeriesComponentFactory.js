@@ -30,12 +30,10 @@ export class SeriesComponentFactory {
                 pageTitle,
                 albumCount: albums.length,
                 onGeneratePlaylists: () => {
-                    const activeSeries = albumSeriesStore.getActiveSeries();
-                    if (activeSeries) {
-                        router.navigate(`/blend?seriesId=${activeSeries.id}`);
-                    } else {
-                        router.navigate('/blend');
-                    }
+                    // The series of the page: the one the screen is at, or the store's active one. The
+                    // store alone missed it when its list had not arrived yet at the opening (UAT-217)
+                    const seriesId = view.controller?.getState?.().targetSeriesId || albumSeriesStore.getActiveSeries()?.id;
+                    router.navigate(seriesId ? `/blend?seriesId=${encodeURIComponent(seriesId)}` : '/blend');
                 }
             }
         });

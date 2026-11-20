@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:52] session — F76 TASK-05/06: prova em navegador, ajustes do que se viu e a nota da tela
+**Branch:** feat/f76-mobile-home-blend
+Prova no app de verdade com dados postos pela página (`reports/evidence/F76/harness/home-blend.mjs`, `reports/evidence/F76/home-blend/`): a 393x852 nenhum texto < 12, campo < 16, alvo < 44 nem caixa com rolagem própria; a 1280x800, 0 % de pixels diferentes da base. Ajustes do que se viu: o fundo decorativo da Home escurecia as capas, o selo de ordem, a barra em uma linha, o «Recommended» repetido, a duração do Blend.
+Nota da tela: `docs/specs/features/F76-mobile-redesign/screens/home-and-blend.md`. Decidido pelo agente — revisável.
+
 ## [2026-11-20 02:51] session — F75 em produção, com valores: 198 de 211 álbuns
 **Branch:** main
 Site e servidor da `70e63da`; revisão `mjrp-proxy-00213-qpq` com `DISCOGS_TOKEN` vindo do secret. A leitura na conta do MJRP deu valor a 198 de 211 álbuns ($1,166.51 no que ele tem; $339.27 no que falta). O Discogs recusa a sugestão em três estados enquanto a conta não tiver as configurações de vendedor: o valor é o menor preço à venda, e a tela diz isso. Prova: `reports/evidence/F75/2026-11-20-production-proof.md`.
@@ -26,6 +31,11 @@ Prova a 393x852: sem rolagem lateral, 0 texto < 12, 0 campo < 16, 0 alvo < 44 em
 O segmento ligado mantém o alvo de 44 px (a pílula desenhada por dentro), o cabeçalho alinha no topo, os botões de mover cabem, sai o vão herdado da tabela do computador.
 Banco de prova `reports/evidence/F76/harness/album-window.*` (as janelas de verdade com dados de exemplo: título longo, 16 faixas, valor do F75) e `reports/evidence/F76/album-window/shoot.mjs` (Chrome sem cabeça, porta própria; mede alvos, texto, campos, faixas à vista, rolagens).
 
+## [2026-11-20 02:36] session — F76 TASK-06: o Blend no celular, e o UAT-217
+**Branch:** feat/f76-mobile-home-blend
+Blend no celular (`public/css/mobile/blend.css`, `components/blend/BlendSeriesPhonePicker.js`): o passo 1 é uma linha que abre uma folha cheia com busca e as séries (sem caixa de 256 px com rolagem própria), passos com rótulo de 12 px e o atual marcado, receitas numa coluna com a descrição inteira, «Blend it!» na barra de ação, apagado com o motivo escrito. UAT-217: «Blend your Albums» leva a série da página (`SeriesComponentFactory.js`, mudança mínima fora da área).
+Testes de celular e de computador; no computador nada muda. Decidido pelo agente — revisável.
+
 ## [2026-11-20 02:35] session — F75, documentos: a sugestão recusada e o menor preço à venda
 
 **Branch:** feat/f75-cd-prices-and-where-to-buy
@@ -48,6 +58,11 @@ Testes novos: TracksTabs.phone, ViewAlbumModal.phone, UserRankModal.phone (celul
 - A rodada não pergunta mais a página de preço a cada álbum: o serviço lembra a recusa na memória da página por seis horas e manda `prices: 'lowest'`. Decidido pelo agente — revisável: cada rodada nova tenta a sugestão uma vez, no primeiro álbum; se vier, os três estados voltam sem mudar código.
 - A chave das leituras no navegador foi para `inventoryvalue:v2:`: as leituras erradas da primeira rodada em produção não são lidas de volta.
 - Testes escritos antes e vistos falhar (14 de 15). Suíte: 2879 testes; lint e build verdes. Um teste de tempo (`inventoryFromSeries`, 200 álbuns em menos de 1 s) falhou uma vez sob carga e passou sozinho.
+
+## [2026-11-20 02:34] session — F76 TASK-05: a Home no celular (o escolhido anda com o dedo)
+**Branch:** feat/f76-mobile-home-blend
+Home no celular (`public/css/mobile/home.css`, `components/home/HomePhoneChosen.js`): uma coluna que rola com a página, filtros de tipo em duas colunas de 44 px, Visual/Bulk Paste em controle segmentado de 44 px, o álbum tocado ganha anel e número, barra de ação «N albums chosen · Create series» sempre à vista e folha com o conjunto escolhido (subir, descer, remover com «Undo», sem arrastar). Janela de edição da série: lista sem caixa própria, subir/descer no celular, alvos de 44 px.
+Testes de celular e de computador (`test/components/home/HomePhone.chosen.test.js`); no computador nada muda. Decidido pelo agente — revisável.
 
 ## [2026-11-20 02:33] session — F76 TASK-07: o inventário no celular em linhas compactas, em blocos, com folhas
 **Branch:** feat/f76-mobile-inventory
