@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:48] session — UAT-220 registrada na F71: a janela do álbum no inventário não mostra as faixas
+
+- O MJRP mostrou, em produção, a janela de dois álbuns que vieram das séries dizendo «No tracks are kept for this album…», e a de um item antigo com a popularidade «Not linked». UAT-220 aberta; entra na F71 como REQ-19.
+
 ## [2026-11-19 23:45] session — F71 fatia 2 e a barra do topo em produção; `## Now` em dia
 
 - Juntadas na `main` e publicadas: a barra do topo (`cbd96fa`, UAT-218) e a segunda fatia da F71 (`61d4061`). Pacote no ar: `main-J7MPEtWh.js`.
