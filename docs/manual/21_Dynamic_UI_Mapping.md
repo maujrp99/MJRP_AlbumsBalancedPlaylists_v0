@@ -189,7 +189,7 @@ Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set
     1.  **[UI]** Search box, Format select, Status select (`All`, `Owned`, `Not Owned`, `Wishlist`).
     2.  **[FN]** `handleFilterChange(type, value)` -> `applyFiltersAndSort()` -> `filterInventory(items, filters)` (`models/inventoryFilter.js`). The three filters apply together.
 *   **Sorting** (F71, S-56):
-    1.  **[UI]** Select `#inventorySort`: `Artist` (default), `Avg Rating`, `Avg Pop`, `Recently added`.
+    1.  **[UI]** Select `#inventorySort`: `Artist (A-Z)` (default), `Artist (Z-A)`, `Avg Rating (↓)`, `Avg Rating (↑)`, `Avg Pop (↓)`, `Avg Pop (↑)`, `Newest`, `Oldest`.
     2.  **[FN]** `handleSortChoice(value)` -> `sortingFor(value)` -> `applyFiltersAndSort()` -> `sortInventory(items, sorting)` (`models/inventorySort.js`). The averages and the date start with the highest/newest first; an item with no value comes last whatever the direction; ties fall back to artist and title. `Recently added` reads `addedToInventory` (or `createdAt`), a Firestore timestamp (`{ seconds }`) or a date.
 *   **The card** shows, in one small line, `Avg Rating: 78.4 · Avg Pop: 42.6%` when the item has `averages`, only the one it has when it has one, and nothing when it has none (`InventoryGridRenderer.renderAverages`).
 *   **Stats Calculation**:

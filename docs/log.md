@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:05] session — F71: o comportamento e o manual dizem a ordenação nas duas direções
+
+**Branch:** feat/f71-inventory-sort-both-ways
+
+- `docs/specs/behavior.md` e três páginas do manual atualizados com as oito escolhas do «Sort by».
+
 ## [2026-11-20 00:05] session — F71: a ordenação do inventário nas duas direções, com setas (REQ-21)
 
 **Branch:** feat/f71-inventory-sort-both-ways
