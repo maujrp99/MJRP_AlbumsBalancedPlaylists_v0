@@ -74,6 +74,36 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'workers/search.worker.js:function': 11 // F57 holds this code (album search, classification, series edit)
 })
 
+/**
+ * The same list for the server (server/, measured 2026-11-19 in F52, slice 5). It can only shrink,
+ * by the same three rules. The key is `file:function` with the file relative to the repository
+ * root. When the slice began there were 26; it brought 8 into the limit (the ranking fetch at 139,
+ * the album answer at 65, the consolidation at 49 among them), and F65 removed the 4 of server/scripts.
+ */
+export const SERVER_KNOWN_ABOVE_THE_LIMIT = Object.freeze({
+    'server/lib/aiClient.js:callProvider': 14, // no feature yet: the two shapes of provider (Gemini, proxy) in one function
+    'server/lib/aiProviderOutcome.js:describeProviderError': 12, // no feature yet: the optional chains of a log line
+    'server/lib/asyncRoute.js:function': 11, // no feature yet: the error responder
+    'server/lib/auth/verifyIdToken.js:verify': 14, // no feature yet: the checks of a login token, in a row
+    'server/lib/normalize.js:tryRecoverRankingFromText': 17, // no feature yet: reading the AI's answer (the ranking prompt)
+    'server/lib/normalize.js:extractFromCandidate': 12, // no feature yet: reading the AI's answer
+    'server/lib/normalize.js:normalizeRankingEntry': 28, // no feature yet: reading the AI's answer (the ranking prompt)
+    'server/lib/normalize.js:extractRankingPayload': 34, // no feature yet: reading the AI's answer (the ranking prompt)
+    'server/lib/outcome.js:upstreamErrorFrom': 11, // no feature yet: one function at 11 in the answer contract
+    'server/lib/scrapers/besteveralbums.js:arrow function': 13, // no feature yet: reading the chart page of BestEverAlbums
+    'server/lib/scrapers/besteveralbums.js:arrow function#2': 11, // no feature yet: reading the chart page of BestEverAlbums
+    'server/routes/debug.js:async arrow function': 13, // no feature yet: a debug route, off in production (F59)
+    'server/routes/debug.js:async arrow function#2': 24, // no feature yet: a debug route, off in production (F59)
+    'server/routes/handlers/ai.js:albumTitlesIn': 13 // no feature yet: reading the AI's list of albums
+})
+
+/**
+ * The same list for the modules the app and the server share (shared/). It is EMPTY: the nine
+ * functions measured on 2026-11-19 were all of shared/curation.js, which F65 removed. Keep it empty:
+ * a function of shared/ above the limit fails the test.
+ */
+export const SHARED_KNOWN_ABOVE_THE_LIMIT = Object.freeze({})
+
 const APP = 'public/js/'
 
 /**

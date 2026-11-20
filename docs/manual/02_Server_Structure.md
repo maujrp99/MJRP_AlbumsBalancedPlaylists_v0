@@ -28,10 +28,10 @@
 ### 1.3 Dependency Injection (Lines 90-114)
 *   **Pattern**: Manual Dependency Injection.
 *   **Components Loaded**:
-    *   `lib/prompts`: `loadPrompts`, `renderPrompt`
+    *   `lib/prompts`: `loadPrompts`, `renderPrompt`. `loadPrompts()` is called right there, when the server starts: a missing or unusable `config/prompts.json` is thrown and the server does not start (F52, slice 5)
     *   `lib/aiClient`: `callProvider`
     *   `lib/normalize`: `extractAlbum`
-    *   `lib/schema`: `validateAlbum`, `ajvAvailable` (AJV)
+    *   `lib/schema`: `validateAlbum`, `ajvAvailable` (AJV; since F52, slice 5, a validator that cannot be loaded is thrown at start, so `ajvAvailable` is always true)
     *   `lib/scrapers/besteveralbums`: `getRankingForAlbum`, injected as `getBestEverRanking`
     *   `lib/fetchRanking`: `fetchRankingForAlbum`
     *   `lib/ranking`: `consolidateRanking`, and `normalizeKey` injected as `normalizeRankingKey`
@@ -91,25 +91,16 @@ flowchart TD
 ### 2.2 `POST /api/generate` -> `GenerationService.generateAlbum(reqBody, serverConfig)`
 **Purpose**: Core endpoint. Generates album structure via AI, then enriches with rankings.
 
-*   **Logic Trace**:
-    1.  **AI Generation**:
-        *   Loads prompt template `albumSearchPrompt`.
-        *   Calls `callProvider` (AI Proxy).
-        *   Logs Latency & Token Usage.
-    2.  **Extraction & Validation**:
-        *   `extractAlbum(response)` parses JSON from AI text.
-        *   `validateAlbum(album)` checks against Schema (Draft-07). Returns 422 if invalid.
-    3.  **Ranking Fetch (Deep Logic)**:
-        *   Calls `fetchRankingForAlbum(album, query)`.
-        *   *Logic*: This service attempts to find rankings from multiple sources (Spotify, BEA, etc.).
-    4.  **Consolidation**:
-        *   Calls `consolidateRanking(tracks, acclaim)`.
-        *   *Logic*: Merges external ranking lists with the AI-generated tracklist to compute a "Consolidated Score" and "Divergence" metrics.
-    5.  **Mapping**:
-        *   Maps `finalPosition` and `rating` back to the specific `track` objects in the album.
-    6.  **Sorting**:
-        *   Creates `tracksByAcclaim` array (sorted clone of tracks).
-    7.  **Response**: Returns `{ data: albumPayload }`.
+*   **Logic Trace** (`GenerationService`, each step a small method; F52, slice 5):
+    1.  **The request**: no `albumQuery` is `invalid_request`, and nothing is spent. The `albumSearchPrompt` is read with `requirePrompt`: a prompts file without it is thrown (500 `internal`) before the provider is called.
+    2.  **AI Generation** (`_askProvider`): calls `callProvider` within the budget of the request (`GENERATE_BUDGET_MS`, 75 s; `lib/timeBudget.js`). A failure of the provider is a row of its table (`lib/aiProviderOutcome.js`); the budget running out is the "timeout" row (504). Logs latency and token usage.
+    3.  **Extraction & Validation** (`_albumIn`): `extractAlbum(response)` parses JSON from AI text; `validateAlbum(album)` checks against Schema (Draft-07). No album, an answer that breaks while it is read, or an album that fails the schema is the "unusable" row (424, not retryable).
+    4.  **Ranking Fetch**: `fetchRankingForAlbum(album, query, { budget })`, the pipeline of sources of section 4.1. It never throws for a source that failed: the result says, source by source, what happened (`ratings`).
+    5.  **The album answer** (`lib/albumAnswer.js`, pure steps):
+        *   `withRanking`: the sources, the entries (`rankingAcclaim`), what stays of the BestEverAlbums page (`bestEverEvidence`, `bestEverUrl`, `bestEverAlbumId`) and `ratings`.
+        *   `consolidateRanking(tracks, acclaim)` and `withConsolidation`: the consolidated ranking and its notes (`rankingConsolidated`, `rankingConsolidatedMeta`).
+        *   `withRanksOnTracks`: `finalPosition` and `rating` on each track (its place in the album when the ranking has none) and `tracksByAcclaim` (sorted copy).
+    6.  **Response**: `{ data: albumPayload, outcome: 'found' }`, with `data.ratings`. Anything of this server that breaks in steps 4 and 5 is thrown (500 `internal`); it is never answered as an album with no ratings.
 
 *   **Architecture Diagram**:
 ```mermaid
@@ -182,51 +173,54 @@ flowchart LR
 
 ## 4. Libraries & Business Logic
 
-### 4.1 `server/lib/fetchRanking.js` (Ranking Orchestrator)
+### 4.1 `server/lib/fetchRanking.js` and `server/lib/rankingSources/` (the ranking pipeline)
 **Status**: `[ACTIVE]`
-**Type**: Service Facade
+**Type**: Pipeline of sources (rewritten in F52, slice 5; it was one function of cyclomatic complexity 139)
 
-**Purpose**: Orchestrates the multi-source strategy to find "acclaim" rating for tracks.
+**Purpose**: Finds the ranking of the tracks of an album from three sources, asked in a declared order, and says what happened to each.
 
-*   **Logic Trace (`fetchRankingForAlbum`)**:
-    1.  **Preparation**: Loads prompt templates and gets `normalizeKey` function.
-    2.  **Strategy 1 (BestEverAlbums)**:
-        *   Calls `getBestEverRanking`.
-        *   Counts the tracks that have a rating; fewer than 40% of the album's tracks **and** fewer than 3 rated tracks is "insufficient".
-    3.  **Strategy 2 (Spotify Popularity Fallback)**:
-        *   *Trigger*: If BEA has < 40% coverage and < 3 total ratings.
-        *   Calls `getSpotifyPopularityRanking`.
-        *   *Decision*: If Spotify returns valid data >= 50% coverage, **returns immediately** (Short-circuit).
-    4.  **BEA is complete**: if BEA returned at least as many entries as the album has tracks (or the track count is unknown), returns the BEA entries, without calling the AI.
-    5.  **Strategy 3 (AI Enrichment)**:
-        *   *Trigger*: BEA returned fewer entries than the album has tracks.
-        *   Calls `callProvider` with `rankingPrompt`.
-        *   *Merges*: fills the tracks BEA did not cover with the AI entries, matched by normalized title (`normalizeKey`). If the AI call fails, returns the BEA entries alone.
-    6.  **BEA returned nothing or failed**: tries `getSpotifyPopularityRanking`; if that also returns nothing, the ranking comes from the AI alone (`rankingPrompt`).
-    7.  **Output**: Returns `{ entries, sources, debugTrace }`, plus `bestEver` or `spotify` when that source was used. With `options.raw` it returns the raw AI response instead (`{ raw, debugTrace }`).
+*   **The pieces**:
+
+    | File | Job |
+    | :--- | :--- |
+    | `fetchRanking.js` | `createRankingFetch(deps)` builds `fetchRankingForAlbum` with the outside injected; `PIPELINE` declares the order; the module also exports the one wired to the real sources |
+    | `rankingSources/sourceOutcome.js` | the typed outcome of a source (`found`, `not_found`, `no_ratings`, `not_configured`, `failed`, `not_asked`) and `askSource`, which asks a source within the time of the request and turns anything thrown into `failed` |
+    | `rankingSources/bestEverSource.js` | `acclaim`: the track ratings of the album's page (the entries in page order) |
+    | `rankingSources/spotifySource.js` | `popularity`: the popularity of the tracks as a rating, highest first |
+    | `rankingSources/modelSource.js` | `aiRanking`: the paid provider asked with the `rankingPrompt` (positions, no ratings) |
+    | `rankingSources/rankingPlan.js` | pure decisions: `needsPopularity`, `needsModel`, `chooseRanking` |
+    | `rankingSources/completeRanking.js` | pure: a page that lists fewer tracks than the album, completed with the AI's entries, matched by `normalizeKey` |
+
+*   **Logic Trace (`fetchRankingForAlbum(album, albumQuery, { budget })`)**:
+    1.  **Preparation**: the `rankingPrompt` must be in the prompts file (`requirePrompt`), or a `PromptsError` is thrown before any source is asked.
+    2.  **`acclaim` (BestEverAlbums)**: always asked. `found` when the page rates at least one track, `no_ratings` when it rates none, `not_found` when there is no page.
+    3.  **`popularity` (Spotify)**: asked when the page lists no track, or rates fewer than 3 tracks **and** fewer than 40% of the album. It wins when BestEverAlbums listed nothing, or when it has at least 50% of the album's tracks; the page that lost stays on the album as evidence.
+    4.  **`aiRanking`**: asked when Spotify did not win and the page does not list every track of the album (or lists none). With a partial page it completes it (no list of suggested sources in the prompt); alone, it is the ranking. When the AI fails while completing, the page's entries leave as they are.
+    5.  **Output**: `{ entries, sources, ratings, debugTrace }`, plus `bestEver` and `spotify` when that source gave something. `ratings` is `{ acclaim, popularity, aiRanking }`; `debugTrace` is one row per source (`{ source, outcome, entries, code? }`). With `options.raw` (a debug feature) it returns the raw AI answer to the ranking prompt instead (`{ raw, debugTrace }`).
+    6.  **Failure**: a source that fails (`UpstreamError`, a failure of the provider, something of ours that broke inside the source, or the time of the request ending) is `failed` in `ratings`, with a `ranking_source_failed` line in the log. It is never read as "the source has none": before slice 5 a failure of the scraper or of Spotify was caught here and looked the same as an album with no ratings.
 
 *   **Architecture Diagram**:
 ```mermaid
 flowchart TD
-    Start[fetchRankingForAlbum] --> BEA[BestEverAlbums Scraper]
-    BEA -- No evidence / error --> Spotify2[Spotify Popularity]
-    Spotify2 -- Success --> Return[Return]
-    Spotify2 -- Fail --> AIOnly[AI ranking only]
+    Start[fetchRankingForAlbum] --> BEA[acclaim: BestEverAlbums]
+    BEA -- no track listed, or it failed --> Spotify2[popularity: Spotify]
+    Spotify2 -- found --> Return[chooseRanking]
+    Spotify2 -- not found / not configured / failed --> AIOnly[aiRanking: the AI alone]
     AIOnly --> Return
-    BEA -- Evidence --> check{Ratings >= 40% or >= 3?}
-    check -- No --> Spotify[Spotify Popularity]
-    Spotify -- Coverage >= 50% --> Return
-    Spotify -- Fail --> full
-    check -- Yes --> full{BEA covers all tracks?}
+    BEA -- tracks listed --> check{3 rated tracks, or 40% of the album?}
+    check -- No --> Spotify[popularity: Spotify]
+    Spotify -- at least 50% of the tracks --> Return
+    Spotify -- less, or none, or failed --> full
+    check -- Yes --> full{the page lists every track?}
     full -- Yes --> Return
-    full -- No --> AI[AI Enrichment]
-    AI --> Merge[Merge & Validate]
-    Merge --> Return
+    full -- No --> AI[aiRanking: the AI completes the page]
+    AI --> Return
+    Return --> Out[entries, sources, ratings]
 ```
 
 ### 4.2 `server/lib/ranking.js` (Consolidation Logic)
 **Status**: `[ACTIVE]`
-**Type**: Domain Logic (Pure Function)
+**Type**: Domain Logic (Pure Function; since F52, slice 5, small steps: `boardOf`, `placeMentions`, `ordered`, with `consolidate(tracks, mentions, normalizeKey)` as the pure core and `consolidateRanking` as the async door that loads the title rule)
 
 **Purpose**: Merges an unordered set of "Acclaim" ratings onto the official tracklist.
 
@@ -290,4 +284,4 @@ flowchart TD
 *   Other declared properties: `id`, `year` (integer or string), `cover`. Additional properties are allowed at both levels.
 
 ### Usage
-Used by `server/lib/schema.js` (via `ajv`, with `coerceTypes: true`) to validate the album extracted from the AI response in `GenerationService` (422 when invalid).
+Used by `server/lib/schema.js` (via `ajv`, with `coerceTypes: true`) to validate the album extracted from the AI response in `GenerationService` (an album that fails it is the "unusable" row of the provider's table: 424, not retryable).

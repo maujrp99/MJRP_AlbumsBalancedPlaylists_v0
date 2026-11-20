@@ -90,6 +90,7 @@ app.get('/_health', (req, res) => res.send({ ok: true }))
 // Load Dependencies for Routes
 // ============================================================================
 const { loadPrompts, renderPrompt } = require('./lib/prompts')
+loadPrompts() // without its prompts the server does not start: a missing or unusable file is thrown here (F52)
 const { callProvider } = require('./lib/aiClient')
 const { extractAlbum } = require('./lib/normalize')
 const { validateAlbum, ajvAvailable } = require('./lib/schema')

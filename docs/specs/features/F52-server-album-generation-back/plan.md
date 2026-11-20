@@ -3,7 +3,7 @@
 # Plan — Feature F52: O servidor diz a verdade · Spec: [[spec]]
 **Approved**: not a gate (via rápida; o MJRP julga)
 
-> O desenho é a seção «O servidor diz a verdade — proposta (F52)» do `docs/specs/arch.md`; a seção 11 vale sobre as seções 2, 5 e 7. Este plano registra a fatia 1 e, na seção «Fatia 3 e medição», as fatias 3 e 4 como foram construídas. A fatia 2 foi entregue pela F55 e está no plano dela.
+> O desenho é a seção «O servidor diz a verdade — proposta (F52)» do `docs/specs/arch.md`; a seção 11 vale sobre as seções 2, 5 e 7. Este plano registra a fatia 1 e, na seção «Fatia 3 e medição», as fatias 3 e 4 como foram construídas. A fatia 5 (o caminho de `/api/generate`) está na seção «Fatia 5». A fatia 2 foi entregue pela F55 e está no plano dela.
 
 ## Architecture Approach
 Um contrato, um lugar que escreve, um lugar que lê (DP-19, resultado tipado, atravessando a rede):
@@ -93,6 +93,112 @@ Um contrato, um lugar que escreve, um lugar que lê (DP-19, resultado tipado, at
 - *Marcar cada álbum como falha quando a fonte pede uma espera longa:* viraria a série inteira em «falhou»; a carga já sabia esperar pelo 429 do servidor, e o mesmo mecanismo serve.
 - *Trocar a versão do registro guardado para confiar por dias:* a F55 já confere cada registro na leitura; o «vazio» antigo não tem motivo e segue valendo 1 hora.
 
+## Fatia 5 — o caminho de `/api/generate` (construída em 2026-11-19, ramo `fix/f52-slice-5-generate-path-tells-the-truth`)
+
+**O que sobrava da UAT-23.** As notas e a lista da IA já diziam a verdade; o caminho de `POST /api/generate` ainda transformava falha em sucesso: arquivo de prompts ausente virava `{}`; `fetchRankingForAlbum` engolia a falha do raspador e a do Spotify e seguia; `GenerationService` registrava «Ranking fetch skipped» e devolvia o álbum como `found`, sem notas, igual a «as fontes não têm notas». As três funções do caminho mediam 139, 65 e 49 de complexidade.
+
+**O desenho: uma esteira de fontes com desfecho tipado, e passos puros.**
+
+| Peça | Onde | O que faz |
+|---|---|---|
+| Desfecho de uma fonte | `server/lib/rankingSources/sourceOutcome.js` | `found`, `not_found`, `no_ratings`, `not_configured`, `failed`, `not_asked`; `askSource` pergunta a fonte dentro do prazo do pedido e transforma o que for lançado em `failed` (com o código da lista fechada) |
+| As três fontes | `rankingSources/bestEverSource.js`, `spotifySource.js`, `modelSource.js` | uma função cada: perguntam e devolvem o desfecho; não capturam falha |
+| A ordem, declarada | `server/lib/fetchRanking.js` (`PIPELINE`) | `acclaim` sempre; `popularity` quando a página não lista faixa ou tem poucas notas; `aiRanking` quando nenhuma das duas deu o ranking do álbum inteiro |
+| As decisões, puras | `rankingSources/rankingPlan.js`, `completeRanking.js` | que fonte ainda é precisa, que resposta vira o ranking, e a página incompleta completada pela IA |
+| A consolidação, pura | `server/lib/ranking.js` | quadro das faixas, cada menção no seu lugar, pontos de Borda, ordem |
+| A resposta do álbum, pura | `server/lib/albumAnswer.js` | fontes, entradas, `ratings`, ranking consolidado, nota e posição em cada faixa |
+| O serviço | `server/lib/services/GenerationService.js` | o álbum decide o resultado; as notas nunca derrubam o pedido; o que quebra dentro do servidor é lançado |
+| Prompts | `server/lib/prompts.js` | `loadPrompts` lança `PromptsError`; `requirePrompt` é como uma rota lê um prompt; `server/index.js` carrega na partida (uma linha) |
+
+**Como a mudança foi presa antes.** Os testes de caracterização (commit `4ceabac`) rodaram contra o código antigo, com as fontes trocadas por dublês; depois da reescrita passam sem mudança, menos três que diziam «TODAY» e viraram o comportamento novo. Na primeira versão o dublê entrava no lugar dos módulos que a função antiga pedia por conta própria; com a esteira, entra por injeção (`createRankingFetch(deps)`); as afirmações dos testes não mudaram.
+
+**Decisões tomadas na construção (do agente, revisáveis):**
+- *As notas não derrubam o pedido; o defeito do servidor derruba.* Fonte que falha é `failed` ao lado do álbum. Consolidação que quebra, ou prompt que falta, é `internal`: responder um álbum «sem notas» seria a mesma mentira.
+- *Três chaves, pelos nomes que o app usa nas fontes:* `acclaim` (BestEverAlbums), `popularity` (Spotify), `aiRanking` (a IA). Os valores `found`, `not_found` e `no_ratings` são os do `outcome.js`; `not_configured` é o da F69; `failed` e `not_asked` são novos e só existem aqui.
+- *`not_asked` existe* porque a esteira só pergunta a fonte seguinte quando a anterior deixou o ranking incompleto: sem ele, «não perguntei» pareceria «não tem».
+- *O raspador é perguntado uma vez.* O serviço perguntava de novo quando o ranking não vinha do BestEverAlbums; a esteira já sabe o que a página respondeu. No caminho em que o Spotify ganha, a página fica no álbum como evidência, agora com o endereço.
+- *O prazo acabar na fase das notas não descarta o álbum pago:* a fonte que ainda roda vira `failed` e o álbum sai. Só o provedor que não responde o álbum vira `upstream_timeout`.
+- *Prazo de 75 s*, abaixo dos 90 s do app; o cliente de IA tem 60 s próprios por chamada. Sem medição.
+- *Os dois prompts são obrigatórios na carga* (`albumSearchPrompt`, `rankingPrompt`): um arquivo sem um deles não é «um arquivo com menos prompts», é uma publicação quebrada.
+- *O validador do álbum (`ajv`) também falha alto:* é dependência declarada do servidor; não carregar virava «validação desligada».
+- *O catch vazio é medido em todo o `server/`*; o «só escreve no log» é medido no caminho das duas rotas, sem exceção.
+
+**Alternativas pesadas:**
+- *Remendar cada `catch` da função de 139:* manteria a função e cinco caminhos de saída; o dono pediu arquitetura. Recusada.
+- *Falhar o pedido inteiro quando uma fonte de notas falha:* joga fora um álbum pago, e o app repetiria a chamada paga. Recusada (o pedido da fatia já dizia).
+- *Um campo só (`ratings: 'failed'`):* não diz qual fonte; o app tem um enriquecedor por fonte. Recusada.
+- *Corrida com o prazo no manipulador da rota:* descartaria o álbum quando só as notas atrasam. Recusada; o prazo é lido dentro do serviço.
+- *Deixar a suíte de complexidade do servidor sem as pastas que a F65 ia remover:* a conta do dono (26 e 9) as incluía; entraram na lista e saíram dela quando a F65 chegou.
+
+**Todo `catch` de `server/lib`, `server/routes` e `server/index.js`** (linhas de 2026-11-19, depois da fatia; as linhas «antes» são as da `main` em `6ae9940`):
+
+| Onde | O que fazia ou faz | Estado |
+|---|---|---|
+| `prompts.js:18-21` (antes) | arquivo ausente ou ilegível virava `{}` com aviso | **consertado**: `loadPrompts` lança `PromptsError`, na partida |
+| `fetchRanking.js:103-104`, `:121` (antes) | sem prompt de ranking devolvia `entries: []` | **consertado**: `requirePrompt` lança; a rota responde `internal` |
+| `fetchRanking.js:202-205` (antes) | falha do Spotify (página com poucas notas): aviso e seguia | **consertado**: `popularity: failed` |
+| `fetchRanking.js:305-310` (antes) | falha da IA ao completar a página: aviso e devolvia a página | **consertado**: `aiRanking: failed` (a página segue saindo) |
+| `fetchRanking.js:312-315` (antes) | falha do raspador: aviso e seguia para o Spotify | **consertado**: `acclaim: failed` |
+| `fetchRanking.js:341-343` (antes) | falha do Spotify: `// ignore` | **consertado**: `popularity: failed` |
+| `fetchRanking.js:363` (antes) | `catch (e) { }` ao ler o motivo de parada do modelo | **removido**: leitura sem `try` |
+| `fetchRanking.js:19` (antes) | `require('./logger')` com `console` de reserva | **removido** |
+| `GenerationService.js:65-68` (antes) | tudo que quebrasse depois do provedor virava «resposta inaproveitável» (424) | **consertado**: só a leitura do álbum; o resto é lançado (`internal`) |
+| `GenerationService.js:86` (antes) | `catch (e) { /* ignore */ }` no log de uso | **removido** |
+| `GenerationService.js:124-126` (antes) | segunda pergunta ao raspador, falha só no log | **removido** com a segunda pergunta |
+| `GenerationService.js:133-135` (antes) | «Ranking fetch skipped»: álbum `found` sem notas | **consertado**: `data.ratings` |
+| `GenerationService.js:162-166` (antes) | consolidação que quebra: 200 com ranking vazio, erro e pilha no corpo | **consertado**: lançado (`internal`) |
+| `GenerationService.js:193-195`, `:209-211` (antes) | escrever posição nas faixas e ordenar: falha só no log | **removido**: passos puros, sem `catch` |
+| `ranking.js:147` (antes) | `catch (e) { return null }` ao escolher a nota | **removido** |
+| `normalize.js:214-217`, `:220` (antes) | `require` de `validateSource` e de `logger` com reserva | **removido** |
+| `normalize.js:226-246` (antes) | conferência do endereço de referência: dois `catch` vazios em volta do próprio log, um ramo que nunca rodava, `.catch(() => false)` | **reescrito**: `checkedReferenceUrl` |
+| `schema.js:15-17` (antes) | `ajv` ou o esquema não carregam: «validação desligada» | **consertado**: lançado na partida |
+| `normalize.js:74`, `:79` | tentativa de ler JSON da resposta da IA; sem JSON devolve `null` e quem chamou responde `unusable` | legítimo (leitura opcional) |
+| `normalize.js:112` | vazio: pedaço do texto da IA que não é um objeto JSON | legítimo, na lista com motivo |
+| `validateSource.js:9` | `verifyUrl` responde `false`: é a resposta de «o endereço não conferiu» | legítimo |
+| `logger.js:8` | o `meta` que não vira JSON: a linha sai sem ele | legítimo |
+| `prompts.js:48`, `:74` | relança como `PromptsError` | legítimo (diz o que falhou) |
+| `rankingSources/sourceOutcome.js:59` | transforma em `failed` com código, e escreve `ranking_source_failed` | legítimo (resultado tipado) |
+| `politeQueue.js:117`, `scrapers/besteveralbums.js:126`, `services/spotifyPopularity.js:163`, `albumIdentity.js:12` | relançam (`PaceError`, `UpstreamError`) | legítimo |
+| `services/EnrichmentService.js:76`, `services/GenerationService.js:119`, `:147`, `:170`, `routes/handlers/ai.js:55` | falha tipada pela tabela ou pelo contrato; o que não é da fonte é relançado | legítimo |
+| `routes/handlers/ai.js:28` | JSON quebrado da lista da IA: lê os títulos um a um; sem lista é `unusable` | legítimo |
+| `auth/verifyIdToken.js:32`, `:46`, `:80`, `auth/requireUser.js:26` | `AuthError`, depois 401 ou 503 pelo contrato | legítimo |
+| `asyncRoute.js:15` | `.catch(next)`: entrega ao respondedor de erros | legítimo |
+| `index.js:12` | sem `fetch-blob`, usa substitutos mínimos de `File` e `Blob` | deixado (partida; `index.js` só ganhou uma linha) |
+| `index.js:38` | vazio: o mesmo bloco de substitutos | deixado, na lista com motivo |
+| `index.js:100` | `require('./lib/logger')` com `console` de reserva | deixado (o arquivo existe sempre; mexer é do `index.js`) |
+| `routes/musickit.js:48` | 500 com a mensagem do erro no corpo, formato próprio | deixado: fora do caminho; a spec da F52 deixa a rota fora |
+| `routes/playlists.js:64` | idem | saiu com a rota, removida pela F65 |
+| `routes/debug.js:41`, `:86`, `:110`, `:119`, `:136` | respondem a mensagem (e a pilha) do erro | deixado: rotas de depuração, desligadas em produção (F59) |
+| `routes/debug.js:72` | vazio: sem álbum legível, mostra a resposta crua | deixado, na lista com motivo |
+| `routes/debug.js:78` | só log: falha do raspador vira `bestEverEvidence: null` | deixado: rota de depuração; é o único «só log» fora de `scripts/` e `test/` |
+| `server/scripts/**`, `server/test/**` | dez `catch` que só escreviam no log | saíram com as pastas, removidas pela F65 |
+
+**Riscos e bordas (fatia 5):**
+- **A F65 entrou na `main` enquanto a fatia era feita** e removeu `server/scripts/**`, `server/test/**`, `routes/playlists.js` e `shared/curation.js`. A `main` foi trazida para o ramo: as 4 linhas de `server/scripts` e as 9 de `shared/curation.js` saíram das listas de complexidade (o teste pediu). As listas ficam com 14 funções no servidor e nenhuma em `shared/`.
+- **Um servidor que subia «meio quebrado» agora não sobe.** É o pedido; o teste de fumaça da publicação sobe o servidor preparado antes de enviar e para ali.
+- **A chamada ao provedor que perde a corrida com o prazo não é cancelada:** termina no prazo próprio (60 s) e a resposta é descartada. Na prática o prazo próprio vem antes dos 75 s.
+- **A conferência dos endereços de referência da IA** (`validateSource.verifyUrl`) faz uma requisição a cada endereço que o modelo devolve; corre dentro do prazo do pedido, mas o servidor busca endereços escolhidos pelo modelo. Anterior a esta fatia; anotado, sem dono.
+- **O app ainda grava o que a rota responde sem olhar `ratings`:** até o item do app, um álbum que veio com `acclaim: failed` segue sendo tratado como hoje (o enriquecedor de notas pergunta por conta própria em `/api/enrich-album`, que já diz a verdade).
+
+### Test plan — fatia 5
+> Derivado dos REQ-11 a REQ-16 · 2026-11-19 21:50 (Brasília)
+
+| REQ | Verificação | O que confere | Nível | Automática |
+|---|---|---|---|---|
+| REQ-11 | `test/server/rankingPipeline.test.js` | a ordem das fontes e o que sai em cada caminho (escrito contra o código antigo); o desfecho de cada fonte em 13 casos; a falha do provedor pelo código da tabela; sem mensagem de fonte na resposta | servidor, unidade | sim |
+| REQ-11 | `test/server/rankingConsolidation.test.js` | a consolidação: ordem por nota, pontos de Borda, títulos repetidos, título contido, palavras em comum, menção sem faixa, faixas desconhecidas | servidor, unidade | sim |
+| REQ-11 | `test/server/rankingEntries.test.js` | o endereço de referência que não confere sai e a entrada fica | servidor, unidade | sim |
+| REQ-12 | `test/server/generateAlbumAnswer.test.js` | o álbum com as notas nas faixas em cada caminho; `data.ratings` nos quatro casos (achou, não tem, falhou, não configurado); consolidação que quebra é lançada | servidor, serviço inteiro com dublês de fonte | sim |
+| REQ-12 | `test/api/siteAgainstGenerateWithRatings.test.js` | o `APIClient` de hoje lê o mesmo álbum com e sem `ratings` | app, unidade | sim |
+| REQ-13 | `test/server/prompts.test.js` | arquivo ausente, ilegível, não JSON, vazio, sem um prompt: lança; a mensagem que a publicação procura; a falha não fica guardada; o `index.js` carrega na partida | servidor, unidade | sim |
+| REQ-13 | `test/server/generateAlbumAnswer.test.js` | sem prompt, a rota responde 500 `internal` e o provedor não é chamado | servidor, rota com o respondedor de erros | sim |
+| REQ-14 | `test/server/generateAlbumAnswer.test.js`, `test/server/rankingPipeline.test.js` | o prazo é menor que o do app (lido do `client.js`); provedor que não responde: 504; fonte que não responde: `failed` e o álbum sai; sem tempo, nenhuma fonte é perguntada | servidor, unidade | sim |
+| REQ-15 | `test/server/generateAlbumAnswer.test.js` | a linha `generate` no sucesso e na falha; nada do álbum nem da pessoa | servidor, unidade | sim |
+| REQ-16 | `test/architecture/noSwallowedFailure.test.js`, `test/architecture/complexityLimit.test.js` | nenhum `catch` vazio fora da lista; nenhum «só log» no caminho; servidor e `shared/` dentro do limite, fora das listas | arquitetura | sim |
+| REQ-11 a REQ-15 | cópia local do servidor (como a imagem), com um substituto da IA na própria máquina e o BestEverAlbums inalcançável, com `curl` (2026-11-19) | 200 com `ratings: { acclaim: "failed", popularity: "not_configured", aiRanking: "found" }` e a linha `generate`; 424 no 402 do substituto; sem o arquivo de prompts o servidor sai com erro e a conferência da publicação falha | servidor de verdade, sem chamada paga | não |
+
+Bordas fora dos critérios: o caminho «a página tem as notas» (`acclaim: found`) não foi visto no servidor de verdade (pediria requisições ao BestEverAlbums); as funções que leem a tabela de notas do raspador seguem fora da suíte da raiz (sem `cheerio`).
+
 ## UI/UX Design (if the feature touches a screen)
 Nenhuma tela muda. Na fatia 3 há um terceiro aviso: «The ratings source asked to slow down. Loading ratings is paused. It resumes by itself at HH:MM.». Na fatia 1, aparece um aviso (toast) quando a carga é segurada: «Your sign-in could not be confirmed. Sign in again to keep loading ratings.» ou «The server asked to slow down. Loading is paused. It resumes by itself at HH:MM.».
 
@@ -105,6 +211,7 @@ Nenhuma dependência nova. O `cheerio` continua sendo dependência só do `serve
 - `docs/specs/uat.md` (UAT-181, UAT-23)
 - `docs/specs/features/F59-close-what-is-open-security/` (a porta e o limite do servidor; `serverFetch`)
 - `docs/manual/03_Backend_API_Layer.md`, `docs/manual/07_Frontend_Data_Infra.md`
+- (fatia 5) `reports/audits/2026-11-19-mjrpalbumblender-v0-open-issues-triage.md` (linha da UAT-23), `scripts/deploy-server.sh` (o teste de fumaça), `test/architecture/complexityLimit.test.js` (o molde da F58), `docs/specs/features/F69-spotify-popularity-failure-is-failure/` (os desfechos da popularidade no servidor)
 
 ## Risks & Considerations
 - **Ordem de publicação:** o site vai primeiro (lê o formato novo e o antigo), o servidor depois. Ao contrário, a aba aberta leria o formato novo com o código antigo: funciona para notas e para `/api/generate`, e perde a lista da IA até recarregar.
@@ -116,7 +223,7 @@ Nenhuma dependência nova. O `cheerio` continua sendo dependência só do `serve
 - **(fatia 3) Mais de uma instância no Cloud Run:** a fila, as esperas e a divisão em voo são por instância. Sem `--max-instances=1` o ritmo com a fonte é o de cada instância, somado. O limite de 4 do app continua como segundo freio.
 - **(fatia 3) Álbum ausente sob carga:** achar um álbum custa 3 requisições à fonte (2,0 s medido local); concluir «não tem» custa de 4 a cerca de 10. Com 4 pedidos do app por vez e 2 requisições por vez na fonte, um lote de álbuns ausentes pode passar de 15 s e voltar como `upstream_timeout` (falha, com «tentar de novo»), não como «não tem». O log (`answer: "upstream_timeout"`) dá o número.
 - **(fatia 3) Fonte ocupada sem fim:** a carga segura, volta, e segura de novo enquanto a tela estiver aberta; não há limite de vezes.
-- **(fatia 3) `/api/generate`** passa pela mesma fila e pelo prazo de 8 s por requisição, sem orçamento total.
+- **(fatia 3) `/api/generate`** passa pela mesma fila e pelo prazo de 8 s por requisição, sem orçamento total. (Resolvido na fatia 5: 75 s no total.)
 - **(fatia 3) Registros `done` com página e zero notas, de antes da F52,** não se refazem sozinhos (ver Open Questions da spec).
 - **Popularidade do Spotify (fora desta feature; lido, não mexido):** `PopularityEnricher` (`adapters/enrichers.js`) termina em `empty` sempre que o álbum volta sem `spotifyId`, e isso cobre três casos diferentes: o Spotify não tem o álbum, a pessoa não está conectada, e a chamada falhou (token vencido, 401, 429, rede). O `empty` vale 1 hora no guardado e vira «sem dado» nos fatos da série (`models/albumFacts.js` grava `popularity: false`). O item próprio precisa: erro tipado nas camadas de baixo, `failed` na falha, e um estado para «não conectado» que não vá para os fatos.
 

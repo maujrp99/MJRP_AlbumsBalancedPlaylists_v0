@@ -87,7 +87,7 @@ The in-memory model: a named collection of `Album` objects. The stored series do
 ```
 
 ## 4. Ranking Object (`rankingConsolidated`)
-The track acclaim merged from multiple sources, as returned by `consolidateRanking` (`server/lib/ranking.js`) in the response of `POST /api/generate`.
+The track acclaim merged from multiple sources, as returned by `consolidateRanking` (`server/lib/ranking.js`) in the response of `POST /api/generate`. Beside it, since F52 (slice 5), the response carries `ratings: { acclaim, popularity, aiRanking }`: what happened to each source of ratings (`found`, `not_found`, `no_ratings`, `not_configured`, `failed`, `not_asked`), so an album with no ratings is told apart from one whose ratings could not be fetched (`03_Backend_API_Layer.md`).
 
 ```javascript
 [

@@ -208,40 +208,22 @@ function extractAlbum(response) {
 }
 
 // URL verification uses the validateSource helper. Keep this logic centralized
-let validateSourceHelpers = null
-try {
-  validateSourceHelpers = require('./validateSource')
-} catch (e) {
-  // in some test contexts validateSource may be unavailable; gracefully degrade
-  validateSourceHelpers = null
-}
+const validateSource = require('./validateSource')
 
-const logger = (() => {
-  try { return require('./logger') } catch (e) { return console }
-})()
+/**
+ * The reference link of a ranking entry, as the app may show it: a BestEverAlbums link as it is;
+ * any other link only when it answers. A link that does not answer is dropped (null) and the entry
+ * stays: `verifyUrl` answers false for a link that failed, which is what "not verified" means here.
+ */
+async function checkedReferenceUrl (url) {
+  if (validateSource.isBestEverUrl(url)) return url
+  return (await validateSource.verifyUrl(url)) ? url : null
+}
 
 async function validateAndSanitizeEntries(entries) {
   if (!Array.isArray(entries)) return entries
-  const { verifyUrl, isBestEverUrl } = validateSourceHelpers || {}
   await Promise.all(entries.map(async (ent) => {
-    if (ent && ent.referenceUrl && typeof ent.referenceUrl === 'string') {
-      try {
-        // allow BestEverAlbums urls without network verification
-        if (typeof isBestEverUrl === 'function' && isBestEverUrl(ent.referenceUrl)) return
-        if (typeof verifyUrl === 'function') {
-          const ok = await verifyUrl(ent.referenceUrl).catch(() => false)
-          if (!ok) ent.referenceUrl = null
-          else if (!ok) {
-            // record the nullification event for observability
-            try { logger.info('nullified_reference_url', { url: ent.referenceUrl, provider: ent.provider || null, trackTitle: ent.trackTitle || null }) } catch (e) { /* ignore */ }
-            ent.referenceUrl = null
-          }
-        }
-      } catch (e) {
-        try { logger.warn('reference_url_validation_error', { url: ent.referenceUrl, err: (e && e.message) || String(e) }) } catch (er) { }
-        ent.referenceUrl = null
-      }
-    }
+    if (ent && ent.referenceUrl && typeof ent.referenceUrl === 'string') ent.referenceUrl = await checkedReferenceUrl(ent.referenceUrl)
   }))
   return entries
 }

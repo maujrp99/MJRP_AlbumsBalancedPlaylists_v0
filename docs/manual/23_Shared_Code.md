@@ -17,7 +17,7 @@
         *   Remove all non-alphanumeric characters (punctuation).
         *   Collapse whitespace.
     3.  **Output**: Clean token string (e.g., "money").
-*   **Consumers**: imported (dynamic `import()`) by `server/lib/ranking.js`, `server/lib/fetchRanking.js` and `server/routes/debug.js`, and by `shared/curation.js`. *(removed in F65: `curation.js`)*
+*   **Consumers**: imported (dynamic `import()`) by `server/lib/ranking.js` (whose loader `server/lib/fetchRanking.js` and `GenerationService` use) and `server/routes/debug.js`, and by `shared/curation.js`. *(removed in F65: `curation.js`)*
 
 ---
 

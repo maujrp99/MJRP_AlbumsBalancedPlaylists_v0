@@ -88,7 +88,7 @@ const serviceWith = (overrides = {}) => new GenerationService({
     validateAlbum: null,
     ajvAvailable: false,
     getBestEverRanking: vi.fn(async () => null),
-    fetchRankingForAlbum: vi.fn(async () => ({ entries: [], sources: [], debugTrace: [] })),
+    fetchRankingForAlbum: vi.fn(async () => ({ entries: [], sources: [], debugTrace: [], ratings: { acclaim: 'not_found', popularity: 'not_found', aiRanking: 'not_found' } })),
     consolidateRanking: vi.fn(async () => ({ results: [], divergence: {} })),
     normalizeRankingKey: async () => (text) => String(text || '').toLowerCase(),
     logger: quiet,
@@ -137,10 +137,12 @@ describe('GenerationService: a typed result for every answer of the provider', (
         expect(callProvider).not.toHaveBeenCalled()
     })
 
-    it('the ratings source failing does not fail the album: the album leaves without them', async () => {
-        const { UpstreamError } = require('../../server/lib/outcome.js')
-        const service = serviceWith({ getBestEverRanking: vi.fn(async () => { throw new UpstreamError('upstream_timeout', 'slow') }) })
-        expect(await service.generateAlbum({ albumQuery: 'Artist - Album' }, config)).toMatchObject({ ok: true, outcome: 'found' })
+    it('the ratings sources failing does not fail the album: the album leaves, and says which source failed', async () => {
+        const failedRanking = { entries: [], sources: [], debugTrace: [], ratings: { acclaim: 'failed', popularity: 'failed', aiRanking: 'failed' } }
+        const service = serviceWith({ fetchRankingForAlbum: vi.fn(async () => failedRanking) })
+        const result = await service.generateAlbum({ albumQuery: 'Artist - Album' }, config)
+
+        expect(result).toMatchObject({ ok: true, outcome: 'found', data: { ratings: { acclaim: 'failed', popularity: 'failed', aiRanking: 'failed' } } })
     })
 })
 

@@ -1,17 +1,59 @@
 /**
  * GenerationService.js
- * 
- * Logic regarding album generation (AI Prompting, Parsing, Validation).
- * Extracted from server/routes/albums.js (Sprint 18).
+ *
+ * An album from the paid AI provider, with the ranking of its tracks (POST /api/generate).
  *
  * It returns a typed result (lib/outcome.js): the album as `found`, or a failure. What the paid
  * provider answered is turned into a failure by ONE table (lib/aiProviderOutcome.js); the
  * provider's own answer or message never leaves in the result (F52).
+ *
+ * The album and its ratings are two things (F52, slice 5):
+ *   - the ALBUM decides the result: found, or the failure of the provider;
+ *   - the RATINGS come from a pipeline of sources (lib/fetchRanking.js) and never fail the
+ *     request: `data.ratings` says, source by source, what happened (found, not_found, no_ratings,
+ *     not_configured, failed, not_asked), so "there are no ratings" and "the ratings could not be
+ *     fetched" are told apart. The app asks the ratings again through POST /api/enrich-album.
+ * Anything of this server that breaks (a missing prompt, a bug in the consolidation) is thrown:
+ * the route's error path answers `internal`. It is never answered as an album without ratings.
+ *
+ * Time: one request has GENERATE_BUDGET_MS in all, less than the time the app waits for this call
+ * (90 s, `serverTimeoutMs` in the app's api/client.js). The provider not answering the album in
+ * that time is `upstream_timeout`; a source of ratings that is still running when the time ends
+ * is `failed` in `data.ratings`, and the album leaves (it was paid for).
+ *
+ * Every result carries `trace` ({ ratings }) for the log line of the route; it does not go on the wire.
  */
-const { success, failure } = require('../outcome')
+const { success, failure, UpstreamError } = require('../outcome')
 const { providerFailure, failureFromProviderError, describeProviderError } = require('../aiProviderOutcome')
+const { createBudget } = require('../timeBudget')
+const { requirePrompt } = require('../prompts')
+const { withRanking, withConsolidation, withRanksOnTracks } = require('../albumAnswer')
+
+/** The whole time of one request. The app gives up at 90 s; the answer has to leave before. */
+const GENERATE_BUDGET_MS = 75000
+const PROVIDER = 'AI provider'
+
+/** The tokens the provider says it used, for the log. */
+const tokensOf = (usage) => ['promptTokenCount', 'totalTokenCount', 'thoughtsTokenCount']
+    .map(name => `${name.replace('Count', 's')}=${usage[name] || '-'}`)
+    .join(' ')
+
+const isBudgetTimeout = (err) => err instanceof UpstreamError && err.code === 'upstream_timeout'
 
 class GenerationService {
+    /**
+     * @param {Object} deps
+     * @param {Function} deps.loadPrompts
+     * @param {Function} deps.renderPrompt
+     * @param {Function} deps.callProvider - the AI client
+     * @param {Function} deps.extractAlbum - the album in the provider's answer, or null
+     * @param {Function} [deps.validateAlbum] - the schema check (ajv), with `ajvAvailable`
+     * @param {Function} deps.fetchRankingForAlbum - lib/fetchRanking.js
+     * @param {Function} deps.consolidateRanking - lib/ranking.js
+     * @param {Function} deps.normalizeRankingKey
+     * @param {Object} [deps.logger]
+     * @param {Function} [deps.newBudget] - () => a budget of lib/timeBudget.js, for one request
+     */
     constructor(deps) {
         this.loadPrompts = deps.loadPrompts;
         this.renderPrompt = deps.renderPrompt;
@@ -19,202 +61,130 @@ class GenerationService {
         this.extractAlbum = deps.extractAlbum;
         this.validateAlbum = deps.validateAlbum;
         this.ajvAvailable = deps.ajvAvailable;
-        this.getBestEverRanking = deps.getBestEverRanking;
         this.fetchRankingForAlbum = deps.fetchRankingForAlbum;
         this.consolidateRanking = deps.consolidateRanking;
         this.normalizeRankingKey = deps.normalizeRankingKey;
         this.logger = deps.logger || console;
+        this.newBudget = deps.newBudget || (() => createBudget({ ms: GENERATE_BUDGET_MS }));
     }
 
     /**
      * @returns {Promise<Object>} a result of lib/outcome.js; on success `data` is the album
+     * @throws {PromptsError} when the prompts file has no prompt for the album search
      */
     async generateAlbum(reqBody, serverConfig) {
-        const { albumQuery, model, maxTokens } = reqBody || {};
-        const { processEnv } = serverConfig;
+        const { albumQuery } = reqBody || {};
 
         // Nothing to look for: the paid provider is not called
         if (typeof albumQuery !== 'string' || !albumQuery.trim()) return failure('invalid_request')
 
-        const prompts = this.loadPrompts()
-        const albumPrompt = this.renderPrompt(prompts.albumSearchPrompt, { albumQuery })
+        // No prompt: this server is broken, and it is known before anything is spent
+        const prompt = this.renderPrompt(requirePrompt(this.loadPrompts(), 'albumSearchPrompt'), { albumQuery })
+        const budget = this.newBudget()
 
-        let response
+        const asked = await this._askProvider(prompt, reqBody, serverConfig, budget)
+        if (asked.failed) return asked.failed
+
+        // The provider answered and was paid for. An answer with no usable album in it is the
+        // "unusable" row of the table: a status no tab asks again for, and no raw answer out.
+        const album = this._albumIn(asked.response, albumQuery)
+        if (!album) return providerFailure('unusable')
+
+        if (reqBody.rawStage === 'ranking' && serverConfig.allowRawStage) return this._rawRanking(album, albumQuery)
+
+        const ranking = await this.fetchRankingForAlbum(album, albumQuery, { budget })
+        return { ...success(await this._answerOf(album, ranking)), trace: { ratings: ranking.ratings } }
+    }
+
+    /**
+     * One call to the paid provider, within the time of the request.
+     * @returns {Promise<{ response: Object }|{ failed: Object }>} a failure of the provider is a
+     *          row of the table; anything else that breaks is thrown
+     * @private
+     */
+    async _askProvider(prompt, reqBody, serverConfig, budget) {
+        const { processEnv } = serverConfig
         try {
-            response = await this.callProvider({
-                prompt: albumPrompt || undefined,
-                albumQuery,
-                model,
-                maxTokens,
+            const response = await budget.race(this.callProvider({
+                prompt,
+                albumQuery: reqBody.albumQuery,
+                model: reqBody.model,
+                maxTokens: reqBody.maxTokens,
                 aiEndpoint: processEnv.AI_ENDPOINT,
                 aiApiKey: processEnv.AI_API_KEY,
                 aiModelEnv: processEnv.AI_MODEL
-            })
+            }), PROVIDER)
+            if (response) this._logUsage(response, serverConfig)
+            return { response }
+        } catch (err) {
+            const failed = isBudgetTimeout(err) ? providerFailure('timeout') : failureFromProviderError(err)
+            if (!failed) throw err
+            console.error(`AI provider failed for "${reqBody.albumQuery}": ${isBudgetTimeout(err) ? err.message : describeProviderError(err)}`)
+            return { failed }
+        }
+    }
+
+    /** @private */
+    _logUsage(response, serverConfig) {
+        const latencyMs = Date.now() - (serverConfig.startTime || Date.now())
+        const usedModel = serverConfig.processEnv.AI_MODEL || 'models/gemini-2.5-flash'
+        console.log(`AI proxy: model=${usedModel} status=${response.status} latencyMs=${latencyMs}`)
+
+        const usage = response.data && response.data.usageMetadata
+        if (usage) console.log(`AI usage: ${tokensOf(usage)}`)
+    }
+
+    /**
+     * The album in the provider's answer.
+     * @returns {Object|null} null when the answer has no album, breaks while it is read, or the
+     *          album fails the schema: the three are "the answer cannot be used"
+     * @private
+     */
+    _albumIn(response, albumQuery) {
+        let album
+        try {
+            album = this.extractAlbum(response)
+        } catch (err) {
+            console.error(`AI answer for "${albumQuery}" could not be read:`, (err && err.message) || err)
+            return null
+        }
+        if (!album) {
+            console.warn(`AI answer for "${albumQuery}" has no album in it`)
+            return null
+        }
+        if (this.ajvAvailable && this.validateAlbum && !this.validateAlbum(album)) {
+            console.warn('Album validation failed:', this.validateAlbum.errors)
+            return null
+        }
+        return album
+    }
+
+    /**
+     * The raw stage (a debug feature, F59): the provider's answer to the ranking prompt, as it came.
+     * @private
+     */
+    async _rawRanking(album, albumQuery) {
+        try {
+            const ranking = await this.fetchRankingForAlbum(album, albumQuery, { raw: true })
+            return success({ rawRankingResponse: ranking.raw && ranking.raw.data })
         } catch (err) {
             const failed = failureFromProviderError(err)
             if (!failed) throw err
-            console.error(`AI provider failed for "${albumQuery}": ${describeProviderError(err)}`)
+            console.error(`AI provider failed for the ranking of "${albumQuery}": ${describeProviderError(err)}`)
             return failed
-        }
-
-        // The provider answered and was paid for. Whatever stops the answer from becoming an album
-        // is the "unusable" row of the table: a status no tab asks again for, and no raw answer out.
-        try {
-            const payload = await this._albumFromResponse(response, reqBody, serverConfig)
-            return payload ? success(payload) : providerFailure('unusable')
-        } catch (err) {
-            console.error(`AI answer for "${albumQuery}" could not be read:`, err?.message || err)
-            return providerFailure('unusable')
         }
     }
 
     /**
-     * @returns {Promise<Object|null>} the album with its rankings, or null when the answer has no usable album
+     * The album with its ranking, consolidated and written on the tracks.
      * @private
      */
-    async _albumFromResponse(response, reqBody, serverConfig) {
-        const { albumQuery, rawStage } = reqBody;
-        const { processEnv, allowRawStage } = serverConfig;
-        const latencyMs = Date.now() - (serverConfig.startTime || Date.now())
-        const usedModel = (processEnv.AI_MODEL || 'models/gemini-2.5-flash')
-        console.log(`AI proxy: model=${usedModel} status=${response.status} latencyMs=${latencyMs}`)
-
-        if (response.data?.usageMetadata) {
-            try {
-                const u = response.data.usageMetadata
-                console.log(`AI usage: promptTokens=${u.promptTokenCount || '-'} totalTokens=${u.totalTokenCount || '-'} thoughtsTokens=${u.thoughtsTokenCount || '-'} `)
-            } catch (e) { /* ignore */ }
-        }
-
-        // Normalize
-        const album = this.extractAlbum(response)
-        if (album) {
-            if (this.ajvAvailable && this.validateAlbum) {
-                const ok = this.validateAlbum(album)
-                if (!ok) {
-                    console.warn('Album validation failed:', this.validateAlbum.errors)
-                    return null
-                }
-            }
-            let rankingEntries = []
-            let rankingSources = []
-            let fetchDebug = null
-
-            try {
-                if (rawStage === 'ranking' && allowRawStage) {
-                    const rankingResult = await this.fetchRankingForAlbum(album, albumQuery, { raw: true })
-                    return { rawRankingResponse: rankingResult.raw && rankingResult.raw.data }
-                }
-                const rankingResult = await this.fetchRankingForAlbum(album, albumQuery)
-                fetchDebug = rankingResult.debugTrace
-                rankingEntries = rankingResult.entries
-                rankingSources = rankingResult.sources
-
-                let bestEver = rankingResult.bestEver
-                if (!bestEver) {
-                    try {
-                        const be = await this.getBestEverRanking(album?.title || albumQuery, album?.artist || '')
-                        if (be && Array.isArray(be.evidence) && be.evidence.length > 0) {
-                            bestEver = be
-                            rankingSources = Array.isArray(rankingSources) ? rankingSources : []
-                            if (!rankingSources.some(s => String(s.provider || '').toLowerCase() === 'besteveralbums')) {
-                                rankingSources.unshift({ provider: 'BestEverAlbums', providerType: 'community', referenceUrl: be.referenceUrl || be.albumUrl || null })
-                            }
-                        }
-                    } catch (e) {
-                        this.logger && this.logger.warn && this.logger.warn('bestever_scraper_fallback_failed', { albumQuery, err: (e && e.message) || String(e) })
-                    }
-                }
-                if (bestEver) {
-                    album.bestEverEvidence = Array.isArray(bestEver.evidence) ? bestEver.evidence : []
-                    album.bestEverUrl = bestEver.albumUrl || null
-                    if (bestEver.albumId) album.bestEverAlbumId = String(bestEver.albumId)
-                }
-            } catch (err) {
-                console.warn('Ranking fetch skipped:', err?.message || err)
-            }
-
-            const combinedSources = Array.isArray(album.rankingSources)
-                ? [...album.rankingSources, ...rankingSources]
-                : [...rankingSources]
-            const albumPayload = {
-                ...album,
-                rankingSources: combinedSources
-            }
-            if (rankingEntries.length) albumPayload.rankingAcclaim = rankingEntries
-
-            // Consolidate acclaim
-            try {
-                const consolidated = await this.consolidateRanking(albumPayload.tracks || [], albumPayload.rankingAcclaim || [])
-                if (consolidated && consolidated.results) {
-                    albumPayload.rankingConsolidated = consolidated.results
-                    albumPayload.rankingConsolidatedMeta = {
-                        ...consolidated.divergence,
-                        debugInfo: consolidated.debugInfo,
-                        rankingEntriesCount: rankingEntries ? rankingEntries.length : -1,
-                        rankingEntriesSample: rankingEntries && rankingEntries.length ? rankingEntries[0] : null,
-                        fetchRankingDebug: fetchDebug
-                    }
-                } else {
-                    albumPayload.rankingConsolidated = Array.isArray(consolidated) ? consolidated : []
-                    albumPayload.rankingConsolidatedMeta = {}
-                }
-            } catch (e) {
-                console.warn('Ranking consolidation failed:', e && e.message)
-                albumPayload.rankingConsolidated = []
-                albumPayload.rankingConsolidatedMeta = { error: e.message, stack: e.stack }
-            }
-
-            // Map ranks back to tracks
-            try {
-                const normalizeKey = await this.normalizeRankingKey()
-
-                if (Array.isArray(albumPayload.rankingConsolidated) && Array.isArray(albumPayload.tracks)) {
-                    const rankMap = new Map()
-                    const ratingMap = new Map()
-                    albumPayload.rankingConsolidated.forEach(r => {
-                        if (r && r.trackTitle) {
-                            const key = normalizeKey(r.trackTitle)
-                            if (r.finalPosition !== undefined && r.finalPosition !== null) {
-                                rankMap.set(key, Number(r.finalPosition))
-                            }
-                            if (r.rating !== undefined && r.rating !== null) {
-                                ratingMap.set(key, Number(r.rating))
-                            }
-                        }
-                    })
-
-                    albumPayload.tracks.forEach(t => {
-                        const key = normalizeKey((t && (t.title || t.trackTitle || t.name)) || '')
-                        if (rankMap.has(key)) t.rank = rankMap.get(key)
-                        if (ratingMap.has(key)) t.rating = ratingMap.get(key)
-                    })
-                }
-            } catch (e) {
-                this.logger && this.logger.warn && this.logger.warn('rank_mapping_failed', { err: (e && e.message) || String(e) })
-            }
-
-            // Create tracksByAcclaim sorted list
-            try {
-                if (Array.isArray(albumPayload.tracks)) {
-                    albumPayload.tracks.forEach((t, idx) => {
-                        if (t && (t.rank === undefined || t.rank === null)) t.rank = idx + 1
-                    })
-                    albumPayload.tracksByAcclaim = Array.from(albumPayload.tracks).slice().sort((a, b) => {
-                        const ra = (a && a.rank) || Number.POSITIVE_INFINITY
-                        const rb = (b && b.rank) || Number.POSITIVE_INFINITY
-                        return ra - rb
-                    })
-                }
-            } catch (e) {
-                this.logger && this.logger.warn && this.logger.warn('tracks_by_acclaim_failed', { err: (e && e.message) || String(e) })
-            }
-            return albumPayload
-        }
-
-        console.warn(`AI answer for "${albumQuery}" has no album in it`)
-        return null
+    async _answerOf(album, ranking) {
+        const ranked = withRanking(album, ranking)
+        const consolidated = await this.consolidateRanking(ranked.tracks || [], ranked.rankingAcclaim || [])
+        return withRanksOnTracks(withConsolidation(ranked, consolidated, ranking), await this.normalizeRankingKey())
     }
 }
 
 module.exports = GenerationService;
+module.exports.GENERATE_BUDGET_MS = GENERATE_BUDGET_MS;
