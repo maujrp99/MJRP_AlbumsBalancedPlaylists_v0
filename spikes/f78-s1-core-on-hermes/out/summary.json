@@ -1,0 +1,167 @@
+{
+  "pass": "as-is (the site's files unchanged)",
+  "patches": [],
+  "digests": {
+    "diff-hermes-bare.txt": {
+      "bytes": 64141233,
+      "sha256": "fc2d973c48be18c05b858c1f7808019c3a1ec6f1fbb277545075d5c218747c5b"
+    },
+    "diff-hermes-polyfill-bytecode.txt": {
+      "bytes": 219357,
+      "sha256": "405044a8af71b0096bf419a0f714b8d6382df2d7ba0688831f69dc03b6b4a088"
+    },
+    "diff-hermes-polyfill-source.txt": {
+      "bytes": 219355,
+      "sha256": "e2e2c570170ae670932391c3b42813da67a5d59a252d19a0cc52e5103b9f5036"
+    },
+    "diff-node-bundle.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "features-hermes-bytecode.json": {
+      "bytes": 4749,
+      "sha256": "e7ddb6941dbb3565bde384b89a5ac453d63d57dc12163c6c461e087aae06077a"
+    },
+    "features-hermes.json": {
+      "bytes": 4749,
+      "sha256": "e7ddb6941dbb3565bde384b89a5ac453d63d57dc12163c6c461e087aae06077a"
+    },
+    "features-node.json": {
+      "bytes": 4526,
+      "sha256": "bee63686e6a8199b0431a20136918b9bfdc3f51c649003d0dec75428d0eb4571"
+    },
+    "hermes-bare.json": {
+      "bytes": 13028182,
+      "sha256": "072bdfdcc02416327a5cb977c323dcfc880be5f97f7d21eec62f98924b089fa1"
+    },
+    "hermes-polyfill-bytecode.json": {
+      "bytes": 54616358,
+      "sha256": "15c0c855bec713eb12e45ec74298948125351a270bb5a1d29c5d7417c9d99bc7"
+    },
+    "hermes-polyfill-source.json": {
+      "bytes": 54616358,
+      "sha256": "15c0c855bec713eb12e45ec74298948125351a270bb5a1d29c5d7417c9d99bc7"
+    },
+    "node-bundle.json": {
+      "bytes": 54617877,
+      "sha256": "07da305002bf68407e58ebd40ac1571d334be6b33b5a5e6c5163879e71aefc6c"
+    },
+    "node-reference.json": {
+      "bytes": 54617877,
+      "sha256": "07da305002bf68407e58ebd40ac1571d334be6b33b5a5e6c5163879e71aefc6c"
+    }
+  },
+  "hermes": {
+    "version": "260318099.0.5",
+    "shippedBy": "react-native@0.88.1 (dependency hermes-compiler 260318099.0.5)",
+    "artifact": "com.facebook.hermes:hermes-ios:260318099.0.5, macOS slice of hermesvm.framework"
+  },
+  "referenceBytes": 54617877,
+  "cases": 3401,
+  "casesByKind": {
+    "registry": 1,
+    "model": 59,
+    "transformer": 58,
+    "rank": 464,
+    "recipe": 1273,
+    "mixin": 66,
+    "albumIdentity": 1015,
+    "trackIdentity": 465
+  },
+  "corpus": {
+    "handmadeAlbums": 11,
+    "measuredAlbums": 28,
+    "rankAlbums": 58,
+    "albumSets": 8,
+    "extractedRecords": 938,
+    "extractedReplayable": 921
+  },
+  "ids": {
+    "generated": 25369,
+    "notV4": 0,
+    "repeated": 0,
+    "badStamps": 0
+  },
+  "errorsInReference": [],
+  "compared": {
+    "node-bundle": {
+      "ran": true,
+      "identical": true,
+      "bytes": 54617877,
+      "differentCases": 0,
+      "firstDifferent": []
+    },
+    "hermes-bare": {
+      "ran": true,
+      "identical": false,
+      "bytes": 13028182,
+      "differentCases": 1241,
+      "firstDifferent": [
+        "model:Album:handmade:alb-pitty-admiravel",
+        "model:Album:handmade:alb-sigur-agaetis",
+        "model:Album:handmade:alb-utada-firstlove",
+        "model:Album:handmade:alb-kino-gruppa",
+        "model:Album:handmade:alb-beatles-abbey",
+        "model:Album:handmade:alb-beatles-revolver",
+        "model:Album:handmade:alb-beatles-anthology",
+        "model:Album:handmade:alb-twenty",
+        "model:Album:handmade:alb-single",
+        "model:Album:handmade:alb-no-scores",
+        "model:Album:measured:measured-1",
+        "model:Album:measured:measured-2",
+        "model:Album:measured:measured-3",
+        "model:Album:measured:measured-4",
+        "model:Album:measured:measured-5",
+        "model:Album:measured:measured-6",
+        "model:Album:measured:measured-7",
+        "model:Album:measured:measured-8",
+        "model:Album:measured:measured-9",
+        "model:Album:measured:measured-10"
+      ]
+    },
+    "hermes-polyfill-source": {
+      "ran": true,
+      "identical": false,
+      "bytes": 54616358,
+      "differentCases": 7,
+      "firstDifferent": [
+        "mixin:enrichTracks:handmade:alb-pitty-admiravel",
+        "mixin:enrichTracks:handmade:alb-twenty",
+        "mixin:enrichTracks:measured:measured-12",
+        "mixin:swap+trim:handmade:mixed-five",
+        "mixin:swap+trim:handmade:with-edges",
+        "mixin:swap+trim:handmade:all-handmade",
+        "mixin:swap+trim:measured:first-twelve"
+      ]
+    },
+    "hermes-polyfill-bytecode": {
+      "ran": true,
+      "identical": false,
+      "bytes": 54616358,
+      "differentCases": 7,
+      "firstDifferent": [
+        "mixin:enrichTracks:handmade:alb-pitty-admiravel",
+        "mixin:enrichTracks:handmade:alb-twenty",
+        "mixin:enrichTracks:measured:measured-12",
+        "mixin:swap+trim:handmade:mixed-five",
+        "mixin:swap+trim:handmade:with-edges",
+        "mixin:swap+trim:handmade:all-handmade",
+        "mixin:swap+trim:measured:first-twelve"
+      ]
+    }
+  },
+  "hermesRuns": {
+    "hermes-bare": {
+      "exit": 0,
+      "stderr": ""
+    },
+    "hermes-polyfill-source": {
+      "exit": 0,
+      "stderr": ""
+    },
+    "hermes-polyfill-bytecode": {
+      "exit": 0,
+      "stderr": ""
+    }
+  }
+}
