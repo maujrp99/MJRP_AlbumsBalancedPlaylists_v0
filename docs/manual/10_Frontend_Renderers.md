@@ -40,6 +40,8 @@ To keep the main View classes (like `SeriesView` and `InventoryView`) maintainab
 ## 2. View Strategies
 
 ### View Mode Strategy (`public/js/views/strategies/ViewModeStrategy.js`)
+
+> **F65 (2026-11-19):** `ViewModeStrategy.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 *   **Pattern**: **Strategy Pattern**.
 *   **Usage today**: no module imports this file; `SeriesView` does not use it.
 *   **Problem**: Switching between "Grid View" and "List View" created complex `if/else` logic in the main controller.
@@ -52,6 +54,8 @@ To keep the main View classes (like `SeriesView` and `InventoryView`) maintainab
 ## 3. Specialized Views
 
 ### Save All / Migration View (`public/js/views/SaveAllView.js`)
+
+> **F65 (2026-11-19):** `SaveAllView.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 *   **Role**: A dedicated utility view for migrating data from `localStorage` (Legacy) to `Firestore` (V3).
 *   **Logic**:
     *   Receives the `MigrationUtility` and `getUserId` from the route (`app.js`, `/save-all`): since F58 (UAT-14) the view imports no Firebase (it used to load a second SDK, 11.6.1, from the `gstatic` CDN).
@@ -74,8 +78,10 @@ To keep the main View classes (like `SeriesView` and `InventoryView`) maintainab
 ## 4. UI Utilities
 
 ### Albums Filters (`public/js/views/albums/AlbumsFilters.js`)
+
+> **F65 (2026-11-19):** `AlbumsFilters.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 *   **Role**: Pure logic for filtering album arrays.
-*   **Usage today**: only re-exported by `views/albums/index.js`, which no module imports. The filters of the albums screen are in `services/SeriesFilterService.js` and `models/seriesFilter.js`.
+*   **Usage today**: only re-exported by `views/albums/index.js`, which no module imports. The filters of the albums screen are in `services/SeriesFilterService.js` and `models/seriesFilter.js`. *(removed in F65: `AlbumsFilters.js`, `views/albums/index.js`, `SeriesFilterService.js`; the filters of the albums screen are pure rules in `models/seriesFilter.js`)*
 *   **Filters Supported**:
     *   `Search`: Case-insensitive substring match on Title/Artist.
     *   `Artist`: Exact artist name.
@@ -84,6 +90,8 @@ To keep the main View classes (like `SeriesView` and `InventoryView`) maintainab
     *   `Expansion Safety`: Explicitly excludes "Expansion" (Staging) albums from main views unless specifically searched.
 
 ### Playlists Drag & Drop (`public/js/views/playlists/PlaylistsDragDrop.js`)
+
+> **F65 (2026-11-19):** `PlaylistsDragDrop.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 *   **Library**: `SortableJS`.
 *   **Logic**: Configures the drag-and-drop zones for playlist creation (`setupDragAndDrop(view)`).
 *   **Usage today**: `PlaylistsView` uses `components/playlists/PlaylistsDragHandler.js` instead; nothing calls `setupDragAndDrop`.

@@ -35,7 +35,7 @@ MJRP Albums Balanced Playlists is a **hybrid music curator** that generates bala
 - **Frontend**: Vite + Vanilla JavaScript (SPA with custom router)
 - **Backend**: Node.js/Express + AI API proxy
 - **Database**: Firebase Firestore
-- **Testing**: Vitest (unit), Puppeteer (E2E)
+- **Testing**: Vitest (unit, architecture and security tests). The browser scripts in Puppeteer were removed in F65; a screen is proved in a real browser by the integrator (AGENTS.md, step 4)
 - **Styling**: Tailwind CSS (via CDN)
 
 ### Architecture
@@ -99,9 +99,8 @@ User Action → View → Store → API Client → Backend → Firestore
 ## Part 4: Testing Protocols
 
 ### Test Framework
-- **Vitest**: Unit tests (`tests/stores/`, `tests/router.test.js`)
-- **Puppeteer**: E2E tests (`test/e2e/`)
-- **Setup**: `npm run test:e2e` (launches Puppeteer suite)
+- **Vitest**: every automated test of the project, under `test/` (`test/stores/`, `test/router.test.js`, `test/architecture/`, `test/security/`, `test/server/`)
+- **Browser**: there is no browser suite in the repository since F65 (`test/e2e/` and `npm run test:e2e` were removed: their selectors no longer matched the app). A screen is proved in a real browser, by hand or through the Playwright MCP
 
 ### Running Tests
 ```bash
@@ -113,9 +112,6 @@ npm run test:ui
 
 # Coverage report
 npm run test:coverage
-
-# E2E tests (Puppeteer)
-npm run test:e2e
 ```
 
 ### Test Specification
@@ -183,7 +179,7 @@ npm run test:e2e
 ### Domain Model Pattern
 - **Classes**: `Album`, `Track`, `Playlist`, `Series` (ES6 classes)
 - **Why**: Prevents data anemia, guarantees context (artist/album on tracks)
-- **Hydration**: Centralized in `client.js` and `MigrationUtility.js`
+- **Hydration**: Centralized in `client.js` (`MigrationUtility.js` was removed in F65, with the migration screen)
 
 ---
 
@@ -198,21 +194,20 @@ npm run test:e2e
 - [Data Infrastructure](../manual/07_Frontend_Data_Infra.md) - Data flows & Persistence
 
 ### Test Artifacts
-- [test/e2e/README.md](../../test/e2e/README.md) - Puppeteer framework setup
 - [Test Suite Audit](../manual/24_Test_Suite.md) - Analysis of the current test suite
-- [Test Results](../../test/e2e/screenshots/) - Evidence screenshots
+- Test evidence: `reports/evidence/<feature>/` (the proofs of each feature, with screenshots when there are any)
 
 ---
 
 ## Part 7: Test Artifacts & Evidence
 
 ### Test Specifications
-- **Location**: See `test/e2e/README.md` and `docs/manual/24_Test_Suite.md`.
+- **Location**: See `docs/manual/24_Test_Suite.md`.
 - **Contents**: Navigation scenarios, User Stories, ACs, TCs
 - **Ownership**: QA Engineer maintains
 
 ### Test Results
-- **E2E Screenshots**: `test/e2e/screenshots/`
+- **Screenshots**: `reports/evidence/<feature>/` (`test/e2e/screenshots/` was removed in F65)
 - **Naming**: `{test-name}-{timestamp}.png`
 - **Retention**: Keep last 5 runs
 
@@ -228,14 +223,14 @@ Total: 18 TCs | Passed: 15 ✅ | Failed: 3 ❌ | Pass Rate: 83%
 
 ### Evidence for Bug Reports
 When filing bugs in `DEBUG_LOG.md`:
-- Include screenshot from `test/e2e/screenshots/`
+- Include a screenshot, saved under `reports/evidence/<feature>/`
 - Reference TC-ID from `test_specification.md`
 - Link to test run output
 
 **Example**:
 ```markdown
 ### Issue #22: Navigation Regression
-**Evidence**: ![screenshot](../../test/e2e/screenshots/issue-22-nav-fail-20251202.png)
+**Evidence**: `reports/evidence/<feature>/issue-22-nav-fail-20251202.png`
 **Related TC**: TC-NAV-01 (see test_specification.md)
 ```
 

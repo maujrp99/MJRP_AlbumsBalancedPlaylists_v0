@@ -24,8 +24,6 @@ import SeriesView from './views/SeriesView.js'
 import SeriesController from './controllers/SeriesController.js'
 import { PlaylistsView } from './views/PlaylistsView.js'
 import { InventoryView } from './views/InventoryView.js'
-import { RankingView } from './views/RankingView.js'
-import { ConsolidatedRankingView } from './views/ConsolidatedRankingView.js'
 import { ComingSoonView } from './views/ComingSoonView.js'
 import { BlendingMenuView } from './views/BlendingMenuView.js'
 
@@ -38,12 +36,9 @@ export { app, auth, db }
 import { TopNav } from './components/TopNav.js'
 import { Footer } from './components/Footer.js'
 import { clearAppAlbumCaches } from './services/albums/albumLoading.js'
-import { CacheManager } from './cache/CacheManager.js'
-import { MigrationUtility } from './migration/MigrationUtility.js'
 
 const initUI = () => {
-    // The menu is given what reaches the database; it imports none of it (UAT-19)
-    const topNav = new TopNav({ migrationUtility: new MigrationUtility(db, new CacheManager()) })
+    const topNav = new TopNav()
     const headerEl = document.getElementById('header-container')
     if (headerEl) {
         headerEl.innerHTML = topNav.render()
@@ -149,28 +144,12 @@ router.register('/series', () => {
     return null
 })
 
-// Data Migration route
-router.register('/save-all', async () => {
-    // The screen gets the app's one Firestore through the migration utility, never an SDK of its own (UAT-14)
-    const [{ SaveAllView }, { MigrationUtility }] = await Promise.all([
-        import('./views/SaveAllView.js'),
-        import('./migration/MigrationUtility.js')
-    ])
-    return new SaveAllView({
-        migrationUtility: new MigrationUtility(db, null),
-        getUserId: () => auth.currentUser?.uid || null
-    })
-})
-
-router.register('/ranking/:albumId', () => new RankingView())
-router.register('/consolidated-ranking', () => new ConsolidatedRankingView())
-
 // Global Error Handler
 window.addEventListener('error', (e) => {
     console.error('Global Error:', e.error)
 })
 
-// Expose stores/router globally for Puppeteer testing
+// Expose stores/router globally, for the browser console and for browser-driven checks
 if (typeof window !== 'undefined') {
     import('./stores/albumSeries.js').then(m => { window.albumSeriesStore = m.albumSeriesStore })
     import('./stores/albums.js').then(m => { window.albumsStore = m.albumsStore })

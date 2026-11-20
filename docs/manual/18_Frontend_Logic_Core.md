@@ -17,7 +17,7 @@ The application uses a **Strategy Pattern** for both Playlist Generation and Tra
 
 ## 2. Algorithms (Distribution Layer)
 
-**Registry (`algorithms/index.js`)**: four algorithms are registered and offered as recipes: `mjrp-balanced-cascade`, `top-n-popular`, `top-n-acclaimed`, `top-n-user`. The other files in `public/js/algorithms/` (`LegacyRoundRobinAlgorithm`, `SDraftOriginalAlgorithm`, `SDraftBalancedAlgorithm`, `MJRPBalancedCascadeV0Algorithm`, `Top3*`, `Top5*`) are not registered, so `createAlgorithm` does not return them.
+**Registry (`algorithms/index.js`)**: four algorithms are registered and offered as recipes: `mjrp-balanced-cascade`, `top-n-popular`, `top-n-acclaimed`, `top-n-user`. The algorithms that were not registered (`LegacyRoundRobinAlgorithm`, `SDraftOriginalAlgorithm`, `SDraftBalancedAlgorithm`, `MJRPBalancedCascadeV0Algorithm`, `Top3*`, `Top5*`) were removed in F65: no module imported them.
 
 ### Base Class (`BaseAlgorithm.js`)
 *   **Role**: Abstract base ensuring consistent API (`generate()`).

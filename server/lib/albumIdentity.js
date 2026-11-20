@@ -1,7 +1,7 @@
 /**
  * The one rule of "is this the album asked for" (F55) lives in shared/albumIdentity.js, an ES
  * module the app uses too. The server is CommonJS, so it loads the rule once, on first use, the
- * same way it loads the other shared modules (shared/normalize.js, shared/curation.js).
+ * same way it loads the other shared modules (shared/normalize.js).
  *
  * const { pickAlbum, compareAlbumIdentity, albumFromLabel, sameArtist } = await loadAlbumIdentity()
  */

@@ -2,14 +2,13 @@
 
 This document audits the contents of the `test/` directory, which contains the **Verification Layer** of the application.
 
-> **Correction**: Previous analysis incorrectly stated tests were missing (looked in `tests/` instead of `test/`). The suite is actually **Active and Modern**, using **Vitest** for unit tests and a custom Puppeteer setup for E2E.
+> **Correction**: Previous analysis incorrectly stated tests were missing (looked in `tests/` instead of `test/`). The suite is **Active and Modern**, all of it in **Vitest**. The Puppeteer scripts of `test/e2e/` were removed in F65 (their selectors no longer matched the app, and no command of the project ran them); a screen is proved in a real browser by the integrator.
 
 ## 1. Overview
 The test suite is structured into clear layers, mirroring the application architecture.
 
 | Layer | Framework | Location | Focus |
 | :--- | :--- | :--- | :--- |
-| **End-to-End (E2E)** | Puppeteer | `test/e2e/` | Browser automation, smoke tests, critical user flows. |
 | **Unit (Stores)** | Vitest | `test/stores/` | State management logic, subscriptions, mutations. |
 | **Unit (Views)** | Vitest | `test/views/` | Component rendering, event handling, store interaction (mocked). |
 | **Unit (Services)** | Vitest | `test/services/` | Business logic, API adapters, Auth logic. |
@@ -17,22 +16,25 @@ The test suite is structured into clear layers, mirroring the application archit
 | **Unit (Models)** | Vitest | `test/models/` | Pure rules: album load state, paging, series filter, own ranking, text. |
 | **Architecture** | Vitest | `test/architecture/` | Import boundaries of the album loading, of the own ranking and of the saved playlists read (`savedPlaylistsBoundaries.test.js`, v5.0, F61). Since F63: `historyOwnedByRouter.test.js` (only the router writes the browser history), `interfaceInEnglish.test.js` (no Portuguese string in `public/js`; it reads the strings with `espree`, comments left out) and `oneTabTitle.test.js` (one title for the tab). |
 | **Other unit folders** | Vitest | `test/api/`, `test/cache/`, `test/components/`, `test/controllers/`, `test/ranking/`, `test/repositories/`, `test/transformers/`, `test/utils/` | One folder per layer of `public/js/`. |
-| **Server** | Node scripts | `server/test/` | Run by `npm test` inside `server/` (not by Vitest). |
+| **Server** | Vitest | `test/server/` | The server's modules, loaded with `createRequire`. `server/test/` (Node scripts, three of them importing a file that did not exist: UAT-21) was removed in F65; what was true in it is `test/server/answerParsing.test.js`. `npm test` inside `server/` runs `npx vitest run test/server` from the root. |
+| **Security** | Vitest | `test/security/` | Text from outside shown as text, addresses checked, the build hands out no source, and, since F65, `noSecretsInRepo.test.js`: no tracked text file holds a credential (it reports file, line and rule, never the value). |
 | **Helpers** | Vitest | `test/helpers/` | `fakeFirestore.js` (v5.0, F60): an in-memory double of `firebase/firestore` with atomic batches, a network turn per call, and `failNext` / `holdNext` to make a write fail or stay in the air. The save, series-delete and restore tests look at what is left in the database through it. Since F61 it also counts reads: `fake.reads()` lists every read in order, `fake.maxReadsAtOnce()` says how many were in the air together, and `failNext('read', error, { path })` fails the read of one path. `test/services/playlists/SavedPlaylistsReader.reads.test.js` uses them as the fitness test of the saved playlists read (1 + N reads, 8 at once, 7 waits for 47 series). |
 
-**How they run**: `npm test` runs Vitest (`vitest.config.js`: `jsdom`, `test/**/*.test.js`, `test/e2e/**` excluded). The E2E layer has its own runner, `npm run test:e2e` (`test/e2e/run-all.js`), against a running app; its `BASE_URL` defaults to `http://127.0.0.1:5010`.
+**How they run**: `npm test` runs Vitest (`vitest.config.js`: `jsdom`, `test/**/*.test.js`); `npx vitest run` runs it once, and it is what CI and the deploy scripts run. There is no other runner: `npm run test:e2e` was removed in F65.
+
+**Since F65, `test/architecture/noDeadModules.test.js`** walks the import graph (`test/architecture/support/importGraph.js`) from `public/index.html` and `server/index.js` and fails when a module under `public/js`, `shared` or `server` is reached by no entry point. A test is not a user.
 
 ---
 
 ## 2. Test Components Deep Dive
 
-### End-to-End (E2E) Layer
+### End-to-End (E2E) Layer (removed in F65; kept as a record)
 *   **Setup**: `setup.js` handles browser launching and page creation. `helpers.js` provides navigation utilities.
-*   **Smoke Test (`smoke.test.js`)**:
+*   **Smoke Test (`smoke.test.js`)**: *(removed in F65: `smoke.test.js`)*
     *   Verifies core app visibility: Title, Header, Logo, Navigation Links.
     *   Navigates to critical routes (`/albums`, `/blend`, `/inventory`).
     *   **Revamped (Sprint 19)**: Updated to match V3 Navigation Logic (`/home` redirection).
-*   **Blending Wizard (`blending-wizard.test.js`)**:
+*   **Blending Wizard (`blending-wizard.test.js`)**: *(removed in F65: `blending-wizard.test.js`)*
     *   **Golden Path**: Automates the V3 Blending flow: Select Series -> Configure Ingredients -> Generate Playlist.
     *   Verifies the full "Creation Pipeline".
 *   **Legacy Regressions (`issue-*.test.js`)**:
@@ -49,7 +51,7 @@ The test suite is structured into clear layers, mirroring the application archit
 
 ### View Layer (`test/views/`)
 *   **Technique**: **Dependency Injection / Mocking**.
-*   **Example (`ConsolidatedRankingView.test.js`)**:
+*   **Example (`ConsolidatedRankingView.test.js`)**: *(removed in F65: `ConsolidatedRankingView.test.js`)*
     *   **Steps**:
         1.  Setup: Create 3 Albums (Series A, Series B, Series C).
         2.  Navigate: Go to Series A.
@@ -101,7 +103,7 @@ sequenceDiagram
 
 ## 3. Analysis Verdict
 *   **Status**: **Healthy / Active**.
-*   **Tech Stack**: Modern (Vitest + Puppeteer).
+*   **Tech Stack**: Modern (Vitest; the Puppeteer scripts left in F65).
 *   **Gap**: ~Logic coverage for algorithms~ (Resolved: `topn.test.js` updated for Sprint 17.5). Remaining gap: E2E test reliability on local dev environments (timeouts).
 
 ## 4. Recommendations

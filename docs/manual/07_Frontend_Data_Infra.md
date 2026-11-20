@@ -36,9 +36,6 @@ classDiagram
     class SeriesRepository {
         +findWithAlbums()
     }
-    class AlbumRepository {
-        +findBySeriesId()
-    }
     class Firestore {
         +getDoc()
         +setDoc()
@@ -47,10 +44,11 @@ classDiagram
     BaseRepository o-- CacheManager : Uses Strategy
     BaseRepository ..> Firestore : Fallback Read / Write
     SeriesRepository --|> BaseRepository : Extends
-    AlbumRepository --|> BaseRepository : Extends
 ```
 
 ### SharedAlbumRepository (`public/js/repositories/SharedAlbumRepository.js`) - v4.0 (F48)
+
+> **F65 (2026-11-19):** `SharedAlbumRepository.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 *   **Path**: the root collection `albums`, one document per album, shared by every account.
 *   **No writer since F56** (on the branch `fix/f56-screens-load-through-the-service`, not yet published): its one writer was `SeriesService.refetchAlbumMetadata` ("Refetch Metadata"), which no longer exists; the reload of an album goes through the album load, which does not write here. Nothing in the app reads the collection back. The class stays until the owner decides what the shared collection is for.
 *   **Nothing personal goes in**: `toSharedAlbumData` writes the album as plain data without `hasUserRanking`, `userRanking` and the `userRank` of each track. The personal ranking lives only in `users/{uid}/albumRankings`.
@@ -116,7 +114,7 @@ classDiagram
 ## 5. Models (Domain Entities)
 *   **`Album.js`**: Enriched entity with `tracks`, `rankingSources`, and `stats`.
 *   **`Track.js`**: The atomic unit, carrying the `rankingInfo` provenance chain.
-*   **`Series.js`**: Container for albums.
+*   **`Series.js`**: Container for albums. *(removed in F65: `Series.js`)*
 
 ### `api/serverFetch.js` — the one way to call the app's own server
 `serverFetch(url, init)` is `fetch` plus the person's login: it asks Firebase for the ID token on every call (Firebase renews it) and sends it as `Authorization: Bearer <token>`. With nobody signed in the call goes without it and the server answers 401. `createServerFetch({ getIdToken, fetchImpl })` is the pure version, used by the tests. Every call to `/api/*` that the server guards goes through it: `api/client.js` (`/enrich-album`, `/generate`, `/playlists`) and `services/album-search/AlbumSearchService.js` (`/ai/studio-albums`). `/api/musickit-token` is open and is still called with plain `fetch`.

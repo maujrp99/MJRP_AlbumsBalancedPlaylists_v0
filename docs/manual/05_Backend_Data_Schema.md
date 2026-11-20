@@ -72,6 +72,8 @@ Individual song entity.
 ```
 
 ## 3. Series Object (`Series.js`)
+
+> **F65 (2026-11-19):** the class `public/js/models/Series.js` was removed (no module imported it). The shape below is still the one the app keeps in memory for a series, as plain objects.
 The in-memory model: a named collection of `Album` objects. The stored series document has a different shape (a list of `albumQueries`); see `32_Data_Schema_Reference.md`, section 3.
 
 ```javascript

@@ -1,6 +1,0 @@
-node_modules/
-logs/
-/tmp/
-*.log
-package-lock.json
-public/

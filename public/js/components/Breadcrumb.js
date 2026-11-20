@@ -3,7 +3,7 @@ import { escapeHtml } from '../utils/stringUtils.js'
 
 /**
  * Breadcrumb Component
- * Displays navigation trail (Home > Albums > Ranking)
+ * Displays navigation trail (Home > Blend > Playlists)
  */
 
 export class Breadcrumb {
@@ -37,11 +37,6 @@ export class Breadcrumb {
 
         if (currentPath.startsWith('/albums')) {
             crumbs.push({ label: 'Albums', path: '/albums' })
-        }
-
-        if (currentPath.startsWith('/ranking')) {
-            crumbs.push({ label: 'Albums', path: '/albums' })
-            crumbs.push({ label: 'Ranking', path: currentPath })
         }
 
         // The playlists screen: a set that comes from the blend, or a saved batch being edited

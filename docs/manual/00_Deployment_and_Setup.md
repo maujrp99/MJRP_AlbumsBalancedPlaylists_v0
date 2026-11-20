@@ -155,6 +155,8 @@ Cadastros que valem para esse endereço:
 | Firebase Authentication, Authorized domains | `127.0.0.1` |
 
 ### Frontend (`public/config.js`)
+
+> **F65 (2026-11-19):** `public/config.js` was an empty stub and was removed. The Firebase web configuration is `public/js/firebase-config.js` (model: `public/js/firebase-config.example.js`), with the shape below.
 ```javascript
 const firebaseConfig = {
   apiKey: "...",

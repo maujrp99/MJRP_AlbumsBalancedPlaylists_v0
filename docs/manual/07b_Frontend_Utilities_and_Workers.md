@@ -33,7 +33,7 @@ This document analyzes the "Plumbing" of the frontend: The utilities, transforme
 ### safeUrl (`public/js/utils/safeUrl.js`) - v5.0 (F59)
 *   **Role**: The one check an address from outside the code passes before it becomes a link (`href`, `window.open`, a change of `location`). Outside addresses: the Spotify address stored with an album, the source address of a ranked track, the address of a playlist Spotify has just created.
 *   **What it does**: A pure function, no DOM. It gives back the address, trimmed, when it is absolute and its scheme is `http:` or `https:`; otherwise `null` (not text, empty, relative, `//host/...`, `javascript:`, `data:`, `blob:`, `spotify:`...). The scheme is read by `URL`, the parser the browser follows a link with, so capitals, tabs and line breaks inside the scheme are judged as the browser would.
-*   **Where it is used**: `components/ui/Card.js` (the Spotify badge: a refused address falls back to the one made from the Spotify id), `views/ConsolidatedRankingView.js` (the source link of a track: a refused address shows a dash), `components/SpotifyExportModal.js` (the "open in Spotify" button: a refused address opens nothing).
+*   **Where it is used**: `components/ui/Card.js` (the Spotify badge: a refused address falls back to the one made from the Spotify id), `views/ConsolidatedRankingView.js` (the source link of a track: a refused address shows a dash), `components/SpotifyExportModal.js` (the "open in Spotify" button: a refused address opens nothing). *(removed in F65: `ConsolidatedRankingView.js`)*
 *   **Where it is not needed**: An address written in the code (`/albums`, a template that starts with `https://host/`). An image address (`img src`) does not run as code and is held by the page's `img-src` policy.
 *   **Tests**: `test/utils/safeUrl.test.js` (the function), `test/security/outsideUrlIsChecked.test.js` (the card and the ranking row drawn with `javascript:...`), `test/architecture/outsideUrlChecked.test.js` (fitness: every `href`, `window.open` and `location.assign/replace` of `public/js` is text written in the code or goes through `safeUrl`; the six that come from the code by another road are listed there).
 
@@ -92,7 +92,7 @@ classDiagram
 *   **`stringUtils.js`**: `escapeHtml` (section 2) and `safeText`. The string similarity and the album key that lived here were removed in F55: whether an album is the album asked for is decided by `shared/albumIdentity.js`.
 *   **`NormalizationUtils.js`**: `toCore` (matching track titles). The title cleaner that lived here (`cleanTitle`) was removed in F68: the text sent to a search is the identity rule's `titleWithoutEditionNotes`. Its album and artist normalizers were removed in F55 for the same reason.
 *   **`dom-helpers.js`**: Low-level DOM traversal/manipulation helpers.
-*   **`SvgGenerator.js`**: Dynamic SVG generation (likely for placeholders or dynamic icons).
+*   **`SvgGenerator.js`**: Dynamic SVG generation (likely for placeholders or dynamic icons). *(removed in F65: `SvgGenerator.js`)*
 
 ### `utils/duration.js`
 `formatDuration(seconds)` is the one formatter of a track duration: "m:ss", "h:mm:ss" from one hour on, and "--:--" when there is none. Durations are kept in **seconds** everywhere (`models/Track.js`; `services/musickit/MusicKitCatalog.js` converts Apple's milliseconds). Used by the ranking window and the track table. `TrackRow.formatDuration` and `PlaylistGrid.calculateDuration` still format on their own (also in seconds).

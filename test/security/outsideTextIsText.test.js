@@ -10,12 +10,10 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { AlbumCardRenderer } from '../../public/js/components/ui/AlbumCardRenderer.js'
 import { Album } from '../../public/js/models/Album.js'
 import { TrackRow } from '../../public/js/components/ui/TrackRow.js'
-import { TrackItem } from '../../public/js/components/playlists/TrackItem.js'
 import { renderSeriesHeader } from '../../public/js/views/albums/AlbumsScopedRenderer.js'
 import { SavedPlaylistCard } from '../../public/js/components/playlists/SavedPlaylistCard.js'
 import { InventoryGridRenderer } from '../../public/js/views/renderers/InventoryGridRenderer.js'
 import { Router } from '../../public/js/router.js'
-import { Autocomplete } from '../../public/js/components/Autocomplete.js'
 import { Breadcrumb } from '../../public/js/components/Breadcrumb.js'
 import { BlendSeriesSelector } from '../../public/js/components/blend/BlendSeriesSelector.js'
 import { SpotifyExportModal } from '../../public/js/components/SpotifyExportModal.js'
@@ -91,12 +89,6 @@ describe('text from outside is shown as text', () => {
         expect(host.textContent).not.toContain('&amp;')
     })
 
-    it('track item of a playlist, title in the text and in the tooltip', () => {
-        draw(TrackItem.render({ track: { title: QUOTED, artist: TEXT, album: TEXT, duration: 60 }, playlistIndex: 0, trackIndex: 0 }))
-        expectOnlyText(host, QUOTED, TEXT)
-        expect(host.querySelector('.track-title').getAttribute('title')).toBe(QUOTED)
-    })
-
     it('playlist card: the playlist name', () => {
         draw(PlaylistGrid.renderCard({ playlist: { name: TEXT, tracks: [{ title: TEXT, artist: TEXT, duration: 60 }] }, index: 0, editable: true }))
         expectOnlyText(host, TEXT)
@@ -159,23 +151,12 @@ describe('text from outside is shown as text', () => {
         expectOnlyText(host, TEXT)
     })
 
-    it('search suggestions: album, artist, year and cover address', () => {
-        const autocomplete = new Autocomplete()
-        document.body.appendChild(autocomplete.render())
-        autocomplete.renderResults([{ album: TEXT, artist: TEXT, year: TEXT, coverUrl: QUOTED }])
-
-        expectOnlyText(autocomplete.element, TEXT)
-        expect(autocomplete.element.querySelector('.result-item img').getAttribute('src')).toBe(QUOTED)
-        expect(autocomplete.element.querySelectorAll('img').length).toBe(1)
-        autocomplete.element.remove()
-    })
-
     it('breadcrumb: an address read from the URL', () => {
-        const path = `/ranking/${QUOTED}`
+        const path = `/playlists/${QUOTED}`
         draw(Breadcrumb.render(path, {}))
         expect(host.querySelector('img')).toBeNull()
         expect(window.__xss).toBeUndefined()
-        expect(host.querySelector('.breadcrumb-current').textContent).toBe('Ranking')
+        expect(host.querySelector('.breadcrumb-current').textContent).toBe('Playlists')
     })
 
     it('Spotify export dialog: the playlist name, the message and the tracks not found', () => {

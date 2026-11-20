@@ -3,7 +3,7 @@
 ## Series & Navigation (`series/`, `navigation/`)
 **Status**: `[ACTIVE]`
 
--   **`ui/FilterToolbar.js` & `series/SeriesFilterBar.js`**:
+-   **`ui/FilterToolbar.js` & `series/SeriesFilterBar.js`**: *(removed in F65: `SeriesFilterBar.js`)*
     -   **Role**: UI components for filtering albums/series.
     -   **Logic**: `FilterToolbar` (which replaced `series/SeriesToolbar.js`, a file that no longer exists) is the high-level container combining Search, Filter Dropdowns, and View Toggles. `SeriesFilterBar` is a smaller, older implementation that no module imports.
 -   **`series/ArtistScanner.js`**: removed in F57. Adding albums in the series edit is the one album picker (`album-picker/AlbumPickerPanel.js`).
@@ -53,7 +53,7 @@ Detailed controller-view logic for the Playlists feature.
     -   **Logic**: Renders the `RegeneratePanel`, Empty States, and delegates the actual Grid rendering to `PlaylistGrid`.
 -   **`playlists/PlaylistGrid.js`**:
     -   **Role**: Renders the responsive grid of `PlaylistCard`s containing `TrackRow`s.
--   **`playlists/PlaylistsDragBoard.js` & `PlaylistsDragHandler.js`**:
+-   **`playlists/PlaylistsDragBoard.js` & `PlaylistsDragHandler.js`**: *(removed in F65: `PlaylistsDragBoard.js`)*
     -   **Role**: Drag-and-drop management.
     -   **Logic**: `DragBoard` provides a Kanban-style layout (horizontal columns), but no module imports it. `DragHandler`, used by `PlaylistsView`, wraps `SortableJS` to manage track movement between playlists (drag-and-drop across lists).
 -   **`playlists/RegeneratePanel.js`**:
