@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:51] session — F75 em produção, com valores: 198 de 211 álbuns
+**Branch:** main
+Site e servidor da `70e63da`; revisão `mjrp-proxy-00213-qpq` com `DISCOGS_TOKEN` vindo do secret. A leitura na conta do MJRP deu valor a 198 de 211 álbuns ($1,166.51 no que ele tem; $339.27 no que falta). O Discogs recusa a sugestão em três estados enquanto a conta não tiver as configurações de vendedor: o valor é o menor preço à venda, e a tela diz isso. Prova: `reports/evidence/F75/2026-11-20-production-proof.md`.
+
 ## [2026-11-20 02:35] session — F75, documentos: a sugestão recusada e o menor preço à venda
 
 **Branch:** feat/f75-cd-prices-and-where-to-buy
