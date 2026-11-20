@@ -19,6 +19,7 @@ import { albumLoadService, ALL_SERIES_CONTEXT, ALL_SCOPE, singleScope } from '..
 import { ownRankingsStore } from '../stores/ownRankings.js';
 import { ownRankingService } from '../services/ranking/ownRanking.js';
 import { filterSeries, countUnchecked, readsFacts } from '../models/seriesFilter.js';
+import { countAlbums } from '../models/seriesCounts.js';
 import { rankedQueryKeys } from '../models/ownRanking.js';
 import { decodeEntities } from '../models/text.js';
 import { paginate, takeFirst, normalizePageSize, PagingMode } from '../models/paging.js';
@@ -213,6 +214,7 @@ export default class SeriesController {
                 mode: pagingMode, size: pageSize, page: cut.page, pages: cut.pages,
                 total: cut.total, from: cut.from, to: cut.to, hasMore: cut.hasMore,
                 totalSeries: sorted.length,
+                albums: countAlbums(matching), // of the series that pass the filters, on every page (F72)
                 single: !isAll, // one series on screen: nothing to page, only the notice may show
                 unchecked
             }

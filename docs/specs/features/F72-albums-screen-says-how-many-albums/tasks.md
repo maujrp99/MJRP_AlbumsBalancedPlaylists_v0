@@ -4,24 +4,16 @@
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Pre-Implementation
-- [ ] create the branch feat/albums-screen-says-how-many-albums-<timestamp>
-- [ ] verify the spec and the plan of F72 passed their cross-checks (and were approved, where gated)
+- [x] requisito S-55 e feature registrados na `main` antes do ramo (`66f469c`)
+- [x] ramo `feat/f72-albums-screen-says-how-many`
 
 ## Implementation
-<!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
-     components → composition → polish. -->
-<!-- Marks, after `implements::`, separated by ` · `:
-     model:: sonnet|opus — MANDATORY on every task; the author of this file decides, the implementer never does.
-                        sonnet = MECHANICAL: texts and registry keys, summaries, format samples and tests, derived
-                        files, renames. opus = code design, architecture, critique, visual recheck. There is no
-                        default: a task without the mark fails the cross-check.
-     rounds:: N       — written when the task CLOSES ([x]): how many Execute ⇄ Verify rounds it took (ceiling 3).
-                        `python3 mjrp-scripts/loop.py --check-tasks tasks.md` fails a closed task without it. -->
-- [ ] TASK-01 «a escrever: ação sobre um arquivo ou componente nomeado — o sinal de pronto» · implements:: REQ-01 · model:: «a escrever: sonnet|opus»
+- [x] TASK-01 a conta e a frase num modelo puro (`models/seriesCounts.js`), o número no `getPageView`, a linha no cabeçalho · implements:: REQ-01 · model:: opus · rounds:: 1
+- [x] TASK-04 a caixa da paginação também no topo (`components/ui/Pager.js`, `place: 'top'`; `views/SeriesView.js`), pedida pelo MJRP em 2026-11-20 («trazer a caixa da paginacao para aparecer no topo tb»); teste antes; visto no navegador: as duas caixas mostram «Showing 1–40 of 48 series», a página 2 pela de cima muda as duas, e no modo «Scroll» só a de baixo tem «Load more» · implements:: REQ-02 · model:: opus · rounds:: 1
 
 ## Verification
-- [ ] TASK-02 «a escrever: a verificação: suíte, build, caminho feliz, regressão» · implements:: REQ-01 · model:: «a escrever: sonnet|opus»
+- [x] TASK-02 suíte, lint e build verdes; prova no navegador com a conta do MJRP (`reports/evidence/F72/2026-11-20-albums-count-proof.md`) · implements:: REQ-01 · model:: opus · rounds:: 1
 
 ## Documentation
-- [ ] update the specs affected · mark F72 Done in spec.md · commit: feat: implement albums-screen-says-how-many-albums
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] `docs/specs/behavior.md` (`^library-counts`), spec, plano e tarefas
+- [ ] TASK-03 o MJRP julga a linha de contagem (texto, e se conta os álbuns pedidos ou os distintos) · implements:: REQ-01 · model:: opus · waiting:: human — o aceite é do MJRP · action:: o MJRP olha a tela de séries e diz se a contagem serve

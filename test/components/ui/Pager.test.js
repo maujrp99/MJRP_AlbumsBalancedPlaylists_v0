@@ -198,3 +198,53 @@ describe('Pager', () => {
         })
     })
 })
+
+describe('Pager above the list (F72)', () => {
+    let container, handlers
+    const mountTop = (value) => {
+        const pager = new Pager({ container, props: { paging: value, place: 'top', ...handlers } })
+        pager.mount()
+        return pager
+    }
+    const text = (selector) => container.querySelector(selector)?.textContent.replace(/\s+/g, ' ').trim()
+
+    beforeEach(() => {
+        container = document.createElement('div')
+        document.body.appendChild(container)
+        handlers = { onPage: vi.fn(), onSize: vi.fn(), onMode: vi.fn(), onMore: vi.fn() }
+    })
+
+    it('shows the same count, page size, form and page numbers, and reports the same', () => {
+        mountTop(paging())
+
+        expect(container.querySelector('[data-pager-place="top"]')).not.toBe(null)
+        expect(text('.series-pager-count')).toBe('Showing 1–10 of 45 series')
+        expect(container.querySelector('.series-pager-size').value).toBe('10')
+        container.querySelector('[data-pager-page="2"]').click()
+        expect(handlers.onPage).toHaveBeenCalledWith(2)
+        container.querySelector(`[data-pager-mode="${PagingMode.SCROLL}"]`).click()
+        expect(handlers.onMode).toHaveBeenCalledWith(PagingMode.SCROLL)
+    })
+
+    it('in the growing list it has no "Load more" and nothing that asks for more by being seen', () => {
+        mountTop(paging({ mode: PagingMode.SCROLL, hasMore: true, to: 10 }))
+
+        expect(text('.series-pager-count')).toBe('Showing 1–10 of 45 series')
+        expect(container.querySelector('[data-pager-more]')).toBe(null)
+        expect(container.querySelector('[data-pager-sentinel]')).toBe(null)
+    })
+
+    it('leaves the notice about unchecked albums to the pager below, and draws nothing for one series', () => {
+        mountTop(paging({ unchecked: 3 }))
+        expect(container.querySelector('.series-pager-unchecked')).toBe(null)
+
+        container.innerHTML = ''
+        mountTop(paging({ single: true, unchecked: 3 }))
+        expect(container.innerHTML).toBe('')
+    })
+
+    it('does not announce the count twice: only the pager below is a live region', () => {
+        mountTop(paging())
+        expect(container.querySelector('.series-pager-count').hasAttribute('aria-live')).toBe(false)
+    })
+})

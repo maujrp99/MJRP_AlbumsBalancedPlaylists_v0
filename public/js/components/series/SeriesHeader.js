@@ -13,6 +13,7 @@ export default class SeriesHeader extends Component {
     /**
      * @param {Object} props
      * @param {Object} props.metadata - { title, description, albumCount, canGenerate }
+     * @param {string} [props.counts] - the line under the title: how many series and albums (F72)
      * @param {Function} props.onGeneratePlaylists - Callback for Generate Playlists click
      */
     constructor(props) {
@@ -20,7 +21,7 @@ export default class SeriesHeader extends Component {
     }
 
     render() {
-        const { metadata, pageTitle: propTitle, onGeneratePlaylists } = this.props;
+        const { metadata, pageTitle: propTitle, onGeneratePlaylists, counts } = this.props;
         const title = propTitle || metadata?.title || 'All Albums Series';
 
         // Clear container
@@ -40,7 +41,12 @@ export default class SeriesHeader extends Component {
             SafeDOM.fromHTML(getIcon('Disc', 'w-8 h-8 text-accent-primary')),
             title // SafeDOM text content (auto-escaped)
         ]);
-        titleRow.appendChild(h1);
+        // Title and, under it, how many series and albums the screen holds (F72)
+        const titleBlock = SafeDOM.div({ className: 'flex flex-col gap-1' }, [h1]);
+        if (counts) {
+            titleBlock.appendChild(SafeDOM.p({ className: 'text-sm text-white/60', 'data-series-counts': '' }, counts));
+        }
+        titleRow.appendChild(titleBlock);
 
         // Generate Button
         const btn = SafeDOM.button({

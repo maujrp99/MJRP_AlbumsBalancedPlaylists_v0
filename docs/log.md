@@ -3,6 +3,19 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:09] session — F72: a caixa da paginação também no topo da lista de séries
+
+**Branch:** feat/f72-albums-screen-says-how-many
+
+- Pedido do MJRP: «aproveite ao fazer a 72, pra trazer a caixa da paginacao para aparecer no topo tb». A mesma caixa aparece acima e abaixo da lista; «Load N more» e o aviso de álbuns não conferidos ficam só na de baixo, para a de cima não pedir mais séries só por estar à vista.
+- Dispensa de protótipo dita pelo MJRP e gravada no `spec.md`: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
+
+## [2026-11-20 00:06] session — F72: a tela de séries diz quantas séries e quantos álbuns tem (S-55), depois de priorizada
+
+**Branch:** feat/f72-albums-screen-says-how-many
+
+- O MJRP priorizou a F72; o ramo voltou ao nome da convenção e o trabalho pronto desde 2026-11-20 foi commitado: `models/seriesCounts.js`, a linha de contagem no cabeçalho («47 series · 227 albums», «2 of 47 series · 4 albums», «5 albums»), os testes e os documentos.
+
 ## [2026-11-20 00:05] session — F71: o comportamento e o manual dizem a ordenação nas duas direções
 
 **Branch:** feat/f71-inventory-sort-both-ways

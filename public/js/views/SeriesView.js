@@ -22,6 +22,7 @@ import { SeriesModalsManager } from './helpers/SeriesModalsManager.js';
 import { SafeDOM } from '../utils/SafeDOM.js';
 import Pager from '../components/ui/Pager.js';
 import { SeriesExpansion, SERIES_ALBUM_LIMIT } from '../models/seriesExpansion.js';
+import { describeCounts } from '../models/seriesCounts.js';
 
 export default class SeriesView extends BaseView {
     constructor(controller) {
@@ -48,6 +49,7 @@ export default class SeriesView extends BaseView {
                 SafeDOM.div({ id: 'series-header-mount' }),
                 SafeDOM.div({ id: 'series-toolbar-mount' })
             ]),
+            SafeDOM.div({ id: 'series-pager-top-mount' }),
             SafeDOM.div({ id: 'series-grid-mount' }),
             SafeDOM.div({ id: 'series-pager-mount' }),
             SafeDOM.div({ id: 'emptyStateContainer' }),
@@ -88,17 +90,18 @@ export default class SeriesView extends BaseView {
             { view: this, controller: this.controller }
         );
         // FIX #152B: Progress bar removed - skeletons provide loading feedback
-        this.components.pager = new Pager({
-            container: document.getElementById('series-pager-mount'),
-            props: {
-                paging: null,
-                onPage: (page) => { this.controller.handlePage(page); window.scrollTo({ top: 0 }); },
-                onSize: (size) => this.controller.handlePageSize(size),
-                onMode: (mode) => this.controller.handlePagingMode(mode),
-                onMore: () => this.controller.handleShowMore()
-            }
-        });
+// The same pager below the list and above it (F72): what one changes, both show
+        const pagerProps = {
+            paging: null,
+            onPage: (page) => { this.controller.handlePage(page); window.scrollTo({ top: 0 }); },
+            onSize: (size) => this.controller.handlePageSize(size),
+            onMode: (mode) => this.controller.handlePagingMode(mode),
+            onMore: () => this.controller.handleShowMore()
+        };
+        this.components.pager = new Pager({ container: document.getElementById('series-pager-mount'), props: pagerProps });
         this.components.pager.mount();
+        this.components.pagerTop = new Pager({ container: document.getElementById('series-pager-top-mount'), props: { ...pagerProps, place: 'top' } });
+        this.components.pagerTop.mount();
 
         // 2. Updater: Initialize
         this.updater = new SeriesViewUpdater(this.components);
@@ -212,9 +215,27 @@ export default class SeriesView extends BaseView {
             this.expansion.list()
         );
         const pageView = this.controller ? this.controller.getPageView() : null;
-        this.components.pager?.update({ paging: pageView?.paging || null });
+        this.showPaging(pageView);
         const hasSeriesToShow = (pageView?.paging.totalSeries || 0) > 0;
         this.updater?.updateEmptyState('emptyStateContainer', hasSeriesToShow ? 1 : albums.length, isLoading);
+    }
+
+    /** What the page holds, said in three places: the pager above the list, the one below, and the header (F72). */
+    showPaging(pageView) {
+        const paging = pageView ? pageView.paging : null;
+        [this.components.pagerTop, this.components.pager].filter(Boolean).forEach(pager => pager.update({ paging }));
+        this.showCounts(pageView);
+    }
+
+    /** The header says how many series and albums the screen holds; redrawn only when it changes (F72). */
+    showCounts(pageView) {
+        const paging = pageView ? pageView.paging : null;
+        const counts = describeCounts(paging && {
+            single: paging.single, series: paging.total, totalSeries: paging.totalSeries, albums: paging.albums
+        });
+        if (counts === this.shownCounts) return;
+        this.shownCounts = counts;
+        this.components.header?.update({ counts });
     }
 
     // New Method called by Controller

@@ -8,8 +8,13 @@
  * When a filter reads facts that some album queries do not have yet, it also says how many
  * (`paging.unchecked`). With one series on screen (`paging.single`) only that notice is shown.
  *
+ * The list has one pager below it and one above (F72): the one above (`place: 'top'`) shows the
+ * same count, page size, form and page numbers, so the person does not go to the end of a long
+ * page to move on. It leaves to the one below what belongs to the end of the list: the notice
+ * about unchecked albums, "Load N more" and the watch that asks for more when the end is reached.
+ *
  * Props: { paging: { mode, size, page, pages, total, from, to, hasMore, totalSeries, unchecked, single },
- *          onPage(page), onSize(size), onMode(mode), onMore() }
+ *          place: 'bottom' (default) | 'top', onPage(page), onSize(size), onMode(mode), onMore() }
  */
 import Component from '../base/Component.js';
 import { PAGE_SIZES, PagingMode } from '../../models/paging.js';
@@ -41,22 +46,30 @@ export default class Pager extends Component {
             return;
         }
 
-        const notice = this._renderUnchecked(paging);
+        const top = this.props.place === 'top';
+        const notice = top ? '' : this._renderUnchecked(paging);
         if (paging.single) {
             this.container.innerHTML = notice ? `<div class="series-pager glass-panel p-4 mt-6">${notice}</div>` : '';
             return;
         }
 
+        this.container.innerHTML = this._renderPager(paging, top, notice);
+
+        this._bind(paging);
+    }
+
+    /** The box of the pager: the count, the page size, the form, and the way to move on. */
+    _renderPager(paging, top, notice) {
         const scroll = paging.mode === PagingMode.SCROLL;
         const filtered = paging.total < paging.totalSeries ? ` (of ${paging.totalSeries} in all)` : '';
         const count = paging.total === 0
             ? 'No series matches these filters'
             : `Showing <b class="text-white">${paging.from}–${paging.to}</b> of <b class="text-white">${paging.total}</b> series${filtered}`;
 
-        this.container.innerHTML = `
-            <div class="series-pager glass-panel p-4 mt-6 flex flex-col gap-4" data-paging-mode="${paging.mode}">
+        return `
+            <div class="series-pager glass-panel p-4 ${top ? 'mb-6' : 'mt-6'} flex flex-col gap-4" data-paging-mode="${paging.mode}" data-pager-place="${top ? 'top' : 'bottom'}">
                 <div class="flex flex-wrap items-center justify-between gap-3 text-sm text-gray-400">
-                    <p class="series-pager-count" aria-live="polite">${count}</p>
+                    <p class="series-pager-count" ${top ? '' : 'aria-live="polite"'}>${count}</p>
                     <div class="flex flex-wrap items-center gap-3">
                         <label class="flex items-center gap-2">Series per page
                             <select class="series-pager-size form-control text-sm py-1" aria-label="Series per page">
@@ -72,10 +85,8 @@ export default class Pager extends Component {
                     </div>
                 </div>
                 ${notice}
-                ${scroll ? this._renderMore(paging) : this._renderPages(paging)}
+                ${scroll ? (top ? '' : this._renderMore(paging)) : this._renderPages(paging)}
             </div>`;
-
-        this._bind(paging);
     }
 
     /** The filter in use reads facts some albums do not have yet: say how many, and when they will. */
