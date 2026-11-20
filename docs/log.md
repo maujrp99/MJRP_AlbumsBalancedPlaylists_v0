@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:44] session — F76 polimento: notas das telas e prova (Home, Playlists)
+**Branch:** feat/f76-mobile-polish-home-playlists
+Seção «Polimento pós-crítica» acrescentada a screens/home-and-blend.md e screens/playlists.md; provas em reports/evidence/F76/playlists/ e home-blend/ (antes = main, depois = este ramo, 393x852, 393x660 e 1280x800).
+Computador idêntico pixel a pixel em todas as cenas comparadas, salvo uma faixa de antisserrilhado no botão Sign In da primeira cena da Home.
+
 ## [2026-11-20 03:39] session — F76 polimento: P2 baratos de Home e Playlists (N20, N15, N16 em parte)
 **Branch:** feat/f76-mobile-polish-home-playlists
 No celular: mover uma faixa pela folha mostra «Moved … to number 2 · Undo» e acende a linha por 1,2 s (sem transição com menos movimento); o filtro «?» da Home lê «Other»; na janela Edit Series os avisos de espera/vazio/falha passam a #a0a0a8 (eram 2,43:1).

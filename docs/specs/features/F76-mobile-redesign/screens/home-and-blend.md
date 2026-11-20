@@ -89,3 +89,18 @@ Computador, 1280x800: `python3 reports/evidence/F76/harness/home-blend-compare.p
 - Telas com login (séries reais, criar a série de fato, gerar playlists): os dados foram postos pela página.
 - O conserto do UAT-217 só em teste de unidade.
 - Capas reais (as do teste são SVG em degradê).
+
+
+## Polimento pós-crítica (2026-11-20, ramo `feat/f76-mobile-polish-home-playlists`)
+
+Fecha achados de `reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-recheck.md`. Tudo **decidido pelo agente — revisável**. Prova: `reports/evidence/F76/home-blend/polish/` (depois) contra `before-polish/` (o mesmo arnês sobre uma cópia de `main`), agora também a **393x660**; cenas novas `home-scrolled`, `home-sheet-named`, `home-sheet-noname`.
+
+- **N1 — os filtros não flutuam mais sobre as capas.** `css/views/home.css:37-42` prende `#home-toolbar` (`sticky; top: 0`) abaixo de 769 px; o celular tirava o fundo e deixava o `sticky`. No celular a faixa agora rola com a página (`position: static` em `css/mobile/home.css`); a regra do computador ficou como está. Decidi soltar em vez de prender sob a barra do topo com fundo opaco: os seis filtros em duas colunas ocupam ~190 px, que presos tirariam um terço da tela das capas. Teste: `test/components/home/HomePhone.toolbar.test.js`. Visto: rolada 200 px dentro da grade, antes «Studio», «EPs», «Compendiums» e «?» sobre as capas; agora só capas.
+- **N10 — o nome da série na folha dos escolhidos.** A folha «n albums chosen» abre com «SERIES NAME» e um campo de 48 px e 16 px, com o mesmo valor do campo da página e escrito nos dois sentidos (digitar na folha escreve na página). Com o nome vazio, «Create series» (da barra ou da folha) **não cria**: abre a folha, diz «Give the series a name first.» (`role="alert"`), marca o campo (`aria-invalid`, borda vermelha) e põe o cursor nele. Com nome, segue o caminho de sempre (`handleInitializeLoad`). O computador continua criando com «New Album Series» quando o campo está vazio. Não preenchi o nome com o artista buscado: o pedido foi o mesmo valor do campo da página.
+- **N4 — fonte (decidido).** Na folha dos escolhidos, o título do álbum segue em Syne; artista, campo do nome, aviso de desfazer, estado vazio e a dica da barra passam para a fonte de texto.
+- **N15 — o filtro «?».** No celular lê «Other» (um `span md:hidden` na marcação da Home; o computador segue com «?», idêntico).
+- **N16 (em parte) — Edit Series.** Os avisos de espera, vazio e falha do seletor dentro da janela passam a #a0a0a8 (a crítica mediu 2,43:1). O resto de N16 (linhas sem capa, filtros em pílula) ficou para depois.
+
+Medido, a 393x852 e 393x660, em todas as cenas da Home: largura 393, 0 texto < 12, 0 campo < 16, 0 alvo < 44. Computador (1280x800), `home-results`, `home-chosen`, `home-scrolled`, `home-bulk`: 0 pixel diferente; `home-empty`: uma faixa de 5 px de antisserrilhado no brilho do botão «Sign In» da barra do computador (primeira cena da rodada; nada deste ramo toca nela).
+
+O que não verifiquei: o teclado do iPhone subindo sobre a folha quando o cursor vai ao campo do nome; criar a série de fato (sem login).
