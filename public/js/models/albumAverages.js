@@ -25,13 +25,14 @@ function mean(values) {
 
 /**
  * @param {Array<{ rating?: number|null, spotifyPopularity?: number|null }>} tracks
- * @returns {{ rating: number|null, popularity: number|null, ratedTracks: number, popTracks: number }}
+ * @returns {{ rating: number|null, popularity: number|null, ratedTracks: number, popTracks: number, tracks: number }}
+ *   `tracks` is how many tracks the album has: an average says of how many of them it was made
  */
 export function averagesOf(tracks) {
     const list = Array.isArray(tracks) ? tracks : []
     const ratings = list.map(track => track?.rating).filter(value => isNumber(value) && value > 0)
     const popularities = list.map(track => track?.spotifyPopularity).filter(value => isNumber(value) && value >= 0)
-    return { rating: mean(ratings), popularity: mean(popularities), ratedTracks: ratings.length, popTracks: popularities.length }
+    return { rating: mean(ratings), popularity: mean(popularities), ratedTracks: ratings.length, popTracks: popularities.length, tracks: list.length }
 }
 
 const normalized = (text) => text?.toLowerCase().trim().replace(/[^a-z0-9]/g, '') || ''
@@ -83,13 +84,20 @@ export const popularityValue = (averages) => (isNumber(averages?.popularity) ? `
 export const ratingText = (averages) => `Avg Rating: ${ratingValue(averages)}`
 export const popularityText = (averages) => `Avg Pop: ${popularityValue(averages)}`
 
+/** Of how many tracks an average was made: «(2 of 8)»; «(2)» when the size of the album is not known. */
+function madeOf(count, total) {
+    if (!isNumber(count) || count <= 0) return ''
+    return isNumber(total) && total > 0 ? ` (${count} of ${total})` : ` (${count})`
+}
+
 /**
- * The small line of a card: the averages the item has, and nothing (an empty text) when it has none.
- * @param {{ rating?: number|null, popularity?: number|null }|null} [averages]
+ * The small line of a card: the averages the item has, each with the tracks it was made of
+ * («Avg Rating: 90 (2 of 8) · Avg Pop: 59.5% (6 of 8)»), and nothing (an empty text) when it has none.
+ * @param {{ rating?: number|null, popularity?: number|null, ratedTracks?: number, popTracks?: number, tracks?: number }|null} [averages]
  */
 export function averagesLine(averages) {
     const parts = []
-    if (isNumber(averages?.rating)) parts.push(ratingText(averages))
-    if (isNumber(averages?.popularity)) parts.push(popularityText(averages))
+    if (isNumber(averages?.rating)) parts.push(ratingText(averages) + madeOf(averages.ratedTracks, averages.tracks))
+    if (isNumber(averages?.popularity)) parts.push(popularityText(averages) + madeOf(averages.popTracks, averages.tracks))
     return parts.join(' · ')
 }

@@ -13,7 +13,7 @@ describe('averagesOf', () => {
     it('the rating is the mean of the ratings above zero; the popularity is the mean of those from zero up', () => {
         const averages = averagesOf([track('a', 80, 50), track('b', 70, 0), track('c', 0, 40), track('d', null, -1), track('e', null, null)])
 
-        expect(averages).toEqual({ rating: 75, popularity: 30, ratedTracks: 2, popTracks: 3 })
+        expect(averages).toEqual({ rating: 75, popularity: 30, ratedTracks: 2, popTracks: 3, tracks: 5 })
     })
 
     it('keeps one decimal, as a number', () => {
@@ -25,9 +25,9 @@ describe('averagesOf', () => {
     })
 
     it('says null, not zero, for an album with nothing to average', () => {
-        expect(averagesOf([track('a', null, -1)])).toEqual({ rating: null, popularity: null, ratedTracks: 0, popTracks: 0 })
-        expect(averagesOf([])).toEqual({ rating: null, popularity: null, ratedTracks: 0, popTracks: 0 })
-        expect(averagesOf(undefined)).toEqual({ rating: null, popularity: null, ratedTracks: 0, popTracks: 0 })
+        expect(averagesOf([track('a', null, -1)])).toEqual({ rating: null, popularity: null, ratedTracks: 0, popTracks: 0, tracks: 1 })
+        expect(averagesOf([])).toEqual({ rating: null, popularity: null, ratedTracks: 0, popTracks: 0, tracks: 0 })
+        expect(averagesOf(undefined)).toEqual({ rating: null, popularity: null, ratedTracks: 0, popTracks: 0, tracks: 0 })
     })
 
     it('does not count what is not a number', () => {
@@ -44,13 +44,13 @@ describe('averagesOfAlbum', () => {
         const original = [{ title: 'Time', position: 1 }, { title: 'Money', position: 2 }, { title: 'Us & Them', position: 3 }]
         const acclaim = [{ title: 'money', rating: 90, rank: 1, spotifyPopularity: 80 }, { title: 'TIME', rating: 80, rank: 2, spotifyPopularity: 70 }]
 
-        expect(averagesOfAlbum(album(original, acclaim))).toEqual({ rating: 85, popularity: 75, ratedTracks: 2, popTracks: 2 })
+        expect(averagesOfAlbum(album(original, acclaim))).toEqual({ rating: 85, popularity: 75, ratedTracks: 2, popTracks: 2, tracks: 3 })
     })
 
     it('a track of the original order keeps its own rating and popularity when the acclaim order has none', () => {
         const original = [{ title: 'A', rating: 60, spotifyPopularity: 10 }, { title: 'B', spotifyPopularity: null }]
 
-        expect(averagesOfAlbum(album(original, []))).toEqual({ rating: 60, popularity: 10, ratedTracks: 1, popTracks: 1 })
+        expect(averagesOfAlbum(album(original, []))).toEqual({ rating: 60, popularity: 10, ratedTracks: 1, popTracks: 1, tracks: 2 })
     })
 
     it('mergedTracksOf is what the track comparison shows: every track of the original order, with defaults', () => {
@@ -90,5 +90,24 @@ describe('what is said of the averages', () => {
         expect(averagesLine({ rating: null, popularity: 12 })).toBe('Avg Pop: 12%')
         expect(averagesLine({ rating: null, popularity: null })).toBe('')
         expect(averagesLine(undefined)).toBe('')
+    })
+})
+
+describe('averagesLine: each average says of how many tracks it was made (F71, REQ-20)', () => {
+    it('says "N of M" when the size of the album is known', async () => {
+        const { averagesLine } = await import('../../public/js/models/albumAverages.js')
+        expect(averagesLine({ rating: 90, ratedTracks: 2, popularity: 59.5, popTracks: 6, tracks: 8 }))
+            .toBe('Avg Rating: 90 (2 of 8) · Avg Pop: 59.5% (6 of 8)')
+    })
+
+    it('says only "N" for averages kept before the size of the album was', async () => {
+        const { averagesLine } = await import('../../public/js/models/albumAverages.js')
+        expect(averagesLine({ rating: 90, ratedTracks: 2, popularity: null, popTracks: 0 })).toBe('Avg Rating: 90 (2)')
+    })
+
+    it('says nothing of tracks when the count is not known, and nothing at all with no average', async () => {
+        const { averagesLine } = await import('../../public/js/models/albumAverages.js')
+        expect(averagesLine({ rating: 90 })).toBe('Avg Rating: 90')
+        expect(averagesLine(null)).toBe('')
     })
 })

@@ -21,6 +21,10 @@ Relato do MJRP de 2026-11-20 00:00: «precisamos melhorar o algoritmo do BEA pra
 
 Causa lida no código: `shared/normalize.js` (`normalizeKey`) apaga todo parêntese antes de comparar títulos. O BestEverAlbums escreve «21st Century Schizoid Man Including Mirrors»; o Apple Music, «21st Century Schizoid Man (Including "Mirrors")». E «I Talk to the Wind (Duo Version)» vira «i talk to the wind».
 
+**Alcance, dito pelo MJRP em 2026-11-20:** «não só das edicoes ampliadas, mas dos albuns que nao tiverem todas as faixas com ratings, algo aconteceu que o scrapper do algoritmo nao captura». A investigação separa o que é o leitor da página (scraper) do que é o casamento de títulos.
+
+**Medida de partida (2026-11-20 00:02, inventário do MJRP, 209 álbuns com médias):** 84 álbuns têm nota em só parte das faixas e 13 não têm nota em nenhuma. Os piores: «High Voltage» (AC/DC) 2 de 9; «Mirage (Deluxe Edition)» 10 de 42; «In the Court of the Crimson King (Expanded Edition)» 2 de 8; «Larks' Tongues In Aspic (Expanded Edition)» 4 de 8; «Before the Frost... Until the Freeze» 10 de 20; «Substance» (New Order) 13 de 24; «Substance 1977-1980» 11 de 19; «Are You Experienced (Deluxe Version)» 11 de 18; «Who's Next (Bonus Track Version)» 10 de 16; «Live At The Apollo (1962)» 7 de 11; «Free Live!» 10 de 15; «Black Rose: A Rock Legend» 6 de 9.
+
 ## Requirements
 - [REQ-01] Uma faixa do álbum recebe a nota de uma faixa da fonte quando os dois títulos são a mesma faixa, mesmo que um escreva entre parênteses o que o outro escreve sem. · fixes UAT-221
 - [REQ-02] Uma faixa que é outra versão (ao vivo, demo, versão de rádio, remix, tomada alternativa) não recebe a nota da faixa original. · fixes UAT-221

@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:02] session — F71: o cartão diz de quantas faixas a média saiu; medida de partida da F74
+
+**Branch:** feat/f71-card-says-how-many-tracks
+
+- O cartão do inventário mostra «Avg Rating: 90 (2 of 8) · Avg Pop: 59.5% (6 of 8)». `averages.tracks` guarda o tamanho do álbum. «Update ratings» rodou de novo na conta do MJRP para preencher.
+- Medida de partida da F74, tirada do inventário: 84 de 209 álbuns com nota em só parte das faixas, 13 sem nenhuma. O MJRP alargou o alvo: todo álbum com faixas sem nota, não só as edições ampliadas.
+
 ## [2026-11-20 00:00] session — UAT-221 e F74 registradas (a nota chega à faixa certa); REQ-20 na F71 (de quantas faixas saiu a média)
 
 - O MJRP respondeu à pergunta da média tirada de poucas faixas: «mostrar, mas precisamos melhorar o algoritmo do BEA pra que ele encontre a media das faixas». O cartão vai dizer de quantas faixas a média saiu (F71, REQ-20).

@@ -52,16 +52,16 @@ describe('the ask made from the inventory', () => {
 })
 
 describe('mergeAverages: a number is never overwritten by "nothing"', () => {
-    const fresh = (rating, popularity) => ({ rating, popularity, ratedTracks: rating === null ? 0 : 9, popTracks: popularity === null ? 0 : 8 })
+    const fresh = (rating, popularity) => ({ rating, popularity, ratedTracks: rating === null ? 0 : 9, popTracks: popularity === null ? 0 : 8, tracks: 10 })
     const before = { rating: 70, popularity: 40, ratedTracks: 5, popTracks: 6, at: '2026-01-01T00:00:00.000Z' }
 
     it('both new: both written, with the time', () => {
-        expect(mergeAverages(before, fresh(80, 50), AT)).toEqual({ rating: 80, popularity: 50, ratedTracks: 9, popTracks: 8, at: AT })
+        expect(mergeAverages(before, fresh(80, 50), AT)).toEqual({ rating: 80, popularity: 50, ratedTracks: 9, popTracks: 8, tracks: 10, at: AT })
     })
 
     it('a source gave nothing this time: the previous number stays, with the count it had', () => {
-        expect(mergeAverages(before, fresh(80, null), AT)).toEqual({ rating: 80, popularity: 40, ratedTracks: 9, popTracks: 6, at: AT })
-        expect(mergeAverages(before, fresh(null, 50), AT)).toEqual({ rating: 70, popularity: 50, ratedTracks: 5, popTracks: 8, at: AT })
+        expect(mergeAverages(before, fresh(80, null), AT)).toEqual({ rating: 80, popularity: 40, ratedTracks: 9, popTracks: 6, tracks: 10, at: AT })
+        expect(mergeAverages(before, fresh(null, 50), AT)).toEqual({ rating: 70, popularity: 50, ratedTracks: 5, popTracks: 8, tracks: 10, at: AT })
     })
 
     it('nothing new and nothing before: nothing is written', () => {
@@ -73,7 +73,7 @@ describe('mergeAverages: a number is never overwritten by "nothing"', () => {
     })
 
     it('no previous value: what came is written, and the other average is null', () => {
-        expect(mergeAverages(undefined, fresh(80, null), AT)).toEqual({ rating: 80, popularity: null, ratedTracks: 9, popTracks: 0, at: AT })
+        expect(mergeAverages(undefined, fresh(80, null), AT)).toEqual({ rating: 80, popularity: null, ratedTracks: 9, popTracks: 0, tracks: 10, at: AT })
     })
 })
 
@@ -87,8 +87,8 @@ describe('planAverages: the answer of the ask becomes the averages of the items'
         const plan = planAverages(items, askResult([fragile, wall]), AT)
 
         expect([...plan.updates].sort((a, b) => a.id.localeCompare(b.id))).toEqual([
-            { id: 'inv-1', averages: { rating: 85, popularity: 65, ratedTracks: 2, popTracks: 2, at: AT } },
-            { id: 'inv-2', averages: { rating: 70, popularity: 50, ratedTracks: 1, popTracks: 1, at: AT } }
+            { id: 'inv-1', averages: { rating: 85, popularity: 65, ratedTracks: 2, popTracks: 2, tracks: 2, at: AT } },
+            { id: 'inv-2', averages: { rating: 70, popularity: 50, ratedTracks: 1, popTracks: 1, tracks: 1, at: AT } }
         ])
     })
 
@@ -115,7 +115,7 @@ describe('planAverages: the answer of the ask becomes the averages of the items'
 
         const plan = planAverages(kept, askResult([noPopularity]), AT)
 
-        expect(plan.updates).toEqual([{ id: 'inv-2', averages: { rating: 70, popularity: 33, ratedTracks: 1, popTracks: 4, at: AT } }])
+        expect(plan.updates).toEqual([{ id: 'inv-2', averages: { rating: 70, popularity: 33, ratedTracks: 1, popTracks: 4, tracks: 1, at: AT } }])
     })
 
     it('counts the albums Spotify was not asked for, and the ones a source did not answer for', () => {

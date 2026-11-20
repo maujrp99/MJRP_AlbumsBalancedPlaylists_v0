@@ -66,7 +66,8 @@ function pick(name, countName, fresh, previous) {
  */
 export function mergeAverages(previous, fresh, at) {
     if (!isNumber(fresh.rating) && !isNumber(fresh.popularity)) return null
-    return { ...pick('rating', 'ratedTracks', fresh, previous), ...pick('popularity', 'popTracks', fresh, previous), at }
+    const tracks = isNumber(fresh.tracks) ? fresh.tracks : (previous?.tracks ?? null)
+    return { ...pick('rating', 'ratedTracks', fresh, previous), ...pick('popularity', 'popTracks', fresh, previous), tracks, at }
 }
 
 const countGaps = (missing, matches) => missing.filter(matches).length
