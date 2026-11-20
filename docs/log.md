@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:09] session — F78 Ref-A: documentos — tarefas, plano, arch e data-model
+**Branch:** feat/f78-ref-a-repositories-in-the-core
+TASK-14 e TASK-15 marcadas; a TASK-16 tem a regra escrita e espera a publicação do MJRP; o que mexe na forma de gravar (só leitura acima da versão, transação, os casos abertos de convivência) foi para a TASK-17 (Ref-B). `plan.md` § Technical Design: o que a Ref-A construiu e os casos abertos; `arch.md`: «Os repositórios no núcleo: a store e a versão»; `data-model.md`: `_schemaVersion` nunca desce, e onde vale.
+Conferido no navegador (porta 5199, sem entrar com conta): o site sobe sem erro no console e sem chamada ao Firestore na tela inicial; a sessão anônima que o próprio site abre ao carregar ficou no Firebase Auth. Suíte 274 arquivos, 3.575 testes; lint e build verdes; corpo dourado 3.343 de 3.343 no Node.
+
 ## [2026-11-20 15:05] session — F78 convivência: `firestore.rules` recusa a atualização que rebaixe `_schemaVersion` (não publicado)
 **Branch:** feat/f78-ref-a-repositories-in-the-core
 Nos quatro caminhos que os repositórios gravam (curator: séries e playlists; inventory; albumRankings; spotify_enrichment), `update` passa a pedir `keepsSchemaVersion()` (a versão gravada ≥ a guardada; ausente conta 0); ler, criar e apagar ficam como estavam; os caminhos legados (`users/{uid}/series/…`, `/albums`), onde há documentos antigos com versão 2, não mudam. Nenhum escritor de hoje é recusado: todos gravam 1 ou não tocam no campo.
